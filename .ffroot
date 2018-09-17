@@ -1,0 +1,11 @@
+This file allows 'ff -g' to determine root directory for global searches.
+Example:
+   cd cpp/algo
+Find word 'Scheduler' in source files
+   ff Scheduler 
+Same, but extend search to all relevant directories after searching current
+directory:
+   ff Scheduler -g
+
+Some other tools check presence of .ffroot to make sure they're run from 
+the right location.

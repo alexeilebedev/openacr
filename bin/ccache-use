@@ -1,0 +1,7 @@
+#!/bin/sh
+# keep consistent with ccache-install
+BASEDIR=/opt
+CCDIR=$BASEDIR/ccache
+ln -s $CCDIR $HOME/.ccache
+ln -s $CCDIR .ccache
+ccache -s

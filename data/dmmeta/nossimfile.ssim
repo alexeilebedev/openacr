@@ -1,0 +1,8 @@
+dmmeta.nossimfile  ctype:dev.Include  comment:""
+dmmeta.nossimfile  ctype:dev.Syscmd  comment:""
+dmmeta.nossimfile  ctype:dev.Syscmddep  comment:""
+dmmeta.nossimfile  ctype:dmmeta.BuftypeId  comment:""
+dmmeta.nossimfile  ctype:dmmeta.CppExpr  comment:""
+dmmeta.nossimfile  ctype:dmmeta.Dispsigcheck  comment:""
+dmmeta.nossimfile  ctype:dmmeta.Func  comment:""
+dmmeta.nossimfile  ctype:dmmeta.ReftypeId  comment:""

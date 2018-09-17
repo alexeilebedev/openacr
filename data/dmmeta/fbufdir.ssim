@@ -1,0 +1,2 @@
+dmmeta.fbufdir  fbufdir:in  read:Y  comment:""
+dmmeta.fbufdir  fbufdir:out  read:N  comment:""

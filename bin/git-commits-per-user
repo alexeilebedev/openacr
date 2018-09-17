@@ -1,0 +1,5 @@
+#!/bin/sh
+DATE=${1:-$(date -d "-1 month" +%Y-%m-%d)}
+shift
+# respect .mailmap
+git log --no-merges --pretty=format:%aN --since={$DATE} $* | sort | uniq -c | sort -rn

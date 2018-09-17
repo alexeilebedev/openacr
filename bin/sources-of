@@ -1,0 +1,1 @@
+acr targsrc:$1/% -field:src -report:N

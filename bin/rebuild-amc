@@ -1,0 +1,7 @@
+#!/bin/sh
+ai amc &&
+amc &&
+ai amc &&
+amc &&
+ai amc &&
+git add -u

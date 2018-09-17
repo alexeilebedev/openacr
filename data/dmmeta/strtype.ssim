@@ -1,0 +1,3 @@
+dmmeta.strtype  strtype:rpascal  comment:"String of length N+2, last byte is the count"
+dmmeta.strtype  strtype:rightpad  comment:"String of length N, padded on the right"
+dmmeta.strtype  strtype:leftpad  comment:"String of length N, padded on the left"

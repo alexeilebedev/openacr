@@ -1,0 +1,14 @@
+#!/usr/bin/perl
+use strict;
+my $limit=shift @ARGV;
+my $nline=0;
+while (<>) {
+    if ($nline < $limit) {
+        print;
+    }
+    $nline++;
+}
+if ($nline > $limit) {
+    print "# first $limit entries shown; total lines were $nline\n";
+}
+exit 0;

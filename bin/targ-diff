@@ -1,0 +1,31 @@
+#!/bin/sh
+# show differences introduced in specified target ($1)
+# between current working directory and specified commit ($2, default:HEAD~)
+# detecting movement across files
+
+BRANCH=$(git-current-branch)
+OTHERCOMIT=$2
+if [ "$OTHERCOMMIT" == "" ]; then
+    OTHERCOMMIT="HEAD~"
+fi
+# stash the executable in case it's missing in the other commit
+cp bin/Linux-x86_64/src_func temp/
+src_func -sortname -showloc:N "-targsrc:$1/%" -listfunc | grep -v report.src_func > temp/after
+if [ "$(wc -l < temp/after)" == "0" ]; then
+    echo "Is '$1' a valid target? src_func produced no output"
+    exit 1
+fi
+if [ ! -d ".tempgit" ]; then
+    git clone --local . .tempgit
+fi
+(
+    cd .tempgit
+    git fetch -q ..
+    git reset -q --hard
+    git clean -q -dfx
+    git checkout -q "$OTHERCOMMIT"
+    ../temp/src_func -sortname -showloc:N "-targsrc:$1/%" -listfunc | grep -v report.src_func  > ../temp/before
+)
+
+# diff them
+diff -w -U3 temp/before temp/after

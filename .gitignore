@@ -1,0 +1,16 @@
+*.o
+*.wiki
+*~
+.ccache
+.gcache
+.svn
+.testgen
+.tempgit
+\#*
+cscope.out
+dflt.*-x86_64
+lock
+tags
+temp
+vmlinux*
+

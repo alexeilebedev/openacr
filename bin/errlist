@@ -1,0 +1,16 @@
+#
+# (C) NYSE | Intercontinental Exchange 2013-2014
+#
+# Run specified command and open error list in editor
+# Works with emacs and vim
+#
+if [ "$EDITOR" == "vim" ]; then
+    $* 2>&1 | tee temp/errlist
+    vim -q temp/errlist -c ":copen 30"
+else
+    cat > temp/errlist.el <<EOF
+(setq compile-command "$*")
+(compile compile-command)
+EOF
+    emacs -nw --load temp/errlist.el
+fi

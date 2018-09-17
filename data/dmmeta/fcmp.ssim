@@ -1,0 +1,6 @@
+dmmeta.fcmp  field:algo_lib.FTxtrow.sortkey  versionsort:Y  casesens:N  extrn:N  comment:""
+dmmeta.fcmp  field:atf_amc.Cstr.val  versionsort:N  casesens:Y  extrn:N  comment:""
+dmmeta.fcmp  field:atf_amc.SortedStr.novs  versionsort:N  casesens:Y  extrn:N  comment:""
+dmmeta.fcmp  field:atf_amc.SortedStr.vs  versionsort:Y  casesens:Y  extrn:N  comment:""
+dmmeta.fcmp  field:atf_unit.Cstr.val  versionsort:N  casesens:Y  extrn:N  comment:""
+dmmeta.fcmp  field:src_func.FFunc.sortkey  versionsort:Y  casesens:Y  extrn:N  comment:""

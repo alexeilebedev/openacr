@@ -1,0 +1,3 @@
+dmmeta.fbuftype  fbuftype:Bytebuf  getmsg:Y  skipbytes:Y  read:N  comment:"Byte buffer"
+dmmeta.fbuftype  fbuftype:Linebuf  getmsg:Y  skipbytes:Y  read:N  comment:"Line buffering"
+dmmeta.fbuftype  fbuftype:Msgbuf  getmsg:Y  skipbytes:N  read:N  comment:"Message buffering"

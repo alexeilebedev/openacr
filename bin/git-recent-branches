@@ -1,0 +1,5 @@
+#!/bin/sh
+git reflog > temp/reflog
+for X in $(cat temp/reflog | grep 'commit: AB' | sed 's/://g' | awk '{print $4}' | sort | uniq); do
+    cat temp/reflog | egrep "commit.*$X:\$" | head -1;
+done | sed 's/ (amend)//;s/commit: //;s/:$//;s/: / /' | sort -k 2 -V

@@ -1,0 +1,2 @@
+git ls-files -u | cut -f 2 | sort -u
+

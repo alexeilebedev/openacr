@@ -1,0 +1,3 @@
+dev.compiler  compiler:""  dflt:""  ranlib:""  ar:""  comment:all
+dev.compiler  compiler:clang++  dflt:clang  ranlib:llvm-ranlib  ar:llvm-ar  comment:""
+dev.compiler  compiler:g++  dflt:dflt  ranlib:ranlib  ar:ar  comment:""

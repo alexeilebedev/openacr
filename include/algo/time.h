@@ -1,0 +1,128 @@
+// (C) AlgoEngineering LLC 2008-2012
+// (C) 2013-2019 NYSE | Intercontinental Exchange
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+// Contacting ICE: <https://www.theice.com/contact>
+//
+// Target: algo_lib (lib) -- Support library for all executables
+// Exceptions: NO
+// Header: include/algo/time.h -- Time functions
+//
+// Created By: alexei.lebedev
+// Recent Changes: alexei.lebedev
+//
+
+#pragma once
+
+namespace algo {
+    static const i64    MSECS_PER_DAY     = 60*60*24*1000;
+    static const i64    SECS_PER_DAY      = 60*60*24;
+    static const i64    SECS_PER_HOUR     = 60*60;
+    static const i64    SECS_PER_MIN      = 60;
+    static const i64    UNTIME_PER_SEC    = 1*1000*1000*1000;
+    static const i64    UNTIME_PER_MSEC   = 1*1000*1000;
+    static const i64    UNTIME_PER_USEC   = 1*1000;
+
+    UnixDiff UnixDiffHMS(i64 h, int m=0, int s = 0);
+    UnDiff UnDiffHMS(int h, int m=0, int s=0);
+
+    struct TimeStruct : tm {
+        int  tm_nsec;
+        bool tm_neg;
+        TimeStruct() { ZeroBytes(*this); tm_isdst = -1;}
+    TimeStruct(const struct tm &t) : tm(t) { tm_nsec = 0; tm_neg = false;}
+    };
+}
+
+namespace algo { // update-hdr srcfile:"%/algo/time.%"
+    // Dear human:
+    //     Text from here to the closing curly brace was produced by scanning
+    //     source files. Editing this text is futile.
+    //     To refresh the contents of this section, run 'update-hdr'.
+    //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+
+    // -------------------------------------------------------------------
+    // cpp/lib/algo/time.cpp -- UnTime / UnDiff functions
+    //
+    bool TimeStruct_Read(TimeStruct &out, StringIter &iter, const strptr& spec);
+    TimeStruct ToTimeStruct(UnDiff   U);
+    TimeStruct ToTimeStruct(UnixDiff U);
+    UnixDiff ToUnixDiff(const TimeStruct &S);
+    UnDiff ToUnDiff(const TimeStruct &S);
+
+    // uses gettimeofday, returns UTC seconds + fractions
+    // UTC time for midnight; Local timezone is used in computation
+    void SetTz(strptr tz);
+    const UnixTime LocalDate(UnixTime in);
+    TimeStruct GetLocalTimeStruct(UnixTime U);
+    TimeStruct GetLocalTimeStruct(UnTime U);
+    const UnTime LocalDate(UnTime in);
+    TimeStruct GetGMTimeStruct(UnTime U);
+    UnixTime ToUnixTime(const TimeStruct &S);
+    UnTime ToUnTime(const TimeStruct &S);
+
+    // empty string -> 0
+    // invalid weekday -> -1
+    // All other weeks days map to 0..6, numbers compatible with struct tm's tm_wday field
+    int GetWeekday(strptr wday);
+    const strptr GetWeekdayName(int index);
+    int GetMonthZeroBased(strptr month);
+
+    // Inverse mapping to abbreviated month names (Jan, Feb, etc.)
+    // If short_name==false, returns full name (January, February, etc.)
+    const strptr GetMonthNameZeroBased(int index);
+    const strptr GetMonthNameZeroBasedShort(int index);
+
+    // DateCache -- Roughly 200x faster LocalDate
+    const UnTime DateCache_LocalDate(algo::DateCache &dc, UnTime in);
+    UnTime CurrUnTime();
+
+    // -------------------------------------------------------------------
+    // include/algo/time.inl.h
+    //
+
+    // cpu_hz (untyped SchedTime)
+    // use this for timestamps.
+    // these calls may be pipelined and reordered, so measuring instruction
+    // latency with these is not possible. for that, use rdtscp
+    inline u64 get_cycles();
+
+    // Convert scheduler time units to seconds.
+    inline double ToSecs(SchedTime ticks);
+    inline algo::UnDiff ToUnDiff(SchedTime ticks);
+    inline algo::SchedTime ToSchedTime(double secs);
+    inline algo::UnTime ToUnTime(UnixTime t);
+    inline algo::UnixTime ToUnixTime(UnTime t);
+    inline double ToSecs(UnDiff t);
+    inline algo::UnixTime CurrUnixTime();
+
+    //
+    // use this for performance measurements.
+    // according to Intel software manual, lfence followed by rdtsc
+    // is the beez knees.
+    //
+    inline u64 rdtscp();
+    inline UnixDiff UnixDiffHMS(i64 h, int m, int s);
+    inline UnDiff UnDiffSecs(double d);
+    inline UnDiff UnDiffSecs(i64 i);
+    inline UnDiff UnDiffSecs(i32 i);
+    inline UnDiff UnDiffHMS(int h, int m, int s);
+
+    // Current value of get_cycles();
+    inline algo::SchedTime CurrSchedTime();
+
+    // Elapsed time in seconds between two SchedTimes.
+    inline double ElapsedSecs(algo::SchedTime start, algo::SchedTime end);
+}

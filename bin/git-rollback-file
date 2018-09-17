@@ -1,0 +1,10 @@
+#!/bin/sh
+# require a parameter
+if [ "$*" != "" ]; then
+    git reset HEAD~ $*
+    git checkout $*
+    git-add-to-last-commit
+else
+    echo "usage: $0 <glob>"
+    exit 1
+fi

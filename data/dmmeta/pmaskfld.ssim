@@ -1,0 +1,3 @@
+dmmeta.pmaskfld  field:atf_amc.PmaskU128.pmask  comment:""
+dmmeta.pmaskfld  field:atf_amc.PmaskU32.pmask  comment:""
+dmmeta.pmaskfld  field:atf_amc.PmaskU555.pmask  comment:""

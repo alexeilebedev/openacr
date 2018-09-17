@@ -1,0 +1,4 @@
+dev.badline  badline:assign_tempstr  expr:"<<\\s*tempstr\\(\\)"  targsrc_regx:%  comment:"extra tempstr can be eliminated. See txt/string-readme.txt for more info"
+dev.badline  badline:prlog_tempstr  expr:"(prerr|prlog|prerr_|prlog_|verblog|verblog2|verblog3|dbglog)\\(\\s*tempstr"  targsrc_regx:%  comment:"prlog/prerr/verblog macros do not require tempstr(). See txt/string-readme.txt for more info"
+dev.badline  badline:useless_tempstr  expr:"strptr .*=.*(tempstr|cstring|SysEval)"  targsrc_regx:%  comment:"strptr is being assigned a temporary. See txt/string-readme.txt for more info"
+dev.badline  badline:using_namespace  expr:"using namespace"  targsrc_regx:%.h  comment:"'using namespace' is not allowed in headers"

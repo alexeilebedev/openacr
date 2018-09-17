@@ -1,0 +1,2 @@
+#!/bin/sh
+acr -t -e ctype:command.$1

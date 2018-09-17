@@ -1,0 +1,7 @@
+#!/bin/sh
+# remove any binaries from last commit.
+# this does not assume anything about base branch
+git reset --soft HEAD~
+git reset bin/Linux-x86_64 pdf/*.pdf
+git checkout bin/Linux-x86_64 pdf/*.pdf
+git commit --allow-empty -C HEAD@{1}

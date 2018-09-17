@@ -1,0 +1,13 @@
+#!/bin/env perl
+use strict;
+my $oldref=shift @ARGV;
+my $rest=shift @ARGV;
+$oldref="HEAD" if $oldref eq"";
+my $cmd= "git diff --stat ${oldref}~..${oldref} ${rest} |  grep '|' | awk '{print \$1}' | egrep -v /gen/ | ";
+print "$cmd\n";
+open my $R, $cmd or die $!;
+while (<$R>) {
+    chomp;
+    system("git-diff-annotate '$oldref~:$_' '$oldref' | cat");
+}
+# pipe output through nogen to get automatic 'hilite -d | less -r'

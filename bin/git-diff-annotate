@@ -1,0 +1,46 @@
+#!/usr/bin/perl
+# usage: git-diff-annotate gitref:filename [newref]
+# newref is taken to be HEAD if omitted
+use strict;
+my $gitref=shift @ARGV;
+my $newref=shift @ARGV;
+$newref="HEAD" if !$newref;
+
+# return (commit,filename) from gitref;
+sub parseref($) {
+    my $commit;
+    my $file;
+    if ($_[0] =~ /^(.*?):(.*)$/) {
+        $commit=$1;
+        $file=$2;
+    }
+    return $commit,$file;
+}
+
+# annotate gitref $_[0] to $_[1];
+sub annotate($$) {
+    my ($gitref,$out)=@_;
+    my ($commit,$file) = parseref($gitref);
+# a496f0c7 (Hayk Mkrtchyan 2019-01-01 13:00:35 -0500 1)// (C) 2017-2019 NYSE | Intercontinental Exchange
+# 09d2743b (Luke Huang 2017-10-20 16:01:53 -0400 2)//
+# 09d2743b (Luke Huang 2017-10-20 16:01:53 -0400 3)// Target: atf_pb (exe)
+    open my $R, "git annotate $commit $file |" or die $!;
+    open my $W, ">$out" or die $!;
+    while (<$R>) {
+        if (/(\w+)\s+\((.*?)\s+(\d+)\)(.*?)$/) {
+            my $commit=$1;
+            my $who=$2;
+            my $lineno=$3;
+            my $text=$4;
+            print $W "$commit $who $text\n";
+        }
+    }
+}
+my ($oldref,$file)=parseref($gitref);
+my $fname=$file;
+$fname =~ s!/!-!g;
+annotate("$oldref:$file", "temp/$fname-a.cpp");
+annotate("$newref:$file", "temp/$fname-b.cpp");
+system("git diff --no-index -W temp/$fname-a.cpp temp/$fname-b.cpp");
+unlink("temp/$fname-a.cpp");
+unlink("temp/$fname-b.cpp");

@@ -1,0 +1,5 @@
+dev.uname  uname:""  comment:default
+dev.uname  uname:Cygwin  comment:""
+dev.uname  uname:Darwin  comment:""
+dev.uname  uname:Linux  comment:""
+dev.uname  uname:SunOS  comment:"Tested on solaris 5.11"

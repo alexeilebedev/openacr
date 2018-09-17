@@ -1,0 +1,9 @@
+#!/bin/sh
+if [ "$1" == "" -o "$2" == "" ]; then
+    echo "usage; git-grep-reflog <path> <regex>"
+fi
+for X in $(git reflog | head -200 | awk '{print $1}'); do
+    if $(git show $X -- $1 | grep $2 >/dev/null); then
+        echo $X
+    fi
+done

@@ -1,0 +1,14 @@
+amcdb.bltin  ctype:bool  likeu64:N  bigendok:N  issigned:N  comment:"dflt is a c++ expr: real dflt is 'N'"
+amcdb.bltin  ctype:char  likeu64:N  bigendok:N  issigned:N  comment:char
+amcdb.bltin  ctype:double  likeu64:N  bigendok:N  issigned:Y  comment:double
+amcdb.bltin  ctype:float  likeu64:N  bigendok:N  issigned:Y  comment:float
+amcdb.bltin  ctype:i16  likeu64:Y  bigendok:Y  issigned:Y  comment:"16-bit   signed integer"
+amcdb.bltin  ctype:i32  likeu64:Y  bigendok:Y  issigned:Y  comment:"32-bit   signed integer"
+amcdb.bltin  ctype:i64  likeu64:Y  bigendok:Y  issigned:Y  comment:"64-bit   signed integer"
+amcdb.bltin  ctype:i8  likeu64:Y  bigendok:N  issigned:Y  comment:"8-bit   signed integer"
+amcdb.bltin  ctype:pad_byte  likeu64:N  bigendok:N  issigned:N  comment:""
+amcdb.bltin  ctype:u128  likeu64:N  bigendok:Y  issigned:N  comment:"128-bit unsigned integer"
+amcdb.bltin  ctype:u16  likeu64:Y  bigendok:Y  issigned:N  comment:"16-bit unsigned integer"
+amcdb.bltin  ctype:u32  likeu64:Y  bigendok:Y  issigned:N  comment:"32-bit unsigned integer"
+amcdb.bltin  ctype:u64  likeu64:Y  bigendok:Y  issigned:N  comment:"64-bit unsigned integer"
+amcdb.bltin  ctype:u8  likeu64:Y  bigendok:N  issigned:N  comment:"8-bit unsigned integer"

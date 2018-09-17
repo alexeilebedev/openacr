@@ -1,0 +1,22 @@
+#!/usr/bin/perl
+my $A=shift @ARGV;
+my $B=shift @ARGV;
+my $afile="temp/$A";
+my $bfile="temp/$B";
+system("acr -report:N -pretty:N ctype:$A -ndown 10 -tree | egrep -v ^'(dmmeta.field|dmmeta.dispatch_msg)' > $afile");
+system("acr -report:N -pretty:N ctype:$B -ndown 10 -tree | egrep -v ^'(dmmeta.field|dmmeta.dispatch_msg)' | sed \"s/$B/$A/g\" > $bfile");
+my $rc=system("diff --ignore-all-space --strip-trailing-cr --ignore-space-change --ignore-blank-lines $afile $bfile");
+unlink($afile);
+unlink($bfile);
+
+if ($rc==0) {
+    print("$A and $B are identical...  Renaming $A->$B\n");
+    # rename all uses of A -> B
+    system("acr -report:N -pretty:N ctype:$A -ndown 10 -tree | sed \"s/$A/$B/g\" | acr -merge -write")==0 or die $?;
+    # delete A
+    system("acr -report:N -del -write ctype:$A");
+} else {
+    print("$A and $B are different\n");
+}
+
+exit(0);

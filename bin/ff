@@ -1,0 +1,364 @@
+#!/usr/bin/perl
+#
+# ff -- find files and IN files
+#
+# examples:
+#  find function definition in linux headers:
+# 
+#    ff -s -t sched_set
+#
+#  find .cpp files. note, all regexes are perl regex
+#  
+#    ff -f '\.cpp'
+#
+#  find some symbol as a standalaone word
+# 
+#    ff '\bWord\b'
+#
+#  repeat last search but only list filenames of matching files
+#
+#    ff '\bWord\b' -l
+#
+#  find all text files
+#
+#    ff
+#
+
+use warnings;
+use strict;
+use File::Glob qw(bsd_glob);;
+use Cwd 'abs_path';
+
+my $pbreaks    = 0;
+my $list_files = 0;
+my $notty      = 0;
+my $wholeword  = 0;
+my @dirs;
+my @linepat    = ();
+my @pathpat    = (
+    '!'.
+    join('|',
+         ('\.svn/'
+          ,'temp/'
+          ,'bin/'
+          ,'makefile.win'))
+    );
+my @filepat    = (
+    '!'.
+    join('|',
+         ('^\.'
+          ,'^.*\.debug'
+          ,'^.*\.release'
+          ,'\~$'
+          ,'\.mk$'
+          ,'\.ppm$'
+          ,'\#$'
+          ,'\.o$'
+          ,'\.so$'
+          ,'\.so\.'
+          ,'\.exe$'
+          ,'\.gcda$'
+          ,'\.gcno$'
+          ,'\.scexe$'
+          ,'\.pdf$'
+          ,'\.gch$'
+          ,'\.a$'
+          ,'\.obj$'
+          ,'^run$'
+          ,'\.objlist$'
+          ,'^core\.\d+$'
+          ,'\.pyc$'))
+    );
+my $g_nfiles   = 0;
+my %visited    = ();
+my $typedef  = "";
+my $usage = "$0 [-d startdir] [-f file pattern]+ [regex]+
+    Multiple occurences of file/line pattern tighten the search.
+    First character ! indicates negation
+    -d  <dir>      add directory to search path
+    -t             look loosely for C-style definitions
+    -c             print out matches with breaks
+    -g             global search from directory containing .ffroot
+    -s             search system include directories as well
+    -l             list filenames only 
+    -w             search for whole words only 
+    -n             NO search auto-generated code
+    -a             all matches: one line may appear more than once
+    -i             case-insensitive search
+    -f <regex>     match just file 
+    -p <regex>     match full pathname
+    -notty         do not use colors
+    [regex]        pattern to match lines
+";
+
+#
+# platform may miss File::Type
+#
+my $ftype;
+eval {
+    require File::Type;
+    $ftype = File::Type->new();
+};
+
+use Getopt::Long;
+use Cwd qw(getcwd abs_path);
+use POSIX 'isatty';
+use Term::ANSIColor qw(:constants);
+my $verbose;
+my $nocase = 0;
+my $sys_dirs;
+my $list_all;
+my $no_autogen;
+my $help;
+my $global_dir;
+GetOptions("verbose"   => \$verbose
+           , "t"       => \$typedef
+           , "c"       => \$pbreaks
+           , "d=s"     => \@dirs
+           , "g"       => \$global_dir
+           , "l"       => \$list_files
+           , "a"       => \$list_all
+           , "s"       => \$sys_dirs
+           , "n"       => \$no_autogen
+           , "w"       => \$wholeword
+           , "f=s"     => \@filepat
+           , "p=s"     => \@pathpat
+           , "i"       => \$nocase
+           , "notty"   => \$notty
+           , "help"    => \$help
+    ) or die "\n";
+die $usage if $help;
+
+for (; @ARGV; shift @ARGV) {
+    push(@linepat, $ARGV[0]);
+}
+
+if ($sys_dirs) {
+    push(@dirs, "/usr/include");
+}
+
+if ($typedef) {
+    push(@linepat, 'DEF_NEW_TYPE|extern|typedef|(struct|class).*{|(\w+\s+=[^;]+$)');
+}
+
+if (!scalar(@linepat)) {
+    $list_files=1;
+}
+
+if ($nocase) {
+    @filepat = map {lc} @filepat;
+    @linepat = map {lc} @linepat;
+}
+
+if ($wholeword) {
+    @linepat = map { "\\b$_\\b" } @linepat;
+}
+
+if ($no_autogen) {
+    push(@pathpat, "!/gen/");
+    push(@pathpat, "!apssuite/");
+    push(@pathpat, "!extern/");
+}
+
+if (!@dirs) {
+    push(@dirs,abs_path($ENV{"PWD"}));
+}
+
+if ($global_dir) {
+    my $dir=getcwd();
+    $dir = abs_path($dir);
+    push(@dirs,$dir);# current dir goes first
+    my $root = &find_ff_root($dir);
+    if ($root) {
+        push(@dirs,"$root/include");#guess
+        push(@dirs,"$root/cpp");# guess
+        push(@dirs,$root);
+    }
+}
+
+my %C;
+if (!$notty && isatty(1) && $ENV{TERM} ne 'dumb') {
+    $C{red}   = RED;
+    $C{reset} = RESET;
+    $C{dark}  = DARK;
+    $C{bold}  = BOLD;
+} else {
+    $C{red}   = "";
+    $C{reset} = "";
+    $C{dark}  = "";
+    $C{bold}  = "";
+}
+
+
+#
+# input: directory path
+# output: path to root, which is taken to be nearest directory containing file .ffroot
+# output is an absolute path
+#
+sub find_ff_root($) {
+    my ($dir)=@_;
+    $dir = abs_path($dir);
+    my @paths=split(/\/+/,$dir);
+    for (my $i=scalar(@paths)-1; $i>=0; $i--) {
+        my $root=join("/",@paths[0..$i]);
+        if (-f "$root/.ffroot") {
+            $dir = $root;
+            last;
+        }
+    }
+    return abs_path($dir);
+}
+
+#
+# match_pat(LINE, LIST)
+# match all patterns in  LIST against LINE
+# for each patterns in LIST, first character of ! indicates negation
+#
+# returns tuple of (
+#      number of positive matches
+#    , number of negative matches
+#    , number of positive patterns
+#    , number of negative patterns
+#  )
+#
+sub match_pat($$) {
+    my ($line,$list) = @_;
+    $line     = lc($line) if $nocase;
+    my @match = (0,0,0,0);
+    for my $p(@$list) {
+        my $q           = $p;
+        my $neg         = $q    =~ s/^!//;
+        $match[$neg]   += $line =~ /$q/g;
+        $match[2+$neg] ++;
+    }
+    return @match;
+}
+
+#
+# colorize(LINE,LIST)
+# highlight all occurences of positive patterns in LIST
+# return resulting string
+#
+sub colorize($@) {
+    my ($line,@list)=@_;
+    for my $p(@list) {
+        if ($p !~ /^!/) {
+            $line =~ s/($p)/$C{red}$C{bold}$1$C{reset}/g;
+        }
+    }
+    return $line;
+}
+
+#
+# search_file(FULLPATH) 
+# return list of [line number, line] for matching lines
+#
+sub search_file($) {
+    my ($fullpath)=@_;
+    my @found;
+    open(F,$fullpath) or return;
+    my $index=1;
+    $g_nfiles++;
+    while (<F>) {
+        my ($npos,$nneg,$totpos) = match_pat($_,\@linepat);
+        my $n = $npos;
+        $n = 0 if ($npos < $totpos || $nneg > 0);
+        $n = 1 if $n > 0 && !$list_all;
+        push(@found, [$index,$_]) while $n-- > 0;
+        $index++;
+    }
+    return @found;
+}
+
+#
+# print_lines(FNAME,FOUND)
+# print FOUND array with paragraph breaks
+#
+sub print_lines($@) {
+    my ($path,@found)=@_;
+    for my $entry(@found) {
+        my ($idx,$line) = @$entry;
+        print "$path:$idx: $line";
+    }
+}
+
+#
+# print_breaks(FULLPATH,FNAME,FOUND)
+# print FOUND array with paragraph breaks
+#
+sub print_breaks($@) {
+    my ($fullpath,$fname,@found)=@_;
+    my $prompt = $fullpath;
+    my $next_idx=-1;
+    for my $entry(@found) {
+        my ($idx,$line) = @$entry;
+        if ($next_idx != $idx) {
+            print "$prompt\n";
+            $next_idx = $idx+1;
+            $prompt   = $fname;
+        }
+        print "$idx: $line";
+    }
+}
+
+#
+# main directory search function
+#
+sub recurse {
+    my ($path) = $_[0];
+    # important -- do not visit directory twice
+    return if ($visited{$path});
+    $visited{$path}=1;
+    return if -l $path;
+    for my $fullpath (bsd_glob("$path/*")) { # don't split on whitespace
+	my $fname = $fullpath;
+        $fname =~s/.*\///;
+        if (-d $fullpath) {
+            recurse($fullpath) unless -f "$fullpath/.ffskip";
+            next;
+        }
+        my ($npos,$nneg,$totpos,$totneg) = match_pat($fname, \@filepat);
+        $verbose && print "test  fullpath:$fullpath  file:$fname\n";
+        my ($npos2,$nneg2,$totpos2,$totneg2) = match_pat($fullpath, \@pathpat);
+        next if $nneg>0 || $nneg2>0;
+        next if $npos < $totpos || $npos2 < $totpos2;
+        next if !-T $fullpath;
+        print "scan  $fullpath\n" if $verbose;
+        my @found;
+        if (scalar(@linepat)) {
+            @found=search_file($fullpath);
+        }
+        # display just filename
+        if ($list_files) {
+            if (!scalar(@linepat) || @found) {
+                print "$fullpath\n";
+            }
+            next;
+        } 
+        # apply color
+        for my $entry(@found) {
+            $entry->[1] = colorize($entry->[1], @linepat);
+        }
+        # display
+        if ($pbreaks) {
+            print_breaks($fullpath,$fname,@found);
+        } else {
+            print_lines($fullpath,@found);
+        }
+        if (@found) {
+            print "\n";
+        }
+    }
+}
+
+$verbose && print join("\n    ",("pathpat:",@pathpat)),"\n";
+$verbose && print join("\n    ",("filepat:",@filepat)),"\n";
+$verbose && print join("\n    ",("linepat:",@linepat)),"\n";
+$verbose && print join("\n    ",("dirs:"   ,@dirs   )),"\n";
+
+for my $dir(@dirs) {
+    recurse($dir);
+}
+
+$verbose && print "$g_nfiles files searched\n";
+

@@ -1,0 +1,5 @@
+dmmeta.nstype  nstype:exe
+dmmeta.nstype  nstype:lib
+dmmeta.nstype  nstype:pch
+dmmeta.nstype  nstype:protocol
+dmmeta.nstype  nstype:ssimdb

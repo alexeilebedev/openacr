@@ -1,0 +1,6 @@
+dmmeta.fbitset  field:algo_lib.Bitset.ary  comment:""
+dmmeta.fbitset  field:algo.Charset.ch  comment:""
+dmmeta.fbitset  field:atf_unit.Bitset.fld1  comment:""
+dmmeta.fbitset  field:atf_unit.Bitset.fld8  comment:""
+dmmeta.fbitset  field:atf_unit.Bitset.fld64  comment:""
+dmmeta.fbitset  field:atf_unit.Bitset.fld128  comment:""

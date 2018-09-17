@@ -1,0 +1,73 @@
+#!/usr/bin/perl
+# first line of defense:
+# get rid of trivial conflicts and commit if no further changes...
+#
+use strict;
+my $rc=0;
+my $modfiles = `git ls-files -m`;
+my $stepno=1;
+my $self= $0;
+sub step($) {
+    print ">>> $self: Step $stepno -- $_[0]\n";
+    $stepno++;
+}
+
+if ($modfiles) {
+    print "Attempting to fix conflicts in generated files...\n";
+    step("start with generated files from NEW parent (--theirs -- to allow for possible amc changes)");
+    # during a merge, the files may have been merged successfully
+    # but it's in error.
+    system("git checkout --theirs \$(git-conflicts | grep /gen/)");
+    if ($rc == 0) {
+        # can't run any binaries prior to ai, which contains bootstrap step
+        my $redirect = (-t STDOUT ? "" : ">/dev/null");
+        step("attempt to build base amc");
+        $rc = system("ai '(acr|abt|amc|src_%)' $redirect");
+        if ($rc != 0) {
+            print STDERR "Build failed -- giving up\n";
+        }
+    }
+    if ($rc == 0) {
+        step("re-generate files using amc");
+        $rc = system("amc");
+        system("update-linelim >/dev/null"); # doesn't matter if it fails
+        system("src_hdr -write");
+        if ($rc != 0) {
+            print STDERR "amc invocation failed. There is most likely a conflict in one of the generated files\n";
+            print STDERR "Fix it and re-run $0\n";
+        }
+    }
+    # ignore useless output from update-linelim
+    if ($rc == 0) {
+        step("add files back to the commit");
+        # some of these can cause an error -- no big deal
+        my @paths=("include/gen"
+                   , "cpp/gen"
+                   , "data/dmmeta/*sig.ssim"
+                   , "data/dev/linelim.ssim"
+                   , "data/dmmeta/ctypelen.ssim");
+        foreach my $path(@paths) {
+            $rc = system("git add -u $path 2>/dev/null");
+        }
+        $modfiles = `git ls-files -m`;
+        if ($modfiles eq "") {
+            $rc = system("ai && atf_norm '(amc%|bootstrap|copyright|iffy_src|tempcode|gitfile|indent%|src_lim)'");
+        }
+    }
+    if ($rc == 0) {
+        step("checking if no conflicts remain");
+        if (-d ".git/rebase-merge" && !$modfiles) {
+            print "$0: Fixed successfully, continuing rebase\n";
+            system("git rebase --continue");
+        } elsif (`git ls-files -m` eq "") {
+            print "$0: Fixed successfully, finishing merge with a commit\n";
+            $rc = system("git commit --no-edit");
+        } else {
+            $rc = 1;
+        }
+    }
+}
+if ($rc != 0) {
+    print "$0: Manual intervention required\n";
+}
+exit $rc;

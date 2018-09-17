@@ -1,0 +1,135 @@
+#!/bin/env perl
+use strict;
+# scan hunks on stdin,
+# and filter them according them to specified pattern
+# any number of patterns must be specified
+# patterns can be positive or negative, negative patterns are preceded with !
+# patterns can apply to filename, line, hunk header, or the entire hunk
+# pattern prefix specifies its scope:
+# l:    line pattern (applies to content only)
+# f:    filename pattern (applies to diff header line)
+# a:    applies to 'a' file (line starts with ---)
+# b:    applies to 'b' file (line starts with +++)
+# h:    hunk pattern -- applies to the entire hunk, including any header lines
+# if any positive pattern matches, and no negative pattern matches, hunk is accepted
+# filename pattern is specified with f:<regex>
+# example: grephunk amc f:!/gen/ x.diff h:'}\s+$'
+# hunk must contain word amc anywhere in it, filename should not have pattern /gen/
+#    and hunk ends in closing curly (plus some whitespace)
+
+# Example of a patch file:
+# diff --git a/include/gen/atf_amc_gen.inl.h b/include/gen/atf_amc_gen.inl.h
+# index fbcd12a..5871940 100644
+# --- a/include/gen/atf_amc_gen.inl.h
+# +++ b/include/gen/atf_amc_gen.inl.h
+# @@ -385,0 +386,14 @@ inline bool atf_amc::Ctype2Attr_Update(atf_amc::Ctype2Attr &lhs, atf_amc::Ctype2
+# +    atf_amc::DelType1_Uninit(*this);
+# @@ -426 +440 @@ inline atf_amc::DispFilter::DispFilter() {
+# -inline int atf_amc::pmask_Nbits(atf_amc::DispFilter &parent) {
+# +inline int atf_amc::pmask_Nbits(atf_amc::DispFilter& parent) {
+#
+# Here there are 2 hunks, one for each @@-line
+# Each hunk shares the filename
+# Each hunk has a header (everything from word 'diff ' to the first @@)
+# and several bodies; each part starts with @@
+#
+
+my @patterns;
+my $hunkheader="";# everything prior to @@
+my $hunkpart="";# @@ and afterwards
+my $postest=0;# counter of tests
+my $posmatch=0;# counter of matches
+my $negmatch=0;
+my $hdrpostest=0;
+my $hdrposmatch=0;
+my $hdrnegmatch=0;
+
+# load patterns
+# by default, patterns are assumed to be line-level
+foreach my $pattern(@ARGV) {
+    if ($pattern !~ /^(f:|l:|h:)/) {
+        $pattern = "l:$pattern";
+    }
+    #print "## pattern $pattern\n";
+    push(@patterns,$pattern);
+}
+
+#--------------------------------------------------------------------------------
+# match line $_[0] against all patterns in global @patterns array
+# selecting only patterns which
+sub matchline($$) {
+    my ($line,$type)=@_;
+    foreach my $pattern(@patterns) {
+        my $regx=$pattern;
+        if ($regx =~ s/^$type//) {# destructively match type
+            if ($regx =~ s/^!//) {# strip off leading !
+                $negmatch++ if($line =~ m/$regx/);
+            } else {
+                $posmatch++ if($line =~ m/$regx/);
+                $postest++;
+            }
+        }
+    }
+}
+
+#--------------------------------------------------------------------------------
+
+sub matchedq {
+    return ($posmatch>0 || $postest==0) && ($negmatch==0);
+}
+
+#--------------------------------------------------------------------------------
+
+# mark end of a hunk part
+sub endhunkpart {
+    if ($hunkpart) {
+        matchline("$hunkheader$hunkpart","h:");
+        if (matchedq()) {
+            print "$hunkheader$hunkpart";
+            $hunkheader=""; # squash it -- it's been printed
+        }
+        $hunkpart="";
+        $postest=$hdrpostest;
+        $posmatch=$hdrposmatch;# restore old values
+        $negmatch=$hdrnegmatch;
+    } else {
+        $hdrpostest=$postest;
+        $hdrposmatch=$posmatch;# save values pre-hunk-part
+        $hdrnegmatch=$negmatch;
+    }
+}
+
+#--------------------------------------------------------------------------------
+while (<STDIN>) {
+    if (/^diff /) {
+        endhunkpart();
+        $posmatch=0;
+        $postest=0;
+        $negmatch=0;
+        $hdrposmatch=0;
+        $hdrpostest=0;
+        $hdrnegmatch=0;
+        $hunkheader=$_;
+        matchline($_,"f:");
+    } elsif (/^---/) {
+        matchline($_,"a:");
+        $hunkheader.=$_;
+    } elsif (/^\+\+\+/) {
+        matchline($_,"b:");
+        $hunkheader.=$_;
+    } elsif (/^index /) {
+        $hunkheader.=$_;
+    } elsif (/^\@\@ /) {
+        endhunkpart();
+        $hunkpart=$_;
+    } else {
+        matchline($_,"l:");
+        if ($hunkpart) {
+            $hunkpart.=$_;
+        } else {
+            $hunkheader.=$_;
+        }
+    }
+}
+
+endhunkpart();

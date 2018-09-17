@@ -1,0 +1,5 @@
+dmmeta.strfmt  strfmt:Argv  comment:"Convert to/from command line"
+dmmeta.strfmt  strfmt:ArgvGnu  comment:"Convert to/from command line (use --key value)"
+dmmeta.strfmt  strfmt:Json  comment:"Convert to/from JSON tree"
+dmmeta.strfmt  strfmt:String  comment:"Convert to/from string"
+dmmeta.strfmt  strfmt:Tuple  comment:"Convert to/from array of key-value pairs"

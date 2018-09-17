@@ -1,0 +1,7 @@
+dmmeta.basepool  field:abt.FDb.lpool  base:algo_lib.FDb.sbrk
+dmmeta.basepool  field:algo.cstring.ch  base:algo_lib.FDb.lpool
+dmmeta.basepool  field:algo_lib.FDb.lpool  base:algo_lib.FDb.sbrk
+dmmeta.basepool  field:amc.FDb.lpool  base:algo_lib.FDb.sbrk
+dmmeta.basepool  field:amc_vis.FDb.lpool  base:algo_lib.FDb.sbrk
+dmmeta.basepool  field:lib_json.FDb.lpool  base:algo_lib.FDb.sbrk
+dmmeta.basepool  field:mdbg.FDb.lpool  base:algo_lib.FDb.sbrk

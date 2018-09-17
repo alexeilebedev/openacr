@@ -1,0 +1,788 @@
+--- a/cpp/lib/lib_iconv.cpp
++++ /dev/null
+@@ -1,94 +0,0 @@
+-// (C) AlgoEngineering LLC 2008-2013
+-// (C) 2013-2018 NYSE | Intercontinental Exchange
+-//
+-// Target: lib_iconv (lib) -- ICONV wrapper
+-// Exceptions: NO
+-// Source:    cpp/gen/lib_iconv_gen.cpp
+-// Source: -> cpp/lib/lib_iconv.cpp
+-// Header:    include/gen/lib_iconv_gen.h
+-// Header:    include/gen/lib_iconv_gen.inl.h
+-// Header:    include/lib/lib_iconv.h
+-//
+-// Created By: alexei.lebedev
+-// Recent Changes: alexei.lebedev
+-//
+-// Odbc/Iconvlib wrappers
+-// close conversion descriptor
+-
+-#include "include/lib/lib_mysql.h"
+-#include "include/lib/lib_odbc.h"
+-#include "include/lib/lib_iconv.h"
+-
+-void lib_iconv::Close(lib_iconv::Icd &icd) {
+-    if (icd.icd != (iconv_t)-1) {
+-        iconv_close(icd.icd);
+-        icd.icd = (iconv_t)-1;
+-    }
+-}
+-
+-// open conversion descriptor
+-void lib_iconv::Open(lib_iconv::Icd& icd, strptr tocode, strptr fromcode) {
+-    tempstr _tocode(tocode);
+-    tempstr _fromcode(fromcode);
+-    lib_iconv::Close(icd);
+-    icd.icd = iconv_open(Zeroterm(_tocode),Zeroterm(_fromcode));
+-    vrfy((iconv_t)-1 != icd.icd ||  errno != EINVAL
+-         ,tempstr()<<"The conversion from "<<fromcode<<" to "<<tocode<<" is not supported by the implementation");
+-    errno_vrfy((iconv_t)-1 != icd.icd, "iconv");
+-}
+-
+-// convert multibyte sequence
+-tempstr lib_iconv::Convert(lib_iconv::Icd &icd, strptr in, bool no_throw) {
+-    tempstr out;
+-    // first reserve exact number of bytes (assume zero-conversion)
+-    ch_Reserve(out,elems_N(in));
+-    size_t inoffset  = 0;
+-    size_t outoffset = 0;
+-    while (true) {
+-        char *inbuf         = in.elems + inoffset;
+-        char *outbuf        = out.ch_elems + outoffset;
+-        size_t inbytesleft  = elems_N(in) - inoffset;
+-        size_t outbytesleft = out.ch_max - outoffset;
+-
+-        // do conversion
+-        size_t ret  = iconv(icd.icd,&inbuf,&inbytesleft,&outbuf,&outbytesleft);
+-
+-        inoffset    = inbuf  - in.elems;
+-        outoffset   = outbuf - out.ch_elems;
+-        out.ch_n = outoffset;
+-        if ((size_t)-1 == ret) {
+-            switch(errno) {
+-            case E2BIG: {
+-                u32 reserve = 0;
+-                if (inoffset) {
+-                    // estimate mean conversion ratio
+-                    double ratio = double(outoffset)/double(inoffset) + 0.2; // 20% extra
+-                    reserve = static_cast<u32>(ratio*inbytesleft);
+-                }
+-                // minumum 6 bytes for widest encoding (UTF-8)
+-                reserve = reserve > 6 ? reserve : 6 ;
+-                ch_Reserve(out,reserve);
+-                continue;
+-            }
+-            case EILSEQ: {
+-                vrfy(no_throw,tempstr()<<"Invalid multibyte sequence (first 6 bytes shown): "
+-                     << strptr_ToMemptr(FirstN(strptr(inbuf,inbytesleft),6)));
+-                break;
+-            }
+-            case EINVAL:
+-                vrfy(no_throw,tempstr()<<"Incomplete multibyte sequence: "
+-                     << strptr_ToMemptr(strptr(inbuf,inbytesleft)));
+-                break;
+-            default:
+-                errno_vrfy(no_throw,"iconv");
+-                break;
+-            }
+-        }
+-        break;
+-    }
+-    return out;
+-}
+-
+-void lib_iconv::icd_Cleanup(lib_iconv::Icd &icd) {
+-    lib_iconv::Close(icd);
+-}
+--- a/cpp/lib/lib_odbc.cpp
++++ /dev/null
+@@ -1,300 +0,0 @@
+-// (C) AlgoEngineering LLC 2008-2013
+-// (C) 2013-2018 NYSE | Intercontinental Exchange
+-//
+-// Target: lib_odbc (lib) -- ODBC wrapper
+-// Exceptions: NO
+-// Source:    cpp/gen/lib_odbc_gen.cpp
+-// Source: -> cpp/lib/lib_odbc.cpp
+-// Header:    include/gen/lib_odbc_gen.h
+-// Header:    include/gen/lib_odbc_gen.inl.h
+-// Header:    include/lib/lib_odbc.h
+-//
+-// Created By: alexei.lebedev vladimir.parizhsky
+-// Recent Changes: alexei.lebedev vladimir.parizhsky
+-//
+-// Odbc/Iconvlib wrappers
+-
+-#include <stdlib.h>
+-#include "include/lib/lib_odbc.h"
+-
+-// -----------------------------------------------------------------------------
+-
+-void lib_odbc::PrintSqlErrors_(cstring &lhs, SQLSMALLINT htype, SQLHANDLE handle) {
+-    UCHAR        sql_state[6];                      // 5 chars + terminating zero
+-    UCHAR        sql_msg[SQL_MAX_MESSAGE_LENGTH];   // including terminating zero
+-    // gather diagnostic records
+-    for (SQLSMALLINT rec = 1; true; ++rec) {
+-        SQLRETURN ret = SQLGetDiagRec(htype,handle,rec,sql_state,NULL,sql_msg,SQL_MAX_MESSAGE_LENGTH,NULL);
+-        if (SQL_SUCCESS != ret) {
+-            break;
+-        }
+-        lhs << "\n" << (char*)sql_state << " " << (char*)sql_msg;
+-    }
+-}
+-
+-// -----------------------------------------------------------------------------
+-
+-// Return string describing most recent error
+-tempstr lib_odbc::SqlError() {
+-    tempstr out;
+-    PrintSqlErrors_(out,SQL_HANDLE_ENV, lib_odbc::_db.henv);
+-    PrintSqlErrors_(out,SQL_HANDLE_DBC, lib_odbc::_db.hdbc);
+-    return out;
+-}
+-
+-/// -----------------------------------------------------------------------------
+-
+-// Return string describing most recent statement error.
+-tempstr lib_odbc::SqlError(lib_odbc::Hstmt &hstmt) {
+-    tempstr out;
+-    PrintSqlErrors_(out,SQL_HANDLE_STMT, hstmt.hstmt);
+-    return out;
+-}
+-
+-// -----------------------------------------------------------------------------
+-
+-void lib_odbc::SqlGetInfo(SQLUSMALLINT info_type, cstring &target, SQLSMALLINT str_max) {
+-    if (target.ch_max < u32(str_max)) {
+-        ch_Reserve(target,str_max - target.ch_max);
+-    }
+-    SQLSMALLINT str_len = 0 ;
+-    vrfy(SQL_SUCCEEDED(SQLGetInfo(lib_odbc::_db.hdbc,info_type,target.ch_elems,str_max,&str_len)),SqlError());
+-    target.ch_n = str_len;
+-}
+-
+-// -----------------------------------------------------------------------------
+-
+-void lib_odbc::SqlInit() {
+-    vrfy(lib_odbc::_db.henv == SQL_NULL_HANDLE,"Double allocation of environment handle");
+-    vrfy(lib_odbc::_db.hdbc == SQL_NULL_HANDLE,"Double allocation of connection handle");
+-    // Allocate environment handle
+-    vrfy(SQL_SUCCEEDED(SQLAllocHandle(SQL_HANDLE_ENV,SQL_NULL_HANDLE,&lib_odbc::_db.henv)),SqlError());
+-    // Set ODBC version 3
+-    vrfy(SQL_SUCCEEDED(SQLSetEnvAttr(lib_odbc::_db.henv,SQL_ATTR_ODBC_VERSION,(void*)SQL_OV_ODBC3,0)),SqlError());
+-    // Allocate connection handle
+-    vrfy(SQL_SUCCEEDED(SQLAllocHandle(SQL_HANDLE_DBC,lib_odbc::_db.henv,&lib_odbc::_db.hdbc)),SqlError());
+-    // Set connection and login timeout to 1 sec
+-    vrfy(SQL_SUCCEEDED(SQLSetConnectAttr(lib_odbc::_db.hdbc,SQL_ATTR_LOGIN_TIMEOUT,(void*)1,1)),SqlError());
+-    vrfy(SQL_SUCCEEDED(SQLSetConnectAttr(lib_odbc::_db.hdbc,SQL_ATTR_CONNECTION_TIMEOUT,(void*)1,1)),SqlError());
+-}
+-
+-// -----------------------------------------------------------------------------
+-
+-static bool SqlConnectMaybe(strptr conn_string){
+-    bool conn_ok=SQL_SUCCEEDED(SQLDriverConnect(lib_odbc::_db.hdbc
+-                                                ,NULL
+-                                                ,(SQLCHAR *)conn_string.elems
+-                                                ,elems_N(conn_string)
+-                                                ,NULL
+-                                                ,0
+-                                                ,NULL
+-                                                ,SQL_DRIVER_COMPLETE));
+-    if (!conn_ok){
+-        prerr(lib_odbc::SqlError());
+-    }
+-    return conn_ok;
+-}
+-
+-// -----------------------------------------------------------------------------
+-
+-void lib_odbc::SqlConnectShell(strptr driver, strptr server, strptr port, strptr uid, strptr pwd) {
+-    // SysCmd doesn't exit or timeout on conn failure, so there is no way try a 2nd ip
+-    if (driver == "FreeTDS") {
+-        tempstr cmd;
+-        cmd << "tsql";
+-        cmd << " -H "<<server;
+-        cmd << " -p "<<port;
+-        cmd << " -U "<<uid;
+-        cmd << " -P "<<pwd;
+-        SysCmd(cmd,FailokQ(true),DryrunQ(false));
+-    } else {
+-        prerr("Sorry, shell is currently only supported for FreeTDS drivers (we use tsql)");
+-    }
+-    exit(0); // exit silently
+-}
+-
+-// -----------------------------------------------------------------------------
+-
+-void lib_odbc::SqlConnect(strptr driver,
+-                          strptr server,
+-                          strptr server2,
+-                          strptr port,
+-                          strptr uid,
+-                          strptr pwd,
+-                          strptr database) {
+-    tempstr conn_string,conn_pre;
+-    // NOTE for usedeclarefetch:
+-    // postgresql-odbc retrieves entire result-set at once by default,
+-    // and  that causes out of memory kill.
+-    // This option makes driver to fetch rows by 100.
+-    // This is harmless for MSSQL
+-
+-    // NOTE for tds_version
+-    // without that FreeTDS assumes old 4.2 protocol (specified with configure)
+-    // That causes trouble: empty varchar value is reported as single space.
+-    // To work correctly, MSSQL requires protocol version 7.0 or 8.0
+-    conn_pre << "Driver="<<driver;
+-    conn_pre << ";port="<<port;
+-    conn_pre << ";uid="<<uid;
+-    conn_pre << ";pwd="<<pwd;
+-    conn_pre << ";database="<<database;
+-    conn_pre << ";usedeclarefetch=1";
+-    conn_pre << ";tds_version=8.0";
+-
+-    // Connect to database
+-    // 1st connection attempt - if timeout, 2nd connection attempt
+-    // retry the whole thing 3 times with a small sleep in between.
+-    bool conn_ok = false;
+-    int max_retry=3;
+-    int retry=0;
+-    for (retry=0; retry<max_retry && !conn_ok; retry++) {
+-        conn_ok = SqlConnectMaybe(tempstr()<<conn_pre<<";Server="<<server);
+-        if(!conn_ok && (server2!="")){
+-            conn_ok=SqlConnectMaybe(tempstr()<<conn_pre<<";Server="<<server2);
+-        }
+-        if (!conn_ok) {
+-            SleepMsec(1000);
+-        }
+-    }
+-    // inform user of a failure without revealing passwords etc.
+-    vrfy(conn_ok,tempstr()
+-         <<tempstr("lib_odbc.connect_fail")
+-         <<Keyval("driver",driver)
+-         <<Keyval("server",tempstr()<<uid<<"@"<<server<<":"<<port)
+-         <<Keyval("server2",tempstr()<<uid<<"@"<<server2<<":"<<port));
+-    if (retry>1) {
+-        prerr("lib_odbc.shaky_connection"
+-              <<Keyval("retry",retry)
+-              <<Keyval("comment","WARNING: connection succeeded after a few attempts"));
+-    }
+-
+-    // Get info
+-    SqlGetInfo(SQL_DATABASE_NAME        ,lib_odbc::_db.sql_db_name,129);
+-    SqlGetInfo(SQL_IDENTIFIER_QUOTE_CHAR,lib_odbc::_db.sql_id_quote,5);
+-
+-    if (lib_odbc::_db.sql_db_name == "null") {
+-        lib_odbc::_db.sql_db_name = strptr();
+-    }
+-
+-    verblog("SQL_DATABASE_NAME        : "<< lib_odbc::_db.sql_db_name);
+-    verblog("SQL_IDENTIFIER_QUOTE_CHAR: "<< lib_odbc::_db.sql_id_quote);
+-}
+-
+-// -----------------------------------------------------------------------------
+-
+-void lib_odbc::SqlAllocOrReuseStmt(lib_odbc::Hstmt &hstmt) {
+-    if (hstmt.hstmt == SQL_NULL_HANDLE) {
+-        vrfy(hstmt.hstmt == SQL_NULL_HANDLE,"Double allocation of statement handle");
+-        vrfy(SQL_SUCCEEDED(SQLAllocHandle(SQL_HANDLE_STMT,lib_odbc::_db.hdbc,&hstmt.hstmt)),SqlError(hstmt));
+-    } else {
+-        vrfy(SQL_SUCCEEDED(SQLFreeStmt(hstmt.hstmt,SQL_CLOSE))       ,SqlError(hstmt));
+-        vrfy(SQL_SUCCEEDED(SQLFreeStmt(hstmt.hstmt,SQL_UNBIND))      ,SqlError(hstmt));
+-        vrfy(SQL_SUCCEEDED(SQLFreeStmt(hstmt.hstmt,SQL_RESET_PARAMS)),SqlError(hstmt));
+-    }
+-}
+-
+-// -----------------------------------------------------------------------------
+-
+-void lib_odbc::SqlBindCol(lib_odbc::Hstmt &hstmt, SQLSMALLINT col, lib_odbc::Sqlslongbuf& buf) {
+-    vrfy(SQL_SUCCEEDED(SQLBindCol(hstmt.hstmt
+-                                  ,col
+-                                  ,SQL_C_SLONG
+-                                  ,&buf.value
+-                                  ,sizeof(buf.value)
+-                                  ,&buf.ind_len)),SqlError(hstmt));
+-}
+-
+-// -----------------------------------------------------------------------------
+-
+-void lib_odbc::SqlBindCol(lib_odbc::Hstmt &hstmt, SQLSMALLINT col, lib_odbc::Sqlcharbuf &buf) {
+-    vrfy(SQL_SUCCEEDED(SQLBindCol(hstmt.hstmt
+-                                  ,col
+-                                  ,SQL_C_CHAR
+-                                  ,buf.value_elems
+-                                  ,buf.value_max
+-                                  ,&buf.ind_len)),SqlError(hstmt));
+-}
+-
+-// -----------------------------------------------------------------------------
+-
+-strptr lib_odbc::GetValue(lib_odbc::Sqlcharbuf& buf) {
+-    char *ptr = buf.ind_len >0 || buf.ind_len == SQL_NTS ? buf.value_elems : NULL;
+-    u32   len = buf.ind_len >= 0 ? buf.ind_len : (buf.ind_len == SQL_NTS ? strlen(ptr) : 0) ;
+-    return strptr(ptr,len);
+-}
+-
+-// -----------------------------------------------------------------------------
+-
+-SQLINTEGER lib_odbc::GetValue(lib_odbc::Sqlslongbuf& buf) {
+-    bool null_data = (buf.ind_len == SQL_NULL_DATA);
+-    bool ok        = (buf.ind_len == sizeof(buf.value));
+-    vrfy(ok||null_data, "value length mismatch");
+-    return null_data ? 0 : buf.value;
+-}
+-
+-// -----------------------------------------------------------------------------
+-
+-void lib_odbc::print_sql_results(lib_odbc::Hstmt &hstmt) {
+-    SQLSMALLINT columns; /* number of columns in result-set */
+-    /* How many columns are there */
+-    vrfy(SQL_SUCCEEDED(SQLNumResultCols(hstmt.hstmt, &columns)),SqlError(hstmt));
+-    char colnames[129][101];
+-    vrfy_(columns<100);
+-    for (SQLUSMALLINT i=1;i<=columns;++i) {
+-        vrfy(SQL_SUCCEEDED(SQLColAttribute(hstmt.hstmt
+-                                           ,i
+-                                           ,SQL_DESC_NAME
+-                                           ,colnames[i]
+-                                           ,1000
+-                                           ,NULL
+-                                           ,NULL)),SqlError(hstmt));
+-    }
+-
+-    /* Loop through the rows in the result-set */
+-    while (SQL_SUCCEEDED(SQLFetch(hstmt.hstmt))) {
+-        SQLUSMALLINT i;
+-        tempstr text;
+-        /* Loop through the columns */
+-        for (i = 1; i <= columns; i++) {
+-            SQLLEN indicator;
+-            char buf[4096];
+-            /* retrieve column data as a string */
+-            /* nchar and nvarchar (ucs-2): high byte will be cut silently  */
+-            vrfy(SQL_SUCCEEDED(SQLGetData(hstmt.hstmt, i, SQL_C_CHAR, buf, sizeof(buf), &indicator)),SqlError(hstmt));
+-            /* Handle null columns */
+-            if (indicator == SQL_NULL_DATA) {
+-                strcpy(buf, "NULL");
+-            }
+-            text << "  " << colnames[i] << ":"<<buf;
+-        }
+-        prlog(text);
+-    }
+-}
+-
+-// -----------------------------------------------------------------------------
+-
+-void lib_odbc::henv_Cleanup() {
+-    if (lib_odbc::_db.henv != SQL_NULL_HANDLE) {
+-        SQLFreeHandle(SQL_HANDLE_ENV,lib_odbc::_db.henv);
+-        lib_odbc::_db.henv = SQL_NULL_HANDLE;
+-    }
+-}
+-
+-// -----------------------------------------------------------------------------
+-
+-void lib_odbc::hdbc_Cleanup() {
+-    if (lib_odbc::_db.hdbc != SQL_NULL_HANDLE) {
+-        SQLDisconnect(lib_odbc::_db.hdbc);
+-        SQLFreeHandle(SQL_HANDLE_DBC,lib_odbc::_db.hdbc);
+-        lib_odbc::_db.hdbc = SQL_NULL_HANDLE;
+-    }
+-}
+-
+-// -----------------------------------------------------------------------------
+-
+-void lib_odbc::hstmt_Cleanup(lib_odbc::Hstmt &hstmt) {
+-    if (hstmt.hstmt != SQL_NULL_HANDLE) {
+-        SQLFreeHandle(SQL_HANDLE_STMT,hstmt.hstmt);
+-        hstmt.hstmt = SQL_NULL_HANDLE;
+-    }
+-}
+--- a/include/lib/lib_iconv.h
++++ /dev/null
+@@ -1,25 +0,0 @@
+-// (C) 2013-2018 NYSE | Intercontinental Exchange
+-//
+-// Target: lib_iconv (lib) -- ICONV wrapper
+-// Exceptions: NO
+-// Source:    cpp/gen/lib_iconv_gen.cpp
+-// Source:    cpp/lib/lib_iconv.cpp
+-// Header:    include/gen/lib_iconv_gen.h
+-// Header:    include/gen/lib_iconv_gen.inl.h
+-// Header: -> include/lib/lib_iconv.h
+-//
+-// Created By: alexei.lebedev
+-// Recent Changes: alexei.lebedev
+-//
+-
+-#pragma once
+-#include "include/algo.h"
+-#include "include/gen/lib_iconv_gen.h"
+-#include "include/gen/lib_iconv_gen.inl.h"
+-
+-namespace lib_iconv {
+-    // convert multibyte sequence
+-    tempstr Convert(lib_iconv::Icd &icd, strptr in, bool no_throw = false);
+-    void Close(lib_iconv::Icd &icd);
+-    void Open(lib_iconv::Icd& icd, strptr tocode, strptr fromcode);
+-}
+--- a/include/lib/lib_odbc.h
++++ /dev/null
+@@ -1,34 +0,0 @@
+-// (C) 2013-2018 NYSE | Intercontinental Exchange
+-//
+-// Target: lib_odbc (lib) -- ODBC wrapper
+-// Exceptions: NO
+-// Source:    cpp/gen/lib_odbc_gen.cpp
+-// Source:    cpp/lib/lib_odbc.cpp
+-// Header:    include/gen/lib_odbc_gen.h
+-// Header:    include/gen/lib_odbc_gen.inl.h
+-// Header: -> include/lib/lib_odbc.h
+-//
+-// Created By: alexei.lebedev
+-// Recent Changes: alexei.lebedev
+-//
+-
+-#pragma once
+-#include "include/algo.h"
+-#include "include/gen/lib_odbc_gen.h"
+-#include "include/gen/lib_odbc_gen.inl.h"
+-
+-namespace lib_odbc {
+-    void PrintSqlErrors_(cstring &lhs, SQLSMALLINT htype, SQLHANDLE handle);
+-    tempstr SqlError();
+-    tempstr SqlError(lib_odbc::Hstmt &hstmt);
+-    void SqlGetInfo(SQLUSMALLINT info_type, cstring &target, SQLSMALLINT str_max);
+-    void SqlInit();
+-    void SqlConnect(strptr driver, strptr server, strptr server2, strptr port, strptr uid, strptr pwd, strptr database);
+-    void SqlConnectShell(strptr driver, strptr server, strptr port, strptr uid, strptr pwd);
+-    void SqlAllocOrReuseStmt(lib_odbc::Hstmt &hstmt);
+-    void SqlBindCol(lib_odbc::Hstmt &hstmt, SQLSMALLINT col, lib_odbc::Sqlslongbuf& buf);
+-    void SqlBindCol(lib_odbc::Hstmt &hstmt, SQLSMALLINT col, lib_odbc::Sqlcharbuf &buf);
+-    strptr GetValue(lib_odbc::Sqlcharbuf& buf);
+-    SQLINTEGER GetValue(lib_odbc::Sqlslongbuf& buf);
+-    void print_sql_results(lib_odbc::Hstmt &hstmt);
+-}
+--- a/data/dev/gitfile.ssim
++++ b/data/dev/gitfile.ssim
+@@ -257,9 +257,7 @@ dev.gitfile  gitfile:cpp/gen/ietf_gen.cpp
+ dev.gitfile  gitfile:cpp/gen/lib_ctype_gen.cpp
+ dev.gitfile  gitfile:cpp/gen/lib_exec_gen.cpp
+ dev.gitfile  gitfile:cpp/gen/lib_git_gen.cpp
+-dev.gitfile  gitfile:cpp/gen/lib_iconv_gen.cpp
+ dev.gitfile  gitfile:cpp/gen/lib_json_gen.cpp
+-dev.gitfile  gitfile:cpp/gen/lib_odbc_gen.cpp
+ dev.gitfile  gitfile:cpp/gen/lib_sql_gen.cpp
+ dev.gitfile  gitfile:cpp/gen/lin_gen.cpp
+ dev.gitfile  gitfile:cpp/gen/pcap_gen.cpp
+@@ -293,9 +291,7 @@ dev.gitfile  gitfile:cpp/lib/lib_ctype.cpp
+ dev.gitfile  gitfile:cpp/lib/lib_exec.cpp
+ dev.gitfile  gitfile:cpp/lib/lib_gen.cpp
+ dev.gitfile  gitfile:cpp/lib/lib_git.cpp
+-dev.gitfile  gitfile:cpp/lib/lib_iconv.cpp
+ dev.gitfile  gitfile:cpp/lib/lib_json.cpp
+-dev.gitfile  gitfile:cpp/lib/lib_odbc.cpp
+ dev.gitfile  gitfile:cpp/lib/lib_sql.cpp
+ dev.gitfile  gitfile:cpp/src/func/check.cpp
+ dev.gitfile  gitfile:cpp/src/func/edit.cpp
+@@ -444,6 +440,8 @@ dev.gitfile  gitfile:data/dmmeta/tracerec.ssim
+ dev.gitfile  gitfile:data/dmmeta/typefld.ssim
+ dev.gitfile  gitfile:data/dmmeta/usertracefld.ssim
+ dev.gitfile  gitfile:data/dmmeta/xref.ssim
++dev.gitfile  gitfile:diff/mysql1.diff
++dev.gitfile  gitfile:diff/mysql2.diff
+ dev.gitfile  gitfile:doc/abt.txt
+ dev.gitfile  gitfile:doc/acr.txt
+ dev.gitfile  gitfile:doc/acr_ed.txt
+@@ -548,12 +546,8 @@ dev.gitfile  gitfile:include/gen/lib_exec_gen.h
+ dev.gitfile  gitfile:include/gen/lib_exec_gen.inl.h
+ dev.gitfile  gitfile:include/gen/lib_git_gen.h
+ dev.gitfile  gitfile:include/gen/lib_git_gen.inl.h
+-dev.gitfile  gitfile:include/gen/lib_iconv_gen.h
+-dev.gitfile  gitfile:include/gen/lib_iconv_gen.inl.h
+ dev.gitfile  gitfile:include/gen/lib_json_gen.h
+ dev.gitfile  gitfile:include/gen/lib_json_gen.inl.h
+-dev.gitfile  gitfile:include/gen/lib_odbc_gen.h
+-dev.gitfile  gitfile:include/gen/lib_odbc_gen.inl.h
+ dev.gitfile  gitfile:include/gen/lib_sql_gen.h
+ dev.gitfile  gitfile:include/gen/lib_sql_gen.inl.h
+ dev.gitfile  gitfile:include/gen/lin_gen.h
+@@ -574,10 +568,8 @@ dev.gitfile  gitfile:include/gen/strconv_gen.h
+ dev.gitfile  gitfile:include/gen/strconv_gen.inl.h
+ dev.gitfile  gitfile:include/lib/lib_ctype.h
+ dev.gitfile  gitfile:include/lib/lib_exec.h
+-dev.gitfile  gitfile:include/lib/lib_iconv.h
+ dev.gitfile  gitfile:include/lib/lib_json.h
+ dev.gitfile  gitfile:include/lib/lib_json.inl.h
+-dev.gitfile  gitfile:include/lib/lib_odbc.h
+ dev.gitfile  gitfile:include/lib_git.h
+ dev.gitfile  gitfile:include/lib_sql.h
+ dev.gitfile  gitfile:include/sha.h
+--- a/data/dev/linelim.ssim
++++ b/data/dev/linelim.ssim
+@@ -119,5 +119,4 @@ dev.linelim  gitfile:cpp/lib/algo/time.cpp  nlongline:2  longestline:160  nbadws
+ dev.linelim  gitfile:cpp/lib/algo/txttbl.cpp  nlongline:0  longestline:117  nbadws:0  maxws:12  nlongfunc:0  longestfunc:13  nmysteryfunc:4  badness:....................
+ dev.linelim  gitfile:cpp/lib/lib_exec.cpp  nlongline:0  longestline:118  nbadws:0  maxws:16  nlongfunc:1  longestfunc:73  nmysteryfunc:1  badness:.......
+ dev.linelim  gitfile:cpp/lib/lib_json.cpp  nlongline:1  longestline:126  nbadws:0  maxws:16  nlongfunc:0  longestfunc:50  nmysteryfunc:7  badness:*****************
+-dev.linelim  gitfile:cpp/lib/lib_odbc.cpp  nlongline:0  longestline:118  nbadws:0  maxws:12  nlongfunc:0  longestfunc:57  nmysteryfunc:13  badness:******************************
+ dev.linelim  gitfile:cpp/src/lim.cpp  nlongline:2  longestline:145  nbadws:0  maxws:8  nlongfunc:0  longestfunc:53  nmysteryfunc:1  badness:.....
+--- a/data/dev/targdep.ssim
++++ b/data/dev/targdep.ssim
+@@ -42,10 +42,7 @@ dev.targdep  targdep:lib_exec.algo_pch  comment:""
+ dev.targdep  targdep:lib_git.algo_lib  comment:""
+ dev.targdep  targdep:lib_git.algo_pch  comment:""
+ dev.targdep  targdep:lib_git.gen_lib  comment:""
+-dev.targdep  targdep:lib_iconv.algo_pch  comment:""
+ dev.targdep  targdep:lib_json.algo_pch  comment:""
+-dev.targdep  targdep:lib_odbc.algo_pch  comment:""
+-dev.targdep  targdep:lib_odbc.lib_iconv  comment:""
+ dev.targdep  targdep:lib_sql.algo_lib  comment:""
+ dev.targdep  targdep:lib_sql.algo_pch  comment:""
+ dev.targdep  targdep:lib_sql.gen_lib  comment:""
+--- a/data/dev/target.ssim
++++ b/data/dev/target.ssim
+@@ -17,9 +17,7 @@ dev.target  target:gen_lib
+ dev.target  target:lib_ctype
+ dev.target  target:lib_exec
+ dev.target  target:lib_git
+-dev.target  target:lib_iconv
+ dev.target  target:lib_json
+-dev.target  target:lib_odbc
+ dev.target  target:lib_sql
+ dev.target  target:src_func
+ dev.target  target:src_hdr
+--- a/data/dev/targsrc.ssim
++++ b/data/dev/targsrc.ssim
+@@ -300,22 +300,12 @@ dev.targsrc  targsrc:lib_git/cpp/lib/lib_git.cpp  comment:""
+ dev.targsrc  targsrc:lib_git/include/gen/lib_git_gen.h  comment:""
+ dev.targsrc  targsrc:lib_git/include/gen/lib_git_gen.inl.h  comment:""
+ dev.targsrc  targsrc:lib_git/include/lib_git.h  comment:""
+-dev.targsrc  targsrc:lib_iconv/cpp/gen/lib_iconv_gen.cpp  comment:""
+-dev.targsrc  targsrc:lib_iconv/cpp/lib/lib_iconv.cpp  comment:""
+-dev.targsrc  targsrc:lib_iconv/include/gen/lib_iconv_gen.h  comment:""
+-dev.targsrc  targsrc:lib_iconv/include/gen/lib_iconv_gen.inl.h  comment:""
+-dev.targsrc  targsrc:lib_iconv/include/lib/lib_iconv.h  comment:""
+ dev.targsrc  targsrc:lib_json/cpp/gen/lib_json_gen.cpp  comment:""
+ dev.targsrc  targsrc:lib_json/cpp/lib/lib_json.cpp  comment:""
+ dev.targsrc  targsrc:lib_json/include/gen/lib_json_gen.h  comment:""
+ dev.targsrc  targsrc:lib_json/include/gen/lib_json_gen.inl.h  comment:""
+ dev.targsrc  targsrc:lib_json/include/lib/lib_json.h  comment:""
+ dev.targsrc  targsrc:lib_json/include/lib/lib_json.inl.h  comment:""
+-dev.targsrc  targsrc:lib_odbc/cpp/gen/lib_odbc_gen.cpp  comment:""
+-dev.targsrc  targsrc:lib_odbc/cpp/lib/lib_odbc.cpp  comment:""
+-dev.targsrc  targsrc:lib_odbc/include/gen/lib_odbc_gen.h  comment:""
+-dev.targsrc  targsrc:lib_odbc/include/gen/lib_odbc_gen.inl.h  comment:""
+-dev.targsrc  targsrc:lib_odbc/include/lib/lib_odbc.h  comment:""
+ dev.targsrc  targsrc:lib_sql/cpp/gen/lib_sql_gen.cpp  comment:""
+ dev.targsrc  targsrc:lib_sql/cpp/lib/lib_sql.cpp  comment:""
+ dev.targsrc  targsrc:lib_sql/include/gen/lib_sql_gen.h  comment:""
+--- a/data/dmmeta/anonfld.ssim
++++ b/data/dmmeta/anonfld.ssim
+@@ -70,4 +70,3 @@ dmmeta.anonfld  field:command.strconv.str  comment:"String parameter"
+ dmmeta.anonfld  field:dmmeta.BuftypeId.value  comment:""
+ dmmeta.anonfld  field:dmmeta.CppExpr.value  comment:""
+ dmmeta.anonfld  field:dmmeta.ReftypeId.value  comment:""
+-dmmeta.anonfld  field:lib_odbc.Datatype.datatype  comment:""
+--- a/data/dmmeta/cfmt.ssim
++++ b/data/dmmeta/cfmt.ssim
+@@ -472,16 +472,9 @@ dmmeta.cfmt  cfmt:lib_ctype.FFconst.String  printfmt:Tuple  read:N  print:Y  sep
+ dmmeta.cfmt  cfmt:lib_ctype.FField.String  printfmt:Tuple  read:N  print:Y  sep:""  genop:N  comment:""
+ dmmeta.cfmt  cfmt:lib_exec.FSyscmd.String  printfmt:Tuple  read:N  print:Y  sep:""  genop:N  comment:""
+ dmmeta.cfmt  cfmt:lib_exec.FSyscmddep.String  printfmt:Tuple  read:N  print:Y  sep:""  genop:N  comment:""
+-dmmeta.cfmt  cfmt:lib_iconv.Icd.String  printfmt:Raw  read:N  print:Y  sep:""  genop:Y  comment:""
+ dmmeta.cfmt  cfmt:lib_json.FNode.String  printfmt:Tuple  read:N  print:Y  sep:""  genop:Y  comment:""
+ dmmeta.cfmt  cfmt:lib_json.FParser.String  printfmt:Tuple  read:N  print:Y  sep:""  genop:Y  comment:""
+ dmmeta.cfmt  cfmt:lib_json.FldKey.String  printfmt:Tuple  read:N  print:Y  sep:""  genop:Y  comment:""
+-dmmeta.cfmt  cfmt:lib_odbc.Hstmt.String  printfmt:Raw  read:N  print:Y  sep:""  genop:Y  comment:""
+-dmmeta.cfmt  cfmt:lib_odbc.Sqlfkey.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+-dmmeta.cfmt  cfmt:lib_odbc.Sqlpkeycol.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+-dmmeta.cfmt  cfmt:lib_odbc.Sqltbl.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+-dmmeta.cfmt  cfmt:lib_odbc.Sqlukey.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+-dmmeta.cfmt  cfmt:lib_odbc.Sqlukeycol.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+ dmmeta.cfmt  cfmt:lin.cap_data_t.String  printfmt:Extern  read:N  print:Y  sep:""  genop:Y  comment:""
+ dmmeta.cfmt  cfmt:lin.cap_header_t.String  printfmt:Extern  read:N  print:Y  sep:""  genop:Y  comment:""
+ dmmeta.cfmt  cfmt:report.Msgcount.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+--- a/data/dmmeta/cpptype.ssim
++++ b/data/dmmeta/cpptype.ssim
+@@ -250,7 +250,6 @@ dmmeta.cpptype  ctype:ietf.Ipv4  ctor:Y  dtor:Y  cheap_copy:Y
+ dmmeta.cpptype  ctype:ietf.Ipv4Addr  ctor:Y  dtor:Y  cheap_copy:Y
+ dmmeta.cpptype  ctype:lib_ctype.Match  ctor:N  dtor:Y  cheap_copy:N
+ dmmeta.cpptype  ctype:lib_json.FldKey  ctor:Y  dtor:Y  cheap_copy:N
+-dmmeta.cpptype  ctype:lib_odbc.Datatype  ctor:Y  dtor:Y  cheap_copy:N
+ dmmeta.cpptype  ctype:pad_byte  ctor:Y  dtor:Y  cheap_copy:Y
+ dmmeta.cpptype  ctype:pid_t  ctor:N  dtor:Y  cheap_copy:Y
+ dmmeta.cpptype  ctype:report.abt  ctor:Y  dtor:Y  cheap_copy:N
+--- a/data/dmmeta/ctype.ssim
++++ b/data/dmmeta/ctype.ssim
+@@ -766,22 +766,10 @@ dmmeta.ctype  ctype:lib_exec.FDb  comment:""
+ dmmeta.ctype  ctype:lib_exec.FSyscmd  comment:""
+ dmmeta.ctype  ctype:lib_exec.FSyscmddep  comment:""
+ dmmeta.ctype  ctype:lib_git.FDb  comment:""
+-dmmeta.ctype  ctype:lib_iconv.FDb  comment:""
+-dmmeta.ctype  ctype:lib_iconv.Icd  comment:""
+ dmmeta.ctype  ctype:lib_json.FDb  comment:""
+ dmmeta.ctype  ctype:lib_json.FNode  comment:""
+ dmmeta.ctype  ctype:lib_json.FParser  comment:""
+ dmmeta.ctype  ctype:lib_json.FldKey  comment:""
+-dmmeta.ctype  ctype:lib_odbc.Datatype  comment:"Is this the right namespace?"
+-dmmeta.ctype  ctype:lib_odbc.FDb  comment:""
+-dmmeta.ctype  ctype:lib_odbc.Hstmt  comment:""
+-dmmeta.ctype  ctype:lib_odbc.Sqlcharbuf  comment:""
+-dmmeta.ctype  ctype:lib_odbc.Sqlfkey  comment:""
+-dmmeta.ctype  ctype:lib_odbc.Sqlpkeycol  comment:""
+-dmmeta.ctype  ctype:lib_odbc.Sqlslongbuf  comment:""
+-dmmeta.ctype  ctype:lib_odbc.Sqltbl  comment:""
+-dmmeta.ctype  ctype:lib_odbc.Sqlukey  comment:""
+-dmmeta.ctype  ctype:lib_odbc.Sqlukeycol  comment:""
+ dmmeta.ctype  ctype:lib_sql.FAttr  comment:""
+ dmmeta.ctype  ctype:lib_sql.FDb  comment:""
+ dmmeta.ctype  ctype:lin.Limitsfld  comment:""
+--- a/data/dmmeta/ctypelen.ssim
++++ b/data/dmmeta/ctypelen.ssim
+@@ -692,17 +692,10 @@ dmmeta.ctypelen  ctype:lib_exec.FDb  len:616  alignment:8  padbytes:23
+ dmmeta.ctypelen  ctype:lib_exec.FSyscmd  len:152  alignment:8  padbytes:16
+ dmmeta.ctypelen  ctype:lib_exec.FSyscmddep  len:40  alignment:8  padbytes:6
+ dmmeta.ctypelen  ctype:lib_git.FDb  len:1  alignment:1  padbytes:0
+-dmmeta.ctypelen  ctype:lib_iconv.FDb  len:1  alignment:1  padbytes:0
+ dmmeta.ctypelen  ctype:lib_json.FDb  len:296  alignment:8  padbytes:4
+ dmmeta.ctypelen  ctype:lib_json.FNode  len:72  alignment:8  padbytes:11
+ dmmeta.ctypelen  ctype:lib_json.FParser  len:96  alignment:8  padbytes:8
+ dmmeta.ctypelen  ctype:lib_json.FldKey  len:24  alignment:8  padbytes:0
+-dmmeta.ctypelen  ctype:lib_odbc.Datatype  len:4  alignment:4  padbytes:0
+-dmmeta.ctypelen  ctype:lib_odbc.Sqlfkey  len:660  alignment:1  padbytes:0
+-dmmeta.ctypelen  ctype:lib_odbc.Sqlpkeycol  len:404  alignment:1  padbytes:0
+-dmmeta.ctypelen  ctype:lib_odbc.Sqltbl  len:224  alignment:8  padbytes:5
+-dmmeta.ctypelen  ctype:lib_odbc.Sqlukey  len:354  alignment:1  padbytes:0
+-dmmeta.ctypelen  ctype:lib_odbc.Sqlukeycol  len:252  alignment:1  padbytes:0
+ dmmeta.ctypelen  ctype:lib_sql.FAttr  len:32  alignment:8  padbytes:7
+ dmmeta.ctypelen  ctype:lib_sql.FDb  len:288  alignment:8  padbytes:11
+ dmmeta.ctypelen  ctype:lin.Limitsfld  len:100  alignment:1  padbytes:0
+--- a/data/dmmeta/fcast.ssim
++++ b/data/dmmeta/fcast.ssim
+@@ -183,4 +183,3 @@ dmmeta.fcast  field:atf_unit.Dbl.val  expr:""  comment:""
+ dmmeta.fcast  field:dmmeta.BuftypeId.value  expr:""  comment:""
+ dmmeta.fcast  field:dmmeta.Fconst.value  expr:""  comment:""
+ dmmeta.fcast  field:dmmeta.ReftypeId.value  expr:""  comment:""
+-dmmeta.fcast  field:lib_odbc.Datatype.datatype  expr:""  comment:""
+--- a/data/dmmeta/fcleanup.ssim
++++ b/data/dmmeta/fcleanup.ssim
+@@ -9,8 +9,4 @@ dmmeta.fcleanup  field:algo_lib.Replscope.ind_replvar  comment:""
+ dmmeta.fcleanup  field:atf_amc.AmcCleanup2.field1  comment:""
+ dmmeta.fcleanup  field:atf_amc.AmcCleanup2.field2  comment:""
+ dmmeta.fcleanup  field:atf_amc.FCascdel.key  comment:""
+-dmmeta.fcleanup  field:lib_iconv.Icd.icd  comment:""
+ dmmeta.fcleanup  field:lib_json.FParser.root_node  comment:""
+-dmmeta.fcleanup  field:lib_odbc.FDb.hdbc  comment:""
+-dmmeta.fcleanup  field:lib_odbc.FDb.henv  comment:""
+-dmmeta.fcleanup  field:lib_odbc.Hstmt.hstmt  comment:""
+--- a/data/dmmeta/field.ssim
++++ b/data/dmmeta/field.ssim
+@@ -2684,9 +2684,6 @@ dmmeta.field  field:lib_exec.FSyscmddep.msghdr  arg:dev.Syscmddep  reftype:Base
+ dmmeta.field  field:lib_exec.FSyscmddep.p_child  arg:lib_exec.FSyscmd  reftype:Upptr  dflt:""  comment:"Command to execute after"
+ dmmeta.field  field:lib_exec.FSyscmddep.p_parent  arg:lib_exec.FSyscmd  reftype:Upptr  dflt:""  comment:"Command to execute before (p = parent, prior, prerequisite..)"
+ dmmeta.field  field:lib_git.FDb._db  arg:lib_git.FDb  reftype:Global  dflt:""  comment:""
+-dmmeta.field  field:lib_iconv.FDb._db  arg:lib_iconv.FDb  reftype:Global  dflt:""  comment:""
+-dmmeta.field  field:lib_iconv.FDb.icd  arg:lib_iconv.Icd  reftype:Cppstack  dflt:""  comment:""
+-dmmeta.field  field:lib_iconv.Icd.icd  arg:iconv_t  reftype:Val  dflt:"((iconv_t)-1)"  comment:"iconv descriptor"
+ dmmeta.field  field:lib_json.FDb.lpool  arg:u8  reftype:Lpool  dflt:""  comment:"private memory pool"
+ dmmeta.field  field:lib_json.FDb._db  arg:lib_json.FDb  reftype:Global  dflt:""  comment:""
+ dmmeta.field  field:lib_json.FDb.node  arg:lib_json.FNode  reftype:Tpool  dflt:""  comment:""
+@@ -2714,35 +2711,6 @@ dmmeta.field  field:lib_json.FParser.uesc_need  arg:u8  reftype:Val  dflt:""  co
+ dmmeta.field  field:lib_json.FParser.value  arg:algo.cstring  reftype:Val  dflt:""  comment:""
+ dmmeta.field  field:lib_json.FldKey.object  arg:lib_json.FNode  reftype:Ptr  dflt:""  comment:""
+ dmmeta.field  field:lib_json.FldKey.field  arg:algo.strptr  reftype:Val  dflt:""  comment:""
+-dmmeta.field  field:lib_odbc.Datatype.datatype  arg:u32  reftype:Val  dflt:""  comment:""
+-dmmeta.field  field:lib_odbc.FDb.henv  arg:SQLHANDLE  reftype:Val  dflt:SQL_NULL_HANDLE  comment:"Environment handle"
+-dmmeta.field  field:lib_odbc.FDb.hdbc  arg:SQLHANDLE  reftype:Val  dflt:SQL_NULL_HANDLE  comment:"DB Connection handle"
+-dmmeta.field  field:lib_odbc.FDb._db  arg:lib_odbc.FDb  reftype:Global  dflt:""  comment:""
+-dmmeta.field  field:lib_odbc.FDb.hstmt  arg:lib_odbc.Hstmt  reftype:Cppstack  dflt:""  comment:""
+-dmmeta.field  field:lib_odbc.FDb.sql_id_quote  arg:algo.cstring  reftype:Val  dflt:SQL_QUOTE  comment:"SQLGetInfo: SQL_IDENTIFIER_QUOTE_CHAR"
+-dmmeta.field  field:lib_odbc.FDb.sql_db_name  arg:algo.cstring  reftype:Val  dflt:""  comment:"SQLGetInfo: SQL_DATABASE_NAME"
+-dmmeta.field  field:lib_odbc.Hstmt.hstmt  arg:SQLHANDLE  reftype:Val  dflt:SQL_NULL_HANDLE  comment:"Statement handle"
+-dmmeta.field  field:lib_odbc.Sqlcharbuf.value  arg:char  reftype:Tary  dflt:""  comment:""
+-dmmeta.field  field:lib_odbc.Sqlcharbuf.ind_len  arg:SQLLEN  reftype:Val  dflt:0  comment:""
+-dmmeta.field  field:lib_odbc.Sqlfkey.fkey  arg:algo.Smallstr250  reftype:Val  dflt:""  comment:Key
+-dmmeta.field  field:lib_odbc.Sqlfkey.table  arg:algo.Smallstr150  reftype:Val  dflt:""  comment:Key
+-dmmeta.field  field:lib_odbc.Sqlfkey.column  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:Key
+-dmmeta.field  field:lib_odbc.Sqlfkey.ref_table  arg:algo.Smallstr150  reftype:Val  dflt:""  comment:Key
+-dmmeta.field  field:lib_odbc.Sqlfkey.ref_column  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:Key
+-dmmeta.field  field:lib_odbc.Sqlpkeycol.pkeycol  arg:algo.Smallstr250  reftype:Val  dflt:""  comment:Key
+-dmmeta.field  field:lib_odbc.Sqlpkeycol.pkey  arg:algo.Smallstr200  reftype:Val  dflt:""  comment:Key
+-dmmeta.field  field:lib_odbc.Sqlpkeycol.column  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:Key
+-dmmeta.field  field:lib_odbc.Sqlpkeycol.table  arg:algo.Smallstr150  reftype:Val  dflt:""  comment:Key
+-dmmeta.field  field:lib_odbc.Sqlslongbuf.value  arg:SQLINTEGER  reftype:Val  dflt:0  comment:""
+-dmmeta.field  field:lib_odbc.Sqlslongbuf.ind_len  arg:SQLLEN  reftype:Val  dflt:0  comment:""
+-dmmeta.field  field:lib_odbc.Sqltbl.table  arg:algo.Smallstr200  reftype:Val  dflt:""  comment:Key
+-dmmeta.field  field:lib_odbc.Sqltbl.storedproc  arg:bool  reftype:Val  dflt:""  comment:"Is this a stored proc?"
+-dmmeta.field  field:lib_odbc.Sqltbl.ssimfile  arg:algo.cstring  reftype:Val  dflt:""  comment:"Ssim file key"
+-dmmeta.field  field:lib_odbc.Sqlukey.ukey  arg:algo.Smallstr200  reftype:Val  dflt:""  comment:Key
+-dmmeta.field  field:lib_odbc.Sqlukey.table  arg:algo.Smallstr150  reftype:Val  dflt:""  comment:Key
+-dmmeta.field  field:lib_odbc.Sqlukeycol.ukeycol  arg:algo.Smallstr250  reftype:Val  dflt:""  comment:Key
+-dmmeta.field  field:lib_odbc.Sqlukeycol.ukey  arg:lib_odbc.Sqlukey  reftype:Pkey  dflt:""  comment:Key
+-dmmeta.field  field:lib_odbc.Sqlukeycol.column  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:Key
+ dmmeta.field  field:lib_sql.FAttr.attr  arg:algo.cstring  reftype:Val  dflt:""  comment:""
+ dmmeta.field  field:lib_sql.FAttr.isbool  arg:bool  reftype:Val  dflt:""  comment:""
+ dmmeta.field  field:lib_sql.FDb._db  arg:lib_sql.FDb  reftype:Global  dflt:""  comment:""
+--- a/data/dmmeta/ns.ssim
++++ b/data/dmmeta/ns.ssim
+@@ -27,9 +27,7 @@ dmmeta.ns  ns:ietf  nstype:protocol  comment:"parsing igmp"
+ dmmeta.ns  ns:lib_ctype  nstype:lib  comment:""
+ dmmeta.ns  ns:lib_exec  nstype:lib  comment:"Build and run a dag of subprocesses with N parallel jobs"
+ dmmeta.ns  ns:lib_git  nstype:lib  comment:""
+-dmmeta.ns  ns:lib_iconv  nstype:lib  comment:"ICONV wrapper"
+ dmmeta.ns  ns:lib_json  nstype:lib  comment:""
+-dmmeta.ns  ns:lib_odbc  nstype:lib  comment:"ODBC wrapper"
+ dmmeta.ns  ns:lib_sql  nstype:lib  comment:"SQL formatting functions"
+ dmmeta.ns  ns:lin  nstype:protocol  comment:"Linux API"
+ dmmeta.ns  ns:pcap  nstype:protocol  comment:""
+--- a/data/dmmeta/nsinclude.ssim
++++ b/data/dmmeta/nsinclude.ssim
+@@ -1,4 +1 @@
+ dmmeta.nsinclude  nsinclude:atf_amc/include/lib/lib_json.h  sys:N  comment:""
+-dmmeta.nsinclude  nsinclude:lib_iconv/iconv.h  sys:Y  comment:""
+-dmmeta.nsinclude  nsinclude:lib_odbc/sql.h  sys:Y  comment:""
+-dmmeta.nsinclude  nsinclude:lib_odbc/sqlext.h  sys:Y  comment:""
+--- a/data/dmmeta/nsx.ssim
++++ b/data/dmmeta/nsx.ssim
+@@ -25,9 +25,7 @@ dmmeta.nsx  ns:ietf  genthrow:N  correct_getorcreate:Y  pool:algo_lib.FDb.malloc
+ dmmeta.nsx  ns:lib_ctype  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  gbounsafe:N  pack:N  fldoffset_asserts:N  comment:""
+ dmmeta.nsx  ns:lib_exec  genthrow:N  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:N  gbounsafe:N  pack:N  fldoffset_asserts:N  comment:""
+ dmmeta.nsx  ns:lib_git  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  gbounsafe:N  pack:N  fldoffset_asserts:N  comment:""
+-dmmeta.nsx  ns:lib_iconv  genthrow:N  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:N  gbounsafe:N  pack:N  fldoffset_asserts:N  comment:""
+ dmmeta.nsx  ns:lib_json  genthrow:N  correct_getorcreate:Y  pool:lib_json.FDb.lpool  sortxref:N  gbounsafe:N  pack:N  fldoffset_asserts:N  comment:""
+-dmmeta.nsx  ns:lib_odbc  genthrow:N  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:N  gbounsafe:N  pack:N  fldoffset_asserts:N  comment:""
+ dmmeta.nsx  ns:lib_sql  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  gbounsafe:N  pack:N  fldoffset_asserts:N  comment:""
+ dmmeta.nsx  ns:lin  genthrow:N  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:N  gbounsafe:N  pack:Y  fldoffset_asserts:Y  comment:""
+ dmmeta.nsx  ns:pcap  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:N  gbounsafe:N  pack:Y  fldoffset_asserts:Y  comment:""
+--- a/data/dmmeta/substr.ssim
++++ b/data/dmmeta/substr.ssim
+@@ -79,7 +79,3 @@ dmmeta.substr  field:dmmeta.Xref.keyfld  expr:/RR  srcfield:dmmeta.Xref.via
+ dmmeta.substr  field:dmmeta.Xref.name  expr:.RR  srcfield:dmmeta.Xref.field
+ dmmeta.substr  field:dmmeta.Xref.ns  expr:.LL  srcfield:dmmeta.Xref.field
+ dmmeta.substr  field:dmmeta.Xref.viafld  expr:/LL  srcfield:dmmeta.Xref.via
+-dmmeta.substr  field:lib_odbc.Sqlpkeycol.column  expr:.RR  srcfield:lib_odbc.Sqlpkeycol.pkeycol
+-dmmeta.substr  field:lib_odbc.Sqlpkeycol.pkey  expr:.LL  srcfield:lib_odbc.Sqlpkeycol.pkeycol
+-dmmeta.substr  field:lib_odbc.Sqlukeycol.column  expr:.RR  srcfield:lib_odbc.Sqlukeycol.ukeycol
+-dmmeta.substr  field:lib_odbc.Sqlukeycol.ukey  expr:.LL  srcfield:lib_odbc.Sqlukeycol.ukeycol
+--- a/data/dmmeta/tary.ssim
++++ b/data/dmmeta/tary.ssim
+@@ -29,7 +29,6 @@ dmmeta.tary  field:atf_unit.FPerfSort.index  aliased:N  comment:""
+ dmmeta.tary  field:atf_unit.FPerfSort.orig  aliased:N  comment:""
+ dmmeta.tary  field:atf_unit.FPerfSort.sorted  aliased:Y  comment:""
+ dmmeta.tary  field:atf_unit.ShStreamAry.shstream  aliased:N  comment:""
+-dmmeta.tary  field:lib_odbc.Sqlcharbuf.value  aliased:N  comment:""
+ dmmeta.tary  field:ssim2csv.FDb.flatten  aliased:N  comment:""
+ dmmeta.tary  field:ssim2csv.FDb.name  aliased:N  comment:""
+ dmmeta.tary  field:ssim2csv.FDb.value  aliased:N  comment:""
+--- a/data/dmmeta/tracerec.ssim
++++ b/data/dmmeta/tracerec.ssim
+@@ -14,9 +14,7 @@ dmmeta.tracerec  tracerec:atf_unit.trace  comment:""
+ dmmeta.tracerec  tracerec:lib_ctype.trace  comment:""
+ dmmeta.tracerec  tracerec:lib_exec.trace  comment:""
+ dmmeta.tracerec  tracerec:lib_git.trace  comment:""
+-dmmeta.tracerec  tracerec:lib_iconv.trace  comment:""
+ dmmeta.tracerec  tracerec:lib_json.trace  comment:""
+-dmmeta.tracerec  tracerec:lib_odbc.trace  comment:""
+ dmmeta.tracerec  tracerec:lib_sql.trace  comment:""
+ dmmeta.tracerec  tracerec:src_func.trace  comment:""
+ dmmeta.tracerec  tracerec:src_hdr.trace  comment:""

@@ -1,0 +1,9 @@
+#!/bin/sh
+# translate git author, which can have typos, into a real person name
+# note "-" around git author's name to ensure full match
+REPLACE=$(acr -report:N gitauthor -cmd:'echo -n "s+-$gitauthor-+$person+;"'|sh)
+COMMITS=$(git log --follow --no-merges --pretty=format:'-%an-' $* | sed "$REPLACE")
+# now show who's responsible for this mess
+echo "Created By: "     $(echo "$COMMITS" | tail -50 | sort | uniq -c | sort -rn | head -2 | awk '{if ($1>1)  {print $2}}')
+echo "Authors: "        $(echo "$COMMITS" |            sort | uniq -c | sort -rn | head -5 | awk '{if ($1>20) {print $2}}')
+echo "Recent Changes: " $(echo "$COMMITS" | head -50 | sort | uniq -c | sort -rn | head -3 | awk '{if ($1>1)  {print $2}}')

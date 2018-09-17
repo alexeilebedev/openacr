@@ -1,0 +1,5 @@
+dmmeta.usertracefld  tracefld:algo_lib.trace.n_mmap  comment:"# times memory allocated with mmap() (huge or not)"
+dmmeta.usertracefld  tracefld:algo_lib.trace.n_sbrk  comment:"# of calls to sbrk"
+dmmeta.usertracefld  tracefld:algo_lib.trace.tot_insert_err  comment:""
+dmmeta.usertracefld  tracefld:algo_lib.trace.tot_selfcheck_err  comment:""
+dmmeta.usertracefld  tracefld:algo_lib.trace.tot_update_err  comment:""

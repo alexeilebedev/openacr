@@ -1,0 +1,4 @@
+#!/bin/sh
+while read line; do
+    echo "$(date +%Y/%m/%d-%H:%M:%S.%N) $line"
+done

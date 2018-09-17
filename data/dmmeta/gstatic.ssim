@@ -1,0 +1,8 @@
+dmmeta.gstatic  field:amc.FDb.tclass  comment:""
+dmmeta.gstatic  field:amc.FDb.tfunc  comment:""
+dmmeta.gstatic  field:amc.FDb.gen  comment:""
+dmmeta.gstatic  field:amc.FDb.reftype  comment:""
+dmmeta.gstatic  field:atf_amc.FDb.amctest  comment:""
+dmmeta.gstatic  field:atf_amc.FDb.listtype  comment:""
+dmmeta.gstatic  field:atf_norm.FDb.normcheck  comment:""
+dmmeta.gstatic  field:atf_unit.FDb.unittest  comment:""

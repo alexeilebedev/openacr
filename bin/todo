@@ -1,0 +1,2 @@
+#!/bin/sh
+errlist "acr targsrc:$*/% -field:src -report:N | xargs grep -Hn TODO:"

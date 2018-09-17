@@ -1,0 +1,193 @@
+#!/usr/bin/env perl
+# (C) NYSE | Intercontinental Exchange 2013-2014
+# Author: Alexei Lebedev
+#
+# filter to colorize output
+# Usage 1:
+# <some command> | hilite <term1> <term2> ...
+# each term is a regex that is highlighted using a separate color.
+# colors are picked automatically from a default sequence
+#
+# to specify a color explicitly, use its name: term1:green term2:yellow
+#
+# blotter mode:
+# to highlight every other line, use term1:green%2; to highlight every other 5 lines,
+# use term1:green%5
+#
+# If multiple patterns match a given input line, patterns specified later
+# on the command line override previous patterns; Each pattern can match multiple
+# times within the line.
+#
+# inline specification:
+# highlighting rules can be provided as part of the input.
+# If a line starts with the special word 'hilite.colors', e.g.
+# hilite.colors <term1> <term2> ...
+# Then the previous rules are flushed,
+# and new terms are processed as if they were read from the command line
+#
+use strict;
+
+# map of supported named escape sequences
+# there are 17 possible colors
+# 0..7  -> dark{black,red,gree,yellow,blue,magenta,cyan,white}
+# 8..15 ->      black,red,gree,yellow,blue,magenta,cyan,white
+# and 16 -> off
+my $nocolor = 16;
+my $colors  = {
+    darkblack    =>0
+        ,darkred     =>1
+        ,darkgreen   =>2
+        ,darkyellow  =>3
+        ,darkblue    =>4
+        ,darkmagenta =>5
+        ,darkcyan    =>6
+        ,darkwhite   =>7
+        ,black       =>8
+        ,red         =>9
+        ,green       =>10
+        ,yellow      =>11
+        ,blue        =>12
+        ,magenta     =>13
+        ,cyan        =>14
+        ,white       =>15
+        ,off         =>$nocolor
+};
+
+#--------------------------------------------------------------------------------
+
+# return ascii escape code for specified color number
+sub asciicode($) {
+    my $colornum=$_[0];
+    my $ret="\033[";
+    if ($colornum==$nocolor) {
+        $ret .= "0;0m";
+    } elsif ($colornum >= 8) {
+        $ret .= "1;" . (30 + $colornum-8) . "m"; # light
+    } else {
+        $ret .= "0;" . (30 + $colornum) . "m"; # dark
+    }
+    return $ret;
+}
+
+#--------------------------------------------------------------------------------
+
+# initial sequence of colors
+my @defaultcolors=qw(green yellow blue cyan red magenta white darkwhite darkyellow
+ darkgreen darkblue darkcyan darkred darkmagenta darkblack black);
+my $nextcolor=0;
+# current patterns
+# a ref to an array of [regex,colornum,blotter]
+# regex    -> perl regex to match
+# colornum -> color to apply
+# blotter  -> blotter paper; N lines on, N lines off
+# nmatch   -> number of lines where pattern matched (used for blotter)
+my $patterns=[];
+
+# -----------------------------------------------------------------------------
+
+sub nextcolor {
+    return $defaultcolors[$nextcolor++ % scalar(@defaultcolors)];
+}
+
+#--------------------------------------------------------------------------------
+# read colors out of array ref $_[1] into pattern array ref $_[0]
+sub readcolors($$) {
+    my ($patterns,$from)=@_;
+    foreach my $pattern (@$from) {
+        if ($pattern eq "-diff" || $pattern eq "-d") {# diff mode
+            # syntax hilite for diff
+            push(@$patterns, ["^(index|diff) .*",$colors->{darkblue}, 0, 0]);
+            push(@$patterns, ["^-.*"            ,$colors->{darkred}, 0, 0]);
+            push(@$patterns, ["^\\+.*"          ,$colors->{darkgreen}, 0, 0]);
+            # --word-diff syntax
+            push(@$patterns, ["\\[-.*-\\]"      ,$colors->{darkgreen}, 0, 0]);
+            push(@$patterns, ["\\{\\+.*\\+\\}"  ,$colors->{darkgreen}, 0, 0]);
+        } elsif ($pattern =~ /(.*):(\w+)(%(\d+))?/ && defined($colors->{$2})) {
+            # pick specific color
+            my $pattern = $1;
+            $pattern = '^.*$' if !$pattern;  # match entire line if not specified
+            my $blotter=int($4);
+            push(@$patterns, [$pattern          ,$colors->{$2}, $blotter, 0]);
+        } else {
+            # pick next color
+            push(@$patterns, [$pattern          ,$colors->{nextcolor()}, 0, 0]);
+        }
+    }
+}
+
+#--------------------------------------------------------------------------------
+
+# return string $_[0] colorized with code $_[1]
+sub colorized($$) {
+    return ($_[1]==$nocolor) ? $_[0]
+        : asciicode($_[1]) . $_[0] . asciicode($nocolor);
+}
+
+#--------------------------------------------------------------------------------
+
+# blotter test
+# $_[0] - blotter width in lines (e.g. 1 means match every other line)
+# $_[1] - current line number
+sub blotter_on($$) {
+    my $lineno=$_[1];
+    my $mod=$_[0];
+    return $mod==0 ? 1 : (($lineno/$mod)%2 == 1);
+}
+
+#--------------------------------------------------------------------------------
+
+# hilite string $_[0]
+# raster highlight algorithm -- handles nested and overlapping highlights.
+# the idea is to maintan an array of colors parallel to the original string;
+# in the first pass, find all matches and update color cells with new colors.
+# in the second pass, detect chunks of contiguous color in the color array
+# and print the corresponding substring using hilight.
+sub hilite($) {
+    my $str=$_[0];# string being highlighted
+    my @color;# color array
+    for (my $i=0; $i<length($str); $i++) {
+        push(@color,$nocolor);# off
+    }
+    # match patterns one at a time
+    foreach my $X (@$patterns) {
+        my $nmatch=0;
+        while ($str =~ m/($X->[0])/g) { # loop over matches within string
+            if (blotter_on($X->[2],$X->[3])) {
+                for (my $j=$-[0]; $j < $+[0]; $j++) { # rasterize color update
+                    $color[$j]=$X->[1];
+                }
+            }
+            $nmatch++;
+        }
+        $X->[3]++ if $nmatch>0; # increment count lines matched
+    }
+    my $prevcolor=$nocolor; # off
+    my $startoffset=0;
+    my $ret="";# returned highlighted string
+    for (my $i=0; $i<length($str); $i++) {
+        if ($color[$i] != $prevcolor) {
+            $ret .= colorized(substr($str,$startoffset,$i-$startoffset), $prevcolor);
+            $prevcolor=$color[$i];
+            $startoffset=$i;
+        }
+    }
+    $ret .= colorized(substr($str,$startoffset), $prevcolor);# colorize rest
+    return $ret;
+}
+
+#--------------------------------------------------------------------------------
+# process input
+
+readcolors($patterns,\@ARGV);
+while (<STDIN>) {
+    if (/^hilite.colors (.*)/) {# rebuild patterns and colors from scratch
+        $patterns=[];
+        my @words=split(/\s+/,$1);
+        readcolors($patterns,\@words);
+    } else {# apply patterns
+        chomp;
+        print hilite($_),"\n";
+    }
+}
+
+1;

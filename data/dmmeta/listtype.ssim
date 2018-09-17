@@ -1,0 +1,8 @@
+dmmeta.listtype  listtype:cd  circular:Y  haveprev:Y  instail:Y  comment:"Circular doubly-linked queue"
+dmmeta.listtype  listtype:cdl  circular:Y  haveprev:Y  instail:N  comment:"Circular double-linked lifo (stack)"
+dmmeta.listtype  listtype:cs  circular:Y  haveprev:N  instail:Y  comment:"Circular singly-linked queue"
+dmmeta.listtype  listtype:csl  circular:Y  haveprev:N  instail:N  comment:"Circular singly-linked lifo (stack)"
+dmmeta.listtype  listtype:zd  circular:N  haveprev:Y  instail:Y  comment:"Zero-terminated doubly-linked queue"
+dmmeta.listtype  listtype:zdl  circular:N  haveprev:Y  instail:N  comment:"Zero-terminated doubly-linked lifo (stack)"
+dmmeta.listtype  listtype:zs  circular:N  haveprev:N  instail:Y  comment:"Zero-terminated singly-linked queue"
+dmmeta.listtype  listtype:zsl  circular:N  haveprev:N  instail:N  comment:"Zero-terminated singly-linked lifo (stack)"

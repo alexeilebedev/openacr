@@ -1,0 +1,5 @@
+dmmeta.cppfunc  field:amc.FFcmdline.p_ns  expr:"fcmdline.p_field->p_ctype->p_ns"
+dmmeta.cppfunc  field:atf_amc.VarlenExtern.length  expr:""
+dmmeta.cppfunc  field:dev.Syscmd.execkey  expr:""
+dmmeta.cppfunc  field:dev.Syscmddep.syscmddep  expr:""
+dmmeta.cppfunc  field:lib_json.FNode.fldkey  expr:""

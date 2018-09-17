@@ -1,0 +1,6 @@
+# 
+# (C) NYSE | Intercontinental Exchange 2013-2014
+#
+# format git log using colors
+#
+git log --pretty=format:'%Cred%ad.%C(yellow)%h %Cblue%an%Cgreen%d %Creset%s' --date=short $*

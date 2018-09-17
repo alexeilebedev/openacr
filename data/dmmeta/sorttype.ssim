@@ -1,0 +1,3 @@
+dmmeta.sorttype  sorttype:QuickSort  comment:""
+dmmeta.sorttype  sorttype:InsertionSort  comment:""
+dmmeta.sorttype  sorttype:HeapSort  comment:""

@@ -1,0 +1,9 @@
+#!/usr/bin/perl
+# return path to directory containing root
+
+use Cwd qw(getcwd abs_path);
+$dir = abs_path($dir);
+while ($dir && ! -f "$dir/.ffroot") {
+    $dir =~ s!/[^/]*!!;
+}
+print $dir,"\n";

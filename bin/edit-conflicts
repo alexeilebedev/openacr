@@ -1,0 +1,2 @@
+#!/bin/sh
+$EDITOR `git-conflicts`

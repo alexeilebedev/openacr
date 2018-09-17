@@ -1,0 +1,6 @@
+dev.arch  arch:""  comment:all
+dev.arch  arch:i386  comment:"OSX (???)"
+dev.arch  arch:i686  comment:"OSX (???)"
+dev.arch  arch:i86pc  comment:"Solaris 64-bit mode"
+dev.arch  arch:x64  comment:"64-bit mode on windows (under cygwin)"
+dev.arch  arch:x86_64  comment:"64-bit mode on linux"

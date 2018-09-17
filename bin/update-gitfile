@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+#
+# (C) NYSE | Intercontinental Exchange 2013-2014
+#
+# script to update dev.gitfile table and acmdb.keyfile
+#
+
+(
+    cat data/dev/gitfile.ssim | awk '{print "acr.delete",$0}'
+    git ls-files | while read X; do echo dev.gitfile  gitfile:\"$X\"; done
+) | acr -replace -write -print:N

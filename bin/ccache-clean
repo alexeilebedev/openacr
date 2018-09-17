@@ -1,0 +1,4 @@
+rm -rf dflt.*-x86_64
+rm -rf .testgen
+ccache -C
+echo "done"

@@ -1,0 +1,83 @@
+// (C) 2017-2019 NYSE | Intercontinental Exchange
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+// Contacting ICE: <https://www.theice.com/contact>
+//
+// Target: lib_ctype (lib)
+// Exceptions: yes
+// Header: include/lib/lib_ctype.h
+//
+// Created By: alexei.lebedev
+// Recent Changes: alexei.lebedev
+//
+
+#include "include/gen/lib_ctype_gen.h"
+#include "include/gen/lib_ctype_gen.inl.h"
+
+namespace lib_ctype { // update-hdr
+    // Dear human:
+    //     Text from here to the closing curly brace was produced by scanning
+    //     source files. Editing this text is futile.
+    //     To refresh the contents of this section, run 'update-hdr'.
+    //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+
+    // -------------------------------------------------------------------
+    // cpp/lib/lib_ctype.cpp
+    //
+
+    // Find ctype from tuple type tag.
+    // Supports ctype and ssimfile lookups.
+    lib_ctype::FCtype *TagToCtype(algo::Tuple &tuple);
+
+    // Check if specified attribute matches the default value for the field.
+    bool EqualDefaultQ(algo::Attr *attr, lib_ctype::FField &field);
+
+    // Print attributes from TUPLE,
+    // which is known to be of ctype CTYPE, to cstring TEXT.
+    // Output fields in normalized order, respecting Base.
+    // If SKIP_DFLT is true, do not print fields which happen to match their default.
+    // Suports Varlen fields with
+    void PrintTupleAttrs(cstring& text, algo::Tuple &tuple, lib_ctype::FCtype &ctype, bool skip_dflt);
+
+    // Retrieve base type for the given ctype
+    lib_ctype::FCtype *Basetype(lib_ctype::FCtype &ctype);
+
+    // Find field by name, possibly scanning base fields
+    // Skips dot-suffix first, i.e. attr "abc.4" is looked up as "abc" (used for Varlen fields)
+    lib_ctype::FField *FindField(lib_ctype::FCtype &ctype, strptr name);
+
+    // Check if field is printed as tuple -- i.e. requires recursive parsing
+    bool TupleFieldQ(lib_ctype::FField &field);
+
+    // Check if attribute is a tuple.
+    // This is basically the same as TupleFieldQ, but returns false for
+    // empty Opt fields.
+    bool TupleAttrQ(lib_ctype::FField &field, strptr val);
+
+    // Load main schema from specified dataset
+    void Init(strptr root);
+
+    // Find fconst from field and ssim attr value.
+    lib_ctype::FFconst *FindFconst(lib_ctype::FField *field, cstring& attr_value);
+
+    // Match Tuple EXPECT against tuple RESULT.
+    // EXPECT must be a subset of RESULT for the match to pass.
+    // Results of comparison, mostly represented as a match distance, are saved in MATCH.
+    // Search exits early if match.distance exceeds match.maxdist.
+    void Match_Tuple(lib_ctype::Match &match, Tuple &expect, Tuple &result);
+
+    // Does nothing
+    void Main();
+}

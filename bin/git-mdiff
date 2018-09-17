@@ -1,0 +1,7 @@
+#!/bin/sh
+# git diff --color=always doesn't work with filterdiff.
+# so filterdiff must be applied afterwards.
+(
+    git diff --color=always HEAD~ --stat | grep -v /gen/
+    git diff -w -U6 $* HEAD~ include cpp data | grephunk f:'!/gen/' | hilite -d
+) | less -r

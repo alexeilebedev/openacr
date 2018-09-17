@@ -1,0 +1,8 @@
+#!/usr/bin/perl
+my %lines;
+while (<>) {
+    print if !$lines{$_};
+    $lines{$_}=1;
+}
+
+        

@@ -1,0 +1,7 @@
+#!/bin/sh
+if [ ! -d ".gcache/" ]; then
+    echo "gcache not enabled (check .gcache)"
+else
+    echo "gcache size: $(du -sh .gcache/)"
+fi
+

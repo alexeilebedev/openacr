@@ -1,0 +1,7 @@
+
+" Shift-F4: previous error
+execute "set <xF4>=\eO1;*S"
+noremap <S-F4> :cprev<CR>
+
+" F4: next error
+noremap <F4> :cnext<CR>

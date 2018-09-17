@@ -1,0 +1,13 @@
+#
+# 
+# (C) NYSE | Intercontinental Exchange 2013-2014
+# 
+# 
+
+# disable cursor blinking
+#
+gsettings set org.gnome.desktop.interface cursor-blink false
+#
+# windows-right-click: resize
+#
+gsettings set org.gnome.desktop.wm.preferences resize-with-right-button true

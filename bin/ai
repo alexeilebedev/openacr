@@ -1,0 +1,9 @@
+#!/usr/bin/env perl
+if (!-x "dflt.release-x86_64/abt") {
+    system("bin/abt-bootstrap && bin/abt -install % -report:N");
+}
+$F = shift @ARGV;
+$F = "%" if !$F;
+# calls src_func -updateproto
+system("bin/src_hdr", "-write"); 
+system("bin/abt", "-install", $F, "-maxjobs:16");

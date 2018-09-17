@@ -1,0 +1,26 @@
+#!/bin/sh
+#
+# (C) NYSE | Intercontinental Exchange 2013-2016
+#
+# Apply indentation policy to specified source files.
+# Usage:
+# emacs-indent cpp/algo/*.cpp
+#
+(
+    for X in $*; do
+        echo "(print \"Processing $X\")"
+        echo "(find-file \"$X\")"
+        echo "(setq c-basic-offset 4)"
+        echo "(setq indent-tabs-mode nil)"
+        echo "(setq tab-stop-list (number-sequence 4 200 4))"
+        echo "(setq tab-width 4)"
+        echo "(untabify (point-min) (point-max))" # get rid of pesky tabs
+        echo "(indent-region (point-min) (point-max))" # indent it
+        echo "(delete-trailing-whitespace)"
+        echo "(basic-save-buffer)"
+        echo "(kill-buffer)"
+        echo ""
+    done
+    echo "(save-buffers-kill-terminal t)"
+) > temp/cpp-indent
+emacs -nw --batch --load temp/cpp-indent

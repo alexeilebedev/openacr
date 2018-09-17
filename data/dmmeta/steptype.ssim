@@ -1,0 +1,6 @@
+dmmeta.steptype  steptype:Callback  comment:"Check field on every scheduler cycle; Does not update _db.next_loop"
+dmmeta.steptype  steptype:Extern  comment:""
+dmmeta.steptype  steptype:Inline  comment:"Check field on every scheduler cycle"
+dmmeta.steptype  steptype:InlineOnce  comment:"Check timeout field on every scheduler cycle; Do not reschedule"
+dmmeta.steptype  steptype:InlineRecur  comment:"Check timeout field on every scheduler cycle; reschedule with delay"
+dmmeta.steptype  steptype:TimeHookRecur  comment:"Bheap version of InlineRecur"

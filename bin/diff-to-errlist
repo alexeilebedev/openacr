@@ -1,0 +1,12 @@
+#!/usr/bin/perl
+while (<>) {
+    if (/^\+\+\+ b\/(.*)$/) {
+        $file=$1;
+    }
+    if (/^@@ -(\d+),(\d+) \+(\d+),(\d+) @@/) {
+        if ($file) {
+            print "$file:$3: ...\n";
+        }
+    }
+    print;
+}

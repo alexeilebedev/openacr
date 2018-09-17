@@ -1,0 +1,8 @@
+#!/bin/sh
+echo "setting up gcache..."
+mkdir -p /tmp/gcache
+chmod -R 0775 /tmp/gcache
+# inheric group writable flag
+find /tmp/gcache -type d -exec chmod g+s {} \;
+gcache-use
+echo "done"

@@ -1,0 +1,6 @@
+#!/bin/sh
+#
+# (C) NYSE | Intercontinental Exchange 2013-2014
+# Delete any branches that are safe to delete
+#
+for X in `git branch --merged  | grep -v master | grep -v $'^\\*'`; do git branch $X -d; done

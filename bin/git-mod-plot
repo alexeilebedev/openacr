@@ -1,0 +1,32 @@
+#!/usr/bin/perl
+$cmd = "git log --numstat --no-merges @ARGV --pretty=\$'format:%H\t%at\t%an'";
+print "$cmd\n";
+open R, "$cmd|";
+open W, ">outfile";
+while (<R>) {
+      chomp;
+      $totmod=0;
+      ($commit,$time,$author)=split(/\t/);
+      while (<R>) {
+            ($ins,$del,$fname)=split(/\t+/);
+            last if $fname eq "";
+            $totmod += $ins;
+      }
+      print W "$time $totmod\n";
+      print "git-mod-plot.commit  commit:$commit  time:$time  author:$author  totmod:$totmod\n";
+}
+system("sort outfile -n > outfile.sort");
+open G, "|gnuplot";
+print G<<EOF
+set terminal dumb
+set xdata time
+set timefmt "%s"
+set format x "%Y-%m"
+set xlabel "Date"
+plot "outfile.sort" using 1:2 with linespoints smooth cumulative
+EOF
+
+
+
+
+

@@ -1,0 +1,2 @@
+ai && atf_norm 2>&1 | hilite-error
+
