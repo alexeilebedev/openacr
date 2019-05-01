@@ -1,3 +1,5 @@
+Table of Contents
+=================
 <!--ts-->
       * [About](#about)
       * [Setup and Installation](#setup-and-installation)
