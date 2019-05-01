@@ -126,9 +126,51 @@ void atf_norm::normcheck_stray_gen() {
 
 // --------------------------------------------------------------------------------
 
-void atf_norm::normcheck_readmetoc() {
-    // TODO: get rid of gh-md-toc and just re-generate it by hand
-    algo::SysCmd("bin/gh-md-toc --insert README.md >/dev/null", FailokQ(false));
-    algo::SysCmd("sed -i '/-- Added by:/d' README.md", FailokQ(false));
-    algo::SysCmd("rm -f README.md.toc.* README.md.orig.*", FailokQ(false));
+// History of SKNF -> [History of SKNF](history-of-sknf)
+static tempstr TocLink(strptr str) {
+    tempstr ret;
+    ret << "[" << str << "](#";
+    tempstr lc;
+    lc << str;
+    MakeLower(lc);
+    for (u32 i=0; i < lc.ch_n; i++) {
+        if (!algo_lib::IdentCharQ(lc.ch_elems[i])) {
+            lc.ch_elems[i] = '-';
+        }
+    }
+    Replace(lc,"--","-");
+    ret << lc << ")";
+    return ret;
+}
+
+// Scan string FROM for markdown header indicators
+// (==, ===, ==== etc)
+// And add them as sections to the table of contents, with 3 spaces per level
+static void AppendToc(strptr from, cstring &to) {
+    ind_beg(Line_curs,line,from) {
+        int i=0;
+        while (i<line.n_elems && line[i]=='#') {
+            i++;
+        }
+        if (i>1 && i<line.n_elems && line[i]==' ') {
+            char_PrintNTimes(' ',to,(i-1)*3);
+            to << "* " << TocLink(RestFrom(line,i+1)) << eol;
+        }
+    }ind_end;
+}
+
+void atf_norm::normcheck_readme() {
+    // Create a README
+    cstring text;
+    cstring out;
+    out << "This file was created with 'atf_norm readme' from txt/*.md -- *do not edit*\n\n";
+    out << "## Table Of Contents\n";
+    ind_beg(_db_readme_curs,readme,_db) {
+        text << eol;
+        text << FileToString(readme.gitfile);
+    }ind_end;
+    AppendToc(text,out);
+    out << eol;
+    out << text;
+    StringToFile(out, "README.md");
 }

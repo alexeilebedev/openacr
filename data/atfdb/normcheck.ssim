@@ -1,6 +1,6 @@
 atfdb.normcheck  normcheck:amc  comment:"Run amc"
 atfdb.normcheck  normcheck:testamc  comment:"Test amc (run atf_amc)"
-atfdb.normcheck  normcheck:readmetoc  comment:"Re-generate README.md table of contents"
+atfdb.normcheck  normcheck:readme  comment:"Re-generate README.md table of contents"
 atfdb.normcheck  normcheck:unit  comment:"Run unit tests"
 atfdb.normcheck  normcheck:copyright  comment:"Update copyrights in source files"
 atfdb.normcheck  normcheck:iffy_src  comment:"Check for iffy source constructs with src_func"

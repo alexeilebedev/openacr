@@ -98,6 +98,7 @@ namespace dev { struct Gitinfo; }
 namespace dev { struct Include; }
 namespace dev { struct Linelim; }
 namespace dev { struct OptType; }
+namespace dev { struct Readme; }
 namespace dev { struct Scriptfile; }
 namespace dev { struct Srcfile; }
 namespace dev { struct Syscmd; }
@@ -356,6 +357,20 @@ bool                 OptType_ReadStrptrMaybe(dev::OptType &parent, algo::strptr 
 // print string representation of dev::OptType to string LHS, no header -- cprint:dev.OptType.String
 void                 OptType_Print(dev::OptType & row, algo::cstring &str) __attribute__((nothrow));
 
+// --- dev.Readme
+struct Readme { // dev.Readme
+    algo::Smallstr200   gitfile;   //
+    algo::Comment       comment;   //
+    Readme();
+};
+
+bool                 Readme_ReadFieldMaybe(dev::Readme &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Readme from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 Readme_ReadStrptrMaybe(dev::Readme &parent, algo::strptr in_str);
+// print string representation of dev::Readme to string LHS, no header -- cprint:dev.Readme.String
+void                 Readme_Print(dev::Readme & row, algo::cstring &str) __attribute__((nothrow));
+
 // --- dev.Scriptfile
 struct Scriptfile { // dev.Scriptfile
     algo::Smallstr200   gitfile;   //
@@ -606,6 +621,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const dev::FieldId &row);/
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Gitfile &row);// cfmt:dev.Gitfile.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Include &row);// cfmt:dev.Include.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Linelim &row);// cfmt:dev.Linelim.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Readme &row);// cfmt:dev.Readme.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Scriptfile &row);// cfmt:dev.Scriptfile.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Srcfile &row);// cfmt:dev.Srcfile.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Syscmd &row);// cfmt:dev.Syscmd.String

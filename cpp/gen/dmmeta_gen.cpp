@@ -157,6 +157,7 @@ const char *dmmeta_Ssimfile_ssimfile_dev_gitfile           = "dev.gitfile";
 const char *dmmeta_Ssimfile_ssimfile_dev_gitinfo           = "dev.gitinfo";
 const char *dmmeta_Ssimfile_ssimfile_dev_linelim           = "dev.linelim";
 const char *dmmeta_Ssimfile_ssimfile_dev_opt_type          = "dev.opt_type";
+const char *dmmeta_Ssimfile_ssimfile_dev_readme            = "dev.readme";
 const char *dmmeta_Ssimfile_ssimfile_dev_scriptfile        = "dev.scriptfile";
 const char *dmmeta_Ssimfile_ssimfile_dev_srcfile           = "dev.srcfile";
 const char *dmmeta_Ssimfile_ssimfile_dev_syslib            = "dev.syslib";

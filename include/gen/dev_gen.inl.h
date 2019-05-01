@@ -142,6 +142,9 @@ inline dev::OptType::OptType(const algo::strptr&            in_opt_type
 inline dev::OptType::OptType() {
 }
 
+inline dev::Readme::Readme() {
+}
+
 inline dev::Scriptfile::Scriptfile() {
 }
 
@@ -288,6 +291,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Include &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Linelim &row) {// cfmt:dev.Linelim.String
     dev::Linelim_Print(const_cast<dev::Linelim&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Readme &row) {// cfmt:dev.Readme.String
+    dev::Readme_Print(const_cast<dev::Readme&>(row), str);
     return str;
 }
 

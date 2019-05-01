@@ -29,22 +29,26 @@ enum { atf_norm_FieldIdEnum_N = 1 };
 enum atf_norm_TableIdEnum {                   // atf_norm.TableId.value
      atf_norm_TableId_dmmeta_Ns         = 0   // dmmeta.Ns -> atf_norm.FNs
     ,atf_norm_TableId_dmmeta_ns         = 0   // dmmeta.ns -> atf_norm.FNs
-    ,atf_norm_TableId_dev_Scriptfile    = 1   // dev.Scriptfile -> atf_norm.FScriptfile
-    ,atf_norm_TableId_dev_scriptfile    = 1   // dev.scriptfile -> atf_norm.FScriptfile
-    ,atf_norm_TableId_dmmeta_Ssimfile   = 2   // dmmeta.Ssimfile -> atf_norm.FSsimfile
-    ,atf_norm_TableId_dmmeta_ssimfile   = 2   // dmmeta.ssimfile -> atf_norm.FSsimfile
+    ,atf_norm_TableId_dev_Readme        = 1   // dev.Readme -> atf_norm.FReadme
+    ,atf_norm_TableId_dev_readme        = 1   // dev.readme -> atf_norm.FReadme
+    ,atf_norm_TableId_dev_Scriptfile    = 2   // dev.Scriptfile -> atf_norm.FScriptfile
+    ,atf_norm_TableId_dev_scriptfile    = 2   // dev.scriptfile -> atf_norm.FScriptfile
+    ,atf_norm_TableId_dmmeta_Ssimfile   = 3   // dmmeta.Ssimfile -> atf_norm.FSsimfile
+    ,atf_norm_TableId_dmmeta_ssimfile   = 3   // dmmeta.ssimfile -> atf_norm.FSsimfile
 };
 
-enum { atf_norm_TableIdEnum_N = 6 };
+enum { atf_norm_TableIdEnum_N = 8 };
 
 namespace atfdb { struct Normcheck; }
 namespace dmmeta { struct Ns; }
+namespace dev { struct Readme; }
 namespace dev { struct Scriptfile; }
 namespace dmmeta { struct Ssimfile; }
 namespace atf_norm { struct trace; }
 namespace atf_norm { struct FDb; }
 namespace atf_norm { struct FNormcheck; }
 namespace atf_norm { struct FNs; }
+namespace atf_norm { struct FReadme; }
 namespace atf_norm { struct FScriptfile; }
 namespace atf_norm { struct FSsimfile; }
 namespace atf_norm { struct FieldId; }
@@ -56,6 +60,7 @@ namespace atf_norm { struct _db_scriptfile_curs; }
 namespace atf_norm { struct _db_ind_scriptfile_curs; }
 namespace atf_norm { struct _db_ns_curs; }
 namespace atf_norm { struct _db_ind_ns_curs; }
+namespace atf_norm { struct _db_readme_curs; }
 namespace atf_norm {
 }//pkey typedefs
 namespace atf_norm {
@@ -97,6 +102,8 @@ struct FDb { // atf_norm.FDb
     atf_norm::FNs**           ind_ns_buckets_elems;           // pointer to bucket array
     i32                       ind_ns_buckets_n;               // number of elements in bucket array
     i32                       ind_ns_n;                       // number of elements in the hash table
+    atf_norm::FReadme*        readme_lary[32];                // level array
+    i32                       readme_n;                       // number of elements in array
     atf_norm::trace           trace;                          //
 };
 
@@ -281,6 +288,34 @@ void                 ind_ns_Remove(atf_norm::FNs& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 void                 ind_ns_Reserve(int n) __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_norm::FReadme&   readme_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+atf_norm::FReadme*   readme_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_norm::FReadme*   readme_InsertMaybe(const dev::Readme &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                readme_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 readme_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+atf_norm::FReadme*   readme_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+atf_norm::FReadme*   readme_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  readme_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 readme_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 readme_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+atf_norm::FReadme&   readme_qFind(u64 t) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+bool                 readme_XrefMaybe(atf_norm::FReadme &row);
+
 // cursor points to valid item
 void                 _db_normcheck_curs_Reset(_db_normcheck_curs &curs, atf_norm::FDb &parent);
 // cursor points to valid item
@@ -313,6 +348,14 @@ bool                 _db_ns_curs_ValidQ(_db_ns_curs &curs);
 void                 _db_ns_curs_Next(_db_ns_curs &curs);
 // item access
 atf_norm::FNs&       _db_ns_curs_Access(_db_ns_curs &curs);
+// cursor points to valid item
+void                 _db_readme_curs_Reset(_db_readme_curs &curs, atf_norm::FDb &parent);
+// cursor points to valid item
+bool                 _db_readme_curs_ValidQ(_db_readme_curs &curs);
+// proceed to next item
+void                 _db_readme_curs_Next(_db_readme_curs &curs);
+// item access
+atf_norm::FReadme&   _db_readme_curs_Access(_db_readme_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
@@ -374,6 +417,25 @@ void                 ns_CopyIn(atf_norm::FNs &row, dmmeta::Ns &in) __attribute__
 // Set all fields to initial values.
 void                 FNs_Init(atf_norm::FNs& ns);
 void                 FNs_Uninit(atf_norm::FNs& ns) __attribute__((nothrow));
+
+// --- atf_norm.FReadme
+// create: atf_norm.FDb.readme (Lary)
+struct FReadme { // atf_norm.FReadme
+    algo::Smallstr200   gitfile;   //
+    algo::Comment       comment;   //
+private:
+    friend atf_norm::FReadme&   readme_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_norm::FReadme*   readme_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 readme_RemoveAll() __attribute__((nothrow));
+    friend void                 readme_RemoveLast() __attribute__((nothrow));
+    FReadme();
+};
+
+// Copy fields out of row
+void                 readme_CopyOut(atf_norm::FReadme &row, dev::Readme &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 readme_CopyIn(atf_norm::FReadme &row, dev::Readme &in) __attribute__((nothrow));
+
 
 // --- atf_norm.FScriptfile
 // create: atf_norm.FDb.scriptfile (Lary)
@@ -542,12 +604,20 @@ struct _db_ns_curs {// cursor
     _db_ns_curs(){ parent=NULL; index=0; }
 };
 
+
+struct _db_readme_curs {// cursor
+    typedef atf_norm::FReadme ChildType;
+    atf_norm::FDb *parent;
+    i64 index;
+    _db_readme_curs(){ parent=NULL; index=0; }
+};
+
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_amc();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_testamc();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
-void                 normcheck_readmetoc();
+void                 normcheck_readme();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_unit();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck

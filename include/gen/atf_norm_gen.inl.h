@@ -222,6 +222,48 @@ inline i32 atf_norm::ind_ns_N() {
     return _db.ind_ns_n;
 }
 
+// --- atf_norm.FDb.readme.EmptyQ
+// Return true if index is empty
+inline bool atf_norm::readme_EmptyQ() {
+    return _db.readme_n == 0;
+}
+
+// --- atf_norm.FDb.readme.Find
+// Look up row by row id. Return NULL if out of range
+inline atf_norm::FReadme* atf_norm::readme_Find(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    atf_norm::FReadme *retval = NULL;
+    if (LIKELY(x <= u64(_db.readme_n))) {
+        retval = &_db.readme_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- atf_norm.FDb.readme.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline atf_norm::FReadme* atf_norm::readme_Last() {
+    return readme_Find(u64(_db.readme_n-1));
+}
+
+// --- atf_norm.FDb.readme.N
+// Return number of items in the pool
+inline i32 atf_norm::readme_N() {
+    return _db.readme_n;
+}
+
+// --- atf_norm.FDb.readme.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline atf_norm::FReadme& atf_norm::readme_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.readme_lary[bsr][index];
+}
+
 // --- atf_norm.FDb.normcheck_curs.Reset
 // cursor points to valid item
 inline void atf_norm::_db_normcheck_curs_Reset(_db_normcheck_curs &curs, atf_norm::FDb &parent) {
@@ -321,6 +363,31 @@ inline void atf_norm::_db_ns_curs_Next(_db_ns_curs &curs) {
 inline atf_norm::FNs& atf_norm::_db_ns_curs_Access(_db_ns_curs &curs) {
     return ns_qFind(u64(curs.index));
 }
+
+// --- atf_norm.FDb.readme_curs.Reset
+// cursor points to valid item
+inline void atf_norm::_db_readme_curs_Reset(_db_readme_curs &curs, atf_norm::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- atf_norm.FDb.readme_curs.ValidQ
+// cursor points to valid item
+inline bool atf_norm::_db_readme_curs_ValidQ(_db_readme_curs &curs) {
+    return curs.index < _db.readme_n;
+}
+
+// --- atf_norm.FDb.readme_curs.Next
+// proceed to next item
+inline void atf_norm::_db_readme_curs_Next(_db_readme_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_norm.FDb.readme_curs.Access
+// item access
+inline atf_norm::FReadme& atf_norm::_db_readme_curs_Access(_db_readme_curs &curs) {
+    return readme_qFind(u64(curs.index));
+}
 inline atf_norm::FNormcheck::FNormcheck() {
     atf_norm::FNormcheck_Init(*this);
 }
@@ -354,6 +421,9 @@ inline atf_norm::FNs::~FNs() {
 inline void atf_norm::FNs_Init(atf_norm::FNs& ns) {
     ns.ind_ns_next = (atf_norm::FNs*)-1; // (atf_norm.FDb.ind_ns) not-in-hash
 }
+inline atf_norm::FReadme::FReadme() {
+}
+
 inline atf_norm::FScriptfile::FScriptfile() {
     atf_norm::FScriptfile_Init(*this);
 }

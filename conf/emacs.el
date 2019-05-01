@@ -43,7 +43,7 @@
   "Invoke ff to find current word in the directory tree"
   (interactive)
   (ignore-errors (kill-buffer "*grep*"))
-  (grep-find (concat "ff -notty -g -n "
+  (grep-find (concat ffroot-directory "/bin/ff -notty -g -n "
                      (shell-quote-argument (current-word)))))
 
 
@@ -54,7 +54,7 @@
   "Invoke ff to find current word in the directory tree"
   (interactive)
   (ignore-errors (kill-buffer "*grep*"))
-  (grep-find (concat "ff -notty -g "
+  (grep-find (concat ffroot-directory "/bin/ff -notty -g "
                      (shell-quote-argument (current-word)))))
 
 ;;
@@ -317,8 +317,9 @@
 
 ;;------------------------------------------------------------------------------
 
-(setq startup-directory            (substring (pwd) 10)); strip 'Directory '
-(setq compile-command              (concat "cd " startup-directory " && ai %"))
+; strip 'Directory '
+(setq ffroot-directory default-directory)
+(setq compile-command              (concat "cd " ffroot-directory " && ai %"))
 
 (setq-default c-basic-offset               4)
 (setq-default indent-tabs-mode             nil)
@@ -411,21 +412,21 @@
   (interactive)
   (find-file
    (shell-command-to-string
-    (concat "cd " startup-directory "; bin/src_func -nextfile:"
+    (concat "cd " ffroot-directory "; bin/src_func -nextfile:"
             (buffer-file-name)))))
 
 ;;-----------------------------------------------------------------------------
 
 (defun algo-ff-open-other ()
   (interactive)
-  (find-file (shell-command-to-string (concat "cd " startup-directory "; bin/src_func -other -nextfile:" (buffer-file-name)))))
+  (find-file (shell-command-to-string (concat "cd " ffroot-directory "; bin/src_func -other -nextfile:" (buffer-file-name)))))
 
 ;;-----------------------------------------------------------------------------
 
 ;; Find e-mail for user USERNAME using acr lookup in acmdb.user table
 ;; Return the first found e-mail, being careful to strip trailing newlines
 (defun email-of (username)
-  (shell-command-to-string (concat "cd " startup-directory "; for X in $(bin/acr acmdb.user:" username " -field:email -report:N); do echo -n $X; exit 0; done")))
+  (shell-command-to-string (concat "cd " ffroot-directory "; for X in $(bin/acr acmdb.user:" username " -field:email -report:N); do echo -n $X; exit 0; done")))
 
 ;;-----------------------------------------------------------------------------
 

@@ -60,6 +60,7 @@ static void          normcheck_LoadStatic() __attribute__((nothrow));
 static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
 static bool          scriptfile_InputMaybe(dev::Scriptfile &elem) __attribute__((nothrow));
 static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
+static bool          readme_InputMaybe(dev::Readme &elem) __attribute__((nothrow));
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
 // Function return 1
@@ -119,7 +120,7 @@ static void atf_norm::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_norm.Input'  signature:'630ccf20082239bc0930c3a8b8866e75c9dc458e'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_norm.Input'  signature:'3626e34d29ecb6be034040c47f0a81db3babb4a5'");
 }
 
 // --- atf_norm.FDb._db.StaticCheck
@@ -154,6 +155,12 @@ bool atf_norm::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && ns_InputMaybe(elem);
             break;
         }
+        case atf_norm_TableId_dev_Readme: { // finput:atf_norm.FDb.readme
+            dev::Readme elem;
+            retval = dev::Readme_ReadStrptrMaybe(elem, str);
+            retval = retval && readme_InputMaybe(elem);
+            break;
+        }
         default:
         retval = algo_lib::InsertStrptrMaybe(str);
         break;
@@ -169,7 +176,8 @@ bool atf_norm::InsertStrptrMaybe(algo::strptr str) {
 bool atf_norm::LoadTuplesMaybe(algo::strptr root) {
     bool retval = true;
     static const char *ssimfiles[] = {
-        "dmmeta.ns", "dev.scriptfile", "dmmeta.ssimfile"
+        "dmmeta.ns", "dev.readme", "dev.scriptfile", "dmmeta.ssimfile"
+
         , NULL};
         retval = algo_lib::DoLoadTuples(root, atf_norm::InsertStrptrMaybe, ssimfiles, true);
         return retval;
@@ -283,7 +291,7 @@ static void atf_norm::normcheck_LoadStatic() {
     } data[] = {
         { "atfdb.normcheck  normcheck:amc  comment:\"Run amc\"", atf_norm::normcheck_amc }
         ,{ "atfdb.normcheck  normcheck:testamc  comment:\"Test amc (run atf_amc)\"", atf_norm::normcheck_testamc }
-        ,{ "atfdb.normcheck  normcheck:readmetoc  comment:\"Re-generate README.md table of contents\"", atf_norm::normcheck_readmetoc }
+        ,{ "atfdb.normcheck  normcheck:readme  comment:\"Re-generate README.md table of contents\"", atf_norm::normcheck_readme }
         ,{ "atfdb.normcheck  normcheck:unit  comment:\"Run unit tests\"", atf_norm::normcheck_unit }
         ,{ "atfdb.normcheck  normcheck:copyright  comment:\"Update copyrights in source files\"", atf_norm::normcheck_copyright }
         ,{ "atfdb.normcheck  normcheck:iffy_src  comment:\"Check for iffy source constructs with src_func\"", atf_norm::normcheck_iffy_src }
@@ -995,6 +1003,104 @@ void atf_norm::ind_ns_Reserve(int n) {
     }
 }
 
+// --- atf_norm.FDb.readme.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_norm::FReadme& atf_norm::readme_Alloc() {
+    atf_norm::FReadme* row = readme_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_norm.out_of_mem  field:atf_norm.FDb.readme  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_norm.FDb.readme.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_norm::FReadme* atf_norm::readme_AllocMaybe() {
+    atf_norm::FReadme *row = (atf_norm::FReadme*)readme_AllocMem();
+    if (row) {
+        new (row) atf_norm::FReadme; // call constructor
+    }
+    return row;
+}
+
+// --- atf_norm.FDb.readme.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_norm::FReadme* atf_norm::readme_InsertMaybe(const dev::Readme &value) {
+    atf_norm::FReadme *row = &readme_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    readme_CopyIn(*row,const_cast<dev::Readme&>(value));
+    bool ok = readme_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        readme_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- atf_norm.FDb.readme.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* atf_norm::readme_AllocMem() {
+    u64 new_nelems     = _db.readme_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    atf_norm::FReadme*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.readme_lary[bsr];
+        if (!lev) {
+            lev=(atf_norm::FReadme*)algo_lib::malloc_AllocMem(sizeof(atf_norm::FReadme) * (u64(1)<<bsr));
+            _db.readme_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.readme_n = new_nelems;
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- atf_norm.FDb.readme.RemoveAll
+// Remove all elements from Lary
+void atf_norm::readme_RemoveAll() {
+    for (u64 n = _db.readme_n; n>0; ) {
+        n--;
+        readme_qFind(u64(n)).~FReadme(); // destroy last element
+        _db.readme_n = n;
+    }
+}
+
+// --- atf_norm.FDb.readme.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void atf_norm::readme_RemoveLast() {
+    u64 n = _db.readme_n;
+    if (n > 0) {
+        n -= 1;
+        readme_qFind(u64(n)).~FReadme();
+        _db.readme_n = n;
+    }
+}
+
+// --- atf_norm.FDb.readme.InputMaybe
+static bool atf_norm::readme_InputMaybe(dev::Readme &elem) {
+    bool retval = true;
+    retval = readme_InsertMaybe(elem);
+    return retval;
+}
+
+// --- atf_norm.FDb.readme.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+bool atf_norm::readme_XrefMaybe(atf_norm::FReadme &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
 // --- atf_norm.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr atf_norm::trace_RowidFind(int t) {
@@ -1080,6 +1186,17 @@ void atf_norm::FDb_Init() {
         FatalErrorExit("out of memory"); // (atf_norm.FDb.ind_ns)
     }
     memset(_db.ind_ns_buckets_elems, 0, sizeof(atf_norm::FNs*)*_db.ind_ns_buckets_n); // (atf_norm.FDb.ind_ns)
+    // initialize LAry readme (atf_norm.FDb.readme)
+    _db.readme_n = 0;
+    memset(_db.readme_lary, 0, sizeof(_db.readme_lary)); // zero out all level pointers
+    atf_norm::FReadme* readme_first = (atf_norm::FReadme*)algo_lib::malloc_AllocMem(sizeof(atf_norm::FReadme) * (u64(1)<<4));
+    if (!readme_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.readme_lary[i]  = readme_first;
+        readme_first    += 1ULL<<i;
+    }
 
     atf_norm::InitReflection();
     normcheck_LoadStatic();
@@ -1088,6 +1205,9 @@ void atf_norm::FDb_Init() {
 // --- atf_norm.FDb..Uninit
 void atf_norm::FDb_Uninit() {
     atf_norm::FDb &row = _db; (void)row;
+
+    // atf_norm.FDb.readme.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // atf_norm.FDb.ind_ns.Uninit (Thash)  //
     // skip destruction of ind_ns in global scope
@@ -1145,6 +1265,20 @@ void atf_norm::ns_CopyIn(atf_norm::FNs &row, dmmeta::Ns &in) {
 void atf_norm::FNs_Uninit(atf_norm::FNs& ns) {
     atf_norm::FNs &row = ns; (void)row;
     ind_ns_Remove(row); // remove ns from index ind_ns
+}
+
+// --- atf_norm.FReadme.base.CopyOut
+// Copy fields out of row
+void atf_norm::readme_CopyOut(atf_norm::FReadme &row, dev::Readme &out) {
+    out.gitfile = row.gitfile;
+    out.comment = row.comment;
+}
+
+// --- atf_norm.FReadme.base.CopyIn
+// Copy fields in to row
+void atf_norm::readme_CopyIn(atf_norm::FReadme &row, dev::Readme &in) {
+    row.gitfile = in.gitfile;
+    row.comment = in.comment;
 }
 
 // --- atf_norm.FScriptfile.base.CopyOut
@@ -1289,6 +1423,7 @@ const char* atf_norm::value_ToCstr(const atf_norm::TableId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_norm_TableId_dmmeta_Ns    : ret = "dmmeta.Ns";  break;
+        case atf_norm_TableId_dev_Readme   : ret = "dev.Readme";  break;
         case atf_norm_TableId_dev_Scriptfile: ret = "dev.Scriptfile";  break;
         case atf_norm_TableId_dmmeta_Ssimfile: ret = "dmmeta.Ssimfile";  break;
     }
@@ -1322,6 +1457,19 @@ bool atf_norm::value_SetStrptrMaybe(atf_norm::TableId& parent, algo::strptr rhs)
                 }
                 case LE_STR8('d','m','m','e','t','a','.','n'): {
                     if (memcmp(rhs.elems+8,"s",1)==0) { value_SetEnum(parent,atf_norm_TableId_dmmeta_ns); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 10: {
+            switch (ReadLE64(rhs.elems)) {
+                case LE_STR8('d','e','v','.','R','e','a','d'): {
+                    if (memcmp(rhs.elems+8,"me",2)==0) { value_SetEnum(parent,atf_norm_TableId_dev_Readme); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','r','e','a','d'): {
+                    if (memcmp(rhs.elems+8,"me",2)==0) { value_SetEnum(parent,atf_norm_TableId_dev_readme); ret = true; break; }
                     break;
                 }
             }

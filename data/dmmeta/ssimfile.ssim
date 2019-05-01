@@ -16,6 +16,7 @@ dmmeta.ssimfile  ssimfile:dev.gitfile  ctype:dev.Gitfile
 dmmeta.ssimfile  ssimfile:dev.gitinfo  ctype:dev.Gitinfo
 dmmeta.ssimfile  ssimfile:dev.linelim  ctype:dev.Linelim
 dmmeta.ssimfile  ssimfile:dev.opt_type  ctype:dev.OptType
+dmmeta.ssimfile  ssimfile:dev.readme  ctype:dev.Readme
 dmmeta.ssimfile  ssimfile:dev.scriptfile  ctype:dev.Scriptfile
 dmmeta.ssimfile  ssimfile:dev.srcfile  ctype:dev.Srcfile
 dmmeta.ssimfile  ssimfile:dev.syslib  ctype:dev.Syslib

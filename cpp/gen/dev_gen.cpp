@@ -918,6 +918,47 @@ void dev::OptType_Print(dev::OptType & row, algo::cstring &str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
+// --- dev.Readme..ReadFieldMaybe
+bool dev::Readme_ReadFieldMaybe(dev::Readme &parent, algo::strptr field, algo::strptr strval) {
+    dev::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case dev_FieldId_gitfile: retval = algo::Smallstr200_ReadStrptrMaybe(parent.gitfile, strval); break;
+        case dev_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dev.Readme..ReadStrptrMaybe
+// Read fields of dev::Readme from an ascii string.
+// The format of the string is an ssim Tuple
+bool dev::Readme_ReadStrptrMaybe(dev::Readme &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dev.readme") || algo::StripTypeTag(in_str, "dev.Readme");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Readme_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dev.Readme..Print
+// print string representation of dev::Readme to string LHS, no header -- cprint:dev.Readme.String
+void dev::Readme_Print(dev::Readme & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "dev.readme";
+
+    algo::Smallstr200_Print(row.gitfile, temp);
+    PrintAttrSpaceReset(str,"gitfile", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
 // --- dev.Scriptfile..ReadFieldMaybe
 bool dev::Scriptfile_ReadFieldMaybe(dev::Scriptfile &parent, algo::strptr field, algo::strptr strval) {
     dev::FieldId field_id;

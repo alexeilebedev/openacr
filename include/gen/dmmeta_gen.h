@@ -383,6 +383,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dev_gitfile;           // dev.gitf
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_gitinfo;           // dev.gitinfo            fconst:dmmeta.Ssimfile.ssimfile/dev.gitinfo
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_linelim;           // dev.linelim            fconst:dmmeta.Ssimfile.ssimfile/dev.linelim
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_opt_type;          // dev.opt_type           fconst:dmmeta.Ssimfile.ssimfile/dev.opt_type
+extern const char *  dmmeta_Ssimfile_ssimfile_dev_readme;            // dev.readme             fconst:dmmeta.Ssimfile.ssimfile/dev.readme
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_scriptfile;        // dev.scriptfile         fconst:dmmeta.Ssimfile.ssimfile/dev.scriptfile
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_srcfile;           // dev.srcfile            fconst:dmmeta.Ssimfile.ssimfile/dev.srcfile
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_syslib;            // dev.syslib             fconst:dmmeta.Ssimfile.ssimfile/dev.syslib

@@ -526,9 +526,10 @@ dmmeta.ctypelen  ctype:atf_amc.VarlenAlloc  len:4  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.VarlenExtern  len:4  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.VarlenH  len:4  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.VarlenK  len:4  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:atf_norm.FDb  len:1240  alignment:8  padbytes:30
+dmmeta.ctypelen  ctype:atf_norm.FDb  len:1496  alignment:8  padbytes:26
 dmmeta.ctypelen  ctype:atf_norm.FNormcheck  len:216  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:atf_norm.FNs  len:232  alignment:8  padbytes:2
+dmmeta.ctypelen  ctype:atf_norm.FReadme  len:354  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atf_norm.FScriptfile  len:464  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:atf_norm.FSsimfile  len:112  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:atf_unit.Bitset  len:48  alignment:16  padbytes:15
@@ -583,6 +584,7 @@ dmmeta.ctypelen  ctype:dev.Gitinfo  len:352  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Include  len:355  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Linelim  len:284  alignment:4  padbytes:2
 dmmeta.ctypelen  ctype:dev.OptType  len:208  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:dev.Readme  len:354  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Scriptfile  len:456  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Srcfile  len:202  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Syscmd  len:48  alignment:8  padbytes:6
