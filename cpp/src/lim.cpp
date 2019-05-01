@@ -161,6 +161,7 @@ static int CheckLim(dev::Linelim &ideallim, dev::Linelim &customlim, dev::Lineli
     MmapFile file;
     MmapFile_Load(file,ideallim.gitfile);
     cstring func_comment;
+    bool show_workaround=false;
     ind_beg(algo::Line_curs, line, file.text) {
         u32 linelen=ch_N(line);
         bool hascurly=FindChar(line,'}')!=-1;
@@ -174,6 +175,7 @@ static int CheckLim(dev::Linelim &ideallim, dev::Linelim &customlim, dev::Lineli
         bool badline=false;
         if (badfunclen && (observed.nlongfunc > customlim.nlongfunc || observed.longestfunc > customlim.longestfunc)) {
             badline=true;
+            show_workaround=true;
             prerr("src_lim.funclen_crazy"
                   <<Keyval("funclength",funclen)
                   <<Keyval("limit",ideallim.longestfunc)
@@ -181,6 +183,7 @@ static int CheckLim(dev::Linelim &ideallim, dev::Linelim &customlim, dev::Lineli
         }
         if (badlinelen && (observed.longestline > customlim.longestline || observed.nlongline > customlim.nlongline)) {
             badline=true;
+            show_workaround=true;
             prerr("src_lim.not_uk"
                   <<Keyval("linelength",linelen)
                   <<Keyval("limit",ideallim.longestline)
@@ -188,6 +191,7 @@ static int CheckLim(dev::Linelim &ideallim, dev::Linelim &customlim, dev::Lineli
         }
         if (badmystery && (observed.nmysteryfunc > customlim.nmysteryfunc)) {
             badline=true;
+            show_workaround=true;
             prerr("src_lim.voynich_manuscript"
                   <<Keyval("nmysteryfunc",observed.nmysteryfunc)
                   <<Keyval("limit",ideallim.nmysteryfunc)
@@ -195,6 +199,7 @@ static int CheckLim(dev::Linelim &ideallim, dev::Linelim &customlim, dev::Lineli
         }
         if (badws && (observed.nbadws > customlim.nbadws || observed.maxws > customlim.maxws)) {
             badline=true;
+            show_workaround=true;
             prerr("src_lim.indentured_service"
                   <<Keyval("ws",ws)
                   <<Keyval("limit",ideallim.maxws)
@@ -206,6 +211,9 @@ static int CheckLim(dev::Linelim &ideallim, dev::Linelim &customlim, dev::Lineli
             nerr++;
         }
     }ind_end;
+    if (show_workaround) {
+        prerr("# NOTE: to bypass the error message, re-run update-linelim to re-baseline the change");
+    }
     return nerr;
 }
 

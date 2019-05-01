@@ -74,6 +74,7 @@ namespace atf_norm { // update-hdr
     // void normcheck_amc();
     // void normcheck_tempcode();
     // void normcheck_stray_gen();
+    // void normcheck_readmetoc();
 
     // -------------------------------------------------------------------
     // cpp/atf/norm/ssim.cpp -- ssim database normalizations

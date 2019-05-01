@@ -1,3 +1,105 @@
+<!--ts-->
+      * [About](#about)
+      * [Setup and Installation](#setup-and-installation)
+         * [Tests](#tests)
+      * [Directory Structure](#directory-structure)
+         * [Binaries](#binaries)
+         * [Editor configuration files](#editor-configuration-files)
+      * [Command Line Options](#command-line-options)
+      * [Bash Command Completion](#bash-command-completion)
+         * [Example: Create New Ssimfile And Test Command Completion](#example-create-new-ssimfile-and-test-command-completion)
+      * [Tutorial: Hello Meta World](#tutorial-hello-meta-world)
+      * [Ssim files](#ssim-files)
+         * [Structured Key Normal Form](#structured-key-normal-form)
+         * [History of SKNF](#history-of-sknf)
+      * [acr - Auto Cross Reference](#acr---auto-cross-reference)
+         * [Example: Print all records in Ssim database](#example-print-all-records-in-ssim-database)
+         * [Example: Format ssim table](#example-format-ssim-table)
+         * [Example: Delete unnecessary entries from a dependency table](#example-delete-unnecessary-entries-from-a-dependency-table)
+         * [Example: Round-trip custom type through Mariadb without loss](#example-round-trip-custom-type-through-mariadb-without-loss)
+         * [Example: Recursively rename a key](#example-recursively-rename-a-key)
+         * [Example: Move field from one ctype to another](#example-move-field-from-one-ctype-to-another)
+         * [Example: Recursively delete a key](#example-recursively-delete-a-key)
+         * [Example: Use SQL statements to refactor code](#example-use-sql-statements-to-refactor-code)
+         * [Example: Specify bool options on command line](#example-specify-bool-options-on-command-line)
+         * [Field Funcs](#field-funcs)
+      * [acr_in: Show input tuples for target.](#acr_in-show-input-tuples-for-target)
+      * [abt - A Build Tool](#abt---a-build-tool)
+      * [amc - Algo Model Compiler](#amc---algo-model-compiler)
+         * [Running Amc](#running-amc)
+         * [Query mode](#query-mode)
+         * [References](#references)
+         * [Sandbox mode](#sandbox-mode)
+         * [Reading Code of Amc Itself](#reading-code-of-amc-itself)
+         * [Example Show generated C   struct](#example-show-generated-c-struct)
+         * [Example: Show prototypes of all generated functions matching pattern](#example-show-prototypes-of-all-generated-functions-matching-pattern)
+         * [Example: Count how many linked lists there are in the code database](#example-count-how-many-linked-lists-there-are-in-the-code-database)
+         * [Example: Find all references to a record](#example-find-all-references-to-a-record)
+         * [Example: Edit 2 Ctypes](#example-edit-2-ctypes)
+         * [Main Input Tables](#main-input-tables)
+         * [Steps](#steps)
+         * [Cross-references](#cross-references)
+         * [Chaining](#chaining)
+         * [Default Namespace Pool](#default-namespace-pool)
+         * [Tracing](#tracing)
+      * [Bootstrapping Magic](#bootstrapping-magic)
+      * [Reftypes (field types)](#reftypes-field-types)
+         * [Base: Mixin](#base-mixin)
+         * [Bheap: Binary Heap](#bheap-binary-heap)
+         * [Bitset: Bitset over an array](#bitset-bitset-over-an-array)
+         * [Blkpool: Mostly fifo memory allocator](#blkpool-mostly-fifo-memory-allocator)
+         * [Count: Count elements](#count-count-elements)
+         * [Dec: Scaled decimals](#dec-scaled-decimals)
+         * [Fconst: Enumerated type](#fconst-enumerated-type)
+         * [Inlary: Inline array](#inlary-inline-array)
+         * [Lary: Level array](#lary-level-array)
+         * [Llist: Linked list](#llist-linked-list)
+         * [Lpool: Level pool](#lpool-level-pool)
+         * [Malloc](#malloc)
+         * [Opt: Optional last field in variable-length struct](#opt-optional-last-field-in-variable-length-struct)
+         * [Pmask: Presence mask](#pmask-presence-mask)
+         * [Ptr](#ptr)
+         * [Ptrary](#ptrary)
+         * [RegxSql:](#regxsql)
+         * [Sbrk](#sbrk)
+         * [Smallstr](#smallstr)
+         * [Tary: Flat array of records](#tary-flat-array-of-records)
+         * [Thash: hash table](#thash-hash-table)
+         * [Tpool: singly linked free-list](#tpool-singly-linked-free-list)
+         * [Upptr:](#upptr)
+         * [Val: Value](#val-value)
+         * [Varlen: variable-length tail portion of a struct](#varlen-variable-length-tail-portion-of-a-struct)
+      * [String types and how to use them:](#string-types-and-how-to-use-them)
+      * [acr_ed](#acr_ed)
+      * [Coding Style](#coding-style)
+         * [Spaces, Indentation](#spaces-indentation)
+         * [Variable Names](#variable-names)
+         * [Predicate Functions](#predicate-functions)
+         * [Curly Braces](#curly-braces)
+         * [Split Conditionals](#split-conditionals)
+         * [Curly Braces around Conditionals are Non-Optional](#curly-braces-around-conditionals-are-non-optional)
+         * [Use of semi-colon forces a new line](#use-of-semi-colon-forces-a-new-line)
+         * [Keep code separate from data](#keep-code-separate-from-data)
+         * [Use query-command separation](#use-query-command-separation)
+         * [Keep it single-threaded](#keep-it-single-threaded)
+         * [Use Single Entry, Single Exit (SESE) style](#use-single-entry-single-exit-sese-style)
+         * [Single File Static Assignment](#single-file-static-assignment)
+         * [Document all non-static functions](#document-all-non-static-functions)
+         * [All rules allow exceptions](#all-rules-allow-exceptions)
+      * [amc_vis](#amc_vis)
+      * [amc_gc: AMC garbage collector](#amc_gc-amc-garbage-collector)
+      * [MariaDB integration](#mariadb-integration)
+      * [Working with source files &amp; targets](#working-with-source-files--targets)
+         * [Listing Files](#listing-files)
+         * [Creating Source Files](#creating-source-files)
+         * [Functions &amp; Headers](#functions--headers)
+         * [Program Text](#program-text)
+      * [atf_unit: Unit Tests](#atf_unit-unit-tests)
+      * [Links](#links)
+
+
+<!--te-->
+
 ## About
 This is OpenACR, an open-source version of acr, which stands for Auto Cross
 Reference, and related tools.
@@ -102,21 +204,12 @@ If this script succeeds, your latest changes are OK (relatively speaking).
 * `temp`        Temp dir
 * `txt`         .txt files
 
-All executables are registered in bin -- both scripts and binaries.
+Intermediate binaries are kept in dflt.debug-x86_64 or dflt.release-x86_64
 
 ### Binaries
 
-All executable files are in bin.
+All executable files are in bin (both scripts and binary executables).
 Binaries are compiled with abt -build and installed with abt -install.
-
-### Try these commands
-
-* `amc`                    generate c++: output files are placed in cpp/gen and include/gen
-* `abt % -install`         compile and install all binaries (shortcut: ai)
-* `acr target -t`          list of buildable targets, their source files and build options
-* `normalize`              consistency check (includes calls to atf_unit and more)
-
-Intermediate binaries are kept in dflt.debug-x86_64 or dflt.release-x86_64
 
 ### Editor configuration files
 

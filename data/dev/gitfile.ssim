@@ -36,6 +36,7 @@ dev.gitfile  gitfile:bin/gcache
 dev.gitfile  gitfile:bin/gcache-install
 dev.gitfile  gitfile:bin/gcache-stats
 dev.gitfile  gitfile:bin/gcache-use
+dev.gitfile  gitfile:bin/gh-md-toc
 dev.gitfile  gitfile:bin/git-add-to-last-commit
 dev.gitfile  gitfile:bin/git-authors
 dev.gitfile  gitfile:bin/git-clean-branches
@@ -79,6 +80,7 @@ dev.gitfile  gitfile:bin/todo
 dev.gitfile  gitfile:bin/update-gitfile
 dev.gitfile  gitfile:bin/update-hdr
 dev.gitfile  gitfile:bin/update-linelim
+dev.gitfile  gitfile:bin/update-readme-toc
 dev.gitfile  gitfile:bin/update-scriptfile
 dev.gitfile  gitfile:bin/zfs_snapshot.pl
 dev.gitfile  gitfile:conf/alexei/bash_profile

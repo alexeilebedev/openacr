@@ -123,3 +123,12 @@ void atf_norm::normcheck_stray_gen() {
     GenCheck("include/gen");
     GenCheck("cpp/gen");
 }
+
+// --------------------------------------------------------------------------------
+
+void atf_norm::normcheck_readmetoc() {
+    // TODO: get rid of gh-md-toc and just re-generate it by hand
+    algo::SysCmd("bin/gh-md-toc --insert README.md >/dev/null", FailokQ(false));
+    algo::SysCmd("sed -i '/-- Added by:/d' README.md", FailokQ(false));
+    algo::SysCmd("rm -f README.md.toc.* README.md.orig.*", FailokQ(false));
+}

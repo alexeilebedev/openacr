@@ -547,6 +547,8 @@ void                 normcheck_amc();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_testamc();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
+void                 normcheck_readmetoc();
+// User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_unit();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_copyright();

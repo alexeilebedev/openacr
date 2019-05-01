@@ -283,6 +283,7 @@ static void atf_norm::normcheck_LoadStatic() {
     } data[] = {
         { "atfdb.normcheck  normcheck:amc  comment:\"Run amc\"", atf_norm::normcheck_amc }
         ,{ "atfdb.normcheck  normcheck:testamc  comment:\"Test amc (run atf_amc)\"", atf_norm::normcheck_testamc }
+        ,{ "atfdb.normcheck  normcheck:readmetoc  comment:\"Re-generate README.md table of contents\"", atf_norm::normcheck_readmetoc }
         ,{ "atfdb.normcheck  normcheck:unit  comment:\"Run unit tests\"", atf_norm::normcheck_unit }
         ,{ "atfdb.normcheck  normcheck:copyright  comment:\"Update copyrights in source files\"", atf_norm::normcheck_copyright }
         ,{ "atfdb.normcheck  normcheck:iffy_src  comment:\"Check for iffy source constructs with src_func\"", atf_norm::normcheck_iffy_src }
