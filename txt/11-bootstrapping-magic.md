@@ -33,23 +33,31 @@ lock in the gains. For that, we need a tool whose input is about equally readabl
 by both human and the machine, and where most of the source code is derived
 from this input. That way, we skip the slow interpretation layer, and
 get to lock in any iterative improvements.
-And we want to avoid creating a new language, at all costs --
-a conservative subset of C++ is all you need to write anything.
 
-In the world where a lot of source code is generated from a machine-readable
-format, you encounter seemingly circular situations:
+And we want to avoid creating a new language, at all costs, because creating a new
+language is such an expensive proposition. You now need glue libraries between your
+language and all other languages; and you need debuggers, and multi-platform support
+just for starters.
+But a conservative subset of C++ is all you need to write anything.
+C++ with an extra library is still C++.
+
+In the world where data is kept in a machine-readable format, and most of the source code
+is generated, the tools become universal: any tool works with almost any other tool. 
+
+    'abt acr' builds acr.
+    'abt abt' builds itself.
 
     'acr field:dmmeta.Field.field' describes its own primary key.
     'acr ctype:dmmeta.Ctype' describes the struct type (C type).
 
     'amc acr.%' generates from scratch (most of) the source code for acr
-    'amc amc.%' generates from scratch the source code itself.
+    'amc amc.%' generates from scratch the source code of itself.
 
     'src_func abt' shows the hand-written source code of abt.
     'src_func src_func' shows the hand-written source code of itself.
 
     'acr_in -data amc' shows all of the inputs that amc takes
-    'acr_in -data acr_in' shows all of the inputs for itself.
+    'acr_in -data acr_in' shows all of the inputs that it takes.
 
     'acr_compl -line amc' shows bash completions for amc
     'acr_compl -line acr_compl' shows bash completions for acr_compl itself
@@ -57,7 +65,6 @@ format, you encounter seemingly circular situations:
     'acr ns:abt -t' shows the definitions of all abt structures
     'acr ns:acr -t' shows the definitions of its own structures
 
-    'abt acr' builds acr.
-    'abt abt' builds itself.
-
-
+And of course, the point of the tools is not to compile themselves; 
+The idea is that this repo is extended with new commands and tools specific to some project,
+maintaining the same directory structure and basic conventions.

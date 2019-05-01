@@ -24,16 +24,16 @@ void samp_hi::Main() {
             prlog("    has field "<<field.field<<" of type "<<field.arg<<" reftype:"<<field.reftype);
         }ind_end;
         ind_beg(samp_hi::ctype_zd_arg_curs,arg,ctype) {
-            prlog("    is referred to by field "<<arg.field<<" using "<<field.reftype);
+            prlog("    is referred to by field "<<arg.field<<" using "<<arg.reftype);
         }ind_end;
     }ind_end;
 }
 EOF
-acr_ed -create -finput -target samp_hi -ssimfile dmmeta.ctype -indexed -write
-acr_ed -create -finput -target samp_hi -ssimfile dmmeta.field -write
-acr_ed -create -field samp_hi.FField.p_ctype  -write
-acr_ed -create -field samp_hi.FCtype.zd_field -arg samp_hi.FField -xref -via:samp_hi.FDb.ind_ctype/dmmeta.Field.ctype  -write
-acr_ed -create -field samp_hi.FCtype.zd_arg   -arg samp_hi.FField -xref -via:samp_hi.FDb.ind_ctype/dmmeta.Field.arg    -write
+acr_ed -create -finput -target samp_hi -ssimfile:dmmeta.ctype -indexed -write
+acr_ed -create -finput -target samp_hi -ssimfile:dmmeta.field -write
+acr_ed -create -field:samp_hi.FField.p_ctype  -arg:samp_hi.FCtype -xref -via:samp_hi.FDb.ind_ctype/dmmeta.Field.ctype -write
+acr_ed -create -field:samp_hi.FCtype.zd_field -arg:samp_hi.FField -xref -via:samp_hi.FDb.ind_ctype/dmmeta.Field.ctype  -write
+acr_ed -create -field:samp_hi.FCtype.zd_arg   -arg:samp_hi.FField -xref -via:samp_hi.FDb.ind_ctype/dmmeta.Field.arg    -write
 amc
 abt -install samp_hi
 acr ns:samp_hi -t

@@ -6,14 +6,15 @@ I don't particularly like Java, but the first variant is preferrable,
 because it's clear at the syntax level, without knowing what the command
 expects, that `value` is a value and not a stand-alone option or a positional argument.
 
-All tools accept standard options -verbose, -help, -debug
-Verbosity is cumulative, each child process inherits a lower verbosity level; it's a form of tracing.
+All tools accept standard options -verbose, -help, -debug. 
+Verbosity is cumulative, each subprocess process inherits a lower verbosity level; it's a form of tracing.
 Running a process with -v -v will execute most immediate subprocesses with -v.
-The command line of any tool is represented by ctype in the command namespace. Try this:
+The command line of any tool is represented by a ctype in the command namespace. 
+Try this:
 
     acr ctype:cmdline.acr -t
 
-## Bash Command Completion
+### Bash Command Completion
 
 To configure completion of all commands, do
 
