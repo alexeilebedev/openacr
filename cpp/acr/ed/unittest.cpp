@@ -62,3 +62,15 @@ void acr_ed::Main_CreateUnittest() {
     Ins(&R, acr_ed::_db.script, tempstr()<<"$prefixemacs -nw +"<<nline+4<<" cpp/atf/unit/$ns.cpp");
     Ins(&R, acr_ed::_db.script, "$prefixabt -install atf_unit && atf_unit $ns.$Name");
 }
+
+// -----------------------------------------------------------------------------
+
+// Create a new normalization check
+void acr_ed::Main_CreateNormcheck() {
+    prlog("acr_ed.create_normcheck"
+          <<Keyval("normcheck",acr_ed::_db.cmdline.normcheck));
+    acr_ed::_db.out_ssim<<"atfdb.normcheck"
+                        <<Keyval("normcheck",acr_ed::_db.cmdline.normcheck)
+                        <<Keyval("comment","")
+                        <<eol;
+}

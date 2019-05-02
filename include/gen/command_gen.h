@@ -62,7 +62,7 @@ enum command_FieldIdEnum {                    // command.FieldId.value
     ,command_FieldId_tree              = 45
     ,command_FieldId_loose             = 46
     ,command_FieldId_my                = 47
-    ,command_FieldId_schema_dir        = 48
+    ,command_FieldId_schema            = 48
     ,command_FieldId_e                 = 49
     ,command_FieldId_b                 = 50
     ,command_FieldId_t                 = 51
@@ -102,37 +102,37 @@ enum command_FieldIdEnum {                    // command.FieldId.value
     ,command_FieldId_hashfld           = 85
     ,command_FieldId_sortfld           = 86
     ,command_FieldId_unittest          = 87
-    ,command_FieldId_cppfunc           = 88
-    ,command_FieldId_via               = 89
-    ,command_FieldId_showcpp           = 90
-    ,command_FieldId_comment           = 91
-    ,command_FieldId_sandbox           = 92
-    ,command_FieldId_ns                = 93
-    ,command_FieldId_data              = 94
-    ,command_FieldId_sigcheck          = 95
-    ,command_FieldId_data_dir          = 96
-    ,command_FieldId_related           = 97
-    ,command_FieldId_notssimfile       = 98
-    ,command_FieldId_checkable         = 99
-    ,command_FieldId_nsdb              = 100
-    ,command_FieldId_fkey              = 101
-    ,command_FieldId_start             = 102
-    ,command_FieldId_stop              = 103
-    ,command_FieldId_abort             = 104
-    ,command_FieldId_shell             = 105
-    ,command_FieldId_serv              = 106
-    ,command_FieldId_proto             = 107
-    ,command_FieldId_trace             = 108
-    ,command_FieldId_fconst            = 109
-    ,command_FieldId_gconst            = 110
-    ,command_FieldId_key               = 111
-    ,command_FieldId_include           = 112
-    ,command_FieldId_dot               = 113
-    ,command_FieldId_xns               = 114
-    ,command_FieldId_noinput           = 115
-    ,command_FieldId_render            = 116
-    ,command_FieldId_amctest           = 117
-    ,command_FieldId_normcheck         = 118
+    ,command_FieldId_normcheck         = 88
+    ,command_FieldId_cppfunc           = 89
+    ,command_FieldId_via               = 90
+    ,command_FieldId_showcpp           = 91
+    ,command_FieldId_comment           = 92
+    ,command_FieldId_sandbox           = 93
+    ,command_FieldId_ns                = 94
+    ,command_FieldId_data              = 95
+    ,command_FieldId_sigcheck          = 96
+    ,command_FieldId_data_dir          = 97
+    ,command_FieldId_related           = 98
+    ,command_FieldId_notssimfile       = 99
+    ,command_FieldId_checkable         = 100
+    ,command_FieldId_nsdb              = 101
+    ,command_FieldId_fkey              = 102
+    ,command_FieldId_start             = 103
+    ,command_FieldId_stop              = 104
+    ,command_FieldId_abort             = 105
+    ,command_FieldId_shell             = 106
+    ,command_FieldId_serv              = 107
+    ,command_FieldId_proto             = 108
+    ,command_FieldId_trace             = 109
+    ,command_FieldId_fconst            = 110
+    ,command_FieldId_gconst            = 111
+    ,command_FieldId_key               = 112
+    ,command_FieldId_include           = 113
+    ,command_FieldId_dot               = 114
+    ,command_FieldId_xns               = 115
+    ,command_FieldId_noinput           = 116
+    ,command_FieldId_render            = 117
+    ,command_FieldId_amctest           = 118
     ,command_FieldId_nofork            = 119
     ,command_FieldId_debug             = 120
     ,command_FieldId_perf_secs         = 121
@@ -152,39 +152,38 @@ enum command_FieldIdEnum {                    // command.FieldId.value
     ,command_FieldId_writessimfile     = 135
     ,command_FieldId_url               = 136
     ,command_FieldId_tables            = 137
-    ,command_FieldId_schema            = 138
-    ,command_FieldId_nologo            = 139
-    ,command_FieldId_baddbok           = 140
-    ,command_FieldId_targsrc           = 141
-    ,command_FieldId_name              = 142
-    ,command_FieldId_body              = 143
-    ,command_FieldId_func              = 144
-    ,command_FieldId_nextfile          = 145
-    ,command_FieldId_other             = 146
-    ,command_FieldId_updateproto       = 147
-    ,command_FieldId_listfunc          = 148
-    ,command_FieldId_iffy              = 149
-    ,command_FieldId_gen               = 150
-    ,command_FieldId_showloc           = 151
-    ,command_FieldId_showstatic        = 152
-    ,command_FieldId_showsortkey       = 153
-    ,command_FieldId_sortname          = 154
-    ,command_FieldId_update_authors    = 155
-    ,command_FieldId_linelim           = 156
-    ,command_FieldId_strayfile         = 157
-    ,command_FieldId_capture           = 158
-    ,command_FieldId_expand            = 159
-    ,command_FieldId_ignoreQuote       = 160
-    ,command_FieldId_maxpacket         = 161
-    ,command_FieldId_db                = 162
-    ,command_FieldId_createdb          = 163
-    ,command_FieldId_str               = 164
-    ,command_FieldId_tocamelcase       = 165
-    ,command_FieldId_tolowerunder      = 166
-    ,command_FieldId_value             = 167
+    ,command_FieldId_nologo            = 138
+    ,command_FieldId_baddbok           = 139
+    ,command_FieldId_targsrc           = 140
+    ,command_FieldId_name              = 141
+    ,command_FieldId_body              = 142
+    ,command_FieldId_func              = 143
+    ,command_FieldId_nextfile          = 144
+    ,command_FieldId_other             = 145
+    ,command_FieldId_updateproto       = 146
+    ,command_FieldId_listfunc          = 147
+    ,command_FieldId_iffy              = 148
+    ,command_FieldId_gen               = 149
+    ,command_FieldId_showloc           = 150
+    ,command_FieldId_showstatic        = 151
+    ,command_FieldId_showsortkey       = 152
+    ,command_FieldId_sortname          = 153
+    ,command_FieldId_update_authors    = 154
+    ,command_FieldId_linelim           = 155
+    ,command_FieldId_strayfile         = 156
+    ,command_FieldId_capture           = 157
+    ,command_FieldId_expand            = 158
+    ,command_FieldId_ignoreQuote       = 159
+    ,command_FieldId_maxpacket         = 160
+    ,command_FieldId_db                = 161
+    ,command_FieldId_createdb          = 162
+    ,command_FieldId_str               = 163
+    ,command_FieldId_tocamelcase       = 164
+    ,command_FieldId_tolowerunder      = 165
+    ,command_FieldId_value             = 166
 };
 
-enum { command_FieldIdEnum_N = 168 };
+enum { command_FieldIdEnum_N = 167 };
 
 namespace command { struct FieldId; }
 namespace command { struct Protocol; }
@@ -387,40 +386,40 @@ void                 abt_proc_Uninit(command::abt_proc& parent) __attribute__((n
 // --- command.acr
 // access: command.acr_proc.acr (Exec)
 struct acr { // command.acr
-    algo::cstring   query;        //   ""  Regx to match record
-    bool            select;       //   true  Select records matching query (default)
-    bool            del;          //   false  Delete found item
-    bool            insert;       //   false  Read input and insert tuples
-    bool            replace;      //   false  Read stdin and replace tuples
-    bool            merge;        //   false  Like replace, but merge tuple attributes
-    bool            unused;       //   false  Only select records which are not referenced.
-    bool            trunc;        //   false  (with insert or rename): truncate table on first write
-    bool            check;        //   false  Run cross-reference check on selection
-    i32             maxshow;      //   100  Limit number of errors per table
-    bool            write;        //   false  Write data back to disk.
-    algo::cstring   rename;       //   ""  Change value of found item
-    i32             nup;          //   0  Number of levels to go up
-    i32             ndown;        //   0  Number of levels to go down
-    bool            xref;         //   false  Short for -nup 100 -ndown 100
-    bool            fldfunc;      //   false  Evaluate fldfunc when printing tuple
-    i32             maxgroup;     //   25  Max. items per group
-    bool            pretty;       //   true  Align output in blocks
-    bool            tree;         //   false  Print as tree
-    bool            loose;        //   false  Allow printing a record before its references (used with -e)
-    bool            my;           //   false  Invoke acr_my -e (using acr_my directly is faster)
-    algo::cstring   schema_dir;   //   "data"  Directory for initializing acr meta-data
-    bool            e;            //   false  Open selection in editor, write back when done.
-    bool            b;            //   false  Short for -serve 0.0.0.0:6769; start browser.
-    bool            t;            //   false  Short for -tree -xref -loose
-    bool            rowid;        //   false  Print/respect acr.rowid attribute
-    algo::cstring   in;           //   "data"  Input directory or filename, - for stdin
-    bool            cmt;          //   false  Print comments for all columns referenced in output
-    bool            report;       //   true  Show final report
-    bool            print;        //   true  Print selected records
-    algo::cstring   cmd;          //   ""  Print script with command execution for each selected row
-    algo::cstring   field;        //   ""  Comma-separated list of fields to select
-    algo::cstring   regxof;       //   ""  Single field: output regx of matching field values
-    bool            meta;         //   false  Select meta-data for selected records
+    algo::cstring   query;      //   ""  Regx to match record
+    bool            select;     //   true  Select records matching query (default)
+    bool            del;        //   false  Delete found item
+    bool            insert;     //   false  Read input and insert tuples
+    bool            replace;    //   false  Read stdin and replace tuples
+    bool            merge;      //   false  Like replace, but merge tuple attributes
+    bool            unused;     //   false  Only select records which are not referenced.
+    bool            trunc;      //   false  (with insert or rename): truncate table on first write
+    bool            check;      //   false  Run cross-reference check on selection
+    i32             maxshow;    //   100  Limit number of errors per table
+    bool            write;      //   false  Write data back to disk.
+    algo::cstring   rename;     //   ""  Change value of found item
+    i32             nup;        //   0  Number of levels to go up
+    i32             ndown;      //   0  Number of levels to go down
+    bool            xref;       //   false  Short for -nup 100 -ndown 100
+    bool            fldfunc;    //   false  Evaluate fldfunc when printing tuple
+    i32             maxgroup;   //   25  Max. items per group
+    bool            pretty;     //   true  Align output in blocks
+    bool            tree;       //   false  Print as tree
+    bool            loose;      //   false  Allow printing a record before its references (used with -e)
+    bool            my;         //   false  Invoke acr_my -e (using acr_my directly is faster)
+    algo::cstring   schema;     //   "data"  Directory for initializing acr meta-data
+    bool            e;          //   false  Open selection in editor, write back when done.
+    bool            b;          //   false  Short for -serve 0.0.0.0:6769; start browser.
+    bool            t;          //   false  Short for -tree -xref -loose
+    bool            rowid;      //   false  Print/respect acr.rowid attribute
+    algo::cstring   in;         //   "data"  Input directory or filename, - for stdin
+    bool            cmt;        //   false  Print comments for all columns referenced in output
+    bool            report;     //   true  Show final report
+    bool            print;      //   true  Print selected records
+    algo::cstring   cmd;        //   ""  Print script with command execution for each selected row
+    algo::cstring   field;      //   ""  Comma-separated list of fields to select
+    algo::cstring   regxof;     //   ""  Single field: output regx of matching field values
+    bool            meta;       //   false  Select meta-data for selected records
     acr();
 };
 
@@ -532,6 +531,7 @@ struct acr_ed { // command.acr_ed
     algo::Smallstr100   hashfld;     //   ""      (-reftype:Thash) Hash field
     algo::Smallstr100   sortfld;     //   ""      (-reftype:Bheap) Sort field
     algo::cstring       unittest;    //   ""  Create unit test, <ns>.<functionname>
+    algo::cstring       normcheck;   //   ""  Create normalization check
     algo::cstring       cppfunc;     //   ""  Field is a cppfunc, pass c++ expression as argument
     bool                xref;        //   false      X-ref with field type
     algo::cstring       via;         //   ""        X-ref argument (index, pointer, or index/key)
@@ -602,7 +602,7 @@ struct acr_in { // command.acr_in
     bool             sigcheck;      //   true  Output sigcheck records for schema version mismatch detection
     bool             list;          //   false  List ssimfile names
     algo::cstring    data_dir;      //   "data"  Directory with ssimfiles
-    algo::cstring    schema_dir;    //   "data"
+    algo::cstring    schema;        //   "data"
     algo::cstring    related;       //   ""  Select only tuples related to specified acr key
     algo_lib::Regx   notssimfile;   //   ""  Regx of dmmeta::Ssimfile
     bool             checkable;     //   false  Ensure output passes acr -check
@@ -676,17 +676,17 @@ void                 acr_in_proc_Uninit(command::acr_in_proc& parent) __attribut
 // --- command.acr_my
 // access: command.acr_my_proc.acr_my (Exec)
 struct acr_my { // command.acr_my
-    algo_lib::Regx   nsdb;         //   ""  Regx of dmmeta::Nsdb
-    algo::cstring    in;           //   "data"  Input directory or filename, - for stdin
-    algo::cstring    schema_dir;   //   "data"  Input directory or filename, - for stdin
-    bool             fldfunc;      //   false  Evaluate fldfunc when printing tuple
-    bool             fkey;         //   false  Enable foreign key constraints
-    bool             e;            //   false  Alias for -start -shell -stop
-    bool             start;        //   false  Start local mysql server
-    bool             stop;         //   false  Stop local mysql server, saving data
-    bool             abort;        //   false  Abort local mysql server, losing data
-    bool             shell;        //   false  Connect to local mysql server
-    bool             serv;         //   false  Start mysql with TCP/IP service enabled
+    algo_lib::Regx   nsdb;      //   ""  Regx of dmmeta::Nsdb
+    algo::cstring    in;        //   "data"  Input directory or filename, - for stdin
+    algo::cstring    schema;    //   "data"  Input directory or filename, - for stdin
+    bool             fldfunc;   //   false  Evaluate fldfunc when printing tuple
+    bool             fkey;      //   false  Enable foreign key constraints
+    bool             e;         //   false  Alias for -start -shell -stop
+    bool             start;     //   false  Start local mysql server
+    bool             stop;      //   false  Stop local mysql server, saving data
+    bool             abort;     //   false  Abort local mysql server, losing data
+    bool             shell;     //   false  Connect to local mysql server
+    bool             serv;      //   false  Start mysql with TCP/IP service enabled
     acr_my();
 };
 

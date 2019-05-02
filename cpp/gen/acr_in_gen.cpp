@@ -38,7 +38,7 @@ const char *acr_in_help =
 "    -sigcheck             Output sigcheck records for schema version mismatch detection. default: true\n"
 "    -list                 List ssimfile names. default: false\n"
 "    -data_dir     string  Directory with ssimfiles. default: \"data\"\n"
-"    -schema_dir   string  . default: \"data\"\n"
+"    -schema       string  . default: \"data\"\n"
 "    -related      string  Select only tuples related to specified acr key\n"
 "    -notssimfile  string  Exclude ssimfiles matching regx\n"
 "    -checkable            Ensure output passes acr -check. default: false\n"
@@ -56,7 +56,7 @@ const char *acr_in_syntax =
 " -sigcheck:flag=true\n"
 " -list:flag\n"
 " -data_dir:string=\"data\"\n"
-" -schema_dir:string=\"data\"\n"
+" -schema:string=\"data\"\n"
 " -related:string=\n"
 " -notssimfile:string=\n"
 " -checkable:flag\n"
@@ -500,7 +500,7 @@ void acr_in::MainArgs(int argc, char **argv) {
     Argtuple argtuple;
     Argtuple_ReadArgv(argtuple, argc,argv,acr_in_syntax, acr_in_help);
     vrfy(acr_in_ReadTupleMaybe(acr_in::_db.cmdline, argtuple.tuple),"where:read_cmdline");
-    vrfy(acr_in::LoadTuplesMaybe(acr_in::_db.cmdline.schema_dir)
+    vrfy(acr_in::LoadTuplesMaybe(acr_in::_db.cmdline.schema)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
     acr_in::Main(); // call through to user-defined main
 }

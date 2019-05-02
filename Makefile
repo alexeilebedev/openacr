@@ -11,3 +11,6 @@ bootstrap:
 
 clean:
 	rm -rf dflt.*-x86_64 .testgen 
+
+readme:
+	atf_norm readme
