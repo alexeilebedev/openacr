@@ -30,29 +30,29 @@ acr_my::FDb     acr_my::_db;      // dependency found via dev.targdep
 namespace acr_my {
 const char *acr_my_help =
 "Usage: acr_my [options]\n"
-"    [nsdb]       string  Regx of ssim namespace (dmmeta.nsdb) to select\n"
-"    -in          string  Input directory or filename, - for stdin. default: \"data\"\n"
-"    -schema_dir  string  Input directory or filename, - for stdin. default: \"data\"\n"
-"    -fldfunc             Evaluate fldfunc when printing tuple. default: false\n"
-"    -fkey                Enable foreign key constraints. default: false\n"
-"    -e                   Alias for -start -shell -stop. default: false\n"
-"    -start               Start local mysql server. default: false\n"
-"    -stop                Stop local mysql server, saving data. default: false\n"
-"    -abort               Abort local mysql server, losing data. default: false\n"
-"    -shell               Connect to local mysql server. default: false\n"
-"    -serv                Start mysql with TCP/IP service enabled. default: false\n"
-"    -verbose             Enable verbose mode\n"
-"    -debug               Enable debug mode\n"
-"    -version             Show version information\n"
-"    -sig                 Print SHA1 signatures for dispatches\n"
-"    -help                Print this screen and exit\n"
+"    [nsdb]    string  Regx of ssim namespace (dmmeta.nsdb) to select\n"
+"    -in       string  Input directory or filename, - for stdin. default: \"data\"\n"
+"    -schema   string  Input directory or filename, - for stdin. default: \"data\"\n"
+"    -fldfunc          Evaluate fldfunc when printing tuple. default: false\n"
+"    -fkey             Enable foreign key constraints. default: false\n"
+"    -e                Alias for -start -shell -stop. default: false\n"
+"    -start            Start local mysql server. default: false\n"
+"    -stop             Stop local mysql server, saving data. default: false\n"
+"    -abort            Abort local mysql server, losing data. default: false\n"
+"    -shell            Connect to local mysql server. default: false\n"
+"    -serv             Start mysql with TCP/IP service enabled. default: false\n"
+"    -verbose          Enable verbose mode\n"
+"    -debug            Enable debug mode\n"
+"    -version          Show version information\n"
+"    -sig              Print SHA1 signatures for dispatches\n"
+"    -help             Print this screen and exit\n"
 ;
 
 
 const char *acr_my_syntax =
 "[nsdb]:string=\n"
 " -in:string=\"data\"\n"
-" -schema_dir:string=\"data\"\n"
+" -schema:string=\"data\"\n"
 " -fldfunc:flag\n"
 " -fkey:flag\n"
 " -e:flag\n"
@@ -178,7 +178,7 @@ void acr_my::MainArgs(int argc, char **argv) {
     Argtuple argtuple;
     Argtuple_ReadArgv(argtuple, argc,argv,acr_my_syntax, acr_my_help);
     vrfy(acr_my_ReadTupleMaybe(acr_my::_db.cmdline, argtuple.tuple),"where:read_cmdline");
-    vrfy(acr_my::LoadTuplesMaybe(acr_my::_db.cmdline.schema_dir)
+    vrfy(acr_my::LoadTuplesMaybe(acr_my::_db.cmdline.schema)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
     acr_my::Main(); // call through to user-defined main
 }

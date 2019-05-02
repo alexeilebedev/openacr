@@ -1517,7 +1517,7 @@ void atf_unit::acr_ed_ExecX() {
 // Call execv()
 // Call execv with specified parameters -- cprint:acr_ed.Argv
 int atf_unit::acr_ed_Execv() {
-    char *argv[40+2]; // start of first arg (future pointer)
+    char *argv[41+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -1745,6 +1745,13 @@ int atf_unit::acr_ed_Execv() {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-unittest:";
         cstring_Print(_db.acr_ed_cmd.unittest, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (_db.acr_ed_cmd.normcheck != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-normcheck:";
+        cstring_Print(_db.acr_ed_cmd.normcheck, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 

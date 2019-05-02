@@ -111,6 +111,10 @@ static void Create() {
         acr_ed::Main_CreateUnittest();
         acr_ed::NeedAmc();
         n_action++;
+    } else if (ch_N(acr_ed::_db.cmdline.normcheck)) {
+        acr_ed::Main_CreateNormcheck();
+        acr_ed::NeedAmc();
+        n_action++;
     } else if (acr_ed::_db.cmdline.finput || acr_ed::_db.cmdline.gstatic) {
         acr_ed::Main_CreateFinput();
         acr_ed::NeedAmc();

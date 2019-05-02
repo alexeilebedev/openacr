@@ -124,4 +124,7 @@ namespace acr_ed { // update-hdr
     // cpp/acr/ed/unittest.cpp -- Create, delete, rename unit test
     //
     void Main_CreateUnittest();
+
+    // Create a new normalization check
+    void Main_CreateNormcheck();
 }

@@ -287,10 +287,10 @@ int amc_gc::acr_Execv(amc_gc::Acr& parent) {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
-    if (parent.acr_cmd.schema_dir != "data") {
+    if (parent.acr_cmd.schema != "data") {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-schema_dir:";
-        cstring_Print(parent.acr_cmd.schema_dir, temp);
+        temp << "-schema:";
+        cstring_Print(parent.acr_cmd.schema, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
@@ -643,10 +643,10 @@ int amc_gc::acr_Execv(amc_gc::Check& parent) {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
-    if (parent.acr_cmd.schema_dir != "data") {
+    if (parent.acr_cmd.schema != "data") {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-schema_dir:";
-        cstring_Print(parent.acr_cmd.schema_dir, temp);
+        temp << "-schema:";
+        cstring_Print(parent.acr_cmd.schema, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 

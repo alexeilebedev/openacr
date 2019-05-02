@@ -2,24 +2,25 @@ This file was created with 'atf_norm readme' from txt/*.md -- *do not edit*
 
 ## Table Of Contents
    * [About](#about)
+      * [Contributors](#contributors)
    * [Setup and Installation](#setup-and-installation)
-      * [Tests](#tests)
+      * [Platform Short List](#platform-short-list)
+      * [Editor configuration files](#editor-configuration-files)
+      * [Environment Variables](#environment-variables)
    * [Directory Structure](#directory-structure)
       * [Binaries](#binaries)
-      * [Editor configuration files](#editor-configuration-files)
-   * [Command Lines](#command-lines)
-      * [Bash Command Completion](#bash-command-completion)
-      * [Example: Create New Ssimfile And Test Command Completion](#example-create-new-ssimfile-and-test-command-completion)
-   * [Tutorial: Hello Meta World](#tutorial-hello-meta-world)
-   * [Ssim files](#ssim-files)
-      * [Structured Key Normal Form](#structured-key-normal-form)
-      * [History of SKNF](#history-of-sknf)
+      * [Intermediate Files](#intermediate-files)
+   * [Hello Meta World](#hello-meta-world)
    * [acr - Auto Cross Reference](#acr--auto-cross-reference)
       * [Querying](#querying)
       * [Creating A New Table](#creating-a-new-table)
       * [Inserting Data](#inserting-data)
+         * [The -replace option](#the-replace-option)
+         * [The -merge option](#the-merge-option)
+         * [The -trunc option](#the-trunc-option)
       * [Generating Shell Scripts](#generating-shell-scripts)
       * [Inserting a Column](#inserting-a-column)
+         * [The -before option](#the-before-option)
       * [Creating a Subset Table](#creating-a-subset-table)
       * [Following References Up](#following-references-up)
       * [Following References Down](#following-references-down)
@@ -30,9 +31,32 @@ This file was created with 'atf_norm readme' from txt/*.md -- *do not edit*
       * [Cross-Product Types](#cross-product-types)
       * [Fldfunc fields](#fldfunc-fields)
       * [Querying On Non-Primary Key](#querying-on-non-primary-key)
+      * [Sorting & RowIDs](#sorting--rowids)
+      * [Creating A New Data Set](#creating-a-new-data-set)
+      * [Using A File As A Data Set](#using-a-file-as-a-data-set)
+      * [The -schema option](#the-schema-option)
+      * [The -meta option](#the-meta-option)
+      * [The -cmt option](#the-cmt-option)
       * [MySQL Integration](#mysql-integration)
-      * [Specifying Flags On Command Line](#specifying-flags-on-command-line)
-   * [acr_in: Show input tuples for target](#acr_in-show-input-tuples-for-target)
+   * [Command Lines](#command-lines)
+      * [Boolean Options](#boolean-options)
+      * [Integer Options](#integer-options)
+      * [Anonymous Values](#anonymous-values)
+      * [Bash Command Completion](#bash-command-completion)
+      * [Completing From Table](#completing-from-table)
+      * [Inputting A Table](#inputting-a-table)
+      * [Regx Options](#regx-options)
+      * [The -version flag](#the-version-flag)
+      * [Printing Command Lines](#printing-command-lines)
+      * [Subprocesses With Command Line](#subprocesses-with-command-line)
+      * [Verbosity](#verbosity)
+   * [Ssim files](#ssim-files)
+      * [Structured Key Normal Form](#structured-key-normal-form)
+      * [History of Database Design](#history-of-database-design)
+      * [Cardinality Analysis](#cardinality-analysis)
+      * [The Curse Of Simple Domains](#the-curse-of-simple-domains)
+      * [Remember 4-valued logic?](#remember-4-valued-logic-)
+      * [Structured Key Normal Form](#structured-key-normal-form)
    * [acr_in: Show input tuples for target](#acr_in-show-input-tuples-for-target)
    * [abt - A Build Tool](#abt--a-build-tool)
    * [amc - Algo Model Compiler](#amc--algo-model-compiler)
@@ -104,29 +128,64 @@ This file was created with 'atf_norm readme' from txt/*.md -- *do not edit*
       * [Creating Source Files](#creating-source-files)
       * [Functions & Headers](#functions--headers)
       * [Program Text](#program-text)
-   * [atf_unit: Unit Tests](#atf_unit-unit-tests)
+   * [Tests](#tests)
+      * [Unit Tests](#unit-tests)
+      * [Normalization Checks](#normalization-checks)
+      * [Debugging](#debugging)
 
 
 ## About
 
+The home for this project is at https://github.com/alexeilebedev/openacr
+
 This is OpenACR, an open-source version of acr, which stands for Auto Cross
 Reference, and its related tools.
 It is the result of over 10 years of development and
-production use. The tools were initially created by Alexei Lebedev at AlgoEngineering
-with the goal of helping write low latency software of higher quality.
-Subsequently they were licensed to Intercontinental Exchange as part
-of a project to rewrite all of NYSE's electronic exchanges.
+production use. The tools were initially created by Alexei Lebedev (me) at AlgoEngineering
+with the goal of formalizing construction of low-latency software of higher quality;
+but they ended up being suitable for all sorts of other things, and the code generation
+part took on a life of its own, eventually generating most of its own source code.
+
+The tools were licensed to Intercontinental Exchange as part
+of a project called Pillar to rewrite all of NYSE's electronic exchanges.
 
 As of this writing, there are several national electronic markets
-written in acr/amc, from matching engines to development tools,
+written entirely in acr/amc, from matching engines to development tools,
 with amc responsible for over 95% of all executable code (>4 million LOC)
-and acr handling all configurations.
+and acr handling all configurations -- from NICs and ip addresses to bit fields and
+ priority queues.
 
 Since the tools are domain-agonostic, it was decided that open-sourcing
 them would be the best way to ensure their longevity and value, and
 also a way to give back to the community. After
 all, if it weren't for Linux, gcc and the shell, this project wouldn't have
 been possible in the first place. And so here we are.
+
+OpenACR is in an interesting position of having been co-developed with a large
+software project, and later extracted back from it. Its usability
+on small projects is assumed but not proven. The ideal use case is growing,
+in-place, an ecosystem of commands and corresponding configuration data
+files around this kernel.
+
+### Contributors
+
+Here are some of the names of git authors who contributed code to this project,
+in alphabetical order by first name. 
+
+* Alexey Polovinkin
+* Ara Aslyan
+* Ezequiel Fernandes
+* Hank Wang
+* Hayk Mkrtchyan
+* Jeffrey Wang
+* Jeremy Xue
+* Jonathan Joshua
+* Luke Huang
+* Shreejith Billenahallilokegowda
+* Vladimir Parizhsky
+
+There were also many others who helped immensely with
+discussions and influenced various design decisions.
 
 Enjoy,
 
@@ -137,11 +196,15 @@ April 29, 2019
 
 ## Setup and Installation
 
-Presently, the project only builds on CentOS Linux. It has been tested on
+Presently, this project has been tested on the following distributions:
 
 * RHEL 7.0
 * RHEL 7.3
 * CentOS 7.6
+
+The following compilers are supported:
+
+* g++ 4.8
 
 The MariaDB packages are required in order to build mysql2ssim and ssim2mysql tools.
 
@@ -160,53 +223,26 @@ or the bootstapped version of abt called ai:
 This should build abt using a bootstrapped shell script, then switch to abt
 and build the rest. If any of this fails, you may need to file a bug report.
 
-The home for this project is at https://github.com/alexeilebedev/openacr
+### Platform Short List
 
-After you run ai, you will see a couple of directories appear:
+Support for g++ 8.x, clang, other Linux distributions, FreeBSD, Windows (Cygwin) and Darwin
+is very must desired, so if you'd like to help, please contact alexei@lebe.dev
 
-    drwxr-xr-x  2 alexei users  4096 Apr 29 10:57 dflt.debug-x86_64
-    drwxr-xr-x  2 alexei users 12288 Apr 30 17:52 dflt.release-x86_64
+### Editor configuration files
 
-These contain all object, library and executable files -- outputs of abt.
-Each directory is just a flat set of files. Object file names are created by
-replacing '/' with '.' in the relative path to the source:
+See files in conf/ for sample config files that provide ssim syntax highlighting, etc.
+Here are some commands to get set it up.
 
-    $ ls -l dflt.release-x86_64/ | grep abt
-    -rwxr-xr-x 1 alexei users   335848 Apr 30 17:51 abt
-    -rw-r--r-- 1 alexei users    14952 Apr 30 17:51 cpp.abt.build.o
-    -rw-r--r-- 1 alexei users     9248 Apr 30 17:51 cpp.abt.disas.o
-    -rw-r--r-- 1 alexei users    71528 Apr 30 17:51 cpp.abt.main.o
-    -rw-r--r-- 1 alexei users    12776 Apr 30 17:51 cpp.abt.opt.o
-    -rw-r--r-- 1 alexei users   232360 Apr 30 17:51 cpp.gen.abt_gen.o
+    ln -s $PWD/conf/emacs.el ~/.emacs
+    ln -s $PWD/conf/elisp ~/elisp
+    ln -s $PWD/conf/vimrc ~/.vimrc
+    ln -s $PWD/conf/vim ~/.vim
+    ln -s $PWD/conf/alexei/bash_profile ~/.bash_profile
 
-These temporary directories shouldn't be in the path, instead
-just bin/ is in the path. When compiling any executable with -install flag, abt creates
-a soft link under bin/ pointing to one of these directories. This allows 'installing'
-debug binaries, or profile binaries, or binaries built with another compiler.
-At the time of writing, gcc and clang are supported as compilers.
-To undo any non-standard installation, type 'ai'. This will reinstall all binaries
-using the release configuration.
+### Environment Variables
 
-### Tests
-
-There are two kinds of tests in OpenACR, unit tests and normalization tests.
-Unit tests just check that some functions do what they should, and they can be invoked
-with
-
-    atf_unit
-
-Normalization tests enforce various invariants on this repository, such as checking
-that all files have an entry in the gitfile table, or round-tripping all data values
-through a temporary MariaDB instance to ensure portability. These are invoked with
-
-    atf_norm
-
-All tests together are died in the script called normalize
-
-    normalize
-
-If this script succeeds, your latest changes are OK (relatively speaking).
-
+There are no environment variables that we either or rely on.
+The ssimfiles offer plenty of room for structured configs.
 
 ## Directory Structure
 
@@ -221,294 +257,83 @@ If this script succeeds, your latest changes are OK (relatively speaking).
 * `temp`        Temp dir
 * `txt`         .txt files
 
-Intermediate binaries are kept in dflt.debug-x86_64 or dflt.release-x86_64
-
 ### Binaries
 
-All executable files are in bin (both scripts and binary executables).
-Binaries are compiled with abt -build and installed with abt -install.
+All executable files are accessible from bin (both scripts and binary executables).
+For each binary, there is a soft link from bin to the directory where the binary really sits.
 
-### Editor configuration files
+Binaries are compiled with `abt -build` and installed (linked into bin/) with `abt -install`.
 
-See files in conf/ for sample config files that provide ssim syntax highlighting, etc.
-Here are some commands to get set it up:
+Binaries are never kept in git history, but the soft links are. 
+To get abt going, abt generates a bootstrap script for compiling 
+itself, and that script sits in `bin/abt-bootstrap`. It is automatically re-generated during
+`normalize` so every commit should have a working bootstrap as a result.
 
-    ln -sf $PWD/conf/emacs.el ~/.emacs
-    ln -sf $PWD/conf/elisp ~/elisp
-    ln -sf $PWD/conf/vimrc ~/.vimrc
-    ln -sf $PWD/conf/vim ~/.vim
+### Intermediate Files
 
+Object files, libraries and executables are kept in `dflt.debug-x86_64` or `dflt.release-x86_64`.
+Here, `dflt` is the compiler name. Other possible names are `clang`.
 
-## Command Lines
+Build directories can be wiped with `make clean`. After that, the `abt` binary will no longer exist,
+and it would have to be re-created with `ai` or `abt-bootstrap`.
 
-All tools treat space after option and `:` interchangeably:
-`-option:value` is the same as `-option value`.
-I don't particularly like Java, but the first variant is preferrable,
-because it's clear at the syntax level, without knowing what the command
-expects, that `value` is a value and not a stand-alone option or a positional argument.
-
-All tools accept standard options -verbose, -help, -debug. 
-Verbosity is cumulative, each subprocess process inherits a lower verbosity level; it's a form of tracing.
-Running a process with -v -v will execute most immediate subprocesses with -v.
-The command line of any tool is represented by a ctype in the command namespace. 
-Try this:
-
-    acr ctype:cmdline.acr -t
-
-### Bash Command Completion
-
-To configure completion of all commands, do
-
-    eval $(acr_compl -install)
-
-Then, try auto-completing acr command-line options:
-
-    $ acr -pr<tab>
-    -pretty:<flag>  -print:<flag>
-
-This auto-completes works with ssimfiles, and can auto-complete from any table.
-
-    $ acr ctype:acr.FC<tab>
-    acr.FCdflt    acr.FCheck    acr.FCppfunc  acr.FCtype
-
-### Example: Create New Ssimfile And Test Command Completion
-
-In fact, let's create and populate a brand new table, and add a dummy acr 
-command line option referencing that table, just to see if auto-complete works.
-
-* Step 1: create new ssimfile
-
-    acr_ed -create -ssimfile dmmeta.mytable -write
-
-* Step 2: populate it
-
-    for X in abcd{10..99}; do echo "dmmeta.mytable mytable:$X"; done | acr -insert -write
-
-* Step 3: create a new command line option
-
-    acr_ed -create -field command.acr.mytable -arg dmmeta.Mytable -reftype Pkey -comment "A very useful option" -write
-
-* Step 4: test
-
-    $ acr -mytable:abcd2<tab>
-    abcd20  abcd21  abcd22  abcd23  abcd24  abcd25  abcd26  abcd27  abcd28  abcd29
-
-Inside acr, the field is accessible as _db.cmdline.mytable. Of course, manually
-editing acr source code would be required to do something useful with this new option.
-
-Since we don't really need these changes, we can undo them:
-
-    $ git reset --hard
-
-Or
-
-    $ acr_ed -del -ssimfile dmmeta.mytable -write
-    $ acr field:command.acr.mytable -del -write
+The intermediate directory has a flat structure. The name of each object file is the 
+path to the .cpp file with `/`s replaced by `.`s.
+    
+    $ ls dflt.release-x86_64/
+    abc                    cpp.amc.ctype.read.o     cpp.amc.regx.o          cpp.atf.amc.strconv.o ...
+    abt                    cpp.amc.delptr.o         cpp.amc.sbrk.o          cpp.atf.amc.tary.o
+    acr                    cpp.amc.dflt.o           cpp.amc.signature.o     cpp.atf.amc.varlen.o
+    acr_compl              cpp.amc.disp.call.o      cpp.amc.size.o          cpp.atf.amc.zdlist.o
+    ...
 
 
-## Tutorial: Hello Meta World
+## Hello Meta World
 
 Follow the steps below to create a new sample program.
-The program will load ctype and field tables, and cross-reference
-them in two ways.
-It will list all data structures in all executables, and compute all
-back-references, i.e. for each struct (ctype), it will show all the
-places where the struct is referenced.
 
-Use this as a starting point for creating your own data model analysis tool.
+The program will print the names of all of its own structures, and 
+their fields, cross-referenced twice: first, by membership and 
+then by computing all back-references.
+
+This seems like an appropriately self-referential way to say hello
+using the tools at our disposal. Having a program print its own data 
+structure is also mind-boggling if you think about it for too long.
+
+Use this as a starting point, or to get motivated to read one of the tutorials.
 
 ~~~
-acr_ed -create -target samp_hi -write
-cat > cpp/samp/samp_hi.cpp << EOF
-#include "include/algo.h"
-#include "include/gen/samp_hi_gen.h"
-#include "include/gen/samp_hi_gen.inl.h"
-// Load ctype and field, print all fields and use sites
-void samp_hi::Main() {
+acr_ed -create -target hi -write
+cat > cpp/samp/hi.cpp << EOF
+#include "include/hi.h"
+void hi::Main() {
     prlog("Hello Meta World!");
-    ind_beg(samp_hi::_db_ctype_curs,ctype,samp_hi::_db) {
-        prlog("ctype "<<ctype.ctype);
-        ind_beg(samp_hi::ctype_zd_field_curs,field,ctype) {
-            prlog("    has field "<<field.field<<" of type "<<field.arg<<" reftype:"<<field.reftype);
-        }ind_end;
-        ind_beg(samp_hi::ctype_zd_arg_curs,arg,ctype) {
-            prlog("    is referred to by field "<<arg.field<<" using "<<arg.reftype);
-        }ind_end;
+    ind_beg(hi::_db_ctype_curs,ctype,hi::_db) {
+        if (ns_Get(ctype) == dmmeta_Ns_ns_hi) {
+            prlog("ctype "<<ctype.ctype);
+            ind_beg(hi::ctype_zd_field_curs,field,ctype) {
+                prlog("    has field "<<field.field<<" of type "<<field.arg<<" reftype:"<<field.reftype);
+            }ind_end;
+            ind_beg(hi::ctype_zd_arg_curs,arg,ctype) {
+                prlog("    is referred to by field "<<arg.field<<" using "<<arg.reftype);
+            }ind_end;
+        }
     }ind_end;
 }
 EOF
-acr_ed -create -finput -target samp_hi -ssimfile:dmmeta.ctype -indexed -write
-acr_ed -create -finput -target samp_hi -ssimfile:dmmeta.field -write
-acr_ed -create -field:samp_hi.FField.p_ctype  -arg:samp_hi.FCtype -xref -via:samp_hi.FDb.ind_ctype/dmmeta.Field.ctype -write
-acr_ed -create -field:samp_hi.FCtype.zd_field -arg:samp_hi.FField -xref -via:samp_hi.FDb.ind_ctype/dmmeta.Field.ctype  -write
-acr_ed -create -field:samp_hi.FCtype.zd_arg   -arg:samp_hi.FField -xref -via:samp_hi.FDb.ind_ctype/dmmeta.Field.arg    -write
-amc
-abt -install samp_hi
-acr ns:samp_hi -t
-samp_hi
+acr_ed -create -finput -target hi -ssimfile:dmmeta.ctype -indexed -write
+acr_ed -create -finput -target hi -ssimfile:dmmeta.field -write
+acr_ed -create -field:hi.FField.p_ctype  -arg:hi.FCtype -xref -via:hi.FDb.ind_ctype/dmmeta.Field.ctype -write
+acr_ed -create -field:hi.FCtype.zd_field -arg:hi.FField -xref -via:hi.FDb.ind_ctype/dmmeta.Field.ctype  -write
+acr_ed -create -field:hi.FCtype.zd_arg   -arg:hi.FField -xref -via:hi.FDb.ind_ctype/dmmeta.Field.arg    -write
+abt -install hi
+hi
 ~~~
-
-
-## Ssim files
-
-Ssim is a Super-Simple line-oriented text format for
-storing configuration data in the form of tables of tuples. Each tuple consists
-of a type tag and key-value pairs called attributes. The first
-key-value pair is a primary key.
-
-    $ acr ctype:amc.% | head
-    dmmeta.ctype  ctype:amc.BltinId       comment:""
-    dmmeta.ctype  ctype:amc.CppkeywordId  comment:""
-    dmmeta.ctype  ctype:amc.Enumstr       comment:Key
-    dmmeta.ctype  ctype:amc.FAnonfld      comment:""
-    ^^type tag          ^^primary key
-
-Every line is treated as an element of a set.  There are no headers or
-footers or other file markers, although lines can be commented out with #.
-Any concatenation, permutation, or subset of two ssim files is a
-valid ssim file, just like you would expect with sets.
-
-Both keys and values may be arbitrary byte sequences. A string
-containing non-obvious characters and be enclosed either with single
-or double quotes (there being no difference between these types of quotes),
-and inside the quotes, C++ string rules exactly apply. So "\t":"\001" is a valid
-key-value pair.
-
-A ssimfile maps directly to a relational table, and each line corresponds to a record
-in a database.
-
-In a given dataset,
-The list of all ssim files is provided by "acr ssimfile".
-The list of all attrbitutes is provided by "acr field"
-
-Ssim tuples is typically held in data sets, (with one directory per
-namespace, and one file per table) or in a single file.  One can use
-grep, sed, awk, and other line-oriented tools to access these records.
-
-All amc-supported commands support the -in argument which specifies the input
-dataset for the tool -- either a file or a directory. By default it's "data"
-
-### Structured Key Normal Form
-
-There is a lot of literature on how to construct database schema so that it doesn't
-have anomalies, and how to create primary keys; There are 6 or 7 'normal forms' -- invariants
-that have to hold if you want certain anomalies to be absent from your schema.
-
-Here I will describe the Structured Key Normal Form, or SKNF, which all ssim
-schemas use. SKNF has no anomalies by construction and requires only one normal form.
-All it boils down to is this:
-a single field, the first field of a table, is the primary key, and it is either a simple type,
-or a cross product of two other keys (which is the same thing if you allow for an empty set).
-
-All other columns are non-NULL, and are also either simple types, or must refer to a key of some other
-table. acr treats the key as a regular string.
-When the primary key is a cross-product of two other sets, for instance dmmeta.Ctype, where dmmeta refers to ns:dmmeta
-and ctype Ctype is a string, we use a separator, in this case '.'.
-
-If you need some column to be NULLable, you delete
-the column, and create a new ssimfile which is a subset of the original file.
-Deleting the rows from this new ssimfile is equivalent to NULLing the original fields.
-
-Let's look at an example:
-
-    $ acr ctype:dmmeta.Ctype
-    dmmeta.ctype  ctype:dmmeta.Ctype  comment:"C structure"
-
-Here, the primary key is the string 'dmmeta.Ctype'.
-
-But the key is restricted by a foreign key constraint.
-Let's try acr with -fldfunc argument:
-
-    $ acr ctype:dmmeta.Ctype -fldfunc
-    dmmeta.ctype  ctype:dmmeta.Ctype  ns:dmmeta  name:Ctype  comment:"C structure"
-
-If we were to rename this element to dmm.Ctype, we'd get an acr -check
-error, since dmm is not a valid namespace.
-
-dmmeta.Ctype.ns is an attribute of dmmeta.Ctype, and it's defined as a function of other fields,
-or 'fldfunc' for short. The acr option -fldfunc expands all fldfuncs when showing output.
-The 'ns' field in the query above is defined like this:
-
-      dmmeta.field  field:dmmeta.Ctype.ns  arg:dmmeta.Ns  reftype:Pkey  dflt:""  comment:"translates to c++ namespace"
-        dmmeta.substr  field:dmmeta.Ctype.ns  expr:.RL  srcfield:dmmeta.Ctype.ctype
-
-The substr expression consists of triples of characters, where the first character is
-what to look for in the string (in this case '.'), the second character is where to start (in this case
-start at the right side of the string, 'R'), and the third character specifies what part of the
-string to take after the match is found, or the search stops. If the match is not found, search stops
-at the opposite end of the string. So, the expression .RL means "Scan from the right until you find the
-character or hit the left side of the string. Then, return everything to the right of the current position".
-These triples can be repeated as many times as necessary to "bite off" pieces of the string, for example
-.RL.RL removes the 2 trailing dots from a string. The corresponding C++ function that implements this
-search is called algo::Pathcomp.
-
-There are no constraints other than foreign key constraints in ssim databases.
-(acr -check can detect some errors such as strings that are too long for the underlying specified type,
-but that's not a constraint per se)
-
-### History of SKNF
-
-In his seminal paper (https://www.seas.upenn.edu/~zives/03f/cis550/codd.pdf)
-Codd explained that attaching an access path to a data set
-results in anomalies which lie at the root of most data modeling problems,
-and so must be avoided. Here for the first time, way after languages
-such as Algol were designed and published, we have the most important
-simplication -- the factoring of a state space into a set of sets, and a set
-of access paths between them. Data structure is replaced with access structure
-and a set.
-
-Whenever we talk of "linked list of X" or "hash table of X", we are introducing
-invisible anomalies by presupposing that all X are reachable via said access path.
-To avoid this anomaly, we analyze X as a set by itself, and figure out what
-information must be included in the element of each set in order to distinguish
-two elements from each other. Only after we have done that, do we begin to attach
-indexing structures, or access paths, so that we can retrieve elements of X
-from the data store (in-memory or on-disk) faster.
-
-If we view each element of a set as a struct with several fields, then the set of
-fields which can be used to distinguish this element from others is called a key.
-Many such keys are possible. For instance, we could generate a globally unique ID (GUID)
-or get a sequence number from some service, and attach it to the elements of our
-set as a key; This would be called a 'surrogate key'. In fact, most relational databases
-blindly use surrogate keys (a field called 'id') for most purposes. There is even
-an argument that surrogate keys are good since they protect the user from having
-to know the schema. But the problem with surrogate keys is that they are not guessable,
-and so two people cooperating on constructing the same table without communicating
-with each other will run into a conflict: they will certainly include duplicate elements
-into the table, marked with different surrogate keys.
-
-So, surrogate keys don't solve the problem of constructing the set
-For that, you have to describe the cardinality of
-the set, either being an integer, or a subset of another set, or a cross product of two sets.
-
-Codd was much of in favor of simple domains, where each column (field of a struct)
-is either an integer or a string, and the primary key is described as a concatenation
-of several such fields. This principle is not scalable, because if you use simple domains,
-you get very complicated joins which are very sensitive to all layers of the schema.
-And it's violated by SQL's timestamp type itself, which is a complex domain composed of year,
-month, day, hour, minute, second and nanosecond. If we followed Codd blindly, we'd use 7
-fields every time we needed a timestamp.
-
-Codd was also in favor of the 4-valued boolean logic, where you have values
-"yes", "no", "NULL but doesn't matter", and "NULL and it does matter". He had a lot
-of trouble convincing people to implement this 4-valued logic, which was necessary
-for consistency. Most database implementors ignored the 4-valued logic, sayng
-"NULL is NULL, OK?", making Codd very upset. But most database
-users heeded the "simple domain" rule. It's possible that if it weren't for
-this unfortuante decision, SQL would be a lot more popular today.
-
-If it weren't for the simple domain rule and NULLs, the proliferation of normal forms
-wouldn't exist. And so SKNF represents a very simple but stable point in the space of
-all possible schema schemas (meta-schemas), where you don't have NULLs and every key is
-just a single composite value. It scales indefinitely, and every join takes just 2 values.
-
-SKNF is not a name recognized in the industry. In the clade of DBMS construction philosophies,
-the closest analog would be DKNF (Domain Key Normal Form).
-
 
 ## acr - Auto Cross Reference
 
-Acr is a query and editing tool for a ssim (super-simple) database..
+Acr is a query and editing tool for ssim (super-simple) databases.
+These databases can be proper directories, or files, or stdin.
 Acr is not concerned with big data; it's about small but highly cross-referenced data,
 essentially configurations and source code. A rule of thumb is that acr will
 process 1 million records/sec and the data sets must fit in memory.
@@ -524,7 +349,7 @@ Assuming you've successfully built acr, you can type
     < about 10,000 more records are printed >
 
 This will dump all records in the data directory, about 10,000 of them.
-Of course, once you start growing a real project around this initial deposit, 
+Of course, once you start growing a real project around this initial deposit,
 3,000 fields will seem like nothing.
 A large project may easily get 10,000 ctypes, 1,000 ssimfiles and 30,000 fields,
 and a few million records.
@@ -537,7 +362,7 @@ You could achieve a similar result to `acr %` by running
 
     $ find data -name "*.ssim" | xargs cat
     ...
-    
+
 ### Creating A New Table
 
 To show the rest of the commands, let's start with a couple of fresh tables
@@ -560,10 +385,10 @@ The dmmeta database is how acr knows anything.
 ### Inserting Data
 
 We can now populate this table with some data. `acr -insert -write` reads values from standard
-input, inserts them into the database, and saves everything to disk when done. Duplicate keys 
-will cause errors. If we need to ignore duplicates, we use `acr -replace -write`. 
+input, inserts them into the database, and saves everything to disk when done. Duplicate keys
+will cause errors. If we need to ignore duplicates, we use `acr -replace -write`.
 
-    $ for X in {0..10}; do echo dev.a a:a$X; done | acr -insert -write 
+    $ for X in {0..10}; do echo dev.a a:a$X; done | acr -insert -write
     acr.insert  dev.a  a:a0   comment:""
     acr.insert  dev.a  a:a1   comment:""
     acr.insert  dev.a  a:a2   comment:""
@@ -592,15 +417,75 @@ First, the `-field` option:
     a2
     a3
     a4
-    
+
 Alternatively, we could ask for a regex of the values:
 
     $ acr a:a'(2|3|4)' -regxof:a
     (a2|a3|a4)
+
+#### The -replace option
+
+When `-replace` is specified, each new tuple completely overrides the previous tuple. 
+Any fields that aren't specified are assigned default values. Let's illustrate by first
+creating a temporary table:
+
+    $ acr_ed -create -ssimfile dev.t -write
+    ...
+    $ acr_ed -create -field dev.T.val -arg u32 -write
+    ...
+    $ echo 'dev.t t:ggg val:3' | acr -insert -write
+    acr.insert  dev.t  t:ggg  val:3  comment:""
+    ...
     
+Now let's try to insert another record with the value `ggg`:
+
+    $ echo 'dev.t t:ggg' | acr -insert -write
+    acr.duplicate_key  key:dev.T:ggg
+
+That failed. Now let's replace instead. This will succeed, and the value `val`
+will go back to the default:
+
+    $ echo 'dev.t t:ggg' | acr -replace -write
+    ...
+    $ acr t
+    dev.t  t:ggg  val:0  comment:""
+    
+#### The -merge option
+
+The `-merge` option is like replace on a per-field basis. Let's illustrate
+using the same `t` table. We'll need another column, call it `val2`, while 
+set set `val` back to 3:
+
+    $ acr_ed -create -field dev.T.val2 -arg u32 -write
+    $ echo 'dev.t t:ggg val:3' | acr -replace -write
+    ...
+    $ acr t
+    dev.t  t:ggg  val:3  val2:0   comment:""
+    
+So far so good. Now let's use -merge:
+
+    $ echo 'dev.t t:ggg val2:4' | acr -merge -write
+    ...
+    $ acr t
+    dev.t  t:ggg  val:3  val2:4  comment:""
+
+#### The -trunc option
+
+With this option, when the first change is made to the table, the table is first wiped.
+
+    $ echo 'dev.t t:hhh' | acr -insert -trunc -write
+    ...
+    $ acr t
+    dev.t  t:hhh  val:0  val2:0  comment:""
+
+
 ### Generating Shell Scripts
 
-Finally, the `-cmd` option produces an executable shell script which can be piped to `sh`. script
+Finally, the `-cmd` option produces an executable shell script which can be piped to `sh`. 
+For each record in the final selection, acr outputs variable assignment statements, giving the
+shell script access to the values of all field attributes, the fldfuncs, the tuple itsef (`acr_tuple`)
+the type tag (`acr_head`) and the rowid (`acr_rowid`). The script can then use whatever 
+other Unix tools it needs to.
 
     $ acr a:a1 -cmd 'echo ==== $a ===='
     acr_tuple=$'dev.a  a:a1  comment:""'
@@ -609,12 +494,15 @@ Finally, the `-cmd` option produces an executable shell script which can be pipe
     a=a1
     comment=''
     echo ==== $a ====
-    
+
 Piping through sh produces the desired result:
 
     $ acr a:a1 -cmd 'echo ==== $a ====' | sh
     ==== a1 ====
-    
+
+The beauty of `-cmd` is that it only creates one subprocess, the target shell. Executing
+one command per output row would have been prohibitively expensive.
+
 ### Inserting a Column
 
 We now might want to add a column to the `a` table.
@@ -626,7 +514,7 @@ Let's update a few values with `acr -merge`:
 
     $ echo 'dev.a a:a1 b:55' | acr -merge -write
     report.acr  n_select:0  n_insert:0  n_delete:0  n_update:1  n_file_mod:1
-    
+
 Let's check if the b column is there:
 
     $ acr a | head -3
@@ -644,6 +532,13 @@ Yes, it is. What if we just look in the file itself?
 We see largely the same result, except the columns are not aligned. By default,
 acr flag `-pretty` is set to true, which aligns columns in blocks of 25.
 
+#### The -before option
+
+When creating a new field with `acr_ed`, it can be inserted before another field
+by specifying `-before <field>`. Alternatively, you can always call up `acr -t -e ctype:<ctype>`
+and make the adjustment by hand, or just go into the `data/dmmeta/field.ssim` table
+and swap two lines in a text editor. These are all equally valid approaches.
+
 ### Creating a Subset Table
 
 Now let's create another table which will be a subset of the first, and populate it.
@@ -660,8 +555,8 @@ Let's quickly check how `B`'s fields were defined:
     report.acr  n_select:2  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
 
 We see that the field dev.B.a was created, with `arg:dev.A` and `reftype:Pkey`.
-`reftype:Pkey` means that the type of the field in question is the same as the type 
-of the first field of the arg. In this case, `algo.Smallstr50`. It also means, as far as acr 
+`reftype:Pkey` means that the type of the field in question is the same as the type
+of the first field of the arg. In this case, `algo.Smallstr50`. It also means, as far as acr
 is concerned, that the value of this field must correspond to some existing value in `a`.
 Notice that the new table's primary key has the name `a`, not `b`. This
 is because of the convention that a foreign key reference uses the name of the target table.
@@ -674,7 +569,7 @@ We'll use values a3 through a7.
     acr.insert  dev.b  a:a6  comment:""
     acr.insert  dev.b  a:a7  comment:""
     report.acr  n_select:5  n_insert:5  n_delete:0  n_update:5  n_file_mod:1
-    
+
 ### Following References Up
 
 Now let's see if acr recognizes that these tables are related. We'll use the `-nup 1`
@@ -692,7 +587,7 @@ Yes! It worked. What if we try the same thing when querying a?
     $ acr a:a3 -nup 1
     dev.a  a:a3  b:0  comment:""
     report.acr  n_select:1  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
-    
+
 Since `a` doesn't refer to anything, there is nothing to discover.
 
 ### Following References Down
@@ -705,7 +600,7 @@ But we *can* discover the b record by following from a:
     dev.b  a:a4  comment:""
     report.acr  n_select:2  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
 
-Notice that in the output, `a` is always printed out before `b`. That's because 
+Notice that in the output, `a` is always printed out before `b`. That's because
 acr sorts the output so that when it's scanned linearly, referential integrity is
 maintained. Acr has a useful shortcut `-xref`, which stands for `-nup 100 -ndown 100`.
 And we'll use the `-tree` option, which groups any dependent records underneath the
@@ -729,14 +624,14 @@ for human comprehension:
     dev.a  a:a7  b:0  comment:""
       dev.b  a:a7  comment:""
     report.acr  n_select:10  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
-          
+
 Since `-xref -tree` is very frequently used, command line option `-t` is an alias for it.
 
     $ acr b:a5 -t
     dev.a  a:a5  b:0  comment:""
       dev.b  a:a5  comment:""
       report.acr  n_select:2  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
-  
+
 What about deleting records? Let's delete something.
 
     $ acr a:a4 -del -write
@@ -756,7 +651,7 @@ be deleted, but in the final report, `n_file_mod:0` so we know that nothing was 
 
     $ acr a:a5 -del
     acr.delete  dev.a  a:a5  b:0  comment:""
-    
+
     acr.delete  dev.b  a:a5  comment:""
     report.acr  n_select:2  n_insert:0  n_delete:2  n_update:0  n_file_mod:0
 
@@ -781,9 +676,9 @@ Let's insert a record into the `b` table which has no corresponding record in th
 
 Now we have a record referring to a non-existing `xyz`. This is clearly a foreign
 key constraint violation, but because we've been running acr with `-check:N` (the default),
-the violation was allowed. The reason `acr -check` is off by default is that it's 
-virtually impossible to interactively build a nice dataset without it being `broken` at 
-one point or another. It's like if your editor disallowed syntactically incorrect programs -- 
+the violation was allowed. The reason `acr -check` is off by default is that it's
+virtually impossible to interactively build a nice data set without it being `broken` at
+one point or another. It's like if your editor disallowed syntactically incorrect programs --
 you wouln't be able to even type up "hello world". Usually, it's applications that load
 and cross-reference records are the ones that care deeply about constraint violation.
 
@@ -818,7 +713,7 @@ We can check that the dependencies were followed during the rename.
     dev.a  a:a99  b:0  comment:""
       dev.b  a:a99  comment:""
       report.acr  n_select:2  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
-  
+
 ### Cross-Product Types
 
 Now it's time to do something more interesting. We'll create a table `c`, which will be
@@ -837,7 +732,7 @@ Now let's create a table `d`, whose key is a cross product of `b` and `c`.
 
     $ acr_ed -create -ssimfile dev.d -subset dev.B -subset2 dev.C -separator . -write
     ...
-    
+
     $ for B in a5 a6 a7; do for C in red green blue; do echo dev.d d:$B.$C; done; done | acr -insert -write
     acr.insert  dev.d  d:a5.red    comment:""
     acr.insert  dev.d  d:a5.green  comment:""
@@ -853,8 +748,8 @@ Now let's create a table `d`, whose key is a cross product of `b` and `c`.
 Now the most interesting part is, how does acr see the resulting structure?
 Below we see that acr has followed the schema and discovered all the necessary dependencies,
 grouping `d` under `b`, which groups under `a`. All the referenced colors from `c` were
-included in the output, but didn't become part of the tree, because only one parent is the *main*
-parent, and acr chooses the leftmost parent.
+included in the output, but didn't become part of the tree, because only the leftmost
+parent is the preferred one.
 
     $ acr d -t
     dev.c  c:blue   comment:""
@@ -880,11 +775,13 @@ parent, and acr chooses the leftmost parent.
     report.acr  n_select:17  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
 
 Let's look at the definition of `dev.D` type. The reason I have been holding off
-on showing the definitions of the types `dev.A`, `dev.B`, and `dev.C`.
-What you see here is the self-similar aspect of `acr`: the definitions
-are nothing more than records that were inserted by acr_ed into the appropriate
-databases (using, just like us, `acr -insert -write`), and -t discovers and shows
-their relationships.
+on showing the definitions of the types `dev.A`, `dev.B`, and `dev.C` is that 
+this tutorial is about creating tables and records in these tables,
+and type definitions are exactly that -- they're just records inserted by `acr_ed`
+into some appropriate tables using `acr -insert -write`.
+So it would have been circular to start with them, and I had to hide them.
+Seemingly circular definitions occur all the time in acr.
+Thankfully, `acr -t` discovers all forward and back references and shows their relationships:
 
     $ acr ctype:dev.D -t
     dmmeta.nstype  nstype:ssimdb
@@ -909,7 +806,7 @@ their relationships.
 
 One thing we see in the print-out above, is that the fields `dev.D.b` and `deb.D.c` are not data
 fields. They are defined as subswtrings of `dev.D.d` (the primary key), using expressions `.RL`
-and `.RR`. Such computed fields are called fldfuncs. Acr treats fldfunc fields in the same way 
+and `.RR`. Such computed fields are called fldfuncs. Acr treats fldfunc fields in the same way
 as all other fields, but doesn't display them by default unless `-fldfunc` has been specified.
 Let's ask acr to show us the fldfunc values:
 
@@ -933,11 +830,19 @@ We can also use `-regx` to quickly confirm which values are present:
 There are two other types of fldfuncs in addition to substr: bitfields and externally-defined values.
 These will be described later.
 
-The expression such as '.RL' is not limited to 3 characters. It can be any number.
-For example, '.RL/RR' first drops everything to the right of the last dot, then selects
-everything to the right of the last `/`.
-The funciton that parses these expressions is called Pathcomp, and we can easily show its source
-code right on the comman line:
+The expression such as '.RL' is not limited to 3 characters. 
+
+The substr expression consists of triples of characters, where the first character is
+what to look for in the string (in this case '.'), the second character is where to start (in this case
+start at the right side of the string, 'R'), and the third character specifies what part of the
+string to take after the match is found, or the search stops. If the match is not found, search stops
+at the opposite end of the string. So, the expression .RL means "Scan from the right until you find the
+character or hit the left side of the string. Then, return everything to the right of the current position".
+These triples can be repeated as many times as necessary to "bite off" pieces of the string, for example
+.RL.RL removes the 2 trailing dots from a string. The corresponding C++ function that implements this
+search is called algo::Pathcomp.
+
+The funciton that parses these expressions is called Pathcomp, and we can easily view its source code:
 
     $ src_func % Pathcomp
 
@@ -966,47 +871,729 @@ So, if we wanted to search both `b` and `c` tables, we'd write:
     dev.b  a:a7  comment:""
     report.acr  n_select:7  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
 
+### Sorting & RowIDs
+
+Acr always saves files in sorted order. Sorting is controlled by the `ssimsort`
+table, which is a subset of `ssimfile`. Sorting is optional. If `ssimsort` is missing,
+the set is *order-dependent*. When sorting is enabled, it can be done on any fields,
+including a fldfunc.
+
+Let's take another look at our color table `c`:
+
+    $ acr c
+    dev.c  c:blue   comment:""
+    dev.c  c:green  comment:""
+    dev.c  c:red    comment:""
+    report.acr  n_select:3  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+
+The colors are sorted by name. Let's look at the ctype:
+
+    $ acr ctype:dev.C -t
+    dmmeta.ctype  ctype:dev.C  comment:""
+      dmmeta.field  field:dev.C.c        arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+      dmmeta.field  field:dev.C.comment  arg:algo.Comment     reftype:Val  dflt:""  comment:""
+      dmmeta.cfmt  cfmt:dev.C.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:dev.C  len:204  alignment:1  padbytes:0
+
+    dmmeta.ssimfile  ssimfile:dev.c  ctype:dev.C
+      dmmeta.ssimsort  ssimfile:dev.c  sortfld:dev.C.c  comment:""
+
+Now let's delete the ssimsort line.
+
+    $ acr ssimsort:dev.c -del -write
+    ...
+
+If we now use `acr -e` to open `c` in an editor, we will see that each line now has an additional
+attribute called `acr.rowid`. This is attribute ensures that the line will be saved back to the 
+file in the same position.
+
+    $ acr c -e
+    <opens EDITOR>
+    dev.c  c:blue   acr.rowid:0       comment:""
+    dev.c  c:green  acr.rowid:1       comment:""
+    dev.c  c:red    acr.rowid:2       comment:""
+
+If we swap the lines for `blue` and `green`, and exit from the editor, no change will 
+occur on disk. That's because the order of the records is not determined by their visual order
+on the screen. It's determined by the rowid. To swap two records, we would need to swap their rowids.
+The rowids are temporary, and exist only for the duration of the editing session. They are not 
+saved to the ssimfile.
+
+The type of this rowid is conveniently a `float`, which allows you to insert new lines at fractional positions,
+something like this:
+
+    dev.c  c:cyan  acr.rowid:0.5 ...
+    ...
+    
+The very important `dmmeta.field` table is partially positional. It is sorted on the `ctype`
+attribute, but not sorted by name. That's because the user needs to control the order of fields
+in a structure. Most other ssimfiles are sorted on the primary key.
+
+### Creating A New Data Set
+
+So far, we have been using the default data set called `data`. Acr is not limited to it.
+We can work with tuples in any data set, and that data set can be either a directory or a file.
+
+To create a new directory-based data set, we just create an empty directory and then use the `-in`
+option:
+
+    $ mkdir x
+    $ acr dmmeta.% | acr -in:x -insert -write -print:N
+    ...
+    $ ls -l x
+    total 8
+    drwxrwxr-x. 2 alexei alexei 4096 May  2 17:29 dmmeta
+
+All records have now been copiled from `data` to `in`.
+As long as we specify the `-in` option, acr will read and write from the specified directory.
+
+### Using A File As A Data Set
+
+We can do the same thing with a file
+
+    $ rm -r x
+    $ touch x
+    $ acr dmmeta.% | acr -in:x -insert -write -print:N
+    ...
+    $ ls -l x
+    -rw-rw-r--. 1 alexei alexei 735004 May  2 18:00 x
+
+File `x` now contains ssim tuples, one per line, and it can be queried or edited
+just like any other data set. Just by dumping some tuples in a file, we get a data set.
+
+### The -schema option
+
+Acr can use and query standard input just like it can a regular file.
+
+    $ echo 'dmmeta.ctype ctype:xyz' | acr -in:- ctype:%
+    dmmeta.ctype  ctype:xyz  comment:""
+
+You might wonder, how does `acr` know that `dmmeta.ctype` has an attribute 
+`comment` under these conditions? Well, as it turns out, this is a common problem.
+If `acr` loaded its meta-information from the same place it loaded the data, it would
+be supremely inconvenient. That's why an additional attribute called `-schema`,
+which is equal to `"data"` by default, specifies where to load the schema information.
+If we pass an empty data set as schema, we expect nothing to be printed:
+
+    $ rm -r x; touch x  # create a file
+    $ echo 'dmmeta.ctype ctype:xyz' | acr -in:- ctype:% -schema:x
+    report.acr  n_select:0  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+
+Sure enough, acr doesn't recognize the input as a valid tuple, so the line is silently
+skipped.
+
+### The -meta option
+
+Instead of writing `acr ctype:dev.C -t` we can write
+
+    $ acr c -meta
+    dmmeta.ctype  ctype:dev.C  comment:""
+      dmmeta.field  field:dev.C.c        arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+      dmmeta.field  field:dev.C.comment  arg:algo.Comment     reftype:Val  dflt:""  comment:""
+      dmmeta.cfmt  cfmt:dev.C.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:dev.C  len:204  alignment:1  padbytes:0
+        
+The `-meta` option looks at the selected records, and de-selects them, and selects their
+ctypes instead. `-meta` implies `-t`.
+
+### The -cmt option
+
+The -cmt option displays any comments associated with the current selection. Let's document the dev.C.c
+field so that every time `-cmt` is used (and it's on by default whenever `-e` is specified), the 
+users gets some help:
+
+    $ echo 'dmmeta.field field:dev.C.c comment:"Name of the color (primary key)"' | acr -merge -write
+    $ acr c -cmt
+    dev.c  c:blue   comment:""
+    dev.c  c:green  comment:""
+    dev.c  c:red    comment:""
+    
+    # Field    Arg              Reftype  Comment
+    # dev.C.c  algo.Smallstr50  Val      Name of the color (primary key)
+
 ### MySQL Integration
 
 The option -my launches an instance of mariadb and imports all namespaces that cover selected records
 as databases into mariadb. It then drops you into a mariadb shell, where you can apply needed transformations.
 Upon exit, the data is downloaded from the database back to disk. -my implies -write.
 
-### Specifying Flags On Command Line
+## Command Lines
 
-Whenever a bool field is present in the command line, it can be specified in a few different ways:
+All tools created with amc come with full command line support. A command line is just a struct,
+and options are described as fields. All one needs to do is keep adding fields, and amc and the rest
+of tools will take care of all chores.
 
-    acr % -print:N       # OK
-    acr % -print:Y       # database-style -- OK
-    acr % -print:true    # OK
-    acr % -print         # defaults to true
+To start this tutorial, let's start with a fresh commit, and create a new executable.
 
-## acr_in: Show input tuples for target
+    $ acr_ed -create -target abc -write
+    ...
 
-acr_in computes the names and the order of ssimfiles
-which constitute target's declared input. Input fields are simply
-those fields for which finput records exist, e.g. for target t:
+This will create a new tool called `abc`:
 
-    acr finput:t.%
+    $ abc
+    Hello, World!
 
-but taken recursively over all libraries that the target uses.
+The tool already comes with some built-in options.
 
-With -data argument, acr_in also loads the specified ssimfiles in memory
-and prints out their contents in the order in which it is safe to load.
-
-The order of ssimfiles is determined as a transitive closure on Pkey
-references, and is independent of the target itself. This means that
-acr_in can be called with an regex of target names (e.g. %), and the
-resulting input can be fed into any one of the targets implied by the
-regex, without error.
-
-Example: Create canned input file for a given tool:
-
-    acr_in amc -data > tempfile
-    amc -in:tempfile
-    # this is exactly the same as running amc -in:data
+    $ abc -h
 
 
+    Usage: abc [options]
+        -in       string  Input directory or filename, - for stdin. default: "data"
+        -verbose          Enable verbose mode
+        -debug            Enable debug mode
+        -version          Show version information
+        -sig              Print SHA1 signatures for dispatches
+        -help             Print this screen and exit
+
+Let's ignore these for now and proceed to fun stuff. First, let's add a flag. Because what kind of
+command doesn't have a flag?
+
+    $ acr_ed -create -field command.abc.flag -arg bool -write -comment "An important flag"
+    ...
+    $ ai abc
+    ...
+    $ abc -h
+
+    Usage: abc [options]
+        -in       string  Input directory or filename, - for stdin. default: "data"
+        -flag             An important flag. default: false
+        -verbose          Enable verbose mode
+        -debug            Enable debug mode
+        -version          Show version information
+        -sig              Print SHA1 signatures for dispatches
+        -help             Print this screen and exit
+
+As you can see, the new flag is now recognized. Let's modify `abc`'s main to print it.
+It is an OpenACR convention to avoid ever displaying raw values. Output should be machine
+readable and never susceptible to an injection attack. Even though it may not matter
+with a bool, we'll print it as a key-value pair. `Keyval` is a little C++ template that
+helps do that:
+
+    void abc::Main() {
+        prlog(Keyval("flag",_db.cmdline.flag));
+    }
+
+    $ ai abc
+    ...
+    $ abc -flag
+    flag:Y
+
+### Boolean Options
+
+There are several ways to specify a flag on a command line: `abc -flag`, `abc -flag:Y`,
+`abc -flag:true` as well as `-flag:yes` and `-flag:on` all work.
+To specify a false value, we could either omit the option
+altogether, or write `abc -flag:N` or `abc -flag:false` or `-flag:no` or `-flag:off`.
+The OpenACR convention is to
+print booleans in a datatabase-friendly way, using `Y` and `N`.
+
+All these interchangeable symbols come from the fconst values for `algo.Bool`.
+We can query them:
+
+    $ acr fconst:algo.Bool.%
+    dmmeta.fconst  fconst:algo.Bool.value/N      value:0  comment:""
+    dmmeta.fconst  fconst:algo.Bool.value/Y      value:1  comment:""
+    dmmeta.fconst  fconst:algo.Bool.value/true   value:1  comment:""
+    dmmeta.fconst  fconst:algo.Bool.value/false  value:0  comment:""
+    dmmeta.fconst  fconst:algo.Bool.value/0      value:0  comment:""
+    dmmeta.fconst  fconst:algo.Bool.value/1      value:1  comment:""
+    dmmeta.fconst  fconst:algo.Bool.value/off    value:0  comment:""
+    dmmeta.fconst  fconst:algo.Bool.value/on     value:1  comment:""
+    dmmeta.fconst  fconst:algo.Bool.value/no     value:0  comment:""
+    dmmeta.fconst  fconst:algo.Bool.value/yes    value:1  comment:""
+    ...
+
+We can also query the resulting code:
+
+    $ amc algo.Bool
+
+    // --- algo_BoolEnum
+
+    enum algo_BoolEnum {        // algo.Bool.value
+         algo_Bool_N       = 0
+        ,algo_Bool_Y       = 1
+        ,algo_Bool_true    = 1
+        ,algo_Bool_false   = 0
+        ,algo_Bool_0       = 0
+        ,algo_Bool_1       = 1
+        ,algo_Bool_off     = 0
+        ,algo_Bool_on      = 1
+        ,algo_Bool_no      = 0
+        ,algo_Bool_yes     = 1
+    };
+
+    enum { algo_BoolEnum_N = 10 };
+
+    // --- algo.Bool
+    struct Bool { // algo.Bool
+        u8   value;   //   false
+        inline operator algo_BoolEnum() const;
+        explicit Bool(u8                             in_value);
+        Bool(algo_BoolEnum arg);
+        Bool();
+    };
+
+    ...
+
+I'm showing these queries to encourage you to query anything and everything in OpenACR
+as a method of discovery. With few exceptions, most of the things normally considered
+built-ins are in OpenACR being generated.
+
+### Integer Options
+
+Let's continue. It's time to add an integer-valued option:
+
+    $ acr_ed -create -field command.abc.val -dflt 0 -arg u32 -write -comment "A value"
+    ...
+    $ ai abc
+
+Let's update the source code to print the value:
+
+    void abc::Main() {
+        prlog(Keyval("flag",_db.cmdline.flag));
+        prlog(Keyval("val",_db.cmdline.val));
+    }
+
+    ...
+    $ abc -val:4
+    flag:N
+    val:4
+
+When parsing the command line, space after option and `:` are treated interchangeably:
+`-val:4` is the same as `-val value`.
+
+It may be a stylistic point, but when the option and its value form one word, it's clear at the syntax level,
+without knowing what the command expects, that `value` is not a stand-alone option or a positional argument.
+It can make error messages more legible when things go wrong.
+
+### Anonymous Values
+
+Let's say we want abc to be able to write `abc 4` without specifying the parameter name `-val`.
+We can use `anonfld` for this. We add the appropriate record to the anonfld table, then re-generate
+and rebuild.
+
+    $ echo dmmeta.anonfld field:command.abc.val | acr -insert -write
+    $ amc && abt -install abc
+    $ abc 5
+    flag:N
+    val:5
+
+### Bash Command Completion
+
+OpenACR offers completion of command line parameters for any tool in its domain.
+The magic is implemented in the command `acr_compl`. To use, we instruct bash
+to call `acr_compl` whenever a command line start with one of known command names.
+In this case, abc is now a known name, so `acr_compl` already knows about it:
+
+    $ abt -install acr_compl
+    $ acr_compl -install
+    # This is a script suitable for inclusion in .bash_profile
+    complete -o default -o nospace -C acr_compl abc abt acr acr_compl acr_ed acr_in acr_my amc ...
+                                                ^^^ -- it knows!
+
+Let's manually hook it up:
+
+    complete -o default -o nospace -C acr_compl abc
+
+And test it:
+
+    $ abc -v<tab>
+    -val:<int>  -verbose    -version
+
+### Completing From Table
+
+Auto-complete works with the contents of any table, loading it as necessary to provide completions.
+
+    $ acr ctype:acr.FC<tab>
+    acr.FCdflt    acr.FCheck    acr.FCppfunc  acr.FCtype
+
+Let's test it on our tool. We'll create and populate a brand new table, and add an option to abc
+which will be completed with values from that table.
+
+    $ acr_ed -create -ssimfile dmmeta.mytable -write
+    $ for X in abcd{10..99}; do echo "dmmeta.mytable mytable:$X"; done | acr -insert -write
+    ...
+    $ acr mytable -print:N
+    report.acr  n_select:90  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+
+So far so good, we have 90 values in our table.
+Now let's create a new command line option:
+
+    $ acr_ed -create -field command.abc.mytable -arg dmmeta.Mytable -reftype Pkey -dflt '""' -comment "A very useful option" -write
+    ...
+    $ ai abc
+
+And now we're ready to test it:
+
+    $ abc -mytable:abcd2<tab>
+    abcd20  abcd21  abcd22  abcd23  abcd24  abcd25  abcd26  abcd27  abcd28  abcd29
+
+It works! Bash now magically knows to fetch values from `mytable` whenever `abc` is being invoked.
+As expected, inside abc this value is accessible as _db.cmdline.mytable. It has the type `algo::Smallstr50`,
+because that's the type of the primary key of `mytable`.
+
+### Inputting A Table
+
+Now that we have our `abc` tool and we're taking a `mytable` option, it would be nice to be able
+to do a lookup and find the appropriate record.
+
+To do that, we first create a table in the `abc` namespace, which is based on the `dmmeta.mytable` table.
+
+    $ acr_ed -create -finput -target abc -ssimfile dmmeta.mytable -indexed -write
+
+We verify that there are two access paths from `abc` to `abc.FMytable`, one via the memory pool `abc.FDb.mytable`,
+the other via hash table `abc.FDb.ind_mytable`:
+
+    / abc.FDb
+    |
+    |Lary mytable------->/ abc.FMytable
+    |Thash ind_mytable-->|
+    -                    |
+                         |
+                         -
+
+We modify `abc` as follows:
+
+    void abc::Main() {
+        abc::FMytable *mytable=ind_mytable_Find(_db.cmdline.mytable);
+        prlog((mytable ? "Yes, record found" : "No such record"));
+    }
+
+Then build and run:
+
+    $ abc -mytable:tt
+    No such record
+    $ abc -mytable:abcd51
+    Yes, record found
+
+### Regx Options
+
+We will go into more detail into these operations later, but first let's convert `-mytable`
+to a Regx option, andmodify abc to scan the `_db.mytable` array instead of using the hash table,
+and print all matching records:
+
+    $ echo dmmeta.field field:command.abc.mytable reftype:RegxSql | acr -merge -write
+    $ amc
+
+    ...
+    void abc::Main() {
+        ind_beg(_db_mytable_curs,mytable,_db) {
+            if (Regx_Match(_db.cmdline.mytable,mytable.mytable)) {
+                prlog(mytable.mytable);
+            }
+        }ind_end;
+    }
+
+Now we run the new abc to check the result:
+
+    $ abc -mytable:abcd5%
+    abcd50
+    abcd51
+    abcd52
+    abcd53
+    abcd54
+    abcd55
+    abcd56
+    abcd57
+    abcd58
+    abcd59
+
+Yes, it finds and prints the keys of the records it found.
+
+Notice that we no longer need the hash table `abc.FDb.ind_mytable`, since we 
+converted from a hash lookup to a linear scan. Let's delete the hash table:
+
+    $ acr_ed -del -field abc.FDb.ind_mytable -write
+    $ amc_vis abc.%
+
+    / abc.FDb
+    |
+    |Lary mytable-->/ abc.FMytable
+    -               |
+                    |
+                    -
+
+Indeed, only one access path remains.
+
+### The -version flag
+
+All commands compiled with abt contain a special string called `gitinfo`. abt populates it
+with the build date, first 6 characters of the last known git commit, last git author's e-mail,
+and current configuration string: compiler, compiler version, config (e.g. release), OS name (e.g. Linux)
+and architecture string (e.g. x86). All this is intended to help with debugging.
+This information can be retrived with `strings` or by running the command with `-version` argument:
+
+    $ abc -version
+    dev.gitinfo  gitinfo:2019-05-02.309c6ba  author:alexei@lebe.dev  cfg:g++/4.8.5/release.Linux-x86_64  package:""
+
+    $ strings dflt.release-x86_64/abc | grep gitinfo:
+    dev.gitinfo  gitinfo:2019-05-02.309c6ba  author:alexei@lebe.dev  cfg:g++/4.8.5/release.Linux-x86_64  package:""
+
+### Printing Command Lines
+
+Just like there is support for reading command lines, amc generates the necessary code to print command lines.
+Let's modify `abc`'s source as follows:
+
+    void abc::Main() {
+        prlog(abc_ToCmdline(_db.cmdline));
+    }
+
+Now let's run abc with some options:
+
+    $ abc
+    bin/abc  0
+
+abc converts its command line back to a string that can be passed to bash, and any strings get
+correctly quoted and escaped as necessary:
+
+    $ abc -val:33 -mytable:$'\nblah'
+    bin/abc  33 -mytable:$'\nblah'
+
+Since `-val` is an anonymous field, `abc_ToCmdline` omits the name.
+
+### Subprocesses With Command Line
+
+Before we end this tutorial, let's show one more feature, namely invoking a subprocess
+in a strictly typed way. `amc` generates a subprocess invocation helper `command::abc_proc`
+which we can use to avoid calling system(). system() is undesirable, mainly because
+it disables SIGINT and SIGTERM, making processes built around system() essentially unkillable
+from the command line. `amc`s subprocess implementation doesn't capture interrupts, and
+uses `DieWithParent` to make sure the child process is killed whenever the parent dies.
+
+Modify the source code of abc.cpp as follows:
+
+    #include "include/gen/command_gen.h"
+    #include "include/gen/command_gen.inl.h"
+
+    void abc::Main() {
+        prlog(_db.cmdline.val);
+        if (_db.cmdline.val>0) {
+            command::abc_proc abc;
+            abc.cmd.val = _db.cmdline.val-1;
+            abc_Exec(abc);
+        }
+    }
+
+This will recursively invoke the `abc` subprocess (don't try it with large values!)
+
+    $ abc 3
+    3
+    2
+    1
+    0
+
+Here is the code amc generated for `amc_proc`:
+
+    $ amc command.abc_proc
+
+    // --- command.abc_proc
+    struct abc_proc { // command.abc_proc: Subprocess:
+        algo::cstring   path;      //   "bin/abc"  path for executable
+        command::abc    cmd;       // command line for child process
+        algo::cstring   stdin;     // redirect for stdin
+        algo::cstring   stdout;    // redirect for stdout
+        algo::cstring   stderr;    // redirect for stderr
+        pid_t           pid;       //   0  pid of running child process
+        i32             timeout;   //   0  optional timeout for child process
+        i32             status;    //   0  last exit status of child process
+        abc_proc();
+        ~abc_proc();
+    private:
+        // reftype of command.abc_proc.abc prohibits copy
+        abc_proc(const abc_proc&){ /*disallow copy constructor */}
+        void operator =(const abc_proc&){ /*disallow direct assignment */}
+    };
+    ...
+
+### Verbosity
+
+You may have noticed the use of `prlog` to print things. `prlog` is one of a few C++ macros in OpenACR.
+(All macros are defined in [include/define.h]).
+Along with `prlog`, there is `prerr` that prints to stderr, `verblog`, which prints only
+if the command was invoked with `-v` or `-verbose`, and `dbglog`, which prints if the command was
+invoked with `-d` or `-debug`.
+
+Don't forget to `git reset --hard` to clean up any local changes.
+
+## Ssim files
+
+Ssim is a Super-Simple line-oriented text format for
+storing configuration data in the form of tables of tuples. Each tuple consists
+of a type tag and key-value pairs called attributes. The first
+key-value pair is a primary key.
+
+    $ acr ctype:amc.% | head
+    dmmeta.ctype  ctype:amc.BltinId       comment:""
+    dmmeta.ctype  ctype:amc.CppkeywordId  comment:""
+    dmmeta.ctype  ctype:amc.Enumstr       comment:Key
+    dmmeta.ctype  ctype:amc.FAnonfld      comment:""
+    ^^type tag          ^^primary key
+
+Every line is treated as an element of a set.  There are no headers or
+footers or other file markers, although lines can be commented out with #.
+Any concatenation, permutation, or subset of two ssim files is a
+valid ssim file, just like you would expect with sets.
+
+Both keys and values may be arbitrary byte sequences. A string
+containing non-obvious characters and be enclosed either with single
+or double quotes (there being no difference between these types of quotes),
+and inside the quotes, C++ string rules exactly apply. So "\t":"\001" is a valid
+key-value pair.
+
+A ssimfile maps directly to a relational table, and each line corresponds to a record
+in a database.
+
+In a given data set,
+The list of all ssim files is provided by "acr ssimfile".
+The list of all attrbitutes is provided by "acr field"
+
+Ssim tuples are typically held in data sets, (with one directory per
+namespace, and one file per table) or in a single file.  One can use
+grep, sed, awk, and other line-oriented tools to access, edit,
+and multilate these records.
+
+All amc-generated commands support the -in argument which specifies the input
+data set for the tool -- either a file or a directory. By default it's "data"
+
+### Structured Key Normal Form
+
+There is a lot of literature on how to construct database schema so that it doesn't
+have anomalies, and how to create primary keys. There are 6 or 7 'normal forms' -- invariants
+that have to hold if you want certain anomalies to be absent from your schema.
+Anomalies are logical inconsistencies that arise as a result of operations such as join, update, insert
+or delete.
+
+Here I will describe the Structured Key Normal Form, or SKNF, which all OpenACR
+schemas use. SKNF has no anomalies by construction and requires only one normal form.
+All it boils down to is this:
+a single field, the first field of a table, is the primary key, and it is either a simple type,
+or a cross product of two other keys (which is the same thing if you allow for an empty set).
+
+All other columns are non-NULL, and are also either simple types, or must refer to a key of some other
+table. acr treats the key as a regular string.
+When the primary key is a cross-product of two other sets, for instance dmmeta.Ctype, where dmmeta refers to ns:dmmeta
+and ctype Ctype is a string, we use a separator, in this case '.'.
+
+If you need some column to be NULLable, you delete
+the column, and create a new ssimfile which is a subset of the original file.
+Deleting the rows from this new ssimfile is equivalent to NULLing the original fields.
+
+Let's look at an example:
+
+    $ acr ctype:dmmeta.Ctype
+    dmmeta.ctype  ctype:dmmeta.Ctype  comment:"C structure"
+
+Here, the primary key is the string 'dmmeta.Ctype'.
+
+But the key is restricted by a foreign key constraint.
+Let's try acr with -fldfunc argument:
+
+    $ acr ctype:dmmeta.Ctype -fldfunc
+    dmmeta.ctype  ctype:dmmeta.Ctype  ns:dmmeta  name:Ctype  comment:"C structure"
+
+If we were to rename this element to xyz.Ctype, we'd get an acr -check
+error, since xyz is not a valid namespace.
+
+dmmeta.Ctype.ns is an attribute of dmmeta.Ctype, and it's defined as a function of other fields,
+or 'fldfunc' for short. The acr option -fldfunc expands all fldfuncs when showing output.
+The 'ns' field in the query above is defined like this:
+
+      dmmeta.field  field:dmmeta.Ctype.ns  arg:dmmeta.Ns  reftype:Pkey  dflt:""  comment:"translates to c++ namespace"
+        dmmeta.substr  field:dmmeta.Ctype.ns  expr:.RL  srcfield:dmmeta.Ctype.ctype
+
+There are no constraints other than foreign key constraints in ssim databases,
+and since they are kept in text files, the only storage type is string (in memory it can be
+a different story).
+
+acr -check can detect some errors such as strings that are too long for the underlying specified type,
+but that's not really a database constraint.
+
+### History of Database Design
+
+In his seminal paper (https://www.seas.upenn.edu/~zives/03f/cis550/codd.pdf)
+Codd explained how to decompose a *data structure* into a *set of tables* and *access paths*,
+where each access path is also a table.
+This was a crucial insight. Attaching an access path to a data set and calling
+it a data structure results in anomalies which lie at the root of many, many bugs,
+and so must be avoided. An anomaly is basically anything that dangles. 
+Any value that was supposed to be updated but wasn't is an anomaly. Anomalies are just bugs.
+
+For the first time, way after languages
+such as Algol were designed and published, the world of software construction
+acquired one of the most important tools -- the factoring of a state space into a
+set of sets, and a set of access paths between them. This decomposition is similar 
+in importance, and in fact identical in princple, to the first successful axiomatization
+of mathematics, the Zermelo–Fraenkel set theory.
+Data structure was replaced by a set and an access path, and the access path
+is itself a set.
+
+Whenever we talk of "linked list of X" or "hash table of X", we are introducing
+invisible anomalies by presupposing that all X are reachable via said access path.
+To avoid this anomaly, we need to first think of X as a thing in itself, and only attach 
+indexes later.
+
+### Cardinality Analysis
+
+If we view each element of a set as a struct with several fields, then the set of
+fields which can be used to distinguish this element from others is called a key.
+Many such keys are possible. For instance, we could generate a globally unique ID (GUID)
+or get a sequence number from some service, and attach it to the elements of our
+set as a key; This would be called a 'surrogate key'. In fact, most relational databases
+blindly use surrogate keys (a field called 'id') for most purposes. There is even
+an argument that surrogate keys are good since they protect the user from having
+to know the schema. But the problem with surrogate keys is that they are not guessable,
+and so two people cooperating on constructing the same table without communicating
+with each other will run into a conflict: they will certainly include duplicate elements
+into the table, marked with different surrogate keys.
+
+So, surrogate keys don't solve the problem of constructing the set. What does?
+
+Cardinality analysis does. The cardinality of each set is either either an integer, a string,
+same as that of another set (i.e. a subset), or a cross product of two sets.
+
+Decomposing your domain into sets based on the cardinality alone has the property of being
+replicable -- if two people go into separate rooms and each design a schema for the same domain,
+they will arrive at the same decomposition module spelling of names. This is important 
+for collaborations as it simplifies merging.
+
+### The Curse Of Simple Domains
+
+Codd was much of in favor of simple domains, where each column (field of a struct)
+is either an integer or a string, and the primary key is described as a concatenation
+of several such fields. This principle is not scalable, because if you use simple domains,
+you get very complicated joins which are very sensitive to all layers of the schema.
+And it's violated by SQL's timestamp type itself, which is a complex domain composed of year,
+month, day, hour, minute, second and nanosecond. If we followed Codd blindly, we'd use 7
+fields every time we needed a timestamp.
+
+### Remember 4-valued logic?
+
+Simple domains weren't the only thing that Codd strongly advocated for.
+He was also in favor of the 4-valued boolean logic, where the result of any expression has
+"yes", "no", "NULL and doesn't matter", and "NULL and it does matter". He had a lot
+of trouble convincing people to implement this 4-valued logic, which was necessary
+for logical consistency in presence of NULLable columns. Codd was right. If you have NULLs
+and don't use 4-valued logic, you have consistency issues. But 50 years later,
+we have some hindsight: why not just throw away NULLs?
+When you get rid of NULLs, you are naturally pushed toward columnar storage, 
+since you still need to support missing values at various stages of your data set lifetime, 
+but your missing values simply become missing rows.
+
+A NULL is nothing more than a missing join!
+
+### Structured Key Normal Form
+
+If it weren't for the simple domain rule and NULLs, the proliferation of normal forms
+wouldn't exist. 
+
+And so SKNF represents a very simple but stable point in the space of
+all possible schemas of schemas, where you don't have NULLs and every key is
+just a single composite value. It scales indefinitely, and every join takes just 2 values.
+It's guessable and easy to remember.
+
+SKNF is not a name recognized in the industry. Perhaps in the clade of DBMS construction philosophies,
+the closest analog would be DKNF (Domain Key Normal Form).
 
 ## acr_in: Show input tuples for target
 
@@ -2017,30 +2604,58 @@ Show target functions, sort by name:
      src_func amc -sortname
 
 
-## atf_unit: Unit Tests
+## Tests
 
-atf\_unit runs single-function tests which are linked into atf\_unit.
+There are two kinds of tests in OpenACR, unit tests and normalization tests.
+Unit tests just check that some functions do what they should, and they can be invoked
+with
+
+    atf_unit
+
+Normalization tests enforce various invariants on this repository, such as checking
+that all files have an entry in the gitfile table, or round-tripping all data values
+through a temporary MariaDB instance to ensure portability. These are invoked with
+
+    atf_norm
+
+All tests together are died in the script called normalize
+
+    normalize
+
+Every commit should satisfy `normalize`.
+
+### Unit Tests
+
+`atf_unit` runs single-function tests which are linked into `atf_unit`.
 The test source code is under cpp/atf/unit, and the names of all defined tests are in the table
-atfdb.unittest.
+atfdb.unittest. You can see what all the tests are with `acr unittest`.
 
-Example: Create new unit test
+Let's begin by creating a new unit test:
 
-    $ acr_ed -create -unittest amc.Test1
+    $ acr_ed -create -unittest algo_lib.Test1 -write
 
-Example: Create and edit a new unit test
+This creates a new entry in `atfdb.unittest`, and adds a stub to `cpp/atf/unit/algo_lib.cpp`.
 
-    $ acr_ed -create -unittest amc.Test1 -e
+    +// --------------------------------------------------------------------------------
+    +
+    +void atf_unit::unittest_algo_lib_Test1() {
+    +    // test code goes here
+    +}
 
-Example: Run a single unit test
+After implementing the test, we can run it with `atf_unit algo_lib.Test`
 
-    $ atf_unit http_lib.Http09
+We can run all unit tests from our namespace with 
 
-Example: Run several unit tests
+    atf_unit algo.%
+    
+### Normalization Checks
 
-    $ atf_unit http_lib.%
+We can create a normalization check with 
 
-Example: Debug a unit test
+    acr_ed -create -normcheck <name> -write
 
-    $ atf_unit http_lib.Http09 -debug
+### Debugging
 
-
+If a test fails, the easiest way to debug it is to re-run `atf_unit` with 
+`-debug` flag. It will use `mdbg` and automatically set a breakpoint at the first 
+line of the test in question.

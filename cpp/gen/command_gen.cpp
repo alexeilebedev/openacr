@@ -73,7 +73,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_tree          : ret = "tree";  break;
         case command_FieldId_loose         : ret = "loose";  break;
         case command_FieldId_my            : ret = "my";  break;
-        case command_FieldId_schema_dir    : ret = "schema_dir";  break;
+        case command_FieldId_schema        : ret = "schema";  break;
         case command_FieldId_e             : ret = "e";  break;
         case command_FieldId_b             : ret = "b";  break;
         case command_FieldId_t             : ret = "t";  break;
@@ -113,6 +113,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_hashfld       : ret = "hashfld";  break;
         case command_FieldId_sortfld       : ret = "sortfld";  break;
         case command_FieldId_unittest      : ret = "unittest";  break;
+        case command_FieldId_normcheck     : ret = "normcheck";  break;
         case command_FieldId_cppfunc       : ret = "cppfunc";  break;
         case command_FieldId_via           : ret = "via";  break;
         case command_FieldId_showcpp       : ret = "showcpp";  break;
@@ -143,7 +144,6 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_noinput       : ret = "noinput";  break;
         case command_FieldId_render        : ret = "render";  break;
         case command_FieldId_amctest       : ret = "amctest";  break;
-        case command_FieldId_normcheck     : ret = "normcheck";  break;
         case command_FieldId_nofork        : ret = "nofork";  break;
         case command_FieldId_debug         : ret = "debug";  break;
         case command_FieldId_perf_secs     : ret = "perf_secs";  break;
@@ -163,7 +163,6 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_writessimfile : ret = "writessimfile";  break;
         case command_FieldId_url           : ret = "url";  break;
         case command_FieldId_tables        : ret = "tables";  break;
-        case command_FieldId_schema        : ret = "schema";  break;
         case command_FieldId_nologo        : ret = "nologo";  break;
         case command_FieldId_baddbok       : ret = "baddbok";  break;
         case command_FieldId_targsrc       : ret = "targsrc";  break;
@@ -736,10 +735,6 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
             switch (ReadLE64(rhs.elems)) {
                 case LE_STR8('c','a','t','c','h','t','h','r'): {
                     if (memcmp(rhs.elems+8,"ow",2)==0) { value_SetEnum(parent,command_FieldId_catchthrow); ret = true; break; }
-                    break;
-                }
-                case LE_STR8('s','c','h','e','m','a','_','d'): {
-                    if (memcmp(rhs.elems+8,"ir",2)==0) { value_SetEnum(parent,command_FieldId_schema_dir); ret = true; break; }
                     break;
                 }
                 case LE_STR8('s','h','o','w','s','t','a','t'): {
@@ -1514,7 +1509,7 @@ bool command::acr_ReadFieldMaybe(command::acr &parent, algo::strptr field, algo:
         case command_FieldId_tree: retval = bool_ReadStrptrMaybe(parent.tree, strval); break;
         case command_FieldId_loose: retval = bool_ReadStrptrMaybe(parent.loose, strval); break;
         case command_FieldId_my: retval = bool_ReadStrptrMaybe(parent.my, strval); break;
-        case command_FieldId_schema_dir: retval = algo::cstring_ReadStrptrMaybe(parent.schema_dir, strval); break;
+        case command_FieldId_schema: retval = algo::cstring_ReadStrptrMaybe(parent.schema, strval); break;
         case command_FieldId_e: retval = bool_ReadStrptrMaybe(parent.e, strval); break;
         case command_FieldId_b: retval = bool_ReadStrptrMaybe(parent.b, strval); break;
         case command_FieldId_t: retval = bool_ReadStrptrMaybe(parent.t, strval); break;
@@ -1576,7 +1571,7 @@ void command::acr_Init(command::acr& parent) {
     parent.tree = bool(false);
     parent.loose = bool(false);
     parent.my = bool(false);
-    parent.schema_dir = algo::strptr("data");
+    parent.schema = algo::strptr("data");
     parent.e = bool(false);
     parent.b = bool(false);
     parent.t = bool(false);
@@ -1722,10 +1717,10 @@ void command::acr_PrintArgv(command::acr & row, algo::cstring &str) {
         str << " -my:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.schema_dir == "data")) {
+    if (!(row.schema == "data")) {
         ch_RemoveAll(temp);
-        cstring_Print(row.schema_dir, temp);
-        str << " -schema_dir:";
+        cstring_Print(row.schema, temp);
+        str << " -schema:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.e == false)) {
@@ -2102,6 +2097,7 @@ bool command::acr_ed_ReadFieldMaybe(command::acr_ed &parent, algo::strptr field,
         case command_FieldId_hashfld: retval = algo::Smallstr100_ReadStrptrMaybe(parent.hashfld, strval); break;
         case command_FieldId_sortfld: retval = algo::Smallstr100_ReadStrptrMaybe(parent.sortfld, strval); break;
         case command_FieldId_unittest: retval = algo::cstring_ReadStrptrMaybe(parent.unittest, strval); break;
+        case command_FieldId_normcheck: retval = algo::cstring_ReadStrptrMaybe(parent.normcheck, strval); break;
         case command_FieldId_cppfunc: retval = algo::cstring_ReadStrptrMaybe(parent.cppfunc, strval); break;
         case command_FieldId_xref: retval = bool_ReadStrptrMaybe(parent.xref, strval); break;
         case command_FieldId_via: retval = algo::cstring_ReadStrptrMaybe(parent.via, strval); break;
@@ -2166,6 +2162,7 @@ void command::acr_ed_Init(command::acr_ed& parent) {
     parent.hashfld = algo::strptr("");
     parent.sortfld = algo::strptr("");
     parent.unittest = algo::strptr("");
+    parent.normcheck = algo::strptr("");
     parent.cppfunc = algo::strptr("");
     parent.xref = bool(false);
     parent.via = algo::strptr("");
@@ -2375,6 +2372,12 @@ void command::acr_ed_PrintArgv(command::acr_ed & row, algo::cstring &str) {
         str << " -unittest:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.normcheck == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.normcheck, temp);
+        str << " -normcheck:";
+        strptr_PrintBash(temp,str);
+    }
     if (!(row.cppfunc == "")) {
         ch_RemoveAll(temp);
         cstring_Print(row.cppfunc, temp);
@@ -2526,7 +2529,7 @@ void command::acr_ed_ExecX(command::acr_ed_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:acr_ed.Argv
 int command::acr_ed_Execv(command::acr_ed_proc& parent) {
-    char *argv[40+2]; // start of first arg (future pointer)
+    char *argv[41+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -2757,6 +2760,13 @@ int command::acr_ed_Execv(command::acr_ed_proc& parent) {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
+    if (parent.cmd.normcheck != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-normcheck:";
+        cstring_Print(parent.cmd.normcheck, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
     if (parent.cmd.cppfunc != "") {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-cppfunc:";
@@ -2890,7 +2900,7 @@ bool command::acr_in_ReadFieldMaybe(command::acr_in &parent, algo::strptr field,
         case command_FieldId_sigcheck: retval = bool_ReadStrptrMaybe(parent.sigcheck, strval); break;
         case command_FieldId_list: retval = bool_ReadStrptrMaybe(parent.list, strval); break;
         case command_FieldId_data_dir: retval = algo::cstring_ReadStrptrMaybe(parent.data_dir, strval); break;
-        case command_FieldId_schema_dir: retval = algo::cstring_ReadStrptrMaybe(parent.schema_dir, strval); break;
+        case command_FieldId_schema: retval = algo::cstring_ReadStrptrMaybe(parent.schema, strval); break;
         case command_FieldId_related: retval = algo::cstring_ReadStrptrMaybe(parent.related, strval); break;
         case command_FieldId_notssimfile: retval = notssimfile_ReadStrptrMaybe(parent, strval); break;
         case command_FieldId_checkable: retval = bool_ReadStrptrMaybe(parent.checkable, strval); break;
@@ -2926,7 +2936,7 @@ void command::acr_in_Init(command::acr_in& parent) {
     parent.sigcheck = bool(true);
     parent.list = bool(false);
     parent.data_dir = algo::strptr("data");
-    parent.schema_dir = algo::strptr("data");
+    parent.schema = algo::strptr("data");
     parent.related = algo::strptr("");
     Regx_ReadSql(parent.notssimfile, "", true);
     parent.checkable = bool(false);
@@ -2967,10 +2977,10 @@ void command::acr_in_PrintArgv(command::acr_in & row, algo::cstring &str) {
         str << " -data_dir:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.schema_dir == "data")) {
+    if (!(row.schema == "data")) {
         ch_RemoveAll(temp);
-        cstring_Print(row.schema_dir, temp);
-        str << " -schema_dir:";
+        cstring_Print(row.schema, temp);
+        str << " -schema:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.related == "")) {
@@ -3145,10 +3155,10 @@ int command::acr_in_Execv(command::acr_in_proc& parent) {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
-    if (parent.cmd.schema_dir != "data") {
+    if (parent.cmd.schema != "data") {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-schema_dir:";
-        cstring_Print(parent.cmd.schema_dir, temp);
+        temp << "-schema:";
+        cstring_Print(parent.cmd.schema, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
@@ -3232,7 +3242,7 @@ bool command::acr_my_ReadFieldMaybe(command::acr_my &parent, algo::strptr field,
     switch(field_id) {
         case command_FieldId_nsdb: retval = nsdb_ReadStrptrMaybe(parent, strval); break;
         case command_FieldId_in: retval = algo::cstring_ReadStrptrMaybe(parent.in, strval); break;
-        case command_FieldId_schema_dir: retval = algo::cstring_ReadStrptrMaybe(parent.schema_dir, strval); break;
+        case command_FieldId_schema: retval = algo::cstring_ReadStrptrMaybe(parent.schema, strval); break;
         case command_FieldId_fldfunc: retval = bool_ReadStrptrMaybe(parent.fldfunc, strval); break;
         case command_FieldId_fkey: retval = bool_ReadStrptrMaybe(parent.fkey, strval); break;
         case command_FieldId_e: retval = bool_ReadStrptrMaybe(parent.e, strval); break;
@@ -3271,7 +3281,7 @@ bool command::acr_my_ReadTupleMaybe(command::acr_my &parent, algo::Tuple &tuple)
 void command::acr_my_Init(command::acr_my& parent) {
     Regx_ReadSql(parent.nsdb, "", true);
     parent.in = algo::strptr("data");
-    parent.schema_dir = algo::strptr("data");
+    parent.schema = algo::strptr("data");
     parent.fldfunc = bool(false);
     parent.fkey = bool(false);
     parent.e = bool(false);
@@ -3299,10 +3309,10 @@ void command::acr_my_PrintArgv(command::acr_my & row, algo::cstring &str) {
         str << " -in:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.schema_dir == "data")) {
+    if (!(row.schema == "data")) {
         ch_RemoveAll(temp);
-        cstring_Print(row.schema_dir, temp);
-        str << " -schema_dir:";
+        cstring_Print(row.schema, temp);
+        str << " -schema:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.fldfunc == false)) {
@@ -3486,10 +3496,10 @@ int command::acr_my_Execv(command::acr_my_proc& parent) {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
-    if (parent.cmd.schema_dir != "data") {
+    if (parent.cmd.schema != "data") {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-schema_dir:";
-        cstring_Print(parent.cmd.schema_dir, temp);
+        temp << "-schema:";
+        cstring_Print(parent.cmd.schema, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
@@ -3823,10 +3833,10 @@ int command::acr_Execv(command::acr_proc& parent) {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
-    if (parent.cmd.schema_dir != "data") {
+    if (parent.cmd.schema != "data") {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-schema_dir:";
-        cstring_Print(parent.cmd.schema_dir, temp);
+        temp << "-schema:";
+        cstring_Print(parent.cmd.schema, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
@@ -8759,7 +8769,7 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::acr,tree) == 65);
     algo_assert(_offset_of(command::acr,loose) == 66);
     algo_assert(_offset_of(command::acr,my) == 67);
-    algo_assert(_offset_of(command::acr,schema_dir) == 72);
+    algo_assert(_offset_of(command::acr,schema) == 72);
     algo_assert(_offset_of(command::acr,e) == 88);
     algo_assert(_offset_of(command::acr,b) == 89);
     algo_assert(_offset_of(command::acr,t) == 90);
@@ -8810,28 +8820,29 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::acr_ed,hashfld) == 1076);
     algo_assert(_offset_of(command::acr_ed,sortfld) == 1178);
     algo_assert(_offset_of(command::acr_ed,unittest) == 1280);
-    algo_assert(_offset_of(command::acr_ed,cppfunc) == 1296);
-    algo_assert(_offset_of(command::acr_ed,xref) == 1312);
-    algo_assert(_offset_of(command::acr_ed,via) == 1320);
-    algo_assert(_offset_of(command::acr_ed,showcpp) == 1336);
-    algo_assert(_offset_of(command::acr_ed,write) == 1337);
-    algo_assert(_offset_of(command::acr_ed,e) == 1338);
-    algo_assert(_offset_of(command::acr_ed,comment) == 1344);
-    algo_assert(_offset_of(command::acr_ed,sandbox) == 1360);
-    algo_assert(sizeof(command::acr_ed) == 1368);
+    algo_assert(_offset_of(command::acr_ed,normcheck) == 1296);
+    algo_assert(_offset_of(command::acr_ed,cppfunc) == 1312);
+    algo_assert(_offset_of(command::acr_ed,xref) == 1328);
+    algo_assert(_offset_of(command::acr_ed,via) == 1336);
+    algo_assert(_offset_of(command::acr_ed,showcpp) == 1352);
+    algo_assert(_offset_of(command::acr_ed,write) == 1353);
+    algo_assert(_offset_of(command::acr_ed,e) == 1354);
+    algo_assert(_offset_of(command::acr_ed,comment) == 1360);
+    algo_assert(_offset_of(command::acr_ed,sandbox) == 1376);
+    algo_assert(sizeof(command::acr_ed) == 1384);
     algo_assert(_offset_of(command::acr_in,ns) == 0);
     algo_assert(_offset_of(command::acr_in,data) == 96);
     algo_assert(_offset_of(command::acr_in,sigcheck) == 97);
     algo_assert(_offset_of(command::acr_in,list) == 98);
     algo_assert(_offset_of(command::acr_in,data_dir) == 104);
-    algo_assert(_offset_of(command::acr_in,schema_dir) == 120);
+    algo_assert(_offset_of(command::acr_in,schema) == 120);
     algo_assert(_offset_of(command::acr_in,related) == 136);
     algo_assert(_offset_of(command::acr_in,notssimfile) == 152);
     algo_assert(_offset_of(command::acr_in,checkable) == 248);
     algo_assert(sizeof(command::acr_in) == 256);
     algo_assert(_offset_of(command::acr_my,nsdb) == 0);
     algo_assert(_offset_of(command::acr_my,in) == 96);
-    algo_assert(_offset_of(command::acr_my,schema_dir) == 112);
+    algo_assert(_offset_of(command::acr_my,schema) == 112);
     algo_assert(_offset_of(command::acr_my,fldfunc) == 128);
     algo_assert(_offset_of(command::acr_my,fkey) == 129);
     algo_assert(_offset_of(command::acr_my,e) == 130);
