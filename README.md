@@ -11,7 +11,7 @@ This file was created with 'atf_norm readme' from files in [txt/] -- *do not edi
       * [Binaries](#binaries)
       * [Intermediate Files](#intermediate-files)
    * [Hello Meta World](#hello-meta-world)
-   * [acr - Auto Cross Reference](#acr--auto-cross-reference)
+   * [acr: Auto Cross Reference](#acr-auto-cross-reference)
       * [Querying](#querying)
       * [Creating A New Table](#creating-a-new-table)
       * [Inserting Data](#inserting-data)
@@ -66,7 +66,7 @@ This file was created with 'atf_norm readme' from files in [txt/] -- *do not edi
       * [The -data option](#the-data-option)
       * [The -checkable option](#the-checkable-option)
       * [The -related option](#the-related-option)
-   * [abt - A Build Tool](#abt--a-build-tool)
+   * [abt: A Build Tool](#abt-a-build-tool)
       * [Input Tables](#input-tables)
       * [Output Directory](#output-directory)
       * [The -install option](#the-install-option)
@@ -78,7 +78,7 @@ This file was created with 'atf_norm readme' from files in [txt/] -- *do not edi
       * [The -listincl option](#the-listincl-option)
       * [Debugging the build](#debugging-the-build)
       * [Bootstrapping](#bootstrapping)
-   * [amc - Algo Model Compiler](#amc--algo-model-compiler)
+   * [amc: Algo Model Compiler](#amc-algo-model-compiler)
       * [Introduction](#introduction)
       * [Running Amc](#running-amc)
       * [Query mode](#query-mode)
@@ -136,7 +136,7 @@ This file was created with 'atf_norm readme' from files in [txt/] -- *do not edi
       * [Single File Static Assignment](#single-file-static-assignment)
       * [Document all non-static functions](#document-all-non-static-functions)
       * [All rules allow exceptions](#all-rules-allow-exceptions)
-   * [amc_vis - Visualize Ctype Dependencies and Access Paths](#amc_vis--visualize-ctype-dependencies-and-access-paths)
+   * [amc_vis: Visualize Ctype Dependencies and Access Paths](#amc_vis-visualize-ctype-dependencies-and-access-paths)
    * [amc_gc: AMC garbage collector](#amc_gc-amc-garbage-collector)
    * [MariaDB integration](#mariadb-integration)
    * [Working with source files & targets](#working-with-source-files--targets)
@@ -148,7 +148,7 @@ This file was created with 'atf_norm readme' from files in [txt/] -- *do not edi
       * [Unit Tests](#unit-tests)
       * [Normalization Checks](#normalization-checks)
       * [Debugging](#debugging)
-   * [Mdbg - My debugger](#mdbg--my-debugger)
+   * [Mdbg: My debugger](#mdbg-my-debugger)
       * [Specifying arguments](#specifying-arguments)
       * [The -tui option](#the-tui-option)
       * [Specifying Breakpoints](#specifying-breakpoints)
@@ -157,11 +157,11 @@ This file was created with 'atf_norm readme' from files in [txt/] -- *do not edi
       * [Exceptions](#exceptions)
       * [Gdb Python Interface](#gdb-python-interface)
    * [Scriptlets](#scriptlets)
-      * [Hilite - inline highlighter](#hilite--inline-highlighter)
+      * [Hilite: inline highlighter](#hilite-inline-highlighter)
          * [Blotter Mode](#blotter-mode)
          * [Inline Specification](#inline-specification)
          * [Diff mode](#diff-mode)
-      * [Grephunk - patch file filter](#grephunk--patch-file-filter)
+      * [Grephunk: patch file filter](#grephunk-patch-file-filter)
 
 
 ## About
@@ -361,7 +361,7 @@ abt -install hi
 hi
 ~~~
 
-## acr - Auto Cross Reference
+## acr: Auto Cross Reference
 
 Acr is a query and editing tool for ssim (super-simple) databases.
 These databases can be proper directories, or files, or stdin.
@@ -1772,7 +1772,7 @@ In contrast, if we didn't specify `-related`, `-data` would fetch all records:
     $ acr_in abc -data | wc -l
     864
 
-## abt - A Build Tool
+## abt: A Build Tool
 
 Abt is a build tool. The argument to abt is a target name regex.
 Abt reads some ssim files that describe which source files go into 
@@ -1951,7 +1951,7 @@ clean.
 With the `-printcmd` option, abt doesn't actually run the commands but simply prints them to 
 stdout. This can be used to generate bootstrap scripts, such as `bin/abt-bootstrap`. 
 
-## amc - Algo Model Compiler
+## amc: Algo Model Compiler
 
 ### Introduction
 
@@ -2731,7 +2731,7 @@ Given a sufficiently good reason, any rule can be replaced. But let's try to kee
 whole by following these rules whenever possible.
 
 
-## amc_vis - Visualize Ctype Dependencies and Access Paths
+## amc_vis: Visualize Ctype Dependencies and Access Paths
 
 The single parameter to `amc_vis` is a ctype regex, 
 and whatever ctypes are matched by the regex will be shown
@@ -2986,7 +2986,7 @@ If a test fails, the easiest way to debug it is to re-run `atf_unit` with
 `-debug` flag. It will use `mdbg` and automatically set a breakpoint at the first 
 line of the test in question.
 
-## Mdbg - My debugger
+## Mdbg: My debugger
 
 This is a wrapper for automating the invocation of `gdb` from command line.
 
@@ -3106,7 +3106,7 @@ To enable gdb python scriptability, specify `-py` option.
 OpenACR includes a number of little scripts to ease program development.
 Some of them are useful as stand-alone utilities
 
-### Hilite - inline highlighter
+### Hilite: inline highlighter
 
 The hilite tool is a perl script that takes a number of perl regexes
 on the command line, and highlights matching strings in stdin using randomly 
@@ -3157,7 +3157,7 @@ lines are blue.
 Hilite is not intended to compete with the various syntax highlighters; it is an
 interactive tool intended to ease readibility or terminal-based output.
 
-### Grephunk - patch file filter
+### Grephunk: patch file filter
 
 Grephunk is a perl script that scan hunks on stdin
 and filter them according them to specified pattern. A `hunk` is the name patch file 

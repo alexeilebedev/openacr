@@ -3,7 +3,7 @@
 OpenACR includes a number of little scripts to ease program development.
 Some of them are useful as stand-alone utilities
 
-### Hilite - inline highlighter
+### Hilite: inline highlighter
 
 The hilite tool is a perl script that takes a number of perl regexes
 on the command line, and highlights matching strings in stdin using randomly 
@@ -54,7 +54,7 @@ lines are blue.
 Hilite is not intended to compete with the various syntax highlighters; it is an
 interactive tool intended to ease readibility or terminal-based output.
 
-### Grephunk - patch file filter
+### Grephunk: patch file filter
 
 Grephunk is a perl script that scan hunks on stdin
 and filter them according them to specified pattern. A `hunk` is the name patch file 

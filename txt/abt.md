@@ -1,4 +1,4 @@
-## abt - A Build Tool
+## abt: A Build Tool
 
 Abt is a build tool. The argument to abt is a target name regex.
 Abt reads some ssim files that describe which source files go into 

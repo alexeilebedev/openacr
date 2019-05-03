@@ -1,4 +1,4 @@
-## amc - Algo Model Compiler
+## amc: Algo Model Compiler
 
 ### Introduction
 

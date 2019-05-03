@@ -1,4 +1,4 @@
-## acr - Auto Cross Reference
+## acr: Auto Cross Reference
 
 Acr is a query and editing tool for ssim (super-simple) databases.
 These databases can be proper directories, or files, or stdin.

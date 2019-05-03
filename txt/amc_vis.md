@@ -1,4 +1,4 @@
-## amc_vis - Visualize Ctype Dependencies and Access Paths
+## amc_vis: Visualize Ctype Dependencies and Access Paths
 
 The single parameter to `amc_vis` is a ctype regex, 
 and whatever ctypes are matched by the regex will be shown

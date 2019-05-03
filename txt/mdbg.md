@@ -1,4 +1,4 @@
-## Mdbg - My debugger
+## Mdbg: My debugger
 
 This is a wrapper for automating the invocation of `gdb` from command line.
 
