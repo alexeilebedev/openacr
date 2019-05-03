@@ -52,7 +52,6 @@ dev.gitfile  gitfile:bin/git-rebase-origin
 dev.gitfile  gitfile:bin/git-recent-branches
 dev.gitfile  gitfile:bin/git-rollback-file
 dev.gitfile  gitfile:bin/grephunk
-dev.gitfile  gitfile:bin/hi
 dev.gitfile  gitfile:bin/hilite
 dev.gitfile  gitfile:bin/hilite-error
 dev.gitfile  gitfile:bin/indent-recent

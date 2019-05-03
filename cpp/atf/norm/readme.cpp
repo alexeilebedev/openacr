@@ -60,7 +60,7 @@ static void AppendToc(strptr from, cstring &to) {
 void atf_norm::normcheck_readme() {
     cstring text;
     cstring out;
-    out << "This file was created with 'atf_norm readme' from files in [txt/] -- *do not edit*\n\n";
+    out << "This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do not edit*\n\n";
     out << "## Table Of Contents\n";
     ind_beg(_db_readme_curs,readme,_db) {
         text << eol;

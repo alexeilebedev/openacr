@@ -1,14 +1,11 @@
-## acr_ed
+## acr_ed: Acr Editor
 
-acr_ed (``acr editor'') generates sequences of commands
-that implement common developer tasks such as
- create target,
- create ctype,
- create ssimfile,
- etc.
+`Acr_ed` started its life as a cheat sheet generator, but now it's an indispensable 
+tool for common tasks such as creating, deleting, and renaming targets, ctypes, ssimfiles,
+xrefs, and source files.
 
-By default, acr_ed spits out an executable script to stdout. With
--write, the script is executed (this has the same effect as piping output
+By default, `acr_ed` spits out an executable script to stdout. With
+`-write`, the script is executed (this has the same effect as piping output
 to sh)
 
 The main commands in acr_ed are:

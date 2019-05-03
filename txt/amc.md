@@ -2,147 +2,223 @@
 
 ### Introduction
 
-AMC is an extensible generator of source code from ssimfiles.
+Amc is an extensible generator of source code from ssimfiles.
 
-AMC reads ssim tables, creates C++ in-memory database code as determined by these tables, 
+Amc reads ssim tables, creates C++ in-memory database code as determined by these tables, 
 and outputs .h and .cpp files.
-By default, ssim tables are loaded (by default, from directory "data"), and output
+By default, ssim tables are loaded from directory "data", and output
 is written to directories `cpp/gen` and `include/gen`.
 
-Amc generates hash tables, arrays, linked lists, dequeues, binary heaps, and tree structures. 
-Amc generates hierarchical, region-based memory allocators, including
-free-list, fifo, best-fit, linear array (vector), indirect array (with permanent pointers);
-inline array;
-Functions to convert any struct to/from a string; Comprehensive enum support,
-both for integer and string values; presence masks; big-endian field storage;
+Amc generates hash tables, arrays, linked lists, dequeues, binary heaps; trees;
+hierarchical, region-based memory allocators, including
+single and powers-of-two freelists, fifo, linear array (vector), 
+indirect array (with permanent pointers); inline arrays and fixed-size arrays;
+Functions to convert any struct to/from a string or a bash command line; Enum support,
+both for integer and string values; presence masks; big-endian fields;
 sort functions on custom fields; incremental group-by indexes; tracking of pointers
 with automatic cascade delete; protection against linear scanning when deleting
-elements; scheduling constructs (for engines); cycle accounting (traces).
-C++ symbols from ssimfile columns; Statically loaded tables; Conversion of any 
-struct to/from bash command line; Subprocess invocation; Asynchronous I/O. Bitsets on top
-of any array type. Char sets; Fixed string types (Pascal strings, Left-padded strings, Right-padded
-strings, Fixed-length strings with numeric conversion); Decimal types; Protocol decoding 
-support; Dispatching (i.e. calling a user function) on both text and binary input; 
-Printing, reading, and validating dispatches; Uniform cursors for bheap, hash, tree, array (of all types),
+elements; scheduling constructs (for real-time modules); cycle accounting ('traces').
+C++ symbols from ssimfile columns; Statically loaded tables; Subprocess invocation.
+Asynchronous I/O. Bitsets on top of any array type. Char sets; 
+Fixed string types (Pascal strings, Left-padded strings, Right-padded
+strings, Fixed-length strings with numeric conversion); Scaled decimal types; 
+Dispatches (any group of ctypes), sharing a common header with a type field, or not.
+Printing, reading, calling dispatches given both binary and text input.
+Uniform cursor (iterator) interfaces for bheap, hash, tree, array,
 lines, files in directory, and more. I'm sure I'm forgetting something.
 
-The resulting code is compiled into a library, a ``database of source code'',
+For each program, these things are generated in-place and
+from scratch, and can be iteratively customized.
+The resulting code forms a *database of source code*,
 containing a superset of functions that will be used by the final
-application. The generated code is verbose, user-readable, and properly commented,
-and uses only a small, strict subset of C++. 
-You almost never need to go to assembly level with this code.
-AMC does not modify or reverse-engineer user code. The
-application developer uses generated code as a library.
+application. The generated code is verbose, user-readable, properly commented,
+is intended to be readable by a human, corresponds directly to the final assembly
+code, and uses only a small, conservative subset of C++. 
+`Amc` does not modify or reverse-engineer user code, so it's not a framework
+where you have to "plug in" anything. It is a tool for constructing software
+based on your specifications.
 
-AMC reads about 100 ssim tables. The full list can be obtained with
-acr\_in amc. The exact actual amc input can be printed with acr_in amc -data.
+`Amc` loads about 100 ssim tables. The full list can be obtained with
+`acr_in amc`. The exact actual `amc` input can be printed with `acr_in amc -data`.
 About 20% of these tables are responsible for 80% of the generated code, the rest deal with finer details.
 
-AMC was initially coded by hand, but once its capabilities became powerful enough, it was used to
-generate data structures for its next version. As a result, all of AMC's internal data structures,
-both input, and computational, are defined as ssim tuples and can be queried with ``acr ns:amc -xref''.
+`Amc` was initially coded by hand, but once its capabilities became powerful enough, it was used to
+generate data structures for its next version. As a result, all of `Amc`'s internal data structures,
+both input, and computational, are defined as ssim tuples and can be queried with `acr ns:amc -xref`.
 
-An in-memory database is a data structure with specific record types, well-defined custom memory pools,
-referential integrity constraints, and functions to create, read, update and delete (CRUD) the records,
-built-in joins between tables (called cross-references), and other operations.
-Programs using amc include the generated header then make calls to provided functions.
+### Why Generate?
 
-The premise of AMC is that reusable source code doesn't work, because of two things:
-- layers of glue and cruft that get added to accomodate various use cases.
-- eventual loss of either compatibility or flexibility and abandonment.
-As a result, code written for reusability never reaches its intended potential in terms
+The motivation for writing generators is that writing code for reusability doesn't work.
+The reason it doesn't work is that the definition of correctness doesn't lie with
+the piece of reusable code -- it lies with the final application. And so the reusable 
+code always offers to the application too much and at the same time not enough.
+You need a singly linked list, but the library uses a doubly linked list. You don't need
+a count of elements, but the library maintains that. You have your own strategy for memory
+management, but the library insists on its own. And you can't customize the library, since
+somebody else is using it, and they might need the feature. And when you update to the next
+version of the library, you get tons of features you didn't ask for.
+Code written for reusability rarely reaches its intended potential in terms
 of either performance or utility.
-As can be seen from real life examples, all high-performance systems are hand-coded due to highly
-specific requirements. And hand-coding is error-prone and requires a lot of debugging and chasing
-of memory errors and dangling pointers. 
 
-AMC specifically addresses and solves this dilemma.
-Since it generates readable source code that we then keep the under source control, 
-we can control the changes tightly. 
-Since the performance of AMC itself is irrelevant (it generates 1M+ lines of code
-per second, which is good enough for all purposes), we can keep backward
-compatibility at the cost of slightly lower performance whenever we face such trade-off.
-AMC allows customization, down to bitfield-level, of the memory layout of all attributes.
+Leaving aside reusability for a moment, as can be seen from real life examples,
+all high-performance systems are hand-coded due to highly
+specific requirements, and because it allows writing only what's needed, debugging that,
+and leaving it to run and do its job indefinitly. But hand-coding is difficult and 
+requires a lot of debugging and chasing of memory errors and dangling pointers. 
+Good algorithms and data structures for most problems are known.
+The problem is attaching them to the application without losing the performance to 
+glue code, data format translations (such as what happens with libraries), or layers of obfuscation
+and symbol renamings (what happens with the C++ template sublanguage or with macro preprocessors). 
 
-Best-in-class algorithms for most day-to-day problems are known.
-The problem is supplying them to the application without losing the performance to glue code and data format
-mismatch. Since AMC generates a custom set of routines for each application, it can be tuned without fear
-of adversely affecting other users.
+Software complexity models such as [COCOMO](https://en.wikipedia.org/wiki/COCOMO)
+estimate the defect rate to grow as an
+exponential function of number of source lines. This exponent should not be underestimated.
+It is about 1.2 for a national exchange with real-time and embedded constraints, meaning that 
+to write 1,000 lines of code, it costs you 3,981 units of effort.
+And if you write 100,000 lines of code, you pay a full 1,000,000 units. This exponential
+nature of the cost of lines of code is closely related to the cost of borrowing money.
+You basically have to pay back with interest, making every line of code 
+ in a very real sense "technical debt". 
+ 
+Massive code bases can slow development to a crawl and destroy projects.
+I don't want to present a macabre listing of all the software projects that failed 
+because they had too much code; I will just assume that we all agree on the validity
+of the following equation:
 
-One killer feature of AMC is that it generates xrefs -- automatic joins between
-in-memory structures, giving you a tool to eliminate pointer errors such as double deletion.
+    (Project Goodness) = (Features)*W - A*(Amount of Code Written)^B
 
-Studies estimate the defect rate to grow as an exponential function of
-number of source lines. The ratio of manual to AMC-generated code for
-a typical application is 1 to 20, significantly lowering the number of
-potential bugs. The code AMC generates is also the kind that is the
-most time-consuming and error-prone to write.
+In other words, we like the features of our system, with some weight `W`,
+and we pay with interest `B` and weight `A` for the amount
+of code we wrote, to get these features. 
+
+So we have a mini-max problem, which is the first sign of a problem worth solving. 
+On one hand, we want maximally customizable code that does only what we want.
+On the other hand, we want to write and debug the minimal amount of code.
+
+With that, let's see how far we are able to go in solving this problem, and what kinds
+of cool tricks we can make our generator do. 
 
 ### Running Amc
 
-To run amc, just type amc.
-The default invocation takes no arguments, and prints something like this:
+To run `amc`, just type `amc`. All of its inputs come from ssimfiles, so no arguments
+are necessary. The default invocation prints something like this:
 
     $ amc
     report.amc  n_cppfile:123  n_cppline:258301  n_ctype:970  n_func:22524  n_xref:460  n_filemod:0
 
+`Amc` processes generates about 1M LOC per second.
+Of course, this performance is not reflected in 
+the final executable, which means that adding new checks to amc is effectively free.
+
+It is important that amc outputs are versioned in git, so we can trace the origin
+of any change (with git annotate), and continue to make changes to amc
+without breaking existing code.
+
 ### Query mode
 
 When amc is given an argument, it runs in query mode.
-Instead of modifying source files it simply prints to stdout all internal code sections whose key matches
-the specified regex (typically it's a ctype name or a function name).
+Instead of modifying source files it simply prints to stdout all internal code
+sections whose key matches the specified regex (typically it's a ctype name or a function name).
 
 This is the fastest way to check how a certain function is implemented.
-
-Example:
 
     amc amc.%
 
 This would generate all functions which are used to compile amc itself. The apparent circularity
-is because at some point, those functions were written by hand, and then amc was modified to generate them
-and save them to cpp/gen/amc_gen.cpp
+exists because at some point, functions implementing amc were written by hand, 
+and then amc was modified to generate them and save them to `cpp/gen/amc_gen.cpp`.
+Please see [The Algorithm For Generating Any Code](#the-algorithm-for-generating-any-code)
 
 To limit amc's output to prototypes only, specify `-proto`:
 
     amc amc.% -proto
     
-### Sandbox mode
+### Ratio of Generated To Manual LOC
+
+It generates roughly 25 lines of code per 1 line of ssimfile specification. In fact
+I will check that claim right now:
+
+    $ acr ns:amc -t | wc -l
+    2010
+    $ amc amc.% | wc -l
+    47431
+
+The specification can be edited manually and adjusted frequently with Unix tools such as
+sed and perl, or by issuing `acr_ed` commands. This makes the cost of
+ssim specifications lower than the cost of regular code.
+
+### Sandbox Mode
 
 The sandbox mode is provided to help add features to amc without creating a dead-end (where
-  generated code is broken, but cannot be re-generated because amc needs to be rebuilt)
+generated code is broken, but cannot be re-generated because amc needs to be rebuilt)
 
 `abt -testgen` compiles a debug version of amc, creates the sandbox directory .testgen, runs amc in the .testgen
 directory, shows a diff between current and sandboxed changes, builds all unit tests inside the sandbox
 and runs the tests. The command succeeds if all of the steps succeed.
 
-### References
-
-If a record of type A presupposes the existence of record of type B, then A contains some field
-  that is a *reference* to B. If we want to main a list of all As that refer to a given B,
-then we can collect that information using a *cross-reference. Reference types in amc are
-Pkey, Upptr, RegxSql. Cross-reference types are Ptr, Ptrary, Thash, Atree, Bheap, Llist, Count, and others.
-
 ### Reading Code of Amc Itself
 
 Amc source code is located under cpp/amc. The list of all the source files and headers
-can also be retrieved with acr targsrc:amc/%
-If you want to browse all the functions in amc concerned with generating hash tables, run
-errlist src_func amc Thash -proto
+can also be examined with `acr targsrc:amc/%`
 
-Gentle reminder to read amc code and the tables in data/amcdb and data/dmmeta, since
-they're quite readable, and ultimately that's where all the information is. 
+amc inpt tables are in `data/amcdb` and `data/dmmeta`; The full list can be obtained 
+with `acr_in amc`. 
+
+### What is a Cross-reference?
+
+The [Relational Model](https://en.wikipedia.org/wiki/Relational_model) is a universal
+way to represent knowledge, first described by Edgar Codd (he is our Jesus).
+It is related to [Zermelo–Fraenkel set theory](https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory)
+
+It is a good foundation. In a relational data model, individual records are represented by tuples (ctype).
+Each attribute (field) is either a raw type, or a reference to some other record.
+
+The reference can take several forms -- it could be a direct pointer (Upptr),
+or a primary key (Pkey). In either case, the whole
+reason we write compiled language programs instead of solving all problems using SQL and MariaDB,
+is that reversing the direction of reference lookup -- 
+*finding all records that point to a given record* -- is expensive. 
+Cheap cross-references are ultimately why we write programs in the first place.
+In database terms, a cross-reference is a group-by; in amc, cross-reference is
+maintained as an incremental join -- automatically updated as records are added or removed from tables.
+
+A cross-reference is established by use of an xref record. Here is an example
+
+    dmmeta.ctype  ctype:amc.FTarget  comment:"
+      dmmeta.field  field:amc.FTarget.msghdr     arg:dev.Target    reftype:Base    dflt:"  comment:"
+      dmmeta.field  field:amc.FTarget.c_targdep  arg:amc.FTargdep  reftype:Ptrary  dflt:"  comment:"
+        dmmeta.ptrary  field:amc.FTarget.c_targdep  unique:Y
+        dmmeta.xref  field:amc.FTarget.c_targdep  inscond:true  via:amc.FDb.ind_target/dev.Targdep.target
+
+This says: Dear amc, whenever a `targdep` record is inserted in my program, find an instance
+of `target` by using global index `ind_target` with key `dev.Targdep.target`  (a fldfunc of `targdep`),
+as the key, and insert `targdep` into an array of pointers rooted in `target`. 
+Whenever a `targdep` record is deleted, automatically remove it from the list.
+
+The main xref types supported by amc are Ptr, Ptrary, Llist, Thash, Bheap, Atree and Count.
+
+Xrefs can be easily added and removed either by hand (with `acr -e` or by editing ssimfiles 
+directly), or using `acr_ed`. In the example above, `acr_ed -create -field amc.FTarget.c_targdep -write`
+would be enough to establish the x-ref.
+
+There can be any number of xrefs between any two tables. So, if you want a record to be
+a member of ten linked lists and eleven heaps -- you're free to do so. 
+Thus xrefs are exactly analogous to RDBMS indexes; except xrefs can be between any two
+tables, so xrefs are also `partitioned indexes` and incremental `group by`s at the same time.
+
+I would re-state here the fact that these x-refs, or indexes, are secondary to the data.
+It doesn't make sense to say "hash of X" or "tree of Y". Sets of X and Y are primary, and exist even 
+if you remove all meaningful access paths to them. Instead, we speak of "access to X". The indexes
+are roads, and there can be many roads to the same place.
+
+To visualize xrefs, it may be useful to use `amc_vis`.
 
 ### Main Input Tables
 
-The main tables Amc uses as input are ns, ctype and field.
+The main tables Amc uses as input are ns, ctype and field. 
 Ns maps to a C++ namespace.
-Ctype corresponds to a struct.
+Ctype corresponds to a struct. 
 Field corresponds to a struct member or some derived value.
-
-Namespaces, ctypes and fields lead useful lives outside of world of source code.
-For instance, every ssim database has a namespace defined for it; its records
-  are described with ctype and field. But acr mostly cares about the field names
-since ssimfiles are text files, and for acr, values are strings.
 
 The main attributes of a field are its name, arg, and reftype.
 Arg is the type, and reftype is a modifier, or 'type constructor'.
@@ -151,6 +227,7 @@ Arg is the type, and reftype is a modifier, or 'type constructor'.
     dmmeta.field  field:dmmeta.Field.field     arg:algo.Smallstr100  reftype:Val  dflt:"  comment:"
 
 ### Steps
+
 Steps are a scheduling construct to associate actions to fields.
 
 A step can be thought of as a cooperative thread -- a function that's assigned to
@@ -177,45 +254,6 @@ is called if the field is non-empty.
 
 InlineRecur step requires an fdelay record specifying the initial delay between steps.
 The logic is the same as Inline, with a time-based delay between steps.
-
-### Cross-references
-In a relational data model, individual records are represented by tuples (ctype).
-Each attribute (field) is either a raw type, or a reference to some other record.
-The reference can take several forms -- it could be a direct pointer (Upptr),
-a primary key (Pkey), a regular expression (RegxSql). In either case, the whole
-reason we write C++ programs with amc instead of solving all problems using SQL and MariaDB,
-is that reversing the direction of reference lookup -- finding all records
-that point to a given record -- is expensive. This is where x-references come in.
-In database terms, a cross-reference would be a join or a group-by.
-Except a cross-reference is an incremental
-join that is efficiently and automatically maintained as records are added or removed from tables.
-
-A cross-reference is established by use of an xref record. Here is an example
-
-    dmmeta.ctype  ctype:amc.FTarget  comment:"
-      dmmeta.field  field:amc.FTarget.msghdr     arg:dev.Target    reftype:Base    dflt:"  comment:"
-      dmmeta.field  field:amc.FTarget.c_targdep  arg:amc.FTargdep  reftype:Ptrary  dflt:"  comment:"
-        dmmeta.ptrary  field:amc.FTarget.c_targdep  unique:Y
-        dmmeta.xref  field:amc.FTarget.c_targdep  inscond:true  via:amc.FDb.ind_target/dev.Targdep.target
-
-This says: whenever a Targdep record is inserted, find an instance of Target by using global
-index ind_target with key dev.Targdep.target (a computed attribute of targdep),
-and insert Targdep into an array of pointers rooted in Target. Whenever a Targdep record is deleted,
-automatically remove it from the list.
-
-The main x-reference types are Ptr, Ptrary, Llist, Thash, Bheap and Atree.
-
-There can be any number of x-references between any two tables. So, if you want a record to be
-a member of ten linked lists and eleven heaps -- you're free to do so. This is similar to RDBMS indexes,
-of which you can have any number.
-
-To visualize x-references, it may be useful to use amc_vis.
-
-A pool is a memory source for new records.
-Pools are declared as fields, using reftype to specify pool type.
-
-Amc always creates custom Alloc/Delete functions for each type of record. Memory allocation
-is thus record-specific. There is no generic ``malloc'' and there is no casting of return types.
 
 ### Chaining
 Pools can be chained by specifying a basepool record. Basepool is where a pool gets more memory
@@ -263,7 +301,7 @@ eventually exhausting memory.
 
 ### Count: Count elements
 
-Count is a x-reference type that simply keeps track of the number of child
+Count is a xref type that simply keeps track of the number of child
 elements referring to a given parent. The elements themselves are not accessible
 via this field.
 
@@ -450,7 +488,7 @@ DO NOT assign tempstr, cstring, or a temporary variable to a strptr.
 DO NOT pass cstring& to a function when strptr is sufficient.
 DO NOT return cstring from functions, it will result in extra alloc/copy/delete
 
-AMC-generated types:
+Amc-generated types:
 A lot of these are are already defined, but new ones can be built as  needed.
 use "acr smallstr" for the full list. Brief explanation below.
 
@@ -469,3 +507,16 @@ because left-padding with 0 prevents that.
 
 LnumStr13\_U64\_Base36: Same as above, but different base.
 
+### The Algorithm For Generating Any Code
+
+The main algorithm for generating any code (not just with amc) is simple:
+
+1. Manually write the code that you want to generate and make sure it works.
+2. Put a print statement around each line.
+3. Move the resulting code to the appropriate place in your generator.
+4. Run your generator. Now you have 2 copies of your code: one you started with, and the 
+  other that was printed by the generator. If you did everygthing right, you should get a
+  link error now.
+5. Delete the manually written code.
+6. Parameterize the generator so that it can generate a whole family of implementations that
+  share look like the code.
