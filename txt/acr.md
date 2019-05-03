@@ -300,6 +300,8 @@ Since `-xref -tree` is very frequently used, command line option `-t` is an alia
       dev.b  a:a5  comment:""
       report.acr  n_select:2  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
 
+### Deleting Records
+
 What about deleting records? Let's delete something.
 
     $ acr a:a4 -del -write
@@ -310,8 +312,6 @@ What about deleting records? Let's delete something.
 
 As you can see, acr followed the reference and deleted the offending b record as well as the
 matching a record.
-
-### Deleting Records
 
 What if we wanted to see what `-del` does without modifying the database?
 We could omit the `-write` option. Notice that acr prints the records that *would*
@@ -325,6 +325,8 @@ be deleted, but in the final report, `n_file_mod:0` so we know that nothing was 
 
 `-del` works with any number of records. You could delete the entire database with
 `acr % -del -write`.
+
+When deleting a field, acr automatically opens and rewrites the corresponding ssimfile.
 
 ### Manual Editing
 
@@ -636,7 +638,12 @@ Acr can use and query standard input just like it can a regular file.
     $ echo 'dmmeta.ctype ctype:xyz' | acr -in:- ctype:%
     dmmeta.ctype  ctype:xyz  comment:""
 
-You might wonder, how does `acr` know that `dmmeta.ctype` has an attribute 
+This shows a couple of interesting things. First, acr always displays tuples 
+according to the known schema. When printing a tuple, `acr` loops over the 
+non-fldfunc fields of the associated `ctype`, and evaluates each field in the context
+of the given tuple. This means that acr normalizes data whenever the data is printed.
+
+Second, you might wonder, how does `acr` know that `dmmeta.ctype` has an attribute 
 `comment` under these conditions? Well, as it turns out, this is a common problem.
 If `acr` loaded its meta-information from the same place it loaded the data, it would
 be supremely inconvenient. That's why an additional attribute called `-schema`,

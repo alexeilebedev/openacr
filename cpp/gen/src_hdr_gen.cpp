@@ -12,10 +12,10 @@
 #include "include/gen/src_hdr_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
-#include "include/gen/algo_gen.h"
-#include "include/gen/algo_gen.inl.h"
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/dmmeta_gen.inl.h"
+#include "include/gen/algo_gen.h"
+#include "include/gen/algo_gen.inl.h"
 #include "include/gen/dev_gen.h"
 #include "include/gen/dev_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
@@ -667,7 +667,6 @@ void src_hdr::FDb_Init() {
         _db.nsx_lary[i]  = nsx_first;
         nsx_first    += 1ULL<<i;
     }
-    _db.year = i32(0);
 
     src_hdr::InitReflection();
 }
@@ -811,14 +810,6 @@ void src_hdr::FNsx_Uninit(src_hdr::FNsx& nsx) {
     if (p_ns)  {
         c_nsx_Remove(*p_ns, row);// remove nsx from index c_nsx
     }
-}
-
-// --- src_hdr.FSrc..Init
-// Set all fields to initial values.
-void src_hdr::FSrc_Init(src_hdr::FSrc& parent) {
-    parent.p_targsrc = NULL;
-    parent.minyear = i32(0);
-    parent.saw_target = bool(false);
 }
 
 // --- src_hdr.FTargsrc.base.CopyOut

@@ -39,8 +39,6 @@ static const char *license =
     "\n"
     "You should have received a copy of the GNU General Public License\n"
     "along with this program.  If not, see <https://www.gnu.org/licenses/>.\n"
-    "\n"
-    "Contacting ICE: <https://www.theice.com/contact>\n"
     "\n";
 
 // -----------------------------------------------------------------------------
@@ -93,16 +91,7 @@ static void DescribeTarget(src_hdr::FNs &ns, cstring &out, src_hdr::FTargsrc &ta
 // -----------------------------------------------------------------------------
 
 static void AddCopyright(src_hdr::FSrc &src, cstring &out) {
-    // maintain range of copyright years.xs
-    tempstr line;
-    line <<"(C) ";
-    if (src.minyear!=0 && src.minyear<src_hdr::_db.year) {
-        line << src.minyear<<"-";
-    }
-    line<< src_hdr::_db.year<<" NYSE | Intercontinental Exchange"<<eol;
-
     InsertComment(src.copyright,out);
-    InsertComment(line,out);
     InsertComment("\n",out);
 }
 
@@ -131,7 +120,11 @@ static void Authors(src_hdr::FSrc &src, cstring &out) {
 static void Save(src_hdr::FSrc &src) {
     cstring out;
     AddCopyright(src,out);
-    InsertComment(src_hdr::_db.license,out);
+    InsertComment(strptr(license),out);
+    // if copyright came from ICE, add contact info
+    if (FindStr(src.copyright, "Intercontinental Exchange")!=-1) {
+        InsertComment("Contacting ICE: <https://www.theice.com/contact>\n\n",out);
+    }
     src_hdr::FTargsrc &targsrc=*src.p_targsrc;
     // add namespace info
     DescribeTarget(*targsrc.p_ns,out,targsrc);
@@ -141,25 +134,6 @@ static void Save(src_hdr::FSrc &src) {
     out<<src.body;
 
     (void)StringToFile(out,src_Get(*src.p_targsrc));
-}
-
-// -----------------------------------------------------------------------------
-
-static bool NoteNyseCopyright(src_hdr::FSrc &src, strptr copyright) {
-    bool nyse=FindStr(copyright, "NYSE")!=-1;
-    if (nyse) {
-        if (src.minyear==0) {
-            src.minyear = src_hdr::_db.year;
-        }
-        // find earliest copyright year (look up to 3 years back
-        // w.r.t. any number found on the line)
-        for (int i=src.minyear-1; i>=src.minyear-100; i--) {
-            if (FindStr(copyright,tempstr()<<i)!=-1) {
-                src.minyear = i;
-            }
-        }
-    }
-    return nyse;
 }
 
 // -----------------------------------------------------------------------------
@@ -192,9 +166,7 @@ static void ReadTagLine(src_hdr::FSrc &src, strptr line) {
     } else if (StartsWithQ(line,"Exceptions:")) {
         // ignore, we re-generate this
     } else if (StartsWithQ(line,"(C)")) {
-        if (!NoteNyseCopyright(src,line)) {
-            src.copyright<<line<<eol;
-        }
+        src.copyright<<line<<eol;
     } else if (ch_N(line)) {
         if (src.saw_target) {
             src.comment<<line<<eol;
@@ -263,10 +235,6 @@ static void ScanTargsrc(src_hdr::FTargsrc &targsrc) {
 // -----------------------------------------------------------------------------
 
 void src_hdr::Main() {
-    TimeStruct ts= GetLocalTimeStruct(CurrUnixTime());
-    src_hdr::_db.year=ts.tm_year+1900;
-    src_hdr::_db.license = strptr(license);
-
     algo_lib::Regx exclude;
     (void)Regx_ReadStrptrMaybe(exclude,"(include/gen/%|cpp/gen/%|extern/%)");
     ind_beg(src_hdr::_db_targsrc_curs,targsrc,src_hdr::_db) {

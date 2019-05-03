@@ -1,6 +1,6 @@
 ## Ssim files
 
-Ssim is a Super-Simple line-oriented text format for
+Ssim is a super-simple line-oriented text format for
 storing configuration data in the form of tables of tuples. Each tuple consists
 of a type tag and key-value pairs called attributes. The first
 key-value pair is a primary key.
@@ -17,25 +17,35 @@ footers or other file markers, although lines can be commented out with #.
 Any concatenation, permutation, or subset of two ssim files is a
 valid ssim file, just like you would expect with sets.
 
+Leading and trailing whitespace is ignored, and may be used to aid legibility.
+(For instance, it could be used to create a tree-like structure)
+
 Both keys and values may be arbitrary byte sequences. A string
 containing non-obvious characters and be enclosed either with single
 or double quotes (there being no difference between these types of quotes),
 and inside the quotes, C++ string rules exactly apply. So "\t":"\001" is a valid
 key-value pair.
 
-A ssimfile maps directly to a relational table, and each line corresponds to a record
-in a database.
+In database terms, a ssimfile maps directly to a table, 
+and each line corresponds to a record.
 
-In a given data set,
+### Ssim Data Sets
+
+Ssimfiles are often found in data sets. There is one data set in this 
+project, it is in the directory "data". In it, there is one directory per
+namespace, and one file per ssimfile.
+
+In this data set, there is both data and meta-data. Meta-data is in the directory
+`data/dmmeta`, where `dmmeta` stands for "data model meta".
+
 The list of all ssim files is provided by "acr ssimfile".
 The list of all attrbitutes is provided by "acr field"
 
-Ssim tuples are typically held in data sets, (with one directory per
-namespace, and one file per table) or in a single file.  One can use
-grep, sed, awk, and other line-oriented tools to access, edit,
+Ssim tuples can also be stored together in a file. Acr can read and write those
+tuples. One can also use grep, sed, awk, and other line-oriented tools to access, edit,
 and multilate these records.
 
-All amc-generated commands support the -in argument which specifies the input
+All amc-generated programs support the -in argument which specifies the input
 data set for the tool -- either a file or a directory. By default it's "data"
 
 ### Structured Key Normal Form
@@ -52,44 +62,86 @@ All it boils down to is this:
 a single field, the first field of a table, is the primary key, and it is either a simple type,
 or a cross product of two other keys (which is the same thing if you allow for an empty set).
 
-All other columns are non-NULL, and are also either simple types, or must refer to a key of some other
-table. acr treats the key as a regular string.
-When the primary key is a cross-product of two other sets, for instance dmmeta.Ctype, where dmmeta refers to ns:dmmeta
-and ctype Ctype is a string, we use a separator, in this case '.'.
+All other columns are non-NULL, and are also either simple types, or must refer to a key in some other table.
+When the primary key is a cross-product of two other sets, for instance dmmeta.Ctype, 
+where `dmmeta` refers to `ns:dmmeta` and ctype Ctype is a string, we use a separator, in this case '.'.
 
-If you need some column to be NULLable, you delete
-the column, and create a new ssimfile which is a subset of the original file.
-Deleting the rows from this new ssimfile is equivalent to NULLing the original fields.
+To decompose a domain into ssimfiles, perform cardinality analysis, meaning that you break the domain up
+into sets, where each set has 1 or more values attached to a key, and the key is a structured
+one as described above. 
 
-Let's look at an example:
-
-    $ acr ctype:dmmeta.Ctype
-    dmmeta.ctype  ctype:dmmeta.Ctype  comment:"C structure"
-
-Here, the primary key is the string 'dmmeta.Ctype'.
-
-But the key is restricted by a foreign key constraint.
-Let's try acr with -fldfunc argument:
-
-    $ acr ctype:dmmeta.Ctype -fldfunc
-    dmmeta.ctype  ctype:dmmeta.Ctype  ns:dmmeta  name:Ctype  comment:"C structure"
-
-If we were to rename this element to xyz.Ctype, we'd get an acr -check
-error, since xyz is not a valid namespace.
-
-dmmeta.Ctype.ns is an attribute of dmmeta.Ctype, and it's defined as a function of other fields,
-or 'fldfunc' for short. The acr option -fldfunc expands all fldfuncs when showing output.
-The 'ns' field in the query above is defined like this:
-
-      dmmeta.field  field:dmmeta.Ctype.ns  arg:dmmeta.Ns  reftype:Pkey  dflt:""  comment:"translates to c++ namespace"
-        dmmeta.substr  field:dmmeta.Ctype.ns  expr:.RL  srcfield:dmmeta.Ctype.ctype
+If you need some column to be NULLable, there is no action available. Instead, delete
+the column, and create a new table which is a subset of the original table.
+Deleting the rows from this new table is equivalent to NULLing the original fields.
 
 There are no constraints other than foreign key constraints in ssim databases,
-and since they are kept in text files, the only storage type is string (in memory it can be
-a different story).
+and since they are kept in text files, the only storage type is string (for acr, all values
+are just strings).
 
-acr -check can detect some errors such as strings that are too long for the underlying specified type,
-but that's not really a database constraint.
+### Decomposing A Domain Into Sets
+
+Let's consider the domain of programs, such as the one found here in OpenACR.
+Since we need to attach various properties to these programs in order to do stuff with them,
+we create a number of tables to describe them.
+
+First, we have the set of all binaries. We can call it `target`, meaning "build target". 
+Then, we have the set of all source files; We'll call it `gitfile`.
+Notice that when naming a set, we don't use plurals. In OpenACR, we always use singular
+when describing a set; (There is simply no benefit to using plurals when naming things).
+Finally, to specify that a source file belongs to some target, we create a table `targsrc`
+as a cross product of `target` and `gitfile`.
+We make `target` a subset of `ns`, since all targets have namespaces describing them,
+but not all namespaces become build targets (i.e. `command` doesn't have a target).
+
+The resulting schema is shown below with `amc_vis`. Notice that all arrows point left.
+This is very important. Left-pointing arrows are *references*, and a database without indexes 
+consists only of references. 
+
+    $ amc_vis dev.Target\|dmmeta.Ns\|dev.Targsrc\|dev.Gitfile
+
+                    / dev.Gitfile
+                    |
+                / dmmeta.Ns
+                |   |
+                |   |              / dev.Targsrc
+                |   |<-------------|Pkey src
+                |   -              |
+                |                  |
+                |                  |
+                |   / dev.Target   |
+                |<--|Pkey target   |
+                -   |              |
+                    |              |
+                    |<-------------|Pkey target
+                    |              -
+                    |
+                    -
+
+When we need to quickly answer the question
+"which records point to this record?" do we introduce right-pointing *cross-references*, which are
+computed from references. Here is an example of an in-memory database built specifically
+for abt in accordance with the above schema.
+
+    amc_vis abt.FDb\|abt.FTarget\|abt.FTargsrc
+
+    / abt.FDb
+    |
+    |Lary targsrc---------------------------------->/ abt.FTargsrc
+    |Thash ind_targsrc----------------------------->|
+    |                                               |
+    |Lary target--------------->/ abt.FTarget       |
+    |Thash ind_target---------->|                   |
+    |Llist zs_sel_target------->|                   |
+    |Llist zsl_libdep_visited-->|                   |
+    |Llist zsl_libdep---------->|                   |
+    |Llist zs_origsel_target--->|                   |
+    -                           |                   |
+                                |                   |
+                                |Ptrary c_targsrc-->|
+                                |<------------------|Upptr p_target
+                                |                   -
+                                |
+                                -
 
 ### History of Database Design
 

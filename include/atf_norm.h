@@ -54,6 +54,15 @@ namespace atf_norm { // update-hdr
     void Main();
 
     // -------------------------------------------------------------------
+    // cpp/atf/norm/readme.cpp
+    //
+
+    // Generate README.md by scanning the readme table
+    // for instructions
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void normcheck_readme();
+
+    // -------------------------------------------------------------------
     // cpp/atf/norm/src.cpp -- source file (cpp/, include/) normalizations including amc
     //
 
@@ -74,7 +83,6 @@ namespace atf_norm { // update-hdr
     // void normcheck_amc();
     // void normcheck_tempcode();
     // void normcheck_stray_gen();
-    // void normcheck_readme();
 
     // -------------------------------------------------------------------
     // cpp/atf/norm/ssim.cpp -- ssim database normalizations

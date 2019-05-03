@@ -757,10 +757,10 @@ dmmeta.ctypelen  ctype:src_func.FGenprefix  len:112  alignment:8  padbytes:2
 dmmeta.ctypelen  ctype:src_func.FGstatic  len:254  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:src_func.FTarget  len:48  alignment:8  padbytes:9
 dmmeta.ctypelen  ctype:src_func.FTargsrc  len:304  alignment:8  padbytes:6
-dmmeta.ctypelen  ctype:src_hdr.FDb  len:952  alignment:8  padbytes:15
+dmmeta.ctypelen  ctype:src_hdr.FDb  len:928  alignment:8  padbytes:11
 dmmeta.ctypelen  ctype:src_hdr.FNs  len:256  alignment:8  padbytes:2
 dmmeta.ctypelen  ctype:src_hdr.FNsx  len:277  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:src_hdr.FSrc  len:136  alignment:8  padbytes:11
+dmmeta.ctypelen  ctype:src_hdr.FSrc  len:128  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:src_hdr.FTargsrc  len:272  alignment:8  padbytes:8
 dmmeta.ctypelen  ctype:src_lim.FDb  len:1224  alignment:8  padbytes:23
 dmmeta.ctypelen  ctype:src_lim.FGitfile  len:256  alignment:8  padbytes:10

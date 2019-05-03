@@ -1,26 +1,88 @@
 ## acr_in: Show input tuples for target
 
 acr_in computes the names and the order of ssimfiles
-which constitute target's declared input. Input fields are simply
-those fields for which finput records exist, e.g. for target t:
+which constitute target's declared input.
 
-    acr finput:t.%
+To illustrate, let's create a new program and make it read a table.
 
-but taken recursively over all libraries that the target uses.
+    $ acr_ed -create -target abc -write
+    ...
+    $ acr_ed -create -finput -target abc -ssimfile dmmeta.ctype -write
+    ...
+    $ acr finput:abc.%
+    dmmeta.finput  field:abc.FDb.gitfile  extrn:N  update:N  strict:Y  comment:""
+    ...
+    
+For this target, finput is `dmmeta.ctype`. Let's see if acr_in knows that:
 
-With -data argument, acr_in also loads the specified ssimfiles in memory
-and prints out their contents in the order in which it is safe to load.
+    $ acr_in abc
+    dmmeta.Dispsigcheck  dispsig:abc.Input  signature:f162f70f9895c41909c2192722172e6d21fe5679
+    dmmeta.Dispsigcheck  dispsig:algo_lib.Input  signature:ddc07e859e7056e1a824df1ad0e6d08e12e89849
+    dmmeta.ssimfile  ssimfile:dmmeta.ctype  ctype:dmmeta.Ctype
+
+The output is the list of ssimfiles needed by the target, plus any signatures
+used by the target. We can ignore the signatures for now, but they can be used 
+to detect schema changes between the compiled version of a program and the version 
+of data set on which `acr_in` operates. The `-sigcheck` option can be used to omit these.
+
+Let's now add, as an `finput` for `abc`, the `dmmeta.ns` table, which is lexicographically
+after `dmmeta.ctype`, but logically before (since ctype depends on ns).
+
+    $ acr_ed -create -finput -target abc -ssimfile dmmeta.ns -write
+    
+    $ acr_in abc -sigcheck:N
+    dmmeta.ssimfile  ssimfile:dmmeta.ns  ctype:dmmeta.Ns
+    dmmeta.ssimfile  ssimfile:dmmeta.ctype  ctype:dmmeta.Ctype
+    
+We see that `acr_in` has printed ns and ctype in the order of Pkey dependencies between them.
+`acr_in` operates recursively over all libraries that are target uses.
 
 The order of ssimfiles is determined as a transitive closure on Pkey
 references, and is independent of the target itself. This means that
-acr_in can be called with an regex of target names (e.g. %), and the
+`acr_in` can be called with an regex of target names (e.g. %), and the
 resulting input can be fed into any one of the targets implied by the
 regex, without error.
 
-Example: Create canned input file for a given tool:
+### The -data option
 
-    acr_in amc -data > tempfile
-    amc -in:tempfile
-    # this is exactly the same as running amc -in:data
+With -data argument, acr_in also loads the specified ssimfiles in memory
+and prints out their contents.
 
+This can be used to create canned input files:
 
+    acr_in abc -data > tempfile
+    abc -in:tempfile
+    # this is exactly the same as running abc -in:data
+
+### The -checkable option
+
+If we take the data from ssmifiles `ns` and `ctype`, they are now sufficient
+to serve as inputs to the newly created `abc`. However, `acr -check` will fail on
+this resulting dataset, because `ns` also depends on `nstype`, and in general there
+may be unresolved Pkey references in the resulting output.
+
+To recursively include any dependent ssimfiles, specify `-checkable`:
+
+    $ acr_in abc -checkable -sigcheck:N
+    dmmeta.ssimfile  ssimfile:dmmeta.nstype  ctype:dmmeta.Nstype
+    dmmeta.ssimfile  ssimfile:dmmeta.ns  ctype:dmmeta.Ns
+    dmmeta.ssimfile  ssimfile:dmmeta.dispsig  ctype:dmmeta.Dispsig
+    dmmeta.ssimfile  ssimfile:dmmeta.ctype  ctype:dmmeta.Ctype
+
+### The -related option
+
+`acr_in` can optionally include only those tuples which are transitively
+reachable from a certain set. For this, specify `-related`.
+Here is an example where we constrain `abc`'s input to the `abc` namespace itself.
+
+    $ acr_in abc -data -related:dmmeta.ns:abc -sigcheck:N
+    dmmeta.ns  ns:abc  nstype:exe  comment:""
+    dmmeta.ctype  ctype:abc.FCtype  comment:""
+    dmmeta.ctype  ctype:abc.FDb  comment:""
+    dmmeta.ctype  ctype:abc.FGitfile  comment:""
+    dmmeta.ctype  ctype:abc.FNs  comment:""
+
+In contrast, if we didn't specify `-related`, `-data` would fetch all records:
+
+    $ acr_in abc -data | wc -l
+    864

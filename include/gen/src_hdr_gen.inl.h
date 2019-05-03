@@ -9,8 +9,8 @@
 
 #pragma once
 #include "include/gen/command_gen.inl.h"
-#include "include/gen/algo_gen.inl.h"
 #include "include/gen/dmmeta_gen.inl.h"
+#include "include/gen/algo_gen.inl.h"
 #include "include/gen/dev_gen.inl.h"
 //#pragma endinclude
 inline src_hdr::trace::trace() {
@@ -354,6 +354,13 @@ inline src_hdr::FSrc::FSrc() {
     src_hdr::FSrc_Init(*this);
 }
 
+
+// --- src_hdr.FSrc..Init
+// Set all fields to initial values.
+inline void src_hdr::FSrc_Init(src_hdr::FSrc& parent) {
+    parent.p_targsrc = NULL;
+    parent.saw_target = bool(false);
+}
 inline src_hdr::FTargsrc::FTargsrc() {
     src_hdr::FTargsrc_Init(*this);
 }

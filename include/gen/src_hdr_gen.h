@@ -9,8 +9,8 @@
 
 #pragma once
 #include "include/gen/command_gen.h"
-#include "include/gen/algo_gen.h"
 #include "include/gen/dmmeta_gen.h"
+#include "include/gen/algo_gen.h"
 #include "include/gen/dev_gen.h"
 //#pragma endinclude
 
@@ -79,8 +79,6 @@ struct FDb { // src_hdr.FDb
     i32                  ind_ns_n;               // number of elements in the hash table
     src_hdr::FNsx*       nsx_lary[32];           // level array
     i32                  nsx_n;                  // number of elements in array
-    i32                  year;                   //   0  Current year
-    algo::cstring        license;                //
     src_hdr::trace       trace;                  //
 };
 
@@ -331,7 +329,6 @@ struct FSrc { // src_hdr.FSrc
     src_hdr::FTargsrc*   p_targsrc;        // reference to parent row
     algo::strptr         text;             //
     algo::cstring        copyright;        //
-    i32                  minyear;          //   0
     algo::cstring        created_by;       //
     algo::cstring        authors;          //
     algo::cstring        recent_changes;   //

@@ -51,7 +51,6 @@ dev.gitfile  gitfile:bin/git-praise
 dev.gitfile  gitfile:bin/git-rebase-origin
 dev.gitfile  gitfile:bin/git-recent-branches
 dev.gitfile  gitfile:bin/git-rollback-file
-dev.gitfile  gitfile:bin/git-strip-binaries
 dev.gitfile  gitfile:bin/grephunk
 dev.gitfile  gitfile:bin/hi
 dev.gitfile  gitfile:bin/hilite
@@ -80,7 +79,6 @@ dev.gitfile  gitfile:bin/todo
 dev.gitfile  gitfile:bin/update-gitfile
 dev.gitfile  gitfile:bin/update-hdr
 dev.gitfile  gitfile:bin/update-linelim
-dev.gitfile  gitfile:bin/update-readme-toc
 dev.gitfile  gitfile:bin/update-scriptfile
 dev.gitfile  gitfile:bin/zfs_snapshot.pl
 dev.gitfile  gitfile:conf/alexei/bash_profile
@@ -233,6 +231,7 @@ dev.gitfile  gitfile:cpp/atf/amc/varlen.cpp
 dev.gitfile  gitfile:cpp/atf/amc/zdlist.cpp
 dev.gitfile  gitfile:cpp/atf/amc/zslist.cpp
 dev.gitfile  gitfile:cpp/atf/norm/main.cpp
+dev.gitfile  gitfile:cpp/atf/norm/readme.cpp
 dev.gitfile  gitfile:cpp/atf/norm/src.cpp
 dev.gitfile  gitfile:cpp/atf/norm/ssim.cpp
 dev.gitfile  gitfile:cpp/atf/unit/acr.cpp
@@ -617,7 +616,7 @@ dev.gitfile  gitfile:txt/command-lines.md
 dev.gitfile  gitfile:txt/directory-structure.md
 dev.gitfile  gitfile:txt/hello-meta-world.md
 dev.gitfile  gitfile:txt/mariadb-integration.md
-dev.gitfile  gitfile:txt/reftypes.md
+dev.gitfile  gitfile:txt/scriptlets.md
 dev.gitfile  gitfile:txt/setup-and-installation.md
 dev.gitfile  gitfile:txt/ssimfiles.md
 dev.gitfile  gitfile:txt/tests.md
