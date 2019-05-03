@@ -115,10 +115,6 @@ void atf_unit::unittest_amc_Unit() {
 void atf_unit::Main() {
     atf_unit::_db.perf_cycle_budget = ToSchedTime(atf_unit::_db.cmdline.perf_secs);
 
-    // create needed directories
-    if (!DirectoryQ(tempstr()<<atf_unit::_db.cmdline.data_dir<<"/atfrun")) {
-        CreateDirRecurse(tempstr()<<atf_unit::_db.cmdline.data_dir<<"/atfrun");
-    }
     ind_beg(atf_unit::_db_unittest_curs,unittest, atf_unit::_db) {
         atf_unit::_db.report.n_test_total++;
         bool match = Regx_Match(atf_unit::_db.cmdline.unittest, unittest.unittest);

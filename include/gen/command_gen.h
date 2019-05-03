@@ -15,7 +15,7 @@
 
 enum command_FieldIdEnum {                    // command.FieldId.value
      command_FieldId_target            = 0
-    ,command_FieldId_in_dir            = 1
+    ,command_FieldId_in                = 1
     ,command_FieldId_out_dir           = 2
     ,command_FieldId_cfg               = 3
     ,command_FieldId_compiler          = 4
@@ -25,103 +25,103 @@ enum command_FieldIdEnum {                    // command.FieldId.value
     ,command_FieldId_list              = 8
     ,command_FieldId_listincl          = 9
     ,command_FieldId_build             = 10
-    ,command_FieldId_line              = 11
-    ,command_FieldId_preproc           = 12
-    ,command_FieldId_clean             = 13
-    ,command_FieldId_dry_run           = 14
-    ,command_FieldId_maxjobs           = 15
-    ,command_FieldId_printcmd          = 16
-    ,command_FieldId_force             = 17
-    ,command_FieldId_testgen           = 18
-    ,command_FieldId_install           = 19
-    ,command_FieldId_coverity          = 20
-    ,command_FieldId_release           = 21
-    ,command_FieldId_package           = 22
-    ,command_FieldId_nover             = 23
-    ,command_FieldId_maxerr            = 24
-    ,command_FieldId_disas             = 25
-    ,command_FieldId_report            = 26
-    ,command_FieldId_query             = 27
-    ,command_FieldId_select            = 28
-    ,command_FieldId_del               = 29
-    ,command_FieldId_insert            = 30
-    ,command_FieldId_replace           = 31
-    ,command_FieldId_merge             = 32
-    ,command_FieldId_unused            = 33
-    ,command_FieldId_trunc             = 34
-    ,command_FieldId_check             = 35
-    ,command_FieldId_maxshow           = 36
-    ,command_FieldId_write             = 37
-    ,command_FieldId_rename            = 38
-    ,command_FieldId_nup               = 39
-    ,command_FieldId_ndown             = 40
-    ,command_FieldId_xref              = 41
-    ,command_FieldId_fldfunc           = 42
-    ,command_FieldId_maxgroup          = 43
-    ,command_FieldId_pretty            = 44
-    ,command_FieldId_tree              = 45
-    ,command_FieldId_loose             = 46
-    ,command_FieldId_my                = 47
-    ,command_FieldId_schema            = 48
-    ,command_FieldId_e                 = 49
-    ,command_FieldId_b                 = 50
-    ,command_FieldId_t                 = 51
-    ,command_FieldId_rowid             = 52
-    ,command_FieldId_in                = 53
-    ,command_FieldId_cmt               = 54
-    ,command_FieldId_print             = 55
-    ,command_FieldId_cmd               = 56
-    ,command_FieldId_field             = 57
-    ,command_FieldId_regxof            = 58
-    ,command_FieldId_meta              = 59
-    ,command_FieldId_point             = 60
-    ,command_FieldId_type              = 61
-    ,command_FieldId_create            = 62
-    ,command_FieldId_finput            = 63
-    ,command_FieldId_srcfile           = 64
-    ,command_FieldId_gstatic           = 65
-    ,command_FieldId_indexed           = 66
-    ,command_FieldId_nstype            = 67
-    ,command_FieldId_ctype             = 68
-    ,command_FieldId_pooltype          = 69
-    ,command_FieldId_ssimfile          = 70
-    ,command_FieldId_subset            = 71
-    ,command_FieldId_subset2           = 72
-    ,command_FieldId_separator         = 73
-    ,command_FieldId_arg               = 74
-    ,command_FieldId_dflt              = 75
-    ,command_FieldId_anon              = 76
-    ,command_FieldId_bigend            = 77
-    ,command_FieldId_cascdel           = 78
-    ,command_FieldId_before            = 79
-    ,command_FieldId_substr            = 80
-    ,command_FieldId_srcfield          = 81
-    ,command_FieldId_fstep             = 82
-    ,command_FieldId_inscond           = 83
-    ,command_FieldId_reftype           = 84
-    ,command_FieldId_hashfld           = 85
-    ,command_FieldId_sortfld           = 86
-    ,command_FieldId_unittest          = 87
-    ,command_FieldId_normcheck         = 88
-    ,command_FieldId_cppfunc           = 89
-    ,command_FieldId_via               = 90
-    ,command_FieldId_showcpp           = 91
-    ,command_FieldId_comment           = 92
-    ,command_FieldId_sandbox           = 93
-    ,command_FieldId_ns                = 94
-    ,command_FieldId_data              = 95
-    ,command_FieldId_sigcheck          = 96
-    ,command_FieldId_data_dir          = 97
-    ,command_FieldId_related           = 98
-    ,command_FieldId_notssimfile       = 99
-    ,command_FieldId_checkable         = 100
-    ,command_FieldId_nsdb              = 101
-    ,command_FieldId_fkey              = 102
-    ,command_FieldId_start             = 103
-    ,command_FieldId_stop              = 104
-    ,command_FieldId_abort             = 105
-    ,command_FieldId_shell             = 106
-    ,command_FieldId_serv              = 107
+    ,command_FieldId_preproc           = 11
+    ,command_FieldId_clean             = 12
+    ,command_FieldId_dry_run           = 13
+    ,command_FieldId_maxjobs           = 14
+    ,command_FieldId_printcmd          = 15
+    ,command_FieldId_force             = 16
+    ,command_FieldId_testgen           = 17
+    ,command_FieldId_install           = 18
+    ,command_FieldId_coverity          = 19
+    ,command_FieldId_release           = 20
+    ,command_FieldId_package           = 21
+    ,command_FieldId_nover             = 22
+    ,command_FieldId_maxerr            = 23
+    ,command_FieldId_disas             = 24
+    ,command_FieldId_report            = 25
+    ,command_FieldId_query             = 26
+    ,command_FieldId_select            = 27
+    ,command_FieldId_del               = 28
+    ,command_FieldId_insert            = 29
+    ,command_FieldId_replace           = 30
+    ,command_FieldId_merge             = 31
+    ,command_FieldId_unused            = 32
+    ,command_FieldId_trunc             = 33
+    ,command_FieldId_check             = 34
+    ,command_FieldId_maxshow           = 35
+    ,command_FieldId_write             = 36
+    ,command_FieldId_rename            = 37
+    ,command_FieldId_nup               = 38
+    ,command_FieldId_ndown             = 39
+    ,command_FieldId_xref              = 40
+    ,command_FieldId_fldfunc           = 41
+    ,command_FieldId_maxgroup          = 42
+    ,command_FieldId_pretty            = 43
+    ,command_FieldId_tree              = 44
+    ,command_FieldId_loose             = 45
+    ,command_FieldId_my                = 46
+    ,command_FieldId_schema            = 47
+    ,command_FieldId_e                 = 48
+    ,command_FieldId_b                 = 49
+    ,command_FieldId_t                 = 50
+    ,command_FieldId_rowid             = 51
+    ,command_FieldId_cmt               = 52
+    ,command_FieldId_print             = 53
+    ,command_FieldId_cmd               = 54
+    ,command_FieldId_field             = 55
+    ,command_FieldId_regxof            = 56
+    ,command_FieldId_meta              = 57
+    ,command_FieldId_line              = 58
+    ,command_FieldId_point             = 59
+    ,command_FieldId_type              = 60
+    ,command_FieldId_create            = 61
+    ,command_FieldId_finput            = 62
+    ,command_FieldId_srcfile           = 63
+    ,command_FieldId_gstatic           = 64
+    ,command_FieldId_indexed           = 65
+    ,command_FieldId_nstype            = 66
+    ,command_FieldId_ctype             = 67
+    ,command_FieldId_pooltype          = 68
+    ,command_FieldId_ssimfile          = 69
+    ,command_FieldId_subset            = 70
+    ,command_FieldId_subset2           = 71
+    ,command_FieldId_separator         = 72
+    ,command_FieldId_arg               = 73
+    ,command_FieldId_dflt              = 74
+    ,command_FieldId_anon              = 75
+    ,command_FieldId_bigend            = 76
+    ,command_FieldId_cascdel           = 77
+    ,command_FieldId_before            = 78
+    ,command_FieldId_substr            = 79
+    ,command_FieldId_srcfield          = 80
+    ,command_FieldId_fstep             = 81
+    ,command_FieldId_inscond           = 82
+    ,command_FieldId_reftype           = 83
+    ,command_FieldId_hashfld           = 84
+    ,command_FieldId_sortfld           = 85
+    ,command_FieldId_unittest          = 86
+    ,command_FieldId_normcheck         = 87
+    ,command_FieldId_cppfunc           = 88
+    ,command_FieldId_via               = 89
+    ,command_FieldId_showcpp           = 90
+    ,command_FieldId_comment           = 91
+    ,command_FieldId_sandbox           = 92
+    ,command_FieldId_ns                = 93
+    ,command_FieldId_data              = 94
+    ,command_FieldId_sigcheck          = 95
+    ,command_FieldId_data_dir          = 96
+    ,command_FieldId_related           = 97
+    ,command_FieldId_notssimfile       = 98
+    ,command_FieldId_checkable         = 99
+    ,command_FieldId_nsdb              = 100
+    ,command_FieldId_fkey              = 101
+    ,command_FieldId_start             = 102
+    ,command_FieldId_stop              = 103
+    ,command_FieldId_abort             = 104
+    ,command_FieldId_shell             = 105
+    ,command_FieldId_serv              = 106
+    ,command_FieldId_in_dir            = 107
     ,command_FieldId_proto             = 108
     ,command_FieldId_trace             = 109
     ,command_FieldId_fconst            = 110
@@ -290,7 +290,7 @@ void                 StaticCheck();
 // access: command.abt_proc.abt (Exec)
 struct abt { // command.abt
     algo_lib::Regx     target;     //   ""  Regx of dev::Target
-    algo::cstring      in_dir;     //   "data"  Root of input ssim dir
+    algo::cstring      in;         //   "data"  Root of input ssim dir
     algo::cstring      out_dir;    //   ""  Output directory
     algo::Smallstr50   cfg;        //   ""  Set config
     algo::Smallstr50   compiler;   //   ""  Set compiler.
@@ -300,7 +300,6 @@ struct abt { // command.abt
     bool               list;       //   false  List target files
     bool               listincl;   //   false  List includes
     bool               build;      //   false  If set, build specified target (all necessary steps)
-    i32                line;       //   0  Specify source file line in question
     bool               preproc;    //   false  Preprocess file, produce .i file
     bool               clean;      //   false  Delete all output files
     bool               dry_run;    //   false  Print actions, do not perform
@@ -1310,7 +1309,7 @@ tempstr              mdbg_ToCmdline(command::mdbg & row) __attribute__((nothrow)
 algo::strptr         mdbg_GetAnon(command::mdbg &parent, i32 idx) __attribute__((nothrow));
 
 // --- command.mdbg_proc
-struct mdbg_proc { // command.mdbg_proc: Subprocess: Module debugger
+struct mdbg_proc { // command.mdbg_proc: Subprocess: My debugger
     algo::cstring   path;      //   "bin/mdbg"  path for executable
     command::mdbg   cmd;       // command line for child process
     algo::cstring   stdin;     // redirect for stdin

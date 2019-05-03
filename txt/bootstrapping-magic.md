@@ -65,6 +65,9 @@ is generated, the tools become universal: any tool works with almost any other t
     'acr ns:abt -t' shows the definitions of all abt structures
     'acr ns:acr -t' shows the definitions of its own structures
 
+    'mdbg acr' debugs acr
+    'mdbg mdbg' debugs the debugger
+    
 And of course, the point of the tools is not to compile themselves; 
 The idea is that this repo is extended with new commands and tools specific to some project,
 maintaining the same directory structure and basic conventions.

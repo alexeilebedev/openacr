@@ -26,7 +26,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case command_FieldId_target        : ret = "target";  break;
-        case command_FieldId_in_dir        : ret = "in_dir";  break;
+        case command_FieldId_in            : ret = "in";  break;
         case command_FieldId_out_dir       : ret = "out_dir";  break;
         case command_FieldId_cfg           : ret = "cfg";  break;
         case command_FieldId_compiler      : ret = "compiler";  break;
@@ -36,7 +36,6 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_list          : ret = "list";  break;
         case command_FieldId_listincl      : ret = "listincl";  break;
         case command_FieldId_build         : ret = "build";  break;
-        case command_FieldId_line          : ret = "line";  break;
         case command_FieldId_preproc       : ret = "preproc";  break;
         case command_FieldId_clean         : ret = "clean";  break;
         case command_FieldId_dry_run       : ret = "dry_run";  break;
@@ -78,13 +77,13 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_b             : ret = "b";  break;
         case command_FieldId_t             : ret = "t";  break;
         case command_FieldId_rowid         : ret = "rowid";  break;
-        case command_FieldId_in            : ret = "in";  break;
         case command_FieldId_cmt           : ret = "cmt";  break;
         case command_FieldId_print         : ret = "print";  break;
         case command_FieldId_cmd           : ret = "cmd";  break;
         case command_FieldId_field         : ret = "field";  break;
         case command_FieldId_regxof        : ret = "regxof";  break;
         case command_FieldId_meta          : ret = "meta";  break;
+        case command_FieldId_line          : ret = "line";  break;
         case command_FieldId_point         : ret = "point";  break;
         case command_FieldId_type          : ret = "type";  break;
         case command_FieldId_create        : ret = "create";  break;
@@ -133,6 +132,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_abort         : ret = "abort";  break;
         case command_FieldId_shell         : ret = "shell";  break;
         case command_FieldId_serv          : ret = "serv";  break;
+        case command_FieldId_in_dir        : ret = "in_dir";  break;
         case command_FieldId_proto         : ret = "proto";  break;
         case command_FieldId_trace         : ret = "trace";  break;
         case command_FieldId_fconst        : ret = "fconst";  break;
@@ -888,7 +888,7 @@ bool command::abt_ReadFieldMaybe(command::abt &parent, algo::strptr field, algo:
     bool retval = true; // default is no error
     switch(field_id) {
         case command_FieldId_target: retval = target_ReadStrptrMaybe(parent, strval); break;
-        case command_FieldId_in_dir: retval = algo::cstring_ReadStrptrMaybe(parent.in_dir, strval); break;
+        case command_FieldId_in: retval = algo::cstring_ReadStrptrMaybe(parent.in, strval); break;
         case command_FieldId_out_dir: retval = algo::cstring_ReadStrptrMaybe(parent.out_dir, strval); break;
         case command_FieldId_cfg: retval = algo::Smallstr50_ReadStrptrMaybe(parent.cfg, strval); break;
         case command_FieldId_compiler: retval = algo::Smallstr50_ReadStrptrMaybe(parent.compiler, strval); break;
@@ -898,7 +898,6 @@ bool command::abt_ReadFieldMaybe(command::abt &parent, algo::strptr field, algo:
         case command_FieldId_list: retval = bool_ReadStrptrMaybe(parent.list, strval); break;
         case command_FieldId_listincl: retval = bool_ReadStrptrMaybe(parent.listincl, strval); break;
         case command_FieldId_build: retval = bool_ReadStrptrMaybe(parent.build, strval); break;
-        case command_FieldId_line: retval = i32_ReadStrptrMaybe(parent.line, strval); break;
         case command_FieldId_preproc: retval = bool_ReadStrptrMaybe(parent.preproc, strval); break;
         case command_FieldId_clean: retval = bool_ReadStrptrMaybe(parent.clean, strval); break;
         case command_FieldId_dry_run: retval = bool_ReadStrptrMaybe(parent.dry_run, strval); break;
@@ -943,7 +942,7 @@ bool command::abt_ReadTupleMaybe(command::abt &parent, algo::Tuple &tuple) {
 // Set all fields to initial values.
 void command::abt_Init(command::abt& parent) {
     Regx_ReadSql(parent.target, "", true);
-    parent.in_dir = algo::strptr("data");
+    parent.in = algo::strptr("data");
     parent.out_dir = algo::strptr("");
     parent.cfg = algo::strptr("");
     parent.compiler = algo::strptr("");
@@ -953,7 +952,6 @@ void command::abt_Init(command::abt& parent) {
     parent.list = bool(false);
     parent.listincl = bool(false);
     parent.build = bool(false);
-    parent.line = i32(0);
     parent.preproc = bool(false);
     parent.clean = bool(false);
     parent.dry_run = bool(false);
@@ -982,10 +980,10 @@ void command::abt_PrintArgv(command::abt & row, algo::cstring &str) {
     command::target_Print(const_cast<command::abt&>(row), temp);
     str << " ";
     strptr_PrintBash(temp,str);
-    if (!(row.in_dir == "data")) {
+    if (!(row.in == "data")) {
         ch_RemoveAll(temp);
-        cstring_Print(row.in_dir, temp);
-        str << " -in_dir:";
+        cstring_Print(row.in, temp);
+        str << " -in:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.out_dir == "")) {
@@ -1040,12 +1038,6 @@ void command::abt_PrintArgv(command::abt & row, algo::cstring &str) {
         ch_RemoveAll(temp);
         bool_Print(row.build, temp);
         str << " -build:";
-        strptr_PrintBash(temp,str);
-    }
-    if (!(row.line == 0)) {
-        ch_RemoveAll(temp);
-        i32_Print(row.line, temp);
-        str << " -line:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.preproc == false)) {
@@ -1250,7 +1242,7 @@ void command::abt_ExecX(command::abt_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:abt.Argv
 int command::abt_Execv(command::abt_proc& parent) {
-    char *argv[27+2]; // start of first arg (future pointer)
+    char *argv[26+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -1264,10 +1256,10 @@ int command::abt_Execv(command::abt_proc& parent) {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
-    if (parent.cmd.in_dir != "data") {
+    if (parent.cmd.in != "data") {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-in_dir:";
-        cstring_Print(parent.cmd.in_dir, temp);
+        temp << "-in:";
+        cstring_Print(parent.cmd.in, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
@@ -1331,13 +1323,6 @@ int command::abt_Execv(command::abt_proc& parent) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-build:";
         bool_Print(parent.cmd.build, temp);
-        ch_Alloc(temp) = 0;// NUL term for this arg
-    }
-
-    if (parent.cmd.line != 0) {
-        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-line:";
-        i32_Print(parent.cmd.line, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
@@ -8721,7 +8706,7 @@ void command::strconv_proc_Uninit(command::strconv_proc& parent) {
 // --- command...SizeCheck
 inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::abt,target) == 0);
-    algo_assert(_offset_of(command::abt,in_dir) == 96);
+    algo_assert(_offset_of(command::abt,in) == 96);
     algo_assert(_offset_of(command::abt,out_dir) == 112);
     algo_assert(_offset_of(command::abt,cfg) == 128);
     algo_assert(_offset_of(command::abt,compiler) == 180);
@@ -8731,16 +8716,15 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::abt,list) == 337);
     algo_assert(_offset_of(command::abt,listincl) == 338);
     algo_assert(_offset_of(command::abt,build) == 339);
-    algo_assert(_offset_of(command::abt,line) == 340);
-    algo_assert(_offset_of(command::abt,preproc) == 344);
-    algo_assert(_offset_of(command::abt,clean) == 345);
-    algo_assert(_offset_of(command::abt,dry_run) == 346);
-    algo_assert(_offset_of(command::abt,maxjobs) == 348);
-    algo_assert(_offset_of(command::abt,printcmd) == 352);
-    algo_assert(_offset_of(command::abt,force) == 353);
-    algo_assert(_offset_of(command::abt,testgen) == 354);
-    algo_assert(_offset_of(command::abt,install) == 355);
-    algo_assert(_offset_of(command::abt,coverity) == 356);
+    algo_assert(_offset_of(command::abt,preproc) == 340);
+    algo_assert(_offset_of(command::abt,clean) == 341);
+    algo_assert(_offset_of(command::abt,dry_run) == 342);
+    algo_assert(_offset_of(command::abt,maxjobs) == 344);
+    algo_assert(_offset_of(command::abt,printcmd) == 348);
+    algo_assert(_offset_of(command::abt,force) == 349);
+    algo_assert(_offset_of(command::abt,testgen) == 350);
+    algo_assert(_offset_of(command::abt,install) == 351);
+    algo_assert(_offset_of(command::abt,coverity) == 352);
     algo_assert(_offset_of(command::abt,release) == 360);
     algo_assert(_offset_of(command::abt,package) == 376);
     algo_assert(_offset_of(command::abt,nover) == 392);

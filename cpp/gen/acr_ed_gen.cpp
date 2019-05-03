@@ -2342,7 +2342,7 @@ void acr_ed::abt_ExecX() {
 // Call execv()
 // Call execv with specified parameters -- cprint:abt.Argv
 int acr_ed::abt_Execv() {
-    char *argv[27+2]; // start of first arg (future pointer)
+    char *argv[26+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -2356,10 +2356,10 @@ int acr_ed::abt_Execv() {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
-    if (_db.abt_cmd.in_dir != "data") {
+    if (_db.abt_cmd.in != "data") {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-in_dir:";
-        cstring_Print(_db.abt_cmd.in_dir, temp);
+        temp << "-in:";
+        cstring_Print(_db.abt_cmd.in, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
@@ -2423,13 +2423,6 @@ int acr_ed::abt_Execv() {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-build:";
         bool_Print(_db.abt_cmd.build, temp);
-        ch_Alloc(temp) = 0;// NUL term for this arg
-    }
-
-    if (_db.abt_cmd.line != 0) {
-        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-line:";
-        i32_Print(_db.abt_cmd.line, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 

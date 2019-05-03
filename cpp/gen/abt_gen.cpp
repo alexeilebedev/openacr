@@ -36,7 +36,7 @@ const char *abt_help =
 "abt: Algo Build Tool (build system)\n"
 "Usage: abt [options]\n"
 "    [target]   string  Regx of target name\n"
-"    -in_dir    string  Root of input ssim dir. default: \"data\"\n"
+"    -in        string  Root of input ssim dir. default: \"data\"\n"
 "    -out_dir   string  Output directory\n"
 "    -cfg       string  Set config\n"
 "    -compiler  string  Set compiler.\n"
@@ -46,7 +46,6 @@ const char *abt_help =
 "    -list              List target files. default: false\n"
 "    -listincl          List includes. default: false\n"
 "    -build             If set, build specified target (all necessary steps). default: false\n"
-"    -line      int     Specify source file line in question. default: 0\n"
 "    -preproc           Preprocess file, produce .i file. default: false\n"
 "    -clean             Delete all output files. default: false\n"
 "    -dry_run           Print actions, do not perform. default: false\n"
@@ -72,7 +71,7 @@ const char *abt_help =
 
 const char *abt_syntax =
 "[target]:string=\n"
-" -in_dir:string=\"data\"\n"
+" -in:string=\"data\"\n"
 " -out_dir:string=\n"
 " -cfg:string=\n"
 " -compiler:string=\n"
@@ -82,7 +81,6 @@ const char *abt_syntax =
 " -list:flag\n"
 " -listincl:flag\n"
 " -build:flag\n"
-" -line:int=0\n"
 " -preproc:flag\n"
 " -clean:flag\n"
 " -dry_run:flag\n"
@@ -1266,7 +1264,7 @@ void abt::MainArgs(int argc, char **argv) {
     Argtuple argtuple;
     Argtuple_ReadArgv(argtuple, argc,argv,abt_syntax, abt_help);
     vrfy(abt_ReadTupleMaybe(abt::_db.cmdline, argtuple.tuple),"where:read_cmdline");
-    vrfy(abt::LoadTuplesMaybe(abt::_db.cmdline.in_dir)
+    vrfy(abt::LoadTuplesMaybe(abt::_db.cmdline.in)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
     abt::Main(); // call through to user-defined main
 }

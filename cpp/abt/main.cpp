@@ -24,30 +24,6 @@
 // Authors: alexei.lebedev
 // Recent Changes: alexei.lebedev
 //
-// ABT: Algo Build Tool
-// Environment vars:
-// UNAME
-// COMPILER
-// CFG
-// ARCH
-// Input tables:
-// dev.target         buildable target
-// dev.targdep        pairwise dependencies between targets
-// dev.targsrc        list of source files for each target.
-// dev.tool_opt       list of options to use for compilation and linking,
-// classified by uname, target, compiler, cfg.
-// Runtime tables:
-// dev.srcfile        one per source or header file
-// dev.syscmd         one build command (compile, link, archive.)
-// dev.syscmddep      dependency between two sys commands
-// TODO: secondary reverse sort of sources by date.
-// Each source file must belong to just 1 target
-// (the object file key is based on source file name, so there may be only one)
-// Precompiled headers are implemented by creating a target of type 'pch'
-// with a single source -- the header.
-// It is then added to other targets as a dependency. This ensures that the precompiled
-// header is compiled before other sources.
-// TODO: propagate out-of-date flag across files in a uniform way.
 // TODO Create entries for object files and add them as input dependencies to link step.
 // Currently, the out-of-date flag propagation is unconvincing
 
@@ -631,13 +607,8 @@ static void Main_CreateCmds(algo_lib::Replscope &R, abt::FTarget &target, abt::F
 // -----------------------------------------------------------------------------
 
 static void Main_GuessUname() {
-    if (!ch_N(abt::_db.cmdline.uname))    abt::_db.cmdline.uname    = getenv("UNAME");
-    if (!ch_N(abt::_db.cmdline.compiler)) abt::_db.cmdline.compiler = getenv("COMPILER");
-    if (!ch_N(abt::_db.cmdline.cfg))      abt::_db.cmdline.cfg      = getenv("CFG");
-    if (!ch_N(abt::_db.cmdline.arch))     abt::_db.cmdline.arch     = getenv("ARCH");
-
-    if (!ch_N(abt::_db.cmdline.compiler)) abt::_db.cmdline.compiler = "g++";
-    if (!ch_N(abt::_db.cmdline.cfg))      abt::_db.cmdline.cfg      = dev_Cfg_cfg_debug;
+    if (!ch_N(abt::_db.cmdline.compiler)) abt::_db.cmdline.compiler = "g++"; // default compiler
+    if (!ch_N(abt::_db.cmdline.cfg))      abt::_db.cmdline.cfg      = dev_Cfg_cfg_release; // default config
 
     if (!ch_N(abt::_db.cmdline.arch) || !ch_N(abt::_db.cmdline.uname)) {
         struct utsname un;
@@ -752,9 +723,14 @@ static void RewriteOpts() {
         prlog("abt.testgen  Compiling debug version of amc");
         Regx_ReadSql(abt::_db.cmdline.target, dmmeta_Ns_ns_amc, true);
     }
-    if (!abt::_db.cmdline.build && !abt::_db.cmdline.list  && !abt::_db.cmdline.listincl
-        && !abt::_db.cmdline.clean && !abt::_db.cmdline.preproc && ch_N(abt::_db.cmdline.target.expr)) {
-        abt::_db.cmdline.build=true; // pick reasonable default
+    if (!abt::_db.cmdline.build
+        && !abt::_db.cmdline.list
+        && !abt::_db.cmdline.listincl
+        && !abt::_db.cmdline.ood
+        && !abt::_db.cmdline.clean
+        && !abt::_db.cmdline.preproc
+        && ch_N(abt::_db.cmdline.target.expr)) {
+        abt::_db.cmdline.build=true; // pick a reasonable default
     }
     // pick reasonable maxjobs
     // can we limit these compilers to a group so they don't suck up all cpu on a machine?
@@ -762,8 +738,6 @@ static void RewriteOpts() {
         abt::_db.cmdline.maxjobs = i32_Max(4,sysconf(_SC_NPROCESSORS_ONLN)/2);
     }
     abt::_db.cmdline.maxjobs = i32_Max(abt::_db.cmdline.maxjobs, 1);
-
-    vrfy(!abt::_db.cmdline.line, "line number: not implemented");
 
     // implies
     if (abt::_db.cmdline.ood) {
@@ -778,11 +752,6 @@ static void RewriteOpts() {
         prlog("set -x");// show commands
         abt::_db.cmdline.maxjobs = 1;// deterministic output
         abt::_db.cmdline.force = true;// make everything out-of-date
-    }
-    // pick default cfg=release if using install
-    // (-install -cfg debug will override this)
-    if (abt::_db.cmdline.install && !ch_N(abt::_db.cmdline.cfg)) {
-        abt::_db.cmdline.cfg = dev_Cfg_cfg_release;
     }
 }
 
@@ -801,7 +770,7 @@ static void Main_ShowOod() {
     }ind_end;
     if (realexec && abt::zs_sel_target_N() > 0 && abt::_db.cmdline.report) {
         prlog("abt.config"
-              <<Keyval("cmd",abt::_db.cmdline.cfg)
+              <<Keyval("cfg",abt::_db.cmdline.cfg)
               <<Keyval("uname",abt::_db.cmdline.uname)
               <<Keyval("arch",abt::_db.cmdline.arch)
               <<Keyval("compiler",abt::_db.cmdline.compiler)

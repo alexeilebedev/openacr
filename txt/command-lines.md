@@ -1,20 +1,20 @@
 ## Command Lines
 
-All tools created with amc come with full command line support. A command line is just a struct,
+All programs created with amc come with full command line support. A command line is just a struct,
 and options are described as fields. All one needs to do is keep adding fields, and amc and the rest
-of tools will take care of all chores.
+of programs will take care of all chores.
 
 To start this tutorial, let's start with a fresh commit, and create a new executable.
 
     $ acr_ed -create -target abc -write
     ...
 
-This will create a new tool called `abc`:
+This will create a new program called `abc`:
 
     $ abc
     Hello, World!
 
-The tool already comes with some built-in options.
+The program already comes with some built-in options.
 
     $ abc -h
 
@@ -27,8 +27,18 @@ The tool already comes with some built-in options.
         -sig              Print SHA1 signatures for dispatches
         -help             Print this screen and exit
 
-Let's ignore these for now and proceed to fun stuff. First, let's add a flag. Because what kind of
-command doesn't have a flag?
+Amc knows that the ctype `command.abc` is the command line for abc because of the `fcmdline`
+record inserted by `acr_ed`.
+
+    $ acr fcmdline:abc.%
+    dmmeta.fcmdline  field:abc.FDb.cmdline  read:Y  comment:""
+
+The command line itself, as created by acr_ed, is a simple ctype:
+
+    dmmeta.ctype  ctype:command.abc  comment:""
+      dmmeta.field  field:command.acr.in  arg:algo.cstring  reftype:Val  dflt:'"data"'  comment:"Input directory or filename, - for stdin"
+                  
+Let's do something func. First, let's add a flag. Because what kind of command doesn't have a flag?
 
     $ acr_ed -create -field command.abc.flag -arg bool -write -comment "An important flag"
     ...
@@ -45,11 +55,10 @@ command doesn't have a flag?
         -sig              Print SHA1 signatures for dispatches
         -help             Print this screen and exit
 
-As you can see, the new flag is now recognized. Let's modify `abc`'s main to print it.
-It is an OpenACR convention to avoid ever displaying raw values. Output should be machine
-readable and never susceptible to an injection attack. Even though it may not matter
-with a bool, we'll print it as a key-value pair. `Keyval` is a little C++ template that
-helps do that:
+As you can see, the help screen has been updated. Let's modify `abc`'s main to print the flag.
+It is an OpenACR convention to avoid displaying raw values. Output should be machine
+readable and never susceptible to an injection attack. So we'll print the value
+as a key-value pair (`Keyval` is a C++ template helper):
 
     void abc::Main() {
         prlog(Keyval("flag",_db.cmdline.flag));
@@ -69,57 +78,25 @@ altogether, or write `abc -flag:N` or `abc -flag:false` or `-flag:no` or `-flag:
 The OpenACR convention is to
 print booleans in a datatabase-friendly way, using `Y` and `N`.
 
-All these interchangeable symbols come from the fconst values for `algo.Bool`.
-We can query them:
+If a boolean option is specified more than one on the command line, the value
+in memory is incremented by one each time. This allows counting how many times the value
+was specified, which is useful for controlling verbosity and debug levels.
 
-    $ acr fconst:algo.Bool.%
-    dmmeta.fconst  fconst:algo.Bool.value/N      value:0  comment:""
-    dmmeta.fconst  fconst:algo.Bool.value/Y      value:1  comment:""
-    dmmeta.fconst  fconst:algo.Bool.value/true   value:1  comment:""
-    dmmeta.fconst  fconst:algo.Bool.value/false  value:0  comment:""
-    dmmeta.fconst  fconst:algo.Bool.value/0      value:0  comment:""
-    dmmeta.fconst  fconst:algo.Bool.value/1      value:1  comment:""
-    dmmeta.fconst  fconst:algo.Bool.value/off    value:0  comment:""
-    dmmeta.fconst  fconst:algo.Bool.value/on     value:1  comment:""
-    dmmeta.fconst  fconst:algo.Bool.value/no     value:0  comment:""
-    dmmeta.fconst  fconst:algo.Bool.value/yes    value:1  comment:""
-    ...
+There is no bundling of options. Each option must be specified as a separate 
+argument.
 
-We can also query the resulting code:
+### Default Values
 
-    $ amc algo.Bool
+If the `dflt` attribute of the field describing a command line argumentn is non-empty,
+that option may be omitted. Otherwise it is required.
+Boolean options can always be omitted (i.e. omitting a boolean option, a.k.a. a flag
+from the command line is never an error).
 
-    // --- algo_BoolEnum
+Here is an example of the default value, in this case `"data"`:
 
-    enum algo_BoolEnum {        // algo.Bool.value
-         algo_Bool_N       = 0
-        ,algo_Bool_Y       = 1
-        ,algo_Bool_true    = 1
-        ,algo_Bool_false   = 0
-        ,algo_Bool_0       = 0
-        ,algo_Bool_1       = 1
-        ,algo_Bool_off     = 0
-        ,algo_Bool_on      = 1
-        ,algo_Bool_no      = 0
-        ,algo_Bool_yes     = 1
-    };
+    $ acr field:command.%.in | head -1
+    dmmeta.field  field:command.acr.in  arg:algo.cstring  reftype:Val  dflt:'"data"'  comment:"Input directory or filename, - for stdin"
 
-    enum { algo_BoolEnum_N = 10 };
-
-    // --- algo.Bool
-    struct Bool { // algo.Bool
-        u8   value;   //   false
-        inline operator algo_BoolEnum() const;
-        explicit Bool(u8                             in_value);
-        Bool(algo_BoolEnum arg);
-        Bool();
-    };
-
-    ...
-
-I'm showing these queries to encourage you to query anything and everything in OpenACR
-as a method of discovery. With few exceptions, most of the things normally considered
-built-ins are in OpenACR being generated.
 
 ### Integer Options
 
@@ -148,7 +125,7 @@ It may be a stylistic point, but when the option and its value form one word, it
 without knowing what the command expects, that `value` is not a stand-alone option or a positional argument.
 It can make error messages more legible when things go wrong.
 
-### Anonymous Values
+### Anonymous Options
 
 Let's say we want abc to be able to write `abc 4` without specifying the parameter name `-val`.
 We can use `anonfld` for this. We add the appropriate record to the anonfld table, then re-generate
@@ -160,9 +137,19 @@ and rebuild.
     flag:N
     val:5
 
+### Other Data Types
+
+A command line option can be of any data type whatsoever. Any type that can be read from 
+a string is a valid type. For instance, to input an IPv4 address, use
+
+    $ acr_ed -create -field command.abc.ip -arg ietf.Ipv4 -comment "Enter this IP" -write
+
+Reading ctypes from a string is controlled by the `dmmeta.cfmt` table, where a user-provided
+function may be specified with `extrn:Y`. This is described in depth in the chapter on string conversion.
+    
 ### Bash Command Completion
 
-OpenACR offers completion of command line parameters for any tool in its domain.
+OpenACR offers completion of command line parameters for any program in its domain.
 The magic is implemented in the command `acr_compl`. To use, we instruct bash
 to call `acr_compl` whenever a command line start with one of known command names.
 In this case, abc is now a known name, so `acr_compl` already knows about it:
@@ -189,7 +176,7 @@ Auto-complete works with the contents of any table, loading it as necessary to p
     $ acr ctype:acr.FC<tab>
     acr.FCdflt    acr.FCheck    acr.FCppfunc  acr.FCtype
 
-Let's test it on our tool. We'll create and populate a brand new table, and add an option to abc
+Let's test it on our program. We'll create and populate a brand new table, and add an option to abc
 which will be completed with values from that table.
 
     $ acr_ed -create -ssimfile dmmeta.mytable -write
@@ -216,7 +203,7 @@ because that's the type of the primary key of `mytable`.
 
 ### Inputting A Table
 
-Now that we have our `abc` tool and we're taking a `mytable` option, it would be nice to be able
+Now that we have our `abc` program and we're taking a `mytable` option, it would be nice to be able
 to do a lookup and find the appropriate record.
 
 To do that, we first create a table in the `abc` namespace, which is based on the `dmmeta.mytable` table.
@@ -251,7 +238,7 @@ Then build and run:
 ### Regx Options
 
 We will go into more detail into these operations later, but first let's convert `-mytable`
-to a Regx option, andmodify abc to scan the `_db.mytable` array instead of using the hash table,
+to a Regx option, and modify abc to scan the `_db.mytable` array instead of using the hash table,
 and print all matching records:
 
     $ echo dmmeta.field field:command.abc.mytable reftype:RegxSql | acr -merge -write
@@ -311,9 +298,16 @@ This information can be retrived with `strings` or by running the command with `
     $ strings dflt.release-x86_64/abc | grep gitinfo:
     dev.gitinfo  gitinfo:2019-05-02.309c6ba  author:alexei@lebe.dev  cfg:g++/4.8.5/release.Linux-x86_64  package:""
 
+### The -sig flag
+
+For each target that inputs some tables, amc computes a signature hash of that program's inputs.
+This allows detecting schema changes and avoiding incompatibilities that might be dangerous.
+The `-sig` option prints the target's signatures. A signature can be viewed as a de-facto version.
+
 ### Printing Command Lines
 
-Just like there is support for reading command lines, amc generates the necessary code to print command lines.
+Just like there is support for reading command lines, amc generates the necessary code to convert
+a command line struct to a properly escaped Bash command.
 Let's modify `abc`'s source as follows:
 
     void abc::Main() {
@@ -394,5 +388,9 @@ You may have noticed the use of `prlog` to print things. `prlog` is one of a few
 Along with `prlog`, there is `prerr` that prints to stderr, `verblog`, which prints only
 if the command was invoked with `-v` or `-verbose`, and `dbglog`, which prints if the command was
 invoked with `-d` or `-debug`.
+
+Whenever a command line is converted to a string with the `_ToCmdline` function,
+it inherits a lower verbosity level than the parent. This allows tracing the process tree
+by using an appropriate number of `-v`'s on the command line.
 
 Don't forget to `git reset --hard` to clean up any local changes.

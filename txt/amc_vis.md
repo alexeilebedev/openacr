@@ -1,12 +1,12 @@
-## amc_vis
+## amc_vis - Visualize Ctype Dependencies and Access Paths
 
-amc_vis is a tool for visualization access paths between tables.
-The parameter is a ctype regex, and whatever ctypes are matched by the regex will be shown
+The single parameter to `amc_vis` is a ctype regex, 
+and whatever ctypes are matched by the regex will be shown
 via ASCII art.
 
-Visualize access paths between two records
+Here is an example:
 
-    $ amc_vis amc.FCtype\|amc.FField -xref:N
+    $ amc_vis amc.FCtype\|amc.FField
 
 
                   / amc.FCtype

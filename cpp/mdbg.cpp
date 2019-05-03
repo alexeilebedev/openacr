@@ -16,7 +16,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 //
-// Target: mdbg (exe) -- Module debugger
+// Target: mdbg (exe) -- My debugger
 // Exceptions: NO
 // Source: cpp/mdbg.cpp
 //
@@ -280,9 +280,7 @@ static tempstr FindBuildDir() {
 // -----------------------------------------------------------------------------
 
 void mdbg::Main() {
-    // fetch OS release. (other possibility being RHEL 6.5).
-    mdbg::_db.rhel7 = FirstN(Trimmed(SysEval("/usr/bin/rpm -q --queryformat '%{version}' redhat-release-server",
-                                             FailokQ(true), 1024)), 1) == "7";
+    mdbg::_db.rhel7 = true;
 
     algo_lib::Replscope R;
     Set(R, "$target", mdbg::_db.cmdline.target, false);

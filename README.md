@@ -1,4 +1,4 @@
-This file was created with 'atf_norm readme' from txt/*.md -- *do not edit*
+This file was created with 'atf_norm readme' from files in [txt/] -- *do not edit*
 
 ## Table Of Contents
    * [About](#about)
@@ -40,44 +40,57 @@ This file was created with 'atf_norm readme' from txt/*.md -- *do not edit*
       * [MySQL Integration](#mysql-integration)
    * [Command Lines](#command-lines)
       * [Boolean Options](#boolean-options)
+      * [Default Values](#default-values)
       * [Integer Options](#integer-options)
-      * [Anonymous Values](#anonymous-values)
+      * [Anonymous Options](#anonymous-options)
+      * [Other Data Types](#other-data-types)
       * [Bash Command Completion](#bash-command-completion)
       * [Completing From Table](#completing-from-table)
       * [Inputting A Table](#inputting-a-table)
       * [Regx Options](#regx-options)
       * [The -version flag](#the-version-flag)
+      * [The -sig flag](#the-sig-flag)
       * [Printing Command Lines](#printing-command-lines)
       * [Subprocesses With Command Line](#subprocesses-with-command-line)
       * [Verbosity](#verbosity)
    * [Ssim files](#ssim-files)
+      * [Ssim Data Sets](#ssim-data-sets)
       * [Structured Key Normal Form](#structured-key-normal-form)
+      * [Decomposing A Domain Into Sets](#decomposing-a-domain-into-sets)
       * [History of Database Design](#history-of-database-design)
       * [Cardinality Analysis](#cardinality-analysis)
       * [The Curse Of Simple Domains](#the-curse-of-simple-domains)
       * [Remember 4-valued logic?](#remember-4-valued-logic-)
       * [Structured Key Normal Form](#structured-key-normal-form)
    * [acr_in: Show input tuples for target](#acr_in-show-input-tuples-for-target)
+      * [The -data option](#the-data-option)
+      * [The -checkable option](#the-checkable-option)
+      * [The -related option](#the-related-option)
    * [abt - A Build Tool](#abt--a-build-tool)
+      * [Input Tables](#input-tables)
+      * [Output Directory](#output-directory)
+      * [The -install option](#the-install-option)
+      * [Target Definition](#target-definition)
+      * [Customizing Options](#customizing-options)
+      * [Disassembling](#disassembling)
+      * [Specifying a different compiler](#specifying-a-different-compiler)
+      * [The -ood option](#the-ood-option)
+      * [The -listincl option](#the-listincl-option)
+      * [Debugging the build](#debugging-the-build)
+      * [Bootstrapping](#bootstrapping)
    * [amc - Algo Model Compiler](#amc--algo-model-compiler)
+      * [Introduction](#introduction)
       * [Running Amc](#running-amc)
       * [Query mode](#query-mode)
-      * [References](#references)
       * [Sandbox mode](#sandbox-mode)
+      * [References](#references)
       * [Reading Code of Amc Itself](#reading-code-of-amc-itself)
-      * [Example Show generated C++ struct](#example-show-generated-c--struct)
-      * [Example: Show prototypes of all generated functions matching pattern](#example-show-prototypes-of-all-generated-functions-matching-pattern)
-      * [Example: Count how many linked lists there are in the code database](#example-count-how-many-linked-lists-there-are-in-the-code-database)
-      * [Example: Find all references to a record](#example-find-all-references-to-a-record)
-      * [Example: Edit 2 Ctypes](#example-edit-2-ctypes)
       * [Main Input Tables](#main-input-tables)
       * [Steps](#steps)
       * [Cross-references](#cross-references)
       * [Chaining](#chaining)
       * [Default Namespace Pool](#default-namespace-pool)
       * [Tracing](#tracing)
-   * [Bootstrapping Magic](#bootstrapping-magic)
-   * [Reftypes (field types)](#reftypes-field-types-)
       * [Base: Mixin](#base-mixin)
       * [Bheap: Binary Heap](#bheap-binary-heap)
       * [Bitset: Bitset over an array](#bitset-bitset-over-an-array)
@@ -103,24 +116,27 @@ This file was created with 'atf_norm readme' from txt/*.md -- *do not edit*
       * [Upptr:](#upptr-)
       * [Val: Value](#val-value)
       * [Varlen: variable-length tail portion of a struct](#varlen-variable-length-tail-portion-of-a-struct)
-   * [String types and how to use them:](#string-types-and-how-to-use-them-)
+      * [String types and how to use them:](#string-types-and-how-to-use-them-)
+   * [Bootstrapping Magic](#bootstrapping-magic)
    * [acr_ed](#acr_ed)
    * [Coding Style](#coding-style)
       * [Spaces, Indentation](#spaces-indentation)
       * [Variable Names](#variable-names)
+      * [Member Functions](#member-functions)
       * [Predicate Functions](#predicate-functions)
       * [Curly Braces](#curly-braces)
       * [Split Conditionals](#split-conditionals)
       * [Curly Braces around Conditionals are Non-Optional](#curly-braces-around-conditionals-are-non-optional)
       * [Use of semi-colon forces a new line](#use-of-semi-colon-forces-a-new-line)
       * [Keep code separate from data](#keep-code-separate-from-data)
+      * [No Code In Headers](#no-code-in-headers)
       * [Use query-command separation](#use-query-command-separation)
       * [Keep it single-threaded](#keep-it-single-threaded)
       * [Use Single Entry, Single Exit (SESE) style](#use-single-entry-single-exit-sese-style)
       * [Single File Static Assignment](#single-file-static-assignment)
       * [Document all non-static functions](#document-all-non-static-functions)
       * [All rules allow exceptions](#all-rules-allow-exceptions)
-   * [amc_vis](#amc_vis)
+   * [amc_vis - Visualize Ctype Dependencies and Access Paths](#amc_vis--visualize-ctype-dependencies-and-access-paths)
    * [amc_gc: AMC garbage collector](#amc_gc-amc-garbage-collector)
    * [MariaDB integration](#mariadb-integration)
    * [Working with source files & targets](#working-with-source-files--targets)
@@ -132,6 +148,20 @@ This file was created with 'atf_norm readme' from txt/*.md -- *do not edit*
       * [Unit Tests](#unit-tests)
       * [Normalization Checks](#normalization-checks)
       * [Debugging](#debugging)
+   * [Mdbg - My debugger](#mdbg--my-debugger)
+      * [Specifying arguments](#specifying-arguments)
+      * [The -tui option](#the-tui-option)
+      * [Specifying Breakpoints](#specifying-breakpoints)
+      * [Edit-and-retry](#edit-and-retry)
+      * [The -follow_child otption](#the-follow_child-otption)
+      * [Exceptions](#exceptions)
+      * [Gdb Python Interface](#gdb-python-interface)
+   * [Scriptlets](#scriptlets)
+      * [Hilite - inline highlighter](#hilite--inline-highlighter)
+         * [Blotter Mode](#blotter-mode)
+         * [Inline Specification](#inline-specification)
+         * [Diff mode](#diff-mode)
+      * [Grephunk - patch file filter](#grephunk--patch-file-filter)
 
 
 ## About
@@ -179,6 +209,7 @@ in alphabetical order by first name.
 * Hayk Mkrtchyan
 * Jeffrey Wang
 * Jeremy Xue
+* John Brzezniak
 * Jonathan Joshua
 * Luke Huang
 * Shreejith Billenahallilokegowda
@@ -632,6 +663,8 @@ Since `-xref -tree` is very frequently used, command line option `-t` is an alia
       dev.b  a:a5  comment:""
       report.acr  n_select:2  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
 
+### Deleting Records
+
 What about deleting records? Let's delete something.
 
     $ acr a:a4 -del -write
@@ -642,8 +675,6 @@ What about deleting records? Let's delete something.
 
 As you can see, acr followed the reference and deleted the offending b record as well as the
 matching a record.
-
-### Deleting Records
 
 What if we wanted to see what `-del` does without modifying the database?
 We could omit the `-write` option. Notice that acr prints the records that *would*
@@ -657,6 +688,8 @@ be deleted, but in the final report, `n_file_mod:0` so we know that nothing was 
 
 `-del` works with any number of records. You could delete the entire database with
 `acr % -del -write`.
+
+When deleting a field, acr automatically opens and rewrites the corresponding ssimfile.
 
 ### Manual Editing
 
@@ -968,7 +1001,12 @@ Acr can use and query standard input just like it can a regular file.
     $ echo 'dmmeta.ctype ctype:xyz' | acr -in:- ctype:%
     dmmeta.ctype  ctype:xyz  comment:""
 
-You might wonder, how does `acr` know that `dmmeta.ctype` has an attribute 
+This shows a couple of interesting things. First, acr always displays tuples 
+according to the known schema. When printing a tuple, `acr` loops over the 
+non-fldfunc fields of the associated `ctype`, and evaluates each field in the context
+of the given tuple. This means that acr normalizes data whenever the data is printed.
+
+Second, you might wonder, how does `acr` know that `dmmeta.ctype` has an attribute 
 `comment` under these conditions? Well, as it turns out, this is a common problem.
 If `acr` loaded its meta-information from the same place it loaded the data, it would
 be supremely inconvenient. That's why an additional attribute called `-schema`,
@@ -1019,21 +1057,21 @@ Upon exit, the data is downloaded from the database back to disk. -my implies -w
 
 ## Command Lines
 
-All tools created with amc come with full command line support. A command line is just a struct,
+All programs created with amc come with full command line support. A command line is just a struct,
 and options are described as fields. All one needs to do is keep adding fields, and amc and the rest
-of tools will take care of all chores.
+of programs will take care of all chores.
 
 To start this tutorial, let's start with a fresh commit, and create a new executable.
 
     $ acr_ed -create -target abc -write
     ...
 
-This will create a new tool called `abc`:
+This will create a new program called `abc`:
 
     $ abc
     Hello, World!
 
-The tool already comes with some built-in options.
+The program already comes with some built-in options.
 
     $ abc -h
 
@@ -1046,8 +1084,18 @@ The tool already comes with some built-in options.
         -sig              Print SHA1 signatures for dispatches
         -help             Print this screen and exit
 
-Let's ignore these for now and proceed to fun stuff. First, let's add a flag. Because what kind of
-command doesn't have a flag?
+Amc knows that the ctype `command.abc` is the command line for abc because of the `fcmdline`
+record inserted by `acr_ed`.
+
+    $ acr fcmdline:abc.%
+    dmmeta.fcmdline  field:abc.FDb.cmdline  read:Y  comment:""
+
+The command line itself, as created by acr_ed, is a simple ctype:
+
+    dmmeta.ctype  ctype:command.abc  comment:""
+      dmmeta.field  field:command.acr.in  arg:algo.cstring  reftype:Val  dflt:'"data"'  comment:"Input directory or filename, - for stdin"
+                  
+Let's do something func. First, let's add a flag. Because what kind of command doesn't have a flag?
 
     $ acr_ed -create -field command.abc.flag -arg bool -write -comment "An important flag"
     ...
@@ -1064,11 +1112,10 @@ command doesn't have a flag?
         -sig              Print SHA1 signatures for dispatches
         -help             Print this screen and exit
 
-As you can see, the new flag is now recognized. Let's modify `abc`'s main to print it.
-It is an OpenACR convention to avoid ever displaying raw values. Output should be machine
-readable and never susceptible to an injection attack. Even though it may not matter
-with a bool, we'll print it as a key-value pair. `Keyval` is a little C++ template that
-helps do that:
+As you can see, the help screen has been updated. Let's modify `abc`'s main to print the flag.
+It is an OpenACR convention to avoid displaying raw values. Output should be machine
+readable and never susceptible to an injection attack. So we'll print the value
+as a key-value pair (`Keyval` is a C++ template helper):
 
     void abc::Main() {
         prlog(Keyval("flag",_db.cmdline.flag));
@@ -1088,57 +1135,25 @@ altogether, or write `abc -flag:N` or `abc -flag:false` or `-flag:no` or `-flag:
 The OpenACR convention is to
 print booleans in a datatabase-friendly way, using `Y` and `N`.
 
-All these interchangeable symbols come from the fconst values for `algo.Bool`.
-We can query them:
+If a boolean option is specified more than one on the command line, the value
+in memory is incremented by one each time. This allows counting how many times the value
+was specified, which is useful for controlling verbosity and debug levels.
 
-    $ acr fconst:algo.Bool.%
-    dmmeta.fconst  fconst:algo.Bool.value/N      value:0  comment:""
-    dmmeta.fconst  fconst:algo.Bool.value/Y      value:1  comment:""
-    dmmeta.fconst  fconst:algo.Bool.value/true   value:1  comment:""
-    dmmeta.fconst  fconst:algo.Bool.value/false  value:0  comment:""
-    dmmeta.fconst  fconst:algo.Bool.value/0      value:0  comment:""
-    dmmeta.fconst  fconst:algo.Bool.value/1      value:1  comment:""
-    dmmeta.fconst  fconst:algo.Bool.value/off    value:0  comment:""
-    dmmeta.fconst  fconst:algo.Bool.value/on     value:1  comment:""
-    dmmeta.fconst  fconst:algo.Bool.value/no     value:0  comment:""
-    dmmeta.fconst  fconst:algo.Bool.value/yes    value:1  comment:""
-    ...
+There is no bundling of options. Each option must be specified as a separate 
+argument.
 
-We can also query the resulting code:
+### Default Values
 
-    $ amc algo.Bool
+If the `dflt` attribute of the field describing a command line argumentn is non-empty,
+that option may be omitted. Otherwise it is required.
+Boolean options can always be omitted (i.e. omitting a boolean option, a.k.a. a flag
+from the command line is never an error).
 
-    // --- algo_BoolEnum
+Here is an example of the default value, in this case `"data"`:
 
-    enum algo_BoolEnum {        // algo.Bool.value
-         algo_Bool_N       = 0
-        ,algo_Bool_Y       = 1
-        ,algo_Bool_true    = 1
-        ,algo_Bool_false   = 0
-        ,algo_Bool_0       = 0
-        ,algo_Bool_1       = 1
-        ,algo_Bool_off     = 0
-        ,algo_Bool_on      = 1
-        ,algo_Bool_no      = 0
-        ,algo_Bool_yes     = 1
-    };
+    $ acr field:command.%.in | head -1
+    dmmeta.field  field:command.acr.in  arg:algo.cstring  reftype:Val  dflt:'"data"'  comment:"Input directory or filename, - for stdin"
 
-    enum { algo_BoolEnum_N = 10 };
-
-    // --- algo.Bool
-    struct Bool { // algo.Bool
-        u8   value;   //   false
-        inline operator algo_BoolEnum() const;
-        explicit Bool(u8                             in_value);
-        Bool(algo_BoolEnum arg);
-        Bool();
-    };
-
-    ...
-
-I'm showing these queries to encourage you to query anything and everything in OpenACR
-as a method of discovery. With few exceptions, most of the things normally considered
-built-ins are in OpenACR being generated.
 
 ### Integer Options
 
@@ -1167,7 +1182,7 @@ It may be a stylistic point, but when the option and its value form one word, it
 without knowing what the command expects, that `value` is not a stand-alone option or a positional argument.
 It can make error messages more legible when things go wrong.
 
-### Anonymous Values
+### Anonymous Options
 
 Let's say we want abc to be able to write `abc 4` without specifying the parameter name `-val`.
 We can use `anonfld` for this. We add the appropriate record to the anonfld table, then re-generate
@@ -1179,9 +1194,19 @@ and rebuild.
     flag:N
     val:5
 
+### Other Data Types
+
+A command line option can be of any data type whatsoever. Any type that can be read from 
+a string is a valid type. For instance, to input an IPv4 address, use
+
+    $ acr_ed -create -field command.abc.ip -arg ietf.Ipv4 -comment "Enter this IP" -write
+
+Reading ctypes from a string is controlled by the `dmmeta.cfmt` table, where a user-provided
+function may be specified with `extrn:Y`. This is described in depth in the chapter on string conversion.
+    
 ### Bash Command Completion
 
-OpenACR offers completion of command line parameters for any tool in its domain.
+OpenACR offers completion of command line parameters for any program in its domain.
 The magic is implemented in the command `acr_compl`. To use, we instruct bash
 to call `acr_compl` whenever a command line start with one of known command names.
 In this case, abc is now a known name, so `acr_compl` already knows about it:
@@ -1208,7 +1233,7 @@ Auto-complete works with the contents of any table, loading it as necessary to p
     $ acr ctype:acr.FC<tab>
     acr.FCdflt    acr.FCheck    acr.FCppfunc  acr.FCtype
 
-Let's test it on our tool. We'll create and populate a brand new table, and add an option to abc
+Let's test it on our program. We'll create and populate a brand new table, and add an option to abc
 which will be completed with values from that table.
 
     $ acr_ed -create -ssimfile dmmeta.mytable -write
@@ -1235,7 +1260,7 @@ because that's the type of the primary key of `mytable`.
 
 ### Inputting A Table
 
-Now that we have our `abc` tool and we're taking a `mytable` option, it would be nice to be able
+Now that we have our `abc` program and we're taking a `mytable` option, it would be nice to be able
 to do a lookup and find the appropriate record.
 
 To do that, we first create a table in the `abc` namespace, which is based on the `dmmeta.mytable` table.
@@ -1270,7 +1295,7 @@ Then build and run:
 ### Regx Options
 
 We will go into more detail into these operations later, but first let's convert `-mytable`
-to a Regx option, andmodify abc to scan the `_db.mytable` array instead of using the hash table,
+to a Regx option, and modify abc to scan the `_db.mytable` array instead of using the hash table,
 and print all matching records:
 
     $ echo dmmeta.field field:command.abc.mytable reftype:RegxSql | acr -merge -write
@@ -1330,9 +1355,16 @@ This information can be retrived with `strings` or by running the command with `
     $ strings dflt.release-x86_64/abc | grep gitinfo:
     dev.gitinfo  gitinfo:2019-05-02.309c6ba  author:alexei@lebe.dev  cfg:g++/4.8.5/release.Linux-x86_64  package:""
 
+### The -sig flag
+
+For each target that inputs some tables, amc computes a signature hash of that program's inputs.
+This allows detecting schema changes and avoiding incompatibilities that might be dangerous.
+The `-sig` option prints the target's signatures. A signature can be viewed as a de-facto version.
+
 ### Printing Command Lines
 
-Just like there is support for reading command lines, amc generates the necessary code to print command lines.
+Just like there is support for reading command lines, amc generates the necessary code to convert
+a command line struct to a properly escaped Bash command.
 Let's modify `abc`'s source as follows:
 
     void abc::Main() {
@@ -1414,11 +1446,15 @@ Along with `prlog`, there is `prerr` that prints to stderr, `verblog`, which pri
 if the command was invoked with `-v` or `-verbose`, and `dbglog`, which prints if the command was
 invoked with `-d` or `-debug`.
 
+Whenever a command line is converted to a string with the `_ToCmdline` function,
+it inherits a lower verbosity level than the parent. This allows tracing the process tree
+by using an appropriate number of `-v`'s on the command line.
+
 Don't forget to `git reset --hard` to clean up any local changes.
 
 ## Ssim files
 
-Ssim is a Super-Simple line-oriented text format for
+Ssim is a super-simple line-oriented text format for
 storing configuration data in the form of tables of tuples. Each tuple consists
 of a type tag and key-value pairs called attributes. The first
 key-value pair is a primary key.
@@ -1435,25 +1471,35 @@ footers or other file markers, although lines can be commented out with #.
 Any concatenation, permutation, or subset of two ssim files is a
 valid ssim file, just like you would expect with sets.
 
+Leading and trailing whitespace is ignored, and may be used to aid legibility.
+(For instance, it could be used to create a tree-like structure)
+
 Both keys and values may be arbitrary byte sequences. A string
 containing non-obvious characters and be enclosed either with single
 or double quotes (there being no difference between these types of quotes),
 and inside the quotes, C++ string rules exactly apply. So "\t":"\001" is a valid
 key-value pair.
 
-A ssimfile maps directly to a relational table, and each line corresponds to a record
-in a database.
+In database terms, a ssimfile maps directly to a table, 
+and each line corresponds to a record.
 
-In a given data set,
+### Ssim Data Sets
+
+Ssimfiles are often found in data sets. There is one data set in this 
+project, it is in the directory "data". In it, there is one directory per
+namespace, and one file per ssimfile.
+
+In this data set, there is both data and meta-data. Meta-data is in the directory
+`data/dmmeta`, where `dmmeta` stands for "data model meta".
+
 The list of all ssim files is provided by "acr ssimfile".
 The list of all attrbitutes is provided by "acr field"
 
-Ssim tuples are typically held in data sets, (with one directory per
-namespace, and one file per table) or in a single file.  One can use
-grep, sed, awk, and other line-oriented tools to access, edit,
+Ssim tuples can also be stored together in a file. Acr can read and write those
+tuples. One can also use grep, sed, awk, and other line-oriented tools to access, edit,
 and multilate these records.
 
-All amc-generated commands support the -in argument which specifies the input
+All amc-generated programs support the -in argument which specifies the input
 data set for the tool -- either a file or a directory. By default it's "data"
 
 ### Structured Key Normal Form
@@ -1470,44 +1516,86 @@ All it boils down to is this:
 a single field, the first field of a table, is the primary key, and it is either a simple type,
 or a cross product of two other keys (which is the same thing if you allow for an empty set).
 
-All other columns are non-NULL, and are also either simple types, or must refer to a key of some other
-table. acr treats the key as a regular string.
-When the primary key is a cross-product of two other sets, for instance dmmeta.Ctype, where dmmeta refers to ns:dmmeta
-and ctype Ctype is a string, we use a separator, in this case '.'.
+All other columns are non-NULL, and are also either simple types, or must refer to a key in some other table.
+When the primary key is a cross-product of two other sets, for instance dmmeta.Ctype, 
+where `dmmeta` refers to `ns:dmmeta` and ctype Ctype is a string, we use a separator, in this case '.'.
 
-If you need some column to be NULLable, you delete
-the column, and create a new ssimfile which is a subset of the original file.
-Deleting the rows from this new ssimfile is equivalent to NULLing the original fields.
+To decompose a domain into ssimfiles, perform cardinality analysis, meaning that you break the domain up
+into sets, where each set has 1 or more values attached to a key, and the key is a structured
+one as described above. 
 
-Let's look at an example:
-
-    $ acr ctype:dmmeta.Ctype
-    dmmeta.ctype  ctype:dmmeta.Ctype  comment:"C structure"
-
-Here, the primary key is the string 'dmmeta.Ctype'.
-
-But the key is restricted by a foreign key constraint.
-Let's try acr with -fldfunc argument:
-
-    $ acr ctype:dmmeta.Ctype -fldfunc
-    dmmeta.ctype  ctype:dmmeta.Ctype  ns:dmmeta  name:Ctype  comment:"C structure"
-
-If we were to rename this element to xyz.Ctype, we'd get an acr -check
-error, since xyz is not a valid namespace.
-
-dmmeta.Ctype.ns is an attribute of dmmeta.Ctype, and it's defined as a function of other fields,
-or 'fldfunc' for short. The acr option -fldfunc expands all fldfuncs when showing output.
-The 'ns' field in the query above is defined like this:
-
-      dmmeta.field  field:dmmeta.Ctype.ns  arg:dmmeta.Ns  reftype:Pkey  dflt:""  comment:"translates to c++ namespace"
-        dmmeta.substr  field:dmmeta.Ctype.ns  expr:.RL  srcfield:dmmeta.Ctype.ctype
+If you need some column to be NULLable, there is no action available. Instead, delete
+the column, and create a new table which is a subset of the original table.
+Deleting the rows from this new table is equivalent to NULLing the original fields.
 
 There are no constraints other than foreign key constraints in ssim databases,
-and since they are kept in text files, the only storage type is string (in memory it can be
-a different story).
+and since they are kept in text files, the only storage type is string (for acr, all values
+are just strings).
 
-acr -check can detect some errors such as strings that are too long for the underlying specified type,
-but that's not really a database constraint.
+### Decomposing A Domain Into Sets
+
+Let's consider the domain of programs, such as the one found here in OpenACR.
+Since we need to attach various properties to these programs in order to do stuff with them,
+we create a number of tables to describe them.
+
+First, we have the set of all binaries. We can call it `target`, meaning "build target". 
+Then, we have the set of all source files; We'll call it `gitfile`.
+Notice that when naming a set, we don't use plurals. In OpenACR, we always use singular
+when describing a set; (There is simply no benefit to using plurals when naming things).
+Finally, to specify that a source file belongs to some target, we create a table `targsrc`
+as a cross product of `target` and `gitfile`.
+We make `target` a subset of `ns`, since all targets have namespaces describing them,
+but not all namespaces become build targets (i.e. `command` doesn't have a target).
+
+The resulting schema is shown below with `amc_vis`. Notice that all arrows point left.
+This is very important. Left-pointing arrows are *references*, and a database without indexes 
+consists only of references. 
+
+    $ amc_vis dev.Target\|dmmeta.Ns\|dev.Targsrc\|dev.Gitfile
+
+                    / dev.Gitfile
+                    |
+                / dmmeta.Ns
+                |   |
+                |   |              / dev.Targsrc
+                |   |<-------------|Pkey src
+                |   -              |
+                |                  |
+                |                  |
+                |   / dev.Target   |
+                |<--|Pkey target   |
+                -   |              |
+                    |              |
+                    |<-------------|Pkey target
+                    |              -
+                    |
+                    -
+
+When we need to quickly answer the question
+"which records point to this record?" do we introduce right-pointing *cross-references*, which are
+computed from references. Here is an example of an in-memory database built specifically
+for abt in accordance with the above schema.
+
+    amc_vis abt.FDb\|abt.FTarget\|abt.FTargsrc
+
+    / abt.FDb
+    |
+    |Lary targsrc---------------------------------->/ abt.FTargsrc
+    |Thash ind_targsrc----------------------------->|
+    |                                               |
+    |Lary target--------------->/ abt.FTarget       |
+    |Thash ind_target---------->|                   |
+    |Llist zs_sel_target------->|                   |
+    |Llist zsl_libdep_visited-->|                   |
+    |Llist zsl_libdep---------->|                   |
+    |Llist zs_origsel_target--->|                   |
+    -                           |                   |
+                                |                   |
+                                |Ptrary c_targsrc-->|
+                                |<------------------|Upptr p_target
+                                |                   -
+                                |
+                                -
 
 ### History of Database Design
 
@@ -1598,86 +1686,305 @@ the closest analog would be DKNF (Domain Key Normal Form).
 ## acr_in: Show input tuples for target
 
 acr_in computes the names and the order of ssimfiles
-which constitute target's declared input. Input fields are simply
-those fields for which finput records exist, e.g. for target t:
+which constitute target's declared input.
 
-    acr finput:t.%
+To illustrate, let's create a new program and make it read a table.
 
-but taken recursively over all libraries that the target uses.
+    $ acr_ed -create -target abc -write
+    ...
+    $ acr_ed -create -finput -target abc -ssimfile dmmeta.ctype -write
+    ...
+    $ acr finput:abc.%
+    dmmeta.finput  field:abc.FDb.gitfile  extrn:N  update:N  strict:Y  comment:""
+    ...
+    
+For this target, finput is `dmmeta.ctype`. Let's see if acr_in knows that:
 
-With -data argument, acr_in also loads the specified ssimfiles in memory
-and prints out their contents in the order in which it is safe to load.
+    $ acr_in abc
+    dmmeta.Dispsigcheck  dispsig:abc.Input  signature:f162f70f9895c41909c2192722172e6d21fe5679
+    dmmeta.Dispsigcheck  dispsig:algo_lib.Input  signature:ddc07e859e7056e1a824df1ad0e6d08e12e89849
+    dmmeta.ssimfile  ssimfile:dmmeta.ctype  ctype:dmmeta.Ctype
+
+The output is the list of ssimfiles needed by the target, plus any signatures
+used by the target. We can ignore the signatures for now, but they can be used 
+to detect schema changes between the compiled version of a program and the version 
+of data set on which `acr_in` operates. The `-sigcheck` option can be used to omit these.
+
+Let's now add, as an `finput` for `abc`, the `dmmeta.ns` table, which is lexicographically
+after `dmmeta.ctype`, but logically before (since ctype depends on ns).
+
+    $ acr_ed -create -finput -target abc -ssimfile dmmeta.ns -write
+    
+    $ acr_in abc -sigcheck:N
+    dmmeta.ssimfile  ssimfile:dmmeta.ns  ctype:dmmeta.Ns
+    dmmeta.ssimfile  ssimfile:dmmeta.ctype  ctype:dmmeta.Ctype
+    
+We see that `acr_in` has printed ns and ctype in the order of Pkey dependencies between them.
+`acr_in` operates recursively over all libraries that are target uses.
 
 The order of ssimfiles is determined as a transitive closure on Pkey
 references, and is independent of the target itself. This means that
-acr_in can be called with an regex of target names (e.g. %), and the
+`acr_in` can be called with an regex of target names (e.g. %), and the
 resulting input can be fed into any one of the targets implied by the
 regex, without error.
 
-Example: Create canned input file for a given tool:
+### The -data option
 
-    acr_in amc -data > tempfile
-    amc -in:tempfile
-    # this is exactly the same as running amc -in:data
+With -data argument, acr_in also loads the specified ssimfiles in memory
+and prints out their contents.
 
+This can be used to create canned input files:
 
+    acr_in abc -data > tempfile
+    abc -in:tempfile
+    # this is exactly the same as running abc -in:data
+
+### The -checkable option
+
+If we take the data from ssmifiles `ns` and `ctype`, they are now sufficient
+to serve as inputs to the newly created `abc`. However, `acr -check` will fail on
+this resulting dataset, because `ns` also depends on `nstype`, and in general there
+may be unresolved Pkey references in the resulting output.
+
+To recursively include any dependent ssimfiles, specify `-checkable`:
+
+    $ acr_in abc -checkable -sigcheck:N
+    dmmeta.ssimfile  ssimfile:dmmeta.nstype  ctype:dmmeta.Nstype
+    dmmeta.ssimfile  ssimfile:dmmeta.ns  ctype:dmmeta.Ns
+    dmmeta.ssimfile  ssimfile:dmmeta.dispsig  ctype:dmmeta.Dispsig
+    dmmeta.ssimfile  ssimfile:dmmeta.ctype  ctype:dmmeta.Ctype
+
+### The -related option
+
+`acr_in` can optionally include only those tuples which are transitively
+reachable from a certain set. For this, specify `-related`.
+Here is an example where we constrain `abc`'s input to the `abc` namespace itself.
+
+    $ acr_in abc -data -related:dmmeta.ns:abc -sigcheck:N
+    dmmeta.ns  ns:abc  nstype:exe  comment:""
+    dmmeta.ctype  ctype:abc.FCtype  comment:""
+    dmmeta.ctype  ctype:abc.FDb  comment:""
+    dmmeta.ctype  ctype:abc.FGitfile  comment:""
+    dmmeta.ctype  ctype:abc.FNs  comment:""
+
+In contrast, if we didn't specify `-related`, `-data` would fetch all records:
+
+    $ acr_in abc -data | wc -l
+    864
 
 ## abt - A Build Tool
 
-ABT is a build tool. The argument to abt is a target name regex.
-ABT reads some ssim files (use acr_in abt to find out which ones);
-Builds a dependency dag based on #includes; Invokes build commands.
+Abt is a build tool. The argument to abt is a target name regex.
+Abt reads some ssim files that describe which source files go into 
+these targets, and the dependencies between targets;
+builds a dependency dag based on #includes; Invokes build commands,
+keeping up to N of them running at a time.
+The simplest way to build everything is:
 
-With -cfg, abt can select different option sets.
-Cfg can be release, profile, coverage, debug, or some custom config.
+    $ abt %
 
-The list of available targets is loaded from dev.target ("acr dev.target" to list).
-List of source files for each target is in by dev.targsrc.
-To view the configuration for a given target, use acr dev.target:amc -t -e
+Let's begin by creating a new target.
 
-Using configuration cfg:release, source file
-cpp/amc/main.cpp compiles to dflt.release-x86_64/cpp.amc.main.o
+    $ acr_ed -create -target abc -write
 
-Example: Build all
+This creates and builds `abc.` Let's clean abc. This cleans both the target
+and all of the libraries that it might use. 
 
-         $ abt -install %
+    $ abt -clean abc
+    abt.config  cfg:release  uname:Linux  arch:x86_64  compiler:g++  cache:none
+    abt.outofdate  pch:1  src:38  lib:2  exe:1
+    report.abt  n_target:4  time:00:00:00.037978981  n_warn:0  n_err:0  n_install:0
 
-Example: Re-build all, verbose mode
+And rebuild it:
 
-         $ abt -clean -install %
+    $ abt abc
+    abt.config  cfg:release  uname:Linux  arch:x86_64  compiler:g++  cache:none
+    abt.outofdate  pch:1  src:38  lib:2  exe:1
+    abt.build  line_n:48,413  built_n:13,511  job_n:3  complete:28
+                ^^^^^ build in progress
 
-Example: Disassemble one function
+In the example above, I'm running the command on a weak cloud-based VM,
+so only 3 jobs run in parallel (as indicated by `job_n`). This default is picked
+based on the number of processors in the system. It can be overriden by specifying `-maxjobs`.
+The `config` line specifies
+which config (release, debug, etc) to use; what OS (Linux), architecture (x86_64),
+compiler (g++) and compiler cache.
 
-         $ abt -cfg release amc -disas:%Main%
+The `outofdate` line shows what `abt` found to be out of date: 1 precompiled header,
+38 source files, 2 libraries and 1 executable.
 
-Example: Find out what files are out of date for a target
+### Input Tables
 
-         $ abt -ood amc
+Abt's main input tables come from the dev namespace of the default data set
+(as specified with `-in`)
 
-Example: Install debug version of binaries into bin/
+* dev.target         buildable target
+* dev.targdep        pairwise dependencies between targets
+* dev.targsrc        list of source files for each target.
+* dev.tool_opt       list of options to use for compilation and linking,
 
-         $ abt % -install -cfg:debug
+### Output Directory
 
-Example: Add a library to link with an executable
+The resulting object files are now in `dflt.release-x86_64/abc`:
 
-         echo dev.targdep:amc.json_lib | acr -replace -write
+    $ ls -l dflt.release-x86_64/*abc*
+    -rwxrwxr-x. 1 alexei alexei 109128 May  3 18:35 dflt.release-x86_64/abc
+    -rw-rw-r--. 1 alexei alexei   1912 May  3 18:34 dflt.release-x86_64/cpp.abc.abc.o
+    -rw-rw-r--. 1 alexei alexei  24776 May  3 18:34 dflt.release-x86_64/cpp.gen.abc_gen.o
 
+`abt` places all output files in the same output directory, with no subdirectories.
+Source file paths are flattened, substituting `/` with `.`.
 
+The output directory can be overriden with `-out_dir` option. If not specified, the output
+directory defaults to `$compiler.$cfg-$arch`.
+
+### The -install option
+
+By default, the resulting files are left in the output directory.
+There are already soft links from bin/ to `../dflt.release-x86_64`. If we want to re-point the default
+binary to a different version, the `-install` option will rewrite the soft link to point 
+to the new executable. 
+
+### Target Definition
+
+We can view the definition of target `abc`, as created by `acr_ed`, with `acr`.
+As we can see, headers are considered sourdce files, and there are a couple of libraries
+(`lib_prot` and `algo_lib`), and a precompiled header (`algo_pch`).
+
+    $ acr target:abc -ndown 10 > x
+    dev.target  target:abc
+
+    dev.targdep  targdep:abc.algo_lib  comment:""
+    dev.targdep  targdep:abc.algo_pch  comment:""
+    dev.targdep  targdep:abc.lib_prot  comment:""
+
+    dev.targsrc  targsrc:abc/cpp/abc/abc.cpp            comment:""
+    dev.targsrc  targsrc:abc/cpp/gen/abc_gen.cpp        comment:""
+    dev.targsrc  targsrc:abc/include/abc.h              comment:""
+    dev.targsrc  targsrc:abc/include/gen/abc_gen.h      comment:""
+    dev.targsrc  targsrc:abc/include/gen/abc_gen.inl.h  comment:""
+    report.acr  n_select:9  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+
+### Customizing Options
+
+When debugging memory errors, we would use `abt -cfg:debug`; or 
+`-cfg:coverage` when updating coverage.
+
+It is possible to see what options `abt` will pass to the compiler under a certain configuration.
+The slightly non-standard, non-SKNF table `dev.tool_opt` allows customizing these options
+on a per-target, per-uname, per-compiler, per-cfg and per-arch basis:
+
+    $ acr cfg:coverage -t
+    dev.cfg  cfg:coverage  comment:"coverage measurement"
+      dev.builddir  builddir:dflt.coverage-x86_64  comment:""
+
+      dev.tool_opt  tool_opt:181  opt_type:CC_OPTS    opt:-ftest-coverage    target:""  uname:""  compiler:g++  cfg:coverage  arch:""  comment:""
+      dev.tool_opt  tool_opt:182  opt_type:CC_OPTS    opt:-fprofile-arcs     target:""  uname:""  compiler:g++  cfg:coverage  arch:""  comment:""
+      dev.tool_opt  tool_opt:183  opt_type:CC_OPTS    opt:"-fprofile-dir=."  target:""  uname:""  compiler:g++  cfg:coverage  arch:""  comment:""
+      dev.tool_opt  tool_opt:184  opt_type:LINK_OPTS  opt:--coverage         target:""  uname:""  compiler:g++  cfg:coverage  arch:""  comment:""
+      dev.tool_opt  tool_opt:185  opt_type:CC_OPTS    opt:-D_COVERAGE        target:""  uname:""  compiler:g++  cfg:coverage  arch:""  comment:""
+      report.acr  n_select:7  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+  
+### Disassembling
+
+Abt includes a convenient disassembly mode, which can be invoked with `-disas`.
+The parameter is a regular expression that's matched against function names in the 
+compiler's assembler output.
+
+    $ abt abc -disas Main | head -15
+    abt.config  cfg:release  uname:Linux  arch:x86_64  compiler:g++  cache:none
+    abt.outofdate  pch:0  src:0  lib:0  exe:0
+    0000000000000000 <abc::Main()>:
+       0:	53                   	push   %rbx
+       1:	be 00 00 00 00       	mov    $0x0,%esi
+       6:	48 83 ec 10          	sub    $0x10,%rsp
+       a:	8b 1d 00 00 00 00    	mov    0x0(%rip),%ebx        # 10 <abc::Main()+0x10>
+      10:	48 89 e7             	mov    %rsp,%rdi
+      13:	48 c7 04 24 00 00 00 	movq   $0x0,(%rsp)
+      1a:	00 
+      1b:	c7 44 24 08 0d 00 00 	movl   $0xd,0x8(%rsp)
+      22:	00 
+      23:	e8 00 00 00 00       	callq  28 <abc::Main()+0x28>
+      28:	89 da                	mov    %ebx,%edx
+      2a:	b9 01 00 00 00       	mov    $0x1,%ecx
+
+### Specifying a different compiler
+
+The `-compiler` option tells `abt` to use a compiler other than the default. In addition
+to `-arch`, `-uname`, and `-cfg` option, this mostly affects the choice of options from the `tool_opt` 
+table. For each of the files it compiles, `abt` scans the `tool_opt` table in full, and includes
+any options that apply. There is a handful of custom lines of code in abt for dealing specifically
+with `g++` and `clang`, and other cases that cannot be handled by `tool_opt` alone.
+
+### The -ood option
+
+You can find out which files are out-of-date (I don't really see how this could be useful,
+but the option is there) with `-ood`:
+
+    $ touch include/abc.h
+    $ abt -ood abc -build:N
+    dev.target  target:abc
+    dev.srcfile  srcfile:cpp/abc/abc.cpp
+    abt.config  cfg:release  uname:Linux  arch:x86_64  compiler:g++  cache:none
+    abt.outofdate  pch:0  src:1  lib:0  exe:1
+    report.abt  n_target:4  time:00:00:00.031850008  n_warn:0  n_err:0  n_install:0
+
+### The -listincl option
+
+To see the full list of include files, as discovered by abt, for a given target, use
+
+    $ abt -listincl abc 
+    dev.Include  include:cpp/abc/abc.cpp:include/algo.h  sys:N  comment:""
+    dev.Include  include:cpp/abc/abc.cpp:include/abc.h  sys:N  comment:""
+    dev.Include  include:cpp/gen/abc_gen.cpp:include/algo.h  sys:N  comment:""
+    ...
+
+### Debugging the build
+
+Just like with other programs, the verbosity level `-v` can be used to trace the execution.
+When run with `-v`, abt will show the commands that execute. Otherwise, only the commands that
+either fail or produce output are echoed to the screen. By default, they are hidden to keep output
+clean.
+
+### Bootstrapping
+
+With the `-printcmd` option, abt doesn't actually run the commands but simply prints them to 
+stdout. This can be used to generate bootstrap scripts, such as `bin/abt-bootstrap`. 
 
 ## amc - Algo Model Compiler
 
-AMC reads ssim tables, mechanically generates
-C++ in-memory database code as determined by these tables, and outputs .h and .cpp files.
-By default, ssim tables are loaded from directory "data", and output
-is written to directories cpp/gen and include/gen.
+### Introduction
 
-Amc generates hash tables, arrays,
-linked lists, dequeues, binary heaps, and tree structures. AMC
-generates hierarchical, region-based memory allocators, including
-free-list, fifo, best-fit, linear array, indirect array. The resulting
-code is compiled into a library, a ``database of source code'',
+AMC is an extensible generator of source code from ssimfiles.
+
+AMC reads ssim tables, creates C++ in-memory database code as determined by these tables, 
+and outputs .h and .cpp files.
+By default, ssim tables are loaded (by default, from directory "data"), and output
+is written to directories `cpp/gen` and `include/gen`.
+
+Amc generates hash tables, arrays, linked lists, dequeues, binary heaps, and tree structures. 
+Amc generates hierarchical, region-based memory allocators, including
+free-list, fifo, best-fit, linear array (vector), indirect array (with permanent pointers);
+inline array;
+Functions to convert any struct to/from a string; Comprehensive enum support,
+both for integer and string values; presence masks; big-endian field storage;
+sort functions on custom fields; incremental group-by indexes; tracking of pointers
+with automatic cascade delete; protection against linear scanning when deleting
+elements; scheduling constructs (for engines); cycle accounting (traces).
+C++ symbols from ssimfile columns; Statically loaded tables; Conversion of any 
+struct to/from bash command line; Subprocess invocation; Asynchronous I/O. Bitsets on top
+of any array type. Char sets; Fixed string types (Pascal strings, Left-padded strings, Right-padded
+strings, Fixed-length strings with numeric conversion); Decimal types; Protocol decoding 
+support; Dispatching (i.e. calling a user function) on both text and binary input; 
+Printing, reading, and validating dispatches; Uniform cursors for bheap, hash, tree, array (of all types),
+lines, files in directory, and more. I'm sure I'm forgetting something.
+
+The resulting code is compiled into a library, a ``database of source code'',
 containing a superset of functions that will be used by the final
-application. AMC does not modify or reverse-engineer user code. The
+application. The generated code is verbose, user-readable, and properly commented,
+and uses only a small, strict subset of C++. 
+You almost never need to go to assembly level with this code.
+AMC does not modify or reverse-engineer user code. The
 application developer uses generated code as a library.
 
 AMC reads about 100 ssim tables. The full list can be obtained with
@@ -1688,37 +1995,35 @@ AMC was initially coded by hand, but once its capabilities became powerful enoug
 generate data structures for its next version. As a result, all of AMC's internal data structures,
 both input, and computational, are defined as ssim tuples and can be queried with ``acr ns:amc -xref''.
 
-The output of amc is a "database of code". AMC generates verbose, user-readable code with comments.
-You almost never need to go to assembly level with this code.
-
 An in-memory database is a data structure with specific record types, well-defined custom memory pools,
 referential integrity constraints, and functions to create, read, update and delete (CRUD) the records,
 built-in joins between tables (called cross-references), and other operations.
-
 Programs using amc include the generated header then make calls to provided functions.
-A large number of primitives is implemented, spanning the range from almost trivial to
-quite sophisticated, that the human can use to build programs.
 
-The premise of AMC is that reusable code doesn't work, because of two things:
-- layers of glue and cruft that get added to accomodate the possible use scenarios
-- eventual loss of either compatibility or flexibility and abandonment
+The premise of AMC is that reusable source code doesn't work, because of two things:
+- layers of glue and cruft that get added to accomodate various use cases.
+- eventual loss of either compatibility or flexibility and abandonment.
+As a result, code written for reusability never reaches its intended potential in terms
+of either performance or utility.
+As can be seen from real life examples, all high-performance systems are hand-coded due to highly
+specific requirements. And hand-coding is error-prone and requires a lot of debugging and chasing
+of memory errors and dangling pointers. 
 
-As a result, all high-performance systems are hand-coded due to highly
-specific requirements. AMC solves this dilemma.
-Since it generates readable source code that we then keep the under source control, we can control the changes tightly.
+AMC specifically addresses and solves this dilemma.
+Since it generates readable source code that we then keep the under source control, 
+we can control the changes tightly. 
 Since the performance of AMC itself is irrelevant (it generates 1M+ lines of code
 per second, which is good enough for all purposes), we can keep backward
-compatibility at the cost of slightly lower performance whenever we face this trade-off.
+compatibility at the cost of slightly lower performance whenever we face such trade-off.
 AMC allows customization, down to bitfield-level, of the memory layout of all attributes.
+
 Best-in-class algorithms for most day-to-day problems are known.
 The problem is supplying them to the application without losing the performance to glue code and data format
 mismatch. Since AMC generates a custom set of routines for each application, it can be tuned without fear
 of adversely affecting other users.
 
 One killer feature of AMC is that it generates xrefs -- automatic joins between
-in-memory structures, eliminating hard-to-find pointer errors and
-leaving the developer to focus on the application, not pointer
-management.
+in-memory structures, giving you a tool to eliminate pointer errors such as double deletion.
 
 Studies estimate the defect rate to grow as an exponential function of
 number of source lines. The ratio of manual to AMC-generated code for
@@ -1750,6 +2055,19 @@ This would generate all functions which are used to compile amc itself. The appa
 is because at some point, those functions were written by hand, and then amc was modified to generate them
 and save them to cpp/gen/amc_gen.cpp
 
+To limit amc's output to prototypes only, specify `-proto`:
+
+    amc amc.% -proto
+    
+### Sandbox mode
+
+The sandbox mode is provided to help add features to amc without creating a dead-end (where
+  generated code is broken, but cannot be re-generated because amc needs to be rebuilt)
+
+`abt -testgen` compiles a debug version of amc, creates the sandbox directory .testgen, runs amc in the .testgen
+directory, shows a diff between current and sandboxed changes, builds all unit tests inside the sandbox
+and runs the tests. The command succeeds if all of the steps succeed.
+
 ### References
 
 If a record of type A presupposes the existence of record of type B, then A contains some field
@@ -1757,46 +2075,18 @@ If a record of type A presupposes the existence of record of type B, then A cont
 then we can collect that information using a *cross-reference. Reference types in amc are
 Pkey, Upptr, RegxSql. Cross-reference types are Ptr, Ptrary, Thash, Atree, Bheap, Llist, Count, and others.
 
-### Sandbox mode
-
-The sandbox mode is provided to help add features to amc without creating a dead-end (where
-  generated code is broken, but cannot be re-generated because amc needs to be rebuilt)
-
-abt -testgen compiles a debug version of amc, creates the sandbox directory .testgen, runs amc in the .testgen
-directory, shows a diff between current and sandboxed changes, builds all unit tests inside the sandbox
-and runs the tests. The command succeeds if all of the steps succeed.
-
 ### Reading Code of Amc Itself
-Amc source code is located under cpp/amc/*.cpp. The list of all the source files and headers
+
+Amc source code is located under cpp/amc. The list of all the source files and headers
 can also be retrieved with acr targsrc:amc/%
 If you want to browse all the functions in amc concerned with generating hash tables, run
 errlist src_func amc Thash -proto
 
 Gentle reminder to read amc code and the tables in data/amcdb and data/dmmeta, since
-they're quite readable, and ultimately that's where all the information is. This documentation
-is more of a conceptual aid.
-
-### Example Show generated C++ struct
-
-    amc amc.FCtype
-
-### Example: Show prototypes of all generated functions matching pattern
-
-    amc amc.FCtype.% -proto
-
-### Example: Count how many linked lists there are in the code database
-
-    acr llist -print:N
-
-### Example: Find all references to a record
-
-    acr ctype:acmdb.Device -ndown 100
-
-### Example: Edit 2 Ctypes
-
-    acr ctype:acr.FCtype\|acr.FField -t -e
+they're quite readable, and ultimately that's where all the information is. 
 
 ### Main Input Tables
+
 The main tables Amc uses as input are ns, ctype and field.
 Ns maps to a C++ namespace.
 Ctype corresponds to a struct.
@@ -1890,80 +2180,6 @@ Each namespace has a default pool, declared via nsx record. This is where all me
 
 ### Tracing
 Ftrace record can be used to enable counting of alloc/delete calls for each pool.
-
-
-## Bootstrapping Magic
-
-Let's consider the three main tools in this repository: acr, amc and abt.
-
-The three tools are interdependent:
- acr, abt and amc all use acr to manage and validate their inputs.
- acr, abt and amc's in-memory structures are all generated with amc
- acr, abt and amc are all build using abt
-
-There are several examples of such systems in the world.
-The most famous one is the LISP interpreter as expressed in LISP itself.
-Another example is gcc after it was compiled by gcc that was compiled by gcc.
-
-Humbly joining this hallowed group is amc, which generates most
-of its own source code as C++ and lets you modify this source code with
-perl, sed and MariaDB from the bash command line, without introducing
-a new language or an interpreter.
-
-Why is this important?
-You see, when a LISP interpreter interprets LISP, the new interpreter is
-qualitatively different from the old one: it is slower. It can only
-run smaller jobs than its parent.
-
-Similarly, the C++ template language is less powerful than the parent language.
-If you go back one step and extended C++ itself by changing its grammar,
-and update the compiler accordingly, you get a new language that's not C++, and
-cannot be mixed with C++.
-
-So, after one cycle of application of these tools (LISP interpretation, C++ templates),
-you get to a new and better place, but that place is
-temporary, and you don't lock in the gains. Yet *it is* possible to
-lock in the gains. For that, we need a tool whose input is about equally readable and writable
-by both human and the machine, and where most of the source code is derived
-from this input. That way, we skip the slow interpretation layer, and
-get to lock in any iterative improvements.
-
-And we want to avoid creating a new language, at all costs, because creating a new
-language is such an expensive proposition. You now need glue libraries between your
-language and all other languages; and you need debuggers, and multi-platform support
-just for starters.
-But a conservative subset of C++ is all you need to write anything.
-C++ with an extra library is still C++.
-
-In the world where data is kept in a machine-readable format, and most of the source code
-is generated, the tools become universal: any tool works with almost any other tool. 
-
-    'abt acr' builds acr.
-    'abt abt' builds itself.
-
-    'acr field:dmmeta.Field.field' describes its own primary key.
-    'acr ctype:dmmeta.Ctype' describes the struct type (C type).
-
-    'amc acr.%' generates from scratch (most of) the source code for acr
-    'amc amc.%' generates from scratch the source code of itself.
-
-    'src_func abt' shows the hand-written source code of abt.
-    'src_func src_func' shows the hand-written source code of itself.
-
-    'acr_in -data amc' shows all of the inputs that amc takes
-    'acr_in -data acr_in' shows all of the inputs that it takes.
-
-    'acr_compl -line amc' shows bash completions for amc
-    'acr_compl -line acr_compl' shows bash completions for acr_compl itself
-
-    'acr ns:abt -t' shows the definitions of all abt structures
-    'acr ns:acr -t' shows the definitions of its own structures
-
-And of course, the point of the tools is not to compile themselves; 
-The idea is that this repo is extended with new commands and tools specific to some project,
-maintaining the same directory structure and basic conventions.
-
-## Reftypes (field types)
 
 ### Base: Mixin
 
@@ -2163,7 +2379,7 @@ Varlen corresponds to a (possibly empty) array of fixed-size records appended to
 the parent ctype must have a length field defined. varlen fields cane be read from a string or
 iterated over. This type is frequently used by wire protocols to specify a repeated section of a message.
 
-## String types and how to use them:
+### String types and how to use them:
 
 algo::strptr: Length-delimited string pointer.
 There are two fields in this struct: char *elems, int n\_elems;
@@ -2206,6 +2422,80 @@ because left-padding with 0 prevents that.
 
 LnumStr13\_U64\_Base36: Same as above, but different base.
 
+
+## Bootstrapping Magic
+
+Let's consider the three main tools in this repository: acr, amc and abt.
+
+The three tools are interdependent:
+ acr, abt and amc all use acr to manage and validate their inputs.
+ acr, abt and amc's in-memory structures are all generated with amc
+ acr, abt and amc are all build using abt
+
+There are several examples of such systems in the world.
+The most famous one is the LISP interpreter as expressed in LISP itself.
+Another example is gcc after it was compiled by gcc that was compiled by gcc.
+
+Humbly joining this hallowed group is amc, which generates most
+of its own source code as C++ and lets you modify this source code with
+perl, sed and MariaDB from the bash command line, without introducing
+a new language or an interpreter.
+
+Why is this important?
+You see, when a LISP interpreter interprets LISP, the new interpreter is
+qualitatively different from the old one: it is slower. It can only
+run smaller jobs than its parent.
+
+Similarly, the C++ template language is less powerful than the parent language.
+If you go back one step and extended C++ itself by changing its grammar,
+and update the compiler accordingly, you get a new language that's not C++, and
+cannot be mixed with C++.
+
+So, after one cycle of application of these tools (LISP interpretation, C++ templates),
+you get to a new and better place, but that place is
+temporary, and you don't lock in the gains. Yet *it is* possible to
+lock in the gains. For that, we need a tool whose input is about equally readable and writable
+by both human and the machine, and where most of the source code is derived
+from this input. That way, we skip the slow interpretation layer, and
+get to lock in any iterative improvements.
+
+And we want to avoid creating a new language, at all costs, because creating a new
+language is such an expensive proposition. You now need glue libraries between your
+language and all other languages; and you need debuggers, and multi-platform support
+just for starters.
+But a conservative subset of C++ is all you need to write anything.
+C++ with an extra library is still C++.
+
+In the world where data is kept in a machine-readable format, and most of the source code
+is generated, the tools become universal: any tool works with almost any other tool. 
+
+    'abt acr' builds acr.
+    'abt abt' builds itself.
+
+    'acr field:dmmeta.Field.field' describes its own primary key.
+    'acr ctype:dmmeta.Ctype' describes the struct type (C type).
+
+    'amc acr.%' generates from scratch (most of) the source code for acr
+    'amc amc.%' generates from scratch the source code of itself.
+
+    'src_func abt' shows the hand-written source code of abt.
+    'src_func src_func' shows the hand-written source code of itself.
+
+    'acr_in -data amc' shows all of the inputs that amc takes
+    'acr_in -data acr_in' shows all of the inputs that it takes.
+
+    'acr_compl -line amc' shows bash completions for amc
+    'acr_compl -line acr_compl' shows bash completions for acr_compl itself
+
+    'acr ns:abt -t' shows the definitions of all abt structures
+    'acr ns:acr -t' shows the definitions of its own structures
+
+    'mdbg acr' debugs acr
+    'mdbg mdbg' debugs the debugger
+    
+And of course, the point of the tools is not to compile themselves; 
+The idea is that this repo is extended with new commands and tools specific to some project,
+maintaining the same directory structure and basic conventions.
 
 ## acr_ed
 
@@ -2297,18 +2587,31 @@ Create new header:
 
 ## Coding Style
 
+OpenACR is written with a certain uniform coding style. This section 
+explains the reasoning behind it. The style is maintained by various tools; 
+first of all, amc generates all code in this style; Second, `indent-recent`
+and `cpp-indent` automatically indent source files using emacs 4-space indentation
+mode.
+
 ### Spaces, Indentation
 
-Use spaces, use 4 space indent. We use cpp-indent to normalize all source files,
+Use spaces, use 4 space indent. We use `cpp-indent` to normalize all source files,
 so this policy is enforced automatically.
 
 ### Variable Names
 
-Variable names use lower_under style.
+Variable names use `lower_under` style.
+
+### Member Functions
+
+There are no member functions. Functions describe actual blocks of instructions for 
+CPU to execute; Structs don't even exist -- they are rules for calculating field
+offsets and thereby structuring RAM. We maintain this separation.
 
 ### Predicate Functions
 
-Functions that return bool end in Q: VisibleQ, ExistsQ, etc. Q means Query or Question mark.
+Functions that return bool end in Q: VisibleQ, ExistsQ, etc. 
+Q means Query or Question mark. This is the Mathematica convention.
 
 ### Curly Braces
 
@@ -2368,7 +2671,12 @@ diffs just because someone needed to debug a piece of code.
 ### Keep code separate from data
 
 Structure space with ssim files and amc.
-Strucutre time with plain C++.
+Structure time with plain C++.
+
+### No Code In Headers
+
+`.h` contain declarations and structure definitions only, never any code.
+All inline code codes into `inl.h` headers (after all, it must go somewhere).
 
 ### Use query-command separation
 
@@ -2376,14 +2684,16 @@ Functions can be divided into two types: queries, which are read-only functions 
 a value; and commands, which are procedures that perform some in-memory update.
 Queries are a lot easier to write and debug, since there is no post-condition to prove.
 Keep as much code as possible in query form, and keep it separate from command-type functions.
-This will reduce debugging time.
+This will reduce debugging time. Bertrand Meyer writes eloquently about this.
 
 ### Keep it single-threaded
 
 We can easily task thousands of cores with independent tasks, and they will all execute at once.
 But let's not task a human with trying to understand two tasks simltaneously. Keep programs
 single-threaded, and as deterministic (independent of wall clock) as possible,
-and your debug times will be finite.
+and your debug times will be finite. Hoare's
+[Communicating Sequential Processes](https://www.cs.cmu.edu/~crary/819-f09/Hoare78.pdf) should
+serve as an inspiration.
 
 ### Use Single Entry, Single Exit (SESE) style
 
@@ -2396,7 +2706,8 @@ SESE is also a normal form, i.e. a solution that two developers can agree on wit
 so it is scalable.
 Finally, SESE dictates that code of the program is simply a text representation of its control
 flow graph. All arcs in the graph are made visible, and this facilitates reasoning about program
-correctness.
+correctness. Bertrand Meyer is a big proponent of this style.
+See [Wiki Entry](https://en.wikipedia.org/wiki/Single-entry_single-exit)
 
 ### Single File Static Assignment
 
@@ -2405,7 +2716,8 @@ where each variable is assigned to. This is preferable but not required.
 
 All assignments to a given variable must be in the same source file.
 This is necessary for reasoning about correctness, debugging, and enforcing post-conditions
-of given variable assignment.
+of given variable assignment. See Andrew Appel's
+[SSA Is Functional Programming](https://www.cs.princeton.edu/~appel/papers/ssafun.pdf)
 
 ### Document all non-static functions
 
@@ -2419,15 +2731,15 @@ Given a sufficiently good reason, any rule can be replaced. But let's try to kee
 whole by following these rules whenever possible.
 
 
-## amc_vis
+## amc_vis - Visualize Ctype Dependencies and Access Paths
 
-amc_vis is a tool for visualization access paths between tables.
-The parameter is a ctype regex, and whatever ctypes are matched by the regex will be shown
+The single parameter to `amc_vis` is a ctype regex, 
+and whatever ctypes are matched by the regex will be shown
 via ASCII art.
 
-Visualize access paths between two records
+Here is an example:
 
-    $ amc_vis amc.FCtype\|amc.FField -xref:N
+    $ amc_vis amc.FCtype\|amc.FField
 
 
                   / amc.FCtype
@@ -2456,17 +2768,31 @@ amc_vis can also output an dot file, which can then be viewed in a browser:
 
 ## amc_gc: AMC garbage collector
 
-amc_gc is a tool for removing unused records from the dmmeta database.
+`amc_gc` is a tool for removing unused records from the dmmeta database.
 
-amc_gc takes a target regex and an acr query as an argument. It finds all records
+`amc_gc` takes a target regex and an acr query as an argument. It finds all records
 matching the query, then it tries to remove them one by one, and rebuilds the targets
 (using abt) in a sandbox dir. If build succeeds with one of the records deleted
 it means it wasn't needed in the first place.
 
-Eliminate all ctypes in amc without which amc can be built
+Let's illustrate `amc_gc` by creating a new program and inputting a table. 
 
-    $ amc_gc -target:amc -key:ctype:amc.%
+    $ acr_ed -create -target abc -write
+    $ acr_ed -create -finput -target abc -ssimfile dmmeta.ns -write
 
+Since the `ns` table is unused, `abc` will compile even if we remove it. This is the 
+case that `amc_gc` detects, and can remove the table:
+
+    $ amc_gc -target:abc -key:ctype:abc.%
+    amc_gc.begin  tot_rec:2  n_cppline:259802  watch_cmd:"watch head -50 temp/amc_gc.build"
+    amc_gc.analyze  query:dmmeta.ctype:abc.FDb  eliminate:N  rec_no:1  tot_rec:2  n_del:0  n_cppline:259802  n_cppline_del:0
+    amc_gc.analyze  query:dmmeta.ctype:abc.FNs  eliminate:Y  rec_no:2  tot_rec:2  n_del:1  n_cppline:259341  n_cppline_del:461
+    report.amc_gc  key:ctype:abc.%  n_match:2  n_del:1  n_cppline:259341  n_cppline_del:461
+
+And indeed, `amc_gc` successfully garbage collects the table.
+Let's finish by deleting the unused target
+
+    $ acr_ed -del -target abc -write
 
 ## MariaDB integration
 
@@ -2479,29 +2805,29 @@ it via a socket.
 Here are some useful commands:
 Start a local MariaDB server:
 
-    acr_my -start dmmeta
+    $ acr_my -start dmmeta
 
 Connect to the local server on the command line:
 
-    acr_my -shell
+    $ acr_my -shell
 
 From here, you can issue SQL commands:
 
-    select count(*) from dmmeta.field where arg ='u8';
+    > select count(*) from dmmeta.field where arg ='u8';
 
 When you exit from the shell, the server keeps running.
 You can stop the server and save changes:
 
-    acr_my -stop
+    $ acr_my -stop
 
 Or stop the server, discarding changes:
 
-    acr_my -abort
+    $ acr_my -abort
 
 You can also use acr -my as a shortcut for acr_my -start -shell -stop:
 
-    echo 'update thash set unique='N' where field like "acr.%"' | acr -my -fldfunc dmmeta.%
-    amc
+    $ echo 'update thash set unique='N' where field like "acr.%"' | acr -my -fldfunc dmmeta.%
+    $ amc
 
 The table dmmeta.sqltype allows ssim2mysql to map ctypes to SQL types so that
 round tripping can occur without loss.
@@ -2659,3 +2985,233 @@ We can create a normalization check with
 If a test fails, the easiest way to debug it is to re-run `atf_unit` with 
 `-debug` flag. It will use `mdbg` and automatically set a breakpoint at the first 
 line of the test in question.
+
+## Mdbg - My debugger
+
+This is a wrapper for automating the invocation of `gdb` from command line.
+
+Mdbg uses abt to build a debug version of the debug target. By default,
+this means `debug`, but the option can be customized with `-cfg <cfg>`, for instance
+specifying `-cfg profile`.
+
+Then, mdbg prepares a debugging environment by writing two script files: one
+for the debugger, `temp/mdbg.gdb`, and one for the editor, `temp/mdbg.el`.
+The default, and really the most supported editor, is emacs, although specifying `-tui`
+will switch to the gdb's Text User Interface mode instead.
+
+Mdbg then runs the debug target in the debug environment.
+Let's proceed as usual, with an example:
+
+    $ acr_ed -create -target abc -write
+    ...
+    $ mdbg abc
+    
+Mdbg will print a reminder of the shortcuts it has equipped the target editor with...
+
+    mdbg.note  Debug mdbg::_db.script saved to temp/mdbg.el
+    mdbg.note  Invoking gdb under emacs. Make sure to link ~/.emacs -> conf/emacs.el, ~/elisp -> conf/elisp
+    mdbg.note  Standard shortcuts:
+    mdbg.note               F7  recompile and restart executable
+    mdbg.note              F11  step into
+    mdbg.note        Shift-F11  step out
+    mdbg.note              F10  step over
+    mdbg.note         Ctrl-F10  run to cursor
+    mdbg.note              F12  restore windows
+    mdbg.note              F9   set breakpoint
+    mdbg.note         Ctrl-F9   clear breakpoint
+    mdbg.note              F6   other window
+    mdbg.note    Alt-Up Arrow   Go up the call stack
+    mdbg.note  Alt-Down Arrow   Go down the call stack
+
+and run the target program under the debugger, stopping at Main.
+
+      // --- abc...main
+      int main(int argc, char **argv) {
+          try {
+    B =>      algo_lib::FDb_Init();
+              abc::FDb_Init();
+              algo_lib::_db.argc = argc;
+      ...
+
+The `-manywin` option enables emacs' gdb's `gud-many-windows` mode, which brings up
+a debugger layout reminiscent of modern IDEs, with locals, breakpoints, threads subwindows, etc.
+Additionally specifying the `-disas` option enables the disassembly window.
+
+### Specifying arguments
+
+The first argument to mdbg is the debug target name. Mdbg must know it so it can build it.
+To pass arguments to the debug target, specify them in a single string like this:
+ 
+    $ mdbg abc " -in:filename"
+
+Always include a space in front of the arguments: since Bash will strip the quotes, mdbg
+needs to know that the specified option is not an mdbg option but in fact an option for the debug
+target. To avoid any ambiguity, you could write `-args:-in:filename`, but it seems less 
+convenient than passing the arguments directly.
+
+### The -tui option
+
+To use gdb's text UI, use `mdbg -tui`
+
+### Specifying Breakpoints
+
+The default breakpoint is Main, but others can be specified, including gdb's conditional breakpoints.
+For instance, in the example above, we might invoke mdbg with a custom breakpoint.
+
+    $ mdbg abc -b algo::Prlog 
+    ...
+
+      void algo::Prlog(int fd, cstring &str, int start, bool eol) {
+          try {
+    B =>      if (eol) {
+                  str << '\n';
+              }
+    
+Or, if we're interested only in output that goes to stderr,
+
+    $ mdbg abc -b "algo::Prlog if fd==2"
+    
+Multiple breakpoints can be specified by comma-separating them. For instance `-b "A, B if c"`, etc.
+To execute a command at a breakpoint, use `-bcmd` option:
+
+    $ mdbg abc -b "algo::Prlog if fd==2" -bcmd "print str.ch_n"
+
+These options preconfigure gdb via the `mdbg.gdb` file so that 
+there is less typing later.
+
+### Edit-and-retry
+
+Mdbg sets up the standard shortcut F7 for edit-and-retry: the target is rebuilt
+and reinvoked with the same options as initially. This can save a lot of set up, because
+the gdb instance is not restarted; only the debug target.
+
+### The -follow_child otption
+
+This controlls gdb's `follow child` so that the debugger traces the child process instead
+of the parent. By default, only the parent process is debugged.
+This option is really most useful for debugging `fork()` calls; With fork/exec, it makes
+the most sense to isolate the child process command line and debug it directly without
+messing with the parent first.
+
+### Exceptions
+
+By default, gdb is configured to catch exceptions. To ignore them instead, specify `-catchthrow:N`
+
+### Gdb Python Interface
+
+To enable gdb python scriptability, specify `-py` option. 
+
+## Scriptlets
+
+OpenACR includes a number of little scripts to ease program development.
+Some of them are useful as stand-alone utilities
+
+### Hilite - inline highlighter
+
+The hilite tool is a perl script that takes a number of perl regexes
+on the command line, and highlights matching strings in stdin using randomly 
+chosen colors.
+
+Usage:
+
+    <some command> | hilite <expr1> <expr2> ...
+
+Each expr is a regex that is highlighted using a separate color.
+colors are picked automatically from a default sequence.
+
+To specify a color explicitly, use its name: `expr1:green expr2:yellow`
+
+Omitting `expr` matches the entire line, so `hilite :green` makes all lines green.
+
+#### Blotter Mode
+
+To highlight every other line, use `expr1:green%2`; to highlight every other 5 lines,
+use `expr1:green%5`.
+
+If multiple patterns match a given input line, patterns specified later
+on the command line override previous patterns; Each pattern can match multiple
+times within the line.
+
+#### Inline Specification
+
+Highlighting rules can be provided as part of the input.
+If a line starts with the special word 'hilite.colors', e.g.
+
+    hilite.colors <expr1> <expr2> ...
+
+Then the previous rules are flushed,
+and new exprs are processed as if they were read from the command line.
+This allows commands to output hilite instructions that keep the text readable
+yet support highlighting where appropriate.
+
+#### Diff mode
+
+If `<expr>` is `-diff` or `-d`, hilite loads diff rules that support either line-
+or word-diffs. Example of colorizing a diff file:
+
+   hilite -d < patchfile | less -r
+   
+Removed lines or words are colored red, added lines or words are green, and index
+lines are blue.
+
+Hilite is not intended to compete with the various syntax highlighters; it is an
+interactive tool intended to ease readibility or terminal-based output.
+
+### Grephunk - patch file filter
+
+Grephunk is a perl script that scan hunks on stdin
+and filter them according them to specified pattern. A `hunk` is the name patch file 
+people use to refer to sections of a patch file that look like this:
+
+    diff --git a/include/gen/atf_amc_gen.inl.h b/include/gen/atf_amc_gen.inl.h
+    index fbcd12a..5871940 100644
+    --- a/include/gen/atf_amc_gen.inl.h
+    +++ b/include/gen/atf_amc_gen.inl.h
+    @@ -385,0 +386,14 @@ inline bool atf_amc::Ctype2Attr_Update(atf_amc::Ctype2Attr &lhs, atf_amc::Ctype2
+    +    atf_amc::DelType1_Uninit(*this);
+    @@ -426 +440 @@ inline atf_amc::DispFilter::DispFilter() {
+    -inline int atf_amc::pmask_Nbits(atf_amc::DispFilter &parent) {
+    +inline int atf_amc::pmask_Nbits(atf_amc::DispFilter& parent) {
+
+Here, there are two hunks, one for each line starting with `@@`.
+The `filename` of a hunk is the contents of the `diff` line.
+
+The `header` is everything from the word `diff` to the first `@@`.
+Hunk body is everything between `@@` and the next `@@` or end of file.
+
+Grephunk allows specifying patterns for any of these entities.
+Patterns can apply to filename, line, hunk header, or the entire hunk.
+
+Pattern prefix specifies its scope:
+* no prefix: applies to hunk body
+* l:    line pattern (applies to content only)
+* f:    filename pattern (applies to diff header line)
+* a:    applies to 'a' file (line starts with ---)
+* b:    applies to 'b' file (line starts with +++)
+* h:    hunk pattern -- applies to the entire hunk, including any header lines
+
+Any number of patterns must be specified on the command line.
+Filename pattern is specified with `f:<regex>`.
+For instance,
+
+    <some command> | grephunk abcd f:cpp
+
+Searches fort hunks that match string `abcd` where the filename also 
+matches `cpp`
+
+A pattern can be positive or negative, negative patterns are preceded with `!`.
+So,
+
+    <some command> | grephunk f:\!/gen/ | grephunk blah
+
+Excludes files with /gen/ in the pathname, and then searches for string `blah`.
+
+Grephunk outputs any hunk that matches any of the patterns. So, "OR" is assumed.
+If you want "AND", just chain several grephunk invocations one after another, or use
+a `blah.*blah` pattern.
+
+In the example below, hunk must contain the word amc anywhere in it,
+and filename should not have pattern /gen/
+
+    grephunk amc f:!/gen/ h:'}\s+$'
+    

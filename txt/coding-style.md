@@ -1,17 +1,30 @@
 ## Coding Style
 
+OpenACR is written with a certain uniform coding style. This section 
+explains the reasoning behind it. The style is maintained by various tools; 
+first of all, amc generates all code in this style; Second, `indent-recent`
+and `cpp-indent` automatically indent source files using emacs 4-space indentation
+mode.
+
 ### Spaces, Indentation
 
-Use spaces, use 4 space indent. We use cpp-indent to normalize all source files,
+Use spaces, use 4 space indent. We use `cpp-indent` to normalize all source files,
 so this policy is enforced automatically.
 
 ### Variable Names
 
-Variable names use lower_under style.
+Variable names use `lower_under` style.
+
+### Member Functions
+
+There are no member functions. Functions describe actual blocks of instructions for 
+CPU to execute; Structs don't even exist -- they are rules for calculating field
+offsets and thereby structuring RAM. We maintain this separation.
 
 ### Predicate Functions
 
-Functions that return bool end in Q: VisibleQ, ExistsQ, etc. Q means Query or Question mark.
+Functions that return bool end in Q: VisibleQ, ExistsQ, etc. 
+Q means Query or Question mark. This is the Mathematica convention.
 
 ### Curly Braces
 
@@ -71,7 +84,12 @@ diffs just because someone needed to debug a piece of code.
 ### Keep code separate from data
 
 Structure space with ssim files and amc.
-Strucutre time with plain C++.
+Structure time with plain C++.
+
+### No Code In Headers
+
+`.h` contain declarations and structure definitions only, never any code.
+All inline code codes into `inl.h` headers (after all, it must go somewhere).
 
 ### Use query-command separation
 
@@ -79,14 +97,16 @@ Functions can be divided into two types: queries, which are read-only functions 
 a value; and commands, which are procedures that perform some in-memory update.
 Queries are a lot easier to write and debug, since there is no post-condition to prove.
 Keep as much code as possible in query form, and keep it separate from command-type functions.
-This will reduce debugging time.
+This will reduce debugging time. Bertrand Meyer writes eloquently about this.
 
 ### Keep it single-threaded
 
 We can easily task thousands of cores with independent tasks, and they will all execute at once.
 But let's not task a human with trying to understand two tasks simltaneously. Keep programs
 single-threaded, and as deterministic (independent of wall clock) as possible,
-and your debug times will be finite.
+and your debug times will be finite. Hoare's
+[Communicating Sequential Processes](https://www.cs.cmu.edu/~crary/819-f09/Hoare78.pdf) should
+serve as an inspiration.
 
 ### Use Single Entry, Single Exit (SESE) style
 
@@ -99,7 +119,8 @@ SESE is also a normal form, i.e. a solution that two developers can agree on wit
 so it is scalable.
 Finally, SESE dictates that code of the program is simply a text representation of its control
 flow graph. All arcs in the graph are made visible, and this facilitates reasoning about program
-correctness.
+correctness. Bertrand Meyer is a big proponent of this style.
+See [Wiki Entry](https://en.wikipedia.org/wiki/Single-entry_single-exit)
 
 ### Single File Static Assignment
 
@@ -108,7 +129,8 @@ where each variable is assigned to. This is preferable but not required.
 
 All assignments to a given variable must be in the same source file.
 This is necessary for reasoning about correctness, debugging, and enforcing post-conditions
-of given variable assignment.
+of given variable assignment. See Andrew Appel's
+[SSA Is Functional Programming](https://www.cs.princeton.edu/~appel/papers/ssafun.pdf)
 
 ### Document all non-static functions
 
