@@ -67,7 +67,19 @@ This file was created with 'atf_norm readme' from files in [txt/] -- *do not edi
       * [The -checkable option](#the-checkable-option)
       * [The -related option](#the-related-option)
    * [abt - A Build Tool](#abt--a-build-tool)
+      * [Input Tables](#input-tables)
+      * [Output Directory](#output-directory)
+      * [The -install option](#the-install-option)
+      * [Target Definition](#target-definition)
+      * [Customizing Options](#customizing-options)
+      * [Disassembling](#disassembling)
+      * [Specifying a different compiler](#specifying-a-different-compiler)
+      * [The -ood option](#the-ood-option)
+      * [The -listincl option](#the-listincl-option)
+      * [Debugging the build](#debugging-the-build)
+      * [Bootstrapping](#bootstrapping)
    * [amc - Algo Model Compiler](#amc--algo-model-compiler)
+      * [Introduction](#introduction)
       * [Running Amc](#running-amc)
       * [Query mode](#query-mode)
       * [Sandbox mode](#sandbox-mode)
@@ -110,19 +122,21 @@ This file was created with 'atf_norm readme' from files in [txt/] -- *do not edi
    * [Coding Style](#coding-style)
       * [Spaces, Indentation](#spaces-indentation)
       * [Variable Names](#variable-names)
+      * [Member Functions](#member-functions)
       * [Predicate Functions](#predicate-functions)
       * [Curly Braces](#curly-braces)
       * [Split Conditionals](#split-conditionals)
       * [Curly Braces around Conditionals are Non-Optional](#curly-braces-around-conditionals-are-non-optional)
       * [Use of semi-colon forces a new line](#use-of-semi-colon-forces-a-new-line)
       * [Keep code separate from data](#keep-code-separate-from-data)
+      * [No Code In Headers](#no-code-in-headers)
       * [Use query-command separation](#use-query-command-separation)
       * [Keep it single-threaded](#keep-it-single-threaded)
       * [Use Single Entry, Single Exit (SESE) style](#use-single-entry-single-exit-sese-style)
       * [Single File Static Assignment](#single-file-static-assignment)
       * [Document all non-static functions](#document-all-non-static-functions)
       * [All rules allow exceptions](#all-rules-allow-exceptions)
-   * [amc_vis](#amc_vis)
+   * [amc_vis - Visualize Ctype Dependencies and Access Paths](#amc_vis--visualize-ctype-dependencies-and-access-paths)
    * [amc_gc: AMC garbage collector](#amc_gc-amc-garbage-collector)
    * [MariaDB integration](#mariadb-integration)
    * [Working with source files & targets](#working-with-source-files--targets)
@@ -134,6 +148,14 @@ This file was created with 'atf_norm readme' from files in [txt/] -- *do not edi
       * [Unit Tests](#unit-tests)
       * [Normalization Checks](#normalization-checks)
       * [Debugging](#debugging)
+   * [Mdbg - My debugger](#mdbg--my-debugger)
+      * [Specifying arguments](#specifying-arguments)
+      * [The -tui option](#the-tui-option)
+      * [Specifying Breakpoints](#specifying-breakpoints)
+      * [Edit-and-retry](#edit-and-retry)
+      * [The -follow_child otption](#the-follow_child-otption)
+      * [Exceptions](#exceptions)
+      * [Gdb Python Interface](#gdb-python-interface)
    * [Scriptlets](#scriptlets)
       * [Hilite - inline highlighter](#hilite--inline-highlighter)
          * [Blotter Mode](#blotter-mode)
@@ -187,6 +209,7 @@ in alphabetical order by first name.
 * Hayk Mkrtchyan
 * Jeffrey Wang
 * Jeremy Xue
+* John Brzezniak
 * Jonathan Joshua
 * Luke Huang
 * Shreejith Billenahallilokegowda
@@ -1751,47 +1774,186 @@ In contrast, if we didn't specify `-related`, `-data` would fetch all records:
 
 ## abt - A Build Tool
 
-ABT is a build tool. The argument to abt is a target name regex.
-ABT reads some ssim files (use acr_in abt to find out which ones);
-Builds a dependency dag based on #includes; Invokes build commands.
+Abt is a build tool. The argument to abt is a target name regex.
+Abt reads some ssim files that describe which source files go into 
+these targets, and the dependencies between targets;
+builds a dependency dag based on #includes; Invokes build commands,
+keeping up to N of them running at a time.
+The simplest way to build everything is:
 
-With -cfg, abt can select different option sets.
-Cfg can be release, profile, coverage, debug, or some custom config.
+    $ abt %
 
-The list of available targets is loaded from dev.target ("acr dev.target" to list).
-List of source files for each target is in by dev.targsrc.
-To view the configuration for a given target, use acr dev.target:amc -t -e
+Let's begin by creating a new target.
 
-Using configuration cfg:release, source file
-cpp/amc/main.cpp compiles to dflt.release-x86_64/cpp.amc.main.o
+    $ acr_ed -create -target abc -write
 
-Example: Build all
+This creates and builds `abc.` Let's clean abc. This cleans both the target
+and all of the libraries that it might use. 
 
-         $ abt -install %
+    $ abt -clean abc
+    abt.config  cfg:release  uname:Linux  arch:x86_64  compiler:g++  cache:none
+    abt.outofdate  pch:1  src:38  lib:2  exe:1
+    report.abt  n_target:4  time:00:00:00.037978981  n_warn:0  n_err:0  n_install:0
 
-Example: Re-build all, verbose mode
+And rebuild it:
 
-         $ abt -clean -install %
+    $ abt abc
+    abt.config  cfg:release  uname:Linux  arch:x86_64  compiler:g++  cache:none
+    abt.outofdate  pch:1  src:38  lib:2  exe:1
+    abt.build  line_n:48,413  built_n:13,511  job_n:3  complete:28
+                ^^^^^ build in progress
 
-Example: Disassemble one function
+In the example above, I'm running the command on a weak cloud-based VM,
+so only 3 jobs run in parallel (as indicated by `job_n`). This default is picked
+based on the number of processors in the system. It can be overriden by specifying `-maxjobs`.
+The `config` line specifies
+which config (release, debug, etc) to use; what OS (Linux), architecture (x86_64),
+compiler (g++) and compiler cache.
 
-         $ abt -cfg release amc -disas:%Main%
+The `outofdate` line shows what `abt` found to be out of date: 1 precompiled header,
+38 source files, 2 libraries and 1 executable.
 
-Example: Find out what files are out of date for a target
+### Input Tables
 
-         $ abt -ood amc
+Abt's main input tables come from the dev namespace of the default data set
+(as specified with `-in`)
 
-Example: Install debug version of binaries into bin/
+* dev.target         buildable target
+* dev.targdep        pairwise dependencies between targets
+* dev.targsrc        list of source files for each target.
+* dev.tool_opt       list of options to use for compilation and linking,
 
-         $ abt % -install -cfg:debug
+### Output Directory
 
-Example: Add a library to link with an executable
+The resulting object files are now in `dflt.release-x86_64/abc`:
 
-         echo dev.targdep:amc.json_lib | acr -replace -write
+    $ ls -l dflt.release-x86_64/*abc*
+    -rwxrwxr-x. 1 alexei alexei 109128 May  3 18:35 dflt.release-x86_64/abc
+    -rw-rw-r--. 1 alexei alexei   1912 May  3 18:34 dflt.release-x86_64/cpp.abc.abc.o
+    -rw-rw-r--. 1 alexei alexei  24776 May  3 18:34 dflt.release-x86_64/cpp.gen.abc_gen.o
 
+`abt` places all output files in the same output directory, with no subdirectories.
+Source file paths are flattened, substituting `/` with `.`.
 
+The output directory can be overriden with `-out_dir` option. If not specified, the output
+directory defaults to `$compiler.$cfg-$arch`.
+
+### The -install option
+
+By default, the resulting files are left in the output directory.
+There are already soft links from bin/ to `../dflt.release-x86_64`. If we want to re-point the default
+binary to a different version, the `-install` option will rewrite the soft link to point 
+to the new executable. 
+
+### Target Definition
+
+We can view the definition of target `abc`, as created by `acr_ed`, with `acr`.
+As we can see, headers are considered sourdce files, and there are a couple of libraries
+(`lib_prot` and `algo_lib`), and a precompiled header (`algo_pch`).
+
+    $ acr target:abc -ndown 10 > x
+    dev.target  target:abc
+
+    dev.targdep  targdep:abc.algo_lib  comment:""
+    dev.targdep  targdep:abc.algo_pch  comment:""
+    dev.targdep  targdep:abc.lib_prot  comment:""
+
+    dev.targsrc  targsrc:abc/cpp/abc/abc.cpp            comment:""
+    dev.targsrc  targsrc:abc/cpp/gen/abc_gen.cpp        comment:""
+    dev.targsrc  targsrc:abc/include/abc.h              comment:""
+    dev.targsrc  targsrc:abc/include/gen/abc_gen.h      comment:""
+    dev.targsrc  targsrc:abc/include/gen/abc_gen.inl.h  comment:""
+    report.acr  n_select:9  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+
+### Customizing Options
+
+When debugging memory errors, we would use `abt -cfg:debug`; or 
+`-cfg:coverage` when updating coverage.
+
+It is possible to see what options `abt` will pass to the compiler under a certain configuration.
+The slightly non-standard, non-SKNF table `dev.tool_opt` allows customizing these options
+on a per-target, per-uname, per-compiler, per-cfg and per-arch basis:
+
+    $ acr cfg:coverage -t
+    dev.cfg  cfg:coverage  comment:"coverage measurement"
+      dev.builddir  builddir:dflt.coverage-x86_64  comment:""
+
+      dev.tool_opt  tool_opt:181  opt_type:CC_OPTS    opt:-ftest-coverage    target:""  uname:""  compiler:g++  cfg:coverage  arch:""  comment:""
+      dev.tool_opt  tool_opt:182  opt_type:CC_OPTS    opt:-fprofile-arcs     target:""  uname:""  compiler:g++  cfg:coverage  arch:""  comment:""
+      dev.tool_opt  tool_opt:183  opt_type:CC_OPTS    opt:"-fprofile-dir=."  target:""  uname:""  compiler:g++  cfg:coverage  arch:""  comment:""
+      dev.tool_opt  tool_opt:184  opt_type:LINK_OPTS  opt:--coverage         target:""  uname:""  compiler:g++  cfg:coverage  arch:""  comment:""
+      dev.tool_opt  tool_opt:185  opt_type:CC_OPTS    opt:-D_COVERAGE        target:""  uname:""  compiler:g++  cfg:coverage  arch:""  comment:""
+      report.acr  n_select:7  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+  
+### Disassembling
+
+Abt includes a convenient disassembly mode, which can be invoked with `-disas`.
+The parameter is a regular expression that's matched against function names in the 
+compiler's assembler output.
+
+    $ abt abc -disas Main | head -15
+    abt.config  cfg:release  uname:Linux  arch:x86_64  compiler:g++  cache:none
+    abt.outofdate  pch:0  src:0  lib:0  exe:0
+    0000000000000000 <abc::Main()>:
+       0:	53                   	push   %rbx
+       1:	be 00 00 00 00       	mov    $0x0,%esi
+       6:	48 83 ec 10          	sub    $0x10,%rsp
+       a:	8b 1d 00 00 00 00    	mov    0x0(%rip),%ebx        # 10 <abc::Main()+0x10>
+      10:	48 89 e7             	mov    %rsp,%rdi
+      13:	48 c7 04 24 00 00 00 	movq   $0x0,(%rsp)
+      1a:	00 
+      1b:	c7 44 24 08 0d 00 00 	movl   $0xd,0x8(%rsp)
+      22:	00 
+      23:	e8 00 00 00 00       	callq  28 <abc::Main()+0x28>
+      28:	89 da                	mov    %ebx,%edx
+      2a:	b9 01 00 00 00       	mov    $0x1,%ecx
+
+### Specifying a different compiler
+
+The `-compiler` option tells `abt` to use a compiler other than the default. In addition
+to `-arch`, `-uname`, and `-cfg` option, this mostly affects the choice of options from the `tool_opt` 
+table. For each of the files it compiles, `abt` scans the `tool_opt` table in full, and includes
+any options that apply. There is a handful of custom lines of code in abt for dealing specifically
+with `g++` and `clang`, and other cases that cannot be handled by `tool_opt` alone.
+
+### The -ood option
+
+You can find out which files are out-of-date (I don't really see how this could be useful,
+but the option is there) with `-ood`:
+
+    $ touch include/abc.h
+    $ abt -ood abc -build:N
+    dev.target  target:abc
+    dev.srcfile  srcfile:cpp/abc/abc.cpp
+    abt.config  cfg:release  uname:Linux  arch:x86_64  compiler:g++  cache:none
+    abt.outofdate  pch:0  src:1  lib:0  exe:1
+    report.abt  n_target:4  time:00:00:00.031850008  n_warn:0  n_err:0  n_install:0
+
+### The -listincl option
+
+To see the full list of include files, as discovered by abt, for a given target, use
+
+    $ abt -listincl abc 
+    dev.Include  include:cpp/abc/abc.cpp:include/algo.h  sys:N  comment:""
+    dev.Include  include:cpp/abc/abc.cpp:include/abc.h  sys:N  comment:""
+    dev.Include  include:cpp/gen/abc_gen.cpp:include/algo.h  sys:N  comment:""
+    ...
+
+### Debugging the build
+
+Just like with other programs, the verbosity level `-v` can be used to trace the execution.
+When run with `-v`, abt will show the commands that execute. Otherwise, only the commands that
+either fail or produce output are echoed to the screen. By default, they are hidden to keep output
+clean.
+
+### Bootstrapping
+
+With the `-printcmd` option, abt doesn't actually run the commands but simply prints them to 
+stdout. This can be used to generate bootstrap scripts, such as `bin/abt-bootstrap`. 
 
 ## amc - Algo Model Compiler
+
+### Introduction
 
 AMC is an extensible generator of source code from ssimfiles.
 
@@ -2328,6 +2490,9 @@ is generated, the tools become universal: any tool works with almost any other t
     'acr ns:abt -t' shows the definitions of all abt structures
     'acr ns:acr -t' shows the definitions of its own structures
 
+    'mdbg acr' debugs acr
+    'mdbg mdbg' debugs the debugger
+    
 And of course, the point of the tools is not to compile themselves; 
 The idea is that this repo is extended with new commands and tools specific to some project,
 maintaining the same directory structure and basic conventions.
@@ -2422,18 +2587,31 @@ Create new header:
 
 ## Coding Style
 
+OpenACR is written with a certain uniform coding style. This section 
+explains the reasoning behind it. The style is maintained by various tools; 
+first of all, amc generates all code in this style; Second, `indent-recent`
+and `cpp-indent` automatically indent source files using emacs 4-space indentation
+mode.
+
 ### Spaces, Indentation
 
-Use spaces, use 4 space indent. We use cpp-indent to normalize all source files,
+Use spaces, use 4 space indent. We use `cpp-indent` to normalize all source files,
 so this policy is enforced automatically.
 
 ### Variable Names
 
-Variable names use lower_under style.
+Variable names use `lower_under` style.
+
+### Member Functions
+
+There are no member functions. Functions describe actual blocks of instructions for 
+CPU to execute; Structs don't even exist -- they are rules for calculating field
+offsets and thereby structuring RAM. We maintain this separation.
 
 ### Predicate Functions
 
-Functions that return bool end in Q: VisibleQ, ExistsQ, etc. Q means Query or Question mark.
+Functions that return bool end in Q: VisibleQ, ExistsQ, etc. 
+Q means Query or Question mark. This is the Mathematica convention.
 
 ### Curly Braces
 
@@ -2493,7 +2671,12 @@ diffs just because someone needed to debug a piece of code.
 ### Keep code separate from data
 
 Structure space with ssim files and amc.
-Strucutre time with plain C++.
+Structure time with plain C++.
+
+### No Code In Headers
+
+`.h` contain declarations and structure definitions only, never any code.
+All inline code codes into `inl.h` headers (after all, it must go somewhere).
 
 ### Use query-command separation
 
@@ -2501,14 +2684,16 @@ Functions can be divided into two types: queries, which are read-only functions 
 a value; and commands, which are procedures that perform some in-memory update.
 Queries are a lot easier to write and debug, since there is no post-condition to prove.
 Keep as much code as possible in query form, and keep it separate from command-type functions.
-This will reduce debugging time.
+This will reduce debugging time. Bertrand Meyer writes eloquently about this.
 
 ### Keep it single-threaded
 
 We can easily task thousands of cores with independent tasks, and they will all execute at once.
 But let's not task a human with trying to understand two tasks simltaneously. Keep programs
 single-threaded, and as deterministic (independent of wall clock) as possible,
-and your debug times will be finite.
+and your debug times will be finite. Hoare's
+[Communicating Sequential Processes](https://www.cs.cmu.edu/~crary/819-f09/Hoare78.pdf) should
+serve as an inspiration.
 
 ### Use Single Entry, Single Exit (SESE) style
 
@@ -2521,7 +2706,8 @@ SESE is also a normal form, i.e. a solution that two developers can agree on wit
 so it is scalable.
 Finally, SESE dictates that code of the program is simply a text representation of its control
 flow graph. All arcs in the graph are made visible, and this facilitates reasoning about program
-correctness.
+correctness. Bertrand Meyer is a big proponent of this style.
+See [Wiki Entry](https://en.wikipedia.org/wiki/Single-entry_single-exit)
 
 ### Single File Static Assignment
 
@@ -2530,7 +2716,8 @@ where each variable is assigned to. This is preferable but not required.
 
 All assignments to a given variable must be in the same source file.
 This is necessary for reasoning about correctness, debugging, and enforcing post-conditions
-of given variable assignment.
+of given variable assignment. See Andrew Appel's
+[SSA Is Functional Programming](https://www.cs.princeton.edu/~appel/papers/ssafun.pdf)
 
 ### Document all non-static functions
 
@@ -2544,15 +2731,15 @@ Given a sufficiently good reason, any rule can be replaced. But let's try to kee
 whole by following these rules whenever possible.
 
 
-## amc_vis
+## amc_vis - Visualize Ctype Dependencies and Access Paths
 
-amc_vis is a tool for visualization access paths between tables.
-The parameter is a ctype regex, and whatever ctypes are matched by the regex will be shown
+The single parameter to `amc_vis` is a ctype regex, 
+and whatever ctypes are matched by the regex will be shown
 via ASCII art.
 
-Visualize access paths between two records
+Here is an example:
 
-    $ amc_vis amc.FCtype\|amc.FField -xref:N
+    $ amc_vis amc.FCtype\|amc.FField
 
 
                   / amc.FCtype
@@ -2581,17 +2768,31 @@ amc_vis can also output an dot file, which can then be viewed in a browser:
 
 ## amc_gc: AMC garbage collector
 
-amc_gc is a tool for removing unused records from the dmmeta database.
+`amc_gc` is a tool for removing unused records from the dmmeta database.
 
-amc_gc takes a target regex and an acr query as an argument. It finds all records
+`amc_gc` takes a target regex and an acr query as an argument. It finds all records
 matching the query, then it tries to remove them one by one, and rebuilds the targets
 (using abt) in a sandbox dir. If build succeeds with one of the records deleted
 it means it wasn't needed in the first place.
 
-Eliminate all ctypes in amc without which amc can be built
+Let's illustrate `amc_gc` by creating a new program and inputting a table. 
 
-    $ amc_gc -target:amc -key:ctype:amc.%
+    $ acr_ed -create -target abc -write
+    $ acr_ed -create -finput -target abc -ssimfile dmmeta.ns -write
 
+Since the `ns` table is unused, `abc` will compile even if we remove it. This is the 
+case that `amc_gc` detects, and can remove the table:
+
+    $ amc_gc -target:abc -key:ctype:abc.%
+    amc_gc.begin  tot_rec:2  n_cppline:259802  watch_cmd:"watch head -50 temp/amc_gc.build"
+    amc_gc.analyze  query:dmmeta.ctype:abc.FDb  eliminate:N  rec_no:1  tot_rec:2  n_del:0  n_cppline:259802  n_cppline_del:0
+    amc_gc.analyze  query:dmmeta.ctype:abc.FNs  eliminate:Y  rec_no:2  tot_rec:2  n_del:1  n_cppline:259341  n_cppline_del:461
+    report.amc_gc  key:ctype:abc.%  n_match:2  n_del:1  n_cppline:259341  n_cppline_del:461
+
+And indeed, `amc_gc` successfully garbage collects the table.
+Let's finish by deleting the unused target
+
+    $ acr_ed -del -target abc -write
 
 ## MariaDB integration
 
@@ -2604,29 +2805,29 @@ it via a socket.
 Here are some useful commands:
 Start a local MariaDB server:
 
-    acr_my -start dmmeta
+    $ acr_my -start dmmeta
 
 Connect to the local server on the command line:
 
-    acr_my -shell
+    $ acr_my -shell
 
 From here, you can issue SQL commands:
 
-    select count(*) from dmmeta.field where arg ='u8';
+    > select count(*) from dmmeta.field where arg ='u8';
 
 When you exit from the shell, the server keeps running.
 You can stop the server and save changes:
 
-    acr_my -stop
+    $ acr_my -stop
 
 Or stop the server, discarding changes:
 
-    acr_my -abort
+    $ acr_my -abort
 
 You can also use acr -my as a shortcut for acr_my -start -shell -stop:
 
-    echo 'update thash set unique='N' where field like "acr.%"' | acr -my -fldfunc dmmeta.%
-    amc
+    $ echo 'update thash set unique='N' where field like "acr.%"' | acr -my -fldfunc dmmeta.%
+    $ amc
 
 The table dmmeta.sqltype allows ssim2mysql to map ctypes to SQL types so that
 round tripping can occur without loss.
@@ -2784,6 +2985,121 @@ We can create a normalization check with
 If a test fails, the easiest way to debug it is to re-run `atf_unit` with 
 `-debug` flag. It will use `mdbg` and automatically set a breakpoint at the first 
 line of the test in question.
+
+## Mdbg - My debugger
+
+This is a wrapper for automating the invocation of `gdb` from command line.
+
+Mdbg uses abt to build a debug version of the debug target. By default,
+this means `debug`, but the option can be customized with `-cfg <cfg>`, for instance
+specifying `-cfg profile`.
+
+Then, mdbg prepares a debugging environment by writing two script files: one
+for the debugger, `temp/mdbg.gdb`, and one for the editor, `temp/mdbg.el`.
+The default, and really the most supported editor, is emacs, although specifying `-tui`
+will switch to the gdb's Text User Interface mode instead.
+
+Mdbg then runs the debug target in the debug environment.
+Let's proceed as usual, with an example:
+
+    $ acr_ed -create -target abc -write
+    ...
+    $ mdbg abc
+    
+Mdbg will print a reminder of the shortcuts it has equipped the target editor with...
+
+    mdbg.note  Debug mdbg::_db.script saved to temp/mdbg.el
+    mdbg.note  Invoking gdb under emacs. Make sure to link ~/.emacs -> conf/emacs.el, ~/elisp -> conf/elisp
+    mdbg.note  Standard shortcuts:
+    mdbg.note               F7  recompile and restart executable
+    mdbg.note              F11  step into
+    mdbg.note        Shift-F11  step out
+    mdbg.note              F10  step over
+    mdbg.note         Ctrl-F10  run to cursor
+    mdbg.note              F12  restore windows
+    mdbg.note              F9   set breakpoint
+    mdbg.note         Ctrl-F9   clear breakpoint
+    mdbg.note              F6   other window
+    mdbg.note    Alt-Up Arrow   Go up the call stack
+    mdbg.note  Alt-Down Arrow   Go down the call stack
+
+and run the target program under the debugger, stopping at Main.
+
+      // --- abc...main
+      int main(int argc, char **argv) {
+          try {
+    B =>      algo_lib::FDb_Init();
+              abc::FDb_Init();
+              algo_lib::_db.argc = argc;
+      ...
+
+The `-manywin` option enables emacs' gdb's `gud-many-windows` mode, which brings up
+a debugger layout reminiscent of modern IDEs, with locals, breakpoints, threads subwindows, etc.
+Additionally specifying the `-disas` option enables the disassembly window.
+
+### Specifying arguments
+
+The first argument to mdbg is the debug target name. Mdbg must know it so it can build it.
+To pass arguments to the debug target, specify them in a single string like this:
+ 
+    $ mdbg abc " -in:filename"
+
+Always include a space in front of the arguments: since Bash will strip the quotes, mdbg
+needs to know that the specified option is not an mdbg option but in fact an option for the debug
+target. To avoid any ambiguity, you could write `-args:-in:filename`, but it seems less 
+convenient than passing the arguments directly.
+
+### The -tui option
+
+To use gdb's text UI, use `mdbg -tui`
+
+### Specifying Breakpoints
+
+The default breakpoint is Main, but others can be specified, including gdb's conditional breakpoints.
+For instance, in the example above, we might invoke mdbg with a custom breakpoint.
+
+    $ mdbg abc -b algo::Prlog 
+    ...
+
+      void algo::Prlog(int fd, cstring &str, int start, bool eol) {
+          try {
+    B =>      if (eol) {
+                  str << '\n';
+              }
+    
+Or, if we're interested only in output that goes to stderr,
+
+    $ mdbg abc -b "algo::Prlog if fd==2"
+    
+Multiple breakpoints can be specified by comma-separating them. For instance `-b "A, B if c"`, etc.
+To execute a command at a breakpoint, use `-bcmd` option:
+
+    $ mdbg abc -b "algo::Prlog if fd==2" -bcmd "print str.ch_n"
+
+These options preconfigure gdb via the `mdbg.gdb` file so that 
+there is less typing later.
+
+### Edit-and-retry
+
+Mdbg sets up the standard shortcut F7 for edit-and-retry: the target is rebuilt
+and reinvoked with the same options as initially. This can save a lot of set up, because
+the gdb instance is not restarted; only the debug target.
+
+### The -follow_child otption
+
+This controlls gdb's `follow child` so that the debugger traces the child process instead
+of the parent. By default, only the parent process is debugged.
+This option is really most useful for debugging `fork()` calls; With fork/exec, it makes
+the most sense to isolate the child process command line and debug it directly without
+messing with the parent first.
+
+### Exceptions
+
+By default, gdb is configured to catch exceptions. To ignore them instead, specify `-catchthrow:N`
+
+### Gdb Python Interface
+
+To enable gdb python scriptability, specify `-py` option. 
 
 ## Scriptlets
 

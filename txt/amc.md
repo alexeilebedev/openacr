@@ -1,5 +1,7 @@
 ## amc - Algo Model Compiler
 
+### Introduction
+
 AMC is an extensible generator of source code from ssimfiles.
 
 AMC reads ssim tables, creates C++ in-memory database code as determined by these tables, 

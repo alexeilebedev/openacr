@@ -996,7 +996,7 @@ int amc_gc::abt_Exec(amc_gc::Check& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:abt.Argv
 int amc_gc::abt_Execv(amc_gc::Check& parent) {
-    char *argv[27+2]; // start of first arg (future pointer)
+    char *argv[26+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -1010,10 +1010,10 @@ int amc_gc::abt_Execv(amc_gc::Check& parent) {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
-    if (parent.abt_cmd.in_dir != "data") {
+    if (parent.abt_cmd.in != "data") {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-in_dir:";
-        cstring_Print(parent.abt_cmd.in_dir, temp);
+        temp << "-in:";
+        cstring_Print(parent.abt_cmd.in, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
@@ -1077,13 +1077,6 @@ int amc_gc::abt_Execv(amc_gc::Check& parent) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-build:";
         bool_Print(parent.abt_cmd.build, temp);
-        ch_Alloc(temp) = 0;// NUL term for this arg
-    }
-
-    if (parent.abt_cmd.line != 0) {
-        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-line:";
-        i32_Print(parent.abt_cmd.line, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 

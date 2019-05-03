@@ -9,29 +9,29 @@ it via a socket.
 Here are some useful commands:
 Start a local MariaDB server:
 
-    acr_my -start dmmeta
+    $ acr_my -start dmmeta
 
 Connect to the local server on the command line:
 
-    acr_my -shell
+    $ acr_my -shell
 
 From here, you can issue SQL commands:
 
-    select count(*) from dmmeta.field where arg ='u8';
+    > select count(*) from dmmeta.field where arg ='u8';
 
 When you exit from the shell, the server keeps running.
 You can stop the server and save changes:
 
-    acr_my -stop
+    $ acr_my -stop
 
 Or stop the server, discarding changes:
 
-    acr_my -abort
+    $ acr_my -abort
 
 You can also use acr -my as a shortcut for acr_my -start -shell -stop:
 
-    echo 'update thash set unique='N' where field like "acr.%"' | acr -my -fldfunc dmmeta.%
-    amc
+    $ echo 'update thash set unique='N' where field like "acr.%"' | acr -my -fldfunc dmmeta.%
+    $ amc
 
 The table dmmeta.sqltype allows ssim2mysql to map ctypes to SQL types so that
 round tripping can occur without loss.

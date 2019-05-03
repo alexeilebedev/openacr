@@ -43,6 +43,7 @@ in alphabetical order by first name.
 * Hayk Mkrtchyan
 * Jeffrey Wang
 * Jeremy Xue
+* John Brzezniak
 * Jonathan Joshua
 * Luke Huang
 * Shreejith Billenahallilokegowda

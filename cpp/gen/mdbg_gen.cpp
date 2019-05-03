@@ -29,7 +29,7 @@ mdbg::FDb       mdbg::_db;        // dependency found via dev.targdep
 
 namespace mdbg {
 const char *mdbg_help =
-"mdbg: Module debugger\n"
+"mdbg: My debugger\n"
 "Usage: mdbg [options]\n"
 "    [target]       string  Executable name\n"
 "    [args]         string  Additional module args\n"
