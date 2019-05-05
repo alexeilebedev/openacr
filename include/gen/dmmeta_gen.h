@@ -226,7 +226,6 @@ extern const char *  dmmeta_Ns_ns_lib_json;     // lib_json      fconst:dmmeta.N
 extern const char *  dmmeta_Ns_ns_lib_mysql;    // lib_mysql     fconst:dmmeta.Ns.ns/lib_mysql
 extern const char *  dmmeta_Ns_ns_lib_prot;     // lib_prot      fconst:dmmeta.Ns.ns/lib_prot
 extern const char *  dmmeta_Ns_ns_lib_sql;      // lib_sql       fconst:dmmeta.Ns.ns/lib_sql
-extern const char *  dmmeta_Ns_ns_lz4_lib;      // lz4_lib       fconst:dmmeta.Ns.ns/lz4_lib
 extern const char *  dmmeta_Ns_ns_mdbg;         // mdbg          fconst:dmmeta.Ns.ns/mdbg
 extern const char *  dmmeta_Ns_ns_mysql2ssim;   // mysql2ssim    fconst:dmmeta.Ns.ns/mysql2ssim
 extern const char *  dmmeta_Ns_ns_report;       // report        fconst:dmmeta.Ns.ns/report

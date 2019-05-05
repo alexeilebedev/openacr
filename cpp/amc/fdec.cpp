@@ -89,11 +89,11 @@ void amc::tfunc_Dec_qSetDouble() {
     amc::FFunc& qsetdbl = amc::CreateCurFunc();
     qsetdbl.inl = true;
     Ins(&R, qsetdbl.comment, "Set value of field $name.");
-    Ins(&R, qsetdbl.comment, "Make sure truncation of a near-integer value does not occur.");
+    Ins(&R, qsetdbl.comment, "The value is rounded to the nearest integer.");
+    Ins(&R, qsetdbl.comment, "This ensures that truncation of a near-integer value does not occur.");
     Ins(&R, qsetdbl.comment, "Example: 1.3 cannot be represented exactly as a double, the actual");
     Ins(&R, qsetdbl.comment, "stored value will be 1.29999999. when we apply C truncation,");
     Ins(&R, qsetdbl.comment, "we want to end up with 1.3, not 1.2.");
-    Ins(&R, qsetdbl.comment, "If the new value overflows: do nothing in release, core dump in debug.");
     Ins(&R, qsetdbl.ret  , "void",false);
     Ins(&R, qsetdbl.proto, "$name_qSetDouble($Parent, double val)",false);
     Ins(&R, qsetdbl.body, "double intval = val * $fromdbl + (val > 0 ? 0.5 : -0.5);");

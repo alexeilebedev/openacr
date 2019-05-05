@@ -1863,11 +1863,11 @@ inline algo::I32Dec1::I32Dec1() {
 
 // --- algo.I32Dec1.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::I32Dec1& parent, double val) {
     double intval = val * 10 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -1922,11 +1922,11 @@ inline algo::I32Dec2::I32Dec2() {
 
 // --- algo.I32Dec2.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::I32Dec2& parent, double val) {
     double intval = val * 100 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -1981,11 +1981,11 @@ inline algo::I32Dec3::I32Dec3() {
 
 // --- algo.I32Dec3.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::I32Dec3& parent, double val) {
     double intval = val * 1000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -2040,11 +2040,11 @@ inline algo::I32Dec4::I32Dec4() {
 
 // --- algo.I32Dec4.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::I32Dec4& parent, double val) {
     double intval = val * 10000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -2099,11 +2099,11 @@ inline algo::I32Dec5::I32Dec5() {
 
 // --- algo.I32Dec5.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::I32Dec5& parent, double val) {
     double intval = val * 100000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -2158,11 +2158,11 @@ inline algo::I64Dec1::I64Dec1() {
 
 // --- algo.I64Dec1.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::I64Dec1& parent, double val) {
     double intval = val * 10 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -2217,11 +2217,11 @@ inline algo::I64Dec10::I64Dec10() {
 
 // --- algo.I64Dec10.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::I64Dec10& parent, double val) {
     double intval = val * 10000000000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -2276,11 +2276,11 @@ inline algo::I64Dec2::I64Dec2() {
 
 // --- algo.I64Dec2.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::I64Dec2& parent, double val) {
     double intval = val * 100 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -2335,11 +2335,11 @@ inline algo::I64Dec3::I64Dec3() {
 
 // --- algo.I64Dec3.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::I64Dec3& parent, double val) {
     double intval = val * 1000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -2394,11 +2394,11 @@ inline algo::I64Dec4::I64Dec4() {
 
 // --- algo.I64Dec4.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::I64Dec4& parent, double val) {
     double intval = val * 10000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -2453,11 +2453,11 @@ inline algo::I64Dec5::I64Dec5() {
 
 // --- algo.I64Dec5.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::I64Dec5& parent, double val) {
     double intval = val * 100000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -2512,11 +2512,11 @@ inline algo::I64Dec6::I64Dec6() {
 
 // --- algo.I64Dec6.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::I64Dec6& parent, double val) {
     double intval = val * 1000000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -2571,11 +2571,11 @@ inline algo::I64Dec7::I64Dec7() {
 
 // --- algo.I64Dec7.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::I64Dec7& parent, double val) {
     double intval = val * 10000000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -2630,11 +2630,11 @@ inline algo::I64Dec8::I64Dec8() {
 
 // --- algo.I64Dec8.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::I64Dec8& parent, double val) {
     double intval = val * 100000000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -2689,11 +2689,11 @@ inline algo::I64Dec9::I64Dec9() {
 
 // --- algo.I64Dec9.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::I64Dec9& parent, double val) {
     double intval = val * 1000000000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -14176,11 +14176,11 @@ inline algo::U16Dec2::U16Dec2() {
 
 // --- algo.U16Dec2.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::U16Dec2& parent, double val) {
     double intval = val * 100 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -14235,11 +14235,11 @@ inline algo::U32Dec1::U32Dec1() {
 
 // --- algo.U32Dec1.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::U32Dec1& parent, double val) {
     double intval = val * 10 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -14294,11 +14294,11 @@ inline algo::U32Dec2::U32Dec2() {
 
 // --- algo.U32Dec2.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::U32Dec2& parent, double val) {
     double intval = val * 100 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -14353,11 +14353,11 @@ inline algo::U32Dec3::U32Dec3() {
 
 // --- algo.U32Dec3.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::U32Dec3& parent, double val) {
     double intval = val * 1000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -14412,11 +14412,11 @@ inline algo::U32Dec4::U32Dec4() {
 
 // --- algo.U32Dec4.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::U32Dec4& parent, double val) {
     double intval = val * 10000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -14471,11 +14471,11 @@ inline algo::U32Dec5::U32Dec5() {
 
 // --- algo.U32Dec5.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::U32Dec5& parent, double val) {
     double intval = val * 100000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -14644,11 +14644,11 @@ inline algo::U64Dec10::U64Dec10() {
 
 // --- algo.U64Dec10.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::U64Dec10& parent, double val) {
     double intval = val * 10000000000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -14703,11 +14703,11 @@ inline algo::U64Dec2::U64Dec2() {
 
 // --- algo.U64Dec2.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::U64Dec2& parent, double val) {
     double intval = val * 100 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -14762,11 +14762,11 @@ inline algo::U64Dec4::U64Dec4() {
 
 // --- algo.U64Dec4.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::U64Dec4& parent, double val) {
     double intval = val * 10000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -14821,11 +14821,11 @@ inline algo::U64Dec5::U64Dec5() {
 
 // --- algo.U64Dec5.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::U64Dec5& parent, double val) {
     double intval = val * 100000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -14880,11 +14880,11 @@ inline algo::U64Dec6::U64Dec6() {
 
 // --- algo.U64Dec6.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::U64Dec6& parent, double val) {
     double intval = val * 1000000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -14939,11 +14939,11 @@ inline algo::U64Dec7::U64Dec7() {
 
 // --- algo.U64Dec7.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::U64Dec7& parent, double val) {
     double intval = val * 10000000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -14998,11 +14998,11 @@ inline algo::U64Dec8::U64Dec8() {
 
 // --- algo.U64Dec8.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::U64Dec8& parent, double val) {
     double intval = val * 100000000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
@@ -15057,11 +15057,11 @@ inline algo::U64Dec9::U64Dec9() {
 
 // --- algo.U64Dec9.value.qSetDouble
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 inline void algo::value_qSetDouble(algo::U64Dec9& parent, double val) {
     double intval = val * 1000000000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.

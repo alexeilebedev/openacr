@@ -1,10 +1,10 @@
 ## Coding Style
 
 OpenACR is written with a certain uniform coding style. This section 
-explains the reasoning behind it. The style is maintained by various tools; 
-first of all, amc generates all code in this style; Second, `indent-recent`
-and `cpp-indent` automatically indent source files using emacs 4-space indentation
-mode.
+explains the reasoning behind it. The style is maintained by various tools.
+First of all, amc generates all code in this style; 
+Second, `indent-recent` and `cpp-indent` automatically indent 
+source files, and should be used before any commit.
 
 ### Spaces, Indentation
 

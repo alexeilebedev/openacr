@@ -8,15 +8,7 @@ By default, `acr_ed` spits out an executable script to stdout. With
 `-write`, the script is executed (this has the same effect as piping output
 to sh)
 
-The main commands in acr_ed are:
-
 ~~~
--ctype:X -create : Create new ctype. Suboptions: -ssimfile, -cbase
--ctype:X -rename:Y: Rename ctype X to Y
--ctype:X -create -subset:Y -pooltype:Z -indexed: Create a new indexed in-memory table
-
--ssimfile:X -create : Create new ssimfile. Suboptions: -subset, -subset2, -separator, -ctype
--ssimfile:X -rename:Y: Rename ssimfile (to fully rename an ssimfile, first rename the ssimfile, then the ctype)
 
 -field:X -create: Create field or access path.
   Suboptions: -comment, -arg, -dflt, -reftype, -before, -via, -xref, -fstep, -substr, -anon, -bigend
@@ -26,59 +18,150 @@ The main commands in acr_ed are:
     given a z.
 -finput -create  -ssimfile:X -target:Y: Add ssimfile as finput for a target. Suboptions: -indexed
 
--target:X -create: Create new target. Issues necessary git commands as well.
--target:X -rename:Y: Rename target. Issues necessary git commands as well.
--target:X -del: Delete a target
-
--srcfile:X -create -target:Y: Create new source file
--srcfile:X -rename:Y: Rename source file (automatically updates headers)
--srcfile:X -del: Delete source file
 ~~~
 
-Create new target:
+### Targets
 
-       acr_ed -create -target xyz
+#### Create Target
 
-Delete target:
+    $ acr_ed -create -target:X
+    ...
 
-       acr_ed -del -target xyz
+#### Rename Target
 
-Create new ssimfile.
+    $ acr_ed -target:X -rename:Y
+    ...
 
-	 acr_ed -ssimfile dmmeta.nsref -create
+#### Delete Target
 
-Create new ssimfile as a subset of 2 other ctypes, using separator for the key
+    $ acr_ed -del -target:X
+    ...
 
-	 acr_ed -create -ssimfile dmmeta.nsref -subset dmmeta.Ns -subset2 dmmeta.Reftype -separator /
+### Ssimfiles
 
-Create new table for in-memory database (manual).
-	 Parameter -reftype Thash is guessed based on field name
-	 Parameter -hashfld is guessed based on primary key
+#### Create Ssimfile
 
-	 acr_ed -create -ctype amc.FCtype -cbase dmmeta.Ctype
-	 acr_ed -create -field amc.FDb.ctype -arg amc.FCtype  -reftype Lary
-	 acr_ed -create -field amc.FDb.ind_ctype -arg amc.FCtype  -xref
+    $ acr_ed -create -ssimfile ns.x 
+    ...
 
-Create new table for in-memory database, based on an ssimfile
+#### Create Ssimfile as a Subset of Another Ssimfile
 
-	 acr_ed -create -finput -target amc -ssimfile dmmeta.ctype
+    $ acr_ed -create -ssimfile ns.x -subset ns.Y
+    ...
 
-Create new table for in-memory database, based on an ssimfile, add a hash index
+#### Create Ssimfile as a Cross Product of 2 Other Ssimfiles
 
-	 acr_ed -create -finput -target amc -ssimfile dmmeta.ctype -indexed
+    $ acr_ed -create -ssimfile ns.x -subset ns.Y -subset2 ns.Z -separator .
+    ...
 
-Add a pointer from ssimfile -> ctype for target acr_ed
-Parameters -reftype, -via are guessed.
+Note that ssimfiles user lowercase names but ctypes use uppercase names.
+Options `-subset`, `-subset2` take ctype names.
 
-Conditional cross-reference
+#### Rename Ssimfile
 
-	 acr_ed -create -field acr_ed.FSsimfile.p_ctype -arg acr_ed.FCtype -xref -inscond false
+    $ acr_ed -ssimfile ns.x -rename ns2.y
+    ...
 
-Create new source file:
+#### Delete Ssimfile
 
-       acr_ed -create -srcfile cpp/amc/blah.cpp -write
+    $ acr_ed -del -ssimfile ns.x
+    ...
 
-Create new header:
+### Source Files
 
-       acr_ed -create -srcfile include/amc/blah.h -target amc -write
+#### Create Source File
+When creating a source file, `acr_ed` automatically which target
+this file will belong to based on the the other files in the same directory.
+If there is ambiguity, specify `-target ...` argument
+Headers are considered source files.
 
+    $ acr_ed -create -srcfile cpp/...path.cpp
+    ...
+    $ acr_ed -create -srcfile include/path.h
+
+#### Rename Source File
+
+    $ acr_ed -srcfile cpp/path.cpp -rename cpp/path2.cpp
+    ...
+
+#### Delete Source File
+
+    $ acr_ed -del -srcfile cpp/path.cpp
+    ...
+
+### Ctypes
+
+#### Create A Ctype
+
+    $ acr_ed -create -ctype ns.Name
+    ...
+
+#### Rename A Ctype
+
+    $ acr_ed -ctype ns.Name -rename ns2.Name2
+    ...
+
+#### Delete A Ctype
+
+    $ acr_ed -del -ctype ns.Name
+    ...
+    
+### Add An Input To Program
+
+    $ acr_ed -create -finput -target ns -ssimfile ns2.name
+    acr_ed.create_finput  target:abc  ssimfile:dev.gitfile
+    bin/acr  '' -insert:Y -check:Y -write:Y -t:Y -rowid:Y << EOF
+    dmmeta.ctype  ctype:abc.FGitfile  comment:""
+    dmmeta.field  field:abc.FGitfile.base  arg:dev.Gitfile  reftype:Base  dflt:""  comment:""
+    dmmeta.field  field:abc.FDb.gitfile  arg:abc.FGitfile  reftype:Lary  dflt:""  comment:""
+    dmmeta.finput  field:abc.FDb.gitfile  extrn:N  update:N  strict:Y  comment:""
+    #  Proposed change
+    #
+    #
+    #     / abc.FDb
+    #     |
+    #     |Lary gitfile-->/ abc.FGitfile
+    #     -               |
+    #                     |
+    #                     -
+    EOF
+    ...
+    
+With `-indexed` option, a hash index is thrown in. This is pretty common.
+
+### Create A New In-Memory Table
+
+To create a new table in a program, use `-create -ctype ... -subset ... -pooltype`.
+This adds a global pool of a given type (typically `Tpool` or `Lary`).
+To throw in a hash index, specify `-indexed`
+
+    $ acr_ed -create -ctype abc.FTable -subset u32 -pooltype Tpool -indexed
+    bin/acr  '' -insert:Y -check:Y -write:Y -t:Y -rowid:Y << EOF
+    dmmeta.ctype  ctype:abc.FTable  comment:""
+    dmmeta.field  field:abc.FTable.table  arg:u32  reftype:Val  dflt:""  comment:""
+    dmmeta.field  field:abc.FDb.table  arg:abc.FTable  reftype:Tpool  dflt:""  comment:""
+    dmmeta.field  field:abc.FDb.ind_table  arg:abc.FTable  reftype:Thash  dflt:""  comment:""
+    dmmeta.thash  field:abc.FDb.ind_table  hashfld:abc.FTable.table  unique:Y  comment:""
+    dmmeta.xref  field:abc.FDb.ind_table  inscond:true  via:""
+    EOF
+
+### Create An Index
+
+#### Create A Hash Table
+
+    $ acr_ed -create -field abc.FDb.ind_table
+    $ acr_ed -create -field abc.FDb.ind_table -hashfld <fieldname>
+
+#### Create A Binary Heap
+
+    $ acr_ed -create -field abc.FDb.bh_table
+    $ acr_ed -create -field abc.FDb.bh_table -sortfld <fieldname>
+
+#### Create An AVL Tree
+
+    $ acr_ed -create -field abc.FDb.tr_table
+    $ acr_ed -create -field abc.FDb.tr_table -sortfld <fieldname>
+
+### Conditional X-Ref
+
+    $ acr_ed -create -field abc.FDb.ind_table -inscond false

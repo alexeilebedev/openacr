@@ -279,7 +279,6 @@ dev.gitfile  gitfile:cpp/gen/lib_json_gen.cpp
 dev.gitfile  gitfile:cpp/gen/lib_mysql_gen.cpp
 dev.gitfile  gitfile:cpp/gen/lib_prot_gen.cpp
 dev.gitfile  gitfile:cpp/gen/lib_sql_gen.cpp
-dev.gitfile  gitfile:cpp/gen/lz4_lib_gen.cpp
 dev.gitfile  gitfile:cpp/gen/mdbg_gen.cpp
 dev.gitfile  gitfile:cpp/gen/mysql2ssim_gen.cpp
 dev.gitfile  gitfile:cpp/gen/report_gen.cpp
@@ -469,7 +468,6 @@ dev.gitfile  gitfile:data/dmmeta/xref.ssim
 dev.gitfile  gitfile:diff/mysql1.diff
 dev.gitfile  gitfile:diff/odbc1.diff
 dev.gitfile  gitfile:extern/.empty
-dev.gitfile  gitfile:extern/lz4/lz4.c
 dev.gitfile  gitfile:include/abt.h
 dev.gitfile  gitfile:include/acr.h
 dev.gitfile  gitfile:include/acr_ed.h
@@ -561,8 +559,6 @@ dev.gitfile  gitfile:include/gen/lib_prot_gen.h
 dev.gitfile  gitfile:include/gen/lib_prot_gen.inl.h
 dev.gitfile  gitfile:include/gen/lib_sql_gen.h
 dev.gitfile  gitfile:include/gen/lib_sql_gen.inl.h
-dev.gitfile  gitfile:include/gen/lz4_lib_gen.h
-dev.gitfile  gitfile:include/gen/lz4_lib_gen.inl.h
 dev.gitfile  gitfile:include/gen/mdbg_gen.h
 dev.gitfile  gitfile:include/gen/mdbg_gen.inl.h
 dev.gitfile  gitfile:include/gen/mysql2ssim_gen.h
@@ -589,7 +585,6 @@ dev.gitfile  gitfile:include/lib/lib_json.inl.h
 dev.gitfile  gitfile:include/lib/lib_mysql.h
 dev.gitfile  gitfile:include/lib_git.h
 dev.gitfile  gitfile:include/lib_sql.h
-dev.gitfile  gitfile:include/lz4.h
 dev.gitfile  gitfile:include/sha.h
 dev.gitfile  gitfile:include/src_func.h
 dev.gitfile  gitfile:include/strconv.h
@@ -604,6 +599,7 @@ dev.gitfile  gitfile:txt/acr.md
 dev.gitfile  gitfile:txt/acr_ed.md
 dev.gitfile  gitfile:txt/acr_in.md
 dev.gitfile  gitfile:txt/amc-commit-log.txt
+dev.gitfile  gitfile:txt/amc-features.md
 dev.gitfile  gitfile:txt/amc.md
 dev.gitfile  gitfile:txt/amc_gc.md
 dev.gitfile  gitfile:txt/amc_vis.md
@@ -617,5 +613,6 @@ dev.gitfile  gitfile:txt/mdbg.md
 dev.gitfile  gitfile:txt/scriptlets.md
 dev.gitfile  gitfile:txt/setup-and-installation.md
 dev.gitfile  gitfile:txt/ssimfiles.md
+dev.gitfile  gitfile:txt/testimonials.md
 dev.gitfile  gitfile:txt/tests.md
 dev.gitfile  gitfile:txt/working-with-srcfiles.md

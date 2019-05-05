@@ -8,7 +8,8 @@
 ;;    ln -s ~/.emacs `pwd`/conf/emacs.el
 ;;    ln -s ~/elisp  `pwd`/conf/elisp
 ;;
-;;
+
+(setq ffroot-directory default-directory)
 
 (defun kill-current-buffer () (interactive)
   (kill-buffer (current-buffer)))
@@ -43,7 +44,7 @@
   "Invoke ff to find current word in the directory tree"
   (interactive)
   (ignore-errors (kill-buffer "*grep*"))
-  (grep-find (concat ffroot-directory "/bin/ff -notty -g -n "
+  (grep-find (concat "cd " ffroot-directory " && bin/ff -notty -g -n "
                      (shell-quote-argument (current-word)))))
 
 
@@ -54,7 +55,7 @@
   "Invoke ff to find current word in the directory tree"
   (interactive)
   (ignore-errors (kill-buffer "*grep*"))
-  (grep-find (concat ffroot-directory "/bin/ff -notty -g "
+  (grep-find (concat "cd " ffroot-directory " && bin/ff -notty -g "
                      (shell-quote-argument (current-word)))))
 
 ;;
@@ -64,9 +65,9 @@
   "Invoke ff to find current word in the directory tree"
   (interactive)
   (ignore-errors (kill-buffer "*grep*"))
-  (grep-find (concat (concat "ff -notty -g -n "
-                             (shell-quote-argument (current-word)))
-                     ".*{") ))
+  (grep-find (concat "cd " ffroot-directory " && bin/ff -notty -g -n "
+                     (shell-quote-argument (current-word))
+                     ".*{")))
 
 ;;
 ;; tex-verbatim
@@ -207,7 +208,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(cc-search-directories (quote ("." "/usr/include" "/usr/local/include/*")))
- '(grep-find-command "ff -notty -g -n ")
+ '(grep-find-command (concat "cd " ffroot-directory " && bin/ff -notty -g -n "))
  '(send-mail-function (quote sendmail-send-it))
  '(warning-suppress-types (quote ((undo discard-info)))))
 
@@ -318,7 +319,6 @@
 ;;------------------------------------------------------------------------------
 
 ; strip 'Directory '
-(setq ffroot-directory default-directory)
 (setq compile-command              (concat "cd " ffroot-directory " && ai %"))
 
 (setq-default c-basic-offset               4)

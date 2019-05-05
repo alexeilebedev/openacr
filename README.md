@@ -3,173 +3,90 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
 ## Table Of Contents
    * [About](#about)
       * [Contributors](#contributors)
-      * [Testimonials](#testimonials)
-         * [1](#1)
-         * [2 ](#2-)
-         * [3](#3)
-         * [4](#4)
    * [Setup and Installation](#setup-and-installation)
       * [Platform Short List](#platform-short-list)
-      * [Editor configuration files](#editor-configuration-files)
-      * [Environment Variables](#environment-variables)
+; [Editor configuration files](#editor-configuration-files); [Environment Variables](#environment-variables)
    * [Directory Structure](#directory-structure)
       * [Binaries](#binaries)
-      * [Intermediate Files](#intermediate-files)
+; [Intermediate Files](#intermediate-files)
    * [Hello Meta World](#hello-meta-world)
    * [acr: Auto Cross Reference](#acr-auto-cross-reference)
       * [Querying](#querying)
-      * [Creating A New Table](#creating-a-new-table)
-      * [Inserting Data](#inserting-data)
+; [Creating A New Table](#creating-a-new-table); [Inserting Data](#inserting-data)
          * [The -replace option](#the-replace-option)
-         * [The -merge option](#the-merge-option)
-         * [The -trunc option](#the-trunc-option)
+; [The -merge option](#the-merge-option); [The -trunc option](#the-trunc-option)
       * [Generating Shell Scripts](#generating-shell-scripts)
-      * [Inserting a Column](#inserting-a-column)
+; [Inserting a Column](#inserting-a-column)
          * [The -before option](#the-before-option)
       * [Creating a Subset Table](#creating-a-subset-table)
-      * [Following References Up](#following-references-up)
-      * [Following References Down](#following-references-down)
-      * [Deleting Records](#deleting-records)
-      * [Manual Editing](#manual-editing)
-      * [Checking Referential Integrity](#checking-referential-integrity)
-      * [Renaming](#renaming)
-      * [Cross-Product Types](#cross-product-types)
-      * [Fldfunc fields](#fldfunc-fields)
-      * [Querying On Non-Primary Key](#querying-on-non-primary-key)
-      * [Sorting & RowIDs](#sorting--rowids)
-      * [Creating A New Data Set](#creating-a-new-data-set)
-      * [Using A File As A Data Set](#using-a-file-as-a-data-set)
-      * [The -schema option](#the-schema-option)
-      * [The -meta option](#the-meta-option)
-      * [The -cmt option](#the-cmt-option)
-      * [MySQL Integration](#mysql-integration)
+; [Following References Up](#following-references-up); [Following References Down](#following-references-down); [Deleting Records](#deleting-records); [Manual Editing](#manual-editing); [Checking Referential Integrity](#checking-referential-integrity); [Renaming](#renaming); [Cross-Product Types](#cross-product-types); [Fldfunc fields](#fldfunc-fields); [Querying On Non-Primary Key](#querying-on-non-primary-key); [Sorting & RowIDs](#sorting--rowids); [Creating A New Data Set](#creating-a-new-data-set); [Using A File As A Data Set](#using-a-file-as-a-data-set); [The -schema option](#the-schema-option); [The -meta option](#the-meta-option); [The -cmt option](#the-cmt-option); [MySQL Integration](#mysql-integration)
    * [Command Lines](#command-lines)
       * [Boolean Options](#boolean-options)
-      * [Default Values](#default-values)
-      * [Integer Options](#integer-options)
-      * [Anonymous Options](#anonymous-options)
-      * [Other Data Types](#other-data-types)
-      * [Bash Command Completion](#bash-command-completion)
-      * [Completing From Table](#completing-from-table)
-      * [Inputting A Table](#inputting-a-table)
-      * [Regx Options](#regx-options)
-      * [The -version flag](#the-version-flag)
-      * [The -sig flag](#the-sig-flag)
-      * [Printing Command Lines](#printing-command-lines)
-      * [Subprocesses With Command Line](#subprocesses-with-command-line)
-      * [Verbosity](#verbosity)
+; [Default Values](#default-values); [Integer Options](#integer-options); [Anonymous Options](#anonymous-options); [Other Data Types](#other-data-types); [Bash Command Completion](#bash-command-completion); [Completing From Table](#completing-from-table); [Inputting A Table](#inputting-a-table); [Regx Options](#regx-options); [The -version flag](#the-version-flag); [The -sig flag](#the-sig-flag); [Printing Command Lines](#printing-command-lines); [Subprocesses With Command Line](#subprocesses-with-command-line); [Verbosity](#verbosity)
    * [Ssim files](#ssim-files)
       * [Ssim Data Sets](#ssim-data-sets)
-      * [Structured Key Normal Form](#structured-key-normal-form)
-      * [Decomposing A Domain Into Sets](#decomposing-a-domain-into-sets)
-      * [History of Database Design](#history-of-database-design)
-      * [Cardinality Analysis](#cardinality-analysis)
-      * [The Curse Of Simple Domains](#the-curse-of-simple-domains)
-      * [Remember 4-valued logic?](#remember-4-valued-logic-)
-      * [Structured Key Normal Form](#structured-key-normal-form)
+; [Structured Key Normal Form](#structured-key-normal-form); [Decomposing A Domain Into Sets](#decomposing-a-domain-into-sets); [History of Database Design](#history-of-database-design); [Cardinality Analysis](#cardinality-analysis); [The Curse Of Simple Domains](#the-curse-of-simple-domains); [Remember 4-valued logic?](#remember-4-valued-logic-); [Structured Key Normal Form](#structured-key-normal-form)
    * [acr_in: Show input tuples for target](#acr_in-show-input-tuples-for-target)
       * [The -data option](#the-data-option)
-      * [The -checkable option](#the-checkable-option)
-      * [The -related option](#the-related-option)
+; [The -checkable option](#the-checkable-option); [The -related option](#the-related-option)
    * [abt: A Build Tool](#abt-a-build-tool)
       * [Input Tables](#input-tables)
-      * [Output Directory](#output-directory)
-      * [The -install option](#the-install-option)
-      * [Target Definition](#target-definition)
-      * [Customizing Options](#customizing-options)
-      * [Disassembling](#disassembling)
-      * [Specifying a different compiler](#specifying-a-different-compiler)
-      * [The -ood option](#the-ood-option)
-      * [The -listincl option](#the-listincl-option)
-      * [Debugging the build](#debugging-the-build)
-      * [Bootstrapping](#bootstrapping)
+; [Output Directory](#output-directory); [The -install option](#the-install-option); [Target Definition](#target-definition); [Customizing Options](#customizing-options); [Disassembling](#disassembling); [Specifying a different compiler](#specifying-a-different-compiler); [The -ood option](#the-ood-option); [The -listincl option](#the-listincl-option); [Debugging the build](#debugging-the-build); [Bootstrapping](#bootstrapping)
    * [amc: Algo Model Compiler](#amc-algo-model-compiler)
       * [Introduction](#introduction)
-      * [Why Generate?](#why-generate-)
+; [Why Generate?](#why-generate-)
+         * [Libraries Vs. Custom Code](#libraries-vs-custom-code)
+; [Exponential Cost Of Software](#exponential-cost-of-software)
       * [Running Amc](#running-amc)
-      * [Query mode](#query-mode)
-      * [Ratio of Generated To Manual LOC](#ratio-of-generated-to-manual-loc)
-      * [Sandbox Mode](#sandbox-mode)
-      * [Reading Code of Amc Itself](#reading-code-of-amc-itself)
-      * [What is a Cross-reference?](#what-is-a-cross-reference-)
-      * [Main Input Tables](#main-input-tables)
-      * [Steps](#steps)
-      * [Chaining](#chaining)
-      * [Default Namespace Pool](#default-namespace-pool)
-      * [Tracing](#tracing)
-      * [Base: Mixin](#base-mixin)
-      * [Bheap: Binary Heap](#bheap-binary-heap)
-      * [Bitset: Bitset over an array](#bitset-bitset-over-an-array)
-      * [Blkpool: Mostly fifo memory allocator](#blkpool-mostly-fifo-memory-allocator)
-      * [Count: Count elements](#count-count-elements)
-      * [Dec: Scaled decimals](#dec-scaled-decimals)
-      * [Fconst: Enumerated type](#fconst-enumerated-type)
-      * [Inlary: Inline array](#inlary-inline-array)
-      * [Lary: Level array](#lary-level-array)
-      * [Llist: Linked list](#llist-linked-list)
-      * [Lpool: Level pool](#lpool-level-pool)
-      * [Malloc](#malloc)
-      * [Opt: Optional last field in variable-length struct](#opt-optional-last-field-in-variable-length-struct)
-      * [Pmask: Presence mask](#pmask-presence-mask)
-      * [Ptr](#ptr)
-      * [Ptrary](#ptrary)
-      * [RegxSql:](#regxsql-)
-      * [Sbrk](#sbrk)
-      * [Smallstr](#smallstr)
-      * [Tary: Flat array of records](#tary-flat-array-of-records)
-      * [Thash: hash table](#thash-hash-table)
-      * [Tpool: singly linked free-list](#tpool-singly-linked-free-list)
-      * [Upptr:](#upptr-)
-      * [Val: Value](#val-value)
-      * [Varlen: variable-length tail portion of a struct](#varlen-variable-length-tail-portion-of-a-struct)
-      * [String types and how to use them:](#string-types-and-how-to-use-them-)
-      * [The Algorithm For Generating Any Code](#the-algorithm-for-generating-any-code)
+; [Query mode](#query-mode); [Ratio of Generated To Manual LOC](#ratio-of-generated-to-manual-loc); [Sandbox Mode](#sandbox-mode); [Reading Code of Amc Itself](#reading-code-of-amc-itself); [What is a Cross-reference?](#what-is-a-cross-reference-); [Main Input Tables](#main-input-tables); [String types and how to use them:](#string-types-and-how-to-use-them-)
+         * [Amc-generated String Types](#amc-generated-string-types)
+      * [Field Name Prefix](#field-name-prefix)
+; [The Algorithm For Generating Code](#the-algorithm-for-generating-code)
+   * [Amc Features](#amc-features)
+      * [Scaled Decimal Types](#scaled-decimal-types)
+; [Big-Endian Fields](#big-endian-fields); [Bitfields](#bitfields); [Steps](#steps); [Chaining](#chaining); [Default Namespace Pool](#default-namespace-pool); [Tracing](#tracing); [Base: Mixin](#base-mixin); [Bheap: Binary Heap](#bheap-binary-heap); [Bitset: Bitset over an array](#bitset-bitset-over-an-array); [Blkpool: Mostly fifo memory allocator](#blkpool-mostly-fifo-memory-allocator); [Count: Count elements](#count-count-elements); [Dec: Scaled decimals](#dec-scaled-decimals); [Fconst: Enumerated type](#fconst-enumerated-type); [Inlary: Inline array](#inlary-inline-array); [Lary: Level array](#lary-level-array); [Llist: Linked list](#llist-linked-list); [Lpool: Level pool](#lpool-level-pool); [Malloc](#malloc); [Opt: Optional last field in variable-length struct](#opt-optional-last-field-in-variable-length-struct); [Pmask: Presence mask](#pmask-presence-mask); [Ptr](#ptr); [Ptrary](#ptrary); [RegxSql:](#regxsql-); [Sbrk](#sbrk); [Smallstr](#smallstr); [Tary: Flat array of records](#tary-flat-array-of-records); [Thash: hash table](#thash-hash-table); [Tpool: singly linked free-list](#tpool-singly-linked-free-list); [Upptr:](#upptr-); [Val: Value](#val-value); [Varlen: variable-length tail portion of a struct](#varlen-variable-length-tail-portion-of-a-struct)
    * [Bootstrapping Magic](#bootstrapping-magic)
    * [acr_ed: Acr Editor](#acr_ed-acr-editor)
+      * [Targets](#targets)
+         * [Create Target](#create-target)
+; [Rename Target](#rename-target); [Delete Target](#delete-target)
+      * [Ssimfiles](#ssimfiles)
+         * [Create Ssimfile](#create-ssimfile)
+; [Create Ssimfile as a Subset of Another Ssimfile](#create-ssimfile-as-a-subset-of-another-ssimfile); [Create Ssimfile as a Cross Product of 2 Other Ssimfiles](#create-ssimfile-as-a-cross-product-of-2-other-ssimfiles); [Rename Ssimfile](#rename-ssimfile); [Delete Ssimfile](#delete-ssimfile)
+      * [Source Files](#source-files)
+         * [Create Source File](#create-source-file)
+; [Rename Source File](#rename-source-file); [Delete Source File](#delete-source-file)
+      * [Ctypes](#ctypes)
+         * [Create A Ctype](#create-a-ctype)
+; [Rename A Ctype](#rename-a-ctype); [Delete A Ctype](#delete-a-ctype)
+      * [Add An Input To Program](#add-an-input-to-program)
+; [Create A New In-Memory Table](#create-a-new-in-memory-table); [Create An Index](#create-an-index)
+         * [Create A Hash Table](#create-a-hash-table)
+; [Create A Binary Heap](#create-a-binary-heap); [Create An AVL Tree](#create-an-avl-tree)
+      * [Conditional X-Ref](#conditional-x-ref)
    * [Coding Style](#coding-style)
       * [Spaces, Indentation](#spaces-indentation)
-      * [Variable Names](#variable-names)
-      * [Member Functions](#member-functions)
-      * [Predicate Functions](#predicate-functions)
-      * [Curly Braces](#curly-braces)
-      * [Split Conditionals](#split-conditionals)
-      * [Curly Braces around Conditionals are Non-Optional](#curly-braces-around-conditionals-are-non-optional)
-      * [Use of semi-colon forces a new line](#use-of-semi-colon-forces-a-new-line)
-      * [Keep code separate from data](#keep-code-separate-from-data)
-      * [No Code In Headers](#no-code-in-headers)
-      * [Use query-command separation](#use-query-command-separation)
-      * [Keep it single-threaded](#keep-it-single-threaded)
-      * [Use Single Entry, Single Exit (SESE) style](#use-single-entry-single-exit-sese-style)
-      * [Single File Static Assignment](#single-file-static-assignment)
-      * [Document all non-static functions](#document-all-non-static-functions)
-      * [All rules allow exceptions](#all-rules-allow-exceptions)
+; [Variable Names](#variable-names); [Member Functions](#member-functions); [Predicate Functions](#predicate-functions); [Curly Braces](#curly-braces); [Split Conditionals](#split-conditionals); [Curly Braces around Conditionals are Non-Optional](#curly-braces-around-conditionals-are-non-optional); [Use of semi-colon forces a new line](#use-of-semi-colon-forces-a-new-line); [Keep code separate from data](#keep-code-separate-from-data); [No Code In Headers](#no-code-in-headers); [Use query-command separation](#use-query-command-separation); [Keep it single-threaded](#keep-it-single-threaded); [Use Single Entry, Single Exit (SESE) style](#use-single-entry-single-exit-sese-style); [Single File Static Assignment](#single-file-static-assignment); [Document all non-static functions](#document-all-non-static-functions); [All rules allow exceptions](#all-rules-allow-exceptions)
    * [amc_vis: Visualize Ctype Dependencies and Access Paths](#amc_vis-visualize-ctype-dependencies-and-access-paths)
    * [amc_gc: AMC garbage collector](#amc_gc-amc-garbage-collector)
    * [MariaDB integration](#mariadb-integration)
    * [Working with source files & targets](#working-with-source-files--targets)
       * [Listing Files](#listing-files)
-      * [Creating Source Files](#creating-source-files)
-      * [Functions & Headers](#functions--headers)
-      * [Program Text](#program-text)
+; [Creating Source Files](#creating-source-files); [Functions & Headers](#functions--headers); [Program Text](#program-text)
    * [Tests](#tests)
       * [Unit Tests](#unit-tests)
-      * [Normalization Checks](#normalization-checks)
-      * [Debugging](#debugging)
-   * [Mdbg: My debugger](#mdbg-my-debugger)
+; [Normalization Checks](#normalization-checks); [Debugging](#debugging)
+   * [Mdbg: Gdb front-end](#mdbg-gdb-front-end)
       * [Specifying arguments](#specifying-arguments)
-      * [The -tui option](#the-tui-option)
-      * [Specifying Breakpoints](#specifying-breakpoints)
-      * [Edit-and-retry](#edit-and-retry)
-      * [The -follow_child otption](#the-follow_child-otption)
-      * [Exceptions](#exceptions)
-      * [Gdb Python Interface](#gdb-python-interface)
+; [The -tui option](#the-tui-option); [Specifying Breakpoints](#specifying-breakpoints); [Edit-and-retry](#edit-and-retry); [The -follow_child otption](#the-follow_child-otption); [Exceptions](#exceptions); [Gdb Python Interface](#gdb-python-interface); [Bugs](#bugs)
    * [Scriptlets](#scriptlets)
       * [Hilite: inline highlighter](#hilite-inline-highlighter)
          * [Blotter Mode](#blotter-mode)
-         * [Inline Specification](#inline-specification)
-         * [Diff mode](#diff-mode)
+; [Inline Specification](#inline-specification); [Diff mode](#diff-mode)
       * [Grephunk: patch file filter](#grephunk-patch-file-filter)
-
+   * [Testimonials](#testimonials)
+      * [1](#1)
+; [2](#2); [3](#3); [4](#4)
 
 ## About
 
@@ -230,54 +147,6 @@ Enjoy,
 Alexei Lebedev
 April 29, 2019
 
-### Testimonials
-
-#### 1
-
-    Alexei has built a tool set and framework that significantly improves
-    the software development process with large percentage of the code
-    generated with guaranteed consistency and quality. 
-
-        Shreejith Billenahalli
-        Director of Technology, Software Architecture, Development & Delivery
-        at Intercontinental Exchange
-
-#### 2 
-
-    Alexei's ACR and AMC is a unique, transformative, and extendible tool
-    that models and implements the relationships between data,
-    configurations, components, and anything else that can be defined. The
-    code that it generates leads to reduced development efforts, improved
-    quality, excellent performance, and a single coding standard across
-    the entire codebase.
-
-        Jon Joshua
-        Development Lead at New York Stock Exchange
-
-#### 3
-
-    Alexei has created a paradigm-shifting methodology for systems that
-    require extreme stability while having a high-frequency release
-    cycle. His model compiler in combination with pre-commit invariant
-    checking has enabled a big team of developers to produce very
-    high-quality products in very short periods of time while working on a
-    single codebase
- 
-        Hayk Mkrtchyan
-        Director at Intercontinental Exchange
- 
-#### 4
-
-    Alexei envisioned a new HPC programming paradigm, wrote a programming
-    language and compiler for it, and invented middleware with a
-    blockchain-like transactional algorithm. The resulting unique and
-    powerful programming environment, that I have the privilege using at
-    AlgoEngineering and NYSE, formed the foundation for NYSE Pillar
-    exchange architecture. NYSE Pillar currently powers 4 markets, with
-    more on the way.
-
-        Vladimir Parizhsky
-        SVP, Systems Architecture at Intercontinental Exchange
 
 ## Setup and Installation
 
@@ -2055,32 +1924,51 @@ both input, and computational, are defined as ssim tuples and can be queried wit
 
 ### Why Generate?
 
+Good algorithms and data structures for most problems are known. 
+The problem is attaching them to an application. Usually the costs associated 
+with using algorithms are:
+
+* Performance cost and complexity cost when using libraries.
+* Complexity cost due to symbol renamings (what happens with the C++ template sublanguage or with macro preprocessors). 
+* Debugging and reliability cost when hand-coding algorithms.
+* Maintenance cost due to having too many lines of code (technical debt).
+* Unexpected changes in upstream generic libraries.
+
+#### Libraries Vs. Custom Code
+
 The motivation for writing generators is that writing code for reusability doesn't work.
 The reason it doesn't work is that the definition of correctness doesn't lie with
 the piece of reusable code -- it lies with the final application. And so the reusable 
 code always offers to the application too much and at the same time not enough.
-You need a singly linked list, but the library uses a doubly linked list. You don't need
-a count of elements, but the library maintains that. You have your own strategy for memory
+You need a singly linked list, but the library uses a doubly linked list. You need an extra index,
+but the library author didn't anticipate it. You have your own strategy for memory
 management, but the library insists on its own. And you can't customize the library, since
-somebody else is using it, and they might need the feature. And when you update to the next
-version of the library, you get tons of features you didn't ask for.
+for every feature, there is already some user out there who needs it to stay the same. 
+And when you update to the next version of the library, you get tons of features you didn't ask for.
 Code written for reusability rarely reaches its intended potential in terms
 of either performance or utility.
 
 Leaving aside reusability for a moment, as can be seen from real life examples,
 all high-performance systems are hand-coded due to highly
 specific requirements, and because it allows writing only what's needed, debugging that,
-and leaving it to run and do its job indefinitly. But hand-coding is difficult and 
+and leaving it to run and do its job indefinitely. Yet hand-coding is difficult and 
 requires a lot of debugging and chasing of memory errors and dangling pointers. 
-Good algorithms and data structures for most problems are known.
-The problem is attaching them to the application without losing the performance to 
-glue code, data format translations (such as what happens with libraries), or layers of obfuscation
-and symbol renamings (what happens with the C++ template sublanguage or with macro preprocessors). 
+
+All of this may not matter when the problems are small and requirements negligible, but it
+really starts to matter when you are pushing against the limits of a single machine. The difference
+between code that runs in 1 millisecond and 10 milliseconds is eventually the difference between
+10 servers and 100 servers. 
+
+Thus we have a mini-max problem, which is the first sign of a problem worth solving. 
+On one hand, we want maximally customizable code that does only what we want.
+On the other hand, we want to write and debug the minimal amount of code.
+
+#### Exponential Cost Of Software
 
 Software complexity models such as [COCOMO](https://en.wikipedia.org/wiki/COCOMO)
 estimate the defect rate to grow as an
 exponential function of number of source lines. This exponent should not be underestimated.
-It is about 1.2 for a national exchange with real-time and embedded constraints, meaning that 
+It is about 1.2 for a national stock exchange with real-time and embedded constraints, meaning that 
 to write 1,000 lines of code, it costs you 3,981 units of effort.
 And if you write 100,000 lines of code, you pay a full 1,000,000 units. This exponential
 nature of the cost of lines of code is closely related to the cost of borrowing money.
@@ -2092,15 +1980,11 @@ I don't want to present a macabre listing of all the software projects that fail
 because they had too much code; I will just assume that we all agree on the validity
 of the following equation:
 
-    (Project Goodness) = (Features)*W - A*(Amount of Code Written)^B
+    (Project Goodness) = W*(Features) - A*(Amount of Code Written)^B
 
 In other words, we like the features of our system, with some weight `W`,
 and we pay with interest `B` and weight `A` for the amount
-of code we wrote, to get these features. 
-
-So we have a mini-max problem, which is the first sign of a problem worth solving. 
-On one hand, we want maximally customizable code that does only what we want.
-On the other hand, we want to write and debug the minimal amount of code.
+of code we wrote to get these features. 
 
 With that, let's see how far we are able to go in solving this problem, and what kinds
 of cool tricks we can make our generator do. 
@@ -2174,47 +2058,51 @@ with `acr_in amc`.
 ### What is a Cross-reference?
 
 The [Relational Model](https://en.wikipedia.org/wiki/Relational_model) is a universal
-way to represent knowledge, first described by Edgar Codd (he is our Jesus).
-It is related to [Zermelo–Fraenkel set theory](https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory)
+way to represent knowledge, first described by Edgar Codd.
+It is related to [Zermelo–Fraenkel set theory](https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory).
 
-It is a good foundation. In a relational data model, individual records are represented by tuples (ctype).
-Each attribute (field) is either a raw type, or a reference to some other record.
+It is a good foundation. In a relational data model, individual records are represented by tuples
+(what we call a ctype). Each attribute (what we call a field) is either a basic type, or
+a reference to some other tuple.
 
 The reference can take several forms -- it could be a direct pointer (Upptr),
 or a primary key (Pkey). In either case, the whole
 reason we write compiled language programs instead of solving all problems using SQL and MariaDB,
 is that reversing the direction of reference lookup -- 
 *finding all records that point to a given record* -- is expensive. 
-Cheap cross-references are ultimately why we write programs in the first place.
+Cheaper cross-references is really the reason why most programs exist in the first place.
 In database terms, a cross-reference is a group-by; in amc, cross-reference is
-maintained as an incremental join -- automatically updated as records are added or removed from tables.
+always incremental -- automatically updated as new records are added or removed from tables.
 
-A cross-reference is established by use of an xref record. Here is an example
+A cross-reference is established by use of an xref record. Here is a random example from amc, which
+needs to keep track of targets and their dependencies.
 
-    dmmeta.ctype  ctype:amc.FTarget  comment:"
-      dmmeta.field  field:amc.FTarget.msghdr     arg:dev.Target    reftype:Base    dflt:"  comment:"
-      dmmeta.field  field:amc.FTarget.c_targdep  arg:amc.FTargdep  reftype:Ptrary  dflt:"  comment:"
-        dmmeta.ptrary  field:amc.FTarget.c_targdep  unique:Y
+    dmmeta.field  field:amc.FTarget.c_targdep  arg:amc.FTargdep  reftype:Ptrary  dflt:"  comment:"
+      dmmeta.ptrary  field:amc.FTarget.c_targdep  unique:Y
         dmmeta.xref  field:amc.FTarget.c_targdep  inscond:true  via:amc.FDb.ind_target/dev.Targdep.target
 
 This says: Dear amc, whenever a `targdep` record is inserted in my program, find an instance
-of `target` by using global index `ind_target` with key `dev.Targdep.target`  (a fldfunc of `targdep`),
-as the key, and insert `targdep` into an array of pointers rooted in `target`. 
+of `target` by using global index `ind_target` with key `dev.Targdep.target` as the key, and
+insert `targdep` into an array of pointers rooted in `target`. 
 Whenever a `targdep` record is deleted, automatically remove it from the list.
+(Removing from a Ptrary is expensive but the last part won't be needed).
 
 The main xref types supported by amc are Ptr, Ptrary, Llist, Thash, Bheap, Atree and Count.
 
 Xrefs can be easily added and removed either by hand (with `acr -e` or by editing ssimfiles 
 directly), or using `acr_ed`. In the example above, `acr_ed -create -field amc.FTarget.c_targdep -write`
-would be enough to establish the x-ref.
+would be enough to establish the xref.
 
 There can be any number of xrefs between any two tables. So, if you want a record to be
-a member of ten linked lists and eleven heaps -- you're free to do so. 
-Thus xrefs are exactly analogous to RDBMS indexes; except xrefs can be between any two
-tables, so xrefs are also `partitioned indexes` and incremental `group by`s at the same time.
+a member of ten linked lists and eleven binary heaps -- you're free to do so. 
+Xrefs are exactly analogous to RDBMS indexes; except xrefs can be established between any two
+tables, so they are also `partitioned indexes` and incremental `group by`s at the same time.
 
-I would re-state here the fact that these x-refs, or indexes, are secondary to the data.
-It doesn't make sense to say "hash of X" or "tree of Y". Sets of X and Y are primary, and exist even 
+I would re-state here the fact that these xrefs, or indexes, are secondary to the data.
+The information needed to establish the xrefs must be contained in the data itself. This typically means
+extra information in the leaves.
+
+It doesn't make sense to say "hash of X" or "tree of Y". Elements of X and Y are primary, and exist even 
 if you remove all meaningful access paths to them. Instead, we speak of "access to X". The indexes
 are roads, and there can be many roads to the same place.
 
@@ -2233,7 +2121,258 @@ Arg is the type, and reftype is a modifier, or 'type constructor'.
     dmmeta.field  field:amc.FDb.ind_ns        arg:amc.FNs        reftype:Thash   dflt:""  comment:""
     dmmeta.field  field:dmmeta.Field.field     arg:algo.Smallstr100  reftype:Val  dflt:"  comment:"
 
+### String types and how to use them:
+
+Throughout the code base, you will see several string types in use.
+They are fairly straightforward, and they're all described below. 
+
+* `algo::strptr`: Length-delimited string pointer. 
+There are two fields in this struct: `char *elems, int n_elems`;
+The string is just n chars starting at elems;
+No null-termination is assumed or allowed.
+It's safe to use strptr in function prototypes when the argument isn't
+  modified by the function -- all other string types can be converted
+  to such temporary strptr and passed to a function.
+amc's hash find uses strptr as argument type whenever the key type is some
+kind of string.
+
+* `algo::cstring`: Tary of char. Contents can be cast to strptr.
+Fields are: `char *ch, int ch_n, int ch_max`.
+operator = is defined for cstring, so these can be assigned like values
+
+* `algo::tempstr`: cstring, to be used only as the return type of a function,
+in order to avoid copying data. Has the property that when assigned to
+cstring, the contents are moved instead ("move constructor semantics").
+
+- DO NOT assign tempstr, cstring, or a temporary variable to a strptr, since strptr
+is just a pointer.
+- DO NOT pass cstring& to a function when strptr is sufficient. 
+- DO NOT return cstring from functions, it will result in extra alloc/copy/delete. 
+ Return tempstr instead.
+
+In addition to these string types, which are fully sufficient for all practical purposes,
+there are many possible fixed-length string types that are generated by amc, mostly
+for protocol-handling and database interoperability purposes.
+
+#### Amc-generated String Types
+
+A lot of these are are already defined, but new ones can be built as  needed.
+use "acr smallstr" for the full list. Brief explanation below.
+
+* `algo::SmallstrN`: pascal string with N characters. Both data and length
+are part of the struct. Don't send this over the wire, because unused
+portions of the string may contain garbage from the stack.
+
+* `algo::RspaceStr{1..255}`: Fixed-length string field padded on the right with spaces.
+Can be sent over the wire (included in protocol types)
+* `algo::RnullStr{1..255}`
+* `algo::LspaceStr{1..255}`: similar to the above
+
+* `algo::LnumStr{1..N}_U{32,64}`: Fixed-length string field, padded on the left with '0'
+(ascii character '0', not the NUL character). Includes functions to convert to/from a u32/u64. 
+Number cannot be negative, because left-padding with 0 prevents that.
+
+* `LnumStr{1..N}_U{32,64}_Base{B}`: Same as above, but different base.
+
+### Field Name Prefix
+
+The functions amc generates are all global functions. I.e. they are not member
+functions of any class. The function name is usually built from the name of the related
+field, plus a name. For example, a big-endian u32 called `value` will  cause a function
+named `value_Get` to be generated. A linked list field called `zd_target` will cause
+amc to create functions `zd_target_Insert`, `zd_target_Prev`, etc. These function names
+are readable because the field name contains a hint about its type. 
+
+The table `dmmeta.fprefix` defines a constraint between field prefix and a field reftype,
+as interpreted by amc. If the field's name begins with the prefix (such as zd), followed
+by an underscore, then the field must have the specified reftype.
+
+The defined prefixes are:
+
+* `bh` -> Bheap
+* `c` -> Ptr or Ptrary
+* `cd, cdl, cs, csl, zd, zdl, zs, zsl` -> Llist
+* `cnt` -> Count
+* `ind` -> Thash
+* `p` -> Upptr
+* `tr` -> Atree
+
+Additional prefixes may be defined by the user.
+
+### The Algorithm For Generating Code
+
+The main algorithm for generating any code (not just with amc) is simple:
+
+1. Manually write the code that you want to generate and make sure it works.
+2. Put a print statement around each line.
+3. Move the resulting code to the appropriate place in your generator.
+4. Run your generator. Now you have 2 copies of your code: one you started with, and the 
+  other that was printed by the generator. If you did everygthing right, you should get a
+  link error now.
+5. Delete the manually written code.
+6. Parameterize the generator so that it can generate a whole family of implementations that
+  look similar.
+
+It is usually not a good idea to start programming new features in amc itself. 
+It is very tiresome to debug such code. The code should already have been written 
+by hand, possibly a couple of times, to the point where the duplication occurs, but the 
+different implementations cannot be unified because of either unacceptable performance costs, 
+or too many dependencies. Such code is to be lifted into a generator.
+
+## Amc Features
+
+### Scaled Decimal Types
+
+A scaled decimal type is an integer with an implied decimal point. For instance, a number
+with two implied decimal places can be constructed with an `fdec` record, specifying `nplace:2`.
+
+Attribute `fixedfmt` controls whether trailing zeros are left in place when printing.
+With `fixedfmt:Y`, 0 is printed as `0.00`, otherwise it is just printed as 0.
+
+Example:
+
+    dmmeta.field  field:algo.U64Dec2.value  arg:u64  reftype:Val  dflt:""  comment:""
+      dmmeta.fdec  field:algo.U64Dec2.value  nplace:2  fixedfmt:Y  comment:"0 prints as 0.00"
+
+The scaled decimal type generates functions to convert between the stored (scaled) value 
+and a numeric value: `value_qSetDouble`, `value_SetDoubleMaybe`, `value_GetDouble`, `value_GetInt`.
+
+    // Set value of field value.
+    // The value is rounded to the nearest integer.
+    // This ensures that truncation of a near-integer value does not occur.
+    // Example: 1.3 cannot be represented exactly as a double, the actual
+    // stored value will be 1.29999999. when we apply C truncation,
+    // we want to end up with 1.3, not 1.2.
+    void                 value_qSetDouble(algo::U64Dec2& parent, double val) __attribute__((nothrow));
+
+    double               value_GetDouble(algo::U64Dec2& parent) __attribute__((nothrow));
+
+    // Return integer portion (divide number by 100)
+    u64                  value_GetInt(algo::U64Dec2& parent) __attribute__((nothrow));
+
+    // Return constant 100
+    u64                  U64Dec2_GetScale() __attribute__((nothrow));
+
+    // Set value of field value, using rounding.
+    // If value is out of range for the target type, return false.
+    bool                 value_SetDoubleMaybe(algo::U64Dec2& parent, double val) __attribute__((nothrow));
+
+Functions to print and read the value are also generated.
+You can query the generated source for `value_Print` with `amc algo.U64Dec2.value.Print`
+
+    bool                 value_ReadStrptrMaybe(algo::U64Dec2& parent, algo::strptr in) __attribute__((nothrow));
+    void                 value_Print(algo::U64Dec2& parent, cstring &outstr) __attribute__((nothrow));
+
+### Big-Endian Fields
+
+Adding an `fbigend` record to a field indicates that the in-memory byte order is big-endian.
+
+    dmmeta.field  field:atf_amc.TypeBE16.value  arg:u16  reftype:Val  dflt:""  comment:""
+      dmmeta.fbigend  field:atf_amc.TypeBE16.value  comment:""
+              
+Amc generates values `value_Get` and `value_Set` to access the value.
+
+    u16                  value_Get(const atf_amc::TypeBE16& parent) __attribute__((__warn_unused_result__, nothrow));
+    void                 value_Set(atf_amc::TypeBE16& parent, u16 rhs) __attribute__((nothrow));
+
+When generating the C++ struct, amc adds `_be` to the field name so that the programmer
+becomes aware, should they choose to access it manually, that the field may be encoded.
+
+    $ amc atf_amc.TypeBE16%
+    // --- atf_amc.TypeBE16
+    struct TypeBE16 { // atf_amc.TypeBE16
+        u16   value_be;   //   0
+        TypeBE16();
+    };
+
+    ...
+
+    // --- atf_amc.TypeBE16.value.Get
+    inline u16 atf_amc::value_Get(const atf_amc::TypeBE16& parent) {
+        return be16toh(parent.value_be); // read big-endian value from memory
+    }
+
+    // --- atf_amc.TypeBE16.value.Set
+    inline void atf_amc::value_Set(atf_amc::TypeBE16& parent, u16 rhs) {
+        parent.value_be = htobe16(rhs); // write big-endian value to memory
+    }
+    
+    ...
+    
+### Bitfields
+
+Amc supports bitfields. In the example below, the field `bits5` is defined
+as bits 5..10 of the value of the field called `value`. It is important that 
+the source field is explicitly specified. This eliminates any ambiguity about where
+in memory the bitfield may be. The source field can be any integer type.
+
+Bitfields also work identically between big- and little-endian source fields.
+The reason is that we define the bitfield in terms of a shift- and mask- operation
+on the source field. It is purely an arithmetic operation that produces the value of the
+bitfield.
+
+If you've looked at Linux system headers for network protocols, you've seen ungainly `#ifdef` blocks.
+They are needed in C because C bitfields are defined against memory, not against the value of 
+a source field.
+
+    dmmeta.field  field:atf_amc.BitfldType1.value  arg:u64  reftype:Val     dflt:""  comment:""
+    dmmeta.field  field:atf_amc.BitfldType1.bits5   arg:u64  reftype:Bitfld  dflt:""  comment:""
+      dmmeta.bitfld  field:atf_amc.BitfldType1.bits5   offset:5  width:10  srcfield:atf_amc.BitfldType1.value  comment:""
+                    
+A bitfield can have any type - `bool`, `u64`, or a custom type that wraps an integer.
+
+    $ amc atf_amc.BitfldType1.bits5.% -proto
+
+    // Retrieve bitfield from value of field value
+    //    10 bits starting at bit 5.
+    u64                  bits5_Get(const atf_amc::BitfldType1& parent) __attribute__((__warn_unused_result__, nothrow));
+
+    // Set bitfield in value of field 'value'
+    //    10 bits starting at bit 5.
+    void                 bits5_Set(atf_amc::BitfldType1& parent, u64 rhs) __attribute__((nothrow));
+
+The implementation is straightforward:
+
+    $ amc atf_amc.BitfldType1.bits5.Set
+    
+    // --- atf_amc.BitfldType1.bits5.Set
+    // Set bitfield in value of field 'value'
+    //    10 bits starting at bit 5.
+    inline void atf_amc::bits5_Set(atf_amc::BitfldType1& parent, u64 rhs) {
+        u64 t1    = u64(0x3ff) << 5;
+        u64 t2    = (u64(rhs) & 0x3ff) << 5;
+        parent.value = u64((parent.value & ~t1) | t2);
+    }
+
+bitfields can be read from string tuples just like other fields.
+When printing a ctype containing bitfields to an ssim tuple, amc does not print the source field;
+instead, all the bitfields are printed instead. 
+
+When printing a ctype containing bitfields using the `Raw` format, only the source field is printed,
+and bitfields are skipped.
+
+It is an error to specify a combination of offset and width that is out of bounds for the source type.
+Amc will flag this. It is also an error to have two bitfields overlap. All of the `offset+width` 
+ranges must be disjoint.
+
+Here is an example of the code amc generates when the source field is big-endian. 
+(Endianness tends to be confusing, because languages try hard to erase the boundary between 
+memory and values, so the user gets an extra warning).
+
+    $ amc atf_amc.TypeBE64sf.bit63.Get
+
+    // --- atf_amc.TypeBE64sf.bit63.Get
+    // Retrieve bitfield from value of field value
+    //    1 bits starting at bit 63.
+    //    NOTE: bits correspond to the the integer value of the field.
+    //    The value is obtained by reading bytes from memory and swapping them.
+    inline u64 atf_amc::bit63_Get(const atf_amc::TypeBE64sf& parent) {
+        return u64((value_Get(parent) >> 63) & 0x01);
+    }
+
 ### Steps
+
+*UNDER CONSTRUCTION*.
 
 Steps are a scheduling construct to associate actions to fields.
 
@@ -2263,17 +2402,25 @@ InlineRecur step requires an fdelay record specifying the initial delay between 
 The logic is the same as Inline, with a time-based delay between steps.
 
 ### Chaining
+
+*UNDER CONSTRUCTION*.
 Pools can be chained by specifying a basepool record. Basepool is where a pool gets more memory
 when its own supplies are exhausted. The algo_lib.FDb.sbrk pool is usually at the root of each chain.
 
 ### Default Namespace Pool
+
+*UNDER CONSTRUCTION*.
 Each namespace has a default pool, declared via nsx record. This is where all memory for the
  namespace ultimately comes from.
 
 ### Tracing
+
+*UNDER CONSTRUCTION*.
 Ftrace record can be used to enable counting of alloc/delete calls for each pool.
 
 ### Base: Mixin
+
+*UNDER CONSTRUCTION*.
 
 The Base reftype copies all fields from one arg to field's parent ctype.
 There are two main use cases.
@@ -2287,14 +2434,20 @@ are extra pointers in the in-memory version, some attributes are being used for 
 
 ### Bheap: Binary Heap
 
+*UNDER CONSTRUCTION*.
+
 The binary heap is implemented as an flat array of pointers (e.g. a Ptrary).
 
 ### Bitset: Bitset over an array
+
+*UNDER CONSTRUCTION*.
 
 Bitsets can be created on top of any integer field (e.g. u8 to u128) or array field (Inlary, Tary).
 Amc generates functions to provide indexed access to bits of the underlying field.
 
 ### Blkpool: Mostly fifo memory allocator
+
+*UNDER CONSTRUCTION*.
 
 The block pool is a free-list of large-ish blocks. Memory is allocated from the current block,
 with others serving as reserve. Allocated elements contain a back-pointer to the beginning
@@ -2308,14 +2461,20 @@ eventually exhausting memory.
 
 ### Count: Count elements
 
+*UNDER CONSTRUCTION*.
+
 Count is a xref type that simply keeps track of the number of child
 elements referring to a given parent. The elements themselves are not accessible
 via this field.
 
 ### Dec: Scaled decimals
+
+*UNDER CONSTRUCTION*.
 This reftype is not specified explicitly. It is applied when fdec record appears.
 
 ### Fconst: Enumerated type
+
+*UNDER CONSTRUCTION*.
 This reftype is not specified explicitly. It is applied when fconst record appears.
 Each fconst record names a symbol and a C++ expression (value). The symbol is the string representation
 of the vaule. Amc creates an enum type with values, and creates to-string and from-string functions
@@ -2328,6 +2487,8 @@ value is printed as a number. When reading, if input symbol doesn't map to any k
 as an integer instead.
 
 ### Inlary: Inline array
+
+*UNDER CONSTRUCTION*.
 
 Inlary uses memory reserved directly inside the parent struct. A dmmeta.inlary record
 is required, specifying min,max elements. If min=max, it is considered a fixed array.
@@ -2344,6 +2505,8 @@ and be properly cross-referenced.
 
 ### Lary: Level array
 
+*UNDER CONSTRUCTION*.
+
 Lary is implemented as 32 pointers in the parent struct. Level k holds as pointer
 to a block of elements of length 2^k. Indexed lookup involves just 1 memory access,
 because amc uses BitScanReverse to find which level the element lives on. When a level is exhausted,
@@ -2352,6 +2515,8 @@ reallocated, the pointers returned by Lary are stable and so elements can be fre
 Lary is the most common pool.
 
 ### Llist: Linked list
+
+*UNDER CONSTRUCTION*.
 
 Amc generates 32 flavors of linked lists, almost as many as Heinz for ketchup.
 Linked lists can be:
@@ -2367,19 +2532,27 @@ to both grab an element off the head of the list, and move this element to the b
 
 ### Lpool: Level pool
 
+*UNDER CONSTRUCTION*.
+
 Lpool is 32 Tpools, one for each allocation size. When allocating memory, the request
 is bumped up to the nearest power of 2 and from there Tpool logic is followed.
 
 ### Malloc
 
+*UNDER CONSTRUCTION*.
+
 Pass-through to libc's malloc / free.
 
 ### Opt: Optional last field in variable-length struct
+
+*UNDER CONSTRUCTION*.
 
 Opt corresponds to 0 or 1 values at the end of a struct. This type is frequently used by protocols
 to specify optional payload. Amc provides functions that can validate and access the payload.
 
 ### Pmask: Presence mask
+
+*UNDER CONSTRUCTION*.
 
 Amc provides convenient presence mask support. If any field in a ctype is marked Pmask,
 then amc allocates 1 bit in the pmask for each field in the struct. The bits are initially zero.
@@ -2395,13 +2568,19 @@ if a field was previously Set.
 
 ### Ptr
 
+*UNDER CONSTRUCTION*.
+
 Ptr is a cross-reference type used when there can be 0 or 1 child records for each parent record.
 
 ### Ptrary
 
+*UNDER CONSTRUCTION*.
+
 Tary of Ptrs.
 
 ### RegxSql:
+
+*UNDER CONSTRUCTION*.
 
 When using this field type, amc ignores the field arg and inserts an algo_lib.Regx into
 the parent structure. The expression intended to match the primary key of the target type.
@@ -2409,11 +2588,15 @@ This reftype is very useful in command line arguments.
 
 ### Sbrk
 
+*UNDER CONSTRUCTION*.
+
 This is just a pass-through to the sbrk() system call. The pool does not support deletion.
 Ultimately all system memory requests are satisfied by this pool, because it sits at the
 end of every basepool chain.
 
 ### Smallstr
+
+*UNDER CONSTRUCTION*.
 
 Smallstr is a fixed-length character field. Memory is reserved inline in the parent struct.
 Strings can be length-suffixed (Rpascal), left-padded or right-padded.
@@ -2422,12 +2605,16 @@ Any smallstr is castable to strptr.
 
 ### Tary: Flat array of records
 
+*UNDER CONSTRUCTION*.
+
 Tary is a dynamically allocated resizable array of values. A single block of memory
 is used for all elements, so taking the address of a Tary element is not allowed. Records
 allocated with Tary cannot be cross-referenced. ByteAry and cstring use Tary as the underlying type.
 When growing a full Tary (such as from Reserve or Alloc functions), the size is always at least doubled.
 
 ### Thash: hash table
+
+*UNDER CONSTRUCTION*.
 
 Hash table, implemented as a Tary of pointers.
 Collisions are implemented as a singly linked list. Hash tables grow automatically.
@@ -2444,6 +2631,8 @@ which is a convenient way to force creation of an element when you know its key.
 
 ### Tpool: singly linked free-list
 
+*UNDER CONSTRUCTION*.
+
 This pool type only supports fixed-size allocation. free elements are stored in a singly
 linked list. if the list is empty, tpool uses the base allocator (or the namespace default allocator)
 to fulfill the request. the free list can be refilled with reservemem. This is the
@@ -2451,6 +2640,8 @@ fastest allocator, because it only takes a couple of instructions to peel a free
 off of the free list.
 
 ### Upptr:
+
+*UNDER CONSTRUCTION*.
 
 Upptr is a pointer to a pre-existing record, usually non-null.
 Upptr is a reference. By contrast, Ptr is a cross-reference.
@@ -2461,72 +2652,20 @@ B has Upptr to A). Circular dependencies between Ptr fields are OK.
 
 ### Val: Value
 
+*UNDER CONSTRUCTION*.
+
 Val is the simplest field type, just a struct member.
 It is an inline field that is initialized whenever the parent
 is initialized, and destroyed when the parent is destroyed.
 
 ### Varlen: variable-length tail portion of a struct
 
+*UNDER CONSTRUCTION*.
+
 Varlen corresponds to a (possibly empty) array of fixed-size records appended to the end of a struct.
 the parent ctype must have a length field defined. varlen fields cane be read from a string or
 iterated over. This type is frequently used by wire protocols to specify a repeated section of a message.
 
-### String types and how to use them:
-
-algo::strptr: Length-delimited string pointer.
-There are two fields in this struct: char *elems, int n\_elems;
-The string is just n chars starting at elems;
-No null-termination is assumed or allowed.
-It's safe to use strptr in function prototypes when the argument isn't
-  modified by the function -- all other string types can be converted
-  to such temporary strptr and passed to a function.
-amc's hash find uses strptr as argument type whenever the key type is some
-kind of string.
-
-algo::cstring: Tary of char. Contents can be cast to strptr.
-Fields are: char *ch, int ch\_n, int ch\_max.
-operator = is defined for cstring, so these can be assigned like values
-
-algo::tempstr: cstring, to be used only as the return type of a function,
-in order to avoid copying data. Has the property that when assigned to
-cstring, the contents are moved instead ("move constructor semantics").
-
-DO NOT assign tempstr, cstring, or a temporary variable to a strptr.
-DO NOT pass cstring& to a function when strptr is sufficient.
-DO NOT return cstring from functions, it will result in extra alloc/copy/delete
-
-Amc-generated types:
-A lot of these are are already defined, but new ones can be built as  needed.
-use "acr smallstr" for the full list. Brief explanation below.
-
-algo::SmallstrN: pascal string with N characters. Both data and length
-are part of the struct. Don't send this over the wire, because unused
-portions of the string may contain garbage from the stack.
-
-algo::RspaceStrN: Fixed-length string field padded on the right with spaces.
-Can be sent over the wire (included in protocol types)
-algo::RnullStrN
-algo::LspaceStrN: similar to the above
-
-algo::LnumStrN\_U{32,64}: Fixed-length string field, padded on the left with '0' (numeric 0)
-Includes functions to convert to/from a u32/u64. Number cannot be negative,
-because left-padding with 0 prevents that.
-
-LnumStr13\_U64\_Base36: Same as above, but different base.
-
-### The Algorithm For Generating Any Code
-
-The main algorithm for generating any code (not just with amc) is simple:
-
-1. Manually write the code that you want to generate and make sure it works.
-2. Put a print statement around each line.
-3. Move the resulting code to the appropriate place in your generator.
-4. Run your generator. Now you have 2 copies of your code: one you started with, and the 
-  other that was printed by the generator. If you did everygthing right, you should get a
-  link error now.
-5. Delete the manually written code.
-6. Parameterize the generator so that it can generate a whole family of implementations that
-  share look like the code.
 
 ## Bootstrapping Magic
 
@@ -2612,15 +2751,7 @@ By default, `acr_ed` spits out an executable script to stdout. With
 `-write`, the script is executed (this has the same effect as piping output
 to sh)
 
-The main commands in acr_ed are:
-
 ~~~
--ctype:X -create : Create new ctype. Suboptions: -ssimfile, -cbase
--ctype:X -rename:Y: Rename ctype X to Y
--ctype:X -create -subset:Y -pooltype:Z -indexed: Create a new indexed in-memory table
-
--ssimfile:X -create : Create new ssimfile. Suboptions: -subset, -subset2, -separator, -ctype
--ssimfile:X -rename:Y: Rename ssimfile (to fully rename an ssimfile, first rename the ssimfile, then the ctype)
 
 -field:X -create: Create field or access path.
   Suboptions: -comment, -arg, -dflt, -reftype, -before, -via, -xref, -fstep, -substr, -anon, -bigend
@@ -2630,70 +2761,161 @@ The main commands in acr_ed are:
     given a z.
 -finput -create  -ssimfile:X -target:Y: Add ssimfile as finput for a target. Suboptions: -indexed
 
--target:X -create: Create new target. Issues necessary git commands as well.
--target:X -rename:Y: Rename target. Issues necessary git commands as well.
--target:X -del: Delete a target
-
--srcfile:X -create -target:Y: Create new source file
--srcfile:X -rename:Y: Rename source file (automatically updates headers)
--srcfile:X -del: Delete source file
 ~~~
 
-Create new target:
+### Targets
 
-       acr_ed -create -target xyz
+#### Create Target
 
-Delete target:
+    $ acr_ed -create -target:X
+    ...
 
-       acr_ed -del -target xyz
+#### Rename Target
 
-Create new ssimfile.
+    $ acr_ed -target:X -rename:Y
+    ...
 
-	 acr_ed -ssimfile dmmeta.nsref -create
+#### Delete Target
 
-Create new ssimfile as a subset of 2 other ctypes, using separator for the key
+    $ acr_ed -del -target:X
+    ...
 
-	 acr_ed -create -ssimfile dmmeta.nsref -subset dmmeta.Ns -subset2 dmmeta.Reftype -separator /
+### Ssimfiles
 
-Create new table for in-memory database (manual).
-	 Parameter -reftype Thash is guessed based on field name
-	 Parameter -hashfld is guessed based on primary key
+#### Create Ssimfile
 
-	 acr_ed -create -ctype amc.FCtype -cbase dmmeta.Ctype
-	 acr_ed -create -field amc.FDb.ctype -arg amc.FCtype  -reftype Lary
-	 acr_ed -create -field amc.FDb.ind_ctype -arg amc.FCtype  -xref
+    $ acr_ed -create -ssimfile ns.x 
+    ...
 
-Create new table for in-memory database, based on an ssimfile
+#### Create Ssimfile as a Subset of Another Ssimfile
 
-	 acr_ed -create -finput -target amc -ssimfile dmmeta.ctype
+    $ acr_ed -create -ssimfile ns.x -subset ns.Y
+    ...
 
-Create new table for in-memory database, based on an ssimfile, add a hash index
+#### Create Ssimfile as a Cross Product of 2 Other Ssimfiles
 
-	 acr_ed -create -finput -target amc -ssimfile dmmeta.ctype -indexed
+    $ acr_ed -create -ssimfile ns.x -subset ns.Y -subset2 ns.Z -separator .
+    ...
 
-Add a pointer from ssimfile -> ctype for target acr_ed
-Parameters -reftype, -via are guessed.
+Note that ssimfiles user lowercase names but ctypes use uppercase names.
+Options `-subset`, `-subset2` take ctype names.
 
-Conditional cross-reference
+#### Rename Ssimfile
 
-	 acr_ed -create -field acr_ed.FSsimfile.p_ctype -arg acr_ed.FCtype -xref -inscond false
+    $ acr_ed -ssimfile ns.x -rename ns2.y
+    ...
 
-Create new source file:
+#### Delete Ssimfile
 
-       acr_ed -create -srcfile cpp/amc/blah.cpp -write
+    $ acr_ed -del -ssimfile ns.x
+    ...
 
-Create new header:
+### Source Files
 
-       acr_ed -create -srcfile include/amc/blah.h -target amc -write
+#### Create Source File
+When creating a source file, `acr_ed` automatically which target
+this file will belong to based on the the other files in the same directory.
+If there is ambiguity, specify `-target ...` argument
+Headers are considered source files.
 
+    $ acr_ed -create -srcfile cpp/...path.cpp
+    ...
+    $ acr_ed -create -srcfile include/path.h
+
+#### Rename Source File
+
+    $ acr_ed -srcfile cpp/path.cpp -rename cpp/path2.cpp
+    ...
+
+#### Delete Source File
+
+    $ acr_ed -del -srcfile cpp/path.cpp
+    ...
+
+### Ctypes
+
+#### Create A Ctype
+
+    $ acr_ed -create -ctype ns.Name
+    ...
+
+#### Rename A Ctype
+
+    $ acr_ed -ctype ns.Name -rename ns2.Name2
+    ...
+
+#### Delete A Ctype
+
+    $ acr_ed -del -ctype ns.Name
+    ...
+    
+### Add An Input To Program
+
+    $ acr_ed -create -finput -target ns -ssimfile ns2.name
+    acr_ed.create_finput  target:abc  ssimfile:dev.gitfile
+    bin/acr  '' -insert:Y -check:Y -write:Y -t:Y -rowid:Y << EOF
+    dmmeta.ctype  ctype:abc.FGitfile  comment:""
+    dmmeta.field  field:abc.FGitfile.base  arg:dev.Gitfile  reftype:Base  dflt:""  comment:""
+    dmmeta.field  field:abc.FDb.gitfile  arg:abc.FGitfile  reftype:Lary  dflt:""  comment:""
+    dmmeta.finput  field:abc.FDb.gitfile  extrn:N  update:N  strict:Y  comment:""
+    #  Proposed change
+    #
+    #
+    #     / abc.FDb
+    #     |
+    #     |Lary gitfile-->/ abc.FGitfile
+    #     -               |
+    #                     |
+    #                     -
+    EOF
+    ...
+    
+With `-indexed` option, a hash index is thrown in. This is pretty common.
+
+### Create A New In-Memory Table
+
+To create a new table in a program, use `-create -ctype ... -subset ... -pooltype`.
+This adds a global pool of a given type (typically `Tpool` or `Lary`).
+To throw in a hash index, specify `-indexed`
+
+    $ acr_ed -create -ctype abc.FTable -subset u32 -pooltype Tpool -indexed
+    bin/acr  '' -insert:Y -check:Y -write:Y -t:Y -rowid:Y << EOF
+    dmmeta.ctype  ctype:abc.FTable  comment:""
+    dmmeta.field  field:abc.FTable.table  arg:u32  reftype:Val  dflt:""  comment:""
+    dmmeta.field  field:abc.FDb.table  arg:abc.FTable  reftype:Tpool  dflt:""  comment:""
+    dmmeta.field  field:abc.FDb.ind_table  arg:abc.FTable  reftype:Thash  dflt:""  comment:""
+    dmmeta.thash  field:abc.FDb.ind_table  hashfld:abc.FTable.table  unique:Y  comment:""
+    dmmeta.xref  field:abc.FDb.ind_table  inscond:true  via:""
+    EOF
+
+### Create An Index
+
+#### Create A Hash Table
+
+    $ acr_ed -create -field abc.FDb.ind_table
+    $ acr_ed -create -field abc.FDb.ind_table -hashfld <fieldname>
+
+#### Create A Binary Heap
+
+    $ acr_ed -create -field abc.FDb.bh_table
+    $ acr_ed -create -field abc.FDb.bh_table -sortfld <fieldname>
+
+#### Create An AVL Tree
+
+    $ acr_ed -create -field abc.FDb.tr_table
+    $ acr_ed -create -field abc.FDb.tr_table -sortfld <fieldname>
+
+### Conditional X-Ref
+
+    $ acr_ed -create -field abc.FDb.ind_table -inscond false
 
 ## Coding Style
 
 OpenACR is written with a certain uniform coding style. This section 
-explains the reasoning behind it. The style is maintained by various tools; 
-first of all, amc generates all code in this style; Second, `indent-recent`
-and `cpp-indent` automatically indent source files using emacs 4-space indentation
-mode.
+explains the reasoning behind it. The style is maintained by various tools.
+First of all, amc generates all code in this style; 
+Second, `indent-recent` and `cpp-indent` automatically indent 
+source files, and should be used before any commit.
 
 ### Spaces, Indentation
 
@@ -2947,9 +3169,9 @@ List all libraries:
 
      acr dmmeta.ns.nstype:lib
 
-List all sources for target T:
+List all sources for target T, one filename per line:
 
-     acr targsrc:T/%
+     acr targsrc:T/% -field:src
 
 Re-build copyright blocks in files:
 
@@ -3088,21 +3310,23 @@ If a test fails, the easiest way to debug it is to re-run `atf_unit` with
 `-debug` flag. It will use `mdbg` and automatically set a breakpoint at the first 
 line of the test in question.
 
-## Mdbg: My debugger
+## Mdbg: Gdb front-end
 
 This is a wrapper for automating the invocation of `gdb` from command line.
 
-Mdbg uses abt to build a debug version of the debug target. By default,
+Mdbg uses abt to build a debug version of the debug target (By default,
 this means `debug`, but the option can be customized with `-cfg <cfg>`, for instance
-specifying `-cfg profile`.
+specifying `-cfg profile`).
 
 Then, mdbg prepares a debugging environment by writing two script files: one
 for the debugger, `temp/mdbg.gdb`, and one for the editor, `temp/mdbg.el`.
-The default, and really the most supported editor, is emacs, although specifying `-tui`
+The default, and really the most supported editor, is emacs; specifying `-tui`
 will switch to the gdb's Text User Interface mode instead.
 
-Mdbg then runs the debug target in the debug environment.
-Let's proceed as usual, with an example:
+Mdbg then runs the debug target in the debug environment. It can optionally set a regular
+or conditional breakpoint in a function other than Main with the `-b` option.
+
+Let's consider an example:
 
     $ acr_ed -create -target abc -write
     ...
@@ -3110,7 +3334,7 @@ Let's proceed as usual, with an example:
     
 Mdbg will print a reminder of the shortcuts it has equipped the target editor with...
 
-    mdbg.note  Debug mdbg::_db.script saved to temp/mdbg.el
+    mdbg.note  Debug script saved to temp/mdbg.el
     mdbg.note  Invoking gdb under emacs. Make sure to link ~/.emacs -> conf/emacs.el, ~/elisp -> conf/elisp
     mdbg.note  Standard shortcuts:
     mdbg.note               F7  recompile and restart executable
@@ -3136,7 +3360,8 @@ and run the target program under the debugger, stopping at Main.
       ...
 
 The `-manywin` option enables emacs' gdb's `gud-many-windows` mode, which brings up
-a debugger layout reminiscent of modern IDEs, with locals, breakpoints, threads subwindows, etc.
+a debugger layout reminiscent of Visual Studio or Eclipse, with locals, breakpoints, 
+threads subwindows, etc.
 Additionally specifying the `-disas` option enables the disassembly window.
 
 ### Specifying arguments
@@ -3203,6 +3428,13 @@ By default, gdb is configured to catch exceptions. To ignore them instead, speci
 
 To enable gdb python scriptability, specify `-py` option. 
 
+### Bugs
+
+Because gdb and emacs don't form a standardized environment, it's possible that mdbg's integration
+is broken in some way. Please file an issue, describing your config, so that this combination
+can be tried out and fixed.
+
+
 ## Scriptlets
 
 OpenACR includes a number of little scripts to ease program development.
@@ -3210,25 +3442,25 @@ Some of them are useful as stand-alone utilities
 
 ### Hilite: inline highlighter
 
-The hilite tool is a perl script that takes a number of perl regexes
-on the command line, and highlights matching strings in stdin using randomly 
-chosen colors.
+The hilite tool is a perl script for highlighting strings in some output.
 
 Usage:
 
     <some command> | hilite <expr1> <expr2> ...
 
-Each expr is a regex that is highlighted using a separate color.
+Each expr is a perl regex that is highlighted using a separate color.
 colors are picked automatically from a default sequence.
 
 To specify a color explicitly, use its name: `expr1:green expr2:yellow`
+The list of available colors is black, red, green, yellow, blue, magenta, cyan, white, darkblack, 
+darkred, darkgreen, darkyellow, darkblue, darkmagenta, darkcyan, darkwhite.
 
 Omitting `expr` matches the entire line, so `hilite :green` makes all lines green.
 
 #### Blotter Mode
 
-To highlight every other line, use `expr1:green%2`; to highlight every other 5 lines,
-use `expr1:green%5`.
+To highlight every other line, use `:green%2`. This is useful with values of 5
+when the output is wide, creating a blotter effect.
 
 If multiple patterns match a given input line, patterns specified later
 on the command line override previous patterns; Each pattern can match multiple
@@ -3251,8 +3483,8 @@ yet support highlighting where appropriate.
 If `<expr>` is `-diff` or `-d`, hilite loads diff rules that support either line-
 or word-diffs. Example of colorizing a diff file:
 
-   hilite -d < patchfile | less -r
-   
+   cat patchfile | hilite -d | less -r
+
 Removed lines or words are colored red, added lines or words are green, and index
 lines are blue.
 
@@ -3262,7 +3494,7 @@ interactive tool intended to ease readibility or terminal-based output.
 ### Grephunk: patch file filter
 
 Grephunk is a perl script that scan hunks on stdin
-and filter them according them to specified pattern. A `hunk` is the name patch file 
+and filter them according them to specified pattern. A `hunk` is the name patch file
 people use to refer to sections of a patch file that look like this:
 
     diff --git a/include/gen/atf_amc_gen.inl.h b/include/gen/atf_amc_gen.inl.h
@@ -3298,7 +3530,7 @@ For instance,
 
     <some command> | grephunk abcd f:cpp
 
-Searches fort hunks that match string `abcd` where the filename also 
+Searches fort hunks that match string `abcd` where the filename also
 matches `cpp`
 
 A pattern can be positive or negative, negative patterns are preceded with `!`.
@@ -3316,4 +3548,52 @@ In the example below, hunk must contain the word amc anywhere in it,
 and filename should not have pattern /gen/
 
     grephunk amc f:!/gen/ h:'}\s+$'
-    
+
+## Testimonials
+
+### 1
+
+    Alexei has built a tool set and framework that significantly improves
+    the software development process with large percentage of the code
+    generated with guaranteed consistency and quality. 
+
+        Shreejith Billenahalli
+        Director of Technology, Software Architecture, Development & Delivery
+        at Intercontinental Exchange
+
+### 2
+
+    Alexei's ACR and AMC is a unique, transformative, and extendible tool
+    that models and implements the relationships between data,
+    configurations, components, and anything else that can be defined. The
+    code that it generates leads to reduced development efforts, improved
+    quality, excellent performance, and a single coding standard across
+    the entire codebase.
+
+        Jon Joshua
+        Development Lead at New York Stock Exchange
+
+### 3
+
+    Alexei has created a paradigm-shifting methodology for systems that
+    require extreme stability while having a high-frequency release
+    cycle. His model compiler in combination with pre-commit invariant
+    checking has enabled a big team of developers to produce very
+    high-quality products in very short periods of time while working on a
+    single codebase
+ 
+        Hayk Mkrtchyan
+        Director at Intercontinental Exchange
+ 
+### 4
+
+    Alexei envisioned a new HPC programming paradigm, wrote a programming
+    language and compiler for it, and invented middleware with a
+    blockchain-like transactional algorithm. The resulting unique and
+    powerful programming environment, that I have the privilege using at
+    AlgoEngineering and NYSE, formed the foundation for NYSE Pillar
+    exchange architecture. NYSE Pillar currently powers 4 markets, with
+    more on the way.
+
+        Vladimir Parizhsky
+        SVP, Systems Architecture at Intercontinental Exchange

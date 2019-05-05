@@ -21,7 +21,6 @@ dev.target  target:lib_json
 dev.target  target:lib_mysql
 dev.target  target:lib_prot
 dev.target  target:lib_sql
-dev.target  target:lz4_lib
 dev.target  target:mdbg
 dev.target  target:mysql2ssim
 dev.target  target:src_func

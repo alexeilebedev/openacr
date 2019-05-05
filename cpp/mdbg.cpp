@@ -133,7 +133,7 @@ static void AddEmacsFunctions(algo_lib::Replscope &R) {
 
 // Display additional information in the Emacs window
 static void DisplayEmacsNotes() {
-    prlog("mdbg.note  Debug mdbg::_db.script saved to temp/mdbg.el");
+    prlog("mdbg.note  Debug script saved to temp/mdbg.el");
     prlog("mdbg.note  Invoking gdb under emacs. Make sure to link ~/.emacs -> conf/emacs.el, ~/elisp -> conf/elisp");
     prlog("mdbg.note  Standard shortcuts:");
     prlog("mdbg.note               F7  recompile and restart executable");

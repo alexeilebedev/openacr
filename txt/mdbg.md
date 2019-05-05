@@ -1,18 +1,20 @@
-## Mdbg: My debugger
+## Mdbg: Gdb front-end
 
 This is a wrapper for automating the invocation of `gdb` from command line.
 
-Mdbg uses abt to build a debug version of the debug target. By default,
+Mdbg uses abt to build a debug version of the debug target (By default,
 this means `debug`, but the option can be customized with `-cfg <cfg>`, for instance
-specifying `-cfg profile`.
+specifying `-cfg profile`).
 
 Then, mdbg prepares a debugging environment by writing two script files: one
 for the debugger, `temp/mdbg.gdb`, and one for the editor, `temp/mdbg.el`.
-The default, and really the most supported editor, is emacs, although specifying `-tui`
+The default, and really the most supported editor, is emacs; specifying `-tui`
 will switch to the gdb's Text User Interface mode instead.
 
-Mdbg then runs the debug target in the debug environment.
-Let's proceed as usual, with an example:
+Mdbg then runs the debug target in the debug environment. It can optionally set a regular
+or conditional breakpoint in a function other than Main with the `-b` option.
+
+Let's consider an example:
 
     $ acr_ed -create -target abc -write
     ...
@@ -20,7 +22,7 @@ Let's proceed as usual, with an example:
     
 Mdbg will print a reminder of the shortcuts it has equipped the target editor with...
 
-    mdbg.note  Debug mdbg::_db.script saved to temp/mdbg.el
+    mdbg.note  Debug script saved to temp/mdbg.el
     mdbg.note  Invoking gdb under emacs. Make sure to link ~/.emacs -> conf/emacs.el, ~/elisp -> conf/elisp
     mdbg.note  Standard shortcuts:
     mdbg.note               F7  recompile and restart executable
@@ -46,7 +48,8 @@ and run the target program under the debugger, stopping at Main.
       ...
 
 The `-manywin` option enables emacs' gdb's `gud-many-windows` mode, which brings up
-a debugger layout reminiscent of modern IDEs, with locals, breakpoints, threads subwindows, etc.
+a debugger layout reminiscent of Visual Studio or Eclipse, with locals, breakpoints, 
+threads subwindows, etc.
 Additionally specifying the `-disas` option enables the disassembly window.
 
 ### Specifying arguments
@@ -112,3 +115,10 @@ By default, gdb is configured to catch exceptions. To ignore them instead, speci
 ### Gdb Python Interface
 
 To enable gdb python scriptability, specify `-py` option. 
+
+### Bugs
+
+Because gdb and emacs don't form a standardized environment, it's possible that mdbg's integration
+is broken in some way. Please file an issue, describing your config, so that this combination
+can be tried out and fixed.
+

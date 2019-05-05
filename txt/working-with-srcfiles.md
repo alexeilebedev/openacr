@@ -10,9 +10,9 @@ List all libraries:
 
      acr dmmeta.ns.nstype:lib
 
-List all sources for target T:
+List all sources for target T, one filename per line:
 
-     acr targsrc:T/%
+     acr targsrc:T/% -field:src
 
 Re-build copyright blocks in files:
 

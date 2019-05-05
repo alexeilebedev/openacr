@@ -1439,11 +1439,11 @@ struct I32Dec1 { // algo.I32Dec1: signed i32, scale 1e1
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::I32Dec1& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::I32Dec1& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 10)
@@ -1474,11 +1474,11 @@ struct I32Dec2 { // algo.I32Dec2: signed i32, scale 1e2
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::I32Dec2& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::I32Dec2& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 100)
@@ -1509,11 +1509,11 @@ struct I32Dec3 { // algo.I32Dec3
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::I32Dec3& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::I32Dec3& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 1000)
@@ -1544,11 +1544,11 @@ struct I32Dec4 { // algo.I32Dec4
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::I32Dec4& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::I32Dec4& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 10000)
@@ -1579,11 +1579,11 @@ struct I32Dec5 { // algo.I32Dec5
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::I32Dec5& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::I32Dec5& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 100000)
@@ -1614,11 +1614,11 @@ struct I64Dec1 { // algo.I64Dec1
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::I64Dec1& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::I64Dec1& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 10)
@@ -1649,11 +1649,11 @@ struct I64Dec10 { // algo.I64Dec10: signed i64, scale 1e10
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::I64Dec10& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::I64Dec10& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 10000000000)
@@ -1684,11 +1684,11 @@ struct I64Dec2 { // algo.I64Dec2
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::I64Dec2& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::I64Dec2& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 100)
@@ -1719,11 +1719,11 @@ struct I64Dec3 { // algo.I64Dec3
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::I64Dec3& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::I64Dec3& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 1000)
@@ -1756,11 +1756,11 @@ struct I64Dec4 { // algo.I64Dec4
 #pragma pack(pop)
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::I64Dec4& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::I64Dec4& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 10000)
@@ -1793,11 +1793,11 @@ struct I64Dec5 { // algo.I64Dec5
 #pragma pack(pop)
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::I64Dec5& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::I64Dec5& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 100000)
@@ -1828,11 +1828,11 @@ struct I64Dec6 { // algo.I64Dec6
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::I64Dec6& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::I64Dec6& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 1000000)
@@ -1863,11 +1863,11 @@ struct I64Dec7 { // algo.I64Dec7: signed i64, scale 1e7
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::I64Dec7& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::I64Dec7& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 10000000)
@@ -1898,11 +1898,11 @@ struct I64Dec8 { // algo.I64Dec8: signed i64, scale 1e8
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::I64Dec8& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::I64Dec8& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 100000000)
@@ -1933,11 +1933,11 @@ struct I64Dec9 { // algo.I64Dec9: signed i64, scale 1e9
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::I64Dec9& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::I64Dec9& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 1000000000)
@@ -8674,11 +8674,11 @@ struct U16Dec2 { // algo.U16Dec2
 #pragma pack(pop)
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::U16Dec2& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::U16Dec2& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 100)
@@ -8711,11 +8711,11 @@ struct U32Dec1 { // algo.U32Dec1
 #pragma pack(pop)
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::U32Dec1& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::U32Dec1& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 10)
@@ -8746,11 +8746,11 @@ struct U32Dec2 { // algo.U32Dec2
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::U32Dec2& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::U32Dec2& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 100)
@@ -8781,11 +8781,11 @@ struct U32Dec3 { // algo.U32Dec3
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::U32Dec3& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::U32Dec3& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 1000)
@@ -8816,11 +8816,11 @@ struct U32Dec4 { // algo.U32Dec4
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::U32Dec4& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::U32Dec4& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 10000)
@@ -8851,11 +8851,11 @@ struct U32Dec5 { // algo.U32Dec5
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::U32Dec5& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::U32Dec5& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 100000)
@@ -8955,11 +8955,11 @@ struct U64Dec10 { // algo.U64Dec10: unsigned u64, scale 1e10
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::U64Dec10& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::U64Dec10& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 10000000000)
@@ -8992,11 +8992,11 @@ struct U64Dec2 { // algo.U64Dec2
 #pragma pack(pop)
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::U64Dec2& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::U64Dec2& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 100)
@@ -9027,11 +9027,11 @@ struct U64Dec4 { // algo.U64Dec4
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::U64Dec4& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::U64Dec4& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 10000)
@@ -9062,11 +9062,11 @@ struct U64Dec5 { // algo.U64Dec5
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::U64Dec5& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::U64Dec5& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 100000)
@@ -9097,11 +9097,11 @@ struct U64Dec6 { // algo.U64Dec6
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::U64Dec6& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::U64Dec6& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 1000000)
@@ -9132,11 +9132,11 @@ struct U64Dec7 { // algo.U64Dec7: unsigned u64, scale 1e7
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::U64Dec7& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::U64Dec7& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 10000000)
@@ -9167,11 +9167,11 @@ struct U64Dec8 { // algo.U64Dec8: unsigned u64, scale 1e8
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::U64Dec8& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::U64Dec8& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 100000000)
@@ -9202,11 +9202,11 @@ struct U64Dec9 { // algo.U64Dec9: unsigned u64, scale 1e9
 };
 
 // Set value of field value.
-// Make sure truncation of a near-integer value does not occur.
+// The value is rounded to the nearest integer.
+// This ensures that truncation of a near-integer value does not occur.
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-// If the new value overflows: do nothing in release, core dump in debug.
 void                 value_qSetDouble(algo::U64Dec9& parent, double val) __attribute__((nothrow));
 double               value_GetDouble(algo::U64Dec9& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 1000000000)

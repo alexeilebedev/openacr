@@ -5,25 +5,25 @@ Some of them are useful as stand-alone utilities
 
 ### Hilite: inline highlighter
 
-The hilite tool is a perl script that takes a number of perl regexes
-on the command line, and highlights matching strings in stdin using randomly 
-chosen colors.
+The hilite tool is a perl script for highlighting strings in some output.
 
 Usage:
 
     <some command> | hilite <expr1> <expr2> ...
 
-Each expr is a regex that is highlighted using a separate color.
+Each expr is a perl regex that is highlighted using a separate color.
 colors are picked automatically from a default sequence.
 
 To specify a color explicitly, use its name: `expr1:green expr2:yellow`
+The list of available colors is black, red, green, yellow, blue, magenta, cyan, white, darkblack, 
+darkred, darkgreen, darkyellow, darkblue, darkmagenta, darkcyan, darkwhite.
 
 Omitting `expr` matches the entire line, so `hilite :green` makes all lines green.
 
 #### Blotter Mode
 
-To highlight every other line, use `expr1:green%2`; to highlight every other 5 lines,
-use `expr1:green%5`.
+To highlight every other line, use `:green%2`. This is useful with values of 5
+when the output is wide, creating a blotter effect.
 
 If multiple patterns match a given input line, patterns specified later
 on the command line override previous patterns; Each pattern can match multiple
@@ -46,8 +46,8 @@ yet support highlighting where appropriate.
 If `<expr>` is `-diff` or `-d`, hilite loads diff rules that support either line-
 or word-diffs. Example of colorizing a diff file:
 
-   hilite -d < patchfile | less -r
-   
+   cat patchfile | hilite -d | less -r
+
 Removed lines or words are colored red, added lines or words are green, and index
 lines are blue.
 
@@ -57,7 +57,7 @@ interactive tool intended to ease readibility or terminal-based output.
 ### Grephunk: patch file filter
 
 Grephunk is a perl script that scan hunks on stdin
-and filter them according them to specified pattern. A `hunk` is the name patch file 
+and filter them according them to specified pattern. A `hunk` is the name patch file
 people use to refer to sections of a patch file that look like this:
 
     diff --git a/include/gen/atf_amc_gen.inl.h b/include/gen/atf_amc_gen.inl.h
@@ -93,7 +93,7 @@ For instance,
 
     <some command> | grephunk abcd f:cpp
 
-Searches fort hunks that match string `abcd` where the filename also 
+Searches fort hunks that match string `abcd` where the filename also
 matches `cpp`
 
 A pattern can be positive or negative, negative patterns are preceded with `!`.
@@ -111,4 +111,3 @@ In the example below, hunk must contain the word amc anywhere in it,
 and filename should not have pattern /gen/
 
     grephunk amc f:!/gen/ h:'}\s+$'
-    

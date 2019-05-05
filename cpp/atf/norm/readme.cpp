@@ -24,6 +24,7 @@
 
 // History of SKNF -> [History of SKNF](#history-of-sknf)
 static tempstr TocLink(strptr str) {
+    str = Trimmed(str);
     tempstr ret;
     ret << "[" << str << "](#";
     tempstr lc;
@@ -39,18 +40,35 @@ static tempstr TocLink(strptr str) {
     return ret;
 }
 
+static int GetHeaderLevel(strptr line) {
+    int i=0;
+    while (i<line.n_elems && line[i]=='#') {
+        i++;
+    }
+    return i;
+}
+
 // Scan string FROM for markdown header indicators
-// (==, ===, ==== etc)
-// And add them as sections to the table of contents, with 3 spaces per level
+// (##, ###, #### etc)
+// And add them as sections to the table of contents, with 3 spaces per '#'.
+// At a certain level of indentation, stop wasting lines and use "; " as separator
+// between chapters
 static void AppendToc(strptr from, cstring &to) {
+    int prevlevel=0;
     ind_beg(Line_curs,line,from) {
-        int i=0;
-        while (i<line.n_elems && line[i]=='#') {
-            i++;
-        }
-        if (i>1 && i<line.n_elems && line[i]==' ') {
-            char_PrintNTimes(' ',to,(i-1)*3);
-            to << "* " << TocLink(RestFrom(line,i+1)) << eol;
+        int level = GetHeaderLevel(line);
+        if (level>1 && level<line.n_elems && line[level]==' ') {
+            tempstr toclink = TocLink(RestFrom(line,level+1));
+            if (prevlevel == level && level >= 3) {
+                to << "; "<< toclink;
+            } else {
+                if (ch_qLast(to) != '\n') {
+                    to << eol;
+                }
+                char_PrintNTimes(' ',to,(level-1)*3);
+                to << "* " << toclink << eol;
+            }
+            prevlevel=level;
         }
     }ind_end;
 }
