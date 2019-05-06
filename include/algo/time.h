@@ -41,8 +41,8 @@ namespace algo {
     struct TimeStruct : tm {
         int  tm_nsec;
         bool tm_neg;
-        TimeStruct() { ZeroBytes(*this); tm_isdst = -1;}
-    TimeStruct(const struct tm &t) : tm(t) { tm_nsec = 0; tm_neg = false;}
+        inline TimeStruct();
+        inline TimeStruct(const struct tm &t);
     };
 }
 

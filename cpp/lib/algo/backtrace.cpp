@@ -61,6 +61,7 @@
 #include <dlfcn.h>
 #include <elf.h>
 #include <execinfo.h>// backtrace
+#include <ucontext.h>
 #include <cxxabi.h>// abi::__cxa_demangle
 
 // we need to silently break out on any error to do not cause segfault or exception
@@ -236,7 +237,7 @@ void algo::FatalErrorExit(const char *a) NORETURN {
 
 static void Signal(int signal, siginfo_t *_si, void *context) {
     (void)_si;
-    uintptr_t ip = context ? (uintptr_t)(((struct ucontext *)context)->uc_mcontext.gregs[REG_RIP]) : 0;
+    uintptr_t ip = context ? (uintptr_t)(((ucontext_t *)context)->uc_mcontext.gregs[REG_RIP]) : 0;
     cstring &out=algo_lib::_db.fatalerr;
     out << "algo_lib.signal  location:";
     u64_PrintHex(ip, out, 8, true);

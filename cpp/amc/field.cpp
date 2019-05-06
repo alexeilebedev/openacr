@@ -30,7 +30,8 @@
 // -----------------------------------------------------------------------------
 
 static void RemoveUnderscores(strptr from, cstring &to) {
-    (void)ch_AllocN(to,ch_N(from));
+    aryptr<char> ignore = ch_AllocN(to,ch_N(from));
+    (void)ignore;
     int j=0;
     for (int i=0; i<from.n_elems; i++) {
         if (from.elems[i] != '_') {

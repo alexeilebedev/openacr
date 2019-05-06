@@ -449,7 +449,7 @@ bool algo::Ipmask_ReadStrptrMaybe(Ipmask &row, algo::strptr str) {
         if (i==4) {
         } else if (i==0) {
             if (bits!=0) {// special case: A.B.C.D/0 -> bits 0
-                bits = -1 << (32-bits);
+                bits = u32(-1) << (32-bits);
             }
         }
         mask &= bits;

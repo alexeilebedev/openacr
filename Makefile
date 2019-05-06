@@ -10,7 +10,8 @@ bootstrap:
 	cpp-indent bin/abt-bootstrap >/dev/null 2>&1
 
 clean:
-	rm -rf dflt.*-x86_64 .testgen 
+	rm -rf dflt.*-x86_64 .testgen
+	git clean -dfx temp
 
 readme:
 	atf_norm readme

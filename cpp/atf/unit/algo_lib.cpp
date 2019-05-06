@@ -2454,24 +2454,20 @@ void atf_unit::unittest_algo_lib_AvlvsMap(){
 // --------------------------------------------------------------------------------
 
 static void CheckSleep(double sec) {
-    for (int i=0; i<10; i++) {
+    bool success=false;
+    for (int i=0; i<10 && !success; i++,sleep(1)) {
         SchedTime c(get_cycles());
         algo::SleepMsec(sec*1000.0);
         SchedTime c2(get_cycles());
         double elapsed = ElapsedSecs(c,c2);
         //some servers only give you 10% accuracy in sleep
-        bool success = elapsed >= sec*0.75 && elapsed <= sec*1.25;
-        prerr("atf_unit.check_sleep"
-              <<Keyval("want",sec)
-              <<Keyval("elapsed",elapsed)
-              <<Keyval("success",success));
-        if (success) {
-            return;
-        }
-        // wait a little
-        sleep(1);
+        success = elapsed >= sec*0.75 && elapsed <= sec*1.25;
+        verblog("atf_unit.check_sleep"
+                <<Keyval("want",sec)
+                <<Keyval("elapsed",elapsed)
+                <<Keyval("success",success));
     }
-    vrfy(0,"SleepMsec test failed");
+    vrfy(success,"SleepMsec test failed");
 }
 
 void atf_unit::unittest_algo_lib_Sleep() {

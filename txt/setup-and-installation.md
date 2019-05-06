@@ -1,18 +1,19 @@
 ## Setup and Installation
 
-Presently, this project has been tested on the following distributions:
+Presently, this project has been tested on the following distribution/compiler combinations:
 
-* RHEL 7.0
-* RHEL 7.3
-* CentOS 7.6
+* RHEL 7.0, g++ 4.8
+* RHEL 7.3, g++ 4.8
+* CentOS 7.6, g++ 4.8
+* Ubuntu, g++ 8.3
 
-The following compilers are supported:
-
-* g++ 4.8
-
-The MariaDB packages are required in order to build mysql2ssim and ssim2mysql tools.
+The MariaDB and OpenSSL packages are required in order to build mysql2ssim and ssim2mysql tools.
 
     yum install -y mariadb mariadb-devel mariadb-server
+
+And 
+
+    apt install -y libmariadb-dev libssl-dev
     
 All commands can be issued from this, top-level directory.
 Just add the relative path bin/ to your path.
@@ -47,3 +48,7 @@ Here are some commands to get set it up.
 
 There are no environment variables that we either or rely on.
 The ssimfiles offer plenty of room for structured configs.
+
+### Known Issues
+
+Currently, optimization levels `-O2` and higher cannot be used with gcc 8.

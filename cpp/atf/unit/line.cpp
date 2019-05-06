@@ -110,7 +110,8 @@ static void CheckFileLine4(strptr text, int nline, bool blocking) {
         (void)close(pipefd[0]);// cause eof on the other side
         algo_lib::DieWithParent();
         for (int i=0; i<text.n_elems; i++) {
-            write(pipefd[1],text.elems+i,1);
+            ssize_t ret = write(pipefd[1],text.elems+i,1);
+            (void)ret;// ignore return value
             usleep(5000);// sleep 5 msec
         }
         (void)close(pipefd[1]);// cause eof on the other side

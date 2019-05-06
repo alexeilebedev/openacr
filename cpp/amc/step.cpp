@@ -75,7 +75,8 @@ void amc::tfunc_Step_Init() {
     } else if (fstep.steptype == dmmeta_Steptype_steptype_TimeHookRecur) {
         Ins(&R, init.body, "// initialize fstep timehook ($field)");
         Ins(&R, init.body, "// timehook is recurrent with initial frequency=max.");
-        Ins(&R, init.body, "ThInitRecur($parname.th_$name, Hook($ns::$name_Call), SchedTime());");
+        Ins(&R, init.body, "hook_Set0($parname.th_$name, $ns::$name_Call);");
+        Ins(&R, init.body, "ThInitRecur($parname.th_$name, SchedTime());");
         if (fstep.c_fdelay) {
             vrfy(!fstep.c_fdelay->scale, "Scalable delay is only supported for InlineRecur step");
             Set(R, "$delay", tempstr()<< fstep.c_fdelay->delay);

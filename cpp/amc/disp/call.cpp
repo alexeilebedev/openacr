@@ -167,7 +167,7 @@ static void Call_Hdr2(algo_lib::Replscope &R, amc::FDispatch &dispatch) {
     amc::FFunc &func = amc::ind_func_GetOrCreate(Subst(R, "$ns.$Disp..Dispatch2"));
     func.ret = "void";
     func.glob = true;
-    Ins(&R, func.comment, "void rettype useful for THook<>", false);
+    Ins(&R, func.comment, "void rettype useful for hooks", false);
     Ins(&R, func.proto  , "v$DispDispatch()", false); {
         AddCtxProtoArg(dispatch,func);
         amc::AddProtoArg(func, amc::Refto(dispatch.p_ctype_hdr->cpp_type)<<" ", "msg");

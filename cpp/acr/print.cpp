@@ -444,7 +444,8 @@ void acr::PrintToFd(acr::FPrint &print, algo::Fildes fd) {
     int old_out = dup(1);
     dup2(fd.value,1);
     lseek(fd.value,0,SEEK_SET);
-    ftruncate(fd.value,0);
+    int rc = ftruncate(fd.value,0);
+    (void)rc;
     fsync(fd.value);
     acr::Print(print);
     if (old_out >= 0) {// mostly for coverity. dup shouldn't fail

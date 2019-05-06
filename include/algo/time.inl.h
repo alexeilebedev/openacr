@@ -117,3 +117,15 @@ inline algo::SchedTime algo::CurrSchedTime() {
 inline double algo::ElapsedSecs(algo::SchedTime start, algo::SchedTime end) {
     return (end-start)/get_cpu_hz();
 }
+
+inline algo::TimeStruct::TimeStruct() {
+    ZeroBytes(static_cast<tm&>(*this));
+    tm_nsec = 0;
+    tm_neg = false;
+    tm_isdst = -1;
+}
+
+inline algo::TimeStruct::TimeStruct(const struct tm &t) : tm(t) {
+    tm_nsec = 0;
+    tm_neg = false;
+}

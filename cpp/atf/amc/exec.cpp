@@ -26,8 +26,8 @@ static void CheckExecStatus(int scenario, int expected_status) {
     int pid=fork();
     if (pid==0) {// child
         algo_lib::DieWithParent();
-        prerr("atf_amc.exec_status"
-              <<Keyval("scenario",scenario));
+        verblog("atf_amc.exec_status"
+                <<Keyval("scenario",scenario));
         switch(scenario) {
         case 0: _exit(0); break;
         case 1: _exit(33); break;
@@ -66,7 +66,8 @@ void atf_amc::amctest_Exec_Status() {
 // Should this be generated?
 static algo::Fildes amc_StartRead(command::amc_proc &amc, algo_lib::FFildes &read) {
     int pipefd[2];
-    (void)pipe(pipefd);
+    int rc=pipe(pipefd);
+    (void)rc;
     read.fd.value = pipefd[0];
     amc.stdout  << ">&" << pipefd[1];
     amc_Start(amc);

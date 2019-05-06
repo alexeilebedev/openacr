@@ -107,7 +107,7 @@ static int DeleteRec(strptr line, strptr pkey) {
 // -----------------------------------------------------------------------------
 
 static int SandboxDeleteRec(strptr line, strptr pkey) {
-    (void)chdir(".testgen");// CHANGING DIRECTORY HERE
+    errno_vrfy(chdir(".testgen")==0,"chdir");// CHANGING DIRECTORY HERE
     command::amc_proc amc;
     command::abt_proc abt;
 
@@ -128,7 +128,7 @@ static int SandboxDeleteRec(strptr line, strptr pkey) {
     if (rc == 0) {
         rc = abt_Exec(abt);
     }
-    (void)chdir(Zeroterm(amc_gc::_db.basedir));// CHANGING DIRECTORY BACK
+    errno_vrfy(chdir(Zeroterm(amc_gc::_db.basedir))==0,"chdir");// CHANGING DIRECTORY BACK
     return rc;
 }
 

@@ -26,22 +26,21 @@
 
 #include "include/algo.h"
 
-
-// Initialize TH and associate it with SCOPE.
-// When SCOPE exits, TH will be descheduled.
-// If an exception occurs in hook's callback, it will be passed to SCOPe.
-void algo_lib::ThInit(algo_lib::FTimehook& th, algo::THook<> hook, algo::SchedTime delay) NOTHROW {
+// Initialize time hook TH as non-recurrent, with delay DELAY.
+// Usage:
+// ThInit(th, SchedTime());     // schedule at current time
+// hook_Set0(th, myfunction);   // set callback
+// bh_timehook_Reheap(th);      // insert into timehook heap
+// ... eventually algo_lib::Step() will call the hook
+void algo_lib::ThInit(algo_lib::FTimehook& th, algo::SchedTime delay) NOTHROW {
     th.recurrent = false;
-    th.hook_ctx = (u64)hook.ctx;
-    th.hook     = (timehook_hook_hook)hook.fcn;
     th.delay     = delay;
     th.time      = algo_lib::_db.clock;
 }
 
-void algo_lib::ThInitRecur(algo_lib::FTimehook& th, algo::THook<> hook, algo::SchedTime delay) NOTHROW {
+// Similar to the above, but recurrent.
+void algo_lib::ThInitRecur(algo_lib::FTimehook& th, algo::SchedTime delay) NOTHROW {
     th.recurrent = true;
-    th.hook_ctx = (u64)hook.ctx;
-    th.hook     = (timehook_hook_hook)hook.fcn;
     th.delay     = delay;
     th.time      = algo_lib::_db.clock;
 }

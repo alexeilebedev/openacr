@@ -212,8 +212,9 @@ namespace algo { // update-hdr srcfile:'(%/algo/lib.%|include/algo.inl.h|include
     // Where it works, ExpFast makes a steady relative error of about 2%.
     double ExpFast(double y);
 
-    // verbose version of mlockall
-    void LockAllMemory();
+    // lock all presently, and future allocated bytes in physical memory.
+    // Return success value. Errno provides more info.
+    bool LockAllMemory();
     void SetupExitSignals(bool sigint);
     const tempstr GetHostname();
     const tempstr GetDomainname();
@@ -257,20 +258,6 @@ namespace algo { // update-hdr srcfile:'(%/algo/lib.%|include/algo.inl.h|include
     template<class T> inline void ZeroBytes(T &t);
     template<class T, class U> inline T PtrAdd(U *ptr, int_ptr offset);
     template<class T> inline void TSwap(T &a, T &b);
-    inline THook<> Hook(void (*in_fcn)());
-    template<class Ctx> inline THook<> Hook(Ctx *in_ctx, void (*in_fcn)(Ctx*));
-    template<class Ctx> inline THook<> Hook(Ctx *in_ctx, void (*in_fcn)(Ctx&));
-    template<class Ctx,class B> inline THook<B> Hook(Ctx *in_ctx, void (*in_fcn)(Ctx*,B));
-    template<class Ctx,class B> inline THook<B> Hook(Ctx *in_ctx, void (*in_fcn)(Ctx&,B));
-    template<class Ctx,class B,class C> inline THook<B,C> Hook(Ctx *in_ctx, void (*in_fcn)(Ctx*,B,C));
-    template<class Ctx,class B,class C> inline THook<B,C> Hook(Ctx *in_ctx, void (*in_fcn)(Ctx&,B,C));
-    template<class Ctx,class B,class C, class D> inline THook<B,C,D> Hook(Ctx *in_ctx, void (*in_fcn)(Ctx*,B,C,D));
-    template<class Ctx,class B,class C, class D> inline THook<B,C,D> Hook(Ctx *in_ctx, void (*in_fcn)(Ctx&,B,C,D));
-    inline void qCall(const THook<> &hook);
-    template<class B> inline void qCall(const THook<B> &hook, B arg1);
-    template<class B, class C> inline void qCall(const THook<B,C> &hook, B arg1, C arg2);
-    template<class B, class C, class D> inline void qCall(const THook<B,C,D> &hook, B arg1, C arg2, D arg3);
-    inline void NoOp();
 
     // Default, and invalid, value for Fildes is -1. 0 is a valid value (stdin)!
     inline bool ValidQ(Fildes fd);
@@ -650,11 +637,16 @@ namespace algo_lib { // update-hdr
     // cpp/lib/algo/timehook.cpp
     //
 
-    // Initialize TH and associate it with SCOPE.
-    // When SCOPE exits, TH will be descheduled.
-    // If an exception occurs in hook's callback, it will be passed to SCOPe.
-    void ThInit(algo_lib::FTimehook& th, algo::THook<> hook, algo::SchedTime delay) __attribute__((nothrow));
-    void ThInitRecur(algo_lib::FTimehook& th, algo::THook<> hook, algo::SchedTime delay) __attribute__((nothrow));
+    // Initialize time hook TH as non-recurrent, with delay DELAY.
+    // Usage:
+    // ThInit(th, SchedTime());     // schedule at current time
+    // hook_Set0(th, myfunction);   // set callback
+    // bh_timehook_Reheap(th);      // insert into timehook heap
+    // ... eventually algo_lib::Step() will call the hook
+    void ThInit(algo_lib::FTimehook& th, algo::SchedTime delay) __attribute__((nothrow));
+
+    // Similar to the above, but recurrent.
+    void ThInitRecur(algo_lib::FTimehook& th, algo::SchedTime delay) __attribute__((nothrow));
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/txttbl.cpp -- Ascii table

@@ -143,7 +143,8 @@ void acr::Main_Browser() {
         cmd << " http://localhost:6769/?q=";
         strptr_PrintUri(acr::_db.cmdline.query, cmd, true);
         cmd << " & ";// background it
-        system(Zeroterm(cmd));
+        int rc = system(Zeroterm(cmd));
+        (void)rc;
     }
 }
 
@@ -166,10 +167,10 @@ static void SelectCtype(acr::FCtype &ctype_ctype, acr::FCtype &ctype) {
 // Select ctypes of selected records, deselect records themselves
 void acr::Main_SelectMeta() {
     // Find data record of 'ctype'
-    acr::FCtype &ctype_ctype = *acr::ind_ctype_Find("dmmeta.Ctype");
-    vrfy(&ctype_ctype, "acr.broken_metadata");
-    if (ctype_ctype.c_ssimfile && !ctype_ctype.c_ssimfile->c_file) {
-        acr::LoadSsimfile(*ctype_ctype.c_ssimfile);
+    acr::FCtype *ctype_ctype = acr::ind_ctype_Find("dmmeta.Ctype");
+    vrfy(ctype_ctype, "acr.broken_metadata");
+    if (ctype_ctype->c_ssimfile && !ctype_ctype->c_ssimfile->c_file) {
+        acr::LoadSsimfile(*ctype_ctype->c_ssimfile);
     }
     ind_beg(acr::_db_zd_all_selrec_curs,rec,acr::_db) {
         rec.metasel=true;
@@ -178,8 +179,7 @@ void acr::Main_SelectMeta() {
     ind_beg(acr::_db_file_curs, file, acr::_db) {
         ind_beg(acr::file_zd_frec_curs,rec,file) {
             if (rec.metasel) {
-                acr::FCtype &ctype = *rec.p_ctype;
-                SelectCtype(ctype_ctype,ctype);
+                SelectCtype(*ctype_ctype,*rec.p_ctype);
             }
         }ind_end;
     }ind_end;

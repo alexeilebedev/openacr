@@ -341,13 +341,13 @@ double algo::ExpFast(double y) {
 
 // -----------------------------------------------------------------------------
 
-// verbose version of mlockall
-void algo::LockAllMemory() {
-    if (mlockall(MCL_CURRENT | MCL_FUTURE)!=0) {
-        prerr("algo_lib.mlockall"
-              <<Keyval("comment","mlockall failed"));
-    }
+// lock all presently, and future allocated bytes in physical memory.
+// Return success value. Errno provides more info.
+bool algo::LockAllMemory() {
+    return mlockall(MCL_CURRENT | MCL_FUTURE)==0;
 }
+
+// -----------------------------------------------------------------------------
 
 static void SignalHandler(int sig) {
     algo_lib::_db.last_signal = sig;

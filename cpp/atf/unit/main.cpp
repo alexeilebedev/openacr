@@ -94,7 +94,8 @@ static void Main_Test(atf_unit::FUnittest &test, int temp_fd) {
         atf::Testrun testrun;
         atf_unit::testrun_CopyOut(*test.c_testrun, testrun);
         out << testrun << eol;
-        write(temp_fd,out.ch_elems,out.ch_n);
+        ssize_t ret = write(temp_fd,out.ch_elems,out.ch_n);
+        (void)ret; // ignore value
     }
     if (do_exit) {
         close(temp_fd);

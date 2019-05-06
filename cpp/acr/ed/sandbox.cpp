@@ -39,7 +39,7 @@ void acr_ed::BeginSandbox() {
     // acr_ed schedules update-gitfile, and there may be gsymbols
     // generated off of gitfile.ssim, so the list of versioned files
     // must be reasonably valid.
-    SysCmd("git add -f bin cpp include extern data diff", FailokQ(false));
+    SysCmd("git add -f --ignore-removal bin cpp include extern data diff", FailokQ(false));
     SysCmd("git commit --allow-empty -m initial-commit", FailokQ(false));
     (void)mkdir("temp", 0755);// may fail
 }

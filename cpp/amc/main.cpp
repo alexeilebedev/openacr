@@ -662,7 +662,7 @@ tempstr amc::FieldvalExpr(amc::FCtype *ctype, amc::FField &field, strptr name) {
         }ind_end;
     }
     // search parent fields
-    amc::FCtype *base;
+    amc::FCtype *base=NULL;
     if (ctype) {
         base = amc::GetBaseType(*ctype,NULL);
         if (base) {

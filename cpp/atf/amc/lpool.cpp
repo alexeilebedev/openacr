@@ -110,11 +110,10 @@ void atf_amc::amctest_Lpool() {
         vrfy_(atf_amc::_db.optalloc_free[4] == elem);// check that it went into the right bin
     }
     // step 5: use setrlimit and alloc a block that's too large
-    {
+    if (algo::LockAllMemory()) {
         // don't worry, each test executes inside a fork() anyway
         // so after this function exits, these changes will be discarded
         algo_lib::_db.sbrk_zeromem = true;
-        algo::LockAllMemory(); // make all pages physical
         LimitMem(10*1024*1024);
 
         void *elem1 = atf_amc::optalloc_AllocMem(1<<15); // 1MB will fit
@@ -128,5 +127,7 @@ void atf_amc::amctest_Lpool() {
         MarkOrCheckMem(elem1, 1<<15, false);
         atf_amc::optalloc_FreeMem(elem1,1<<20);// free the original block
         vrfy_(atf_amc::_db.optalloc_n==0);
+    } else {
+        verblog("# atf_amc: skipping Lpool LimitMem test, mlockall not available");
     }
 }
