@@ -43,10 +43,12 @@ static void _CheckQuery(const char *file, int line, strptr source, strptr query,
     tempstr value(Trimmed(SysEval(cmd,FailokQ(true),1024*100)));
     expect=Trimmed(expect);
     bool ok = expect==value;
-    atf_unit::Testcmp(file, line, value, expect, ok);
-    if (!ok) {
-        prerr("COMMAND: ["<<cmd<<"]");
-    }
+    vrfy(ok,
+         tempstr()<<file<<":"<<line<<": atf_unit.acr  "
+         <<Keyval("success","N")
+         <<Keyval("command",cmd)
+         <<Keyval("output",value)
+         <<Keyval("expected",expect));
 }
 
 #define CheckQuery(source,query,extraargs,expect) _CheckQuery(__FILE__,__LINE__,source,query,extraargs,expect)

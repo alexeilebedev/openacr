@@ -310,6 +310,33 @@ inline void command::atf_unit_proc_Init(command::atf_unit_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
+inline command::bash::bash() {
+    command::bash_Init(*this);
+}
+
+
+// --- command.bash..Init
+// Set all fields to initial values.
+inline void command::bash_Init(command::bash& parent) {
+    parent.c = algo::strptr("");
+}
+inline command::bash_proc::bash_proc() {
+    command::bash_proc_Init(*this);
+}
+
+inline command::bash_proc::~bash_proc() {
+    command::bash_proc_Uninit(*this);
+}
+
+
+// --- command.bash_proc..Init
+// Set all fields to initial values.
+inline void command::bash_proc_Init(command::bash_proc& parent) {
+    parent.path = algo::strptr("/usr/bin/bash");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
 inline command::lib_ctype::lib_ctype() {
     command::lib_ctype_Init(*this);
 }
@@ -383,33 +410,6 @@ inline command::mysql2ssim_proc::~mysql2ssim_proc() {
 // Set all fields to initial values.
 inline void command::mysql2ssim_proc_Init(command::mysql2ssim_proc& parent) {
     parent.path = algo::strptr("bin/mysql2ssim");
-    parent.pid = pid_t(0);
-    parent.timeout = i32(0);
-    parent.status = i32(0);
-}
-inline command::sh::sh() {
-    command::sh_Init(*this);
-}
-
-
-// --- command.sh..Init
-// Set all fields to initial values.
-inline void command::sh_Init(command::sh& parent) {
-    parent.c = algo::strptr("");
-}
-inline command::sh_proc::sh_proc() {
-    command::sh_proc_Init(*this);
-}
-
-inline command::sh_proc::~sh_proc() {
-    command::sh_proc_Uninit(*this);
-}
-
-
-// --- command.sh_proc..Init
-// Set all fields to initial values.
-inline void command::sh_proc_Init(command::sh_proc& parent) {
-    parent.path = algo::strptr("/bin/sh");
     parent.pid = pid_t(0);
     parent.timeout = i32(0);
     parent.status = i32(0);

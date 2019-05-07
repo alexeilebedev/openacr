@@ -258,6 +258,7 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_lib_AvlvsMap();
     // void unittest_algo_lib_Sleep();
     // void unittest_algo_lib_strptr_Eq();
+    // void unittest_algo_lib_SysEval();
 
     // -------------------------------------------------------------------
     // cpp/atf/unit/bash.cpp

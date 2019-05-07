@@ -34,32 +34,60 @@
 // -----------------------------------------------------------------------------
 
 // Execute unix command and return output.
-// TODO: don't use popen. it creates an extra shell.
-//
-// todo: eval N commands and return N outputs.
-//
-tempstr algo::SysEval(strptr cmd_, FailokQ fail_ok, int max_output, bool echo) {
-    tempstr cmd;
-    cmd<<cmd_;
+tempstr algo::SysEval(strptr cmd, FailokQ fail_ok, int max_output, bool echo) {
     tempstr result;
-    if (echo) {
-        prlog(cmd);
-    } else {
-        verblog(cmd);
-    }
-    fflush(stdout);
-    FILE *f = popen(Zeroterm(cmd),"r");
-    errno_vrfy(f || fail_ok,tempstr()<< "Invocation of ["<<cmd<<"] failed: failed to start process");
-    if (f) {
-        char buf[4096];
-        size_t nread;
-        while ((nread = fread(buf, 1, sizeof(buf), f))!=0) {
-            result << strptr(buf,(i32)nread);
-            bool exceed = ch_N(result) >= max_output;
-            vrfy(!exceed,tempstr()<< "Output of ["<<cmd<<"] exceeds "<<max_output<<" characters.");
+    bool ok = true;
+    int start_code=0;
+    // empty command succeeds immediately
+    if (cmd != "") {
+        if (echo) {
+            prlog(cmd);
+        } else {
+            verblog(cmd);
         }
-        // --- and how do we find out if SIGINT or SIGQUIT occured?
-        errno_vrfy(pclose(f)==0 || fail_ok,tempstr()<< "command returned error ("<<cmd<<")");
+        command::bash_proc bash;
+        bash.cmd.c = cmd;
+        algo_lib::FFildes readpipe;
+        {
+            int pipefd[2];
+            int rc=pipe(pipefd);
+            (void)rc;
+            readpipe.fd.value = pipefd[0];
+            bash.stdout  << ">&" << pipefd[1];
+            start_code=bash_Start(bash);
+            (void)close(pipefd[1]);
+        }
+        vrfy(start_code==0 || fail_ok
+             ,tempstr("algo_lib.exec_error")
+             <<Keyval("code",start_code)
+             <<Keyval("cmd",cmd));
+        // read from fd
+        if (ok) {
+            char buf[4096];
+            size_t nread;
+            while ((nread = read(readpipe.fd.value, buf, sizeof(buf)))!=0) {
+                result << strptr(buf,(i32)nread);
+                if (ch_N(result) > max_output) {
+                    bash_Kill(bash);// terminate subprocess
+                    vrfy(fail_ok,tempstr("algo_lib.max_output_exceeded")
+                         << Keyval("max_n",max_output)
+                         << Keyval("cmd",cmd));
+                    ok = false;
+                    break;
+                }
+            }
+        }
+        // wait for subprocess to finish
+        bash_Wait(bash);
+        if (ok) {
+            errno_vrfy(bash.status==0 || fail_ok
+                       ,tempstr("algo_lib.cmd_status_error")
+                       << Keyval("status",bash.status)
+                       << Keyval("cmd",cmd));
+        }
+    }
+    if (!ok) {
+        result="";
     }
     return result;
 }
@@ -80,12 +108,12 @@ int algo::SysCmd(strptr cmd, FailokQ fail_ok, DryrunQ dry_run, EchoQ echo) {
         }
         // empty command will cause a long-living shell; don't do it
         if (cmd.n_elems > 0) {
-            command::sh_proc sh;
-            sh.cmd.c = cmd;
+            command::bash_proc bash;
+            bash.cmd.c = cmd;
             if (fail_ok) {
-                ret = sh_Exec(sh);
+                ret = bash_Exec(bash);
             } else {
-                sh_ExecX(sh); // let amc-generated code throw the exception
+                bash_ExecX(bash); // let amc-generated code throw the exception
             }
         }
     }

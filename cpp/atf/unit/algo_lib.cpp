@@ -2504,3 +2504,40 @@ void atf_unit::unittest_algo_lib_strptr_Eq() {
         }
     }
 }
+
+// -----------------------------------------------------------------------------
+
+static void CheckSysEval(strptr cmd, strptr expect_output, int limit, bool expect_success) {
+    bool test_ok=true;
+    cstring out;
+    // test command
+    try {
+        out=SysEval(cmd,FailokQ(true),limit);
+        test_ok = out==expect_output;
+        out="";
+    } catch(algo_lib::ErrorX &x) {
+        test_ok=expect_success==false;
+    }
+    // re-test same command with FailokQ(false)
+    if (test_ok && !expect_success) {
+        try {
+            out=SysEval(cmd,FailokQ(false),limit);
+            test_ok = false;// must have thrown!!
+        } catch(algo_lib::ErrorX &x) {
+            test_ok = true;
+        }
+    }
+    vrfy(test_ok,
+         tempstr("syseval_fail")
+         <<Keyval("cmd",cmd)
+         <<Keyval("expect_output",expect_output)
+         <<Keyval("output",out)
+         <<Keyval("limit",limit));
+}
+
+void atf_unit::unittest_algo_lib_SysEval() {
+    CheckSysEval("echo -n blah","blah",10,true);
+    CheckSysEval("echo -n longstring","",1,false);// will fail because of output limit
+    CheckSysEval("cat /dev/zero","",100000,false);// will fail because of output limit
+    CheckSysEval("echo blah","blah\n",5,true);// check newline
+}

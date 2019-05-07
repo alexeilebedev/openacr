@@ -1351,6 +1351,8 @@ void                 unittest_algo_lib_StringToFile();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_SubstringIndex();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+void                 unittest_algo_lib_SysEval();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_Tabulate();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_Tempfile();

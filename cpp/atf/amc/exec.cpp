@@ -100,23 +100,23 @@ void atf_amc::amctest_ReadProc() {
 void atf_amc::amctest_ExecSh() {
     // spawn a shell subprocess...
     {
-        command::sh_proc sh;
-        sh.cmd.c = "true";
-        sh_ExecX(sh);
+        command::bash_proc bash;
+        bash.cmd.c = "true";
+        bash_ExecX(bash);
     }
     // try return value
     {
-        command::sh_proc sh;
-        sh.cmd.c = "false";
-        vrfy_(sh_Exec(sh)!=0);
+        command::bash_proc bash;
+        bash.cmd.c = "false";
+        vrfy_(bash_Exec(bash)!=0);
     }
     // make sure -verbose doesn't pass down...
     {
-        command::sh_proc sh;
+        command::bash_proc bash;
         algo_lib::_db.cmdline.verbose++;
-        sh.cmd.c = "ls";
-        vrfy_(FindStr(sh_ToCmdline(sh),"verbose")==-1);
-        vrfy_(sh_Exec(sh)==0);
+        bash.cmd.c = "ls";
+        vrfy_(FindStr(bash_ToCmdline(bash),"verbose")==-1);
+        vrfy_(bash_Exec(bash)==0);
         algo_lib::_db.cmdline.verbose--;
     }
 }

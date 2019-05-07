@@ -51,9 +51,6 @@ static void Main_Start() {
     // In RH7, we use mariadb which requires innodb to be enabled.
     struct utsname my_uname;
     uname(&my_uname);
-    if (strstr(my_uname.release, "el7.x86_64") == NULL) {
-        cmd << " --skip-innodb"; // This only applies to RH6
-    }
     cmd << " 1>/dev/null &";
     SysCmd(cmd, FailokQ(false), DryrunQ(false), EchoQ(false));
     // wait for it to start -- wait for a few seconds, then print the error

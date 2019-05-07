@@ -562,12 +562,12 @@ dmmeta.ctypelen  ctype:command.amc_vis  len:136  alignment:8  padbytes:3
 dmmeta.ctypelen  ctype:command.atf_amc  len:112  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:command.atf_norm  len:112  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:command.atf_unit  len:160  alignment:8  padbytes:18
+dmmeta.ctypelen  ctype:command.bash  len:16  alignment:8  padbytes:0
+dmmeta.ctypelen  ctype:command.bash_proc  len:96  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:command.lib_ctype  len:16  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:command.lib_exec  len:12  alignment:4  padbytes:5
 dmmeta.ctypelen  ctype:command.mdbg  len:152  alignment:8  padbytes:11
 dmmeta.ctypelen  ctype:command.mysql2ssim  len:72  alignment:8  padbytes:19
-dmmeta.ctypelen  ctype:command.sh  len:16  alignment:8  padbytes:0
-dmmeta.ctypelen  ctype:command.sh_proc  len:96  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:command.src_func  len:712  alignment:8  padbytes:2
 dmmeta.ctypelen  ctype:command.src_hdr  len:120  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:command.src_lim  len:128  alignment:8  padbytes:12

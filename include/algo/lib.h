@@ -76,14 +76,14 @@ namespace algo {
     // -----------------------------------------------------------------------------
 
     template<class T>
-        struct Renew {
-            T &t;
+    struct Renew {
+        T &t;
         Renew(T &in_t) : t(in_t){
         }
-            ~Renew() {
-                new (&t)T;
-            }
-        };
+        ~Renew() {
+            new (&t)T;
+        }
+    };
 
     template<class T> inline void Refurbish(T &t) {
         Renew<T> r(t);
@@ -164,11 +164,7 @@ namespace algo { // update-hdr srcfile:'(%/algo/lib.%|include/algo.inl.h|include
     //
 
     // Execute unix command and return output.
-    // TODO: don't use popen. it creates an extra shell.
-    //
-    // todo: eval N commands and return N outputs.
-    //
-    tempstr SysEval(strptr cmd_, FailokQ fail_ok, int max_output, bool echo);
+    tempstr SysEval(strptr cmd, FailokQ fail_ok, int max_output, bool echo);
 
     // Execute unix command and return status code.
     // Exception is thrown if FAIL_OK is false, and subprocess does not exit normally.

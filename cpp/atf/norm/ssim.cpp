@@ -40,16 +40,14 @@ void atf_norm::normcheck_normalize_acr() {
 // -----------------------------------------------------------------------------
 
 void atf_norm::normcheck_normalize_acr_my() {
-    if (FileQ("bin/ssim2mysql")) {
-        command::acr_my acr_my;
-        acr_my.abort = true;
-        SysCmd(acr_my_ToCmdline(acr_my),FailokQ(false)); //return to known state
-        command::acr_my acr_my2;
-        acr_my2.start = true;
-        acr_my2.stop  = true;
-        acr_my2.nsdb.expr   = "%";
-        SysCmd(acr_my_ToCmdline(acr_my2),FailokQ(false));//# round trip all data through mysql
-    }
+    command::acr_my_proc acr_my;
+    acr_my.cmd.abort = true;
+    acr_my_ExecX(acr_my); //return to known state
+    command::acr_my_proc acr_my2;
+    acr_my2.cmd.start = true;
+    acr_my2.cmd.stop  = true;
+    acr_my2.cmd.nsdb.expr   = "%";
+    acr_my_ExecX(acr_my2);//# round trip all data through mysql
 }
 
 // -----------------------------------------------------------------------------

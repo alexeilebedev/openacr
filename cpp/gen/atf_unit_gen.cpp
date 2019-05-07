@@ -838,6 +838,7 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:algo_lib.StringSubrange  comment:\"\"", atf_unit::unittest_algo_lib_StringSubrange }
         ,{ "atfdb.unittest  unittest:algo_lib.StringToFile  comment:\"\"", atf_unit::unittest_algo_lib_StringToFile }
         ,{ "atfdb.unittest  unittest:algo_lib.SubstringIndex  comment:\"\"", atf_unit::unittest_algo_lib_SubstringIndex }
+        ,{ "atfdb.unittest  unittest:algo_lib.SysEval  comment:\"\"", atf_unit::unittest_algo_lib_SysEval }
         ,{ "atfdb.unittest  unittest:algo_lib.Tabulate  comment:\"\"", atf_unit::unittest_algo_lib_Tabulate }
         ,{ "atfdb.unittest  unittest:algo_lib.Tempfile  comment:\"\"", atf_unit::unittest_algo_lib_Tempfile }
         ,{ "atfdb.unittest  unittest:algo_lib.TestBitSet  comment:\"Bitset over Tary\"", atf_unit::unittest_algo_lib_TestBitSet }

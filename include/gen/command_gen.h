@@ -212,14 +212,14 @@ namespace command { struct atf_norm; }
 namespace command { struct atf_norm_proc; }
 namespace command { struct atf_unit; }
 namespace command { struct atf_unit_proc; }
+namespace command { struct bash; }
+namespace command { struct bash_proc; }
 namespace command { struct lib_ctype; }
 namespace command { struct lib_exec; }
 namespace command { struct mdbg; }
 namespace command { struct mdbg_proc; }
 namespace command { struct mysql2ssim; }
 namespace command { struct mysql2ssim_proc; }
-namespace command { struct sh; }
-namespace command { struct sh_proc; }
 namespace command { struct src_func; }
 namespace command { struct src_func_proc; }
 namespace command { struct src_hdr; }
@@ -1238,6 +1238,58 @@ algo::tempstr        atf_unit_ToCmdline(command::atf_unit_proc& parent) __attrib
 void                 atf_unit_proc_Init(command::atf_unit_proc& parent);
 void                 atf_unit_proc_Uninit(command::atf_unit_proc& parent) __attribute__((nothrow));
 
+// --- command.bash
+// access: command.bash_proc.bash (Exec)
+struct bash { // command.bash: One way of invoking the shell
+    algo::cstring   c;   //   ""  Shell command to execute
+    bash();
+};
+
+// Set all fields to initial values.
+void                 bash_Init(command::bash& parent);
+// print command-line args of command::bash to string  -- cprint:command.bash.Argv
+void                 bash_PrintArgv(command::bash & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- command.bash_proc
+struct bash_proc { // command.bash_proc: Shell subprocess
+    algo::cstring   path;      //   "/usr/bin/bash"  path for executable
+    command::bash   cmd;       // command line for child process
+    algo::cstring   stdin;     // redirect for stdin
+    algo::cstring   stdout;    // redirect for stdout
+    algo::cstring   stderr;    // redirect for stderr
+    pid_t           pid;       //   0  pid of running child process
+    i32             timeout;   //   0  optional timeout for child process
+    i32             status;    //   0  last exit status of child process
+    bash_proc();
+    ~bash_proc();
+private:
+    // reftype of command.bash_proc.bash prohibits copy
+    bash_proc(const bash_proc&){ /*disallow copy constructor */}
+    void operator =(const bash_proc&){ /*disallow direct assignment */}
+};
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int                  bash_Start(command::bash_proc& parent) __attribute__((nothrow));
+// Kill subprocess and wait
+void                 bash_Kill(command::bash_proc& parent);
+// Wait for subprocess to return
+void                 bash_Wait(command::bash_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+int                  bash_Exec(command::bash_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void                 bash_ExecX(command::bash_proc& parent);
+// Call execv()
+// Call execv with specified parameters -- cprint:bash.Argv
+int                  bash_Execv(command::bash_proc& parent) __attribute__((nothrow));
+algo::tempstr        bash_ToCmdline(command::bash_proc& parent) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 bash_proc_Init(command::bash_proc& parent);
+void                 bash_proc_Uninit(command::bash_proc& parent) __attribute__((nothrow));
+
 // --- command.lib_ctype
 struct lib_ctype { // command.lib_ctype
     algo::cstring   in;   //   "data"  Input directory or filename, - for stdin
@@ -1413,58 +1465,6 @@ algo::tempstr        mysql2ssim_ToCmdline(command::mysql2ssim_proc& parent) __at
 // Set all fields to initial values.
 void                 mysql2ssim_proc_Init(command::mysql2ssim_proc& parent);
 void                 mysql2ssim_proc_Uninit(command::mysql2ssim_proc& parent) __attribute__((nothrow));
-
-// --- command.sh
-// access: command.sh_proc.sh (Exec)
-struct sh { // command.sh: One way of invoking the shell
-    algo::cstring   c;   //   ""  Shell command to execute
-    sh();
-};
-
-// Set all fields to initial values.
-void                 sh_Init(command::sh& parent);
-// print command-line args of command::sh to string  -- cprint:command.sh.Argv
-void                 sh_PrintArgv(command::sh & row, algo::cstring &str) __attribute__((nothrow));
-
-// --- command.sh_proc
-struct sh_proc { // command.sh_proc: Shell subprocess
-    algo::cstring   path;      //   "/bin/sh"  path for executable
-    command::sh     cmd;       // command line for child process
-    algo::cstring   stdin;     // redirect for stdin
-    algo::cstring   stdout;    // redirect for stdout
-    algo::cstring   stderr;    // redirect for stderr
-    pid_t           pid;       //   0  pid of running child process
-    i32             timeout;   //   0  optional timeout for child process
-    i32             status;    //   0  last exit status of child process
-    sh_proc();
-    ~sh_proc();
-private:
-    // reftype of command.sh_proc.sh prohibits copy
-    sh_proc(const sh_proc&){ /*disallow copy constructor */}
-    void operator =(const sh_proc&){ /*disallow direct assignment */}
-};
-
-// Start subprocess
-// If subprocess already running, do nothing. Otherwise, start it
-int                  sh_Start(command::sh_proc& parent) __attribute__((nothrow));
-// Kill subprocess and wait
-void                 sh_Kill(command::sh_proc& parent);
-// Wait for subprocess to return
-void                 sh_Wait(command::sh_proc& parent) __attribute__((nothrow));
-// Start + Wait
-// Execute subprocess and return exit code
-int                  sh_Exec(command::sh_proc& parent) __attribute__((nothrow));
-// Start + Wait, throw exception on error
-// Execute subprocess; throw human-readable exception on error
-void                 sh_ExecX(command::sh_proc& parent);
-// Call execv()
-// Call execv with specified parameters -- cprint:sh.Argv
-int                  sh_Execv(command::sh_proc& parent) __attribute__((nothrow));
-algo::tempstr        sh_ToCmdline(command::sh_proc& parent) __attribute__((nothrow));
-
-// Set all fields to initial values.
-void                 sh_proc_Init(command::sh_proc& parent);
-void                 sh_proc_Uninit(command::sh_proc& parent) __attribute__((nothrow));
 
 // --- command.src_func
 // access: command.src_func_proc.src_func (Exec)

@@ -5785,6 +5785,152 @@ void command::atf_unit_proc_Uninit(command::atf_unit_proc& parent) {
     atf_unit_Kill(parent); // kill child, ensure forward progress
 }
 
+// --- command.bash..PrintArgv
+// print command-line args of command::bash to string  -- cprint:command.bash.Argv
+void command::bash_PrintArgv(command::bash & row, algo::cstring &str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)row;
+    (void)str;
+    if (!(row.c == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.c, temp);
+        str << " -c ";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- command.bash_proc.bash.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::bash_Start(command::bash_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(bash_ToCmdline(parent)); // maybe print command
+        parent.status = 0; // reset last status
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            algo_lib::ApplyRedirect(parent.stdin, 0);
+            algo_lib::ApplyRedirect(parent.stdout, 1);
+            algo_lib::ApplyRedirect(parent.stderr, 2);
+            retval = bash_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.bash_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        } else {
+            retval = parent.status; // parent
+        }
+    }
+    return retval;
+}
+
+// --- command.bash_proc.bash.Kill
+// Kill subprocess and wait
+void command::bash_Kill(command::bash_proc& parent) {
+    if (parent.pid != 0) {
+        kill(parent.pid,9);
+        bash_Wait(parent);
+    }
+}
+
+// --- command.bash_proc.bash.Wait
+// Wait for subprocess to return
+void command::bash_Wait(command::bash_proc& parent) {
+    if (parent.pid != 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.bash_proc.bash.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::bash_Exec(command::bash_proc& parent) {
+    bash_Start(parent);
+    bash_Wait(parent);
+    return parent.status;
+}
+
+// --- command.bash_proc.bash.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::bash_ExecX(command::bash_proc& parent) {
+    int rc = bash_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",bash_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.bash_proc.bash.Execv
+// Call execv()
+// Call execv with specified parameters -- cprint:bash.Argv
+int command::bash_Execv(command::bash_proc& parent) {
+    char *argv[1+2]; // start of first arg (future pointer)
+    algo::tempstr temp;
+    int n_argv=0;
+    argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+    temp << parent.path;
+    ch_Alloc(temp) = 0;// NUL term for pathname
+
+    if (parent.cmd.c != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-c";
+        ch_Alloc(temp) = 0;
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        cstring_Print(parent.cmd.c, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+    argv[n_argv] = NULL; // last pointer
+    while (n_argv>0) { // shift pointers
+        argv[--n_argv] += (u64)temp.ch_elems;
+    }
+    return execv(Zeroterm(parent.path),argv);
+}
+
+// --- command.bash_proc.bash.ToCmdline
+algo::tempstr command::bash_ToCmdline(command::bash_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::bash_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.stdin)) {
+        retval << " " << parent.stdin;
+    }
+    if (ch_N(parent.stdout)) {
+        retval << " " << parent.stdout;
+    }
+    if (ch_N(parent.stderr)) {
+        retval << " 2" << parent.stderr;
+    }
+    return retval;
+}
+
+// --- command.bash_proc..Uninit
+void command::bash_proc_Uninit(command::bash_proc& parent) {
+    command::bash_proc &row = parent; (void)row;
+
+    // command.bash_proc.bash.Uninit (Exec)  //Must be bash to support $'' for string quoting
+    bash_Kill(parent); // kill child, ensure forward progress
+}
+
 // --- command.lib_ctype..ReadFieldMaybe
 bool command::lib_ctype_ReadFieldMaybe(command::lib_ctype &parent, algo::strptr field, algo::strptr strval) {
     command::FieldId field_id;
@@ -6646,152 +6792,6 @@ void command::mysql2ssim_proc_Uninit(command::mysql2ssim_proc& parent) {
 
     // command.mysql2ssim_proc.mysql2ssim.Uninit (Exec)  //
     mysql2ssim_Kill(parent); // kill child, ensure forward progress
-}
-
-// --- command.sh..PrintArgv
-// print command-line args of command::sh to string  -- cprint:command.sh.Argv
-void command::sh_PrintArgv(command::sh & row, algo::cstring &str) {
-    algo::tempstr temp;
-    (void)temp;
-    (void)row;
-    (void)str;
-    if (!(row.c == "")) {
-        ch_RemoveAll(temp);
-        cstring_Print(row.c, temp);
-        str << " -c ";
-        strptr_PrintBash(temp,str);
-    }
-}
-
-// --- command.sh_proc.sh.Start
-// Start subprocess
-// If subprocess already running, do nothing. Otherwise, start it
-int command::sh_Start(command::sh_proc& parent) {
-    int retval = 0;
-    if (parent.pid == 0) {
-        verblog(sh_ToCmdline(parent)); // maybe print command
-        parent.status = 0; // reset last status
-        parent.pid = fork();
-        if (parent.pid == 0) { // child
-            algo_lib::DieWithParent();
-            if (parent.timeout > 0) {
-                alarm(parent.timeout);
-            }
-            algo_lib::ApplyRedirect(parent.stdin, 0);
-            algo_lib::ApplyRedirect(parent.stdout, 1);
-            algo_lib::ApplyRedirect(parent.stderr, 2);
-            retval = sh_Execv(parent);
-            if (retval != 0) { // if start fails, print error
-                int err=errno;
-                prerr("command.sh_execv"
-                <<Keyval("errno",err)
-                <<Keyval("errstr",strerror(err))
-                <<Keyval("comment","Execv failed"));
-            }
-            _exit(127); // if failed to start, exit anyway
-        } else if (parent.pid == -1) {
-            retval = errno; // failed to fork
-        } else {
-            retval = parent.status; // parent
-        }
-    }
-    return retval;
-}
-
-// --- command.sh_proc.sh.Kill
-// Kill subprocess and wait
-void command::sh_Kill(command::sh_proc& parent) {
-    if (parent.pid != 0) {
-        kill(parent.pid,9);
-        sh_Wait(parent);
-    }
-}
-
-// --- command.sh_proc.sh.Wait
-// Wait for subprocess to return
-void command::sh_Wait(command::sh_proc& parent) {
-    if (parent.pid != 0) {
-        int wait_flags = 0;
-        int wait_status = 0;
-        int rc = -1;
-        do {
-            // really wait for subprocess to exit
-            rc = waitpid(parent.pid,&wait_status,wait_flags);
-        } while (rc==-1 && errno==EINTR);
-        if (rc == parent.pid) {
-            parent.status = wait_status;
-            parent.pid = 0;
-        }
-    }
-}
-
-// --- command.sh_proc.sh.Exec
-// Start + Wait
-// Execute subprocess and return exit code
-int command::sh_Exec(command::sh_proc& parent) {
-    sh_Start(parent);
-    sh_Wait(parent);
-    return parent.status;
-}
-
-// --- command.sh_proc.sh.ExecX
-// Start + Wait, throw exception on error
-// Execute subprocess; throw human-readable exception on error
-void command::sh_ExecX(command::sh_proc& parent) {
-    int rc = sh_Exec(parent);
-    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",sh_ToCmdline(parent))
-    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
-}
-
-// --- command.sh_proc.sh.Execv
-// Call execv()
-// Call execv with specified parameters -- cprint:sh.Argv
-int command::sh_Execv(command::sh_proc& parent) {
-    char *argv[1+2]; // start of first arg (future pointer)
-    algo::tempstr temp;
-    int n_argv=0;
-    argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-    temp << parent.path;
-    ch_Alloc(temp) = 0;// NUL term for pathname
-
-    if (parent.cmd.c != "") {
-        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-c";
-        ch_Alloc(temp) = 0;
-        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        cstring_Print(parent.cmd.c, temp);
-        ch_Alloc(temp) = 0;// NUL term for this arg
-    }
-    argv[n_argv] = NULL; // last pointer
-    while (n_argv>0) { // shift pointers
-        argv[--n_argv] += (u64)temp.ch_elems;
-    }
-    return execv(Zeroterm(parent.path),argv);
-}
-
-// --- command.sh_proc.sh.ToCmdline
-algo::tempstr command::sh_ToCmdline(command::sh_proc& parent) {
-    algo::tempstr retval;
-    retval << parent.path << " ";
-    command::sh_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.stdin)) {
-        retval << " " << parent.stdin;
-    }
-    if (ch_N(parent.stdout)) {
-        retval << " " << parent.stdout;
-    }
-    if (ch_N(parent.stderr)) {
-        retval << " 2" << parent.stderr;
-    }
-    return retval;
-}
-
-// --- command.sh_proc..Uninit
-void command::sh_proc_Uninit(command::sh_proc& parent) {
-    command::sh_proc &row = parent; (void)row;
-
-    // command.sh_proc.sh.Uninit (Exec)  //
-    sh_Kill(parent); // kill child, ensure forward progress
 }
 
 // --- command.src_func.targsrc.Print
@@ -8877,6 +8877,17 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::atf_unit,perf_secs) == 144);
     algo_assert(_offset_of(command::atf_unit,pertest_timeout) == 152);
     algo_assert(sizeof(command::atf_unit) == 160);
+    algo_assert(_offset_of(command::bash,c) == 0);
+    algo_assert(sizeof(command::bash) == 16);
+    algo_assert(_offset_of(command::bash_proc,path) == 0);
+    algo_assert(_offset_of(command::bash_proc,cmd) == 16);
+    algo_assert(_offset_of(command::bash_proc,stdin) == 32);
+    algo_assert(_offset_of(command::bash_proc,stdout) == 48);
+    algo_assert(_offset_of(command::bash_proc,stderr) == 64);
+    algo_assert(_offset_of(command::bash_proc,pid) == 80);
+    algo_assert(_offset_of(command::bash_proc,timeout) == 84);
+    algo_assert(_offset_of(command::bash_proc,status) == 88);
+    algo_assert(sizeof(command::bash_proc) == 96);
     algo_assert(_offset_of(command::lib_ctype,in) == 0);
     algo_assert(sizeof(command::lib_ctype) == 16);
     algo_assert(_offset_of(command::lib_exec,dry_run) == 0);
@@ -8909,17 +8920,6 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::mysql2ssim,nologo) == 65);
     algo_assert(_offset_of(command::mysql2ssim,baddbok) == 66);
     algo_assert(sizeof(command::mysql2ssim) == 72);
-    algo_assert(_offset_of(command::sh,c) == 0);
-    algo_assert(sizeof(command::sh) == 16);
-    algo_assert(_offset_of(command::sh_proc,path) == 0);
-    algo_assert(_offset_of(command::sh_proc,cmd) == 16);
-    algo_assert(_offset_of(command::sh_proc,stdin) == 32);
-    algo_assert(_offset_of(command::sh_proc,stdout) == 48);
-    algo_assert(_offset_of(command::sh_proc,stderr) == 64);
-    algo_assert(_offset_of(command::sh_proc,pid) == 80);
-    algo_assert(_offset_of(command::sh_proc,timeout) == 84);
-    algo_assert(_offset_of(command::sh_proc,status) == 88);
-    algo_assert(sizeof(command::sh_proc) == 96);
     algo_assert(_offset_of(command::src_func,in) == 0);
     algo_assert(_offset_of(command::src_func,targsrc) == 16);
     algo_assert(_offset_of(command::src_func,name) == 112);
