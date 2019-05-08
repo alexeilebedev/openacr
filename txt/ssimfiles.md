@@ -31,22 +31,27 @@ and each line corresponds to a record.
 
 ### Ssim Data Sets
 
-Ssimfiles are often found in data sets. There is one data set in this 
-project, it is in the directory "data". In it, there is one directory per
-namespace, and one file per ssimfile.
+A ssimfile could be a part of a data set, or it could be a stand-alone file.
+Both are called `ssimfiles` and use the extension `.ssim`.
+There is one data set in this project, it is in the directory "data". 
+In it, there is one directory per namespace, and one file per ssimfile.
 
 In this data set, there is both data and meta-data. Meta-data is in the directory
-`data/dmmeta`, where `dmmeta` stands for "data model meta".
+`data/dmmeta`, where `dmmeta` stands for "data model meta". 
 
 The list of all ssim files is provided by "acr ssimfile".
 The list of all attrbitutes is provided by "acr field"
 
 Ssim tuples can also be stored together in a file. Acr can read and write those
 tuples. One can also use grep, sed, awk, and other line-oriented tools to access, edit,
-and multilate these records.
+and mutilate these records.
 
-All amc-generated programs support the -in argument which specifies the input
-data set for the tool -- either a file or a directory. By default it's "data"
+All amc-generated programs support the `-in` argument which specifies the input
+data set for the tool -- either a file or a directory. By default it's `"data"`.
+
+Acr additionally supports the `-schema` argument, specify the location from which it 
+loads the schema. But default it's also `"data"`. This allows having many data-oriented
+data sets which all use the same schema, and keeping the schema in the default location.
 
 ### Structured Key Normal Form
 

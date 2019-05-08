@@ -208,17 +208,13 @@ void acr_my::Main() {
     acr_my::_db.data_dir << GetCurDir() << "/mysql";
     Set(acr_my::_db.R, "$data_dir", acr_my::_db.data_dir);
 
-    int nselect=0;
     ind_beg(acr_my::_db_nsdb_curs, nsdb,acr_my::_db) {
         bool match = Regx_Match(acr_my::_db.cmdline.nsdb, tempstr()<<nsdb.ns<<".");// allow dmmeta.% to match dmmeta
         match |= Regx_Match(acr_my::_db.cmdline.nsdb, nsdb.ns);// allow dmm%a to match dmmeta
         if (match) {
             nsdb.select=true;
-            nselect++;
         }
     }ind_end;
-
-    vrfy(!acr_my::_db.cmdline.start || nselect>0, "no namespace selected");
 
     // start mysql
     if (acr_my::_db.cmdline.start) {
