@@ -119,6 +119,6 @@ void atf_unit::unittest_lib_exec_Dependency() {
     lib_exec::SyscmdExecute();
 
     TESTCMP(glob_end.status, 0);
-    TESTCMP(strptr(algo::FileToString("temp/lib_exec.dependency")), "1234");
+    vrfy_(algo::FileToString("temp/lib_exec.dependency") == "1234");
     unlink("temp/lib_exec.dependency");
 }

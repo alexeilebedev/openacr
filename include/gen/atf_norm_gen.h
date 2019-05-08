@@ -615,6 +615,8 @@ struct _db_readme_curs {// cursor
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_amc();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
+void                 normcheck_bootstrap();
+// User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_testamc();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_readme();
@@ -645,7 +647,7 @@ void                 normcheck_normalize_acr();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_normalize_acr_my();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
-void                 normcheck_bootstrap();
+void                 normcheck_clang();
 int                  main(int argc, char **argv);
 } // end namespace atf_norm
 namespace algo {

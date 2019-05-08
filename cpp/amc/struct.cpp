@@ -113,11 +113,8 @@ static void GenStruct_Cstring(algo_lib::Replscope &R, amc::FCtype &ctype) {
     Ins(&R, *ns.hdr, "    cstring& operator =(const cstring &s);");
     Ins(&R, *ns.hdr, "    explicit cstring(const strptr &s);");
     Ins(&R, *ns.hdr, "    cstring(const tempstr &rhs);");
-    Ins(&R, *ns.hdr, "    operator const strptr() const {");
-    Ins(&R, *ns.hdr, "        return strptr(ch_elems,ch_n);");
-    Ins(&R, *ns.hdr, "    }");
-    Ins(&R, *ns.hdr, "    operator strptr() {");
-    Ins(&R, *ns.hdr, "        return strptr(ch_elems,ch_n);");
+    Ins(&R, *ns.hdr, "    operator strptr() const {");
+    Ins(&R, *ns.hdr, "        return strptr(const_cast<char*>(ch_elems),ch_n);");
     Ins(&R, *ns.hdr, "    }");
 
     Ins(&R, *ns.cpp, "algo::cstring& algo::cstring::operator =(const algo::strptr &rhs) {");

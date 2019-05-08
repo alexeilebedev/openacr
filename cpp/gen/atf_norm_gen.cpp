@@ -290,6 +290,7 @@ static void atf_norm::normcheck_LoadStatic() {
         void (*step)();
     } data[] = {
         { "atfdb.normcheck  normcheck:amc  comment:\"Run amc\"", atf_norm::normcheck_amc }
+        ,{ "atfdb.normcheck  normcheck:bootstrap  comment:\"Re-run abt bootstrap\"", atf_norm::normcheck_bootstrap }
         ,{ "atfdb.normcheck  normcheck:testamc  comment:\"Test amc (run atf_amc)\"", atf_norm::normcheck_testamc }
         ,{ "atfdb.normcheck  normcheck:readme  comment:\"Re-generate README.md table of contents\"", atf_norm::normcheck_readme }
         ,{ "atfdb.normcheck  normcheck:unit  comment:\"Run unit tests\"", atf_norm::normcheck_unit }
@@ -305,7 +306,7 @@ static void atf_norm::normcheck_LoadStatic() {
         ,{ "atfdb.normcheck  normcheck:ssimfile  comment:\"Check for .ssim files with no corresponding ssimfile entry\"", atf_norm::normcheck_ssimfile }
         ,{ "atfdb.normcheck  normcheck:normalize_acr  comment:\"Read ssim databases into memory and write back\"", atf_norm::normcheck_normalize_acr }
         ,{ "atfdb.normcheck  normcheck:normalize_acr_my  comment:\"Round trip ssim databases through MariaDB and back\"", atf_norm::normcheck_normalize_acr_my }
-        ,{ "atfdb.normcheck  normcheck:bootstrap  comment:\"Re-run abt bootstrap\"", atf_norm::normcheck_bootstrap }
+        ,{ "atfdb.normcheck  normcheck:clang  comment:\"Build everything under clang\"", atf_norm::normcheck_clang }
         ,{NULL, NULL}
     };
     (void)data;

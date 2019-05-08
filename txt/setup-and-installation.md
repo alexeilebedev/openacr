@@ -2,10 +2,9 @@
 
 Presently, this project has been tested on the following distribution/compiler combinations:
 
-* RHEL 7.0, g++ 4.8
-* RHEL 7.3, g++ 4.8
-* CentOS 7.6, g++ 4.8
-* Ubuntu, g++ 8.3
+* RHEL {7.0,7.3}: g++ 4.8
+* CentOS 7.6: g++ 4.8, clang 3.4.2
+* Ubuntu 19.04: g++ 8.3, clang 3.4.2
 
 The MariaDB and OpenSSL packages are required in order to build mysql2ssim and ssim2mysql tools.
 
@@ -13,7 +12,8 @@ The MariaDB and OpenSSL packages are required in order to build mysql2ssim and s
 
 And 
 
-    apt install -y libmariadb-dev libssl-dev
+    apt install -y mariadb libmariadb-dev libmariadbd-dev libssl-dev
+    apt install llvm llvm-dev  # to enable abt -compiler llvm
     
 All commands can be issued from this, top-level directory.
 Just add the relative path bin/ to your path.

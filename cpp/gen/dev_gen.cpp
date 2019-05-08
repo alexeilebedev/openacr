@@ -36,6 +36,11 @@ const char *dev_Cfg_cfg_debug      = "debug";
 const char *dev_Cfg_cfg_profile   = "profile";
 const char *dev_Cfg_cfg_release   = "release";
 
+// compile-time string constants for dev.Compiler.compiler
+const char *dev_Compiler_compiler_          = "";
+const char *dev_Compiler_compiler_clangPP   = "clang++";
+const char *dev_Compiler_compiler_gPP       = "g++";
+
 namespace dev {
 static void          SizeCheck();
 } // end namespace dev

@@ -9,19 +9,18 @@
 * `include`     All files ending in .h; include/gen contains outputs from amc
 * `lock`        Runtime lock files
 * `temp`        Temp dir
-* `txt`         .txt files
+* `txt`         .txt and .md (markdown) files
 
 ### Binaries
 
 All executable files are accessible from bin (both scripts and binary executables).
 For each binary, there is a soft link from bin to the directory where the binary really sits.
 
-Binaries are compiled with `abt -build` and installed (linked into bin/) with `abt -install`.
+Binaries are compiled with `abt -build` and the soft link in `bin/` can be updated with `abt -install`.
 
-Binaries are never kept in git history, but the soft links are. 
-To get abt going, abt generates a bootstrap script for compiling 
-itself, and that script sits in `bin/abt-bootstrap`. It is automatically re-generated during
-`normalize` so every commit should have a working bootstrap as a result.
+Binaries are not kept in git, only the soft links in bin/ are stored.
+To make these links valid, the targets must be built with `ai`, which is a bootstrap script
+that will build `abt` if it doesn't yet exist.
 
 ### Intermediate Files
 

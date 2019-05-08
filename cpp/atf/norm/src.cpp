@@ -124,3 +124,16 @@ void atf_norm::normcheck_stray_gen() {
     GenCheck("cpp/gen");
 }
 
+// -----------------------------------------------------------------------------
+
+void atf_norm::normcheck_clang() {
+    if (SysEval("/usr/bin/clang++ --version",FailokQ(true),1024*10) != "") {
+        command::abt_proc abt;
+        abt.cmd.compiler = dev_Compiler_compiler_clangPP;
+        abt.cmd.cfg = dev_Cfg_cfg_release;
+        abt.cmd.target.expr = "%";
+        abt_ExecX(abt);
+    } else {
+        prlog("# clang not installed, skipping build");
+    }
+}

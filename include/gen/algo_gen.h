@@ -397,11 +397,8 @@ struct cstring { // algo.cstring
     cstring& operator =(const cstring &s);
     explicit cstring(const strptr &s);
     cstring(const tempstr &rhs);
-    operator const strptr() const {
-        return strptr(ch_elems,ch_n);
-    }
-    operator strptr() {
-        return strptr(ch_elems,ch_n);
+    operator strptr() const {
+        return strptr(const_cast<char*>(ch_elems),ch_n);
     }
     bool operator ==(const algo::cstring &rhs) const;
     bool operator <(const algo::cstring &rhs) const;

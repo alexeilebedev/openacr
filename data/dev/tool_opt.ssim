@@ -36,5 +36,5 @@ dev.tool_opt  tool_opt:472  opt_type:CC_OPTS  opt:-Wno-unused-local-typedefs  ta
 dev.tool_opt  tool_opt:476  opt_type:CC_OPTS  opt:-Wno-long-long  target:""  uname:Linux  compiler:""  cfg:""  arch:""  comment:""
 dev.tool_opt  tool_opt:477  opt_type:CC_OPTS  opt:-Wno-strict-aliasing  target:""  uname:Linux  compiler:""  cfg:""  arch:""  comment:""
 dev.tool_opt  tool_opt:487  opt_type:CC_OPTS  opt:-fpch-preprocess  target:""  uname:""  compiler:""  cfg:""  arch:""  comment:"Needed by ccache"
-dev.tool_opt  tool_opt:488  opt_type:CC_OPTS  opt:-Wno-cast-function-type  target:""  uname:""  compiler:""  cfg:""  arch:""  comment:""
-dev.tool_opt  tool_opt:489  opt_type:CC_OPTS  opt:-Wno-class-memaccess  target:""  uname:""  compiler:""  cfg:""  arch:""  comment:""
+dev.tool_opt  tool_opt:488  opt_type:CC_OPTS  opt:-Wno-cast-function-type  target:""  uname:""  compiler:g++  cfg:""  arch:""  comment:""
+dev.tool_opt  tool_opt:489  opt_type:CC_OPTS  opt:-Wno-class-memaccess  target:""  uname:""  compiler:g++  cfg:""  arch:""  comment:""

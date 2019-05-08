@@ -5,7 +5,7 @@ The home for this project is at https://github.com/alexeilebedev/openacr
 This is OpenACR, an open-source version of acr, which stands for Auto Cross
 Reference, and its related tools.
 It is the result of over 10 years of development and
-production use. The tools were initially created by Alexei Lebedev (me) at AlgoEngineering
+production use. The tools were initially created by Alexei Lebedev at AlgoEngineering
 with the goal of formalizing construction of low-latency software of higher quality;
 but they ended up being suitable for all sorts of other things, and the code generation
 part took on a life of its own, eventually generating most of its own source code.

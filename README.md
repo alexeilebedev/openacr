@@ -95,7 +95,7 @@ The home for this project is at https://github.com/alexeilebedev/openacr
 This is OpenACR, an open-source version of acr, which stands for Auto Cross
 Reference, and its related tools.
 It is the result of over 10 years of development and
-production use. The tools were initially created by Alexei Lebedev (me) at AlgoEngineering
+production use. The tools were initially created by Alexei Lebedev at AlgoEngineering
 with the goal of formalizing construction of low-latency software of higher quality;
 but they ended up being suitable for all sorts of other things, and the code generation
 part took on a life of its own, eventually generating most of its own source code.
@@ -152,10 +152,9 @@ April 29, 2019
 
 Presently, this project has been tested on the following distribution/compiler combinations:
 
-* RHEL 7.0, g++ 4.8
-* RHEL 7.3, g++ 4.8
-* CentOS 7.6, g++ 4.8
-* Ubuntu, g++ 8.3
+* RHEL {7.0,7.3}: g++ 4.8
+* CentOS 7.6: g++ 4.8, clang 3.4.2
+* Ubuntu 19.04: g++ 8.3, clang 3.4.2
 
 The MariaDB and OpenSSL packages are required in order to build mysql2ssim and ssim2mysql tools.
 
@@ -163,7 +162,8 @@ The MariaDB and OpenSSL packages are required in order to build mysql2ssim and s
 
 And 
 
-    apt install -y libmariadb-dev libssl-dev
+    apt install -y mariadb libmariadb-dev libmariadbd-dev libssl-dev
+    apt install llvm llvm-dev  # to enable abt -compiler llvm
     
 All commands can be issued from this, top-level directory.
 Just add the relative path bin/ to your path.
@@ -214,19 +214,18 @@ Currently, optimization levels `-O2` and higher cannot be used with gcc 8.
 * `include`     All files ending in .h; include/gen contains outputs from amc
 * `lock`        Runtime lock files
 * `temp`        Temp dir
-* `txt`         .txt files
+* `txt`         .txt and .md (markdown) files
 
 ### Binaries
 
 All executable files are accessible from bin (both scripts and binary executables).
 For each binary, there is a soft link from bin to the directory where the binary really sits.
 
-Binaries are compiled with `abt -build` and installed (linked into bin/) with `abt -install`.
+Binaries are compiled with `abt -build` and the soft link in `bin/` can be updated with `abt -install`.
 
-Binaries are never kept in git history, but the soft links are. 
-To get abt going, abt generates a bootstrap script for compiling 
-itself, and that script sits in `bin/abt-bootstrap`. It is automatically re-generated during
-`normalize` so every commit should have a working bootstrap as a result.
+Binaries are not kept in git, only the soft links in bin/ are stored.
+To make these links valid, the targets must be built with `ai`, which is a bootstrap script
+that will build `abt` if it doesn't yet exist.
 
 ### Intermediate Files
 
