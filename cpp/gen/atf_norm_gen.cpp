@@ -1148,7 +1148,6 @@ void atf_norm::FDb_Init() {
     }
     memset(_db.ind_ssimfile_buckets_elems, 0, sizeof(atf_norm::FSsimfile*)*_db.ind_ssimfile_buckets_n); // (atf_norm.FDb.ind_ssimfile)
     _db.c_normcheck = NULL;
-    _db.env_loaded = bool(false);
     // initialize LAry scriptfile (atf_norm.FDb.scriptfile)
     _db.scriptfile_n = 0;
     memset(_db.scriptfile_lary, 0, sizeof(_db.scriptfile_lary)); // zero out all level pointers

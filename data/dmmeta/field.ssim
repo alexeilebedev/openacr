@@ -1856,7 +1856,6 @@ dmmeta.field  field:atf_norm.FDb.normcheck  arg:atf_norm.FNormcheck  reftype:Lar
 dmmeta.field  field:atf_norm.FDb.ssimfile  arg:atf_norm.FSsimfile  reftype:Lary  dflt:""  comment:""
 dmmeta.field  field:atf_norm.FDb.ind_ssimfile  arg:atf_norm.FSsimfile  reftype:Thash  dflt:""  comment:""
 dmmeta.field  field:atf_norm.FDb.c_normcheck  arg:atf_norm.FNormcheck  reftype:Ptr  dflt:""  comment:""
-dmmeta.field  field:atf_norm.FDb.env_loaded  arg:bool  reftype:Val  dflt:""  comment:""
 dmmeta.field  field:atf_norm.FDb.scriptfile  arg:atf_norm.FScriptfile  reftype:Lary  dflt:""  comment:""
 dmmeta.field  field:atf_norm.FDb.ind_scriptfile  arg:atf_norm.FScriptfile  reftype:Thash  dflt:""  comment:""
 dmmeta.field  field:atf_norm.FDb.ns  arg:atf_norm.FNs  reftype:Lary  dflt:""  comment:""
