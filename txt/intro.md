@@ -315,7 +315,7 @@ And so we can use the `ns` table to describe all the tools that we plan to intro
     dmmeta.ns ns:acr
     dmmeta.ns ns:acr_ed
     EOF
-    
+
 Now comes the tricky part: we want `amc` to generate the ctype called `Ctype` in namespace `dmmeta`,
 by virtue of loading the `dmmeta.ctype  ctype:dmmeta.Ctype` record. There is a real dependency here,
 of a different type than what we had with ssimfiles: with ssimfiles, even though they seemed to be
@@ -333,5 +333,17 @@ Slowly but surely, we can cause about 95% of all the code we need to be generate
 would actually be counter-productive. It is only interesting to generate code that's used in more than one place.)
 
 In subsequent chapters, I will descibre the `amc` memory model for an executable, and things like pools 
-(for holding records) and x-refs (for creating group-by's and cross-references).
+(for holding records) and x-refs (for creating group-by's and cross-references). 
+The presence of `ssimfile` in our data set was dictated by the way we organized the data set.
+The presence of `amc` in this model was dictated by our desire to use C++ to write the query tool `acr`.
+There is a more general pattern here:
 
+### Representation & Manipulation
+
+This approach seems to scale indefinitely. We can represent any semantic concept as 
+tuples, which are points in a multi-dimensional sparse space.
+Whenever we extend our representable universe with
+additional concepts, such as a physcial set of C++ files on disk, or a set of dev and production environments
+with some configuration, we include its relational description, or map, as a set of tables in our data set. 
+We then write tools that enforce a unidirectional or bidirectional correspondence between this new object and
+the records that describe it. 

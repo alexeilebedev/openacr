@@ -27,15 +27,18 @@ static tempstr TocLink(strptr str) {
     str = Trimmed(str);
     tempstr ret;
     ret << "[" << str << "](#";
-    tempstr lc;
-    lc << str;
-    MakeLower(lc);
-    for (u32 i=0; i < lc.ch_n; i++) {
-        if (!algo_lib::IdentCharQ(lc.ch_elems[i])) {
-            lc.ch_elems[i] = '-';
+    for (int i=0; i < str.n_elems; i++) {
+        char c = ToLower(str.elems[i]);
+        if (c == ':') {
+            // skip
+        } else {
+            if (!algo_lib::IdentCharQ(c)) {
+                c = '-';
+            }
+            ret << c;
         }
     }
-    ret << lc << ")";
+    ret << ")";
     return ret;
 }
 

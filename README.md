@@ -11,13 +11,13 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
 ; [Intermediate Files](#intermediate-files)
    * [History & Intro](#history---intro)
       * [A Motivating Example](#a-motivating-example)
-; [Creating Some Tuples](#creating-some-tuples); [Describing The Tuple Schema](#describing-the-tuple-schema); [Describing The Columns](#describing-the-columns); [Adding Tools](#adding-tools); [Describing The Tools](#describing-the-tools)
+; [Creating Some Tuples](#creating-some-tuples); [Describing The Tuple Schema](#describing-the-tuple-schema); [Describing The Columns](#describing-the-columns); [Adding Tools](#adding-tools); [Describing The Tools](#describing-the-tools); [Representation & Manipulation](#representation---manipulation)
    * [Ssim files](#ssim-files)
       * [Ssim Data Sets](#ssim-data-sets)
 ; [Structured Key Normal Form](#structured-key-normal-form); [Decomposing A Domain Into Sets](#decomposing-a-domain-into-sets); [History of Database Design](#history-of-database-design); [Cardinality Analysis](#cardinality-analysis); [The Curse Of Simple Domains](#the-curse-of-simple-domains); [Remember 4-valued logic?](#remember-4-valued-logic-); [Structured Key Normal Form](#structured-key-normal-form)
    * [Bootstrapping Magic](#bootstrapping-magic)
    * [Hello Meta World](#hello-meta-world)
-   * [acr: Auto Cross Reference](#acr--auto-cross-reference)
+   * [acr: Auto Cross Reference](#acr-auto-cross-reference)
       * [Querying](#querying)
 ; [Creating A New Table](#creating-a-new-table); [Inserting Data](#inserting-data)
          * [The -replace option](#the--replace-option)
@@ -30,42 +30,42 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
    * [Command Lines](#command-lines)
       * [Boolean Options](#boolean-options)
 ; [Default Values](#default-values); [Integer Options](#integer-options); [Anonymous Options](#anonymous-options); [Other Data Types](#other-data-types); [Bash Command Completion](#bash-command-completion); [Completing From Table](#completing-from-table); [Inputting A Table](#inputting-a-table); [Regx Options](#regx-options); [The -version flag](#the--version-flag); [The -sig flag](#the--sig-flag); [Printing Command Lines](#printing-command-lines); [Subprocesses With Command Line](#subprocesses-with-command-line); [Verbosity](#verbosity)
-   * [acr_in: Show input tuples for target](#acr_in--show-input-tuples-for-target)
+   * [acr_in: Show input tuples for target](#acr_in-show-input-tuples-for-target)
       * [The -data option](#the--data-option)
 ; [The -checkable option](#the--checkable-option); [The -related option](#the--related-option)
-   * [abt: A Build Tool](#abt--a-build-tool)
+   * [abt: A Build Tool](#abt-a-build-tool)
       * [Input Tables](#input-tables)
 ; [Output Directory](#output-directory); [The -install option](#the--install-option); [Target Definition](#target-definition); [Customizing Options](#customizing-options); [Disassembling](#disassembling); [Specifying a different compiler](#specifying-a-different-compiler); [The -ood option](#the--ood-option); [The -listincl option](#the--listincl-option); [Debugging the build](#debugging-the-build); [Bootstrapping](#bootstrapping)
-   * [amc: Algo Model Compiler](#amc--algo-model-compiler)
+   * [amc: Algo Model Compiler](#amc-algo-model-compiler)
       * [Introduction](#introduction)
 ; [Why Generate?](#why-generate-)
          * [Libraries Vs. Custom Code](#libraries-vs--custom-code)
 ; [Exponential Cost Of Software](#exponential-cost-of-software)
       * [Running Amc](#running-amc)
-; [Query mode](#query-mode); [Ratio of Generated To Manual LOC](#ratio-of-generated-to-manual-loc); [Sandbox Mode](#sandbox-mode); [Reading Code of Amc Itself](#reading-code-of-amc-itself); [What is a Cross-reference?](#what-is-a-cross-reference-); [Main Input Tables](#main-input-tables); [String types and how to use them:](#string-types-and-how-to-use-them-)
+; [Query mode](#query-mode); [Ratio of Generated To Manual LOC](#ratio-of-generated-to-manual-loc); [Sandbox Mode](#sandbox-mode); [Reading Code of Amc Itself](#reading-code-of-amc-itself); [What is a Cross-reference?](#what-is-a-cross-reference-); [Main Input Tables](#main-input-tables); [String types and how to use them:](#string-types-and-how-to-use-them)
          * [Amc-generated String Types](#amc-generated-string-types)
       * [Field Name Prefix](#field-name-prefix)
 ; [The Algorithm For Generating Code](#the-algorithm-for-generating-code)
-   * [Amc: Memory Pools](#amc--memory-pools)
+   * [Amc: Memory Pools](#amc-memory-pools)
       * [Types of Memory Pools](#types-of-memory-pools)
-; [Declaring a Pool](#declaring-a-pool); [Base Pools](#base-pools); [Running Out Of Memory](#running-out-of-memory); [Blkpool](#blkpool); [Delptr: Optional Value](#delptr--optional-value); [Inlary: Inline Array](#inlary--inline-array); [Lary: Level array](#lary--level-array)
+; [Declaring a Pool](#declaring-a-pool); [Base Pools](#base-pools); [Running Out Of Memory](#running-out-of-memory); [Blkpool](#blkpool); [Delptr: Optional Value](#delptr-optional-value); [Inlary: Inline Array](#inlary-inline-array); [Lary: Level array](#lary-level-array)
          * [Alloc](#alloc)
 ; [AllocMaybe](#allocmaybe); [InsertMaybe](#insertmaybe); [AllocMem](#allocmem); [EmptyQ](#emptyq); [Find](#find); [Last](#last); [N](#n); [RemoveLast](#removelast); [qFind](#qfind); [XrefMaybe](#xrefmaybe)
-      * [Lpool: Level pool](#lpool--level-pool)
+      * [Lpool: Level pool](#lpool-level-pool)
          * [FreeMem](#freemem)
 ; [AllocMem](#allocmem); [ReserveBuffers](#reservebuffers); [ReallocMem](#reallocmem)
       * [Malloc](#malloc)
-; [Sbrk](#sbrk); [Tary: Flat indirect array (vector)](#tary--flat-indirect-array--vector-)
+; [Sbrk](#sbrk); [Tary: Flat indirect array (vector)](#tary-flat-indirect-array--vector-)
          * [Aliasing](#aliasing)
 ; [Addary](#addary); [Alloc](#alloc); [AllocAt](#allocat); [AllocN](#allocn); [EmptyQ](#emptyq); [Find](#find); [Getary](#getary); [Last](#last); [Max](#max); [N](#n); [Remove](#remove); [RemoveAll](#removeall); [RemoveLast](#removelast); [Reserve](#reserve); [AbsReserve](#absreserve); [Setary (copy one Tary to another)](#setary--copy-one-tary-to-another-); [Setary](#setary); [qFind](#qfind); [qLast](#qlast)
       * [Tpool](#tpool)
          * [Alloc](#alloc)
 ; [AllocMaybe](#allocmaybe); [Delete](#delete); [AllocMem](#allocmem); [FreeMem](#freemem); [Reserve](#reserve); [ReserveMem](#reservemem); [XrefMaybe](#xrefmaybe)
-      * [Val: Value](#val--value)
+      * [Val: Value](#val-value)
    * [Amc Features](#amc-features)
       * [Scaled Decimal Types](#scaled-decimal-types)
-; [Big-Endian Fields](#big-endian-fields); [Bitfields](#bitfields); [Steps](#steps); [Tracing](#tracing); [Base: Mixin](#base--mixin); [Bheap: Binary Heap](#bheap--binary-heap); [Bitset: Bitset over an array](#bitset--bitset-over-an-array); [Count: Count elements](#count--count-elements); [Fconst: Enumerated type](#fconst--enumerated-type); [Inlary: Inline array](#inlary--inline-array); [Lary: Level array](#lary--level-array); [Llist: Linked list](#llist--linked-list); [Opt: Optional last field in variable-length struct](#opt--optional-last-field-in-variable-length-struct); [Pmask: Presence mask](#pmask--presence-mask); [Ptr](#ptr); [Ptrary](#ptrary); [RegxSql:](#regxsql-); [Smallstr](#smallstr); [Thash: hash table](#thash--hash-table); [Upptr:](#upptr-); [Varlen: variable-length tail portion of a struct](#varlen--variable-length-tail-portion-of-a-struct)
-   * [acr_ed: Acr Editor](#acr_ed--acr-editor)
+; [Big-Endian Fields](#big-endian-fields); [Bitfields](#bitfields); [Steps](#steps); [Tracing](#tracing); [Base: Mixin](#base-mixin); [Bheap: Binary Heap](#bheap-binary-heap); [Bitset: Bitset over an array](#bitset-bitset-over-an-array); [Count: Count elements](#count-count-elements); [Fconst: Enumerated type](#fconst-enumerated-type); [Inlary: Inline array](#inlary-inline-array); [Lary: Level array](#lary-level-array); [Llist: Linked list](#llist-linked-list); [Opt: Optional last field in variable-length struct](#opt-optional-last-field-in-variable-length-struct); [Pmask: Presence mask](#pmask-presence-mask); [Ptr](#ptr); [Ptrary](#ptrary); [RegxSql:](#regxsql); [Smallstr](#smallstr); [Thash: hash table](#thash-hash-table); [Upptr:](#upptr); [Varlen: variable-length tail portion of a struct](#varlen-variable-length-tail-portion-of-a-struct)
+   * [acr_ed: Acr Editor](#acr_ed-acr-editor)
       * [Targets](#targets)
          * [Create Target](#create-target)
 ; [Rename Target](#rename-target); [Delete Target](#delete-target)
@@ -86,8 +86,8 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
    * [Coding Style](#coding-style)
       * [Spaces, Indentation](#spaces--indentation)
 ; [Variable Names](#variable-names); [Member Functions](#member-functions); [Predicate Functions](#predicate-functions); [Curly Braces](#curly-braces); [Split Conditionals](#split-conditionals); [Curly Braces around Conditionals are Non-Optional](#curly-braces-around-conditionals-are-non-optional); [Use of semi-colon forces a new line](#use-of-semi-colon-forces-a-new-line); [Keep code separate from data](#keep-code-separate-from-data); [No Code In Headers](#no-code-in-headers); [Use query-command separation](#use-query-command-separation); [Keep it single-threaded](#keep-it-single-threaded); [Use Single Entry, Single Exit (SESE) style](#use-single-entry--single-exit--sese--style); [Single File Static Assignment](#single-file-static-assignment); [Document all non-static functions](#document-all-non-static-functions); [All rules allow exceptions](#all-rules-allow-exceptions)
-   * [amc_vis: Visualize Ctype Dependencies and Access Paths](#amc_vis--visualize-ctype-dependencies-and-access-paths)
-   * [amc_gc: AMC garbage collector](#amc_gc--amc-garbage-collector)
+   * [amc_vis: Visualize Ctype Dependencies and Access Paths](#amc_vis-visualize-ctype-dependencies-and-access-paths)
+   * [amc_gc: AMC garbage collector](#amc_gc-amc-garbage-collector)
    * [MariaDB integration](#mariadb-integration)
    * [Working with source files & targets](#working-with-source-files---targets)
       * [Listing Files](#listing-files)
@@ -95,14 +95,14 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
    * [Tests](#tests)
       * [Unit Tests](#unit-tests)
 ; [Normalization Checks](#normalization-checks); [Debugging](#debugging)
-   * [Mdbg: Gdb front-end](#mdbg--gdb-front-end)
+   * [Mdbg: Gdb front-end](#mdbg-gdb-front-end)
       * [Specifying arguments](#specifying-arguments)
 ; [The -tui option](#the--tui-option); [Specifying Breakpoints](#specifying-breakpoints); [Edit-and-retry](#edit-and-retry); [The -follow_child otption](#the--follow_child-otption); [Exceptions](#exceptions); [Gdb Python Interface](#gdb-python-interface); [Bugs](#bugs)
    * [Scriptlets](#scriptlets)
-      * [Hilite: inline highlighter](#hilite--inline-highlighter)
+      * [Hilite: inline highlighter](#hilite-inline-highlighter)
          * [Blotter Mode](#blotter-mode)
 ; [Inline Specification](#inline-specification); [Diff mode](#diff-mode)
-      * [Grephunk: patch file filter](#grephunk--patch-file-filter)
+      * [Grephunk: patch file filter](#grephunk-patch-file-filter)
    * [Testimonials](#testimonials)
       * [1](#1)
 ; [2](#2); [3](#3); [4](#4)
@@ -587,7 +587,7 @@ And so we can use the `ns` table to describe all the tools that we plan to intro
     dmmeta.ns ns:acr
     dmmeta.ns ns:acr_ed
     EOF
-    
+
 Now comes the tricky part: we want `amc` to generate the ctype called `Ctype` in namespace `dmmeta`,
 by virtue of loading the `dmmeta.ctype  ctype:dmmeta.Ctype` record. There is a real dependency here,
 of a different type than what we had with ssimfiles: with ssimfiles, even though they seemed to be
@@ -605,8 +605,20 @@ Slowly but surely, we can cause about 95% of all the code we need to be generate
 would actually be counter-productive. It is only interesting to generate code that's used in more than one place.)
 
 In subsequent chapters, I will descibre the `amc` memory model for an executable, and things like pools 
-(for holding records) and x-refs (for creating group-by's and cross-references).
+(for holding records) and x-refs (for creating group-by's and cross-references). 
+The presence of `ssimfile` in our data set was dictated by the way we organized the data set.
+The presence of `amc` in this model was dictated by our desire to use C++ to write the query tool `acr`.
+There is a more general pattern here:
 
+### Representation & Manipulation
+
+This approach seems to scale indefinitely. We can represent any semantic concept as 
+tuples, which are points in a multi-dimensional sparse space.
+Whenever we extend our representable universe with
+additional concepts, such as a physcial set of C++ files on disk, or a set of dev and production environments
+with some configuration, we include its relational description, or map, as a set of tables in our data set. 
+We then write tools that enforce a unidirectional or bidirectional correspondence between this new object and
+the records that describe it. 
 
 ## Ssim files
 
