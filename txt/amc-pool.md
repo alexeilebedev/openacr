@@ -81,7 +81,7 @@ of both of these processes is sent to the same destination and de-duplicated bas
 This is a hot-hot redundancy scenario with great latency characteristics (the faster of the two messages
 becomes the output, shaving off some latency spikes). In any case, the output of the two proceses
 must be identical and depend only on the input. This means that a process is *not allowed* to strategize
-around low-memory conditions. That's why existing on out-of-memory is a valid, in fact the only possible
+around low-memory conditions. That's why exiting on out-of-memory is a valid, in fact the only possible
 strategy.
 
 ### Blkpool

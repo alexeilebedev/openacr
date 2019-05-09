@@ -35,7 +35,6 @@ static tempstr TocLink(strptr str) {
             lc.ch_elems[i] = '-';
         }
     }
-    Replace(lc,"--","-");
     ret << lc << ")";
     return ret;
 }

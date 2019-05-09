@@ -23,7 +23,7 @@ and acr handling all configurations -- from NICs and ip addresses to bit fields 
 priority queues. NYSE exchanges have the lowest transaction latency in the 
 industry, as measured by ack times of 99.9% of all orders.
 
-Since the tools are domain-agonostic, it was decided that open-sourcing
+Since the tools are domain-agnostic, it was decided that open-sourcing
 them would be the best way to ensure their longevity and value, and
 also a way to give back to the community. After
 all, if it weren't for other open-source projects like Linux, gcc and the shell, 
