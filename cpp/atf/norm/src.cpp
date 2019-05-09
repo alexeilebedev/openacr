@@ -31,7 +31,7 @@
 void atf_norm::normcheck_indent_srcfile() {
     // indent recently modified source files
     SysCmd("for X in $(git diff-tree --name-only  HEAD -r --no-commit-id cpp include"
-           " | egrep -v '(cpp/gen/|include/gen|extern/|include/vma)'); do if [ -f $X ]; then echo $X; fi; done "
+           " | egrep -v '(cpp/gen/|include/gen|extern/)'); do if [ -f $X ]; then echo $X; fi; done "
            "> temp/atf_norm_indent.list",FailokQ(true));
     SysCmd("echo -n indenting files:;"
            " for X in $(head temp/atf_norm_indent.list); do"

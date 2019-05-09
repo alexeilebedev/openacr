@@ -52,7 +52,7 @@ static amc::FFunc &CreateCursFunc(amc::FCtype &ctype, strptr name) {
 
 // // Cursor for byte-array of xyz messages
 // // Usage:
-// // ind_beg(xyz::MsgHeader_curs,arms,byteary) {
+// // ind_beg(xyz::MsgHeader_curs,msghdr,byteary) {
 // //     < do something >
 // // }ind_end;
 // struct MsgHeader_curs {

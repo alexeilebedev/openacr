@@ -91,7 +91,6 @@ struct FDb { // atf_norm.FDb
     i32                       ind_ssimfile_buckets_n;         // number of elements in bucket array
     i32                       ind_ssimfile_n;                 // number of elements in the hash table
     atf_norm::FNormcheck*     c_normcheck;                    // optional pointer
-    bool                      env_loaded;                     //   false
     atf_norm::FScriptfile*    scriptfile_lary[32];            // level array
     i32                       scriptfile_n;                   // number of elements in array
     atf_norm::FScriptfile**   ind_scriptfile_buckets_elems;   // pointer to bucket array

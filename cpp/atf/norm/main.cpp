@@ -52,7 +52,7 @@ void atf_norm::CheckCleanDirs(strptr dirs) {
 }
 
 static void CheckCleanDirsAll() {
-    atf_norm::CheckCleanDirs("cpp include data sql gen tsuite env utpobr");
+    atf_norm::CheckCleanDirs("cpp include data sql gen");
 }
 
 // -----------------------------------------------------------------------------
