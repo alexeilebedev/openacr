@@ -47,6 +47,13 @@ void amc::tclass_Tpool() {
         InsVar(R, field.p_ctype, "$Cpptype* volatile", "$name_free_mt", "", "");
     }
 
+    if (!GlobalQ(*field.p_ctype)) {
+        prerr("amc.nonglobal_tpool"
+              <<Keyval("field",field.field)
+              <<Keyval("comment","Tpool doesn't return memory, so it must be global"));
+        algo_lib::_db.exit_code=1;
+    }
+
     // avoid coverity warning and initialize _next to -1 in child's ctor,
     // as opposed to Tpool's AllocMem
     amc::FFunc *child_init = amc::init_GetOrCreate(*field.p_arg);

@@ -24,7 +24,7 @@ dmmeta.ctypelen  ctype:acr.FCdflt  len:608  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:acr.FCheck  len:40  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:acr.FCppfunc  len:354  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:acr.FCtype  len:424  alignment:8  padbytes:35
-dmmeta.ctypelen  ctype:acr.FDb  len:3976  alignment:8  padbytes:68
+dmmeta.ctypelen  ctype:acr.FDb  len:4240  alignment:8  padbytes:72
 dmmeta.ctypelen  ctype:acr.FErr  len:72  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:acr.FEvalattr  len:48  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:acr.FField  len:680  alignment:8  padbytes:10

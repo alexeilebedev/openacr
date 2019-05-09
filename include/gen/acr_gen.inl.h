@@ -1766,6 +1766,48 @@ inline acr::FCppfunc& acr::cppfunc_qFind(u64 t) {
     return _db.cppfunc_lary[bsr][index];
 }
 
+// --- acr.FDb.file2.EmptyQ
+// Return true if index is empty
+inline bool acr::file2_EmptyQ() {
+    return _db.file2_n == 0;
+}
+
+// --- acr.FDb.file2.Find
+// Look up row by row id. Return NULL if out of range
+inline acr::FFile* acr::file2_Find(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    acr::FFile *retval = NULL;
+    if (LIKELY(x <= u64(_db.file2_n))) {
+        retval = &_db.file2_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr.FDb.file2.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr::FFile* acr::file2_Last() {
+    return file2_Find(u64(_db.file2_n-1));
+}
+
+// --- acr.FDb.file2.N
+// Return number of items in the pool
+inline i32 acr::file2_N() {
+    return _db.file2_n;
+}
+
+// --- acr.FDb.file2.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr::FFile& acr::file2_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.file2_lary[bsr][index];
+}
+
 // --- acr.FDb.zd_pline_curs.Reset
 // cursor points to valid item
 inline void acr::_db_zd_pline_curs_Reset(_db_zd_pline_curs &curs, acr::FDb &parent) {
@@ -2257,6 +2299,31 @@ inline void acr::_db_cppfunc_curs_Next(_db_cppfunc_curs &curs) {
 // item access
 inline acr::FCppfunc& acr::_db_cppfunc_curs_Access(_db_cppfunc_curs &curs) {
     return cppfunc_qFind(u64(curs.index));
+}
+
+// --- acr.FDb.file2_curs.Reset
+// cursor points to valid item
+inline void acr::_db_file2_curs_Reset(_db_file2_curs &curs, acr::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr.FDb.file2_curs.ValidQ
+// cursor points to valid item
+inline bool acr::_db_file2_curs_ValidQ(_db_file2_curs &curs) {
+    return curs.index < _db.file2_n;
+}
+
+// --- acr.FDb.file2_curs.Next
+// proceed to next item
+inline void acr::_db_file2_curs_Next(_db_file2_curs &curs) {
+    curs.index++;
+}
+
+// --- acr.FDb.file2_curs.Access
+// item access
+inline acr::FFile& acr::_db_file2_curs_Access(_db_file2_curs &curs) {
+    return file2_qFind(u64(curs.index));
 }
 inline acr::FErr::FErr() {
     acr::FErr_Init(*this);

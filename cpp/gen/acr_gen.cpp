@@ -4764,6 +4764,74 @@ bool acr::cppfunc_XrefMaybe(acr::FCppfunc &row) {
     return retval;
 }
 
+// --- acr.FDb.file2.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr::FFile& acr::file2_Alloc() {
+    acr::FFile* row = file2_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr.out_of_mem  field:acr.FDb.file2  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr.FDb.file2.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr::FFile* acr::file2_AllocMaybe() {
+    acr::FFile *row = (acr::FFile*)file2_AllocMem();
+    if (row) {
+        new (row) acr::FFile; // call constructor
+    }
+    return row;
+}
+
+// --- acr.FDb.file2.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr::file2_AllocMem() {
+    u64 new_nelems     = _db.file2_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr::FFile*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.file2_lary[bsr];
+        if (!lev) {
+            lev=(acr::FFile*)algo_lib::malloc_AllocMem(sizeof(acr::FFile) * (u64(1)<<bsr));
+            _db.file2_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.file2_n = new_nelems;
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr.FDb.file2.RemoveAll
+// Remove all elements from Lary
+void acr::file2_RemoveAll() {
+    for (u64 n = _db.file2_n; n>0; ) {
+        n--;
+        file2_qFind(u64(n)).~FFile(); // destroy last element
+        _db.file2_n = n;
+    }
+}
+
+// --- acr.FDb.file2.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr::file2_RemoveLast() {
+    u64 n = _db.file2_n;
+    if (n > 0) {
+        n -= 1;
+        file2_qFind(u64(n)).~FFile();
+        _db.file2_n = n;
+    }
+}
+
 // --- acr.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr acr::trace_RowidFind(int t) {
@@ -5197,6 +5265,17 @@ void acr::FDb_Init() {
         _db.cppfunc_lary[i]  = cppfunc_first;
         cppfunc_first    += 1ULL<<i;
     }
+    // initialize LAry file2 (acr.FDb.file2)
+    _db.file2_n = 0;
+    memset(_db.file2_lary, 0, sizeof(_db.file2_lary)); // zero out all level pointers
+    acr::FFile* file2_first = (acr::FFile*)algo_lib::malloc_AllocMem(sizeof(acr::FFile) * (u64(1)<<4));
+    if (!file2_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.file2_lary[i]  = file2_first;
+        file2_first    += 1ULL<<i;
+    }
 
     acr::InitReflection();
 }
@@ -5206,6 +5285,9 @@ void acr::FDb_Uninit() {
     acr::FDb &row = _db; (void)row;
     zd_pdep_Cascdel(); // dmmeta.cascdel:acr.FDb.zd_pdep
     zd_pline_Cascdel(); // dmmeta.cascdel:acr.FDb.zd_pline
+
+    // acr.FDb.file2.Uninit (Lary)  //List of all loaded files
+    // skip destruction in global scope
 
     // acr.FDb.cppfunc.Uninit (Lary)  //
     // skip destruction in global scope

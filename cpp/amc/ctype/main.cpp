@@ -241,7 +241,7 @@ static void Ctype_Xref(amc::FCtype &ctype) {
     // xref function for parent field??
     amc::FFunc& xrefmaybe = amc::ind_func_GetOrCreate(Subst(R,"$inst.XrefMaybe"));
     Ins(&R, xrefmaybe.comment, "Insert row into all appropriate indices. If error occurs, store error");
-    Ins(&R, xrefmaybe.comment, "in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.");
+    Ins(&R, xrefmaybe.comment, "in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.");
     Ins(&R, xrefmaybe.ret  , "bool", false);
     Ins(&R, xrefmaybe.body , "bool retval = true;");
     if (!GlobalQ(ctype)) {

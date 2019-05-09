@@ -149,6 +149,7 @@ memory and values, so the user gets an extra warning).
         return u64((value_Get(parent) >> 63) & 0x01);
     }
 
+
 ### Steps
 
 *UNDER CONSTRUCTION*.
@@ -179,18 +180,6 @@ is called if the field is non-empty.
 
 InlineRecur step requires an fdelay record specifying the initial delay between steps.
 The logic is the same as Inline, with a time-based delay between steps.
-
-### Chaining
-
-*UNDER CONSTRUCTION*.
-Pools can be chained by specifying a basepool record. Basepool is where a pool gets more memory
-when its own supplies are exhausted. The algo_lib.FDb.sbrk pool is usually at the root of each chain.
-
-### Default Namespace Pool
-
-*UNDER CONSTRUCTION*.
-Each namespace has a default pool, declared via nsx record. This is where all memory for the
- namespace ultimately comes from.
 
 ### Tracing
 
@@ -224,20 +213,6 @@ The binary heap is implemented as an flat array of pointers (e.g. a Ptrary).
 Bitsets can be created on top of any integer field (e.g. u8 to u128) or array field (Inlary, Tary).
 Amc generates functions to provide indexed access to bits of the underlying field.
 
-### Blkpool: Mostly fifo memory allocator
-
-*UNDER CONSTRUCTION*.
-
-The block pool is a free-list of large-ish blocks. Memory is allocated from the current block,
-with others serving as reserve. Allocated elements contain a back-pointer to the beginning
-of the block, and increment a refcount on the block. Elements are allocated back-to-back
-starting at the beginning of the block until the block is exhausted.
-When freeing memory, the refcount is decremented but memory cannot be reused (yet). When
-the block's refcount goes to zero, the entire block goes back to the free list. This allocator
-is suitable for messages that are being processed using a fifo strategy. It is not good
-for random access patterns because one unfreed message can hold an entire block in memory,
-eventually exhausting memory.
-
 ### Count: Count elements
 
 *UNDER CONSTRUCTION*.
@@ -245,11 +220,6 @@ eventually exhausting memory.
 Count is a xref type that simply keeps track of the number of child
 elements referring to a given parent. The elements themselves are not accessible
 via this field.
-
-### Dec: Scaled decimals
-
-*UNDER CONSTRUCTION*.
-This reftype is not specified explicitly. It is applied when fdec record appears.
 
 ### Fconst: Enumerated type
 
@@ -286,13 +256,6 @@ and be properly cross-referenced.
 
 *UNDER CONSTRUCTION*.
 
-Lary is implemented as 32 pointers in the parent struct. Level k holds as pointer
-to a block of elements of length 2^k. Indexed lookup involves just 1 memory access,
-because amc uses BitScanReverse to find which level the element lives on. When a level is exhausted,
-another level 2x the size, is allocated. Since none of the previous levels need to be
-reallocated, the pointers returned by Lary are stable and so elements can be freely cross-referenced.
-Lary is the most common pool.
-
 ### Llist: Linked list
 
 *UNDER CONSTRUCTION*.
@@ -308,19 +271,6 @@ With or without tail pointer
 
 Circular linked lists are often used with steps, because it is convenient to call RotateFirst
 to both grab an element off the head of the list, and move this element to the back.
-
-### Lpool: Level pool
-
-*UNDER CONSTRUCTION*.
-
-Lpool is 32 Tpools, one for each allocation size. When allocating memory, the request
-is bumped up to the nearest power of 2 and from there Tpool logic is followed.
-
-### Malloc
-
-*UNDER CONSTRUCTION*.
-
-Pass-through to libc's malloc / free.
 
 ### Opt: Optional last field in variable-length struct
 
@@ -365,14 +315,6 @@ When using this field type, amc ignores the field arg and inserts an algo_lib.Re
 the parent structure. The expression intended to match the primary key of the target type.
 This reftype is very useful in command line arguments.
 
-### Sbrk
-
-*UNDER CONSTRUCTION*.
-
-This is just a pass-through to the sbrk() system call. The pool does not support deletion.
-Ultimately all system memory requests are satisfied by this pool, because it sits at the
-end of every basepool chain.
-
 ### Smallstr
 
 *UNDER CONSTRUCTION*.
@@ -381,15 +323,6 @@ Smallstr is a fixed-length character field. Memory is reserved inline in the par
 Strings can be length-suffixed (Rpascal), left-padded or right-padded.
 For padded strings, the string value is calculated by discarding the pad characters from the edge.
 Any smallstr is castable to strptr.
-
-### Tary: Flat array of records
-
-*UNDER CONSTRUCTION*.
-
-Tary is a dynamically allocated resizable array of values. A single block of memory
-is used for all elements, so taking the address of a Tary element is not allowed. Records
-allocated with Tary cannot be cross-referenced. ByteAry and cstring use Tary as the underlying type.
-When growing a full Tary (such as from Reserve or Alloc functions), the size is always at least doubled.
 
 ### Thash: hash table
 
@@ -408,16 +341,6 @@ A non-unique hash table allows them.
 For records that have only one hash access path defined for them, amc generates a GetOrCreate function
 which is a convenient way to force creation of an element when you know its key.
 
-### Tpool: singly linked free-list
-
-*UNDER CONSTRUCTION*.
-
-This pool type only supports fixed-size allocation. free elements are stored in a singly
-linked list. if the list is empty, tpool uses the base allocator (or the namespace default allocator)
-to fulfill the request. the free list can be refilled with reservemem. This is the
-fastest allocator, because it only takes a couple of instructions to peel a free element
-off of the free list.
-
 ### Upptr:
 
 *UNDER CONSTRUCTION*.
@@ -428,14 +351,6 @@ I.e. a Ptr becomes non-null when another record starts pointing at the parent of
 Upptr becomes non-null when a lookup in an index is performed.
 amc_vis will complain if there are circular dependencies implied by Upptr (i.e. A has Upptr to B,
 B has Upptr to A). Circular dependencies between Ptr fields are OK.
-
-### Val: Value
-
-*UNDER CONSTRUCTION*.
-
-Val is the simplest field type, just a struct member.
-It is an inline field that is initialized whenever the parent
-is initialized, and destroyed when the parent is destroyed.
 
 ### Varlen: variable-length tail portion of a struct
 

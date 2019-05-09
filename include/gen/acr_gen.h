@@ -151,6 +151,7 @@ namespace acr { struct _db_bltin_curs; }
 namespace acr { struct _db_bh_ctype_topo_curs; }
 namespace acr { struct _db_bh_ctype_topo_unordcurs; }
 namespace acr { struct _db_cppfunc_curs; }
+namespace acr { struct _db_file2_curs; }
 namespace acr { struct file_zd_frec_curs; }
 namespace acr { struct pline_zd_child_curs; }
 namespace acr { struct print_ind_printattr_curs; }
@@ -750,6 +751,8 @@ struct FDb { // acr.FDb
     i32                  bh_ctype_topo_max;              // max elements in bh_ctype_topo_elems
     acr::FCppfunc*       cppfunc_lary[32];               // level array
     i32                  cppfunc_n;                      // number of elements in array
+    acr::FFile*          file2_lary[32];                 // level array
+    i32                  file2_n;                        // number of elements in array
     acr::trace           trace;                          //
 };
 
@@ -1582,6 +1585,28 @@ acr::FCppfunc&       cppfunc_qFind(u64 t) __attribute__((nothrow));
 // in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
 bool                 cppfunc_XrefMaybe(acr::FCppfunc &row);
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr::FFile&          file2_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+acr::FFile*          file2_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                file2_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 file2_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+acr::FFile*          file2_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+acr::FFile*          file2_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  file2_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 file2_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 file2_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+acr::FFile&          file2_qFind(u64 t) __attribute__((nothrow));
+
 // cursor points to valid item
 void                 _db_zd_pline_curs_Reset(_db_zd_pline_curs &curs, acr::FDb &parent);
 // cursor points to valid item
@@ -1752,6 +1777,14 @@ bool                 _db_cppfunc_curs_ValidQ(_db_cppfunc_curs &curs);
 void                 _db_cppfunc_curs_Next(_db_cppfunc_curs &curs);
 // item access
 acr::FCppfunc&       _db_cppfunc_curs_Access(_db_cppfunc_curs &curs);
+// cursor points to valid item
+void                 _db_file2_curs_Reset(_db_file2_curs &curs, acr::FDb &parent);
+// cursor points to valid item
+bool                 _db_file2_curs_ValidQ(_db_file2_curs &curs);
+// proceed to next item
+void                 _db_file2_curs_Next(_db_file2_curs &curs);
+// item access
+acr::FFile&          _db_file2_curs_Access(_db_file2_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
@@ -1866,6 +1899,7 @@ void                 FField_Uninit(acr::FField& field) __attribute__((nothrow));
 
 // --- acr.FFile
 // create: acr.FDb.file (Lary)
+// create: acr.FDb.file2 (Lary)
 // global access: ind_file (Thash)
 // access: acr.FRec.p_outfile (Upptr)
 // access: acr.FRec.p_infile (Upptr)
@@ -1887,6 +1921,10 @@ private:
     friend acr::FFile*          file_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 file_RemoveAll() __attribute__((nothrow));
     friend void                 file_RemoveLast() __attribute__((nothrow));
+    friend acr::FFile&          file2_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr::FFile*          file2_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 file2_RemoveAll() __attribute__((nothrow));
+    friend void                 file2_RemoveLast() __attribute__((nothrow));
     FFile();
     ~FFile();
     FFile(const FFile&){ /*disallow copy constructor */}
@@ -2990,6 +3028,14 @@ struct _db_cppfunc_curs {// cursor
     acr::FDb *parent;
     i64 index;
     _db_cppfunc_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_file2_curs {// cursor
+    typedef acr::FFile ChildType;
+    acr::FDb *parent;
+    i64 index;
+    _db_file2_curs(){ parent=NULL; index=0; }
 };
 
 

@@ -46,9 +46,25 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
          * [Amc-generated String Types](#amc-generated-string-types)
       * [Field Name Prefix](#field-name-prefix)
 ; [The Algorithm For Generating Code](#the-algorithm-for-generating-code)
+   * [Amc: Memory Pools](#amc-memory-pools)
+      * [Types of Memory Pools](#types-of-memory-pools)
+; [Declaring a Pool](#declaring-a-pool); [Base Pools](#base-pools); [Running Out Of Memory](#running-out-of-memory); [Blkpool](#blkpool); [Delptr: Optional Value](#delptr-optional-value); [Inlary: Inline Array](#inlary-inline-array); [Lary: Level array](#lary-level-array)
+         * [Alloc](#alloc)
+; [AllocMaybe](#allocmaybe); [InsertMaybe](#insertmaybe); [AllocMem](#allocmem); [EmptyQ](#emptyq); [Find](#find); [Last](#last); [N](#n); [RemoveLast](#removelast); [qFind](#qfind); [XrefMaybe](#xrefmaybe)
+      * [Lpool: Level pool](#lpool-level-pool)
+         * [FreeMem](#freemem)
+; [AllocMem](#allocmem); [ReserveBuffers](#reservebuffers); [ReallocMem](#reallocmem)
+      * [Malloc](#malloc)
+; [Sbrk](#sbrk); [Tary: Flat indirect array (vector)](#tary-flat-indirect-array-vector-)
+         * [Aliasing](#aliasing)
+; [Addary](#addary); [Alloc](#alloc); [AllocAt](#allocat); [AllocN](#allocn); [EmptyQ](#emptyq); [Find](#find); [Getary](#getary); [Last](#last); [Max](#max); [N](#n); [Remove](#remove); [RemoveAll](#removeall); [RemoveLast](#removelast); [Reserve](#reserve); [AbsReserve](#absreserve); [Setary (copy one Tary to another)](#setary-copy-one-tary-to-another-); [Setary](#setary); [qFind](#qfind); [qLast](#qlast)
+      * [Tpool](#tpool)
+         * [Alloc](#alloc)
+; [AllocMaybe](#allocmaybe); [Delete](#delete); [AllocMem](#allocmem); [FreeMem](#freemem); [Reserve](#reserve); [ReserveMem](#reservemem); [XrefMaybe](#xrefmaybe)
+      * [Val: Value](#val-value)
    * [Amc Features](#amc-features)
       * [Scaled Decimal Types](#scaled-decimal-types)
-; [Big-Endian Fields](#big-endian-fields); [Bitfields](#bitfields); [Steps](#steps); [Chaining](#chaining); [Default Namespace Pool](#default-namespace-pool); [Tracing](#tracing); [Base: Mixin](#base-mixin); [Bheap: Binary Heap](#bheap-binary-heap); [Bitset: Bitset over an array](#bitset-bitset-over-an-array); [Blkpool: Mostly fifo memory allocator](#blkpool-mostly-fifo-memory-allocator); [Count: Count elements](#count-count-elements); [Dec: Scaled decimals](#dec-scaled-decimals); [Fconst: Enumerated type](#fconst-enumerated-type); [Inlary: Inline array](#inlary-inline-array); [Lary: Level array](#lary-level-array); [Llist: Linked list](#llist-linked-list); [Lpool: Level pool](#lpool-level-pool); [Malloc](#malloc); [Opt: Optional last field in variable-length struct](#opt-optional-last-field-in-variable-length-struct); [Pmask: Presence mask](#pmask-presence-mask); [Ptr](#ptr); [Ptrary](#ptrary); [RegxSql:](#regxsql-); [Sbrk](#sbrk); [Smallstr](#smallstr); [Tary: Flat array of records](#tary-flat-array-of-records); [Thash: hash table](#thash-hash-table); [Tpool: singly linked free-list](#tpool-singly-linked-free-list); [Upptr:](#upptr-); [Val: Value](#val-value); [Varlen: variable-length tail portion of a struct](#varlen-variable-length-tail-portion-of-a-struct)
+; [Big-Endian Fields](#big-endian-fields); [Bitfields](#bitfields); [Steps](#steps); [Tracing](#tracing); [Base: Mixin](#base-mixin); [Bheap: Binary Heap](#bheap-binary-heap); [Bitset: Bitset over an array](#bitset-bitset-over-an-array); [Count: Count elements](#count-count-elements); [Fconst: Enumerated type](#fconst-enumerated-type); [Inlary: Inline array](#inlary-inline-array); [Lary: Level array](#lary-level-array); [Llist: Linked list](#llist-linked-list); [Opt: Optional last field in variable-length struct](#opt-optional-last-field-in-variable-length-struct); [Pmask: Presence mask](#pmask-presence-mask); [Ptr](#ptr); [Ptrary](#ptrary); [RegxSql:](#regxsql-); [Smallstr](#smallstr); [Thash: hash table](#thash-hash-table); [Upptr:](#upptr-); [Varlen: variable-length tail portion of a struct](#varlen-variable-length-tail-portion-of-a-struct)
    * [acr_ed: Acr Editor](#acr_ed-acr-editor)
       * [Targets](#targets)
          * [Create Target](#create-target)
@@ -95,11 +111,14 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
 
 The home for this project is at https://github.com/alexeilebedev/openacr
 
-This is OpenACR, an open-source version of acr, which stands for Auto Cross
-Reference, and its related tools.
+This is OpenACR, an open-source version of acr and amc, powerful
+and extensible tools for handling configuration data and creating programs.
+(By configuration data, I mean perhaps a thousand tables and a
+few million records).
+
 It is the result of over 10 years of development and
 production use. The tools were initially created by Alexei Lebedev at AlgoEngineering
-with the goal of formalizing construction of low-latency software of higher quality;
+with the goal of formalizing construction of low-latency & realtime programs,
 but they ended up being suitable for all sorts of other things, and the code generation
 part took on a life of its own, eventually generating most of its own source code.
 
@@ -108,21 +127,23 @@ of a project called Pillar to rewrite all of NYSE's electronic exchanges.
 
 As of this writing, there are several national electronic markets
 written entirely in acr/amc, from matching engines to development tools,
-with amc responsible for over 95% of all executable code (>4 million LOC)
+with amc generating over 95% of all executable code (>4 million LOC)
 and acr handling all configurations -- from NICs and ip addresses to bit fields and
- priority queues.
+priority queues. NYSE exchanges have the lowest transaction latency in the 
+industry, as measured by ack times of 99.9% of all orders.
 
 Since the tools are domain-agonostic, it was decided that open-sourcing
 them would be the best way to ensure their longevity and value, and
 also a way to give back to the community. After
-all, if it weren't for Linux, gcc and the shell, this project wouldn't have
-been possible in the first place. And so here we are.
+all, if it weren't for other open-source projects like Linux, gcc and the shell, 
+this project wouldn't have been possible in the first place. And so here we are.
 
 OpenACR is in an interesting position of having been co-developed with a large
 software project, and later extracted back from it. Its usability
-on small projects is assumed but not proven. The ideal use case is growing,
-in-place, an ecosystem of commands and corresponding configuration data
-files around this kernel.
+on small projects is assumed but not proven. I believe its ideal use case is realized
+when it is taken as a kernel, and an ecosystem of commands and corresponding
+configuration data files are grown in-place around it. Thus, it is meant to be used
+in-vivo.
 
 ### Contributors
 
@@ -2643,6 +2664,478 @@ by hand, possibly a couple of times, to the point where the duplication occurs, 
 different implementations cannot be unified because of either unacceptable performance costs, 
 or too many dependencies. Such code is to be lifted into a generator.
 
+## Amc: Memory Pools
+
+For each `ctype`, instances of which can be dynamically allocated
+(i.e. not on the stack), amc generates two functions: `Alloc` and `Delete`.
+
+This section will explain all of the available pool types, how to chain them
+so that one pool allocates its own memory from another, and provide examples.
+
+In `amc`, memory pools are fields with specific reftypes. They are given names and 
+they can be referred to.
+
+### Types of Memory Pools
+
+A memory pool can be thought of as any mechanism by which new instances of records can be allocated.
+Amc provides the following base set of memory pools, listed here
+in alphabetical order.
+
+* Blkpool - A mostly-fifo allocator based on refcounted blocks.
+* Delptr - Indirect Val; A single value, always freed in destructor.
+* Inlary - A piece of memory for min..max elements inside the parent struct. 
+ When `min == max`, there is no `Alloc` function, and it behaves like N `Val`s.
+ When `min < max`, new elements can be allocated. Only the last element can be freed.
+* Lary - Effectively an Inlary of 32 Tarys, each of size 2^k. Has permanent pointers.
+* Lpool - 32 Tpools, each for elements of size up to 2^k.
+* Malloc - Simply calls malloc() / free().
+* Sbrk - Calls sbrk() to get memory.
+* Tary - Pointer to a resizable array (typically growing by powers of 2). Similar to std::vector.
+* Tpool - A singly linked list of free elements; Gets new memory from base pool, frees 
+  elements into the list.
+* Val - A single value, automatically allocated in constructor, and freed in destructor. 
+
+### Declaring a Pool
+
+A pool is declared like a field.
+
+    dmmeta.field  field:acr.FDb.file  arg:acr.FFile  reftype:Lary  dflt:""  comment:"List of all loaded files"
+
+This provides a hook for `amc` to generate the functions initializing
+and maintaining the state of the pool.
+
+Amc keeps track of all the pools which claim to be able to provide memory for a given ctype.
+In the example above, `amc` would generate functions `file_Alloc` and `file_Delete`.
+The names of these functions are not derived from the ctype; They are derived
+from the pool name. It is the pool's state that gets altered when one of these functions
+is called.
+
+### Base Pools
+
+For any pool, you can specify where to get memory from. This is called a basepool,
+and is specified with a `dmmeta.basepool` record.
+In the example below, the `Lpool` `algo_lib.FDb.lpool` calls `sbrk_AllocMem` 
+whenever it needs more memory.
+
+    dmmeta.field  field:algo_lib.FDb.sbrk   arg:u8  reftype:Sbrk   dflt:""  comment:"Base allocator for everything"
+    dmmeta.field  field:algo_lib.FDb.lpool  arg:u8  reftype:Lpool  dflt:""  comment:"private memory pool"
+      dmmeta.basepool  field:algo_lib.FDb.lpool  base:algo_lib.FDb.sbrk
+
+The basepool is a really great feature. Imagine a realtime program with strict
+memory requirements; Everything must be pre-allocated and system calls are not allowed during runtime,
+since they would cause latency spikes 1000x of what's allowed. The configuration of memory
+pools can be done entirely outside of the source code base. One can write straightforward bash scripts that try 
+different memory pools and measure their relative performance.
+
+To avoid having to specify a base pool for every single pool in a given
+namespace, you can (actually, you must) specify a default namespace pool in the `dmmeta.nsx` record.
+
+    dmmeta.nsx  ns:algo_lib   genthrow:N  correct_getorcreate:Y  pool:algo_lib.FDb.lpool   sortxref:N  pack:N  fldoffset_asserts:N  comment:""
+
+### Running Out Of Memory
+
+There are two ways to run out of memory: voluntarily (because you decide a table got too big)
+and involuntarily (the OS refuses to give you more memory). The first method is on the user --
+`amc` does not support pool limits. When the OS is out of memory, the function either exits
+the calling process (it's a fatal error) or returns NULL.  A function
+with an unambiguous name such as `Alloc` will kill the process when an out-of-memory condition occurs.
+A function ending in `Maybe`, such as `AllocMaybe`, will return NULL.
+
+One of the use cases of `amc` is to generate deterministic processes. Think of two programs, running
+in parallel on two different physical hosts, processing the same sequence of messages. The output
+of both of these processes is sent to the same destination and de-duplicated based on sequence numbers.
+This is a hot-hot redundancy scenario with great latency characteristics (the faster of the two messages
+becomes the output, shaving off some latency spikes). In any case, the output of the two proceses
+must be identical and depend only on the input. This means that a process is *not allowed* to strategize
+around low-memory conditions. That's why existing on out-of-memory is a valid, in fact the only possible
+strategy.
+
+### Blkpool
+
+The block pool is a free-list of large-ish blocks. Memory is allocated from the current block,
+with others serving as reserve. Allocated elements contain a back-pointer to the beginning
+of the block, and increment a refcount on the block. Elements are allocated back-to-back
+starting at the beginning of the block until the block is exhausted, respecting the necessary
+alignment.
+
+When freeing memory, the refcount is decremented but memory cannot be reused (yet). Only when
+the block's refcount goes to zero, the entire block goes back to the free list. This allocator
+is suitable for messages that are being processed using a fifo strategy. It is not good
+for random access patterns because one unfreed message can hold an entire block in memory,
+eventually exhausting memory.
+
+### Delptr: Optional Value
+
+Delptr is an indirect Val. The parent struct gets a pointer which is initially `NULL`.
+When you call `_Access`, and the point is still `NULL`, a new value is allocated.
+When the the struct is deleted, the value is freed.
+
+Here is an example of a `Delptr` field:
+
+    dmmeta.ctype  ctype:atf_amc.DelType1  comment:"Delptr test 1"
+      dmmeta.field  field:atf_amc.DelType1.u32val  arg:u32  reftype:Delptr  dflt:34  comment:""
+
+Here is the generated struct:
+
+    // --- atf_amc.DelType1
+    struct DelType1 { // atf_amc.DelType1: Delptr test 1
+        u32*   u32val;   // Private pointer to value
+        DelType1();
+        ~DelType1();
+    private:
+        // reftype of atf_amc.DelType1.u32val prohibits copy
+        DelType1(const DelType1&){ /*disallow copy constructor */}
+        void operator =(const DelType1&){ /*disallow direct assignment */}
+    };
+
+And here is the implementation of `_Access`.
+The underlying memory pool used is the one associated with its namespace
+via the `nsx` record.
+
+    // --- atf_amc.DelType1.u32val.Access
+    // Get or Create
+    // Access value, creating it if necessary. Process dies if not successful.
+    u32& atf_amc::u32val_Access(atf_amc::DelType1& parent) {
+        u32 *ret=parent.u32val;
+        if (!ret) {
+            ret = (u32*)algo_lib::malloc_AllocMem(sizeof(u32));
+            if (!ret) {
+                FatalErrorExit("out of memory allocating u32 (in atf_amc::DelType1.u32val)");
+            }
+            new(ret) u32(34);
+            parent.u32val = ret;
+        }
+        return *ret;
+    }
+
+### Inlary: Inline Array
+
+*Tbd*
+
+### Lary: Level array
+
+Lary is implemented as 32 pointers in the parent struct. Level k holds as pointer
+to a block of elements of length 2^k. Indexed lookup involves just 1 memory access,
+because amc uses BitScanReverse to find which level the element lives on. When a level is exhausted,
+another level, 2x the size, is allocated. Since none of the previous levels need to be
+reallocated, the pointers returned by Lary are stable and so elements can be freely cross-referenced.
+Lary is the most common pool.
+
+The permanent pointer promise is the main reason for Lary's existence. Lary is the default
+pool for most records.
+Here is an example of one:
+
+    dmmeta.field  field:ssim2mysql.FDb.ctype  arg:ssim2mysql.FCtype  reftype:Lary  dflt:""  comment:""
+    
+And here are the generated functions.
+
+#### Alloc
+    // Allocate memory for new default row.
+    // If out of memory, process is killed.
+    ssim2mysql::FCtype&  ctype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+
+#### AllocMaybe
+
+    // Allocate memory for new element. If out of memory, return NULL.
+    ssim2mysql::FCtype*  ctype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+
+#### InsertMaybe
+
+    // Create new row from struct.
+    // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+    ssim2mysql::FCtype*  ctype_InsertMaybe(const dmmeta::Ctype &value) __attribute__((nothrow));
+
+#### AllocMem
+
+    // Allocate space for one element. If no memory available, return NULL.
+    void*                ctype_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+
+#### EmptyQ
+
+    // Return true if index is empty
+    bool                 ctype_EmptyQ() __attribute__((nothrow));
+
+#### Find
+
+    // Look up row by row id. Return NULL if out of range
+    ssim2mysql::FCtype*  ctype_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+
+#### Last
+
+    // Return pointer to last element of array, or NULL if array is empty
+    ssim2mysql::FCtype*  ctype_Last() __attribute__((nothrow, pure));
+
+#### N
+
+    // Return number of items in the pool
+    i32                  ctype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+
+#### RemoveLast
+
+    // Delete last element of array. Do nothing if array is empty.
+    void                 ctype_RemoveLast() __attribute__((nothrow));
+
+#### qFind
+
+    // 'quick' Access row by row id. No bounds checking.
+    ssim2mysql::FCtype&  ctype_qFind(u64 t) __attribute__((nothrow));
+
+#### XrefMaybe
+
+    // Insert row into all appropriate indices. If error occurs, store error
+    // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+    bool                 ctype_XrefMaybe(ssim2mysql::FCtype &row);
+
+### Lpool: Level pool
+
+Lpool is 32 Tpools, one for each allocation size. When allocating memory, the request
+is bumped up to the nearest power of 2 and from there Tpool logic is followed.
+
+Here is an example of an Lpool declaration:
+
+    dmmeta.field  field:algo_lib.FDb.lpool  arg:u8  reftype:Lpool  dflt:""  comment:"private memory pool"
+      dmmeta.basepool  field:algo_lib.FDb.lpool  base:algo_lib.FDb.sbrk
+
+And here are the generated functions. As always, the actual code 
+of these functions can be queried with `amc algo_lib.FDb.lpool.%`
+
+#### FreeMem
+
+    // Free block of memory previously returned by Lpool.
+    void                 lpool_FreeMem(void *mem, u64 size) __attribute__((nothrow));
+
+#### AllocMem
+
+    // Allocate new piece of memory at least SIZE bytes long.
+    // If not successful, return NULL
+    // The allocated block is 16-byte aligned
+    void*                lpool_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
+
+#### ReserveBuffers
+
+    // Add N buffers of some size to the free store
+    bool                 lpool_ReserveBuffers(int nbuf, u64 bufsize) __attribute__((nothrow));
+
+#### ReallocMem
+
+    // Allocate new block, copy old to new, delete old.
+    // New memory is always allocated (i.e. size reduction is not a no-op)
+    // If no memory, return NULL: old memory untouched
+    void*                lpool_ReallocMem(void *oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+              
+### Malloc
+
+Pass-through to libc's malloc / free.
+
+### Sbrk
+
+*Tbd*
+
+### Tary: Flat indirect array (vector)
+
+Tary is a dynamically allocated resizable array of values. A single block of memory
+is used for all elements.
+Taking the address of a Tary element is not allowed, although it cannot be prevented
+Records allocated with Tary cannot be cross-referenced, this is enforced by `amc`.
+`algo.ByteAry` is defined as Tary of u8. `algo.cstring` is defined as Tary of char.
+When growing a full Tary (such as from Reserve or Alloc functions), 
+the size is always at least doubled.
+
+Here is an example of a Tary field:
+
+    dmmeta.field  field:algo.LineBuf.buf  arg:char  reftype:Tary  dflt:""  comment:""
+      dmmeta.tary  field:algo.LineBuf.buf  aliased:Y  comment:""
+
+#### Aliasing
+
+The `aliased` attribute of the `tary` record specifies whether functions involving
+`aryptr` will be generated.
+When they are, it is possible that the `aryptr` being passed to `Addary` or `Setary` is 
+a subrange of the array itself. A check is inserted for this condition, and it's a fatal 
+program error if the check fails. Even though `amc` could adjust the incoming pointer
+before and after calling `Reserve`, the caller still has a bad `aryptr` on their hands,
+which means there is a program error.
+
+The following functions are generated:
+
+#### Addary
+
+    // Reserve space (this may move memory). Insert N element at the end.
+    // Return aryptr to newly inserted block.
+    // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+    algo::aryptr<char>   buf_Addary(algo::LineBuf& parent, algo::aryptr<char> rhs) __attribute__((nothrow));
+
+#### Alloc
+
+    // Reserve space. Insert element at the end
+    // The new element is initialized to a default value
+    char&                buf_Alloc(algo::LineBuf& parent) __attribute__((__warn_unused_result__, nothrow));
+
+#### AllocAt
+
+    // Reserve space for new element, reallocating the array if necessary
+    // Insert new element at specified index. Index must be in range or a fatal error occurs.
+    char&                buf_AllocAt(algo::LineBuf& parent, int at) __attribute__((__warn_unused_result__, nothrow));
+
+#### AllocN
+
+    // Reserve space. Insert N elements at the end of the array, return pointer to array
+    algo::aryptr<char>   buf_AllocN(algo::LineBuf& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+
+#### EmptyQ
+
+    // Return true if index is empty
+    bool                 buf_EmptyQ(algo::LineBuf& parent) __attribute__((nothrow));
+
+#### Find
+
+    // Look up row by row id. Return NULL if out of range
+    char*                buf_Find(algo::LineBuf& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+
+#### Getary
+
+    // Return array pointer by value
+    algo::aryptr<char>   buf_Getary(algo::LineBuf& parent) __attribute__((nothrow));
+
+#### Last
+
+    // Return pointer to last element of array, or NULL if array is empty
+    char*                buf_Last(algo::LineBuf& parent) __attribute__((nothrow, pure));
+
+#### Max
+
+    // Return max. number of items in the array
+    i32                  buf_Max(algo::LineBuf& parent) __attribute__((nothrow));
+
+#### N
+
+    // Return number of items in the array
+    i32                  buf_N(const algo::LineBuf& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+
+#### Remove
+
+    // Remove item by index. If index outside of range, do nothing.
+    void                 buf_Remove(algo::LineBuf& parent, u32 i) __attribute__((nothrow));
+
+#### RemoveAll
+
+    void                 buf_RemoveAll(algo::LineBuf& parent) __attribute__((nothrow));
+
+#### RemoveLast
+
+    // Delete last element of array. Do nothing if array is empty.
+    void                 buf_RemoveLast(algo::LineBuf& parent) __attribute__((nothrow));
+
+#### Reserve
+
+    // Make sure N *more* elements will fit in array. Process dies if out of memory
+    void                 buf_Reserve(algo::LineBuf& parent, int n) __attribute__((nothrow));
+
+#### AbsReserve
+
+    // Make sure N elements fit in array. Process dies if out of memory
+    void                 buf_AbsReserve(algo::LineBuf& parent, int n) __attribute__((nothrow));
+
+#### Setary (copy one Tary to another)
+
+    // Copy contents of RHS to PARENT.
+    void                 buf_Setary(algo::LineBuf& parent, algo::LineBuf &rhs) __attribute__((nothrow));
+
+#### Setary
+
+    // Copy specified array into buf, discarding previous contents.
+    // If the RHS argument aliases the array (refers to the same memory), throw exception.
+    void                 buf_Setary(algo::LineBuf& parent, const algo::aryptr<char> &rhs) __attribute__((nothrow));
+
+#### qFind
+
+    // 'quick' Access row by row id. No bounds checking.
+    char&                buf_qFind(algo::LineBuf& parent, u64 t) __attribute__((nothrow));
+
+#### qLast
+
+    // Return reference to last element of array. No bounds checking
+    char&                buf_qLast(algo::LineBuf& parent) __attribute__((nothrow));
+
+### Tpool
+
+This pool type only supports fixed-size allocation. Free elements area stored in a singly
+linked list. if the list is empty, tpool uses the base allocator
+(or the namespace default allocator)
+to fulfill the request. The free list can be refilled with ReserveMem. 
+The memory obtained by Tpool from the base allocator is never returned. 
+Tpools can only be global (otherwise, memory leaks would occur).
+This is the fastest allocator, because it only takes a couple of instructions to peel a free element
+off of the free list.
+
+Here is an example of a `Tpool`:
+
+    dmmeta.field  field:ssim2mysql.FDb.cmd     arg:ssim2mysql.FCmd     reftype:Tpool   dflt:""  comment:""
+
+And here is the generated code:
+
+#### Alloc
+
+    // Allocate memory for new default row.
+    // If out of memory, process is killed.
+    ssim2mysql::FCmd&    cmd_Alloc() __attribute__((__warn_unused_result__, nothrow));
+
+#### AllocMaybe
+
+    // Allocate memory for new element. If out of memory, return NULL.
+    ssim2mysql::FCmd*    cmd_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+
+#### Delete
+
+    // Remove row from all global and cross indices, then deallocate row
+    void                 cmd_Delete(ssim2mysql::FCmd &row) __attribute__((nothrow));
+
+#### AllocMem
+
+    // Allocate space for one element
+    // If no memory available, return NULL.
+    void*                cmd_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+
+#### FreeMem
+
+    // Remove mem from all global and cross indices, then deallocate mem
+    void                 cmd_FreeMem(ssim2mysql::FCmd &row) __attribute__((nothrow));
+
+#### Reserve
+
+    // Preallocate memory for N more elements
+    // Return number of elements actually reserved.
+    u64                  cmd_Reserve(u64 n_elems) __attribute__((nothrow));
+
+#### ReserveMem
+
+    // Allocate block of given size, break up into small elements and append to free list.
+    // Return number of elements reserved.
+    u64                  cmd_ReserveMem(u64 size) __attribute__((nothrow));
+
+#### XrefMaybe
+
+    // Insert row into all appropriate indices. If error occurs, store error
+    // in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+    bool                 cmd_XrefMaybe(ssim2mysql::FCmd &row);
+
+### Val: Value
+
+Val is the simplest reftype. A field of type val becomes a regular struct member
+on output.
+Here is an example of a `Val` field:
+
+    dmmeta.ctype  ctype:algo.UnTime  comment:"unix time * 1e9 + nanoseconds"
+      dmmeta.field  field:algo.UnTime.value  arg:i64  reftype:Val  dflt:""  comment:""
+
+And here is what `amc` produces on output:
+
+    // --- algo.UnTime
+    struct UnTime { // algo.UnTime: unix time * 1e9 + nanoseconds
+        i64   value;   //   0
+        UnTime();
+    };
+
 ## Amc Features
 
 ### Scaled Decimal Types
@@ -2794,6 +3287,7 @@ memory and values, so the user gets an extra warning).
         return u64((value_Get(parent) >> 63) & 0x01);
     }
 
+
 ### Steps
 
 *UNDER CONSTRUCTION*.
@@ -2824,18 +3318,6 @@ is called if the field is non-empty.
 
 InlineRecur step requires an fdelay record specifying the initial delay between steps.
 The logic is the same as Inline, with a time-based delay between steps.
-
-### Chaining
-
-*UNDER CONSTRUCTION*.
-Pools can be chained by specifying a basepool record. Basepool is where a pool gets more memory
-when its own supplies are exhausted. The algo_lib.FDb.sbrk pool is usually at the root of each chain.
-
-### Default Namespace Pool
-
-*UNDER CONSTRUCTION*.
-Each namespace has a default pool, declared via nsx record. This is where all memory for the
- namespace ultimately comes from.
 
 ### Tracing
 
@@ -2869,20 +3351,6 @@ The binary heap is implemented as an flat array of pointers (e.g. a Ptrary).
 Bitsets can be created on top of any integer field (e.g. u8 to u128) or array field (Inlary, Tary).
 Amc generates functions to provide indexed access to bits of the underlying field.
 
-### Blkpool: Mostly fifo memory allocator
-
-*UNDER CONSTRUCTION*.
-
-The block pool is a free-list of large-ish blocks. Memory is allocated from the current block,
-with others serving as reserve. Allocated elements contain a back-pointer to the beginning
-of the block, and increment a refcount on the block. Elements are allocated back-to-back
-starting at the beginning of the block until the block is exhausted.
-When freeing memory, the refcount is decremented but memory cannot be reused (yet). When
-the block's refcount goes to zero, the entire block goes back to the free list. This allocator
-is suitable for messages that are being processed using a fifo strategy. It is not good
-for random access patterns because one unfreed message can hold an entire block in memory,
-eventually exhausting memory.
-
 ### Count: Count elements
 
 *UNDER CONSTRUCTION*.
@@ -2890,11 +3358,6 @@ eventually exhausting memory.
 Count is a xref type that simply keeps track of the number of child
 elements referring to a given parent. The elements themselves are not accessible
 via this field.
-
-### Dec: Scaled decimals
-
-*UNDER CONSTRUCTION*.
-This reftype is not specified explicitly. It is applied when fdec record appears.
 
 ### Fconst: Enumerated type
 
@@ -2931,13 +3394,6 @@ and be properly cross-referenced.
 
 *UNDER CONSTRUCTION*.
 
-Lary is implemented as 32 pointers in the parent struct. Level k holds as pointer
-to a block of elements of length 2^k. Indexed lookup involves just 1 memory access,
-because amc uses BitScanReverse to find which level the element lives on. When a level is exhausted,
-another level 2x the size, is allocated. Since none of the previous levels need to be
-reallocated, the pointers returned by Lary are stable and so elements can be freely cross-referenced.
-Lary is the most common pool.
-
 ### Llist: Linked list
 
 *UNDER CONSTRUCTION*.
@@ -2953,19 +3409,6 @@ With or without tail pointer
 
 Circular linked lists are often used with steps, because it is convenient to call RotateFirst
 to both grab an element off the head of the list, and move this element to the back.
-
-### Lpool: Level pool
-
-*UNDER CONSTRUCTION*.
-
-Lpool is 32 Tpools, one for each allocation size. When allocating memory, the request
-is bumped up to the nearest power of 2 and from there Tpool logic is followed.
-
-### Malloc
-
-*UNDER CONSTRUCTION*.
-
-Pass-through to libc's malloc / free.
 
 ### Opt: Optional last field in variable-length struct
 
@@ -3010,14 +3453,6 @@ When using this field type, amc ignores the field arg and inserts an algo_lib.Re
 the parent structure. The expression intended to match the primary key of the target type.
 This reftype is very useful in command line arguments.
 
-### Sbrk
-
-*UNDER CONSTRUCTION*.
-
-This is just a pass-through to the sbrk() system call. The pool does not support deletion.
-Ultimately all system memory requests are satisfied by this pool, because it sits at the
-end of every basepool chain.
-
 ### Smallstr
 
 *UNDER CONSTRUCTION*.
@@ -3026,15 +3461,6 @@ Smallstr is a fixed-length character field. Memory is reserved inline in the par
 Strings can be length-suffixed (Rpascal), left-padded or right-padded.
 For padded strings, the string value is calculated by discarding the pad characters from the edge.
 Any smallstr is castable to strptr.
-
-### Tary: Flat array of records
-
-*UNDER CONSTRUCTION*.
-
-Tary is a dynamically allocated resizable array of values. A single block of memory
-is used for all elements, so taking the address of a Tary element is not allowed. Records
-allocated with Tary cannot be cross-referenced. ByteAry and cstring use Tary as the underlying type.
-When growing a full Tary (such as from Reserve or Alloc functions), the size is always at least doubled.
 
 ### Thash: hash table
 
@@ -3053,16 +3479,6 @@ A non-unique hash table allows them.
 For records that have only one hash access path defined for them, amc generates a GetOrCreate function
 which is a convenient way to force creation of an element when you know its key.
 
-### Tpool: singly linked free-list
-
-*UNDER CONSTRUCTION*.
-
-This pool type only supports fixed-size allocation. free elements are stored in a singly
-linked list. if the list is empty, tpool uses the base allocator (or the namespace default allocator)
-to fulfill the request. the free list can be refilled with reservemem. This is the
-fastest allocator, because it only takes a couple of instructions to peel a free element
-off of the free list.
-
 ### Upptr:
 
 *UNDER CONSTRUCTION*.
@@ -3073,14 +3489,6 @@ I.e. a Ptr becomes non-null when another record starts pointing at the parent of
 Upptr becomes non-null when a lookup in an index is performed.
 amc_vis will complain if there are circular dependencies implied by Upptr (i.e. A has Upptr to B,
 B has Upptr to A). Circular dependencies between Ptr fields are OK.
-
-### Val: Value
-
-*UNDER CONSTRUCTION*.
-
-Val is the simplest field type, just a struct member.
-It is an inline field that is initialized whenever the parent
-is initialized, and destroyed when the parent is destroyed.
 
 ### Varlen: variable-length tail portion of a struct
 
