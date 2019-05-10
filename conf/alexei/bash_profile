@@ -15,8 +15,7 @@ PATH=$PATH:bin
 EDITOR="emacs -nw"
 HISTFILESIZE=100000
 HOSTNAME=`hostname -f 2>/dev/null`
-function CURBRANCH() { git branch 2>/dev/null | grep '^\*' | cut -c 3-1000; }
-PS1="\e[0;34m[\$? \D{%b %d %H:%M:%S}] \u@$HOSTNAME\e[0;32m:\w \$(CURBRANCH)\e[m \n\$ "
+PS1="\e[0;34m[\$? \D{%b %d %H:%M:%S}] \u@$HOSTNAME\e[0;32m:\w\e[m \n\$ "
 LS_OPTIONS='--color=auto --quoting-style=shell'
 
 unset SSH_ASKPASS
@@ -29,15 +28,10 @@ export EDITOR
 export HISTFILESIZE
 
 shopt -s histappend
-eval "`dircolors`"
 
-alias ls='ls $LS_OPTIONS'
-alias ll='ls $LS_OPTIONS -l'
-alias l='ls $LS_OPTIONS -lA'
 alias more=less
 
 bind "set completion-query-items 1000"
-
 
 # Generated with acr_compl -install
 # This is a script suitable for inclusion in .bash_profile
