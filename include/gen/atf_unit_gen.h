@@ -389,7 +389,7 @@ u64                  number_Reserve(u64 n_elems) __attribute__((nothrow));
 // Return number of elements reserved.
 u64                  number_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 number_XrefMaybe(atf_unit::FNumber &row);
 
 // Return true if index is empty
@@ -453,7 +453,7 @@ void                 unittest_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 atf_unit::FUnittest& unittest_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 unittest_XrefMaybe(atf_unit::FUnittest &row);
 
 // Main function
@@ -473,7 +473,7 @@ bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow))
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
 
 // Return true if hash is empty
@@ -533,7 +533,7 @@ void                 testrun_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 atf_unit::FTestrun&  testrun_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 testrun_XrefMaybe(atf_unit::FTestrun &row);
 
 // Start subprocess
@@ -666,7 +666,7 @@ atf_unit::Dbl&       orig_qLast(atf_unit::FPerfSort& parent) __attribute__((noth
 // Return row id of specified element
 u64                  orig_rowid_Get(atf_unit::FPerfSort& parent, atf_unit::Dbl &elem) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 orig_XrefMaybe(atf_unit::Dbl &row);
 
 // Reserve space (this may move memory). Insert N element at the end.
@@ -966,7 +966,7 @@ atf_unit::ShStream&  shstream_qLast(atf_unit::ShStreamAry& parent) __attribute__
 // Return row id of specified element
 u64                  shstream_rowid_Get(atf_unit::ShStreamAry& parent, atf_unit::ShStream &elem) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 shstream_XrefMaybe(atf_unit::ShStream &row);
 
 // proceed to next item

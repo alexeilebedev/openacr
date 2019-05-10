@@ -111,7 +111,6 @@ static void CheckSmallstr(amc::FSmallstr &smallstr, amc::FNumstr *numstr) {
 void amc::tclass_Smallstr() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
-    amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
 
     vrfy(field.c_smallstr, "smallstr required");
     amc::FSmallstr& smallstr = *field.c_smallstr;
@@ -145,28 +144,6 @@ void amc::tclass_Smallstr() {
     } else {
         InsStruct(R, field.p_ctype, "u8 $name[$max_length+1];");
         InsStruct(R, field.p_ctype, "u8 n_$name;");// extra 1 byte is required by rpascal.
-        InsStruct(R, field.p_ctype, "");
-    }
-
-    // copy ctor
-    InsStruct(R, field.p_ctype, "$Parname(const $Partype &rhs) {");
-    InsStruct(R, field.p_ctype, "operator =(rhs);");
-    InsStruct(R, field.p_ctype, "}");
-
-    // initialization from strptr
-    InsStruct(R, field.p_ctype, "explicit $Parname(algo::strptr s) {");
-    InsStruct(R, field.p_ctype, "operator =(s);");
-    InsStruct(R, field.p_ctype, "}");
-
-    // assign strptr
-    InsStruct(R, field.p_ctype, "void operator =(const algo::strptr & str);");
-    Ins(&R, *ns.inl, "inline void $Partype::operator =(const algo::strptr & str) { $name_Set(*this, str); }");
-
-    if (smallstr.strtype == dmmeta_Strtype_strtype_rpascal) {
-        InsStruct(R, field.p_ctype, "void operator =(const $Parname &s) {");
-        InsStruct(R, field.p_ctype, "    n_$name = s.n_$name;");
-        InsStruct(R, field.p_ctype, "    memcpy($name, s.$name, n_$name);");
-        InsStruct(R, field.p_ctype, "}");
         InsStruct(R, field.p_ctype, "");
     }
 }
@@ -265,7 +242,7 @@ void amc::tfunc_Smallstr_ReadStrptrMaybe() {
         Ins(&R, rd.proto, "$name_ReadStrptrMaybe($Parent, algo::strptr rhs)", false);
         Ins(&R, rd.body, "bool retval = false;");
         Ins(&R, rd.body, "if (rhs.n_elems <= $max_length) {");
-        Ins(&R, rd.body, "    $name_qSet($pararg, rhs);");
+        Ins(&R, rd.body, "    $name_SetStrptr($pararg, rhs);");
         Ins(&R, rd.body, "    retval = true;");
         Ins(&R, rd.body, "} else {");
         Ins(&R, rd.body, "    algo_lib::SaveBadTag(\"comment\",\"text too long, limit $max_length\");");
@@ -285,8 +262,7 @@ void amc::tfunc_Smallstr_Print() {
     Ins(&R, print.body, "ch_Addary(out, $name_Getary($pararg));");
 }
 
-void amc::tfunc_Smallstr_Hash() {
-}
+// -----------------------------------------------------------------------------
 
 void amc::tfunc_Smallstr_HashStrptr() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
@@ -307,13 +283,13 @@ void amc::tfunc_Smallstr_HashStrptr() {
     Ins(&R, hash.body, "return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);");
 }
 
+// -----------------------------------------------------------------------------
 
+// compute length
 void amc::tfunc_Smallstr_N() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
     amc::FSmallstr& smallstr = *field.c_smallstr;
-
-    // compute length
     amc::FFunc& nitems = amc::CreateCurFunc();
     Ins(&R, nitems.ret  , "int", false);
     Ins(&R, nitems.proto, "$name_N($Cparent)", false);
@@ -335,11 +311,12 @@ void amc::tfunc_Smallstr_N() {
     Ins(&R, nitems.body, "return int(ret);");
 }
 
+// -----------------------------------------------------------------------------
 
+// Max # of elements (constant)
 void amc::tfunc_Smallstr_Max() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
 
-    // Max # of elements (constant)
     amc::FFunc& maxitems = amc::CreateCurFunc();
     maxitems.inl=true;
     Ins(&R, maxitems.comment, "always return constant $max_length");
@@ -349,49 +326,98 @@ void amc::tfunc_Smallstr_Max() {
     Ins(&R, maxitems.body, "return $max_length;");
 }
 
-void amc::tfunc_Smallstr_qSet() {
+// -----------------------------------------------------------------------------
+
+// Set value as strptr
+void amc::tfunc_Smallstr_SetStrptr() {
+    algo_lib::Replscope &R = amc::_db.genfield.R;
+    amc::FField &field = *amc::_db.genfield.p_field;
+    amc::FSmallstr& smallstr = *field.c_smallstr;
+    amc::FFunc& func = amc::CreateCurFunc();
+    Ins(&R, func.ret  , "void", false);
+    Ins(&R, func.comment, "Set string to the value provided by RHS.");
+    Ins(&R, func.comment, "If RHS is too large, it is silently clipped.");
+    Ins(&R, func.proto, "$name_SetStrptr($Parent, const algo::strptr &rhs)", false);
+    Ins(&R, func.body, "int len = i32_Min(rhs.n_elems, $max_length);");
+    Ins(&R, func.body, "char *rhs_elems = rhs.elems;");
+    Ins(&R, func.body, "int i = 0;");
+    Ins(&R, func.body, "int j = 0;");
+    if (smallstr.strtype == dmmeta_Strtype_strtype_leftpad) {
+        Ins(&R, func.body, "for (; j < $max_length - len; j++) {");
+        Ins(&R, func.body, "    $parname.$name[j] = $pad;");
+        Ins(&R, func.body, "}");
+    }
+    Ins(&R, func.body, "for (; i < len; i++, j++) {");
+    Ins(&R, func.body, "    $parname.$name[j] = rhs_elems[i];");
+    Ins(&R, func.body, "}");
+    if (smallstr.strtype == dmmeta_Strtype_strtype_rightpad) {
+        Ins(&R, func.body, "for (; j < $max_length; j++) {");
+        Ins(&R, func.body, "    $parname.$name[j] = $pad;");
+        Ins(&R, func.body, "}");
+    }
+    if (smallstr.strtype == dmmeta_Strtype_strtype_rpascal) {
+        Ins(&R, func.body, "$parname.n_$name       = u8(len);");
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Copy from same type
+void amc::tfunc_Smallstr_Set() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
     amc::FSmallstr& smallstr = *field.c_smallstr;
 
-    // Set from strptr, no checking
-    amc::FFunc& qset = amc::CreateCurFunc();
-    qset.priv = true;
-    Ins(&R, qset.ret  , "void", false);
-    Ins(&R, qset.comment, "Set string to the value provided by RHS.");
-    Ins(&R, qset.comment, "No bounds checking is performed");
-    Ins(&R, qset.proto, "$name_qSet($Parent, const algo::strptr &rhs)", false);
-    Ins(&R, qset.body, "int len = rhs.n_elems;");
-    Ins(&R, qset.body, "char *rhs_elems = rhs.elems;");
-    Ins(&R, qset.body, "int i = 0;");
-    Ins(&R, qset.body, "int j = 0;");
-    if (smallstr.strtype == dmmeta_Strtype_strtype_leftpad) {
-        Ins(&R, qset.body, "for (; j < $max_length - len; j++) {");
-        Ins(&R, qset.body, "    $parname.$name[j] = $pad;");
-        Ins(&R, qset.body, "}");
-    }
-    Ins(&R, qset.body, "for (; i < len; i++, j++) {");
-    Ins(&R, qset.body, "    $parname.$name[j] = rhs_elems[i];");
-    Ins(&R, qset.body, "}");
-    if (smallstr.strtype == dmmeta_Strtype_strtype_rightpad) {
-        Ins(&R, qset.body, "for (; j < $max_length; j++) {");
-        Ins(&R, qset.body, "    $parname.$name[j] = $pad;");
-        Ins(&R, qset.body, "}");
-    }
+    amc::FFunc& func = amc::CreateCurFunc();
+    func.inl=true;
+    func.member=true;
+    Ins(&R, func.ret  , "void", false);
+    Ins(&R, func.comment, "Copy value from RHS.");
+    Ins(&R, func.proto, "operator =(const $Parent)", false);
     if (smallstr.strtype == dmmeta_Strtype_strtype_rpascal) {
-        Ins(&R, qset.body, "$parname.n_$name       = u8(len);");
+        Ins(&R, func.body, "memcpy($name, parent.$name, parent.n_$name);");
+        Ins(&R, func.body, "n_$name = parent.n_$name;");
+    } else {
+        Ins(&R, func.body, "memcpy($name, parent.$name, $max_length);");
     }
 }
 
-void amc::tfunc_Smallstr_Set() {
+// -----------------------------------------------------------------------------
+
+// Assignment operator from strptr
+void amc::tfunc_Smallstr_AssignStrptr() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
 
-    // Set from strptr, clip
-    amc::FFunc& set = amc::CreateCurFunc();
-    Ins(&R, set.ret  , "void", false);
-    Ins(&R, set.comment, "Set string to the value provided by RHS.");
-    Ins(&R, set.comment, "If RHS is too large, it is silently clipped.");
-    Ins(&R, set.proto, "$name_Set($Parent, const algo::strptr &rhs)", false);
-    Ins(&R, set.body, "int len = i32_Min(rhs.n_elems, $max_length);");
-    Ins(&R, set.body, "$name_qSet($parname, algo::strptr(rhs.elems, len));");
+    amc::FFunc& func = amc::CreateCurFunc();
+    func.inl=true;
+    func.member=true;
+    Ins(&R, func.ret  , "void", false);
+    Ins(&R, func.proto, "operator =(const algo::strptr &str)", false);
+    Ins(&R, func.body, "$name_SetStrptr(*this, str);");
+}
+
+// -----------------------------------------------------------------------------
+
+// Construct from same type
+void amc::tfunc_Smallstr_Ctor() {
+    algo_lib::Replscope &R = amc::_db.genfield.R;
+    amc::FFunc& func = amc::CreateCurFunc();
+    func.inl=true;
+    func.comment="";// erase it
+    func.member=true;
+    Ins(&R, func.proto, "$Parname(const $Partype &rhs)", false);
+    Ins(&R, func.body, "operator =(rhs);");
+}
+
+// -----------------------------------------------------------------------------
+
+// Construct from strptr
+void amc::tfunc_Smallstr_CtorStrptr() {
+    algo_lib::Replscope &R = amc::_db.genfield.R;
+    amc::FFunc& func = amc::CreateCurFunc();
+    func.inl=true;
+    func.comment="";// erase it
+    func.member=true;
+    Ins(&R, func.proto, "$Parname(const algo::strptr &rhs)", false);
+    Ins(&R, func.body, "$name_SetStrptr(*this, rhs);");
 }

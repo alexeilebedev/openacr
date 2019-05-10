@@ -387,7 +387,7 @@ void                 srcfile_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 abt::FSrcfile&       srcfile_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 srcfile_XrefMaybe(abt::FSrcfile &row);
 
 // Allocate memory for new default row.
@@ -413,7 +413,7 @@ void                 targdep_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 abt::FTargdep&       targdep_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 targdep_XrefMaybe(abt::FTargdep &row);
 
 // Allocate memory for new default row.
@@ -439,7 +439,7 @@ void                 tool_opt_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 abt::FToolOpt&       tool_opt_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 tool_opt_XrefMaybe(abt::FToolOpt &row);
 
 // Return true if hash is empty
@@ -480,7 +480,7 @@ void                 target_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 abt::FTarget&        target_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 target_XrefMaybe(abt::FTarget &row);
 
 // Return true if hash is empty
@@ -521,7 +521,7 @@ void                 targsrc_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 abt::FTargsrc&       targsrc_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 targsrc_XrefMaybe(abt::FTargsrc &row);
 
 // Allocate memory for new default row.
@@ -547,7 +547,7 @@ void                 syscmddep_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 abt::FSyscmddep&     syscmddep_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 syscmddep_XrefMaybe(abt::FSyscmddep &row);
 
 // Allocate memory for new default row.
@@ -573,7 +573,7 @@ void                 syscmd_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 abt::FSyscmd&        syscmd_qFind(i32 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 syscmd_XrefMaybe(abt::FSyscmd &row);
 
 // Main function
@@ -593,7 +593,7 @@ bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow))
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
 
 // Return true if hash is empty
@@ -664,7 +664,7 @@ void                 cfg_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 abt::FCfg&           cfg_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 cfg_XrefMaybe(abt::FCfg &row);
 
 // Return true if hash is empty
@@ -705,7 +705,7 @@ void                 uname_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 abt::FUname&         uname_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 uname_XrefMaybe(abt::FUname &row);
 
 // Return true if hash is empty
@@ -746,7 +746,7 @@ void                 compiler_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 abt::FCompiler&      compiler_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 compiler_XrefMaybe(abt::FCompiler &row);
 
 // Return true if hash is empty
@@ -787,7 +787,7 @@ void                 arch_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 abt::FArch&          arch_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 arch_XrefMaybe(abt::FArch &row);
 
 // Return true if hash is empty
@@ -904,7 +904,7 @@ void                 targinstall_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 abt::FTarginstall&   targinstall_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 targinstall_XrefMaybe(abt::FTarginstall &row);
 
 // Return true if hash is empty
@@ -981,7 +981,7 @@ void                 targsyslib_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 abt::FTargsyslib&    targsyslib_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 targsyslib_XrefMaybe(abt::FTargsyslib &row);
 
 // Allocate memory for new default row.
@@ -1007,7 +1007,7 @@ void                 syslib_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 abt::FSyslib&        syslib_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 syslib_XrefMaybe(abt::FSyslib &row);
 
 // Return true if hash is empty
@@ -1048,7 +1048,7 @@ void                 include_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 abt::FInclude&       include_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 include_XrefMaybe(abt::FInclude &row);
 
 // Return true if hash is empty
@@ -1147,7 +1147,7 @@ void                 ns_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 abt::FNs&            ns_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 ns_XrefMaybe(abt::FNs &row);
 
 // Return true if hash is empty
@@ -1187,7 +1187,7 @@ void                 filestat_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 abt::FFilestat&      filestat_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 filestat_XrefMaybe(abt::FFilestat &row);
 
 // Return true if hash is empty

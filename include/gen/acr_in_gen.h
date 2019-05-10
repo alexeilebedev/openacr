@@ -320,7 +320,7 @@ void                 tuple_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr_in::FTuple&      tuple_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 tuple_XrefMaybe(acr_in::FTuple &row);
 
 // Return true if hash is empty
@@ -357,7 +357,7 @@ bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow))
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
 
 // Allocate memory for new default row.
@@ -383,7 +383,7 @@ void                 finput_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr_in::FFinput&     finput_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 finput_XrefMaybe(acr_in::FFinput &row);
 
 // Allocate memory for new default row.
@@ -409,7 +409,7 @@ void                 field_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr_in::FField&      field_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 field_XrefMaybe(acr_in::FField &row);
 
 // Return true if hash is empty
@@ -450,7 +450,7 @@ void                 ctype_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr_in::FCtype&      ctype_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 ctype_XrefMaybe(acr_in::FCtype &row);
 
 // Return true if hash is empty
@@ -493,7 +493,7 @@ void                 ssimfile_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr_in::FSsimfile&   ssimfile_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 ssimfile_XrefMaybe(acr_in::FSsimfile &row);
 
 // Allocate memory for new default row.
@@ -519,7 +519,7 @@ void                 ns_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr_in::FNs&         ns_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 ns_XrefMaybe(acr_in::FNs &row);
 
 // Return true if hash is empty
@@ -612,7 +612,7 @@ void                 substr_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr_in::FSubstr&     substr_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 substr_XrefMaybe(acr_in::FSubstr &row);
 
 // Allocate memory for new default row.
@@ -638,7 +638,7 @@ void                 dispsig_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr_in::FDispsig&    dispsig_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 dispsig_XrefMaybe(acr_in::FDispsig &row);
 
 // Return true if hash is empty
@@ -769,7 +769,7 @@ void                 target_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr_in::FTarget&     target_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 target_XrefMaybe(acr_in::FTarget &row);
 
 // Return true if hash is empty
@@ -810,7 +810,7 @@ void                 targdep_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr_in::FTargdep&    targdep_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 targdep_XrefMaybe(acr_in::FTargdep &row);
 
 // Return true if index is empty

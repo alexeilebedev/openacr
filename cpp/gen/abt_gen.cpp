@@ -104,36 +104,36 @@ abt::_db_bh_syscmd_curs::~_db_bh_syscmd_curs() {
 }
 
 namespace abt {
-static bool          targdep_InputMaybe(dev::Targdep &elem) __attribute__((nothrow));
-static bool          tool_opt_InputMaybe(dev::ToolOpt &elem) __attribute__((nothrow));
-static bool          target_InputMaybe(dev::Target &elem) __attribute__((nothrow));
-static bool          targsrc_InputMaybe(dev::Targsrc &elem) __attribute__((nothrow));
-static bool          syscmddep_InputMaybe(dev::Syscmddep &elem) __attribute__((nothrow));
-static bool          syscmd_InputMaybe(dev::Syscmd &elem) __attribute__((nothrow));
-// Load statically available data into tables, register tables and database.
-static void          InitReflection();
-static bool          cfg_InputMaybe(dev::Cfg &elem) __attribute__((nothrow));
-static bool          uname_InputMaybe(dev::Uname &elem) __attribute__((nothrow));
-static bool          compiler_InputMaybe(dev::Compiler &elem) __attribute__((nothrow));
-static bool          arch_InputMaybe(dev::Arch &elem) __attribute__((nothrow));
-// Find new location for ROW starting at IDX
-// NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int           bh_syscmd_Downheap(abt::FSyscmd& row, int idx) __attribute__((nothrow));
-// Find and return index of new location for element ROW in the heap, starting at index IDX.
-// Move any elements along the way but do not modify ROW.
-static int           bh_syscmd_Upheap(abt::FSyscmd& row, int idx) __attribute__((nothrow));
-static bool          bh_syscmd_ElemLt(abt::FSyscmd &a, abt::FSyscmd &b) __attribute__((nothrow));
-static void          _db_bh_syscmd_curs_Add(_db_bh_syscmd_curs &curs, abt::FSyscmd& row);
-static bool          targinstall_InputMaybe(dev::Targinstall &elem) __attribute__((nothrow));
-static bool          targsyslib_InputMaybe(dev::Targsyslib &elem) __attribute__((nothrow));
-static bool          syslib_InputMaybe(dev::Syslib &elem) __attribute__((nothrow));
-static bool          include_InputMaybe(dev::Include &elem) __attribute__((nothrow));
-static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
-// find trace by row id (used to implement reflection)
-static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
-// Function return 1
-static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-static void          SizeCheck();
+    static bool          targdep_InputMaybe(dev::Targdep &elem) __attribute__((nothrow));
+    static bool          tool_opt_InputMaybe(dev::ToolOpt &elem) __attribute__((nothrow));
+    static bool          target_InputMaybe(dev::Target &elem) __attribute__((nothrow));
+    static bool          targsrc_InputMaybe(dev::Targsrc &elem) __attribute__((nothrow));
+    static bool          syscmddep_InputMaybe(dev::Syscmddep &elem) __attribute__((nothrow));
+    static bool          syscmd_InputMaybe(dev::Syscmd &elem) __attribute__((nothrow));
+    // Load statically available data into tables, register tables and database.
+    static void          InitReflection();
+    static bool          cfg_InputMaybe(dev::Cfg &elem) __attribute__((nothrow));
+    static bool          uname_InputMaybe(dev::Uname &elem) __attribute__((nothrow));
+    static bool          compiler_InputMaybe(dev::Compiler &elem) __attribute__((nothrow));
+    static bool          arch_InputMaybe(dev::Arch &elem) __attribute__((nothrow));
+    // Find new location for ROW starting at IDX
+    // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    static int           bh_syscmd_Downheap(abt::FSyscmd& row, int idx) __attribute__((nothrow));
+    // Find and return index of new location for element ROW in the heap, starting at index IDX.
+    // Move any elements along the way but do not modify ROW.
+    static int           bh_syscmd_Upheap(abt::FSyscmd& row, int idx) __attribute__((nothrow));
+    static bool          bh_syscmd_ElemLt(abt::FSyscmd &a, abt::FSyscmd &b) __attribute__((nothrow));
+    static void          _db_bh_syscmd_curs_Add(_db_bh_syscmd_curs &curs, abt::FSyscmd& row);
+    static bool          targinstall_InputMaybe(dev::Targinstall &elem) __attribute__((nothrow));
+    static bool          targsyslib_InputMaybe(dev::Targsyslib &elem) __attribute__((nothrow));
+    static bool          syslib_InputMaybe(dev::Syslib &elem) __attribute__((nothrow));
+    static bool          include_InputMaybe(dev::Include &elem) __attribute__((nothrow));
+    static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
+    // find trace by row id (used to implement reflection)
+    static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
+    // Function return 1
+    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    static void          SizeCheck();
 } // end namespace abt
 
 // --- abt.FArch.msghdr.CopyOut
@@ -381,7 +381,7 @@ void abt::srcfile_RemoveLast() {
 
 // --- abt.FDb.srcfile.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool abt::srcfile_XrefMaybe(abt::FSrcfile &row) {
     bool retval = true;
     (void)row;
@@ -482,7 +482,7 @@ static bool abt::targdep_InputMaybe(dev::Targdep &elem) {
 
 // --- abt.FDb.targdep.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool abt::targdep_XrefMaybe(abt::FTargdep &row) {
     bool retval = true;
     (void)row;
@@ -588,7 +588,7 @@ static bool abt::tool_opt_InputMaybe(dev::ToolOpt &elem) {
 
 // --- abt.FDb.tool_opt.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool abt::tool_opt_XrefMaybe(abt::FToolOpt &row) {
     bool retval = true;
     (void)row;
@@ -789,7 +789,7 @@ static bool abt::target_InputMaybe(dev::Target &elem) {
 
 // --- abt.FDb.target.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool abt::target_XrefMaybe(abt::FTarget &row) {
     bool retval = true;
     (void)row;
@@ -1008,7 +1008,7 @@ static bool abt::targsrc_InputMaybe(dev::Targsrc &elem) {
 
 // --- abt.FDb.targsrc.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool abt::targsrc_XrefMaybe(abt::FTargsrc &row) {
     bool retval = true;
     (void)row;
@@ -1118,7 +1118,7 @@ static bool abt::syscmddep_InputMaybe(dev::Syscmddep &elem) {
 
 // --- abt.FDb.syscmddep.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool abt::syscmddep_XrefMaybe(abt::FSyscmddep &row) {
     bool retval = true;
     (void)row;
@@ -1233,7 +1233,7 @@ static bool abt::syscmd_InputMaybe(dev::Syscmd &elem) {
 
 // --- abt.FDb.syscmd.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool abt::syscmd_XrefMaybe(abt::FSyscmd &row) {
     bool retval = true;
     (void)row;
@@ -1444,7 +1444,7 @@ bool abt::LoadSsimfileMaybe(algo::strptr fname) {
 
 // --- abt.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool abt::_db_XrefMaybe() {
     bool retval = true;
     return retval;
@@ -1870,7 +1870,7 @@ static bool abt::cfg_InputMaybe(dev::Cfg &elem) {
 
 // --- abt.FDb.cfg.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool abt::cfg_XrefMaybe(abt::FCfg &row) {
     bool retval = true;
     (void)row;
@@ -2080,7 +2080,7 @@ static bool abt::uname_InputMaybe(dev::Uname &elem) {
 
 // --- abt.FDb.uname.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool abt::uname_XrefMaybe(abt::FUname &row) {
     bool retval = true;
     (void)row;
@@ -2290,7 +2290,7 @@ static bool abt::compiler_InputMaybe(dev::Compiler &elem) {
 
 // --- abt.FDb.compiler.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool abt::compiler_XrefMaybe(abt::FCompiler &row) {
     bool retval = true;
     (void)row;
@@ -2500,7 +2500,7 @@ static bool abt::arch_InputMaybe(dev::Arch &elem) {
 
 // --- abt.FDb.arch.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool abt::arch_XrefMaybe(abt::FArch &row) {
     bool retval = true;
     (void)row;
@@ -3039,7 +3039,7 @@ static bool abt::targinstall_InputMaybe(dev::Targinstall &elem) {
 
 // --- abt.FDb.targinstall.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool abt::targinstall_XrefMaybe(abt::FTarginstall &row) {
     bool retval = true;
     (void)row;
@@ -3387,7 +3387,7 @@ static bool abt::targsyslib_InputMaybe(dev::Targsyslib &elem) {
 
 // --- abt.FDb.targsyslib.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool abt::targsyslib_XrefMaybe(abt::FTargsyslib &row) {
     bool retval = true;
     (void)row;
@@ -3493,7 +3493,7 @@ static bool abt::syslib_InputMaybe(dev::Syslib &elem) {
 
 // --- abt.FDb.syslib.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool abt::syslib_XrefMaybe(abt::FSyslib &row) {
     bool retval = true;
     (void)row;
@@ -3703,7 +3703,7 @@ static bool abt::include_InputMaybe(dev::Include &elem) {
 
 // --- abt.FDb.include.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool abt::include_XrefMaybe(abt::FInclude &row) {
     bool retval = true;
     (void)row;
@@ -4095,7 +4095,7 @@ static bool abt::ns_InputMaybe(dmmeta::Ns &elem) {
 
 // --- abt.FDb.ns.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool abt::ns_XrefMaybe(abt::FNs &row) {
     bool retval = true;
     (void)row;
@@ -4294,7 +4294,7 @@ void abt::filestat_RemoveLast() {
 
 // --- abt.FDb.filestat.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool abt::filestat_XrefMaybe(abt::FFilestat &row) {
     bool retval = true;
     (void)row;

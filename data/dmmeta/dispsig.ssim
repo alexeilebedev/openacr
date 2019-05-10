@@ -5,7 +5,7 @@ dmmeta.dispsig  dispsig:acr_ed.Input  signature:4a62829eabcceb6a0156ada29e54841b
 dmmeta.dispsig  dispsig:acr_in.Input  signature:921f0867652e8602d2f5e2203a234a6e634c2874
 dmmeta.dispsig  dispsig:acr_my.Input  signature:4af1104b912fd0ce532858d685766efe3c9836a6
 dmmeta.dispsig  dispsig:algo_lib.Input  signature:ddc07e859e7056e1a824df1ad0e6d08e12e89849
-dmmeta.dispsig  dispsig:amc.Input  signature:6e7465174099b909179d170297fd870bea5dc09f
+dmmeta.dispsig  dispsig:amc.Input  signature:5faa44c407372a18c3d18df99ec6c7a08ae87a74
 dmmeta.dispsig  dispsig:amc_vis.Input  signature:76002ceb41bd908a4029a5ae4341364b2386489a
 dmmeta.dispsig  dispsig:atf_amc.Disp  signature:d11df8e45dfabb45e515398cd71d30a184879014
 dmmeta.dispsig  dispsig:atf_amc.Input  signature:3b9943558be9b03e79fade60297ec50f1d4702a3

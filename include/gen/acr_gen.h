@@ -151,7 +151,6 @@ namespace acr { struct _db_bltin_curs; }
 namespace acr { struct _db_bh_ctype_topo_curs; }
 namespace acr { struct _db_bh_ctype_topo_unordcurs; }
 namespace acr { struct _db_cppfunc_curs; }
-namespace acr { struct _db_file2_curs; }
 namespace acr { struct file_zd_frec_curs; }
 namespace acr { struct pline_zd_child_curs; }
 namespace acr { struct print_ind_printattr_curs; }
@@ -751,8 +750,6 @@ struct FDb { // acr.FDb
     i32                  bh_ctype_topo_max;              // max elements in bh_ctype_topo_elems
     acr::FCppfunc*       cppfunc_lary[32];               // level array
     i32                  cppfunc_n;                      // number of elements in array
-    acr::FFile*          file2_lary[32];                 // level array
-    i32                  file2_n;                        // number of elements in array
     acr::trace           trace;                          //
 };
 
@@ -775,7 +772,7 @@ u64                  pline_Reserve(u64 n_elems) __attribute__((nothrow));
 // Return number of elements reserved.
 u64                  pline_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 pline_XrefMaybe(acr::FPline &row);
 
 // Allocate memory for new default row.
@@ -797,7 +794,7 @@ u64                  pdep_Reserve(u64 n_elems) __attribute__((nothrow));
 // Return number of elements reserved.
 u64                  pdep_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 pdep_XrefMaybe(acr::FPdep &row);
 
 // Delete all elements in the linked list.
@@ -873,7 +870,7 @@ void                 ctype_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr::FCtype&         ctype_qFind(i32 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 ctype_XrefMaybe(acr::FCtype &row);
 
 // Allocate memory for new default row.
@@ -898,7 +895,7 @@ u64                  err_Reserve(u64 n_elems) __attribute__((nothrow));
 // Return number of elements reserved.
 u64                  err_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 err_XrefMaybe(acr::FErr &row);
 
 // Allocate memory for new default row.
@@ -924,7 +921,7 @@ void                 anonfld_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr::FAnonfld&       anonfld_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 anonfld_XrefMaybe(acr::FAnonfld &row);
 
 // Allocate memory for new default row.
@@ -950,7 +947,7 @@ void                 cdflt_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr::FCdflt&         cdflt_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 cdflt_XrefMaybe(acr::FCdflt &row);
 
 // Allocate memory for new default row.
@@ -972,7 +969,7 @@ u64                  rec_Reserve(u64 n_elems) __attribute__((nothrow));
 // Return number of elements reserved.
 u64                  rec_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 rec_XrefMaybe(acr::FRec &row);
 
 // Allocate memory for new default row.
@@ -994,7 +991,7 @@ u64                  uniqueattr_Reserve(u64 n_elems) __attribute__((nothrow));
 // Return number of elements reserved.
 u64                  uniqueattr_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 uniqueattr_XrefMaybe(acr::FUniqueattr &row);
 
 // Allocate memory for new default row.
@@ -1016,7 +1013,7 @@ u64                  query_Reserve(u64 n_elems) __attribute__((nothrow));
 // Return number of elements reserved.
 u64                  query_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 query_XrefMaybe(acr::FQuery &row);
 
 // Allocate memory for new default row.
@@ -1042,7 +1039,7 @@ void                 field_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr::FField&         field_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 field_XrefMaybe(acr::FField &row);
 
 // Allocate memory for new default row.
@@ -1067,7 +1064,7 @@ void                 file_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr::FFile&          file_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 file_XrefMaybe(acr::FFile &row);
 
 // Main function
@@ -1087,7 +1084,7 @@ bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow))
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
 
 // Return true if hash is empty
@@ -1257,7 +1254,7 @@ void                 substr_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr::FSubstr&        substr_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 substr_XrefMaybe(acr::FSubstr &row);
 
 // Allocate memory for new default row.
@@ -1283,7 +1280,7 @@ void                 ssimfile_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr::FSsimfile&      ssimfile_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 ssimfile_XrefMaybe(acr::FSsimfile &row);
 
 // Allocate memory for new default row.
@@ -1308,7 +1305,7 @@ void                 tempkey_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr::FTempkey&       tempkey_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 tempkey_XrefMaybe(acr::FTempkey &row);
 
 // Return true if hash is empty
@@ -1340,7 +1337,7 @@ void                 ind_ssimfile_Remove(acr::FSsimfile& row) __attribute__((not
 void                 ind_ssimfile_Reserve(int n) __attribute__((nothrow));
 
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 print_XrefMaybe(acr::FPrint &row);
 
 // Allocate memory for new default row.
@@ -1358,7 +1355,7 @@ void                 printattr_FreeMem(void *mem, size_t n) __attribute__((nothr
 // In this case, original MEM pointer is untouched.
 void*                printattr_ReallocMem(void *mem, size_t old_size, size_t new_size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 printattr_XrefMaybe(acr::FPrintAttr &row);
 
 // Return true if index is empty
@@ -1384,11 +1381,11 @@ acr::FQuery*         zs_query_RemoveFirst() __attribute__((nothrow));
 acr::FQuery&         zs_query_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 run_XrefMaybe(acr::FRun &row);
 
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 check_XrefMaybe(acr::FCheck &row);
 
 // Allocate memory for new default row.
@@ -1414,7 +1411,7 @@ void                 ssimsort_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr::FSsimsort&      ssimsort_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 ssimsort_XrefMaybe(acr::FSsimsort &row);
 
 // Return true if hash is empty
@@ -1431,7 +1428,7 @@ void                 ind_ssimsort_Remove(acr::FSsimsort& row) __attribute__((not
 void                 ind_ssimsort_Reserve(int n) __attribute__((nothrow));
 
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 write_XrefMaybe(acr::FWrite &row);
 
 // Allocate memory for new default row.
@@ -1457,7 +1454,7 @@ void                 smallstr_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr::FSmallstr&      smallstr_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 smallstr_XrefMaybe(acr::FSmallstr &row);
 
 // Allocate memory for new default row.
@@ -1483,7 +1480,7 @@ void                 funique_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr::FFunique&       funique_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 funique_XrefMaybe(acr::FFunique &row);
 
 // Return true if hash is empty
@@ -1524,7 +1521,7 @@ void                 bltin_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr::FBltin&         bltin_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 bltin_XrefMaybe(acr::FBltin &row);
 
 // Remove all elements from heap and free memory used by the array.
@@ -1582,30 +1579,8 @@ void                 cppfunc_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 acr::FCppfunc&       cppfunc_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 cppfunc_XrefMaybe(acr::FCppfunc &row);
-
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-acr::FFile&          file2_Alloc() __attribute__((__warn_unused_result__, nothrow));
-// Allocate memory for new element. If out of memory, return NULL.
-acr::FFile*          file2_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-// Allocate space for one element. If no memory available, return NULL.
-void*                file2_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-bool                 file2_EmptyQ() __attribute__((nothrow));
-// Look up row by row id. Return NULL if out of range
-acr::FFile*          file2_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
-// Return pointer to last element of array, or NULL if array is empty
-acr::FFile*          file2_Last() __attribute__((nothrow, pure));
-// Return number of items in the pool
-i32                  file2_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Remove all elements from Lary
-void                 file2_RemoveAll() __attribute__((nothrow));
-// Delete last element of array. Do nothing if array is empty.
-void                 file2_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-acr::FFile&          file2_qFind(u64 t) __attribute__((nothrow));
 
 // cursor points to valid item
 void                 _db_zd_pline_curs_Reset(_db_zd_pline_curs &curs, acr::FDb &parent);
@@ -1777,14 +1752,6 @@ bool                 _db_cppfunc_curs_ValidQ(_db_cppfunc_curs &curs);
 void                 _db_cppfunc_curs_Next(_db_cppfunc_curs &curs);
 // item access
 acr::FCppfunc&       _db_cppfunc_curs_Access(_db_cppfunc_curs &curs);
-// cursor points to valid item
-void                 _db_file2_curs_Reset(_db_file2_curs &curs, acr::FDb &parent);
-// cursor points to valid item
-bool                 _db_file2_curs_ValidQ(_db_file2_curs &curs);
-// proceed to next item
-void                 _db_file2_curs_Next(_db_file2_curs &curs);
-// item access
-acr::FFile&          _db_file2_curs_Access(_db_file2_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
@@ -1899,7 +1866,6 @@ void                 FField_Uninit(acr::FField& field) __attribute__((nothrow));
 
 // --- acr.FFile
 // create: acr.FDb.file (Lary)
-// create: acr.FDb.file2 (Lary)
 // global access: ind_file (Thash)
 // access: acr.FRec.p_outfile (Upptr)
 // access: acr.FRec.p_infile (Upptr)
@@ -1921,10 +1887,6 @@ private:
     friend acr::FFile*          file_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 file_RemoveAll() __attribute__((nothrow));
     friend void                 file_RemoveLast() __attribute__((nothrow));
-    friend acr::FFile&          file2_Alloc() __attribute__((__warn_unused_result__, nothrow));
-    friend acr::FFile*          file2_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 file2_RemoveAll() __attribute__((nothrow));
-    friend void                 file2_RemoveLast() __attribute__((nothrow));
     FFile();
     ~FFile();
     FFile(const FFile&){ /*disallow copy constructor */}
@@ -3028,14 +2990,6 @@ struct _db_cppfunc_curs {// cursor
     acr::FDb *parent;
     i64 index;
     _db_cppfunc_curs(){ parent=NULL; index=0; }
-};
-
-
-struct _db_file2_curs {// cursor
-    typedef acr::FFile ChildType;
-    acr::FDb *parent;
-    i64 index;
-    _db_file2_curs(){ parent=NULL; index=0; }
 };
 
 

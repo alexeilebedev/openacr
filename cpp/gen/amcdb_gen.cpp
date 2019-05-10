@@ -73,7 +73,7 @@ const char *amcdb_Tclass_tclass_Varlen     = "Varlen";
 const char *amcdb_Tclass_tclass_ZSListMT   = "ZSListMT";
 
 namespace amcdb {
-static void          SizeCheck();
+    static void          SizeCheck();
 } // end namespace amcdb
 
 // --- amcdb.Bltin..ReadFieldMaybe

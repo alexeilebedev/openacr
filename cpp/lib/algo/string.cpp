@@ -1415,3 +1415,51 @@ bool algo::AlignedEqual(strptr a, strptr b) {
     return StrEqual(a, b, true);
 #endif
 }
+
+// -----------------------------------------------------------------------------
+
+// insert TEXT into OUT, indenting as necessary;
+// Initial indentation is INDENT, it's adjusted as necessary as { and } are found
+// in the TEXT.
+// Each indent is 4 spaces.
+void algo::InsertIndent(algo::cstring &out, strptr text, int indent) {
+    ind_beg(Line_curs,line,text) {
+        line = TrimmedRight(line);
+        int next_indent = indent;
+        int lcurly=-1;// offset
+        int rcurly=-1;// offset
+        int lstart=-1;
+        for (int i=0; i<line.n_elems; i++) {
+            char c = line.elems[i];
+            if (algo_lib::WhiteCharQ(c)) {
+                // whitespace
+            } else {
+                if (lstart == -1) {// save start of line
+                    lstart=i;
+                }
+                if (c == '{') {// opening curly in last position
+                    lcurly = i;
+                } else if (c== '}') {
+                    rcurly = lstart == i ? i:-1;// closing curly in first position
+                } else if (c=='/' && i<line.n_elems-1 && line[i+1]=='/') {
+                    break;
+                } else {
+                    lcurly=-1;// reset lcurly on any non-ws char
+                }
+            }
+        }
+        if (rcurly != -1) {
+            indent--;
+            next_indent--;
+        }
+        if (lcurly != -1) {
+            next_indent++;
+        }
+        if (lstart != -1) {
+            char_PrintNTimes(' ', out, indent*4);
+            out << RestFrom(line,lstart);
+        }
+        out << eol;
+        indent = i32_Max(next_indent,0);
+    }ind_end;
+}

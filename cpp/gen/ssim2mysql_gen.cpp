@@ -68,33 +68,33 @@ const char *ssim2mysql_syntax =
 ;
 } // namespace ssim2mysql
 namespace ssim2mysql {
-static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
-static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
-static bool          field_InputMaybe(dmmeta::Field &elem) __attribute__((nothrow));
-static bool          sqltype_InputMaybe(dmmeta::Sqltype &elem) __attribute__((nothrow));
-// Load statically available data into tables, register tables and database.
-static void          InitReflection();
-static bool          substr_InputMaybe(dmmeta::Substr &elem) __attribute__((nothrow));
-static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
-// First element of index changed.
-static void          zs_cmd_FirstChanged() __attribute__((nothrow));
-// Update cycles count from previous clock capture
-static void          zs_cmd_UpdateCycles() __attribute__((nothrow));
-static void          zs_cmd_Call() __attribute__((nothrow));
-// First element of index changed.
-static void          cd_input_line_FirstChanged() __attribute__((nothrow));
-// Update cycles count from previous clock capture
-static void          cd_input_line_UpdateCycles() __attribute__((nothrow));
-static void          cd_input_line_Call() __attribute__((nothrow));
-// find trace by row id (used to implement reflection)
-static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
-// Function return 1
-static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// 
-static void          in_buf_Scanmsg(ssim2mysql::FInput& input) __attribute__((nothrow));
-// Shift existing bytes over to the beginning of the buffer
-static void          in_buf_Shift(ssim2mysql::FInput& input) __attribute__((nothrow));
-static void          SizeCheck();
+    static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
+    static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
+    static bool          field_InputMaybe(dmmeta::Field &elem) __attribute__((nothrow));
+    static bool          sqltype_InputMaybe(dmmeta::Sqltype &elem) __attribute__((nothrow));
+    // Load statically available data into tables, register tables and database.
+    static void          InitReflection();
+    static bool          substr_InputMaybe(dmmeta::Substr &elem) __attribute__((nothrow));
+    static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
+    // First element of index changed.
+    static void          zs_cmd_FirstChanged() __attribute__((nothrow));
+    // Update cycles count from previous clock capture
+    static void          zs_cmd_UpdateCycles() __attribute__((nothrow));
+    static void          zs_cmd_Call() __attribute__((nothrow));
+    // First element of index changed.
+    static void          cd_input_line_FirstChanged() __attribute__((nothrow));
+    // Update cycles count from previous clock capture
+    static void          cd_input_line_UpdateCycles() __attribute__((nothrow));
+    static void          cd_input_line_Call() __attribute__((nothrow));
+    // find trace by row id (used to implement reflection)
+    static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
+    // Function return 1
+    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    //
+    static void          in_buf_Scanmsg(ssim2mysql::FInput& input) __attribute__((nothrow));
+    // Shift existing bytes over to the beginning of the buffer
+    static void          in_buf_Shift(ssim2mysql::FInput& input) __attribute__((nothrow));
+    static void          SizeCheck();
 } // end namespace ssim2mysql
 
 // --- ssim2mysql.FCmd..Uninit
@@ -497,7 +497,7 @@ static bool ssim2mysql::ns_InputMaybe(dmmeta::Ns &elem) {
 
 // --- ssim2mysql.FDb.ns.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool ssim2mysql::ns_XrefMaybe(ssim2mysql::FNs &row) {
     bool retval = true;
     (void)row;
@@ -594,7 +594,7 @@ static bool ssim2mysql::ctype_InputMaybe(dmmeta::Ctype &elem) {
 
 // --- ssim2mysql.FDb.ctype.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool ssim2mysql::ctype_XrefMaybe(ssim2mysql::FCtype &row) {
     bool retval = true;
     (void)row;
@@ -700,7 +700,7 @@ static bool ssim2mysql::field_InputMaybe(dmmeta::Field &elem) {
 
 // --- ssim2mysql.FDb.field.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool ssim2mysql::field_XrefMaybe(ssim2mysql::FField &row) {
     bool retval = true;
     (void)row;
@@ -819,7 +819,7 @@ static bool ssim2mysql::sqltype_InputMaybe(dmmeta::Sqltype &elem) {
 
 // --- ssim2mysql.FDb.sqltype.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool ssim2mysql::sqltype_XrefMaybe(ssim2mysql::FSqltype &row) {
     bool retval = true;
     (void)row;
@@ -928,7 +928,7 @@ u64 ssim2mysql::cmd_ReserveMem(u64 size) {
 
 // --- ssim2mysql.FDb.cmd.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool ssim2mysql::cmd_XrefMaybe(ssim2mysql::FCmd &row) {
     bool retval = true;
     (void)row;
@@ -1009,7 +1009,7 @@ void ssim2mysql::column_RemoveLast() {
 
 // --- ssim2mysql.FDb.column.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool ssim2mysql::column_XrefMaybe(ssim2mysql::FColumn &row) {
     bool retval = true;
     (void)row;
@@ -1168,7 +1168,7 @@ bool ssim2mysql::LoadSsimfileMaybe(algo::strptr fname) {
 
 // --- ssim2mysql.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool ssim2mysql::_db_XrefMaybe() {
     bool retval = true;
     return retval;
@@ -1618,7 +1618,7 @@ static bool ssim2mysql::substr_InputMaybe(dmmeta::Substr &elem) {
 
 // --- ssim2mysql.FDb.substr.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool ssim2mysql::substr_XrefMaybe(ssim2mysql::FSubstr &row) {
     bool retval = true;
     (void)row;
@@ -1724,7 +1724,7 @@ static bool ssim2mysql::ssimfile_InputMaybe(dmmeta::Ssimfile &elem) {
 
 // --- ssim2mysql.FDb.ssimfile.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool ssim2mysql::ssimfile_XrefMaybe(ssim2mysql::FSsimfile &row) {
     bool retval = true;
     (void)row;
@@ -2087,7 +2087,7 @@ u64 ssim2mysql::input_ReserveMem(u64 size) {
 
 // --- ssim2mysql.FDb.input.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool ssim2mysql::input_XrefMaybe(ssim2mysql::FInput &row) {
     bool retval = true;
     (void)row;

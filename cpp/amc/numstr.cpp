@@ -257,7 +257,7 @@ void amc::tfunc_Numstr_SetnumMaybe() {
     }
     Ins(&R, setnum.body        , "bool retval = length <= $max_length;");
     Ins(&R, setnum.body        , "if (retval) {");
-    Ins(&R, setnum.body        , "    $name_qSet($pararg, strptr(buf + charpos, length));");
+    Ins(&R, setnum.body        , "    $name_SetStrptr($pararg, strptr(buf + charpos, length));");
     Ins(&R, setnum.body        , "}");
     Ins(&R, setnum.body        , "return retval;");
 }

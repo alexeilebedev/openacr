@@ -169,21 +169,22 @@ enum command_FieldIdEnum {                    // command.FieldId.value
     ,command_FieldId_showsortkey       = 152
     ,command_FieldId_sortname          = 153
     ,command_FieldId_update_authors    = 154
-    ,command_FieldId_linelim           = 155
-    ,command_FieldId_strayfile         = 156
-    ,command_FieldId_capture           = 157
-    ,command_FieldId_expand            = 158
-    ,command_FieldId_ignoreQuote       = 159
-    ,command_FieldId_maxpacket         = 160
-    ,command_FieldId_db                = 161
-    ,command_FieldId_createdb          = 162
-    ,command_FieldId_str               = 163
-    ,command_FieldId_tocamelcase       = 164
-    ,command_FieldId_tolowerunder      = 165
-    ,command_FieldId_value             = 166
+    ,command_FieldId_indent            = 155
+    ,command_FieldId_linelim           = 156
+    ,command_FieldId_strayfile         = 157
+    ,command_FieldId_capture           = 158
+    ,command_FieldId_expand            = 159
+    ,command_FieldId_ignoreQuote       = 160
+    ,command_FieldId_maxpacket         = 161
+    ,command_FieldId_db                = 162
+    ,command_FieldId_createdb          = 163
+    ,command_FieldId_str               = 164
+    ,command_FieldId_tocamelcase       = 165
+    ,command_FieldId_tolowerunder      = 166
+    ,command_FieldId_value             = 167
 };
 
-enum { command_FieldIdEnum_N = 167 };
+enum { command_FieldIdEnum_N = 168 };
 
 namespace command { struct FieldId; }
 namespace command { struct Protocol; }
@@ -791,7 +792,7 @@ void                 acr_proc_Uninit(command::acr_proc& parent) __attribute__((n
 // access: command.amc_proc.amc (Exec)
 struct amc { // command.amc
     algo::cstring    in_dir;    //   "data"  Root of input ssim dir
-    algo_lib::Regx   query;     //   ""  Regx of algo::cstring
+    algo::cstring    query;     //   ""  Query mode: generate code for specified object
     algo::cstring    out_dir;   //   "."  Root of output cpp dir
     bool             proto;     //   false  Print prototype
     bool             report;    //   true  Final report
@@ -799,12 +800,6 @@ struct amc { // command.amc
     algo_lib::Regx   trace;     //   ""  Regx of algo::cstring
     amc();
 };
-
-// Print back to string
-void                 query_Print(command::amc& parent, algo::cstring &out) __attribute__((nothrow));
-// Read Regx from string
-// Convert string to field. Return success value
-bool                 query_ReadStrptrMaybe(command::amc& parent, algo::strptr in) __attribute__((nothrow));
 
 // Print back to string
 void                 trace_Print(command::amc& parent, algo::cstring &out) __attribute__((nothrow));
@@ -1580,6 +1575,7 @@ struct src_hdr { // command.src_hdr
     algo_lib::Regx   targsrc;          //   "%"  Regx of dev::Targsrc
     bool             write;            //   false  Update files in-place
     bool             update_authors;   //   false  Update authors from git history
+    bool             indent;           //   false  Indent source files
     src_hdr();
 };
 

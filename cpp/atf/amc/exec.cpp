@@ -80,7 +80,7 @@ static algo::Fildes amc_StartRead(command::amc_proc &amc, algo_lib::FFildes &rea
 void atf_amc::amctest_ReadProc() {
     // spawn a subprocess and read output line by line
     command::amc_proc amc;
-    amc.cmd.query.expr = "command.amc_proc";
+    amc.cmd.query = "command.amc_proc";
     algo_lib::FFildes read;
 
     prlog("reading output 1");

@@ -25,51 +25,51 @@ algo_lib::_db_bh_timehook_curs::~_db_bh_timehook_curs() {
 #include <sys/wait.h>
 #include <sys/mman.h>
 namespace algo_lib {
-// Load statically available data into tables, register tables and database.
-static void          InitReflection();
-// Find new location for ROW starting at IDX
-// NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int           bh_timehook_Downheap(algo_lib::FTimehook& row, int idx) __attribute__((nothrow));
-// Find and return index of new location for element ROW in the heap, starting at index IDX.
-// Move any elements along the way but do not modify ROW.
-static int           bh_timehook_Upheap(algo_lib::FTimehook& row, int idx) __attribute__((nothrow));
-static bool          bh_timehook_ElemLt(algo_lib::FTimehook &a, algo_lib::FTimehook &b) __attribute__((nothrow));
-static void          _db_bh_timehook_curs_Add(_db_bh_timehook_curs &curs, algo_lib::FTimehook& row);
-// find trace by row id (used to implement reflection)
-static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
-// Function return 1
-static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Extract next character from STR and advance IDX
-static u64           sortkey_Nextchar(const algo_lib::FTxtrow& txtrow, strptr &str, int &idx) __attribute__((nothrow));
-// Swap values elem_a and elem_b
-static void          c_txtrow_Swap(algo_lib::FTxtrow* &elem_a, algo_lib::FTxtrow* &elem_b) __attribute__((nothrow));
-// Left circular shift of three-tuple
-static void          c_txtrow_Rotleft(algo_lib::FTxtrow* &elem_a, algo_lib::FTxtrow* &elem_b, algo_lib::FTxtrow* &elem_c) __attribute__((nothrow));
-// Compare values elem_a and elem_b
-// The comparison function must be anti-symmetric: if a>b, then !(b>a).
-// If not, mayhem results.
-static bool          c_txtrow_Lt(algo_lib::FTxtrow &elem_a, algo_lib::FTxtrow &elem_b) __attribute__((nothrow));
-// Internal insertion sort
-static void          c_txtrow_IntInsertionSort(algo_lib::FTxtrow* *elems, int n) __attribute__((nothrow));
-// Internal heap sort
-static void          c_txtrow_IntHeapSort(algo_lib::FTxtrow* *elems, int n) __attribute__((nothrow));
-// Quick sort engine
-static void          c_txtrow_IntQuickSort(algo_lib::FTxtrow* *elems, int n, int depth) __attribute__((nothrow));
-// Swap values elem_a and elem_b
-static void          ch_class_Swap(algo::i32_Range &elem_a, algo::i32_Range &elem_b) __attribute__((nothrow));
-// Left circular shift of three-tuple
-static void          ch_class_Rotleft(algo::i32_Range &elem_a, algo::i32_Range &elem_b, algo::i32_Range &elem_c) __attribute__((nothrow));
-// Compare values elem_a and elem_b
-// The comparison function must be anti-symmetric: if a>b, then !(b>a).
-// If not, mayhem results.
-static bool          ch_class_Lt(algo::i32_Range &elem_a, algo::i32_Range &elem_b) __attribute__((nothrow));
-// Internal insertion sort
-static void          ch_class_IntInsertionSort(algo::i32_Range *elems, int n) __attribute__((nothrow));
-// Internal heap sort
-static void          ch_class_IntHeapSort(algo::i32_Range *elems, int n) __attribute__((nothrow));
-// Quick sort engine
-static void          ch_class_IntQuickSort(algo::i32_Range *elems, int n, int depth) __attribute__((nothrow));
-static void          SizeCheck();
+    // Load statically available data into tables, register tables and database.
+    static void          InitReflection();
+    // Find new location for ROW starting at IDX
+    // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    static int           bh_timehook_Downheap(algo_lib::FTimehook& row, int idx) __attribute__((nothrow));
+    // Find and return index of new location for element ROW in the heap, starting at index IDX.
+    // Move any elements along the way but do not modify ROW.
+    static int           bh_timehook_Upheap(algo_lib::FTimehook& row, int idx) __attribute__((nothrow));
+    static bool          bh_timehook_ElemLt(algo_lib::FTimehook &a, algo_lib::FTimehook &b) __attribute__((nothrow));
+    static void          _db_bh_timehook_curs_Add(_db_bh_timehook_curs &curs, algo_lib::FTimehook& row);
+    // find trace by row id (used to implement reflection)
+    static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
+    // Function return 1
+    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // Extract next character from STR and advance IDX
+    static u64           sortkey_Nextchar(const algo_lib::FTxtrow& txtrow, strptr &str, int &idx) __attribute__((nothrow));
+    // Swap values elem_a and elem_b
+    static void          c_txtrow_Swap(algo_lib::FTxtrow* &elem_a, algo_lib::FTxtrow* &elem_b) __attribute__((nothrow));
+    // Left circular shift of three-tuple
+    static void          c_txtrow_Rotleft(algo_lib::FTxtrow* &elem_a, algo_lib::FTxtrow* &elem_b, algo_lib::FTxtrow* &elem_c) __attribute__((nothrow));
+    // Compare values elem_a and elem_b
+    // The comparison function must be anti-symmetric: if a>b, then !(b>a).
+    // If not, mayhem results.
+    static bool          c_txtrow_Lt(algo_lib::FTxtrow &elem_a, algo_lib::FTxtrow &elem_b) __attribute__((nothrow));
+    // Internal insertion sort
+    static void          c_txtrow_IntInsertionSort(algo_lib::FTxtrow* *elems, int n) __attribute__((nothrow));
+    // Internal heap sort
+    static void          c_txtrow_IntHeapSort(algo_lib::FTxtrow* *elems, int n) __attribute__((nothrow));
+    // Quick sort engine
+    static void          c_txtrow_IntQuickSort(algo_lib::FTxtrow* *elems, int n, int depth) __attribute__((nothrow));
+    // Swap values elem_a and elem_b
+    static void          ch_class_Swap(algo::i32_Range &elem_a, algo::i32_Range &elem_b) __attribute__((nothrow));
+    // Left circular shift of three-tuple
+    static void          ch_class_Rotleft(algo::i32_Range &elem_a, algo::i32_Range &elem_b, algo::i32_Range &elem_c) __attribute__((nothrow));
+    // Compare values elem_a and elem_b
+    // The comparison function must be anti-symmetric: if a>b, then !(b>a).
+    // If not, mayhem results.
+    static bool          ch_class_Lt(algo::i32_Range &elem_a, algo::i32_Range &elem_b) __attribute__((nothrow));
+    // Internal insertion sort
+    static void          ch_class_IntInsertionSort(algo::i32_Range *elems, int n) __attribute__((nothrow));
+    // Internal heap sort
+    static void          ch_class_IntHeapSort(algo::i32_Range *elems, int n) __attribute__((nothrow));
+    // Quick sort engine
+    static void          ch_class_IntQuickSort(algo::i32_Range *elems, int n, int depth) __attribute__((nothrow));
+    static void          SizeCheck();
 } // end namespace algo_lib
 
 // --- algo_lib.Bitset.ary.ExpandBits
@@ -588,7 +588,7 @@ void* algo_lib::lpool_ReallocMem(void *oldmem, u64 old_size, u64 new_size) {
 
 // --- algo_lib.FDb.fildes.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool algo_lib::fildes_XrefMaybe(algo_lib::FFildes &row) {
     bool retval = true;
     (void)row;
@@ -693,7 +693,7 @@ bool algo_lib::LoadSsimfileMaybe(algo::strptr fname) {
 
 // --- algo_lib.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool algo_lib::_db_XrefMaybe() {
     bool retval = true;
     return retval;
@@ -783,7 +783,7 @@ void algo_lib::imtable_RemoveLast() {
 
 // --- algo_lib.FDb.imtable.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool algo_lib::imtable_XrefMaybe(algo_lib::FImtable &row) {
     bool retval = true;
     (void)row;
@@ -914,7 +914,7 @@ void algo_lib::ind_imtable_Reserve(int n) {
 
 // --- algo_lib.FDb.iohook.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool algo_lib::iohook_XrefMaybe(algo_lib::FIohook &row) {
     bool retval = true;
     (void)row;
@@ -923,7 +923,7 @@ bool algo_lib::iohook_XrefMaybe(algo_lib::FIohook &row) {
 
 // --- algo_lib.FDb.timehook.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool algo_lib::timehook_XrefMaybe(algo_lib::FTimehook &row) {
     bool retval = true;
     (void)row;
@@ -932,7 +932,7 @@ bool algo_lib::timehook_XrefMaybe(algo_lib::FTimehook &row) {
 
 // --- algo_lib.FDb.replscope.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool algo_lib::replscope_XrefMaybe(algo_lib::Replscope &row) {
     bool retval = true;
     (void)row;
@@ -963,8 +963,9 @@ algo_lib::ErrorX* algo_lib::error_AllocMaybe() {
 // --- algo_lib.FDb.error.Delete
 // Remove row from all global and cross indices, then deallocate row
 void algo_lib::error_Delete(algo_lib::ErrorX &row) {
+    int length = sizeof(algo_lib::ErrorX);
     row.~ErrorX();
-    error_FreeMem(&row, sizeof(algo_lib::ErrorX));
+    error_FreeMem(&row, length);
 }
 
 // --- algo_lib.FDb.error.AllocMem
@@ -998,7 +999,7 @@ void* algo_lib::error_ReallocMem(void *mem, size_t old_size, size_t new_size) {
 
 // --- algo_lib.FDb.error.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool algo_lib::error_XrefMaybe(algo_lib::ErrorX &row) {
     bool retval = true;
     (void)row;
@@ -1007,7 +1008,7 @@ bool algo_lib::error_XrefMaybe(algo_lib::ErrorX &row) {
 
 // --- algo_lib.FDb.parsecsv.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool algo_lib::parsecsv_XrefMaybe(algo_lib::CsvParse &row) {
     bool retval = true;
     (void)row;
@@ -1016,7 +1017,7 @@ bool algo_lib::parsecsv_XrefMaybe(algo_lib::CsvParse &row) {
 
 // --- algo_lib.FDb.regxparse.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool algo_lib::regxparse_XrefMaybe(algo_lib::RegxParse &row) {
     bool retval = true;
     (void)row;
@@ -1025,7 +1026,7 @@ bool algo_lib::regxparse_XrefMaybe(algo_lib::RegxParse &row) {
 
 // --- algo_lib.FDb.regx.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool algo_lib::regx_XrefMaybe(algo_lib::Regx &row) {
     bool retval = true;
     (void)row;
@@ -1034,7 +1035,7 @@ bool algo_lib::regx_XrefMaybe(algo_lib::Regx &row) {
 
 // --- algo_lib.FDb.tabulate.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool algo_lib::tabulate_XrefMaybe(algo_lib::Tabulate &row) {
     bool retval = true;
     (void)row;
@@ -1324,7 +1325,7 @@ void algo_lib::dispsigcheck_RemoveLast() {
 
 // --- algo_lib.FDb.dispsigcheck.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool algo_lib::dispsigcheck_XrefMaybe(algo_lib::FDispsigcheck &row) {
     bool retval = true;
     (void)row;
@@ -1511,7 +1512,7 @@ void algo_lib::imdb_RemoveLast() {
 
 // --- algo_lib.FDb.imdb.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool algo_lib::imdb_XrefMaybe(algo_lib::FImdb &row) {
     bool retval = true;
     (void)row;
@@ -1748,7 +1749,7 @@ u64 algo_lib::txtcell_ReserveMem(u64 size) {
 
 // --- algo_lib.FDb.txtcell.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool algo_lib::txtcell_XrefMaybe(algo_lib::FTxtcell &row) {
     bool retval = true;
     (void)row;
@@ -1852,7 +1853,7 @@ u64 algo_lib::txtrow_ReserveMem(u64 size) {
 
 // --- algo_lib.FDb.txtrow.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool algo_lib::txtrow_XrefMaybe(algo_lib::FTxtrow &row) {
     bool retval = true;
     (void)row;
@@ -1870,7 +1871,7 @@ bool algo_lib::txtrow_XrefMaybe(algo_lib::FTxtrow &row) {
 
 // --- algo_lib.FDb.txttbl.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool algo_lib::txttbl_XrefMaybe(algo_lib::FTxttbl &row) {
     bool retval = true;
     (void)row;
@@ -1879,7 +1880,7 @@ bool algo_lib::txttbl_XrefMaybe(algo_lib::FTxttbl &row) {
 
 // --- algo_lib.FDb.tempfile.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool algo_lib::tempfile_XrefMaybe(algo_lib::FTempfile &row) {
     bool retval = true;
     (void)row;
@@ -2050,7 +2051,7 @@ u64 algo_lib::replvar_ReserveMem(u64 size) {
 
 // --- algo_lib.FDb.replvar.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool algo_lib::replvar_XrefMaybe(algo_lib::FReplvar &row) {
     bool retval = true;
     (void)row;
@@ -3117,7 +3118,7 @@ void algo_lib::state_AbsReserve(algo_lib::Regx& regx, int n) {
 
 // --- algo_lib.Regx.state.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool algo_lib::state_XrefMaybe(algo_lib::RegxState &row) {
     bool retval = true;
     (void)row;
@@ -3293,7 +3294,7 @@ void algo_lib::ary_expr_AbsReserve(algo_lib::RegxParse& regxparse, int n) {
 
 // --- algo_lib.RegxParse.ary_expr.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool algo_lib::ary_expr_XrefMaybe(algo_lib::RegxExpr &row) {
     bool retval = true;
     (void)row;

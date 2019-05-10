@@ -27,13 +27,10 @@
 
 // -----------------------------------------------------------------------------
 
-void amc::Main_Querymode() {
-    algo_lib::Replscope R;
-    tempstr out;
-
+static void Query_Ctype(algo_lib::Regx &regx_value, cstring &out) {
     ind_beg(amc::_db_ctype_curs, ctype, amc::_db) {
         amc::FNs& ns = *ctype.p_ns;
-        if (Regx_Match(amc::_db.cmdline.query, ctype.ctype)) {
+        if (Regx_Match(regx_value, ctype.ctype)) {
             amc::_db.report.n_ctype++;
             ch_RemoveAll(*ns.cpp);
             ch_RemoveAll(*ns.hdr);
@@ -53,39 +50,93 @@ void amc::Main_Querymode() {
             }
         }
     }ind_end;
+}
 
-    // query
-    ind_beg(amc::_db_func_curs, func, amc::_db) if (ch_N(func.proto) > 0 && !func.disable) {
-        amc::FNs& ns = *func.p_ns;
-        if (Regx_Match(amc::_db.cmdline.query, func.func)) {
-            ch_RemoveAll(*ns.cpp);
-            ch_RemoveAll(*ns.hdr);
-            ch_RemoveAll(*ns.inl);
-            if (amc::_db.cmdline.proto) {
-                if (!func.priv && !func.globns && !func.oper) {
-                    amc::_db.report.n_func++;
-                    GenFuncProto(ns, func, false, false);
+// -----------------------------------------------------------------------------
+
+static void Query_Func(algo_lib::Regx &regx, cstring &out) {
+    ind_beg(amc::_db_func_curs, func, amc::_db) {
+        if (ch_N(func.proto) > 0 && !func.disable) {
+            amc::FNs& ns = *func.p_ns;
+            if (Regx_Match(regx, func.func)) {
+                ch_RemoveAll(*ns.cpp);
+                ch_RemoveAll(*ns.hdr);
+                ch_RemoveAll(*ns.inl);
+                if (amc::_db.cmdline.proto) {
+                    if (!func.priv && !func.globns && !func.oper) {
+                        amc::_db.report.n_func++;
+                        tempstr proto;
+                        PrintFuncProto(func, NULL, proto);
+                        algo::InsertIndent(*ns.hdr, proto, 0);
+                    }
+                } else {
+                    if (!func.extrn && !func.globns) {
+                        amc::_db.report.n_func++;
+                        PrintFuncBody(ns, func);
+                    }
                 }
-            } else {
-                if (!func.extrn && !func.globns) {
-                    amc::_db.report.n_func++;
-                    GenFuncBody(ns, func);
+                if (ch_N(*ns.hdr)) {
+                    out << *ns.hdr;
                 }
-            }
-            if (ch_N(*ns.hdr)) {
-                out << *ns.hdr;
-            }
-            if (ch_N(*ns.inl)) {
-                out << *ns.inl;
-            }
-            if (ch_N(*ns.cpp)) {
-                out << *ns.cpp;
+                if (ch_N(*ns.inl)) {
+                    out << *ns.inl;
+                }
+                if (ch_N(*ns.cpp)) {
+                    out << *ns.cpp;
+                }
             }
         }
     }ind_end;
+}
 
+// -----------------------------------------------------------------------------
+
+void amc::Main_Querymode() {
+    algo_lib::Regx regx_key;
+    Regx_ReadSql(regx_key, Query_GetKey(), true);
+    algo_lib::Regx regx_value;
+    Regx_ReadSql(regx_value, Query_GetValue(), true);
+    algo_lib::Replscope R;
+    tempstr out;
+
+    if (Regx_Match(regx_key, "ctype")) {
+        Query_Ctype(regx_value,out);
+    }
+    if (Regx_Match(regx_key, "func")) {
+        Query_Func(regx_value,out);
+    }
     frep_(i,ch_N(out)) {
         amc::_db.report.n_cppline += ch_qFind(out, i) == '\n';
     }
     prlog(out);
+}
+
+// -----------------------------------------------------------------------------
+
+tempstr amc::Query_GetKey() {
+    strptr key = Pathcomp(amc::_db.cmdline.query, ":RL");
+    if (key == "") {
+        key = "%";
+    }
+    return tempstr(key);
+}
+
+// -----------------------------------------------------------------------------
+
+tempstr amc::Query_GetValue() {
+    return tempstr(Pathcomp(amc::_db.cmdline.query, ":RR"));
+}
+
+// -----------------------------------------------------------------------------
+
+// Parse query argument, return regex of namespaces
+tempstr amc::Query_GetNs() {
+    return tempstr(Pathcomp(amc::_db.cmdline.query, ":RR.LL"));
+}
+
+// -----------------------------------------------------------------------------
+
+// True if amc was invoked in query-only mode
+bool amc::QueryModeQ() {
+    return  ch_N(amc::_db.cmdline.query) > 0;
 }

@@ -551,7 +551,7 @@ bool                 lpool_ReserveBuffers(int nbuf, u64 bufsize) __attribute__((
 void*                lpool_ReallocMem(void *oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
 
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 fildes_XrefMaybe(algo_lib::FFildes &row);
 
 // Set all elements of fixed array to value RHS
@@ -593,7 +593,7 @@ void                 Init() __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
 
 // Allocate memory for new default row.
@@ -621,7 +621,7 @@ void                 imtable_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 algo_lib::FImtable&  imtable_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 imtable_XrefMaybe(algo_lib::FImtable &row);
 
 // Return true if hash is empty
@@ -640,15 +640,15 @@ void                 ind_imtable_Remove(algo_lib::FImtable& row) __attribute__((
 void                 ind_imtable_Reserve(int n) __attribute__((nothrow));
 
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 iohook_XrefMaybe(algo_lib::FIohook &row);
 
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 timehook_XrefMaybe(algo_lib::FTimehook &row);
 
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 replscope_XrefMaybe(algo_lib::Replscope &row);
 
 // Allocate memory for new default row.
@@ -666,23 +666,23 @@ void                 error_FreeMem(void *mem, size_t n) __attribute__((nothrow))
 // In this case, original MEM pointer is untouched.
 void*                error_ReallocMem(void *mem, size_t old_size, size_t new_size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 error_XrefMaybe(algo_lib::ErrorX &row);
 
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 parsecsv_XrefMaybe(algo_lib::CsvParse &row);
 
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 regxparse_XrefMaybe(algo_lib::RegxParse &row);
 
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 regx_XrefMaybe(algo_lib::Regx &row);
 
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 tabulate_XrefMaybe(algo_lib::Tabulate &row);
 
 // Remove all elements from heap and free memory used by the array.
@@ -747,7 +747,7 @@ void                 dispsigcheck_RemoveLast() __attribute__((nothrow));
 algo_lib::FDispsigcheck& dispsigcheck_qFind(u64 t) __attribute__((nothrow));
 bool                 dispsigcheck_InputMaybe(dmmeta::Dispsigcheck &elem) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 dispsigcheck_XrefMaybe(algo_lib::FDispsigcheck &row);
 
 // Return true if hash is empty
@@ -794,7 +794,7 @@ algo_lib::FImdb&     imdb_qFind(u64 t) __attribute__((nothrow));
 // Compute row id of element given element's address
 u64                  imdb_rowid_Get(algo_lib::FImdb &row) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 imdb_XrefMaybe(algo_lib::FImdb &row);
 
 // Return true if hash is empty
@@ -839,7 +839,7 @@ u64                  txtcell_Reserve(u64 n_elems) __attribute__((nothrow));
 // Return number of elements reserved.
 u64                  txtcell_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 txtcell_XrefMaybe(algo_lib::FTxtcell &row);
 
 // Allocate memory for new default row.
@@ -861,15 +861,15 @@ u64                  txtrow_Reserve(u64 n_elems) __attribute__((nothrow));
 // Return number of elements reserved.
 u64                  txtrow_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 txtrow_XrefMaybe(algo_lib::FTxtrow &row);
 
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 txttbl_XrefMaybe(algo_lib::FTxttbl &row);
 
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 tempfile_XrefMaybe(algo_lib::FTempfile &row);
 
 // Return true if index is empty
@@ -916,7 +916,7 @@ u64                  replvar_Reserve(u64 n_elems) __attribute__((nothrow));
 // Return number of elements reserved.
 u64                  replvar_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 replvar_XrefMaybe(algo_lib::FReplvar &row);
 
 // Invoke function by pointer
@@ -1502,7 +1502,7 @@ algo_lib::RegxState& state_qLast(algo_lib::Regx& regx) __attribute__((nothrow));
 // Return row id of specified element
 u64                  state_rowid_Get(algo_lib::Regx& regx, algo_lib::RegxState &elem) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 state_XrefMaybe(algo_lib::RegxState &row);
 
 // proceed to next item
@@ -1620,7 +1620,7 @@ algo_lib::RegxExpr&  ary_expr_qLast(algo_lib::RegxParse& regxparse) __attribute_
 // Return row id of specified element
 u64                  ary_expr_rowid_Get(algo_lib::RegxParse& regxparse, algo_lib::RegxExpr &elem) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 ary_expr_XrefMaybe(algo_lib::RegxExpr &row);
 
 // proceed to next item

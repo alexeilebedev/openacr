@@ -751,33 +751,33 @@ void atf_unit::unittest_algo_lib_ParseNumber_Empty4() {
 
 void atf_unit::unittest_algo_lib_ParseNumber_Overflow1() {
     algo::LnumStr7_U32_Base36 x;
-    ch_Set(x, "1234XYZ");
+    ch_SetStrptr(x, "1234XYZ");
     u32 val = ch_GetnumDflt(x,0);
     vrfyeq_(val, 2302984187);
 
-    ch_Set(x, "XYZ1234");
+    ch_SetStrptr(x, "XYZ1234");
     val = ch_GetnumDflt(x,0);
     vrfyeq_(val,u32(0));
 }
 
 void atf_unit::unittest_algo_lib_ParseNumber_Overflow2() {
     algo::LnumStr20_U64 x;
-    ch_Set(x, "1234567891234567890");
+    ch_SetStrptr(x, "1234567891234567890");
     u64 val = ch_GetnumDflt(x,0);
     vrfyeq_(val, u64(1234567891234567890));
 
-    ch_Set(x, "98765432109876543210");
+    ch_SetStrptr(x, "98765432109876543210");
     val = ch_GetnumDflt(x,0);
     vrfyeq_(val, u64(0));
 }
 
 void atf_unit::unittest_algo_lib_ParseNumber_Overflow3() {
     algo::LnumStr22_U64 x;
-    ch_Set(x, "1234567891234567890");
+    ch_SetStrptr(x, "1234567891234567890");
     u64 val = ch_GetnumDflt(x,0);
     vrfyeq_(val, u64(1234567891234567890));
 
-    ch_Set(x, "98765432109876543210");
+    ch_SetStrptr(x, "98765432109876543210");
     val = ch_GetnumDflt(x,0);
     vrfyeq_(val, u64(0));
 }

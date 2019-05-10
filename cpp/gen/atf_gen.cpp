@@ -14,7 +14,7 @@
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
 namespace atf {
-static void          SizeCheck();
+    static void          SizeCheck();
 } // end namespace atf
 
 // --- atf.FieldId.value.ToCstr

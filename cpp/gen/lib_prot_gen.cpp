@@ -12,7 +12,7 @@
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 namespace lib_prot {
-static void          SizeCheck();
+    static void          SizeCheck();
 } // end namespace lib_prot
 
 // --- lib_prot.FieldId.value.ToCstr

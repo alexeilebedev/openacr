@@ -90,30 +90,30 @@ src_func::_db_bh_func_curs::~_db_bh_func_curs() {
 }
 
 namespace src_func {
-// Load statically available data into tables, register tables and database.
-static void          InitReflection();
-static bool          targsrc_InputMaybe(dev::Targsrc &elem) __attribute__((nothrow));
-static bool          target_InputMaybe(dev::Target &elem) __attribute__((nothrow));
-// Find new location for ROW starting at IDX
-// NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int           bh_func_Downheap(src_func::FFunc& row, int idx) __attribute__((nothrow));
-// Find and return index of new location for element ROW in the heap, starting at index IDX.
-// Move any elements along the way but do not modify ROW.
-static int           bh_func_Upheap(src_func::FFunc& row, int idx) __attribute__((nothrow));
-static bool          bh_func_ElemLt(src_func::FFunc &a, src_func::FFunc &b) __attribute__((nothrow));
-static void          _db_bh_func_curs_Add(_db_bh_func_curs &curs, src_func::FFunc& row);
-static bool          dispatch_InputMaybe(dmmeta::Dispatch &elem) __attribute__((nothrow));
-static bool          fstep_InputMaybe(dmmeta::Fstep &elem) __attribute__((nothrow));
-static bool          gstatic_InputMaybe(dmmeta::Gstatic &elem) __attribute__((nothrow));
-static bool          ctypelen_InputMaybe(dmmeta::Ctypelen &elem) __attribute__((nothrow));
-static bool          badline_InputMaybe(dev::Badline &elem) __attribute__((nothrow));
-// find trace by row id (used to implement reflection)
-static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
-// Function return 1
-static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Extract next character from STR and advance IDX
-static u64           sortkey_Nextchar(const src_func::FFunc& func, strptr &str, int &idx) __attribute__((nothrow));
-static void          SizeCheck();
+    // Load statically available data into tables, register tables and database.
+    static void          InitReflection();
+    static bool          targsrc_InputMaybe(dev::Targsrc &elem) __attribute__((nothrow));
+    static bool          target_InputMaybe(dev::Target &elem) __attribute__((nothrow));
+    // Find new location for ROW starting at IDX
+    // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    static int           bh_func_Downheap(src_func::FFunc& row, int idx) __attribute__((nothrow));
+    // Find and return index of new location for element ROW in the heap, starting at index IDX.
+    // Move any elements along the way but do not modify ROW.
+    static int           bh_func_Upheap(src_func::FFunc& row, int idx) __attribute__((nothrow));
+    static bool          bh_func_ElemLt(src_func::FFunc &a, src_func::FFunc &b) __attribute__((nothrow));
+    static void          _db_bh_func_curs_Add(_db_bh_func_curs &curs, src_func::FFunc& row);
+    static bool          dispatch_InputMaybe(dmmeta::Dispatch &elem) __attribute__((nothrow));
+    static bool          fstep_InputMaybe(dmmeta::Fstep &elem) __attribute__((nothrow));
+    static bool          gstatic_InputMaybe(dmmeta::Gstatic &elem) __attribute__((nothrow));
+    static bool          ctypelen_InputMaybe(dmmeta::Ctypelen &elem) __attribute__((nothrow));
+    static bool          badline_InputMaybe(dev::Badline &elem) __attribute__((nothrow));
+    // find trace by row id (used to implement reflection)
+    static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
+    // Function return 1
+    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // Extract next character from STR and advance IDX
+    static u64           sortkey_Nextchar(const src_func::FFunc& func, strptr &str, int &idx) __attribute__((nothrow));
+    static void          SizeCheck();
 } // end namespace src_func
 
 // --- src_func.FBadline.base.CopyOut
@@ -242,7 +242,7 @@ void src_func::genprefix_RemoveLast() {
 
 // --- src_func.FDb.genprefix.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool src_func::genprefix_XrefMaybe(src_func::FGenprefix &row) {
     bool retval = true;
     (void)row;
@@ -394,7 +394,7 @@ bool src_func::LoadSsimfileMaybe(algo::strptr fname) {
 
 // --- src_func.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool src_func::_db_XrefMaybe() {
     bool retval = true;
     return retval;
@@ -481,7 +481,7 @@ static bool src_func::targsrc_InputMaybe(dev::Targsrc &elem) {
 
 // --- src_func.FDb.targsrc.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool src_func::targsrc_XrefMaybe(src_func::FTargsrc &row) {
     bool retval = true;
     (void)row;
@@ -582,7 +582,7 @@ static bool src_func::target_InputMaybe(dev::Target &elem) {
 
 // --- src_func.FDb.target.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool src_func::target_XrefMaybe(src_func::FTarget &row) {
     bool retval = true;
     (void)row;
@@ -789,7 +789,7 @@ void src_func::func_RemoveLast() {
 
 // --- src_func.FDb.func.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool src_func::func_XrefMaybe(src_func::FFunc &row) {
     bool retval = true;
     (void)row;
@@ -1189,7 +1189,7 @@ static bool src_func::dispatch_InputMaybe(dmmeta::Dispatch &elem) {
 
 // --- src_func.FDb.dispatch.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool src_func::dispatch_XrefMaybe(src_func::FDispatch &row) {
     bool retval = true;
     (void)row;
@@ -1287,7 +1287,7 @@ static bool src_func::fstep_InputMaybe(dmmeta::Fstep &elem) {
 
 // --- src_func.FDb.fstep.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool src_func::fstep_XrefMaybe(src_func::FFstep &row) {
     bool retval = true;
     (void)row;
@@ -1385,7 +1385,7 @@ static bool src_func::gstatic_InputMaybe(dmmeta::Gstatic &elem) {
 
 // --- src_func.FDb.gstatic.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool src_func::gstatic_XrefMaybe(src_func::FGstatic &row) {
     bool retval = true;
     (void)row;
@@ -1604,7 +1604,7 @@ static bool src_func::ctypelen_InputMaybe(dmmeta::Ctypelen &elem) {
 
 // --- src_func.FDb.ctypelen.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool src_func::ctypelen_XrefMaybe(src_func::FCtypelen &row) {
     bool retval = true;
     (void)row;
@@ -1832,7 +1832,7 @@ static bool src_func::badline_InputMaybe(dev::Badline &elem) {
 
 // --- src_func.FDb.badline.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool src_func::badline_XrefMaybe(src_func::FBadline &row) {
     bool retval = true;
     (void)row;

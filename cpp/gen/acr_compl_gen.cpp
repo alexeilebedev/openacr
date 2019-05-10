@@ -56,26 +56,26 @@ acr_compl::_db_bh_completion_curs::~_db_bh_completion_curs() {
 }
 
 namespace acr_compl {
-// Load statically available data into tables, register tables and database.
-static void          InitReflection();
-static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
-static bool          field_InputMaybe(dmmeta::Field &elem) __attribute__((nothrow));
-static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
-static bool          anonfld_InputMaybe(dmmeta::Anonfld &elem) __attribute__((nothrow));
-// Find new location for ROW starting at IDX
-// NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int           bh_completion_Downheap(acr_compl::FCompletion& row, int idx) __attribute__((nothrow));
-// Find and return index of new location for element ROW in the heap, starting at index IDX.
-// Move any elements along the way but do not modify ROW.
-static int           bh_completion_Upheap(acr_compl::FCompletion& row, int idx) __attribute__((nothrow));
-static bool          bh_completion_ElemLt(acr_compl::FCompletion &a, acr_compl::FCompletion &b) __attribute__((nothrow));
-static void          _db_bh_completion_curs_Add(_db_bh_completion_curs &curs, acr_compl::FCompletion& row);
-static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
-// find trace by row id (used to implement reflection)
-static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
-// Function return 1
-static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-static void          SizeCheck();
+    // Load statically available data into tables, register tables and database.
+    static void          InitReflection();
+    static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
+    static bool          field_InputMaybe(dmmeta::Field &elem) __attribute__((nothrow));
+    static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
+    static bool          anonfld_InputMaybe(dmmeta::Anonfld &elem) __attribute__((nothrow));
+    // Find new location for ROW starting at IDX
+    // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    static int           bh_completion_Downheap(acr_compl::FCompletion& row, int idx) __attribute__((nothrow));
+    // Find and return index of new location for element ROW in the heap, starting at index IDX.
+    // Move any elements along the way but do not modify ROW.
+    static int           bh_completion_Upheap(acr_compl::FCompletion& row, int idx) __attribute__((nothrow));
+    static bool          bh_completion_ElemLt(acr_compl::FCompletion &a, acr_compl::FCompletion &b) __attribute__((nothrow));
+    static void          _db_bh_completion_curs_Add(_db_bh_completion_curs &curs, acr_compl::FCompletion& row);
+    static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
+    // find trace by row id (used to implement reflection)
+    static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
+    // Function return 1
+    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    static void          SizeCheck();
 } // end namespace acr_compl
 
 // --- acr_compl.Badness.badness.ToCstr
@@ -569,7 +569,7 @@ bool acr_compl::LoadSsimfileMaybe(algo::strptr fname) {
 
 // --- acr_compl.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr_compl::_db_XrefMaybe() {
     bool retval = true;
     return retval;
@@ -745,7 +745,7 @@ static bool acr_compl::ctype_InputMaybe(dmmeta::Ctype &elem) {
 
 // --- acr_compl.FDb.ctype.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr_compl::ctype_XrefMaybe(acr_compl::FCtype &row) {
     bool retval = true;
     (void)row;
@@ -955,7 +955,7 @@ static bool acr_compl::field_InputMaybe(dmmeta::Field &elem) {
 
 // --- acr_compl.FDb.field.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr_compl::field_XrefMaybe(acr_compl::FField &row) {
     bool retval = true;
     (void)row;
@@ -1167,7 +1167,7 @@ static bool acr_compl::ssimfile_InputMaybe(dmmeta::Ssimfile &elem) {
 
 // --- acr_compl.FDb.ssimfile.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr_compl::ssimfile_XrefMaybe(acr_compl::FSsimfile &row) {
     bool retval = true;
     (void)row;
@@ -1382,7 +1382,7 @@ void acr_compl::completion_RemoveLast() {
 
 // --- acr_compl.FDb.completion.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr_compl::completion_XrefMaybe(acr_compl::FCompletion &row) {
     bool retval = true;
     (void)row;
@@ -1474,7 +1474,7 @@ static bool acr_compl::anonfld_InputMaybe(dmmeta::Anonfld &elem) {
 
 // --- acr_compl.FDb.anonfld.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr_compl::anonfld_XrefMaybe(acr_compl::FAnonfld &row) {
     bool retval = true;
     (void)row;
@@ -1761,7 +1761,7 @@ static bool acr_compl::ns_InputMaybe(dmmeta::Ns &elem) {
 
 // --- acr_compl.FDb.ns.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr_compl::ns_XrefMaybe(acr_compl::FNs &row) {
     bool retval = true;
     (void)row;

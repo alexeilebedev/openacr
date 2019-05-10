@@ -125,54 +125,54 @@ acr::_db_bh_ctype_topo_curs::~_db_bh_ctype_topo_curs() {
 }
 
 namespace acr {
-static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
-static bool          anonfld_InputMaybe(dmmeta::Anonfld &elem) __attribute__((nothrow));
-static bool          cdflt_InputMaybe(dmmeta::Cdflt &elem) __attribute__((nothrow));
-static bool          field_InputMaybe(dmmeta::Field &elem) __attribute__((nothrow));
-// Load statically available data into tables, register tables and database.
-static void          InitReflection();
-// Find new location for ROW starting at IDX
-// NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int           bh_pline_Downheap(acr::FPline& row, int idx) __attribute__((nothrow));
-// Find and return index of new location for element ROW in the heap, starting at index IDX.
-// Move any elements along the way but do not modify ROW.
-static int           bh_pline_Upheap(acr::FPline& row, int idx) __attribute__((nothrow));
-static bool          bh_pline_ElemLt(acr::FPline &a, acr::FPline &b) __attribute__((nothrow));
-static void          _db_bh_pline_curs_Add(_db_bh_pline_curs &curs, acr::FPline& row);
-static bool          substr_InputMaybe(dmmeta::Substr &elem) __attribute__((nothrow));
-static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
-static bool          ssimsort_InputMaybe(dmmeta::Ssimsort &elem) __attribute__((nothrow));
-static bool          smallstr_InputMaybe(dmmeta::Smallstr &elem) __attribute__((nothrow));
-static bool          funique_InputMaybe(dmmeta::Funique &elem) __attribute__((nothrow));
-static bool          bltin_InputMaybe(amcdb::Bltin &elem) __attribute__((nothrow));
-// Find new location for ROW starting at IDX
-// NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int           bh_ctype_topo_Downheap(acr::FCtype& row, int idx) __attribute__((nothrow));
-// Find and return index of new location for element ROW in the heap, starting at index IDX.
-// Move any elements along the way but do not modify ROW.
-static int           bh_ctype_topo_Upheap(acr::FCtype& row, int idx) __attribute__((nothrow));
-static bool          bh_ctype_topo_ElemLt(acr::FCtype &a, acr::FCtype &b) __attribute__((nothrow));
-static void          _db_bh_ctype_topo_curs_Add(_db_bh_ctype_topo_curs &curs, acr::FCtype& row);
-static bool          cppfunc_InputMaybe(dmmeta::Cppfunc &elem) __attribute__((nothrow));
-// find trace by row id (used to implement reflection)
-static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
-// Function return 1
-static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Swap values elem_a and elem_b
-static void          c_cmtrec_Swap(acr::FRec* &elem_a, acr::FRec* &elem_b) __attribute__((nothrow));
-// Left circular shift of three-tuple
-static void          c_cmtrec_Rotleft(acr::FRec* &elem_a, acr::FRec* &elem_b, acr::FRec* &elem_c) __attribute__((nothrow));
-// Compare values elem_a and elem_b
-// The comparison function must be anti-symmetric: if a>b, then !(b>a).
-// If not, mayhem results.
-static bool          c_cmtrec_Lt(acr::FRec &elem_a, acr::FRec &elem_b) __attribute__((nothrow));
-// Internal insertion sort
-static void          c_cmtrec_IntInsertionSort(acr::FRec* *elems, int n) __attribute__((nothrow));
-// Internal heap sort
-static void          c_cmtrec_IntHeapSort(acr::FRec* *elems, int n) __attribute__((nothrow));
-// Quick sort engine
-static void          c_cmtrec_IntQuickSort(acr::FRec* *elems, int n, int depth) __attribute__((nothrow));
-static void          SizeCheck();
+    static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
+    static bool          anonfld_InputMaybe(dmmeta::Anonfld &elem) __attribute__((nothrow));
+    static bool          cdflt_InputMaybe(dmmeta::Cdflt &elem) __attribute__((nothrow));
+    static bool          field_InputMaybe(dmmeta::Field &elem) __attribute__((nothrow));
+    // Load statically available data into tables, register tables and database.
+    static void          InitReflection();
+    // Find new location for ROW starting at IDX
+    // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    static int           bh_pline_Downheap(acr::FPline& row, int idx) __attribute__((nothrow));
+    // Find and return index of new location for element ROW in the heap, starting at index IDX.
+    // Move any elements along the way but do not modify ROW.
+    static int           bh_pline_Upheap(acr::FPline& row, int idx) __attribute__((nothrow));
+    static bool          bh_pline_ElemLt(acr::FPline &a, acr::FPline &b) __attribute__((nothrow));
+    static void          _db_bh_pline_curs_Add(_db_bh_pline_curs &curs, acr::FPline& row);
+    static bool          substr_InputMaybe(dmmeta::Substr &elem) __attribute__((nothrow));
+    static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
+    static bool          ssimsort_InputMaybe(dmmeta::Ssimsort &elem) __attribute__((nothrow));
+    static bool          smallstr_InputMaybe(dmmeta::Smallstr &elem) __attribute__((nothrow));
+    static bool          funique_InputMaybe(dmmeta::Funique &elem) __attribute__((nothrow));
+    static bool          bltin_InputMaybe(amcdb::Bltin &elem) __attribute__((nothrow));
+    // Find new location for ROW starting at IDX
+    // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    static int           bh_ctype_topo_Downheap(acr::FCtype& row, int idx) __attribute__((nothrow));
+    // Find and return index of new location for element ROW in the heap, starting at index IDX.
+    // Move any elements along the way but do not modify ROW.
+    static int           bh_ctype_topo_Upheap(acr::FCtype& row, int idx) __attribute__((nothrow));
+    static bool          bh_ctype_topo_ElemLt(acr::FCtype &a, acr::FCtype &b) __attribute__((nothrow));
+    static void          _db_bh_ctype_topo_curs_Add(_db_bh_ctype_topo_curs &curs, acr::FCtype& row);
+    static bool          cppfunc_InputMaybe(dmmeta::Cppfunc &elem) __attribute__((nothrow));
+    // find trace by row id (used to implement reflection)
+    static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
+    // Function return 1
+    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // Swap values elem_a and elem_b
+    static void          c_cmtrec_Swap(acr::FRec* &elem_a, acr::FRec* &elem_b) __attribute__((nothrow));
+    // Left circular shift of three-tuple
+    static void          c_cmtrec_Rotleft(acr::FRec* &elem_a, acr::FRec* &elem_b, acr::FRec* &elem_c) __attribute__((nothrow));
+    // Compare values elem_a and elem_b
+    // The comparison function must be anti-symmetric: if a>b, then !(b>a).
+    // If not, mayhem results.
+    static bool          c_cmtrec_Lt(acr::FRec &elem_a, acr::FRec &elem_b) __attribute__((nothrow));
+    // Internal insertion sort
+    static void          c_cmtrec_IntInsertionSort(acr::FRec* *elems, int n) __attribute__((nothrow));
+    // Internal heap sort
+    static void          c_cmtrec_IntHeapSort(acr::FRec* *elems, int n) __attribute__((nothrow));
+    // Quick sort engine
+    static void          c_cmtrec_IntQuickSort(acr::FRec* *elems, int n, int depth) __attribute__((nothrow));
+    static void          SizeCheck();
 } // end namespace acr
 
 // --- acr.CtypeTopoKey..Print
@@ -1092,7 +1092,7 @@ u64 acr::pline_ReserveMem(u64 size) {
 
 // --- acr.FDb.pline.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::pline_XrefMaybe(acr::FPline &row) {
     bool retval = true;
     (void)row;
@@ -1205,7 +1205,7 @@ u64 acr::pdep_ReserveMem(u64 size) {
 
 // --- acr.FDb.pdep.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::pdep_XrefMaybe(acr::FPdep &row) {
     bool retval = true;
     (void)row;
@@ -1459,7 +1459,7 @@ static bool acr::ctype_InputMaybe(dmmeta::Ctype &elem) {
 
 // --- acr.FDb.ctype.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::ctype_XrefMaybe(acr::FCtype &row) {
     bool retval = true;
     (void)row;
@@ -1581,7 +1581,7 @@ u64 acr::err_ReserveMem(u64 size) {
 
 // --- acr.FDb.err.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::err_XrefMaybe(acr::FErr &row) {
     bool retval = true;
     (void)row;
@@ -1673,7 +1673,7 @@ static bool acr::anonfld_InputMaybe(dmmeta::Anonfld &elem) {
 
 // --- acr.FDb.anonfld.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::anonfld_XrefMaybe(acr::FAnonfld &row) {
     bool retval = true;
     (void)row;
@@ -1761,7 +1761,7 @@ static bool acr::cdflt_InputMaybe(dmmeta::Cdflt &elem) {
 
 // --- acr.FDb.cdflt.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::cdflt_XrefMaybe(acr::FCdflt &row) {
     bool retval = true;
     (void)row;
@@ -1870,7 +1870,7 @@ u64 acr::rec_ReserveMem(u64 size) {
 
 // --- acr.FDb.rec.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::rec_XrefMaybe(acr::FRec &row) {
     bool retval = true;
     (void)row;
@@ -1992,7 +1992,7 @@ u64 acr::uniqueattr_ReserveMem(u64 size) {
 
 // --- acr.FDb.uniqueattr.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::uniqueattr_XrefMaybe(acr::FUniqueattr &row) {
     bool retval = true;
     (void)row;
@@ -2096,7 +2096,7 @@ u64 acr::query_ReserveMem(u64 size) {
 
 // --- acr.FDb.query.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::query_XrefMaybe(acr::FQuery &row) {
     bool retval = true;
     (void)row;
@@ -2188,7 +2188,7 @@ static bool acr::field_InputMaybe(dmmeta::Field &elem) {
 
 // --- acr.FDb.field.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::field_XrefMaybe(acr::FField &row) {
     bool retval = true;
     (void)row;
@@ -2300,7 +2300,7 @@ void acr::file_RemoveLast() {
 
 // --- acr.FDb.file.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::file_XrefMaybe(acr::FFile &row) {
     bool retval = true;
     (void)row;
@@ -2488,7 +2488,7 @@ bool acr::LoadSsimfileMaybe(algo::strptr fname) {
 
 // --- acr.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::_db_XrefMaybe() {
     bool retval = true;
     return retval;
@@ -3269,7 +3269,7 @@ static bool acr::substr_InputMaybe(dmmeta::Substr &elem) {
 
 // --- acr.FDb.substr.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::substr_XrefMaybe(acr::FSubstr &row) {
     bool retval = true;
     (void)row;
@@ -3371,7 +3371,7 @@ static bool acr::ssimfile_InputMaybe(dmmeta::Ssimfile &elem) {
 
 // --- acr.FDb.ssimfile.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::ssimfile_XrefMaybe(acr::FSsimfile &row) {
     bool retval = true;
     (void)row;
@@ -3475,7 +3475,7 @@ void acr::tempkey_RemoveLast() {
 
 // --- acr.FDb.tempkey.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::tempkey_XrefMaybe(acr::FTempkey &row) {
     bool retval = true;
     (void)row;
@@ -3703,7 +3703,7 @@ void acr::ind_ssimfile_Reserve(int n) {
 
 // --- acr.FDb.print.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::print_XrefMaybe(acr::FPrint &row) {
     bool retval = true;
     (void)row;
@@ -3734,8 +3734,9 @@ acr::FPrintAttr* acr::printattr_AllocMaybe() {
 // --- acr.FDb.printattr.Delete
 // Remove row from all global and cross indices, then deallocate row
 void acr::printattr_Delete(acr::FPrintAttr &row) {
+    int length = sizeof(acr::FPrintAttr);
     row.~FPrintAttr();
-    printattr_FreeMem(&row, sizeof(acr::FPrintAttr));
+    printattr_FreeMem(&row, length);
 }
 
 // --- acr.FDb.printattr.AllocMem
@@ -3769,7 +3770,7 @@ void* acr::printattr_ReallocMem(void *mem, size_t old_size, size_t new_size) {
 
 // --- acr.FDb.printattr.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::printattr_XrefMaybe(acr::FPrintAttr &row) {
     bool retval = true;
     (void)row;
@@ -3867,7 +3868,7 @@ acr::FQuery* acr::zs_query_RemoveFirst() {
 
 // --- acr.FDb.run.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::run_XrefMaybe(acr::FRun &row) {
     bool retval = true;
     (void)row;
@@ -3876,7 +3877,7 @@ bool acr::run_XrefMaybe(acr::FRun &row) {
 
 // --- acr.FDb.check.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::check_XrefMaybe(acr::FCheck &row) {
     bool retval = true;
     (void)row;
@@ -3964,7 +3965,7 @@ static bool acr::ssimsort_InputMaybe(dmmeta::Ssimsort &elem) {
 
 // --- acr.FDb.ssimsort.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::ssimsort_XrefMaybe(acr::FSsimsort &row) {
     bool retval = true;
     (void)row;
@@ -4093,7 +4094,7 @@ void acr::ind_ssimsort_Reserve(int n) {
 
 // --- acr.FDb.write.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::write_XrefMaybe(acr::FWrite &row) {
     bool retval = true;
     (void)row;
@@ -4181,7 +4182,7 @@ static bool acr::smallstr_InputMaybe(dmmeta::Smallstr &elem) {
 
 // --- acr.FDb.smallstr.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::smallstr_XrefMaybe(acr::FSmallstr &row) {
     bool retval = true;
     (void)row;
@@ -4269,7 +4270,7 @@ static bool acr::funique_InputMaybe(dmmeta::Funique &elem) {
 
 // --- acr.FDb.funique.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::funique_XrefMaybe(acr::FFunique &row) {
     bool retval = true;
     (void)row;
@@ -4470,7 +4471,7 @@ static bool acr::bltin_InputMaybe(amcdb::Bltin &elem) {
 
 // --- acr.FDb.bltin.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::bltin_XrefMaybe(acr::FBltin &row) {
     bool retval = true;
     (void)row;
@@ -4757,79 +4758,11 @@ static bool acr::cppfunc_InputMaybe(dmmeta::Cppfunc &elem) {
 
 // --- acr.FDb.cppfunc.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr::cppfunc_XrefMaybe(acr::FCppfunc &row) {
     bool retval = true;
     (void)row;
     return retval;
-}
-
-// --- acr.FDb.file2.Alloc
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-acr::FFile& acr::file2_Alloc() {
-    acr::FFile* row = file2_AllocMaybe();
-    if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("acr.out_of_mem  field:acr.FDb.file2  comment:'Alloc failed'");
-    }
-    return *row;
-}
-
-// --- acr.FDb.file2.AllocMaybe
-// Allocate memory for new element. If out of memory, return NULL.
-acr::FFile* acr::file2_AllocMaybe() {
-    acr::FFile *row = (acr::FFile*)file2_AllocMem();
-    if (row) {
-        new (row) acr::FFile; // call constructor
-    }
-    return row;
-}
-
-// --- acr.FDb.file2.AllocMem
-// Allocate space for one element. If no memory available, return NULL.
-void* acr::file2_AllocMem() {
-    u64 new_nelems     = _db.file2_n+1;
-    // compute level and index on level
-    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
-    u64 base  = u64(1)<<bsr;
-    u64 index = new_nelems-base;
-    void *ret = NULL;
-    // if level doesn't exist yet, create it
-    acr::FFile*  lev   = NULL;
-    if (bsr < 32) {
-        lev = _db.file2_lary[bsr];
-        if (!lev) {
-            lev=(acr::FFile*)algo_lib::malloc_AllocMem(sizeof(acr::FFile) * (u64(1)<<bsr));
-            _db.file2_lary[bsr] = lev;
-        }
-    }
-    // allocate element from this level
-    if (lev) {
-        _db.file2_n = new_nelems;
-        ret = lev + index;
-    }
-    return ret;
-}
-
-// --- acr.FDb.file2.RemoveAll
-// Remove all elements from Lary
-void acr::file2_RemoveAll() {
-    for (u64 n = _db.file2_n; n>0; ) {
-        n--;
-        file2_qFind(u64(n)).~FFile(); // destroy last element
-        _db.file2_n = n;
-    }
-}
-
-// --- acr.FDb.file2.RemoveLast
-// Delete last element of array. Do nothing if array is empty.
-void acr::file2_RemoveLast() {
-    u64 n = _db.file2_n;
-    if (n > 0) {
-        n -= 1;
-        file2_qFind(u64(n)).~FFile();
-        _db.file2_n = n;
-    }
 }
 
 // --- acr.FDb.trace.RowidFind
@@ -5265,17 +5198,6 @@ void acr::FDb_Init() {
         _db.cppfunc_lary[i]  = cppfunc_first;
         cppfunc_first    += 1ULL<<i;
     }
-    // initialize LAry file2 (acr.FDb.file2)
-    _db.file2_n = 0;
-    memset(_db.file2_lary, 0, sizeof(_db.file2_lary)); // zero out all level pointers
-    acr::FFile* file2_first = (acr::FFile*)algo_lib::malloc_AllocMem(sizeof(acr::FFile) * (u64(1)<<4));
-    if (!file2_first) {
-        FatalErrorExit("out of memory");
-    }
-    for (int i = 0; i < 4; i++) {
-        _db.file2_lary[i]  = file2_first;
-        file2_first    += 1ULL<<i;
-    }
 
     acr::InitReflection();
 }
@@ -5285,9 +5207,6 @@ void acr::FDb_Uninit() {
     acr::FDb &row = _db; (void)row;
     zd_pdep_Cascdel(); // dmmeta.cascdel:acr.FDb.zd_pdep
     zd_pline_Cascdel(); // dmmeta.cascdel:acr.FDb.zd_pline
-
-    // acr.FDb.file2.Uninit (Lary)  //List of all loaded files
-    // skip destruction in global scope
 
     // acr.FDb.cppfunc.Uninit (Lary)  //
     // skip destruction in global scope

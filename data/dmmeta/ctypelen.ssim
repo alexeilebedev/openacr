@@ -24,7 +24,7 @@ dmmeta.ctypelen  ctype:acr.FCdflt  len:608  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:acr.FCheck  len:40  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:acr.FCppfunc  len:354  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:acr.FCtype  len:424  alignment:8  padbytes:35
-dmmeta.ctypelen  ctype:acr.FDb  len:4240  alignment:8  padbytes:72
+dmmeta.ctypelen  ctype:acr.FDb  len:3976  alignment:8  padbytes:68
 dmmeta.ctypelen  ctype:acr.FErr  len:72  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:acr.FEvalattr  len:48  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:acr.FField  len:680  alignment:8  padbytes:10
@@ -344,7 +344,7 @@ dmmeta.ctypelen  ctype:amc.FCsize  len:60  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:amc.FCstr  len:53  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amc.FCtype  len:768  alignment:8  padbytes:33
 dmmeta.ctypelen  ctype:amc.FCtypelen  len:68  alignment:4  padbytes:3
-dmmeta.ctypelen  ctype:amc.FDb  len:32448  alignment:16  padbytes:415
+dmmeta.ctypelen  ctype:amc.FDb  len:32368  alignment:16  padbytes:415
 dmmeta.ctypelen  ctype:amc.FDispatch  len:168  alignment:8  padbytes:17
 dmmeta.ctypelen  ctype:amc.FDispatchmsg  len:144  alignment:8  padbytes:9
 dmmeta.ctypelen  ctype:amc.FDispctx  len:112  alignment:8  padbytes:0
@@ -379,7 +379,7 @@ dmmeta.ctypelen  ctype:amc.FFregx  len:103  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amc.FFsort  len:272  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:amc.FFstep  len:344  alignment:8  padbytes:13
 dmmeta.ctypelen  ctype:amc.FFtrace  len:254  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:amc.FFunc  len:280  alignment:8  padbytes:20
+dmmeta.ctypelen  ctype:amc.FFunc  len:272  alignment:8  padbytes:10
 dmmeta.ctypelen  ctype:amc.FFunique  len:254  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amc.FFwddecl  len:112  alignment:8  padbytes:1
 dmmeta.ctypelen  ctype:amc.FGconst  len:328  alignment:8  padbytes:5
@@ -433,7 +433,7 @@ dmmeta.ctypelen  ctype:amc.Funcarg  len:56  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:amc.Genfield  len:48  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:amc.Genpnew  len:104  alignment:8  padbytes:13
 dmmeta.ctypelen  ctype:amc_gc.Acr  len:256  alignment:8  padbytes:4
-dmmeta.ctypelen  ctype:amc_gc.Check  len:1152  alignment:8  padbytes:12
+dmmeta.ctypelen  ctype:amc_gc.Check  len:1072  alignment:8  padbytes:12
 dmmeta.ctypelen  ctype:amc_gc.FDb  len:272  alignment:8  padbytes:3
 dmmeta.ctypelen  ctype:amc_vis.FCtype  len:280  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:amc_vis.FDb  len:2912  alignment:8  padbytes:39
@@ -555,7 +555,7 @@ dmmeta.ctypelen  ctype:command.acr_compl  len:56  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:command.acr_ed  len:1384  alignment:8  padbytes:46
 dmmeta.ctypelen  ctype:command.acr_in  len:256  alignment:8  padbytes:12
 dmmeta.ctypelen  ctype:command.acr_my  len:136  alignment:8  padbytes:0
-dmmeta.ctypelen  ctype:command.amc  len:232  alignment:8  padbytes:5
+dmmeta.ctypelen  ctype:command.amc  len:152  alignment:8  padbytes:5
 dmmeta.ctypelen  ctype:command.amc_dml  len:120  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:command.amc_gc  len:216  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:command.amc_vis  len:136  alignment:8  padbytes:3
@@ -569,7 +569,7 @@ dmmeta.ctypelen  ctype:command.lib_exec  len:12  alignment:4  padbytes:5
 dmmeta.ctypelen  ctype:command.mdbg  len:152  alignment:8  padbytes:11
 dmmeta.ctypelen  ctype:command.mysql2ssim  len:72  alignment:8  padbytes:19
 dmmeta.ctypelen  ctype:command.src_func  len:712  alignment:8  padbytes:2
-dmmeta.ctypelen  ctype:command.src_hdr  len:120  alignment:8  padbytes:6
+dmmeta.ctypelen  ctype:command.src_hdr  len:120  alignment:8  padbytes:5
 dmmeta.ctypelen  ctype:command.src_lim  len:128  alignment:8  padbytes:12
 dmmeta.ctypelen  ctype:command.ssim2csv  len:24  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:command.ssim2mysql  len:80  alignment:8  padbytes:6

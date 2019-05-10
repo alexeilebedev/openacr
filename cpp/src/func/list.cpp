@@ -76,17 +76,6 @@ static void PrintGlobalProtos_Decl(src_func::FFunc &func, cstring &out, strptr n
 
 // -----------------------------------------------------------------------------
 
-static void InsertIndented(strptr text, cstring &out) {
-    ind_beg(Line_curs,line,text) {
-        if (ch_N(line)>0) {
-            out << "    "<<TrimmedRight(line);
-        }
-        out<<eol;
-    }ind_end;
-}
-
-// -----------------------------------------------------------------------------
-
 static tempstr DemarcatedComment(strptr comment) {
     tempstr ret;
     if (ch_N(comment)) {
@@ -128,7 +117,7 @@ void src_func::PrintGlobalProtos(src_func::FTarget &target, strptr ns, strptr sr
                 out << "    // -------------------------------------------------------------------" << eol
                     << "    // "<<src_Get(targsrc) << DemarcatedComment(targsrc.comment) << eol
                     << "    //"<<eol;
-                InsertIndented(funcs,out);
+                algo::InsertIndent(out,funcs,1);
             }
         }
     }ind_end;

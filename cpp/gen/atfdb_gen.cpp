@@ -14,7 +14,7 @@
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
 namespace atfdb {
-static void          SizeCheck();
+    static void          SizeCheck();
 } // end namespace atfdb
 
 // --- atfdb.Amctest..ReadFieldMaybe

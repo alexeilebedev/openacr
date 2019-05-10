@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+function bootstrap() {
+    echo "echo '# this script has been created using make bootstrap'"
+    echo "echo '# now building an abt executable which will build the rest'"
+    abt -compiler:$1 -install '(abt|src_hdr)' -printcmd -report:N -nover
+}
+
+for compiler in $(acr compiler -field:compiler); do
+    OUTFILE=bin/abt-bootstrap.$compiler
+    bootstrap $compiler > $OUTFILE
+    cpp-indent $OUTFILE >/dev/null 2>&1
+    chmod +x $OUTFILE
+    git add $OUTFILE
+done

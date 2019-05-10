@@ -12,495 +12,132 @@
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
 namespace algo {
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::Smallstr150& parent, const algo::strptr &rhs) __attribute__((nothrow));
-static bool          append_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          read_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          write_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          _throw_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          read_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          write_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          eof_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          err_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::Smallstr50& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LnumStr10_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u64           ch_qGetnum(algo::LnumStr10_U64& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LnumStr11_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u64           ch_qGetnum(algo::LnumStr11_U64& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LnumStr12_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u64           ch_qGetnum(algo::LnumStr12_U64& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LnumStr13_U64_Base36& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u64           ch_qGetnum(algo::LnumStr13_U64_Base36& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LnumStr16_U64_Base16& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u64           ch_qGetnum(algo::LnumStr16_U64_Base16& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LnumStr1_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32           ch_qGetnum(algo::LnumStr1_U32& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LnumStr20_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u64           ch_qGetnum(algo::LnumStr20_U64& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LnumStr22_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u64           ch_qGetnum(algo::LnumStr22_U64& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LnumStr2_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32           ch_qGetnum(algo::LnumStr2_U32& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LnumStr3_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32           ch_qGetnum(algo::LnumStr3_U32& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LnumStr4_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32           ch_qGetnum(algo::LnumStr4_U32& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LnumStr5_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32           ch_qGetnum(algo::LnumStr5_U32& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LnumStr5_U32_Base36& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32           ch_qGetnum(algo::LnumStr5_U32_Base36& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LnumStr6_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32           ch_qGetnum(algo::LnumStr6_U32& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LnumStr7_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32           ch_qGetnum(algo::LnumStr7_U32& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LnumStr7_U32_Base36& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32           ch_qGetnum(algo::LnumStr7_U32_Base36& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LnumStr8_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32           ch_qGetnum(algo::LnumStr8_U32& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LnumStr8_U32_Base16& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32           ch_qGetnum(algo::LnumStr8_U32_Base16& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LnumStr8_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u64           ch_qGetnum(algo::LnumStr8_U64& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LnumStr9_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32           ch_qGetnum(algo::LnumStr9_U32& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LnumStr9_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u64           ch_qGetnum(algo::LnumStr9_U64& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::Smallstr200& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LspaceStr10& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LspaceStr12& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LspaceStr14& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LspaceStr15& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LspaceStr20_I64& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static i64           ch_qGetnum(algo::LspaceStr20_I64& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LspaceStr20_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u64           ch_qGetnum(algo::LspaceStr20_U64& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LspaceStr3& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LspaceStr3_I16& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static i16           ch_qGetnum(algo::LspaceStr3_I16& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LspaceStr4& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LspaceStr5& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LspaceStr5_I16& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u16           ch_qGetnum(algo::LspaceStr5_I16& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LspaceStr6& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LspaceStr6_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32           ch_qGetnum(algo::LspaceStr6_U32& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LspaceStr7_I32_Base36& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static i32           ch_qGetnum(algo::LspaceStr7_I32_Base36& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LspaceStr8& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::LspaceStr9& parent, const algo::strptr &rhs) __attribute__((nothrow));
-static bool          err_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          ok_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          neg_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          overflow_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          hex_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr1& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr10& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr100& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr1000& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr11& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr12& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr129& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr13& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr14& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr15& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr151& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr16& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr17& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr18& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr19& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr2& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr20& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr21& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr24& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr25& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr28& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr3& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr30& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr32& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr33& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr35& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr36& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr4& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr40& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr41& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr43& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr44& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr48& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr5& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr50& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr54& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr55& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr6& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr60& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr62& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr66& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr6_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32           ch_qGetnum(algo::RnullStr6_U32& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr7& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr8& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr80& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RnullStr9& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr10& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr100& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr11& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr16& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr2& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr20& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr200& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr21& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr24& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr240& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr26& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr3& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr31& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr32& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr4& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr40& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr5& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr50& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr6& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr64& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr7& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr8& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::RspaceStr9& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::Smallstr1& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::Smallstr10& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::Smallstr100& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::Smallstr16& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::Smallstr2& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::Smallstr20& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::Smallstr25& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::Smallstr250& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::Smallstr30& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::Smallstr4& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::Smallstr40& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(algo::Smallstr5& parent, const algo::strptr &rhs) __attribute__((nothrow));
-static void          SizeCheck();
+    static bool          append_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          read_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          write_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          _throw_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          read_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          write_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          eof_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          err_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u64           ch_qGetnum(algo::LnumStr10_U64& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u64           ch_qGetnum(algo::LnumStr11_U64& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u64           ch_qGetnum(algo::LnumStr12_U64& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u64           ch_qGetnum(algo::LnumStr13_U64_Base36& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u64           ch_qGetnum(algo::LnumStr16_U64_Base16& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u32           ch_qGetnum(algo::LnumStr1_U32& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u64           ch_qGetnum(algo::LnumStr20_U64& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u64           ch_qGetnum(algo::LnumStr22_U64& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u32           ch_qGetnum(algo::LnumStr2_U32& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u32           ch_qGetnum(algo::LnumStr3_U32& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u32           ch_qGetnum(algo::LnumStr4_U32& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u32           ch_qGetnum(algo::LnumStr5_U32& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u32           ch_qGetnum(algo::LnumStr5_U32_Base36& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u32           ch_qGetnum(algo::LnumStr6_U32& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u32           ch_qGetnum(algo::LnumStr7_U32& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u32           ch_qGetnum(algo::LnumStr7_U32_Base36& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u32           ch_qGetnum(algo::LnumStr8_U32& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u32           ch_qGetnum(algo::LnumStr8_U32_Base16& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u64           ch_qGetnum(algo::LnumStr8_U64& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u32           ch_qGetnum(algo::LnumStr9_U32& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u64           ch_qGetnum(algo::LnumStr9_U64& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static i64           ch_qGetnum(algo::LspaceStr20_I64& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u64           ch_qGetnum(algo::LspaceStr20_U64& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static i16           ch_qGetnum(algo::LspaceStr3_I16& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u16           ch_qGetnum(algo::LspaceStr5_I16& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u32           ch_qGetnum(algo::LspaceStr6_U32& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static i32           ch_qGetnum(algo::LspaceStr7_I32_Base36& parent, u32 &ok) __attribute__((nothrow));
+    static bool          err_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          ok_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          neg_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          overflow_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          hex_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u32           ch_qGetnum(algo::RnullStr6_U32& parent, u32 &ok) __attribute__((nothrow));
+    static void          SizeCheck();
 } // end namespace algo
 algo::cstring& algo::cstring::operator =(const algo::strptr &rhs) {
     algo::ch_Setary(*this, rhs);
@@ -1583,7 +1220,7 @@ void algo::ch_Print(algo::Smallstr150& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::Smallstr150& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 150) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 150");
@@ -1591,19 +1228,12 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr150& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.Smallstr150.ch.Set
+// --- algo.Smallstr150.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::Smallstr150& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr150& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 150);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.Smallstr150.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::Smallstr150& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -3833,7 +3463,7 @@ void algo::ch_Print(algo::Smallstr50& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::Smallstr50& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 50) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 50");
@@ -3841,19 +3471,12 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr50& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.Smallstr50.ch.Set
+// --- algo.Smallstr50.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::Smallstr50& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr50& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 50);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.Smallstr50.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::Smallstr50& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -4057,7 +3680,7 @@ void algo::ch_Print(algo::LnumStr10_U64& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LnumStr10_U64& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 10) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 10");
@@ -4065,19 +3688,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr10_U64& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LnumStr10_U64.ch.Set
+// --- algo.LnumStr10_U64.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LnumStr10_U64& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr10_U64& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 10);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LnumStr10_U64.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LnumStr10_U64& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -4135,7 +3751,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr10_U64& parent, i64 rhs) {
     length = u64_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 10;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -4172,7 +3788,7 @@ void algo::ch_Print(algo::LnumStr11_U64& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LnumStr11_U64& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 11) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 11");
@@ -4180,19 +3796,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr11_U64& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LnumStr11_U64.ch.Set
+// --- algo.LnumStr11_U64.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LnumStr11_U64& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr11_U64& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 11);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LnumStr11_U64.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LnumStr11_U64& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -4250,7 +3859,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr11_U64& parent, i64 rhs) {
     length = u64_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 11;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -4287,7 +3896,7 @@ void algo::ch_Print(algo::LnumStr12_U64& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LnumStr12_U64& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 12) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 12");
@@ -4295,19 +3904,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr12_U64& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LnumStr12_U64.ch.Set
+// --- algo.LnumStr12_U64.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LnumStr12_U64& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr12_U64& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 12);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LnumStr12_U64.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LnumStr12_U64& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -4365,7 +3967,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr12_U64& parent, i64 rhs) {
     length = u64_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 12;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -4402,7 +4004,7 @@ void algo::ch_Print(algo::LnumStr13_U64_Base36& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LnumStr13_U64_Base36& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 13) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 13");
@@ -4410,19 +4012,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr13_U64_Base36& parent, algo::strptr r
     return retval;
 }
 
-// --- algo.LnumStr13_U64_Base36.ch.Set
+// --- algo.LnumStr13_U64_Base36.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LnumStr13_U64_Base36& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr13_U64_Base36& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 13);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LnumStr13_U64_Base36.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LnumStr13_U64_Base36& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -4502,7 +4097,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr13_U64_Base36& parent, i64 rhs) {
     length = sizeof(buf) - charpos;
     bool retval = length <= 13;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -4539,7 +4134,7 @@ void algo::ch_Print(algo::LnumStr16_U64_Base16& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LnumStr16_U64_Base16& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 16) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 16");
@@ -4547,19 +4142,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr16_U64_Base16& parent, algo::strptr r
     return retval;
 }
 
-// --- algo.LnumStr16_U64_Base16.ch.Set
+// --- algo.LnumStr16_U64_Base16.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LnumStr16_U64_Base16& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr16_U64_Base16& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 16);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LnumStr16_U64_Base16.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LnumStr16_U64_Base16& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -4636,7 +4224,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr16_U64_Base16& parent, i64 rhs) {
     length = sizeof(buf) - charpos;
     bool retval = length <= 16;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -4673,7 +4261,7 @@ void algo::ch_Print(algo::LnumStr1_U32& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LnumStr1_U32& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 1) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 1");
@@ -4681,19 +4269,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr1_U32& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LnumStr1_U32.ch.Set
+// --- algo.LnumStr1_U32.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LnumStr1_U32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr1_U32& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 1);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LnumStr1_U32.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LnumStr1_U32& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -4751,7 +4332,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr1_U32& parent, i64 rhs) {
     length = u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 1;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -4788,7 +4369,7 @@ void algo::ch_Print(algo::LnumStr20_U64& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LnumStr20_U64& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 20) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 20");
@@ -4796,19 +4377,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr20_U64& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LnumStr20_U64.ch.Set
+// --- algo.LnumStr20_U64.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LnumStr20_U64& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr20_U64& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 20);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LnumStr20_U64.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LnumStr20_U64& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -4876,7 +4450,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr20_U64& parent, i64 rhs) {
     length = u64_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 20;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -4913,7 +4487,7 @@ void algo::ch_Print(algo::LnumStr22_U64& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LnumStr22_U64& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 22) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 22");
@@ -4921,19 +4495,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr22_U64& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LnumStr22_U64.ch.Set
+// --- algo.LnumStr22_U64.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LnumStr22_U64& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr22_U64& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 22);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LnumStr22_U64.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LnumStr22_U64& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -5001,7 +4568,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr22_U64& parent, i64 rhs) {
     length = u64_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 22;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -5038,7 +4605,7 @@ void algo::ch_Print(algo::LnumStr2_U32& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LnumStr2_U32& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 2) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 2");
@@ -5046,19 +4613,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr2_U32& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LnumStr2_U32.ch.Set
+// --- algo.LnumStr2_U32.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LnumStr2_U32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr2_U32& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 2);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LnumStr2_U32.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LnumStr2_U32& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -5116,7 +4676,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr2_U32& parent, i64 rhs) {
     length = u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 2;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -5153,7 +4713,7 @@ void algo::ch_Print(algo::LnumStr3_U32& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LnumStr3_U32& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 3) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 3");
@@ -5161,19 +4721,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr3_U32& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LnumStr3_U32.ch.Set
+// --- algo.LnumStr3_U32.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LnumStr3_U32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr3_U32& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 3);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LnumStr3_U32.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LnumStr3_U32& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -5231,7 +4784,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr3_U32& parent, i64 rhs) {
     length = u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 3;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -5268,7 +4821,7 @@ void algo::ch_Print(algo::LnumStr4_U32& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LnumStr4_U32& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 4) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 4");
@@ -5276,19 +4829,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr4_U32& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LnumStr4_U32.ch.Set
+// --- algo.LnumStr4_U32.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LnumStr4_U32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr4_U32& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 4);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LnumStr4_U32.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LnumStr4_U32& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -5346,7 +4892,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr4_U32& parent, i64 rhs) {
     length = u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 4;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -5383,7 +4929,7 @@ void algo::ch_Print(algo::LnumStr5_U32& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LnumStr5_U32& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 5) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 5");
@@ -5391,19 +4937,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr5_U32& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LnumStr5_U32.ch.Set
+// --- algo.LnumStr5_U32.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LnumStr5_U32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr5_U32& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 5);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LnumStr5_U32.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LnumStr5_U32& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -5461,7 +5000,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr5_U32& parent, i64 rhs) {
     length = u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 5;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -5498,7 +5037,7 @@ void algo::ch_Print(algo::LnumStr5_U32_Base36& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LnumStr5_U32_Base36& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 5) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 5");
@@ -5506,19 +5045,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr5_U32_Base36& parent, algo::strptr rh
     return retval;
 }
 
-// --- algo.LnumStr5_U32_Base36.ch.Set
+// --- algo.LnumStr5_U32_Base36.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LnumStr5_U32_Base36& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr5_U32_Base36& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 5);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LnumStr5_U32_Base36.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LnumStr5_U32_Base36& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -5595,7 +5127,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr5_U32_Base36& parent, i64 rhs) {
     length = sizeof(buf) - charpos;
     bool retval = length <= 5;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -5632,7 +5164,7 @@ void algo::ch_Print(algo::LnumStr6_U32& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LnumStr6_U32& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 6) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 6");
@@ -5640,19 +5172,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr6_U32& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LnumStr6_U32.ch.Set
+// --- algo.LnumStr6_U32.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LnumStr6_U32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr6_U32& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 6);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LnumStr6_U32.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LnumStr6_U32& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -5710,7 +5235,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr6_U32& parent, i64 rhs) {
     length = u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 6;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -5747,7 +5272,7 @@ void algo::ch_Print(algo::LnumStr7_U32& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LnumStr7_U32& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 7) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 7");
@@ -5755,19 +5280,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr7_U32& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LnumStr7_U32.ch.Set
+// --- algo.LnumStr7_U32.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LnumStr7_U32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr7_U32& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 7);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LnumStr7_U32.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LnumStr7_U32& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -5825,7 +5343,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr7_U32& parent, i64 rhs) {
     length = u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 7;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -5862,7 +5380,7 @@ void algo::ch_Print(algo::LnumStr7_U32_Base36& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LnumStr7_U32_Base36& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 7) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 7");
@@ -5870,19 +5388,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr7_U32_Base36& parent, algo::strptr rh
     return retval;
 }
 
-// --- algo.LnumStr7_U32_Base36.ch.Set
+// --- algo.LnumStr7_U32_Base36.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LnumStr7_U32_Base36& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr7_U32_Base36& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 7);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LnumStr7_U32_Base36.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LnumStr7_U32_Base36& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -5960,7 +5471,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr7_U32_Base36& parent, i64 rhs) {
     length = sizeof(buf) - charpos;
     bool retval = length <= 7;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -5997,7 +5508,7 @@ void algo::ch_Print(algo::LnumStr8_U32& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LnumStr8_U32& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 8) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 8");
@@ -6005,19 +5516,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr8_U32& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LnumStr8_U32.ch.Set
+// --- algo.LnumStr8_U32.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LnumStr8_U32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr8_U32& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 8);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LnumStr8_U32.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LnumStr8_U32& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -6075,7 +5579,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr8_U32& parent, i64 rhs) {
     length = u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 8;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -6112,7 +5616,7 @@ void algo::ch_Print(algo::LnumStr8_U32_Base16& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LnumStr8_U32_Base16& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 8) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 8");
@@ -6120,19 +5624,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr8_U32_Base16& parent, algo::strptr rh
     return retval;
 }
 
-// --- algo.LnumStr8_U32_Base16.ch.Set
+// --- algo.LnumStr8_U32_Base16.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LnumStr8_U32_Base16& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr8_U32_Base16& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 8);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LnumStr8_U32_Base16.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LnumStr8_U32_Base16& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -6210,7 +5707,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr8_U32_Base16& parent, i64 rhs) {
     length = sizeof(buf) - charpos;
     bool retval = length <= 8;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -6247,7 +5744,7 @@ void algo::ch_Print(algo::LnumStr8_U64& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LnumStr8_U64& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 8) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 8");
@@ -6255,19 +5752,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr8_U64& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LnumStr8_U64.ch.Set
+// --- algo.LnumStr8_U64.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LnumStr8_U64& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr8_U64& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 8);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LnumStr8_U64.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LnumStr8_U64& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -6325,7 +5815,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr8_U64& parent, i64 rhs) {
     length = u64_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 8;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -6362,7 +5852,7 @@ void algo::ch_Print(algo::LnumStr9_U32& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LnumStr9_U32& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 9) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 9");
@@ -6370,19 +5860,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr9_U32& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LnumStr9_U32.ch.Set
+// --- algo.LnumStr9_U32.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LnumStr9_U32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr9_U32& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 9);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LnumStr9_U32.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LnumStr9_U32& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -6440,7 +5923,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr9_U32& parent, i64 rhs) {
     length = u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 9;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -6477,7 +5960,7 @@ void algo::ch_Print(algo::LnumStr9_U64& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LnumStr9_U64& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 9) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 9");
@@ -6485,19 +5968,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr9_U64& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LnumStr9_U64.ch.Set
+// --- algo.LnumStr9_U64.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LnumStr9_U64& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr9_U64& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 9);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LnumStr9_U64.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LnumStr9_U64& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -6555,7 +6031,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr9_U64& parent, i64 rhs) {
     length = u64_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 9;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -6637,7 +6113,7 @@ void algo::ch_Print(algo::Smallstr200& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::Smallstr200& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 200) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 200");
@@ -6645,19 +6121,12 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr200& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.Smallstr200.ch.Set
+// --- algo.Smallstr200.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::Smallstr200& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr200& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 200);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.Smallstr200.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::Smallstr200& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -6721,7 +6190,7 @@ void algo::ch_Print(algo::LspaceStr10& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LspaceStr10& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 10) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 10");
@@ -6729,19 +6198,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr10& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LspaceStr10.ch.Set
+// --- algo.LspaceStr10.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LspaceStr10& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr10& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 10);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LspaceStr10.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LspaceStr10& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -6785,7 +6247,7 @@ void algo::ch_Print(algo::LspaceStr12& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LspaceStr12& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 12) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 12");
@@ -6793,19 +6255,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr12& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LspaceStr12.ch.Set
+// --- algo.LspaceStr12.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LspaceStr12& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr12& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 12);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LspaceStr12.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LspaceStr12& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -6849,7 +6304,7 @@ void algo::ch_Print(algo::LspaceStr14& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LspaceStr14& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 14) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 14");
@@ -6857,19 +6312,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr14& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LspaceStr14.ch.Set
+// --- algo.LspaceStr14.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LspaceStr14& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr14& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 14);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LspaceStr14.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LspaceStr14& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -6913,7 +6361,7 @@ void algo::ch_Print(algo::LspaceStr15& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LspaceStr15& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 15) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 15");
@@ -6921,19 +6369,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr15& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LspaceStr15.ch.Set
+// --- algo.LspaceStr15.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LspaceStr15& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr15& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 15);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LspaceStr15.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LspaceStr15& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -6977,7 +6418,7 @@ void algo::ch_Print(algo::LspaceStr20_I64& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LspaceStr20_I64& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 20) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 20");
@@ -6985,19 +6426,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr20_I64& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LspaceStr20_I64.ch.Set
+// --- algo.LspaceStr20_I64.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LspaceStr20_I64& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr20_I64& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 20);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LspaceStr20_I64.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LspaceStr20_I64& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -7078,7 +6512,7 @@ bool algo::ch_SetnumMaybe(algo::LspaceStr20_I64& parent, i64 rhs) {
     }
     bool retval = length <= 20;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -7115,7 +6549,7 @@ void algo::ch_Print(algo::LspaceStr20_U64& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LspaceStr20_U64& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 20) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 20");
@@ -7123,19 +6557,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr20_U64& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LspaceStr20_U64.ch.Set
+// --- algo.LspaceStr20_U64.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LspaceStr20_U64& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr20_U64& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 20);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LspaceStr20_U64.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LspaceStr20_U64& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -7203,7 +6630,7 @@ bool algo::ch_SetnumMaybe(algo::LspaceStr20_U64& parent, i64 rhs) {
     length = u64_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 20;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -7240,7 +6667,7 @@ void algo::ch_Print(algo::LspaceStr3& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LspaceStr3& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 3) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 3");
@@ -7248,19 +6675,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr3& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LspaceStr3.ch.Set
+// --- algo.LspaceStr3.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LspaceStr3& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr3& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 3);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LspaceStr3.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LspaceStr3& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -7304,7 +6724,7 @@ void algo::ch_Print(algo::LspaceStr3_I16& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LspaceStr3_I16& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 3) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 3");
@@ -7312,19 +6732,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr3_I16& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LspaceStr3_I16.ch.Set
+// --- algo.LspaceStr3_I16.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LspaceStr3_I16& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr3_I16& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 3);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LspaceStr3_I16.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LspaceStr3_I16& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -7395,7 +6808,7 @@ bool algo::ch_SetnumMaybe(algo::LspaceStr3_I16& parent, i64 rhs) {
     }
     bool retval = length <= 3;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -7432,7 +6845,7 @@ void algo::ch_Print(algo::LspaceStr4& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LspaceStr4& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 4) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 4");
@@ -7440,19 +6853,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr4& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LspaceStr4.ch.Set
+// --- algo.LspaceStr4.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LspaceStr4& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr4& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 4);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LspaceStr4.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LspaceStr4& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -7496,7 +6902,7 @@ void algo::ch_Print(algo::LspaceStr5& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LspaceStr5& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 5) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 5");
@@ -7504,19 +6910,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr5& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LspaceStr5.ch.Set
+// --- algo.LspaceStr5.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LspaceStr5& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr5& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 5);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LspaceStr5.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LspaceStr5& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -7560,7 +6959,7 @@ void algo::ch_Print(algo::LspaceStr5_I16& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LspaceStr5_I16& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 5) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 5");
@@ -7568,19 +6967,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr5_I16& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LspaceStr5_I16.ch.Set
+// --- algo.LspaceStr5_I16.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LspaceStr5_I16& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr5_I16& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 5);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LspaceStr5_I16.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LspaceStr5_I16& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -7644,7 +7036,7 @@ bool algo::ch_SetnumMaybe(algo::LspaceStr5_I16& parent, i64 rhs) {
     }
     bool retval = length <= 5;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -7681,7 +7073,7 @@ void algo::ch_Print(algo::LspaceStr6& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LspaceStr6& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 6) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 6");
@@ -7689,19 +7081,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr6& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LspaceStr6.ch.Set
+// --- algo.LspaceStr6.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LspaceStr6& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr6& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 6);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LspaceStr6.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LspaceStr6& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -7745,7 +7130,7 @@ void algo::ch_Print(algo::LspaceStr6_U32& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LspaceStr6_U32& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 6) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 6");
@@ -7753,19 +7138,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr6_U32& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LspaceStr6_U32.ch.Set
+// --- algo.LspaceStr6_U32.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LspaceStr6_U32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr6_U32& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 6);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LspaceStr6_U32.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LspaceStr6_U32& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -7823,7 +7201,7 @@ bool algo::ch_SetnumMaybe(algo::LspaceStr6_U32& parent, i64 rhs) {
     length = u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 6;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -7860,7 +7238,7 @@ void algo::ch_Print(algo::LspaceStr7_I32_Base36& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LspaceStr7_I32_Base36& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 7) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 7");
@@ -7868,19 +7246,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr7_I32_Base36& parent, algo::strptr 
     return retval;
 }
 
-// --- algo.LspaceStr7_I32_Base36.ch.Set
+// --- algo.LspaceStr7_I32_Base36.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LspaceStr7_I32_Base36& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr7_I32_Base36& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 7);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LspaceStr7_I32_Base36.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LspaceStr7_I32_Base36& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -7971,7 +7342,7 @@ bool algo::ch_SetnumMaybe(algo::LspaceStr7_I32_Base36& parent, i64 rhs) {
     }
     bool retval = length <= 7;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -8008,7 +7379,7 @@ void algo::ch_Print(algo::LspaceStr8& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LspaceStr8& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 8) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 8");
@@ -8016,19 +7387,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr8& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LspaceStr8.ch.Set
+// --- algo.LspaceStr8.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LspaceStr8& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr8& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 8);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LspaceStr8.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LspaceStr8& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -8072,7 +7436,7 @@ void algo::ch_Print(algo::LspaceStr9& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::LspaceStr9& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 9) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 9");
@@ -8080,19 +7444,12 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr9& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.LspaceStr9.ch.Set
+// --- algo.LspaceStr9.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::LspaceStr9& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr9& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 9);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.LspaceStr9.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::LspaceStr9& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -8627,7 +7984,7 @@ void algo::ch_Print(algo::RnullStr1& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr1& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 1) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 1");
@@ -8635,19 +7992,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr1& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr1.ch.Set
+// --- algo.RnullStr1.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr1& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr1& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 1);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr1.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr1& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -8691,7 +8041,7 @@ void algo::ch_Print(algo::RnullStr10& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr10& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 10) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 10");
@@ -8699,19 +8049,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr10& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr10.ch.Set
+// --- algo.RnullStr10.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr10& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr10& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 10);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr10.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr10& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -8755,7 +8098,7 @@ void algo::ch_Print(algo::RnullStr100& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr100& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 100) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 100");
@@ -8763,19 +8106,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr100& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr100.ch.Set
+// --- algo.RnullStr100.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr100& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr100& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 100);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr100.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr100& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -8819,7 +8155,7 @@ void algo::ch_Print(algo::RnullStr1000& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr1000& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 1000) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 1000");
@@ -8827,19 +8163,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr1000& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr1000.ch.Set
+// --- algo.RnullStr1000.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr1000& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr1000& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 1000);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr1000.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr1000& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -8883,7 +8212,7 @@ void algo::ch_Print(algo::RnullStr11& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr11& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 11) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 11");
@@ -8891,19 +8220,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr11& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr11.ch.Set
+// --- algo.RnullStr11.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr11& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr11& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 11);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr11.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr11& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -8947,7 +8269,7 @@ void algo::ch_Print(algo::RnullStr12& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr12& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 12) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 12");
@@ -8955,19 +8277,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr12& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr12.ch.Set
+// --- algo.RnullStr12.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr12& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr12& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 12);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr12.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr12& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -9011,7 +8326,7 @@ void algo::ch_Print(algo::RnullStr129& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr129& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 129) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 129");
@@ -9019,19 +8334,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr129& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr129.ch.Set
+// --- algo.RnullStr129.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr129& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr129& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 129);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr129.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr129& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -9075,7 +8383,7 @@ void algo::ch_Print(algo::RnullStr13& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr13& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 13) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 13");
@@ -9083,19 +8391,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr13& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr13.ch.Set
+// --- algo.RnullStr13.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr13& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr13& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 13);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr13.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr13& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -9139,7 +8440,7 @@ void algo::ch_Print(algo::RnullStr14& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr14& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 14) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 14");
@@ -9147,19 +8448,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr14& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr14.ch.Set
+// --- algo.RnullStr14.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr14& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr14& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 14);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr14.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr14& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -9203,7 +8497,7 @@ void algo::ch_Print(algo::RnullStr15& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr15& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 15) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 15");
@@ -9211,19 +8505,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr15& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr15.ch.Set
+// --- algo.RnullStr15.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr15& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr15& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 15);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr15.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr15& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -9267,7 +8554,7 @@ void algo::ch_Print(algo::RnullStr151& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr151& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 151) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 151");
@@ -9275,19 +8562,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr151& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr151.ch.Set
+// --- algo.RnullStr151.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr151& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr151& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 151);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr151.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr151& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -9331,7 +8611,7 @@ void algo::ch_Print(algo::RnullStr16& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr16& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 16) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 16");
@@ -9339,19 +8619,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr16& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr16.ch.Set
+// --- algo.RnullStr16.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr16& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr16& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 16);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr16.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr16& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -9395,7 +8668,7 @@ void algo::ch_Print(algo::RnullStr17& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr17& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 17) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 17");
@@ -9403,19 +8676,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr17& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr17.ch.Set
+// --- algo.RnullStr17.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr17& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr17& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 17);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr17.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr17& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -9459,7 +8725,7 @@ void algo::ch_Print(algo::RnullStr18& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr18& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 18) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 18");
@@ -9467,19 +8733,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr18& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr18.ch.Set
+// --- algo.RnullStr18.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr18& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr18& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 18);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr18.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr18& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -9523,7 +8782,7 @@ void algo::ch_Print(algo::RnullStr19& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr19& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 19) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 19");
@@ -9531,19 +8790,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr19& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr19.ch.Set
+// --- algo.RnullStr19.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr19& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr19& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 19);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr19.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr19& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -9587,7 +8839,7 @@ void algo::ch_Print(algo::RnullStr2& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr2& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 2) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 2");
@@ -9595,19 +8847,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr2& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr2.ch.Set
+// --- algo.RnullStr2.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr2& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr2& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 2);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr2.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr2& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -9651,7 +8896,7 @@ void algo::ch_Print(algo::RnullStr20& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr20& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 20) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 20");
@@ -9659,19 +8904,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr20& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr20.ch.Set
+// --- algo.RnullStr20.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr20& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr20& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 20);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr20.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr20& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -9715,7 +8953,7 @@ void algo::ch_Print(algo::RnullStr21& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr21& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 21) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 21");
@@ -9723,19 +8961,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr21& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr21.ch.Set
+// --- algo.RnullStr21.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr21& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr21& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 21);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr21.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr21& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -9779,7 +9010,7 @@ void algo::ch_Print(algo::RnullStr24& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr24& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 24) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 24");
@@ -9787,19 +9018,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr24& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr24.ch.Set
+// --- algo.RnullStr24.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr24& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr24& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 24);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr24.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr24& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -9843,7 +9067,7 @@ void algo::ch_Print(algo::RnullStr25& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr25& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 25) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 25");
@@ -9851,19 +9075,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr25& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr25.ch.Set
+// --- algo.RnullStr25.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr25& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr25& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 25);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr25.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr25& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -9907,7 +9124,7 @@ void algo::ch_Print(algo::RnullStr28& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr28& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 28) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 28");
@@ -9915,19 +9132,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr28& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr28.ch.Set
+// --- algo.RnullStr28.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr28& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr28& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 28);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr28.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr28& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -9971,7 +9181,7 @@ void algo::ch_Print(algo::RnullStr3& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr3& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 3) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 3");
@@ -9979,19 +9189,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr3& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr3.ch.Set
+// --- algo.RnullStr3.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr3& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr3& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 3);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr3.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr3& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -10035,7 +9238,7 @@ void algo::ch_Print(algo::RnullStr30& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr30& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 30) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 30");
@@ -10043,19 +9246,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr30& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr30.ch.Set
+// --- algo.RnullStr30.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr30& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr30& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 30);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr30.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr30& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -10099,7 +9295,7 @@ void algo::ch_Print(algo::RnullStr32& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr32& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 32) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 32");
@@ -10107,19 +9303,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr32& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr32.ch.Set
+// --- algo.RnullStr32.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr32& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 32);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr32.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr32& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -10163,7 +9352,7 @@ void algo::ch_Print(algo::RnullStr33& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr33& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 33) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 33");
@@ -10171,19 +9360,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr33& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr33.ch.Set
+// --- algo.RnullStr33.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr33& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr33& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 33);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr33.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr33& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -10227,7 +9409,7 @@ void algo::ch_Print(algo::RnullStr35& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr35& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 35) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 35");
@@ -10235,19 +9417,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr35& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr35.ch.Set
+// --- algo.RnullStr35.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr35& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr35& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 35);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr35.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr35& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -10291,7 +9466,7 @@ void algo::ch_Print(algo::RnullStr36& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr36& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 36) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 36");
@@ -10299,19 +9474,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr36& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr36.ch.Set
+// --- algo.RnullStr36.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr36& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr36& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 36);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr36.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr36& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -10355,7 +9523,7 @@ void algo::ch_Print(algo::RnullStr4& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr4& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 4) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 4");
@@ -10363,19 +9531,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr4& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr4.ch.Set
+// --- algo.RnullStr4.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr4& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr4& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 4);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr4.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr4& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -10419,7 +9580,7 @@ void algo::ch_Print(algo::RnullStr40& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr40& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 40) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 40");
@@ -10427,19 +9588,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr40& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr40.ch.Set
+// --- algo.RnullStr40.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr40& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr40& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 40);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr40.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr40& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -10483,7 +9637,7 @@ void algo::ch_Print(algo::RnullStr41& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr41& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 41) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 41");
@@ -10491,19 +9645,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr41& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr41.ch.Set
+// --- algo.RnullStr41.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr41& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr41& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 41);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr41.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr41& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -10547,7 +9694,7 @@ void algo::ch_Print(algo::RnullStr43& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr43& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 43) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 43");
@@ -10555,19 +9702,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr43& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr43.ch.Set
+// --- algo.RnullStr43.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr43& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr43& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 43);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr43.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr43& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -10611,7 +9751,7 @@ void algo::ch_Print(algo::RnullStr44& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr44& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 44) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 44");
@@ -10619,19 +9759,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr44& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr44.ch.Set
+// --- algo.RnullStr44.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr44& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr44& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 44);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr44.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr44& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -10675,7 +9808,7 @@ void algo::ch_Print(algo::RnullStr48& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr48& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 48) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 48");
@@ -10683,19 +9816,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr48& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr48.ch.Set
+// --- algo.RnullStr48.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr48& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr48& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 48);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr48.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr48& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -10739,7 +9865,7 @@ void algo::ch_Print(algo::RnullStr5& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr5& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 5) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 5");
@@ -10747,19 +9873,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr5& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr5.ch.Set
+// --- algo.RnullStr5.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr5& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr5& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 5);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr5.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr5& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -10803,7 +9922,7 @@ void algo::ch_Print(algo::RnullStr50& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr50& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 50) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 50");
@@ -10811,19 +9930,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr50& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr50.ch.Set
+// --- algo.RnullStr50.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr50& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr50& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 50);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr50.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr50& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -10867,7 +9979,7 @@ void algo::ch_Print(algo::RnullStr54& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr54& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 54) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 54");
@@ -10875,19 +9987,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr54& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr54.ch.Set
+// --- algo.RnullStr54.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr54& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr54& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 54);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr54.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr54& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -10931,7 +10036,7 @@ void algo::ch_Print(algo::RnullStr55& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr55& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 55) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 55");
@@ -10939,19 +10044,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr55& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr55.ch.Set
+// --- algo.RnullStr55.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr55& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr55& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 55);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr55.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr55& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -10995,7 +10093,7 @@ void algo::ch_Print(algo::RnullStr6& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr6& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 6) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 6");
@@ -11003,19 +10101,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr6& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr6.ch.Set
+// --- algo.RnullStr6.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr6& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr6& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 6);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr6.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr6& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -11059,7 +10150,7 @@ void algo::ch_Print(algo::RnullStr60& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr60& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 60) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 60");
@@ -11067,19 +10158,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr60& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr60.ch.Set
+// --- algo.RnullStr60.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr60& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr60& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 60);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr60.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr60& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -11123,7 +10207,7 @@ void algo::ch_Print(algo::RnullStr62& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr62& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 62) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 62");
@@ -11131,19 +10215,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr62& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr62.ch.Set
+// --- algo.RnullStr62.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr62& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr62& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 62);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr62.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr62& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -11187,7 +10264,7 @@ void algo::ch_Print(algo::RnullStr66& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr66& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 66) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 66");
@@ -11195,19 +10272,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr66& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr66.ch.Set
+// --- algo.RnullStr66.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr66& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr66& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 66);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr66.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr66& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -11251,7 +10321,7 @@ void algo::ch_Print(algo::RnullStr6_U32& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr6_U32& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 6) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 6");
@@ -11259,19 +10329,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr6_U32& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr6_U32.ch.Set
+// --- algo.RnullStr6_U32.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr6_U32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr6_U32& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 6);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr6_U32.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr6_U32& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -11329,7 +10392,7 @@ bool algo::ch_SetnumMaybe(algo::RnullStr6_U32& parent, i64 rhs) {
     length = u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 6;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -11366,7 +10429,7 @@ void algo::ch_Print(algo::RnullStr7& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr7& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 7) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 7");
@@ -11374,19 +10437,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr7& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr7.ch.Set
+// --- algo.RnullStr7.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr7& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr7& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 7);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr7.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr7& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -11430,7 +10486,7 @@ void algo::ch_Print(algo::RnullStr8& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr8& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 8) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 8");
@@ -11438,19 +10494,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr8& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr8.ch.Set
+// --- algo.RnullStr8.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr8& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr8& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 8);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr8.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr8& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -11494,7 +10543,7 @@ void algo::ch_Print(algo::RnullStr80& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr80& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 80) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 80");
@@ -11502,19 +10551,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr80& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr80.ch.Set
+// --- algo.RnullStr80.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr80& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr80& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 80);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr80.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr80& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -11558,7 +10600,7 @@ void algo::ch_Print(algo::RnullStr9& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RnullStr9& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 9) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 9");
@@ -11566,19 +10608,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr9& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RnullStr9.ch.Set
+// --- algo.RnullStr9.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RnullStr9& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr9& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 9);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RnullStr9.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RnullStr9& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -11622,7 +10657,7 @@ void algo::ch_Print(algo::RspaceStr10& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr10& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 10) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 10");
@@ -11630,19 +10665,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr10& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr10.ch.Set
+// --- algo.RspaceStr10.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr10& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr10& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 10);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr10.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr10& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -11686,7 +10714,7 @@ void algo::ch_Print(algo::RspaceStr100& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr100& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 100) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 100");
@@ -11694,19 +10722,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr100& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr100.ch.Set
+// --- algo.RspaceStr100.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr100& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr100& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 100);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr100.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr100& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -11750,7 +10771,7 @@ void algo::ch_Print(algo::RspaceStr11& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr11& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 11) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 11");
@@ -11758,19 +10779,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr11& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr11.ch.Set
+// --- algo.RspaceStr11.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr11& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr11& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 11);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr11.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr11& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -11814,7 +10828,7 @@ void algo::ch_Print(algo::RspaceStr16& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr16& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 16) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 16");
@@ -11822,19 +10836,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr16& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr16.ch.Set
+// --- algo.RspaceStr16.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr16& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr16& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 16);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr16.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr16& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -11878,7 +10885,7 @@ void algo::ch_Print(algo::RspaceStr2& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr2& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 2) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 2");
@@ -11886,19 +10893,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr2& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr2.ch.Set
+// --- algo.RspaceStr2.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr2& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr2& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 2);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr2.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr2& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -11942,7 +10942,7 @@ void algo::ch_Print(algo::RspaceStr20& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr20& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 20) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 20");
@@ -11950,19 +10950,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr20& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr20.ch.Set
+// --- algo.RspaceStr20.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr20& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr20& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 20);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr20.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr20& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -12006,7 +10999,7 @@ void algo::ch_Print(algo::RspaceStr200& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr200& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 200) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 200");
@@ -12014,19 +11007,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr200& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr200.ch.Set
+// --- algo.RspaceStr200.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr200& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr200& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 200);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr200.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr200& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -12070,7 +11056,7 @@ void algo::ch_Print(algo::RspaceStr21& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr21& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 21) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 21");
@@ -12078,19 +11064,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr21& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr21.ch.Set
+// --- algo.RspaceStr21.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr21& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr21& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 21);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr21.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr21& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -12134,7 +11113,7 @@ void algo::ch_Print(algo::RspaceStr24& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr24& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 24) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 24");
@@ -12142,19 +11121,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr24& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr24.ch.Set
+// --- algo.RspaceStr24.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr24& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr24& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 24);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr24.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr24& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -12198,7 +11170,7 @@ void algo::ch_Print(algo::RspaceStr240& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr240& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 240) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 240");
@@ -12206,19 +11178,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr240& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr240.ch.Set
+// --- algo.RspaceStr240.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr240& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr240& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 240);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr240.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr240& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -12262,7 +11227,7 @@ void algo::ch_Print(algo::RspaceStr26& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr26& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 26) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 26");
@@ -12270,19 +11235,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr26& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr26.ch.Set
+// --- algo.RspaceStr26.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr26& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr26& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 26);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr26.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr26& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -12326,7 +11284,7 @@ void algo::ch_Print(algo::RspaceStr3& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr3& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 3) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 3");
@@ -12334,19 +11292,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr3& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr3.ch.Set
+// --- algo.RspaceStr3.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr3& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr3& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 3);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr3.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr3& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -12390,7 +11341,7 @@ void algo::ch_Print(algo::RspaceStr31& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr31& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 31) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 31");
@@ -12398,19 +11349,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr31& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr31.ch.Set
+// --- algo.RspaceStr31.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr31& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr31& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 31);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr31.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr31& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -12454,7 +11398,7 @@ void algo::ch_Print(algo::RspaceStr32& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr32& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 32) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 32");
@@ -12462,19 +11406,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr32& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr32.ch.Set
+// --- algo.RspaceStr32.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr32& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 32);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr32.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr32& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -12518,7 +11455,7 @@ void algo::ch_Print(algo::RspaceStr4& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr4& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 4) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 4");
@@ -12526,19 +11463,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr4& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr4.ch.Set
+// --- algo.RspaceStr4.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr4& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr4& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 4);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr4.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr4& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -12582,7 +11512,7 @@ void algo::ch_Print(algo::RspaceStr40& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr40& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 40) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 40");
@@ -12590,19 +11520,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr40& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr40.ch.Set
+// --- algo.RspaceStr40.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr40& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr40& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 40);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr40.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr40& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -12646,7 +11569,7 @@ void algo::ch_Print(algo::RspaceStr5& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr5& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 5) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 5");
@@ -12654,19 +11577,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr5& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr5.ch.Set
+// --- algo.RspaceStr5.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr5& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr5& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 5);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr5.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr5& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -12710,7 +11626,7 @@ void algo::ch_Print(algo::RspaceStr50& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr50& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 50) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 50");
@@ -12718,19 +11634,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr50& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr50.ch.Set
+// --- algo.RspaceStr50.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr50& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr50& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 50);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr50.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr50& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -12774,7 +11683,7 @@ void algo::ch_Print(algo::RspaceStr6& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr6& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 6) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 6");
@@ -12782,19 +11691,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr6& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr6.ch.Set
+// --- algo.RspaceStr6.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr6& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr6& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 6);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr6.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr6& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -12838,7 +11740,7 @@ void algo::ch_Print(algo::RspaceStr64& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr64& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 64) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 64");
@@ -12846,19 +11748,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr64& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr64.ch.Set
+// --- algo.RspaceStr64.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr64& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr64& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 64);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr64.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr64& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -12902,7 +11797,7 @@ void algo::ch_Print(algo::RspaceStr7& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr7& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 7) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 7");
@@ -12910,19 +11805,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr7& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr7.ch.Set
+// --- algo.RspaceStr7.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr7& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr7& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 7);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr7.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr7& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -12966,7 +11854,7 @@ void algo::ch_Print(algo::RspaceStr8& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr8& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 8) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 8");
@@ -12974,19 +11862,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr8& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr8.ch.Set
+// --- algo.RspaceStr8.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr8& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr8& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 8);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr8.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr8& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -13030,7 +11911,7 @@ void algo::ch_Print(algo::RspaceStr9& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::RspaceStr9& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 9) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 9");
@@ -13038,19 +11919,12 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr9& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr9.ch.Set
+// --- algo.RspaceStr9.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::RspaceStr9& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr9& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 9);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.RspaceStr9.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::RspaceStr9& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -13161,7 +12035,7 @@ void algo::ch_Print(algo::Smallstr1& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::Smallstr1& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 1) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 1");
@@ -13169,19 +12043,12 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr1& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.Smallstr1.ch.Set
+// --- algo.Smallstr1.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::Smallstr1& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr1& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 1);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.Smallstr1.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::Smallstr1& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -13223,7 +12090,7 @@ void algo::ch_Print(algo::Smallstr10& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::Smallstr10& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 10) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 10");
@@ -13231,19 +12098,12 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr10& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.Smallstr10.ch.Set
+// --- algo.Smallstr10.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::Smallstr10& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr10& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 10);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.Smallstr10.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::Smallstr10& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -13285,7 +12145,7 @@ void algo::ch_Print(algo::Smallstr100& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::Smallstr100& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 100) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 100");
@@ -13293,19 +12153,12 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr100& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.Smallstr100.ch.Set
+// --- algo.Smallstr100.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::Smallstr100& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr100& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 100);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.Smallstr100.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::Smallstr100& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -13347,7 +12200,7 @@ void algo::ch_Print(algo::Smallstr16& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::Smallstr16& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 16) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 16");
@@ -13355,19 +12208,12 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr16& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.Smallstr16.ch.Set
+// --- algo.Smallstr16.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::Smallstr16& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr16& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 16);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.Smallstr16.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::Smallstr16& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -13409,7 +12255,7 @@ void algo::ch_Print(algo::Smallstr2& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::Smallstr2& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 2) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 2");
@@ -13417,19 +12263,12 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr2& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.Smallstr2.ch.Set
+// --- algo.Smallstr2.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::Smallstr2& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr2& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 2);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.Smallstr2.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::Smallstr2& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -13471,7 +12310,7 @@ void algo::ch_Print(algo::Smallstr20& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::Smallstr20& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 20) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 20");
@@ -13479,19 +12318,12 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr20& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.Smallstr20.ch.Set
+// --- algo.Smallstr20.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::Smallstr20& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr20& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 20);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.Smallstr20.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::Smallstr20& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -13533,7 +12365,7 @@ void algo::ch_Print(algo::Smallstr25& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::Smallstr25& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 25) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 25");
@@ -13541,19 +12373,12 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr25& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.Smallstr25.ch.Set
+// --- algo.Smallstr25.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::Smallstr25& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr25& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 25);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.Smallstr25.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::Smallstr25& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -13595,7 +12420,7 @@ void algo::ch_Print(algo::Smallstr250& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::Smallstr250& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 250) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 250");
@@ -13603,19 +12428,12 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr250& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.Smallstr250.ch.Set
+// --- algo.Smallstr250.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::Smallstr250& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr250& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 250);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.Smallstr250.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::Smallstr250& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -13657,7 +12475,7 @@ void algo::ch_Print(algo::Smallstr30& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::Smallstr30& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 30) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 30");
@@ -13665,19 +12483,12 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr30& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.Smallstr30.ch.Set
+// --- algo.Smallstr30.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::Smallstr30& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr30& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 30);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.Smallstr30.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::Smallstr30& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -13719,7 +12530,7 @@ void algo::ch_Print(algo::Smallstr4& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::Smallstr4& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 4) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 4");
@@ -13727,19 +12538,12 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr4& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.Smallstr4.ch.Set
+// --- algo.Smallstr4.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::Smallstr4& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr4& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 4);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.Smallstr4.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::Smallstr4& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -13781,7 +12585,7 @@ void algo::ch_Print(algo::Smallstr40& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::Smallstr40& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 40) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 40");
@@ -13789,19 +12593,12 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr40& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.Smallstr40.ch.Set
+// --- algo.Smallstr40.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::Smallstr40& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr40& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 40);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.Smallstr40.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::Smallstr40& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -13843,7 +12640,7 @@ void algo::ch_Print(algo::Smallstr5& parent, algo::cstring &out) {
 bool algo::ch_ReadStrptrMaybe(algo::Smallstr5& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 5) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 5");
@@ -13851,19 +12648,12 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr5& parent, algo::strptr rhs) {
     return retval;
 }
 
-// --- algo.Smallstr5.ch.Set
+// --- algo.Smallstr5.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_Set(algo::Smallstr5& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr5& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 5);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- algo.Smallstr5.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void algo::ch_qSet(algo::Smallstr5& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;

@@ -12,7 +12,7 @@
 #include "include/gen/algo_pch_gen.inl.h"
 //#pragma endinclude
 namespace algo_pch {
-static void          SizeCheck();
+    static void          SizeCheck();
 } // end namespace algo_pch
 
 // --- algo_pch.FieldId.value.ToCstr

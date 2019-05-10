@@ -50,21 +50,21 @@ lib_exec::_db_bh_syscmd_curs::~_db_bh_syscmd_curs() {
 }
 
 namespace lib_exec {
-// Load statically available data into tables, register tables and database.
-static void          InitReflection();
-// Find new location for ROW starting at IDX
-// NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int           bh_syscmd_Downheap(lib_exec::FSyscmd& row, int idx) __attribute__((nothrow));
-// Find and return index of new location for element ROW in the heap, starting at index IDX.
-// Move any elements along the way but do not modify ROW.
-static int           bh_syscmd_Upheap(lib_exec::FSyscmd& row, int idx) __attribute__((nothrow));
-static bool          bh_syscmd_ElemLt(lib_exec::FSyscmd &a, lib_exec::FSyscmd &b) __attribute__((nothrow));
-static void          _db_bh_syscmd_curs_Add(_db_bh_syscmd_curs &curs, lib_exec::FSyscmd& row);
-// find trace by row id (used to implement reflection)
-static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
-// Function return 1
-static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-static void          SizeCheck();
+    // Load statically available data into tables, register tables and database.
+    static void          InitReflection();
+    // Find new location for ROW starting at IDX
+    // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    static int           bh_syscmd_Downheap(lib_exec::FSyscmd& row, int idx) __attribute__((nothrow));
+    // Find and return index of new location for element ROW in the heap, starting at index IDX.
+    // Move any elements along the way but do not modify ROW.
+    static int           bh_syscmd_Upheap(lib_exec::FSyscmd& row, int idx) __attribute__((nothrow));
+    static bool          bh_syscmd_ElemLt(lib_exec::FSyscmd &a, lib_exec::FSyscmd &b) __attribute__((nothrow));
+    static void          _db_bh_syscmd_curs_Add(_db_bh_syscmd_curs &curs, lib_exec::FSyscmd& row);
+    // find trace by row id (used to implement reflection)
+    static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
+    // Function return 1
+    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    static void          SizeCheck();
 } // end namespace lib_exec
 
 // --- lib_exec.trace..Print
@@ -128,7 +128,7 @@ bool lib_exec::LoadSsimfileMaybe(algo::strptr fname) {
 
 // --- lib_exec.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool lib_exec::_db_XrefMaybe() {
     bool retval = true;
     return retval;
@@ -218,7 +218,7 @@ void lib_exec::syscmddep_RemoveLast() {
 
 // --- lib_exec.FDb.syscmddep.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool lib_exec::syscmddep_XrefMaybe(lib_exec::FSyscmddep &row) {
     bool retval = true;
     (void)row;
@@ -336,7 +336,7 @@ void lib_exec::syscmd_RemoveLast() {
 
 // --- lib_exec.FDb.syscmd.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool lib_exec::syscmd_XrefMaybe(lib_exec::FSyscmd &row) {
     bool retval = true;
     (void)row;

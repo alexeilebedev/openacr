@@ -14,13 +14,13 @@
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
 namespace lib_json {
-// Load statically available data into tables, register tables and database.
-static void          InitReflection();
-// find trace by row id (used to implement reflection)
-static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
-// Function return 1
-static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-static void          SizeCheck();
+    // Load statically available data into tables, register tables and database.
+    static void          InitReflection();
+    // find trace by row id (used to implement reflection)
+    static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
+    // Function return 1
+    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    static void          SizeCheck();
 } // end namespace lib_json
 
 // --- lib_json.trace..Print
@@ -177,7 +177,7 @@ bool lib_json::LoadSsimfileMaybe(algo::strptr fname) {
 
 // --- lib_json.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool lib_json::_db_XrefMaybe() {
     bool retval = true;
     return retval;
@@ -273,7 +273,7 @@ u64 lib_json::node_ReserveMem(u64 size) {
 
 // --- lib_json.FDb.node.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool lib_json::node_XrefMaybe(lib_json::FNode &row) {
     bool retval = true;
     (void)row;

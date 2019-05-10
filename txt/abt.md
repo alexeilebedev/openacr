@@ -1,6 +1,7 @@
 ## abt: A Build Tool
 
 Abt is a build tool. The argument to abt is a target name regex.
+Here, target means 'build target'.
 Abt reads some ssim files that describe which source files go into 
 these targets, and the dependencies between targets;
 builds a dependency dag based on #includes; Invokes build commands,
@@ -48,6 +49,15 @@ Abt's main input tables come from the dev namespace of the default data set
 * dev.targdep        pairwise dependencies between targets
 * dev.targsrc        list of source files for each target.
 * dev.tool_opt       list of options to use for compilation and linking,
+
+### Environment Variables
+
+Abt reads the following environment variables, but does not require any of them to be set.
+
+* COMPILER - read if `-compiler` is not speified. Default is `g++`.
+* UNAME - read if `-uname` is not specified. Default is obtained from `uname` command.
+* ARCH - read if `-arch` is not specified. Default is obtained from `uname` command.
+* CFG - read if `-cfg` is not specified. Default is `release`.
 
 ### Output Directory
 

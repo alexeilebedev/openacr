@@ -55,17 +55,17 @@ const char *src_lim_syntax =
 ;
 } // namespace src_lim
 namespace src_lim {
-static bool          include_InputMaybe(dev::Include &elem) __attribute__((nothrow));
-static bool          linelim_InputMaybe(dev::Linelim &elem) __attribute__((nothrow));
-// Load statically available data into tables, register tables and database.
-static void          InitReflection();
-static bool          targsrc_InputMaybe(dev::Targsrc &elem) __attribute__((nothrow));
-static bool          gitfile_InputMaybe(dev::Gitfile &elem) __attribute__((nothrow));
-// find trace by row id (used to implement reflection)
-static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
-// Function return 1
-static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-static void          SizeCheck();
+    static bool          include_InputMaybe(dev::Include &elem) __attribute__((nothrow));
+    static bool          linelim_InputMaybe(dev::Linelim &elem) __attribute__((nothrow));
+    // Load statically available data into tables, register tables and database.
+    static void          InitReflection();
+    static bool          targsrc_InputMaybe(dev::Targsrc &elem) __attribute__((nothrow));
+    static bool          gitfile_InputMaybe(dev::Gitfile &elem) __attribute__((nothrow));
+    // find trace by row id (used to implement reflection)
+    static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
+    // Function return 1
+    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    static void          SizeCheck();
 } // end namespace src_lim
 
 // --- src_lim.trace..Print
@@ -157,7 +157,7 @@ static bool src_lim::include_InputMaybe(dev::Include &elem) {
 
 // --- src_lim.FDb.include.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool src_lim::include_XrefMaybe(src_lim::FInclude &row) {
     bool retval = true;
     (void)row;
@@ -245,7 +245,7 @@ static bool src_lim::linelim_InputMaybe(dev::Linelim &elem) {
 
 // --- src_lim.FDb.linelim.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool src_lim::linelim_XrefMaybe(src_lim::FLinelim &row) {
     bool retval = true;
     (void)row;
@@ -387,7 +387,7 @@ bool src_lim::LoadSsimfileMaybe(algo::strptr fname) {
 
 // --- src_lim.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool src_lim::_db_XrefMaybe() {
     bool retval = true;
     return retval;
@@ -474,7 +474,7 @@ static bool src_lim::targsrc_InputMaybe(dev::Targsrc &elem) {
 
 // --- src_lim.FDb.targsrc.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool src_lim::targsrc_XrefMaybe(src_lim::FTargsrc &row) {
     bool retval = true;
     (void)row;
@@ -580,7 +580,7 @@ static bool src_lim::gitfile_InputMaybe(dev::Gitfile &elem) {
 
 // --- src_lim.FDb.gitfile.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool src_lim::gitfile_XrefMaybe(src_lim::FGitfile &row) {
     bool retval = true;
     (void)row;

@@ -54,18 +54,18 @@ const char *atf_norm_syntax =
 ;
 } // namespace atf_norm
 namespace atf_norm {
-// Load statically available data into tables, register tables and database.
-static void          InitReflection();
-static void          normcheck_LoadStatic() __attribute__((nothrow));
-static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
-static bool          scriptfile_InputMaybe(dev::Scriptfile &elem) __attribute__((nothrow));
-static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
-static bool          readme_InputMaybe(dev::Readme &elem) __attribute__((nothrow));
-// find trace by row id (used to implement reflection)
-static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
-// Function return 1
-static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-static void          SizeCheck();
+    // Load statically available data into tables, register tables and database.
+    static void          InitReflection();
+    static void          normcheck_LoadStatic() __attribute__((nothrow));
+    static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
+    static bool          scriptfile_InputMaybe(dev::Scriptfile &elem) __attribute__((nothrow));
+    static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
+    static bool          readme_InputMaybe(dev::Readme &elem) __attribute__((nothrow));
+    // find trace by row id (used to implement reflection)
+    static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
+    // Function return 1
+    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    static void          SizeCheck();
 } // end namespace atf_norm
 
 // --- atf_norm.trace..Print
@@ -195,7 +195,7 @@ bool atf_norm::LoadSsimfileMaybe(algo::strptr fname) {
 
 // --- atf_norm.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_norm::_db_XrefMaybe() {
     bool retval = true;
     return retval;
@@ -306,7 +306,8 @@ static void atf_norm::normcheck_LoadStatic() {
         ,{ "atfdb.normcheck  normcheck:ssimfile  comment:\"Check for .ssim files with no corresponding ssimfile entry\"", atf_norm::normcheck_ssimfile }
         ,{ "atfdb.normcheck  normcheck:normalize_acr  comment:\"Read ssim databases into memory and write back\"", atf_norm::normcheck_normalize_acr }
         ,{ "atfdb.normcheck  normcheck:normalize_acr_my  comment:\"Round trip ssim databases through MariaDB and back\"", atf_norm::normcheck_normalize_acr_my }
-        ,{ "atfdb.normcheck  normcheck:clang  comment:\"Build everything under clang\"", atf_norm::normcheck_clang }
+        ,{ "atfdb.normcheck  normcheck:build_clang  comment:\"Build everything under clang\"", atf_norm::normcheck_build_clang }
+        ,{ "atfdb.normcheck  normcheck:build_gcc9  comment:\"Build everything under g++-9\"", atf_norm::normcheck_build_gcc9 }
         ,{NULL, NULL}
     };
     (void)data;
@@ -323,7 +324,7 @@ static void atf_norm::normcheck_LoadStatic() {
 
 // --- atf_norm.FDb.normcheck.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_norm::normcheck_XrefMaybe(atf_norm::FNormcheck &row) {
     bool retval = true;
     (void)row;
@@ -411,7 +412,7 @@ static bool atf_norm::ssimfile_InputMaybe(dmmeta::Ssimfile &elem) {
 
 // --- atf_norm.FDb.ssimfile.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_norm::ssimfile_XrefMaybe(atf_norm::FSsimfile &row) {
     bool retval = true;
     (void)row;
@@ -639,7 +640,7 @@ static bool atf_norm::scriptfile_InputMaybe(dev::Scriptfile &elem) {
 
 // --- atf_norm.FDb.scriptfile.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_norm::scriptfile_XrefMaybe(atf_norm::FScriptfile &row) {
     bool retval = true;
     (void)row;
@@ -867,7 +868,7 @@ static bool atf_norm::ns_InputMaybe(dmmeta::Ns &elem) {
 
 // --- atf_norm.FDb.ns.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_norm::ns_XrefMaybe(atf_norm::FNs &row) {
     bool retval = true;
     (void)row;
@@ -1095,7 +1096,7 @@ static bool atf_norm::readme_InputMaybe(dev::Readme &elem) {
 
 // --- atf_norm.FDb.readme.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_norm::readme_XrefMaybe(atf_norm::FReadme &row) {
     bool retval = true;
     (void)row;

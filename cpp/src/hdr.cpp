@@ -204,6 +204,11 @@ static void RebuildHeader(src_hdr::FSrc &src) {
     if (src_hdr::_db.cmdline.update_authors) {
         UpdateAuthors(src);
     }
+    if (src_hdr::_db.cmdline.indent) {
+        tempstr out;
+        algo::InsertIndent(out, src.body,0);
+        src.body=out;
+    }
     // prlog("src_hdr.file"
     //    <<Keyval("src",src_Get(*src.p_targsrc))
     //    <<Keyval("comment",src.comment));

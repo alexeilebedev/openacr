@@ -63,254 +63,248 @@ atf_amc::typea_bh_typeb_curs::~typea_bh_typeb_curs() {
 }
 
 namespace atf_amc {
-static bool          bit1_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          bits5_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) __attribute__((nothrow));
-// Shift existing bytes over to the beginning of the buffer
-static void          in_Shift(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
-// Extract next character from STR and advance IDX
-static int           val_Nextchar(const atf_amc::Cstr& orig, strptr &str, int &idx) __attribute__((nothrow));
-static bool          strval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          strval_regx_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          strval2_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          strval2_regx_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          start_dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          end_dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          start_intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          end_intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
-// Find new location for ROW starting at IDX
-// NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int           bh_child_bheap_Downheap(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row, int idx) __attribute__((nothrow));
-// Find and return index of new location for element ROW in the heap, starting at index IDX.
-// Move any elements along the way but do not modify ROW.
-static int           bh_child_bheap_Upheap(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row, int idx) __attribute__((nothrow));
-static bool          bh_child_bheap_ElemLt(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, atf_amc::FCascdel &b) __attribute__((nothrow));
-static bool          bh_child_bheap_ElemLtval(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, const u32 &b) __attribute__((nothrow));
-static void          cascdel_bh_child_bheap_curs_Add(cascdel_bh_child_bheap_curs &curs, atf_amc::FCascdel& row);
-// Returns the child that has greater height.
-static atf_amc::FCascdel* tr_child_atree_TallerChild(atf_amc::FCascdel& node) __attribute__((nothrow));
-// Disconnects the subtree(branch) from the parent
-static void          tr_child_atree_Disconnect(atf_amc::FCascdel& node) __attribute__((nothrow));
-static bool          tr_child_atree_ElemLt(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, atf_amc::FCascdel &b) __attribute__((nothrow));
-static void          tr_child_atree_updateDepth(atf_amc::FCascdel& node) __attribute__((nothrow));
-// rotates the tree in from->to direction
-static void          tr_child_atree_Turn(atf_amc::FCascdel& from, atf_amc::FCascdel& to) __attribute__((nothrow));
-static void          tr_child_atree_Connect(atf_amc::FCascdel* parent, atf_amc::FCascdel* child, bool left) __attribute__((nothrow));
-// Find new location for ROW starting at IDX
-// NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int           bh_typec_Downheap(atf_amc::FTypeC& row, int idx) __attribute__((nothrow));
-// Find and return index of new location for element ROW in the heap, starting at index IDX.
-// Move any elements along the way but do not modify ROW.
-static int           bh_typec_Upheap(atf_amc::FTypeC& row, int idx) __attribute__((nothrow));
-static bool          bh_typec_ElemLt(atf_amc::FTypeC &a, atf_amc::FTypeC &b) __attribute__((nothrow));
-static void          _db_bh_typec_curs_Add(_db_bh_typec_curs &curs, atf_amc::FTypeC& row);
-static bool          types_InputMaybe(atf_amc::TypeS &elem) __attribute__((nothrow));
-// Load statically available data into tables, register tables and database.
-static void          InitReflection();
-static bool          typet_InputMaybe(atf_amc::TypeT &elem) __attribute__((nothrow));
-// First element of index changed.
-static void          cd_in_msg_FirstChanged() __attribute__((nothrow));
-// Update cycles count from previous clock capture
-static void          cd_in_msg_UpdateCycles() __attribute__((nothrow));
-static void          cd_in_msg_Call() __attribute__((nothrow));
-static void          amctest_LoadStatic() __attribute__((nothrow));
-// Returns the child that has greater height.
-static atf_amc::FAvl* tr_avl_TallerChild(atf_amc::FAvl& node) __attribute__((nothrow));
-// Disconnects the subtree(branch) from the parent
-static void          tr_avl_Disconnect(atf_amc::FAvl& node) __attribute__((nothrow));
-static bool          tr_avl_ElemLt(atf_amc::FAvl &a, atf_amc::FAvl &b) __attribute__((nothrow));
-static void          tr_avl_updateDepth(atf_amc::FAvl& node) __attribute__((nothrow));
-// rotates the tree in from->to direction
-static void          tr_avl_Turn(atf_amc::FAvl& from, atf_amc::FAvl& to) __attribute__((nothrow));
-static void          tr_avl_Connect(atf_amc::FAvl* parent, atf_amc::FAvl* child, bool left) __attribute__((nothrow));
-static void          listtype_LoadStatic() __attribute__((nothrow));
-// find trace by row id (used to implement reflection)
-static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
-// Function return 1
-static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Swap values elem_a and elem_b
-static void          sorted1_Swap(atf_amc::Cstr &elem_a, atf_amc::Cstr &elem_b) __attribute__((nothrow));
-// Left circular shift of three-tuple
-static void          sorted1_Rotleft(atf_amc::Cstr &elem_a, atf_amc::Cstr &elem_b, atf_amc::Cstr &elem_c) __attribute__((nothrow));
-// Compare values elem_a and elem_b
-// The comparison function must be anti-symmetric: if a>b, then !(b>a).
-// If not, mayhem results.
-static bool          sorted1_Lt(atf_amc::Cstr &elem_a, atf_amc::Cstr &elem_b) __attribute__((nothrow));
-// Internal insertion sort
-static void          sorted1_IntInsertionSort(atf_amc::Cstr *elems, int n) __attribute__((nothrow));
-// Internal heap sort
-static void          sorted1_IntHeapSort(atf_amc::Cstr *elems, int n) __attribute__((nothrow));
-// Quick sort engine
-static void          sorted1_IntQuickSort(atf_amc::Cstr *elems, int n, int depth) __attribute__((nothrow));
-// Find new location for ROW starting at IDX
-// NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int           bh_typeb_Downheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row, int idx) __attribute__((nothrow));
-// Find and return index of new location for element ROW in the heap, starting at index IDX.
-// Move any elements along the way but do not modify ROW.
-static int           bh_typeb_Upheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row, int idx) __attribute__((nothrow));
-static bool          bh_typeb_ElemLt(atf_amc::FTypeA& typea, atf_amc::FTypeB &a, atf_amc::FTypeB &b) __attribute__((nothrow));
-static void          typea_bh_typeb_curs_Add(typea_bh_typeb_curs &curs, atf_amc::FTypeB& row);
-// Swap values elem_a and elem_b
-static void          tary_Swap(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) __attribute__((nothrow));
-// Left circular shift of three-tuple
-static void          tary_Rotleft(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b, atf_amc::TypeA &elem_c) __attribute__((nothrow));
-// Compare values elem_a and elem_b
-// The comparison function must be anti-symmetric: if a>b, then !(b>a).
-// If not, mayhem results.
-static bool          tary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) __attribute__((nothrow));
-// Internal insertion sort
-static void          tary_IntInsertionSort(atf_amc::TypeA *elems, int n) __attribute__((nothrow));
-// Internal heap sort
-static void          tary_IntHeapSort(atf_amc::TypeA *elems, int n) __attribute__((nothrow));
-// Quick sort engine
-static void          tary_IntQuickSort(atf_amc::TypeA *elems, int n, int depth) __attribute__((nothrow));
-// Swap values elem_a and elem_b
-static void          c_ptrary_Swap(atf_amc::TypeA* &elem_a, atf_amc::TypeA* &elem_b) __attribute__((nothrow));
-// Left circular shift of three-tuple
-static void          c_ptrary_Rotleft(atf_amc::TypeA* &elem_a, atf_amc::TypeA* &elem_b, atf_amc::TypeA* &elem_c) __attribute__((nothrow));
-// Compare values elem_a and elem_b
-// The comparison function must be anti-symmetric: if a>b, then !(b>a).
-// If not, mayhem results.
-static bool          c_ptrary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) __attribute__((nothrow));
-// Internal insertion sort
-static void          c_ptrary_IntInsertionSort(atf_amc::TypeA* *elems, int n) __attribute__((nothrow));
-// Internal heap sort
-static void          c_ptrary_IntHeapSort(atf_amc::TypeA* *elems, int n) __attribute__((nothrow));
-// Quick sort engine
-static void          c_ptrary_IntQuickSort(atf_amc::TypeA* *elems, int n, int depth) __attribute__((nothrow));
-// Swap values elem_a and elem_b
-static void          fixary_Swap(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) __attribute__((nothrow));
-// Left circular shift of three-tuple
-static void          fixary_Rotleft(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b, atf_amc::TypeA &elem_c) __attribute__((nothrow));
-// Compare values elem_a and elem_b
-// The comparison function must be anti-symmetric: if a>b, then !(b>a).
-// If not, mayhem results.
-static bool          fixary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) __attribute__((nothrow));
-// Internal insertion sort
-static void          fixary_IntInsertionSort(atf_amc::TypeA *elems, int n) __attribute__((nothrow));
-// Internal heap sort
-static void          fixary_IntHeapSort(atf_amc::TypeA *elems, int n) __attribute__((nothrow));
-// Quick sort engine
-static void          fixary_IntQuickSort(atf_amc::TypeA *elems, int n, int depth) __attribute__((nothrow));
-// 
-static void          in_Scanmsg(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
-// Shift existing bytes over to the beginning of the buffer
-static void          in_Shift(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
-// 
-static void          in_Scanmsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
-// Shift existing bytes over to the beginning of the buffer
-static void          in_Shift(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
-static bool          value_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value2_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value3_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value21_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value22_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value23_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value24_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value25_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value26_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value20_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value28_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value29_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value30_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value31_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value32_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value27_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value19_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value18_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value4_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value5_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value6_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value7_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value8_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value9_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value69_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value11_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value12_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value13_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value14_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value15_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value16_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value33_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value10_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value17_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value35_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value55_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value56_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value57_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value58_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value59_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value60_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value54_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value62_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value63_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value64_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value65_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value66_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value67_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value68_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value61_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value34_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value52_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value36_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value37_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value38_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value39_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value40_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value41_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value42_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value53_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value44_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value45_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value46_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value47_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value48_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value49_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value50_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value51_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value43_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value70_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value71_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value2_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value3_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value4_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
-static bool          value5_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(atf_amc::RnullStr6_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32           ch_qGetnum(atf_amc::RnullStr6_U32& parent, u32 &ok) __attribute__((nothrow));
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void          ch_qSet(atf_amc::RpasU32Str6& parent, const algo::strptr &rhs) __attribute__((nothrow));
-// Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32           ch_qGetnum(atf_amc::RpasU32Str6& parent, u32 &ok) __attribute__((nothrow));
-// Extract next character from STR and advance IDX
-static int           novs_Nextchar(const atf_amc::SortedStr& parent, strptr &str, int &idx) __attribute__((nothrow));
-// Extract next character from STR and advance IDX
-static u64           vs_Nextchar(const atf_amc::SortedStr& parent, strptr &str, int &idx) __attribute__((nothrow));
-static bool          value_ReadStrptrMaybe(atf_amc::TypeBE64 &parent, algo::strptr in_str) __attribute__((nothrow));
-// Swap values elem_a and elem_b
-static void          typeh_Swap(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b) __attribute__((nothrow));
-// Left circular shift of three-tuple
-static void          typeh_Rotleft(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b, atf_amc::TypeH &elem_c) __attribute__((nothrow));
-// Compare values elem_a and elem_b
-// The comparison function must be anti-symmetric: if a>b, then !(b>a).
-// If not, mayhem results.
-static bool          typeh_Lt(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b) __attribute__((nothrow));
-// Internal insertion sort
-static void          typeh_IntInsertionSort(atf_amc::TypeH *elems, int n) __attribute__((nothrow));
-// Internal heap sort
-static void          typeh_IntHeapSort(atf_amc::TypeH *elems, int n) __attribute__((nothrow));
-// Quick sort engine
-static void          typeh_IntQuickSort(atf_amc::TypeH *elems, int n, int depth) __attribute__((nothrow));
-static void          SizeCheck();
+    static bool          bit1_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          bits5_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // Shift existing bytes over to the beginning of the buffer
+    static void          in_Shift(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
+    // Extract next character from STR and advance IDX
+    static int           val_Nextchar(const atf_amc::Cstr& orig, strptr &str, int &idx) __attribute__((nothrow));
+    static bool          strval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          strval_regx_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          strval2_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          strval2_regx_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          start_dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          end_dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          start_intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          end_intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    // Find new location for ROW starting at IDX
+    // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    static int           bh_child_bheap_Downheap(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row, int idx) __attribute__((nothrow));
+    // Find and return index of new location for element ROW in the heap, starting at index IDX.
+    // Move any elements along the way but do not modify ROW.
+    static int           bh_child_bheap_Upheap(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row, int idx) __attribute__((nothrow));
+    static bool          bh_child_bheap_ElemLt(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, atf_amc::FCascdel &b) __attribute__((nothrow));
+    static bool          bh_child_bheap_ElemLtval(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, const u32 &b) __attribute__((nothrow));
+    static void          cascdel_bh_child_bheap_curs_Add(cascdel_bh_child_bheap_curs &curs, atf_amc::FCascdel& row);
+    // Returns the child that has greater height.
+    static atf_amc::FCascdel* tr_child_atree_TallerChild(atf_amc::FCascdel& node) __attribute__((nothrow));
+    // Disconnects the subtree(branch) from the parent
+    static void          tr_child_atree_Disconnect(atf_amc::FCascdel& node) __attribute__((nothrow));
+    static bool          tr_child_atree_ElemLt(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, atf_amc::FCascdel &b) __attribute__((nothrow));
+    static void          tr_child_atree_updateDepth(atf_amc::FCascdel& node) __attribute__((nothrow));
+    // rotates the tree in from->to direction
+    static void          tr_child_atree_Turn(atf_amc::FCascdel& from, atf_amc::FCascdel& to) __attribute__((nothrow));
+    static void          tr_child_atree_Connect(atf_amc::FCascdel* parent, atf_amc::FCascdel* child, bool left) __attribute__((nothrow));
+    // Find new location for ROW starting at IDX
+    // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    static int           bh_typec_Downheap(atf_amc::FTypeC& row, int idx) __attribute__((nothrow));
+    // Find and return index of new location for element ROW in the heap, starting at index IDX.
+    // Move any elements along the way but do not modify ROW.
+    static int           bh_typec_Upheap(atf_amc::FTypeC& row, int idx) __attribute__((nothrow));
+    static bool          bh_typec_ElemLt(atf_amc::FTypeC &a, atf_amc::FTypeC &b) __attribute__((nothrow));
+    static void          _db_bh_typec_curs_Add(_db_bh_typec_curs &curs, atf_amc::FTypeC& row);
+    static bool          types_InputMaybe(atf_amc::TypeS &elem) __attribute__((nothrow));
+    // Load statically available data into tables, register tables and database.
+    static void          InitReflection();
+    static bool          typet_InputMaybe(atf_amc::TypeT &elem) __attribute__((nothrow));
+    // First element of index changed.
+    static void          cd_in_msg_FirstChanged() __attribute__((nothrow));
+    // Update cycles count from previous clock capture
+    static void          cd_in_msg_UpdateCycles() __attribute__((nothrow));
+    static void          cd_in_msg_Call() __attribute__((nothrow));
+    static void          amctest_LoadStatic() __attribute__((nothrow));
+    // Returns the child that has greater height.
+    static atf_amc::FAvl* tr_avl_TallerChild(atf_amc::FAvl& node) __attribute__((nothrow));
+    // Disconnects the subtree(branch) from the parent
+    static void          tr_avl_Disconnect(atf_amc::FAvl& node) __attribute__((nothrow));
+    static bool          tr_avl_ElemLt(atf_amc::FAvl &a, atf_amc::FAvl &b) __attribute__((nothrow));
+    static void          tr_avl_updateDepth(atf_amc::FAvl& node) __attribute__((nothrow));
+    // rotates the tree in from->to direction
+    static void          tr_avl_Turn(atf_amc::FAvl& from, atf_amc::FAvl& to) __attribute__((nothrow));
+    static void          tr_avl_Connect(atf_amc::FAvl* parent, atf_amc::FAvl* child, bool left) __attribute__((nothrow));
+    static void          listtype_LoadStatic() __attribute__((nothrow));
+    // find trace by row id (used to implement reflection)
+    static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
+    // Function return 1
+    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // Swap values elem_a and elem_b
+    static void          sorted1_Swap(atf_amc::Cstr &elem_a, atf_amc::Cstr &elem_b) __attribute__((nothrow));
+    // Left circular shift of three-tuple
+    static void          sorted1_Rotleft(atf_amc::Cstr &elem_a, atf_amc::Cstr &elem_b, atf_amc::Cstr &elem_c) __attribute__((nothrow));
+    // Compare values elem_a and elem_b
+    // The comparison function must be anti-symmetric: if a>b, then !(b>a).
+    // If not, mayhem results.
+    static bool          sorted1_Lt(atf_amc::Cstr &elem_a, atf_amc::Cstr &elem_b) __attribute__((nothrow));
+    // Internal insertion sort
+    static void          sorted1_IntInsertionSort(atf_amc::Cstr *elems, int n) __attribute__((nothrow));
+    // Internal heap sort
+    static void          sorted1_IntHeapSort(atf_amc::Cstr *elems, int n) __attribute__((nothrow));
+    // Quick sort engine
+    static void          sorted1_IntQuickSort(atf_amc::Cstr *elems, int n, int depth) __attribute__((nothrow));
+    // Find new location for ROW starting at IDX
+    // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    static int           bh_typeb_Downheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row, int idx) __attribute__((nothrow));
+    // Find and return index of new location for element ROW in the heap, starting at index IDX.
+    // Move any elements along the way but do not modify ROW.
+    static int           bh_typeb_Upheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row, int idx) __attribute__((nothrow));
+    static bool          bh_typeb_ElemLt(atf_amc::FTypeA& typea, atf_amc::FTypeB &a, atf_amc::FTypeB &b) __attribute__((nothrow));
+    static void          typea_bh_typeb_curs_Add(typea_bh_typeb_curs &curs, atf_amc::FTypeB& row);
+    // Swap values elem_a and elem_b
+    static void          tary_Swap(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) __attribute__((nothrow));
+    // Left circular shift of three-tuple
+    static void          tary_Rotleft(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b, atf_amc::TypeA &elem_c) __attribute__((nothrow));
+    // Compare values elem_a and elem_b
+    // The comparison function must be anti-symmetric: if a>b, then !(b>a).
+    // If not, mayhem results.
+    static bool          tary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) __attribute__((nothrow));
+    // Internal insertion sort
+    static void          tary_IntInsertionSort(atf_amc::TypeA *elems, int n) __attribute__((nothrow));
+    // Internal heap sort
+    static void          tary_IntHeapSort(atf_amc::TypeA *elems, int n) __attribute__((nothrow));
+    // Quick sort engine
+    static void          tary_IntQuickSort(atf_amc::TypeA *elems, int n, int depth) __attribute__((nothrow));
+    // Swap values elem_a and elem_b
+    static void          c_ptrary_Swap(atf_amc::TypeA* &elem_a, atf_amc::TypeA* &elem_b) __attribute__((nothrow));
+    // Left circular shift of three-tuple
+    static void          c_ptrary_Rotleft(atf_amc::TypeA* &elem_a, atf_amc::TypeA* &elem_b, atf_amc::TypeA* &elem_c) __attribute__((nothrow));
+    // Compare values elem_a and elem_b
+    // The comparison function must be anti-symmetric: if a>b, then !(b>a).
+    // If not, mayhem results.
+    static bool          c_ptrary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) __attribute__((nothrow));
+    // Internal insertion sort
+    static void          c_ptrary_IntInsertionSort(atf_amc::TypeA* *elems, int n) __attribute__((nothrow));
+    // Internal heap sort
+    static void          c_ptrary_IntHeapSort(atf_amc::TypeA* *elems, int n) __attribute__((nothrow));
+    // Quick sort engine
+    static void          c_ptrary_IntQuickSort(atf_amc::TypeA* *elems, int n, int depth) __attribute__((nothrow));
+    // Swap values elem_a and elem_b
+    static void          fixary_Swap(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) __attribute__((nothrow));
+    // Left circular shift of three-tuple
+    static void          fixary_Rotleft(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b, atf_amc::TypeA &elem_c) __attribute__((nothrow));
+    // Compare values elem_a and elem_b
+    // The comparison function must be anti-symmetric: if a>b, then !(b>a).
+    // If not, mayhem results.
+    static bool          fixary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) __attribute__((nothrow));
+    // Internal insertion sort
+    static void          fixary_IntInsertionSort(atf_amc::TypeA *elems, int n) __attribute__((nothrow));
+    // Internal heap sort
+    static void          fixary_IntHeapSort(atf_amc::TypeA *elems, int n) __attribute__((nothrow));
+    // Quick sort engine
+    static void          fixary_IntQuickSort(atf_amc::TypeA *elems, int n, int depth) __attribute__((nothrow));
+    //
+    static void          in_Scanmsg(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
+    // Shift existing bytes over to the beginning of the buffer
+    static void          in_Shift(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
+    //
+    static void          in_Scanmsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+    // Shift existing bytes over to the beginning of the buffer
+    static void          in_Shift(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+    static bool          value_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value2_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value3_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value21_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value22_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value23_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value24_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value25_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value26_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value20_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value28_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value29_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value30_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value31_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value32_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value27_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value19_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value18_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value4_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value5_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value6_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value7_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value8_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value9_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value69_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value11_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value12_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value13_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value14_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value15_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value16_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value33_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value10_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value17_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value35_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value55_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value56_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value57_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value58_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value59_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value60_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value54_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value62_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value63_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value64_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value65_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value66_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value67_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value68_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value61_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value34_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value52_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value36_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value37_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value38_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value39_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value40_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value41_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value42_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value53_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value44_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value45_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value46_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value47_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value48_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value49_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value50_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value51_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value43_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value70_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value71_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value2_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value3_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value4_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          value5_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u32           ch_qGetnum(atf_amc::RnullStr6_U32& parent, u32 &ok) __attribute__((nothrow));
+    // Convert field to numeric value. If the value is too large
+    // for the target type, the result is undefined.
+    // The special case of an empty string is evaluated to zero.
+    static u32           ch_qGetnum(atf_amc::RpasU32Str6& parent, u32 &ok) __attribute__((nothrow));
+    // Extract next character from STR and advance IDX
+    static int           novs_Nextchar(const atf_amc::SortedStr& parent, strptr &str, int &idx) __attribute__((nothrow));
+    // Extract next character from STR and advance IDX
+    static u64           vs_Nextchar(const atf_amc::SortedStr& parent, strptr &str, int &idx) __attribute__((nothrow));
+    static bool          value_ReadStrptrMaybe(atf_amc::TypeBE64 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // Swap values elem_a and elem_b
+    static void          typeh_Swap(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b) __attribute__((nothrow));
+    // Left circular shift of three-tuple
+    static void          typeh_Rotleft(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b, atf_amc::TypeH &elem_c) __attribute__((nothrow));
+    // Compare values elem_a and elem_b
+    // The comparison function must be anti-symmetric: if a>b, then !(b>a).
+    // If not, mayhem results.
+    static bool          typeh_Lt(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b) __attribute__((nothrow));
+    // Internal insertion sort
+    static void          typeh_IntInsertionSort(atf_amc::TypeH *elems, int n) __attribute__((nothrow));
+    // Internal heap sort
+    static void          typeh_IntHeapSort(atf_amc::TypeH *elems, int n) __attribute__((nothrow));
+    // Quick sort engine
+    static void          typeh_IntQuickSort(atf_amc::TypeH *elems, int n, int depth) __attribute__((nothrow));
+    static void          SizeCheck();
 } // end namespace atf_amc
 
 // --- atf_amc.AmcCleanup2..Uninit
@@ -3348,7 +3342,7 @@ void atf_amc::typea_RemoveLast() {
 
 // --- atf_amc.FDb.typea.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::typea_XrefMaybe(atf_amc::FTypeA &row) {
     bool retval = true;
     (void)row;
@@ -3455,7 +3449,7 @@ static bool atf_amc::types_InputMaybe(atf_amc::TypeS &elem) {
 
 // --- atf_amc.FDb.types.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::types_XrefMaybe(atf_amc::FTypeS &row) {
     bool retval = true;
     (void)row;
@@ -3835,7 +3829,7 @@ bool atf_amc::LoadSsimfileMaybe(algo::strptr fname) {
 
 // --- atf_amc.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::_db_XrefMaybe() {
     bool retval = true;
     return retval;
@@ -3932,7 +3926,7 @@ static bool atf_amc::typet_InputMaybe(atf_amc::TypeT &elem) {
 
 // --- atf_amc.FDb.typet.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::typet_XrefMaybe(atf_amc::FTypeT &row) {
     bool retval = true;
     (void)row;
@@ -4032,7 +4026,7 @@ void atf_amc::cstring_RemoveLast() {
 
 // --- atf_amc.FDb.cstring.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::cstring_XrefMaybe(atf_amc::FCstring &row) {
     bool retval = true;
     (void)row;
@@ -4163,7 +4157,7 @@ void atf_amc::ind_cstring_Reserve(int n) {
 
 // --- atf_amc.FDb.msgbuf.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::msgbuf_XrefMaybe(atf_amc::Msgbuf &row) {
     bool retval = true;
     (void)row;
@@ -4172,7 +4166,7 @@ bool atf_amc::msgbuf_XrefMaybe(atf_amc::Msgbuf &row) {
 
 // --- atf_amc.FDb.bytebuf.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::bytebuf_XrefMaybe(atf_amc::Bytebuf &row) {
     bool retval = true;
     (void)row;
@@ -4181,7 +4175,7 @@ bool atf_amc::bytebuf_XrefMaybe(atf_amc::Bytebuf &row) {
 
 // --- atf_amc.FDb.linebuf.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::linebuf_XrefMaybe(atf_amc::Linebuf &row) {
     bool retval = true;
     (void)row;
@@ -4403,7 +4397,7 @@ u64 atf_amc::typeb_ReserveMem(u64 size) {
 
 // --- atf_amc.FDb.typeb.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::typeb_XrefMaybe(atf_amc::FTypeB &row) {
     bool retval = true;
     (void)row;
@@ -4507,7 +4501,7 @@ u64 atf_amc::pooledbe64_ReserveMem(u64 size) {
 
 // --- atf_amc.FDb.pooledbe64.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::pooledbe64_XrefMaybe(atf_amc::PooledBE64 &row) {
     bool retval = true;
     (void)row;
@@ -4640,13 +4634,14 @@ atf_amc::VarlenExtern* atf_amc::varlen_extern_AllocExtraMaybe(void *extra, i32 n
 // --- atf_amc.FDb.varlen_extern.Delete
 // Remove row from all global and cross indices, then deallocate row
 void atf_amc::varlen_extern_Delete(atf_amc::VarlenExtern &row) {
+    int length = length_Get(row);
     row.~VarlenExtern();
-    varlen_extern_FreeMem(&row, length_Get(row));
+    varlen_extern_FreeMem(&row, length);
 }
 
 // --- atf_amc.FDb.varlen_extern.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::varlen_extern_XrefMaybe(atf_amc::VarlenExtern &row) {
     bool retval = true;
     (void)row;
@@ -4955,7 +4950,7 @@ static void atf_amc::amctest_LoadStatic() {
 
 // --- atf_amc.FDb.amctest.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::amctest_XrefMaybe(atf_amc::FAmctest &row) {
     bool retval = true;
     (void)row;
@@ -5050,7 +5045,7 @@ u64 atf_amc::cascdel_ReserveMem(u64 size) {
 
 // --- atf_amc.FDb.cascdel.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::cascdel_XrefMaybe(atf_amc::FCascdel &row) {
     bool retval = true;
     (void)row;
@@ -5211,13 +5206,14 @@ atf_amc::OptAlloc* atf_amc::optalloc_AllocExtraMaybe(void *extra, i32 nbyte_extr
 // --- atf_amc.FDb.optalloc.Delete
 // Remove row from all global and cross indices, then deallocate row
 void atf_amc::optalloc_Delete(atf_amc::OptAlloc &row) {
+    int length = row.length;
     row.~OptAlloc();
-    optalloc_FreeMem(&row, row.length);
+    optalloc_FreeMem(&row, length);
 }
 
 // --- atf_amc.FDb.optalloc.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::optalloc_XrefMaybe(atf_amc::OptAlloc &row) {
     bool retval = true;
     (void)row;
@@ -5350,13 +5346,14 @@ atf_amc::VarlenAlloc* atf_amc::varlenalloc_AllocExtraMaybe(void *extra, i32 nbyt
 // --- atf_amc.FDb.varlenalloc.Delete
 // Remove row from all global and cross indices, then deallocate row
 void atf_amc::varlenalloc_Delete(atf_amc::VarlenAlloc &row) {
+    int length = row.length;
     row.~VarlenAlloc();
-    varlenalloc_FreeMem(&row, row.length);
+    varlenalloc_FreeMem(&row, length);
 }
 
 // --- atf_amc.FDb.varlenalloc.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::varlenalloc_XrefMaybe(atf_amc::VarlenAlloc &row) {
     bool retval = true;
     (void)row;
@@ -5494,13 +5491,14 @@ atf_amc::FOptG* atf_amc::optg_InsertMaybe(const atf_amc::OptG &value) {
 // --- atf_amc.FDb.optg.Delete
 // Remove row from all global and cross indices, then deallocate row
 void atf_amc::optg_Delete(atf_amc::FOptG &row) {
+    int length = row.length;
     row.~FOptG();
-    optg_FreeMem(&row, row.length);
+    optg_FreeMem(&row, length);
 }
 
 // --- atf_amc.FDb.optg.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::optg_XrefMaybe(atf_amc::FOptG &row) {
     bool retval = true;
     (void)row;
@@ -5641,7 +5639,7 @@ void atf_amc::avl_RemoveLast() {
 
 // --- atf_amc.FDb.avl.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::avl_XrefMaybe(atf_amc::FAvl &row) {
     bool retval = true;
     (void)row;
@@ -6005,7 +6003,7 @@ static void atf_amc::listtype_LoadStatic() {
 
 // --- atf_amc.FDb.listtype.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::listtype_XrefMaybe(atf_amc::FListtype &row) {
     bool retval = true;
     (void)row;
@@ -6451,7 +6449,7 @@ void atf_amc::orig_Setary(atf_amc::FPerfSortString& parent, atf_amc::FPerfSortSt
 
 // --- atf_amc.FPerfSortString.orig.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::orig_XrefMaybe(atf_amc::Cstr &row) {
     bool retval = true;
     (void)row;
@@ -6876,7 +6874,7 @@ void atf_amc::typec_RemoveLast(atf_amc::FTypeA& typea) {
 
 // --- atf_amc.FTypeA.typec.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::typec_XrefMaybe(atf_amc::FTypeC &row) {
     bool retval = true;
     (void)row;
@@ -7755,7 +7753,7 @@ void atf_amc::tary_QuickSort(atf_amc::FUnitSort& parent) {
 
 // --- atf_amc.FUnitSort.tary.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::tary_XrefMaybe(atf_amc::TypeA &row) {
     bool retval = true;
     (void)row;
@@ -9320,7 +9318,7 @@ bool atf_amc::in_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
 
 // --- atf_amc.Msgbuf.in.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::in_XrefMaybe(atf_amc::MsgHeader &row) {
     bool retval = true;
     (void)row;
@@ -9457,7 +9455,7 @@ bool atf_amc::typeg_ReadStrptrMaybe(atf_amc::OptAlloc &parent, algo::strptr in_s
 
 // --- atf_amc.OptAlloc.typeg.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::typeg_XrefMaybe(atf_amc::TypeG &row) {
     bool retval = true;
     (void)row;
@@ -9600,7 +9598,7 @@ bool atf_amc::optg_ReadStrptrMaybe(atf_amc::OptOptG &parent, algo::strptr in_str
 
 // --- atf_amc.OptOptG.optg.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::optg_XrefMaybe(atf_amc::OptG &row) {
     bool retval = true;
     (void)row;
@@ -11198,7 +11196,7 @@ void atf_amc::ch_Print(atf_amc::RnullStr6_U32& parent, algo::cstring &out) {
 bool atf_amc::ch_ReadStrptrMaybe(atf_amc::RnullStr6_U32& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 6) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 6");
@@ -11206,19 +11204,12 @@ bool atf_amc::ch_ReadStrptrMaybe(atf_amc::RnullStr6_U32& parent, algo::strptr rh
     return retval;
 }
 
-// --- atf_amc.RnullStr6_U32.ch.Set
+// --- atf_amc.RnullStr6_U32.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void atf_amc::ch_Set(atf_amc::RnullStr6_U32& parent, const algo::strptr &rhs) {
+void atf_amc::ch_SetStrptr(atf_amc::RnullStr6_U32& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 6);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- atf_amc.RnullStr6_U32.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void atf_amc::ch_qSet(atf_amc::RnullStr6_U32& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -11276,7 +11267,7 @@ bool atf_amc::ch_SetnumMaybe(atf_amc::RnullStr6_U32& parent, i64 rhs) {
     length = u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 6;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -11313,7 +11304,7 @@ void atf_amc::ch_Print(atf_amc::RpasU32Str6& parent, algo::cstring &out) {
 bool atf_amc::ch_ReadStrptrMaybe(atf_amc::RpasU32Str6& parent, algo::strptr rhs) {
     bool retval = false;
     if (rhs.n_elems <= 6) {
-        ch_qSet(parent, rhs);
+        ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
         algo_lib::SaveBadTag("comment","text too long, limit 6");
@@ -11321,19 +11312,12 @@ bool atf_amc::ch_ReadStrptrMaybe(atf_amc::RpasU32Str6& parent, algo::strptr rhs)
     return retval;
 }
 
-// --- atf_amc.RpasU32Str6.ch.Set
+// --- atf_amc.RpasU32Str6.ch.SetStrptr
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void atf_amc::ch_Set(atf_amc::RpasU32Str6& parent, const algo::strptr &rhs) {
+void atf_amc::ch_SetStrptr(atf_amc::RpasU32Str6& parent, const algo::strptr &rhs) {
     int len = i32_Min(rhs.n_elems, 6);
-    ch_qSet(parent, algo::strptr(rhs.elems, len));
-}
-
-// --- atf_amc.RpasU32Str6.ch.qSet
-// Set string to the value provided by RHS.
-// No bounds checking is performed
-static void atf_amc::ch_qSet(atf_amc::RpasU32Str6& parent, const algo::strptr &rhs) {
-    int len = rhs.n_elems;
     char *rhs_elems = rhs.elems;
     int i = 0;
     int j = 0;
@@ -11389,7 +11373,7 @@ bool atf_amc::ch_SetnumMaybe(atf_amc::RpasU32Str6& parent, i64 rhs) {
     length = u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 6;
     if (retval) {
-        ch_qSet(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -12717,7 +12701,7 @@ void atf_amc::typeh_QuickSort(atf_amc::VarlenH& parent) {
 
 // --- atf_amc.VarlenH.typeh.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_amc::typeh_XrefMaybe(atf_amc::TypeH &row) {
     bool retval = true;
     (void)row;

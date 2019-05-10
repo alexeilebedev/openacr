@@ -249,10 +249,6 @@ bool amc::ExternStepQ(amc::FFstep &fstep) {
 
 // -----------------------------------------------------------------------------
 
-bool amc::QueryModeQ() {
-    return  ch_N(amc::_db.cmdline.query.expr) > 0;
-}
-
 // add text to c++ body of class
 void amc::InsStruct(algo_lib::Replscope &R, amc::FCtype *ctype, const strptr &text) {
     algo_lib::Ins(&R,ctype->body,text);
@@ -921,52 +917,6 @@ void amc::CppSectionAll(amc::FNs& ns, strptr label) {
 
 // -----------------------------------------------------------------------------
 
-// insert TEXT into OUT,
-// indenting as necessary; first line indent is INDENT.
-// Each indent is 4 spaces.
-void amc::InsertIndent(algo::cstring &out, strptr text, int indent) {
-    ind_beg(Line_curs,line,text) {
-        int next_indent = indent;
-        int lcurly=-1;// offset
-        int rcurly=-1;// offset
-        int lstart=-1;
-        for (int i=0; i<line.n_elems; i++) {
-            char c = line.elems[i];
-            if (algo_lib::WhiteCharQ(c)) {
-                // whitespace
-            } else {
-                if (lstart == -1) {// save start of line
-                    lstart=i;
-                }
-                if (c == '{') {// opening curly in last position
-                    lcurly = i;
-                } else if (c== '}') {
-                    rcurly = lstart == i ? i:-1;// closing curly in first position
-                } else if (c=='/' && i<line.n_elems-1 && line[i+1]=='/') {
-                    break;
-                } else {
-                    lcurly=-1;// reset lcurly on any non-ws char
-                }
-            }
-        }
-        if (rcurly != -1) {
-            indent--;
-            next_indent--;
-        }
-        if (lcurly != -1) {
-            next_indent++;
-        }
-        if (lstart != -1) {
-            char_PrintNTimes(' ', out, indent*4);
-            out << RestFrom(line,lstart);
-        }
-        out << eol;
-        indent = i32_Max(next_indent,0);
-    }ind_end;
-}
-
-// -----------------------------------------------------------------------------
-
 void amc::TopoSortVisit(amc::FNs& ns, amc::FCtype& ctype) {
     if (ctype.p_ns == &ns && bool_Update(ctype.topo_visited,true)) {
         ind_beg(amc::ctype_c_field_curs, field,ctype) if (field.p_reftype->cascins) {// cascins
@@ -1126,7 +1076,7 @@ static void Main_Edit() {
         // acr did nothing, exit as quickly as possible
         _exit(0);
     }
-    amc::_db.cmdline.query.expr = "";// revert to a normal run
+    amc::_db.cmdline.query = "";// revert to a normal run
 }
 
 // -----------------------------------------------------------------------------

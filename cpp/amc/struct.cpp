@@ -195,16 +195,31 @@ static void GenStruct_Ctor2(algo_lib::Replscope &R, amc::FCtype &ctype) {
     amc::FFunc *uninit = amc::ind_func_Find(tempstr() << ctype.ctype << "..Uninit");
     bool pooled = PoolHasAllocQ(ctype);
     bool priv_ctor = pooled;
+
+    // We are inside a struct
+    // Print declarations of member functions
+    ind_beg(amc::ctype_c_field_curs,field,ctype) {
+        ind_beg(amc::field_c_ffunc_curs,func,field) {
+            if (func.member) {
+                tempstr proto;
+                PrintFuncProto(func,&ctype,proto);
+                algo::InsertIndent(*ns.hdr, proto,1);
+            }
+        }ind_end;
+    }ind_end;
+
     // default constructor
     if (priv_ctor) {
         Ins(&R, *ns.hdr, "private:");
         ind_beg(amc::ctype_zd_inst_curs,inst,ctype) if (inst.p_reftype->hasalloc) {
             ind_beg(amc::field_c_ffunc_curs,func,inst) if (func.isalloc) {
-                *ns.hdr<<"    ";
-                GenFuncProto(ns,func,false,true);
+                tempstr proto;
+                PrintFuncProto(func,&ctype,proto);
+                algo::InsertIndent(*ns.hdr,proto,1);
             }ind_end;
         }ind_end;
     }
+
     Ins(&R, *ns.hdr, "    $Name();");
     Ins(&R, *ns.inl, "inline $Cpptype::$Name() {");
     // call init function
@@ -345,7 +360,7 @@ void amc::GenStruct(amc::FNs& ns, amc::FCtype& ctype) {// print struct contents
     Set(R, "$comment", comment);
     Ins(&R, *ns.hdr, "struct $Name { // $comment");
     (void)ChunkyTabulated;
-    amc::InsertIndent(*ns.hdr, Tabulated(ctype.body, "\t", "ll", 2), 1);
+    algo::InsertIndent(*ns.hdr, Tabulated(ctype.body, "\t", "ll", 2), 1);
     bool gen_ctor = ctype.c_cpptype && ctype.c_cpptype->ctor;
     if (gen_ctor) {
         GenStruct_Ctor(ctype);

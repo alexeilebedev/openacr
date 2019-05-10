@@ -321,7 +321,7 @@ void                 ns_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 ssim2mysql::FNs&     ns_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 ns_XrefMaybe(ssim2mysql::FNs &row);
 
 // Allocate memory for new default row.
@@ -347,7 +347,7 @@ void                 ctype_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 ssim2mysql::FCtype&  ctype_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 ctype_XrefMaybe(ssim2mysql::FCtype &row);
 
 // Allocate memory for new default row.
@@ -373,7 +373,7 @@ void                 field_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 ssim2mysql::FField&  field_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 field_XrefMaybe(ssim2mysql::FField &row);
 
 // Allocate memory for new default row.
@@ -399,7 +399,7 @@ void                 sqltype_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 ssim2mysql::FSqltype& sqltype_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 sqltype_XrefMaybe(ssim2mysql::FSqltype &row);
 
 // Allocate memory for new default row.
@@ -421,7 +421,7 @@ u64                  cmd_Reserve(u64 n_elems) __attribute__((nothrow));
 // Return number of elements reserved.
 u64                  cmd_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 cmd_XrefMaybe(ssim2mysql::FCmd &row);
 
 // Allocate memory for new default row.
@@ -446,7 +446,7 @@ void                 column_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 ssim2mysql::FColumn& column_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 column_XrefMaybe(ssim2mysql::FColumn &row);
 
 // Main function
@@ -466,7 +466,7 @@ bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow))
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
 
 // Return true if hash is empty
@@ -543,7 +543,7 @@ void                 substr_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 ssim2mysql::FSubstr& substr_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 substr_XrefMaybe(ssim2mysql::FSubstr &row);
 
 // Allocate memory for new default row.
@@ -569,7 +569,7 @@ void                 ssimfile_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 ssim2mysql::FSsimfile& ssimfile_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 ssimfile_XrefMaybe(ssim2mysql::FSsimfile &row);
 
 // Return true if hash is empty
@@ -632,7 +632,7 @@ u64                  input_Reserve(u64 n_elems) __attribute__((nothrow));
 // Return number of elements reserved.
 u64                  input_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 input_XrefMaybe(ssim2mysql::FInput &row);
 
 // Return true if index is empty
@@ -865,7 +865,7 @@ void                 in_buf_EndRead(ssim2mysql::FInput& input) __attribute__((no
 // The returned aryptr excludes the trailing deliminter.
 // SkipMsg will skip both the line and the deliminter.
 // A partial line at the end of input is NOT returned (TODO?)
-// 
+//
 aryptr<char>         in_buf_GetMsg(ssim2mysql::FInput& input) __attribute__((nothrow));
 // Return max. number of bytes in the buffer.
 i32                  in_buf_Max(ssim2mysql::FInput& input) __attribute__((nothrow));
@@ -876,14 +876,14 @@ bool                 in_buf_Refill(ssim2mysql::FInput& input) __attribute__((not
 // Discard contents of the buffer.
 void                 in_buf_RemoveAll(ssim2mysql::FInput& input) __attribute__((nothrow));
 // Mark some buffer contents as read.
-// 
+//
 void                 in_buf_SkipBytes(ssim2mysql::FInput& input, int n) __attribute__((nothrow));
 // Skip current message, if any.
 void                 in_buf_SkipMsg(ssim2mysql::FInput& input) __attribute__((nothrow));
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
-// 
+//
 bool                 in_buf_WriteAll(ssim2mysql::FInput& input, u8 *in, i32 in_n) __attribute__((nothrow));
 
 // Set all fields to initial values.

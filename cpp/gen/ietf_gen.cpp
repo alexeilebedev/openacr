@@ -12,8 +12,8 @@
 #include "include/gen/ietf_gen.inl.h"
 //#pragma endinclude
 namespace ietf {
-static bool          addr_ReadStrptrMaybe(ietf::Ipv4Addr &parent, algo::strptr in_str) __attribute__((nothrow));
-static void          SizeCheck();
+    static bool          addr_ReadStrptrMaybe(ietf::Ipv4Addr &parent, algo::strptr in_str) __attribute__((nothrow));
+    static void          SizeCheck();
 } // end namespace ietf
 
 // --- ietf.FieldId.value.ToCstr

@@ -123,7 +123,7 @@ bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow))
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
 
 // Allocate memory for new default row.
@@ -151,7 +151,7 @@ void                 normcheck_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 atf_norm::FNormcheck& normcheck_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 normcheck_XrefMaybe(atf_norm::FNormcheck &row);
 
 // Allocate memory for new default row.
@@ -177,7 +177,7 @@ void                 ssimfile_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 atf_norm::FSsimfile& ssimfile_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 ssimfile_XrefMaybe(atf_norm::FSsimfile &row);
 
 // Return true if hash is empty
@@ -222,7 +222,7 @@ void                 scriptfile_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 atf_norm::FScriptfile& scriptfile_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 scriptfile_XrefMaybe(atf_norm::FScriptfile &row);
 
 // Return true if hash is empty
@@ -267,7 +267,7 @@ void                 ns_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 atf_norm::FNs&       ns_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 ns_XrefMaybe(atf_norm::FNs &row);
 
 // Return true if hash is empty
@@ -312,7 +312,7 @@ void                 readme_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 atf_norm::FReadme&   readme_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 readme_XrefMaybe(atf_norm::FReadme &row);
 
 // cursor points to valid item
@@ -646,7 +646,9 @@ void                 normcheck_normalize_acr();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_normalize_acr_my();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
-void                 normcheck_clang();
+void                 normcheck_build_clang();
+// User-implemented function from gstatic:atf_norm.FDb.normcheck
+void                 normcheck_build_gcc9();
 int                  main(int argc, char **argv);
 } // end namespace atf_norm
 namespace algo {

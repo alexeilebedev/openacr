@@ -361,12 +361,17 @@ void amc::tfunc_Pool_Delete() {
         }
         Set(R, "$partrace", Refname(*field.p_ctype));
         Ins(&R, fdel.comment, "Remove row from all global and cross indices, then deallocate row");
+        bool haslen = PoolVarlenQ(field);
+        if (haslen) {
+            Set(R, "$totlen", TotlenExpr(R, field.p_arg, "row"));
+            // fetch the length before the destructor runs
+            Ins(&R, fdel.body, "int length = $totlen;");
+        }
         if ((field.p_arg->c_cpptype && field.p_arg->c_cpptype->dtor)||!field.p_arg->c_cpptype) {
             Ins(&R, fdel.body, "row.~$Ctype();");
         }
         if (PoolVarlenQ(field)) {
-            Set(R, "$totlen", TotlenExpr(R, field.p_arg, "row"));
-            Ins(&R, fdel.body, "$name_FreeMem($pararg, &row, $totlen);");// FreeMem takes pointer
+            Ins(&R, fdel.body, "$name_FreeMem($pararg, &row, length);");// FreeMem takes pointer
         } else {
             Ins(&R, fdel.body, "$name_FreeMem($pararg, row);");// FreeMem takes reference
         }

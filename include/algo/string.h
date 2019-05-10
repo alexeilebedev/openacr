@@ -57,7 +57,7 @@ namespace algo {
     struct ListSep {
         strptr sep;
         mutable int iter;
-    ListSep(strptr sep_ = ", ") : sep(sep_), iter(0) {}
+        ListSep(strptr sep_ = ", ") : sep(sep_), iter(0) {}
     };
 
     int CompareNoCase(strptr lhs, strptr rhs)               __attribute__((nothrow));
@@ -87,7 +87,7 @@ namespace algo {
         bool eof;
         int i;
         strptr line;
-    Line_curs(): eof(true),i(-1){}// mostly for coverity
+        Line_curs(): eof(true),i(-1){}// mostly for coverity
     };
 
     // Word cursor (works with ind_beg/ind_end)
@@ -103,7 +103,7 @@ namespace algo {
         strptr text;
         strptr token;// current token
         int index;// current index (may be past token.end)
-    Word_curs() : index(0){}
+        Word_curs() : index(0){}
     };
 
     // -----------------------------------------------------------------------------
@@ -121,13 +121,9 @@ namespace algo {
         explicit tempstr(const strptr& rhs) : cstring(rhs){}
         tempstr(const tempstr &rhs);// move ctor.
         void operator=(strptr s) { cstring::operator =(s); }
+        void operator=(const tempstr &s) { operator=(strptr(s)); }
         ~tempstr();
-        operator const strptr() const {
-            return strptr(ch_elems,ch_n);
-        }
-        operator strptr() {
-            return strptr(ch_elems,ch_n);
-        }
+        operator strptr() const { return strptr((char*)ch_elems,ch_n); }
     };
 
     // -----------------------------------------------------------------------------
@@ -439,6 +435,12 @@ namespace algo { // update-hdr srcfile:'(%/algo/string.%|%/algo/line.%)'
     // Compare two strings whose start address is 16-byte aligned
     // Do not use this function --
     bool AlignedEqual(strptr a, strptr b);
+
+    // insert TEXT into OUT, indenting as necessary;
+    // Initial indentation is INDENT, it's adjusted as necessary as { and } are found
+    // in the TEXT.
+    // Each indent is 4 spaces.
+    void InsertIndent(algo::cstring &out, strptr text, int indent);
 
     // -------------------------------------------------------------------
     // include/algo/string.inl.h

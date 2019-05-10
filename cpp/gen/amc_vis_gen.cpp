@@ -69,33 +69,33 @@ amc_vis::_db_bh_link_curs::~_db_bh_link_curs() {
 }
 
 namespace amc_vis {
-static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
-static bool          field_InputMaybe(dmmeta::Field &elem) __attribute__((nothrow));
-// Load statically available data into tables, register tables and database.
-static void          InitReflection();
-// Find new location for ROW starting at IDX
-// NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int           bh_node_Downheap(amc_vis::FNode& row, int idx) __attribute__((nothrow));
-// Find and return index of new location for element ROW in the heap, starting at index IDX.
-// Move any elements along the way but do not modify ROW.
-static int           bh_node_Upheap(amc_vis::FNode& row, int idx) __attribute__((nothrow));
-static bool          bh_node_ElemLt(amc_vis::FNode &a, amc_vis::FNode &b) __attribute__((nothrow));
-static void          _db_bh_node_curs_Add(_db_bh_node_curs &curs, amc_vis::FNode& row);
-// Find new location for ROW starting at IDX
-// NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int           bh_link_Downheap(amc_vis::Link& row, int idx) __attribute__((nothrow));
-// Find and return index of new location for element ROW in the heap, starting at index IDX.
-// Move any elements along the way but do not modify ROW.
-static int           bh_link_Upheap(amc_vis::Link& row, int idx) __attribute__((nothrow));
-static bool          bh_link_ElemLt(amc_vis::Link &a, amc_vis::Link &b) __attribute__((nothrow));
-static void          _db_bh_link_curs_Add(_db_bh_link_curs &curs, amc_vis::Link& row);
-static bool          reftype_InputMaybe(dmmeta::Reftype &elem) __attribute__((nothrow));
-static bool          finput_InputMaybe(dmmeta::Finput &elem) __attribute__((nothrow));
-// find trace by row id (used to implement reflection)
-static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
-// Function return 1
-static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-static void          SizeCheck();
+    static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
+    static bool          field_InputMaybe(dmmeta::Field &elem) __attribute__((nothrow));
+    // Load statically available data into tables, register tables and database.
+    static void          InitReflection();
+    // Find new location for ROW starting at IDX
+    // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    static int           bh_node_Downheap(amc_vis::FNode& row, int idx) __attribute__((nothrow));
+    // Find and return index of new location for element ROW in the heap, starting at index IDX.
+    // Move any elements along the way but do not modify ROW.
+    static int           bh_node_Upheap(amc_vis::FNode& row, int idx) __attribute__((nothrow));
+    static bool          bh_node_ElemLt(amc_vis::FNode &a, amc_vis::FNode &b) __attribute__((nothrow));
+    static void          _db_bh_node_curs_Add(_db_bh_node_curs &curs, amc_vis::FNode& row);
+    // Find new location for ROW starting at IDX
+    // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    static int           bh_link_Downheap(amc_vis::Link& row, int idx) __attribute__((nothrow));
+    // Find and return index of new location for element ROW in the heap, starting at index IDX.
+    // Move any elements along the way but do not modify ROW.
+    static int           bh_link_Upheap(amc_vis::Link& row, int idx) __attribute__((nothrow));
+    static bool          bh_link_ElemLt(amc_vis::Link &a, amc_vis::Link &b) __attribute__((nothrow));
+    static void          _db_bh_link_curs_Add(_db_bh_link_curs &curs, amc_vis::Link& row);
+    static bool          reftype_InputMaybe(dmmeta::Reftype &elem) __attribute__((nothrow));
+    static bool          finput_InputMaybe(dmmeta::Finput &elem) __attribute__((nothrow));
+    // find trace by row id (used to implement reflection)
+    static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
+    // Function return 1
+    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    static void          SizeCheck();
 } // end namespace amc_vis
 
 // --- amc_vis.FCtype.msghdr.CopyOut
@@ -374,7 +374,7 @@ static bool amc_vis::ctype_InputMaybe(dmmeta::Ctype &elem) {
 
 // --- amc_vis.FDb.ctype.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc_vis::ctype_XrefMaybe(amc_vis::FCtype &row) {
     bool retval = true;
     (void)row;
@@ -471,7 +471,7 @@ static bool amc_vis::field_InputMaybe(dmmeta::Field &elem) {
 
 // --- amc_vis.FDb.field.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc_vis::field_XrefMaybe(amc_vis::FField &row) {
     bool retval = true;
     (void)row;
@@ -636,7 +636,7 @@ bool amc_vis::LoadSsimfileMaybe(algo::strptr fname) {
 
 // --- amc_vis.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc_vis::_db_XrefMaybe() {
     bool retval = true;
     return retval;
@@ -939,7 +939,7 @@ void amc_vis::node_RemoveLast() {
 
 // --- amc_vis.FDb.node.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc_vis::node_XrefMaybe(amc_vis::FNode &row) {
     bool retval = true;
     (void)row;
@@ -1146,7 +1146,7 @@ void amc_vis::link_RemoveLast() {
 
 // --- amc_vis.FDb.link.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc_vis::link_XrefMaybe(amc_vis::Link &row) {
     bool retval = true;
     (void)row;
@@ -1356,7 +1356,7 @@ void amc_vis::linkdep_RemoveLast() {
 
 // --- amc_vis.FDb.linkdep.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc_vis::linkdep_XrefMaybe(amc_vis::Linkdep &row) {
     bool retval = true;
     (void)row;
@@ -1876,7 +1876,7 @@ static bool amc_vis::reftype_InputMaybe(dmmeta::Reftype &elem) {
 
 // --- amc_vis.FDb.reftype.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc_vis::reftype_XrefMaybe(amc_vis::FReftype &row) {
     bool retval = true;
     (void)row;
@@ -2084,7 +2084,7 @@ void amc_vis::nodedep_RemoveLast() {
 
 // --- amc_vis.FDb.nodedep.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc_vis::nodedep_XrefMaybe(amc_vis::FNodedep &row) {
     bool retval = true;
     (void)row;
@@ -2180,7 +2180,7 @@ void amc_vis::outrow_RemoveLast() {
 
 // --- amc_vis.FDb.outrow.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc_vis::outrow_XrefMaybe(amc_vis::Outrow &row) {
     bool retval = true;
     (void)row;
@@ -2340,7 +2340,7 @@ static bool amc_vis::finput_InputMaybe(dmmeta::Finput &elem) {
 
 // --- amc_vis.FDb.finput.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc_vis::finput_XrefMaybe(amc_vis::FFinput &row) {
     bool retval = true;
     (void)row;

@@ -661,7 +661,7 @@ void amc::gen_xref2() {
 void amc::gen_select_ns() {
     // skip namespaces that can't match
     algo_lib::Regx ns_regx;
-    (void)Regx_ReadStrptrMaybe(ns_regx, Pathcomp(amc::_db.cmdline.query.expr,".LL"));
+    (void)Regx_ReadStrptrMaybe(ns_regx, amc::Query_GetNs());
     ind_beg(amc::_db_ns_curs, ns,amc::_db) {
         ns.select = !amc::QueryModeQ()
             || Regx_Match(ns_regx,ns.ns);
@@ -1109,15 +1109,19 @@ void amc::gen_ns_funcindex() {
     }ind_end;
 }
 
+// Print static function prototype declarations
+// to the cpp file
 void amc::gen_ns_print_proto() {
     amc::FNs &ns =*amc::_db.c_ns;
     algo_lib::Replscope R;
     Set(R, "$ns", ns.ns);
     Ins(&R, *ns.cpp,"namespace $ns {");
     ind_beg(amc::ns_c_func_curs, func,ns) {
-        bool print = func.priv && !func.ismacro && !func.globns && !func.oper && !func.disable;
+        bool print = func.priv && !func.ismacro && !func.globns && !func.oper && !func.disable && !func.member;
         if (print) {
-            GenFuncProto(ns, func, false, false);
+            tempstr proto;
+            PrintFuncProto(func, NULL, proto);
+            algo::InsertIndent(*ns.cpp, proto, 1);
         }
     }ind_end;
     Ins(&R, *ns.cpp,"} // end namespace $ns");
@@ -1132,27 +1136,35 @@ void amc::gen_ns_print_struct() {
         }
         ind_beg(amc::ctype_c_field_curs, field,ctype) {
             int n_hdr = ch_N(*ns.hdr);
-            ind_beg(amc::field_c_ffunc_curs, ffunc,field) if (!ffunc.printed && !ffunc.ismacro && !ffunc.globns && !ffunc.disable) {
-                if (!ffunc.priv && !ffunc.oper) {
-                    GenFuncProto(ns,ffunc,false, false);
+            ind_beg(amc::field_c_ffunc_curs, ffunc,field) {
+                if (!ffunc.printed && !ffunc.ismacro && !ffunc.globns && !ffunc.disable) {
+                    if (!ffunc.priv && !ffunc.oper && !ffunc.member) {
+                        tempstr proto;
+                        PrintFuncProto(ffunc,NULL,proto);// goes to header
+                        algo::InsertIndent(*ns.hdr, proto, 0);
+                    }
+                    if (!ffunc.extrn) {
+                        PrintFuncBody(ns,ffunc);// goes to source
+                    }
+                    ffunc.printed=true;
                 }
-                if (!ffunc.extrn) {
-                    GenFuncBody(ns,ffunc);
-                }
-                ffunc.printed=true;
             }ind_end;
             if (ch_N(*ns.hdr) > n_hdr) {
                 *ns.hdr << eol;
             }
         }ind_end;
-        ind_beg(amc::ctype_c_ffunc_curs, ffunc, ctype) if (!ffunc.printed && !ffunc.ismacro && !ffunc.globns && !ffunc.disable) {
-            if (!ffunc.priv && !ffunc.oper) {
-                GenFuncProto(ns,ffunc,false,false);
+        ind_beg(amc::ctype_c_ffunc_curs, ffunc, ctype) {
+            if (!ffunc.printed && !ffunc.ismacro && !ffunc.globns && !ffunc.disable) {
+                if (!ffunc.priv && !ffunc.oper && !ffunc.member) {
+                    tempstr proto;
+                    PrintFuncProto(ffunc,NULL,proto);// goes to header
+                    algo::InsertIndent(*ns.hdr, proto, 0);
+                }
+                if (!ffunc.extrn) {
+                    PrintFuncBody(ns,ffunc);// goes to source
+                }
+                ffunc.printed=true;
             }
-            if (!ffunc.extrn) {
-                GenFuncBody(ns,ffunc);
-            }
-            ffunc.printed=true;
         }ind_end;
     }ind_end;
 }
@@ -1176,14 +1188,18 @@ void amc::gen_ns_func() {
     amc::FNs &ns =*amc::_db.c_ns;
     algo_lib::Replscope R;
     Set(R, "$ns", ns.ns);
-    ind_beg(amc::ns_c_func_curs, func,ns) if (!func.printed && !func.ismacro && !func.disable) {
-        if (!func.priv && !func.oper) {
-            GenFuncProto(ns, func, false,false);
+    ind_beg(amc::ns_c_func_curs, func,ns) {
+        if (!func.printed && !func.ismacro && !func.disable && !func.member) {
+            if (!func.priv && !func.oper) {
+                tempstr proto;
+                PrintFuncProto(func, NULL, proto);
+                algo::InsertIndent(*ns.hdr, proto, 0);
+            }
+            if (!func.extrn) {
+                PrintFuncBody(ns, func);
+            }
+            func.printed = true;
         }
-        if (!func.extrn) {
-            GenFuncBody(ns, func);
-        }
-        func.printed = true;
     }ind_end;
     if (ch_N(ns.ns)) {
         Ins(&R, *ns.hdr,"} // end namespace $ns");

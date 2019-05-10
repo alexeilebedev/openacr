@@ -14,7 +14,7 @@
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
 namespace report {
-static void          SizeCheck();
+    static void          SizeCheck();
 } // end namespace report
 
 // --- report.FieldId.value.ToCstr

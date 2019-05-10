@@ -109,7 +109,7 @@ void                 include_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 src_lim::FInclude&   include_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 include_XrefMaybe(src_lim::FInclude &row);
 
 // Allocate memory for new default row.
@@ -135,7 +135,7 @@ void                 linelim_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 src_lim::FLinelim&   linelim_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 linelim_XrefMaybe(src_lim::FLinelim &row);
 
 // Main function
@@ -155,7 +155,7 @@ bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow))
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
 
 // Allocate memory for new default row.
@@ -181,7 +181,7 @@ void                 targsrc_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 src_lim::FTargsrc&   targsrc_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 targsrc_XrefMaybe(src_lim::FTargsrc &row);
 
 // Allocate memory for new default row.
@@ -207,7 +207,7 @@ void                 gitfile_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 src_lim::FGitfile&   gitfile_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 gitfile_XrefMaybe(src_lim::FGitfile &row);
 
 // Return true if hash is empty

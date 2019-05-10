@@ -70,39 +70,39 @@ const char *atf_unit_syntax =
 ;
 } // namespace atf_unit
 namespace atf_unit {
-// Extract next character from STR and advance IDX
-static int           val_Nextchar(const atf_unit::Cstr& parent, strptr &str, int &idx) __attribute__((nothrow));
-// Returns the child that has greater height.
-static atf_unit::FNumber* tr_number_TallerChild(atf_unit::FNumber& node) __attribute__((nothrow));
-// Disconnects the subtree(branch) from the parent
-static void          tr_number_Disconnect(atf_unit::FNumber& node) __attribute__((nothrow));
-static bool          tr_number_ElemLt(atf_unit::FNumber &a, atf_unit::FNumber &b) __attribute__((nothrow));
-static void          tr_number_updateDepth(atf_unit::FNumber& node) __attribute__((nothrow));
-// rotates the tree in from->to direction
-static void          tr_number_Turn(atf_unit::FNumber& from, atf_unit::FNumber& to) __attribute__((nothrow));
-static void          tr_number_Connect(atf_unit::FNumber* parent, atf_unit::FNumber* child, bool left) __attribute__((nothrow));
-static void          unittest_LoadStatic() __attribute__((nothrow));
-// Load statically available data into tables, register tables and database.
-static void          InitReflection();
-// find trace by row id (used to implement reflection)
-static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
-// Function return 1
-static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Swap values elem_a and elem_b
-static void          sorted_Swap(atf_unit::Dbl &elem_a, atf_unit::Dbl &elem_b) __attribute__((nothrow));
-// Left circular shift of three-tuple
-static void          sorted_Rotleft(atf_unit::Dbl &elem_a, atf_unit::Dbl &elem_b, atf_unit::Dbl &elem_c) __attribute__((nothrow));
-// Compare values elem_a and elem_b
-// The comparison function must be anti-symmetric: if a>b, then !(b>a).
-// If not, mayhem results.
-static bool          sorted_Lt(atf_unit::Dbl elem_a, atf_unit::Dbl elem_b) __attribute__((nothrow));
-// Internal insertion sort
-static void          sorted_IntInsertionSort(atf_unit::Dbl *elems, int n) __attribute__((nothrow));
-// Internal heap sort
-static void          sorted_IntHeapSort(atf_unit::Dbl *elems, int n) __attribute__((nothrow));
-// Quick sort engine
-static void          sorted_IntQuickSort(atf_unit::Dbl *elems, int n, int depth) __attribute__((nothrow));
-static void          SizeCheck();
+    // Extract next character from STR and advance IDX
+    static int           val_Nextchar(const atf_unit::Cstr& parent, strptr &str, int &idx) __attribute__((nothrow));
+    // Returns the child that has greater height.
+    static atf_unit::FNumber* tr_number_TallerChild(atf_unit::FNumber& node) __attribute__((nothrow));
+    // Disconnects the subtree(branch) from the parent
+    static void          tr_number_Disconnect(atf_unit::FNumber& node) __attribute__((nothrow));
+    static bool          tr_number_ElemLt(atf_unit::FNumber &a, atf_unit::FNumber &b) __attribute__((nothrow));
+    static void          tr_number_updateDepth(atf_unit::FNumber& node) __attribute__((nothrow));
+    // rotates the tree in from->to direction
+    static void          tr_number_Turn(atf_unit::FNumber& from, atf_unit::FNumber& to) __attribute__((nothrow));
+    static void          tr_number_Connect(atf_unit::FNumber* parent, atf_unit::FNumber* child, bool left) __attribute__((nothrow));
+    static void          unittest_LoadStatic() __attribute__((nothrow));
+    // Load statically available data into tables, register tables and database.
+    static void          InitReflection();
+    // find trace by row id (used to implement reflection)
+    static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
+    // Function return 1
+    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // Swap values elem_a and elem_b
+    static void          sorted_Swap(atf_unit::Dbl &elem_a, atf_unit::Dbl &elem_b) __attribute__((nothrow));
+    // Left circular shift of three-tuple
+    static void          sorted_Rotleft(atf_unit::Dbl &elem_a, atf_unit::Dbl &elem_b, atf_unit::Dbl &elem_c) __attribute__((nothrow));
+    // Compare values elem_a and elem_b
+    // The comparison function must be anti-symmetric: if a>b, then !(b>a).
+    // If not, mayhem results.
+    static bool          sorted_Lt(atf_unit::Dbl elem_a, atf_unit::Dbl elem_b) __attribute__((nothrow));
+    // Internal insertion sort
+    static void          sorted_IntInsertionSort(atf_unit::Dbl *elems, int n) __attribute__((nothrow));
+    // Internal heap sort
+    static void          sorted_IntHeapSort(atf_unit::Dbl *elems, int n) __attribute__((nothrow));
+    // Quick sort engine
+    static void          sorted_IntQuickSort(atf_unit::Dbl *elems, int n, int depth) __attribute__((nothrow));
+    static void          SizeCheck();
 } // end namespace atf_unit
 
 // --- atf_unit.Cstr.val.Nextchar
@@ -357,7 +357,7 @@ u64 atf_unit::number_ReserveMem(u64 size) {
 
 // --- atf_unit.FDb.number.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_unit::number_XrefMaybe(atf_unit::FNumber &row) {
     bool retval = true;
     (void)row;
@@ -987,7 +987,7 @@ static void atf_unit::unittest_LoadStatic() {
 
 // --- atf_unit.FDb.unittest.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_unit::unittest_XrefMaybe(atf_unit::FUnittest &row) {
     bool retval = true;
     (void)row;
@@ -1084,7 +1084,7 @@ bool atf_unit::LoadSsimfileMaybe(algo::strptr fname) {
 
 // --- atf_unit.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_unit::_db_XrefMaybe() {
     bool retval = true;
     return retval;
@@ -1400,7 +1400,7 @@ void atf_unit::testrun_RemoveLast() {
 
 // --- atf_unit.FDb.testrun.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_unit::testrun_XrefMaybe(atf_unit::FTestrun &row) {
     bool retval = true;
     (void)row;
@@ -2026,7 +2026,7 @@ void atf_unit::orig_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfSort &rhs
 
 // --- atf_unit.FPerfSort.orig.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_unit::orig_XrefMaybe(atf_unit::Dbl &row) {
     bool retval = true;
     (void)row;
@@ -2764,7 +2764,7 @@ void atf_unit::shstream_AbsReserve(atf_unit::ShStreamAry& parent, int n) {
 
 // --- atf_unit.ShStreamAry.shstream.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool atf_unit::shstream_XrefMaybe(atf_unit::ShStream &row) {
     bool retval = true;
     (void)row;

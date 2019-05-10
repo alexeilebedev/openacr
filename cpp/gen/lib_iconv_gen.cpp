@@ -12,13 +12,13 @@
 #include "include/gen/lib_iconv_gen.inl.h"
 //#pragma endinclude
 namespace lib_iconv {
-// Load statically available data into tables, register tables and database.
-static void          InitReflection();
-// find trace by row id (used to implement reflection)
-static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
-// Function return 1
-static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-static void          SizeCheck();
+    // Load statically available data into tables, register tables and database.
+    static void          InitReflection();
+    // find trace by row id (used to implement reflection)
+    static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
+    // Function return 1
+    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    static void          SizeCheck();
 } // end namespace lib_iconv
 
 // --- lib_iconv.trace..Print
@@ -82,7 +82,7 @@ bool lib_iconv::LoadSsimfileMaybe(algo::strptr fname) {
 
 // --- lib_iconv.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool lib_iconv::_db_XrefMaybe() {
     bool retval = true;
     return retval;
@@ -90,7 +90,7 @@ bool lib_iconv::_db_XrefMaybe() {
 
 // --- lib_iconv.FDb.icd.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool lib_iconv::icd_XrefMaybe(lib_iconv::Icd &row) {
     bool retval = true;
     (void)row;

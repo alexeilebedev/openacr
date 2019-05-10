@@ -409,7 +409,7 @@ static void Main_Testgen(algo_lib::Replscope &R) {
     Ins(&R,cmd_gen     ,"$dflt.$cfg-$arch/amc -in_dir:data -out_dir:.testgen/");
     Ins(&R,cmd_diff,
         "(diff -I signature -u -r ./cpp/gen .testgen/cpp/gen; "
-        "diff -I signature -u -r ./include/gen .testgen/include/gen) | hilite -d | cat");
+        "diff -I signature -u -r ./include/gen .testgen/include/gen) | hilite -d | limit-output 10000");
 
     Ins(&R,cmd_build   ,"cd .testgen && bin/abt -uname:$uname -compiler:$compiler -cfg:$cfg -arch:$arch %");
     Ins(&R,cmd_test    ,"cd .testgen && $dflt.$cfg-$arch/atf_unit % >/dev/null 2>&1 || $dflt.$cfg-$arch/atf_unit %");
@@ -607,8 +607,17 @@ static void Main_CreateCmds(algo_lib::Replscope &R, abt::FTarget &target, abt::F
 // -----------------------------------------------------------------------------
 
 static void Main_GuessUname() {
+    if (!ch_N(abt::_db.cmdline.uname))    abt::_db.cmdline.uname    = getenv("UNAME");
+    if (!ch_N(abt::_db.cmdline.compiler)) abt::_db.cmdline.compiler = getenv("COMPILER");
+    if (!ch_N(abt::_db.cmdline.cfg))      abt::_db.cmdline.cfg      = getenv("CFG");
+    if (!ch_N(abt::_db.cmdline.arch))     abt::_db.cmdline.arch     = getenv("ARCH");
+
     if (!ch_N(abt::_db.cmdline.compiler)) abt::_db.cmdline.compiler = "g++"; // default compiler
-    if (!ch_N(abt::_db.cmdline.cfg))      abt::_db.cmdline.cfg      = dev_Cfg_cfg_release; // default config
+
+    // pick a default config
+    if (!ch_N(abt::_db.cmdline.cfg)) {
+        abt::_db.cmdline.cfg = abt::_db.cmdline.testgen ? dev_Cfg_cfg_debug : dev_Cfg_cfg_release;
+    }
 
     if (!ch_N(abt::_db.cmdline.arch) || !ch_N(abt::_db.cmdline.uname)) {
         struct utsname un;
@@ -618,10 +627,10 @@ static void Main_GuessUname() {
     }
 
     // cause errors if any of these guys are not found
-    vrfy(abt::ind_uname_Find   (abt::_db.cmdline.uname)   , tempstr()<<"abt.bad_uname  uname:"<<abt::_db.cmdline.uname);
-    vrfy(abt::ind_compiler_Find(abt::_db.cmdline.compiler), tempstr()<<"abt.bad_compiler  compiler:"<<abt::_db.cmdline.compiler);
-    vrfy(abt::ind_cfg_Find     (abt::_db.cmdline.cfg)     , tempstr()<<"abt.bad_cfg  cfg:"<<abt::_db.cmdline.cfg);
-    vrfy(abt::ind_arch_Find    (abt::_db.cmdline.arch)    , tempstr()<<"abt.bad_arch  arch:"<<abt::_db.cmdline.arch);
+    vrfy(abt::ind_uname_Find   (abt::_db.cmdline.uname)   , tempstr()<<"abt.bad_uname"   <<Keyval("uname",abt::_db.cmdline.uname));
+    vrfy(abt::ind_compiler_Find(abt::_db.cmdline.compiler), tempstr()<<"abt.bad_compiler"<<Keyval("compiler",abt::_db.cmdline.compiler));
+    vrfy(abt::ind_cfg_Find     (abt::_db.cmdline.cfg)     , tempstr()<<"abt.bad_cfg"     <<Keyval("cfg",abt::_db.cmdline.cfg));
+    vrfy(abt::ind_arch_Find    (abt::_db.cmdline.arch)    , tempstr()<<"abt.bad_arch"    <<Keyval("arch",abt::_db.cmdline.arch));
 }
 
 // -----------------------------------------------------------------------------
@@ -774,7 +783,9 @@ static void Main_ShowOod() {
               <<Keyval("uname",abt::_db.cmdline.uname)
               <<Keyval("arch",abt::_db.cmdline.arch)
               <<Keyval("compiler",abt::_db.cmdline.compiler)
-              <<Keyval("cache",(abt::_db.ccache ? "ccache" : abt::_db.gcache ? "gcache" : "none")));
+              <<Keyval("cache",(abt::_db.ccache ? "ccache" : abt::_db.gcache ? "gcache" : "none"))
+              <<Keyval("out_dir",abt::_db.cmdline.out_dir)
+              );
         prlog("abt.outofdate"
               <<Keyval("pch", ood_pch)
               <<Keyval("src", ood_src)
@@ -826,14 +837,13 @@ static void Main_BuildParams(algo_lib::Replscope& R) {
     if (!ch_N(abt::_db.cmdline.out_dir)) {
         abt::_db.cmdline.out_dir << abt::_db.c_compiler->dflt << "." << abt::_db.cmdline.cfg << "-" << abt::_db.cmdline.arch;
     }
-    //Set scope for replacements.
+    //initialize replacements
     Set(R,"$uname"   ,abt::_db.cmdline.uname);
     Set(R,"$compiler",abt::_db.cmdline.compiler);
     Set(R,"$cfg"     ,abt::_db.cmdline.cfg);
     Set(R,"$arch"    ,abt::_db.cmdline.arch);
     Set(R,"$dflt"    ,abt::_db.c_compiler->dflt);
     Set(R,"$ranlib"    ,abt::_db.c_compiler->ranlib);
-    //Set(R,"$ar"    ,abt::_db.c_compiler->ar);
 }
 
 // -----------------------------------------------------------------------------
@@ -861,7 +871,7 @@ void abt::Main() {
     algo_lib::Replscope R;
     Main_BuildParams(R);
 
-    Main_SelectTarget();// select targets
+    Main_SelectTarget();
     if (abt::_db.report.n_err) {
         return;
     }

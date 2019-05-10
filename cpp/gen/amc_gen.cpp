@@ -78,204 +78,204 @@ amc::field_bh_bitfld_curs::~field_bh_bitfld_curs() {
 }
 
 namespace amc {
-// Extract next character from STR and advance IDX
-static int           str_Nextchar(const amc::Enumstr& parent, strptr &str, int &idx) __attribute__((nothrow));
-// Swap values elem_a and elem_b
-static void          c_field_Swap(amc::FField* &elem_a, amc::FField* &elem_b) __attribute__((nothrow));
-// Left circular shift of three-tuple
-static void          c_field_Rotleft(amc::FField* &elem_a, amc::FField* &elem_b, amc::FField* &elem_c) __attribute__((nothrow));
-// Compare values elem_a and elem_b
-// The comparison function must be anti-symmetric: if a>b, then !(b>a).
-// If not, mayhem results.
-static bool          c_field_Lt(amc::FField &elem_a, amc::FField &elem_b) __attribute__((nothrow));
-// Internal insertion sort
-static void          c_field_IntInsertionSort(amc::FField* *elems, int n) __attribute__((nothrow));
-// Internal heap sort
-static void          c_field_IntHeapSort(amc::FField* *elems, int n) __attribute__((nothrow));
-// Quick sort engine
-static void          c_field_IntQuickSort(amc::FField* *elems, int n, int depth) __attribute__((nothrow));
-static bool          fsort_InputMaybe(dmmeta::Fsort &elem) __attribute__((nothrow));
-static bool          dispfilter_InputMaybe(dmmeta::Dispfilter &elem) __attribute__((nothrow));
-static bool          usertracefld_InputMaybe(dmmeta::Usertracefld &elem) __attribute__((nothrow));
-static bool          cfmt_InputMaybe(dmmeta::Cfmt &elem) __attribute__((nothrow));
-static bool          dispatch_InputMaybe(dmmeta::Dispatch &elem) __attribute__((nothrow));
-static bool          dispatch_msg_InputMaybe(dmmeta::DispatchMsg &elem) __attribute__((nothrow));
-static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
-static bool          field_InputMaybe(dmmeta::Field &elem) __attribute__((nothrow));
-static bool          basepool_InputMaybe(dmmeta::Basepool &elem) __attribute__((nothrow));
-static bool          llist_InputMaybe(dmmeta::Llist &elem) __attribute__((nothrow));
-static bool          anonfld_InputMaybe(dmmeta::Anonfld &elem) __attribute__((nothrow));
-static bool          xref_InputMaybe(dmmeta::Xref &elem) __attribute__((nothrow));
-static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
-static bool          pnew_InputMaybe(dmmeta::Pnew &elem) __attribute__((nothrow));
-static bool          fldoffset_InputMaybe(dmmeta::Fldoffset &elem) __attribute__((nothrow));
-static bool          typefld_InputMaybe(dmmeta::Typefld &elem) __attribute__((nothrow));
-static bool          lenfld_InputMaybe(dmmeta::Lenfld &elem) __attribute__((nothrow));
-static bool          bltin_InputMaybe(amcdb::Bltin &elem) __attribute__((nothrow));
-static bool          msgtype_InputMaybe(dmmeta::Msgtype &elem) __attribute__((nothrow));
-static bool          gconst_InputMaybe(dmmeta::Gconst &elem) __attribute__((nothrow));
-static bool          gstatic_InputMaybe(dmmeta::Gstatic &elem) __attribute__((nothrow));
-static bool          thash_InputMaybe(dmmeta::Thash &elem) __attribute__((nothrow));
-static bool          func_InputMaybe(dmmeta::Func &elem) __attribute__((nothrow));
-static bool          smallstr_InputMaybe(dmmeta::Smallstr &elem) __attribute__((nothrow));
-static bool          numstr_InputMaybe(dmmeta::Numstr &elem) __attribute__((nothrow));
-static bool          main_InputMaybe(dmmeta::Main &elem) __attribute__((nothrow));
-static void          reftype_LoadStatic() __attribute__((nothrow));
-// Load statically available data into tables, register tables and database.
-static void          InitReflection();
-static bool          cpptype_InputMaybe(dmmeta::Cpptype &elem) __attribute__((nothrow));
-static bool          inlary_InputMaybe(dmmeta::Inlary &elem) __attribute__((nothrow));
-static bool          tary_InputMaybe(dmmeta::Tary &elem) __attribute__((nothrow));
-static bool          cppfunc_InputMaybe(dmmeta::Cppfunc &elem) __attribute__((nothrow));
-static bool          rowid_InputMaybe(dmmeta::Rowid &elem) __attribute__((nothrow));
-static bool          cascdel_InputMaybe(dmmeta::Cascdel &elem) __attribute__((nothrow));
-static bool          substr_InputMaybe(dmmeta::Substr &elem) __attribute__((nothrow));
-static bool          bitfld_InputMaybe(dmmeta::Bitfld &elem) __attribute__((nothrow));
-static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
-static bool          pack_InputMaybe(dmmeta::Pack &elem) __attribute__((nothrow));
-static bool          ptrary_InputMaybe(dmmeta::Ptrary &elem) __attribute__((nothrow));
-// Swap values elem_a and elem_b
-static void          c_ctype_sorted_Swap(amc::FCtype* &elem_a, amc::FCtype* &elem_b) __attribute__((nothrow));
-// Left circular shift of three-tuple
-static void          c_ctype_sorted_Rotleft(amc::FCtype* &elem_a, amc::FCtype* &elem_b, amc::FCtype* &elem_c) __attribute__((nothrow));
-// Compare values elem_a and elem_b
-// The comparison function must be anti-symmetric: if a>b, then !(b>a).
-// If not, mayhem results.
-static bool          c_ctype_sorted_Lt(amc::FCtype &elem_a, amc::FCtype &elem_b) __attribute__((nothrow));
-// Internal insertion sort
-static void          c_ctype_sorted_IntInsertionSort(amc::FCtype* *elems, int n) __attribute__((nothrow));
-// Internal heap sort
-static void          c_ctype_sorted_IntHeapSort(amc::FCtype* *elems, int n) __attribute__((nothrow));
-// Quick sort engine
-static void          c_ctype_sorted_IntQuickSort(amc::FCtype* *elems, int n, int depth) __attribute__((nothrow));
-// Find new location for ROW starting at IDX
-// NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int           bh_enumstr_len_Downheap(amc::FEnumstrLen& row, int idx) __attribute__((nothrow));
-// Find and return index of new location for element ROW in the heap, starting at index IDX.
-// Move any elements along the way but do not modify ROW.
-static int           bh_enumstr_len_Upheap(amc::FEnumstrLen& row, int idx) __attribute__((nothrow));
-static bool          bh_enumstr_len_ElemLt(amc::FEnumstrLen &a, amc::FEnumstrLen &b) __attribute__((nothrow));
-static void          _db_bh_enumstr_len_curs_Add(_db_bh_enumstr_len_curs &curs, amc::FEnumstrLen& row);
-static bool          fbitset_InputMaybe(dmmeta::Fbitset &elem) __attribute__((nothrow));
-static bool          fcleanup_InputMaybe(dmmeta::Fcleanup &elem) __attribute__((nothrow));
-static bool          fdec_InputMaybe(dmmeta::Fdec &elem) __attribute__((nothrow));
-static bool          fconst_InputMaybe(dmmeta::Fconst &elem) __attribute__((nothrow));
-static bool          finput_InputMaybe(dmmeta::Finput &elem) __attribute__((nothrow));
-static bool          foutput_InputMaybe(dmmeta::Foutput &elem) __attribute__((nothrow));
-static bool          fbuf_InputMaybe(dmmeta::Fbuf &elem) __attribute__((nothrow));
-static bool          chash_InputMaybe(dmmeta::Chash &elem) __attribute__((nothrow));
-static bool          ccmp_InputMaybe(dmmeta::Ccmp &elem) __attribute__((nothrow));
-static bool          fbigend_InputMaybe(dmmeta::Fbigend &elem) __attribute__((nothrow));
-static bool          cstr_InputMaybe(dmmeta::Cstr &elem) __attribute__((nothrow));
-static bool          listtype_InputMaybe(dmmeta::Listtype &elem) __attribute__((nothrow));
-static bool          fstep_InputMaybe(dmmeta::Fstep &elem) __attribute__((nothrow));
-static bool          cextern_InputMaybe(dmmeta::Cextern &elem) __attribute__((nothrow));
-static bool          fdelay_InputMaybe(dmmeta::Fdelay &elem) __attribute__((nothrow));
-static bool          disptrace_InputMaybe(dmmeta::Disptrace &elem) __attribute__((nothrow));
-// Swap values elem_a and elem_b
-static void          c_dispsig_sorted_Swap(amc::FDispsig* &elem_a, amc::FDispsig* &elem_b) __attribute__((nothrow));
-// Left circular shift of three-tuple
-static void          c_dispsig_sorted_Rotleft(amc::FDispsig* &elem_a, amc::FDispsig* &elem_b, amc::FDispsig* &elem_c) __attribute__((nothrow));
-// Compare values elem_a and elem_b
-// The comparison function must be anti-symmetric: if a>b, then !(b>a).
-// If not, mayhem results.
-static bool          c_dispsig_sorted_Lt(amc::FDispsig &elem_a, amc::FDispsig &elem_b) __attribute__((nothrow));
-// Internal insertion sort
-static void          c_dispsig_sorted_IntInsertionSort(amc::FDispsig* *elems, int n) __attribute__((nothrow));
-// Internal heap sort
-static void          c_dispsig_sorted_IntHeapSort(amc::FDispsig* *elems, int n) __attribute__((nothrow));
-// Quick sort engine
-static void          c_dispsig_sorted_IntQuickSort(amc::FDispsig* *elems, int n, int depth) __attribute__((nothrow));
-static bool          target_InputMaybe(dev::Target &elem) __attribute__((nothrow));
-static bool          targdep_InputMaybe(dev::Targdep &elem) __attribute__((nothrow));
-static bool          dispctx_InputMaybe(dmmeta::Dispctx &elem) __attribute__((nothrow));
-static bool          pmaskfld_InputMaybe(dmmeta::Pmaskfld &elem) __attribute__((nothrow));
-static bool          fwddecl_InputMaybe(dmmeta::Fwddecl &elem) __attribute__((nothrow));
-static void          tfunc_LoadStatic() __attribute__((nothrow));
-static void          gen_LoadStatic() __attribute__((nothrow));
-static bool          fregx_InputMaybe(dmmeta::Fregx &elem) __attribute__((nothrow));
-static void          tclass_LoadStatic() __attribute__((nothrow));
-static bool          fcmp_InputMaybe(dmmeta::Fcmp &elem) __attribute__((nothrow));
-static bool          fcast_InputMaybe(dmmeta::Fcast &elem) __attribute__((nothrow));
-static bool          noxref_InputMaybe(dmmeta::Noxref &elem) __attribute__((nothrow));
-static bool          nocascdel_InputMaybe(dmmeta::Nocascdel &elem) __attribute__((nothrow));
-static bool          cafter_InputMaybe(dmmeta::Cafter &elem) __attribute__((nothrow));
-static bool          csize_InputMaybe(dmmeta::Csize &elem) __attribute__((nothrow));
-static bool          nsx_InputMaybe(dmmeta::Nsx &elem) __attribute__((nothrow));
-static bool          fcompact_InputMaybe(dmmeta::Fcompact &elem) __attribute__((nothrow));
-static bool          findrem_InputMaybe(dmmeta::Findrem &elem) __attribute__((nothrow));
-static bool          tcursor_InputMaybe(amcdb::Tcursor &elem) __attribute__((nothrow));
-static bool          fcurs_InputMaybe(dmmeta::Fcurs &elem) __attribute__((nothrow));
-static bool          cdflt_InputMaybe(dmmeta::Cdflt &elem) __attribute__((nothrow));
-static bool          argvtype_InputMaybe(dmmeta::Argvtype &elem) __attribute__((nothrow));
-static bool          fcmdline_InputMaybe(dmmeta::Fcmdline &elem) __attribute__((nothrow));
-static bool          floadtuples_InputMaybe(dmmeta::Floadtuples &elem) __attribute__((nothrow));
-static bool          fcmap_InputMaybe(dmmeta::Fcmap &elem) __attribute__((nothrow));
-static bool          nsproto_InputMaybe(dmmeta::Nsproto &elem) __attribute__((nothrow));
-static bool          nsdb_InputMaybe(dmmeta::Nsdb &elem) __attribute__((nothrow));
-static bool          fprefix_InputMaybe(dmmeta::Fprefix &elem) __attribute__((nothrow));
-static bool          ftrace_InputMaybe(dmmeta::Ftrace &elem) __attribute__((nothrow));
-static bool          fnoremove_InputMaybe(dmmeta::Fnoremove &elem) __attribute__((nothrow));
-// Swap values elem_a and elem_b
-static void          c_substr_field_Swap(amc::FSubstr* &elem_a, amc::FSubstr* &elem_b) __attribute__((nothrow));
-// Left circular shift of three-tuple
-static void          c_substr_field_Rotleft(amc::FSubstr* &elem_a, amc::FSubstr* &elem_b, amc::FSubstr* &elem_c) __attribute__((nothrow));
-// Compare values elem_a and elem_b
-// The comparison function must be anti-symmetric: if a>b, then !(b>a).
-// If not, mayhem results.
-static bool          c_substr_field_Lt(amc::FSubstr &elem_a, amc::FSubstr &elem_b) __attribute__((nothrow));
-// Internal insertion sort
-static void          c_substr_field_IntInsertionSort(amc::FSubstr* *elems, int n) __attribute__((nothrow));
-// Internal heap sort
-static void          c_substr_field_IntHeapSort(amc::FSubstr* *elems, int n) __attribute__((nothrow));
-// Quick sort engine
-static void          c_substr_field_IntQuickSort(amc::FSubstr* *elems, int n, int depth) __attribute__((nothrow));
-// Swap values elem_a and elem_b
-static void          c_ctypelen_Swap(amc::FCtypelen* &elem_a, amc::FCtypelen* &elem_b) __attribute__((nothrow));
-// Left circular shift of three-tuple
-static void          c_ctypelen_Rotleft(amc::FCtypelen* &elem_a, amc::FCtypelen* &elem_b, amc::FCtypelen* &elem_c) __attribute__((nothrow));
-// Compare values elem_a and elem_b
-// The comparison function must be anti-symmetric: if a>b, then !(b>a).
-// If not, mayhem results.
-static bool          c_ctypelen_Lt(amc::FCtypelen &elem_a, amc::FCtypelen &elem_b) __attribute__((nothrow));
-// Internal insertion sort
-static void          c_ctypelen_IntInsertionSort(amc::FCtypelen* *elems, int n) __attribute__((nothrow));
-// Internal heap sort
-static void          c_ctypelen_IntHeapSort(amc::FCtypelen* *elems, int n) __attribute__((nothrow));
-// Quick sort engine
-static void          c_ctypelen_IntQuickSort(amc::FCtypelen* *elems, int n, int depth) __attribute__((nothrow));
-static bool          fbase_InputMaybe(dmmeta::Fbase &elem) __attribute__((nothrow));
-static bool          nossimfile_InputMaybe(dmmeta::Nossimfile &elem) __attribute__((nothrow));
-static bool          gsymbol_InputMaybe(dmmeta::Gsymbol &elem) __attribute__((nothrow));
-static bool          sortfld_InputMaybe(dmmeta::Sortfld &elem) __attribute__((nothrow));
-static bool          cget_InputMaybe(dmmeta::Cget &elem) __attribute__((nothrow));
-static bool          cdecl_InputMaybe(dmmeta::Cdecl &elem) __attribute__((nothrow));
-static bool          hook_InputMaybe(dmmeta::Hook &elem) __attribute__((nothrow));
-static bool          charset_InputMaybe(dmmeta::Charset &elem) __attribute__((nothrow));
-static bool          nsinclude_InputMaybe(dmmeta::Nsinclude &elem) __attribute__((nothrow));
-static bool          ssimvolatile_InputMaybe(dmmeta::Ssimvolatile &elem) __attribute__((nothrow));
-static bool          funique_InputMaybe(dmmeta::Funique &elem) __attribute__((nothrow));
-// find trace by row id (used to implement reflection)
-static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
-// Function return 1
-static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Find new location for ROW starting at IDX
-// NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int           bh_enumstr_Downheap(amc::FEnumstrLen& enumstr_len, amc::FEnumstr& row, int idx) __attribute__((nothrow));
-// Find and return index of new location for element ROW in the heap, starting at index IDX.
-// Move any elements along the way but do not modify ROW.
-static int           bh_enumstr_Upheap(amc::FEnumstrLen& enumstr_len, amc::FEnumstr& row, int idx) __attribute__((nothrow));
-static bool          bh_enumstr_ElemLt(amc::FEnumstrLen& enumstr_len, amc::FEnumstr &a, amc::FEnumstr &b) __attribute__((nothrow));
-static void          enumstr_len_bh_enumstr_curs_Add(enumstr_len_bh_enumstr_curs &curs, amc::FEnumstr& row);
-// Find new location for ROW starting at IDX
-// NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int           bh_bitfld_Downheap(amc::FField& field, amc::FBitfld& row, int idx) __attribute__((nothrow));
-// Find and return index of new location for element ROW in the heap, starting at index IDX.
-// Move any elements along the way but do not modify ROW.
-static int           bh_bitfld_Upheap(amc::FField& field, amc::FBitfld& row, int idx) __attribute__((nothrow));
-static bool          bh_bitfld_ElemLt(amc::FField& field, amc::FBitfld &a, amc::FBitfld &b) __attribute__((nothrow));
-static void          field_bh_bitfld_curs_Add(field_bh_bitfld_curs &curs, amc::FBitfld& row);
-static void          SizeCheck();
+    // Extract next character from STR and advance IDX
+    static int           str_Nextchar(const amc::Enumstr& parent, strptr &str, int &idx) __attribute__((nothrow));
+    // Swap values elem_a and elem_b
+    static void          c_field_Swap(amc::FField* &elem_a, amc::FField* &elem_b) __attribute__((nothrow));
+    // Left circular shift of three-tuple
+    static void          c_field_Rotleft(amc::FField* &elem_a, amc::FField* &elem_b, amc::FField* &elem_c) __attribute__((nothrow));
+    // Compare values elem_a and elem_b
+    // The comparison function must be anti-symmetric: if a>b, then !(b>a).
+    // If not, mayhem results.
+    static bool          c_field_Lt(amc::FField &elem_a, amc::FField &elem_b) __attribute__((nothrow));
+    // Internal insertion sort
+    static void          c_field_IntInsertionSort(amc::FField* *elems, int n) __attribute__((nothrow));
+    // Internal heap sort
+    static void          c_field_IntHeapSort(amc::FField* *elems, int n) __attribute__((nothrow));
+    // Quick sort engine
+    static void          c_field_IntQuickSort(amc::FField* *elems, int n, int depth) __attribute__((nothrow));
+    static bool          fsort_InputMaybe(dmmeta::Fsort &elem) __attribute__((nothrow));
+    static bool          dispfilter_InputMaybe(dmmeta::Dispfilter &elem) __attribute__((nothrow));
+    static bool          usertracefld_InputMaybe(dmmeta::Usertracefld &elem) __attribute__((nothrow));
+    static bool          cfmt_InputMaybe(dmmeta::Cfmt &elem) __attribute__((nothrow));
+    static bool          dispatch_InputMaybe(dmmeta::Dispatch &elem) __attribute__((nothrow));
+    static bool          dispatch_msg_InputMaybe(dmmeta::DispatchMsg &elem) __attribute__((nothrow));
+    static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
+    static bool          field_InputMaybe(dmmeta::Field &elem) __attribute__((nothrow));
+    static bool          basepool_InputMaybe(dmmeta::Basepool &elem) __attribute__((nothrow));
+    static bool          llist_InputMaybe(dmmeta::Llist &elem) __attribute__((nothrow));
+    static bool          anonfld_InputMaybe(dmmeta::Anonfld &elem) __attribute__((nothrow));
+    static bool          xref_InputMaybe(dmmeta::Xref &elem) __attribute__((nothrow));
+    static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
+    static bool          pnew_InputMaybe(dmmeta::Pnew &elem) __attribute__((nothrow));
+    static bool          fldoffset_InputMaybe(dmmeta::Fldoffset &elem) __attribute__((nothrow));
+    static bool          typefld_InputMaybe(dmmeta::Typefld &elem) __attribute__((nothrow));
+    static bool          lenfld_InputMaybe(dmmeta::Lenfld &elem) __attribute__((nothrow));
+    static bool          bltin_InputMaybe(amcdb::Bltin &elem) __attribute__((nothrow));
+    static bool          msgtype_InputMaybe(dmmeta::Msgtype &elem) __attribute__((nothrow));
+    static bool          gconst_InputMaybe(dmmeta::Gconst &elem) __attribute__((nothrow));
+    static bool          gstatic_InputMaybe(dmmeta::Gstatic &elem) __attribute__((nothrow));
+    static bool          thash_InputMaybe(dmmeta::Thash &elem) __attribute__((nothrow));
+    static bool          func_InputMaybe(dmmeta::Func &elem) __attribute__((nothrow));
+    static bool          smallstr_InputMaybe(dmmeta::Smallstr &elem) __attribute__((nothrow));
+    static bool          numstr_InputMaybe(dmmeta::Numstr &elem) __attribute__((nothrow));
+    static bool          main_InputMaybe(dmmeta::Main &elem) __attribute__((nothrow));
+    static void          reftype_LoadStatic() __attribute__((nothrow));
+    // Load statically available data into tables, register tables and database.
+    static void          InitReflection();
+    static bool          cpptype_InputMaybe(dmmeta::Cpptype &elem) __attribute__((nothrow));
+    static bool          inlary_InputMaybe(dmmeta::Inlary &elem) __attribute__((nothrow));
+    static bool          tary_InputMaybe(dmmeta::Tary &elem) __attribute__((nothrow));
+    static bool          cppfunc_InputMaybe(dmmeta::Cppfunc &elem) __attribute__((nothrow));
+    static bool          rowid_InputMaybe(dmmeta::Rowid &elem) __attribute__((nothrow));
+    static bool          cascdel_InputMaybe(dmmeta::Cascdel &elem) __attribute__((nothrow));
+    static bool          substr_InputMaybe(dmmeta::Substr &elem) __attribute__((nothrow));
+    static bool          bitfld_InputMaybe(dmmeta::Bitfld &elem) __attribute__((nothrow));
+    static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
+    static bool          pack_InputMaybe(dmmeta::Pack &elem) __attribute__((nothrow));
+    static bool          ptrary_InputMaybe(dmmeta::Ptrary &elem) __attribute__((nothrow));
+    // Swap values elem_a and elem_b
+    static void          c_ctype_sorted_Swap(amc::FCtype* &elem_a, amc::FCtype* &elem_b) __attribute__((nothrow));
+    // Left circular shift of three-tuple
+    static void          c_ctype_sorted_Rotleft(amc::FCtype* &elem_a, amc::FCtype* &elem_b, amc::FCtype* &elem_c) __attribute__((nothrow));
+    // Compare values elem_a and elem_b
+    // The comparison function must be anti-symmetric: if a>b, then !(b>a).
+    // If not, mayhem results.
+    static bool          c_ctype_sorted_Lt(amc::FCtype &elem_a, amc::FCtype &elem_b) __attribute__((nothrow));
+    // Internal insertion sort
+    static void          c_ctype_sorted_IntInsertionSort(amc::FCtype* *elems, int n) __attribute__((nothrow));
+    // Internal heap sort
+    static void          c_ctype_sorted_IntHeapSort(amc::FCtype* *elems, int n) __attribute__((nothrow));
+    // Quick sort engine
+    static void          c_ctype_sorted_IntQuickSort(amc::FCtype* *elems, int n, int depth) __attribute__((nothrow));
+    // Find new location for ROW starting at IDX
+    // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    static int           bh_enumstr_len_Downheap(amc::FEnumstrLen& row, int idx) __attribute__((nothrow));
+    // Find and return index of new location for element ROW in the heap, starting at index IDX.
+    // Move any elements along the way but do not modify ROW.
+    static int           bh_enumstr_len_Upheap(amc::FEnumstrLen& row, int idx) __attribute__((nothrow));
+    static bool          bh_enumstr_len_ElemLt(amc::FEnumstrLen &a, amc::FEnumstrLen &b) __attribute__((nothrow));
+    static void          _db_bh_enumstr_len_curs_Add(_db_bh_enumstr_len_curs &curs, amc::FEnumstrLen& row);
+    static bool          fbitset_InputMaybe(dmmeta::Fbitset &elem) __attribute__((nothrow));
+    static bool          fcleanup_InputMaybe(dmmeta::Fcleanup &elem) __attribute__((nothrow));
+    static bool          fdec_InputMaybe(dmmeta::Fdec &elem) __attribute__((nothrow));
+    static bool          fconst_InputMaybe(dmmeta::Fconst &elem) __attribute__((nothrow));
+    static bool          finput_InputMaybe(dmmeta::Finput &elem) __attribute__((nothrow));
+    static bool          foutput_InputMaybe(dmmeta::Foutput &elem) __attribute__((nothrow));
+    static bool          fbuf_InputMaybe(dmmeta::Fbuf &elem) __attribute__((nothrow));
+    static bool          chash_InputMaybe(dmmeta::Chash &elem) __attribute__((nothrow));
+    static bool          ccmp_InputMaybe(dmmeta::Ccmp &elem) __attribute__((nothrow));
+    static bool          fbigend_InputMaybe(dmmeta::Fbigend &elem) __attribute__((nothrow));
+    static bool          cstr_InputMaybe(dmmeta::Cstr &elem) __attribute__((nothrow));
+    static bool          listtype_InputMaybe(dmmeta::Listtype &elem) __attribute__((nothrow));
+    static bool          fstep_InputMaybe(dmmeta::Fstep &elem) __attribute__((nothrow));
+    static bool          cextern_InputMaybe(dmmeta::Cextern &elem) __attribute__((nothrow));
+    static bool          fdelay_InputMaybe(dmmeta::Fdelay &elem) __attribute__((nothrow));
+    static bool          disptrace_InputMaybe(dmmeta::Disptrace &elem) __attribute__((nothrow));
+    // Swap values elem_a and elem_b
+    static void          c_dispsig_sorted_Swap(amc::FDispsig* &elem_a, amc::FDispsig* &elem_b) __attribute__((nothrow));
+    // Left circular shift of three-tuple
+    static void          c_dispsig_sorted_Rotleft(amc::FDispsig* &elem_a, amc::FDispsig* &elem_b, amc::FDispsig* &elem_c) __attribute__((nothrow));
+    // Compare values elem_a and elem_b
+    // The comparison function must be anti-symmetric: if a>b, then !(b>a).
+    // If not, mayhem results.
+    static bool          c_dispsig_sorted_Lt(amc::FDispsig &elem_a, amc::FDispsig &elem_b) __attribute__((nothrow));
+    // Internal insertion sort
+    static void          c_dispsig_sorted_IntInsertionSort(amc::FDispsig* *elems, int n) __attribute__((nothrow));
+    // Internal heap sort
+    static void          c_dispsig_sorted_IntHeapSort(amc::FDispsig* *elems, int n) __attribute__((nothrow));
+    // Quick sort engine
+    static void          c_dispsig_sorted_IntQuickSort(amc::FDispsig* *elems, int n, int depth) __attribute__((nothrow));
+    static bool          target_InputMaybe(dev::Target &elem) __attribute__((nothrow));
+    static bool          targdep_InputMaybe(dev::Targdep &elem) __attribute__((nothrow));
+    static bool          dispctx_InputMaybe(dmmeta::Dispctx &elem) __attribute__((nothrow));
+    static bool          pmaskfld_InputMaybe(dmmeta::Pmaskfld &elem) __attribute__((nothrow));
+    static bool          fwddecl_InputMaybe(dmmeta::Fwddecl &elem) __attribute__((nothrow));
+    static void          tfunc_LoadStatic() __attribute__((nothrow));
+    static void          gen_LoadStatic() __attribute__((nothrow));
+    static bool          fregx_InputMaybe(dmmeta::Fregx &elem) __attribute__((nothrow));
+    static void          tclass_LoadStatic() __attribute__((nothrow));
+    static bool          fcmp_InputMaybe(dmmeta::Fcmp &elem) __attribute__((nothrow));
+    static bool          fcast_InputMaybe(dmmeta::Fcast &elem) __attribute__((nothrow));
+    static bool          noxref_InputMaybe(dmmeta::Noxref &elem) __attribute__((nothrow));
+    static bool          nocascdel_InputMaybe(dmmeta::Nocascdel &elem) __attribute__((nothrow));
+    static bool          cafter_InputMaybe(dmmeta::Cafter &elem) __attribute__((nothrow));
+    static bool          csize_InputMaybe(dmmeta::Csize &elem) __attribute__((nothrow));
+    static bool          nsx_InputMaybe(dmmeta::Nsx &elem) __attribute__((nothrow));
+    static bool          fcompact_InputMaybe(dmmeta::Fcompact &elem) __attribute__((nothrow));
+    static bool          findrem_InputMaybe(dmmeta::Findrem &elem) __attribute__((nothrow));
+    static bool          tcursor_InputMaybe(amcdb::Tcursor &elem) __attribute__((nothrow));
+    static bool          fcurs_InputMaybe(dmmeta::Fcurs &elem) __attribute__((nothrow));
+    static bool          cdflt_InputMaybe(dmmeta::Cdflt &elem) __attribute__((nothrow));
+    static bool          argvtype_InputMaybe(dmmeta::Argvtype &elem) __attribute__((nothrow));
+    static bool          fcmdline_InputMaybe(dmmeta::Fcmdline &elem) __attribute__((nothrow));
+    static bool          floadtuples_InputMaybe(dmmeta::Floadtuples &elem) __attribute__((nothrow));
+    static bool          fcmap_InputMaybe(dmmeta::Fcmap &elem) __attribute__((nothrow));
+    static bool          nsproto_InputMaybe(dmmeta::Nsproto &elem) __attribute__((nothrow));
+    static bool          nsdb_InputMaybe(dmmeta::Nsdb &elem) __attribute__((nothrow));
+    static bool          fprefix_InputMaybe(dmmeta::Fprefix &elem) __attribute__((nothrow));
+    static bool          ftrace_InputMaybe(dmmeta::Ftrace &elem) __attribute__((nothrow));
+    static bool          fnoremove_InputMaybe(dmmeta::Fnoremove &elem) __attribute__((nothrow));
+    // Swap values elem_a and elem_b
+    static void          c_substr_field_Swap(amc::FSubstr* &elem_a, amc::FSubstr* &elem_b) __attribute__((nothrow));
+    // Left circular shift of three-tuple
+    static void          c_substr_field_Rotleft(amc::FSubstr* &elem_a, amc::FSubstr* &elem_b, amc::FSubstr* &elem_c) __attribute__((nothrow));
+    // Compare values elem_a and elem_b
+    // The comparison function must be anti-symmetric: if a>b, then !(b>a).
+    // If not, mayhem results.
+    static bool          c_substr_field_Lt(amc::FSubstr &elem_a, amc::FSubstr &elem_b) __attribute__((nothrow));
+    // Internal insertion sort
+    static void          c_substr_field_IntInsertionSort(amc::FSubstr* *elems, int n) __attribute__((nothrow));
+    // Internal heap sort
+    static void          c_substr_field_IntHeapSort(amc::FSubstr* *elems, int n) __attribute__((nothrow));
+    // Quick sort engine
+    static void          c_substr_field_IntQuickSort(amc::FSubstr* *elems, int n, int depth) __attribute__((nothrow));
+    // Swap values elem_a and elem_b
+    static void          c_ctypelen_Swap(amc::FCtypelen* &elem_a, amc::FCtypelen* &elem_b) __attribute__((nothrow));
+    // Left circular shift of three-tuple
+    static void          c_ctypelen_Rotleft(amc::FCtypelen* &elem_a, amc::FCtypelen* &elem_b, amc::FCtypelen* &elem_c) __attribute__((nothrow));
+    // Compare values elem_a and elem_b
+    // The comparison function must be anti-symmetric: if a>b, then !(b>a).
+    // If not, mayhem results.
+    static bool          c_ctypelen_Lt(amc::FCtypelen &elem_a, amc::FCtypelen &elem_b) __attribute__((nothrow));
+    // Internal insertion sort
+    static void          c_ctypelen_IntInsertionSort(amc::FCtypelen* *elems, int n) __attribute__((nothrow));
+    // Internal heap sort
+    static void          c_ctypelen_IntHeapSort(amc::FCtypelen* *elems, int n) __attribute__((nothrow));
+    // Quick sort engine
+    static void          c_ctypelen_IntQuickSort(amc::FCtypelen* *elems, int n, int depth) __attribute__((nothrow));
+    static bool          fbase_InputMaybe(dmmeta::Fbase &elem) __attribute__((nothrow));
+    static bool          nossimfile_InputMaybe(dmmeta::Nossimfile &elem) __attribute__((nothrow));
+    static bool          gsymbol_InputMaybe(dmmeta::Gsymbol &elem) __attribute__((nothrow));
+    static bool          sortfld_InputMaybe(dmmeta::Sortfld &elem) __attribute__((nothrow));
+    static bool          cget_InputMaybe(dmmeta::Cget &elem) __attribute__((nothrow));
+    static bool          cdecl_InputMaybe(dmmeta::Cdecl &elem) __attribute__((nothrow));
+    static bool          hook_InputMaybe(dmmeta::Hook &elem) __attribute__((nothrow));
+    static bool          charset_InputMaybe(dmmeta::Charset &elem) __attribute__((nothrow));
+    static bool          nsinclude_InputMaybe(dmmeta::Nsinclude &elem) __attribute__((nothrow));
+    static bool          ssimvolatile_InputMaybe(dmmeta::Ssimvolatile &elem) __attribute__((nothrow));
+    static bool          funique_InputMaybe(dmmeta::Funique &elem) __attribute__((nothrow));
+    // find trace by row id (used to implement reflection)
+    static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
+    // Function return 1
+    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // Find new location for ROW starting at IDX
+    // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    static int           bh_enumstr_Downheap(amc::FEnumstrLen& enumstr_len, amc::FEnumstr& row, int idx) __attribute__((nothrow));
+    // Find and return index of new location for element ROW in the heap, starting at index IDX.
+    // Move any elements along the way but do not modify ROW.
+    static int           bh_enumstr_Upheap(amc::FEnumstrLen& enumstr_len, amc::FEnumstr& row, int idx) __attribute__((nothrow));
+    static bool          bh_enumstr_ElemLt(amc::FEnumstrLen& enumstr_len, amc::FEnumstr &a, amc::FEnumstr &b) __attribute__((nothrow));
+    static void          enumstr_len_bh_enumstr_curs_Add(enumstr_len_bh_enumstr_curs &curs, amc::FEnumstr& row);
+    // Find new location for ROW starting at IDX
+    // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    static int           bh_bitfld_Downheap(amc::FField& field, amc::FBitfld& row, int idx) __attribute__((nothrow));
+    // Find and return index of new location for element ROW in the heap, starting at index IDX.
+    // Move any elements along the way but do not modify ROW.
+    static int           bh_bitfld_Upheap(amc::FField& field, amc::FBitfld& row, int idx) __attribute__((nothrow));
+    static bool          bh_bitfld_ElemLt(amc::FField& field, amc::FBitfld &a, amc::FBitfld &b) __attribute__((nothrow));
+    static void          field_bh_bitfld_curs_Add(field_bh_bitfld_curs &curs, amc::FBitfld& row);
+    static void          SizeCheck();
 } // end namespace amc
 
 // --- amc.BltinId.value.ToCstr
@@ -2786,7 +2786,7 @@ static bool amc::fsort_InputMaybe(dmmeta::Fsort &elem) {
 
 // --- amc.FDb.fsort.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::fsort_XrefMaybe(amc::FFsort &row) {
     bool retval = true;
     (void)row;
@@ -3014,7 +3014,7 @@ static bool amc::dispfilter_InputMaybe(dmmeta::Dispfilter &elem) {
 
 // --- amc.FDb.dispfilter.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::dispfilter_XrefMaybe(amc::FDispfilter &row) {
     bool retval = true;
     (void)row;
@@ -3116,7 +3116,7 @@ static bool amc::usertracefld_InputMaybe(dmmeta::Usertracefld &elem) {
 
 // --- amc.FDb.usertracefld.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::usertracefld_XrefMaybe(amc::FUsertracefld &row) {
     bool retval = true;
     (void)row;
@@ -3204,7 +3204,7 @@ static bool amc::cfmt_InputMaybe(dmmeta::Cfmt &elem) {
 
 // --- amc.FDb.cfmt.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::cfmt_XrefMaybe(amc::FCfmt &row) {
     bool retval = true;
     (void)row;
@@ -3310,7 +3310,7 @@ static bool amc::dispatch_InputMaybe(dmmeta::Dispatch &elem) {
 
 // --- amc.FDb.dispatch.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::dispatch_XrefMaybe(amc::FDispatch &row) {
     bool retval = true;
     (void)row;
@@ -3420,7 +3420,7 @@ static bool amc::dispatch_msg_InputMaybe(dmmeta::DispatchMsg &elem) {
 
 // --- amc.FDb.dispatch_msg.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::dispatch_msg_XrefMaybe(amc::FDispatchmsg &row) {
     bool retval = true;
     (void)row;
@@ -3530,7 +3530,7 @@ static bool amc::ctype_InputMaybe(dmmeta::Ctype &elem) {
 
 // --- amc.FDb.ctype.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::ctype_XrefMaybe(amc::FCtype &row) {
     bool retval = true;
     (void)row;
@@ -3641,7 +3641,7 @@ static bool amc::field_InputMaybe(dmmeta::Field &elem) {
 
 // --- amc.FDb.field.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::field_XrefMaybe(amc::FField &row) {
     bool retval = true;
     (void)row;
@@ -3773,7 +3773,7 @@ static bool amc::basepool_InputMaybe(dmmeta::Basepool &elem) {
 
 // --- amc.FDb.basepool.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::basepool_XrefMaybe(amc::FBasepool &row) {
     bool retval = true;
     (void)row;
@@ -3888,7 +3888,7 @@ static bool amc::llist_InputMaybe(dmmeta::Llist &elem) {
 
 // --- amc.FDb.llist.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::llist_XrefMaybe(amc::FLlist &row) {
     bool retval = true;
     (void)row;
@@ -3999,7 +3999,7 @@ static bool amc::anonfld_InputMaybe(dmmeta::Anonfld &elem) {
 
 // --- amc.FDb.anonfld.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::anonfld_XrefMaybe(amc::FAnonfld &row) {
     bool retval = true;
     (void)row;
@@ -4101,7 +4101,7 @@ static bool amc::xref_InputMaybe(dmmeta::Xref &elem) {
 
 // --- amc.FDb.xref.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::xref_XrefMaybe(amc::FXref &row) {
     bool retval = true;
     (void)row;
@@ -4238,7 +4238,7 @@ static bool amc::ns_InputMaybe(dmmeta::Ns &elem) {
 
 // --- amc.FDb.ns.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::ns_XrefMaybe(amc::FNs &row) {
     bool retval = true;
     (void)row;
@@ -4335,7 +4335,7 @@ static bool amc::pnew_InputMaybe(dmmeta::Pnew &elem) {
 
 // --- amc.FDb.pnew.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::pnew_XrefMaybe(amc::FPnew &row) {
     bool retval = true;
     (void)row;
@@ -4454,7 +4454,7 @@ static bool amc::fldoffset_InputMaybe(dmmeta::Fldoffset &elem) {
 
 // --- amc.FDb.fldoffset.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::fldoffset_XrefMaybe(amc::FFldoffset &row) {
     bool retval = true;
     (void)row;
@@ -4560,7 +4560,7 @@ static bool amc::typefld_InputMaybe(dmmeta::Typefld &elem) {
 
 // --- amc.FDb.typefld.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::typefld_XrefMaybe(amc::FTypefld &row) {
     bool retval = true;
     (void)row;
@@ -4684,7 +4684,7 @@ static bool amc::lenfld_InputMaybe(dmmeta::Lenfld &elem) {
 
 // --- amc.FDb.lenfld.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::lenfld_XrefMaybe(amc::FLenfld &row) {
     bool retval = true;
     (void)row;
@@ -4795,7 +4795,7 @@ static bool amc::bltin_InputMaybe(amcdb::Bltin &elem) {
 
 // --- amc.FDb.bltin.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::bltin_XrefMaybe(amc::FBltin &row) {
     bool retval = true;
     (void)row;
@@ -4895,7 +4895,7 @@ void amc::static_tuple_RemoveLast() {
 
 // --- amc.FDb.static_tuple.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::static_tuple_XrefMaybe(amc::FStatictuple &row) {
     bool retval = true;
     (void)row;
@@ -4992,7 +4992,7 @@ static bool amc::msgtype_InputMaybe(dmmeta::Msgtype &elem) {
 
 // --- amc.FDb.msgtype.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::msgtype_XrefMaybe(amc::FMsgtype &row) {
     bool retval = true;
     (void)row;
@@ -5098,7 +5098,7 @@ static bool amc::gconst_InputMaybe(dmmeta::Gconst &elem) {
 
 // --- amc.FDb.gconst.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::gconst_XrefMaybe(amc::FGconst &row) {
     bool retval = true;
     (void)row;
@@ -5214,7 +5214,7 @@ static bool amc::gstatic_InputMaybe(dmmeta::Gstatic &elem) {
 
 // --- amc.FDb.gstatic.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::gstatic_XrefMaybe(amc::FGstatic &row) {
     bool retval = true;
     (void)row;
@@ -5329,7 +5329,7 @@ static bool amc::thash_InputMaybe(dmmeta::Thash &elem) {
 
 // --- amc.FDb.thash.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::thash_XrefMaybe(amc::FThash &row) {
     bool retval = true;
     (void)row;
@@ -5451,7 +5451,7 @@ u64 amc::outfile_ReserveMem(u64 size) {
 
 // --- amc.FDb.outfile.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::outfile_XrefMaybe(amc::FOutfile &row) {
     bool retval = true;
     (void)row;
@@ -5557,7 +5557,7 @@ static bool amc::func_InputMaybe(dmmeta::Func &elem) {
 
 // --- amc.FDb.func.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::func_XrefMaybe(amc::FFunc &row) {
     bool retval = true;
     (void)row;
@@ -5667,7 +5667,7 @@ static bool amc::smallstr_InputMaybe(dmmeta::Smallstr &elem) {
 
 // --- amc.FDb.smallstr.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::smallstr_XrefMaybe(amc::FSmallstr &row) {
     bool retval = true;
     (void)row;
@@ -5782,7 +5782,7 @@ static bool amc::numstr_InputMaybe(dmmeta::Numstr &elem) {
 
 // --- amc.FDb.numstr.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::numstr_XrefMaybe(amc::FNumstr &row) {
     bool retval = true;
     (void)row;
@@ -5893,7 +5893,7 @@ static bool amc::main_InputMaybe(dmmeta::Main &elem) {
 
 // --- amc.FDb.main.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::main_XrefMaybe(amc::FMain &row) {
     bool retval = true;
     (void)row;
@@ -6057,7 +6057,7 @@ static void amc::reftype_LoadStatic() {
 
 // --- amc.FDb.reftype.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::reftype_XrefMaybe(amc::FReftype &row) {
     bool retval = true;
     (void)row;
@@ -6124,7 +6124,7 @@ static void amc::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'6e7465174099b909179d170297fd870bea5dc09f'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'5faa44c407372a18c3d18df99ec6c7a08ae87a74'");
 }
 
 // --- amc.FDb._db.StaticCheck
@@ -6757,7 +6757,7 @@ bool amc::LoadSsimfileMaybe(algo::strptr fname) {
 
 // --- amc.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::_db_XrefMaybe() {
     bool retval = true;
     return retval;
@@ -7732,7 +7732,7 @@ static bool amc::cpptype_InputMaybe(dmmeta::Cpptype &elem) {
 
 // --- amc.FDb.cpptype.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::cpptype_XrefMaybe(amc::FCpptype &row) {
     bool retval = true;
     (void)row;
@@ -7960,7 +7960,7 @@ static bool amc::inlary_InputMaybe(dmmeta::Inlary &elem) {
 
 // --- amc.FDb.inlary.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::inlary_XrefMaybe(amc::FInlary &row) {
     bool retval = true;
     (void)row;
@@ -8184,7 +8184,7 @@ static bool amc::tary_InputMaybe(dmmeta::Tary &elem) {
 
 // --- amc.FDb.tary.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::tary_XrefMaybe(amc::FTary &row) {
     bool retval = true;
     (void)row;
@@ -8412,7 +8412,7 @@ static bool amc::cppfunc_InputMaybe(dmmeta::Cppfunc &elem) {
 
 // --- amc.FDb.cppfunc.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::cppfunc_XrefMaybe(amc::FCppfunc &row) {
     bool retval = true;
     (void)row;
@@ -8514,7 +8514,7 @@ static bool amc::rowid_InputMaybe(dmmeta::Rowid &elem) {
 
 // --- amc.FDb.rowid.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::rowid_XrefMaybe(amc::FRowid &row) {
     bool retval = true;
     (void)row;
@@ -8738,7 +8738,7 @@ static bool amc::cascdel_InputMaybe(dmmeta::Cascdel &elem) {
 
 // --- amc.FDb.cascdel.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::cascdel_XrefMaybe(amc::FCascdel &row) {
     bool retval = true;
     (void)row;
@@ -8844,7 +8844,7 @@ static bool amc::substr_InputMaybe(dmmeta::Substr &elem) {
 
 // --- amc.FDb.substr.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::substr_XrefMaybe(amc::FSubstr &row) {
     bool retval = true;
     (void)row;
@@ -8959,7 +8959,7 @@ static bool amc::bitfld_InputMaybe(dmmeta::Bitfld &elem) {
 
 // --- amc.FDb.bitfld.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::bitfld_XrefMaybe(amc::FBitfld &row) {
     bool retval = true;
     (void)row;
@@ -9074,7 +9074,7 @@ static bool amc::ssimfile_InputMaybe(dmmeta::Ssimfile &elem) {
 
 // --- amc.FDb.ssimfile.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::ssimfile_XrefMaybe(amc::FSsimfile &row) {
     bool retval = true;
     (void)row;
@@ -9302,7 +9302,7 @@ static bool amc::pack_InputMaybe(dmmeta::Pack &elem) {
 
 // --- amc.FDb.pack.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::pack_XrefMaybe(amc::FPack &row) {
     bool retval = true;
     (void)row;
@@ -9643,7 +9643,7 @@ static bool amc::ptrary_InputMaybe(dmmeta::Ptrary &elem) {
 
 // --- amc.FDb.ptrary.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::ptrary_XrefMaybe(amc::FPtrary &row) {
     bool retval = true;
     (void)row;
@@ -9977,7 +9977,7 @@ void amc::enumstr_RemoveLast() {
 
 // --- amc.FDb.enumstr.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::enumstr_XrefMaybe(amc::FEnumstr &row) {
     bool retval = true;
     (void)row;
@@ -10072,7 +10072,7 @@ void amc::enumstr_len_RemoveLast() {
 
 // --- amc.FDb.enumstr_len.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::enumstr_len_XrefMaybe(amc::FEnumstrLen &row) {
     bool retval = true;
     (void)row;
@@ -10574,7 +10574,7 @@ static bool amc::fbitset_InputMaybe(dmmeta::Fbitset &elem) {
 
 // --- amc.FDb.fbitset.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::fbitset_XrefMaybe(amc::FFbitset &row) {
     bool retval = true;
     (void)row;
@@ -10802,7 +10802,7 @@ static bool amc::fcleanup_InputMaybe(dmmeta::Fcleanup &elem) {
 
 // --- amc.FDb.fcleanup.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::fcleanup_XrefMaybe(amc::FFcleanup &row) {
     bool retval = true;
     (void)row;
@@ -10908,7 +10908,7 @@ static bool amc::fdec_InputMaybe(dmmeta::Fdec &elem) {
 
 // --- amc.FDb.fdec.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::fdec_XrefMaybe(amc::FFdec &row) {
     bool retval = true;
     (void)row;
@@ -11249,7 +11249,7 @@ static bool amc::fconst_InputMaybe(dmmeta::Fconst &elem) {
 
 // --- amc.FDb.fconst.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::fconst_XrefMaybe(amc::FFconst &row) {
     bool retval = true;
     (void)row;
@@ -11545,7 +11545,7 @@ static bool amc::finput_InputMaybe(dmmeta::Finput &elem) {
 
 // --- amc.FDb.finput.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::finput_XrefMaybe(amc::FFinput &row) {
     bool retval = true;
     (void)row;
@@ -11660,7 +11660,7 @@ static bool amc::foutput_InputMaybe(dmmeta::Foutput &elem) {
 
 // --- amc.FDb.foutput.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::foutput_XrefMaybe(amc::FFoutput &row) {
     bool retval = true;
     (void)row;
@@ -11771,7 +11771,7 @@ static bool amc::fbuf_InputMaybe(dmmeta::Fbuf &elem) {
 
 // --- amc.FDb.fbuf.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::fbuf_XrefMaybe(amc::FFbuf &row) {
     bool retval = true;
     (void)row;
@@ -12013,7 +12013,7 @@ static bool amc::chash_InputMaybe(dmmeta::Chash &elem) {
 
 // --- amc.FDb.chash.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::chash_XrefMaybe(amc::FChash &row) {
     bool retval = true;
     (void)row;
@@ -12237,7 +12237,7 @@ static bool amc::ccmp_InputMaybe(dmmeta::Ccmp &elem) {
 
 // --- amc.FDb.ccmp.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::ccmp_XrefMaybe(amc::FCcmp &row) {
     bool retval = true;
     (void)row;
@@ -12461,7 +12461,7 @@ static bool amc::fbigend_InputMaybe(dmmeta::Fbigend &elem) {
 
 // --- amc.FDb.fbigend.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::fbigend_XrefMaybe(amc::FFbigend &row) {
     bool retval = true;
     (void)row;
@@ -12629,7 +12629,7 @@ static bool amc::cstr_InputMaybe(dmmeta::Cstr &elem) {
 
 // --- amc.FDb.cstr.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::cstr_XrefMaybe(amc::FCstr &row) {
     bool retval = true;
     (void)row;
@@ -12731,7 +12731,7 @@ static bool amc::listtype_InputMaybe(dmmeta::Listtype &elem) {
 
 // --- amc.FDb.listtype.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::listtype_XrefMaybe(amc::FListtype &row) {
     bool retval = true;
     (void)row;
@@ -12941,7 +12941,7 @@ static bool amc::fstep_InputMaybe(dmmeta::Fstep &elem) {
 
 // --- amc.FDb.fstep.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::fstep_XrefMaybe(amc::FFstep &row) {
     bool retval = true;
     (void)row;
@@ -13065,7 +13065,7 @@ static bool amc::cextern_InputMaybe(dmmeta::Cextern &elem) {
 
 // --- amc.FDb.cextern.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::cextern_XrefMaybe(amc::FCextern &row) {
     bool retval = true;
     (void)row;
@@ -13167,7 +13167,7 @@ static bool amc::fdelay_InputMaybe(dmmeta::Fdelay &elem) {
 
 // --- amc.FDb.fdelay.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::fdelay_XrefMaybe(amc::FFdelay &row) {
     bool retval = true;
     (void)row;
@@ -13269,7 +13269,7 @@ static bool amc::disptrace_InputMaybe(dmmeta::Disptrace &elem) {
 
 // --- amc.FDb.disptrace.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::disptrace_XrefMaybe(amc::FDisptrace &row) {
     bool retval = true;
     (void)row;
@@ -13505,7 +13505,7 @@ bool amc::tracefld_SaveSsimfile(strptr fname) {
 
 // --- amc.FDb.tracefld.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::tracefld_XrefMaybe(amc::FTracefld &row) {
     bool retval = true;
     (void)row;
@@ -13610,7 +13610,7 @@ bool amc::tracerec_SaveSsimfile(strptr fname) {
 
 // --- amc.FDb.tracerec.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::tracerec_XrefMaybe(amc::FTracerec &row) {
     bool retval = true;
     (void)row;
@@ -13701,7 +13701,7 @@ void amc::dispsig_RemoveLast() {
 
 // --- amc.FDb.dispsig.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::dispsig_XrefMaybe(amc::FDispsig &row) {
     bool retval = true;
     (void)row;
@@ -14121,7 +14121,7 @@ static bool amc::target_InputMaybe(dev::Target &elem) {
 
 // --- amc.FDb.target.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::target_XrefMaybe(amc::FTarget &row) {
     bool retval = true;
     (void)row;
@@ -14349,7 +14349,7 @@ static bool amc::targdep_InputMaybe(dev::Targdep &elem) {
 
 // --- amc.FDb.targdep.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::targdep_XrefMaybe(amc::FTargdep &row) {
     bool retval = true;
     (void)row;
@@ -14459,7 +14459,7 @@ static bool amc::dispctx_InputMaybe(dmmeta::Dispctx &elem) {
 
 // --- amc.FDb.dispctx.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::dispctx_XrefMaybe(amc::FDispctx &row) {
     bool retval = true;
     (void)row;
@@ -14570,7 +14570,7 @@ static bool amc::pmaskfld_InputMaybe(dmmeta::Pmaskfld &elem) {
 
 // --- amc.FDb.pmaskfld.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::pmaskfld_XrefMaybe(amc::FPmaskfld &row) {
     bool retval = true;
     (void)row;
@@ -14690,7 +14690,7 @@ static bool amc::fwddecl_InputMaybe(dmmeta::Fwddecl &elem) {
 
 // --- amc.FDb.fwddecl.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::fwddecl_XrefMaybe(amc::FFwddecl &row) {
     bool retval = true;
     (void)row;
@@ -15001,8 +15001,6 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Blkpool.FreeMem  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Deallocate memory previously allocated from pool\"", amc::tfunc_Blkpool_FreeMem }
         ,{ "amcdb.tfunc  tfunc:Blkpool.Init  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:\"\"", amc::tfunc_Blkpool_Init }
         ,{ "amcdb.tfunc  tfunc:Charset.Match  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Charset_Match }
-        ,{ "amcdb.tfunc  tfunc:Cmp.Swap  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Cmp_Swap }
-        ,{ "amcdb.tfunc  tfunc:Cmp.Rotleft  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Cmp_Rotleft }
         ,{ "amcdb.tfunc  tfunc:Cmp.Nextchar  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Cmp_Nextchar }
         ,{ "amcdb.tfunc  tfunc:Cmp.Lt  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Cmp_Lt }
         ,{ "amcdb.tfunc  tfunc:Cmp.Cmp  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Cmp_Cmp }
@@ -15216,15 +15214,17 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Smallstr.Add  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Smallstr_Add }
         ,{ "amcdb.tfunc  tfunc:Smallstr.AddStrptr  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Smallstr_AddStrptr }
         ,{ "amcdb.tfunc  tfunc:Smallstr.Getary  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Smallstr_Getary }
-        ,{ "amcdb.tfunc  tfunc:Smallstr.Hash  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Smallstr_Hash }
         ,{ "amcdb.tfunc  tfunc:Smallstr.HashStrptr  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Smallstr_HashStrptr }
         ,{ "amcdb.tfunc  tfunc:Smallstr.Init  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Smallstr_Init }
         ,{ "amcdb.tfunc  tfunc:Smallstr.Max  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Smallstr_Max }
         ,{ "amcdb.tfunc  tfunc:Smallstr.N  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:Y  pure:Y  ismacro:N  comment:\"\"", amc::tfunc_Smallstr_N }
         ,{ "amcdb.tfunc  tfunc:Smallstr.Print  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Smallstr_Print }
         ,{ "amcdb.tfunc  tfunc:Smallstr.ReadStrptrMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Smallstr_ReadStrptrMaybe }
-        ,{ "amcdb.tfunc  tfunc:Smallstr.Set  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Smallstr_Set }
-        ,{ "amcdb.tfunc  tfunc:Smallstr.qSet  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Smallstr_qSet }
+        ,{ "amcdb.tfunc  tfunc:Smallstr.SetStrptr  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Copy from strptr, clipping length\"", amc::tfunc_Smallstr_SetStrptr }
+        ,{ "amcdb.tfunc  tfunc:Smallstr.AssignStrptr  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Copy from strptr (operator=)\"", amc::tfunc_Smallstr_AssignStrptr }
+        ,{ "amcdb.tfunc  tfunc:Smallstr.Set  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Copy from same type\"", amc::tfunc_Smallstr_Set }
+        ,{ "amcdb.tfunc  tfunc:Smallstr.Ctor  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Construct from same type\"", amc::tfunc_Smallstr_Ctor }
+        ,{ "amcdb.tfunc  tfunc:Smallstr.CtorStrptr  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Construct from stptr\"", amc::tfunc_Smallstr_CtorStrptr }
         ,{ "amcdb.tfunc  tfunc:Sort.Swap  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Sort_Swap }
         ,{ "amcdb.tfunc  tfunc:Sort.Rotleft  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Sort_Rotleft }
         ,{ "amcdb.tfunc  tfunc:Sort.Lt  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Sort_Lt }
@@ -15319,7 +15319,7 @@ static void amc::tfunc_LoadStatic() {
 
 // --- amc.FDb.tfunc.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::tfunc_XrefMaybe(amc::FTfunc &row) {
     bool retval = true;
     (void)row;
@@ -15637,7 +15637,7 @@ static void amc::gen_LoadStatic() {
 
 // --- amc.FDb.gen.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::gen_XrefMaybe(amc::FGen &row) {
     bool retval = true;
     (void)row;
@@ -15729,7 +15729,7 @@ static bool amc::fregx_InputMaybe(dmmeta::Fregx &elem) {
 
 // --- amc.FDb.fregx.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::fregx_XrefMaybe(amc::FFregx &row) {
     bool retval = true;
     (void)row;
@@ -15877,7 +15877,7 @@ static void amc::tclass_LoadStatic() {
 
 // --- amc.FDb.tclass.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::tclass_XrefMaybe(amc::FTclass &row) {
     bool retval = true;
     (void)row;
@@ -16087,7 +16087,7 @@ static bool amc::fcmp_InputMaybe(dmmeta::Fcmp &elem) {
 
 // --- amc.FDb.fcmp.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::fcmp_XrefMaybe(amc::FFcmp &row) {
     bool retval = true;
     (void)row;
@@ -16189,7 +16189,7 @@ static bool amc::fcast_InputMaybe(dmmeta::Fcast &elem) {
 
 // --- amc.FDb.fcast.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::fcast_XrefMaybe(amc::FFcast &row) {
     bool retval = true;
     (void)row;
@@ -16291,7 +16291,7 @@ static bool amc::noxref_InputMaybe(dmmeta::Noxref &elem) {
 
 // --- amc.FDb.noxref.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::noxref_XrefMaybe(amc::FNoxref &row) {
     bool retval = true;
     (void)row;
@@ -16393,7 +16393,7 @@ static bool amc::nocascdel_InputMaybe(dmmeta::Nocascdel &elem) {
 
 // --- amc.FDb.nocascdel.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::nocascdel_XrefMaybe(amc::FNocascdel &row) {
     bool retval = true;
     (void)row;
@@ -16495,7 +16495,7 @@ static bool amc::cafter_InputMaybe(dmmeta::Cafter &elem) {
 
 // --- amc.FDb.cafter.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::cafter_XrefMaybe(amc::FCafter &row) {
     bool retval = true;
     (void)row;
@@ -16601,7 +16601,7 @@ static bool amc::csize_InputMaybe(dmmeta::Csize &elem) {
 
 // --- amc.FDb.csize.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::csize_XrefMaybe(amc::FCsize &row) {
     bool retval = true;
     (void)row;
@@ -16703,7 +16703,7 @@ static bool amc::nsx_InputMaybe(dmmeta::Nsx &elem) {
 
 // --- amc.FDb.nsx.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::nsx_XrefMaybe(amc::FNsx &row) {
     bool retval = true;
     (void)row;
@@ -16814,7 +16814,7 @@ static bool amc::fcompact_InputMaybe(dmmeta::Fcompact &elem) {
 
 // --- amc.FDb.fcompact.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::fcompact_XrefMaybe(amc::FFcompact &row) {
     bool retval = true;
     (void)row;
@@ -16916,7 +16916,7 @@ static bool amc::findrem_InputMaybe(dmmeta::Findrem &elem) {
 
 // --- amc.FDb.findrem.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::findrem_XrefMaybe(amc::FFindrem &row) {
     bool retval = true;
     (void)row;
@@ -17018,7 +17018,7 @@ static bool amc::tcursor_InputMaybe(amcdb::Tcursor &elem) {
 
 // --- amc.FDb.tcursor.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::tcursor_XrefMaybe(amc::FTcursor &row) {
     bool retval = true;
     (void)row;
@@ -17120,7 +17120,7 @@ static bool amc::fcurs_InputMaybe(dmmeta::Fcurs &elem) {
 
 // --- amc.FDb.fcurs.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::fcurs_XrefMaybe(amc::FFcurs &row) {
     bool retval = true;
     (void)row;
@@ -17217,7 +17217,7 @@ static bool amc::cdflt_InputMaybe(dmmeta::Cdflt &elem) {
 
 // --- amc.FDb.cdflt.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::cdflt_XrefMaybe(amc::FCdflt &row) {
     bool retval = true;
     (void)row;
@@ -17319,7 +17319,7 @@ static bool amc::argvtype_InputMaybe(dmmeta::Argvtype &elem) {
 
 // --- amc.FDb.argvtype.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::argvtype_XrefMaybe(amc::FArgvtype &row) {
     bool retval = true;
     (void)row;
@@ -17421,7 +17421,7 @@ static bool amc::fcmdline_InputMaybe(dmmeta::Fcmdline &elem) {
 
 // --- amc.FDb.fcmdline.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::fcmdline_XrefMaybe(amc::FFcmdline &row) {
     bool retval = true;
     (void)row;
@@ -17645,7 +17645,7 @@ static bool amc::floadtuples_InputMaybe(dmmeta::Floadtuples &elem) {
 
 // --- amc.FDb.floadtuples.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::floadtuples_XrefMaybe(amc::FFloadtuples &row) {
     bool retval = true;
     (void)row;
@@ -17756,7 +17756,7 @@ static bool amc::fcmap_InputMaybe(dmmeta::Fcmap &elem) {
 
 // --- amc.FDb.fcmap.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::fcmap_XrefMaybe(amc::FFcmap &row) {
     bool retval = true;
     (void)row;
@@ -17955,7 +17955,7 @@ static bool amc::nsproto_InputMaybe(dmmeta::Nsproto &elem) {
 
 // --- amc.FDb.nsproto.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::nsproto_XrefMaybe(amc::FNsproto &row) {
     bool retval = true;
     (void)row;
@@ -18057,7 +18057,7 @@ static bool amc::nsdb_InputMaybe(dmmeta::Nsdb &elem) {
 
 // --- amc.FDb.nsdb.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::nsdb_XrefMaybe(amc::FNsdb &row) {
     bool retval = true;
     (void)row;
@@ -18328,7 +18328,7 @@ static bool amc::fprefix_InputMaybe(dmmeta::Fprefix &elem) {
 
 // --- amc.FDb.fprefix.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::fprefix_XrefMaybe(amc::FFprefix &row) {
     bool retval = true;
     (void)row;
@@ -18547,7 +18547,7 @@ static bool amc::ftrace_InputMaybe(dmmeta::Ftrace &elem) {
 
 // --- amc.FDb.ftrace.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::ftrace_XrefMaybe(amc::FFtrace &row) {
     bool retval = true;
     (void)row;
@@ -18649,7 +18649,7 @@ static bool amc::fnoremove_InputMaybe(dmmeta::Fnoremove &elem) {
 
 // --- amc.FDb.fnoremove.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::fnoremove_XrefMaybe(amc::FFnoremove &row) {
     bool retval = true;
     (void)row;
@@ -18984,7 +18984,7 @@ void amc::ctypelen_RemoveLast() {
 
 // --- amc.FDb.ctypelen.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::ctypelen_XrefMaybe(amc::FCtypelen &row) {
     bool retval = true;
     (void)row;
@@ -19408,7 +19408,7 @@ static bool amc::fbase_InputMaybe(dmmeta::Fbase &elem) {
 
 // --- amc.FDb.fbase.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::fbase_XrefMaybe(amc::FFbase &row) {
     bool retval = true;
     (void)row;
@@ -19633,7 +19633,7 @@ static bool amc::nossimfile_InputMaybe(dmmeta::Nossimfile &elem) {
 
 // --- amc.FDb.nossimfile.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::nossimfile_XrefMaybe(amc::FNossimfile &row) {
     bool retval = true;
     (void)row;
@@ -19745,7 +19745,7 @@ static bool amc::gsymbol_InputMaybe(dmmeta::Gsymbol &elem) {
 
 // --- amc.FDb.gsymbol.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::gsymbol_XrefMaybe(amc::FGsymbol &row) {
     bool retval = true;
     (void)row;
@@ -19842,7 +19842,7 @@ static bool amc::sortfld_InputMaybe(dmmeta::Sortfld &elem) {
 
 // --- amc.FDb.sortfld.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::sortfld_XrefMaybe(amc::FSortfld &row) {
     bool retval = true;
     (void)row;
@@ -19953,7 +19953,7 @@ static bool amc::cget_InputMaybe(dmmeta::Cget &elem) {
 
 // --- amc.FDb.cget.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::cget_XrefMaybe(amc::FCget &row) {
     bool retval = true;
     (void)row;
@@ -20141,7 +20141,7 @@ static bool amc::cdecl_InputMaybe(dmmeta::Cdecl &elem) {
 
 // --- amc.FDb.cdecl.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::cdecl_XrefMaybe(amc::FCdecl &row) {
     bool retval = true;
     (void)row;
@@ -20327,7 +20327,7 @@ static bool amc::hook_InputMaybe(dmmeta::Hook &elem) {
 
 // --- amc.FDb.hook.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::hook_XrefMaybe(amc::FHook &row) {
     bool retval = true;
     (void)row;
@@ -20443,7 +20443,7 @@ static bool amc::charset_InputMaybe(dmmeta::Charset &elem) {
 
 // --- amc.FDb.charset.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::charset_XrefMaybe(amc::FCharset &row) {
     bool retval = true;
     (void)row;
@@ -20555,7 +20555,7 @@ static bool amc::nsinclude_InputMaybe(dmmeta::Nsinclude &elem) {
 
 // --- amc.FDb.nsinclude.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::nsinclude_XrefMaybe(amc::FNsinclude &row) {
     bool retval = true;
     (void)row;
@@ -20662,7 +20662,7 @@ static bool amc::ssimvolatile_InputMaybe(dmmeta::Ssimvolatile &elem) {
 
 // --- amc.FDb.ssimvolatile.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::ssimvolatile_XrefMaybe(amc::FSsimvolatile &row) {
     bool retval = true;
     (void)row;
@@ -20774,7 +20774,7 @@ static bool amc::funique_InputMaybe(dmmeta::Funique &elem) {
 
 // --- amc.FDb.funique.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::funique_XrefMaybe(amc::FFunique &row) {
     bool retval = true;
     (void)row;
@@ -24918,7 +24918,7 @@ void amc::funcarg_Setary(amc::FFunc& func, amc::FFunc &rhs) {
 
 // --- amc.FFunc.funcarg.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::funcarg_XrefMaybe(amc::Funcarg &row) {
     bool retval = true;
     (void)row;
@@ -24934,20 +24934,22 @@ void amc::FFunc_Init(amc::FFunc& func) {
     func.extrn = bool(false);
     func.glob = bool(false);
     func.priv = bool(false);
-    func.printed = bool(false);
-    func.throws = bool(false);
-    func.nothrow = bool(false);
-    func.disable = bool(false);
-    func.oper = bool(false);
-    func.globns = bool(false);
     func.p_ns = NULL;
-    func.isalloc = bool(false);
-    func.wur = bool(false);
-    func.pure = bool(false);
     func.funcarg_elems 	= 0; // (amc.FFunc.funcarg)
     func.funcarg_n     	= 0; // (amc.FFunc.funcarg)
     func.funcarg_max   	= 0; // (amc.FFunc.funcarg)
+    func.printed = bool(false);
+    func.throws = bool(false);
+    func.nothrow = bool(false);
+    func.member = bool(false);
+    func.disable = bool(false);
+    func.oper = bool(false);
+    func.globns = bool(false);
+    func.isalloc = bool(false);
+    func.wur = bool(false);
+    func.pure = bool(false);
     func.finalized = bool(false);
+    func.isexplicit = bool(false);
     func.istmpl = bool(false);
     func.ns_c_func_in_ary = bool(false);
     func.ind_func_next = (amc::FFunc*)-1; // (amc.FDb.ind_func) not-in-hash
@@ -24965,7 +24967,7 @@ void amc::FFunc_Uninit(amc::FFunc& func) {
     }
     cd_temp_func_Remove(row); // remove func from index cd_temp_func
 
-    // amc.FFunc.funcarg.Uninit (Tary)  //
+    // amc.FFunc.funcarg.Uninit (Tary)  //Array of declared function arguments
     // remove all elements from amc.FFunc.funcarg
     funcarg_RemoveAll(func);
     // free memory for Tary amc.FFunc.funcarg
@@ -25246,7 +25248,7 @@ void amc::seen_RemoveLast(amc::FGenXref& parent) {
 
 // --- amc.FGenXref.seen.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc::seen_XrefMaybe(amc::FGenXrefSeen &row) {
     bool retval = true;
     (void)row;

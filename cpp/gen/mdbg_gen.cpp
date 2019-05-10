@@ -73,15 +73,15 @@ const char *mdbg_syntax =
 ;
 } // namespace mdbg
 namespace mdbg {
-// Load statically available data into tables, register tables and database.
-static void          InitReflection();
-static bool          cfg_InputMaybe(dev::Cfg &elem) __attribute__((nothrow));
-static bool          builddir_InputMaybe(dev::Builddir &elem) __attribute__((nothrow));
-// find trace by row id (used to implement reflection)
-static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
-// Function return 1
-static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-static void          SizeCheck();
+    // Load statically available data into tables, register tables and database.
+    static void          InitReflection();
+    static bool          cfg_InputMaybe(dev::Cfg &elem) __attribute__((nothrow));
+    static bool          builddir_InputMaybe(dev::Builddir &elem) __attribute__((nothrow));
+    // find trace by row id (used to implement reflection)
+    static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
+    // Function return 1
+    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    static void          SizeCheck();
 } // end namespace mdbg
 
 // --- mdbg.FBuilddir.base.CopyOut
@@ -400,7 +400,7 @@ bool mdbg::LoadSsimfileMaybe(algo::strptr fname) {
 
 // --- mdbg.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool mdbg::_db_XrefMaybe() {
     bool retval = true;
     return retval;
@@ -497,7 +497,7 @@ static bool mdbg::cfg_InputMaybe(dev::Cfg &elem) {
 
 // --- mdbg.FDb.cfg.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool mdbg::cfg_XrefMaybe(mdbg::FCfg &row) {
     bool retval = true;
     (void)row;
@@ -717,7 +717,7 @@ static bool mdbg::builddir_InputMaybe(dev::Builddir &elem) {
 
 // --- mdbg.FDb.builddir.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool mdbg::builddir_XrefMaybe(mdbg::FBuilddir &row) {
     bool retval = true;
     (void)row;

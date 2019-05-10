@@ -262,8 +262,6 @@ namespace amc { // update-hdr
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Cmp();
-    // void tfunc_Cmp_Swap();
-    // void tfunc_Cmp_Rotleft();
     // void tfunc_Cmp_Nextchar();
     // void tfunc_Cmp_Cmp();
     // void tfunc_Cmp_Lt();
@@ -540,12 +538,19 @@ namespace amc { // update-hdr
     // TEXT: AddCallArg("abcd(y) abc","x") -> "abcd(y, x) abc"
     // Experimental, helps in readability: If CONDITION is false, do nothing
     void AddArg(cstring &text, strptr cppexpr, bool condition);
+
+    // Same but without conditions
     void AddArg(cstring &text, strptr cppexpr);
+
+    // Add prototype arg to function FUNC
+    // The argument type is TYPE, and name is NAME
+    // Argument is added only if CONDITION is true
     amc::Funcarg* AddProtoArg(amc::FFunc &func, strptr type, strptr name, bool condition);
+
+    // Same but without condition
     amc::Funcarg* AddProtoArg(amc::FFunc &func, strptr type, strptr name);
 
-    // The declaration for retval is emitted when the initializer
-    // becomes available.
+    // The declaration for retval is emitted when the initializer becomes available.
     // This allows initialization of references (i.e. X &retval = <expr>)
     // and also results in shorter code.
     void GenRetvalInit(amc::FFunc &func, amc::Funcarg &funcarg, strptr initializer);
@@ -561,8 +566,12 @@ namespace amc { // update-hdr
 
     // Return non-null pointer to ctype's init function.
     amc::FFunc *init_GetOrCreate(amc::FCtype &ctype);
-    void GenFuncProto(amc::FNs& ns, amc::FFunc& func, bool ins_extra_line, bool isfriend);
-    void GenFuncBody(amc::FNs& ns, amc::FFunc& func);
+
+    // Emit function prototype into string OUT.
+    // If ctype_context is specified, then the declaration is intended to be
+    // used inside the struct, so different C++ syntax rules apply.
+    void PrintFuncProto(amc::FFunc& func, amc::FCtype *ctype_context, cstring &out);
+    void PrintFuncBody(amc::FNs& ns, amc::FFunc& func);
     bool SetRetType(amc::FFunc &func, amc::FCtype &ctype);
     void MaybeUnused(amc::FFunc &func, strptr name);
     amc::Funcarg* FindArg(amc::FFunc &func, strptr name);
@@ -660,6 +669,9 @@ namespace amc { // update-hdr
     // void gen_ns_field();
     // void gen_ns_include();
     // void gen_ns_funcindex();
+
+    // Print static function prototype declarations
+    // to the cpp file
     // void gen_ns_print_proto();
     // void gen_ns_print_struct();
     // void gen_ns_curstext();
@@ -896,7 +908,6 @@ namespace amc { // update-hdr
     amc::FField *FirstInst(amc::FCtype &ctype);
     bool DirectStepQ(amc::FFstep &fstep);
     bool ExternStepQ(amc::FFstep &fstep);
-    bool QueryModeQ();
 
     // add text to c++ body of class
     void InsStruct(algo_lib::Replscope &R, amc::FCtype *ctype, const strptr &text);
@@ -1021,11 +1032,6 @@ namespace amc { // update-hdr
     //
     void CppSection(algo::cstring &out, strptr label, bool major);
     void CppSectionAll(amc::FNs& ns, strptr label);
-
-    // insert TEXT into OUT,
-    // indenting as necessary; first line indent is INDENT.
-    // Each indent is 4 spaces.
-    void InsertIndent(algo::cstring &out, strptr text, int indent);
     void TopoSortVisit(amc::FNs& ns, amc::FCtype& ctype);
     bool ExeQ(amc::FNs &ns);
     tempstr ByvalArgtype(amc::FCtype &ctype);
@@ -1194,6 +1200,14 @@ namespace amc { // update-hdr
     // cpp/amc/query.cpp
     //
     void Main_Querymode();
+    tempstr Query_GetKey();
+    tempstr Query_GetValue();
+
+    // Parse query argument, return regex of namespaces
+    tempstr Query_GetNs();
+
+    // True if amc was invoked in query-only mode
+    bool QueryModeQ();
 
     // -------------------------------------------------------------------
     // cpp/amc/regx.cpp -- Small strings
@@ -1265,12 +1279,28 @@ namespace amc { // update-hdr
     // void tfunc_Smallstr_AddStrptr();
     // void tfunc_Smallstr_ReadStrptrMaybe();
     // void tfunc_Smallstr_Print();
-    // void tfunc_Smallstr_Hash();
     // void tfunc_Smallstr_HashStrptr();
+
+    // compute length
     // void tfunc_Smallstr_N();
+
+    // Max # of elements (constant)
     // void tfunc_Smallstr_Max();
-    // void tfunc_Smallstr_qSet();
+
+    // Set value as strptr
+    // void tfunc_Smallstr_SetStrptr();
+
+    // Copy from same type
     // void tfunc_Smallstr_Set();
+
+    // Assignment operator from strptr
+    // void tfunc_Smallstr_AssignStrptr();
+
+    // Construct from same type
+    // void tfunc_Smallstr_Ctor();
+
+    // Construct from strptr
+    // void tfunc_Smallstr_CtorStrptr();
 
     // -------------------------------------------------------------------
     // cpp/amc/sort.cpp -- Comparison & Sorting routines

@@ -45,6 +45,7 @@ void amc::AddArg(cstring &text, strptr cppexpr, bool condition) {
     }
 }
 
+// Same but without conditions
 void amc::AddArg(cstring &text, strptr cppexpr) {
     AddArg(text,cppexpr,true);
 }
@@ -66,6 +67,9 @@ static tempstr CombineTypeName(strptr type, strptr name) {
     return text;
 }
 
+// Add prototype arg to function FUNC
+// The argument type is TYPE, and name is NAME
+// Argument is added only if CONDITION is true
 amc::Funcarg* amc::AddProtoArg(amc::FFunc &func, strptr type, strptr name, bool condition) {
     amc::Funcarg* ret=NULL;
     if (condition) {
@@ -79,6 +83,7 @@ amc::Funcarg* amc::AddProtoArg(amc::FFunc &func, strptr type, strptr name, bool 
     return ret;
 }
 
+// Same but without condition
 amc::Funcarg* amc::AddProtoArg(amc::FFunc &func, strptr type, strptr name) {
     return AddProtoArg(func,type,name,true);
 }
@@ -100,8 +105,7 @@ static void PrintDecl(strptr type, strptr name, cstring &out) {
 
 // -----------------------------------------------------------------------------
 
-// The declaration for retval is emitted when the initializer
-// becomes available.
+// The declaration for retval is emitted when the initializer becomes available.
 // This allows initialization of references (i.e. X &retval = <expr>)
 // and also results in shorter code.
 void amc::GenRetvalInit(amc::FFunc &func, amc::Funcarg &funcarg, strptr initializer) {
@@ -233,29 +237,35 @@ amc::FFunc *amc::init_GetOrCreate(amc::FCtype &ctype) {
 
 // -----------------------------------------------------------------------------
 
-static tempstr Attrs(amc::FFunc &func) {
-    tempstr ret;
-    if (func.deprecate || func.nothrow || func.wur || ch_N(func.nonnull)) {
-        ListSep ls;
-        ret << " __attribute__((";
-        if (func.deprecate) {
-            ret << ls << "deprecated";
-        }
-        if (func.wur) {
-            ret << ls << "__warn_unused_result__";
-        }
-        if (func.nothrow) {// gcc interprets this as "no throw and no catch"!
-            ret << ls << "nothrow";
-        }
-        if (func.pure) {
-            ret << ls << "pure";
-        }
-        if (ch_N(func.nonnull)) {
-            ret << ls << "__nonnull__ ("<<func.nonnull<<")";
-        }
-        ret << "))";
+static void PrintAttrs(amc::FFunc &func, cstring &out) {
+    int start = out.ch_n;
+    int nattr = 0;
+    ListSep ls;
+    out << " __attribute__((";
+    if (func.deprecate) {
+        out << ls << "deprecated";
+        nattr++;
     }
-    return ret;
+    if (func.wur) {
+        out << ls << "__warn_unused_result__";
+        nattr++;
+    }
+    if (func.nothrow) {// gcc interprets this as "no throw and no catch"!
+        out << ls << "nothrow";
+        nattr++;
+    }
+    if (func.pure) {
+        out << ls << "pure";
+        nattr++;
+    }
+    if (ch_N(func.nonnull)) {
+        out << ls << "__nonnull__ ("<<func.nonnull<<")";
+        nattr++;
+    }
+    out << "))";
+    if (nattr==0) {
+        out.ch_n=start;// undo  if there were no attributes
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -281,40 +291,45 @@ static void TmplPrefix(amc::FFunc& func, cstring &out, bool proto) {
 
 // -----------------------------------------------------------------------------
 
-void amc::GenFuncProto(amc::FNs& ns, amc::FFunc& func, bool ins_extra_line, bool isfriend) {
-    cstring &hdr = func.priv ? *ns.cpp : *ns.hdr;
-
-    if (ins_extra_line) {
-        hdr << eol;
+// Emit function prototype into string OUT.
+// If ctype_context is specified, then the declaration is intended to be
+// used inside the struct, so different C++ syntax rules apply.
+void amc::PrintFuncProto(amc::FFunc& func, amc::FCtype *ctype_context, cstring &out) {
+    if (ctype_context && !func.member) {
+        out << "friend ";
     }
-    if (isfriend) {
-        hdr << "friend ";
-    } else {
+    if (ctype_context && func.isexplicit) {
+        out << "explicit ";
+    }
+    // show function comment but omit it if it's just a friend declaration
+    if (!(ctype_context && !func.member)) {
         ind_beg(Line_curs,comment,func.comment) {
-            hdr << "// "<<comment<<'\n';
+            out << "// "<<comment<<'\n';
         }ind_end;
     }
-    int start = ch_N(hdr);
-    TmplPrefix(func,hdr,true);
+    int start = ch_N(out);
+    TmplPrefix(func,out,true);
     if (func.oper) {
-        hdr << "operator ";
+        out << "operator ";
     }
-    hdr << func.ret;
-    // #AL# visual hack
-    char_PrintNTimes(' ', hdr, start + 20 - ch_N(hdr));
-    hdr << " ";
-    hdr << func.proto << Attrs(func);
-    hdr << ";";
-
-    // try to align the comment
-    //char_PrintNTimes(' ', hdr, start + 80 - ch_N(hdr));
-    //hdr << "// "<<func.func;
-    hdr << eol;
+    out << func.ret;
+    // some indentation for readability
+    char_PrintNTimes(' ', out, start + 20 - ch_N(out));
+    out << " ";
+    if (!ctype_context && func.member) {
+        if (amc::FCtype *ctype = ind_ctype_Find(ctype_Get(func))) {
+            out << ctype->cpp_type << "::";
+        }
+    }
+    out << func.proto;
+    PrintAttrs(func,out);
+    out << ";";
+    out << eol;
 }
 
 // -----------------------------------------------------------------------------
 
-void amc::GenFuncBody(amc::FNs& ns, amc::FFunc& func) {
+void amc::PrintFuncBody(amc::FNs& ns, amc::FFunc& func) {
     cstring &impl = (func.inl && !func.priv) ? *ns.inl : *ns.cpp;
 
     if (bool_Update(func.finalized,true)) {
@@ -331,9 +346,15 @@ void amc::GenFuncBody(amc::FNs& ns, amc::FFunc& func) {
         proto << NsToCpp(ctype_Get(func)) << "::operator ";
     }
     proto << func.ret << " ";
-    if (!func.oper && !func.globns) {// namespace
-        if (ch_N(ns.ns)) {
-            proto << ns.ns << "::";
+    if (func.member) {
+        if (amc::FCtype *ctype = ind_ctype_Find(ctype_Get(func))) {
+            proto << ctype->cpp_type << "::";
+        }
+    } else {
+        if (!func.oper && !func.globns) {// namespace
+            if (ch_N(ns.ns)) {
+                proto << ns.ns << "::";
+            }
         }
     }
     proto << func.proto;
@@ -342,7 +363,7 @@ void amc::GenFuncBody(amc::FNs& ns, amc::FFunc& func) {
         proto << " // internal, automatically inlined";
     }
     impl << proto << eol;
-    amc::InsertIndent(impl, func.body, 1);
+    algo::InsertIndent(impl, func.body, 1);
     impl << "}" << eol;
 }
 

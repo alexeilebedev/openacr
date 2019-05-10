@@ -522,7 +522,7 @@ private:
 // If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
 // If there is no message, read once from underlying file descriptor and try again.
 // The message is any number of bytes > 0
-// 
+//
 aryptr<char>         in_GetMsg(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
 // Return max. number of bytes in the buffer.
 i32                  in_Max(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
@@ -531,12 +531,12 @@ i32                  in_N(atf_amc::Bytebuf& bytebuf) __attribute__((__warn_unuse
 // Discard contents of the buffer.
 void                 in_RemoveAll(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
 // Mark some buffer contents as read.
-// 
+//
 void                 in_SkipBytes(atf_amc::Bytebuf& bytebuf, int n) __attribute__((nothrow));
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
-// 
+//
 bool                 in_WriteAll(atf_amc::Bytebuf& bytebuf, u8 *in, i32 in_n) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -1689,7 +1689,7 @@ void                 typea_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 atf_amc::FTypeA&     typea_qFind(i32 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 typea_XrefMaybe(atf_amc::FTypeA &row);
 
 // Allocate memory for new default row.
@@ -1717,7 +1717,7 @@ void                 types_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 atf_amc::FTypeS&     types_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 types_XrefMaybe(atf_amc::FTypeS &row);
 
 // Return true if hash is empty
@@ -1767,7 +1767,7 @@ bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow))
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
 
 // Allocate memory for new default row.
@@ -1795,7 +1795,7 @@ void                 typet_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 atf_amc::FTypeT&     typet_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 typet_XrefMaybe(atf_amc::FTypeT &row);
 
 // Allocate memory for new default row.
@@ -1823,7 +1823,7 @@ void                 cstring_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 atf_amc::FCstring&   cstring_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 cstring_XrefMaybe(atf_amc::FCstring &row);
 
 // Return true if hash is empty
@@ -1842,15 +1842,15 @@ void                 ind_cstring_Remove(atf_amc::FCstring& row) __attribute__((n
 void                 ind_cstring_Reserve(int n) __attribute__((nothrow));
 
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 msgbuf_XrefMaybe(atf_amc::Msgbuf &row);
 
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 bytebuf_XrefMaybe(atf_amc::Bytebuf &row);
 
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 linebuf_XrefMaybe(atf_amc::Linebuf &row);
 
 // Return true if index is empty
@@ -1903,7 +1903,7 @@ u64                  typeb_Reserve(u64 n_elems) __attribute__((nothrow));
 // Return number of elements reserved.
 u64                  typeb_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 typeb_XrefMaybe(atf_amc::FTypeB &row);
 
 // Allocate memory for new default row.
@@ -1925,7 +1925,7 @@ u64                  pooledbe64_Reserve(u64 n_elems) __attribute__((nothrow));
 // Return number of elements reserved.
 u64                  pooledbe64_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 pooledbe64_XrefMaybe(atf_amc::PooledBE64 &row);
 
 // Free block of memory previously returned by Lpool.
@@ -1959,7 +1959,7 @@ void                 varlen_extern_Delete(atf_amc::VarlenExtern &row) __attribut
 // Return number of items in the pool
 i64                  varlen_extern_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 varlen_extern_XrefMaybe(atf_amc::VarlenExtern &row);
 
 // Allocate memory for new default row.
@@ -1987,7 +1987,7 @@ void                 amctest_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 atf_amc::FAmctest&   amctest_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 amctest_XrefMaybe(atf_amc::FAmctest &row);
 
 // Allocate memory for new default row.
@@ -2009,7 +2009,7 @@ u64                  cascdel_Reserve(u64 n_elems) __attribute__((nothrow));
 // Return number of elements reserved.
 u64                  cascdel_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 cascdel_XrefMaybe(atf_amc::FCascdel &row);
 
 // Free block of memory previously returned by Lpool.
@@ -2032,7 +2032,7 @@ void                 optalloc_Delete(atf_amc::OptAlloc &row) __attribute__((noth
 // Return number of items in the pool
 i64                  optalloc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 optalloc_XrefMaybe(atf_amc::OptAlloc &row);
 
 // Free block of memory previously returned by Lpool.
@@ -2066,7 +2066,7 @@ void                 varlenalloc_Delete(atf_amc::VarlenAlloc &row) __attribute__
 // Return number of items in the pool
 i64                  varlenalloc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 varlenalloc_XrefMaybe(atf_amc::VarlenAlloc &row);
 
 // Free block of memory previously returned by Lpool.
@@ -2092,7 +2092,7 @@ void                 optg_Delete(atf_amc::FOptG &row) __attribute__((nothrow));
 // Return number of items in the pool
 i64                  optg_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 optg_XrefMaybe(atf_amc::FOptG &row);
 
 // Return true if index is empty
@@ -2139,7 +2139,7 @@ void                 avl_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 atf_amc::FAvl&       avl_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 avl_XrefMaybe(atf_amc::FAvl &row);
 
 // Return true if index is empty
@@ -2207,7 +2207,7 @@ atf_amc::FListtype&  listtype_qFind(u64 t) __attribute__((nothrow));
 // Compute row id of element given element's address
 u64                  listtype_rowid_Get(atf_amc::FListtype &row) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 listtype_XrefMaybe(atf_amc::FListtype &row);
 
 void                 _db_bh_typec_curs_Reserve(_db_bh_typec_curs &curs, int n);
@@ -2487,7 +2487,7 @@ atf_amc::Cstr&       orig_qLast(atf_amc::FPerfSortString& parent) __attribute__(
 // Return row id of specified element
 u64                  orig_rowid_Get(atf_amc::FPerfSortString& parent, atf_amc::Cstr &elem) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 orig_XrefMaybe(atf_amc::Cstr &row);
 
 // Reserve space (this may move memory). Insert N element at the end.
@@ -2671,7 +2671,7 @@ atf_amc::FTypeC&     typec_qFind(atf_amc::FTypeA& typea, u64 t) __attribute__((n
 // Compute row id of element given element's address
 u64                  typec_rowid_Get(atf_amc::FTypeA& typea, atf_amc::FTypeC &row) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 typec_XrefMaybe(atf_amc::FTypeC &row);
 
 // Delete all elements in the linked list.
@@ -2995,7 +2995,7 @@ void                 tary_HeapSort(atf_amc::FUnitSort& parent) __attribute__((no
 // Quick sort
 void                 tary_QuickSort(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 tary_XrefMaybe(atf_amc::TypeA &row);
 
 // Return true if index is empty
@@ -3257,7 +3257,7 @@ private:
 // The returned aryptr excludes the trailing deliminter.
 // SkipMsg will skip both the line and the deliminter.
 // A partial line at the end of input is NOT returned (TODO?)
-// 
+//
 aryptr<char>         in_GetMsg(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
 // Return max. number of bytes in the buffer.
 i32                  in_Max(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
@@ -3266,14 +3266,14 @@ i32                  in_N(atf_amc::Linebuf& linebuf) __attribute__((__warn_unuse
 // Discard contents of the buffer.
 void                 in_RemoveAll(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
 // Mark some buffer contents as read.
-// 
+//
 void                 in_SkipBytes(atf_amc::Linebuf& linebuf, int n) __attribute__((nothrow));
 // Skip current message, if any.
 void                 in_SkipMsg(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
-// 
+//
 bool                 in_WriteAll(atf_amc::Linebuf& linebuf, u8 *in, i32 in_n) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -3438,7 +3438,7 @@ void                 in_EndRead(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow)
 // If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
 // If there is no message, read once from underlying file descriptor and try again.
 // The message is length-delimited based on field length field
-// 
+//
 atf_amc::MsgHeader*  in_GetMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Return max. number of bytes in the buffer.
 i32                  in_Max(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
@@ -3453,10 +3453,10 @@ void                 in_SkipMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow)
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
-// 
+//
 bool                 in_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 in_XrefMaybe(atf_amc::MsgHeader &row);
 
 // Set all fields to initial values.
@@ -3564,7 +3564,7 @@ void                 typeg_Print(atf_amc::OptAlloc& optalloc, cstring &out) __at
 // Convert string to field. Return success value
 bool                 typeg_ReadStrptrMaybe(atf_amc::OptAlloc &parent, algo::strptr in_str) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 typeg_XrefMaybe(atf_amc::TypeG &row);
 
 bool                 OptAlloc_ReadFieldMaybe(atf_amc::OptAlloc &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -3638,7 +3638,7 @@ void                 optg_Print(atf_amc::OptOptG& parent, cstring &out) __attrib
 // Convert string to field. Return success value
 bool                 optg_ReadStrptrMaybe(atf_amc::OptOptG &parent, algo::strptr in_str) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 optg_XrefMaybe(atf_amc::OptG &row);
 
 bool                 OptOptG_ReadFieldMaybe(atf_amc::OptOptG &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -4336,16 +4336,16 @@ void                 PooledBE64_Print(atf_amc::PooledBE64 & row, algo::cstring &
 struct RnullStr6_U32 { // atf_amc.RnullStr6_U32: number stored as ascii digits, right pad with NUL
     enum { ch_max = 6 };
     u8 ch[6];
-    RnullStr6_U32(const atf_amc::RnullStr6_U32 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr6_U32(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     bool operator ==(const atf_amc::RnullStr6_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const atf_amc::RnullStr6_U32 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const atf_amc::RnullStr6_U32& parent) __attribute__((nothrow));
+    RnullStr6_U32(const atf_amc::RnullStr6_U32 &rhs) __attribute__((nothrow));
+    RnullStr6_U32(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr6_U32();
 };
 
@@ -4359,9 +4359,10 @@ int                  ch_N(const atf_amc::RnullStr6_U32& parent) __attribute__((_
 void                 ch_Print(atf_amc::RnullStr6_U32& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(atf_amc::RnullStr6_U32& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(atf_amc::RnullStr6_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(atf_amc::RnullStr6_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -4395,21 +4396,16 @@ struct RpasU32Str6 { // atf_amc.RpasU32Str6: number stored as ascii digits, righ
     u8 ch[6+1];
     u8 n_ch;
 
-    RpasU32Str6(const atf_amc::RpasU32Str6 &rhs) {
-        operator =(rhs);
-    }
-    explicit RpasU32Str6(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
-    void operator =(const RpasU32Str6 &s) {
-        n_ch = s.n_ch;
-        memcpy(ch, s.ch, n_ch);
-    }
-
     bool operator ==(const atf_amc::RpasU32Str6 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const atf_amc::RpasU32Str6 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const atf_amc::RpasU32Str6& parent) __attribute__((nothrow));
+    RpasU32Str6(const atf_amc::RpasU32Str6 &rhs) __attribute__((nothrow));
+    RpasU32Str6(const algo::strptr &rhs) __attribute__((nothrow));
     RpasU32Str6();
 };
 
@@ -4430,9 +4426,10 @@ int                  ch_N(const atf_amc::RpasU32Str6& parent) __attribute__((__w
 void                 ch_Print(atf_amc::RpasU32Str6& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(atf_amc::RpasU32Str6& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(atf_amc::RpasU32Str6& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(atf_amc::RpasU32Str6& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -5301,7 +5298,7 @@ void                 typeh_HeapSort(atf_amc::VarlenH& parent) __attribute__((not
 // Quick sort
 void                 typeh_QuickSort(atf_amc::VarlenH& parent) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 typeh_XrefMaybe(atf_amc::TypeH &row);
 
 void                 VarlenH_typeh_curs_Reset(VarlenH_typeh_curs &curs, atf_amc::VarlenH &parent);

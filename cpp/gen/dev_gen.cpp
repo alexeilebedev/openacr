@@ -40,9 +40,10 @@ const char *dev_Cfg_cfg_release   = "release";
 const char *dev_Compiler_compiler_          = "";
 const char *dev_Compiler_compiler_clangPP   = "clang++";
 const char *dev_Compiler_compiler_gPP       = "g++";
+const char *dev_Compiler_compiler_gPP_9     = "g++-9";
 
 namespace dev {
-static void          SizeCheck();
+    static void          SizeCheck();
 } // end namespace dev
 
 // --- dev.Arch..ReadFieldMaybe

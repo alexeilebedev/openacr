@@ -44,12 +44,6 @@ void amc::tclass_Cmp() {
     }
 }
 
-void amc::tfunc_Cmp_Swap() {
-}
-
-void amc::tfunc_Cmp_Rotleft() {
-}
-
 void amc::tfunc_Cmp_Nextchar() {
     algo_lib::Replscope &R          = amc::_db.genfield.R;
     amc::FField         &field      = *amc::_db.genfield.p_field;

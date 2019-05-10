@@ -33,7 +33,7 @@ static tempstr PkeyName(strptr ctype) {
     // if command line read -create -ctype amc.FCtype,
     // remove leading f_ from pkey name.
     if (StartsWithQ(ret,"f_")) {
-        ret=tempstr()<<ch_RestFrom(ret,2);
+        ret=ch_RestFrom(ret,2);
     }
     return ret;
 }

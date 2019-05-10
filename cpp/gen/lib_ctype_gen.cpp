@@ -20,22 +20,22 @@
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 namespace lib_ctype {
-static bool          fconst_InputMaybe(dmmeta::Fconst &elem) __attribute__((nothrow));
-static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
-static bool          ftuple_InputMaybe(dmmeta::Ftuple &elem) __attribute__((nothrow));
-static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
-static bool          field_InputMaybe(dmmeta::Field &elem) __attribute__((nothrow));
-static bool          cdflt_InputMaybe(dmmeta::Cdflt &elem) __attribute__((nothrow));
-// Load statically available data into tables, register tables and database.
-static void          InitReflection();
-static bool          cfmt_InputMaybe(dmmeta::Cfmt &elem) __attribute__((nothrow));
-static bool          cppfunc_InputMaybe(dmmeta::Cppfunc &elem) __attribute__((nothrow));
-static bool          substr_InputMaybe(dmmeta::Substr &elem) __attribute__((nothrow));
-// find trace by row id (used to implement reflection)
-static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
-// Function return 1
-static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-static void          SizeCheck();
+    static bool          fconst_InputMaybe(dmmeta::Fconst &elem) __attribute__((nothrow));
+    static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
+    static bool          ftuple_InputMaybe(dmmeta::Ftuple &elem) __attribute__((nothrow));
+    static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
+    static bool          field_InputMaybe(dmmeta::Field &elem) __attribute__((nothrow));
+    static bool          cdflt_InputMaybe(dmmeta::Cdflt &elem) __attribute__((nothrow));
+    // Load statically available data into tables, register tables and database.
+    static void          InitReflection();
+    static bool          cfmt_InputMaybe(dmmeta::Cfmt &elem) __attribute__((nothrow));
+    static bool          cppfunc_InputMaybe(dmmeta::Cppfunc &elem) __attribute__((nothrow));
+    static bool          substr_InputMaybe(dmmeta::Substr &elem) __attribute__((nothrow));
+    // find trace by row id (used to implement reflection)
+    static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
+    // Function return 1
+    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    static void          SizeCheck();
 } // end namespace lib_ctype
 
 // --- lib_ctype.FCdflt.base.CopyOut
@@ -432,7 +432,7 @@ static bool lib_ctype::fconst_InputMaybe(dmmeta::Fconst &elem) {
 
 // --- lib_ctype.FDb.fconst.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool lib_ctype::fconst_XrefMaybe(lib_ctype::FFconst &row) {
     bool retval = true;
     (void)row;
@@ -748,7 +748,7 @@ static bool lib_ctype::ssimfile_InputMaybe(dmmeta::Ssimfile &elem) {
 
 // --- lib_ctype.FDb.ssimfile.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool lib_ctype::ssimfile_XrefMaybe(lib_ctype::FSsimfile &row) {
     bool retval = true;
     (void)row;
@@ -959,7 +959,7 @@ static bool lib_ctype::ftuple_InputMaybe(dmmeta::Ftuple &elem) {
 
 // --- lib_ctype.FDb.ftuple.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool lib_ctype::ftuple_XrefMaybe(lib_ctype::FFtuple &row) {
     bool retval = true;
     (void)row;
@@ -1061,7 +1061,7 @@ static bool lib_ctype::ctype_InputMaybe(dmmeta::Ctype &elem) {
 
 // --- lib_ctype.FDb.ctype.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool lib_ctype::ctype_XrefMaybe(lib_ctype::FCtype &row) {
     bool retval = true;
     (void)row;
@@ -1279,7 +1279,7 @@ static bool lib_ctype::field_InputMaybe(dmmeta::Field &elem) {
 
 // --- lib_ctype.FDb.field.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool lib_ctype::field_XrefMaybe(lib_ctype::FField &row) {
     bool retval = true;
     (void)row;
@@ -1499,7 +1499,7 @@ static bool lib_ctype::cdflt_InputMaybe(dmmeta::Cdflt &elem) {
 
 // --- lib_ctype.FDb.cdflt.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool lib_ctype::cdflt_XrefMaybe(lib_ctype::FCdflt &row) {
     bool retval = true;
     (void)row;
@@ -1666,7 +1666,7 @@ bool lib_ctype::LoadSsimfileMaybe(algo::strptr fname) {
 
 // --- lib_ctype.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool lib_ctype::_db_XrefMaybe() {
     bool retval = true;
     return retval;
@@ -1753,7 +1753,7 @@ static bool lib_ctype::cfmt_InputMaybe(dmmeta::Cfmt &elem) {
 
 // --- lib_ctype.FDb.cfmt.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool lib_ctype::cfmt_XrefMaybe(lib_ctype::FCfmt &row) {
     bool retval = true;
     (void)row;
@@ -1974,7 +1974,7 @@ static bool lib_ctype::cppfunc_InputMaybe(dmmeta::Cppfunc &elem) {
 
 // --- lib_ctype.FDb.cppfunc.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool lib_ctype::cppfunc_XrefMaybe(lib_ctype::FCppfunc &row) {
     bool retval = true;
     (void)row;
@@ -2086,7 +2086,7 @@ static bool lib_ctype::substr_InputMaybe(dmmeta::Substr &elem) {
 
 // --- lib_ctype.FDb.substr.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool lib_ctype::substr_XrefMaybe(lib_ctype::FSubstr &row) {
     bool retval = true;
     (void)row;

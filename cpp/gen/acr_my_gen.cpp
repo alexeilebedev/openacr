@@ -64,15 +64,15 @@ const char *acr_my_syntax =
 ;
 } // namespace acr_my
 namespace acr_my {
-// Load statically available data into tables, register tables and database.
-static void          InitReflection();
-static bool          nsdb_InputMaybe(dmmeta::Nsdb &elem) __attribute__((nothrow));
-static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
-// find trace by row id (used to implement reflection)
-static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
-// Function return 1
-static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-static void          SizeCheck();
+    // Load statically available data into tables, register tables and database.
+    static void          InitReflection();
+    static bool          nsdb_InputMaybe(dmmeta::Nsdb &elem) __attribute__((nothrow));
+    static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
+    // find trace by row id (used to implement reflection)
+    static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
+    // Function return 1
+    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    static void          SizeCheck();
 } // end namespace acr_my
 
 // --- acr_my.trace..Print
@@ -277,7 +277,7 @@ bool acr_my::LoadSsimfileMaybe(algo::strptr fname) {
 
 // --- acr_my.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr_my::_db_XrefMaybe() {
     bool retval = true;
     return retval;
@@ -364,7 +364,7 @@ static bool acr_my::nsdb_InputMaybe(dmmeta::Nsdb &elem) {
 
 // --- acr_my.FDb.nsdb.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr_my::nsdb_XrefMaybe(acr_my::FNsdb &row) {
     bool retval = true;
     (void)row;
@@ -452,7 +452,7 @@ static bool acr_my::ssimfile_InputMaybe(dmmeta::Ssimfile &elem) {
 
 // --- acr_my.FDb.ssimfile.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr_my::ssimfile_XrefMaybe(acr_my::FSsimfile &row) {
     bool retval = true;
     (void)row;

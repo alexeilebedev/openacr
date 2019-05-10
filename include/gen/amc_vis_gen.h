@@ -267,7 +267,7 @@ void                 ctype_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 amc_vis::FCtype&     ctype_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 ctype_XrefMaybe(amc_vis::FCtype &row);
 
 // Allocate memory for new default row.
@@ -293,7 +293,7 @@ void                 field_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 amc_vis::FField&     field_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 field_XrefMaybe(amc_vis::FField &row);
 
 // Main function
@@ -313,7 +313,7 @@ bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow))
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
 
 // Return true if hash is empty
@@ -370,7 +370,7 @@ void                 node_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 amc_vis::FNode&      node_qFind(i32 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 node_XrefMaybe(amc_vis::FNode &row);
 
 // Return true if hash is empty
@@ -412,7 +412,7 @@ void                 link_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 amc_vis::Link&       link_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 link_XrefMaybe(amc_vis::Link &row);
 
 // Return true if hash is empty
@@ -452,7 +452,7 @@ void                 linkdep_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 amc_vis::Linkdep&    linkdep_qFind(i32 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 linkdep_XrefMaybe(amc_vis::Linkdep &row);
 
 // Return true if index is empty
@@ -560,7 +560,7 @@ void                 reftype_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 amc_vis::FReftype&   reftype_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 reftype_XrefMaybe(amc_vis::FReftype &row);
 
 // Return true if hash is empty
@@ -602,7 +602,7 @@ void                 nodedep_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 amc_vis::FNodedep&   nodedep_qFind(i32 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 nodedep_XrefMaybe(amc_vis::FNodedep &row);
 
 // Allocate memory for new default row.
@@ -627,7 +627,7 @@ void                 outrow_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 amc_vis::Outrow&     outrow_qFind(i32 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 outrow_XrefMaybe(amc_vis::Outrow &row);
 
 // Return true if index is empty
@@ -678,7 +678,7 @@ void                 finput_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 amc_vis::FFinput&    finput_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 finput_XrefMaybe(amc_vis::FFinput &row);
 
 // cursor points to valid item

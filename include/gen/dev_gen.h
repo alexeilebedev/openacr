@@ -28,6 +28,7 @@ extern const char *  dev_Cfg_cfg_release;    // release     fconst:dev.Cfg.cfg/r
 extern const char *  dev_Compiler_compiler_;          //            fconst:dev.Compiler.compiler/
 extern const char *  dev_Compiler_compiler_clangPP;   // clang++    fconst:dev.Compiler.compiler/clang++
 extern const char *  dev_Compiler_compiler_gPP;       // g++        fconst:dev.Compiler.compiler/g++
+extern const char *  dev_Compiler_compiler_gPP_9;     // g++-9      fconst:dev.Compiler.compiler/g++-9
 
 // --- dev_FieldIdEnum
 

@@ -58,13 +58,13 @@ const char *mysql2ssim_syntax =
 ;
 } // namespace mysql2ssim
 namespace mysql2ssim {
-// Load statically available data into tables, register tables and database.
-static void          InitReflection();
-// find trace by row id (used to implement reflection)
-static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
-// Function return 1
-static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-static void          SizeCheck();
+    // Load statically available data into tables, register tables and database.
+    static void          InitReflection();
+    // find trace by row id (used to implement reflection)
+    static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
+    // Function return 1
+    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    static void          SizeCheck();
 } // end namespace mysql2ssim
 
 // --- mysql2ssim.trace..Print
@@ -153,7 +153,7 @@ bool mysql2ssim::LoadSsimfileMaybe(algo::strptr fname) {
 
 // --- mysql2ssim.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool mysql2ssim::_db_XrefMaybe() {
     bool retval = true;
     return retval;

@@ -397,11 +397,8 @@ struct cstring { // algo.cstring
     cstring& operator =(const cstring &s);
     explicit cstring(const strptr &s);
     cstring(const tempstr &rhs);
-    operator const strptr() const {
-        return strptr(ch_elems,ch_n);
-    }
-    operator strptr() {
-        return strptr(ch_elems,ch_n);
+    operator strptr() const {
+        return strptr(const_cast<char*>(ch_elems),ch_n);
     }
     bool operator ==(const algo::cstring &rhs) const;
     bool operator <(const algo::cstring &rhs) const;
@@ -1016,21 +1013,16 @@ struct Smallstr150 { // algo.Smallstr150
     u8 ch[150+1];
     u8 n_ch;
 
-    Smallstr150(const algo::Smallstr150 &rhs) {
-        operator =(rhs);
-    }
-    explicit Smallstr150(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
-    void operator =(const Smallstr150 &s) {
-        n_ch = s.n_ch;
-        memcpy(ch, s.ch, n_ch);
-    }
-
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr150 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::Smallstr150& parent) __attribute__((nothrow));
+    Smallstr150(const algo::Smallstr150 &rhs) __attribute__((nothrow));
+    Smallstr150(const algo::strptr &rhs) __attribute__((nothrow));
     Smallstr150();
 };
 
@@ -1051,9 +1043,10 @@ int                  ch_N(const algo::Smallstr150& parent) __attribute__((__warn
 void                 ch_Print(algo::Smallstr150& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::Smallstr150& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::Smallstr150& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::Smallstr150& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  Smallstr150_Hash(u32 prev, const algo::Smallstr150 & rhs) __attribute__((nothrow));
 // Read fields of algo::Smallstr150 from an ascii string.
@@ -2025,19 +2018,14 @@ struct Smallstr50 { // algo.Smallstr50
     u8 ch[50+1];
     u8 n_ch;
 
-    Smallstr50(const algo::Smallstr50 &rhs) {
-        operator =(rhs);
-    }
-    explicit Smallstr50(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
-    void operator =(const Smallstr50 &s) {
-        n_ch = s.n_ch;
-        memcpy(ch, s.ch, n_ch);
-    }
-
     inline operator algo::strptr() const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::Smallstr50& parent) __attribute__((nothrow));
+    Smallstr50(const algo::Smallstr50 &rhs) __attribute__((nothrow));
+    Smallstr50(const algo::strptr &rhs) __attribute__((nothrow));
     Smallstr50();
 };
 
@@ -2058,9 +2046,10 @@ int                  ch_N(const algo::Smallstr50& parent) __attribute__((__warn_
 void                 ch_Print(algo::Smallstr50& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::Smallstr50& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::Smallstr50& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::Smallstr50& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  Smallstr50_Hash(u32 prev, const algo::Smallstr50 & rhs) __attribute__((nothrow));
 // Read fields of algo::Smallstr50 from an ascii string.
@@ -2240,16 +2229,16 @@ void                 LineBuf_Uninit(algo::LineBuf& parent) __attribute__((nothro
 struct LnumStr10_U64 { // algo.LnumStr10_U64: number stored as ascii digits, left pad with '0'
     enum { ch_max = 10 };
     u8 ch[10];
-    LnumStr10_U64(const algo::LnumStr10_U64 &rhs) {
-        operator =(rhs);
-    }
-    explicit LnumStr10_U64(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr10_U64 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LnumStr10_U64& parent) __attribute__((nothrow));
+    LnumStr10_U64(const algo::LnumStr10_U64 &rhs) __attribute__((nothrow));
+    LnumStr10_U64(const algo::strptr &rhs) __attribute__((nothrow));
     LnumStr10_U64();
 };
 #pragma pack(pop)
@@ -2264,9 +2253,10 @@ int                  ch_N(const algo::LnumStr10_U64& parent) __attribute__((__wa
 void                 ch_Print(algo::LnumStr10_U64& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LnumStr10_U64& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LnumStr10_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LnumStr10_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -2296,16 +2286,16 @@ void                 LnumStr10_U64_Print(algo::LnumStr10_U64 & row, algo::cstrin
 struct LnumStr11_U64 { // algo.LnumStr11_U64: number stored as ascii digits, left pad with '0'
     enum { ch_max = 11 };
     u8 ch[11];
-    LnumStr11_U64(const algo::LnumStr11_U64 &rhs) {
-        operator =(rhs);
-    }
-    explicit LnumStr11_U64(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr11_U64 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LnumStr11_U64& parent) __attribute__((nothrow));
+    LnumStr11_U64(const algo::LnumStr11_U64 &rhs) __attribute__((nothrow));
+    LnumStr11_U64(const algo::strptr &rhs) __attribute__((nothrow));
     LnumStr11_U64();
 };
 #pragma pack(pop)
@@ -2320,9 +2310,10 @@ int                  ch_N(const algo::LnumStr11_U64& parent) __attribute__((__wa
 void                 ch_Print(algo::LnumStr11_U64& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LnumStr11_U64& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LnumStr11_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LnumStr11_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -2352,16 +2343,16 @@ void                 LnumStr11_U64_Print(algo::LnumStr11_U64 & row, algo::cstrin
 struct LnumStr12_U64 { // algo.LnumStr12_U64: number stored as ascii digits, left pad with '0'
     enum { ch_max = 12 };
     u8 ch[12];
-    LnumStr12_U64(const algo::LnumStr12_U64 &rhs) {
-        operator =(rhs);
-    }
-    explicit LnumStr12_U64(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr12_U64 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LnumStr12_U64& parent) __attribute__((nothrow));
+    LnumStr12_U64(const algo::LnumStr12_U64 &rhs) __attribute__((nothrow));
+    LnumStr12_U64(const algo::strptr &rhs) __attribute__((nothrow));
     LnumStr12_U64();
 };
 #pragma pack(pop)
@@ -2376,9 +2367,10 @@ int                  ch_N(const algo::LnumStr12_U64& parent) __attribute__((__wa
 void                 ch_Print(algo::LnumStr12_U64& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LnumStr12_U64& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LnumStr12_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LnumStr12_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -2408,16 +2400,16 @@ void                 LnumStr12_U64_Print(algo::LnumStr12_U64 & row, algo::cstrin
 struct LnumStr13_U64_Base36 { // algo.LnumStr13_U64_Base36: number stored as ascii digits, left pad with '0', base 36
     enum { ch_max = 13 };
     u8 ch[13];
-    LnumStr13_U64_Base36(const algo::LnumStr13_U64_Base36 &rhs) {
-        operator =(rhs);
-    }
-    explicit LnumStr13_U64_Base36(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr13_U64_Base36 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LnumStr13_U64_Base36& parent) __attribute__((nothrow));
+    LnumStr13_U64_Base36(const algo::LnumStr13_U64_Base36 &rhs) __attribute__((nothrow));
+    LnumStr13_U64_Base36(const algo::strptr &rhs) __attribute__((nothrow));
     LnumStr13_U64_Base36();
 };
 #pragma pack(pop)
@@ -2432,9 +2424,10 @@ int                  ch_N(const algo::LnumStr13_U64_Base36& parent) __attribute_
 void                 ch_Print(algo::LnumStr13_U64_Base36& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LnumStr13_U64_Base36& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LnumStr13_U64_Base36& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LnumStr13_U64_Base36& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -2464,16 +2457,16 @@ void                 LnumStr13_U64_Base36_Print(algo::LnumStr13_U64_Base36 & row
 struct LnumStr16_U64_Base16 { // algo.LnumStr16_U64_Base16: number stored as ascii digits, padded with 0s, base 16
     enum { ch_max = 16 };
     u8 ch[16];
-    LnumStr16_U64_Base16(const algo::LnumStr16_U64_Base16 &rhs) {
-        operator =(rhs);
-    }
-    explicit LnumStr16_U64_Base16(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr16_U64_Base16 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LnumStr16_U64_Base16& parent) __attribute__((nothrow));
+    LnumStr16_U64_Base16(const algo::LnumStr16_U64_Base16 &rhs) __attribute__((nothrow));
+    LnumStr16_U64_Base16(const algo::strptr &rhs) __attribute__((nothrow));
     LnumStr16_U64_Base16();
 };
 #pragma pack(pop)
@@ -2488,9 +2481,10 @@ int                  ch_N(const algo::LnumStr16_U64_Base16& parent) __attribute_
 void                 ch_Print(algo::LnumStr16_U64_Base16& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LnumStr16_U64_Base16& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LnumStr16_U64_Base16& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LnumStr16_U64_Base16& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -2520,16 +2514,16 @@ void                 LnumStr16_U64_Base16_Print(algo::LnumStr16_U64_Base16 & row
 struct LnumStr1_U32 { // algo.LnumStr1_U32: number stored as ascii digits, left pad with '0'
     enum { ch_max = 1 };
     u8 ch[1];
-    LnumStr1_U32(const algo::LnumStr1_U32 &rhs) {
-        operator =(rhs);
-    }
-    explicit LnumStr1_U32(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr1_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LnumStr1_U32& parent) __attribute__((nothrow));
+    LnumStr1_U32(const algo::LnumStr1_U32 &rhs) __attribute__((nothrow));
+    LnumStr1_U32(const algo::strptr &rhs) __attribute__((nothrow));
     LnumStr1_U32();
 };
 #pragma pack(pop)
@@ -2544,9 +2538,10 @@ int                  ch_N(const algo::LnumStr1_U32& parent) __attribute__((__war
 void                 ch_Print(algo::LnumStr1_U32& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LnumStr1_U32& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LnumStr1_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LnumStr1_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -2576,16 +2571,16 @@ void                 LnumStr1_U32_Print(algo::LnumStr1_U32 & row, algo::cstring 
 struct LnumStr20_U64 { // algo.LnumStr20_U64: number stored as ascii digits, left pad with '0'
     enum { ch_max = 20 };
     u8 ch[20];
-    LnumStr20_U64(const algo::LnumStr20_U64 &rhs) {
-        operator =(rhs);
-    }
-    explicit LnumStr20_U64(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr20_U64 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LnumStr20_U64& parent) __attribute__((nothrow));
+    LnumStr20_U64(const algo::LnumStr20_U64 &rhs) __attribute__((nothrow));
+    LnumStr20_U64(const algo::strptr &rhs) __attribute__((nothrow));
     LnumStr20_U64();
 };
 #pragma pack(pop)
@@ -2600,9 +2595,10 @@ int                  ch_N(const algo::LnumStr20_U64& parent) __attribute__((__wa
 void                 ch_Print(algo::LnumStr20_U64& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LnumStr20_U64& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LnumStr20_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LnumStr20_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -2632,16 +2628,16 @@ void                 LnumStr20_U64_Print(algo::LnumStr20_U64 & row, algo::cstrin
 struct LnumStr22_U64 { // algo.LnumStr22_U64: number stored as ascii digits, left pad with '0'
     enum { ch_max = 22 };
     u8 ch[22];
-    LnumStr22_U64(const algo::LnumStr22_U64 &rhs) {
-        operator =(rhs);
-    }
-    explicit LnumStr22_U64(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr22_U64 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LnumStr22_U64& parent) __attribute__((nothrow));
+    LnumStr22_U64(const algo::LnumStr22_U64 &rhs) __attribute__((nothrow));
+    LnumStr22_U64(const algo::strptr &rhs) __attribute__((nothrow));
     LnumStr22_U64();
 };
 #pragma pack(pop)
@@ -2656,9 +2652,10 @@ int                  ch_N(const algo::LnumStr22_U64& parent) __attribute__((__wa
 void                 ch_Print(algo::LnumStr22_U64& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LnumStr22_U64& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LnumStr22_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LnumStr22_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -2688,16 +2685,16 @@ void                 LnumStr22_U64_Print(algo::LnumStr22_U64 & row, algo::cstrin
 struct LnumStr2_U32 { // algo.LnumStr2_U32: number stored as ascii digits, left pad with '0'
     enum { ch_max = 2 };
     u8 ch[2];
-    LnumStr2_U32(const algo::LnumStr2_U32 &rhs) {
-        operator =(rhs);
-    }
-    explicit LnumStr2_U32(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr2_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LnumStr2_U32& parent) __attribute__((nothrow));
+    LnumStr2_U32(const algo::LnumStr2_U32 &rhs) __attribute__((nothrow));
+    LnumStr2_U32(const algo::strptr &rhs) __attribute__((nothrow));
     LnumStr2_U32();
 };
 #pragma pack(pop)
@@ -2712,9 +2709,10 @@ int                  ch_N(const algo::LnumStr2_U32& parent) __attribute__((__war
 void                 ch_Print(algo::LnumStr2_U32& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LnumStr2_U32& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LnumStr2_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LnumStr2_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -2744,16 +2742,16 @@ void                 LnumStr2_U32_Print(algo::LnumStr2_U32 & row, algo::cstring 
 struct LnumStr3_U32 { // algo.LnumStr3_U32: number stored as ascii digits, left pad with '0'
     enum { ch_max = 3 };
     u8 ch[3];
-    LnumStr3_U32(const algo::LnumStr3_U32 &rhs) {
-        operator =(rhs);
-    }
-    explicit LnumStr3_U32(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr3_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LnumStr3_U32& parent) __attribute__((nothrow));
+    LnumStr3_U32(const algo::LnumStr3_U32 &rhs) __attribute__((nothrow));
+    LnumStr3_U32(const algo::strptr &rhs) __attribute__((nothrow));
     LnumStr3_U32();
 };
 #pragma pack(pop)
@@ -2768,9 +2766,10 @@ int                  ch_N(const algo::LnumStr3_U32& parent) __attribute__((__war
 void                 ch_Print(algo::LnumStr3_U32& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LnumStr3_U32& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LnumStr3_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LnumStr3_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -2800,16 +2799,16 @@ void                 LnumStr3_U32_Print(algo::LnumStr3_U32 & row, algo::cstring 
 struct LnumStr4_U32 { // algo.LnumStr4_U32: number stored as ascii digits, left pad with '0'
     enum { ch_max = 4 };
     u8 ch[4];
-    LnumStr4_U32(const algo::LnumStr4_U32 &rhs) {
-        operator =(rhs);
-    }
-    explicit LnumStr4_U32(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr4_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LnumStr4_U32& parent) __attribute__((nothrow));
+    LnumStr4_U32(const algo::LnumStr4_U32 &rhs) __attribute__((nothrow));
+    LnumStr4_U32(const algo::strptr &rhs) __attribute__((nothrow));
     LnumStr4_U32();
 };
 #pragma pack(pop)
@@ -2824,9 +2823,10 @@ int                  ch_N(const algo::LnumStr4_U32& parent) __attribute__((__war
 void                 ch_Print(algo::LnumStr4_U32& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LnumStr4_U32& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LnumStr4_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LnumStr4_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -2856,16 +2856,16 @@ void                 LnumStr4_U32_Print(algo::LnumStr4_U32 & row, algo::cstring 
 struct LnumStr5_U32 { // algo.LnumStr5_U32: number stored as ascii digits, left pad with '0'
     enum { ch_max = 5 };
     u8 ch[5];
-    LnumStr5_U32(const algo::LnumStr5_U32 &rhs) {
-        operator =(rhs);
-    }
-    explicit LnumStr5_U32(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr5_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LnumStr5_U32& parent) __attribute__((nothrow));
+    LnumStr5_U32(const algo::LnumStr5_U32 &rhs) __attribute__((nothrow));
+    LnumStr5_U32(const algo::strptr &rhs) __attribute__((nothrow));
     LnumStr5_U32();
 };
 #pragma pack(pop)
@@ -2880,9 +2880,10 @@ int                  ch_N(const algo::LnumStr5_U32& parent) __attribute__((__war
 void                 ch_Print(algo::LnumStr5_U32& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LnumStr5_U32& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LnumStr5_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LnumStr5_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -2912,16 +2913,16 @@ void                 LnumStr5_U32_Print(algo::LnumStr5_U32 & row, algo::cstring 
 struct LnumStr5_U32_Base36 { // algo.LnumStr5_U32_Base36: number stored as ascii digits, left pad with '0', base 36
     enum { ch_max = 5 };
     u8 ch[5];
-    LnumStr5_U32_Base36(const algo::LnumStr5_U32_Base36 &rhs) {
-        operator =(rhs);
-    }
-    explicit LnumStr5_U32_Base36(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr5_U32_Base36 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LnumStr5_U32_Base36& parent) __attribute__((nothrow));
+    LnumStr5_U32_Base36(const algo::LnumStr5_U32_Base36 &rhs) __attribute__((nothrow));
+    LnumStr5_U32_Base36(const algo::strptr &rhs) __attribute__((nothrow));
     LnumStr5_U32_Base36();
 };
 #pragma pack(pop)
@@ -2936,9 +2937,10 @@ int                  ch_N(const algo::LnumStr5_U32_Base36& parent) __attribute__
 void                 ch_Print(algo::LnumStr5_U32_Base36& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LnumStr5_U32_Base36& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LnumStr5_U32_Base36& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LnumStr5_U32_Base36& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -2968,16 +2970,16 @@ void                 LnumStr5_U32_Base36_Print(algo::LnumStr5_U32_Base36 & row, 
 struct LnumStr6_U32 { // algo.LnumStr6_U32: number stored as ascii digits, left pad with '0'
     enum { ch_max = 6 };
     u8 ch[6];
-    LnumStr6_U32(const algo::LnumStr6_U32 &rhs) {
-        operator =(rhs);
-    }
-    explicit LnumStr6_U32(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr6_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LnumStr6_U32& parent) __attribute__((nothrow));
+    LnumStr6_U32(const algo::LnumStr6_U32 &rhs) __attribute__((nothrow));
+    LnumStr6_U32(const algo::strptr &rhs) __attribute__((nothrow));
     LnumStr6_U32();
 };
 #pragma pack(pop)
@@ -2992,9 +2994,10 @@ int                  ch_N(const algo::LnumStr6_U32& parent) __attribute__((__war
 void                 ch_Print(algo::LnumStr6_U32& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LnumStr6_U32& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LnumStr6_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LnumStr6_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -3024,16 +3027,16 @@ void                 LnumStr6_U32_Print(algo::LnumStr6_U32 & row, algo::cstring 
 struct LnumStr7_U32 { // algo.LnumStr7_U32: number stored as ascii digits, left pad with '0'
     enum { ch_max = 7 };
     u8 ch[7];
-    LnumStr7_U32(const algo::LnumStr7_U32 &rhs) {
-        operator =(rhs);
-    }
-    explicit LnumStr7_U32(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr7_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LnumStr7_U32& parent) __attribute__((nothrow));
+    LnumStr7_U32(const algo::LnumStr7_U32 &rhs) __attribute__((nothrow));
+    LnumStr7_U32(const algo::strptr &rhs) __attribute__((nothrow));
     LnumStr7_U32();
 };
 #pragma pack(pop)
@@ -3048,9 +3051,10 @@ int                  ch_N(const algo::LnumStr7_U32& parent) __attribute__((__war
 void                 ch_Print(algo::LnumStr7_U32& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LnumStr7_U32& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LnumStr7_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LnumStr7_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -3080,16 +3084,16 @@ void                 LnumStr7_U32_Print(algo::LnumStr7_U32 & row, algo::cstring 
 struct LnumStr7_U32_Base36 { // algo.LnumStr7_U32_Base36: number stored as ascii digits, left pad with '0', base 36
     enum { ch_max = 7 };
     u8 ch[7];
-    LnumStr7_U32_Base36(const algo::LnumStr7_U32_Base36 &rhs) {
-        operator =(rhs);
-    }
-    explicit LnumStr7_U32_Base36(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr7_U32_Base36 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LnumStr7_U32_Base36& parent) __attribute__((nothrow));
+    LnumStr7_U32_Base36(const algo::LnumStr7_U32_Base36 &rhs) __attribute__((nothrow));
+    LnumStr7_U32_Base36(const algo::strptr &rhs) __attribute__((nothrow));
     LnumStr7_U32_Base36();
 };
 #pragma pack(pop)
@@ -3104,9 +3108,10 @@ int                  ch_N(const algo::LnumStr7_U32_Base36& parent) __attribute__
 void                 ch_Print(algo::LnumStr7_U32_Base36& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LnumStr7_U32_Base36& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LnumStr7_U32_Base36& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LnumStr7_U32_Base36& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -3136,16 +3141,16 @@ void                 LnumStr7_U32_Base36_Print(algo::LnumStr7_U32_Base36 & row, 
 struct LnumStr8_U32 { // algo.LnumStr8_U32: number stored as ascii digits, left pad with '0'
     enum { ch_max = 8 };
     u8 ch[8];
-    LnumStr8_U32(const algo::LnumStr8_U32 &rhs) {
-        operator =(rhs);
-    }
-    explicit LnumStr8_U32(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr8_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LnumStr8_U32& parent) __attribute__((nothrow));
+    LnumStr8_U32(const algo::LnumStr8_U32 &rhs) __attribute__((nothrow));
+    LnumStr8_U32(const algo::strptr &rhs) __attribute__((nothrow));
     LnumStr8_U32();
 };
 #pragma pack(pop)
@@ -3160,9 +3165,10 @@ int                  ch_N(const algo::LnumStr8_U32& parent) __attribute__((__war
 void                 ch_Print(algo::LnumStr8_U32& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LnumStr8_U32& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LnumStr8_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LnumStr8_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -3192,16 +3198,16 @@ void                 LnumStr8_U32_Print(algo::LnumStr8_U32 & row, algo::cstring 
 struct LnumStr8_U32_Base16 { // algo.LnumStr8_U32_Base16: number stored as ascii digits, padded with 0s, base 16
     enum { ch_max = 8 };
     u8 ch[8];
-    LnumStr8_U32_Base16(const algo::LnumStr8_U32_Base16 &rhs) {
-        operator =(rhs);
-    }
-    explicit LnumStr8_U32_Base16(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr8_U32_Base16 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LnumStr8_U32_Base16& parent) __attribute__((nothrow));
+    LnumStr8_U32_Base16(const algo::LnumStr8_U32_Base16 &rhs) __attribute__((nothrow));
+    LnumStr8_U32_Base16(const algo::strptr &rhs) __attribute__((nothrow));
     LnumStr8_U32_Base16();
 };
 #pragma pack(pop)
@@ -3216,9 +3222,10 @@ int                  ch_N(const algo::LnumStr8_U32_Base16& parent) __attribute__
 void                 ch_Print(algo::LnumStr8_U32_Base16& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LnumStr8_U32_Base16& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LnumStr8_U32_Base16& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LnumStr8_U32_Base16& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -3248,16 +3255,16 @@ void                 LnumStr8_U32_Base16_Print(algo::LnumStr8_U32_Base16 & row, 
 struct LnumStr8_U64 { // algo.LnumStr8_U64: number stored as ascii digits, left pad with '0'
     enum { ch_max = 8 };
     u8 ch[8];
-    LnumStr8_U64(const algo::LnumStr8_U64 &rhs) {
-        operator =(rhs);
-    }
-    explicit LnumStr8_U64(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr8_U64 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LnumStr8_U64& parent) __attribute__((nothrow));
+    LnumStr8_U64(const algo::LnumStr8_U64 &rhs) __attribute__((nothrow));
+    LnumStr8_U64(const algo::strptr &rhs) __attribute__((nothrow));
     LnumStr8_U64();
 };
 #pragma pack(pop)
@@ -3272,9 +3279,10 @@ int                  ch_N(const algo::LnumStr8_U64& parent) __attribute__((__war
 void                 ch_Print(algo::LnumStr8_U64& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LnumStr8_U64& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LnumStr8_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LnumStr8_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -3304,16 +3312,16 @@ void                 LnumStr8_U64_Print(algo::LnumStr8_U64 & row, algo::cstring 
 struct LnumStr9_U32 { // algo.LnumStr9_U32: number stored as ascii digits, left pad with '0'
     enum { ch_max = 9 };
     u8 ch[9];
-    LnumStr9_U32(const algo::LnumStr9_U32 &rhs) {
-        operator =(rhs);
-    }
-    explicit LnumStr9_U32(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr9_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LnumStr9_U32& parent) __attribute__((nothrow));
+    LnumStr9_U32(const algo::LnumStr9_U32 &rhs) __attribute__((nothrow));
+    LnumStr9_U32(const algo::strptr &rhs) __attribute__((nothrow));
     LnumStr9_U32();
 };
 #pragma pack(pop)
@@ -3328,9 +3336,10 @@ int                  ch_N(const algo::LnumStr9_U32& parent) __attribute__((__war
 void                 ch_Print(algo::LnumStr9_U32& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LnumStr9_U32& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LnumStr9_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LnumStr9_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -3359,16 +3368,16 @@ void                 LnumStr9_U32_Print(algo::LnumStr9_U32 & row, algo::cstring 
 struct LnumStr9_U64 { // algo.LnumStr9_U64: number stored as ascii digits, left pad with '0'
     enum { ch_max = 9 };
     u8 ch[9];
-    LnumStr9_U64(const algo::LnumStr9_U64 &rhs) {
-        operator =(rhs);
-    }
-    explicit LnumStr9_U64(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr9_U64 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LnumStr9_U64& parent) __attribute__((nothrow));
+    LnumStr9_U64(const algo::LnumStr9_U64 &rhs) __attribute__((nothrow));
+    LnumStr9_U64(const algo::strptr &rhs) __attribute__((nothrow));
     LnumStr9_U64();
 };
 
@@ -3382,9 +3391,10 @@ int                  ch_N(const algo::LnumStr9_U64& parent) __attribute__((__war
 void                 ch_Print(algo::LnumStr9_U64& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LnumStr9_U64& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LnumStr9_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LnumStr9_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -3468,21 +3478,16 @@ struct Smallstr200 { // algo.Smallstr200
     u8 ch[200+1];
     u8 n_ch;
 
-    Smallstr200(const algo::Smallstr200 &rhs) {
-        operator =(rhs);
-    }
-    explicit Smallstr200(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
-    void operator =(const Smallstr200 &s) {
-        n_ch = s.n_ch;
-        memcpy(ch, s.ch, n_ch);
-    }
-
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr200 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::Smallstr200& parent) __attribute__((nothrow));
+    Smallstr200(const algo::Smallstr200 &rhs) __attribute__((nothrow));
+    Smallstr200(const algo::strptr &rhs) __attribute__((nothrow));
     Smallstr200();
 };
 
@@ -3503,9 +3508,10 @@ int                  ch_N(const algo::Smallstr200& parent) __attribute__((__warn
 void                 ch_Print(algo::Smallstr200& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::Smallstr200& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::Smallstr200& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::Smallstr200& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  Smallstr200_Hash(u32 prev, const algo::Smallstr200 & rhs) __attribute__((nothrow));
 // Read fields of algo::Smallstr200 from an ascii string.
@@ -3539,16 +3545,16 @@ void                 Logmsg_Print(algo::Logmsg & row, algo::cstring &str) __attr
 struct LspaceStr10 { // algo.LspaceStr10
     enum { ch_max = 10 };
     u8 ch[10];
-    LspaceStr10(const algo::LspaceStr10 &rhs) {
-        operator =(rhs);
-    }
-    explicit LspaceStr10(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr10 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LspaceStr10& parent) __attribute__((nothrow));
+    LspaceStr10(const algo::LspaceStr10 &rhs) __attribute__((nothrow));
+    LspaceStr10(const algo::strptr &rhs) __attribute__((nothrow));
     LspaceStr10();
 };
 #pragma pack(pop)
@@ -3563,9 +3569,10 @@ int                  ch_N(const algo::LspaceStr10& parent) __attribute__((__warn
 void                 ch_Print(algo::LspaceStr10& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LspaceStr10& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LspaceStr10& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LspaceStr10& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  LspaceStr10_Hash(u32 prev, const algo::LspaceStr10 & rhs) __attribute__((nothrow));
 // Read fields of algo::LspaceStr10 from an ascii string.
@@ -3584,16 +3591,16 @@ void                 LspaceStr10_Print(algo::LspaceStr10 & row, algo::cstring &s
 struct LspaceStr12 { // algo.LspaceStr12
     enum { ch_max = 12 };
     u8 ch[12];
-    LspaceStr12(const algo::LspaceStr12 &rhs) {
-        operator =(rhs);
-    }
-    explicit LspaceStr12(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr12 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LspaceStr12& parent) __attribute__((nothrow));
+    LspaceStr12(const algo::LspaceStr12 &rhs) __attribute__((nothrow));
+    LspaceStr12(const algo::strptr &rhs) __attribute__((nothrow));
     LspaceStr12();
 };
 #pragma pack(pop)
@@ -3608,9 +3615,10 @@ int                  ch_N(const algo::LspaceStr12& parent) __attribute__((__warn
 void                 ch_Print(algo::LspaceStr12& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LspaceStr12& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LspaceStr12& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LspaceStr12& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  LspaceStr12_Hash(u32 prev, const algo::LspaceStr12 & rhs) __attribute__((nothrow));
 // Read fields of algo::LspaceStr12 from an ascii string.
@@ -3629,16 +3637,16 @@ void                 LspaceStr12_Print(algo::LspaceStr12 & row, algo::cstring &s
 struct LspaceStr14 { // algo.LspaceStr14
     enum { ch_max = 14 };
     u8 ch[14];
-    LspaceStr14(const algo::LspaceStr14 &rhs) {
-        operator =(rhs);
-    }
-    explicit LspaceStr14(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr14 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LspaceStr14& parent) __attribute__((nothrow));
+    LspaceStr14(const algo::LspaceStr14 &rhs) __attribute__((nothrow));
+    LspaceStr14(const algo::strptr &rhs) __attribute__((nothrow));
     LspaceStr14();
 };
 #pragma pack(pop)
@@ -3653,9 +3661,10 @@ int                  ch_N(const algo::LspaceStr14& parent) __attribute__((__warn
 void                 ch_Print(algo::LspaceStr14& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LspaceStr14& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LspaceStr14& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LspaceStr14& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  LspaceStr14_Hash(u32 prev, const algo::LspaceStr14 & rhs) __attribute__((nothrow));
 // Read fields of algo::LspaceStr14 from an ascii string.
@@ -3674,16 +3683,16 @@ void                 LspaceStr14_Print(algo::LspaceStr14 & row, algo::cstring &s
 struct LspaceStr15 { // algo.LspaceStr15
     enum { ch_max = 15 };
     u8 ch[15];
-    LspaceStr15(const algo::LspaceStr15 &rhs) {
-        operator =(rhs);
-    }
-    explicit LspaceStr15(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr15 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LspaceStr15& parent) __attribute__((nothrow));
+    LspaceStr15(const algo::LspaceStr15 &rhs) __attribute__((nothrow));
+    LspaceStr15(const algo::strptr &rhs) __attribute__((nothrow));
     LspaceStr15();
 };
 #pragma pack(pop)
@@ -3698,9 +3707,10 @@ int                  ch_N(const algo::LspaceStr15& parent) __attribute__((__warn
 void                 ch_Print(algo::LspaceStr15& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LspaceStr15& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LspaceStr15& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LspaceStr15& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  LspaceStr15_Hash(u32 prev, const algo::LspaceStr15 & rhs) __attribute__((nothrow));
 // Read fields of algo::LspaceStr15 from an ascii string.
@@ -3718,16 +3728,16 @@ void                 LspaceStr15_Print(algo::LspaceStr15 & row, algo::cstring &s
 struct LspaceStr20_I64 { // algo.LspaceStr20_I64: number stored as ascii digits, left pad with ' '
     enum { ch_max = 20 };
     u8 ch[20];
-    LspaceStr20_I64(const algo::LspaceStr20_I64 &rhs) {
-        operator =(rhs);
-    }
-    explicit LspaceStr20_I64(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr20_I64 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LspaceStr20_I64& parent) __attribute__((nothrow));
+    LspaceStr20_I64(const algo::LspaceStr20_I64 &rhs) __attribute__((nothrow));
+    LspaceStr20_I64(const algo::strptr &rhs) __attribute__((nothrow));
     LspaceStr20_I64();
 };
 
@@ -3741,9 +3751,10 @@ int                  ch_N(const algo::LspaceStr20_I64& parent) __attribute__((__
 void                 ch_Print(algo::LspaceStr20_I64& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LspaceStr20_I64& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LspaceStr20_I64& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LspaceStr20_I64& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -3773,16 +3784,16 @@ void                 LspaceStr20_I64_Print(algo::LspaceStr20_I64 & row, algo::cs
 struct LspaceStr20_U64 { // algo.LspaceStr20_U64: number stored as ascii digits, left pad with ' '
     enum { ch_max = 20 };
     u8 ch[20];
-    LspaceStr20_U64(const algo::LspaceStr20_U64 &rhs) {
-        operator =(rhs);
-    }
-    explicit LspaceStr20_U64(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr20_U64 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LspaceStr20_U64& parent) __attribute__((nothrow));
+    LspaceStr20_U64(const algo::LspaceStr20_U64 &rhs) __attribute__((nothrow));
+    LspaceStr20_U64(const algo::strptr &rhs) __attribute__((nothrow));
     LspaceStr20_U64();
 };
 #pragma pack(pop)
@@ -3797,9 +3808,10 @@ int                  ch_N(const algo::LspaceStr20_U64& parent) __attribute__((__
 void                 ch_Print(algo::LspaceStr20_U64& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LspaceStr20_U64& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LspaceStr20_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LspaceStr20_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -3829,16 +3841,16 @@ void                 LspaceStr20_U64_Print(algo::LspaceStr20_U64 & row, algo::cs
 struct LspaceStr3 { // algo.LspaceStr3
     enum { ch_max = 3 };
     u8 ch[3];
-    LspaceStr3(const algo::LspaceStr3 &rhs) {
-        operator =(rhs);
-    }
-    explicit LspaceStr3(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr3 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LspaceStr3& parent) __attribute__((nothrow));
+    LspaceStr3(const algo::LspaceStr3 &rhs) __attribute__((nothrow));
+    LspaceStr3(const algo::strptr &rhs) __attribute__((nothrow));
     LspaceStr3();
 };
 #pragma pack(pop)
@@ -3853,9 +3865,10 @@ int                  ch_N(const algo::LspaceStr3& parent) __attribute__((__warn_
 void                 ch_Print(algo::LspaceStr3& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LspaceStr3& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LspaceStr3& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LspaceStr3& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  LspaceStr3_Hash(u32 prev, const algo::LspaceStr3 & rhs) __attribute__((nothrow));
 // Read fields of algo::LspaceStr3 from an ascii string.
@@ -3874,16 +3887,16 @@ void                 LspaceStr3_Print(algo::LspaceStr3 & row, algo::cstring &str
 struct LspaceStr3_I16 { // algo.LspaceStr3_I16: number stored as ascii digits, left pad with ' '
     enum { ch_max = 3 };
     u8 ch[3];
-    LspaceStr3_I16(const algo::LspaceStr3_I16 &rhs) {
-        operator =(rhs);
-    }
-    explicit LspaceStr3_I16(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr3_I16 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LspaceStr3_I16& parent) __attribute__((nothrow));
+    LspaceStr3_I16(const algo::LspaceStr3_I16 &rhs) __attribute__((nothrow));
+    LspaceStr3_I16(const algo::strptr &rhs) __attribute__((nothrow));
     LspaceStr3_I16();
 };
 #pragma pack(pop)
@@ -3898,9 +3911,10 @@ int                  ch_N(const algo::LspaceStr3_I16& parent) __attribute__((__w
 void                 ch_Print(algo::LspaceStr3_I16& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LspaceStr3_I16& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LspaceStr3_I16& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LspaceStr3_I16& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -3930,16 +3944,16 @@ void                 LspaceStr3_I16_Print(algo::LspaceStr3_I16 & row, algo::cstr
 struct LspaceStr4 { // algo.LspaceStr4
     enum { ch_max = 4 };
     u8 ch[4];
-    LspaceStr4(const algo::LspaceStr4 &rhs) {
-        operator =(rhs);
-    }
-    explicit LspaceStr4(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr4 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LspaceStr4& parent) __attribute__((nothrow));
+    LspaceStr4(const algo::LspaceStr4 &rhs) __attribute__((nothrow));
+    LspaceStr4(const algo::strptr &rhs) __attribute__((nothrow));
     LspaceStr4();
 };
 #pragma pack(pop)
@@ -3954,9 +3968,10 @@ int                  ch_N(const algo::LspaceStr4& parent) __attribute__((__warn_
 void                 ch_Print(algo::LspaceStr4& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LspaceStr4& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LspaceStr4& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LspaceStr4& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  LspaceStr4_Hash(u32 prev, const algo::LspaceStr4 & rhs) __attribute__((nothrow));
 // Read fields of algo::LspaceStr4 from an ascii string.
@@ -3975,16 +3990,16 @@ void                 LspaceStr4_Print(algo::LspaceStr4 & row, algo::cstring &str
 struct LspaceStr5 { // algo.LspaceStr5
     enum { ch_max = 5 };
     u8 ch[5];
-    LspaceStr5(const algo::LspaceStr5 &rhs) {
-        operator =(rhs);
-    }
-    explicit LspaceStr5(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr5 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LspaceStr5& parent) __attribute__((nothrow));
+    LspaceStr5(const algo::LspaceStr5 &rhs) __attribute__((nothrow));
+    LspaceStr5(const algo::strptr &rhs) __attribute__((nothrow));
     LspaceStr5();
 };
 #pragma pack(pop)
@@ -3999,9 +4014,10 @@ int                  ch_N(const algo::LspaceStr5& parent) __attribute__((__warn_
 void                 ch_Print(algo::LspaceStr5& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LspaceStr5& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LspaceStr5& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LspaceStr5& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  LspaceStr5_Hash(u32 prev, const algo::LspaceStr5 & rhs) __attribute__((nothrow));
 // Read fields of algo::LspaceStr5 from an ascii string.
@@ -4020,16 +4036,16 @@ void                 LspaceStr5_Print(algo::LspaceStr5 & row, algo::cstring &str
 struct LspaceStr5_I16 { // algo.LspaceStr5_I16
     enum { ch_max = 5 };
     u8 ch[5];
-    LspaceStr5_I16(const algo::LspaceStr5_I16 &rhs) {
-        operator =(rhs);
-    }
-    explicit LspaceStr5_I16(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr5_I16 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LspaceStr5_I16& parent) __attribute__((nothrow));
+    LspaceStr5_I16(const algo::LspaceStr5_I16 &rhs) __attribute__((nothrow));
+    LspaceStr5_I16(const algo::strptr &rhs) __attribute__((nothrow));
     LspaceStr5_I16();
 };
 #pragma pack(pop)
@@ -4044,9 +4060,10 @@ int                  ch_N(const algo::LspaceStr5_I16& parent) __attribute__((__w
 void                 ch_Print(algo::LspaceStr5_I16& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LspaceStr5_I16& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LspaceStr5_I16& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LspaceStr5_I16& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -4076,16 +4093,16 @@ void                 LspaceStr5_I16_Print(algo::LspaceStr5_I16 & row, algo::cstr
 struct LspaceStr6 { // algo.LspaceStr6
     enum { ch_max = 6 };
     u8 ch[6];
-    LspaceStr6(const algo::LspaceStr6 &rhs) {
-        operator =(rhs);
-    }
-    explicit LspaceStr6(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr6 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LspaceStr6& parent) __attribute__((nothrow));
+    LspaceStr6(const algo::LspaceStr6 &rhs) __attribute__((nothrow));
+    LspaceStr6(const algo::strptr &rhs) __attribute__((nothrow));
     LspaceStr6();
 };
 #pragma pack(pop)
@@ -4100,9 +4117,10 @@ int                  ch_N(const algo::LspaceStr6& parent) __attribute__((__warn_
 void                 ch_Print(algo::LspaceStr6& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LspaceStr6& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LspaceStr6& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LspaceStr6& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  LspaceStr6_Hash(u32 prev, const algo::LspaceStr6 & rhs) __attribute__((nothrow));
 // Read fields of algo::LspaceStr6 from an ascii string.
@@ -4120,16 +4138,16 @@ void                 LspaceStr6_Print(algo::LspaceStr6 & row, algo::cstring &str
 struct LspaceStr6_U32 { // algo.LspaceStr6_U32: number stored as ascii digits, left pad with ' '
     enum { ch_max = 6 };
     u8 ch[6];
-    LspaceStr6_U32(const algo::LspaceStr6_U32 &rhs) {
-        operator =(rhs);
-    }
-    explicit LspaceStr6_U32(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr6_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LspaceStr6_U32& parent) __attribute__((nothrow));
+    LspaceStr6_U32(const algo::LspaceStr6_U32 &rhs) __attribute__((nothrow));
+    LspaceStr6_U32(const algo::strptr &rhs) __attribute__((nothrow));
     LspaceStr6_U32();
 };
 
@@ -4143,9 +4161,10 @@ int                  ch_N(const algo::LspaceStr6_U32& parent) __attribute__((__w
 void                 ch_Print(algo::LspaceStr6_U32& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LspaceStr6_U32& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LspaceStr6_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LspaceStr6_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -4174,16 +4193,16 @@ void                 LspaceStr6_U32_Print(algo::LspaceStr6_U32 & row, algo::cstr
 struct LspaceStr7_I32_Base36 { // algo.LspaceStr7_I32_Base36: number stored as ascii digits, left pad with ' ', base 36
     enum { ch_max = 7 };
     u8 ch[7];
-    LspaceStr7_I32_Base36(const algo::LspaceStr7_I32_Base36 &rhs) {
-        operator =(rhs);
-    }
-    explicit LspaceStr7_I32_Base36(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr7_I32_Base36 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LspaceStr7_I32_Base36& parent) __attribute__((nothrow));
+    LspaceStr7_I32_Base36(const algo::LspaceStr7_I32_Base36 &rhs) __attribute__((nothrow));
+    LspaceStr7_I32_Base36(const algo::strptr &rhs) __attribute__((nothrow));
     LspaceStr7_I32_Base36();
 };
 
@@ -4197,9 +4216,10 @@ int                  ch_N(const algo::LspaceStr7_I32_Base36& parent) __attribute
 void                 ch_Print(algo::LspaceStr7_I32_Base36& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LspaceStr7_I32_Base36& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LspaceStr7_I32_Base36& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LspaceStr7_I32_Base36& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -4229,16 +4249,16 @@ void                 LspaceStr7_I32_Base36_Print(algo::LspaceStr7_I32_Base36 & r
 struct LspaceStr8 { // algo.LspaceStr8
     enum { ch_max = 8 };
     u8 ch[8];
-    LspaceStr8(const algo::LspaceStr8 &rhs) {
-        operator =(rhs);
-    }
-    explicit LspaceStr8(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr8 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LspaceStr8& parent) __attribute__((nothrow));
+    LspaceStr8(const algo::LspaceStr8 &rhs) __attribute__((nothrow));
+    LspaceStr8(const algo::strptr &rhs) __attribute__((nothrow));
     LspaceStr8();
 };
 #pragma pack(pop)
@@ -4253,9 +4273,10 @@ int                  ch_N(const algo::LspaceStr8& parent) __attribute__((__warn_
 void                 ch_Print(algo::LspaceStr8& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LspaceStr8& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LspaceStr8& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LspaceStr8& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  LspaceStr8_Hash(u32 prev, const algo::LspaceStr8 & rhs) __attribute__((nothrow));
 // Read fields of algo::LspaceStr8 from an ascii string.
@@ -4274,16 +4295,16 @@ void                 LspaceStr8_Print(algo::LspaceStr8 & row, algo::cstring &str
 struct LspaceStr9 { // algo.LspaceStr9
     enum { ch_max = 9 };
     u8 ch[9];
-    LspaceStr9(const algo::LspaceStr9 &rhs) {
-        operator =(rhs);
-    }
-    explicit LspaceStr9(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr9 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::LspaceStr9& parent) __attribute__((nothrow));
+    LspaceStr9(const algo::LspaceStr9 &rhs) __attribute__((nothrow));
+    LspaceStr9(const algo::strptr &rhs) __attribute__((nothrow));
     LspaceStr9();
 };
 #pragma pack(pop)
@@ -4298,9 +4319,10 @@ int                  ch_N(const algo::LspaceStr9& parent) __attribute__((__warn_
 void                 ch_Print(algo::LspaceStr9& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::LspaceStr9& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::LspaceStr9& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::LspaceStr9& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  LspaceStr9_Hash(u32 prev, const algo::LspaceStr9 & rhs) __attribute__((nothrow));
 // Read fields of algo::LspaceStr9 from an ascii string.
@@ -4559,17 +4581,17 @@ void                 StaticCheck();
 struct RnullStr1 { // algo.RnullStr1
     enum { ch_max = 1 };
     u8 ch[1];
-    RnullStr1(const algo::RnullStr1 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr1(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr1 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr1 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr1& parent) __attribute__((nothrow));
+    RnullStr1(const algo::RnullStr1 &rhs) __attribute__((nothrow));
+    RnullStr1(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr1();
 };
 #pragma pack(pop)
@@ -4584,9 +4606,10 @@ int                  ch_N(const algo::RnullStr1& parent) __attribute__((__warn_u
 void                 ch_Print(algo::RnullStr1& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr1& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr1& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr1& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr1_Hash(u32 prev, algo::RnullStr1 rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr1 from an ascii string.
@@ -4608,17 +4631,17 @@ void                 RnullStr1_Print(algo::RnullStr1 row, algo::cstring &str) __
 struct RnullStr10 { // algo.RnullStr10
     enum { ch_max = 10 };
     u8 ch[10];
-    RnullStr10(const algo::RnullStr10 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr10(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr10 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr10 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr10& parent) __attribute__((nothrow));
+    RnullStr10(const algo::RnullStr10 &rhs) __attribute__((nothrow));
+    RnullStr10(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr10();
 };
 #pragma pack(pop)
@@ -4633,9 +4656,10 @@ int                  ch_N(const algo::RnullStr10& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr10& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr10& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr10& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr10& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr10_Hash(u32 prev, algo::RnullStr10 rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr10 from an ascii string.
@@ -4657,14 +4681,14 @@ void                 RnullStr10_Print(algo::RnullStr10 row, algo::cstring &str) 
 struct RnullStr100 { // algo.RnullStr100
     enum { ch_max = 100 };
     u8 ch[100];
-    RnullStr100(const algo::RnullStr100 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr100(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr100& parent) __attribute__((nothrow));
+    RnullStr100(const algo::RnullStr100 &rhs) __attribute__((nothrow));
+    RnullStr100(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr100();
 };
 #pragma pack(pop)
@@ -4679,9 +4703,10 @@ int                  ch_N(const algo::RnullStr100& parent) __attribute__((__warn
 void                 ch_Print(algo::RnullStr100& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr100& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr100& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr100& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr100_Hash(u32 prev, const algo::RnullStr100 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr100 from an ascii string.
@@ -4703,17 +4728,17 @@ void                 RnullStr100_Print(algo::RnullStr100 & row, algo::cstring &s
 struct RnullStr1000 { // algo.RnullStr1000
     enum { ch_max = 1000 };
     u8 ch[1000];
-    RnullStr1000(const algo::RnullStr1000 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr1000(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr1000 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr1000 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr1000& parent) __attribute__((nothrow));
+    RnullStr1000(const algo::RnullStr1000 &rhs) __attribute__((nothrow));
+    RnullStr1000(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr1000();
 };
 #pragma pack(pop)
@@ -4728,9 +4753,10 @@ int                  ch_N(const algo::RnullStr1000& parent) __attribute__((__war
 void                 ch_Print(algo::RnullStr1000& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr1000& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr1000& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr1000& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr1000_Hash(u32 prev, const algo::RnullStr1000 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr1000 from an ascii string.
@@ -4752,17 +4778,17 @@ void                 RnullStr1000_Print(algo::RnullStr1000 & row, algo::cstring 
 struct RnullStr11 { // algo.RnullStr11
     enum { ch_max = 11 };
     u8 ch[11];
-    RnullStr11(const algo::RnullStr11 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr11(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr11 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr11 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr11& parent) __attribute__((nothrow));
+    RnullStr11(const algo::RnullStr11 &rhs) __attribute__((nothrow));
+    RnullStr11(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr11();
 };
 #pragma pack(pop)
@@ -4777,9 +4803,10 @@ int                  ch_N(const algo::RnullStr11& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr11& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr11& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr11& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr11& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr11_Hash(u32 prev, const algo::RnullStr11 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr11 from an ascii string.
@@ -4801,17 +4828,17 @@ void                 RnullStr11_Print(algo::RnullStr11 & row, algo::cstring &str
 struct RnullStr12 { // algo.RnullStr12
     enum { ch_max = 12 };
     u8 ch[12];
-    RnullStr12(const algo::RnullStr12 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr12(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr12 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr12 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr12& parent) __attribute__((nothrow));
+    RnullStr12(const algo::RnullStr12 &rhs) __attribute__((nothrow));
+    RnullStr12(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr12();
 };
 #pragma pack(pop)
@@ -4826,9 +4853,10 @@ int                  ch_N(const algo::RnullStr12& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr12& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr12& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr12& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr12& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr12_Hash(u32 prev, const algo::RnullStr12 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr12 from an ascii string.
@@ -4850,17 +4878,17 @@ void                 RnullStr12_Print(algo::RnullStr12 & row, algo::cstring &str
 struct RnullStr129 { // algo.RnullStr129
     enum { ch_max = 129 };
     u8 ch[129];
-    RnullStr129(const algo::RnullStr129 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr129(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr129 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr129 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr129& parent) __attribute__((nothrow));
+    RnullStr129(const algo::RnullStr129 &rhs) __attribute__((nothrow));
+    RnullStr129(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr129();
 };
 #pragma pack(pop)
@@ -4875,9 +4903,10 @@ int                  ch_N(const algo::RnullStr129& parent) __attribute__((__warn
 void                 ch_Print(algo::RnullStr129& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr129& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr129& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr129& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr129_Hash(u32 prev, const algo::RnullStr129 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr129 from an ascii string.
@@ -4899,17 +4928,17 @@ void                 RnullStr129_Print(algo::RnullStr129 & row, algo::cstring &s
 struct RnullStr13 { // algo.RnullStr13
     enum { ch_max = 13 };
     u8 ch[13];
-    RnullStr13(const algo::RnullStr13 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr13(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr13 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr13 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr13& parent) __attribute__((nothrow));
+    RnullStr13(const algo::RnullStr13 &rhs) __attribute__((nothrow));
+    RnullStr13(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr13();
 };
 #pragma pack(pop)
@@ -4924,9 +4953,10 @@ int                  ch_N(const algo::RnullStr13& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr13& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr13& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr13& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr13& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr13_Hash(u32 prev, const algo::RnullStr13 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr13 from an ascii string.
@@ -4948,17 +4978,17 @@ void                 RnullStr13_Print(algo::RnullStr13 & row, algo::cstring &str
 struct RnullStr14 { // algo.RnullStr14
     enum { ch_max = 14 };
     u8 ch[14];
-    RnullStr14(const algo::RnullStr14 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr14(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr14 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr14 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr14& parent) __attribute__((nothrow));
+    RnullStr14(const algo::RnullStr14 &rhs) __attribute__((nothrow));
+    RnullStr14(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr14();
 };
 #pragma pack(pop)
@@ -4973,9 +5003,10 @@ int                  ch_N(const algo::RnullStr14& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr14& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr14& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr14& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr14& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr14_Hash(u32 prev, const algo::RnullStr14 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr14 from an ascii string.
@@ -4997,17 +5028,17 @@ void                 RnullStr14_Print(algo::RnullStr14 & row, algo::cstring &str
 struct RnullStr15 { // algo.RnullStr15
     enum { ch_max = 15 };
     u8 ch[15];
-    RnullStr15(const algo::RnullStr15 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr15(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr15 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr15 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr15& parent) __attribute__((nothrow));
+    RnullStr15(const algo::RnullStr15 &rhs) __attribute__((nothrow));
+    RnullStr15(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr15();
 };
 #pragma pack(pop)
@@ -5022,9 +5053,10 @@ int                  ch_N(const algo::RnullStr15& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr15& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr15& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr15& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr15& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr15_Hash(u32 prev, const algo::RnullStr15 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr15 from an ascii string.
@@ -5046,17 +5078,17 @@ void                 RnullStr15_Print(algo::RnullStr15 & row, algo::cstring &str
 struct RnullStr151 { // algo.RnullStr151
     enum { ch_max = 151 };
     u8 ch[151];
-    RnullStr151(const algo::RnullStr151 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr151(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr151 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr151 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr151& parent) __attribute__((nothrow));
+    RnullStr151(const algo::RnullStr151 &rhs) __attribute__((nothrow));
+    RnullStr151(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr151();
 };
 #pragma pack(pop)
@@ -5071,9 +5103,10 @@ int                  ch_N(const algo::RnullStr151& parent) __attribute__((__warn
 void                 ch_Print(algo::RnullStr151& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr151& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr151& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr151& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr151_Hash(u32 prev, const algo::RnullStr151 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr151 from an ascii string.
@@ -5095,14 +5128,14 @@ void                 RnullStr151_Print(algo::RnullStr151 & row, algo::cstring &s
 struct RnullStr16 { // algo.RnullStr16
     enum { ch_max = 16 };
     u8 ch[16];
-    RnullStr16(const algo::RnullStr16 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr16(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr16& parent) __attribute__((nothrow));
+    RnullStr16(const algo::RnullStr16 &rhs) __attribute__((nothrow));
+    RnullStr16(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr16();
 };
 #pragma pack(pop)
@@ -5117,9 +5150,10 @@ int                  ch_N(const algo::RnullStr16& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr16& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr16& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr16& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr16& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr16_Hash(u32 prev, algo::RnullStr16 rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr16 from an ascii string.
@@ -5141,17 +5175,17 @@ void                 RnullStr16_Print(algo::RnullStr16 row, algo::cstring &str) 
 struct RnullStr17 { // algo.RnullStr17
     enum { ch_max = 17 };
     u8 ch[17];
-    RnullStr17(const algo::RnullStr17 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr17(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr17 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr17 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr17& parent) __attribute__((nothrow));
+    RnullStr17(const algo::RnullStr17 &rhs) __attribute__((nothrow));
+    RnullStr17(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr17();
 };
 #pragma pack(pop)
@@ -5166,9 +5200,10 @@ int                  ch_N(const algo::RnullStr17& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr17& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr17& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr17& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr17& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr17_Hash(u32 prev, const algo::RnullStr17 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr17 from an ascii string.
@@ -5190,17 +5225,17 @@ void                 RnullStr17_Print(algo::RnullStr17 & row, algo::cstring &str
 struct RnullStr18 { // algo.RnullStr18
     enum { ch_max = 18 };
     u8 ch[18];
-    RnullStr18(const algo::RnullStr18 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr18(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr18 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr18 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr18& parent) __attribute__((nothrow));
+    RnullStr18(const algo::RnullStr18 &rhs) __attribute__((nothrow));
+    RnullStr18(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr18();
 };
 #pragma pack(pop)
@@ -5215,9 +5250,10 @@ int                  ch_N(const algo::RnullStr18& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr18& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr18& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr18& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr18& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr18_Hash(u32 prev, algo::RnullStr18 rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr18 from an ascii string.
@@ -5239,14 +5275,14 @@ void                 RnullStr18_Print(algo::RnullStr18 row, algo::cstring &str) 
 struct RnullStr19 { // algo.RnullStr19
     enum { ch_max = 19 };
     u8 ch[19];
-    RnullStr19(const algo::RnullStr19 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr19(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr19& parent) __attribute__((nothrow));
+    RnullStr19(const algo::RnullStr19 &rhs) __attribute__((nothrow));
+    RnullStr19(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr19();
 };
 #pragma pack(pop)
@@ -5261,9 +5297,10 @@ int                  ch_N(const algo::RnullStr19& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr19& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr19& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr19& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr19& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr19_Hash(u32 prev, const algo::RnullStr19 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr19 from an ascii string.
@@ -5285,17 +5322,17 @@ void                 RnullStr19_Print(algo::RnullStr19 & row, algo::cstring &str
 struct RnullStr2 { // algo.RnullStr2
     enum { ch_max = 2 };
     u8 ch[2];
-    RnullStr2(const algo::RnullStr2 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr2(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr2 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr2 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr2& parent) __attribute__((nothrow));
+    RnullStr2(const algo::RnullStr2 &rhs) __attribute__((nothrow));
+    RnullStr2(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr2();
 };
 #pragma pack(pop)
@@ -5310,9 +5347,10 @@ int                  ch_N(const algo::RnullStr2& parent) __attribute__((__warn_u
 void                 ch_Print(algo::RnullStr2& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr2& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr2& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr2& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr2_Hash(u32 prev, algo::RnullStr2 rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr2 from an ascii string.
@@ -5334,17 +5372,17 @@ void                 RnullStr2_Print(algo::RnullStr2 row, algo::cstring &str) __
 struct RnullStr20 { // algo.RnullStr20
     enum { ch_max = 20 };
     u8 ch[20];
-    RnullStr20(const algo::RnullStr20 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr20(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr20 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr20 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr20& parent) __attribute__((nothrow));
+    RnullStr20(const algo::RnullStr20 &rhs) __attribute__((nothrow));
+    RnullStr20(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr20();
 };
 #pragma pack(pop)
@@ -5359,9 +5397,10 @@ int                  ch_N(const algo::RnullStr20& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr20& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr20& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr20& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr20& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr20_Hash(u32 prev, algo::RnullStr20 rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr20 from an ascii string.
@@ -5383,14 +5422,14 @@ void                 RnullStr20_Print(algo::RnullStr20 row, algo::cstring &str) 
 struct RnullStr21 { // algo.RnullStr21
     enum { ch_max = 21 };
     u8 ch[21];
-    RnullStr21(const algo::RnullStr21 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr21(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr21& parent) __attribute__((nothrow));
+    RnullStr21(const algo::RnullStr21 &rhs) __attribute__((nothrow));
+    RnullStr21(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr21();
 };
 #pragma pack(pop)
@@ -5405,9 +5444,10 @@ int                  ch_N(const algo::RnullStr21& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr21& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr21& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr21& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr21& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr21_Hash(u32 prev, const algo::RnullStr21 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr21 from an ascii string.
@@ -5429,17 +5469,17 @@ void                 RnullStr21_Print(algo::RnullStr21 & row, algo::cstring &str
 struct RnullStr24 { // algo.RnullStr24
     enum { ch_max = 24 };
     u8 ch[24];
-    RnullStr24(const algo::RnullStr24 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr24(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr24 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr24 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr24& parent) __attribute__((nothrow));
+    RnullStr24(const algo::RnullStr24 &rhs) __attribute__((nothrow));
+    RnullStr24(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr24();
 };
 #pragma pack(pop)
@@ -5454,9 +5494,10 @@ int                  ch_N(const algo::RnullStr24& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr24& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr24& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr24& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr24& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr24_Hash(u32 prev, const algo::RnullStr24 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr24 from an ascii string.
@@ -5478,17 +5519,17 @@ void                 RnullStr24_Print(algo::RnullStr24 & row, algo::cstring &str
 struct RnullStr25 { // algo.RnullStr25
     enum { ch_max = 25 };
     u8 ch[25];
-    RnullStr25(const algo::RnullStr25 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr25(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr25 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr25 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr25& parent) __attribute__((nothrow));
+    RnullStr25(const algo::RnullStr25 &rhs) __attribute__((nothrow));
+    RnullStr25(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr25();
 };
 #pragma pack(pop)
@@ -5503,9 +5544,10 @@ int                  ch_N(const algo::RnullStr25& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr25& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr25& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr25& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr25& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr25_Hash(u32 prev, const algo::RnullStr25 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr25 from an ascii string.
@@ -5527,17 +5569,17 @@ void                 RnullStr25_Print(algo::RnullStr25 & row, algo::cstring &str
 struct RnullStr28 { // algo.RnullStr28
     enum { ch_max = 28 };
     u8 ch[28];
-    RnullStr28(const algo::RnullStr28 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr28(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr28 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr28 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr28& parent) __attribute__((nothrow));
+    RnullStr28(const algo::RnullStr28 &rhs) __attribute__((nothrow));
+    RnullStr28(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr28();
 };
 #pragma pack(pop)
@@ -5552,9 +5594,10 @@ int                  ch_N(const algo::RnullStr28& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr28& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr28& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr28& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr28& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr28_Hash(u32 prev, const algo::RnullStr28 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr28 from an ascii string.
@@ -5576,17 +5619,17 @@ void                 RnullStr28_Print(algo::RnullStr28 & row, algo::cstring &str
 struct RnullStr3 { // algo.RnullStr3
     enum { ch_max = 3 };
     u8 ch[3];
-    RnullStr3(const algo::RnullStr3 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr3(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr3 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr3 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr3& parent) __attribute__((nothrow));
+    RnullStr3(const algo::RnullStr3 &rhs) __attribute__((nothrow));
+    RnullStr3(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr3();
 };
 #pragma pack(pop)
@@ -5601,9 +5644,10 @@ int                  ch_N(const algo::RnullStr3& parent) __attribute__((__warn_u
 void                 ch_Print(algo::RnullStr3& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr3& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr3& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr3& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr3_Hash(u32 prev, algo::RnullStr3 rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr3 from an ascii string.
@@ -5625,14 +5669,14 @@ void                 RnullStr3_Print(algo::RnullStr3 row, algo::cstring &str) __
 struct RnullStr30 { // algo.RnullStr30
     enum { ch_max = 30 };
     u8 ch[30];
-    RnullStr30(const algo::RnullStr30 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr30(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr30& parent) __attribute__((nothrow));
+    RnullStr30(const algo::RnullStr30 &rhs) __attribute__((nothrow));
+    RnullStr30(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr30();
 };
 #pragma pack(pop)
@@ -5647,9 +5691,10 @@ int                  ch_N(const algo::RnullStr30& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr30& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr30& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr30& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr30& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr30_Hash(u32 prev, algo::RnullStr30 rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr30 from an ascii string.
@@ -5671,17 +5716,17 @@ void                 RnullStr30_Print(algo::RnullStr30 row, algo::cstring &str) 
 struct RnullStr32 { // algo.RnullStr32
     enum { ch_max = 32 };
     u8 ch[32];
-    RnullStr32(const algo::RnullStr32 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr32(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr32 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr32& parent) __attribute__((nothrow));
+    RnullStr32(const algo::RnullStr32 &rhs) __attribute__((nothrow));
+    RnullStr32(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr32();
 };
 #pragma pack(pop)
@@ -5696,9 +5741,10 @@ int                  ch_N(const algo::RnullStr32& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr32& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr32& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr32& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr32& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr32_Hash(u32 prev, algo::RnullStr32 rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr32 from an ascii string.
@@ -5720,17 +5766,17 @@ void                 RnullStr32_Print(algo::RnullStr32 row, algo::cstring &str) 
 struct RnullStr33 { // algo.RnullStr33
     enum { ch_max = 33 };
     u8 ch[33];
-    RnullStr33(const algo::RnullStr33 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr33(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr33 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr33 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr33& parent) __attribute__((nothrow));
+    RnullStr33(const algo::RnullStr33 &rhs) __attribute__((nothrow));
+    RnullStr33(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr33();
 };
 #pragma pack(pop)
@@ -5745,9 +5791,10 @@ int                  ch_N(const algo::RnullStr33& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr33& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr33& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr33& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr33& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr33_Hash(u32 prev, const algo::RnullStr33 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr33 from an ascii string.
@@ -5768,17 +5815,17 @@ void                 RnullStr33_Print(algo::RnullStr33 & row, algo::cstring &str
 struct RnullStr35 { // algo.RnullStr35
     enum { ch_max = 35 };
     u8 ch[35];
-    RnullStr35(const algo::RnullStr35 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr35(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr35 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr35 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr35& parent) __attribute__((nothrow));
+    RnullStr35(const algo::RnullStr35 &rhs) __attribute__((nothrow));
+    RnullStr35(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr35();
 };
 
@@ -5792,9 +5839,10 @@ int                  ch_N(const algo::RnullStr35& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr35& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr35& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr35& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr35& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr35_Hash(u32 prev, const algo::RnullStr35 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr35 from an ascii string.
@@ -5816,17 +5864,17 @@ void                 RnullStr35_Print(algo::RnullStr35 & row, algo::cstring &str
 struct RnullStr36 { // algo.RnullStr36
     enum { ch_max = 36 };
     u8 ch[36];
-    RnullStr36(const algo::RnullStr36 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr36(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr36 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr36 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr36& parent) __attribute__((nothrow));
+    RnullStr36(const algo::RnullStr36 &rhs) __attribute__((nothrow));
+    RnullStr36(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr36();
 };
 #pragma pack(pop)
@@ -5841,9 +5889,10 @@ int                  ch_N(const algo::RnullStr36& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr36& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr36& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr36& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr36& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr36_Hash(u32 prev, const algo::RnullStr36 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr36 from an ascii string.
@@ -5865,14 +5914,14 @@ void                 RnullStr36_Print(algo::RnullStr36 & row, algo::cstring &str
 struct RnullStr4 { // algo.RnullStr4
     enum { ch_max = 4 };
     u8 ch[4];
-    RnullStr4(const algo::RnullStr4 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr4(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr4& parent) __attribute__((nothrow));
+    RnullStr4(const algo::RnullStr4 &rhs) __attribute__((nothrow));
+    RnullStr4(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr4();
 };
 #pragma pack(pop)
@@ -5887,9 +5936,10 @@ int                  ch_N(const algo::RnullStr4& parent) __attribute__((__warn_u
 void                 ch_Print(algo::RnullStr4& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr4& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr4& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr4& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr4_Hash(u32 prev, algo::RnullStr4 rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr4 from an ascii string.
@@ -5911,17 +5961,17 @@ void                 RnullStr4_Print(algo::RnullStr4 row, algo::cstring &str) __
 struct RnullStr40 { // algo.RnullStr40
     enum { ch_max = 40 };
     u8 ch[40];
-    RnullStr40(const algo::RnullStr40 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr40(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr40 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr40 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr40& parent) __attribute__((nothrow));
+    RnullStr40(const algo::RnullStr40 &rhs) __attribute__((nothrow));
+    RnullStr40(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr40();
 };
 #pragma pack(pop)
@@ -5936,9 +5986,10 @@ int                  ch_N(const algo::RnullStr40& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr40& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr40& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr40& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr40& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr40_Hash(u32 prev, const algo::RnullStr40 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr40 from an ascii string.
@@ -5960,17 +6011,17 @@ void                 RnullStr40_Print(algo::RnullStr40 & row, algo::cstring &str
 struct RnullStr41 { // algo.RnullStr41
     enum { ch_max = 41 };
     u8 ch[41];
-    RnullStr41(const algo::RnullStr41 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr41(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr41 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr41 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr41& parent) __attribute__((nothrow));
+    RnullStr41(const algo::RnullStr41 &rhs) __attribute__((nothrow));
+    RnullStr41(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr41();
 };
 #pragma pack(pop)
@@ -5985,9 +6036,10 @@ int                  ch_N(const algo::RnullStr41& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr41& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr41& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr41& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr41& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr41_Hash(u32 prev, const algo::RnullStr41 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr41 from an ascii string.
@@ -6009,14 +6061,14 @@ void                 RnullStr41_Print(algo::RnullStr41 & row, algo::cstring &str
 struct RnullStr43 { // algo.RnullStr43
     enum { ch_max = 43 };
     u8 ch[43];
-    RnullStr43(const algo::RnullStr43 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr43(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr43& parent) __attribute__((nothrow));
+    RnullStr43(const algo::RnullStr43 &rhs) __attribute__((nothrow));
+    RnullStr43(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr43();
 };
 #pragma pack(pop)
@@ -6031,9 +6083,10 @@ int                  ch_N(const algo::RnullStr43& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr43& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr43& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr43& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr43& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr43_Hash(u32 prev, const algo::RnullStr43 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr43 from an ascii string.
@@ -6055,14 +6108,14 @@ void                 RnullStr43_Print(algo::RnullStr43 & row, algo::cstring &str
 struct RnullStr44 { // algo.RnullStr44
     enum { ch_max = 44 };
     u8 ch[44];
-    RnullStr44(const algo::RnullStr44 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr44(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr44& parent) __attribute__((nothrow));
+    RnullStr44(const algo::RnullStr44 &rhs) __attribute__((nothrow));
+    RnullStr44(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr44();
 };
 #pragma pack(pop)
@@ -6077,9 +6130,10 @@ int                  ch_N(const algo::RnullStr44& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr44& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr44& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr44& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr44& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr44_Hash(u32 prev, const algo::RnullStr44 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr44 from an ascii string.
@@ -6101,14 +6155,14 @@ void                 RnullStr44_Print(algo::RnullStr44 & row, algo::cstring &str
 struct RnullStr48 { // algo.RnullStr48
     enum { ch_max = 48 };
     u8 ch[48];
-    RnullStr48(const algo::RnullStr48 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr48(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr48& parent) __attribute__((nothrow));
+    RnullStr48(const algo::RnullStr48 &rhs) __attribute__((nothrow));
+    RnullStr48(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr48();
 };
 #pragma pack(pop)
@@ -6123,9 +6177,10 @@ int                  ch_N(const algo::RnullStr48& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr48& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr48& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr48& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr48& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr48_Hash(u32 prev, const algo::RnullStr48 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr48 from an ascii string.
@@ -6147,14 +6202,14 @@ void                 RnullStr48_Print(algo::RnullStr48 & row, algo::cstring &str
 struct RnullStr5 { // algo.RnullStr5
     enum { ch_max = 5 };
     u8 ch[5];
-    RnullStr5(const algo::RnullStr5 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr5(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr5& parent) __attribute__((nothrow));
+    RnullStr5(const algo::RnullStr5 &rhs) __attribute__((nothrow));
+    RnullStr5(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr5();
 };
 #pragma pack(pop)
@@ -6169,9 +6224,10 @@ int                  ch_N(const algo::RnullStr5& parent) __attribute__((__warn_u
 void                 ch_Print(algo::RnullStr5& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr5& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr5& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr5& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr5_Hash(u32 prev, algo::RnullStr5 rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr5 from an ascii string.
@@ -6193,14 +6249,14 @@ void                 RnullStr5_Print(algo::RnullStr5 row, algo::cstring &str) __
 struct RnullStr50 { // algo.RnullStr50
     enum { ch_max = 50 };
     u8 ch[50];
-    RnullStr50(const algo::RnullStr50 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr50(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr50& parent) __attribute__((nothrow));
+    RnullStr50(const algo::RnullStr50 &rhs) __attribute__((nothrow));
+    RnullStr50(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr50();
 };
 #pragma pack(pop)
@@ -6215,9 +6271,10 @@ int                  ch_N(const algo::RnullStr50& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr50& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr50& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr50& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr50& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr50_Hash(u32 prev, const algo::RnullStr50 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr50 from an ascii string.
@@ -6239,17 +6296,17 @@ void                 RnullStr50_Print(algo::RnullStr50 & row, algo::cstring &str
 struct RnullStr54 { // algo.RnullStr54
     enum { ch_max = 54 };
     u8 ch[54];
-    RnullStr54(const algo::RnullStr54 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr54(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr54 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr54 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr54& parent) __attribute__((nothrow));
+    RnullStr54(const algo::RnullStr54 &rhs) __attribute__((nothrow));
+    RnullStr54(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr54();
 };
 #pragma pack(pop)
@@ -6264,9 +6321,10 @@ int                  ch_N(const algo::RnullStr54& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr54& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr54& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr54& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr54& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr54_Hash(u32 prev, const algo::RnullStr54 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr54 from an ascii string.
@@ -6288,14 +6346,14 @@ void                 RnullStr54_Print(algo::RnullStr54 & row, algo::cstring &str
 struct RnullStr55 { // algo.RnullStr55
     enum { ch_max = 55 };
     u8 ch[55];
-    RnullStr55(const algo::RnullStr55 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr55(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr55& parent) __attribute__((nothrow));
+    RnullStr55(const algo::RnullStr55 &rhs) __attribute__((nothrow));
+    RnullStr55(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr55();
 };
 #pragma pack(pop)
@@ -6310,9 +6368,10 @@ int                  ch_N(const algo::RnullStr55& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr55& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr55& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr55& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr55& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr55_Hash(u32 prev, const algo::RnullStr55 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr55 from an ascii string.
@@ -6334,17 +6393,17 @@ void                 RnullStr55_Print(algo::RnullStr55 & row, algo::cstring &str
 struct RnullStr6 { // algo.RnullStr6
     enum { ch_max = 6 };
     u8 ch[6];
-    RnullStr6(const algo::RnullStr6 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr6(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr6 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr6 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr6& parent) __attribute__((nothrow));
+    RnullStr6(const algo::RnullStr6 &rhs) __attribute__((nothrow));
+    RnullStr6(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr6();
 };
 #pragma pack(pop)
@@ -6359,9 +6418,10 @@ int                  ch_N(const algo::RnullStr6& parent) __attribute__((__warn_u
 void                 ch_Print(algo::RnullStr6& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr6& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr6& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr6& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr6_Hash(u32 prev, algo::RnullStr6 rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr6 from an ascii string.
@@ -6383,17 +6443,17 @@ void                 RnullStr6_Print(algo::RnullStr6 row, algo::cstring &str) __
 struct RnullStr60 { // algo.RnullStr60
     enum { ch_max = 60 };
     u8 ch[60];
-    RnullStr60(const algo::RnullStr60 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr60(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr60 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr60 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr60& parent) __attribute__((nothrow));
+    RnullStr60(const algo::RnullStr60 &rhs) __attribute__((nothrow));
+    RnullStr60(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr60();
 };
 #pragma pack(pop)
@@ -6408,9 +6468,10 @@ int                  ch_N(const algo::RnullStr60& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr60& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr60& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr60& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr60& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr60_Hash(u32 prev, const algo::RnullStr60 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr60 from an ascii string.
@@ -6432,17 +6493,17 @@ void                 RnullStr60_Print(algo::RnullStr60 & row, algo::cstring &str
 struct RnullStr62 { // algo.RnullStr62
     enum { ch_max = 62 };
     u8 ch[62];
-    RnullStr62(const algo::RnullStr62 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr62(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr62 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr62 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr62& parent) __attribute__((nothrow));
+    RnullStr62(const algo::RnullStr62 &rhs) __attribute__((nothrow));
+    RnullStr62(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr62();
 };
 #pragma pack(pop)
@@ -6457,9 +6518,10 @@ int                  ch_N(const algo::RnullStr62& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr62& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr62& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr62& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr62& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr62_Hash(u32 prev, const algo::RnullStr62 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr62 from an ascii string.
@@ -6481,14 +6543,14 @@ void                 RnullStr62_Print(algo::RnullStr62 & row, algo::cstring &str
 struct RnullStr66 { // algo.RnullStr66
     enum { ch_max = 66 };
     u8 ch[66];
-    RnullStr66(const algo::RnullStr66 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr66(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr66& parent) __attribute__((nothrow));
+    RnullStr66(const algo::RnullStr66 &rhs) __attribute__((nothrow));
+    RnullStr66(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr66();
 };
 #pragma pack(pop)
@@ -6503,9 +6565,10 @@ int                  ch_N(const algo::RnullStr66& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr66& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr66& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr66& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr66& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr66_Hash(u32 prev, const algo::RnullStr66 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr66 from an ascii string.
@@ -6527,16 +6590,16 @@ void                 RnullStr66_Print(algo::RnullStr66 & row, algo::cstring &str
 struct RnullStr6_U32 { // algo.RnullStr6_U32: number stored as ascii digits, right pad with null
     enum { ch_max = 6 };
     u8 ch[6];
-    RnullStr6_U32(const algo::RnullStr6_U32 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr6_U32(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr6_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr6_U32& parent) __attribute__((nothrow));
+    RnullStr6_U32(const algo::RnullStr6_U32 &rhs) __attribute__((nothrow));
+    RnullStr6_U32(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr6_U32();
 };
 #pragma pack(pop)
@@ -6551,9 +6614,10 @@ int                  ch_N(const algo::RnullStr6_U32& parent) __attribute__((__wa
 void                 ch_Print(algo::RnullStr6_U32& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr6_U32& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr6_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr6_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -6583,17 +6647,17 @@ void                 RnullStr6_U32_Print(algo::RnullStr6_U32 & row, algo::cstrin
 struct RnullStr7 { // algo.RnullStr7
     enum { ch_max = 7 };
     u8 ch[7];
-    RnullStr7(const algo::RnullStr7 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr7(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr7 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr7 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr7& parent) __attribute__((nothrow));
+    RnullStr7(const algo::RnullStr7 &rhs) __attribute__((nothrow));
+    RnullStr7(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr7();
 };
 #pragma pack(pop)
@@ -6608,9 +6672,10 @@ int                  ch_N(const algo::RnullStr7& parent) __attribute__((__warn_u
 void                 ch_Print(algo::RnullStr7& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr7& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr7& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr7& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr7_Hash(u32 prev, algo::RnullStr7 rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr7 from an ascii string.
@@ -6632,14 +6697,14 @@ void                 RnullStr7_Print(algo::RnullStr7 row, algo::cstring &str) __
 struct RnullStr8 { // algo.RnullStr8
     enum { ch_max = 8 };
     u8 ch[8];
-    RnullStr8(const algo::RnullStr8 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr8(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr8& parent) __attribute__((nothrow));
+    RnullStr8(const algo::RnullStr8 &rhs) __attribute__((nothrow));
+    RnullStr8(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr8();
 };
 #pragma pack(pop)
@@ -6654,9 +6719,10 @@ int                  ch_N(const algo::RnullStr8& parent) __attribute__((__warn_u
 void                 ch_Print(algo::RnullStr8& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr8& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr8& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr8& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr8_Hash(u32 prev, algo::RnullStr8 rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr8 from an ascii string.
@@ -6678,14 +6744,14 @@ void                 RnullStr8_Print(algo::RnullStr8 row, algo::cstring &str) __
 struct RnullStr80 { // algo.RnullStr80
     enum { ch_max = 80 };
     u8 ch[80];
-    RnullStr80(const algo::RnullStr80 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr80(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr80& parent) __attribute__((nothrow));
+    RnullStr80(const algo::RnullStr80 &rhs) __attribute__((nothrow));
+    RnullStr80(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr80();
 };
 #pragma pack(pop)
@@ -6700,9 +6766,10 @@ int                  ch_N(const algo::RnullStr80& parent) __attribute__((__warn_
 void                 ch_Print(algo::RnullStr80& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr80& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr80& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr80& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr80_Hash(u32 prev, const algo::RnullStr80 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr80 from an ascii string.
@@ -6724,17 +6791,17 @@ void                 RnullStr80_Print(algo::RnullStr80 & row, algo::cstring &str
 struct RnullStr9 { // algo.RnullStr9
     enum { ch_max = 9 };
     u8 ch[9];
-    RnullStr9(const algo::RnullStr9 &rhs) {
-        operator =(rhs);
-    }
-    explicit RnullStr9(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr9 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr9 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RnullStr9& parent) __attribute__((nothrow));
+    RnullStr9(const algo::RnullStr9 &rhs) __attribute__((nothrow));
+    RnullStr9(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr9();
 };
 #pragma pack(pop)
@@ -6749,9 +6816,10 @@ int                  ch_N(const algo::RnullStr9& parent) __attribute__((__warn_u
 void                 ch_Print(algo::RnullStr9& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RnullStr9& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RnullStr9& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RnullStr9& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RnullStr9_Hash(u32 prev, const algo::RnullStr9 & rhs) __attribute__((nothrow));
 // Read fields of algo::RnullStr9 from an ascii string.
@@ -6773,16 +6841,16 @@ void                 RnullStr9_Print(algo::RnullStr9 & row, algo::cstring &str) 
 struct RspaceStr10 { // algo.RspaceStr10
     enum { ch_max = 10 };
     u8 ch[10];
-    RspaceStr10(const algo::RspaceStr10 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr10(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr10 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr10& parent) __attribute__((nothrow));
+    RspaceStr10(const algo::RspaceStr10 &rhs) __attribute__((nothrow));
+    RspaceStr10(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr10();
 };
 #pragma pack(pop)
@@ -6797,9 +6865,10 @@ int                  ch_N(const algo::RspaceStr10& parent) __attribute__((__warn
 void                 ch_Print(algo::RspaceStr10& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr10& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr10& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr10& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr10_Hash(u32 prev, const algo::RspaceStr10 & rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr10 from an ascii string.
@@ -6818,16 +6887,16 @@ void                 RspaceStr10_Print(algo::RspaceStr10 & row, algo::cstring &s
 struct RspaceStr100 { // algo.RspaceStr100
     enum { ch_max = 100 };
     u8 ch[100];
-    RspaceStr100(const algo::RspaceStr100 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr100(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr100 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr100& parent) __attribute__((nothrow));
+    RspaceStr100(const algo::RspaceStr100 &rhs) __attribute__((nothrow));
+    RspaceStr100(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr100();
 };
 #pragma pack(pop)
@@ -6842,9 +6911,10 @@ int                  ch_N(const algo::RspaceStr100& parent) __attribute__((__war
 void                 ch_Print(algo::RspaceStr100& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr100& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr100& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr100& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr100_Hash(u32 prev, const algo::RspaceStr100 & rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr100 from an ascii string.
@@ -6863,16 +6933,16 @@ void                 RspaceStr100_Print(algo::RspaceStr100 & row, algo::cstring 
 struct RspaceStr11 { // algo.RspaceStr11
     enum { ch_max = 11 };
     u8 ch[11];
-    RspaceStr11(const algo::RspaceStr11 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr11(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr11 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr11& parent) __attribute__((nothrow));
+    RspaceStr11(const algo::RspaceStr11 &rhs) __attribute__((nothrow));
+    RspaceStr11(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr11();
 };
 #pragma pack(pop)
@@ -6887,9 +6957,10 @@ int                  ch_N(const algo::RspaceStr11& parent) __attribute__((__warn
 void                 ch_Print(algo::RspaceStr11& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr11& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr11& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr11& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr11_Hash(u32 prev, const algo::RspaceStr11 & rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr11 from an ascii string.
@@ -6908,14 +6979,14 @@ void                 RspaceStr11_Print(algo::RspaceStr11 & row, algo::cstring &s
 struct RspaceStr16 { // algo.RspaceStr16
     enum { ch_max = 16 };
     u8 ch[16];
-    RspaceStr16(const algo::RspaceStr16 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr16(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr16& parent) __attribute__((nothrow));
+    RspaceStr16(const algo::RspaceStr16 &rhs) __attribute__((nothrow));
+    RspaceStr16(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr16();
 };
 #pragma pack(pop)
@@ -6930,9 +7001,10 @@ int                  ch_N(const algo::RspaceStr16& parent) __attribute__((__warn
 void                 ch_Print(algo::RspaceStr16& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr16& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr16& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr16& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr16_Hash(u32 prev, algo::RspaceStr16 rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr16 from an ascii string.
@@ -6954,16 +7026,16 @@ void                 RspaceStr16_Print(algo::RspaceStr16 row, algo::cstring &str
 struct RspaceStr2 { // algo.RspaceStr2
     enum { ch_max = 2 };
     u8 ch[2];
-    RspaceStr2(const algo::RspaceStr2 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr2(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr2 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr2& parent) __attribute__((nothrow));
+    RspaceStr2(const algo::RspaceStr2 &rhs) __attribute__((nothrow));
+    RspaceStr2(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr2();
 };
 #pragma pack(pop)
@@ -6978,9 +7050,10 @@ int                  ch_N(const algo::RspaceStr2& parent) __attribute__((__warn_
 void                 ch_Print(algo::RspaceStr2& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr2& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr2& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr2& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr2_Hash(u32 prev, algo::RspaceStr2 rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr2 from an ascii string.
@@ -6999,16 +7072,16 @@ void                 RspaceStr2_Print(algo::RspaceStr2 row, algo::cstring &str) 
 struct RspaceStr20 { // algo.RspaceStr20
     enum { ch_max = 20 };
     u8 ch[20];
-    RspaceStr20(const algo::RspaceStr20 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr20(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr20 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr20& parent) __attribute__((nothrow));
+    RspaceStr20(const algo::RspaceStr20 &rhs) __attribute__((nothrow));
+    RspaceStr20(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr20();
 };
 #pragma pack(pop)
@@ -7023,9 +7096,10 @@ int                  ch_N(const algo::RspaceStr20& parent) __attribute__((__warn
 void                 ch_Print(algo::RspaceStr20& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr20& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr20& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr20& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr20_Hash(u32 prev, const algo::RspaceStr20 & rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr20 from an ascii string.
@@ -7044,16 +7118,16 @@ void                 RspaceStr20_Print(algo::RspaceStr20 & row, algo::cstring &s
 struct RspaceStr200 { // algo.RspaceStr200
     enum { ch_max = 200 };
     u8 ch[200];
-    RspaceStr200(const algo::RspaceStr200 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr200(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr200 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr200& parent) __attribute__((nothrow));
+    RspaceStr200(const algo::RspaceStr200 &rhs) __attribute__((nothrow));
+    RspaceStr200(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr200();
 };
 #pragma pack(pop)
@@ -7068,9 +7142,10 @@ int                  ch_N(const algo::RspaceStr200& parent) __attribute__((__war
 void                 ch_Print(algo::RspaceStr200& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr200& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr200& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr200& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr200_Hash(u32 prev, const algo::RspaceStr200 & rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr200 from an ascii string.
@@ -7089,16 +7164,16 @@ void                 RspaceStr200_Print(algo::RspaceStr200 & row, algo::cstring 
 struct RspaceStr21 { // algo.RspaceStr21
     enum { ch_max = 21 };
     u8 ch[21];
-    RspaceStr21(const algo::RspaceStr21 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr21(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr21 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr21& parent) __attribute__((nothrow));
+    RspaceStr21(const algo::RspaceStr21 &rhs) __attribute__((nothrow));
+    RspaceStr21(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr21();
 };
 #pragma pack(pop)
@@ -7113,9 +7188,10 @@ int                  ch_N(const algo::RspaceStr21& parent) __attribute__((__warn
 void                 ch_Print(algo::RspaceStr21& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr21& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr21& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr21& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr21_Hash(u32 prev, const algo::RspaceStr21 & rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr21 from an ascii string.
@@ -7134,14 +7210,14 @@ void                 RspaceStr21_Print(algo::RspaceStr21 & row, algo::cstring &s
 struct RspaceStr24 { // algo.RspaceStr24
     enum { ch_max = 24 };
     u8 ch[24];
-    RspaceStr24(const algo::RspaceStr24 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr24(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr24& parent) __attribute__((nothrow));
+    RspaceStr24(const algo::RspaceStr24 &rhs) __attribute__((nothrow));
+    RspaceStr24(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr24();
 };
 #pragma pack(pop)
@@ -7156,9 +7232,10 @@ int                  ch_N(const algo::RspaceStr24& parent) __attribute__((__warn
 void                 ch_Print(algo::RspaceStr24& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr24& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr24& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr24& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr24_Hash(u32 prev, algo::RspaceStr24 rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr24 from an ascii string.
@@ -7180,16 +7257,16 @@ void                 RspaceStr24_Print(algo::RspaceStr24 row, algo::cstring &str
 struct RspaceStr240 { // algo.RspaceStr240
     enum { ch_max = 240 };
     u8 ch[240];
-    RspaceStr240(const algo::RspaceStr240 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr240(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr240 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr240& parent) __attribute__((nothrow));
+    RspaceStr240(const algo::RspaceStr240 &rhs) __attribute__((nothrow));
+    RspaceStr240(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr240();
 };
 #pragma pack(pop)
@@ -7204,9 +7281,10 @@ int                  ch_N(const algo::RspaceStr240& parent) __attribute__((__war
 void                 ch_Print(algo::RspaceStr240& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr240& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr240& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr240& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr240_Hash(u32 prev, const algo::RspaceStr240 & rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr240 from an ascii string.
@@ -7225,16 +7303,16 @@ void                 RspaceStr240_Print(algo::RspaceStr240 & row, algo::cstring 
 struct RspaceStr26 { // algo.RspaceStr26
     enum { ch_max = 26 };
     u8 ch[26];
-    RspaceStr26(const algo::RspaceStr26 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr26(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr26 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr26& parent) __attribute__((nothrow));
+    RspaceStr26(const algo::RspaceStr26 &rhs) __attribute__((nothrow));
+    RspaceStr26(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr26();
 };
 #pragma pack(pop)
@@ -7249,9 +7327,10 @@ int                  ch_N(const algo::RspaceStr26& parent) __attribute__((__warn
 void                 ch_Print(algo::RspaceStr26& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr26& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr26& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr26& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr26_Hash(u32 prev, const algo::RspaceStr26 & rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr26 from an ascii string.
@@ -7270,16 +7349,16 @@ void                 RspaceStr26_Print(algo::RspaceStr26 & row, algo::cstring &s
 struct RspaceStr3 { // algo.RspaceStr3
     enum { ch_max = 3 };
     u8 ch[3];
-    RspaceStr3(const algo::RspaceStr3 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr3(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr3 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr3& parent) __attribute__((nothrow));
+    RspaceStr3(const algo::RspaceStr3 &rhs) __attribute__((nothrow));
+    RspaceStr3(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr3();
 };
 #pragma pack(pop)
@@ -7294,9 +7373,10 @@ int                  ch_N(const algo::RspaceStr3& parent) __attribute__((__warn_
 void                 ch_Print(algo::RspaceStr3& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr3& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr3& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr3& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr3_Hash(u32 prev, const algo::RspaceStr3 & rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr3 from an ascii string.
@@ -7315,16 +7395,16 @@ void                 RspaceStr3_Print(algo::RspaceStr3 & row, algo::cstring &str
 struct RspaceStr31 { // algo.RspaceStr31
     enum { ch_max = 31 };
     u8 ch[31];
-    RspaceStr31(const algo::RspaceStr31 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr31(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr31 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr31& parent) __attribute__((nothrow));
+    RspaceStr31(const algo::RspaceStr31 &rhs) __attribute__((nothrow));
+    RspaceStr31(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr31();
 };
 #pragma pack(pop)
@@ -7339,9 +7419,10 @@ int                  ch_N(const algo::RspaceStr31& parent) __attribute__((__warn
 void                 ch_Print(algo::RspaceStr31& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr31& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr31& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr31& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr31_Hash(u32 prev, const algo::RspaceStr31 & rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr31 from an ascii string.
@@ -7360,16 +7441,16 @@ void                 RspaceStr31_Print(algo::RspaceStr31 & row, algo::cstring &s
 struct RspaceStr32 { // algo.RspaceStr32
     enum { ch_max = 32 };
     u8 ch[32];
-    RspaceStr32(const algo::RspaceStr32 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr32(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr32& parent) __attribute__((nothrow));
+    RspaceStr32(const algo::RspaceStr32 &rhs) __attribute__((nothrow));
+    RspaceStr32(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr32();
 };
 #pragma pack(pop)
@@ -7384,9 +7465,10 @@ int                  ch_N(const algo::RspaceStr32& parent) __attribute__((__warn
 void                 ch_Print(algo::RspaceStr32& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr32& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr32& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr32& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr32_Hash(u32 prev, const algo::RspaceStr32 & rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr32 from an ascii string.
@@ -7405,16 +7487,16 @@ void                 RspaceStr32_Print(algo::RspaceStr32 & row, algo::cstring &s
 struct RspaceStr4 { // algo.RspaceStr4
     enum { ch_max = 4 };
     u8 ch[4];
-    RspaceStr4(const algo::RspaceStr4 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr4(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr4 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr4& parent) __attribute__((nothrow));
+    RspaceStr4(const algo::RspaceStr4 &rhs) __attribute__((nothrow));
+    RspaceStr4(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr4();
 };
 #pragma pack(pop)
@@ -7429,9 +7511,10 @@ int                  ch_N(const algo::RspaceStr4& parent) __attribute__((__warn_
 void                 ch_Print(algo::RspaceStr4& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr4& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr4& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr4& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr4_Hash(u32 prev, algo::RspaceStr4 rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr4 from an ascii string.
@@ -7450,14 +7533,14 @@ void                 RspaceStr4_Print(algo::RspaceStr4 row, algo::cstring &str) 
 struct RspaceStr40 { // algo.RspaceStr40
     enum { ch_max = 40 };
     u8 ch[40];
-    RspaceStr40(const algo::RspaceStr40 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr40(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr40& parent) __attribute__((nothrow));
+    RspaceStr40(const algo::RspaceStr40 &rhs) __attribute__((nothrow));
+    RspaceStr40(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr40();
 };
 #pragma pack(pop)
@@ -7472,9 +7555,10 @@ int                  ch_N(const algo::RspaceStr40& parent) __attribute__((__warn
 void                 ch_Print(algo::RspaceStr40& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr40& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr40& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr40& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr40_Hash(u32 prev, const algo::RspaceStr40 & rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr40 from an ascii string.
@@ -7493,16 +7577,16 @@ void                 RspaceStr40_Print(algo::RspaceStr40 & row, algo::cstring &s
 struct RspaceStr5 { // algo.RspaceStr5
     enum { ch_max = 5 };
     u8 ch[5];
-    RspaceStr5(const algo::RspaceStr5 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr5(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr5 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr5& parent) __attribute__((nothrow));
+    RspaceStr5(const algo::RspaceStr5 &rhs) __attribute__((nothrow));
+    RspaceStr5(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr5();
 };
 #pragma pack(pop)
@@ -7517,9 +7601,10 @@ int                  ch_N(const algo::RspaceStr5& parent) __attribute__((__warn_
 void                 ch_Print(algo::RspaceStr5& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr5& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr5& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr5& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr5_Hash(u32 prev, algo::RspaceStr5 rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr5 from an ascii string.
@@ -7538,16 +7623,16 @@ void                 RspaceStr5_Print(algo::RspaceStr5 row, algo::cstring &str) 
 struct RspaceStr50 { // algo.RspaceStr50
     enum { ch_max = 50 };
     u8 ch[50];
-    RspaceStr50(const algo::RspaceStr50 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr50(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr50 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr50& parent) __attribute__((nothrow));
+    RspaceStr50(const algo::RspaceStr50 &rhs) __attribute__((nothrow));
+    RspaceStr50(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr50();
 };
 #pragma pack(pop)
@@ -7562,9 +7647,10 @@ int                  ch_N(const algo::RspaceStr50& parent) __attribute__((__warn
 void                 ch_Print(algo::RspaceStr50& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr50& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr50& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr50& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr50_Hash(u32 prev, const algo::RspaceStr50 & rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr50 from an ascii string.
@@ -7583,17 +7669,17 @@ void                 RspaceStr50_Print(algo::RspaceStr50 & row, algo::cstring &s
 struct RspaceStr6 { // algo.RspaceStr6
     enum { ch_max = 6 };
     u8 ch[6];
-    RspaceStr6(const algo::RspaceStr6 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr6(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr6 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RspaceStr6 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr6& parent) __attribute__((nothrow));
+    RspaceStr6(const algo::RspaceStr6 &rhs) __attribute__((nothrow));
+    RspaceStr6(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr6();
 };
 #pragma pack(pop)
@@ -7608,9 +7694,10 @@ int                  ch_N(const algo::RspaceStr6& parent) __attribute__((__warn_
 void                 ch_Print(algo::RspaceStr6& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr6& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr6& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr6& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr6_Hash(u32 prev, algo::RspaceStr6 rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr6 from an ascii string.
@@ -7632,16 +7719,16 @@ void                 RspaceStr6_Print(algo::RspaceStr6 row, algo::cstring &str) 
 struct RspaceStr64 { // algo.RspaceStr64
     enum { ch_max = 64 };
     u8 ch[64];
-    RspaceStr64(const algo::RspaceStr64 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr64(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr64 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr64& parent) __attribute__((nothrow));
+    RspaceStr64(const algo::RspaceStr64 &rhs) __attribute__((nothrow));
+    RspaceStr64(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr64();
 };
 #pragma pack(pop)
@@ -7656,9 +7743,10 @@ int                  ch_N(const algo::RspaceStr64& parent) __attribute__((__warn
 void                 ch_Print(algo::RspaceStr64& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr64& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr64& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr64& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr64_Hash(u32 prev, const algo::RspaceStr64 & rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr64 from an ascii string.
@@ -7676,16 +7764,16 @@ void                 RspaceStr64_Print(algo::RspaceStr64 & row, algo::cstring &s
 struct RspaceStr7 { // algo.RspaceStr7
     enum { ch_max = 7 };
     u8 ch[7];
-    RspaceStr7(const algo::RspaceStr7 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr7(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr7 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr7& parent) __attribute__((nothrow));
+    RspaceStr7(const algo::RspaceStr7 &rhs) __attribute__((nothrow));
+    RspaceStr7(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr7();
 };
 
@@ -7699,9 +7787,10 @@ int                  ch_N(const algo::RspaceStr7& parent) __attribute__((__warn_
 void                 ch_Print(algo::RspaceStr7& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr7& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr7& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr7& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr7_Hash(u32 prev, algo::RspaceStr7 rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr7 from an ascii string.
@@ -7720,14 +7809,14 @@ void                 RspaceStr7_Print(algo::RspaceStr7 row, algo::cstring &str) 
 struct RspaceStr8 { // algo.RspaceStr8
     enum { ch_max = 8 };
     u8 ch[8];
-    RspaceStr8(const algo::RspaceStr8 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr8(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr8& parent) __attribute__((nothrow));
+    RspaceStr8(const algo::RspaceStr8 &rhs) __attribute__((nothrow));
+    RspaceStr8(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr8();
 };
 #pragma pack(pop)
@@ -7742,9 +7831,10 @@ int                  ch_N(const algo::RspaceStr8& parent) __attribute__((__warn_
 void                 ch_Print(algo::RspaceStr8& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr8& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr8& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr8& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr8_Hash(u32 prev, algo::RspaceStr8 rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr8 from an ascii string.
@@ -7766,16 +7856,16 @@ void                 RspaceStr8_Print(algo::RspaceStr8 row, algo::cstring &str) 
 struct RspaceStr9 { // algo.RspaceStr9
     enum { ch_max = 9 };
     u8 ch[9];
-    RspaceStr9(const algo::RspaceStr9 &rhs) {
-        operator =(rhs);
-    }
-    explicit RspaceStr9(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr9 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr9& parent) __attribute__((nothrow));
+    RspaceStr9(const algo::RspaceStr9 &rhs) __attribute__((nothrow));
+    RspaceStr9(const algo::strptr &rhs) __attribute__((nothrow));
     RspaceStr9();
 };
 #pragma pack(pop)
@@ -7790,9 +7880,10 @@ int                  ch_N(const algo::RspaceStr9& parent) __attribute__((__warn_
 void                 ch_Print(algo::RspaceStr9& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::RspaceStr9& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::RspaceStr9& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::RspaceStr9& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  RspaceStr9_Hash(u32 prev, const algo::RspaceStr9 & rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr9 from an ascii string.
@@ -7887,21 +7978,16 @@ struct Smallstr1 { // algo.Smallstr1
     u8 ch[1+1];
     u8 n_ch;
 
-    Smallstr1(const algo::Smallstr1 &rhs) {
-        operator =(rhs);
-    }
-    explicit Smallstr1(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
-    void operator =(const Smallstr1 &s) {
-        n_ch = s.n_ch;
-        memcpy(ch, s.ch, n_ch);
-    }
-
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr1 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::Smallstr1& parent) __attribute__((nothrow));
+    Smallstr1(const algo::Smallstr1 &rhs) __attribute__((nothrow));
+    Smallstr1(const algo::strptr &rhs) __attribute__((nothrow));
     Smallstr1();
 };
 
@@ -7922,9 +8008,10 @@ int                  ch_N(const algo::Smallstr1& parent) __attribute__((__warn_u
 void                 ch_Print(algo::Smallstr1& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::Smallstr1& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::Smallstr1& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::Smallstr1& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  Smallstr1_Hash(u32 prev, const algo::Smallstr1 & rhs) __attribute__((nothrow));
 // Read fields of algo::Smallstr1 from an ascii string.
@@ -7944,21 +8031,16 @@ struct Smallstr10 { // algo.Smallstr10
     u8 ch[10+1];
     u8 n_ch;
 
-    Smallstr10(const algo::Smallstr10 &rhs) {
-        operator =(rhs);
-    }
-    explicit Smallstr10(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
-    void operator =(const Smallstr10 &s) {
-        n_ch = s.n_ch;
-        memcpy(ch, s.ch, n_ch);
-    }
-
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr10 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::Smallstr10& parent) __attribute__((nothrow));
+    Smallstr10(const algo::Smallstr10 &rhs) __attribute__((nothrow));
+    Smallstr10(const algo::strptr &rhs) __attribute__((nothrow));
     Smallstr10();
 };
 
@@ -7979,9 +8061,10 @@ int                  ch_N(const algo::Smallstr10& parent) __attribute__((__warn_
 void                 ch_Print(algo::Smallstr10& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::Smallstr10& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::Smallstr10& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::Smallstr10& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  Smallstr10_Hash(u32 prev, const algo::Smallstr10 & rhs) __attribute__((nothrow));
 // Read fields of algo::Smallstr10 from an ascii string.
@@ -8001,19 +8084,14 @@ struct Smallstr100 { // algo.Smallstr100
     u8 ch[100+1];
     u8 n_ch;
 
-    Smallstr100(const algo::Smallstr100 &rhs) {
-        operator =(rhs);
-    }
-    explicit Smallstr100(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
-    void operator =(const Smallstr100 &s) {
-        n_ch = s.n_ch;
-        memcpy(ch, s.ch, n_ch);
-    }
-
     inline operator algo::strptr() const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::Smallstr100& parent) __attribute__((nothrow));
+    Smallstr100(const algo::Smallstr100 &rhs) __attribute__((nothrow));
+    Smallstr100(const algo::strptr &rhs) __attribute__((nothrow));
     Smallstr100();
 };
 
@@ -8034,9 +8112,10 @@ int                  ch_N(const algo::Smallstr100& parent) __attribute__((__warn
 void                 ch_Print(algo::Smallstr100& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::Smallstr100& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::Smallstr100& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::Smallstr100& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  Smallstr100_Hash(u32 prev, const algo::Smallstr100 & rhs) __attribute__((nothrow));
 // Read fields of algo::Smallstr100 from an ascii string.
@@ -8056,21 +8135,16 @@ struct Smallstr16 { // algo.Smallstr16
     u8 ch[16+1];
     u8 n_ch;
 
-    Smallstr16(const algo::Smallstr16 &rhs) {
-        operator =(rhs);
-    }
-    explicit Smallstr16(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
-    void operator =(const Smallstr16 &s) {
-        n_ch = s.n_ch;
-        memcpy(ch, s.ch, n_ch);
-    }
-
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr16 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::Smallstr16& parent) __attribute__((nothrow));
+    Smallstr16(const algo::Smallstr16 &rhs) __attribute__((nothrow));
+    Smallstr16(const algo::strptr &rhs) __attribute__((nothrow));
     Smallstr16();
 };
 
@@ -8091,9 +8165,10 @@ int                  ch_N(const algo::Smallstr16& parent) __attribute__((__warn_
 void                 ch_Print(algo::Smallstr16& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::Smallstr16& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::Smallstr16& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::Smallstr16& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  Smallstr16_Hash(u32 prev, const algo::Smallstr16 & rhs) __attribute__((nothrow));
 // Read fields of algo::Smallstr16 from an ascii string.
@@ -8113,21 +8188,16 @@ struct Smallstr2 { // algo.Smallstr2
     u8 ch[2+1];
     u8 n_ch;
 
-    Smallstr2(const algo::Smallstr2 &rhs) {
-        operator =(rhs);
-    }
-    explicit Smallstr2(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
-    void operator =(const Smallstr2 &s) {
-        n_ch = s.n_ch;
-        memcpy(ch, s.ch, n_ch);
-    }
-
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr2 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::Smallstr2& parent) __attribute__((nothrow));
+    Smallstr2(const algo::Smallstr2 &rhs) __attribute__((nothrow));
+    Smallstr2(const algo::strptr &rhs) __attribute__((nothrow));
     Smallstr2();
 };
 
@@ -8148,9 +8218,10 @@ int                  ch_N(const algo::Smallstr2& parent) __attribute__((__warn_u
 void                 ch_Print(algo::Smallstr2& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::Smallstr2& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::Smallstr2& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::Smallstr2& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  Smallstr2_Hash(u32 prev, const algo::Smallstr2 & rhs) __attribute__((nothrow));
 // Read fields of algo::Smallstr2 from an ascii string.
@@ -8170,22 +8241,17 @@ struct Smallstr20 { // algo.Smallstr20
     u8 ch[20+1];
     u8 n_ch;
 
-    Smallstr20(const algo::Smallstr20 &rhs) {
-        operator =(rhs);
-    }
-    explicit Smallstr20(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
-    void operator =(const Smallstr20 &s) {
-        n_ch = s.n_ch;
-        memcpy(ch, s.ch, n_ch);
-    }
-
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr20 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::Smallstr20 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::Smallstr20& parent) __attribute__((nothrow));
+    Smallstr20(const algo::Smallstr20 &rhs) __attribute__((nothrow));
+    Smallstr20(const algo::strptr &rhs) __attribute__((nothrow));
     Smallstr20();
 };
 
@@ -8206,9 +8272,10 @@ int                  ch_N(const algo::Smallstr20& parent) __attribute__((__warn_
 void                 ch_Print(algo::Smallstr20& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::Smallstr20& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::Smallstr20& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::Smallstr20& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  Smallstr20_Hash(u32 prev, const algo::Smallstr20 & rhs) __attribute__((nothrow));
 // Read fields of algo::Smallstr20 from an ascii string.
@@ -8231,21 +8298,16 @@ struct Smallstr25 { // algo.Smallstr25
     u8 ch[25+1];
     u8 n_ch;
 
-    Smallstr25(const algo::Smallstr25 &rhs) {
-        operator =(rhs);
-    }
-    explicit Smallstr25(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
-    void operator =(const Smallstr25 &s) {
-        n_ch = s.n_ch;
-        memcpy(ch, s.ch, n_ch);
-    }
-
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr25 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::Smallstr25& parent) __attribute__((nothrow));
+    Smallstr25(const algo::Smallstr25 &rhs) __attribute__((nothrow));
+    Smallstr25(const algo::strptr &rhs) __attribute__((nothrow));
     Smallstr25();
 };
 
@@ -8266,9 +8328,10 @@ int                  ch_N(const algo::Smallstr25& parent) __attribute__((__warn_
 void                 ch_Print(algo::Smallstr25& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::Smallstr25& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::Smallstr25& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::Smallstr25& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  Smallstr25_Hash(u32 prev, const algo::Smallstr25 & rhs) __attribute__((nothrow));
 // Read fields of algo::Smallstr25 from an ascii string.
@@ -8288,21 +8351,16 @@ struct Smallstr250 { // algo.Smallstr250
     u8 ch[250+1];
     u8 n_ch;
 
-    Smallstr250(const algo::Smallstr250 &rhs) {
-        operator =(rhs);
-    }
-    explicit Smallstr250(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
-    void operator =(const Smallstr250 &s) {
-        n_ch = s.n_ch;
-        memcpy(ch, s.ch, n_ch);
-    }
-
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr250 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::Smallstr250& parent) __attribute__((nothrow));
+    Smallstr250(const algo::Smallstr250 &rhs) __attribute__((nothrow));
+    Smallstr250(const algo::strptr &rhs) __attribute__((nothrow));
     Smallstr250();
 };
 
@@ -8323,9 +8381,10 @@ int                  ch_N(const algo::Smallstr250& parent) __attribute__((__warn
 void                 ch_Print(algo::Smallstr250& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::Smallstr250& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::Smallstr250& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::Smallstr250& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  Smallstr250_Hash(u32 prev, const algo::Smallstr250 & rhs) __attribute__((nothrow));
 // Read fields of algo::Smallstr250 from an ascii string.
@@ -8345,22 +8404,17 @@ struct Smallstr30 { // algo.Smallstr30
     u8 ch[30+1];
     u8 n_ch;
 
-    Smallstr30(const algo::Smallstr30 &rhs) {
-        operator =(rhs);
-    }
-    explicit Smallstr30(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
-    void operator =(const Smallstr30 &s) {
-        n_ch = s.n_ch;
-        memcpy(ch, s.ch, n_ch);
-    }
-
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr30 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::Smallstr30 &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::Smallstr30& parent) __attribute__((nothrow));
+    Smallstr30(const algo::Smallstr30 &rhs) __attribute__((nothrow));
+    Smallstr30(const algo::strptr &rhs) __attribute__((nothrow));
     Smallstr30();
 };
 
@@ -8381,9 +8435,10 @@ int                  ch_N(const algo::Smallstr30& parent) __attribute__((__warn_
 void                 ch_Print(algo::Smallstr30& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::Smallstr30& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::Smallstr30& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::Smallstr30& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  Smallstr30_Hash(u32 prev, const algo::Smallstr30 & rhs) __attribute__((nothrow));
 // Read fields of algo::Smallstr30 from an ascii string.
@@ -8406,21 +8461,16 @@ struct Smallstr4 { // algo.Smallstr4
     u8 ch[4+1];
     u8 n_ch;
 
-    Smallstr4(const algo::Smallstr4 &rhs) {
-        operator =(rhs);
-    }
-    explicit Smallstr4(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
-    void operator =(const Smallstr4 &s) {
-        n_ch = s.n_ch;
-        memcpy(ch, s.ch, n_ch);
-    }
-
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr4 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::Smallstr4& parent) __attribute__((nothrow));
+    Smallstr4(const algo::Smallstr4 &rhs) __attribute__((nothrow));
+    Smallstr4(const algo::strptr &rhs) __attribute__((nothrow));
     Smallstr4();
 };
 
@@ -8441,9 +8491,10 @@ int                  ch_N(const algo::Smallstr4& parent) __attribute__((__warn_u
 void                 ch_Print(algo::Smallstr4& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::Smallstr4& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::Smallstr4& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::Smallstr4& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  Smallstr4_Hash(u32 prev, const algo::Smallstr4 & rhs) __attribute__((nothrow));
 // Read fields of algo::Smallstr4 from an ascii string.
@@ -8463,21 +8514,16 @@ struct Smallstr40 { // algo.Smallstr40
     u8 ch[40+1];
     u8 n_ch;
 
-    Smallstr40(const algo::Smallstr40 &rhs) {
-        operator =(rhs);
-    }
-    explicit Smallstr40(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
-    void operator =(const Smallstr40 &s) {
-        n_ch = s.n_ch;
-        memcpy(ch, s.ch, n_ch);
-    }
-
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr40 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::Smallstr40& parent) __attribute__((nothrow));
+    Smallstr40(const algo::Smallstr40 &rhs) __attribute__((nothrow));
+    Smallstr40(const algo::strptr &rhs) __attribute__((nothrow));
     Smallstr40();
 };
 
@@ -8498,9 +8544,10 @@ int                  ch_N(const algo::Smallstr40& parent) __attribute__((__warn_
 void                 ch_Print(algo::Smallstr40& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::Smallstr40& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::Smallstr40& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::Smallstr40& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  Smallstr40_Hash(u32 prev, const algo::Smallstr40 & rhs) __attribute__((nothrow));
 // Read fields of algo::Smallstr40 from an ascii string.
@@ -8520,21 +8567,16 @@ struct Smallstr5 { // algo.Smallstr5
     u8 ch[5+1];
     u8 n_ch;
 
-    Smallstr5(const algo::Smallstr5 &rhs) {
-        operator =(rhs);
-    }
-    explicit Smallstr5(algo::strptr s) {
-        operator =(s);
-    }
-    void operator =(const algo::strptr & str);
-    void operator =(const Smallstr5 &s) {
-        n_ch = s.n_ch;
-        memcpy(ch, s.ch, n_ch);
-    }
-
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr5 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::Smallstr5& parent) __attribute__((nothrow));
+    Smallstr5(const algo::Smallstr5 &rhs) __attribute__((nothrow));
+    Smallstr5(const algo::strptr &rhs) __attribute__((nothrow));
     Smallstr5();
 };
 
@@ -8555,9 +8597,10 @@ int                  ch_N(const algo::Smallstr5& parent) __attribute__((__warn_u
 void                 ch_Print(algo::Smallstr5& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 ch_ReadStrptrMaybe(algo::Smallstr5& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_Set(algo::Smallstr5& parent, const algo::strptr &rhs) __attribute__((nothrow));
+void                 ch_SetStrptr(algo::Smallstr5& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
 u32                  Smallstr5_Hash(u32 prev, const algo::Smallstr5 & rhs) __attribute__((nothrow));
 // Read fields of algo::Smallstr5 from an ascii string.

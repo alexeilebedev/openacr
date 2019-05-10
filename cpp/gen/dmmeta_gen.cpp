@@ -301,7 +301,7 @@ const char *dmmeta_Strtype_strtype_rightpad   = "rightpad";
 const char *dmmeta_Strtype_strtype_leftpad    = "leftpad";
 
 namespace dmmeta {
-static void          SizeCheck();
+    static void          SizeCheck();
 } // end namespace dmmeta
 
 // --- dmmeta.Anonfld..ReadFieldMaybe

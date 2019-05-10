@@ -37,6 +37,7 @@ const char *src_hdr_help =
 "    -targsrc         string  Regx of targsrc to update. default: \"%\"\n"
 "    -write                   Update files in-place. default: false\n"
 "    -update_authors          Update authors from git history. default: false\n"
+"    -indent                  Indent source files. default: false\n"
 "    -verbose                 Enable verbose mode\n"
 "    -debug                   Enable debug mode\n"
 "    -version                 Show version information\n"
@@ -50,19 +51,20 @@ const char *src_hdr_syntax =
 " -targsrc:string=\"%\"\n"
 " -write:flag\n"
 " -update_authors:flag\n"
+" -indent:flag\n"
 ;
 } // namespace src_hdr
 namespace src_hdr {
-// Load statically available data into tables, register tables and database.
-static void          InitReflection();
-static bool          targsrc_InputMaybe(dev::Targsrc &elem) __attribute__((nothrow));
-static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
-static bool          nsx_InputMaybe(dmmeta::Nsx &elem) __attribute__((nothrow));
-// find trace by row id (used to implement reflection)
-static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
-// Function return 1
-static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-static void          SizeCheck();
+    // Load statically available data into tables, register tables and database.
+    static void          InitReflection();
+    static bool          targsrc_InputMaybe(dev::Targsrc &elem) __attribute__((nothrow));
+    static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
+    static bool          nsx_InputMaybe(dmmeta::Nsx &elem) __attribute__((nothrow));
+    // find trace by row id (used to implement reflection)
+    static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
+    // Function return 1
+    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    static void          SizeCheck();
 } // end namespace src_hdr
 
 // --- src_hdr.trace..Print
@@ -184,7 +186,7 @@ bool src_hdr::LoadSsimfileMaybe(algo::strptr fname) {
 
 // --- src_hdr.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool src_hdr::_db_XrefMaybe() {
     bool retval = true;
     return retval;
@@ -271,7 +273,7 @@ static bool src_hdr::targsrc_InputMaybe(dev::Targsrc &elem) {
 
 // --- src_hdr.FDb.targsrc.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool src_hdr::targsrc_XrefMaybe(src_hdr::FTargsrc &row) {
     bool retval = true;
     (void)row;
@@ -372,7 +374,7 @@ static bool src_hdr::ns_InputMaybe(dmmeta::Ns &elem) {
 
 // --- src_hdr.FDb.ns.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool src_hdr::ns_XrefMaybe(src_hdr::FNs &row) {
     bool retval = true;
     (void)row;
@@ -590,7 +592,7 @@ static bool src_hdr::nsx_InputMaybe(dmmeta::Nsx &elem) {
 
 // --- src_hdr.FDb.nsx.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool src_hdr::nsx_XrefMaybe(src_hdr::FNsx &row) {
     bool retval = true;
     (void)row;

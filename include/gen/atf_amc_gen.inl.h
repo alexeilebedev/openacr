@@ -22,8 +22,6 @@ static atf_amc::FListtype &atf_amc_listtype_zd    = ((atf_amc::FListtype*)atf_am
 static atf_amc::FListtype &atf_amc_listtype_zdl   = ((atf_amc::FListtype*)atf_amc::_db.listtype_data)[5];
 static atf_amc::FListtype &atf_amc_listtype_zs    = ((atf_amc::FListtype*)atf_amc::_db.listtype_data)[6];
 static atf_amc::FListtype &atf_amc_listtype_zsl   = ((atf_amc::FListtype*)atf_amc::_db.listtype_data)[7];
-inline void atf_amc::RnullStr6_U32::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void atf_amc::RpasU32Str6::operator =(const algo::strptr & str) { ch_Set(*this, str); }
 inline atf_amc::AmcCleanup2::AmcCleanup2() {
     atf_amc::AmcCleanup2_Init(*this);
 }
@@ -6466,6 +6464,29 @@ inline int atf_amc::ch_N(const atf_amc::RnullStr6_U32& parent) {
     return int(ret);
 }
 
+// --- atf_amc.RnullStr6_U32.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void atf_amc::RnullStr6_U32::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- atf_amc.RnullStr6_U32.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void atf_amc::RnullStr6_U32::operator =(const atf_amc::RnullStr6_U32& parent) {
+    memcpy(ch, parent.ch, 6);
+}
+
+// --- atf_amc.RnullStr6_U32.ch.Ctor
+inline  atf_amc::RnullStr6_U32::RnullStr6_U32(const atf_amc::RnullStr6_U32 &rhs) {
+    operator =(rhs);
+}
+
+// --- atf_amc.RnullStr6_U32.ch.CtorStrptr
+inline  atf_amc::RnullStr6_U32::RnullStr6_U32(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- atf_amc.RnullStr6_U32..Lt
 inline bool atf_amc::RnullStr6_U32_Lt(atf_amc::RnullStr6_U32 & lhs, atf_amc::RnullStr6_U32 & rhs) {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
@@ -6574,6 +6595,30 @@ inline int atf_amc::ch_N(const atf_amc::RpasU32Str6& parent) {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
+}
+
+// --- atf_amc.RpasU32Str6.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void atf_amc::RpasU32Str6::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- atf_amc.RpasU32Str6.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void atf_amc::RpasU32Str6::operator =(const atf_amc::RpasU32Str6& parent) {
+    memcpy(ch, parent.ch, parent.n_ch);
+    n_ch = parent.n_ch;
+}
+
+// --- atf_amc.RpasU32Str6.ch.Ctor
+inline  atf_amc::RpasU32Str6::RpasU32Str6(const atf_amc::RpasU32Str6 &rhs) {
+    operator =(rhs);
+}
+
+// --- atf_amc.RpasU32Str6.ch.CtorStrptr
+inline  atf_amc::RpasU32Str6::RpasU32Str6(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- atf_amc.RpasU32Str6..Lt

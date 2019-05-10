@@ -49,13 +49,13 @@ const char *amc_gc_syntax =
 ;
 } // namespace amc_gc
 namespace amc_gc {
-// Load statically available data into tables, register tables and database.
-static void          InitReflection();
-// find trace by row id (used to implement reflection)
-static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
-// Function return 1
-static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-static void          SizeCheck();
+    // Load statically available data into tables, register tables and database.
+    static void          InitReflection();
+    // find trace by row id (used to implement reflection)
+    static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
+    // Function return 1
+    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    static void          SizeCheck();
 } // end namespace amc_gc
 
 // --- amc_gc.Acr.acr.Start
@@ -851,10 +851,10 @@ int amc_gc::amc_Execv(amc_gc::Check& parent) {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
-    if (parent.amc_cmd.query.expr != "") {
+    if (parent.amc_cmd.query != "") {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-query:";
-        command::query_Print(parent.amc_cmd, temp);
+        cstring_Print(parent.amc_cmd.query, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
@@ -1332,7 +1332,7 @@ bool amc_gc::LoadSsimfileMaybe(algo::strptr fname) {
 
 // --- amc_gc.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool amc_gc::_db_XrefMaybe() {
     bool retval = true;
     return retval;

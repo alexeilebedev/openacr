@@ -126,14 +126,26 @@ void atf_norm::normcheck_stray_gen() {
 
 // -----------------------------------------------------------------------------
 
-void atf_norm::normcheck_clang() {
-    if (SysEval("/usr/bin/clang++ --version",FailokQ(true),1024*10) != "") {
+static void BuildWith(strptr compiler) {
+    if (SysEval(tempstr() << compiler << " --version",FailokQ(true),1024*10) != "") {
         command::abt_proc abt;
-        abt.cmd.compiler = dev_Compiler_compiler_clangPP;
+        abt.cmd.compiler = compiler;
         abt.cmd.cfg = dev_Cfg_cfg_release;
         abt.cmd.target.expr = "%";
         abt_ExecX(abt);
     } else {
-        prlog("# clang not installed, skipping build");
+        prlog("# "<<compiler<<" not installed, skipping build");
     }
+}
+
+// -----------------------------------------------------------------------------
+
+void atf_norm::normcheck_build_clang() {
+    BuildWith(dev_Compiler_compiler_clangPP);
+}
+
+// -----------------------------------------------------------------------------
+
+void atf_norm::normcheck_build_gcc9() {
+    BuildWith(dev_Compiler_compiler_gPP_9);
 }

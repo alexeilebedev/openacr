@@ -12,13 +12,13 @@
 #include "include/gen/lib_mysql_gen.inl.h"
 //#pragma endinclude
 namespace lib_mysql {
-// Load statically available data into tables, register tables and database.
-static void          InitReflection();
-// find trace by row id (used to implement reflection)
-static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
-// Function return 1
-static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-static void          SizeCheck();
+    // Load statically available data into tables, register tables and database.
+    static void          InitReflection();
+    // find trace by row id (used to implement reflection)
+    static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
+    // Function return 1
+    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    static void          SizeCheck();
 } // end namespace lib_mysql
 
 // --- lib_mysql.trace..Print
@@ -31,7 +31,7 @@ void lib_mysql::trace_Print(lib_mysql::trace & row, algo::cstring &str) {
 
 // --- lib_mysql.FDb.res.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool lib_mysql::res_XrefMaybe(lib_mysql::Res &row) {
     bool retval = true;
     (void)row;
@@ -91,7 +91,7 @@ bool lib_mysql::LoadSsimfileMaybe(algo::strptr fname) {
 
 // --- lib_mysql.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Call Unref or Delete to cleanup partially inserted row.
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool lib_mysql::_db_XrefMaybe() {
     bool retval = true;
     return retval;

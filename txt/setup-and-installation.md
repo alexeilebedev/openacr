@@ -1,10 +1,10 @@
 ## Setup and Installation
 
-Presently, this project has been tested on the following distribution/compiler combinations:
+Presently, this project has been tested on the following distributions / compilers:
 
-* RHEL {7.0,7.3}: g++ 4.8
-* CentOS 7.6: g++ 4.8, clang 3.4.2
-* Ubuntu 19.04: g++ 8.3, clang 3.4.2
+* OS: RHEL, CentOS, Ubuntu
+* g++: 4.8, 8.3, 9
+* clang: 3.4.2
 
 The MariaDB and OpenSSL packages are required in order to build mysql2ssim and ssim2mysql tools.
 
@@ -24,6 +24,10 @@ To build everything, you can run make (provided for convenience)
 or the bootstapped version of abt called ai:
 
     ai
+
+The default compiler abt uses is g++ prior to verison 9.
+You will need to set the environment variable `COMPILER` to `g++-9` or `clang++` if 
+you want to use those compilers. See the section on [abt](#txt/abt-a-build-tool) for more information.
 
 This should build abt using a bootstrapped shell script, then switch to abt
 and build the rest. If any of this fails, you may need to file a bug report.
@@ -46,8 +50,8 @@ Here are some commands to get set it up.
 
 ### Environment Variables
 
-There are no environment variables that we either or rely on.
-The ssimfiles offer plenty of room for structured configs.
+* EDITOR - standard environment variable specifying which editor to use
+* COMPILER, UNAME, CFG, ARCH - defaults for abt [abt](#txt/abt-a-build-tool) section.
 
 ### Known Issues
 

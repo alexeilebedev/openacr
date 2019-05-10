@@ -9,127 +9,6 @@
 
 #pragma once
 //#pragma endinclude
-inline void algo::Smallstr150::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::Smallstr50::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LnumStr10_U64::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LnumStr11_U64::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LnumStr12_U64::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LnumStr13_U64_Base36::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LnumStr16_U64_Base16::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LnumStr1_U32::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LnumStr20_U64::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LnumStr22_U64::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LnumStr2_U32::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LnumStr3_U32::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LnumStr4_U32::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LnumStr5_U32::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LnumStr5_U32_Base36::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LnumStr6_U32::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LnumStr7_U32::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LnumStr7_U32_Base36::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LnumStr8_U32::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LnumStr8_U32_Base16::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LnumStr8_U64::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LnumStr9_U32::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LnumStr9_U64::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::Smallstr200::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LspaceStr10::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LspaceStr12::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LspaceStr14::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LspaceStr15::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LspaceStr20_I64::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LspaceStr20_U64::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LspaceStr3::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LspaceStr3_I16::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LspaceStr4::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LspaceStr5::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LspaceStr5_I16::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LspaceStr6::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LspaceStr6_U32::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LspaceStr7_I32_Base36::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LspaceStr8::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::LspaceStr9::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr1::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr10::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr100::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr1000::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr11::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr12::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr129::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr13::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr14::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr15::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr151::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr16::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr17::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr18::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr19::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr2::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr20::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr21::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr24::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr25::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr28::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr3::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr30::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr32::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr33::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr35::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr36::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr4::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr40::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr41::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr43::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr44::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr48::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr5::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr50::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr54::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr55::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr6::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr60::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr62::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr66::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr6_U32::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr7::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr8::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr80::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RnullStr9::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr10::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr100::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr11::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr16::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr2::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr20::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr200::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr21::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr24::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr240::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr26::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr3::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr31::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr32::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr4::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr40::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr5::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr50::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr6::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr64::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr7::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr8::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::RspaceStr9::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::Smallstr1::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::Smallstr10::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::Smallstr100::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::Smallstr16::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::Smallstr2::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::Smallstr20::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::Smallstr25::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::Smallstr250::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::Smallstr30::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::Smallstr4::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::Smallstr40::operator =(const algo::strptr & str) { ch_Set(*this, str); }
-inline void algo::Smallstr5::operator =(const algo::strptr & str) { ch_Set(*this, str); }
 inline cstring& cstring::operator =(const cstring &rhs) {
     algo::ch_Setary(*this, (algo::cstring&)rhs);
     return *this;
@@ -1336,6 +1215,30 @@ inline int algo::ch_N(const algo::Smallstr150& parent) {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
+}
+
+// --- algo.Smallstr150.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::Smallstr150::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.Smallstr150.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::Smallstr150::operator =(const algo::Smallstr150& parent) {
+    memcpy(ch, parent.ch, parent.n_ch);
+    n_ch = parent.n_ch;
+}
+
+// --- algo.Smallstr150.ch.Ctor
+inline  algo::Smallstr150::Smallstr150(const algo::Smallstr150 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.Smallstr150.ch.CtorStrptr
+inline  algo::Smallstr150::Smallstr150(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr150.ch.Cast
@@ -2890,6 +2793,30 @@ inline int algo::ch_N(const algo::Smallstr50& parent) {
     return int(ret);
 }
 
+// --- algo.Smallstr50.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::Smallstr50::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.Smallstr50.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::Smallstr50::operator =(const algo::Smallstr50& parent) {
+    memcpy(ch, parent.ch, parent.n_ch);
+    n_ch = parent.n_ch;
+}
+
+// --- algo.Smallstr50.ch.Ctor
+inline  algo::Smallstr50::Smallstr50(const algo::Smallstr50 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.Smallstr50.ch.CtorStrptr
+inline  algo::Smallstr50::Smallstr50(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.Smallstr50.ch.Cast
 inline algo::Smallstr50::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -3203,6 +3130,29 @@ inline int algo::ch_N(const algo::LnumStr10_U64& parent) {
     return int(ret);
 }
 
+// --- algo.LnumStr10_U64.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LnumStr10_U64::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LnumStr10_U64.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LnumStr10_U64::operator =(const algo::LnumStr10_U64& parent) {
+    memcpy(ch, parent.ch, 10);
+}
+
+// --- algo.LnumStr10_U64.ch.Ctor
+inline  algo::LnumStr10_U64::LnumStr10_U64(const algo::LnumStr10_U64 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LnumStr10_U64.ch.CtorStrptr
+inline  algo::LnumStr10_U64::LnumStr10_U64(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.LnumStr10_U64.ch.Cast
 inline algo::LnumStr10_U64::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -3284,6 +3234,29 @@ inline int algo::ch_N(const algo::LnumStr11_U64& parent) {
     }
     ret = 11 - ret;
     return int(ret);
+}
+
+// --- algo.LnumStr11_U64.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LnumStr11_U64::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LnumStr11_U64.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LnumStr11_U64::operator =(const algo::LnumStr11_U64& parent) {
+    memcpy(ch, parent.ch, 11);
+}
+
+// --- algo.LnumStr11_U64.ch.Ctor
+inline  algo::LnumStr11_U64::LnumStr11_U64(const algo::LnumStr11_U64 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LnumStr11_U64.ch.CtorStrptr
+inline  algo::LnumStr11_U64::LnumStr11_U64(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr11_U64.ch.Cast
@@ -3369,6 +3342,29 @@ inline int algo::ch_N(const algo::LnumStr12_U64& parent) {
     return int(ret);
 }
 
+// --- algo.LnumStr12_U64.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LnumStr12_U64::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LnumStr12_U64.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LnumStr12_U64::operator =(const algo::LnumStr12_U64& parent) {
+    memcpy(ch, parent.ch, 12);
+}
+
+// --- algo.LnumStr12_U64.ch.Ctor
+inline  algo::LnumStr12_U64::LnumStr12_U64(const algo::LnumStr12_U64 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LnumStr12_U64.ch.CtorStrptr
+inline  algo::LnumStr12_U64::LnumStr12_U64(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.LnumStr12_U64.ch.Cast
 inline algo::LnumStr12_U64::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -3450,6 +3446,29 @@ inline int algo::ch_N(const algo::LnumStr13_U64_Base36& parent) {
     }
     ret = 13 - ret;
     return int(ret);
+}
+
+// --- algo.LnumStr13_U64_Base36.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LnumStr13_U64_Base36::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LnumStr13_U64_Base36.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LnumStr13_U64_Base36::operator =(const algo::LnumStr13_U64_Base36& parent) {
+    memcpy(ch, parent.ch, 13);
+}
+
+// --- algo.LnumStr13_U64_Base36.ch.Ctor
+inline  algo::LnumStr13_U64_Base36::LnumStr13_U64_Base36(const algo::LnumStr13_U64_Base36 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LnumStr13_U64_Base36.ch.CtorStrptr
+inline  algo::LnumStr13_U64_Base36::LnumStr13_U64_Base36(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr13_U64_Base36.ch.Cast
@@ -3535,6 +3554,29 @@ inline int algo::ch_N(const algo::LnumStr16_U64_Base16& parent) {
     return int(ret);
 }
 
+// --- algo.LnumStr16_U64_Base16.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LnumStr16_U64_Base16::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LnumStr16_U64_Base16.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LnumStr16_U64_Base16::operator =(const algo::LnumStr16_U64_Base16& parent) {
+    memcpy(ch, parent.ch, 16);
+}
+
+// --- algo.LnumStr16_U64_Base16.ch.Ctor
+inline  algo::LnumStr16_U64_Base16::LnumStr16_U64_Base16(const algo::LnumStr16_U64_Base16 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LnumStr16_U64_Base16.ch.CtorStrptr
+inline  algo::LnumStr16_U64_Base16::LnumStr16_U64_Base16(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.LnumStr16_U64_Base16.ch.Cast
 inline algo::LnumStr16_U64_Base16::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -3616,6 +3658,29 @@ inline int algo::ch_N(const algo::LnumStr1_U32& parent) {
     }
     ret = 1 - ret;
     return int(ret);
+}
+
+// --- algo.LnumStr1_U32.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LnumStr1_U32::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LnumStr1_U32.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LnumStr1_U32::operator =(const algo::LnumStr1_U32& parent) {
+    memcpy(ch, parent.ch, 1);
+}
+
+// --- algo.LnumStr1_U32.ch.Ctor
+inline  algo::LnumStr1_U32::LnumStr1_U32(const algo::LnumStr1_U32 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LnumStr1_U32.ch.CtorStrptr
+inline  algo::LnumStr1_U32::LnumStr1_U32(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr1_U32.ch.Cast
@@ -3701,6 +3766,29 @@ inline int algo::ch_N(const algo::LnumStr20_U64& parent) {
     return int(ret);
 }
 
+// --- algo.LnumStr20_U64.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LnumStr20_U64::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LnumStr20_U64.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LnumStr20_U64::operator =(const algo::LnumStr20_U64& parent) {
+    memcpy(ch, parent.ch, 20);
+}
+
+// --- algo.LnumStr20_U64.ch.Ctor
+inline  algo::LnumStr20_U64::LnumStr20_U64(const algo::LnumStr20_U64 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LnumStr20_U64.ch.CtorStrptr
+inline  algo::LnumStr20_U64::LnumStr20_U64(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.LnumStr20_U64.ch.Cast
 inline algo::LnumStr20_U64::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -3782,6 +3870,29 @@ inline int algo::ch_N(const algo::LnumStr22_U64& parent) {
     }
     ret = 22 - ret;
     return int(ret);
+}
+
+// --- algo.LnumStr22_U64.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LnumStr22_U64::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LnumStr22_U64.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LnumStr22_U64::operator =(const algo::LnumStr22_U64& parent) {
+    memcpy(ch, parent.ch, 22);
+}
+
+// --- algo.LnumStr22_U64.ch.Ctor
+inline  algo::LnumStr22_U64::LnumStr22_U64(const algo::LnumStr22_U64 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LnumStr22_U64.ch.CtorStrptr
+inline  algo::LnumStr22_U64::LnumStr22_U64(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr22_U64.ch.Cast
@@ -3867,6 +3978,29 @@ inline int algo::ch_N(const algo::LnumStr2_U32& parent) {
     return int(ret);
 }
 
+// --- algo.LnumStr2_U32.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LnumStr2_U32::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LnumStr2_U32.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LnumStr2_U32::operator =(const algo::LnumStr2_U32& parent) {
+    memcpy(ch, parent.ch, 2);
+}
+
+// --- algo.LnumStr2_U32.ch.Ctor
+inline  algo::LnumStr2_U32::LnumStr2_U32(const algo::LnumStr2_U32 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LnumStr2_U32.ch.CtorStrptr
+inline  algo::LnumStr2_U32::LnumStr2_U32(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.LnumStr2_U32.ch.Cast
 inline algo::LnumStr2_U32::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -3948,6 +4082,29 @@ inline int algo::ch_N(const algo::LnumStr3_U32& parent) {
     }
     ret = 3 - ret;
     return int(ret);
+}
+
+// --- algo.LnumStr3_U32.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LnumStr3_U32::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LnumStr3_U32.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LnumStr3_U32::operator =(const algo::LnumStr3_U32& parent) {
+    memcpy(ch, parent.ch, 3);
+}
+
+// --- algo.LnumStr3_U32.ch.Ctor
+inline  algo::LnumStr3_U32::LnumStr3_U32(const algo::LnumStr3_U32 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LnumStr3_U32.ch.CtorStrptr
+inline  algo::LnumStr3_U32::LnumStr3_U32(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr3_U32.ch.Cast
@@ -4033,6 +4190,29 @@ inline int algo::ch_N(const algo::LnumStr4_U32& parent) {
     return int(ret);
 }
 
+// --- algo.LnumStr4_U32.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LnumStr4_U32::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LnumStr4_U32.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LnumStr4_U32::operator =(const algo::LnumStr4_U32& parent) {
+    memcpy(ch, parent.ch, 4);
+}
+
+// --- algo.LnumStr4_U32.ch.Ctor
+inline  algo::LnumStr4_U32::LnumStr4_U32(const algo::LnumStr4_U32 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LnumStr4_U32.ch.CtorStrptr
+inline  algo::LnumStr4_U32::LnumStr4_U32(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.LnumStr4_U32.ch.Cast
 inline algo::LnumStr4_U32::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -4114,6 +4294,29 @@ inline int algo::ch_N(const algo::LnumStr5_U32& parent) {
     }
     ret = 5 - ret;
     return int(ret);
+}
+
+// --- algo.LnumStr5_U32.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LnumStr5_U32::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LnumStr5_U32.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LnumStr5_U32::operator =(const algo::LnumStr5_U32& parent) {
+    memcpy(ch, parent.ch, 5);
+}
+
+// --- algo.LnumStr5_U32.ch.Ctor
+inline  algo::LnumStr5_U32::LnumStr5_U32(const algo::LnumStr5_U32 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LnumStr5_U32.ch.CtorStrptr
+inline  algo::LnumStr5_U32::LnumStr5_U32(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr5_U32.ch.Cast
@@ -4199,6 +4402,29 @@ inline int algo::ch_N(const algo::LnumStr5_U32_Base36& parent) {
     return int(ret);
 }
 
+// --- algo.LnumStr5_U32_Base36.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LnumStr5_U32_Base36::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LnumStr5_U32_Base36.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LnumStr5_U32_Base36::operator =(const algo::LnumStr5_U32_Base36& parent) {
+    memcpy(ch, parent.ch, 5);
+}
+
+// --- algo.LnumStr5_U32_Base36.ch.Ctor
+inline  algo::LnumStr5_U32_Base36::LnumStr5_U32_Base36(const algo::LnumStr5_U32_Base36 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LnumStr5_U32_Base36.ch.CtorStrptr
+inline  algo::LnumStr5_U32_Base36::LnumStr5_U32_Base36(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.LnumStr5_U32_Base36.ch.Cast
 inline algo::LnumStr5_U32_Base36::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -4280,6 +4506,29 @@ inline int algo::ch_N(const algo::LnumStr6_U32& parent) {
     }
     ret = 6 - ret;
     return int(ret);
+}
+
+// --- algo.LnumStr6_U32.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LnumStr6_U32::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LnumStr6_U32.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LnumStr6_U32::operator =(const algo::LnumStr6_U32& parent) {
+    memcpy(ch, parent.ch, 6);
+}
+
+// --- algo.LnumStr6_U32.ch.Ctor
+inline  algo::LnumStr6_U32::LnumStr6_U32(const algo::LnumStr6_U32 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LnumStr6_U32.ch.CtorStrptr
+inline  algo::LnumStr6_U32::LnumStr6_U32(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr6_U32.ch.Cast
@@ -4365,6 +4614,29 @@ inline int algo::ch_N(const algo::LnumStr7_U32& parent) {
     return int(ret);
 }
 
+// --- algo.LnumStr7_U32.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LnumStr7_U32::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LnumStr7_U32.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LnumStr7_U32::operator =(const algo::LnumStr7_U32& parent) {
+    memcpy(ch, parent.ch, 7);
+}
+
+// --- algo.LnumStr7_U32.ch.Ctor
+inline  algo::LnumStr7_U32::LnumStr7_U32(const algo::LnumStr7_U32 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LnumStr7_U32.ch.CtorStrptr
+inline  algo::LnumStr7_U32::LnumStr7_U32(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.LnumStr7_U32.ch.Cast
 inline algo::LnumStr7_U32::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -4446,6 +4718,29 @@ inline int algo::ch_N(const algo::LnumStr7_U32_Base36& parent) {
     }
     ret = 7 - ret;
     return int(ret);
+}
+
+// --- algo.LnumStr7_U32_Base36.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LnumStr7_U32_Base36::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LnumStr7_U32_Base36.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LnumStr7_U32_Base36::operator =(const algo::LnumStr7_U32_Base36& parent) {
+    memcpy(ch, parent.ch, 7);
+}
+
+// --- algo.LnumStr7_U32_Base36.ch.Ctor
+inline  algo::LnumStr7_U32_Base36::LnumStr7_U32_Base36(const algo::LnumStr7_U32_Base36 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LnumStr7_U32_Base36.ch.CtorStrptr
+inline  algo::LnumStr7_U32_Base36::LnumStr7_U32_Base36(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr7_U32_Base36.ch.Cast
@@ -4531,6 +4826,29 @@ inline int algo::ch_N(const algo::LnumStr8_U32& parent) {
     return int(ret);
 }
 
+// --- algo.LnumStr8_U32.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LnumStr8_U32::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LnumStr8_U32.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LnumStr8_U32::operator =(const algo::LnumStr8_U32& parent) {
+    memcpy(ch, parent.ch, 8);
+}
+
+// --- algo.LnumStr8_U32.ch.Ctor
+inline  algo::LnumStr8_U32::LnumStr8_U32(const algo::LnumStr8_U32 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LnumStr8_U32.ch.CtorStrptr
+inline  algo::LnumStr8_U32::LnumStr8_U32(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.LnumStr8_U32.ch.Cast
 inline algo::LnumStr8_U32::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -4612,6 +4930,29 @@ inline int algo::ch_N(const algo::LnumStr8_U32_Base16& parent) {
     }
     ret = 8 - ret;
     return int(ret);
+}
+
+// --- algo.LnumStr8_U32_Base16.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LnumStr8_U32_Base16::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LnumStr8_U32_Base16.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LnumStr8_U32_Base16::operator =(const algo::LnumStr8_U32_Base16& parent) {
+    memcpy(ch, parent.ch, 8);
+}
+
+// --- algo.LnumStr8_U32_Base16.ch.Ctor
+inline  algo::LnumStr8_U32_Base16::LnumStr8_U32_Base16(const algo::LnumStr8_U32_Base16 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LnumStr8_U32_Base16.ch.CtorStrptr
+inline  algo::LnumStr8_U32_Base16::LnumStr8_U32_Base16(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr8_U32_Base16.ch.Cast
@@ -4697,6 +5038,29 @@ inline int algo::ch_N(const algo::LnumStr8_U64& parent) {
     return int(ret);
 }
 
+// --- algo.LnumStr8_U64.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LnumStr8_U64::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LnumStr8_U64.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LnumStr8_U64::operator =(const algo::LnumStr8_U64& parent) {
+    memcpy(ch, parent.ch, 8);
+}
+
+// --- algo.LnumStr8_U64.ch.Ctor
+inline  algo::LnumStr8_U64::LnumStr8_U64(const algo::LnumStr8_U64 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LnumStr8_U64.ch.CtorStrptr
+inline  algo::LnumStr8_U64::LnumStr8_U64(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.LnumStr8_U64.ch.Cast
 inline algo::LnumStr8_U64::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -4780,6 +5144,29 @@ inline int algo::ch_N(const algo::LnumStr9_U32& parent) {
     return int(ret);
 }
 
+// --- algo.LnumStr9_U32.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LnumStr9_U32::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LnumStr9_U32.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LnumStr9_U32::operator =(const algo::LnumStr9_U32& parent) {
+    memcpy(ch, parent.ch, 9);
+}
+
+// --- algo.LnumStr9_U32.ch.Ctor
+inline  algo::LnumStr9_U32::LnumStr9_U32(const algo::LnumStr9_U32 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LnumStr9_U32.ch.CtorStrptr
+inline  algo::LnumStr9_U32::LnumStr9_U32(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.LnumStr9_U32.ch.Cast
 inline algo::LnumStr9_U32::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -4861,6 +5248,29 @@ inline int algo::ch_N(const algo::LnumStr9_U64& parent) {
     }
     ret = 9 - ret;
     return int(ret);
+}
+
+// --- algo.LnumStr9_U64.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LnumStr9_U64::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LnumStr9_U64.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LnumStr9_U64::operator =(const algo::LnumStr9_U64& parent) {
+    memcpy(ch, parent.ch, 9);
+}
+
+// --- algo.LnumStr9_U64.ch.Ctor
+inline  algo::LnumStr9_U64::LnumStr9_U64(const algo::LnumStr9_U64 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LnumStr9_U64.ch.CtorStrptr
+inline  algo::LnumStr9_U64::LnumStr9_U64(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr9_U64.ch.Cast
@@ -5040,6 +5450,30 @@ inline int algo::ch_N(const algo::Smallstr200& parent) {
     return int(ret);
 }
 
+// --- algo.Smallstr200.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::Smallstr200::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.Smallstr200.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::Smallstr200::operator =(const algo::Smallstr200& parent) {
+    memcpy(ch, parent.ch, parent.n_ch);
+    n_ch = parent.n_ch;
+}
+
+// --- algo.Smallstr200.ch.Ctor
+inline  algo::Smallstr200::Smallstr200(const algo::Smallstr200 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.Smallstr200.ch.CtorStrptr
+inline  algo::Smallstr200::Smallstr200(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.Smallstr200.ch.Cast
 inline algo::Smallstr200::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -5131,6 +5565,29 @@ inline int algo::ch_N(const algo::LspaceStr10& parent) {
     return int(ret);
 }
 
+// --- algo.LspaceStr10.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LspaceStr10::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LspaceStr10.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LspaceStr10::operator =(const algo::LspaceStr10& parent) {
+    memcpy(ch, parent.ch, 10);
+}
+
+// --- algo.LspaceStr10.ch.Ctor
+inline  algo::LspaceStr10::LspaceStr10(const algo::LspaceStr10 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LspaceStr10.ch.CtorStrptr
+inline  algo::LspaceStr10::LspaceStr10(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.LspaceStr10.ch.Cast
 inline algo::LspaceStr10::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -5208,6 +5665,29 @@ inline int algo::ch_N(const algo::LspaceStr12& parent) {
     }
     ret = 12 - ret;
     return int(ret);
+}
+
+// --- algo.LspaceStr12.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LspaceStr12::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LspaceStr12.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LspaceStr12::operator =(const algo::LspaceStr12& parent) {
+    memcpy(ch, parent.ch, 12);
+}
+
+// --- algo.LspaceStr12.ch.Ctor
+inline  algo::LspaceStr12::LspaceStr12(const algo::LspaceStr12 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LspaceStr12.ch.CtorStrptr
+inline  algo::LspaceStr12::LspaceStr12(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr12.ch.Cast
@@ -5289,6 +5769,29 @@ inline int algo::ch_N(const algo::LspaceStr14& parent) {
     return int(ret);
 }
 
+// --- algo.LspaceStr14.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LspaceStr14::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LspaceStr14.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LspaceStr14::operator =(const algo::LspaceStr14& parent) {
+    memcpy(ch, parent.ch, 14);
+}
+
+// --- algo.LspaceStr14.ch.Ctor
+inline  algo::LspaceStr14::LspaceStr14(const algo::LspaceStr14 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LspaceStr14.ch.CtorStrptr
+inline  algo::LspaceStr14::LspaceStr14(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.LspaceStr14.ch.Cast
 inline algo::LspaceStr14::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -5366,6 +5869,29 @@ inline int algo::ch_N(const algo::LspaceStr15& parent) {
     }
     ret = 15 - ret;
     return int(ret);
+}
+
+// --- algo.LspaceStr15.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LspaceStr15::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LspaceStr15.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LspaceStr15::operator =(const algo::LspaceStr15& parent) {
+    memcpy(ch, parent.ch, 15);
+}
+
+// --- algo.LspaceStr15.ch.Ctor
+inline  algo::LspaceStr15::LspaceStr15(const algo::LspaceStr15 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LspaceStr15.ch.CtorStrptr
+inline  algo::LspaceStr15::LspaceStr15(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr15.ch.Cast
@@ -5447,6 +5973,29 @@ inline int algo::ch_N(const algo::LspaceStr20_I64& parent) {
     return int(ret);
 }
 
+// --- algo.LspaceStr20_I64.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LspaceStr20_I64::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LspaceStr20_I64.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LspaceStr20_I64::operator =(const algo::LspaceStr20_I64& parent) {
+    memcpy(ch, parent.ch, 20);
+}
+
+// --- algo.LspaceStr20_I64.ch.Ctor
+inline  algo::LspaceStr20_I64::LspaceStr20_I64(const algo::LspaceStr20_I64 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LspaceStr20_I64.ch.CtorStrptr
+inline  algo::LspaceStr20_I64::LspaceStr20_I64(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.LspaceStr20_I64.ch.Cast
 inline algo::LspaceStr20_I64::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -5524,6 +6073,29 @@ inline int algo::ch_N(const algo::LspaceStr20_U64& parent) {
     }
     ret = 20 - ret;
     return int(ret);
+}
+
+// --- algo.LspaceStr20_U64.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LspaceStr20_U64::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LspaceStr20_U64.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LspaceStr20_U64::operator =(const algo::LspaceStr20_U64& parent) {
+    memcpy(ch, parent.ch, 20);
+}
+
+// --- algo.LspaceStr20_U64.ch.Ctor
+inline  algo::LspaceStr20_U64::LspaceStr20_U64(const algo::LspaceStr20_U64 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LspaceStr20_U64.ch.CtorStrptr
+inline  algo::LspaceStr20_U64::LspaceStr20_U64(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr20_U64.ch.Cast
@@ -5605,6 +6177,29 @@ inline int algo::ch_N(const algo::LspaceStr3& parent) {
     return int(ret);
 }
 
+// --- algo.LspaceStr3.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LspaceStr3::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LspaceStr3.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LspaceStr3::operator =(const algo::LspaceStr3& parent) {
+    memcpy(ch, parent.ch, 3);
+}
+
+// --- algo.LspaceStr3.ch.Ctor
+inline  algo::LspaceStr3::LspaceStr3(const algo::LspaceStr3 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LspaceStr3.ch.CtorStrptr
+inline  algo::LspaceStr3::LspaceStr3(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.LspaceStr3.ch.Cast
 inline algo::LspaceStr3::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -5682,6 +6277,29 @@ inline int algo::ch_N(const algo::LspaceStr3_I16& parent) {
     }
     ret = 3 - ret;
     return int(ret);
+}
+
+// --- algo.LspaceStr3_I16.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LspaceStr3_I16::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LspaceStr3_I16.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LspaceStr3_I16::operator =(const algo::LspaceStr3_I16& parent) {
+    memcpy(ch, parent.ch, 3);
+}
+
+// --- algo.LspaceStr3_I16.ch.Ctor
+inline  algo::LspaceStr3_I16::LspaceStr3_I16(const algo::LspaceStr3_I16 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LspaceStr3_I16.ch.CtorStrptr
+inline  algo::LspaceStr3_I16::LspaceStr3_I16(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr3_I16.ch.Cast
@@ -5763,6 +6381,29 @@ inline int algo::ch_N(const algo::LspaceStr4& parent) {
     return int(ret);
 }
 
+// --- algo.LspaceStr4.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LspaceStr4::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LspaceStr4.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LspaceStr4::operator =(const algo::LspaceStr4& parent) {
+    memcpy(ch, parent.ch, 4);
+}
+
+// --- algo.LspaceStr4.ch.Ctor
+inline  algo::LspaceStr4::LspaceStr4(const algo::LspaceStr4 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LspaceStr4.ch.CtorStrptr
+inline  algo::LspaceStr4::LspaceStr4(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.LspaceStr4.ch.Cast
 inline algo::LspaceStr4::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -5840,6 +6481,29 @@ inline int algo::ch_N(const algo::LspaceStr5& parent) {
     }
     ret = 5 - ret;
     return int(ret);
+}
+
+// --- algo.LspaceStr5.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LspaceStr5::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LspaceStr5.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LspaceStr5::operator =(const algo::LspaceStr5& parent) {
+    memcpy(ch, parent.ch, 5);
+}
+
+// --- algo.LspaceStr5.ch.Ctor
+inline  algo::LspaceStr5::LspaceStr5(const algo::LspaceStr5 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LspaceStr5.ch.CtorStrptr
+inline  algo::LspaceStr5::LspaceStr5(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr5.ch.Cast
@@ -5921,6 +6585,29 @@ inline int algo::ch_N(const algo::LspaceStr5_I16& parent) {
     return int(ret);
 }
 
+// --- algo.LspaceStr5_I16.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LspaceStr5_I16::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LspaceStr5_I16.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LspaceStr5_I16::operator =(const algo::LspaceStr5_I16& parent) {
+    memcpy(ch, parent.ch, 5);
+}
+
+// --- algo.LspaceStr5_I16.ch.Ctor
+inline  algo::LspaceStr5_I16::LspaceStr5_I16(const algo::LspaceStr5_I16 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LspaceStr5_I16.ch.CtorStrptr
+inline  algo::LspaceStr5_I16::LspaceStr5_I16(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.LspaceStr5_I16.ch.Cast
 inline algo::LspaceStr5_I16::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -5998,6 +6685,29 @@ inline int algo::ch_N(const algo::LspaceStr6& parent) {
     }
     ret = 6 - ret;
     return int(ret);
+}
+
+// --- algo.LspaceStr6.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LspaceStr6::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LspaceStr6.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LspaceStr6::operator =(const algo::LspaceStr6& parent) {
+    memcpy(ch, parent.ch, 6);
+}
+
+// --- algo.LspaceStr6.ch.Ctor
+inline  algo::LspaceStr6::LspaceStr6(const algo::LspaceStr6 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LspaceStr6.ch.CtorStrptr
+inline  algo::LspaceStr6::LspaceStr6(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr6.ch.Cast
@@ -6079,6 +6789,29 @@ inline int algo::ch_N(const algo::LspaceStr6_U32& parent) {
     return int(ret);
 }
 
+// --- algo.LspaceStr6_U32.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LspaceStr6_U32::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LspaceStr6_U32.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LspaceStr6_U32::operator =(const algo::LspaceStr6_U32& parent) {
+    memcpy(ch, parent.ch, 6);
+}
+
+// --- algo.LspaceStr6_U32.ch.Ctor
+inline  algo::LspaceStr6_U32::LspaceStr6_U32(const algo::LspaceStr6_U32 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LspaceStr6_U32.ch.CtorStrptr
+inline  algo::LspaceStr6_U32::LspaceStr6_U32(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.LspaceStr6_U32.ch.Cast
 inline algo::LspaceStr6_U32::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -6156,6 +6889,29 @@ inline int algo::ch_N(const algo::LspaceStr7_I32_Base36& parent) {
     }
     ret = 7 - ret;
     return int(ret);
+}
+
+// --- algo.LspaceStr7_I32_Base36.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LspaceStr7_I32_Base36::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LspaceStr7_I32_Base36.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LspaceStr7_I32_Base36::operator =(const algo::LspaceStr7_I32_Base36& parent) {
+    memcpy(ch, parent.ch, 7);
+}
+
+// --- algo.LspaceStr7_I32_Base36.ch.Ctor
+inline  algo::LspaceStr7_I32_Base36::LspaceStr7_I32_Base36(const algo::LspaceStr7_I32_Base36 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LspaceStr7_I32_Base36.ch.CtorStrptr
+inline  algo::LspaceStr7_I32_Base36::LspaceStr7_I32_Base36(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr7_I32_Base36.ch.Cast
@@ -6237,6 +6993,29 @@ inline int algo::ch_N(const algo::LspaceStr8& parent) {
     return int(ret);
 }
 
+// --- algo.LspaceStr8.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LspaceStr8::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LspaceStr8.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LspaceStr8::operator =(const algo::LspaceStr8& parent) {
+    memcpy(ch, parent.ch, 8);
+}
+
+// --- algo.LspaceStr8.ch.Ctor
+inline  algo::LspaceStr8::LspaceStr8(const algo::LspaceStr8 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LspaceStr8.ch.CtorStrptr
+inline  algo::LspaceStr8::LspaceStr8(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.LspaceStr8.ch.Cast
 inline algo::LspaceStr8::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -6314,6 +7093,29 @@ inline int algo::ch_N(const algo::LspaceStr9& parent) {
     }
     ret = 9 - ret;
     return int(ret);
+}
+
+// --- algo.LspaceStr9.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::LspaceStr9::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.LspaceStr9.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::LspaceStr9::operator =(const algo::LspaceStr9& parent) {
+    memcpy(ch, parent.ch, 9);
+}
+
+// --- algo.LspaceStr9.ch.Ctor
+inline  algo::LspaceStr9::LspaceStr9(const algo::LspaceStr9 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.LspaceStr9.ch.CtorStrptr
+inline  algo::LspaceStr9::LspaceStr9(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr9.ch.Cast
@@ -6768,6 +7570,29 @@ inline int algo::ch_N(const algo::RnullStr1& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr1.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr1::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr1.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr1::operator =(const algo::RnullStr1& parent) {
+    memcpy(ch, parent.ch, 1);
+}
+
+// --- algo.RnullStr1.ch.Ctor
+inline  algo::RnullStr1::RnullStr1(const algo::RnullStr1 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr1.ch.CtorStrptr
+inline  algo::RnullStr1::RnullStr1(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr1.ch.Cast
 inline algo::RnullStr1::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -6864,6 +7689,29 @@ inline int algo::ch_N(const algo::RnullStr10& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr10.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr10::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr10.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr10::operator =(const algo::RnullStr10& parent) {
+    memcpy(ch, parent.ch, 10);
+}
+
+// --- algo.RnullStr10.ch.Ctor
+inline  algo::RnullStr10::RnullStr10(const algo::RnullStr10 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr10.ch.CtorStrptr
+inline  algo::RnullStr10::RnullStr10(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr10.ch.Cast
 inline algo::RnullStr10::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -6946,6 +7794,29 @@ inline int algo::ch_N(const algo::RnullStr100& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RnullStr100.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr100::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr100.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr100::operator =(const algo::RnullStr100& parent) {
+    memcpy(ch, parent.ch, 100);
+}
+
+// --- algo.RnullStr100.ch.Ctor
+inline  algo::RnullStr100::RnullStr100(const algo::RnullStr100 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr100.ch.CtorStrptr
+inline  algo::RnullStr100::RnullStr100(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr100.ch.Cast
@@ -7044,6 +7915,29 @@ inline int algo::ch_N(const algo::RnullStr1000& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr1000.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr1000::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr1000.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr1000::operator =(const algo::RnullStr1000& parent) {
+    memcpy(ch, parent.ch, 1000);
+}
+
+// --- algo.RnullStr1000.ch.Ctor
+inline  algo::RnullStr1000::RnullStr1000(const algo::RnullStr1000 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr1000.ch.CtorStrptr
+inline  algo::RnullStr1000::RnullStr1000(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr1000.ch.Cast
 inline algo::RnullStr1000::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -7138,6 +8032,29 @@ inline int algo::ch_N(const algo::RnullStr11& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RnullStr11.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr11::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr11.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr11::operator =(const algo::RnullStr11& parent) {
+    memcpy(ch, parent.ch, 11);
+}
+
+// --- algo.RnullStr11.ch.Ctor
+inline  algo::RnullStr11::RnullStr11(const algo::RnullStr11 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr11.ch.CtorStrptr
+inline  algo::RnullStr11::RnullStr11(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr11.ch.Cast
@@ -7236,6 +8153,29 @@ inline int algo::ch_N(const algo::RnullStr12& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr12.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr12::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr12.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr12::operator =(const algo::RnullStr12& parent) {
+    memcpy(ch, parent.ch, 12);
+}
+
+// --- algo.RnullStr12.ch.Ctor
+inline  algo::RnullStr12::RnullStr12(const algo::RnullStr12 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr12.ch.CtorStrptr
+inline  algo::RnullStr12::RnullStr12(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr12.ch.Cast
 inline algo::RnullStr12::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -7330,6 +8270,29 @@ inline int algo::ch_N(const algo::RnullStr129& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RnullStr129.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr129::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr129.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr129::operator =(const algo::RnullStr129& parent) {
+    memcpy(ch, parent.ch, 129);
+}
+
+// --- algo.RnullStr129.ch.Ctor
+inline  algo::RnullStr129::RnullStr129(const algo::RnullStr129 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr129.ch.CtorStrptr
+inline  algo::RnullStr129::RnullStr129(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr129.ch.Cast
@@ -7428,6 +8391,29 @@ inline int algo::ch_N(const algo::RnullStr13& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr13.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr13::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr13.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr13::operator =(const algo::RnullStr13& parent) {
+    memcpy(ch, parent.ch, 13);
+}
+
+// --- algo.RnullStr13.ch.Ctor
+inline  algo::RnullStr13::RnullStr13(const algo::RnullStr13 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr13.ch.CtorStrptr
+inline  algo::RnullStr13::RnullStr13(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr13.ch.Cast
 inline algo::RnullStr13::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -7522,6 +8508,29 @@ inline int algo::ch_N(const algo::RnullStr14& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RnullStr14.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr14::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr14.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr14::operator =(const algo::RnullStr14& parent) {
+    memcpy(ch, parent.ch, 14);
+}
+
+// --- algo.RnullStr14.ch.Ctor
+inline  algo::RnullStr14::RnullStr14(const algo::RnullStr14 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr14.ch.CtorStrptr
+inline  algo::RnullStr14::RnullStr14(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr14.ch.Cast
@@ -7620,6 +8629,29 @@ inline int algo::ch_N(const algo::RnullStr15& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr15.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr15::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr15.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr15::operator =(const algo::RnullStr15& parent) {
+    memcpy(ch, parent.ch, 15);
+}
+
+// --- algo.RnullStr15.ch.Ctor
+inline  algo::RnullStr15::RnullStr15(const algo::RnullStr15 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr15.ch.CtorStrptr
+inline  algo::RnullStr15::RnullStr15(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr15.ch.Cast
 inline algo::RnullStr15::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -7716,6 +8748,29 @@ inline int algo::ch_N(const algo::RnullStr151& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr151.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr151::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr151.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr151::operator =(const algo::RnullStr151& parent) {
+    memcpy(ch, parent.ch, 151);
+}
+
+// --- algo.RnullStr151.ch.Ctor
+inline  algo::RnullStr151::RnullStr151(const algo::RnullStr151 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr151.ch.CtorStrptr
+inline  algo::RnullStr151::RnullStr151(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr151.ch.Cast
 inline algo::RnullStr151::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -7798,6 +8853,29 @@ inline int algo::ch_N(const algo::RnullStr16& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RnullStr16.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr16::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr16.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr16::operator =(const algo::RnullStr16& parent) {
+    memcpy(ch, parent.ch, 16);
+}
+
+// --- algo.RnullStr16.ch.Ctor
+inline  algo::RnullStr16::RnullStr16(const algo::RnullStr16 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr16.ch.CtorStrptr
+inline  algo::RnullStr16::RnullStr16(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr16.ch.Cast
@@ -7896,6 +8974,29 @@ inline int algo::ch_N(const algo::RnullStr17& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr17.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr17::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr17.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr17::operator =(const algo::RnullStr17& parent) {
+    memcpy(ch, parent.ch, 17);
+}
+
+// --- algo.RnullStr17.ch.Ctor
+inline  algo::RnullStr17::RnullStr17(const algo::RnullStr17 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr17.ch.CtorStrptr
+inline  algo::RnullStr17::RnullStr17(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr17.ch.Cast
 inline algo::RnullStr17::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -7992,6 +9093,29 @@ inline int algo::ch_N(const algo::RnullStr18& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr18.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr18::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr18.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr18::operator =(const algo::RnullStr18& parent) {
+    memcpy(ch, parent.ch, 18);
+}
+
+// --- algo.RnullStr18.ch.Ctor
+inline  algo::RnullStr18::RnullStr18(const algo::RnullStr18 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr18.ch.CtorStrptr
+inline  algo::RnullStr18::RnullStr18(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr18.ch.Cast
 inline algo::RnullStr18::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -8074,6 +9198,29 @@ inline int algo::ch_N(const algo::RnullStr19& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RnullStr19.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr19::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr19.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr19::operator =(const algo::RnullStr19& parent) {
+    memcpy(ch, parent.ch, 19);
+}
+
+// --- algo.RnullStr19.ch.Ctor
+inline  algo::RnullStr19::RnullStr19(const algo::RnullStr19 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr19.ch.CtorStrptr
+inline  algo::RnullStr19::RnullStr19(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr19.ch.Cast
@@ -8172,6 +9319,29 @@ inline int algo::ch_N(const algo::RnullStr2& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr2.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr2::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr2.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr2::operator =(const algo::RnullStr2& parent) {
+    memcpy(ch, parent.ch, 2);
+}
+
+// --- algo.RnullStr2.ch.Ctor
+inline  algo::RnullStr2::RnullStr2(const algo::RnullStr2 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr2.ch.CtorStrptr
+inline  algo::RnullStr2::RnullStr2(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr2.ch.Cast
 inline algo::RnullStr2::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -8268,6 +9438,29 @@ inline int algo::ch_N(const algo::RnullStr20& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr20.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr20::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr20.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr20::operator =(const algo::RnullStr20& parent) {
+    memcpy(ch, parent.ch, 20);
+}
+
+// --- algo.RnullStr20.ch.Ctor
+inline  algo::RnullStr20::RnullStr20(const algo::RnullStr20 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr20.ch.CtorStrptr
+inline  algo::RnullStr20::RnullStr20(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr20.ch.Cast
 inline algo::RnullStr20::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -8350,6 +9543,29 @@ inline int algo::ch_N(const algo::RnullStr21& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RnullStr21.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr21::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr21.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr21::operator =(const algo::RnullStr21& parent) {
+    memcpy(ch, parent.ch, 21);
+}
+
+// --- algo.RnullStr21.ch.Ctor
+inline  algo::RnullStr21::RnullStr21(const algo::RnullStr21 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr21.ch.CtorStrptr
+inline  algo::RnullStr21::RnullStr21(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr21.ch.Cast
@@ -8448,6 +9664,29 @@ inline int algo::ch_N(const algo::RnullStr24& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr24.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr24::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr24.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr24::operator =(const algo::RnullStr24& parent) {
+    memcpy(ch, parent.ch, 24);
+}
+
+// --- algo.RnullStr24.ch.Ctor
+inline  algo::RnullStr24::RnullStr24(const algo::RnullStr24 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr24.ch.CtorStrptr
+inline  algo::RnullStr24::RnullStr24(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr24.ch.Cast
 inline algo::RnullStr24::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -8542,6 +9781,29 @@ inline int algo::ch_N(const algo::RnullStr25& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RnullStr25.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr25::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr25.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr25::operator =(const algo::RnullStr25& parent) {
+    memcpy(ch, parent.ch, 25);
+}
+
+// --- algo.RnullStr25.ch.Ctor
+inline  algo::RnullStr25::RnullStr25(const algo::RnullStr25 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr25.ch.CtorStrptr
+inline  algo::RnullStr25::RnullStr25(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr25.ch.Cast
@@ -8640,6 +9902,29 @@ inline int algo::ch_N(const algo::RnullStr28& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr28.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr28::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr28.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr28::operator =(const algo::RnullStr28& parent) {
+    memcpy(ch, parent.ch, 28);
+}
+
+// --- algo.RnullStr28.ch.Ctor
+inline  algo::RnullStr28::RnullStr28(const algo::RnullStr28 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr28.ch.CtorStrptr
+inline  algo::RnullStr28::RnullStr28(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr28.ch.Cast
 inline algo::RnullStr28::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -8736,6 +10021,29 @@ inline int algo::ch_N(const algo::RnullStr3& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr3.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr3::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr3.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr3::operator =(const algo::RnullStr3& parent) {
+    memcpy(ch, parent.ch, 3);
+}
+
+// --- algo.RnullStr3.ch.Ctor
+inline  algo::RnullStr3::RnullStr3(const algo::RnullStr3 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr3.ch.CtorStrptr
+inline  algo::RnullStr3::RnullStr3(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr3.ch.Cast
 inline algo::RnullStr3::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -8818,6 +10126,29 @@ inline int algo::ch_N(const algo::RnullStr30& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RnullStr30.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr30::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr30.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr30::operator =(const algo::RnullStr30& parent) {
+    memcpy(ch, parent.ch, 30);
+}
+
+// --- algo.RnullStr30.ch.Ctor
+inline  algo::RnullStr30::RnullStr30(const algo::RnullStr30 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr30.ch.CtorStrptr
+inline  algo::RnullStr30::RnullStr30(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr30.ch.Cast
@@ -8916,6 +10247,29 @@ inline int algo::ch_N(const algo::RnullStr32& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr32.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr32::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr32.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr32::operator =(const algo::RnullStr32& parent) {
+    memcpy(ch, parent.ch, 32);
+}
+
+// --- algo.RnullStr32.ch.Ctor
+inline  algo::RnullStr32::RnullStr32(const algo::RnullStr32 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr32.ch.CtorStrptr
+inline  algo::RnullStr32::RnullStr32(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr32.ch.Cast
 inline algo::RnullStr32::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -9010,6 +10364,29 @@ inline int algo::ch_N(const algo::RnullStr33& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RnullStr33.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr33::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr33.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr33::operator =(const algo::RnullStr33& parent) {
+    memcpy(ch, parent.ch, 33);
+}
+
+// --- algo.RnullStr33.ch.Ctor
+inline  algo::RnullStr33::RnullStr33(const algo::RnullStr33 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr33.ch.CtorStrptr
+inline  algo::RnullStr33::RnullStr33(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr33.ch.Cast
@@ -9108,6 +10485,29 @@ inline int algo::ch_N(const algo::RnullStr35& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr35.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr35::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr35.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr35::operator =(const algo::RnullStr35& parent) {
+    memcpy(ch, parent.ch, 35);
+}
+
+// --- algo.RnullStr35.ch.Ctor
+inline  algo::RnullStr35::RnullStr35(const algo::RnullStr35 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr35.ch.CtorStrptr
+inline  algo::RnullStr35::RnullStr35(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr35.ch.Cast
 inline algo::RnullStr35::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -9204,6 +10604,29 @@ inline int algo::ch_N(const algo::RnullStr36& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr36.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr36::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr36.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr36::operator =(const algo::RnullStr36& parent) {
+    memcpy(ch, parent.ch, 36);
+}
+
+// --- algo.RnullStr36.ch.Ctor
+inline  algo::RnullStr36::RnullStr36(const algo::RnullStr36 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr36.ch.CtorStrptr
+inline  algo::RnullStr36::RnullStr36(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr36.ch.Cast
 inline algo::RnullStr36::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -9286,6 +10709,29 @@ inline int algo::ch_N(const algo::RnullStr4& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RnullStr4.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr4::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr4.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr4::operator =(const algo::RnullStr4& parent) {
+    memcpy(ch, parent.ch, 4);
+}
+
+// --- algo.RnullStr4.ch.Ctor
+inline  algo::RnullStr4::RnullStr4(const algo::RnullStr4 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr4.ch.CtorStrptr
+inline  algo::RnullStr4::RnullStr4(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr4.ch.Cast
@@ -9384,6 +10830,29 @@ inline int algo::ch_N(const algo::RnullStr40& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr40.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr40::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr40.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr40::operator =(const algo::RnullStr40& parent) {
+    memcpy(ch, parent.ch, 40);
+}
+
+// --- algo.RnullStr40.ch.Ctor
+inline  algo::RnullStr40::RnullStr40(const algo::RnullStr40 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr40.ch.CtorStrptr
+inline  algo::RnullStr40::RnullStr40(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr40.ch.Cast
 inline algo::RnullStr40::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -9480,6 +10949,29 @@ inline int algo::ch_N(const algo::RnullStr41& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr41.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr41::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr41.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr41::operator =(const algo::RnullStr41& parent) {
+    memcpy(ch, parent.ch, 41);
+}
+
+// --- algo.RnullStr41.ch.Ctor
+inline  algo::RnullStr41::RnullStr41(const algo::RnullStr41 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr41.ch.CtorStrptr
+inline  algo::RnullStr41::RnullStr41(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr41.ch.Cast
 inline algo::RnullStr41::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -9562,6 +11054,29 @@ inline int algo::ch_N(const algo::RnullStr43& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RnullStr43.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr43::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr43.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr43::operator =(const algo::RnullStr43& parent) {
+    memcpy(ch, parent.ch, 43);
+}
+
+// --- algo.RnullStr43.ch.Ctor
+inline  algo::RnullStr43::RnullStr43(const algo::RnullStr43 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr43.ch.CtorStrptr
+inline  algo::RnullStr43::RnullStr43(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr43.ch.Cast
@@ -9648,6 +11163,29 @@ inline int algo::ch_N(const algo::RnullStr44& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr44.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr44::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr44.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr44::operator =(const algo::RnullStr44& parent) {
+    memcpy(ch, parent.ch, 44);
+}
+
+// --- algo.RnullStr44.ch.Ctor
+inline  algo::RnullStr44::RnullStr44(const algo::RnullStr44 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr44.ch.CtorStrptr
+inline  algo::RnullStr44::RnullStr44(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr44.ch.Cast
 inline algo::RnullStr44::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -9730,6 +11268,29 @@ inline int algo::ch_N(const algo::RnullStr48& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RnullStr48.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr48::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr48.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr48::operator =(const algo::RnullStr48& parent) {
+    memcpy(ch, parent.ch, 48);
+}
+
+// --- algo.RnullStr48.ch.Ctor
+inline  algo::RnullStr48::RnullStr48(const algo::RnullStr48 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr48.ch.CtorStrptr
+inline  algo::RnullStr48::RnullStr48(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr48.ch.Cast
@@ -9816,6 +11377,29 @@ inline int algo::ch_N(const algo::RnullStr5& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr5.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr5::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr5.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr5::operator =(const algo::RnullStr5& parent) {
+    memcpy(ch, parent.ch, 5);
+}
+
+// --- algo.RnullStr5.ch.Ctor
+inline  algo::RnullStr5::RnullStr5(const algo::RnullStr5 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr5.ch.CtorStrptr
+inline  algo::RnullStr5::RnullStr5(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr5.ch.Cast
 inline algo::RnullStr5::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -9898,6 +11482,29 @@ inline int algo::ch_N(const algo::RnullStr50& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RnullStr50.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr50::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr50.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr50::operator =(const algo::RnullStr50& parent) {
+    memcpy(ch, parent.ch, 50);
+}
+
+// --- algo.RnullStr50.ch.Ctor
+inline  algo::RnullStr50::RnullStr50(const algo::RnullStr50 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr50.ch.CtorStrptr
+inline  algo::RnullStr50::RnullStr50(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr50.ch.Cast
@@ -9996,6 +11603,29 @@ inline int algo::ch_N(const algo::RnullStr54& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr54.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr54::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr54.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr54::operator =(const algo::RnullStr54& parent) {
+    memcpy(ch, parent.ch, 54);
+}
+
+// --- algo.RnullStr54.ch.Ctor
+inline  algo::RnullStr54::RnullStr54(const algo::RnullStr54 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr54.ch.CtorStrptr
+inline  algo::RnullStr54::RnullStr54(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr54.ch.Cast
 inline algo::RnullStr54::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -10078,6 +11708,29 @@ inline int algo::ch_N(const algo::RnullStr55& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RnullStr55.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr55::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr55.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr55::operator =(const algo::RnullStr55& parent) {
+    memcpy(ch, parent.ch, 55);
+}
+
+// --- algo.RnullStr55.ch.Ctor
+inline  algo::RnullStr55::RnullStr55(const algo::RnullStr55 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr55.ch.CtorStrptr
+inline  algo::RnullStr55::RnullStr55(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr55.ch.Cast
@@ -10176,6 +11829,29 @@ inline int algo::ch_N(const algo::RnullStr6& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr6.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr6::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr6.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr6::operator =(const algo::RnullStr6& parent) {
+    memcpy(ch, parent.ch, 6);
+}
+
+// --- algo.RnullStr6.ch.Ctor
+inline  algo::RnullStr6::RnullStr6(const algo::RnullStr6 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr6.ch.CtorStrptr
+inline  algo::RnullStr6::RnullStr6(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr6.ch.Cast
 inline algo::RnullStr6::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -10270,6 +11946,29 @@ inline int algo::ch_N(const algo::RnullStr60& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RnullStr60.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr60::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr60.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr60::operator =(const algo::RnullStr60& parent) {
+    memcpy(ch, parent.ch, 60);
+}
+
+// --- algo.RnullStr60.ch.Ctor
+inline  algo::RnullStr60::RnullStr60(const algo::RnullStr60 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr60.ch.CtorStrptr
+inline  algo::RnullStr60::RnullStr60(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr60.ch.Cast
@@ -10368,6 +12067,29 @@ inline int algo::ch_N(const algo::RnullStr62& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr62.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr62::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr62.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr62::operator =(const algo::RnullStr62& parent) {
+    memcpy(ch, parent.ch, 62);
+}
+
+// --- algo.RnullStr62.ch.Ctor
+inline  algo::RnullStr62::RnullStr62(const algo::RnullStr62 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr62.ch.CtorStrptr
+inline  algo::RnullStr62::RnullStr62(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr62.ch.Cast
 inline algo::RnullStr62::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -10450,6 +12172,29 @@ inline int algo::ch_N(const algo::RnullStr66& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RnullStr66.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr66::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr66.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr66::operator =(const algo::RnullStr66& parent) {
+    memcpy(ch, parent.ch, 66);
+}
+
+// --- algo.RnullStr66.ch.Ctor
+inline  algo::RnullStr66::RnullStr66(const algo::RnullStr66 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr66.ch.CtorStrptr
+inline  algo::RnullStr66::RnullStr66(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr66.ch.Cast
@@ -10544,6 +12289,29 @@ inline int algo::ch_N(const algo::RnullStr6_U32& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr6_U32.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr6_U32::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr6_U32.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr6_U32::operator =(const algo::RnullStr6_U32& parent) {
+    memcpy(ch, parent.ch, 6);
+}
+
+// --- algo.RnullStr6_U32.ch.Ctor
+inline  algo::RnullStr6_U32::RnullStr6_U32(const algo::RnullStr6_U32 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr6_U32.ch.CtorStrptr
+inline  algo::RnullStr6_U32::RnullStr6_U32(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr6_U32.ch.Cast
 inline algo::RnullStr6_U32::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -10623,6 +12391,29 @@ inline int algo::ch_N(const algo::RnullStr7& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RnullStr7.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr7::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr7.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr7::operator =(const algo::RnullStr7& parent) {
+    memcpy(ch, parent.ch, 7);
+}
+
+// --- algo.RnullStr7.ch.Ctor
+inline  algo::RnullStr7::RnullStr7(const algo::RnullStr7 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr7.ch.CtorStrptr
+inline  algo::RnullStr7::RnullStr7(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr7.ch.Cast
@@ -10709,6 +12500,29 @@ inline int algo::ch_N(const algo::RnullStr8& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr8.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr8::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr8.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr8::operator =(const algo::RnullStr8& parent) {
+    memcpy(ch, parent.ch, 8);
+}
+
+// --- algo.RnullStr8.ch.Ctor
+inline  algo::RnullStr8::RnullStr8(const algo::RnullStr8 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr8.ch.CtorStrptr
+inline  algo::RnullStr8::RnullStr8(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr8.ch.Cast
 inline algo::RnullStr8::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -10791,6 +12605,29 @@ inline int algo::ch_N(const algo::RnullStr80& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RnullStr80.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr80::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr80.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr80::operator =(const algo::RnullStr80& parent) {
+    memcpy(ch, parent.ch, 80);
+}
+
+// --- algo.RnullStr80.ch.Ctor
+inline  algo::RnullStr80::RnullStr80(const algo::RnullStr80 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr80.ch.CtorStrptr
+inline  algo::RnullStr80::RnullStr80(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr80.ch.Cast
@@ -10889,6 +12726,29 @@ inline int algo::ch_N(const algo::RnullStr9& parent) {
     return int(ret);
 }
 
+// --- algo.RnullStr9.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RnullStr9::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RnullStr9.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RnullStr9::operator =(const algo::RnullStr9& parent) {
+    memcpy(ch, parent.ch, 9);
+}
+
+// --- algo.RnullStr9.ch.Ctor
+inline  algo::RnullStr9::RnullStr9(const algo::RnullStr9 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RnullStr9.ch.CtorStrptr
+inline  algo::RnullStr9::RnullStr9(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RnullStr9.ch.Cast
 inline algo::RnullStr9::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -10981,6 +12841,29 @@ inline int algo::ch_N(const algo::RspaceStr10& parent) {
     return int(ret);
 }
 
+// --- algo.RspaceStr10.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr10::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr10.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr10::operator =(const algo::RspaceStr10& parent) {
+    memcpy(ch, parent.ch, 10);
+}
+
+// --- algo.RspaceStr10.ch.Ctor
+inline  algo::RspaceStr10::RspaceStr10(const algo::RspaceStr10 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr10.ch.CtorStrptr
+inline  algo::RspaceStr10::RspaceStr10(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RspaceStr10.ch.Cast
 inline algo::RspaceStr10::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -11056,6 +12939,29 @@ inline int algo::ch_N(const algo::RspaceStr100& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RspaceStr100.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr100::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr100.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr100::operator =(const algo::RspaceStr100& parent) {
+    memcpy(ch, parent.ch, 100);
+}
+
+// --- algo.RspaceStr100.ch.Ctor
+inline  algo::RspaceStr100::RspaceStr100(const algo::RspaceStr100 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr100.ch.CtorStrptr
+inline  algo::RspaceStr100::RspaceStr100(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr100.ch.Cast
@@ -11135,6 +13041,29 @@ inline int algo::ch_N(const algo::RspaceStr11& parent) {
     return int(ret);
 }
 
+// --- algo.RspaceStr11.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr11::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr11.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr11::operator =(const algo::RspaceStr11& parent) {
+    memcpy(ch, parent.ch, 11);
+}
+
+// --- algo.RspaceStr11.ch.Ctor
+inline  algo::RspaceStr11::RspaceStr11(const algo::RspaceStr11 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr11.ch.CtorStrptr
+inline  algo::RspaceStr11::RspaceStr11(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RspaceStr11.ch.Cast
 inline algo::RspaceStr11::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -11202,6 +13131,29 @@ inline int algo::ch_N(const algo::RspaceStr16& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RspaceStr16.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr16::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr16.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr16::operator =(const algo::RspaceStr16& parent) {
+    memcpy(ch, parent.ch, 16);
+}
+
+// --- algo.RspaceStr16.ch.Ctor
+inline  algo::RspaceStr16::RspaceStr16(const algo::RspaceStr16 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr16.ch.CtorStrptr
+inline  algo::RspaceStr16::RspaceStr16(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr16.ch.Cast
@@ -11296,6 +13248,29 @@ inline int algo::ch_N(const algo::RspaceStr2& parent) {
     return int(ret);
 }
 
+// --- algo.RspaceStr2.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr2::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr2.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr2::operator =(const algo::RspaceStr2& parent) {
+    memcpy(ch, parent.ch, 2);
+}
+
+// --- algo.RspaceStr2.ch.Ctor
+inline  algo::RspaceStr2::RspaceStr2(const algo::RspaceStr2 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr2.ch.CtorStrptr
+inline  algo::RspaceStr2::RspaceStr2(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RspaceStr2.ch.Cast
 inline algo::RspaceStr2::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -11371,6 +13346,29 @@ inline int algo::ch_N(const algo::RspaceStr20& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RspaceStr20.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr20::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr20.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr20::operator =(const algo::RspaceStr20& parent) {
+    memcpy(ch, parent.ch, 20);
+}
+
+// --- algo.RspaceStr20.ch.Ctor
+inline  algo::RspaceStr20::RspaceStr20(const algo::RspaceStr20 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr20.ch.CtorStrptr
+inline  algo::RspaceStr20::RspaceStr20(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr20.ch.Cast
@@ -11450,6 +13448,29 @@ inline int algo::ch_N(const algo::RspaceStr200& parent) {
     return int(ret);
 }
 
+// --- algo.RspaceStr200.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr200::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr200.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr200::operator =(const algo::RspaceStr200& parent) {
+    memcpy(ch, parent.ch, 200);
+}
+
+// --- algo.RspaceStr200.ch.Ctor
+inline  algo::RspaceStr200::RspaceStr200(const algo::RspaceStr200 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr200.ch.CtorStrptr
+inline  algo::RspaceStr200::RspaceStr200(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RspaceStr200.ch.Cast
 inline algo::RspaceStr200::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -11527,6 +13548,29 @@ inline int algo::ch_N(const algo::RspaceStr21& parent) {
     return int(ret);
 }
 
+// --- algo.RspaceStr21.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr21::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr21.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr21::operator =(const algo::RspaceStr21& parent) {
+    memcpy(ch, parent.ch, 21);
+}
+
+// --- algo.RspaceStr21.ch.Ctor
+inline  algo::RspaceStr21::RspaceStr21(const algo::RspaceStr21 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr21.ch.CtorStrptr
+inline  algo::RspaceStr21::RspaceStr21(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RspaceStr21.ch.Cast
 inline algo::RspaceStr21::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -11594,6 +13638,29 @@ inline int algo::ch_N(const algo::RspaceStr24& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RspaceStr24.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr24::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr24.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr24::operator =(const algo::RspaceStr24& parent) {
+    memcpy(ch, parent.ch, 24);
+}
+
+// --- algo.RspaceStr24.ch.Ctor
+inline  algo::RspaceStr24::RspaceStr24(const algo::RspaceStr24 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr24.ch.CtorStrptr
+inline  algo::RspaceStr24::RspaceStr24(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr24.ch.Cast
@@ -11688,6 +13755,29 @@ inline int algo::ch_N(const algo::RspaceStr240& parent) {
     return int(ret);
 }
 
+// --- algo.RspaceStr240.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr240::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr240.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr240::operator =(const algo::RspaceStr240& parent) {
+    memcpy(ch, parent.ch, 240);
+}
+
+// --- algo.RspaceStr240.ch.Ctor
+inline  algo::RspaceStr240::RspaceStr240(const algo::RspaceStr240 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr240.ch.CtorStrptr
+inline  algo::RspaceStr240::RspaceStr240(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RspaceStr240.ch.Cast
 inline algo::RspaceStr240::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -11763,6 +13853,29 @@ inline int algo::ch_N(const algo::RspaceStr26& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RspaceStr26.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr26::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr26.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr26::operator =(const algo::RspaceStr26& parent) {
+    memcpy(ch, parent.ch, 26);
+}
+
+// --- algo.RspaceStr26.ch.Ctor
+inline  algo::RspaceStr26::RspaceStr26(const algo::RspaceStr26 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr26.ch.CtorStrptr
+inline  algo::RspaceStr26::RspaceStr26(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr26.ch.Cast
@@ -11842,6 +13955,29 @@ inline int algo::ch_N(const algo::RspaceStr3& parent) {
     return int(ret);
 }
 
+// --- algo.RspaceStr3.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr3::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr3.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr3::operator =(const algo::RspaceStr3& parent) {
+    memcpy(ch, parent.ch, 3);
+}
+
+// --- algo.RspaceStr3.ch.Ctor
+inline  algo::RspaceStr3::RspaceStr3(const algo::RspaceStr3 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr3.ch.CtorStrptr
+inline  algo::RspaceStr3::RspaceStr3(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RspaceStr3.ch.Cast
 inline algo::RspaceStr3::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -11917,6 +14053,29 @@ inline int algo::ch_N(const algo::RspaceStr31& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RspaceStr31.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr31::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr31.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr31::operator =(const algo::RspaceStr31& parent) {
+    memcpy(ch, parent.ch, 31);
+}
+
+// --- algo.RspaceStr31.ch.Ctor
+inline  algo::RspaceStr31::RspaceStr31(const algo::RspaceStr31 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr31.ch.CtorStrptr
+inline  algo::RspaceStr31::RspaceStr31(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr31.ch.Cast
@@ -11996,6 +14155,29 @@ inline int algo::ch_N(const algo::RspaceStr32& parent) {
     return int(ret);
 }
 
+// --- algo.RspaceStr32.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr32::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr32.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr32::operator =(const algo::RspaceStr32& parent) {
+    memcpy(ch, parent.ch, 32);
+}
+
+// --- algo.RspaceStr32.ch.Ctor
+inline  algo::RspaceStr32::RspaceStr32(const algo::RspaceStr32 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr32.ch.CtorStrptr
+inline  algo::RspaceStr32::RspaceStr32(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RspaceStr32.ch.Cast
 inline algo::RspaceStr32::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -12073,6 +14255,29 @@ inline int algo::ch_N(const algo::RspaceStr4& parent) {
     return int(ret);
 }
 
+// --- algo.RspaceStr4.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr4::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr4.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr4::operator =(const algo::RspaceStr4& parent) {
+    memcpy(ch, parent.ch, 4);
+}
+
+// --- algo.RspaceStr4.ch.Ctor
+inline  algo::RspaceStr4::RspaceStr4(const algo::RspaceStr4 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr4.ch.CtorStrptr
+inline  algo::RspaceStr4::RspaceStr4(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RspaceStr4.ch.Cast
 inline algo::RspaceStr4::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -12140,6 +14345,29 @@ inline int algo::ch_N(const algo::RspaceStr40& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RspaceStr40.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr40::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr40.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr40::operator =(const algo::RspaceStr40& parent) {
+    memcpy(ch, parent.ch, 40);
+}
+
+// --- algo.RspaceStr40.ch.Ctor
+inline  algo::RspaceStr40::RspaceStr40(const algo::RspaceStr40 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr40.ch.CtorStrptr
+inline  algo::RspaceStr40::RspaceStr40(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr40.ch.Cast
@@ -12219,6 +14447,29 @@ inline int algo::ch_N(const algo::RspaceStr5& parent) {
     return int(ret);
 }
 
+// --- algo.RspaceStr5.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr5::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr5.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr5::operator =(const algo::RspaceStr5& parent) {
+    memcpy(ch, parent.ch, 5);
+}
+
+// --- algo.RspaceStr5.ch.Ctor
+inline  algo::RspaceStr5::RspaceStr5(const algo::RspaceStr5 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr5.ch.CtorStrptr
+inline  algo::RspaceStr5::RspaceStr5(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RspaceStr5.ch.Cast
 inline algo::RspaceStr5::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -12294,6 +14545,29 @@ inline int algo::ch_N(const algo::RspaceStr50& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RspaceStr50.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr50::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr50.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr50::operator =(const algo::RspaceStr50& parent) {
+    memcpy(ch, parent.ch, 50);
+}
+
+// --- algo.RspaceStr50.ch.Ctor
+inline  algo::RspaceStr50::RspaceStr50(const algo::RspaceStr50 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr50.ch.CtorStrptr
+inline  algo::RspaceStr50::RspaceStr50(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr50.ch.Cast
@@ -12375,6 +14649,29 @@ inline int algo::ch_N(const algo::RspaceStr6& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RspaceStr6.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr6::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr6.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr6::operator =(const algo::RspaceStr6& parent) {
+    memcpy(ch, parent.ch, 6);
+}
+
+// --- algo.RspaceStr6.ch.Ctor
+inline  algo::RspaceStr6::RspaceStr6(const algo::RspaceStr6 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr6.ch.CtorStrptr
+inline  algo::RspaceStr6::RspaceStr6(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr6.ch.Cast
@@ -12469,6 +14766,29 @@ inline int algo::ch_N(const algo::RspaceStr64& parent) {
     return int(ret);
 }
 
+// --- algo.RspaceStr64.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr64::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr64.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr64::operator =(const algo::RspaceStr64& parent) {
+    memcpy(ch, parent.ch, 64);
+}
+
+// --- algo.RspaceStr64.ch.Ctor
+inline  algo::RspaceStr64::RspaceStr64(const algo::RspaceStr64 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr64.ch.CtorStrptr
+inline  algo::RspaceStr64::RspaceStr64(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RspaceStr64.ch.Cast
 inline algo::RspaceStr64::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -12546,6 +14866,29 @@ inline int algo::ch_N(const algo::RspaceStr7& parent) {
     return int(ret);
 }
 
+// --- algo.RspaceStr7.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr7::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr7.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr7::operator =(const algo::RspaceStr7& parent) {
+    memcpy(ch, parent.ch, 7);
+}
+
+// --- algo.RspaceStr7.ch.Ctor
+inline  algo::RspaceStr7::RspaceStr7(const algo::RspaceStr7 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr7.ch.CtorStrptr
+inline  algo::RspaceStr7::RspaceStr7(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.RspaceStr7.ch.Cast
 inline algo::RspaceStr7::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -12613,6 +14956,29 @@ inline int algo::ch_N(const algo::RspaceStr8& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RspaceStr8.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr8::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr8.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr8::operator =(const algo::RspaceStr8& parent) {
+    memcpy(ch, parent.ch, 8);
+}
+
+// --- algo.RspaceStr8.ch.Ctor
+inline  algo::RspaceStr8::RspaceStr8(const algo::RspaceStr8 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr8.ch.CtorStrptr
+inline  algo::RspaceStr8::RspaceStr8(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr8.ch.Cast
@@ -12705,6 +15071,29 @@ inline int algo::ch_N(const algo::RspaceStr9& parent) {
         ret--;
     }
     return int(ret);
+}
+
+// --- algo.RspaceStr9.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr9::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr9.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr9::operator =(const algo::RspaceStr9& parent) {
+    memcpy(ch, parent.ch, 9);
+}
+
+// --- algo.RspaceStr9.ch.Ctor
+inline  algo::RspaceStr9::RspaceStr9(const algo::RspaceStr9 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr9.ch.CtorStrptr
+inline  algo::RspaceStr9::RspaceStr9(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr9.ch.Cast
@@ -12982,6 +15371,30 @@ inline int algo::ch_N(const algo::Smallstr1& parent) {
     return int(ret);
 }
 
+// --- algo.Smallstr1.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::Smallstr1::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.Smallstr1.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::Smallstr1::operator =(const algo::Smallstr1& parent) {
+    memcpy(ch, parent.ch, parent.n_ch);
+    n_ch = parent.n_ch;
+}
+
+// --- algo.Smallstr1.ch.Ctor
+inline  algo::Smallstr1::Smallstr1(const algo::Smallstr1 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.Smallstr1.ch.CtorStrptr
+inline  algo::Smallstr1::Smallstr1(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.Smallstr1.ch.Cast
 inline algo::Smallstr1::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -13078,6 +15491,30 @@ inline int algo::ch_N(const algo::Smallstr10& parent) {
     return int(ret);
 }
 
+// --- algo.Smallstr10.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::Smallstr10::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.Smallstr10.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::Smallstr10::operator =(const algo::Smallstr10& parent) {
+    memcpy(ch, parent.ch, parent.n_ch);
+    n_ch = parent.n_ch;
+}
+
+// --- algo.Smallstr10.ch.Ctor
+inline  algo::Smallstr10::Smallstr10(const algo::Smallstr10 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.Smallstr10.ch.CtorStrptr
+inline  algo::Smallstr10::Smallstr10(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.Smallstr10.ch.Cast
 inline algo::Smallstr10::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -13164,6 +15601,30 @@ inline int algo::ch_N(const algo::Smallstr100& parent) {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
+}
+
+// --- algo.Smallstr100.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::Smallstr100::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.Smallstr100.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::Smallstr100::operator =(const algo::Smallstr100& parent) {
+    memcpy(ch, parent.ch, parent.n_ch);
+    n_ch = parent.n_ch;
+}
+
+// --- algo.Smallstr100.ch.Ctor
+inline  algo::Smallstr100::Smallstr100(const algo::Smallstr100 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.Smallstr100.ch.CtorStrptr
+inline  algo::Smallstr100::Smallstr100(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr100.ch.Cast
@@ -13262,6 +15723,30 @@ inline int algo::ch_N(const algo::Smallstr16& parent) {
     return int(ret);
 }
 
+// --- algo.Smallstr16.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::Smallstr16::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.Smallstr16.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::Smallstr16::operator =(const algo::Smallstr16& parent) {
+    memcpy(ch, parent.ch, parent.n_ch);
+    n_ch = parent.n_ch;
+}
+
+// --- algo.Smallstr16.ch.Ctor
+inline  algo::Smallstr16::Smallstr16(const algo::Smallstr16 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.Smallstr16.ch.CtorStrptr
+inline  algo::Smallstr16::Smallstr16(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.Smallstr16.ch.Cast
 inline algo::Smallstr16::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -13356,6 +15841,30 @@ inline int algo::ch_N(const algo::Smallstr2& parent) {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
+}
+
+// --- algo.Smallstr2.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::Smallstr2::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.Smallstr2.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::Smallstr2::operator =(const algo::Smallstr2& parent) {
+    memcpy(ch, parent.ch, parent.n_ch);
+    n_ch = parent.n_ch;
+}
+
+// --- algo.Smallstr2.ch.Ctor
+inline  algo::Smallstr2::Smallstr2(const algo::Smallstr2 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.Smallstr2.ch.CtorStrptr
+inline  algo::Smallstr2::Smallstr2(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr2.ch.Cast
@@ -13456,6 +15965,30 @@ inline int algo::ch_N(const algo::Smallstr20& parent) {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
+}
+
+// --- algo.Smallstr20.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::Smallstr20::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.Smallstr20.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::Smallstr20::operator =(const algo::Smallstr20& parent) {
+    memcpy(ch, parent.ch, parent.n_ch);
+    n_ch = parent.n_ch;
+}
+
+// --- algo.Smallstr20.ch.Ctor
+inline  algo::Smallstr20::Smallstr20(const algo::Smallstr20 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.Smallstr20.ch.CtorStrptr
+inline  algo::Smallstr20::Smallstr20(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr20.ch.Cast
@@ -13569,6 +16102,30 @@ inline int algo::ch_N(const algo::Smallstr25& parent) {
     return int(ret);
 }
 
+// --- algo.Smallstr25.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::Smallstr25::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.Smallstr25.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::Smallstr25::operator =(const algo::Smallstr25& parent) {
+    memcpy(ch, parent.ch, parent.n_ch);
+    n_ch = parent.n_ch;
+}
+
+// --- algo.Smallstr25.ch.Ctor
+inline  algo::Smallstr25::Smallstr25(const algo::Smallstr25 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.Smallstr25.ch.CtorStrptr
+inline  algo::Smallstr25::Smallstr25(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.Smallstr25.ch.Cast
 inline algo::Smallstr25::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -13663,6 +16220,30 @@ inline int algo::ch_N(const algo::Smallstr250& parent) {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
+}
+
+// --- algo.Smallstr250.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::Smallstr250::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.Smallstr250.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::Smallstr250::operator =(const algo::Smallstr250& parent) {
+    memcpy(ch, parent.ch, parent.n_ch);
+    n_ch = parent.n_ch;
+}
+
+// --- algo.Smallstr250.ch.Ctor
+inline  algo::Smallstr250::Smallstr250(const algo::Smallstr250 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.Smallstr250.ch.CtorStrptr
+inline  algo::Smallstr250::Smallstr250(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr250.ch.Cast
@@ -13763,6 +16344,30 @@ inline int algo::ch_N(const algo::Smallstr30& parent) {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
+}
+
+// --- algo.Smallstr30.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::Smallstr30::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.Smallstr30.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::Smallstr30::operator =(const algo::Smallstr30& parent) {
+    memcpy(ch, parent.ch, parent.n_ch);
+    n_ch = parent.n_ch;
+}
+
+// --- algo.Smallstr30.ch.Ctor
+inline  algo::Smallstr30::Smallstr30(const algo::Smallstr30 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.Smallstr30.ch.CtorStrptr
+inline  algo::Smallstr30::Smallstr30(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr30.ch.Cast
@@ -13876,6 +16481,30 @@ inline int algo::ch_N(const algo::Smallstr4& parent) {
     return int(ret);
 }
 
+// --- algo.Smallstr4.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::Smallstr4::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.Smallstr4.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::Smallstr4::operator =(const algo::Smallstr4& parent) {
+    memcpy(ch, parent.ch, parent.n_ch);
+    n_ch = parent.n_ch;
+}
+
+// --- algo.Smallstr4.ch.Ctor
+inline  algo::Smallstr4::Smallstr4(const algo::Smallstr4 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.Smallstr4.ch.CtorStrptr
+inline  algo::Smallstr4::Smallstr4(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.Smallstr4.ch.Cast
 inline algo::Smallstr4::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -13972,6 +16601,30 @@ inline int algo::ch_N(const algo::Smallstr40& parent) {
     return int(ret);
 }
 
+// --- algo.Smallstr40.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::Smallstr40::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.Smallstr40.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::Smallstr40::operator =(const algo::Smallstr40& parent) {
+    memcpy(ch, parent.ch, parent.n_ch);
+    n_ch = parent.n_ch;
+}
+
+// --- algo.Smallstr40.ch.Ctor
+inline  algo::Smallstr40::Smallstr40(const algo::Smallstr40 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.Smallstr40.ch.CtorStrptr
+inline  algo::Smallstr40::Smallstr40(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
 // --- algo.Smallstr40.ch.Cast
 inline algo::Smallstr40::operator algo::strptr () const {
     return ch_Getary(*this);
@@ -14066,6 +16719,30 @@ inline int algo::ch_N(const algo::Smallstr5& parent) {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
+}
+
+// --- algo.Smallstr5.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::Smallstr5::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.Smallstr5.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::Smallstr5::operator =(const algo::Smallstr5& parent) {
+    memcpy(ch, parent.ch, parent.n_ch);
+    n_ch = parent.n_ch;
+}
+
+// --- algo.Smallstr5.ch.Ctor
+inline  algo::Smallstr5::Smallstr5(const algo::Smallstr5 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.Smallstr5.ch.CtorStrptr
+inline  algo::Smallstr5::Smallstr5(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr5.ch.Cast

@@ -16,7 +16,7 @@
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
 namespace command {
-static void          SizeCheck();
+    static void          SizeCheck();
 } // end namespace command
 
 // --- command.FieldId.value.ToCstr
@@ -180,6 +180,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_showsortkey   : ret = "showsortkey";  break;
         case command_FieldId_sortname      : ret = "sortname";  break;
         case command_FieldId_update_authors: ret = "update_authors";  break;
+        case command_FieldId_indent        : ret = "indent";  break;
         case command_FieldId_linelim       : ret = "linelim";  break;
         case command_FieldId_strayfile     : ret = "strayfile";  break;
         case command_FieldId_capture       : ret = "capture";  break;
@@ -487,6 +488,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR6('i','n','_','d','i','r'): {
                     value_SetEnum(parent,command_FieldId_in_dir); ret = true; break;
+                }
+                case LE_STR6('i','n','d','e','n','t'): {
+                    value_SetEnum(parent,command_FieldId_indent); ret = true; break;
                 }
                 case LE_STR6('i','n','s','e','r','t'): {
                     value_SetEnum(parent,command_FieldId_insert); ret = true; break;
@@ -3945,21 +3949,6 @@ void command::acr_proc_Uninit(command::acr_proc& parent) {
     acr_Kill(parent); // kill child, ensure forward progress
 }
 
-// --- command.amc.query.Print
-// Print back to string
-void command::query_Print(command::amc& parent, algo::cstring &out) {
-    Regx_Print(parent.query, out);
-}
-
-// --- command.amc.query.ReadStrptrMaybe
-// Read Regx from string
-// Convert string to field. Return success value
-bool command::query_ReadStrptrMaybe(command::amc& parent, algo::strptr in) {
-    Regx_ReadSql(parent.query, in, true);
-    bool retval = true;// !parent.query.parseerror; -- TODO: uncomment
-    return retval;
-}
-
 // --- command.amc.trace.Print
 // Print back to string
 void command::trace_Print(command::amc& parent, algo::cstring &out) {
@@ -3982,7 +3971,7 @@ bool command::amc_ReadFieldMaybe(command::amc &parent, algo::strptr field, algo:
     bool retval = true; // default is no error
     switch(field_id) {
         case command_FieldId_in_dir: retval = algo::cstring_ReadStrptrMaybe(parent.in_dir, strval); break;
-        case command_FieldId_query: retval = query_ReadStrptrMaybe(parent, strval); break;
+        case command_FieldId_query: retval = algo::cstring_ReadStrptrMaybe(parent.query, strval); break;
         case command_FieldId_out_dir: retval = algo::cstring_ReadStrptrMaybe(parent.out_dir, strval); break;
         case command_FieldId_proto: retval = bool_ReadStrptrMaybe(parent.proto, strval); break;
         case command_FieldId_report: retval = bool_ReadStrptrMaybe(parent.report, strval); break;
@@ -4017,7 +4006,7 @@ bool command::amc_ReadTupleMaybe(command::amc &parent, algo::Tuple &tuple) {
 // Set all fields to initial values.
 void command::amc_Init(command::amc& parent) {
     parent.in_dir = algo::strptr("data");
-    Regx_ReadSql(parent.query, "", true);
+    parent.query = algo::strptr("");
     parent.out_dir = algo::strptr(".");
     parent.proto = bool(false);
     parent.report = bool(true);
@@ -4039,7 +4028,7 @@ void command::amc_PrintArgv(command::amc & row, algo::cstring &str) {
         strptr_PrintBash(temp,str);
     }
     ch_RemoveAll(temp);
-    command::query_Print(const_cast<command::amc&>(row), temp);
+    cstring_Print(row.query, temp);
     str << " ";
     strptr_PrintBash(temp,str);
     if (!(row.out_dir == ".")) {
@@ -4578,10 +4567,10 @@ int command::amc_Execv(command::amc_proc& parent) {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
-    if (parent.cmd.query.expr != "") {
+    if (parent.cmd.query != "") {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-query:";
-        command::query_Print(parent.cmd, temp);
+        cstring_Print(parent.cmd.query, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
@@ -7373,6 +7362,7 @@ bool command::src_hdr_ReadFieldMaybe(command::src_hdr &parent, algo::strptr fiel
         case command_FieldId_targsrc: retval = targsrc_ReadStrptrMaybe(parent, strval); break;
         case command_FieldId_write: retval = bool_ReadStrptrMaybe(parent.write, strval); break;
         case command_FieldId_update_authors: retval = bool_ReadStrptrMaybe(parent.update_authors, strval); break;
+        case command_FieldId_indent: retval = bool_ReadStrptrMaybe(parent.indent, strval); break;
         default: break;
     }
     if (!retval) {
@@ -7401,6 +7391,7 @@ void command::src_hdr_Init(command::src_hdr& parent) {
     Regx_ReadSql(parent.targsrc, "%", true);
     parent.write = bool(false);
     parent.update_authors = bool(false);
+    parent.indent = bool(false);
 }
 
 // --- command.src_hdr..PrintArgv
@@ -7432,6 +7423,12 @@ void command::src_hdr_PrintArgv(command::src_hdr & row, algo::cstring &str) {
         ch_RemoveAll(temp);
         bool_Print(row.update_authors, temp);
         str << " -update_authors:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.indent == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.indent, temp);
+        str << " -indent:";
         strptr_PrintBash(temp,str);
     }
 }
@@ -7537,7 +7534,7 @@ void command::src_hdr_ExecX(command::src_hdr_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:src_hdr.Argv
 int command::src_hdr_Execv(command::src_hdr_proc& parent) {
-    char *argv[4+2]; // start of first arg (future pointer)
+    char *argv[5+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -7569,6 +7566,13 @@ int command::src_hdr_Execv(command::src_hdr_proc& parent) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-update_authors:";
         bool_Print(parent.cmd.update_authors, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.indent != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-indent:";
+        bool_Print(parent.cmd.indent, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
     for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
@@ -8838,12 +8842,12 @@ inline static void command::SizeCheck() {
     algo_assert(sizeof(command::acr_my) == 136);
     algo_assert(_offset_of(command::amc,in_dir) == 0);
     algo_assert(_offset_of(command::amc,query) == 16);
-    algo_assert(_offset_of(command::amc,out_dir) == 112);
-    algo_assert(_offset_of(command::amc,proto) == 128);
-    algo_assert(_offset_of(command::amc,report) == 129);
-    algo_assert(_offset_of(command::amc,e) == 130);
-    algo_assert(_offset_of(command::amc,trace) == 136);
-    algo_assert(sizeof(command::amc) == 232);
+    algo_assert(_offset_of(command::amc,out_dir) == 32);
+    algo_assert(_offset_of(command::amc,proto) == 48);
+    algo_assert(_offset_of(command::amc,report) == 49);
+    algo_assert(_offset_of(command::amc,e) == 50);
+    algo_assert(_offset_of(command::amc,trace) == 56);
+    algo_assert(sizeof(command::amc) == 152);
     algo_assert(_offset_of(command::amc_dml,ns) == 0);
     algo_assert(_offset_of(command::amc_dml,fconst) == 96);
     algo_assert(_offset_of(command::amc_dml,gconst) == 97);
@@ -8944,6 +8948,7 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::src_hdr,targsrc) == 16);
     algo_assert(_offset_of(command::src_hdr,write) == 112);
     algo_assert(_offset_of(command::src_hdr,update_authors) == 113);
+    algo_assert(_offset_of(command::src_hdr,indent) == 114);
     algo_assert(sizeof(command::src_hdr) == 120);
     algo_assert(_offset_of(command::src_lim,in) == 0);
     algo_assert(_offset_of(command::src_lim,linelim) == 16);
