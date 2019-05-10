@@ -4,7 +4,7 @@
     acr scriptfile -cmd 'echo acr.delete dev.scriptfile gitfile:"$gitfile"' | bash
     # search for them again -- this undoes the deletion
     # -L follows symlinks
-    for X in $(find bin -exec file -L {} \; | egrep -i '(bourne-again shell script|posix shell script|perl script)' | cut -f1 -d: | grep -v "~"); do
+    for X in $(find bin -exec file -L {} \; | egrep -i script | cut -f1 -d: | grep -v "~"); do
         echo dev.scriptfile gitfile:$X
     done
 ) | acr -merge -write -print:N

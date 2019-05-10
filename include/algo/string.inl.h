@@ -228,3 +228,12 @@ inline strptr &algo::FileLine_curs_Access(algo::FileLine_curs &curs) {
 inline bool algo::FileLine_curs_ValidQ(algo::FileLine_curs &curs) {
     return !curs.eof;
 }
+
+inline algo::ListSep::ListSep(strptr sep_) : sep(sep_), iter(0) {
+}
+
+inline algo::Line_curs::Line_curs() : eof(true),i(-1){
+}
+
+inline algo::Word_curs::Word_curs() : index(0){
+}

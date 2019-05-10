@@ -57,7 +57,7 @@ namespace algo {
     struct ListSep {
         strptr sep;
         mutable int iter;
-        ListSep(strptr sep_ = ", ") : sep(sep_), iter(0) {}
+        inline ListSep(strptr sep_=", ");
     };
 
     int CompareNoCase(strptr lhs, strptr rhs)               __attribute__((nothrow));
@@ -87,7 +87,7 @@ namespace algo {
         bool eof;
         int i;
         strptr line;
-        Line_curs(): eof(true),i(-1){}// mostly for coverity
+        inline Line_curs();
     };
 
     // Word cursor (works with ind_beg/ind_end)
@@ -103,7 +103,7 @@ namespace algo {
         strptr text;
         strptr token;// current token
         int index;// current index (may be past token.end)
-        Word_curs() : index(0){}
+        inline Word_curs();
     };
 
     // -----------------------------------------------------------------------------

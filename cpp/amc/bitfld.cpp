@@ -46,7 +46,8 @@ void amc::tclass_Bitfld() {
     Set(R, "$srcfldname"  , name_Get(srcfield));// name of source field
     Set(R, "$offset"  , tempstr()<<bitfld.offset);
     Set(R, "$width"   , tempstr()<<bitfld.width);
-    Set(R, "$valtype" , amc::StripWrappers(*srcfield.p_arg,srcfield.p_arg)->ctype);// type with which mask operations are performed -- same as field type
+    // type with which mask operations are performed -- same as field type
+    Set(R, "$valtype" , amc::StripWrappers(*srcfield.p_arg,srcfield.p_arg)->ctype);
     Set(R, "$mask"    , hexval);
     Set(R, "$srcfldval" , FieldvalExpr(field.p_ctype, *bitfld.p_srcfield, "$parname"));
 }

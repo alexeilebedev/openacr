@@ -4,7 +4,6 @@ set -e
 set -x
 mkdir -p temp
 mkdir -p clang.release-x86_64
-echo dev.gitinfo > gitinfo.txt; ld -r -b binary gitinfo.txt -o clang.release-x86_64/gitinfo.o; rm -f gitinfo.txt
 clang++  -O -ffunction-sections -Wsequence-point -Wno-multichar -Wshadow -pipe -Wextra -Winit-self -Wmissing-include-dirs -Wmissing-declarations -Wno-enum-compare -Wno-array-bounds -Wno-error -DUNAME_LINUX -iquote . -msse4.2 -D AOS_SSE42 -Wno-vla -Wno-long-long -Wno-strict-aliasing -fpch-preprocess -c include/algo_pch.h -o clang.release-x86_64/include.algo_pch.h.gch
 clang++  -x c++ -Wno-invalid-offsetof -O -Werror -ffunction-sections -Wsequence-point -Wno-multichar -Wshadow -pipe -Wextra -Winit-self -Wmissing-include-dirs -Wmissing-declarations -Wno-enum-compare -Wno-array-bounds -DUNAME_LINUX -iquote . -msse4.2 -D AOS_SSE42 -Wno-vla -Wno-long-long -Wno-strict-aliasing -fpch-preprocess -iquote clang.release-x86_64/ -include include/algo_pch.h  -c cpp/abt/build.cpp -o clang.release-x86_64/cpp.abt.build.o
 clang++  -x c++ -Wno-invalid-offsetof -O -Werror -ffunction-sections -Wsequence-point -Wno-multichar -Wshadow -pipe -Wextra -Winit-self -Wmissing-include-dirs -Wmissing-declarations -Wno-enum-compare -Wno-array-bounds -DUNAME_LINUX -iquote . -msse4.2 -D AOS_SSE42 -Wno-vla -Wno-long-long -Wno-strict-aliasing -fpch-preprocess -iquote clang.release-x86_64/ -include include/algo_pch.h  -c cpp/abt/disas.cpp -o clang.release-x86_64/cpp.abt.disas.o

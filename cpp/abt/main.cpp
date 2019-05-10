@@ -955,7 +955,7 @@ void abt::Main() {
     // for instance {start,comptarg}, or {comp,linktarg}
     //
     abt::FSyscmd *start=NULL,*end=NULL;
-    if (abt::_db.cmdline.build) {
+    if (abt::_db.cmdline.build && !abt::_db.cmdline.nover) {
         Main_CreateGitinfo(R,start,end);
     }
     ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) {
