@@ -105,7 +105,7 @@ void amc::tfunc_Fbuf_BeginRead() {
         Ins(&R, func.body, "IOEvtFlags flags;");
         Ins(&R, func.body, "read_Set(flags, true);");
         Ins(&R, func.body, "if ($pararg.$name_epoll_enable) {");
-        Ins(&R, func.body, "    algo_lib::IoHookAdd($parname.$name_iohook, flags);");
+        Ins(&R, func.body, "    algo_lib::IohookAdd($parname.$name_iohook, flags);");
         Ins(&R, func.body, "} else {");
         Ins(&R, func.body, "    $ns::$ready_Insert($pararg);");
         Ins(&R, func.body, "}");
@@ -487,7 +487,7 @@ void amc::tfunc_Fbuf_BeginWrite() {
         Ins(&R, func.body, "IOEvtFlags flags;");
         Ins(&R, func.body, "write_Set(flags, true);");
         Ins(&R, func.body, "if ($parname.$name_epoll_enable) {");
-        Ins(&R, func.body, "    algo_lib::IoHookAdd($parname.$name_iohook, flags);");
+        Ins(&R, func.body, "    algo_lib::IohookAdd($parname.$name_iohook, flags);");
         Ins(&R, func.body, "}");
     }
 }

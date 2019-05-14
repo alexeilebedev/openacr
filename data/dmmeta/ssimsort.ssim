@@ -18,7 +18,6 @@ dmmeta.ssimsort  ssimfile:dev.scriptfile  sortfld:dev.Scriptfile.gitfile  commen
 dmmeta.ssimsort  ssimfile:dev.syslib  sortfld:dev.Syslib.syslib  comment:""
 dmmeta.ssimsort  ssimfile:dev.targdep  sortfld:dev.Targdep.targdep  comment:""
 dmmeta.ssimsort  ssimfile:dev.target  sortfld:dev.Target.target  comment:""
-dmmeta.ssimsort  ssimfile:dev.targinstall  sortfld:dev.Targinstall.target  comment:""
 dmmeta.ssimsort  ssimfile:dev.targsrc  sortfld:dev.Targsrc.targsrc  comment:""
 dmmeta.ssimsort  ssimfile:dev.targsyslib  sortfld:dev.Targsyslib.targsyslib  comment:""
 dmmeta.ssimsort  ssimfile:dev.tool_opt  sortfld:dev.ToolOpt.tool_opt  comment:""

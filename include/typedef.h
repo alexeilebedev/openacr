@@ -42,6 +42,10 @@ typedef i64                int_ptr;
 typedef u64                uint_ptr;
 typedef void               *thread_ret_t;
 
+#if defined(__MACH__)
+typedef u64 off64_t;
+#endif
+
 namespace algo {
     struct cstring;
     struct tempstr;

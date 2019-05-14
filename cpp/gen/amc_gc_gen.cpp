@@ -386,6 +386,8 @@ int amc_gc::acr_Execv(amc_gc::Acr& parent) {
     while (n_argv>0) { // shift pointers
         argv[--n_argv] += (u64)temp.ch_elems;
     }
+    // if parent.acr_path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.acr_path);
     return execv(Zeroterm(parent.acr_path),argv);
 }
 
@@ -742,6 +744,8 @@ int amc_gc::acr_Execv(amc_gc::Check& parent) {
     while (n_argv>0) { // shift pointers
         argv[--n_argv] += (u64)temp.ch_elems;
     }
+    // if parent.acr_path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.acr_path);
     return execv(Zeroterm(parent.acr_path),argv);
 }
 
@@ -901,6 +905,8 @@ int amc_gc::amc_Execv(amc_gc::Check& parent) {
     while (n_argv>0) { // shift pointers
         argv[--n_argv] += (u64)temp.ch_elems;
     }
+    // if parent.amc_path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.amc_path);
     return execv(Zeroterm(parent.amc_path),argv);
 }
 
@@ -996,7 +1002,7 @@ int amc_gc::abt_Exec(amc_gc::Check& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:abt.Argv
 int amc_gc::abt_Execv(amc_gc::Check& parent) {
-    char *argv[26+2]; // start of first arg (future pointer)
+    char *argv[24+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -1143,24 +1149,10 @@ int amc_gc::abt_Execv(amc_gc::Check& parent) {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
-    if (parent.abt_cmd.release != "") {
-        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-release:";
-        cstring_Print(parent.abt_cmd.release, temp);
-        ch_Alloc(temp) = 0;// NUL term for this arg
-    }
-
     if (parent.abt_cmd.package != "") {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-package:";
         cstring_Print(parent.abt_cmd.package, temp);
-        ch_Alloc(temp) = 0;// NUL term for this arg
-    }
-
-    if (parent.abt_cmd.nover != false) {
-        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-nover:";
-        bool_Print(parent.abt_cmd.nover, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
@@ -1193,6 +1185,8 @@ int amc_gc::abt_Execv(amc_gc::Check& parent) {
     while (n_argv>0) { // shift pointers
         argv[--n_argv] += (u64)temp.ch_elems;
     }
+    // if parent.abt_path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.abt_path);
     return execv(Zeroterm(parent.abt_path),argv);
 }
 
@@ -1450,10 +1444,7 @@ int main(int argc, char **argv) {
         amc_gc::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
-        algo_lib::_db.epoll_fd = epoll_create(1);
-        if (algo_lib::_db.epoll_fd == -1) {
-            FatalErrorExit("epoll_create");
-        }
+        algo_lib::IohookInit();
         amc_gc::MainArgs(algo_lib::_db.argc,algo_lib::_db.argv); // dmmeta.main:amc_gc
     } catch(algo_lib::ErrorX &x) {
         prerr("amc_gc.error  " << x); // there may be additional hints in DetachBadTags

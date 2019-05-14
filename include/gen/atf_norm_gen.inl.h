@@ -8,12 +8,18 @@
 
 
 #pragma once
+#include "include/gen/dev_gen.inl.h"
+#include "include/gen/algo_gen.inl.h"
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/atfdb_gen.inl.h"
-#include "include/gen/algo_gen.inl.h"
 #include "include/gen/dmmeta_gen.inl.h"
-#include "include/gen/dev_gen.inl.h"
 //#pragma endinclude
+inline atf_norm::FBuilddir::FBuilddir() {
+}
+
+inline atf_norm::FCfg::FCfg() {
+}
+
 inline atf_norm::trace::trace() {
 }
 
@@ -264,6 +270,90 @@ inline atf_norm::FReadme& atf_norm::readme_qFind(u64 t) {
     return _db.readme_lary[bsr][index];
 }
 
+// --- atf_norm.FDb.builddir.EmptyQ
+// Return true if index is empty
+inline bool atf_norm::builddir_EmptyQ() {
+    return _db.builddir_n == 0;
+}
+
+// --- atf_norm.FDb.builddir.Find
+// Look up row by row id. Return NULL if out of range
+inline atf_norm::FBuilddir* atf_norm::builddir_Find(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    atf_norm::FBuilddir *retval = NULL;
+    if (LIKELY(x <= u64(_db.builddir_n))) {
+        retval = &_db.builddir_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- atf_norm.FDb.builddir.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline atf_norm::FBuilddir* atf_norm::builddir_Last() {
+    return builddir_Find(u64(_db.builddir_n-1));
+}
+
+// --- atf_norm.FDb.builddir.N
+// Return number of items in the pool
+inline i32 atf_norm::builddir_N() {
+    return _db.builddir_n;
+}
+
+// --- atf_norm.FDb.builddir.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline atf_norm::FBuilddir& atf_norm::builddir_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.builddir_lary[bsr][index];
+}
+
+// --- atf_norm.FDb.cfg.EmptyQ
+// Return true if index is empty
+inline bool atf_norm::cfg_EmptyQ() {
+    return _db.cfg_n == 0;
+}
+
+// --- atf_norm.FDb.cfg.Find
+// Look up row by row id. Return NULL if out of range
+inline atf_norm::FCfg* atf_norm::cfg_Find(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    atf_norm::FCfg *retval = NULL;
+    if (LIKELY(x <= u64(_db.cfg_n))) {
+        retval = &_db.cfg_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- atf_norm.FDb.cfg.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline atf_norm::FCfg* atf_norm::cfg_Last() {
+    return cfg_Find(u64(_db.cfg_n-1));
+}
+
+// --- atf_norm.FDb.cfg.N
+// Return number of items in the pool
+inline i32 atf_norm::cfg_N() {
+    return _db.cfg_n;
+}
+
+// --- atf_norm.FDb.cfg.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline atf_norm::FCfg& atf_norm::cfg_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.cfg_lary[bsr][index];
+}
+
 // --- atf_norm.FDb.normcheck_curs.Reset
 // cursor points to valid item
 inline void atf_norm::_db_normcheck_curs_Reset(_db_normcheck_curs &curs, atf_norm::FDb &parent) {
@@ -387,6 +477,56 @@ inline void atf_norm::_db_readme_curs_Next(_db_readme_curs &curs) {
 // item access
 inline atf_norm::FReadme& atf_norm::_db_readme_curs_Access(_db_readme_curs &curs) {
     return readme_qFind(u64(curs.index));
+}
+
+// --- atf_norm.FDb.builddir_curs.Reset
+// cursor points to valid item
+inline void atf_norm::_db_builddir_curs_Reset(_db_builddir_curs &curs, atf_norm::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- atf_norm.FDb.builddir_curs.ValidQ
+// cursor points to valid item
+inline bool atf_norm::_db_builddir_curs_ValidQ(_db_builddir_curs &curs) {
+    return curs.index < _db.builddir_n;
+}
+
+// --- atf_norm.FDb.builddir_curs.Next
+// proceed to next item
+inline void atf_norm::_db_builddir_curs_Next(_db_builddir_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_norm.FDb.builddir_curs.Access
+// item access
+inline atf_norm::FBuilddir& atf_norm::_db_builddir_curs_Access(_db_builddir_curs &curs) {
+    return builddir_qFind(u64(curs.index));
+}
+
+// --- atf_norm.FDb.cfg_curs.Reset
+// cursor points to valid item
+inline void atf_norm::_db_cfg_curs_Reset(_db_cfg_curs &curs, atf_norm::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- atf_norm.FDb.cfg_curs.ValidQ
+// cursor points to valid item
+inline bool atf_norm::_db_cfg_curs_ValidQ(_db_cfg_curs &curs) {
+    return curs.index < _db.cfg_n;
+}
+
+// --- atf_norm.FDb.cfg_curs.Next
+// proceed to next item
+inline void atf_norm::_db_cfg_curs_Next(_db_cfg_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_norm.FDb.cfg_curs.Access
+// item access
+inline atf_norm::FCfg& atf_norm::_db_cfg_curs_Access(_db_cfg_curs &curs) {
+    return cfg_qFind(u64(curs.index));
 }
 inline atf_norm::FNormcheck::FNormcheck() {
     atf_norm::FNormcheck_Init(*this);

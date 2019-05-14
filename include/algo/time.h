@@ -93,6 +93,12 @@ namespace algo { // update-hdr srcfile:"%/algo/time.%"
     // include/algo/time.inl.h
     //
 
+    // get CPU HZ value as u64
+    inline u64 get_cpu_hz_int();
+
+    // get CPU HZ value as double
+    inline double get_cpu_hz();
+
     // cpu_hz (untyped SchedTime)
     // use this for timestamps.
     // these calls may be pipelined and reordered, so measuring instruction

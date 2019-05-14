@@ -33,34 +33,10 @@ void lib_git::trace_Print(lib_git::trace & row, algo::cstring &str) {
     (void)row;//only to avoid -Wunused-parameter
 }
 
-// --- lib_git.FDb._db.MainArgs
-// Main function
-void lib_git::MainArgs(int argc, char **argv) {
-    lib_git::Main(); // call through to user-defined main
-    (void)argc;//only to avoid -Wunused-parameter
-    (void)argv;//only to avoid -Wunused-parameter
-}
-
-// --- lib_git.FDb._db.MainLoop
-// Main loop.
-void lib_git::MainLoop() {
-    SchedTime time(get_cycles());
-    algo_lib::_db.clock          = time;
-    do {
-        algo_lib::_db.next_loop.value = algo_lib::_db.limit;
-        algo_lib::Step(); // dependent namespace specified via (dev.targdep)
-    } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
-}
-
-// --- lib_git.FDb._db.Step
-// Main step
-void lib_git::Step() {
-}
-
 // --- lib_git.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void lib_git::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("lib_git", NULL, NULL, lib_git::MainLoop, NULL, algo::Comment()));
+    algo_lib::imdb_InsertMaybe(algo::Imdb("lib_git", NULL, NULL, NULL, NULL, algo::Comment()));
 
     algo::Imtable t_trace;
     t_trace.imtable         = "lib_git.trace";

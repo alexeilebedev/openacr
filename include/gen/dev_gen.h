@@ -16,10 +16,22 @@ extern const char *  dev_Arch_arch_i686;     // i686      fconst:dev.Arch.arch/i
 extern const char *  dev_Arch_arch_i86pc;    // i86pc     fconst:dev.Arch.arch/i86pc
 extern const char *  dev_Arch_arch_x64;      // x64       fconst:dev.Arch.arch/x64
 extern const char *  dev_Arch_arch_x86_64;   // x86_64    fconst:dev.Arch.arch/x86_64
-extern const char *  dev_Builddir_builddir_dflt_coverage_x86_64;   // dflt.coverage-x86_64    fconst:dev.Builddir.builddir/dflt.coverage-x86_64
-extern const char *  dev_Builddir_builddir_dflt_debug_x86_64;      // dflt.debug-x86_64       fconst:dev.Builddir.builddir/dflt.debug-x86_64
-extern const char *  dev_Builddir_builddir_dflt_profile_x86_64;    // dflt.profile-x86_64     fconst:dev.Builddir.builddir/dflt.profile-x86_64
-extern const char *  dev_Builddir_builddir_dflt_release_x86_64;    // dflt.release-x86_64     fconst:dev.Builddir.builddir/dflt.release-x86_64
+extern const char *  dev_Builddir_builddir_Darwin_clangPP_coverage_x86_64;   // Darwin-clang++.coverage-x86_64    fconst:dev.Builddir.builddir/Darwin-clang++.coverage-x86_64
+extern const char *  dev_Builddir_builddir_Darwin_clangPP_debug_x86_64;      // Darwin-clang++.debug-x86_64       fconst:dev.Builddir.builddir/Darwin-clang++.debug-x86_64
+extern const char *  dev_Builddir_builddir_Darwin_clangPP_profile_x86_64;    // Darwin-clang++.profile-x86_64     fconst:dev.Builddir.builddir/Darwin-clang++.profile-x86_64
+extern const char *  dev_Builddir_builddir_Darwin_clangPP_release_x86_64;    // Darwin-clang++.release-x86_64     fconst:dev.Builddir.builddir/Darwin-clang++.release-x86_64
+extern const char *  dev_Builddir_builddir_Linux_clangPP_coverage_x86_64;    // Linux-clang++.coverage-x86_64     fconst:dev.Builddir.builddir/Linux-clang++.coverage-x86_64
+extern const char *  dev_Builddir_builddir_Linux_clangPP_debug_x86_64;       // Linux-clang++.debug-x86_64        fconst:dev.Builddir.builddir/Linux-clang++.debug-x86_64
+extern const char *  dev_Builddir_builddir_Linux_clangPP_profile_x86_64;     // Linux-clang++.profile-x86_64      fconst:dev.Builddir.builddir/Linux-clang++.profile-x86_64
+extern const char *  dev_Builddir_builddir_Linux_clangPP_release_x86_64;     // Linux-clang++.release-x86_64      fconst:dev.Builddir.builddir/Linux-clang++.release-x86_64
+extern const char *  dev_Builddir_builddir_Linux_gPP_9_coverage_x86_64;      // Linux-g++-9.coverage-x86_64       fconst:dev.Builddir.builddir/Linux-g++-9.coverage-x86_64
+extern const char *  dev_Builddir_builddir_Linux_gPP_9_debug_x86_64;         // Linux-g++-9.debug-x86_64          fconst:dev.Builddir.builddir/Linux-g++-9.debug-x86_64
+extern const char *  dev_Builddir_builddir_Linux_gPP_9_profile_x86_64;       // Linux-g++-9.profile-x86_64        fconst:dev.Builddir.builddir/Linux-g++-9.profile-x86_64
+extern const char *  dev_Builddir_builddir_Linux_gPP_9_release_x86_64;       // Linux-g++-9.release-x86_64        fconst:dev.Builddir.builddir/Linux-g++-9.release-x86_64
+extern const char *  dev_Builddir_builddir_Linux_gPP_coverage_x86_64;        // Linux-g++.coverage-x86_64         fconst:dev.Builddir.builddir/Linux-g++.coverage-x86_64
+extern const char *  dev_Builddir_builddir_Linux_gPP_debug_x86_64;           // Linux-g++.debug-x86_64            fconst:dev.Builddir.builddir/Linux-g++.debug-x86_64
+extern const char *  dev_Builddir_builddir_Linux_gPP_profile_x86_64;         // Linux-g++.profile-x86_64          fconst:dev.Builddir.builddir/Linux-g++.profile-x86_64
+extern const char *  dev_Builddir_builddir_Linux_gPP_release_x86_64;         // Linux-g++.release-x86_64          fconst:dev.Builddir.builddir/Linux-g++.release-x86_64
 extern const char *  dev_Cfg_cfg_;           //             fconst:dev.Cfg.cfg/
 extern const char *  dev_Cfg_cfg_coverage;   // coverage    fconst:dev.Cfg.cfg/coverage
 extern const char *  dev_Cfg_cfg_debug;      // debug       fconst:dev.Cfg.cfg/debug
@@ -39,9 +51,9 @@ enum dev_FieldIdEnum {                // dev.FieldId.value
     ,dev_FieldId_expr           = 3
     ,dev_FieldId_targsrc_regx   = 4
     ,dev_FieldId_builddir       = 5
-    ,dev_FieldId_cfg            = 6
+    ,dev_FieldId_uname          = 6
     ,dev_FieldId_compiler       = 7
-    ,dev_FieldId_dflt           = 8
+    ,dev_FieldId_cfg            = 8
     ,dev_FieldId_ranlib         = 9
     ,dev_FieldId_ar             = 10
     ,dev_FieldId_gitfile        = 11
@@ -83,13 +95,12 @@ enum dev_FieldIdEnum {                // dev.FieldId.value
     ,dev_FieldId_targsrc        = 47
     ,dev_FieldId_src            = 48
     ,dev_FieldId_targsyslib     = 49
-    ,dev_FieldId_uname          = 50
-    ,dev_FieldId_tool_opt       = 51
-    ,dev_FieldId_opt            = 52
-    ,dev_FieldId_value          = 53
+    ,dev_FieldId_tool_opt       = 50
+    ,dev_FieldId_opt            = 51
+    ,dev_FieldId_value          = 52
 };
 
-enum { dev_FieldIdEnum_N = 54 };
+enum { dev_FieldIdEnum_N = 53 };
 
 namespace dev { struct Arch; }
 namespace dev { struct Badline; }
@@ -110,7 +121,6 @@ namespace dev { struct Syscmddep; }
 namespace dev { struct Syslib; }
 namespace dev { struct Targdep; }
 namespace dev { struct Target; }
-namespace dev { struct Targinstall; }
 namespace dev { struct Targsrc; }
 namespace dev { struct Targsyslib; }
 namespace dev { struct ToolOpt; }
@@ -162,15 +172,25 @@ bool                 Badline_ReadStrptrMaybe(dev::Badline &parent, algo::strptr 
 void                 Badline_Print(dev::Badline & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dev.Builddir
-struct Builddir { // dev.Builddir
+struct Builddir { // dev.Builddir: Directory where object files/executables go. Determines compile/link options
     algo::Smallstr50   builddir;   //
     algo::Comment      comment;    //
     Builddir();
 };
 
+algo::Smallstr50     uname_Get(dev::Builddir& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::Smallstr50     Builddir_uname_Get(strptr arg) __attribute__((nothrow));
+
+algo::Smallstr50     compiler_Get(dev::Builddir& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::Smallstr50     Builddir_compiler_Get(strptr arg) __attribute__((nothrow));
+
 algo::Smallstr50     cfg_Get(dev::Builddir& parent) __attribute__((__warn_unused_result__, nothrow));
 algo::Smallstr50     Builddir_cfg_Get(strptr arg) __attribute__((nothrow));
 
+algo::Smallstr50     arch_Get(dev::Builddir& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::Smallstr50     Builddir_arch_Get(strptr arg) __attribute__((nothrow));
+
+tempstr              Builddir_Concat_uname_compiler_cfg_arch( const algo::strptr& uname ,const algo::strptr& compiler ,const algo::strptr& cfg ,const algo::strptr& arch );
 bool                 Builddir_ReadFieldMaybe(dev::Builddir &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Builddir from an ascii string.
 // The format of the string is an ssim Tuple
@@ -197,12 +217,10 @@ void                 Cfg_Print(dev::Cfg & row, algo::cstring &str) __attribute__
 // --- dev.Compiler
 struct Compiler { // dev.Compiler
     algo::Smallstr50   compiler;   //
-    algo::Smallstr50   dflt;       //
     algo::Smallstr50   ranlib;     //
     algo::Smallstr50   ar;         //
     algo::Comment      comment;    //
     explicit Compiler(const algo::strptr&            in_compiler
-        ,const algo::strptr&            in_dflt
         ,const algo::strptr&            in_ranlib
         ,const algo::strptr&            in_ar
         ,const algo::Comment&           in_comment);
@@ -511,20 +529,6 @@ bool                 Target_ReadStrptrMaybe(dev::Target &parent, algo::strptr in
 // print string representation of dev::Target to string LHS, no header -- cprint:dev.Target.String
 void                 Target_Print(dev::Target & row, algo::cstring &str) __attribute__((nothrow));
 
-// --- dev.Targinstall
-struct Targinstall { // dev.Targinstall
-    algo::Smallstr16   target;    //
-    algo::Comment      comment;   //
-    Targinstall();
-};
-
-bool                 Targinstall_ReadFieldMaybe(dev::Targinstall &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of dev::Targinstall from an ascii string.
-// The format of the string is an ssim Tuple
-bool                 Targinstall_ReadStrptrMaybe(dev::Targinstall &parent, algo::strptr in_str);
-// print string representation of dev::Targinstall to string LHS, no header -- cprint:dev.Targinstall.String
-void                 Targinstall_Print(dev::Targinstall & row, algo::cstring &str) __attribute__((nothrow));
-
 // --- dev.Targsrc
 struct Targsrc { // dev.Targsrc: List of sources for target
     algo::Smallstr100   targsrc;   //
@@ -554,7 +558,7 @@ void                 Targsrc_Print(dev::Targsrc & row, algo::cstring &str) __att
 // --- dev.Targsyslib
 struct Targsyslib { // dev.Targsyslib
     algo::Smallstr50   targsyslib;   //
-    algo::Smallstr50   uname;        //
+    algo_lib::Regx     uname;        // Regx of dev::Uname
     algo::Comment      comment;      //
     Targsyslib();
 };
@@ -564,6 +568,12 @@ algo::Smallstr16     Targsyslib_target_Get(strptr arg) __attribute__((nothrow));
 
 algo::Smallstr50     syslib_Get(dev::Targsyslib& parent) __attribute__((__warn_unused_result__, nothrow));
 algo::Smallstr50     Targsyslib_syslib_Get(strptr arg) __attribute__((nothrow));
+
+// Print back to string
+void                 uname_Print(dev::Targsyslib& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+bool                 uname_ReadStrptrMaybe(dev::Targsyslib& parent, algo::strptr in) __attribute__((nothrow));
 
 tempstr              Targsyslib_Concat_target_syslib( const algo::strptr& target ,const algo::strptr& syslib );
 bool                 Targsyslib_ReadFieldMaybe(dev::Targsyslib &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -604,6 +614,7 @@ bool                 ToolOpt_ReadStrptrMaybe(dev::ToolOpt &parent, algo::strptr 
 void                 ToolOpt_Print(dev::ToolOpt & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dev.Uname
+// access: dev.Targsyslib.uname (RegxSql)
 struct Uname { // dev.Uname
     algo::Smallstr50   uname;     //
     algo::Comment      comment;   //
@@ -633,7 +644,6 @@ inline algo::cstring &operator <<(algo::cstring &str, const dev::Syscmddep &row)
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Syslib &row);// cfmt:dev.Syslib.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Targdep &row);// cfmt:dev.Targdep.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Target &row);// cfmt:dev.Target.String
-inline algo::cstring &operator <<(algo::cstring &str, const dev::Targinstall &row);// cfmt:dev.Targinstall.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Targsrc &row);// cfmt:dev.Targsrc.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Targsyslib &row);// cfmt:dev.Targsyslib.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::ToolOpt &row);// cfmt:dev.ToolOpt.String

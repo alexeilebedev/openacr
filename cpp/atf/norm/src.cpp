@@ -33,9 +33,9 @@ void atf_norm::normcheck_indent_srcfile() {
     SysCmd("for X in $(git diff-tree --name-only  HEAD -r --no-commit-id cpp include"
            " | egrep -v '(cpp/gen/|include/gen|extern/)'); do if [ -f $X ]; then echo $X; fi; done "
            "> temp/atf_norm_indent.list",FailokQ(true));
-    SysCmd("echo -n indenting files:;"
+    SysCmd("printf %s 'indenting files:';"
            " for X in $(head temp/atf_norm_indent.list); do"
-           " echo -n ' ' $X; done; echo ...",FailokQ(false));
+           " printf '%c %s' ' ' $X; done; echo ...",FailokQ(false));
     SysCmd("bin/cpp-indent $(cat temp/atf_norm_indent.list) > temp/atf_norm_indent.log 2>&1",FailokQ(false));
     CheckCleanDirs("cpp include");
 }

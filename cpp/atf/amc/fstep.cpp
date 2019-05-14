@@ -42,5 +42,26 @@ void atf_amc::amctest_fstep_InlineRecur() {
 
 // -----------------------------------------------------------------------------
 
+static int _num;
+static void IncrNum() {
+    _num++;
+}
+
 void atf_amc::amctest_fstep_TimeHookRecur() {
+    bool success=false;
+    for (int retry=0; retry<10 && !success; retry++) {
+        if (retry>0) {
+            _num=0;
+            sleep(1);
+        }
+        algo_lib::FTimehook th;
+        ThInitRecur(th,ToSchedTime(0.001));
+        hook_Set0(th, IncrNum);
+        bh_timehook_Insert(th);
+        algo_lib::_db.limit = CurrSchedTime() + ToSchedTime(0.01);
+        MainLoop();
+        prlog(_num<<" <=> "<<8);
+        success = _num>=8 && _num<=10;
+    }
+    vrfy_(success);
 }

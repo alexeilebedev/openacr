@@ -1,14 +1,9 @@
 default:
 	ai
 
-# create script to build abt for the first time
-# delete unstable gitinfo information
-bootstrap:
-	bin/make-bootstrap
-
 clean:
-	rm -rf dflt.*-x86_64 .testgen
-	git clean -dfx temp
+	rm -rf temp/acr_ed
+	git clean -dfx build temp
 
 readme:
 	atf_norm readme

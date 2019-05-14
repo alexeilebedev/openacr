@@ -1,5 +1,5 @@
 atfdb.normcheck  normcheck:amc  comment:"Run amc"
-atfdb.normcheck  normcheck:bootstrap  comment:"Re-run abt bootstrap"
+atfdb.normcheck  normcheck:bootstrap  comment:"Re-generate bootstrap files"
 atfdb.normcheck  normcheck:testamc  comment:"Test amc (run atf_amc)"
 atfdb.normcheck  normcheck:readme  comment:"Re-generate README.md table of contents"
 atfdb.normcheck  normcheck:unit  comment:"Run unit tests"

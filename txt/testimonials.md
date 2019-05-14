@@ -1,5 +1,7 @@
 ## Testimonials
 
+These are some of the good things people have said about acr/amc.
+
 ### 1
 
     Alexei has built a tool set and framework that significantly improves
@@ -7,8 +9,6 @@
     generated with guaranteed consistency and quality. 
 
         Shreejith Billenahalli
-        Director of Technology, Software Architecture, Development & Delivery
-        at Intercontinental Exchange
 
 ### 2
 
@@ -20,7 +20,6 @@
     the entire codebase.
 
         Jon Joshua
-        Development Lead at New York Stock Exchange
 
 ### 3
 
@@ -30,9 +29,8 @@
     checking has enabled a big team of developers to produce very
     high-quality products in very short periods of time while working on a
     single codebase
- 
+
         Hayk Mkrtchyan
-        Director at Intercontinental Exchange
  
 ### 4
 
@@ -45,4 +43,3 @@
     more on the way.
 
         Vladimir Parizhsky
-        SVP, Systems Architecture at Intercontinental Exchange

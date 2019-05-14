@@ -332,7 +332,7 @@ inline command::bash_proc::~bash_proc() {
 // --- command.bash_proc..Init
 // Set all fields to initial values.
 inline void command::bash_proc_Init(command::bash_proc& parent) {
-    parent.path = algo::strptr("/usr/bin/bash");
+    parent.path = algo::strptr("bash");
     parent.pid = pid_t(0);
     parent.timeout = i32(0);
     parent.status = i32(0);

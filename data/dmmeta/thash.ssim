@@ -9,7 +9,6 @@ dmmeta.thash  field:abt.FDb.ind_srcfile  hashfld:dev.Srcfile.srcfile  unique:Y  
 dmmeta.thash  field:abt.FDb.ind_syscmd  hashfld:dev.Syscmd.syscmd  unique:Y  comment:""
 dmmeta.thash  field:abt.FDb.ind_syslib  hashfld:dev.Syslib.syslib  unique:Y  comment:""
 dmmeta.thash  field:abt.FDb.ind_target  hashfld:dev.Target.target  unique:Y  comment:""
-dmmeta.thash  field:abt.FDb.ind_targinstall  hashfld:dev.Targinstall.target  unique:Y  comment:""
 dmmeta.thash  field:abt.FDb.ind_targsrc  hashfld:dev.Targsrc.targsrc  unique:Y  comment:""
 dmmeta.thash  field:abt.FDb.ind_uname  hashfld:dev.Uname.uname  unique:Y  comment:""
 dmmeta.thash  field:acr.FCtype.ind_rec  hashfld:acr.FRec.pkey  unique:Y  comment:""

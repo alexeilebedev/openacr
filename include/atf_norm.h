@@ -37,6 +37,14 @@ namespace atf_norm { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
+    // cpp/atf/norm/bootstrap.cpp
+    //
+
+    // Create a bootstrap file for each build dir
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void normcheck_bootstrap();
+
+    // -------------------------------------------------------------------
     // cpp/atf/norm/main.cpp
     //
 
@@ -47,7 +55,6 @@ namespace atf_norm { // update-hdr
     //     (user-implemented function, prototype is in amc-generated header)
     // void normcheck_testamc();
     // void normcheck_unit();
-    // void normcheck_bootstrap();
     // void normcheck_iffy_src();
     // void normcheck_normalize_amc_vis();
     // void normcheck_gitfile();

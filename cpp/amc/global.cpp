@@ -79,11 +79,7 @@ void amc::tfunc_Global_Init() {
             Ins(&R, func.body, "}ary_end;");
             Ins(&R, func.body, "algo_lib::_db.n_temp = algo_lib::temp_strings_N();");
             Ins(&R, func.body, "algo_lib::bh_timehook_Reserve(32);");
-            Ins(&R, func.body, "algo_lib::_db.hz           = get_cpu_hz();");
-            Ins(&R, func.body, "algo_lib::_db.clocks_to_ms = 1000.0 / algo_lib::_db.hz;");
-            Ins(&R, func.body, "algo_lib::_db.clocks_to_ns = 1000000000.0 / algo_lib::_db.hz;");
-            Ins(&R, func.body, "algo_lib::_db.clock.value  = get_cycles();");
-            Ins(&R, func.body, "algo_lib::_db.start_clock  = algo_lib::_db.clock;");
+            Ins(&R, func.body, "algo_lib::InitCpuHz();");
             Ins(&R, func.body, "algo_lib::_db.eol          = true;");
         }
     }
@@ -322,10 +318,7 @@ void amc::tfunc_Global_main() {
         }ind_end;
         Ins(&R, main.body    , "    algo_lib::_db.argc = argc;");
         Ins(&R, main.body    , "    algo_lib::_db.argv = argv;");
-        Ins(&R, main.body    , "    algo_lib::_db.epoll_fd = epoll_create(1);");
-        Ins(&R, main.body    , "    if (algo_lib::_db.epoll_fd == -1) {");
-        Ins(&R, main.body    , "        FatalErrorExit(\"epoll_create\");");
-        Ins(&R, main.body    , "    }");
+        Ins(&R, main.body    , "    algo_lib::IohookInit();");
         // call last non-module main, followed by all module mains
         for (int i=c_parentns_N(ns)-1; i>=0; i--) {// call first non-module main
             amc::FNs &parentns=*c_parentns_Find(ns,i);

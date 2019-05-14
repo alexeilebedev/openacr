@@ -1204,10 +1204,7 @@ int main(int argc, char **argv) {
         src_lim::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
-        algo_lib::_db.epoll_fd = epoll_create(1);
-        if (algo_lib::_db.epoll_fd == -1) {
-            FatalErrorExit("epoll_create");
-        }
+        algo_lib::IohookInit();
         src_lim::MainArgs(algo_lib::_db.argc,algo_lib::_db.argv); // dmmeta.main:src_lim
     } catch(algo_lib::ErrorX &x) {
         prerr("src_lim.error  " << x); // there may be additional hints in DetachBadTags

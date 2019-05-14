@@ -146,7 +146,6 @@ using algo::eol;
 using algo::get_cpu_hz;
 using algo::get_cpu_hz_int;
 using algo::get_cycles;
-using algo::gitinfo_Get;
 using algo::i32_NegateIf;
 using algo::i32_Range;
 using algo::i32_WeakRandom;

@@ -50,6 +50,9 @@ void amc::tfunc_Sbrk_AllocMem() {
     Ins(&R, allocmem.comment , "If out of memory, return NULL");
     Ins(&R, allocmem.comment , "Newly allocated memory is initialized to zeros");
     Ins(&R, allocmem.body    , "void *ret = MAP_FAILED;");
+    Ins(&R, allocmem.body    , "#ifdef __MACH__");
+    Ins(&R, allocmem.body    , "    ret = malloc(size);");
+    Ins(&R, allocmem.body    , "#else");
     Ins(&R, allocmem.body    , "u32 bigsize = 1024*2048;");
     Ins(&R, allocmem.body    , "if (size >= bigsize) { // big block -- will be registered");
     Ins(&R, allocmem.body    , "    size = (size + bigsize - 1) / bigsize * bigsize;");
@@ -86,6 +89,7 @@ void amc::tfunc_Sbrk_AllocMem() {
     Ins(&R, allocmem.body    , "if (ret == (void*)-1) { // sbrk returns -1 on error");
     Ins(&R, allocmem.body    , "    ret = NULL;");
     Ins(&R, allocmem.body    , "}");
+    Ins(&R, allocmem.body    , "#endif");
     Ins(&R, allocmem.body    , "if (ret && $parname.$name_zeromem) {");
     Ins(&R, allocmem.body    , "    memset(ret,0,size); // touch all bytes in the new memory block");
     Ins(&R, allocmem.body    , "}");
@@ -98,10 +102,15 @@ void amc::tfunc_Sbrk_FreeMem() {
     amc::FFunc& freemem = amc::CreateCurFunc();
     Ins(&R, freemem.ret  , "void", false);
     Ins(&R, freemem.proto, "$name_FreeMem($Parent, void *mem, u32 size)", false);
+    Ins(&R, freemem.body, "#ifdef __MACH__");
+    Ins(&R, freemem.body, "    free(mem);");
+    Ins(&R, freemem.body, "    (void)size;");
+    Ins(&R, freemem.body, "#else");
     Ins(&R, freemem.body, "u32 bigsize = 1024*2048;");
     Ins(&R, freemem.body, "if (size >= bigsize) {");
     Ins(&R, freemem.body, "    munmap((void*)mem, size);");
     Ins(&R, freemem.body, "}");
+    Ins(&R, freemem.body, "#endif");
 }
 
 void amc::tfunc_Sbrk_Init() {

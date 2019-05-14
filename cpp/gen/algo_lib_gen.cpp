@@ -449,6 +449,9 @@ void algo_lib::trace_Print(algo_lib::trace & row, algo::cstring &str) {
 // Newly allocated memory is initialized to zeros
 void* algo_lib::sbrk_AllocMem(u32 size) {
     void *ret = MAP_FAILED;
+#ifdef __MACH__
+    ret = malloc(size);
+#else
     u32 bigsize = 1024*2048;
     if (size >= bigsize) { // big block -- will be registered
         size = (size + bigsize - 1) / bigsize * bigsize;
@@ -485,6 +488,7 @@ void* algo_lib::sbrk_AllocMem(u32 size) {
     if (ret == (void*)-1) { // sbrk returns -1 on error
         ret = NULL;
     }
+#endif
     if (ret && _db.sbrk_zeromem) {
         memset(ret,0,size); // touch all bytes in the new memory block
     }
@@ -493,10 +497,15 @@ void* algo_lib::sbrk_AllocMem(u32 size) {
 
 // --- algo_lib.FDb.sbrk.FreeMem
 void algo_lib::sbrk_FreeMem(void *mem, u32 size) {
+#ifdef __MACH__
+    free(mem);
+    (void)size;
+#else
     u32 bigsize = 1024*2048;
     if (size >= bigsize) {
         munmap((void*)mem, size);
     }
+#endif
 }
 
 // --- algo_lib.FDb.lpool.FreeMem
@@ -673,11 +682,7 @@ void algo_lib::Init() {
     }ary_end;
     algo_lib::_db.n_temp = algo_lib::temp_strings_N();
     algo_lib::bh_timehook_Reserve(32);
-    algo_lib::_db.hz           = get_cpu_hz();
-    algo_lib::_db.clocks_to_ms = 1000.0 / algo_lib::_db.hz;
-    algo_lib::_db.clocks_to_ns = 1000000000.0 / algo_lib::_db.hz;
-    algo_lib::_db.clock.value  = get_cycles();
-    algo_lib::_db.start_clock  = algo_lib::_db.clock;
+    algo_lib::InitCpuHz();
     algo_lib::_db.eol          = true;
 }
 
@@ -2211,11 +2216,7 @@ void algo_lib::FDb_Init() {
     }ary_end;
     algo_lib::_db.n_temp = algo_lib::temp_strings_N();
     algo_lib::bh_timehook_Reserve(32);
-    algo_lib::_db.hz           = get_cpu_hz();
-    algo_lib::_db.clocks_to_ms = 1000.0 / algo_lib::_db.hz;
-    algo_lib::_db.clocks_to_ns = 1000000000.0 / algo_lib::_db.hz;
-    algo_lib::_db.clock.value  = get_cycles();
-    algo_lib::_db.start_clock  = algo_lib::_db.clock;
+    algo_lib::InitCpuHz();
     algo_lib::_db.eol          = true;
     // initialize LAry imtable (algo_lib.FDb.imtable)
     _db.imtable_n = 0;

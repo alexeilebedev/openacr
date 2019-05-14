@@ -3,10 +3,6 @@ dev.gitfile  gitfile:.gitignore
 dev.gitfile  gitfile:Makefile
 dev.gitfile  gitfile:README.md
 dev.gitfile  gitfile:bin/abt
-dev.gitfile  gitfile:bin/abt-bootstrap
-dev.gitfile  gitfile:bin/abt-bootstrap.clang++
-dev.gitfile  gitfile:bin/abt-bootstrap.g++
-dev.gitfile  gitfile:bin/abt-bootstrap.g++-9
 dev.gitfile  gitfile:bin/acr
 dev.gitfile  gitfile:bin/acr_compl
 dev.gitfile  gitfile:bin/acr_ed
@@ -19,6 +15,10 @@ dev.gitfile  gitfile:bin/amc_vis
 dev.gitfile  gitfile:bin/atf_amc
 dev.gitfile  gitfile:bin/atf_norm
 dev.gitfile  gitfile:bin/atf_unit
+dev.gitfile  gitfile:bin/bootstrap/Darwin-clang++.release-x86_64
+dev.gitfile  gitfile:bin/bootstrap/Linux-clang++.release-x86_64
+dev.gitfile  gitfile:bin/bootstrap/Linux-g++-9.release-x86_64
+dev.gitfile  gitfile:bin/bootstrap/Linux-g++.release-x86_64
 dev.gitfile  gitfile:bin/ccache-clean
 dev.gitfile  gitfile:bin/ccache-install
 dev.gitfile  gitfile:bin/ccache-use
@@ -61,13 +61,13 @@ dev.gitfile  gitfile:bin/indent-recent
 dev.gitfile  gitfile:bin/limit-output
 dev.gitfile  gitfile:bin/lines-to-dots
 dev.gitfile  gitfile:bin/lsfunc
-dev.gitfile  gitfile:bin/make-bootstrap
 dev.gitfile  gitfile:bin/mdbg
 dev.gitfile  gitfile:bin/msloc.pl
 dev.gitfile  gitfile:bin/mysql2ssim
 dev.gitfile  gitfile:bin/nogen
 dev.gitfile  gitfile:bin/normalize
 dev.gitfile  gitfile:bin/rebuild-amc
+dev.gitfile  gitfile:bin/select-bootstrap
 dev.gitfile  gitfile:bin/sloc.pl
 dev.gitfile  gitfile:bin/sources-of
 dev.gitfile  gitfile:bin/src_func
@@ -93,6 +93,7 @@ dev.gitfile  gitfile:conf/emacs.el
 dev.gitfile  gitfile:conf/vim/ftdetect/ssim.vim
 dev.gitfile  gitfile:conf/vim/syntax/ssim.vim
 dev.gitfile  gitfile:conf/vimrc
+dev.gitfile  gitfile:cpp/abc/abc.cpp
 dev.gitfile  gitfile:cpp/abt/build.cpp
 dev.gitfile  gitfile:cpp/abt/disas.cpp
 dev.gitfile  gitfile:cpp/abt/main.cpp
@@ -233,6 +234,7 @@ dev.gitfile  gitfile:cpp/atf/amc/tary.cpp
 dev.gitfile  gitfile:cpp/atf/amc/varlen.cpp
 dev.gitfile  gitfile:cpp/atf/amc/zdlist.cpp
 dev.gitfile  gitfile:cpp/atf/amc/zslist.cpp
+dev.gitfile  gitfile:cpp/atf/norm/bootstrap.cpp
 dev.gitfile  gitfile:cpp/atf/norm/main.cpp
 dev.gitfile  gitfile:cpp/atf/norm/readme.cpp
 dev.gitfile  gitfile:cpp/atf/norm/src.cpp
@@ -319,7 +321,6 @@ dev.gitfile  gitfile:cpp/lib/lib_git.cpp
 dev.gitfile  gitfile:cpp/lib/lib_iconv.cpp
 dev.gitfile  gitfile:cpp/lib/lib_json.cpp
 dev.gitfile  gitfile:cpp/lib/lib_mysql.cpp
-dev.gitfile  gitfile:cpp/lib/lib_prot.cpp
 dev.gitfile  gitfile:cpp/lib/lib_sql.cpp
 dev.gitfile  gitfile:cpp/mdbg.cpp
 dev.gitfile  gitfile:cpp/mysql2ssim.cpp
@@ -360,7 +361,6 @@ dev.gitfile  gitfile:data/dev/scriptfile.ssim
 dev.gitfile  gitfile:data/dev/syslib.ssim
 dev.gitfile  gitfile:data/dev/targdep.ssim
 dev.gitfile  gitfile:data/dev/target.ssim
-dev.gitfile  gitfile:data/dev/targinstall.ssim
 dev.gitfile  gitfile:data/dev/targsrc.ssim
 dev.gitfile  gitfile:data/dev/targsyslib.ssim
 dev.gitfile  gitfile:data/dev/tool_opt.ssim
@@ -480,7 +480,6 @@ dev.gitfile  gitfile:include/algo.inl.h
 dev.gitfile  gitfile:include/algo/arg.h
 dev.gitfile  gitfile:include/algo/aryptr.inl.h
 dev.gitfile  gitfile:include/algo/backtrace.h
-dev.gitfile  gitfile:include/algo/cpu_hz.h
 dev.gitfile  gitfile:include/algo/file.h
 dev.gitfile  gitfile:include/algo/fmt.h
 dev.gitfile  gitfile:include/algo/fmt.inl.h
@@ -494,7 +493,7 @@ dev.gitfile  gitfile:include/algo/time.h
 dev.gitfile  gitfile:include/algo/time.inl.h
 dev.gitfile  gitfile:include/algo/tstamp.h
 dev.gitfile  gitfile:include/algo/using.h
-dev.gitfile  gitfile:include/algo_pch.h
+dev.gitfile  gitfile:include/algo_pch.hpp
 dev.gitfile  gitfile:include/amc.h
 dev.gitfile  gitfile:include/atf_amc.h
 dev.gitfile  gitfile:include/atf_norm.h
@@ -611,6 +610,7 @@ dev.gitfile  gitfile:txt/bootstrapping-magic.md
 dev.gitfile  gitfile:txt/coding-style.md
 dev.gitfile  gitfile:txt/command-lines.md
 dev.gitfile  gitfile:txt/directory-structure.md
+dev.gitfile  gitfile:txt/ff.md
 dev.gitfile  gitfile:txt/hello-meta-world.md
 dev.gitfile  gitfile:txt/intro.md
 dev.gitfile  gitfile:txt/mariadb-integration.md

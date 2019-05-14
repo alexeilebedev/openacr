@@ -46,9 +46,25 @@ namespace abt { // update-hdr
     // -------------------------------------------------------------------
     // cpp/abt/main.cpp -- Algo Build Tool - Main file
     //
+    bool HeaderExtQ(strptr ext);
 
     // how are we using this execkey???
     i64 execkey_Get(abt::FSyscmd &cmd);
+    abt::FSyscmd& NewCmd(abt::FSyscmd *start, abt::FSyscmd *end);
+
+    // compute obj key by replace path components
+    // with .
+    // So, cpp/abt/main.cpp becomes cpp.abt.main.cpp
+    // Next step will be to replace the extension
+    tempstr GetObjkey(strptr source);
+
+    // Return true if this file is a precompiled header file
+    bool PchQ(abt::FSrcfile &srcfile);
+
+    // Return a canonic name describing current configuration
+    // This is not the actual build directory. That one is called "out_dir".
+    // Builddir is just the primary key of a build directory
+    tempstr GetBuilddir();
     void Main();
 
     // -------------------------------------------------------------------

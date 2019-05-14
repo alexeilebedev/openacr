@@ -1,3 +1,4 @@
+// (C) AlgoEngineering LLC 2008-2013
 // (C) 2013-2019 NYSE | Intercontinental Exchange
 //
 // This program is free software: you can redistribute it and/or modify
@@ -15,15 +16,11 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 //
-// Target: lib_prot (lib) -- library covering all protocols
-// Exceptions: NO
-// Source: cpp/lib/lib_prot.cpp
+// Target: algo_pch (pch) -- precompiled header for pretty much everything
+// Source: include/algo_pch.hpp
 //
-// Created By: alexei.lebedev carlos.suarez
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev carlos.suarez mark.page
+// Created By: alexei.lebedev
+// Recent Changes: alexei.lebedev
 //
 
-inline static void Placeholder() {
-    // ignore me
-}
+#include "include/algo.h"

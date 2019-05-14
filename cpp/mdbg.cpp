@@ -263,17 +263,7 @@ static void Main_Gdb(algo_lib::Replscope &R) {
 // -----------------------------------------------------------------------------
 
 static tempstr FindBuildDir() {
-    mdbg::FCfg *cfg = mdbg::ind_cfg_Find(mdbg::_db.cmdline.cfg);
-    vrfy(cfg
-         , tempstr()<<"mdbg.nocfg"
-         <<Keyval("cfg",mdbg::_db.cmdline.cfg)
-         <<Keyval("comment","configuration not found"));
-
-    vrfy(c_builddir_N(*cfg)>0
-         , tempstr()<<"mdbg.nobuilddir"
-         <<Keyval("cfg",cfg->cfg)
-         <<Keyval("comment","no build directories associated with cfg"));
-    return tempstr()<<c_builddir_Find(*cfg,0)->builddir;
+    return DirFileJoin("build",mdbg::_db.cmdline.cfg);
 }
 
 // -----------------------------------------------------------------------------

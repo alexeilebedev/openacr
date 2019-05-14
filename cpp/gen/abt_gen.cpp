@@ -53,11 +53,9 @@ const char *abt_help =
 "    -printcmd          Print commands. Do not execute. default: false\n"
 "    -force             Assume all files are out-of-date. default: false\n"
 "    -testgen           Run generator (amc) in test directory and report diff. default: false\n"
-"    -install           Install executables to bin/uname-arch directory. default: false\n"
+"    -install           Update soft-link under bin/. default: false\n"
 "    -coverity          Run abt in coverity mode. default: false\n"
-"    -release   string  Release tag\n"
 "    -package   string  Package tag\n"
-"    -nover             If set, precludes the version tag to be insereted into the target. default: false\n"
 "    -maxerr    int     Max failing commands before rest of pipeline is forced to fail. default: 100\n"
 "    -disas     string  Regex of function to disassemble\n"
 "    -report            Print final report. default: true\n"
@@ -90,9 +88,7 @@ const char *abt_syntax =
 " -testgen:flag\n"
 " -install:flag\n"
 " -coverity:flag\n"
-" -release:string=\n"
 " -package:string=\n"
-" -nover:flag\n"
 " -maxerr:int=100\n"
 " -disas:string=\n"
 " -report:flag=true\n"
@@ -124,7 +120,6 @@ namespace abt {
     static int           bh_syscmd_Upheap(abt::FSyscmd& row, int idx) __attribute__((nothrow));
     static bool          bh_syscmd_ElemLt(abt::FSyscmd &a, abt::FSyscmd &b) __attribute__((nothrow));
     static void          _db_bh_syscmd_curs_Add(_db_bh_syscmd_curs &curs, abt::FSyscmd& row);
-    static bool          targinstall_InputMaybe(dev::Targinstall &elem) __attribute__((nothrow));
     static bool          targsyslib_InputMaybe(dev::Targsyslib &elem) __attribute__((nothrow));
     static bool          syslib_InputMaybe(dev::Syslib &elem) __attribute__((nothrow));
     static bool          include_InputMaybe(dev::Include &elem) __attribute__((nothrow));
@@ -180,7 +175,6 @@ void abt::FCfg_Uninit(abt::FCfg& cfg) {
 // Copy fields out of row
 void abt::compiler_CopyOut(abt::FCompiler &row, dev::Compiler &out) {
     out.compiler = row.compiler;
-    out.dflt = row.dflt;
     out.ranlib = row.ranlib;
     out.ar = row.ar;
     out.comment = row.comment;
@@ -190,7 +184,6 @@ void abt::compiler_CopyOut(abt::FCompiler &row, dev::Compiler &out) {
 // Copy fields in to row
 void abt::compiler_CopyIn(abt::FCompiler &row, dev::Compiler &in) {
     row.compiler = in.compiler;
-    row.dflt = in.dflt;
     row.ranlib = in.ranlib;
     row.ar = in.ar;
     row.comment = in.comment;
@@ -1302,7 +1295,7 @@ static void abt::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt.Input'  signature:'54b9ad5d0fd892d08c141f4cf65fd7e07cf4febb'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt.Input'  signature:'74b970ebe53274a949865c248ef979af72de93bf'");
 }
 
 // --- abt.FDb._db.StaticCheck
@@ -1378,12 +1371,6 @@ bool abt::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && arch_InputMaybe(elem);
             break;
         }
-        case abt_TableId_dev_Targinstall: { // finput:abt.FDb.targinstall
-            dev::Targinstall elem;
-            retval = dev::Targinstall_ReadStrptrMaybe(elem, str);
-            retval = retval && targinstall_InputMaybe(elem);
-            break;
-        }
         case abt_TableId_dev_Targsyslib: { // finput:abt.FDb.targsyslib
             dev::Targsyslib elem;
             retval = dev::Targsyslib_ReadStrptrMaybe(elem, str);
@@ -1424,9 +1411,8 @@ bool abt::LoadTuplesMaybe(algo::strptr root) {
     bool retval = true;
     static const char *ssimfiles[] = {
         "dev.arch", "dev.cfg", "dev.compiler", "dmmeta.ns"
-        , "dev.syslib", "dev.target", "dev.targdep", "dev.targinstall"
-        , "dev.targsrc", "dev.targsyslib", "dev.tool_opt", "dev.uname"
-
+        , "dev.syslib", "dev.target", "dev.targdep", "dev.targsrc"
+        , "dev.targsyslib", "dev.tool_opt", "dev.uname"
         , NULL};
         retval = algo_lib::DoLoadTuples(root, abt::InsertStrptrMaybe, ssimfiles, true);
         return retval;
@@ -2956,230 +2942,6 @@ abt::FTarget* abt::zs_sel_target_RemoveFirst() {
         row->zs_sel_target_next = (abt::FTarget*)-1; // mark as not-in-list
     }
     return row;
-}
-
-// --- abt.FDb.targinstall.Alloc
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-abt::FTarginstall& abt::targinstall_Alloc() {
-    abt::FTarginstall* row = targinstall_AllocMaybe();
-    if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("abt.out_of_mem  field:abt.FDb.targinstall  comment:'Alloc failed'");
-    }
-    return *row;
-}
-
-// --- abt.FDb.targinstall.AllocMaybe
-// Allocate memory for new element. If out of memory, return NULL.
-abt::FTarginstall* abt::targinstall_AllocMaybe() {
-    abt::FTarginstall *row = (abt::FTarginstall*)targinstall_AllocMem();
-    if (row) {
-        new (row) abt::FTarginstall; // call constructor
-    }
-    return row;
-}
-
-// --- abt.FDb.targinstall.InsertMaybe
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt::FTarginstall* abt::targinstall_InsertMaybe(const dev::Targinstall &value) {
-    abt::FTarginstall *row = &targinstall_Alloc(); // if out of memory, process dies. if input error, return NULL.
-    targinstall_CopyIn(*row,const_cast<dev::Targinstall&>(value));
-    bool ok = targinstall_XrefMaybe(*row); // this may return false
-    if (!ok) {
-        targinstall_RemoveLast(); // delete offending row, any existing xrefs are cleared
-        row = NULL; // forget this ever happened
-    }
-    return row;
-}
-
-// --- abt.FDb.targinstall.AllocMem
-// Allocate space for one element. If no memory available, return NULL.
-void* abt::targinstall_AllocMem() {
-    u64 new_nelems     = _db.targinstall_n+1;
-    // compute level and index on level
-    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
-    u64 base  = u64(1)<<bsr;
-    u64 index = new_nelems-base;
-    void *ret = NULL;
-    // if level doesn't exist yet, create it
-    abt::FTarginstall*  lev   = NULL;
-    if (bsr < 32) {
-        lev = _db.targinstall_lary[bsr];
-        if (!lev) {
-            lev=(abt::FTarginstall*)abt::lpool_AllocMem(sizeof(abt::FTarginstall) * (u64(1)<<bsr));
-            _db.targinstall_lary[bsr] = lev;
-        }
-    }
-    // allocate element from this level
-    if (lev) {
-        _db.targinstall_n = new_nelems;
-        ret = lev + index;
-    }
-    return ret;
-}
-
-// --- abt.FDb.targinstall.RemoveLast
-// Delete last element of array. Do nothing if array is empty.
-void abt::targinstall_RemoveLast() {
-    u64 n = _db.targinstall_n;
-    if (n > 0) {
-        n -= 1;
-        targinstall_qFind(u64(n)).~FTarginstall();
-        _db.targinstall_n = n;
-    }
-}
-
-// --- abt.FDb.targinstall.InputMaybe
-static bool abt::targinstall_InputMaybe(dev::Targinstall &elem) {
-    bool retval = true;
-    retval = targinstall_InsertMaybe(elem);
-    return retval;
-}
-
-// --- abt.FDb.targinstall.XrefMaybe
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool abt::targinstall_XrefMaybe(abt::FTarginstall &row) {
-    bool retval = true;
-    (void)row;
-    // insert targinstall into index ind_targinstall
-    if (true) { // user-defined insert condition
-        bool success = ind_targinstall_InsertMaybe(row);
-        if (UNLIKELY(!success)) {
-            ch_RemoveAll(algo_lib::_db.errtext);
-            algo_lib::_db.errtext << "abt.duplicate_key  xref:abt.FDb.ind_targinstall"; // check for duplicate key
-            return false;
-        }
-    }
-    abt::FTarget* p_target = abt::ind_target_Find(row.target);
-    if (UNLIKELY(!p_target)) {
-        algo_lib::ResetErrtext() << "abt.bad_xref  index:abt.FDb.ind_target" << Keyval("key", row.target);
-        return false;
-    }
-    // insert targinstall into index c_targinstall
-    if (true) { // user-defined insert condition
-        bool success = c_targinstall_InsertMaybe(*p_target, row);
-        if (UNLIKELY(!success)) {
-            ch_RemoveAll(algo_lib::_db.errtext);
-            algo_lib::_db.errtext << "abt.duplicate_key  xref:abt.FTarget.c_targinstall"; // check for duplicate key
-            return false;
-        }
-    }
-    return retval;
-}
-
-// --- abt.FDb.ind_targinstall.Find
-// Find row by key. Return NULL if not found.
-abt::FTarginstall* abt::ind_targinstall_Find(const algo::strptr& key) {
-    u32 index = Smallstr16_Hash(0, key) & (_db.ind_targinstall_buckets_n - 1);
-    abt::FTarginstall* *e = &_db.ind_targinstall_buckets_elems[index];
-    abt::FTarginstall* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).target == key;
-        if (done) break;
-        e         = &ret->ind_targinstall_next;
-    } while (true);
-    return ret;
-}
-
-// --- abt.FDb.ind_targinstall.GetOrCreate
-// Find row by key. If not found, create and x-reference a new row with with this key.
-abt::FTarginstall& abt::ind_targinstall_GetOrCreate(const algo::strptr& key) {
-    abt::FTarginstall* ret = ind_targinstall_Find(key);
-    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
-        ret         = &targinstall_Alloc();
-        (*ret).target = key;
-        bool good = targinstall_XrefMaybe(*ret);
-        if (!good) {
-            targinstall_RemoveLast(); // delete offending row, any existing xrefs are cleared
-            ret = NULL;
-        }
-    }
-    return *ret;
-}
-
-// --- abt.FDb.ind_targinstall.InsertMaybe
-// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt::ind_targinstall_InsertMaybe(abt::FTarginstall& row) {
-    ind_targinstall_Reserve(1);
-    bool retval = true; // if already in hash, InsertMaybe returns true
-    if (LIKELY(row.ind_targinstall_next == (abt::FTarginstall*)-1)) {// check if in hash already
-        u32 index = Smallstr16_Hash(0, row.target) & (_db.ind_targinstall_buckets_n - 1);
-        abt::FTarginstall* *prev = &_db.ind_targinstall_buckets_elems[index];
-        do {
-            abt::FTarginstall* ret = *prev;
-            if (!ret) { // exit condition 1: reached the end of the list
-                break;
-            }
-            if ((*ret).target == row.target) { // exit condition 2: found matching key
-                retval = false;
-                break;
-            }
-            prev = &ret->ind_targinstall_next;
-        } while (true);
-        if (retval) {
-            row.ind_targinstall_next = *prev;
-            _db.ind_targinstall_n++;
-            *prev = &row;
-        }
-    }
-    return retval;
-}
-
-// --- abt.FDb.ind_targinstall.Remove
-// Remove reference to element from hash index. If element is not in hash, do nothing
-void abt::ind_targinstall_Remove(abt::FTarginstall& row) {
-    if (LIKELY(row.ind_targinstall_next != (abt::FTarginstall*)-1)) {// check if in hash already
-        u32 index = Smallstr16_Hash(0, row.target) & (_db.ind_targinstall_buckets_n - 1);
-        abt::FTarginstall* *prev = &_db.ind_targinstall_buckets_elems[index]; // addr of pointer to current element
-        while (abt::FTarginstall *next = *prev) {                          // scan the collision chain for our element
-            if (next == &row) {        // found it?
-                *prev = next->ind_targinstall_next; // unlink (singly linked list)
-                _db.ind_targinstall_n--;
-                row.ind_targinstall_next = (abt::FTarginstall*)-1;// not-in-hash
-                break;
-            }
-            prev = &next->ind_targinstall_next;
-        }
-    }
-}
-
-// --- abt.FDb.ind_targinstall.Reserve
-// Reserve enough room in the hash for N more elements. Return success code.
-void abt::ind_targinstall_Reserve(int n) {
-    u32 old_nbuckets = _db.ind_targinstall_buckets_n;
-    u32 new_nelems   = _db.ind_targinstall_n + n;
-    // # of elements has to be roughly equal to the number of buckets
-    if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
-        u32 old_size = old_nbuckets * sizeof(abt::FTarginstall*);
-        u32 new_size = new_nbuckets * sizeof(abt::FTarginstall*);
-        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
-        // means new memory will have to be allocated anyway
-        abt::FTarginstall* *new_buckets = (abt::FTarginstall**)abt::lpool_AllocMem(new_size);
-        if (UNLIKELY(!new_buckets)) {
-            FatalErrorExit("abt.out_of_memory  field:abt.FDb.ind_targinstall");
-        }
-        memset(new_buckets, 0, new_size); // clear pointers
-        // rehash all entries
-        for (int i = 0; i < _db.ind_targinstall_buckets_n; i++) {
-            abt::FTarginstall* elem = _db.ind_targinstall_buckets_elems[i];
-            while (elem) {
-                abt::FTarginstall &row        = *elem;
-                abt::FTarginstall* next       = row.ind_targinstall_next;
-                u32 index          = Smallstr16_Hash(0, row.target) & (new_nbuckets-1);
-                row.ind_targinstall_next     = new_buckets[index];
-                new_buckets[index] = &row;
-                elem               = next;
-            }
-        }
-        // free old array
-        abt::lpool_FreeMem(_db.ind_targinstall_buckets_elems, old_size);
-        _db.ind_targinstall_buckets_elems = new_buckets;
-        _db.ind_targinstall_buckets_n = new_nbuckets;
-    }
 }
 
 // --- abt.FDb.zsl_libdep_visited.Insert
@@ -4729,25 +4491,6 @@ void abt::FDb_Init() {
     _db.zs_sel_target_head = NULL; // (abt.FDb.zs_sel_target)
     _db.zs_sel_target_n = 0; // (abt.FDb.zs_sel_target)
     _db.zs_sel_target_tail = NULL; // (abt.FDb.zs_sel_target)
-    // initialize LAry targinstall (abt.FDb.targinstall)
-    _db.targinstall_n = 0;
-    memset(_db.targinstall_lary, 0, sizeof(_db.targinstall_lary)); // zero out all level pointers
-    abt::FTarginstall* targinstall_first = (abt::FTarginstall*)abt::lpool_AllocMem(sizeof(abt::FTarginstall) * (u64(1)<<4));
-    if (!targinstall_first) {
-        FatalErrorExit("out of memory");
-    }
-    for (int i = 0; i < 4; i++) {
-        _db.targinstall_lary[i]  = targinstall_first;
-        targinstall_first    += 1ULL<<i;
-    }
-    // initialize hash table for abt::FTarginstall;
-    _db.ind_targinstall_n             	= 0; // (abt.FDb.ind_targinstall)
-    _db.ind_targinstall_buckets_n     	= 4; // (abt.FDb.ind_targinstall)
-    _db.ind_targinstall_buckets_elems 	= (abt::FTarginstall**)abt::lpool_AllocMem(sizeof(abt::FTarginstall*)*_db.ind_targinstall_buckets_n); // initial buckets (abt.FDb.ind_targinstall)
-    if (!_db.ind_targinstall_buckets_elems) {
-        FatalErrorExit("out of memory"); // (abt.FDb.ind_targinstall)
-    }
-    memset(_db.ind_targinstall_buckets_elems, 0, sizeof(abt::FTarginstall*)*_db.ind_targinstall_buckets_n); // (abt.FDb.ind_targinstall)
     _db.zsl_libdep_visited_head = NULL; // (abt.FDb.zsl_libdep_visited)
     _db.zsl_libdep_head = NULL; // (abt.FDb.zsl_libdep)
     // initialize LAry targsyslib (abt.FDb.targsyslib)
@@ -4883,12 +4626,6 @@ void abt::FDb_Uninit() {
     // skip destruction in global scope
 
     // abt.FDb.targsyslib.Uninit (Lary)  //
-    // skip destruction in global scope
-
-    // abt.FDb.ind_targinstall.Uninit (Thash)  //
-    // skip destruction of ind_targinstall in global scope
-
-    // abt.FDb.targinstall.Uninit (Lary)  //
     // skip destruction in global scope
 
     // abt.FDb.bh_syscmd.Uninit (Bheap)  //
@@ -5850,7 +5587,6 @@ void abt::FTarget_Init(abt::FTarget& target) {
     target.c_targdep_n = 0; // (abt.FTarget.c_targdep)
     target.c_targdep_max = 0; // (abt.FTarget.c_targdep)
     target.ood_visited = bool(false);
-    target.c_targinstall = NULL;
     target.c_targsyslib_elems = NULL; // (abt.FTarget.c_targsyslib)
     target.c_targsyslib_n = 0; // (abt.FTarget.c_targsyslib)
     target.c_targsyslib_max = 0; // (abt.FTarget.c_targsyslib)
@@ -5894,30 +5630,6 @@ void abt::FTarget_Uninit(abt::FTarget& target) {
 
     // abt.FTarget.c_targsrc.Uninit (Ptrary)  //
     abt::lpool_FreeMem(target.c_targsrc_elems, sizeof(abt::FTargsrc*)*target.c_targsrc_max); // (abt.FTarget.c_targsrc)
-}
-
-// --- abt.FTarginstall.msghdr.CopyOut
-// Copy fields out of row
-void abt::targinstall_CopyOut(abt::FTarginstall &row, dev::Targinstall &out) {
-    out.target = row.target;
-    out.comment = row.comment;
-}
-
-// --- abt.FTarginstall.msghdr.CopyIn
-// Copy fields in to row
-void abt::targinstall_CopyIn(abt::FTarginstall &row, dev::Targinstall &in) {
-    row.target = in.target;
-    row.comment = in.comment;
-}
-
-// --- abt.FTarginstall..Uninit
-void abt::FTarginstall_Uninit(abt::FTarginstall& targinstall) {
-    abt::FTarginstall &row = targinstall; (void)row;
-    ind_targinstall_Remove(row); // remove targinstall from index ind_targinstall
-    abt::FTarget* p_target = abt::ind_target_Find(row.target);
-    if (p_target)  {
-        c_targinstall_Remove(*p_target, row);// remove targinstall from index c_targinstall
-    }
 }
 
 // --- abt.FTargsrc.msghdr.CopyOut
@@ -5966,7 +5678,7 @@ void abt::FTargsrc_Uninit(abt::FTargsrc& targsrc) {
 // Copy fields out of row
 void abt::targsyslib_CopyOut(abt::FTargsyslib &row, dev::Targsyslib &out) {
     out.targsyslib = row.targsyslib;
-    out.uname = row.uname;
+    (void)Regx_ReadStrptrMaybe(out.uname, row.uname.expr);
     out.comment = row.comment;
 }
 
@@ -5974,7 +5686,7 @@ void abt::targsyslib_CopyOut(abt::FTargsyslib &row, dev::Targsyslib &out) {
 // Copy fields in to row
 void abt::targsyslib_CopyIn(abt::FTargsyslib &row, dev::Targsyslib &in) {
     row.targsyslib = in.targsyslib;
-    row.uname = in.uname;
+    (void)Regx_ReadStrptrMaybe(row.uname, in.uname.expr);
     row.comment = in.comment;
 }
 
@@ -5988,6 +5700,12 @@ algo::Smallstr16 abt::target_Get(abt::FTargsyslib& targsyslib) {
 algo::Smallstr50 abt::syslib_Get(abt::FTargsyslib& targsyslib) {
     algo::Smallstr50 ret(algo::Pathcomp(targsyslib.targsyslib, ".RR"));
     return ret;
+}
+
+// --- abt.FTargsyslib.uname.Print
+// Print back to string
+void abt::uname_Print(abt::FTargsyslib& targsyslib, algo::cstring &out) {
+    Regx_Print(targsyslib.uname, out);
 }
 
 // --- abt.FTargsyslib..Uninit
@@ -6138,7 +5856,6 @@ const char* abt::value_ToCstr(const abt::TableId& parent) {
         case abt_TableId_dev_Syslib        : ret = "dev.Syslib";  break;
         case abt_TableId_dev_Targdep       : ret = "dev.Targdep";  break;
         case abt_TableId_dev_Target        : ret = "dev.Target";  break;
-        case abt_TableId_dev_Targinstall   : ret = "dev.Targinstall";  break;
         case abt_TableId_dev_Targsrc       : ret = "dev.Targsrc";  break;
         case abt_TableId_dev_Targsyslib    : ret = "dev.Targsyslib";  break;
         case abt_TableId_dev_ToolOpt       : ret = "dev.ToolOpt";  break;
@@ -6296,19 +6013,6 @@ bool abt::value_SetStrptrMaybe(abt::TableId& parent, algo::strptr rhs) {
             }
             break;
         }
-        case 15: {
-            switch (ReadLE64(rhs.elems)) {
-                case LE_STR8('d','e','v','.','T','a','r','g'): {
-                    if (memcmp(rhs.elems+8,"install",7)==0) { value_SetEnum(parent,abt_TableId_dev_Targinstall); ret = true; break; }
-                    break;
-                }
-                case LE_STR8('d','e','v','.','t','a','r','g'): {
-                    if (memcmp(rhs.elems+8,"install",7)==0) { value_SetEnum(parent,abt_TableId_dev_targinstall); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
     }
     return ret;
 }
@@ -6353,10 +6057,7 @@ int main(int argc, char **argv) {
         abt::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
-        algo_lib::_db.epoll_fd = epoll_create(1);
-        if (algo_lib::_db.epoll_fd == -1) {
-            FatalErrorExit("epoll_create");
-        }
+        algo_lib::IohookInit();
         abt::MainArgs(algo_lib::_db.argc,algo_lib::_db.argv); // dmmeta.main:abt
     } catch(algo_lib::ErrorX &x) {
         prerr("abt.error  " << x); // there may be additional hints in DetachBadTags

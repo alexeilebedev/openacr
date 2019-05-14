@@ -171,6 +171,15 @@ Piping through sh produces the desired result:
 The beauty of `-cmd` is that it only creates one subprocess, the target shell. Executing
 one command per output row would have been prohibitively expensive.
 
+### Deleting Records From Stdin
+
+The options `-insert`, `-replace`, `-merge` all enable reading of stdin
+for a list of tuples. This input stream can contain special lines.
+
+Whenever a line starts with `acr.delete`, the corresponding record is deleted.
+
+Whenever a line starts with `acr.insert`, the corresponding record is inserted (subject to replace/merge semantics).
+
 ### Inserting a Column
 
 We now might want to add a column to the `a` table.

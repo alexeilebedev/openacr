@@ -23,18 +23,12 @@
 // Authors: alexei.lebedev
 // Recent Changes: alexei.lebedev mark.page
 //
-
-char __attribute__((weak))  _binary_gitinfo_txt_start[] = "Unversioned";
-char __attribute__((weak))  _binary_gitinfo_txt_end[] = ".";
-
 // Retrieve gitinfo string, e.g.
 // dev.gitinfo  gitinfo:2014-10-06.afa3edc.abt  author:alebedev@nyx.com  cfg:g++/release.Linux-x86_64  compver:4.4.6
-// This symbol is populated by abt using loader commands when building the executable
-// and reflects the most recent commit on top of which the build is being done
+
 strptr algo::gitinfo_Get() {
-    strptr result((char*)_binary_gitinfo_txt_start, _binary_gitinfo_txt_end - _binary_gitinfo_txt_start);
     // remove trailing \n
-    return Trimmed(result);
+    return Trimmed("dev.gitinfo  comment:'unversioned'");
 }
 
 // -----------------------------------------------------------------------------
@@ -53,7 +47,6 @@ strptr algo::gitinfo_Get() {
 // If dflt is omitted, it is considered to be an empty string.
 // All flags are optional, and default to false unless specified otherwise
 // If '...' appears in the string, parsing stops and syntax is marked as var-arg.
-// weak gitinfo string -- replaced during install with a git info string (see abt)
 // both arrays must be non-zero or one of them will go into the bss section, far away
 // from the other one (if not linked with git info)
 static void ScanSyntax(algo::Argtuple &argtuple, strptr syntax) {

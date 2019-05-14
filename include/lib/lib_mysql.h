@@ -25,8 +25,9 @@
 #include "include/algo.h"
 #include "include/gen/lib_mysql_gen.h"
 #include "include/gen/lib_mysql_gen.inl.h"
-typedef struct st_mysql MYSQL;
-typedef struct st_mysql_res MYSQL_RES;
+#include <mysql/mysql.h>
+//typedef struct st_mysql MYSQL;
+//typedef struct st_mysql_res MYSQL_RES;
 
 namespace lib_mysql { // update-hdr
     // Dear human:

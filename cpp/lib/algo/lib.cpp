@@ -27,7 +27,9 @@
 
 #include <arpa/inet.h>// inet_pton
 #include <sys/mman.h>// mmap,mlockall
+#ifndef __MACH__
 #include <sys/prctl.h>
+#endif
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
 
@@ -253,7 +255,7 @@ void algo::attr_Add(Tuple &T, strptr name, strptr value) {
 
 void algo_lib::fildes_Cleanup(algo_lib::FIohook &iohook) {
     if (iohook.in_epoll) {
-        IoHookRemove(iohook);
+        IohookRemove(iohook);
     }
     if (ValidQ(iohook.fildes) && !iohook.nodelete) {
         close(iohook.fildes.value);
@@ -430,75 +432,6 @@ void algo_lib::bh_timehook_Step() {
     }
 }
 
-static void SleepClocks(u64 clocks) {
-    if (clocks > 10000) {
-        u64 sleep_nsec = u64(clocks * algo_lib::_db.clocks_to_ns);
-        struct timespec t;
-        t.tv_sec = sleep_nsec / 1000000000;
-        t.tv_nsec = sleep_nsec % 1000000000;
-        nanosleep(&t,&t);
-    }
-}
-
-// -----------------------------------------------------------------------------
-
-static void DoEpoll(u64 sleep_clocks) {
-    // this is a heuristic -- do not call epoll on every cycle.
-    // epolls are expensive (650 cycles/call) with vma_lib, while main steps are cheap
-    // (200 cycles/step).
-    if ((sleep_clocks > 0) || (algo_lib::_db.giveup_count & 1) == 0) {
-        i32 sleep_ms = i32(i64_Min(sleep_clocks * algo_lib::_db.clocks_to_ms, 60000));
-        epoll_event events[20];
-        if (UNLIKELY(algo_lib::_db.sleep_roundup)) {
-            // Avoid taking 100% cpu when sleep is < 1 msec
-            sleep_ms += sleep_clocks > 0 && sleep_ms == 0;
-        }
-        int n = epoll_wait(algo_lib::_db.epoll_fd, events, _array_count(events), sleep_ms);
-        for (int i=0; i<n; i++) {
-            epoll_event &ev = events[i];
-            algo_lib::FIohook *iohook = (algo_lib::FIohook*)ev.data.ptr;
-            iohook->flags.value = 0;
-            if (ev.events & EPOLLIN) read_Set(iohook->flags, true);
-            if (ev.events & EPOLLOUT) write_Set(iohook->flags, true);
-            if (ev.events & EPOLLHUP) eof_Set(iohook->flags, true);
-            if (ev.events & EPOLLERR) err_Set(iohook->flags, true);
-            callback_Call(*iohook,*iohook);// immediate callback
-        }
-    }
-}
-
-// -----------------------------------------------------------------------------
-
-// give up unused time to the OS.
-void algo_lib::giveup_time_Step() {
-    // compute number of clocks to sleep before next scheduling cycle
-    // If there was no sleep on the previous cycle, the sleep is zero.
-    //   This last bit is important because it prevents deadlocks
-    //   when one step implicitly creates work for another step
-    //   that occurs before it in the main loop.
-    // Sleep will not extend beyond algo_lib::_db.limit
-    u64 limit = algo_lib::_db.limit;
-    u64 slack = u64_SubClip(u64_Min(algo_lib::_db.next_loop, limit), algo_lib::_db.clock);
-    u64 sleep_clocks = algo_lib::_db.last_sleep_clocks == 0 ? 0 : slack;
-    if (algo_lib::_db.n_iohook > 0) {
-        algo_lib::_db.giveup_count++;
-        DoEpoll(sleep_clocks);
-        // at this point, next_loop could be equal to _db.limit
-        // which would cause the main loop to exit; since we just executed
-        // an io wait, prevent that
-        algo_lib::_db.next_loop = algo_lib::_db.clock;
-    } else {
-        // no i/o is in progress, just give up time using nanosleep.
-        // however if next_loop is equal to limit, the loop is about to exit,
-        // so do nothing.
-        if (algo_lib::_db.next_loop < limit) {
-            SleepClocks(sleep_clocks);
-        }
-    }
-    algo_lib::_db.last_sleep_clocks = slack;
-    algo_lib::giveup_time_UpdateCycles();
-}
-
 // -----------------------------------------------------------------------------
 
 // Check signature on incoming data
@@ -541,7 +474,18 @@ const tempstr algo::GetDomainname() {
 
 // Die when parent process dies
 void algo_lib::DieWithParent() {
+#ifdef __MACH__
+    // sadly, there is no way to make a child exit
+    // when a parent dies, so structured concurrency
+    // cannot be implemented
+    // Even if we use kqueue to monitor for parent process exit,
+    //  this works only for processes that
+    // a) do not block, i.e. process events frequently, and
+    // b) for processes which are implemented with algo_lib.
+    //  Anything exec()'ed on top won't work.
+#else
     prctl(PR_SET_PDEATHSIG, SIGKILL);
+#endif
 }
 
 // Create temporary file

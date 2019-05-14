@@ -23,6 +23,11 @@
 // Authors: alexei.lebedev
 // Recent Changes: alexei.lebedev
 //
+
+#ifdef __MACH__
+#include <sys/sysctl.h>
+#endif
+
 // -----------------------------------------------------------------------------
 
 static double GetCpuHzSysdev(void) {
@@ -36,21 +41,15 @@ static double GetCpuHzSysdev(void) {
 // -----------------------------------------------------------------------------
 
 static double GetCpuHzCpuinfo(strptr cpuinfo) {
-    // look in /proc/cpuinfo
-    StringIter iter(cpuinfo);
     double mhz = 0;
-    while (true) {
-        // on some linux systems, the spelling is MHz, others it's Mhz
-        strptr text = "cpu Mhz";
-        int idx = FindFrom(iter.expr, text, iter.index, false /*case-insensitive */);
-        if (idx !=-1) {
-            iter.index = idx + elems_N(text);
+    ind_beg(Line_curs,line,cpuinfo) {
+        if (StartsWithQ(line, "cpu MHz\t", false)) {
+            algo::StringIter iter(Trimmed(Pathcomp(line,":LR")));
+            if (algo::TryParseDouble(iter,mhz)) {
+                break;
+            }
         }
-        iter.Ws();
-        if (idx != -1 && SkipChar(iter, ':') && TryParseDouble(iter, mhz)) {
-            break;
-        }
-    }
+    }ind_end;
     return mhz * 1e6;
 }
 
@@ -74,30 +73,31 @@ static void CheckConstantTsc(strptr cpuinfo) {
 
 // -----------------------------------------------------------------------------
 
-static double ComputeCpuHz() {
+void algo_lib::InitCpuHz() {
+    double hz = 0;
+#ifdef __MACH__
+    uint64_t freq = 0;
+    size_t size = sizeof(freq);
+    if (sysctlbyname("hw.cpufrequency", &freq, &size, NULL, 0) == 0) {
+        hz = freq;
+    }
+    (void)CheckConstantTsc;
+#else
     tempstr cpuinfo(FileToString("/proc/cpuinfo", FileFlags()));
-    double hz = GetCpuHzSysdev();
+    hz = GetCpuHzSysdev();
     if (hz == 0) {
         hz = GetCpuHzCpuinfo(cpuinfo);
     }
     CheckConstantTsc(cpuinfo);
     if (!(hz>10000000 && hz<10000000000ULL)) {
-        FatalErrorExit(Zeroterm(tempstr()<<"Unlikely value for cpu_hz: "<<hz));
+        FatalErrorExit(Zeroterm(tempstr()<<"algo_lib.bad_hz"
+                                <<Keyval("hz",hz)));
     }
-    return hz;
-}
-
-// -----------------------------------------------------------------------------
-
-u64 algo::get_cpu_hz_int(void) {
-    if (UNLIKELY(!algo_lib::_db.cpu_hz)) {// cache the result
-        algo_lib::_db.cpu_hz = ComputeCpuHz();
-    }
-    return algo_lib::_db.cpu_hz;
-}
-
-// -----------------------------------------------------------------------------
-
-double algo::get_cpu_hz(void) {
-    return (double)get_cpu_hz_int();
+#endif
+    algo_lib::_db.hz = hz;//double
+    algo_lib::_db.cpu_hz = hz;//int
+    algo_lib::_db.clocks_to_ms = 1000.0 / algo_lib::_db.hz;
+    algo_lib::_db.clocks_to_ns = 1000000000.0 / algo_lib::_db.hz;
+    algo_lib::_db.clock.value  = get_cycles();
+    algo_lib::_db.start_clock  = algo_lib::_db.clock;
 }

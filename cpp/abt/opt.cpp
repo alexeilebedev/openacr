@@ -72,18 +72,20 @@ tempstr abt::EvalSrcfileOpts(abt::FTarget &target, abt::FSrcfile &srcfile) {
     // use precompiled header in this target
     ind_beg(abt::target_c_targdep_curs, dep,target) {
         if (dep.p_parent->p_ns->nstype == dmmeta_Nstype_nstype_pch) {
+            // e.g.
+            // src.srcfile == include/algo_pch.hpp
+            // src.objkey == build/Linux-g++.release-x86_64/include.algo_pch.hpp.gch
             abt::FSrcfile& src = *c_srcfile_Find(*dep.p_parent, 0);
-            opts << " -iquote "<<GetDirName(src.objpath);
-            if ( abt::_db.cmdline.compiler != "clang++" ) {
-                opts << " -include "<<src.objkey;
+            if (abt::_db.cmdline.compiler == dev_Compiler_compiler_clangPP) {
+                opts << " -include-pch "<<src.objpath;
             } else {
-                opts << " -include include/algo_pch.h ";
+                opts << " -iquote "<<GetDirName(src.objpath);
+                opts << " -include "<<src.objkey;
             }
             // This is a hack to make coverity happy, because coverity doesn't recognize gcc pch.
-            if (abt::_db.cmdline.coverity && (range_N(substr_FindFirst(src.objkey, "include.algo_pch.h")) > 0)) {
-                opts << " -include include/algo_pch.h ";
+            if (abt::_db.cmdline.coverity && PchQ(src)) {
+                opts << " -include "<<src.srcfile;
             }
-
         }
     }ind_end;
 
@@ -125,14 +127,10 @@ static void ComputeLibdep(abt::FTarget &target) {
 // -----------------------------------------------------------------------------
 tempstr abt::EvalLinkCmdline(abt::FTarget &target) {
     tempstr cmd;
-    //    cmd << abt::_db.cmdline.compiler <<" -o " <<target.outfile;            // create executable
     cmd << abt::_db.c_compiler->compiler <<" -o " <<target.outfile;            // create executable
 
-    // link with gitinfo object -- this will replace weak symbol in algo/algo_arg.cpp and provide git info
-    cmd << " "<< abt::_db.c_compiler->dflt <<"."<<abt::_db.cmdline.cfg<<"-"<<abt::_db.cmdline.arch<<"/gitinfo.o";
-
     ind_beg(abt::target_c_srcfile_curs, srcfile, target) {
-        if (GetFileExt(srcfile.srcfile) != ".h") {
+        if (!HeaderExtQ(GetFileExt(srcfile.srcfile))) {
             cmd << " "<< srcfile.objpath;
         }
     }ind_end;

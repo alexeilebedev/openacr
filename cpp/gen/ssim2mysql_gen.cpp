@@ -2571,7 +2571,7 @@ void ssim2mysql::in_buf_BeginRead(ssim2mysql::FInput& input, algo::Fildes fd) {
     IOEvtFlags flags;
     read_Set(flags, true);
     if (input.in_buf_epoll_enable) {
-        algo_lib::IoHookAdd(input.in_buf_iohook, flags);
+        algo_lib::IohookAdd(input.in_buf_iohook, flags);
     } else {
         ssim2mysql::cd_input_line_Insert(input);
     }
@@ -3318,10 +3318,7 @@ int main(int argc, char **argv) {
         ssim2mysql::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
-        algo_lib::_db.epoll_fd = epoll_create(1);
-        if (algo_lib::_db.epoll_fd == -1) {
-            FatalErrorExit("epoll_create");
-        }
+        algo_lib::IohookInit();
         ssim2mysql::MainArgs(algo_lib::_db.argc,algo_lib::_db.argv); // dmmeta.main:ssim2mysql
     } catch(algo_lib::ErrorX &x) {
         prerr("ssim2mysql.error  " << x); // there may be additional hints in DetachBadTags

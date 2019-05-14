@@ -1,9 +1,13 @@
 #!/usr/bin/env perl
-if (!-x "dflt.release-x86_64/abt") {
-    system("bin/abt-bootstrap && bin/abt -install % -report:N");
+use strict;
+# check if abt exists
+if (system("abt --version >/dev/null 2>/dev/null") != 0) {
+    print("# abt doesn't seem to exist. selecting bootstrap file...\n");
+    system("bin/select-bootstrap")==0 or die "bin/select-bootstrap: $?";
+    system("bin/abt", "-build", "src_hdr");# build this other tool
 }
-$F = shift @ARGV;
+my $F = shift @ARGV;
 $F = "%" if !$F;
 # calls src_func -updateproto
 system("bin/src_hdr", "-write");
-system("bin/abt", "-install", $F);
+system("bin/abt", "-build", $F, @ARGV);

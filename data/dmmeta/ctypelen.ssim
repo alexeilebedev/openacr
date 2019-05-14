@@ -1,7 +1,7 @@
 dmmeta.ctypelen  ctype:abt.FArch  len:216  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:abt.FCfg  len:216  alignment:8  padbytes:4
-dmmeta.ctypelen  ctype:abt.FCompiler  len:368  alignment:8  padbytes:0
-dmmeta.ctypelen  ctype:abt.FDb  len:5616  alignment:8  padbytes:85
+dmmeta.ctypelen  ctype:abt.FCompiler  len:320  alignment:8  padbytes:4
+dmmeta.ctypelen  ctype:abt.FDb  len:5320  alignment:8  padbytes:81
 dmmeta.ctypelen  ctype:abt.FFilestat  len:48  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:abt.FInclude  len:400  alignment:8  padbytes:12
 dmmeta.ctypelen  ctype:abt.FNs  len:232  alignment:8  padbytes:2
@@ -10,10 +10,9 @@ dmmeta.ctypelen  ctype:abt.FSyscmd  len:184  alignment:8  padbytes:21
 dmmeta.ctypelen  ctype:abt.FSyscmddep  len:40  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:abt.FSyslib  len:216  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:abt.FTargdep  len:224  alignment:8  padbytes:11
-dmmeta.ctypelen  ctype:abt.FTarget  len:256  alignment:8  padbytes:20
-dmmeta.ctypelen  ctype:abt.FTarginstall  len:184  alignment:8  padbytes:6
+dmmeta.ctypelen  ctype:abt.FTarget  len:248  alignment:8  padbytes:20
 dmmeta.ctypelen  ctype:abt.FTargsrc  len:280  alignment:8  padbytes:9
-dmmeta.ctypelen  ctype:abt.FTargsyslib  len:272  alignment:8  padbytes:7
+dmmeta.ctypelen  ctype:abt.FTargsyslib  len:320  alignment:8  padbytes:11
 dmmeta.ctypelen  ctype:abt.FToolOpt  len:542  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:abt.FUname  len:216  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:acr.CtypeTopoKey  len:8  alignment:4  padbytes:0
@@ -59,7 +58,7 @@ dmmeta.ctypelen  ctype:acr_compl.FSsimfile  len:120  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:acr_compl.Shellqtype  len:1  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:acr_ed.FCstr  len:205  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:acr_ed.FCtype  len:248  alignment:8  padbytes:4
-dmmeta.ctypelen  ctype:acr_ed.FDb  len:4760  alignment:8  padbytes:42
+dmmeta.ctypelen  ctype:acr_ed.FDb  len:4744  alignment:8  padbytes:42
 dmmeta.ctypelen  ctype:acr_ed.FField  len:664  alignment:8  padbytes:17
 dmmeta.ctypelen  ctype:acr_ed.FFprefix  len:224  alignment:8  padbytes:5
 dmmeta.ctypelen  ctype:acr_ed.FListtype  len:176  alignment:8  padbytes:6
@@ -433,7 +432,7 @@ dmmeta.ctypelen  ctype:amc.Funcarg  len:56  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:amc.Genfield  len:48  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:amc.Genpnew  len:104  alignment:8  padbytes:13
 dmmeta.ctypelen  ctype:amc_gc.Acr  len:256  alignment:8  padbytes:4
-dmmeta.ctypelen  ctype:amc_gc.Check  len:1072  alignment:8  padbytes:12
+dmmeta.ctypelen  ctype:amc_gc.Check  len:1056  alignment:8  padbytes:12
 dmmeta.ctypelen  ctype:amc_gc.FDb  len:272  alignment:8  padbytes:3
 dmmeta.ctypelen  ctype:amc_vis.FCtype  len:280  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:amc_vis.FDb  len:2912  alignment:8  padbytes:39
@@ -526,7 +525,9 @@ dmmeta.ctypelen  ctype:atf_amc.VarlenAlloc  len:4  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.VarlenExtern  len:4  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.VarlenH  len:4  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.VarlenK  len:4  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:atf_norm.FDb  len:1488  alignment:8  padbytes:19
+dmmeta.ctypelen  ctype:atf_norm.FBuilddir  len:204  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:atf_norm.FCfg  len:204  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:atf_norm.FDb  len:2016  alignment:8  padbytes:27
 dmmeta.ctypelen  ctype:atf_norm.FNormcheck  len:216  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:atf_norm.FNs  len:232  alignment:8  padbytes:2
 dmmeta.ctypelen  ctype:atf_norm.FReadme  len:354  alignment:1  padbytes:0
@@ -549,7 +550,7 @@ dmmeta.ctypelen  ctype:atf_unit.TypeB  len:8  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:atfdb.Amctest  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atfdb.Normcheck  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atfdb.Unittest  len:204  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:command.abt  len:504  alignment:8  padbytes:18
+dmmeta.ctypelen  ctype:command.abt  len:488  alignment:8  padbytes:19
 dmmeta.ctypelen  ctype:command.acr  len:176  alignment:8  padbytes:25
 dmmeta.ctypelen  ctype:command.acr_compl  len:56  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:command.acr_ed  len:1384  alignment:8  padbytes:46
@@ -578,7 +579,7 @@ dmmeta.ctypelen  ctype:dev.Arch  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Badline  len:458  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Builddir  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Cfg  len:204  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:dev.Compiler  len:360  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:dev.Compiler  len:308  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Gitfile  len:202  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Gitinfo  len:352  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Include  len:355  alignment:1  padbytes:0
@@ -592,9 +593,8 @@ dmmeta.ctypelen  ctype:dev.Syscmddep  len:16  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:dev.Syslib  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Targdep  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Target  len:18  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:dev.Targinstall  len:170  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Targsrc  len:254  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:dev.Targsyslib  len:256  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:dev.Targsyslib  len:304  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:dev.ToolOpt  len:542  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Uname  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Anonfld  len:254  alignment:1  padbytes:0

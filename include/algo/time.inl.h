@@ -25,6 +25,18 @@
 
 #pragma once
 
+// -----------------------------------------------------------------------------
+
+// get CPU HZ value as u64
+inline u64 algo::get_cpu_hz_int() {
+    return algo_lib::_db.cpu_hz;
+}
+
+// get CPU HZ value as double
+inline double algo::get_cpu_hz() {
+    return algo_lib::_db.hz;
+}
+
 // cpu_hz (untyped SchedTime)
 // use this for timestamps.
 // these calls may be pipelined and reordered, so measuring instruction

@@ -34,6 +34,12 @@
 
 // -----------------------------------------------------------------------------
 
+bool abt::HeaderExtQ(strptr ext) {
+    return ext == ".h" || ext == ".hpp";
+}
+
+// -----------------------------------------------------------------------------
+
 static abt::FFilestat &Filestat(strptr fname) {
     abt::FFilestat *filestat=abt::ind_filestat_Find(fname);
     if (!filestat) {
@@ -64,12 +70,12 @@ i64 abt::execkey_Get(abt::FSyscmd &cmd) {
 static bool SourceQ(abt::FTargsrc &targsrc) {
     return ext_Get(targsrc)=="cpp"
         || ext_Get(targsrc)=="c"
-        || targsrc.p_target->p_ns->nstype == "pch";
+        || targsrc.p_target->p_ns->nstype == dmmeta_Nstype_nstype_pch;
 }
 
 // -----------------------------------------------------------------------------
 
-static abt::FSyscmd& NewCmd(abt::FSyscmd *start, abt::FSyscmd *end) {
+abt::FSyscmd& abt::NewCmd(abt::FSyscmd *start, abt::FSyscmd *end) {
     abt::FSyscmd *cmd = &abt::ind_syscmd_GetOrCreate(abt::syscmd_N());
     if (start) {
         abt::syscmddep_InsertMaybe(dev::Syscmddep(cmd->rowid, start->rowid));//child,parent
@@ -121,8 +127,10 @@ static void Main_ComputeAlldep(abt::FTarget &target, abt::FTarget &parent) {
 static void Main_ComputeAlllib() {// transitively collect all libraries for target
     ind_beg(abt::_db_target_curs, target, abt::_db) {
         ind_beg(abt::target_c_alldep_curs, dep, target) {
-            ind_beg(abt::target_c_targsyslib_curs, targsyslib, dep) if (targsyslib.uname == abt::_db.cmdline.uname) {
-                c_alllib_ScanInsertMaybe(target,*targsyslib.p_syslib);
+            ind_beg(abt::target_c_targsyslib_curs, targsyslib, dep) {
+                if (Regx_Match(targsyslib.uname, abt::_db.cmdline.uname)) {
+                    c_alllib_ScanInsertMaybe(target,*targsyslib.p_syslib);
+                }
             }ind_end;
         }ind_end;
     }ind_end;
@@ -190,20 +198,36 @@ static abt::FInclude *FindFile(abt::FSrcfile &srcfile, strptr incl, bool is_sys)
 // -----------------------------------------------------------------------------
 
 static void Main_ComputeSysincl() {
-    tempstr text(SysEval("cpp -x c++ -v </dev/null 2>&1",FailokQ(false),1024*1024));
-    bool inside = false;
-    ind_beg(Line_curs,line,text) {
-        if (StartsWithQ(line, "#include <...>")) {
-            inside = true;
-        }
-        if (StartsWithQ(line, "End of search list")) {
-            inside = false;
-        }
-        strptr path = Trimmed(line);
-        if (inside && Filestat(path).isdir) {
-            abt::sysincl_Alloc() = Trimmed(path);
-        }
-    }ind_end;
+    bool success=false;
+    if (abt::_db.cmdline.printcmd) {
+        success=true;
+        // do nothing -- system includes won't be used
+    } else {
+        // this it he command line that returns the list
+        // of system include paths on this machine
+        tempstr cmd;
+        cmd << abt::_db.cmdline.compiler << " -x c++ -E -v - </dev/null 2>&1";
+        tempstr text(SysEval(cmd,FailokQ(true),1024*1024));
+        // parse it for the paths...
+        bool inside = false;
+        ind_beg(Line_curs,line,text) {
+            if (StartsWithQ(line, "#include <...>")) {
+                inside = true;
+            }
+            if (StartsWithQ(line, "End of search list")) {
+                inside = false;
+                success = true;
+            }
+            strptr path = Trimmed(line);
+            if (inside && Filestat(path).isdir) {
+                abt::sysincl_Alloc() = Trimmed(path);
+            }
+        }ind_end;
+    }
+    vrfy(success,
+         tempstr("abt.sysincl_warning")
+         <<Keyval("compiler",abt::_db.cmdline.compiler)
+         <<Keyval("comment", "cannot compute list of system include paths"));
 }
 
 // -----------------------------------------------------------------------------
@@ -222,7 +246,6 @@ static void line_n_Update(abt::FSrcfile *srcfile) {
 // -----------------------------------------------------------------------------
 
 static void ScanHeaders(abt::FSrcfile *srcfile) {
-    //prlog("scan headers "<<srcfile->srcfile);
     MmapFile file;
     MmapFile_Load(file,srcfile->srcfile);
     u64 bytes_not_scanned = 0;
@@ -234,18 +257,11 @@ static void ScanHeaders(abt::FSrcfile *srcfile) {
             bool is_quote = SkipChar(line.Ws(), '\"');
             bool is_sys   = SkipChar(line.Ws(), '<');
             is_include = is_include && (is_quote || is_sys);
-            // do not evaluate headers included from system dirs
-            is_include = is_include && !StartsWithQ(srcfile->srcfile, "/usr/");
-
-            if (is_include) {
+            if (is_include && !is_sys) {
                 strptr incl(GetTokenChar(line, is_quote ? '\"' : '>'));
                 int lineno = ind_curs(curs).i + 1;
                 abt::FInclude *include = FindFile(*srcfile,incl,is_sys);
                 if (!include && !is_sys) {
-                    prerr(srcfile->srcfile<<":"<<lineno<<": failed to locate file "
-                          <<Keyval("file",incl));
-                }
-                if (!include) {
                     prerr("abt.badinclude"
                           <<Keyval("location", tempstr()<<srcfile->srcfile<<":"<<lineno)
                           <<Keyval("include",incl)
@@ -269,23 +285,42 @@ static void ScanHeaders(abt::FSrcfile *srcfile) {
 
 // -----------------------------------------------------------------------------
 
+// compute obj key by replace path components
+// with .
+// So, cpp/abt/main.cpp becomes cpp.abt.main.cpp
+// Next step will be to replace the extension
+tempstr abt::GetObjkey(strptr source) {
+    tempstr ret(source);
+    Translate(ret, "/", ".");
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Return true if this file is a precompiled header file
+bool abt::PchQ(abt::FSrcfile &srcfile) {
+    return srcfile.p_target && srcfile.p_target->p_ns->nstype == dmmeta_Nstype_nstype_pch;
+}
+
+// -----------------------------------------------------------------------------
+
 static void ComputeObjpath(abt::FSrcfile &srcfile) {
-    // compute obj key
-    srcfile.objkey = srcfile.srcfile;
-    Translate(srcfile.objkey, "/", ".");
-    // compute obj path
+    srcfile.objkey = abt::GetObjkey(srcfile.srcfile);
+    // Replace extension
     strptr tgt_ext;
     strptr ext = GetFileExt(srcfile.srcfile);
     if (ext == ".cpp" || ext == ".c") {
         tgt_ext = ".o";
     } else if (ext == ".rc") {
         tgt_ext = ".res";
-    } else if (ext == ".h" && (srcfile.p_target && srcfile.p_target->p_ns->nstype == dmmeta_Nstype_nstype_pch)) {
+    } else if (abt::PchQ(srcfile)) {
+        // normally we don't compile headers; but
+        // we do compile pch headers
         tgt_ext = ".gch";
     }
     if (ch_N(tgt_ext)) {
         srcfile.objpath << abt::_db.cmdline.out_dir << MaybeDirSep;
-        if (ext != ".h") {
+        if (!abt::HeaderExtQ(ext)) {
             srcfile.objpath << StripExt(srcfile.objkey);
         } else {
             srcfile.objpath << srcfile.objkey;
@@ -301,7 +336,9 @@ static void Main_ReadSrcfile() {
     // walk over target sources; each file corresponds to a single file; create Srcfile records
     ind_beg(abt::_db_targsrc_curs, targsrc, abt::_db) if (SourceQ(targsrc)) {
         tempstr pathname(src_Get(targsrc));
-        vrfy(Filestat(pathname).exists, tempstr() << "targsrc:"<<src_Get(targsrc)<<": file not found");
+        vrfy(Filestat(pathname).exists, tempstr()
+             <<Keyval("src",src_Get(targsrc))
+             <<Keyval("comment","file not found"));
         abt::FSrcfile& src_rec = abt::ind_srcfile_GetOrCreate(pathname);
         src_rec.p_target = targsrc.p_target;
         c_srcfile_Insert(*targsrc.p_target, src_rec);
@@ -399,32 +436,29 @@ static void Main_ListIncl() {
 // -----------------------------------------------------------------------------
 
 static void Main_Testgen(algo_lib::Replscope &R) {
-    tempstr cmd_rsync;
-    tempstr cmd_gen;
-    tempstr cmd_diff;
-    tempstr cmd_build;
-    tempstr cmd_test;
-
-    Ins(&R,cmd_rsync   ,"rsync --delete -a bin cpp dflt.* include extern data lock .testgen");
-    Ins(&R,cmd_gen     ,"$dflt.$cfg-$arch/amc -in_dir:data -out_dir:.testgen/");
-    Ins(&R,cmd_diff,
-        "(diff -I signature -u -r ./cpp/gen .testgen/cpp/gen; "
-        "diff -I signature -u -r ./include/gen .testgen/include/gen) | hilite -d | limit-output 10000");
-
-    Ins(&R,cmd_build   ,"cd .testgen && bin/abt -uname:$uname -compiler:$compiler -cfg:$cfg -arch:$arch %");
-    Ins(&R,cmd_test    ,"cd .testgen && $dflt.$cfg-$arch/atf_unit % >/dev/null 2>&1 || $dflt.$cfg-$arch/atf_unit %");
-
-    prlog("");
-    prlog("abt.testgen  Updating sandbox area, compiling newly generated code");
-    SysCmd(cmd_rsync, FailokQ(false), DryrunQ(abt::_db.cmdline.dry_run),EchoQ(true));
-    SysCmd(cmd_gen  , FailokQ(false), DryrunQ(abt::_db.cmdline.dry_run),EchoQ(true));
-    SysCmd(cmd_diff , FailokQ(true) , DryrunQ(abt::_db.cmdline.dry_run),EchoQ(true));
-    prlog("");
-    prlog("abt.testgen  Running unit tests");
-    SysCmd(cmd_build, FailokQ(false), DryrunQ(abt::_db.cmdline.dry_run),EchoQ(true));
-    SysCmd(cmd_test , FailokQ(false), DryrunQ(abt::_db.cmdline.dry_run),EchoQ(true));
-    prlog("");
-    prlog("abt.testgen  Looks good.");
+    Set(R, "$sandbox", "temp/testgen");
+    cstring cmd;
+    Ins(&R,cmd, "set -e");// exit on first error
+    if (algo_lib::_db.cmdline.verbose) {
+        Ins(&R,cmd, "set -x");
+    }
+    Ins(&R,cmd, "echo '# ... Updating testgen area'");
+    Ins(&R,cmd, "mkdir -p $sandbox");
+    Ins(&R,cmd, "rsync --delete -a bin cpp build include extern data lock $sandbox/");
+    Ins(&R,cmd, "mkdir -p $sandbox/temp");
+    Ins(&R,cmd, "echo '# ... Running newly built amc in testgen area'");
+    Ins(&R,cmd, "$out_dir/amc -in_dir:data -out_dir:$sandbox");
+    Ins(&R,cmd, "echo '# ... Here are the diffs'");
+    Ins(&R,cmd, "(diff -I signature -u -r ./cpp $sandbox/cpp; "
+        "diff -I signature -u -r ./include $sandbox/include) | hilite -d | limit-output 10000");
+    Ins(&R,cmd, "echo '# ... Entering sandbox'");
+    Ins(&R,cmd, "cd $sandbox");
+    Ins(&R,cmd, "echo '# ... Building newly generated code'");
+    Ins(&R,cmd, "bin/abt -uname:$uname -compiler:$compiler -cfg:$cfg -arch:$arch %");
+    Ins(&R,cmd, "echo '# ... Running unit tests'");
+    Ins(&R,cmd, "$out_dir/atf_unit % > temp/atf_unit.out 2>&1 || cat temp/atf_unit.out");
+    Ins(&R,cmd, "echo '# ... Everything looks good'");
+    SysCmd(cmd,FailokQ(false));
 }
 
 // -----------------------------------------------------------------------------
@@ -442,55 +476,6 @@ static void Main_Helpscreen() {
         all_tgts << target.target;
     }ind_end;
     prlog("all targets:" <<all_tgts);
-    prerr("groups");
-    prerr(tbl);
-}
-
-// -----------------------------------------------------------------------------
-
-static void Main_CreateGitinfo(algo_lib::Replscope &R, abt::FSyscmd *start, abt::FSyscmd *end) {
-    // check to see if ANY target is out of date first.
-    bool have_ood=false;
-    ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) {
-        if (target.ood && target.p_ns->nstype == dmmeta_Nstype_nstype_exe) {
-            have_ood=true;
-            break;
-        }
-    }ind_end;
-
-    // Yes -- create gitinfos...
-    if (have_ood) {
-        tempstr cmpver = SysEval(Subst(R,"$compiler --version"), FailokQ(false), 1024);
-        StringIter cmpver_iter(cmpver);//g++ (GCC) 4.8.3 20140911 (Red Hat 4.8.3-9
-        strptr compver;
-        compver=GetWordCharf(cmpver_iter);// g++
-        compver=GetWordCharf(cmpver_iter);// (GCC)
-        compver=GetWordCharf(cmpver_iter);// 4.8.3
-        Set(R, "$compver", compver);
-
-        Tuple tuple;
-        Tuple_ReadStrptr(tuple,SysEval("git log -1 --date=short --format='date:\"%ad\"  hex:\"%h\"  email:\"%ae\"'"
-                                       ,FailokQ(true),1024*10),true);
-        Set(R, "$date", attr_GetString(tuple, "date"));
-        Set(R, "$hex", attr_GetString(tuple, "hex"));
-
-        tempstr gitinfo;
-        PrintAttr(gitinfo,"","dev.gitinfo");
-        if (!abt::_db.cmdline.nover){
-            PrintAttrSpace(gitinfo, "gitinfo", tempstr() << attr_GetString(tuple,"date") <<"." << attr_GetString(tuple,"hex"));
-            PrintAttrSpace(gitinfo, "author", attr_GetString(tuple,"email"));
-            PrintAttrSpace(gitinfo, "cfg", Subst(R, "$compiler/$compver/$cfg.$uname-$arch"));
-            PrintAttrSpace(gitinfo, "package", abt::_db.cmdline.package);
-        }
-        abt::FSyscmd *cmd = &NewCmd(start,end);
-        cmd->redirect = false;
-        cmd->command
-            << "echo ";
-        strptr_PrintBash(gitinfo,cmd->command);
-        cmd->command << " > gitinfo.txt";
-        cmd->command << "; ld -r -b binary gitinfo.txt -o "<<abt::_db.cmdline.out_dir<<"/gitinfo.o";
-        cmd->command << "; rm -f gitinfo.txt";
-    }
 }
 
 // -----------------------------------------------------------------------------
@@ -514,6 +499,19 @@ static void Main_CalcPrecomp() {
 
 // -----------------------------------------------------------------------------
 
+// Create commands between START and END for building target TARGET.
+//
+// compilation workflow for each target:
+// cmd_start : start
+// comptarg  : begin of compile all files
+// linktarg  : begin of link all files
+// end       : end of target workflow
+//
+// start -> compile -> link -> end
+//
+// all actual commands are allocated to a range between two nodes,
+// for instance {start,comptarg}, or {comp,linktarg}
+//
 static void Main_CreateCmds(algo_lib::Replscope &R, abt::FTarget &target, abt::FSyscmd *start, abt::FSyscmd *end) {
     abt::FSyscmd& targ_start    = NewCmd(start,end);
     abt::FSyscmd& targ_comptarg = NewCmd(&targ_start,end);
@@ -578,8 +576,10 @@ static void Main_CreateCmds(algo_lib::Replscope &R, abt::FTarget &target, abt::F
         cmd_ar.command << "rm -f "<<target.outfile;
         cmd_ar.command << "; ar cr "<<target.outfile;
         cmd_ar.outfile = target.outfile;
-        ind_beg(abt::target_c_srcfile_curs, srcfile, target) if (GetFileExt(srcfile.srcfile) != ".h") {
-            cmd_ar.command << " "<< srcfile.objpath;
+        ind_beg(abt::target_c_srcfile_curs, srcfile, target) {
+            if (!abt::HeaderExtQ(GetFileExt(srcfile.srcfile))) {
+                cmd_ar.command << " "<< srcfile.objpath;
+            }
         }ind_end;
 
         abt::FSyscmd& cmd_ranlib = NewCmd(&cmd_ar, &targ_end);
@@ -596,28 +596,48 @@ static void Main_CreateCmds(algo_lib::Replscope &R, abt::FTarget &target, abt::F
     if (abt::_db.cmdline.install && target.p_ns->nstype == dmmeta_Nstype_nstype_exe) {
         abt::FSyscmd& cmd_inst = NewCmd(&targ_insttarg, &targ_end);
         cmd_inst.redirect = false;
-        if (target.c_targinstall) {
-            Ins(&R, cmd_inst.command, "cp -f $dflt.$cfg-$arch/$target bin/$uname-$arch/");
-        } else {
-            Ins(&R, cmd_inst.command, "ln -sf ../$dflt.$cfg-$arch/$target bin/");
-        }
+        Ins(&R, cmd_inst.command, "ln -sf ../build/$cfg/$target bin/$target");
     }
 }
 
 // -----------------------------------------------------------------------------
 
-static void Main_GuessUname() {
-    if (!ch_N(abt::_db.cmdline.uname))    abt::_db.cmdline.uname    = getenv("UNAME");
-    if (!ch_N(abt::_db.cmdline.compiler)) abt::_db.cmdline.compiler = getenv("COMPILER");
-    if (!ch_N(abt::_db.cmdline.cfg))      abt::_db.cmdline.cfg      = getenv("CFG");
-    if (!ch_N(abt::_db.cmdline.arch))     abt::_db.cmdline.arch     = getenv("ARCH");
+static tempstr ReadLink(strptr path) {
+    tempstr ret;
+    char buf[1024];
+    int n=readlink(Zeroterm(tempstr(path)),buf,sizeof(buf));
+    if (n>0) {
+        ret << strptr(buf,n);
+    }
+    return ret;
+}
 
-    if (!ch_N(abt::_db.cmdline.compiler)) abt::_db.cmdline.compiler = "g++"; // default compiler
+// -----------------------------------------------------------------------------
 
-    // pick a default config
+static void MaybeSetVar(algo::Smallstr50 &var, strptr value, strptr source) {
+    if (var=="" && value != "") {
+        var = value;
+        verblog("# abt: selecting "<<source<<" = "<<value);
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+static void Main_GuessParams() {
+    // pick a default config (release most of the time)
     if (!ch_N(abt::_db.cmdline.cfg)) {
         abt::_db.cmdline.cfg = abt::_db.cmdline.testgen ? dev_Cfg_cfg_debug : dev_Cfg_cfg_release;
     }
+
+    // fill in uname, compiler, arch from defaults
+    // provided by bootstrap
+    // For instance, build/release -> Linux-clang++.release-x86_64
+    // means that Linux,clang++ and x86_64 can be guessed
+    // from cfg parameter alone
+    tempstr default_builddir(ReadLink(tempstr("build/")<<abt::_db.cmdline.cfg));
+    MaybeSetVar(abt::_db.cmdline.uname, dev::Builddir_uname_Get(default_builddir), "uname from softlink in build/");
+    MaybeSetVar(abt::_db.cmdline.compiler, dev::Builddir_compiler_Get(default_builddir), "compiler from softlink in build/");
+    MaybeSetVar(abt::_db.cmdline.arch, dev::Builddir_arch_Get(default_builddir), "arch from softlink in build/");
 
     if (!ch_N(abt::_db.cmdline.arch) || !ch_N(abt::_db.cmdline.uname)) {
         struct utsname un;
@@ -766,6 +786,18 @@ static void RewriteOpts() {
 
 // -----------------------------------------------------------------------------
 
+// Return a canonic name describing current configuration
+// This is not the actual build directory. That one is called "out_dir".
+// Builddir is just the primary key of a build directory
+tempstr abt::GetBuilddir() {
+    return dev::Builddir_Concat_uname_compiler_cfg_arch(abt::_db.cmdline.uname
+                                                        ,abt::_db.cmdline.compiler
+                                                        ,abt::_db.cmdline.cfg
+                                                        ,abt::_db.cmdline.arch);
+}
+
+// -----------------------------------------------------------------------------
+
 static void Main_ShowOod() {
     bool realexec = !abt::_db.cmdline.dry_run && !abt::_db.cmdline.printcmd;
     int ood_pch=0, ood_src=0, ood_lib=0, ood_exe=0;
@@ -779,10 +811,7 @@ static void Main_ShowOod() {
     }ind_end;
     if (realexec && abt::zs_sel_target_N() > 0 && abt::_db.cmdline.report) {
         prlog("abt.config"
-              <<Keyval("cfg",abt::_db.cmdline.cfg)
-              <<Keyval("uname",abt::_db.cmdline.uname)
-              <<Keyval("arch",abt::_db.cmdline.arch)
-              <<Keyval("compiler",abt::_db.cmdline.compiler)
+              <<Keyval("config",abt::GetBuilddir())
               <<Keyval("cache",(abt::_db.ccache ? "ccache" : abt::_db.gcache ? "gcache" : "none"))
               <<Keyval("out_dir",abt::_db.cmdline.out_dir)
               );
@@ -835,38 +864,77 @@ static void Main_BuildParams(algo_lib::Replscope& R) {
     vrfy(abt::_db.c_compiler , tempstr()<<"abt.compiler bad choice :"<<abt::_db.cmdline.compiler);
     // pick default output directory
     if (!ch_N(abt::_db.cmdline.out_dir)) {
-        abt::_db.cmdline.out_dir << abt::_db.c_compiler->dflt << "." << abt::_db.cmdline.cfg << "-" << abt::_db.cmdline.arch;
+        abt::_db.cmdline.out_dir
+            << "build/" << abt::_db.cmdline.uname
+            << "-" << abt::_db.cmdline.compiler
+            << "." << abt::_db.cmdline.cfg
+            << "-" << abt::_db.cmdline.arch;
     }
     //initialize replacements
     Set(R,"$uname"   ,abt::_db.cmdline.uname);
     Set(R,"$compiler",abt::_db.cmdline.compiler);
     Set(R,"$cfg"     ,abt::_db.cmdline.cfg);
     Set(R,"$arch"    ,abt::_db.cmdline.arch);
-    Set(R,"$dflt"    ,abt::_db.c_compiler->dflt);
-    Set(R,"$ranlib"    ,abt::_db.c_compiler->ranlib);
+    Set(R,"$ranlib"  ,abt::_db.c_compiler->ranlib);
+    Set(R,"$out_dir" ,abt::_db.cmdline.out_dir);
+}
+
+// -----------------------------------------------------------------------------
+
+static void Main_ValidatePch() {
+    // validate pch targets
+    ind_beg(abt::_db_target_curs, target,abt::_db) if (target.p_ns->nstype == dmmeta_Nstype_nstype_pch) {
+        vrfy(c_targsrc_N(target) == 1, "precompiled header target must have 1 source");
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
+static void Main_ComputeOutfile() {
+    ind_beg(abt::_db_target_curs, tgt,abt::_db) {
+        vrfy(!ch_N(tgt.outfile), "internal error");
+        if (tgt.p_ns->nstype == dmmeta_Nstype_nstype_lib) {
+            tgt.outfile << abt::_db.cmdline.out_dir << MaybeDirSep << tgt.target << "-"
+                        << abt::_db.cmdline.arch << ".a";
+        } else if (tgt.p_ns->nstype == dmmeta_Nstype_nstype_exe) {
+            tgt.outfile << abt::_db.cmdline.out_dir << MaybeDirSep << tgt.target;
+        } else if (tgt.p_ns->nstype == dmmeta_Nstype_nstype_pch) {
+            vrfy(c_srcfile_N(tgt) > 0, tempstr()<<"precompiled header target ["
+                 <<tgt.target<<"] requries at least one source file");
+            tgt.outfile << abt::_db.cmdline.out_dir << MaybeDirSep << c_srcfile_Find(tgt,0)->objkey << ".gch";
+        }
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
+static void Main_ShowReport() {
+    abt::_db.report.n_target = abt::zs_sel_target_N();
+    ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) {
+        if (abt::_db.cmdline.install) {
+            abt::_db.report.n_install += target.targ_end->status ==0;
+        }
+    }ind_end;
+    if (abt::_db.cmdline.report) {
+        prlog(abt::_db.report);
+    }
 }
 
 // -----------------------------------------------------------------------------
 
 void abt::Main() {
-    u64 cycles = get_cycles();
+    SchedTime cycles = CurrSchedTime();
     SetupExitSignals();
 
-
     RewriteOpts();
-
-    Main_ComputeSysincl();
     DetectCcache();
     if (abt::_db.cmdline.build) {
         CreateTmpdir();
     }
 
-    // validate pch targets
-    ind_beg(abt::_db_target_curs, target,abt::_db) if (target.p_ns->nstype == dmmeta_Nstype_nstype_pch) {
-        vrfy(c_targsrc_N(target) == 1, "precompiled header target must have 1 source");
-    }ind_end;
-
-    Main_GuessUname();
+    Main_ValidatePch();
+    Main_GuessParams();
+    Main_ComputeSysincl();
 
     algo_lib::Replscope R;
     Main_BuildParams(R);
@@ -881,24 +949,10 @@ void abt::Main() {
     }ind_end;
 
     Main_ComputeAlllib();
-
     // Scan headers for selected targets only
     Main_ReadSrcfile();
-
     // compute output file name for each target
-    ind_beg(abt::_db_target_curs, tgt,abt::_db) {
-        vrfy(!ch_N(tgt.outfile), "internal error");
-        if (tgt.p_ns->nstype == dmmeta_Nstype_nstype_lib) {
-            tgt.outfile << abt::_db.cmdline.out_dir << MaybeDirSep << tgt.target << "-"
-                        << abt::_db.cmdline.arch << ".a";
-        } else if (tgt.p_ns->nstype == dmmeta_Nstype_nstype_exe) {
-            tgt.outfile << abt::_db.cmdline.out_dir << MaybeDirSep << tgt.target;
-        } else if (tgt.p_ns->nstype == dmmeta_Nstype_nstype_pch) {
-            vrfy(c_srcfile_N(tgt) > 0, tempstr()<<"precompiled header target ["
-                 <<tgt.target<<"] requries at least one source file");
-            tgt.outfile << abt::_db.cmdline.out_dir << MaybeDirSep << c_srcfile_Find(tgt,0)->objkey << ".gch";
-        }
-    }ind_end;
+    Main_ComputeOutfile();
 
     // create top-level build directory
     algo_lib::FLockfile lockfile;
@@ -924,18 +978,6 @@ void abt::Main() {
 
     Main_ComputeTimestamps();
 
-    // create per-target gitinfo, using more recent git log entry
-    // create a gitinfo object file--
-    // the name of the symbol in the object file is based on the input file name (no way to change it)
-    // so it must be gitinfo.txt
-    // use CopyFile/unlink instead of rename, because the build directory may be
-    // a soft link to a different filesystem
-    if (abt::_db.cmdline.build && ch_N(abt::_db.cmdline.package)) {
-        ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) if (target.p_ns->nstype == dmmeta_Nstype_nstype_exe) {
-            target.ood = true;// force ood for package
-        }ind_end;
-    }
-
     // list (print to stdout)
     if (abt::_db.cmdline.list) {
         Main_List();
@@ -945,19 +987,7 @@ void abt::Main() {
         Main_ListIncl();
     }
 
-    // compilation workflow for each target:
-    // cmd_start : start
-    // comptarg  : begin of compile all files
-    // linktarg  : begin of link all files
-    // end       : end of target workflow
-    // start -> compile -> link -> end
-    // all actual commands are allocated to a range between two nodes,
-    // for instance {start,comptarg}, or {comp,linktarg}
-    //
     abt::FSyscmd *start=NULL,*end=NULL;
-    if (abt::_db.cmdline.build && !abt::_db.cmdline.nover) {
-        Main_CreateGitinfo(R,start,end);
-    }
     ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) {
         Main_CreateCmds(R,target,start,end);
     }ind_end;
@@ -988,16 +1018,8 @@ void abt::Main() {
     }
 
     // report abt warnings and errors, and execution time
-    abt::_db.report.n_target = abt::zs_sel_target_N();
-    ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) if (target.c_targinstall
-                                                              && abt::_db.cmdline.install) {
-        abt::_db.report.n_install += target.targ_end->status ==0;
-    }ind_end;
-
-    abt::_db.report.time = UnDiffSecs((get_cycles()-cycles)/get_cpu_hz());
-    if (abt::_db.cmdline.report) {
-        prlog(abt::_db.report);
-    }
+    abt::_db.report.time = UnDiffSecs(algo::ElapsedSecs(cycles,CurrSchedTime()));
+    Main_ShowReport();
     verblog(abt::_db.trace);
 
     if (abt::_db.report.n_err > 0) {

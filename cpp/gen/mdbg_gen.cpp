@@ -98,9 +98,27 @@ void mdbg::builddir_CopyIn(mdbg::FBuilddir &row, dev::Builddir &in) {
     row.comment = in.comment;
 }
 
+// --- mdbg.FBuilddir.uname.Get
+algo::Smallstr50 mdbg::uname_Get(mdbg::FBuilddir& builddir) {
+    algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LL-LL"));
+    return ret;
+}
+
+// --- mdbg.FBuilddir.compiler.Get
+algo::Smallstr50 mdbg::compiler_Get(mdbg::FBuilddir& builddir) {
+    algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LL-LR"));
+    return ret;
+}
+
 // --- mdbg.FBuilddir.cfg.Get
 algo::Smallstr50 mdbg::cfg_Get(mdbg::FBuilddir& builddir) {
     algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LR-LL"));
+    return ret;
+}
+
+// --- mdbg.FBuilddir.arch.Get
+algo::Smallstr50 mdbg::arch_Get(mdbg::FBuilddir& builddir) {
+    algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LR-LR"));
     return ret;
 }
 
@@ -339,7 +357,7 @@ static void mdbg::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'mdbg.Input'  signature:'0568f0b974157130442f93c8e4d5cc3f859d069b'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'mdbg.Input'  signature:'aa5e06ab452d862c1bcf55dfd92cdb360fac8740'");
 }
 
 // --- mdbg.FDb._db.StaticCheck
@@ -972,10 +990,7 @@ int main(int argc, char **argv) {
         mdbg::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
-        algo_lib::_db.epoll_fd = epoll_create(1);
-        if (algo_lib::_db.epoll_fd == -1) {
-            FatalErrorExit("epoll_create");
-        }
+        algo_lib::IohookInit();
         mdbg::MainArgs(algo_lib::_db.argc,algo_lib::_db.argv); // dmmeta.main:mdbg
     } catch(algo_lib::ErrorX &x) {
         prerr("mdbg.error  " << x); // there may be additional hints in DetachBadTags

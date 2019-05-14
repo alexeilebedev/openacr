@@ -56,7 +56,7 @@ namespace algo { // update-hdr srcfile:%/algo/file.%
     bool DirectoryQ(strptr path) __attribute__((nothrow));
 
     // Test if F refers to an existing regular file (i.e. not a special file or directory)
-    bool FileQ(strptr f) __attribute__((nothrow));
+    bool FileQ(strptr fname) __attribute__((nothrow));
 
     // Wrapper for c library realpath function.
     tempstr GetFullPath(strptr path) __attribute__((nothrow));

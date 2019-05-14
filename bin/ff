@@ -1,28 +1,6 @@
 #!/usr/bin/perl
-#
 # ff -- find files and IN files
-#
-# examples:
-#  find function definition in linux headers:
-# 
-#    ff -s -t sched_set
-#
-#  find .cpp files. note, all regexes are perl regex
-#  
-#    ff -f '\.cpp'
-#
-#  find some symbol as a standalaone word
-# 
-#    ff '\bWord\b'
-#
-#  repeat last search but only list filenames of matching files
-#
-#    ff '\bWord\b' -l
-#
-#  find all text files
-#
-#    ff
-#
+# See txt/ff.md for more details
 
 use warnings;
 use strict;
@@ -39,9 +17,7 @@ my @pathpat    = (
     '!'.
     join('|',
          ('\.svn/'
-          ,'temp/'
-          ,'bin/'
-          ,'makefile.win'))
+          ,'\.git/'))
     );
 my @filepat    = (
     '!'.
@@ -80,16 +56,16 @@ my $usage = "$0 [-d startdir] [-f file pattern]+ [regex]+
     -c             print out matches with breaks
     -g             global search from directory containing .ffroot
     -s             search system include directories as well
-    -l             list filenames only 
-    -w             search for whole words only 
+    -l             list filenames only
+    -w             search for whole words only
     -n             NO search auto-generated code
     -a             all matches: one line may appear more than once
     -i             case-insensitive search
-    -f <regex>     match just file 
+    -f <regex>     match just file
     -p <regex>     match full pathname
     -notty         do not use colors
     [regex]        pattern to match lines
-";
+    ";
 
 #
 # platform may miss File::Type
@@ -135,6 +111,7 @@ for (; @ARGV; shift @ARGV) {
 
 if ($sys_dirs) {
     push(@dirs, "/usr/include");
+    push(@dirs, "/usr/local/include");
 }
 
 if ($typedef) {
@@ -250,7 +227,7 @@ sub colorize($@) {
 }
 
 #
-# search_file(FULLPATH) 
+# search_file(FULLPATH)
 # return list of [line number, line] for matching lines
 #
 sub search_file($) {
@@ -311,7 +288,7 @@ sub recurse {
     $visited{$path}=1;
     return if -l $path;
     for my $fullpath (bsd_glob("$path/*")) { # don't split on whitespace
-	my $fname = $fullpath;
+        my $fname = $fullpath;
         $fname =~s/.*\///;
         if (-d $fullpath) {
             recurse($fullpath) unless -f "$fullpath/.ffskip";
@@ -334,7 +311,7 @@ sub recurse {
                 print "$fullpath\n";
             }
             next;
-        } 
+        }
         # apply color
         for my $entry(@found) {
             $entry->[1] = colorize($entry->[1], @linepat);
@@ -361,4 +338,3 @@ for my $dir(@dirs) {
 }
 
 $verbose && print "$g_nfiles files searched\n";
-

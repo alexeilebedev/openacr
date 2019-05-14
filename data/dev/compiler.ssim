@@ -1,4 +1,4 @@
-dev.compiler  compiler:""  dflt:""  ranlib:""  ar:""  comment:all
-dev.compiler  compiler:clang++  dflt:clang  ranlib:llvm-ranlib  ar:llvm-ar  comment:""
-dev.compiler  compiler:g++  dflt:dflt  ranlib:ranlib  ar:ar  comment:""
-dev.compiler  compiler:g++-9  dflt:gcc9  ranlib:ranlib  ar:ar  comment:""
+dev.compiler  compiler:""  ranlib:""  ar:""  comment:all
+dev.compiler  compiler:clang++  ranlib:llvm-ranlib  ar:llvm-ar  comment:""
+dev.compiler  compiler:g++  ranlib:ranlib  ar:ar  comment:""
+dev.compiler  compiler:g++-9  ranlib:ranlib  ar:ar  comment:""

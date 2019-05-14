@@ -121,7 +121,7 @@ void acr_ed::Main_CreateTarget() {
     Ins(&R, acr_ed::_db.script,"bin/amc  # make sure */gen/* files are created");
     acr_ed::_db.need_amc=false; // already did it
     if (exe) {
-        Ins(&R, acr_ed::_db.script,"ln -s ../dflt.release-x86_64/$target bin/$target");
+        Ins(&R, acr_ed::_db.script,"ln -s ../build/release/$target bin/$target");
         Ins(&R, acr_ed::_db.script,"git add -f bin/$target");
     }
     Ins(&R, acr_ed::_db.script,"git add cpp/$targdir$target.cpp");

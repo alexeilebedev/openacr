@@ -266,6 +266,8 @@ void amc::tfunc_Exec_Execv() {
     Ins(&R, execv.body,"    argv[--n_argv] += (u64)temp.ch_elems;");
     Ins(&R, execv.body,"}");
 
+    Ins(&R, execv.body,"// if $_path is relative, search for it in PATH");
+    Ins(&R, execv.body,"algo_lib::ResolveExecFname($_path);");
     Ins(&R, execv.body,"return execv(Zeroterm($_path),argv);");
 }
 

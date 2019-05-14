@@ -9,7 +9,7 @@ if [ "$OTHERCOMMIT" == "" ]; then
     OTHERCOMMIT="HEAD~"
 fi
 # stash the executable in case it's missing in the other commit
-cp bin/Linux-x86_64/src_func temp/
+cp build/release/src_func temp/
 src_func -sortname -showloc:N "-targsrc:$1/%" -listfunc | grep -v report.src_func > temp/after
 if [ "$(wc -l < temp/after)" == "0" ]; then
     echo "Is '$1' a valid target? src_func produced no output"

@@ -2342,7 +2342,7 @@ void acr_ed::abt_ExecX() {
 // Call execv()
 // Call execv with specified parameters -- cprint:abt.Argv
 int acr_ed::abt_Execv() {
-    char *argv[26+2]; // start of first arg (future pointer)
+    char *argv[24+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -2489,24 +2489,10 @@ int acr_ed::abt_Execv() {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
-    if (_db.abt_cmd.release != "") {
-        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-release:";
-        cstring_Print(_db.abt_cmd.release, temp);
-        ch_Alloc(temp) = 0;// NUL term for this arg
-    }
-
     if (_db.abt_cmd.package != "") {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-package:";
         cstring_Print(_db.abt_cmd.package, temp);
-        ch_Alloc(temp) = 0;// NUL term for this arg
-    }
-
-    if (_db.abt_cmd.nover != false) {
-        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-nover:";
-        bool_Print(_db.abt_cmd.nover, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
@@ -2539,6 +2525,8 @@ int acr_ed::abt_Execv() {
     while (n_argv>0) { // shift pointers
         argv[--n_argv] += (u64)temp.ch_elems;
     }
+    // if _db.abt_path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(_db.abt_path);
     return execv(Zeroterm(_db.abt_path),argv);
 }
 
@@ -3280,10 +3268,7 @@ int main(int argc, char **argv) {
         acr_ed::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
-        algo_lib::_db.epoll_fd = epoll_create(1);
-        if (algo_lib::_db.epoll_fd == -1) {
-            FatalErrorExit("epoll_create");
-        }
+        algo_lib::IohookInit();
         acr_ed::MainArgs(algo_lib::_db.argc,algo_lib::_db.argv); // dmmeta.main:acr_ed
     } catch(algo_lib::ErrorX &x) {
         prerr("acr_ed.error  " << x); // there may be additional hints in DetachBadTags

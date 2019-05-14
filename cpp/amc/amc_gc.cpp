@@ -194,7 +194,7 @@ static void Begin(strptr recs) {
 // -----------------------------------------------------------------------------
 
 void amc_gc::Main() {
-    amc_gc::_db.basedir = get_current_dir_name();
+    amc_gc::_db.basedir = GetCurDir();
     tempstr recs = QueryRecords();
     Begin(recs);
     SysCmd("mkdir -p .testgen .testgen/temp"); // setup!

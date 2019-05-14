@@ -317,9 +317,3 @@ void lib_ctype::Match_Tuple(lib_ctype::Match &match, Tuple &expect, Tuple &resul
         match.nattr++;
     }
 }
-
-// -----------------------------------------------------------------------------
-
-// Does nothing
-void lib_ctype::Main() {
-}

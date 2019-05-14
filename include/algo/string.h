@@ -242,7 +242,14 @@ namespace algo { // update-hdr srcfile:'(%/algo/string.%|%/algo/line.%)'
     // cstring is normally NOT null terminated (it is length-based),
     // so this function is necessary when passing strings to C library functions
     // or the OS
-    const char *Zeroterm(cstring &rhs);
+    char *Zeroterm(cstring &rhs);
+
+    // Same thing but with tempstr.
+    // Typical usage is to take a strptr
+    // expression and pass it to some unix call
+    // some_unix_call(Zeroterm(tempstr(some_strptr)))
+    //
+    char *Zeroterm(const tempstr &rhs);
 
     // Construct ssim filename from key
     // SsimFname("data", "abcd") -> data/abcd.ssim
@@ -440,6 +447,9 @@ namespace algo { // update-hdr srcfile:'(%/algo/string.%|%/algo/line.%)'
     // Initial indentation is INDENT, it's adjusted as necessary as { and } are found
     // in the TEXT.
     // Each indent is 4 spaces.
+    // Trailing //-sytle comments are stripped
+    // /* */-style comments are not supported
+    // Lines beginning with # (#ifdef, etc) are printed at column zero.
     void InsertIndent(algo::cstring &out, strptr text, int indent);
 
     // -------------------------------------------------------------------

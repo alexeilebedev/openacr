@@ -41,34 +41,10 @@ void lib_sql::trace_Print(lib_sql::trace & row, algo::cstring &str) {
     (void)row;//only to avoid -Wunused-parameter
 }
 
-// --- lib_sql.FDb._db.MainArgs
-// Main function
-void lib_sql::MainArgs(int argc, char **argv) {
-    lib_sql::Main(); // call through to user-defined main
-    (void)argc;//only to avoid -Wunused-parameter
-    (void)argv;//only to avoid -Wunused-parameter
-}
-
-// --- lib_sql.FDb._db.MainLoop
-// Main loop.
-void lib_sql::MainLoop() {
-    SchedTime time(get_cycles());
-    algo_lib::_db.clock          = time;
-    do {
-        algo_lib::_db.next_loop.value = algo_lib::_db.limit;
-        algo_lib::Step(); // dependent namespace specified via (dev.targdep)
-    } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
-}
-
-// --- lib_sql.FDb._db.Step
-// Main step
-void lib_sql::Step() {
-}
-
 // --- lib_sql.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void lib_sql::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("lib_sql", NULL, NULL, lib_sql::MainLoop, NULL, algo::Comment()));
+    algo_lib::imdb_InsertMaybe(algo::Imdb("lib_sql", NULL, NULL, NULL, NULL, algo::Comment()));
 
     algo::Imtable t_trace;
     t_trace.imtable         = "lib_sql.trace";

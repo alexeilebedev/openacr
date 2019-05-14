@@ -27,37 +27,35 @@ enum { abt_FieldIdEnum_N = 1 };
 
 // --- abt_TableIdEnum
 
-enum abt_TableIdEnum {                    // abt.TableId.value
-     abt_TableId_dev_Arch          = 0    // dev.Arch -> abt.FArch
-    ,abt_TableId_dev_arch          = 0    // dev.arch -> abt.FArch
-    ,abt_TableId_dev_Cfg           = 1    // dev.Cfg -> abt.FCfg
-    ,abt_TableId_dev_cfg           = 1    // dev.cfg -> abt.FCfg
-    ,abt_TableId_dev_Compiler      = 2    // dev.Compiler -> abt.FCompiler
-    ,abt_TableId_dev_compiler      = 2    // dev.compiler -> abt.FCompiler
-    ,abt_TableId_dev_Include       = 3    // dev.Include -> abt.FInclude
-    ,abt_TableId_dmmeta_Ns         = 4    // dmmeta.Ns -> abt.FNs
-    ,abt_TableId_dmmeta_ns         = 4    // dmmeta.ns -> abt.FNs
-    ,abt_TableId_dev_Syscmd        = 5    // dev.Syscmd -> abt.FSyscmd
-    ,abt_TableId_dev_Syscmddep     = 6    // dev.Syscmddep -> abt.FSyscmddep
-    ,abt_TableId_dev_Syslib        = 7    // dev.Syslib -> abt.FSyslib
-    ,abt_TableId_dev_syslib        = 7    // dev.syslib -> abt.FSyslib
-    ,abt_TableId_dev_Targdep       = 8    // dev.Targdep -> abt.FTargdep
-    ,abt_TableId_dev_targdep       = 8    // dev.targdep -> abt.FTargdep
-    ,abt_TableId_dev_Target        = 9    // dev.Target -> abt.FTarget
-    ,abt_TableId_dev_target        = 9    // dev.target -> abt.FTarget
-    ,abt_TableId_dev_Targinstall   = 10   // dev.Targinstall -> abt.FTarginstall
-    ,abt_TableId_dev_targinstall   = 10   // dev.targinstall -> abt.FTarginstall
-    ,abt_TableId_dev_Targsrc       = 11   // dev.Targsrc -> abt.FTargsrc
-    ,abt_TableId_dev_targsrc       = 11   // dev.targsrc -> abt.FTargsrc
-    ,abt_TableId_dev_Targsyslib    = 12   // dev.Targsyslib -> abt.FTargsyslib
-    ,abt_TableId_dev_targsyslib    = 12   // dev.targsyslib -> abt.FTargsyslib
-    ,abt_TableId_dev_ToolOpt       = 13   // dev.ToolOpt -> abt.FToolOpt
-    ,abt_TableId_dev_tool_opt      = 13   // dev.tool_opt -> abt.FToolOpt
-    ,abt_TableId_dev_Uname         = 14   // dev.Uname -> abt.FUname
-    ,abt_TableId_dev_uname         = 14   // dev.uname -> abt.FUname
+enum abt_TableIdEnum {                   // abt.TableId.value
+     abt_TableId_dev_Arch         = 0    // dev.Arch -> abt.FArch
+    ,abt_TableId_dev_arch         = 0    // dev.arch -> abt.FArch
+    ,abt_TableId_dev_Cfg          = 1    // dev.Cfg -> abt.FCfg
+    ,abt_TableId_dev_cfg          = 1    // dev.cfg -> abt.FCfg
+    ,abt_TableId_dev_Compiler     = 2    // dev.Compiler -> abt.FCompiler
+    ,abt_TableId_dev_compiler     = 2    // dev.compiler -> abt.FCompiler
+    ,abt_TableId_dev_Include      = 3    // dev.Include -> abt.FInclude
+    ,abt_TableId_dmmeta_Ns        = 4    // dmmeta.Ns -> abt.FNs
+    ,abt_TableId_dmmeta_ns        = 4    // dmmeta.ns -> abt.FNs
+    ,abt_TableId_dev_Syscmd       = 5    // dev.Syscmd -> abt.FSyscmd
+    ,abt_TableId_dev_Syscmddep    = 6    // dev.Syscmddep -> abt.FSyscmddep
+    ,abt_TableId_dev_Syslib       = 7    // dev.Syslib -> abt.FSyslib
+    ,abt_TableId_dev_syslib       = 7    // dev.syslib -> abt.FSyslib
+    ,abt_TableId_dev_Targdep      = 8    // dev.Targdep -> abt.FTargdep
+    ,abt_TableId_dev_targdep      = 8    // dev.targdep -> abt.FTargdep
+    ,abt_TableId_dev_Target       = 9    // dev.Target -> abt.FTarget
+    ,abt_TableId_dev_target       = 9    // dev.target -> abt.FTarget
+    ,abt_TableId_dev_Targsrc      = 10   // dev.Targsrc -> abt.FTargsrc
+    ,abt_TableId_dev_targsrc      = 10   // dev.targsrc -> abt.FTargsrc
+    ,abt_TableId_dev_Targsyslib   = 11   // dev.Targsyslib -> abt.FTargsyslib
+    ,abt_TableId_dev_targsyslib   = 11   // dev.targsyslib -> abt.FTargsyslib
+    ,abt_TableId_dev_ToolOpt      = 12   // dev.ToolOpt -> abt.FToolOpt
+    ,abt_TableId_dev_tool_opt     = 12   // dev.tool_opt -> abt.FToolOpt
+    ,abt_TableId_dev_Uname        = 13   // dev.Uname -> abt.FUname
+    ,abt_TableId_dev_uname        = 13   // dev.uname -> abt.FUname
 };
 
-enum { abt_TableIdEnum_N = 27 };
+enum { abt_TableIdEnum_N = 25 };
 
 namespace dev { struct Arch; }
 namespace dev { struct Cfg; }
@@ -74,7 +72,6 @@ namespace dev { struct Syslib; }
 namespace dev { struct Targdep; }
 namespace dev { struct Target; }
 namespace abt { struct FNs; }
-namespace dev { struct Targinstall; }
 namespace dev { struct Targsrc; }
 namespace dev { struct Targsyslib; }
 namespace abt { struct FSyslib; }
@@ -89,7 +86,6 @@ namespace abt { struct FFilestat; }
 namespace abt { struct FInclude; }
 namespace abt { struct FSyscmddep; }
 namespace abt { struct FTargdep; }
-namespace abt { struct FTarginstall; }
 namespace abt { struct FTargsrc; }
 namespace abt { struct FTargsyslib; }
 namespace abt { struct FToolOpt; }
@@ -120,8 +116,6 @@ namespace abt { struct _db_bh_syscmd_curs; }
 namespace abt { struct _db_bh_syscmd_unordcurs; }
 namespace abt { struct _db_zs_srcfile_read_curs; }
 namespace abt { struct _db_zs_sel_target_curs; }
-namespace abt { struct _db_targinstall_curs; }
-namespace abt { struct _db_ind_targinstall_curs; }
 namespace abt { struct _db_zsl_libdep_visited_curs; }
 namespace abt { struct _db_zsl_libdep_curs; }
 namespace abt { struct _db_targsyslib_curs; }
@@ -212,7 +206,6 @@ void                 FCfg_Uninit(abt::FCfg& cfg) __attribute__((nothrow));
 // global access: ind_compiler (Thash)
 struct FCompiler { // abt.FCompiler
     algo::Smallstr50   compiler;            //
-    algo::Smallstr50   dflt;                //
     algo::Smallstr50   ranlib;              //
     algo::Smallstr50   ar;                  //
     algo::Comment      comment;             //
@@ -249,104 +242,99 @@ void                 trace_Print(abt::trace & row, algo::cstring &str) __attribu
 // --- abt.FDb
 // create: abt.FDb._db (Global)
 struct FDb { // abt.FDb
-    lpool_Lpblock*        lpool_free[31];                  // Lpool levels
-    command::abt          cmdline;                         //
-    abt::FSrcfile*        srcfile_lary[32];                // level array
-    i32                   srcfile_n;                       // number of elements in array
-    abt::FTargdep*        targdep_lary[32];                // level array
-    i32                   targdep_n;                       // number of elements in array
-    abt::FToolOpt*        tool_opt_lary[32];               // level array
-    i32                   tool_opt_n;                      // number of elements in array
-    abt::FTarget**        ind_target_buckets_elems;        // pointer to bucket array
-    i32                   ind_target_buckets_n;            // number of elements in bucket array
-    i32                   ind_target_n;                    // number of elements in the hash table
-    abt::FTarget*         target_lary[32];                 // level array
-    i32                   target_n;                        // number of elements in array
-    abt::FCompiler*       c_compiler;                      // optional pointer
-    abt::FTargsrc**       ind_targsrc_buckets_elems;       // pointer to bucket array
-    i32                   ind_targsrc_buckets_n;           // number of elements in bucket array
-    i32                   ind_targsrc_n;                   // number of elements in the hash table
-    abt::FTargsrc*        targsrc_lary[32];                // level array
-    i32                   targsrc_n;                       // number of elements in array
-    abt::FSyscmddep*      syscmddep_lary[32];              // level array
-    i32                   syscmddep_n;                     // number of elements in array
-    abt::FSyscmd*         syscmd_lary[32];                 // level array
-    i32                   syscmd_n;                        // number of elements in array
-    abt::FSyscmd**        ind_syscmd_buckets_elems;        // pointer to bucket array
-    i32                   ind_syscmd_buckets_n;            // number of elements in bucket array
-    i32                   ind_syscmd_n;                    // number of elements in the hash table
-    abt::FSyscmd**        ind_running_buckets_elems;       // pointer to bucket array
-    i32                   ind_running_buckets_n;           // number of elements in bucket array
-    i32                   ind_running_n;                   // number of elements in the hash table
-    abt::FSrcfile**       ind_srcfile_buckets_elems;       // pointer to bucket array
-    i32                   ind_srcfile_buckets_n;           // number of elements in bucket array
-    i32                   ind_srcfile_n;                   // number of elements in the hash table
-    abt::FCfg*            cfg_lary[32];                    // level array
-    i32                   cfg_n;                           // number of elements in array
-    abt::FCfg**           ind_cfg_buckets_elems;           // pointer to bucket array
-    i32                   ind_cfg_buckets_n;               // number of elements in bucket array
-    i32                   ind_cfg_n;                       // number of elements in the hash table
-    abt::FUname*          uname_lary[32];                  // level array
-    i32                   uname_n;                         // number of elements in array
-    abt::FUname**         ind_uname_buckets_elems;         // pointer to bucket array
-    i32                   ind_uname_buckets_n;             // number of elements in bucket array
-    i32                   ind_uname_n;                     // number of elements in the hash table
-    abt::FCompiler*       compiler_lary[32];               // level array
-    i32                   compiler_n;                      // number of elements in array
-    abt::FCompiler**      ind_compiler_buckets_elems;      // pointer to bucket array
-    i32                   ind_compiler_buckets_n;          // number of elements in bucket array
-    i32                   ind_compiler_n;                  // number of elements in the hash table
-    abt::FArch*           arch_lary[32];                   // level array
-    i32                   arch_n;                          // number of elements in array
-    abt::FArch**          ind_arch_buckets_elems;          // pointer to bucket array
-    i32                   ind_arch_buckets_n;              // number of elements in bucket array
-    i32                   ind_arch_n;                      // number of elements in the hash table
-    abt::FSyscmd**        bh_syscmd_elems;                 // binary heap by execkey
-    i32                   bh_syscmd_n;                     // number of elements in the heap
-    i32                   bh_syscmd_max;                   // max elements in bh_syscmd_elems
-    abt::FSrcfile*        zs_srcfile_read_head;            // zero-terminated singly linked list
-    abt::FSrcfile*        zs_srcfile_read_tail;            // pointer to last element
-    abt::FTarget*         zs_sel_target_head;              // zero-terminated singly linked list
-    i32                   zs_sel_target_n;                 // zero-terminated singly linked list
-    abt::FTarget*         zs_sel_target_tail;              // pointer to last element
-    report::abt           report;                          //
-    abt::FTarginstall*    targinstall_lary[32];            // level array
-    i32                   targinstall_n;                   // number of elements in array
-    abt::FTarginstall**   ind_targinstall_buckets_elems;   // pointer to bucket array
-    i32                   ind_targinstall_buckets_n;       // number of elements in bucket array
-    i32                   ind_targinstall_n;               // number of elements in the hash table
-    abt::FTarget*         zsl_libdep_visited_head;         // zero-terminated singly linked list
-    abt::FTarget*         zsl_libdep_head;                 // zero-terminated singly linked list
-    abt::FTargsyslib*     targsyslib_lary[32];             // level array
-    i32                   targsyslib_n;                    // number of elements in array
-    abt::FSyslib*         syslib_lary[32];                 // level array
-    i32                   syslib_n;                        // number of elements in array
-    abt::FSyslib**        ind_syslib_buckets_elems;        // pointer to bucket array
-    i32                   ind_syslib_buckets_n;            // number of elements in bucket array
-    i32                   ind_syslib_n;                    // number of elements in the hash table
-    abt::FInclude*        include_lary[32];                // level array
-    i32                   include_n;                       // number of elements in array
-    abt::FInclude**       ind_include_buckets_elems;       // pointer to bucket array
-    i32                   ind_include_buckets_n;           // number of elements in bucket array
-    i32                   ind_include_n;                   // number of elements in the hash table
-    algo::cstring*        sysincl_elems;                   // pointer to elements
-    u32                   sysincl_n;                       // number of elements in array
-    u32                   sysincl_max;                     // max. capacity of array before realloc
-    abt::FTarget*         zs_origsel_target_head;          // zero-terminated singly linked list
-    abt::FTarget*         zs_origsel_target_tail;          // pointer to last element
-    abt::FNs*             ns_lary[32];                     // level array
-    i32                   ns_n;                            // number of elements in array
-    abt::FNs**            ind_ns_buckets_elems;            // pointer to bucket array
-    i32                   ind_ns_buckets_n;                // number of elements in bucket array
-    i32                   ind_ns_n;                        // number of elements in the hash table
-    bool                  ccache;                          //   false
-    bool                  gcache;                          //   false
-    abt::FFilestat*       filestat_lary[32];               // level array
-    i32                   filestat_n;                      // number of elements in array
-    abt::FFilestat**      ind_filestat_buckets_elems;      // pointer to bucket array
-    i32                   ind_filestat_buckets_n;          // number of elements in bucket array
-    i32                   ind_filestat_n;                  // number of elements in the hash table
-    abt::trace            trace;                           //
+    lpool_Lpblock*      lpool_free[31];               // Lpool levels
+    command::abt        cmdline;                      //
+    abt::FSrcfile*      srcfile_lary[32];             // level array
+    i32                 srcfile_n;                    // number of elements in array
+    abt::FTargdep*      targdep_lary[32];             // level array
+    i32                 targdep_n;                    // number of elements in array
+    abt::FToolOpt*      tool_opt_lary[32];            // level array
+    i32                 tool_opt_n;                   // number of elements in array
+    abt::FTarget**      ind_target_buckets_elems;     // pointer to bucket array
+    i32                 ind_target_buckets_n;         // number of elements in bucket array
+    i32                 ind_target_n;                 // number of elements in the hash table
+    abt::FTarget*       target_lary[32];              // level array
+    i32                 target_n;                     // number of elements in array
+    abt::FCompiler*     c_compiler;                   // optional pointer
+    abt::FTargsrc**     ind_targsrc_buckets_elems;    // pointer to bucket array
+    i32                 ind_targsrc_buckets_n;        // number of elements in bucket array
+    i32                 ind_targsrc_n;                // number of elements in the hash table
+    abt::FTargsrc*      targsrc_lary[32];             // level array
+    i32                 targsrc_n;                    // number of elements in array
+    abt::FSyscmddep*    syscmddep_lary[32];           // level array
+    i32                 syscmddep_n;                  // number of elements in array
+    abt::FSyscmd*       syscmd_lary[32];              // level array
+    i32                 syscmd_n;                     // number of elements in array
+    abt::FSyscmd**      ind_syscmd_buckets_elems;     // pointer to bucket array
+    i32                 ind_syscmd_buckets_n;         // number of elements in bucket array
+    i32                 ind_syscmd_n;                 // number of elements in the hash table
+    abt::FSyscmd**      ind_running_buckets_elems;    // pointer to bucket array
+    i32                 ind_running_buckets_n;        // number of elements in bucket array
+    i32                 ind_running_n;                // number of elements in the hash table
+    abt::FSrcfile**     ind_srcfile_buckets_elems;    // pointer to bucket array
+    i32                 ind_srcfile_buckets_n;        // number of elements in bucket array
+    i32                 ind_srcfile_n;                // number of elements in the hash table
+    abt::FCfg*          cfg_lary[32];                 // level array
+    i32                 cfg_n;                        // number of elements in array
+    abt::FCfg**         ind_cfg_buckets_elems;        // pointer to bucket array
+    i32                 ind_cfg_buckets_n;            // number of elements in bucket array
+    i32                 ind_cfg_n;                    // number of elements in the hash table
+    abt::FUname*        uname_lary[32];               // level array
+    i32                 uname_n;                      // number of elements in array
+    abt::FUname**       ind_uname_buckets_elems;      // pointer to bucket array
+    i32                 ind_uname_buckets_n;          // number of elements in bucket array
+    i32                 ind_uname_n;                  // number of elements in the hash table
+    abt::FCompiler*     compiler_lary[32];            // level array
+    i32                 compiler_n;                   // number of elements in array
+    abt::FCompiler**    ind_compiler_buckets_elems;   // pointer to bucket array
+    i32                 ind_compiler_buckets_n;       // number of elements in bucket array
+    i32                 ind_compiler_n;               // number of elements in the hash table
+    abt::FArch*         arch_lary[32];                // level array
+    i32                 arch_n;                       // number of elements in array
+    abt::FArch**        ind_arch_buckets_elems;       // pointer to bucket array
+    i32                 ind_arch_buckets_n;           // number of elements in bucket array
+    i32                 ind_arch_n;                   // number of elements in the hash table
+    abt::FSyscmd**      bh_syscmd_elems;              // binary heap by execkey
+    i32                 bh_syscmd_n;                  // number of elements in the heap
+    i32                 bh_syscmd_max;                // max elements in bh_syscmd_elems
+    abt::FSrcfile*      zs_srcfile_read_head;         // zero-terminated singly linked list
+    abt::FSrcfile*      zs_srcfile_read_tail;         // pointer to last element
+    abt::FTarget*       zs_sel_target_head;           // zero-terminated singly linked list
+    i32                 zs_sel_target_n;              // zero-terminated singly linked list
+    abt::FTarget*       zs_sel_target_tail;           // pointer to last element
+    report::abt         report;                       //
+    abt::FTarget*       zsl_libdep_visited_head;      // zero-terminated singly linked list
+    abt::FTarget*       zsl_libdep_head;              // zero-terminated singly linked list
+    abt::FTargsyslib*   targsyslib_lary[32];          // level array
+    i32                 targsyslib_n;                 // number of elements in array
+    abt::FSyslib*       syslib_lary[32];              // level array
+    i32                 syslib_n;                     // number of elements in array
+    abt::FSyslib**      ind_syslib_buckets_elems;     // pointer to bucket array
+    i32                 ind_syslib_buckets_n;         // number of elements in bucket array
+    i32                 ind_syslib_n;                 // number of elements in the hash table
+    abt::FInclude*      include_lary[32];             // level array
+    i32                 include_n;                    // number of elements in array
+    abt::FInclude**     ind_include_buckets_elems;    // pointer to bucket array
+    i32                 ind_include_buckets_n;        // number of elements in bucket array
+    i32                 ind_include_n;                // number of elements in the hash table
+    algo::cstring*      sysincl_elems;                // pointer to elements
+    u32                 sysincl_n;                    // number of elements in array
+    u32                 sysincl_max;                  // max. capacity of array before realloc
+    abt::FTarget*       zs_origsel_target_head;       // zero-terminated singly linked list
+    abt::FTarget*       zs_origsel_target_tail;       // pointer to last element
+    abt::FNs*           ns_lary[32];                  // level array
+    i32                 ns_n;                         // number of elements in array
+    abt::FNs**          ind_ns_buckets_elems;         // pointer to bucket array
+    i32                 ind_ns_buckets_n;             // number of elements in bucket array
+    i32                 ind_ns_n;                     // number of elements in the hash table
+    bool                ccache;                       //   false
+    bool                gcache;                       //   false
+    abt::FFilestat*     filestat_lary[32];            // level array
+    i32                 filestat_n;                   // number of elements in array
+    abt::FFilestat**    ind_filestat_buckets_elems;   // pointer to bucket array
+    i32                 ind_filestat_buckets_n;       // number of elements in bucket array
+    i32                 ind_filestat_n;               // number of elements in the hash table
+    abt::trace          trace;                        //
 };
 
 // Free block of memory previously returned by Lpool.
@@ -881,47 +869,6 @@ abt::FTarget*        zs_sel_target_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 abt::FTarget&        zs_sel_target_qLast() __attribute__((__warn_unused_result__, nothrow));
 
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-abt::FTarginstall&   targinstall_Alloc() __attribute__((__warn_unused_result__, nothrow));
-// Allocate memory for new element. If out of memory, return NULL.
-abt::FTarginstall*   targinstall_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt::FTarginstall*   targinstall_InsertMaybe(const dev::Targinstall &value) __attribute__((nothrow));
-// Allocate space for one element. If no memory available, return NULL.
-void*                targinstall_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-bool                 targinstall_EmptyQ() __attribute__((nothrow));
-// Look up row by row id. Return NULL if out of range
-abt::FTarginstall*   targinstall_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
-// Return pointer to last element of array, or NULL if array is empty
-abt::FTarginstall*   targinstall_Last() __attribute__((nothrow, pure));
-// Return number of items in the pool
-i32                  targinstall_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Delete last element of array. Do nothing if array is empty.
-void                 targinstall_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-abt::FTarginstall&   targinstall_qFind(u64 t) __attribute__((nothrow));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool                 targinstall_XrefMaybe(abt::FTarginstall &row);
-
-// Return true if hash is empty
-bool                 ind_targinstall_EmptyQ() __attribute__((nothrow));
-// Find row by key. Return NULL if not found.
-abt::FTarginstall*   ind_targinstall_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
-// Find row by key. If not found, create and x-reference a new row with with this key.
-abt::FTarginstall&   ind_targinstall_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
-// Return number of items in the hash
-i32                  ind_targinstall_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool                 ind_targinstall_InsertMaybe(abt::FTarginstall& row) __attribute__((nothrow));
-// Remove reference to element from hash index. If element is not in hash, do nothing
-void                 ind_targinstall_Remove(abt::FTarginstall& row) __attribute__((nothrow));
-// Reserve enough room in the hash for N more elements. Return success code.
-void                 ind_targinstall_Reserve(int n) __attribute__((nothrow));
-
 // Return true if index is empty
 bool                 zsl_libdep_visited_EmptyQ() __attribute__((__warn_unused_result__, nothrow));
 // If index empty, return NULL. Otherwise return pointer to first element in index
@@ -1318,14 +1265,6 @@ bool                 _db_zs_sel_target_curs_ValidQ(_db_zs_sel_target_curs &curs)
 void                 _db_zs_sel_target_curs_Next(_db_zs_sel_target_curs &curs);
 // item access
 abt::FTarget&        _db_zs_sel_target_curs_Access(_db_zs_sel_target_curs &curs);
-// cursor points to valid item
-void                 _db_targinstall_curs_Reset(_db_targinstall_curs &curs, abt::FDb &parent);
-// cursor points to valid item
-bool                 _db_targinstall_curs_ValidQ(_db_targinstall_curs &curs);
-// proceed to next item
-void                 _db_targinstall_curs_Next(_db_targinstall_curs &curs);
-// item access
-abt::FTarginstall&   _db_targinstall_curs_Access(_db_targinstall_curs &curs);
 // cursor points to valid item
 void                 _db_zsl_libdep_visited_curs_Reset(_db_zsl_libdep_visited_curs &curs, abt::FDb &parent);
 // cursor points to valid item
@@ -1814,7 +1753,6 @@ struct FTarget { // abt.FTarget
     u32                  c_targdep_n;               // array of pointers
     u32                  c_targdep_max;             // capacity of allocated array
     bool                 ood_visited;               //   false  Lockout for topo sort
-    abt::FTarginstall*   c_targinstall;             // optional pointer
     abt::FTargsyslib**   c_targsyslib_elems;        // array of pointers
     u32                  c_targsyslib_n;            // array of pointers
     u32                  c_targsyslib_max;          // capacity of allocated array
@@ -1906,11 +1844,6 @@ void                 c_targdep_Remove(abt::FTarget& target, abt::FTargdep& row) 
 void                 c_targdep_RemoveAll(abt::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_targdep_Reserve(abt::FTarget& target, u32 n) __attribute__((nothrow));
-
-// Insert row into pointer index. Return final membership status.
-bool                 c_targinstall_InsertMaybe(abt::FTarget& target, abt::FTarginstall& row) __attribute__((nothrow));
-// Remove element from index. If element is not in index, do nothing.
-void                 c_targinstall_Remove(abt::FTarget& target, abt::FTarginstall& row) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_targsyslib_EmptyQ(abt::FTarget& target) __attribute__((nothrow));
@@ -2026,33 +1959,6 @@ void                 target_c_alllib_curs_Next(target_c_alllib_curs &curs);
 abt::FSyslib&        target_c_alllib_curs_Access(target_c_alllib_curs &curs);
 void                 FTarget_Uninit(abt::FTarget& target) __attribute__((nothrow));
 
-// --- abt.FTarginstall
-// create: abt.FDb.targinstall (Lary)
-// global access: ind_targinstall (Thash)
-// access: abt.FTarget.c_targinstall (Ptr)
-struct FTarginstall { // abt.FTarginstall
-    abt::FTarginstall*   ind_targinstall_next;   // hash next
-    algo::Smallstr16     target;                 //
-    algo::Comment        comment;                //
-private:
-    friend abt::FTarginstall&   targinstall_Alloc() __attribute__((__warn_unused_result__, nothrow));
-    friend abt::FTarginstall*   targinstall_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 targinstall_RemoveLast() __attribute__((nothrow));
-    FTarginstall();
-    ~FTarginstall();
-    FTarginstall(const FTarginstall&){ /*disallow copy constructor */}
-    void operator =(const FTarginstall&){ /*disallow direct assignment */}
-};
-
-// Copy fields out of row
-void                 targinstall_CopyOut(abt::FTarginstall &row, dev::Targinstall &out) __attribute__((nothrow));
-// Copy fields in to row
-void                 targinstall_CopyIn(abt::FTarginstall &row, dev::Targinstall &in) __attribute__((nothrow));
-
-// Set all fields to initial values.
-void                 FTarginstall_Init(abt::FTarginstall& targinstall);
-void                 FTarginstall_Uninit(abt::FTarginstall& targinstall) __attribute__((nothrow));
-
 // --- abt.FTargsrc
 // create: abt.FDb.targsrc (Lary)
 // global access: ind_targsrc (Thash)
@@ -2093,7 +1999,7 @@ void                 FTargsrc_Uninit(abt::FTargsrc& targsrc) __attribute__((noth
 // access: abt.FTarget.c_targsyslib (Ptrary)
 struct FTargsyslib { // abt.FTargsyslib
     algo::Smallstr50   targsyslib;                   //
-    algo::Smallstr50   uname;                        //
+    algo_lib::Regx     uname;                        // Regx of dev::Uname
     algo::Comment      comment;                      //
     abt::FSyslib*      p_syslib;                     // reference to parent row
     bool               target_c_targsyslib_in_ary;   //   false  membership flag
@@ -2115,6 +2021,9 @@ void                 targsyslib_CopyIn(abt::FTargsyslib &row, dev::Targsyslib &i
 algo::Smallstr16     target_Get(abt::FTargsyslib& targsyslib) __attribute__((__warn_unused_result__, nothrow));
 
 algo::Smallstr50     syslib_Get(abt::FTargsyslib& targsyslib) __attribute__((__warn_unused_result__, nothrow));
+
+// Print back to string
+void                 uname_Print(abt::FTargsyslib& targsyslib, algo::cstring &out) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FTargsyslib_Init(abt::FTargsyslib& targsyslib);
@@ -2362,14 +2271,6 @@ struct _db_zs_sel_target_curs {// cursor
     _db_zs_sel_target_curs() {
         row = NULL;
     }
-};
-
-
-struct _db_targinstall_curs {// cursor
-    typedef abt::FTarginstall ChildType;
-    abt::FDb *parent;
-    i64 index;
-    _db_targinstall_curs(){ parent=NULL; index=0; }
 };
 
 

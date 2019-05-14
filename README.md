@@ -4,8 +4,8 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
    * [About](#about)
       * [Contributors](#contributors)
    * [Setup and Installation](#setup-and-installation)
-      * [Platform Short List](#platform-short-list)
-; [Editor configuration files](#editor-configuration-files); [Environment Variables](#environment-variables); [Known Issues](#known-issues)
+      * [Pre-requisites: CentOS:](#pre-requisites-centos)
+; [Pre-requisites: Ubuntu/Debian](#pre-requisites-ubuntu-debian); [Pre-requisites: MacOS](#pre-requisites-macos); [Path](#path); [Building](#building); [Platform Short List](#platform-short-list); [Editor configuration files](#editor-configuration-files); [Environment Variables](#environment-variables); [Known Issues](#known-issues)
    * [Directory Structure](#directory-structure)
       * [Binaries](#binaries)
 ; [Intermediate Files](#intermediate-files)
@@ -23,7 +23,7 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
          * [The -replace option](#the--replace-option)
 ; [The -merge option](#the--merge-option); [The -trunc option](#the--trunc-option)
       * [Generating Shell Scripts](#generating-shell-scripts)
-; [Inserting a Column](#inserting-a-column)
+; [Deleting Records From Stdin](#deleting-records-from-stdin); [Inserting a Column](#inserting-a-column)
          * [The -before option](#the--before-option)
       * [Creating a Subset Table](#creating-a-subset-table)
 ; [Following References Up](#following-references-up); [Following References Down](#following-references-down); [Deleting Records](#deleting-records); [Manual Editing](#manual-editing); [Checking Referential Integrity](#checking-referential-integrity); [Renaming](#renaming); [Cross-Product Types](#cross-product-types); [Fldfunc fields](#fldfunc-fields); [Querying On Non-Primary Key](#querying-on-non-primary-key); [Sorting & RowIDs](#sorting---rowids); [Creating A New Data Set](#creating-a-new-data-set); [Using A File As A Data Set](#using-a-file-as-a-data-set); [The -schema option](#the--schema-option); [The -meta option](#the--meta-option); [The -cmt option](#the--cmt-option); [MySQL Integration](#mysql-integration)
@@ -35,7 +35,7 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
 ; [The -checkable option](#the--checkable-option); [The -related option](#the--related-option)
    * [abt: A Build Tool](#abt-a-build-tool)
       * [Input Tables](#input-tables)
-; [Environment Variables](#environment-variables); [Output Directory](#output-directory); [The -install option](#the--install-option); [Target Definition](#target-definition); [Customizing Options](#customizing-options); [Disassembling](#disassembling); [Specifying a different compiler](#specifying-a-different-compiler); [The -ood option](#the--ood-option); [The -listincl option](#the--listincl-option); [Debugging the build](#debugging-the-build); [Bootstrapping](#bootstrapping)
+; [Output Directory](#output-directory); [Bootstrap System](#bootstrap-system); [The -install option](#the--install-option); [Target Definition](#target-definition); [Customizing Options](#customizing-options); [Disassembling](#disassembling); [Specifying a different compiler](#specifying-a-different-compiler); [The -ood option](#the--ood-option); [The -listincl option](#the--listincl-option); [Debugging the build](#debugging-the-build); [Compiler Cache](#compiler-cache)
    * [amc: Algo Model Compiler](#amc-algo-model-compiler)
       * [Introduction](#introduction)
 ; [Why Generate?](#why-generate-)
@@ -103,6 +103,9 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
          * [Blotter Mode](#blotter-mode)
 ; [Inline Specification](#inline-specification); [Diff mode](#diff-mode)
       * [Grephunk: patch file filter](#grephunk-patch-file-filter)
+   * [FF - find files and in files](#ff---find-files-and-in-files)
+         * [Selecting Files And Directories](#selecting-files-and-directories)
+; [Negative Patterns](#negative-patterns); [Matching Options](#matching-options); [Editing Matches](#editing-matches); [Highlighting](#highlighting)
    * [Testimonials](#testimonials)
       * [1](#1)
 ; [2](#2); [3](#3); [4](#4)
@@ -122,15 +125,7 @@ with the goal of formalizing construction of low-latency & realtime programs,
 but they ended up being suitable for all sorts of other things, and the code generation
 part took on a life of its own, eventually generating most of its own source code.
 
-The tools were licensed to Intercontinental Exchange as part
-of a project called Pillar to rewrite all of NYSE's electronic exchanges.
-
-As of this writing, there are several national electronic markets
-written entirely in acr/amc, from matching engines to development tools,
-with amc generating over 95% of all executable code (>4 million LOC)
-and acr handling all configurations -- from NICs and ip addresses to bit fields and
-priority queues. NYSE exchanges have the lowest transaction latency in the 
-industry, as measured by ack times of 99.9% of all orders.
+The tools were subsequently licensed to Intercontinental Exchange.
 
 Since the tools are domain-agnostic, it was decided that open-sourcing
 them would be the best way to ensure their longevity and value, and
@@ -144,6 +139,8 @@ on small projects is assumed but not proven. I believe its ideal use case is rea
 when it is taken as a kernel, and an ecosystem of commands and corresponding
 configuration data files are grown in-place around it. Thus, it is meant to be used
 in-vivo.
+
+The above statements are do not represent ICE views or constitute an endorsement.
 
 ### Contributors
 
@@ -179,20 +176,51 @@ Presently, this project has been tested on the following distributions / compile
 * OS: RHEL, CentOS, Ubuntu
 * g++: 4.8, 8.3, 9
 * clang: 3.4.2
+* MacOS: LLVM 10.0.1
 
 The MariaDB and OpenSSL packages are required in order to build mysql2ssim and ssim2mysql tools.
 
+### Pre-requisites: CentOS:
+
     yum install -y mariadb mariadb-devel mariadb-server
 
-And 
+### Pre-requisites: Ubuntu/Debian
 
     apt install -y mariadb libmariadb-dev libmariadbd-dev libssl-dev
     apt install llvm llvm-dev  # to enable abt -compiler llvm
+
+### Pre-requisites: MacOS
+
+Install brew.
+Then,
+
+    brew install mariadb openssl nasm
+    ln -s /usr/local/opt/openssl/lib/libcrypto.a /usr/local/lib/
+    ln -s /usr/local/opt/openssl/lib/libssl.a /usr/local/lib/
+
+`Mysql` seems to be broken under Brew (somebody didn't clean the lines...)
+There are missing headers. Since MariaDB is the successor to `mysql`, there 
+doesn't seem to be much point in supporting `mysql`. In any case, `acr` doesn't have
+any dependency on `mysql`. It simply provides an convenient adaptor to it.
+
+Nasm is required because `abt` uses it to embed git info into compiled executables.
+
+MacOS's `g++` is actually clang, and it's slightly incompatible with ther  `g++`
+that I've seen. Since clang is the main and official compiler for MacOS,
+OpenACR on MacOS uses `clang`. For this, the following additional setup is necessary:
+
+    COMPILER=clang++
+    export COMPILER
+    ln -sf clang.release-x86_64 dflt.release-x86_64
     
+### Path
+
 All commands can be issued from this, top-level directory.
-Just add the relative path bin/ to your path.
+Add the relative path bin/ to your path.
 
     set PATH=$PATH:bin/
+
+### Building
 
 To build everything, you can run make (provided for convenience)
 or the bootstapped version of abt called ai:
@@ -208,8 +236,8 @@ and build the rest. If any of this fails, you may need to file a bug report.
 
 ### Platform Short List
 
-Support for g++ 8.x, clang, other Linux distributions, FreeBSD, Windows (Cygwin) and Darwin
-is very must desired, so if you'd like to help, please contact alexei@lebe.dev
+Support FreeBSD and Windows (Cygwin) 
+is very must desired, so if you'd like to help, please send pull requests.
 
 ### Editor configuration files
 
@@ -229,7 +257,10 @@ Here are some commands to get set it up.
 
 ### Known Issues
 
-Currently, optimization levels `-O2` and higher cannot be used with gcc 8.
+Currently, optimization levels `-O2` and higher cannot be used with gcc 8 and higher,
+due to the way the optimizer results in corruptions.
+
+
 
 ## Directory Structure
 
@@ -1149,6 +1180,15 @@ Piping through sh produces the desired result:
 The beauty of `-cmd` is that it only creates one subprocess, the target shell. Executing
 one command per output row would have been prohibitively expensive.
 
+### Deleting Records From Stdin
+
+The options `-insert`, `-replace`, `-merge` all enable reading of stdin
+for a list of tuples. This input stream can contain special lines.
+
+Whenever a line starts with `acr.delete`, the corresponding record is deleted.
+
+Whenever a line starts with `acr.insert`, the corresponding record is inserted (subject to replace/merge semantics).
+
 ### Inserting a Column
 
 We now might want to add a column to the `a` table.
@@ -1970,6 +2010,9 @@ This information can be retrived with `strings` or by running the command with `
     $ strings dflt.release-x86_64/abc | grep gitinfo:
     dev.gitinfo  gitinfo:2019-05-02.309c6ba  author:alexei@lebe.dev  cfg:g++/4.8.5/release.Linux-x86_64  package:""
 
+~AL~: this is no longer valid as gitinfo support via loader mechanism was non-portable.
+Will be re-implemented via `amc` in a portable way
+
 ### The -sig flag
 
 For each target that inputs some tables, amc computes a signature hash of that program's inputs.
@@ -2160,40 +2203,49 @@ In contrast, if we didn't specify `-related`, `-data` would fetch all records:
 
 Abt is a build tool. The argument to abt is a target name regex.
 Here, target means 'build target'.
-Abt reads some ssim files that describe which source files go into 
-these targets, and the dependencies between targets;
-builds a dependency dag based on #includes; Invokes build commands,
-keeping up to N of them running at a time.
+
+The ssimfiles `abt` reads describe which targets can be built,
+what are the sources files that comprise the targets, and the various options to use.
+
+Abt outputs are organized under the `build/` directory.
+`abt` supports multiple compilers and architectures within the same directory.
+
+When building, `abt` builds a dependency dag based on #includes; 
+Invokes build commands, keeping up to N of them running at a time.
 The simplest way to build everything is:
 
     $ abt %
 
+Here we assume that `abt` itself has already been built with `ai`. For more information,
+see the [Bootstrap](#Bootstrap) section.
+
 Let's begin by creating a new target.
 
-    $ acr_ed -create -target abc -write
-
-This creates and builds `abc.` Let's clean abc. This cleans both the target
+    $ acr_ed -create -target sample -write
+    ...
+    
+This creates and builds `sample.` Let's clean sample. This cleans both the target
 and all of the libraries that it might use. 
 
-    $ abt -clean abc
-    abt.config  cfg:release  uname:Linux  arch:x86_64  compiler:g++  cache:none
+    $ abt -clean sample
+    abt.config  config:Linux-clang++.release-x86_64  cache:none  out_dir:build/Linux-clang++.release-x86_64
     abt.outofdate  pch:1  src:38  lib:2  exe:1
     report.abt  n_target:4  time:00:00:00.037978981  n_warn:0  n_err:0  n_install:0
 
 And rebuild it:
 
-    $ abt abc
+    $ abt sample
     abt.config  cfg:release  uname:Linux  arch:x86_64  compiler:g++  cache:none
+    abt.config  config:Linux-clang++.release-x86_64  cache:none  out_dir:build/Linux-clang++.release-x86_64
     abt.outofdate  pch:1  src:38  lib:2  exe:1
     abt.build  line_n:48,413  built_n:13,511  job_n:3  complete:28
                 ^^^^^ build in progress
 
-In the example above, I'm running the command on a weak cloud-based VM,
-so only 3 jobs run in parallel (as indicated by `job_n`). This default is picked
+In the example above, `job_n` indicates the number of jobs that are running at the moment. The default is picked
 based on the number of processors in the system. It can be overriden by specifying `-maxjobs`.
-The `config` line specifies
-which config (release, debug, etc) to use; what OS (Linux), architecture (x86_64),
-compiler (g++) and compiler cache.
+The `config` line specifies the 4-tuple of uname, compiler, configuration and target architecture
+that determine which build options to use. If a compiler cache is being used, it's also specified here.
+See the [Compiler Cache](#compiler-cache) section.
 
 The `outofdate` line shows what `abt` found to be out of date: 1 precompiled header,
 38 source files, 2 libraries and 1 executable.
@@ -2203,61 +2255,95 @@ The `outofdate` line shows what `abt` found to be out of date: 1 precompiled hea
 Abt's main input tables come from the dev namespace of the default data set
 (as specified with `-in`)
 
-* dev.target         buildable target
-* dev.targdep        pairwise dependencies between targets
-* dev.targsrc        list of source files for each target.
-* dev.tool_opt       list of options to use for compilation and linking,
+* dev.target         Buildable target
+* dev.targdep        Pairwise dependencies between targets
+* dev.targsrc        List of source files for each target.
+* dev.tool_opt       List of options to use for compilation and linking,
 
-### Environment Variables
+There are also a few general tables.
 
-Abt reads the following environment variables, but does not require any of them to be set.
-
-* COMPILER - read if `-compiler` is not speified. Default is `g++`.
-* UNAME - read if `-uname` is not specified. Default is obtained from `uname` command.
-* ARCH - read if `-arch` is not specified. Default is obtained from `uname` command.
-* CFG - read if `-cfg` is not specified. Default is `release`.
+* dev.uname          List of supported OS's (Linux, Darwin, Cygwin, etc)
+* dev.compiler       List of supported compilers (clang++, g++, etc)
+* dev.cfg            List of arbitrarily named configurations (release, profile, debug, etc.)
+* dev.arch           List of target architectures (such as x86_64)
 
 ### Output Directory
 
-The resulting object files are now in `dflt.release-x86_64/abc`:
+The resulting object files are now in `build/release/sample`, 
+or more specifically `build/Linux-clang++.release-x86_64/sample`,
+since `build/release/sample` is a soft link.
 
-    $ ls -l dflt.release-x86_64/*abc*
-    -rwxrwxr-x. 1 alexei alexei 109128 May  3 18:35 dflt.release-x86_64/abc
-    -rw-rw-r--. 1 alexei alexei   1912 May  3 18:34 dflt.release-x86_64/cpp.abc.abc.o
-    -rw-rw-r--. 1 alexei alexei  24776 May  3 18:34 dflt.release-x86_64/cpp.gen.abc_gen.o
+
+    $ ls -l build/Linux-clang++.release-x86_64/*sample*
+    -rwxrwxr-x. 1 alexei alexei 109128 May  3 18:35 dflt.release-x86_64/sample
+    -rw-rw-r--. 1 alexei alexei   1912 May  3 18:34 dflt.release-x86_64/cpp.sample.sample.o
+    -rw-rw-r--. 1 alexei alexei  24776 May  3 18:34 dflt.release-x86_64/cpp.gen.sample_gen.o
 
 `abt` places all output files in the same output directory, with no subdirectories.
-Source file paths are flattened, substituting `/` with `.`.
+Source file paths are flattened, substituting `/` with `.`. So, `cpp/sample/sample.cpp`
+becomes `cpp.sample.sample.o` in this directory.
 
-The output directory can be overriden with `-out_dir` option. If not specified, the output
-directory defaults to `$compiler.$cfg-$arch`.
+The output directory can be overriden with `-out_dir` option. 
+If not specified, `-cfg` defaults to `-release` and the output directory defaults to `build/$cfg`.
+Typically, `build/$cfg` is a soft link installed by whatever bootstrap script you ran.
+
+### Bootstrap System
+
+The bootstrap files are prepared by `atf_norm bootstrap` by scanning the `builddir` table 
+and invoking `abt` with `-build:N -printcmd` options. There is one bootstrap file for each tested
+combination of uname, compiler and arch. Bootstrap files are prepared only for the release configuation.
+The bootstrap files live in `bin/bootstrap`:
+
+    $ ls -l bin/bootstrap
+    total 104
+    -rwxr-xr-x 1 alexei alexei 21519 May 17 01:19 Darwin-clang++.release-x86_64
+    -rwxr-xr-x 1 alexei alexei 23442 May 17 01:19 Linux-clang++.release-x86_64
+    -rwxr-xr-x 1 alexei alexei 28566 May 17 01:19 Linux-g++-9.release-x86_64
+    -rwxr-xr-x 1 alexei alexei 26072 May 17 01:19 Linux-g++.release-x86_64
+
+When you first run `ai`, it finds that `abt -version` returns an error. This indicates that `abt`
+is not usable. `ai` then guesses at the values of `uname`, `compiler` and `arch` by invoking
+the `uname` utility and checking if the compiler is installed, and finally runs one of the bootstrap scripts
+from `bin/bootstrap`. The bootstrap script create the top-level `build` directory and creates
+soft links under it. When `abt` is invoked, this soft link provides abt with the defaults
+for each of the options `-uname`, `-compiler`, `-arch`.
+
+The `build/$cfg` (by `$cfg` I mean any one of the supported cfg values) can be rewritten
+manually, or by rerunning one of the bootstrap scripts. For instance, if `ai` picked `clang++`
+and you wanted `g++-9`, you can simply run the corresponding bootstrap script, and `g++-9`
+will become the default compiler.
 
 ### The -install option
 
 By default, the resulting files are left in the output directory.
-There are already soft links from bin/ to `../dflt.release-x86_64`. If we want to re-point the default
+There are already soft links from `bin`/ to `../build/release`. If we want to re-point the default
 binary to a different version, the `-install` option will rewrite the soft link to point 
-to the new executable. 
+to the new executable. For instance, we may want to install a debug sample version with
+`abt -install sample -cfg debug`. This will rewrite the soft link `bin/sample` to be
+`../build/Linux-clang++.debug-x86_64/sample`.
 
 ### Target Definition
 
-We can view the definition of target `abc`, as created by `acr_ed`, with `acr`.
+We can view the definition of target `sample`, as created by `acr_ed`, with `acr`.
+As usual, several viewing options are available, in this case we skip the tree mode
+and use a block output.
+
+    $ acr target:sample -ndown 10 > x
+    dev.target  target:sample
+
+    dev.targdep  targdep:sample.algo_lib  comment:""
+    dev.targdep  targdep:sample.algo_pch  comment:""
+    dev.targdep  targdep:sample.lib_prot  comment:""
+
+    dev.targsrc  targsrc:sample/cpp/sample/sample.cpp            comment:""
+    dev.targsrc  targsrc:sample/cpp/gen/sample_gen.cpp        comment:""
+    dev.targsrc  targsrc:sample/include/sample.h              comment:""
+    dev.targsrc  targsrc:sample/include/gen/sample_gen.h      comment:""
+    dev.targsrc  targsrc:sample/include/gen/sample_gen.inl.h  comment:""
+    report.acr  n_select:9  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+
 As we can see, headers are considered sourdce files, and there are a couple of libraries
 (`lib_prot` and `algo_lib`), and a precompiled header (`algo_pch`).
-
-    $ acr target:abc -ndown 10 > x
-    dev.target  target:abc
-
-    dev.targdep  targdep:abc.algo_lib  comment:""
-    dev.targdep  targdep:abc.algo_pch  comment:""
-    dev.targdep  targdep:abc.lib_prot  comment:""
-
-    dev.targsrc  targsrc:abc/cpp/abc/abc.cpp            comment:""
-    dev.targsrc  targsrc:abc/cpp/gen/abc_gen.cpp        comment:""
-    dev.targsrc  targsrc:abc/include/abc.h              comment:""
-    dev.targsrc  targsrc:abc/include/gen/abc_gen.h      comment:""
-    dev.targsrc  targsrc:abc/include/gen/abc_gen.inl.h  comment:""
-    report.acr  n_select:9  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
 
 ### Customizing Options
 
@@ -2270,7 +2356,7 @@ on a per-target, per-uname, per-compiler, per-cfg and per-arch basis:
 
     $ acr cfg:coverage -t
     dev.cfg  cfg:coverage  comment:"coverage measurement"
-      dev.builddir  builddir:dflt.coverage-x86_64  comment:""
+      dev.builddir  builddir:Linux.coverage-x86_64  comment:""
 
       dev.tool_opt  tool_opt:181  opt_type:CC_OPTS    opt:-ftest-coverage    target:""  uname:""  compiler:g++  cfg:coverage  arch:""  comment:""
       dev.tool_opt  tool_opt:182  opt_type:CC_OPTS    opt:-fprofile-arcs     target:""  uname:""  compiler:g++  cfg:coverage  arch:""  comment:""
@@ -2285,20 +2371,20 @@ Abt includes a convenient disassembly mode, which can be invoked with `-disas`.
 The parameter is a regular expression that's matched against function names in the 
 compiler's assembler output.
 
-    $ abt abc -disas Main | head -15
-    abt.config  cfg:release  uname:Linux  arch:x86_64  compiler:g++  cache:none
+    $ abt sample -disas Main | head -15
+    abt.config  config:Linux-clang++.release-x86_64  cache:none  out_dir:build/Linux-clang++.release-x86_64
     abt.outofdate  pch:0  src:0  lib:0  exe:0
-    0000000000000000 <abc::Main()>:
+    0000000000000000 <sample::Main()>:
        0:	53                   	push   %rbx
        1:	be 00 00 00 00       	mov    $0x0,%esi
        6:	48 83 ec 10          	sub    $0x10,%rsp
-       a:	8b 1d 00 00 00 00    	mov    0x0(%rip),%ebx        # 10 <abc::Main()+0x10>
+       a:	8b 1d 00 00 00 00    	mov    0x0(%rip),%ebx        # 10 <sample::Main()+0x10>
       10:	48 89 e7             	mov    %rsp,%rdi
       13:	48 c7 04 24 00 00 00 	movq   $0x0,(%rsp)
       1a:	00 
       1b:	c7 44 24 08 0d 00 00 	movl   $0xd,0x8(%rsp)
       22:	00 
-      23:	e8 00 00 00 00       	callq  28 <abc::Main()+0x28>
+      23:	e8 00 00 00 00       	callq  28 <sample::Main()+0x28>
       28:	89 da                	mov    %ebx,%edx
       2a:	b9 01 00 00 00       	mov    $0x1,%ecx
 
@@ -2315,11 +2401,11 @@ with `g++` and `clang`, and other cases that cannot be handled by `tool_opt` alo
 You can find out which files are out-of-date (I don't really see how this could be useful,
 but the option is there) with `-ood`:
 
-    $ touch include/abc.h
-    $ abt -ood abc -build:N
-    dev.target  target:abc
-    dev.srcfile  srcfile:cpp/abc/abc.cpp
-    abt.config  cfg:release  uname:Linux  arch:x86_64  compiler:g++  cache:none
+    $ touch include/sample.h
+    $ abt -ood sample -build:N
+    dev.target  target:sample
+    dev.srcfile  srcfile:cpp/sample/sample.cpp
+    abt.config  config:Linux-clang++.release-x86_64  cache:none  out_dir:build/Linux-clang++.release-x86_64
     abt.outofdate  pch:0  src:1  lib:0  exe:1
     report.abt  n_target:4  time:00:00:00.031850008  n_warn:0  n_err:0  n_install:0
 
@@ -2327,10 +2413,10 @@ but the option is there) with `-ood`:
 
 To see the full list of include files, as discovered by abt, for a given target, use
 
-    $ abt -listincl abc 
-    dev.Include  include:cpp/abc/abc.cpp:include/algo.h  sys:N  comment:""
-    dev.Include  include:cpp/abc/abc.cpp:include/abc.h  sys:N  comment:""
-    dev.Include  include:cpp/gen/abc_gen.cpp:include/algo.h  sys:N  comment:""
+    $ abt -listincl sample 
+    dev.Include  include:cpp/sample/sample.cpp:include/algo.h  sys:N  comment:""
+    dev.Include  include:cpp/sample/sample.cpp:include/sample.h  sys:N  comment:""
+    dev.Include  include:cpp/gen/sample_gen.cpp:include/algo.h  sys:N  comment:""
     ...
 
 ### Debugging the build
@@ -2340,10 +2426,11 @@ When run with `-v`, abt will show the commands that execute. Otherwise, only the
 either fail or produce output are echoed to the screen. By default, they are hidden to keep output
 clean.
 
-### Bootstrapping
+### Compiler Cache
 
-With the `-printcmd` option, abt doesn't actually run the commands but simply prints them to 
-stdout. This can be used to generate bootstrap scripts, such as `bin/abt-bootstrap`. 
+`abt` supports two compiler caches. The `ccache` is an open-source tool, and `gcache` is a built-in version.
+
+~TBD~
 
 ## amc: Algo Model Compiler
 
@@ -4333,7 +4420,74 @@ and filename should not have pattern /gen/
 
     grephunk amc f:!/gen/ h:'}\s+$'
 
+## FF - find files and in files
+
+`Ff` is a file search utility.
+The simplest usage is
+
+    ff <term1> <term2>
+    
+Ff recursively searches for all text files starting from from the starting
+point (default is `.`), and then searches inside each for for the specified pattern.
+All terms must occur on the same, in effect `ff term1 term2` is equivalent to `ff term1.*term2`.
+
+All terms are perl regexes.
+
+#### Selecting Files And Directories
+
+Ff can search inside a particular directory with `-d`; Multiple directories can be specified:
+
+    ff -d /usr/include -d cpp <term>
+    
+The `-n` option excludes generated files (files with `/gen/` in the path).
+The `-s` option adds `/usr/include` to the list of starting directories.
+
+The `-g` option starts the search in the `ffroot` directory. This directory is determined
+by walking upward from the current directory until encountering a directory with the file `.ffroot` in it.
+
+`ff` automatically skips directory `temp/`.
+The `-f` option can be used to select which files `ff` selects for searching.
+There can be multiple `-f` options. They act as "OR". 
+
+#### Negative Patterns
+
+Negative patterns can be preceded with `!`.
+Negative patterns are available both for filenames (`-f`) and file conrtents.
+For instance, to exclude headers, you might use `ff -f '!\.h$'`. Make sure to quote `!` 
+so it's not interpeted by the command shell as a history item
+
+#### Matching Options
+
+The `-t` option looks for typedefs or struct definitions (in a very loose sense).
+
+The `-w` option matches whole words only. This is equivalent to wrapping terms with `\b...\b`
+since all terms are Perl regexes.
+
+The `-i` option enables case-insensitive search for all terms.
+
+#### Editing Matches
+
+With `-l` option, only the names of files that matched the terms are printed.
+
+The `-c` option adds extra empty lines between multiple matches in the same file; for visual grouping.
+
+The `-a` option prints all matches, even if there was more than match per line.
+This can be useful with emacs macros, in order to visit all match locations and perform some action.
+
+The output of `ff` is ready to consume as compilation buffer output in emacs, or via errlist.
+To open the list of matches in an editor, do `errlist ff <term1>...`.
+Integration of `ff` with emacs is provided in `conf/emacs.el`.
+
+#### Highlighting
+
+By default, `ff` highlights output. But if `-notty` is specified, or the output
+is not a terminal, highlighting is skipped.
+
+`ff` is similar to `grep -RHn`, but more specialized.
+
 ## Testimonials
+
+These are some of the good things people have said about acr/amc.
 
 ### 1
 
@@ -4342,8 +4496,6 @@ and filename should not have pattern /gen/
     generated with guaranteed consistency and quality. 
 
         Shreejith Billenahalli
-        Director of Technology, Software Architecture, Development & Delivery
-        at Intercontinental Exchange
 
 ### 2
 
@@ -4355,7 +4507,6 @@ and filename should not have pattern /gen/
     the entire codebase.
 
         Jon Joshua
-        Development Lead at New York Stock Exchange
 
 ### 3
 
@@ -4365,9 +4516,8 @@ and filename should not have pattern /gen/
     checking has enabled a big team of developers to produce very
     high-quality products in very short periods of time while working on a
     single codebase
- 
+
         Hayk Mkrtchyan
-        Director at Intercontinental Exchange
  
 ### 4
 
@@ -4380,4 +4530,3 @@ and filename should not have pattern /gen/
     more on the way.
 
         Vladimir Parizhsky
-        SVP, Systems Architecture at Intercontinental Exchange

@@ -1,6 +1,6 @@
 #!/bin/sh
 # convert each line to a single .
 while read X; do
-    echo -n .
+    printf %c .
 done
 echo

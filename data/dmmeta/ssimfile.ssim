@@ -22,7 +22,6 @@ dmmeta.ssimfile  ssimfile:dev.srcfile  ctype:dev.Srcfile
 dmmeta.ssimfile  ssimfile:dev.syslib  ctype:dev.Syslib
 dmmeta.ssimfile  ssimfile:dev.targdep  ctype:dev.Targdep
 dmmeta.ssimfile  ssimfile:dev.target  ctype:dev.Target
-dmmeta.ssimfile  ssimfile:dev.targinstall  ctype:dev.Targinstall
 dmmeta.ssimfile  ssimfile:dev.targsrc  ctype:dev.Targsrc
 dmmeta.ssimfile  ssimfile:dev.targsyslib  ctype:dev.Targsyslib
 dmmeta.ssimfile  ssimfile:dev.tool_opt  ctype:dev.ToolOpt

@@ -58,22 +58,18 @@ static void CheckCleanDirsAll() {
 // -----------------------------------------------------------------------------
 
 void atf_norm::normcheck_testamc() {
-    command::atf_amc atf_amc;
-    SysCmd(atf_amc_ToCmdline(atf_amc)<< ">/dev/null",FailokQ(false));
+    command::atf_amc_proc atf_amc;
+    atf_amc.stdout = ">/dev/null";
+    atf_amc_ExecX(atf_amc);
 }
 
 // -----------------------------------------------------------------------------
 
 void atf_norm::normcheck_unit() {
-    command::atf_unit atf_unit;
-    atf_unit.perf_secs=0;
-    SysCmd(atf_unit_ToCmdline(atf_unit) << ">/dev/null",FailokQ(false));
-}
-
-// -----------------------------------------------------------------------------
-
-void atf_norm::normcheck_bootstrap() {
-    SysCmd("make bootstrap",FailokQ(false));
+    command::atf_unit_proc atf_unit;
+    atf_unit.cmd.perf_secs=0;
+    atf_unit.stdout = ">/dev/null";
+    atf_unit_ExecX(atf_unit);
 }
 
 // -----------------------------------------------------------------------------

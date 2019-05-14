@@ -187,7 +187,7 @@ sub AppendStringToFile($$) {
 # search first 100 lines  of $_[0] for reference to a precompiled header
 # return filename for that header, if applicable
 # Example of preprocess file:
-# #pragma GCC pch_preprocess "dflt.debug-x86_64/include.algo_pch.h.gch"
+# #pragma GCC pch_preprocess "<builddir>/include.algo_pch.h.gch"
 sub FindPchFile($) {
     my $ret="";
     my $nline=0;

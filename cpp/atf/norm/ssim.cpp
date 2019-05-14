@@ -28,13 +28,13 @@
 // -----------------------------------------------------------------------------
 
 void atf_norm::normcheck_normalize_acr() {
-    command::acr acr;
-    acr.check = true;
-    acr.write = true;
-    acr.query = "%";
-    acr.print = false;
-    acr.report = false;
-    SysCmd(acr_ToCmdline(acr),FailokQ(false));
+    command::acr_proc acr;
+    acr.cmd.check = true;
+    acr.cmd.write = true;
+    acr.cmd.query = "%";
+    acr.cmd.print = false;
+    acr.cmd.report = false;
+    acr_ExecX(acr);
 }
 
 // -----------------------------------------------------------------------------

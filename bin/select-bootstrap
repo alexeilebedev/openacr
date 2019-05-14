@@ -1,0 +1,37 @@
+#!/usr/bin/env perl
+use strict;
+my $uname=`uname -s`;
+chomp $uname;
+my $arch=`uname -m`;
+chomp $arch;
+my $cfg="release";
+my $rc=0;
+my $found=0;
+my $builddir;
+for my $compiler ('clang++', 'g++') {
+    $builddir = "$uname-$compiler.$cfg-$arch";
+    print "#   considering $builddir\n";
+    my $bsfile = "bin/bootstrap/$builddir";
+    if (system("$compiler --version >/dev/null 2>/dev/null") == 0 && -f $bsfile) {
+        $found=1;
+        print "# make-bootstrap: running $bsfile\n";
+        $rc=system($bsfile);
+        print "# ------------------------------------------------------------------\n";
+        print "# \n";
+        last;
+    }
+}
+if (!$found) {
+    print "# No available bootstrap file matched your configuration uname:$uname cfg:$cfg arch:$arch\n";
+    print "# The list of all available bootstraps is in bin/bootstrap\n";
+    print "# New ones can be created either manually or from an existing installation\n";
+    $rc=1;
+}
+if ($rc==0) {
+    print "# bootstrap successful!\n";
+    print "# the configuration $builddir is now your default\n";
+    print "# based on the soft links that were created under build/.\n";
+    print "# to change the default, re-run another bootstrap file, or specify\n";
+    print "# options -uname,-compiler,-arch explicitly when invoking abt.\n";
+}
+exit $rc;

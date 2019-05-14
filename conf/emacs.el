@@ -426,7 +426,7 @@
 ;; Find e-mail for user USERNAME using acr lookup in acmdb.user table
 ;; Return the first found e-mail, being careful to strip trailing newlines
 (defun email-of (username)
-  (shell-command-to-string (concat "cd " ffroot-directory "; for X in $(bin/acr acmdb.user:" username " -field:email -report:N); do echo -n $X; exit 0; done")))
+  (shell-command-to-string (concat "cd " ffroot-directory "; for X in $(bin/acr acmdb.user:" username " -field:email -report:N); do printf %s '$X'; exit 0; done")))
 
 ;;-----------------------------------------------------------------------------
 

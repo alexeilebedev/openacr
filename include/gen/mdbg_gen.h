@@ -76,7 +76,13 @@ void                 builddir_CopyOut(mdbg::FBuilddir &row, dev::Builddir &out) 
 // Copy fields in to row
 void                 builddir_CopyIn(mdbg::FBuilddir &row, dev::Builddir &in) __attribute__((nothrow));
 
+algo::Smallstr50     uname_Get(mdbg::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+
+algo::Smallstr50     compiler_Get(mdbg::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+
 algo::Smallstr50     cfg_Get(mdbg::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+
+algo::Smallstr50     arch_Get(mdbg::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 void                 FBuilddir_Init(mdbg::FBuilddir& builddir);

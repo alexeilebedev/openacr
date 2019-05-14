@@ -388,7 +388,6 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dev_srcfile;           // dev.srcf
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_syslib;            // dev.syslib             fconst:dmmeta.Ssimfile.ssimfile/dev.syslib
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_targdep;           // dev.targdep            fconst:dmmeta.Ssimfile.ssimfile/dev.targdep
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_target;            // dev.target             fconst:dmmeta.Ssimfile.ssimfile/dev.target
-extern const char *  dmmeta_Ssimfile_ssimfile_dev_targinstall;       // dev.targinstall        fconst:dmmeta.Ssimfile.ssimfile/dev.targinstall
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_targsrc;           // dev.targsrc            fconst:dmmeta.Ssimfile.ssimfile/dev.targsrc
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_targsyslib;        // dev.targsyslib         fconst:dmmeta.Ssimfile.ssimfile/dev.targsyslib
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_tool_opt;          // dev.tool_opt           fconst:dmmeta.Ssimfile.ssimfile/dev.tool_opt

@@ -35,12 +35,10 @@ inline dev::Cfg::Cfg() {
 }
 
 inline dev::Compiler::Compiler(const algo::strptr&            in_compiler
-        ,const algo::strptr&            in_dflt
         ,const algo::strptr&            in_ranlib
         ,const algo::strptr&            in_ar
         ,const algo::Comment&           in_comment)
     : compiler(in_compiler)
-    , dflt(in_dflt)
     , ranlib(in_ranlib)
     , ar(in_ar)
     , comment(in_comment)
@@ -221,9 +219,6 @@ inline dev::Target::Target(const algo::strptr&            in_target)
 inline dev::Target::Target() {
 }
 
-inline dev::Targinstall::Targinstall() {
-}
-
 inline dev::Targsrc::Targsrc(const algo::strptr&            in_targsrc
         ,const algo::Comment&           in_comment)
     : targsrc(in_targsrc)
@@ -331,11 +326,6 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Targdep &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Target &row) {// cfmt:dev.Target.String
     dev::Target_Print(const_cast<dev::Target&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Targinstall &row) {// cfmt:dev.Targinstall.String
-    dev::Targinstall_Print(const_cast<dev::Targinstall&>(row), str);
     return str;
 }
 

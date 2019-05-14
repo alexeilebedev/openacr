@@ -13,15 +13,7 @@ with the goal of formalizing construction of low-latency & realtime programs,
 but they ended up being suitable for all sorts of other things, and the code generation
 part took on a life of its own, eventually generating most of its own source code.
 
-The tools were licensed to Intercontinental Exchange as part
-of a project called Pillar to rewrite all of NYSE's electronic exchanges.
-
-As of this writing, there are several national electronic markets
-written entirely in acr/amc, from matching engines to development tools,
-with amc generating over 95% of all executable code (>4 million LOC)
-and acr handling all configurations -- from NICs and ip addresses to bit fields and
-priority queues. NYSE exchanges have the lowest transaction latency in the 
-industry, as measured by ack times of 99.9% of all orders.
+The tools were subsequently licensed to Intercontinental Exchange.
 
 Since the tools are domain-agnostic, it was decided that open-sourcing
 them would be the best way to ensure their longevity and value, and
@@ -35,6 +27,8 @@ on small projects is assumed but not proven. I believe its ideal use case is rea
 when it is taken as a kernel, and an ecosystem of commands and corresponding
 configuration data files are grown in-place around it. Thus, it is meant to be used
 in-vivo.
+
+The above statements are do not represent ICE views or constitute an endorsement.
 
 ### Contributors
 

@@ -5,20 +5,51 @@ Presently, this project has been tested on the following distributions / compile
 * OS: RHEL, CentOS, Ubuntu
 * g++: 4.8, 8.3, 9
 * clang: 3.4.2
+* MacOS: LLVM 10.0.1
 
 The MariaDB and OpenSSL packages are required in order to build mysql2ssim and ssim2mysql tools.
 
+### Pre-requisites: CentOS:
+
     yum install -y mariadb mariadb-devel mariadb-server
 
-And 
+### Pre-requisites: Ubuntu/Debian
 
     apt install -y mariadb libmariadb-dev libmariadbd-dev libssl-dev
     apt install llvm llvm-dev  # to enable abt -compiler llvm
+
+### Pre-requisites: MacOS
+
+Install brew.
+Then,
+
+    brew install mariadb openssl nasm
+    ln -s /usr/local/opt/openssl/lib/libcrypto.a /usr/local/lib/
+    ln -s /usr/local/opt/openssl/lib/libssl.a /usr/local/lib/
+
+`Mysql` seems to be broken under Brew (somebody didn't clean the lines...)
+There are missing headers. Since MariaDB is the successor to `mysql`, there 
+doesn't seem to be much point in supporting `mysql`. In any case, `acr` doesn't have
+any dependency on `mysql`. It simply provides an convenient adaptor to it.
+
+Nasm is required because `abt` uses it to embed git info into compiled executables.
+
+MacOS's `g++` is actually clang, and it's slightly incompatible with ther  `g++`
+that I've seen. Since clang is the main and official compiler for MacOS,
+OpenACR on MacOS uses `clang`. For this, the following additional setup is necessary:
+
+    COMPILER=clang++
+    export COMPILER
+    ln -sf clang.release-x86_64 dflt.release-x86_64
     
+### Path
+
 All commands can be issued from this, top-level directory.
-Just add the relative path bin/ to your path.
+Add the relative path bin/ to your path.
 
     set PATH=$PATH:bin/
+
+### Building
 
 To build everything, you can run make (provided for convenience)
 or the bootstapped version of abt called ai:
@@ -34,8 +65,8 @@ and build the rest. If any of this fails, you may need to file a bug report.
 
 ### Platform Short List
 
-Support for g++ 8.x, clang, other Linux distributions, FreeBSD, Windows (Cygwin) and Darwin
-is very must desired, so if you'd like to help, please contact alexei@lebe.dev
+Support FreeBSD and Windows (Cygwin) 
+is very must desired, so if you'd like to help, please send pull requests.
 
 ### Editor configuration files
 
@@ -55,4 +86,7 @@ Here are some commands to get set it up.
 
 ### Known Issues
 
-Currently, optimization levels `-O2` and higher cannot be used with gcc 8.
+Currently, optimization levels `-O2` and higher cannot be used with gcc 8 and higher,
+due to the way the optimizer results in corruptions.
+
+

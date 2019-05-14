@@ -2030,9 +2030,12 @@ void atf_unit::unittest_algo_lib_U128PrintHex() {
 // --------------------------------------------------------------------------------
 
 void atf_unit::unittest_algo_lib_FileToString() {
+#ifndef __MACH__
     // check that FileToString can read /proc/cpuinfo
+    // mac doesn't have these files.
     vrfyeq_(FileToString("/proc/iomem")
             ,SysEval("cat /proc/iomem",FailokQ(true),1024*1024*10));
+#endif
 }
 
 // --------------------------------------------------------------------------------
@@ -2536,8 +2539,8 @@ static void CheckSysEval(strptr cmd, strptr expect_output, int limit, bool expec
 }
 
 void atf_unit::unittest_algo_lib_SysEval() {
-    CheckSysEval("echo -n blah","blah",10,true);
-    CheckSysEval("echo -n longstring","",1,false);// will fail because of output limit
+    CheckSysEval("printf %s blah","blah",10,true);
+    CheckSysEval("printf %s longstring","",1,false);// will fail because of output limit
     CheckSysEval("cat /dev/zero","",100000,false);// will fail because of output limit
     CheckSysEval("echo blah","blah\n",5,true);// check newline
 }

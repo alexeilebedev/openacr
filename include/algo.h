@@ -36,7 +36,6 @@
 
 #include "include/algo/lib.h"
 #include "include/algo/string.h"
-#include "include/algo/cpu_hz.h"
 #include "include/algo/tstamp.h"
 #include "include/algo/file.h"
 #include "include/algo/arg.h"

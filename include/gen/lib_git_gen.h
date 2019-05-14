@@ -42,14 +42,6 @@ struct FDb { // lib_git.FDb
     lib_git::trace   trace;   //
 };
 
-// Main function
-void                 MainArgs(int argc, char **argv);
-// Main loop.
-void                 MainLoop();
-// Main step
-void                 Step();
-// Main function
-void                 Main();
 void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text

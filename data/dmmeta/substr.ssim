@@ -5,7 +5,10 @@ dmmeta.substr  field:atf_amc.AmcSubstr1.boolval  expr:.LR  srcfield:atf_amc.AmcS
 dmmeta.substr  field:atf_amc.AmcSubstr1.intval  expr:.LR  srcfield:atf_amc.AmcSubstr1.strval
 dmmeta.substr  field:atfdb.Unittest.target  expr:.RL  srcfield:atfdb.Unittest.unittest
 dmmeta.substr  field:atfdb.Unittest.testname  expr:.RR  srcfield:atfdb.Unittest.unittest
+dmmeta.substr  field:dev.Builddir.arch  expr:.LR-LR  srcfield:dev.Builddir.builddir
 dmmeta.substr  field:dev.Builddir.cfg  expr:.LR-LL  srcfield:dev.Builddir.builddir
+dmmeta.substr  field:dev.Builddir.compiler  expr:.LL-LR  srcfield:dev.Builddir.builddir
+dmmeta.substr  field:dev.Builddir.uname  expr:.LL-LL  srcfield:dev.Builddir.builddir
 dmmeta.substr  field:dev.Gitfile.ext  expr:/RR.LR.RR  srcfield:dev.Gitfile.gitfile
 dmmeta.substr  field:dev.Include.filename  expr::LR  srcfield:dev.Include.include
 dmmeta.substr  field:dev.Include.srcfile  expr::LL  srcfield:dev.Include.include

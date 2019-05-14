@@ -575,7 +575,7 @@ static void atf_unit::tr_number_Turn(atf_unit::FNumber& from, atf_unit::FNumber&
 // --- atf_unit.FDb.tr_number.Connect
 inline static void atf_unit::tr_number_Connect(atf_unit::FNumber* parent, atf_unit::FNumber* child, bool left) {
     if(parent){
-        (&parent->tr_number_left)[!left] = child;
+        (left ? parent->tr_number_left : parent->tr_number_right) = child;
     }
     if(child){
         child->tr_number_up = parent;
@@ -1820,6 +1820,8 @@ int atf_unit::acr_ed_Execv() {
     while (n_argv>0) { // shift pointers
         argv[--n_argv] += (u64)temp.ch_elems;
     }
+    // if _db.acr_ed_path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(_db.acr_ed_path);
     return execv(Zeroterm(_db.acr_ed_path),argv);
 }
 
@@ -3086,10 +3088,7 @@ int main(int argc, char **argv) {
         atf_unit::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
-        algo_lib::_db.epoll_fd = epoll_create(1);
-        if (algo_lib::_db.epoll_fd == -1) {
-            FatalErrorExit("epoll_create");
-        }
+        algo_lib::IohookInit();
         atf_unit::MainArgs(algo_lib::_db.argc,algo_lib::_db.argv); // dmmeta.main:atf_unit
     } catch(algo_lib::ErrorX &x) {
         prerr("atf_unit.error  " << x); // there may be additional hints in DetachBadTags

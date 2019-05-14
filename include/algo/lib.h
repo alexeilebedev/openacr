@@ -355,6 +355,25 @@ namespace algo_lib { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
+    // cpp/lib/algo/cpu_hz.cpp -- Grab cpu_hz from OS
+    //
+    void InitCpuHz();
+
+    // -------------------------------------------------------------------
+    // cpp/lib/algo/crc32.cpp -- Software-based CRC32
+    //
+
+    // This is a low-quality random number generator suitable for simple tasks...
+    // Set seed for srng state
+    void srng_SetSeed(algo_lib::Srng &srng, int z, int w);
+
+    // retrieve random u32
+    u32 srng_GetU32(algo_lib::Srng &srng);
+
+    // retrieve random double in 0..1 range
+    double srng_GetDouble(algo_lib::Srng &srng);
+
+    // -------------------------------------------------------------------
     // cpp/lib/algo/errtext.cpp
     //
     void SaveBadField(strptr name, strptr value);
@@ -393,6 +412,12 @@ namespace algo_lib { // update-hdr
     //
     void fildes_Cleanup(algo_lib::FLockfile &lockfile);
 
+    // Update FNAME to be a filename that can be passed to Unix exec call.
+    // If FNAME is an absolute path, do nothing
+    // If FNAME is a relative path, perform a search using the PATH environment
+    // variable; upon finding a matching path, set FNAME to the filename found.
+    void ResolveExecFname(cstring &fname);
+
     // -------------------------------------------------------------------
     // cpp/lib/algo/fmt.cpp -- Print to string / Read from string
     //
@@ -402,15 +427,26 @@ namespace algo_lib { // update-hdr
     // -------------------------------------------------------------------
     // cpp/lib/algo/iohook.cpp
     //
+    void IohookInit();
 
     // Register IOHOOK to be called whenever an IO operation is possible.
     // OK to add an fd twice with different flags. Subsequent calls override previous ones.
     // Add iohook to epoll in read, write or read/write mode
     // Optionally, add as edge triggered
-    void IoHookAdd(algo_lib::FIohook& iohook, algo::IOEvtFlags inflags) __attribute__((nothrow));
+    void IohookAdd(algo_lib::FIohook& iohook, algo::IOEvtFlags inflags) __attribute__((nothrow));
 
-    // Remove iohook from epoll
-    void IoHookRemove(algo_lib::FIohook& iohook) __attribute__((nothrow));
+    // De-register interest in iohook
+    void IohookRemove(algo_lib::FIohook& iohook) __attribute__((nothrow));
+
+    // give up unused time to the OS.
+    // Compute number of clocks to sleep before next scheduling cycle
+    // If there was no sleep on the previous cycle, the sleep is zero.
+    // This last bit is important because it prevents deadlocks
+    // when one step implicitly creates work for another step
+    // that occurs before it in the main loop.
+    // Sleep will not extend beyond algo_lib::_db.limit
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void giveup_time_Step();
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/lib.cpp -- Main file
@@ -422,9 +458,6 @@ namespace algo_lib { // update-hdr
     void fildes_Cleanup(algo_lib::FIohook &iohook);
     //     (user-implemented function, prototype is in amc-generated header)
     // void bh_timehook_Step();
-
-    // give up unused time to the OS.
-    // void giveup_time_Step();
 
     // Check signature on incoming data
     bool dispsigcheck_InputMaybe(dmmeta::Dispsigcheck &dispsigcheck);
@@ -543,20 +576,6 @@ namespace algo_lib { // update-hdr
     // Attach mmapfile MMAPFILE to FNAME
     // Return success code.
     bool MmapFile_Load(MmapFile &mmapfile, strptr fname);
-
-    // -------------------------------------------------------------------
-    // cpp/lib/algo/rand.cpp
-    //
-
-    // This is a low-quality random number generator suitable for simple tasks...
-    // Set seed for srng state
-    void srng_SetSeed(algo_lib::Srng &srng, int z, int w);
-
-    // retrieve random u32
-    u32 srng_GetU32(algo_lib::Srng &srng);
-
-    // retrieve random double in 0..1 range
-    double srng_GetDouble(algo_lib::Srng &srng);
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/regx.cpp -- Sql Regx implementation

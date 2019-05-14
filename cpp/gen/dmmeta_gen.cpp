@@ -161,7 +161,6 @@ const char *dmmeta_Ssimfile_ssimfile_dev_srcfile           = "dev.srcfile";
 const char *dmmeta_Ssimfile_ssimfile_dev_syslib            = "dev.syslib";
 const char *dmmeta_Ssimfile_ssimfile_dev_targdep           = "dev.targdep";
 const char *dmmeta_Ssimfile_ssimfile_dev_target            = "dev.target";
-const char *dmmeta_Ssimfile_ssimfile_dev_targinstall       = "dev.targinstall";
 const char *dmmeta_Ssimfile_ssimfile_dev_targsrc           = "dev.targsrc";
 const char *dmmeta_Ssimfile_ssimfile_dev_targsyslib        = "dev.targsyslib";
 const char *dmmeta_Ssimfile_ssimfile_dev_tool_opt          = "dev.tool_opt";

@@ -12,6 +12,8 @@
 #include "include/gen/dev_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/algo_lib_gen.h"
+#include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 // compile-time string constants for dev.Arch.arch
 const char *dev_Arch_arch_         = "";
@@ -22,10 +24,22 @@ const char *dev_Arch_arch_x64      = "x64";
 const char *dev_Arch_arch_x86_64   = "x86_64";
 
 // compile-time string constants for dev.Builddir.builddir
-const char *dev_Builddir_builddir_dflt_coverage_x86_64   = "dflt.coverage-x86_64";
-const char *dev_Builddir_builddir_dflt_debug_x86_64      = "dflt.debug-x86_64";
-const char *dev_Builddir_builddir_dflt_profile_x86_64    = "dflt.profile-x86_64";
-const char *dev_Builddir_builddir_dflt_release_x86_64    = "dflt.release-x86_64";
+const char *dev_Builddir_builddir_Darwin_clangPP_coverage_x86_64   = "Darwin-clang++.coverage-x86_64";
+const char *dev_Builddir_builddir_Darwin_clangPP_debug_x86_64      = "Darwin-clang++.debug-x86_64";
+const char *dev_Builddir_builddir_Darwin_clangPP_profile_x86_64    = "Darwin-clang++.profile-x86_64";
+const char *dev_Builddir_builddir_Darwin_clangPP_release_x86_64    = "Darwin-clang++.release-x86_64";
+const char *dev_Builddir_builddir_Linux_clangPP_coverage_x86_64    = "Linux-clang++.coverage-x86_64";
+const char *dev_Builddir_builddir_Linux_clangPP_debug_x86_64       = "Linux-clang++.debug-x86_64";
+const char *dev_Builddir_builddir_Linux_clangPP_profile_x86_64     = "Linux-clang++.profile-x86_64";
+const char *dev_Builddir_builddir_Linux_clangPP_release_x86_64     = "Linux-clang++.release-x86_64";
+const char *dev_Builddir_builddir_Linux_gPP_9_coverage_x86_64      = "Linux-g++-9.coverage-x86_64";
+const char *dev_Builddir_builddir_Linux_gPP_9_debug_x86_64         = "Linux-g++-9.debug-x86_64";
+const char *dev_Builddir_builddir_Linux_gPP_9_profile_x86_64       = "Linux-g++-9.profile-x86_64";
+const char *dev_Builddir_builddir_Linux_gPP_9_release_x86_64       = "Linux-g++-9.release-x86_64";
+const char *dev_Builddir_builddir_Linux_gPP_coverage_x86_64        = "Linux-g++.coverage-x86_64";
+const char *dev_Builddir_builddir_Linux_gPP_debug_x86_64           = "Linux-g++.debug-x86_64";
+const char *dev_Builddir_builddir_Linux_gPP_profile_x86_64         = "Linux-g++.profile-x86_64";
+const char *dev_Builddir_builddir_Linux_gPP_release_x86_64         = "Linux-g++.release-x86_64";
 
 // compile-time string constants for dev.Cfg.cfg
 const char *dev_Cfg_cfg_   = "";
@@ -136,6 +150,30 @@ void dev::Badline_Print(dev::Badline & row, algo::cstring &str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
+// --- dev.Builddir.uname.Get
+algo::Smallstr50 dev::uname_Get(dev::Builddir& parent) {
+    algo::Smallstr50 ret(algo::Pathcomp(parent.builddir, ".LL-LL"));
+    return ret;
+}
+
+// --- dev.Builddir.uname.Get2
+algo::Smallstr50 dev::Builddir_uname_Get(strptr arg) {
+    algo::Smallstr50 ret(algo::Pathcomp(arg, ".LL-LL"));
+    return ret;
+}
+
+// --- dev.Builddir.compiler.Get
+algo::Smallstr50 dev::compiler_Get(dev::Builddir& parent) {
+    algo::Smallstr50 ret(algo::Pathcomp(parent.builddir, ".LL-LR"));
+    return ret;
+}
+
+// --- dev.Builddir.compiler.Get2
+algo::Smallstr50 dev::Builddir_compiler_Get(strptr arg) {
+    algo::Smallstr50 ret(algo::Pathcomp(arg, ".LL-LR"));
+    return ret;
+}
+
 // --- dev.Builddir.cfg.Get
 algo::Smallstr50 dev::cfg_Get(dev::Builddir& parent) {
     algo::Smallstr50 ret(algo::Pathcomp(parent.builddir, ".LR-LL"));
@@ -146,6 +184,23 @@ algo::Smallstr50 dev::cfg_Get(dev::Builddir& parent) {
 algo::Smallstr50 dev::Builddir_cfg_Get(strptr arg) {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".LR-LL"));
     return ret;
+}
+
+// --- dev.Builddir.arch.Get
+algo::Smallstr50 dev::arch_Get(dev::Builddir& parent) {
+    algo::Smallstr50 ret(algo::Pathcomp(parent.builddir, ".LR-LR"));
+    return ret;
+}
+
+// --- dev.Builddir.arch.Get2
+algo::Smallstr50 dev::Builddir_arch_Get(strptr arg) {
+    algo::Smallstr50 ret(algo::Pathcomp(arg, ".LR-LR"));
+    return ret;
+}
+
+// --- dev.Builddir..Concat_uname_compiler_cfg_arch
+tempstr dev::Builddir_Concat_uname_compiler_cfg_arch( const algo::strptr& uname ,const algo::strptr& compiler ,const algo::strptr& cfg ,const algo::strptr& arch ) {
+    return tempstr() << uname <<'-'<< compiler <<'.'<< cfg <<'-'<< arch ;
 }
 
 // --- dev.Builddir..ReadFieldMaybe
@@ -237,7 +292,6 @@ bool dev::Compiler_ReadFieldMaybe(dev::Compiler &parent, algo::strptr field, alg
     bool retval = true; // default is no error
     switch(field_id) {
         case dev_FieldId_compiler: retval = algo::Smallstr50_ReadStrptrMaybe(parent.compiler, strval); break;
-        case dev_FieldId_dflt: retval = algo::Smallstr50_ReadStrptrMaybe(parent.dflt, strval); break;
         case dev_FieldId_ranlib: retval = algo::Smallstr50_ReadStrptrMaybe(parent.ranlib, strval); break;
         case dev_FieldId_ar: retval = algo::Smallstr50_ReadStrptrMaybe(parent.ar, strval); break;
         case dev_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
@@ -270,9 +324,6 @@ void dev::Compiler_Print(dev::Compiler & row, algo::cstring &str) {
     algo::Smallstr50_Print(row.compiler, temp);
     PrintAttrSpaceReset(str,"compiler", temp);
 
-    algo::Smallstr50_Print(row.dflt, temp);
-    PrintAttrSpaceReset(str,"dflt", temp);
-
     algo::Smallstr50_Print(row.ranlib, temp);
     PrintAttrSpaceReset(str,"ranlib", temp);
 
@@ -295,9 +346,9 @@ const char* dev::value_ToCstr(const dev::FieldId& parent) {
         case dev_FieldId_expr              : ret = "expr";  break;
         case dev_FieldId_targsrc_regx      : ret = "targsrc_regx";  break;
         case dev_FieldId_builddir          : ret = "builddir";  break;
-        case dev_FieldId_cfg               : ret = "cfg";  break;
+        case dev_FieldId_uname             : ret = "uname";  break;
         case dev_FieldId_compiler          : ret = "compiler";  break;
-        case dev_FieldId_dflt              : ret = "dflt";  break;
+        case dev_FieldId_cfg               : ret = "cfg";  break;
         case dev_FieldId_ranlib            : ret = "ranlib";  break;
         case dev_FieldId_ar                : ret = "ar";  break;
         case dev_FieldId_gitfile           : ret = "gitfile";  break;
@@ -339,7 +390,6 @@ const char* dev::value_ToCstr(const dev::FieldId& parent) {
         case dev_FieldId_targsrc           : ret = "targsrc";  break;
         case dev_FieldId_src               : ret = "src";  break;
         case dev_FieldId_targsyslib        : ret = "targsyslib";  break;
-        case dev_FieldId_uname             : ret = "uname";  break;
         case dev_FieldId_tool_opt          : ret = "tool_opt";  break;
         case dev_FieldId_opt               : ret = "opt";  break;
         case dev_FieldId_value             : ret = "value";  break;
@@ -407,9 +457,6 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR4('a','r','g','s'): {
                     value_SetEnum(parent,dev_FieldId_args); ret = true; break;
-                }
-                case LE_STR4('d','f','l','t'): {
-                    value_SetEnum(parent,dev_FieldId_dflt); ret = true; break;
                 }
                 case LE_STR4('e','x','p','r'): {
                     value_SetEnum(parent,dev_FieldId_expr); ret = true; break;
@@ -1313,47 +1360,6 @@ void dev::Target_Print(dev::Target & row, algo::cstring &str) {
     PrintAttrSpaceReset(str,"target", temp);
 }
 
-// --- dev.Targinstall..ReadFieldMaybe
-bool dev::Targinstall_ReadFieldMaybe(dev::Targinstall &parent, algo::strptr field, algo::strptr strval) {
-    dev::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
-    switch(field_id) {
-        case dev_FieldId_target: retval = algo::Smallstr16_ReadStrptrMaybe(parent.target, strval); break;
-        case dev_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
-        default: break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- dev.Targinstall..ReadStrptrMaybe
-// Read fields of dev::Targinstall from an ascii string.
-// The format of the string is an ssim Tuple
-bool dev::Targinstall_ReadStrptrMaybe(dev::Targinstall &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "dev.targinstall") || algo::StripTypeTag(in_str, "dev.Targinstall");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && Targinstall_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- dev.Targinstall..Print
-// print string representation of dev::Targinstall to string LHS, no header -- cprint:dev.Targinstall.String
-void dev::Targinstall_Print(dev::Targinstall & row, algo::cstring &str) {
-    algo::tempstr temp;
-    str << "dev.targinstall";
-
-    algo::Smallstr16_Print(row.target, temp);
-    PrintAttrSpaceReset(str,"target", temp);
-
-    algo::Comment_Print(row.comment, temp);
-    PrintAttrSpaceReset(str,"comment", temp);
-}
-
 // --- dev.Targsrc.target.Get
 algo::Smallstr16 dev::target_Get(dev::Targsrc& parent) {
     algo::Smallstr16 ret(algo::Pathcomp(parent.targsrc, "/LL"));
@@ -1460,6 +1466,21 @@ algo::Smallstr50 dev::Targsyslib_syslib_Get(strptr arg) {
     return ret;
 }
 
+// --- dev.Targsyslib.uname.Print
+// Print back to string
+void dev::uname_Print(dev::Targsyslib& parent, algo::cstring &out) {
+    Regx_Print(parent.uname, out);
+}
+
+// --- dev.Targsyslib.uname.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool dev::uname_ReadStrptrMaybe(dev::Targsyslib& parent, algo::strptr in) {
+    Regx_ReadSql(parent.uname, in, true);
+    bool retval = true;// !parent.uname.parseerror; -- TODO: uncomment
+    return retval;
+}
+
 // --- dev.Targsyslib..Concat_target_syslib
 tempstr dev::Targsyslib_Concat_target_syslib( const algo::strptr& target ,const algo::strptr& syslib ) {
     return tempstr() << target <<'.'<< syslib ;
@@ -1472,7 +1493,7 @@ bool dev::Targsyslib_ReadFieldMaybe(dev::Targsyslib &parent, algo::strptr field,
     bool retval = true; // default is no error
     switch(field_id) {
         case dev_FieldId_targsyslib: retval = algo::Smallstr50_ReadStrptrMaybe(parent.targsyslib, strval); break;
-        case dev_FieldId_uname: retval = algo::Smallstr50_ReadStrptrMaybe(parent.uname, strval); break;
+        case dev_FieldId_uname: retval = uname_ReadStrptrMaybe(parent, strval); break;
         case dev_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
         default: break;
     }
@@ -1503,7 +1524,7 @@ void dev::Targsyslib_Print(dev::Targsyslib & row, algo::cstring &str) {
     algo::Smallstr50_Print(row.targsyslib, temp);
     PrintAttrSpaceReset(str,"targsyslib", temp);
 
-    algo::Smallstr50_Print(row.uname, temp);
+    dev::uname_Print(row, temp);
     PrintAttrSpaceReset(str,"uname", temp);
 
     algo::Comment_Print(row.comment, temp);

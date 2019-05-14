@@ -31,6 +31,15 @@
 
 // -----------------------------------------------------------------------------
 
+#ifdef __MACH__
+// replacement for missing lseek64
+static i64 lseek64(int fd, off64_t off, int whence) {
+    return lseek(fd,off,whence);
+}
+#endif
+
+// -----------------------------------------------------------------------------
+
 // Copy file FROM to file TO, creating the file if necessary
 // with mode MODE.
 // Throw exception on failure.
@@ -83,7 +92,7 @@ bool algo::DirSepQ(int c) NOTHROW {
 // Test whether FNAME refers to a valid filesystem entity (file, directory, or special file)
 bool algo::FileObjectExistsQ(strptr fname) NOTHROW {
     struct stat fst;
-    return 0==stat(strndupa(fname.elems,elems_N(fname)), &fst);
+    return 0==stat(algo::Zeroterm(tempstr(fname)), &fst);
 }
 
 // -----------------------------------------------------------------------------
@@ -91,16 +100,15 @@ bool algo::FileObjectExistsQ(strptr fname) NOTHROW {
 // Test whether PATH is an existing directory
 bool algo::DirectoryQ(strptr path) NOTHROW {
     struct stat fst;
-    return 0==stat(strndupa(path.elems,elems_N(path)), &fst) && S_ISDIR(fst.st_mode);
+    return 0==stat(Zeroterm(tempstr(path)), &fst) && S_ISDIR(fst.st_mode);
 }
 
 // -----------------------------------------------------------------------------
 
 // Test if F refers to an existing regular file (i.e. not a special file or directory)
-bool algo::FileQ(strptr f) NOTHROW {
+bool algo::FileQ(strptr fname) NOTHROW {
     struct stat fst;
-    char *fname = strndupa(f.elems, elems_N(f));
-    int rc = stat(fname, &fst);
+    int rc = stat(Zeroterm(tempstr(fname)), &fst);
     return rc==0 && S_ISREG(fst.st_mode);
 }
 
@@ -110,7 +118,7 @@ bool algo::FileQ(strptr f) NOTHROW {
 tempstr algo::GetFullPath(strptr path) NOTHROW {
     tempstr ret;
     char buf[PATH_MAX];
-    if (NULL != realpath(strndupa(path.elems,elems_N(path)),buf)) {
+    if (NULL != realpath(Zeroterm(tempstr(path)),buf)) {
         ret << strptr(buf);
     }
     return ret;
@@ -261,9 +269,14 @@ tempstr algo::ReplaceExt(strptr a, strptr b) NOTHROW {
 // Return current directory name.
 tempstr algo::GetCurDir() NOTHROW {
     tempstr ret;
+#ifdef __MACH__
+    char buf[BUFSIZ];
+    ret << strptr(getcwd(buf,sizeof(buf)-1));
+#else
     char *p = get_current_dir_name();
     ret<<p;
     free(p);
+#endif
     return ret;
 }
 
@@ -281,7 +294,7 @@ bool algo::SetCurDir(strptr dir) NOTHROW {
 // Calculate size of file referred to by FILENAME.
 off64_t algo::GetFileSize(strptr filename) NOTHROW {
     struct stat s;
-    if (stat(strndupa(filename.elems,elems_N(filename)),&s)) {
+    if (stat(Zeroterm(tempstr(filename)),&s)) {
         return -1;
     }
     return s.st_size;
@@ -745,4 +758,31 @@ int algo::SetBlockingMode(Fildes fildes, bool blocking) NOTHROW {
     int flags = fcntl(fildes.value, F_GETFL);
     int fl    = blocking ? (flags & ~O_NONBLOCK) : (flags | O_NONBLOCK);
     return fcntl(fildes.value, F_SETFL, fl);
+}
+
+// -----------------------------------------------------------------------------
+
+static tempstr PathSearch(strptr fname) {
+    for (strptr path=getenv("PATH"); path != ""; path = Pathcomp(path,":LR")) {
+        strptr left = Pathcomp(path,":LL");
+        tempstr candidate(DirFileJoin(left,fname));
+        if (FileQ(candidate)) {
+            return candidate;
+        }
+    }
+    return tempstr(fname);
+}
+
+// Update FNAME to be a filename that can be passed to Unix exec call.
+// If FNAME is an absolute path, do nothing
+// If FNAME is a relative path, perform a search using the PATH environment
+// variable; upon finding a matching path, set FNAME to the filename found.
+void algo_lib::ResolveExecFname(cstring &fname) {
+    if (!AbsolutePathQ(fname)) {
+        if (FileQ(fname)) {
+            // all good
+        } else {
+            fname = PathSearch(fname);
+        }
+    }
 }

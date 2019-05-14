@@ -298,6 +298,9 @@ This information can be retrived with `strings` or by running the command with `
     $ strings dflt.release-x86_64/abc | grep gitinfo:
     dev.gitinfo  gitinfo:2019-05-02.309c6ba  author:alexei@lebe.dev  cfg:g++/4.8.5/release.Linux-x86_64  package:""
 
+~AL~: this is no longer valid as gitinfo support via loader mechanism was non-portable.
+Will be re-implemented via `amc` in a portable way
+
 ### The -sig flag
 
 For each target that inputs some tables, amc computes a signature hash of that program's inputs.

@@ -432,7 +432,7 @@ void amc::tfunc_Atree_Connect(){
     Ins(&R, func.ret  , "void", false);
     Ins(&R, func.proto, "$Connect($Cpptype* parent, $Cpptype* child, bool left)", false);
     Ins(&R, func.body , "if(parent){");
-    Ins(&R, func.body , "    (&parent->$Left)[!left] = child;");
+    Ins(&R, func.body , "    (left ? parent->$Left : parent->$Right) = child;");
     Ins(&R, func.body , "}");
     Ins(&R, func.body , "if(child){");
     Ins(&R, func.body , "    child->$Up = parent;");

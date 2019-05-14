@@ -755,60 +755,6 @@ inline abt::FTarget& abt::zs_sel_target_qLast() {
     return *row;
 }
 
-// --- abt.FDb.targinstall.EmptyQ
-// Return true if index is empty
-inline bool abt::targinstall_EmptyQ() {
-    return _db.targinstall_n == 0;
-}
-
-// --- abt.FDb.targinstall.Find
-// Look up row by row id. Return NULL if out of range
-inline abt::FTarginstall* abt::targinstall_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
-    abt::FTarginstall *retval = NULL;
-    if (LIKELY(x <= u64(_db.targinstall_n))) {
-        retval = &_db.targinstall_lary[bsr][index];
-    }
-    return retval;
-}
-
-// --- abt.FDb.targinstall.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline abt::FTarginstall* abt::targinstall_Last() {
-    return targinstall_Find(u64(_db.targinstall_n-1));
-}
-
-// --- abt.FDb.targinstall.N
-// Return number of items in the pool
-inline i32 abt::targinstall_N() {
-    return _db.targinstall_n;
-}
-
-// --- abt.FDb.targinstall.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline abt::FTarginstall& abt::targinstall_qFind(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
-    return _db.targinstall_lary[bsr][index];
-}
-
-// --- abt.FDb.ind_targinstall.EmptyQ
-// Return true if hash is empty
-inline bool abt::ind_targinstall_EmptyQ() {
-    return _db.ind_targinstall_n == 0;
-}
-
-// --- abt.FDb.ind_targinstall.N
-// Return number of items in the hash
-inline i32 abt::ind_targinstall_N() {
-    return _db.ind_targinstall_n;
-}
-
 // --- abt.FDb.zsl_libdep_visited.EmptyQ
 // Return true if index is empty
 inline bool abt::zsl_libdep_visited_EmptyQ() {
@@ -1569,31 +1515,6 @@ inline abt::FTarget& abt::_db_zs_sel_target_curs_Access(_db_zs_sel_target_curs &
     return *curs.row;
 }
 
-// --- abt.FDb.targinstall_curs.Reset
-// cursor points to valid item
-inline void abt::_db_targinstall_curs_Reset(_db_targinstall_curs &curs, abt::FDb &parent) {
-    curs.parent = &parent;
-    curs.index = 0;
-}
-
-// --- abt.FDb.targinstall_curs.ValidQ
-// cursor points to valid item
-inline bool abt::_db_targinstall_curs_ValidQ(_db_targinstall_curs &curs) {
-    return curs.index < _db.targinstall_n;
-}
-
-// --- abt.FDb.targinstall_curs.Next
-// proceed to next item
-inline void abt::_db_targinstall_curs_Next(_db_targinstall_curs &curs) {
-    curs.index++;
-}
-
-// --- abt.FDb.targinstall_curs.Access
-// item access
-inline abt::FTarginstall& abt::_db_targinstall_curs_Access(_db_targinstall_curs &curs) {
-    return targinstall_qFind(u64(curs.index));
-}
-
 // --- abt.FDb.zsl_libdep_visited_curs.Reset
 // cursor points to valid item
 inline void abt::_db_zsl_libdep_visited_curs_Reset(_db_zsl_libdep_visited_curs &curs, abt::FDb &parent) {
@@ -2264,26 +2185,6 @@ inline void abt::c_targdep_RemoveAll(abt::FTarget& target) {
     target.c_targdep_n = 0;
 }
 
-// --- abt.FTarget.c_targinstall.InsertMaybe
-// Insert row into pointer index. Return final membership status.
-inline bool abt::c_targinstall_InsertMaybe(abt::FTarget& target, abt::FTarginstall& row) {
-    abt::FTarginstall* ptr = target.c_targinstall;
-    bool retval = (ptr == NULL) | (ptr == &row);
-    if (retval) {
-        target.c_targinstall = &row;
-    }
-    return retval;
-}
-
-// --- abt.FTarget.c_targinstall.Remove
-// Remove element from index. If element is not in index, do nothing.
-inline void abt::c_targinstall_Remove(abt::FTarget& target, abt::FTarginstall& row) {
-    abt::FTarginstall *ptr = target.c_targinstall;
-    if (LIKELY(ptr == &row)) {
-        target.c_targinstall = NULL;
-    }
-}
-
 // --- abt.FTarget.c_targsyslib.EmptyQ
 // Return true if index is empty
 inline bool abt::c_targsyslib_EmptyQ(abt::FTarget& target) {
@@ -2544,20 +2445,6 @@ inline void abt::target_c_alllib_curs_Next(target_c_alllib_curs &curs) {
 // item access
 inline abt::FSyslib& abt::target_c_alllib_curs_Access(target_c_alllib_curs &curs) {
     return *curs.elems[curs.index];
-}
-inline abt::FTarginstall::FTarginstall() {
-    abt::FTarginstall_Init(*this);
-}
-
-inline abt::FTarginstall::~FTarginstall() {
-    abt::FTarginstall_Uninit(*this);
-}
-
-
-// --- abt.FTarginstall..Init
-// Set all fields to initial values.
-inline void abt::FTarginstall_Init(abt::FTarginstall& targinstall) {
-    targinstall.ind_targinstall_next = (abt::FTarginstall*)-1; // (abt.FDb.ind_targinstall) not-in-hash
 }
 inline abt::FTargsrc::FTargsrc() {
     abt::FTargsrc_Init(*this);

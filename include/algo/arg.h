@@ -33,11 +33,6 @@ namespace algo { // update-hdr srcfile:%/algo/arg.%
     // -------------------------------------------------------------------
     // cpp/lib/algo/arg.cpp -- Parse command-line
     //
-
-    // Retrieve gitinfo string, e.g.
-    // dev.gitinfo  gitinfo:2014-10-06.afa3edc.abt  author:alebedev@nyx.com  cfg:g++/release.Linux-x86_64  compver:4.4.6
-    // This symbol is populated by abt using loader commands when building the executable
-    // and reflects the most recent commit on top of which the build is being done
     strptr gitinfo_Get();
 
     // Scan argc/argv array, validate provided options,

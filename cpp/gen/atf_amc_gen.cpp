@@ -22,11 +22,14 @@
 #include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 atf_amc::FDb    atf_amc::_db;     // dependency found via dev.targdep
 
 atf_amc::cascdel_bh_child_bheap_curs::~cascdel_bh_child_bheap_curs() {
@@ -1843,7 +1846,7 @@ static void atf_amc::tr_child_atree_Turn(atf_amc::FCascdel& from, atf_amc::FCasc
 // --- atf_amc.FCascdel.tr_child_atree.Connect
 inline static void atf_amc::tr_child_atree_Connect(atf_amc::FCascdel* parent, atf_amc::FCascdel* child, bool left) {
     if(parent){
-        (&parent->tr_child_atree_left)[!left] = child;
+        (left ? parent->tr_child_atree_left : parent->tr_child_atree_right) = child;
     }
     if(child){
         child->tr_child_atree_up = parent;
@@ -5853,7 +5856,7 @@ static void atf_amc::tr_avl_Turn(atf_amc::FAvl& from, atf_amc::FAvl& to) {
 // --- atf_amc.FDb.tr_avl.Connect
 inline static void atf_amc::tr_avl_Connect(atf_amc::FAvl* parent, atf_amc::FAvl* child, bool left) {
     if(parent){
-        (&parent->tr_avl_left)[!left] = child;
+        (left ? parent->tr_avl_left : parent->tr_avl_right) = child;
     }
     if(child){
         child->tr_avl_up = parent;
@@ -9173,7 +9176,7 @@ void atf_amc::in_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes fd) {
     IOEvtFlags flags;
     read_Set(flags, true);
     if (msgbuf.in_epoll_enable) {
-        algo_lib::IoHookAdd(msgbuf.in_iohook, flags);
+        algo_lib::IohookAdd(msgbuf.in_iohook, flags);
     } else {
         atf_amc::cd_in_msg_Insert(msgbuf);
     }
@@ -12778,13 +12781,11 @@ void atf_amc::VarlenK_Print(atf_amc::VarlenK & row, algo::cstring &str) {
 int main(int argc, char **argv) {
     try {
         algo_lib::FDb_Init();
+        lib_json::FDb_Init();
         atf_amc::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
-        algo_lib::_db.epoll_fd = epoll_create(1);
-        if (algo_lib::_db.epoll_fd == -1) {
-            FatalErrorExit("epoll_create");
-        }
+        algo_lib::IohookInit();
         atf_amc::MainArgs(algo_lib::_db.argc,algo_lib::_db.argv); // dmmeta.main:atf_amc
     } catch(algo_lib::ErrorX &x) {
         prerr("atf_amc.error  " << x); // there may be additional hints in DetachBadTags
@@ -12795,6 +12796,7 @@ int main(int argc, char **argv) {
     }
     try {
         atf_amc::FDb_Uninit();
+        lib_json::FDb_Uninit();
         algo_lib::FDb_Uninit();
     } catch(algo_lib::ErrorX &x) {
         // don't print anything, might crash
