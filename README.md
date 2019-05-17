@@ -69,7 +69,11 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
       * [Discussion](#discussion)
    * [Scheduling And Main Loop](#scheduling-and-main-loop)
       * [Sample App With Main Loop](#sample-app-with-main-loop)
-; [Adding A Step](#adding-a-step); [Step With Delay](#step-with-delay); [Scaled Delay](#scaled-delay); [Dynamic Updates: Deletion](#dynamic-updates-deletion)
+; [Adding A Step](#adding-a-step); [Step With Delay](#step-with-delay); [Scaled Delay](#scaled-delay); [Dynamic Updates: Deletion](#dynamic-updates-deletion); [Auto Unref](#auto-unref); [Larger Programs](#larger-programs); [Tutorial Cleanup](#tutorial-cleanup)
+   * [Iohook & Fbuf](#iohook---fbuf)
+      * [Iohook](#iohook)
+; [Fbuf](#fbuf)
+   * [Dispatch](#dispatch)
    * [acr_ed: Acr Editor](#acr_ed-acr-editor)
       * [Targets](#targets)
          * [Create Target](#create-target)
@@ -3650,7 +3654,7 @@ One type is RPC-style applications, i.e. client applications, written in logical
 This style is characterized by blocking calls.
 
 The second is real-time, cooperative threaded applications ("engines"), written in real time.
-In the first instance, Here, one line of code corresponds to one logical step of the algorithm
+In the first instance, one line of code corresponds to one logical step of the algorithm
 being implemented. In the second instance, each line corresponds to a few CPU instructions.
 This style is fully asynchronous and no blocking calls are typically allowed. In a full
 kernel bypass application, not even system calls are allowed. Both amc and `algo_lib` are
@@ -3680,7 +3684,7 @@ do anything special except modify the `sample::Main` function:
     ...
 
 When you run the newly modified sample, you will notice that it exits right away. That's
-because `sample::MainLoop` has detected that no IO hooks exist, and no steps are defined,
+because `sample::MainLoop` has detected that no actions are possible,
 and has exited. Let's take a closer look at the generated `sample::MainLoop`:
 
     // --- sample.FDb._db.MainLoop
@@ -3700,16 +3704,19 @@ The main loop algorithm is controlled by the following three main variables:
 * `algo_lib::_db.limit`: When `clock` reaches `limit`, the loop exits. This makes it possible to run `MainLoop` for short amounts
 of time if necessary. By default, limit is set to the max possible u64 value.
 * `algo_lib::_db.next_loop`: At the top of each each main loop cycle, this variable is set to limit. Then, some number
-of `Steps` are performed as described below. Each step is allowed to revise `next_loop` downward. Thus, we compute
-when we are going to next need some CPU time. At the bottom of the loop, inside `algo_lib::Step`, we have
+of `Steps` are performed, one per namespace.
+Each namespace's step call zero or more of its `fsteps` (field-level steps), which are just functions.
+Each `fstep` is allowed to revise `next_loop` to the value
+when this step needs to be revisited. Thus, we compute the soonest time we are going to next need some CPU time. 
+At the bottom of the loop, inside `algo_lib::Step`, we have
 `giveup_time_Step()`, which yields the unneeded time to the OS, either by calling a direct sleep function, or,
-if some iohooks are defined, calling `kevent` (BSD systems) or `evoll_wait` (Linux systems) with a timeout.
+if some `Iohooks` are defined, calling `kevent` (BSD systems) or `evoll_wait` (Linux systems) with a timeout.
 If `next_loop` is found to be equal to `limit` at the end of the cycle, this proves that there is no possible
 way the application has anything left to do, so we just exit the loop and the process naturally ends.
 
-In a kernel bypass (e.g. hot polling, latency-critical) application, there are no iohooks, but there is usually some step that
+In a kernel bypass (e.g. hot polling, latency-critical) application, there are no `Iohooks`, but there is usually some step that
 is set up to be called on every scheduling cycle. This tells `giveup_time_Step` not to sleep, and so we get
-good performance and no system calls. But should an iohook show up after all in one of the
+good performance and no system calls. But should an `Iohook` show up after all in one of the
 namespaces that comprise the app, the main loop automatically begins to poll it with no special action needed.
 
 ### Adding A Step
@@ -3966,7 +3973,11 @@ Now let's compile and run the program:
 
 And indeed, modifying the linked list of values was never even an issue, because amc automatically
 removed any deleted value from the list.
-Now is a good time to see that happens. Whenever a `value` is deleted, amc invokes the `Unref` function.
+Now is a good time to see that happens. 
+
+### Auto Unref
+
+Whenever a `value` is deleted, amc invokes the `Unref` function.
 The function's job is to remove any references to the value from known places in the system.
 Any references held by user code via raw pointers, or some other trickery, are of course not visible
 to amc. (Amc cannot save you from committing suicide).
@@ -4019,10 +4030,109 @@ introduces an extra field just to link dead elements together. This field is unu
 * Privately declared functions `Alloc`, `AllocMaybe`, private constructor, copy constructor,
   and `operator =`. Whenever `amc` sees an access path, it has disallows copying.
   And whenever `amc` sees a pool, it disallows creating of the corresponding record 
-  on the stack. The reason is simple: how does one distinguish between a record allocated via
+  on the stack. (The reason is simple: how does one distinguish between a record allocated via
   a Tpool and a record on the stack? One would be free to call `_Delete` on either, yielding
-  unpredictable results. Thus private constructor.
+  unpredictable results.)
 
+### Larger Programs
+
+This method of interleaving multiple little steps in a larger program scales very well,
+and gives one fine control over the various activities. The step functions should be viewed
+as cooperatively scheduled threads. After each step, we return to the scheduler,
+and we aren't holding any pointers on the stack, making the overall process easier to reason
+about.
+
+### Tutorial Cleanup
+
+Let's not forget to clean up after this tutorial:
+
+    $ acr_ed -del -target sample -write
+
+Or
+
+    $ git reset --hard
+    
+
+## Iohook & Fbuf
+
+In a non-blocking single-threaded application, there can be only one situation where time is 
+yielded to the system: when that time is not needed. That's how we avoid taking 100% CPU
+while continuing to call ourselves `non-blocking`.
+
+### Iohook
+
+The `Iohook` mechanism is a way to attach (hook?) file descriptor polling to the main loop.
+
+Let's begin talking about `Iohooks` by creating a sample program. For this chapter, the sample
+program is `samp_iohook`:
+
+    $ acr_ed -create -target samp_iohook -write
+    ...
+
+The concept is simple. We register interest in either reading or writing a file descriptor,
+attach a callback, and insert the iohook into the system-specific event mechanism. On
+BSD systems (FreeBSD and MacOS (Mach)) it's `kevent`, on Linu it's `epoll`.
+
+The program will read characters from stdin and print them as c++-quoted characters
+with timestamp.
+First, we'll need a field for the Iohook:
+
+    $ acr_ed -create -field samp_iohook.FDb.read -arg algo_lib.FIohook -write
+    ...
+
+
+    static void DoRead() {
+        char buf;
+        int rc=0;
+        do {
+            rc=read(samp_iohook::_db.read.fildes.value,&buf,1);
+            if (rc==1) {
+                tempstr out;
+                char_PrintCppSingleQuote(buf,out);
+                prlog(CurrUnTime()<<" "<<out);
+            } else if (rc==-1 && errno==EAGAIN) {
+            } else {
+                IohookRemove(samp_iohook::_db.read);
+            }
+        } while (rc>0);
+    }
+
+    void samp_iohook::Main() {
+        _db.read.fildes=algo::Fildes(0);
+        algo::SetBlockingMode(_db.read.fildes,false);
+        callback_Set0(_db.read,DoRead);
+        IOEvtFlags flags;
+        read_Set(flags,true);
+        IohookAdd(_db.read,flags);
+        MainLoop();
+    }
+
+Let's run the program:
+
+    $ samp_iohook
+    5
+    2019-05-17T16:26:52.95788 '5'
+    2019-05-17T16:26:52.95818 '\n'
+    ^K
+    2019-05-17T16:26:56.931429 '\013'
+    2019-05-17T16:26:56.931444 '\n'
+    ^D
+    <exits>
+    
+Our primitive non-blocking program does what we intended.
+This code could be combined with other non-blocking code,
+and the behaviors the two will be combined.
+
+### Fbuf
+
+~TBD~
+
+
+## Dispatch
+
+
+
+~TBD~
 
 ## acr_ed: Acr Editor
 

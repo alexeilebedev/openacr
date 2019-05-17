@@ -59,8 +59,11 @@ static void CheckCleanDirsAll() {
 
 void atf_norm::normcheck_testamc() {
     command::atf_amc_proc atf_amc;
-    atf_amc.stdout = ">/dev/null";
-    atf_amc_ExecX(atf_amc);
+    atf_amc.stdout = "> temp/atf_amc";
+    if (atf_amc_Exec(atf_amc)!=0) {
+        SysCmd("cat temp/atf_amc");
+        vrfy(0, "atf_amc returned an error");
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -68,8 +71,11 @@ void atf_norm::normcheck_testamc() {
 void atf_norm::normcheck_unit() {
     command::atf_unit_proc atf_unit;
     atf_unit.cmd.perf_secs=0;
-    atf_unit.stdout = ">/dev/null";
-    atf_unit_ExecX(atf_unit);
+    atf_unit.stdout = "> temp/atf_unit";
+    if (atf_unit_Exec(atf_unit)!=0) {
+        SysCmd("cat temp/atf_unit");
+        vrfy(0, "atf_unit returned an error");
+    }
 }
 
 // -----------------------------------------------------------------------------

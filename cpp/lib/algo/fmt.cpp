@@ -573,7 +573,8 @@ void algo::strptr_PrintWithCommas(strptr src, cstring &out) {
 // -----------------------------------------------------------------------------
 
 // Assuming STR is a number, remove any unnecessary characters from the right of it.
-// Unnecessary characters are trailing zeros.
+// Unnecessary characters are trailing zeros after a dot.
+// If the string contains no dot, nothing is done.
 // If a trailing '.' or a single '-' remains, it is removed as well.
 // If the resulting string is empty, a single zero is returned.
 //
@@ -581,7 +582,7 @@ void algo::strptr_PrintWithCommas(strptr src, cstring &out) {
 // 0.1       -> 0.1
 // 0.0       -> 0
 // 12345.000 -> 12345
-// -0        -> 0
+// -0        -> -0
 // .0        -> 0
 // -.0       -> 0
 // -0.0      -> -0
@@ -595,9 +596,15 @@ void algo::strptr_PrintWithCommas(strptr src, cstring &out) {
 //
 void algo::strptr_TrimZerosRight(strptr &str) {
     int n=str.n_elems;
+    int dotpos=0;
+    for (; dotpos < str.n_elems; dotpos++) {
+        if (str.elems[dotpos] == '.') {
+            break;
+        }
+    }
     if (n > 0) {
         // kill trailing zeros, but don't leave an empty string
-        while (n > 1 && str.elems[n-1] == '0') {
+        while (n > dotpos && str.elems[n-1] == '0') {
             n--;
         }
         // kill trailing .

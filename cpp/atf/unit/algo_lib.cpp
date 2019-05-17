@@ -587,19 +587,31 @@ static void TestDoubleWithCommas(double d, int prec, strptr result) {
 }
 
 void atf_unit::unittest_algo_lib_PrintDoubleWithCommas() {
-    TestDoubleWithCommas(0, 0, "0");
-    TestDoubleWithCommas(0, 1, "0");
-    TestDoubleWithCommas(0, 2, "0");
-    TestDoubleWithCommas(0, 3, "0");
-    TestDoubleWithCommas(0, 4, "0");
-    TestDoubleWithCommas(0, 5, "0");
+    // test integers
+    for (int prec=-1; prec<20; prec++) {
+        TestDoubleWithCommas(0, prec, "0");
+        TestDoubleWithCommas(1, prec, "1");
+        TestDoubleWithCommas(10, prec, "10");
+        TestDoubleWithCommas(12, prec, "12");
+        TestDoubleWithCommas(100  , prec, "100");
+        TestDoubleWithCommas(1000 , prec, "1,000");
+        TestDoubleWithCommas(10000, prec, "10,000");
+        TestDoubleWithCommas(100000, prec, "100,000");
+        TestDoubleWithCommas(101, prec, "101");
+        TestDoubleWithCommas(-101, prec, "-101");
+        TestDoubleWithCommas(-1001, prec, "-1,001");
+        TestDoubleWithCommas(1001, prec, "1,001");
+        TestDoubleWithCommas(10001, prec, "10,001");
+        TestDoubleWithCommas(100001, prec, "100,001");
+        TestDoubleWithCommas(12341234, prec, "12,341,234");
+    }
 
     TestDoubleWithCommas(0.1, 0, "0");
     TestDoubleWithCommas(0.1, 1, "0.1");
     TestDoubleWithCommas(0.1, 2, "0.1");
     TestDoubleWithCommas(0.1, 3, "0.1");
 
-    TestDoubleWithCommas(-0.000001, 0, "0");
+    TestDoubleWithCommas(-0.000001, 0, "-0");
     TestDoubleWithCommas(-0.000001, 1, "-0");
     TestDoubleWithCommas(-0.000001, 2, "-0");
     TestDoubleWithCommas(-0.000001, 3, "-0");
@@ -607,31 +619,16 @@ void atf_unit::unittest_algo_lib_PrintDoubleWithCommas() {
     TestDoubleWithCommas(-0.000001, 5, "-0");
     TestDoubleWithCommas(-0.000001, 6, "-0.000001");
 
-    TestDoubleWithCommas(12, 0, "12");
-    TestDoubleWithCommas(12, 1, "12");
-    TestDoubleWithCommas(12, 2, "12");
-    TestDoubleWithCommas(12, 3, "12");
-
     TestDoubleWithCommas(12.0001, 0, "12");
     TestDoubleWithCommas(12.0001, 1, "12");
     TestDoubleWithCommas(12.0001, 2, "12");
     TestDoubleWithCommas(12.0001, 3, "12");
     TestDoubleWithCommas(12.0001, 4, "12.0001");
 
-    TestDoubleWithCommas(101, 5, "101");
-    TestDoubleWithCommas(-101, 5, "-101");
-
-    TestDoubleWithCommas(1001, 5, "1,001");
-    TestDoubleWithCommas(10001, 5, "10,001");
-    TestDoubleWithCommas(100001, 5, "100,001");
-    TestDoubleWithCommas(12341234, 5, "12,341,234");
-
     TestDoubleWithCommas(12341234.333, 1, "12,341,234.3");
     TestDoubleWithCommas(12341234.333, 5, "12,341,234.333");
 
-    TestDoubleWithCommas(-1001, 5, "-1,001");
-
-    TestDoubleWithCommas(1000*1000*1000*1000*1000, 0, "1000000000000000");
+    TestDoubleWithCommas(1000.0*1000*1000*1000*1000, 0, "1,000,000,000,000,000");
 }
 
 // -----------------------------------------------------------------------------
@@ -1679,7 +1676,19 @@ void atf_unit::unittest_algo_lib_U128PrintHex() {
 // --------------------------------------------------------------------------------
 
 void atf_unit::unittest_algo_lib_FileToString() {
-#ifndef __MACH__
+    CreateDirRecurse("temp");
+
+    // test basic operation
+    {
+        algo_lib::FTempfile tempfile;
+        TempfileInitX(tempfile,"x");
+
+        cstring str("blah\n");
+        StringToFile(str,tempfile.filename);
+        vrfy_(FileToString(tempfile.filename) == str);
+    }
+
+#ifdef __linux__
     // check that FileToString can read /proc/cpuinfo
     // mac doesn't have these files.
     vrfyeq_(FileToString("/proc/iomem")
@@ -2209,7 +2218,7 @@ void atf_unit::unittest_algo_lib_TrimZerosRight() {
     TestTrimZeros("0.1"       , "0.1");
     TestTrimZeros("0.0"       , "0");
     TestTrimZeros("12345.000" , "12345");
-    TestTrimZeros("-0"        , "0");
+    TestTrimZeros("-0"        , "-0");// not touched
     TestTrimZeros(".0"        , "0");
     TestTrimZeros("-.0"       , "0");
     TestTrimZeros("-0.0"      , "-0");

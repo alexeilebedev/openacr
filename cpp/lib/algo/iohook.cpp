@@ -60,11 +60,11 @@ void algo_lib::IohookAdd(algo_lib::FIohook& iohook, algo::IOEvtFlags inflags) NO
     struct kevent ev;
     int flags=0;
     if (read_Get(inflags)) {
-        EV_SET(&ev, iohook.fildes.value, EVFILT_READ, EV_ADD | EV_ENABLE | EV_ONESHOT, 0, 0, &iohook);
+        EV_SET(&ev, iohook.fildes.value, EVFILT_READ, EV_ADD | EV_CLEAR, 0, 0, &iohook);
         (void)kevent(algo_lib::_db.epoll_fd, &ev, 1, NULL, 0, NULL);
     }
     if (write_Get(inflags)) {
-        EV_SET(&ev, iohook.fildes.value, EVFILT_WRITE, EV_ADD | EV_ENABLE | EV_ONESHOT, 0, 0, &iohook);
+        EV_SET(&ev, iohook.fildes.value, EVFILT_WRITE, EV_ADD | EV_CLEAR, 0, 0, &iohook);
         (void)kevent(algo_lib::_db.epoll_fd, &ev, 1, NULL, 0, NULL);
     }
 #else

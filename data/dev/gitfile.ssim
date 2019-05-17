@@ -94,7 +94,6 @@ dev.gitfile  gitfile:conf/emacs.el
 dev.gitfile  gitfile:conf/vim/ftdetect/ssim.vim
 dev.gitfile  gitfile:conf/vim/syntax/ssim.vim
 dev.gitfile  gitfile:conf/vimrc
-dev.gitfile  gitfile:cpp/abc/abc.cpp
 dev.gitfile  gitfile:cpp/abt/build.cpp
 dev.gitfile  gitfile:cpp/abt/disas.cpp
 dev.gitfile  gitfile:cpp/abt/main.cpp
@@ -603,7 +602,7 @@ dev.gitfile  gitfile:txt/acr.md
 dev.gitfile  gitfile:txt/acr_ed.md
 dev.gitfile  gitfile:txt/acr_in.md
 dev.gitfile  gitfile:txt/amc-commit-log.txt
-dev.gitfile  gitfile:txt/amc-features.md
+dev.gitfile  gitfile:txt/amc-feature.md
 dev.gitfile  gitfile:txt/amc-pool.md
 dev.gitfile  gitfile:txt/amc.md
 dev.gitfile  gitfile:txt/amc_gc.md
@@ -612,11 +611,15 @@ dev.gitfile  gitfile:txt/bootstrapping-magic.md
 dev.gitfile  gitfile:txt/coding-style.md
 dev.gitfile  gitfile:txt/command-lines.md
 dev.gitfile  gitfile:txt/directory-structure.md
+dev.gitfile  gitfile:txt/dispatch.md
 dev.gitfile  gitfile:txt/ff.md
 dev.gitfile  gitfile:txt/hello-meta-world.md
 dev.gitfile  gitfile:txt/intro.md
+dev.gitfile  gitfile:txt/iohook.md
 dev.gitfile  gitfile:txt/mariadb-integration.md
 dev.gitfile  gitfile:txt/mdbg.md
+dev.gitfile  gitfile:txt/reflection.md
+dev.gitfile  gitfile:txt/scheduling.md
 dev.gitfile  gitfile:txt/scriptlets.md
 dev.gitfile  gitfile:txt/setup-and-installation.md
 dev.gitfile  gitfile:txt/ssimfiles.md

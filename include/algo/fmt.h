@@ -82,7 +82,8 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
     void strptr_PrintWithCommas(strptr src, cstring &out);
 
     // Assuming STR is a number, remove any unnecessary characters from the right of it.
-    // Unnecessary characters are trailing zeros.
+    // Unnecessary characters are trailing zeros after a dot.
+    // If the string contains no dot, nothing is done.
     // If a trailing '.' or a single '-' remains, it is removed as well.
     // If the resulting string is empty, a single zero is returned.
     //
@@ -90,7 +91,7 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
     // 0.1       -> 0.1
     // 0.0       -> 0
     // 12345.000 -> 12345
-    // -0        -> 0
+    // -0        -> -0
     // .0        -> 0
     // -.0       -> 0
     // -0.0      -> -0
