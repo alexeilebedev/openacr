@@ -1,10 +1,10 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 #
-# AOS 
+# AOS
 # (C) AlgoEngineering LLC 2008-2012
 # (C) NYSE | Intercontinental Exchange 2013-2014
 #
-# 
+#
 # usage: sloc.pl <list of files>
 # LOC = line of code; i.e. non-comment line
 #
@@ -24,7 +24,7 @@
 # the curly braces count approximate number of basic blocks
 # total # of chars is the 'reading cost' of the code.
 # warnings about few unique lines of code indicate a copy-paste problem.
-# 
+#
 #
 @files = @ARGV;
 @files = split(/\n/, `ff -l 2>/dev/null`) if !@files;

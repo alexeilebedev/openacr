@@ -18,7 +18,6 @@ dmmeta.cextern  ctype:algo.ImrowPrintFcn  initmemset:Y
 dmmeta.cextern  ctype:algo.ImrowRowidFindFcn  initmemset:Y
 dmmeta.cextern  ctype:algo.ImrowXrefXFcn  initmemset:Y
 dmmeta.cextern  ctype:algo.PageBuf  initmemset:N
-dmmeta.cextern  ctype:algo.Stat  initmemset:Y
 dmmeta.cextern  ctype:algo.TFNNtTestAlert  initmemset:N
 dmmeta.cextern  ctype:algo.memptr  initmemset:N
 dmmeta.cextern  ctype:algo.strptr  initmemset:N

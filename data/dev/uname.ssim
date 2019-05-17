@@ -1,5 +1,6 @@
 dev.uname  uname:""  comment:default
 dev.uname  uname:Cygwin  comment:""
-dev.uname  uname:Darwin  comment:""
-dev.uname  uname:Linux  comment:""
+dev.uname  uname:Darwin  comment:"Last tested version 10.14.4 (Mojave)"
+dev.uname  uname:FreeBSD  comment:"11.2, 12.0"
+dev.uname  uname:Linux  comment:"Ubuntu 17, CentOS 7.6, Debian"
 dev.uname  uname:SunOS  comment:"Tested on solaris 5.11"

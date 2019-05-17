@@ -449,7 +449,7 @@ void algo_lib::trace_Print(algo_lib::trace & row, algo::cstring &str) {
 // Newly allocated memory is initialized to zeros
 void* algo_lib::sbrk_AllocMem(u32 size) {
     void *ret = MAP_FAILED;
-#ifdef __MACH__
+#if defined(__MACH__) || __FreeBSD__>0
     ret = malloc(size);
 #else
     u32 bigsize = 1024*2048;
@@ -497,7 +497,7 @@ void* algo_lib::sbrk_AllocMem(u32 size) {
 
 // --- algo_lib.FDb.sbrk.FreeMem
 void algo_lib::sbrk_FreeMem(void *mem, u32 size) {
-#ifdef __MACH__
+#if defined(__MACH__) || __FreeBSD__>0
     free(mem);
     (void)size;
 #else

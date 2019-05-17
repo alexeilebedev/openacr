@@ -338,7 +338,7 @@ void algo::SetupFatalSignals() {
     sigaction(SIGSEGV  ,&sa, NULL);
     sigaction(SIGILL   ,&sa, NULL);
     sigaction(SIGBUS   ,&sa, NULL);
-#ifndef __MACH__
+#ifdef __linux__
     // is there a SIG stack fault on MacOS?
     sigaction(SIGSTKFLT,&sa, NULL);
 #endif

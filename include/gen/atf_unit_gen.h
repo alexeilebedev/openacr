@@ -1237,17 +1237,7 @@ void                 unittest_algo_lib_ParseHex1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_ParseHex2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
-void                 unittest_algo_lib_ParseNum();
-// User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_ParseNumber();
-// User-implemented function from gstatic:atf_unit.FDb.unittest
-void                 unittest_algo_lib_ParseNumber_Empty1();
-// User-implemented function from gstatic:atf_unit.FDb.unittest
-void                 unittest_algo_lib_ParseNumber_Empty2();
-// User-implemented function from gstatic:atf_unit.FDb.unittest
-void                 unittest_algo_lib_ParseNumber_Empty3();
-// User-implemented function from gstatic:atf_unit.FDb.unittest
-void                 unittest_algo_lib_ParseNumber_Empty4();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_ParseNumber_Overflow1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
@@ -1283,21 +1273,7 @@ void                 unittest_algo_lib_PrintBash();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_PrintCppQuoted();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
-void                 unittest_algo_lib_PrintDoubleWithCommas1();
-// User-implemented function from gstatic:atf_unit.FDb.unittest
-void                 unittest_algo_lib_PrintDoubleWithCommas2();
-// User-implemented function from gstatic:atf_unit.FDb.unittest
-void                 unittest_algo_lib_PrintDoubleWithCommas3();
-// User-implemented function from gstatic:atf_unit.FDb.unittest
-void                 unittest_algo_lib_PrintDoubleWithCommas4();
-// User-implemented function from gstatic:atf_unit.FDb.unittest
-void                 unittest_algo_lib_PrintDoubleWithCommas5();
-// User-implemented function from gstatic:atf_unit.FDb.unittest
-void                 unittest_algo_lib_PrintDoubleWithCommas6();
-// User-implemented function from gstatic:atf_unit.FDb.unittest
-void                 unittest_algo_lib_PrintDoubleWithCommas7();
-// User-implemented function from gstatic:atf_unit.FDb.unittest
-void                 unittest_algo_lib_PrintDoubleWithCommas8();
+void                 unittest_algo_lib_PrintDoubleWithCommas();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_PrintHex();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
@@ -1306,6 +1282,8 @@ void                 unittest_algo_lib_PrintPad();
 void                 unittest_algo_lib_PrintSsim();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_PrintTime();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+void                 unittest_algo_lib_PrintWithCommas();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_ReadLine();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
@@ -1378,6 +1356,8 @@ void                 unittest_algo_lib_TestStringFmt3();
 void                 unittest_algo_lib_TimeConstants();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_TimeConversion();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+void                 unittest_algo_lib_TrimZerosRight();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_Tuple();
 // User-implemented function from gstatic:atf_unit.FDb.unittest

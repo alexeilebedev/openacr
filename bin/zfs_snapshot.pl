@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 #
 # AOS  / TSL
 # (C) AlgoEngineering LLC 2008-2012
@@ -11,7 +11,7 @@
 #
 # zfs snapshot manager.
 #
-# 
+#
 #
 #
 #
@@ -34,14 +34,14 @@ my $usage = "$0 <cmd>
 
     -verbose        extra printouts
     -dry_run        don't create/destroy snapshots. just print
-";
+    ";
 
 our $dry_run;
 our $verbose;
 GetOptions(
     "verbose"   => \$verbose
     , "dry_run" => \$dry_run
-           )
+    )
     or die "$0: GetOptions error. Usage:\n$usage";
 
 my $err = 0;
@@ -49,28 +49,28 @@ my $err = 0;
 sub get_pools {
     my @pools=();
     for my $line(split(/\n/,`zpool list`)) {
-	my $name = (split(/\s+/,$line))[0];
-	if ($name eq "NAME") {
-	    next;
-	}
-	# only accept valid identifiers
-	if ($name !~ /^[a-zA-Z0-9_]+$/) {
-	    next;
-	}
-	push(@pools,$name);
+        my $name = (split(/\s+/,$line))[0];
+        if ($name eq "NAME") {
+            next;
+        }
+        # only accept valid identifiers
+        if ($name !~ /^[a-zA-Z0-9_]+$/) {
+            next;
+        }
+        push(@pools,$name);
     }
     return @pools;
 }
 
 sub take_snapshots {
     for my $pool (@_) {
-	my $date = strftime("%Y-%m-%d",localtime());
-	my $cmd = "zfs snapshot -r $pool\@snap_$date";
-	if ($dry_run) {
-	    print "(dry run) $cmd\n";
-	} else {
-	    sys_cmd_fail_ok($cmd);
-	}
+        my $date = strftime("%Y-%m-%d",localtime());
+        my $cmd = "zfs snapshot -r $pool\@snap_$date";
+        if ($dry_run) {
+            print "(dry run) $cmd\n";
+        } else {
+            sys_cmd_fail_ok($cmd);
+        }
     }
 }
 
@@ -94,10 +94,10 @@ sub sort2_inplace_reverse {
 # the budget is given by an exponential function that determines the maximum number of snapshots
 # of a given age.
 #
-# for power=0.7, there can be at most 
+# for power=0.7, there can be at most
 # 62 snapshots of age 365 days
 # 10 snapshots of age 31 days
-# 
+#
 # at least k snapshots are always kept around.
 #
 #
@@ -108,48 +108,48 @@ sub filter_snapshots() {
     $verbose && print "figuring out snapshots...\n";
     my %snapshots=();
     for my $line(split(/\n/,`zfs list -t snapshot`)) {
-	my $name = (split(/\s+/,$line))[0];
-	if ($name eq "NAME") {
-	    next;
-	}
-	# only accept valid identifiers
-	if ($name !~ /^[a-zA-Z0-9_@\/-]+$/) {
-	    print "skipping identifier [$name]\n";
-	    next;
-	}
-	if ($name =~ /(.*)\@snap_(\d\d\d\d-\d\d-\d\d)/) {
-	    push(@{$snapshots{$1}}, $2);
-	}
+        my $name = (split(/\s+/,$line))[0];
+        if ($name eq "NAME") {
+            next;
+        }
+        # only accept valid identifiers
+        if ($name !~ /^[a-zA-Z0-9_@\/-]+$/) {
+            print "skipping identifier [$name]\n";
+            next;
+        }
+        if ($name =~ /(.*)\@snap_(\d\d\d\d-\d\d-\d\d)/) {
+            push(@{$snapshots{$1}}, $2);
+        }
     }
     foreach my $key(keys(%snapshots)) {
-	my @ary = @{$snapshots{$key}};
-	my @unix_stamps;
-	foreach my $date(@ary) {
-	    my $dt = Date::Parse::str2time($date);
-	    $dt or die "Unexpected internal error. Error parsing date $date";
-	    push(@unix_stamps,$dt);
-	}
-	sort2_inplace_reverse(\@unix_stamps,\@ary);
-	my $now=time();
-	my $position = 0;
-	for (my $i=0; $i<scalar(@ary); $i++) {
-	    my $age = ($now - $unix_stamps[$i]) / $SNAPSHOT_FREQUENCY;
-	    if ($age<0) {
-		die "problem with timestamps";
-	    }
-	    my $limit = POSIX::pow($age, $DECAY);
-	    my $too_old = ($position >= $KEEP_SNAPS && $position > $limit);
-	    $verbose && print "snapshot $key: age $age, position $position, limit $limit\n";
-	    if ($too_old) {
-		print "    snapshot $key : $ary[$i] : too old.\n";
-		if (!$dry_run) {
-		    sys_cmd("zfs destroy $key\@snap_$ary[$i]");
-		}
-	    } else {
-		$verbose && print "    snapshot $key : $ary[$i] : ok\n";
-		$position++;
-	    }
-	}
+        my @ary = @{$snapshots{$key}};
+        my @unix_stamps;
+        foreach my $date(@ary) {
+            my $dt = Date::Parse::str2time($date);
+            $dt or die "Unexpected internal error. Error parsing date $date";
+            push(@unix_stamps,$dt);
+        }
+        sort2_inplace_reverse(\@unix_stamps,\@ary);
+        my $now=time();
+        my $position = 0;
+        for (my $i=0; $i<scalar(@ary); $i++) {
+            my $age = ($now - $unix_stamps[$i]) / $SNAPSHOT_FREQUENCY;
+            if ($age<0) {
+                die "problem with timestamps";
+            }
+            my $limit = POSIX::pow($age, $DECAY);
+            my $too_old = ($position >= $KEEP_SNAPS && $position > $limit);
+            $verbose && print "snapshot $key: age $age, position $position, limit $limit\n";
+            if ($too_old) {
+                print "    snapshot $key : $ary[$i] : too old.\n";
+                if (!$dry_run) {
+                    sys_cmd("zfs destroy $key\@snap_$ary[$i]");
+                }
+            } else {
+                $verbose && print "    snapshot $key : $ary[$i] : ok\n";
+                $position++;
+            }
+        }
     }
     #print join("\n",@snapshots);
 }

@@ -108,6 +108,12 @@ algo::Smallstr50 atf_norm::arch_Get(atf_norm::FBuilddir& builddir) {
     return ret;
 }
 
+// --- atf_norm.FBuilddir..Uninit
+void atf_norm::FBuilddir_Uninit(atf_norm::FBuilddir& builddir) {
+    atf_norm::FBuilddir &row = builddir; (void)row;
+    ind_builddir_Remove(row); // remove builddir from index ind_builddir
+}
+
 // --- atf_norm.FCfg.base.CopyOut
 // Copy fields out of row
 void atf_norm::cfg_CopyOut(atf_norm::FCfg &row, dev::Cfg &out) {
@@ -1264,6 +1270,15 @@ static bool atf_norm::builddir_InputMaybe(dev::Builddir &elem) {
 bool atf_norm::builddir_XrefMaybe(atf_norm::FBuilddir &row) {
     bool retval = true;
     (void)row;
+    // insert builddir into index ind_builddir
+    if (true) { // user-defined insert condition
+        bool success = ind_builddir_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "atf_norm.duplicate_key  xref:atf_norm.FDb.ind_builddir"; // check for duplicate key
+            return false;
+        }
+    }
     return retval;
 }
 
@@ -1363,6 +1378,127 @@ bool atf_norm::cfg_XrefMaybe(atf_norm::FCfg &row) {
     bool retval = true;
     (void)row;
     return retval;
+}
+
+// --- atf_norm.FDb.ind_builddir.Find
+// Find row by key. Return NULL if not found.
+atf_norm::FBuilddir* atf_norm::ind_builddir_Find(const algo::strptr& key) {
+    u32 index = Smallstr50_Hash(0, key) & (_db.ind_builddir_buckets_n - 1);
+    atf_norm::FBuilddir* *e = &_db.ind_builddir_buckets_elems[index];
+    atf_norm::FBuilddir* ret=NULL;
+    do {
+        ret       = *e;
+        bool done = !ret || (*ret).builddir == key;
+        if (done) break;
+        e         = &ret->ind_builddir_next;
+    } while (true);
+    return ret;
+}
+
+// --- atf_norm.FDb.ind_builddir.FindX
+// Look up row by key and return reference. Throw exception if not found
+atf_norm::FBuilddir& atf_norm::ind_builddir_FindX(const algo::strptr& key) {
+    atf_norm::FBuilddir* ret = ind_builddir_Find(key);
+    vrfy(ret, tempstr() << "atf_norm.key_error  table:ind_builddir  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- atf_norm.FDb.ind_builddir.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+atf_norm::FBuilddir& atf_norm::ind_builddir_GetOrCreate(const algo::strptr& key) {
+    atf_norm::FBuilddir* ret = ind_builddir_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &builddir_Alloc();
+        (*ret).builddir = key;
+        bool good = builddir_XrefMaybe(*ret);
+        if (!good) {
+            builddir_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return *ret;
+}
+
+// --- atf_norm.FDb.ind_builddir.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool atf_norm::ind_builddir_InsertMaybe(atf_norm::FBuilddir& row) {
+    ind_builddir_Reserve(1);
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_builddir_next == (atf_norm::FBuilddir*)-1)) {// check if in hash already
+        u32 index = Smallstr50_Hash(0, row.builddir) & (_db.ind_builddir_buckets_n - 1);
+        atf_norm::FBuilddir* *prev = &_db.ind_builddir_buckets_elems[index];
+        do {
+            atf_norm::FBuilddir* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).builddir == row.builddir) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_builddir_next;
+        } while (true);
+        if (retval) {
+            row.ind_builddir_next = *prev;
+            _db.ind_builddir_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- atf_norm.FDb.ind_builddir.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void atf_norm::ind_builddir_Remove(atf_norm::FBuilddir& row) {
+    if (LIKELY(row.ind_builddir_next != (atf_norm::FBuilddir*)-1)) {// check if in hash already
+        u32 index = Smallstr50_Hash(0, row.builddir) & (_db.ind_builddir_buckets_n - 1);
+        atf_norm::FBuilddir* *prev = &_db.ind_builddir_buckets_elems[index]; // addr of pointer to current element
+        while (atf_norm::FBuilddir *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_builddir_next; // unlink (singly linked list)
+                _db.ind_builddir_n--;
+                row.ind_builddir_next = (atf_norm::FBuilddir*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_builddir_next;
+        }
+    }
+}
+
+// --- atf_norm.FDb.ind_builddir.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void atf_norm::ind_builddir_Reserve(int n) {
+    u32 old_nbuckets = _db.ind_builddir_buckets_n;
+    u32 new_nelems   = _db.ind_builddir_n + n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(atf_norm::FBuilddir*);
+        u32 new_size = new_nbuckets * sizeof(atf_norm::FBuilddir*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        atf_norm::FBuilddir* *new_buckets = (atf_norm::FBuilddir**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("atf_norm.out_of_memory  field:atf_norm.FDb.ind_builddir");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_builddir_buckets_n; i++) {
+            atf_norm::FBuilddir* elem = _db.ind_builddir_buckets_elems[i];
+            while (elem) {
+                atf_norm::FBuilddir &row        = *elem;
+                atf_norm::FBuilddir* next       = row.ind_builddir_next;
+                u32 index          = Smallstr50_Hash(0, row.builddir) & (new_nbuckets-1);
+                row.ind_builddir_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_builddir_buckets_elems, old_size);
+        _db.ind_builddir_buckets_elems = new_buckets;
+        _db.ind_builddir_buckets_n = new_nbuckets;
+    }
 }
 
 // --- atf_norm.FDb.trace.RowidFind
@@ -1482,6 +1618,14 @@ void atf_norm::FDb_Init() {
         _db.cfg_lary[i]  = cfg_first;
         cfg_first    += 1ULL<<i;
     }
+    // initialize hash table for atf_norm::FBuilddir;
+    _db.ind_builddir_n             	= 0; // (atf_norm.FDb.ind_builddir)
+    _db.ind_builddir_buckets_n     	= 4; // (atf_norm.FDb.ind_builddir)
+    _db.ind_builddir_buckets_elems 	= (atf_norm::FBuilddir**)algo_lib::malloc_AllocMem(sizeof(atf_norm::FBuilddir*)*_db.ind_builddir_buckets_n); // initial buckets (atf_norm.FDb.ind_builddir)
+    if (!_db.ind_builddir_buckets_elems) {
+        FatalErrorExit("out of memory"); // (atf_norm.FDb.ind_builddir)
+    }
+    memset(_db.ind_builddir_buckets_elems, 0, sizeof(atf_norm::FBuilddir*)*_db.ind_builddir_buckets_n); // (atf_norm.FDb.ind_builddir)
 
     atf_norm::InitReflection();
     normcheck_LoadStatic();
@@ -1490,6 +1634,9 @@ void atf_norm::FDb_Init() {
 // --- atf_norm.FDb..Uninit
 void atf_norm::FDb_Uninit() {
     atf_norm::FDb &row = _db; (void)row;
+
+    // atf_norm.FDb.ind_builddir.Uninit (Thash)  //
+    // skip destruction of ind_builddir in global scope
 
     // atf_norm.FDb.cfg.Uninit (Lary)  //
     // skip destruction in global scope

@@ -781,12 +781,7 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:algo_lib.OrderID  comment:\"\"", atf_unit::unittest_algo_lib_OrderID }
         ,{ "atfdb.unittest  unittest:algo_lib.ParseHex1  comment:\"\"", atf_unit::unittest_algo_lib_ParseHex1 }
         ,{ "atfdb.unittest  unittest:algo_lib.ParseHex2  comment:\"\"", atf_unit::unittest_algo_lib_ParseHex2 }
-        ,{ "atfdb.unittest  unittest:algo_lib.ParseNum  comment:\"\"", atf_unit::unittest_algo_lib_ParseNum }
         ,{ "atfdb.unittest  unittest:algo_lib.ParseNumber  comment:\"\"", atf_unit::unittest_algo_lib_ParseNumber }
-        ,{ "atfdb.unittest  unittest:algo_lib.ParseNumber_Empty1  comment:\"zero length should result in OK = false\"", atf_unit::unittest_algo_lib_ParseNumber_Empty1 }
-        ,{ "atfdb.unittest  unittest:algo_lib.ParseNumber_Empty2  comment:\"zero length should result in OK = false\"", atf_unit::unittest_algo_lib_ParseNumber_Empty2 }
-        ,{ "atfdb.unittest  unittest:algo_lib.ParseNumber_Empty3  comment:\"zero length should result in OK = false\"", atf_unit::unittest_algo_lib_ParseNumber_Empty3 }
-        ,{ "atfdb.unittest  unittest:algo_lib.ParseNumber_Empty4  comment:\"zero length should result in OK = false\"", atf_unit::unittest_algo_lib_ParseNumber_Empty4 }
         ,{ "atfdb.unittest  unittest:algo_lib.ParseNumber_Overflow1  comment:\"Test for LnumU32Str7Base36 overflow\"", atf_unit::unittest_algo_lib_ParseNumber_Overflow1 }
         ,{ "atfdb.unittest  unittest:algo_lib.ParseNumber_Overflow2  comment:\"Test for LnumU64Str20 overflow\"", atf_unit::unittest_algo_lib_ParseNumber_Overflow2 }
         ,{ "atfdb.unittest  unittest:algo_lib.ParseNumber_Overflow3  comment:\"Test for LnumU64Str22 overflow\"", atf_unit::unittest_algo_lib_ParseNumber_Overflow3 }
@@ -804,18 +799,12 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:algo_lib.PopCnt2  comment:\"\"", atf_unit::unittest_algo_lib_PopCnt2 }
         ,{ "atfdb.unittest  unittest:algo_lib.PrintBash  comment:\"\"", atf_unit::unittest_algo_lib_PrintBash }
         ,{ "atfdb.unittest  unittest:algo_lib.PrintCppQuoted  comment:\"\"", atf_unit::unittest_algo_lib_PrintCppQuoted }
-        ,{ "atfdb.unittest  unittest:algo_lib.PrintDoubleWithCommas1  comment:\"\"", atf_unit::unittest_algo_lib_PrintDoubleWithCommas1 }
-        ,{ "atfdb.unittest  unittest:algo_lib.PrintDoubleWithCommas2  comment:\"\"", atf_unit::unittest_algo_lib_PrintDoubleWithCommas2 }
-        ,{ "atfdb.unittest  unittest:algo_lib.PrintDoubleWithCommas3  comment:\"\"", atf_unit::unittest_algo_lib_PrintDoubleWithCommas3 }
-        ,{ "atfdb.unittest  unittest:algo_lib.PrintDoubleWithCommas4  comment:\"\"", atf_unit::unittest_algo_lib_PrintDoubleWithCommas4 }
-        ,{ "atfdb.unittest  unittest:algo_lib.PrintDoubleWithCommas5  comment:\"\"", atf_unit::unittest_algo_lib_PrintDoubleWithCommas5 }
-        ,{ "atfdb.unittest  unittest:algo_lib.PrintDoubleWithCommas6  comment:\"\"", atf_unit::unittest_algo_lib_PrintDoubleWithCommas6 }
-        ,{ "atfdb.unittest  unittest:algo_lib.PrintDoubleWithCommas7  comment:\"\"", atf_unit::unittest_algo_lib_PrintDoubleWithCommas7 }
-        ,{ "atfdb.unittest  unittest:algo_lib.PrintDoubleWithCommas8  comment:\"\"", atf_unit::unittest_algo_lib_PrintDoubleWithCommas8 }
+        ,{ "atfdb.unittest  unittest:algo_lib.PrintDoubleWithCommas  comment:\"\"", atf_unit::unittest_algo_lib_PrintDoubleWithCommas }
         ,{ "atfdb.unittest  unittest:algo_lib.PrintHex  comment:\"\"", atf_unit::unittest_algo_lib_PrintHex }
         ,{ "atfdb.unittest  unittest:algo_lib.PrintPad  comment:\"\"", atf_unit::unittest_algo_lib_PrintPad }
         ,{ "atfdb.unittest  unittest:algo_lib.PrintSsim  comment:\"\"", atf_unit::unittest_algo_lib_PrintSsim }
         ,{ "atfdb.unittest  unittest:algo_lib.PrintTime  comment:\"\"", atf_unit::unittest_algo_lib_PrintTime }
+        ,{ "atfdb.unittest  unittest:algo_lib.PrintWithCommas  comment:\"\"", atf_unit::unittest_algo_lib_PrintWithCommas }
         ,{ "atfdb.unittest  unittest:algo_lib.ReadLine  comment:\"\"", atf_unit::unittest_algo_lib_ReadLine }
         ,{ "atfdb.unittest  unittest:algo_lib.ReadModuleId  comment:\"\"", atf_unit::unittest_algo_lib_ReadModuleId }
         ,{ "atfdb.unittest  unittest:algo_lib.Regx  comment:\"\"", atf_unit::unittest_algo_lib_Regx }
@@ -852,6 +841,7 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:algo_lib.TestStringFmt3  comment:\"Print 128-bit number: huge number\"", atf_unit::unittest_algo_lib_TestStringFmt3 }
         ,{ "atfdb.unittest  unittest:algo_lib.TimeConstants  comment:\"\"", atf_unit::unittest_algo_lib_TimeConstants }
         ,{ "atfdb.unittest  unittest:algo_lib.TimeConversion  comment:\"\"", atf_unit::unittest_algo_lib_TimeConversion }
+        ,{ "atfdb.unittest  unittest:algo_lib.TrimZerosRight  comment:\"\"", atf_unit::unittest_algo_lib_TrimZerosRight }
         ,{ "atfdb.unittest  unittest:algo_lib.Tuple  comment:\"\"", atf_unit::unittest_algo_lib_Tuple }
         ,{ "atfdb.unittest  unittest:algo_lib.Tuple1  comment:\"\"", atf_unit::unittest_algo_lib_Tuple1 }
         ,{ "atfdb.unittest  unittest:algo_lib.Tuple2  comment:\"\"", atf_unit::unittest_algo_lib_Tuple2 }

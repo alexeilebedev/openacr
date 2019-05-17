@@ -180,23 +180,10 @@ namespace atf_unit { // update-hdr
     //
     // void unittest_algo_lib_MinMax();
     // void unittest_algo_lib_NToh();
-    // void unittest_algo_lib_ParseNum();
-    // void unittest_algo_lib_ParseNumber_Empty1();
-    // void unittest_algo_lib_ParseNumber_Empty2();
-    // void unittest_algo_lib_ParseNumber_Empty3();
-    // void unittest_algo_lib_ParseNumber_Empty4();
     // void unittest_algo_lib_ParseNumber_Overflow1();
     // void unittest_algo_lib_ParseNumber_Overflow2();
     // void unittest_algo_lib_ParseNumber_Overflow3();
-    // void unittest_algo_lib_ParseNumber();
-    // void unittest_algo_lib_PrintDoubleWithCommas1();
-    // void unittest_algo_lib_PrintDoubleWithCommas2();
-    // void unittest_algo_lib_PrintDoubleWithCommas3();
-    // void unittest_algo_lib_PrintDoubleWithCommas4();
-    // void unittest_algo_lib_PrintDoubleWithCommas5();
-    // void unittest_algo_lib_PrintDoubleWithCommas6();
-    // void unittest_algo_lib_PrintDoubleWithCommas7();
-    // void unittest_algo_lib_PrintDoubleWithCommas8();
+    // void unittest_algo_lib_PrintDoubleWithCommas();
     // void unittest_algo_lib_PrintCppQuoted();
     // void unittest_algo_lib_PrintPad();
     // void unittest_algo_lib_PrintHex();
@@ -204,11 +191,6 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_lib_TestStringFmt();
     // void unittest_algo_lib_TestStringFmt2();
     // void unittest_algo_lib_TestStringFmt3();
-    // void unittest_algo_lib_Regx();
-
-    // Test that matching a huge string with a regex that
-    // ends in .* is fast.
-    // void unittest_algo_lib_RegxShortCircuit();
     // void unittest_algo_lib_Smallstr();
     // void unittest_algo_lib_StringIter();
     // void unittest_algo_lib_test_strptr();
@@ -231,8 +213,6 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_lib_RemDirRecurse4();
     // void unittest_algo_lib_ReadModuleId();
     // void unittest_algo_lib_Tempfile();
-    // void unittest_algo_lib_RegxReadTwice();
-    // void unittest_algo_lib_RegxReadTwice2();
     // void unittest_algo_lib_NextSep();
     // void unittest_algo_lib_I32Dec3Fmt();
     // void unittest_algo_lib_OrderID();
@@ -259,6 +239,8 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_lib_Sleep();
     // void unittest_algo_lib_strptr_Eq();
     // void unittest_algo_lib_SysEval();
+    // void unittest_algo_lib_TrimZerosRight();
+    // void unittest_algo_lib_PrintWithCommas();
 
     // -------------------------------------------------------------------
     // cpp/atf/unit/bash.cpp
@@ -423,6 +405,24 @@ namespace atf_unit { // update-hdr
     void PrintPerfSample(const strptr& action, u64 nloops, u64 clocks);
     void Testcmp(const char *file, int line, strptr value, strptr expect, bool eq);
     void Testcmp(const char *file, int line, const char *value, const char *expect, bool eq);
+
+    // -------------------------------------------------------------------
+    // cpp/atf/unit/parsenum.cpp
+    //
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void unittest_algo_lib_ParseNumber();
+
+    // -------------------------------------------------------------------
+    // cpp/atf/unit/regx.cpp
+    //
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void unittest_algo_lib_Regx();
+
+    // Test that matching a huge string with a regex that
+    // ends in .* is fast.
+    // void unittest_algo_lib_RegxShortCircuit();
+    // void unittest_algo_lib_RegxReadTwice();
+    // void unittest_algo_lib_RegxReadTwice2();
 
     // -------------------------------------------------------------------
     // cpp/atf/unit/string.cpp

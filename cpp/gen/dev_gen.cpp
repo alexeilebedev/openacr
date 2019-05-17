@@ -17,17 +17,20 @@
 //#pragma endinclude
 // compile-time string constants for dev.Arch.arch
 const char *dev_Arch_arch_         = "";
-const char *dev_Arch_arch_i386     = "i386";
-const char *dev_Arch_arch_i686     = "i686";
 const char *dev_Arch_arch_i86pc    = "i86pc";
 const char *dev_Arch_arch_x64      = "x64";
 const char *dev_Arch_arch_x86_64   = "x86_64";
+const char *dev_Arch_arch_amd64    = "amd64";
 
 // compile-time string constants for dev.Builddir.builddir
 const char *dev_Builddir_builddir_Darwin_clangPP_coverage_x86_64   = "Darwin-clang++.coverage-x86_64";
 const char *dev_Builddir_builddir_Darwin_clangPP_debug_x86_64      = "Darwin-clang++.debug-x86_64";
 const char *dev_Builddir_builddir_Darwin_clangPP_profile_x86_64    = "Darwin-clang++.profile-x86_64";
 const char *dev_Builddir_builddir_Darwin_clangPP_release_x86_64    = "Darwin-clang++.release-x86_64";
+const char *dev_Builddir_builddir_FreeBSD_clangPP_coverage_amd64   = "FreeBSD-clang++.coverage-amd64";
+const char *dev_Builddir_builddir_FreeBSD_clangPP_debug_amd64      = "FreeBSD-clang++.debug-amd64";
+const char *dev_Builddir_builddir_FreeBSD_clangPP_profile_amd64    = "FreeBSD-clang++.profile-amd64";
+const char *dev_Builddir_builddir_FreeBSD_clangPP_release_amd64    = "FreeBSD-clang++.release-amd64";
 const char *dev_Builddir_builddir_Linux_clangPP_coverage_x86_64    = "Linux-clang++.coverage-x86_64";
 const char *dev_Builddir_builddir_Linux_clangPP_debug_x86_64       = "Linux-clang++.debug-x86_64";
 const char *dev_Builddir_builddir_Linux_clangPP_profile_x86_64     = "Linux-clang++.profile-x86_64";

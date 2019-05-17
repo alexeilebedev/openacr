@@ -89,7 +89,6 @@ using algo::ParseNum8;
 using algo::ParseOct1;
 using algo::ParseOct3;
 using algo::Pathcomp;
-using algo::PrintDouble;
 using algo::PtrAdd;
 using algo::ReadBE32;
 using algo::ReadBE64;

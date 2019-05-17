@@ -16,6 +16,7 @@ dev.gitfile  gitfile:bin/atf_amc
 dev.gitfile  gitfile:bin/atf_norm
 dev.gitfile  gitfile:bin/atf_unit
 dev.gitfile  gitfile:bin/bootstrap/Darwin-clang++.release-x86_64
+dev.gitfile  gitfile:bin/bootstrap/FreeBSD-clang++.release-amd64
 dev.gitfile  gitfile:bin/bootstrap/Linux-clang++.release-x86_64
 dev.gitfile  gitfile:bin/bootstrap/Linux-g++-9.release-x86_64
 dev.gitfile  gitfile:bin/bootstrap/Linux-g++.release-x86_64
@@ -251,6 +252,8 @@ dev.gitfile  gitfile:cpp/atf/unit/lib_sql.cpp
 dev.gitfile  gitfile:cpp/atf/unit/line.cpp
 dev.gitfile  gitfile:cpp/atf/unit/lockfile.cpp
 dev.gitfile  gitfile:cpp/atf/unit/main.cpp
+dev.gitfile  gitfile:cpp/atf/unit/parsenum.cpp
+dev.gitfile  gitfile:cpp/atf/unit/regx.cpp
 dev.gitfile  gitfile:cpp/atf/unit/string.cpp
 dev.gitfile  gitfile:cpp/atf/unit/time.cpp
 dev.gitfile  gitfile:cpp/atf/unit/tuple.cpp
@@ -308,7 +311,6 @@ dev.gitfile  gitfile:cpp/lib/algo/lockfile.cpp
 dev.gitfile  gitfile:cpp/lib/algo/mmap.cpp
 dev.gitfile  gitfile:cpp/lib/algo/prlog.cpp
 dev.gitfile  gitfile:cpp/lib/algo/psp.cpp
-dev.gitfile  gitfile:cpp/lib/algo/rand.cpp
 dev.gitfile  gitfile:cpp/lib/algo/regx.cpp
 dev.gitfile  gitfile:cpp/lib/algo/string.cpp
 dev.gitfile  gitfile:cpp/lib/algo/time.cpp

@@ -261,7 +261,6 @@ namespace algo { struct Md5Digest; }
 namespace algo { struct Month; }
 namespace algo { struct NormTxttbl; }
 namespace algo { struct NumParseFlags; }
-namespace algo { struct PrintDouble; }
 namespace algo { struct Protocol; }
 namespace algo { struct RnullStr1; }
 namespace algo { struct RnullStr10; }
@@ -1142,6 +1141,7 @@ struct DirEntry { // algo.DirEntry
     algo::cstring   pattern;      // Shell wildcard to match, e.g. aa*bb
     algo::cstring   pathname;     // Current pathname, e.g. /tmp/aaCbb
     algo::cstring   filename;     // Current filename, e.g. aaCbb
+    u64             mode;         //   0
     u64             size;         //   0  Size of file in bytes
     algo::UnTime    mtime;        // Modification time of file
     algo::UnTime    ctime;        // Change time of file
@@ -1150,7 +1150,6 @@ struct DirEntry { // algo.DirEntry
     bool            is_dir;       //   false  File is a directory
     DIR*            dir_handle;   // (internal) handle for scanning. optional pointer
     algo::Dirent*   dir_ent;      // (internal) pointer to current entry. optional pointer
-    algo::Stat      stat;         //   0  stat results for the file
     DirEntry();
     ~DirEntry();
 private:
@@ -4550,20 +4549,6 @@ bool                 NumParseFlags_ReadStrptrMaybe(algo::NumParseFlags &parent, 
 void                 NumParseFlags_Init(algo::NumParseFlags& parent);
 // print string representation of algo::NumParseFlags to string LHS, no header -- cprint:algo.NumParseFlags.String
 void                 NumParseFlags_Print(algo::NumParseFlags & row, algo::cstring &str) __attribute__((nothrow));
-
-// --- algo.PrintDouble
-struct PrintDouble { // algo.PrintDouble
-    double   dbl;    //   0.0
-    i32      prec;   //   0
-    explicit PrintDouble(double                         in_dbl
-        ,i32                            in_prec);
-    PrintDouble();
-};
-
-// Set all fields to initial values.
-void                 PrintDouble_Init(algo::PrintDouble& parent);
-// Convert algo::PrintDouble to a string (user-implemented function)
-void                 PrintDouble_Print(algo::PrintDouble row, algo::cstring &str) __attribute__((nothrow));
 
 // --- algo.Protocol
 // access: algo.Protocol.proto (Protocol)
@@ -9578,7 +9563,6 @@ inline algo::cstring &operator <<(algo::cstring &str, const algo::Logmsg &row);/
 inline algo::cstring &operator <<(algo::cstring &str, const algo::Md5Digest &row);// cfmt:algo.Md5Digest.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::Month &row);// cfmt:algo.Month.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::NumParseFlags &row);// cfmt:algo.NumParseFlags.String
-inline algo::cstring &operator <<(algo::cstring &str, const algo::PrintDouble &row);// cfmt:algo.PrintDouble.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::SeqType &row);// cfmt:algo.SeqType.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::Sha1sig &row);// cfmt:algo.Sha1sig.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::TermStyle &row);// cfmt:algo.TermStyle.String

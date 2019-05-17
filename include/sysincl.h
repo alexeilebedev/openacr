@@ -36,7 +36,7 @@
 #include <locale.h>
 #include <string.h>
 
-#if !defined(__MACH__)
+#ifdef __linux__
 #include <malloc.h>
 #endif
 
@@ -48,9 +48,11 @@
 #include <dirent.h>
 #include <signal.h>
 
-#if !defined(__MACH__)
+#if _linux__
 #include <byteswap.h>
-#else
+#endif
+
+#ifdef __MACH__
 #include <libkern/OSByteOrder.h>
 #endif
 
@@ -61,7 +63,7 @@
 #include <sys/file.h>
 #include <sys/stat.h>
 
-#if !defined(__MACH__)
+#ifdef __linux__
 #include <sys/epoll.h>
 #endif
 

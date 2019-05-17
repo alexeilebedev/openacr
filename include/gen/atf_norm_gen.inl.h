@@ -15,8 +15,19 @@
 #include "include/gen/dmmeta_gen.inl.h"
 //#pragma endinclude
 inline atf_norm::FBuilddir::FBuilddir() {
+    atf_norm::FBuilddir_Init(*this);
 }
 
+inline atf_norm::FBuilddir::~FBuilddir() {
+    atf_norm::FBuilddir_Uninit(*this);
+}
+
+
+// --- atf_norm.FBuilddir..Init
+// Set all fields to initial values.
+inline void atf_norm::FBuilddir_Init(atf_norm::FBuilddir& builddir) {
+    builddir.ind_builddir_next = (atf_norm::FBuilddir*)-1; // (atf_norm.FDb.ind_builddir) not-in-hash
+}
 inline atf_norm::FCfg::FCfg() {
 }
 
@@ -352,6 +363,18 @@ inline atf_norm::FCfg& atf_norm::cfg_qFind(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     return _db.cfg_lary[bsr][index];
+}
+
+// --- atf_norm.FDb.ind_builddir.EmptyQ
+// Return true if hash is empty
+inline bool atf_norm::ind_builddir_EmptyQ() {
+    return _db.ind_builddir_n == 0;
+}
+
+// --- atf_norm.FDb.ind_builddir.N
+// Return number of items in the hash
+inline i32 atf_norm::ind_builddir_N() {
+    return _db.ind_builddir_n;
 }
 
 // --- atf_norm.FDb.normcheck_curs.Reset

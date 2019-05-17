@@ -90,7 +90,7 @@ dmmeta.ctypelen  ctype:algo.Charset  len:64  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:algo.Comment  len:152  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:algo.DateCache  len:16  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:algo.Dbbox  len:16  alignment:8  padbytes:0
-dmmeta.ctypelen  ctype:algo.DirEntry  len:256  alignment:8  padbytes:5
+dmmeta.ctypelen  ctype:algo.DirEntry  len:120  alignment:8  padbytes:5
 dmmeta.ctypelen  ctype:algo.DryrunQ  len:1  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:algo.EchoQ  len:1  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:algo.Errcode  len:8  alignment:8  padbytes:0
@@ -172,7 +172,6 @@ dmmeta.ctypelen  ctype:algo.Md5Digest  len:16  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:algo.Month  len:4  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:algo.NormTxttbl  len:24  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:algo.NumParseFlags  len:4  alignment:4  padbytes:0
-dmmeta.ctypelen  ctype:algo.PrintDouble  len:16  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:algo.RnullStr1  len:1  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:algo.RnullStr10  len:10  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:algo.RnullStr100  len:100  alignment:1  padbytes:0
@@ -260,7 +259,6 @@ dmmeta.ctypelen  ctype:algo.Smallstr4  len:6  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:algo.Smallstr40  len:42  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:algo.Smallstr5  len:7  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:algo.Smallstr50  len:52  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:algo.Stat  len:144  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:algo.TermStyle  len:4  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:algo.TextJust  len:4  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:algo.TstampCache  len:56  alignment:8  padbytes:2
@@ -525,9 +523,9 @@ dmmeta.ctypelen  ctype:atf_amc.VarlenAlloc  len:4  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.VarlenExtern  len:4  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.VarlenH  len:4  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.VarlenK  len:4  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:atf_norm.FBuilddir  len:204  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:atf_norm.FBuilddir  len:216  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:atf_norm.FCfg  len:204  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:atf_norm.FDb  len:2016  alignment:8  padbytes:27
+dmmeta.ctypelen  ctype:atf_norm.FDb  len:2040  alignment:8  padbytes:35
 dmmeta.ctypelen  ctype:atf_norm.FNormcheck  len:216  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:atf_norm.FNs  len:232  alignment:8  padbytes:2
 dmmeta.ctypelen  ctype:atf_norm.FReadme  len:354  alignment:1  padbytes:0
@@ -738,7 +736,7 @@ dmmeta.ctypelen  ctype:lib_sql.FAttr  len:32  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:lib_sql.FDb  len:288  alignment:8  padbytes:11
 dmmeta.ctypelen  ctype:mdbg.FBuilddir  len:205  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:mdbg.FCfg  len:232  alignment:8  padbytes:4
-dmmeta.ctypelen  ctype:mdbg.FDb  len:984  alignment:8  padbytes:14
+dmmeta.ctypelen  ctype:mdbg.FDb  len:976  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:mysql2ssim.FDb  len:152  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:mysql2ssim.FTobltin  len:24  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:report.abt  len:24  alignment:4  padbytes:4

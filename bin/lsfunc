@@ -1,2 +1,2 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 system("src_func","-listfunc",@ARGV,"-proto");

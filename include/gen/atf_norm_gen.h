@@ -71,6 +71,7 @@ namespace atf_norm { struct _db_ind_ns_curs; }
 namespace atf_norm { struct _db_readme_curs; }
 namespace atf_norm { struct _db_builddir_curs; }
 namespace atf_norm { struct _db_cfg_curs; }
+namespace atf_norm { struct _db_ind_builddir_curs; }
 namespace atf_norm {
 }//pkey typedefs
 namespace atf_norm {
@@ -81,15 +82,20 @@ typedef void (*normcheck_step_hook)();
 
 // --- atf_norm.FBuilddir
 // create: atf_norm.FDb.builddir (Lary)
+// global access: ind_builddir (Thash)
 struct FBuilddir { // atf_norm.FBuilddir
-    algo::Smallstr50   builddir;   //
-    algo::Comment      comment;    //
+    algo::Smallstr50       builddir;            //
+    algo::Comment          comment;             //
+    atf_norm::FBuilddir*   ind_builddir_next;   // hash next
 private:
     friend atf_norm::FBuilddir& builddir_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_norm::FBuilddir* builddir_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 builddir_RemoveAll() __attribute__((nothrow));
     friend void                 builddir_RemoveLast() __attribute__((nothrow));
     FBuilddir();
+    ~FBuilddir();
+    FBuilddir(const FBuilddir&){ /*disallow copy constructor */}
+    void operator =(const FBuilddir&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -105,6 +111,9 @@ algo::Smallstr50     cfg_Get(atf_norm::FBuilddir& builddir) __attribute__((__war
 
 algo::Smallstr50     arch_Get(atf_norm::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
 
+// Set all fields to initial values.
+void                 FBuilddir_Init(atf_norm::FBuilddir& builddir);
+void                 FBuilddir_Uninit(atf_norm::FBuilddir& builddir) __attribute__((nothrow));
 
 // --- atf_norm.FCfg
 // create: atf_norm.FDb.cfg (Lary)
@@ -163,6 +172,9 @@ struct FDb { // atf_norm.FDb
     i32                       builddir_n;                     // number of elements in array
     atf_norm::FCfg*           cfg_lary[32];                   // level array
     i32                       cfg_n;                          // number of elements in array
+    atf_norm::FBuilddir**     ind_builddir_buckets_elems;     // pointer to bucket array
+    i32                       ind_builddir_buckets_n;         // number of elements in bucket array
+    i32                       ind_builddir_n;                 // number of elements in the hash table
     atf_norm::trace           trace;                          //
 };
 
@@ -430,6 +442,23 @@ atf_norm::FCfg&      cfg_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 cfg_XrefMaybe(atf_norm::FCfg &row);
+
+// Return true if hash is empty
+bool                 ind_builddir_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+atf_norm::FBuilddir* ind_builddir_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+atf_norm::FBuilddir& ind_builddir_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+atf_norm::FBuilddir& ind_builddir_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+i32                  ind_builddir_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool                 ind_builddir_InsertMaybe(atf_norm::FBuilddir& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void                 ind_builddir_Remove(atf_norm::FBuilddir& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+void                 ind_builddir_Reserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 void                 _db_normcheck_curs_Reset(_db_normcheck_curs &curs, atf_norm::FDb &parent);

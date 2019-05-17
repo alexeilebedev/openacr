@@ -24,7 +24,7 @@
 // Recent Changes: alexei.lebedev
 //
 
-#ifdef __MACH__
+#if defined(__MACH__) || __FreeBSD__>0
 #include <sys/sysctl.h>
 #endif
 
@@ -75,7 +75,14 @@ static void CheckConstantTsc(strptr cpuinfo) {
 
 void algo_lib::InitCpuHz() {
     double hz = 0;
-#ifdef __MACH__
+#if __FreeBSD__>0
+    uint64_t freq = 0;
+    size_t size = sizeof(freq);
+    if (sysctlbyname("machdep.tsc_freq", &freq, &size, NULL, 0) == 0) {
+        hz = freq;
+    }
+    (void)CheckConstantTsc;
+#elif defined(__MACH__)
     uint64_t freq = 0;
     size_t size = sizeof(freq);
     if (sysctlbyname("hw.cpufrequency", &freq, &size, NULL, 0) == 0) {

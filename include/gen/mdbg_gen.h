@@ -162,7 +162,6 @@ void                 trace_Print(mdbg::trace & row, algo::cstring &str) __attrib
 struct FDb { // mdbg.FDb
     lpool_Lpblock*     lpool_free[31];          // Lpool levels
     command::mdbg      cmdline;                 //
-    bool               rhel7;                   //   false  Are we running on RHEL7? Compatibility flag
     algo::cstring      script;                  // Output script
     algo::cstring      gdbscript;               // GDB script
     mdbg::FCfg*        cfg_lary[32];            // level array

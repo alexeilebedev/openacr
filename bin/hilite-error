@@ -1,8 +1,8 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 exit system("hilite"
-    , "\bxxxyyyzzz" # green
-    , "(success:Y|exitcode:0)" # yellow
-    , "\bxxxyyyzzz1" # blue
-    , "\bxxxyyyzzz2" # cyan
-    , "(success:N|exitcode:[^0])" #red
-    , @ARGV);
+            , "\bxxxyyyzzz" # green
+            , "(success:Y|exitcode:0)" # yellow
+            , "\bxxxyyyzzz1" # blue
+            , "\bxxxyyyzzz2" # cyan
+            , "(success:N|exitcode:[^0])" #red
+            , @ARGV);

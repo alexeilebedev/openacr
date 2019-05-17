@@ -1338,13 +1338,13 @@ algo::strptr algo::Dbbox_GetAnon(algo::Dbbox &parent, i32 idx) {
 // --- algo.DirEntry..Init
 // Set all fields to initial values.
 void algo::DirEntry_Init(algo::DirEntry& parent) {
+    parent.mode = u64(0);
     parent.size = u64(0);
     parent.eof = bool(false);
     parent.match = bool(false);
     parent.is_dir = bool(false);
     parent.dir_handle = NULL;
     parent.dir_ent = NULL;
-    memset(&parent.stat, 0, sizeof(parent.stat));
 }
 
 // --- algo.DirEntry..Uninit
@@ -7942,7 +7942,6 @@ void algo::NumParseFlags_Print(algo::NumParseFlags & row, algo::cstring &str) {
 
 // --- algo.Protocol.proto.StaticCheck
 void algo::StaticCheck() {
-    algo_assert(sizeof(algo::Stat) == 144); // csize:algo.Stat
     algo_assert(sizeof(algo::ImdbInsertStrptrMaybeFcn) == 8); // csize:algo.ImdbInsertStrptrMaybeFcn
     algo_assert(sizeof(algo::ImdbStepFcn) == 8); // csize:algo.ImdbStepFcn
     algo_assert(sizeof(algo::ImdbMainLoopFcn) == 8); // csize:algo.ImdbMainLoopFcn

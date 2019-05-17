@@ -23,6 +23,13 @@
 
 // Create a bootstrap file for each build dir
 void atf_norm::normcheck_bootstrap() {
+    // Check that every entry in the bin/bootstrap directory is a valid 'builddir'
+    ind_beg(Dir_curs,entry,"bin/bootstrap/*") {
+        vrfy(ind_builddir_Find(entry.filename)
+             , tempstr()<<"Missing entry in dev.builddir table for file "
+             << entry.pathname<<" in bin/bootstrap");
+    }ind_end;
+
     ind_beg(atf_norm::_db_builddir_curs,builddir,atf_norm::_db) {
         // bootstrap exists only for release
         if (cfg_Get(builddir) == dev_Cfg_cfg_release) {

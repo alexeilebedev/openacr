@@ -86,6 +86,7 @@ dmmeta.thash  field:atf_amc.FCascdel.ind_child_thash  hashfld:atf_amc.FCascdel.k
 dmmeta.thash  field:atf_amc.FDb.ind_cstring  hashfld:atf_amc.Cstring.str  unique:Y  comment:""
 dmmeta.thash  field:atf_amc.FDb.ind_typea  hashfld:atf_amc.TypeA.typea  unique:Y  comment:""
 dmmeta.thash  field:atf_amc.FDb.ind_types  hashfld:atf_amc.TypeS.types  unique:Y  comment:""
+dmmeta.thash  field:atf_norm.FDb.ind_builddir  hashfld:dev.Builddir.builddir  unique:Y  comment:""
 dmmeta.thash  field:atf_norm.FDb.ind_ns  hashfld:dmmeta.Ns.ns  unique:Y  comment:""
 dmmeta.thash  field:atf_norm.FDb.ind_scriptfile  hashfld:dev.Scriptfile.gitfile  unique:Y  comment:""
 dmmeta.thash  field:atf_norm.FDb.ind_ssimfile  hashfld:dmmeta.Ssimfile.ssimfile  unique:Y  comment:""

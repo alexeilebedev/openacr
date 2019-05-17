@@ -1,20 +1,25 @@
 ## Tests
 
 There are two kinds of tests in OpenACR, unit tests and normalization tests.
-Unit tests just check that some functions do what they should, and they can be invoked
-with
-
-    atf_unit
-
+Unit tests just check that some functions do what they should.
 Normalization tests enforce various invariants on this repository, such as checking
 that all files have an entry in the gitfile table, or round-tripping all data values
-through a temporary MariaDB instance to ensure portability. These are invoked with
+through a temporary MariaDB instance to ensure portability. In addition, all of the unit
+tests are included here for convenience. You can run all possible tests with
 
-    atf_norm
+    $ atf_norm
+    ...
 
-All tests together are died in the script called normalize
+If you just want to invoke unit tests, you can run `atf_unit` directly.
+It is split into a separate executable from `atf_norm` for reasons of manageability.
 
-    normalize
+    $ atf_unit
+    ...
+
+To run all tests with a syntax highlighter, use the `normalize` scriptlet:
+
+    $ normalize
+    ...
 
 Every commit should satisfy `normalize`.
 
@@ -22,12 +27,13 @@ Every commit should satisfy `normalize`.
 
 `atf_unit` runs single-function tests which are linked into `atf_unit`.
 The test source code is under cpp/atf/unit, and the names of all defined tests are in the table
-atfdb.unittest. You can see what all the tests are with `acr unittest`.
+`atfdb.unittest`. You can see what all the tests are with `acr unittest`.
 
 Let's begin by creating a new unit test:
 
     $ acr_ed -create -unittest algo_lib.Test1 -write
-
+    ...
+    
 This creates a new entry in `atfdb.unittest`, and adds a stub to `cpp/atf/unit/algo_lib.cpp`.
 
     +// --------------------------------------------------------------------------------
@@ -36,17 +42,38 @@ This creates a new entry in `atfdb.unittest`, and adds a stub to `cpp/atf/unit/a
     +    // test code goes here
     +}
 
+Alternatively, we could proceed manually:
+
+    $ echo atfdb.unittest unittest:algo_lib.Test1 | acr -insert -write
+    ...
+    $ amc
+    ...
+
+Or even:
+
+    $ vim data/atfdb/unittest.ssim
+    
 After implementing the test, we can run it with `atf_unit algo_lib.Test`
 
 We can run all unit tests from our namespace with 
 
-    atf_unit algo.%
+    $ atf_unit algo_lib.%
+    ...
     
 ### Normalization Checks
 
-We can create a normalization check with 
+We can create a normalization check with :
 
-    acr_ed -create -normcheck <name> -write
+    $ acr_ed -create -normcheck <name> -write
+    ...
+    
+Alternatively, we could do:
+
+    $ echo atfdb.normcheck normcheck:mycheck | acr -insert -write
+    $ amc
+    
+And then implement the function `atf_norm::normcheck_mycheck()` somewhere
+in a file that links with `atf_norm`.
 
 ### Debugging
 

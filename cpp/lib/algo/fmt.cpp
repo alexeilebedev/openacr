@@ -64,6 +64,8 @@ bool char_ReadStrptrMaybe(char &row, algo::strptr str) {
     return retval;
 }
 
+// -----------------------------------------------------------------------------
+
 bool float_ReadStrptrMaybe(float &row, algo::strptr str) {
     bool retval = true;
     double val;
@@ -74,6 +76,8 @@ bool float_ReadStrptrMaybe(float &row, algo::strptr str) {
     }
     return retval;
 }
+
+// -----------------------------------------------------------------------------
 
 bool double_ReadStrptrMaybe(double &row, algo::strptr str) {
     bool retval = true;
@@ -88,6 +92,8 @@ bool double_ReadStrptrMaybe(double &row, algo::strptr str) {
     }
     return retval;
 }
+
+// -----------------------------------------------------------------------------
 
 bool bool_ReadStrptrMaybe(bool &row, algo::strptr str) {
     bool retval = true;
@@ -251,7 +257,17 @@ bool i64_ReadStrptrMaybe(i64    &row, algo::strptr str) {
     return retval;
 }
 
+// -----------------------------------------------------------------------------
 
+// Read time from STR to ROW
+// Return success code.
+// If funciton does not succeed, ROW is not modified
+// Several formats are supported:
+// %Y-%m-%dT%T
+// %Y-%m-%d %T
+// %Y/%m/%d %T
+// Where %T is %H:%M:%S.%X
+// And %X is the nanosecond portion
 bool algo::UnTime_ReadStrptrMaybe(algo::UnTime &row, algo::strptr str) {
     bool retval = true;
     StringIter iter(str);
@@ -277,6 +293,8 @@ bool algo::UnTime_ReadStrptrMaybe(algo::UnTime &row, algo::strptr str) {
     return retval;
 }
 
+// -----------------------------------------------------------------------------
+
 bool algo::UnDiff_ReadStrptrMaybe(UnDiff &row, algo::strptr str) {
     bool retval = true;
     StringIter iter(str);
@@ -293,6 +311,8 @@ bool algo::UnDiff_ReadStrptrMaybe(UnDiff &row, algo::strptr str) {
     }
     return retval;
 }
+
+// -----------------------------------------------------------------------------
 
 bool algo::UnixTime_ReadStrptrMaybe(algo::UnixTime &row, algo::strptr str) {
     bool retval = true;
@@ -311,6 +331,20 @@ bool algo::cstring_ReadStrptrMaybe(algo::cstring &row, algo::strptr str) {
     return retval;
 }
 
+// -----------------------------------------------------------------------------
+
+// Parse a URL from string STR to OUT.
+// The format of a URL is
+// protocol://user:password@somehost:port<-source_interface/dir1/dir2
+// URL fields are
+// protocol, username, password, server, port, host, source_addr_host, dir
+//
+//
+// Windows pathnames are supported, e.g.
+// when parsing
+//    file://c:/dir/dir2
+// c: will not be parsed as a username, but as part of the pathname.
+//
 bool algo::URL_ReadStrptrMaybe(URL &out, algo::strptr str) {
     bool retval = true;
     Refurbish(out);
@@ -382,6 +416,10 @@ bool ietf::Ipv4_ReadStrptrMaybe(ietf::Ipv4 &ip, algo::strptr str) {
     return retval;
 }
 
+// -----------------------------------------------------------------------------
+
+// Parse an IpV4 address from STR to IP
+// Return success value. If not successful, output value is not modified.
 bool ietf::Ipv4Addr_ReadStrptrMaybe(ietf::Ipv4Addr &ip, algo::strptr str) {
     bool retval = true;
     u32 addr = 0;
@@ -400,6 +438,8 @@ bool ietf::Ipv4Addr_ReadStrptrMaybe(ietf::Ipv4Addr &ip, algo::strptr str) {
     addr_Set(ip,addr);
     return retval;
 }
+
+// -----------------------------------------------------------------------------
 
 bool algo::Ipmask_ReadStrptrMaybe(Ipmask &row, algo::strptr str) {
     bool retval = true;
@@ -496,61 +536,141 @@ void algo::i64_PrintPadLeft(i64 num, cstring &out, int atleast) {
 
 // -----------------------------------------------------------------------------
 
-void algo::double_PrintPrec(double d, cstring &out, int precision, bool omit_zeros, bool commas) {
-    if( isnan(d) ){
-        out <<"NaN";
-    } else {
-        precision = i32_Max(precision,0);
-        int dec, sign;
-        strptr c = fcvt(d, precision, &dec, &sign);
-        // attempts to use out.Reserve and qAdd appear buggy.
-        // reverting back to .Add()
-        if (omit_zeros && dec>0) {
-            int lim = elems_N(c);
-            while (lim > dec && c[lim-1]=='0') {
-                lim--;
-            }
-            c.n_elems = lim;
+// Assuming SRC is a number, Transfer SRC to OUT, inserting
+// commas between groups of 3 numbers.
+// 0 -> 0
+// 11 -> 11
+// 222 -> 222
+// 3333 -> 3,333
+// 4567.3 -> 4,567.3
+// 1.11111 -> 1.11111
+void algo::strptr_PrintWithCommas(strptr src, cstring &out) {
+    int dec = Find(src, '.');
+    if (dec==-1) {
+        dec=src.n_elems;
+    }
+    ch_Reserve(out, src.n_elems * 2);
+    int i=0;
+    if (src.elems[0]=='-') {
+        out.ch_elems[out.ch_n++] = src.elems[i++];
+    }
+    int remaining=(dec-i)%3;
+    if (remaining==0) {
+        remaining += 3;
+    }
+    for (; i<dec; i++) {
+        if (remaining==0) {
+            out.ch_elems[out.ch_n++] = ',';
+            remaining += 3;
         }
-        if (sign) {
-            ch_Alloc(out) ='-';
+        remaining--;
+        out.ch_elems[out.ch_n++] = src.elems[i];
+    }
+    // print remainder of the string as-is
+    out << RestFrom(src,dec);
+}
+
+// -----------------------------------------------------------------------------
+
+// Assuming STR is a number, remove any unnecessary characters from the right of it.
+// Unnecessary characters are trailing zeros.
+// If a trailing '.' or a single '-' remains, it is removed as well.
+// If the resulting string is empty, a single zero is returned.
+//
+// 0         -> 0
+// 0.1       -> 0.1
+// 0.0       -> 0
+// 12345.000 -> 12345
+// -0        -> 0
+// .0        -> 0
+// -.0       -> 0
+// -0.0      -> -0
+// -10.0     -> -10
+//           ->            empty string is not touched
+// Since the string may be edited, you can't pass compile-time constants
+// to this function. In fact the only reason this function is not private to algo_lib
+// is because of unit testing.
+// If the initial string is empty, nothing is done.
+// BEWARE: this function will happily convert 1e+60 to 1e+6
+//
+void algo::strptr_TrimZerosRight(strptr &str) {
+    int n=str.n_elems;
+    if (n > 0) {
+        // kill trailing zeros, but don't leave an empty string
+        while (n > 1 && str.elems[n-1] == '0') {
+            n--;
         }
-        if (dec > 0) {
-            if (commas) {
-                strptr s = FirstN(c,dec);
-                do {
-                    i32 n = elems_N(s) - (elems_N(s)-1)/3*3;
-                    ch_Addary(out, FirstN(s,n));
-                    if (elems_N(s) > n) {
-                        ch_Alloc(out) = ',';
-                    }
-                    s = RestFrom(s,n);
-                } while (elems_N(s));
-            } else {
-                ch_Addary(out, FirstN(c,dec));
-            }
-            if (dec < elems_N(c)) {
-                ch_Alloc(out) = '.';
-                ch_Addary(out, RestFrom(c,dec));
-            }
-        } else {
-            ch_Alloc(out) = '0';
-            if (dec<0 || elems_N(c)) {
-                out<<'.';
-            }
-            int p = 0;
-            for (int i=0; i>dec && p<precision; i--, p++) {
-                ch_Alloc(out) = '0';
-            }
-            ch_Addary(out, c);
+        // kill trailing .
+        if (n > 0 && str.elems[n-1] == '.') {
+            n--;
         }
+        // kill trailing -
+        // (this effectively kills -. as well)
+        if (n > 0 && str.elems[n-1] == '-') {
+            n--;
+        }
+        // fix empty string
+        if (n == 0) {
+            str.elems[n++] = '0';
+        }
+        str.n_elems=n;
     }
 }
 
 // -----------------------------------------------------------------------------
 
-void algo::double_PrintPrec(double d, cstring &out, int precision) {
-    double_PrintPrec(d,out,precision,true,false);
+// Return true if a number appears to be
+// formatted using scientific notation
+static inline bool ScientificQ(strptr str) {
+    bool ret=false;
+    for (int i=0; i<str.n_elems; i++) {
+        if (str.elems[i] == 'e' || str.elems[i] == 'E') {
+            ret=true;
+            break;
+        }
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Print double D into string OUT with PRECISION digits
+// after the decimal point.
+// If OMIT_ZEROS is specified, trailing zeros that are safe to omit are omitted.
+// If COMMAS is specified, the large numbers are printed in groups of 3 digits
+// with commas between them.
+void algo::double_PrintPrec(double d, cstring &out, int precision, bool omit_zeros, bool commas) {
+    char buf[128];
+    precision = Clipped(precision,20);
+    // create a format string for the specified precision
+    // i.e. %.7lf
+    char fmt[8];
+    int i=0;
+    fmt[i++] = '%';
+    fmt[i++] = '.';
+    if (precision < 10) {
+        fmt[i++] = '0'+precision;
+    } else {
+        fmt[i++] = '1';
+        fmt[i++] = '0'+precision-10;
+    }
+    fmt[i++] = 'l';
+    fmt[i++] = 'f';
+    fmt[i++] = 0;
+    int n=snprintf(buf,sizeof(buf),fmt,d);
+    strptr result(buf,n);
+    if (ScientificQ(result)) {
+        omit_zeros=false;
+        commas=false;
+    }
+    if (omit_zeros) {
+        strptr_TrimZerosRight(result);
+    }
+    if (commas) {
+        strptr_PrintWithCommas(result,out);
+    } else {
+        out << result;
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -920,7 +1040,7 @@ void  algo::MaybeSpace(cstring &str) {
 // Example:
 // double_PrintPercent(0.334, str, 1) -> "33.4%"
 void algo::double_PrintPercent(double value, cstring &str, int prec) {
-    double_PrintPrec(value*100.0, str, prec);
+    double_PrintPrec(value*100.0, str, prec, true, false);
 }
 
 void algo::i32_Range_Print(algo::i32_Range &r, cstring &o) {
@@ -937,7 +1057,7 @@ void float_Print(float d, cstring &str) {
 }
 
 void algo::double_PrintWithCommas(double value, cstring &str, int prec) {
-    double_PrintPrec(value, str, prec, true, true);
+    double_PrintPrec(value, str, prec, true /*omit zeros*/, true /*commas*/);
 }
 
 // ignore:bigret
@@ -1292,7 +1412,7 @@ static void PrintRow(cstring &str, algo_lib::FTxtrow &row, bool use_style) {
         int extra = txtcell.width - ch_N(txtcell.rsep) - ch_N(txtcell.text);
         int l = txtcell.justify>0 ? extra
             : txtcell.justify<0 ? 0
-                              : extra/2;
+            : extra/2;
         char_PrintNTimes(' ', str,  l);
         TermStyle style = use_style ? txtcell.style : TermStyle(algo_TermStyle_default);
         if (style != algo_TermStyle_default) {
@@ -1745,12 +1865,6 @@ void algo::strptr_PrintDot(strptr s, cstring &out) {
     out <<"\"";
     out << t;
     out <<"\"";
-}
-
-// -----------------------------------------------------------------------------
-
-void algo::PrintDouble_Print(PrintDouble print_double, algo::cstring &str) {
-    double_PrintPrec(print_double.dbl, str, print_double.prec);
 }
 
 // -----------------------------------------------------------------------------

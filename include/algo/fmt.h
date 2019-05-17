@@ -37,18 +37,79 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
     // -------------------------------------------------------------------
     // cpp/lib/algo/fmt.cpp -- Print to string / Read from string
     //
+
+    // Read time from STR to ROW
+    // Return success code.
+    // If funciton does not succeed, ROW is not modified
+    // Several formats are supported:
+    // %Y-%m-%dT%T
+    // %Y-%m-%d %T
+    // %Y/%m/%d %T
+    // Where %T is %H:%M:%S.%X
+    // And %X is the nanosecond portion
     bool UnTime_ReadStrptrMaybe(algo::UnTime &row, algo::strptr str);
     bool UnDiff_ReadStrptrMaybe(UnDiff &row, algo::strptr str);
     bool UnixTime_ReadStrptrMaybe(algo::UnixTime &row, algo::strptr str);
     bool cstring_ReadStrptrMaybe(algo::cstring &row, algo::strptr str);
+
+    // Parse a URL from string STR to OUT.
+    // The format of a URL is
+    // protocol://user:password@somehost:port<-source_interface/dir1/dir2
+    // URL fields are
+    // protocol, username, password, server, port, host, source_addr_host, dir
+    //
+    //
+    // Windows pathnames are supported, e.g.
+    // when parsing
+    // file://c:/dir/dir2
+    // c: will not be parsed as a username, but as part of the pathname.
+    //
     bool URL_ReadStrptrMaybe(URL &out, algo::strptr str);
     bool Ipmask_ReadStrptrMaybe(Ipmask &row, algo::strptr str);
     void Ptr_Print(void *ptr, cstring &out);
 
     // pads with zeros on the left so that at least 'atleast' characters are output.
     void i64_PrintPadLeft(i64 num, cstring &out, int atleast);
+
+    // Assuming SRC is a number, Transfer SRC to OUT, inserting
+    // commas between groups of 3 numbers.
+    // 0 -> 0
+    // 11 -> 11
+    // 222 -> 222
+    // 3333 -> 3,333
+    // 4567.3 -> 4,567.3
+    // 1.11111 -> 1.11111
+    void strptr_PrintWithCommas(strptr src, cstring &out);
+
+    // Assuming STR is a number, remove any unnecessary characters from the right of it.
+    // Unnecessary characters are trailing zeros.
+    // If a trailing '.' or a single '-' remains, it is removed as well.
+    // If the resulting string is empty, a single zero is returned.
+    //
+    // 0         -> 0
+    // 0.1       -> 0.1
+    // 0.0       -> 0
+    // 12345.000 -> 12345
+    // -0        -> 0
+    // .0        -> 0
+    // -.0       -> 0
+    // -0.0      -> -0
+    // -10.0     -> -10
+    // ->            empty string is not touched
+    // Since the string may be edited, you can't pass compile-time constants
+    // to this function. In fact the only reason this function is not private to algo_lib
+    // is because of unit testing.
+    // If the initial string is empty, nothing is done.
+    // BEWARE: this function will happily convert 1e+60 to 1e+6
+    //
+    void strptr_TrimZerosRight(strptr &str);
+
+    // Print double D into string OUT with PRECISION digits
+    // after the decimal point.
+    // If OMIT_ZEROS is specified, trailing zeros that are safe to omit are omitted.
+    // If COMMAS is specified, the large numbers are printed in groups of 3 digits
+    // with commas between them.
     void double_PrintPrec(double d, cstring &out, int precision, bool omit_zeros, bool commas);
-    void double_PrintPrec(double d, cstring &out, int precision);
 
     // Print string, replacing '_x' with 'X', and capitalizing first word.
     void strptr_PrintCamel(algo::strptr str, cstring& out);
@@ -227,7 +288,6 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
 
     // Print string, escaping characters in a way suitable for graphviz dot format
     void strptr_PrintDot(strptr s, cstring &out);
-    void PrintDouble_Print(PrintDouble print_double, algo::cstring &str);
 
     // print binary octet string as hex
     void Sha1sig_Print(algo::Sha1sig &sha1sig, cstring &out);
@@ -340,8 +400,8 @@ namespace algo {
 template<class Val> struct Keyval_ {
     const strptr &key;
     Val &val;
-Keyval_(const strptr &a, const Val &b) :key(a),val((Val&)b) {
-}
+    Keyval_(const strptr &a, const Val &b) :key(a),val((Val&)b) {
+    }
 };
 template<class Val> inline cstring &operator <<(cstring &lhs, const Keyval_<Val> &kv) {
     int start=algo::BeginKeyval(lhs,kv.key);

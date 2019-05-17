@@ -385,6 +385,7 @@ dmmeta.xref  field:atf_amc.FCascdel.tr_child_atree  inscond:"row.p_parent != &ro
 dmmeta.xref  field:atf_norm.FDb.ind_ssimfile  inscond:true  via:""
 dmmeta.xref  field:atf_norm.FDb.ind_scriptfile  inscond:true  via:""
 dmmeta.xref  field:atf_norm.FDb.ind_ns  inscond:true  via:""
+dmmeta.xref  field:atf_norm.FDb.ind_builddir  inscond:true  via:""
 dmmeta.xref  field:atf_unit.FDb.tr_number  inscond:true  via:""
 dmmeta.xref  field:atf_unit.FDb.ind_unittest  inscond:true  via:""
 dmmeta.xref  field:atf_unit.FUnittest.c_testrun  inscond:true  via:atf_unit.FDb.ind_unittest/atf.Testrun.testrun

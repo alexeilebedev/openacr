@@ -31,7 +31,7 @@
 
 // -----------------------------------------------------------------------------
 
-#ifdef __MACH__
+#if defined(__MACH__) || __FreeBSD__>0
 // replacement for missing lseek64
 static i64 lseek64(int fd, off64_t off, int whence) {
     return lseek(fd,off,whence);
@@ -269,13 +269,13 @@ tempstr algo::ReplaceExt(strptr a, strptr b) NOTHROW {
 // Return current directory name.
 tempstr algo::GetCurDir() NOTHROW {
     tempstr ret;
-#ifdef __MACH__
-    char buf[BUFSIZ];
-    ret << strptr(getcwd(buf,sizeof(buf)-1));
-#else
+#ifdef __linux__
     char *p = get_current_dir_name();
     ret<<p;
     free(p);
+#else
+    char buf[BUFSIZ];
+    ret << strptr(getcwd(buf,sizeof(buf)-1));
 #endif
     return ret;
 }
@@ -385,12 +385,15 @@ static void DirEntryFill(DirEntry &E) {
         E.filename = strptr(E.dir_ent->d_name);
         E.pathname.ch_n =  ch_N(E.dirname);
         E.pathname << MaybeDirSep << E.filename;
-        if (0 == lstat(Zeroterm(E.pathname), &E.stat)) {
-            E.is_dir       = S_ISDIR(E.stat.st_mode) != 0;
-            E.mtime        = ToUnTime(UnixTime(E.stat.st_mtime));
-            E.ctime        = ToUnTime(UnixTime(E.stat.st_ctime));
-            E.size         = E.stat.st_size;
-            match          = E.filename != "." && E.filename != "..";// never pass these back to user
+        struct stat st;
+        if (0 == lstat(Zeroterm(E.pathname), &st)) {
+            E.is_dir = S_ISDIR(st.st_mode) != 0;
+            E.mode   = st.st_mode;
+            // can we grab the nanosecs too?
+            E.mtime  = ToUnTime(UnixTime(st.st_mtime));
+            E.ctime  = ToUnTime(UnixTime(st.st_ctime));
+            E.size   = st.st_size;
+            match    = E.filename != "." && E.filename != ".."; // never pass these back to user
             match = match && fnmatch(Zeroterm(E.pattern), Zeroterm(E.filename), FNM_FILE_NAME)==0;
         }
     }

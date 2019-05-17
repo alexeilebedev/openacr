@@ -24,7 +24,7 @@
 //
 
 #include "include/algo.h"
-#ifdef __MACH__
+#if defined(__MACH__) || __FreeBSD__>0
 // kqueue.h
 #include <sys/types.h>
 #include <sys/event.h>
@@ -34,7 +34,7 @@
 // -----------------------------------------------------------------------------
 
 void algo_lib::IohookInit() {
-#ifdef __MACH__
+#if defined(__MACH__) || __FreeBSD__>0
     algo_lib::_db.epoll_fd = kqueue();
     if (algo_lib::_db.epoll_fd == -1) {
         FatalErrorExit("kqueue");
@@ -56,7 +56,7 @@ void algo_lib::IohookInit() {
 void algo_lib::IohookAdd(algo_lib::FIohook& iohook, algo::IOEvtFlags inflags) NOTHROW {
     bool isnew = !iohook.in_epoll;
     iohook.evt_flags = inflags;// flags we're now subscribed to
-#ifdef __MACH__
+#if defined(__MACH__) || __FreeBSD__>0
     struct kevent ev;
     int flags=0;
     if (read_Get(inflags)) {
@@ -95,7 +95,7 @@ void algo_lib::IohookRemove(algo_lib::FIohook& iohook) NOTHROW {
     if (iohook.in_epoll) {
         algo_lib::_db.n_iohook -= 1;
         iohook.in_epoll = false;
-#ifdef __MACH__
+#if defined(__MACH__) || __FreeBSD__>0
         struct kevent ev;
         int flags=0;
         if (read_Get(iohook.evt_flags)) {
@@ -139,16 +139,14 @@ static void SleepClocks(u64 clocks) {
 
 // -----------------------------------------------------------------------------
 
-#ifdef __MACH__
+#if defined(__MACH__) || __FreeBSD__>0
 static inline void IohookWaitClocks_Kqueue(u64 wait_clocks) {
     struct kevent events[20];
     u64 wait_nano = wait_clocks * algo_lib::_db.clocks_to_ns;
     const i64 billion = 1000000000;
-    struct timespec timeout
-        = {
-           wait_nano / billion
-           , wait_nano % billion
-    };
+    struct timespec timeout;
+    timeout.tv_sec = wait_nano / billion;
+    timeout.tv_nsec = wait_nano % billion;
     int n = kevent(algo_lib::_db.epoll_fd
                    , NULL, 0
                    , events, _array_count(events)
@@ -173,7 +171,7 @@ static inline void IohookWaitClocks_Kqueue(u64 wait_clocks) {
 
 // -----------------------------------------------------------------------------
 
-#ifndef __MACH__
+#ifdef __linux__
 static inline void IohookWaitClocks_Epoll(u64 wait_clocks) {
     i32 wait_ms = i32(i64_Min(wait_clocks * algo_lib::_db.clocks_to_ms, 60000));
     // For non-realtime processes,
@@ -204,7 +202,7 @@ static void _IohookWaitClocks(u64 wait_clocks) {
     // epolls are expensive (650 cycles/call) with vma_lib, while main steps are cheap
     // (200 cycles/step).
     if ((wait_clocks > 0) || (algo_lib::_db.giveup_count & 1) == 0) {
-#ifdef __MACH__
+#if defined(__MACH__) || __FreeBSD__>0
         IohookWaitClocks_Kqueue(wait_clocks);
 #else
         IohookWaitClocks_Epoll(wait_clocks);

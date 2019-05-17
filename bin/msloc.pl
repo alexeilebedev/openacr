@@ -1,6 +1,6 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 #
-# AOS 
+# AOS
 # (C) AlgoEngineering LLC 2008-2012
 # (C) NYSE | Intercontinental Exchange 2013-2014
 #

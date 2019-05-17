@@ -767,7 +767,6 @@ inline static i32 mdbg::trace_N() {
 // Set all fields to initial values.
 void mdbg::FDb_Init() {
     memset(_db.lpool_free, 0, sizeof(_db.lpool_free));
-    _db.rhel7 = bool(false);
     // initialize LAry cfg (mdbg.FDb.cfg)
     _db.cfg_n = 0;
     memset(_db.cfg_lary, 0, sizeof(_db.cfg_lary)); // zero out all level pointers

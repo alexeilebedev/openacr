@@ -27,7 +27,7 @@
 
 #include <arpa/inet.h>// inet_pton
 #include <sys/mman.h>// mmap,mlockall
-#ifndef __MACH__
+#ifdef __linux__
 #include <sys/prctl.h>
 #endif
 #include "include/gen/command_gen.h"
@@ -474,7 +474,7 @@ const tempstr algo::GetDomainname() {
 
 // Die when parent process dies
 void algo_lib::DieWithParent() {
-#ifdef __MACH__
+#if defined(__MACH__) || __FreeBSD__>0
     // sadly, there is no way to make a child exit
     // when a parent dies, so structured concurrency
     // cannot be implemented

@@ -47,7 +47,6 @@ dmmeta.cpptype  ctype:algo.LogcatKey  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:algo.Md5Digest  ctor:Y  dtor:Y  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.Month  ctor:Y  dtor:Y  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.NumParseFlags  ctor:Y  dtor:Y  cheap_copy:N
-dmmeta.cpptype  ctype:algo.PrintDouble  ctor:Y  dtor:Y  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.RnullStr1  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.RnullStr10  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.RnullStr100  ctor:N  dtor:N  cheap_copy:N

@@ -1780,7 +1780,7 @@ inline void algo::value_qSetDouble(algo::I32Dec1& parent, double val) {
 // --- algo.I32Dec1.value.GetDouble
 inline double algo::value_GetDouble(algo::I32Dec1& parent) {
     double ret;
-    ret = parent.value * 0.1;
+    ret = parent.value / double(10);
     return ret;
 }
 
@@ -1839,7 +1839,7 @@ inline void algo::value_qSetDouble(algo::I32Dec2& parent, double val) {
 // --- algo.I32Dec2.value.GetDouble
 inline double algo::value_GetDouble(algo::I32Dec2& parent) {
     double ret;
-    ret = parent.value * 0.01;
+    ret = parent.value / double(100);
     return ret;
 }
 
@@ -1898,7 +1898,7 @@ inline void algo::value_qSetDouble(algo::I32Dec3& parent, double val) {
 // --- algo.I32Dec3.value.GetDouble
 inline double algo::value_GetDouble(algo::I32Dec3& parent) {
     double ret;
-    ret = parent.value * 0.001;
+    ret = parent.value / double(1000);
     return ret;
 }
 
@@ -1957,7 +1957,7 @@ inline void algo::value_qSetDouble(algo::I32Dec4& parent, double val) {
 // --- algo.I32Dec4.value.GetDouble
 inline double algo::value_GetDouble(algo::I32Dec4& parent) {
     double ret;
-    ret = parent.value * 0.0001;
+    ret = parent.value / double(10000);
     return ret;
 }
 
@@ -2016,7 +2016,7 @@ inline void algo::value_qSetDouble(algo::I32Dec5& parent, double val) {
 // --- algo.I32Dec5.value.GetDouble
 inline double algo::value_GetDouble(algo::I32Dec5& parent) {
     double ret;
-    ret = parent.value * 0.00001;
+    ret = parent.value / double(100000);
     return ret;
 }
 
@@ -2075,7 +2075,7 @@ inline void algo::value_qSetDouble(algo::I64Dec1& parent, double val) {
 // --- algo.I64Dec1.value.GetDouble
 inline double algo::value_GetDouble(algo::I64Dec1& parent) {
     double ret;
-    ret = parent.value * 0.1;
+    ret = parent.value / double(10);
     return ret;
 }
 
@@ -2134,7 +2134,7 @@ inline void algo::value_qSetDouble(algo::I64Dec10& parent, double val) {
 // --- algo.I64Dec10.value.GetDouble
 inline double algo::value_GetDouble(algo::I64Dec10& parent) {
     double ret;
-    ret = parent.value * 0.0000000001;
+    ret = parent.value / double(10000000000);
     return ret;
 }
 
@@ -2193,7 +2193,7 @@ inline void algo::value_qSetDouble(algo::I64Dec2& parent, double val) {
 // --- algo.I64Dec2.value.GetDouble
 inline double algo::value_GetDouble(algo::I64Dec2& parent) {
     double ret;
-    ret = parent.value * 0.01;
+    ret = parent.value / double(100);
     return ret;
 }
 
@@ -2252,7 +2252,7 @@ inline void algo::value_qSetDouble(algo::I64Dec3& parent, double val) {
 // --- algo.I64Dec3.value.GetDouble
 inline double algo::value_GetDouble(algo::I64Dec3& parent) {
     double ret;
-    ret = parent.value * 0.001;
+    ret = parent.value / double(1000);
     return ret;
 }
 
@@ -2311,7 +2311,7 @@ inline void algo::value_qSetDouble(algo::I64Dec4& parent, double val) {
 // --- algo.I64Dec4.value.GetDouble
 inline double algo::value_GetDouble(algo::I64Dec4& parent) {
     double ret;
-    ret = parent.value * 0.0001;
+    ret = parent.value / double(10000);
     return ret;
 }
 
@@ -2370,7 +2370,7 @@ inline void algo::value_qSetDouble(algo::I64Dec5& parent, double val) {
 // --- algo.I64Dec5.value.GetDouble
 inline double algo::value_GetDouble(algo::I64Dec5& parent) {
     double ret;
-    ret = parent.value * 0.00001;
+    ret = parent.value / double(100000);
     return ret;
 }
 
@@ -2429,7 +2429,7 @@ inline void algo::value_qSetDouble(algo::I64Dec6& parent, double val) {
 // --- algo.I64Dec6.value.GetDouble
 inline double algo::value_GetDouble(algo::I64Dec6& parent) {
     double ret;
-    ret = parent.value * 0.000001;
+    ret = parent.value / double(1000000);
     return ret;
 }
 
@@ -2488,7 +2488,7 @@ inline void algo::value_qSetDouble(algo::I64Dec7& parent, double val) {
 // --- algo.I64Dec7.value.GetDouble
 inline double algo::value_GetDouble(algo::I64Dec7& parent) {
     double ret;
-    ret = parent.value * 0.0000001;
+    ret = parent.value / double(10000000);
     return ret;
 }
 
@@ -2547,7 +2547,7 @@ inline void algo::value_qSetDouble(algo::I64Dec8& parent, double val) {
 // --- algo.I64Dec8.value.GetDouble
 inline double algo::value_GetDouble(algo::I64Dec8& parent) {
     double ret;
-    ret = parent.value * 0.00000001;
+    ret = parent.value / double(100000000);
     return ret;
 }
 
@@ -2606,7 +2606,7 @@ inline void algo::value_qSetDouble(algo::I64Dec9& parent, double val) {
 // --- algo.I64Dec9.value.GetDouble
 inline double algo::value_GetDouble(algo::I64Dec9& parent) {
     double ret;
-    ret = parent.value * 0.000000001;
+    ret = parent.value / double(1000000000);
     return ret;
 }
 
@@ -7497,23 +7497,6 @@ inline void algo::hex_Set(algo::NumParseFlags& parent, bool rhs) {
 // Set all fields to initial values.
 inline void algo::NumParseFlags_Init(algo::NumParseFlags& parent) {
     parent.value = u32(0);
-}
-inline algo::PrintDouble::PrintDouble(double                         in_dbl
-        ,i32                            in_prec)
-    : dbl(in_dbl)
-    , prec(in_prec)
-{
-}
-inline algo::PrintDouble::PrintDouble() {
-    algo::PrintDouble_Init(*this);
-}
-
-
-// --- algo.PrintDouble..Init
-// Set all fields to initial values.
-inline void algo::PrintDouble_Init(algo::PrintDouble& parent) {
-    parent.dbl = double(0.0);
-    parent.prec = i32(0);
 }
 inline algo::Protocol::Protocol() {
 }
@@ -16867,7 +16850,7 @@ inline void algo::value_qSetDouble(algo::U16Dec2& parent, double val) {
 // --- algo.U16Dec2.value.GetDouble
 inline double algo::value_GetDouble(algo::U16Dec2& parent) {
     double ret;
-    ret = parent.value * 0.01;
+    ret = parent.value / double(100);
     return ret;
 }
 
@@ -16926,7 +16909,7 @@ inline void algo::value_qSetDouble(algo::U32Dec1& parent, double val) {
 // --- algo.U32Dec1.value.GetDouble
 inline double algo::value_GetDouble(algo::U32Dec1& parent) {
     double ret;
-    ret = parent.value * 0.1;
+    ret = parent.value / double(10);
     return ret;
 }
 
@@ -16985,7 +16968,7 @@ inline void algo::value_qSetDouble(algo::U32Dec2& parent, double val) {
 // --- algo.U32Dec2.value.GetDouble
 inline double algo::value_GetDouble(algo::U32Dec2& parent) {
     double ret;
-    ret = parent.value * 0.01;
+    ret = parent.value / double(100);
     return ret;
 }
 
@@ -17044,7 +17027,7 @@ inline void algo::value_qSetDouble(algo::U32Dec3& parent, double val) {
 // --- algo.U32Dec3.value.GetDouble
 inline double algo::value_GetDouble(algo::U32Dec3& parent) {
     double ret;
-    ret = parent.value * 0.001;
+    ret = parent.value / double(1000);
     return ret;
 }
 
@@ -17103,7 +17086,7 @@ inline void algo::value_qSetDouble(algo::U32Dec4& parent, double val) {
 // --- algo.U32Dec4.value.GetDouble
 inline double algo::value_GetDouble(algo::U32Dec4& parent) {
     double ret;
-    ret = parent.value * 0.0001;
+    ret = parent.value / double(10000);
     return ret;
 }
 
@@ -17162,7 +17145,7 @@ inline void algo::value_qSetDouble(algo::U32Dec5& parent, double val) {
 // --- algo.U32Dec5.value.GetDouble
 inline double algo::value_GetDouble(algo::U32Dec5& parent) {
     double ret;
-    ret = parent.value * 0.00001;
+    ret = parent.value / double(100000);
     return ret;
 }
 
@@ -17335,7 +17318,7 @@ inline void algo::value_qSetDouble(algo::U64Dec10& parent, double val) {
 // --- algo.U64Dec10.value.GetDouble
 inline double algo::value_GetDouble(algo::U64Dec10& parent) {
     double ret;
-    ret = parent.value * 0.0000000001;
+    ret = parent.value / double(10000000000);
     return ret;
 }
 
@@ -17394,7 +17377,7 @@ inline void algo::value_qSetDouble(algo::U64Dec2& parent, double val) {
 // --- algo.U64Dec2.value.GetDouble
 inline double algo::value_GetDouble(algo::U64Dec2& parent) {
     double ret;
-    ret = parent.value * 0.01;
+    ret = parent.value / double(100);
     return ret;
 }
 
@@ -17453,7 +17436,7 @@ inline void algo::value_qSetDouble(algo::U64Dec4& parent, double val) {
 // --- algo.U64Dec4.value.GetDouble
 inline double algo::value_GetDouble(algo::U64Dec4& parent) {
     double ret;
-    ret = parent.value * 0.0001;
+    ret = parent.value / double(10000);
     return ret;
 }
 
@@ -17512,7 +17495,7 @@ inline void algo::value_qSetDouble(algo::U64Dec5& parent, double val) {
 // --- algo.U64Dec5.value.GetDouble
 inline double algo::value_GetDouble(algo::U64Dec5& parent) {
     double ret;
-    ret = parent.value * 0.00001;
+    ret = parent.value / double(100000);
     return ret;
 }
 
@@ -17571,7 +17554,7 @@ inline void algo::value_qSetDouble(algo::U64Dec6& parent, double val) {
 // --- algo.U64Dec6.value.GetDouble
 inline double algo::value_GetDouble(algo::U64Dec6& parent) {
     double ret;
-    ret = parent.value * 0.000001;
+    ret = parent.value / double(1000000);
     return ret;
 }
 
@@ -17630,7 +17613,7 @@ inline void algo::value_qSetDouble(algo::U64Dec7& parent, double val) {
 // --- algo.U64Dec7.value.GetDouble
 inline double algo::value_GetDouble(algo::U64Dec7& parent) {
     double ret;
-    ret = parent.value * 0.0000001;
+    ret = parent.value / double(10000000);
     return ret;
 }
 
@@ -17689,7 +17672,7 @@ inline void algo::value_qSetDouble(algo::U64Dec8& parent, double val) {
 // --- algo.U64Dec8.value.GetDouble
 inline double algo::value_GetDouble(algo::U64Dec8& parent) {
     double ret;
-    ret = parent.value * 0.00000001;
+    ret = parent.value / double(100000000);
     return ret;
 }
 
@@ -17748,7 +17731,7 @@ inline void algo::value_qSetDouble(algo::U64Dec9& parent, double val) {
 // --- algo.U64Dec9.value.GetDouble
 inline double algo::value_GetDouble(algo::U64Dec9& parent) {
     double ret;
-    ret = parent.value * 0.000000001;
+    ret = parent.value / double(1000000000);
     return ret;
 }
 
@@ -18350,11 +18333,6 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::Month &r
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::NumParseFlags &row) {// cfmt:algo.NumParseFlags.String
     algo::NumParseFlags_Print(const_cast<algo::NumParseFlags&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::PrintDouble &row) {// cfmt:algo.PrintDouble.String
-    algo::PrintDouble_Print(const_cast<algo::PrintDouble&>(row), str);
     return str;
 }
 

@@ -1,8 +1,6 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 my %lines;
 while (<>) {
     print if !$lines{$_};
     $lines{$_}=1;
 }
-
-        
