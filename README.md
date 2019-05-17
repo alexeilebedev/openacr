@@ -186,6 +186,7 @@ Presently, this project has been tested on the following distributions / compile
 * g++: 4.8, 8.3, 9
 * clang: 3.4.2
 * MacOS: LLVM 10.0.1
+* FreeBSD: Clang 6.0.0
 
 The MariaDB and OpenSSL packages are required in order to build mysql2ssim and ssim2mysql tools.
 
