@@ -503,16 +503,6 @@ void algo::double_PrintPrec(double d, cstring &out, int precision, bool omit_zer
         precision = i32_Max(precision,0);
         int dec, sign;
         strptr c = fcvt(d, precision, &dec, &sign);
-#ifdef UNAME_DARWIN
-        // what is this?
-        tempstr t;
-        if (precision == 0) {
-            i64_PrintPadLeft(Trunc(d),t,0);
-            c = t;
-            dec = elems_N(c);
-        }
-#endif
-        //
         // attempts to use out.Reserve and qAdd appear buggy.
         // reverting back to .Add()
         if (omit_zeros && dec>0) {

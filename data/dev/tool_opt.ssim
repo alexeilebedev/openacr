@@ -20,7 +20,6 @@ dev.tool_opt  tool_opt:029  opt_type:CC_OPTS  opt:-Winvalid-pch  target:""  unam
 dev.tool_opt  tool_opt:1001  opt_type:CC_OPTS  opt:-Wno-enum-compare  target:""  uname:""  compiler:clang++  cfg:""  arch:""  comment:""
 dev.tool_opt  tool_opt:1002  opt_type:CC_OPTS  opt:-Wno-array-bounds  target:""  uname:""  compiler:clang++  cfg:""  arch:""  comment:""
 dev.tool_opt  tool_opt:1004  opt_type:CC_OPTS  opt:-Wno-error  target:algo_pch  uname:""  compiler:clang++  cfg:""  arch:""  comment:""
-dev.tool_opt  tool_opt:180  opt_type:CC_OPTS  opt:-DUNAME_LINUX  target:""  uname:Linux  compiler:""  cfg:""  arch:""  comment:""
 dev.tool_opt  tool_opt:181  opt_type:CC_OPTS  opt:-ftest-coverage  target:""  uname:""  compiler:g++  cfg:coverage  arch:""  comment:""
 dev.tool_opt  tool_opt:182  opt_type:CC_OPTS  opt:-fprofile-arcs  target:""  uname:""  compiler:g++  cfg:coverage  arch:""  comment:""
 dev.tool_opt  tool_opt:183  opt_type:CC_OPTS  opt:"-fprofile-dir=."  target:""  uname:""  compiler:g++  cfg:coverage  arch:""  comment:""

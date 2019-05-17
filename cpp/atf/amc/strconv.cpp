@@ -187,7 +187,7 @@ void atf_amc::amctest_TestString() {
     algo_assert(sizeof(f32) == 4);
     algo_assert(sizeof(f64) == 8);
 
-#ifdef UNAME_LINUX
+#ifdef __linux__
     algo_assert(sizeof(off64_t) == sizeof(u64));
 #endif
     algo_assert(sizeof(algo::PCPLine)==CACHE_LINE);

@@ -4,7 +4,7 @@ use strict;
 use File::Copy;
 
 # example of command line we want to speed up
-# /usr/bin/time -v g++  -x g++ -Wno-invalid-offsetof -g -D_DEBUG=1 -ffunction-sections -fdata-sections -Wsequence-point -Wno-multichar -Wall -Wshadow -pipe -Wextra -Winit-self -Wmissing-include-dirs -Wmissing-declarations -DUNAME_LINUX -iquote . -msse4.2 -D AOS_SSE42 -Wno-vla -Wno-unused-local-typedefs -Wno-long-long -Wno-strict-aliasing -fpch-preprocess -iquote dflt.debug-x86_64/   -c a.cpp -o   a.o
+# /usr/bin/time -v g++  -x g++ -Wno-invalid-offsetof -g -D_DEBUG=1 -ffunction-sections -fdata-sections -Wsequence-point -Wno-multichar -Wall -Wshadow -pipe -Wextra -Winit-self -Wmissing-include-dirs -Wmissing-declarations -iquote . -msse4.2 -D AOS_SSE42 -Wno-vla -Wno-unused-local-typedefs -Wno-long-long -Wno-strict-aliasing -fpch-preprocess -iquote dflt.debug-x86_64/   -c a.cpp -o   a.o
 
 # strategy:
 # 1. check if command line is optimizable -- needs a -c and -o options

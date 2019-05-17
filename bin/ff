@@ -17,29 +17,19 @@ my @pathpat    = (
     '!'.
     join('|',
          ('\.svn/'
+          ,'build/'
+          ,'temp/'
           ,'\.git/'))
     );
 my @filepat    = (
     '!'.
     join('|',
          ('^\.'
-          ,'^.*\.debug'
-          ,'^.*\.release'
           ,'\~$'
           ,'\.mk$'
           ,'\.ppm$'
           ,'\#$'
-          ,'\.o$'
-          ,'\.so$'
-          ,'\.so\.'
-          ,'\.exe$'
-          ,'\.gcda$'
-          ,'\.gcno$'
-          ,'\.scexe$'
           ,'\.pdf$'
-          ,'\.gch$'
-          ,'\.a$'
-          ,'\.obj$'
           ,'^run$'
           ,'\.objlist$'
           ,'^core\.\d+$'

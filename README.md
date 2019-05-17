@@ -194,25 +194,13 @@ The MariaDB and OpenSSL packages are required in order to build mysql2ssim and s
 Install brew.
 Then,
 
-    brew install mariadb openssl nasm
+    brew install mariadb openssl
     ln -s /usr/local/opt/openssl/lib/libcrypto.a /usr/local/lib/
     ln -s /usr/local/opt/openssl/lib/libssl.a /usr/local/lib/
 
-`Mysql` seems to be broken under Brew (somebody didn't clean the lines...)
-There are missing headers. Since MariaDB is the successor to `mysql`, there 
-doesn't seem to be much point in supporting `mysql`. In any case, `acr` doesn't have
-any dependency on `mysql`. It simply provides an convenient adaptor to it.
+Please note that mariadb, not mysql should be installed.
+Since MariaDB is the successor to `mysql`, there shouldn't be a problem.
 
-Nasm is required because `abt` uses it to embed git info into compiled executables.
-
-MacOS's `g++` is actually clang, and it's slightly incompatible with ther  `g++`
-that I've seen. Since clang is the main and official compiler for MacOS,
-OpenACR on MacOS uses `clang`. For this, the following additional setup is necessary:
-
-    COMPILER=clang++
-    export COMPILER
-    ln -sf clang.release-x86_64 dflt.release-x86_64
-    
 ### Path
 
 All commands can be issued from this, top-level directory.
@@ -253,7 +241,6 @@ Here are some commands to get set it up.
 ### Environment Variables
 
 * EDITOR - standard environment variable specifying which editor to use
-* COMPILER, UNAME, CFG, ARCH - defaults for abt [abt](#txt/abt-a-build-tool) section.
 
 ### Known Issues
 
