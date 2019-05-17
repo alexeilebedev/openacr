@@ -17,10 +17,10 @@
 //#pragma endinclude
 // compile-time string constants for dev.Arch.arch
 const char *dev_Arch_arch_         = "";
+const char *dev_Arch_arch_amd64    = "amd64";
 const char *dev_Arch_arch_i86pc    = "i86pc";
 const char *dev_Arch_arch_x64      = "x64";
 const char *dev_Arch_arch_x86_64   = "x86_64";
-const char *dev_Arch_arch_amd64    = "amd64";
 
 // compile-time string constants for dev.Builddir.builddir
 const char *dev_Builddir_builddir_Darwin_clangPP_coverage_x86_64   = "Darwin-clang++.coverage-x86_64";

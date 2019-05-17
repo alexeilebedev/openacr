@@ -11,10 +11,10 @@
 #include "include/gen/algo_gen.h"
 //#pragma endinclude
 extern const char *  dev_Arch_arch_;         //           fconst:dev.Arch.arch/
+extern const char *  dev_Arch_arch_amd64;    // amd64     fconst:dev.Arch.arch/amd64
 extern const char *  dev_Arch_arch_i86pc;    // i86pc     fconst:dev.Arch.arch/i86pc
 extern const char *  dev_Arch_arch_x64;      // x64       fconst:dev.Arch.arch/x64
 extern const char *  dev_Arch_arch_x86_64;   // x86_64    fconst:dev.Arch.arch/x86_64
-extern const char *  dev_Arch_arch_amd64;    // amd64     fconst:dev.Arch.arch/amd64
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_coverage_x86_64;   // Darwin-clang++.coverage-x86_64    fconst:dev.Builddir.builddir/Darwin-clang++.coverage-x86_64
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_debug_x86_64;      // Darwin-clang++.debug-x86_64       fconst:dev.Builddir.builddir/Darwin-clang++.debug-x86_64
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_profile_x86_64;    // Darwin-clang++.profile-x86_64     fconst:dev.Builddir.builddir/Darwin-clang++.profile-x86_64

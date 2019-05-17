@@ -65,6 +65,8 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
    * [Amc Features](#amc-features)
       * [Scaled Decimal Types](#scaled-decimal-types)
 ; [Big-Endian Fields](#big-endian-fields); [Bitfields](#bitfields); [Steps](#steps); [Tracing](#tracing); [Base: Mixin](#base-mixin); [Bheap: Binary Heap](#bheap-binary-heap); [Bitset: Bitset over an array](#bitset-bitset-over-an-array); [Count: Count elements](#count-count-elements); [Fconst: Enumerated type](#fconst-enumerated-type); [Inlary: Inline array](#inlary-inline-array); [Lary: Level array](#lary-level-array); [Llist: Linked list](#llist-linked-list); [Opt: Optional last field in variable-length struct](#opt-optional-last-field-in-variable-length-struct); [Pmask: Presence mask](#pmask-presence-mask); [Ptr](#ptr); [Ptrary](#ptrary); [RegxSql:](#regxsql); [Smallstr](#smallstr); [Thash: hash table](#thash-hash-table); [Upptr:](#upptr); [Varlen: variable-length tail portion of a struct](#varlen-variable-length-tail-portion-of-a-struct)
+   * [Reflection](#reflection)
+      * [Discussion](#discussion)
    * [acr_ed: Acr Editor](#acr_ed-acr-editor)
       * [Targets](#targets)
          * [Create Target](#create-target)
@@ -3597,6 +3599,44 @@ B has Upptr to A). Circular dependencies between Ptr fields are OK.
 Varlen corresponds to a (possibly empty) array of fixed-size records appended to the end of a struct.
 the parent ctype must have a length field defined. varlen fields cane be read from a string or
 iterated over. This type is frequently used by wire protocols to specify a repeated section of a message.
+
+
+## Reflection
+
+`amc` includes some information about a process into the process itself.
+For each each namespace linked into a process, possessing an in-memoryo database, an `algo_lib.FImdb`
+entry is defined, and added to the `algo_lib.FDb.imdb` table. This table is indexed
+with `algo_lib.FDb.ind_imdb`.
+
+Without loading any ssimfiles, a process can access the `imdb` records.
+`algo_lib.FImdb` has the following fields:
+
+* imdb: primary key. `algo_lib` or `sample`
+* InsertStrptrMaybe: pointer to a function that takes a strptr and inserts it into this namespace's in-memory database.
+* Step: pointer to a function that executes a single scheduler cycle.
+* MainLoop: pointer to the main loop function, if defined
+* GetTrace: pointer to a function that reads all trace variables from the process
+
+In addition, the `algo_lib.FDb.imtable` table contains the list of all in-memory tables.
+`Imtable` is also indexed, with `ind_imtable`, and has the followin fields (`amc -e algo.Imtable`):
+
+* imtable: primary key
+* elem_type: A string holding the ctype pkey of the records in this table
+* c_RowidFind: Optional pointer to a function to find an element by rowid
+* XrefX: Optional function to x-reference the record
+* NItems: Optional function that returns the number of records in the table
+* Print: Optional function to print one element as a string
+* size: With of each record
+* ssimfile: Pkey of ssimfile, if one is associated with the record.
+
+### Discussion
+
+Reflection is generally considered a very powerful mechanism, but in the OpenACR world
+it's not used that frequently. Why the ability to insert records dynamically (i.e. outside
+of a pre-declared path) and knowing the list of namespace linked into a given program is useful,
+it's not as useful as simply loading the ssimtables that describe *all* processes in the 
+given universe, and doing something with them. An analogy would be surgery on yourself,
+especially brain surgery. Powerful? Yes. Best practice? Hardly.
 
 
 ## acr_ed: Acr Editor
