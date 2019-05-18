@@ -74,9 +74,9 @@ since `build/release/sample` is a soft link.
 
 
     $ ls -l build/Linux-clang++.release-x86_64/*sample*
-    -rwxrwxr-x. 1 alexei alexei 109128 May  3 18:35 dflt.release-x86_64/sample
-    -rw-rw-r--. 1 alexei alexei   1912 May  3 18:34 dflt.release-x86_64/cpp.sample.sample.o
-    -rw-rw-r--. 1 alexei alexei  24776 May  3 18:34 dflt.release-x86_64/cpp.gen.sample_gen.o
+    -rwxrwxr-x. 1 alexei alexei 109128 May  3 18:35 build/Linux-clang++.release-x86_64/sample
+    -rw-rw-r--. 1 alexei alexei   1912 May  3 18:34 build/Linux-clang++.release-x86_64/cpp.sample.sample.o
+    -rw-rw-r--. 1 alexei alexei  24776 May  3 18:34 build/Linux-clang++.release-x86_64/cpp.gen.sample_gen.o
 
 `abt` places all output files in the same output directory, with no subdirectories.
 Source file paths are flattened, substituting `/` with `.`. So, `cpp/sample/sample.cpp`

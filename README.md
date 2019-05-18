@@ -66,7 +66,6 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
       * [Scaled Decimal Types](#scaled-decimal-types)
 ; [Big-Endian Fields](#big-endian-fields); [Bitfields](#bitfields); [Steps](#steps); [Tracing](#tracing); [Base: Mixin](#base-mixin); [Bheap: Binary Heap](#bheap-binary-heap); [Bitset: Bitset over an array](#bitset-bitset-over-an-array); [Count: Count elements](#count-count-elements); [Fconst: Enumerated type](#fconst-enumerated-type); [Inlary: Inline array](#inlary-inline-array); [Lary: Level array](#lary-level-array); [Llist: Linked list](#llist-linked-list); [Opt: Optional last field in variable-length struct](#opt-optional-last-field-in-variable-length-struct); [Pmask: Presence mask](#pmask-presence-mask); [Ptr](#ptr); [Ptrary](#ptrary); [RegxSql:](#regxsql); [Smallstr](#smallstr); [Thash: hash table](#thash-hash-table); [Upptr:](#upptr); [Varlen: variable-length tail portion of a struct](#varlen-variable-length-tail-portion-of-a-struct)
    * [Reflection](#reflection)
-      * [Discussion](#discussion)
    * [Scheduling And Main Loop](#scheduling-and-main-loop)
       * [Sample App With Main Loop](#sample-app-with-main-loop)
 ; [Adding A Step](#adding-a-step); [Step With Delay](#step-with-delay); [Scaled Delay](#scaled-delay); [Dynamic Updates: Deletion](#dynamic-updates-deletion); [Auto Unref](#auto-unref); [Larger Programs](#larger-programs); [Iohooks](#iohooks)
@@ -281,16 +280,14 @@ that will build `abt` if it doesn't yet exist.
 
 ### Intermediate Files
 
-Object files, libraries and executables are kept in `dflt.debug-x86_64` or `dflt.release-x86_64`.
-Here, `dflt` is the compiler name. Other possible names are `clang`.
-
-Build directories can be wiped with `make clean`. After that, the `abt` binary will no longer exist,
-and it would have to be re-created with `ai` or `abt-bootstrap`.
+Object files, libraries and executables are kept in `build/release/` directory.
+Build directories can be wiped with `make clean`. 
+After that, the `abt` binary will no longer exist, and it would have to be re-created with `ai`
 
 The intermediate directory has a flat structure. The name of each object file is the 
 path to the .cpp file with `/`s replaced by `.`s.
     
-    $ ls dflt.release-x86_64/
+    $ ls build/release/
     abc                    cpp.amc.ctype.read.o     cpp.amc.regx.o          cpp.atf.amc.strconv.o ...
     abt                    cpp.amc.delptr.o         cpp.amc.sbrk.o          cpp.atf.amc.tary.o
     acr                    cpp.amc.dflt.o           cpp.amc.signature.o     cpp.atf.amc.varlen.o
@@ -2069,10 +2066,10 @@ This information can be retrived with `strings` or by running the command with `
     $ sample -version
     dev.gitinfo  gitinfo:2019-05-02.309c6ba  author:alexei@lebe.dev  cfg:g++/4.8.5/release.Linux-x86_64  package:""
 
-    $ strings dflt.release-x86_64/sample | grep gitinfo:
+    $ strings build/release/sample | grep gitinfo:
     dev.gitinfo  gitinfo:2019-05-02.309c6ba  author:alexei@lebe.dev  cfg:g++/4.8.5/release.Linux-x86_64  package:""
 
-~AL~: this is no longer valid as gitinfo support via loader mechanism was non-portable.
+*AL*: this is no longer valid as gitinfo support via loader mechanism was non-portable.
 Will be re-implemented via `amc` in a portable way
 
 ### The -sig flag
@@ -2337,9 +2334,9 @@ since `build/release/sample` is a soft link.
 
 
     $ ls -l build/Linux-clang++.release-x86_64/*sample*
-    -rwxrwxr-x. 1 alexei alexei 109128 May  3 18:35 dflt.release-x86_64/sample
-    -rw-rw-r--. 1 alexei alexei   1912 May  3 18:34 dflt.release-x86_64/cpp.sample.sample.o
-    -rw-rw-r--. 1 alexei alexei  24776 May  3 18:34 dflt.release-x86_64/cpp.gen.sample_gen.o
+    -rwxrwxr-x. 1 alexei alexei 109128 May  3 18:35 build/Linux-clang++.release-x86_64/sample
+    -rw-rw-r--. 1 alexei alexei   1912 May  3 18:34 build/Linux-clang++.release-x86_64/cpp.sample.sample.o
+    -rw-rw-r--. 1 alexei alexei  24776 May  3 18:34 build/Linux-clang++.release-x86_64/cpp.gen.sample_gen.o
 
 `abt` places all output files in the same output directory, with no subdirectories.
 Source file paths are flattened, substituting `/` with `.`. So, `cpp/sample/sample.cpp`
@@ -3676,7 +3673,7 @@ iterated over. This type is frequently used by wire protocols to specify a repea
 
 ## Reflection
 
-`amc` includes some information about a process into the process itself.
+`amc` bakes some information about a process into the process itself.
 For each each namespace linked into a process, possessing an in-memory database, an `algo_lib.FImdb`
 entry is defined, and added to the `algo_lib.FDb.imdb` table. This table is indexed
 with `algo_lib.FDb.ind_imdb`.
@@ -3702,11 +3699,9 @@ In addition, the `algo_lib.FDb.imtable` table contains the list of all in-memory
 * `size`: With of each record
 * `ssimfile`: Pkey of ssimfile, if one is associated with the record.
 
-### Discussion
-
 Reflection is generally considered a very powerful mechanism, but in the OpenACR world
-it's not used that frequently. Why the ability to insert records dynamically (i.e. outside
-of a pre-declared path) and knowing the list of namespace linked into a given program is useful,
+it's not used that frequently. While the ability to insert records dynamically (i.e. outside
+of a pre-declared code-path) and knowing the list of namespace linked into a given program is useful,
 it's not as useful as simply loading the ssimtables that describe *all* processes in the 
 given universe, and doing something with them. An analogy would be surgery on yourself,
 especially brain surgery. Powerful? Yes. Best practice? Hardly.

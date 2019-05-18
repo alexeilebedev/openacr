@@ -24,16 +24,14 @@ that will build `abt` if it doesn't yet exist.
 
 ### Intermediate Files
 
-Object files, libraries and executables are kept in `dflt.debug-x86_64` or `dflt.release-x86_64`.
-Here, `dflt` is the compiler name. Other possible names are `clang`.
-
-Build directories can be wiped with `make clean`. After that, the `abt` binary will no longer exist,
-and it would have to be re-created with `ai` or `abt-bootstrap`.
+Object files, libraries and executables are kept in `build/release/` directory.
+Build directories can be wiped with `make clean`. 
+After that, the `abt` binary will no longer exist, and it would have to be re-created with `ai`
 
 The intermediate directory has a flat structure. The name of each object file is the 
 path to the .cpp file with `/`s replaced by `.`s.
     
-    $ ls dflt.release-x86_64/
+    $ ls build/release/
     abc                    cpp.amc.ctype.read.o     cpp.amc.regx.o          cpp.atf.amc.strconv.o ...
     abt                    cpp.amc.delptr.o         cpp.amc.sbrk.o          cpp.atf.amc.tary.o
     acr                    cpp.amc.dflt.o           cpp.amc.signature.o     cpp.atf.amc.varlen.o

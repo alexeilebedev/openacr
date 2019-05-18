@@ -300,10 +300,10 @@ This information can be retrived with `strings` or by running the command with `
     $ sample -version
     dev.gitinfo  gitinfo:2019-05-02.309c6ba  author:alexei@lebe.dev  cfg:g++/4.8.5/release.Linux-x86_64  package:""
 
-    $ strings dflt.release-x86_64/sample | grep gitinfo:
+    $ strings build/release/sample | grep gitinfo:
     dev.gitinfo  gitinfo:2019-05-02.309c6ba  author:alexei@lebe.dev  cfg:g++/4.8.5/release.Linux-x86_64  package:""
 
-~AL~: this is no longer valid as gitinfo support via loader mechanism was non-portable.
+*AL*: this is no longer valid as gitinfo support via loader mechanism was non-portable.
 Will be re-implemented via `amc` in a portable way
 
 ### The -sig flag
