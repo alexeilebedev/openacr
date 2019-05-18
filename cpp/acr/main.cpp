@@ -25,39 +25,7 @@
 // Recent Changes: alexei.lebedev luke.huang
 //
 // ACR: Algo Cross-Reference
-// Search for item by key, value, or regex.
-// Extract cross-reference trees around item or selection
-// Visualize selected records using graphvis, or print to the screen with ssim.
-// Import data to/from mysql and run nested mysql shell
-// Insert new records (loaded using ssim format from stdin)
-// Validate (using x-reference constraint only) records in the data set.
-// Write modified data set out (-write option).
-// Everything is done in-memory.
-// A limited support of substr is available.
-// LIMITATIONS:
-// - regex checks are not performed.
-// - uniqueness tests, other than primary key, are not performed.
-// Example:
-// visualize type/field conectivity digram
-// acr -vis:x.dot
-// this creates file x.svg
-// Show inventory of all devices in carteret:
-// Example:
-// acr acmdb.device:%.crt -xref
-// Show in-memory database definition:
-// Example:
-// acr ns:dmap_db -xref -tree
-// Insert new data:
-// Example:
-// acr dmmeta.% -insert -check [-write]
-// Edit data in mysql:
-// Example:
-// acr -my dmmeta
-// <mysql shell appears>
-// !!!! !!! !!!
-// TODO: -data option, to x-ref schema selection down to data
-// -schema option, to x-ref data selection up to schema.
-// with -data, deletion of ctype will automatically delete ssimfile and all data in the ssimfile.
+// See txt/acr.md for more information
 
 #include "include/acr.h"
 

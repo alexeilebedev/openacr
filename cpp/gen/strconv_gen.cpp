@@ -25,6 +25,7 @@ strconv::FDb    strconv::_db;     // dependency found via dev.targdep
 
 namespace strconv {
 const char *strconv_help =
+"strconv: A simple string utility\n"
 "Usage: strconv str [options]\n"
 "    [str]          string  String parameter\n"
 "    -tocamelcase           Convert string to camel case. default: false\n"

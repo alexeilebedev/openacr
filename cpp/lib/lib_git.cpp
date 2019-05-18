@@ -15,7 +15,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 //
-// Target: lib_git (lib)
+// Target: lib_git (lib) -- Helpful git wrappers
 // Exceptions: yes
 // Source: cpp/lib/lib_git.cpp
 //

@@ -15,7 +15,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 //
-// Target: atf_amc (exe)
+// Target: atf_amc (exe) -- Unit tests for amc (see amctest table)
 // Exceptions: NO
 // Source: cpp/atf/amc/lpool.cpp
 //

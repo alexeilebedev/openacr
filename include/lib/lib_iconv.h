@@ -15,7 +15,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 //
-// Target: lib_iconv (lib) -- ICONV wrapper
+// Target: lib_iconv (lib) -- Iconv wrapper
 // Exceptions: NO
 // Header: include/lib/lib_iconv.h
 //

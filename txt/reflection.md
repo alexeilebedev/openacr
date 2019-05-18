@@ -1,6 +1,6 @@
 ## Reflection
 
-`amc` includes some information about a process into the process itself.
+`amc` bakes some information about a process into the process itself.
 For each each namespace linked into a process, possessing an in-memory database, an `algo_lib.FImdb`
 entry is defined, and added to the `algo_lib.FDb.imdb` table. This table is indexed
 with `algo_lib.FDb.ind_imdb`.
@@ -26,11 +26,9 @@ In addition, the `algo_lib.FDb.imtable` table contains the list of all in-memory
 * `size`: With of each record
 * `ssimfile`: Pkey of ssimfile, if one is associated with the record.
 
-### Discussion
-
 Reflection is generally considered a very powerful mechanism, but in the OpenACR world
-it's not used that frequently. Why the ability to insert records dynamically (i.e. outside
-of a pre-declared path) and knowing the list of namespace linked into a given program is useful,
+it's not used that frequently. While the ability to insert records dynamically (i.e. outside
+of a pre-declared code-path) and knowing the list of namespace linked into a given program is useful,
 it's not as useful as simply loading the ssimtables that describe *all* processes in the 
 given universe, and doing something with them. An analogy would be surgery on yourself,
 especially brain surgery. Powerful? Yes. Best practice? Hardly.

@@ -705,7 +705,7 @@ tempstr              acr_my_ToCmdline(command::acr_my & row) __attribute__((noth
 algo::strptr         acr_my_GetAnon(command::acr_my &parent, i32 idx) __attribute__((nothrow));
 
 // --- command.acr_my_proc
-struct acr_my_proc { // command.acr_my_proc: Subprocess: 
+struct acr_my_proc { // command.acr_my_proc: Subprocess: ACR <-> MariaDB adaptor
     algo::cstring     path;      //   "bin/acr_my"  path for executable
     command::acr_my   cmd;       // command line for child process
     algo::cstring     stdin;     // redirect for stdin
@@ -1053,7 +1053,7 @@ tempstr              atf_amc_ToCmdline(command::atf_amc & row) __attribute__((no
 algo::strptr         atf_amc_GetAnon(command::atf_amc &parent, i32 idx) __attribute__((nothrow));
 
 // --- command.atf_amc_proc
-struct atf_amc_proc { // command.atf_amc_proc: Subprocess: 
+struct atf_amc_proc { // command.atf_amc_proc: Subprocess: Unit tests for amc (see amctest table)
     algo::cstring      path;      //   "bin/atf_amc"  path for executable
     command::atf_amc   cmd;       // command line for child process
     algo::cstring      stdin;     // redirect for stdin
@@ -1119,7 +1119,7 @@ tempstr              atf_norm_ToCmdline(command::atf_norm & row) __attribute__((
 algo::strptr         atf_norm_GetAnon(command::atf_norm &parent, i32 idx) __attribute__((nothrow));
 
 // --- command.atf_norm_proc
-struct atf_norm_proc { // command.atf_norm_proc: Subprocess: Run normalization tests (see normcheck table)
+struct atf_norm_proc { // command.atf_norm_proc: Subprocess: Normalization tests (see normcheck table)
     algo::cstring       path;      //   "bin/atf_norm"  path for executable
     command::atf_norm   cmd;       // command line for child process
     algo::cstring       stdin;     // redirect for stdin
@@ -1190,7 +1190,7 @@ tempstr              atf_unit_ToCmdline(command::atf_unit & row) __attribute__((
 algo::strptr         atf_unit_GetAnon(command::atf_unit &parent, i32 idx) __attribute__((nothrow));
 
 // --- command.atf_unit_proc
-struct atf_unit_proc { // command.atf_unit_proc: Subprocess: Algo Test Framework: unit tests
+struct atf_unit_proc { // command.atf_unit_proc: Subprocess: Unit tests (see unittest table)
     algo::cstring       path;      //   "bin/atf_unit"  path for executable
     command::atf_unit   cmd;       // command line for child process
     algo::cstring       stdin;     // redirect for stdin
@@ -1851,7 +1851,7 @@ tempstr              strconv_ToCmdline(command::strconv & row) __attribute__((no
 algo::strptr         strconv_GetAnon(command::strconv &parent, i32 idx) __attribute__((nothrow));
 
 // --- command.strconv_proc
-struct strconv_proc { // command.strconv_proc: Subprocess: 
+struct strconv_proc { // command.strconv_proc: Subprocess: A simple string utility
     algo::cstring      path;      //   "bin/strconv"  path for executable
     command::strconv   cmd;       // command line for child process
     algo::cstring      stdin;     // redirect for stdin

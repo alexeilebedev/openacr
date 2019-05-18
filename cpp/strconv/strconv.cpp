@@ -15,7 +15,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 //
-// Target: strconv (exe)
+// Target: strconv (exe) -- A simple string utility
 // Exceptions: yes
 // Source: cpp/strconv/strconv.cpp
 //

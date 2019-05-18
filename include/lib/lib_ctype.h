@@ -15,7 +15,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 //
-// Target: lib_ctype (lib)
+// Target: lib_ctype (lib) -- Helpful library for reading/writing ctypes as text tuples
 // Exceptions: yes
 // Header: include/lib/lib_ctype.h
 //

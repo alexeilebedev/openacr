@@ -16,7 +16,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 //
-// Target: acr_my (exe)
+// Target: acr_my (exe) -- ACR <-> MariaDB adaptor
 // Exceptions: yes
 // Source: cpp/acr/acr_my.cpp
 //

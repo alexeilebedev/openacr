@@ -29,6 +29,7 @@ acr_my::FDb     acr_my::_db;      // dependency found via dev.targdep
 
 namespace acr_my {
 const char *acr_my_help =
+"acr_my: ACR <-> MariaDB adaptor\n"
 "Usage: acr_my [options]\n"
 "    [nsdb]    string  Regx of ssim namespace (dmmeta.nsdb) to select\n"
 "    -in       string  Input directory or filename, - for stdin. default: \"data\"\n"

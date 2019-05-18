@@ -16,7 +16,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 //
-// Target: lib_iconv (lib) -- ICONV wrapper
+// Target: lib_iconv (lib) -- Iconv wrapper
 // Exceptions: NO
 // Source: cpp/lib/lib_iconv.cpp
 //

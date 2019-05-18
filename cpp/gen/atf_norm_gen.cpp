@@ -36,7 +36,7 @@ atf_norm::FDb   atf_norm::_db;    // dependency found via dev.targdep
 
 namespace atf_norm {
 const char *atf_norm_help =
-"atf_norm: Run normalization tests (see normcheck table)\n"
+"atf_norm: Normalization tests (see normcheck table)\n"
 "Usage: atf_norm [options]\n"
 "    -in          string  Input directory or filename, - for stdin. default: \"data\"\n"
 "    [normcheck]  string  Normalization checks to run. default: \"%\"\n"

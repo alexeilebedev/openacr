@@ -15,7 +15,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 //
-// Target: lib_json (lib)
+// Target: lib_json (lib) -- Full json support library
 // Exceptions: NO
 // Source: cpp/lib/lib_json.cpp
 //

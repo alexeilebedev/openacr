@@ -44,6 +44,7 @@ atf_amc::_db_bh_typec_curs::~_db_bh_typec_curs() {
 
 namespace atf_amc {
 const char *atf_amc_help =
+"atf_amc: Unit tests for amc (see amctest table)\n"
 "Usage: atf_amc [options]\n"
 "    -in        string  Input directory or filename, - for stdin. default: \"data\"\n"
 "    [amctest]  string  SQL regex, selecting test to run. default: \"%\"\n"

@@ -15,7 +15,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 //
-// Target: atf_norm (exe) -- Run normalization tests (see normcheck table)
+// Target: atf_norm (exe) -- Normalization tests (see normcheck table)
 // Exceptions: yes
 // Source: cpp/atf/norm/main.cpp
 //

@@ -42,7 +42,7 @@ atf_unit::FDb   atf_unit::_db;    // dependency found via dev.targdep
 
 namespace atf_unit {
 const char *atf_unit_help =
-"atf_unit: Algo Test Framework: unit tests\n"
+"atf_unit: Unit tests (see unittest table)\n"
 "Usage: atf_unit [options]\n"
 "    [unittest]        string  SQL regex, selecting test to run. default: \"%\"\n"
 "    -nofork                   Do not fork for destructive tests. default: false\n"

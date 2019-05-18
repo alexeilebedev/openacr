@@ -12,7 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Target: atf_norm (exe) -- Run normalization tests (see normcheck table)
+// Target: atf_norm (exe) -- Normalization tests (see normcheck table)
 // Exceptions: yes
 // Source: cpp/atf/norm/bootstrap.cpp
 //
