@@ -109,18 +109,18 @@ Headers are considered source files.
 ### Add An Input To Program
 
     $ acr_ed -create -finput -target ns -ssimfile ns2.name
-    acr_ed.create_finput  target:abc  ssimfile:dev.gitfile
+    acr_ed.create_finput  target:sample  ssimfile:dev.gitfile
     bin/acr  '' -insert:Y -check:Y -write:Y -t:Y -rowid:Y << EOF
-    dmmeta.ctype  ctype:abc.FGitfile  comment:""
-    dmmeta.field  field:abc.FGitfile.base  arg:dev.Gitfile  reftype:Base  dflt:""  comment:""
-    dmmeta.field  field:abc.FDb.gitfile  arg:abc.FGitfile  reftype:Lary  dflt:""  comment:""
-    dmmeta.finput  field:abc.FDb.gitfile  extrn:N  update:N  strict:Y  comment:""
+    dmmeta.ctype  ctype:sample.FGitfile  comment:""
+    dmmeta.field  field:sample.FGitfile.base  arg:dev.Gitfile  reftype:Base  dflt:""  comment:""
+    dmmeta.field  field:sample.FDb.gitfile  arg:sample.FGitfile  reftype:Lary  dflt:""  comment:""
+    dmmeta.finput  field:sample.FDb.gitfile  extrn:N  update:N  strict:Y  comment:""
     #  Proposed change
     #
     #
-    #     / abc.FDb
+    #     / sample.FDb
     #     |
-    #     |Lary gitfile-->/ abc.FGitfile
+    #     |Lary gitfile-->/ sample.FGitfile
     #     -               |
     #                     |
     #                     -
@@ -135,33 +135,33 @@ To create a new table in a program, use `-create -ctype ... -subset ... -pooltyp
 This adds a global pool of a given type (typically `Tpool` or `Lary`).
 To throw in a hash index, specify `-indexed`
 
-    $ acr_ed -create -ctype abc.FTable -subset u32 -pooltype Tpool -indexed
+    $ acr_ed -create -ctype sample.FTable -subset u32 -pooltype Tpool -indexed
     bin/acr  '' -insert:Y -check:Y -write:Y -t:Y -rowid:Y << EOF
-    dmmeta.ctype  ctype:abc.FTable  comment:""
-    dmmeta.field  field:abc.FTable.table  arg:u32  reftype:Val  dflt:""  comment:""
-    dmmeta.field  field:abc.FDb.table  arg:abc.FTable  reftype:Tpool  dflt:""  comment:""
-    dmmeta.field  field:abc.FDb.ind_table  arg:abc.FTable  reftype:Thash  dflt:""  comment:""
-    dmmeta.thash  field:abc.FDb.ind_table  hashfld:abc.FTable.table  unique:Y  comment:""
-    dmmeta.xref  field:abc.FDb.ind_table  inscond:true  via:""
+    dmmeta.ctype  ctype:sample.FTable  comment:""
+    dmmeta.field  field:sample.FTable.table  arg:u32  reftype:Val  dflt:""  comment:""
+    dmmeta.field  field:sample.FDb.table  arg:sample.FTable  reftype:Tpool  dflt:""  comment:""
+    dmmeta.field  field:sample.FDb.ind_table  arg:sample.FTable  reftype:Thash  dflt:""  comment:""
+    dmmeta.thash  field:sample.FDb.ind_table  hashfld:sample.FTable.table  unique:Y  comment:""
+    dmmeta.xref  field:sample.FDb.ind_table  inscond:true  via:""
     EOF
 
 ### Create An Index
 
 #### Create A Hash Table
 
-    $ acr_ed -create -field abc.FDb.ind_table
-    $ acr_ed -create -field abc.FDb.ind_table -hashfld <fieldname>
+    $ acr_ed -create -field sample.FDb.ind_table
+    $ acr_ed -create -field sample.FDb.ind_table -hashfld <fieldname>
 
 #### Create A Binary Heap
 
-    $ acr_ed -create -field abc.FDb.bh_table
-    $ acr_ed -create -field abc.FDb.bh_table -sortfld <fieldname>
+    $ acr_ed -create -field sample.FDb.bh_table
+    $ acr_ed -create -field sample.FDb.bh_table -sortfld <fieldname>
 
 #### Create An AVL Tree
 
-    $ acr_ed -create -field abc.FDb.tr_table
-    $ acr_ed -create -field abc.FDb.tr_table -sortfld <fieldname>
+    $ acr_ed -create -field sample.FDb.tr_table
+    $ acr_ed -create -field sample.FDb.tr_table -sortfld <fieldname>
 
 ### Conditional X-Ref
 
-    $ acr_ed -create -field abc.FDb.ind_table -inscond false
+    $ acr_ed -create -field sample.FDb.ind_table -inscond false

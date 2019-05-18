@@ -5,17 +5,17 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
       * [Contributors](#contributors)
    * [Setup and Installation](#setup-and-installation)
       * [Pre-requisites: CentOS:](#pre-requisites-centos)
-; [Pre-requisites: Ubuntu/Debian](#pre-requisites-ubuntu-debian); [Pre-requisites: MacOS](#pre-requisites-macos); [Path](#path); [Building](#building); [Platform Short List](#platform-short-list); [Editor configuration files](#editor-configuration-files); [Environment Variables](#environment-variables); [Known Issues](#known-issues)
+; [Pre-requisites: Ubuntu/Debian](#pre-requisites-ubuntu-debian); [Pre-requisites: MacOS](#pre-requisites-macos); [Path](#path); [Building](#building); [Cygwin Support](#cygwin-support); [Editor configuration files](#editor-configuration-files); [Environment Variables](#environment-variables); [Known Issues](#known-issues)
    * [Directory Structure](#directory-structure)
       * [Binaries](#binaries)
 ; [Intermediate Files](#intermediate-files)
    * [History & Intro](#history---intro)
       * [A Motivating Example](#a-motivating-example)
 ; [Creating Some Tuples](#creating-some-tuples); [Describing The Tuple Schema](#describing-the-tuple-schema); [Describing The Columns](#describing-the-columns); [Adding Tools](#adding-tools); [Describing The Tools](#describing-the-tools); [Representation & Manipulation](#representation---manipulation)
+   * [Self-Similarity](#self-similarity)
    * [Ssim files](#ssim-files)
       * [Ssim Data Sets](#ssim-data-sets)
-; [Structured Key Normal Form](#structured-key-normal-form); [Decomposing A Domain Into Sets](#decomposing-a-domain-into-sets); [History of Database Design](#history-of-database-design); [Cardinality Analysis](#cardinality-analysis); [The Curse Of Simple Domains](#the-curse-of-simple-domains); [Remember 4-valued logic?](#remember-4-valued-logic-); [Structured Key Normal Form](#structured-key-normal-form)
-   * [Bootstrapping Magic](#bootstrapping-magic)
+; [Structured Key Normal Form](#structured-key-normal-form); [Decomposing A Domain Into Sets](#decomposing-a-domain-into-sets); [History of Database Design](#history-of-database-design); [Cardinality Analysis](#cardinality-analysis); [Complex Domains All The Way](#complex-domains-all-the-way); [Remember 4-valued logic?](#remember-4-valued-logic-); [Structured Key Normal Form](#structured-key-normal-form)
    * [Hello Meta World](#hello-meta-world)
    * [acr: Auto Cross Reference](#acr-auto-cross-reference)
       * [Querying](#querying)
@@ -180,15 +180,17 @@ April 29, 2019
 
 ## Setup and Installation
 
-Presently, this project has been tested on the following distributions / compilers:
+Presently, this project has been tested with the following distributions / compilers:
 
-* Linux: RHEL, CentOS, Ubuntu
-* g++: 4.8, 8.3, 9
-* clang: 3.4.2
-* MacOS: LLVM 10.0.1
-* FreeBSD: Clang 6.0.0
+* clang on MacOS (a.k.a. Darwin)
+* clang on FreeBSD
+* clang on Linux (RHEL, CentOS, Ubuntu, Debian)
+* g++ on Linux
+* g++-9 on Linux
 
-The MariaDB and OpenSSL packages are required in order to build mysql2ssim and ssim2mysql tools.
+The MariaDB and OpenSSL packages are the main external dependencies.
+MariaDB (formerly MySQL) is not really required, but it's used by `acr_my`, `ssim2mysql` and
+`mysql2ssim` utilities. OpenSSL provides `libcrypto` which is for SHA1 functions.
 
 ### Pre-requisites: CentOS:
 
@@ -201,22 +203,19 @@ The MariaDB and OpenSSL packages are required in order to build mysql2ssim and s
 
 ### Pre-requisites: MacOS
 
-Install brew.
-Then,
+Install brew. Then,
 
     brew install mariadb openssl
     ln -s /usr/local/opt/openssl/lib/libcrypto.a /usr/local/lib/
     ln -s /usr/local/opt/openssl/lib/libssl.a /usr/local/lib/
 
-Please note that mariadb, not mysql should be installed.
-Since MariaDB is the successor to `mysql`, there shouldn't be a problem.
-
 ### Path
 
-All commands can be issued from this, top-level directory.
-Add the relative path bin/ to your path.
+Add the relative path bin to your path.
+All commands are issued from this, top-level directory. This normalizes all 
+pathnames to a single form.
 
-    set PATH=$PATH:bin/
+    set PATH=$PATH:bin
 
 ### Building
 
@@ -225,22 +224,23 @@ or the bootstapped version of abt called ai:
 
     ai
 
-The default compiler abt uses is g++ prior to verison 9.
-You will need to set the environment variable `COMPILER` to `g++-9` or `clang++` if 
-you want to use those compilers. See the section on [abt](#txt/abt-a-build-tool) for more information.
+`ai` will choose a bootstrap file by looking at what kind of system you're running
+on and what compilers you have. It won't install pre-requisites, that fun exercise
+is left to the reader. See the section on [abt](#txt/abt-a-build-tool) for complete
+documentation of this process.
 
-This should build abt using a bootstrapped shell script, then switch to abt
+`ai` should build abt using a canned script, then switch to abt
 and build the rest. If any of this fails, you may need to file a bug report.
 
-### Platform Short List
+### Cygwin Support
 
-Support FreeBSD and Windows (Cygwin) 
-is very must desired, so if you'd like to help, please send pull requests.
+Support of Windows (Cygwin) is needed, so if you'd like to help, please send pull requests.
 
 ### Editor configuration files
 
-See files in conf/ for sample config files that provide ssim syntax highlighting, etc.
-Here are some commands to get set it up.
+See files in `conf/` for sample config files that provide ssim syntax highlighting, etc.
+Here are some commands to get set it up. You may already have some of these files, so you'll need
+to decide whether you want to merge provided configs with yours, replace or do something else.
 
     ln -s $PWD/conf/emacs.el ~/.emacs
     ln -s $PWD/conf/elisp ~/elisp
@@ -250,13 +250,12 @@ Here are some commands to get set it up.
 
 ### Environment Variables
 
-* EDITOR - standard environment variable specifying which editor to use
+* EDITOR - standard environment variable specifying which editor to use.
 
 ### Known Issues
 
 Currently, optimization levels `-O2` and higher cannot be used with gcc 8 and higher,
 due to the way the optimizer results in corruptions.
-
 
 
 ## Directory Structure
@@ -620,6 +619,9 @@ And so we can use the `ns` table to describe all the tools that we plan to intro
     dmmeta.ns ns:acr_ed
     EOF
 
+(The difference between `acr` and `dmmeta` is that `acr` is a database of structs in RAM
+while `dmmeta` is a database of ssim files on disk).
+
 Now comes the tricky part: we want `amc` to generate the ctype called `Ctype` in namespace `dmmeta`,
 by virtue of loading the `dmmeta.ctype  ctype:dmmeta.Ctype` record. There is a real dependency here,
 of a different type than what we had with ssimfiles: with ssimfiles, even though they seemed to be
@@ -633,29 +635,131 @@ bits of `amc` carefully, always using `git commit` to checkpoint and rolling bac
 code that no longer compiles.
 
 Slowly but surely, we can cause about 95% of all the code we need to be generated from ssimfiles.
-(The remaining 5% could also be generated `as-is`, just by `printf()`-ing the lines verbatim, but this 
-would actually be counter-productive. It is only interesting to generate code that's used in more than one place.)
+The remaining 5% could also be generated `as-is`, just by `printf()`-ing the lines verbatim, but this 
+would actually be counter-productive, and no more impressive than `tar cvf`-ing the whole thing. 
+It is only interesting to generate code that's used in more than one place.
 
-In subsequent chapters, I will descibre the `amc` memory model for an executable, and things like pools 
-(for holding records) and x-refs (for creating group-by's and cross-references). 
+In subsequent chapters, I will describe the `amc` memory model for an executable, and things like pools 
+(for holding records) and x-refs (for creating group-by's). 
+
 The presence of `ssimfile` in our data set was dictated by the way we organized the data set.
-The presence of `amc` in this model was dictated by our desire to use C++ to write the query tool `acr`.
+The presence of `amc` in this model was dictated by our desire to use C++ to write the query tool `acr`,
+which keeping the data description in a single place.
+
 There is a more general pattern here:
 
 ### Representation & Manipulation
 
-This approach seems to scale indefinitely. We can represent any semantic concept as 
-tuples, which are points in a multi-dimensional sparse space.
+We can represent any semantic concept as points in a multi-dimensional sparse space of tuples.
 Whenever we extend our representable universe with
 additional concepts, such as a physcial set of C++ files on disk, or a set of dev and production environments
 with some configuration, we include its relational description, or map, as a set of tables in our data set. 
 We then write tools that enforce a unidirectional or bidirectional correspondence between this new object and
-the records that describe it. 
+the records that describe it. In this way we make the object programmable and editable with the
+same fundamental set of tools we use on the tuples themselves.
+
+## Self-Similarity
+
+Looking at the three main tools in OpenACR, `acr`, `amc` and `abt`,
+we see that they all seem to be circularly dependent on each other.
+
+* acr, abt and amc all use acr to edit the description from which their source code is derived.
+* acr, abt and amc's in-memory structures are all generated with amc.
+* acr, abt and amc are all build using abt.
+
+This circularity comes from the fact that these tools' outputs
+also affect their inputs, and you're looking at a system that underwent 
+perhaps a few thousand cycles of evolution, with human programmers completing
+the loop.
+
+There are many instances of self-similar systems in the software world,
+where the rules created by a system begin to apply to the system itself.
+Let's consider three other examples.
+
+* The most famous one is the LISP interpreter as expressed in LISP itself.
+* Another example is the [self-compiling compiler](#https://en.wikipedia.org/wiki/Bootstrapping_(compilers)).
+All compiled languages have one (and *no* interpreted language has one).
+* And a third example is the template meta-programming sublanguage of C++,
+using which you can manipulate the very types from which the underlying
+C++ program is written.
+
+Joining this list is OpenACR, which is of a different kind:
+It not only generates most of its own source code and lets you modify this source code with
+plain command-line tools like sed and awk, and even SQL, without introducing
+any new language or an interpreter; but it serves as a sort of planter from which
+you can grow other applications that share these same properties. 
+
+Why is this important?
+Let's go back to our three examples and consider one cycle of application of them.
+
+* When a LISP interpreter written in LISP interprets more LISP, it is
+qualitatively different: it is slower. It can only
+run smaller jobs than its parent. In order to be the same, the homoiconic interpreter
+would have to be vastly different; At the very least it would have to contain a
+memory model of the underlying computer and its file system, so it could then target them.
+That's why no interpreted language today uses a self-hosting interpreter -- nobody
+wants to pay for the slowdown.
+* The output of a self-compiling compiler is an object file -- unreadable
+for all practical purposes. So even though the compiler can compile itself, and the resulting
+compiler can run even faster than the one before (the opposite of what happens in LISP),
+this is a one-time gain.
+* Finally, the C++ template sublanguage, our third example, is strictly less powerful
+than its parent language; you can't loop over the fields of a struct, 
+or check how many structs are defined, or if the name of a function contains an uppercase S.
+Neither the C++ language, nor its template sublanguage contain words that 
+describe themselves.
+
+So, after one cycle of application, you get to a new and better place, but that place is
+either inaccessible (e.g. object file), or built at some unmaintainable expense;
+in either case, the gains are temporary. Yet *it is* possible to lock them in.
+For that, we need tools whose input is readable and writable
+by both human and the machine, where source code is derived
+from this input, and where the system of names applies equally well to the 
+description of itself and the tools. And of course, the tools should be useful for other
+purposes, not just generating their own source code; that's merely a byproduct.
+
+Creating a new language is not the answer, because the source code for that
+language is a whole new thing. And as you define both the language and its 
+debuggers, multi-platform support, you will need new words for referring
+to them, words that have to be written somewhere... it becomes a chasing game. 
+
+In the world where data is kept in a machine-readable format, and most of the source code
+is generated, any tool works with almost any other tool. 
+
+    'abt acr' builds acr.
+    'abt abt' builds itself.
+
+    'acr field:dmmeta.Field.field' describes its own primary key.
+    'acr ctype:dmmeta.Ctype' describes the struct type (C type).
+
+    'amc acr.%' generates from scratch (most of) the source code for acr
+    'amc amc.%' generates from scratch the source code of itself.
+
+    'src_func abt' shows the hand-written source code of abt.
+    'src_func src_func' shows the hand-written source code of itself.
+
+    'acr_in -data amc' shows all of the inputs that amc takes
+    'acr_in -data acr_in' shows all of the inputs that it takes.
+
+    'acr_compl -line amc' shows bash completions for amc
+    'acr_compl -line acr_compl' shows bash completions for acr_compl itself
+
+    'acr ns:abt -t' shows the definitions of all abt structures
+    'acr ns:acr -t' shows the definitions of its own structures
+
+    'mdbg acr' debugs acr
+    'mdbg "mdbg acr"' debugs the debugger debugging acr (in principle)
+    
+And of course, as already mentioned above, even though this is amazingly fun, 
+the point of these tools is not to compile themselves; 
+The point is to allow the creation of new applications,
+using ssim files to describe new domains while continuing
+to apply the same small set of tools -- bash, acr, perl, etc. on each cycle.
 
 ## Ssim files
 
-Ssim is a super-simple line-oriented text format for
-storing configuration data in the form of tables of tuples. Each tuple consists
+`Ssim` is a *super-simple* line-oriented text format for
+describing structured data in the form of tables of tuples. Each tuple consists
 of a type tag and key-value pairs called attributes. The first
 key-value pair is a primary key.
 
@@ -664,7 +768,9 @@ key-value pair is a primary key.
     dmmeta.ctype  ctype:amc.CppkeywordId  comment:""
     dmmeta.ctype  ctype:amc.Enumstr       comment:Key
     dmmeta.ctype  ctype:amc.FAnonfld      comment:""
-    ^^type tag          ^^primary key
+    ^^^^^^^^^^^^        ^^^^^^^^^^^^
+        |                    |
+        type tag             primary key
 
 Every line is treated as an element of a set.  There are no headers or
 footers or other file markers, although lines can be commented out with #.
@@ -672,29 +778,30 @@ Any concatenation, permutation, or subset of two ssim files is a
 valid ssim file, just like you would expect with sets.
 
 Leading and trailing whitespace is ignored, and may be used to aid legibility.
-(For instance, it could be used to create a tree-like structure)
 
-Both keys and values may be arbitrary byte sequences. A string
+Both keys and values may encode arbitrary byte sequences. A string
 containing non-obvious characters and be enclosed either with single
 or double quotes (there being no difference between these types of quotes),
 and inside the quotes, C++ string rules exactly apply. So "\t":"\001" is a valid
 key-value pair.
 
-In database terms, a ssimfile maps directly to a table, 
-and each line corresponds to a record.
+A single file can contain tuples of any type.
+If a file contains tuples of only one type, it can be thought of as a database
+table.
 
 ### Ssim Data Sets
 
-A ssimfile could be a part of a data set, or it could be a stand-alone file.
+A ssim file can be a part of a data set, or stand-alone.
 Both are called `ssimfiles` and use the extension `.ssim`.
 There is one data set in this project, it is in the directory "data". 
-In it, there is one directory per namespace, and one file per ssimfile.
+In it, there is one directory per namespace, and physical file for tuples of each kind.
 
-In this data set, there is both data and meta-data. Meta-data is in the directory
-`data/dmmeta`, where `dmmeta` stands for "data model meta". 
+In this data set, there is both data (such as the list of supported compilers)
+and data about data, such as the list of ssimfiles. Meta-data is in the directory
+`data/dmmeta` (`dmmeta` stands for "data model meta"). 
 
 The list of all ssim files is provided by "acr ssimfile".
-The list of all attrbitutes is provided by "acr field"
+The list of all attrbitutes is provided by "acr field".
 
 Ssim tuples can also be stored together in a file. Acr can read and write those
 tuples. One can also use grep, sed, awk, and other line-oriented tools to access, edit,
@@ -744,17 +851,16 @@ Since we need to attach various properties to these programs in order to do stuf
 we create a number of tables to describe them.
 
 First, we have the set of all binaries. We can call it `target`, meaning "build target". 
-Then, we have the set of all source files; We'll call it `gitfile`.
-Notice that when naming a set, we don't use plurals. In OpenACR, we always use singular
-when describing a set; (There is simply no benefit to using plurals when naming things).
+Then, we have the set of all files; We'll call it `gitfile`.
+When naming a set, we don't use plurals; we always use singular.
+
 Finally, to specify that a source file belongs to some target, we create a table `targsrc`
 as a cross product of `target` and `gitfile`.
 We make `target` a subset of `ns`, since all targets have namespaces describing them,
-but not all namespaces become build targets (i.e. `command` doesn't have a target).
+but not all namespaces become build targets (i.e. `dmmeta` doesn't have a target).
 
 The resulting schema is shown below with `amc_vis`. Notice that all arrows point left.
-This is very important. Left-pointing arrows are *references*, and a database without indexes 
-consists only of references. 
+This is important. Left-pointing arrows are *references*.
 
     $ amc_vis dev.Target\|dmmeta.Ns\|dev.Targsrc\|dev.Gitfile
 
@@ -777,7 +883,7 @@ consists only of references.
                     -
 
 When we need to quickly answer the question
-"which records point to this record?" do we introduce right-pointing *cross-references*, which are
+"which records point to this record?" we introduce right-pointing *cross-references*, which are
 computed from references. Here is an example of an in-memory database built specifically
 for abt in accordance with the above schema.
 
@@ -829,36 +935,69 @@ indexes later.
 ### Cardinality Analysis
 
 If we view each element of a set as a struct with several fields, then the set of
-fields which can be used to distinguish this element from others is called a key.
+fields which can be used to distinguish one element from another is called a key.
+
 Many such keys are possible. For instance, we could generate a globally unique ID (GUID)
 or get a sequence number from some service, and attach it to the elements of our
-set as a key; This would be called a 'surrogate key'. In fact, most relational databases
-blindly use surrogate keys (a field called 'id') for most purposes. There is even
+set as a key; This would be called a 'surrogate key'. In fact, many database designers
+use surrogate keys (a field called 'id') as primary keys for all tables.
+ 
+There is even
 an argument that surrogate keys are good since they protect the user from having
 to know the schema. But the problem with surrogate keys is that they are not guessable,
 and so two people cooperating on constructing the same table without communicating
 with each other will run into a conflict: they will certainly include duplicate elements
-into the table, marked with different surrogate keys.
+into the table, marked with different surrogate keys. To me, this is a disqualifying
+argument. Surely, a method for creating keys that doesn't depend on who's applying it
+must exist.
 
-So, surrogate keys don't solve the problem of constructing the set. What does?
+If surrogate keys don't solve the problem of constructing the set. What does?
 
-Cardinality analysis does. The cardinality of each set is either either an integer, a string,
-same as that of another set (i.e. a subset), or a cross product of two sets.
+Cardinality analysis does. The cardinality of each set is either either an empty value,
+an integer, a string, or a cross product of two other sets. A subset is a cross product
+if a set and an empty set.
 
 Decomposing your domain into sets based on the cardinality alone has the property of being
 replicable -- if two people go into separate rooms and each design a schema for the same domain,
-they will arrive at the same decomposition module spelling of names. This is important 
-for collaborations as it simplifies merging.
+they will likely arrive at the same decomposition except perhaps for the spelling of names. 
 
-### The Curse Of Simple Domains
+### Complex Domains All The Way
 
-Codd was much of in favor of simple domains, where each column (field of a struct)
-is either an integer or a string, and the primary key is described as a concatenation
-of several such fields. This principle is not scalable, because if you use simple domains,
-you get very complicated joins which are very sensitive to all layers of the schema.
-And it's violated by SQL's timestamp type itself, which is a complex domain composed of year,
-month, day, hour, minute, second and nanosecond. If we followed Codd blindly, we'd use 7
-fields every time we needed a timestamp.
+In database terms, a domain is what in type theory would be considered a type. It's just 
+some set, like integer, string, or a cross-product of two sets.
+
+Codd was much of keeping each column of a table a simple domain.
+The primary key would be described as a concatenation of several such fields. 
+
+He arrived at the simple domain rule through his procedure of removing access path dependence
+by adding all of the components of all access paths as columns to a table.
+It seemed like a great idea at the time, and it *was* a great idea.
+
+Many years later, it became clear that having removed access path dependence from the data, 
+simple domains retain a different access path -- that of key structure. Every join statement begins to 
+reflect the structure of the keys, and the more information-rich your sets, the more complicated the joins.
+Changing the structure of any key now results in waves of changes across any code that 
+uses these keys.
+
+Let's look at SQL's timestamp type itself: it is a complex domain composed of year,
+month, day, hour, minute, second and nanosecond. But the simple domain rule would
+require 7 columns to be used every time a timestamp field is needed, and using 7-term joins
+in order to join two tables on a timestamp field.
+Thankfully, SQL ignores the simple domain rule in this instance, and defines special functions for
+projecting this complex domain onto its different components.
+
+It is simply more natural to view the SQL timestamp as both a single item with some canonic
+string representation, and a structure comprised of data fields and computed fields such as 
+week-of-year. A URL, with its multitude of components, is another candidate. A 2D point, a 3D point,
+a complex number, are all useful complex domains and we absolutely need them to remain that 
+way.
+
+Structuring allows us to replace two things with one thing, and while all the procedures that
+we defined for the simple parts continue to work on more complex part. It is self-similar
+at different scales.
+
+To summarize, OpenACR is squarely in the structured camp, if such a camp even exists,
+and definitely opposed to the simple domain camp in all its forms: surrogate keys, id columns, etc.
 
 ### Remember 4-valued logic?
 
@@ -867,13 +1006,12 @@ He was also in favor of the 4-valued boolean logic, where the result of any expr
 "yes", "no", "NULL and doesn't matter", and "NULL and it does matter". He had a lot
 of trouble convincing people to implement this 4-valued logic, which was necessary
 for logical consistency in presence of NULLable columns. Codd was right. If you have NULLs
-and don't use 4-valued logic, you have consistency issues. But 50 years later,
-we have some hindsight: why not just throw away NULLs?
+and don't use 4-valued logic, you have consistency issues. 
+
+But 50 years later, with some hindsight, we can suggest a different solution: why not just throw away NULLs?
 When you get rid of NULLs, you are naturally pushed toward columnar storage, 
 since you still need to support missing values at various stages of your data set lifetime, 
 but your missing values simply become missing rows.
-
-A NULL is nothing more than a missing join!
 
 ### Structured Key Normal Form
 
@@ -883,84 +1021,9 @@ wouldn't exist.
 And so SKNF represents a very simple but stable point in the space of
 all possible schemas of schemas, where you don't have NULLs and every key is
 just a single composite value. It scales indefinitely, and every join takes just 2 values.
-It's guessable and easy to remember.
 
-SKNF is not a name recognized in the industry. Perhaps in the clade of DBMS construction philosophies,
-the closest analog would be DKNF (Domain Key Normal Form).
-
-## Bootstrapping Magic
-
-Let's consider the three main tools in this repository: acr, amc and abt.
-
-The three tools are interdependent:
- acr, abt and amc all use acr to manage and validate their inputs.
- acr, abt and amc's in-memory structures are all generated with amc
- acr, abt and amc are all build using abt
-
-There are several examples of such systems in the world.
-The most famous one is the LISP interpreter as expressed in LISP itself.
-Another example is gcc after it was compiled by gcc that was compiled by gcc.
-
-Humbly joining this hallowed group is amc, which generates most
-of its own source code as C++ and lets you modify this source code with
-perl, sed and MariaDB from the bash command line, without introducing
-a new language or an interpreter.
-
-Why is this important?
-You see, when a LISP interpreter interprets LISP, the new interpreter is
-qualitatively different from the old one: it is slower. It can only
-run smaller jobs than its parent.
-
-Similarly, the C++ template language is less powerful than the parent language.
-If you go back one step and extended C++ itself by changing its grammar,
-and update the compiler accordingly, you get a new language that's not C++, and
-cannot be mixed with C++.
-
-So, after one cycle of application of these tools (LISP interpretation, C++ templates),
-you get to a new and better place, but that place is
-temporary, and you don't lock in the gains. Yet *it is* possible to
-lock in the gains. For that, we need a tool whose input is about equally readable and writable
-by both human and the machine, and where most of the source code is derived
-from this input. That way, we skip the slow interpretation layer, and
-get to lock in any iterative improvements.
-
-And we want to avoid creating a new language, at all costs, because creating a new
-language is such an expensive proposition. You now need glue libraries between your
-language and all other languages; and you need debuggers, and multi-platform support
-just for starters.
-But a conservative subset of C++ is all you need to write anything.
-C++ with an extra library is still C++.
-
-In the world where data is kept in a machine-readable format, and most of the source code
-is generated, the tools become universal: any tool works with almost any other tool. 
-
-    'abt acr' builds acr.
-    'abt abt' builds itself.
-
-    'acr field:dmmeta.Field.field' describes its own primary key.
-    'acr ctype:dmmeta.Ctype' describes the struct type (C type).
-
-    'amc acr.%' generates from scratch (most of) the source code for acr
-    'amc amc.%' generates from scratch the source code of itself.
-
-    'src_func abt' shows the hand-written source code of abt.
-    'src_func src_func' shows the hand-written source code of itself.
-
-    'acr_in -data amc' shows all of the inputs that amc takes
-    'acr_in -data acr_in' shows all of the inputs that it takes.
-
-    'acr_compl -line amc' shows bash completions for amc
-    'acr_compl -line acr_compl' shows bash completions for acr_compl itself
-
-    'acr ns:abt -t' shows the definitions of all abt structures
-    'acr ns:acr -t' shows the definitions of its own structures
-
-    'mdbg acr' debugs acr
-    'mdbg mdbg' debugs the debugger
-    
-And of course, the point of the tools is not to compile themselves; 
-The idea is that this repo is extended with new commands and tools specific to some project,
-maintaining the same directory structure and basic conventions.
+Perhaps in the clade of DBMS construction philosophies,
+the closest analog to SKNF would be DKNF (Domain Key Normal Form).
 
 ## Hello Meta World
 
@@ -1709,26 +1772,31 @@ Upon exit, the data is downloaded from the database back to disk. -my implies -w
 
 ## Command Lines
 
-All programs created with amc come with full command line support. A command line is just a struct,
-and options are described as fields. All one needs to do is keep adding fields, and amc and the rest
-of programs will take care of all chores.
+All programs created with `amc` come with full command line support. A command line is just a struct,
+and options are described as fields. The command lines of all commands are described in the `command`
+namespace. All one needs to do is keep adding fields, and amc will take care of conversion between
+this description and
+* code to read the command-line from argc & argv
+* code to generate a shell command line from a command struct
+* the usage screen (displayed when a program is invoked without correct parameters)
+* shell auto-completion when editing commands.
 
-To start this tutorial, let's start with a fresh commit, and create a new executable.
+To start this tutorial, let's start with a fresh commit and create a new executable.
 
-    $ acr_ed -create -target abc -write
+    $ acr_ed -create -target sample -write
     ...
 
-This will create a new program called `abc`:
+This will create a new program called `sample`:
 
-    $ abc
+    $ sample
     Hello, World!
 
 The program already comes with some built-in options.
 
-    $ abc -h
+    $ sample -h
 
 
-    Usage: abc [options]
+    Usage: sample [options]
         -in       string  Input directory or filename, - for stdin. default: "data"
         -verbose          Enable verbose mode
         -debug            Enable debug mode
@@ -1736,26 +1804,26 @@ The program already comes with some built-in options.
         -sig              Print SHA1 signatures for dispatches
         -help             Print this screen and exit
 
-Amc knows that the ctype `command.abc` is the command line for abc because of the `fcmdline`
+Amc knows that the ctype `command.sample` is the command line for sample because of the `fcmdline`
 record inserted by `acr_ed`.
 
-    $ acr fcmdline:abc.%
-    dmmeta.fcmdline  field:abc.FDb.cmdline  read:Y  comment:""
+    $ acr fcmdline:sample.%
+    dmmeta.fcmdline  field:sample.FDb.cmdline  read:Y  comment:""
 
 The command line itself, as created by acr_ed, is a simple ctype:
 
-    dmmeta.ctype  ctype:command.abc  comment:""
+    dmmeta.ctype  ctype:command.sample  comment:""
       dmmeta.field  field:command.acr.in  arg:algo.cstring  reftype:Val  dflt:'"data"'  comment:"Input directory or filename, - for stdin"
                   
 Let's do something func. First, let's add a flag. Because what kind of command doesn't have a flag?
 
-    $ acr_ed -create -field command.abc.flag -arg bool -write -comment "An important flag"
+    $ acr_ed -create -field command.sample.flag -arg bool -write -comment "An important flag"
     ...
-    $ ai abc
+    $ ai sample
     ...
-    $ abc -h
+    $ sample -h
 
-    Usage: abc [options]
+    Usage: sample [options]
         -in       string  Input directory or filename, - for stdin. default: "data"
         -flag             An important flag. default: false
         -verbose          Enable verbose mode
@@ -1764,26 +1832,26 @@ Let's do something func. First, let's add a flag. Because what kind of command d
         -sig              Print SHA1 signatures for dispatches
         -help             Print this screen and exit
 
-As you can see, the help screen has been updated. Let's modify `abc`'s main to print the flag.
+As you can see, the help screen has been updated. Let's modify `sample`'s main to print the flag.
 It is an OpenACR convention to avoid displaying raw values. Output should be machine
 readable and never susceptible to an injection attack. So we'll print the value
 as a key-value pair (`Keyval` is a C++ template helper):
 
-    void abc::Main() {
+    void sample::Main() {
         prlog(Keyval("flag",_db.cmdline.flag));
     }
 
-    $ ai abc
+    $ ai sample
     ...
-    $ abc -flag
+    $ sample -flag
     flag:Y
 
 ### Boolean Options
 
-There are several ways to specify a flag on a command line: `abc -flag`, `abc -flag:Y`,
-`abc -flag:true` as well as `-flag:yes` and `-flag:on` all work.
+There are several ways to specify a flag on a command line: `sample -flag`, `sample -flag:Y`,
+`sample -flag:true` as well as `-flag:yes` and `-flag:on` all work.
 To specify a false value, we could either omit the option
-altogether, or write `abc -flag:N` or `abc -flag:false` or `-flag:no` or `-flag:off`.
+altogether, or write `sample -flag:N` or `sample -flag:false` or `-flag:no` or `-flag:off`.
 The OpenACR convention is to
 print booleans in a datatabase-friendly way, using `Y` and `N`.
 
@@ -1811,19 +1879,19 @@ Here is an example of the default value, in this case `"data"`:
 
 Let's continue. It's time to add an integer-valued option:
 
-    $ acr_ed -create -field command.abc.val -dflt 0 -arg u32 -write -comment "A value"
+    $ acr_ed -create -field command.sample.val -dflt 0 -arg u32 -write -comment "A value"
     ...
-    $ ai abc
+    $ ai sample
 
 Let's update the source code to print the value:
 
-    void abc::Main() {
+    void sample::Main() {
         prlog(Keyval("flag",_db.cmdline.flag));
         prlog(Keyval("val",_db.cmdline.val));
     }
 
     ...
-    $ abc -val:4
+    $ sample -val:4
     flag:N
     val:4
 
@@ -1836,13 +1904,13 @@ It can make error messages more legible when things go wrong.
 
 ### Anonymous Options
 
-Let's say we want abc to be able to write `abc 4` without specifying the parameter name `-val`.
+Let's say we want sample to be able to write `sample 4` without specifying the parameter name `-val`.
 We can use `anonfld` for this. We add the appropriate record to the anonfld table, then re-generate
 and rebuild.
 
-    $ echo dmmeta.anonfld field:command.abc.val | acr -insert -write
-    $ amc && abt -install abc
-    $ abc 5
+    $ echo dmmeta.anonfld field:command.sample.val | acr -insert -write
+    $ amc && abt -install sample
+    $ sample 5
     flag:N
     val:5
 
@@ -1851,7 +1919,7 @@ and rebuild.
 A command line option can be of any data type whatsoever. Any type that can be read from 
 a string is a valid type. For instance, to input an IPv4 address, use
 
-    $ acr_ed -create -field command.abc.ip -arg ietf.Ipv4 -comment "Enter this IP" -write
+    $ acr_ed -create -field command.sample.ip -arg ietf.Ipv4 -comment "Enter this IP" -write
 
 Reading ctypes from a string is controlled by the `dmmeta.cfmt` table, where a user-provided
 function may be specified with `extrn:Y`. This is described in depth in the chapter on string conversion.
@@ -1861,21 +1929,21 @@ function may be specified with `extrn:Y`. This is described in depth in the chap
 OpenACR offers completion of command line parameters for any program in its domain.
 The magic is implemented in the command `acr_compl`. To use, we instruct bash
 to call `acr_compl` whenever a command line start with one of known command names.
-In this case, abc is now a known name, so `acr_compl` already knows about it:
+In this case, sample is now a known name, so `acr_compl` already knows about it:
 
     $ abt -install acr_compl
     $ acr_compl -install
     # This is a script suitable for inclusion in .bash_profile
-    complete -o default -o nospace -C acr_compl abc abt acr acr_compl acr_ed acr_in acr_my amc ...
+    complete -o default -o nospace -C acr_compl sample abt acr acr_compl acr_ed acr_in acr_my amc ...
                                                 ^^^ -- it knows!
 
 Let's manually hook it up:
 
-    complete -o default -o nospace -C acr_compl abc
+    complete -o default -o nospace -C acr_compl sample
 
 And test it:
 
-    $ abc -v<tab>
+    $ sample -v<tab>
     -val:<int>  -verbose    -version
 
 ### Completing From Table
@@ -1885,11 +1953,11 @@ Auto-complete works with the contents of any table, loading it as necessary to p
     $ acr ctype:acr.FC<tab>
     acr.FCdflt    acr.FCheck    acr.FCppfunc  acr.FCtype
 
-Let's test it on our program. We'll create and populate a brand new table, and add an option to abc
+Let's test it on our program. We'll create and populate a brand new table, and add an option to sample
 which will be completed with values from that table.
 
     $ acr_ed -create -ssimfile dmmeta.mytable -write
-    $ for X in abcd{10..99}; do echo "dmmeta.mytable mytable:$X"; done | acr -insert -write
+    $ for X in sampled{10..99}; do echo "dmmeta.mytable mytable:$X"; done | acr -insert -write
     ...
     $ acr mytable -print:N
     report.acr  n_select:90  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
@@ -1897,64 +1965,64 @@ which will be completed with values from that table.
 So far so good, we have 90 values in our table.
 Now let's create a new command line option:
 
-    $ acr_ed -create -field command.abc.mytable -arg dmmeta.Mytable -reftype Pkey -dflt '""' -comment "A very useful option" -write
+    $ acr_ed -create -field command.sample.mytable -arg dmmeta.Mytable -reftype Pkey -dflt '""' -comment "A very useful option" -write
     ...
-    $ ai abc
+    $ ai sample
 
 And now we're ready to test it:
 
-    $ abc -mytable:abcd2<tab>
+    $ sample -mytable:abcd2<tab>
     abcd20  abcd21  abcd22  abcd23  abcd24  abcd25  abcd26  abcd27  abcd28  abcd29
 
-It works! Bash now magically knows to fetch values from `mytable` whenever `abc` is being invoked.
-As expected, inside abc this value is accessible as _db.cmdline.mytable. It has the type `algo::Smallstr50`,
+It works! Bash now magically knows to fetch values from `mytable` whenever `sample` is being invoked.
+As expected, inside sample this value is accessible as _db.cmdline.mytable. It has the type `algo::Smallstr50`,
 because that's the type of the primary key of `mytable`.
 
 ### Inputting A Table
 
-Now that we have our `abc` program and we're taking a `mytable` option, it would be nice to be able
+Now that we have our `sample` program and we're taking a `mytable` option, it would be nice to be able
 to do a lookup and find the appropriate record.
 
-To do that, we first create a table in the `abc` namespace, which is based on the `dmmeta.mytable` table.
+To do that, we first create a table in the `sample` namespace, which is based on the `dmmeta.mytable` table.
 
-    $ acr_ed -create -finput -target abc -ssimfile dmmeta.mytable -indexed -write
+    $ acr_ed -create -finput -target sample -ssimfile dmmeta.mytable -indexed -write
 
-We verify that there are two access paths from `abc` to `abc.FMytable`, one via the memory pool `abc.FDb.mytable`,
-the other via hash table `abc.FDb.ind_mytable`:
+We verify that there are two access paths from `sample` to `sample.FMytable`, one via the memory pool `sample.FDb.mytable`,
+the other via hash table `sample.FDb.ind_mytable`:
 
-    / abc.FDb
+    / sample.FDb
     |
-    |Lary mytable------->/ abc.FMytable
+    |Lary mytable------->/ sample.FMytable
     |Thash ind_mytable-->|
     -                    |
                          |
                          -
 
-We modify `abc` as follows:
+We modify `sample` as follows:
 
-    void abc::Main() {
-        abc::FMytable *mytable=ind_mytable_Find(_db.cmdline.mytable);
+    void sample::Main() {
+        sample::FMytable *mytable=ind_mytable_Find(_db.cmdline.mytable);
         prlog((mytable ? "Yes, record found" : "No such record"));
     }
 
 Then build and run:
 
-    $ abc -mytable:tt
+    $ sample -mytable:tt
     No such record
-    $ abc -mytable:abcd51
+    $ sample -mytable:abcd51
     Yes, record found
 
 ### Regx Options
 
 We will go into more detail into these operations later, but first let's convert `-mytable`
-to a Regx option, and modify abc to scan the `_db.mytable` array instead of using the hash table,
+to a Regx option, and modify sample to scan the `_db.mytable` array instead of using the hash table,
 and print all matching records:
 
-    $ echo dmmeta.field field:command.abc.mytable reftype:RegxSql | acr -merge -write
+    $ echo dmmeta.field field:command.sample.mytable reftype:RegxSql | acr -merge -write
     $ amc
 
     ...
-    void abc::Main() {
+    void sample::Main() {
         ind_beg(_db_mytable_curs,mytable,_db) {
             if (Regx_Match(_db.cmdline.mytable,mytable.mytable)) {
                 prlog(mytable.mytable);
@@ -1962,9 +2030,9 @@ and print all matching records:
         }ind_end;
     }
 
-Now we run the new abc to check the result:
+Now we run the new sample to check the result:
 
-    $ abc -mytable:abcd5%
+    $ sample -mytable:abcd5%
     abcd50
     abcd51
     abcd52
@@ -1978,15 +2046,15 @@ Now we run the new abc to check the result:
 
 Yes, it finds and prints the keys of the records it found.
 
-Notice that we no longer need the hash table `abc.FDb.ind_mytable`, since we 
+Notice that we no longer need the hash table `sample.FDb.ind_mytable`, since we 
 converted from a hash lookup to a linear scan. Let's delete the hash table:
 
-    $ acr_ed -del -field abc.FDb.ind_mytable -write
-    $ amc_vis abc.%
+    $ acr_ed -del -field sample.FDb.ind_mytable -write
+    $ amc_vis sample.%
 
-    / abc.FDb
+    / sample.FDb
     |
-    |Lary mytable-->/ abc.FMytable
+    |Lary mytable-->/ sample.FMytable
     -               |
                     |
                     -
@@ -2001,10 +2069,10 @@ and current configuration string: compiler, compiler version, config (e.g. relea
 and architecture string (e.g. x86). All this is intended to help with debugging.
 This information can be retrived with `strings` or by running the command with `-version` argument:
 
-    $ abc -version
+    $ sample -version
     dev.gitinfo  gitinfo:2019-05-02.309c6ba  author:alexei@lebe.dev  cfg:g++/4.8.5/release.Linux-x86_64  package:""
 
-    $ strings dflt.release-x86_64/abc | grep gitinfo:
+    $ strings dflt.release-x86_64/sample | grep gitinfo:
     dev.gitinfo  gitinfo:2019-05-02.309c6ba  author:alexei@lebe.dev  cfg:g++/4.8.5/release.Linux-x86_64  package:""
 
 ~AL~: this is no longer valid as gitinfo support via loader mechanism was non-portable.
@@ -2020,51 +2088,51 @@ The `-sig` option prints the target's signatures. A signature can be viewed as a
 
 Just like there is support for reading command lines, amc generates the necessary code to convert
 a command line struct to a properly escaped Bash command.
-Let's modify `abc`'s source as follows:
+Let's modify `sample`'s source as follows:
 
-    void abc::Main() {
-        prlog(abc_ToCmdline(_db.cmdline));
+    void sample::Main() {
+        prlog(sample_ToCmdline(_db.cmdline));
     }
 
-Now let's run abc with some options:
+Now let's run sample with some options:
 
-    $ abc
-    bin/abc  0
+    $ sample
+    bin/sample  0
 
-abc converts its command line back to a string that can be passed to bash, and any strings get
+sample converts its command line back to a string that can be passed to bash, and any strings get
 correctly quoted and escaped as necessary:
 
-    $ abc -val:33 -mytable:$'\nblah'
-    bin/abc  33 -mytable:$'\nblah'
+    $ sample -val:33 -mytable:$'\nblah'
+    bin/sample  33 -mytable:$'\nblah'
 
-Since `-val` is an anonymous field, `abc_ToCmdline` omits the name.
+Since `-val` is an anonymous field, `sample_ToCmdline` omits the name.
 
 ### Subprocesses With Command Line
 
 Before we end this tutorial, let's show one more feature, namely invoking a subprocess
-in a strictly typed way. `amc` generates a subprocess invocation helper `command::abc_proc`
+in a strictly typed way. `amc` generates a subprocess invocation helper `command::sample_proc`
 which we can use to avoid calling system(). system() is undesirable, mainly because
 it disables SIGINT and SIGTERM, making processes built around system() essentially unkillable
 from the command line. `amc`s subprocess implementation doesn't capture interrupts, and
 uses `DieWithParent` to make sure the child process is killed whenever the parent dies.
 
-Modify the source code of abc.cpp as follows:
+Modify the source code of sample.cpp as follows:
 
     #include "include/gen/command_gen.h"
     #include "include/gen/command_gen.inl.h"
 
-    void abc::Main() {
+    void sample::Main() {
         prlog(_db.cmdline.val);
         if (_db.cmdline.val>0) {
-            command::abc_proc abc;
-            abc.cmd.val = _db.cmdline.val-1;
-            abc_Exec(abc);
+            command::sample_proc sample;
+            sample.cmd.val = _db.cmdline.val-1;
+            sample_Exec(sample);
         }
     }
 
-This will recursively invoke the `abc` subprocess (don't try it with large values!)
+This will recursively invoke the `sample` subprocess (don't try it with large values!)
 
-    $ abc 3
+    $ sample 3
     3
     2
     1
@@ -2072,24 +2140,24 @@ This will recursively invoke the `abc` subprocess (don't try it with large value
 
 Here is the code amc generated for `amc_proc`:
 
-    $ amc command.abc_proc
+    $ amc command.sample_proc
 
-    // --- command.abc_proc
-    struct abc_proc { // command.abc_proc: Subprocess:
-        algo::cstring   path;      //   "bin/abc"  path for executable
-        command::abc    cmd;       // command line for child process
+    // --- command.sample_proc
+    struct sample_proc { // command.sample_proc: Subprocess:
+        algo::cstring   path;      //   "bin/sample"  path for executable
+        command::sample    cmd;       // command line for child process
         algo::cstring   stdin;     // redirect for stdin
         algo::cstring   stdout;    // redirect for stdout
         algo::cstring   stderr;    // redirect for stderr
         pid_t           pid;       //   0  pid of running child process
         i32             timeout;   //   0  optional timeout for child process
         i32             status;    //   0  last exit status of child process
-        abc_proc();
-        ~abc_proc();
+        sample_proc();
+        ~sample_proc();
     private:
-        // reftype of command.abc_proc.abc prohibits copy
-        abc_proc(const abc_proc&){ /*disallow copy constructor */}
-        void operator =(const abc_proc&){ /*disallow direct assignment */}
+        // reftype of command.sample_proc.sample prohibits copy
+        sample_proc(const sample_proc&){ /*disallow copy constructor */}
+        void operator =(const sample_proc&){ /*disallow direct assignment */}
     };
     ...
 
@@ -2114,18 +2182,18 @@ which constitute target's declared input.
 
 To illustrate, let's create a new program and make it read a table.
 
-    $ acr_ed -create -target abc -write
+    $ acr_ed -create -target sample -write
     ...
-    $ acr_ed -create -finput -target abc -ssimfile dmmeta.ctype -write
+    $ acr_ed -create -finput -target sample -ssimfile dmmeta.ctype -write
     ...
-    $ acr finput:abc.%
-    dmmeta.finput  field:abc.FDb.gitfile  extrn:N  update:N  strict:Y  comment:""
+    $ acr finput:sample.%
+    dmmeta.finput  field:sample.FDb.gitfile  extrn:N  update:N  strict:Y  comment:""
     ...
     
 For this target, finput is `dmmeta.ctype`. Let's see if acr_in knows that:
 
-    $ acr_in abc
-    dmmeta.Dispsigcheck  dispsig:abc.Input  signature:f162f70f9895c41909c2192722172e6d21fe5679
+    $ acr_in sample
+    dmmeta.Dispsigcheck  dispsig:sample.Input  signature:f162f70f9895c41909c2192722172e6d21fe5679
     dmmeta.Dispsigcheck  dispsig:algo_lib.Input  signature:ddc07e859e7056e1a824df1ad0e6d08e12e89849
     dmmeta.ssimfile  ssimfile:dmmeta.ctype  ctype:dmmeta.Ctype
 
@@ -2134,12 +2202,12 @@ used by the target. We can ignore the signatures for now, but they can be used
 to detect schema changes between the compiled version of a program and the version 
 of data set on which `acr_in` operates. The `-sigcheck` option can be used to omit these.
 
-Let's now add, as an `finput` for `abc`, the `dmmeta.ns` table, which is lexicographically
+Let's now add, as an `finput` for `sample`, the `dmmeta.ns` table, which is lexicographically
 after `dmmeta.ctype`, but logically before (since ctype depends on ns).
 
-    $ acr_ed -create -finput -target abc -ssimfile dmmeta.ns -write
+    $ acr_ed -create -finput -target sample -ssimfile dmmeta.ns -write
     
-    $ acr_in abc -sigcheck:N
+    $ acr_in sample -sigcheck:N
     dmmeta.ssimfile  ssimfile:dmmeta.ns  ctype:dmmeta.Ns
     dmmeta.ssimfile  ssimfile:dmmeta.ctype  ctype:dmmeta.Ctype
     
@@ -2159,20 +2227,20 @@ and prints out their contents.
 
 This can be used to create canned input files:
 
-    acr_in abc -data > tempfile
-    abc -in:tempfile
-    # this is exactly the same as running abc -in:data
+    acr_in sample -data > tempfile
+    sample -in:tempfile
+    # this is exactly the same as running sample -in:data
 
 ### The -checkable option
 
 If we take the data from ssmifiles `ns` and `ctype`, they are now sufficient
-to serve as inputs to the newly created `abc`. However, `acr -check` will fail on
+to serve as inputs to the newly created `sample`. However, `acr -check` will fail on
 this resulting dataset, because `ns` also depends on `nstype`, and in general there
 may be unresolved Pkey references in the resulting output.
 
 To recursively include any dependent ssimfiles, specify `-checkable`:
 
-    $ acr_in abc -checkable -sigcheck:N
+    $ acr_in sample -checkable -sigcheck:N
     dmmeta.ssimfile  ssimfile:dmmeta.nstype  ctype:dmmeta.Nstype
     dmmeta.ssimfile  ssimfile:dmmeta.ns  ctype:dmmeta.Ns
     dmmeta.ssimfile  ssimfile:dmmeta.dispsig  ctype:dmmeta.Dispsig
@@ -2182,18 +2250,18 @@ To recursively include any dependent ssimfiles, specify `-checkable`:
 
 `acr_in` can optionally include only those tuples which are transitively
 reachable from a certain set. For this, specify `-related`.
-Here is an example where we constrain `abc`'s input to the `abc` namespace itself.
+Here is an example where we constrain `sample`'s input to the `sample` namespace itself.
 
-    $ acr_in abc -data -related:dmmeta.ns:abc -sigcheck:N
-    dmmeta.ns  ns:abc  nstype:exe  comment:""
-    dmmeta.ctype  ctype:abc.FCtype  comment:""
-    dmmeta.ctype  ctype:abc.FDb  comment:""
-    dmmeta.ctype  ctype:abc.FGitfile  comment:""
-    dmmeta.ctype  ctype:abc.FNs  comment:""
+    $ acr_in sample -data -related:dmmeta.ns:sample -sigcheck:N
+    dmmeta.ns  ns:sample  nstype:exe  comment:""
+    dmmeta.ctype  ctype:sample.FCtype  comment:""
+    dmmeta.ctype  ctype:sample.FDb  comment:""
+    dmmeta.ctype  ctype:sample.FGitfile  comment:""
+    dmmeta.ctype  ctype:sample.FNs  comment:""
 
 In contrast, if we didn't specify `-related`, `-data` would fetch all records:
 
-    $ acr_in abc -data | wc -l
+    $ acr_in sample -data | wc -l
     864
 
 ## abt: A Build Tool
@@ -4246,18 +4314,18 @@ Headers are considered source files.
 ### Add An Input To Program
 
     $ acr_ed -create -finput -target ns -ssimfile ns2.name
-    acr_ed.create_finput  target:abc  ssimfile:dev.gitfile
+    acr_ed.create_finput  target:sample  ssimfile:dev.gitfile
     bin/acr  '' -insert:Y -check:Y -write:Y -t:Y -rowid:Y << EOF
-    dmmeta.ctype  ctype:abc.FGitfile  comment:""
-    dmmeta.field  field:abc.FGitfile.base  arg:dev.Gitfile  reftype:Base  dflt:""  comment:""
-    dmmeta.field  field:abc.FDb.gitfile  arg:abc.FGitfile  reftype:Lary  dflt:""  comment:""
-    dmmeta.finput  field:abc.FDb.gitfile  extrn:N  update:N  strict:Y  comment:""
+    dmmeta.ctype  ctype:sample.FGitfile  comment:""
+    dmmeta.field  field:sample.FGitfile.base  arg:dev.Gitfile  reftype:Base  dflt:""  comment:""
+    dmmeta.field  field:sample.FDb.gitfile  arg:sample.FGitfile  reftype:Lary  dflt:""  comment:""
+    dmmeta.finput  field:sample.FDb.gitfile  extrn:N  update:N  strict:Y  comment:""
     #  Proposed change
     #
     #
-    #     / abc.FDb
+    #     / sample.FDb
     #     |
-    #     |Lary gitfile-->/ abc.FGitfile
+    #     |Lary gitfile-->/ sample.FGitfile
     #     -               |
     #                     |
     #                     -
@@ -4272,36 +4340,36 @@ To create a new table in a program, use `-create -ctype ... -subset ... -pooltyp
 This adds a global pool of a given type (typically `Tpool` or `Lary`).
 To throw in a hash index, specify `-indexed`
 
-    $ acr_ed -create -ctype abc.FTable -subset u32 -pooltype Tpool -indexed
+    $ acr_ed -create -ctype sample.FTable -subset u32 -pooltype Tpool -indexed
     bin/acr  '' -insert:Y -check:Y -write:Y -t:Y -rowid:Y << EOF
-    dmmeta.ctype  ctype:abc.FTable  comment:""
-    dmmeta.field  field:abc.FTable.table  arg:u32  reftype:Val  dflt:""  comment:""
-    dmmeta.field  field:abc.FDb.table  arg:abc.FTable  reftype:Tpool  dflt:""  comment:""
-    dmmeta.field  field:abc.FDb.ind_table  arg:abc.FTable  reftype:Thash  dflt:""  comment:""
-    dmmeta.thash  field:abc.FDb.ind_table  hashfld:abc.FTable.table  unique:Y  comment:""
-    dmmeta.xref  field:abc.FDb.ind_table  inscond:true  via:""
+    dmmeta.ctype  ctype:sample.FTable  comment:""
+    dmmeta.field  field:sample.FTable.table  arg:u32  reftype:Val  dflt:""  comment:""
+    dmmeta.field  field:sample.FDb.table  arg:sample.FTable  reftype:Tpool  dflt:""  comment:""
+    dmmeta.field  field:sample.FDb.ind_table  arg:sample.FTable  reftype:Thash  dflt:""  comment:""
+    dmmeta.thash  field:sample.FDb.ind_table  hashfld:sample.FTable.table  unique:Y  comment:""
+    dmmeta.xref  field:sample.FDb.ind_table  inscond:true  via:""
     EOF
 
 ### Create An Index
 
 #### Create A Hash Table
 
-    $ acr_ed -create -field abc.FDb.ind_table
-    $ acr_ed -create -field abc.FDb.ind_table -hashfld <fieldname>
+    $ acr_ed -create -field sample.FDb.ind_table
+    $ acr_ed -create -field sample.FDb.ind_table -hashfld <fieldname>
 
 #### Create A Binary Heap
 
-    $ acr_ed -create -field abc.FDb.bh_table
-    $ acr_ed -create -field abc.FDb.bh_table -sortfld <fieldname>
+    $ acr_ed -create -field sample.FDb.bh_table
+    $ acr_ed -create -field sample.FDb.bh_table -sortfld <fieldname>
 
 #### Create An AVL Tree
 
-    $ acr_ed -create -field abc.FDb.tr_table
-    $ acr_ed -create -field abc.FDb.tr_table -sortfld <fieldname>
+    $ acr_ed -create -field sample.FDb.tr_table
+    $ acr_ed -create -field sample.FDb.tr_table -sortfld <fieldname>
 
 ### Conditional X-Ref
 
-    $ acr_ed -create -field abc.FDb.ind_table -inscond false
+    $ acr_ed -create -field sample.FDb.ind_table -inscond false
 
 ## Coding Style
 
@@ -4495,22 +4563,22 @@ it means it wasn't needed in the first place.
 
 Let's illustrate `amc_gc` by creating a new program and inputting a table. 
 
-    $ acr_ed -create -target abc -write
-    $ acr_ed -create -finput -target abc -ssimfile dmmeta.ns -write
+    $ acr_ed -create -target sample -write
+    $ acr_ed -create -finput -target sample -ssimfile dmmeta.ns -write
 
-Since the `ns` table is unused, `abc` will compile even if we remove it. This is the 
+Since the `ns` table is unused, `sample` will compile even if we remove it. This is the 
 case that `amc_gc` detects, and can remove the table:
 
-    $ amc_gc -target:abc -key:ctype:abc.%
+    $ amc_gc -target:sample -key:ctype:sample.%
     amc_gc.begin  tot_rec:2  n_cppline:259802  watch_cmd:"watch head -50 temp/amc_gc.build"
-    amc_gc.analyze  query:dmmeta.ctype:abc.FDb  eliminate:N  rec_no:1  tot_rec:2  n_del:0  n_cppline:259802  n_cppline_del:0
-    amc_gc.analyze  query:dmmeta.ctype:abc.FNs  eliminate:Y  rec_no:2  tot_rec:2  n_del:1  n_cppline:259341  n_cppline_del:461
-    report.amc_gc  key:ctype:abc.%  n_match:2  n_del:1  n_cppline:259341  n_cppline_del:461
+    amc_gc.analyze  query:dmmeta.ctype:sample.FDb  eliminate:N  rec_no:1  tot_rec:2  n_del:0  n_cppline:259802  n_cppline_del:0
+    amc_gc.analyze  query:dmmeta.ctype:sample.FNs  eliminate:Y  rec_no:2  tot_rec:2  n_del:1  n_cppline:259341  n_cppline_del:461
+    report.amc_gc  key:ctype:sample.%  n_match:2  n_del:1  n_cppline:259341  n_cppline_del:461
 
 And indeed, `amc_gc` successfully garbage collects the table.
 Let's finish by deleting the unused target
 
-    $ acr_ed -del -target abc -write
+    $ acr_ed -del -target sample -write
 
 ## MariaDB integration
 
@@ -4749,9 +4817,9 @@ or conditional breakpoint in a function other than Main with the `-b` option.
 
 Let's consider an example:
 
-    $ acr_ed -create -target abc -write
+    $ acr_ed -create -target sample -write
     ...
-    $ mdbg abc
+    $ mdbg sample
     
 Mdbg will print a reminder of the shortcuts it has equipped the target editor with...
 
@@ -4772,11 +4840,11 @@ Mdbg will print a reminder of the shortcuts it has equipped the target editor wi
 
 and run the target program under the debugger, stopping at Main.
 
-      // --- abc...main
+      // --- sample...main
       int main(int argc, char **argv) {
           try {
     B =>      algo_lib::FDb_Init();
-              abc::FDb_Init();
+              sample::FDb_Init();
               algo_lib::_db.argc = argc;
       ...
 
@@ -4790,7 +4858,7 @@ Additionally specifying the `-disas` option enables the disassembly window.
 The first argument to mdbg is the debug target name. Mdbg must know it so it can build it.
 To pass arguments to the debug target, specify them in a single string like this:
  
-    $ mdbg abc " -in:filename"
+    $ mdbg sample " -in:filename"
 
 Always include a space in front of the arguments: since Bash will strip the quotes, mdbg
 needs to know that the specified option is not an mdbg option but in fact an option for the debug
@@ -4806,7 +4874,7 @@ To use gdb's text UI, use `mdbg -tui`
 The default breakpoint is Main, but others can be specified, including gdb's conditional breakpoints.
 For instance, in the example above, we might invoke mdbg with a custom breakpoint.
 
-    $ mdbg abc -b algo::Prlog 
+    $ mdbg sample -b algo::Prlog 
     ...
 
       void algo::Prlog(int fd, cstring &str, int start, bool eol) {
@@ -4817,12 +4885,12 @@ For instance, in the example above, we might invoke mdbg with a custom breakpoin
     
 Or, if we're interested only in output that goes to stderr,
 
-    $ mdbg abc -b "algo::Prlog if fd==2"
+    $ mdbg sample -b "algo::Prlog if fd==2"
     
 Multiple breakpoints can be specified by comma-separating them. For instance `-b "A, B if c"`, etc.
 To execute a command at a breakpoint, use `-bcmd` option:
 
-    $ mdbg abc -b "algo::Prlog if fd==2" -bcmd "print str.ch_n"
+    $ mdbg sample -b "algo::Prlog if fd==2" -bcmd "print str.ch_n"
 
 These options preconfigure gdb via the `mdbg.gdb` file so that 
 there is less typing later.

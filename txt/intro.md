@@ -316,6 +316,9 @@ And so we can use the `ns` table to describe all the tools that we plan to intro
     dmmeta.ns ns:acr_ed
     EOF
 
+(The difference between `acr` and `dmmeta` is that `acr` is a database of structs in RAM
+while `dmmeta` is a database of ssim files on disk).
+
 Now comes the tricky part: we want `amc` to generate the ctype called `Ctype` in namespace `dmmeta`,
 by virtue of loading the `dmmeta.ctype  ctype:dmmeta.Ctype` record. There is a real dependency here,
 of a different type than what we had with ssimfiles: with ssimfiles, even though they seemed to be
@@ -329,21 +332,25 @@ bits of `amc` carefully, always using `git commit` to checkpoint and rolling bac
 code that no longer compiles.
 
 Slowly but surely, we can cause about 95% of all the code we need to be generated from ssimfiles.
-(The remaining 5% could also be generated `as-is`, just by `printf()`-ing the lines verbatim, but this 
-would actually be counter-productive. It is only interesting to generate code that's used in more than one place.)
+The remaining 5% could also be generated `as-is`, just by `printf()`-ing the lines verbatim, but this 
+would actually be counter-productive, and no more impressive than `tar cvf`-ing the whole thing. 
+It is only interesting to generate code that's used in more than one place.
 
-In subsequent chapters, I will descibre the `amc` memory model for an executable, and things like pools 
-(for holding records) and x-refs (for creating group-by's and cross-references). 
+In subsequent chapters, I will describe the `amc` memory model for an executable, and things like pools 
+(for holding records) and x-refs (for creating group-by's). 
+
 The presence of `ssimfile` in our data set was dictated by the way we organized the data set.
-The presence of `amc` in this model was dictated by our desire to use C++ to write the query tool `acr`.
+The presence of `amc` in this model was dictated by our desire to use C++ to write the query tool `acr`,
+which keeping the data description in a single place.
+
 There is a more general pattern here:
 
 ### Representation & Manipulation
 
-This approach seems to scale indefinitely. We can represent any semantic concept as 
-tuples, which are points in a multi-dimensional sparse space.
+We can represent any semantic concept as points in a multi-dimensional sparse space of tuples.
 Whenever we extend our representable universe with
 additional concepts, such as a physcial set of C++ files on disk, or a set of dev and production environments
 with some configuration, we include its relational description, or map, as a set of tables in our data set. 
 We then write tools that enforce a unidirectional or bidirectional correspondence between this new object and
-the records that describe it. 
+the records that describe it. In this way we make the object programmable and editable with the
+same fundamental set of tools we use on the tuples themselves.

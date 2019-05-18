@@ -16,9 +16,9 @@ or conditional breakpoint in a function other than Main with the `-b` option.
 
 Let's consider an example:
 
-    $ acr_ed -create -target abc -write
+    $ acr_ed -create -target sample -write
     ...
-    $ mdbg abc
+    $ mdbg sample
     
 Mdbg will print a reminder of the shortcuts it has equipped the target editor with...
 
@@ -39,11 +39,11 @@ Mdbg will print a reminder of the shortcuts it has equipped the target editor wi
 
 and run the target program under the debugger, stopping at Main.
 
-      // --- abc...main
+      // --- sample...main
       int main(int argc, char **argv) {
           try {
     B =>      algo_lib::FDb_Init();
-              abc::FDb_Init();
+              sample::FDb_Init();
               algo_lib::_db.argc = argc;
       ...
 
@@ -57,7 +57,7 @@ Additionally specifying the `-disas` option enables the disassembly window.
 The first argument to mdbg is the debug target name. Mdbg must know it so it can build it.
 To pass arguments to the debug target, specify them in a single string like this:
  
-    $ mdbg abc " -in:filename"
+    $ mdbg sample " -in:filename"
 
 Always include a space in front of the arguments: since Bash will strip the quotes, mdbg
 needs to know that the specified option is not an mdbg option but in fact an option for the debug
@@ -73,7 +73,7 @@ To use gdb's text UI, use `mdbg -tui`
 The default breakpoint is Main, but others can be specified, including gdb's conditional breakpoints.
 For instance, in the example above, we might invoke mdbg with a custom breakpoint.
 
-    $ mdbg abc -b algo::Prlog 
+    $ mdbg sample -b algo::Prlog 
     ...
 
       void algo::Prlog(int fd, cstring &str, int start, bool eol) {
@@ -84,12 +84,12 @@ For instance, in the example above, we might invoke mdbg with a custom breakpoin
     
 Or, if we're interested only in output that goes to stderr,
 
-    $ mdbg abc -b "algo::Prlog if fd==2"
+    $ mdbg sample -b "algo::Prlog if fd==2"
     
 Multiple breakpoints can be specified by comma-separating them. For instance `-b "A, B if c"`, etc.
 To execute a command at a breakpoint, use `-bcmd` option:
 
-    $ mdbg abc -b "algo::Prlog if fd==2" -bcmd "print str.ch_n"
+    $ mdbg sample -b "algo::Prlog if fd==2" -bcmd "print str.ch_n"
 
 These options preconfigure gdb via the `mdbg.gdb` file so that 
 there is less typing later.
