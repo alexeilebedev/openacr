@@ -15,7 +15,6 @@ with any project, or a project with no parts, etc.
 
 Let's use a MariaDB interactive shell as an example. You can start one manually, or you can use a provided
 tool `acr_my` (assuming you successfully built everything), to create a local networkless instance.
-Here is provide the namespace name `dmmeta` because
 
     $ acr_my -start -shell
 
@@ -26,19 +25,19 @@ Let's create a new database.
     use test;
 
 Let's create Codd's project schema. Instead of the name `commit`, which Codd used for the assignment
-of parts to projects, we'll use the name `projpart`.
+of parts to projects, we'll use the name `partproj`.
 
     create table project (project varchar(50));
     create table part (part varchar(50));
     create table partproj (part varchar(50), project varchar(50));
 
-Now let's set up the primary keys
+Now let's set up the primary keys:
 
     alter table project add primary key project (project);
     alter table part add primary key part (part);
     alter table partproj add primary key part (part);
 
-And the foreign key constraints
+And the foreign key constraints:
 
     alter table partproj add foreign key  (part) references part(part);
     alter table partproj add foreign key (project) references project(project);
@@ -92,15 +91,19 @@ sets, either simple ones, or constructed from other sets (i.e. by taking a cross
 At the same time, when presenting his 4 schemas with anomalies, Codd is
 basically describing what we, programmers, know as data structure. He is pointing out a fatal flaw that lies in the
 idea of subordination of one set to another: by introducing an access path dependence into your data model,
-you lose the ability to represent conditions when they lie outside of your world view. It is hard to
-overestimate the importance of this idea.
+you lose the ability to represent conditions that lie outside of your narrowed world view. It is hard to
+overestimate the importance of this idea. 
 
-So it would be very nice to apply the relational model to all config files and to the actual programs as well.
-Because the concept of anomalies is fundamental, if anomalies cause bugs when modeling projects and parts, 
-they also cause bugs in configs, and bugs in programs. We are pretty much forced into it.. But can it be done?
+If even a simple projects-and-parts example has 5 possible schemas that can represent it, out of which
+4 have anomalies (design bugs with provably bad consequences), then what can be said about a larger software project?
+Any software project is a veritable rat's nest of references, just a large database.
+How many design bugs does a software project have that can be shown to exist from code organization alone,
+before we even run it? 
+We are forced into the idea of converting our software to relational form, fixing anomalies at that level, and then
+re-creating source code from that representation. But can it be done?
 
 OpenACR says that yes, not only can it be done, but you get an insanely extensible, compact system with almost
- magical properties. Let's begin by building this same schema using `acr`.
+magical properties. Below I show how it gets started, from scarch.
  
 ### Creating Some Tuples
 
@@ -110,23 +113,23 @@ We want to keep records in plain text files, version them, and treat them like s
 We'll need a tool that manipulates these text records and does various useful things with them.
 
 We introduce the idea of a super-simple tuple, or ssim tuple, that consists
-of key-value pairs on a single line and a type tag.
+of a type tag, and key-value pairs on a single line.
 
     test.project  project:project1
 
-Let's look at the first word, `test.project`. This is the tuple head, or type tag.
+The first word, `test.project` is the tuple head, or type tag.
 If you think of a shell command line, it's the name of the command being invoked. 
-But here, `test` is the database name, and `project` is the table name. In ssim, there is no 
-concept of a database, there is only namespace, or ns. So `test` is the namespace. 
+But here, `test` is the database name, and `project` is the table name. Instead of `database`, 
+we will say `namespace`, or `ns`.
 
 We are going to keep these, and only these records in the file
 
     data/test/project.ssim
     
-Similarly, we will be keeping parts and projparts in files
+Similarly, we will be keeping parts and partprojs in files
 
     data/test/part.ssim
-    data/test/projpart.ssim
+    data/test/partproj.ssim
 
 And so we are going to place the following text lines in the corresponding files.
 
@@ -145,20 +148,19 @@ And so we are going to place the following text lines in the corresponding files
     test.partproj  part:part2  project:project1
     EOF
 
-And we're done.
+And that's it for now.
 
 ### Describing The Tuple Schema
 
 Now here comes the interesting part.
 
 If we want our query tool to find this data, we would need to specify exactly 
-which ssimfiles and namespaces we want in our system. We also need a description 
+which ssimfiles and namespaces we want in our system. We would also need a description 
 of the various columns, and what they refer to.
 
 We will place the list of ssimfiles in the ssimfile called `data/dmmeta/ssimfile.ssim` 
-and in it, by convention, each tuple will start work the word `ssimfile`. 
-The word `dmmeta` is short for *Data Model Meta-information*
-While we're at it, we will include the `ssimfile` record as well.
+and in it, by the above convention, each tuple will start work the word `dmmeta.ssimfile`. 
+The ns `dmmeta` is short for *Data Model Meta-information*.
 The entries will be sorted alphabetically.
 
     $ cat > data/dmmeta/ssimfile.ssim << EOF
@@ -168,22 +170,22 @@ The entries will be sorted alphabetically.
     dmmeta.ssimfile  ssimfile:test.project
     EOF
 
+Notice that the `dmmeta.ssimfile` entry, referring to the file itself, is
+part of that list.
 
-Similarly, we will place the list of known namespaces in the
+We will then place the list of known namespaces in the
 table `data/dmmeta/ns.ssim` and these will all be tagged as `dmmeta.ns`.
 But because we already have a namespace `dmmeta`, we will include its definition.
+So far we have two namespaces:
 
     $ cat > data/dmmeta/ns.ssim << EOF
     dmmeta.ns  ns:dmmeta
     dmmeta.ns  ns:test
     EOF
 
-It things get even more interesting.
-
 Since we want to write a C++ programs with these tuples, we will need a name for the type 
 to use in C++. In addition, we anticipate having C types that have no associated ssimfiles.
-
-Using the CamelCase convention for C++ types, we create a new table `dmmeta.ctype`.
+Using the CamelCase convention for C++ type names, we create a new table `dmmeta.ctype`.
 We must include ctypes for all ctypes mentioned so far, this includes `ns` and `ctype`.
 
     $ cat > data/dmmeta/ctype.ssim << EOF
@@ -204,16 +206,16 @@ This is analogous to the `partproj` relation.
     dmmeta.ssimfile  ssimfile:test.project    ctype:test.Project
     EOF
 
-We decide that it is not necessary to align the columns in a ssimfile, but it looks nicer.
+It is not necessary to align the columns in a ssimfile, but it looks nicer.
 Also, leading and trailing whitespace on each line will be ignored. And the order of the lines 
 shouldn't matter either. 
 
-And now the only thing that's missing is some description of the columns.
+At this point, the only thing that's missing is some description of the columns.
 
 ### Describing The Columns
 
 We will need a new table, with one record for every type of column we have used so far.
-We will call it `dmmeta.field`, so now we need to add `ssimfile` and `ctype` records to 
+We will call it `dmmeta.field`, so now we need to add field's `ssimfile` and `ctype` lines to 
 the appropriate ssmifiles:
 
     $ echo 'dmmeta.ctype  ctype:dmmeta.Field' >> data/dmmeta/ctype.ssim
@@ -231,21 +233,22 @@ of another table. We will call these `reftypes`. We can easily enter the descrip
 reftypes, and some reftype records, using the tools we have so far:
 
     $ echo 'dmmeta.ctype  ctype:dmmeta.Reftype ' >> data/dmmeta/ctype.ssim
-    $ echo 'dmmeta.ctype  ctype:dmmeta.Reftype ' >> data/dmmeta/ctype.ssim
+    $ echo 'dmmeta.ssimfile  ssimfile:dmmeta.reftype  ctype:dmmeta.Reftype ' >> data/dmmeta/ssimfile.ssim
     $ cat > data/dmmeta/reftype.ssim <<EOF
     dmmeta.reftype  reftype:Val
     dmmeta.reftype  reftype:Pkey
     EOF
     
 In order to describe value types, we will add a single type called `algo.Smallstr50`.
-This will be our equivalent of varchar(50).
+This will be our equivalent of `varchar(50)`.
 We create a new namespace called `algo`, because we want the `dmmeta`
 namespace to be used exclusively for ctypes that have ssimfiles associated with them.
 
     $ echo 'dmmeta.ns ns:algo' >> data/dmmeta/ns.ssim
     $ echo 'dmmeta.ctype ctype:algo.Smallstr50' >> data/dmmeta/ctype.ssim
 
-And now we are ready to describe the fields. We include descriptions of all known fields.
+And now we are ready to describe the fields. The table below includes descriptions of
+all fields we referenced so far.
 
     $ cat > data/dmmeta/field.ssim << EOF
     dmmeta.field  field:dmmeta.Ctype.ctype        arg:algo.Smallstr50  reftype:Val 
@@ -262,29 +265,54 @@ And now we are ready to describe the fields. We include descriptions of all know
     dmmeta.field  field:test.Project.project      arg:algo.Smallstr50  reftype:Val
     EOF
     
-If your head is not at least a little bit exploding when you see 
-the line:
+If your head is not at least a little bit exploding when you see the line:
 
     dmmeta.field  field:dmmeta.Field.reftype      arg:dmmeta.Reftype  reftype:Pkey
-
-Or the line
-
-    dmmeta.field  field:dmmeta.Field.field        arg:algo.Smallstr50  reftype:Val 
 
 Then you need to read the above text again. 
 All of our moves so far have been forced. We are simply adding descriptions
 of things as they pop up.
 
+We are almost done. All that remains is adding a description of the constraint for substrings
+of fields. For instance, a substring of the field's primary key must refer to a valid ctype,
+and similarly a substring of ctype's primary key must refer to a namespace.
+For this, we will add some records describing the substrings, and place them all 
+into the appropriate ssimfiles:
+
+    dmmeta.ctype  ctype:dmmeta.Substr  comment:"Computed field"
+      dmmeta.field  field:dmmeta.Substr.field     arg:dmmeta.Field    reftype:Pkey  dflt:""  comment:""
+      dmmeta.field  field:dmmeta.Substr.expr      arg:algo.Smallstr50 reftype:Val   dflt:""  comment:""
+      dmmeta.field  field:dmmeta.Substr.srcfield  arg:dmmeta.Field    reftype:Pkey  dflt:""  comment:""
+
+    dmmeta.ssimfile  ssimfile:dmmeta.substr  ctype:dmmeta.Substr
+
+And now we can describe the fields which are implicitly contained in other fields:
+
+    dmmeta.field  field:dmmeta.Field.ctype  arg:dmmeta.Ctype  reftype:Pkey  dflt:""  comment:"enclosing structure"
+      dmmeta.substr  field:dmmeta.Field.ctype  expr:.RL  srcfield:dmmeta.Field.field
+
+    dmmeta.field  field:dmmeta.Ctype.ns  arg:dmmeta.Ns  reftype:Pkey  dflt:""  comment:"translates to c++ namespace"
+      dmmeta.substr  field:dmmeta.Ctype.ns  expr:.RL  srcfield:dmmeta.Ctype.ctype
+
+And place these records into their corresponding ctypes as well.
+The expression `.RL` means "scan for character . from the Right. then take everything to the Left of the found character".
+We will also allow expressions with any number of triples and any search characters, e.g. `/RR@LL` or `.LR.LR.LR`.
+We may want to describe additional substrings (such as field's name), but this should be sufficient
+to show the process of building up the concepts.
+
 ### Adding Tools
 
-At this point, it is clear what kinds of actions we are performing on these data sets.
-So we need to introduce some tools.
+At this point, it is clear what kinds of actions we are performing on these data sets. Let's introduce some tools.
 
 First, we need a query tool that can fetch records of a given type, and then find all related
-records as a transitive closure over the Pkey references. Because the tool will be 
+records as a transitive closure over the Pkey references. Because the tool 
 automatically cross-references all the tables in our system, we will call it `Auto Cross Reference`
 or `acr`. We will equip `acr` with options like `-check` so that it can find any broken
-Pkey references, and other options to make it useful.
+`Pkey` references, and other options to make it useful. We will describe all the command-line options
+as fields of the ctype `command.acr`.
+
+For shell command-line completion, we will write `acr_compl`, which will now be able to auto-complete
+both arguments to acr, and even queries, by reading appropriate ssim files.
 
 Second, we will need a tool that takes some command lines and prints shell scripts of the 
 sort we used above, which we can then pipe through `sh` in order to make the edits. 
