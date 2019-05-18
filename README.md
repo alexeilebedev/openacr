@@ -69,10 +69,7 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
       * [Discussion](#discussion)
    * [Scheduling And Main Loop](#scheduling-and-main-loop)
       * [Sample App With Main Loop](#sample-app-with-main-loop)
-; [Adding A Step](#adding-a-step); [Step With Delay](#step-with-delay); [Scaled Delay](#scaled-delay); [Dynamic Updates: Deletion](#dynamic-updates-deletion); [Auto Unref](#auto-unref); [Larger Programs](#larger-programs); [Tutorial Cleanup](#tutorial-cleanup)
-   * [Iohook & Fbuf](#iohook---fbuf)
-      * [Iohook](#iohook)
-; [Fbuf](#fbuf)
+; [Adding A Step](#adding-a-step); [Step With Delay](#step-with-delay); [Scaled Delay](#scaled-delay); [Dynamic Updates: Deletion](#dynamic-updates-deletion); [Auto Unref](#auto-unref); [Larger Programs](#larger-programs); [Iohooks](#iohooks)
    * [Dispatch](#dispatch)
    * [acr_ed: Acr Editor](#acr_ed-acr-editor)
       * [Targets](#targets)
@@ -3717,7 +3714,7 @@ especially brain surgery. Powerful? Yes. Best practice? Hardly.
 
 ## Scheduling And Main Loop
 
-The are two main types of applicaitons that `amc` provides support for.
+The are two main types of applications that `amc` provides support for.
 
 One type is RPC-style applications, i.e. client applications, written in logical time domain.
 This style is characterized by blocking calls.
@@ -3727,7 +3724,7 @@ In the first instance, one line of code corresponds to one logical step of the a
 being implemented. In the second instance, each line corresponds to a few CPU instructions.
 This style is fully asynchronous and no blocking calls are typically allowed. In a full
 kernel bypass application, not even system calls are allowed. Both amc and `algo_lib` are
-designed for this and support this use case.
+ support this use case.
 
 It is also possible to mix these two paradigms, but the distinction is useful to keep
 in mind. If you keep RPC applications and engines separate, you get the best of both worlds:
@@ -4111,62 +4108,47 @@ as cooperatively scheduled threads. After each step, we return to the scheduler,
 and we aren't holding any pointers on the stack, making the overall process easier to reason
 about.
 
-### Tutorial Cleanup
-
-Let's not forget to clean up after this tutorial:
-
-    $ acr_ed -del -target sample -write
-
-Or
-
-    $ git reset --hard
-    
-
-## Iohook & Fbuf
+### Iohooks
 
 In a non-blocking single-threaded application, there can be only one situation where time is 
 yielded to the system: when that time is not needed. That's how we avoid taking 100% CPU
 while continuing to call ourselves `non-blocking`.
-
-### Iohook
-
 The `Iohook` mechanism is a way to attach (hook?) file descriptor polling to the main loop.
 
-Let's begin talking about `Iohooks` by creating a sample program. For this chapter, the sample
-program is `samp_iohook`:
+Let's begin by deleting the old program and creating a new one:
 
-    $ acr_ed -create -target samp_iohook -write
+    $ acr_ed -del -target sample -write
+    $ acr_ed -create -target sample -write
     ...
-
-The concept is simple. We register interest in either reading or writing a file descriptor,
-attach a callback, and insert the iohook into the system-specific event mechanism. On
-BSD systems (FreeBSD and MacOS (Mach)) it's `kevent`, on Linu it's `epoll`.
 
 The program will read characters from stdin and print them as c++-quoted characters
 with timestamp.
 First, we'll need a field for the Iohook:
 
-    $ acr_ed -create -field samp_iohook.FDb.read -arg algo_lib.FIohook -write
+    $ acr_ed -create -field sample.FDb.read -arg algo_lib.FIohook -write
     ...
 
+The concept is simple. We register interest in either reading or writing a file descriptor,
+attach a callback, and insert the iohook into the system-specific event mechanism. On
+BSD systems (FreeBSD and MacOS (Mach)) it's `kevent`, on Linux it's `epoll`.
 
     static void DoRead() {
         char buf;
         int rc=0;
         do {
-            rc=read(samp_iohook::_db.read.fildes.value,&buf,1);
+            rc=read(sample::_db.read.fildes.value,&buf,1);
             if (rc==1) {
                 tempstr out;
                 char_PrintCppSingleQuote(buf,out);
                 prlog(CurrUnTime()<<" "<<out);
             } else if (rc==-1 && errno==EAGAIN) {
             } else {
-                IohookRemove(samp_iohook::_db.read);
+                IohookRemove(sample::_db.read);
             }
         } while (rc>0);
     }
 
-    void samp_iohook::Main() {
+    void sample::Main() {
         _db.read.fildes=algo::Fildes(0);
         algo::SetBlockingMode(_db.read.fildes,false);
         callback_Set0(_db.read,DoRead);
@@ -4178,7 +4160,7 @@ First, we'll need a field for the Iohook:
 
 Let's run the program:
 
-    $ samp_iohook
+    $ sample
     5
     2019-05-17T16:26:52.95788 '5'
     2019-05-17T16:26:52.95818 '\n'
@@ -4191,11 +4173,6 @@ Let's run the program:
 Our primitive non-blocking program does what we intended.
 This code could be combined with other non-blocking code,
 and the behaviors the two will be combined.
-
-### Fbuf
-
-~TBD~
-
 
 ## Dispatch
 
