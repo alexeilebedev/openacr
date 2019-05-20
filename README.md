@@ -11,12 +11,10 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
 ; [Intermediate Files](#intermediate-files)
    * [History & Intro](#history---intro)
       * [A Motivating Example](#a-motivating-example)
-; [Creating Some Tuples](#creating-some-tuples); [Describing The Tuple Schema](#describing-the-tuple-schema); [Describing The Columns](#describing-the-columns); [Adding Tools](#adding-tools); [Describing The Tools](#describing-the-tools); [Representation & Manipulation](#representation---manipulation)
-   * [Self-Similarity](#self-similarity)
+; [Creating Some Tuples](#creating-some-tuples); [Describing The Tuple Schema](#describing-the-tuple-schema); [Describing The Columns](#describing-the-columns); [Adding Tools](#adding-tools); [Describing The Tools](#describing-the-tools); [Representation & Manipulation](#representation---manipulation); [Ordering Dependencies](#ordering-dependencies)
    * [Ssim files](#ssim-files)
       * [Ssim Data Sets](#ssim-data-sets)
 ; [Structured Key Normal Form](#structured-key-normal-form); [Decomposing A Domain Into Sets](#decomposing-a-domain-into-sets); [History of Database Design](#history-of-database-design); [Cardinality Analysis](#cardinality-analysis); [Complex Domains All The Way](#complex-domains-all-the-way); [Remember 4-valued logic?](#remember-4-valued-logic-); [Structured Key Normal Form](#structured-key-normal-form)
-   * [Hello Meta World](#hello-meta-world)
    * [acr: Auto Cross Reference](#acr-auto-cross-reference)
       * [Querying](#querying)
 ; [Creating A New Table](#creating-a-new-table); [Inserting Data](#inserting-data)
@@ -70,6 +68,7 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
       * [Sample App With Main Loop](#sample-app-with-main-loop)
 ; [Adding A Step](#adding-a-step); [Step With Delay](#step-with-delay); [Scaled Delay](#scaled-delay); [Dynamic Updates: Deletion](#dynamic-updates-deletion); [Auto Unref](#auto-unref); [Larger Programs](#larger-programs); [Iohooks](#iohooks)
    * [Dispatch](#dispatch)
+   * [Hello Meta World](#hello-meta-world)
    * [acr_ed: Acr Editor](#acr_ed-acr-editor)
       * [Targets](#targets)
          * [Create Target](#create-target)
@@ -102,12 +101,11 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
 ; [Normalization Checks](#normalization-checks); [Debugging](#debugging)
    * [Mdbg: Gdb front-end](#mdbg-gdb-front-end)
       * [Specifying arguments](#specifying-arguments)
-; [The -tui option](#the--tui-option); [Specifying Breakpoints](#specifying-breakpoints); [Edit-and-retry](#edit-and-retry); [The -follow_child otption](#the--follow_child-otption); [Exceptions](#exceptions); [Gdb Python Interface](#gdb-python-interface); [Bugs](#bugs)
+; [The -tui option](#the--tui-option); [Specifying Breakpoints](#specifying-breakpoints); [Edit-and-retry](#edit-and-retry); [The -follow_child otption](#the--follow_child-otption); [Exceptions](#exceptions); [Gdb Python Interface](#gdb-python-interface); [Bugs](#bugs); [Grephunk: patch file filter](#grephunk-patch-file-filter)
    * [Scriptlets](#scriptlets)
       * [Hilite: inline highlighter](#hilite-inline-highlighter)
          * [Blotter Mode](#blotter-mode)
 ; [Inline Specification](#inline-specification); [Diff mode](#diff-mode)
-      * [Grephunk: patch file filter](#grephunk-patch-file-filter)
    * [FF - find files and in files](#ff---find-files-and-in-files)
          * [Selecting Files And Directories](#selecting-files-and-directories)
 ; [Negative Patterns](#negative-patterns); [Matching Options](#matching-options); [Editing Matches](#editing-matches); [Highlighting](#highlighting)
@@ -672,7 +670,7 @@ There is a more general pattern here:
 
 ### Representation & Manipulation
 
-We can represent any semantic concept as points in a multi-dimensional sparse space of tuples.
+We can represent any concept as a point in a multi-dimensional sparse space of tuples.
 Whenever we extend our representable universe with
 additional concepts, such as a physcial set of C++ files on disk, or a set of dev and production environments
 with some configuration, we include its relational description, or map, as a set of tables in our data set. 
@@ -680,38 +678,26 @@ We then write tools that enforce a unidirectional or bidirectional correspondenc
 the records that describe it. In this way we make the object programmable and editable with the
 same fundamental set of tools we use on the tuples themselves.
 
-## Self-Similarity
+### Ordering Dependencies
 
-Looking at the three main tools in OpenACR, `acr`, `amc` and `abt`,
-we see that they all seem to be circularly dependent on each other.
-
-* acr, abt and amc all use acr to edit the description from which their source code is derived.
-* acr, abt and amc's in-memory structures are all generated with amc.
-* acr, abt and amc are all build using abt.
-
-This circularity comes from the fact that these tools' outputs
-also affect their inputs, and you're looking at a system that underwent 
-perhaps a few thousand cycles of evolution, with human programmers completing
-the loop.
-
-There are many instances of self-similar systems in the software world,
+There are many examples of systems in the software world
 where the rules created by a system begin to apply to the system itself.
-Let's consider three other examples.
+Let's briefly consider some such systems.
 
-* The most famous one is the LISP interpreter as expressed in LISP itself.
+* The most famous one is the LISP interpreter as expressed in LISP itself,
+as expressed by the famous top-level expression `(loop (print (eval (read))))`. 
 * Another example is the [self-compiling compiler](#https://en.wikipedia.org/wiki/Bootstrapping_(compilers)).
 All compiled languages have one (and *no* interpreted language has one).
 * And a third example is the template meta-programming sublanguage of C++,
 using which you can manipulate the very types from which the underlying
 C++ program is written.
 
-Joining this list is OpenACR, which is of a different kind:
-It not only generates most of its own source code and lets you modify this source code with
+Joining this list is OpenACR, which is of a different kind: 
+it not only generates most of its own source code and lets you modify this source code with
 plain command-line tools like sed and awk, and even SQL, without introducing
 any new language or an interpreter; but it serves as a sort of planter from which
 you can grow other applications that share these same properties. 
 
-Why is this important?
 Let's go back to our three examples and consider one cycle of application of them.
 
 * When a LISP interpreter written in LISP interprets more LISP, it is
@@ -735,17 +721,10 @@ So, after one cycle of application, you get to a new and better place, but that 
 either inaccessible (e.g. object file), or built at some unmaintainable expense;
 in either case, the gains are temporary. Yet *it is* possible to lock them in.
 For that, we need tools whose input is readable and writable
-by both human and the machine, where source code is derived
-from this input, and where the system of names applies equally well to the 
-description of itself and the tools. And of course, the tools should be useful for other
-purposes, not just generating their own source code; that's merely a byproduct.
+by both human and the machine, and where the system of names applies equally well to the 
+description of itself and the tools. 
 
-Creating a new language is not the answer, because the source code for that
-language is a whole new thing. And as you define both the language and its 
-debuggers, multi-platform support, you will need new words for referring
-to them, words that have to be written somewhere... it becomes a chasing game. 
-
-In the world where data is kept in a machine-readable format, and most of the source code
+When the input format is both machine and human-readable and most of the source code
 is generated, any tool works with almost any other tool. 
 
     'abt acr' builds acr.
@@ -772,10 +751,11 @@ is generated, any tool works with almost any other tool.
     'mdbg acr' debugs acr
     'mdbg "mdbg acr"' debugs the debugger debugging acr (in principle)
     
-And of course, as already mentioned above, even though this is amazingly fun, 
+And of course, even though this is fun, 
 the point of these tools is not to compile themselves; 
+That economy is just a by-product of some naming conventions.
 The point is to allow the creation of new applications,
-using ssim files to describe new domains while continuing
+using plain-text files to describe new domains while continuing
 to apply the same small set of tools -- bash, acr, perl, etc. on each cycle.
 
 ## Ssim files
@@ -1046,48 +1026,6 @@ just a single composite value. It scales indefinitely, and every join takes just
 
 Perhaps in the clade of DBMS construction philosophies,
 the closest analog to SKNF would be DKNF (Domain Key Normal Form).
-
-## Hello Meta World
-
-Follow the steps below to create a new sample program.
-
-The program will print the names of all of its own structures, and 
-their fields, cross-referenced twice: first, by membership and 
-then by computing all back-references.
-
-This seems like an appropriately self-referential way to say hello
-using the tools at our disposal. Having a program print its own data 
-structure is also mind-boggling if you think about it for too long.
-
-Use this as a starting point, or to get motivated to read one of the tutorials.
-
-~~~
-acr_ed -create -target hi -write
-cat > cpp/samp/hi.cpp << EOF
-#include "include/hi.h"
-void hi::Main() {
-    prlog("Hello Meta World!");
-    ind_beg(hi::_db_ctype_curs,ctype,hi::_db) {
-        if (ns_Get(ctype) == dmmeta_Ns_ns_hi) {
-            prlog("ctype "<<ctype.ctype);
-            ind_beg(hi::ctype_zd_field_curs,field,ctype) {
-                prlog("    has field "<<field.field<<" of type "<<field.arg<<" reftype:"<<field.reftype);
-            }ind_end;
-            ind_beg(hi::ctype_zd_arg_curs,arg,ctype) {
-                prlog("    is referred to by field "<<arg.field<<" using "<<arg.reftype);
-            }ind_end;
-        }
-    }ind_end;
-}
-EOF
-acr_ed -create -finput -target hi -ssimfile:dmmeta.ctype -indexed -write
-acr_ed -create -finput -target hi -ssimfile:dmmeta.field -write
-acr_ed -create -field:hi.FField.p_ctype  -arg:hi.FCtype -xref -via:hi.FDb.ind_ctype/dmmeta.Field.ctype -write
-acr_ed -create -field:hi.FCtype.zd_field -arg:hi.FField -xref -via:hi.FDb.ind_ctype/dmmeta.Field.ctype  -write
-acr_ed -create -field:hi.FCtype.zd_arg   -arg:hi.FField -xref -via:hi.FDb.ind_ctype/dmmeta.Field.arg    -write
-abt -install hi
-hi
-~~~
 
 ## acr: Auto Cross Reference
 
@@ -4203,6 +4141,48 @@ and the behaviors the two will be combined.
 
 ~TBD~
 
+## Hello Meta World
+
+Follow the steps below to create a new sample program.
+
+The program will print the names of all of its own structures, and 
+their fields, cross-referenced twice: first, by membership and 
+then by computing all back-references.
+
+This seems like an appropriately self-referential way to say hello
+using the tools at our disposal. Having a program print its own data 
+structure is also mind-boggling if you think about it for too long.
+
+Use this as a starting point, or to get motivated to read one of the tutorials.
+
+~~~
+acr_ed -create -target hi -write
+cat > cpp/samp/hi.cpp << EOF
+#include "include/hi.h"
+void hi::Main() {
+    prlog("Hello Meta World!");
+    ind_beg(hi::_db_ctype_curs,ctype,hi::_db) {
+        if (ns_Get(ctype) == dmmeta_Ns_ns_hi) {
+            prlog("ctype "<<ctype.ctype);
+            ind_beg(hi::ctype_zd_field_curs,field,ctype) {
+                prlog("    has field "<<field.field<<" of type "<<field.arg<<" reftype:"<<field.reftype);
+            }ind_end;
+            ind_beg(hi::ctype_zd_arg_curs,arg,ctype) {
+                prlog("    is referred to by field "<<arg.field<<" using "<<arg.reftype);
+            }ind_end;
+        }
+    }ind_end;
+}
+EOF
+acr_ed -create -finput -target hi -ssimfile:dmmeta.ctype -indexed -write
+acr_ed -create -finput -target hi -ssimfile:dmmeta.field -write
+acr_ed -create -field:hi.FField.p_ctype  -arg:hi.FCtype -xref -via:hi.FDb.ind_ctype/dmmeta.Field.ctype -write
+acr_ed -create -field:hi.FCtype.zd_field -arg:hi.FField -xref -via:hi.FDb.ind_ctype/dmmeta.Field.ctype  -write
+acr_ed -create -field:hi.FCtype.zd_arg   -arg:hi.FField -xref -via:hi.FDb.ind_ctype/dmmeta.Field.arg    -write
+abt -install hi
+hi
+~~~
+
 ## acr_ed: Acr Editor
 
 `Acr_ed` started its life as a cheat sheet generator, but now it's an indispensable 
@@ -4924,62 +4904,6 @@ is broken in some way. Please file an issue, describing your config, so that thi
 can be tried out and fixed.
 
 
-## Scriptlets
-
-OpenACR includes a number of little scripts to ease program development.
-Some of them are useful as stand-alone utilities
-
-### Hilite: inline highlighter
-
-The hilite tool is a perl script for highlighting strings in some output.
-
-Usage:
-
-    <some command> | hilite <expr1> <expr2> ...
-
-Each expr is a perl regex that is highlighted using a separate color.
-colors are picked automatically from a default sequence.
-
-To specify a color explicitly, use its name: `expr1:green expr2:yellow`
-The list of available colors is black, red, green, yellow, blue, magenta, cyan, white, darkblack, 
-darkred, darkgreen, darkyellow, darkblue, darkmagenta, darkcyan, darkwhite.
-
-Omitting `expr` matches the entire line, so `hilite :green` makes all lines green.
-
-#### Blotter Mode
-
-To highlight every other line, use `:green%2`. This is useful with values of 5
-when the output is wide, creating a blotter effect.
-
-If multiple patterns match a given input line, patterns specified later
-on the command line override previous patterns; Each pattern can match multiple
-times within the line.
-
-#### Inline Specification
-
-Highlighting rules can be provided as part of the input.
-If a line starts with the special word 'hilite.colors', e.g.
-
-    hilite.colors <expr1> <expr2> ...
-
-Then the previous rules are flushed,
-and new exprs are processed as if they were read from the command line.
-This allows commands to output hilite instructions that keep the text readable
-yet support highlighting where appropriate.
-
-#### Diff mode
-
-If `<expr>` is `-diff` or `-d`, hilite loads diff rules that support either line-
-or word-diffs. Example of colorizing a diff file:
-
-   cat patchfile | hilite -d | less -r
-
-Removed lines or words are colored red, added lines or words are green, and index
-lines are blue.
-
-Hilite is not intended to compete with the various syntax highlighters; it is an
-interactive tool intended to ease readibility or terminal-based output.
-
 ### Grephunk: patch file filter
 
 Grephunk is a perl script that scan hunks on stdin
@@ -5037,6 +4961,64 @@ In the example below, hunk must contain the word amc anywhere in it,
 and filename should not have pattern /gen/
 
     grephunk amc f:!/gen/ h:'}\s+$'
+
+## Scriptlets
+
+OpenACR includes a number of little scripts to ease program development.
+Some of them are useful as stand-alone utilities
+
+
+### Hilite: inline highlighter
+
+The hilite tool is a perl script for highlighting strings in some output.
+
+Usage:
+
+    <some command> | hilite <expr1> <expr2> ...
+
+Each expr is a perl regex that is highlighted using a separate color.
+colors are picked automatically from a default sequence.
+
+To specify a color explicitly, use its name: `expr1:green expr2:yellow`
+The list of available colors is black, red, green, yellow, blue, magenta, cyan, white, darkblack, 
+darkred, darkgreen, darkyellow, darkblue, darkmagenta, darkcyan, darkwhite.
+
+Omitting `expr` matches the entire line, so `hilite :green` makes all lines green.
+
+#### Blotter Mode
+
+To highlight every other line, use `:green%2`. This is useful with values of 5
+when the output is wide, creating a blotter effect.
+
+If multiple patterns match a given input line, patterns specified later
+on the command line override previous patterns; Each pattern can match multiple
+times within the line.
+
+#### Inline Specification
+
+Highlighting rules can be provided as part of the input.
+If a line starts with the special word 'hilite.colors', e.g.
+
+    hilite.colors <expr1> <expr2> ...
+
+Then the previous rules are flushed,
+and new exprs are processed as if they were read from the command line.
+This allows commands to output hilite instructions that keep the text readable
+yet support highlighting where appropriate.
+
+#### Diff mode
+
+If `<expr>` is `-diff` or `-d`, hilite loads diff rules that support either line-
+or word-diffs. Example of colorizing a diff file:
+
+   cat patchfile | hilite -d | less -r
+
+Removed lines or words are colored red, added lines or words are green, and index
+lines are blue.
+
+Hilite is not intended to compete with the various syntax highlighters; it is an
+interactive tool intended to ease readibility or terminal-based output.
+
 
 ## FF - find files and in files
 

@@ -375,10 +375,90 @@ There is a more general pattern here:
 
 ### Representation & Manipulation
 
-We can represent any semantic concept as points in a multi-dimensional sparse space of tuples.
+We can represent any concept as a point in a multi-dimensional sparse space of tuples.
 Whenever we extend our representable universe with
 additional concepts, such as a physcial set of C++ files on disk, or a set of dev and production environments
 with some configuration, we include its relational description, or map, as a set of tables in our data set. 
 We then write tools that enforce a unidirectional or bidirectional correspondence between this new object and
 the records that describe it. In this way we make the object programmable and editable with the
 same fundamental set of tools we use on the tuples themselves.
+
+### Ordering Dependencies
+
+There are many examples of systems in the software world
+where the rules created by a system begin to apply to the system itself.
+Let's briefly consider some such systems.
+
+* The most famous one is the LISP interpreter as expressed in LISP itself,
+as expressed by the famous top-level expression `(loop (print (eval (read))))`. 
+* Another example is the [self-compiling compiler](#https://en.wikipedia.org/wiki/Bootstrapping_(compilers)).
+All compiled languages have one (and *no* interpreted language has one).
+* And a third example is the template meta-programming sublanguage of C++,
+using which you can manipulate the very types from which the underlying
+C++ program is written.
+
+Joining this list is OpenACR, which is of a different kind: 
+it not only generates most of its own source code and lets you modify this source code with
+plain command-line tools like sed and awk, and even SQL, without introducing
+any new language or an interpreter; but it serves as a sort of planter from which
+you can grow other applications that share these same properties. 
+
+Let's go back to our three examples and consider one cycle of application of them.
+
+* When a LISP interpreter written in LISP interprets more LISP, it is
+qualitatively different: it is slower. It can only
+run smaller jobs than its parent. In order to be the same, the homoiconic interpreter
+would have to be vastly different; At the very least it would have to contain a
+memory model of the underlying computer and its file system, so it could then target them.
+That's why no interpreted language today uses a self-hosting interpreter -- nobody
+wants to pay for the slowdown.
+* The output of a self-compiling compiler is an object file -- unreadable
+for all practical purposes. So even though the compiler can compile itself, and the resulting
+compiler can run even faster than the one before (the opposite of what happens in LISP),
+this is a one-time gain.
+* Finally, the C++ template sublanguage, our third example, is strictly less powerful
+than its parent language; you can't loop over the fields of a struct, 
+or check how many structs are defined, or if the name of a function contains an uppercase S.
+Neither the C++ language, nor its template sublanguage contain words that 
+describe themselves.
+
+So, after one cycle of application, you get to a new and better place, but that place is
+either inaccessible (e.g. object file), or built at some unmaintainable expense;
+in either case, the gains are temporary. Yet *it is* possible to lock them in.
+For that, we need tools whose input is readable and writable
+by both human and the machine, and where the system of names applies equally well to the 
+description of itself and the tools. 
+
+When the input format is both machine and human-readable and most of the source code
+is generated, any tool works with almost any other tool. 
+
+    'abt acr' builds acr.
+    'abt abt' builds itself.
+
+    'acr field:dmmeta.Field.field' describes its own primary key.
+    'acr ctype:dmmeta.Ctype' describes the struct type (C type).
+
+    'amc acr.%' generates from scratch (most of) the source code for acr
+    'amc amc.%' generates from scratch the source code of itself.
+
+    'src_func abt' shows the hand-written source code of abt.
+    'src_func src_func' shows the hand-written source code of itself.
+
+    'acr_in -data amc' shows all of the inputs that amc takes
+    'acr_in -data acr_in' shows all of the inputs that it takes.
+
+    'acr_compl -line amc' shows bash completions for amc
+    'acr_compl -line acr_compl' shows bash completions for acr_compl itself
+
+    'acr ns:abt -t' shows the definitions of all abt structures
+    'acr ns:acr -t' shows the definitions of its own structures
+
+    'mdbg acr' debugs acr
+    'mdbg "mdbg acr"' debugs the debugger debugging acr (in principle)
+    
+And of course, even though this is fun, 
+the point of these tools is not to compile themselves; 
+That economy is just a by-product of some naming conventions.
+The point is to allow the creation of new applications,
+using plain-text files to describe new domains while continuing
+to apply the same small set of tools -- bash, acr, perl, etc. on each cycle.
