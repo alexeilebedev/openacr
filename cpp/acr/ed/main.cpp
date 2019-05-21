@@ -229,7 +229,7 @@ static void ExecuteTransaction() {
     }
     StringToFile(final_script, "temp/acr_ed.ssim", algo_FileFlags_throw);
     DryrunQ dry_run(!acr_ed::_db.cmdline.write);
-    tempstr cmd = tempstr() << (acr_ed::_db.cmdline.write ? "sh" : "cat") << " < temp/acr_ed.ssim";
+    tempstr cmd = tempstr() << (acr_ed::_db.cmdline.write ? "bash" : "cat") << " < temp/acr_ed.ssim";
     // highlight proposed change
     if (SaneTerminalQ()) {
         algo_lib::Replscope R;
