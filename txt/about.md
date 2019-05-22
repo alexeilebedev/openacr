@@ -3,13 +3,11 @@
 The home for this project is at https://github.com/alexeilebedev/openacr
 
 This is OpenACR, an open-source version of acr and amc, powerful
-and extensible tools for handling configuration data and creating programs.
-(By configuration data, I mean perhaps a thousand tables and a
-few million records).
+and extensible tools for creating programs and writing code as data.
 
 It is the result of over 10 years of development and
-production use. The tools were initially created by Alexei Lebedev 
-with the goal of formalizing construction of low-latency & realtime programs,
+production use. The tools were initially written with the goal of formalizing
+construction of low-latency & realtime programs,
 but they ended up being suitable for all sorts of other things, and the code generation
 part took on a life of its own, eventually generating most of its own source code.
 
@@ -25,27 +23,6 @@ on small projects is assumed but not proven. I believe its ideal use case is rea
 when it is taken as a kernel, and an ecosystem of commands and corresponding
 configuration data files are grown in-place around it. Thus, it is meant to be used
 in-vivo.
-
-### Contributors
-
-Here are some of the names of git authors who contributed code to this project,
-in alphabetical order by first name. 
-
-* Alexey Polovinkin
-* Ara Aslyan
-* Ezequiel Fernandes
-* Hank Wang
-* Hayk Mkrtchyan
-* Jeffrey Wang
-* Jeremy Xue
-* John Brzezniak
-* Jonathan Joshua
-* Luke Huang
-* Shreejith Billenahallilokegowda
-* Vladimir Parizhsky
-
-There were also many others who helped immensely with
-discussions and influenced various design decisions.
 
 Enjoy,
 
