@@ -1169,8 +1169,6 @@ void                 unittest_acr_Xref1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_acr_Xref2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
-void                 unittest_acr_ed_CreateTarget();
-// User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_Abs();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_Aligned();

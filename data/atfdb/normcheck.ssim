@@ -17,3 +17,4 @@ atfdb.normcheck  normcheck:normalize_acr  comment:"Read ssim databases into memo
 atfdb.normcheck  normcheck:normalize_acr_my  comment:"Round trip ssim databases through MariaDB and back"
 atfdb.normcheck  normcheck:build_clang  comment:"Build everything under clang"
 atfdb.normcheck  normcheck:build_gcc9  comment:"Build everything under g++-9"
+atfdb.normcheck  normcheck:acr_ed  comment:"Takes a while - do it last"

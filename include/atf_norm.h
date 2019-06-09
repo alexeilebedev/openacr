@@ -58,6 +58,7 @@ namespace atf_norm { // update-hdr
     // void normcheck_iffy_src();
     // void normcheck_normalize_amc_vis();
     // void normcheck_gitfile();
+    // void normcheck_acr_ed();
     void Main();
 
     // -------------------------------------------------------------------

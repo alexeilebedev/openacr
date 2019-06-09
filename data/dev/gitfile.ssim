@@ -240,7 +240,6 @@ dev.gitfile  gitfile:cpp/atf/norm/readme.cpp
 dev.gitfile  gitfile:cpp/atf/norm/src.cpp
 dev.gitfile  gitfile:cpp/atf/norm/ssim.cpp
 dev.gitfile  gitfile:cpp/atf/unit/acr.cpp
-dev.gitfile  gitfile:cpp/atf/unit/acr_ed.cpp
 dev.gitfile  gitfile:cpp/atf/unit/algo_fmt.cpp
 dev.gitfile  gitfile:cpp/atf/unit/algo_lib.cpp
 dev.gitfile  gitfile:cpp/atf/unit/bash.cpp

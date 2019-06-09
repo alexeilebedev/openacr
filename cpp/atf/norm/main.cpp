@@ -143,6 +143,19 @@ static bool RunCheck(atf_norm::FNormcheck &normcheck) {
     return success;
 }
 
+
+// --------------------------------------------------------------------------------
+
+void atf_norm::normcheck_acr_ed() {
+    // create a new executable in a sandbox.
+    command::acr_ed_proc acr_ed;
+    acr_ed.cmd.create=true;
+    acr_ed.cmd.target="acr_test";
+    acr_ed.cmd.sandbox=true;
+    acr_ed.cmd.write=true;
+    acr_ed_ExecX(acr_ed);
+}
+
 // -----------------------------------------------------------------------------
 
 void atf_norm::Main() {

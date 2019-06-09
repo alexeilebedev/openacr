@@ -826,6 +826,8 @@ void                 normcheck_normalize_acr_my();
 void                 normcheck_build_clang();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_build_gcc9();
+// User-implemented function from gstatic:atf_norm.FDb.normcheck
+void                 normcheck_acr_ed();
 int                  main(int argc, char **argv);
 } // end namespace atf_norm
 namespace algo {

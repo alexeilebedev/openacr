@@ -131,12 +131,6 @@ namespace atf_unit { // update-hdr
     // void unittest_acr_Meta1();
 
     // -------------------------------------------------------------------
-    // cpp/atf/unit/acr_ed.cpp
-    //
-    //     (user-implemented function, prototype is in amc-generated header)
-    // void unittest_acr_ed_CreateTarget();
-
-    // -------------------------------------------------------------------
     // cpp/atf/unit/algo_fmt.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)

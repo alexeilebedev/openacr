@@ -380,6 +380,7 @@ static void atf_norm::normcheck_LoadStatic() {
         ,{ "atfdb.normcheck  normcheck:normalize_acr_my  comment:\"Round trip ssim databases through MariaDB and back\"", atf_norm::normcheck_normalize_acr_my }
         ,{ "atfdb.normcheck  normcheck:build_clang  comment:\"Build everything under clang\"", atf_norm::normcheck_build_clang }
         ,{ "atfdb.normcheck  normcheck:build_gcc9  comment:\"Build everything under g++-9\"", atf_norm::normcheck_build_gcc9 }
+        ,{ "atfdb.normcheck  normcheck:acr_ed  comment:\"Takes a while - do it last\"", atf_norm::normcheck_acr_ed }
         ,{NULL, NULL}
     };
     (void)data;

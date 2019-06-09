@@ -747,7 +747,6 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:acr.Write2  comment:\"\"", atf_unit::unittest_acr_Write2 }
         ,{ "atfdb.unittest  unittest:acr.Xref1  comment:\"\"", atf_unit::unittest_acr_Xref1 }
         ,{ "atfdb.unittest  unittest:acr.Xref2  comment:\"\"", atf_unit::unittest_acr_Xref2 }
-        ,{ "atfdb.unittest  unittest:acr_ed.CreateTarget  comment:\"\"", atf_unit::unittest_acr_ed_CreateTarget }
         ,{ "atfdb.unittest  unittest:algo_lib.Abs  comment:\"\"", atf_unit::unittest_algo_lib_Abs }
         ,{ "atfdb.unittest  unittest:algo_lib.Aligned  comment:\"\"", atf_unit::unittest_algo_lib_Aligned }
         ,{ "atfdb.unittest  unittest:algo_lib.Argtuple2  comment:\"\"", atf_unit::unittest_algo_lib_Argtuple2 }
