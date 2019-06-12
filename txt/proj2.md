@@ -1,53 +1,87 @@
-## History & Intro
+## Tutorial 2: Parts And Projects in SQL
 
-This chapter introduces the concepts of ctypes, fields, namespaces, ssimfiles,
-and with the assumption that you know some SQL.
+In this tutorial, I'll introduce the idea of storing data in ASCII files
+by analogy with SQL database tables, and then extend this idea to the so-called `schema`,
+or the description of data, using these same files.
 
-### A Motivating Example
+### Codd 1970 And Anomalies
 
 Let's begin with a classic modeling example involving projects and parts.
-This is the example from Codd 1970's
+This is the example from Codd 1970 paper
 [A Relational Model of Data For Large Shared Data Banks](https://www.seas.upenn.edu/~zives/03f/cis550/codd.pdf)
 
-Codd considers 5 different database schemas, first four of which have access path anomalies --
-i.e. they are unable to represent conditions such as an ownership of a part that's not associated
-with any project, or a project with no parts, etc.
+Codd considers a modeling situation involving some shop, which has 
+a few projects, some number of parts, and each part may be allocated to at most one project.
+He then considers 5 different schemas, all quite natural and frequently seen in the wild,
+even today, almost fifty years after the publication of the paper. The first four schemas
+have *access path anomalies* -- i.e. they are unable to represent conditions such as an ownership
+of a part that's not associated with any project, or a project with no parts. If you are a software
+developer and want to write programs without bugs, I would really recommend reading at least the
+first few pages of Codd's paper and meditating on them for a long, long time.
 
-Let's use a MariaDB interactive shell as an example. You can start one manually, or you can use a provided
-tool `acr_my` (assuming you successfully built everything), to create a local networkless instance.
+When presenting his four schemas with anomalies, Codd is
+basically describing what we, programmers, know as a data structure, i.e. a structuring of data into layers,
+where you access subsequent layers from previous layers. He is pointing out a fatal flaw that lies in the
+idea of *subordination* of one set to another: by introducing an access path dependence into your data model,
+you lose the ability to represent configurations that lie outside of your narrowed world view. 
+
+It is hard to overestimate the importance of this idea: 
+If even a simple projects-and-parts example has five possible schemas that can represent it, out of which
+four have inherent design bugs with provably bad consequences, then what can be said about
+a larger software project? Any software project can be viewed as a large database
+with a veritable rat's nest of references; and if it's a database, but not a carefully structured
+one (perhaps it came about by some natural accretion of code, as usually happens with software), then what 
+are the chances that it is free of anomalies?
+How many design bugs does a software project have that can be shown to exist from its code organization alone,
+before we even run it?
+
+### Creating MariaDB Tables
+
+In any case, let's use a MariaDB interactive shell and model this example.
+You can start one manually, or you can use a provided
+tool `acr_my` (assuming you successfully built everything), 
+to create a local networkless instance.
 
     $ acr_my -start -shell
 
-I will omit MariaDB prompts to make it easier to copy/paste commands into your shell.
 Let's create a new database.
 
-    create database test;
-    use test;
+    MariaDB [none]> create database test;
+    MariaDB [none]> use test;
 
-Let's create Codd's project schema. Instead of the name `commit`, which Codd used for the assignment
-of parts to projects, we'll use the name `partproj`.
+Let's create Codd's project schema. In his paper, Codd used the name `commit` to represent
+the part-to-project commitment relationship. This is an SQL reserved keyword, so we'll use
+the name `partproj` instead.
+The table `project` has a column called `project`.
+The table `part` has a column called `part`.
+And the table `partproj` has two columns, one named `part` and the second named `project`.
 
-    create table project (project varchar(50));
-    create table part (part varchar(50));
-    create table partproj (part varchar(50), project varchar(50));
+    MariaDB [test]> create table project (project varchar(50));
+    MariaDB [test]> create table part (part varchar(50));
+    MariaDB [test]> create table partproj (part varchar(50), project varchar(50));
 
-Now let's set up the primary keys:
+Now let's set up the primary keys. For all three tables, the first column is the primary key.
+Primary keys have their own names which are independent of table or column names. We name 
+the keys to be the same as the columns.
 
-    alter table project add primary key project (project);
-    alter table part add primary key part (part);
-    alter table partproj add primary key part (part);
+    MariaDB [test]> alter table project add primary key project (project);
+    MariaDB [test]> alter table part add primary key part (part);
+    MariaDB [test]> alter table partproj add primary key part (part);
 
-And the foreign key constraints:
+Now let's add the foreign key constraints. Only `partproj` table has these.
 
-    alter table partproj add foreign key  (part) references part(part);
-    alter table partproj add foreign key (project) references project(project);
+    MariaDB [test]> alter table partproj add foreign key (part) references part(part);
+    MariaDB [test]> alter table partproj add foreign key (project) references project(project);
 
-And populate some data.
+It's time to populate some data. As a reminder, the MariaDB syntax for the `insert` statement
+is as follows:
+`insert into <tablename> (column1,column2) values ("row1.col1","row1.col2"), ("row2.col1","row2.col2")`.
 
-    insert into part (part) values ("part1"), ("part2");
-    insert into project (project) values ("project1"), ("project2");
-    insert into partproj (part,project) values ("part1","project1"), ("part2","project1");
+    MariaDB [test]> insert into part (part) values ("part1"), ("part2");
+    MariaDB [test]> insert into project (project) values ("project1"), ("project2");
+    MariaDB [test]> insert into partproj (part,project) values ("part1","project1"), ("part2","project1");
 
+We're mostly done.
 Let's check if the projects are there:
 
     MariaDB [test]> select * from project;
@@ -81,39 +115,25 @@ Also good. And now the part-to-project assignment.
     +-------+----------+
     2 rows in set (0.00 sec)
 
-By now that we have a database instance and some data in it, we can do all the things one does with the database --
+Now that we have a database instance and some data in it, we can do all the things one does with the database --
 connect to it, submit various queries, and serve up the results. Not only is it extremely useful
-(which is why everybody does it), but the table-based approach is universal. The
+(which is why everybody does it), but the table-based approach is universal, which means that if you keep adding
+tables like shown above, you won't hit any fundamental limit and will be able to support a project of any size.
+
+If you're curious about the universality claim, the
 [Zermelo-Fraenkel Set Theory](https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory),
 first proposed in 1908, essentially says that all of constructible mathematical facts can be represented by N
 sets, either simple ones, or constructed from other sets (i.e. by taking a cross-product of some other 2 sets).
 
-At the same time, when presenting his 4 schemas with anomalies, Codd is
-basically describing what we, programmers, know as data structure. He is pointing out a fatal flaw that lies in the
-idea of subordination of one set to another: by introducing an access path dependence into your data model,
-you lose the ability to represent conditions that lie outside of your narrowed world view. It is hard to
-overestimate the importance of this idea. 
-
-If even a simple projects-and-parts example has 5 possible schemas that can represent it, out of which
-4 have anomalies (design bugs with provably bad consequences), then what can be said about a larger software project?
-Any software project is a veritable rat's nest of references, just a large database.
-How many design bugs does a software project have that can be shown to exist from code organization alone,
-before we even run it? 
-We are forced into the idea of converting our software to relational form, fixing anomalies at that level, and then
-re-creating source code from that representation. But can it be done?
-
-OpenACR says that yes, not only can it be done, but you get an insanely extensible, compact system with almost
-magical properties. Below I show how it gets started, from scarch.
- 
-### Creating Some Tuples
+### Same Thing In Text
 
 The first thing we want is a way to move database records down to the level of text lines, so we can work with 
-them outside of MariaDB or any other database. Perl and sed and grep are great tools, and so is git. 
+them outside of MariaDB or any other database. `Perl` and `sed` and `grep` are great tools, and so is `git`. 
 We want to keep records in plain text files, version them, and treat them like source code. 
 We'll need a tool that manipulates these text records and does various useful things with them.
 
 We introduce the idea of a super-simple tuple, or ssim tuple, that consists
-of a type tag, and key-value pairs on a single line.
+of a type tag followed by some key-value pairs on a single line.
 
     test.project  project:project1
 

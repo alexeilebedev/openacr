@@ -141,8 +141,15 @@ inline dev::OptType::OptType() {
 }
 
 inline dev::Readme::Readme() {
+    dev::Readme_Init(*this);
 }
 
+
+// --- dev.Readme..Init
+// Set all fields to initial values.
+inline void dev::Readme_Init(dev::Readme& parent) {
+    parent.inl = bool(false);
+}
 inline dev::Scriptfile::Scriptfile() {
 }
 

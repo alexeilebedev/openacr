@@ -79,31 +79,32 @@ enum dev_FieldIdEnum {                // dev.FieldId.value
     ,dev_FieldId_badness        = 28
     ,dev_FieldId_opt_type       = 29
     ,dev_FieldId_sep            = 30
-    ,dev_FieldId_args           = 31
-    ,dev_FieldId_syscmd         = 32
-    ,dev_FieldId_execkey        = 33
-    ,dev_FieldId_command        = 34
-    ,dev_FieldId_pid            = 35
-    ,dev_FieldId_status         = 36
-    ,dev_FieldId_nprereq        = 37
-    ,dev_FieldId_fail_prereq    = 38
-    ,dev_FieldId_completed      = 39
-    ,dev_FieldId_maxtime        = 40
-    ,dev_FieldId_syscmddep      = 41
-    ,dev_FieldId_child          = 42
-    ,dev_FieldId_parent         = 43
-    ,dev_FieldId_syslib         = 44
-    ,dev_FieldId_targdep        = 45
-    ,dev_FieldId_target         = 46
-    ,dev_FieldId_targsrc        = 47
-    ,dev_FieldId_src            = 48
-    ,dev_FieldId_targsyslib     = 49
-    ,dev_FieldId_tool_opt       = 50
-    ,dev_FieldId_opt            = 51
-    ,dev_FieldId_value          = 52
+    ,dev_FieldId_inl            = 31
+    ,dev_FieldId_args           = 32
+    ,dev_FieldId_syscmd         = 33
+    ,dev_FieldId_execkey        = 34
+    ,dev_FieldId_command        = 35
+    ,dev_FieldId_pid            = 36
+    ,dev_FieldId_status         = 37
+    ,dev_FieldId_nprereq        = 38
+    ,dev_FieldId_fail_prereq    = 39
+    ,dev_FieldId_completed      = 40
+    ,dev_FieldId_maxtime        = 41
+    ,dev_FieldId_syscmddep      = 42
+    ,dev_FieldId_child          = 43
+    ,dev_FieldId_parent         = 44
+    ,dev_FieldId_syslib         = 45
+    ,dev_FieldId_targdep        = 46
+    ,dev_FieldId_target         = 47
+    ,dev_FieldId_targsrc        = 48
+    ,dev_FieldId_src            = 49
+    ,dev_FieldId_targsyslib     = 50
+    ,dev_FieldId_tool_opt       = 51
+    ,dev_FieldId_opt            = 52
+    ,dev_FieldId_value          = 53
 };
 
-enum { dev_FieldIdEnum_N = 53 };
+enum { dev_FieldIdEnum_N = 54 };
 
 namespace dev { struct Arch; }
 namespace dev { struct Badline; }
@@ -385,6 +386,7 @@ void                 OptType_Print(dev::OptType & row, algo::cstring &str) __att
 // --- dev.Readme
 struct Readme { // dev.Readme
     algo::Smallstr200   gitfile;   //
+    bool                inl;       //   false
     algo::Comment       comment;   //
     Readme();
 };
@@ -393,6 +395,8 @@ bool                 Readme_ReadFieldMaybe(dev::Readme &parent, algo::strptr fie
 // Read fields of dev::Readme from an ascii string.
 // The format of the string is an ssim Tuple
 bool                 Readme_ReadStrptrMaybe(dev::Readme &parent, algo::strptr in_str);
+// Set all fields to initial values.
+void                 Readme_Init(dev::Readme& parent);
 // print string representation of dev::Readme to string LHS, no header -- cprint:dev.Readme.String
 void                 Readme_Print(dev::Readme & row, algo::cstring &str) __attribute__((nothrow));
 

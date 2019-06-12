@@ -75,6 +75,24 @@ static void AppendToc(strptr from, cstring &to) {
     }ind_end;
 }
 
+// -----------------------------------------------------------------------------
+
+static tempstr InlineFile(strptr filename, bool inl) {
+    tempstr contents(FileToString(filename));
+    if (!inl) {
+        tempstr abridged;
+        ind_beg(Line_curs,line,contents) {// take first line
+            abridged << line;
+            break;
+        }ind_end;
+        abridged << "[See "<<filename<<"]("<<filename<<")"<<eol;
+        contents = abridged;
+    }
+    return contents;
+}
+
+// -----------------------------------------------------------------------------
+
 // Generate README.md by scanning the readme table
 // for instructions
 void atf_norm::normcheck_readme() {
@@ -84,7 +102,7 @@ void atf_norm::normcheck_readme() {
     out << "## Table Of Contents\n";
     ind_beg(_db_readme_curs,readme,_db) {
         text << eol;
-        text << FileToString(readme.gitfile);
+        text << InlineFile(readme.gitfile, readme.inl);
     }ind_end;
     AppendToc(text,out);
     out << eol;

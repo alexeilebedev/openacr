@@ -44,9 +44,12 @@ namespace acr_ed { // update-hdr
     // acr_ed -create -ctype acmdb.Devos -subset1 acmdb.Device -subset2 acmdb.Os -separator /
     // Example 2:
     // acr_ed -create -ctype atf_tmsg.FOrder -pooltype Tpool -indexed
-    //
     void Main_CreateCtype();
+
+    // acr_ed -ctype:X -del -write
     void Main_DeleteCtype();
+
+    // acr_ed -ctype:X -rename:Y -write
     void Main_RenameCtype();
 
     // -------------------------------------------------------------------
@@ -64,6 +67,10 @@ namespace acr_ed { // update-hdr
     // Thash -> dmmeta.thash
     // Inlary -> dmmeta.inlary
     void InsertFieldExtras(strptr field, strptr arg, strptr reftype);
+
+    // Trivial function to make a field indexed by a hash.
+    // This is equivalent to creating an FDb.ind_<name>
+    void CreateHashIndex(dmmeta::Field &field);
 
     // -------------------------------------------------------------------
     // cpp/acr/ed/finput.cpp

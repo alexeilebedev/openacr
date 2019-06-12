@@ -374,6 +374,7 @@ const char* dev::value_ToCstr(const dev::FieldId& parent) {
         case dev_FieldId_badness           : ret = "badness";  break;
         case dev_FieldId_opt_type          : ret = "opt_type";  break;
         case dev_FieldId_sep               : ret = "sep";  break;
+        case dev_FieldId_inl               : ret = "inl";  break;
         case dev_FieldId_args              : ret = "args";  break;
         case dev_FieldId_syscmd            : ret = "syscmd";  break;
         case dev_FieldId_execkey           : ret = "execkey";  break;
@@ -434,6 +435,9 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR3('e','x','t'): {
                     value_SetEnum(parent,dev_FieldId_ext); ret = true; break;
+                }
+                case LE_STR3('i','n','l'): {
+                    value_SetEnum(parent,dev_FieldId_inl); ret = true; break;
                 }
                 case LE_STR3('o','p','t'): {
                     value_SetEnum(parent,dev_FieldId_opt); ret = true; break;
@@ -981,6 +985,7 @@ bool dev::Readme_ReadFieldMaybe(dev::Readme &parent, algo::strptr field, algo::s
     bool retval = true; // default is no error
     switch(field_id) {
         case dev_FieldId_gitfile: retval = algo::Smallstr200_ReadStrptrMaybe(parent.gitfile, strval); break;
+        case dev_FieldId_inl: retval = bool_ReadStrptrMaybe(parent.inl, strval); break;
         case dev_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
         default: break;
     }
@@ -1010,6 +1015,9 @@ void dev::Readme_Print(dev::Readme & row, algo::cstring &str) {
 
     algo::Smallstr200_Print(row.gitfile, temp);
     PrintAttrSpaceReset(str,"gitfile", temp);
+
+    bool_Print(row.inl, temp);
+    PrintAttrSpaceReset(str,"inl", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

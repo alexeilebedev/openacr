@@ -2219,6 +2219,7 @@ dmmeta.field  field:dev.OptType.opt_type  arg:algo.Smallstr50  reftype:Val  dflt
 dmmeta.field  field:dev.OptType.sep  arg:algo.RspaceStr4  reftype:Val  dflt:""  comment:""
 dmmeta.field  field:dev.OptType.comment  arg:algo.Comment  reftype:Val  dflt:""  comment:""
 dmmeta.field  field:dev.Readme.gitfile  arg:dev.Gitfile  reftype:Pkey  dflt:""  comment:""
+dmmeta.field  field:dev.Readme.inl  arg:bool  reftype:Val  dflt:""  comment:""
 dmmeta.field  field:dev.Readme.comment  arg:algo.Comment  reftype:Val  dflt:""  comment:""
 dmmeta.field  field:dev.Scriptfile.gitfile  arg:dev.Gitfile  reftype:Pkey  dflt:""  comment:""
 dmmeta.field  field:dev.Scriptfile.args  arg:algo.Smallstr100  reftype:Val  dflt:""  comment:""

@@ -180,7 +180,7 @@ static void atf_norm::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_norm.Input'  signature:'338efa8825bb49e4d331718e7d3713bfe505dddc'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_norm.Input'  signature:'3cb8129a191a643a1221a134ff6bd02fe1dd96a5'");
 }
 
 // --- atf_norm.FDb._db.StaticCheck
@@ -1710,6 +1710,7 @@ void atf_norm::FNs_Uninit(atf_norm::FNs& ns) {
 // Copy fields out of row
 void atf_norm::readme_CopyOut(atf_norm::FReadme &row, dev::Readme &out) {
     out.gitfile = row.gitfile;
+    out.inl = row.inl;
     out.comment = row.comment;
 }
 
@@ -1717,6 +1718,7 @@ void atf_norm::readme_CopyOut(atf_norm::FReadme &row, dev::Readme &out) {
 // Copy fields in to row
 void atf_norm::readme_CopyIn(atf_norm::FReadme &row, dev::Readme &in) {
     row.gitfile = in.gitfile;
+    row.inl = in.inl;
     row.comment = in.comment;
 }
 

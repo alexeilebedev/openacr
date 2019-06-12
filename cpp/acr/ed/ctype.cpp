@@ -28,6 +28,7 @@
 // -----------------------------------------------------------------------------
 
 // Determine name of pkey for the newly created ctype
+// By converting the ctype's name to lower_under form.
 static tempstr PkeyName(strptr ctype) {
     tempstr ret(acr_ed::ToLowerUnder(dmmeta::Ctype_name_Get(ctype)));
     // if command line read -create -ctype amc.FCtype,
@@ -38,29 +39,9 @@ static tempstr PkeyName(strptr ctype) {
     return ret;
 }
 
-// Determine name of pkey for the newly created ctype
-static tempstr PkeyName() {
-    return acr_ed::_db.cmdline.ssimfile != ""
-        ? tempstr(dmmeta::Ssimfile_name_Get(acr_ed::_db.cmdline.ssimfile))
-        : tempstr(PkeyName(acr_ed::_db.cmdline.ctype));
-}
-
 // -----------------------------------------------------------------------------
 
-// If ctype name was not specified on the command line, guess it.
-static void GuessCtypeName(strptr pkey) {
-    if (!ch_N(acr_ed::_db.cmdline.ctype)) {
-        tempstr ctype_name(acr_ed::_db.cmdline.ctype);
-        ctype_name << GetNs(acr_ed::_db.cmdline.ssimfile);
-        ctype_name << ".";
-        strptr_PrintCamel(pkey, ctype_name);
-        acr_ed::_db.cmdline.ctype = ctype_name;
-    }
-}
-
-// -----------------------------------------------------------------------------
-
-// Implement structured pkey creation: triggered with -subset X -subset2 Y -separate Z
+// Structured pkey creation: triggered with -subset X -subset2 Y -separator Z
 // The key consists of 2 substrs, each of which is a foreign key, separated
 // by a certain character.
 static void CreateCrossProduct(dmmeta::Ctype &ctype, dmmeta::Field &field_pkey) {
@@ -103,37 +84,6 @@ static void CreateCrossProduct(dmmeta::Ctype &ctype, dmmeta::Field &field_pkey) 
 
 // -----------------------------------------------------------------------------
 
-static void CreateInstance(dmmeta::Ctype &ctype, dmmeta::Field &pkey) {
-    if (ch_N(acr_ed::_db.cmdline.pooltype)) {
-        dmmeta::Field pool;
-        pool.field = tempstr() << ns_Get(ctype) <<".FDb." << name_Get(pkey);
-        pool.arg = ctype.ctype;
-        pool.reftype = acr_ed::_db.cmdline.pooltype;
-        acr_ed::_db.out_ssim << pool << eol;
-
-        if (acr_ed::_db.cmdline.indexed) {
-            // pick a hash based on the first field
-            dmmeta::Field hash;
-            hash.field   = tempstr() << ns_Get(ctype) << ".FDb.ind_" << name_Get(pkey);
-            hash.arg     = ctype.ctype;
-            hash.reftype = value_ToCstr(dmmeta::ReftypeId(dmmeta_ReftypeId_Thash));
-            acr_ed::_db.out_ssim << hash    << eol;
-
-            dmmeta::Thash thash;
-            thash.field   = hash.field;
-            thash.hashfld = pkey.field;
-            acr_ed::_db.out_ssim << thash   << eol;
-
-            dmmeta::Xref xref;
-            xref.field     = hash.field;
-            xref.inscond.value = "true";
-            acr_ed::_db.out_ssim << xref    << eol;
-        }
-    }
-}
-
-// -----------------------------------------------------------------------------
-
 // Create a new ctype
 // The new type can be relational, i.e. a subset of a cross product of 2 other types,
 // or an in-memory type.
@@ -141,12 +91,26 @@ static void CreateInstance(dmmeta::Ctype &ctype, dmmeta::Field &pkey) {
 // acr_ed -create -ctype acmdb.Devos -subset1 acmdb.Device -subset2 acmdb.Os -separator /
 // Example 2:
 // acr_ed -create -ctype atf_tmsg.FOrder -pooltype Tpool -indexed
-//
 void acr_ed::Main_CreateCtype() {
-    tempstr pkey_name = PkeyName();
+    acr_ed::FNs *ns = ind_ns_Find(dmmeta::Ctype_ns_Get(_db.cmdline.ctype));
 
-    // determine ctype name from ssimfile name
-    GuessCtypeName(pkey_name);
+    // Determine name of pkey for the newly created ctype
+    // - if ssimfile name is known, pick ssimfile name;
+    // - otherwise, construct the pkey name from ctype name
+    tempstr pkey_name =  acr_ed::_db.cmdline.ssimfile != ""
+        ? tempstr(dmmeta::Ssimfile_name_Get(acr_ed::_db.cmdline.ssimfile))
+        : tempstr(PkeyName(acr_ed::_db.cmdline.ctype));
+
+    // Guess ctype name from ssimfile name
+    // (If ctype name was not specified on the command line, but
+    // ssimfile name was specified)
+    if (!ch_N(acr_ed::_db.cmdline.ctype)) {
+        tempstr ctype_name(acr_ed::_db.cmdline.ctype);
+        ctype_name << GetNs(acr_ed::_db.cmdline.ssimfile);
+        ctype_name << ".";
+        strptr_PrintCamel(pkey_name, ctype_name);
+        acr_ed::_db.cmdline.ctype = ctype_name;
+    }
 
     dmmeta::Ctype ctype;
     ctype.ctype = acr_ed::_db.cmdline.ctype;
@@ -154,10 +118,12 @@ void acr_ed::Main_CreateCtype() {
     acr_ed::_db.out_ssim << ctype << eol;
 
     dmmeta::Field pkey;
-    bool relational = ch_N(acr_ed::_db.cmdline.subset) > 0;
+    bool relational = ns && ns->nstype == dmmeta_Nstype_nstype_ssimdb;
 
-    // default choice for subset
-    if (!ch_N(acr_ed::_db.cmdline.subset)) {
+    // when creating a relational type, pick default subset
+    // if -indexed was specified with -create -ctype, we also need a field,
+    // so pick a type for it (can always be edited later)
+    if (acr_ed::_db.cmdline.subset == "" && (relational || _db.cmdline.indexed)) {
         acr_ed::_db.cmdline.subset = "algo.Smallstr50";
     }
 
@@ -174,29 +140,42 @@ void acr_ed::Main_CreateCtype() {
         }
     }
 
-    // print pkey
-    pkey.field = tempstr() << ctype.ctype << "." << pkey_name;
-    if (acr_ed::_db.cmdline.reftype != "") {
-        pkey.reftype = acr_ed::_db.cmdline.reftype;
+    // print pkey -- if -subset was specified
+    if (ch_N(acr_ed::_db.cmdline.subset) > 0) {
+        pkey.field = tempstr() << ctype.ctype << "." << pkey_name;
+        if (acr_ed::_db.cmdline.reftype != "") {
+            pkey.reftype = acr_ed::_db.cmdline.reftype;
+        }
+        pkey.arg = ch_N(acr_ed::_db.cmdline.subset2) == 0
+            ? strptr(acr_ed::_db.cmdline.subset)
+            : strptr("algo.Smallstr50");
+        acr_ed::_db.out_ssim << pkey << eol;
+        acr_ed::_db.cmdline.field = pkey.field;//save it
+        InsertFieldExtras(pkey.field, pkey.arg, acr_ed::_db.cmdline.reftype);
     }
-    pkey.arg = ch_N(acr_ed::_db.cmdline.subset2) == 0
-        ? strptr(acr_ed::_db.cmdline.subset)
-        : strptr("algo.Smallstr50");
-    acr_ed::_db.out_ssim << pkey << eol;
-    acr_ed::_db.cmdline.field = pkey.field;//save it
-    InsertFieldExtras(pkey.field, pkey.arg, acr_ed::_db.cmdline.reftype);
 
-    // subset of a 2 other ctypes: create substrings using a separator
-    // TODO: this is broken -- it can't use i32 as a second subset
-    if (ch_N(acr_ed::_db.cmdline.subset) > 0 && ch_N(acr_ed::_db.cmdline.subset2) > 0) {
+    // subset of a 2 other ctypes: substrings using a separator
+    if (acr_ed::_db.cmdline.subset2 != "") {
         CreateCrossProduct(ctype,pkey);
     }
 
-    CreateInstance(ctype,pkey);
+    // Create a pool for the ctype
+    if (ch_N(acr_ed::_db.cmdline.pooltype)) {
+        dmmeta::Field pool;
+        pool.field = tempstr() << ns_Get(ctype) <<".FDb." << pkey_name;
+        pool.arg = ctype.ctype;
+        pool.reftype = acr_ed::_db.cmdline.pooltype;
+        acr_ed::_db.out_ssim << pool << eol;
+    }
+
+    if (acr_ed::_db.cmdline.indexed && name_Get(pkey) != "") {
+        CreateHashIndex(pkey);
+    }
 }
 
 // -----------------------------------------------------------------------------
 
+// acr_ed -ctype:X -del -write
 void acr_ed::Main_DeleteCtype() {
     prlog("acr_ed.delete_ctype"
           <<Keyval("ctype",acr_ed::_db.cmdline.ctype));
@@ -209,6 +188,7 @@ void acr_ed::Main_DeleteCtype() {
 
 // -----------------------------------------------------------------------------
 
+// acr_ed -ctype:X -rename:Y -write
 void acr_ed::Main_RenameCtype() {
     prlog("acr_ed.rename_ctype"
           <<Keyval("ctype",acr_ed::_db.cmdline.target)

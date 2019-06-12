@@ -528,7 +528,7 @@ dmmeta.ctypelen  ctype:atf_norm.FCfg  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atf_norm.FDb  len:2040  alignment:8  padbytes:35
 dmmeta.ctypelen  ctype:atf_norm.FNormcheck  len:216  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:atf_norm.FNs  len:232  alignment:8  padbytes:2
-dmmeta.ctypelen  ctype:atf_norm.FReadme  len:354  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:atf_norm.FReadme  len:355  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atf_norm.FScriptfile  len:464  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:atf_norm.FSsimfile  len:112  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:atf_unit.Bitset  len:48  alignment:16  padbytes:15
@@ -583,7 +583,7 @@ dmmeta.ctypelen  ctype:dev.Gitinfo  len:352  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Include  len:355  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Linelim  len:284  alignment:4  padbytes:2
 dmmeta.ctypelen  ctype:dev.OptType  len:208  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:dev.Readme  len:354  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:dev.Readme  len:355  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Scriptfile  len:456  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Srcfile  len:202  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Syscmd  len:48  alignment:8  padbytes:6

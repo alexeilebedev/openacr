@@ -2,15 +2,19 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
 
 ## Table Of Contents
    * [About](#about)
+   * [Why Use It](#why-use-it)
    * [Setup and Installation](#setup-and-installation)
       * [Pre-requisites: CentOS:](#pre-requisites-centos)
 ; [Pre-requisites: Ubuntu/Debian](#pre-requisites-ubuntu-debian); [Pre-requisites: MacOS](#pre-requisites-macos); [Path](#path); [Building](#building); [Cygwin Support](#cygwin-support); [Editor configuration files](#editor-configuration-files); [Environment Variables](#environment-variables); [Known Issues](#known-issues)
    * [Directory Structure](#directory-structure)
       * [Binaries](#binaries)
 ; [Intermediate Files](#intermediate-files)
-   * [History & Intro](#history---intro)
-      * [A Motivating Example](#a-motivating-example)
-; [Creating Some Tuples](#creating-some-tuples); [Describing The Tuple Schema](#describing-the-tuple-schema); [Describing The Columns](#describing-the-columns); [Adding Tools](#adding-tools); [Describing The Tools](#describing-the-tools); [Representation & Manipulation](#representation---manipulation); [Ordering Dependencies](#ordering-dependencies)
+   * [Tutorial 1: Parts And Projects Tutorial](#tutorial-1-parts-and-projects-tutorial)
+      * [Creating The Program](#creating-the-program)
+; [Program Source](#program-source); [Running The Program](#running-the-program); [Visualizing the In-Memory Database](#visualizing-the-in-memory-database); [Generated Code](#generated-code); [Summary](#summary); [Cleanup](#cleanup)
+   * [Tutorial 2: Parts And Projects in SQL](#tutorial-2-parts-and-projects-in-sql)
+      * [Codd 1970 And Anomalies](#codd-1970-and-anomalies)
+; [Creating MariaDB Tables](#creating-mariadb-tables); [Same Thing In Text](#same-thing-in-text); [Describing The Tuple Schema](#describing-the-tuple-schema); [Describing The Columns](#describing-the-columns); [Adding Tools](#adding-tools); [Describing The Tools](#describing-the-tools); [Representation & Manipulation](#representation---manipulation); [Ordering Dependencies](#ordering-dependencies)
    * [Ssim files](#ssim-files)
       * [Ssim Data Sets](#ssim-data-sets)
 ; [Structured Key Normal Form](#structured-key-normal-form); [Decomposing A Domain Into Sets](#decomposing-a-domain-into-sets); [History of Database Design](#history-of-database-design); [Cardinality Analysis](#cardinality-analysis); [Complex Domains All The Way](#complex-domains-all-the-way); [Remember 4-valued logic?](#remember-4-valued-logic-); [Structured Key Normal Form](#structured-key-normal-form)
@@ -136,12 +140,87 @@ software project, and later extracted back from it. Its usability
 on small projects is assumed but not proven. I believe its ideal use case is realized
 when it is taken as a kernel, and an ecosystem of commands and corresponding
 configuration data files are grown in-place around it. Thus, it is meant to be used
-in-vivo.
+a core of a project.
 
 Enjoy,
 
 Alexei Lebedev
 April 29, 2019
+
+
+## Why Use It
+
+Most of software design, or rather design of libraries, looks like this:
+library author decides what type of data to represent and manipulate in memory;
+Without exception, the library declares some number of *records*, each containing
+some fields, and a set of functions that manipulate sets of these records while
+maintaining some library-wide invariants.
+At a higher level, the library author is said to pick some *data structure*
+that offers efficient/economical creation,
+modification, updates, and querying. Update operations range from allocation and 
+handling of memory-related conditions and errors, to business logic (the most
+application-specific part).
+
+Designing abstract data structures is difficult because of the need to track  various 
+pointers and cross-references in the resulting data structures, and subsequently 
+rewriting these pointers without causing corruption. To be robust and to avoid leaks, 
+the library must also track resources that were allocated.
+This difficulty, and the corresponding debugging effort, which usually exceeds
+the initial coding time by 10- or 100x, means that once a library has been built, it
+is not updated frequently. 
+Sometimes, the choice of the data structure itself makes adding additional
+indexes impractical. For instance, if we think of our main data structure as being 
+a "hash table of X", we have committed to a key-value map as the main access structure,
+and all other operations are operations other than lookup by key are made less efficient.
+And if we have decided to use "a binary tree of X", then we'll use the binary tree lookup
+and not consider also hashing the items. This type of thinking characterizes "data structure" 
+design, and is taught in schools. 
+The very term "data structure" presupposes that we take our data and then structure
+it somehow. The metaphor is some sort of data origame, or moving data around for 
+better access. There is no concept of access as being separate from the data.
+This is assumed to be the price to pay if we want to write good algorithms.
+
+On the other hand, there is a different approach to handling data -- the database approach.
+If the data structure approach blends data with indexing, the database approach maximally separates
+them. The data which we want to handle is first split (factored) into various tables. 
+A table contains a number of records, and each record has some fields (also known as attributes).
+We then create *indexes on attributes*, so that we can quickly locate
+any record. Typically, any number of such indexes are allowed by a database management system.
+Then, we write a query in some special query language, and a mechanism known as the query
+planner decides which indexes to use to answer the query (so it's not just a multiply-nested
+for-loop over all tables) and hopefully completes the query. But not *that*
+quickly. It is an accepted fact that you pay for the generality of this approach with
+correspondingly low runtime performance. When you really want performance, you use classical
+methods to get it.
+
+And yet, we know that all programming can be viewed as manipulation of in-memory databases.
+Thus, the main motivation of *amc* is to give you the flexibility of crafting your own 
+in-memory database with any number of tables and indexes, without having to implement
+all the operations that implement creation, replacement, update, deletion and querying
+of these records.
+
+As a software architect and user of amc, you decide on the schema to use for your in-memory
+database, and amc follows the constraints in your schema to implement cascading deletes, 
+automatic group-bys, fast allocation of records using chained memory pools, and many other things.
+The number and the variety of structures generated by amc is more similar to that of
+a standard C++ library than an RDBMS.
+
+Amc generates roughly 20 lines of code for each line of input. The code it generates 
+is usually of the most error-prone and performance-critical kind, and you can account
+for the generated code at the assembly instruction level. The generated code is documented,
+readable and debuggable, and is provided in a standard target language: a conservative subset of C++ 
+(circa C++ 1997), eschewing all modern constructs. 
+This value proposition has immense consequences:
+it means that a large and expensive software project can become a medium-sized software project,
+and a medium-sized software project can become a small software project. Ultimately, 
+this is what makes amc worth learning
+
+When you co-evolve the schema together with your application, you can easily add and
+remove indexes on the fly, and fine-tune them later.
+At the same time, you can co-evolve amc itself with the project.
+That's because amc isn't built and installed on the host system as a stand-alone, 
+binary package. It is provided in source code form and versioned together with the
+project it supports, forming a single eco-system.
 
 
 ## Setup and Installation
@@ -265,56 +344,341 @@ path to the .cpp file with `/`s replaced by `.`s.
     ...
 
 
-## History & Intro
+## Tutorial 1: Parts And Projects Tutorial
 
-This chapter introduces the concepts of ctypes, fields, namespaces, ssimfiles,
-and with the assumption that you know some SQL.
+In the tutorial that follows, we'll implement a parts-and-project application, focusing
+on automatic group-by and cascade delete operations. In subsequent chapters, we'll examine
+how amc inputs are specified using ssim files, and how amc builds its own data
+structures using these same inputs.
 
-### A Motivating Example
+This tutorial is based on the example from Codd classical 1970 paper
+[A Relational Model of Data For Large Shared Data Banks](https://www.seas.upenn.edu/~zives/03f/cis550/codd.pdf).
+The second tutorial deals with this paper and its implications in more detail; Here,
+we just create an in-memory database using these record types, and demonstrate a few useful
+`amc` features on it.
+
+### Creating The Program
+
+Step 1: Create new target
+
+    $ acr_ed -create -target tut1 -write
+
+Step 2: Create in-memory tables
+
+    $ acr_ed -create -ctype tut1.Proj -pooltype Tpool -indexed -write
+    $ acr_ed -create -ctype tut1.Part -pooltype Tpool -indexed -write
+    $ acr_ed -create -ctype tut1.Partproj -pooltype Tpool  -write
+
+Step 3: Create reference fields.
+
+    $ acr_ed -create -field tut1.Partproj.p_part -arg tut1.Part -reftype Upptr -write
+    $ acr_ed -create -field tut1.Partproj.p_proj -arg tut1.Proj -reftype Upptr -write
+
+Step 4: Create x-reference (cross reference) fields.
+An x-reference field is maintained in response to some other insertion. 
+A cross reference is a synonym for an index.
+First, let's create two global lists so we can scan projects and parts:
+
+    $ acr_ed -create -field tut1.FDb.zd_part -write -comment "List of all parts"
+    $ acr_ed -create -field tut1.FDb.zd_proj -write -comment "List of all projects"
+
+Second, let's add group-bys:
+
+    $ acr_ed -create -field tut1.Part.c_partproj -reftype Ptr -cascdel -write -comment "List of projects by part"
+    $ acr_ed -create -field tut1.Proj.zd_partproj -cascdel -write -comment "List of parts by project"
+
+Step 5: Enter the following program text in cpp/tut1.cpp:
+
+### Program Source
+
+```
+cat > cpp/tut1.cpp << EOF
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+// Target: tut1 (exe)
+// Exceptions: yes
+// Source: cpp/tut1.cpp
+//
+
+#include "include/algo.h"
+#include "include/tut1.h"
+
+tut1::Partproj *tut1::CreatePartProj(tut1::Part &part, tut1::Proj &proj) {
+    Partproj *pp = &partproj_Alloc();
+    pp->p_part = &part;
+    pp->p_proj = &proj;
+    if (!partproj_XrefMaybe(*pp)) {
+        partproj_Delete(*pp);
+        pp=NULL;
+    }
+    return pp;
+}
+
+static void Show() {
+    prlog("list of projects and their parts");
+    ind_beg(tut1::_db_zd_proj_curs,proj,tut1::_db) {
+        prlog("  project "<<proj.proj);
+        ind_beg(tut1::proj_zd_partproj_curs,partproj,proj) {
+            prlog("    has part "<<partproj.p_part->part);
+        }ind_end
+    }ind_end;
+    prlog("list of parts and their projects");
+    ind_beg(tut1::_db_zd_part_curs,part,tut1::_db) {
+        prlog("  part "<<part.part);
+        if (tut1::Partproj *partproj = part.c_partproj) {
+            prlog("    has project "<<partproj->p_proj->proj);
+        }
+    }ind_end;
+    prlog("");
+}
+
+void tut1::Main() {
+    tut1::Proj &proj1 = tut1::ind_proj_GetOrCreate("proj1");
+    tut1::Proj &proj2 = tut1::ind_proj_GetOrCreate("proj2");
+
+    tut1::Part &part1 = tut1::ind_part_GetOrCreate("part1");
+    tut1::Part &part2 = tut1::ind_part_GetOrCreate("part2");
+    tut1::Part &part3 = tut1::ind_part_GetOrCreate("part3");
+
+    // assign parts to projects
+    tut1::CreatePartProj(part1,proj1);
+    tut1::CreatePartProj(part2,proj1);
+    tut1::CreatePartProj(part3,proj2);
+
+    // list parts
+    prlog("initial setup");
+    Show();
+
+    // delete a part -- this will remove it from any projects
+    // that reference the part
+    prlog("deleting part1");
+    part_Delete(part1);
+    Show();
+    // let's not reference part1 beyond this point
+
+    // delete a project
+    prlog("deleting proj2");
+    proj_Delete(proj2);
+    // now part3 will become unassigned
+    Show();
+
+    prlog("deleting proj1");
+    proj_Delete(proj1);
+    // at this point, part2 and part3 remain,
+    // but they aren't attached to any project
+    Show();
+}
+EOF
+```
+
+### Running The Program
+
+When we run tut1, we see the following output:
+
+```
+$ tut1
+initial setup
+list of projects and their parts
+  project proj1
+    has part part1
+    has part part2
+  project proj2
+    has part part3
+list of parts and their projects
+  part part1
+    has project proj1
+  part part2
+    has project proj1
+  part part3
+    has project proj2
+
+deleting part1
+list of projects and their parts
+  project proj1
+    has part part2
+  project proj2
+    has part part3
+list of parts and their projects
+  part part2
+    has project proj1
+  part part3
+    has project proj2
+
+deleting proj2
+list of projects and their parts
+  project proj1
+    has part part2
+list of parts and their projects
+  part part2
+    has project proj1
+  part part3
+
+deleting proj1
+list of projects and their parts
+list of parts and their projects
+  part part2
+  part part3
+```
+
+### Visualizing the In-Memory Database
+
+Let's use `amc_vis` to visualize the various access paths that we created. 
+In the diagram below, every ctype is indicated by a veritcal line:
+
+    / tut1.FDb
+    |
+    |
+    -
+
+Fields are shown as horizontal arrows, either left-pointing (references)
+Or right-pointing (cross-references, or index fields).
+
+    $ amc_vis tut1.%
+
+        / tut1.FDb
+        |
+        |Tpool proj------>/ tut1.Proj
+        |Thash ind_proj-->|
+        |Llist zd_proj--->|
+        |                 |
+        |Tpool part-------|------------------->/ tut1.Part
+        |Thash ind_part---|------------------->|
+        |Llist zd_part----|------------------->|
+        |                 |                    |
+        |Tpool partproj---|--------------------|---------------->/ tut1.Partproj
+        -                 |                    |                 |
+                          |                    |                 |
+                          |<-------------------|-----------------|Upptr p_proj
+                          |                    |<----------------|Upptr p_part
+                          |Llist zd_partproj---|---------------->|
+                          -                    |                 |
+                                               |                 |
+                                               |Ptr c_partproj-->|
+                                               -                 |
+                                                                 |
+                                                                 -
+
+### Generated Code
+
+The code generated by `amc` for this tutorial can be examined interactively,
+with `amc tut1.%`, or by studying files `cpp/gen/tut1_gen.cpp`, `include/gen/tut1_gen.h`
+and `include/gen/tut1_gen.inl.h` (this last file is where all of the inline
+functions are placed).
+
+### Summary
+
+This tutorial has demonstrated the following automatically generated features:
+
+* The shell as an IDE. Creating a new executable, all of its data structures, and all of its indexing
+  structures from a command-line.
+* Automatic insertion of a record into a global list.
+* Automation removal of a record from a global list
+* Automatic group-by, by following a reference
+* Automatic deletion of a record when a reference to it would become invalid.
+* Custom allocation and deallocation for a record
+
+### Cleanup
+
+Let's delete this tutorial.
+
+    $ acr_ed -del -target tut1 -write
+
+## Tutorial 2: Parts And Projects in SQL
+
+In this tutorial, I'll introduce the idea of storing data in ASCII files
+by analogy with SQL database tables, and then extend this idea to the so-called `schema`,
+or the description of data, using these same files.
+
+### Codd 1970 And Anomalies
 
 Let's begin with a classic modeling example involving projects and parts.
-This is the example from Codd 1970's
+This is the example from Codd 1970 paper
 [A Relational Model of Data For Large Shared Data Banks](https://www.seas.upenn.edu/~zives/03f/cis550/codd.pdf)
 
-Codd considers 5 different database schemas, first four of which have access path anomalies --
-i.e. they are unable to represent conditions such as an ownership of a part that's not associated
-with any project, or a project with no parts, etc.
+Codd considers a modeling situation involving some shop, which has 
+a few projects, some number of parts, and each part may be allocated to at most one project.
+He then considers 5 different schemas, all quite natural and frequently seen in the wild,
+even today, almost fifty years after the publication of the paper. The first four schemas
+have *access path anomalies* -- i.e. they are unable to represent conditions such as an ownership
+of a part that's not associated with any project, or a project with no parts. If you are a software
+developer and want to write programs without bugs, I would really recommend reading at least the
+first few pages of Codd's paper and meditating on them for a long, long time.
 
-Let's use a MariaDB interactive shell as an example. You can start one manually, or you can use a provided
-tool `acr_my` (assuming you successfully built everything), to create a local networkless instance.
+When presenting his four schemas with anomalies, Codd is
+basically describing what we, programmers, know as a data structure, i.e. a structuring of data into layers,
+where you access subsequent layers from previous layers. He is pointing out a fatal flaw that lies in the
+idea of *subordination* of one set to another: by introducing an access path dependence into your data model,
+you lose the ability to represent configurations that lie outside of your narrowed world view. 
+
+It is hard to overestimate the importance of this idea: 
+If even a simple projects-and-parts example has five possible schemas that can represent it, out of which
+four have inherent design bugs with provably bad consequences, then what can be said about
+a larger software project? Any software project can be viewed as a large database
+with a veritable rat's nest of references; and if it's a database, but not a carefully structured
+one (perhaps it came about by some natural accretion of code, as usually happens with software), then what 
+are the chances that it is free of anomalies?
+How many design bugs does a software project have that can be shown to exist from its code organization alone,
+before we even run it?
+
+### Creating MariaDB Tables
+
+In any case, let's use a MariaDB interactive shell and model this example.
+You can start one manually, or you can use a provided
+tool `acr_my` (assuming you successfully built everything), 
+to create a local networkless instance.
 
     $ acr_my -start -shell
 
-I will omit MariaDB prompts to make it easier to copy/paste commands into your shell.
 Let's create a new database.
 
-    create database test;
-    use test;
+    MariaDB [none]> create database test;
+    MariaDB [none]> use test;
 
-Let's create Codd's project schema. Instead of the name `commit`, which Codd used for the assignment
-of parts to projects, we'll use the name `partproj`.
+Let's create Codd's project schema. In his paper, Codd used the name `commit` to represent
+the part-to-project commitment relationship. This is an SQL reserved keyword, so we'll use
+the name `partproj` instead.
+The table `project` has a column called `project`.
+The table `part` has a column called `part`.
+And the table `partproj` has two columns, one named `part` and the second named `project`.
 
-    create table project (project varchar(50));
-    create table part (part varchar(50));
-    create table partproj (part varchar(50), project varchar(50));
+    MariaDB [test]> create table project (project varchar(50));
+    MariaDB [test]> create table part (part varchar(50));
+    MariaDB [test]> create table partproj (part varchar(50), project varchar(50));
 
-Now let's set up the primary keys:
+Now let's set up the primary keys. For all three tables, the first column is the primary key.
+Primary keys have their own names which are independent of table or column names. We name 
+the keys to be the same as the columns.
 
-    alter table project add primary key project (project);
-    alter table part add primary key part (part);
-    alter table partproj add primary key part (part);
+    MariaDB [test]> alter table project add primary key project (project);
+    MariaDB [test]> alter table part add primary key part (part);
+    MariaDB [test]> alter table partproj add primary key part (part);
 
-And the foreign key constraints:
+Now let's add the foreign key constraints. Only `partproj` table has these.
 
-    alter table partproj add foreign key  (part) references part(part);
-    alter table partproj add foreign key (project) references project(project);
+    MariaDB [test]> alter table partproj add foreign key (part) references part(part);
+    MariaDB [test]> alter table partproj add foreign key (project) references project(project);
 
-And populate some data.
+It's time to populate some data. As a reminder, the MariaDB syntax for the `insert` statement
+is as follows:
+`insert into <tablename> (column1,column2) values ("row1.col1","row1.col2"), ("row2.col1","row2.col2")`.
 
-    insert into part (part) values ("part1"), ("part2");
-    insert into project (project) values ("project1"), ("project2");
-    insert into partproj (part,project) values ("part1","project1"), ("part2","project1");
+    MariaDB [test]> insert into part (part) values ("part1"), ("part2");
+    MariaDB [test]> insert into project (project) values ("project1"), ("project2");
+    MariaDB [test]> insert into partproj (part,project) values ("part1","project1"), ("part2","project1");
 
+We're mostly done.
 Let's check if the projects are there:
 
     MariaDB [test]> select * from project;
@@ -348,39 +712,25 @@ Also good. And now the part-to-project assignment.
     +-------+----------+
     2 rows in set (0.00 sec)
 
-By now that we have a database instance and some data in it, we can do all the things one does with the database --
+Now that we have a database instance and some data in it, we can do all the things one does with the database --
 connect to it, submit various queries, and serve up the results. Not only is it extremely useful
-(which is why everybody does it), but the table-based approach is universal. The
+(which is why everybody does it), but the table-based approach is universal, which means that if you keep adding
+tables like shown above, you won't hit any fundamental limit and will be able to support a project of any size.
+
+If you're curious about the universality claim, the
 [Zermelo-Fraenkel Set Theory](https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory),
 first proposed in 1908, essentially says that all of constructible mathematical facts can be represented by N
 sets, either simple ones, or constructed from other sets (i.e. by taking a cross-product of some other 2 sets).
 
-At the same time, when presenting his 4 schemas with anomalies, Codd is
-basically describing what we, programmers, know as data structure. He is pointing out a fatal flaw that lies in the
-idea of subordination of one set to another: by introducing an access path dependence into your data model,
-you lose the ability to represent conditions that lie outside of your narrowed world view. It is hard to
-overestimate the importance of this idea. 
-
-If even a simple projects-and-parts example has 5 possible schemas that can represent it, out of which
-4 have anomalies (design bugs with provably bad consequences), then what can be said about a larger software project?
-Any software project is a veritable rat's nest of references, just a large database.
-How many design bugs does a software project have that can be shown to exist from code organization alone,
-before we even run it? 
-We are forced into the idea of converting our software to relational form, fixing anomalies at that level, and then
-re-creating source code from that representation. But can it be done?
-
-OpenACR says that yes, not only can it be done, but you get an insanely extensible, compact system with almost
-magical properties. Below I show how it gets started, from scarch.
- 
-### Creating Some Tuples
+### Same Thing In Text
 
 The first thing we want is a way to move database records down to the level of text lines, so we can work with 
-them outside of MariaDB or any other database. Perl and sed and grep are great tools, and so is git. 
+them outside of MariaDB or any other database. `Perl` and `sed` and `grep` are great tools, and so is `git`. 
 We want to keep records in plain text files, version them, and treat them like source code. 
 We'll need a tool that manipulates these text records and does various useful things with them.
 
 We introduce the idea of a super-simple tuple, or ssim tuple, that consists
-of a type tag, and key-value pairs on a single line.
+of a type tag followed by some key-value pairs on a single line.
 
     test.project  project:project1
 

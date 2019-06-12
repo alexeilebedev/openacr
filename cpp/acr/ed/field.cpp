@@ -192,9 +192,6 @@ void acr_ed::Main_DeleteField() {
 
 // -----------------------------------------------------------------------------
 
-
-// -----------------------------------------------------------------------------
-
 void acr_ed::Main_CreateField() {
     prlog("acr_ed.create_field"
           <<Keyval("field",acr_ed::_db.cmdline.field));
@@ -327,6 +324,9 @@ void acr_ed::Main_CreateField() {
     if (existing_field == NULL) {
         InsertFieldExtras(field.field, field.arg, acr_ed::_db.cmdline.reftype);
     }
+    if (_db.cmdline.indexed) {
+        CreateHashIndex(field);
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -398,4 +398,28 @@ void acr_ed::InsertFieldExtras(strptr field, strptr arg, strptr reftype) {
         hook.field   = field;
         acr_ed::_db.out_ssim << hook << eol;
     }
+}
+
+// -----------------------------------------------------------------------------
+
+// Trivial function to make a field indexed by a hash.
+// This is equivalent to creating an FDb.ind_<name>
+void acr_ed::CreateHashIndex(dmmeta::Field &field) {
+    tempstr ctype(ctype_Get(field));
+    tempstr ns(dmmeta::Ctype_ns_Get(ctype));
+    dmmeta::Field hash;
+    hash.field   = tempstr() << ns << ".FDb.ind_" << name_Get(field);
+    hash.arg     = ctype;
+    hash.reftype = value_ToCstr(dmmeta::ReftypeId(dmmeta_ReftypeId_Thash));
+    acr_ed::_db.out_ssim << hash << eol;
+
+    dmmeta::Thash thash;
+    thash.field   = hash.field;
+    thash.hashfld = field.field;
+    acr_ed::_db.out_ssim << thash   << eol;
+
+    dmmeta::Xref xref;
+    xref.field     = hash.field;
+    xref.inscond.value = "true";
+    acr_ed::_db.out_ssim << xref    << eol;
 }

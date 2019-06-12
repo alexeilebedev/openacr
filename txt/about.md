@@ -22,7 +22,7 @@ software project, and later extracted back from it. Its usability
 on small projects is assumed but not proven. I believe its ideal use case is realized
 when it is taken as a kernel, and an ecosystem of commands and corresponding
 configuration data files are grown in-place around it. Thus, it is meant to be used
-in-vivo.
+a core of a project.
 
 Enjoy,
 

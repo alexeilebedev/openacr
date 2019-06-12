@@ -27,6 +27,21 @@
 
 // -----------------------------------------------------------------------------
 
+// Pick target directory name based on target name:
+// samp_xyz -> cpp/samp/
+// tut1 -> cpp/
+static tempstr PickTargdir(strptr target) {
+    tempstr targdir;
+    targdir << "cpp";
+    strptr prefix = Pathcomp(target, "_RL");
+    if (prefix != "") {
+        targdir << "/" << prefix;
+    }
+    return targdir;
+}
+
+// -----------------------------------------------------------------------------
+
 void acr_ed::Main_CreateTarget() {
     prlog("acr_ed.create_target  target:"<<acr_ed::_db.cmdline.target);
     algo_lib::Replscope R;
@@ -39,7 +54,7 @@ void acr_ed::Main_CreateTarget() {
         acr_ed::_db.cmdline.nstype = dmmeta_Nstype_nstype_lib;
     }
     bool exe = acr_ed::_db.cmdline.nstype == dmmeta_Nstype_nstype_exe;
-    Set(R, "$targdir", strptr(ch_N(prefix) ? tempstr() << prefix << "/" : strptr()));
+    Set(R, "$targdir", PickTargdir(_db.cmdline.target));
 
     // namespace & imd
 
@@ -62,7 +77,7 @@ void acr_ed::Main_CreateTarget() {
     // tuples for abt to build this executable
     Ins(&R, acr_ed::_db.out_ssim, "dev.target  target:$target");
 
-    Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:cpp/$targdir$target.cpp  comment:''");
+    Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:$targdir/$target.cpp  comment:''");
     Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:cpp/gen/$target_gen.cpp  comment:''");
     Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:include/$target.h  comment:''");
     Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:include/gen/$target_gen.h  comment:''");
@@ -71,7 +86,7 @@ void acr_ed::Main_CreateTarget() {
         Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:bin/$target  comment:''");
     }
 
-    Ins(&R, acr_ed::_db.out_ssim, "dev.targsrc  targsrc:$target/cpp/$targdir$target.cpp  comment:''");
+    Ins(&R, acr_ed::_db.out_ssim, "dev.targsrc  targsrc:$target/$targdir/$target.cpp  comment:''");
     Ins(&R, acr_ed::_db.out_ssim, "dev.targsrc  targsrc:$target/cpp/gen/$target_gen.cpp  comment:''");
     Ins(&R, acr_ed::_db.out_ssim, "dev.targsrc  targsrc:$target/include/$target.h  comment:''");
     Ins(&R, acr_ed::_db.out_ssim, "dev.targsrc  targsrc:$target/include/gen/$target_gen.h  comment:''");
@@ -96,7 +111,7 @@ void acr_ed::Main_CreateTarget() {
     }
 
     // sample header
-    Ins(&R, acr_ed::_db.script, "mkdir -p cpp/$targdir");
+    Ins(&R, acr_ed::_db.script, "mkdir -p $targdir/");
     Ins(&R, acr_ed::_db.script, "cat > include/$target.h << EOF");
     Ins(&R, acr_ed::_db.script, "#include \"include/gen/$target_gen.h\"");
     Ins(&R, acr_ed::_db.script, "#include \"include/gen/$target_gen.inl.h\"");
@@ -107,7 +122,7 @@ void acr_ed::Main_CreateTarget() {
     Ins(&R, acr_ed::_db.script, "");
 
     // sample source file
-    Ins(&R, acr_ed::_db.script, "cat > cpp/$targdir$target.cpp << EOF");
+    Ins(&R, acr_ed::_db.script, "cat > $targdir/$target.cpp << EOF");
     Ins(&R, acr_ed::_db.script, "#include \"include/algo.h\"");
     InsertSrcfileInclude(R,false);
     if (exe) {
@@ -124,7 +139,7 @@ void acr_ed::Main_CreateTarget() {
         Ins(&R, acr_ed::_db.script,"ln -s ../build/release/$target bin/$target");
         Ins(&R, acr_ed::_db.script,"git add -f bin/$target");
     }
-    Ins(&R, acr_ed::_db.script,"git add cpp/$targdir$target.cpp");
+    Ins(&R, acr_ed::_db.script,"git add $targdir/$target.cpp");
     Ins(&R, acr_ed::_db.script,"git add cpp/gen/$target_gen.cpp");
     Ins(&R, acr_ed::_db.script,"git add include/$target.h");
     Ins(&R, acr_ed::_db.script,"git add include/gen/$target_gen.h");

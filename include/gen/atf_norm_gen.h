@@ -582,6 +582,7 @@ void                 FNs_Uninit(atf_norm::FNs& ns) __attribute__((nothrow));
 // create: atf_norm.FDb.readme (Lary)
 struct FReadme { // atf_norm.FReadme
     algo::Smallstr200   gitfile;   //
+    bool                inl;       //   false
     algo::Comment       comment;   //
 private:
     friend atf_norm::FReadme&   readme_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -596,6 +597,8 @@ void                 readme_CopyOut(atf_norm::FReadme &row, dev::Readme &out) __
 // Copy fields in to row
 void                 readme_CopyIn(atf_norm::FReadme &row, dev::Readme &in) __attribute__((nothrow));
 
+// Set all fields to initial values.
+void                 FReadme_Init(atf_norm::FReadme& readme);
 
 // --- atf_norm.FScriptfile
 // create: atf_norm.FDb.scriptfile (Lary)

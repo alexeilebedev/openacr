@@ -585,8 +585,15 @@ inline void atf_norm::FNs_Init(atf_norm::FNs& ns) {
     ns.ind_ns_next = (atf_norm::FNs*)-1; // (atf_norm.FDb.ind_ns) not-in-hash
 }
 inline atf_norm::FReadme::FReadme() {
+    atf_norm::FReadme_Init(*this);
 }
 
+
+// --- atf_norm.FReadme..Init
+// Set all fields to initial values.
+inline void atf_norm::FReadme_Init(atf_norm::FReadme& readme) {
+    readme.inl = bool(false);
+}
 inline atf_norm::FScriptfile::FScriptfile() {
     atf_norm::FScriptfile_Init(*this);
 }
