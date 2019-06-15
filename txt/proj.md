@@ -243,6 +243,14 @@ This tutorial has demonstrated the following automatically generated features:
 * Automatic deletion of a record when a reference to it would become invalid.
 * Custom allocation and deallocation for a record
 
+When creating this tutorial, we accidentally introduced unnecessary (and unused) hash indexes
+`tut1.FDb.ind_proj` and `tut1.FDb.ind_part`. We can easily delete them:
+
+    acr_ed -del -field tut1.FDb.ind_proj -write
+    acr_ed -del -field tut1.FDb.ind_part -write
+
+And rebuild the tutorial. These indexes can be easily introduced later if necessary.
+    
 ### Cleanup
 
 Let's delete this tutorial.
