@@ -82,7 +82,7 @@ static tempstr InlineFile(strptr filename, bool inl) {
     if (!inl) {
         tempstr abridged;
         ind_beg(Line_curs,line,contents) {// take first line
-            abridged << line;
+            abridged << line << eol;
             break;
         }ind_end;
         abridged << "[See "<<filename<<"]("<<filename<<")"<<eol;

@@ -1,4 +1,4 @@
-## Scheduling And Main Loop
+## Tutorial 3: Scheduling And Main Loop
 
 The are two main types of applications that `amc` provides support for.
 
@@ -9,7 +9,7 @@ The second is real-time, cooperative threaded applications ("engines"), written 
 In the first instance, one line of code corresponds to one logical step of the algorithm
 being implemented. In the second instance, each line corresponds to a few CPU instructions.
 This style is fully asynchronous and no blocking calls are typically allowed. In a full
-kernel bypass application, not even system calls are allowed. Both amc and `algo_lib` are
+kernel bypass application, not even system calls are allowed. Both amc and `algo_lib` 
  support this use case.
 
 It is also possible to mix these two paradigms, but the distinction is useful to keep

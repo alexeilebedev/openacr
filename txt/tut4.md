@@ -1,9 +1,15 @@
-## Command Lines
+## Tutorial 4: Command Lines
 
-All programs created with `amc` come with full command line support. A command line is just a struct,
-and options are described as fields. The command lines of all commands are described in the `command`
-namespace. All one needs to do is keep adding fields, and amc will take care of conversion between
-this description and
+All programs created with `amc` come with full command line support. 
+This means that there is a standard way in which every program parses
+its command line. 
+A command line is defined as a ctype (a struct), and options are described as fields. 
+The fields can be of any type, including a custom type (as usual, the notion of 
+'built-in' is not really relevant since pre-existing features are implemented in the 
+same way as new features might be). 
+The command lines of *all* programs are described in the `command` namespace. 
+Amc generates code to handle the following tasks:
+
 * code to read the command-line from argc & argv
 * code to generate a shell command line from a command struct
 * the usage screen (displayed when a program is invoked without correct parameters)
@@ -43,7 +49,7 @@ The command line itself, as created by acr_ed, is a simple ctype:
     dmmeta.ctype  ctype:command.sample  comment:""
       dmmeta.field  field:command.acr.in  arg:algo.cstring  reftype:Val  dflt:'"data"'  comment:"Input directory or filename, - for stdin"
                   
-Let's do something func. First, let's add a flag. Because what kind of command doesn't have a flag?
+Let's do something fun. First, let's add a flag. Because what kind of command doesn't have a flag?
 
     $ acr_ed -create -field command.sample.flag -arg bool -write -comment "An important flag"
     ...
@@ -54,6 +60,7 @@ Let's do something func. First, let's add a flag. Because what kind of command d
     Usage: sample [options]
         -in       string  Input directory or filename, - for stdin. default: "data"
         -flag             An important flag. default: false
+        ^^^^^ it was added!
         -verbose          Enable verbose mode
         -debug            Enable debug mode
         -version          Show version information
@@ -61,9 +68,9 @@ Let's do something func. First, let's add a flag. Because what kind of command d
         -help             Print this screen and exit
 
 As you can see, the help screen has been updated. Let's modify `sample`'s main to print the flag.
-It is an OpenACR convention to avoid displaying raw values. Output should be machine
-readable and never susceptible to an injection attack. So we'll print the value
-as a key-value pair (`Keyval` is a C++ template helper):
+It is an OpenACR convention to avoid displaying raw values, since raw values equals injection attacks.
+Output should be machine readable. So we'll print the value
+as a key-value pair using the `Keyval` construct.
 
     void sample::Main() {
         prlog(Keyval("flag",_db.cmdline.flag));
