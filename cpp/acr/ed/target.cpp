@@ -53,55 +53,65 @@ void acr_ed::Main_CreateTarget() {
     if (prefix == dmmeta_Nstype_nstype_lib) {
         acr_ed::_db.cmdline.nstype = dmmeta_Nstype_nstype_lib;
     }
-    bool exe = acr_ed::_db.cmdline.nstype == dmmeta_Nstype_nstype_exe;
+    bool is_exe = acr_ed::_db.cmdline.nstype == dmmeta_Nstype_nstype_exe;
+    bool is_lib = acr_ed::_db.cmdline.nstype == dmmeta_Nstype_nstype_lib;
+    bool is_ssimdb = acr_ed::_db.cmdline.nstype == dmmeta_Nstype_nstype_ssimdb;
     Set(R, "$targdir", PickTargdir(_db.cmdline.target));
 
-    // namespace & imd
-
+    // namespace
     acr_ed::_db.out_ssim<< dmmeta::Ns(acr_ed::_db.cmdline.target
                                       , acr_ed::_db.cmdline.nstype
                                       , algo::Comment(acr_ed::_db.cmdline.comment)) << eol;
-    acr_ed::_db.out_ssim<< dmmeta::Nsx(acr_ed::_db.cmdline.target
-                                       , true/*genthrow*/
-                                       , true/*correct_getorcreate*/
-                                       , "algo_lib.FDb.malloc"
-                                       , true/*sortxref*/
-                                       , /*pack*/false
-                                       , /*field offsets*/false
-                                       , algo::Comment()) << eol;
+
+    if (is_exe || is_lib) {
+        acr_ed::_db.out_ssim<< dmmeta::Nsx(acr_ed::_db.cmdline.target
+                                           , true/*genthrow*/
+                                           , true/*correct_getorcreate*/
+                                           , "algo_lib.FDb.malloc"
+                                           , true/*sortxref*/
+                                           , /*pack*/false
+                                           , /*field offsets*/false
+                                           , algo::Comment()) << eol;
+    }
     // don't emit 'main' for libraries
-    if (exe) {
+    if (is_exe) {
         acr_ed::_db.out_ssim<<dmmeta::Main(acr_ed::_db.cmdline.target, false/*ismodule*/)<<eol;
     }
 
     // tuples for abt to build this executable
-    Ins(&R, acr_ed::_db.out_ssim, "dev.target  target:$target");
+    if (is_exe || is_lib) {
+        Ins(&R, acr_ed::_db.out_ssim, "dev.target  target:$target");
+        Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:$targdir/$target.cpp  comment:''");
+        Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:include/$target.h  comment:''");
+    }
 
-    Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:$targdir/$target.cpp  comment:''");
     Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:cpp/gen/$target_gen.cpp  comment:''");
-    Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:include/$target.h  comment:''");
     Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:include/gen/$target_gen.h  comment:''");
     Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:include/gen/$target_gen.inl.h  comment:''");
-    if (exe) {
+    if (is_exe) {
         Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:bin/$target  comment:''");
     }
 
-    Ins(&R, acr_ed::_db.out_ssim, "dev.targsrc  targsrc:$target/$targdir/$target.cpp  comment:''");
-    Ins(&R, acr_ed::_db.out_ssim, "dev.targsrc  targsrc:$target/cpp/gen/$target_gen.cpp  comment:''");
-    Ins(&R, acr_ed::_db.out_ssim, "dev.targsrc  targsrc:$target/include/$target.h  comment:''");
-    Ins(&R, acr_ed::_db.out_ssim, "dev.targsrc  targsrc:$target/include/gen/$target_gen.h  comment:''");
-    Ins(&R, acr_ed::_db.out_ssim, "dev.targsrc  targsrc:$target/include/gen/$target_gen.inl.h  comment:''");
+    if (is_exe || is_lib) {
+        Ins(&R, acr_ed::_db.out_ssim, "dev.targsrc  targsrc:$target/$targdir/$target.cpp  comment:''");
+        Ins(&R, acr_ed::_db.out_ssim, "dev.targsrc  targsrc:$target/include/$target.h  comment:''");
+    }
 
-    Ins(&R, acr_ed::_db.out_ssim, "dev.targdep  targdep:$target.algo_lib  comment:''");
-    Ins(&R, acr_ed::_db.out_ssim, "dev.targdep  targdep:$target.lib_prot  comment:''");
-    Ins(&R, acr_ed::_db.out_ssim, "dev.targdep  targdep:$target.algo_pch  comment:''");
+    Set(R, "$gentarget", is_ssimdb ? "lib_prot" : "$target");
+    Ins(&R, acr_ed::_db.out_ssim, "dev.targsrc  targsrc:$gentarget/cpp/gen/$target_gen.cpp  comment:''");
+    Ins(&R, acr_ed::_db.out_ssim, "dev.targsrc  targsrc:$gentarget/include/gen/$target_gen.h  comment:''");
+    Ins(&R, acr_ed::_db.out_ssim, "dev.targsrc  targsrc:$gentarget/include/gen/$target_gen.inl.h  comment:''");
 
-    // add FDb and a command line
-    Ins(&R, acr_ed::_db.out_ssim, "dmmeta.ctype  ctype:$target.FDb  comment:''");
+    if (is_exe || is_lib) {
+        Ins(&R, acr_ed::_db.out_ssim, "dev.targdep  targdep:$target.algo_lib  comment:''");
+        Ins(&R, acr_ed::_db.out_ssim, "dev.targdep  targdep:$target.lib_prot  comment:''");
+        Ins(&R, acr_ed::_db.out_ssim, "dev.targdep  targdep:$target.algo_pch  comment:''");
+        // add FDb and a command line
+        Ins(&R, acr_ed::_db.out_ssim, "dmmeta.ctype  ctype:$target.FDb  comment:''");
+        Ins(&R, acr_ed::_db.out_ssim, "dmmeta.field  field:$target.FDb._db  arg:$target.FDb  reftype:Global  dflt:''  comment:''  ");
+    }
 
-    Ins(&R, acr_ed::_db.out_ssim, "dmmeta.field  field:$target.FDb._db  arg:$target.FDb  reftype:Global  dflt:''  comment:''  ");
-
-    if (exe) {
+    if (is_exe) {
         Ins(&R, acr_ed::_db.out_ssim, "dmmeta.ctype  ctype:command.$target  comment:''");
         Ins(&R, acr_ed::_db.out_ssim, "dmmeta.cfmt  cfmt:command.$target.Argv  printfmt:Tuple  print:Y  read:Y  sep:''  genop:N  comment:''");
         Ins(&R, acr_ed::_db.out_ssim, "dmmeta.field  field:$target.FDb.cmdline  arg:command.$target  reftype:Val  dflt:''  comment:''  ");
@@ -109,46 +119,58 @@ void acr_ed::Main_CreateTarget() {
         Ins(&R, acr_ed::_db.out_ssim, "dmmeta.field  field:command.$target.in  arg:algo.cstring  reftype:Val  dflt:'\"data\"'  comment:'Input directory or filename, - for stdin'");
         Ins(&R, acr_ed::_db.out_ssim, "dmmeta.floadtuples  field:command.$target.in  comment:''");
     }
-
-    // sample header
-    Ins(&R, acr_ed::_db.script, "mkdir -p $targdir/");
-    Ins(&R, acr_ed::_db.script, "cat > include/$target.h << EOF");
-    Ins(&R, acr_ed::_db.script, "#include \"include/gen/$target_gen.h\"");
-    Ins(&R, acr_ed::_db.script, "#include \"include/gen/$target_gen.inl.h\"");
-    Ins(&R, acr_ed::_db.script, "");
-    Ins(&R, acr_ed::_db.script, "namespace $target { // update-hdr");
-    Ins(&R, acr_ed::_db.script, "}");
-    Ins(&R, acr_ed::_db.script, "EOF");
-    Ins(&R, acr_ed::_db.script, "");
-
-    // sample source file
-    Ins(&R, acr_ed::_db.script, "cat > $targdir/$target.cpp << EOF");
-    Ins(&R, acr_ed::_db.script, "#include \"include/algo.h\"");
-    InsertSrcfileInclude(R,false);
-    if (exe) {
-        Ins(&R, acr_ed::_db.script, "void $target::Main() {");
-        Ins(&R, acr_ed::_db.script, "    prlog(\"Hello, World!\");");
-        Ins(&R, acr_ed::_db.script, "}");
+    if (is_ssimdb) {
+        Ins(&R, acr_ed::_db.out_ssim, "dmmeta.nsdb  ns:$target  comment:''");
     }
-    Ins(&R, acr_ed::_db.script, "EOF");
-    Ins(&R, acr_ed::_db.script, "");
+    if (is_exe || is_lib) {
+        // sample header
+        Ins(&R, acr_ed::_db.script, "mkdir -p $targdir/");
+        Ins(&R, acr_ed::_db.script, "cat > include/$target.h << EOF");
+        Ins(&R, acr_ed::_db.script, "#include \"include/gen/$target_gen.h\"");
+        Ins(&R, acr_ed::_db.script, "#include \"include/gen/$target_gen.inl.h\"");
+        Ins(&R, acr_ed::_db.script, "");
+        Ins(&R, acr_ed::_db.script, "namespace $target { // update-hdr");
+        Ins(&R, acr_ed::_db.script, "}");
+        Ins(&R, acr_ed::_db.script, "EOF");
+        Ins(&R, acr_ed::_db.script, "");
+    }
+    if (is_ssimdb) {
+        Ins(&R, acr_ed::_db.script, "mkdir -p data/$target/");
+    }
+    // sample source file
+    if (is_exe || is_lib) {
+        Ins(&R, acr_ed::_db.script, "cat > $targdir/$target.cpp << EOF");
+        Ins(&R, acr_ed::_db.script, "#include \"include/algo.h\"");
+        InsertSrcfileInclude(R,false);
+        if (is_exe) {
+            Ins(&R, acr_ed::_db.script, "void $target::Main() {");
+            Ins(&R, acr_ed::_db.script, "    prlog(\"Hello, World!\");");
+            Ins(&R, acr_ed::_db.script, "}");
+        }
+        Ins(&R, acr_ed::_db.script, "EOF");
+        Ins(&R, acr_ed::_db.script, "");
+    }
 
     Ins(&R, acr_ed::_db.script,"bin/amc  # make sure */gen/* files are created");
     acr_ed::_db.need_amc=false; // already did it
-    if (exe) {
+    if (is_exe) {
         Ins(&R, acr_ed::_db.script,"ln -s ../build/release/$target bin/$target");
         Ins(&R, acr_ed::_db.script,"git add -f bin/$target");
     }
-    Ins(&R, acr_ed::_db.script,"git add $targdir/$target.cpp");
+    if (is_exe || is_lib) {
+        Ins(&R, acr_ed::_db.script,"git add $targdir/$target.cpp");
+        Ins(&R, acr_ed::_db.script,"git add include/$target.h");
+    }
     Ins(&R, acr_ed::_db.script,"git add cpp/gen/$target_gen.cpp");
-    Ins(&R, acr_ed::_db.script,"git add include/$target.h");
     Ins(&R, acr_ed::_db.script,"git add include/gen/$target_gen.h");
     Ins(&R, acr_ed::_db.script,"git add include/gen/$target_gen.inl.h");
 
     Ins(&R, acr_ed::_db.script,"bin/update-gitfile");
     Ins(&R, acr_ed::_db.script,"bin/src_hdr -targsrc:$target/% -write");
-    Ins(&R, acr_ed::_db.script,"bin/update-hdr");
-    Ins(&R, acr_ed::_db.script,"bin/abt -install $target");
+    if (is_exe || is_lib) {
+        Ins(&R, acr_ed::_db.script,"bin/update-hdr");
+        Ins(&R, acr_ed::_db.script,"bin/abt -install $target");
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -172,15 +194,15 @@ void acr_ed::Main_RenameTarget() {
     Set(R, "$oldfname", DirectoryQ(Subst(R,"cpp/$olddir")) ? "cpp/$olddir/$oldtarg" : "cpp/$oldtarg");
     Set(R, "$newfname", DirectoryQ(Subst(R,"cpp/$newdir")) ? "cpp/$newdir/$newtarg" : "cpp/$newtarg");
 
-    Ins(&R, acr_ed::_db.script, "bin/acr ctype:command.$oldtarg -rename command.$newtarg  -write");
-    Ins(&R, acr_ed::_db.script, "bin/acr ctype:report.$oldtarg -rename report.$newtarg  -write");
-    Ins(&R, acr_ed::_db.script, "bin/acr target:$oldtarg -rename $newtarg -write");
-    Ins(&R, acr_ed::_db.script, "bin/acr ns:$oldtarg -rename $newtarg -write");
+    Ins(&R, acr_ed::_db.script, "bin/acr ctype:command.$oldtarg -rename command.$newtarg  -write -report:N");
+    Ins(&R, acr_ed::_db.script, "bin/acr ctype:report.$oldtarg -rename report.$newtarg  -write -report:N");
+    Ins(&R, acr_ed::_db.script, "bin/acr target:$oldtarg -rename $newtarg -write -report:N");
+    Ins(&R, acr_ed::_db.script, "bin/acr ns:$oldtarg -rename $newtarg -write -report:N");
 
     Ins(&R, acr_ed::_db.script, "# rename targsrc records");
     // note -- the original name now has $newtarg because acr has recursively updated target name
-    Ins(&R, acr_ed::_db.script, "bin/acr targsrc:$newtarg/$oldfname.cpp -rename $newtarg/$newfname.cpp -write");
-    Ins(&R, acr_ed::_db.script, "bin/acr targsrc:$newtarg/cpp/gen/$oldtarg_gen.cpp -rename $newtarg/cpp/gen/$newtarg_gen.cpp -write");
+    Ins(&R, acr_ed::_db.script, "bin/acr targsrc:$newtarg/$oldfname.cpp -rename $newtarg/$newfname.cpp -write -report:N");
+    Ins(&R, acr_ed::_db.script, "bin/acr targsrc:$newtarg/cpp/gen/$oldtarg_gen.cpp -rename $newtarg/cpp/gen/$newtarg_gen.cpp -write -report:N");
 
     Ins(&R, acr_ed::_db.script, "# rename source files");
     Ins(&R, acr_ed::_db.script, "git mv -f include/gen/$oldtarg_gen.h include/gen/$newtarg_gen.h");

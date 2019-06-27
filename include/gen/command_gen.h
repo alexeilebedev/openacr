@@ -105,84 +105,85 @@ enum command_FieldIdEnum {                    // command.FieldId.value
     ,command_FieldId_showcpp           = 88
     ,command_FieldId_comment           = 89
     ,command_FieldId_sandbox           = 90
-    ,command_FieldId_ns                = 91
-    ,command_FieldId_data              = 92
-    ,command_FieldId_sigcheck          = 93
-    ,command_FieldId_data_dir          = 94
-    ,command_FieldId_related           = 95
-    ,command_FieldId_notssimfile       = 96
-    ,command_FieldId_checkable         = 97
-    ,command_FieldId_nsdb              = 98
-    ,command_FieldId_fkey              = 99
-    ,command_FieldId_start             = 100
-    ,command_FieldId_stop              = 101
-    ,command_FieldId_abort             = 102
-    ,command_FieldId_shell             = 103
-    ,command_FieldId_serv              = 104
-    ,command_FieldId_in_dir            = 105
-    ,command_FieldId_proto             = 106
-    ,command_FieldId_trace             = 107
-    ,command_FieldId_fconst            = 108
-    ,command_FieldId_gconst            = 109
-    ,command_FieldId_key               = 110
-    ,command_FieldId_include           = 111
-    ,command_FieldId_dot               = 112
-    ,command_FieldId_xns               = 113
-    ,command_FieldId_noinput           = 114
-    ,command_FieldId_render            = 115
-    ,command_FieldId_amctest           = 116
-    ,command_FieldId_nofork            = 117
-    ,command_FieldId_debug             = 118
-    ,command_FieldId_perf_secs         = 119
-    ,command_FieldId_pertest_timeout   = 120
-    ,command_FieldId_q                 = 121
-    ,command_FieldId_complooo          = 122
-    ,command_FieldId_args              = 123
-    ,command_FieldId_manywin           = 124
-    ,command_FieldId_root              = 125
-    ,command_FieldId_attach            = 126
-    ,command_FieldId_catchthrow        = 127
-    ,command_FieldId_tui               = 128
-    ,command_FieldId_bcmd              = 129
-    ,command_FieldId_emacs             = 130
-    ,command_FieldId_follow_child      = 131
-    ,command_FieldId_py                = 132
-    ,command_FieldId_writessimfile     = 133
-    ,command_FieldId_url               = 134
-    ,command_FieldId_tables            = 135
-    ,command_FieldId_nologo            = 136
-    ,command_FieldId_baddbok           = 137
-    ,command_FieldId_targsrc           = 138
-    ,command_FieldId_name              = 139
-    ,command_FieldId_body              = 140
-    ,command_FieldId_func              = 141
-    ,command_FieldId_nextfile          = 142
-    ,command_FieldId_other             = 143
-    ,command_FieldId_updateproto       = 144
-    ,command_FieldId_listfunc          = 145
-    ,command_FieldId_iffy              = 146
-    ,command_FieldId_gen               = 147
-    ,command_FieldId_showloc           = 148
-    ,command_FieldId_showstatic        = 149
-    ,command_FieldId_showsortkey       = 150
-    ,command_FieldId_sortname          = 151
-    ,command_FieldId_update_authors    = 152
-    ,command_FieldId_indent            = 153
-    ,command_FieldId_linelim           = 154
-    ,command_FieldId_strayfile         = 155
-    ,command_FieldId_capture           = 156
-    ,command_FieldId_expand            = 157
-    ,command_FieldId_ignoreQuote       = 158
-    ,command_FieldId_maxpacket         = 159
-    ,command_FieldId_db                = 160
-    ,command_FieldId_createdb          = 161
-    ,command_FieldId_str               = 162
-    ,command_FieldId_tocamelcase       = 163
-    ,command_FieldId_tolowerunder      = 164
-    ,command_FieldId_value             = 165
+    ,command_FieldId_sandbox_build     = 91
+    ,command_FieldId_ns                = 92
+    ,command_FieldId_data              = 93
+    ,command_FieldId_sigcheck          = 94
+    ,command_FieldId_data_dir          = 95
+    ,command_FieldId_related           = 96
+    ,command_FieldId_notssimfile       = 97
+    ,command_FieldId_checkable         = 98
+    ,command_FieldId_nsdb              = 99
+    ,command_FieldId_fkey              = 100
+    ,command_FieldId_start             = 101
+    ,command_FieldId_stop              = 102
+    ,command_FieldId_abort             = 103
+    ,command_FieldId_shell             = 104
+    ,command_FieldId_serv              = 105
+    ,command_FieldId_in_dir            = 106
+    ,command_FieldId_proto             = 107
+    ,command_FieldId_trace             = 108
+    ,command_FieldId_fconst            = 109
+    ,command_FieldId_gconst            = 110
+    ,command_FieldId_key               = 111
+    ,command_FieldId_include           = 112
+    ,command_FieldId_dot               = 113
+    ,command_FieldId_xns               = 114
+    ,command_FieldId_noinput           = 115
+    ,command_FieldId_render            = 116
+    ,command_FieldId_amctest           = 117
+    ,command_FieldId_nofork            = 118
+    ,command_FieldId_debug             = 119
+    ,command_FieldId_perf_secs         = 120
+    ,command_FieldId_pertest_timeout   = 121
+    ,command_FieldId_q                 = 122
+    ,command_FieldId_complooo          = 123
+    ,command_FieldId_args              = 124
+    ,command_FieldId_manywin           = 125
+    ,command_FieldId_root              = 126
+    ,command_FieldId_attach            = 127
+    ,command_FieldId_catchthrow        = 128
+    ,command_FieldId_tui               = 129
+    ,command_FieldId_bcmd              = 130
+    ,command_FieldId_emacs             = 131
+    ,command_FieldId_follow_child      = 132
+    ,command_FieldId_py                = 133
+    ,command_FieldId_writessimfile     = 134
+    ,command_FieldId_url               = 135
+    ,command_FieldId_tables            = 136
+    ,command_FieldId_nologo            = 137
+    ,command_FieldId_baddbok           = 138
+    ,command_FieldId_targsrc           = 139
+    ,command_FieldId_name              = 140
+    ,command_FieldId_body              = 141
+    ,command_FieldId_func              = 142
+    ,command_FieldId_nextfile          = 143
+    ,command_FieldId_other             = 144
+    ,command_FieldId_updateproto       = 145
+    ,command_FieldId_listfunc          = 146
+    ,command_FieldId_iffy              = 147
+    ,command_FieldId_gen               = 148
+    ,command_FieldId_showloc           = 149
+    ,command_FieldId_showstatic        = 150
+    ,command_FieldId_showsortkey       = 151
+    ,command_FieldId_sortname          = 152
+    ,command_FieldId_update_authors    = 153
+    ,command_FieldId_indent            = 154
+    ,command_FieldId_linelim           = 155
+    ,command_FieldId_strayfile         = 156
+    ,command_FieldId_capture           = 157
+    ,command_FieldId_expand            = 158
+    ,command_FieldId_ignoreQuote       = 159
+    ,command_FieldId_maxpacket         = 160
+    ,command_FieldId_db                = 161
+    ,command_FieldId_createdb          = 162
+    ,command_FieldId_str               = 163
+    ,command_FieldId_tocamelcase       = 164
+    ,command_FieldId_tolowerunder      = 165
+    ,command_FieldId_value             = 166
 };
 
-enum { command_FieldIdEnum_N = 166 };
+enum { command_FieldIdEnum_N = 167 };
 
 namespace command { struct FieldId; }
 namespace command { struct Protocol; }
@@ -495,47 +496,48 @@ void                 acr_compl_proc_Uninit(command::acr_compl_proc& parent) __at
 // --- command.acr_ed
 // access: command.acr_ed_proc.acr_ed (Exec)
 struct acr_ed { // command.acr_ed
-    algo::cstring       in;          //   "data"  Input directory or filename, - for stdin
-    bool                create;      //   false  Create new entity (-finput, -target, -ctype, -field)
-    bool                del;         //   false  Delete mode
-    algo::cstring       rename;      //   ""  Rename to something else
-    bool                replace;     //   false  Use acr -replace (default is -insert, fails on duplicate)
-    bool                finput;      //   false  Create in-memory table based on ssimfile
-    algo::cstring       srcfile;     //   ""      Create source file
-    bool                gstatic;     //   false  Like -finput, but data is loaded at compile time
-    bool                indexed;     //   false  (with -finput) Add hash index
-    algo::Smallstr16    target;      //   ""  Create new target
-    algo::Smallstr50    nstype;      //   "exe"  (with -create -target): exe,lib,etc.
-    algo::Smallstr50    ctype;       //   ""  Create new ctype
-    algo::Smallstr50    pooltype;    //   ""   Pool reftype (Lary,Lpool etc) for finput/ctype
-    algo::Smallstr50    ssimfile;    //   ""    Ssimfile for new ctype
-    algo::Smallstr50    subset;      //   ""    Primary key is a subset of this ctype
-    algo::Smallstr50    subset2;     //   ""    Primary key is also a subset of this ctype
-    algo::cstring       separator;   //   "."      Key separator
-    algo::Smallstr100   field;       //   ""  Create field
-    algo::Smallstr50    arg;         //   ""    Field type (e.g. u32, etc)
-    algo::cstring       dflt;        //   ""    Field default value
-    bool                anon;        //   false    Anonymous field (use with command lines)
-    bool                bigend;      //   false    Big-endian field
-    bool                cascdel;     //   false    Field is cascdel
-    algo::Smallstr100   before;      //   ""    Place field before this one
-    algo::Smallstr100   substr;      //   ""    New field is a substring
-    algo::Smallstr100   srcfield;    //   ""    Source field for bitfld/substr
-    algo::Smallstr100   fstep;       //   ""    Add fstep record
-    algo::cstring       inscond;     //   "true"    Insert condition (for xref)
-    algo::Smallstr50    reftype;     //   ""    Reftype (e.g. Val, Thash, Llist, etc)
-    algo::Smallstr100   hashfld;     //   ""      (-reftype:Thash) Hash field
-    algo::Smallstr100   sortfld;     //   ""      (-reftype:Bheap) Sort field
-    algo::cstring       unittest;    //   ""  Create unit test, <ns>.<functionname>
-    algo::cstring       normcheck;   //   ""  Create normalization check
-    algo::cstring       cppfunc;     //   ""  Field is a cppfunc, pass c++ expression as argument
-    bool                xref;        //   false      X-ref with field type
-    algo::cstring       via;         //   ""        X-ref argument (index, pointer, or index/key)
-    bool                showcpp;     //   false  Show resulting C++ code
-    bool                write;       //   false  Commit output to disk
-    bool                e;           //   false   (with -create -unittest) Edit new testcase
-    algo::cstring       comment;     //   ""  Comment for new entity
-    bool                sandbox;     //   false  Make changes in sandbox
+    algo::cstring       in;              //   "data"  Input directory or filename, - for stdin
+    bool                create;          //   false  Create new entity (-finput, -target, -ctype, -field)
+    bool                del;             //   false  Delete mode
+    algo::cstring       rename;          //   ""  Rename to something else
+    bool                replace;         //   false  Use acr -replace (default is -insert, fails on duplicate)
+    bool                finput;          //   false  Create in-memory table based on ssimfile
+    algo::cstring       srcfile;         //   ""      Create source file
+    bool                gstatic;         //   false  Like -finput, but data is loaded at compile time
+    bool                indexed;         //   false  (with -finput) Add hash index
+    algo::Smallstr16    target;          //   ""  Create new target
+    algo::Smallstr50    nstype;          //   "exe"  (with -create -target): exe,lib,etc.
+    algo::Smallstr50    ctype;           //   ""  Create new ctype
+    algo::Smallstr50    pooltype;        //   ""   Pool reftype (Lary,Lpool etc) for finput/ctype
+    algo::Smallstr50    ssimfile;        //   ""    Ssimfile for new ctype
+    algo::Smallstr50    subset;          //   ""    Primary key is a subset of this ctype
+    algo::Smallstr50    subset2;         //   ""    Primary key is also a subset of this ctype
+    algo::cstring       separator;       //   "."      Key separator
+    algo::Smallstr100   field;           //   ""  Create field
+    algo::Smallstr50    arg;             //   ""    Field type (e.g. u32, etc)
+    algo::cstring       dflt;            //   ""    Field default value
+    bool                anon;            //   false    Anonymous field (use with command lines)
+    bool                bigend;          //   false    Big-endian field
+    bool                cascdel;         //   false    Field is cascdel
+    algo::Smallstr100   before;          //   ""    Place field before this one
+    algo::Smallstr100   substr;          //   ""    New field is a substring
+    algo::Smallstr100   srcfield;        //   ""    Source field for bitfld/substr
+    algo::Smallstr100   fstep;           //   ""    Add fstep record
+    algo::cstring       inscond;         //   "true"    Insert condition (for xref)
+    algo::Smallstr50    reftype;         //   ""    Reftype (e.g. Val, Thash, Llist, etc)
+    algo::Smallstr100   hashfld;         //   ""      (-reftype:Thash) Hash field
+    algo::Smallstr100   sortfld;         //   ""      (-reftype:Bheap) Sort field
+    algo::cstring       unittest;        //   ""  Create unit test, <ns>.<functionname>
+    algo::cstring       normcheck;       //   ""  Create normalization check
+    algo::cstring       cppfunc;         //   ""  Field is a cppfunc, pass c++ expression as argument
+    bool                xref;            //   false      X-ref with field type
+    algo::cstring       via;             //   ""        X-ref argument (index, pointer, or index/key)
+    bool                showcpp;         //   false  Show resulting C++ code
+    bool                write;           //   false  Commit output to disk
+    bool                e;               //   false   (with -create -unittest) Edit new testcase
+    algo::cstring       comment;         //   ""  Comment for new entity
+    bool                sandbox;         //   false  Make changes in sandbox
+    bool                sandbox_build;   //   true    (with -sandbox) Do a build check
     acr_ed();
 };
 

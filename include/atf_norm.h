@@ -37,6 +37,14 @@ namespace atf_norm { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
+    // cpp/atf/norm/acr_ed.cpp
+    //
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void normcheck_acr_ed_ssimdb();
+    // void normcheck_acr_ed_ssimfile();
+    // void normcheck_acr_ed_target();
+
+    // -------------------------------------------------------------------
     // cpp/atf/norm/bootstrap.cpp
     //
 
@@ -58,7 +66,6 @@ namespace atf_norm { // update-hdr
     // void normcheck_iffy_src();
     // void normcheck_normalize_amc_vis();
     // void normcheck_gitfile();
-    // void normcheck_acr_ed();
     void Main();
 
     // -------------------------------------------------------------------

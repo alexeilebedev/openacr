@@ -1507,7 +1507,7 @@ void atf_unit::acr_ed_ExecX() {
 // Call execv()
 // Call execv with specified parameters -- cprint:acr_ed.Argv
 int atf_unit::acr_ed_Execv() {
-    char *argv[41+2]; // start of first arg (future pointer)
+    char *argv[42+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -1798,6 +1798,13 @@ int atf_unit::acr_ed_Execv() {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-sandbox:";
         bool_Print(_db.acr_ed_cmd.sandbox, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (_db.acr_ed_cmd.sandbox_build != true) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-sandbox_build:";
+        bool_Print(_db.acr_ed_cmd.sandbox_build, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
     for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {

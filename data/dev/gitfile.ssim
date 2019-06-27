@@ -234,6 +234,7 @@ dev.gitfile  gitfile:cpp/atf/amc/tary.cpp
 dev.gitfile  gitfile:cpp/atf/amc/varlen.cpp
 dev.gitfile  gitfile:cpp/atf/amc/zdlist.cpp
 dev.gitfile  gitfile:cpp/atf/amc/zslist.cpp
+dev.gitfile  gitfile:cpp/atf/norm/acr_ed.cpp
 dev.gitfile  gitfile:cpp/atf/norm/bootstrap.cpp
 dev.gitfile  gitfile:cpp/atf/norm/main.cpp
 dev.gitfile  gitfile:cpp/atf/norm/readme.cpp

@@ -104,6 +104,7 @@ namespace acr_ed { // update-hdr
     void ExitSandbox();
 
     // Build specified tools inside the sandbox
+    // It is assumed that we're inside the sandbox
     void BuildX(strptr what);
 
     // -------------------------------------------------------------------

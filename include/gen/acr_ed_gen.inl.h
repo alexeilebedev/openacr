@@ -96,6 +96,26 @@ inline void acr_ed::c_cstr_Remove(acr_ed::FCtype& ctype, acr_ed::FCstr& row) {
     }
 }
 
+// --- acr_ed.FCtype.c_ssimfile.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool acr_ed::c_ssimfile_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FSsimfile& row) {
+    acr_ed::FSsimfile* ptr = ctype.c_ssimfile;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        ctype.c_ssimfile = &row;
+    }
+    return retval;
+}
+
+// --- acr_ed.FCtype.c_ssimfile.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void acr_ed::c_ssimfile_Remove(acr_ed::FCtype& ctype, acr_ed::FSsimfile& row) {
+    acr_ed::FSsimfile *ptr = ctype.c_ssimfile;
+    if (LIKELY(ptr == &row)) {
+        ctype.c_ssimfile = NULL;
+    }
+}
+
 // --- acr_ed.FCtype.c_field_curs.Reset
 inline void acr_ed::ctype_c_field_curs_Reset(ctype_c_field_curs &curs, acr_ed::FCtype &parent) {
     curs.elems = parent.c_field_elems;
@@ -129,6 +149,7 @@ inline void acr_ed::FCtype_Init(acr_ed::FCtype& ctype) {
     ctype.c_field_max = 0; // (acr_ed.FCtype.c_field)
     ctype.c_cstr = NULL;
     ctype.p_ns = NULL;
+    ctype.c_ssimfile = NULL;
     ctype.ind_ctype_next = (acr_ed::FCtype*)-1; // (acr_ed.FDb.ind_ctype) not-in-hash
 }
 inline acr_ed::trace::trace() {

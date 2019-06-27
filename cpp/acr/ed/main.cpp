@@ -281,7 +281,7 @@ void acr_ed::Main() {
 
     // execute/show proposed transaction
     ExecuteTransaction();
-    if (acr_ed::_db.cmdline.sandbox) {
+    if (acr_ed::_db.cmdline.sandbox && acr_ed::_db.cmdline.sandbox_build) {
         BuildX("amc|acr%|abt%");
     }
     ExitSandbox();

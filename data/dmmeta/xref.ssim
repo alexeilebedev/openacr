@@ -86,6 +86,7 @@ dmmeta.xref  field:acr_ed.FDb.ind_fprefix  inscond:true  via:""
 dmmeta.xref  field:acr_ed.FDb.ind_target  inscond:true  via:""
 dmmeta.xref  field:acr_ed.FCtype.p_ns  inscond:true  via:acr_ed.FDb.ind_ns/dmmeta.Ctype.ns
 dmmeta.xref  field:acr_ed.FTargsrc.p_target  inscond:true  via:acr_ed.FDb.ind_target/dev.Targsrc.target
+dmmeta.xref  field:acr_ed.FCtype.c_ssimfile  inscond:true  via:acr_ed.FDb.ind_ctype/dmmeta.Ssimfile.ctype
 dmmeta.xref  field:acr_in.FDb.ind_tuple  inscond:true  via:""
 dmmeta.xref  field:acr_in.FDb.ind_field  inscond:true  via:""
 dmmeta.xref  field:acr_in.FDb.ind_ctype  inscond:true  via:""

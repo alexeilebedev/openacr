@@ -92,8 +92,6 @@ static void CreateCrossProduct(dmmeta::Ctype &ctype, dmmeta::Field &field_pkey) 
 // Example 2:
 // acr_ed -create -ctype atf_tmsg.FOrder -pooltype Tpool -indexed
 void acr_ed::Main_CreateCtype() {
-    acr_ed::FNs *ns = ind_ns_Find(dmmeta::Ctype_ns_Get(_db.cmdline.ctype));
-
     // Determine name of pkey for the newly created ctype
     // - if ssimfile name is known, pick ssimfile name;
     // - otherwise, construct the pkey name from ctype name
@@ -112,12 +110,22 @@ void acr_ed::Main_CreateCtype() {
         acr_ed::_db.cmdline.ctype = ctype_name;
     }
 
+    // now look up namespace
+    // from ctype
+    acr_ed::FNs *ns = ind_ns_Find(dmmeta::Ctype_ns_Get(_db.cmdline.ctype));
+
     dmmeta::Ctype ctype;
     ctype.ctype = acr_ed::_db.cmdline.ctype;
     ctype.comment.value = acr_ed::_db.cmdline.comment;
     acr_ed::_db.out_ssim << ctype << eol;
 
     dmmeta::Field pkey;
+    if (!ns) {
+        prerr("acr_ed.invalid_namespace"
+              <<Keyval("ns",dmmeta::Ctype_ns_Get(_db.cmdline.ctype))
+              <<Keyval("comment","namespace doesn't exist"));
+        algo_lib::_db.exit_code=1;
+    }
     bool relational = ns && ns->nstype == dmmeta_Nstype_nstype_ssimdb;
 
     // when creating a relational type, pick default subset
@@ -130,7 +138,8 @@ void acr_ed::Main_CreateCtype() {
     // if new ctype is a subset of one other relational ctype, use that type's name.
     if (ch_N(acr_ed::_db.cmdline.subset2) == 0 && relational) {
         acr_ed::FCtype &subset = acr_ed::ind_ctype_FindX(acr_ed::_db.cmdline.subset);
-        if (c_field_N(subset) > 0) {
+        // if creating a subset of a relational type, borrow the name of the first field
+        if (c_field_N(subset) > 0 && subset.c_ssimfile) {
             pkey_name = name_Get(*c_field_Find(subset,0));
         }
         if (subset.p_ns->nstype == dmmeta_Nstype_nstype_ssimdb) {

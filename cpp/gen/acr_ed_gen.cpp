@@ -33,52 +33,53 @@ namespace acr_ed {
 const char *acr_ed_help =
 "acr_ed: ACR Editor Set of useful recipes, uses acr, abt, git, and other tools\n"
 "Usage: acr_ed [options]\n"
-"    -in         string  Input directory or filename, - for stdin. default: \"data\"\n"
-"    -create             Create new entity (-finput, -target, -ctype, -field). default: false\n"
-"    -del                Delete mode. default: false\n"
-"    -rename     string  Rename to something else\n"
-"    -replace            Use acr -replace (default is -insert, fails on duplicate). default: false\n"
-"    -finput             Create in-memory table based on ssimfile. default: false\n"
-"    -srcfile    string      Create source file\n"
-"    -gstatic            Like -finput, but data is loaded at compile time. default: false\n"
-"    -indexed            (with -finput) Add hash index. default: false\n"
-"    -target     string  Create new target\n"
-"    -nstype     string  (with -create -target): exe,lib,etc.. default: \"exe\"\n"
-"    -ctype      string  Create new ctype\n"
-"    -pooltype   string   Pool reftype (Lary,Lpool etc) for finput/ctype\n"
-"    -ssimfile   string    Ssimfile for new ctype\n"
-"    -subset     string    Primary key is a subset of this ctype\n"
-"    -subset2    string    Primary key is also a subset of this ctype\n"
-"    -separator  string      Key separator. default: \".\"\n"
-"    -field      string  Create field\n"
-"    -arg        string    Field type (e.g. u32, etc)\n"
-"    -dflt       string    Field default value\n"
-"    -anon                 Anonymous field (use with command lines). default: false\n"
-"    -bigend               Big-endian field. default: false\n"
-"    -cascdel              Field is cascdel. default: false\n"
-"    -before     string    Place field before this one\n"
-"    -substr     string    New field is a substring\n"
-"    -srcfield   string    Source field for bitfld/substr\n"
-"    -fstep      string    Add fstep record\n"
-"    -inscond    string    Insert condition (for xref). default: \"true\"\n"
-"    -reftype    string    Reftype (e.g. Val, Thash, Llist, etc)\n"
-"    -hashfld    string      (-reftype:Thash) Hash field\n"
-"    -sortfld    string      (-reftype:Bheap) Sort field\n"
-"    -unittest   string  Create unit test, <ns>.<functionname>\n"
-"    -normcheck  string  Create normalization check\n"
-"    -cppfunc    string  Field is a cppfunc, pass c++ expression as argument\n"
-"    -xref                   X-ref with field type. default: false\n"
-"    -via        string        X-ref argument (index, pointer, or index/key)\n"
-"    -showcpp            Show resulting C++ code. default: false\n"
-"    -write              Commit output to disk. default: false\n"
-"    -e                   (with -create -unittest) Edit new testcase. default: false\n"
-"    -comment    string  Comment for new entity\n"
-"    -sandbox            Make changes in sandbox. default: false\n"
-"    -verbose            Enable verbose mode\n"
-"    -debug              Enable debug mode\n"
-"    -version            Show version information\n"
-"    -sig                Print SHA1 signatures for dispatches\n"
-"    -help               Print this screen and exit\n"
+"    -in             string  Input directory or filename, - for stdin. default: \"data\"\n"
+"    -create                 Create new entity (-finput, -target, -ctype, -field). default: false\n"
+"    -del                    Delete mode. default: false\n"
+"    -rename         string  Rename to something else\n"
+"    -replace                Use acr -replace (default is -insert, fails on duplicate). default: false\n"
+"    -finput                 Create in-memory table based on ssimfile. default: false\n"
+"    -srcfile        string      Create source file\n"
+"    -gstatic                Like -finput, but data is loaded at compile time. default: false\n"
+"    -indexed                (with -finput) Add hash index. default: false\n"
+"    -target         string  Create new target\n"
+"    -nstype         string  (with -create -target): exe,lib,etc.. default: \"exe\"\n"
+"    -ctype          string  Create new ctype\n"
+"    -pooltype       string   Pool reftype (Lary,Lpool etc) for finput/ctype\n"
+"    -ssimfile       string    Ssimfile for new ctype\n"
+"    -subset         string    Primary key is a subset of this ctype\n"
+"    -subset2        string    Primary key is also a subset of this ctype\n"
+"    -separator      string      Key separator. default: \".\"\n"
+"    -field          string  Create field\n"
+"    -arg            string    Field type (e.g. u32, etc)\n"
+"    -dflt           string    Field default value\n"
+"    -anon                     Anonymous field (use with command lines). default: false\n"
+"    -bigend                   Big-endian field. default: false\n"
+"    -cascdel                  Field is cascdel. default: false\n"
+"    -before         string    Place field before this one\n"
+"    -substr         string    New field is a substring\n"
+"    -srcfield       string    Source field for bitfld/substr\n"
+"    -fstep          string    Add fstep record\n"
+"    -inscond        string    Insert condition (for xref). default: \"true\"\n"
+"    -reftype        string    Reftype (e.g. Val, Thash, Llist, etc)\n"
+"    -hashfld        string      (-reftype:Thash) Hash field\n"
+"    -sortfld        string      (-reftype:Bheap) Sort field\n"
+"    -unittest       string  Create unit test, <ns>.<functionname>\n"
+"    -normcheck      string  Create normalization check\n"
+"    -cppfunc        string  Field is a cppfunc, pass c++ expression as argument\n"
+"    -xref                       X-ref with field type. default: false\n"
+"    -via            string        X-ref argument (index, pointer, or index/key)\n"
+"    -showcpp                Show resulting C++ code. default: false\n"
+"    -write                  Commit output to disk. default: false\n"
+"    -e                       (with -create -unittest) Edit new testcase. default: false\n"
+"    -comment        string  Comment for new entity\n"
+"    -sandbox                Make changes in sandbox. default: false\n"
+"    -sandbox_build            (with -sandbox) Do a build check. default: true\n"
+"    -verbose                Enable verbose mode\n"
+"    -debug                  Enable debug mode\n"
+"    -version                Show version information\n"
+"    -sig                    Print SHA1 signatures for dispatches\n"
+"    -help                   Print this screen and exit\n"
 ;
 
 
@@ -124,6 +125,7 @@ const char *acr_ed_syntax =
 " -e:flag\n"
 " -comment:string=\n"
 " -sandbox:flag\n"
+" -sandbox_build:flag=true\n"
 ;
 } // namespace acr_ed
 namespace acr_ed {
@@ -539,7 +541,7 @@ static void acr_ed::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_ed.Input'  signature:'4a62829eabcceb6a0156ada29e54841bfb759772'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_ed.Input'  signature:'ec24395020bd864339254458388b7df4e5a6fe28'");
 }
 
 // --- acr_ed.FDb._db.StaticCheck
@@ -1195,6 +1197,15 @@ bool acr_ed::ssimfile_XrefMaybe(acr_ed::FSsimfile &row) {
         if (UNLIKELY(!success)) {
             ch_RemoveAll(algo_lib::_db.errtext);
             algo_lib::_db.errtext << "acr_ed.duplicate_key  xref:acr_ed.FDb.ind_ssimfile"; // check for duplicate key
+            return false;
+        }
+    }
+    // insert ssimfile into index c_ssimfile
+    if (true) { // user-defined insert condition
+        bool success = c_ssimfile_InsertMaybe(*p_ctype, row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_ed.duplicate_key  xref:acr_ed.FCtype.c_ssimfile"; // check for duplicate key
             return false;
         }
     }
@@ -2957,6 +2968,10 @@ algo::Smallstr50 acr_ed::name_Get(acr_ed::FSsimfile& ssimfile) {
 void acr_ed::FSsimfile_Uninit(acr_ed::FSsimfile& ssimfile) {
     acr_ed::FSsimfile &row = ssimfile; (void)row;
     ind_ssimfile_Remove(row); // remove ssimfile from index ind_ssimfile
+    acr_ed::FCtype* p_ctype = acr_ed::ind_ctype_Find(row.ctype);
+    if (p_ctype)  {
+        c_ssimfile_Remove(*p_ctype, row);// remove ssimfile from index c_ssimfile
+    }
 }
 
 // --- acr_ed.FTarget.base.CopyOut

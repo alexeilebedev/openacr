@@ -116,6 +116,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_showcpp       : ret = "showcpp";  break;
         case command_FieldId_comment       : ret = "comment";  break;
         case command_FieldId_sandbox       : ret = "sandbox";  break;
+        case command_FieldId_sandbox_build : ret = "sandbox_build";  break;
         case command_FieldId_ns            : ret = "ns";  break;
         case command_FieldId_data          : ret = "data";  break;
         case command_FieldId_sigcheck      : ret = "sigcheck";  break;
@@ -780,6 +781,10 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
         }
         case 13: {
             switch (ReadLE64(rhs.elems)) {
+                case LE_STR8('s','a','n','d','b','o','x','_'): {
+                    if (memcmp(rhs.elems+8,"build",5)==0) { value_SetEnum(parent,command_FieldId_sandbox_build); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('w','r','i','t','e','s','s','i'): {
                     if (memcmp(rhs.elems+8,"mfile",5)==0) { value_SetEnum(parent,command_FieldId_writessimfile); ret = true; break; }
                     break;
@@ -2061,6 +2066,7 @@ bool command::acr_ed_ReadFieldMaybe(command::acr_ed &parent, algo::strptr field,
         case command_FieldId_e: retval = bool_ReadStrptrMaybe(parent.e, strval); break;
         case command_FieldId_comment: retval = algo::cstring_ReadStrptrMaybe(parent.comment, strval); break;
         case command_FieldId_sandbox: retval = bool_ReadStrptrMaybe(parent.sandbox, strval); break;
+        case command_FieldId_sandbox_build: retval = bool_ReadStrptrMaybe(parent.sandbox_build, strval); break;
         default: break;
     }
     if (!retval) {
@@ -2126,6 +2132,7 @@ void command::acr_ed_Init(command::acr_ed& parent) {
     parent.e = bool(false);
     parent.comment = algo::strptr("");
     parent.sandbox = bool(false);
+    parent.sandbox_build = bool(true);
 }
 
 // --- command.acr_ed..PrintArgv
@@ -2381,6 +2388,12 @@ void command::acr_ed_PrintArgv(command::acr_ed & row, algo::cstring &str) {
         str << " -sandbox:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.sandbox_build == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.sandbox_build, temp);
+        str << " -sandbox_build:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.acr_ed..ToCmdline
@@ -2484,7 +2497,7 @@ void command::acr_ed_ExecX(command::acr_ed_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:acr_ed.Argv
 int command::acr_ed_Execv(command::acr_ed_proc& parent) {
-    char *argv[41+2]; // start of first arg (future pointer)
+    char *argv[42+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -2775,6 +2788,13 @@ int command::acr_ed_Execv(command::acr_ed_proc& parent) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-sandbox:";
         bool_Print(parent.cmd.sandbox, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.sandbox_build != true) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-sandbox_build:";
+        bool_Print(parent.cmd.sandbox_build, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
     for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
@@ -8819,6 +8839,7 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::acr_ed,e) == 1354);
     algo_assert(_offset_of(command::acr_ed,comment) == 1360);
     algo_assert(_offset_of(command::acr_ed,sandbox) == 1376);
+    algo_assert(_offset_of(command::acr_ed,sandbox_build) == 1377);
     algo_assert(sizeof(command::acr_ed) == 1384);
     algo_assert(_offset_of(command::acr_in,ns) == 0);
     algo_assert(_offset_of(command::acr_in,data) == 96);

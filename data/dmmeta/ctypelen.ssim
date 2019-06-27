@@ -57,7 +57,7 @@ dmmeta.ctypelen  ctype:acr_compl.FNs  len:222  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:acr_compl.FSsimfile  len:120  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:acr_compl.Shellqtype  len:1  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:acr_ed.FCstr  len:205  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:acr_ed.FCtype  len:248  alignment:8  padbytes:4
+dmmeta.ctypelen  ctype:acr_ed.FCtype  len:256  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:acr_ed.FDb  len:4744  alignment:8  padbytes:42
 dmmeta.ctypelen  ctype:acr_ed.FField  len:664  alignment:8  padbytes:17
 dmmeta.ctypelen  ctype:acr_ed.FFprefix  len:224  alignment:8  padbytes:5
@@ -551,7 +551,7 @@ dmmeta.ctypelen  ctype:atfdb.Unittest  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:command.abt  len:488  alignment:8  padbytes:19
 dmmeta.ctypelen  ctype:command.acr  len:176  alignment:8  padbytes:25
 dmmeta.ctypelen  ctype:command.acr_compl  len:56  alignment:8  padbytes:7
-dmmeta.ctypelen  ctype:command.acr_ed  len:1384  alignment:8  padbytes:46
+dmmeta.ctypelen  ctype:command.acr_ed  len:1384  alignment:8  padbytes:45
 dmmeta.ctypelen  ctype:command.acr_in  len:256  alignment:8  padbytes:12
 dmmeta.ctypelen  ctype:command.acr_my  len:136  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:command.amc  len:152  alignment:8  padbytes:5

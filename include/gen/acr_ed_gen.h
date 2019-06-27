@@ -128,14 +128,15 @@ void                 FCstr_Uninit(acr_ed::FCstr& cstr) __attribute__((nothrow));
 // access: acr_ed.FField.p_arg (Upptr)
 // access: acr_ed.FSsimfile.p_ctype (Upptr)
 struct FCtype { // acr_ed.FCtype
-    algo::Smallstr50   ctype;            // Identifier. must be ns.typename
-    algo::Comment      comment;          //
-    acr_ed::FField**   c_field_elems;    // array of pointers
-    u32                c_field_n;        // array of pointers
-    u32                c_field_max;      // capacity of allocated array
-    acr_ed::FCstr*     c_cstr;           // optional pointer
-    acr_ed::FNs*       p_ns;             // reference to parent row
-    acr_ed::FCtype*    ind_ctype_next;   // hash next
+    algo::Smallstr50     ctype;            // Identifier. must be ns.typename
+    algo::Comment        comment;          //
+    acr_ed::FField**     c_field_elems;    // array of pointers
+    u32                  c_field_n;        // array of pointers
+    u32                  c_field_max;      // capacity of allocated array
+    acr_ed::FCstr*       c_cstr;           // optional pointer
+    acr_ed::FNs*         p_ns;             // reference to parent row
+    acr_ed::FSsimfile*   c_ssimfile;       // optional pointer
+    acr_ed::FCtype*      ind_ctype_next;   // hash next
 private:
     friend acr_ed::FCtype&      ctype_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr_ed::FCtype*      ctype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -181,6 +182,11 @@ void                 c_field_Reserve(acr_ed::FCtype& ctype, u32 n) __attribute__
 bool                 c_cstr_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FCstr& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 void                 c_cstr_Remove(acr_ed::FCtype& ctype, acr_ed::FCstr& row) __attribute__((nothrow));
+
+// Insert row into pointer index. Return final membership status.
+bool                 c_ssimfile_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FSsimfile& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+void                 c_ssimfile_Remove(acr_ed::FCtype& ctype, acr_ed::FSsimfile& row) __attribute__((nothrow));
 
 void                 ctype_c_field_curs_Reset(ctype_c_field_curs &curs, acr_ed::FCtype &parent);
 // cursor points to valid item
@@ -903,6 +909,7 @@ void                 FNs_Uninit(acr_ed::FNs& ns) __attribute__((nothrow));
 // --- acr_ed.FSsimfile
 // create: acr_ed.FDb.ssimfile (Lary)
 // global access: ind_ssimfile (Thash)
+// access: acr_ed.FCtype.c_ssimfile (Ptr)
 struct FSsimfile { // acr_ed.FSsimfile
     acr_ed::FSsimfile*   ind_ssimfile_next;   // hash next
     algo::Smallstr50     ssimfile;            //
