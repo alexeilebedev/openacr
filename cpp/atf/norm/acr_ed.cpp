@@ -18,6 +18,7 @@
 //
 
 #include "include/atf_norm.h"
+#include "include/define.h"
 
 // -----------------------------------------------------------------------------
 
@@ -57,8 +58,8 @@ void atf_norm::normcheck_acr_ed_ssimfile() {
     }
 
     // go inside sandbox
-    (void)chdir("temp/acr_ed");
-
+    errno_vrfy(chdir("temp/acr_ed")==0, "chdir");
+    
     {
         command::acr_ed_proc acr_ed;
         acr_ed.cmd.create=true;
@@ -79,7 +80,7 @@ void atf_norm::normcheck_acr_ed_ssimfile() {
     acr.cmd.query = "%";
     acr.cmd.check=true;
     acr_ExecX(acr);
-    (void)chdir("../../");
+    errno_vrfy(chdir("../../")==0, "chdir");
 }
 
 // --------------------------------------------------------------------------------
