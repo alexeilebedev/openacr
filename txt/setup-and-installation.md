@@ -21,6 +21,13 @@ MariaDB (formerly MySQL) is not really required, but it's used by `acr_my`, `ssi
     apt install -y mariadb-client mariadb-common mariadb-server libmariadb-dev libmariadbd-dev libssl-dev
     apt install llvm llvm-dev  # to enable abt -compiler llvm
 
+You may need the following hacks as well. This is because mysql hasn't been fully renamed
+to mariadb yet.
+
+    (cd /usr/lib/x86_64-linux-gnu && ln -sf libmariadbclient.a libmysqlclient.a)
+    (cd /usr/lib/x86_64-linux-gnu && ln -sf libmariadbclient.so libmysqlclient.so)
+    (cd /usr/include && ln -sf mariadb mysql)
+
 ### Pre-requisites: MacOS
 
 Install brew. Then,
