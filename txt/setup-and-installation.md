@@ -18,7 +18,7 @@ MariaDB (formerly MySQL) is not really required, but it's used by `acr_my`, `ssi
 
 ### Pre-requisites: Ubuntu/Debian
 
-    apt install -y mariadb libmariadb-dev libmariadbd-dev libssl-dev
+    apt install -y mariadb-client mariadb-common mariadb-server libmariadb-dev libmariadbd-dev libssl-dev
     apt install llvm llvm-dev  # to enable abt -compiler llvm
 
 ### Pre-requisites: MacOS
