@@ -64,7 +64,7 @@ inline src_func::FGenprefix* src_func::genprefix_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     src_func::FGenprefix *retval = NULL;
-    if (LIKELY(x <= u64(_db.genprefix_n))) {
+    if (LIKELY(u64(t) < u64(_db.genprefix_n))) {
         retval = &_db.genprefix_lary[bsr][index];
     }
     return retval;
@@ -106,7 +106,7 @@ inline src_func::FTargsrc* src_func::targsrc_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     src_func::FTargsrc *retval = NULL;
-    if (LIKELY(x <= u64(_db.targsrc_n))) {
+    if (LIKELY(u64(t) < u64(_db.targsrc_n))) {
         retval = &_db.targsrc_lary[bsr][index];
     }
     return retval;
@@ -148,7 +148,7 @@ inline src_func::FTarget* src_func::target_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     src_func::FTarget *retval = NULL;
-    if (LIKELY(x <= u64(_db.target_n))) {
+    if (LIKELY(u64(t) < u64(_db.target_n))) {
         retval = &_db.target_lary[bsr][index];
     }
     return retval;
@@ -202,7 +202,7 @@ inline src_func::FFunc* src_func::func_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     src_func::FFunc *retval = NULL;
-    if (LIKELY(x <= u64(_db.func_n))) {
+    if (LIKELY(u64(t) < u64(_db.func_n))) {
         retval = &_db.func_lary[bsr][index];
     }
     return retval;
@@ -286,7 +286,7 @@ inline src_func::FDispatch* src_func::dispatch_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     src_func::FDispatch *retval = NULL;
-    if (LIKELY(x <= u64(_db.dispatch_n))) {
+    if (LIKELY(u64(t) < u64(_db.dispatch_n))) {
         retval = &_db.dispatch_lary[bsr][index];
     }
     return retval;
@@ -328,7 +328,7 @@ inline src_func::FFstep* src_func::fstep_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     src_func::FFstep *retval = NULL;
-    if (LIKELY(x <= u64(_db.fstep_n))) {
+    if (LIKELY(u64(t) < u64(_db.fstep_n))) {
         retval = &_db.fstep_lary[bsr][index];
     }
     return retval;
@@ -370,7 +370,7 @@ inline src_func::FGstatic* src_func::gstatic_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     src_func::FGstatic *retval = NULL;
-    if (LIKELY(x <= u64(_db.gstatic_n))) {
+    if (LIKELY(u64(t) < u64(_db.gstatic_n))) {
         retval = &_db.gstatic_lary[bsr][index];
     }
     return retval;
@@ -424,7 +424,7 @@ inline src_func::FCtypelen* src_func::ctypelen_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     src_func::FCtypelen *retval = NULL;
-    if (LIKELY(x <= u64(_db.ctypelen_n))) {
+    if (LIKELY(u64(t) < u64(_db.ctypelen_n))) {
         retval = &_db.ctypelen_lary[bsr][index];
     }
     return retval;
@@ -478,7 +478,7 @@ inline src_func::FBadline* src_func::badline_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     src_func::FBadline *retval = NULL;
-    if (LIKELY(x <= u64(_db.badline_n))) {
+    if (LIKELY(u64(t) < u64(_db.badline_n))) {
         retval = &_db.badline_lary[bsr][index];
     }
     return retval;

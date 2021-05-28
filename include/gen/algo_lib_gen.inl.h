@@ -620,7 +620,7 @@ inline algo_lib::FImtable* algo_lib::imtable_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     algo_lib::FImtable *retval = NULL;
-    if (LIKELY(x <= u64(_db.imtable_n))) {
+    if (LIKELY(u64(t) < u64(_db.imtable_n))) {
         retval = &_db.imtable_lary[bsr][index];
     }
     return retval;
@@ -711,7 +711,7 @@ inline algo_lib::FDispsigcheck* algo_lib::dispsigcheck_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     algo_lib::FDispsigcheck *retval = NULL;
-    if (LIKELY(x <= u64(_db.dispsigcheck_n))) {
+    if (LIKELY(u64(t) < u64(_db.dispsigcheck_n))) {
         retval = &_db.dispsigcheck_lary[bsr][index];
     }
     return retval;

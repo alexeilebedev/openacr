@@ -185,7 +185,7 @@ inline acr_in::FTuple* acr_in::tuple_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr_in::FTuple *retval = NULL;
-    if (LIKELY(x <= u64(_db.tuple_n))) {
+    if (LIKELY(u64(t) < u64(_db.tuple_n))) {
         retval = &_db.tuple_lary[bsr][index];
     }
     return retval;
@@ -239,7 +239,7 @@ inline acr_in::FFinput* acr_in::finput_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr_in::FFinput *retval = NULL;
-    if (LIKELY(x <= u64(_db.finput_n))) {
+    if (LIKELY(u64(t) < u64(_db.finput_n))) {
         retval = &_db.finput_lary[bsr][index];
     }
     return retval;
@@ -281,7 +281,7 @@ inline acr_in::FField* acr_in::field_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr_in::FField *retval = NULL;
-    if (LIKELY(x <= u64(_db.field_n))) {
+    if (LIKELY(u64(t) < u64(_db.field_n))) {
         retval = &_db.field_lary[bsr][index];
     }
     return retval;
@@ -335,7 +335,7 @@ inline acr_in::FCtype* acr_in::ctype_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr_in::FCtype *retval = NULL;
-    if (LIKELY(x <= u64(_db.ctype_n))) {
+    if (LIKELY(u64(t) < u64(_db.ctype_n))) {
         retval = &_db.ctype_lary[bsr][index];
     }
     return retval;
@@ -389,7 +389,7 @@ inline acr_in::FSsimfile* acr_in::ssimfile_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr_in::FSsimfile *retval = NULL;
-    if (LIKELY(x <= u64(_db.ssimfile_n))) {
+    if (LIKELY(u64(t) < u64(_db.ssimfile_n))) {
         retval = &_db.ssimfile_lary[bsr][index];
     }
     return retval;
@@ -431,7 +431,7 @@ inline acr_in::FNs* acr_in::ns_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr_in::FNs *retval = NULL;
-    if (LIKELY(x <= u64(_db.ns_n))) {
+    if (LIKELY(u64(t) < u64(_db.ns_n))) {
         retval = &_db.ns_lary[bsr][index];
     }
     return retval;
@@ -597,7 +597,7 @@ inline acr_in::FSubstr* acr_in::substr_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr_in::FSubstr *retval = NULL;
-    if (LIKELY(x <= u64(_db.substr_n))) {
+    if (LIKELY(u64(t) < u64(_db.substr_n))) {
         retval = &_db.substr_lary[bsr][index];
     }
     return retval;
@@ -639,7 +639,7 @@ inline acr_in::FDispsig* acr_in::dispsig_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr_in::FDispsig *retval = NULL;
-    if (LIKELY(x <= u64(_db.dispsig_n))) {
+    if (LIKELY(u64(t) < u64(_db.dispsig_n))) {
         retval = &_db.dispsig_lary[bsr][index];
     }
     return retval;
@@ -873,7 +873,7 @@ inline acr_in::FTarget* acr_in::target_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr_in::FTarget *retval = NULL;
-    if (LIKELY(x <= u64(_db.target_n))) {
+    if (LIKELY(u64(t) < u64(_db.target_n))) {
         retval = &_db.target_lary[bsr][index];
     }
     return retval;
@@ -927,7 +927,7 @@ inline acr_in::FTargdep* acr_in::targdep_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr_in::FTargdep *retval = NULL;
-    if (LIKELY(x <= u64(_db.targdep_n))) {
+    if (LIKELY(u64(t) < u64(_db.targdep_n))) {
         retval = &_db.targdep_lary[bsr][index];
     }
     return retval;

@@ -1756,7 +1756,7 @@ inline atf_amc::FTypeA* atf_amc::typea_Find(i32 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     atf_amc::FTypeA *retval = NULL;
-    if (LIKELY(x <= u64(_db.typea_n))) {
+    if (LIKELY(u64(t) < u64(_db.typea_n))) {
         retval = &_db.typea_lary[bsr][index];
     }
     return retval;
@@ -1798,7 +1798,7 @@ inline atf_amc::FTypeS* atf_amc::types_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     atf_amc::FTypeS *retval = NULL;
-    if (LIKELY(x <= u64(_db.types_n))) {
+    if (LIKELY(u64(t) < u64(_db.types_n))) {
         retval = &_db.types_lary[bsr][index];
     }
     return retval;
@@ -1864,7 +1864,7 @@ inline atf_amc::FTypeT* atf_amc::typet_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     atf_amc::FTypeT *retval = NULL;
-    if (LIKELY(x <= u64(_db.typet_n))) {
+    if (LIKELY(u64(t) < u64(_db.typet_n))) {
         retval = &_db.typet_lary[bsr][index];
     }
     return retval;
@@ -1906,7 +1906,7 @@ inline atf_amc::FCstring* atf_amc::cstring_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     atf_amc::FCstring *retval = NULL;
-    if (LIKELY(x <= u64(_db.cstring_n))) {
+    if (LIKELY(u64(t) < u64(_db.cstring_n))) {
         retval = &_db.cstring_lary[bsr][index];
     }
     return retval;
@@ -2037,7 +2037,7 @@ inline atf_amc::FAmctest* atf_amc::amctest_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     atf_amc::FAmctest *retval = NULL;
-    if (LIKELY(x <= u64(_db.amctest_n))) {
+    if (LIKELY(u64(t) < u64(_db.amctest_n))) {
         retval = &_db.amctest_lary[bsr][index];
     }
     return retval;
@@ -2158,7 +2158,7 @@ inline atf_amc::FAvl* atf_amc::avl_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     atf_amc::FAvl *retval = NULL;
-    if (LIKELY(x <= u64(_db.avl_n))) {
+    if (LIKELY(u64(t) < u64(_db.avl_n))) {
         retval = &_db.avl_lary[bsr][index];
     }
     return retval;
@@ -3982,6 +3982,81 @@ inline void atf_amc::InlaryPrint_inlary_curs_Next(InlaryPrint_inlary_curs &curs)
 // item access
 inline u32& atf_amc::InlaryPrint_inlary_curs_Access(InlaryPrint_inlary_curs &curs) {
     return inlary_qFind((*curs.parent), u64(curs.index));
+}
+inline atf_amc::Lary32::Lary32() {
+    atf_amc::Lary32_Init(*this);
+}
+
+inline atf_amc::Lary32::~Lary32() {
+    atf_amc::Lary32_Uninit(*this);
+}
+
+
+// --- atf_amc.Lary32.lary.EmptyQ
+// Return true if index is empty
+inline bool atf_amc::lary_EmptyQ(atf_amc::Lary32& parent) {
+    return parent.lary_n == 0;
+}
+
+// --- atf_amc.Lary32.lary.Find
+// Look up row by row id. Return NULL if out of range
+inline u32* atf_amc::lary_Find(atf_amc::Lary32& parent, u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    u32 *retval = NULL;
+    if (LIKELY(u64(t) < u64(parent.lary_n))) {
+        retval = &parent.lary_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- atf_amc.Lary32.lary.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline u32* atf_amc::lary_Last(atf_amc::Lary32& parent) {
+    return lary_Find(parent, u64(parent.lary_n-1));
+}
+
+// --- atf_amc.Lary32.lary.N
+// Return number of items in the pool
+inline i32 atf_amc::lary_N(const atf_amc::Lary32& parent) {
+    return parent.lary_n;
+}
+
+// --- atf_amc.Lary32.lary.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline u32& atf_amc::lary_qFind(atf_amc::Lary32& parent, u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return parent.lary_lary[bsr][index];
+}
+
+// --- atf_amc.Lary32.lary_curs.Reset
+// cursor points to valid item
+inline void atf_amc::Lary32_lary_curs_Reset(Lary32_lary_curs &curs, atf_amc::Lary32 &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- atf_amc.Lary32.lary_curs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::Lary32_lary_curs_ValidQ(Lary32_lary_curs &curs) {
+    return curs.index < (*curs.parent).lary_n;
+}
+
+// --- atf_amc.Lary32.lary_curs.Next
+// proceed to next item
+inline void atf_amc::Lary32_lary_curs_Next(Lary32_lary_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_amc.Lary32.lary_curs.Access
+// item access
+inline u32& atf_amc::Lary32_lary_curs_Access(Lary32_lary_curs &curs) {
+    return lary_qFind((*curs.parent), u64(curs.index));
 }
 inline atf_amc::Linebuf::Linebuf() {
     atf_amc::Linebuf_Init(*this);

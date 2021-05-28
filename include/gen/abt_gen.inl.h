@@ -75,7 +75,7 @@ inline abt::FSrcfile* abt::srcfile_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     abt::FSrcfile *retval = NULL;
-    if (LIKELY(x <= u64(_db.srcfile_n))) {
+    if (LIKELY(u64(t) < u64(_db.srcfile_n))) {
         retval = &_db.srcfile_lary[bsr][index];
     }
     return retval;
@@ -117,7 +117,7 @@ inline abt::FTargdep* abt::targdep_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     abt::FTargdep *retval = NULL;
-    if (LIKELY(x <= u64(_db.targdep_n))) {
+    if (LIKELY(u64(t) < u64(_db.targdep_n))) {
         retval = &_db.targdep_lary[bsr][index];
     }
     return retval;
@@ -159,7 +159,7 @@ inline abt::FToolOpt* abt::tool_opt_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     abt::FToolOpt *retval = NULL;
-    if (LIKELY(x <= u64(_db.tool_opt_n))) {
+    if (LIKELY(u64(t) < u64(_db.tool_opt_n))) {
         retval = &_db.tool_opt_lary[bsr][index];
     }
     return retval;
@@ -213,7 +213,7 @@ inline abt::FTarget* abt::target_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     abt::FTarget *retval = NULL;
-    if (LIKELY(x <= u64(_db.target_n))) {
+    if (LIKELY(u64(t) < u64(_db.target_n))) {
         retval = &_db.target_lary[bsr][index];
     }
     return retval;
@@ -267,7 +267,7 @@ inline abt::FTargsrc* abt::targsrc_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     abt::FTargsrc *retval = NULL;
-    if (LIKELY(x <= u64(_db.targsrc_n))) {
+    if (LIKELY(u64(t) < u64(_db.targsrc_n))) {
         retval = &_db.targsrc_lary[bsr][index];
     }
     return retval;
@@ -309,7 +309,7 @@ inline abt::FSyscmddep* abt::syscmddep_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     abt::FSyscmddep *retval = NULL;
-    if (LIKELY(x <= u64(_db.syscmddep_n))) {
+    if (LIKELY(u64(t) < u64(_db.syscmddep_n))) {
         retval = &_db.syscmddep_lary[bsr][index];
     }
     return retval;
@@ -351,7 +351,7 @@ inline abt::FSyscmd* abt::syscmd_Find(i32 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     abt::FSyscmd *retval = NULL;
-    if (LIKELY(x <= u64(_db.syscmd_n))) {
+    if (LIKELY(u64(t) < u64(_db.syscmd_n))) {
         retval = &_db.syscmd_lary[bsr][index];
     }
     return retval;
@@ -429,7 +429,7 @@ inline abt::FCfg* abt::cfg_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     abt::FCfg *retval = NULL;
-    if (LIKELY(x <= u64(_db.cfg_n))) {
+    if (LIKELY(u64(t) < u64(_db.cfg_n))) {
         retval = &_db.cfg_lary[bsr][index];
     }
     return retval;
@@ -483,7 +483,7 @@ inline abt::FUname* abt::uname_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     abt::FUname *retval = NULL;
-    if (LIKELY(x <= u64(_db.uname_n))) {
+    if (LIKELY(u64(t) < u64(_db.uname_n))) {
         retval = &_db.uname_lary[bsr][index];
     }
     return retval;
@@ -537,7 +537,7 @@ inline abt::FCompiler* abt::compiler_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     abt::FCompiler *retval = NULL;
-    if (LIKELY(x <= u64(_db.compiler_n))) {
+    if (LIKELY(u64(t) < u64(_db.compiler_n))) {
         retval = &_db.compiler_lary[bsr][index];
     }
     return retval;
@@ -591,7 +591,7 @@ inline abt::FArch* abt::arch_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     abt::FArch *retval = NULL;
-    if (LIKELY(x <= u64(_db.arch_n))) {
+    if (LIKELY(u64(t) < u64(_db.arch_n))) {
         retval = &_db.arch_lary[bsr][index];
     }
     return retval;
@@ -825,7 +825,7 @@ inline abt::FTargsyslib* abt::targsyslib_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     abt::FTargsyslib *retval = NULL;
-    if (LIKELY(x <= u64(_db.targsyslib_n))) {
+    if (LIKELY(u64(t) < u64(_db.targsyslib_n))) {
         retval = &_db.targsyslib_lary[bsr][index];
     }
     return retval;
@@ -867,7 +867,7 @@ inline abt::FSyslib* abt::syslib_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     abt::FSyslib *retval = NULL;
-    if (LIKELY(x <= u64(_db.syslib_n))) {
+    if (LIKELY(u64(t) < u64(_db.syslib_n))) {
         retval = &_db.syslib_lary[bsr][index];
     }
     return retval;
@@ -921,7 +921,7 @@ inline abt::FInclude* abt::include_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     abt::FInclude *retval = NULL;
-    if (LIKELY(x <= u64(_db.include_n))) {
+    if (LIKELY(u64(t) < u64(_db.include_n))) {
         retval = &_db.include_lary[bsr][index];
     }
     return retval;
@@ -1086,7 +1086,7 @@ inline abt::FNs* abt::ns_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     abt::FNs *retval = NULL;
-    if (LIKELY(x <= u64(_db.ns_n))) {
+    if (LIKELY(u64(t) < u64(_db.ns_n))) {
         retval = &_db.ns_lary[bsr][index];
     }
     return retval;
@@ -1140,7 +1140,7 @@ inline abt::FFilestat* abt::filestat_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     abt::FFilestat *retval = NULL;
-    if (LIKELY(x <= u64(_db.filestat_n))) {
+    if (LIKELY(u64(t) < u64(_db.filestat_n))) {
         retval = &_db.filestat_lary[bsr][index];
     }
     return retval;

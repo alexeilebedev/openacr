@@ -95,7 +95,7 @@ void amc::tfunc_Lary_Find() {
     Ins(&R, find.body, "u64 base  = u64(1)<<bsr;");
     Ins(&R, find.body, "u64 index = x-base;");
     Ins(&R, find.body, "$Cpptype *retval = NULL;");
-    Ins(&R, find.body, "if (LIKELY(x <= u64($parname.$name_n))) {");
+    Ins(&R, find.body, "if (LIKELY(u64(t) < u64($parname.$name_n))) {");
     Ins(&R, find.body, "    retval = &$parname.$name_lary[bsr][index];");
     Ins(&R, find.body, "}");
     Ins(&R, find.body, "return retval;");

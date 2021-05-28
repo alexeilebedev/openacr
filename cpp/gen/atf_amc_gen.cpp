@@ -4812,6 +4812,7 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:Hook2  comment:\"Test Hook functions\"", atf_amc::amctest_Hook2 }
         ,{ "atfdb.amctest  amctest:ImdXref  comment:\"\"", atf_amc::amctest_ImdXref }
         ,{ "atfdb.amctest  amctest:Inlary_ReadPrint  comment:\"Check Inlary read/print\"", atf_amc::amctest_Inlary_ReadPrint }
+        ,{ "atfdb.amctest  amctest:LaryFind  comment:\"\"", atf_amc::amctest_LaryFind }
         ,{ "atfdb.amctest  amctest:LineIter  comment:\"Iterate over lines\"", atf_amc::amctest_LineIter }
         ,{ "atfdb.amctest  amctest:Lpool  comment:\"\"", atf_amc::amctest_Lpool }
         ,{ "atfdb.amctest  amctest:Minmax  comment:\"\"", atf_amc::amctest_Minmax }
@@ -8896,6 +8897,100 @@ void atf_amc::InlaryPrint_Print(atf_amc::InlaryPrint & row, algo::cstring &str) 
 
     atf_amc::inlary_Print(row, temp);
     PrintAttrSpaceReset(str,"inlary", temp);
+}
+
+// --- atf_amc.Lary32.lary.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+u32& atf_amc::lary_Alloc(atf_amc::Lary32& parent) {
+    u32* row = lary_AllocMaybe(parent);
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.Lary32.lary  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_amc.Lary32.lary.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+u32* atf_amc::lary_AllocMaybe(atf_amc::Lary32& parent) {
+    u32 *row = (u32*)lary_AllocMem(parent);
+    if (row) {
+        new (row) u32; // call constructor
+    }
+    return row;
+}
+
+// --- atf_amc.Lary32.lary.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* atf_amc::lary_AllocMem(atf_amc::Lary32& parent) {
+    u64 new_nelems     = parent.lary_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    u32*  lev   = NULL;
+    if (bsr < 32) {
+        lev = parent.lary_lary[bsr];
+        if (!lev) {
+            lev=(u32*)algo_lib::malloc_AllocMem(sizeof(u32) * (u64(1)<<bsr));
+            parent.lary_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        parent.lary_n = new_nelems;
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- atf_amc.Lary32.lary.RemoveAll
+// Remove all elements from Lary
+void atf_amc::lary_RemoveAll(atf_amc::Lary32& parent) {
+    parent.lary_n = 0;
+}
+
+// --- atf_amc.Lary32.lary.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void atf_amc::lary_RemoveLast(atf_amc::Lary32& parent) {
+    u64 n = parent.lary_n;
+    if (n > 0) {
+        n -= 1;
+        parent.lary_n = n;
+    }
+}
+
+// --- atf_amc.Lary32..Init
+// Set all fields to initial values.
+void atf_amc::Lary32_Init(atf_amc::Lary32& parent) {
+    // initialize LAry lary (atf_amc.Lary32.lary)
+    parent.lary_n = 0;
+    memset(parent.lary_lary, 0, sizeof(parent.lary_lary)); // zero out all level pointers
+    u32* lary_first = (u32*)algo_lib::malloc_AllocMem(sizeof(u32) * (u64(1)<<4));
+    if (!lary_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        parent.lary_lary[i]  = lary_first;
+        lary_first    += 1ULL<<i;
+    }
+}
+
+// --- atf_amc.Lary32..Uninit
+void atf_amc::Lary32_Uninit(atf_amc::Lary32& parent) {
+    atf_amc::Lary32 &row = parent; (void)row;
+
+    // atf_amc.Lary32.lary.Uninit (Lary)  //
+    // destroy atf_amc.Lary32.lary
+    // destroy all elements
+    lary_RemoveAll(parent);
+    // destroy all levels. stop when NULL level is found -- there is nothing beyond it
+    algo_lib::malloc_FreeMem(parent.lary_lary[0],sizeof(u32) * (u64(1)<<4));
+    for (u64 i = 4; i < 32 && parent.lary_lary[i]; i++) {
+        algo_lib::malloc_FreeMem(parent.lary_lary[i],sizeof(u32) * (u64(1)<<i));
+    }
 }
 
 // --- atf_amc.Linebuf.in.GetMsg

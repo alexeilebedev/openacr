@@ -1839,7 +1839,7 @@ inline amc::FFsort* amc::fsort_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFsort *retval = NULL;
-    if (LIKELY(x <= u64(_db.fsort_n))) {
+    if (LIKELY(u64(t) < u64(_db.fsort_n))) {
         retval = &_db.fsort_lary[bsr][index];
     }
     return retval;
@@ -1893,7 +1893,7 @@ inline amc::FDispfilter* amc::dispfilter_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FDispfilter *retval = NULL;
-    if (LIKELY(x <= u64(_db.dispfilter_n))) {
+    if (LIKELY(u64(t) < u64(_db.dispfilter_n))) {
         retval = &_db.dispfilter_lary[bsr][index];
     }
     return retval;
@@ -1935,7 +1935,7 @@ inline amc::FUsertracefld* amc::usertracefld_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FUsertracefld *retval = NULL;
-    if (LIKELY(x <= u64(_db.usertracefld_n))) {
+    if (LIKELY(u64(t) < u64(_db.usertracefld_n))) {
         retval = &_db.usertracefld_lary[bsr][index];
     }
     return retval;
@@ -1977,7 +1977,7 @@ inline amc::FCfmt* amc::cfmt_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FCfmt *retval = NULL;
-    if (LIKELY(x <= u64(_db.cfmt_n))) {
+    if (LIKELY(u64(t) < u64(_db.cfmt_n))) {
         retval = &_db.cfmt_lary[bsr][index];
     }
     return retval;
@@ -2019,7 +2019,7 @@ inline amc::FDispatch* amc::dispatch_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FDispatch *retval = NULL;
-    if (LIKELY(x <= u64(_db.dispatch_n))) {
+    if (LIKELY(u64(t) < u64(_db.dispatch_n))) {
         retval = &_db.dispatch_lary[bsr][index];
     }
     return retval;
@@ -2061,7 +2061,7 @@ inline amc::FDispatchmsg* amc::dispatch_msg_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FDispatchmsg *retval = NULL;
-    if (LIKELY(x <= u64(_db.dispatch_msg_n))) {
+    if (LIKELY(u64(t) < u64(_db.dispatch_msg_n))) {
         retval = &_db.dispatch_msg_lary[bsr][index];
     }
     return retval;
@@ -2103,7 +2103,7 @@ inline amc::FCtype* amc::ctype_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FCtype *retval = NULL;
-    if (LIKELY(x <= u64(_db.ctype_n))) {
+    if (LIKELY(u64(t) < u64(_db.ctype_n))) {
         retval = &_db.ctype_lary[bsr][index];
     }
     return retval;
@@ -2145,7 +2145,7 @@ inline amc::FField* amc::field_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FField *retval = NULL;
-    if (LIKELY(x <= u64(_db.field_n))) {
+    if (LIKELY(u64(t) < u64(_db.field_n))) {
         retval = &_db.field_lary[bsr][index];
     }
     return retval;
@@ -2187,7 +2187,7 @@ inline amc::FBasepool* amc::basepool_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FBasepool *retval = NULL;
-    if (LIKELY(x <= u64(_db.basepool_n))) {
+    if (LIKELY(u64(t) < u64(_db.basepool_n))) {
         retval = &_db.basepool_lary[bsr][index];
     }
     return retval;
@@ -2229,7 +2229,7 @@ inline amc::FLlist* amc::llist_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FLlist *retval = NULL;
-    if (LIKELY(x <= u64(_db.llist_n))) {
+    if (LIKELY(u64(t) < u64(_db.llist_n))) {
         retval = &_db.llist_lary[bsr][index];
     }
     return retval;
@@ -2271,7 +2271,7 @@ inline amc::FAnonfld* amc::anonfld_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FAnonfld *retval = NULL;
-    if (LIKELY(x <= u64(_db.anonfld_n))) {
+    if (LIKELY(u64(t) < u64(_db.anonfld_n))) {
         retval = &_db.anonfld_lary[bsr][index];
     }
     return retval;
@@ -2313,7 +2313,7 @@ inline amc::FXref* amc::xref_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FXref *retval = NULL;
-    if (LIKELY(x <= u64(_db.xref_n))) {
+    if (LIKELY(u64(t) < u64(_db.xref_n))) {
         retval = &_db.xref_lary[bsr][index];
     }
     return retval;
@@ -2355,7 +2355,7 @@ inline amc::FNs* amc::ns_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FNs *retval = NULL;
-    if (LIKELY(x <= u64(_db.ns_n))) {
+    if (LIKELY(u64(t) < u64(_db.ns_n))) {
         retval = &_db.ns_lary[bsr][index];
     }
     return retval;
@@ -2397,7 +2397,7 @@ inline amc::FPnew* amc::pnew_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FPnew *retval = NULL;
-    if (LIKELY(x <= u64(_db.pnew_n))) {
+    if (LIKELY(u64(t) < u64(_db.pnew_n))) {
         retval = &_db.pnew_lary[bsr][index];
     }
     return retval;
@@ -2439,7 +2439,7 @@ inline amc::FFldoffset* amc::fldoffset_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFldoffset *retval = NULL;
-    if (LIKELY(x <= u64(_db.fldoffset_n))) {
+    if (LIKELY(u64(t) < u64(_db.fldoffset_n))) {
         retval = &_db.fldoffset_lary[bsr][index];
     }
     return retval;
@@ -2481,7 +2481,7 @@ inline amc::FTypefld* amc::typefld_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FTypefld *retval = NULL;
-    if (LIKELY(x <= u64(_db.typefld_n))) {
+    if (LIKELY(u64(t) < u64(_db.typefld_n))) {
         retval = &_db.typefld_lary[bsr][index];
     }
     return retval;
@@ -2523,7 +2523,7 @@ inline amc::FLenfld* amc::lenfld_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FLenfld *retval = NULL;
-    if (LIKELY(x <= u64(_db.lenfld_n))) {
+    if (LIKELY(u64(t) < u64(_db.lenfld_n))) {
         retval = &_db.lenfld_lary[bsr][index];
     }
     return retval;
@@ -2565,7 +2565,7 @@ inline amc::FBltin* amc::bltin_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FBltin *retval = NULL;
-    if (LIKELY(x <= u64(_db.bltin_n))) {
+    if (LIKELY(u64(t) < u64(_db.bltin_n))) {
         retval = &_db.bltin_lary[bsr][index];
     }
     return retval;
@@ -2607,7 +2607,7 @@ inline amc::FStatictuple* amc::static_tuple_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FStatictuple *retval = NULL;
-    if (LIKELY(x <= u64(_db.static_tuple_n))) {
+    if (LIKELY(u64(t) < u64(_db.static_tuple_n))) {
         retval = &_db.static_tuple_lary[bsr][index];
     }
     return retval;
@@ -2649,7 +2649,7 @@ inline amc::FMsgtype* amc::msgtype_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FMsgtype *retval = NULL;
-    if (LIKELY(x <= u64(_db.msgtype_n))) {
+    if (LIKELY(u64(t) < u64(_db.msgtype_n))) {
         retval = &_db.msgtype_lary[bsr][index];
     }
     return retval;
@@ -2691,7 +2691,7 @@ inline amc::FGconst* amc::gconst_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FGconst *retval = NULL;
-    if (LIKELY(x <= u64(_db.gconst_n))) {
+    if (LIKELY(u64(t) < u64(_db.gconst_n))) {
         retval = &_db.gconst_lary[bsr][index];
     }
     return retval;
@@ -2733,7 +2733,7 @@ inline amc::FGstatic* amc::gstatic_Find(u32 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FGstatic *retval = NULL;
-    if (LIKELY(x <= u64(_db.gstatic_n))) {
+    if (LIKELY(u64(t) < u64(_db.gstatic_n))) {
         retval = &_db.gstatic_lary[bsr][index];
     }
     return retval;
@@ -2775,7 +2775,7 @@ inline amc::FThash* amc::thash_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FThash *retval = NULL;
-    if (LIKELY(x <= u64(_db.thash_n))) {
+    if (LIKELY(u64(t) < u64(_db.thash_n))) {
         retval = &_db.thash_lary[bsr][index];
     }
     return retval;
@@ -2817,7 +2817,7 @@ inline amc::FFunc* amc::func_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFunc *retval = NULL;
-    if (LIKELY(x <= u64(_db.func_n))) {
+    if (LIKELY(u64(t) < u64(_db.func_n))) {
         retval = &_db.func_lary[bsr][index];
     }
     return retval;
@@ -2859,7 +2859,7 @@ inline amc::FSmallstr* amc::smallstr_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FSmallstr *retval = NULL;
-    if (LIKELY(x <= u64(_db.smallstr_n))) {
+    if (LIKELY(u64(t) < u64(_db.smallstr_n))) {
         retval = &_db.smallstr_lary[bsr][index];
     }
     return retval;
@@ -2901,7 +2901,7 @@ inline amc::FNumstr* amc::numstr_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FNumstr *retval = NULL;
-    if (LIKELY(x <= u64(_db.numstr_n))) {
+    if (LIKELY(u64(t) < u64(_db.numstr_n))) {
         retval = &_db.numstr_lary[bsr][index];
     }
     return retval;
@@ -2943,7 +2943,7 @@ inline amc::FMain* amc::main_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FMain *retval = NULL;
-    if (LIKELY(x <= u64(_db.main_n))) {
+    if (LIKELY(u64(t) < u64(_db.main_n))) {
         retval = &_db.main_lary[bsr][index];
     }
     return retval;
@@ -2985,7 +2985,7 @@ inline amc::FReftype* amc::reftype_Find(dmmeta::ReftypeId t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FReftype *retval = NULL;
-    if (LIKELY(x <= u64(_db.reftype_n))) {
+    if (LIKELY(u64(t) < u64(_db.reftype_n))) {
         retval = &_db.reftype_lary[bsr][index];
     }
     return retval;
@@ -3123,7 +3123,7 @@ inline amc::FCpptype* amc::cpptype_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FCpptype *retval = NULL;
-    if (LIKELY(x <= u64(_db.cpptype_n))) {
+    if (LIKELY(u64(t) < u64(_db.cpptype_n))) {
         retval = &_db.cpptype_lary[bsr][index];
     }
     return retval;
@@ -3177,7 +3177,7 @@ inline amc::FInlary* amc::inlary_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FInlary *retval = NULL;
-    if (LIKELY(x <= u64(_db.inlary_n))) {
+    if (LIKELY(u64(t) < u64(_db.inlary_n))) {
         retval = &_db.inlary_lary[bsr][index];
     }
     return retval;
@@ -3231,7 +3231,7 @@ inline amc::FTary* amc::tary_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FTary *retval = NULL;
-    if (LIKELY(x <= u64(_db.tary_n))) {
+    if (LIKELY(u64(t) < u64(_db.tary_n))) {
         retval = &_db.tary_lary[bsr][index];
     }
     return retval;
@@ -3285,7 +3285,7 @@ inline amc::FCppfunc* amc::cppfunc_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FCppfunc *retval = NULL;
-    if (LIKELY(x <= u64(_db.cppfunc_n))) {
+    if (LIKELY(u64(t) < u64(_db.cppfunc_n))) {
         retval = &_db.cppfunc_lary[bsr][index];
     }
     return retval;
@@ -3327,7 +3327,7 @@ inline amc::FRowid* amc::rowid_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FRowid *retval = NULL;
-    if (LIKELY(x <= u64(_db.rowid_n))) {
+    if (LIKELY(u64(t) < u64(_db.rowid_n))) {
         retval = &_db.rowid_lary[bsr][index];
     }
     return retval;
@@ -3381,7 +3381,7 @@ inline amc::FCascdel* amc::cascdel_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FCascdel *retval = NULL;
-    if (LIKELY(x <= u64(_db.cascdel_n))) {
+    if (LIKELY(u64(t) < u64(_db.cascdel_n))) {
         retval = &_db.cascdel_lary[bsr][index];
     }
     return retval;
@@ -3423,7 +3423,7 @@ inline amc::FSubstr* amc::substr_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FSubstr *retval = NULL;
-    if (LIKELY(x <= u64(_db.substr_n))) {
+    if (LIKELY(u64(t) < u64(_db.substr_n))) {
         retval = &_db.substr_lary[bsr][index];
     }
     return retval;
@@ -3465,7 +3465,7 @@ inline amc::FBitfld* amc::bitfld_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FBitfld *retval = NULL;
-    if (LIKELY(x <= u64(_db.bitfld_n))) {
+    if (LIKELY(u64(t) < u64(_db.bitfld_n))) {
         retval = &_db.bitfld_lary[bsr][index];
     }
     return retval;
@@ -3507,7 +3507,7 @@ inline amc::FSsimfile* amc::ssimfile_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FSsimfile *retval = NULL;
-    if (LIKELY(x <= u64(_db.ssimfile_n))) {
+    if (LIKELY(u64(t) < u64(_db.ssimfile_n))) {
         retval = &_db.ssimfile_lary[bsr][index];
     }
     return retval;
@@ -3561,7 +3561,7 @@ inline amc::FPack* amc::pack_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FPack *retval = NULL;
-    if (LIKELY(x <= u64(_db.pack_n))) {
+    if (LIKELY(u64(t) < u64(_db.pack_n))) {
         retval = &_db.pack_lary[bsr][index];
     }
     return retval;
@@ -3627,7 +3627,7 @@ inline amc::FPtrary* amc::ptrary_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FPtrary *retval = NULL;
-    if (LIKELY(x <= u64(_db.ptrary_n))) {
+    if (LIKELY(u64(t) < u64(_db.ptrary_n))) {
         retval = &_db.ptrary_lary[bsr][index];
     }
     return retval;
@@ -3705,7 +3705,7 @@ inline amc::FEnumstr* amc::enumstr_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FEnumstr *retval = NULL;
-    if (LIKELY(x <= u64(_db.enumstr_n))) {
+    if (LIKELY(u64(t) < u64(_db.enumstr_n))) {
         retval = &_db.enumstr_lary[bsr][index];
     }
     return retval;
@@ -3747,7 +3747,7 @@ inline amc::FEnumstrLen* amc::enumstr_len_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FEnumstrLen *retval = NULL;
-    if (LIKELY(x <= u64(_db.enumstr_len_n))) {
+    if (LIKELY(u64(t) < u64(_db.enumstr_len_n))) {
         retval = &_db.enumstr_len_lary[bsr][index];
     }
     return retval;
@@ -3843,7 +3843,7 @@ inline amc::FFbitset* amc::fbitset_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFbitset *retval = NULL;
-    if (LIKELY(x <= u64(_db.fbitset_n))) {
+    if (LIKELY(u64(t) < u64(_db.fbitset_n))) {
         retval = &_db.fbitset_lary[bsr][index];
     }
     return retval;
@@ -3897,7 +3897,7 @@ inline amc::FFcleanup* amc::fcleanup_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFcleanup *retval = NULL;
-    if (LIKELY(x <= u64(_db.fcleanup_n))) {
+    if (LIKELY(u64(t) < u64(_db.fcleanup_n))) {
         retval = &_db.fcleanup_lary[bsr][index];
     }
     return retval;
@@ -3939,7 +3939,7 @@ inline amc::FFdec* amc::fdec_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFdec *retval = NULL;
-    if (LIKELY(x <= u64(_db.fdec_n))) {
+    if (LIKELY(u64(t) < u64(_db.fdec_n))) {
         retval = &_db.fdec_lary[bsr][index];
     }
     return retval;
@@ -4005,7 +4005,7 @@ inline amc::FFconst* amc::fconst_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFconst *retval = NULL;
-    if (LIKELY(x <= u64(_db.fconst_n))) {
+    if (LIKELY(u64(t) < u64(_db.fconst_n))) {
         retval = &_db.fconst_lary[bsr][index];
     }
     return retval;
@@ -4095,7 +4095,7 @@ inline amc::FFinput* amc::finput_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFinput *retval = NULL;
-    if (LIKELY(x <= u64(_db.finput_n))) {
+    if (LIKELY(u64(t) < u64(_db.finput_n))) {
         retval = &_db.finput_lary[bsr][index];
     }
     return retval;
@@ -4137,7 +4137,7 @@ inline amc::FFoutput* amc::foutput_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFoutput *retval = NULL;
-    if (LIKELY(x <= u64(_db.foutput_n))) {
+    if (LIKELY(u64(t) < u64(_db.foutput_n))) {
         retval = &_db.foutput_lary[bsr][index];
     }
     return retval;
@@ -4179,7 +4179,7 @@ inline amc::FFbuf* amc::fbuf_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFbuf *retval = NULL;
-    if (LIKELY(x <= u64(_db.fbuf_n))) {
+    if (LIKELY(u64(t) < u64(_db.fbuf_n))) {
         retval = &_db.fbuf_lary[bsr][index];
     }
     return retval;
@@ -4233,7 +4233,7 @@ inline amc::FChash* amc::chash_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FChash *retval = NULL;
-    if (LIKELY(x <= u64(_db.chash_n))) {
+    if (LIKELY(u64(t) < u64(_db.chash_n))) {
         retval = &_db.chash_lary[bsr][index];
     }
     return retval;
@@ -4287,7 +4287,7 @@ inline amc::FCcmp* amc::ccmp_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FCcmp *retval = NULL;
-    if (LIKELY(x <= u64(_db.ccmp_n))) {
+    if (LIKELY(u64(t) < u64(_db.ccmp_n))) {
         retval = &_db.ccmp_lary[bsr][index];
     }
     return retval;
@@ -4341,7 +4341,7 @@ inline amc::FFbigend* amc::fbigend_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFbigend *retval = NULL;
-    if (LIKELY(x <= u64(_db.fbigend_n))) {
+    if (LIKELY(u64(t) < u64(_db.fbigend_n))) {
         retval = &_db.fbigend_lary[bsr][index];
     }
     return retval;
@@ -4411,7 +4411,7 @@ inline amc::FCstr* amc::cstr_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FCstr *retval = NULL;
-    if (LIKELY(x <= u64(_db.cstr_n))) {
+    if (LIKELY(u64(t) < u64(_db.cstr_n))) {
         retval = &_db.cstr_lary[bsr][index];
     }
     return retval;
@@ -4453,7 +4453,7 @@ inline amc::FListtype* amc::listtype_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FListtype *retval = NULL;
-    if (LIKELY(x <= u64(_db.listtype_n))) {
+    if (LIKELY(u64(t) < u64(_db.listtype_n))) {
         retval = &_db.listtype_lary[bsr][index];
     }
     return retval;
@@ -4507,7 +4507,7 @@ inline amc::FFstep* amc::fstep_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFstep *retval = NULL;
-    if (LIKELY(x <= u64(_db.fstep_n))) {
+    if (LIKELY(u64(t) < u64(_db.fstep_n))) {
         retval = &_db.fstep_lary[bsr][index];
     }
     return retval;
@@ -4549,7 +4549,7 @@ inline amc::FCextern* amc::cextern_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FCextern *retval = NULL;
-    if (LIKELY(x <= u64(_db.cextern_n))) {
+    if (LIKELY(u64(t) < u64(_db.cextern_n))) {
         retval = &_db.cextern_lary[bsr][index];
     }
     return retval;
@@ -4591,7 +4591,7 @@ inline amc::FFdelay* amc::fdelay_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFdelay *retval = NULL;
-    if (LIKELY(x <= u64(_db.fdelay_n))) {
+    if (LIKELY(u64(t) < u64(_db.fdelay_n))) {
         retval = &_db.fdelay_lary[bsr][index];
     }
     return retval;
@@ -4633,7 +4633,7 @@ inline amc::FDisptrace* amc::disptrace_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FDisptrace *retval = NULL;
-    if (LIKELY(x <= u64(_db.disptrace_n))) {
+    if (LIKELY(u64(t) < u64(_db.disptrace_n))) {
         retval = &_db.disptrace_lary[bsr][index];
     }
     return retval;
@@ -4687,7 +4687,7 @@ inline amc::FTracefld* amc::tracefld_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FTracefld *retval = NULL;
-    if (LIKELY(x <= u64(_db.tracefld_n))) {
+    if (LIKELY(u64(t) < u64(_db.tracefld_n))) {
         retval = &_db.tracefld_lary[bsr][index];
     }
     return retval;
@@ -4729,7 +4729,7 @@ inline amc::FTracerec* amc::tracerec_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FTracerec *retval = NULL;
-    if (LIKELY(x <= u64(_db.tracerec_n))) {
+    if (LIKELY(u64(t) < u64(_db.tracerec_n))) {
         retval = &_db.tracerec_lary[bsr][index];
     }
     return retval;
@@ -4771,7 +4771,7 @@ inline amc::FDispsig* amc::dispsig_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FDispsig *retval = NULL;
-    if (LIKELY(x <= u64(_db.dispsig_n))) {
+    if (LIKELY(u64(t) < u64(_db.dispsig_n))) {
         retval = &_db.dispsig_lary[bsr][index];
     }
     return retval;
@@ -4897,7 +4897,7 @@ inline amc::FTarget* amc::target_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FTarget *retval = NULL;
-    if (LIKELY(x <= u64(_db.target_n))) {
+    if (LIKELY(u64(t) < u64(_db.target_n))) {
         retval = &_db.target_lary[bsr][index];
     }
     return retval;
@@ -4951,7 +4951,7 @@ inline amc::FTargdep* amc::targdep_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FTargdep *retval = NULL;
-    if (LIKELY(x <= u64(_db.targdep_n))) {
+    if (LIKELY(u64(t) < u64(_db.targdep_n))) {
         retval = &_db.targdep_lary[bsr][index];
     }
     return retval;
@@ -4993,7 +4993,7 @@ inline amc::FDispctx* amc::dispctx_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FDispctx *retval = NULL;
-    if (LIKELY(x <= u64(_db.dispctx_n))) {
+    if (LIKELY(u64(t) < u64(_db.dispctx_n))) {
         retval = &_db.dispctx_lary[bsr][index];
     }
     return retval;
@@ -5035,7 +5035,7 @@ inline amc::FPmaskfld* amc::pmaskfld_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FPmaskfld *retval = NULL;
-    if (LIKELY(x <= u64(_db.pmaskfld_n))) {
+    if (LIKELY(u64(t) < u64(_db.pmaskfld_n))) {
         retval = &_db.pmaskfld_lary[bsr][index];
     }
     return retval;
@@ -5077,7 +5077,7 @@ inline amc::FFwddecl* amc::fwddecl_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFwddecl *retval = NULL;
-    if (LIKELY(x <= u64(_db.fwddecl_n))) {
+    if (LIKELY(u64(t) < u64(_db.fwddecl_n))) {
         retval = &_db.fwddecl_lary[bsr][index];
     }
     return retval;
@@ -5131,7 +5131,7 @@ inline amc::FTfunc* amc::tfunc_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FTfunc *retval = NULL;
-    if (LIKELY(x <= u64(_db.tfunc_n))) {
+    if (LIKELY(u64(t) < u64(_db.tfunc_n))) {
         retval = &_db.tfunc_lary[bsr][index];
     }
     return retval;
@@ -5185,7 +5185,7 @@ inline amc::FGen* amc::gen_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FGen *retval = NULL;
-    if (LIKELY(x <= u64(_db.gen_n))) {
+    if (LIKELY(u64(t) < u64(_db.gen_n))) {
         retval = &_db.gen_lary[bsr][index];
     }
     return retval;
@@ -5227,7 +5227,7 @@ inline amc::FFregx* amc::fregx_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFregx *retval = NULL;
-    if (LIKELY(x <= u64(_db.fregx_n))) {
+    if (LIKELY(u64(t) < u64(_db.fregx_n))) {
         retval = &_db.fregx_lary[bsr][index];
     }
     return retval;
@@ -5337,7 +5337,7 @@ inline amc::FFcmp* amc::fcmp_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFcmp *retval = NULL;
-    if (LIKELY(x <= u64(_db.fcmp_n))) {
+    if (LIKELY(u64(t) < u64(_db.fcmp_n))) {
         retval = &_db.fcmp_lary[bsr][index];
     }
     return retval;
@@ -5379,7 +5379,7 @@ inline amc::FFcast* amc::fcast_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFcast *retval = NULL;
-    if (LIKELY(x <= u64(_db.fcast_n))) {
+    if (LIKELY(u64(t) < u64(_db.fcast_n))) {
         retval = &_db.fcast_lary[bsr][index];
     }
     return retval;
@@ -5421,7 +5421,7 @@ inline amc::FNoxref* amc::noxref_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FNoxref *retval = NULL;
-    if (LIKELY(x <= u64(_db.noxref_n))) {
+    if (LIKELY(u64(t) < u64(_db.noxref_n))) {
         retval = &_db.noxref_lary[bsr][index];
     }
     return retval;
@@ -5463,7 +5463,7 @@ inline amc::FNocascdel* amc::nocascdel_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FNocascdel *retval = NULL;
-    if (LIKELY(x <= u64(_db.nocascdel_n))) {
+    if (LIKELY(u64(t) < u64(_db.nocascdel_n))) {
         retval = &_db.nocascdel_lary[bsr][index];
     }
     return retval;
@@ -5505,7 +5505,7 @@ inline amc::FCafter* amc::cafter_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FCafter *retval = NULL;
-    if (LIKELY(x <= u64(_db.cafter_n))) {
+    if (LIKELY(u64(t) < u64(_db.cafter_n))) {
         retval = &_db.cafter_lary[bsr][index];
     }
     return retval;
@@ -5547,7 +5547,7 @@ inline amc::FCsize* amc::csize_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FCsize *retval = NULL;
-    if (LIKELY(x <= u64(_db.csize_n))) {
+    if (LIKELY(u64(t) < u64(_db.csize_n))) {
         retval = &_db.csize_lary[bsr][index];
     }
     return retval;
@@ -5589,7 +5589,7 @@ inline amc::FNsx* amc::nsx_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FNsx *retval = NULL;
-    if (LIKELY(x <= u64(_db.nsx_n))) {
+    if (LIKELY(u64(t) < u64(_db.nsx_n))) {
         retval = &_db.nsx_lary[bsr][index];
     }
     return retval;
@@ -5631,7 +5631,7 @@ inline amc::FFcompact* amc::fcompact_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFcompact *retval = NULL;
-    if (LIKELY(x <= u64(_db.fcompact_n))) {
+    if (LIKELY(u64(t) < u64(_db.fcompact_n))) {
         retval = &_db.fcompact_lary[bsr][index];
     }
     return retval;
@@ -5673,7 +5673,7 @@ inline amc::FFindrem* amc::findrem_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFindrem *retval = NULL;
-    if (LIKELY(x <= u64(_db.findrem_n))) {
+    if (LIKELY(u64(t) < u64(_db.findrem_n))) {
         retval = &_db.findrem_lary[bsr][index];
     }
     return retval;
@@ -5715,7 +5715,7 @@ inline amc::FTcursor* amc::tcursor_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FTcursor *retval = NULL;
-    if (LIKELY(x <= u64(_db.tcursor_n))) {
+    if (LIKELY(u64(t) < u64(_db.tcursor_n))) {
         retval = &_db.tcursor_lary[bsr][index];
     }
     return retval;
@@ -5757,7 +5757,7 @@ inline amc::FFcurs* amc::fcurs_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFcurs *retval = NULL;
-    if (LIKELY(x <= u64(_db.fcurs_n))) {
+    if (LIKELY(u64(t) < u64(_db.fcurs_n))) {
         retval = &_db.fcurs_lary[bsr][index];
     }
     return retval;
@@ -5799,7 +5799,7 @@ inline amc::FCdflt* amc::cdflt_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FCdflt *retval = NULL;
-    if (LIKELY(x <= u64(_db.cdflt_n))) {
+    if (LIKELY(u64(t) < u64(_db.cdflt_n))) {
         retval = &_db.cdflt_lary[bsr][index];
     }
     return retval;
@@ -5841,7 +5841,7 @@ inline amc::FArgvtype* amc::argvtype_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FArgvtype *retval = NULL;
-    if (LIKELY(x <= u64(_db.argvtype_n))) {
+    if (LIKELY(u64(t) < u64(_db.argvtype_n))) {
         retval = &_db.argvtype_lary[bsr][index];
     }
     return retval;
@@ -5883,7 +5883,7 @@ inline amc::FFcmdline* amc::fcmdline_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFcmdline *retval = NULL;
-    if (LIKELY(x <= u64(_db.fcmdline_n))) {
+    if (LIKELY(u64(t) < u64(_db.fcmdline_n))) {
         retval = &_db.fcmdline_lary[bsr][index];
     }
     return retval;
@@ -5937,7 +5937,7 @@ inline amc::FFloadtuples* amc::floadtuples_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFloadtuples *retval = NULL;
-    if (LIKELY(x <= u64(_db.floadtuples_n))) {
+    if (LIKELY(u64(t) < u64(_db.floadtuples_n))) {
         retval = &_db.floadtuples_lary[bsr][index];
     }
     return retval;
@@ -5979,7 +5979,7 @@ inline amc::FFcmap* amc::fcmap_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFcmap *retval = NULL;
-    if (LIKELY(x <= u64(_db.fcmap_n))) {
+    if (LIKELY(u64(t) < u64(_db.fcmap_n))) {
         retval = &_db.fcmap_lary[bsr][index];
     }
     return retval;
@@ -6065,7 +6065,7 @@ inline amc::FNsproto* amc::nsproto_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FNsproto *retval = NULL;
-    if (LIKELY(x <= u64(_db.nsproto_n))) {
+    if (LIKELY(u64(t) < u64(_db.nsproto_n))) {
         retval = &_db.nsproto_lary[bsr][index];
     }
     return retval;
@@ -6107,7 +6107,7 @@ inline amc::FNsdb* amc::nsdb_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FNsdb *retval = NULL;
-    if (LIKELY(x <= u64(_db.nsdb_n))) {
+    if (LIKELY(u64(t) < u64(_db.nsdb_n))) {
         retval = &_db.nsdb_lary[bsr][index];
     }
     return retval;
@@ -6217,7 +6217,7 @@ inline amc::FFprefix* amc::fprefix_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFprefix *retval = NULL;
-    if (LIKELY(x <= u64(_db.fprefix_n))) {
+    if (LIKELY(u64(t) < u64(_db.fprefix_n))) {
         retval = &_db.fprefix_lary[bsr][index];
     }
     return retval;
@@ -6271,7 +6271,7 @@ inline amc::FFtrace* amc::ftrace_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFtrace *retval = NULL;
-    if (LIKELY(x <= u64(_db.ftrace_n))) {
+    if (LIKELY(u64(t) < u64(_db.ftrace_n))) {
         retval = &_db.ftrace_lary[bsr][index];
     }
     return retval;
@@ -6313,7 +6313,7 @@ inline amc::FFnoremove* amc::fnoremove_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFnoremove *retval = NULL;
-    if (LIKELY(x <= u64(_db.fnoremove_n))) {
+    if (LIKELY(u64(t) < u64(_db.fnoremove_n))) {
         retval = &_db.fnoremove_lary[bsr][index];
     }
     return retval;
@@ -6395,7 +6395,7 @@ inline amc::FCtypelen* amc::ctypelen_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FCtypelen *retval = NULL;
-    if (LIKELY(x <= u64(_db.ctypelen_n))) {
+    if (LIKELY(u64(t) < u64(_db.ctypelen_n))) {
         retval = &_db.ctypelen_lary[bsr][index];
     }
     return retval;
@@ -6517,7 +6517,7 @@ inline amc::FFbase* amc::fbase_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFbase *retval = NULL;
-    if (LIKELY(x <= u64(_db.fbase_n))) {
+    if (LIKELY(u64(t) < u64(_db.fbase_n))) {
         retval = &_db.fbase_lary[bsr][index];
     }
     return retval;
@@ -6571,7 +6571,7 @@ inline amc::FNossimfile* amc::nossimfile_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FNossimfile *retval = NULL;
-    if (LIKELY(x <= u64(_db.nossimfile_n))) {
+    if (LIKELY(u64(t) < u64(_db.nossimfile_n))) {
         retval = &_db.nossimfile_lary[bsr][index];
     }
     return retval;
@@ -6613,7 +6613,7 @@ inline amc::FGsymbol* amc::gsymbol_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FGsymbol *retval = NULL;
-    if (LIKELY(x <= u64(_db.gsymbol_n))) {
+    if (LIKELY(u64(t) < u64(_db.gsymbol_n))) {
         retval = &_db.gsymbol_lary[bsr][index];
     }
     return retval;
@@ -6655,7 +6655,7 @@ inline amc::FSortfld* amc::sortfld_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FSortfld *retval = NULL;
-    if (LIKELY(x <= u64(_db.sortfld_n))) {
+    if (LIKELY(u64(t) < u64(_db.sortfld_n))) {
         retval = &_db.sortfld_lary[bsr][index];
     }
     return retval;
@@ -6697,7 +6697,7 @@ inline amc::FCget* amc::cget_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FCget *retval = NULL;
-    if (LIKELY(x <= u64(_db.cget_n))) {
+    if (LIKELY(u64(t) < u64(_db.cget_n))) {
         retval = &_db.cget_lary[bsr][index];
     }
     return retval;
@@ -6795,7 +6795,7 @@ inline amc::FCdecl* amc::cdecl_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FCdecl *retval = NULL;
-    if (LIKELY(x <= u64(_db.cdecl_n))) {
+    if (LIKELY(u64(t) < u64(_db.cdecl_n))) {
         retval = &_db.cdecl_lary[bsr][index];
     }
     return retval;
@@ -6881,7 +6881,7 @@ inline amc::FHook* amc::hook_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FHook *retval = NULL;
-    if (LIKELY(x <= u64(_db.hook_n))) {
+    if (LIKELY(u64(t) < u64(_db.hook_n))) {
         retval = &_db.hook_lary[bsr][index];
     }
     return retval;
@@ -6923,7 +6923,7 @@ inline amc::FCharset* amc::charset_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FCharset *retval = NULL;
-    if (LIKELY(x <= u64(_db.charset_n))) {
+    if (LIKELY(u64(t) < u64(_db.charset_n))) {
         retval = &_db.charset_lary[bsr][index];
     }
     return retval;
@@ -6970,7 +6970,7 @@ inline amc::FNsinclude* amc::nsinclude_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FNsinclude *retval = NULL;
-    if (LIKELY(x <= u64(_db.nsinclude_n))) {
+    if (LIKELY(u64(t) < u64(_db.nsinclude_n))) {
         retval = &_db.nsinclude_lary[bsr][index];
     }
     return retval;
@@ -7012,7 +7012,7 @@ inline amc::FSsimvolatile* amc::ssimvolatile_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FSsimvolatile *retval = NULL;
-    if (LIKELY(x <= u64(_db.ssimvolatile_n))) {
+    if (LIKELY(u64(t) < u64(_db.ssimvolatile_n))) {
         retval = &_db.ssimvolatile_lary[bsr][index];
     }
     return retval;
@@ -7054,7 +7054,7 @@ inline amc::FFunique* amc::funique_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FFunique *retval = NULL;
-    if (LIKELY(x <= u64(_db.funique_n))) {
+    if (LIKELY(u64(t) < u64(_db.funique_n))) {
         retval = &_db.funique_lary[bsr][index];
     }
     return retval;
@@ -11981,7 +11981,7 @@ inline amc::FGenXrefSeen* amc::seen_Find(amc::FGenXref& parent, u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc::FGenXrefSeen *retval = NULL;
-    if (LIKELY(x <= u64(parent.seen_n))) {
+    if (LIKELY(u64(t) < u64(parent.seen_n))) {
         retval = &parent.seen_lary[bsr][index];
     }
     return retval;

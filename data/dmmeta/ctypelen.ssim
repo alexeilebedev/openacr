@@ -483,6 +483,7 @@ dmmeta.ctypelen  ctype:atf_amc.FTypeT  len:24  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.FUnitSort  len:432  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.Hooktype  len:24  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:atf_amc.InlaryPrint  len:80  alignment:16  padbytes:16
+dmmeta.ctypelen  ctype:atf_amc.Lary32  len:264  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:atf_amc.Linebuf  len:104  alignment:8  padbytes:17
 dmmeta.ctypelen  ctype:atf_amc.MsgHeader  len:4  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.MsgLength  len:2  alignment:1  padbytes:0

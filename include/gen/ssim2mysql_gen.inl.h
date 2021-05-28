@@ -210,7 +210,7 @@ inline ssim2mysql::FNs* ssim2mysql::ns_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     ssim2mysql::FNs *retval = NULL;
-    if (LIKELY(x <= u64(_db.ns_n))) {
+    if (LIKELY(u64(t) < u64(_db.ns_n))) {
         retval = &_db.ns_lary[bsr][index];
     }
     return retval;
@@ -252,7 +252,7 @@ inline ssim2mysql::FCtype* ssim2mysql::ctype_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     ssim2mysql::FCtype *retval = NULL;
-    if (LIKELY(x <= u64(_db.ctype_n))) {
+    if (LIKELY(u64(t) < u64(_db.ctype_n))) {
         retval = &_db.ctype_lary[bsr][index];
     }
     return retval;
@@ -294,7 +294,7 @@ inline ssim2mysql::FField* ssim2mysql::field_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     ssim2mysql::FField *retval = NULL;
-    if (LIKELY(x <= u64(_db.field_n))) {
+    if (LIKELY(u64(t) < u64(_db.field_n))) {
         retval = &_db.field_lary[bsr][index];
     }
     return retval;
@@ -336,7 +336,7 @@ inline ssim2mysql::FSqltype* ssim2mysql::sqltype_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     ssim2mysql::FSqltype *retval = NULL;
-    if (LIKELY(x <= u64(_db.sqltype_n))) {
+    if (LIKELY(u64(t) < u64(_db.sqltype_n))) {
         retval = &_db.sqltype_lary[bsr][index];
     }
     return retval;
@@ -378,7 +378,7 @@ inline ssim2mysql::FColumn* ssim2mysql::column_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     ssim2mysql::FColumn *retval = NULL;
-    if (LIKELY(x <= u64(_db.column_n))) {
+    if (LIKELY(u64(t) < u64(_db.column_n))) {
         retval = &_db.column_lary[bsr][index];
     }
     return retval;
@@ -456,7 +456,7 @@ inline ssim2mysql::FSubstr* ssim2mysql::substr_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     ssim2mysql::FSubstr *retval = NULL;
-    if (LIKELY(x <= u64(_db.substr_n))) {
+    if (LIKELY(u64(t) < u64(_db.substr_n))) {
         retval = &_db.substr_lary[bsr][index];
     }
     return retval;
@@ -498,7 +498,7 @@ inline ssim2mysql::FSsimfile* ssim2mysql::ssimfile_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     ssim2mysql::FSsimfile *retval = NULL;
-    if (LIKELY(x <= u64(_db.ssimfile_n))) {
+    if (LIKELY(u64(t) < u64(_db.ssimfile_n))) {
         retval = &_db.ssimfile_lary[bsr][index];
     }
     return retval;

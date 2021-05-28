@@ -117,7 +117,7 @@ inline amc_vis::FCtype* amc_vis::ctype_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc_vis::FCtype *retval = NULL;
-    if (LIKELY(x <= u64(_db.ctype_n))) {
+    if (LIKELY(u64(t) < u64(_db.ctype_n))) {
         retval = &_db.ctype_lary[bsr][index];
     }
     return retval;
@@ -159,7 +159,7 @@ inline amc_vis::FField* amc_vis::field_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc_vis::FField *retval = NULL;
-    if (LIKELY(x <= u64(_db.field_n))) {
+    if (LIKELY(u64(t) < u64(_db.field_n))) {
         retval = &_db.field_lary[bsr][index];
     }
     return retval;
@@ -225,7 +225,7 @@ inline amc_vis::FNode* amc_vis::node_Find(i32 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc_vis::FNode *retval = NULL;
-    if (LIKELY(x <= u64(_db.node_n))) {
+    if (LIKELY(u64(t) < u64(_db.node_n))) {
         retval = &_db.node_lary[bsr][index];
     }
     return retval;
@@ -279,7 +279,7 @@ inline amc_vis::Link* amc_vis::link_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc_vis::Link *retval = NULL;
-    if (LIKELY(x <= u64(_db.link_n))) {
+    if (LIKELY(u64(t) < u64(_db.link_n))) {
         retval = &_db.link_lary[bsr][index];
     }
     return retval;
@@ -333,7 +333,7 @@ inline amc_vis::Linkdep* amc_vis::linkdep_Find(i32 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc_vis::Linkdep *retval = NULL;
-    if (LIKELY(x <= u64(_db.linkdep_n))) {
+    if (LIKELY(u64(t) < u64(_db.linkdep_n))) {
         retval = &_db.linkdep_lary[bsr][index];
     }
     return retval;
@@ -475,7 +475,7 @@ inline amc_vis::FReftype* amc_vis::reftype_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc_vis::FReftype *retval = NULL;
-    if (LIKELY(x <= u64(_db.reftype_n))) {
+    if (LIKELY(u64(t) < u64(_db.reftype_n))) {
         retval = &_db.reftype_lary[bsr][index];
     }
     return retval;
@@ -529,7 +529,7 @@ inline amc_vis::FNodedep* amc_vis::nodedep_Find(i32 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc_vis::FNodedep *retval = NULL;
-    if (LIKELY(x <= u64(_db.nodedep_n))) {
+    if (LIKELY(u64(t) < u64(_db.nodedep_n))) {
         retval = &_db.nodedep_lary[bsr][index];
     }
     return retval;
@@ -571,7 +571,7 @@ inline amc_vis::Outrow* amc_vis::outrow_Find(i32 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc_vis::Outrow *retval = NULL;
-    if (LIKELY(x <= u64(_db.outrow_n))) {
+    if (LIKELY(u64(t) < u64(_db.outrow_n))) {
         retval = &_db.outrow_lary[bsr][index];
     }
     return retval;
@@ -669,7 +669,7 @@ inline amc_vis::FFinput* amc_vis::finput_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     amc_vis::FFinput *retval = NULL;
-    if (LIKELY(x <= u64(_db.finput_n))) {
+    if (LIKELY(u64(t) < u64(_db.finput_n))) {
         retval = &_db.finput_lary[bsr][index];
     }
     return retval;
