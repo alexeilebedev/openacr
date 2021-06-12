@@ -222,7 +222,7 @@ inline lib_ctype::FFconst* lib_ctype::fconst_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     lib_ctype::FFconst *retval = NULL;
-    if (LIKELY(x <= u64(_db.fconst_n))) {
+    if (LIKELY(u64(t) < u64(_db.fconst_n))) {
         retval = &_db.fconst_lary[bsr][index];
     }
     return retval;
@@ -288,7 +288,7 @@ inline lib_ctype::FSsimfile* lib_ctype::ssimfile_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     lib_ctype::FSsimfile *retval = NULL;
-    if (LIKELY(x <= u64(_db.ssimfile_n))) {
+    if (LIKELY(u64(t) < u64(_db.ssimfile_n))) {
         retval = &_db.ssimfile_lary[bsr][index];
     }
     return retval;
@@ -342,7 +342,7 @@ inline lib_ctype::FFtuple* lib_ctype::ftuple_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     lib_ctype::FFtuple *retval = NULL;
-    if (LIKELY(x <= u64(_db.ftuple_n))) {
+    if (LIKELY(u64(t) < u64(_db.ftuple_n))) {
         retval = &_db.ftuple_lary[bsr][index];
     }
     return retval;
@@ -384,7 +384,7 @@ inline lib_ctype::FCtype* lib_ctype::ctype_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     lib_ctype::FCtype *retval = NULL;
-    if (LIKELY(x <= u64(_db.ctype_n))) {
+    if (LIKELY(u64(t) < u64(_db.ctype_n))) {
         retval = &_db.ctype_lary[bsr][index];
     }
     return retval;
@@ -438,7 +438,7 @@ inline lib_ctype::FField* lib_ctype::field_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     lib_ctype::FField *retval = NULL;
-    if (LIKELY(x <= u64(_db.field_n))) {
+    if (LIKELY(u64(t) < u64(_db.field_n))) {
         retval = &_db.field_lary[bsr][index];
     }
     return retval;
@@ -492,7 +492,7 @@ inline lib_ctype::FCdflt* lib_ctype::cdflt_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     lib_ctype::FCdflt *retval = NULL;
-    if (LIKELY(x <= u64(_db.cdflt_n))) {
+    if (LIKELY(u64(t) < u64(_db.cdflt_n))) {
         retval = &_db.cdflt_lary[bsr][index];
     }
     return retval;
@@ -534,7 +534,7 @@ inline lib_ctype::FCfmt* lib_ctype::cfmt_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     lib_ctype::FCfmt *retval = NULL;
-    if (LIKELY(x <= u64(_db.cfmt_n))) {
+    if (LIKELY(u64(t) < u64(_db.cfmt_n))) {
         retval = &_db.cfmt_lary[bsr][index];
     }
     return retval;
@@ -588,7 +588,7 @@ inline lib_ctype::FCppfunc* lib_ctype::cppfunc_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     lib_ctype::FCppfunc *retval = NULL;
-    if (LIKELY(x <= u64(_db.cppfunc_n))) {
+    if (LIKELY(u64(t) < u64(_db.cppfunc_n))) {
         retval = &_db.cppfunc_lary[bsr][index];
     }
     return retval;
@@ -630,7 +630,7 @@ inline lib_ctype::FSubstr* lib_ctype::substr_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     lib_ctype::FSubstr *retval = NULL;
-    if (LIKELY(x <= u64(_db.substr_n))) {
+    if (LIKELY(u64(t) < u64(_db.substr_n))) {
         retval = &_db.substr_lary[bsr][index];
     }
     return retval;

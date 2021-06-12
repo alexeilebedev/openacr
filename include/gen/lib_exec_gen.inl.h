@@ -31,7 +31,7 @@ inline lib_exec::FSyscmddep* lib_exec::syscmddep_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     lib_exec::FSyscmddep *retval = NULL;
-    if (LIKELY(x <= u64(_db.syscmddep_n))) {
+    if (LIKELY(u64(t) < u64(_db.syscmddep_n))) {
         retval = &_db.syscmddep_lary[bsr][index];
     }
     return retval;
@@ -73,7 +73,7 @@ inline lib_exec::FSyscmd* lib_exec::syscmd_Find(i32 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     lib_exec::FSyscmd *retval = NULL;
-    if (LIKELY(x <= u64(_db.syscmd_n))) {
+    if (LIKELY(u64(t) < u64(_db.syscmd_n))) {
         retval = &_db.syscmd_lary[bsr][index];
     }
     return retval;

@@ -325,7 +325,7 @@ inline acr_compl::FCtype* acr_compl::ctype_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr_compl::FCtype *retval = NULL;
-    if (LIKELY(x <= u64(_db.ctype_n))) {
+    if (LIKELY(u64(t) < u64(_db.ctype_n))) {
         retval = &_db.ctype_lary[bsr][index];
     }
     return retval;
@@ -379,7 +379,7 @@ inline acr_compl::FField* acr_compl::field_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr_compl::FField *retval = NULL;
-    if (LIKELY(x <= u64(_db.field_n))) {
+    if (LIKELY(u64(t) < u64(_db.field_n))) {
         retval = &_db.field_lary[bsr][index];
     }
     return retval;
@@ -433,7 +433,7 @@ inline acr_compl::FSsimfile* acr_compl::ssimfile_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr_compl::FSsimfile *retval = NULL;
-    if (LIKELY(x <= u64(_db.ssimfile_n))) {
+    if (LIKELY(u64(t) < u64(_db.ssimfile_n))) {
         retval = &_db.ssimfile_lary[bsr][index];
     }
     return retval;
@@ -487,7 +487,7 @@ inline acr_compl::FCompletion* acr_compl::completion_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr_compl::FCompletion *retval = NULL;
-    if (LIKELY(x <= u64(_db.completion_n))) {
+    if (LIKELY(u64(t) < u64(_db.completion_n))) {
         retval = &_db.completion_lary[bsr][index];
     }
     return retval;
@@ -529,7 +529,7 @@ inline acr_compl::FAnonfld* acr_compl::anonfld_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr_compl::FAnonfld *retval = NULL;
-    if (LIKELY(x <= u64(_db.anonfld_n))) {
+    if (LIKELY(u64(t) < u64(_db.anonfld_n))) {
         retval = &_db.anonfld_lary[bsr][index];
     }
     return retval;
@@ -601,7 +601,7 @@ inline acr_compl::FNs* acr_compl::ns_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr_compl::FNs *retval = NULL;
-    if (LIKELY(x <= u64(_db.ns_n))) {
+    if (LIKELY(u64(t) < u64(_db.ns_n))) {
         retval = &_db.ns_lary[bsr][index];
     }
     return retval;

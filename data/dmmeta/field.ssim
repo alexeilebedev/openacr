@@ -1703,6 +1703,7 @@ dmmeta.field  field:atf_amc.Hooktype.callback  arg:atf_amc.Hooktype  reftype:Hoo
 dmmeta.field  field:atf_amc.Hooktype.value  arg:i32  reftype:Val  dflt:""  comment:""
 dmmeta.field  field:atf_amc.InlaryPrint.fixary  arg:u32  reftype:Inlary  dflt:""  comment:""
 dmmeta.field  field:atf_amc.InlaryPrint.inlary  arg:u32  reftype:Inlary  dflt:""  comment:""
+dmmeta.field  field:atf_amc.Lary32.lary  arg:u32  reftype:Lary  dflt:""  comment:""
 dmmeta.field  field:atf_amc.Linebuf.in  arg:char  reftype:Fbuf  dflt:"'\\n'"  comment:"Delimited buffer"
 dmmeta.field  field:atf_amc.MsgHeader.type  arg:atf_amc.MsgType  reftype:Val  dflt:""  comment:"Message type"
 dmmeta.field  field:atf_amc.MsgHeader.length  arg:atf_amc.MsgLength  reftype:Val  dflt:""  comment:"Total message length, including this header"

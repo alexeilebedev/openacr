@@ -30,7 +30,7 @@ inline src_lim::FInclude* src_lim::include_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     src_lim::FInclude *retval = NULL;
-    if (LIKELY(x <= u64(_db.include_n))) {
+    if (LIKELY(u64(t) < u64(_db.include_n))) {
         retval = &_db.include_lary[bsr][index];
     }
     return retval;
@@ -72,7 +72,7 @@ inline src_lim::FLinelim* src_lim::linelim_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     src_lim::FLinelim *retval = NULL;
-    if (LIKELY(x <= u64(_db.linelim_n))) {
+    if (LIKELY(u64(t) < u64(_db.linelim_n))) {
         retval = &_db.linelim_lary[bsr][index];
     }
     return retval;
@@ -114,7 +114,7 @@ inline src_lim::FTargsrc* src_lim::targsrc_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     src_lim::FTargsrc *retval = NULL;
-    if (LIKELY(x <= u64(_db.targsrc_n))) {
+    if (LIKELY(u64(t) < u64(_db.targsrc_n))) {
         retval = &_db.targsrc_lary[bsr][index];
     }
     return retval;
@@ -156,7 +156,7 @@ inline src_lim::FGitfile* src_lim::gitfile_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     src_lim::FGitfile *retval = NULL;
-    if (LIKELY(x <= u64(_db.gitfile_n))) {
+    if (LIKELY(u64(t) < u64(_db.gitfile_n))) {
         retval = &_db.gitfile_lary[bsr][index];
     }
     return retval;

@@ -278,6 +278,7 @@ namespace atf_amc { struct FUnitSort; }
 namespace atf_amc { struct FieldId; }
 namespace atf_amc { struct Hooktype; }
 namespace atf_amc { struct InlaryPrint; }
+namespace atf_amc { struct Lary32; }
 namespace atf_amc { struct Linebuf; }
 namespace atf_amc { struct MsgHeader_curs; }
 namespace atf_amc { struct Msgbuf; }
@@ -351,6 +352,7 @@ namespace atf_amc { struct FUnitSort_c_ptrary_curs; }
 namespace atf_amc { struct FUnitSort_fixary_curs; }
 namespace atf_amc { struct InlaryPrint_fixary_curs; }
 namespace atf_amc { struct InlaryPrint_inlary_curs; }
+namespace atf_amc { struct Lary32_lary_curs; }
 namespace atf_amc { struct PmaskU555_pmask_curs; }
 namespace atf_amc { struct TaryU32_tary_u32_curs; }
 namespace atf_amc { struct TaryU8_ary_curs; }
@@ -3229,6 +3231,52 @@ void                 InlaryPrint_Uninit(atf_amc::InlaryPrint& parent) __attribut
 // print string representation of atf_amc::InlaryPrint to string LHS, no header -- cprint:atf_amc.InlaryPrint.String
 void                 InlaryPrint_Print(atf_amc::InlaryPrint & row, algo::cstring &str) __attribute__((nothrow));
 
+// --- atf_amc.Lary32
+struct Lary32 { // atf_amc.Lary32
+    u32*   lary_lary[32];   // level array
+    i32    lary_n;          // number of elements in array
+    Lary32();
+    ~Lary32();
+private:
+    // reftype of atf_amc.Lary32.lary prohibits copy
+    Lary32(const Lary32&){ /*disallow copy constructor */}
+    void operator =(const Lary32&){ /*disallow direct assignment */}
+};
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+u32&                 lary_Alloc(atf_amc::Lary32& parent) __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+u32*                 lary_AllocMaybe(atf_amc::Lary32& parent) __attribute__((__warn_unused_result__, nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                lary_AllocMem(atf_amc::Lary32& parent) __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 lary_EmptyQ(atf_amc::Lary32& parent) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+u32*                 lary_Find(atf_amc::Lary32& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+u32*                 lary_Last(atf_amc::Lary32& parent) __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  lary_N(const atf_amc::Lary32& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 lary_RemoveAll(atf_amc::Lary32& parent) __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 lary_RemoveLast(atf_amc::Lary32& parent) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+u32&                 lary_qFind(atf_amc::Lary32& parent, u64 t) __attribute__((nothrow));
+
+// cursor points to valid item
+void                 Lary32_lary_curs_Reset(Lary32_lary_curs &curs, atf_amc::Lary32 &parent);
+// cursor points to valid item
+bool                 Lary32_lary_curs_ValidQ(Lary32_lary_curs &curs);
+// proceed to next item
+void                 Lary32_lary_curs_Next(Lary32_lary_curs &curs);
+// item access
+u32&                 Lary32_lary_curs_Access(Lary32_lary_curs &curs);
+// Set all fields to initial values.
+void                 Lary32_Init(atf_amc::Lary32& parent);
+void                 Lary32_Uninit(atf_amc::Lary32& parent) __attribute__((nothrow));
+
 // --- atf_amc.Linebuf
 // create: atf_amc.FDb.linebuf (Cppstack)
 struct Linebuf { // atf_amc.Linebuf
@@ -5684,6 +5732,14 @@ struct InlaryPrint_inlary_curs {// cursor
 };
 
 
+struct Lary32_lary_curs {// cursor
+    typedef u32 ChildType;
+    atf_amc::Lary32 *parent;
+    i64 index;
+    Lary32_lary_curs(){ parent=NULL; index=0; }
+};
+
+
 struct PmaskU555_pmask_curs {// cursor
     typedef u64 ChildType;
     int index;
@@ -5898,6 +5954,8 @@ void                 amctest_Hook2();
 void                 amctest_ImdXref();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_Inlary_ReadPrint();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+void                 amctest_LaryFind();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_LineIter();
 // User-implemented function from gstatic:atf_amc.FDb.amctest

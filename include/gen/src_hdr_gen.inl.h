@@ -31,7 +31,7 @@ inline src_hdr::FTargsrc* src_hdr::targsrc_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     src_hdr::FTargsrc *retval = NULL;
-    if (LIKELY(x <= u64(_db.targsrc_n))) {
+    if (LIKELY(u64(t) < u64(_db.targsrc_n))) {
         retval = &_db.targsrc_lary[bsr][index];
     }
     return retval;
@@ -73,7 +73,7 @@ inline src_hdr::FNs* src_hdr::ns_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     src_hdr::FNs *retval = NULL;
-    if (LIKELY(x <= u64(_db.ns_n))) {
+    if (LIKELY(u64(t) < u64(_db.ns_n))) {
         retval = &_db.ns_lary[bsr][index];
     }
     return retval;
@@ -127,7 +127,7 @@ inline src_hdr::FNsx* src_hdr::nsx_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     src_hdr::FNsx *retval = NULL;
-    if (LIKELY(x <= u64(_db.nsx_n))) {
+    if (LIKELY(u64(t) < u64(_db.nsx_n))) {
         retval = &_db.nsx_lary[bsr][index];
     }
     return retval;

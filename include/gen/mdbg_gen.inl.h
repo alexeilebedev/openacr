@@ -126,7 +126,7 @@ inline mdbg::FCfg* mdbg::cfg_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     mdbg::FCfg *retval = NULL;
-    if (LIKELY(x <= u64(_db.cfg_n))) {
+    if (LIKELY(u64(t) < u64(_db.cfg_n))) {
         retval = &_db.cfg_lary[bsr][index];
     }
     return retval;
@@ -180,7 +180,7 @@ inline mdbg::FBuilddir* mdbg::builddir_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     mdbg::FBuilddir *retval = NULL;
-    if (LIKELY(x <= u64(_db.builddir_n))) {
+    if (LIKELY(u64(t) < u64(_db.builddir_n))) {
         retval = &_db.builddir_lary[bsr][index];
     }
     return retval;

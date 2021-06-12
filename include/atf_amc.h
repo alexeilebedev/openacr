@@ -396,6 +396,12 @@ namespace atf_amc { // update-hdr
     // void amctest_Inlary_ReadPrint();
 
     // -------------------------------------------------------------------
+    // cpp/atf/amc/lary.cpp
+    //
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void amctest_LaryFind();
+
+    // -------------------------------------------------------------------
     // cpp/atf/amc/lineiter.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)

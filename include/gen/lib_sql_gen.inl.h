@@ -43,7 +43,7 @@ inline lib_sql::FAttr* lib_sql::attr_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     lib_sql::FAttr *retval = NULL;
-    if (LIKELY(x <= u64(_db.attr_n))) {
+    if (LIKELY(u64(t) < u64(_db.attr_n))) {
         retval = &_db.attr_lary[bsr][index];
     }
     return retval;

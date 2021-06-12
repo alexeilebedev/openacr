@@ -884,7 +884,7 @@ inline acr::FCtype* acr::ctype_Find(i32 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr::FCtype *retval = NULL;
-    if (LIKELY(x <= u64(_db.ctype_n))) {
+    if (LIKELY(u64(t) < u64(_db.ctype_n))) {
         retval = &_db.ctype_lary[bsr][index];
     }
     return retval;
@@ -926,7 +926,7 @@ inline acr::FAnonfld* acr::anonfld_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr::FAnonfld *retval = NULL;
-    if (LIKELY(x <= u64(_db.anonfld_n))) {
+    if (LIKELY(u64(t) < u64(_db.anonfld_n))) {
         retval = &_db.anonfld_lary[bsr][index];
     }
     return retval;
@@ -968,7 +968,7 @@ inline acr::FCdflt* acr::cdflt_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr::FCdflt *retval = NULL;
-    if (LIKELY(x <= u64(_db.cdflt_n))) {
+    if (LIKELY(u64(t) < u64(_db.cdflt_n))) {
         retval = &_db.cdflt_lary[bsr][index];
     }
     return retval;
@@ -1010,7 +1010,7 @@ inline acr::FField* acr::field_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr::FField *retval = NULL;
-    if (LIKELY(x <= u64(_db.field_n))) {
+    if (LIKELY(u64(t) < u64(_db.field_n))) {
         retval = &_db.field_lary[bsr][index];
     }
     return retval;
@@ -1052,7 +1052,7 @@ inline acr::FFile* acr::file_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr::FFile *retval = NULL;
-    if (LIKELY(x <= u64(_db.file_n))) {
+    if (LIKELY(u64(t) < u64(_db.file_n))) {
         retval = &_db.file_lary[bsr][index];
     }
     return retval;
@@ -1322,7 +1322,7 @@ inline acr::FSubstr* acr::substr_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr::FSubstr *retval = NULL;
-    if (LIKELY(x <= u64(_db.substr_n))) {
+    if (LIKELY(u64(t) < u64(_db.substr_n))) {
         retval = &_db.substr_lary[bsr][index];
     }
     return retval;
@@ -1364,7 +1364,7 @@ inline acr::FSsimfile* acr::ssimfile_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr::FSsimfile *retval = NULL;
-    if (LIKELY(x <= u64(_db.ssimfile_n))) {
+    if (LIKELY(u64(t) < u64(_db.ssimfile_n))) {
         retval = &_db.ssimfile_lary[bsr][index];
     }
     return retval;
@@ -1406,7 +1406,7 @@ inline acr::FTempkey* acr::tempkey_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr::FTempkey *retval = NULL;
-    if (LIKELY(x <= u64(_db.tempkey_n))) {
+    if (LIKELY(u64(t) < u64(_db.tempkey_n))) {
         retval = &_db.tempkey_lary[bsr][index];
     }
     return retval;
@@ -1516,7 +1516,7 @@ inline acr::FSsimsort* acr::ssimsort_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr::FSsimsort *retval = NULL;
-    if (LIKELY(x <= u64(_db.ssimsort_n))) {
+    if (LIKELY(u64(t) < u64(_db.ssimsort_n))) {
         retval = &_db.ssimsort_lary[bsr][index];
     }
     return retval;
@@ -1570,7 +1570,7 @@ inline acr::FSmallstr* acr::smallstr_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr::FSmallstr *retval = NULL;
-    if (LIKELY(x <= u64(_db.smallstr_n))) {
+    if (LIKELY(u64(t) < u64(_db.smallstr_n))) {
         retval = &_db.smallstr_lary[bsr][index];
     }
     return retval;
@@ -1612,7 +1612,7 @@ inline acr::FFunique* acr::funique_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr::FFunique *retval = NULL;
-    if (LIKELY(x <= u64(_db.funique_n))) {
+    if (LIKELY(u64(t) < u64(_db.funique_n))) {
         retval = &_db.funique_lary[bsr][index];
     }
     return retval;
@@ -1666,7 +1666,7 @@ inline acr::FBltin* acr::bltin_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr::FBltin *retval = NULL;
-    if (LIKELY(x <= u64(_db.bltin_n))) {
+    if (LIKELY(u64(t) < u64(_db.bltin_n))) {
         retval = &_db.bltin_lary[bsr][index];
     }
     return retval;
@@ -1738,7 +1738,7 @@ inline acr::FCppfunc* acr::cppfunc_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr::FCppfunc *retval = NULL;
-    if (LIKELY(x <= u64(_db.cppfunc_n))) {
+    if (LIKELY(u64(t) < u64(_db.cppfunc_n))) {
         retval = &_db.cppfunc_lary[bsr][index];
     }
     return retval;

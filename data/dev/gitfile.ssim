@@ -219,6 +219,7 @@ dev.gitfile  gitfile:cpp/atf/amc/fconst.cpp
 dev.gitfile  gitfile:cpp/atf/amc/fstep.cpp
 dev.gitfile  gitfile:cpp/atf/amc/hook.cpp
 dev.gitfile  gitfile:cpp/atf/amc/inlary.cpp
+dev.gitfile  gitfile:cpp/atf/amc/lary.cpp
 dev.gitfile  gitfile:cpp/atf/amc/lineiter.cpp
 dev.gitfile  gitfile:cpp/atf/amc/lpool.cpp
 dev.gitfile  gitfile:cpp/atf/amc/main.cpp

@@ -30,7 +30,7 @@ inline ssim2csv::FExpand* ssim2csv::expand_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     ssim2csv::FExpand *retval = NULL;
-    if (LIKELY(x <= u64(_db.expand_n))) {
+    if (LIKELY(u64(t) < u64(_db.expand_n))) {
         retval = &_db.expand_lary[bsr][index];
     }
     return retval;
@@ -84,7 +84,7 @@ inline ssim2csv::FOutfile* ssim2csv::outfile_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     ssim2csv::FOutfile *retval = NULL;
-    if (LIKELY(x <= u64(_db.outfile_n))) {
+    if (LIKELY(u64(t) < u64(_db.outfile_n))) {
         retval = &_db.outfile_lary[bsr][index];
     }
     return retval;

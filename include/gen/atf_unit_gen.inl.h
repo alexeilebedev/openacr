@@ -930,7 +930,7 @@ inline atf_unit::FUnittest* atf_unit::unittest_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     atf_unit::FUnittest *retval = NULL;
-    if (LIKELY(x <= u64(_db.unittest_n))) {
+    if (LIKELY(u64(t) < u64(_db.unittest_n))) {
         retval = &_db.unittest_lary[bsr][index];
     }
     return retval;
@@ -996,7 +996,7 @@ inline atf_unit::FTestrun* atf_unit::testrun_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     atf_unit::FTestrun *retval = NULL;
-    if (LIKELY(x <= u64(_db.testrun_n))) {
+    if (LIKELY(u64(t) < u64(_db.testrun_n))) {
         retval = &_db.testrun_lary[bsr][index];
     }
     return retval;

@@ -98,7 +98,7 @@ inline acr_my::FNsdb* acr_my::nsdb_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr_my::FNsdb *retval = NULL;
-    if (LIKELY(x <= u64(_db.nsdb_n))) {
+    if (LIKELY(u64(t) < u64(_db.nsdb_n))) {
         retval = &_db.nsdb_lary[bsr][index];
     }
     return retval;
@@ -140,7 +140,7 @@ inline acr_my::FSsimfile* acr_my::ssimfile_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     acr_my::FSsimfile *retval = NULL;
-    if (LIKELY(x <= u64(_db.ssimfile_n))) {
+    if (LIKELY(u64(t) < u64(_db.ssimfile_n))) {
         retval = &_db.ssimfile_lary[bsr][index];
     }
     return retval;

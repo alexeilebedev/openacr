@@ -49,7 +49,7 @@ inline atf_norm::FNormcheck* atf_norm::normcheck_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     atf_norm::FNormcheck *retval = NULL;
-    if (LIKELY(x <= u64(_db.normcheck_n))) {
+    if (LIKELY(u64(t) < u64(_db.normcheck_n))) {
         retval = &_db.normcheck_lary[bsr][index];
     }
     return retval;
@@ -91,7 +91,7 @@ inline atf_norm::FSsimfile* atf_norm::ssimfile_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     atf_norm::FSsimfile *retval = NULL;
-    if (LIKELY(x <= u64(_db.ssimfile_n))) {
+    if (LIKELY(u64(t) < u64(_db.ssimfile_n))) {
         retval = &_db.ssimfile_lary[bsr][index];
     }
     return retval;
@@ -145,7 +145,7 @@ inline atf_norm::FScriptfile* atf_norm::scriptfile_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     atf_norm::FScriptfile *retval = NULL;
-    if (LIKELY(x <= u64(_db.scriptfile_n))) {
+    if (LIKELY(u64(t) < u64(_db.scriptfile_n))) {
         retval = &_db.scriptfile_lary[bsr][index];
     }
     return retval;
@@ -199,7 +199,7 @@ inline atf_norm::FNs* atf_norm::ns_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     atf_norm::FNs *retval = NULL;
-    if (LIKELY(x <= u64(_db.ns_n))) {
+    if (LIKELY(u64(t) < u64(_db.ns_n))) {
         retval = &_db.ns_lary[bsr][index];
     }
     return retval;
@@ -253,7 +253,7 @@ inline atf_norm::FReadme* atf_norm::readme_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     atf_norm::FReadme *retval = NULL;
-    if (LIKELY(x <= u64(_db.readme_n))) {
+    if (LIKELY(u64(t) < u64(_db.readme_n))) {
         retval = &_db.readme_lary[bsr][index];
     }
     return retval;
@@ -295,7 +295,7 @@ inline atf_norm::FBuilddir* atf_norm::builddir_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     atf_norm::FBuilddir *retval = NULL;
-    if (LIKELY(x <= u64(_db.builddir_n))) {
+    if (LIKELY(u64(t) < u64(_db.builddir_n))) {
         retval = &_db.builddir_lary[bsr][index];
     }
     return retval;
@@ -337,7 +337,7 @@ inline atf_norm::FCfg* atf_norm::cfg_Find(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     atf_norm::FCfg *retval = NULL;
-    if (LIKELY(x <= u64(_db.cfg_n))) {
+    if (LIKELY(u64(t) < u64(_db.cfg_n))) {
         retval = &_db.cfg_lary[bsr][index];
     }
     return retval;
