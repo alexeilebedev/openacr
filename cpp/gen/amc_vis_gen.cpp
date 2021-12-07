@@ -285,7 +285,7 @@ void* amc_vis::lpool_ReallocMem(void *oldmem, u64 old_size, u64 new_size) {
     void* ret = oldmem;
     if (new_size != old_size) {
         ret = lpool_AllocMem(new_size);
-        if (ret) {
+        if (ret && oldmem) {
             memcpy(ret,oldmem,u64_Min(new_size,old_size));
             lpool_FreeMem(oldmem, old_size);
         }
