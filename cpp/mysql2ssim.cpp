@@ -26,7 +26,7 @@
 #include "include/gen/mysql2ssim_gen.h"
 #include "include/gen/mysql2ssim_gen.inl.h"
 #include "include/lib/lib_mysql.h"
-#include <mysql/mysqld_error.h> // for ER_BAD_DB_ERROR
+#include <mariadb/mysqld_error.h> // for ER_BAD_DB_ERROR
 
 // -----------------------------------------------------------------------------
 

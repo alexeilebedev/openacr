@@ -33,29 +33,39 @@
 // State machine:
 // Init -> Update ... Update -> Finish -> (GetDigest), Init -> ...
 
+#pragma once
+#include <openssl/evp.h>
+
 struct Sha1Ctx {
-    SHA_CTX sha_context;
-    u8      sha_digest[SHA_DIGEST_LENGTH];
-    Bool    final_flag;
+    EVP_MD_CTX* sha_context;
+    u8          sha_digest[EVP_MAX_MD_SIZE];
+    Bool        final_flag;
     Sha1Ctx();
+    ~Sha1Ctx();
 };
 
 // Initialize Sha1 context
 inline Sha1Ctx::Sha1Ctx() {
-    vrfy(SHA1_Init(&sha_context),"SHA1_Init");
+    sha_context = EVP_MD_CTX_new();
+    vrfy(sha_context, "EVP_MD_CTX_new");
+    vrfy(EVP_DigestInit(sha_context, EVP_get_digestbyname("sha1")),"SHA1_Init");
     memset(&sha_digest,0,sizeof(sha_digest));
+}
+
+inline Sha1Ctx::~Sha1Ctx() {
+    EVP_MD_CTX_free(sha_context);
 }
 
 // Update Sha1 context with new data
 inline void Update(Sha1Ctx &ctx, algo::memptr data) {
     vrfy(!ctx.final_flag, "SHA context has already been finalized");
-    vrfy(SHA1_Update(&ctx.sha_context, data.elems, data.n_elems), "SHA1_Update");
+    vrfy(EVP_DigestUpdate(ctx.sha_context, data.elems, data.n_elems), "SHA1_Update");
 }
 
 // Finalize Sha1 context, and compute the digest
 inline void Finish(Sha1Ctx &ctx) {
     vrfy(!ctx.final_flag, "SHA context has already been finalized");
-    vrfy(SHA1_Final(&ctx.sha_digest[0], &ctx.sha_context), "SHA1_Final");
+    vrfy(EVP_DigestFinal(ctx.sha_context,ctx.sha_digest,NULL), "SHA1_Final");
     ctx.final_flag.value = true;
 }
 
