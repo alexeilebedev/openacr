@@ -157,7 +157,7 @@ void amc::tfunc_Lpool_ReallocMem() {
     Ins(&R, func.body, "void* ret = oldmem;");
     Ins(&R, func.body, "if (new_size != old_size) {");
     Ins(&R, func.body, "    ret = $name_AllocMem($pararg, new_size);");
-    Ins(&R, func.body, "    if (ret) {");
+    Ins(&R, func.body, "    if (ret && oldmem) {");
     Ins(&R, func.body, "        memcpy(ret,oldmem,u64_Min(new_size,old_size));");
     Ins(&R, func.body, "        $name_FreeMem($pararg, oldmem, old_size);");
     Ins(&R, func.body, "    }");

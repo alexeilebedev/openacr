@@ -4593,7 +4593,7 @@ void* atf_amc::varlen_extern_ReallocMem(void *oldmem, u64 old_size, u64 new_size
     void* ret = oldmem;
     if (new_size != old_size) {
         ret = varlen_extern_AllocMem(new_size);
-        if (ret) {
+        if (ret && oldmem) {
             memcpy(ret,oldmem,u64_Min(new_size,old_size));
             varlen_extern_FreeMem(oldmem, old_size);
         }
@@ -5177,7 +5177,7 @@ void* atf_amc::optalloc_ReallocMem(void *oldmem, u64 old_size, u64 new_size) {
     void* ret = oldmem;
     if (new_size != old_size) {
         ret = optalloc_AllocMem(new_size);
-        if (ret) {
+        if (ret && oldmem) {
             memcpy(ret,oldmem,u64_Min(new_size,old_size));
             optalloc_FreeMem(oldmem, old_size);
         }
@@ -5306,7 +5306,7 @@ void* atf_amc::varlenalloc_ReallocMem(void *oldmem, u64 old_size, u64 new_size) 
     void* ret = oldmem;
     if (new_size != old_size) {
         ret = varlenalloc_AllocMem(new_size);
-        if (ret) {
+        if (ret && oldmem) {
             memcpy(ret,oldmem,u64_Min(new_size,old_size));
             varlenalloc_FreeMem(oldmem, old_size);
         }
@@ -5446,7 +5446,7 @@ void* atf_amc::optg_ReallocMem(void *oldmem, u64 old_size, u64 new_size) {
     void* ret = oldmem;
     if (new_size != old_size) {
         ret = optg_AllocMem(new_size);
-        if (ret) {
+        if (ret && oldmem) {
             memcpy(ret,oldmem,u64_Min(new_size,old_size));
             optg_FreeMem(oldmem, old_size);
         }

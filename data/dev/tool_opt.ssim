@@ -1,4 +1,4 @@
-dev.tool_opt  tool_opt:004  opt_type:CC_OPTS  opt:-O  target:""  uname:""  compiler:""  cfg:release  arch:""  comment:""
+dev.tool_opt  tool_opt:004  opt_type:CC_OPTS  opt:-O3  target:""  uname:""  compiler:""  cfg:release  arch:""  comment:""
 dev.tool_opt  tool_opt:005  opt_type:CC_OPTS  opt:-Werror  target:""  uname:""  compiler:""  cfg:release  arch:""  comment:""
 dev.tool_opt  tool_opt:006  opt_type:CC_OPTS  opt:-pg  target:""  uname:""  compiler:""  cfg:profile  arch:""  comment:""
 dev.tool_opt  tool_opt:008  opt_type:LINK_OPTS  opt:-pg  target:""  uname:""  compiler:""  cfg:profile  arch:""  comment:""
