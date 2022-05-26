@@ -323,4 +323,4 @@ if ($verbose > 0) {
         ."  copyerr:$trace_copyerr  unoptimizable_cmd:$trace_unoptimizable_cmd\n";
 }
 RemoveTempFiles();
-$rc;
+exit $rc > 128 ? 128 : $rc;

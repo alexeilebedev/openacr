@@ -33,7 +33,7 @@ Let's begin by creating a new unit test:
 
     $ acr_ed -create -unittest algo_lib.Test1 -write
     ...
-    
+
 This creates a new entry in `atfdb.unittest`, and adds a stub to `cpp/atf/unit/algo_lib.cpp`.
 
     +// --------------------------------------------------------------------------------
@@ -52,31 +52,31 @@ Alternatively, we could proceed manually:
 Or even:
 
     $ vim data/atfdb/unittest.ssim
-    
+
 After implementing the test, we can run it with `atf_unit algo_lib.Test`
 
-We can run all unit tests from our namespace with 
+We can run all unit tests from our namespace with
 
     $ atf_unit algo_lib.%
     ...
-    
+
 ### Normalization Checks
 
 We can create a normalization check with :
 
     $ acr_ed -create -normcheck <name> -write
     ...
-    
+
 Alternatively, we could do:
 
     $ echo atfdb.normcheck normcheck:mycheck | acr -insert -write
     $ amc
-    
+
 And then implement the function `atf_norm::normcheck_mycheck()` somewhere
 in a file that links with `atf_norm`.
 
 ### Debugging
 
-If a test fails, the easiest way to debug it is to re-run `atf_unit` with 
-`-debug` flag. It will use `mdbg` and automatically set a breakpoint at the first 
+If a test fails, the easiest way to debug it is to re-run `atf_unit` with
+`-debug` flag. It will use `mdbg` and automatically set a breakpoint at the first
 line of the test in question.

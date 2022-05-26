@@ -5,12 +5,14 @@ The are two main types of applications that `amc` provides support for.
 One type is RPC-style applications, i.e. client applications, written in logical time domain.
 This style is characterized by blocking calls.
 
-The second is real-time, cooperative threaded applications ("engines"), written in real time.
+The second is real-time, cooperative threaded applications ("engines"), written in real-time
+domain.
 In the first instance, one line of code corresponds to one logical step of the algorithm
 being implemented. In the second instance, each line corresponds to a few CPU instructions.
-This style is fully asynchronous and no blocking calls are typically allowed. In a full
-kernel bypass application, not even system calls are allowed. Both amc and `algo_lib` 
- support this use case.
+This style is fully asynchronous and no blocking calls are typically allowed.
+
+In a full kernel bypass application, not even system calls are allowed. Both amc and `algo_lib` 
+support this use case. 
 
 It is also possible to mix these two paradigms, but the distinction is useful to keep
 in mind. If you keep RPC applications and engines separate, you get the best of both worlds:
@@ -54,10 +56,10 @@ The main loop algorithm is controlled by the following three main variables:
 
 * `algo_lib::_db.clock`: Current value of the clock. Updated on every scheduling cycle from CPU time source (get_cycles())
 * `algo_lib::_db.limit`: When `clock` reaches `limit`, the loop exits. This makes it possible to run `MainLoop` for short amounts
-of time if necessary. By default, limit is set to the max possible u64 value.
+of time if necessary by adjusting `limit`. By default, limit is set to the max possible u64 value.
 * `algo_lib::_db.next_loop`: At the top of each each main loop cycle, this variable is set to limit. Then, some number
 of `Steps` are performed, one per namespace.
-Each namespace's step call zero or more of its `fsteps` (field-level steps), which are just functions.
+Each namespace's step calls zero or more of its `fsteps` (field-level steps), which are just functions.
 Each `fstep` is allowed to revise `next_loop` to the value
 when this step needs to be revisited. Thus, we compute the soonest time we are going to next need some CPU time. 
 At the bottom of the loop, inside `algo_lib::Step`, we have

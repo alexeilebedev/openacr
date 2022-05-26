@@ -9,9 +9,9 @@
 
 #pragma once
 #include "include/gen/command_gen.inl.h"
-#include "include/gen/dmmeta_gen.inl.h"
-#include "include/gen/algo_gen.inl.h"
 #include "include/gen/dev_gen.inl.h"
+#include "include/gen/algo_gen.inl.h"
+#include "include/gen/dmmeta_gen.inl.h"
 //#pragma endinclude
 inline src_hdr::trace::trace() {
 }
@@ -26,12 +26,12 @@ inline bool src_hdr::targsrc_EmptyQ() {
 // --- src_hdr.FDb.targsrc.Find
 // Look up row by row id. Return NULL if out of range
 inline src_hdr::FTargsrc* src_hdr::targsrc_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     src_hdr::FTargsrc *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.targsrc_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.targsrc_lary[bsr][index];
     }
     return retval;
@@ -68,12 +68,12 @@ inline bool src_hdr::ns_EmptyQ() {
 // --- src_hdr.FDb.ns.Find
 // Look up row by row id. Return NULL if out of range
 inline src_hdr::FNs* src_hdr::ns_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     src_hdr::FNs *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ns_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ns_lary[bsr][index];
     }
     return retval;
@@ -122,12 +122,12 @@ inline bool src_hdr::nsx_EmptyQ() {
 // --- src_hdr.FDb.nsx.Find
 // Look up row by row id. Return NULL if out of range
 inline src_hdr::FNsx* src_hdr::nsx_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     src_hdr::FNsx *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.nsx_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.nsx_lary[bsr][index];
     }
     return retval;
@@ -153,6 +153,114 @@ inline src_hdr::FNsx& src_hdr::nsx_qFind(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     return _db.nsx_lary[bsr][index];
+}
+
+// --- src_hdr.FDb.license.EmptyQ
+// Return true if index is empty
+inline bool src_hdr::license_EmptyQ() {
+    return _db.license_n == 0;
+}
+
+// --- src_hdr.FDb.license.Find
+// Look up row by row id. Return NULL if out of range
+inline src_hdr::FLicense* src_hdr::license_Find(u64 t) {
+    src_hdr::FLicense *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.license_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.license_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- src_hdr.FDb.license.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline src_hdr::FLicense* src_hdr::license_Last() {
+    return license_Find(u64(_db.license_n-1));
+}
+
+// --- src_hdr.FDb.license.N
+// Return number of items in the pool
+inline i32 src_hdr::license_N() {
+    return _db.license_n;
+}
+
+// --- src_hdr.FDb.license.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline src_hdr::FLicense& src_hdr::license_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.license_lary[bsr][index];
+}
+
+// --- src_hdr.FDb.ind_license.EmptyQ
+// Return true if hash is empty
+inline bool src_hdr::ind_license_EmptyQ() {
+    return _db.ind_license_n == 0;
+}
+
+// --- src_hdr.FDb.ind_license.N
+// Return number of items in the hash
+inline i32 src_hdr::ind_license_N() {
+    return _db.ind_license_n;
+}
+
+// --- src_hdr.FDb.target.EmptyQ
+// Return true if index is empty
+inline bool src_hdr::target_EmptyQ() {
+    return _db.target_n == 0;
+}
+
+// --- src_hdr.FDb.target.Find
+// Look up row by row id. Return NULL if out of range
+inline src_hdr::FTarget* src_hdr::target_Find(u64 t) {
+    src_hdr::FTarget *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.target_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.target_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- src_hdr.FDb.target.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline src_hdr::FTarget* src_hdr::target_Last() {
+    return target_Find(u64(_db.target_n-1));
+}
+
+// --- src_hdr.FDb.target.N
+// Return number of items in the pool
+inline i32 src_hdr::target_N() {
+    return _db.target_n;
+}
+
+// --- src_hdr.FDb.target.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline src_hdr::FTarget& src_hdr::target_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.target_lary[bsr][index];
+}
+
+// --- src_hdr.FDb.ind_target.EmptyQ
+// Return true if hash is empty
+inline bool src_hdr::ind_target_EmptyQ() {
+    return _db.ind_target_n == 0;
+}
+
+// --- src_hdr.FDb.ind_target.N
+// Return number of items in the hash
+inline i32 src_hdr::ind_target_N() {
+    return _db.ind_target_n;
 }
 
 // --- src_hdr.FDb.targsrc_curs.Reset
@@ -229,6 +337,70 @@ inline void src_hdr::_db_nsx_curs_Next(_db_nsx_curs &curs) {
 inline src_hdr::FNsx& src_hdr::_db_nsx_curs_Access(_db_nsx_curs &curs) {
     return nsx_qFind(u64(curs.index));
 }
+
+// --- src_hdr.FDb.license_curs.Reset
+// cursor points to valid item
+inline void src_hdr::_db_license_curs_Reset(_db_license_curs &curs, src_hdr::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- src_hdr.FDb.license_curs.ValidQ
+// cursor points to valid item
+inline bool src_hdr::_db_license_curs_ValidQ(_db_license_curs &curs) {
+    return curs.index < _db.license_n;
+}
+
+// --- src_hdr.FDb.license_curs.Next
+// proceed to next item
+inline void src_hdr::_db_license_curs_Next(_db_license_curs &curs) {
+    curs.index++;
+}
+
+// --- src_hdr.FDb.license_curs.Access
+// item access
+inline src_hdr::FLicense& src_hdr::_db_license_curs_Access(_db_license_curs &curs) {
+    return license_qFind(u64(curs.index));
+}
+
+// --- src_hdr.FDb.target_curs.Reset
+// cursor points to valid item
+inline void src_hdr::_db_target_curs_Reset(_db_target_curs &curs, src_hdr::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- src_hdr.FDb.target_curs.ValidQ
+// cursor points to valid item
+inline bool src_hdr::_db_target_curs_ValidQ(_db_target_curs &curs) {
+    return curs.index < _db.target_n;
+}
+
+// --- src_hdr.FDb.target_curs.Next
+// proceed to next item
+inline void src_hdr::_db_target_curs_Next(_db_target_curs &curs) {
+    curs.index++;
+}
+
+// --- src_hdr.FDb.target_curs.Access
+// item access
+inline src_hdr::FTarget& src_hdr::_db_target_curs_Access(_db_target_curs &curs) {
+    return target_qFind(u64(curs.index));
+}
+inline src_hdr::FLicense::FLicense() {
+    src_hdr::FLicense_Init(*this);
+}
+
+inline src_hdr::FLicense::~FLicense() {
+    src_hdr::FLicense_Uninit(*this);
+}
+
+
+// --- src_hdr.FLicense..Init
+// Set all fields to initial values.
+inline void src_hdr::FLicense_Init(src_hdr::FLicense& license) {
+    license.ind_license_next = (src_hdr::FLicense*)-1; // (src_hdr.FDb.ind_license) not-in-hash
+}
 inline src_hdr::FNs::FNs() {
     src_hdr::FNs_Init(*this);
 }
@@ -237,46 +409,6 @@ inline src_hdr::FNs::~FNs() {
     src_hdr::FNs_Uninit(*this);
 }
 
-
-// --- src_hdr.FNs.c_targsrc.EmptyQ
-// Return true if index is empty
-inline bool src_hdr::c_targsrc_EmptyQ(src_hdr::FNs& ns) {
-    return ns.c_targsrc_n == 0;
-}
-
-// --- src_hdr.FNs.c_targsrc.Find
-// Look up row by row id. Return NULL if out of range
-inline src_hdr::FTargsrc* src_hdr::c_targsrc_Find(src_hdr::FNs& ns, u32 t) {
-    src_hdr::FTargsrc *retval = NULL;
-    u64 idx = t;
-    u64 lim = ns.c_targsrc_n;
-    if (idx < lim) {
-        retval = ns.c_targsrc_elems[idx];
-    }
-    return retval;
-}
-
-// --- src_hdr.FNs.c_targsrc.Getary
-// Return array of pointers
-inline algo::aryptr<src_hdr::FTargsrc*> src_hdr::c_targsrc_Getary(src_hdr::FNs& ns) {
-    return algo::aryptr<src_hdr::FTargsrc*>(ns.c_targsrc_elems, ns.c_targsrc_n);
-}
-
-// --- src_hdr.FNs.c_targsrc.N
-// Return number of items in the pointer array
-inline i32 src_hdr::c_targsrc_N(const src_hdr::FNs& ns) {
-    return ns.c_targsrc_n;
-}
-
-// --- src_hdr.FNs.c_targsrc.RemoveAll
-// Empty the index. (The rows are not deleted)
-inline void src_hdr::c_targsrc_RemoveAll(src_hdr::FNs& ns) {
-    for (u32 i = 0; i < ns.c_targsrc_n; i++) {
-        // mark all elements as not-in-array
-        ns.c_targsrc_elems[i]->ns_c_targsrc_in_ary = false;
-    }
-    ns.c_targsrc_n = 0;
-}
 
 // --- src_hdr.FNs.c_nsx.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -301,36 +433,8 @@ inline void src_hdr::c_nsx_Remove(src_hdr::FNs& ns, src_hdr::FNsx& row) {
 // --- src_hdr.FNs..Init
 // Set all fields to initial values.
 inline void src_hdr::FNs_Init(src_hdr::FNs& ns) {
-    ns.c_targsrc_elems = NULL; // (src_hdr.FNs.c_targsrc)
-    ns.c_targsrc_n = 0; // (src_hdr.FNs.c_targsrc)
-    ns.c_targsrc_max = 0; // (src_hdr.FNs.c_targsrc)
     ns.c_nsx = NULL;
     ns.ind_ns_next = (src_hdr::FNs*)-1; // (src_hdr.FDb.ind_ns) not-in-hash
-}
-
-// --- src_hdr.FNs.c_targsrc_curs.Reset
-inline void src_hdr::ns_c_targsrc_curs_Reset(ns_c_targsrc_curs &curs, src_hdr::FNs &parent) {
-    curs.elems = parent.c_targsrc_elems;
-    curs.n_elems = parent.c_targsrc_n;
-    curs.index = 0;
-}
-
-// --- src_hdr.FNs.c_targsrc_curs.ValidQ
-// cursor points to valid item
-inline bool src_hdr::ns_c_targsrc_curs_ValidQ(ns_c_targsrc_curs &curs) {
-    return curs.index < curs.n_elems;
-}
-
-// --- src_hdr.FNs.c_targsrc_curs.Next
-// proceed to next item
-inline void src_hdr::ns_c_targsrc_curs_Next(ns_c_targsrc_curs &curs) {
-    curs.index++;
-}
-
-// --- src_hdr.FNs.c_targsrc_curs.Access
-// item access
-inline src_hdr::FTargsrc& src_hdr::ns_c_targsrc_curs_Access(ns_c_targsrc_curs &curs) {
-    return *curs.elems[curs.index];
 }
 inline src_hdr::FNsx::FNsx() {
     src_hdr::FNsx_Init(*this);
@@ -361,6 +465,91 @@ inline void src_hdr::FSrc_Init(src_hdr::FSrc& parent) {
     parent.p_targsrc = NULL;
     parent.saw_target = bool(false);
 }
+inline src_hdr::FTarget::FTarget() {
+    src_hdr::FTarget_Init(*this);
+}
+
+inline src_hdr::FTarget::~FTarget() {
+    src_hdr::FTarget_Uninit(*this);
+}
+
+
+// --- src_hdr.FTarget.c_targsrc.EmptyQ
+// Return true if index is empty
+inline bool src_hdr::c_targsrc_EmptyQ(src_hdr::FTarget& target) {
+    return target.c_targsrc_n == 0;
+}
+
+// --- src_hdr.FTarget.c_targsrc.Find
+// Look up row by row id. Return NULL if out of range
+inline src_hdr::FTargsrc* src_hdr::c_targsrc_Find(src_hdr::FTarget& target, u32 t) {
+    src_hdr::FTargsrc *retval = NULL;
+    u64 idx = t;
+    u64 lim = target.c_targsrc_n;
+    if (idx < lim) {
+        retval = target.c_targsrc_elems[idx];
+    }
+    return retval;
+}
+
+// --- src_hdr.FTarget.c_targsrc.Getary
+// Return array of pointers
+inline algo::aryptr<src_hdr::FTargsrc*> src_hdr::c_targsrc_Getary(src_hdr::FTarget& target) {
+    return algo::aryptr<src_hdr::FTargsrc*>(target.c_targsrc_elems, target.c_targsrc_n);
+}
+
+// --- src_hdr.FTarget.c_targsrc.N
+// Return number of items in the pointer array
+inline i32 src_hdr::c_targsrc_N(const src_hdr::FTarget& target) {
+    return target.c_targsrc_n;
+}
+
+// --- src_hdr.FTarget.c_targsrc.RemoveAll
+// Empty the index. (The rows are not deleted)
+inline void src_hdr::c_targsrc_RemoveAll(src_hdr::FTarget& target) {
+    for (u32 i = 0; i < target.c_targsrc_n; i++) {
+        // mark all elements as not-in-array
+        target.c_targsrc_elems[i]->target_c_targsrc_in_ary = false;
+    }
+    target.c_targsrc_n = 0;
+}
+
+// --- src_hdr.FTarget..Init
+// Set all fields to initial values.
+inline void src_hdr::FTarget_Init(src_hdr::FTarget& target) {
+    target.compat = algo::strptr("Linux-%.%-%");
+    target.c_targsrc_elems = NULL; // (src_hdr.FTarget.c_targsrc)
+    target.c_targsrc_n = 0; // (src_hdr.FTarget.c_targsrc)
+    target.c_targsrc_max = 0; // (src_hdr.FTarget.c_targsrc)
+    target.p_license = NULL;
+    target.p_ns = NULL;
+    target.ind_target_next = (src_hdr::FTarget*)-1; // (src_hdr.FDb.ind_target) not-in-hash
+}
+
+// --- src_hdr.FTarget.c_targsrc_curs.Reset
+inline void src_hdr::target_c_targsrc_curs_Reset(target_c_targsrc_curs &curs, src_hdr::FTarget &parent) {
+    curs.elems = parent.c_targsrc_elems;
+    curs.n_elems = parent.c_targsrc_n;
+    curs.index = 0;
+}
+
+// --- src_hdr.FTarget.c_targsrc_curs.ValidQ
+// cursor points to valid item
+inline bool src_hdr::target_c_targsrc_curs_ValidQ(target_c_targsrc_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- src_hdr.FTarget.c_targsrc_curs.Next
+// proceed to next item
+inline void src_hdr::target_c_targsrc_curs_Next(target_c_targsrc_curs &curs) {
+    curs.index++;
+}
+
+// --- src_hdr.FTarget.c_targsrc_curs.Access
+// item access
+inline src_hdr::FTargsrc& src_hdr::target_c_targsrc_curs_Access(target_c_targsrc_curs &curs) {
+    return *curs.elems[curs.index];
+}
 inline src_hdr::FTargsrc::FTargsrc() {
     src_hdr::FTargsrc_Init(*this);
 }
@@ -373,9 +562,9 @@ inline src_hdr::FTargsrc::~FTargsrc() {
 // --- src_hdr.FTargsrc..Init
 // Set all fields to initial values.
 inline void src_hdr::FTargsrc_Init(src_hdr::FTargsrc& targsrc) {
-    targsrc.p_ns = NULL;
     targsrc.select = bool(false);
-    targsrc.ns_c_targsrc_in_ary = bool(false);
+    targsrc.p_target = NULL;
+    targsrc.target_c_targsrc_in_ary = bool(false);
 }
 inline src_hdr::FieldId::FieldId(i32                            in_value)
     : value(in_value)

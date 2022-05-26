@@ -111,11 +111,11 @@ static int SandboxDeleteRec(strptr line, strptr pkey) {
     command::amc_proc amc;
     command::abt_proc abt;
 
-    amc.stdout     = tempstr() << ">>../" << amc_gc::_db.buildlog;
-    amc.stderr     = tempstr() << ">>../" << amc_gc::_db.buildlog;
+    amc.fstdout     = tempstr() << ">>../" << amc_gc::_db.buildlog;
+    amc.fstderr     = tempstr() << ">>../" << amc_gc::_db.buildlog;
 
-    abt.stdout     = tempstr() << ">>../" << amc_gc::_db.buildlog;
-    abt.stderr     = tempstr() << ">>../" << amc_gc::_db.buildlog;
+    abt.fstdout     = tempstr() << ">>../" << amc_gc::_db.buildlog;
+    abt.fstderr     = tempstr() << ">>../" << amc_gc::_db.buildlog;
 
     int rc = DeleteRec(line, pkey);
     if (rc==0) {
@@ -158,7 +158,7 @@ static void Analyze(strptr line) {
         int rc=SandboxDeleteRec(line,pkey);
         if (rc==0) {
             (void)DeleteRec(line,pkey);
-            tempstr logcontents(FileToString(amc_gc::_db.buildlog,algo_FileFlags_none));
+            tempstr logcontents(FileToString(amc_gc::_db.buildlog,algo::FileFlags()));
             amc_gc::_db.n_newcppline = n_cppline_Get(logcontents,amc_gc::_db.n_newcppline);
             amc_gc::_db.n_del++;
             eliminate=true;
@@ -194,11 +194,11 @@ static void Begin(strptr recs) {
 // -----------------------------------------------------------------------------
 
 void amc_gc::Main() {
-    amc_gc::_db.basedir = GetCurDir();
+    amc_gc::_db.basedir = algo::GetCurDir();
     tempstr recs = QueryRecords();
     Begin(recs);
     SysCmd("mkdir -p .testgen .testgen/temp"); // setup!
-    SysCmd("rsync --delete -ac bin cpp include extern data .testgen"
+    SysCmd("rsync --delete -ac bin cpp algo distrib include extern data .testgen"
            ,FailokQ(false),DryrunQ(false));// copy everything over
 
     ind_beg(Line_curs,line,recs) {

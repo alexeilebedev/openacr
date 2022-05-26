@@ -33,12 +33,12 @@ inline algo::strptr algo::ToStrPtr(memptr buf)  {
 }
 
 // Note: cstring << algo::ToLower(int) will output an *integer*, not a character
-inline int ToLower(int i)  {
+inline int algo::ToLower(int i)  {
     return i>='A' && i<='Z' ? i-'A'+'a' : i;
 }
 
 // Note: cstring << algo::ToUpper(int) will output an *integer*, not a character
-inline int ToUpper(int i)  {
+inline int algo::ToUpper(int i)  {
     return i>='a' && i<='z' ? i-'a'+'A' : i;
 }
 
@@ -73,43 +73,43 @@ inline algo::StringIter &algo::StringIter::Ws() {
     return *this;
 }
 
-inline i32_Range algo::TFind(const strptr s, char match) {
+inline algo::i32_Range algo::TFind(const strptr &s, char match) {
     return ch_FindFirst(s,match);
 }
 
-inline i32_Range algo::TRevFind(const strptr s, char match) {
+inline algo::i32_Range algo::TRevFind(const strptr &s, char match) {
     return ch_FindLast(s,match);
 }
 
-inline aryptr<char> algo::ch_FirstN(const cstring &lhs, u32 n) {
-    u32 lim = lhs.ch_n;
+inline algo::aryptr<char> algo::ch_FirstN(const strptr &lhs, u32 n) {
+    u32 lim = lhs.n_elems;
     if (n > lim) {
         n = lim;
     }
-    return aryptr<char>(lhs.ch_elems, n);
+    return algo::aryptr<char>(lhs.elems, n);
 }
 
-inline aryptr<char> algo::ch_LastN(const cstring &lhs, u32 n) {
-    u32 lim = lhs.ch_n;
+inline algo::aryptr<char> algo::ch_LastN(const strptr &lhs, u32 n) {
+    u32 lim = lhs.n_elems;
     if (n > lim) {
         n = lim;
     }
-    return aryptr<char>(lhs.ch_elems + lim - n, n);
+    return algo::aryptr<char>(lhs.elems + lim - n, n);
 }
 
-inline aryptr<char> algo::ch_RestFrom(const cstring &lhs, u32 n) {
-    u32 lim = lhs.ch_n;
+inline algo::aryptr<char> algo::ch_RestFrom(const strptr &lhs, u32 n) {
+    u32 lim = lhs.n_elems;
     if (n > lim) {
         n = lim;
     }
-    return aryptr<char>(lhs.ch_elems + n, lim - n);
+    return algo::aryptr<char>(lhs.elems + n, lim - n);
 }
 
-inline aryptr<char> algo::ch_GetRegion(const cstring &lhs, u32 lo, u32 n) {
-    u32 max = lhs.ch_n;
+inline algo::aryptr<char> algo::ch_GetRegion(const strptr &lhs, u32 lo, u32 n) {
+    u32 max = lhs.n_elems;
     lo = u32_Min(lo, max);
     n  = u32_Min(n,  max - lo);
-    return aryptr<char>(lhs.ch_elems + lo, n);
+    return algo::aryptr<char>(lhs.elems + lo, n);
 }
 
 inline int algo::ImpliedLength(char *, const char *c) {
@@ -140,12 +140,12 @@ inline int algo::range_N(const i32_Range &rhs) {
     return rhs.end - rhs.beg;
 }
 
-inline aryptr<u8> algo::strptr_ToMemptr(aryptr<char> rhs) {
-    return aryptr<u8>((u8*)rhs.elems,rhs.n_elems);
+inline algo::aryptr<u8> algo::strptr_ToMemptr(algo::aryptr<char> rhs) {
+    return algo::aryptr<u8>((u8*)rhs.elems,rhs.n_elems);
 }
 
-inline aryptr<char> algo::memptr_ToStrptr(aryptr<u8> rhs) {
-    return aryptr<char>((char*)rhs.elems,rhs.n_elems);
+inline algo::aryptr<char> algo::memptr_ToStrptr(algo::aryptr<u8> rhs) {
+    return algo::aryptr<char>((char*)rhs.elems,rhs.n_elems);
 }
 
 // if next character matches WHAT, skip and return true

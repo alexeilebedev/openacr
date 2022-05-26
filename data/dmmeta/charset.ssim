@@ -1,7 +1,10 @@
 dmmeta.charset  field:algo_lib.FDb.AlphaChar  expr:a-zA-Z  charrange:Y  calc:Y  comment:""
 dmmeta.charset  field:algo_lib.FDb.ArgvIdent  expr:a-zA-Z0-9_  charrange:Y  calc:N  comment:""
 dmmeta.charset  field:algo_lib.FDb.BashQuotesafe  expr:a-zA-Z0-9_^%@./-  charrange:Y  calc:N  comment:""
+dmmeta.charset  field:algo_lib.FDb.CmdLineNameBreak  expr:"[]{}()\t \r\n:"  charrange:N  calc:Y  comment:wcore
+dmmeta.charset  field:algo_lib.FDb.CmdLineValueBreak  expr:"[]{}()\t \r\n"  charrange:N  calc:Y  comment:wcore
 dmmeta.charset  field:algo_lib.FDb.DigitChar  expr:0-9  charrange:Y  calc:Y  comment:""
+dmmeta.charset  field:algo_lib.FDb.DirSep  expr:"/\\"  charrange:N  calc:Y  comment:""
 dmmeta.charset  field:algo_lib.FDb.HexChar  expr:0-9a-fA-F  charrange:Y  calc:Y  comment:""
 dmmeta.charset  field:algo_lib.FDb.IdentChar  expr:a-zA-Z0-9_  charrange:Y  calc:Y  comment:""
 dmmeta.charset  field:algo_lib.FDb.IdentStart  expr:a-zA-Z_  charrange:Y  calc:Y  comment:""
@@ -14,6 +17,7 @@ dmmeta.charset  field:algo_lib.FDb.SsimQuotesafe  expr:a-zA-Z0-9_;&*^%$@.!:,+/- 
 dmmeta.charset  field:algo_lib.FDb.UpperChar  expr:A-Z  charrange:Y  calc:Y  comment:""
 dmmeta.charset  field:algo_lib.FDb.Urlsafe  expr:"0-9a-zA-Z_.~"  charrange:Y  calc:N  comment:""
 dmmeta.charset  field:algo_lib.FDb.WhiteChar  expr:"\t\n\r "  charrange:N  calc:Y  comment:""
+dmmeta.charset  field:algo_lib.FDb.WordSeparator  expr:"\t\n\r []{}(),;~`!@#$%.?'\"=+-/*^&|"  charrange:N  calc:Y  comment:wcore
 dmmeta.charset  field:amc.FDb.ValidRnumPad  expr:0123456789+-.e  charrange:N  calc:N  comment:""
 dmmeta.charset  field:lib_json.FDb.JsonFirstNumChar  expr:0-9-  charrange:Y  calc:Y  comment:""
 dmmeta.charset  field:lib_json.FDb.JsonNumChar  expr:0-9eE.+-  charrange:Y  calc:Y  comment:""

@@ -1,3 +1,4 @@
+dmmeta.csize  ctype:HANDLE  size:8  alignment:8  comment:""
 dmmeta.csize  ctype:algo.ImdbGetTraceFcn  size:8  alignment:8  comment:""
 dmmeta.csize  ctype:algo.ImdbInsertStrptrMaybeFcn  size:8  alignment:8  comment:""
 dmmeta.csize  ctype:algo.ImdbMainLoopFcn  size:8  alignment:8  comment:""

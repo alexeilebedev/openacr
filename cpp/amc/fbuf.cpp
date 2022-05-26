@@ -52,7 +52,7 @@ void amc::tclass_Fbuf() {
     vrfy(!linebuf || ch_N(field.dflt.value) > 0, "Linebuf requires dflt (end of line value)");
 
     Set(R, "$bufsize", tempstr()<<fbuf.max);
-    Set(R, "$Rettype", (inmsgbuf ? "$Cpptype*" : "aryptr<$Cpptype>"));
+    Set(R, "$Rettype", (inmsgbuf ? "$Cpptype*" : "algo::aryptr<$Cpptype>"));
 
     // how to force the elems to go to the end of of the struct?
     InsVar(R, field.p_ctype    , "u8", "$name_elems[$bufsize]", "", "pointer to elements of inline array");
@@ -561,7 +561,8 @@ void amc::tfunc_Fbuf_EndWrite() {
         Ins(&R, func.ret  , "void",false);
         Ins(&R, func.body, "if (ValidQ($parname.$name_iohook.fildes)) {");
         Ins(&R, func.body, "    // zero-byte write for remote side");
-        Ins(&R, func.body, "    (void)write($parname.$name_iohook.fildes.value, \"\", 0);");
+        Ins(&R, func.body, "    ssize_t rc=write($parname.$name_iohook.fildes.value, \"\", 0);");
+        Ins(&R, func.body, "    (void)rc;");
         Ins(&R, func.body, "}");
     }
 }

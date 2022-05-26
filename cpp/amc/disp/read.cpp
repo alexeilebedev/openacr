@@ -58,7 +58,7 @@ void amc::Disp_Read(amc::FDispatch &disp) {
     Ins(&R, func.proto, "$Dname_ReadStrptr(algo::strptr str, algo::ByteAry &buf)", false);
     Ins(&R, func.body            , "bool ok = false;");
     Ins(&R, func.body            , "tempstr msgtype_str;");
-    Ins(&R, func.body            , "StringIter iter(str);");
+    Ins(&R, func.body            , "algo::StringIter iter(str);");
     Ins(&R, func.body            , "cstring_ReadCmdarg(msgtype_str, iter, false); // read first word");
     Ins(&R, func.body            , "$Casetype msgtype;");
     Ins(&R, func.body            , "$casetypefld_SetStrptrMaybe(msgtype, msgtype_str); // map string -> enum");

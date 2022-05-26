@@ -1,5 +1,5 @@
-dev.cfg  cfg:""  comment:all
-dev.cfg  cfg:coverage  comment:"coverage measurement"
-dev.cfg  cfg:debug  comment:"bounds-checked build"
-dev.cfg  cfg:profile  comment:"release with various debug options still on"
-dev.cfg  cfg:release  comment:"all bound-checking disabled"
+dev.cfg  cfg:""  suffix:""  comment:all
+dev.cfg  cfg:coverage  suffix:c  comment:"coverage measurement"
+dev.cfg  cfg:debug  suffix:d  comment:"bounds-checked build"
+dev.cfg  cfg:profile  suffix:p  comment:"release with various debug options still on"
+dev.cfg  cfg:release  suffix:r  comment:"all bound-checking disabled"

@@ -317,7 +317,7 @@ void atf_amc::amctest_ZslistRemove() {
         vrfy_(!nb_typec        == atf_amc::zs_t_typec_EmptyQ  ());
     }
     frep_(i,100) {
-        vrfy_(item[i].typec = 100+i); // check if nothing has corrupted
+        vrfy_(item[i].typec == 100+i); // check if nothing has corrupted
     }
     // teardown
 }

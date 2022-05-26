@@ -329,17 +329,17 @@ namespace algo { // update-hdr srcfile:'(%/algo/string.%|%/algo/line.%)'
     // sep="|", string = "a||b|"; return value -> "a", rest -> "b|";
     // sep="|", string = "a";     return value -> "a", rest -> "";
     // sep="|", string = "|x";    return value -> "" , rest -> "x";
-    strptr GetTokenChar(StringIter &S, char sep);
+    strptr GetTokenChar(algo::StringIter &S, char sep);
 
     // Skip leading characters matching SEP
     // Return run of characters up to next matching SEP, or EOF.
     // Do not skip trailing separators.
-    strptr GetWordCharf(StringIter &iter, bool (*sep)(u32));
+    strptr GetWordCharf(algo::StringIter &iter, bool (*sep)(u32));
 
     // Skip leading whitespace characters
     // Return run of characters up to next whitespace, or EOF.
     // Do not skip trailing whitespace
-    strptr GetWordCharf(StringIter &iter);
+    strptr GetWordCharf(algo::StringIter &iter);
 
     // Skip any leading whitespace in STR.
     // Read and return next word.
@@ -351,12 +351,12 @@ namespace algo { // update-hdr srcfile:'(%/algo/string.%|%/algo/line.%)'
 
     // Read a series of digits and return resulting number.
     // Return success code
-    bool TryParseDigits(StringIter &S, double &result);
+    bool TryParseDigits(algo::StringIter &S, double &result);
 
     // TODO: document these more carefully
     // Read a series of digits N, returning N / pow(10, length(N))
     // If successful, advance index. Otherwise, leave index where it was.
-    bool TryParseFraction(StringIter &S, double &result);
+    bool TryParseFraction(algo::StringIter &S, double &result);
     bool TryParseDouble(algo::StringIter &iter, double &result);
 
     // Search for the next occurence of SEP. If not found, assume it occurs at EOF
@@ -384,11 +384,11 @@ namespace algo { // update-hdr srcfile:'(%/algo/string.%|%/algo/line.%)'
     // If found, return range corresponding to the match.
     // If not found, return range (S.n_elems,S.n_elems) -- an empty range positioned at
     // the end of S
-    i32_Range substr_FindFirst(const aryptr<char> &s, const aryptr<char> &match);
+    algo::i32_Range substr_FindFirst(const aryptr<char> &s, const aryptr<char> &match);
 
     // Same as above but search right-to-left.
     // In case of failure, return range (0,0) -- empty range positioned at start of S.
-    i32_Range substr_FindLast(const aryptr<char> &s, const aryptr<char> &match);
+    algo::i32_Range substr_FindLast(const aryptr<char> &s, const aryptr<char> &match);
 
     // Strip leading whitespace, return new strptr.
     strptr TrimmedLeft(strptr s);
@@ -426,10 +426,10 @@ namespace algo { // update-hdr srcfile:'(%/algo/string.%|%/algo/line.%)'
     algo::i32_Range ch_FindLast(const algo::strptr &s, char match);
     bool strptr_ReadStrptrMaybe(strptr , strptr );
 
-    // Append a directory separator to string STR unless
-    // STR already ends in one.
-    // Example:
+    // Append / to string STR unless STR already ends in one.
     // str << dirname << MaybeDirSep << filename.
+    // The separator is always /. To support windows-specific pathnames,
+    // use ToWindows path where appropriate.
     void MaybeDirSep(cstring &str);
     i32 strptr_Cmp(algo::strptr a, algo::strptr b);
     bool strptr_Lt(algo::strptr a, algo::strptr b);
@@ -452,19 +452,32 @@ namespace algo { // update-hdr srcfile:'(%/algo/string.%|%/algo/line.%)'
     // Lines beginning with # (#ifdef, etc) are printed at column zero.
     void InsertIndent(algo::cstring &out, strptr text, int indent);
 
+    // Convert unix path to windows path
+    // This replaces slashes with backslashes
+    tempstr ToWindowsPath(strptr path);
+
+    // compatibility
+    void reset(algo::cstring &lhs);
+
     // -------------------------------------------------------------------
     // include/algo/string.inl.h
     //
     inline void eol(cstring &s);
     inline algo::strptr ToStrPtr(memptr buf);
+
+    // Note: cstring << algo::ToLower(int) will output an *integer*, not a character
+    inline int ToLower(int i);
+
+    // Note: cstring << algo::ToUpper(int) will output an *integer*, not a character
+    inline int ToUpper(int i);
     inline char ToLower(char i);
     inline char ToUpper(char i);
-    inline i32_Range TFind(const strptr s, char match);
-    inline i32_Range TRevFind(const strptr s, char match);
-    inline aryptr<char> ch_FirstN(const cstring &lhs, u32 n);
-    inline aryptr<char> ch_LastN(const cstring &lhs, u32 n);
-    inline aryptr<char> ch_RestFrom(const cstring &lhs, u32 n);
-    inline aryptr<char> ch_GetRegion(const cstring &lhs, u32 lo, u32 n);
+    inline algo::i32_Range TFind(const strptr &s, char match);
+    inline algo::i32_Range TRevFind(const strptr &s, char match);
+    inline algo::aryptr<char> ch_FirstN(const strptr &lhs, u32 n);
+    inline algo::aryptr<char> ch_LastN(const strptr &lhs, u32 n);
+    inline algo::aryptr<char> ch_RestFrom(const strptr &lhs, u32 n);
+    inline algo::aryptr<char> ch_GetRegion(const strptr &lhs, u32 lo, u32 n);
     inline int ImpliedLength(char *, const char *c);
     inline int ImpliedLength(const char *, const char *c);
     inline int ch_N(const strptr &s);
@@ -472,8 +485,8 @@ namespace algo { // update-hdr srcfile:'(%/algo/string.%|%/algo/line.%)'
     inline int ch_Last(const strptr &s, int dflt);
     inline int ch_N(const tempstr &str);
     inline int range_N(const i32_Range &rhs);
-    inline aryptr<u8> strptr_ToMemptr(aryptr<char> rhs);
-    inline aryptr<char> memptr_ToStrptr(aryptr<u8> rhs);
+    inline algo::aryptr<u8> strptr_ToMemptr(algo::aryptr<char> rhs);
+    inline algo::aryptr<char> memptr_ToStrptr(algo::aryptr<u8> rhs);
 
     // if next character matches WHAT, skip and return true
     // otherwise return false

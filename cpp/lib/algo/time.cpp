@@ -24,7 +24,9 @@
 // Recent Changes: alexei.lebedev hayk.mkrtchyan
 //
 
-static int ReadInt(StringIter &parser, int width) {
+#include "include/algo.h"
+
+static int ReadInt(algo::StringIter &parser, int width) {
     if (width<=0) {
         width=0x7fffffff;
     }
@@ -43,10 +45,10 @@ static int ReadInt(StringIter &parser, int width) {
             return 0;
         }
     } while (chars_read < width);
-    return i32_NegateIf(number_so_far,isneg);
+    return algo::i32_NegateIf(number_so_far,isneg);
 }
 
-static int ReadNS(StringIter &parser, int width) {
+static int ReadNS(algo::StringIter &parser, int width) {
     int start = parser.index;
     int ns = ReadInt(parser,width);
     int chars_read = parser.index - start;
@@ -69,7 +71,7 @@ static int ReadNS(StringIter &parser, int width) {
 
 // -----------------------------------------------------------------------------
 
-bool algo::TimeStruct_Read(TimeStruct &out, StringIter &iter, const strptr& spec) {
+bool algo::TimeStruct_Read(TimeStruct &out, algo::StringIter &iter, const strptr& spec) {
     int    field_width  = 10;
     bool   percent      = false;
     for (int i=0; i<elems_N(spec); i++) {
@@ -220,8 +222,8 @@ bool algo::TimeStruct_Read(TimeStruct &out, StringIter &iter, const strptr& spec
 static TimeStruct SecsToTs(i64 secs, i64 nsecs) {
     TimeStruct ret;
     ret.tm_neg = secs < 0;
-    secs = Abs(secs);
-    ret.tm_nsec  = int(Abs(nsecs));
+    secs = algo::Abs(secs);
+    ret.tm_nsec  = int(algo::Abs(nsecs));
     ret.tm_sec   = int(secs % 60);
     secs        /= 60;
     ret.tm_min   = int(secs % 60);
@@ -237,25 +239,17 @@ TimeStruct algo::ToTimeStruct(UnixDiff U) {
     return SecsToTs(U.value, 0);
 }
 
-UnixDiff algo::ToUnixDiff(const TimeStruct &S) {
+algo::UnixDiff algo::ToUnixDiff(const TimeStruct &S) {
     return UnixDiff(i64_NegateIf(i64(S.tm_hour) * SECS_PER_HOUR  + i64(S.tm_min) * SECS_PER_MIN + i64(S.tm_sec),S.tm_neg));
 }
 
-UnDiff algo::ToUnDiff(const TimeStruct &S) {
+algo::UnDiff algo::ToUnDiff(const TimeStruct &S) {
     return UnDiff(i64_NegateIf((i64(S.tm_hour) * SECS_PER_HOUR   + i64(S.tm_min) * SECS_PER_MIN + i64(S.tm_sec)) * UNTIME_PER_SEC   + i64(S.tm_nsec),S.tm_neg));
-}
-
-// uses gettimeofday, returns UTC seconds + fractions
-// UTC time for midnight; Local timezone is used in computation
-void algo::SetTz(strptr tz) {
-    tempstr tzspec = tempstr() << ":" << tz;
-    setenv("TZ", Zeroterm(tzspec), true);
-    tzset();
 }
 
 // -----------------------------------------------------------------------------
 
-const UnixTime algo::LocalDate(UnixTime in) {
+const algo::UnixTime algo::LocalDate(UnixTime in) {
     struct tm t = GetLocalTimeStruct(in);
     t.tm_hour   = 0;
     t.tm_min    = 0;
@@ -291,7 +285,7 @@ TimeStruct algo::GetLocalTimeStruct(UnTime U) {
 
 // -----------------------------------------------------------------------------
 
-const UnTime algo::LocalDate(UnTime in) {
+const algo::UnTime algo::LocalDate(UnTime in) {
     TimeStruct t = GetLocalTimeStruct(in);
     t.tm_hour   = 0;
     t.tm_min    = 0;
@@ -303,7 +297,7 @@ const UnTime algo::LocalDate(UnTime in) {
 
 // -----------------------------------------------------------------------------
 
-TimeStruct algo::GetGMTimeStruct(UnTime U) {
+algo::TimeStruct algo::GetGMTimeStruct(algo::UnTime U) {
     time_t secs  = time_t(U.value / UNTIME_PER_SEC);
     int    nsecs = int(U.value % UNTIME_PER_SEC);
     // correct negative value
@@ -317,7 +311,7 @@ TimeStruct algo::GetGMTimeStruct(UnTime U) {
     return ret;
 }
 
-UnixTime algo::ToUnixTime(const TimeStruct &S) {
+algo::UnixTime algo::ToUnixTime(const TimeStruct &S) {
     UnixTime ret;
     i64 secs = mktime((tm*)&S);
     if (secs != -1) {
@@ -326,7 +320,7 @@ UnixTime algo::ToUnixTime(const TimeStruct &S) {
     return ret;
 }
 
-UnTime algo::ToUnTime(const TimeStruct &S) {
+algo::UnTime algo::ToUnTime(const TimeStruct &S) {
     UnTime ret;
     i64 secs = mktime((tm*)&S);
     if (secs != -1) {
@@ -338,7 +332,7 @@ UnTime algo::ToUnTime(const TimeStruct &S) {
 // -----------------------------------------------------------------------------
 
 static const char *weekdays_names[] = {
-    "Sun","Mon","Tue","Wed","Thu","Fri","Sat"
+                                       "Sun","Mon","Tue","Wed","Thu","Fri","Sat"
 };
 
 // empty string -> 0
@@ -355,10 +349,10 @@ const strptr algo::GetWeekdayName(int index){
     return LIKELY(u32(index) < u32(_array_count(weekdays_names))) ? weekdays_names[index] : strptr();
 }
 static const char *month_names[] = {
-    "January","February","March","April","May","June","July","August","September","October","November","December",
+                                    "January","February","March","April","May","June","July","August","September","October","November","December",
 };
 static const int month_days[] = {
-    31,29,31,30,31,30,31,31,30,31,30,31
+                                 31,29,31,30,31,30,31,31,30,31,30,31
 };
 int algo::GetMonthZeroBased(strptr month) {
     rep_(i,_array_count(month_names)) {
@@ -383,7 +377,7 @@ const strptr algo::GetMonthNameZeroBasedShort(int index) {
 // -----------------------------------------------------------------------------
 
 // DateCache -- Roughly 200x faster LocalDate
-const UnTime algo::DateCache_LocalDate(algo::DateCache &dc, UnTime in) {
+const algo::UnTime algo::DateCache_LocalDate(algo::DateCache &dc, UnTime in) {
     if (!(in.value >= dc.min.value && in.value < dc.max.value)) {
         UnTime date = LocalDate(in);
         dc.min = date;
@@ -396,11 +390,42 @@ const UnTime algo::DateCache_LocalDate(algo::DateCache &dc, UnTime in) {
 
 // -----------------------------------------------------------------------------
 
-UnTime algo::CurrUnTime() {
+// Todo: test on windows
+algo::UnTime algo::CurrUnTime() {
+    UnTime ret;
     struct timeval tv;
     ZeroBytes(tv);
     gettimeofday(&tv,NULL);
-    UnTime ret;
     ret.value = (i64(tv.tv_sec) * 1000000 + tv.tv_usec) * 1000;
     return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+algo::UnTime algo::ToUnTime(WTime s) {
+    const i64 multiplier = algo::UNTIME_PER_SEC / WTIME_PER_SEC;
+    const i64 upper_bound = LLONG_MAX / multiplier + WTIME_OFFSET;
+    const i64 lower_bound = WTIME_OFFSET;
+    i64 result = LLONG_MAX;
+    if (s.value < lower_bound) {
+        result = 0;
+    }
+    else if (s.value <= upper_bound) {
+        result = (s.value - WTIME_OFFSET) * multiplier;
+    }
+    return UnTime(result);
+}
+
+// -----------------------------------------------------------------------------
+
+// Change TZ environment variable to specified value
+// and notify C runtime lib of the change
+void algo::SetTz(strptr zone) {
+#ifdef WIN32
+    putenv(Zeroterm(tempstr() << "TZ=" << zone));
+    _tzset();
+#else
+    setenv("TZ",Zeroterm(tempstr() << zone),1);
+    tzset();
+#endif
 }

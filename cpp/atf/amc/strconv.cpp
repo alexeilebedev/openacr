@@ -24,7 +24,6 @@
 //
 
 #include "include/atf_amc.h"
-#include "include/algo/pcbuf.h"
 
 // -----------------------------------------------------------------------------
 
@@ -47,7 +46,7 @@ static void TestOneNumber(StringDesc &desc, i64 num) {
     bool setnum_ok = desc.SetnumMaybe(stringbuf, num);
 
     static char base36[37] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    u64 val = Abs(num);
+    u64 val = algo::Abs(num);
     char tempbuf[64];
     u32 offset = sizeof(tempbuf);
     int min_digits = desc.min_length;
@@ -131,8 +130,8 @@ static void TestOneNumber(StringDesc &desc, i64 num) {
 
 static void StringConversionTest(StringDesc& desc) {
     int iter_n = 10000;
-    u64 strtype_max = pow(desc.base, desc.max_length);
-    u64 strtype_min = -pow(desc.base, desc.max_length-1);
+    u64 strtype_max = pow(double(desc.base), int(desc.max_length));
+    u64 strtype_min = -pow(double(desc.base), int(desc.max_length-1));
 
     // first N integers
     for (int i = 0; i < iter_n; ++i) {
@@ -186,9 +185,4 @@ void atf_amc::amctest_TestString() {
     algo_assert(sizeof(u64) == 8);
     algo_assert(sizeof(f32) == 4);
     algo_assert(sizeof(f64) == 8);
-
-#ifdef __linux__
-    algo_assert(sizeof(off64_t) == sizeof(u64));
-#endif
-    algo_assert(sizeof(algo::PCPLine)==CACHE_LINE);
 }

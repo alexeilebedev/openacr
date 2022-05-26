@@ -20,16 +20,16 @@
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/dmmeta_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
+#include "include/gen/lib_prot_gen.h"
+#include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
+algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 atf_amc::FDb    atf_amc::_db;     // dependency found via dev.targdep
 
 atf_amc::cascdel_bh_child_bheap_curs::~cascdel_bh_child_bheap_curs() {
@@ -48,6 +48,8 @@ const char *atf_amc_help =
 "Usage: atf_amc [options]\n"
 "    -in        string  Input directory or filename, - for stdin. default: \"data\"\n"
 "    [amctest]  string  SQL regex, selecting test to run. default: \"%\"\n"
+"    -dofork            Use fork. default: true\n"
+"    -q                 Quiet mode. default: false\n"
 "    -verbose           Enable verbose mode\n"
 "    -debug             Enable debug mode\n"
 "    -version           Show version information\n"
@@ -59,6 +61,8 @@ const char *atf_amc_help =
 const char *atf_amc_syntax =
 "-in:string=\"data\"\n"
 " [amctest]:string=\"%\"\n"
+" -dofork:flag=true\n"
+" -q:flag\n"
 ;
 } // namespace atf_amc
 atf_amc::typea_bh_typeb_curs::~typea_bh_typeb_curs() {
@@ -69,10 +73,12 @@ atf_amc::typea_bh_typeb_curs::~typea_bh_typeb_curs() {
 namespace atf_amc {
     static bool          bit1_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          bits5_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          bit0_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          bit1_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) __attribute__((nothrow));
     // Shift existing bytes over to the beginning of the buffer
     static void          in_Shift(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
     // Extract next character from STR and advance IDX
-    static int           val_Nextchar(const atf_amc::Cstr& orig, strptr &str, int &idx) __attribute__((nothrow));
+    static int           val_Nextchar(const atf_amc::Cstr& orig, algo::strptr &str, int &idx) __attribute__((nothrow));
     static bool          strval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          strval_regx_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          strval2_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
@@ -290,9 +296,9 @@ namespace atf_amc {
     // The special case of an empty string is evaluated to zero.
     static u32           ch_qGetnum(atf_amc::RpasU32Str6& parent, u32 &ok) __attribute__((nothrow));
     // Extract next character from STR and advance IDX
-    static int           novs_Nextchar(const atf_amc::SortedStr& parent, strptr &str, int &idx) __attribute__((nothrow));
+    static int           novs_Nextchar(const atf_amc::SortedStr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
     // Extract next character from STR and advance IDX
-    static u64           vs_Nextchar(const atf_amc::SortedStr& parent, strptr &str, int &idx) __attribute__((nothrow));
+    static u64           vs_Nextchar(const atf_amc::SortedStr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
     static bool          value_ReadStrptrMaybe(atf_amc::TypeBE64 &parent, algo::strptr in_str) __attribute__((nothrow));
     // Swap values elem_a and elem_b
     static void          typeh_Swap(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b) __attribute__((nothrow));
@@ -398,14 +404,97 @@ void atf_amc::BitfldType1_Print(atf_amc::BitfldType1 & row, algo::cstring &str) 
     PrintAttrSpaceReset(str,"bits5", temp);
 }
 
+// --- atf_amc.BitfldType2.bit0.ReadStrptrMaybe
+inline static bool atf_amc::bit0_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) {
+    bool retval = true;
+    bool bit0_tmp;
+    retval = bool_ReadStrptrMaybe(bit0_tmp, in_str);
+    if (retval) {
+        bit0_Set(parent, bit0_tmp);
+    }
+    return retval;
+}
+
+// --- atf_amc.BitfldType2.bit1.ReadStrptrMaybe
+inline static bool atf_amc::bit1_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) {
+    bool retval = true;
+    bool bit1_tmp;
+    retval = bool_ReadStrptrMaybe(bit1_tmp, in_str);
+    if (retval) {
+        bit1_Set(parent, bit1_tmp);
+    }
+    return retval;
+}
+
+// --- atf_amc.BitfldType2..ReadFieldMaybe
+bool atf_amc::BitfldType2_ReadFieldMaybe(atf_amc::BitfldType2 &parent, algo::strptr field, algo::strptr strval) {
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case atf_amc_FieldId_value: retval = u64_ReadStrptrMaybe(parent.value, strval); break;
+        case atf_amc_FieldId_bit0: retval = bit0_ReadStrptrMaybe(parent, strval); break;
+        case atf_amc_FieldId_bit1: retval = bit1_ReadStrptrMaybe(parent, strval); break;
+        case atf_amc_FieldId_freebool: retval = bool_ReadStrptrMaybe(parent.freebool, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.BitfldType2..ReadStrptrMaybe
+// Read fields of atf_amc::BitfldType2 from an ascii string.
+bool atf_amc::BitfldType2_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) {
+    bool retval = true;
+    while (ch_N(in_str)) {
+        strptr field_name;
+        algo::NextSep(in_str,',',field_name);
+        field_name = algo::Trimmed(field_name);
+        if (ch_N(field_name)) {
+            atf_amc::FieldId field_id;
+            bool ok = atf_amc::value_SetStrptrMaybe(field_id,field_name);
+            if (ok) {
+                switch (field_id) {
+                    case atf_amc_FieldId_bit0: bit0_Set(parent,true); break;
+                    case atf_amc_FieldId_bit1: bit1_Set(parent,true); break;
+                    case atf_amc_FieldId_freebool: parent.freebool = true; break;
+                    default: ok = false; break;
+                }
+            }
+            if (!ok) {
+                algo_lib::AppendErrtext("bitfld",field_name);
+                retval = false;
+            }
+        }
+    }
+    return retval;
+}
+
+// --- atf_amc.BitfldType2..Print
+// print string representation of atf_amc::BitfldType2 to string LHS, no header -- cprint:atf_amc.BitfldType2.String
+void atf_amc::BitfldType2_Print(atf_amc::BitfldType2 & row, algo::cstring &str) {
+    algo::ListSep ls(",");
+    if (bit0_Get(row)) {
+        str << ls << "bit0";
+    }
+    if (bit1_Get(row)) {
+        str << ls << "bit1";
+    }
+    if (row.freebool) {
+        str << ls << "freebool";
+    }
+}
+
 // --- atf_amc.Bytebuf.in.GetMsg
 // Look for valid message at current position in the buffer.
 // If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
 // If there is no message, read once from underlying file descriptor and try again.
 // The message is any number of bytes > 0
 // 
-aryptr<char> atf_amc::in_GetMsg(atf_amc::Bytebuf& bytebuf) {
-    aryptr<char> ret;
+algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::Bytebuf& bytebuf) {
+    algo::aryptr<char> ret;
     if (in_N(bytebuf) == 0) {
     }
     char *hdr = (char*)(bytebuf.in_elems + bytebuf.in_start);
@@ -483,7 +572,7 @@ void atf_amc::Bytebuf_Print(atf_amc::Bytebuf & row, algo::cstring &str) {
 
 // --- atf_amc.Cstr.val.Nextchar
 // Extract next character from STR and advance IDX
-inline static int atf_amc::val_Nextchar(const atf_amc::Cstr& orig, strptr &str, int &idx) {
+inline static int atf_amc::val_Nextchar(const atf_amc::Cstr& orig, algo::strptr &str, int &idx) {
     (void)orig;
     int i = idx;
     int ch = str.elems[i];
@@ -633,7 +722,7 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::DispCase& parent, algo::strptr rhs) 
     bool ret = false;
     switch (elems_N(rhs)) {
         case 17: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('a','t','f','_','a','m','c','.'): {
                     if (memcmp(rhs.elems+8,"DispType1",9)==0) { value_SetEnum(parent,atf_amc_DispCase_atf_amc_DispType1); ret = true; break; }
                     if (memcmp(rhs.elems+8,"DispType2",9)==0) { value_SetEnum(parent,atf_amc_DispCase_atf_amc_DispType2); ret = true; break; }
@@ -1033,6 +1122,9 @@ void atf_amc::FAmctest_Print(atf_amc::FAmctest & row, algo::cstring &str) {
 
     bool_Print(row.select, temp);
     PrintAttrSpaceReset(str,"select", temp);
+
+    bool_Print(row.success, temp);
+    PrintAttrSpaceReset(str,"success", temp);
 }
 
 // --- atf_amc.FAvl..Uninit
@@ -1077,7 +1169,7 @@ bool atf_amc::type_SetStrptrMaybe(atf_amc::FCascdel& cascdel, algo::strptr rhs) 
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
-            switch (u64(ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
                 case LE_STR3('p','t','r'): {
                     type_SetEnum(cascdel,atf_amc_FCascdel_type_ptr); ret = true; break;
                 }
@@ -1085,7 +1177,7 @@ bool atf_amc::type_SetStrptrMaybe(atf_amc::FCascdel& cascdel, algo::strptr rhs) 
             break;
         }
         case 4: {
-            switch (u64(ReadLE32(rhs.elems))) {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('n','o','n','e'): {
                     type_SetEnum(cascdel,atf_amc_FCascdel_type_none); ret = true; break;
                 }
@@ -1093,7 +1185,7 @@ bool atf_amc::type_SetStrptrMaybe(atf_amc::FCascdel& cascdel, algo::strptr rhs) 
             break;
         }
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('a','t','r','e','e'): {
                     type_SetEnum(cascdel,atf_amc_FCascdel_type_atree); ret = true; break;
                 }
@@ -1107,7 +1199,7 @@ bool atf_amc::type_SetStrptrMaybe(atf_amc::FCascdel& cascdel, algo::strptr rhs) 
             break;
         }
         case 6: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('p','t','r','a','r','y'): {
                     type_SetEnum(cascdel,atf_amc_FCascdel_type_ptrary); ret = true; break;
                 }
@@ -1236,7 +1328,7 @@ void atf_amc::ind_child_thash_Cascdel(atf_amc::FCascdel& cascdel) {
 // --- atf_amc.FCascdel.ind_child_thash.Find
 // Find row by key. Return NULL if not found.
 atf_amc::FCascdel* atf_amc::ind_child_thash_Find(atf_amc::FCascdel& cascdel, u32 key) {
-    u32 index = u32_Hash(0, key) & (cascdel.ind_child_thash_buckets_n - 1);
+    u32 index = ::u32_Hash(0, key) & (cascdel.ind_child_thash_buckets_n - 1);
     atf_amc::FCascdel* *e = &cascdel.ind_child_thash_buckets_elems[index];
     atf_amc::FCascdel* ret=NULL;
     do {
@@ -1254,7 +1346,7 @@ bool atf_amc::ind_child_thash_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::F
     ind_child_thash_Reserve(cascdel, 1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_child_thash_next == (atf_amc::FCascdel*)-1)) {// check if in hash already
-        u32 index = u32_Hash(0, row.key) & (cascdel.ind_child_thash_buckets_n - 1);
+        u32 index = ::u32_Hash(0, row.key) & (cascdel.ind_child_thash_buckets_n - 1);
         atf_amc::FCascdel* *prev = &cascdel.ind_child_thash_buckets_elems[index];
         do {
             atf_amc::FCascdel* ret = *prev;
@@ -1280,7 +1372,7 @@ bool atf_amc::ind_child_thash_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::F
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_amc::ind_child_thash_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
     if (LIKELY(row.ind_child_thash_next != (atf_amc::FCascdel*)-1)) {// check if in hash already
-        u32 index = u32_Hash(0, row.key) & (cascdel.ind_child_thash_buckets_n - 1);
+        u32 index = ::u32_Hash(0, row.key) & (cascdel.ind_child_thash_buckets_n - 1);
         atf_amc::FCascdel* *prev = &cascdel.ind_child_thash_buckets_elems[index]; // addr of pointer to current element
         while (atf_amc::FCascdel *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1301,7 +1393,7 @@ void atf_amc::ind_child_thash_Reserve(atf_amc::FCascdel& cascdel, int n) {
     u32 new_nelems   = cascdel.ind_child_thash_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(atf_amc::FCascdel*);
         u32 new_size = new_nbuckets * sizeof(atf_amc::FCascdel*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -1317,7 +1409,7 @@ void atf_amc::ind_child_thash_Reserve(atf_amc::FCascdel& cascdel, int n) {
             while (elem) {
                 atf_amc::FCascdel &row        = *elem;
                 atf_amc::FCascdel* next       = row.ind_child_thash_next;
-                u32 index          = u32_Hash(0, row.key) & (new_nbuckets-1);
+                u32 index          = ::u32_Hash(0, row.key) & (new_nbuckets-1);
                 row.ind_child_thash_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1761,13 +1853,13 @@ static void atf_amc::tr_child_atree_Disconnect(atf_amc::FCascdel& node) {
 // --- atf_amc.FCascdel.tr_child_atree.Rebalance
 // Rebalances the node if needed.
 void atf_amc::tr_child_atree_Rebalance(atf_amc::FCascdel& node) {
-    if(Abs(tr_child_atree_Balance(node)) > 1){
+    if (algo::Abs(tr_child_atree_Balance(node)) > 1){
         atf_amc::FCascdel* deep1 = tr_child_atree_TallerChild(node);
         atf_amc::FCascdel* deep2 = tr_child_atree_TallerChild(*deep1);
         bool turn = tr_child_atree_Balance(*deep1)!=0 && (node.tr_child_atree_left == deep1) != (deep1->tr_child_atree_left == deep2);
         if(turn){
             tr_child_atree_Turn(*deep2, *deep1);
-            TSwap(deep1, deep2);
+            algo::TSwap(deep1, deep2);
         }
         tr_child_atree_Turn(*deep1, node);
         tr_child_atree_updateDepth(node);
@@ -2394,11 +2486,11 @@ inline static bool atf_amc::bh_typec_ElemLt(atf_amc::FTypeC &a, atf_amc::FTypeC 
 // --- atf_amc.FDb.bh_typec.UpdateCycles
 // Update cycles count from previous clock capture
 void atf_amc::bh_typec_UpdateCycles() {
-    u64 cur_cycles                      = get_cycles();
+    u64 cur_cycles                      = algo::get_cycles();
     u64 prev_cycles                     = algo_lib::_db.clock.value;
     ++atf_amc::_db.trace.step_bh_typec;
     atf_amc::_db.trace.step_bh_typec_cycles  += cur_cycles - prev_cycles;
-    algo_lib::_db.clock                 = SchedTime(cur_cycles);
+    algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
 // --- atf_amc.FDb.zdl_h_typec.Insert
@@ -2638,11 +2730,11 @@ atf_amc::FTypeC* atf_amc::zsl_h_typec_RemoveFirst() {
 // --- atf_amc.FDb.zsl_h_typec.UpdateCycles
 // Update cycles count from previous clock capture
 void atf_amc::zsl_h_typec_UpdateCycles() {
-    u64 cur_cycles                      = get_cycles();
+    u64 cur_cycles                      = algo::get_cycles();
     u64 prev_cycles                     = algo_lib::_db.clock.value;
     ++atf_amc::_db.trace.step_zsl_h_typec;
     atf_amc::_db.trace.step_zsl_h_typec_cycles  += cur_cycles - prev_cycles;
-    algo_lib::_db.clock                 = SchedTime(cur_cycles);
+    algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
 // --- atf_amc.FDb.zs_t_typec.Insert
@@ -2739,11 +2831,11 @@ atf_amc::FTypeC* atf_amc::zs_t_typec_RemoveFirst() {
 // --- atf_amc.FDb.zs_t_typec.UpdateCycles
 // Update cycles count from previous clock capture
 void atf_amc::zs_t_typec_UpdateCycles() {
-    u64 cur_cycles                      = get_cycles();
+    u64 cur_cycles                      = algo::get_cycles();
     u64 prev_cycles                     = algo_lib::_db.clock.value;
     ++atf_amc::_db.trace.step_zs_t_typec;
     atf_amc::_db.trace.step_zs_t_typec_cycles  += cur_cycles - prev_cycles;
-    algo_lib::_db.clock                 = SchedTime(cur_cycles);
+    algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
 // --- atf_amc.FDb.zs_mt_typec.DestructiveFirst
@@ -3143,11 +3235,11 @@ atf_amc::FTypeC* atf_amc::csl_h_typec_RotateFirst() {
 // --- atf_amc.FDb.csl_h_typec.UpdateCycles
 // Update cycles count from previous clock capture
 void atf_amc::csl_h_typec_UpdateCycles() {
-    u64 cur_cycles                      = get_cycles();
+    u64 cur_cycles                      = algo::get_cycles();
     u64 prev_cycles                     = algo_lib::_db.clock.value;
     ++atf_amc::_db.trace.step_csl_h_typec;
     atf_amc::_db.trace.step_csl_h_typec_cycles  += cur_cycles - prev_cycles;
-    algo_lib::_db.clock                 = SchedTime(cur_cycles);
+    algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
 // --- atf_amc.FDb.cs_t_typec.Insert
@@ -3254,11 +3346,11 @@ atf_amc::FTypeC* atf_amc::cs_t_typec_RotateFirst() {
 // --- atf_amc.FDb.cs_t_typec.UpdateCycles
 // Update cycles count from previous clock capture
 void atf_amc::cs_t_typec_UpdateCycles() {
-    u64 cur_cycles                      = get_cycles();
+    u64 cur_cycles                      = algo::get_cycles();
     u64 prev_cycles                     = algo_lib::_db.clock.value;
     ++atf_amc::_db.trace.step_cs_t_typec;
     atf_amc::_db.trace.step_cs_t_typec_cycles  += cur_cycles - prev_cycles;
-    algo_lib::_db.clock                 = SchedTime(cur_cycles);
+    algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
 // --- atf_amc.FDb.typea.Alloc
@@ -3472,7 +3564,7 @@ bool atf_amc::types_XrefMaybe(atf_amc::FTypeS &row) {
 // --- atf_amc.FDb.ind_types.Find
 // Find row by key. Return NULL if not found.
 atf_amc::FTypeS* atf_amc::ind_types_Find(i32 key) {
-    u32 index = i32_Hash(0, key) & (_db.ind_types_buckets_n - 1);
+    u32 index = ::i32_Hash(0, key) & (_db.ind_types_buckets_n - 1);
     atf_amc::FTypeS* *e = &_db.ind_types_buckets_elems[index];
     atf_amc::FTypeS* ret=NULL;
     do {
@@ -3506,7 +3598,7 @@ bool atf_amc::ind_types_InsertMaybe(atf_amc::FTypeS& row) {
     ind_types_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_types_next == (atf_amc::FTypeS*)-1)) {// check if in hash already
-        u32 index = i32_Hash(0, row.types) & (_db.ind_types_buckets_n - 1);
+        u32 index = ::i32_Hash(0, row.types) & (_db.ind_types_buckets_n - 1);
         atf_amc::FTypeS* *prev = &_db.ind_types_buckets_elems[index];
         do {
             atf_amc::FTypeS* ret = *prev;
@@ -3532,7 +3624,7 @@ bool atf_amc::ind_types_InsertMaybe(atf_amc::FTypeS& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_amc::ind_types_Remove(atf_amc::FTypeS& row) {
     if (LIKELY(row.ind_types_next != (atf_amc::FTypeS*)-1)) {// check if in hash already
-        u32 index = i32_Hash(0, row.types) & (_db.ind_types_buckets_n - 1);
+        u32 index = ::i32_Hash(0, row.types) & (_db.ind_types_buckets_n - 1);
         atf_amc::FTypeS* *prev = &_db.ind_types_buckets_elems[index]; // addr of pointer to current element
         while (atf_amc::FTypeS *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -3553,7 +3645,7 @@ void atf_amc::ind_types_Reserve(int n) {
     u32 new_nelems   = _db.ind_types_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(atf_amc::FTypeS*);
         u32 new_size = new_nbuckets * sizeof(atf_amc::FTypeS*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -3569,7 +3661,7 @@ void atf_amc::ind_types_Reserve(int n) {
             while (elem) {
                 atf_amc::FTypeS &row        = *elem;
                 atf_amc::FTypeS* next       = row.ind_types_next;
-                u32 index          = i32_Hash(0, row.types) & (new_nbuckets-1);
+                u32 index          = ::i32_Hash(0, row.types) & (new_nbuckets-1);
                 row.ind_types_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -3585,7 +3677,7 @@ void atf_amc::ind_types_Reserve(int n) {
 // --- atf_amc.FDb.ind_typea.Find
 // Find row by key. Return NULL if not found.
 atf_amc::FTypeA* atf_amc::ind_typea_Find(i32 key) {
-    u32 index = i32_Hash(0, key) & (_db.ind_typea_buckets_n - 1);
+    u32 index = ::i32_Hash(0, key) & (_db.ind_typea_buckets_n - 1);
     atf_amc::FTypeA* *e = &_db.ind_typea_buckets_elems[index];
     atf_amc::FTypeA* ret=NULL;
     do {
@@ -3619,7 +3711,7 @@ bool atf_amc::ind_typea_InsertMaybe(atf_amc::FTypeA& row) {
     ind_typea_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_typea_next == (atf_amc::FTypeA*)-1)) {// check if in hash already
-        u32 index = i32_Hash(0, row.typea) & (_db.ind_typea_buckets_n - 1);
+        u32 index = ::i32_Hash(0, row.typea) & (_db.ind_typea_buckets_n - 1);
         atf_amc::FTypeA* *prev = &_db.ind_typea_buckets_elems[index];
         do {
             atf_amc::FTypeA* ret = *prev;
@@ -3645,7 +3737,7 @@ bool atf_amc::ind_typea_InsertMaybe(atf_amc::FTypeA& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_amc::ind_typea_Remove(atf_amc::FTypeA& row) {
     if (LIKELY(row.ind_typea_next != (atf_amc::FTypeA*)-1)) {// check if in hash already
-        u32 index = i32_Hash(0, row.typea) & (_db.ind_typea_buckets_n - 1);
+        u32 index = ::i32_Hash(0, row.typea) & (_db.ind_typea_buckets_n - 1);
         atf_amc::FTypeA* *prev = &_db.ind_typea_buckets_elems[index]; // addr of pointer to current element
         while (atf_amc::FTypeA *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -3666,7 +3758,7 @@ void atf_amc::ind_typea_Reserve(int n) {
     u32 new_nelems   = _db.ind_typea_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(atf_amc::FTypeA*);
         u32 new_size = new_nbuckets * sizeof(atf_amc::FTypeA*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -3682,7 +3774,7 @@ void atf_amc::ind_typea_Reserve(int n) {
             while (elem) {
                 atf_amc::FTypeA &row        = *elem;
                 atf_amc::FTypeA* next       = row.ind_typea_next;
-                u32 index          = i32_Hash(0, row.typea) & (new_nbuckets-1);
+                u32 index          = ::i32_Hash(0, row.typea) & (new_nbuckets-1);
                 row.ind_typea_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -3709,7 +3801,7 @@ void atf_amc::MainArgs(int argc, char **argv) {
 // --- atf_amc.FDb._db.MainLoop
 // Main loop.
 void atf_amc::MainLoop() {
-    SchedTime time(get_cycles());
+    algo::SchedTime time(algo::get_cycles());
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
@@ -3759,6 +3851,8 @@ void atf_amc::StaticCheck() {
     algo_assert(sizeof(atf_amc::parent_callback_hook) == 8); // csize:atf_amc.parent_callback_hook
     // check that bitfield fits width
     algo_assert(sizeof(((atf_amc::BitfldType1*)0)->value)*8 >= 15);
+    // check that bitfield fits width
+    algo_assert(sizeof(((atf_amc::BitfldType2*)0)->value)*8 >= 2);
     // check that bitfield fits width
     algo_assert(sizeof(((atf_amc::BitfldU128*)0)->value)*8 >= 128);
     // check that bitfield fits width
@@ -4049,7 +4143,7 @@ bool atf_amc::cstring_XrefMaybe(atf_amc::FCstring &row) {
 // --- atf_amc.FDb.ind_cstring.Find
 // Find row by key. Return NULL if not found.
 atf_amc::FCstring* atf_amc::ind_cstring_Find(const algo::strptr& key) {
-    u32 index = cstring_Hash(0, key) & (_db.ind_cstring_buckets_n - 1);
+    u32 index = algo::cstring_Hash(0, key) & (_db.ind_cstring_buckets_n - 1);
     atf_amc::FCstring* *e = &_db.ind_cstring_buckets_elems[index];
     atf_amc::FCstring* ret=NULL;
     do {
@@ -4083,7 +4177,7 @@ bool atf_amc::ind_cstring_InsertMaybe(atf_amc::FCstring& row) {
     ind_cstring_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_cstring_next == (atf_amc::FCstring*)-1)) {// check if in hash already
-        u32 index = cstring_Hash(0, row.str) & (_db.ind_cstring_buckets_n - 1);
+        u32 index = algo::cstring_Hash(0, row.str) & (_db.ind_cstring_buckets_n - 1);
         atf_amc::FCstring* *prev = &_db.ind_cstring_buckets_elems[index];
         do {
             atf_amc::FCstring* ret = *prev;
@@ -4109,7 +4203,7 @@ bool atf_amc::ind_cstring_InsertMaybe(atf_amc::FCstring& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_amc::ind_cstring_Remove(atf_amc::FCstring& row) {
     if (LIKELY(row.ind_cstring_next != (atf_amc::FCstring*)-1)) {// check if in hash already
-        u32 index = cstring_Hash(0, row.str) & (_db.ind_cstring_buckets_n - 1);
+        u32 index = algo::cstring_Hash(0, row.str) & (_db.ind_cstring_buckets_n - 1);
         atf_amc::FCstring* *prev = &_db.ind_cstring_buckets_elems[index]; // addr of pointer to current element
         while (atf_amc::FCstring *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -4130,7 +4224,7 @@ void atf_amc::ind_cstring_Reserve(int n) {
     u32 new_nelems   = _db.ind_cstring_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(atf_amc::FCstring*);
         u32 new_size = new_nbuckets * sizeof(atf_amc::FCstring*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -4146,7 +4240,7 @@ void atf_amc::ind_cstring_Reserve(int n) {
             while (elem) {
                 atf_amc::FCstring &row        = *elem;
                 atf_amc::FCstring* next       = row.ind_cstring_next;
-                u32 index          = cstring_Hash(0, row.str) & (new_nbuckets-1);
+                u32 index          = algo::cstring_Hash(0, row.str) & (new_nbuckets-1);
                 row.ind_cstring_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -4283,11 +4377,11 @@ static void atf_amc::cd_in_msg_FirstChanged() {
 // --- atf_amc.FDb.cd_in_msg.UpdateCycles
 // Update cycles count from previous clock capture
 inline static void atf_amc::cd_in_msg_UpdateCycles() {
-    u64 cur_cycles                      = get_cycles();
+    u64 cur_cycles                      = algo::get_cycles();
     u64 prev_cycles                     = algo_lib::_db.clock.value;
     ++atf_amc::_db.trace.step_cd_in_msg;
     atf_amc::_db.trace.step_cd_in_msg_cycles  += cur_cycles - prev_cycles;
-    algo_lib::_db.clock                 = SchedTime(cur_cycles);
+    algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
 // --- atf_amc.FDb.cd_in_msg.Call
@@ -4517,7 +4611,7 @@ bool atf_amc::pooledbe64_XrefMaybe(atf_amc::PooledBE64 &row) {
 void atf_amc::varlen_extern_FreeMem(void *mem, u64 size) {
     if (mem) {
         size = u64_Max(size,16); // enforce alignment
-        u64 cell = u64_BitScanReverse(size-1) + 1;
+        u64 cell = algo::u64_BitScanReverse(size-1) + 1;
         varlen_extern_Lpblock *temp = (varlen_extern_Lpblock*)mem; // push  singly linked list
         temp->next = _db.varlen_extern_free[cell];
         _db.varlen_extern_free[cell] = temp;
@@ -4531,7 +4625,7 @@ void atf_amc::varlen_extern_FreeMem(void *mem, u64 size) {
 // The allocated block is 16-byte aligned
 void* atf_amc::varlen_extern_AllocMem(u64 size) {
     size     = u64_Max(size,16); // enforce alignment
-    u64 cell = u64_BitScanReverse(size-1)+1;
+    u64 cell = algo::u64_BitScanReverse(size-1)+1;
     u64 i    = cell;
     u8 *retval = NULL;
     // try to find a block that's at least as large as required.
@@ -4571,7 +4665,7 @@ bool atf_amc::varlen_extern_ReserveBuffers(int nbuf, u64 bufsize) {
     bool retval = true;
     bufsize = u64_Max(bufsize, 16);
     for (int i = 0; i < nbuf; i++) {
-        u64     cell = u64_BitScanReverse(bufsize-1)+1;
+        u64     cell = algo::u64_BitScanReverse(bufsize-1)+1;
         u64     size = 1ULL<<cell;
         varlen_extern_Lpblock *temp = (varlen_extern_Lpblock*)algo_lib::malloc_AllocMem(size);
         if (temp == NULL) {
@@ -4748,6 +4842,7 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:BheapInsert100  comment:\"Ascending, descending, mixed\"", atf_amc::amctest_BheapInsert100 }
         ,{ "atfdb.amctest  amctest:BigEndian  comment:\"\"", atf_amc::amctest_BigEndian }
         ,{ "atfdb.amctest  amctest:BigendFconst  comment:\"\"", atf_amc::amctest_BigendFconst }
+        ,{ "atfdb.amctest  amctest:BitfldBitset  comment:\"Test bitfield extraction/insertion when reading bitset field\"", atf_amc::amctest_BitfldBitset }
         ,{ "atfdb.amctest  amctest:BitfldNet  comment:\"Test bitfield extraction/insertion (big-endian storage)\"", atf_amc::amctest_BitfldNet }
         ,{ "atfdb.amctest  amctest:BitfldTuple  comment:\"Test bitfield extraction/insertion when reading tuple\"", atf_amc::amctest_BitfldTuple }
         ,{ "atfdb.amctest  amctest:CascdelAtree  comment:\"Test for cascade deletion\"", atf_amc::amctest_CascdelAtree }
@@ -4944,10 +5039,10 @@ static void atf_amc::amctest_LoadStatic() {
     (void)data;
     atfdb::Amctest amctest;
     for (int i=0; data[i].s; i++) {
-        (void)atfdb::Amctest_ReadStrptrMaybe(amctest, strptr(data[i].s));
+        (void)atfdb::Amctest_ReadStrptrMaybe(amctest, algo::strptr(data[i].s));
         atf_amc::FAmctest *elem = amctest_InsertMaybe(amctest);
         vrfy(elem, tempstr("atf_amc.static_insert_fatal_error")
-        << Keyval("tuple",strptr(data[i].s))
+        << Keyval("tuple",algo::strptr(data[i].s))
         << Keyval("comment",algo_lib::DetachBadTags()));
         elem->step = data[i].step;
     }
@@ -5101,7 +5196,7 @@ bool atf_amc::cascdel_XrefMaybe(atf_amc::FCascdel &row) {
 void atf_amc::optalloc_FreeMem(void *mem, u64 size) {
     if (mem) {
         size = u64_Max(size,16); // enforce alignment
-        u64 cell = u64_BitScanReverse(size-1) + 1;
+        u64 cell = algo::u64_BitScanReverse(size-1) + 1;
         optalloc_Lpblock *temp = (optalloc_Lpblock*)mem; // push  singly linked list
         temp->next = _db.optalloc_free[cell];
         _db.optalloc_free[cell] = temp;
@@ -5115,7 +5210,7 @@ void atf_amc::optalloc_FreeMem(void *mem, u64 size) {
 // The allocated block is 16-byte aligned
 void* atf_amc::optalloc_AllocMem(u64 size) {
     size     = u64_Max(size,16); // enforce alignment
-    u64 cell = u64_BitScanReverse(size-1)+1;
+    u64 cell = algo::u64_BitScanReverse(size-1)+1;
     u64 i    = cell;
     u8 *retval = NULL;
     // try to find a block that's at least as large as required.
@@ -5155,7 +5250,7 @@ bool atf_amc::optalloc_ReserveBuffers(int nbuf, u64 bufsize) {
     bool retval = true;
     bufsize = u64_Max(bufsize, 16);
     for (int i = 0; i < nbuf; i++) {
-        u64     cell = u64_BitScanReverse(bufsize-1)+1;
+        u64     cell = algo::u64_BitScanReverse(bufsize-1)+1;
         u64     size = 1ULL<<cell;
         optalloc_Lpblock *temp = (optalloc_Lpblock*)algo_lib::malloc_AllocMem(size);
         if (temp == NULL) {
@@ -5230,7 +5325,7 @@ bool atf_amc::optalloc_XrefMaybe(atf_amc::OptAlloc &row) {
 void atf_amc::varlenalloc_FreeMem(void *mem, u64 size) {
     if (mem) {
         size = u64_Max(size,16); // enforce alignment
-        u64 cell = u64_BitScanReverse(size-1) + 1;
+        u64 cell = algo::u64_BitScanReverse(size-1) + 1;
         varlenalloc_Lpblock *temp = (varlenalloc_Lpblock*)mem; // push  singly linked list
         temp->next = _db.varlenalloc_free[cell];
         _db.varlenalloc_free[cell] = temp;
@@ -5244,7 +5339,7 @@ void atf_amc::varlenalloc_FreeMem(void *mem, u64 size) {
 // The allocated block is 16-byte aligned
 void* atf_amc::varlenalloc_AllocMem(u64 size) {
     size     = u64_Max(size,16); // enforce alignment
-    u64 cell = u64_BitScanReverse(size-1)+1;
+    u64 cell = algo::u64_BitScanReverse(size-1)+1;
     u64 i    = cell;
     u8 *retval = NULL;
     // try to find a block that's at least as large as required.
@@ -5284,7 +5379,7 @@ bool atf_amc::varlenalloc_ReserveBuffers(int nbuf, u64 bufsize) {
     bool retval = true;
     bufsize = u64_Max(bufsize, 16);
     for (int i = 0; i < nbuf; i++) {
-        u64     cell = u64_BitScanReverse(bufsize-1)+1;
+        u64     cell = algo::u64_BitScanReverse(bufsize-1)+1;
         u64     size = 1ULL<<cell;
         varlenalloc_Lpblock *temp = (varlenalloc_Lpblock*)algo_lib::malloc_AllocMem(size);
         if (temp == NULL) {
@@ -5370,7 +5465,7 @@ bool atf_amc::varlenalloc_XrefMaybe(atf_amc::VarlenAlloc &row) {
 void atf_amc::optg_FreeMem(void *mem, u64 size) {
     if (mem) {
         size = u64_Max(size,16); // enforce alignment
-        u64 cell = u64_BitScanReverse(size-1) + 1;
+        u64 cell = algo::u64_BitScanReverse(size-1) + 1;
         optg_Lpblock *temp = (optg_Lpblock*)mem; // push  singly linked list
         temp->next = _db.optg_free[cell];
         _db.optg_free[cell] = temp;
@@ -5384,7 +5479,7 @@ void atf_amc::optg_FreeMem(void *mem, u64 size) {
 // The allocated block is 16-byte aligned
 void* atf_amc::optg_AllocMem(u64 size) {
     size     = u64_Max(size,16); // enforce alignment
-    u64 cell = u64_BitScanReverse(size-1)+1;
+    u64 cell = algo::u64_BitScanReverse(size-1)+1;
     u64 i    = cell;
     u8 *retval = NULL;
     // try to find a block that's at least as large as required.
@@ -5424,7 +5519,7 @@ bool atf_amc::optg_ReserveBuffers(int nbuf, u64 bufsize) {
     bool retval = true;
     bufsize = u64_Max(bufsize, 16);
     for (int i = 0; i < nbuf; i++) {
-        u64     cell = u64_BitScanReverse(bufsize-1)+1;
+        u64     cell = algo::u64_BitScanReverse(bufsize-1)+1;
         u64     size = 1ULL<<cell;
         optg_Lpblock *temp = (optg_Lpblock*)algo_lib::malloc_AllocMem(size);
         if (temp == NULL) {
@@ -5772,13 +5867,13 @@ static void atf_amc::tr_avl_Disconnect(atf_amc::FAvl& node) {
 // --- atf_amc.FDb.tr_avl.Rebalance
 // Rebalances the node if needed.
 void atf_amc::tr_avl_Rebalance(atf_amc::FAvl& node) {
-    if(Abs(tr_avl_Balance(node)) > 1){
+    if (algo::Abs(tr_avl_Balance(node)) > 1){
         atf_amc::FAvl* deep1 = tr_avl_TallerChild(node);
         atf_amc::FAvl* deep2 = tr_avl_TallerChild(*deep1);
         bool turn = tr_avl_Balance(*deep1)!=0 && (node.tr_avl_left == deep1) != (deep1->tr_avl_left == deep2);
         if(turn){
             tr_avl_Turn(*deep2, *deep1);
-            TSwap(deep1, deep2);
+            algo::TSwap(deep1, deep2);
         }
         tr_avl_Turn(*deep1, node);
         tr_avl_updateDepth(node);
@@ -5997,10 +6092,10 @@ static void atf_amc::listtype_LoadStatic() {
     (void)data;
     dmmeta::Listtype listtype;
     for (int i=0; data[i].s; i++) {
-        (void)dmmeta::Listtype_ReadStrptrMaybe(listtype, strptr(data[i].s));
+        (void)dmmeta::Listtype_ReadStrptrMaybe(listtype, algo::strptr(data[i].s));
         atf_amc::FListtype *elem = listtype_InsertMaybe(listtype);
         vrfy(elem, tempstr("atf_amc.static_insert_fatal_error")
-        << Keyval("tuple",strptr(data[i].s))
+        << Keyval("tuple",algo::strptr(data[i].s))
         << Keyval("comment",algo_lib::DetachBadTags()));
         elem->step = data[i].step;
     }
@@ -6224,10 +6319,10 @@ void atf_amc::FDb_Init() {
     _db.cd_in_msg_head = NULL; // (atf_amc.FDb.cd_in_msg)
     // typeb: initialize Tpool
     _db.typeb_free      = NULL;
-    _db.typeb_blocksize = BumpToPow2(64 * sizeof(atf_amc::FTypeB)); // allocate 64-127 elements at a time
+    _db.typeb_blocksize = algo::BumpToPow2(64 * sizeof(atf_amc::FTypeB)); // allocate 64-127 elements at a time
     // pooledbe64: initialize Tpool
     _db.pooledbe64_free      = NULL;
-    _db.pooledbe64_blocksize = BumpToPow2(64 * sizeof(atf_amc::PooledBE64)); // allocate 64-127 elements at a time
+    _db.pooledbe64_blocksize = algo::BumpToPow2(64 * sizeof(atf_amc::PooledBE64)); // allocate 64-127 elements at a time
     memset(_db.varlen_extern_free, 0, sizeof(_db.varlen_extern_free));
     _db.varlen_extern_n = 0;
     // initialize LAry amctest (atf_amc.FDb.amctest)
@@ -6243,7 +6338,7 @@ void atf_amc::FDb_Init() {
     }
     // cascdel: initialize Tpool
     _db.cascdel_free      = NULL;
-    _db.cascdel_blocksize = BumpToPow2(64 * sizeof(atf_amc::FCascdel)); // allocate 64-127 elements at a time
+    _db.cascdel_blocksize = algo::BumpToPow2(64 * sizeof(atf_amc::FCascdel)); // allocate 64-127 elements at a time
     _db.cascdel_next_key = u32(0);
     memset(_db.optalloc_free, 0, sizeof(_db.optalloc_free));
     _db.optalloc_n = 0;
@@ -6268,6 +6363,7 @@ void atf_amc::FDb_Init() {
     _db.tr_avl_root = NULL; // (atf_amc.FDb.tr_avl)
     _db.tr_avl_n = 0;
     _db.listtype_n = 0; // listtype: initialize count
+    _db.dofork = bool(false);
 
     atf_amc::InitReflection();
     amctest_LoadStatic();
@@ -6431,13 +6527,15 @@ void atf_amc::orig_RemoveLast(atf_amc::FPerfSortString& parent) {
 // Make sure N elements fit in array. Process dies if out of memory
 void atf_amc::orig_AbsReserve(atf_amc::FPerfSortString& parent, int n) {
     u32 old_max  = parent.orig_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(parent.orig_elems, old_max * sizeof(atf_amc::Cstr), new_max * sizeof(atf_amc::Cstr));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("atf_amc.tary_nomem  field:atf_amc.FPerfSortString.orig  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.orig_elems, old_max * sizeof(atf_amc::Cstr), new_max * sizeof(atf_amc::Cstr));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("atf_amc.tary_nomem  field:atf_amc.FPerfSortString.orig  comment:'out of memory'");
+        }
+        parent.orig_elems = (atf_amc::Cstr*)new_mem;
+        parent.orig_max = new_max;
     }
-    parent.orig_elems = (atf_amc::Cstr*)new_mem;
-    parent.orig_max = new_max;
 }
 
 // --- atf_amc.FPerfSortString.orig.Setary
@@ -6560,13 +6658,15 @@ void atf_amc::sorted1_RemoveLast(atf_amc::FPerfSortString& parent) {
 // Make sure N elements fit in array. Process dies if out of memory
 void atf_amc::sorted1_AbsReserve(atf_amc::FPerfSortString& parent, int n) {
     u32 old_max  = parent.sorted1_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(parent.sorted1_elems, old_max * sizeof(atf_amc::Cstr), new_max * sizeof(atf_amc::Cstr));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("atf_amc.tary_nomem  field:atf_amc.FPerfSortString.sorted1  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.sorted1_elems, old_max * sizeof(atf_amc::Cstr), new_max * sizeof(atf_amc::Cstr));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("atf_amc.tary_nomem  field:atf_amc.FPerfSortString.sorted1  comment:'out of memory'");
+        }
+        parent.sorted1_elems = (atf_amc::Cstr*)new_mem;
+        parent.sorted1_max = new_max;
     }
-    parent.sorted1_elems = (atf_amc::Cstr*)new_mem;
-    parent.sorted1_max = new_max;
 }
 
 // --- atf_amc.FPerfSortString.sorted1.Setary
@@ -6752,7 +6852,7 @@ void atf_amc::sorted1_HeapSort(atf_amc::FPerfSortString& parent) {
 // Quick sort
 void atf_amc::sorted1_QuickSort(atf_amc::FPerfSortString& parent) {
     // compute max recursion depth based on number of elements in the array
-    int max_depth = CeilingLog2(u32(sorted1_N(parent) + 1)) + 3;
+    int max_depth = algo::CeilingLog2(u32(sorted1_N(parent) + 1)) + 3;
     atf_amc::Cstr *elems = sorted1_Getary(parent).elems;
     int n = sorted1_N(parent);
     sorted1_IntQuickSort(elems, n, max_depth);
@@ -7566,13 +7666,15 @@ void atf_amc::tary_RemoveLast(atf_amc::FUnitSort& parent) {
 // Make sure N elements fit in array. Process dies if out of memory
 void atf_amc::tary_AbsReserve(atf_amc::FUnitSort& parent, int n) {
     u32 old_max  = parent.tary_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(parent.tary_elems, old_max * sizeof(atf_amc::TypeA), new_max * sizeof(atf_amc::TypeA));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("atf_amc.tary_nomem  field:atf_amc.FUnitSort.tary  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.tary_elems, old_max * sizeof(atf_amc::TypeA), new_max * sizeof(atf_amc::TypeA));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("atf_amc.tary_nomem  field:atf_amc.FUnitSort.tary  comment:'out of memory'");
+        }
+        parent.tary_elems = (atf_amc::TypeA*)new_mem;
+        parent.tary_max = new_max;
     }
-    parent.tary_elems = (atf_amc::TypeA*)new_mem;
-    parent.tary_max = new_max;
 }
 
 // --- atf_amc.FUnitSort.tary.Setary
@@ -7750,7 +7852,7 @@ void atf_amc::tary_HeapSort(atf_amc::FUnitSort& parent) {
 // Quick sort
 void atf_amc::tary_QuickSort(atf_amc::FUnitSort& parent) {
     // compute max recursion depth based on number of elements in the array
-    int max_depth = CeilingLog2(u32(tary_N(parent) + 1)) + 3;
+    int max_depth = algo::CeilingLog2(u32(tary_N(parent) + 1)) + 3;
     atf_amc::TypeA *elems = tary_Getary(parent).elems;
     int n = tary_N(parent);
     tary_IntQuickSort(elems, n, max_depth);
@@ -7998,7 +8100,7 @@ void atf_amc::c_ptrary_HeapSort(atf_amc::FUnitSort& parent) {
 // Quick sort
 void atf_amc::c_ptrary_QuickSort(atf_amc::FUnitSort& parent) {
     // compute max recursion depth based on number of elements in the array
-    int max_depth = CeilingLog2(u32(c_ptrary_N(parent) + 1)) + 3;
+    int max_depth = algo::CeilingLog2(u32(c_ptrary_N(parent) + 1)) + 3;
     atf_amc::TypeA* *elems = c_ptrary_Getary(parent).elems;
     int n = c_ptrary_N(parent);
     c_ptrary_IntQuickSort(elems, n, max_depth);
@@ -8167,7 +8269,7 @@ void atf_amc::fixary_HeapSort(atf_amc::FUnitSort& parent) {
 // Quick sort
 void atf_amc::fixary_QuickSort(atf_amc::FUnitSort& parent) {
     // compute max recursion depth based on number of elements in the array
-    int max_depth = CeilingLog2(u32(fixary_N(parent) + 1)) + 3;
+    int max_depth = algo::CeilingLog2(u32(fixary_N(parent) + 1)) + 3;
     atf_amc::TypeA *elems = fixary_Getary(parent).elems;
     int n = fixary_N(parent);
     fixary_IntQuickSort(elems, n, max_depth);
@@ -8196,6 +8298,8 @@ const char* atf_amc::value_ToCstr(const atf_amc::FieldId& parent) {
         case atf_amc_FieldId_value         : ret = "value";  break;
         case atf_amc_FieldId_bit1          : ret = "bit1";  break;
         case atf_amc_FieldId_bits5         : ret = "bits5";  break;
+        case atf_amc_FieldId_bit0          : ret = "bit0";  break;
+        case atf_amc_FieldId_freebool      : ret = "freebool";  break;
         case atf_amc_FieldId_attr1         : ret = "attr1";  break;
         case atf_amc_FieldId_attr2         : ret = "attr2";  break;
         case atf_amc_FieldId_strval        : ret = "strval";  break;
@@ -8335,7 +8439,7 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 2: {
-            switch (u64(ReadLE16(rhs.elems))) {
+            switch (u64(algo::ReadLE16(rhs.elems))) {
                 case LE_STR2('c','h'): {
                     value_SetEnum(parent,atf_amc_FieldId_ch); ret = true; break;
                 }
@@ -8343,7 +8447,7 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 3: {
-            switch (u64(ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
                 case LE_STR3('v','a','l'): {
                     value_SetEnum(parent,atf_amc_FieldId_val); ret = true; break;
                 }
@@ -8351,7 +8455,10 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 4: {
-            switch (u64(ReadLE32(rhs.elems))) {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('b','i','t','0'): {
+                    value_SetEnum(parent,atf_amc_FieldId_bit0); ret = true; break;
+                }
                 case LE_STR4('b','i','t','1'): {
                     value_SetEnum(parent,atf_amc_FieldId_bit1); ret = true; break;
                 }
@@ -8377,7 +8484,7 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('a','t','t','r','1'): {
                     value_SetEnum(parent,atf_amc_FieldId_attr1); ret = true; break;
                 }
@@ -8412,7 +8519,7 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 6: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('f','i','x','a','r','y'): {
                     value_SetEnum(parent,atf_amc_FieldId_fixary); ret = true; break;
                 }
@@ -8459,7 +8566,7 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 7: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
                 case LE_STR7('c','o','m','m','e','n','t'): {
                     value_SetEnum(parent,atf_amc_FieldId_comment); ret = true; break;
                 }
@@ -8661,8 +8768,16 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
             }
             break;
         }
+        case 8: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('f','r','e','e','b','o','o','l'): {
+                    value_SetEnum(parent,atf_amc_FieldId_freebool); ret = true; break;
+                }
+            }
+            break;
+        }
         case 10: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('e','n','d','_','i','n','t','v'): {
                     if (memcmp(rhs.elems+8,"al",2)==0) { value_SetEnum(parent,atf_amc_FieldId_end_intval); ret = true; break; }
                     break;
@@ -8671,7 +8786,7 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 11: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('e','n','d','_','d','a','t','e'): {
                     if (memcmp(rhs.elems+8,"val",3)==0) { value_SetEnum(parent,atf_amc_FieldId_end_dateval); ret = true; break; }
                     break;
@@ -8684,7 +8799,7 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 12: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('s','t','a','r','t','_','i','n'): {
                     if (memcmp(rhs.elems+8,"tval",4)==0) { value_SetEnum(parent,atf_amc_FieldId_start_intval); ret = true; break; }
                     break;
@@ -8697,7 +8812,7 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 13: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('s','t','a','r','t','_','d','a'): {
                     if (memcmp(rhs.elems+8,"teval",5)==0) { value_SetEnum(parent,atf_amc_FieldId_start_dateval); ret = true; break; }
                     break;
@@ -8760,7 +8875,7 @@ void atf_amc::fixary_Print(atf_amc::InlaryPrint& parent, algo::cstring &lhs) {
 bool atf_amc::fixary_ReadStrptrMaybe(atf_amc::InlaryPrint& parent, algo::strptr in_str) {
     bool retval = true;
     for (int i=0; in_str != "" && i < fixary_Max(parent); i++) {
-        strptr token;
+        algo::strptr token;
         algo::NextSep(in_str, ' ', token);
         retval = u32_ReadStrptrMaybe(parent.fixary_elems[i], token);
         if (!retval) {
@@ -8826,7 +8941,7 @@ bool atf_amc::inlary_ReadStrptrMaybe(atf_amc::InlaryPrint& parent, algo::strptr 
     bool retval = true;
     inlary_RemoveAll(parent);
     for (int i=0; in_str != "" && i < inlary_Max(parent); i++) {
-        strptr token;
+        algo::strptr token;
         algo::NextSep(in_str, ' ', token);
         if (i >= 0) { // make room for new element...
             u32 &elem = inlary_Alloc(parent);
@@ -9004,8 +9119,8 @@ void atf_amc::Lary32_Uninit(atf_amc::Lary32& parent) {
 // SkipMsg will skip both the line and the deliminter.
 // A partial line at the end of input is NOT returned (TODO?)
 // 
-aryptr<char> atf_amc::in_GetMsg(atf_amc::Linebuf& linebuf) {
-    aryptr<char> ret;
+algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::Linebuf& linebuf) {
+    algo::aryptr<char> ret;
     if (!linebuf.in_msgvalid) {
         in_Scanmsg(linebuf);
     }
@@ -9157,7 +9272,7 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgType& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 12: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('a','t','f','_','a','m','c','.'): {
                     if (memcmp(rhs.elems+8,"Text",4)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_Text); ret = true; break; }
                     break;
@@ -9166,7 +9281,7 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgType& parent, algo::strptr rhs) {
             break;
         }
         case 14: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('a','t','f','_','a','m','c','.'): {
                     if (memcmp(rhs.elems+8,"Seqmsg",6)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_Seqmsg); ret = true; break; }
                     break;
@@ -9481,7 +9596,7 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgsCase& parent, algo::strptr rhs) 
     bool ret = false;
     switch (elems_N(rhs)) {
         case 15: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('a','t','f','_','a','m','c','.'): {
                     if (memcmp(rhs.elems+8,"VarlenK",7)==0) { value_SetEnum(parent,atf_amc_MsgsCase_atf_amc_VarlenK); ret = true; break; }
                     break;
@@ -11327,7 +11442,7 @@ void atf_amc::ch_SetStrptr(atf_amc::RnullStr6_U32& parent, const algo::strptr &r
 static u32 atf_amc::ch_qGetnum(atf_amc::RnullStr6_U32& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
         val = aParseNum8(str, ok);
     }
@@ -11363,10 +11478,10 @@ bool atf_amc::ch_SetnumMaybe(atf_amc::RnullStr6_U32& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = rhs;
-    length = u32_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 6;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -11433,7 +11548,7 @@ void atf_amc::ch_SetStrptr(atf_amc::RpasU32Str6& parent, const algo::strptr &rhs
 static u32 atf_amc::ch_qGetnum(atf_amc::RpasU32Str6& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
         val = aParseNum8(str, ok);
     }
@@ -11469,10 +11584,10 @@ bool atf_amc::ch_SetnumMaybe(atf_amc::RpasU32Str6& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = rhs;
-    length = u32_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 6;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -11521,7 +11636,7 @@ bool atf_amc::Sep1_ReadFieldMaybe(atf_amc::Sep1 &parent, algo::strptr field, alg
 // The format of the string is a string with separated values
 bool atf_amc::Sep1_ReadStrptrMaybe(atf_amc::Sep1 &parent, algo::strptr in_str) {
     bool retval = true;
-    strptr value;
+    algo::strptr value;
 
     algo::NextSep(in_str, '-', value);
     retval = retval && u32_ReadStrptrMaybe(parent.val1, value);
@@ -11614,7 +11729,7 @@ void atf_amc::Seqmsg_Print(atf_amc::Seqmsg & row, algo::cstring &str) {
 
 // --- atf_amc.SortedStr.novs.Nextchar
 // Extract next character from STR and advance IDX
-inline static int atf_amc::novs_Nextchar(const atf_amc::SortedStr& parent, strptr &str, int &idx) {
+inline static int atf_amc::novs_Nextchar(const atf_amc::SortedStr& parent, algo::strptr &str, int &idx) {
     (void)parent;
     int i = idx;
     int ch = str.elems[i];
@@ -11625,7 +11740,7 @@ inline static int atf_amc::novs_Nextchar(const atf_amc::SortedStr& parent, strpt
 
 // --- atf_amc.SortedStr.vs.Nextchar
 // Extract next character from STR and advance IDX
-inline static u64 atf_amc::vs_Nextchar(const atf_amc::SortedStr& parent, strptr &str, int &idx) {
+inline static u64 atf_amc::vs_Nextchar(const atf_amc::SortedStr& parent, algo::strptr &str, int &idx) {
     (void)parent;
     int i = idx;
     u64 ch = str.elems[i];
@@ -11656,8 +11771,8 @@ i32 atf_amc::vs_Cmp(atf_amc::SortedStr& parent, atf_amc::SortedStr &rhs) {
     i32 retval = 0;
     int idx_a = 0;
     int idx_b = 0;
-    strptr str_a = ch_Getary(parent.vs);
-    strptr str_b = ch_Getary(rhs.vs);
+    algo::strptr str_a = ch_Getary(parent.vs);
+    algo::strptr str_b = ch_Getary(rhs.vs);
     int n_a   = elems_N(str_a);
     int n_b   = elems_N(str_b);
     retval    = i32_Cmp(n_a,n_b);
@@ -11703,7 +11818,7 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::SsimfilesCase& parent, algo::strptr 
     bool ret = false;
     switch (elems_N(rhs)) {
         case 12: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','C'): {
                     if (memcmp(rhs.elems+8,"type",4)==0) { value_SetEnum(parent,atf_amc_SsimfilesCase_dmmeta_Ctype); ret = true; break; }
                     break;
@@ -11778,7 +11893,7 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::TableId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 13: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('a','t','f','_','a','m','c','.'): {
                     if (memcmp(rhs.elems+8,"TypeS",5)==0) { value_SetEnum(parent,atf_amc_TableId_atf_amc_TypeS); ret = true; break; }
                     if (memcmp(rhs.elems+8,"TypeT",5)==0) { value_SetEnum(parent,atf_amc_TableId_atf_amc_TypeT); ret = true; break; }
@@ -11892,13 +12007,15 @@ void atf_amc::tary_u32_RemoveLast(atf_amc::TaryU32& parent) {
 // Make sure N elements fit in array. Process dies if out of memory
 void atf_amc::tary_u32_AbsReserve(atf_amc::TaryU32& parent, int n) {
     u32 old_max  = parent.tary_u32_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(parent.tary_u32_elems, old_max * sizeof(u32), new_max * sizeof(u32));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("atf_amc.tary_nomem  field:atf_amc.TaryU32.tary_u32  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.tary_u32_elems, old_max * sizeof(u32), new_max * sizeof(u32));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("atf_amc.tary_nomem  field:atf_amc.TaryU32.tary_u32  comment:'out of memory'");
+        }
+        parent.tary_u32_elems = (u32*)new_mem;
+        parent.tary_u32_max = new_max;
     }
-    parent.tary_u32_elems = (u32*)new_mem;
-    parent.tary_u32_max = new_max;
 }
 
 // --- atf_amc.TaryU32.tary_u32.Setary
@@ -11990,13 +12107,15 @@ void atf_amc::ary_RemoveLast(atf_amc::TaryU8& parent) {
 // Make sure N elements fit in array. Process dies if out of memory
 void atf_amc::ary_AbsReserve(atf_amc::TaryU8& parent, int n) {
     u32 old_max  = parent.ary_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(parent.ary_elems, old_max * sizeof(u8), new_max * sizeof(u8));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("atf_amc.tary_nomem  field:atf_amc.TaryU8.ary  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.ary_elems, old_max * sizeof(u8), new_max * sizeof(u8));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("atf_amc.tary_nomem  field:atf_amc.TaryU8.ary  comment:'out of memory'");
+        }
+        parent.ary_elems = (u8*)new_mem;
+        parent.ary_max = new_max;
     }
-    parent.ary_elems = (u8*)new_mem;
-    parent.ary_max = new_max;
 }
 
 // --- atf_amc.TaryU8.ary.Setary
@@ -12143,7 +12262,7 @@ void atf_amc::Text_Print(atf_amc::Text & row, algo::cstring &str) {
     algo::tempstr temp;
     str << "atf_amc.Text";
 
-    aryptr<char> text_ary = text_Getary(row);
+    algo::aryptr<char> text_ary = text_Getary(row);
     PrintAttrSpace(str, "text", text_ary); // print field atf_amc.Text.text
 }
 
@@ -12212,6 +12331,117 @@ lib_json::FNode * atf_amc::TypeB_FmtJson(atf_amc::TypeB & row, lib_json::FNode *
     return object_node;
 }
 
+// --- atf_amc.TypeBE32en.value.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* atf_amc::value_ToCstr(const atf_amc::TypeBE32en& parent) {
+    const char *ret = NULL;
+    switch(value_GetEnum(parent)) {
+        case atf_amc_TypeBE32en_value_val1 : ret = "val1";  break;
+        case atf_amc_TypeBE32en_value_val2 : ret = "val2";  break;
+    }
+    return ret;
+}
+
+// --- atf_amc.TypeBE32en.value.Print
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+void atf_amc::value_Print(const atf_amc::TypeBE32en& parent, algo::cstring &lhs) {
+    const char *strval = value_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << value_Get(parent);
+    }
+}
+
+// --- atf_amc.TypeBE32en.value.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool atf_amc::value_SetStrptrMaybe(atf_amc::TypeBE32en& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('v','a','l','1'): {
+                    value_SetEnum(parent,atf_amc_TypeBE32en_value_val1); ret = true; break;
+                }
+                case LE_STR4('v','a','l','2'): {
+                    value_SetEnum(parent,atf_amc_TypeBE32en_value_val2); ret = true; break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.TypeBE32en.value.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void atf_amc::value_SetStrptr(atf_amc::TypeBE32en& parent, algo::strptr rhs, atf_amc_TypeBE32en_value_Enum dflt) {
+    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
+}
+
+// --- atf_amc.TypeBE32en.value.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool atf_amc::value_ReadStrptrMaybe(atf_amc::TypeBE32en& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        u32 value_tmp;
+        retval = u32_ReadStrptrMaybe(value_tmp, rhs);
+        if (retval) {
+            value_Set(parent, value_tmp);
+        }
+    }
+    return retval;
+}
+
+// --- atf_amc.TypeBE32en..ReadFieldMaybe
+bool atf_amc::TypeBE32en_ReadFieldMaybe(atf_amc::TypeBE32en &parent, algo::strptr field, algo::strptr strval) {
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case atf_amc_FieldId_value: retval = value_ReadStrptrMaybe(parent, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.TypeBE32en..ReadStrptrMaybe
+// Read fields of atf_amc::TypeBE32en from an ascii string.
+// The format of the string is the format of the atf_amc::TypeBE32en's only field
+bool atf_amc::TypeBE32en_ReadStrptrMaybe(atf_amc::TypeBE32en &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && atf_amc::value_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- atf_amc.TypeBE32en..ReadTupleMaybe
+// Read fields of atf_amc::TypeBE32en from attributes of ascii tuple TUPLE
+bool atf_amc::TypeBE32en_ReadTupleMaybe(atf_amc::TypeBE32en &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        retval = TypeBE32en_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.TypeBE32en..Print
+// print string representation of atf_amc::TypeBE32en to string LHS, no header -- cprint:atf_amc.TypeBE32en.String
+void atf_amc::TypeBE32en_Print(atf_amc::TypeBE32en & row, algo::cstring &str) {
+    atf_amc::value_Print(row, str);
+}
+
 // --- atf_amc.TypeBE64.value.ReadStrptrMaybe
 inline static bool atf_amc::value_ReadStrptrMaybe(atf_amc::TypeBE64 &parent, algo::strptr in_str) {
     bool retval = true;
@@ -12264,117 +12494,6 @@ bool atf_amc::TypeBE64_ReadTupleMaybe(atf_amc::TypeBE64 &parent, algo::Tuple &tu
 // print string representation of atf_amc::TypeBE64 to string LHS, no header -- cprint:atf_amc.TypeBE64.String
 void atf_amc::TypeBE64_Print(atf_amc::TypeBE64 & row, algo::cstring &str) {
     u64_Print(value_Get(row), str);
-}
-
-// --- atf_amc.TypeBE64en.value.ToCstr
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::value_ToCstr(const atf_amc::TypeBE64en& parent) {
-    const char *ret = NULL;
-    switch(value_GetEnum(parent)) {
-        case atf_amc_TypeBE64en_value_val1 : ret = "val1";  break;
-        case atf_amc_TypeBE64en_value_val2 : ret = "val2";  break;
-    }
-    return ret;
-}
-
-// --- atf_amc.TypeBE64en.value.Print
-// Convert value to a string. First, attempt conversion to a known string.
-// If no string matches, print value as a numeric value.
-void atf_amc::value_Print(const atf_amc::TypeBE64en& parent, algo::cstring &lhs) {
-    const char *strval = value_ToCstr(parent);
-    if (strval) {
-        lhs << strval;
-    } else {
-        lhs << value_Get(parent);
-    }
-}
-
-// --- atf_amc.TypeBE64en.value.SetStrptrMaybe
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-bool atf_amc::value_SetStrptrMaybe(atf_amc::TypeBE64en& parent, algo::strptr rhs) {
-    bool ret = false;
-    switch (elems_N(rhs)) {
-        case 4: {
-            switch (u64(ReadLE32(rhs.elems))) {
-                case LE_STR4('v','a','l','1'): {
-                    value_SetEnum(parent,atf_amc_TypeBE64en_value_val1); ret = true; break;
-                }
-                case LE_STR4('v','a','l','2'): {
-                    value_SetEnum(parent,atf_amc_TypeBE64en_value_val2); ret = true; break;
-                }
-            }
-            break;
-        }
-    }
-    return ret;
-}
-
-// --- atf_amc.TypeBE64en.value.SetStrptr
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-void atf_amc::value_SetStrptr(atf_amc::TypeBE64en& parent, algo::strptr rhs, atf_amc_TypeBE64en_value_Enum dflt) {
-    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
-}
-
-// --- atf_amc.TypeBE64en.value.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool atf_amc::value_ReadStrptrMaybe(atf_amc::TypeBE64en& parent, algo::strptr rhs) {
-    bool retval = false;
-    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
-    if (!retval) { // didn't work? try reading as underlying type
-        u64 value_tmp;
-        retval = u64_ReadStrptrMaybe(value_tmp, rhs);
-        if (retval) {
-            value_Set(parent, value_tmp);
-        }
-    }
-    return retval;
-}
-
-// --- atf_amc.TypeBE64en..ReadFieldMaybe
-bool atf_amc::TypeBE64en_ReadFieldMaybe(atf_amc::TypeBE64en &parent, algo::strptr field, algo::strptr strval) {
-    atf_amc::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
-    switch(field_id) {
-        case atf_amc_FieldId_value: retval = value_ReadStrptrMaybe(parent, strval); break;
-        default: break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- atf_amc.TypeBE64en..ReadStrptrMaybe
-// Read fields of atf_amc::TypeBE64en from an ascii string.
-// The format of the string is the format of the atf_amc::TypeBE64en's only field
-bool atf_amc::TypeBE64en_ReadStrptrMaybe(atf_amc::TypeBE64en &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = retval && atf_amc::value_ReadStrptrMaybe(parent, in_str);
-    return retval;
-}
-
-// --- atf_amc.TypeBE64en..ReadTupleMaybe
-// Read fields of atf_amc::TypeBE64en from attributes of ascii tuple TUPLE
-bool atf_amc::TypeBE64en_ReadTupleMaybe(atf_amc::TypeBE64en &parent, algo::Tuple &tuple) {
-    bool retval = true;
-    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
-        retval = TypeBE64en_ReadFieldMaybe(parent, attr.name, attr.value);
-        if (!retval) {
-            break;
-        }
-    }ind_end;
-    return retval;
-}
-
-// --- atf_amc.TypeBE64en..Print
-// print string representation of atf_amc::TypeBE64en to string LHS, no header -- cprint:atf_amc.TypeBE64en.String
-void atf_amc::TypeBE64en_Print(atf_amc::TypeBE64en & row, algo::cstring &str) {
-    atf_amc::value_Print(row, str);
 }
 
 // --- atf_amc.TypeC..ReadStrptrMaybe
@@ -12521,7 +12640,7 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::Typefconst& parent, algo::strptr rhs
     bool ret = false;
     switch (elems_N(rhs)) {
         case 7: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
                 case LE_STR7('s','t','r','v','a','l','1'): {
                     value_SetEnum(parent,atf_amc_Typefconst_value_strval1); ret = true; break;
                 }
@@ -12792,7 +12911,7 @@ void atf_amc::typeh_HeapSort(atf_amc::VarlenH& parent) {
 // Quick sort
 void atf_amc::typeh_QuickSort(atf_amc::VarlenH& parent) {
     // compute max recursion depth based on number of elements in the array
-    int max_depth = CeilingLog2(u32(typeh_N(parent) + 1)) + 3;
+    int max_depth = algo::CeilingLog2(u32(typeh_N(parent) + 1)) + 3;
     atf_amc::TypeH *elems = typeh_Getary(parent).elems;
     int n = typeh_N(parent);
     typeh_IntQuickSort(elems, n, max_depth);
@@ -12863,7 +12982,7 @@ void atf_amc::VarlenK_Print(atf_amc::VarlenK & row, algo::cstring &str) {
     algo::tempstr temp;
     str << "atf_amc.VarlenK";
 
-    aryptr<u32> i_ary = i_Getary(row);
+    algo::aryptr<u32> i_ary = i_Getary(row);
     for (int i = 0; i < i_ary.n_elems; i++) { // print field atf_amc.VarlenK.i as repeating group
         u32_Print(i_ary.elems[i], temp);
         tempstr name;
@@ -12876,8 +12995,8 @@ void atf_amc::VarlenK_Print(atf_amc::VarlenK & row, algo::cstring &str) {
 // --- atf_amc...main
 int main(int argc, char **argv) {
     try {
-        algo_lib::FDb_Init();
         lib_json::FDb_Init();
+        algo_lib::FDb_Init();
         atf_amc::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
@@ -12892,12 +13011,14 @@ int main(int argc, char **argv) {
     }
     try {
         atf_amc::FDb_Uninit();
-        lib_json::FDb_Uninit();
         algo_lib::FDb_Uninit();
-    } catch(algo_lib::ErrorX &x) {
+        lib_json::FDb_Uninit();
+    } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;
     }
+    // only the lower 1 byte makes it to the outside world
+    (void)i32_UpdateMin(algo_lib::_db.exit_code,255);
     return algo_lib::_db.exit_code;
 }
 
@@ -12972,7 +13093,7 @@ bool atf_amc::MsgHeaderMsgs_Print(algo::cstring &str, atf_amc::MsgHeader &msg, u
 atf_amc::MsgsCase atf_amc::Msgs_ReadStrptr(algo::strptr str, algo::ByteAry &buf) {
     bool ok = false;
     tempstr msgtype_str;
-    StringIter iter(str);
+    algo::StringIter iter(str);
     cstring_ReadCmdarg(msgtype_str, iter, false); // read first word
     atf_amc::MsgsCase msgtype;
     value_SetStrptrMaybe(msgtype, msgtype_str); // map string -> enum
@@ -13003,7 +13124,7 @@ bool atf_amc::Msgs_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf) {
 atf_amc::SsimfilesCase atf_amc::Ssimfiles_ReadStrptr(algo::strptr str, algo::ByteAry &buf) {
     bool ok = false;
     tempstr msgtype_str;
-    StringIter iter(str);
+    algo::StringIter iter(str);
     cstring_ReadCmdarg(msgtype_str, iter, false); // read first word
     atf_amc::SsimfilesCase msgtype;
     value_SetStrptrMaybe(msgtype, msgtype_str); // map string -> enum
@@ -13031,7 +13152,7 @@ bool atf_amc::Ssimfiles_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf) {
 atf_amc::MsgType atf_amc::MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::ByteAry &buf) {
     bool ok = false;
     tempstr msgtype_str;
-    StringIter iter(str);
+    algo::StringIter iter(str);
     cstring_ReadCmdarg(msgtype_str, iter, false); // read first word
     atf_amc::MsgType msgtype;
     value_SetStrptrMaybe(msgtype, msgtype_str); // map string -> enum

@@ -20,6 +20,14 @@ dmmeta.substr  field:dev.Targsrc.src  expr:/LR  srcfield:dev.Targsrc.targsrc
 dmmeta.substr  field:dev.Targsrc.target  expr:/LL  srcfield:dev.Targsrc.targsrc
 dmmeta.substr  field:dev.Targsyslib.syslib  expr:.RR  srcfield:dev.Targsyslib.targsyslib
 dmmeta.substr  field:dev.Targsyslib.target  expr:.RL  srcfield:dev.Targsyslib.targsyslib
+dmmeta.substr  field:dev.ToolOpt.arch  expr:/LL.LR-LR  srcfield:dev.ToolOpt.tool_opt
+dmmeta.substr  field:dev.ToolOpt.cfg  expr:/LL.LR-LL  srcfield:dev.ToolOpt.tool_opt
+dmmeta.substr  field:dev.ToolOpt.compiler  expr:/LL.LL-LR  srcfield:dev.ToolOpt.tool_opt
+dmmeta.substr  field:dev.ToolOpt.opt  expr:/LR:LR  srcfield:dev.ToolOpt.tool_opt
+dmmeta.substr  field:dev.ToolOpt.opt_type  expr:/LR:LL-LR  srcfield:dev.ToolOpt.tool_opt
+dmmeta.substr  field:dev.ToolOpt.sortfld  expr:.LL  srcfield:dev.ToolOpt.tool_opt
+dmmeta.substr  field:dev.ToolOpt.target  expr:/LR:LL-LL  srcfield:dev.ToolOpt.tool_opt
+dmmeta.substr  field:dev.ToolOpt.uname  expr:/LL.LL-LL  srcfield:dev.ToolOpt.tool_opt
 dmmeta.substr  field:dmmeta.Bitfld.name  expr:.RR  srcfield:dmmeta.Bitfld.field
 dmmeta.substr  field:dmmeta.Cafter.after  expr:/RR  srcfield:dmmeta.Cafter.cafter
 dmmeta.substr  field:dmmeta.Cafter.ctype  expr:/RL  srcfield:dmmeta.Cafter.cafter

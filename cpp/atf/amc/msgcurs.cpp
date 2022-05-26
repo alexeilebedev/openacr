@@ -24,7 +24,7 @@
 
 // -----------------------------------------------------------------------------
 
-static void CheckBuf(ByteAry &buf, strptr result) {
+static void CheckBuf(algo::ByteAry &buf, strptr result) {
     cstring out;
     ind_beg(atf_amc::MsgHeader_curs,hdr,ary_Getary(buf)) {
         if (atf_amc::Text *msg = atf_amc::Text_Castdown(*hdr)) {
@@ -39,8 +39,8 @@ static void CheckBuf(ByteAry &buf, strptr result) {
 
 // Read 2 messages from byteary
 void atf_amc::amctest_MsgCurs() {
-    ByteAry bigbuf;
-    ByteAry buf;
+    algo::ByteAry bigbuf;
+    algo::ByteAry buf;
     Text_FmtByteAry(buf, "msg1;");
     ary_Addary(bigbuf, ary_Getary(buf));
     Text_FmtByteAry(buf, "msg2;");
@@ -52,7 +52,7 @@ void atf_amc::amctest_MsgCurs() {
 
 // Byte array too small for message
 void atf_amc::amctest_MsgCurs2() {
-    ByteAry buf;
+    algo::ByteAry buf;
     Text_FmtByteAry(buf, "msg1;");
     buf.ary_n--;
     CheckBuf(buf, "");
@@ -62,7 +62,7 @@ void atf_amc::amctest_MsgCurs2() {
 
 // Message too big for buffer;
 void atf_amc::amctest_MsgCurs3() {
-    ByteAry buf;
+    algo::ByteAry buf;
     Text_FmtByteAry(buf, "msg1;")->length.value++;
     CheckBuf(buf, "");
 }
@@ -71,7 +71,7 @@ void atf_amc::amctest_MsgCurs3() {
 
 // Byte array too small for even message header
 void atf_amc::amctest_MsgCurs4() {
-    ByteAry buf;
+    algo::ByteAry buf;
     Text_FmtByteAry(buf, "msg1;");
     buf.ary_n=0;
     CheckBuf(buf, "");

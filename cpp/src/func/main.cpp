@@ -31,7 +31,7 @@
 // Remove single-line C++ comment from file
 // and return result
 strptr src_func::StripComment(strptr line) {
-    i32_Range r=substr_FindLast(line,"//");
+    algo::i32_Range r=substr_FindLast(line,"//");
     strptr ret = line;
     if (r.end > r.beg) {
         ret = FirstN(line,r.beg);
@@ -68,10 +68,9 @@ bool src_func::FuncstartQ(strptr line, strptr trimmedline) {
         tempstr msg;
         msg << GetFileloc() << "suspicious multi-line function declaration "<<trimmedline;
         src_func::_db.report.n_baddecl++;
-        if (src_func::_db.cmdline.check) {
-            // too many bad function declarations to make this a check
-            //prlog(msg);
-            //algo_lib::_db.exit_code++;
+        if (src_func::_db.cmdline.baddecl) {
+            prlog(msg);
+            algo_lib::_db.exit_code++;
         } else {
             verblog(msg);
         }
@@ -92,7 +91,7 @@ static strptr GetFuncname(strptr funcname) {
 // void *ns::blah(arg1, arg2) -> ns
 strptr src_func::GetFuncNs(strptr funcname) {
     strptr s = Pathcomp(funcname,"(LL RR"); // void *ns::blah
-    i32_Range r = substr_FindLast(s,"::"); // 8..10
+    algo::i32_Range r = substr_FindLast(s,"::"); // 8..10
     s = FirstN(s,r.beg);// void *ns
     int idx =s.n_elems;
     while (idx>0 && algo_lib::IdentCharQ(s[idx-1])) {
@@ -147,7 +146,7 @@ tempstr src_func::Nsline_GetSrcfile(strptr line) {
 
 // extract namespace name from a line like 'namespace xyz {'
 strptr src_func::Nsline_GetNamespace(strptr str) {
-    StringIter iter(str);
+    algo::StringIter iter(str);
     GetWordCharf(iter);
     return GetWordCharf(iter);
 }
@@ -183,12 +182,11 @@ static void RewriteOpts() {
 void src_func::Main() {
     (void)Regx_ReadStrptrMaybe(src_func::_db.ignore_funcstart
                                , "(namespace|enum|struct|#|//|/*|*/)%");
-    bool report=true;
+    bool report=_db.cmdline.report;
 
     SelectTarget();
 
     RewriteOpts();
-    InitBadline();
     bool action = false;
 
     if (ch_N(src_func::_db.cmdline.nextfile)) {

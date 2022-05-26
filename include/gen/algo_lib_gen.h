@@ -99,7 +99,6 @@ namespace algo_lib { struct _db_dispsigcheck_curs; }
 namespace algo_lib { struct _db_ind_dispsigcheck_curs; }
 namespace algo_lib { struct _db_imdb_curs; }
 namespace algo_lib { struct _db_ind_imdb_curs; }
-namespace algo_lib { struct _db_zd_tempfile_curs; }
 namespace algo_lib { struct txtrow_c_txtcell_curs; }
 namespace algo_lib { struct txttbl_c_txtrow_curs; }
 namespace algo_lib { struct InTextFile_temp_buf_curs; }
@@ -309,9 +308,7 @@ void                 CsvParse_Print(algo_lib::CsvParse & row, algo::cstring &str
 // create: algo_lib.FDb.error (Malloc)
 struct ErrorX { // algo_lib.ErrorX
     algo::cstring   str;   //
-    algo::Errcode   err;   //
-    explicit ErrorX(const algo::strptr&            in_str
-        ,const algo::Errcode&           in_err);
+    explicit ErrorX(const algo::strptr&            in_str);
 private:
     friend algo_lib::ErrorX&    error_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend algo_lib::ErrorX*    error_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -505,9 +502,6 @@ struct FDb { // algo_lib.FDb
     algo_lib::FTxtrow*                txtrow_free;                               //
     i32                               argc;                                      //   0
     char**                            argv;                                      // optional pointer
-    algo_lib::FTempfile*              zd_tempfile_head;                          // zero-terminated doubly linked list
-    i32                               zd_tempfile_n;                             // zero-terminated doubly linked list
-    algo_lib::FTempfile*              zd_tempfile_tail;                          // pointer to last element
     algo::cstring                     xref_error;                                //
     algo::cstring                     errtext;                                   //
     algo::ByteAry                     varlenbuf;                                 //
@@ -524,10 +518,8 @@ struct FDb { // algo_lib.FDb
     u64                               last_sleep_clocks;                         //   0
     algo::ByteAry                     msgtemp;                                   //
     u32                               show_insert_err_lim;                       //   0
-    algo::TstampCache                 fixuntime;                                 //
-    algo::TstampCache                 fixuntimemsec;                             //
-    algo::TstampCache                 fixuntimesec;                              //
     algo::Charset                     Urlsafe;                                   //
+    u64                               winjob;                                    //   0
     algo_lib::trace                   trace;                                     //
 };
 
@@ -868,35 +860,6 @@ bool                 txtrow_XrefMaybe(algo_lib::FTxtrow &row);
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 txttbl_XrefMaybe(algo_lib::FTxttbl &row);
 
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool                 tempfile_XrefMaybe(algo_lib::FTempfile &row);
-
-// Return true if index is empty
-bool                 zd_tempfile_EmptyQ() __attribute__((__warn_unused_result__, nothrow));
-// If index empty, return NULL. Otherwise return pointer to first element in index
-algo_lib::FTempfile* zd_tempfile_First() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return true if row is in the linked list, false otherwise
-bool                 zd_tempfile_InLlistQ(algo_lib::FTempfile& row) __attribute__((__warn_unused_result__, nothrow));
-// Insert row into linked list. If row is already in linked list, do nothing.
-void                 zd_tempfile_Insert(algo_lib::FTempfile& row) __attribute__((nothrow));
-// If index empty, return NULL. Otherwise return pointer to last element in index
-algo_lib::FTempfile* zd_tempfile_Last() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return number of items in the linked list
-i32                  zd_tempfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to next element in the list
-algo_lib::FTempfile* zd_tempfile_Next(algo_lib::FTempfile &row) __attribute__((__warn_unused_result__, nothrow));
-// Return pointer to previous element in the list
-algo_lib::FTempfile* zd_tempfile_Prev(algo_lib::FTempfile &row) __attribute__((__warn_unused_result__, nothrow));
-// Remove element from index. If element is not in index, do nothing.
-void                 zd_tempfile_Remove(algo_lib::FTempfile& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-void                 zd_tempfile_RemoveAll() __attribute__((nothrow));
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-algo_lib::FTempfile* zd_tempfile_RemoveFirst() __attribute__((nothrow));
-// Return reference to last element in the index. No bounds checking.
-algo_lib::FTempfile& zd_tempfile_qLast() __attribute__((__warn_unused_result__, nothrow));
-
 // Allocate memory for new default row.
 // If out of memory, process is killed.
 algo_lib::FReplvar&  replvar_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -939,6 +902,8 @@ bool                 NewLineCharQ(u32 ch) __attribute__((nothrow));
 
 bool                 WhiteCharQ(u32 ch) __attribute__((nothrow));
 
+bool                 DirSepQ(u32 ch) __attribute__((nothrow));
+
 bool                 IdentCharQ(u32 ch) __attribute__((nothrow));
 
 bool                 IdentStartQ(u32 ch) __attribute__((nothrow));
@@ -948,6 +913,12 @@ bool                 AlphaCharQ(u32 ch) __attribute__((nothrow));
 bool                 HexCharQ(u32 ch) __attribute__((nothrow));
 
 bool                 UpperCharQ(u32 ch) __attribute__((nothrow));
+
+bool                 CmdLineNameBreakQ(u32 ch) __attribute__((nothrow));
+
+bool                 CmdLineValueBreakQ(u32 ch) __attribute__((nothrow));
+
+bool                 WordSeparatorQ(u32 ch) __attribute__((nothrow));
 
 bool                 LowerCharQ(u32 ch) __attribute__((nothrow));
 
@@ -994,14 +965,6 @@ bool                 _db_imdb_curs_ValidQ(_db_imdb_curs &curs);
 void                 _db_imdb_curs_Next(_db_imdb_curs &curs);
 // item access
 algo_lib::FImdb&     _db_imdb_curs_Access(_db_imdb_curs &curs);
-// cursor points to valid item
-void                 _db_zd_tempfile_curs_Reset(_db_zd_tempfile_curs &curs, algo_lib::FDb &parent);
-// cursor points to valid item
-bool                 _db_zd_tempfile_curs_ValidQ(_db_zd_tempfile_curs &curs);
-// proceed to next item
-void                 _db_zd_tempfile_curs_Next(_db_zd_tempfile_curs &curs);
-// item access
-algo_lib::FTempfile& _db_zd_tempfile_curs_Access(_db_zd_tempfile_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
@@ -1129,26 +1092,22 @@ void                 FReplvar_Init(algo_lib::FReplvar& replvar);
 void                 FReplvar_Uninit(algo_lib::FReplvar& replvar) __attribute__((nothrow));
 
 // --- algo_lib.FTempfile
-// create: algo_lib.FDb.tempfile (Cppstack)
-// global access: zd_tempfile (Llist)
 struct FTempfile { // algo_lib.FTempfile
-    algo_lib::FTempfile*   zd_tempfile_next;   // zslist link; -1 means not-in-list
-    algo_lib::FTempfile*   zd_tempfile_prev;   // previous element
-    algo::cstring          filename;           //
-    algo_lib::FFildes      fildes;             //
+    algo::cstring       filename;   //
+    algo_lib::FFildes   fildes;     //
     FTempfile();
     ~FTempfile();
 private:
+    // value field algo_lib.FTempfile.fildes is not copiable
+    // user-defined fcleanup on algo_lib.FTempfile.fildes prevents copy
     FTempfile(const FTempfile&){ /*disallow copy constructor */}
     void operator =(const FTempfile&){ /*disallow direct assignment */}
 };
 
 // User-defined cleanup function invoked for field fildes of algo_lib::FTempfile
-void                 fildes_Cleanup(algo_lib::FTempfile& tempfile) __attribute__((nothrow));
+void                 fildes_Cleanup(algo_lib::FTempfile& parent) __attribute__((nothrow));
 
-// Set all fields to initial values.
-void                 FTempfile_Init(algo_lib::FTempfile& tempfile);
-void                 FTempfile_Uninit(algo_lib::FTempfile& tempfile) __attribute__((nothrow));
+void                 FTempfile_Uninit(algo_lib::FTempfile& parent) __attribute__((nothrow));
 
 // --- algo_lib.FTxtcell
 // create: algo_lib.FDb.txtcell (Tpool)
@@ -1523,9 +1482,9 @@ void                 Regx_Print(algo_lib::Regx & row, algo::cstring &str) __attr
 
 // --- algo_lib.RegxToken
 struct RegxToken { // algo_lib.RegxToken
-    u32   type;   //   0  State
+    i32   type;   //   0  State
     inline operator algo_lib_RegxToken_type_Enum() const;
-    explicit RegxToken(u32                            in_type);
+    explicit RegxToken(i32                            in_type);
     RegxToken(algo_lib_RegxToken_type_Enum arg);
     RegxToken();
 };
@@ -1973,15 +1932,6 @@ struct _db_imdb_curs {// cursor
     int index;
     algo_lib::FDb *parent;
     _db_imdb_curs() { parent=NULL; index=0; }
-};
-
-
-struct _db_zd_tempfile_curs {// cursor
-    typedef algo_lib::FTempfile ChildType;
-    algo_lib::FTempfile* row;
-    _db_zd_tempfile_curs() {
-        row = NULL;
-    }
 };
 
 

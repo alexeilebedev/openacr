@@ -250,85 +250,87 @@ enum amc_TableIdEnum {                        // amc.TableId.value
     ,amc_TableId_dmmeta_Func           = 51   // dmmeta.Func -> amc.FFunc
     ,amc_TableId_dmmeta_Funique        = 52   // dmmeta.Funique -> amc.FFunique
     ,amc_TableId_dmmeta_funique        = 52   // dmmeta.funique -> amc.FFunique
-    ,amc_TableId_dmmeta_Fwddecl        = 53   // dmmeta.Fwddecl -> amc.FFwddecl
-    ,amc_TableId_dmmeta_fwddecl        = 53   // dmmeta.fwddecl -> amc.FFwddecl
-    ,amc_TableId_dmmeta_Gconst         = 54   // dmmeta.Gconst -> amc.FGconst
-    ,amc_TableId_dmmeta_gconst         = 54   // dmmeta.gconst -> amc.FGconst
-    ,amc_TableId_dmmeta_Gstatic        = 55   // dmmeta.Gstatic -> amc.FGstatic
-    ,amc_TableId_dmmeta_gstatic        = 55   // dmmeta.gstatic -> amc.FGstatic
-    ,amc_TableId_dmmeta_Gsymbol        = 56   // dmmeta.Gsymbol -> amc.FGsymbol
-    ,amc_TableId_dmmeta_gsymbol        = 56   // dmmeta.gsymbol -> amc.FGsymbol
-    ,amc_TableId_dmmeta_Hook           = 57   // dmmeta.Hook -> amc.FHook
-    ,amc_TableId_dmmeta_hook           = 57   // dmmeta.hook -> amc.FHook
-    ,amc_TableId_dmmeta_Inlary         = 58   // dmmeta.Inlary -> amc.FInlary
-    ,amc_TableId_dmmeta_inlary         = 58   // dmmeta.inlary -> amc.FInlary
-    ,amc_TableId_dmmeta_Lenfld         = 59   // dmmeta.Lenfld -> amc.FLenfld
-    ,amc_TableId_dmmeta_lenfld         = 59   // dmmeta.lenfld -> amc.FLenfld
-    ,amc_TableId_dmmeta_Listtype       = 60   // dmmeta.Listtype -> amc.FListtype
-    ,amc_TableId_dmmeta_listtype       = 60   // dmmeta.listtype -> amc.FListtype
-    ,amc_TableId_dmmeta_Llist          = 61   // dmmeta.Llist -> amc.FLlist
-    ,amc_TableId_dmmeta_llist          = 61   // dmmeta.llist -> amc.FLlist
-    ,amc_TableId_dmmeta_Main           = 62   // dmmeta.Main -> amc.FMain
-    ,amc_TableId_dmmeta_main           = 62   // dmmeta.main -> amc.FMain
-    ,amc_TableId_dmmeta_Msgtype        = 63   // dmmeta.Msgtype -> amc.FMsgtype
-    ,amc_TableId_dmmeta_msgtype        = 63   // dmmeta.msgtype -> amc.FMsgtype
-    ,amc_TableId_dmmeta_Nocascdel      = 64   // dmmeta.Nocascdel -> amc.FNocascdel
-    ,amc_TableId_dmmeta_nocascdel      = 64   // dmmeta.nocascdel -> amc.FNocascdel
-    ,amc_TableId_dmmeta_Nossimfile     = 65   // dmmeta.Nossimfile -> amc.FNossimfile
-    ,amc_TableId_dmmeta_nossimfile     = 65   // dmmeta.nossimfile -> amc.FNossimfile
-    ,amc_TableId_dmmeta_Noxref         = 66   // dmmeta.Noxref -> amc.FNoxref
-    ,amc_TableId_dmmeta_noxref         = 66   // dmmeta.noxref -> amc.FNoxref
-    ,amc_TableId_dmmeta_Ns             = 67   // dmmeta.Ns -> amc.FNs
-    ,amc_TableId_dmmeta_ns             = 67   // dmmeta.ns -> amc.FNs
-    ,amc_TableId_dmmeta_Nsdb           = 68   // dmmeta.Nsdb -> amc.FNsdb
-    ,amc_TableId_dmmeta_nsdb           = 68   // dmmeta.nsdb -> amc.FNsdb
-    ,amc_TableId_dmmeta_Nsinclude      = 69   // dmmeta.Nsinclude -> amc.FNsinclude
-    ,amc_TableId_dmmeta_nsinclude      = 69   // dmmeta.nsinclude -> amc.FNsinclude
-    ,amc_TableId_dmmeta_Nsproto        = 70   // dmmeta.Nsproto -> amc.FNsproto
-    ,amc_TableId_dmmeta_nsproto        = 70   // dmmeta.nsproto -> amc.FNsproto
-    ,amc_TableId_dmmeta_Nsx            = 71   // dmmeta.Nsx -> amc.FNsx
-    ,amc_TableId_dmmeta_nsx            = 71   // dmmeta.nsx -> amc.FNsx
-    ,amc_TableId_dmmeta_Numstr         = 72   // dmmeta.Numstr -> amc.FNumstr
-    ,amc_TableId_dmmeta_numstr         = 72   // dmmeta.numstr -> amc.FNumstr
-    ,amc_TableId_dmmeta_Pack           = 73   // dmmeta.Pack -> amc.FPack
-    ,amc_TableId_dmmeta_pack           = 73   // dmmeta.pack -> amc.FPack
-    ,amc_TableId_dmmeta_Pmaskfld       = 74   // dmmeta.Pmaskfld -> amc.FPmaskfld
-    ,amc_TableId_dmmeta_pmaskfld       = 74   // dmmeta.pmaskfld -> amc.FPmaskfld
-    ,amc_TableId_dmmeta_Pnew           = 75   // dmmeta.Pnew -> amc.FPnew
-    ,amc_TableId_dmmeta_pnew           = 75   // dmmeta.pnew -> amc.FPnew
-    ,amc_TableId_dmmeta_Ptrary         = 76   // dmmeta.Ptrary -> amc.FPtrary
-    ,amc_TableId_dmmeta_ptrary         = 76   // dmmeta.ptrary -> amc.FPtrary
-    ,amc_TableId_dmmeta_Rowid          = 77   // dmmeta.Rowid -> amc.FRowid
-    ,amc_TableId_dmmeta_rowid          = 77   // dmmeta.rowid -> amc.FRowid
-    ,amc_TableId_dmmeta_Smallstr       = 78   // dmmeta.Smallstr -> amc.FSmallstr
-    ,amc_TableId_dmmeta_smallstr       = 78   // dmmeta.smallstr -> amc.FSmallstr
-    ,amc_TableId_dmmeta_Sortfld        = 79   // dmmeta.Sortfld -> amc.FSortfld
-    ,amc_TableId_dmmeta_sortfld        = 79   // dmmeta.sortfld -> amc.FSortfld
-    ,amc_TableId_dmmeta_Ssimfile       = 80   // dmmeta.Ssimfile -> amc.FSsimfile
-    ,amc_TableId_dmmeta_ssimfile       = 80   // dmmeta.ssimfile -> amc.FSsimfile
-    ,amc_TableId_dmmeta_Ssimvolatile   = 81   // dmmeta.Ssimvolatile -> amc.FSsimvolatile
-    ,amc_TableId_dmmeta_ssimvolatile   = 81   // dmmeta.ssimvolatile -> amc.FSsimvolatile
-    ,amc_TableId_dmmeta_Substr         = 82   // dmmeta.Substr -> amc.FSubstr
-    ,amc_TableId_dmmeta_substr         = 82   // dmmeta.substr -> amc.FSubstr
-    ,amc_TableId_dev_Targdep           = 83   // dev.Targdep -> amc.FTargdep
-    ,amc_TableId_dev_targdep           = 83   // dev.targdep -> amc.FTargdep
-    ,amc_TableId_dev_Target            = 84   // dev.Target -> amc.FTarget
-    ,amc_TableId_dev_target            = 84   // dev.target -> amc.FTarget
-    ,amc_TableId_dmmeta_Tary           = 85   // dmmeta.Tary -> amc.FTary
-    ,amc_TableId_dmmeta_tary           = 85   // dmmeta.tary -> amc.FTary
-    ,amc_TableId_amcdb_Tcursor         = 86   // amcdb.Tcursor -> amc.FTcursor
-    ,amc_TableId_amcdb_tcursor         = 86   // amcdb.tcursor -> amc.FTcursor
-    ,amc_TableId_dmmeta_Thash          = 87   // dmmeta.Thash -> amc.FThash
-    ,amc_TableId_dmmeta_thash          = 87   // dmmeta.thash -> amc.FThash
-    ,amc_TableId_dmmeta_Typefld        = 88   // dmmeta.Typefld -> amc.FTypefld
-    ,amc_TableId_dmmeta_typefld        = 88   // dmmeta.typefld -> amc.FTypefld
-    ,amc_TableId_dmmeta_Usertracefld   = 89   // dmmeta.Usertracefld -> amc.FUsertracefld
-    ,amc_TableId_dmmeta_usertracefld   = 89   // dmmeta.usertracefld -> amc.FUsertracefld
-    ,amc_TableId_dmmeta_Xref           = 90   // dmmeta.Xref -> amc.FXref
-    ,amc_TableId_dmmeta_xref           = 90   // dmmeta.xref -> amc.FXref
+    ,amc_TableId_dmmeta_Fuserinit      = 53   // dmmeta.Fuserinit -> amc.FFuserinit
+    ,amc_TableId_dmmeta_fuserinit      = 53   // dmmeta.fuserinit -> amc.FFuserinit
+    ,amc_TableId_dmmeta_Fwddecl        = 54   // dmmeta.Fwddecl -> amc.FFwddecl
+    ,amc_TableId_dmmeta_fwddecl        = 54   // dmmeta.fwddecl -> amc.FFwddecl
+    ,amc_TableId_dmmeta_Gconst         = 55   // dmmeta.Gconst -> amc.FGconst
+    ,amc_TableId_dmmeta_gconst         = 55   // dmmeta.gconst -> amc.FGconst
+    ,amc_TableId_dmmeta_Gstatic        = 56   // dmmeta.Gstatic -> amc.FGstatic
+    ,amc_TableId_dmmeta_gstatic        = 56   // dmmeta.gstatic -> amc.FGstatic
+    ,amc_TableId_dmmeta_Gsymbol        = 57   // dmmeta.Gsymbol -> amc.FGsymbol
+    ,amc_TableId_dmmeta_gsymbol        = 57   // dmmeta.gsymbol -> amc.FGsymbol
+    ,amc_TableId_dmmeta_Hook           = 58   // dmmeta.Hook -> amc.FHook
+    ,amc_TableId_dmmeta_hook           = 58   // dmmeta.hook -> amc.FHook
+    ,amc_TableId_dmmeta_Inlary         = 59   // dmmeta.Inlary -> amc.FInlary
+    ,amc_TableId_dmmeta_inlary         = 59   // dmmeta.inlary -> amc.FInlary
+    ,amc_TableId_dmmeta_Lenfld         = 60   // dmmeta.Lenfld -> amc.FLenfld
+    ,amc_TableId_dmmeta_lenfld         = 60   // dmmeta.lenfld -> amc.FLenfld
+    ,amc_TableId_dmmeta_Listtype       = 61   // dmmeta.Listtype -> amc.FListtype
+    ,amc_TableId_dmmeta_listtype       = 61   // dmmeta.listtype -> amc.FListtype
+    ,amc_TableId_dmmeta_Llist          = 62   // dmmeta.Llist -> amc.FLlist
+    ,amc_TableId_dmmeta_llist          = 62   // dmmeta.llist -> amc.FLlist
+    ,amc_TableId_dmmeta_Main           = 63   // dmmeta.Main -> amc.FMain
+    ,amc_TableId_dmmeta_main           = 63   // dmmeta.main -> amc.FMain
+    ,amc_TableId_dmmeta_Msgtype        = 64   // dmmeta.Msgtype -> amc.FMsgtype
+    ,amc_TableId_dmmeta_msgtype        = 64   // dmmeta.msgtype -> amc.FMsgtype
+    ,amc_TableId_dmmeta_Nocascdel      = 65   // dmmeta.Nocascdel -> amc.FNocascdel
+    ,amc_TableId_dmmeta_nocascdel      = 65   // dmmeta.nocascdel -> amc.FNocascdel
+    ,amc_TableId_dmmeta_Nossimfile     = 66   // dmmeta.Nossimfile -> amc.FNossimfile
+    ,amc_TableId_dmmeta_nossimfile     = 66   // dmmeta.nossimfile -> amc.FNossimfile
+    ,amc_TableId_dmmeta_Noxref         = 67   // dmmeta.Noxref -> amc.FNoxref
+    ,amc_TableId_dmmeta_noxref         = 67   // dmmeta.noxref -> amc.FNoxref
+    ,amc_TableId_dmmeta_Ns             = 68   // dmmeta.Ns -> amc.FNs
+    ,amc_TableId_dmmeta_ns             = 68   // dmmeta.ns -> amc.FNs
+    ,amc_TableId_dmmeta_Nsdb           = 69   // dmmeta.Nsdb -> amc.FNsdb
+    ,amc_TableId_dmmeta_nsdb           = 69   // dmmeta.nsdb -> amc.FNsdb
+    ,amc_TableId_dmmeta_Nsinclude      = 70   // dmmeta.Nsinclude -> amc.FNsinclude
+    ,amc_TableId_dmmeta_nsinclude      = 70   // dmmeta.nsinclude -> amc.FNsinclude
+    ,amc_TableId_dmmeta_Nsproto        = 71   // dmmeta.Nsproto -> amc.FNsproto
+    ,amc_TableId_dmmeta_nsproto        = 71   // dmmeta.nsproto -> amc.FNsproto
+    ,amc_TableId_dmmeta_Nsx            = 72   // dmmeta.Nsx -> amc.FNsx
+    ,amc_TableId_dmmeta_nsx            = 72   // dmmeta.nsx -> amc.FNsx
+    ,amc_TableId_dmmeta_Numstr         = 73   // dmmeta.Numstr -> amc.FNumstr
+    ,amc_TableId_dmmeta_numstr         = 73   // dmmeta.numstr -> amc.FNumstr
+    ,amc_TableId_dmmeta_Pack           = 74   // dmmeta.Pack -> amc.FPack
+    ,amc_TableId_dmmeta_pack           = 74   // dmmeta.pack -> amc.FPack
+    ,amc_TableId_dmmeta_Pmaskfld       = 75   // dmmeta.Pmaskfld -> amc.FPmaskfld
+    ,amc_TableId_dmmeta_pmaskfld       = 75   // dmmeta.pmaskfld -> amc.FPmaskfld
+    ,amc_TableId_dmmeta_Pnew           = 76   // dmmeta.Pnew -> amc.FPnew
+    ,amc_TableId_dmmeta_pnew           = 76   // dmmeta.pnew -> amc.FPnew
+    ,amc_TableId_dmmeta_Ptrary         = 77   // dmmeta.Ptrary -> amc.FPtrary
+    ,amc_TableId_dmmeta_ptrary         = 77   // dmmeta.ptrary -> amc.FPtrary
+    ,amc_TableId_dmmeta_Rowid          = 78   // dmmeta.Rowid -> amc.FRowid
+    ,amc_TableId_dmmeta_rowid          = 78   // dmmeta.rowid -> amc.FRowid
+    ,amc_TableId_dmmeta_Smallstr       = 79   // dmmeta.Smallstr -> amc.FSmallstr
+    ,amc_TableId_dmmeta_smallstr       = 79   // dmmeta.smallstr -> amc.FSmallstr
+    ,amc_TableId_dmmeta_Sortfld        = 80   // dmmeta.Sortfld -> amc.FSortfld
+    ,amc_TableId_dmmeta_sortfld        = 80   // dmmeta.sortfld -> amc.FSortfld
+    ,amc_TableId_dmmeta_Ssimfile       = 81   // dmmeta.Ssimfile -> amc.FSsimfile
+    ,amc_TableId_dmmeta_ssimfile       = 81   // dmmeta.ssimfile -> amc.FSsimfile
+    ,amc_TableId_dmmeta_Ssimvolatile   = 82   // dmmeta.Ssimvolatile -> amc.FSsimvolatile
+    ,amc_TableId_dmmeta_ssimvolatile   = 82   // dmmeta.ssimvolatile -> amc.FSsimvolatile
+    ,amc_TableId_dmmeta_Substr         = 83   // dmmeta.Substr -> amc.FSubstr
+    ,amc_TableId_dmmeta_substr         = 83   // dmmeta.substr -> amc.FSubstr
+    ,amc_TableId_dev_Targdep           = 84   // dev.Targdep -> amc.FTargdep
+    ,amc_TableId_dev_targdep           = 84   // dev.targdep -> amc.FTargdep
+    ,amc_TableId_dev_Target            = 85   // dev.Target -> amc.FTarget
+    ,amc_TableId_dev_target            = 85   // dev.target -> amc.FTarget
+    ,amc_TableId_dmmeta_Tary           = 86   // dmmeta.Tary -> amc.FTary
+    ,amc_TableId_dmmeta_tary           = 86   // dmmeta.tary -> amc.FTary
+    ,amc_TableId_amcdb_Tcursor         = 87   // amcdb.Tcursor -> amc.FTcursor
+    ,amc_TableId_amcdb_tcursor         = 87   // amcdb.tcursor -> amc.FTcursor
+    ,amc_TableId_dmmeta_Thash          = 88   // dmmeta.Thash -> amc.FThash
+    ,amc_TableId_dmmeta_thash          = 88   // dmmeta.thash -> amc.FThash
+    ,amc_TableId_dmmeta_Typefld        = 89   // dmmeta.Typefld -> amc.FTypefld
+    ,amc_TableId_dmmeta_typefld        = 89   // dmmeta.typefld -> amc.FTypefld
+    ,amc_TableId_dmmeta_Usertracefld   = 90   // dmmeta.Usertracefld -> amc.FUsertracefld
+    ,amc_TableId_dmmeta_usertracefld   = 90   // dmmeta.usertracefld -> amc.FUsertracefld
+    ,amc_TableId_dmmeta_Xref           = 91   // dmmeta.Xref -> amc.FXref
+    ,amc_TableId_dmmeta_xref           = 91   // dmmeta.xref -> amc.FXref
 };
 
-enum { amc_TableIdEnum_N = 181 };
+enum { amc_TableIdEnum_N = 183 };
 
 namespace dmmeta { struct Anonfld; }
 namespace dmmeta { struct Argvtype; }
@@ -390,6 +392,7 @@ namespace dmmeta { struct Fstep; }
 namespace dmmeta { struct Ftrace; }
 namespace dmmeta { struct Func; }
 namespace dmmeta { struct Funique; }
+namespace dmmeta { struct Fuserinit; }
 namespace dmmeta { struct Fwddecl; }
 namespace dmmeta { struct Gconst; }
 namespace amcdb { struct Gen; }
@@ -498,6 +501,7 @@ namespace amc { struct FFsort; }
 namespace amc { struct FFstep; }
 namespace amc { struct FFtrace; }
 namespace amc { struct FFunique; }
+namespace amc { struct FFuserinit; }
 namespace amc { struct FFwddecl; }
 namespace amc { struct FGconst; }
 namespace amc { struct FGen; }
@@ -708,6 +712,7 @@ namespace amc { struct _db_charset_curs; }
 namespace amc { struct _db_nsinclude_curs; }
 namespace amc { struct _db_ssimvolatile_curs; }
 namespace amc { struct _db_funique_curs; }
+namespace amc { struct _db_fuserinit_curs; }
 namespace amc { struct dispatch_c_dispatch_msg_curs; }
 namespace amc { struct enumstr_c_fconst_curs; }
 namespace amc { struct enumstr_len_bh_enumstr_curs; }
@@ -825,6 +830,7 @@ struct Enumstr { // amc.Enumstr: Key
     explicit Enumstr(i32                            in_len
         ,const algo::strptr&            in_str);
     bool operator ==(const amc::Enumstr &rhs) const;
+    bool operator !=(const amc::Enumstr &rhs) const;
     bool operator <(const amc::Enumstr &rhs) const;
     Enumstr();
 };
@@ -931,6 +937,7 @@ struct FBitfld { // amc.FBitfld
     i32                 width;           //   0  Width, in bits, within parent field.
     algo::Smallstr100   srcfield;        //
     amc::FField*        p_srcfield;      // reference to parent row
+    amc::FField*        p_field;         // reference to parent row
     i32                 bh_bitfld_idx;   // index in heap; -1 means not-in-heap
 private:
     friend amc::FBitfld&        bitfld_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -1120,6 +1127,7 @@ void                 FCdflt_Uninit(amc::FCdflt& cdflt) __attribute__((nothrow));
 struct FCextern { // amc.FCextern
     algo::Smallstr50   ctype;        // Ctype in question
     bool               initmemset;   //   false  Initialize using memset? (set this to Y for all C structs)
+    bool               isstruct;     //   false
 private:
     friend amc::FCextern&       cextern_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend amc::FCextern*       cextern_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -2433,6 +2441,8 @@ struct FDb { // amc.FDb
     i32                   ssimvolatile_n;                           // number of elements in array
     amc::FFunique*        funique_lary[32];                         // level array
     i32                   funique_n;                                // number of elements in array
+    amc::FFuserinit*      fuserinit_lary[32];                       // level array
+    i32                   fuserinit_n;                              // number of elements in array
     amc::trace            trace;                                    //
 };
 
@@ -4504,7 +4514,7 @@ void                 tracefld_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 amc::FTracefld&      tracefld_qFind(u64 t) __attribute__((nothrow));
 // Save table to ssimfile
-bool                 tracefld_SaveSsimfile(strptr fname) __attribute__((nothrow));
+bool                 tracefld_SaveSsimfile(algo::strptr fname) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 tracefld_XrefMaybe(amc::FTracefld &row);
@@ -4534,7 +4544,7 @@ void                 tracerec_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 amc::FTracerec&      tracerec_qFind(u64 t) __attribute__((nothrow));
 // Save table to ssimfile
-bool                 tracerec_SaveSsimfile(strptr fname) __attribute__((nothrow));
+bool                 tracerec_SaveSsimfile(algo::strptr fname) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 tracerec_XrefMaybe(amc::FTracerec &row);
@@ -4597,7 +4607,7 @@ void                 c_dispsig_sorted_HeapSort() __attribute__((nothrow));
 // Quick sort
 void                 c_dispsig_sorted_QuickSort() __attribute__((nothrow));
 // Save table to ssimfile
-bool                 c_dispsig_sorted_SaveSsimfile(strptr fname) __attribute__((nothrow));
+bool                 c_dispsig_sorted_SaveSsimfile(algo::strptr fname) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 zs_sig_visit_EmptyQ() __attribute__((__warn_unused_result__, nothrow));
@@ -5649,7 +5659,7 @@ void                 c_ctypelen_HeapSort() __attribute__((nothrow));
 // Quick sort
 void                 c_ctypelen_QuickSort() __attribute__((nothrow));
 // Save table to ssimfile
-bool                 c_ctypelen_SaveSsimfile(strptr fname) __attribute__((nothrow));
+bool                 c_ctypelen_SaveSsimfile(algo::strptr fname) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_tempfield_EmptyQ() __attribute__((nothrow));
@@ -6043,6 +6053,34 @@ amc::FFunique&       funique_qFind(u64 t) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 funique_XrefMaybe(amc::FFunique &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+amc::FFuserinit&     fuserinit_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+amc::FFuserinit*     fuserinit_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc::FFuserinit*     fuserinit_InsertMaybe(const dmmeta::Fuserinit &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                fuserinit_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 fuserinit_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+amc::FFuserinit*     fuserinit_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+amc::FFuserinit*     fuserinit_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  fuserinit_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 fuserinit_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 fuserinit_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+amc::FFuserinit&     fuserinit_qFind(u64 t) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 fuserinit_XrefMaybe(amc::FFuserinit &row);
 
 // cursor points to valid item
 void                 _db_fsort_curs_Reset(_db_fsort_curs &curs, amc::FDb &parent);
@@ -6959,6 +6997,14 @@ bool                 _db_funique_curs_ValidQ(_db_funique_curs &curs);
 void                 _db_funique_curs_Next(_db_funique_curs &curs);
 // item access
 amc::FFunique&       _db_funique_curs_Access(_db_funique_curs &curs);
+// cursor points to valid item
+void                 _db_fuserinit_curs_Reset(_db_fuserinit_curs &curs, amc::FDb &parent);
+// cursor points to valid item
+bool                 _db_fuserinit_curs_ValidQ(_db_fuserinit_curs &curs);
+// proceed to next item
+void                 _db_fuserinit_curs_Next(_db_fuserinit_curs &curs);
+// item access
+amc::FFuserinit&     _db_fuserinit_curs_Access(_db_fuserinit_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
@@ -7720,6 +7766,7 @@ void                 FFdelay_Uninit(amc::FFdelay& fdelay) __attribute__((nothrow
 // access: amc.FBasepool.p_field (Upptr)
 // access: amc.FBasepool.p_base (Upptr)
 // access: amc.FBitfld.p_srcfield (Upptr)
+// access: amc.FBitfld.p_field (Upptr)
 // access: amc.FCascdel.p_field (Upptr)
 // access: amc.FCtype.c_field (Ptrary)
 // access: amc.FCtype.c_varlenfld (Ptr)
@@ -7849,6 +7896,7 @@ struct FField { // amc.FField
     i32                 bh_bitfld_n;              // number of elements in the heap
     i32                 bh_bitfld_max;            // max elements in bh_bitfld_elems
     amc::FFunique*      c_funique;                // optional pointer
+    amc::FFuserinit*    c_fuserinit;              // optional pointer
     bool                ctype_c_datafld_in_ary;   //   false  membership flag
     bool                _db_c_tempfield_in_ary;   //   false  membership flag
 private:
@@ -8198,6 +8246,11 @@ void                 bh_bitfld_Reserve(amc::FField& field, int n) __attribute__(
 bool                 c_funique_InsertMaybe(amc::FField& field, amc::FFunique& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 void                 c_funique_Remove(amc::FField& field, amc::FFunique& row) __attribute__((nothrow));
+
+// Insert row into pointer index. Return final membership status.
+bool                 c_fuserinit_InsertMaybe(amc::FField& field, amc::FFuserinit& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+void                 c_fuserinit_Remove(amc::FField& field, amc::FFuserinit& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FField_Init(amc::FField& field);
@@ -8684,6 +8737,30 @@ void                 funique_CopyIn(amc::FFunique &row, dmmeta::Funique &in) __a
 
 void                 FFunique_Uninit(amc::FFunique& funique) __attribute__((nothrow));
 
+// --- amc.FFuserinit
+// create: amc.FDb.fuserinit (Lary)
+// access: amc.FField.c_fuserinit (Ptr)
+struct FFuserinit { // amc.FFuserinit
+    algo::Smallstr100   field;     //
+    algo::Comment       comment;   //
+private:
+    friend amc::FFuserinit&     fuserinit_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend amc::FFuserinit*     fuserinit_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 fuserinit_RemoveAll() __attribute__((nothrow));
+    friend void                 fuserinit_RemoveLast() __attribute__((nothrow));
+    FFuserinit();
+    ~FFuserinit();
+    FFuserinit(const FFuserinit&){ /*disallow copy constructor */}
+    void operator =(const FFuserinit&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 fuserinit_CopyOut(amc::FFuserinit &row, dmmeta::Fuserinit &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 fuserinit_CopyIn(amc::FFuserinit &row, dmmeta::Fuserinit &in) __attribute__((nothrow));
+
+void                 FFuserinit_Uninit(amc::FFuserinit& fuserinit) __attribute__((nothrow));
+
 // --- amc.FFwddecl
 // create: amc.FDb.fwddecl (Lary)
 // global access: ind_fwddecl (Thash)
@@ -8895,7 +8972,7 @@ void                 FGstatic_Uninit(amc::FGstatic& gstatic) __attribute__((noth
 // access: amc.FNs.c_gsymbol (Ptrary)
 struct FGsymbol { // amc.FGsymbol
     algo::Smallstr50    gsymbol;               //
-    algo::Smallstr100   inc;                   //
+    algo::Smallstr100   inc;                   // Regex to filter rows
     algo::Comment       comment;               //
     bool                ns_c_gsymbol_in_ary;   //   false  membership flag
 private:
@@ -10456,6 +10533,8 @@ void                 FTargdep_Uninit(amc::FTargdep& targdep) __attribute__((noth
 struct FTarget { // amc.FTarget
     amc::FTarget*      ind_target_next;   // hash next
     algo::Smallstr16   target;            //
+    algo::Smallstr50   license;           //
+    algo::Smallstr50   compat;            //   "Linux-%.%-%"
     amc::FTargdep**    c_targdep_elems;   // array of pointers
     u32                c_targdep_n;       // array of pointers
     u32                c_targdep_max;     // capacity of allocated array
@@ -11942,6 +12021,14 @@ struct _db_funique_curs {// cursor
 };
 
 
+struct _db_fuserinit_curs {// cursor
+    typedef amc::FFuserinit ChildType;
+    amc::FDb *parent;
+    i64 index;
+    _db_fuserinit_curs(){ parent=NULL; index=0; }
+};
+
+
 struct dispatch_c_dispatch_msg_curs {// cursor
     typedef amc::FDispatchmsg ChildType;
     amc::FDispatchmsg** elems;
@@ -12577,6 +12664,8 @@ void                 tfunc_Delptr_Uninit();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Exec_Start();
 // User-implemented function from gstatic:amc.FDb.tfunc
+void                 tfunc_Exec_StartRead();
+// User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Exec_Kill();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Exec_Wait();
@@ -12644,6 +12733,8 @@ void                 tfunc_Fconst_SetStrptr();
 void                 tfunc_Fconst_ReadStrptrMaybe();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Field_Cleanup();
+// User-implemented function from gstatic:amc.FDb.tfunc
+void                 tfunc_Field_Userinit();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Field_Cascdel();
 // User-implemented function from gstatic:amc.FDb.tfunc
@@ -12963,6 +13054,8 @@ void                 tfunc_Step_Step();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Step_Call();
 // User-implemented function from gstatic:amc.FDb.tfunc
+void                 tfunc_Step_SetDelay();
+// User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Substr_Get();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Substr_Get2();
@@ -13106,6 +13199,8 @@ void                 gen_lookuppkey();
 void                 gen_tableenum();
 // User-implemented function from gstatic:amc.FDb.gen
 void                 gen_gconst();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_bitfldenum();
 // User-implemented function from gstatic:amc.FDb.gen
 void                 gen_proc();
 // User-implemented function from gstatic:amc.FDb.gen

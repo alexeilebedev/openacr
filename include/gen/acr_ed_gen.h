@@ -38,15 +38,17 @@ enum acr_ed_TableIdEnum {                   // acr_ed.TableId.value
     ,acr_ed_TableId_dmmeta_listtype   = 4   // dmmeta.listtype -> acr_ed.FListtype
     ,acr_ed_TableId_dmmeta_Ns         = 5   // dmmeta.Ns -> acr_ed.FNs
     ,acr_ed_TableId_dmmeta_ns         = 5   // dmmeta.ns -> acr_ed.FNs
-    ,acr_ed_TableId_dmmeta_Ssimfile   = 6   // dmmeta.Ssimfile -> acr_ed.FSsimfile
-    ,acr_ed_TableId_dmmeta_ssimfile   = 6   // dmmeta.ssimfile -> acr_ed.FSsimfile
-    ,acr_ed_TableId_dev_Target        = 7   // dev.Target -> acr_ed.FTarget
-    ,acr_ed_TableId_dev_target        = 7   // dev.target -> acr_ed.FTarget
-    ,acr_ed_TableId_dev_Targsrc       = 8   // dev.Targsrc -> acr_ed.FTargsrc
-    ,acr_ed_TableId_dev_targsrc       = 8   // dev.targsrc -> acr_ed.FTargsrc
+    ,acr_ed_TableId_dev_Sandbox       = 6   // dev.Sandbox -> acr_ed.FSandbox
+    ,acr_ed_TableId_dev_sandbox       = 6   // dev.sandbox -> acr_ed.FSandbox
+    ,acr_ed_TableId_dmmeta_Ssimfile   = 7   // dmmeta.Ssimfile -> acr_ed.FSsimfile
+    ,acr_ed_TableId_dmmeta_ssimfile   = 7   // dmmeta.ssimfile -> acr_ed.FSsimfile
+    ,acr_ed_TableId_dev_Target        = 8   // dev.Target -> acr_ed.FTarget
+    ,acr_ed_TableId_dev_target        = 8   // dev.target -> acr_ed.FTarget
+    ,acr_ed_TableId_dev_Targsrc       = 9   // dev.Targsrc -> acr_ed.FTargsrc
+    ,acr_ed_TableId_dev_targsrc       = 9   // dev.targsrc -> acr_ed.FTargsrc
 };
 
-enum { acr_ed_TableIdEnum_N = 18 };
+enum { acr_ed_TableIdEnum_N = 20 };
 
 namespace dmmeta { struct Cstr; }
 namespace dmmeta { struct Ctype; }
@@ -56,6 +58,7 @@ namespace acr_ed { struct FCtype; }
 namespace dmmeta { struct Fprefix; }
 namespace dmmeta { struct Listtype; }
 namespace dmmeta { struct Ns; }
+namespace dev { struct Sandbox; }
 namespace dmmeta { struct Ssimfile; }
 namespace dev { struct Target; }
 namespace dev { struct Targsrc; }
@@ -66,6 +69,7 @@ namespace acr_ed { struct FDb; }
 namespace acr_ed { struct FField; }
 namespace acr_ed { struct FFprefix; }
 namespace acr_ed { struct FListtype; }
+namespace acr_ed { struct FSandbox; }
 namespace acr_ed { struct FSsimfile; }
 namespace acr_ed { struct FTargsrc; }
 namespace acr_ed { struct FieldId; }
@@ -88,6 +92,7 @@ namespace acr_ed { struct _db_ind_fprefix_curs; }
 namespace acr_ed { struct _db_target_curs; }
 namespace acr_ed { struct _db_ind_target_curs; }
 namespace acr_ed { struct _db_targsrc_curs; }
+namespace acr_ed { struct _db_sandbox_curs; }
 namespace acr_ed {
 }//pkey typedefs
 namespace acr_ed {
@@ -265,12 +270,14 @@ struct FDb { // acr_ed.FDb
     algo::cstring         sandbox_dir;                  //
     algo::cstring         abt_path;                     //   "bin/abt"  path for executable
     command::abt          abt_cmd;                      // command line for child process
-    algo::cstring         abt_stdin;                    // redirect for stdin
-    algo::cstring         abt_stdout;                   // redirect for stdout
-    algo::cstring         abt_stderr;                   // redirect for stderr
+    algo::cstring         abt_fstdin;                   // redirect for stdin
+    algo::cstring         abt_fstdout;                  // redirect for stdout
+    algo::cstring         abt_fstderr;                  // redirect for stderr
     pid_t                 abt_pid;                      //   0  pid of running child process
     i32                   abt_timeout;                  //   0  optional timeout for child process
     i32                   abt_status;                   //   0  last exit status of child process
+    acr_ed::FSandbox*     sandbox_lary[32];             // level array
+    i32                   sandbox_n;                    // number of elements in array
     acr_ed::trace         trace;                        //
 };
 
@@ -682,6 +689,8 @@ bool                 targsrc_XrefMaybe(acr_ed::FTargsrc &row);
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  abt_Start() __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         abt_StartRead(algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 abt_Kill();
 // Wait for subprocess to return
@@ -696,6 +705,34 @@ void                 abt_ExecX();
 // Call execv with specified parameters -- cprint:abt.Argv
 int                  abt_Execv() __attribute__((nothrow));
 algo::tempstr        abt_ToCmdline() __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_ed::FSandbox&    sandbox_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+acr_ed::FSandbox*    sandbox_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_ed::FSandbox*    sandbox_InsertMaybe(const dev::Sandbox &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                sandbox_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 sandbox_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+acr_ed::FSandbox*    sandbox_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+acr_ed::FSandbox*    sandbox_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  sandbox_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 sandbox_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 sandbox_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+acr_ed::FSandbox&    sandbox_qFind(u64 t) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 sandbox_XrefMaybe(acr_ed::FSandbox &row);
 
 // cursor points to valid item
 void                 _db_ns_curs_Reset(_db_ns_curs &curs, acr_ed::FDb &parent);
@@ -776,6 +813,14 @@ bool                 _db_targsrc_curs_ValidQ(_db_targsrc_curs &curs);
 void                 _db_targsrc_curs_Next(_db_targsrc_curs &curs);
 // item access
 acr_ed::FTargsrc&    _db_targsrc_curs_Access(_db_targsrc_curs &curs);
+// cursor points to valid item
+void                 _db_sandbox_curs_Reset(_db_sandbox_curs &curs, acr_ed::FDb &parent);
+// cursor points to valid item
+bool                 _db_sandbox_curs_ValidQ(_db_sandbox_curs &curs);
+// proceed to next item
+void                 _db_sandbox_curs_Next(_db_sandbox_curs &curs);
+// item access
+acr_ed::FSandbox&    _db_sandbox_curs_Access(_db_sandbox_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
@@ -906,6 +951,25 @@ void                 ns_CopyIn(acr_ed::FNs &row, dmmeta::Ns &in) __attribute__((
 void                 FNs_Init(acr_ed::FNs& ns);
 void                 FNs_Uninit(acr_ed::FNs& ns) __attribute__((nothrow));
 
+// --- acr_ed.FSandbox
+// create: acr_ed.FDb.sandbox (Lary)
+struct FSandbox { // acr_ed.FSandbox
+    algo::Smallstr50   sandbox;   //
+    algo::Comment      comment;   //
+private:
+    friend acr_ed::FSandbox&    sandbox_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_ed::FSandbox*    sandbox_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 sandbox_RemoveAll() __attribute__((nothrow));
+    friend void                 sandbox_RemoveLast() __attribute__((nothrow));
+    FSandbox();
+};
+
+// Copy fields out of row
+void                 sandbox_CopyOut(acr_ed::FSandbox &row, dev::Sandbox &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 sandbox_CopyIn(acr_ed::FSandbox &row, dev::Sandbox &in) __attribute__((nothrow));
+
+
 // --- acr_ed.FSsimfile
 // create: acr_ed.FDb.ssimfile (Lary)
 // global access: ind_ssimfile (Thash)
@@ -947,6 +1011,8 @@ void                 FSsimfile_Uninit(acr_ed::FSsimfile& ssimfile) __attribute__
 struct FTarget { // acr_ed.FTarget
     acr_ed::FTarget*   ind_target_next;   // hash next
     algo::Smallstr16   target;            //
+    algo::Smallstr50   license;           //
+    algo::Smallstr50   compat;            //   "Linux-%.%-%"
     u32                score;             //   0  For guessing target from source file
 private:
     friend acr_ed::FTarget&     target_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -1161,6 +1227,14 @@ struct _db_targsrc_curs {// cursor
     acr_ed::FDb *parent;
     i64 index;
     _db_targsrc_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_sandbox_curs {// cursor
+    typedef acr_ed::FSandbox ChildType;
+    acr_ed::FDb *parent;
+    i64 index;
+    _db_sandbox_curs(){ parent=NULL; index=0; }
 };
 
 int                  main(int argc, char **argv);

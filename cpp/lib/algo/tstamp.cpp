@@ -57,7 +57,7 @@ void algo::tstamp_cache_Init(TstampCache& cache, strptr spec, bool gmt){
     }
 }
 
-static algo::TimeStruct GetTimeStruct(algo::TstampCache& cache, UnTime t){
+static algo::TimeStruct GetTimeStruct(algo::TstampCache& cache, algo::UnTime t){
     return cache.gmtQ ? algo::GetGMTimeStruct(t) : algo::GetLocalTimeStruct(t);
 }
 
@@ -80,7 +80,7 @@ inline static void tstamp_cache_PlaceNanos(algo::TstampCache& cache, u32 nanos, 
         u64 usec_buf64;
         int nano    = nanos / 10;
         int quot    = nanos % 10;
-        usec_buf64    = (u32_CvtLestr8Small(nano) + 0x3030303030303030); //convert microsecs to string
+        usec_buf64    = (algo::u32_CvtLestr8Small(nano) + 0x3030303030303030); //convert microsecs to string
         u8  *usec_buf = (u8*)&usec_buf64;
         int max = i32_Min(cache.nano_size, 8);
         memcpy(out.elems + cache.nano_location ,usec_buf, max);
@@ -92,14 +92,14 @@ inline static void tstamp_cache_PlaceNanos(algo::TstampCache& cache, u32 nanos, 
 
 inline static void tsamp_cache_Update(algo::TstampCache& cache, algo::UnTime t){
     TimeStruct ts = GetTimeStruct(cache, t);
-    u64 delta = (ts.tm_min * 60 + ts.tm_sec ) * UNTIME_PER_SEC + ts.tm_nsec;
+    u64 delta = (ts.tm_min * 60 + ts.tm_sec ) * algo::UNTIME_PER_SEC + ts.tm_nsec;
     ts.tm_min = 0;
     ts.tm_sec = 0;
     ts.tm_nsec = 0;
     ch_RemoveAll(cache.cached);
     TimeStruct_Print(ts, cache.cached, cache.spec);
     cache.valid_beg.value = t.value - delta;
-    cache.valid_end.value = cache.valid_beg.value + u64(UNTIME_PER_SEC) * SECS_PER_HOUR;
+    cache.valid_end.value = cache.valid_beg.value + u64(algo::UNTIME_PER_SEC) * algo::SECS_PER_HOUR;
 }
 
 

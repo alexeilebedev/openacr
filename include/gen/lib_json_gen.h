@@ -171,6 +171,7 @@ struct FldKey { // lib_json.FldKey
     explicit FldKey(lib_json::FNode*               in_object
         ,algo::strptr                   in_field);
     bool operator ==(const lib_json::FldKey &rhs) const;
+    bool operator !=(const lib_json::FldKey &rhs) const;
     bool operator <(const lib_json::FldKey &rhs) const;
     FldKey();
 };

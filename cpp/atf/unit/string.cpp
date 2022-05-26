@@ -47,7 +47,7 @@ static void CheckAligned(const char *in_a, const char *in_b, int result) {
     cstring b;
     a=in_a;
     b=in_b;
-    vrfy_(AlignedEqual(a,b)==result);
+    vrfy_(AlignedEqual(a,b)==(result!=0));
 }
 
 void atf_unit::unittest_algo_lib_Aligned() {
@@ -191,11 +191,11 @@ static tempstr Reversed(strptr s) {
 
 // --------------------------------------------------------------------------------
 
-static void CheckFindFirst(strptr str, char c, i32_Range expect) {
+static void CheckFindFirst(strptr str, char c, algo::i32_Range expect) {
     int offset = expect.beg==expect.end ? -1 : expect.beg;
 
     vrfy_(algo::ch_FindFirst(str,c) == expect);
-    vrfy_(algo::ch_FindLast(Reversed(str),c) == i32_Range(str.n_elems-expect.end,str.n_elems-expect.beg));
+    vrfy_(algo::ch_FindLast(Reversed(str),c) == algo::i32_Range(str.n_elems-expect.end,str.n_elems-expect.beg));
     vrfy_(algo::FindStr(str,tempstr()<<c) == offset);
     vrfy_(algo::FindFrom(str,tempstr()<<c,0) == offset);
     vrfy_(algo::FindFrom(str,c,0) == offset);
@@ -207,7 +207,7 @@ static void CheckFindFirst(strptr str, char c, i32_Range expect) {
         vrfy_(algo::StartsWithQ(str,tempstr()<<c));
     }
     {
-        StringIter iter(str);
+        algo::StringIter iter(str);
         vrfy_(GetTokenStrptr(iter,tempstr()<<c)==FirstN(str,expect.beg));
     }
 }
@@ -215,12 +215,12 @@ static void CheckFindFirst(strptr str, char c, i32_Range expect) {
 // --------------------------------------------------------------------------------
 
 void atf_unit::unittest_algo_lib_StringFind() {
-    CheckFindFirst("a",'a', i32_Range(0,1));
-    CheckFindFirst("a",'b', i32_Range(1,1));
-    CheckFindFirst("",'b', i32_Range(0,0));
-    CheckFindFirst("aa",'a', i32_Range(0,1));
-    CheckFindFirst("aaa",'a', i32_Range(0,1));
-    CheckFindFirst("bbba",'a', i32_Range(3,4));
+    CheckFindFirst("a",'a', algo::i32_Range(0,1));
+    CheckFindFirst("a",'b', algo::i32_Range(1,1));
+    CheckFindFirst("",'b', algo::i32_Range(0,0));
+    CheckFindFirst("aa",'a', algo::i32_Range(0,1));
+    CheckFindFirst("aaa",'a', algo::i32_Range(0,1));
+    CheckFindFirst("bbba",'a', algo::i32_Range(3,4));
 }
 
 // -----------------------------------------------------------------------------

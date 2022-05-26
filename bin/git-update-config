@@ -1,0 +1,7 @@
+#!/bin/sh
+git config merge.update-linelim-driver.name "Merge driver to resolve conflicts in linelim.ssim"
+git config merge.update-linelim-driver.driver "update-linelim; update-linelim"
+
+LINE="data/dev/linelim.ssim merge=update-linelim-driver"
+AFILE=".git/info/attributes"
+grep -qxF "$LINE" $AFILE || echo $LINE >> $AFILE

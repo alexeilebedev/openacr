@@ -100,3 +100,87 @@ void atf_amc::amctest_BitfldTuple() {
     BitfldType1_ReadStrptrMaybe(var2,str);
     vrfyeq_(var1.value,var2.value);
 }
+
+// -----------------------------------------------------------------------------
+
+void atf_amc::amctest_BitfldBitset() {
+    {
+        atf_amc::BitfldType2 var1;
+        bit0_Set(var1,true);
+        bit1_Set(var1,true);
+        var1.freebool = true;
+        cstring str;
+        str << var1;
+        vrfyeq_(str, "bit0,bit1,freebool");
+
+        atf_amc::BitfldType2 var2;
+        vrfy_(BitfldType2_ReadStrptrMaybe(var2,str));
+        vrfyeq_(var1.value,var2.value);
+    }
+    {
+        atf_amc::BitfldType2 var1;
+        bit0_Set(var1,true);
+        cstring str;
+        str << var1;
+        vrfyeq_(str, "bit0");
+
+        atf_amc::BitfldType2 var2;
+        vrfy_(BitfldType2_ReadStrptrMaybe(var2,str));
+        vrfyeq_(var1.value,var2.value);
+    }
+    {
+        atf_amc::BitfldType2 var1;
+        bit1_Set(var1,true);
+        cstring str;
+        str << var1;
+        vrfyeq_(str, "bit1");
+
+        atf_amc::BitfldType2 var2;
+        vrfy_(BitfldType2_ReadStrptrMaybe(var2,str));
+        vrfyeq_(var1.value,var2.value);
+    }
+    {
+        atf_amc::BitfldType2 var1;
+        var1.freebool = true;;
+        cstring str;
+        str << var1;
+        vrfyeq_(str, "freebool");
+
+        atf_amc::BitfldType2 var2;
+        vrfy_(BitfldType2_ReadStrptrMaybe(var2,str));
+        vrfyeq_(var1.value,var2.value);
+    }
+    {
+        atf_amc::BitfldType2 var;
+        vrfy_(BitfldType2_ReadStrptrMaybe(var,",, ,  "));
+        vrfy_(!bit0_Get(var));
+        vrfy_(!bit1_Get(var));
+    }
+    {
+        atf_amc::BitfldType2 var;
+        vrfy_(BitfldType2_ReadStrptrMaybe(var,",,, freebool , bit1 , , bit0 "));
+        vrfy_(bit0_Get(var));
+        vrfy_(bit1_Get(var));
+        vrfy_(var.freebool);
+    }
+    {
+        atf_amc::BitfldType2 var;
+        vrfy_(!BitfldType2_ReadStrptrMaybe(var,"blah"));
+        vrfy_(FindStr(algo_lib::DetachBadTags(),"blah")!=-1);
+    }
+    {
+        atf_amc::BitfldType2 var;
+        vrfy_(!BitfldType2_ReadStrptrMaybe(var,"bit00"));
+        vrfy_(FindStr(algo_lib::DetachBadTags(),"bit00")!=-1);
+    }
+    {
+        atf_amc::BitfldType2 var;
+        vrfy_(!BitfldType2_ReadStrptrMaybe(var,"bbit0"));
+        vrfy_(FindStr(algo_lib::DetachBadTags(),"bbit0")!=-1);
+    }
+    {
+        atf_amc::BitfldType2 var;
+        vrfy_(!BitfldType2_ReadStrptrMaybe(var,"bit0bit1freebool"));
+        vrfy_(FindStr(algo_lib::DetachBadTags(),"bit0bit1freebool")!=-1);
+    }
+}

@@ -866,7 +866,7 @@ void                 in_buf_EndRead(ssim2mysql::FInput& input) __attribute__((no
 // SkipMsg will skip both the line and the deliminter.
 // A partial line at the end of input is NOT returned (TODO?)
 //
-aryptr<char>         in_buf_GetMsg(ssim2mysql::FInput& input) __attribute__((nothrow));
+algo::aryptr<char>   in_buf_GetMsg(ssim2mysql::FInput& input) __attribute__((nothrow));
 // Return max. number of bytes in the buffer.
 i32                  in_buf_Max(ssim2mysql::FInput& input) __attribute__((nothrow));
 // Return number of bytes in the buffer.

@@ -16,6 +16,16 @@
 #include "include/gen/dmmeta_gen.h"
 //#pragma endinclude
 
+// --- atf_amc_BitfldType2_value_Enum
+
+enum atf_amc_BitfldType2_value_Enum {                  // atf_amc.BitfldType2.value
+     atf_amc_BitfldType2_value_bit0    = (u64(1)<<0)   // atf_amc.BitfldType2.bit0
+    ,atf_amc_BitfldType2_value_bit1    = (u64(1)<<1)   // atf_amc.BitfldType2.bit1
+};
+
+enum { atf_amc_BitfldType2_value_Enum_N = 2 };
+
+
 // --- atf_amc_DispCaseEnum
 
 enum atf_amc_DispCaseEnum {                    // atf_amc.DispCase.value
@@ -48,113 +58,115 @@ enum atf_amc_FieldIdEnum {                  // atf_amc.FieldId.value
      atf_amc_FieldId_value           = 0
     ,atf_amc_FieldId_bit1            = 1
     ,atf_amc_FieldId_bits5           = 2
-    ,atf_amc_FieldId_attr1           = 3
-    ,atf_amc_FieldId_attr2           = 4
-    ,atf_amc_FieldId_strval          = 5
-    ,atf_amc_FieldId_strval2         = 6
-    ,atf_amc_FieldId_dateval         = 7
-    ,atf_amc_FieldId_intval          = 8
-    ,atf_amc_FieldId_fixary          = 9
-    ,atf_amc_FieldId_inlary          = 10
-    ,atf_amc_FieldId_type            = 11
-    ,atf_amc_FieldId_length          = 12
-    ,atf_amc_FieldId_typeg           = 13
-    ,atf_amc_FieldId_optg            = 14
-    ,atf_amc_FieldId_pmask           = 15
-    ,atf_amc_FieldId_value2          = 16
-    ,atf_amc_FieldId_value3          = 17
-    ,atf_amc_FieldId_value21         = 18
-    ,atf_amc_FieldId_value22         = 19
-    ,atf_amc_FieldId_value23         = 20
-    ,atf_amc_FieldId_value24         = 21
-    ,atf_amc_FieldId_value25         = 22
-    ,atf_amc_FieldId_value26         = 23
-    ,atf_amc_FieldId_value20         = 24
-    ,atf_amc_FieldId_value28         = 25
-    ,atf_amc_FieldId_value29         = 26
-    ,atf_amc_FieldId_value30         = 27
-    ,atf_amc_FieldId_value31         = 28
-    ,atf_amc_FieldId_value32         = 29
-    ,atf_amc_FieldId_value27         = 30
-    ,atf_amc_FieldId_value19         = 31
-    ,atf_amc_FieldId_value18         = 32
-    ,atf_amc_FieldId_value4          = 33
-    ,atf_amc_FieldId_value5          = 34
-    ,atf_amc_FieldId_value6          = 35
-    ,atf_amc_FieldId_value7          = 36
-    ,atf_amc_FieldId_value8          = 37
-    ,atf_amc_FieldId_value9          = 38
-    ,atf_amc_FieldId_value69         = 39
-    ,atf_amc_FieldId_value11         = 40
-    ,atf_amc_FieldId_value12         = 41
-    ,atf_amc_FieldId_value13         = 42
-    ,atf_amc_FieldId_value14         = 43
-    ,atf_amc_FieldId_value15         = 44
-    ,atf_amc_FieldId_value16         = 45
-    ,atf_amc_FieldId_value33         = 46
-    ,atf_amc_FieldId_value10         = 47
-    ,atf_amc_FieldId_value17         = 48
-    ,atf_amc_FieldId_value35         = 49
-    ,atf_amc_FieldId_value55         = 50
-    ,atf_amc_FieldId_value56         = 51
-    ,atf_amc_FieldId_value57         = 52
-    ,atf_amc_FieldId_value58         = 53
-    ,atf_amc_FieldId_value59         = 54
-    ,atf_amc_FieldId_value60         = 55
-    ,atf_amc_FieldId_value54         = 56
-    ,atf_amc_FieldId_value62         = 57
-    ,atf_amc_FieldId_value63         = 58
-    ,atf_amc_FieldId_value64         = 59
-    ,atf_amc_FieldId_value65         = 60
-    ,atf_amc_FieldId_value66         = 61
-    ,atf_amc_FieldId_value67         = 62
-    ,atf_amc_FieldId_value68         = 63
-    ,atf_amc_FieldId_value61         = 64
-    ,atf_amc_FieldId_value34         = 65
-    ,atf_amc_FieldId_value52         = 66
-    ,atf_amc_FieldId_value36         = 67
-    ,atf_amc_FieldId_value37         = 68
-    ,atf_amc_FieldId_value38         = 69
-    ,atf_amc_FieldId_value39         = 70
-    ,atf_amc_FieldId_value40         = 71
-    ,atf_amc_FieldId_value41         = 72
-    ,atf_amc_FieldId_value42         = 73
-    ,atf_amc_FieldId_value53         = 74
-    ,atf_amc_FieldId_value44         = 75
-    ,atf_amc_FieldId_value45         = 76
-    ,atf_amc_FieldId_value46         = 77
-    ,atf_amc_FieldId_value47         = 78
-    ,atf_amc_FieldId_value48         = 79
-    ,atf_amc_FieldId_value49         = 80
-    ,atf_amc_FieldId_value50         = 81
-    ,atf_amc_FieldId_value51         = 82
-    ,atf_amc_FieldId_value43         = 83
-    ,atf_amc_FieldId_value70         = 84
-    ,atf_amc_FieldId_value71         = 85
-    ,atf_amc_FieldId_ch              = 86
-    ,atf_amc_FieldId_val1            = 87
-    ,atf_amc_FieldId_val2            = 88
-    ,atf_amc_FieldId_val3            = 89
-    ,atf_amc_FieldId_msghdr          = 90
-    ,atf_amc_FieldId_payload         = 91
-    ,atf_amc_FieldId_val             = 92
-    ,atf_amc_FieldId_text            = 93
-    ,atf_amc_FieldId_typea           = 94
-    ,atf_amc_FieldId_j               = 95
-    ,atf_amc_FieldId_typec           = 96
-    ,atf_amc_FieldId_typeh           = 97
-    ,atf_amc_FieldId_types           = 98
-    ,atf_amc_FieldId_comment         = 99
-    ,atf_amc_FieldId_i               = 100
-    ,atf_amc_FieldId_strval_regx     = 101
-    ,atf_amc_FieldId_strval2_regx    = 102
-    ,atf_amc_FieldId_start_dateval   = 103
-    ,atf_amc_FieldId_end_dateval     = 104
-    ,atf_amc_FieldId_start_intval    = 105
-    ,atf_amc_FieldId_end_intval      = 106
+    ,atf_amc_FieldId_bit0            = 3
+    ,atf_amc_FieldId_freebool        = 4
+    ,atf_amc_FieldId_attr1           = 5
+    ,atf_amc_FieldId_attr2           = 6
+    ,atf_amc_FieldId_strval          = 7
+    ,atf_amc_FieldId_strval2         = 8
+    ,atf_amc_FieldId_dateval         = 9
+    ,atf_amc_FieldId_intval          = 10
+    ,atf_amc_FieldId_fixary          = 11
+    ,atf_amc_FieldId_inlary          = 12
+    ,atf_amc_FieldId_type            = 13
+    ,atf_amc_FieldId_length          = 14
+    ,atf_amc_FieldId_typeg           = 15
+    ,atf_amc_FieldId_optg            = 16
+    ,atf_amc_FieldId_pmask           = 17
+    ,atf_amc_FieldId_value2          = 18
+    ,atf_amc_FieldId_value3          = 19
+    ,atf_amc_FieldId_value21         = 20
+    ,atf_amc_FieldId_value22         = 21
+    ,atf_amc_FieldId_value23         = 22
+    ,atf_amc_FieldId_value24         = 23
+    ,atf_amc_FieldId_value25         = 24
+    ,atf_amc_FieldId_value26         = 25
+    ,atf_amc_FieldId_value20         = 26
+    ,atf_amc_FieldId_value28         = 27
+    ,atf_amc_FieldId_value29         = 28
+    ,atf_amc_FieldId_value30         = 29
+    ,atf_amc_FieldId_value31         = 30
+    ,atf_amc_FieldId_value32         = 31
+    ,atf_amc_FieldId_value27         = 32
+    ,atf_amc_FieldId_value19         = 33
+    ,atf_amc_FieldId_value18         = 34
+    ,atf_amc_FieldId_value4          = 35
+    ,atf_amc_FieldId_value5          = 36
+    ,atf_amc_FieldId_value6          = 37
+    ,atf_amc_FieldId_value7          = 38
+    ,atf_amc_FieldId_value8          = 39
+    ,atf_amc_FieldId_value9          = 40
+    ,atf_amc_FieldId_value69         = 41
+    ,atf_amc_FieldId_value11         = 42
+    ,atf_amc_FieldId_value12         = 43
+    ,atf_amc_FieldId_value13         = 44
+    ,atf_amc_FieldId_value14         = 45
+    ,atf_amc_FieldId_value15         = 46
+    ,atf_amc_FieldId_value16         = 47
+    ,atf_amc_FieldId_value33         = 48
+    ,atf_amc_FieldId_value10         = 49
+    ,atf_amc_FieldId_value17         = 50
+    ,atf_amc_FieldId_value35         = 51
+    ,atf_amc_FieldId_value55         = 52
+    ,atf_amc_FieldId_value56         = 53
+    ,atf_amc_FieldId_value57         = 54
+    ,atf_amc_FieldId_value58         = 55
+    ,atf_amc_FieldId_value59         = 56
+    ,atf_amc_FieldId_value60         = 57
+    ,atf_amc_FieldId_value54         = 58
+    ,atf_amc_FieldId_value62         = 59
+    ,atf_amc_FieldId_value63         = 60
+    ,atf_amc_FieldId_value64         = 61
+    ,atf_amc_FieldId_value65         = 62
+    ,atf_amc_FieldId_value66         = 63
+    ,atf_amc_FieldId_value67         = 64
+    ,atf_amc_FieldId_value68         = 65
+    ,atf_amc_FieldId_value61         = 66
+    ,atf_amc_FieldId_value34         = 67
+    ,atf_amc_FieldId_value52         = 68
+    ,atf_amc_FieldId_value36         = 69
+    ,atf_amc_FieldId_value37         = 70
+    ,atf_amc_FieldId_value38         = 71
+    ,atf_amc_FieldId_value39         = 72
+    ,atf_amc_FieldId_value40         = 73
+    ,atf_amc_FieldId_value41         = 74
+    ,atf_amc_FieldId_value42         = 75
+    ,atf_amc_FieldId_value53         = 76
+    ,atf_amc_FieldId_value44         = 77
+    ,atf_amc_FieldId_value45         = 78
+    ,atf_amc_FieldId_value46         = 79
+    ,atf_amc_FieldId_value47         = 80
+    ,atf_amc_FieldId_value48         = 81
+    ,atf_amc_FieldId_value49         = 82
+    ,atf_amc_FieldId_value50         = 83
+    ,atf_amc_FieldId_value51         = 84
+    ,atf_amc_FieldId_value43         = 85
+    ,atf_amc_FieldId_value70         = 86
+    ,atf_amc_FieldId_value71         = 87
+    ,atf_amc_FieldId_ch              = 88
+    ,atf_amc_FieldId_val1            = 89
+    ,atf_amc_FieldId_val2            = 90
+    ,atf_amc_FieldId_val3            = 91
+    ,atf_amc_FieldId_msghdr          = 92
+    ,atf_amc_FieldId_payload         = 93
+    ,atf_amc_FieldId_val             = 94
+    ,atf_amc_FieldId_text            = 95
+    ,atf_amc_FieldId_typea           = 96
+    ,atf_amc_FieldId_j               = 97
+    ,atf_amc_FieldId_typec           = 98
+    ,atf_amc_FieldId_typeh           = 99
+    ,atf_amc_FieldId_types           = 100
+    ,atf_amc_FieldId_comment         = 101
+    ,atf_amc_FieldId_i               = 102
+    ,atf_amc_FieldId_strval_regx     = 103
+    ,atf_amc_FieldId_strval2_regx    = 104
+    ,atf_amc_FieldId_start_dateval   = 105
+    ,atf_amc_FieldId_end_dateval     = 106
+    ,atf_amc_FieldId_start_intval    = 107
+    ,atf_amc_FieldId_end_intval      = 108
 };
 
-enum { atf_amc_FieldIdEnum_N = 107 };
+enum { atf_amc_FieldIdEnum_N = 109 };
 
 
 // --- atf_amc_MsgTypeEnum
@@ -206,14 +218,14 @@ enum atf_amc_TableIdEnum {                 // atf_amc.TableId.value
 enum { atf_amc_TableIdEnum_N = 2 };
 
 
-// --- atf_amc_TypeBE64en_value_Enum
+// --- atf_amc_TypeBE32en_value_Enum
 
-enum atf_amc_TypeBE64en_value_Enum {                        // atf_amc.TypeBE64en.value
-     atf_amc_TypeBE64en_value_val1    = 0xfedcba9876543210
-    ,atf_amc_TypeBE64en_value_val2    = 0x1032547698badcfe
+enum atf_amc_TypeBE32en_value_Enum {                // atf_amc.TypeBE32en.value
+     atf_amc_TypeBE32en_value_val1    = 0x12345678
+    ,atf_amc_TypeBE32en_value_val2    = 0xabcdef01
 };
 
-enum { atf_amc_TypeBE64en_value_Enum_N = 2 };
+enum { atf_amc_TypeBE32en_value_Enum_N = 2 };
 
 
 // --- atf_amc_Typefconst_value_Enum
@@ -251,6 +263,7 @@ namespace atf_amc { struct MsgLength; }
 namespace atf_amc { struct AmcCleanup2; }
 namespace atf_amc { struct AmcSubstr1; }
 namespace atf_amc { struct BitfldType1; }
+namespace atf_amc { struct BitfldType2; }
 namespace atf_amc { struct BitfldU128; }
 namespace atf_amc { struct BitfldU16; }
 namespace atf_amc { struct Bytebuf; }
@@ -301,9 +314,9 @@ namespace atf_amc { struct TestRegx1; }
 namespace atf_amc { struct TestType; }
 namespace atf_amc { struct TypeBE16; }
 namespace atf_amc { struct TypeBE32; }
+namespace atf_amc { struct TypeBE32en; }
 namespace atf_amc { struct TypeBE64; }
 namespace atf_amc { struct TypeBE64dflt; }
-namespace atf_amc { struct TypeBE64en; }
 namespace atf_amc { struct TypeBE64sf; }
 namespace atf_amc { struct Typefconst; }
 namespace atf_amc { struct VarlenAlloc; }
@@ -457,6 +470,35 @@ void                 BitfldType1_Init(atf_amc::BitfldType1& parent);
 // print string representation of atf_amc::BitfldType1 to string LHS, no header -- cprint:atf_amc.BitfldType1.String
 void                 BitfldType1_Print(atf_amc::BitfldType1 & row, algo::cstring &str) __attribute__((nothrow));
 
+// --- atf_amc.BitfldType2
+struct BitfldType2 { // atf_amc.BitfldType2: Test type 2 for testing reading/printing bitfields to tuple
+    u64    value;      //   0
+    bool   freebool;   //   false
+    BitfldType2();
+};
+
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 0.
+bool                 bit0_Get(const atf_amc::BitfldType2& parent) __attribute__((__warn_unused_result__, nothrow));
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 0.
+void                 bit0_Set(atf_amc::BitfldType2& parent, bool rhs) __attribute__((nothrow));
+
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 1.
+bool                 bit1_Get(const atf_amc::BitfldType2& parent) __attribute__((__warn_unused_result__, nothrow));
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 1.
+void                 bit1_Set(atf_amc::BitfldType2& parent, bool rhs) __attribute__((nothrow));
+
+bool                 BitfldType2_ReadFieldMaybe(atf_amc::BitfldType2 &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atf_amc::BitfldType2 from an ascii string.
+bool                 BitfldType2_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str);
+// Set all fields to initial values.
+void                 BitfldType2_Init(atf_amc::BitfldType2& parent);
+// print string representation of atf_amc::BitfldType2 to string LHS, no header -- cprint:atf_amc.BitfldType2.String
+void                 BitfldType2_Print(atf_amc::BitfldType2 & row, algo::cstring &str) __attribute__((nothrow));
+
 // --- atf_amc.BitfldU128
 struct BitfldU128 { // atf_amc.BitfldU128: Test of bitfield functionality
     u128   value;   //   0
@@ -525,7 +567,7 @@ private:
 // If there is no message, read once from underlying file descriptor and try again.
 // The message is any number of bytes > 0
 //
-aryptr<char>         in_GetMsg(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
+algo::aryptr<char>   in_GetMsg(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
 // Return max. number of bytes in the buffer.
 i32                  in_Max(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
 // Return number of bytes in the buffer.
@@ -554,6 +596,7 @@ struct Cstr { // atf_amc.Cstr
     inline operator algo::strptr() const;
     explicit Cstr(const algo::strptr&            in_val);
     bool operator ==(const atf_amc::Cstr &rhs) const;
+    bool operator !=(const atf_amc::Cstr &rhs) const;
     bool operator <(const atf_amc::Cstr &rhs) const;
     Cstr();
 };
@@ -586,6 +629,7 @@ struct Ctype1Attr { // atf_amc.Ctype1Attr
     inline operator u32() const;
     explicit Ctype1Attr(u32                            in_attr1);
     bool operator ==(const atf_amc::Ctype1Attr &rhs) const;
+    bool operator !=(const atf_amc::Ctype1Attr &rhs) const;
     bool operator <(const atf_amc::Ctype1Attr &rhs) const;
     Ctype1Attr();
 };
@@ -611,6 +655,7 @@ struct Ctype2Attr { // atf_amc.Ctype2Attr
     explicit Ctype2Attr(u32                            in_attr1
         ,u32                            in_attr2);
     bool operator ==(const atf_amc::Ctype2Attr &rhs) const;
+    bool operator !=(const atf_amc::Ctype2Attr &rhs) const;
     bool operator <(const atf_amc::Ctype2Attr &rhs) const;
     Ctype2Attr();
 };
@@ -874,6 +919,7 @@ struct FAmctest { // atf_amc.FAmctest: Test function
     algo::Smallstr50             amctest;   //
     algo::Comment                comment;   //
     bool                         select;    //   false  Select test for running?
+    bool                         success;   //   false  Did it succeed?
     atf_amc::amctest_step_hook   step;      //   NULL  Pointer to a function
 private:
     friend atf_amc::FAmctest&   amctest_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -1347,6 +1393,7 @@ struct FDb { // atf_amc.FDb
     u128                     listtype_data[sizeu128(atf_amc::FListtype,10)];   // place for data
     i32                      listtype_n;                                       // number of elems current in existence
     enum { listtype_max = 10 };
+    bool                     dofork;                                           //   false
     atf_amc::trace           trace;                                            //
 };
 
@@ -2384,6 +2431,7 @@ void                 FDb_Uninit() __attribute__((nothrow));
 struct TypeG { // atf_amc.TypeG
     i32   typeg;   //   0
     bool operator ==(const atf_amc::TypeG &rhs) const;
+    bool operator !=(const atf_amc::TypeG &rhs) const;
     bool operator <(const atf_amc::TypeG &rhs) const;
     TypeG();
 };
@@ -2913,6 +2961,7 @@ void                 FTypeT_Print(atf_amc::FTypeT & row, algo::cstring &str) __a
 struct TypeA { // atf_amc.TypeA
     i32   typea;   //   0
     bool operator ==(const atf_amc::TypeA &rhs) const;
+    bool operator !=(const atf_amc::TypeA &rhs) const;
     bool operator <(const atf_amc::TypeA &rhs) const;
     TypeA();
 };
@@ -3306,7 +3355,7 @@ private:
 // SkipMsg will skip both the line and the deliminter.
 // A partial line at the end of input is NOT returned (TODO?)
 //
-aryptr<char>         in_GetMsg(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
+algo::aryptr<char>   in_GetMsg(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
 // Return max. number of bytes in the buffer.
 i32                  in_Max(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
 // Return number of bytes in the buffer.
@@ -3337,6 +3386,7 @@ struct MsgType { // atf_amc.MsgType
     explicit MsgType(u16                            in_value);
     MsgType(atf_amc_MsgTypeEnum arg);
     bool operator ==(const atf_amc::MsgType &rhs) const;
+    bool operator !=(const atf_amc::MsgType &rhs) const;
     bool operator <(const atf_amc::MsgType &rhs) const;
     bool operator ==(atf_amc_MsgTypeEnum rhs) const;
     MsgType();
@@ -3416,6 +3466,7 @@ struct MsgHeader { // atf_amc.MsgHeader
     explicit MsgHeader(atf_amc::MsgType               in_type
         ,atf_amc::MsgLength             in_length);
     bool operator ==(const atf_amc::MsgHeader &rhs) const;
+    bool operator !=(const atf_amc::MsgHeader &rhs) const;
     MsgHeader();
 };
 #pragma pack(pop)
@@ -3447,7 +3498,7 @@ struct MsgHeader_curs { // atf_amc.MsgHeader_curs: Cursor for scanning messages 
 #pragma pack(pop)
 
 bool                 MsgHeader_curs_ValidQ(atf_amc::MsgHeader_curs& curs) __attribute__((nothrow));
-void                 MsgHeader_curs_Reset(atf_amc::MsgHeader_curs& curs, memptr buf) __attribute__((nothrow));
+void                 MsgHeader_curs_Reset(atf_amc::MsgHeader_curs& curs, algo::memptr buf) __attribute__((nothrow));
 atf_amc::MsgHeader*& MsgHeader_curs_Access(atf_amc::MsgHeader_curs& curs) __attribute__((nothrow));
 void                 MsgHeader_curs_Next(atf_amc::MsgHeader_curs& curs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -4385,6 +4436,7 @@ struct RnullStr6_U32 { // atf_amc.RnullStr6_U32: number stored as ascii digits, 
     enum { ch_max = 6 };
     u8 ch[6];
     bool operator ==(const atf_amc::RnullStr6_U32 &rhs) const;
+    bool operator !=(const atf_amc::RnullStr6_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const atf_amc::RnullStr6_U32 &rhs) const;
     // Copy from strptr (operator=)
@@ -4445,6 +4497,7 @@ struct RpasU32Str6 { // atf_amc.RpasU32Str6: number stored as ascii digits, righ
     u8 n_ch;
 
     bool operator ==(const atf_amc::RpasU32Str6 &rhs) const;
+    bool operator !=(const atf_amc::RpasU32Str6 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const atf_amc::RpasU32Str6 &rhs) const;
     // Copy from strptr (operator=)
@@ -4514,6 +4567,7 @@ struct Sep1 { // atf_amc.Sep1: Check printing/reading of types with separators
         ,u32                            in_val2
         ,u32                            in_val3);
     bool operator ==(const atf_amc::Sep1 &rhs) const;
+    bool operator !=(const atf_amc::Sep1 &rhs) const;
     bool operator <(const atf_amc::Sep1 &rhs) const;
     Sep1();
 };
@@ -4584,6 +4638,7 @@ struct SortedStr { // atf_amc.SortedStr
     explicit SortedStr(const algo::strptr&            in_novs
         ,const algo::strptr&            in_vs);
     bool operator ==(const atf_amc::SortedStr &rhs) const;
+    bool operator !=(const atf_amc::SortedStr &rhs) const;
     bool operator <(const atf_amc::SortedStr &rhs) const;
     SortedStr();
 };
@@ -4885,6 +4940,7 @@ struct TypeB { // atf_amc.TypeB
     i32   typea;   //   0
     i32   j;       //   0
     bool operator ==(const atf_amc::TypeB &rhs) const;
+    bool operator !=(const atf_amc::TypeB &rhs) const;
     bool operator <(const atf_amc::TypeB &rhs) const;
     TypeB();
 };
@@ -4930,12 +4986,56 @@ void                 value_Set(atf_amc::TypeBE32& parent, u32 rhs) __attribute__
 // Set all fields to initial values.
 void                 TypeBE32_Init(atf_amc::TypeBE32& parent);
 
+// --- atf_amc.TypeBE32en
+struct TypeBE32en { // atf_amc.TypeBE32en
+    u32   value_be;   //   0
+    inline operator atf_amc_TypeBE32en_value_Enum() const;
+    explicit TypeBE32en(u32                            in_value);
+    TypeBE32en(atf_amc_TypeBE32en_value_Enum arg);
+    TypeBE32en();
+};
+
+u32                  value_Get(const atf_amc::TypeBE32en& parent) __attribute__((__warn_unused_result__, nothrow));
+void                 value_Set(atf_amc::TypeBE32en& parent, u32 rhs) __attribute__((nothrow));
+// Get value of field as enum type
+atf_amc_TypeBE32en_value_Enum value_GetEnum(const atf_amc::TypeBE32en& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+void                 value_SetEnum(atf_amc::TypeBE32en& parent, atf_amc_TypeBE32en_value_Enum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char*          value_ToCstr(const atf_amc::TypeBE32en& parent) __attribute__((nothrow));
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+void                 value_Print(const atf_amc::TypeBE32en& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool                 value_SetStrptrMaybe(atf_amc::TypeBE32en& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void                 value_SetStrptr(atf_amc::TypeBE32en& parent, algo::strptr rhs, atf_amc_TypeBE32en_value_Enum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+bool                 value_ReadStrptrMaybe(atf_amc::TypeBE32en& parent, algo::strptr rhs) __attribute__((nothrow));
+
+u32                  TypeBE32en_Hash(u32 prev, const atf_amc::TypeBE32en & rhs) __attribute__((nothrow));
+bool                 TypeBE32en_ReadFieldMaybe(atf_amc::TypeBE32en &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atf_amc::TypeBE32en from an ascii string.
+// The format of the string is the format of the atf_amc::TypeBE32en's only field
+bool                 TypeBE32en_ReadStrptrMaybe(atf_amc::TypeBE32en &parent, algo::strptr in_str);
+// Read fields of atf_amc::TypeBE32en from attributes of ascii tuple TUPLE
+bool                 TypeBE32en_ReadTupleMaybe(atf_amc::TypeBE32en &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 TypeBE32en_Init(atf_amc::TypeBE32en& parent);
+// print string representation of atf_amc::TypeBE32en to string LHS, no header -- cprint:atf_amc.TypeBE32en.String
+void                 TypeBE32en_Print(atf_amc::TypeBE32en & row, algo::cstring &str) __attribute__((nothrow));
+
 // --- atf_amc.TypeBE64
 struct TypeBE64 { // atf_amc.TypeBE64
     u64   value_be;   //   0
     inline operator u64() const;
     explicit TypeBE64(u64                            in_value);
     bool operator ==(const atf_amc::TypeBE64 &rhs) const;
+    bool operator !=(const atf_amc::TypeBE64 &rhs) const;
     bool operator <(const atf_amc::TypeBE64 &rhs) const;
     TypeBE64();
 };
@@ -4973,49 +5073,6 @@ void                 value_Set(atf_amc::TypeBE64dflt& parent, u64 rhs) __attribu
 
 // Set all fields to initial values.
 void                 TypeBE64dflt_Init(atf_amc::TypeBE64dflt& parent);
-
-// --- atf_amc.TypeBE64en
-struct TypeBE64en { // atf_amc.TypeBE64en
-    u64   value_be;   //   0
-    inline operator atf_amc_TypeBE64en_value_Enum() const;
-    explicit TypeBE64en(u64                            in_value);
-    TypeBE64en(atf_amc_TypeBE64en_value_Enum arg);
-    TypeBE64en();
-};
-
-u64                  value_Get(const atf_amc::TypeBE64en& parent) __attribute__((__warn_unused_result__, nothrow));
-void                 value_Set(atf_amc::TypeBE64en& parent, u64 rhs) __attribute__((nothrow));
-// Get value of field as enum type
-atf_amc_TypeBE64en_value_Enum value_GetEnum(const atf_amc::TypeBE64en& parent) __attribute__((nothrow));
-// Set value of field from enum type.
-void                 value_SetEnum(atf_amc::TypeBE64en& parent, atf_amc_TypeBE64en_value_Enum rhs) __attribute__((nothrow));
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-const char*          value_ToCstr(const atf_amc::TypeBE64en& parent) __attribute__((nothrow));
-// Convert value to a string. First, attempt conversion to a known string.
-// If no string matches, print value as a numeric value.
-void                 value_Print(const atf_amc::TypeBE64en& parent, algo::cstring &lhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-bool                 value_SetStrptrMaybe(atf_amc::TypeBE64en& parent, algo::strptr rhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-void                 value_SetStrptr(atf_amc::TypeBE64en& parent, algo::strptr rhs, atf_amc_TypeBE64en_value_Enum dflt) __attribute__((nothrow));
-// Convert string to field. Return success value
-bool                 value_ReadStrptrMaybe(atf_amc::TypeBE64en& parent, algo::strptr rhs) __attribute__((nothrow));
-
-u32                  TypeBE64en_Hash(u32 prev, const atf_amc::TypeBE64en & rhs) __attribute__((nothrow));
-bool                 TypeBE64en_ReadFieldMaybe(atf_amc::TypeBE64en &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of atf_amc::TypeBE64en from an ascii string.
-// The format of the string is the format of the atf_amc::TypeBE64en's only field
-bool                 TypeBE64en_ReadStrptrMaybe(atf_amc::TypeBE64en &parent, algo::strptr in_str);
-// Read fields of atf_amc::TypeBE64en from attributes of ascii tuple TUPLE
-bool                 TypeBE64en_ReadTupleMaybe(atf_amc::TypeBE64en &parent, algo::Tuple &tuple) __attribute__((nothrow));
-// Set all fields to initial values.
-void                 TypeBE64en_Init(atf_amc::TypeBE64en& parent);
-// print string representation of atf_amc::TypeBE64en to string LHS, no header -- cprint:atf_amc.TypeBE64en.String
-void                 TypeBE64en_Print(atf_amc::TypeBE64en & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- atf_amc.TypeBE64sf
 struct TypeBE64sf { // atf_amc.TypeBE64sf
@@ -5130,6 +5187,7 @@ void                 TypeBE64sf_Init(atf_amc::TypeBE64sf& parent);
 struct TypeC { // atf_amc.TypeC
     i32   typec;   //   0
     bool operator ==(const atf_amc::TypeC &rhs) const;
+    bool operator !=(const atf_amc::TypeC &rhs) const;
     bool operator <(const atf_amc::TypeC &rhs) const;
     TypeC();
 };
@@ -5153,6 +5211,7 @@ void                 TypeC_Print(atf_amc::TypeC & row, algo::cstring &str) __att
 struct TypeH { // atf_amc.TypeH
     i32   typeh;   //   0
     bool operator ==(const atf_amc::TypeH &rhs) const;
+    bool operator !=(const atf_amc::TypeH &rhs) const;
     bool operator <(const atf_amc::TypeH &rhs) const;
     TypeH();
 };
@@ -5827,6 +5886,8 @@ void                 amctest_BigEndian();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_BigendFconst();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+void                 amctest_BitfldBitset();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_BitfldNet();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_BitfldTuple();
@@ -6270,6 +6331,7 @@ atf_amc::VarlenK *   VarlenK_FmtMemptr(algo::memptr &buf, algo::aryptr<u32 > i);
 } // end namespace atf_amc
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::BitfldType1 &row);// cfmt:atf_amc.BitfldType1.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::BitfldType2 &row);// cfmt:atf_amc.BitfldType2.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::Ctype1Attr &row);// cfmt:atf_amc.Ctype1Attr.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::Ctype2Attr &row);// cfmt:atf_amc.Ctype2Attr.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::trace &row);// cfmt:atf_amc.trace.String
@@ -6286,7 +6348,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::Sep1 &row);
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::Seqmsg &row);// cfmt:atf_amc.Seqmsg.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::TableId &row);// cfmt:atf_amc.TableId.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::TestRegx1 &row);// cfmt:atf_amc.TestRegx1.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::TypeBE32en &row);// cfmt:atf_amc.TypeBE32en.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::TypeBE64 &row);// cfmt:atf_amc.TypeBE64.String
-inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::TypeBE64en &row);// cfmt:atf_amc.TypeBE64en.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::Typefconst &row);// cfmt:atf_amc.Typefconst.String
 }

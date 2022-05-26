@@ -46,7 +46,7 @@ bool algo_pch::value_SetStrptrMaybe(algo_pch::FieldId& parent, algo::strptr rhs)
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,algo_pch_FieldId_value); ret = true; break;
                 }

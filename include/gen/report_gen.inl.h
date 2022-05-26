@@ -125,9 +125,8 @@ inline report::atf_unit::atf_unit() {
 // Set all fields to initial values.
 inline void report::atf_unit_Init(report::atf_unit& parent) {
     parent.n_test_total = u32(0);
+    parent.success = bool(false);
     parent.n_test_run = u64(0);
-    parent.n_test_step = u64(0);
-    parent.n_cmp = u64(0);
     parent.n_err = u64(0);
 }
 inline report::src_func::src_func() {

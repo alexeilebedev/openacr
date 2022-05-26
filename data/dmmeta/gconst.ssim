@@ -6,6 +6,7 @@ dmmeta.gconst  field:dev.Arch.arch  namefld:dev.Arch.arch  idfld:""  wantenum:N
 dmmeta.gconst  field:dev.Builddir.builddir  namefld:dev.Builddir.builddir  idfld:""  wantenum:N
 dmmeta.gconst  field:dev.Cfg.cfg  namefld:dev.Cfg.cfg  idfld:""  wantenum:N
 dmmeta.gconst  field:dev.Compiler.compiler  namefld:dev.Compiler.compiler  idfld:""  wantenum:N
+dmmeta.gconst  field:dev.Target.target  namefld:dev.Target.target  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Buftype.pnewtype  namefld:dmmeta.Buftype.pnewtype  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.BuftypeId.value  namefld:dmmeta.Buftype.pnewtype  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Fbufdir.fbufdir  namefld:dmmeta.Fbufdir.fbufdir  idfld:""  wantenum:N

@@ -16,6 +16,8 @@
 #include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
@@ -24,6 +26,7 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
 acr_compl::FDb   acr_compl::_db;    // dependency found via dev.targdep
 
@@ -84,11 +87,8 @@ namespace acr_compl {
 const char* acr_compl::badness_ToCstr(const acr_compl::Badness& parent) {
     const char *ret = NULL;
     switch(badness_GetEnum(parent)) {
-        case acr_compl_Badness_full_match  : ret = "full_match";  break;
-        case acr_compl_Badness_first_word  : ret = "first_word";  break;
-        case acr_compl_Badness_last_word   : ret = "last_word";  break;
         case acr_compl_Badness_first       : ret = "first";  break;
-        case acr_compl_Badness_last        : ret = "last";  break;
+        case acr_compl_Badness_last_word   : ret = "last_word";  break;
         case acr_compl_Badness_substring   : ret = "substring";  break;
     }
     return ret;
@@ -113,16 +113,8 @@ void acr_compl::badness_Print(const acr_compl::Badness& parent, algo::cstring &l
 bool acr_compl::badness_SetStrptrMaybe(acr_compl::Badness& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
-        case 4: {
-            switch (u64(ReadLE32(rhs.elems))) {
-                case LE_STR4('l','a','s','t'): {
-                    badness_SetEnum(parent,acr_compl_Badness_last); ret = true; break;
-                }
-            }
-            break;
-        }
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('f','i','r','s','t'): {
                     badness_SetEnum(parent,acr_compl_Badness_first); ret = true; break;
                 }
@@ -130,26 +122,13 @@ bool acr_compl::badness_SetStrptrMaybe(acr_compl::Badness& parent, algo::strptr 
             break;
         }
         case 9: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('l','a','s','t','_','w','o','r'): {
                     if (memcmp(rhs.elems+8,"d",1)==0) { badness_SetEnum(parent,acr_compl_Badness_last_word); ret = true; break; }
                     break;
                 }
                 case LE_STR8('s','u','b','s','t','r','i','n'): {
                     if (memcmp(rhs.elems+8,"g",1)==0) { badness_SetEnum(parent,acr_compl_Badness_substring); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 10: {
-            switch (ReadLE64(rhs.elems)) {
-                case LE_STR8('f','i','r','s','t','_','w','o'): {
-                    if (memcmp(rhs.elems+8,"rd",2)==0) { badness_SetEnum(parent,acr_compl_Badness_first_word); ret = true; break; }
-                    break;
-                }
-                case LE_STR8('f','u','l','l','_','m','a','t'): {
-                    if (memcmp(rhs.elems+8,"ch",2)==0) { badness_SetEnum(parent,acr_compl_Badness_full_match); ret = true; break; }
                     break;
                 }
             }
@@ -459,7 +438,7 @@ void acr_compl::MainArgs(int argc, char **argv) {
 // --- acr_compl.FDb._db.MainLoop
 // Main loop.
 void acr_compl::MainLoop() {
-    SchedTime time(get_cycles());
+    algo::SchedTime time(algo::get_cycles());
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
@@ -655,13 +634,15 @@ void acr_compl::word_RemoveLast() {
 // Make sure N elements fit in array. Process dies if out of memory
 void acr_compl::word_AbsReserve(int n) {
     u32 old_max  = _db.word_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(_db.word_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("acr_compl.tary_nomem  field:acr_compl.FDb.word  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(_db.word_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("acr_compl.tary_nomem  field:acr_compl.FDb.word  comment:'out of memory'");
+        }
+        _db.word_elems = (algo::cstring*)new_mem;
+        _db.word_max = new_max;
     }
-    _db.word_elems = (algo::cstring*)new_mem;
-    _db.word_max = new_max;
 }
 
 // --- acr_compl.FDb.ctype.Alloc
@@ -764,7 +745,7 @@ bool acr_compl::ctype_XrefMaybe(acr_compl::FCtype &row) {
 // --- acr_compl.FDb.ind_ctype.Find
 // Find row by key. Return NULL if not found.
 acr_compl::FCtype* acr_compl::ind_ctype_Find(const algo::strptr& key) {
-    u32 index = Smallstr50_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
     acr_compl::FCtype* *e = &_db.ind_ctype_buckets_elems[index];
     acr_compl::FCtype* ret=NULL;
     do {
@@ -798,7 +779,7 @@ bool acr_compl::ind_ctype_InsertMaybe(acr_compl::FCtype& row) {
     ind_ctype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctype_next == (acr_compl::FCtype*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         acr_compl::FCtype* *prev = &_db.ind_ctype_buckets_elems[index];
         do {
             acr_compl::FCtype* ret = *prev;
@@ -824,7 +805,7 @@ bool acr_compl::ind_ctype_InsertMaybe(acr_compl::FCtype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_compl::ind_ctype_Remove(acr_compl::FCtype& row) {
     if (LIKELY(row.ind_ctype_next != (acr_compl::FCtype*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         acr_compl::FCtype* *prev = &_db.ind_ctype_buckets_elems[index]; // addr of pointer to current element
         while (acr_compl::FCtype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -845,7 +826,7 @@ void acr_compl::ind_ctype_Reserve(int n) {
     u32 new_nelems   = _db.ind_ctype_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(acr_compl::FCtype*);
         u32 new_size = new_nbuckets * sizeof(acr_compl::FCtype*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -861,7 +842,7 @@ void acr_compl::ind_ctype_Reserve(int n) {
             while (elem) {
                 acr_compl::FCtype &row        = *elem;
                 acr_compl::FCtype* next       = row.ind_ctype_next;
-                u32 index          = Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
                 row.ind_ctype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -992,7 +973,7 @@ bool acr_compl::field_XrefMaybe(acr_compl::FField &row) {
 // --- acr_compl.FDb.ind_field.Find
 // Find row by key. Return NULL if not found.
 acr_compl::FField* acr_compl::ind_field_Find(const algo::strptr& key) {
-    u32 index = Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
     acr_compl::FField* *e = &_db.ind_field_buckets_elems[index];
     acr_compl::FField* ret=NULL;
     do {
@@ -1010,7 +991,7 @@ bool acr_compl::ind_field_InsertMaybe(acr_compl::FField& row) {
     ind_field_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_field_next == (acr_compl::FField*)-1)) {// check if in hash already
-        u32 index = Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
         acr_compl::FField* *prev = &_db.ind_field_buckets_elems[index];
         do {
             acr_compl::FField* ret = *prev;
@@ -1036,7 +1017,7 @@ bool acr_compl::ind_field_InsertMaybe(acr_compl::FField& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_compl::ind_field_Remove(acr_compl::FField& row) {
     if (LIKELY(row.ind_field_next != (acr_compl::FField*)-1)) {// check if in hash already
-        u32 index = Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
         acr_compl::FField* *prev = &_db.ind_field_buckets_elems[index]; // addr of pointer to current element
         while (acr_compl::FField *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1057,7 +1038,7 @@ void acr_compl::ind_field_Reserve(int n) {
     u32 new_nelems   = _db.ind_field_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(acr_compl::FField*);
         u32 new_size = new_nbuckets * sizeof(acr_compl::FField*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -1073,7 +1054,7 @@ void acr_compl::ind_field_Reserve(int n) {
             while (elem) {
                 acr_compl::FField &row        = *elem;
                 acr_compl::FField* next       = row.ind_field_next;
-                u32 index          = Smallstr100_Hash(0, row.field) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.field) & (new_nbuckets-1);
                 row.ind_field_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1204,7 +1185,7 @@ bool acr_compl::ssimfile_XrefMaybe(acr_compl::FSsimfile &row) {
 // --- acr_compl.FDb.ind_ssimfile.Find
 // Find row by key. Return NULL if not found.
 acr_compl::FSsimfile* acr_compl::ind_ssimfile_Find(const algo::strptr& key) {
-    u32 index = Smallstr50_Hash(0, key) & (_db.ind_ssimfile_buckets_n - 1);
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ssimfile_buckets_n - 1);
     acr_compl::FSsimfile* *e = &_db.ind_ssimfile_buckets_elems[index];
     acr_compl::FSsimfile* ret=NULL;
     do {
@@ -1222,7 +1203,7 @@ bool acr_compl::ind_ssimfile_InsertMaybe(acr_compl::FSsimfile& row) {
     ind_ssimfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ssimfile_next == (acr_compl::FSsimfile*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
         acr_compl::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index];
         do {
             acr_compl::FSsimfile* ret = *prev;
@@ -1248,7 +1229,7 @@ bool acr_compl::ind_ssimfile_InsertMaybe(acr_compl::FSsimfile& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_compl::ind_ssimfile_Remove(acr_compl::FSsimfile& row) {
     if (LIKELY(row.ind_ssimfile_next != (acr_compl::FSsimfile*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
         acr_compl::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index]; // addr of pointer to current element
         while (acr_compl::FSsimfile *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1269,7 +1250,7 @@ void acr_compl::ind_ssimfile_Reserve(int n) {
     u32 new_nelems   = _db.ind_ssimfile_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(acr_compl::FSsimfile*);
         u32 new_size = new_nbuckets * sizeof(acr_compl::FSsimfile*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -1285,7 +1266,7 @@ void acr_compl::ind_ssimfile_Reserve(int n) {
             while (elem) {
                 acr_compl::FSsimfile &row        = *elem;
                 acr_compl::FSsimfile* next       = row.ind_ssimfile_next;
-                u32 index          = Smallstr50_Hash(0, row.ssimfile) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr50_Hash(0, row.ssimfile) & (new_nbuckets-1);
                 row.ind_ssimfile_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2205,7 +2186,7 @@ bool acr_compl::value_SetStrptrMaybe(acr_compl::FieldId& parent, algo::strptr rh
     bool ret = false;
     switch (elems_N(rhs)) {
         case 4: {
-            switch (u64(ReadLE32(rhs.elems))) {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('t','y','p','e'): {
                     value_SetEnum(parent,acr_compl_FieldId_type); ret = true; break;
                 }
@@ -2213,7 +2194,7 @@ bool acr_compl::value_SetStrptrMaybe(acr_compl::FieldId& parent, algo::strptr rh
             break;
         }
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,acr_compl_FieldId_value); ret = true; break;
                 }
@@ -2221,7 +2202,7 @@ bool acr_compl::value_SetStrptrMaybe(acr_compl::FieldId& parent, algo::strptr rh
             break;
         }
         case 6: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('m','s','g','h','d','r'): {
                     value_SetEnum(parent,acr_compl_FieldId_msghdr); ret = true; break;
                 }
@@ -2229,7 +2210,7 @@ bool acr_compl::value_SetStrptrMaybe(acr_compl::FieldId& parent, algo::strptr rh
             break;
         }
         case 7: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
                 case LE_STR7('b','a','d','n','e','s','s'): {
                     value_SetEnum(parent,acr_compl_FieldId_badness); ret = true; break;
                 }
@@ -2310,7 +2291,7 @@ bool acr_compl::type_SetStrptrMaybe(acr_compl::Shellqtype& parent, algo::strptr 
     bool ret = false;
     switch (elems_N(rhs)) {
         case 4: {
-            switch (u64(ReadLE32(rhs.elems))) {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('n','o','n','e'): {
                     type_SetEnum(parent,acr_compl_Shellqtype_none); ret = true; break;
                 }
@@ -2318,7 +2299,7 @@ bool acr_compl::type_SetStrptrMaybe(acr_compl::Shellqtype& parent, algo::strptr 
             break;
         }
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('e','r','r','o','r'): {
                     type_SetEnum(parent,acr_compl_Shellqtype_error); ret = true; break;
                 }
@@ -2326,7 +2307,7 @@ bool acr_compl::type_SetStrptrMaybe(acr_compl::Shellqtype& parent, algo::strptr 
             break;
         }
         case 6: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('d','q','u','o','t','e'): {
                     type_SetEnum(parent,acr_compl_Shellqtype_dquote); ret = true; break;
                 }
@@ -2408,7 +2389,7 @@ bool acr_compl::value_SetStrptrMaybe(acr_compl::TableId& parent, algo::strptr rh
     bool ret = false;
     switch (elems_N(rhs)) {
         case 9: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','N'): {
                     if (memcmp(rhs.elems+8,"s",1)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_Ns); ret = true; break; }
                     break;
@@ -2421,7 +2402,7 @@ bool acr_compl::value_SetStrptrMaybe(acr_compl::TableId& parent, algo::strptr rh
             break;
         }
         case 12: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','C'): {
                     if (memcmp(rhs.elems+8,"type",4)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_Ctype); ret = true; break; }
                     break;
@@ -2442,7 +2423,7 @@ bool acr_compl::value_SetStrptrMaybe(acr_compl::TableId& parent, algo::strptr rh
             break;
         }
         case 14: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','A'): {
                     if (memcmp(rhs.elems+8,"nonfld",6)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_Anonfld); ret = true; break; }
                     break;
@@ -2455,7 +2436,7 @@ bool acr_compl::value_SetStrptrMaybe(acr_compl::TableId& parent, algo::strptr rh
             break;
         }
         case 15: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','S'): {
                     if (memcmp(rhs.elems+8,"simfile",7)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_Ssimfile); ret = true; break; }
                     break;
@@ -2507,6 +2488,7 @@ void acr_compl::TableId_Print(acr_compl::TableId & row, algo::cstring &str) {
 // --- acr_compl...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         acr_compl::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -2523,10 +2505,13 @@ int main(int argc, char **argv) {
     try {
         acr_compl::FDb_Uninit();
         algo_lib::FDb_Uninit();
-    } catch(algo_lib::ErrorX &x) {
+        lib_json::FDb_Uninit();
+    } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;
     }
+    // only the lower 1 byte makes it to the outside world
+    (void)i32_UpdateMin(algo_lib::_db.exit_code,255);
     return algo_lib::_db.exit_code;
 }
 

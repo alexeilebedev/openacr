@@ -86,6 +86,7 @@ namespace lib_json {
     lib_json::FNode &NewObjectNode(lib_json::FNode *parent, strptr field=strptr());
     lib_json::FNode  &NewArrayNode(lib_json::FNode *parent, strptr field=strptr());
     lib_json::FNode &NewStringNode(lib_json::FNode *parent, strptr field=strptr(), strptr value=strptr());
+    lib_json::FNode &NewNumberNode(lib_json::FNode *parent, strptr field=strptr(), strptr value=strptr("0"));
 
     //
     // Convenience functions for getting values from tree in exception-safe manner

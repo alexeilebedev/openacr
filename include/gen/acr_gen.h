@@ -172,6 +172,7 @@ struct CtypeTopoKey { // acr.CtypeTopoKey: Key for sorting print-line records
     i32   alldep;   //   0  # Unresolved references
     i32   rowid;    //   0  Rowid of original record
     bool operator ==(const acr::CtypeTopoKey &rhs) const;
+    bool operator !=(const acr::CtypeTopoKey &rhs) const;
     bool operator <(const acr::CtypeTopoKey &rhs) const;
     CtypeTopoKey();
 };
@@ -1978,6 +1979,7 @@ struct PlineKey { // acr.PlineKey: Key for sorting print-line records
     i32   ctype_rank;   //   0  Topological key for ctype
     i32   rowid;        //   0  Rowid of original record
     bool operator ==(const acr::PlineKey &rhs) const;
+    bool operator !=(const acr::PlineKey &rhs) const;
     bool operator <(const acr::PlineKey &rhs) const;
     PlineKey();
 };
@@ -2077,7 +2079,7 @@ struct FPrint { // acr.FPrint: Print function
     bool                cmt;                           //   false
     bool                rowid;                         //   true
     algo::cstring       out;                           // Output
-    bool                stdout;                        //   true  Dump to stdout?
+    bool                fstdout;                       //   true  Dump to stdout?
     bool                loose;                         //   false  Loose referential integrity
     bool                showstatus;                    //   false  show record status (acr.insert etc)
     i32                 skip_line;                     //   0
@@ -2234,6 +2236,7 @@ struct RecSortkey { // acr.RecSortkey: One record
     algo::cstring   str;     // String key (sort key)
     float           rowid;   //   0.f  row id
     bool operator ==(const acr::RecSortkey &rhs) const;
+    bool operator !=(const acr::RecSortkey &rhs) const;
     bool operator <(const acr::RecSortkey &rhs) const;
     RecSortkey();
 };

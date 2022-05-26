@@ -33,9 +33,9 @@
 // escape single quote, \n, \r
 // enclose each token in single quotes
 //
-static void CsvPrint(aryptr<cstring> in, cstring &out) {
+static void CsvPrint(algo::aryptr<cstring> in, cstring &out) {
     ch_RemoveAll(out);
-    ListSep ls(",");
+    algo::ListSep ls(",");
     frep_(i,elems_N(in)) {
         tempstr tok;
         tok<<in[i];
@@ -106,18 +106,13 @@ static void HandleLine(strptr line, int lineno) {
 void ssim2csv::Main() {
     strptr toks=ssim2csv::_db.cmdline.expand;
     while (elems_N(toks)) {
-        i32_Range R=TFind(toks,',');
+        algo::i32_Range R=TFind(toks,',');
         ssim2csv::ind_expand_GetOrCreate(FirstN(toks,R.beg));
         toks=RestFrom(toks,R.end);
     }
-    algo_lib::InTextFile in;
-    in.file.fd = Fildes(0);
-    strptr line;
-    int lineno=1;
-    while (ReadLine(in,line)) {
+    ind_beg(algo::FileLine_curs,line,Fildes(0)) {
         if (elems_N(line)) {
-            HandleLine(line,lineno);
+            HandleLine(line,ind_curs(line).i+1);
         }
-        lineno++;
-    }
+    }ind_end;
 }

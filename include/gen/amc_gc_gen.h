@@ -36,9 +36,9 @@ extern FDb _db;
 struct Acr { // amc_gc.Acr
     algo::cstring   acr_path;      //   "bin/acr"  path for executable
     command::acr    acr_cmd;       // command line for child process
-    algo::cstring   acr_stdin;     // redirect for stdin
-    algo::cstring   acr_stdout;    // redirect for stdout
-    algo::cstring   acr_stderr;    // redirect for stderr
+    algo::cstring   acr_fstdin;    // redirect for stdin
+    algo::cstring   acr_fstdout;   // redirect for stdout
+    algo::cstring   acr_fstderr;   // redirect for stderr
     pid_t           acr_pid;       //   0  pid of running child process
     i32             acr_timeout;   //   0  optional timeout for child process
     i32             acr_status;    //   0  last exit status of child process
@@ -53,6 +53,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  acr_Start(amc_gc::Acr& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         acr_StartRead(amc_gc::Acr& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 acr_Kill(amc_gc::Acr& parent);
 // Wait for subprocess to return
@@ -73,25 +75,25 @@ void                 Acr_Uninit(amc_gc::Acr& parent) __attribute__((nothrow));
 struct Check { // amc_gc.Check
     algo::cstring   acr_path;      //   "bin/acr"  path for executable
     command::acr    acr_cmd;       // command line for child process
-    algo::cstring   acr_stdin;     // redirect for stdin
-    algo::cstring   acr_stdout;    // redirect for stdout
-    algo::cstring   acr_stderr;    // redirect for stderr
+    algo::cstring   acr_fstdin;    // redirect for stdin
+    algo::cstring   acr_fstdout;   // redirect for stdout
+    algo::cstring   acr_fstderr;   // redirect for stderr
     pid_t           acr_pid;       //   0  pid of running child process
     i32             acr_timeout;   //   0  optional timeout for child process
     i32             acr_status;    //   0  last exit status of child process
     algo::cstring   amc_path;      //   "bin/amc"  path for executable
     command::amc    amc_cmd;       // command line for child process
-    algo::cstring   amc_stdin;     // redirect for stdin
-    algo::cstring   amc_stdout;    // redirect for stdout
-    algo::cstring   amc_stderr;    // redirect for stderr
+    algo::cstring   amc_fstdin;    // redirect for stdin
+    algo::cstring   amc_fstdout;   // redirect for stdout
+    algo::cstring   amc_fstderr;   // redirect for stderr
     pid_t           amc_pid;       //   0  pid of running child process
     i32             amc_timeout;   //   0  optional timeout for child process
     i32             amc_status;    //   0  last exit status of child process
     algo::cstring   abt_path;      //   "bin/abt"  path for executable
     command::abt    abt_cmd;       // command line for child process
-    algo::cstring   abt_stdin;     // redirect for stdin
-    algo::cstring   abt_stdout;    // redirect for stdout
-    algo::cstring   abt_stderr;    // redirect for stderr
+    algo::cstring   abt_fstdin;    // redirect for stdin
+    algo::cstring   abt_fstdout;   // redirect for stdout
+    algo::cstring   abt_fstderr;   // redirect for stderr
     pid_t           abt_pid;       //   0  pid of running child process
     i32             abt_timeout;   //   0  optional timeout for child process
     i32             abt_status;    //   0  last exit status of child process
@@ -109,6 +111,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  acr_Start(amc_gc::Check& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         acr_StartRead(amc_gc::Check& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 acr_Kill(amc_gc::Check& parent);
 // Wait for subprocess to return
@@ -124,6 +128,8 @@ algo::tempstr        acr_ToCmdline(amc_gc::Check& parent) __attribute__((nothrow
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  amc_Start(amc_gc::Check& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         amc_StartRead(amc_gc::Check& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 amc_Kill(amc_gc::Check& parent);
 // Wait for subprocess to return
@@ -139,6 +145,8 @@ algo::tempstr        amc_ToCmdline(amc_gc::Check& parent) __attribute__((nothrow
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  abt_Start(amc_gc::Check& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         abt_StartRead(amc_gc::Check& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 abt_Kill(amc_gc::Check& parent);
 // Wait for subprocess to return

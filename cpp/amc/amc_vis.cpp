@@ -229,7 +229,7 @@ static void Main_Render() {
     // draw arrows.
     // these go left or right between columns
     ind_beg(amc_vis::_db_c_linklist_curs, link, amc_vis::_db) if (link.p_node2 != link.p_node1) {
-        aryptr<u8> line = text_Getary(amc_vis::outrow_qFind(link.outrow));
+        algo::aryptr<u8> line = text_Getary(amc_vis::outrow_qFind(link.outrow));
 
         bool rtol = link.p_node1->xpos > link.p_node2->xpos;
         char arrow = rtol ? '<' : '>';
@@ -263,7 +263,7 @@ static void Main_Render() {
     }ind_end;
 
     ind_beg(amc_vis::_db_c_linklist_curs, link, amc_vis::_db) {
-        aryptr<u8> line = text_Getary(amc_vis::outrow_qFind(link.outrow));
+        algo::aryptr<u8> line = text_Getary(amc_vis::outrow_qFind(link.outrow));
 
         // render left label
         if (link.p_node1 && link.p_node1 != link.p_node2) {
@@ -337,8 +337,8 @@ static void Main_GenerateDot() {
         strptr label1 = link.label1;
         strptr label2 = link.label2;
         if (link.upptr) {
-            TSwap(node1,node2);
-            TSwap(label1,label2);
+            algo::TSwap(node1,node2);
+            algo::TSwap(label1,label2);
         }
         out << " ";
         strptr_PrintDot(node1->node, out);
@@ -351,7 +351,7 @@ static void Main_GenerateDot() {
             strptr_PrintDot(label2, out);
         }
         out << "[";
-        ListSep ls(";");
+        algo::ListSep ls(";");
         if (link.upptr) {
             out << "dir=back";
         }
@@ -367,7 +367,7 @@ static void Main_GenerateDot() {
 
     out << "};\n";
     verblog(out);
-    StringToFile(out, amc_vis::_db.cmdline.dot, algo_FileFlags_throw);
+    StringToFile(out, amc_vis::_db.cmdline.dot, algo_FileFlags__throw);
     tempstr svg;
     svg << StripExt(amc_vis::_db.cmdline.dot) << ".svg";
     SysCmd(tempstr() << "dot -Tsvg -o "<<svg<<" "<<amc_vis::_db.cmdline.dot, FailokQ(true), DryrunQ(false));

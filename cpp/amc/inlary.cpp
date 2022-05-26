@@ -650,7 +650,7 @@ void amc::tfunc_Inlary_ReadStrptrMaybe() {
         } else {
             Set(R, "$Fldcpptype", field.p_arg->cpp_type);
             Ins(&R, func.body , "for (int i=0; in_str != \"\" && i < $name_Max($pararg); i++) {");
-            Ins(&R, func.body , "    strptr token;");
+            Ins(&R, func.body , "    algo::strptr token;");
             Ins(&R, func.body , "    algo::NextSep(in_str, $sep, token);");
             if (!FixedQ(field)) {
                 Ins(&R, func.body , "    if (i >= $min) { // make room for new element...");

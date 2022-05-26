@@ -20,6 +20,10 @@ inline bool acr::CtypeTopoKey::operator ==(const acr::CtypeTopoKey &rhs) const {
     return acr::CtypeTopoKey_Eq(const_cast<acr::CtypeTopoKey&>(*this),const_cast<acr::CtypeTopoKey&>(rhs));
 }
 
+inline bool acr::CtypeTopoKey::operator !=(const acr::CtypeTopoKey &rhs) const {
+    return !acr::CtypeTopoKey_Eq(const_cast<acr::CtypeTopoKey&>(*this),const_cast<acr::CtypeTopoKey&>(rhs));
+}
+
 inline bool acr::CtypeTopoKey::operator <(const acr::CtypeTopoKey &rhs) const {
     return acr::CtypeTopoKey_Lt(const_cast<acr::CtypeTopoKey&>(*this),const_cast<acr::CtypeTopoKey&>(rhs));
 }
@@ -879,12 +883,12 @@ inline bool acr::ctype_EmptyQ() {
 // --- acr.FDb.ctype.Find
 // Look up row by row id. Return NULL if out of range
 inline acr::FCtype* acr::ctype_Find(i32 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr::FCtype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ctype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ctype_lary[bsr][index];
     }
     return retval;
@@ -921,12 +925,12 @@ inline bool acr::anonfld_EmptyQ() {
 // --- acr.FDb.anonfld.Find
 // Look up row by row id. Return NULL if out of range
 inline acr::FAnonfld* acr::anonfld_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr::FAnonfld *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.anonfld_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.anonfld_lary[bsr][index];
     }
     return retval;
@@ -963,12 +967,12 @@ inline bool acr::cdflt_EmptyQ() {
 // --- acr.FDb.cdflt.Find
 // Look up row by row id. Return NULL if out of range
 inline acr::FCdflt* acr::cdflt_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr::FCdflt *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.cdflt_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.cdflt_lary[bsr][index];
     }
     return retval;
@@ -1005,12 +1009,12 @@ inline bool acr::field_EmptyQ() {
 // --- acr.FDb.field.Find
 // Look up row by row id. Return NULL if out of range
 inline acr::FField* acr::field_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr::FField *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.field_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.field_lary[bsr][index];
     }
     return retval;
@@ -1047,12 +1051,12 @@ inline bool acr::file_EmptyQ() {
 // --- acr.FDb.file.Find
 // Look up row by row id. Return NULL if out of range
 inline acr::FFile* acr::file_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr::FFile *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.file_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.file_lary[bsr][index];
     }
     return retval;
@@ -1317,12 +1321,12 @@ inline bool acr::substr_EmptyQ() {
 // --- acr.FDb.substr.Find
 // Look up row by row id. Return NULL if out of range
 inline acr::FSubstr* acr::substr_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr::FSubstr *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.substr_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.substr_lary[bsr][index];
     }
     return retval;
@@ -1359,12 +1363,12 @@ inline bool acr::ssimfile_EmptyQ() {
 // --- acr.FDb.ssimfile.Find
 // Look up row by row id. Return NULL if out of range
 inline acr::FSsimfile* acr::ssimfile_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr::FSsimfile *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ssimfile_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ssimfile_lary[bsr][index];
     }
     return retval;
@@ -1401,12 +1405,12 @@ inline bool acr::tempkey_EmptyQ() {
 // --- acr.FDb.tempkey.Find
 // Look up row by row id. Return NULL if out of range
 inline acr::FTempkey* acr::tempkey_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr::FTempkey *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.tempkey_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.tempkey_lary[bsr][index];
     }
     return retval;
@@ -1511,12 +1515,12 @@ inline bool acr::ssimsort_EmptyQ() {
 // --- acr.FDb.ssimsort.Find
 // Look up row by row id. Return NULL if out of range
 inline acr::FSsimsort* acr::ssimsort_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr::FSsimsort *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ssimsort_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ssimsort_lary[bsr][index];
     }
     return retval;
@@ -1565,12 +1569,12 @@ inline bool acr::smallstr_EmptyQ() {
 // --- acr.FDb.smallstr.Find
 // Look up row by row id. Return NULL if out of range
 inline acr::FSmallstr* acr::smallstr_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr::FSmallstr *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.smallstr_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.smallstr_lary[bsr][index];
     }
     return retval;
@@ -1607,12 +1611,12 @@ inline bool acr::funique_EmptyQ() {
 // --- acr.FDb.funique.Find
 // Look up row by row id. Return NULL if out of range
 inline acr::FFunique* acr::funique_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr::FFunique *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.funique_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.funique_lary[bsr][index];
     }
     return retval;
@@ -1661,12 +1665,12 @@ inline bool acr::bltin_EmptyQ() {
 // --- acr.FDb.bltin.Find
 // Look up row by row id. Return NULL if out of range
 inline acr::FBltin* acr::bltin_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr::FBltin *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.bltin_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.bltin_lary[bsr][index];
     }
     return retval;
@@ -1733,12 +1737,12 @@ inline bool acr::cppfunc_EmptyQ() {
 // --- acr.FDb.cppfunc.Find
 // Look up row by row id. Return NULL if out of range
 inline acr::FCppfunc* acr::cppfunc_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr::FCppfunc *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.cppfunc_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.cppfunc_lary[bsr][index];
     }
     return retval;
@@ -2458,6 +2462,10 @@ inline bool acr::PlineKey::operator ==(const acr::PlineKey &rhs) const {
     return acr::PlineKey_Eq(const_cast<acr::PlineKey&>(*this),const_cast<acr::PlineKey&>(rhs));
 }
 
+inline bool acr::PlineKey::operator !=(const acr::PlineKey &rhs) const {
+    return !acr::PlineKey_Eq(const_cast<acr::PlineKey&>(*this),const_cast<acr::PlineKey&>(rhs));
+}
+
 inline bool acr::PlineKey::operator <(const acr::PlineKey &rhs) const {
     return acr::PlineKey_Lt(const_cast<acr::PlineKey&>(*this),const_cast<acr::PlineKey&>(rhs));
 }
@@ -2747,6 +2755,10 @@ inline acr::FQuery::~FQuery() {
 
 inline bool acr::RecSortkey::operator ==(const acr::RecSortkey &rhs) const {
     return acr::RecSortkey_Eq(const_cast<acr::RecSortkey&>(*this),const_cast<acr::RecSortkey&>(rhs));
+}
+
+inline bool acr::RecSortkey::operator !=(const acr::RecSortkey &rhs) const {
+    return !acr::RecSortkey_Eq(const_cast<acr::RecSortkey&>(*this),const_cast<acr::RecSortkey&>(rhs));
 }
 
 inline bool acr::RecSortkey::operator <(const acr::RecSortkey &rhs) const {

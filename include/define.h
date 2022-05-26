@@ -42,55 +42,52 @@
 
 #ifdef WIN32
 
-#define ifgcc(x)
-#define ifmsc(x)                     x
-
 #define V_UNUSED
 #define UNLIKELY(x)                  (x)
 #define LIKELY(x)                    (x)
 
-#define CACHE_ALIGN                  __declspec(align(CACHE_LINE))
-
 #define F_NONNULL
-#define F_DEPRECATED                 __declspec(deprecated)
-#define V_ALIGN(N)
 
 #define T_MAY_ALIAS
-#pragma warning (disable : 4481)     // non-standard extension used: override specified
-
-// todo: eliminate. this is confising.
+// todo: clean all of these up...
+#pragma warning(disable:4481) // non-standard extension used: override specified
+#pragma warning(disable:4146) // unary minus applied to unsigned type, result still unsigned
+#pragma warning(disable:4127) // conditional expression is constant (while (true))
+#pragma warning(disable:4512) // assignment operator could not be generated
+#pragma warning(disable:4065) // switch sattement contains no case labels (gen code)
+#pragma warning(disable:4267) // conversion from larger to smaller integer type, possible loss of data
+#pragma warning(disable:4480) // non-standard extension used: override specified
 #define __attribute__(x)
 
 // MSC doesn't have __func__, instead it has __FUNCTION__
 // msdn.microsoft.com/en-us/library/b0084kay(v=vs.80).aspx
 #define __func__                     __FUNCTION__
 
-#ifndef __INTEL_COMPILER
-#pragma inline_depth(50)             // removes the arbitrary limitation of 8 levels
-#endif
-
-#define _64BIT 1
-
 #else  // GCC
 
 #define GCC_VERSION                 (__GNUC__ * 10 + __GNUC_MINOR__)
-
-#if defined(__LP64__) || defined(_LP64)
-#define _64BIT 1
-#endif
 
 #if GCC_VERSION < 40
 #error only gcc
 #endif
 
-#define ifgcc(x)                    x
-#define ifmsc(x)
+// On cygwin with clang 8 try/catch problem has been observed:
+// http://cygwin.1069669.n5.nabble.com/BUG-try-catch-does-not-work-if-compiled-with-clang-8-0-td148824.html
+//
+// Similar problem has been discovered on Linux clang++ 10.
+// Catch occasinally does not catch exceptions. Using -stdlib=libc++ does not help.
+//
+// Clang++ support has to be proven on target platform and compiler version
+//
+#ifdef __clang__
+#ifdef WIN32
+#pragma message clang++ may have problems with exception handling
+#endif
+#endif
 
 #define T_MAY_ALIAS                 __attribute__((__may_alias__))
-#define CACHE_ALIGN                 __attribute__((aligned (CACHE_LINE)))
 #define V_UNUSED                    __attribute__((unused))
 #define F_NONNULL                   __attribute__((nonnull))
-#define V_ALIGN(N)                  __attribute__((aligned(N)))
 
 #define UNLIKELY(x)                  __builtin_expect(!!(x), 0)
 #define LIKELY(x)                    __builtin_expect(!!(x), 1)
@@ -124,16 +121,13 @@
 #define rrep1_(i, max)   for (i32 i = (max)          ; --i>0      ;)      // reverse rep down to 1
 
 // Walk over array by reference
-//
-#define ary_beg(type,e,ary)                             \
+#define ind_beg_aryptr(type,e,ary)                      \
     {                                                   \
     algo::aryptr<type> e##temp(ary);                    \
     for (i32 e##i=0; e##i < e##temp.n_elems; e##i++) {  \
     type &e = e##temp.elems[e##i];
 
-#define ary_end } }
-
-#define ary_idx(e) e##i
+#define ind_end_aryptr } }
 
 // -----------------------------------------------------------------------------
 
@@ -147,39 +141,10 @@
 
 // *vrfy*(x,...) x must be true or an exception of type ErrorX is thrown.
 // There is no exception hierarchy. ErrorX holds a string value representing error text.
-//
-// EXPRESSION     A              B
-// vrfy (a,b)     bool expr      expression evaluating to string
-// pvrfy(a,b)     bool expr      c++ expression that can be formatted to cstring
-//
-// -----------------------------------------------------------------------------
-//
-// errno_vrfy_    - interpret error code in errno and include in text
-// errno_vrfy
-// errno_pvrfy
-//
-// win_vrfy_      - interpret GetLastError() and include in text
-// win_vrfy
-// win_pvrfy
-//
-// On Windows, GetLastError() and errno are different things.
-// Make sure to use the right vrfy_ flavor when checking return codes.
-// WSAGetLastError() is the same as GetLastError() so
-// doesn't need to be considered separately.
-//
-//
-
 #define vrfy_(a)           { if (UNLIKELY(!(a))) algo::Throw(#a          , algo::Errcode()); }
 #define vrfy(a,b)          { if (UNLIKELY(!(a))) algo::Throw( b          , algo::Errcode()); }
-
 #define errno_vrfy_(a)     { if (UNLIKELY(!(a))) algo::Throw(#a          , algo::FromErrno(errno)); }
 #define errno_vrfy(a,b)    { if (UNLIKELY(!(a))) algo::Throw( b          , algo::FromErrno(errno)); }
-
-// will break compilation on non-windows
-#define win_vrfy_(a)       { if (UNLIKELY(!(a))) algo::Throw(#a          , algo::FromWinErr(GetLastError())); }
-#define win_vrfy(a,b)      { if (UNLIKELY(!(a))) algo::Throw( b          , algo::FromWinErr(GetLastError())); }
-
-// These are used in startup tests mostly.
 #define vrfyeq(a,b,c)      vrfy((a)==(b), tempstr()<< c << ": " #a " should be "<<(b)<<", not "<<(a))
 #define vrfyeq_(a,b)       vrfy((a)==(b), tempstr()<<      ": " #a " should be "<<(b)<<", not "<<(a))
 
@@ -204,23 +169,23 @@
 #define MULTICHAR_CONST3(b,c,d)   (          (b)<<16 | (c)<<8 | (d))
 #define MULTICHAR_CONST4(a,b,c,d) ((a)<<24 | (b)<<16 | (c)<<8 | (d))
 
-#define log_msg_(fd,x,eol)            {                 \
+#define prlog_fd_(fd,x,eol)            {                \
         algo::cstring &_outstr = algo_lib::_db.log_str; \
         int _saved = ch_N(_outstr);                     \
         _outstr << x;                                   \
         algo::Prlog(fd, _outstr, _saved, eol);          \
     }
 
-#define prlog_(x)             log_msg_(1,x,false)
-#define prerr_(x)             log_msg_(2,x,false)
+#define prlog_(x)             prlog_fd_(1,x,false)
+#define prerr_(x)             prlog_fd_(2,x,false)
 
-#define prlog(x)              log_msg_(1,x,true)
-#define prerr(x)              log_msg_(2,x,true)
+#define prlog(x)              prlog_fd_(1,x,true)
+#define prerr(x)              prlog_fd_(2,x,true)
 
-#define verblog(x)            { if(UNLIKELY(algo_lib::_db.cmdline.verbose)) log_msg_(2,x,true); }
-#define verblog2(x)           { if(UNLIKELY(algo_lib::_db.cmdline.verbose>1)) log_msg_(2,x,true); }
-#define verblog3(x)           { if(UNLIKELY(algo_lib::_db.cmdline.verbose>2)) log_msg_(2,x,true); }
-#define dbglog(x)             { if(UNLIKELY(algo_lib::_db.cmdline.debug)) log_msg_(2,x,true); }
+#define verblog(x)            { if(UNLIKELY(algo_lib::_db.cmdline.verbose)) prlog_fd_(2,x,true); }
+#define verblog2(x)           { if(UNLIKELY(algo_lib::_db.cmdline.verbose>1)) prlog_fd_(2,x,true); }
+#define verblog3(x)           { if(UNLIKELY(algo_lib::_db.cmdline.verbose>2)) prlog_fd_(2,x,true); }
+#define dbglog(x)             { if(UNLIKELY(algo_lib::_db.cmdline.debug)) prlog_fd_(2,x,true); }
 
 #define bitset_beg(INDTYPE,IND,SET) {                                   \
     algo::aryptr<u64> IND##_temp(ary_Getary(SET));                      \
@@ -229,75 +194,12 @@
     while (IND##_i) {                                                   \
     u64 IND##_j = algo::u64_BitScanForward(IND##_i);                    \
     IND##_i &= ~(u64(1)<<IND##_j);                                      \
-    INDTYPE IND = INDTYPE(ary_idx(IND##_i) * 64 + IND##_j);
+    INDTYPE IND = INDTYPE(ind_curs(IND##_i) * 64 + IND##_j);
 
 #define bitset_end }}}
 
-#ifdef WIN32
-//
-// thanks Microsoft, but we won't switch to your proprietary versions
-// of standard C functions.
-//
-#define _CRT_SECURE_NO_DEPRECATE 1
-#define _CRT_NONSTDC_NO_DEPRECATE 1
-#define _CRT_SECURE_NO_WARNINGS 1
-
-// Settings these macros indicates that we are aware that our code will only execute
-// on Windows 5.0 (2000) or later.
-
-#if _MSC_VER >= 1400
-#else
-#define WINVER 0x0500
-#endif
-
-#undef _WIN32_WINNT
-#define _WIN32_WINNT 0x0500
-
-#undef _WIN32_WINDOWS
-#define _WIN32_WINDOWS 0x0500
-
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-
-#define VC_EXTRALEAN        // Exclude rarely-used stuff from Windows headers
-
-#ifndef VC_EXTRALEAN
-#define VC_EXTRALEAN
-#endif
-
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-
-#ifndef STRICT
-#define STRICT
-#endif
-
-#endif
-
 #ifdef constant
 #undef constant
-#endif
-
-#ifdef grp1
-#undef grp1
-#endif
-
-#ifdef grp2
-#undef grp2
-#endif
-
-#ifdef grp3
-#undef grp3
-#endif
-
-#ifdef grp4
-#undef grp4
 #endif
 
 #ifdef min
@@ -310,9 +212,15 @@
 
 // compiler instructions for reordering
 // not processor instructions!!!
+#if  WIN32
+#define sfence() __faststorefence()
+#define lfence()
+#define mfence() sfence()
+#else
 #define sfence() asm volatile("sfence" ::: "memory")
 #define lfence() asm volatile("lfence" ::: "memory")
 #define mfence() asm volatile("mfence" ::: "memory")
+#endif
 
 // tag to help update-hdr to insert __attribute__((nothrow))
 // in header.
@@ -339,4 +247,17 @@
 #define htole64(x) OSSwapHostToLittleInt64(x)
 #define be64toh(x) OSSwapBigToHostInt64(x)
 #define le64toh(x) OSSwapLittleToHostInt64(x)
+#endif
+
+#ifdef WIN32
+#pragma intrinsic(__rdtsc)
+#pragma intrinsic(_ReadBarrier)
+#pragma intrinsic(_BitScanForward  )
+#pragma intrinsic(_BitScanForward64)
+#pragma intrinsic(_BitScanReverse  )
+#pragma intrinsic(_BitScanReverse64)
+#endif
+
+#ifdef __linux__
+#define __cdecl
 #endif

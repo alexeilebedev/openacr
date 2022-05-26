@@ -217,12 +217,12 @@ inline bool lib_ctype::fconst_EmptyQ() {
 // --- lib_ctype.FDb.fconst.Find
 // Look up row by row id. Return NULL if out of range
 inline lib_ctype::FFconst* lib_ctype::fconst_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     lib_ctype::FFconst *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fconst_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fconst_lary[bsr][index];
     }
     return retval;
@@ -283,12 +283,12 @@ inline bool lib_ctype::ssimfile_EmptyQ() {
 // --- lib_ctype.FDb.ssimfile.Find
 // Look up row by row id. Return NULL if out of range
 inline lib_ctype::FSsimfile* lib_ctype::ssimfile_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     lib_ctype::FSsimfile *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ssimfile_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ssimfile_lary[bsr][index];
     }
     return retval;
@@ -337,12 +337,12 @@ inline bool lib_ctype::ftuple_EmptyQ() {
 // --- lib_ctype.FDb.ftuple.Find
 // Look up row by row id. Return NULL if out of range
 inline lib_ctype::FFtuple* lib_ctype::ftuple_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     lib_ctype::FFtuple *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ftuple_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ftuple_lary[bsr][index];
     }
     return retval;
@@ -379,12 +379,12 @@ inline bool lib_ctype::ctype_EmptyQ() {
 // --- lib_ctype.FDb.ctype.Find
 // Look up row by row id. Return NULL if out of range
 inline lib_ctype::FCtype* lib_ctype::ctype_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     lib_ctype::FCtype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ctype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ctype_lary[bsr][index];
     }
     return retval;
@@ -433,12 +433,12 @@ inline bool lib_ctype::field_EmptyQ() {
 // --- lib_ctype.FDb.field.Find
 // Look up row by row id. Return NULL if out of range
 inline lib_ctype::FField* lib_ctype::field_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     lib_ctype::FField *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.field_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.field_lary[bsr][index];
     }
     return retval;
@@ -487,12 +487,12 @@ inline bool lib_ctype::cdflt_EmptyQ() {
 // --- lib_ctype.FDb.cdflt.Find
 // Look up row by row id. Return NULL if out of range
 inline lib_ctype::FCdflt* lib_ctype::cdflt_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     lib_ctype::FCdflt *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.cdflt_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.cdflt_lary[bsr][index];
     }
     return retval;
@@ -529,12 +529,12 @@ inline bool lib_ctype::cfmt_EmptyQ() {
 // --- lib_ctype.FDb.cfmt.Find
 // Look up row by row id. Return NULL if out of range
 inline lib_ctype::FCfmt* lib_ctype::cfmt_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     lib_ctype::FCfmt *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.cfmt_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.cfmt_lary[bsr][index];
     }
     return retval;
@@ -583,12 +583,12 @@ inline bool lib_ctype::cppfunc_EmptyQ() {
 // --- lib_ctype.FDb.cppfunc.Find
 // Look up row by row id. Return NULL if out of range
 inline lib_ctype::FCppfunc* lib_ctype::cppfunc_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     lib_ctype::FCppfunc *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.cppfunc_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.cppfunc_lary[bsr][index];
     }
     return retval;
@@ -625,12 +625,12 @@ inline bool lib_ctype::substr_EmptyQ() {
 // --- lib_ctype.FDb.substr.Find
 // Look up row by row id. Return NULL if out of range
 inline lib_ctype::FSubstr* lib_ctype::substr_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     lib_ctype::FSubstr *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.substr_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.substr_lary[bsr][index];
     }
     return retval;

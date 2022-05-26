@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+git-rebase-origin && normalize && git push origin master

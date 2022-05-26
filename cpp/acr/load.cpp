@@ -81,7 +81,7 @@ void acr::Main_ReadIn() {
         file.sticky = true;
         file.autoloaded = true;// not new data
         algo_lib::InTextFile in;
-        in.file.fd = OpenRead(acr::_db.cmdline.in, algo_FileFlags_none);
+        in.file.fd = OpenRead(acr::_db.cmdline.in, algo::FileFlags());
         file.filename = acr::_db.cmdline.in;
         file.modtime = FdModTime(in.file.fd);
         ReadLines(file,in);

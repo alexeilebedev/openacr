@@ -14,7 +14,7 @@ inline cstring& cstring::operator =(const cstring &rhs) {
     return *this;
 }
 
-inline  cstring::cstring(const strptr &rhs) {
+inline  cstring::cstring(const algo::strptr &rhs) {
     algo::cstring_Init(*this);
     algo::ch_Addary(*this, aryptr<char>((char*)rhs.elems, rhs.n_elems));
 }
@@ -32,6 +32,10 @@ inline cstring::cstring(const tempstr &rhs) {
 
 inline bool algo::cstring::operator ==(const algo::cstring &rhs) const {
     return algo::cstring_Eq(const_cast<algo::cstring&>(*this),const_cast<algo::cstring&>(rhs));
+}
+
+inline bool algo::cstring::operator !=(const algo::cstring &rhs) const {
+    return !algo::cstring_Eq(const_cast<algo::cstring&>(*this),const_cast<algo::cstring&>(rhs));
 }
 
 inline bool algo::cstring::operator <(const algo::cstring &rhs) const {
@@ -212,6 +216,10 @@ inline algo::Attr::Attr(const algo::strptr&            in_name
 
 inline bool algo::Attr::operator ==(const algo::Attr &rhs) const {
     return algo::Attr_Eq(const_cast<algo::Attr&>(*this),const_cast<algo::Attr&>(rhs));
+}
+
+inline bool algo::Attr::operator !=(const algo::Attr &rhs) const {
+    return !algo::Attr_Eq(const_cast<algo::Attr&>(*this),const_cast<algo::Attr&>(rhs));
 }
 inline algo::Attr::Attr() {
 }
@@ -1059,7 +1067,7 @@ inline i32 algo::ch_Sup(algo::Charset& parent) {
     for (int i = lim-1; i >= 0; i--) {
         u64 &val = ch_qFind(parent, i);
         if (val) {
-            u32 bitidx = u64_BitScanReverse(val) + 1;
+            u32 bitidx = algo::u64_BitScanReverse(val) + 1;
             ret = i * 64 + bitidx;
             break;
         }
@@ -1153,6 +1161,10 @@ inline void algo::Charset_Init(algo::Charset& parent) {
 
 inline bool algo::Smallstr150::operator ==(const algo::Smallstr150 &rhs) const {
     return algo::Smallstr150_Eq(const_cast<algo::Smallstr150&>(*this),const_cast<algo::Smallstr150&>(rhs));
+}
+
+inline bool algo::Smallstr150::operator !=(const algo::Smallstr150 &rhs) const {
+    return !algo::Smallstr150_Eq(const_cast<algo::Smallstr150&>(*this),const_cast<algo::Smallstr150&>(rhs));
 }
 
 inline bool algo::Smallstr150::operator ==(const algo::strptr &rhs) const {
@@ -1303,6 +1315,10 @@ inline algo::UnTime::UnTime(i64                            in_value)
 
 inline bool algo::UnTime::operator ==(const algo::UnTime &rhs) const {
     return algo::UnTime_Eq(const_cast<algo::UnTime&>(*this),const_cast<algo::UnTime&>(rhs));
+}
+
+inline bool algo::UnTime::operator !=(const algo::UnTime &rhs) const {
+    return !algo::UnTime_Eq(const_cast<algo::UnTime&>(*this),const_cast<algo::UnTime&>(rhs));
 }
 
 inline bool algo::UnTime::operator <(const algo::UnTime &rhs) const {
@@ -1611,6 +1627,10 @@ inline bool algo::Fildes::operator ==(const algo::Fildes &rhs) const {
     return algo::Fildes_Eq(const_cast<algo::Fildes&>(*this),const_cast<algo::Fildes&>(rhs));
 }
 
+inline bool algo::Fildes::operator !=(const algo::Fildes &rhs) const {
+    return !algo::Fildes_Eq(const_cast<algo::Fildes&>(*this),const_cast<algo::Fildes&>(rhs));
+}
+
 inline bool algo::Fildes::operator <(const algo::Fildes &rhs) const {
     return algo::Fildes_Lt(const_cast<algo::Fildes&>(*this),const_cast<algo::Fildes&>(rhs));
 }
@@ -1668,18 +1688,6 @@ inline algo::FileFlags::FileFlags() {
     algo::FileFlags_Init(*this);
 }
 
-
-// --- algo.FileFlags.value.GetEnum
-// Get value of field as enum type
-inline algo_FileFlagsEnum algo::value_GetEnum(const algo::FileFlags& parent) {
-    return algo_FileFlagsEnum(parent.value);
-}
-
-// --- algo.FileFlags.value.SetEnum
-// Set value of field from enum type.
-inline void algo::value_SetEnum(algo::FileFlags& parent, algo_FileFlagsEnum rhs) {
-    parent.value = u32(rhs);
-}
 
 // --- algo.FileFlags.value.Cast
 inline algo::FileFlags::operator algo_FileFlagsEnum () const {
@@ -1750,6 +1758,70 @@ inline void algo::_throw_Set(algo::FileFlags& parent, bool rhs) {
     parent.value = u32((parent.value & ~t1) | t2);
 }
 
+// --- algo.FileFlags.temp.Get
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 6.
+inline bool algo::temp_Get(const algo::FileFlags& parent) {
+    return bool((parent.value >> 6) & 0x01);
+}
+
+// --- algo.FileFlags.temp.Set
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 6.
+inline void algo::temp_Set(algo::FileFlags& parent, bool rhs) {
+    u32 t1    = u32(0x01) << 6;
+    u32 t2    = (u32(rhs) & 0x01) << 6;
+    parent.value = u32((parent.value & ~t1) | t2);
+}
+
+// --- algo.FileFlags.overlap.Get
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 7.
+inline bool algo::overlap_Get(const algo::FileFlags& parent) {
+    return bool((parent.value >> 7) & 0x01);
+}
+
+// --- algo.FileFlags.overlap.Set
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 7.
+inline void algo::overlap_Set(algo::FileFlags& parent, bool rhs) {
+    u32 t1    = u32(0x01) << 7;
+    u32 t2    = (u32(rhs) & 0x01) << 7;
+    parent.value = u32((parent.value & ~t1) | t2);
+}
+
+// --- algo.FileFlags.linear.Get
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 8.
+inline bool algo::linear_Get(const algo::FileFlags& parent) {
+    return bool((parent.value >> 8) & 0x01);
+}
+
+// --- algo.FileFlags.linear.Set
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 8.
+inline void algo::linear_Set(algo::FileFlags& parent, bool rhs) {
+    u32 t1    = u32(0x01) << 8;
+    u32 t2    = (u32(rhs) & 0x01) << 8;
+    parent.value = u32((parent.value & ~t1) | t2);
+}
+
+// --- algo.FileFlags.printerr.Get
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 9.
+inline bool algo::printerr_Get(const algo::FileFlags& parent) {
+    return bool((parent.value >> 9) & 0x01);
+}
+
+// --- algo.FileFlags.printerr.Set
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 9.
+inline void algo::printerr_Set(algo::FileFlags& parent, bool rhs) {
+    u32 t1    = u32(0x01) << 9;
+    u32 t2    = (u32(rhs) & 0x01) << 9;
+    parent.value = u32((parent.value & ~t1) | t2);
+}
+
 // --- algo.FileFlags..Init
 // Set all fields to initial values.
 inline void algo::FileFlags_Init(algo::FileFlags& parent) {
@@ -1778,7 +1850,7 @@ inline void algo::value_qSetDouble(algo::I32Dec1& parent, double val) {
 }
 
 // --- algo.I32Dec1.value.GetDouble
-inline double algo::value_GetDouble(algo::I32Dec1& parent) {
+inline double algo::value_GetDouble(const algo::I32Dec1& parent) {
     double ret;
     ret = parent.value / double(10);
     return ret;
@@ -1786,7 +1858,7 @@ inline double algo::value_GetDouble(algo::I32Dec1& parent) {
 
 // --- algo.I32Dec1.value.GetInt
 // Return integer portion (divide number by 10)
-inline i32 algo::value_GetInt(algo::I32Dec1& parent) {
+inline i32 algo::value_GetInt(const algo::I32Dec1& parent) {
     i32 ret;
     ret = parent.value / 10;
     return ret;
@@ -1837,7 +1909,7 @@ inline void algo::value_qSetDouble(algo::I32Dec2& parent, double val) {
 }
 
 // --- algo.I32Dec2.value.GetDouble
-inline double algo::value_GetDouble(algo::I32Dec2& parent) {
+inline double algo::value_GetDouble(const algo::I32Dec2& parent) {
     double ret;
     ret = parent.value / double(100);
     return ret;
@@ -1845,7 +1917,7 @@ inline double algo::value_GetDouble(algo::I32Dec2& parent) {
 
 // --- algo.I32Dec2.value.GetInt
 // Return integer portion (divide number by 100)
-inline i32 algo::value_GetInt(algo::I32Dec2& parent) {
+inline i32 algo::value_GetInt(const algo::I32Dec2& parent) {
     i32 ret;
     ret = parent.value / 100;
     return ret;
@@ -1896,7 +1968,7 @@ inline void algo::value_qSetDouble(algo::I32Dec3& parent, double val) {
 }
 
 // --- algo.I32Dec3.value.GetDouble
-inline double algo::value_GetDouble(algo::I32Dec3& parent) {
+inline double algo::value_GetDouble(const algo::I32Dec3& parent) {
     double ret;
     ret = parent.value / double(1000);
     return ret;
@@ -1904,7 +1976,7 @@ inline double algo::value_GetDouble(algo::I32Dec3& parent) {
 
 // --- algo.I32Dec3.value.GetInt
 // Return integer portion (divide number by 1000)
-inline i32 algo::value_GetInt(algo::I32Dec3& parent) {
+inline i32 algo::value_GetInt(const algo::I32Dec3& parent) {
     i32 ret;
     ret = parent.value / 1000;
     return ret;
@@ -1955,7 +2027,7 @@ inline void algo::value_qSetDouble(algo::I32Dec4& parent, double val) {
 }
 
 // --- algo.I32Dec4.value.GetDouble
-inline double algo::value_GetDouble(algo::I32Dec4& parent) {
+inline double algo::value_GetDouble(const algo::I32Dec4& parent) {
     double ret;
     ret = parent.value / double(10000);
     return ret;
@@ -1963,7 +2035,7 @@ inline double algo::value_GetDouble(algo::I32Dec4& parent) {
 
 // --- algo.I32Dec4.value.GetInt
 // Return integer portion (divide number by 10000)
-inline i32 algo::value_GetInt(algo::I32Dec4& parent) {
+inline i32 algo::value_GetInt(const algo::I32Dec4& parent) {
     i32 ret;
     ret = parent.value / 10000;
     return ret;
@@ -2014,7 +2086,7 @@ inline void algo::value_qSetDouble(algo::I32Dec5& parent, double val) {
 }
 
 // --- algo.I32Dec5.value.GetDouble
-inline double algo::value_GetDouble(algo::I32Dec5& parent) {
+inline double algo::value_GetDouble(const algo::I32Dec5& parent) {
     double ret;
     ret = parent.value / double(100000);
     return ret;
@@ -2022,7 +2094,7 @@ inline double algo::value_GetDouble(algo::I32Dec5& parent) {
 
 // --- algo.I32Dec5.value.GetInt
 // Return integer portion (divide number by 100000)
-inline i32 algo::value_GetInt(algo::I32Dec5& parent) {
+inline i32 algo::value_GetInt(const algo::I32Dec5& parent) {
     i32 ret;
     ret = parent.value / 100000;
     return ret;
@@ -2073,7 +2145,7 @@ inline void algo::value_qSetDouble(algo::I64Dec1& parent, double val) {
 }
 
 // --- algo.I64Dec1.value.GetDouble
-inline double algo::value_GetDouble(algo::I64Dec1& parent) {
+inline double algo::value_GetDouble(const algo::I64Dec1& parent) {
     double ret;
     ret = parent.value / double(10);
     return ret;
@@ -2081,7 +2153,7 @@ inline double algo::value_GetDouble(algo::I64Dec1& parent) {
 
 // --- algo.I64Dec1.value.GetInt
 // Return integer portion (divide number by 10)
-inline i64 algo::value_GetInt(algo::I64Dec1& parent) {
+inline i64 algo::value_GetInt(const algo::I64Dec1& parent) {
     i64 ret;
     ret = parent.value / 10;
     return ret;
@@ -2132,7 +2204,7 @@ inline void algo::value_qSetDouble(algo::I64Dec10& parent, double val) {
 }
 
 // --- algo.I64Dec10.value.GetDouble
-inline double algo::value_GetDouble(algo::I64Dec10& parent) {
+inline double algo::value_GetDouble(const algo::I64Dec10& parent) {
     double ret;
     ret = parent.value / double(10000000000);
     return ret;
@@ -2140,7 +2212,7 @@ inline double algo::value_GetDouble(algo::I64Dec10& parent) {
 
 // --- algo.I64Dec10.value.GetInt
 // Return integer portion (divide number by 10000000000)
-inline i64 algo::value_GetInt(algo::I64Dec10& parent) {
+inline i64 algo::value_GetInt(const algo::I64Dec10& parent) {
     i64 ret;
     ret = parent.value / 10000000000;
     return ret;
@@ -2191,7 +2263,7 @@ inline void algo::value_qSetDouble(algo::I64Dec2& parent, double val) {
 }
 
 // --- algo.I64Dec2.value.GetDouble
-inline double algo::value_GetDouble(algo::I64Dec2& parent) {
+inline double algo::value_GetDouble(const algo::I64Dec2& parent) {
     double ret;
     ret = parent.value / double(100);
     return ret;
@@ -2199,7 +2271,7 @@ inline double algo::value_GetDouble(algo::I64Dec2& parent) {
 
 // --- algo.I64Dec2.value.GetInt
 // Return integer portion (divide number by 100)
-inline i64 algo::value_GetInt(algo::I64Dec2& parent) {
+inline i64 algo::value_GetInt(const algo::I64Dec2& parent) {
     i64 ret;
     ret = parent.value / 100;
     return ret;
@@ -2250,7 +2322,7 @@ inline void algo::value_qSetDouble(algo::I64Dec3& parent, double val) {
 }
 
 // --- algo.I64Dec3.value.GetDouble
-inline double algo::value_GetDouble(algo::I64Dec3& parent) {
+inline double algo::value_GetDouble(const algo::I64Dec3& parent) {
     double ret;
     ret = parent.value / double(1000);
     return ret;
@@ -2258,7 +2330,7 @@ inline double algo::value_GetDouble(algo::I64Dec3& parent) {
 
 // --- algo.I64Dec3.value.GetInt
 // Return integer portion (divide number by 1000)
-inline i64 algo::value_GetInt(algo::I64Dec3& parent) {
+inline i64 algo::value_GetInt(const algo::I64Dec3& parent) {
     i64 ret;
     ret = parent.value / 1000;
     return ret;
@@ -2309,7 +2381,7 @@ inline void algo::value_qSetDouble(algo::I64Dec4& parent, double val) {
 }
 
 // --- algo.I64Dec4.value.GetDouble
-inline double algo::value_GetDouble(algo::I64Dec4& parent) {
+inline double algo::value_GetDouble(const algo::I64Dec4& parent) {
     double ret;
     ret = parent.value / double(10000);
     return ret;
@@ -2317,7 +2389,7 @@ inline double algo::value_GetDouble(algo::I64Dec4& parent) {
 
 // --- algo.I64Dec4.value.GetInt
 // Return integer portion (divide number by 10000)
-inline i64 algo::value_GetInt(algo::I64Dec4& parent) {
+inline i64 algo::value_GetInt(const algo::I64Dec4& parent) {
     i64 ret;
     ret = parent.value / 10000;
     return ret;
@@ -2368,7 +2440,7 @@ inline void algo::value_qSetDouble(algo::I64Dec5& parent, double val) {
 }
 
 // --- algo.I64Dec5.value.GetDouble
-inline double algo::value_GetDouble(algo::I64Dec5& parent) {
+inline double algo::value_GetDouble(const algo::I64Dec5& parent) {
     double ret;
     ret = parent.value / double(100000);
     return ret;
@@ -2376,7 +2448,7 @@ inline double algo::value_GetDouble(algo::I64Dec5& parent) {
 
 // --- algo.I64Dec5.value.GetInt
 // Return integer portion (divide number by 100000)
-inline i64 algo::value_GetInt(algo::I64Dec5& parent) {
+inline i64 algo::value_GetInt(const algo::I64Dec5& parent) {
     i64 ret;
     ret = parent.value / 100000;
     return ret;
@@ -2427,7 +2499,7 @@ inline void algo::value_qSetDouble(algo::I64Dec6& parent, double val) {
 }
 
 // --- algo.I64Dec6.value.GetDouble
-inline double algo::value_GetDouble(algo::I64Dec6& parent) {
+inline double algo::value_GetDouble(const algo::I64Dec6& parent) {
     double ret;
     ret = parent.value / double(1000000);
     return ret;
@@ -2435,7 +2507,7 @@ inline double algo::value_GetDouble(algo::I64Dec6& parent) {
 
 // --- algo.I64Dec6.value.GetInt
 // Return integer portion (divide number by 1000000)
-inline i64 algo::value_GetInt(algo::I64Dec6& parent) {
+inline i64 algo::value_GetInt(const algo::I64Dec6& parent) {
     i64 ret;
     ret = parent.value / 1000000;
     return ret;
@@ -2486,7 +2558,7 @@ inline void algo::value_qSetDouble(algo::I64Dec7& parent, double val) {
 }
 
 // --- algo.I64Dec7.value.GetDouble
-inline double algo::value_GetDouble(algo::I64Dec7& parent) {
+inline double algo::value_GetDouble(const algo::I64Dec7& parent) {
     double ret;
     ret = parent.value / double(10000000);
     return ret;
@@ -2494,7 +2566,7 @@ inline double algo::value_GetDouble(algo::I64Dec7& parent) {
 
 // --- algo.I64Dec7.value.GetInt
 // Return integer portion (divide number by 10000000)
-inline i64 algo::value_GetInt(algo::I64Dec7& parent) {
+inline i64 algo::value_GetInt(const algo::I64Dec7& parent) {
     i64 ret;
     ret = parent.value / 10000000;
     return ret;
@@ -2545,7 +2617,7 @@ inline void algo::value_qSetDouble(algo::I64Dec8& parent, double val) {
 }
 
 // --- algo.I64Dec8.value.GetDouble
-inline double algo::value_GetDouble(algo::I64Dec8& parent) {
+inline double algo::value_GetDouble(const algo::I64Dec8& parent) {
     double ret;
     ret = parent.value / double(100000000);
     return ret;
@@ -2553,7 +2625,7 @@ inline double algo::value_GetDouble(algo::I64Dec8& parent) {
 
 // --- algo.I64Dec8.value.GetInt
 // Return integer portion (divide number by 100000000)
-inline i64 algo::value_GetInt(algo::I64Dec8& parent) {
+inline i64 algo::value_GetInt(const algo::I64Dec8& parent) {
     i64 ret;
     ret = parent.value / 100000000;
     return ret;
@@ -2604,7 +2676,7 @@ inline void algo::value_qSetDouble(algo::I64Dec9& parent, double val) {
 }
 
 // --- algo.I64Dec9.value.GetDouble
-inline double algo::value_GetDouble(algo::I64Dec9& parent) {
+inline double algo::value_GetDouble(const algo::I64Dec9& parent) {
     double ret;
     ret = parent.value / double(1000000000);
     return ret;
@@ -2612,7 +2684,7 @@ inline double algo::value_GetDouble(algo::I64Dec9& parent) {
 
 // --- algo.I64Dec9.value.GetInt
 // Return integer portion (divide number by 1000000000)
-inline i64 algo::value_GetInt(algo::I64Dec9& parent) {
+inline i64 algo::value_GetInt(const algo::I64Dec9& parent) {
     i64 ret;
     ret = parent.value / 1000000000;
     return ret;
@@ -2644,14 +2716,15 @@ inline algo::IOEvtFlags::IOEvtFlags(u32                            in_value)
     : value(in_value)
 {
 }
+inline algo::IOEvtFlags::IOEvtFlags(algo_IOEvtFlagsEnum arg) { this->value = u32(arg); }
 inline algo::IOEvtFlags::IOEvtFlags() {
     algo::IOEvtFlags_Init(*this);
 }
 
 
 // --- algo.IOEvtFlags.value.Cast
-inline algo::IOEvtFlags::operator u32 () const {
-    return u32((*this).value);
+inline algo::IOEvtFlags::operator algo_IOEvtFlagsEnum () const {
+    return algo_IOEvtFlagsEnum((*this).value);
 }
 
 // --- algo.IOEvtFlags.read.Get
@@ -2733,6 +2806,22 @@ inline algo::IPoint::IPoint() {
 inline void algo::IPoint_Init(algo::IPoint& parent) {
     parent.x = i32(0);
     parent.y = i32(0);
+}
+
+inline bool algo::Smallstr50::operator ==(const algo::Smallstr50 &rhs) const {
+    return algo::Smallstr50_Eq(const_cast<algo::Smallstr50&>(*this),const_cast<algo::Smallstr50&>(rhs));
+}
+
+inline bool algo::Smallstr50::operator !=(const algo::Smallstr50 &rhs) const {
+    return !algo::Smallstr50_Eq(const_cast<algo::Smallstr50&>(*this),const_cast<algo::Smallstr50&>(rhs));
+}
+
+inline bool algo::Smallstr50::operator ==(const algo::strptr &rhs) const {
+    return algo::Smallstr50_EqStrptr(const_cast<algo::Smallstr50&>(*this),rhs);
+}
+
+inline bool algo::Smallstr50::operator <(const algo::Smallstr50 &rhs) const {
+    return algo::Smallstr50_Lt(const_cast<algo::Smallstr50&>(*this),const_cast<algo::Smallstr50&>(rhs));
 }
 inline algo::Smallstr50::Smallstr50() {
     algo::Smallstr50_Init(*this);
@@ -3083,6 +3172,10 @@ inline bool algo::LnumStr10_U64::operator ==(const algo::LnumStr10_U64 &rhs) con
     return algo::LnumStr10_U64_Eq(const_cast<algo::LnumStr10_U64&>(*this),const_cast<algo::LnumStr10_U64&>(rhs));
 }
 
+inline bool algo::LnumStr10_U64::operator !=(const algo::LnumStr10_U64 &rhs) const {
+    return !algo::LnumStr10_U64_Eq(const_cast<algo::LnumStr10_U64&>(*this),const_cast<algo::LnumStr10_U64&>(rhs));
+}
+
 inline bool algo::LnumStr10_U64::operator ==(const algo::strptr &rhs) const {
     return algo::LnumStr10_U64_EqStrptr(const_cast<algo::LnumStr10_U64&>(*this),rhs);
 }
@@ -3187,6 +3280,10 @@ inline bool algo::LnumStr10_U64_EqStrptr(algo::LnumStr10_U64 & lhs, const algo::
 
 inline bool algo::LnumStr11_U64::operator ==(const algo::LnumStr11_U64 &rhs) const {
     return algo::LnumStr11_U64_Eq(const_cast<algo::LnumStr11_U64&>(*this),const_cast<algo::LnumStr11_U64&>(rhs));
+}
+
+inline bool algo::LnumStr11_U64::operator !=(const algo::LnumStr11_U64 &rhs) const {
+    return !algo::LnumStr11_U64_Eq(const_cast<algo::LnumStr11_U64&>(*this),const_cast<algo::LnumStr11_U64&>(rhs));
 }
 
 inline bool algo::LnumStr11_U64::operator ==(const algo::strptr &rhs) const {
@@ -3295,6 +3392,10 @@ inline bool algo::LnumStr12_U64::operator ==(const algo::LnumStr12_U64 &rhs) con
     return algo::LnumStr12_U64_Eq(const_cast<algo::LnumStr12_U64&>(*this),const_cast<algo::LnumStr12_U64&>(rhs));
 }
 
+inline bool algo::LnumStr12_U64::operator !=(const algo::LnumStr12_U64 &rhs) const {
+    return !algo::LnumStr12_U64_Eq(const_cast<algo::LnumStr12_U64&>(*this),const_cast<algo::LnumStr12_U64&>(rhs));
+}
+
 inline bool algo::LnumStr12_U64::operator ==(const algo::strptr &rhs) const {
     return algo::LnumStr12_U64_EqStrptr(const_cast<algo::LnumStr12_U64&>(*this),rhs);
 }
@@ -3399,6 +3500,10 @@ inline bool algo::LnumStr12_U64_EqStrptr(algo::LnumStr12_U64 & lhs, const algo::
 
 inline bool algo::LnumStr13_U64_Base36::operator ==(const algo::LnumStr13_U64_Base36 &rhs) const {
     return algo::LnumStr13_U64_Base36_Eq(const_cast<algo::LnumStr13_U64_Base36&>(*this),const_cast<algo::LnumStr13_U64_Base36&>(rhs));
+}
+
+inline bool algo::LnumStr13_U64_Base36::operator !=(const algo::LnumStr13_U64_Base36 &rhs) const {
+    return !algo::LnumStr13_U64_Base36_Eq(const_cast<algo::LnumStr13_U64_Base36&>(*this),const_cast<algo::LnumStr13_U64_Base36&>(rhs));
 }
 
 inline bool algo::LnumStr13_U64_Base36::operator ==(const algo::strptr &rhs) const {
@@ -3507,6 +3612,10 @@ inline bool algo::LnumStr16_U64_Base16::operator ==(const algo::LnumStr16_U64_Ba
     return algo::LnumStr16_U64_Base16_Eq(const_cast<algo::LnumStr16_U64_Base16&>(*this),const_cast<algo::LnumStr16_U64_Base16&>(rhs));
 }
 
+inline bool algo::LnumStr16_U64_Base16::operator !=(const algo::LnumStr16_U64_Base16 &rhs) const {
+    return !algo::LnumStr16_U64_Base16_Eq(const_cast<algo::LnumStr16_U64_Base16&>(*this),const_cast<algo::LnumStr16_U64_Base16&>(rhs));
+}
+
 inline bool algo::LnumStr16_U64_Base16::operator ==(const algo::strptr &rhs) const {
     return algo::LnumStr16_U64_Base16_EqStrptr(const_cast<algo::LnumStr16_U64_Base16&>(*this),rhs);
 }
@@ -3611,6 +3720,10 @@ inline bool algo::LnumStr16_U64_Base16_EqStrptr(algo::LnumStr16_U64_Base16 & lhs
 
 inline bool algo::LnumStr1_U32::operator ==(const algo::LnumStr1_U32 &rhs) const {
     return algo::LnumStr1_U32_Eq(const_cast<algo::LnumStr1_U32&>(*this),const_cast<algo::LnumStr1_U32&>(rhs));
+}
+
+inline bool algo::LnumStr1_U32::operator !=(const algo::LnumStr1_U32 &rhs) const {
+    return !algo::LnumStr1_U32_Eq(const_cast<algo::LnumStr1_U32&>(*this),const_cast<algo::LnumStr1_U32&>(rhs));
 }
 
 inline bool algo::LnumStr1_U32::operator ==(const algo::strptr &rhs) const {
@@ -3719,6 +3832,10 @@ inline bool algo::LnumStr20_U64::operator ==(const algo::LnumStr20_U64 &rhs) con
     return algo::LnumStr20_U64_Eq(const_cast<algo::LnumStr20_U64&>(*this),const_cast<algo::LnumStr20_U64&>(rhs));
 }
 
+inline bool algo::LnumStr20_U64::operator !=(const algo::LnumStr20_U64 &rhs) const {
+    return !algo::LnumStr20_U64_Eq(const_cast<algo::LnumStr20_U64&>(*this),const_cast<algo::LnumStr20_U64&>(rhs));
+}
+
 inline bool algo::LnumStr20_U64::operator ==(const algo::strptr &rhs) const {
     return algo::LnumStr20_U64_EqStrptr(const_cast<algo::LnumStr20_U64&>(*this),rhs);
 }
@@ -3823,6 +3940,10 @@ inline bool algo::LnumStr20_U64_EqStrptr(algo::LnumStr20_U64 & lhs, const algo::
 
 inline bool algo::LnumStr22_U64::operator ==(const algo::LnumStr22_U64 &rhs) const {
     return algo::LnumStr22_U64_Eq(const_cast<algo::LnumStr22_U64&>(*this),const_cast<algo::LnumStr22_U64&>(rhs));
+}
+
+inline bool algo::LnumStr22_U64::operator !=(const algo::LnumStr22_U64 &rhs) const {
+    return !algo::LnumStr22_U64_Eq(const_cast<algo::LnumStr22_U64&>(*this),const_cast<algo::LnumStr22_U64&>(rhs));
 }
 
 inline bool algo::LnumStr22_U64::operator ==(const algo::strptr &rhs) const {
@@ -3931,6 +4052,10 @@ inline bool algo::LnumStr2_U32::operator ==(const algo::LnumStr2_U32 &rhs) const
     return algo::LnumStr2_U32_Eq(const_cast<algo::LnumStr2_U32&>(*this),const_cast<algo::LnumStr2_U32&>(rhs));
 }
 
+inline bool algo::LnumStr2_U32::operator !=(const algo::LnumStr2_U32 &rhs) const {
+    return !algo::LnumStr2_U32_Eq(const_cast<algo::LnumStr2_U32&>(*this),const_cast<algo::LnumStr2_U32&>(rhs));
+}
+
 inline bool algo::LnumStr2_U32::operator ==(const algo::strptr &rhs) const {
     return algo::LnumStr2_U32_EqStrptr(const_cast<algo::LnumStr2_U32&>(*this),rhs);
 }
@@ -4035,6 +4160,10 @@ inline bool algo::LnumStr2_U32_EqStrptr(algo::LnumStr2_U32 & lhs, const algo::st
 
 inline bool algo::LnumStr3_U32::operator ==(const algo::LnumStr3_U32 &rhs) const {
     return algo::LnumStr3_U32_Eq(const_cast<algo::LnumStr3_U32&>(*this),const_cast<algo::LnumStr3_U32&>(rhs));
+}
+
+inline bool algo::LnumStr3_U32::operator !=(const algo::LnumStr3_U32 &rhs) const {
+    return !algo::LnumStr3_U32_Eq(const_cast<algo::LnumStr3_U32&>(*this),const_cast<algo::LnumStr3_U32&>(rhs));
 }
 
 inline bool algo::LnumStr3_U32::operator ==(const algo::strptr &rhs) const {
@@ -4143,6 +4272,10 @@ inline bool algo::LnumStr4_U32::operator ==(const algo::LnumStr4_U32 &rhs) const
     return algo::LnumStr4_U32_Eq(const_cast<algo::LnumStr4_U32&>(*this),const_cast<algo::LnumStr4_U32&>(rhs));
 }
 
+inline bool algo::LnumStr4_U32::operator !=(const algo::LnumStr4_U32 &rhs) const {
+    return !algo::LnumStr4_U32_Eq(const_cast<algo::LnumStr4_U32&>(*this),const_cast<algo::LnumStr4_U32&>(rhs));
+}
+
 inline bool algo::LnumStr4_U32::operator ==(const algo::strptr &rhs) const {
     return algo::LnumStr4_U32_EqStrptr(const_cast<algo::LnumStr4_U32&>(*this),rhs);
 }
@@ -4247,6 +4380,10 @@ inline bool algo::LnumStr4_U32_EqStrptr(algo::LnumStr4_U32 & lhs, const algo::st
 
 inline bool algo::LnumStr5_U32::operator ==(const algo::LnumStr5_U32 &rhs) const {
     return algo::LnumStr5_U32_Eq(const_cast<algo::LnumStr5_U32&>(*this),const_cast<algo::LnumStr5_U32&>(rhs));
+}
+
+inline bool algo::LnumStr5_U32::operator !=(const algo::LnumStr5_U32 &rhs) const {
+    return !algo::LnumStr5_U32_Eq(const_cast<algo::LnumStr5_U32&>(*this),const_cast<algo::LnumStr5_U32&>(rhs));
 }
 
 inline bool algo::LnumStr5_U32::operator ==(const algo::strptr &rhs) const {
@@ -4355,6 +4492,10 @@ inline bool algo::LnumStr5_U32_Base36::operator ==(const algo::LnumStr5_U32_Base
     return algo::LnumStr5_U32_Base36_Eq(const_cast<algo::LnumStr5_U32_Base36&>(*this),const_cast<algo::LnumStr5_U32_Base36&>(rhs));
 }
 
+inline bool algo::LnumStr5_U32_Base36::operator !=(const algo::LnumStr5_U32_Base36 &rhs) const {
+    return !algo::LnumStr5_U32_Base36_Eq(const_cast<algo::LnumStr5_U32_Base36&>(*this),const_cast<algo::LnumStr5_U32_Base36&>(rhs));
+}
+
 inline bool algo::LnumStr5_U32_Base36::operator ==(const algo::strptr &rhs) const {
     return algo::LnumStr5_U32_Base36_EqStrptr(const_cast<algo::LnumStr5_U32_Base36&>(*this),rhs);
 }
@@ -4459,6 +4600,10 @@ inline bool algo::LnumStr5_U32_Base36_EqStrptr(algo::LnumStr5_U32_Base36 & lhs, 
 
 inline bool algo::LnumStr6_U32::operator ==(const algo::LnumStr6_U32 &rhs) const {
     return algo::LnumStr6_U32_Eq(const_cast<algo::LnumStr6_U32&>(*this),const_cast<algo::LnumStr6_U32&>(rhs));
+}
+
+inline bool algo::LnumStr6_U32::operator !=(const algo::LnumStr6_U32 &rhs) const {
+    return !algo::LnumStr6_U32_Eq(const_cast<algo::LnumStr6_U32&>(*this),const_cast<algo::LnumStr6_U32&>(rhs));
 }
 
 inline bool algo::LnumStr6_U32::operator ==(const algo::strptr &rhs) const {
@@ -4567,6 +4712,10 @@ inline bool algo::LnumStr7_U32::operator ==(const algo::LnumStr7_U32 &rhs) const
     return algo::LnumStr7_U32_Eq(const_cast<algo::LnumStr7_U32&>(*this),const_cast<algo::LnumStr7_U32&>(rhs));
 }
 
+inline bool algo::LnumStr7_U32::operator !=(const algo::LnumStr7_U32 &rhs) const {
+    return !algo::LnumStr7_U32_Eq(const_cast<algo::LnumStr7_U32&>(*this),const_cast<algo::LnumStr7_U32&>(rhs));
+}
+
 inline bool algo::LnumStr7_U32::operator ==(const algo::strptr &rhs) const {
     return algo::LnumStr7_U32_EqStrptr(const_cast<algo::LnumStr7_U32&>(*this),rhs);
 }
@@ -4671,6 +4820,10 @@ inline bool algo::LnumStr7_U32_EqStrptr(algo::LnumStr7_U32 & lhs, const algo::st
 
 inline bool algo::LnumStr7_U32_Base36::operator ==(const algo::LnumStr7_U32_Base36 &rhs) const {
     return algo::LnumStr7_U32_Base36_Eq(const_cast<algo::LnumStr7_U32_Base36&>(*this),const_cast<algo::LnumStr7_U32_Base36&>(rhs));
+}
+
+inline bool algo::LnumStr7_U32_Base36::operator !=(const algo::LnumStr7_U32_Base36 &rhs) const {
+    return !algo::LnumStr7_U32_Base36_Eq(const_cast<algo::LnumStr7_U32_Base36&>(*this),const_cast<algo::LnumStr7_U32_Base36&>(rhs));
 }
 
 inline bool algo::LnumStr7_U32_Base36::operator ==(const algo::strptr &rhs) const {
@@ -4779,6 +4932,10 @@ inline bool algo::LnumStr8_U32::operator ==(const algo::LnumStr8_U32 &rhs) const
     return algo::LnumStr8_U32_Eq(const_cast<algo::LnumStr8_U32&>(*this),const_cast<algo::LnumStr8_U32&>(rhs));
 }
 
+inline bool algo::LnumStr8_U32::operator !=(const algo::LnumStr8_U32 &rhs) const {
+    return !algo::LnumStr8_U32_Eq(const_cast<algo::LnumStr8_U32&>(*this),const_cast<algo::LnumStr8_U32&>(rhs));
+}
+
 inline bool algo::LnumStr8_U32::operator ==(const algo::strptr &rhs) const {
     return algo::LnumStr8_U32_EqStrptr(const_cast<algo::LnumStr8_U32&>(*this),rhs);
 }
@@ -4883,6 +5040,10 @@ inline bool algo::LnumStr8_U32_EqStrptr(algo::LnumStr8_U32 & lhs, const algo::st
 
 inline bool algo::LnumStr8_U32_Base16::operator ==(const algo::LnumStr8_U32_Base16 &rhs) const {
     return algo::LnumStr8_U32_Base16_Eq(const_cast<algo::LnumStr8_U32_Base16&>(*this),const_cast<algo::LnumStr8_U32_Base16&>(rhs));
+}
+
+inline bool algo::LnumStr8_U32_Base16::operator !=(const algo::LnumStr8_U32_Base16 &rhs) const {
+    return !algo::LnumStr8_U32_Base16_Eq(const_cast<algo::LnumStr8_U32_Base16&>(*this),const_cast<algo::LnumStr8_U32_Base16&>(rhs));
 }
 
 inline bool algo::LnumStr8_U32_Base16::operator ==(const algo::strptr &rhs) const {
@@ -4991,6 +5152,10 @@ inline bool algo::LnumStr8_U64::operator ==(const algo::LnumStr8_U64 &rhs) const
     return algo::LnumStr8_U64_Eq(const_cast<algo::LnumStr8_U64&>(*this),const_cast<algo::LnumStr8_U64&>(rhs));
 }
 
+inline bool algo::LnumStr8_U64::operator !=(const algo::LnumStr8_U64 &rhs) const {
+    return !algo::LnumStr8_U64_Eq(const_cast<algo::LnumStr8_U64&>(*this),const_cast<algo::LnumStr8_U64&>(rhs));
+}
+
 inline bool algo::LnumStr8_U64::operator ==(const algo::strptr &rhs) const {
     return algo::LnumStr8_U64_EqStrptr(const_cast<algo::LnumStr8_U64&>(*this),rhs);
 }
@@ -5097,6 +5262,10 @@ inline bool algo::LnumStr9_U32::operator ==(const algo::LnumStr9_U32 &rhs) const
     return algo::LnumStr9_U32_Eq(const_cast<algo::LnumStr9_U32&>(*this),const_cast<algo::LnumStr9_U32&>(rhs));
 }
 
+inline bool algo::LnumStr9_U32::operator !=(const algo::LnumStr9_U32 &rhs) const {
+    return !algo::LnumStr9_U32_Eq(const_cast<algo::LnumStr9_U32&>(*this),const_cast<algo::LnumStr9_U32&>(rhs));
+}
+
 inline bool algo::LnumStr9_U32::operator ==(const algo::strptr &rhs) const {
     return algo::LnumStr9_U32_EqStrptr(const_cast<algo::LnumStr9_U32&>(*this),rhs);
 }
@@ -5201,6 +5370,10 @@ inline bool algo::LnumStr9_U32_EqStrptr(algo::LnumStr9_U32 & lhs, const algo::st
 
 inline bool algo::LnumStr9_U64::operator ==(const algo::LnumStr9_U64 &rhs) const {
     return algo::LnumStr9_U64_Eq(const_cast<algo::LnumStr9_U64&>(*this),const_cast<algo::LnumStr9_U64&>(rhs));
+}
+
+inline bool algo::LnumStr9_U64::operator !=(const algo::LnumStr9_U64 &rhs) const {
+    return !algo::LnumStr9_U64_Eq(const_cast<algo::LnumStr9_U64&>(*this),const_cast<algo::LnumStr9_U64&>(rhs));
 }
 
 inline bool algo::LnumStr9_U64::operator ==(const algo::strptr &rhs) const {
@@ -5388,6 +5561,10 @@ inline bool algo::Smallstr200::operator ==(const algo::Smallstr200 &rhs) const {
     return algo::Smallstr200_Eq(const_cast<algo::Smallstr200&>(*this),const_cast<algo::Smallstr200&>(rhs));
 }
 
+inline bool algo::Smallstr200::operator !=(const algo::Smallstr200 &rhs) const {
+    return !algo::Smallstr200_Eq(const_cast<algo::Smallstr200&>(*this),const_cast<algo::Smallstr200&>(rhs));
+}
+
 inline bool algo::Smallstr200::operator ==(const algo::strptr &rhs) const {
     return algo::Smallstr200_EqStrptr(const_cast<algo::Smallstr200&>(*this),rhs);
 }
@@ -5520,6 +5697,10 @@ inline bool algo::LspaceStr10::operator ==(const algo::LspaceStr10 &rhs) const {
     return algo::LspaceStr10_Eq(const_cast<algo::LspaceStr10&>(*this),const_cast<algo::LspaceStr10&>(rhs));
 }
 
+inline bool algo::LspaceStr10::operator !=(const algo::LspaceStr10 &rhs) const {
+    return !algo::LspaceStr10_Eq(const_cast<algo::LspaceStr10&>(*this),const_cast<algo::LspaceStr10&>(rhs));
+}
+
 inline bool algo::LspaceStr10::operator ==(const algo::strptr &rhs) const {
     return algo::LspaceStr10_EqStrptr(const_cast<algo::LspaceStr10&>(*this),rhs);
 }
@@ -5620,6 +5801,10 @@ inline bool algo::LspaceStr10_EqStrptr(algo::LspaceStr10 & lhs, const algo::strp
 
 inline bool algo::LspaceStr12::operator ==(const algo::LspaceStr12 &rhs) const {
     return algo::LspaceStr12_Eq(const_cast<algo::LspaceStr12&>(*this),const_cast<algo::LspaceStr12&>(rhs));
+}
+
+inline bool algo::LspaceStr12::operator !=(const algo::LspaceStr12 &rhs) const {
+    return !algo::LspaceStr12_Eq(const_cast<algo::LspaceStr12&>(*this),const_cast<algo::LspaceStr12&>(rhs));
 }
 
 inline bool algo::LspaceStr12::operator ==(const algo::strptr &rhs) const {
@@ -5724,6 +5909,10 @@ inline bool algo::LspaceStr14::operator ==(const algo::LspaceStr14 &rhs) const {
     return algo::LspaceStr14_Eq(const_cast<algo::LspaceStr14&>(*this),const_cast<algo::LspaceStr14&>(rhs));
 }
 
+inline bool algo::LspaceStr14::operator !=(const algo::LspaceStr14 &rhs) const {
+    return !algo::LspaceStr14_Eq(const_cast<algo::LspaceStr14&>(*this),const_cast<algo::LspaceStr14&>(rhs));
+}
+
 inline bool algo::LspaceStr14::operator ==(const algo::strptr &rhs) const {
     return algo::LspaceStr14_EqStrptr(const_cast<algo::LspaceStr14&>(*this),rhs);
 }
@@ -5824,6 +6013,10 @@ inline bool algo::LspaceStr14_EqStrptr(algo::LspaceStr14 & lhs, const algo::strp
 
 inline bool algo::LspaceStr15::operator ==(const algo::LspaceStr15 &rhs) const {
     return algo::LspaceStr15_Eq(const_cast<algo::LspaceStr15&>(*this),const_cast<algo::LspaceStr15&>(rhs));
+}
+
+inline bool algo::LspaceStr15::operator !=(const algo::LspaceStr15 &rhs) const {
+    return !algo::LspaceStr15_Eq(const_cast<algo::LspaceStr15&>(*this),const_cast<algo::LspaceStr15&>(rhs));
 }
 
 inline bool algo::LspaceStr15::operator ==(const algo::strptr &rhs) const {
@@ -5928,6 +6121,10 @@ inline bool algo::LspaceStr20_I64::operator ==(const algo::LspaceStr20_I64 &rhs)
     return algo::LspaceStr20_I64_Eq(const_cast<algo::LspaceStr20_I64&>(*this),const_cast<algo::LspaceStr20_I64&>(rhs));
 }
 
+inline bool algo::LspaceStr20_I64::operator !=(const algo::LspaceStr20_I64 &rhs) const {
+    return !algo::LspaceStr20_I64_Eq(const_cast<algo::LspaceStr20_I64&>(*this),const_cast<algo::LspaceStr20_I64&>(rhs));
+}
+
 inline bool algo::LspaceStr20_I64::operator ==(const algo::strptr &rhs) const {
     return algo::LspaceStr20_I64_EqStrptr(const_cast<algo::LspaceStr20_I64&>(*this),rhs);
 }
@@ -6028,6 +6225,10 @@ inline bool algo::LspaceStr20_I64_EqStrptr(algo::LspaceStr20_I64 & lhs, const al
 
 inline bool algo::LspaceStr20_U64::operator ==(const algo::LspaceStr20_U64 &rhs) const {
     return algo::LspaceStr20_U64_Eq(const_cast<algo::LspaceStr20_U64&>(*this),const_cast<algo::LspaceStr20_U64&>(rhs));
+}
+
+inline bool algo::LspaceStr20_U64::operator !=(const algo::LspaceStr20_U64 &rhs) const {
+    return !algo::LspaceStr20_U64_Eq(const_cast<algo::LspaceStr20_U64&>(*this),const_cast<algo::LspaceStr20_U64&>(rhs));
 }
 
 inline bool algo::LspaceStr20_U64::operator ==(const algo::strptr &rhs) const {
@@ -6132,6 +6333,10 @@ inline bool algo::LspaceStr3::operator ==(const algo::LspaceStr3 &rhs) const {
     return algo::LspaceStr3_Eq(const_cast<algo::LspaceStr3&>(*this),const_cast<algo::LspaceStr3&>(rhs));
 }
 
+inline bool algo::LspaceStr3::operator !=(const algo::LspaceStr3 &rhs) const {
+    return !algo::LspaceStr3_Eq(const_cast<algo::LspaceStr3&>(*this),const_cast<algo::LspaceStr3&>(rhs));
+}
+
 inline bool algo::LspaceStr3::operator ==(const algo::strptr &rhs) const {
     return algo::LspaceStr3_EqStrptr(const_cast<algo::LspaceStr3&>(*this),rhs);
 }
@@ -6232,6 +6437,10 @@ inline bool algo::LspaceStr3_EqStrptr(algo::LspaceStr3 & lhs, const algo::strptr
 
 inline bool algo::LspaceStr3_I16::operator ==(const algo::LspaceStr3_I16 &rhs) const {
     return algo::LspaceStr3_I16_Eq(const_cast<algo::LspaceStr3_I16&>(*this),const_cast<algo::LspaceStr3_I16&>(rhs));
+}
+
+inline bool algo::LspaceStr3_I16::operator !=(const algo::LspaceStr3_I16 &rhs) const {
+    return !algo::LspaceStr3_I16_Eq(const_cast<algo::LspaceStr3_I16&>(*this),const_cast<algo::LspaceStr3_I16&>(rhs));
 }
 
 inline bool algo::LspaceStr3_I16::operator ==(const algo::strptr &rhs) const {
@@ -6336,6 +6545,10 @@ inline bool algo::LspaceStr4::operator ==(const algo::LspaceStr4 &rhs) const {
     return algo::LspaceStr4_Eq(const_cast<algo::LspaceStr4&>(*this),const_cast<algo::LspaceStr4&>(rhs));
 }
 
+inline bool algo::LspaceStr4::operator !=(const algo::LspaceStr4 &rhs) const {
+    return !algo::LspaceStr4_Eq(const_cast<algo::LspaceStr4&>(*this),const_cast<algo::LspaceStr4&>(rhs));
+}
+
 inline bool algo::LspaceStr4::operator ==(const algo::strptr &rhs) const {
     return algo::LspaceStr4_EqStrptr(const_cast<algo::LspaceStr4&>(*this),rhs);
 }
@@ -6436,6 +6649,10 @@ inline bool algo::LspaceStr4_EqStrptr(algo::LspaceStr4 & lhs, const algo::strptr
 
 inline bool algo::LspaceStr5::operator ==(const algo::LspaceStr5 &rhs) const {
     return algo::LspaceStr5_Eq(const_cast<algo::LspaceStr5&>(*this),const_cast<algo::LspaceStr5&>(rhs));
+}
+
+inline bool algo::LspaceStr5::operator !=(const algo::LspaceStr5 &rhs) const {
+    return !algo::LspaceStr5_Eq(const_cast<algo::LspaceStr5&>(*this),const_cast<algo::LspaceStr5&>(rhs));
 }
 
 inline bool algo::LspaceStr5::operator ==(const algo::strptr &rhs) const {
@@ -6540,6 +6757,10 @@ inline bool algo::LspaceStr5_I16::operator ==(const algo::LspaceStr5_I16 &rhs) c
     return algo::LspaceStr5_I16_Eq(const_cast<algo::LspaceStr5_I16&>(*this),const_cast<algo::LspaceStr5_I16&>(rhs));
 }
 
+inline bool algo::LspaceStr5_I16::operator !=(const algo::LspaceStr5_I16 &rhs) const {
+    return !algo::LspaceStr5_I16_Eq(const_cast<algo::LspaceStr5_I16&>(*this),const_cast<algo::LspaceStr5_I16&>(rhs));
+}
+
 inline bool algo::LspaceStr5_I16::operator ==(const algo::strptr &rhs) const {
     return algo::LspaceStr5_I16_EqStrptr(const_cast<algo::LspaceStr5_I16&>(*this),rhs);
 }
@@ -6640,6 +6861,10 @@ inline bool algo::LspaceStr5_I16_EqStrptr(algo::LspaceStr5_I16 & lhs, const algo
 
 inline bool algo::LspaceStr6::operator ==(const algo::LspaceStr6 &rhs) const {
     return algo::LspaceStr6_Eq(const_cast<algo::LspaceStr6&>(*this),const_cast<algo::LspaceStr6&>(rhs));
+}
+
+inline bool algo::LspaceStr6::operator !=(const algo::LspaceStr6 &rhs) const {
+    return !algo::LspaceStr6_Eq(const_cast<algo::LspaceStr6&>(*this),const_cast<algo::LspaceStr6&>(rhs));
 }
 
 inline bool algo::LspaceStr6::operator ==(const algo::strptr &rhs) const {
@@ -6744,6 +6969,10 @@ inline bool algo::LspaceStr6_U32::operator ==(const algo::LspaceStr6_U32 &rhs) c
     return algo::LspaceStr6_U32_Eq(const_cast<algo::LspaceStr6_U32&>(*this),const_cast<algo::LspaceStr6_U32&>(rhs));
 }
 
+inline bool algo::LspaceStr6_U32::operator !=(const algo::LspaceStr6_U32 &rhs) const {
+    return !algo::LspaceStr6_U32_Eq(const_cast<algo::LspaceStr6_U32&>(*this),const_cast<algo::LspaceStr6_U32&>(rhs));
+}
+
 inline bool algo::LspaceStr6_U32::operator ==(const algo::strptr &rhs) const {
     return algo::LspaceStr6_U32_EqStrptr(const_cast<algo::LspaceStr6_U32&>(*this),rhs);
 }
@@ -6844,6 +7073,10 @@ inline bool algo::LspaceStr6_U32_EqStrptr(algo::LspaceStr6_U32 & lhs, const algo
 
 inline bool algo::LspaceStr7_I32_Base36::operator ==(const algo::LspaceStr7_I32_Base36 &rhs) const {
     return algo::LspaceStr7_I32_Base36_Eq(const_cast<algo::LspaceStr7_I32_Base36&>(*this),const_cast<algo::LspaceStr7_I32_Base36&>(rhs));
+}
+
+inline bool algo::LspaceStr7_I32_Base36::operator !=(const algo::LspaceStr7_I32_Base36 &rhs) const {
+    return !algo::LspaceStr7_I32_Base36_Eq(const_cast<algo::LspaceStr7_I32_Base36&>(*this),const_cast<algo::LspaceStr7_I32_Base36&>(rhs));
 }
 
 inline bool algo::LspaceStr7_I32_Base36::operator ==(const algo::strptr &rhs) const {
@@ -6948,6 +7181,10 @@ inline bool algo::LspaceStr8::operator ==(const algo::LspaceStr8 &rhs) const {
     return algo::LspaceStr8_Eq(const_cast<algo::LspaceStr8&>(*this),const_cast<algo::LspaceStr8&>(rhs));
 }
 
+inline bool algo::LspaceStr8::operator !=(const algo::LspaceStr8 &rhs) const {
+    return !algo::LspaceStr8_Eq(const_cast<algo::LspaceStr8&>(*this),const_cast<algo::LspaceStr8&>(rhs));
+}
+
 inline bool algo::LspaceStr8::operator ==(const algo::strptr &rhs) const {
     return algo::LspaceStr8_EqStrptr(const_cast<algo::LspaceStr8&>(*this),rhs);
 }
@@ -7048,6 +7285,10 @@ inline bool algo::LspaceStr8_EqStrptr(algo::LspaceStr8 & lhs, const algo::strptr
 
 inline bool algo::LspaceStr9::operator ==(const algo::LspaceStr9 &rhs) const {
     return algo::LspaceStr9_Eq(const_cast<algo::LspaceStr9&>(*this),const_cast<algo::LspaceStr9&>(rhs));
+}
+
+inline bool algo::LspaceStr9::operator !=(const algo::LspaceStr9 &rhs) const {
+    return !algo::LspaceStr9_Eq(const_cast<algo::LspaceStr9&>(*this),const_cast<algo::LspaceStr9&>(rhs));
 }
 
 inline bool algo::LspaceStr9::operator ==(const algo::strptr &rhs) const {
@@ -7396,18 +7637,6 @@ inline algo::NumParseFlags::NumParseFlags() {
 }
 
 
-// --- algo.NumParseFlags.value.GetEnum
-// Get value of field as enum type
-inline algo_NumParseFlagsEnum algo::value_GetEnum(const algo::NumParseFlags& parent) {
-    return algo_NumParseFlagsEnum(parent.value);
-}
-
-// --- algo.NumParseFlags.value.SetEnum
-// Set value of field from enum type.
-inline void algo::value_SetEnum(algo::NumParseFlags& parent, algo_NumParseFlagsEnum rhs) {
-    parent.value = u32(rhs);
-}
-
 // --- algo.NumParseFlags.value.Cast
 inline algo::NumParseFlags::operator algo_NumParseFlagsEnum () const {
     return algo_NumParseFlagsEnum((*this).value);
@@ -7504,6 +7733,10 @@ inline algo::Protocol::Protocol() {
 
 inline bool algo::RnullStr1::operator ==(const algo::RnullStr1 &rhs) const {
     return algo::RnullStr1_Eq(const_cast<algo::RnullStr1&>(*this),const_cast<algo::RnullStr1&>(rhs));
+}
+
+inline bool algo::RnullStr1::operator !=(const algo::RnullStr1 &rhs) const {
+    return !algo::RnullStr1_Eq(const_cast<algo::RnullStr1&>(*this),const_cast<algo::RnullStr1&>(rhs));
 }
 
 inline bool algo::RnullStr1::operator ==(const algo::strptr &rhs) const {
@@ -7623,6 +7856,10 @@ inline bool algo::RnullStr1_EqStrptr(algo::RnullStr1 lhs, const algo::strptr &rh
 
 inline bool algo::RnullStr10::operator ==(const algo::RnullStr10 &rhs) const {
     return algo::RnullStr10_Eq(const_cast<algo::RnullStr10&>(*this),const_cast<algo::RnullStr10&>(rhs));
+}
+
+inline bool algo::RnullStr10::operator !=(const algo::RnullStr10 &rhs) const {
+    return !algo::RnullStr10_Eq(const_cast<algo::RnullStr10&>(*this),const_cast<algo::RnullStr10&>(rhs));
 }
 
 inline bool algo::RnullStr10::operator ==(const algo::strptr &rhs) const {
@@ -7851,6 +8088,10 @@ inline bool algo::RnullStr1000::operator ==(const algo::RnullStr1000 &rhs) const
     return algo::RnullStr1000_Eq(const_cast<algo::RnullStr1000&>(*this),const_cast<algo::RnullStr1000&>(rhs));
 }
 
+inline bool algo::RnullStr1000::operator !=(const algo::RnullStr1000 &rhs) const {
+    return !algo::RnullStr1000_Eq(const_cast<algo::RnullStr1000&>(*this),const_cast<algo::RnullStr1000&>(rhs));
+}
+
 inline bool algo::RnullStr1000::operator ==(const algo::strptr &rhs) const {
     return algo::RnullStr1000_EqStrptr(const_cast<algo::RnullStr1000&>(*this),rhs);
 }
@@ -7968,6 +8209,10 @@ inline bool algo::RnullStr1000_EqStrptr(algo::RnullStr1000 & lhs, const algo::st
 
 inline bool algo::RnullStr11::operator ==(const algo::RnullStr11 &rhs) const {
     return algo::RnullStr11_Eq(const_cast<algo::RnullStr11&>(*this),const_cast<algo::RnullStr11&>(rhs));
+}
+
+inline bool algo::RnullStr11::operator !=(const algo::RnullStr11 &rhs) const {
+    return !algo::RnullStr11_Eq(const_cast<algo::RnullStr11&>(*this),const_cast<algo::RnullStr11&>(rhs));
 }
 
 inline bool algo::RnullStr11::operator ==(const algo::strptr &rhs) const {
@@ -8089,6 +8334,10 @@ inline bool algo::RnullStr12::operator ==(const algo::RnullStr12 &rhs) const {
     return algo::RnullStr12_Eq(const_cast<algo::RnullStr12&>(*this),const_cast<algo::RnullStr12&>(rhs));
 }
 
+inline bool algo::RnullStr12::operator !=(const algo::RnullStr12 &rhs) const {
+    return !algo::RnullStr12_Eq(const_cast<algo::RnullStr12&>(*this),const_cast<algo::RnullStr12&>(rhs));
+}
+
 inline bool algo::RnullStr12::operator ==(const algo::strptr &rhs) const {
     return algo::RnullStr12_EqStrptr(const_cast<algo::RnullStr12&>(*this),rhs);
 }
@@ -8206,6 +8455,10 @@ inline bool algo::RnullStr12_EqStrptr(algo::RnullStr12 & lhs, const algo::strptr
 
 inline bool algo::RnullStr129::operator ==(const algo::RnullStr129 &rhs) const {
     return algo::RnullStr129_Eq(const_cast<algo::RnullStr129&>(*this),const_cast<algo::RnullStr129&>(rhs));
+}
+
+inline bool algo::RnullStr129::operator !=(const algo::RnullStr129 &rhs) const {
+    return !algo::RnullStr129_Eq(const_cast<algo::RnullStr129&>(*this),const_cast<algo::RnullStr129&>(rhs));
 }
 
 inline bool algo::RnullStr129::operator ==(const algo::strptr &rhs) const {
@@ -8327,6 +8580,10 @@ inline bool algo::RnullStr13::operator ==(const algo::RnullStr13 &rhs) const {
     return algo::RnullStr13_Eq(const_cast<algo::RnullStr13&>(*this),const_cast<algo::RnullStr13&>(rhs));
 }
 
+inline bool algo::RnullStr13::operator !=(const algo::RnullStr13 &rhs) const {
+    return !algo::RnullStr13_Eq(const_cast<algo::RnullStr13&>(*this),const_cast<algo::RnullStr13&>(rhs));
+}
+
 inline bool algo::RnullStr13::operator ==(const algo::strptr &rhs) const {
     return algo::RnullStr13_EqStrptr(const_cast<algo::RnullStr13&>(*this),rhs);
 }
@@ -8444,6 +8701,10 @@ inline bool algo::RnullStr13_EqStrptr(algo::RnullStr13 & lhs, const algo::strptr
 
 inline bool algo::RnullStr14::operator ==(const algo::RnullStr14 &rhs) const {
     return algo::RnullStr14_Eq(const_cast<algo::RnullStr14&>(*this),const_cast<algo::RnullStr14&>(rhs));
+}
+
+inline bool algo::RnullStr14::operator !=(const algo::RnullStr14 &rhs) const {
+    return !algo::RnullStr14_Eq(const_cast<algo::RnullStr14&>(*this),const_cast<algo::RnullStr14&>(rhs));
 }
 
 inline bool algo::RnullStr14::operator ==(const algo::strptr &rhs) const {
@@ -8565,6 +8826,10 @@ inline bool algo::RnullStr15::operator ==(const algo::RnullStr15 &rhs) const {
     return algo::RnullStr15_Eq(const_cast<algo::RnullStr15&>(*this),const_cast<algo::RnullStr15&>(rhs));
 }
 
+inline bool algo::RnullStr15::operator !=(const algo::RnullStr15 &rhs) const {
+    return !algo::RnullStr15_Eq(const_cast<algo::RnullStr15&>(*this),const_cast<algo::RnullStr15&>(rhs));
+}
+
 inline bool algo::RnullStr15::operator ==(const algo::strptr &rhs) const {
     return algo::RnullStr15_EqStrptr(const_cast<algo::RnullStr15&>(*this),rhs);
 }
@@ -8682,6 +8947,10 @@ inline bool algo::RnullStr15_EqStrptr(algo::RnullStr15 & lhs, const algo::strptr
 
 inline bool algo::RnullStr151::operator ==(const algo::RnullStr151 &rhs) const {
     return algo::RnullStr151_Eq(const_cast<algo::RnullStr151&>(*this),const_cast<algo::RnullStr151&>(rhs));
+}
+
+inline bool algo::RnullStr151::operator !=(const algo::RnullStr151 &rhs) const {
+    return !algo::RnullStr151_Eq(const_cast<algo::RnullStr151&>(*this),const_cast<algo::RnullStr151&>(rhs));
 }
 
 inline bool algo::RnullStr151::operator ==(const algo::strptr &rhs) const {
@@ -8910,6 +9179,10 @@ inline bool algo::RnullStr17::operator ==(const algo::RnullStr17 &rhs) const {
     return algo::RnullStr17_Eq(const_cast<algo::RnullStr17&>(*this),const_cast<algo::RnullStr17&>(rhs));
 }
 
+inline bool algo::RnullStr17::operator !=(const algo::RnullStr17 &rhs) const {
+    return !algo::RnullStr17_Eq(const_cast<algo::RnullStr17&>(*this),const_cast<algo::RnullStr17&>(rhs));
+}
+
 inline bool algo::RnullStr17::operator ==(const algo::strptr &rhs) const {
     return algo::RnullStr17_EqStrptr(const_cast<algo::RnullStr17&>(*this),rhs);
 }
@@ -9027,6 +9300,10 @@ inline bool algo::RnullStr17_EqStrptr(algo::RnullStr17 & lhs, const algo::strptr
 
 inline bool algo::RnullStr18::operator ==(const algo::RnullStr18 &rhs) const {
     return algo::RnullStr18_Eq(const_cast<algo::RnullStr18&>(*this),const_cast<algo::RnullStr18&>(rhs));
+}
+
+inline bool algo::RnullStr18::operator !=(const algo::RnullStr18 &rhs) const {
+    return !algo::RnullStr18_Eq(const_cast<algo::RnullStr18&>(*this),const_cast<algo::RnullStr18&>(rhs));
 }
 
 inline bool algo::RnullStr18::operator ==(const algo::strptr &rhs) const {
@@ -9255,6 +9532,10 @@ inline bool algo::RnullStr2::operator ==(const algo::RnullStr2 &rhs) const {
     return algo::RnullStr2_Eq(const_cast<algo::RnullStr2&>(*this),const_cast<algo::RnullStr2&>(rhs));
 }
 
+inline bool algo::RnullStr2::operator !=(const algo::RnullStr2 &rhs) const {
+    return !algo::RnullStr2_Eq(const_cast<algo::RnullStr2&>(*this),const_cast<algo::RnullStr2&>(rhs));
+}
+
 inline bool algo::RnullStr2::operator ==(const algo::strptr &rhs) const {
     return algo::RnullStr2_EqStrptr(const_cast<algo::RnullStr2&>(*this),rhs);
 }
@@ -9372,6 +9653,10 @@ inline bool algo::RnullStr2_EqStrptr(algo::RnullStr2 lhs, const algo::strptr &rh
 
 inline bool algo::RnullStr20::operator ==(const algo::RnullStr20 &rhs) const {
     return algo::RnullStr20_Eq(const_cast<algo::RnullStr20&>(*this),const_cast<algo::RnullStr20&>(rhs));
+}
+
+inline bool algo::RnullStr20::operator !=(const algo::RnullStr20 &rhs) const {
+    return !algo::RnullStr20_Eq(const_cast<algo::RnullStr20&>(*this),const_cast<algo::RnullStr20&>(rhs));
 }
 
 inline bool algo::RnullStr20::operator ==(const algo::strptr &rhs) const {
@@ -9600,6 +9885,10 @@ inline bool algo::RnullStr24::operator ==(const algo::RnullStr24 &rhs) const {
     return algo::RnullStr24_Eq(const_cast<algo::RnullStr24&>(*this),const_cast<algo::RnullStr24&>(rhs));
 }
 
+inline bool algo::RnullStr24::operator !=(const algo::RnullStr24 &rhs) const {
+    return !algo::RnullStr24_Eq(const_cast<algo::RnullStr24&>(*this),const_cast<algo::RnullStr24&>(rhs));
+}
+
 inline bool algo::RnullStr24::operator ==(const algo::strptr &rhs) const {
     return algo::RnullStr24_EqStrptr(const_cast<algo::RnullStr24&>(*this),rhs);
 }
@@ -9717,6 +10006,10 @@ inline bool algo::RnullStr24_EqStrptr(algo::RnullStr24 & lhs, const algo::strptr
 
 inline bool algo::RnullStr25::operator ==(const algo::RnullStr25 &rhs) const {
     return algo::RnullStr25_Eq(const_cast<algo::RnullStr25&>(*this),const_cast<algo::RnullStr25&>(rhs));
+}
+
+inline bool algo::RnullStr25::operator !=(const algo::RnullStr25 &rhs) const {
+    return !algo::RnullStr25_Eq(const_cast<algo::RnullStr25&>(*this),const_cast<algo::RnullStr25&>(rhs));
 }
 
 inline bool algo::RnullStr25::operator ==(const algo::strptr &rhs) const {
@@ -9838,6 +10131,10 @@ inline bool algo::RnullStr28::operator ==(const algo::RnullStr28 &rhs) const {
     return algo::RnullStr28_Eq(const_cast<algo::RnullStr28&>(*this),const_cast<algo::RnullStr28&>(rhs));
 }
 
+inline bool algo::RnullStr28::operator !=(const algo::RnullStr28 &rhs) const {
+    return !algo::RnullStr28_Eq(const_cast<algo::RnullStr28&>(*this),const_cast<algo::RnullStr28&>(rhs));
+}
+
 inline bool algo::RnullStr28::operator ==(const algo::strptr &rhs) const {
     return algo::RnullStr28_EqStrptr(const_cast<algo::RnullStr28&>(*this),rhs);
 }
@@ -9955,6 +10252,10 @@ inline bool algo::RnullStr28_EqStrptr(algo::RnullStr28 & lhs, const algo::strptr
 
 inline bool algo::RnullStr3::operator ==(const algo::RnullStr3 &rhs) const {
     return algo::RnullStr3_Eq(const_cast<algo::RnullStr3&>(*this),const_cast<algo::RnullStr3&>(rhs));
+}
+
+inline bool algo::RnullStr3::operator !=(const algo::RnullStr3 &rhs) const {
+    return !algo::RnullStr3_Eq(const_cast<algo::RnullStr3&>(*this),const_cast<algo::RnullStr3&>(rhs));
 }
 
 inline bool algo::RnullStr3::operator ==(const algo::strptr &rhs) const {
@@ -10183,6 +10484,10 @@ inline bool algo::RnullStr32::operator ==(const algo::RnullStr32 &rhs) const {
     return algo::RnullStr32_Eq(const_cast<algo::RnullStr32&>(*this),const_cast<algo::RnullStr32&>(rhs));
 }
 
+inline bool algo::RnullStr32::operator !=(const algo::RnullStr32 &rhs) const {
+    return !algo::RnullStr32_Eq(const_cast<algo::RnullStr32&>(*this),const_cast<algo::RnullStr32&>(rhs));
+}
+
 inline bool algo::RnullStr32::operator ==(const algo::strptr &rhs) const {
     return algo::RnullStr32_EqStrptr(const_cast<algo::RnullStr32&>(*this),rhs);
 }
@@ -10300,6 +10605,10 @@ inline bool algo::RnullStr32_EqStrptr(algo::RnullStr32 lhs, const algo::strptr &
 
 inline bool algo::RnullStr33::operator ==(const algo::RnullStr33 &rhs) const {
     return algo::RnullStr33_Eq(const_cast<algo::RnullStr33&>(*this),const_cast<algo::RnullStr33&>(rhs));
+}
+
+inline bool algo::RnullStr33::operator !=(const algo::RnullStr33 &rhs) const {
+    return !algo::RnullStr33_Eq(const_cast<algo::RnullStr33&>(*this),const_cast<algo::RnullStr33&>(rhs));
 }
 
 inline bool algo::RnullStr33::operator ==(const algo::strptr &rhs) const {
@@ -10421,6 +10730,10 @@ inline bool algo::RnullStr35::operator ==(const algo::RnullStr35 &rhs) const {
     return algo::RnullStr35_Eq(const_cast<algo::RnullStr35&>(*this),const_cast<algo::RnullStr35&>(rhs));
 }
 
+inline bool algo::RnullStr35::operator !=(const algo::RnullStr35 &rhs) const {
+    return !algo::RnullStr35_Eq(const_cast<algo::RnullStr35&>(*this),const_cast<algo::RnullStr35&>(rhs));
+}
+
 inline bool algo::RnullStr35::operator ==(const algo::strptr &rhs) const {
     return algo::RnullStr35_EqStrptr(const_cast<algo::RnullStr35&>(*this),rhs);
 }
@@ -10538,6 +10851,10 @@ inline bool algo::RnullStr35_EqStrptr(algo::RnullStr35 & lhs, const algo::strptr
 
 inline bool algo::RnullStr36::operator ==(const algo::RnullStr36 &rhs) const {
     return algo::RnullStr36_Eq(const_cast<algo::RnullStr36&>(*this),const_cast<algo::RnullStr36&>(rhs));
+}
+
+inline bool algo::RnullStr36::operator !=(const algo::RnullStr36 &rhs) const {
+    return !algo::RnullStr36_Eq(const_cast<algo::RnullStr36&>(*this),const_cast<algo::RnullStr36&>(rhs));
 }
 
 inline bool algo::RnullStr36::operator ==(const algo::strptr &rhs) const {
@@ -10766,6 +11083,10 @@ inline bool algo::RnullStr40::operator ==(const algo::RnullStr40 &rhs) const {
     return algo::RnullStr40_Eq(const_cast<algo::RnullStr40&>(*this),const_cast<algo::RnullStr40&>(rhs));
 }
 
+inline bool algo::RnullStr40::operator !=(const algo::RnullStr40 &rhs) const {
+    return !algo::RnullStr40_Eq(const_cast<algo::RnullStr40&>(*this),const_cast<algo::RnullStr40&>(rhs));
+}
+
 inline bool algo::RnullStr40::operator ==(const algo::strptr &rhs) const {
     return algo::RnullStr40_EqStrptr(const_cast<algo::RnullStr40&>(*this),rhs);
 }
@@ -10883,6 +11204,10 @@ inline bool algo::RnullStr40_EqStrptr(algo::RnullStr40 & lhs, const algo::strptr
 
 inline bool algo::RnullStr41::operator ==(const algo::RnullStr41 &rhs) const {
     return algo::RnullStr41_Eq(const_cast<algo::RnullStr41&>(*this),const_cast<algo::RnullStr41&>(rhs));
+}
+
+inline bool algo::RnullStr41::operator !=(const algo::RnullStr41 &rhs) const {
+    return !algo::RnullStr41_Eq(const_cast<algo::RnullStr41&>(*this),const_cast<algo::RnullStr41&>(rhs));
 }
 
 inline bool algo::RnullStr41::operator ==(const algo::strptr &rhs) const {
@@ -11539,6 +11864,10 @@ inline bool algo::RnullStr54::operator ==(const algo::RnullStr54 &rhs) const {
     return algo::RnullStr54_Eq(const_cast<algo::RnullStr54&>(*this),const_cast<algo::RnullStr54&>(rhs));
 }
 
+inline bool algo::RnullStr54::operator !=(const algo::RnullStr54 &rhs) const {
+    return !algo::RnullStr54_Eq(const_cast<algo::RnullStr54&>(*this),const_cast<algo::RnullStr54&>(rhs));
+}
+
 inline bool algo::RnullStr54::operator ==(const algo::strptr &rhs) const {
     return algo::RnullStr54_EqStrptr(const_cast<algo::RnullStr54&>(*this),rhs);
 }
@@ -11765,6 +12094,10 @@ inline bool algo::RnullStr6::operator ==(const algo::RnullStr6 &rhs) const {
     return algo::RnullStr6_Eq(const_cast<algo::RnullStr6&>(*this),const_cast<algo::RnullStr6&>(rhs));
 }
 
+inline bool algo::RnullStr6::operator !=(const algo::RnullStr6 &rhs) const {
+    return !algo::RnullStr6_Eq(const_cast<algo::RnullStr6&>(*this),const_cast<algo::RnullStr6&>(rhs));
+}
+
 inline bool algo::RnullStr6::operator ==(const algo::strptr &rhs) const {
     return algo::RnullStr6_EqStrptr(const_cast<algo::RnullStr6&>(*this),rhs);
 }
@@ -11884,6 +12217,10 @@ inline bool algo::RnullStr60::operator ==(const algo::RnullStr60 &rhs) const {
     return algo::RnullStr60_Eq(const_cast<algo::RnullStr60&>(*this),const_cast<algo::RnullStr60&>(rhs));
 }
 
+inline bool algo::RnullStr60::operator !=(const algo::RnullStr60 &rhs) const {
+    return !algo::RnullStr60_Eq(const_cast<algo::RnullStr60&>(*this),const_cast<algo::RnullStr60&>(rhs));
+}
+
 inline bool algo::RnullStr60::operator ==(const algo::strptr &rhs) const {
     return algo::RnullStr60_EqStrptr(const_cast<algo::RnullStr60&>(*this),rhs);
 }
@@ -12001,6 +12338,10 @@ inline bool algo::RnullStr60_EqStrptr(algo::RnullStr60 & lhs, const algo::strptr
 
 inline bool algo::RnullStr62::operator ==(const algo::RnullStr62 &rhs) const {
     return algo::RnullStr62_Eq(const_cast<algo::RnullStr62&>(*this),const_cast<algo::RnullStr62&>(rhs));
+}
+
+inline bool algo::RnullStr62::operator !=(const algo::RnullStr62 &rhs) const {
+    return !algo::RnullStr62_Eq(const_cast<algo::RnullStr62&>(*this),const_cast<algo::RnullStr62&>(rhs));
 }
 
 inline bool algo::RnullStr62::operator ==(const algo::strptr &rhs) const {
@@ -12229,6 +12570,10 @@ inline bool algo::RnullStr6_U32::operator ==(const algo::RnullStr6_U32 &rhs) con
     return algo::RnullStr6_U32_Eq(const_cast<algo::RnullStr6_U32&>(*this),const_cast<algo::RnullStr6_U32&>(rhs));
 }
 
+inline bool algo::RnullStr6_U32::operator !=(const algo::RnullStr6_U32 &rhs) const {
+    return !algo::RnullStr6_U32_Eq(const_cast<algo::RnullStr6_U32&>(*this),const_cast<algo::RnullStr6_U32&>(rhs));
+}
+
 inline bool algo::RnullStr6_U32::operator ==(const algo::strptr &rhs) const {
     return algo::RnullStr6_U32_EqStrptr(const_cast<algo::RnullStr6_U32&>(*this),rhs);
 }
@@ -12327,6 +12672,10 @@ inline bool algo::RnullStr6_U32_EqStrptr(algo::RnullStr6_U32 & lhs, const algo::
 
 inline bool algo::RnullStr7::operator ==(const algo::RnullStr7 &rhs) const {
     return algo::RnullStr7_Eq(const_cast<algo::RnullStr7&>(*this),const_cast<algo::RnullStr7&>(rhs));
+}
+
+inline bool algo::RnullStr7::operator !=(const algo::RnullStr7 &rhs) const {
+    return !algo::RnullStr7_Eq(const_cast<algo::RnullStr7&>(*this),const_cast<algo::RnullStr7&>(rhs));
 }
 
 inline bool algo::RnullStr7::operator ==(const algo::strptr &rhs) const {
@@ -12662,6 +13011,10 @@ inline bool algo::RnullStr9::operator ==(const algo::RnullStr9 &rhs) const {
     return algo::RnullStr9_Eq(const_cast<algo::RnullStr9&>(*this),const_cast<algo::RnullStr9&>(rhs));
 }
 
+inline bool algo::RnullStr9::operator !=(const algo::RnullStr9 &rhs) const {
+    return !algo::RnullStr9_Eq(const_cast<algo::RnullStr9&>(*this),const_cast<algo::RnullStr9&>(rhs));
+}
+
 inline bool algo::RnullStr9::operator ==(const algo::strptr &rhs) const {
     return algo::RnullStr9_EqStrptr(const_cast<algo::RnullStr9&>(*this),rhs);
 }
@@ -12781,6 +13134,10 @@ inline bool algo::RspaceStr10::operator ==(const algo::RspaceStr10 &rhs) const {
     return algo::RspaceStr10_Eq(const_cast<algo::RspaceStr10&>(*this),const_cast<algo::RspaceStr10&>(rhs));
 }
 
+inline bool algo::RspaceStr10::operator !=(const algo::RspaceStr10 &rhs) const {
+    return !algo::RspaceStr10_Eq(const_cast<algo::RspaceStr10&>(*this),const_cast<algo::RspaceStr10&>(rhs));
+}
+
 inline bool algo::RspaceStr10::operator ==(const algo::strptr &rhs) const {
     return algo::RspaceStr10_EqStrptr(const_cast<algo::RspaceStr10&>(*this),rhs);
 }
@@ -12879,6 +13236,10 @@ inline bool algo::RspaceStr10_EqStrptr(algo::RspaceStr10 & lhs, const algo::strp
 
 inline bool algo::RspaceStr100::operator ==(const algo::RspaceStr100 &rhs) const {
     return algo::RspaceStr100_Eq(const_cast<algo::RspaceStr100&>(*this),const_cast<algo::RspaceStr100&>(rhs));
+}
+
+inline bool algo::RspaceStr100::operator !=(const algo::RspaceStr100 &rhs) const {
+    return !algo::RspaceStr100_Eq(const_cast<algo::RspaceStr100&>(*this),const_cast<algo::RspaceStr100&>(rhs));
 }
 
 inline bool algo::RspaceStr100::operator ==(const algo::strptr &rhs) const {
@@ -12981,6 +13342,10 @@ inline bool algo::RspaceStr11::operator ==(const algo::RspaceStr11 &rhs) const {
     return algo::RspaceStr11_Eq(const_cast<algo::RspaceStr11&>(*this),const_cast<algo::RspaceStr11&>(rhs));
 }
 
+inline bool algo::RspaceStr11::operator !=(const algo::RspaceStr11 &rhs) const {
+    return !algo::RspaceStr11_Eq(const_cast<algo::RspaceStr11&>(*this),const_cast<algo::RspaceStr11&>(rhs));
+}
+
 inline bool algo::RspaceStr11::operator ==(const algo::strptr &rhs) const {
     return algo::RspaceStr11_EqStrptr(const_cast<algo::RspaceStr11&>(*this),rhs);
 }
@@ -13074,6 +13439,110 @@ inline bool algo::RspaceStr11_Eq(const algo::RspaceStr11 & lhs,const algo::Rspac
 
 // --- algo.RspaceStr11..EqStrptr
 inline bool algo::RspaceStr11_EqStrptr(algo::RspaceStr11 & lhs, const algo::strptr &rhs) {
+    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+}
+
+inline bool algo::RspaceStr12::operator ==(const algo::RspaceStr12 &rhs) const {
+    return algo::RspaceStr12_Eq(const_cast<algo::RspaceStr12&>(*this),const_cast<algo::RspaceStr12&>(rhs));
+}
+
+inline bool algo::RspaceStr12::operator !=(const algo::RspaceStr12 &rhs) const {
+    return !algo::RspaceStr12_Eq(const_cast<algo::RspaceStr12&>(*this),const_cast<algo::RspaceStr12&>(rhs));
+}
+
+inline bool algo::RspaceStr12::operator ==(const algo::strptr &rhs) const {
+    return algo::RspaceStr12_EqStrptr(const_cast<algo::RspaceStr12&>(*this),rhs);
+}
+inline algo::RspaceStr12::RspaceStr12() {
+    algo::RspaceStr12_Init(*this);
+}
+
+
+// --- algo.RspaceStr12.ch.Getary
+// Access string as array of chars
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr12& parent) {
+    int len = ch_N(parent);
+    algo::aryptr<char> ret((char*)parent.ch, len);
+    return ret;
+}
+
+// --- algo.RspaceStr12.ch.HashStrptr
+inline u32 algo::RspaceStr12_Hash(u32 prev, const algo::strptr &str) {
+    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
+}
+
+// --- algo.RspaceStr12.ch.Init
+inline void algo::ch_Init(algo::RspaceStr12 &parent) {
+    memset(parent.ch, ' ', 12);
+}
+
+// --- algo.RspaceStr12.ch.Max
+// always return constant 12
+inline int algo::ch_Max(algo::RspaceStr12& parent) {
+    (void)parent;
+    return 12;
+}
+
+// --- algo.RspaceStr12.ch.N
+inline int algo::ch_N(const algo::RspaceStr12& parent) {
+    u64 ret;
+    ret = 12;
+    while (ret>0 && parent.ch[ret-1]==u8(' ')) {
+        ret--;
+    }
+    return int(ret);
+}
+
+// --- algo.RspaceStr12.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr12::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr12.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr12::operator =(const algo::RspaceStr12& parent) {
+    memcpy(ch, parent.ch, 12);
+}
+
+// --- algo.RspaceStr12.ch.Ctor
+inline  algo::RspaceStr12::RspaceStr12(const algo::RspaceStr12 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr12.ch.CtorStrptr
+inline  algo::RspaceStr12::RspaceStr12(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
+// --- algo.RspaceStr12.ch.Cast
+inline algo::RspaceStr12::operator algo::strptr () const {
+    return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr12..Cmp
+inline i32 algo::RspaceStr12_Cmp(algo::RspaceStr12 lhs, algo::RspaceStr12 rhs) {
+    i32 retval = 0;
+    retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
+    return retval;
+}
+
+// --- algo.RspaceStr12..Init
+// Set all fields to initial values.
+inline void algo::RspaceStr12_Init(algo::RspaceStr12& parent) {
+    memset(parent.ch, ' ', 12);
+}
+
+// --- algo.RspaceStr12..Eq
+inline bool algo::RspaceStr12_Eq(algo::RspaceStr12 lhs, algo::RspaceStr12 rhs) {
+    bool retval = true;
+    retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
+    return retval;
+}
+
+// --- algo.RspaceStr12..EqStrptr
+inline bool algo::RspaceStr12_EqStrptr(algo::RspaceStr12 lhs, const algo::strptr &rhs) {
     return algo::strptr_Eq(ch_Getary(lhs), rhs);
 }
 inline algo::RspaceStr16::RspaceStr16() {
@@ -13188,6 +13657,10 @@ inline bool algo::RspaceStr2::operator ==(const algo::RspaceStr2 &rhs) const {
     return algo::RspaceStr2_Eq(const_cast<algo::RspaceStr2&>(*this),const_cast<algo::RspaceStr2&>(rhs));
 }
 
+inline bool algo::RspaceStr2::operator !=(const algo::RspaceStr2 &rhs) const {
+    return !algo::RspaceStr2_Eq(const_cast<algo::RspaceStr2&>(*this),const_cast<algo::RspaceStr2&>(rhs));
+}
+
 inline bool algo::RspaceStr2::operator ==(const algo::strptr &rhs) const {
     return algo::RspaceStr2_EqStrptr(const_cast<algo::RspaceStr2&>(*this),rhs);
 }
@@ -13286,6 +13759,10 @@ inline bool algo::RspaceStr2_EqStrptr(algo::RspaceStr2 lhs, const algo::strptr &
 
 inline bool algo::RspaceStr20::operator ==(const algo::RspaceStr20 &rhs) const {
     return algo::RspaceStr20_Eq(const_cast<algo::RspaceStr20&>(*this),const_cast<algo::RspaceStr20&>(rhs));
+}
+
+inline bool algo::RspaceStr20::operator !=(const algo::RspaceStr20 &rhs) const {
+    return !algo::RspaceStr20_Eq(const_cast<algo::RspaceStr20&>(*this),const_cast<algo::RspaceStr20&>(rhs));
 }
 
 inline bool algo::RspaceStr20::operator ==(const algo::strptr &rhs) const {
@@ -13388,6 +13865,10 @@ inline bool algo::RspaceStr200::operator ==(const algo::RspaceStr200 &rhs) const
     return algo::RspaceStr200_Eq(const_cast<algo::RspaceStr200&>(*this),const_cast<algo::RspaceStr200&>(rhs));
 }
 
+inline bool algo::RspaceStr200::operator !=(const algo::RspaceStr200 &rhs) const {
+    return !algo::RspaceStr200_Eq(const_cast<algo::RspaceStr200&>(*this),const_cast<algo::RspaceStr200&>(rhs));
+}
+
 inline bool algo::RspaceStr200::operator ==(const algo::strptr &rhs) const {
     return algo::RspaceStr200_EqStrptr(const_cast<algo::RspaceStr200&>(*this),rhs);
 }
@@ -13486,6 +13967,10 @@ inline bool algo::RspaceStr200_EqStrptr(algo::RspaceStr200 & lhs, const algo::st
 
 inline bool algo::RspaceStr21::operator ==(const algo::RspaceStr21 &rhs) const {
     return algo::RspaceStr21_Eq(const_cast<algo::RspaceStr21&>(*this),const_cast<algo::RspaceStr21&>(rhs));
+}
+
+inline bool algo::RspaceStr21::operator !=(const algo::RspaceStr21 &rhs) const {
+    return !algo::RspaceStr21_Eq(const_cast<algo::RspaceStr21&>(*this),const_cast<algo::RspaceStr21&>(rhs));
 }
 
 inline bool algo::RspaceStr21::operator ==(const algo::strptr &rhs) const {
@@ -13695,6 +14180,10 @@ inline bool algo::RspaceStr240::operator ==(const algo::RspaceStr240 &rhs) const
     return algo::RspaceStr240_Eq(const_cast<algo::RspaceStr240&>(*this),const_cast<algo::RspaceStr240&>(rhs));
 }
 
+inline bool algo::RspaceStr240::operator !=(const algo::RspaceStr240 &rhs) const {
+    return !algo::RspaceStr240_Eq(const_cast<algo::RspaceStr240&>(*this),const_cast<algo::RspaceStr240&>(rhs));
+}
+
 inline bool algo::RspaceStr240::operator ==(const algo::strptr &rhs) const {
     return algo::RspaceStr240_EqStrptr(const_cast<algo::RspaceStr240&>(*this),rhs);
 }
@@ -13793,6 +14282,10 @@ inline bool algo::RspaceStr240_EqStrptr(algo::RspaceStr240 & lhs, const algo::st
 
 inline bool algo::RspaceStr26::operator ==(const algo::RspaceStr26 &rhs) const {
     return algo::RspaceStr26_Eq(const_cast<algo::RspaceStr26&>(*this),const_cast<algo::RspaceStr26&>(rhs));
+}
+
+inline bool algo::RspaceStr26::operator !=(const algo::RspaceStr26 &rhs) const {
+    return !algo::RspaceStr26_Eq(const_cast<algo::RspaceStr26&>(*this),const_cast<algo::RspaceStr26&>(rhs));
 }
 
 inline bool algo::RspaceStr26::operator ==(const algo::strptr &rhs) const {
@@ -13895,6 +14388,10 @@ inline bool algo::RspaceStr3::operator ==(const algo::RspaceStr3 &rhs) const {
     return algo::RspaceStr3_Eq(const_cast<algo::RspaceStr3&>(*this),const_cast<algo::RspaceStr3&>(rhs));
 }
 
+inline bool algo::RspaceStr3::operator !=(const algo::RspaceStr3 &rhs) const {
+    return !algo::RspaceStr3_Eq(const_cast<algo::RspaceStr3&>(*this),const_cast<algo::RspaceStr3&>(rhs));
+}
+
 inline bool algo::RspaceStr3::operator ==(const algo::strptr &rhs) const {
     return algo::RspaceStr3_EqStrptr(const_cast<algo::RspaceStr3&>(*this),rhs);
 }
@@ -13967,7 +14464,7 @@ inline algo::RspaceStr3::operator algo::strptr () const {
 }
 
 // --- algo.RspaceStr3..Cmp
-inline i32 algo::RspaceStr3_Cmp(algo::RspaceStr3 & lhs, algo::RspaceStr3 & rhs) {
+inline i32 algo::RspaceStr3_Cmp(algo::RspaceStr3 lhs, algo::RspaceStr3 rhs) {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -13980,19 +14477,23 @@ inline void algo::RspaceStr3_Init(algo::RspaceStr3& parent) {
 }
 
 // --- algo.RspaceStr3..Eq
-inline bool algo::RspaceStr3_Eq(const algo::RspaceStr3 & lhs,const algo::RspaceStr3 & rhs) {
+inline bool algo::RspaceStr3_Eq(algo::RspaceStr3 lhs, algo::RspaceStr3 rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
 }
 
 // --- algo.RspaceStr3..EqStrptr
-inline bool algo::RspaceStr3_EqStrptr(algo::RspaceStr3 & lhs, const algo::strptr &rhs) {
+inline bool algo::RspaceStr3_EqStrptr(algo::RspaceStr3 lhs, const algo::strptr &rhs) {
     return algo::strptr_Eq(ch_Getary(lhs), rhs);
 }
 
 inline bool algo::RspaceStr31::operator ==(const algo::RspaceStr31 &rhs) const {
     return algo::RspaceStr31_Eq(const_cast<algo::RspaceStr31&>(*this),const_cast<algo::RspaceStr31&>(rhs));
+}
+
+inline bool algo::RspaceStr31::operator !=(const algo::RspaceStr31 &rhs) const {
+    return !algo::RspaceStr31_Eq(const_cast<algo::RspaceStr31&>(*this),const_cast<algo::RspaceStr31&>(rhs));
 }
 
 inline bool algo::RspaceStr31::operator ==(const algo::strptr &rhs) const {
@@ -14095,6 +14596,10 @@ inline bool algo::RspaceStr32::operator ==(const algo::RspaceStr32 &rhs) const {
     return algo::RspaceStr32_Eq(const_cast<algo::RspaceStr32&>(*this),const_cast<algo::RspaceStr32&>(rhs));
 }
 
+inline bool algo::RspaceStr32::operator !=(const algo::RspaceStr32 &rhs) const {
+    return !algo::RspaceStr32_Eq(const_cast<algo::RspaceStr32&>(*this),const_cast<algo::RspaceStr32&>(rhs));
+}
+
 inline bool algo::RspaceStr32::operator ==(const algo::strptr &rhs) const {
     return algo::RspaceStr32_EqStrptr(const_cast<algo::RspaceStr32&>(*this),rhs);
 }
@@ -14193,6 +14698,10 @@ inline bool algo::RspaceStr32_EqStrptr(algo::RspaceStr32 & lhs, const algo::strp
 
 inline bool algo::RspaceStr4::operator ==(const algo::RspaceStr4 &rhs) const {
     return algo::RspaceStr4_Eq(const_cast<algo::RspaceStr4&>(*this),const_cast<algo::RspaceStr4&>(rhs));
+}
+
+inline bool algo::RspaceStr4::operator !=(const algo::RspaceStr4 &rhs) const {
+    return !algo::RspaceStr4_Eq(const_cast<algo::RspaceStr4&>(*this),const_cast<algo::RspaceStr4&>(rhs));
 }
 
 inline bool algo::RspaceStr4::operator ==(const algo::strptr &rhs) const {
@@ -14387,6 +14896,10 @@ inline bool algo::RspaceStr5::operator ==(const algo::RspaceStr5 &rhs) const {
     return algo::RspaceStr5_Eq(const_cast<algo::RspaceStr5&>(*this),const_cast<algo::RspaceStr5&>(rhs));
 }
 
+inline bool algo::RspaceStr5::operator !=(const algo::RspaceStr5 &rhs) const {
+    return !algo::RspaceStr5_Eq(const_cast<algo::RspaceStr5&>(*this),const_cast<algo::RspaceStr5&>(rhs));
+}
+
 inline bool algo::RspaceStr5::operator ==(const algo::strptr &rhs) const {
     return algo::RspaceStr5_EqStrptr(const_cast<algo::RspaceStr5&>(*this),rhs);
 }
@@ -14487,6 +15000,10 @@ inline bool algo::RspaceStr50::operator ==(const algo::RspaceStr50 &rhs) const {
     return algo::RspaceStr50_Eq(const_cast<algo::RspaceStr50&>(*this),const_cast<algo::RspaceStr50&>(rhs));
 }
 
+inline bool algo::RspaceStr50::operator !=(const algo::RspaceStr50 &rhs) const {
+    return !algo::RspaceStr50_Eq(const_cast<algo::RspaceStr50&>(*this),const_cast<algo::RspaceStr50&>(rhs));
+}
+
 inline bool algo::RspaceStr50::operator ==(const algo::strptr &rhs) const {
     return algo::RspaceStr50_EqStrptr(const_cast<algo::RspaceStr50&>(*this),rhs);
 }
@@ -14585,6 +15102,10 @@ inline bool algo::RspaceStr50_EqStrptr(algo::RspaceStr50 & lhs, const algo::strp
 
 inline bool algo::RspaceStr6::operator ==(const algo::RspaceStr6 &rhs) const {
     return algo::RspaceStr6_Eq(const_cast<algo::RspaceStr6&>(*this),const_cast<algo::RspaceStr6&>(rhs));
+}
+
+inline bool algo::RspaceStr6::operator !=(const algo::RspaceStr6 &rhs) const {
+    return !algo::RspaceStr6_Eq(const_cast<algo::RspaceStr6&>(*this),const_cast<algo::RspaceStr6&>(rhs));
 }
 
 inline bool algo::RspaceStr6::operator ==(const algo::strptr &rhs) const {
@@ -14706,6 +15227,10 @@ inline bool algo::RspaceStr64::operator ==(const algo::RspaceStr64 &rhs) const {
     return algo::RspaceStr64_Eq(const_cast<algo::RspaceStr64&>(*this),const_cast<algo::RspaceStr64&>(rhs));
 }
 
+inline bool algo::RspaceStr64::operator !=(const algo::RspaceStr64 &rhs) const {
+    return !algo::RspaceStr64_Eq(const_cast<algo::RspaceStr64&>(*this),const_cast<algo::RspaceStr64&>(rhs));
+}
+
 inline bool algo::RspaceStr64::operator ==(const algo::strptr &rhs) const {
     return algo::RspaceStr64_EqStrptr(const_cast<algo::RspaceStr64&>(*this),rhs);
 }
@@ -14804,6 +15329,10 @@ inline bool algo::RspaceStr64_EqStrptr(algo::RspaceStr64 & lhs, const algo::strp
 
 inline bool algo::RspaceStr7::operator ==(const algo::RspaceStr7 &rhs) const {
     return algo::RspaceStr7_Eq(const_cast<algo::RspaceStr7&>(*this),const_cast<algo::RspaceStr7&>(rhs));
+}
+
+inline bool algo::RspaceStr7::operator !=(const algo::RspaceStr7 &rhs) const {
+    return !algo::RspaceStr7_Eq(const_cast<algo::RspaceStr7&>(*this),const_cast<algo::RspaceStr7&>(rhs));
 }
 
 inline bool algo::RspaceStr7::operator ==(const algo::strptr &rhs) const {
@@ -15013,6 +15542,10 @@ inline bool algo::RspaceStr9::operator ==(const algo::RspaceStr9 &rhs) const {
     return algo::RspaceStr9_Eq(const_cast<algo::RspaceStr9&>(*this),const_cast<algo::RspaceStr9&>(rhs));
 }
 
+inline bool algo::RspaceStr9::operator !=(const algo::RspaceStr9 &rhs) const {
+    return !algo::RspaceStr9_Eq(const_cast<algo::RspaceStr9&>(*this),const_cast<algo::RspaceStr9&>(rhs));
+}
+
 inline bool algo::RspaceStr9::operator ==(const algo::strptr &rhs) const {
     return algo::RspaceStr9_EqStrptr(const_cast<algo::RspaceStr9&>(*this),rhs);
 }
@@ -15167,6 +15700,10 @@ inline bool algo::Sha1sig::operator ==(const algo::Sha1sig &rhs) const {
     return algo::Sha1sig_Eq(const_cast<algo::Sha1sig&>(*this),const_cast<algo::Sha1sig&>(rhs));
 }
 
+inline bool algo::Sha1sig::operator !=(const algo::Sha1sig &rhs) const {
+    return !algo::Sha1sig_Eq(const_cast<algo::Sha1sig&>(*this),const_cast<algo::Sha1sig&>(rhs));
+}
+
 inline bool algo::Sha1sig::operator <(const algo::Sha1sig &rhs) const {
     return algo::Sha1sig_Lt(const_cast<algo::Sha1sig&>(*this),const_cast<algo::Sha1sig&>(rhs));
 }
@@ -15292,6 +15829,10 @@ inline bool algo::Smallstr1::operator ==(const algo::Smallstr1 &rhs) const {
     return algo::Smallstr1_Eq(const_cast<algo::Smallstr1&>(*this),const_cast<algo::Smallstr1&>(rhs));
 }
 
+inline bool algo::Smallstr1::operator !=(const algo::Smallstr1 &rhs) const {
+    return !algo::Smallstr1_Eq(const_cast<algo::Smallstr1&>(*this),const_cast<algo::Smallstr1&>(rhs));
+}
+
 inline bool algo::Smallstr1::operator ==(const algo::strptr &rhs) const {
     return algo::Smallstr1_EqStrptr(const_cast<algo::Smallstr1&>(*this),rhs);
 }
@@ -15410,6 +15951,10 @@ inline bool algo::Smallstr1_EqStrptr(algo::Smallstr1 & lhs, const algo::strptr &
 
 inline bool algo::Smallstr10::operator ==(const algo::Smallstr10 &rhs) const {
     return algo::Smallstr10_Eq(const_cast<algo::Smallstr10&>(*this),const_cast<algo::Smallstr10&>(rhs));
+}
+
+inline bool algo::Smallstr10::operator !=(const algo::Smallstr10 &rhs) const {
+    return !algo::Smallstr10_Eq(const_cast<algo::Smallstr10&>(*this),const_cast<algo::Smallstr10&>(rhs));
 }
 
 inline bool algo::Smallstr10::operator ==(const algo::strptr &rhs) const {
@@ -15644,6 +16189,10 @@ inline bool algo::Smallstr16::operator ==(const algo::Smallstr16 &rhs) const {
     return algo::Smallstr16_Eq(const_cast<algo::Smallstr16&>(*this),const_cast<algo::Smallstr16&>(rhs));
 }
 
+inline bool algo::Smallstr16::operator !=(const algo::Smallstr16 &rhs) const {
+    return !algo::Smallstr16_Eq(const_cast<algo::Smallstr16&>(*this),const_cast<algo::Smallstr16&>(rhs));
+}
+
 inline bool algo::Smallstr16::operator ==(const algo::strptr &rhs) const {
     return algo::Smallstr16_EqStrptr(const_cast<algo::Smallstr16&>(*this),rhs);
 }
@@ -15764,6 +16313,10 @@ inline bool algo::Smallstr2::operator ==(const algo::Smallstr2 &rhs) const {
     return algo::Smallstr2_Eq(const_cast<algo::Smallstr2&>(*this),const_cast<algo::Smallstr2&>(rhs));
 }
 
+inline bool algo::Smallstr2::operator !=(const algo::Smallstr2 &rhs) const {
+    return !algo::Smallstr2_Eq(const_cast<algo::Smallstr2&>(*this),const_cast<algo::Smallstr2&>(rhs));
+}
+
 inline bool algo::Smallstr2::operator ==(const algo::strptr &rhs) const {
     return algo::Smallstr2_EqStrptr(const_cast<algo::Smallstr2&>(*this),rhs);
 }
@@ -15882,6 +16435,10 @@ inline bool algo::Smallstr2_EqStrptr(algo::Smallstr2 & lhs, const algo::strptr &
 
 inline bool algo::Smallstr20::operator ==(const algo::Smallstr20 &rhs) const {
     return algo::Smallstr20_Eq(const_cast<algo::Smallstr20&>(*this),const_cast<algo::Smallstr20&>(rhs));
+}
+
+inline bool algo::Smallstr20::operator !=(const algo::Smallstr20 &rhs) const {
+    return !algo::Smallstr20_Eq(const_cast<algo::Smallstr20&>(*this),const_cast<algo::Smallstr20&>(rhs));
 }
 
 inline bool algo::Smallstr20::operator ==(const algo::strptr &rhs) const {
@@ -16023,6 +16580,10 @@ inline bool algo::Smallstr25::operator ==(const algo::Smallstr25 &rhs) const {
     return algo::Smallstr25_Eq(const_cast<algo::Smallstr25&>(*this),const_cast<algo::Smallstr25&>(rhs));
 }
 
+inline bool algo::Smallstr25::operator !=(const algo::Smallstr25 &rhs) const {
+    return !algo::Smallstr25_Eq(const_cast<algo::Smallstr25&>(*this),const_cast<algo::Smallstr25&>(rhs));
+}
+
 inline bool algo::Smallstr25::operator ==(const algo::strptr &rhs) const {
     return algo::Smallstr25_EqStrptr(const_cast<algo::Smallstr25&>(*this),rhs);
 }
@@ -16143,6 +16704,10 @@ inline bool algo::Smallstr250::operator ==(const algo::Smallstr250 &rhs) const {
     return algo::Smallstr250_Eq(const_cast<algo::Smallstr250&>(*this),const_cast<algo::Smallstr250&>(rhs));
 }
 
+inline bool algo::Smallstr250::operator !=(const algo::Smallstr250 &rhs) const {
+    return !algo::Smallstr250_Eq(const_cast<algo::Smallstr250&>(*this),const_cast<algo::Smallstr250&>(rhs));
+}
+
 inline bool algo::Smallstr250::operator ==(const algo::strptr &rhs) const {
     return algo::Smallstr250_EqStrptr(const_cast<algo::Smallstr250&>(*this),rhs);
 }
@@ -16259,8 +16824,136 @@ inline bool algo::Smallstr250_EqStrptr(algo::Smallstr250 & lhs, const algo::strp
     return algo::strptr_Eq(ch_Getary(lhs), rhs);
 }
 
+inline bool algo::Smallstr3::operator ==(const algo::Smallstr3 &rhs) const {
+    return algo::Smallstr3_Eq(const_cast<algo::Smallstr3&>(*this),const_cast<algo::Smallstr3&>(rhs));
+}
+
+inline bool algo::Smallstr3::operator !=(const algo::Smallstr3 &rhs) const {
+    return !algo::Smallstr3_Eq(const_cast<algo::Smallstr3&>(*this),const_cast<algo::Smallstr3&>(rhs));
+}
+
+inline bool algo::Smallstr3::operator ==(const algo::strptr &rhs) const {
+    return algo::Smallstr3_EqStrptr(const_cast<algo::Smallstr3&>(*this),rhs);
+}
+inline algo::Smallstr3::Smallstr3() {
+    algo::Smallstr3_Init(*this);
+}
+
+
+// --- algo.Smallstr3.ch.Add
+// Append character to string.
+// If there is no space for an extra character, do nothing.
+inline void algo::ch_Add(algo::Smallstr3& parent, char c) {
+    if (parent.n_ch < 3) {
+        parent.ch[parent.n_ch++] = c;
+    }
+}
+
+// --- algo.Smallstr3.ch.AddStrptr
+// Append string to this string.
+// If there is no space for an extra character, trim.
+// If there is no space left, dump core in debug mode.
+inline void algo::ch_AddStrptr(algo::Smallstr3& parent, algo::strptr str) {
+    int n_new = str.n_elems;
+    if (parent.n_ch + n_new > 3) {
+        n_new = 3 - parent.n_ch;
+    }
+    memcpy(parent.ch + parent.n_ch, str.elems, n_new);
+    parent.n_ch = u8(parent.n_ch + n_new);
+}
+
+// --- algo.Smallstr3.ch.Getary
+// Access string as array of chars
+inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr3& parent) {
+    int len = ch_N(parent);
+    algo::aryptr<char> ret((char*)parent.ch, len);
+    return ret;
+}
+
+// --- algo.Smallstr3.ch.HashStrptr
+inline u32 algo::Smallstr3_Hash(u32 prev, const algo::strptr &str) {
+    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
+}
+
+// --- algo.Smallstr3.ch.Init
+inline void algo::ch_Init(algo::Smallstr3 &parent) {
+    parent.n_ch = 0;
+}
+
+// --- algo.Smallstr3.ch.Max
+// always return constant 3
+inline int algo::ch_Max(algo::Smallstr3& parent) {
+    (void)parent;
+    return 3;
+}
+
+// --- algo.Smallstr3.ch.N
+inline int algo::ch_N(const algo::Smallstr3& parent) {
+    u64 ret;
+    ret = parent.n_ch;
+    return int(ret);
+}
+
+// --- algo.Smallstr3.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::Smallstr3::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.Smallstr3.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::Smallstr3::operator =(const algo::Smallstr3& parent) {
+    memcpy(ch, parent.ch, parent.n_ch);
+    n_ch = parent.n_ch;
+}
+
+// --- algo.Smallstr3.ch.Ctor
+inline  algo::Smallstr3::Smallstr3(const algo::Smallstr3 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.Smallstr3.ch.CtorStrptr
+inline  algo::Smallstr3::Smallstr3(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
+// --- algo.Smallstr3.ch.Cast
+inline algo::Smallstr3::operator algo::strptr () const {
+    return ch_Getary(*this);
+}
+
+// --- algo.Smallstr3..Cmp
+inline i32 algo::Smallstr3_Cmp(algo::Smallstr3 & lhs, algo::Smallstr3 & rhs) {
+    i32 retval = 0;
+    retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
+    return retval;
+}
+
+// --- algo.Smallstr3..Init
+// Set all fields to initial values.
+inline void algo::Smallstr3_Init(algo::Smallstr3& parent) {
+    parent.n_ch = 0;
+}
+
+// --- algo.Smallstr3..Eq
+inline bool algo::Smallstr3_Eq(const algo::Smallstr3 & lhs,const algo::Smallstr3 & rhs) {
+    bool retval = true;
+    retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
+    return retval;
+}
+
+// --- algo.Smallstr3..EqStrptr
+inline bool algo::Smallstr3_EqStrptr(algo::Smallstr3 & lhs, const algo::strptr &rhs) {
+    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+}
+
 inline bool algo::Smallstr30::operator ==(const algo::Smallstr30 &rhs) const {
     return algo::Smallstr30_Eq(const_cast<algo::Smallstr30&>(*this),const_cast<algo::Smallstr30&>(rhs));
+}
+
+inline bool algo::Smallstr30::operator !=(const algo::Smallstr30 &rhs) const {
+    return !algo::Smallstr30_Eq(const_cast<algo::Smallstr30&>(*this),const_cast<algo::Smallstr30&>(rhs));
 }
 
 inline bool algo::Smallstr30::operator ==(const algo::strptr &rhs) const {
@@ -16398,8 +17091,136 @@ inline bool algo::Smallstr30_EqStrptr(algo::Smallstr30 & lhs, const algo::strptr
     return algo::strptr_Eq(ch_Getary(lhs), rhs);
 }
 
+inline bool algo::Smallstr32::operator ==(const algo::Smallstr32 &rhs) const {
+    return algo::Smallstr32_Eq(const_cast<algo::Smallstr32&>(*this),const_cast<algo::Smallstr32&>(rhs));
+}
+
+inline bool algo::Smallstr32::operator !=(const algo::Smallstr32 &rhs) const {
+    return !algo::Smallstr32_Eq(const_cast<algo::Smallstr32&>(*this),const_cast<algo::Smallstr32&>(rhs));
+}
+
+inline bool algo::Smallstr32::operator ==(const algo::strptr &rhs) const {
+    return algo::Smallstr32_EqStrptr(const_cast<algo::Smallstr32&>(*this),rhs);
+}
+inline algo::Smallstr32::Smallstr32() {
+    algo::Smallstr32_Init(*this);
+}
+
+
+// --- algo.Smallstr32.ch.Add
+// Append character to string.
+// If there is no space for an extra character, do nothing.
+inline void algo::ch_Add(algo::Smallstr32& parent, char c) {
+    if (parent.n_ch < 32) {
+        parent.ch[parent.n_ch++] = c;
+    }
+}
+
+// --- algo.Smallstr32.ch.AddStrptr
+// Append string to this string.
+// If there is no space for an extra character, trim.
+// If there is no space left, dump core in debug mode.
+inline void algo::ch_AddStrptr(algo::Smallstr32& parent, algo::strptr str) {
+    int n_new = str.n_elems;
+    if (parent.n_ch + n_new > 32) {
+        n_new = 32 - parent.n_ch;
+    }
+    memcpy(parent.ch + parent.n_ch, str.elems, n_new);
+    parent.n_ch = u8(parent.n_ch + n_new);
+}
+
+// --- algo.Smallstr32.ch.Getary
+// Access string as array of chars
+inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr32& parent) {
+    int len = ch_N(parent);
+    algo::aryptr<char> ret((char*)parent.ch, len);
+    return ret;
+}
+
+// --- algo.Smallstr32.ch.HashStrptr
+inline u32 algo::Smallstr32_Hash(u32 prev, const algo::strptr &str) {
+    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
+}
+
+// --- algo.Smallstr32.ch.Init
+inline void algo::ch_Init(algo::Smallstr32 &parent) {
+    parent.n_ch = 0;
+}
+
+// --- algo.Smallstr32.ch.Max
+// always return constant 32
+inline int algo::ch_Max(algo::Smallstr32& parent) {
+    (void)parent;
+    return 32;
+}
+
+// --- algo.Smallstr32.ch.N
+inline int algo::ch_N(const algo::Smallstr32& parent) {
+    u64 ret;
+    ret = parent.n_ch;
+    return int(ret);
+}
+
+// --- algo.Smallstr32.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::Smallstr32::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.Smallstr32.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::Smallstr32::operator =(const algo::Smallstr32& parent) {
+    memcpy(ch, parent.ch, parent.n_ch);
+    n_ch = parent.n_ch;
+}
+
+// --- algo.Smallstr32.ch.Ctor
+inline  algo::Smallstr32::Smallstr32(const algo::Smallstr32 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.Smallstr32.ch.CtorStrptr
+inline  algo::Smallstr32::Smallstr32(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
+// --- algo.Smallstr32.ch.Cast
+inline algo::Smallstr32::operator algo::strptr () const {
+    return ch_Getary(*this);
+}
+
+// --- algo.Smallstr32..Cmp
+inline i32 algo::Smallstr32_Cmp(algo::Smallstr32 & lhs, algo::Smallstr32 & rhs) {
+    i32 retval = 0;
+    retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
+    return retval;
+}
+
+// --- algo.Smallstr32..Init
+// Set all fields to initial values.
+inline void algo::Smallstr32_Init(algo::Smallstr32& parent) {
+    parent.n_ch = 0;
+}
+
+// --- algo.Smallstr32..Eq
+inline bool algo::Smallstr32_Eq(const algo::Smallstr32 & lhs,const algo::Smallstr32 & rhs) {
+    bool retval = true;
+    retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
+    return retval;
+}
+
+// --- algo.Smallstr32..EqStrptr
+inline bool algo::Smallstr32_EqStrptr(algo::Smallstr32 & lhs, const algo::strptr &rhs) {
+    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+}
+
 inline bool algo::Smallstr4::operator ==(const algo::Smallstr4 &rhs) const {
     return algo::Smallstr4_Eq(const_cast<algo::Smallstr4&>(*this),const_cast<algo::Smallstr4&>(rhs));
+}
+
+inline bool algo::Smallstr4::operator !=(const algo::Smallstr4 &rhs) const {
+    return !algo::Smallstr4_Eq(const_cast<algo::Smallstr4&>(*this),const_cast<algo::Smallstr4&>(rhs));
 }
 
 inline bool algo::Smallstr4::operator ==(const algo::strptr &rhs) const {
@@ -16522,6 +17343,10 @@ inline bool algo::Smallstr40::operator ==(const algo::Smallstr40 &rhs) const {
     return algo::Smallstr40_Eq(const_cast<algo::Smallstr40&>(*this),const_cast<algo::Smallstr40&>(rhs));
 }
 
+inline bool algo::Smallstr40::operator !=(const algo::Smallstr40 &rhs) const {
+    return !algo::Smallstr40_Eq(const_cast<algo::Smallstr40&>(*this),const_cast<algo::Smallstr40&>(rhs));
+}
+
 inline bool algo::Smallstr40::operator ==(const algo::strptr &rhs) const {
     return algo::Smallstr40_EqStrptr(const_cast<algo::Smallstr40&>(*this),rhs);
 }
@@ -16640,6 +17465,10 @@ inline bool algo::Smallstr40_EqStrptr(algo::Smallstr40 & lhs, const algo::strptr
 
 inline bool algo::Smallstr5::operator ==(const algo::Smallstr5 &rhs) const {
     return algo::Smallstr5_Eq(const_cast<algo::Smallstr5&>(*this),const_cast<algo::Smallstr5&>(rhs));
+}
+
+inline bool algo::Smallstr5::operator !=(const algo::Smallstr5 &rhs) const {
+    return !algo::Smallstr5_Eq(const_cast<algo::Smallstr5&>(*this),const_cast<algo::Smallstr5&>(rhs));
 }
 
 inline bool algo::Smallstr5::operator ==(const algo::strptr &rhs) const {
@@ -16789,11 +17618,11 @@ inline algo::TermStyle::operator algo_TermStyleEnum () const {
 inline void algo::TermStyle_Init(algo::TermStyle& parent) {
     parent.value = u32(0);
 }
-inline algo::TextJust::TextJust(u32                            in_value)
+inline algo::TextJust::TextJust(i32                            in_value)
     : value(in_value)
 {
 }
-inline algo::TextJust::TextJust(algo_TextJustEnum arg) { this->value = u32(arg); }
+inline algo::TextJust::TextJust(algo_TextJustEnum arg) { this->value = i32(arg); }
 inline algo::TextJust::TextJust() {
     algo::TextJust_Init(*this);
 }
@@ -16808,7 +17637,7 @@ inline algo_TextJustEnum algo::value_GetEnum(const algo::TextJust& parent) {
 // --- algo.TextJust.value.SetEnum
 // Set value of field from enum type.
 inline void algo::value_SetEnum(algo::TextJust& parent, algo_TextJustEnum rhs) {
-    parent.value = u32(rhs);
+    parent.value = i32(rhs);
 }
 
 // --- algo.TextJust.value.Cast
@@ -16819,7 +17648,7 @@ inline algo::TextJust::operator algo_TextJustEnum () const {
 // --- algo.TextJust..Init
 // Set all fields to initial values.
 inline void algo::TextJust_Init(algo::TextJust& parent) {
-    parent.value = u32(0);
+    parent.value = i32(0);
 }
 inline algo::TstampCache::TstampCache() {
     algo::TstampCache_Init(*this);
@@ -16848,7 +17677,7 @@ inline void algo::value_qSetDouble(algo::U16Dec2& parent, double val) {
 }
 
 // --- algo.U16Dec2.value.GetDouble
-inline double algo::value_GetDouble(algo::U16Dec2& parent) {
+inline double algo::value_GetDouble(const algo::U16Dec2& parent) {
     double ret;
     ret = parent.value / double(100);
     return ret;
@@ -16856,7 +17685,7 @@ inline double algo::value_GetDouble(algo::U16Dec2& parent) {
 
 // --- algo.U16Dec2.value.GetInt
 // Return integer portion (divide number by 100)
-inline u16 algo::value_GetInt(algo::U16Dec2& parent) {
+inline u16 algo::value_GetInt(const algo::U16Dec2& parent) {
     u16 ret;
     ret = parent.value / 100;
     return ret;
@@ -16907,7 +17736,7 @@ inline void algo::value_qSetDouble(algo::U32Dec1& parent, double val) {
 }
 
 // --- algo.U32Dec1.value.GetDouble
-inline double algo::value_GetDouble(algo::U32Dec1& parent) {
+inline double algo::value_GetDouble(const algo::U32Dec1& parent) {
     double ret;
     ret = parent.value / double(10);
     return ret;
@@ -16915,7 +17744,7 @@ inline double algo::value_GetDouble(algo::U32Dec1& parent) {
 
 // --- algo.U32Dec1.value.GetInt
 // Return integer portion (divide number by 10)
-inline u32 algo::value_GetInt(algo::U32Dec1& parent) {
+inline u32 algo::value_GetInt(const algo::U32Dec1& parent) {
     u32 ret;
     ret = parent.value / 10;
     return ret;
@@ -16966,7 +17795,7 @@ inline void algo::value_qSetDouble(algo::U32Dec2& parent, double val) {
 }
 
 // --- algo.U32Dec2.value.GetDouble
-inline double algo::value_GetDouble(algo::U32Dec2& parent) {
+inline double algo::value_GetDouble(const algo::U32Dec2& parent) {
     double ret;
     ret = parent.value / double(100);
     return ret;
@@ -16974,7 +17803,7 @@ inline double algo::value_GetDouble(algo::U32Dec2& parent) {
 
 // --- algo.U32Dec2.value.GetInt
 // Return integer portion (divide number by 100)
-inline u32 algo::value_GetInt(algo::U32Dec2& parent) {
+inline u32 algo::value_GetInt(const algo::U32Dec2& parent) {
     u32 ret;
     ret = parent.value / 100;
     return ret;
@@ -17025,7 +17854,7 @@ inline void algo::value_qSetDouble(algo::U32Dec3& parent, double val) {
 }
 
 // --- algo.U32Dec3.value.GetDouble
-inline double algo::value_GetDouble(algo::U32Dec3& parent) {
+inline double algo::value_GetDouble(const algo::U32Dec3& parent) {
     double ret;
     ret = parent.value / double(1000);
     return ret;
@@ -17033,7 +17862,7 @@ inline double algo::value_GetDouble(algo::U32Dec3& parent) {
 
 // --- algo.U32Dec3.value.GetInt
 // Return integer portion (divide number by 1000)
-inline u32 algo::value_GetInt(algo::U32Dec3& parent) {
+inline u32 algo::value_GetInt(const algo::U32Dec3& parent) {
     u32 ret;
     ret = parent.value / 1000;
     return ret;
@@ -17084,7 +17913,7 @@ inline void algo::value_qSetDouble(algo::U32Dec4& parent, double val) {
 }
 
 // --- algo.U32Dec4.value.GetDouble
-inline double algo::value_GetDouble(algo::U32Dec4& parent) {
+inline double algo::value_GetDouble(const algo::U32Dec4& parent) {
     double ret;
     ret = parent.value / double(10000);
     return ret;
@@ -17092,7 +17921,7 @@ inline double algo::value_GetDouble(algo::U32Dec4& parent) {
 
 // --- algo.U32Dec4.value.GetInt
 // Return integer portion (divide number by 10000)
-inline u32 algo::value_GetInt(algo::U32Dec4& parent) {
+inline u32 algo::value_GetInt(const algo::U32Dec4& parent) {
     u32 ret;
     ret = parent.value / 10000;
     return ret;
@@ -17143,7 +17972,7 @@ inline void algo::value_qSetDouble(algo::U32Dec5& parent, double val) {
 }
 
 // --- algo.U32Dec5.value.GetDouble
-inline double algo::value_GetDouble(algo::U32Dec5& parent) {
+inline double algo::value_GetDouble(const algo::U32Dec5& parent) {
     double ret;
     ret = parent.value / double(100000);
     return ret;
@@ -17151,7 +17980,7 @@ inline double algo::value_GetDouble(algo::U32Dec5& parent) {
 
 // --- algo.U32Dec5.value.GetInt
 // Return integer portion (divide number by 100000)
-inline u32 algo::value_GetInt(algo::U32Dec5& parent) {
+inline u32 algo::value_GetInt(const algo::U32Dec5& parent) {
     u32 ret;
     ret = parent.value / 100000;
     return ret;
@@ -17316,7 +18145,7 @@ inline void algo::value_qSetDouble(algo::U64Dec10& parent, double val) {
 }
 
 // --- algo.U64Dec10.value.GetDouble
-inline double algo::value_GetDouble(algo::U64Dec10& parent) {
+inline double algo::value_GetDouble(const algo::U64Dec10& parent) {
     double ret;
     ret = parent.value / double(10000000000);
     return ret;
@@ -17324,7 +18153,7 @@ inline double algo::value_GetDouble(algo::U64Dec10& parent) {
 
 // --- algo.U64Dec10.value.GetInt
 // Return integer portion (divide number by 10000000000)
-inline u64 algo::value_GetInt(algo::U64Dec10& parent) {
+inline u64 algo::value_GetInt(const algo::U64Dec10& parent) {
     u64 ret;
     ret = parent.value / 10000000000;
     return ret;
@@ -17375,7 +18204,7 @@ inline void algo::value_qSetDouble(algo::U64Dec2& parent, double val) {
 }
 
 // --- algo.U64Dec2.value.GetDouble
-inline double algo::value_GetDouble(algo::U64Dec2& parent) {
+inline double algo::value_GetDouble(const algo::U64Dec2& parent) {
     double ret;
     ret = parent.value / double(100);
     return ret;
@@ -17383,7 +18212,7 @@ inline double algo::value_GetDouble(algo::U64Dec2& parent) {
 
 // --- algo.U64Dec2.value.GetInt
 // Return integer portion (divide number by 100)
-inline u64 algo::value_GetInt(algo::U64Dec2& parent) {
+inline u64 algo::value_GetInt(const algo::U64Dec2& parent) {
     u64 ret;
     ret = parent.value / 100;
     return ret;
@@ -17434,7 +18263,7 @@ inline void algo::value_qSetDouble(algo::U64Dec4& parent, double val) {
 }
 
 // --- algo.U64Dec4.value.GetDouble
-inline double algo::value_GetDouble(algo::U64Dec4& parent) {
+inline double algo::value_GetDouble(const algo::U64Dec4& parent) {
     double ret;
     ret = parent.value / double(10000);
     return ret;
@@ -17442,7 +18271,7 @@ inline double algo::value_GetDouble(algo::U64Dec4& parent) {
 
 // --- algo.U64Dec4.value.GetInt
 // Return integer portion (divide number by 10000)
-inline u64 algo::value_GetInt(algo::U64Dec4& parent) {
+inline u64 algo::value_GetInt(const algo::U64Dec4& parent) {
     u64 ret;
     ret = parent.value / 10000;
     return ret;
@@ -17493,7 +18322,7 @@ inline void algo::value_qSetDouble(algo::U64Dec5& parent, double val) {
 }
 
 // --- algo.U64Dec5.value.GetDouble
-inline double algo::value_GetDouble(algo::U64Dec5& parent) {
+inline double algo::value_GetDouble(const algo::U64Dec5& parent) {
     double ret;
     ret = parent.value / double(100000);
     return ret;
@@ -17501,7 +18330,7 @@ inline double algo::value_GetDouble(algo::U64Dec5& parent) {
 
 // --- algo.U64Dec5.value.GetInt
 // Return integer portion (divide number by 100000)
-inline u64 algo::value_GetInt(algo::U64Dec5& parent) {
+inline u64 algo::value_GetInt(const algo::U64Dec5& parent) {
     u64 ret;
     ret = parent.value / 100000;
     return ret;
@@ -17552,7 +18381,7 @@ inline void algo::value_qSetDouble(algo::U64Dec6& parent, double val) {
 }
 
 // --- algo.U64Dec6.value.GetDouble
-inline double algo::value_GetDouble(algo::U64Dec6& parent) {
+inline double algo::value_GetDouble(const algo::U64Dec6& parent) {
     double ret;
     ret = parent.value / double(1000000);
     return ret;
@@ -17560,7 +18389,7 @@ inline double algo::value_GetDouble(algo::U64Dec6& parent) {
 
 // --- algo.U64Dec6.value.GetInt
 // Return integer portion (divide number by 1000000)
-inline u64 algo::value_GetInt(algo::U64Dec6& parent) {
+inline u64 algo::value_GetInt(const algo::U64Dec6& parent) {
     u64 ret;
     ret = parent.value / 1000000;
     return ret;
@@ -17611,7 +18440,7 @@ inline void algo::value_qSetDouble(algo::U64Dec7& parent, double val) {
 }
 
 // --- algo.U64Dec7.value.GetDouble
-inline double algo::value_GetDouble(algo::U64Dec7& parent) {
+inline double algo::value_GetDouble(const algo::U64Dec7& parent) {
     double ret;
     ret = parent.value / double(10000000);
     return ret;
@@ -17619,7 +18448,7 @@ inline double algo::value_GetDouble(algo::U64Dec7& parent) {
 
 // --- algo.U64Dec7.value.GetInt
 // Return integer portion (divide number by 10000000)
-inline u64 algo::value_GetInt(algo::U64Dec7& parent) {
+inline u64 algo::value_GetInt(const algo::U64Dec7& parent) {
     u64 ret;
     ret = parent.value / 10000000;
     return ret;
@@ -17670,7 +18499,7 @@ inline void algo::value_qSetDouble(algo::U64Dec8& parent, double val) {
 }
 
 // --- algo.U64Dec8.value.GetDouble
-inline double algo::value_GetDouble(algo::U64Dec8& parent) {
+inline double algo::value_GetDouble(const algo::U64Dec8& parent) {
     double ret;
     ret = parent.value / double(100000000);
     return ret;
@@ -17678,7 +18507,7 @@ inline double algo::value_GetDouble(algo::U64Dec8& parent) {
 
 // --- algo.U64Dec8.value.GetInt
 // Return integer portion (divide number by 100000000)
-inline u64 algo::value_GetInt(algo::U64Dec8& parent) {
+inline u64 algo::value_GetInt(const algo::U64Dec8& parent) {
     u64 ret;
     ret = parent.value / 100000000;
     return ret;
@@ -17688,11 +18517,6 @@ inline u64 algo::value_GetInt(algo::U64Dec8& parent) {
 // Return constant 100000000
 inline u64 algo::U64Dec8_GetScale() {
     return 100000000;
-}
-
-// --- algo.U64Dec8.value.Cast
-inline algo::U64Dec8::operator u64 () const {
-    return u64((*this).value);
 }
 
 // --- algo.U64Dec8..Hash
@@ -17729,7 +18553,7 @@ inline void algo::value_qSetDouble(algo::U64Dec9& parent, double val) {
 }
 
 // --- algo.U64Dec9.value.GetDouble
-inline double algo::value_GetDouble(algo::U64Dec9& parent) {
+inline double algo::value_GetDouble(const algo::U64Dec9& parent) {
     double ret;
     ret = parent.value / double(1000000000);
     return ret;
@@ -17737,7 +18561,7 @@ inline double algo::value_GetDouble(algo::U64Dec9& parent) {
 
 // --- algo.U64Dec9.value.GetInt
 // Return integer portion (divide number by 1000000000)
-inline u64 algo::value_GetInt(algo::U64Dec9& parent) {
+inline u64 algo::value_GetInt(const algo::U64Dec9& parent) {
     u64 ret;
     ret = parent.value / 1000000000;
     return ret;
@@ -17801,6 +18625,10 @@ inline algo::UnDiff::UnDiff(i64                            in_value)
 
 inline bool algo::UnDiff::operator ==(const algo::UnDiff &rhs) const {
     return algo::UnDiff_Eq(const_cast<algo::UnDiff&>(*this),const_cast<algo::UnDiff&>(rhs));
+}
+
+inline bool algo::UnDiff::operator !=(const algo::UnDiff &rhs) const {
+    return !algo::UnDiff_Eq(const_cast<algo::UnDiff&>(*this),const_cast<algo::UnDiff&>(rhs));
 }
 
 inline bool algo::UnDiff::operator <(const algo::UnDiff &rhs) const {
@@ -17892,6 +18720,10 @@ inline bool algo::UnixDiff::operator ==(const algo::UnixDiff &rhs) const {
     return algo::UnixDiff_Eq(const_cast<algo::UnixDiff&>(*this),const_cast<algo::UnixDiff&>(rhs));
 }
 
+inline bool algo::UnixDiff::operator !=(const algo::UnixDiff &rhs) const {
+    return !algo::UnixDiff_Eq(const_cast<algo::UnixDiff&>(*this),const_cast<algo::UnixDiff&>(rhs));
+}
+
 inline bool algo::UnixDiff::operator <(const algo::UnixDiff &rhs) const {
     return algo::UnixDiff_Lt(const_cast<algo::UnixDiff&>(*this),const_cast<algo::UnixDiff&>(rhs));
 }
@@ -17981,6 +18813,10 @@ inline bool algo::UnixTime::operator ==(const algo::UnixTime &rhs) const {
     return algo::UnixTime_Eq(const_cast<algo::UnixTime&>(*this),const_cast<algo::UnixTime&>(rhs));
 }
 
+inline bool algo::UnixTime::operator !=(const algo::UnixTime &rhs) const {
+    return !algo::UnixTime_Eq(const_cast<algo::UnixTime&>(*this),const_cast<algo::UnixTime&>(rhs));
+}
+
 inline bool algo::UnixTime::operator <(const algo::UnixTime &rhs) const {
     return algo::UnixTime_Lt(const_cast<algo::UnixTime&>(*this),const_cast<algo::UnixTime&>(rhs));
 }
@@ -18061,6 +18897,192 @@ inline bool algo::UnixTime_Update(algo::UnixTime &lhs, algo::UnixTime rhs) {
     }
     return ret;
 }
+inline algo::WDiff::WDiff(i64                            in_value)
+    : value(in_value)
+{
+}
+
+inline bool algo::WDiff::operator ==(const algo::WDiff &rhs) const {
+    return algo::WDiff_Eq(const_cast<algo::WDiff&>(*this),const_cast<algo::WDiff&>(rhs));
+}
+
+inline bool algo::WDiff::operator !=(const algo::WDiff &rhs) const {
+    return !algo::WDiff_Eq(const_cast<algo::WDiff&>(*this),const_cast<algo::WDiff&>(rhs));
+}
+
+inline bool algo::WDiff::operator <(const algo::WDiff &rhs) const {
+    return algo::WDiff_Lt(const_cast<algo::WDiff&>(*this),const_cast<algo::WDiff&>(rhs));
+}
+inline algo::WDiff::WDiff() {
+    algo::WDiff_Init(*this);
+}
+
+
+// --- algo.WDiff..Hash
+inline u32 algo::WDiff_Hash(u32 prev, algo::WDiff rhs) {
+    prev = i64_Hash(prev, rhs.value);
+    return prev;
+}
+
+// --- algo.WDiff..Lt
+inline bool algo::WDiff_Lt(algo::WDiff lhs, algo::WDiff rhs) {
+    return i64_Lt(lhs.value, rhs.value);
+}
+
+// --- algo.WDiff..Cmp
+inline i32 algo::WDiff_Cmp(algo::WDiff lhs, algo::WDiff rhs) {
+    i32 retval = 0;
+    retval = i64_Cmp(lhs.value, rhs.value);
+    return retval;
+}
+
+// --- algo.WDiff..Init
+// Set all fields to initial values.
+inline void algo::WDiff_Init(algo::WDiff& parent) {
+    parent.value = i64(0);
+}
+
+// --- algo.WDiff..UpdateMax
+// Attempt to make LHS bigger. Return true if it was changed
+inline bool algo::WDiff_UpdateMax(algo::WDiff &lhs, algo::WDiff rhs) {
+    bool retval = lhs < rhs;
+    if (retval) {
+        lhs = rhs;
+    }
+    return retval;
+}
+
+// --- algo.WDiff..Min
+// Return the lesser of two values
+inline algo::WDiff algo::WDiff_Min(algo::WDiff lhs, algo::WDiff rhs) {
+    return lhs < rhs ? lhs : rhs;
+}
+
+// --- algo.WDiff..UpdateMin
+// Attempt to make LHS smaller. Return true if it was changed
+inline bool algo::WDiff_UpdateMin(algo::WDiff &lhs, algo::WDiff rhs) {
+    bool retval = rhs < lhs;
+    if (retval) {
+        lhs = rhs;
+    }
+    return retval;
+}
+
+// --- algo.WDiff..Max
+// Return the greater of two values
+inline algo::WDiff algo::WDiff_Max(algo::WDiff lhs, algo::WDiff rhs) {
+    return rhs < lhs ? lhs : rhs;
+}
+
+// --- algo.WDiff..Eq
+inline bool algo::WDiff_Eq(algo::WDiff lhs, algo::WDiff rhs) {
+    bool retval = true;
+    retval = i64_Eq(lhs.value, rhs.value);
+    return retval;
+}
+
+// --- algo.WDiff..Update
+// Set value. Return true if new value is different from old value.
+inline bool algo::WDiff_Update(algo::WDiff &lhs, algo::WDiff rhs) {
+    bool ret = !WDiff_Eq(lhs, rhs); // compare values
+    if (ret) {
+        lhs = rhs; // update
+    }
+    return ret;
+}
+inline algo::WTime::WTime(i64                            in_value)
+    : value(in_value)
+{
+}
+
+inline bool algo::WTime::operator ==(const algo::WTime &rhs) const {
+    return algo::WTime_Eq(const_cast<algo::WTime&>(*this),const_cast<algo::WTime&>(rhs));
+}
+
+inline bool algo::WTime::operator !=(const algo::WTime &rhs) const {
+    return !algo::WTime_Eq(const_cast<algo::WTime&>(*this),const_cast<algo::WTime&>(rhs));
+}
+
+inline bool algo::WTime::operator <(const algo::WTime &rhs) const {
+    return algo::WTime_Lt(const_cast<algo::WTime&>(*this),const_cast<algo::WTime&>(rhs));
+}
+inline algo::WTime::WTime() {
+    algo::WTime_Init(*this);
+}
+
+
+// --- algo.WTime..Hash
+inline u32 algo::WTime_Hash(u32 prev, algo::WTime rhs) {
+    prev = i64_Hash(prev, rhs.value);
+    return prev;
+}
+
+// --- algo.WTime..Lt
+inline bool algo::WTime_Lt(algo::WTime lhs, algo::WTime rhs) {
+    return i64_Lt(lhs.value, rhs.value);
+}
+
+// --- algo.WTime..Cmp
+inline i32 algo::WTime_Cmp(algo::WTime lhs, algo::WTime rhs) {
+    i32 retval = 0;
+    retval = i64_Cmp(lhs.value, rhs.value);
+    return retval;
+}
+
+// --- algo.WTime..Init
+// Set all fields to initial values.
+inline void algo::WTime_Init(algo::WTime& parent) {
+    parent.value = i64(0);
+}
+
+// --- algo.WTime..UpdateMax
+// Attempt to make LHS bigger. Return true if it was changed
+inline bool algo::WTime_UpdateMax(algo::WTime &lhs, algo::WTime rhs) {
+    bool retval = lhs < rhs;
+    if (retval) {
+        lhs = rhs;
+    }
+    return retval;
+}
+
+// --- algo.WTime..Min
+// Return the lesser of two values
+inline algo::WTime algo::WTime_Min(algo::WTime lhs, algo::WTime rhs) {
+    return lhs < rhs ? lhs : rhs;
+}
+
+// --- algo.WTime..UpdateMin
+// Attempt to make LHS smaller. Return true if it was changed
+inline bool algo::WTime_UpdateMin(algo::WTime &lhs, algo::WTime rhs) {
+    bool retval = rhs < lhs;
+    if (retval) {
+        lhs = rhs;
+    }
+    return retval;
+}
+
+// --- algo.WTime..Max
+// Return the greater of two values
+inline algo::WTime algo::WTime_Max(algo::WTime lhs, algo::WTime rhs) {
+    return rhs < lhs ? lhs : rhs;
+}
+
+// --- algo.WTime..Eq
+inline bool algo::WTime_Eq(algo::WTime lhs, algo::WTime rhs) {
+    bool retval = true;
+    retval = i64_Eq(lhs.value, rhs.value);
+    return retval;
+}
+
+// --- algo.WTime..Update
+// Set value. Return true if new value is different from old value.
+inline bool algo::WTime_Update(algo::WTime &lhs, algo::WTime rhs) {
+    bool ret = !WTime_Eq(lhs, rhs); // compare values
+    if (ret) {
+        lhs = rhs; // update
+    }
+    return ret;
+}
 inline algo::i32_Range::i32_Range(i32                            in_beg
         ,i32                            in_end)
     : beg(in_beg)
@@ -18070,6 +19092,10 @@ inline algo::i32_Range::i32_Range(i32                            in_beg
 
 inline bool algo::i32_Range::operator ==(const algo::i32_Range &rhs) const {
     return algo::i32_Range_Eq(const_cast<algo::i32_Range&>(*this),const_cast<algo::i32_Range&>(rhs));
+}
+
+inline bool algo::i32_Range::operator !=(const algo::i32_Range &rhs) const {
+    return !algo::i32_Range_Eq(const_cast<algo::i32_Range&>(*this),const_cast<algo::i32_Range&>(rhs));
 }
 
 inline bool algo::i32_Range::operator <(const algo::i32_Range &rhs) const {
@@ -18443,6 +19469,16 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::UnixDiff
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::UnixTime &row) {// cfmt:algo.UnixTime.String
     algo::UnixTime_Print(const_cast<algo::UnixTime&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::WDiff &row) {// cfmt:algo.WDiff.String
+    algo::WDiff_Print(const_cast<algo::WDiff&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::WTime &row) {// cfmt:algo.WTime.String
+    algo::WTime_Print(const_cast<algo::WTime&>(row), str);
     return str;
 }
 

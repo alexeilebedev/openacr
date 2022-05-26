@@ -1,2 +1,3 @@
-ai && atf_norm 2>&1 | hilite-error
-
+#!/usr/bin/env bash
+set -o pipefail
+(ai && atf_norm) 2>&1 | hilite-error

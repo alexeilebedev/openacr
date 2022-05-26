@@ -80,21 +80,21 @@ void atf_amc::amctest_BheapInsert100() {
     {
         // insert...
         atf_amc::_db.bh_typec_n = atf_amc::_db.bh_typec_max;
-        u64 c = get_cycles();
+        u64 c = algo::get_cycles();
         atf_amc::bh_typec_Reserve(2500);
-        c = get_cycles() - c;
+        c = algo::get_cycles() - c;
         verblog("reserve 2500 elems: "<<c<<" cycles");
 
         atf_amc::_db.bh_typec_n = atf_amc::_db.bh_typec_max;
-        c = get_cycles();
+        c = algo::get_cycles();
         atf_amc::bh_typec_Reserve(5000);
-        c = get_cycles() - c;
+        c = algo::get_cycles() - c;
         verblog("reserve 5000 elems: "<<c<<" cycles");
 
         atf_amc::_db.bh_typec_n = atf_amc::_db.bh_typec_max;
-        c = get_cycles();
+        c = algo::get_cycles();
         atf_amc::bh_typec_Reserve(10000);
-        c = get_cycles() - c;
+        c = algo::get_cycles() - c;
         verblog("reserve 10000 elems: "<<c<<" cycles");
 
         atf_amc::_db.bh_typec_n = 0;

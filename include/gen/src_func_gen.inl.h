@@ -8,27 +8,13 @@
 
 
 #pragma once
-#include "include/gen/dev_gen.inl.h"
-#include "include/gen/algo_gen.inl.h"
-#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/dmmeta_gen.inl.h"
+#include "include/gen/algo_gen.inl.h"
 #include "include/gen/report_gen.inl.h"
 #include "include/gen/command_gen.inl.h"
+#include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/dev_gen.inl.h"
 //#pragma endinclude
-inline src_func::FBadline::FBadline() {
-    src_func::FBadline_Init(*this);
-}
-
-inline src_func::FBadline::~FBadline() {
-    src_func::FBadline_Uninit(*this);
-}
-
-
-// --- src_func.FBadline..Init
-// Set all fields to initial values.
-inline void src_func::FBadline_Init(src_func::FBadline& badline) {
-    badline.ind_badline_next = (src_func::FBadline*)-1; // (src_func.FDb.ind_badline) not-in-hash
-}
 inline src_func::FCtypelen::FCtypelen() {
     src_func::FCtypelen_Init(*this);
 }
@@ -59,12 +45,12 @@ inline bool src_func::genprefix_EmptyQ() {
 // --- src_func.FDb.genprefix.Find
 // Look up row by row id. Return NULL if out of range
 inline src_func::FGenprefix* src_func::genprefix_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     src_func::FGenprefix *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.genprefix_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.genprefix_lary[bsr][index];
     }
     return retval;
@@ -101,12 +87,12 @@ inline bool src_func::targsrc_EmptyQ() {
 // --- src_func.FDb.targsrc.Find
 // Look up row by row id. Return NULL if out of range
 inline src_func::FTargsrc* src_func::targsrc_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     src_func::FTargsrc *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.targsrc_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.targsrc_lary[bsr][index];
     }
     return retval;
@@ -143,12 +129,12 @@ inline bool src_func::target_EmptyQ() {
 // --- src_func.FDb.target.Find
 // Look up row by row id. Return NULL if out of range
 inline src_func::FTarget* src_func::target_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     src_func::FTarget *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.target_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.target_lary[bsr][index];
     }
     return retval;
@@ -197,12 +183,12 @@ inline bool src_func::func_EmptyQ() {
 // --- src_func.FDb.func.Find
 // Look up row by row id. Return NULL if out of range
 inline src_func::FFunc* src_func::func_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     src_func::FFunc *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.func_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.func_lary[bsr][index];
     }
     return retval;
@@ -281,12 +267,12 @@ inline bool src_func::dispatch_EmptyQ() {
 // --- src_func.FDb.dispatch.Find
 // Look up row by row id. Return NULL if out of range
 inline src_func::FDispatch* src_func::dispatch_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     src_func::FDispatch *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.dispatch_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.dispatch_lary[bsr][index];
     }
     return retval;
@@ -323,12 +309,12 @@ inline bool src_func::fstep_EmptyQ() {
 // --- src_func.FDb.fstep.Find
 // Look up row by row id. Return NULL if out of range
 inline src_func::FFstep* src_func::fstep_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     src_func::FFstep *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fstep_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fstep_lary[bsr][index];
     }
     return retval;
@@ -365,12 +351,12 @@ inline bool src_func::gstatic_EmptyQ() {
 // --- src_func.FDb.gstatic.Find
 // Look up row by row id. Return NULL if out of range
 inline src_func::FGstatic* src_func::gstatic_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     src_func::FGstatic *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.gstatic_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.gstatic_lary[bsr][index];
     }
     return retval;
@@ -419,12 +405,12 @@ inline bool src_func::ctypelen_EmptyQ() {
 // --- src_func.FDb.ctypelen.Find
 // Look up row by row id. Return NULL if out of range
 inline src_func::FCtypelen* src_func::ctypelen_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     src_func::FCtypelen *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ctypelen_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ctypelen_lary[bsr][index];
     }
     return retval;
@@ -462,60 +448,6 @@ inline bool src_func::ind_ctypelen_EmptyQ() {
 // Return number of items in the hash
 inline i32 src_func::ind_ctypelen_N() {
     return _db.ind_ctypelen_n;
-}
-
-// --- src_func.FDb.badline.EmptyQ
-// Return true if index is empty
-inline bool src_func::badline_EmptyQ() {
-    return _db.badline_n == 0;
-}
-
-// --- src_func.FDb.badline.Find
-// Look up row by row id. Return NULL if out of range
-inline src_func::FBadline* src_func::badline_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
-    src_func::FBadline *retval = NULL;
-    if (LIKELY(u64(t) < u64(_db.badline_n))) {
-        retval = &_db.badline_lary[bsr][index];
-    }
-    return retval;
-}
-
-// --- src_func.FDb.badline.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline src_func::FBadline* src_func::badline_Last() {
-    return badline_Find(u64(_db.badline_n-1));
-}
-
-// --- src_func.FDb.badline.N
-// Return number of items in the pool
-inline i32 src_func::badline_N() {
-    return _db.badline_n;
-}
-
-// --- src_func.FDb.badline.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline src_func::FBadline& src_func::badline_qFind(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
-    return _db.badline_lary[bsr][index];
-}
-
-// --- src_func.FDb.ind_badline.EmptyQ
-// Return true if hash is empty
-inline bool src_func::ind_badline_EmptyQ() {
-    return _db.ind_badline_n == 0;
-}
-
-// --- src_func.FDb.ind_badline.N
-// Return number of items in the hash
-inline i32 src_func::ind_badline_N() {
-    return _db.ind_badline_n;
 }
 
 // --- src_func.FDb.genprefix_curs.Reset
@@ -729,31 +661,6 @@ inline void src_func::_db_ctypelen_curs_Next(_db_ctypelen_curs &curs) {
 inline src_func::FCtypelen& src_func::_db_ctypelen_curs_Access(_db_ctypelen_curs &curs) {
     return ctypelen_qFind(u64(curs.index));
 }
-
-// --- src_func.FDb.badline_curs.Reset
-// cursor points to valid item
-inline void src_func::_db_badline_curs_Reset(_db_badline_curs &curs, src_func::FDb &parent) {
-    curs.parent = &parent;
-    curs.index = 0;
-}
-
-// --- src_func.FDb.badline_curs.ValidQ
-// cursor points to valid item
-inline bool src_func::_db_badline_curs_ValidQ(_db_badline_curs &curs) {
-    return curs.index < _db.badline_n;
-}
-
-// --- src_func.FDb.badline_curs.Next
-// proceed to next item
-inline void src_func::_db_badline_curs_Next(_db_badline_curs &curs) {
-    curs.index++;
-}
-
-// --- src_func.FDb.badline_curs.Access
-// item access
-inline src_func::FBadline& src_func::_db_badline_curs_Access(_db_badline_curs &curs) {
-    return badline_qFind(u64(curs.index));
-}
 inline src_func::FDispatch::FDispatch() {
     src_func::FDispatch_Init(*this);
 }
@@ -860,6 +767,7 @@ inline src_func::FTargsrc& src_func::cd_targsrc_qLast(src_func::FTarget& target)
 // --- src_func.FTarget..Init
 // Set all fields to initial values.
 inline void src_func::FTarget_Init(src_func::FTarget& target) {
+    target.compat = algo::strptr("Linux-%.%-%");
     target.cd_targsrc_head = NULL; // (src_func.FTarget.cd_targsrc)
     target.cd_targsrc_n = 0; // (src_func.FTarget.cd_targsrc)
     target.select = bool(false);

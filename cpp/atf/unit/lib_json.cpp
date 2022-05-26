@@ -627,12 +627,12 @@ void atf_unit::unittest_lib_json_ArrayAll() {
 void atf_unit::unittest_lib_json_Typical() {
     lib_json::FParser parser;
     static const char *secstr = "throw 'allowIllegalResourceCall is false.';";
-    static const char *in = "\n{"
+    static const char *in = "{"
         "\"id\":1000,"
         "\"name\":\"Object\","
-        "\"methods\":\n[\"GET\",\"PUT\"],"
-        "\"collections\":\n[],"
-        "\"fields\":\n{"
+        "\"methods\":[\"GET\",\"PUT\"],"
+        "\"collections\":[],"
+        "\"fields\":{"
         "\"field1\":null,"
         "\"field2\":false,"
         "\"field3\":true"
@@ -1167,9 +1167,9 @@ void atf_unit::unittest_lib_json_FmtJson_Object() {
     frep_(i,c_child_N(*node)) {
         lib_json::FNode *field = c_child_Find(*node,i);
         TESTCMP(field->type, lib_json_FNode_type_field);
-        const char *name;
-        u32 type;
-        const char *value;
+        const char *name="";
+        u32 type=0;
+        const char *value="";
         switch (i) {
         case 0:  name = "fld_bool"     ; type = lib_json_FNode_type_false  ; value = ""            ; break;
         case 1:  name = "fld_u8"       ; type = lib_json_FNode_type_number ; value = "1"           ; break;
@@ -1203,9 +1203,9 @@ void atf_unit::unittest_lib_json_FmtJson_Object() {
     frep_(i,c_child_N(*typeb)) {
         lib_json::FNode *field = c_child_Find(*typeb,i);
         TESTCMP(field->type, lib_json_FNode_type_field);
-        const char *name;
-        u32 type;
-        const char *value;
+        const char *name="";
+        u32 type=0;
+        const char *value="";
         switch (i) {
         case 0:  name = "typea"   ; type = lib_json_FNode_type_number ; value = "6"            ; break;
         case 1:  name = "j"       ; type = lib_json_FNode_type_number ; value = "7"            ; break;

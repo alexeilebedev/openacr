@@ -87,7 +87,7 @@ void amc::tclass_Thash() {
     amc::FField        *hashfld   = thash.p_hashfld;
 
     Set(R, "$Hashfldarg" , Argtype(*hashfld));
-    Set(R, "$Hashfldtype", name_Get(*hashfld->p_arg));
+    Set(R, "$Hashfldtype", tempstr() << ns_Get(*hashfld->p_arg) << "::" << name_Get(*hashfld->p_arg));
     Set(R, "$rethashfld" , FieldvalExpr(field.p_arg, *hashfld,"(*ret)"));
     Set(R, "$gethashfld" , FieldvalExpr(field.p_arg, *hashfld,"row"));
 
@@ -148,7 +148,7 @@ void amc::tfunc_Thash_Reserve() {
     Ins(&R, reserve.body, "u32 new_nelems   = $parname.$name_n + n;");
     Ins(&R, reserve.body, "// # of elements has to be roughly equal to the number of buckets");
     Ins(&R, reserve.body, "if (new_nelems > old_nbuckets) {");
-    Ins(&R, reserve.body, "    int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));");
+    Ins(&R, reserve.body, "    int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));");
     Ins(&R, reserve.body, "    u32 old_size = old_nbuckets * sizeof($Cpptype*);");
     Ins(&R, reserve.body, "    u32 new_size = new_nbuckets * sizeof($Cpptype*);");
     Ins(&R, reserve.body, "    // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably");

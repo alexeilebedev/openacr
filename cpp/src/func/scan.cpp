@@ -106,11 +106,10 @@ static src_func::FFunc *CreateFunc(src_func::FTargsrc &targsrc, strptr funcline,
         func->precomment = precomment;
         func->mystery = ch_N(func->precomment)<20 && !func->isstatic && !func->isinline;
         func->line = src_func::_db.cur_line;
-        // function may fail to xref
-        // and that's ok
+        // function may fail to xref (and that's ok)
         bool xrefok=func_XrefMaybe(*func);
         if (!xrefok) {
-            prerr(Location(*func,0)<<": src_func can't parse declaration: "<<func->func);
+            verblog(Location(*func,0)<<": src_func can't parse declaration: "<<func->func<<" (failed to xref)");
         }
         src_func::_db.report.n_func++;
         src_func::_db.report.n_static += func->isstatic;
@@ -133,9 +132,6 @@ static void ScanFile(src_func::FTargsrc &targsrc) {
     ind_beg(Line_curs,line,file.text) {
         strptr trimmedline=src_func::StripComment(Trimmed(line));
         SaveFileloc(targsrc,ind_curs(line).i+1);
-        if (src_func::_db.cmdline.check) {
-            src_func::CheckLine(trimmedline,line);
-        }
         bool funcstart = src_func::FuncstartQ(line,trimmedline);
         if (funcstart) {
             func=CreateFunc(targsrc,trimmedline, precomment);
@@ -176,9 +172,6 @@ static bool VisitfileQ(src_func::FTargsrc &targsrc) {
     bool issrc = ext == "cpp";
     bool inlhdr = ext == "inl.h";
     bool ret = (issrc || inlhdr);
-    if (src_func::_db.cmdline.check) {
-        ret = ret || ext == "h";
-    }
     if (src_func::_db.cmdline.updateproto) {
         ret &= targsrc.p_target->select;
     } else {

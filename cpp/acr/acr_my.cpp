@@ -63,15 +63,15 @@ static void Main_Start() {
                             " --protocol=socket"
                             " --socket=$data_dir/mysql.sock"
                             " ping 1>/dev/null 2>&1");
-    SchedTime t0=CurrSchedTime();
+    algo::SchedTime t0=algo::CurrSchedTime();
     do {
         started = SysCmd(Zeroterm(waitcmd))==0;
         if (step % 10 == 9) {// print message every few seconds
             prlog("waiting for server startup...");
         }
-        SleepMsec(100);
+        algo::SleepMsec(100);
         step++;
-    } while (!started && ElapsedSecs(t0,CurrSchedTime()) < 5.0);
+    } while (!started && algo::ElapsedSecs(t0,algo::CurrSchedTime()) < 5.0);
 
     // oops -- start failed. proceed straight to abort.
     if (!started) {
@@ -154,7 +154,7 @@ static bool MysqlUpQ(int pid) {
 
 static void Main_Stop() {
     int step=0;
-    int pid=ParseI32(algo::FileToString(Subst(acr_my::_db.R,"$data_dir/mysql_pid"),algo_FileFlags_none),0);
+    int pid=ParseI32(algo::FileToString(Subst(acr_my::_db.R,"$data_dir/mysql_pid"),algo::FileFlags()),0);
     tempstr cmd = Subst(acr_my::_db.R
                         , "mysqladmin"
                         " --no-defaults"
@@ -169,12 +169,12 @@ static void Main_Stop() {
                   <<Keyval("pid",pid));
         }
         SysCmd(Zeroterm(cmd),FailokQ(true),DryrunQ(false));
-        SleepMsec(50);
+        algo::SleepMsec(50);
         step++;
         vrfy(step<20*10, "server stop timeout");
     }
 
-    RemDirRecurse("mysql", true);
+    algo::RemDirRecurse("mysql", true);
 }
 
 // -----------------------------------------------------------------------------
@@ -207,7 +207,7 @@ void acr_my::Main() {
     }
 
     // has to be a full pathname, otherwise mysql fails.
-    acr_my::_db.data_dir << GetCurDir() << "/temp/mysql";
+    acr_my::_db.data_dir << algo::GetCurDir() << "/temp/mysql";
     Set(acr_my::_db.R, "$data_dir", acr_my::_db.data_dir);
 
     ind_beg(acr_my::_db_nsdb_curs, nsdb,acr_my::_db) {

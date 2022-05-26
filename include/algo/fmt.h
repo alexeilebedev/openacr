@@ -38,6 +38,12 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
     // cpp/lib/algo/fmt.cpp -- Print to string / Read from string
     //
 
+    // Examine string VALUE
+    // Determine if it needs quoting as an ssim key/value,
+    // and return appropriate quote character. If no quote character is needed,
+    // return NUL.
+    char PickSsimQuoteChar(strptr value);
+
     // Read time from STR to ROW
     // Return success code.
     // If funciton does not succeed, ROW is not modified
@@ -200,7 +206,24 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
     u32 u64_FmtBufDec(u64 num, int scale, u8 *buf);
 
     // print TIME to STR, according to spec SPEC
-    // todo: document format chars...
+    // The following control characters are supported in SPEC.
+    // %Y     Year printed as 4 digits, e.g. 2002
+    // %y     Last 2 digits of year printed as 2 digits
+    // %B     Short month name (Feb)
+    // %b     Long month name (February)
+    // %a     Week day name (Monday)
+    // %m     Month printed as 2 digits, with January being 01
+    // %d     Day of month printed as at least 2 digits (or WIDTH)
+    // %.X    where X is a number -- set width
+    // %I     Hour using 12-hour format
+    // %H     Hour using 24-hour format, printed as 2 digits
+    // %M     Minute, printed as 2 digits
+    // %S     Second, printed as 2 digits
+    // %T     Shortcut for %H:%M:%S.%.9X
+    // %X     Print fractions of a second according to width
+    // %x     Print milliseconds with 3 decimal places
+    // %-     Print - sign if timespec is negative
+    // %%     Print % sign
     void TimeStruct_Print(const TimeStruct &time, cstring &str, const algo::strptr &spec);
     void Tuple_Print(algo::Tuple &row_, cstring &str);
     void Bool_Print(algo::Bool row, algo::cstring &str);
@@ -216,6 +239,12 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
     void Errcode_Print(algo::Errcode &row, algo::cstring &str);
 
     // Append STR to OUT, using comma-separated-values encoding
+    // If QUOTE is 0, the need for quotes and the type of quote is determined automatically.
+    // If it is any other value, then that type of quote is used
+    // According to the CSV standard, the quote itself is the escape character.
+    void strptr_PrintCsv(algo::strptr str, cstring &out, char quote);
+
+    // Print CSV field, auto-determine quotes
     void strptr_PrintCsv(algo::strptr str, cstring &out);
     void URL_Print(algo::URL &url, cstring &str);
 
@@ -273,7 +302,7 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
     // basis function for reading tuples.
     // scan ITER for identifier, or quoted string.
     // return FALSE if attribute is malformed (i.e. unterminated string)
-    bool cstring_ReadCmdarg(cstring &out, StringIter &S, bool is_value);
+    bool cstring_ReadCmdarg(cstring &out, algo::StringIter &S, bool is_value);
 
     // Read Charset from list of chars.
     // Every character in RHS is simply added to the bitset
@@ -282,6 +311,9 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
 
     // Print STR to OUT in a way that's acceptable as input for bash.
     void strptr_PrintBash(strptr str, cstring &out);
+
+    // Escape S according to bash rules and return result
+    tempstr strptr_ToBash(strptr str);
 
     // encode uri component.
     // before ? use plus=false (no + substitution by space)
@@ -371,6 +403,10 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
     // Print a string as a classic regex, escaping all special
     // characters. This regex will only match the specified string.
     void strptr_PrintRegxSql(algo::strptr value, cstring &str);
+    void WDiff_Print(algo::WDiff row, algo::cstring &str);
+    void WTime_Print(algo::WTime row, algo::cstring &str);
+    bool WDiff_ReadStrptrMaybe(algo::WDiff &parent, algo::strptr in_str);
+    bool WTime_ReadStrptrMaybe(algo::WTime &parent, algo::strptr in_str);
 
     // -------------------------------------------------------------------
     // include/algo/fmt.inl.h
@@ -399,16 +435,23 @@ namespace algo {
 // - both key and value are ssim-quoted (i.e. c++ quoting rules but outer quotes can be single or double)
 // - reasonably fast.
 template<class Val> struct Keyval_ {
-    const strptr &key;
+    const algo::strptr &key;
     Val &val;
-    Keyval_(const strptr &a, const Val &b) :key(a),val((Val&)b) {
+    Keyval_(const algo::strptr &a, const Val &b) :key(a),val((Val&)b) {
+    }
+    Keyval_(const Keyval_ &rhs) : key(rhs.key), val((Val&)rhs.val) {
+    }
+private:
+    void operator =(const Keyval_ &) {
     }
 };
+
 template<class Val> inline cstring &operator <<(cstring &lhs, const Keyval_<Val> &kv) {
     int start=algo::BeginKeyval(lhs,kv.key);
     lhs<<kv.val;
     return algo::EndKeyval(lhs,start);
 }
-template<class Val> Keyval_<Val> inline Keyval(const strptr &key, const Val &val) {
+
+template<class Val> Keyval_<Val> inline Keyval(const algo::strptr &key, const Val &val) {
     return Keyval_<Val>(key,val);
 }

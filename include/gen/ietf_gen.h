@@ -76,6 +76,7 @@ struct Ipv4 { // ietf.Ipv4
     u32   ipv4;   //   0  IP address. First octet in bits 24..32
     explicit Ipv4(u32                            in_ipv4);
     bool operator ==(const ietf::Ipv4 &rhs) const;
+    bool operator !=(const ietf::Ipv4 &rhs) const;
     bool operator <(const ietf::Ipv4 &rhs) const;
     Ipv4();
 };
@@ -103,6 +104,7 @@ struct Ipport { // ietf.Ipport: IP+Port: host format
     explicit Ipport(ietf::Ipv4                     in_ip
         ,u16                            in_port);
     bool operator ==(const ietf::Ipport &rhs) const;
+    bool operator !=(const ietf::Ipport &rhs) const;
     bool operator <(const ietf::Ipport &rhs) const;
     Ipport();
 };
@@ -128,6 +130,7 @@ struct Ipv4Addr { // ietf.Ipv4Addr
     u32   addr_be;   //   0
     explicit Ipv4Addr(u32                            in_addr);
     bool operator ==(const ietf::Ipv4Addr &rhs) const;
+    bool operator !=(const ietf::Ipv4Addr &rhs) const;
     bool operator <(const ietf::Ipv4Addr &rhs) const;
     Ipv4Addr();
 };

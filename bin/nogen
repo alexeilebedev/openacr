@@ -1,1 +1,1 @@
-filterdiff -x "*/gen/*" | colordiff | less -r
+grephunk 'f:!/gen/' | hilite -d | less -r

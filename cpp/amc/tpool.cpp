@@ -166,5 +166,5 @@ void amc::tfunc_Tpool_Init() {
         Ins(&R, init.body, "$parname.$name_free_mt = NULL; // ($field)");
     }
     Ins(&R, init.body, "$parname.$name_free      = NULL;");
-    Ins(&R, init.body, "$parname.$name_blocksize = BumpToPow2(64 * sizeof($Cpptype)); // allocate 64-127 elements at a time");
+    Ins(&R, init.body, "$parname.$name_blocksize = algo::BumpToPow2(64 * sizeof($Cpptype)); // allocate 64-127 elements at a time");
 }

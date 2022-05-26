@@ -4,12 +4,13 @@
 # Run specified command and open error list in editor
 # Works with emacs and vim
 #
+echo "set -x; $*" > temp/errlist.cmd
 if [ "$EDITOR" == "vim" ]; then
-    $* 2>&1 | tee temp/errlist
+    sh temp/errlist.cmd 2>&1 | tee temp/errlist
     vim -q temp/errlist -c ":copen 30"
 else
     cat > temp/errlist.el <<EOF
-(setq compile-command "$*")
+(setq compile-command "sh temp/errlist.cmd 2>&1 | break-long-lines")
 (compile compile-command)
 EOF
     emacs -nw --load temp/errlist.el

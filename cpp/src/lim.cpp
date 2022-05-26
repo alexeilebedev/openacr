@@ -43,10 +43,10 @@ static dev::Linelim GetCustomlim(src_lim::FTargsrc &targsrc, dev::Linelim &ideal
 // this is used by bin/update-linelim to periodically tighten the line limits.
 static void Capture(dev::Linelim &observed, dev::Linelim &ideallim) {
     tempstr badstr;
-    int badness = u32_SubClip(observed.nbadws,ideallim.nbadws)
-        + u32_SubClip(observed.nlongline,ideallim.nlongline)/5
+    int badness = algo::u32_SubClip(observed.nbadws,ideallim.nbadws)
+        + algo::u32_SubClip(observed.nlongline,ideallim.nlongline)/5
         + observed.nmysteryfunc*5
-        + u32_SubClip(observed.nlongfunc,ideallim.nlongfunc)*2;
+        + algo::u32_SubClip(observed.nlongfunc,ideallim.nlongfunc)*2;
     char badchar='.';
     if (badness>30) {
         badness/=2;
@@ -220,12 +220,10 @@ static int CheckLim(dev::Linelim &ideallim, dev::Linelim &customlim, dev::Lineli
 // -----------------------------------------------------------------------------
 
 static void Main_Lim() {
-    algo_lib::Regx exclude;
-    Regx_ReadSql(exclude, "(%/gen/%|extern/%)", true);
     algo_lib::Regx include;
     Regx_ReadSql(include, "%.cpp", true);
     int nerr=0;
-    ind_beg(src_lim::_db_targsrc_curs,targsrc,src_lim::_db) {
+    ind_beg(src_lim::_db_targsrc_curs,targsrc,src_lim::_db) if (targsrc.select) {
         dev::Linelim ideallim;
         ideallim.gitfile=src_Get(targsrc);
         ideallim.maxws=16;
@@ -239,9 +237,7 @@ static void Main_Lim() {
         ideallim.nmysteryfunc=2;
         dev::Linelim customlim=GetCustomlim(targsrc,ideallim);// look up limit on this file
         bool bad=false;
-        if (algo_lib::Regx_Match(include, ideallim.gitfile)
-            && algo_lib::Regx_Match(src_lim::_db.cmdline.srcfile, ideallim.gitfile)
-            && !Regx_Match(exclude, ideallim.gitfile)) {
+        if (algo_lib::Regx_Match(include, ideallim.gitfile)) {
             bad = CheckLim(ideallim,customlim,observed);
         }
         nerr += bad;
@@ -282,6 +278,23 @@ static void StraySrc() {
         }
     }ind_end;
     vrfy(nerr==0,"src_lim.stray_files  comment:'Please delete these files or add them to targsrc table'");
+}
+
+// -----------------------------------------------------------------------------
+
+static void CheckPerms() {
+    int nbad=0;
+    ind_beg(src_lim::_db_targsrc_curs,targsrc,src_lim::_db) {
+        struct stat st;
+        algo::ZeroBytes(st);
+        (void)stat(Zeroterm(tempstr()<<src_Get(targsrc)),&st);
+        if (st.st_mode & 0111) {
+            nbad++;
+            prerr("src_lim.badperms"
+                  <<Keyval("gitfile",src_Get(targsrc))
+                  <<Keyval("comment","source files should not be executable"));
+        }
+    }ind_end;
 }
 
 // -----------------------------------------------------------------------------
@@ -351,13 +364,62 @@ static void Main_FinishCapture() {
 
 // -----------------------------------------------------------------------------
 
+static void CheckBadline(src_lim::FTargsrc &targsrc) {
+    MmapFile file;
+    tempstr fname(src_Get(targsrc));
+    MmapFile_Load(file,fname);
+    ind_beg(algo::Line_curs, line, file.text) {
+        ind_beg(src_lim::_db_badline_curs,badline,src_lim::_db) if (badline.select) {
+            if (Regx_Match(badline.regx, line)
+                && Regx_Match(badline._targsrc_regx,fname)// todo: move this out of the loop
+                && FindStr(line, tempstr()<<"ignore:"<<badline.badline)==-1) {
+                tempstr loc = tempstr() << fname<<":"<<ind_curs(line).i+1<<": ";
+                prlog(loc << line);
+                prlog("  "<<loc<<": src_lim.badline"
+                      <<Keyval("badline",badline.badline)
+                      <<Keyval("comment",tempstr()<<badline.comment));
+                algo_lib::_db.exit_code=1;
+            }
+        }ind_end;
+    }ind_end;
+}
+
+static void CheckBadline() {
+    int nselect=0;
+    ind_beg(src_lim::_db_badline_curs,badline,src_lim::_db) {
+        badline.select = Regx_Match(src_lim::_db.cmdline.badline,badline.badline);
+        nselect += badline.select;
+        (void)Regx_ReadDflt(badline.regx, badline.expr);// full regx
+        (void)Regx_ReadSql(badline._targsrc_regx, badline.targsrc_regx, true);// full regx
+    }ind_end;
+    if (nselect) {
+        ind_beg(src_lim::_db_targsrc_curs,targsrc,src_lim::_db) if (targsrc.select) {
+            CheckBadline(targsrc);
+        }ind_end;
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 void src_lim::Main() {
+    // select targsrc for processing
+    algo_lib::Regx exclude;
+    Regx_ReadSql(exclude, "(%/gen/%|extern/%)", true);
+    ind_beg(src_lim::_db_targsrc_curs,targsrc,src_lim::_db) {
+        targsrc.select = algo_lib::Regx_Match(src_lim::_db.cmdline.srcfile, src_Get(targsrc))
+            && !algo_lib::Regx_Match(exclude, src_Get(targsrc));
+    }ind_end;
+
     if (src_lim::_db.cmdline.linelim) {
+        CheckPerms();
         Main_Lim();
     }
     if (src_lim::_db.cmdline.strayfile) {
         StraySrc();
         StrayInclude();
+    }
+    if (src_lim::_db.cmdline.badline.expr != "") {
+        CheckBadline();
     }
     if (src_lim::_db.cmdline.capture) {
         Main_FinishCapture();

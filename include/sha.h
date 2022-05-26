@@ -47,7 +47,7 @@ inline Sha1Ctx::Sha1Ctx() {
 }
 
 // Update Sha1 context with new data
-inline void Update(Sha1Ctx &ctx, memptr data) {
+inline void Update(Sha1Ctx &ctx, algo::memptr data) {
     vrfy(!ctx.final_flag, "SHA context has already been finalized");
     vrfy(SHA1_Update(&ctx.sha_context, data.elems, data.n_elems), "SHA1_Update");
 }

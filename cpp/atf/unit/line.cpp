@@ -181,7 +181,7 @@ void atf_unit::unittest_algo_lib_FileLine_curs() {
     {
         algo::LineBuf L;
         int sink=0;
-        memptr data = algo::strptr_ToMemptr("asdfasdf\nasdfasdf\nasdfasdf\n\n\n\nasdfasdf\n");
+        algo::memptr data = algo::strptr_ToMemptr("asdfasdf\nasdfasdf\nasdfasdf\n\n\n\nasdfasdf\n");
         DO_PERF_TEST("Linebuf",{
                 algo::LinebufBegin(L,data,true);
                 strptr str;

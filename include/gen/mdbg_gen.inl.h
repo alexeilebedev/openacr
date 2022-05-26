@@ -121,12 +121,12 @@ inline bool mdbg::cfg_EmptyQ() {
 // --- mdbg.FDb.cfg.Find
 // Look up row by row id. Return NULL if out of range
 inline mdbg::FCfg* mdbg::cfg_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     mdbg::FCfg *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.cfg_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.cfg_lary[bsr][index];
     }
     return retval;
@@ -175,12 +175,12 @@ inline bool mdbg::builddir_EmptyQ() {
 // --- mdbg.FDb.builddir.Find
 // Look up row by row id. Return NULL if out of range
 inline mdbg::FBuilddir* mdbg::builddir_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     mdbg::FBuilddir *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.builddir_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.builddir_lary[bsr][index];
     }
     return retval;

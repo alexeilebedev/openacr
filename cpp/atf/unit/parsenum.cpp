@@ -145,33 +145,33 @@ static void TestNumber(u64 n) {
     u32 ok;
     if (ch_N(s) <= 8) {
         vrfyeq_(aParseNum8(s, ok), n);
-        vrfyeq_(ok, true);
+        vrfyeq_(ok!=0, true);
     } else {
         aParseNum8(s, ok);
-        vrfyeq_(ok, false);
+        vrfyeq_(ok!=0, false);
     }
     if (ch_N(s) <= 4) {
         vrfyeq_(aParseNum4(s, ok), n);
-        vrfyeq_(ok, true);
+        vrfyeq_(ok!=0, true);
     } else {
         aParseNum4(s, ok);
-        vrfyeq_(ok, false);
+        vrfyeq_(ok!=0, false);
     }
     if (ch_N(s) <= 16) {
         vrfyeq_(aParseNum16(s, ok), n);
-        vrfyeq_(ok, true);
+        vrfyeq_(ok!=0, true);
     } else {
         aParseNum16(s, ok);
-        vrfyeq_(ok, false);
+        vrfyeq_(ok!=0, false);
     }
     {
-        char c = char(i32_WeakRandom(256));
+        char c = char(algo::i32_WeakRandom(256));
         if (c>='0' && c<='9') {
             c += 10;
         }
         tempstr t;
         t=s;
-        ch_qFind(t, i32_WeakRandom(ch_N(s))) = c;
+        ch_qFind(t, algo::i32_WeakRandom(ch_N(s))) = c;
         if (ch_N(t) <= 16) {
             aParseNum16(t, ok);
             vrfyeq_(ok, false);
@@ -184,13 +184,13 @@ static void TestNumber(u64 n) {
 }
 
 void atf_unit::unittest_algo_lib_ParseNumber() {
-    TestStrNumConv<8,u64,u32>(ParseNum8,0,0);
-    TestStrNumConv<4,u32,u32>(ParseNum4,0,0);
-    TestStrNumConv<8,u64,u32>(0,ParseNum8,0);
-    TestStrNumConv<4,u32,u32>(0,ParseNum4,0);
-    TestStrNumConv<8,u64,u32>(0,0,aParseNum8);
-    TestStrNumConv<4,u32,u32>(0,0,aParseNum4);
-    TestStrNumConv<16,int,u64>(0,0,aParseNum16); // 2nd arg is fake
+    TestStrNumConv<8,u64,u32>(algo::ParseNum8,0,0);
+    TestStrNumConv<4,u32,u32>(algo::ParseNum4,0,0);
+    TestStrNumConv<8,u64,u32>(0,algo::ParseNum8,0);
+    TestStrNumConv<4,u32,u32>(0,algo::ParseNum4,0);
+    TestStrNumConv<8,u64,u32>(0,0,algo::aParseNum8);
+    TestStrNumConv<4,u32,u32>(0,0,algo::aParseNum4);
+    TestStrNumConv<16,int,u64>(0,0,algo::aParseNum16); // 2nd arg is fake
 
     frep_(i,10) {
         TestNumber(i);
@@ -205,7 +205,7 @@ void atf_unit::unittest_algo_lib_ParseNumber() {
     }
 
     rep_(i,10000) {
-        TestNumber(i32_WeakRandom(INT_MAX) & ((1<<i32_WeakRandom(32))-1));
+        TestNumber(algo::i32_WeakRandom(INT_MAX) & ((1<<algo::i32_WeakRandom(32))-1));
     }
 
     {
@@ -222,13 +222,13 @@ void atf_unit::unittest_algo_lib_ParseNumber() {
 
     {
         u32 ok=1;
-        ParseNum8(0, 0, ok);
+        algo::ParseNum8(0, 0, ok);
         vrfyeq_(ok, false);
     }
 
     {
         u32 ok=1;
-        ParseNum4(0, 0, ok);
+        algo::ParseNum4(0, 0, ok);
         vrfyeq_(ok, false);
     }
 

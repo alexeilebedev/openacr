@@ -58,28 +58,42 @@
 // #AL#: we don't need fflush,. because stderr is line-buffered
 // by default.
 
+#include "include/algo.h"
+
 #ifdef __MACH__
 // 'The deprecated ucontext routines require _XOPEN_SOURCE to be defined'
 #define _XOPEN_SOURCE
 #endif
 
+#ifndef WIN32
 #include <dlfcn.h>
-#ifndef __MACH__
+#endif
+
+#if !defined(__MACH__) && !defined(WIN32)
 #include <elf.h>
 #endif
+
+#if !defined(__CYGWIN__) && !defined(WIN32)
 #include <execinfo.h>// backtrace
+#endif
+
+#if !defined(WIN32)
 #include <ucontext.h>
 #include <cxxabi.h>// abi::__cxa_demangle
+#endif
+#include <iostream>
 
 // we need to silently break out on any error to do not cause segfault or exception
 #define break_if_not_(x) if (LIKELY(x)) ; else break
 
 // Print backtrace symbols
-static void BacktraceSymbols_Print(aryptr<void*> addrlist, algo::cstring &lhs) {
-#ifdef __MACH__
-    //
-    (void)addrlist;
-    (void)lhs;
+static void BacktraceSymbols_Print(algo::aryptr<void*> addrlist, algo::cstring &out) {
+#if defined(__MACH__) || defined(__CYGWIN__) || defined(WIN32)
+    ind_beg_aryptr(void*,ptr,addrlist) {
+        out<<ind_curs(ptr)<<": ";
+        u64_PrintHex((u64)ptr,out,16,true,false);
+        out<<eol;
+    }ind_end_aryptr;
 #else
     // static symbol table
     int         fd        = -1;    // file descriptor to read
@@ -188,7 +202,7 @@ static void BacktraceSymbols_Print(aryptr<void*> addrlist, algo::cstring &lhs) {
         free(demangled_symbol);
 
         msg<<eol;
-        lhs<< msg;
+        out<< msg;
     }
 
     // free mem
@@ -238,23 +252,6 @@ static void PrintTraces() {
 
 // -----------------------------------------------------------------------------
 
-void algo::FatalErrorExit(const char *a) NORETURN {
-    cstring &out = algo_lib::_db.fatalerr;
-    out << "algo.fatal_error" << eol;
-    out << a << eol;
-    out << " "<<gitinfo_Get()<<eol;
-    void* addrlist[64];
-    int nsyms = backtrace(addrlist, _array_count(addrlist));
-    if (nsyms) {
-        BacktraceSymbols_Print(aryptr<void*>(addrlist+1,nsyms-1),out);
-    }
-    PrintTraces();
-    fprintf(stderr,"%s\n",Zeroterm(out));// do not use prerr!
-    _exit(1);
-}
-
-// -----------------------------------------------------------------------------
-
 // Retrieve instruction pointer from signal handling context
 static uintptr_t GetIp(ucontext_t *uc) {
     uintptr_t ret = 0;
@@ -262,6 +259,11 @@ static uintptr_t GetIp(ucontext_t *uc) {
     ret = uc->uc_mcontext.mc_rip;
 #elif defined(__MACH__)
     ret = uc->uc_mcontext->__ss.__rip;
+#elif defined(__CYGWIN__)
+    ret = uc->uc_mcontext.rip;
+#elif defined(WIN32)
+    (void)uc;
+    ret = 0;
 #else
     ret = uc->uc_mcontext.gregs[REG_RIP];
 #endif
@@ -279,9 +281,17 @@ static tempstr IpString(ucontext_t *uc) {
 
 // -----------------------------------------------------------------------------
 
-static void ShowStackTrace(ucontext_t *uc, cstring &out) {
+void algo::ShowStackTrace(uintptr_t start_ip, cstring &out) {
     void* addrlist[64];
-    int nsyms = backtrace(addrlist, _array_count(addrlist));
+    memset(addrlist, 0, sizeof(addrlist));
+    int nsyms = 0;
+#if defined(__CYGWIN__)
+    nsyms = 0;
+#elif defined(WIN32)
+    nsyms = CaptureStackBackTrace(0,_array_count(addrlist),addrlist,NULL);
+#else
+    nsyms = backtrace(addrlist, _array_count(addrlist));
+#endif
     if (nsyms) {
         // this heuristic is from glibs:
         // Now attempt to locate the PC from signal context in the backtrace.
@@ -289,7 +299,7 @@ static void ShowStackTrace(ucontext_t *uc, cstring &out) {
         // if there were some signal handler wrappers.  Allow a few bytes
         // difference to cope with as many arches as possible.
         int start = 0 ;
-        for (uintptr_t ip=GetIp(uc); ip && start < nsyms; ++start) {
+        for (uintptr_t ip=start_ip; ip && start < nsyms; ++start) {
             if ((uintptr_t) addrlist[start] >= ip - 16 && (uintptr_t) addrlist[start] <= ip + 16) {
                 break;
             }
@@ -299,8 +309,24 @@ static void ShowStackTrace(ucontext_t *uc, cstring &out) {
         if (start == nsyms) {
             start = 0;
         }
-        BacktraceSymbols_Print(aryptr<void*>(addrlist+start,nsyms-start),out);
+        BacktraceSymbols_Print(algo::aryptr<void*>(addrlist+start,nsyms-start),out);
     }
+}
+
+// -----------------------------------------------------------------------------
+
+void algo::FatalErrorExit(const char *a) NORETURN {
+    cstring &out = algo_lib::_db.fatalerr;
+    out << "algo.fatal_error" << eol;
+    out << a << eol;
+    out << " "<<gitinfo_Get()<<eol;
+    ShowStackTrace((uintptr_t)&FatalErrorExit, out);
+    PrintTraces();
+    std::cerr << Zeroterm(out) << "\n";// do not use prerr!
+#if defined (_WIN32) && defined(_DEBUG)
+    DebugBreak();
+#endif
+    _exit(1);
 }
 
 // -----------------------------------------------------------------------------
@@ -314,7 +340,7 @@ static void Signal(int signal, siginfo_t *_si, void *context) {
         <<Keyval("text",strsignal(signal))
         <<eol;
     out << algo::gitinfo_Get()<<eol;
-    ShowStackTrace(uc,out);
+    ShowStackTrace(GetIp(uc),out);
     PrintTraces();
     // do not use prerr, be safe: this function may be called from a thread
     // that doesn't support prerr.
@@ -328,6 +354,8 @@ static void Signal(int signal, siginfo_t *_si, void *context) {
     sigaction(signal, &sa, NULL);
     raise(signal);
 }
+
+// -----------------------------------------------------------------------------
 
 // catch fatal signals and show backtrace
 void algo::SetupFatalSignals() {

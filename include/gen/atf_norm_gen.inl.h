@@ -44,12 +44,12 @@ inline bool atf_norm::normcheck_EmptyQ() {
 // --- atf_norm.FDb.normcheck.Find
 // Look up row by row id. Return NULL if out of range
 inline atf_norm::FNormcheck* atf_norm::normcheck_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     atf_norm::FNormcheck *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.normcheck_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.normcheck_lary[bsr][index];
     }
     return retval;
@@ -86,12 +86,12 @@ inline bool atf_norm::ssimfile_EmptyQ() {
 // --- atf_norm.FDb.ssimfile.Find
 // Look up row by row id. Return NULL if out of range
 inline atf_norm::FSsimfile* atf_norm::ssimfile_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     atf_norm::FSsimfile *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ssimfile_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ssimfile_lary[bsr][index];
     }
     return retval;
@@ -140,12 +140,12 @@ inline bool atf_norm::scriptfile_EmptyQ() {
 // --- atf_norm.FDb.scriptfile.Find
 // Look up row by row id. Return NULL if out of range
 inline atf_norm::FScriptfile* atf_norm::scriptfile_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     atf_norm::FScriptfile *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.scriptfile_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.scriptfile_lary[bsr][index];
     }
     return retval;
@@ -194,12 +194,12 @@ inline bool atf_norm::ns_EmptyQ() {
 // --- atf_norm.FDb.ns.Find
 // Look up row by row id. Return NULL if out of range
 inline atf_norm::FNs* atf_norm::ns_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     atf_norm::FNs *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ns_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ns_lary[bsr][index];
     }
     return retval;
@@ -248,12 +248,12 @@ inline bool atf_norm::readme_EmptyQ() {
 // --- atf_norm.FDb.readme.Find
 // Look up row by row id. Return NULL if out of range
 inline atf_norm::FReadme* atf_norm::readme_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     atf_norm::FReadme *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.readme_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.readme_lary[bsr][index];
     }
     return retval;
@@ -290,12 +290,12 @@ inline bool atf_norm::builddir_EmptyQ() {
 // --- atf_norm.FDb.builddir.Find
 // Look up row by row id. Return NULL if out of range
 inline atf_norm::FBuilddir* atf_norm::builddir_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     atf_norm::FBuilddir *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.builddir_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.builddir_lary[bsr][index];
     }
     return retval;
@@ -332,12 +332,12 @@ inline bool atf_norm::cfg_EmptyQ() {
 // --- atf_norm.FDb.cfg.Find
 // Look up row by row id. Return NULL if out of range
 inline atf_norm::FCfg* atf_norm::cfg_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     atf_norm::FCfg *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.cfg_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.cfg_lary[bsr][index];
     }
     return retval;
@@ -375,6 +375,144 @@ inline bool atf_norm::ind_builddir_EmptyQ() {
 // Return number of items in the hash
 inline i32 atf_norm::ind_builddir_N() {
     return _db.ind_builddir_n;
+}
+
+// --- atf_norm.FDb.gitfile.EmptyQ
+// Return true if index is empty
+inline bool atf_norm::gitfile_EmptyQ() {
+    return _db.gitfile_n == 0;
+}
+
+// --- atf_norm.FDb.gitfile.Find
+// Look up row by row id. Return NULL if out of range
+inline atf_norm::FGitfile* atf_norm::gitfile_Find(u64 t) {
+    atf_norm::FGitfile *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.gitfile_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.gitfile_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- atf_norm.FDb.gitfile.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline atf_norm::FGitfile* atf_norm::gitfile_Last() {
+    return gitfile_Find(u64(_db.gitfile_n-1));
+}
+
+// --- atf_norm.FDb.gitfile.N
+// Return number of items in the pool
+inline i32 atf_norm::gitfile_N() {
+    return _db.gitfile_n;
+}
+
+// --- atf_norm.FDb.gitfile.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline atf_norm::FGitfile& atf_norm::gitfile_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.gitfile_lary[bsr][index];
+}
+
+// --- atf_norm.FDb.ind_gitfile.EmptyQ
+// Return true if hash is empty
+inline bool atf_norm::ind_gitfile_EmptyQ() {
+    return _db.ind_gitfile_n == 0;
+}
+
+// --- atf_norm.FDb.ind_gitfile.N
+// Return number of items in the hash
+inline i32 atf_norm::ind_gitfile_N() {
+    return _db.ind_gitfile_n;
+}
+
+// --- atf_norm.FDb.noindent.EmptyQ
+// Return true if index is empty
+inline bool atf_norm::noindent_EmptyQ() {
+    return _db.noindent_n == 0;
+}
+
+// --- atf_norm.FDb.noindent.Find
+// Look up row by row id. Return NULL if out of range
+inline atf_norm::FNoindent* atf_norm::noindent_Find(u64 t) {
+    atf_norm::FNoindent *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.noindent_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.noindent_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- atf_norm.FDb.noindent.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline atf_norm::FNoindent* atf_norm::noindent_Last() {
+    return noindent_Find(u64(_db.noindent_n-1));
+}
+
+// --- atf_norm.FDb.noindent.N
+// Return number of items in the pool
+inline i32 atf_norm::noindent_N() {
+    return _db.noindent_n;
+}
+
+// --- atf_norm.FDb.noindent.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline atf_norm::FNoindent& atf_norm::noindent_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.noindent_lary[bsr][index];
+}
+
+// --- atf_norm.FDb.targsrc.EmptyQ
+// Return true if index is empty
+inline bool atf_norm::targsrc_EmptyQ() {
+    return _db.targsrc_n == 0;
+}
+
+// --- atf_norm.FDb.targsrc.Find
+// Look up row by row id. Return NULL if out of range
+inline atf_norm::FTargsrc* atf_norm::targsrc_Find(u64 t) {
+    atf_norm::FTargsrc *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.targsrc_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.targsrc_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- atf_norm.FDb.targsrc.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline atf_norm::FTargsrc* atf_norm::targsrc_Last() {
+    return targsrc_Find(u64(_db.targsrc_n-1));
+}
+
+// --- atf_norm.FDb.targsrc.N
+// Return number of items in the pool
+inline i32 atf_norm::targsrc_N() {
+    return _db.targsrc_n;
+}
+
+// --- atf_norm.FDb.targsrc.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline atf_norm::FTargsrc& atf_norm::targsrc_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.targsrc_lary[bsr][index];
 }
 
 // --- atf_norm.FDb.normcheck_curs.Reset
@@ -551,6 +689,165 @@ inline void atf_norm::_db_cfg_curs_Next(_db_cfg_curs &curs) {
 inline atf_norm::FCfg& atf_norm::_db_cfg_curs_Access(_db_cfg_curs &curs) {
     return cfg_qFind(u64(curs.index));
 }
+
+// --- atf_norm.FDb.gitfile_curs.Reset
+// cursor points to valid item
+inline void atf_norm::_db_gitfile_curs_Reset(_db_gitfile_curs &curs, atf_norm::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- atf_norm.FDb.gitfile_curs.ValidQ
+// cursor points to valid item
+inline bool atf_norm::_db_gitfile_curs_ValidQ(_db_gitfile_curs &curs) {
+    return curs.index < _db.gitfile_n;
+}
+
+// --- atf_norm.FDb.gitfile_curs.Next
+// proceed to next item
+inline void atf_norm::_db_gitfile_curs_Next(_db_gitfile_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_norm.FDb.gitfile_curs.Access
+// item access
+inline atf_norm::FGitfile& atf_norm::_db_gitfile_curs_Access(_db_gitfile_curs &curs) {
+    return gitfile_qFind(u64(curs.index));
+}
+
+// --- atf_norm.FDb.noindent_curs.Reset
+// cursor points to valid item
+inline void atf_norm::_db_noindent_curs_Reset(_db_noindent_curs &curs, atf_norm::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- atf_norm.FDb.noindent_curs.ValidQ
+// cursor points to valid item
+inline bool atf_norm::_db_noindent_curs_ValidQ(_db_noindent_curs &curs) {
+    return curs.index < _db.noindent_n;
+}
+
+// --- atf_norm.FDb.noindent_curs.Next
+// proceed to next item
+inline void atf_norm::_db_noindent_curs_Next(_db_noindent_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_norm.FDb.noindent_curs.Access
+// item access
+inline atf_norm::FNoindent& atf_norm::_db_noindent_curs_Access(_db_noindent_curs &curs) {
+    return noindent_qFind(u64(curs.index));
+}
+
+// --- atf_norm.FDb.targsrc_curs.Reset
+// cursor points to valid item
+inline void atf_norm::_db_targsrc_curs_Reset(_db_targsrc_curs &curs, atf_norm::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- atf_norm.FDb.targsrc_curs.ValidQ
+// cursor points to valid item
+inline bool atf_norm::_db_targsrc_curs_ValidQ(_db_targsrc_curs &curs) {
+    return curs.index < _db.targsrc_n;
+}
+
+// --- atf_norm.FDb.targsrc_curs.Next
+// proceed to next item
+inline void atf_norm::_db_targsrc_curs_Next(_db_targsrc_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_norm.FDb.targsrc_curs.Access
+// item access
+inline atf_norm::FTargsrc& atf_norm::_db_targsrc_curs_Access(_db_targsrc_curs &curs) {
+    return targsrc_qFind(u64(curs.index));
+}
+inline atf_norm::FGitfile::FGitfile() {
+    atf_norm::FGitfile_Init(*this);
+}
+
+inline atf_norm::FGitfile::~FGitfile() {
+    atf_norm::FGitfile_Uninit(*this);
+}
+
+
+// --- atf_norm.FGitfile.c_noindent.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool atf_norm::c_noindent_InsertMaybe(atf_norm::FGitfile& gitfile, atf_norm::FNoindent& row) {
+    atf_norm::FNoindent* ptr = gitfile.c_noindent;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        gitfile.c_noindent = &row;
+    }
+    return retval;
+}
+
+// --- atf_norm.FGitfile.c_noindent.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void atf_norm::c_noindent_Remove(atf_norm::FGitfile& gitfile, atf_norm::FNoindent& row) {
+    atf_norm::FNoindent *ptr = gitfile.c_noindent;
+    if (LIKELY(ptr == &row)) {
+        gitfile.c_noindent = NULL;
+    }
+}
+
+// --- atf_norm.FGitfile.c_scriptfile.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool atf_norm::c_scriptfile_InsertMaybe(atf_norm::FGitfile& gitfile, atf_norm::FScriptfile& row) {
+    atf_norm::FScriptfile* ptr = gitfile.c_scriptfile;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        gitfile.c_scriptfile = &row;
+    }
+    return retval;
+}
+
+// --- atf_norm.FGitfile.c_scriptfile.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void atf_norm::c_scriptfile_Remove(atf_norm::FGitfile& gitfile, atf_norm::FScriptfile& row) {
+    atf_norm::FScriptfile *ptr = gitfile.c_scriptfile;
+    if (LIKELY(ptr == &row)) {
+        gitfile.c_scriptfile = NULL;
+    }
+}
+
+// --- atf_norm.FGitfile.c_targsrc.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool atf_norm::c_targsrc_InsertMaybe(atf_norm::FGitfile& gitfile, atf_norm::FTargsrc& row) {
+    atf_norm::FTargsrc* ptr = gitfile.c_targsrc;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        gitfile.c_targsrc = &row;
+    }
+    return retval;
+}
+
+// --- atf_norm.FGitfile.c_targsrc.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void atf_norm::c_targsrc_Remove(atf_norm::FGitfile& gitfile, atf_norm::FTargsrc& row) {
+    atf_norm::FTargsrc *ptr = gitfile.c_targsrc;
+    if (LIKELY(ptr == &row)) {
+        gitfile.c_targsrc = NULL;
+    }
+}
+
+// --- atf_norm.FGitfile..Init
+// Set all fields to initial values.
+inline void atf_norm::FGitfile_Init(atf_norm::FGitfile& gitfile) {
+    gitfile.c_noindent = NULL;
+    gitfile.c_scriptfile = NULL;
+    gitfile.c_targsrc = NULL;
+    gitfile.ind_gitfile_next = (atf_norm::FGitfile*)-1; // (atf_norm.FDb.ind_gitfile) not-in-hash
+}
+inline atf_norm::FNoindent::FNoindent() {
+}
+
+inline atf_norm::FNoindent::~FNoindent() {
+    atf_norm::FNoindent_Uninit(*this);
+}
+
 inline atf_norm::FNormcheck::FNormcheck() {
     atf_norm::FNormcheck_Init(*this);
 }
@@ -622,6 +919,13 @@ inline atf_norm::FSsimfile::~FSsimfile() {
 inline void atf_norm::FSsimfile_Init(atf_norm::FSsimfile& ssimfile) {
     ssimfile.ind_ssimfile_next = (atf_norm::FSsimfile*)-1; // (atf_norm.FDb.ind_ssimfile) not-in-hash
 }
+inline atf_norm::FTargsrc::FTargsrc() {
+}
+
+inline atf_norm::FTargsrc::~FTargsrc() {
+    atf_norm::FTargsrc_Uninit(*this);
+}
+
 inline atf_norm::FieldId::FieldId(i32                            in_value)
     : value(in_value)
 {

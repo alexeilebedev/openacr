@@ -31,13 +31,13 @@ enum command_FieldIdEnum {                    // command.FieldId.value
     ,command_FieldId_maxjobs           = 14
     ,command_FieldId_printcmd          = 15
     ,command_FieldId_force             = 16
-    ,command_FieldId_testgen           = 17
-    ,command_FieldId_install           = 18
-    ,command_FieldId_coverity          = 19
-    ,command_FieldId_package           = 20
-    ,command_FieldId_maxerr            = 21
-    ,command_FieldId_disas             = 22
-    ,command_FieldId_report            = 23
+    ,command_FieldId_install           = 17
+    ,command_FieldId_coverity          = 18
+    ,command_FieldId_package           = 19
+    ,command_FieldId_maxerr            = 20
+    ,command_FieldId_disas             = 21
+    ,command_FieldId_report            = 22
+    ,command_FieldId_jcdb              = 23
     ,command_FieldId_query             = 24
     ,command_FieldId_select            = 25
     ,command_FieldId_del               = 26
@@ -75,115 +75,128 @@ enum command_FieldIdEnum {                    // command.FieldId.value
     ,command_FieldId_type              = 58
     ,command_FieldId_create            = 59
     ,command_FieldId_finput            = 60
-    ,command_FieldId_srcfile           = 61
-    ,command_FieldId_gstatic           = 62
-    ,command_FieldId_indexed           = 63
-    ,command_FieldId_nstype            = 64
-    ,command_FieldId_ctype             = 65
-    ,command_FieldId_pooltype          = 66
-    ,command_FieldId_ssimfile          = 67
-    ,command_FieldId_subset            = 68
-    ,command_FieldId_subset2           = 69
-    ,command_FieldId_separator         = 70
-    ,command_FieldId_arg               = 71
-    ,command_FieldId_dflt              = 72
-    ,command_FieldId_anon              = 73
-    ,command_FieldId_bigend            = 74
-    ,command_FieldId_cascdel           = 75
-    ,command_FieldId_before            = 76
-    ,command_FieldId_substr            = 77
-    ,command_FieldId_srcfield          = 78
-    ,command_FieldId_fstep             = 79
-    ,command_FieldId_inscond           = 80
-    ,command_FieldId_reftype           = 81
-    ,command_FieldId_hashfld           = 82
-    ,command_FieldId_sortfld           = 83
-    ,command_FieldId_unittest          = 84
-    ,command_FieldId_normcheck         = 85
-    ,command_FieldId_cppfunc           = 86
-    ,command_FieldId_via               = 87
-    ,command_FieldId_showcpp           = 88
+    ,command_FieldId_foutput           = 61
+    ,command_FieldId_srcfile           = 62
+    ,command_FieldId_gstatic           = 63
+    ,command_FieldId_indexed           = 64
+    ,command_FieldId_nstype            = 65
+    ,command_FieldId_ctype             = 66
+    ,command_FieldId_pooltype          = 67
+    ,command_FieldId_ssimfile          = 68
+    ,command_FieldId_subset            = 69
+    ,command_FieldId_subset2           = 70
+    ,command_FieldId_separator         = 71
+    ,command_FieldId_arg               = 72
+    ,command_FieldId_dflt              = 73
+    ,command_FieldId_anon              = 74
+    ,command_FieldId_bigend            = 75
+    ,command_FieldId_cascdel           = 76
+    ,command_FieldId_before            = 77
+    ,command_FieldId_substr            = 78
+    ,command_FieldId_srcfield          = 79
+    ,command_FieldId_fstep             = 80
+    ,command_FieldId_inscond           = 81
+    ,command_FieldId_reftype           = 82
+    ,command_FieldId_hashfld           = 83
+    ,command_FieldId_sortfld           = 84
+    ,command_FieldId_unittest          = 85
+    ,command_FieldId_normcheck         = 86
+    ,command_FieldId_cppfunc           = 87
+    ,command_FieldId_via               = 88
     ,command_FieldId_comment           = 89
     ,command_FieldId_sandbox           = 90
-    ,command_FieldId_sandbox_build     = 91
-    ,command_FieldId_ns                = 92
-    ,command_FieldId_data              = 93
-    ,command_FieldId_sigcheck          = 94
-    ,command_FieldId_data_dir          = 95
-    ,command_FieldId_related           = 96
-    ,command_FieldId_notssimfile       = 97
-    ,command_FieldId_checkable         = 98
-    ,command_FieldId_nsdb              = 99
-    ,command_FieldId_fkey              = 100
-    ,command_FieldId_start             = 101
-    ,command_FieldId_stop              = 102
-    ,command_FieldId_abort             = 103
-    ,command_FieldId_shell             = 104
-    ,command_FieldId_serv              = 105
-    ,command_FieldId_in_dir            = 106
-    ,command_FieldId_proto             = 107
-    ,command_FieldId_trace             = 108
-    ,command_FieldId_fconst            = 109
-    ,command_FieldId_gconst            = 110
-    ,command_FieldId_key               = 111
-    ,command_FieldId_include           = 112
-    ,command_FieldId_dot               = 113
-    ,command_FieldId_xns               = 114
-    ,command_FieldId_noinput           = 115
-    ,command_FieldId_render            = 116
-    ,command_FieldId_amctest           = 117
-    ,command_FieldId_nofork            = 118
-    ,command_FieldId_debug             = 119
-    ,command_FieldId_perf_secs         = 120
-    ,command_FieldId_pertest_timeout   = 121
-    ,command_FieldId_q                 = 122
-    ,command_FieldId_complooo          = 123
-    ,command_FieldId_args              = 124
-    ,command_FieldId_manywin           = 125
-    ,command_FieldId_root              = 126
-    ,command_FieldId_attach            = 127
-    ,command_FieldId_catchthrow        = 128
-    ,command_FieldId_tui               = 129
-    ,command_FieldId_bcmd              = 130
-    ,command_FieldId_emacs             = 131
-    ,command_FieldId_follow_child      = 132
-    ,command_FieldId_py                = 133
-    ,command_FieldId_writessimfile     = 134
-    ,command_FieldId_url               = 135
-    ,command_FieldId_tables            = 136
-    ,command_FieldId_nologo            = 137
-    ,command_FieldId_baddbok           = 138
-    ,command_FieldId_targsrc           = 139
-    ,command_FieldId_name              = 140
-    ,command_FieldId_body              = 141
-    ,command_FieldId_func              = 142
-    ,command_FieldId_nextfile          = 143
-    ,command_FieldId_other             = 144
-    ,command_FieldId_updateproto       = 145
-    ,command_FieldId_listfunc          = 146
-    ,command_FieldId_iffy              = 147
-    ,command_FieldId_gen               = 148
-    ,command_FieldId_showloc           = 149
-    ,command_FieldId_showstatic        = 150
-    ,command_FieldId_showsortkey       = 151
-    ,command_FieldId_sortname          = 152
-    ,command_FieldId_update_authors    = 153
-    ,command_FieldId_indent            = 154
-    ,command_FieldId_linelim           = 155
-    ,command_FieldId_strayfile         = 156
-    ,command_FieldId_capture           = 157
-    ,command_FieldId_expand            = 158
-    ,command_FieldId_ignoreQuote       = 159
-    ,command_FieldId_maxpacket         = 160
-    ,command_FieldId_db                = 161
-    ,command_FieldId_createdb          = 162
-    ,command_FieldId_str               = 163
-    ,command_FieldId_tocamelcase       = 164
-    ,command_FieldId_tolowerunder      = 165
-    ,command_FieldId_value             = 166
+    ,command_FieldId_test              = 91
+    ,command_FieldId_showcpp           = 92
+    ,command_FieldId_ns                = 93
+    ,command_FieldId_data              = 94
+    ,command_FieldId_sigcheck          = 95
+    ,command_FieldId_data_dir          = 96
+    ,command_FieldId_related           = 97
+    ,command_FieldId_notssimfile       = 98
+    ,command_FieldId_checkable         = 99
+    ,command_FieldId_nsdb              = 100
+    ,command_FieldId_fkey              = 101
+    ,command_FieldId_start             = 102
+    ,command_FieldId_stop              = 103
+    ,command_FieldId_abort             = 104
+    ,command_FieldId_shell             = 105
+    ,command_FieldId_serv              = 106
+    ,command_FieldId_in_dir            = 107
+    ,command_FieldId_proto             = 108
+    ,command_FieldId_trace             = 109
+    ,command_FieldId_fconst            = 110
+    ,command_FieldId_gconst            = 111
+    ,command_FieldId_key               = 112
+    ,command_FieldId_include           = 113
+    ,command_FieldId_dot               = 114
+    ,command_FieldId_xns               = 115
+    ,command_FieldId_noinput           = 116
+    ,command_FieldId_render            = 117
+    ,command_FieldId_amctest           = 118
+    ,command_FieldId_dofork            = 119
+    ,command_FieldId_q                 = 120
+    ,command_FieldId_ncmd              = 121
+    ,command_FieldId_nofork            = 122
+    ,command_FieldId_debug             = 123
+    ,command_FieldId_perf_secs         = 124
+    ,command_FieldId_pertest_timeout   = 125
+    ,command_FieldId_capture           = 126
+    ,command_FieldId_complooo          = 127
+    ,command_FieldId_args              = 128
+    ,command_FieldId_manywin           = 129
+    ,command_FieldId_root              = 130
+    ,command_FieldId_attach            = 131
+    ,command_FieldId_catchthrow        = 132
+    ,command_FieldId_tui               = 133
+    ,command_FieldId_bcmd              = 134
+    ,command_FieldId_emacs             = 135
+    ,command_FieldId_follow_child      = 136
+    ,command_FieldId_py                = 137
+    ,command_FieldId_writessimfile     = 138
+    ,command_FieldId_url               = 139
+    ,command_FieldId_tables            = 140
+    ,command_FieldId_nologo            = 141
+    ,command_FieldId_baddbok           = 142
+    ,command_FieldId_typetag           = 143
+    ,command_FieldId_move              = 144
+    ,command_FieldId_dedup             = 145
+    ,command_FieldId_commit            = 146
+    ,command_FieldId_undo              = 147
+    ,command_FieldId_hash              = 148
+    ,command_FieldId_targsrc           = 149
+    ,command_FieldId_name              = 150
+    ,command_FieldId_body              = 151
+    ,command_FieldId_func              = 152
+    ,command_FieldId_nextfile          = 153
+    ,command_FieldId_other             = 154
+    ,command_FieldId_updateproto       = 155
+    ,command_FieldId_listfunc          = 156
+    ,command_FieldId_iffy              = 157
+    ,command_FieldId_gen               = 158
+    ,command_FieldId_showloc           = 159
+    ,command_FieldId_showstatic        = 160
+    ,command_FieldId_showsortkey       = 161
+    ,command_FieldId_sortname          = 162
+    ,command_FieldId_baddecl           = 163
+    ,command_FieldId_update_authors    = 164
+    ,command_FieldId_indent            = 165
+    ,command_FieldId_linelim           = 166
+    ,command_FieldId_strayfile         = 167
+    ,command_FieldId_badchar           = 168
+    ,command_FieldId_badline           = 169
+    ,command_FieldId_expand            = 170
+    ,command_FieldId_ignoreQuote       = 171
+    ,command_FieldId_maxpacket         = 172
+    ,command_FieldId_db                = 173
+    ,command_FieldId_createdb          = 174
+    ,command_FieldId_str               = 175
+    ,command_FieldId_tocamelcase       = 176
+    ,command_FieldId_tolowerunder      = 177
+    ,command_FieldId_pathcomp          = 178
+    ,command_FieldId_value             = 179
 };
 
-enum { command_FieldIdEnum_N = 167 };
+enum { command_FieldIdEnum_N = 180 };
 
 namespace command { struct FieldId; }
 namespace command { struct Protocol; }
@@ -210,9 +223,13 @@ namespace command { struct atf_amc; }
 namespace command { struct atf_amc_proc; }
 namespace command { struct atf_norm; }
 namespace command { struct atf_norm_proc; }
+namespace command { struct atf_nrun; }
+namespace command { struct atf_nrun_proc; }
 namespace command { struct atf_unit; }
 namespace command { struct atf_unit_proc; }
 namespace command { struct bash; }
+namespace command { struct bash2html; }
+namespace command { struct bash2html_proc; }
 namespace command { struct bash_proc; }
 namespace command { struct lib_ctype; }
 namespace command { struct lib_exec; }
@@ -220,6 +237,10 @@ namespace command { struct mdbg; }
 namespace command { struct mdbg_proc; }
 namespace command { struct mysql2ssim; }
 namespace command { struct mysql2ssim_proc; }
+namespace command { struct ntup; }
+namespace command { struct ntup_proc; }
+namespace command { struct orgfile; }
+namespace command { struct orgfile_proc; }
 namespace command { struct src_func; }
 namespace command { struct src_func_proc; }
 namespace command { struct src_hdr; }
@@ -306,13 +327,13 @@ struct abt { // command.abt
     i32                maxjobs;    //   0  Maximum number of child build processes. 0=pick good default
     bool               printcmd;   //   false  Print commands. Do not execute
     bool               force;      //   false  Assume all files are out-of-date
-    bool               testgen;    //   false  Run generator (amc) in test directory and report diff
     bool               install;    //   false  Update soft-link under bin/
     bool               coverity;   //   false  Run abt in coverity mode
     algo::cstring      package;    //   ""  Package tag
     u32                maxerr;     //   100  Max failing commands before rest of pipeline is forced to fail
     algo_lib::Regx     disas;      //   ""  Regx of algo::cstring
     bool               report;     //   true  Print final report
+    algo::cstring      jcdb;       //   ""  Create JSON compilation database in specified file
     abt();
 };
 
@@ -344,9 +365,9 @@ algo::strptr         abt_GetAnon(command::abt &parent, i32 idx) __attribute__((n
 struct abt_proc { // command.abt_proc: Subprocess: Algo Build Tool (build system)
     algo::cstring   path;      //   "bin/abt"  path for executable
     command::abt    cmd;       // command line for child process
-    algo::cstring   stdin;     // redirect for stdin
-    algo::cstring   stdout;    // redirect for stdout
-    algo::cstring   stderr;    // redirect for stderr
+    algo::cstring   fstdin;    // redirect for stdin
+    algo::cstring   fstdout;   // redirect for stdout
+    algo::cstring   fstderr;   // redirect for stderr
     pid_t           pid;       //   0  pid of running child process
     i32             timeout;   //   0  optional timeout for child process
     i32             status;    //   0  last exit status of child process
@@ -361,6 +382,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  abt_Start(command::abt_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         abt_StartRead(command::abt_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 abt_Kill(command::abt_proc& parent);
 // Wait for subprocess to return
@@ -457,9 +480,9 @@ tempstr              acr_compl_ToCmdline(command::acr_compl & row) __attribute__
 struct acr_compl_proc { // command.acr_compl_proc: Subprocess: ACR shell auto-complete for all targets
     algo::cstring        path;      //   "bin/acr_compl"  path for executable
     command::acr_compl   cmd;       // command line for child process
-    algo::cstring        stdin;     // redirect for stdin
-    algo::cstring        stdout;    // redirect for stdout
-    algo::cstring        stderr;    // redirect for stderr
+    algo::cstring        fstdin;    // redirect for stdin
+    algo::cstring        fstdout;   // redirect for stdout
+    algo::cstring        fstderr;   // redirect for stderr
     pid_t                pid;       //   0  pid of running child process
     i32                  timeout;   //   0  optional timeout for child process
     i32                  status;    //   0  last exit status of child process
@@ -474,6 +497,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  acr_compl_Start(command::acr_compl_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         acr_compl_StartRead(command::acr_compl_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 acr_compl_Kill(command::acr_compl_proc& parent);
 // Wait for subprocess to return
@@ -496,48 +521,49 @@ void                 acr_compl_proc_Uninit(command::acr_compl_proc& parent) __at
 // --- command.acr_ed
 // access: command.acr_ed_proc.acr_ed (Exec)
 struct acr_ed { // command.acr_ed
-    algo::cstring       in;              //   "data"  Input directory or filename, - for stdin
-    bool                create;          //   false  Create new entity (-finput, -target, -ctype, -field)
-    bool                del;             //   false  Delete mode
-    algo::cstring       rename;          //   ""  Rename to something else
-    bool                replace;         //   false  Use acr -replace (default is -insert, fails on duplicate)
-    bool                finput;          //   false  Create in-memory table based on ssimfile
-    algo::cstring       srcfile;         //   ""      Create source file
-    bool                gstatic;         //   false  Like -finput, but data is loaded at compile time
-    bool                indexed;         //   false  (with -finput) Add hash index
-    algo::Smallstr16    target;          //   ""  Create new target
-    algo::Smallstr50    nstype;          //   "exe"  (with -create -target): exe,lib,etc.
-    algo::Smallstr50    ctype;           //   ""  Create new ctype
-    algo::Smallstr50    pooltype;        //   ""   Pool reftype (Lary,Lpool etc) for finput/ctype
-    algo::Smallstr50    ssimfile;        //   ""    Ssimfile for new ctype
-    algo::Smallstr50    subset;          //   ""    Primary key is a subset of this ctype
-    algo::Smallstr50    subset2;         //   ""    Primary key is also a subset of this ctype
-    algo::cstring       separator;       //   "."      Key separator
-    algo::Smallstr100   field;           //   ""  Create field
-    algo::Smallstr50    arg;             //   ""    Field type (e.g. u32, etc)
-    algo::cstring       dflt;            //   ""    Field default value
-    bool                anon;            //   false    Anonymous field (use with command lines)
-    bool                bigend;          //   false    Big-endian field
-    bool                cascdel;         //   false    Field is cascdel
-    algo::Smallstr100   before;          //   ""    Place field before this one
-    algo::Smallstr100   substr;          //   ""    New field is a substring
-    algo::Smallstr100   srcfield;        //   ""    Source field for bitfld/substr
-    algo::Smallstr100   fstep;           //   ""    Add fstep record
-    algo::cstring       inscond;         //   "true"    Insert condition (for xref)
-    algo::Smallstr50    reftype;         //   ""    Reftype (e.g. Val, Thash, Llist, etc)
-    algo::Smallstr100   hashfld;         //   ""      (-reftype:Thash) Hash field
-    algo::Smallstr100   sortfld;         //   ""      (-reftype:Bheap) Sort field
-    algo::cstring       unittest;        //   ""  Create unit test, <ns>.<functionname>
-    algo::cstring       normcheck;       //   ""  Create normalization check
-    algo::cstring       cppfunc;         //   ""  Field is a cppfunc, pass c++ expression as argument
-    bool                xref;            //   false      X-ref with field type
-    algo::cstring       via;             //   ""        X-ref argument (index, pointer, or index/key)
-    bool                showcpp;         //   false  Show resulting C++ code
-    bool                write;           //   false  Commit output to disk
-    bool                e;               //   false   (with -create -unittest) Edit new testcase
-    algo::cstring       comment;         //   ""  Comment for new entity
-    bool                sandbox;         //   false  Make changes in sandbox
-    bool                sandbox_build;   //   true    (with -sandbox) Do a build check
+    algo::cstring       in;          //   "data"  Input directory or filename, - for stdin
+    bool                create;      //   false  Create new entity (-finput, -target, -ctype, -field)
+    bool                del;         //   false  Delete mode
+    algo::cstring       rename;      //   ""  Rename to something else
+    bool                replace;     //   false  Use acr -replace (default is -insert, fails on duplicate)
+    bool                finput;      //   false  Create in-memory table based on ssimfile
+    bool                foutput;     //   false  Declare field as an output
+    algo::cstring       srcfile;     //   ""      Create source file
+    bool                gstatic;     //   false  Like -finput, but data is loaded at compile time
+    bool                indexed;     //   false  (with -finput) Add hash index
+    algo::Smallstr16    target;      //   ""  Create new target
+    algo::Smallstr50    nstype;      //   "exe"  (with -create -target): exe,lib,etc.
+    algo::Smallstr50    ctype;       //   ""  Create new ctype
+    algo::Smallstr50    pooltype;    //   ""   Pool reftype (Lary,Lpool etc) for finput/ctype
+    algo::Smallstr50    ssimfile;    //   ""    Ssimfile for new ctype
+    algo::Smallstr50    subset;      //   ""    Primary key is a subset of this ctype
+    algo::Smallstr50    subset2;     //   ""    Primary key is also a subset of this ctype
+    algo::cstring       separator;   //   "."      Key separator
+    algo::Smallstr100   field;       //   ""  Create field
+    algo::Smallstr50    arg;         //   ""    Field type (e.g. u32, etc)
+    algo::cstring       dflt;        //   ""    Field default value
+    bool                anon;        //   false    Anonymous field (use with command lines)
+    bool                bigend;      //   false    Big-endian field
+    bool                cascdel;     //   false    Field is cascdel
+    algo::Smallstr100   before;      //   ""    Place field before this one
+    algo::Smallstr100   substr;      //   ""    New field is a substring
+    algo::Smallstr100   srcfield;    //   ""    Source field for bitfld/substr
+    algo::Smallstr100   fstep;       //   ""    Add fstep record
+    algo::cstring       inscond;     //   "true"    Insert condition (for xref)
+    algo::Smallstr50    reftype;     //   ""    Reftype (e.g. Val, Thash, Llist, etc)
+    algo::Smallstr100   hashfld;     //   ""      (-reftype:Thash) Hash field
+    algo::Smallstr100   sortfld;     //   ""      (-reftype:Bheap) Sort field
+    algo::cstring       unittest;    //   ""  Create unit test, <ns>.<functionname>
+    algo::cstring       normcheck;   //   ""  Create normalization check
+    algo::cstring       cppfunc;     //   ""  Field is a cppfunc, pass c++ expression as argument
+    bool                xref;        //   false      X-ref with field type
+    algo::cstring       via;         //   ""        X-ref argument (index, pointer, or index/key)
+    bool                write;       //   false  Commit output to disk
+    bool                e;           //   false   (with -create -unittest) Edit new testcase
+    algo::cstring       comment;     //   ""  Comment for new entity
+    bool                sandbox;     //   false  Make changes in sandbox
+    bool                test;        //   false  Build resulting changes, run tests
+    bool                showcpp;     //   false  (With -sandbox), show resulting diff
     acr_ed();
 };
 
@@ -556,9 +582,9 @@ tempstr              acr_ed_ToCmdline(command::acr_ed & row) __attribute__((noth
 struct acr_ed_proc { // command.acr_ed_proc: Subprocess: ACR Editor Set of useful recipes, uses acr, abt, git, and other tools
     algo::cstring     path;      //   "bin/acr_ed"  path for executable
     command::acr_ed   cmd;       // command line for child process
-    algo::cstring     stdin;     // redirect for stdin
-    algo::cstring     stdout;    // redirect for stdout
-    algo::cstring     stderr;    // redirect for stderr
+    algo::cstring     fstdin;    // redirect for stdin
+    algo::cstring     fstdout;   // redirect for stdout
+    algo::cstring     fstderr;   // redirect for stderr
     pid_t             pid;       //   0  pid of running child process
     i32               timeout;   //   0  optional timeout for child process
     i32               status;    //   0  last exit status of child process
@@ -573,6 +599,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  acr_ed_Start(command::acr_ed_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         acr_ed_StartRead(command::acr_ed_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 acr_ed_Kill(command::acr_ed_proc& parent);
 // Wait for subprocess to return
@@ -635,9 +663,9 @@ algo::strptr         acr_in_GetAnon(command::acr_in &parent, i32 idx) __attribut
 struct acr_in_proc { // command.acr_in_proc: Subprocess: ACR Input - compute set of ssimfiles or tuples used by a specific target
     algo::cstring     path;      //   "bin/acr_in"  path for executable
     command::acr_in   cmd;       // command line for child process
-    algo::cstring     stdin;     // redirect for stdin
-    algo::cstring     stdout;    // redirect for stdout
-    algo::cstring     stderr;    // redirect for stderr
+    algo::cstring     fstdin;    // redirect for stdin
+    algo::cstring     fstdout;   // redirect for stdout
+    algo::cstring     fstderr;   // redirect for stderr
     pid_t             pid;       //   0  pid of running child process
     i32               timeout;   //   0  optional timeout for child process
     i32               status;    //   0  last exit status of child process
@@ -652,6 +680,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  acr_in_Start(command::acr_in_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         acr_in_StartRead(command::acr_in_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 acr_in_Kill(command::acr_in_proc& parent);
 // Wait for subprocess to return
@@ -710,9 +740,9 @@ algo::strptr         acr_my_GetAnon(command::acr_my &parent, i32 idx) __attribut
 struct acr_my_proc { // command.acr_my_proc: Subprocess: ACR <-> MariaDB adaptor
     algo::cstring     path;      //   "bin/acr_my"  path for executable
     command::acr_my   cmd;       // command line for child process
-    algo::cstring     stdin;     // redirect for stdin
-    algo::cstring     stdout;    // redirect for stdout
-    algo::cstring     stderr;    // redirect for stderr
+    algo::cstring     fstdin;    // redirect for stdin
+    algo::cstring     fstdout;   // redirect for stdout
+    algo::cstring     fstderr;   // redirect for stderr
     pid_t             pid;       //   0  pid of running child process
     i32               timeout;   //   0  optional timeout for child process
     i32               status;    //   0  last exit status of child process
@@ -727,6 +757,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  acr_my_Start(command::acr_my_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         acr_my_StartRead(command::acr_my_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 acr_my_Kill(command::acr_my_proc& parent);
 // Wait for subprocess to return
@@ -750,9 +782,9 @@ void                 acr_my_proc_Uninit(command::acr_my_proc& parent) __attribut
 struct acr_proc { // command.acr_proc: Subprocess: Algo Cross-Reference - ssimfile database & update tool
     algo::cstring   path;      //   "bin/acr"  path for executable
     command::acr    cmd;       // command line for child process
-    algo::cstring   stdin;     // redirect for stdin
-    algo::cstring   stdout;    // redirect for stdout
-    algo::cstring   stderr;    // redirect for stderr
+    algo::cstring   fstdin;    // redirect for stdin
+    algo::cstring   fstdout;   // redirect for stdout
+    algo::cstring   fstderr;   // redirect for stderr
     pid_t           pid;       //   0  pid of running child process
     i32             timeout;   //   0  optional timeout for child process
     i32             status;    //   0  last exit status of child process
@@ -767,6 +799,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  acr_Start(command::acr_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         acr_StartRead(command::acr_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 acr_Kill(command::acr_proc& parent);
 // Wait for subprocess to return
@@ -880,9 +914,9 @@ tempstr              amc_gc_ToCmdline(command::amc_gc & row) __attribute__((noth
 struct amc_gc_proc { // command.amc_gc_proc: Subprocess: Empirically eliminate unused records
     algo::cstring     path;      //   "bin/amc_gc"  path for executable
     command::amc_gc   cmd;       // command line for child process
-    algo::cstring     stdin;     // redirect for stdin
-    algo::cstring     stdout;    // redirect for stdout
-    algo::cstring     stderr;    // redirect for stderr
+    algo::cstring     fstdin;    // redirect for stdin
+    algo::cstring     fstdout;   // redirect for stdout
+    algo::cstring     fstderr;   // redirect for stderr
     pid_t             pid;       //   0  pid of running child process
     i32               timeout;   //   0  optional timeout for child process
     i32               status;    //   0  last exit status of child process
@@ -897,6 +931,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  amc_gc_Start(command::amc_gc_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         amc_gc_StartRead(command::amc_gc_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 amc_gc_Kill(command::amc_gc_proc& parent);
 // Wait for subprocess to return
@@ -920,9 +956,9 @@ void                 amc_gc_proc_Uninit(command::amc_gc_proc& parent) __attribut
 struct amc_proc { // command.amc_proc: Subprocess: Algo Model Compiler: generate code under include/gen and cpp/gen
     algo::cstring   path;      //   "bin/amc"  path for executable
     command::amc    cmd;       // command line for child process
-    algo::cstring   stdin;     // redirect for stdin
-    algo::cstring   stdout;    // redirect for stdout
-    algo::cstring   stderr;    // redirect for stderr
+    algo::cstring   fstdin;    // redirect for stdin
+    algo::cstring   fstdout;   // redirect for stdout
+    algo::cstring   fstderr;   // redirect for stderr
     pid_t           pid;       //   0  pid of running child process
     i32             timeout;   //   0  optional timeout for child process
     i32             status;    //   0  last exit status of child process
@@ -937,6 +973,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  amc_Start(command::amc_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         amc_StartRead(command::amc_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 amc_Kill(command::amc_proc& parent);
 // Wait for subprocess to return
@@ -992,9 +1030,9 @@ algo::strptr         amc_vis_GetAnon(command::amc_vis &parent, i32 idx) __attrib
 struct amc_vis_proc { // command.amc_vis_proc: Subprocess: amc: draw access path diagrams
     algo::cstring      path;      //   "bin/amc_vis"  path for executable
     command::amc_vis   cmd;       // command line for child process
-    algo::cstring      stdin;     // redirect for stdin
-    algo::cstring      stdout;    // redirect for stdout
-    algo::cstring      stderr;    // redirect for stderr
+    algo::cstring      fstdin;    // redirect for stdin
+    algo::cstring      fstdout;   // redirect for stdout
+    algo::cstring      fstderr;   // redirect for stderr
     pid_t              pid;       //   0  pid of running child process
     i32                timeout;   //   0  optional timeout for child process
     i32                status;    //   0  last exit status of child process
@@ -1009,6 +1047,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  amc_vis_Start(command::amc_vis_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         amc_vis_StartRead(command::amc_vis_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 amc_vis_Kill(command::amc_vis_proc& parent);
 // Wait for subprocess to return
@@ -1033,6 +1073,8 @@ void                 amc_vis_proc_Uninit(command::amc_vis_proc& parent) __attrib
 struct atf_amc { // command.atf_amc
     algo::cstring    in;        //   "data"  Input directory or filename, - for stdin
     algo_lib::Regx   amctest;   //   "%"  Regx of atfdb::Amctest
+    bool             dofork;    //   true  Use fork
+    bool             q;         //   false  Quiet mode
     atf_amc();
 };
 
@@ -1058,9 +1100,9 @@ algo::strptr         atf_amc_GetAnon(command::atf_amc &parent, i32 idx) __attrib
 struct atf_amc_proc { // command.atf_amc_proc: Subprocess: Unit tests for amc (see amctest table)
     algo::cstring      path;      //   "bin/atf_amc"  path for executable
     command::atf_amc   cmd;       // command line for child process
-    algo::cstring      stdin;     // redirect for stdin
-    algo::cstring      stdout;    // redirect for stdout
-    algo::cstring      stderr;    // redirect for stderr
+    algo::cstring      fstdin;    // redirect for stdin
+    algo::cstring      fstdout;   // redirect for stdout
+    algo::cstring      fstderr;   // redirect for stderr
     pid_t              pid;       //   0  pid of running child process
     i32                timeout;   //   0  optional timeout for child process
     i32                status;    //   0  last exit status of child process
@@ -1075,6 +1117,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  atf_amc_Start(command::atf_amc_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         atf_amc_StartRead(command::atf_amc_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 atf_amc_Kill(command::atf_amc_proc& parent);
 // Wait for subprocess to return
@@ -1124,9 +1168,9 @@ algo::strptr         atf_norm_GetAnon(command::atf_norm &parent, i32 idx) __attr
 struct atf_norm_proc { // command.atf_norm_proc: Subprocess: Normalization tests (see normcheck table)
     algo::cstring       path;      //   "bin/atf_norm"  path for executable
     command::atf_norm   cmd;       // command line for child process
-    algo::cstring       stdin;     // redirect for stdin
-    algo::cstring       stdout;    // redirect for stdout
-    algo::cstring       stderr;    // redirect for stderr
+    algo::cstring       fstdin;    // redirect for stdin
+    algo::cstring       fstdout;   // redirect for stdout
+    algo::cstring       fstderr;   // redirect for stderr
     pid_t               pid;       //   0  pid of running child process
     i32                 timeout;   //   0  optional timeout for child process
     i32                 status;    //   0  last exit status of child process
@@ -1141,6 +1185,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  atf_norm_Start(command::atf_norm_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         atf_norm_StartRead(command::atf_norm_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 atf_norm_Kill(command::atf_norm_proc& parent);
 // Wait for subprocess to return
@@ -1160,6 +1206,69 @@ algo::tempstr        atf_norm_ToCmdline(command::atf_norm_proc& parent) __attrib
 void                 atf_norm_proc_Init(command::atf_norm_proc& parent);
 void                 atf_norm_proc_Uninit(command::atf_norm_proc& parent) __attribute__((nothrow));
 
+// --- command.atf_nrun
+// access: command.atf_nrun_proc.atf_nrun (Exec)
+struct atf_nrun { // command.atf_nrun
+    algo::cstring   in;        //   "data"  Input directory or filename, - for stdin
+    i32             maxjobs;   //   2  Number of simultaneous jobs
+    i32             ncmd;      //   6
+    atf_nrun();
+};
+
+bool                 atf_nrun_ReadFieldMaybe(command::atf_nrun &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of command::atf_nrun from attributes of ascii tuple TUPLE
+bool                 atf_nrun_ReadTupleMaybe(command::atf_nrun &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 atf_nrun_Init(command::atf_nrun& parent);
+// print command-line args of command::atf_nrun to string  -- cprint:command.atf_nrun.Argv
+void                 atf_nrun_PrintArgv(command::atf_nrun & row, algo::cstring &str) __attribute__((nothrow));
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr              atf_nrun_ToCmdline(command::atf_nrun & row) __attribute__((nothrow));
+algo::strptr         atf_nrun_GetAnon(command::atf_nrun &parent, i32 idx) __attribute__((nothrow));
+
+// --- command.atf_nrun_proc
+struct atf_nrun_proc { // command.atf_nrun_proc: Subprocess: 
+    algo::cstring       path;      //   "bin/atf_nrun"  path for executable
+    command::atf_nrun   cmd;       // command line for child process
+    algo::cstring       fstdin;    // redirect for stdin
+    algo::cstring       fstdout;   // redirect for stdout
+    algo::cstring       fstderr;   // redirect for stderr
+    pid_t               pid;       //   0  pid of running child process
+    i32                 timeout;   //   0  optional timeout for child process
+    i32                 status;    //   0  last exit status of child process
+    atf_nrun_proc();
+    ~atf_nrun_proc();
+private:
+    // reftype of command.atf_nrun_proc.atf_nrun prohibits copy
+    atf_nrun_proc(const atf_nrun_proc&){ /*disallow copy constructor */}
+    void operator =(const atf_nrun_proc&){ /*disallow direct assignment */}
+};
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int                  atf_nrun_Start(command::atf_nrun_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         atf_nrun_StartRead(command::atf_nrun_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
+// Kill subprocess and wait
+void                 atf_nrun_Kill(command::atf_nrun_proc& parent);
+// Wait for subprocess to return
+void                 atf_nrun_Wait(command::atf_nrun_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+int                  atf_nrun_Exec(command::atf_nrun_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void                 atf_nrun_ExecX(command::atf_nrun_proc& parent);
+// Call execv()
+// Call execv with specified parameters -- cprint:atf_nrun.Argv
+int                  atf_nrun_Execv(command::atf_nrun_proc& parent) __attribute__((nothrow));
+algo::tempstr        atf_nrun_ToCmdline(command::atf_nrun_proc& parent) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 atf_nrun_proc_Init(command::atf_nrun_proc& parent);
+void                 atf_nrun_proc_Uninit(command::atf_nrun_proc& parent) __attribute__((nothrow));
+
 // --- command.atf_unit
 // access: command.atf_unit_proc.atf_unit (Exec)
 struct atf_unit { // command.atf_unit
@@ -1170,6 +1279,8 @@ struct atf_unit { // command.atf_unit
     bool             debug;             //   0  Break at testcase in debugger
     double           perf_secs;         //   1.0  # Of seconds to run perf tests for
     u32              pertest_timeout;   //   900  Max runtime of any individual unit test
+    bool             report;            //   true  Print final report
+    bool             capture;           //   false  Re-capture test results
     atf_unit();
 };
 
@@ -1195,9 +1306,9 @@ algo::strptr         atf_unit_GetAnon(command::atf_unit &parent, i32 idx) __attr
 struct atf_unit_proc { // command.atf_unit_proc: Subprocess: Unit tests (see unittest table)
     algo::cstring       path;      //   "bin/atf_unit"  path for executable
     command::atf_unit   cmd;       // command line for child process
-    algo::cstring       stdin;     // redirect for stdin
-    algo::cstring       stdout;    // redirect for stdout
-    algo::cstring       stderr;    // redirect for stderr
+    algo::cstring       fstdin;    // redirect for stdin
+    algo::cstring       fstdout;   // redirect for stdout
+    algo::cstring       fstderr;   // redirect for stderr
     pid_t               pid;       //   0  pid of running child process
     i32                 timeout;   //   0  optional timeout for child process
     i32                 status;    //   0  last exit status of child process
@@ -1212,6 +1323,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  atf_unit_Start(command::atf_unit_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         atf_unit_StartRead(command::atf_unit_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 atf_unit_Kill(command::atf_unit_proc& parent);
 // Wait for subprocess to return
@@ -1243,13 +1356,74 @@ void                 bash_Init(command::bash& parent);
 // print command-line args of command::bash to string  -- cprint:command.bash.Argv
 void                 bash_PrintArgv(command::bash & row, algo::cstring &str) __attribute__((nothrow));
 
+// --- command.bash2html
+// access: command.bash2html_proc.bash2html (Exec)
+struct bash2html { // command.bash2html
+    algo::cstring   in;     //   "data"  Input directory or filename, - for stdin
+    bool            test;   //   false  Produce Test Output
+    bash2html();
+};
+
+bool                 bash2html_ReadFieldMaybe(command::bash2html &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of command::bash2html from attributes of ascii tuple TUPLE
+bool                 bash2html_ReadTupleMaybe(command::bash2html &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 bash2html_Init(command::bash2html& parent);
+// print command-line args of command::bash2html to string  -- cprint:command.bash2html.Argv
+void                 bash2html_PrintArgv(command::bash2html & row, algo::cstring &str) __attribute__((nothrow));
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr              bash2html_ToCmdline(command::bash2html & row) __attribute__((nothrow));
+
+// --- command.bash2html_proc
+struct bash2html_proc { // command.bash2html_proc: Subprocess: Convert bash output and colours to html
+    algo::cstring        path;      //   "bin/bash2html"  path for executable
+    command::bash2html   cmd;       // command line for child process
+    algo::cstring        fstdin;    // redirect for stdin
+    algo::cstring        fstdout;   // redirect for stdout
+    algo::cstring        fstderr;   // redirect for stderr
+    pid_t                pid;       //   0  pid of running child process
+    i32                  timeout;   //   0  optional timeout for child process
+    i32                  status;    //   0  last exit status of child process
+    bash2html_proc();
+    ~bash2html_proc();
+private:
+    // reftype of command.bash2html_proc.bash2html prohibits copy
+    bash2html_proc(const bash2html_proc&){ /*disallow copy constructor */}
+    void operator =(const bash2html_proc&){ /*disallow direct assignment */}
+};
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int                  bash2html_Start(command::bash2html_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         bash2html_StartRead(command::bash2html_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
+// Kill subprocess and wait
+void                 bash2html_Kill(command::bash2html_proc& parent);
+// Wait for subprocess to return
+void                 bash2html_Wait(command::bash2html_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+int                  bash2html_Exec(command::bash2html_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void                 bash2html_ExecX(command::bash2html_proc& parent);
+// Call execv()
+// Call execv with specified parameters -- cprint:bash2html.Argv
+int                  bash2html_Execv(command::bash2html_proc& parent) __attribute__((nothrow));
+algo::tempstr        bash2html_ToCmdline(command::bash2html_proc& parent) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 bash2html_proc_Init(command::bash2html_proc& parent);
+void                 bash2html_proc_Uninit(command::bash2html_proc& parent) __attribute__((nothrow));
+
 // --- command.bash_proc
 struct bash_proc { // command.bash_proc: Shell subprocess
     algo::cstring   path;      //   "bash"  path for executable
     command::bash   cmd;       // command line for child process
-    algo::cstring   stdin;     // redirect for stdin
-    algo::cstring   stdout;    // redirect for stdout
-    algo::cstring   stderr;    // redirect for stderr
+    algo::cstring   fstdin;    // redirect for stdin
+    algo::cstring   fstdout;   // redirect for stdout
+    algo::cstring   fstderr;   // redirect for stderr
     pid_t           pid;       //   0  pid of running child process
     i32             timeout;   //   0  optional timeout for child process
     i32             status;    //   0  last exit status of child process
@@ -1264,6 +1438,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  bash_Start(command::bash_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         bash_StartRead(command::bash_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 bash_Kill(command::bash_proc& parent);
 // Wait for subprocess to return
@@ -1357,9 +1533,9 @@ algo::strptr         mdbg_GetAnon(command::mdbg &parent, i32 idx) __attribute__(
 struct mdbg_proc { // command.mdbg_proc: Subprocess: My debugger
     algo::cstring   path;      //   "bin/mdbg"  path for executable
     command::mdbg   cmd;       // command line for child process
-    algo::cstring   stdin;     // redirect for stdin
-    algo::cstring   stdout;    // redirect for stdout
-    algo::cstring   stderr;    // redirect for stderr
+    algo::cstring   fstdin;    // redirect for stdin
+    algo::cstring   fstdout;   // redirect for stdout
+    algo::cstring   fstderr;   // redirect for stderr
     pid_t           pid;       //   0  pid of running child process
     i32             timeout;   //   0  optional timeout for child process
     i32             status;    //   0  last exit status of child process
@@ -1374,6 +1550,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  mdbg_Start(command::mdbg_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         mdbg_StartRead(command::mdbg_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 mdbg_Kill(command::mdbg_proc& parent);
 // Wait for subprocess to return
@@ -1423,9 +1601,9 @@ algo::strptr         mysql2ssim_GetAnon(command::mysql2ssim &parent, i32 idx) __
 struct mysql2ssim_proc { // command.mysql2ssim_proc: Subprocess: mysql -> ssim conversion tool
     algo::cstring         path;      //   "bin/mysql2ssim"  path for executable
     command::mysql2ssim   cmd;       // command line for child process
-    algo::cstring         stdin;     // redirect for stdin
-    algo::cstring         stdout;    // redirect for stdout
-    algo::cstring         stderr;    // redirect for stderr
+    algo::cstring         fstdin;    // redirect for stdin
+    algo::cstring         fstdout;   // redirect for stdout
+    algo::cstring         fstderr;   // redirect for stderr
     pid_t                 pid;       //   0  pid of running child process
     i32                   timeout;   //   0  optional timeout for child process
     i32                   status;    //   0  last exit status of child process
@@ -1440,6 +1618,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  mysql2ssim_Start(command::mysql2ssim_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         mysql2ssim_StartRead(command::mysql2ssim_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 mysql2ssim_Kill(command::mysql2ssim_proc& parent);
 // Wait for subprocess to return
@@ -1459,6 +1639,146 @@ algo::tempstr        mysql2ssim_ToCmdline(command::mysql2ssim_proc& parent) __at
 void                 mysql2ssim_proc_Init(command::mysql2ssim_proc& parent);
 void                 mysql2ssim_proc_Uninit(command::mysql2ssim_proc& parent) __attribute__((nothrow));
 
+// --- command.ntup
+// access: command.ntup_proc.ntup (Exec)
+struct ntup { // command.ntup
+    algo::cstring      in;        //   "data"  Input directory or filename, - for stdin
+    algo::cstring      cmd;       //   ""  Emit command for each tuple
+    algo::Smallstr50   field;     // Select and print attribute from incoming tuple
+    algo_lib::Regx     typetag;   //   "%"  Regx of algo::cstring
+    ntup();
+};
+
+// Print back to string
+void                 typetag_Print(command::ntup& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+bool                 typetag_ReadStrptrMaybe(command::ntup& parent, algo::strptr in) __attribute__((nothrow));
+
+bool                 ntup_ReadFieldMaybe(command::ntup &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of command::ntup from attributes of ascii tuple TUPLE
+bool                 ntup_ReadTupleMaybe(command::ntup &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 ntup_Init(command::ntup& parent);
+// print command-line args of command::ntup to string  -- cprint:command.ntup.Argv
+void                 ntup_PrintArgv(command::ntup & row, algo::cstring &str) __attribute__((nothrow));
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr              ntup_ToCmdline(command::ntup & row) __attribute__((nothrow));
+
+// --- command.ntup_proc
+struct ntup_proc { // command.ntup_proc: Subprocess: Tuple utility
+    algo::cstring   path;      //   "bin/ntup"  path for executable
+    command::ntup   cmd;       // command line for child process
+    algo::cstring   fstdin;    // redirect for stdin
+    algo::cstring   fstdout;   // redirect for stdout
+    algo::cstring   fstderr;   // redirect for stderr
+    pid_t           pid;       //   0  pid of running child process
+    i32             timeout;   //   0  optional timeout for child process
+    i32             status;    //   0  last exit status of child process
+    ntup_proc();
+    ~ntup_proc();
+private:
+    // reftype of command.ntup_proc.ntup prohibits copy
+    ntup_proc(const ntup_proc&){ /*disallow copy constructor */}
+    void operator =(const ntup_proc&){ /*disallow direct assignment */}
+};
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int                  ntup_Start(command::ntup_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         ntup_StartRead(command::ntup_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
+// Kill subprocess and wait
+void                 ntup_Kill(command::ntup_proc& parent);
+// Wait for subprocess to return
+void                 ntup_Wait(command::ntup_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+int                  ntup_Exec(command::ntup_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void                 ntup_ExecX(command::ntup_proc& parent);
+// Call execv()
+// Call execv with specified parameters -- cprint:ntup.Argv
+int                  ntup_Execv(command::ntup_proc& parent) __attribute__((nothrow));
+algo::tempstr        ntup_ToCmdline(command::ntup_proc& parent) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 ntup_proc_Init(command::ntup_proc& parent);
+void                 ntup_proc_Uninit(command::ntup_proc& parent) __attribute__((nothrow));
+
+// --- command.orgfile
+// access: command.orgfile_proc.orgfile (Exec)
+struct orgfile { // command.orgfile
+    algo::cstring    in;       //   "data"  Input directory or filename, - for stdin
+    algo::cstring    move;     //   ""  Read stdin, rename files based on pattern
+    algo_lib::Regx   dedup;    //   ""  Regx of algo::cstring
+    bool             commit;   //   false  Apply changes
+    bool             undo;     //   false  Read previous orgfile output, undoing movement
+    algo::cstring    hash;     //   "sha1"  Hash command to use for deduplication
+    orgfile();
+};
+
+// Print back to string
+void                 dedup_Print(command::orgfile& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+bool                 dedup_ReadStrptrMaybe(command::orgfile& parent, algo::strptr in) __attribute__((nothrow));
+
+bool                 orgfile_ReadFieldMaybe(command::orgfile &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of command::orgfile from attributes of ascii tuple TUPLE
+bool                 orgfile_ReadTupleMaybe(command::orgfile &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 orgfile_Init(command::orgfile& parent);
+// print command-line args of command::orgfile to string  -- cprint:command.orgfile.Argv
+void                 orgfile_PrintArgv(command::orgfile & row, algo::cstring &str) __attribute__((nothrow));
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr              orgfile_ToCmdline(command::orgfile & row) __attribute__((nothrow));
+
+// --- command.orgfile_proc
+struct orgfile_proc { // command.orgfile_proc: Subprocess: OpenACR File deduplicator tool
+    algo::cstring      path;      //   "bin/orgfile"  path for executable
+    command::orgfile   cmd;       // command line for child process
+    algo::cstring      fstdin;    // redirect for stdin
+    algo::cstring      fstdout;   // redirect for stdout
+    algo::cstring      fstderr;   // redirect for stderr
+    pid_t              pid;       //   0  pid of running child process
+    i32                timeout;   //   0  optional timeout for child process
+    i32                status;    //   0  last exit status of child process
+    orgfile_proc();
+    ~orgfile_proc();
+private:
+    // reftype of command.orgfile_proc.orgfile prohibits copy
+    orgfile_proc(const orgfile_proc&){ /*disallow copy constructor */}
+    void operator =(const orgfile_proc&){ /*disallow direct assignment */}
+};
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int                  orgfile_Start(command::orgfile_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         orgfile_StartRead(command::orgfile_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
+// Kill subprocess and wait
+void                 orgfile_Kill(command::orgfile_proc& parent);
+// Wait for subprocess to return
+void                 orgfile_Wait(command::orgfile_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+int                  orgfile_Exec(command::orgfile_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void                 orgfile_ExecX(command::orgfile_proc& parent);
+// Call execv()
+// Call execv with specified parameters -- cprint:orgfile.Argv
+int                  orgfile_Execv(command::orgfile_proc& parent) __attribute__((nothrow));
+algo::tempstr        orgfile_ToCmdline(command::orgfile_proc& parent) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 orgfile_proc_Init(command::orgfile_proc& parent);
+void                 orgfile_proc_Uninit(command::orgfile_proc& parent) __attribute__((nothrow));
+
 // --- command.src_func
 // access: command.src_func_proc.src_func (Exec)
 struct src_func { // command.src_func
@@ -1473,7 +1793,6 @@ struct src_func { // command.src_func
     bool                updateproto;   //   false  Update prototypes in headers
     bool                listfunc;      //   false  Show functions in target
     bool                iffy;          //   false  Select functions that may contain errors
-    bool                check;         //   false  (with -iffy) Exit with error if iffy functions found
     bool                proto;         //   false  (with -listfunc) List prototypes only
     bool                gen;           //   false  (with -listfunc) Visit generated files
     bool                showloc;       //   true  (with -listfunc) Show file location
@@ -1481,6 +1800,8 @@ struct src_func { // command.src_func
     bool                showsortkey;   //   false  (with -listfunc) Display function sortkey
     bool                sortname;      //   false  (with -listfunc) Sort functions by name
     bool                e;             //   false  (with -listfunc) Edit found functions
+    bool                baddecl;       //   false  Report and fail on bad declarations
+    bool                report;        //   false
     src_func();
 };
 
@@ -1530,9 +1851,9 @@ algo::strptr         src_func_GetAnon(command::src_func &parent, i32 idx) __attr
 struct src_func_proc { // command.src_func_proc: Subprocess: Access / edit functions
     algo::cstring       path;      //   "bin/src_func"  path for executable
     command::src_func   cmd;       // command line for child process
-    algo::cstring       stdin;     // redirect for stdin
-    algo::cstring       stdout;    // redirect for stdout
-    algo::cstring       stderr;    // redirect for stderr
+    algo::cstring       fstdin;    // redirect for stdin
+    algo::cstring       fstdout;   // redirect for stdout
+    algo::cstring       fstderr;   // redirect for stderr
     pid_t               pid;       //   0  pid of running child process
     i32                 timeout;   //   0  optional timeout for child process
     i32                 status;    //   0  last exit status of child process
@@ -1547,6 +1868,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  src_func_Start(command::src_func_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         src_func_StartRead(command::src_func_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 src_func_Kill(command::src_func_proc& parent);
 // Wait for subprocess to return
@@ -1598,9 +1921,9 @@ tempstr              src_hdr_ToCmdline(command::src_hdr & row) __attribute__((no
 struct src_hdr_proc { // command.src_hdr_proc: Subprocess: Update source file / copyright header
     algo::cstring      path;      //   "bin/src_hdr"  path for executable
     command::src_hdr   cmd;       // command line for child process
-    algo::cstring      stdin;     // redirect for stdin
-    algo::cstring      stdout;    // redirect for stdout
-    algo::cstring      stderr;    // redirect for stderr
+    algo::cstring      fstdin;    // redirect for stdin
+    algo::cstring      fstdout;   // redirect for stdout
+    algo::cstring      fstderr;   // redirect for stderr
     pid_t              pid;       //   0  pid of running child process
     i32                timeout;   //   0  optional timeout for child process
     i32                status;    //   0  last exit status of child process
@@ -1615,6 +1938,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  src_hdr_Start(command::src_hdr_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         src_hdr_StartRead(command::src_hdr_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 src_hdr_Kill(command::src_hdr_proc& parent);
 // Wait for subprocess to return
@@ -1643,6 +1968,8 @@ struct src_lim { // command.src_lim
     bool             strayfile;   //   false  Check for unregistered source files
     bool             capture;     //   false  Generate new dev.linelim records
     bool             write;       //   false  Update ssim database (with -capture)
+    bool             badchar;     //   false  Check for bad chars in source files
+    algo_lib::Regx   badline;     //   ""  Regx of dev::Badline
     src_lim();
 };
 
@@ -1651,6 +1978,12 @@ void                 srcfile_Print(command::src_lim& parent, algo::cstring &out)
 // Read Regx from string
 // Convert string to field. Return success value
 bool                 srcfile_ReadStrptrMaybe(command::src_lim& parent, algo::strptr in) __attribute__((nothrow));
+
+// Print back to string
+void                 badline_Print(command::src_lim& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+bool                 badline_ReadStrptrMaybe(command::src_lim& parent, algo::strptr in) __attribute__((nothrow));
 
 bool                 src_lim_ReadFieldMaybe(command::src_lim &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::src_lim from attributes of ascii tuple TUPLE
@@ -1667,9 +2000,9 @@ tempstr              src_lim_ToCmdline(command::src_lim & row) __attribute__((no
 struct src_lim_proc { // command.src_lim_proc: Subprocess: Enforce line length, function length, and indentation limits
     algo::cstring      path;      //   "bin/src_lim"  path for executable
     command::src_lim   cmd;       // command line for child process
-    algo::cstring      stdin;     // redirect for stdin
-    algo::cstring      stdout;    // redirect for stdout
-    algo::cstring      stderr;    // redirect for stderr
+    algo::cstring      fstdin;    // redirect for stdin
+    algo::cstring      fstdout;   // redirect for stdout
+    algo::cstring      fstderr;   // redirect for stderr
     pid_t              pid;       //   0  pid of running child process
     i32                timeout;   //   0  optional timeout for child process
     i32                status;    //   0  last exit status of child process
@@ -1684,6 +2017,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  src_lim_Start(command::src_lim_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         src_lim_StartRead(command::src_lim_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 src_lim_Kill(command::src_lim_proc& parent);
 // Wait for subprocess to return
@@ -1726,9 +2061,9 @@ tempstr              ssim2csv_ToCmdline(command::ssim2csv & row) __attribute__((
 struct ssim2csv_proc { // command.ssim2csv_proc: Subprocess: Ssim -> csv conversion tool
     algo::cstring       path;      //   "bin/ssim2csv"  path for executable
     command::ssim2csv   cmd;       // command line for child process
-    algo::cstring       stdin;     // redirect for stdin
-    algo::cstring       stdout;    // redirect for stdout
-    algo::cstring       stderr;    // redirect for stderr
+    algo::cstring       fstdin;    // redirect for stdin
+    algo::cstring       fstdout;   // redirect for stdout
+    algo::cstring       fstderr;   // redirect for stderr
     pid_t               pid;       //   0  pid of running child process
     i32                 timeout;   //   0  optional timeout for child process
     i32                 status;    //   0  last exit status of child process
@@ -1743,6 +2078,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  ssim2csv_Start(command::ssim2csv_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         ssim2csv_StartRead(command::ssim2csv_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 ssim2csv_Kill(command::ssim2csv_proc& parent);
 // Wait for subprocess to return
@@ -1794,9 +2131,9 @@ tempstr              ssim2mysql_ToCmdline(command::ssim2mysql & row) __attribute
 struct ssim2mysql_proc { // command.ssim2mysql_proc: Subprocess: Ssim -> mysql
     algo::cstring         path;      //   "bin/ssim2mysql"  path for executable
     command::ssim2mysql   cmd;       // command line for child process
-    algo::cstring         stdin;     // redirect for stdin
-    algo::cstring         stdout;    // redirect for stdout
-    algo::cstring         stderr;    // redirect for stderr
+    algo::cstring         fstdin;    // redirect for stdin
+    algo::cstring         fstdout;   // redirect for stdout
+    algo::cstring         fstderr;   // redirect for stderr
     pid_t                 pid;       //   0  pid of running child process
     i32                   timeout;   //   0  optional timeout for child process
     i32                   status;    //   0  last exit status of child process
@@ -1811,6 +2148,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  ssim2mysql_Start(command::ssim2mysql_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         ssim2mysql_StartRead(command::ssim2mysql_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 ssim2mysql_Kill(command::ssim2mysql_proc& parent);
 // Wait for subprocess to return
@@ -1833,10 +2172,11 @@ void                 ssim2mysql_proc_Uninit(command::ssim2mysql_proc& parent) __
 // --- command.strconv
 // access: command.strconv_proc.strconv (Exec)
 struct strconv { // command.strconv
-    algo::cstring   str;            // String parameter
-    bool            tocamelcase;    //   false  Convert string to camel case
-    bool            tolowerunder;   //   false  Convert string to lower-under
-    algo::cstring   in;             //   "data"  Input directory or filename, - for stdin
+    algo::cstring       str;            // String parameter
+    bool                tocamelcase;    //   false  Convert string to camel case
+    bool                tolowerunder;   //   false  Convert string to lower-under
+    algo::cstring       in;             //   "data"  Input directory or filename, - for stdin
+    algo::Smallstr100   pathcomp;       //   ""  Extract path component from string
     strconv();
 };
 
@@ -1856,9 +2196,9 @@ algo::strptr         strconv_GetAnon(command::strconv &parent, i32 idx) __attrib
 struct strconv_proc { // command.strconv_proc: Subprocess: A simple string utility
     algo::cstring      path;      //   "bin/strconv"  path for executable
     command::strconv   cmd;       // command line for child process
-    algo::cstring      stdin;     // redirect for stdin
-    algo::cstring      stdout;    // redirect for stdout
-    algo::cstring      stderr;    // redirect for stderr
+    algo::cstring      fstdin;    // redirect for stdin
+    algo::cstring      fstdout;   // redirect for stdout
+    algo::cstring      fstderr;   // redirect for stderr
     pid_t              pid;       //   0  pid of running child process
     i32                timeout;   //   0  optional timeout for child process
     i32                status;    //   0  last exit status of child process
@@ -1873,6 +2213,8 @@ private:
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  strconv_Start(command::strconv_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         strconv_StartRead(command::strconv_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 strconv_Kill(command::strconv_proc& parent);
 // Wait for subprocess to return

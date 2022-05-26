@@ -25,7 +25,16 @@
 
 #pragma once
 
+#ifdef WIN32
+typedef struct DIR DIR;// TODO:IMPLEMENT ME
+typedef void*              pthread_t;// TODO:IMPLEMENT ME
+typedef int              pid_t;// TODO:IMPLEMENT ME
+#pragma warning(disable:4244) // conversion, possible loss of data
+#pragma warning(disable:4800) // forcing value to bool
+#else
 typedef __uint128_t        u128;
+#endif
+
 typedef unsigned char      byte;
 typedef   signed char      i8;
 typedef unsigned char      u8;
@@ -36,8 +45,14 @@ typedef unsigned int       u32;
 typedef          float     f32;
 typedef          double    f64;
 typedef     long double    f80;
+#ifdef WIN32
+typedef __int64            i64;
+typedef i64                ssize_t;
+typedef unsigned __int64   u64;
+#else
 typedef unsigned long      u64;
 typedef   signed long      i64;
+#endif
 typedef i64                int_ptr;
 typedef u64                uint_ptr;
 typedef void               *thread_ret_t;
@@ -60,8 +75,6 @@ namespace algo {
     typedef bool(*SetnumFcn)(void* str, i64 num);
     typedef i64(*Geti64Fcn)(void* str, bool &out_ok);
     typedef algo::aryptr<char>(*GetaryFcn)(void* str);
-    typedef struct dirent Dirent;
-    typedef struct stat Stat;
     typedef bool (*ImdbInsertStrptrMaybeFcn)(strptr str);
     typedef void (*ImdbStepFcn)();
     typedef void (*ImdbMainLoopFcn)();
@@ -83,6 +96,14 @@ namespace algo {
         T              &operator [](u32 idx) const;
     };
 }
-using algo::memptr;
 using algo::strptr;
 using algo::tempstr;
+
+// On Windows we must use stat64 to get 64-bit file sizes,
+// so on other platforms we're forced to use this type as well.
+// Due to use of macros, `struct stat` cannot be used on Windows.
+#ifdef WIN32
+typedef struct _stat64 StatStruct;
+#else
+typedef struct stat StatStruct;
+#endif

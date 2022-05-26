@@ -93,6 +93,7 @@ void                 FBuilddir_Uninit(mdbg::FBuilddir& builddir) __attribute__((
 // global access: ind_cfg (Thash)
 struct FCfg { // mdbg.FCfg
     algo::Smallstr50    cfg;                //
+    algo::Smallstr5     suffix;             //
     algo::Comment       comment;            //
     mdbg::FBuilddir**   c_builddir_elems;   // array of pointers
     u32                 c_builddir_n;       // array of pointers

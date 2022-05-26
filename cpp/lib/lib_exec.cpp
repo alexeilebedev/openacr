@@ -24,9 +24,12 @@
 // Recent Changes: alexei.lebedev jeremy.xue jeffrey.wang
 //
 
+#include "include/algo.h"
 #include "include/lib/lib_exec.h"
+#ifndef WIN32
 #include <sys/wait.h>
 #include <sys/resource.h>   // setrlimit()
+#endif
 
 i64 lib_exec::execkey_Get(lib_exec::FSyscmd &cmd) {
     return (i64(cmd.nprereq) << 32) | (i64(cmd.syscmd) & 0xffffffff);
@@ -71,11 +74,11 @@ static void ShowOutput(lib_exec::FSyscmd &cmd) {
     // Remove stdout, stderr files
     if (show_out) {
         (void)algo::CopyFd(cmd.stdout_fd.fd, Fildes(1));
-        Refurbish(cmd.stdout_fd);
+        algo::Refurbish(cmd.stdout_fd);
     }
     if (show_err) {
         (void)algo::CopyFd(cmd.stderr_fd.fd, Fildes(2));
-        Refurbish(cmd.stderr_fd);// delete
+        algo::Refurbish(cmd.stderr_fd);// delete
     }
 }
 
@@ -114,8 +117,8 @@ static void Child(lib_exec::FSyscmd &cmd) {
     if (cmd.redir_out) {// child
         dup2(cmd.stdout_fd.fd.value, 1);  // closes 1 first if necessary
         dup2(cmd.stderr_fd.fd.value, 2);  // closes 2 first if necessary
-        Refurbish(cmd.stdout_fd);
-        Refurbish(cmd.stderr_fd);
+        algo::Refurbish(cmd.stdout_fd);
+        algo::Refurbish(cmd.stderr_fd);
     }
     // execute child process
     int ret = execl("/bin/sh", "/bin/sh", "-c", Zeroterm(cmd.command), (char*)NULL);
@@ -349,9 +352,9 @@ bool lib_exec::CompletedOKQ(lib_exec::FSyscmd &cmd) {
 // Frees FDs for stdout and stderr
 void lib_exec::RefurbishStd(lib_exec::FSyscmd &cmd) {
     if (ValidQ(cmd.stdout_fd.fd)){
-        Refurbish(cmd.stdout_fd);
+        algo::Refurbish(cmd.stdout_fd);
     }
     if (ValidQ(cmd.stderr_fd.fd)){
-        Refurbish(cmd.stderr_fd);
+        algo::Refurbish(cmd.stderr_fd);
     }
 }

@@ -10,6 +10,8 @@
 #include "include/algo.h"  // hard-coded include
 #include "include/gen/lib_git_gen.h"
 #include "include/gen/lib_git_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
@@ -147,7 +149,7 @@ bool lib_git::value_SetStrptrMaybe(lib_git::FieldId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,lib_git_FieldId_value); ret = true; break;
                 }

@@ -28,9 +28,9 @@
 void atf_amc::amctest_VarlenExternLength() {
     // Allocate
     u32 ary[]={1,2,3,4,5,6,7,8,9,10};
-    aryptr<u32> ary1=aryptr<u32>(ary,10);
+    algo::aryptr<u32> ary1=algo::aryptr<u32>(ary,10);
     atf_amc::VarlenExtern &vl = atf_amc::varlen_extern_AllocVarlen(ary1);
-    aryptr<u32> ary2=varlen_Getary(vl);
+    algo::aryptr<u32> ary2=varlen_Getary(vl);
     vrfyeq_(elems_N(ary1),elems_N(ary2)); // test code goes here
     for (int i=0; i<ary1.n_elems; i++) {
         vrfyeq_(ary1[i], ary2[i]);
@@ -75,7 +75,7 @@ void atf_amc::amctest_VarlenAlloc() {
     }
     // alloc using Varlen
     {
-        atf_amc::VarlenAlloc *rec = &atf_amc::varlenalloc_AllocVarlen(aryptr<int>(temp,256));
+        atf_amc::VarlenAlloc *rec = &atf_amc::varlenalloc_AllocVarlen(algo::aryptr<int>(temp,256));
         CheckVarlen(rec,256);
         varlenalloc_Delete(*rec);
     }

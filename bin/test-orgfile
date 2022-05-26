@@ -1,0 +1,36 @@
+#!/usr/bin/env perl
+my $tests = {
+    # check -hashing
+    q!sha1 < test/orgfile/a.txt | awk '{print $1}'!
+        => q!96eebd6d7ef91bc42afb9bd168cb82ab643da052!
+
+        # check detection of target path by date that was parsed from filename
+        ,q!find test/orgfile -name "PSX_*" | bin/orgfile -move:test/orgfile/%Y/%m/%d/!
+        => q!orgfile.move  pathname:test/orgfile/PSX_20200101.txt  tgtfile:test/orgfile/2020/01/01/PSX_20200101.txt  comment:"move file"!
+
+        # check -dedup (file c.txt is unique)
+        ,q!for X in a b c; do echo test/orgfile/$X.txt; done | bin/orgfile -dedup:%!
+                                                            => q!orgfile.dedup  original:test/orgfile/a.txt  duplicate:test/orgfile/b.txt  comment:"contents are identical (based on hash)"!
+
+                                                            # check -dedup_pathregx -- delete a.txt intead of b.txt
+                                                            ,q!(echo test/orgfile/b.txt; find test/orgfile -name "*.txt") | bin/orgfile -dedup:"%/a.txt"!
+                                                            => q!orgfile.dedup  original:test/orgfile/b.txt  duplicate:test/orgfile/a.txt  comment:"contents are identical (based on hash)"!
+
+                                                            # should be a no-op -- move to same dir
+                                                            ,q!find test/orgfile -name "PSX_*" | bin/orgfile -move:test/orgfile/!
+                                                            => q!!
+
+                                                            # test consumption of input
+                                                            ,q!echo orgfile.move pathname:xxx/yyy tgtfile:y | orgfile !
+                                                            => q!orgfile.move  pathname:xxx/yyy  tgtfile:y  comment:"original not found"!
+
+                                                            # should be a no-op -- but directory is detected by filesystem test
+                                                            ,q!find test/orgfile -name "PSX_*" | bin/orgfile -move:.!
+                                                            => q!orgfile.move  pathname:test/orgfile/PSX_20200101.txt  tgtfile:./PSX_20200101.txt  comment:"move file"!
+};
+
+foreach my $test(keys(%$tests)) {
+    $out=`$test`;
+    chomp($out);
+    ($out eq $tests->{$test}) or die "TEST FAILED\nTEST    : $test\nEXPECTED: $tests->{$test}\nGOT     : $out\n";
+}

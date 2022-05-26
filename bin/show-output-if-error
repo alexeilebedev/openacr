@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+F=$(mktemp)
+"$@" >$F 2>&1
+RC=$?
+if [ $RC != 0 ]; then
+    cat $F
+fi
+rm -f $F
+exit $RC

@@ -12,12 +12,14 @@
 #include "include/gen/src_hdr_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
-#include "include/gen/dmmeta_gen.h"
-#include "include/gen/dmmeta_gen.inl.h"
-#include "include/gen/algo_gen.h"
-#include "include/gen/algo_gen.inl.h"
 #include "include/gen/dev_gen.h"
 #include "include/gen/dev_gen.inl.h"
+#include "include/gen/algo_gen.h"
+#include "include/gen/algo_gen.inl.h"
+#include "include/gen/dmmeta_gen.h"
+#include "include/gen/dmmeta_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
@@ -26,6 +28,7 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 src_hdr::FDb    src_hdr::_db;     // dependency found via dev.targdep
 
@@ -54,12 +57,17 @@ const char *src_hdr_syntax =
 " -indent:flag\n"
 ;
 } // namespace src_hdr
+namespace src_hdr { // gsymbol:src_hdr/dev.scriptfile
+    const char *dev_scriptfile_bin_git_authors = "bin/git-authors";
+}
 namespace src_hdr {
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     static bool          targsrc_InputMaybe(dev::Targsrc &elem) __attribute__((nothrow));
     static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
     static bool          nsx_InputMaybe(dmmeta::Nsx &elem) __attribute__((nothrow));
+    static bool          license_InputMaybe(dev::License &elem) __attribute__((nothrow));
+    static bool          target_InputMaybe(dev::Target &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
@@ -89,7 +97,7 @@ void src_hdr::MainArgs(int argc, char **argv) {
 // --- src_hdr.FDb._db.MainLoop
 // Main loop.
 void src_hdr::MainLoop() {
-    SchedTime time(get_cycles());
+    algo::SchedTime time(algo::get_cycles());
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
@@ -119,7 +127,7 @@ static void src_hdr::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_hdr.Input'  signature:'a1e7264997d8d742fc7b03d291e743493427663b'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_hdr.Input'  signature:'553c16476a908ef27d29d77ef42d6bdf74e987f4'");
 }
 
 // --- src_hdr.FDb._db.StaticCheck
@@ -153,6 +161,18 @@ bool src_hdr::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && nsx_InputMaybe(elem);
             break;
         }
+        case src_hdr_TableId_dev_License: { // finput:src_hdr.FDb.license
+            dev::License elem;
+            retval = dev::License_ReadStrptrMaybe(elem, str);
+            retval = retval && license_InputMaybe(elem);
+            break;
+        }
+        case src_hdr_TableId_dev_Target: { // finput:src_hdr.FDb.target
+            dev::Target elem;
+            retval = dev::Target_ReadStrptrMaybe(elem, str);
+            retval = retval && target_InputMaybe(elem);
+            break;
+        }
         default:
         retval = algo_lib::InsertStrptrMaybe(str);
         break;
@@ -168,7 +188,8 @@ bool src_hdr::InsertStrptrMaybe(algo::strptr str) {
 bool src_hdr::LoadTuplesMaybe(algo::strptr root) {
     bool retval = true;
     static const char *ssimfiles[] = {
-        "dmmeta.ns", "dmmeta.nsx", "dev.targsrc"
+        "dev.license", "dmmeta.ns", "dmmeta.nsx", "dev.target"
+        , "dev.targsrc"
         , NULL};
         retval = algo_lib::DoLoadTuples(root, src_hdr::InsertStrptrMaybe, ssimfiles, true);
         return retval;
@@ -277,14 +298,14 @@ static bool src_hdr::targsrc_InputMaybe(dev::Targsrc &elem) {
 bool src_hdr::targsrc_XrefMaybe(src_hdr::FTargsrc &row) {
     bool retval = true;
     (void)row;
-    src_hdr::FNs* p_target = src_hdr::ind_ns_Find(target_Get(row));
+    src_hdr::FTarget* p_target = src_hdr::ind_target_Find(target_Get(row));
     if (UNLIKELY(!p_target)) {
-        algo_lib::ResetErrtext() << "src_hdr.bad_xref  index:src_hdr.FDb.ind_ns" << Keyval("key", target_Get(row));
+        algo_lib::ResetErrtext() << "src_hdr.bad_xref  index:src_hdr.FDb.ind_target" << Keyval("key", target_Get(row));
         return false;
     }
     // targsrc: save pointer to target
     if (true) { // user-defined insert condition
-        row.p_ns = p_target;
+        row.p_target = p_target;
     }
     // insert targsrc into index c_targsrc
     if (true) { // user-defined insert condition
@@ -393,7 +414,7 @@ bool src_hdr::ns_XrefMaybe(src_hdr::FNs &row) {
 // --- src_hdr.FDb.ind_ns.Find
 // Find row by key. Return NULL if not found.
 src_hdr::FNs* src_hdr::ind_ns_Find(const algo::strptr& key) {
-    u32 index = Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
+    u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
     src_hdr::FNs* *e = &_db.ind_ns_buckets_elems[index];
     src_hdr::FNs* ret=NULL;
     do {
@@ -435,7 +456,7 @@ bool src_hdr::ind_ns_InsertMaybe(src_hdr::FNs& row) {
     ind_ns_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ns_next == (src_hdr::FNs*)-1)) {// check if in hash already
-        u32 index = Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
         src_hdr::FNs* *prev = &_db.ind_ns_buckets_elems[index];
         do {
             src_hdr::FNs* ret = *prev;
@@ -461,7 +482,7 @@ bool src_hdr::ind_ns_InsertMaybe(src_hdr::FNs& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void src_hdr::ind_ns_Remove(src_hdr::FNs& row) {
     if (LIKELY(row.ind_ns_next != (src_hdr::FNs*)-1)) {// check if in hash already
-        u32 index = Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
         src_hdr::FNs* *prev = &_db.ind_ns_buckets_elems[index]; // addr of pointer to current element
         while (src_hdr::FNs *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -482,7 +503,7 @@ void src_hdr::ind_ns_Reserve(int n) {
     u32 new_nelems   = _db.ind_ns_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(src_hdr::FNs*);
         u32 new_size = new_nbuckets * sizeof(src_hdr::FNs*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -498,7 +519,7 @@ void src_hdr::ind_ns_Reserve(int n) {
             while (elem) {
                 src_hdr::FNs &row        = *elem;
                 src_hdr::FNs* next       = row.ind_ns_next;
-                u32 index          = Smallstr16_Hash(0, row.ns) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr16_Hash(0, row.ns) & (new_nbuckets-1);
                 row.ind_ns_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -613,6 +634,464 @@ bool src_hdr::nsx_XrefMaybe(src_hdr::FNsx &row) {
     return retval;
 }
 
+// --- src_hdr.FDb.license.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+src_hdr::FLicense& src_hdr::license_Alloc() {
+    src_hdr::FLicense* row = license_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("src_hdr.out_of_mem  field:src_hdr.FDb.license  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- src_hdr.FDb.license.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+src_hdr::FLicense* src_hdr::license_AllocMaybe() {
+    src_hdr::FLicense *row = (src_hdr::FLicense*)license_AllocMem();
+    if (row) {
+        new (row) src_hdr::FLicense; // call constructor
+    }
+    return row;
+}
+
+// --- src_hdr.FDb.license.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+src_hdr::FLicense* src_hdr::license_InsertMaybe(const dev::License &value) {
+    src_hdr::FLicense *row = &license_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    license_CopyIn(*row,const_cast<dev::License&>(value));
+    bool ok = license_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        license_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- src_hdr.FDb.license.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* src_hdr::license_AllocMem() {
+    u64 new_nelems     = _db.license_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    src_hdr::FLicense*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.license_lary[bsr];
+        if (!lev) {
+            lev=(src_hdr::FLicense*)algo_lib::malloc_AllocMem(sizeof(src_hdr::FLicense) * (u64(1)<<bsr));
+            _db.license_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.license_n = new_nelems;
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- src_hdr.FDb.license.RemoveAll
+// Remove all elements from Lary
+void src_hdr::license_RemoveAll() {
+    for (u64 n = _db.license_n; n>0; ) {
+        n--;
+        license_qFind(u64(n)).~FLicense(); // destroy last element
+        _db.license_n = n;
+    }
+}
+
+// --- src_hdr.FDb.license.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void src_hdr::license_RemoveLast() {
+    u64 n = _db.license_n;
+    if (n > 0) {
+        n -= 1;
+        license_qFind(u64(n)).~FLicense();
+        _db.license_n = n;
+    }
+}
+
+// --- src_hdr.FDb.license.InputMaybe
+static bool src_hdr::license_InputMaybe(dev::License &elem) {
+    bool retval = true;
+    retval = license_InsertMaybe(elem);
+    return retval;
+}
+
+// --- src_hdr.FDb.license.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool src_hdr::license_XrefMaybe(src_hdr::FLicense &row) {
+    bool retval = true;
+    (void)row;
+    // insert license into index ind_license
+    if (true) { // user-defined insert condition
+        bool success = ind_license_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "src_hdr.duplicate_key  xref:src_hdr.FDb.ind_license"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- src_hdr.FDb.ind_license.Find
+// Find row by key. Return NULL if not found.
+src_hdr::FLicense* src_hdr::ind_license_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_license_buckets_n - 1);
+    src_hdr::FLicense* *e = &_db.ind_license_buckets_elems[index];
+    src_hdr::FLicense* ret=NULL;
+    do {
+        ret       = *e;
+        bool done = !ret || (*ret).license == key;
+        if (done) break;
+        e         = &ret->ind_license_next;
+    } while (true);
+    return ret;
+}
+
+// --- src_hdr.FDb.ind_license.FindX
+// Look up row by key and return reference. Throw exception if not found
+src_hdr::FLicense& src_hdr::ind_license_FindX(const algo::strptr& key) {
+    src_hdr::FLicense* ret = ind_license_Find(key);
+    vrfy(ret, tempstr() << "src_hdr.key_error  table:ind_license  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- src_hdr.FDb.ind_license.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+src_hdr::FLicense& src_hdr::ind_license_GetOrCreate(const algo::strptr& key) {
+    src_hdr::FLicense* ret = ind_license_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &license_Alloc();
+        (*ret).license = key;
+        bool good = license_XrefMaybe(*ret);
+        if (!good) {
+            license_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return *ret;
+}
+
+// --- src_hdr.FDb.ind_license.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool src_hdr::ind_license_InsertMaybe(src_hdr::FLicense& row) {
+    ind_license_Reserve(1);
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_license_next == (src_hdr::FLicense*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr50_Hash(0, row.license) & (_db.ind_license_buckets_n - 1);
+        src_hdr::FLicense* *prev = &_db.ind_license_buckets_elems[index];
+        do {
+            src_hdr::FLicense* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).license == row.license) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_license_next;
+        } while (true);
+        if (retval) {
+            row.ind_license_next = *prev;
+            _db.ind_license_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- src_hdr.FDb.ind_license.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void src_hdr::ind_license_Remove(src_hdr::FLicense& row) {
+    if (LIKELY(row.ind_license_next != (src_hdr::FLicense*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr50_Hash(0, row.license) & (_db.ind_license_buckets_n - 1);
+        src_hdr::FLicense* *prev = &_db.ind_license_buckets_elems[index]; // addr of pointer to current element
+        while (src_hdr::FLicense *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_license_next; // unlink (singly linked list)
+                _db.ind_license_n--;
+                row.ind_license_next = (src_hdr::FLicense*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_license_next;
+        }
+    }
+}
+
+// --- src_hdr.FDb.ind_license.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void src_hdr::ind_license_Reserve(int n) {
+    u32 old_nbuckets = _db.ind_license_buckets_n;
+    u32 new_nelems   = _db.ind_license_n + n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(src_hdr::FLicense*);
+        u32 new_size = new_nbuckets * sizeof(src_hdr::FLicense*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        src_hdr::FLicense* *new_buckets = (src_hdr::FLicense**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("src_hdr.out_of_memory  field:src_hdr.FDb.ind_license");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_license_buckets_n; i++) {
+            src_hdr::FLicense* elem = _db.ind_license_buckets_elems[i];
+            while (elem) {
+                src_hdr::FLicense &row        = *elem;
+                src_hdr::FLicense* next       = row.ind_license_next;
+                u32 index          = algo::Smallstr50_Hash(0, row.license) & (new_nbuckets-1);
+                row.ind_license_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_license_buckets_elems, old_size);
+        _db.ind_license_buckets_elems = new_buckets;
+        _db.ind_license_buckets_n = new_nbuckets;
+    }
+}
+
+// --- src_hdr.FDb.target.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+src_hdr::FTarget& src_hdr::target_Alloc() {
+    src_hdr::FTarget* row = target_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("src_hdr.out_of_mem  field:src_hdr.FDb.target  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- src_hdr.FDb.target.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+src_hdr::FTarget* src_hdr::target_AllocMaybe() {
+    src_hdr::FTarget *row = (src_hdr::FTarget*)target_AllocMem();
+    if (row) {
+        new (row) src_hdr::FTarget; // call constructor
+    }
+    return row;
+}
+
+// --- src_hdr.FDb.target.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+src_hdr::FTarget* src_hdr::target_InsertMaybe(const dev::Target &value) {
+    src_hdr::FTarget *row = &target_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    target_CopyIn(*row,const_cast<dev::Target&>(value));
+    bool ok = target_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        target_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- src_hdr.FDb.target.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* src_hdr::target_AllocMem() {
+    u64 new_nelems     = _db.target_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    src_hdr::FTarget*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.target_lary[bsr];
+        if (!lev) {
+            lev=(src_hdr::FTarget*)algo_lib::malloc_AllocMem(sizeof(src_hdr::FTarget) * (u64(1)<<bsr));
+            _db.target_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.target_n = new_nelems;
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- src_hdr.FDb.target.RemoveAll
+// Remove all elements from Lary
+void src_hdr::target_RemoveAll() {
+    for (u64 n = _db.target_n; n>0; ) {
+        n--;
+        target_qFind(u64(n)).~FTarget(); // destroy last element
+        _db.target_n = n;
+    }
+}
+
+// --- src_hdr.FDb.target.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void src_hdr::target_RemoveLast() {
+    u64 n = _db.target_n;
+    if (n > 0) {
+        n -= 1;
+        target_qFind(u64(n)).~FTarget();
+        _db.target_n = n;
+    }
+}
+
+// --- src_hdr.FDb.target.InputMaybe
+static bool src_hdr::target_InputMaybe(dev::Target &elem) {
+    bool retval = true;
+    retval = target_InsertMaybe(elem);
+    return retval;
+}
+
+// --- src_hdr.FDb.target.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool src_hdr::target_XrefMaybe(src_hdr::FTarget &row) {
+    bool retval = true;
+    (void)row;
+    src_hdr::FLicense* p_license = src_hdr::ind_license_Find(row.license);
+    if (UNLIKELY(!p_license)) {
+        algo_lib::ResetErrtext() << "src_hdr.bad_xref  index:src_hdr.FDb.ind_license" << Keyval("key", row.license);
+        return false;
+    }
+    // target: save pointer to license
+    if (true) { // user-defined insert condition
+        row.p_license = p_license;
+    }
+    src_hdr::FNs* p_target = src_hdr::ind_ns_Find(row.target);
+    if (UNLIKELY(!p_target)) {
+        algo_lib::ResetErrtext() << "src_hdr.bad_xref  index:src_hdr.FDb.ind_ns" << Keyval("key", row.target);
+        return false;
+    }
+    // target: save pointer to target
+    if (true) { // user-defined insert condition
+        row.p_ns = p_target;
+    }
+    // insert target into index ind_target
+    if (true) { // user-defined insert condition
+        bool success = ind_target_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "src_hdr.duplicate_key  xref:src_hdr.FDb.ind_target"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- src_hdr.FDb.ind_target.Find
+// Find row by key. Return NULL if not found.
+src_hdr::FTarget* src_hdr::ind_target_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_target_buckets_n - 1);
+    src_hdr::FTarget* *e = &_db.ind_target_buckets_elems[index];
+    src_hdr::FTarget* ret=NULL;
+    do {
+        ret       = *e;
+        bool done = !ret || (*ret).target == key;
+        if (done) break;
+        e         = &ret->ind_target_next;
+    } while (true);
+    return ret;
+}
+
+// --- src_hdr.FDb.ind_target.FindX
+// Look up row by key and return reference. Throw exception if not found
+src_hdr::FTarget& src_hdr::ind_target_FindX(const algo::strptr& key) {
+    src_hdr::FTarget* ret = ind_target_Find(key);
+    vrfy(ret, tempstr() << "src_hdr.key_error  table:ind_target  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- src_hdr.FDb.ind_target.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool src_hdr::ind_target_InsertMaybe(src_hdr::FTarget& row) {
+    ind_target_Reserve(1);
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_target_next == (src_hdr::FTarget*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
+        src_hdr::FTarget* *prev = &_db.ind_target_buckets_elems[index];
+        do {
+            src_hdr::FTarget* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).target == row.target) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_target_next;
+        } while (true);
+        if (retval) {
+            row.ind_target_next = *prev;
+            _db.ind_target_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- src_hdr.FDb.ind_target.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void src_hdr::ind_target_Remove(src_hdr::FTarget& row) {
+    if (LIKELY(row.ind_target_next != (src_hdr::FTarget*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
+        src_hdr::FTarget* *prev = &_db.ind_target_buckets_elems[index]; // addr of pointer to current element
+        while (src_hdr::FTarget *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_target_next; // unlink (singly linked list)
+                _db.ind_target_n--;
+                row.ind_target_next = (src_hdr::FTarget*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_target_next;
+        }
+    }
+}
+
+// --- src_hdr.FDb.ind_target.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void src_hdr::ind_target_Reserve(int n) {
+    u32 old_nbuckets = _db.ind_target_buckets_n;
+    u32 new_nelems   = _db.ind_target_n + n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(src_hdr::FTarget*);
+        u32 new_size = new_nbuckets * sizeof(src_hdr::FTarget*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        src_hdr::FTarget* *new_buckets = (src_hdr::FTarget**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("src_hdr.out_of_memory  field:src_hdr.FDb.ind_target");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_target_buckets_n; i++) {
+            src_hdr::FTarget* elem = _db.ind_target_buckets_elems[i];
+            while (elem) {
+                src_hdr::FTarget &row        = *elem;
+                src_hdr::FTarget* next       = row.ind_target_next;
+                u32 index          = algo::Smallstr16_Hash(0, row.target) & (new_nbuckets-1);
+                row.ind_target_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_target_buckets_elems, old_size);
+        _db.ind_target_buckets_elems = new_buckets;
+        _db.ind_target_buckets_n = new_nbuckets;
+    }
+}
+
 // --- src_hdr.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr src_hdr::trace_RowidFind(int t) {
@@ -669,6 +1148,44 @@ void src_hdr::FDb_Init() {
         _db.nsx_lary[i]  = nsx_first;
         nsx_first    += 1ULL<<i;
     }
+    // initialize LAry license (src_hdr.FDb.license)
+    _db.license_n = 0;
+    memset(_db.license_lary, 0, sizeof(_db.license_lary)); // zero out all level pointers
+    src_hdr::FLicense* license_first = (src_hdr::FLicense*)algo_lib::malloc_AllocMem(sizeof(src_hdr::FLicense) * (u64(1)<<4));
+    if (!license_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.license_lary[i]  = license_first;
+        license_first    += 1ULL<<i;
+    }
+    // initialize hash table for src_hdr::FLicense;
+    _db.ind_license_n             	= 0; // (src_hdr.FDb.ind_license)
+    _db.ind_license_buckets_n     	= 4; // (src_hdr.FDb.ind_license)
+    _db.ind_license_buckets_elems 	= (src_hdr::FLicense**)algo_lib::malloc_AllocMem(sizeof(src_hdr::FLicense*)*_db.ind_license_buckets_n); // initial buckets (src_hdr.FDb.ind_license)
+    if (!_db.ind_license_buckets_elems) {
+        FatalErrorExit("out of memory"); // (src_hdr.FDb.ind_license)
+    }
+    memset(_db.ind_license_buckets_elems, 0, sizeof(src_hdr::FLicense*)*_db.ind_license_buckets_n); // (src_hdr.FDb.ind_license)
+    // initialize LAry target (src_hdr.FDb.target)
+    _db.target_n = 0;
+    memset(_db.target_lary, 0, sizeof(_db.target_lary)); // zero out all level pointers
+    src_hdr::FTarget* target_first = (src_hdr::FTarget*)algo_lib::malloc_AllocMem(sizeof(src_hdr::FTarget) * (u64(1)<<4));
+    if (!target_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.target_lary[i]  = target_first;
+        target_first    += 1ULL<<i;
+    }
+    // initialize hash table for src_hdr::FTarget;
+    _db.ind_target_n             	= 0; // (src_hdr.FDb.ind_target)
+    _db.ind_target_buckets_n     	= 4; // (src_hdr.FDb.ind_target)
+    _db.ind_target_buckets_elems 	= (src_hdr::FTarget**)algo_lib::malloc_AllocMem(sizeof(src_hdr::FTarget*)*_db.ind_target_buckets_n); // initial buckets (src_hdr.FDb.ind_target)
+    if (!_db.ind_target_buckets_elems) {
+        FatalErrorExit("out of memory"); // (src_hdr.FDb.ind_target)
+    }
+    memset(_db.ind_target_buckets_elems, 0, sizeof(src_hdr::FTarget*)*_db.ind_target_buckets_n); // (src_hdr.FDb.ind_target)
 
     src_hdr::InitReflection();
 }
@@ -676,6 +1193,18 @@ void src_hdr::FDb_Init() {
 // --- src_hdr.FDb..Uninit
 void src_hdr::FDb_Uninit() {
     src_hdr::FDb &row = _db; (void)row;
+
+    // src_hdr.FDb.ind_target.Uninit (Thash)  //
+    // skip destruction of ind_target in global scope
+
+    // src_hdr.FDb.target.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // src_hdr.FDb.ind_license.Uninit (Thash)  //
+    // skip destruction of ind_license in global scope
+
+    // src_hdr.FDb.license.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // src_hdr.FDb.nsx.Uninit (Lary)  //
     // skip destruction in global scope
@@ -688,6 +1217,26 @@ void src_hdr::FDb_Uninit() {
 
     // src_hdr.FDb.targsrc.Uninit (Lary)  //
     // skip destruction in global scope
+}
+
+// --- src_hdr.FLicense.base.CopyOut
+// Copy fields out of row
+void src_hdr::license_CopyOut(src_hdr::FLicense &row, dev::License &out) {
+    out.license = row.license;
+    out.comment = row.comment;
+}
+
+// --- src_hdr.FLicense.base.CopyIn
+// Copy fields in to row
+void src_hdr::license_CopyIn(src_hdr::FLicense &row, dev::License &in) {
+    row.license = in.license;
+    row.comment = in.comment;
+}
+
+// --- src_hdr.FLicense..Uninit
+void src_hdr::FLicense_Uninit(src_hdr::FLicense& license) {
+    src_hdr::FLicense &row = license; (void)row;
+    ind_license_Remove(row); // remove license from index ind_license
 }
 
 // --- src_hdr.FNs.base.CopyOut
@@ -706,77 +1255,10 @@ void src_hdr::ns_CopyIn(src_hdr::FNs &row, dmmeta::Ns &in) {
     row.comment = in.comment;
 }
 
-// --- src_hdr.FNs.c_targsrc.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
-void src_hdr::c_targsrc_Insert(src_hdr::FNs& ns, src_hdr::FTargsrc& row) {
-    if (bool_Update(row.ns_c_targsrc_in_ary,true)) {
-        // reserve space
-        c_targsrc_Reserve(ns, 1);
-        u32 n  = ns.c_targsrc_n;
-        u32 at = n;
-        src_hdr::FTargsrc* *elems = ns.c_targsrc_elems;
-        elems[at] = &row;
-        ns.c_targsrc_n = n+1;
-
-    }
-}
-
-// --- src_hdr.FNs.c_targsrc.InsertMaybe
-// Insert pointer to row in array.
-// If row is already in the array, do nothing.
-// Return value: whether element was inserted into array.
-bool src_hdr::c_targsrc_InsertMaybe(src_hdr::FNs& ns, src_hdr::FTargsrc& row) {
-    bool retval = !row.ns_c_targsrc_in_ary;
-    c_targsrc_Insert(ns,row); // check is performed in _Insert again
-    return retval;
-}
-
-// --- src_hdr.FNs.c_targsrc.Remove
-// Find element using linear scan. If element is in array, remove, otherwise do nothing
-void src_hdr::c_targsrc_Remove(src_hdr::FNs& ns, src_hdr::FTargsrc& row) {
-    if (bool_Update(row.ns_c_targsrc_in_ary,false)) {
-        int lim = ns.c_targsrc_n;
-        src_hdr::FTargsrc* *elems = ns.c_targsrc_elems;
-        // search backward, so that most recently added element is found first.
-        // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
-            src_hdr::FTargsrc* elem = elems[i]; // fetch element
-            if (elem == &row) {
-                int j = i + 1;
-                size_t nbytes = sizeof(src_hdr::FTargsrc*) * (lim - j);
-                memmove(elems + i, elems + j, nbytes);
-                ns.c_targsrc_n = lim - 1;
-                break;
-            }
-        }
-    }
-}
-
-// --- src_hdr.FNs.c_targsrc.Reserve
-// Reserve space in index for N more elements;
-void src_hdr::c_targsrc_Reserve(src_hdr::FNs& ns, u32 n) {
-    u32 old_max = ns.c_targsrc_max;
-    if (UNLIKELY(ns.c_targsrc_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(src_hdr::FTargsrc*);
-        u32 new_size = new_max * sizeof(src_hdr::FTargsrc*);
-        void *new_mem = algo_lib::malloc_ReallocMem(ns.c_targsrc_elems, old_size, new_size);
-        if (UNLIKELY(!new_mem)) {
-            FatalErrorExit("src_hdr.out_of_memory  field:src_hdr.FNs.c_targsrc");
-        }
-        ns.c_targsrc_elems = (src_hdr::FTargsrc**)new_mem;
-        ns.c_targsrc_max = new_max;
-    }
-}
-
 // --- src_hdr.FNs..Uninit
 void src_hdr::FNs_Uninit(src_hdr::FNs& ns) {
     src_hdr::FNs &row = ns; (void)row;
     ind_ns_Remove(row); // remove ns from index ind_ns
-
-    // src_hdr.FNs.c_targsrc.Uninit (Ptrary)  //
-    algo_lib::malloc_FreeMem(ns.c_targsrc_elems, sizeof(src_hdr::FTargsrc*)*ns.c_targsrc_max); // (src_hdr.FNs.c_targsrc)
 }
 
 // --- src_hdr.FNsx.base.CopyOut
@@ -814,6 +1296,95 @@ void src_hdr::FNsx_Uninit(src_hdr::FNsx& nsx) {
     }
 }
 
+// --- src_hdr.FTarget.base.CopyOut
+// Copy fields out of row
+void src_hdr::target_CopyOut(src_hdr::FTarget &row, dev::Target &out) {
+    out.target = row.target;
+    out.license = row.license;
+    out.compat = row.compat;
+}
+
+// --- src_hdr.FTarget.base.CopyIn
+// Copy fields in to row
+void src_hdr::target_CopyIn(src_hdr::FTarget &row, dev::Target &in) {
+    row.target = in.target;
+    row.license = in.license;
+    row.compat = in.compat;
+}
+
+// --- src_hdr.FTarget.c_targsrc.Insert
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+void src_hdr::c_targsrc_Insert(src_hdr::FTarget& target, src_hdr::FTargsrc& row) {
+    if (bool_Update(row.target_c_targsrc_in_ary,true)) {
+        // reserve space
+        c_targsrc_Reserve(target, 1);
+        u32 n  = target.c_targsrc_n;
+        u32 at = n;
+        src_hdr::FTargsrc* *elems = target.c_targsrc_elems;
+        elems[at] = &row;
+        target.c_targsrc_n = n+1;
+
+    }
+}
+
+// --- src_hdr.FTarget.c_targsrc.InsertMaybe
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+bool src_hdr::c_targsrc_InsertMaybe(src_hdr::FTarget& target, src_hdr::FTargsrc& row) {
+    bool retval = !row.target_c_targsrc_in_ary;
+    c_targsrc_Insert(target,row); // check is performed in _Insert again
+    return retval;
+}
+
+// --- src_hdr.FTarget.c_targsrc.Remove
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void src_hdr::c_targsrc_Remove(src_hdr::FTarget& target, src_hdr::FTargsrc& row) {
+    if (bool_Update(row.target_c_targsrc_in_ary,false)) {
+        int lim = target.c_targsrc_n;
+        src_hdr::FTargsrc* *elems = target.c_targsrc_elems;
+        // search backward, so that most recently added element is found first.
+        // if found, shift array.
+        for (int i = lim-1; i>=0; i--) {
+            src_hdr::FTargsrc* elem = elems[i]; // fetch element
+            if (elem == &row) {
+                int j = i + 1;
+                size_t nbytes = sizeof(src_hdr::FTargsrc*) * (lim - j);
+                memmove(elems + i, elems + j, nbytes);
+                target.c_targsrc_n = lim - 1;
+                break;
+            }
+        }
+    }
+}
+
+// --- src_hdr.FTarget.c_targsrc.Reserve
+// Reserve space in index for N more elements;
+void src_hdr::c_targsrc_Reserve(src_hdr::FTarget& target, u32 n) {
+    u32 old_max = target.c_targsrc_max;
+    if (UNLIKELY(target.c_targsrc_n + n > old_max)) {
+        u32 new_max  = u32_Max(4, old_max * 2);
+        u32 old_size = old_max * sizeof(src_hdr::FTargsrc*);
+        u32 new_size = new_max * sizeof(src_hdr::FTargsrc*);
+        void *new_mem = algo_lib::malloc_ReallocMem(target.c_targsrc_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("src_hdr.out_of_memory  field:src_hdr.FTarget.c_targsrc");
+        }
+        target.c_targsrc_elems = (src_hdr::FTargsrc**)new_mem;
+        target.c_targsrc_max = new_max;
+    }
+}
+
+// --- src_hdr.FTarget..Uninit
+void src_hdr::FTarget_Uninit(src_hdr::FTarget& target) {
+    src_hdr::FTarget &row = target; (void)row;
+    ind_target_Remove(row); // remove target from index ind_target
+
+    // src_hdr.FTarget.c_targsrc.Uninit (Ptrary)  //
+    algo_lib::malloc_FreeMem(target.c_targsrc_elems, sizeof(src_hdr::FTargsrc*)*target.c_targsrc_max); // (src_hdr.FTarget.c_targsrc)
+}
+
 // --- src_hdr.FTargsrc.base.CopyOut
 // Copy fields out of row
 void src_hdr::targsrc_CopyOut(src_hdr::FTargsrc &row, dev::Targsrc &out) {
@@ -849,7 +1420,7 @@ algo::Smallstr10 src_hdr::ext_Get(src_hdr::FTargsrc& targsrc) {
 // --- src_hdr.FTargsrc..Uninit
 void src_hdr::FTargsrc_Uninit(src_hdr::FTargsrc& targsrc) {
     src_hdr::FTargsrc &row = targsrc; (void)row;
-    src_hdr::FNs* p_target = src_hdr::ind_ns_Find(target_Get(row));
+    src_hdr::FTarget* p_target = src_hdr::ind_target_Find(target_Get(row));
     if (p_target)  {
         c_targsrc_Remove(*p_target, row);// remove targsrc from index c_targsrc
     }
@@ -886,7 +1457,7 @@ bool src_hdr::value_SetStrptrMaybe(src_hdr::FieldId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,src_hdr_FieldId_value); ret = true; break;
                 }
@@ -936,8 +1507,10 @@ void src_hdr::FieldId_Print(src_hdr::FieldId & row, algo::cstring &str) {
 const char* src_hdr::value_ToCstr(const src_hdr::TableId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
+        case src_hdr_TableId_dev_License   : ret = "dev.License";  break;
         case src_hdr_TableId_dmmeta_Ns     : ret = "dmmeta.Ns";  break;
         case src_hdr_TableId_dmmeta_Nsx    : ret = "dmmeta.Nsx";  break;
+        case src_hdr_TableId_dev_Target    : ret = "dev.Target";  break;
         case src_hdr_TableId_dev_Targsrc   : ret = "dev.Targsrc";  break;
     }
     return ret;
@@ -963,7 +1536,7 @@ bool src_hdr::value_SetStrptrMaybe(src_hdr::TableId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 9: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','N'): {
                     if (memcmp(rhs.elems+8,"s",1)==0) { value_SetEnum(parent,src_hdr_TableId_dmmeta_Ns); ret = true; break; }
                     break;
@@ -976,7 +1549,15 @@ bool src_hdr::value_SetStrptrMaybe(src_hdr::TableId& parent, algo::strptr rhs) {
             break;
         }
         case 10: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','e','v','.','T','a','r','g'): {
+                    if (memcmp(rhs.elems+8,"et",2)==0) { value_SetEnum(parent,src_hdr_TableId_dev_Target); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','t','a','r','g'): {
+                    if (memcmp(rhs.elems+8,"et",2)==0) { value_SetEnum(parent,src_hdr_TableId_dev_target); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','m','m','e','t','a','.','N'): {
                     if (memcmp(rhs.elems+8,"sx",2)==0) { value_SetEnum(parent,src_hdr_TableId_dmmeta_Nsx); ret = true; break; }
                     break;
@@ -989,9 +1570,17 @@ bool src_hdr::value_SetStrptrMaybe(src_hdr::TableId& parent, algo::strptr rhs) {
             break;
         }
         case 11: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','e','v','.','L','i','c','e'): {
+                    if (memcmp(rhs.elems+8,"nse",3)==0) { value_SetEnum(parent,src_hdr_TableId_dev_License); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','e','v','.','T','a','r','g'): {
                     if (memcmp(rhs.elems+8,"src",3)==0) { value_SetEnum(parent,src_hdr_TableId_dev_Targsrc); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','l','i','c','e'): {
+                    if (memcmp(rhs.elems+8,"nse",3)==0) { value_SetEnum(parent,src_hdr_TableId_dev_license); ret = true; break; }
                     break;
                 }
                 case LE_STR8('d','e','v','.','t','a','r','g'): {
@@ -1041,6 +1630,7 @@ void src_hdr::TableId_Print(src_hdr::TableId & row, algo::cstring &str) {
 // --- src_hdr...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         src_hdr::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -1057,10 +1647,13 @@ int main(int argc, char **argv) {
     try {
         src_hdr::FDb_Uninit();
         algo_lib::FDb_Uninit();
-    } catch(algo_lib::ErrorX &x) {
+        lib_json::FDb_Uninit();
+    } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;
     }
+    // only the lower 1 byte makes it to the outside world
+    (void)i32_UpdateMin(algo_lib::_db.exit_code,255);
     return algo_lib::_db.exit_code;
 }
 

@@ -24,7 +24,10 @@
 //
 
 #include "include/algo.h"
+#ifdef WIN32
+#else
 #include <sys/mman.h>// mmap,mlockall
+#endif
 
 // -----------------------------------------------------------------------------
 
@@ -63,6 +66,6 @@ bool algo_lib::MmapFile_LoadFd(MmapFile &mmapfile, algo::Fildes fd) {
 // Attach mmapfile MMAPFILE to FNAME
 // Return success code.
 bool algo_lib::MmapFile_Load(MmapFile &mmapfile, strptr fname) {
-    algo::Fildes fildes = OpenRead(fname,algo_FileFlags_none);
+    algo::Fildes fildes = OpenRead(fname,algo::FileFlags());
     return ValidQ(fildes) ? MmapFile_LoadFd(mmapfile,fildes) : false;
 }

@@ -98,7 +98,7 @@ static void Ctype_ReadStrptrMaybe_Ssim(algo_lib::Replscope &R, amc::FCtype &ctyp
 
 static void Ctype_ReadStrptrMaybe_Sep(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FFunc &readstrptr, strptr sep) {
     Ins(&R, readstrptr.comment, "The format of the string is a string with separated values");
-    Ins(&R, readstrptr.body, "strptr value;");
+    Ins(&R, readstrptr.body, "algo::strptr value;");
     int counter = 0;
     amc::FField *lastfld = NULL;
     ind_beg(amc::ctype_c_field_curs, field,ctype) {
@@ -177,6 +177,44 @@ static void Ctype_ReadStrptrMaybe_Raw(algo_lib::Replscope &R, amc::FCtype &ctype
 
 // -----------------------------------------------------------------------------
 
+static void Ctype_ReadStrptrMaybe_Bitset(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FCfmt &cfmt, amc::FFunc &readstrptr) {
+    vrfy(ch_N(cfmt.sep)==1, tempstr()<<"For Bitset only one-char separator is supported: "<<cfmt.cfmt);
+    cstring sep;
+    char_PrintCppSingleQuote(cfmt.sep.ch[0],sep);
+    Set(R, "$sep", sep);
+    Set(R, "$ns", ns_Get(ctype));
+    Ins(&R, readstrptr.body        ,"while (ch_N(in_str)) {");
+    Ins(&R, readstrptr.body        ,"    strptr field_name;");
+    Ins(&R, readstrptr.body        ,"    algo::NextSep(in_str,$sep,field_name);");
+    Ins(&R, readstrptr.body        ,"    field_name = algo::Trimmed(field_name);");
+    Ins(&R, readstrptr.body        ,"    if (ch_N(field_name)) {");
+    Ins(&R, readstrptr.body        ,"        $ns::FieldId field_id;");
+    Ins(&R, readstrptr.body        ,"        bool ok = $ns::value_SetStrptrMaybe(field_id,field_name);");
+    Ins(&R, readstrptr.body        ,"        if (ok) {");
+    Ins(&R, readstrptr.body        ,"            switch (field_id) {");
+    ind_beg(amc::ctype_c_field_curs,field,ctype) if (field.arg == "bool") {
+        Set(R, "$name", name_Get(field));
+        if (amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Set"))) {
+            Ins(&R, readstrptr.body,"            case $ns_FieldId_$name: $name_Set(parent,true); break;");
+        } else {
+            Ins(&R, readstrptr.body,"            case $ns_FieldId_$name: parent.$name = true; break;");
+        }
+    }ind_end;
+    Ins(&R, readstrptr.body        ,"            default: ok = false; break;");
+    Ins(&R, readstrptr.body        ,"            }");
+    Ins(&R, readstrptr.body        ,"        }");
+    Ins(&R, readstrptr.body        ,"        if (!ok) {");
+    Ins(&R, readstrptr.body        ,"            algo_lib::AppendErrtext(\"bitfld\",field_name);");
+    Ins(&R, readstrptr.body        ,"            retval = false;");
+    Ins(&R, readstrptr.body        ,"        }");
+    Ins(&R, readstrptr.body        ,"    }");
+    Ins(&R, readstrptr.body        ,"}");
+    MaybeUnused(readstrptr, "parent");
+    MaybeUnused(readstrptr, "in_str");
+}
+
+// -----------------------------------------------------------------------------
+
 void amc::tfunc_Ctype_ReadStrptrMaybe() {
     amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
     ind_beg(amc::ctype_zs_cfmt_curs,cfmt,ctype) {
@@ -210,6 +248,8 @@ void amc::tfunc_Ctype_ReadStrptrMaybe() {
                     Ctype_ReadStrptrMaybe_Raw(R, ctype, readstrptr);
                 } else if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Tuple) {
                     Ctype_ReadStrptrMaybe_Ssim(R, ctype, readstrptr);
+                } else if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Bitset) {
+                    Ctype_ReadStrptrMaybe_Bitset(R, ctype, cfmt, readstrptr);
                 }
             }
             Ins(&R, readstrptr.body, "return retval;");

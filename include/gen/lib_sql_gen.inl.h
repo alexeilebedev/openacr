@@ -38,12 +38,12 @@ inline bool lib_sql::attr_EmptyQ() {
 // --- lib_sql.FDb.attr.Find
 // Look up row by row id. Return NULL if out of range
 inline lib_sql::FAttr* lib_sql::attr_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     lib_sql::FAttr *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.attr_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.attr_lary[bsr][index];
     }
     return retval;

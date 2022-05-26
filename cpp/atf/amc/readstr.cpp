@@ -56,7 +56,7 @@ void atf_amc::amctest_ReadTuple2() {
     vrfyeq_(in_ctype, out_ctype);
     // Check that ReadTuple works the same
     algo::Tuple tuple;
-    Refurbish(in_ctype);
+    algo::Refurbish(in_ctype);
     Tuple_ReadStrptr(tuple, out, true /*attrs only*/);
     Ctype2Attr_ReadTupleMaybe(in_ctype, tuple);
     vrfyeq_(in_ctype, out_ctype);

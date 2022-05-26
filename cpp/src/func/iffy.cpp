@@ -27,10 +27,6 @@
 static void MarkIffy(src_func::FFunc &func, int errline, strptr where, strptr error, strptr suggestion) {
     // allow disabling errors with 'ignore:XYZ' tag
     if (FindStr(func.precomment, tempstr()<<"ignore:"<<error)==-1) {
-        // exit with error if -check was specified
-        if (src_func::_db.cmdline.check) {
-            algo_lib::_db.exit_code++;
-        }
         tempstr comment;
         comment<<suggestion<<"; to ignore, add ignore:"<<error<<" anywhere in function comment";
         func.iffy = true;
@@ -99,7 +95,7 @@ static void CheckIndBegIndentation(src_func::FFunc &func) {
     static bool firsttime;
     // non-sql regx
     if (bool_Update(firsttime,true)) {
-        (void)Regx_ReadDflt(beg,"\\s*ind_beg\\s*\\(.*"); // full
+        (void)Regx_ReadDflt(beg,"\\s*ind_beg.*\\(.*"); // full
         (void)Regx_ReadDflt(end,"\\s*}\\s*ind_end.*"); // full
     }
     ind_beg(Line_curs,line,func.body) {
@@ -143,6 +139,12 @@ void src_func::ComputeIffy(src_func::FFunc &func) {
     for (; proto != ""; proto=Pathcomp(proto,",LR")) {
         strptr arg=Pathcomp(proto,",LL");
         CheckArg(func,arg);
+    }
+    strptr ns = GetFuncNs(func.func);
+    tempstr need_ns(target_Get(*func.p_targsrc));
+    if (ns != "" && ns != need_ns && ind_target_Find(ns)) {
+        MarkIffy(func, 0, func.func, "funcns"
+                 , (tempstr()<<"Expected namespace "<<need_ns));
     }
     CheckIndBegIndentation(func);
 }

@@ -25,15 +25,6 @@
 
 #include "include/acr_ed.h"
 
-
-// -----------------------------------------------------------------------------
-
-static void RequireSrcfileDir(strptr srcfile) {
-    vrfy(DirectoryQ(GetDirName(srcfile))
-         , tempstr()<<"acr_ed.baddir"
-         <<Keyval("srcfile",srcfile));
-}
-
 // -----------------------------------------------------------------------------
 
 // Find a target which has the most source files
@@ -56,48 +47,73 @@ static acr_ed::FTarget *GuessTarget(strptr srcfile) {
 
 // -----------------------------------------------------------------------------
 
+// Create cpp, h or readme file
 void acr_ed::Main_CreateSrcfile() {
-    if (acr_ed::_db.cmdline.target == "") {
-        if (acr_ed::FTarget *target = GuessTarget(acr_ed::_db.cmdline.srcfile)) {
-            prlog("acr_ed.guess_target"
-                  <<Keyval("target",target->target));
-            acr_ed::_db.cmdline.target = target->target;
+    vrfy(DirectoryQ(GetDirName(acr_ed::_db.cmdline.srcfile))
+         , tempstr()<<"acr_ed.baddir"
+         <<Keyval("srcfile",acr_ed::_db.cmdline.srcfile));
+
+    bool readme = Pathcomp(acr_ed::_db.cmdline.srcfile,"/LL") == "txt";
+    bool cpp_or_h = !readme;
+    bool need_target = cpp_or_h;
+
+    if (need_target) {
+        if (acr_ed::_db.cmdline.target == "") {
+            if (acr_ed::FTarget *target = GuessTarget(acr_ed::_db.cmdline.srcfile)) {
+                prlog("acr_ed.guess_target"
+                      <<Keyval("target",target->target));
+                acr_ed::_db.cmdline.target = target->target;
+            }
         }
+        vrfy(acr_ed::_db.cmdline.target != ""
+             && acr_ed::ind_target_Find(acr_ed::_db.cmdline.target)
+             , tempstr()<<"acr_ed.badtarget"
+             <<Keyval("target",acr_ed::_db.cmdline.target));
+
+        prlog("acr_ed.srcfile_target"
+              <<Keyval("target",acr_ed::_db.cmdline.target));
     }
-    prlog("acr_ed.create_srcfile"
-          <<Keyval("target",acr_ed::_db.cmdline.target));
 
     algo_lib::Replscope R;
     Set(R, "$target", acr_ed::_db.cmdline.target);
     Set(R, "$srcfile", acr_ed::_db.cmdline.srcfile);
-    vrfy(acr_ed::_db.cmdline.target != ""
-         && acr_ed::ind_target_Find(acr_ed::_db.cmdline.target)
-         , tempstr()<<"acr_ed.badtarget"
-         <<Keyval("target",acr_ed::_db.cmdline.target));
 
-    RequireSrcfileDir(acr_ed::_db.cmdline.srcfile);
-
-    // create gitfile
+    // create gitfile record
     acr_ed::_db.out_ssim << dev::Gitfile(acr_ed::_db.cmdline.srcfile)<<eol;
 
-    // create targsrc
-    tempstr targsrc;
-    targsrc<<acr_ed::_db.cmdline.target<<"/"<<acr_ed::_db.cmdline.srcfile;
-    acr_ed::_db.out_ssim << dev::Targsrc(targsrc,algo::Comment(acr_ed::_db.cmdline.comment))<<eol;
+    // create targsrc, readme record
+    if (cpp_or_h) {
+        tempstr targsrc;
+        targsrc<<acr_ed::_db.cmdline.target<<"/"<<acr_ed::_db.cmdline.srcfile;
+        acr_ed::_db.out_ssim << dev::Targsrc(targsrc,algo::Comment(acr_ed::_db.cmdline.comment))<<eol;
+    }
+    if (readme) {
+        bool inl=false;
+        acr_ed::_db.out_ssim << dev::Readme(acr_ed::_db.cmdline.srcfile,inl,algo::Comment(acr_ed::_db.cmdline.comment))<<eol;
+    }
 
-    // create source file
+    // create source file, insert some content
     Ins(&R, acr_ed::_db.script, "cat > $srcfile << EOF");
-    bool mainheader = StripExt(StripDirName(acr_ed::_db.cmdline.srcfile)) == acr_ed::_db.cmdline.target;
-    InsertSrcfileInclude(R, mainheader);
+    if (cpp_or_h) {
+        bool mainheader = StripExt(StripDirName(acr_ed::_db.cmdline.srcfile)) == acr_ed::_db.cmdline.target;
+        InsertSrcfileInclude(R, mainheader);
+    }
+    if (readme) {
+        Ins(&R, acr_ed::_db.script, "## $srcfile");
+    }
     Ins(&R, acr_ed::_db.script, "EOF");
 
     // updateh file copyright headers
     Ins(&R, acr_ed::_db.script, "git add $srcfile");
-    Ins(&R, acr_ed::_db.script, "bin/src_hdr -targsrc:$target/% -write");
+    if (cpp_or_h) {
+        Ins(&R, acr_ed::_db.script, "bin/src_hdr -targsrc:$target/% -write");
+    }
+    ScriptEditFile(R,acr_ed::_db.cmdline.srcfile);
 }
 
 // -----------------------------------------------------------------------------
 
+// Rename cpp, h, or readme file
 void acr_ed::Main_RenameSrcfile() {
     prlog("acr_ed.rename_srcfile"
           <<Keyval("from",acr_ed::_db.cmdline.srcfile)
@@ -106,7 +122,14 @@ void acr_ed::Main_RenameSrcfile() {
     algo_lib::Replscope R;
     Set(R, "$srcfile", acr_ed::_db.cmdline.srcfile);
     Set(R, "$to", acr_ed::_db.cmdline.rename);
-    RequireSrcfileDir(acr_ed::_db.cmdline.srcfile);
+    vrfy(FileQ(acr_ed::_db.cmdline.srcfile),
+         tempstr()<<"acr_ed.nosrcfile"
+         <<Keyval("srcfile",acr_ed::_db.cmdline.srcfile)
+         <<Keyval("comment","source file not found"));
+
+    vrfy(DirectoryQ(GetDirName(acr_ed::_db.cmdline.rename))
+         , tempstr()<<"acr_ed.baddir"
+         <<Keyval("dirname",GetDirName(acr_ed::_db.cmdline.rename)));
 
     Ins(&R, acr_ed::_db.script, "acr gitfile:$srcfile -rename:$to -write -print:N");
     Ins(&R, acr_ed::_db.script, "git mv $srcfile $to");
@@ -115,13 +138,17 @@ void acr_ed::Main_RenameSrcfile() {
 
 // -----------------------------------------------------------------------------
 
+// Delete cpp,h, or readme file
 void acr_ed::Main_DeleteSrcfile() {
     prlog("acr_ed.delete_srcfile"
           <<Keyval("srcfile",acr_ed::_db.cmdline.srcfile));
 
     algo_lib::Replscope R;
     Set(R, "$srcfile", acr_ed::_db.cmdline.srcfile);
-    RequireSrcfileDir(acr_ed::_db.cmdline.srcfile);
+    vrfy(FileQ(acr_ed::_db.cmdline.srcfile),
+         tempstr()<<"acr_ed.nosrcfile"
+         <<Keyval("srcfile",acr_ed::_db.cmdline.srcfile)
+         <<Keyval("comment","source file not found"));
 
     Ins(&R, acr_ed::_db.script, "acr gitfile:$srcfile -del -write");
     Ins(&R, acr_ed::_db.script, "git rm -f $srcfile");

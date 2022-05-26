@@ -26,9 +26,13 @@
 // Retrieve gitinfo string, e.g.
 // dev.gitinfo  gitinfo:2014-10-06.afa3edc.abt  author:alebedev@nyx.com  cfg:g++/release.Linux-x86_64  compver:4.4.6
 
+#include "include/algo.h"
+
+#define STRINGIFY(x) #x
+
 strptr algo::gitinfo_Get() {
     // remove trailing \n
-    return Trimmed("dev.gitinfo  comment:'unversioned'");
+    return Trimmed("dev.gitinfo  comment:unversioned");
 }
 
 // -----------------------------------------------------------------------------
@@ -50,9 +54,9 @@ strptr algo::gitinfo_Get() {
 // both arrays must be non-zero or one of them will go into the bss section, far away
 // from the other one (if not linked with git info)
 static void ScanSyntax(algo::Argtuple &argtuple, strptr syntax) {
-    StringIter iter(syntax);
+    algo::StringIter iter(syntax);
     while (!iter.Ws().EofQ()) {
-        strptr name   = GetTokenChar(iter, ':');
+        strptr name   = algo::GetTokenChar(iter, ':');
         if (name == "...") {
             argtuple.vararg = true;
             break;
@@ -66,7 +70,7 @@ static void ScanSyntax(algo::Argtuple &argtuple, strptr syntax) {
         while (iter.index < elems_N(iter.expr) && algo_lib::ArgvIdentQ(iter.expr[iter.index])) {
             iter.index++;
         }
-        arg.type = GetRegion(iter.expr,start,iter.index-start);
+        arg.type = algo::GetRegion(iter.expr,start,iter.index-start);
 
         bool      eq  = SkipChar(iter, '=');
         tempstr value;
@@ -205,7 +209,7 @@ static int ReadOption(algo::Argtuple &argtuple, int i, int argc, char **argv) {
     option              = RestFrom(option,dashdash ? 1 : 0); // convert -- to -
     // note, single - is not an option
     bool isopt          = !argtuple.endopt && elems_N(option)>1 && option[0]=='-';
-    i32_Range  R        = isopt ? TFind(option,':') : i32_Range(0,0);
+    algo::i32_Range  R  = isopt ? TFind(option,':') : algo::i32_Range(0,0);
     strptr name         = FirstN(option, R.beg);
     strptr value        = RestFrom(option, R.end);
     ArgProto *arg_proto = FindArgProto(argtuple,name);
@@ -256,7 +260,7 @@ void algo::Argtuple_ReadArgv(algo::Argtuple &argtuple, int argc, char **argv, st
     ScanSyntax(argtuple, syntax);
     frep1_(i,argc) {
         strptr option       = argv[i];
-        if (option == "--") {
+        if (option == strptr("--")) {
             argtuple.endopt = true;
         } else {
             i=ReadOption(argtuple,i,argc,argv);

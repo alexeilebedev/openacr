@@ -63,20 +63,6 @@ void atf_amc::amctest_Exec_Status() {
 
 // -----------------------------------------------------------------------------
 
-// Should this be generated?
-static algo::Fildes amc_StartRead(command::amc_proc &amc, algo_lib::FFildes &read) {
-    int pipefd[2];
-    int rc=pipe(pipefd);
-    (void)rc;
-    read.fd.value = pipefd[0];
-    amc.stdout  << ">&" << pipefd[1];
-    amc_Start(amc);
-    (void)close(pipefd[1]);
-    return read.fd;
-}
-
-// -----------------------------------------------------------------------------
-
 void atf_amc::amctest_ReadProc() {
     // spawn a subprocess and read output line by line
     command::amc_proc amc;

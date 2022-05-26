@@ -9,9 +9,9 @@
 
 #pragma once
 #include "include/gen/command_gen.h"
-#include "include/gen/dmmeta_gen.h"
-#include "include/gen/algo_gen.h"
 #include "include/gen/dev_gen.h"
+#include "include/gen/algo_gen.h"
+#include "include/gen/dmmeta_gen.h"
 //#pragma endinclude
 
 // --- src_hdr_FieldIdEnum
@@ -26,18 +26,24 @@ enum { src_hdr_FieldIdEnum_N = 1 };
 // --- src_hdr_TableIdEnum
 
 enum src_hdr_TableIdEnum {               // src_hdr.TableId.value
-     src_hdr_TableId_dmmeta_Ns     = 0   // dmmeta.Ns -> src_hdr.FNs
-    ,src_hdr_TableId_dmmeta_ns     = 0   // dmmeta.ns -> src_hdr.FNs
-    ,src_hdr_TableId_dmmeta_Nsx    = 1   // dmmeta.Nsx -> src_hdr.FNsx
-    ,src_hdr_TableId_dmmeta_nsx    = 1   // dmmeta.nsx -> src_hdr.FNsx
-    ,src_hdr_TableId_dev_Targsrc   = 2   // dev.Targsrc -> src_hdr.FTargsrc
-    ,src_hdr_TableId_dev_targsrc   = 2   // dev.targsrc -> src_hdr.FTargsrc
+     src_hdr_TableId_dev_License   = 0   // dev.License -> src_hdr.FLicense
+    ,src_hdr_TableId_dev_license   = 0   // dev.license -> src_hdr.FLicense
+    ,src_hdr_TableId_dmmeta_Ns     = 1   // dmmeta.Ns -> src_hdr.FNs
+    ,src_hdr_TableId_dmmeta_ns     = 1   // dmmeta.ns -> src_hdr.FNs
+    ,src_hdr_TableId_dmmeta_Nsx    = 2   // dmmeta.Nsx -> src_hdr.FNsx
+    ,src_hdr_TableId_dmmeta_nsx    = 2   // dmmeta.nsx -> src_hdr.FNsx
+    ,src_hdr_TableId_dev_Target    = 3   // dev.Target -> src_hdr.FTarget
+    ,src_hdr_TableId_dev_target    = 3   // dev.target -> src_hdr.FTarget
+    ,src_hdr_TableId_dev_Targsrc   = 4   // dev.Targsrc -> src_hdr.FTargsrc
+    ,src_hdr_TableId_dev_targsrc   = 4   // dev.targsrc -> src_hdr.FTargsrc
 };
 
-enum { src_hdr_TableIdEnum_N = 6 };
+enum { src_hdr_TableIdEnum_N = 10 };
 
 namespace src_hdr { struct FTargsrc; }
+namespace src_hdr { struct FLicense; }
 namespace src_hdr { struct FNs; }
+namespace src_hdr { struct FTarget; }
 namespace src_hdr { struct trace; }
 namespace src_hdr { struct FDb; }
 namespace src_hdr { struct FNsx; }
@@ -48,13 +54,18 @@ namespace src_hdr { struct _db_targsrc_curs; }
 namespace src_hdr { struct _db_ns_curs; }
 namespace src_hdr { struct _db_ind_ns_curs; }
 namespace src_hdr { struct _db_nsx_curs; }
-namespace src_hdr { struct ns_c_targsrc_curs; }
+namespace src_hdr { struct _db_license_curs; }
+namespace src_hdr { struct _db_ind_license_curs; }
+namespace src_hdr { struct _db_target_curs; }
+namespace src_hdr { struct _db_ind_target_curs; }
+namespace src_hdr { struct target_c_targsrc_curs; }
 namespace src_hdr {
 }//pkey typedefs
 namespace src_hdr {
 extern const char *src_hdr_help;
 extern const char *src_hdr_syntax;
 extern FDb _db;
+extern const char *dev_scriptfile_bin_git_authors; // "bin/git-authors"
 
 // --- src_hdr.trace
 #pragma pack(push,1)
@@ -69,17 +80,27 @@ void                 trace_Print(src_hdr::trace & row, algo::cstring &str) __att
 // --- src_hdr.FDb
 // create: src_hdr.FDb._db (Global)
 struct FDb { // src_hdr.FDb
-    command::src_hdr     cmdline;                //
-    src_hdr::FTargsrc*   targsrc_lary[32];       // level array
-    i32                  targsrc_n;              // number of elements in array
-    src_hdr::FNs*        ns_lary[32];            // level array
-    i32                  ns_n;                   // number of elements in array
-    src_hdr::FNs**       ind_ns_buckets_elems;   // pointer to bucket array
-    i32                  ind_ns_buckets_n;       // number of elements in bucket array
-    i32                  ind_ns_n;               // number of elements in the hash table
-    src_hdr::FNsx*       nsx_lary[32];           // level array
-    i32                  nsx_n;                  // number of elements in array
-    src_hdr::trace       trace;                  //
+    command::src_hdr      cmdline;                     //
+    src_hdr::FTargsrc*    targsrc_lary[32];            // level array
+    i32                   targsrc_n;                   // number of elements in array
+    src_hdr::FNs*         ns_lary[32];                 // level array
+    i32                   ns_n;                        // number of elements in array
+    src_hdr::FNs**        ind_ns_buckets_elems;        // pointer to bucket array
+    i32                   ind_ns_buckets_n;            // number of elements in bucket array
+    i32                   ind_ns_n;                    // number of elements in the hash table
+    src_hdr::FNsx*        nsx_lary[32];                // level array
+    i32                   nsx_n;                       // number of elements in array
+    src_hdr::FLicense*    license_lary[32];            // level array
+    i32                   license_n;                   // number of elements in array
+    src_hdr::FLicense**   ind_license_buckets_elems;   // pointer to bucket array
+    i32                   ind_license_buckets_n;       // number of elements in bucket array
+    i32                   ind_license_n;               // number of elements in the hash table
+    src_hdr::FTarget*     target_lary[32];             // level array
+    i32                   target_n;                    // number of elements in array
+    src_hdr::FTarget**    ind_target_buckets_elems;    // pointer to bucket array
+    i32                   ind_target_buckets_n;        // number of elements in bucket array
+    i32                   ind_target_n;                // number of elements in the hash table
+    src_hdr::trace        trace;                       //
 };
 
 // Main function
@@ -197,6 +218,94 @@ src_hdr::FNsx&       nsx_qFind(u64 t) __attribute__((nothrow));
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 nsx_XrefMaybe(src_hdr::FNsx &row);
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+src_hdr::FLicense&   license_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+src_hdr::FLicense*   license_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+src_hdr::FLicense*   license_InsertMaybe(const dev::License &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                license_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 license_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+src_hdr::FLicense*   license_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+src_hdr::FLicense*   license_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  license_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 license_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 license_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+src_hdr::FLicense&   license_qFind(u64 t) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 license_XrefMaybe(src_hdr::FLicense &row);
+
+// Return true if hash is empty
+bool                 ind_license_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+src_hdr::FLicense*   ind_license_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+src_hdr::FLicense&   ind_license_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+src_hdr::FLicense&   ind_license_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+i32                  ind_license_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool                 ind_license_InsertMaybe(src_hdr::FLicense& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void                 ind_license_Remove(src_hdr::FLicense& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+void                 ind_license_Reserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+src_hdr::FTarget&    target_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+src_hdr::FTarget*    target_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+src_hdr::FTarget*    target_InsertMaybe(const dev::Target &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                target_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 target_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+src_hdr::FTarget*    target_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+src_hdr::FTarget*    target_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  target_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 target_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 target_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+src_hdr::FTarget&    target_qFind(u64 t) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 target_XrefMaybe(src_hdr::FTarget &row);
+
+// Return true if hash is empty
+bool                 ind_target_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+src_hdr::FTarget*    ind_target_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+src_hdr::FTarget&    ind_target_FindX(const algo::strptr& key);
+// Return number of items in the hash
+i32                  ind_target_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool                 ind_target_InsertMaybe(src_hdr::FTarget& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void                 ind_target_Remove(src_hdr::FTarget& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+void                 ind_target_Reserve(int n) __attribute__((nothrow));
+
 // cursor points to valid item
 void                 _db_targsrc_curs_Reset(_db_targsrc_curs &curs, src_hdr::FDb &parent);
 // cursor points to valid item
@@ -221,23 +330,65 @@ bool                 _db_nsx_curs_ValidQ(_db_nsx_curs &curs);
 void                 _db_nsx_curs_Next(_db_nsx_curs &curs);
 // item access
 src_hdr::FNsx&       _db_nsx_curs_Access(_db_nsx_curs &curs);
+// cursor points to valid item
+void                 _db_license_curs_Reset(_db_license_curs &curs, src_hdr::FDb &parent);
+// cursor points to valid item
+bool                 _db_license_curs_ValidQ(_db_license_curs &curs);
+// proceed to next item
+void                 _db_license_curs_Next(_db_license_curs &curs);
+// item access
+src_hdr::FLicense&   _db_license_curs_Access(_db_license_curs &curs);
+// cursor points to valid item
+void                 _db_target_curs_Reset(_db_target_curs &curs, src_hdr::FDb &parent);
+// cursor points to valid item
+bool                 _db_target_curs_ValidQ(_db_target_curs &curs);
+// proceed to next item
+void                 _db_target_curs_Next(_db_target_curs &curs);
+// item access
+src_hdr::FTarget&    _db_target_curs_Access(_db_target_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
 
+// --- src_hdr.FLicense
+// create: src_hdr.FDb.license (Lary)
+// global access: ind_license (Thash)
+// access: src_hdr.FTarget.p_license (Upptr)
+struct FLicense { // src_hdr.FLicense
+    src_hdr::FLicense*   ind_license_next;   // hash next
+    algo::Smallstr50     license;            //
+    algo::Comment        comment;            //
+    algo::cstring        text;               //
+private:
+    friend src_hdr::FLicense&   license_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend src_hdr::FLicense*   license_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 license_RemoveAll() __attribute__((nothrow));
+    friend void                 license_RemoveLast() __attribute__((nothrow));
+    FLicense();
+    ~FLicense();
+    FLicense(const FLicense&){ /*disallow copy constructor */}
+    void operator =(const FLicense&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 license_CopyOut(src_hdr::FLicense &row, dev::License &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 license_CopyIn(src_hdr::FLicense &row, dev::License &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 FLicense_Init(src_hdr::FLicense& license);
+void                 FLicense_Uninit(src_hdr::FLicense& license) __attribute__((nothrow));
+
 // --- src_hdr.FNs
 // create: src_hdr.FDb.ns (Lary)
 // global access: ind_ns (Thash)
-// access: src_hdr.FTargsrc.p_ns (Upptr)
+// access: src_hdr.FTarget.p_ns (Upptr)
 struct FNs { // src_hdr.FNs
-    src_hdr::FNs*         ind_ns_next;       // hash next
-    algo::Smallstr16      ns;                // Namespace name (primary key)
-    algo::Smallstr50      nstype;            //
-    algo::Comment         comment;           //
-    src_hdr::FTargsrc**   c_targsrc_elems;   // array of pointers
-    u32                   c_targsrc_n;       // array of pointers
-    u32                   c_targsrc_max;     // capacity of allocated array
-    src_hdr::FNsx*        c_nsx;             // optional pointer
+    src_hdr::FNs*      ind_ns_next;   // hash next
+    algo::Smallstr16   ns;            // Namespace name (primary key)
+    algo::Smallstr50   nstype;        //
+    algo::Comment      comment;       //
+    src_hdr::FNsx*     c_nsx;         // optional pointer
 private:
     friend src_hdr::FNs&        ns_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend src_hdr::FNs*        ns_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -253,28 +404,6 @@ void                 ns_CopyOut(src_hdr::FNs &row, dmmeta::Ns &out) __attribute_
 // Copy fields in to row
 void                 ns_CopyIn(src_hdr::FNs &row, dmmeta::Ns &in) __attribute__((nothrow));
 
-// Return true if index is empty
-bool                 c_targsrc_EmptyQ(src_hdr::FNs& ns) __attribute__((nothrow));
-// Look up row by row id. Return NULL if out of range
-src_hdr::FTargsrc*   c_targsrc_Find(src_hdr::FNs& ns, u32 t) __attribute__((__warn_unused_result__, nothrow));
-// Return array of pointers
-algo::aryptr<src_hdr::FTargsrc*> c_targsrc_Getary(src_hdr::FNs& ns) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
-void                 c_targsrc_Insert(src_hdr::FNs& ns, src_hdr::FTargsrc& row) __attribute__((nothrow));
-// Insert pointer to row in array.
-// If row is already in the array, do nothing.
-// Return value: whether element was inserted into array.
-bool                 c_targsrc_InsertMaybe(src_hdr::FNs& ns, src_hdr::FTargsrc& row) __attribute__((nothrow));
-// Return number of items in the pointer array
-i32                  c_targsrc_N(const src_hdr::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
-// Find element using linear scan. If element is in array, remove, otherwise do nothing
-void                 c_targsrc_Remove(src_hdr::FNs& ns, src_hdr::FTargsrc& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-void                 c_targsrc_RemoveAll(src_hdr::FNs& ns) __attribute__((nothrow));
-// Reserve space in index for N more elements;
-void                 c_targsrc_Reserve(src_hdr::FNs& ns, u32 n) __attribute__((nothrow));
-
 // Insert row into pointer index. Return final membership status.
 bool                 c_nsx_InsertMaybe(src_hdr::FNs& ns, src_hdr::FNsx& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
@@ -282,13 +411,6 @@ void                 c_nsx_Remove(src_hdr::FNs& ns, src_hdr::FNsx& row) __attrib
 
 // Set all fields to initial values.
 void                 FNs_Init(src_hdr::FNs& ns);
-void                 ns_c_targsrc_curs_Reset(ns_c_targsrc_curs &curs, src_hdr::FNs &parent);
-// cursor points to valid item
-bool                 ns_c_targsrc_curs_ValidQ(ns_c_targsrc_curs &curs);
-// proceed to next item
-void                 ns_c_targsrc_curs_Next(ns_c_targsrc_curs &curs);
-// item access
-src_hdr::FTargsrc&   ns_c_targsrc_curs_Access(ns_c_targsrc_curs &curs);
 void                 FNs_Uninit(src_hdr::FNs& ns) __attribute__((nothrow));
 
 // --- src_hdr.FNsx
@@ -339,16 +461,79 @@ struct FSrc { // src_hdr.FSrc
 // Set all fields to initial values.
 void                 FSrc_Init(src_hdr::FSrc& parent);
 
+// --- src_hdr.FTarget
+// create: src_hdr.FDb.target (Lary)
+// global access: ind_target (Thash)
+// access: src_hdr.FTargsrc.p_target (Upptr)
+struct FTarget { // src_hdr.FTarget
+    src_hdr::FTarget*     ind_target_next;   // hash next
+    algo::Smallstr16      target;            //
+    algo::Smallstr50      license;           //
+    algo::Smallstr50      compat;            //   "Linux-%.%-%"
+    src_hdr::FTargsrc**   c_targsrc_elems;   // array of pointers
+    u32                   c_targsrc_n;       // array of pointers
+    u32                   c_targsrc_max;     // capacity of allocated array
+    src_hdr::FLicense*    p_license;         // reference to parent row
+    src_hdr::FNs*         p_ns;              // reference to parent row
+private:
+    friend src_hdr::FTarget&    target_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend src_hdr::FTarget*    target_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 target_RemoveAll() __attribute__((nothrow));
+    friend void                 target_RemoveLast() __attribute__((nothrow));
+    FTarget();
+    ~FTarget();
+    FTarget(const FTarget&){ /*disallow copy constructor */}
+    void operator =(const FTarget&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 target_CopyOut(src_hdr::FTarget &row, dev::Target &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 target_CopyIn(src_hdr::FTarget &row, dev::Target &in) __attribute__((nothrow));
+
+// Return true if index is empty
+bool                 c_targsrc_EmptyQ(src_hdr::FTarget& target) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+src_hdr::FTargsrc*   c_targsrc_Find(src_hdr::FTarget& target, u32 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array of pointers
+algo::aryptr<src_hdr::FTargsrc*> c_targsrc_Getary(src_hdr::FTarget& target) __attribute__((nothrow));
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+void                 c_targsrc_Insert(src_hdr::FTarget& target, src_hdr::FTargsrc& row) __attribute__((nothrow));
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+bool                 c_targsrc_InsertMaybe(src_hdr::FTarget& target, src_hdr::FTargsrc& row) __attribute__((nothrow));
+// Return number of items in the pointer array
+i32                  c_targsrc_N(const src_hdr::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void                 c_targsrc_Remove(src_hdr::FTarget& target, src_hdr::FTargsrc& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+void                 c_targsrc_RemoveAll(src_hdr::FTarget& target) __attribute__((nothrow));
+// Reserve space in index for N more elements;
+void                 c_targsrc_Reserve(src_hdr::FTarget& target, u32 n) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 FTarget_Init(src_hdr::FTarget& target);
+void                 target_c_targsrc_curs_Reset(target_c_targsrc_curs &curs, src_hdr::FTarget &parent);
+// cursor points to valid item
+bool                 target_c_targsrc_curs_ValidQ(target_c_targsrc_curs &curs);
+// proceed to next item
+void                 target_c_targsrc_curs_Next(target_c_targsrc_curs &curs);
+// item access
+src_hdr::FTargsrc&   target_c_targsrc_curs_Access(target_c_targsrc_curs &curs);
+void                 FTarget_Uninit(src_hdr::FTarget& target) __attribute__((nothrow));
+
 // --- src_hdr.FTargsrc
 // create: src_hdr.FDb.targsrc (Lary)
-// access: src_hdr.FNs.c_targsrc (Ptrary)
 // access: src_hdr.FSrc.p_targsrc (Upptr)
+// access: src_hdr.FTarget.c_targsrc (Ptrary)
 struct FTargsrc { // src_hdr.FTargsrc
-    algo::Smallstr100   targsrc;               //
-    algo::Comment       comment;               //
-    src_hdr::FNs*       p_ns;                  // reference to parent row
-    bool                select;                //   false  Temporary flag
-    bool                ns_c_targsrc_in_ary;   //   false  membership flag
+    algo::Smallstr100   targsrc;                   //
+    algo::Comment       comment;                   //
+    bool                select;                    //   false  Temporary flag
+    src_hdr::FTarget*   p_target;                  // reference to parent row
+    bool                target_c_targsrc_in_ary;   //   false  membership flag
 private:
     friend src_hdr::FTargsrc&   targsrc_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend src_hdr::FTargsrc*   targsrc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -474,12 +659,28 @@ struct _db_nsx_curs {// cursor
 };
 
 
-struct ns_c_targsrc_curs {// cursor
+struct _db_license_curs {// cursor
+    typedef src_hdr::FLicense ChildType;
+    src_hdr::FDb *parent;
+    i64 index;
+    _db_license_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_target_curs {// cursor
+    typedef src_hdr::FTarget ChildType;
+    src_hdr::FDb *parent;
+    i64 index;
+    _db_target_curs(){ parent=NULL; index=0; }
+};
+
+
+struct target_c_targsrc_curs {// cursor
     typedef src_hdr::FTargsrc ChildType;
     src_hdr::FTargsrc** elems;
     u32 n_elems;
     u32 index;
-    ns_c_targsrc_curs() { elems=NULL; n_elems=0; index=0; }
+    target_c_targsrc_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
 int                  main(int argc, char **argv);

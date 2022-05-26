@@ -27,7 +27,9 @@
 
 // -----------------------------------------------------------------------------
 
+#if GCC_VERSION >= 4
 #pragma GCC diagnostic ignored "-Warray-bounds"
+#endif
 
 void atf_amc::amctest_OptG() {
     {
@@ -117,7 +119,7 @@ void atf_amc::amctest_OptOptG7() {
 void atf_amc::amctest_OptG8() {
     u8 buf[1024];
     memset(buf, 0xff, sizeof(buf));
-    memptr mem(buf,sizeof(buf));
+    algo::memptr mem(buf,sizeof(buf));
 
     atf_amc::TypeG typeg;
     typeg.typeg = 0x12341234;
@@ -131,7 +133,7 @@ void atf_amc::amctest_OptG8() {
 void atf_amc::amctest_OptOptG8() {
     u8 buf[1024];
     memset(buf, 0xff, sizeof(buf));
-    memptr mem(buf,sizeof(buf));
+    algo::memptr mem(buf,sizeof(buf));
 
     atf_amc::TypeG typeg;
     typeg.typeg = 0xabcabc;

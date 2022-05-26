@@ -31,11 +31,11 @@
 
 // -----------------------------------------------------------------------------
 
-UnTime acr::FdModTime(algo::Fildes fd) {
+algo::UnTime acr::FdModTime(algo::Fildes fd) {
     struct stat S;
-    UnTime ret;
+    algo::UnTime ret;
     if (fstat(fd.value, &S)==0) {
-        ret = ToUnTime(UnixTime(S.st_mtime));
+        ret = ToUnTime(algo::UnixTime(S.st_mtime));
     }
     return ret;
 }

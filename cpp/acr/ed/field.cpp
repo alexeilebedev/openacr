@@ -192,6 +192,27 @@ void acr_ed::Main_DeleteField() {
 
 // -----------------------------------------------------------------------------
 
+void acr_ed::Main_RenameField() {
+    prlog("acr_ed.rename_field"
+          <<Keyval("field",acr_ed::_db.cmdline.field));
+    command::acr acr;
+    // if called as
+    // acr_ed -field a.B.c -rename d,
+    // rewrite as
+    // acr_ed -field a.B.c -rename a.B.d
+    vrfy(ind_field_Find(_db.cmdline.field), "no such field");
+    if (dmmeta::Field_ctype_Get(_db.cmdline.rename) == "") {
+        _db.cmdline.rename = tempstr() << dmmeta::Field_ctype_Get(_db.cmdline.field)
+                                       << "." << _db.cmdline.rename;
+    }
+    acr.query << "field:"<<acr_ed::_db.cmdline.field;
+    acr.rename=_db.cmdline.rename;
+    acr.write=true;
+    acr_ed::_db.script << acr_ToCmdline(acr) << eol;
+}
+
+// -----------------------------------------------------------------------------
+
 void acr_ed::Main_CreateField() {
     prlog("acr_ed.create_field"
           <<Keyval("field",acr_ed::_db.cmdline.field));
@@ -236,7 +257,7 @@ void acr_ed::Main_CreateField() {
     acr_ed::FCtype *parent = &acr_ed::ind_ctype_FindX(ctype_Get(field));
     acr_ed::FCtype *child = &acr_ed::ind_ctype_FindX(field.arg);
     if (StartsWithQ(name_Get(field),"p_")) {
-        TSwap(parent,child);
+        algo::TSwap(parent,child);
     }
 
     bool is_global = name_Get(*parent) == "FDb";
@@ -406,7 +427,7 @@ void acr_ed::InsertFieldExtras(strptr field, strptr arg, strptr reftype) {
 // This is equivalent to creating an FDb.ind_<name>
 void acr_ed::CreateHashIndex(dmmeta::Field &field) {
     tempstr ctype(ctype_Get(field));
-    tempstr ns(dmmeta::Ctype_ns_Get(ctype));
+    tempstr ns(ns_Get(field));
     dmmeta::Field hash;
     hash.field   = tempstr() << ns << ".FDb.ind_" << name_Get(field);
     hash.arg     = ctype;

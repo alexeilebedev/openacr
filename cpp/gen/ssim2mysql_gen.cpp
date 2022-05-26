@@ -16,6 +16,8 @@
 #include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
@@ -26,6 +28,7 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb     lib_json::_db;      // dependency found via dev.targdep
 algo_lib::FDb     algo_lib::_db;      // dependency found via dev.targdep
 lib_mysql::FDb    lib_mysql::_db;     // dependency found via dev.targdep
 ssim2mysql::FDb   ssim2mysql::_db;    // dependency found via dev.targdep
@@ -298,7 +301,7 @@ void ssim2mysql::trace_Print(ssim2mysql::trace & row, algo::cstring &str) {
 // --- ssim2mysql.FDb.ind_column.Find
 // Find row by key. Return NULL if not found.
 ssim2mysql::FColumn* ssim2mysql::ind_column_Find(const algo::strptr& key) {
-    u32 index = Smallstr100_Hash(0, key) & (_db.ind_column_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_column_buckets_n - 1);
     ssim2mysql::FColumn* *e = &_db.ind_column_buckets_elems[index];
     ssim2mysql::FColumn* ret=NULL;
     do {
@@ -340,7 +343,7 @@ bool ssim2mysql::ind_column_InsertMaybe(ssim2mysql::FColumn& row) {
     ind_column_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_column_next == (ssim2mysql::FColumn*)-1)) {// check if in hash already
-        u32 index = Smallstr100_Hash(0, row.column) & (_db.ind_column_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.column) & (_db.ind_column_buckets_n - 1);
         ssim2mysql::FColumn* *prev = &_db.ind_column_buckets_elems[index];
         do {
             ssim2mysql::FColumn* ret = *prev;
@@ -366,7 +369,7 @@ bool ssim2mysql::ind_column_InsertMaybe(ssim2mysql::FColumn& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void ssim2mysql::ind_column_Remove(ssim2mysql::FColumn& row) {
     if (LIKELY(row.ind_column_next != (ssim2mysql::FColumn*)-1)) {// check if in hash already
-        u32 index = Smallstr100_Hash(0, row.column) & (_db.ind_column_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.column) & (_db.ind_column_buckets_n - 1);
         ssim2mysql::FColumn* *prev = &_db.ind_column_buckets_elems[index]; // addr of pointer to current element
         while (ssim2mysql::FColumn *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -387,7 +390,7 @@ void ssim2mysql::ind_column_Reserve(int n) {
     u32 new_nelems   = _db.ind_column_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(ssim2mysql::FColumn*);
         u32 new_size = new_nbuckets * sizeof(ssim2mysql::FColumn*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -403,7 +406,7 @@ void ssim2mysql::ind_column_Reserve(int n) {
             while (elem) {
                 ssim2mysql::FColumn &row        = *elem;
                 ssim2mysql::FColumn* next       = row.ind_column_next;
-                u32 index          = Smallstr100_Hash(0, row.column) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.column) & (new_nbuckets-1);
                 row.ind_column_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1048,7 +1051,7 @@ void ssim2mysql::MainArgs(int argc, char **argv) {
 // --- ssim2mysql.FDb._db.MainLoop
 // Main loop.
 void ssim2mysql::MainLoop() {
-    SchedTime time(get_cycles());
+    algo::SchedTime time(algo::get_cycles());
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
@@ -1177,7 +1180,7 @@ bool ssim2mysql::_db_XrefMaybe() {
 // --- ssim2mysql.FDb.ind_ns.Find
 // Find row by key. Return NULL if not found.
 ssim2mysql::FNs* ssim2mysql::ind_ns_Find(const algo::strptr& key) {
-    u32 index = Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
+    u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
     ssim2mysql::FNs* *e = &_db.ind_ns_buckets_elems[index];
     ssim2mysql::FNs* ret=NULL;
     do {
@@ -1219,7 +1222,7 @@ bool ssim2mysql::ind_ns_InsertMaybe(ssim2mysql::FNs& row) {
     ind_ns_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ns_next == (ssim2mysql::FNs*)-1)) {// check if in hash already
-        u32 index = Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
         ssim2mysql::FNs* *prev = &_db.ind_ns_buckets_elems[index];
         do {
             ssim2mysql::FNs* ret = *prev;
@@ -1245,7 +1248,7 @@ bool ssim2mysql::ind_ns_InsertMaybe(ssim2mysql::FNs& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void ssim2mysql::ind_ns_Remove(ssim2mysql::FNs& row) {
     if (LIKELY(row.ind_ns_next != (ssim2mysql::FNs*)-1)) {// check if in hash already
-        u32 index = Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
         ssim2mysql::FNs* *prev = &_db.ind_ns_buckets_elems[index]; // addr of pointer to current element
         while (ssim2mysql::FNs *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1266,7 +1269,7 @@ void ssim2mysql::ind_ns_Reserve(int n) {
     u32 new_nelems   = _db.ind_ns_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(ssim2mysql::FNs*);
         u32 new_size = new_nbuckets * sizeof(ssim2mysql::FNs*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -1282,7 +1285,7 @@ void ssim2mysql::ind_ns_Reserve(int n) {
             while (elem) {
                 ssim2mysql::FNs &row        = *elem;
                 ssim2mysql::FNs* next       = row.ind_ns_next;
-                u32 index          = Smallstr16_Hash(0, row.ns) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr16_Hash(0, row.ns) & (new_nbuckets-1);
                 row.ind_ns_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1298,7 +1301,7 @@ void ssim2mysql::ind_ns_Reserve(int n) {
 // --- ssim2mysql.FDb.ind_ctype.Find
 // Find row by key. Return NULL if not found.
 ssim2mysql::FCtype* ssim2mysql::ind_ctype_Find(const algo::strptr& key) {
-    u32 index = Smallstr50_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
     ssim2mysql::FCtype* *e = &_db.ind_ctype_buckets_elems[index];
     ssim2mysql::FCtype* ret=NULL;
     do {
@@ -1340,7 +1343,7 @@ bool ssim2mysql::ind_ctype_InsertMaybe(ssim2mysql::FCtype& row) {
     ind_ctype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctype_next == (ssim2mysql::FCtype*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         ssim2mysql::FCtype* *prev = &_db.ind_ctype_buckets_elems[index];
         do {
             ssim2mysql::FCtype* ret = *prev;
@@ -1366,7 +1369,7 @@ bool ssim2mysql::ind_ctype_InsertMaybe(ssim2mysql::FCtype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void ssim2mysql::ind_ctype_Remove(ssim2mysql::FCtype& row) {
     if (LIKELY(row.ind_ctype_next != (ssim2mysql::FCtype*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         ssim2mysql::FCtype* *prev = &_db.ind_ctype_buckets_elems[index]; // addr of pointer to current element
         while (ssim2mysql::FCtype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1387,7 +1390,7 @@ void ssim2mysql::ind_ctype_Reserve(int n) {
     u32 new_nelems   = _db.ind_ctype_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(ssim2mysql::FCtype*);
         u32 new_size = new_nbuckets * sizeof(ssim2mysql::FCtype*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -1403,7 +1406,7 @@ void ssim2mysql::ind_ctype_Reserve(int n) {
             while (elem) {
                 ssim2mysql::FCtype &row        = *elem;
                 ssim2mysql::FCtype* next       = row.ind_ctype_next;
-                u32 index          = Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
                 row.ind_ctype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1419,7 +1422,7 @@ void ssim2mysql::ind_ctype_Reserve(int n) {
 // --- ssim2mysql.FDb.ind_field.Find
 // Find row by key. Return NULL if not found.
 ssim2mysql::FField* ssim2mysql::ind_field_Find(const algo::strptr& key) {
-    u32 index = Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
     ssim2mysql::FField* *e = &_db.ind_field_buckets_elems[index];
     ssim2mysql::FField* ret=NULL;
     do {
@@ -1461,7 +1464,7 @@ bool ssim2mysql::ind_field_InsertMaybe(ssim2mysql::FField& row) {
     ind_field_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_field_next == (ssim2mysql::FField*)-1)) {// check if in hash already
-        u32 index = Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
         ssim2mysql::FField* *prev = &_db.ind_field_buckets_elems[index];
         do {
             ssim2mysql::FField* ret = *prev;
@@ -1487,7 +1490,7 @@ bool ssim2mysql::ind_field_InsertMaybe(ssim2mysql::FField& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void ssim2mysql::ind_field_Remove(ssim2mysql::FField& row) {
     if (LIKELY(row.ind_field_next != (ssim2mysql::FField*)-1)) {// check if in hash already
-        u32 index = Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
         ssim2mysql::FField* *prev = &_db.ind_field_buckets_elems[index]; // addr of pointer to current element
         while (ssim2mysql::FField *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1508,7 +1511,7 @@ void ssim2mysql::ind_field_Reserve(int n) {
     u32 new_nelems   = _db.ind_field_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(ssim2mysql::FField*);
         u32 new_size = new_nbuckets * sizeof(ssim2mysql::FField*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -1524,7 +1527,7 @@ void ssim2mysql::ind_field_Reserve(int n) {
             while (elem) {
                 ssim2mysql::FField &row        = *elem;
                 ssim2mysql::FField* next       = row.ind_field_next;
-                u32 index          = Smallstr100_Hash(0, row.field) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.field) & (new_nbuckets-1);
                 row.ind_field_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1770,7 +1773,7 @@ bool ssim2mysql::ssimfile_XrefMaybe(ssim2mysql::FSsimfile &row) {
 // --- ssim2mysql.FDb.ind_ssimfile.Find
 // Find row by key. Return NULL if not found.
 ssim2mysql::FSsimfile* ssim2mysql::ind_ssimfile_Find(const algo::strptr& key) {
-    u32 index = Smallstr50_Hash(0, key) & (_db.ind_ssimfile_buckets_n - 1);
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ssimfile_buckets_n - 1);
     ssim2mysql::FSsimfile* *e = &_db.ind_ssimfile_buckets_elems[index];
     ssim2mysql::FSsimfile* ret=NULL;
     do {
@@ -1812,7 +1815,7 @@ bool ssim2mysql::ind_ssimfile_InsertMaybe(ssim2mysql::FSsimfile& row) {
     ind_ssimfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ssimfile_next == (ssim2mysql::FSsimfile*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
         ssim2mysql::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index];
         do {
             ssim2mysql::FSsimfile* ret = *prev;
@@ -1838,7 +1841,7 @@ bool ssim2mysql::ind_ssimfile_InsertMaybe(ssim2mysql::FSsimfile& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void ssim2mysql::ind_ssimfile_Remove(ssim2mysql::FSsimfile& row) {
     if (LIKELY(row.ind_ssimfile_next != (ssim2mysql::FSsimfile*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
         ssim2mysql::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index]; // addr of pointer to current element
         while (ssim2mysql::FSsimfile *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1859,7 +1862,7 @@ void ssim2mysql::ind_ssimfile_Reserve(int n) {
     u32 new_nelems   = _db.ind_ssimfile_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(ssim2mysql::FSsimfile*);
         u32 new_size = new_nbuckets * sizeof(ssim2mysql::FSsimfile*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -1875,7 +1878,7 @@ void ssim2mysql::ind_ssimfile_Reserve(int n) {
             while (elem) {
                 ssim2mysql::FSsimfile &row        = *elem;
                 ssim2mysql::FSsimfile* next       = row.ind_ssimfile_next;
-                u32 index          = Smallstr50_Hash(0, row.ssimfile) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr50_Hash(0, row.ssimfile) & (new_nbuckets-1);
                 row.ind_ssimfile_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1983,11 +1986,11 @@ static void ssim2mysql::zs_cmd_FirstChanged() {
 // --- ssim2mysql.FDb.zs_cmd.UpdateCycles
 // Update cycles count from previous clock capture
 inline static void ssim2mysql::zs_cmd_UpdateCycles() {
-    u64 cur_cycles                      = get_cycles();
+    u64 cur_cycles                      = algo::get_cycles();
     u64 prev_cycles                     = algo_lib::_db.clock.value;
     ++ssim2mysql::_db.trace.step_zs_cmd;
     ssim2mysql::_db.trace.step_zs_cmd_cycles  += cur_cycles - prev_cycles;
-    algo_lib::_db.clock                 = SchedTime(cur_cycles);
+    algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
 // --- ssim2mysql.FDb.zs_cmd.Call
@@ -2259,11 +2262,11 @@ static void ssim2mysql::cd_input_line_FirstChanged() {
 // --- ssim2mysql.FDb.cd_input_line.UpdateCycles
 // Update cycles count from previous clock capture
 inline static void ssim2mysql::cd_input_line_UpdateCycles() {
-    u64 cur_cycles                      = get_cycles();
+    u64 cur_cycles                      = algo::get_cycles();
     u64 prev_cycles                     = algo_lib::_db.clock.value;
     ++ssim2mysql::_db.trace.step_cd_input_line;
     ssim2mysql::_db.trace.step_cd_input_line_cycles  += cur_cycles - prev_cycles;
-    algo_lib::_db.clock                 = SchedTime(cur_cycles);
+    algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
 // --- ssim2mysql.FDb.cd_input_line.Call
@@ -2344,7 +2347,7 @@ void ssim2mysql::FDb_Init() {
     }
     // cmd: initialize Tpool
     _db.cmd_free      = NULL;
-    _db.cmd_blocksize = BumpToPow2(64 * sizeof(ssim2mysql::FCmd)); // allocate 64-127 elements at a time
+    _db.cmd_blocksize = algo::BumpToPow2(64 * sizeof(ssim2mysql::FCmd)); // allocate 64-127 elements at a time
     // initialize LAry column (ssim2mysql.FDb.column)
     _db.column_n = 0;
     memset(_db.column_lary, 0, sizeof(_db.column_lary)); // zero out all level pointers
@@ -2417,7 +2420,7 @@ void ssim2mysql::FDb_Init() {
     _db.n_cmd_rows = u32(0);
     // input: initialize Tpool
     _db.input_free      = NULL;
-    _db.input_blocksize = BumpToPow2(64 * sizeof(ssim2mysql::FInput)); // allocate 64-127 elements at a time
+    _db.input_blocksize = algo::BumpToPow2(64 * sizeof(ssim2mysql::FInput)); // allocate 64-127 elements at a time
     _db.zd_ssimfile_head = NULL; // (ssim2mysql.FDb.zd_ssimfile)
     _db.zd_ssimfile_tail = NULL; // (ssim2mysql.FDb.zd_ssimfile)
     _db.cd_input_line_head = NULL; // (ssim2mysql.FDb.cd_input_line)
@@ -2597,8 +2600,8 @@ void ssim2mysql::in_buf_EndRead(ssim2mysql::FInput& input) {
 // SkipMsg will skip both the line and the deliminter.
 // A partial line at the end of input is NOT returned (TODO?)
 // 
-aryptr<char> ssim2mysql::in_buf_GetMsg(ssim2mysql::FInput& input) {
-    aryptr<char> ret;
+algo::aryptr<char> ssim2mysql::in_buf_GetMsg(ssim2mysql::FInput& input) {
+    algo::aryptr<char> ret;
     if (!input.in_buf_msgvalid) {
         in_buf_Scanmsg(input);
         if (!input.in_buf_msgvalid) {
@@ -3121,7 +3124,7 @@ bool ssim2mysql::value_SetStrptrMaybe(ssim2mysql::FieldId& parent, algo::strptr 
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,ssim2mysql_FieldId_value); ret = true; break;
                 }
@@ -3201,7 +3204,7 @@ bool ssim2mysql::value_SetStrptrMaybe(ssim2mysql::TableId& parent, algo::strptr 
     bool ret = false;
     switch (elems_N(rhs)) {
         case 9: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','N'): {
                     if (memcmp(rhs.elems+8,"s",1)==0) { value_SetEnum(parent,ssim2mysql_TableId_dmmeta_Ns); ret = true; break; }
                     break;
@@ -3214,7 +3217,7 @@ bool ssim2mysql::value_SetStrptrMaybe(ssim2mysql::TableId& parent, algo::strptr 
             break;
         }
         case 12: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','C'): {
                     if (memcmp(rhs.elems+8,"type",4)==0) { value_SetEnum(parent,ssim2mysql_TableId_dmmeta_Ctype); ret = true; break; }
                     break;
@@ -3235,7 +3238,7 @@ bool ssim2mysql::value_SetStrptrMaybe(ssim2mysql::TableId& parent, algo::strptr 
             break;
         }
         case 13: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','S'): {
                     if (memcmp(rhs.elems+8,"ubstr",5)==0) { value_SetEnum(parent,ssim2mysql_TableId_dmmeta_Substr); ret = true; break; }
                     break;
@@ -3248,7 +3251,7 @@ bool ssim2mysql::value_SetStrptrMaybe(ssim2mysql::TableId& parent, algo::strptr 
             break;
         }
         case 14: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','S'): {
                     if (memcmp(rhs.elems+8,"qltype",6)==0) { value_SetEnum(parent,ssim2mysql_TableId_dmmeta_Sqltype); ret = true; break; }
                     break;
@@ -3261,7 +3264,7 @@ bool ssim2mysql::value_SetStrptrMaybe(ssim2mysql::TableId& parent, algo::strptr 
             break;
         }
         case 15: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','S'): {
                     if (memcmp(rhs.elems+8,"simfile",7)==0) { value_SetEnum(parent,ssim2mysql_TableId_dmmeta_Ssimfile); ret = true; break; }
                     break;
@@ -3313,6 +3316,7 @@ void ssim2mysql::TableId_Print(ssim2mysql::TableId & row, algo::cstring &str) {
 // --- ssim2mysql...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         lib_mysql::FDb_Init();
         ssim2mysql::FDb_Init();
@@ -3331,10 +3335,13 @@ int main(int argc, char **argv) {
         ssim2mysql::FDb_Uninit();
         lib_mysql::FDb_Uninit();
         algo_lib::FDb_Uninit();
-    } catch(algo_lib::ErrorX &x) {
+        lib_json::FDb_Uninit();
+    } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;
     }
+    // only the lower 1 byte makes it to the outside world
+    (void)i32_UpdateMin(algo_lib::_db.exit_code,255);
     return algo_lib::_db.exit_code;
 }
 

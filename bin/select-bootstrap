@@ -1,6 +1,9 @@
 #!/usr/bin/env perl
 use strict;
-my $uname=`uname -s`;
+# on cygwin, uname -s returns CYGWIN_NT-10.0
+# so we need to strip out the version number from it
+# on other platforms, uname -s returns Linux, Darwin, FreeBSD
+my $uname=`uname -s | sed 's/-.*//'`;
 chomp $uname;
 my $arch=`uname -m`;
 chomp $arch;
@@ -8,7 +11,8 @@ my $cfg="release";
 my $rc=0;
 my $found=0;
 my $builddir;
-for my $compiler ('clang++', 'g++') {
+# prefer g++
+for my $compiler ('g++', 'clang++') {
     $builddir = "$uname-$compiler.$cfg-$arch";
     print "#   considering $builddir\n";
     my $bsfile = "bin/bootstrap/$builddir";

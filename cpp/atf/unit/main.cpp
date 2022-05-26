@@ -27,6 +27,21 @@
 
 #include "include/atf_unit.h"
 
+// -----------------------------------------------------------------------------
+
+// Compare contents of file `outfname` with the reference file.
+// Any difference = error
+void atf_unit::CompareOutput(strptr outfname) {
+    tempstr expect_fname = tempstr() << "test/atf_unit/" << atf_unit::_db.c_curtest->unittest;
+    if (_db.cmdline.capture) {
+        CopyFileX(outfname, expect_fname, 0644);
+    } else {
+        vrfy_(SysCmd(tempstr()
+                     << "git diff --no-index "
+                     << " " << expect_fname
+                     << " " << outfname) == 0);
+    }
+}
 
 // -----------------------------------------------------------------------------
 
@@ -47,60 +62,72 @@ static void Main_Debug() {
 
 // -----------------------------------------------------------------------------
 
-static void Main_Test(atf_unit::FUnittest &test, int temp_fd) {
-    atf_unit::_db.c_test = &test;
-    bool do_exit = false;// used in case of forking
-    bool do_output = true;
-    bool do_test = true;// only child runs test if forking
-    bool do_fork = !atf_unit::_db.cmdline.nofork;
-    int child_pid = 0;
-    if (do_test && do_fork) {
-        child_pid = fork();
-        errno_vrfy(child_pid!=-1, "fork");
-        do_test = child_pid == 0;
-        do_exit = child_pid == 0;
-    }
-    if (do_test) {
+static void CheckUntrackedFiles(cstring &comment) {
+    cstring untracked_files=SysEval("git status -u --porcelain",FailokQ(false),1024*1024);
+    algo::ListSep ls;
+    ind_beg(Line_curs,line,untracked_files) {
+        if (StartsWithQ(line,"??")) {
+            comment << ls << Pathcomp(line," LR");
+        }
+    }ind_end;
+}
+
+static void Main_CheckUntrackedFiles() {
+    cstring untracked_files;
+    CheckUntrackedFiles(untracked_files);
+    vrfy(untracked_files == ""
+         , tempstr()
+         <<"atf_unit.untracked_files"
+         <<Keyval("files",untracked_files)
+         <<Keyval("comment", "Please remove any untracked files before running atf_unit"));
+}
+
+// -----------------------------------------------------------------------------
+
+// Run specified test (called both with -nofork and without)
+void atf_unit::Main_Test(atf_unit::FUnittest &test) {
+    atf_unit::_db.c_curtest = &test;
+    cstring comment;
+    if (atf_unit::_db.cmdline.nofork) {
         try {
-            if (do_fork) {
-                alarm(atf_unit::_db.cmdline.pertest_timeout);// reasonable timeout
-            }
-            value_SetEnum(test.c_testrun->testresult, atf_Testresult_PASSED);
+            alarm(atf_unit::_db.cmdline.pertest_timeout);// reasonable timeout
             (*test.step)();
         }catch(algo_lib::ErrorX &x) {
-            prerr("error "<<x);
-            value_SetEnum(test.c_testrun->testresult,atf_Testresult_FAILED);
-            test.c_testrun->comment <<x; // algo.Comment may be too small to handle big exception
+            comment << "error "<<x;
         }
-    }
-    // parent: wait for child
-    if (do_fork && child_pid != 0) {
-        int status = 0;
-        int ret    = waitpid(0,&status,0);
-        vrfy(ret == child_pid, "waitpid");
-        if (status != 0) {
-            value_SetEnum(test.c_testrun->testresult,atf_Testresult_FAILED);
-            test.c_testrun->comment << "Subprocess exited with code "<<status;
-            if (WIFSIGNALED(status)) {
-                test.c_testrun->comment << " ("<<strsignal(WTERMSIG(status))<<")";
+    } else {
+        command::atf_unit_proc cmd;
+        cmd.path = "/proc/self/exe";
+        cmd.cmd.unittest.expr = test.unittest;
+        cmd.cmd.capture = atf_unit::_db.cmdline.capture;
+        cmd.cmd.perf_secs = atf_unit::_db.cmdline.perf_secs;
+        cmd.cmd.pertest_timeout = atf_unit::_db.cmdline.pertest_timeout;
+        cmd.cmd.data_dir = atf_unit::_db.cmdline.data_dir;
+        cmd.cmd.nofork = true;
+        cmd.cmd.report = false;// prevent double reporting
+        int rc = atf_unit_Exec(cmd);
+        if (rc!=0) {
+            comment << "Subprocess exited with code "<<cmd.status;
+        } else {
+            // check for untracked files
+            tempstr files;
+            CheckUntrackedFiles(files);
+            if (files != "") {
+                comment << "Test created untracked files: "<<files;
             }
         }
-        do_output = false;// parent doesn't print testrun record, child will!
     }
-    // child atf runs in a separate process, so it must use file i/o
-    // to report test results.
-    if (do_output) {
-        tempstr out;
-        atf::Testrun testrun;
-        atf_unit::testrun_CopyOut(*test.c_testrun, testrun);
-        out << testrun << eol;
-        ssize_t ret = write(temp_fd,out.ch_elems,out.ch_n);
-        (void)ret; // ignore value
-    }
-    if (do_exit) {
-        close(temp_fd);
-        // MUST call exit, not _exit, to ensure coverage files get written out
-        exit(atf_unit::_db.report.n_err);
+    test.comment.value = comment;
+    test.success = comment == "";
+    // only the instance of atf_unit that actually executed the test
+    // reports on it, because test.comment may contain information obtained
+    // from running the test.
+    if (atf_unit::_db.cmdline.nofork){
+        prlog("atf_unit.unittest"
+              <<Keyval("unittest",test.unittest)
+              <<Keyval("success",test.success)
+              <<Keyval("comment",comment)
+              );
     }
 }
 
@@ -113,104 +140,11 @@ void atf_unit::unittest_amc_Unit() {
 
 // -----------------------------------------------------------------------------
 
-void atf_unit::Main() {
-    atf_unit::_db.perf_cycle_budget = ToSchedTime(atf_unit::_db.cmdline.perf_secs);
-
-    ind_beg(atf_unit::_db_unittest_curs,unittest, atf_unit::_db) {
-        atf_unit::_db.report.n_test_total++;
-        bool match = Regx_Match(atf_unit::_db.cmdline.unittest, unittest.unittest);
-        unittest.select = match;
-        atf_unit::_db.report.n_test_run += unittest.select;
-    }ind_end;
-
-    // Useful warning
-    if (atf_unit::_db.report.n_test_run==0) {
-        prerr("atf_uniq.regex_warning"
-              <<Keyval("regex", atf_unit::_db.cmdline.unittest)
-              <<Keyval("comment", "no tests match regx. See 'acr unittest' for a complete list of runnable tests"));
-    }
-
-    if (atf_unit::_db.cmdline.debug) {
-        Main_Debug();
-        _exit(0);
-    }
-
-    // create testrun objects -- one for selected test, always from scratch.
-    atf_unit::testrun_RemoveAll();
-    ind_beg(atf_unit::_db_unittest_curs,unittest, atf_unit::_db) if (unittest.select) {
-        atf_unit::FTestrun &testrun = atf_unit::testrun_Alloc();
-        testrun.testrun = unittest.unittest;
-        vrfy(testrun_XrefMaybe(testrun), algo_lib::_db.errtext);
-    }ind_end;
-
-    // a temp. file is used to write test results from child subprocesses.
-    // it'd be nice to use a table, but a table cannot be shared between processes.
-    algo_lib::FTempfile tempfile;
-    TempfileInitX(tempfile,"atf_unit.out");
-
-    ind_beg(atf_unit::_db_unittest_curs,unittest, atf_unit::_db) if (unittest.select) {// loop over selected tests
-        Main_Test(unittest, tempfile.fildes.fd.value);
-    }ind_end;
-
-    // merge testrun results as written by child processes
-    cstring tempdata(FileToString(tempfile.filename));
-    ind_beg(Line_curs,line,tempdata) {
-        atf::Testrun testrun;
-        if (Testrun_ReadStrptrMaybe(testrun,line)) {
-            atf_unit::FTestrun *ftestrun = atf_unit::ind_testrun_Find(testrun.testrun);
-            if (ftestrun) {
-                // worsen testresult.
-                // child may say the test is a success, but if we know the child exited with nonzero status,
-                // we must declare it a failure.
-                if (ftestrun->testresult == atf_Testresult_UNTESTED) {
-                    ftestrun->testresult = testrun.testresult;
-                }
-                ftestrun->n_step += testrun.n_step;
-                ftestrun->n_cmp += testrun.n_cmp;
-                ftestrun->comment = tempstr() << ftestrun->comment << testrun.comment;
-                // all other attributes are already known here in the parent process
-            }
-        }
-    }ind_end;
-    Refurbish(tempfile);
-
-    // update error counter
-    ind_beg(atf_unit::_db_testrun_curs, testrun, atf_unit::_db) {
-        atf_unit::_db.report.n_test_total += 1;
-        atf_unit::_db.report.n_test_run   += testrun.p_test->select;
-        atf_unit::_db.report.n_test_step  += testrun.n_step;
-        atf_unit::_db.report.n_cmp        += testrun.n_cmp;
-        atf_unit::_db.report.n_err        += testrun.testresult != atf_Testresult_PASSED && testrun.testresult != atf_Testresult_UNTESTED;
-    }ind_end;
-
-    // print all tests
-    ind_beg(atf_unit::_db_testrun_curs, testrun, atf_unit::_db) if (testrun.testresult != atf_Testresult_FAILED) {
-        atf::Testrun _testrun;
-        atf_unit::testrun_CopyOut(testrun, _testrun);
-        prlog(_testrun);
-    }ind_end;
-
-    // printed failed tests at the end
-    ind_beg(atf_unit::_db_testrun_curs, testrun, atf_unit::_db) if (testrun.testresult == atf_Testresult_FAILED) {
-        atf::Testrun _testrun;
-        atf_unit::testrun_CopyOut(testrun, _testrun);
-        prlog(_testrun);
-    }ind_end;
-
-    // print report
-    // report.n_test_step is reported incorrectly, because the value is not collected
-    // from child processes!
-    prlog(atf_unit::_db.report);
-    algo_lib::_db.exit_code = atf_unit::_db.report.n_err;// zero errors = zero exit code
-}
-
-// -----------------------------------------------------------------------------
-
 // usage:
 // DO_PERF_TEST("Testing XYZ",xyz());
 // The expression will be evaluated for 2 seconds, after which average speed will be printed.
 void atf_unit::PrintPerfSample(const strptr& action, u64 nloops, u64 clocks) {
-    UnDiff time_per_loop(clocks * (1e9/get_cpu_hz()) / nloops);
+    algo::UnDiff time_per_loop(clocks * (1e9/algo::get_cpu_hz()) / nloops);
     prlog("atf_unit.perf"
           <<Keyval("action",action)
           <<Keyval("nloops",nloops)
@@ -220,20 +154,13 @@ void atf_unit::PrintPerfSample(const strptr& action, u64 nloops, u64 clocks) {
 // -----------------------------------------------------------------------------
 
 void atf_unit::Testcmp(const char *file, int line, strptr value, strptr expect, bool eq) {
-    atf_unit::_db.c_test->c_testrun->n_cmp++;
     if (!eq) {
         prerr(file<<":"<<line<<": atf_unit.fail"
-              <<Keyval("unittest", atf_unit::_db.c_test->unittest)
+              <<Keyval("unittest", atf_unit::_db.c_curtest->unittest)
               <<Keyval("expression",value)
               <<Keyval("expected_value",value)
               <<Keyval("comment", "Expression doesn't match expected value"));
-        atf_unit::FUnittest &test = *atf_unit::_db.c_test;
-        if (!ch_N(test.c_testrun->comment)) {
-            test.c_testrun->comment
-                <<Keyval("value",value)
-                <<Keyval("expect",expect);
-        }
-        value_SetEnum(test.c_testrun->testresult,atf_Testresult_FAILED);
+        vrfy(0,tempstr()<<Keyval("value",value)<<Keyval("expect",expect));
         atf_unit::_db.report.n_err++;
     }
 }
@@ -242,4 +169,69 @@ void atf_unit::Testcmp(const char *file, int line, strptr value, strptr expect, 
 
 void atf_unit::Testcmp(const char *file, int line, const char *value, const char *expect, bool eq) {
     Testcmp(file, line, strptr(value), strptr(expect), eq);
+}
+
+// -----------------------------------------------------------------------------
+
+void atf_unit::unittest_atf_unit_Outfile() {
+    ind_beg(algo::Dir_curs,entry,"test/atf_unit/*") {
+        if (!EndsWithQ(entry.filename,"~")) {
+            vrfy(atf_unit::ind_unittest_Find(entry.filename)
+                 ,tempstr()<<"foreign file "<<entry.pathname);
+        }
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
+void atf_unit::Main() {
+
+    atf_unit::_db.perf_cycle_budget = algo::ToSchedTime(atf_unit::_db.cmdline.perf_secs);
+
+    int nsel=0;
+    ind_beg(atf_unit::_db_unittest_curs,unittest, atf_unit::_db) {
+        atf_unit::_db.report.n_test_total++;
+        bool match = Regx_Match(atf_unit::_db.cmdline.unittest, unittest.unittest);
+        unittest.select = match;
+        nsel += unittest.select;
+    }ind_end;
+
+    // Useful warning
+    if (nsel==0) {
+        prerr("atf_uniq.regex_warning"
+              <<Keyval("regex", atf_unit::_db.cmdline.unittest)
+              <<Keyval("comment", "no tests match regx. See 'acr unittest' for a complete list of runnable tests"));
+    }
+
+    // Drop into debugger
+    if (atf_unit::_db.cmdline.debug) {
+        Main_Debug();
+        _exit(0);
+    }
+
+    Main_CheckUntrackedFiles();
+
+    atf_unit::_db.report.n_test_total += atf_unit::unittest_N();
+    ind_beg(atf_unit::_db_unittest_curs,unittest, atf_unit::_db) if (unittest.select) {
+        Main_Test(unittest);
+        atf_unit::_db.report.n_test_run++;
+        atf_unit::_db.report.n_err += unittest.success==false;
+    }ind_end;
+
+    atf_unit::_db.report.success = atf_unit::_db.report.n_err==0;
+    algo_lib::_db.exit_code = atf_unit::_db.report.n_err;// zero errors = zero exit code
+
+    // show failed tests again
+    if (_db.cmdline.report) {
+        ind_beg(atf_unit::_db_unittest_curs, unittest, atf_unit::_db) {
+            if (unittest.select && !unittest.success) {
+                prlog("atf_unit.unittest"
+                      <<Keyval("unittest",unittest.unittest)
+                      <<Keyval("success",unittest.success)
+                      <<Keyval("repro",tempstr()<<"atf_unit "<<unittest.unittest)
+                      );
+            }
+        }ind_end;
+        prlog(atf_unit::_db.report);
+    }
 }

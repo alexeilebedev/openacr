@@ -133,20 +133,23 @@ void algo::Line_curs_Next(Line_curs &curs) {
 // A partial line at the end of the file is returned.
 bool algo_lib::ReadLine(algo_lib::InTextFile &file, algo::strptr &result) {
     // attempt to grab a line from in-memory buffer
-    bool ret = LinebufNext(file.line_buf,result);
-    while (!ret && !file.line_buf.eof) {
-        ssize_t len = read(file.file.fd.value, file.temp_buf_data, ssizeof(file.temp_buf_data));
-        // pipes can return a few bytes at a time, without filling a whole line.
-        // keep reading until we get a full line, or end of file is detected
-        // if we were passed a non-blocking file descriptor, keep going. it wastes CPU,
-        // but that's not our problem, it's the caller's problem.
-        if (len >= 0) {
-            bool implied_eof = len==0;
-            LinebufBegin(file.line_buf, memptr(file.temp_buf_data,len), implied_eof);
-            ret = LinebufNext(file.line_buf, result);
-        } else if (errno != EAGAIN) {
-            ret = false;
-            break;
+    bool ret = false;
+    if (algo::ValidQ(file.file.fd)) {
+        ret = LinebufNext(file.line_buf,result);
+        while (!ret && !file.line_buf.eof) {
+            ssize_t len = read(file.file.fd.value, file.temp_buf_data, ssizeof(file.temp_buf_data));
+            // pipes can return a few bytes at a time, without filling a whole line.
+            // keep reading until we get a full line, or end of file is detected
+            // if we were passed a non-blocking file descriptor, keep going. it wastes CPU,
+            // but that's not our problem, it's the caller's problem.
+            if (len >= 0) {
+                bool implied_eof = len==0;
+                LinebufBegin(file.line_buf, algo::memptr(file.temp_buf_data,len), implied_eof);
+                ret = LinebufNext(file.line_buf, result);
+            } else if (errno != EAGAIN) {
+                ret = false;
+                break;
+            }
         }
     }
     return ret;

@@ -82,6 +82,7 @@ namespace atf_amc { // update-hdr
     // At each step, check that total field has the expected value
     // void amctest_BitfldNet();
     // void amctest_BitfldTuple();
+    // void amctest_BitfldBitset();
 
     // -------------------------------------------------------------------
     // cpp/atf/amc/cascdel.cpp

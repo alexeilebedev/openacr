@@ -16,6 +16,10 @@ namespace algo {
     static bool          read_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          write_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          _throw_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          temp_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          overlap_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          linear_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    static bool          printerr_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          read_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          write_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          eof_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) __attribute__((nothrow));
@@ -260,13 +264,15 @@ void algo::ch_RemoveLast(algo::cstring& error) {
 // Make sure N elements fit in array. Process dies if out of memory
 void algo::ch_AbsReserve(algo::cstring& error, int n) {
     u32 old_max  = error.ch_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::lpool_ReallocMem(error.ch_elems, old_max * sizeof(char), new_max * sizeof(char));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("algo.tary_nomem  field:algo.cstring.ch  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::lpool_ReallocMem(error.ch_elems, old_max * sizeof(char), new_max * sizeof(char));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("algo.tary_nomem  field:algo.cstring.ch  comment:'out of memory'");
+        }
+        error.ch_elems = (char*)new_mem;
+        error.ch_max = new_max;
     }
-    error.ch_elems = (char*)new_mem;
-    error.ch_max = new_max;
 }
 
 // --- algo.cstring.ch.Setary
@@ -450,13 +456,15 @@ void algo::attrs_RemoveLast(algo::Tuple& parent) {
 // Make sure N elements fit in array. Process dies if out of memory
 void algo::attrs_AbsReserve(algo::Tuple& parent, int n) {
     u32 old_max  = parent.attrs_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(parent.attrs_elems, old_max * sizeof(algo::Attr), new_max * sizeof(algo::Attr));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("algo.tary_nomem  field:algo.Tuple.attrs  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.attrs_elems, old_max * sizeof(algo::Attr), new_max * sizeof(algo::Attr));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("algo.tary_nomem  field:algo.Tuple.attrs  comment:'out of memory'");
+        }
+        parent.attrs_elems = (algo::Attr*)new_mem;
+        parent.attrs_max = new_max;
     }
-    parent.attrs_elems = (algo::Attr*)new_mem;
-    parent.attrs_max = new_max;
 }
 
 // --- algo.Tuple.attrs.Setary
@@ -570,13 +578,15 @@ void algo::proto_RemoveLast(algo::Argtuple& parent) {
 // Make sure N elements fit in array. Process dies if out of memory
 void algo::proto_AbsReserve(algo::Argtuple& parent, int n) {
     u32 old_max  = parent.proto_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(parent.proto_elems, old_max * sizeof(algo::ArgProto), new_max * sizeof(algo::ArgProto));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("algo.tary_nomem  field:algo.Argtuple.proto  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.proto_elems, old_max * sizeof(algo::ArgProto), new_max * sizeof(algo::ArgProto));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("algo.tary_nomem  field:algo.Argtuple.proto  comment:'out of memory'");
+        }
+        parent.proto_elems = (algo::ArgProto*)new_mem;
+        parent.proto_max = new_max;
     }
-    parent.proto_elems = (algo::ArgProto*)new_mem;
-    parent.proto_max = new_max;
 }
 
 // --- algo.Argtuple.proto.Setary
@@ -671,13 +681,15 @@ void algo::error_RemoveLast(algo::Argtuple& parent) {
 // Make sure N elements fit in array. Process dies if out of memory
 void algo::error_AbsReserve(algo::Argtuple& parent, int n) {
     u32 old_max  = parent.error_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(parent.error_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("algo.tary_nomem  field:algo.Argtuple.error  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.error_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("algo.tary_nomem  field:algo.Argtuple.error  comment:'out of memory'");
+        }
+        parent.error_elems = (algo::cstring*)new_mem;
+        parent.error_max = new_max;
     }
-    parent.error_elems = (algo::cstring*)new_mem;
-    parent.error_max = new_max;
 }
 
 // --- algo.Argtuple.error.Setary
@@ -837,13 +849,15 @@ void algo::out_RemoveLast(algo::Arrsimp& parent) {
 // Make sure N elements fit in array. Process dies if out of memory
 void algo::out_AbsReserve(algo::Arrsimp& parent, int n) {
     u32 old_max  = parent.out_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(parent.out_elems, old_max * sizeof(i32), new_max * sizeof(i32));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("algo.tary_nomem  field:algo.Arrsimp.out  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.out_elems, old_max * sizeof(i32), new_max * sizeof(i32));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("algo.tary_nomem  field:algo.Arrsimp.out  comment:'out of memory'");
+        }
+        parent.out_elems = (i32*)new_mem;
+        parent.out_max = new_max;
     }
-    parent.out_elems = (i32*)new_mem;
-    parent.out_max = new_max;
 }
 
 // --- algo.Arrsimp.out.Setary
@@ -926,13 +940,15 @@ void algo::stack_RemoveLast(algo::Arrsimp& parent) {
 // Make sure N elements fit in array. Process dies if out of memory
 void algo::stack_AbsReserve(algo::Arrsimp& parent, int n) {
     u32 old_max  = parent.stack_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(parent.stack_elems, old_max * sizeof(algo::i32_Range), new_max * sizeof(algo::i32_Range));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("algo.tary_nomem  field:algo.Arrsimp.stack  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.stack_elems, old_max * sizeof(algo::i32_Range), new_max * sizeof(algo::i32_Range));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("algo.tary_nomem  field:algo.Arrsimp.stack  comment:'out of memory'");
+        }
+        parent.stack_elems = (algo::i32_Range*)new_mem;
+        parent.stack_max = new_max;
     }
-    parent.stack_elems = (algo::i32_Range*)new_mem;
-    parent.stack_max = new_max;
 }
 
 // --- algo.Arrsimp.stack.Setary
@@ -1013,7 +1029,7 @@ bool algo::value_SetStrptrMaybe(algo::Bool& parent, algo::strptr rhs) {
             break;
         }
         case 2: {
-            switch (u64(ReadLE16(rhs.elems))) {
+            switch (u64(algo::ReadLE16(rhs.elems))) {
                 case LE_STR2('n','o'): {
                     value_SetEnum(parent,algo_Bool_no); ret = true; break;
                 }
@@ -1024,7 +1040,7 @@ bool algo::value_SetStrptrMaybe(algo::Bool& parent, algo::strptr rhs) {
             break;
         }
         case 3: {
-            switch (u64(ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
                 case LE_STR3('o','f','f'): {
                     value_SetEnum(parent,algo_Bool_off); ret = true; break;
                 }
@@ -1035,7 +1051,7 @@ bool algo::value_SetStrptrMaybe(algo::Bool& parent, algo::strptr rhs) {
             break;
         }
         case 4: {
-            switch (u64(ReadLE32(rhs.elems))) {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('t','r','u','e'): {
                     value_SetEnum(parent,algo_Bool_true); ret = true; break;
                 }
@@ -1043,7 +1059,7 @@ bool algo::value_SetStrptrMaybe(algo::Bool& parent, algo::strptr rhs) {
             break;
         }
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('f','a','l','s','e'): {
                     value_SetEnum(parent,algo_Bool_false); ret = true; break;
                 }
@@ -1144,13 +1160,15 @@ void algo::ary_RemoveLast(algo::ByteAry& parent) {
 // Make sure N elements fit in array. Process dies if out of memory
 void algo::ary_AbsReserve(algo::ByteAry& parent, int n) {
     u32 old_max  = parent.ary_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(parent.ary_elems, old_max * sizeof(u8), new_max * sizeof(u8));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("algo.tary_nomem  field:algo.ByteAry.ary  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.ary_elems, old_max * sizeof(u8), new_max * sizeof(u8));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("algo.tary_nomem  field:algo.ByteAry.ary  comment:'out of memory'");
+        }
+        parent.ary_elems = (u8*)new_mem;
+        parent.ary_max = new_max;
     }
-    parent.ary_elems = (u8*)new_mem;
-    parent.ary_max = new_max;
 }
 
 // --- algo.ByteAry.ary.Setary
@@ -1200,7 +1218,7 @@ void algo::ch_Print(algo::Charset& parent, algo::cstring &lhs) {
 bool algo::ch_ReadStrptrMaybe(algo::Charset& parent, algo::strptr in_str) {
     bool retval = true;
     for (int i=0; in_str != "" && i < ch_Max(parent); i++) {
-        strptr token;
+        algo::strptr token;
         algo::NextSep(in_str, ',', token);
         retval = u64_ReadStrptrMaybe(parent.ch_elems[i], token);
         if (!retval) {
@@ -1331,7 +1349,7 @@ algo::strptr algo::Dbbox_GetAnon(algo::Dbbox &parent, i32 idx) {
     switch(idx) {
         case(0): return strptr("min", 3);
         case(1): return strptr("max", 3);
-        default: return strptr();
+        default: return algo::strptr();
     }
 }
 
@@ -1344,7 +1362,6 @@ void algo::DirEntry_Init(algo::DirEntry& parent) {
     parent.match = bool(false);
     parent.is_dir = bool(false);
     parent.dir_handle = NULL;
-    parent.dir_ent = NULL;
 }
 
 // --- algo.DirEntry..Uninit
@@ -1391,7 +1408,7 @@ bool algo::value_SetStrptrMaybe(algo::EchoQ& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 4: {
-            switch (u64(ReadLE32(rhs.elems))) {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('t','r','u','e'): {
                     value_SetEnum(parent,algo_EchoQ_true); ret = true; break;
                 }
@@ -1399,7 +1416,7 @@ bool algo::value_SetStrptrMaybe(algo::EchoQ& parent, algo::strptr rhs) {
             break;
         }
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('f','a','l','s','e'): {
                     value_SetEnum(parent,algo_EchoQ_false); ret = true; break;
                 }
@@ -1455,7 +1472,7 @@ bool algo::value_SetStrptrMaybe(algo::Errns& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
-            switch (u64(ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
                 case LE_STR3('w','i','n'): {
                     value_SetEnum(parent,algo_Errns_win); ret = true; break;
                 }
@@ -1463,7 +1480,7 @@ bool algo::value_SetStrptrMaybe(algo::Errns& parent, algo::strptr rhs) {
             break;
         }
         case 4: {
-            switch (u64(ReadLE32(rhs.elems))) {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('u','n','i','x'): {
                     value_SetEnum(parent,algo_Errns_unix); ret = true; break;
                 }
@@ -1513,7 +1530,7 @@ bool algo::value_SetStrptrMaybe(algo::FailokQ& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 4: {
-            switch (u64(ReadLE32(rhs.elems))) {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('t','r','u','e'): {
                     value_SetEnum(parent,algo_FailokQ_true); ret = true; break;
                 }
@@ -1521,7 +1538,7 @@ bool algo::value_SetStrptrMaybe(algo::FailokQ& parent, algo::strptr rhs) {
             break;
         }
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('f','a','l','s','e'): {
                     value_SetEnum(parent,algo_FailokQ_false); ret = true; break;
                 }
@@ -1563,6 +1580,10 @@ const char* algo::value_ToCstr(const algo::FieldId& parent) {
         case algo_FieldId_read             : ret = "read";  break;
         case algo_FieldId_write            : ret = "write";  break;
         case algo_FieldId__throw           : ret = "_throw";  break;
+        case algo_FieldId_temp             : ret = "temp";  break;
+        case algo_FieldId_overlap          : ret = "overlap";  break;
+        case algo_FieldId_linear           : ret = "linear";  break;
+        case algo_FieldId_printerr         : ret = "printerr";  break;
         case algo_FieldId_eof              : ret = "eof";  break;
         case algo_FieldId_err              : ret = "err";  break;
         case algo_FieldId_x                : ret = "x";  break;
@@ -1619,7 +1640,7 @@ bool algo::value_SetStrptrMaybe(algo::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 2: {
-            switch (u64(ReadLE16(rhs.elems))) {
+            switch (u64(algo::ReadLE16(rhs.elems))) {
                 case LE_STR2('c','h'): {
                     value_SetEnum(parent,algo_FieldId_ch); ret = true; break;
                 }
@@ -1630,7 +1651,7 @@ bool algo::value_SetStrptrMaybe(algo::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 3: {
-            switch (u64(ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
                 case LE_STR3('d','i','r'): {
                     value_SetEnum(parent,algo_FieldId_dir); ret = true; break;
                 }
@@ -1656,7 +1677,7 @@ bool algo::value_SetStrptrMaybe(algo::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 4: {
-            switch (u64(ReadLE32(rhs.elems))) {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('a','n','o','n'): {
                     value_SetEnum(parent,algo_FieldId_anon); ret = true; break;
                 }
@@ -1678,6 +1699,9 @@ bool algo::value_SetStrptrMaybe(algo::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('r','e','a','d'): {
                     value_SetEnum(parent,algo_FieldId_read); ret = true; break;
                 }
+                case LE_STR4('t','e','m','p'): {
+                    value_SetEnum(parent,algo_FieldId_temp); ret = true; break;
+                }
                 case LE_STR4('t','y','p','e'): {
                     value_SetEnum(parent,algo_FieldId_type); ret = true; break;
                 }
@@ -1685,7 +1709,7 @@ bool algo::value_SetStrptrMaybe(algo::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('a','t','t','r','s'): {
                     value_SetEnum(parent,algo_FieldId_attrs); ret = true; break;
                 }
@@ -1699,12 +1723,15 @@ bool algo::value_SetStrptrMaybe(algo::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 6: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('_','t','h','r','o','w'): {
                     value_SetEnum(parent,algo_FieldId__throw); ret = true; break;
                 }
                 case LE_STR6('a','p','p','e','n','d'): {
                     value_SetEnum(parent,algo_FieldId_append); ret = true; break;
+                }
+                case LE_STR6('l','i','n','e','a','r'): {
+                    value_SetEnum(parent,algo_FieldId_linear); ret = true; break;
                 }
                 case LE_STR6('s','e','r','v','e','r'): {
                     value_SetEnum(parent,algo_FieldId_server); ret = true; break;
@@ -1713,9 +1740,12 @@ bool algo::value_SetStrptrMaybe(algo::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 7: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
                 case LE_STR7('i','p','_','h','o','s','t'): {
                     value_SetEnum(parent,algo_FieldId_ip_host); ret = true; break;
+                }
+                case LE_STR7('o','v','e','r','l','a','p'): {
+                    value_SetEnum(parent,algo_FieldId_overlap); ret = true; break;
                 }
                 case LE_STR7('s','h','a','1','s','i','g'): {
                     value_SetEnum(parent,algo_FieldId_sha1sig); ret = true; break;
@@ -1724,7 +1754,7 @@ bool algo::value_SetStrptrMaybe(algo::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 8: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('o','p','t','i','o','n','a','l'): {
                     value_SetEnum(parent,algo_FieldId_optional); ret = true; break;
                 }
@@ -1733,6 +1763,9 @@ bool algo::value_SetStrptrMaybe(algo::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('p','a','s','s','w','o','r','d'): {
                     value_SetEnum(parent,algo_FieldId_password); ret = true; break;
+                }
+                case LE_STR8('p','r','i','n','t','e','r','r'): {
+                    value_SetEnum(parent,algo_FieldId_printerr); ret = true; break;
                 }
                 case LE_STR8('p','r','o','t','o','c','o','l'): {
                     value_SetEnum(parent,algo_FieldId_protocol); ret = true; break;
@@ -1744,7 +1777,7 @@ bool algo::value_SetStrptrMaybe(algo::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 16: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('s','o','u','r','c','e','_','a'): {
                     if (memcmp(rhs.elems+8,"ddr_host",8)==0) { value_SetEnum(parent,algo_FieldId_source_addr_host); ret = true; break; }
                     break;
@@ -1787,92 +1820,6 @@ bool algo::FieldId_ReadStrptrMaybe(algo::FieldId &parent, algo::strptr in_str) {
 // print string representation of algo::FieldId to string LHS, no header -- cprint:algo.FieldId.String
 void algo::FieldId_Print(algo::FieldId & row, algo::cstring &str) {
     algo::value_Print(row, str);
-}
-
-// --- algo.FileFlags.value.ToCstr
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-const char* algo::value_ToCstr(const algo::FileFlags& parent) {
-    const char *ret = NULL;
-    switch(value_GetEnum(parent)) {
-        case algo_FileFlags_read           : ret = "read";  break;
-        case algo_FileFlags_write          : ret = "write";  break;
-        case algo_FileFlags_append         : ret = "append";  break;
-        case algo_FileFlags_throw          : ret = "throw";  break;
-        case algo_FileFlags_none           : ret = "none";  break;
-    }
-    return ret;
-}
-
-// --- algo.FileFlags.value.Print
-// Convert value to a string. First, attempt conversion to a known string.
-// If no string matches, print value as a numeric value.
-void algo::value_Print(const algo::FileFlags& parent, algo::cstring &lhs) {
-    const char *strval = value_ToCstr(parent);
-    if (strval) {
-        lhs << strval;
-    } else {
-        lhs << parent.value;
-    }
-}
-
-// --- algo.FileFlags.value.SetStrptrMaybe
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-bool algo::value_SetStrptrMaybe(algo::FileFlags& parent, algo::strptr rhs) {
-    bool ret = false;
-    switch (elems_N(rhs)) {
-        case 4: {
-            switch (u64(ReadLE32(rhs.elems))) {
-                case LE_STR4('n','o','n','e'): {
-                    value_SetEnum(parent,algo_FileFlags_none); ret = true; break;
-                }
-                case LE_STR4('r','e','a','d'): {
-                    value_SetEnum(parent,algo_FileFlags_read); ret = true; break;
-                }
-            }
-            break;
-        }
-        case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
-                case LE_STR5('t','h','r','o','w'): {
-                    value_SetEnum(parent,algo_FileFlags_throw); ret = true; break;
-                }
-                case LE_STR5('w','r','i','t','e'): {
-                    value_SetEnum(parent,algo_FileFlags_write); ret = true; break;
-                }
-            }
-            break;
-        }
-        case 6: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)) {
-                case LE_STR6('a','p','p','e','n','d'): {
-                    value_SetEnum(parent,algo_FileFlags_append); ret = true; break;
-                }
-            }
-            break;
-        }
-    }
-    return ret;
-}
-
-// --- algo.FileFlags.value.SetStrptr
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-void algo::value_SetStrptr(algo::FileFlags& parent, algo::strptr rhs, algo_FileFlagsEnum dflt) {
-    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
-}
-
-// --- algo.FileFlags.value.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool algo::value_ReadStrptrMaybe(algo::FileFlags& parent, algo::strptr rhs) {
-    bool retval = false;
-    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
-    if (!retval) { // didn't work? try reading as underlying type
-        retval = u32_ReadStrptrMaybe(parent.value,rhs);
-    }
-    return retval;
 }
 
 // --- algo.FileFlags.append.ReadStrptrMaybe
@@ -1919,17 +1866,65 @@ inline static bool algo::_throw_ReadStrptrMaybe(algo::FileFlags &parent, algo::s
     return retval;
 }
 
+// --- algo.FileFlags.temp.ReadStrptrMaybe
+inline static bool algo::temp_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) {
+    bool retval = true;
+    bool temp_tmp;
+    retval = bool_ReadStrptrMaybe(temp_tmp, in_str);
+    if (retval) {
+        temp_Set(parent, temp_tmp);
+    }
+    return retval;
+}
+
+// --- algo.FileFlags.overlap.ReadStrptrMaybe
+inline static bool algo::overlap_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) {
+    bool retval = true;
+    bool overlap_tmp;
+    retval = bool_ReadStrptrMaybe(overlap_tmp, in_str);
+    if (retval) {
+        overlap_Set(parent, overlap_tmp);
+    }
+    return retval;
+}
+
+// --- algo.FileFlags.linear.ReadStrptrMaybe
+inline static bool algo::linear_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) {
+    bool retval = true;
+    bool linear_tmp;
+    retval = bool_ReadStrptrMaybe(linear_tmp, in_str);
+    if (retval) {
+        linear_Set(parent, linear_tmp);
+    }
+    return retval;
+}
+
+// --- algo.FileFlags.printerr.ReadStrptrMaybe
+inline static bool algo::printerr_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) {
+    bool retval = true;
+    bool printerr_tmp;
+    retval = bool_ReadStrptrMaybe(printerr_tmp, in_str);
+    if (retval) {
+        printerr_Set(parent, printerr_tmp);
+    }
+    return retval;
+}
+
 // --- algo.FileFlags..ReadFieldMaybe
 bool algo::FileFlags_ReadFieldMaybe(algo::FileFlags &parent, algo::strptr field, algo::strptr strval) {
     algo::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
     bool retval = true; // default is no error
     switch(field_id) {
-        case algo_FieldId_value: retval = value_ReadStrptrMaybe(parent, strval); break;
+        case algo_FieldId_value: retval = u32_ReadStrptrMaybe(parent.value, strval); break;
         case algo_FieldId_append: retval = append_ReadStrptrMaybe(parent, strval); break;
         case algo_FieldId_read: retval = read_ReadStrptrMaybe(parent, strval); break;
         case algo_FieldId_write: retval = write_ReadStrptrMaybe(parent, strval); break;
         case algo_FieldId__throw: retval = _throw_ReadStrptrMaybe(parent, strval); break;
+        case algo_FieldId_temp: retval = temp_ReadStrptrMaybe(parent, strval); break;
+        case algo_FieldId_overlap: retval = overlap_ReadStrptrMaybe(parent, strval); break;
+        case algo_FieldId_linear: retval = linear_ReadStrptrMaybe(parent, strval); break;
+        case algo_FieldId_printerr: retval = printerr_ReadStrptrMaybe(parent, strval); break;
         default: break;
     }
     if (!retval) {
@@ -1940,44 +1935,64 @@ bool algo::FileFlags_ReadFieldMaybe(algo::FileFlags &parent, algo::strptr field,
 
 // --- algo.FileFlags..ReadStrptrMaybe
 // Read fields of algo::FileFlags from an ascii string.
-// The format of the string is an ssim Tuple
 bool algo::FileFlags_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "algo.FileFlags");
-    int anon_idx = 0;
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        if (ch_N(attr.name) == 0) {
-            attr.name = FileFlags_GetAnon(parent, anon_idx++);
+    while (ch_N(in_str)) {
+        strptr field_name;
+        algo::NextSep(in_str,',',field_name);
+        field_name = algo::Trimmed(field_name);
+        if (ch_N(field_name)) {
+            algo::FieldId field_id;
+            bool ok = algo::value_SetStrptrMaybe(field_id,field_name);
+            if (ok) {
+                switch (field_id) {
+                    case algo_FieldId_append: append_Set(parent,true); break;
+                    case algo_FieldId_read: read_Set(parent,true); break;
+                    case algo_FieldId_write: write_Set(parent,true); break;
+                    case algo_FieldId__throw: _throw_Set(parent,true); break;
+                    case algo_FieldId_temp: temp_Set(parent,true); break;
+                    case algo_FieldId_overlap: overlap_Set(parent,true); break;
+                    case algo_FieldId_linear: linear_Set(parent,true); break;
+                    case algo_FieldId_printerr: printerr_Set(parent,true); break;
+                    default: ok = false; break;
+                }
+            }
+            if (!ok) {
+                algo_lib::AppendErrtext("bitfld",field_name);
+                retval = false;
+            }
         }
-        retval = retval && FileFlags_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
+    }
     return retval;
 }
 
 // --- algo.FileFlags..Print
 // print string representation of algo::FileFlags to string LHS, no header -- cprint:algo.FileFlags.String
 void algo::FileFlags_Print(algo::FileFlags & row, algo::cstring &str) {
-    algo::tempstr temp;
-    str << "algo.FileFlags";
-
+    algo::ListSep ls(",");
     if (append_Get(row)) {
-        bool_Print(append_Get(row), temp);
-        PrintAttrSpaceReset(str,"append", temp);
+        str << ls << "append";
     }
-
     if (read_Get(row)) {
-        bool_Print(read_Get(row), temp);
-        PrintAttrSpaceReset(str,"read", temp);
+        str << ls << "read";
     }
-
     if (write_Get(row)) {
-        bool_Print(write_Get(row), temp);
-        PrintAttrSpaceReset(str,"write", temp);
+        str << ls << "write";
     }
-
     if (_throw_Get(row)) {
-        bool_Print(_throw_Get(row), temp);
-        PrintAttrSpaceReset(str,"_throw", temp);
+        str << ls << "_throw";
+    }
+    if (temp_Get(row)) {
+        str << ls << "temp";
+    }
+    if (overlap_Get(row)) {
+        str << ls << "overlap";
+    }
+    if (linear_Get(row)) {
+        str << ls << "linear";
+    }
+    if (printerr_Get(row)) {
+        str << ls << "printerr";
     }
 }
 
@@ -1986,7 +2001,7 @@ algo::strptr algo::FileFlags_GetAnon(algo::FileFlags &parent, i32 idx) {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("value", 5);
-        default: return strptr();
+        default: return algo::strptr();
     }
 }
 
@@ -2063,7 +2078,7 @@ void algo::value_Print(algo::I32Dec1& parent, cstring &outstr) {
         value = -value;
     }
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 1, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 1, value_start, true);
 }
 
 // --- algo.I32Dec1..ReadStrptrMaybe
@@ -2154,7 +2169,7 @@ void algo::value_Print(algo::I32Dec2& parent, cstring &outstr) {
         value = -value;
     }
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 2, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 2, value_start, true);
 }
 
 // --- algo.I32Dec2..ReadStrptrMaybe
@@ -2245,7 +2260,7 @@ void algo::value_Print(algo::I32Dec3& parent, cstring &outstr) {
         value = -value;
     }
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 3, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 3, value_start, true);
 }
 
 // --- algo.I32Dec3..ReadStrptrMaybe
@@ -2336,7 +2351,7 @@ void algo::value_Print(algo::I32Dec4& parent, cstring &outstr) {
         value = -value;
     }
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 4, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 4, value_start, true);
 }
 
 // --- algo.I32Dec4..ReadStrptrMaybe
@@ -2427,7 +2442,7 @@ void algo::value_Print(algo::I32Dec5& parent, cstring &outstr) {
         value = -value;
     }
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 5, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 5, value_start, true);
 }
 
 // --- algo.I32Dec5..ReadStrptrMaybe
@@ -2518,7 +2533,7 @@ void algo::value_Print(algo::I64Dec1& parent, cstring &outstr) {
         value = -value;
     }
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 1, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 1, value_start, true);
 }
 
 // --- algo.I64Dec1..ReadStrptrMaybe
@@ -2609,7 +2624,7 @@ void algo::value_Print(algo::I64Dec10& parent, cstring &outstr) {
         value = -value;
     }
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 10, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 10, value_start, true);
 }
 
 // --- algo.I64Dec10..ReadStrptrMaybe
@@ -2700,7 +2715,7 @@ void algo::value_Print(algo::I64Dec2& parent, cstring &outstr) {
         value = -value;
     }
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 2, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 2, value_start, true);
 }
 
 // --- algo.I64Dec2..ReadStrptrMaybe
@@ -2791,7 +2806,7 @@ void algo::value_Print(algo::I64Dec3& parent, cstring &outstr) {
         value = -value;
     }
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 3, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 3, value_start, true);
 }
 
 // --- algo.I64Dec3..ReadStrptrMaybe
@@ -2882,7 +2897,7 @@ void algo::value_Print(algo::I64Dec4& parent, cstring &outstr) {
         value = -value;
     }
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 4, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 4, value_start, true);
 }
 
 // --- algo.I64Dec4..ReadStrptrMaybe
@@ -2973,7 +2988,7 @@ void algo::value_Print(algo::I64Dec5& parent, cstring &outstr) {
         value = -value;
     }
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 5, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 5, value_start, true);
 }
 
 // --- algo.I64Dec5..ReadStrptrMaybe
@@ -3064,7 +3079,7 @@ void algo::value_Print(algo::I64Dec6& parent, cstring &outstr) {
         value = -value;
     }
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 6, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 6, value_start, true);
 }
 
 // --- algo.I64Dec6..ReadStrptrMaybe
@@ -3155,7 +3170,7 @@ void algo::value_Print(algo::I64Dec7& parent, cstring &outstr) {
         value = -value;
     }
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 7, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 7, value_start, true);
 }
 
 // --- algo.I64Dec7..ReadStrptrMaybe
@@ -3246,7 +3261,7 @@ void algo::value_Print(algo::I64Dec8& parent, cstring &outstr) {
         value = -value;
     }
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 8, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 8, value_start, true);
 }
 
 // --- algo.I64Dec8..ReadStrptrMaybe
@@ -3337,7 +3352,7 @@ void algo::value_Print(algo::I64Dec9& parent, cstring &outstr) {
         value = -value;
     }
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 9, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 9, value_start, true);
 }
 
 // --- algo.I64Dec9..ReadStrptrMaybe
@@ -3399,19 +3414,79 @@ inline static bool algo::err_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::str
     return retval;
 }
 
+// --- algo.IOEvtFlags..ReadFieldMaybe
+bool algo::IOEvtFlags_ReadFieldMaybe(algo::IOEvtFlags &parent, algo::strptr field, algo::strptr strval) {
+    algo::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case algo_FieldId_value: retval = u32_ReadStrptrMaybe(parent.value, strval); break;
+        case algo_FieldId_read: retval = read_ReadStrptrMaybe(parent, strval); break;
+        case algo_FieldId_write: retval = write_ReadStrptrMaybe(parent, strval); break;
+        case algo_FieldId_eof: retval = eof_ReadStrptrMaybe(parent, strval); break;
+        case algo_FieldId_err: retval = err_ReadStrptrMaybe(parent, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
 // --- algo.IOEvtFlags..ReadStrptrMaybe
 // Read fields of algo::IOEvtFlags from an ascii string.
-// The format of the string is the format of the algo::IOEvtFlags's only field
 bool algo::IOEvtFlags_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = retval && u32_ReadStrptrMaybe(parent.value, in_str);
+    while (ch_N(in_str)) {
+        strptr field_name;
+        algo::NextSep(in_str,',',field_name);
+        field_name = algo::Trimmed(field_name);
+        if (ch_N(field_name)) {
+            algo::FieldId field_id;
+            bool ok = algo::value_SetStrptrMaybe(field_id,field_name);
+            if (ok) {
+                switch (field_id) {
+                    case algo_FieldId_read: read_Set(parent,true); break;
+                    case algo_FieldId_write: write_Set(parent,true); break;
+                    case algo_FieldId_eof: eof_Set(parent,true); break;
+                    case algo_FieldId_err: err_Set(parent,true); break;
+                    default: ok = false; break;
+                }
+            }
+            if (!ok) {
+                algo_lib::AppendErrtext("bitfld",field_name);
+                retval = false;
+            }
+        }
+    }
     return retval;
 }
 
 // --- algo.IOEvtFlags..Print
 // print string representation of algo::IOEvtFlags to string LHS, no header -- cprint:algo.IOEvtFlags.String
 void algo::IOEvtFlags_Print(algo::IOEvtFlags & row, algo::cstring &str) {
-    u32_Print(row.value, str);
+    algo::ListSep ls(",");
+    if (read_Get(row)) {
+        str << ls << "read";
+    }
+    if (write_Get(row)) {
+        str << ls << "write";
+    }
+    if (eof_Get(row)) {
+        str << ls << "eof";
+    }
+    if (err_Get(row)) {
+        str << ls << "err";
+    }
+}
+
+// --- algo.IOEvtFlags..GetAnon
+algo::strptr algo::IOEvtFlags_GetAnon(algo::IOEvtFlags &parent, i32 idx) {
+    (void)parent;//only to avoid -Wunused-parameter
+    switch(idx) {
+        case(0): return strptr("value", 5);
+        default: return algo::strptr();
+    }
 }
 
 // --- algo.IPoint..ReadFieldMaybe
@@ -3435,7 +3510,7 @@ bool algo::IPoint_ReadFieldMaybe(algo::IPoint &parent, algo::strptr field, algo:
 // The format of the string is a string with separated values
 bool algo::IPoint_ReadStrptrMaybe(algo::IPoint &parent, algo::strptr in_str) {
     bool retval = true;
-    strptr value;
+    algo::strptr value;
 
     algo::NextSep(in_str, ' ', value);
     retval = retval && i32_ReadStrptrMaybe(parent.x, value);
@@ -3632,13 +3707,15 @@ void algo::buf_RemoveLast(algo::LineBuf& parent) {
 // Make sure N elements fit in array. Process dies if out of memory
 void algo::buf_AbsReserve(algo::LineBuf& parent, int n) {
     u32 old_max  = parent.buf_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(parent.buf_elems, old_max * sizeof(char), new_max * sizeof(char));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("algo.tary_nomem  field:algo.LineBuf.buf  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.buf_elems, old_max * sizeof(char), new_max * sizeof(char));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("algo.tary_nomem  field:algo.LineBuf.buf  comment:'out of memory'");
+        }
+        parent.buf_elems = (char*)new_mem;
+        parent.buf_max = new_max;
     }
-    parent.buf_elems = (char*)new_mem;
-    parent.buf_max = new_max;
 }
 
 // --- algo.LineBuf.buf.Setary
@@ -3712,7 +3789,7 @@ void algo::ch_SetStrptr(algo::LnumStr10_U64& parent, const algo::strptr &rhs) {
 static u64 algo::ch_qGetnum(algo::LnumStr10_U64& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
         val = aParseNum16(str, ok);
     }
@@ -3748,10 +3825,10 @@ bool algo::ch_SetnumMaybe(algo::LnumStr10_U64& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = rhs;
-    length = u64_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u64_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 10;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -3820,7 +3897,7 @@ void algo::ch_SetStrptr(algo::LnumStr11_U64& parent, const algo::strptr &rhs) {
 static u64 algo::ch_qGetnum(algo::LnumStr11_U64& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
         val = aParseNum16(str, ok);
     }
@@ -3856,10 +3933,10 @@ bool algo::ch_SetnumMaybe(algo::LnumStr11_U64& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = rhs;
-    length = u64_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u64_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 11;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -3928,7 +4005,7 @@ void algo::ch_SetStrptr(algo::LnumStr12_U64& parent, const algo::strptr &rhs) {
 static u64 algo::ch_qGetnum(algo::LnumStr12_U64& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
         val = aParseNum16(str, ok);
     }
@@ -3964,10 +4041,10 @@ bool algo::ch_SetnumMaybe(algo::LnumStr12_U64& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = rhs;
-    length = u64_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u64_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 12;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -4036,7 +4113,7 @@ void algo::ch_SetStrptr(algo::LnumStr13_U64_Base36& parent, const algo::strptr &
 static u64 algo::ch_qGetnum(algo::LnumStr13_U64_Base36& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
         char ch = str.elems[i];
         int digit = ch;
@@ -4097,7 +4174,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr13_U64_Base36& parent, i64 rhs) {
     length = sizeof(buf) - charpos;
     bool retval = length <= 13;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -4166,7 +4243,7 @@ void algo::ch_SetStrptr(algo::LnumStr16_U64_Base16& parent, const algo::strptr &
 static u64 algo::ch_qGetnum(algo::LnumStr16_U64_Base16& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
         char ch = str.elems[i];
         int digit = ch;
@@ -4181,6 +4258,7 @@ static u64 algo::ch_qGetnum(algo::LnumStr16_U64_Base16& parent, u32 &ok) {
         }
         val = val*16 + digit;
     }
+    ok &= val <= 0XFFFFFFFFFFFFFFFF;
     return u64(val);
 }
 
@@ -4224,7 +4302,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr16_U64_Base16& parent, i64 rhs) {
     length = sizeof(buf) - charpos;
     bool retval = length <= 16;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -4293,7 +4371,7 @@ void algo::ch_SetStrptr(algo::LnumStr1_U32& parent, const algo::strptr &rhs) {
 static u32 algo::ch_qGetnum(algo::LnumStr1_U32& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
         val = aParseNum4(str, ok);
     }
@@ -4329,10 +4407,10 @@ bool algo::ch_SetnumMaybe(algo::LnumStr1_U32& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = rhs;
-    length = u32_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 1;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -4401,7 +4479,7 @@ void algo::ch_SetStrptr(algo::LnumStr20_U64& parent, const algo::strptr &rhs) {
 static u64 algo::ch_qGetnum(algo::LnumStr20_U64& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
         char ch = str.elems[i];
         int digit = ch;
@@ -4447,10 +4525,10 @@ bool algo::ch_SetnumMaybe(algo::LnumStr20_U64& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = rhs;
-    length = u64_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u64_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 20;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -4519,7 +4597,7 @@ void algo::ch_SetStrptr(algo::LnumStr22_U64& parent, const algo::strptr &rhs) {
 static u64 algo::ch_qGetnum(algo::LnumStr22_U64& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
         char ch = str.elems[i];
         int digit = ch;
@@ -4565,10 +4643,10 @@ bool algo::ch_SetnumMaybe(algo::LnumStr22_U64& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = rhs;
-    length = u64_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u64_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 22;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -4637,7 +4715,7 @@ void algo::ch_SetStrptr(algo::LnumStr2_U32& parent, const algo::strptr &rhs) {
 static u32 algo::ch_qGetnum(algo::LnumStr2_U32& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
         val = aParseNum4(str, ok);
     }
@@ -4673,10 +4751,10 @@ bool algo::ch_SetnumMaybe(algo::LnumStr2_U32& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = rhs;
-    length = u32_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 2;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -4745,7 +4823,7 @@ void algo::ch_SetStrptr(algo::LnumStr3_U32& parent, const algo::strptr &rhs) {
 static u32 algo::ch_qGetnum(algo::LnumStr3_U32& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
         val = aParseNum4(str, ok);
     }
@@ -4781,10 +4859,10 @@ bool algo::ch_SetnumMaybe(algo::LnumStr3_U32& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = rhs;
-    length = u32_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 3;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -4853,7 +4931,7 @@ void algo::ch_SetStrptr(algo::LnumStr4_U32& parent, const algo::strptr &rhs) {
 static u32 algo::ch_qGetnum(algo::LnumStr4_U32& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
         val = aParseNum4(str, ok);
     }
@@ -4889,10 +4967,10 @@ bool algo::ch_SetnumMaybe(algo::LnumStr4_U32& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = rhs;
-    length = u32_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 4;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -4961,7 +5039,7 @@ void algo::ch_SetStrptr(algo::LnumStr5_U32& parent, const algo::strptr &rhs) {
 static u32 algo::ch_qGetnum(algo::LnumStr5_U32& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
         val = aParseNum8(str, ok);
     }
@@ -4997,10 +5075,10 @@ bool algo::ch_SetnumMaybe(algo::LnumStr5_U32& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = rhs;
-    length = u32_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 5;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -5069,7 +5147,7 @@ void algo::ch_SetStrptr(algo::LnumStr5_U32_Base36& parent, const algo::strptr &r
 static u32 algo::ch_qGetnum(algo::LnumStr5_U32_Base36& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
         char ch = str.elems[i];
         int digit = ch;
@@ -5127,7 +5205,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr5_U32_Base36& parent, i64 rhs) {
     length = sizeof(buf) - charpos;
     bool retval = length <= 5;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -5196,7 +5274,7 @@ void algo::ch_SetStrptr(algo::LnumStr6_U32& parent, const algo::strptr &rhs) {
 static u32 algo::ch_qGetnum(algo::LnumStr6_U32& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
         val = aParseNum8(str, ok);
     }
@@ -5232,10 +5310,10 @@ bool algo::ch_SetnumMaybe(algo::LnumStr6_U32& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = rhs;
-    length = u32_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 6;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -5304,7 +5382,7 @@ void algo::ch_SetStrptr(algo::LnumStr7_U32& parent, const algo::strptr &rhs) {
 static u32 algo::ch_qGetnum(algo::LnumStr7_U32& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
         val = aParseNum8(str, ok);
     }
@@ -5340,10 +5418,10 @@ bool algo::ch_SetnumMaybe(algo::LnumStr7_U32& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = rhs;
-    length = u32_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 7;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -5412,7 +5490,7 @@ void algo::ch_SetStrptr(algo::LnumStr7_U32_Base36& parent, const algo::strptr &r
 static u32 algo::ch_qGetnum(algo::LnumStr7_U32_Base36& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
         char ch = str.elems[i];
         int digit = ch;
@@ -5471,7 +5549,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr7_U32_Base36& parent, i64 rhs) {
     length = sizeof(buf) - charpos;
     bool retval = length <= 7;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -5540,7 +5618,7 @@ void algo::ch_SetStrptr(algo::LnumStr8_U32& parent, const algo::strptr &rhs) {
 static u32 algo::ch_qGetnum(algo::LnumStr8_U32& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
         val = aParseNum8(str, ok);
     }
@@ -5576,10 +5654,10 @@ bool algo::ch_SetnumMaybe(algo::LnumStr8_U32& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = rhs;
-    length = u32_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 8;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -5648,7 +5726,7 @@ void algo::ch_SetStrptr(algo::LnumStr8_U32_Base16& parent, const algo::strptr &r
 static u32 algo::ch_qGetnum(algo::LnumStr8_U32_Base16& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
         char ch = str.elems[i];
         int digit = ch;
@@ -5707,7 +5785,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr8_U32_Base16& parent, i64 rhs) {
     length = sizeof(buf) - charpos;
     bool retval = length <= 8;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -5776,7 +5854,7 @@ void algo::ch_SetStrptr(algo::LnumStr8_U64& parent, const algo::strptr &rhs) {
 static u64 algo::ch_qGetnum(algo::LnumStr8_U64& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
         val = aParseNum8(str, ok);
     }
@@ -5812,10 +5890,10 @@ bool algo::ch_SetnumMaybe(algo::LnumStr8_U64& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = rhs;
-    length = u64_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u64_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 8;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -5884,7 +5962,7 @@ void algo::ch_SetStrptr(algo::LnumStr9_U32& parent, const algo::strptr &rhs) {
 static u32 algo::ch_qGetnum(algo::LnumStr9_U32& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
         val = aParseNum16(str, ok);
     }
@@ -5920,10 +5998,10 @@ bool algo::ch_SetnumMaybe(algo::LnumStr9_U32& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = rhs;
-    length = u32_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 9;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -5992,7 +6070,7 @@ void algo::ch_SetStrptr(algo::LnumStr9_U64& parent, const algo::strptr &rhs) {
 static u64 algo::ch_qGetnum(algo::LnumStr9_U64& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
         val = aParseNum16(str, ok);
     }
@@ -6028,10 +6106,10 @@ bool algo::ch_SetnumMaybe(algo::LnumStr9_U64& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = rhs;
-    length = u64_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u64_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 9;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -6450,7 +6528,7 @@ void algo::ch_SetStrptr(algo::LspaceStr20_I64& parent, const algo::strptr &rhs) 
 static i64 algo::ch_qGetnum(algo::LspaceStr20_I64& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     bool is_neg = (str.n_elems > 0) && (str.elems[0] == '-');
     if (is_neg) {
         str.elems++;
@@ -6502,7 +6580,7 @@ bool algo::ch_SetnumMaybe(algo::LspaceStr20_I64& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = (rhs < 0 ? -rhs : rhs);
-    length = u64_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u64_FmtBuf(val, (u8*)buf + charpos);
     if (rhs < 0) {
         if (charpos > 0 && buf[charpos] != '0') {
             --charpos;
@@ -6512,7 +6590,7 @@ bool algo::ch_SetnumMaybe(algo::LspaceStr20_I64& parent, i64 rhs) {
     }
     bool retval = length <= 20;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -6581,7 +6659,7 @@ void algo::ch_SetStrptr(algo::LspaceStr20_U64& parent, const algo::strptr &rhs) 
 static u64 algo::ch_qGetnum(algo::LspaceStr20_U64& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
         char ch = str.elems[i];
         int digit = ch;
@@ -6627,10 +6705,10 @@ bool algo::ch_SetnumMaybe(algo::LspaceStr20_U64& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = rhs;
-    length = u64_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u64_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 20;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -6756,7 +6834,7 @@ void algo::ch_SetStrptr(algo::LspaceStr3_I16& parent, const algo::strptr &rhs) {
 static i16 algo::ch_qGetnum(algo::LspaceStr3_I16& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     bool is_neg = (str.n_elems > 0) && (str.elems[0] == '-');
     if (is_neg) {
         str.elems++;
@@ -6798,7 +6876,7 @@ bool algo::ch_SetnumMaybe(algo::LspaceStr3_I16& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = (rhs < 0 ? -rhs : rhs);
-    length = u16_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u16_FmtBuf(val, (u8*)buf + charpos);
     if (rhs < 0) {
         if (charpos > 0 && buf[charpos] != '0') {
             --charpos;
@@ -6808,7 +6886,7 @@ bool algo::ch_SetnumMaybe(algo::LspaceStr3_I16& parent, i64 rhs) {
     }
     bool retval = length <= 3;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -6991,7 +7069,7 @@ void algo::ch_SetStrptr(algo::LspaceStr5_I16& parent, const algo::strptr &rhs) {
 static u16 algo::ch_qGetnum(algo::LspaceStr5_I16& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
         val = aParseNum8(str, ok);
     }
@@ -7028,7 +7106,7 @@ bool algo::ch_SetnumMaybe(algo::LspaceStr5_I16& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = rhs;
-    length = u16_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u16_FmtBuf(val, (u8*)buf + charpos);
     //pad string with 0s up to min_length
     while (charpos > 0 && length < 5) {
         buf[--charpos] = '0';
@@ -7036,7 +7114,7 @@ bool algo::ch_SetnumMaybe(algo::LspaceStr5_I16& parent, i64 rhs) {
     }
     bool retval = length <= 5;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -7162,7 +7240,7 @@ void algo::ch_SetStrptr(algo::LspaceStr6_U32& parent, const algo::strptr &rhs) {
 static u32 algo::ch_qGetnum(algo::LspaceStr6_U32& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
         val = aParseNum8(str, ok);
     }
@@ -7198,10 +7276,10 @@ bool algo::ch_SetnumMaybe(algo::LspaceStr6_U32& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = rhs;
-    length = u32_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 6;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -7270,7 +7348,7 @@ void algo::ch_SetStrptr(algo::LspaceStr7_I32_Base36& parent, const algo::strptr 
 static i32 algo::ch_qGetnum(algo::LspaceStr7_I32_Base36& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     bool is_neg = (str.n_elems > 0) && (str.elems[0] == '-');
     if (is_neg) {
         str.elems++;
@@ -7342,7 +7420,7 @@ bool algo::ch_SetnumMaybe(algo::LspaceStr7_I32_Base36& parent, i64 rhs) {
     }
     bool retval = length <= 7;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -7501,7 +7579,7 @@ void algo::value_Print(algo::Md5Digest& parent, algo::cstring &lhs) {
 bool algo::value_ReadStrptrMaybe(algo::Md5Digest& parent, algo::strptr in_str) {
     bool retval = true;
     for (int i=0; in_str != "" && i < value_Max(parent); i++) {
-        strptr token;
+        algo::strptr token;
         algo::NextSep(in_str, ':', token);
         retval = u8_ReadStrptrMaybe(parent.value_elems[i], token);
         if (!retval) {
@@ -7569,7 +7647,7 @@ bool algo::value_SetStrptrMaybe(algo::Month& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
-            switch (u64(ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
                 case LE_STR3('M','a','y'): {
                     value_SetEnum(parent,algo_Month_May); ret = true; break;
                 }
@@ -7577,7 +7655,7 @@ bool algo::value_SetStrptrMaybe(algo::Month& parent, algo::strptr rhs) {
             break;
         }
         case 4: {
-            switch (u64(ReadLE32(rhs.elems))) {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('J','u','l','y'): {
                     value_SetEnum(parent,algo_Month_July); ret = true; break;
                 }
@@ -7591,7 +7669,7 @@ bool algo::value_SetStrptrMaybe(algo::Month& parent, algo::strptr rhs) {
             break;
         }
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('A','p','r','i','l'): {
                     value_SetEnum(parent,algo_Month_April); ret = true; break;
                 }
@@ -7602,7 +7680,7 @@ bool algo::value_SetStrptrMaybe(algo::Month& parent, algo::strptr rhs) {
             break;
         }
         case 6: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('A','u','g','u','s','t'): {
                     value_SetEnum(parent,algo_Month_August); ret = true; break;
                 }
@@ -7610,7 +7688,7 @@ bool algo::value_SetStrptrMaybe(algo::Month& parent, algo::strptr rhs) {
             break;
         }
         case 7: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
                 case LE_STR7('J','a','n','u','a','r','y'): {
                     value_SetEnum(parent,algo_Month_January); ret = true; break;
                 }
@@ -7621,7 +7699,7 @@ bool algo::value_SetStrptrMaybe(algo::Month& parent, algo::strptr rhs) {
             break;
         }
         case 8: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('D','e','c','e','m','b','e','r'): {
                     value_SetEnum(parent,algo_Month_December); ret = true; break;
                 }
@@ -7635,7 +7713,7 @@ bool algo::value_SetStrptrMaybe(algo::Month& parent, algo::strptr rhs) {
             break;
         }
         case 9: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('S','e','p','t','e','m','b','e'): {
                     if (memcmp(rhs.elems+8,"r",1)==0) { value_SetEnum(parent,algo_Month_September); ret = true; break; }
                     break;
@@ -7748,13 +7826,15 @@ void algo::start_RemoveLast(algo::NormTxttbl& parent) {
 // Make sure N elements fit in array. Process dies if out of memory
 void algo::start_AbsReserve(algo::NormTxttbl& parent, int n) {
     u32 old_max  = parent.start_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(parent.start_elems, old_max * sizeof(i32), new_max * sizeof(i32));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("algo.tary_nomem  field:algo.NormTxttbl.start  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.start_elems, old_max * sizeof(i32), new_max * sizeof(i32));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("algo.tary_nomem  field:algo.NormTxttbl.start  comment:'out of memory'");
+        }
+        parent.start_elems = (i32*)new_mem;
+        parent.start_max = new_max;
     }
-    parent.start_elems = (i32*)new_mem;
-    parent.start_max = new_max;
 }
 
 // --- algo.NormTxttbl.start.Setary
@@ -7778,96 +7858,6 @@ void algo::NormTxttbl_Uninit(algo::NormTxttbl& parent) {
     start_RemoveAll(parent);
     // free memory for Tary algo.NormTxttbl.start
     algo_lib::malloc_FreeMem(parent.start_elems, sizeof(i32)*parent.start_max); // (algo.NormTxttbl.start)
-}
-
-// --- algo.NumParseFlags.value.ToCstr
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-const char* algo::value_ToCstr(const algo::NumParseFlags& parent) {
-    const char *ret = NULL;
-    switch(value_GetEnum(parent)) {
-        case algo_NumParseFlags_parse_err  : ret = "parse_err";  break;
-        case algo_NumParseFlags_parse_ok   : ret = "parse_ok";  break;
-        case algo_NumParseFlags_parse_neg  : ret = "parse_neg";  break;
-        case algo_NumParseFlags_parse_overflow: ret = "parse_overflow";  break;
-        case algo_NumParseFlags_parse_hex  : ret = "parse_hex";  break;
-    }
-    return ret;
-}
-
-// --- algo.NumParseFlags.value.Print
-// Convert value to a string. First, attempt conversion to a known string.
-// If no string matches, print value as a numeric value.
-void algo::value_Print(const algo::NumParseFlags& parent, algo::cstring &lhs) {
-    const char *strval = value_ToCstr(parent);
-    if (strval) {
-        lhs << strval;
-    } else {
-        lhs << parent.value;
-    }
-}
-
-// --- algo.NumParseFlags.value.SetStrptrMaybe
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-bool algo::value_SetStrptrMaybe(algo::NumParseFlags& parent, algo::strptr rhs) {
-    bool ret = false;
-    switch (elems_N(rhs)) {
-        case 8: {
-            switch (ReadLE64(rhs.elems)) {
-                case LE_STR8('p','a','r','s','e','_','o','k'): {
-                    value_SetEnum(parent,algo_NumParseFlags_parse_ok); ret = true; break;
-                }
-            }
-            break;
-        }
-        case 9: {
-            switch (ReadLE64(rhs.elems)) {
-                case LE_STR8('p','a','r','s','e','_','e','r'): {
-                    if (memcmp(rhs.elems+8,"r",1)==0) { value_SetEnum(parent,algo_NumParseFlags_parse_err); ret = true; break; }
-                    break;
-                }
-                case LE_STR8('p','a','r','s','e','_','h','e'): {
-                    if (memcmp(rhs.elems+8,"x",1)==0) { value_SetEnum(parent,algo_NumParseFlags_parse_hex); ret = true; break; }
-                    break;
-                }
-                case LE_STR8('p','a','r','s','e','_','n','e'): {
-                    if (memcmp(rhs.elems+8,"g",1)==0) { value_SetEnum(parent,algo_NumParseFlags_parse_neg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 14: {
-            switch (ReadLE64(rhs.elems)) {
-                case LE_STR8('p','a','r','s','e','_','o','v'): {
-                    if (memcmp(rhs.elems+8,"erflow",6)==0) { value_SetEnum(parent,algo_NumParseFlags_parse_overflow); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-    }
-    return ret;
-}
-
-// --- algo.NumParseFlags.value.SetStrptr
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-void algo::value_SetStrptr(algo::NumParseFlags& parent, algo::strptr rhs, algo_NumParseFlagsEnum dflt) {
-    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
-}
-
-// --- algo.NumParseFlags.value.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool algo::value_ReadStrptrMaybe(algo::NumParseFlags& parent, algo::strptr rhs) {
-    bool retval = false;
-    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
-    if (!retval) { // didn't work? try reading as underlying type
-        retval = u32_ReadStrptrMaybe(parent.value,rhs);
-    }
-    return retval;
 }
 
 // --- algo.NumParseFlags.err.ReadStrptrMaybe
@@ -7925,19 +7915,84 @@ inline static bool algo::hex_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::
     return retval;
 }
 
+// --- algo.NumParseFlags..ReadFieldMaybe
+bool algo::NumParseFlags_ReadFieldMaybe(algo::NumParseFlags &parent, algo::strptr field, algo::strptr strval) {
+    algo::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case algo_FieldId_value: retval = u32_ReadStrptrMaybe(parent.value, strval); break;
+        case algo_FieldId_err: retval = err_ReadStrptrMaybe(parent, strval); break;
+        case algo_FieldId_ok: retval = ok_ReadStrptrMaybe(parent, strval); break;
+        case algo_FieldId_neg: retval = neg_ReadStrptrMaybe(parent, strval); break;
+        case algo_FieldId_overflow: retval = overflow_ReadStrptrMaybe(parent, strval); break;
+        case algo_FieldId_hex: retval = hex_ReadStrptrMaybe(parent, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
 // --- algo.NumParseFlags..ReadStrptrMaybe
 // Read fields of algo::NumParseFlags from an ascii string.
-// The format of the string is the format of the algo::NumParseFlags's only field
 bool algo::NumParseFlags_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = retval && algo::value_ReadStrptrMaybe(parent, in_str);
+    while (ch_N(in_str)) {
+        strptr field_name;
+        algo::NextSep(in_str,',',field_name);
+        field_name = algo::Trimmed(field_name);
+        if (ch_N(field_name)) {
+            algo::FieldId field_id;
+            bool ok = algo::value_SetStrptrMaybe(field_id,field_name);
+            if (ok) {
+                switch (field_id) {
+                    case algo_FieldId_err: err_Set(parent,true); break;
+                    case algo_FieldId_ok: ok_Set(parent,true); break;
+                    case algo_FieldId_neg: neg_Set(parent,true); break;
+                    case algo_FieldId_overflow: overflow_Set(parent,true); break;
+                    case algo_FieldId_hex: hex_Set(parent,true); break;
+                    default: ok = false; break;
+                }
+            }
+            if (!ok) {
+                algo_lib::AppendErrtext("bitfld",field_name);
+                retval = false;
+            }
+        }
+    }
     return retval;
 }
 
 // --- algo.NumParseFlags..Print
 // print string representation of algo::NumParseFlags to string LHS, no header -- cprint:algo.NumParseFlags.String
 void algo::NumParseFlags_Print(algo::NumParseFlags & row, algo::cstring &str) {
-    algo::value_Print(row, str);
+    algo::ListSep ls(",");
+    if (err_Get(row)) {
+        str << ls << "err";
+    }
+    if (ok_Get(row)) {
+        str << ls << "ok";
+    }
+    if (neg_Get(row)) {
+        str << ls << "neg";
+    }
+    if (overflow_Get(row)) {
+        str << ls << "overflow";
+    }
+    if (hex_Get(row)) {
+        str << ls << "hex";
+    }
+}
+
+// --- algo.NumParseFlags..GetAnon
+algo::strptr algo::NumParseFlags_GetAnon(algo::NumParseFlags &parent, i32 idx) {
+    (void)parent;//only to avoid -Wunused-parameter
+    switch(idx) {
+        case(0): return strptr("value", 5);
+        default: return algo::strptr();
+    }
 }
 
 // --- algo.Protocol.proto.StaticCheck
@@ -7957,8 +8012,7 @@ void algo::StaticCheck() {
     algo_assert(sizeof(((algo::Errcode*)0)->value)*8 >= 40);
     algo_assert(_offset_of(algo::FieldId, value) + sizeof(((algo::FieldId*)0)->value) == sizeof(algo::FieldId));
     // check that bitfield fits width
-    algo_assert(sizeof(((algo::FileFlags*)0)->value)*8 >= 6);
-    algo_assert(_offset_of(algo::I64Dec4, value) + sizeof(((algo::I64Dec4*)0)->value) == sizeof(algo::I64Dec4));
+    algo_assert(sizeof(((algo::FileFlags*)0)->value)*8 >= 10);
     algo_assert(_offset_of(algo::I64Dec5, value) + sizeof(((algo::I64Dec5*)0)->value) == sizeof(algo::I64Dec5));
     // check that bitfield fits width
     algo_assert(sizeof(((algo::IOEvtFlags*)0)->value)*8 >= 4);
@@ -7971,6 +8025,8 @@ void algo::StaticCheck() {
     algo_assert(_offset_of(algo::U64Dec2, value) + sizeof(((algo::U64Dec2*)0)->value) == sizeof(algo::U64Dec2));
     algo_assert(_offset_of(algo::UnDiff, value) + sizeof(((algo::UnDiff*)0)->value) == sizeof(algo::UnDiff));
     algo_assert(_offset_of(algo::UnixTime, value) + sizeof(((algo::UnixTime*)0)->value) == sizeof(algo::UnixTime));
+    algo_assert(_offset_of(algo::WDiff, value) + sizeof(((algo::WDiff*)0)->value) == sizeof(algo::WDiff));
+    algo_assert(_offset_of(algo::WTime, value) + sizeof(((algo::WTime*)0)->value) == sizeof(algo::WTime));
 }
 
 // --- algo.RnullStr1.ch.Print
@@ -10352,7 +10408,7 @@ void algo::ch_SetStrptr(algo::RnullStr6_U32& parent, const algo::strptr &rhs) {
 static u32 algo::ch_qGetnum(algo::RnullStr6_U32& parent, u32 &ok) {
     (void)ok;
     u64 val = 0;
-    strptr str = ch_Getary(parent);
+    algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
         val = aParseNum8(str, ok);
     }
@@ -10388,10 +10444,10 @@ bool algo::ch_SetnumMaybe(algo::RnullStr6_U32& parent, i64 rhs) {
     int length = 0;
     int charpos = 64;
     u64 val = rhs;
-    length = u32_FmtBuf(val, (u8*)buf + charpos);
+    length = algo::u32_FmtBuf(val, (u8*)buf + charpos);
     bool retval = length <= 6;
     if (retval) {
-        ch_SetStrptr(parent, strptr(buf + charpos, length));
+        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
     }
     return retval;
 }
@@ -10814,6 +10870,63 @@ bool algo::RspaceStr11_ReadStrptrMaybe(algo::RspaceStr11 &parent, algo::strptr i
 // --- algo.RspaceStr11..Print
 // print string representation of algo::RspaceStr11 to string LHS, no header -- cprint:algo.RspaceStr11.String
 void algo::RspaceStr11_Print(algo::RspaceStr11 & row, algo::cstring &str) {
+    algo::ch_Print(row, str);
+}
+
+// --- algo.RspaceStr12.ch.Print
+void algo::ch_Print(algo::RspaceStr12& parent, algo::cstring &out) {
+    ch_Addary(out, ch_Getary(parent));
+}
+
+// --- algo.RspaceStr12.ch.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr12& parent, algo::strptr rhs) {
+    bool retval = false;
+    if (rhs.n_elems <= 12) {
+        ch_SetStrptr(parent, rhs);
+        retval = true;
+    } else {
+        algo_lib::SaveBadTag("comment","text too long, limit 12");
+    }
+    return retval;
+}
+
+// --- algo.RspaceStr12.ch.SetStrptr
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void algo::ch_SetStrptr(algo::RspaceStr12& parent, const algo::strptr &rhs) {
+    int len = i32_Min(rhs.n_elems, 12);
+    char *rhs_elems = rhs.elems;
+    int i = 0;
+    int j = 0;
+    for (; i < len; i++, j++) {
+        parent.ch[j] = rhs_elems[i];
+    }
+    for (; j < 12; j++) {
+        parent.ch[j] = ' ';
+    }
+}
+
+// --- algo.RspaceStr12..Hash
+u32 algo::RspaceStr12_Hash(u32 prev, algo::RspaceStr12 rhs) {
+    algo::strptr ch_strptr = ch_Getary(rhs);
+    prev = ::strptr_Hash(prev, ch_strptr);
+    return prev;
+}
+
+// --- algo.RspaceStr12..ReadStrptrMaybe
+// Read fields of algo::RspaceStr12 from an ascii string.
+// The format of the string is the format of the algo::RspaceStr12's only field
+bool algo::RspaceStr12_ReadStrptrMaybe(algo::RspaceStr12 &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && algo::ch_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- algo.RspaceStr12..Print
+// print string representation of algo::RspaceStr12 to string LHS, no header -- cprint:algo.RspaceStr12.String
+void algo::RspaceStr12_Print(algo::RspaceStr12 row, algo::cstring &str) {
     algo::ch_Print(row, str);
 }
 
@@ -11309,7 +11422,7 @@ void algo::ch_SetStrptr(algo::RspaceStr3& parent, const algo::strptr &rhs) {
 }
 
 // --- algo.RspaceStr3..Hash
-u32 algo::RspaceStr3_Hash(u32 prev, const algo::RspaceStr3 & rhs) {
+u32 algo::RspaceStr3_Hash(u32 prev, algo::RspaceStr3 rhs) {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -11326,7 +11439,7 @@ bool algo::RspaceStr3_ReadStrptrMaybe(algo::RspaceStr3 &parent, algo::strptr in_
 
 // --- algo.RspaceStr3..Print
 // print string representation of algo::RspaceStr3 to string LHS, no header -- cprint:algo.RspaceStr3.String
-void algo::RspaceStr3_Print(algo::RspaceStr3 & row, algo::cstring &str) {
+void algo::RspaceStr3_Print(algo::RspaceStr3 row, algo::cstring &str) {
     algo::ch_Print(row, str);
 }
 
@@ -12014,7 +12127,7 @@ void algo::sha1sig_Print(algo::Sha1sig& parent, algo::cstring &lhs) {
 bool algo::sha1sig_ReadStrptrMaybe(algo::Sha1sig& parent, algo::strptr in_str) {
     bool retval = true;
     for (int i=0; in_str != "" && i < sha1sig_Max(parent); i++) {
-        strptr token;
+        algo::strptr token;
         algo::NextSep(in_str, ':', token);
         retval = u8_ReadStrptrMaybe(parent.sha1sig_elems[i], token);
         if (!retval) {
@@ -12464,6 +12577,61 @@ void algo::Smallstr250_Print(algo::Smallstr250 & row, algo::cstring &str) {
     algo::ch_Print(row, str);
 }
 
+// --- algo.Smallstr3.ch.Print
+void algo::ch_Print(algo::Smallstr3& parent, algo::cstring &out) {
+    ch_Addary(out, ch_Getary(parent));
+}
+
+// --- algo.Smallstr3.ch.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr3& parent, algo::strptr rhs) {
+    bool retval = false;
+    if (rhs.n_elems <= 3) {
+        ch_SetStrptr(parent, rhs);
+        retval = true;
+    } else {
+        algo_lib::SaveBadTag("comment","text too long, limit 3");
+    }
+    return retval;
+}
+
+// --- algo.Smallstr3.ch.SetStrptr
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void algo::ch_SetStrptr(algo::Smallstr3& parent, const algo::strptr &rhs) {
+    int len = i32_Min(rhs.n_elems, 3);
+    char *rhs_elems = rhs.elems;
+    int i = 0;
+    int j = 0;
+    for (; i < len; i++, j++) {
+        parent.ch[j] = rhs_elems[i];
+    }
+    parent.n_ch       = u8(len);
+}
+
+// --- algo.Smallstr3..Hash
+u32 algo::Smallstr3_Hash(u32 prev, const algo::Smallstr3 & rhs) {
+    algo::strptr ch_strptr = ch_Getary(rhs);
+    prev = ::strptr_Hash(prev, ch_strptr);
+    return prev;
+}
+
+// --- algo.Smallstr3..ReadStrptrMaybe
+// Read fields of algo::Smallstr3 from an ascii string.
+// The format of the string is the format of the algo::Smallstr3's only field
+bool algo::Smallstr3_ReadStrptrMaybe(algo::Smallstr3 &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && algo::ch_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- algo.Smallstr3..Print
+// print string representation of algo::Smallstr3 to string LHS, no header -- cprint:algo.Smallstr3.String
+void algo::Smallstr3_Print(algo::Smallstr3 & row, algo::cstring &str) {
+    algo::ch_Print(row, str);
+}
+
 // --- algo.Smallstr30.ch.Print
 void algo::ch_Print(algo::Smallstr30& parent, algo::cstring &out) {
     ch_Addary(out, ch_Getary(parent));
@@ -12516,6 +12684,61 @@ bool algo::Smallstr30_ReadStrptrMaybe(algo::Smallstr30 &parent, algo::strptr in_
 // --- algo.Smallstr30..Print
 // print string representation of algo::Smallstr30 to string LHS, no header -- cprint:algo.Smallstr30.String
 void algo::Smallstr30_Print(algo::Smallstr30 & row, algo::cstring &str) {
+    algo::ch_Print(row, str);
+}
+
+// --- algo.Smallstr32.ch.Print
+void algo::ch_Print(algo::Smallstr32& parent, algo::cstring &out) {
+    ch_Addary(out, ch_Getary(parent));
+}
+
+// --- algo.Smallstr32.ch.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr32& parent, algo::strptr rhs) {
+    bool retval = false;
+    if (rhs.n_elems <= 32) {
+        ch_SetStrptr(parent, rhs);
+        retval = true;
+    } else {
+        algo_lib::SaveBadTag("comment","text too long, limit 32");
+    }
+    return retval;
+}
+
+// --- algo.Smallstr32.ch.SetStrptr
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void algo::ch_SetStrptr(algo::Smallstr32& parent, const algo::strptr &rhs) {
+    int len = i32_Min(rhs.n_elems, 32);
+    char *rhs_elems = rhs.elems;
+    int i = 0;
+    int j = 0;
+    for (; i < len; i++, j++) {
+        parent.ch[j] = rhs_elems[i];
+    }
+    parent.n_ch       = u8(len);
+}
+
+// --- algo.Smallstr32..Hash
+u32 algo::Smallstr32_Hash(u32 prev, const algo::Smallstr32 & rhs) {
+    algo::strptr ch_strptr = ch_Getary(rhs);
+    prev = ::strptr_Hash(prev, ch_strptr);
+    return prev;
+}
+
+// --- algo.Smallstr32..ReadStrptrMaybe
+// Read fields of algo::Smallstr32 from an ascii string.
+// The format of the string is the format of the algo::Smallstr32's only field
+bool algo::Smallstr32_ReadStrptrMaybe(algo::Smallstr32 &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && algo::ch_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- algo.Smallstr32..Print
+// print string representation of algo::Smallstr32 to string LHS, no header -- cprint:algo.Smallstr32.String
+void algo::Smallstr32_Print(algo::Smallstr32 & row, algo::cstring &str) {
     algo::ch_Print(row, str);
 }
 
@@ -12719,7 +12942,7 @@ bool algo::value_SetStrptrMaybe(algo::TermStyle& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
-            switch (u64(ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
                 case LE_STR3('r','e','d'): {
                     value_SetEnum(parent,algo_TermStyle_red); ret = true; break;
                 }
@@ -12727,7 +12950,7 @@ bool algo::value_SetStrptrMaybe(algo::TermStyle& parent, algo::strptr rhs) {
             break;
         }
         case 4: {
-            switch (u64(ReadLE32(rhs.elems))) {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('b','l','u','e'): {
                     value_SetEnum(parent,algo_TermStyle_blue); ret = true; break;
                 }
@@ -12738,7 +12961,7 @@ bool algo::value_SetStrptrMaybe(algo::TermStyle& parent, algo::strptr rhs) {
             break;
         }
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('g','r','e','e','n'): {
                     value_SetEnum(parent,algo_TermStyle_green); ret = true; break;
                 }
@@ -12746,7 +12969,7 @@ bool algo::value_SetStrptrMaybe(algo::TermStyle& parent, algo::strptr rhs) {
             break;
         }
         case 7: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
                 case LE_STR7('d','e','f','a','u','l','t'): {
                     value_SetEnum(parent,algo_TermStyle_default); ret = true; break;
                 }
@@ -12823,7 +13046,7 @@ bool algo::value_SetStrptrMaybe(algo::TextJust& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 6: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('j','_','l','e','f','t'): {
                     value_SetEnum(parent,algo_TextJust_j_left); ret = true; break;
                 }
@@ -12831,7 +13054,7 @@ bool algo::value_SetStrptrMaybe(algo::TextJust& parent, algo::strptr rhs) {
             break;
         }
         case 7: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
                 case LE_STR7('j','_','r','i','g','h','t'): {
                     value_SetEnum(parent,algo_TextJust_j_right); ret = true; break;
                 }
@@ -12839,7 +13062,7 @@ bool algo::value_SetStrptrMaybe(algo::TextJust& parent, algo::strptr rhs) {
             break;
         }
         case 8: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('j','_','c','e','n','t','e','r'): {
                     value_SetEnum(parent,algo_TextJust_j_center); ret = true; break;
                 }
@@ -12863,7 +13086,7 @@ bool algo::value_ReadStrptrMaybe(algo::TextJust& parent, algo::strptr rhs) {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
-        retval = u32_ReadStrptrMaybe(parent.value,rhs);
+        retval = i32_ReadStrptrMaybe(parent.value,rhs);
     }
     return retval;
 }
@@ -12959,7 +13182,7 @@ void algo::value_Print(algo::U16Dec2& parent, cstring &outstr) {
     u16 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 2, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 2, value_start, true);
 }
 
 // --- algo.U16Dec2..ReadStrptrMaybe
@@ -13042,7 +13265,7 @@ void algo::value_Print(algo::U32Dec1& parent, cstring &outstr) {
     u32 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 1, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 1, value_start, true);
 }
 
 // --- algo.U32Dec1..ReadStrptrMaybe
@@ -13125,7 +13348,7 @@ void algo::value_Print(algo::U32Dec2& parent, cstring &outstr) {
     u32 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 2, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 2, value_start, true);
 }
 
 // --- algo.U32Dec2..ReadStrptrMaybe
@@ -13208,7 +13431,7 @@ void algo::value_Print(algo::U32Dec3& parent, cstring &outstr) {
     u32 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 3, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 3, value_start, true);
 }
 
 // --- algo.U32Dec3..ReadStrptrMaybe
@@ -13291,7 +13514,7 @@ void algo::value_Print(algo::U32Dec4& parent, cstring &outstr) {
     u32 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 4, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 4, value_start, true);
 }
 
 // --- algo.U32Dec4..ReadStrptrMaybe
@@ -13374,7 +13597,7 @@ void algo::value_Print(algo::U32Dec5& parent, cstring &outstr) {
     u32 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 5, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 5, value_start, true);
 }
 
 // --- algo.U32Dec5..ReadStrptrMaybe
@@ -13479,13 +13702,15 @@ void algo::ary_RemoveLast(algo::U64Ary& parent) {
 // Make sure N elements fit in array. Process dies if out of memory
 void algo::ary_AbsReserve(algo::U64Ary& parent, int n) {
     u32 old_max  = parent.ary_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(parent.ary_elems, old_max * sizeof(u64), new_max * sizeof(u64));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("algo.tary_nomem  field:algo.U64Ary.ary  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.ary_elems, old_max * sizeof(u64), new_max * sizeof(u64));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("algo.tary_nomem  field:algo.U64Ary.ary  comment:'out of memory'");
+        }
+        parent.ary_elems = (u64*)new_mem;
+        parent.ary_max = new_max;
     }
-    parent.ary_elems = (u64*)new_mem;
-    parent.ary_max = new_max;
 }
 
 // --- algo.U64Ary.ary.Setary
@@ -13584,7 +13809,7 @@ void algo::value_Print(algo::U64Dec10& parent, cstring &outstr) {
     u64 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 10, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 10, value_start, true);
 }
 
 // --- algo.U64Dec10..ReadStrptrMaybe
@@ -13667,7 +13892,7 @@ void algo::value_Print(algo::U64Dec2& parent, cstring &outstr) {
     u64 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 2, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 2, value_start, true);
 }
 
 // --- algo.U64Dec2..ReadStrptrMaybe
@@ -13750,7 +13975,7 @@ void algo::value_Print(algo::U64Dec4& parent, cstring &outstr) {
     u64 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 4, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 4, value_start, true);
 }
 
 // --- algo.U64Dec4..ReadStrptrMaybe
@@ -13833,7 +14058,7 @@ void algo::value_Print(algo::U64Dec5& parent, cstring &outstr) {
     u64 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 5, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 5, value_start, true);
 }
 
 // --- algo.U64Dec5..ReadStrptrMaybe
@@ -13916,7 +14141,7 @@ void algo::value_Print(algo::U64Dec6& parent, cstring &outstr) {
     u64 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 6, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 6, value_start, true);
 }
 
 // --- algo.U64Dec6..ReadStrptrMaybe
@@ -13999,7 +14224,7 @@ void algo::value_Print(algo::U64Dec7& parent, cstring &outstr) {
     u64 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 7, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 7, value_start, true);
 }
 
 // --- algo.U64Dec7..ReadStrptrMaybe
@@ -14082,7 +14307,7 @@ void algo::value_Print(algo::U64Dec8& parent, cstring &outstr) {
     u64 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 8, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 8, value_start, true);
 }
 
 // --- algo.U64Dec8..ReadStrptrMaybe
@@ -14165,7 +14390,7 @@ void algo::value_Print(algo::U64Dec9& parent, cstring &outstr) {
     u64 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += u64_FmtBufDec(value, 9, value_start, true);
+    outstr.ch_n += algo::u64_FmtBufDec(value, 9, value_start, true);
 }
 
 // --- algo.U64Dec9..ReadStrptrMaybe

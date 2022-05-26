@@ -87,9 +87,18 @@ void acr_ed::Main_CreateFinput() {
         acr_ed::_db.out_ssim << finput  << eol;
     }
 
+    if (acr_ed::_db.cmdline.foutput) {
+        dmmeta::Foutput foutput;
+        foutput.field = pool.field;
+        Foutput_Print(foutput, acr_ed::_db.out_ssim);
+        acr_ed::_db.out_ssim << eol;
+    }
+
     acr_ed::vis_Alloc() << ftype.ctype;
     acr_ed::vis_Alloc() << acr_ed::_db.cmdline.target<<".FDb";
 
+    // #AL# TODO: rewrite this using
+    // CreateHashIndex(hashfld);
     if (acr_ed::_db.cmdline.indexed) {
         // pick a hash based on the first field
         dmmeta::Field hash;

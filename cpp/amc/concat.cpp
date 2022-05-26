@@ -104,7 +104,7 @@ void amc::GenerateSetForCoveredTrees(amc::FField& sourceField, u64 filledRange, 
     if(filledRange == ((u64)1 << 32) - 1){
         GenerateForCurrentCoverage();
     }
-    aryptr<amc::FSubstr*> substrs =  amc::c_substr_field_Getary();
+    algo::aryptr<amc::FSubstr*> substrs =  amc::c_substr_field_Getary();
     for(int i = lastIndex + 1; i < elems_N(substrs) ; ++i){
         bool compatible = true;
         amc::FSubstr* substr = substrs[i];

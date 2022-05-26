@@ -25,11 +25,17 @@
 // Recent Changes: alexei.lebedev
 //
 
+#include "include/algo.h"
+
+#if !defined(WIN32)
 #include <arpa/inet.h>// inet_pton
 #include <sys/mman.h>// mmap,mlockall
-#ifdef __linux__
+#endif
+
+#if defined(__linux__)
 #include <sys/prctl.h>
 #endif
+
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
 
@@ -55,7 +61,7 @@ tempstr algo::SysEval(strptr cmd, FailokQ fail_ok, int max_output, bool echo) {
             int rc=pipe(pipefd);
             (void)rc;
             readpipe.fd.value = pipefd[0];
-            bash.stdout  << ">&" << pipefd[1];
+            bash.fstdout  << ">&" << pipefd[1];
             start_code=bash_Start(bash);
             (void)close(pipefd[1]);
         }
@@ -146,50 +152,18 @@ tempstr algo::DescribeWaitStatus(int status) {
 // setup instructions out of the execution path as possible, to avoid polluting instruction
 // cache.
 void algo::Throw(strptr text, Errcode err) NORETURN {
-    throw algo_lib::ErrorX(text,err);
+    tempstr str;
+    str << text;
+    if (code_Get(err)!=0) {
+        str << ": "
+            <<Keyval("errno", code_Get(err))
+            <<Keyval("errtext", err);
+    }
+    throw algo_lib::ErrorX(str);
 }
 
 void algo::Throw() NORETURN {
     Throw("", Errcode());
-}
-
-// -----------------------------------------------------------------------------
-
-// This function uses vertical distance to simplify an input curve,
-// which is assumed to be uniformly sampled.
-// Returned is array $backidx, which lists indices of input points.
-// Parameter tol specifies maximum vertical distance.
-// "arrsim" stands for "Array Simplify".
-void algo::RunArrsimp(algo::Arrsimp &arrsimp, aryptr<double> in) {
-    out_Reserve(arrsimp, elems_N(in));
-    if (!elems_N(in) || arrsimp.tol <= 0) {
-        frep_(i,elems_N(in)) {
-            out_Alloc(arrsimp) = i;
-        }
-    } else {
-        stack_Alloc(arrsimp) = i32_Range(0,elems_N(in));
-        while (stack_N(arrsimp) > 0) {
-            i32_Range r = stack_qLast(arrsimp);
-            stack_RemoveLast(arrsimp);
-            double lo = in[r.beg], hi = in[r.end-1], diff = (hi-lo)/(r.end-1-r.beg);
-            double maxd = arrsimp.tol;
-            int imax=-1;
-            for (int i = r.beg+1; i < r.end-1; i++) {
-                double this_diff = Abs(in[i] - (lo + diff * (i-r.beg)));
-                if (this_diff > maxd) {
-                    maxd = this_diff;
-                    imax=i;
-                }
-            }
-            if (imax != -1) {
-                stack_Alloc(arrsimp) = i32_Range(imax, r.end);
-                stack_Alloc(arrsimp) = i32_Range(r.beg, imax);
-            } else {
-                out_Alloc(arrsimp) = r.beg;
-            }
-        }
-        out_Alloc(arrsimp) = elems_N(in)-1;
-    }
 }
 
 // Set exit time of main loop to current time.
@@ -267,11 +241,17 @@ void algo_lib::fildes_Cleanup(algo_lib::FIohook &iohook) {
 
 // Call sleep/usleep, giving up MS milliseconds
 void algo::SleepMsec(int ms) {
+#ifdef WIN32
+    Sleep(ms);
+#else
     if (ms>=1000) {
         sleep(ms/1000);
         ms -= (ms/1000)*1000;
     }
-    usleep(ms*1000);
+    if (ms>0) {
+        usleep(ms*1000);
+    }
+#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -353,7 +333,7 @@ void algo::CopyFromToB16(void *from, void *to, u32 n) {
 // ExpFast(x) goes bad at x < -709 (exp doesn't)
 // Where it works, ExpFast makes a steady relative error of about 2%.
 double algo::ExpFast(double y) {
-#ifdef AOS_SSE42
+#if defined(AOS_SSE42) && !defined(WIN32)
     __m128d x = _mm_setr_pd((1<<20) / M_LN2, 1072693248 - 60801);
     // how do we get rid of the resulting movddup??
     __m128d ry = _mm_set1_pd(y);
@@ -374,17 +354,22 @@ double algo::ExpFast(double y) {
 // lock all presently, and future allocated bytes in physical memory.
 // Return success value. Errno provides more info.
 bool algo::LockAllMemory() {
+#if defined(WIN32) || defined(__CYGWIN__)
+    // not supported
+    return false;
+#else
     return mlockall(MCL_CURRENT | MCL_FUTURE)==0;
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
 static void SignalHandler(int sig) {
     algo_lib::_db.last_signal = sig;
-    i64 t_now = get_cycles();
+    i64 t_now = algo::get_cycles();
     // 2 interrupts within 2 second -- die.
     // otherwise the process becomes unkillable
-    i64 thresh = algo_lib::_db.t_last_signal + get_cpu_hz_int()*2;
+    i64 thresh = algo_lib::_db.t_last_signal + algo::get_cpu_hz_int()*2;
     if (thresh > t_now) {
         kill(getpid(), SIGKILL);
     }
@@ -395,13 +380,13 @@ static void SignalHandler(int sig) {
 void algo::SetupExitSignals(bool sigint) {
     struct sigaction sigact;
     sigact.sa_handler = SignalHandler;
-    sigemptyset( &sigact.sa_mask );
+    sigemptyset(&sigact.sa_mask);
     sigact.sa_flags = SA_RESTART;
-    errno_vrfy(sigaction( SIGHUP, &sigact, 0 )==0,"sigaction");
+    (void)sigaction( SIGHUP, &sigact, 0);
     if (sigint) {
-        errno_vrfy(sigaction( SIGINT, &sigact, 0 )==0,"sigaction");
+        (void)sigaction( SIGINT, &sigact, 0);
     }
-    errno_vrfy(sigaction(SIGTERM, &sigact, 0 )==0,"sigaction");
+    (void)sigaction(SIGTERM, &sigact, 0);
     // SIGPIPE, which can occur on sockets, should result in an error (EPIPE)
     // not in killed processes
     signal(SIGPIPE, SIG_IGN);
@@ -458,8 +443,9 @@ const tempstr algo::GetHostname() {
     tempstr str;
     ch_Reserve(str,128);
     int ret = gethostname(str.ch_elems,str.ch_max);
-    vrfy(!ret,"gethostname() failed");
-    str.ch_n = strlen(str.ch_elems);
+    if (ret == 0) {
+        str.ch_n = u32(strlen(str.ch_elems));
+    }
     return str;
 }
 
@@ -467,14 +453,15 @@ const tempstr algo::GetDomainname() {
     tempstr str;
     ch_Reserve(str,128);
     int ret = getdomainname(str.ch_elems,str.ch_max);
-    vrfy(!ret,"getdomainname() failed");
-    str.ch_n = strlen(str.ch_elems);
+    if (ret == 0) {
+        str.ch_n = u32(strlen(str.ch_elems));
+    }
     return str;
 }
 
 // Die when parent process dies
 void algo_lib::DieWithParent() {
-#if defined(__MACH__) || __FreeBSD__>0
+#if defined(__MACH__) || __FreeBSD__>0 || defined(__CYGWIN__) || defined(WIN32)
     // sadly, there is no way to make a child exit
     // when a parent dies, so structured concurrency
     // cannot be implemented
@@ -527,18 +514,19 @@ i32 algo::i32_WeakRandom(i32 modulo) {
 
 // -----------------------------------------------------------------------------
 
-// Apply redirect for given fd, _exit on error
-// This function is used to implement amc's Exec
+// Interpret redirect string, return resulting fd
+// If no redirect applies, return -1
+// If a valid fd is returned, it is unique and may be closd with close()
 // Supported redirects:
 // >filename  -- on exit, dst_fd is writing to a file
 // <filename  -- on exit, dst_fd is reading from a file
 // >>filename -- on exit, dst_fd is appending to a file
 // >&fd       -- on exit, dst_fd is pointing to fd
 // <&fd       -- on exit, dst_fd is pointing to fd
-void algo_lib::ApplyRedirect(strptr redirect, int dst_fd) {
-    StringIter iter(Trimmed(redirect));
+// This function could be called openex
+int algo_lib::CreateRedirect(strptr redirect) {
+    algo::StringIter iter(Trimmed(redirect));
     algo::FileFlags flags;
-    int rc = 0;
     int src_fd = -1;
     bool try_dup = false;
     if (SkipChar(iter,'<')) {// <
@@ -551,26 +539,38 @@ void algo_lib::ApplyRedirect(strptr redirect, int dst_fd) {
         }
         try_dup = true;
     }
+    // return existing fd
     if (try_dup && SkipChar(iter,'&')) {// >&, <&, >>& forms
-        src_fd = ParseI32(iter,-1);
-        if (src_fd == -1) {
-            rc=EINVAL;
-        }
+        src_fd = dup(ParseI32(iter,-1));
     }
+    // open file with flags
     if (src_fd == -1 && !iter.EofQ()) {// try filename
         tempstr fname;
         fname << Trimmed(iter.Rest());
         src_fd = algo::OpenFile(Zeroterm(fname), flags).value;
-        if (src_fd == -1) {
-            rc=errno;
+    }
+    return src_fd;
+}
+
+// -----------------------------------------------------------------------------
+
+// Interpret redirect string and make DST_FD consistent with
+// the intended state. Return 0 on success, -1 on failure
+// This function is usually called in the child process right after fork
+// See CreateRedirect for interpretation of redirect string
+int algo_lib::ApplyRedirect(strptr redirect, int dst_fd) {
+    int rc=0;
+    if (redirect != "") {
+        int src_fd = CreateRedirect(redirect);
+        if (src_fd < 0) {
+            rc=-1;
+        }
+        if (src_fd >=0 && src_fd != dst_fd) {
+            (void)dup2(src_fd,dst_fd);
+            (void)close(src_fd);
         }
     }
-    if (src_fd >=0 && src_fd != dst_fd) {
-        (void)dup2(src_fd,dst_fd);
-    }
-    if (rc!=0) {
-        _exit(rc);
-    }
+    return rc;
 }
 
 // -----------------------------------------------------------------------------
@@ -583,12 +583,13 @@ bool algo_lib::IpmaskValidQ(const strptr ipmask) {
     i32 i = Find(ipmask,'/');
     if (valid && i != -1) {
         strptr subnet_mask = Pathcomp(ipmask, "/RR");
-        StringIter iter(subnet_mask);
+        algo::StringIter iter(subnet_mask);
         u32 mask_len = 0;
         valid  = ch_N(subnet_mask) > 0 && TryParseU32(iter, mask_len);
-        valid  = valid && ((ip.ipv4 == 0 && mask_len == 0) || (mask_len > 0 && mask_len <=32)); // 0.0.0.0/0 is valid
-        valid  = valid && (mask_len == 32 || (ip.ipv4 << mask_len == 0));  // /32 is valid for any addr
-
+        // 0.0.0.0/0 is valid
+        valid  = valid && ((ip.ipv4 == 0 && mask_len == 0) || (mask_len > 0 && mask_len <=32));
+        // /32 is valid for any addr
+        valid  = valid && (mask_len == 32 || (ip.ipv4 << mask_len == 0));
     }
     return valid;
 }

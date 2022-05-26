@@ -30,7 +30,7 @@
 // -----------------------------------------------------------------------------
 
 static void RemoveUnderscores(strptr from, cstring &to) {
-    aryptr<char> ignore = ch_AllocN(to,ch_N(from));
+    algo::aryptr<char> ignore = ch_AllocN(to,ch_N(from));
     (void)ignore;
     int j=0;
     for (int i=0; i<from.n_elems; i++) {
@@ -81,6 +81,18 @@ void amc::tfunc_Field_Cleanup() {
         }
         cleanup.extrn = true;
         Ins(&R, cleanup.comment, "User-defined cleanup function invoked for field $name of $Partype");
+    }
+}
+
+void amc::tfunc_Field_Userinit() {
+    algo_lib::Replscope &R = amc::_db.genfield.R;
+    amc::FField &field = *amc::_db.genfield.p_field;
+    if (field.c_fuserinit) {
+        amc::FFunc& func = amc::CreateCurFunc(true); {
+            AddRetval(func, "void", "", "");
+        }
+        func.extrn = true;
+        Ins(&R, func.comment, "User-defined init function invoked for field $name of $Partype");
     }
 }
 

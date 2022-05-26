@@ -97,7 +97,7 @@ static void GenMsgcurs(amc::FCtype &fctype, amc::FTypefld &typefld) {
     {
         amc::FFunc &func = CreateCursFunc(fctype, "Reset");
         AddProtoArg(func, Subst(R,"$Cpptype_curs&"), "curs");
-        AddProtoArg(func, "memptr", "buf");
+        AddProtoArg(func, "algo::memptr", "buf");
         amc::AddRetval(func, "void", "", "");
         Ins(&R, func.body, "curs.bytes = buf.elems;");
         Ins(&R, func.body, "curs.limit = buf.n_elems;");

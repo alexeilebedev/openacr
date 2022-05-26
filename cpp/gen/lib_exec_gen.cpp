@@ -18,6 +18,8 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
@@ -355,7 +357,7 @@ bool lib_exec::syscmd_XrefMaybe(lib_exec::FSyscmd &row) {
 // --- lib_exec.FDb.ind_running.Find
 // Find row by key. Return NULL if not found.
 lib_exec::FSyscmd* lib_exec::ind_running_Find(i32 key) {
-    u32 index = i32_Hash(0, key) & (_db.ind_running_buckets_n - 1);
+    u32 index = ::i32_Hash(0, key) & (_db.ind_running_buckets_n - 1);
     lib_exec::FSyscmd* *e = &_db.ind_running_buckets_elems[index];
     lib_exec::FSyscmd* ret=NULL;
     do {
@@ -389,7 +391,7 @@ bool lib_exec::ind_running_InsertMaybe(lib_exec::FSyscmd& row) {
     ind_running_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_running_next == (lib_exec::FSyscmd*)-1)) {// check if in hash already
-        u32 index = i32_Hash(0, row.pid) & (_db.ind_running_buckets_n - 1);
+        u32 index = ::i32_Hash(0, row.pid) & (_db.ind_running_buckets_n - 1);
         lib_exec::FSyscmd* *prev = &_db.ind_running_buckets_elems[index];
         do {
             lib_exec::FSyscmd* ret = *prev;
@@ -415,7 +417,7 @@ bool lib_exec::ind_running_InsertMaybe(lib_exec::FSyscmd& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_exec::ind_running_Remove(lib_exec::FSyscmd& row) {
     if (LIKELY(row.ind_running_next != (lib_exec::FSyscmd*)-1)) {// check if in hash already
-        u32 index = i32_Hash(0, row.pid) & (_db.ind_running_buckets_n - 1);
+        u32 index = ::i32_Hash(0, row.pid) & (_db.ind_running_buckets_n - 1);
         lib_exec::FSyscmd* *prev = &_db.ind_running_buckets_elems[index]; // addr of pointer to current element
         while (lib_exec::FSyscmd *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -436,7 +438,7 @@ void lib_exec::ind_running_Reserve(int n) {
     u32 new_nelems   = _db.ind_running_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(lib_exec::FSyscmd*);
         u32 new_size = new_nbuckets * sizeof(lib_exec::FSyscmd*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -452,7 +454,7 @@ void lib_exec::ind_running_Reserve(int n) {
             while (elem) {
                 lib_exec::FSyscmd &row        = *elem;
                 lib_exec::FSyscmd* next       = row.ind_running_next;
-                u32 index          = i32_Hash(0, row.pid) & (new_nbuckets-1);
+                u32 index          = ::i32_Hash(0, row.pid) & (new_nbuckets-1);
                 row.ind_running_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1196,7 +1198,7 @@ bool lib_exec::value_SetStrptrMaybe(lib_exec::FieldId& parent, algo::strptr rhs)
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,lib_exec_FieldId_value); ret = true; break;
                 }

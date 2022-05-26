@@ -22,6 +22,10 @@ inline bool acr_compl::Badness::operator ==(const acr_compl::Badness &rhs) const
     return acr_compl::Badness_Eq(const_cast<acr_compl::Badness&>(*this),const_cast<acr_compl::Badness&>(rhs));
 }
 
+inline bool acr_compl::Badness::operator !=(const acr_compl::Badness &rhs) const {
+    return !acr_compl::Badness_Eq(const_cast<acr_compl::Badness&>(*this),const_cast<acr_compl::Badness&>(rhs));
+}
+
 inline bool acr_compl::Badness::operator <(const acr_compl::Badness &rhs) const {
     return acr_compl::Badness_Lt(const_cast<acr_compl::Badness&>(*this),const_cast<acr_compl::Badness&>(rhs));
 }
@@ -320,12 +324,12 @@ inline bool acr_compl::ctype_EmptyQ() {
 // --- acr_compl.FDb.ctype.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_compl::FCtype* acr_compl::ctype_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_compl::FCtype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ctype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ctype_lary[bsr][index];
     }
     return retval;
@@ -374,12 +378,12 @@ inline bool acr_compl::field_EmptyQ() {
 // --- acr_compl.FDb.field.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_compl::FField* acr_compl::field_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_compl::FField *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.field_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.field_lary[bsr][index];
     }
     return retval;
@@ -428,12 +432,12 @@ inline bool acr_compl::ssimfile_EmptyQ() {
 // --- acr_compl.FDb.ssimfile.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_compl::FSsimfile* acr_compl::ssimfile_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_compl::FSsimfile *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ssimfile_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ssimfile_lary[bsr][index];
     }
     return retval;
@@ -482,12 +486,12 @@ inline bool acr_compl::completion_EmptyQ() {
 // --- acr_compl.FDb.completion.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_compl::FCompletion* acr_compl::completion_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_compl::FCompletion *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.completion_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.completion_lary[bsr][index];
     }
     return retval;
@@ -524,12 +528,12 @@ inline bool acr_compl::anonfld_EmptyQ() {
 // --- acr_compl.FDb.anonfld.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_compl::FAnonfld* acr_compl::anonfld_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_compl::FAnonfld *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.anonfld_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.anonfld_lary[bsr][index];
     }
     return retval;
@@ -596,12 +600,12 @@ inline bool acr_compl::ns_EmptyQ() {
 // --- acr_compl.FDb.ns.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_compl::FNs* acr_compl::ns_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_compl::FNs *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ns_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ns_lary[bsr][index];
     }
     return retval;

@@ -10,24 +10,27 @@
 #include "include/algo.h"  // hard-coded include
 #include "include/gen/src_func_gen.h"
 #include "include/gen/src_func_gen.inl.h"
-#include "include/gen/dev_gen.h"
-#include "include/gen/dev_gen.inl.h"
-#include "include/gen/algo_gen.h"
-#include "include/gen/algo_gen.inl.h"
-#include "include/gen/algo_lib_gen.h"
-#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/dmmeta_gen.inl.h"
+#include "include/gen/algo_gen.h"
+#include "include/gen/algo_gen.inl.h"
 #include "include/gen/report_gen.h"
 #include "include/gen/report_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
+#include "include/gen/algo_lib_gen.h"
+#include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/dev_gen.h"
+#include "include/gen/dev_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 src_func::FDb   src_func::_db;    // dependency found via dev.targdep
 
@@ -46,7 +49,6 @@ const char *src_func_help =
 "    -updateproto          Update prototypes in headers. default: false\n"
 "    -listfunc             Show functions in target. default: false\n"
 "    -iffy                 Select functions that may contain errors. default: false\n"
-"    -check                (with -iffy) Exit with error if iffy functions found. default: false\n"
 "    -proto                (with -listfunc) List prototypes only. default: false\n"
 "    -gen                  (with -listfunc) Visit generated files. default: false\n"
 "    -showloc              (with -listfunc) Show file location. default: true\n"
@@ -54,6 +56,8 @@ const char *src_func_help =
 "    -showsortkey          (with -listfunc) Display function sortkey. default: false\n"
 "    -sortname             (with -listfunc) Sort functions by name. default: false\n"
 "    -e                    (with -listfunc) Edit found functions. default: false\n"
+"    -baddecl              Report and fail on bad declarations. default: false\n"
+"    -report               . default: false\n"
 "    -verbose              Enable verbose mode\n"
 "    -debug                Enable debug mode\n"
 "    -version              Show version information\n"
@@ -74,7 +78,6 @@ const char *src_func_syntax =
 " -updateproto:flag\n"
 " -listfunc:flag\n"
 " -iffy:flag\n"
-" -check:flag\n"
 " -proto:flag\n"
 " -gen:flag\n"
 " -showloc:flag=true\n"
@@ -82,6 +85,8 @@ const char *src_func_syntax =
 " -showsortkey:flag\n"
 " -sortname:flag\n"
 " -e:flag\n"
+" -baddecl:flag\n"
+" -report:flag\n"
 ;
 } // namespace src_func
 src_func::_db_bh_func_curs::~_db_bh_func_curs() {
@@ -106,39 +111,14 @@ namespace src_func {
     static bool          fstep_InputMaybe(dmmeta::Fstep &elem) __attribute__((nothrow));
     static bool          gstatic_InputMaybe(dmmeta::Gstatic &elem) __attribute__((nothrow));
     static bool          ctypelen_InputMaybe(dmmeta::Ctypelen &elem) __attribute__((nothrow));
-    static bool          badline_InputMaybe(dev::Badline &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // Extract next character from STR and advance IDX
-    static u64           sortkey_Nextchar(const src_func::FFunc& func, strptr &str, int &idx) __attribute__((nothrow));
+    static u64           sortkey_Nextchar(const src_func::FFunc& func, algo::strptr &str, int &idx) __attribute__((nothrow));
     static void          SizeCheck();
 } // end namespace src_func
-
-// --- src_func.FBadline.base.CopyOut
-// Copy fields out of row
-void src_func::badline_CopyOut(src_func::FBadline &row, dev::Badline &out) {
-    out.badline = row.badline;
-    out.expr = row.expr;
-    out.targsrc_regx = row.targsrc_regx;
-    out.comment = row.comment;
-}
-
-// --- src_func.FBadline.base.CopyIn
-// Copy fields in to row
-void src_func::badline_CopyIn(src_func::FBadline &row, dev::Badline &in) {
-    row.badline = in.badline;
-    row.expr = in.expr;
-    row.targsrc_regx = in.targsrc_regx;
-    row.comment = in.comment;
-}
-
-// --- src_func.FBadline..Uninit
-void src_func::FBadline_Uninit(src_func::FBadline& badline) {
-    src_func::FBadline &row = badline; (void)row;
-    ind_badline_Remove(row); // remove badline from index ind_badline
-}
 
 // --- src_func.FCtypelen.base.CopyOut
 // Copy fields out of row
@@ -272,7 +252,7 @@ void src_func::MainArgs(int argc, char **argv) {
 // --- src_func.FDb._db.MainLoop
 // Main loop.
 void src_func::MainLoop() {
-    SchedTime time(get_cycles());
+    algo::SchedTime time(algo::get_cycles());
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
@@ -302,7 +282,7 @@ static void src_func::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_func.Input'  signature:'ed05427e5503605f81d52ef70aa44d1697440397'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_func.Input'  signature:'e2e33d5cf56507e68cc0ab81237691e895bf9c42'");
 }
 
 // --- src_func.FDb._db.StaticCheck
@@ -354,12 +334,6 @@ bool src_func::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && ctypelen_InputMaybe(elem);
             break;
         }
-        case src_func_TableId_dev_Badline: { // finput:src_func.FDb.badline
-            dev::Badline elem;
-            retval = dev::Badline_ReadStrptrMaybe(elem, str);
-            retval = retval && badline_InputMaybe(elem);
-            break;
-        }
         default:
         retval = algo_lib::InsertStrptrMaybe(str);
         break;
@@ -375,8 +349,8 @@ bool src_func::InsertStrptrMaybe(algo::strptr str) {
 bool src_func::LoadTuplesMaybe(algo::strptr root) {
     bool retval = true;
     static const char *ssimfiles[] = {
-        "dev.badline", "dmmeta.ctypelen", "dmmeta.dispatch", "dmmeta.fstep"
-        , "dev.target", "dev.targsrc", "dmmeta.gstatic"
+        "dmmeta.ctypelen", "dmmeta.dispatch", "dmmeta.fstep", "dev.target"
+        , "dev.targsrc", "dmmeta.gstatic"
         , NULL};
         retval = algo_lib::DoLoadTuples(root, src_func::InsertStrptrMaybe, ssimfiles, true);
         return retval;
@@ -601,7 +575,7 @@ bool src_func::target_XrefMaybe(src_func::FTarget &row) {
 // --- src_func.FDb.ind_target.Find
 // Find row by key. Return NULL if not found.
 src_func::FTarget* src_func::ind_target_Find(const algo::strptr& key) {
-    u32 index = Smallstr16_Hash(0, key) & (_db.ind_target_buckets_n - 1);
+    u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_target_buckets_n - 1);
     src_func::FTarget* *e = &_db.ind_target_buckets_elems[index];
     src_func::FTarget* ret=NULL;
     do {
@@ -643,7 +617,7 @@ bool src_func::ind_target_InsertMaybe(src_func::FTarget& row) {
     ind_target_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_target_next == (src_func::FTarget*)-1)) {// check if in hash already
-        u32 index = Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
+        u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
         src_func::FTarget* *prev = &_db.ind_target_buckets_elems[index];
         do {
             src_func::FTarget* ret = *prev;
@@ -669,7 +643,7 @@ bool src_func::ind_target_InsertMaybe(src_func::FTarget& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void src_func::ind_target_Remove(src_func::FTarget& row) {
     if (LIKELY(row.ind_target_next != (src_func::FTarget*)-1)) {// check if in hash already
-        u32 index = Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
+        u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
         src_func::FTarget* *prev = &_db.ind_target_buckets_elems[index]; // addr of pointer to current element
         while (src_func::FTarget *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -690,7 +664,7 @@ void src_func::ind_target_Reserve(int n) {
     u32 new_nelems   = _db.ind_target_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(src_func::FTarget*);
         u32 new_size = new_nbuckets * sizeof(src_func::FTarget*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -706,7 +680,7 @@ void src_func::ind_target_Reserve(int n) {
             while (elem) {
                 src_func::FTarget &row        = *elem;
                 src_func::FTarget* next       = row.ind_target_next;
-                u32 index          = Smallstr16_Hash(0, row.target) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr16_Hash(0, row.target) & (new_nbuckets-1);
                 row.ind_target_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -821,7 +795,7 @@ bool src_func::func_XrefMaybe(src_func::FFunc &row) {
 // --- src_func.FDb.ind_func.Find
 // Find row by key. Return NULL if not found.
 src_func::FFunc* src_func::ind_func_Find(const algo::strptr& key) {
-    u32 index = cstring_Hash(0, key) & (_db.ind_func_buckets_n - 1);
+    u32 index = algo::cstring_Hash(0, key) & (_db.ind_func_buckets_n - 1);
     src_func::FFunc* *e = &_db.ind_func_buckets_elems[index];
     src_func::FFunc* ret=NULL;
     do {
@@ -847,7 +821,7 @@ bool src_func::ind_func_InsertMaybe(src_func::FFunc& row) {
     ind_func_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_func_next == (src_func::FFunc*)-1)) {// check if in hash already
-        u32 index = cstring_Hash(0, row.func) & (_db.ind_func_buckets_n - 1);
+        u32 index = algo::cstring_Hash(0, row.func) & (_db.ind_func_buckets_n - 1);
         src_func::FFunc* *prev = &_db.ind_func_buckets_elems[index];
         do {
             src_func::FFunc* ret = *prev;
@@ -873,7 +847,7 @@ bool src_func::ind_func_InsertMaybe(src_func::FFunc& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void src_func::ind_func_Remove(src_func::FFunc& row) {
     if (LIKELY(row.ind_func_next != (src_func::FFunc*)-1)) {// check if in hash already
-        u32 index = cstring_Hash(0, row.func) & (_db.ind_func_buckets_n - 1);
+        u32 index = algo::cstring_Hash(0, row.func) & (_db.ind_func_buckets_n - 1);
         src_func::FFunc* *prev = &_db.ind_func_buckets_elems[index]; // addr of pointer to current element
         while (src_func::FFunc *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -894,7 +868,7 @@ void src_func::ind_func_Reserve(int n) {
     u32 new_nelems   = _db.ind_func_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(src_func::FFunc*);
         u32 new_size = new_nbuckets * sizeof(src_func::FFunc*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -910,7 +884,7 @@ void src_func::ind_func_Reserve(int n) {
             while (elem) {
                 src_func::FFunc &row        = *elem;
                 src_func::FFunc* next       = row.ind_func_next;
-                u32 index          = cstring_Hash(0, row.func) & (new_nbuckets-1);
+                u32 index          = algo::cstring_Hash(0, row.func) & (new_nbuckets-1);
                 row.ind_func_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1395,7 +1369,7 @@ bool src_func::gstatic_XrefMaybe(src_func::FGstatic &row) {
 // --- src_func.FDb.ind_genprefix.Find
 // Find row by key. Return NULL if not found.
 src_func::FGenprefix* src_func::ind_genprefix_Find(const algo::strptr& key) {
-    u32 index = Smallstr100_Hash(0, key) & (_db.ind_genprefix_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_genprefix_buckets_n - 1);
     src_func::FGenprefix* *e = &_db.ind_genprefix_buckets_elems[index];
     src_func::FGenprefix* ret=NULL;
     do {
@@ -1437,7 +1411,7 @@ bool src_func::ind_genprefix_InsertMaybe(src_func::FGenprefix& row) {
     ind_genprefix_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_genprefix_next == (src_func::FGenprefix*)-1)) {// check if in hash already
-        u32 index = Smallstr100_Hash(0, row.genprefix) & (_db.ind_genprefix_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.genprefix) & (_db.ind_genprefix_buckets_n - 1);
         src_func::FGenprefix* *prev = &_db.ind_genprefix_buckets_elems[index];
         do {
             src_func::FGenprefix* ret = *prev;
@@ -1463,7 +1437,7 @@ bool src_func::ind_genprefix_InsertMaybe(src_func::FGenprefix& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void src_func::ind_genprefix_Remove(src_func::FGenprefix& row) {
     if (LIKELY(row.ind_genprefix_next != (src_func::FGenprefix*)-1)) {// check if in hash already
-        u32 index = Smallstr100_Hash(0, row.genprefix) & (_db.ind_genprefix_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.genprefix) & (_db.ind_genprefix_buckets_n - 1);
         src_func::FGenprefix* *prev = &_db.ind_genprefix_buckets_elems[index]; // addr of pointer to current element
         while (src_func::FGenprefix *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1484,7 +1458,7 @@ void src_func::ind_genprefix_Reserve(int n) {
     u32 new_nelems   = _db.ind_genprefix_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(src_func::FGenprefix*);
         u32 new_size = new_nbuckets * sizeof(src_func::FGenprefix*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -1500,7 +1474,7 @@ void src_func::ind_genprefix_Reserve(int n) {
             while (elem) {
                 src_func::FGenprefix &row        = *elem;
                 src_func::FGenprefix* next       = row.ind_genprefix_next;
-                u32 index          = Smallstr100_Hash(0, row.genprefix) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.genprefix) & (new_nbuckets-1);
                 row.ind_genprefix_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1623,7 +1597,7 @@ bool src_func::ctypelen_XrefMaybe(src_func::FCtypelen &row) {
 // --- src_func.FDb.ind_ctypelen.Find
 // Find row by key. Return NULL if not found.
 src_func::FCtypelen* src_func::ind_ctypelen_Find(const algo::strptr& key) {
-    u32 index = Smallstr50_Hash(0, key) & (_db.ind_ctypelen_buckets_n - 1);
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ctypelen_buckets_n - 1);
     src_func::FCtypelen* *e = &_db.ind_ctypelen_buckets_elems[index];
     src_func::FCtypelen* ret=NULL;
     do {
@@ -1665,7 +1639,7 @@ bool src_func::ind_ctypelen_InsertMaybe(src_func::FCtypelen& row) {
     ind_ctypelen_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctypelen_next == (src_func::FCtypelen*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.ctype) & (_db.ind_ctypelen_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctypelen_buckets_n - 1);
         src_func::FCtypelen* *prev = &_db.ind_ctypelen_buckets_elems[index];
         do {
             src_func::FCtypelen* ret = *prev;
@@ -1691,7 +1665,7 @@ bool src_func::ind_ctypelen_InsertMaybe(src_func::FCtypelen& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void src_func::ind_ctypelen_Remove(src_func::FCtypelen& row) {
     if (LIKELY(row.ind_ctypelen_next != (src_func::FCtypelen*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.ctype) & (_db.ind_ctypelen_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctypelen_buckets_n - 1);
         src_func::FCtypelen* *prev = &_db.ind_ctypelen_buckets_elems[index]; // addr of pointer to current element
         while (src_func::FCtypelen *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1712,7 +1686,7 @@ void src_func::ind_ctypelen_Reserve(int n) {
     u32 new_nelems   = _db.ind_ctypelen_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(src_func::FCtypelen*);
         u32 new_size = new_nbuckets * sizeof(src_func::FCtypelen*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -1728,7 +1702,7 @@ void src_func::ind_ctypelen_Reserve(int n) {
             while (elem) {
                 src_func::FCtypelen &row        = *elem;
                 src_func::FCtypelen* next       = row.ind_ctypelen_next;
-                u32 index          = Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
                 row.ind_ctypelen_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1738,234 +1712,6 @@ void src_func::ind_ctypelen_Reserve(int n) {
         algo_lib::malloc_FreeMem(_db.ind_ctypelen_buckets_elems, old_size);
         _db.ind_ctypelen_buckets_elems = new_buckets;
         _db.ind_ctypelen_buckets_n = new_nbuckets;
-    }
-}
-
-// --- src_func.FDb.badline.Alloc
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-src_func::FBadline& src_func::badline_Alloc() {
-    src_func::FBadline* row = badline_AllocMaybe();
-    if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("src_func.out_of_mem  field:src_func.FDb.badline  comment:'Alloc failed'");
-    }
-    return *row;
-}
-
-// --- src_func.FDb.badline.AllocMaybe
-// Allocate memory for new element. If out of memory, return NULL.
-src_func::FBadline* src_func::badline_AllocMaybe() {
-    src_func::FBadline *row = (src_func::FBadline*)badline_AllocMem();
-    if (row) {
-        new (row) src_func::FBadline; // call constructor
-    }
-    return row;
-}
-
-// --- src_func.FDb.badline.InsertMaybe
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-src_func::FBadline* src_func::badline_InsertMaybe(const dev::Badline &value) {
-    src_func::FBadline *row = &badline_Alloc(); // if out of memory, process dies. if input error, return NULL.
-    badline_CopyIn(*row,const_cast<dev::Badline&>(value));
-    bool ok = badline_XrefMaybe(*row); // this may return false
-    if (!ok) {
-        badline_RemoveLast(); // delete offending row, any existing xrefs are cleared
-        row = NULL; // forget this ever happened
-    }
-    return row;
-}
-
-// --- src_func.FDb.badline.AllocMem
-// Allocate space for one element. If no memory available, return NULL.
-void* src_func::badline_AllocMem() {
-    u64 new_nelems     = _db.badline_n+1;
-    // compute level and index on level
-    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
-    u64 base  = u64(1)<<bsr;
-    u64 index = new_nelems-base;
-    void *ret = NULL;
-    // if level doesn't exist yet, create it
-    src_func::FBadline*  lev   = NULL;
-    if (bsr < 32) {
-        lev = _db.badline_lary[bsr];
-        if (!lev) {
-            lev=(src_func::FBadline*)algo_lib::malloc_AllocMem(sizeof(src_func::FBadline) * (u64(1)<<bsr));
-            _db.badline_lary[bsr] = lev;
-        }
-    }
-    // allocate element from this level
-    if (lev) {
-        _db.badline_n = new_nelems;
-        ret = lev + index;
-    }
-    return ret;
-}
-
-// --- src_func.FDb.badline.RemoveAll
-// Remove all elements from Lary
-void src_func::badline_RemoveAll() {
-    for (u64 n = _db.badline_n; n>0; ) {
-        n--;
-        badline_qFind(u64(n)).~FBadline(); // destroy last element
-        _db.badline_n = n;
-    }
-}
-
-// --- src_func.FDb.badline.RemoveLast
-// Delete last element of array. Do nothing if array is empty.
-void src_func::badline_RemoveLast() {
-    u64 n = _db.badline_n;
-    if (n > 0) {
-        n -= 1;
-        badline_qFind(u64(n)).~FBadline();
-        _db.badline_n = n;
-    }
-}
-
-// --- src_func.FDb.badline.InputMaybe
-static bool src_func::badline_InputMaybe(dev::Badline &elem) {
-    bool retval = true;
-    retval = badline_InsertMaybe(elem);
-    return retval;
-}
-
-// --- src_func.FDb.badline.XrefMaybe
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool src_func::badline_XrefMaybe(src_func::FBadline &row) {
-    bool retval = true;
-    (void)row;
-    // insert badline into index ind_badline
-    if (true) { // user-defined insert condition
-        bool success = ind_badline_InsertMaybe(row);
-        if (UNLIKELY(!success)) {
-            ch_RemoveAll(algo_lib::_db.errtext);
-            algo_lib::_db.errtext << "src_func.duplicate_key  xref:src_func.FDb.ind_badline"; // check for duplicate key
-            return false;
-        }
-    }
-    return retval;
-}
-
-// --- src_func.FDb.ind_badline.Find
-// Find row by key. Return NULL if not found.
-src_func::FBadline* src_func::ind_badline_Find(const algo::strptr& key) {
-    u32 index = Smallstr50_Hash(0, key) & (_db.ind_badline_buckets_n - 1);
-    src_func::FBadline* *e = &_db.ind_badline_buckets_elems[index];
-    src_func::FBadline* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).badline == key;
-        if (done) break;
-        e         = &ret->ind_badline_next;
-    } while (true);
-    return ret;
-}
-
-// --- src_func.FDb.ind_badline.FindX
-// Look up row by key and return reference. Throw exception if not found
-src_func::FBadline& src_func::ind_badline_FindX(const algo::strptr& key) {
-    src_func::FBadline* ret = ind_badline_Find(key);
-    vrfy(ret, tempstr() << "src_func.key_error  table:ind_badline  key:'"<<key<<"'  comment:'key not found'");
-    return *ret;
-}
-
-// --- src_func.FDb.ind_badline.GetOrCreate
-// Find row by key. If not found, create and x-reference a new row with with this key.
-src_func::FBadline& src_func::ind_badline_GetOrCreate(const algo::strptr& key) {
-    src_func::FBadline* ret = ind_badline_Find(key);
-    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
-        ret         = &badline_Alloc();
-        (*ret).badline = key;
-        bool good = badline_XrefMaybe(*ret);
-        if (!good) {
-            badline_RemoveLast(); // delete offending row, any existing xrefs are cleared
-            ret = NULL;
-        }
-    }
-    return *ret;
-}
-
-// --- src_func.FDb.ind_badline.InsertMaybe
-// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool src_func::ind_badline_InsertMaybe(src_func::FBadline& row) {
-    ind_badline_Reserve(1);
-    bool retval = true; // if already in hash, InsertMaybe returns true
-    if (LIKELY(row.ind_badline_next == (src_func::FBadline*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.badline) & (_db.ind_badline_buckets_n - 1);
-        src_func::FBadline* *prev = &_db.ind_badline_buckets_elems[index];
-        do {
-            src_func::FBadline* ret = *prev;
-            if (!ret) { // exit condition 1: reached the end of the list
-                break;
-            }
-            if ((*ret).badline == row.badline) { // exit condition 2: found matching key
-                retval = false;
-                break;
-            }
-            prev = &ret->ind_badline_next;
-        } while (true);
-        if (retval) {
-            row.ind_badline_next = *prev;
-            _db.ind_badline_n++;
-            *prev = &row;
-        }
-    }
-    return retval;
-}
-
-// --- src_func.FDb.ind_badline.Remove
-// Remove reference to element from hash index. If element is not in hash, do nothing
-void src_func::ind_badline_Remove(src_func::FBadline& row) {
-    if (LIKELY(row.ind_badline_next != (src_func::FBadline*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.badline) & (_db.ind_badline_buckets_n - 1);
-        src_func::FBadline* *prev = &_db.ind_badline_buckets_elems[index]; // addr of pointer to current element
-        while (src_func::FBadline *next = *prev) {                          // scan the collision chain for our element
-            if (next == &row) {        // found it?
-                *prev = next->ind_badline_next; // unlink (singly linked list)
-                _db.ind_badline_n--;
-                row.ind_badline_next = (src_func::FBadline*)-1;// not-in-hash
-                break;
-            }
-            prev = &next->ind_badline_next;
-        }
-    }
-}
-
-// --- src_func.FDb.ind_badline.Reserve
-// Reserve enough room in the hash for N more elements. Return success code.
-void src_func::ind_badline_Reserve(int n) {
-    u32 old_nbuckets = _db.ind_badline_buckets_n;
-    u32 new_nelems   = _db.ind_badline_n + n;
-    // # of elements has to be roughly equal to the number of buckets
-    if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
-        u32 old_size = old_nbuckets * sizeof(src_func::FBadline*);
-        u32 new_size = new_nbuckets * sizeof(src_func::FBadline*);
-        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
-        // means new memory will have to be allocated anyway
-        src_func::FBadline* *new_buckets = (src_func::FBadline**)algo_lib::malloc_AllocMem(new_size);
-        if (UNLIKELY(!new_buckets)) {
-            FatalErrorExit("src_func.out_of_memory  field:src_func.FDb.ind_badline");
-        }
-        memset(new_buckets, 0, new_size); // clear pointers
-        // rehash all entries
-        for (int i = 0; i < _db.ind_badline_buckets_n; i++) {
-            src_func::FBadline* elem = _db.ind_badline_buckets_elems[i];
-            while (elem) {
-                src_func::FBadline &row        = *elem;
-                src_func::FBadline* next       = row.ind_badline_next;
-                u32 index          = Smallstr50_Hash(0, row.badline) & (new_nbuckets-1);
-                row.ind_badline_next     = new_buckets[index];
-                new_buckets[index] = &row;
-                elem               = next;
-            }
-        }
-        // free old array
-        algo_lib::malloc_FreeMem(_db.ind_badline_buckets_elems, old_size);
-        _db.ind_badline_buckets_elems = new_buckets;
-        _db.ind_badline_buckets_n = new_nbuckets;
     }
 }
 
@@ -2197,25 +1943,6 @@ void src_func::FDb_Init() {
         FatalErrorExit("out of memory"); // (src_func.FDb.ind_ctypelen)
     }
     memset(_db.ind_ctypelen_buckets_elems, 0, sizeof(src_func::FCtypelen*)*_db.ind_ctypelen_buckets_n); // (src_func.FDb.ind_ctypelen)
-    // initialize LAry badline (src_func.FDb.badline)
-    _db.badline_n = 0;
-    memset(_db.badline_lary, 0, sizeof(_db.badline_lary)); // zero out all level pointers
-    src_func::FBadline* badline_first = (src_func::FBadline*)algo_lib::malloc_AllocMem(sizeof(src_func::FBadline) * (u64(1)<<4));
-    if (!badline_first) {
-        FatalErrorExit("out of memory");
-    }
-    for (int i = 0; i < 4; i++) {
-        _db.badline_lary[i]  = badline_first;
-        badline_first    += 1ULL<<i;
-    }
-    // initialize hash table for src_func::FBadline;
-    _db.ind_badline_n             	= 0; // (src_func.FDb.ind_badline)
-    _db.ind_badline_buckets_n     	= 4; // (src_func.FDb.ind_badline)
-    _db.ind_badline_buckets_elems 	= (src_func::FBadline**)algo_lib::malloc_AllocMem(sizeof(src_func::FBadline*)*_db.ind_badline_buckets_n); // initial buckets (src_func.FDb.ind_badline)
-    if (!_db.ind_badline_buckets_elems) {
-        FatalErrorExit("out of memory"); // (src_func.FDb.ind_badline)
-    }
-    memset(_db.ind_badline_buckets_elems, 0, sizeof(src_func::FBadline*)*_db.ind_badline_buckets_n); // (src_func.FDb.ind_badline)
     _db.printed_user_impl_notice = bool(false);
 
     src_func::InitReflection();
@@ -2224,12 +1951,6 @@ void src_func::FDb_Init() {
 // --- src_func.FDb..Uninit
 void src_func::FDb_Uninit() {
     src_func::FDb &row = _db; (void)row;
-
-    // src_func.FDb.ind_badline.Uninit (Thash)  //
-    // skip destruction of ind_badline in global scope
-
-    // src_func.FDb.badline.Uninit (Lary)  //
-    // skip destruction in global scope
 
     // src_func.FDb.ind_ctypelen.Uninit (Thash)  //
     // skip destruction of ind_ctypelen in global scope
@@ -2356,7 +2077,7 @@ algo::Smallstr50 src_func::name_Get(src_func::FFstep& fstep) {
 
 // --- src_func.FFunc.sortkey.Nextchar
 // Extract next character from STR and advance IDX
-inline static u64 src_func::sortkey_Nextchar(const src_func::FFunc& func, strptr &str, int &idx) {
+inline static u64 src_func::sortkey_Nextchar(const src_func::FFunc& func, algo::strptr &str, int &idx) {
     (void)func;
     int i = idx;
     u64 ch = str.elems[i];
@@ -2387,8 +2108,8 @@ i32 src_func::sortkey_Cmp(src_func::FFunc& func, src_func::FFunc &rhs) {
     i32 retval = 0;
     int idx_a = 0;
     int idx_b = 0;
-    strptr str_a = ch_Getary(func.sortkey);
-    strptr str_b = ch_Getary(rhs.sortkey);
+    algo::strptr str_a = ch_Getary(func.sortkey);
+    algo::strptr str_b = ch_Getary(rhs.sortkey);
     int n_a   = elems_N(str_a);
     int n_b   = elems_N(str_b);
     retval    = i32_Cmp(n_a,n_b);
@@ -2462,12 +2183,16 @@ algo::Smallstr16 src_func::ns_Get(src_func::FGstatic& gstatic) {
 // Copy fields out of row
 void src_func::target_CopyOut(src_func::FTarget &row, dev::Target &out) {
     out.target = row.target;
+    out.license = row.license;
+    out.compat = row.compat;
 }
 
 // --- src_func.FTarget.base.CopyIn
 // Copy fields in to row
 void src_func::target_CopyIn(src_func::FTarget &row, dev::Target &in) {
     row.target = in.target;
+    row.license = in.license;
+    row.compat = in.compat;
 }
 
 // --- src_func.FTarget.cd_targsrc.Insert
@@ -2701,7 +2426,7 @@ bool src_func::value_SetStrptrMaybe(src_func::FieldId& parent, algo::strptr rhs)
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,src_func_FieldId_value); ret = true; break;
                 }
@@ -2751,7 +2476,6 @@ void src_func::FieldId_Print(src_func::FieldId & row, algo::cstring &str) {
 const char* src_func::value_ToCstr(const src_func::TableId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
-        case src_func_TableId_dev_Badline  : ret = "dev.Badline";  break;
         case src_func_TableId_dmmeta_Ctypelen: ret = "dmmeta.Ctypelen";  break;
         case src_func_TableId_dmmeta_Dispatch: ret = "dmmeta.Dispatch";  break;
         case src_func_TableId_dmmeta_Fstep : ret = "dmmeta.Fstep";  break;
@@ -2782,7 +2506,7 @@ bool src_func::value_SetStrptrMaybe(src_func::TableId& parent, algo::strptr rhs)
     bool ret = false;
     switch (elems_N(rhs)) {
         case 10: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','e','v','.','T','a','r','g'): {
                     if (memcmp(rhs.elems+8,"et",2)==0) { value_SetEnum(parent,src_func_TableId_dev_Target); ret = true; break; }
                     break;
@@ -2795,17 +2519,9 @@ bool src_func::value_SetStrptrMaybe(src_func::TableId& parent, algo::strptr rhs)
             break;
         }
         case 11: {
-            switch (ReadLE64(rhs.elems)) {
-                case LE_STR8('d','e','v','.','B','a','d','l'): {
-                    if (memcmp(rhs.elems+8,"ine",3)==0) { value_SetEnum(parent,src_func_TableId_dev_Badline); ret = true; break; }
-                    break;
-                }
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','e','v','.','T','a','r','g'): {
                     if (memcmp(rhs.elems+8,"src",3)==0) { value_SetEnum(parent,src_func_TableId_dev_Targsrc); ret = true; break; }
-                    break;
-                }
-                case LE_STR8('d','e','v','.','b','a','d','l'): {
-                    if (memcmp(rhs.elems+8,"ine",3)==0) { value_SetEnum(parent,src_func_TableId_dev_badline); ret = true; break; }
                     break;
                 }
                 case LE_STR8('d','e','v','.','t','a','r','g'): {
@@ -2816,7 +2532,7 @@ bool src_func::value_SetStrptrMaybe(src_func::TableId& parent, algo::strptr rhs)
             break;
         }
         case 12: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','F'): {
                     if (memcmp(rhs.elems+8,"step",4)==0) { value_SetEnum(parent,src_func_TableId_dmmeta_Fstep); ret = true; break; }
                     break;
@@ -2829,7 +2545,7 @@ bool src_func::value_SetStrptrMaybe(src_func::TableId& parent, algo::strptr rhs)
             break;
         }
         case 14: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','G'): {
                     if (memcmp(rhs.elems+8,"static",6)==0) { value_SetEnum(parent,src_func_TableId_dmmeta_Gstatic); ret = true; break; }
                     break;
@@ -2842,7 +2558,7 @@ bool src_func::value_SetStrptrMaybe(src_func::TableId& parent, algo::strptr rhs)
             break;
         }
         case 15: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','C'): {
                     if (memcmp(rhs.elems+8,"typelen",7)==0) { value_SetEnum(parent,src_func_TableId_dmmeta_Ctypelen); ret = true; break; }
                     break;
@@ -2902,6 +2618,7 @@ void src_func::TableId_Print(src_func::TableId & row, algo::cstring &str) {
 // --- src_func...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         src_func::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -2918,10 +2635,13 @@ int main(int argc, char **argv) {
     try {
         src_func::FDb_Uninit();
         algo_lib::FDb_Uninit();
-    } catch(algo_lib::ErrorX &x) {
+        lib_json::FDb_Uninit();
+    } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;
     }
+    // only the lower 1 byte makes it to the outside world
+    (void)i32_UpdateMin(algo_lib::_db.exit_code,255);
     return algo_lib::_db.exit_code;
 }
 

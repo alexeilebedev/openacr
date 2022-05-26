@@ -291,7 +291,7 @@ static void Main_Install(strptr prog) {
 // type CTYPE
 //
 
-static void Main_Line_Ctype(acr_compl::FCtype *ctype, strptr value, strptr compl_prefix) {
+static void Main_Line_Ctype(acr_compl::FCtype *ctype, strptr value, strptr compl_prefix, bool exact=false) {
     if (ctype) {
         // Read VALUE into a regex.
         algo_lib::Regx value_regx;
@@ -302,7 +302,7 @@ static void Main_Line_Ctype(acr_compl::FCtype *ctype, strptr value, strptr compl
             tempstr attrname(name_Get(*c_field_Find(*ctype,0)));
             // Load ssimfile!
             tempstr fname = SsimFname("data",ctype->c_ssimfile->ssimfile);
-            cstring lines(FileToString(fname,algo_FileFlags_throw));
+            cstring lines(FileToString(fname,algo_FileFlags__throw));
             // Read all lines from ssimfile.
             Tuple tuple;
             ind_beg(Line_curs,line,lines) {
@@ -317,20 +317,55 @@ static void Main_Line_Ctype(acr_compl::FCtype *ctype, strptr value, strptr compl
                     bool match = false;
                     // Regx is a substring match.
                     match = Regx_Match(value_regx, this_val);
-                    bool full_match       = this_val == value;
-                    bool first_word_match = Pathcomp(this_val,".LL") == value;
-                    bool last_word_match  = Pathcomp(this_val,".RR") == value;
-                    bool first_match      = StartsWithQ(this_val, value);
-                    bool last_match       = EndsWithQ(this_val, value);
+                    //
+                    // Three classes of match:
+                    // - first - prefix match - this is ideal match;
+                    // - last word - prefix match of the last word;
+                    // - substring - all others.
+                    //
+                    // Note that classes are exclusive and restrictive.
+                    //
+                    // First, prefix match is tried, and ONLY if no such match,
+                    // prefix match of the last word is considered,
+                    // if STILL no luck, substring match is considered.
+                    //
+                    // Last word match case is very special to ACR  query parameter,
+                    // where user starts typing ssimfile name without namespace,
+                    // thus not exact but prefix match.
+                    // Note that this may cause unwanted behavior when applied
+                    // to some other paremeter.
+                    //
+                    // These classes are enough to get predictability and
+                    // better user experinence.
+                    // Their enhancement is not desirabe, and lead to very
+                    // aggresive and problematic completion behavior.
+                    //
+                    // Problems with enhanced classes in previous implementation:
+                    // - full exact match causes problem with empty pattern and/or value,
+                    // too early completion, although there are other alternatives;
+                    // - first word exact match - makes too early completion,
+                    // although there are other alternatives;
+                    // - postfix match - weird behavior, may cause erasing of already
+                    // typed text (and useless, as no one types letters
+                    // in reverse order);
+                    // - exact last word match - weak use (whole word is required,
+                    // in opposite to prefix match where user may just start typing
+                    // the last word).
+                    //
+                    // But in some corner cases exact match is required instead of prefix,
+                    // `exact' parameter indicates that.
+                    bool first_match      = exact
+                        ? this_val == value
+                        : StartsWithQ(this_val, value);
+                    bool last_word_match  = exact
+                        ? Pathcomp(this_val,".RR") == value
+                        : StartsWithQ(Pathcomp(this_val,".RR"),value);
                     if (match) {
                         acr_compl::FCompletion &completion = acr_compl::completion_Alloc();
                         completion.value << compl_prefix << this_val;
                         completion.badness =
-                            full_match ? acr_compl_Badness_full_match
-                            : first_word_match ? acr_compl_Badness_first_word
+                            first_match ? acr_compl_Badness_first
                             : last_word_match ? acr_compl_Badness_last_word
-                            : first_match ? acr_compl_Badness_first
-                            : last_match ? acr_compl_Badness_last
                             : acr_compl_Badness_substring;
                         vrfy(completion_XrefMaybe(completion), algo_lib::_db.errtext);
                     }
@@ -343,12 +378,12 @@ static void Main_Line_Ctype(acr_compl::FCtype *ctype, strptr value, strptr compl
 // -----------------------------------------------------------------------------
 
 static char const *std_opt[] = {
-    "verbose"
-    ,"debug"
-    ,"trace"
-    ,"version"
-    ,"help"
-    ,"sig"
+                                "verbose"
+                                ,"debug"
+                                ,"trace"
+                                ,"version"
+                                ,"help"
+                                ,"sig"
 };
 
 static bool StdOptQ(strptr opt) {
@@ -396,12 +431,22 @@ static bool UniqueCompletionQ(int badness_limit=INT_MAX) {
     return badness1 < badness2 && badness1 < badness_limit;
 }
 
+// process ACR query attribute
 static void Main_Line_Acr(acr_compl::FField *, strptr value, cstring &compl_prefix) {
+    // whether ssimfile key is a full key, that is no key completion is required
+    bool have_key = FindChar(value,':')>=0;
+    // get value parts
     tempstr ssimfile_key(Pathcomp(value,":LL"));
     tempstr ssimfile_value(Pathcomp(value,":LR"));
-    acr_compl::FSsimfile *ssimfile = acr_compl::ind_ssimfile_Find(ssimfile_key);
+    // further steps are to guess ssim file
+    acr_compl::FSsimfile *ssimfile(NULL);
+    // first try exact match, only if full key has supplied
+    if (have_key) {
+        ssimfile = acr_compl::ind_ssimfile_Find(ssimfile_key);
+    }
+    // if no luck try to do some match from dmmeta.Ssimfile
     if (!ssimfile) {
-        Main_Line_Ctype(acr_compl::ind_ctype_Find("dmmeta.Ssimfile"),ssimfile_key,compl_prefix);
+        Main_Line_Ctype(acr_compl::ind_ctype_Find("dmmeta.Ssimfile"),ssimfile_key,compl_prefix,have_key);
         bool unique = UniqueCompletionQ();
         acr_compl::FCompletion *first_compl = acr_compl::bh_completion_First();
         // bash treats : as a word separator.
@@ -410,17 +455,25 @@ static void Main_Line_Acr(acr_compl::FField *, strptr value, cstring &compl_pref
         // if we find one, we assume the ssimfile is found but don't modify the arg.
         // if the colon is missing, we are OK to complete.
         bool ssimfile_ok = first_compl &&
-            (first_compl->badness == acr_compl_Badness_full_match || first_compl->badness == acr_compl_Badness_last_word);
-        if (unique && first_compl && ssimfile_key != value && ssimfile_ok) {
+            (first_compl->badness == acr_compl_Badness_first
+             || first_compl->badness == acr_compl_Badness_last_word);
+
+        if (unique && first_compl && have_key && ssimfile_ok) {
+            // we found good and unique ssimfile, and now move to value completion
             ssimfile = acr_compl::ind_ssimfile_Find(first_compl->value);
+            // we do not need key completions anymore
             acr_compl::completion_RemoveAll();
         }
+
+        // add colon to all found ssimfile keys,
+        // note this heap is empty if we moved to value completion
         ind_beg(acr_compl::_db_completion_curs, completion, acr_compl::_db) {
             completion.nospace = true;
             completion.value << ':';
         }ind_end;
     }
 
+    // if ssimfile key is OK, perform value completion
     if (ssimfile) {
         Main_Line_Ctype(ssimfile->p_ctype,ssimfile_value,compl_prefix);
     }
@@ -491,12 +544,12 @@ static void Main_Line() {
     bool have_colon         = false;
     bool word_is_option     = StartsWithQ(word,"-");
     bool precword_is_option = StartsWithQ(precword,"-");
-    i32_Range r;
+    algo::i32_Range r;
     if (elems_N(word)) {
         if (word_is_option) {
             // -abc[:def]<TAB>
             r = TFind(word,':');
-            option = RestFrom(FirstN(word,r.beg),1);
+            option = algo::RestFrom(FirstN(word,r.beg),1);
             have_option = r.end>r.beg;
             have_colon  = have_option;
             if (have_option) {
@@ -659,14 +712,20 @@ static void Main_Line() {
         if (completion.badness >= badness_limit) break;// early escape!
         tempstr out;
         if (acr_compl::_db.cmdline.type == "63") {
-            // need to escape spaces if any
-            frep_(i,ch_N(completion.value)) {
-                if ((ch_qFind(completion.value, i) == ' ' || ch_qFind(completion.value, i) == '\t' || ch_qFind(completion.value, i) == '\n')) {
-                    out << '\\';
+            if (ch_N(completion.value)) {
+                // need to escape spaces if any
+                frep_(i,ch_N(completion.value)) {
+                    if ((ch_qFind(completion.value, i) == ' '
+                         || ch_qFind(completion.value, i) == '\t'
+                         || ch_qFind(completion.value, i) == '\n')) {
+                        out << '\\';
+                    }
+                    out << ch_qFind(completion.value, i);
                 }
-                out << ch_qFind(completion.value, i);
+            } else {
+                out << "<EMPTY>";
             }
-        } else {
+        } else if (ch_N(completion.value)) {
             // escape depending on active quote, from the position where the quote starts
             strptr_PrintEscBash(ch_RestFrom(completion.value,qpoint),out,type_GetEnum(qtype));
             if (!completion.nospace
@@ -676,6 +735,16 @@ static void Main_Line() {
                 out << ' ';
             }
         }
+        // Empty values in most cases are useless and thus ignored:
+        // For named parameter and unique empty completion, bash on its own add space.
+        // For named parameter and non-unique completion (including empty),
+        // let the user hit space to choose empty value among others.
+        // For unnamed parameter and non-unique completion, let the user add "" explicitly.
+        // For unnamed parameter and unique completion, it would be better to add "",
+        // but the user still can do it.
+        // In most cases, unnamed parameters have regex or very specific structure,
+        // so that they have to be specified by the user explicitly,
+        // or they have reasonable default, so better to do not to specify them at all.
         prlog(out);
     }ind_end;
 }

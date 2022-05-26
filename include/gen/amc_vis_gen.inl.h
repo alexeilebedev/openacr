@@ -112,12 +112,12 @@ inline bool amc_vis::ctype_EmptyQ() {
 // --- amc_vis.FDb.ctype.Find
 // Look up row by row id. Return NULL if out of range
 inline amc_vis::FCtype* amc_vis::ctype_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc_vis::FCtype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ctype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ctype_lary[bsr][index];
     }
     return retval;
@@ -154,12 +154,12 @@ inline bool amc_vis::field_EmptyQ() {
 // --- amc_vis.FDb.field.Find
 // Look up row by row id. Return NULL if out of range
 inline amc_vis::FField* amc_vis::field_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc_vis::FField *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.field_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.field_lary[bsr][index];
     }
     return retval;
@@ -220,12 +220,12 @@ inline bool amc_vis::node_EmptyQ() {
 // --- amc_vis.FDb.node.Find
 // Look up row by row id. Return NULL if out of range
 inline amc_vis::FNode* amc_vis::node_Find(i32 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc_vis::FNode *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.node_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.node_lary[bsr][index];
     }
     return retval;
@@ -274,12 +274,12 @@ inline bool amc_vis::link_EmptyQ() {
 // --- amc_vis.FDb.link.Find
 // Look up row by row id. Return NULL if out of range
 inline amc_vis::Link* amc_vis::link_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc_vis::Link *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.link_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.link_lary[bsr][index];
     }
     return retval;
@@ -328,12 +328,12 @@ inline bool amc_vis::linkdep_EmptyQ() {
 // --- amc_vis.FDb.linkdep.Find
 // Look up row by row id. Return NULL if out of range
 inline amc_vis::Linkdep* amc_vis::linkdep_Find(i32 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc_vis::Linkdep *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.linkdep_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.linkdep_lary[bsr][index];
     }
     return retval;
@@ -470,12 +470,12 @@ inline bool amc_vis::reftype_EmptyQ() {
 // --- amc_vis.FDb.reftype.Find
 // Look up row by row id. Return NULL if out of range
 inline amc_vis::FReftype* amc_vis::reftype_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc_vis::FReftype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.reftype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.reftype_lary[bsr][index];
     }
     return retval;
@@ -524,12 +524,12 @@ inline bool amc_vis::nodedep_EmptyQ() {
 // --- amc_vis.FDb.nodedep.Find
 // Look up row by row id. Return NULL if out of range
 inline amc_vis::FNodedep* amc_vis::nodedep_Find(i32 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc_vis::FNodedep *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.nodedep_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.nodedep_lary[bsr][index];
     }
     return retval;
@@ -566,12 +566,12 @@ inline bool amc_vis::outrow_EmptyQ() {
 // --- amc_vis.FDb.outrow.Find
 // Look up row by row id. Return NULL if out of range
 inline amc_vis::Outrow* amc_vis::outrow_Find(i32 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc_vis::Outrow *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.outrow_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.outrow_lary[bsr][index];
     }
     return retval;
@@ -664,12 +664,12 @@ inline bool amc_vis::finput_EmptyQ() {
 // --- amc_vis.FDb.finput.Find
 // Look up row by row id. Return NULL if out of range
 inline amc_vis::FFinput* amc_vis::finput_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc_vis::FFinput *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.finput_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.finput_lary[bsr][index];
     }
     return retval;
@@ -1049,6 +1049,10 @@ inline amc_vis::Nodekey::Nodekey(u32                            in_n_ct_in
 
 inline bool amc_vis::Nodekey::operator ==(const amc_vis::Nodekey &rhs) const {
     return amc_vis::Nodekey_Eq(const_cast<amc_vis::Nodekey&>(*this),const_cast<amc_vis::Nodekey&>(rhs));
+}
+
+inline bool amc_vis::Nodekey::operator !=(const amc_vis::Nodekey &rhs) const {
+    return !amc_vis::Nodekey_Eq(const_cast<amc_vis::Nodekey&>(*this),const_cast<amc_vis::Nodekey&>(rhs));
 }
 
 inline bool amc_vis::Nodekey::operator <(const amc_vis::Nodekey &rhs) const {
@@ -1549,6 +1553,10 @@ inline amc_vis::Linkkey::Linkkey(u32                            in_n_link_in
 
 inline bool amc_vis::Linkkey::operator ==(const amc_vis::Linkkey &rhs) const {
     return amc_vis::Linkkey_Eq(const_cast<amc_vis::Linkkey&>(*this),const_cast<amc_vis::Linkkey&>(rhs));
+}
+
+inline bool amc_vis::Linkkey::operator !=(const amc_vis::Linkkey &rhs) const {
+    return !amc_vis::Linkkey_Eq(const_cast<amc_vis::Linkkey&>(*this),const_cast<amc_vis::Linkkey&>(rhs));
 }
 
 inline bool amc_vis::Linkkey::operator <(const amc_vis::Linkkey &rhs) const {

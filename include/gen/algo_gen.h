@@ -73,43 +73,62 @@ enum algo_FieldIdEnum {                    // algo.FieldId.value
     ,algo_FieldId_read               = 9
     ,algo_FieldId_write              = 10
     ,algo_FieldId__throw             = 11
-    ,algo_FieldId_eof                = 12
-    ,algo_FieldId_err                = 13
-    ,algo_FieldId_x                  = 14
-    ,algo_FieldId_y                  = 15
-    ,algo_FieldId_ip_host            = 16
-    ,algo_FieldId_mask               = 17
-    ,algo_FieldId_ok                 = 18
-    ,algo_FieldId_neg                = 19
-    ,algo_FieldId_overflow           = 20
-    ,algo_FieldId_hex                = 21
-    ,algo_FieldId_sha1sig            = 22
-    ,algo_FieldId_attrs              = 23
-    ,algo_FieldId_head               = 24
-    ,algo_FieldId_protocol           = 25
-    ,algo_FieldId_username           = 26
-    ,algo_FieldId_password           = 27
-    ,algo_FieldId_server             = 28
-    ,algo_FieldId_dir                = 29
-    ,algo_FieldId_port               = 30
-    ,algo_FieldId_source_addr_host   = 31
-    ,algo_FieldId_host               = 32
+    ,algo_FieldId_temp               = 12
+    ,algo_FieldId_overlap            = 13
+    ,algo_FieldId_linear             = 14
+    ,algo_FieldId_printerr           = 15
+    ,algo_FieldId_eof                = 16
+    ,algo_FieldId_err                = 17
+    ,algo_FieldId_x                  = 18
+    ,algo_FieldId_y                  = 19
+    ,algo_FieldId_ip_host            = 20
+    ,algo_FieldId_mask               = 21
+    ,algo_FieldId_ok                 = 22
+    ,algo_FieldId_neg                = 23
+    ,algo_FieldId_overflow           = 24
+    ,algo_FieldId_hex                = 25
+    ,algo_FieldId_sha1sig            = 26
+    ,algo_FieldId_attrs              = 27
+    ,algo_FieldId_head               = 28
+    ,algo_FieldId_protocol           = 29
+    ,algo_FieldId_username           = 30
+    ,algo_FieldId_password           = 31
+    ,algo_FieldId_server             = 32
+    ,algo_FieldId_dir                = 33
+    ,algo_FieldId_port               = 34
+    ,algo_FieldId_source_addr_host   = 35
+    ,algo_FieldId_host               = 36
 };
 
-enum { algo_FieldIdEnum_N = 33 };
+enum { algo_FieldIdEnum_N = 37 };
 
 
 // --- algo_FileFlagsEnum
 
-enum algo_FileFlagsEnum {             // algo.FileFlags.value
-     algo_FileFlags_read     = 0x001
-    ,algo_FileFlags_write    = 0x002
-    ,algo_FileFlags_append   = 0x010
-    ,algo_FileFlags_throw    = 0x020
-    ,algo_FileFlags_none     = 0x000
+enum algo_FileFlagsEnum {                      // algo.FileFlags.value
+     algo_FileFlags_read       = (u32(1)<<0)   // algo.FileFlags.read
+    ,algo_FileFlags_write      = (u32(1)<<1)   // algo.FileFlags.write
+    ,algo_FileFlags_append     = (u32(1)<<4)   // algo.FileFlags.append
+    ,algo_FileFlags__throw     = (u32(1)<<5)   // algo.FileFlags._throw
+    ,algo_FileFlags_temp       = (u32(1)<<6)   // algo.FileFlags.temp
+    ,algo_FileFlags_overlap    = (u32(1)<<7)   // algo.FileFlags.overlap
+    ,algo_FileFlags_linear     = (u32(1)<<8)   // algo.FileFlags.linear
+    ,algo_FileFlags_printerr   = (u32(1)<<9)   // algo.FileFlags.printerr
 };
 
-enum { algo_FileFlagsEnum_N = 5 };
+enum { algo_FileFlagsEnum_N = 8 };
+
+
+// --- algo_IOEvtFlagsEnum
+
+enum algo_IOEvtFlagsEnum {                   // algo.IOEvtFlags.value
+     algo_IOEvtFlags_read    = (u32(1)<<0)   // algo.IOEvtFlags.read
+    ,algo_IOEvtFlags_write   = (u32(1)<<1)   // algo.IOEvtFlags.write
+    ,algo_IOEvtFlags_eof     = (u32(1)<<2)   // algo.IOEvtFlags.eof
+    ,algo_IOEvtFlags_err     = (u32(1)<<3)   // algo.IOEvtFlags.err
+};
+
+enum { algo_IOEvtFlagsEnum_N = 4 };
 
 
 // --- algo_MonthEnum
@@ -135,12 +154,12 @@ enum { algo_MonthEnum_N = 13 };
 
 // --- algo_NumParseFlagsEnum
 
-enum algo_NumParseFlagsEnum {                    // algo.NumParseFlags.value
-     algo_NumParseFlags_parse_err        = 1<<0
-    ,algo_NumParseFlags_parse_ok         = 1<<1
-    ,algo_NumParseFlags_parse_neg        = 1<<2
-    ,algo_NumParseFlags_parse_overflow   = 1<<3
-    ,algo_NumParseFlags_parse_hex        = 1<<4
+enum algo_NumParseFlagsEnum {                      // algo.NumParseFlags.value
+     algo_NumParseFlags_err        = (u32(1)<<0)   // algo.NumParseFlags.err
+    ,algo_NumParseFlags_ok         = (u32(1)<<1)   // algo.NumParseFlags.ok
+    ,algo_NumParseFlags_neg        = (u32(1)<<2)   // algo.NumParseFlags.neg
+    ,algo_NumParseFlags_overflow   = (u32(1)<<3)   // algo.NumParseFlags.overflow
+    ,algo_NumParseFlags_hex        = (u32(1)<<4)   // algo.NumParseFlags.hex
 };
 
 enum { algo_NumParseFlagsEnum_N = 5 };
@@ -311,6 +330,7 @@ namespace algo { struct RnullStr9; }
 namespace algo { struct RspaceStr10; }
 namespace algo { struct RspaceStr100; }
 namespace algo { struct RspaceStr11; }
+namespace algo { struct RspaceStr12; }
 namespace algo { struct RspaceStr16; }
 namespace algo { struct RspaceStr2; }
 namespace algo { struct RspaceStr20; }
@@ -341,7 +361,9 @@ namespace algo { struct Smallstr2; }
 namespace algo { struct Smallstr20; }
 namespace algo { struct Smallstr25; }
 namespace algo { struct Smallstr250; }
+namespace algo { struct Smallstr3; }
 namespace algo { struct Smallstr30; }
+namespace algo { struct Smallstr32; }
 namespace algo { struct Smallstr4; }
 namespace algo { struct Smallstr40; }
 namespace algo { struct Smallstr5; }
@@ -367,6 +389,8 @@ namespace algo { struct URL; }
 namespace algo { struct UnDiff; }
 namespace algo { struct UnixDiff; }
 namespace algo { struct UnixTime; }
+namespace algo { struct WDiff; }
+namespace algo { struct WTime; }
 namespace algo { struct i32_Range; }
 namespace algo { struct error_ch_curs; }
 namespace algo { struct Tuple_attrs_curs; }
@@ -391,15 +415,16 @@ struct cstring { // algo.cstring
     char*   ch_elems;   // pointer to elements
     u32     ch_n;       // number of elements in array
     u32     ch_max;     // max. capacity of array before realloc
-    cstring& operator =(const strptr &t);
+    cstring& operator =(const algo::strptr &t);
     cstring(const cstring &t);
     cstring& operator =(const cstring &s);
-    explicit cstring(const strptr &s);
+    explicit cstring(const algo::strptr &s);
     cstring(const tempstr &rhs);
-    operator strptr() const {
-        return strptr(const_cast<char*>(ch_elems),ch_n);
+    operator algo::strptr() const {
+        return algo::strptr(const_cast<char*>(ch_elems),ch_n);
     }
     bool operator ==(const algo::cstring &rhs) const;
+    bool operator !=(const algo::cstring &rhs) const;
     bool operator <(const algo::cstring &rhs) const;
     cstring();
     ~cstring();
@@ -509,6 +534,7 @@ struct Attr { // algo.Attr
     explicit Attr(const algo::strptr&            in_name
         ,const algo::strptr&            in_value);
     bool operator ==(const algo::Attr &rhs) const;
+    bool operator !=(const algo::Attr &rhs) const;
     Attr();
 };
 
@@ -1014,6 +1040,7 @@ struct Smallstr150 { // algo.Smallstr150
 
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr150 &rhs) const;
+    bool operator !=(const algo::Smallstr150 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -1077,10 +1104,11 @@ void                 Comment_Print(algo::Comment & row, algo::cstring &str) __at
 
 // --- algo.UnTime
 #pragma pack(push,1)
-struct UnTime { // algo.UnTime: unix time * 1e9 + nanoseconds
+struct UnTime { // algo.UnTime: Unix time * 1e9 + nanoseconds
     i64   value;   //   0
     explicit UnTime(i64                            in_value);
     bool operator ==(const algo::UnTime &rhs) const;
+    bool operator !=(const algo::UnTime &rhs) const;
     bool operator <(const algo::UnTime &rhs) const;
     UnTime();
 };
@@ -1149,7 +1177,6 @@ struct DirEntry { // algo.DirEntry
     bool            match;        //   false  (internal) File entry matches pattern
     bool            is_dir;       //   false  File is a directory
     DIR*            dir_handle;   // (internal) handle for scanning. optional pointer
-    algo::Dirent*   dir_ent;      // (internal) pointer to current entry. optional pointer
     DirEntry();
     ~DirEntry();
 private:
@@ -1342,6 +1369,7 @@ struct Fildes { // algo.Fildes: File descriptor primary key
     i32   value;   //   -1  -1 is invalid value; 0 and above are valid (stdin)
     explicit Fildes(i32                            in_value);
     bool operator ==(const algo::Fildes &rhs) const;
+    bool operator !=(const algo::Fildes &rhs) const;
     bool operator <(const algo::Fildes &rhs) const;
     Fildes();
 };
@@ -1363,26 +1391,6 @@ struct FileFlags { // algo.FileFlags
     FileFlags(algo_FileFlagsEnum arg);
     FileFlags();
 };
-
-// Get value of field as enum type
-algo_FileFlagsEnum   value_GetEnum(const algo::FileFlags& parent) __attribute__((nothrow));
-// Set value of field from enum type.
-void                 value_SetEnum(algo::FileFlags& parent, algo_FileFlagsEnum rhs) __attribute__((nothrow));
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-const char*          value_ToCstr(const algo::FileFlags& parent) __attribute__((nothrow));
-// Convert value to a string. First, attempt conversion to a known string.
-// If no string matches, print value as a numeric value.
-void                 value_Print(const algo::FileFlags& parent, algo::cstring &lhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-bool                 value_SetStrptrMaybe(algo::FileFlags& parent, algo::strptr rhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-void                 value_SetStrptr(algo::FileFlags& parent, algo::strptr rhs, algo_FileFlagsEnum dflt) __attribute__((nothrow));
-// Convert string to field. Return success value
-bool                 value_ReadStrptrMaybe(algo::FileFlags& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 4.
@@ -1412,9 +1420,36 @@ bool                 _throw_Get(const algo::FileFlags& parent) __attribute__((__
 //    1 bits starting at bit 5.
 void                 _throw_Set(algo::FileFlags& parent, bool rhs) __attribute__((nothrow));
 
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 6.
+bool                 temp_Get(const algo::FileFlags& parent) __attribute__((__warn_unused_result__, nothrow));
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 6.
+void                 temp_Set(algo::FileFlags& parent, bool rhs) __attribute__((nothrow));
+
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 7.
+bool                 overlap_Get(const algo::FileFlags& parent) __attribute__((__warn_unused_result__, nothrow));
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 7.
+void                 overlap_Set(algo::FileFlags& parent, bool rhs) __attribute__((nothrow));
+
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 8.
+bool                 linear_Get(const algo::FileFlags& parent) __attribute__((__warn_unused_result__, nothrow));
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 8.
+void                 linear_Set(algo::FileFlags& parent, bool rhs) __attribute__((nothrow));
+
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 9.
+bool                 printerr_Get(const algo::FileFlags& parent) __attribute__((__warn_unused_result__, nothrow));
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 9.
+void                 printerr_Set(algo::FileFlags& parent, bool rhs) __attribute__((nothrow));
+
 bool                 FileFlags_ReadFieldMaybe(algo::FileFlags &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of algo::FileFlags from an ascii string.
-// The format of the string is an ssim Tuple
 bool                 FileFlags_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str);
 // Set all fields to initial values.
 void                 FileFlags_Init(algo::FileFlags& parent);
@@ -1437,9 +1472,9 @@ struct I32Dec1 { // algo.I32Dec1: signed i32, scale 1e1
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::I32Dec1& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::I32Dec1& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::I32Dec1& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 10)
-i32                  value_GetInt(algo::I32Dec1& parent) __attribute__((nothrow));
+i32                  value_GetInt(const algo::I32Dec1& parent) __attribute__((nothrow));
 // Return constant 10
 i32                  I32Dec1_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -1472,9 +1507,9 @@ struct I32Dec2 { // algo.I32Dec2: signed i32, scale 1e2
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::I32Dec2& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::I32Dec2& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::I32Dec2& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 100)
-i32                  value_GetInt(algo::I32Dec2& parent) __attribute__((nothrow));
+i32                  value_GetInt(const algo::I32Dec2& parent) __attribute__((nothrow));
 // Return constant 100
 i32                  I32Dec2_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -1507,9 +1542,9 @@ struct I32Dec3 { // algo.I32Dec3
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::I32Dec3& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::I32Dec3& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::I32Dec3& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 1000)
-i32                  value_GetInt(algo::I32Dec3& parent) __attribute__((nothrow));
+i32                  value_GetInt(const algo::I32Dec3& parent) __attribute__((nothrow));
 // Return constant 1000
 i32                  I32Dec3_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -1542,9 +1577,9 @@ struct I32Dec4 { // algo.I32Dec4
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::I32Dec4& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::I32Dec4& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::I32Dec4& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 10000)
-i32                  value_GetInt(algo::I32Dec4& parent) __attribute__((nothrow));
+i32                  value_GetInt(const algo::I32Dec4& parent) __attribute__((nothrow));
 // Return constant 10000
 i32                  I32Dec4_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -1577,9 +1612,9 @@ struct I32Dec5 { // algo.I32Dec5
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::I32Dec5& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::I32Dec5& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::I32Dec5& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 100000)
-i32                  value_GetInt(algo::I32Dec5& parent) __attribute__((nothrow));
+i32                  value_GetInt(const algo::I32Dec5& parent) __attribute__((nothrow));
 // Return constant 100000
 i32                  I32Dec5_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -1612,9 +1647,9 @@ struct I64Dec1 { // algo.I64Dec1
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::I64Dec1& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::I64Dec1& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::I64Dec1& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 10)
-i64                  value_GetInt(algo::I64Dec1& parent) __attribute__((nothrow));
+i64                  value_GetInt(const algo::I64Dec1& parent) __attribute__((nothrow));
 // Return constant 10
 i64                  I64Dec1_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -1647,9 +1682,9 @@ struct I64Dec10 { // algo.I64Dec10: signed i64, scale 1e10
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::I64Dec10& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::I64Dec10& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::I64Dec10& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 10000000000)
-i64                  value_GetInt(algo::I64Dec10& parent) __attribute__((nothrow));
+i64                  value_GetInt(const algo::I64Dec10& parent) __attribute__((nothrow));
 // Return constant 10000000000
 i64                  I64Dec10_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -1682,9 +1717,9 @@ struct I64Dec2 { // algo.I64Dec2
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::I64Dec2& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::I64Dec2& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::I64Dec2& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 100)
-i64                  value_GetInt(algo::I64Dec2& parent) __attribute__((nothrow));
+i64                  value_GetInt(const algo::I64Dec2& parent) __attribute__((nothrow));
 // Return constant 100
 i64                  I64Dec2_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -1717,9 +1752,9 @@ struct I64Dec3 { // algo.I64Dec3
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::I64Dec3& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::I64Dec3& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::I64Dec3& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 1000)
-i64                  value_GetInt(algo::I64Dec3& parent) __attribute__((nothrow));
+i64                  value_GetInt(const algo::I64Dec3& parent) __attribute__((nothrow));
 // Return constant 1000
 i64                  I64Dec3_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -1738,14 +1773,12 @@ void                 I64Dec3_Init(algo::I64Dec3& parent);
 void                 I64Dec3_Print(algo::I64Dec3 row, algo::cstring &str) __attribute__((nothrow));
 
 // --- algo.I64Dec4
-#pragma pack(push,1)
 struct I64Dec4 { // algo.I64Dec4
     i64   value;   //   0
     inline operator i64() const;
     explicit I64Dec4(i64                            in_value);
     I64Dec4();
 };
-#pragma pack(pop)
 
 // Set value of field value.
 // The value is rounded to the nearest integer.
@@ -1754,9 +1787,9 @@ struct I64Dec4 { // algo.I64Dec4
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::I64Dec4& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::I64Dec4& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::I64Dec4& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 10000)
-i64                  value_GetInt(algo::I64Dec4& parent) __attribute__((nothrow));
+i64                  value_GetInt(const algo::I64Dec4& parent) __attribute__((nothrow));
 // Return constant 10000
 i64                  I64Dec4_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -1791,9 +1824,9 @@ struct I64Dec5 { // algo.I64Dec5
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::I64Dec5& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::I64Dec5& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::I64Dec5& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 100000)
-i64                  value_GetInt(algo::I64Dec5& parent) __attribute__((nothrow));
+i64                  value_GetInt(const algo::I64Dec5& parent) __attribute__((nothrow));
 // Return constant 100000
 i64                  I64Dec5_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -1826,9 +1859,9 @@ struct I64Dec6 { // algo.I64Dec6
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::I64Dec6& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::I64Dec6& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::I64Dec6& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 1000000)
-i64                  value_GetInt(algo::I64Dec6& parent) __attribute__((nothrow));
+i64                  value_GetInt(const algo::I64Dec6& parent) __attribute__((nothrow));
 // Return constant 1000000
 i64                  I64Dec6_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -1861,9 +1894,9 @@ struct I64Dec7 { // algo.I64Dec7: signed i64, scale 1e7
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::I64Dec7& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::I64Dec7& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::I64Dec7& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 10000000)
-i64                  value_GetInt(algo::I64Dec7& parent) __attribute__((nothrow));
+i64                  value_GetInt(const algo::I64Dec7& parent) __attribute__((nothrow));
 // Return constant 10000000
 i64                  I64Dec7_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -1896,9 +1929,9 @@ struct I64Dec8 { // algo.I64Dec8: signed i64, scale 1e8
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::I64Dec8& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::I64Dec8& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::I64Dec8& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 100000000)
-i64                  value_GetInt(algo::I64Dec8& parent) __attribute__((nothrow));
+i64                  value_GetInt(const algo::I64Dec8& parent) __attribute__((nothrow));
 // Return constant 100000000
 i64                  I64Dec8_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -1931,9 +1964,9 @@ struct I64Dec9 { // algo.I64Dec9: signed i64, scale 1e9
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::I64Dec9& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::I64Dec9& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::I64Dec9& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 1000000000)
-i64                  value_GetInt(algo::I64Dec9& parent) __attribute__((nothrow));
+i64                  value_GetInt(const algo::I64Dec9& parent) __attribute__((nothrow));
 // Return constant 1000000000
 i64                  I64Dec9_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -1954,8 +1987,9 @@ void                 I64Dec9_Print(algo::I64Dec9 row, algo::cstring &str) __attr
 // --- algo.IOEvtFlags
 struct IOEvtFlags { // algo.IOEvtFlags
     u32   value;   //   0
-    inline operator u32() const;
+    inline operator algo_IOEvtFlagsEnum() const;
     explicit IOEvtFlags(u32                            in_value);
+    IOEvtFlags(algo_IOEvtFlagsEnum arg);
     IOEvtFlags();
 };
 
@@ -1987,13 +2021,14 @@ bool                 err_Get(const algo::IOEvtFlags& parent) __attribute__((__wa
 //    1 bits starting at bit 3.
 void                 err_Set(algo::IOEvtFlags& parent, bool rhs) __attribute__((nothrow));
 
+bool                 IOEvtFlags_ReadFieldMaybe(algo::IOEvtFlags &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of algo::IOEvtFlags from an ascii string.
-// The format of the string is the format of the algo::IOEvtFlags's only field
 bool                 IOEvtFlags_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str);
 // Set all fields to initial values.
 void                 IOEvtFlags_Init(algo::IOEvtFlags& parent);
 // print string representation of algo::IOEvtFlags to string LHS, no header -- cprint:algo.IOEvtFlags.String
 void                 IOEvtFlags_Print(algo::IOEvtFlags & row, algo::cstring &str) __attribute__((nothrow));
+algo::strptr         IOEvtFlags_GetAnon(algo::IOEvtFlags &parent, i32 idx) __attribute__((nothrow));
 
 // --- algo.IPoint
 struct IPoint { // algo.IPoint
@@ -2018,6 +2053,10 @@ struct Smallstr50 { // algo.Smallstr50
     u8 n_ch;
 
     inline operator algo::strptr() const;
+    bool operator ==(const algo::Smallstr50 &rhs) const;
+    bool operator !=(const algo::Smallstr50 &rhs) const;
+    bool operator ==(const algo::strptr &rhs) const;
+    bool operator <(const algo::Smallstr50 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -2230,6 +2269,7 @@ struct LnumStr10_U64 { // algo.LnumStr10_U64: number stored as ascii digits, lef
     u8 ch[10];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr10_U64 &rhs) const;
+    bool operator !=(const algo::LnumStr10_U64 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -2287,6 +2327,7 @@ struct LnumStr11_U64 { // algo.LnumStr11_U64: number stored as ascii digits, lef
     u8 ch[11];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr11_U64 &rhs) const;
+    bool operator !=(const algo::LnumStr11_U64 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -2344,6 +2385,7 @@ struct LnumStr12_U64 { // algo.LnumStr12_U64: number stored as ascii digits, lef
     u8 ch[12];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr12_U64 &rhs) const;
+    bool operator !=(const algo::LnumStr12_U64 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -2401,6 +2443,7 @@ struct LnumStr13_U64_Base36 { // algo.LnumStr13_U64_Base36: number stored as asc
     u8 ch[13];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr13_U64_Base36 &rhs) const;
+    bool operator !=(const algo::LnumStr13_U64_Base36 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -2458,6 +2501,7 @@ struct LnumStr16_U64_Base16 { // algo.LnumStr16_U64_Base16: number stored as asc
     u8 ch[16];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr16_U64_Base16 &rhs) const;
+    bool operator !=(const algo::LnumStr16_U64_Base16 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -2515,6 +2559,7 @@ struct LnumStr1_U32 { // algo.LnumStr1_U32: number stored as ascii digits, left 
     u8 ch[1];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr1_U32 &rhs) const;
+    bool operator !=(const algo::LnumStr1_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -2572,6 +2617,7 @@ struct LnumStr20_U64 { // algo.LnumStr20_U64: number stored as ascii digits, lef
     u8 ch[20];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr20_U64 &rhs) const;
+    bool operator !=(const algo::LnumStr20_U64 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -2629,6 +2675,7 @@ struct LnumStr22_U64 { // algo.LnumStr22_U64: number stored as ascii digits, lef
     u8 ch[22];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr22_U64 &rhs) const;
+    bool operator !=(const algo::LnumStr22_U64 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -2686,6 +2733,7 @@ struct LnumStr2_U32 { // algo.LnumStr2_U32: number stored as ascii digits, left 
     u8 ch[2];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr2_U32 &rhs) const;
+    bool operator !=(const algo::LnumStr2_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -2743,6 +2791,7 @@ struct LnumStr3_U32 { // algo.LnumStr3_U32: number stored as ascii digits, left 
     u8 ch[3];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr3_U32 &rhs) const;
+    bool operator !=(const algo::LnumStr3_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -2800,6 +2849,7 @@ struct LnumStr4_U32 { // algo.LnumStr4_U32: number stored as ascii digits, left 
     u8 ch[4];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr4_U32 &rhs) const;
+    bool operator !=(const algo::LnumStr4_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -2857,6 +2907,7 @@ struct LnumStr5_U32 { // algo.LnumStr5_U32: number stored as ascii digits, left 
     u8 ch[5];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr5_U32 &rhs) const;
+    bool operator !=(const algo::LnumStr5_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -2914,6 +2965,7 @@ struct LnumStr5_U32_Base36 { // algo.LnumStr5_U32_Base36: number stored as ascii
     u8 ch[5];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr5_U32_Base36 &rhs) const;
+    bool operator !=(const algo::LnumStr5_U32_Base36 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -2971,6 +3023,7 @@ struct LnumStr6_U32 { // algo.LnumStr6_U32: number stored as ascii digits, left 
     u8 ch[6];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr6_U32 &rhs) const;
+    bool operator !=(const algo::LnumStr6_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -3028,6 +3081,7 @@ struct LnumStr7_U32 { // algo.LnumStr7_U32: number stored as ascii digits, left 
     u8 ch[7];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr7_U32 &rhs) const;
+    bool operator !=(const algo::LnumStr7_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -3085,6 +3139,7 @@ struct LnumStr7_U32_Base36 { // algo.LnumStr7_U32_Base36: number stored as ascii
     u8 ch[7];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr7_U32_Base36 &rhs) const;
+    bool operator !=(const algo::LnumStr7_U32_Base36 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -3142,6 +3197,7 @@ struct LnumStr8_U32 { // algo.LnumStr8_U32: number stored as ascii digits, left 
     u8 ch[8];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr8_U32 &rhs) const;
+    bool operator !=(const algo::LnumStr8_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -3199,6 +3255,7 @@ struct LnumStr8_U32_Base16 { // algo.LnumStr8_U32_Base16: number stored as ascii
     u8 ch[8];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr8_U32_Base16 &rhs) const;
+    bool operator !=(const algo::LnumStr8_U32_Base16 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -3256,6 +3313,7 @@ struct LnumStr8_U64 { // algo.LnumStr8_U64: number stored as ascii digits, left 
     u8 ch[8];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr8_U64 &rhs) const;
+    bool operator !=(const algo::LnumStr8_U64 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -3313,6 +3371,7 @@ struct LnumStr9_U32 { // algo.LnumStr9_U32: number stored as ascii digits, left 
     u8 ch[9];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr9_U32 &rhs) const;
+    bool operator !=(const algo::LnumStr9_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -3369,6 +3428,7 @@ struct LnumStr9_U64 { // algo.LnumStr9_U64: number stored as ascii digits, left 
     u8 ch[9];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LnumStr9_U64 &rhs) const;
+    bool operator !=(const algo::LnumStr9_U64 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -3479,6 +3539,7 @@ struct Smallstr200 { // algo.Smallstr200
 
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr200 &rhs) const;
+    bool operator !=(const algo::Smallstr200 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -3546,6 +3607,7 @@ struct LspaceStr10 { // algo.LspaceStr10
     u8 ch[10];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr10 &rhs) const;
+    bool operator !=(const algo::LspaceStr10 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -3592,6 +3654,7 @@ struct LspaceStr12 { // algo.LspaceStr12
     u8 ch[12];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr12 &rhs) const;
+    bool operator !=(const algo::LspaceStr12 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -3638,6 +3701,7 @@ struct LspaceStr14 { // algo.LspaceStr14
     u8 ch[14];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr14 &rhs) const;
+    bool operator !=(const algo::LspaceStr14 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -3684,6 +3748,7 @@ struct LspaceStr15 { // algo.LspaceStr15
     u8 ch[15];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr15 &rhs) const;
+    bool operator !=(const algo::LspaceStr15 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -3729,6 +3794,7 @@ struct LspaceStr20_I64 { // algo.LspaceStr20_I64: number stored as ascii digits,
     u8 ch[20];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr20_I64 &rhs) const;
+    bool operator !=(const algo::LspaceStr20_I64 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -3785,6 +3851,7 @@ struct LspaceStr20_U64 { // algo.LspaceStr20_U64: number stored as ascii digits,
     u8 ch[20];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr20_U64 &rhs) const;
+    bool operator !=(const algo::LspaceStr20_U64 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -3842,6 +3909,7 @@ struct LspaceStr3 { // algo.LspaceStr3
     u8 ch[3];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr3 &rhs) const;
+    bool operator !=(const algo::LspaceStr3 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -3888,6 +3956,7 @@ struct LspaceStr3_I16 { // algo.LspaceStr3_I16: number stored as ascii digits, l
     u8 ch[3];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr3_I16 &rhs) const;
+    bool operator !=(const algo::LspaceStr3_I16 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -3945,6 +4014,7 @@ struct LspaceStr4 { // algo.LspaceStr4
     u8 ch[4];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr4 &rhs) const;
+    bool operator !=(const algo::LspaceStr4 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -3991,6 +4061,7 @@ struct LspaceStr5 { // algo.LspaceStr5
     u8 ch[5];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr5 &rhs) const;
+    bool operator !=(const algo::LspaceStr5 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -4037,6 +4108,7 @@ struct LspaceStr5_I16 { // algo.LspaceStr5_I16
     u8 ch[5];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr5_I16 &rhs) const;
+    bool operator !=(const algo::LspaceStr5_I16 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -4094,6 +4166,7 @@ struct LspaceStr6 { // algo.LspaceStr6
     u8 ch[6];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr6 &rhs) const;
+    bool operator !=(const algo::LspaceStr6 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -4139,6 +4212,7 @@ struct LspaceStr6_U32 { // algo.LspaceStr6_U32: number stored as ascii digits, l
     u8 ch[6];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr6_U32 &rhs) const;
+    bool operator !=(const algo::LspaceStr6_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -4194,6 +4268,7 @@ struct LspaceStr7_I32_Base36 { // algo.LspaceStr7_I32_Base36: number stored as a
     u8 ch[7];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr7_I32_Base36 &rhs) const;
+    bool operator !=(const algo::LspaceStr7_I32_Base36 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -4250,6 +4325,7 @@ struct LspaceStr8 { // algo.LspaceStr8
     u8 ch[8];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr8 &rhs) const;
+    bool operator !=(const algo::LspaceStr8 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -4296,6 +4372,7 @@ struct LspaceStr9 { // algo.LspaceStr9
     u8 ch[9];
     inline operator algo::strptr() const;
     bool operator ==(const algo::LspaceStr9 &rhs) const;
+    bool operator !=(const algo::LspaceStr9 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -4487,26 +4564,6 @@ struct NumParseFlags { // algo.NumParseFlags
     NumParseFlags();
 };
 
-// Get value of field as enum type
-algo_NumParseFlagsEnum value_GetEnum(const algo::NumParseFlags& parent) __attribute__((nothrow));
-// Set value of field from enum type.
-void                 value_SetEnum(algo::NumParseFlags& parent, algo_NumParseFlagsEnum rhs) __attribute__((nothrow));
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-const char*          value_ToCstr(const algo::NumParseFlags& parent) __attribute__((nothrow));
-// Convert value to a string. First, attempt conversion to a known string.
-// If no string matches, print value as a numeric value.
-void                 value_Print(const algo::NumParseFlags& parent, algo::cstring &lhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-bool                 value_SetStrptrMaybe(algo::NumParseFlags& parent, algo::strptr rhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-void                 value_SetStrptr(algo::NumParseFlags& parent, algo::strptr rhs, algo_NumParseFlagsEnum dflt) __attribute__((nothrow));
-// Convert string to field. Return success value
-bool                 value_ReadStrptrMaybe(algo::NumParseFlags& parent, algo::strptr rhs) __attribute__((nothrow));
-
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 0.
 bool                 err_Get(const algo::NumParseFlags& parent) __attribute__((__warn_unused_result__, nothrow));
@@ -4542,13 +4599,14 @@ bool                 hex_Get(const algo::NumParseFlags& parent) __attribute__((_
 //    1 bits starting at bit 4.
 void                 hex_Set(algo::NumParseFlags& parent, bool rhs) __attribute__((nothrow));
 
+bool                 NumParseFlags_ReadFieldMaybe(algo::NumParseFlags &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of algo::NumParseFlags from an ascii string.
-// The format of the string is the format of the algo::NumParseFlags's only field
 bool                 NumParseFlags_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str);
 // Set all fields to initial values.
 void                 NumParseFlags_Init(algo::NumParseFlags& parent);
 // print string representation of algo::NumParseFlags to string LHS, no header -- cprint:algo.NumParseFlags.String
 void                 NumParseFlags_Print(algo::NumParseFlags & row, algo::cstring &str) __attribute__((nothrow));
+algo::strptr         NumParseFlags_GetAnon(algo::NumParseFlags &parent, i32 idx) __attribute__((nothrow));
 
 // --- algo.Protocol
 // access: algo.Protocol.proto (Protocol)
@@ -4568,6 +4626,7 @@ struct RnullStr1 { // algo.RnullStr1
     u8 ch[1];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr1 &rhs) const;
+    bool operator !=(const algo::RnullStr1 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr1 &rhs) const;
     // Copy from strptr (operator=)
@@ -4618,6 +4677,7 @@ struct RnullStr10 { // algo.RnullStr10
     u8 ch[10];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr10 &rhs) const;
+    bool operator !=(const algo::RnullStr10 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr10 &rhs) const;
     // Copy from strptr (operator=)
@@ -4715,6 +4775,7 @@ struct RnullStr1000 { // algo.RnullStr1000
     u8 ch[1000];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr1000 &rhs) const;
+    bool operator !=(const algo::RnullStr1000 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr1000 &rhs) const;
     // Copy from strptr (operator=)
@@ -4765,6 +4826,7 @@ struct RnullStr11 { // algo.RnullStr11
     u8 ch[11];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr11 &rhs) const;
+    bool operator !=(const algo::RnullStr11 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr11 &rhs) const;
     // Copy from strptr (operator=)
@@ -4815,6 +4877,7 @@ struct RnullStr12 { // algo.RnullStr12
     u8 ch[12];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr12 &rhs) const;
+    bool operator !=(const algo::RnullStr12 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr12 &rhs) const;
     // Copy from strptr (operator=)
@@ -4865,6 +4928,7 @@ struct RnullStr129 { // algo.RnullStr129
     u8 ch[129];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr129 &rhs) const;
+    bool operator !=(const algo::RnullStr129 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr129 &rhs) const;
     // Copy from strptr (operator=)
@@ -4915,6 +4979,7 @@ struct RnullStr13 { // algo.RnullStr13
     u8 ch[13];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr13 &rhs) const;
+    bool operator !=(const algo::RnullStr13 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr13 &rhs) const;
     // Copy from strptr (operator=)
@@ -4965,6 +5030,7 @@ struct RnullStr14 { // algo.RnullStr14
     u8 ch[14];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr14 &rhs) const;
+    bool operator !=(const algo::RnullStr14 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr14 &rhs) const;
     // Copy from strptr (operator=)
@@ -5015,6 +5081,7 @@ struct RnullStr15 { // algo.RnullStr15
     u8 ch[15];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr15 &rhs) const;
+    bool operator !=(const algo::RnullStr15 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr15 &rhs) const;
     // Copy from strptr (operator=)
@@ -5065,6 +5132,7 @@ struct RnullStr151 { // algo.RnullStr151
     u8 ch[151];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr151 &rhs) const;
+    bool operator !=(const algo::RnullStr151 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr151 &rhs) const;
     // Copy from strptr (operator=)
@@ -5162,6 +5230,7 @@ struct RnullStr17 { // algo.RnullStr17
     u8 ch[17];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr17 &rhs) const;
+    bool operator !=(const algo::RnullStr17 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr17 &rhs) const;
     // Copy from strptr (operator=)
@@ -5212,6 +5281,7 @@ struct RnullStr18 { // algo.RnullStr18
     u8 ch[18];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr18 &rhs) const;
+    bool operator !=(const algo::RnullStr18 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr18 &rhs) const;
     // Copy from strptr (operator=)
@@ -5309,6 +5379,7 @@ struct RnullStr2 { // algo.RnullStr2
     u8 ch[2];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr2 &rhs) const;
+    bool operator !=(const algo::RnullStr2 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr2 &rhs) const;
     // Copy from strptr (operator=)
@@ -5359,6 +5430,7 @@ struct RnullStr20 { // algo.RnullStr20
     u8 ch[20];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr20 &rhs) const;
+    bool operator !=(const algo::RnullStr20 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr20 &rhs) const;
     // Copy from strptr (operator=)
@@ -5456,6 +5528,7 @@ struct RnullStr24 { // algo.RnullStr24
     u8 ch[24];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr24 &rhs) const;
+    bool operator !=(const algo::RnullStr24 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr24 &rhs) const;
     // Copy from strptr (operator=)
@@ -5506,6 +5579,7 @@ struct RnullStr25 { // algo.RnullStr25
     u8 ch[25];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr25 &rhs) const;
+    bool operator !=(const algo::RnullStr25 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr25 &rhs) const;
     // Copy from strptr (operator=)
@@ -5556,6 +5630,7 @@ struct RnullStr28 { // algo.RnullStr28
     u8 ch[28];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr28 &rhs) const;
+    bool operator !=(const algo::RnullStr28 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr28 &rhs) const;
     // Copy from strptr (operator=)
@@ -5606,6 +5681,7 @@ struct RnullStr3 { // algo.RnullStr3
     u8 ch[3];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr3 &rhs) const;
+    bool operator !=(const algo::RnullStr3 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr3 &rhs) const;
     // Copy from strptr (operator=)
@@ -5703,6 +5779,7 @@ struct RnullStr32 { // algo.RnullStr32
     u8 ch[32];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr32 &rhs) const;
+    bool operator !=(const algo::RnullStr32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr32 &rhs) const;
     // Copy from strptr (operator=)
@@ -5753,6 +5830,7 @@ struct RnullStr33 { // algo.RnullStr33
     u8 ch[33];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr33 &rhs) const;
+    bool operator !=(const algo::RnullStr33 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr33 &rhs) const;
     // Copy from strptr (operator=)
@@ -5802,6 +5880,7 @@ struct RnullStr35 { // algo.RnullStr35
     u8 ch[35];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr35 &rhs) const;
+    bool operator !=(const algo::RnullStr35 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr35 &rhs) const;
     // Copy from strptr (operator=)
@@ -5851,6 +5930,7 @@ struct RnullStr36 { // algo.RnullStr36
     u8 ch[36];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr36 &rhs) const;
+    bool operator !=(const algo::RnullStr36 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr36 &rhs) const;
     // Copy from strptr (operator=)
@@ -5948,6 +6028,7 @@ struct RnullStr40 { // algo.RnullStr40
     u8 ch[40];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr40 &rhs) const;
+    bool operator !=(const algo::RnullStr40 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr40 &rhs) const;
     // Copy from strptr (operator=)
@@ -5998,6 +6079,7 @@ struct RnullStr41 { // algo.RnullStr41
     u8 ch[41];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr41 &rhs) const;
+    bool operator !=(const algo::RnullStr41 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr41 &rhs) const;
     // Copy from strptr (operator=)
@@ -6283,6 +6365,7 @@ struct RnullStr54 { // algo.RnullStr54
     u8 ch[54];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr54 &rhs) const;
+    bool operator !=(const algo::RnullStr54 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr54 &rhs) const;
     // Copy from strptr (operator=)
@@ -6380,6 +6463,7 @@ struct RnullStr6 { // algo.RnullStr6
     u8 ch[6];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr6 &rhs) const;
+    bool operator !=(const algo::RnullStr6 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr6 &rhs) const;
     // Copy from strptr (operator=)
@@ -6430,6 +6514,7 @@ struct RnullStr60 { // algo.RnullStr60
     u8 ch[60];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr60 &rhs) const;
+    bool operator !=(const algo::RnullStr60 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr60 &rhs) const;
     // Copy from strptr (operator=)
@@ -6480,6 +6565,7 @@ struct RnullStr62 { // algo.RnullStr62
     u8 ch[62];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr62 &rhs) const;
+    bool operator !=(const algo::RnullStr62 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr62 &rhs) const;
     // Copy from strptr (operator=)
@@ -6577,6 +6663,7 @@ struct RnullStr6_U32 { // algo.RnullStr6_U32: number stored as ascii digits, rig
     u8 ch[6];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr6_U32 &rhs) const;
+    bool operator !=(const algo::RnullStr6_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -6634,6 +6721,7 @@ struct RnullStr7 { // algo.RnullStr7
     u8 ch[7];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr7 &rhs) const;
+    bool operator !=(const algo::RnullStr7 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr7 &rhs) const;
     // Copy from strptr (operator=)
@@ -6778,6 +6866,7 @@ struct RnullStr9 { // algo.RnullStr9
     u8 ch[9];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RnullStr9 &rhs) const;
+    bool operator !=(const algo::RnullStr9 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr9 &rhs) const;
     // Copy from strptr (operator=)
@@ -6828,6 +6917,7 @@ struct RspaceStr10 { // algo.RspaceStr10
     u8 ch[10];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr10 &rhs) const;
+    bool operator !=(const algo::RspaceStr10 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -6874,6 +6964,7 @@ struct RspaceStr100 { // algo.RspaceStr100
     u8 ch[100];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr100 &rhs) const;
+    bool operator !=(const algo::RspaceStr100 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -6920,6 +7011,7 @@ struct RspaceStr11 { // algo.RspaceStr11
     u8 ch[11];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr11 &rhs) const;
+    bool operator !=(const algo::RspaceStr11 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -6958,6 +7050,53 @@ bool                 RspaceStr11_Eq(const algo::RspaceStr11 & lhs,const algo::Rs
 bool                 RspaceStr11_EqStrptr(algo::RspaceStr11 & lhs, const algo::strptr &rhs) __attribute__((nothrow));
 // print string representation of algo::RspaceStr11 to string LHS, no header -- cprint:algo.RspaceStr11.String
 void                 RspaceStr11_Print(algo::RspaceStr11 & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- algo.RspaceStr12
+#pragma pack(push,1)
+struct RspaceStr12 { // algo.RspaceStr12
+    enum { ch_max = 12 };
+    u8 ch[12];
+    inline operator algo::strptr() const;
+    bool operator ==(const algo::RspaceStr12 &rhs) const;
+    bool operator !=(const algo::RspaceStr12 &rhs) const;
+    bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr12& parent) __attribute__((nothrow));
+    RspaceStr12(const algo::RspaceStr12 &rhs) __attribute__((nothrow));
+    RspaceStr12(const algo::strptr &rhs) __attribute__((nothrow));
+    RspaceStr12();
+};
+#pragma pack(pop)
+
+// Access string as array of chars
+algo::aryptr<char>   ch_Getary(const algo::RspaceStr12& parent) __attribute__((nothrow));
+u32                  RspaceStr12_Hash(u32 prev, const algo::strptr &str);
+void                 ch_Init(algo::RspaceStr12 &parent) __attribute__((nothrow));
+// always return constant 12
+int                  ch_Max(algo::RspaceStr12& parent) __attribute__((nothrow));
+int                  ch_N(const algo::RspaceStr12& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+void                 ch_Print(algo::RspaceStr12& parent, algo::cstring &out) __attribute__((nothrow));
+// Convert string to field. Return success value
+bool                 ch_ReadStrptrMaybe(algo::RspaceStr12& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void                 ch_SetStrptr(algo::RspaceStr12& parent, const algo::strptr &rhs) __attribute__((nothrow));
+
+u32                  RspaceStr12_Hash(u32 prev, algo::RspaceStr12 rhs) __attribute__((nothrow));
+// Read fields of algo::RspaceStr12 from an ascii string.
+// The format of the string is the format of the algo::RspaceStr12's only field
+bool                 RspaceStr12_ReadStrptrMaybe(algo::RspaceStr12 &parent, algo::strptr in_str);
+i32                  RspaceStr12_Cmp(algo::RspaceStr12 lhs, algo::RspaceStr12 rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 RspaceStr12_Init(algo::RspaceStr12& parent);
+bool                 RspaceStr12_Eq(algo::RspaceStr12 lhs, algo::RspaceStr12 rhs) __attribute__((nothrow));
+bool                 RspaceStr12_EqStrptr(algo::RspaceStr12 lhs, const algo::strptr &rhs) __attribute__((nothrow));
+// print string representation of algo::RspaceStr12 to string LHS, no header -- cprint:algo.RspaceStr12.String
+void                 RspaceStr12_Print(algo::RspaceStr12 row, algo::cstring &str) __attribute__((nothrow));
 
 // --- algo.RspaceStr16
 #pragma pack(push,1)
@@ -7013,6 +7152,7 @@ struct RspaceStr2 { // algo.RspaceStr2
     u8 ch[2];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr2 &rhs) const;
+    bool operator !=(const algo::RspaceStr2 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -7059,6 +7199,7 @@ struct RspaceStr20 { // algo.RspaceStr20
     u8 ch[20];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr20 &rhs) const;
+    bool operator !=(const algo::RspaceStr20 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -7105,6 +7246,7 @@ struct RspaceStr200 { // algo.RspaceStr200
     u8 ch[200];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr200 &rhs) const;
+    bool operator !=(const algo::RspaceStr200 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -7151,6 +7293,7 @@ struct RspaceStr21 { // algo.RspaceStr21
     u8 ch[21];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr21 &rhs) const;
+    bool operator !=(const algo::RspaceStr21 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -7244,6 +7387,7 @@ struct RspaceStr240 { // algo.RspaceStr240
     u8 ch[240];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr240 &rhs) const;
+    bool operator !=(const algo::RspaceStr240 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -7290,6 +7434,7 @@ struct RspaceStr26 { // algo.RspaceStr26
     u8 ch[26];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr26 &rhs) const;
+    bool operator !=(const algo::RspaceStr26 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -7336,6 +7481,7 @@ struct RspaceStr3 { // algo.RspaceStr3
     u8 ch[3];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr3 &rhs) const;
+    bool operator !=(const algo::RspaceStr3 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -7363,17 +7509,17 @@ bool                 ch_ReadStrptrMaybe(algo::RspaceStr3& parent, algo::strptr r
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::RspaceStr3& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
-u32                  RspaceStr3_Hash(u32 prev, const algo::RspaceStr3 & rhs) __attribute__((nothrow));
+u32                  RspaceStr3_Hash(u32 prev, algo::RspaceStr3 rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr3 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr3's only field
 bool                 RspaceStr3_ReadStrptrMaybe(algo::RspaceStr3 &parent, algo::strptr in_str);
-i32                  RspaceStr3_Cmp(algo::RspaceStr3 & lhs, algo::RspaceStr3 & rhs) __attribute__((nothrow));
+i32                  RspaceStr3_Cmp(algo::RspaceStr3 lhs, algo::RspaceStr3 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 void                 RspaceStr3_Init(algo::RspaceStr3& parent);
-bool                 RspaceStr3_Eq(const algo::RspaceStr3 & lhs,const algo::RspaceStr3 & rhs) __attribute__((nothrow));
-bool                 RspaceStr3_EqStrptr(algo::RspaceStr3 & lhs, const algo::strptr &rhs) __attribute__((nothrow));
+bool                 RspaceStr3_Eq(algo::RspaceStr3 lhs, algo::RspaceStr3 rhs) __attribute__((nothrow));
+bool                 RspaceStr3_EqStrptr(algo::RspaceStr3 lhs, const algo::strptr &rhs) __attribute__((nothrow));
 // print string representation of algo::RspaceStr3 to string LHS, no header -- cprint:algo.RspaceStr3.String
-void                 RspaceStr3_Print(algo::RspaceStr3 & row, algo::cstring &str) __attribute__((nothrow));
+void                 RspaceStr3_Print(algo::RspaceStr3 row, algo::cstring &str) __attribute__((nothrow));
 
 // --- algo.RspaceStr31
 #pragma pack(push,1)
@@ -7382,6 +7528,7 @@ struct RspaceStr31 { // algo.RspaceStr31
     u8 ch[31];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr31 &rhs) const;
+    bool operator !=(const algo::RspaceStr31 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -7428,6 +7575,7 @@ struct RspaceStr32 { // algo.RspaceStr32
     u8 ch[32];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr32 &rhs) const;
+    bool operator !=(const algo::RspaceStr32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -7474,6 +7622,7 @@ struct RspaceStr4 { // algo.RspaceStr4
     u8 ch[4];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr4 &rhs) const;
+    bool operator !=(const algo::RspaceStr4 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -7564,6 +7713,7 @@ struct RspaceStr5 { // algo.RspaceStr5
     u8 ch[5];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr5 &rhs) const;
+    bool operator !=(const algo::RspaceStr5 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -7610,6 +7760,7 @@ struct RspaceStr50 { // algo.RspaceStr50
     u8 ch[50];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr50 &rhs) const;
+    bool operator !=(const algo::RspaceStr50 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -7656,6 +7807,7 @@ struct RspaceStr6 { // algo.RspaceStr6
     u8 ch[6];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr6 &rhs) const;
+    bool operator !=(const algo::RspaceStr6 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RspaceStr6 &rhs) const;
     // Copy from strptr (operator=)
@@ -7706,6 +7858,7 @@ struct RspaceStr64 { // algo.RspaceStr64
     u8 ch[64];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr64 &rhs) const;
+    bool operator !=(const algo::RspaceStr64 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -7751,6 +7904,7 @@ struct RspaceStr7 { // algo.RspaceStr7
     u8 ch[7];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr7 &rhs) const;
+    bool operator !=(const algo::RspaceStr7 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -7843,6 +7997,7 @@ struct RspaceStr9 { // algo.RspaceStr9
     u8 ch[9];
     inline operator algo::strptr() const;
     bool operator ==(const algo::RspaceStr9 &rhs) const;
+    bool operator !=(const algo::RspaceStr9 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -7910,6 +8065,7 @@ void                 SeqType_Print(algo::SeqType row, algo::cstring &str) __attr
 struct Sha1sig { // algo.Sha1sig
     u8   sha1sig_elems[20];   //   0  fixed array
     bool operator ==(const algo::Sha1sig &rhs) const;
+    bool operator !=(const algo::Sha1sig &rhs) const;
     bool operator <(const algo::Sha1sig &rhs) const;
     Sha1sig();
 };
@@ -7965,6 +8121,7 @@ struct Smallstr1 { // algo.Smallstr1
 
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr1 &rhs) const;
+    bool operator !=(const algo::Smallstr1 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -8011,6 +8168,7 @@ bool                 Smallstr1_EqStrptr(algo::Smallstr1 & lhs, const algo::strpt
 void                 Smallstr1_Print(algo::Smallstr1 & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- algo.Smallstr10
+#pragma pack(push,1)
 struct Smallstr10 { // algo.Smallstr10
     enum { ch_max = 10 };
     u8 ch[10+1];
@@ -8018,6 +8176,7 @@ struct Smallstr10 { // algo.Smallstr10
 
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr10 &rhs) const;
+    bool operator !=(const algo::Smallstr10 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -8028,6 +8187,7 @@ struct Smallstr10 { // algo.Smallstr10
     Smallstr10(const algo::strptr &rhs) __attribute__((nothrow));
     Smallstr10();
 };
+#pragma pack(pop)
 
 // Append character to string.
 // If there is no space for an extra character, do nothing.
@@ -8064,6 +8224,7 @@ bool                 Smallstr10_EqStrptr(algo::Smallstr10 & lhs, const algo::str
 void                 Smallstr10_Print(algo::Smallstr10 & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- algo.Smallstr100
+#pragma pack(push,1)
 struct Smallstr100 { // algo.Smallstr100
     enum { ch_max = 100 };
     u8 ch[100+1];
@@ -8079,6 +8240,7 @@ struct Smallstr100 { // algo.Smallstr100
     Smallstr100(const algo::strptr &rhs) __attribute__((nothrow));
     Smallstr100();
 };
+#pragma pack(pop)
 
 // Append character to string.
 // If there is no space for an extra character, do nothing.
@@ -8122,6 +8284,7 @@ struct Smallstr16 { // algo.Smallstr16
 
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr16 &rhs) const;
+    bool operator !=(const algo::Smallstr16 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -8175,6 +8338,7 @@ struct Smallstr2 { // algo.Smallstr2
 
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr2 &rhs) const;
+    bool operator !=(const algo::Smallstr2 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -8221,6 +8385,7 @@ bool                 Smallstr2_EqStrptr(algo::Smallstr2 & lhs, const algo::strpt
 void                 Smallstr2_Print(algo::Smallstr2 & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- algo.Smallstr20
+#pragma pack(push,1)
 struct Smallstr20 { // algo.Smallstr20
     enum { ch_max = 20 };
     u8 ch[20+1];
@@ -8228,6 +8393,7 @@ struct Smallstr20 { // algo.Smallstr20
 
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr20 &rhs) const;
+    bool operator !=(const algo::Smallstr20 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::Smallstr20 &rhs) const;
     // Copy from strptr (operator=)
@@ -8239,6 +8405,7 @@ struct Smallstr20 { // algo.Smallstr20
     Smallstr20(const algo::strptr &rhs) __attribute__((nothrow));
     Smallstr20();
 };
+#pragma pack(pop)
 
 // Append character to string.
 // If there is no space for an extra character, do nothing.
@@ -8285,6 +8452,7 @@ struct Smallstr25 { // algo.Smallstr25
 
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr25 &rhs) const;
+    bool operator !=(const algo::Smallstr25 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -8338,6 +8506,7 @@ struct Smallstr250 { // algo.Smallstr250
 
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr250 &rhs) const;
+    bool operator !=(const algo::Smallstr250 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -8383,6 +8552,60 @@ bool                 Smallstr250_EqStrptr(algo::Smallstr250 & lhs, const algo::s
 // print string representation of algo::Smallstr250 to string LHS, no header -- cprint:algo.Smallstr250.String
 void                 Smallstr250_Print(algo::Smallstr250 & row, algo::cstring &str) __attribute__((nothrow));
 
+// --- algo.Smallstr3
+struct Smallstr3 { // algo.Smallstr3
+    enum { ch_max = 3 };
+    u8 ch[3+1];
+    u8 n_ch;
+
+    inline operator algo::strptr() const;
+    bool operator ==(const algo::Smallstr3 &rhs) const;
+    bool operator !=(const algo::Smallstr3 &rhs) const;
+    bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::Smallstr3& parent) __attribute__((nothrow));
+    Smallstr3(const algo::Smallstr3 &rhs) __attribute__((nothrow));
+    Smallstr3(const algo::strptr &rhs) __attribute__((nothrow));
+    Smallstr3();
+};
+
+// Append character to string.
+// If there is no space for an extra character, do nothing.
+void                 ch_Add(algo::Smallstr3& parent, char c) __attribute__((nothrow));
+// Append string to this string.
+// If there is no space for an extra character, trim.
+// If there is no space left, dump core in debug mode.
+void                 ch_AddStrptr(algo::Smallstr3& parent, algo::strptr str) __attribute__((nothrow));
+// Access string as array of chars
+algo::aryptr<char>   ch_Getary(const algo::Smallstr3& parent) __attribute__((nothrow));
+u32                  Smallstr3_Hash(u32 prev, const algo::strptr &str);
+void                 ch_Init(algo::Smallstr3 &parent) __attribute__((nothrow));
+// always return constant 3
+int                  ch_Max(algo::Smallstr3& parent) __attribute__((nothrow));
+int                  ch_N(const algo::Smallstr3& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+void                 ch_Print(algo::Smallstr3& parent, algo::cstring &out) __attribute__((nothrow));
+// Convert string to field. Return success value
+bool                 ch_ReadStrptrMaybe(algo::Smallstr3& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void                 ch_SetStrptr(algo::Smallstr3& parent, const algo::strptr &rhs) __attribute__((nothrow));
+
+u32                  Smallstr3_Hash(u32 prev, const algo::Smallstr3 & rhs) __attribute__((nothrow));
+// Read fields of algo::Smallstr3 from an ascii string.
+// The format of the string is the format of the algo::Smallstr3's only field
+bool                 Smallstr3_ReadStrptrMaybe(algo::Smallstr3 &parent, algo::strptr in_str);
+i32                  Smallstr3_Cmp(algo::Smallstr3 & lhs, algo::Smallstr3 & rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 Smallstr3_Init(algo::Smallstr3& parent);
+bool                 Smallstr3_Eq(const algo::Smallstr3 & lhs,const algo::Smallstr3 & rhs) __attribute__((nothrow));
+bool                 Smallstr3_EqStrptr(algo::Smallstr3 & lhs, const algo::strptr &rhs) __attribute__((nothrow));
+// print string representation of algo::Smallstr3 to string LHS, no header -- cprint:algo.Smallstr3.String
+void                 Smallstr3_Print(algo::Smallstr3 & row, algo::cstring &str) __attribute__((nothrow));
+
 // --- algo.Smallstr30
 struct Smallstr30 { // algo.Smallstr30
     enum { ch_max = 30 };
@@ -8391,6 +8614,7 @@ struct Smallstr30 { // algo.Smallstr30
 
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr30 &rhs) const;
+    bool operator !=(const algo::Smallstr30 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::Smallstr30 &rhs) const;
     // Copy from strptr (operator=)
@@ -8440,6 +8664,62 @@ bool                 Smallstr30_EqStrptr(algo::Smallstr30 & lhs, const algo::str
 // print string representation of algo::Smallstr30 to string LHS, no header -- cprint:algo.Smallstr30.String
 void                 Smallstr30_Print(algo::Smallstr30 & row, algo::cstring &str) __attribute__((nothrow));
 
+// --- algo.Smallstr32
+#pragma pack(push,1)
+struct Smallstr32 { // algo.Smallstr32
+    enum { ch_max = 32 };
+    u8 ch[32+1];
+    u8 n_ch;
+
+    inline operator algo::strptr() const;
+    bool operator ==(const algo::Smallstr32 &rhs) const;
+    bool operator !=(const algo::Smallstr32 &rhs) const;
+    bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::Smallstr32& parent) __attribute__((nothrow));
+    Smallstr32(const algo::Smallstr32 &rhs) __attribute__((nothrow));
+    Smallstr32(const algo::strptr &rhs) __attribute__((nothrow));
+    Smallstr32();
+};
+#pragma pack(pop)
+
+// Append character to string.
+// If there is no space for an extra character, do nothing.
+void                 ch_Add(algo::Smallstr32& parent, char c) __attribute__((nothrow));
+// Append string to this string.
+// If there is no space for an extra character, trim.
+// If there is no space left, dump core in debug mode.
+void                 ch_AddStrptr(algo::Smallstr32& parent, algo::strptr str) __attribute__((nothrow));
+// Access string as array of chars
+algo::aryptr<char>   ch_Getary(const algo::Smallstr32& parent) __attribute__((nothrow));
+u32                  Smallstr32_Hash(u32 prev, const algo::strptr &str);
+void                 ch_Init(algo::Smallstr32 &parent) __attribute__((nothrow));
+// always return constant 32
+int                  ch_Max(algo::Smallstr32& parent) __attribute__((nothrow));
+int                  ch_N(const algo::Smallstr32& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+void                 ch_Print(algo::Smallstr32& parent, algo::cstring &out) __attribute__((nothrow));
+// Convert string to field. Return success value
+bool                 ch_ReadStrptrMaybe(algo::Smallstr32& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void                 ch_SetStrptr(algo::Smallstr32& parent, const algo::strptr &rhs) __attribute__((nothrow));
+
+u32                  Smallstr32_Hash(u32 prev, const algo::Smallstr32 & rhs) __attribute__((nothrow));
+// Read fields of algo::Smallstr32 from an ascii string.
+// The format of the string is the format of the algo::Smallstr32's only field
+bool                 Smallstr32_ReadStrptrMaybe(algo::Smallstr32 &parent, algo::strptr in_str);
+i32                  Smallstr32_Cmp(algo::Smallstr32 & lhs, algo::Smallstr32 & rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 Smallstr32_Init(algo::Smallstr32& parent);
+bool                 Smallstr32_Eq(const algo::Smallstr32 & lhs,const algo::Smallstr32 & rhs) __attribute__((nothrow));
+bool                 Smallstr32_EqStrptr(algo::Smallstr32 & lhs, const algo::strptr &rhs) __attribute__((nothrow));
+// print string representation of algo::Smallstr32 to string LHS, no header -- cprint:algo.Smallstr32.String
+void                 Smallstr32_Print(algo::Smallstr32 & row, algo::cstring &str) __attribute__((nothrow));
+
 // --- algo.Smallstr4
 struct Smallstr4 { // algo.Smallstr4
     enum { ch_max = 4 };
@@ -8448,6 +8728,7 @@ struct Smallstr4 { // algo.Smallstr4
 
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr4 &rhs) const;
+    bool operator !=(const algo::Smallstr4 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -8501,6 +8782,7 @@ struct Smallstr40 { // algo.Smallstr40
 
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr40 &rhs) const;
+    bool operator !=(const algo::Smallstr40 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -8554,6 +8836,7 @@ struct Smallstr5 { // algo.Smallstr5
 
     inline operator algo::strptr() const;
     bool operator ==(const algo::Smallstr5 &rhs) const;
+    bool operator !=(const algo::Smallstr5 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
@@ -8638,9 +8921,9 @@ void                 TermStyle_Print(algo::TermStyle row, algo::cstring &str) __
 
 // --- algo.TextJust
 struct TextJust { // algo.TextJust
-    u32   value;   //   0
+    i32   value;   //   0
     inline operator algo_TextJustEnum() const;
-    explicit TextJust(u32                            in_value);
+    explicit TextJust(i32                            in_value);
     TextJust(algo_TextJustEnum arg);
     TextJust();
 };
@@ -8708,9 +8991,9 @@ struct U16Dec2 { // algo.U16Dec2
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::U16Dec2& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::U16Dec2& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::U16Dec2& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 100)
-u16                  value_GetInt(algo::U16Dec2& parent) __attribute__((nothrow));
+u16                  value_GetInt(const algo::U16Dec2& parent) __attribute__((nothrow));
 // Return constant 100
 u16                  U16Dec2_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -8745,9 +9028,9 @@ struct U32Dec1 { // algo.U32Dec1
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::U32Dec1& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::U32Dec1& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::U32Dec1& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 10)
-u32                  value_GetInt(algo::U32Dec1& parent) __attribute__((nothrow));
+u32                  value_GetInt(const algo::U32Dec1& parent) __attribute__((nothrow));
 // Return constant 10
 u32                  U32Dec1_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -8780,9 +9063,9 @@ struct U32Dec2 { // algo.U32Dec2
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::U32Dec2& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::U32Dec2& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::U32Dec2& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 100)
-u32                  value_GetInt(algo::U32Dec2& parent) __attribute__((nothrow));
+u32                  value_GetInt(const algo::U32Dec2& parent) __attribute__((nothrow));
 // Return constant 100
 u32                  U32Dec2_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -8815,9 +9098,9 @@ struct U32Dec3 { // algo.U32Dec3
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::U32Dec3& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::U32Dec3& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::U32Dec3& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 1000)
-u32                  value_GetInt(algo::U32Dec3& parent) __attribute__((nothrow));
+u32                  value_GetInt(const algo::U32Dec3& parent) __attribute__((nothrow));
 // Return constant 1000
 u32                  U32Dec3_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -8850,9 +9133,9 @@ struct U32Dec4 { // algo.U32Dec4
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::U32Dec4& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::U32Dec4& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::U32Dec4& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 10000)
-u32                  value_GetInt(algo::U32Dec4& parent) __attribute__((nothrow));
+u32                  value_GetInt(const algo::U32Dec4& parent) __attribute__((nothrow));
 // Return constant 10000
 u32                  U32Dec4_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -8885,9 +9168,9 @@ struct U32Dec5 { // algo.U32Dec5
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::U32Dec5& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::U32Dec5& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::U32Dec5& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 100000)
-u32                  value_GetInt(algo::U32Dec5& parent) __attribute__((nothrow));
+u32                  value_GetInt(const algo::U32Dec5& parent) __attribute__((nothrow));
 // Return constant 100000
 u32                  U32Dec5_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -8989,9 +9272,9 @@ struct U64Dec10 { // algo.U64Dec10: unsigned u64, scale 1e10
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::U64Dec10& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::U64Dec10& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::U64Dec10& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 10000000000)
-u64                  value_GetInt(algo::U64Dec10& parent) __attribute__((nothrow));
+u64                  value_GetInt(const algo::U64Dec10& parent) __attribute__((nothrow));
 // Return constant 10000000000
 u64                  U64Dec10_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -9026,9 +9309,9 @@ struct U64Dec2 { // algo.U64Dec2
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::U64Dec2& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::U64Dec2& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::U64Dec2& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 100)
-u64                  value_GetInt(algo::U64Dec2& parent) __attribute__((nothrow));
+u64                  value_GetInt(const algo::U64Dec2& parent) __attribute__((nothrow));
 // Return constant 100
 u64                  U64Dec2_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -9061,9 +9344,9 @@ struct U64Dec4 { // algo.U64Dec4
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::U64Dec4& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::U64Dec4& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::U64Dec4& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 10000)
-u64                  value_GetInt(algo::U64Dec4& parent) __attribute__((nothrow));
+u64                  value_GetInt(const algo::U64Dec4& parent) __attribute__((nothrow));
 // Return constant 10000
 u64                  U64Dec4_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -9096,9 +9379,9 @@ struct U64Dec5 { // algo.U64Dec5
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::U64Dec5& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::U64Dec5& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::U64Dec5& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 100000)
-u64                  value_GetInt(algo::U64Dec5& parent) __attribute__((nothrow));
+u64                  value_GetInt(const algo::U64Dec5& parent) __attribute__((nothrow));
 // Return constant 100000
 u64                  U64Dec5_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -9131,9 +9414,9 @@ struct U64Dec6 { // algo.U64Dec6
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::U64Dec6& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::U64Dec6& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::U64Dec6& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 1000000)
-u64                  value_GetInt(algo::U64Dec6& parent) __attribute__((nothrow));
+u64                  value_GetInt(const algo::U64Dec6& parent) __attribute__((nothrow));
 // Return constant 1000000
 u64                  U64Dec6_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -9166,9 +9449,9 @@ struct U64Dec7 { // algo.U64Dec7: unsigned u64, scale 1e7
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::U64Dec7& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::U64Dec7& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::U64Dec7& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 10000000)
-u64                  value_GetInt(algo::U64Dec7& parent) __attribute__((nothrow));
+u64                  value_GetInt(const algo::U64Dec7& parent) __attribute__((nothrow));
 // Return constant 10000000
 u64                  U64Dec7_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -9189,7 +9472,6 @@ void                 U64Dec7_Print(algo::U64Dec7 row, algo::cstring &str) __attr
 // --- algo.U64Dec8
 struct U64Dec8 { // algo.U64Dec8: unsigned u64, scale 1e8
     u64   value;   //   0
-    inline operator u64() const;
     explicit U64Dec8(u64                            in_value);
     U64Dec8();
 };
@@ -9201,9 +9483,9 @@ struct U64Dec8 { // algo.U64Dec8: unsigned u64, scale 1e8
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::U64Dec8& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::U64Dec8& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::U64Dec8& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 100000000)
-u64                  value_GetInt(algo::U64Dec8& parent) __attribute__((nothrow));
+u64                  value_GetInt(const algo::U64Dec8& parent) __attribute__((nothrow));
 // Return constant 100000000
 u64                  U64Dec8_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -9236,9 +9518,9 @@ struct U64Dec9 { // algo.U64Dec9: unsigned u64, scale 1e9
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
 void                 value_qSetDouble(algo::U64Dec9& parent, double val) __attribute__((nothrow));
-double               value_GetDouble(algo::U64Dec9& parent) __attribute__((nothrow));
+double               value_GetDouble(const algo::U64Dec9& parent) __attribute__((nothrow));
 // Return integer portion (divide number by 1000000000)
-u64                  value_GetInt(algo::U64Dec9& parent) __attribute__((nothrow));
+u64                  value_GetInt(const algo::U64Dec9& parent) __attribute__((nothrow));
 // Return constant 1000000000
 u64                  U64Dec9_GetScale() __attribute__((nothrow));
 // Set value of field value, using rounding.
@@ -9287,10 +9569,11 @@ void                 URL_Print(algo::URL & row, algo::cstring &str) __attribute_
 
 // --- algo.UnDiff
 #pragma pack(push,1)
-struct UnDiff { // algo.UnDiff: unix diff * 1e9 + nanoseconds
+struct UnDiff { // algo.UnDiff: Unix diff * 1e9 + nanoseconds
     i64   value;   //   0
     explicit UnDiff(i64                            in_value);
     bool operator ==(const algo::UnDiff &rhs) const;
+    bool operator !=(const algo::UnDiff &rhs) const;
     bool operator <(const algo::UnDiff &rhs) const;
     UnDiff();
 };
@@ -9319,10 +9602,11 @@ bool                 UnDiff_Update(algo::UnDiff &lhs, algo::UnDiff rhs) __attrib
 void                 UnDiff_Print(algo::UnDiff row, algo::cstring &str) __attribute__((nothrow));
 
 // --- algo.UnixDiff
-struct UnixDiff { // algo.UnixDiff
+struct UnixDiff { // algo.UnixDiff: Difference between two UnixTimes; units: seconds
     i64   value;   //   0
     explicit UnixDiff(i64                            in_value);
     bool operator ==(const algo::UnixDiff &rhs) const;
+    bool operator !=(const algo::UnixDiff &rhs) const;
     bool operator <(const algo::UnixDiff &rhs) const;
     UnixDiff();
 };
@@ -9351,10 +9635,11 @@ void                 UnixDiff_Print(algo::UnixDiff row, algo::cstring &str) __at
 
 // --- algo.UnixTime
 #pragma pack(push,1)
-struct UnixTime { // algo.UnixTime
+struct UnixTime { // algo.UnixTime: Unix epoch time, in seconds
     i64   value;   //   0
     explicit UnixTime(i64                            in_value);
     bool operator ==(const algo::UnixTime &rhs) const;
+    bool operator !=(const algo::UnixTime &rhs) const;
     bool operator <(const algo::UnixTime &rhs) const;
     UnixTime();
 };
@@ -9382,6 +9667,74 @@ bool                 UnixTime_Update(algo::UnixTime &lhs, algo::UnixTime rhs) __
 // Convert algo::UnixTime to a string (user-implemented function)
 void                 UnixTime_Print(algo::UnixTime row, algo::cstring &str) __attribute__((nothrow));
 
+// --- algo.WDiff
+#pragma pack(push,1)
+struct WDiff { // algo.WDiff: Difference between two WinTimes
+    i64   value;   //   0
+    explicit WDiff(i64                            in_value);
+    bool operator ==(const algo::WDiff &rhs) const;
+    bool operator !=(const algo::WDiff &rhs) const;
+    bool operator <(const algo::WDiff &rhs) const;
+    WDiff();
+};
+#pragma pack(pop)
+
+u32                  WDiff_Hash(u32 prev, algo::WDiff rhs) __attribute__((nothrow));
+// Read fields of algo::WDiff from an ascii string.
+// The function is implemented externally.
+bool                 WDiff_ReadStrptrMaybe(algo::WDiff &parent, algo::strptr in_str);
+bool                 WDiff_Lt(algo::WDiff lhs, algo::WDiff rhs) __attribute__((nothrow));
+i32                  WDiff_Cmp(algo::WDiff lhs, algo::WDiff rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 WDiff_Init(algo::WDiff& parent);
+// Attempt to make LHS bigger. Return true if it was changed
+bool                 WDiff_UpdateMax(algo::WDiff &lhs, algo::WDiff rhs) __attribute__((nothrow));
+// Return the lesser of two values
+algo::WDiff          WDiff_Min(algo::WDiff lhs, algo::WDiff rhs) __attribute__((nothrow));
+// Attempt to make LHS smaller. Return true if it was changed
+bool                 WDiff_UpdateMin(algo::WDiff &lhs, algo::WDiff rhs) __attribute__((nothrow));
+// Return the greater of two values
+algo::WDiff          WDiff_Max(algo::WDiff lhs, algo::WDiff rhs) __attribute__((nothrow));
+bool                 WDiff_Eq(algo::WDiff lhs, algo::WDiff rhs) __attribute__((nothrow));
+// Set value. Return true if new value is different from old value.
+bool                 WDiff_Update(algo::WDiff &lhs, algo::WDiff rhs) __attribute__((nothrow));
+// Convert algo::WDiff to a string (user-implemented function)
+void                 WDiff_Print(algo::WDiff row, algo::cstring &str) __attribute__((nothrow));
+
+// --- algo.WTime
+#pragma pack(push,1)
+struct WTime { // algo.WTime: Units: 100nsec; Number of units since Jan 1, 1600
+    i64   value;   //   0
+    explicit WTime(i64                            in_value);
+    bool operator ==(const algo::WTime &rhs) const;
+    bool operator !=(const algo::WTime &rhs) const;
+    bool operator <(const algo::WTime &rhs) const;
+    WTime();
+};
+#pragma pack(pop)
+
+u32                  WTime_Hash(u32 prev, algo::WTime rhs) __attribute__((nothrow));
+// Read fields of algo::WTime from an ascii string.
+// The function is implemented externally.
+bool                 WTime_ReadStrptrMaybe(algo::WTime &parent, algo::strptr in_str);
+bool                 WTime_Lt(algo::WTime lhs, algo::WTime rhs) __attribute__((nothrow));
+i32                  WTime_Cmp(algo::WTime lhs, algo::WTime rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 WTime_Init(algo::WTime& parent);
+// Attempt to make LHS bigger. Return true if it was changed
+bool                 WTime_UpdateMax(algo::WTime &lhs, algo::WTime rhs) __attribute__((nothrow));
+// Return the lesser of two values
+algo::WTime          WTime_Min(algo::WTime lhs, algo::WTime rhs) __attribute__((nothrow));
+// Attempt to make LHS smaller. Return true if it was changed
+bool                 WTime_UpdateMin(algo::WTime &lhs, algo::WTime rhs) __attribute__((nothrow));
+// Return the greater of two values
+algo::WTime          WTime_Max(algo::WTime lhs, algo::WTime rhs) __attribute__((nothrow));
+bool                 WTime_Eq(algo::WTime lhs, algo::WTime rhs) __attribute__((nothrow));
+// Set value. Return true if new value is different from old value.
+bool                 WTime_Update(algo::WTime &lhs, algo::WTime rhs) __attribute__((nothrow));
+// Convert algo::WTime to a string (user-implemented function)
+void                 WTime_Print(algo::WTime row, algo::cstring &str) __attribute__((nothrow));
+
 // --- algo.i32_Range
 // create: algo.Arrsimp.stack (Tary)
 struct i32_Range { // algo.i32_Range
@@ -9390,6 +9743,7 @@ struct i32_Range { // algo.i32_Range
     explicit i32_Range(i32                            in_beg
         ,i32                            in_end);
     bool operator ==(const algo::i32_Range &rhs) const;
+    bool operator !=(const algo::i32_Range &rhs) const;
     bool operator <(const algo::i32_Range &rhs) const;
     i32_Range();
 };
@@ -9585,5 +9939,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const algo::URL &row);// c
 inline algo::cstring &operator <<(algo::cstring &str, const algo::UnDiff &row);// cfmt:algo.UnDiff.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::UnixDiff &row);// cfmt:algo.UnixDiff.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::UnixTime &row);// cfmt:algo.UnixTime.String
+inline algo::cstring &operator <<(algo::cstring &str, const algo::WDiff &row);// cfmt:algo.WDiff.String
+inline algo::cstring &operator <<(algo::cstring &str, const algo::WTime &row);// cfmt:algo.WTime.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::i32_Range &row);// cfmt:algo.i32_Range.String
 }

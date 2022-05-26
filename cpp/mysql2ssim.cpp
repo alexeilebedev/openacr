@@ -31,7 +31,7 @@
 // -----------------------------------------------------------------------------
 
 static dmmeta::CtypePkey MapDecimal(mysql2ssim::FTobltin &tobltin, strptr param) {
-    i32_Range DR = TFind(param,',');
+    algo::i32_Range DR = TFind(param,',');
     i32 fxsize;
     i32 flsize;
     dmmeta::CtypePkey ret;
@@ -99,14 +99,14 @@ static void CvtVarchar(mysql2ssim::FTobltin &tobltin, dmmeta::Field &field) {
 // Convert MYSQL type as best we can to a TFC type.
 //
 static void ToBltin(strptr str, dmmeta::Field &field) {
-    i32_Range  L      = TFind(str, '(');
-    i32_Range  R      = TFind(str, ')');
+    algo::i32_Range  L      = TFind(str, '(');
+    algo::i32_Range  R      = TFind(str, ')');
     strptr type   = FirstN(str, L.beg);
     strptr suffix = Trimmed(RestFrom(str, R.end));
     bool   uns    = range_N(substr_FindFirst(suffix, strptr("unsigned"))) > 0;
     strptr param  = qGetRegion(str, L.end, R.beg-L.end);
     mysql2ssim::FTobltin  tobltin;
-    StringIter iter(param);
+    algo::StringIter iter(param);
     while (!iter.EofQ()) {
         vals_Alloc(tobltin) = GetTokenChar(iter, ',');
     }
@@ -162,11 +162,11 @@ static tempstr TableList() {
     mysql2ssim::in_tables_RemoveAll();
     strptr tables = mysql2ssim::_db.cmdline.tables;
     while (elems_N(tables)) {
-        i32_Range r2   = TFind(tables,',');
+        algo::i32_Range r2   = TFind(tables,',');
         mysql2ssim::in_tables_Alloc() = FirstN(tables,r2.beg);
         tables = RestFrom(tables,r2.end);
     }
-    ListSep ls(",");
+    algo::ListSep ls(",");
     ind_beg(mysql2ssim::_db_in_tables_curs, E, mysql2ssim::_db) {
         ret << ls;
         lib_mysql::MPrintQuoted(ret, lib_mysql::_db.mysql, E, '\'');
@@ -226,7 +226,7 @@ static void ReadSchema(strptr db, strptr table_name) {
     lib_mysql::Res res;
     MQuery(lib_mysql::_db.mysql, query, res);
     int    nfields       = mysql_field_count(lib_mysql::_db.mysql);
-    aryptr<MYSQL_FIELD>  fields(mysql_fetch_fields(res.res), nfields);
+    algo::aryptr<MYSQL_FIELD>  fields(mysql_fetch_fields(res.res), nfields);
     MYSQL_ROW            mysql_row;
     int idx              = 0;
 
@@ -243,7 +243,7 @@ static void ReadSchema(strptr db, strptr table_name) {
 
 // -----------------------------------------------------------------------------
 
-static void ReadData_Ssim(Attr &head, lib_mysql::Res &res, int nfields, int skipfield, aryptr<MYSQL_FIELD> fields) {
+static void ReadData_Ssim(Attr &head, lib_mysql::Res &res, int nfields, int skipfield, algo::aryptr<MYSQL_FIELD> fields) {
     cstring str;
     MYSQL_ROW            mysql_row;
     while ((mysql_row = mysql_fetch_row(res.res)) != NULL) {
@@ -268,7 +268,7 @@ static void ReadData_Ssim(Attr &head, lib_mysql::Res &res, int nfields, int skip
 
 // -----------------------------------------------------------------------------
 
-static void ReadData_Table(Attr &head, lib_mysql::Res &res, int nfields, aryptr<MYSQL_FIELD> fields) {
+static void ReadData_Table(Attr &head, lib_mysql::Res &res, int nfields, algo::aryptr<MYSQL_FIELD> fields) {
     // print aligned rectangular blocks
     int screenful = 100;
     algo_lib::FTxttbl table;
@@ -285,7 +285,7 @@ static void ReadData_Table(Attr &head, lib_mysql::Res &res, int nfields, aryptr<
         }
         if (c_txtrow_N(table) >= screenful) {
             prlog(table);
-            Refurbish(table);
+            algo::Refurbish(table);
         }
     }
     if (c_txtrow_N(table) > 0) {
@@ -304,7 +304,7 @@ static void ReadData(strptr db, strptr table_name) {
     lib_mysql::Res res;
     lib_mysql::MQuery(lib_mysql::_db.mysql, query, res);
     int    nfields       = mysql_field_count(lib_mysql::_db.mysql);
-    aryptr<MYSQL_FIELD>  fields(mysql_fetch_fields(res.res), nfields);
+    algo::aryptr<MYSQL_FIELD>  fields(mysql_fetch_fields(res.res), nfields);
     // on the way back, skip the bad column
     int skipfield=-1;
     frep_(i,nfields) {
@@ -392,6 +392,6 @@ void mysql2ssim::Main() {
         acr.report=false;
         acr.print=false;
         int rc=SysCmd(acr_ToCmdline(acr)<<"< "<<mysql2ssim::_db.tempfile.filename);
-        algo_lib::_db.exit_code += Abs(rc);
+        algo_lib::_db.exit_code += algo::Abs(rc);
     }
 }

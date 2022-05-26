@@ -45,7 +45,7 @@ void amc::tfunc_RegxSql_ReadStrptrMaybe() {
         Ins(&R, read.comment, "Convert string to field. Return success value");
         Ins(&R, read.ret  , "bool", false);
         Ins(&R, read.proto, "$name_ReadStrptrMaybe($Parent, algo::strptr in)", false);
-        Ins(&R, read.body, "Regx_ReadSql($pararg.$name, in, $full);");
+        Ins(&R, read.body, "Regx_ReadSql($parname.$name, in, $full);");
         Ins(&R, read.body, "bool retval = true;// !$parname.$name.parseerror; -- TODO: uncomment");
         SetPresent(read,Subst(R,"$parname"),field);
         Ins(&R, read.body, "return retval;");
@@ -58,7 +58,7 @@ void amc::tfunc_RegxSql_Print() {
     amc::FFunc& print = amc::CreateCurFunc();
     Ins(&R, print.ret  , "void", false);
     Ins(&R, print.proto, "$name_Print($Parent, algo::cstring &out)", false);
-    Ins(&R, print.body, "Regx_Print($pararg.$name, out);");
+    Ins(&R, print.body, "Regx_Print($parname.$name, out);");
 }
 
 void amc::tfunc_RegxSql_Init() {
@@ -67,6 +67,6 @@ void amc::tfunc_RegxSql_Init() {
 
     if (ch_N(field.dflt.value)) {
         amc::FFunc& init = amc::CreateCurFunc();
-        Ins(&R, init.body, "Regx_ReadSql($pararg.$name, $dflt, true);");
+        Ins(&R, init.body, "Regx_ReadSql($parname.$name, $dflt, true);");
     }
 }

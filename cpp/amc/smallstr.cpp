@@ -58,13 +58,14 @@ static void CheckSmallstr(amc::FSmallstr &smallstr, amc::FNumstr *numstr) {
     // algo.LspaceStr7_I32_Base36
     if (smallstr.strict) {
         algo::Smallstr50 suffix(Pathcomp(name_Get(*smallstr.p_field->p_ctype),"_LLBLLrRR"));
-        if (ParseI32(suffix,0) != smallstr.length) {
+        int isuffix = ParseI32(suffix,0);
+        if (isuffix != 0 && isuffix != smallstr.length) {
             algo_lib::_db.exit_code=1;
             prerr("amc.badsuffix"
                   <<Keyval("field",smallstr.field)
                   <<Keyval("suffix",suffix)
                   <<Keyval("length",smallstr.length)
-                  <<Keyval("comment","Please use a suffix consistent with string length"));
+                  <<Keyval("comment","Please use a suffix consistent with string length (or a non-numeric suffix)"));
         }
     }
     if (numstr && smallstr.strict) {
@@ -129,12 +130,13 @@ void amc::tclass_Smallstr() {
 
     InsStruct(R, field.p_ctype, "enum { $name_max = $max_length };");
 
-    if (smallstr.strtype == dmmeta_Strtype_strtype_rpascal && field.p_ctype->c_pack) {
-        prerr("amc.pascalpack"
-              <<Keyval("field",field.field)
-              <<Keyval("comment","Rpascal string cannot be packed (it is not wire-safe)"));
-        algo_lib::_db.exit_code=1;
-    }
+    // allow Rpascal strings on the wire
+    // if (smallstr.strtype == dmmeta_Strtype_strtype_rpascal && field.p_ctype->c_pack) {
+    //     prerr("amc.pascalpack"
+    //           <<Keyval("field",field.field)
+    //           <<Keyval("comment","Rpascal string cannot be packed (it is not wire-safe)"));
+    //     algo_lib::_db.exit_code=1;
+    // }
 
     // #AL# declare fields
     // make sure not to use char* because then it's tempting to use them where char*

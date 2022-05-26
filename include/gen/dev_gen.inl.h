@@ -26,8 +26,10 @@ inline dev::Builddir::Builddir() {
 }
 
 inline dev::Cfg::Cfg(const algo::strptr&            in_cfg
+        ,const algo::strptr&            in_suffix
         ,const algo::Comment&           in_comment)
     : cfg(in_cfg)
+    , suffix(in_suffix)
     , comment(in_comment)
 {
 }
@@ -37,10 +39,22 @@ inline dev::Cfg::Cfg() {
 inline dev::Compiler::Compiler(const algo::strptr&            in_compiler
         ,const algo::strptr&            in_ranlib
         ,const algo::strptr&            in_ar
+        ,const algo::strptr&            in_link
+        ,const algo::strptr&            in_libext
+        ,const algo::strptr&            in_exeext
+        ,const algo::strptr&            in_pchext
+        ,const algo::strptr&            in_objext
+        ,const algo::strptr&            in_rc
         ,const algo::Comment&           in_comment)
     : compiler(in_compiler)
     , ranlib(in_ranlib)
     , ar(in_ar)
+    , link(in_link)
+    , libext(in_libext)
+    , exeext(in_exeext)
+    , pchext(in_pchext)
+    , objext(in_objext)
+    , rc(in_rc)
     , comment(in_comment)
 {
 }
@@ -103,6 +117,16 @@ inline dev::Gitinfo::Gitinfo(const algo::strptr&            in_gitinfo
 inline dev::Gitinfo::Gitinfo() {
 }
 
+inline dev::Htmlentity::Htmlentity() {
+    dev::Htmlentity_Init(*this);
+}
+
+
+// --- dev.Htmlentity..Init
+// Set all fields to initial values.
+inline void dev::Htmlentity_Init(dev::Htmlentity& parent) {
+    parent.code = i32(0);
+}
 inline dev::Include::Include() {
     dev::Include_Init(*this);
 }
@@ -113,6 +137,9 @@ inline dev::Include::Include() {
 inline void dev::Include_Init(dev::Include& parent) {
     parent.sys = bool(false);
 }
+inline dev::License::License() {
+}
+
 inline dev::Linelim::Linelim() {
     dev::Linelim_Init(*this);
 }
@@ -129,6 +156,9 @@ inline void dev::Linelim_Init(dev::Linelim& parent) {
     parent.longestfunc = u32(0);
     parent.nmysteryfunc = u32(0);
 }
+inline dev::Noindent::Noindent() {
+}
+
 inline dev::OptType::OptType(const algo::strptr&            in_opt_type
         ,const algo::strptr&            in_sep
         ,const algo::Comment&           in_comment)
@@ -140,6 +170,14 @@ inline dev::OptType::OptType(const algo::strptr&            in_opt_type
 inline dev::OptType::OptType() {
 }
 
+inline dev::Readme::Readme(const algo::strptr&            in_gitfile
+        ,bool                           in_inl
+        ,const algo::Comment&           in_comment)
+    : gitfile(in_gitfile)
+    , inl(in_inl)
+    , comment(in_comment)
+{
+}
 inline dev::Readme::Readme() {
     dev::Readme_Init(*this);
 }
@@ -150,6 +188,9 @@ inline dev::Readme::Readme() {
 inline void dev::Readme_Init(dev::Readme& parent) {
     parent.inl = bool(false);
 }
+inline dev::Sandbox::Sandbox() {
+}
+
 inline dev::Scriptfile::Scriptfile() {
 }
 
@@ -219,13 +260,24 @@ inline dev::Targdep::Targdep(const algo::strptr&            in_targdep
 inline dev::Targdep::Targdep() {
 }
 
-inline dev::Target::Target(const algo::strptr&            in_target)
+inline dev::Target::Target(const algo::strptr&            in_target
+        ,const algo::strptr&            in_license
+        ,const algo::strptr&            in_compat)
     : target(in_target)
+    , license(in_license)
+    , compat(in_compat)
 {
 }
 inline dev::Target::Target() {
+    dev::Target_Init(*this);
 }
 
+
+// --- dev.Target..Init
+// Set all fields to initial values.
+inline void dev::Target_Init(dev::Target& parent) {
+    parent.compat = algo::strptr("Linux-%.%-%");
+}
 inline dev::Targsrc::Targsrc(const algo::strptr&            in_targsrc
         ,const algo::Comment&           in_comment)
     : targsrc(in_targsrc)
@@ -238,23 +290,19 @@ inline dev::Targsrc::Targsrc() {
 inline dev::Targsyslib::Targsyslib() {
 }
 
+inline dev::Timefmt::Timefmt() {
+    dev::Timefmt_Init(*this);
+}
+
+
+// --- dev.Timefmt..Init
+// Set all fields to initial values.
+inline void dev::Timefmt_Init(dev::Timefmt& parent) {
+    parent.dirname = bool(false);
+}
 inline dev::ToolOpt::ToolOpt(const algo::strptr&            in_tool_opt
-        ,const algo::strptr&            in_opt_type
-        ,const algo::strptr&            in_opt
-        ,const algo::strptr&            in_target
-        ,const algo::strptr&            in_uname
-        ,const algo::strptr&            in_compiler
-        ,const algo::strptr&            in_cfg
-        ,const algo::strptr&            in_arch
         ,const algo::Comment&           in_comment)
     : tool_opt(in_tool_opt)
-    , opt_type(in_opt_type)
-    , opt(in_opt)
-    , target(in_target)
-    , uname(in_uname)
-    , compiler(in_compiler)
-    , cfg(in_cfg)
-    , arch(in_arch)
     , comment(in_comment)
 {
 }
@@ -286,8 +334,18 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Gitfile &
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Htmlentity &row) {// cfmt:dev.Htmlentity.String
+    dev::Htmlentity_Print(const_cast<dev::Htmlentity&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Include &row) {// cfmt:dev.Include.String
     dev::Include_Print(const_cast<dev::Include&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::License &row) {// cfmt:dev.License.String
+    dev::License_Print(const_cast<dev::License&>(row), str);
     return str;
 }
 
@@ -296,8 +354,18 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Linelim &
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Noindent &row) {// cfmt:dev.Noindent.String
+    dev::Noindent_Print(const_cast<dev::Noindent&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Readme &row) {// cfmt:dev.Readme.String
     dev::Readme_Print(const_cast<dev::Readme&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Sandbox &row) {// cfmt:dev.Sandbox.String
+    dev::Sandbox_Print(const_cast<dev::Sandbox&>(row), str);
     return str;
 }
 
@@ -343,6 +411,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Targsrc &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Targsyslib &row) {// cfmt:dev.Targsyslib.String
     dev::Targsyslib_Print(const_cast<dev::Targsyslib&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Timefmt &row) {// cfmt:dev.Timefmt.String
+    dev::Timefmt_Print(const_cast<dev::Timefmt&>(row), str);
     return str;
 }
 

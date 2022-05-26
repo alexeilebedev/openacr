@@ -16,6 +16,8 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
@@ -24,6 +26,7 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 mdbg::FDb       mdbg::_db;        // dependency found via dev.targdep
 
@@ -135,6 +138,7 @@ void mdbg::FBuilddir_Uninit(mdbg::FBuilddir& builddir) {
 // Copy fields out of row
 void mdbg::cfg_CopyOut(mdbg::FCfg &row, dev::Cfg &out) {
     out.cfg = row.cfg;
+    out.suffix = row.suffix;
     out.comment = row.comment;
 }
 
@@ -142,6 +146,7 @@ void mdbg::cfg_CopyOut(mdbg::FCfg &row, dev::Cfg &out) {
 // Copy fields in to row
 void mdbg::cfg_CopyIn(mdbg::FCfg &row, dev::Cfg &in) {
     row.cfg = in.cfg;
+    row.suffix = in.suffix;
     row.comment = in.comment;
 }
 
@@ -231,7 +236,7 @@ void mdbg::trace_Print(mdbg::trace & row, algo::cstring &str) {
 void mdbg::lpool_FreeMem(void *mem, u64 size) {
     if (mem) {
         size = u64_Max(size,16); // enforce alignment
-        u64 cell = u64_BitScanReverse(size-1) + 1;
+        u64 cell = algo::u64_BitScanReverse(size-1) + 1;
         lpool_Lpblock *temp = (lpool_Lpblock*)mem; // push  singly linked list
         temp->next = _db.lpool_free[cell];
         _db.lpool_free[cell] = temp;
@@ -244,7 +249,7 @@ void mdbg::lpool_FreeMem(void *mem, u64 size) {
 // The allocated block is 16-byte aligned
 void* mdbg::lpool_AllocMem(u64 size) {
     size     = u64_Max(size,16); // enforce alignment
-    u64 cell = u64_BitScanReverse(size-1)+1;
+    u64 cell = algo::u64_BitScanReverse(size-1)+1;
     u64 i    = cell;
     u8 *retval = NULL;
     // try to find a block that's at least as large as required.
@@ -283,7 +288,7 @@ bool mdbg::lpool_ReserveBuffers(int nbuf, u64 bufsize) {
     bool retval = true;
     bufsize = u64_Max(bufsize, 16);
     for (int i = 0; i < nbuf; i++) {
-        u64     cell = u64_BitScanReverse(bufsize-1)+1;
+        u64     cell = algo::u64_BitScanReverse(bufsize-1)+1;
         u64     size = 1ULL<<cell;
         lpool_Lpblock *temp = (lpool_Lpblock*)algo_lib::sbrk_AllocMem(size);
         if (temp == NULL) {
@@ -327,7 +332,7 @@ void mdbg::MainArgs(int argc, char **argv) {
 // --- mdbg.FDb._db.MainLoop
 // Main loop.
 void mdbg::MainLoop() {
-    SchedTime time(get_cycles());
+    algo::SchedTime time(algo::get_cycles());
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
@@ -357,7 +362,7 @@ static void mdbg::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'mdbg.Input'  signature:'aa5e06ab452d862c1bcf55dfd92cdb360fac8740'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'mdbg.Input'  signature:'a39a7508119d6dc51451d2cda9f120fd888b1184'");
 }
 
 // --- mdbg.FDb._db.StaticCheck
@@ -534,7 +539,7 @@ bool mdbg::cfg_XrefMaybe(mdbg::FCfg &row) {
 // --- mdbg.FDb.ind_cfg.Find
 // Find row by key. Return NULL if not found.
 mdbg::FCfg* mdbg::ind_cfg_Find(const algo::strptr& key) {
-    u32 index = Smallstr50_Hash(0, key) & (_db.ind_cfg_buckets_n - 1);
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_cfg_buckets_n - 1);
     mdbg::FCfg* *e = &_db.ind_cfg_buckets_elems[index];
     mdbg::FCfg* ret=NULL;
     do {
@@ -568,7 +573,7 @@ bool mdbg::ind_cfg_InsertMaybe(mdbg::FCfg& row) {
     ind_cfg_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_cfg_next == (mdbg::FCfg*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.cfg) & (_db.ind_cfg_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.cfg) & (_db.ind_cfg_buckets_n - 1);
         mdbg::FCfg* *prev = &_db.ind_cfg_buckets_elems[index];
         do {
             mdbg::FCfg* ret = *prev;
@@ -594,7 +599,7 @@ bool mdbg::ind_cfg_InsertMaybe(mdbg::FCfg& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void mdbg::ind_cfg_Remove(mdbg::FCfg& row) {
     if (LIKELY(row.ind_cfg_next != (mdbg::FCfg*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.cfg) & (_db.ind_cfg_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.cfg) & (_db.ind_cfg_buckets_n - 1);
         mdbg::FCfg* *prev = &_db.ind_cfg_buckets_elems[index]; // addr of pointer to current element
         while (mdbg::FCfg *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -615,7 +620,7 @@ void mdbg::ind_cfg_Reserve(int n) {
     u32 new_nelems   = _db.ind_cfg_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(mdbg::FCfg*);
         u32 new_size = new_nbuckets * sizeof(mdbg::FCfg*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -631,7 +636,7 @@ void mdbg::ind_cfg_Reserve(int n) {
             while (elem) {
                 mdbg::FCfg &row        = *elem;
                 mdbg::FCfg* next       = row.ind_cfg_next;
-                u32 index          = Smallstr50_Hash(0, row.cfg) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr50_Hash(0, row.cfg) & (new_nbuckets-1);
                 row.ind_cfg_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -846,7 +851,7 @@ bool mdbg::value_SetStrptrMaybe(mdbg::FieldId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,mdbg_FieldId_value); ret = true; break;
                 }
@@ -922,7 +927,7 @@ bool mdbg::value_SetStrptrMaybe(mdbg::TableId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 7: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
                 case LE_STR7('d','e','v','.','C','f','g'): {
                     value_SetEnum(parent,mdbg_TableId_dev_Cfg); ret = true; break;
                 }
@@ -933,7 +938,7 @@ bool mdbg::value_SetStrptrMaybe(mdbg::TableId& parent, algo::strptr rhs) {
             break;
         }
         case 12: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','e','v','.','B','u','i','l'): {
                     if (memcmp(rhs.elems+8,"ddir",4)==0) { value_SetEnum(parent,mdbg_TableId_dev_Builddir); ret = true; break; }
                     break;
@@ -985,6 +990,7 @@ void mdbg::TableId_Print(mdbg::TableId & row, algo::cstring &str) {
 // --- mdbg...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         mdbg::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -1001,10 +1007,13 @@ int main(int argc, char **argv) {
     try {
         mdbg::FDb_Uninit();
         algo_lib::FDb_Uninit();
-    } catch(algo_lib::ErrorX &x) {
+        lib_json::FDb_Uninit();
+    } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;
     }
+    // only the lower 1 byte makes it to the outside world
+    (void)i32_UpdateMin(algo_lib::_db.exit_code,255);
     return algo_lib::_db.exit_code;
 }
 

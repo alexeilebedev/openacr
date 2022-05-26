@@ -26,7 +26,7 @@
 
 static void CheckPid() {
     const char *fname = "temp/lock1";
-    tempstr contents = FileToString(fname,algo_FileFlags_none);
+    tempstr contents = algo::FileToString(fname,algo::FileFlags());
     tempstr shouldbe = tempstr()<<getpid();
     vrfyeq_(contents, shouldbe);
 }
@@ -55,8 +55,8 @@ static void Lock1() {
     bool ok2 = LockFileInit(lockfile2, fname, FailokQ(true));
     vrfyeq_(ok2, false);
 
-    Refurbish(lockfile1);// give it up
-    vrfyeq_(FileQ(fname), false);
+    algo::Refurbish(lockfile1);// give it up
+    vrfyeq_(algo::FileQ(fname), false);
 
     ok2 = LockFileInit(lockfile1, fname, FailokQ(true));
     vrfyeq_(ok2, true);
@@ -135,11 +135,11 @@ static void Lock5() {// version with timeout
     vrfyeq_(ok1, true);
     CheckPid();
 
-    SchedTime start = CurrSchedTime();
-    bool ok1_2 = LockFileInit(lockfile2, fname, FailokQ(true), UnDiffSecs(1));
+    algo::SchedTime start = algo::CurrSchedTime();
+    bool ok1_2 = LockFileInit(lockfile2, fname, FailokQ(true), algo::UnDiffSecs(1));
     vrfyeq_(ok1_2, false); // must timeout
-    SchedTime end = CurrSchedTime();
-    vrfy_(ElapsedSecs(start,end) >= 0.9); /* at least 90% of time elapsed */
+    algo::SchedTime end = algo::CurrSchedTime();
+    vrfy_(algo::ElapsedSecs(start,end) >= 0.9); /* at least 90% of time elapsed */
 }
 
 // -----------------------------------------------------------------------------

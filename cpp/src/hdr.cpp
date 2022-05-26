@@ -23,23 +23,11 @@
 // Recent Changes: alexei.lebedev
 //
 
+#include "include/algo.h"
 #include "include/gen/src_hdr_gen.h"
 #include "include/gen/src_hdr_gen.inl.h"
-
-static const char *license =
-    "This program is free software: you can redistribute it and/or modify\n"
-    "it under the terms of the GNU General Public License as published by\n"
-    "the Free Software Foundation, either version 3 of the License, or\n"
-    "(at your option) any later version.\n"
-    "\n"
-    "This program is distributed in the hope that it will be useful,\n"
-    "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-    "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-    "GNU General Public License for more details.\n"
-    "\n"
-    "You should have received a copy of the GNU General Public License\n"
-    "along with this program.  If not, see <https://www.gnu.org/licenses/>.\n"
-    "\n";
+#include "include/gen/dev_gen.h"
+#include "include/gen/dev_gen.inl.h"
 
 // -----------------------------------------------------------------------------
 
@@ -120,20 +108,24 @@ static void Authors(src_hdr::FSrc &src, cstring &out) {
 static void Save(src_hdr::FSrc &src) {
     cstring out;
     AddCopyright(src,out);
-    InsertComment(strptr(license),out);
+
+    strptr license = src.p_targsrc->p_target->p_license->text;
+    if (license != "") {
+        InsertComment(strptr(license),out);
+    }
     // if copyright came from ICE, add contact info
     if (FindStr(src.copyright, "Intercontinental Exchange")!=-1) {
         InsertComment("Contacting ICE: <https://www.theice.com/contact>\n\n",out);
     }
     src_hdr::FTargsrc &targsrc=*src.p_targsrc;
     // add namespace info
-    DescribeTarget(*targsrc.p_ns,out,targsrc);
+    DescribeTarget(*targsrc.p_target->p_ns,out,targsrc);
     Authors(src,out);
     InsertComment(src.comment,out);
     out<<eol;
     out<<src.body;
 
-    (void)StringToFile(out,src_Get(*src.p_targsrc));
+    (void)SafeStringToFile(out,src_Get(*src.p_targsrc),algo::FileFlags());
 }
 
 // -----------------------------------------------------------------------------
@@ -181,7 +173,7 @@ static void ReadTagLine(src_hdr::FSrc &src, strptr line) {
 // -----------------------------------------------------------------------------
 
 static void UpdateAuthors(src_hdr::FSrc &src) {
-    tempstr cmd=tempstr()<<"bin/git-authors "<<src_Get(*src.p_targsrc);
+    tempstr cmd=tempstr()<<src_hdr::dev_scriptfile_bin_git_authors<<src_Get(*src.p_targsrc);
     tempstr data=SysEval(cmd,FailokQ(true),1024*1024);
     ind_beg(Line_curs,line,data) {
         ReadTagLine(src,Trimmed(line));
@@ -239,8 +231,19 @@ static void ScanTargsrc(src_hdr::FTargsrc &targsrc) {
 
 // -----------------------------------------------------------------------------
 
+static void LoadLicense() {
+    ind_beg(src_hdr::_db_license_curs,license,src_hdr::_db) {
+        if (license.license != "") {
+            license.text = FileToString(tempstr()<<"conf/"<<license.license<<".license.txt",algo::FileFlags());
+        }
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
 void src_hdr::Main() {
     algo_lib::Regx exclude;
+    LoadLicense();
     (void)Regx_ReadStrptrMaybe(exclude,"(include/gen/%|cpp/gen/%|extern/%)");
     ind_beg(src_hdr::_db_targsrc_curs,targsrc,src_hdr::_db) {
         if (ScanTargsrcQ(targsrc,exclude)) {

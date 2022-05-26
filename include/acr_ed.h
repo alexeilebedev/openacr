@@ -56,6 +56,7 @@ namespace acr_ed { // update-hdr
     // cpp/acr/ed/field.cpp -- Create, delete, rename field
     //
     void Main_DeleteField();
+    void Main_RenameField();
     void Main_CreateField();
 
     // Look at field FIELD, which is of reftype acr_ed::_db.cmdline.reftype.
@@ -89,6 +90,8 @@ namespace acr_ed { // update-hdr
     acr_ed::FField *PkeyField(strptr ctype);
     tempstr ToLowerUnder(strptr str);
     void InsertSrcfileInclude(algo_lib::Replscope &R, bool mainheader);
+    void BuildTest();
+    void ScriptEditFile(algo_lib::Replscope &R, strptr fname);
     void Main();
 
     // -------------------------------------------------------------------
@@ -103,15 +106,17 @@ namespace acr_ed { // update-hdr
     // Sandbox stays in place.
     void ExitSandbox();
 
-    // Build specified tools inside the sandbox
-    // It is assumed that we're inside the sandbox
-    void BuildX(strptr what);
-
     // -------------------------------------------------------------------
     // cpp/acr/ed/srcfile.cpp -- Create, delete, rename source file
     //
+
+    // Create cpp, h or readme file
     void Main_CreateSrcfile();
+
+    // Rename cpp, h, or readme file
     void Main_RenameSrcfile();
+
+    // Delete cpp,h, or readme file
     void Main_DeleteSrcfile();
 
     // -------------------------------------------------------------------

@@ -345,9 +345,9 @@ void amc::GenPrintStmt(cstring &out, amc::FCtype &parenttype, amc::FField &field
 // -----------------------------------------------------------------------------
 
 // print binary octet string as hex byte array initializer
-void amc::memptr_PrintOctetsHexArray(memptr ary, cstring &out, bool caps) {
+void amc::memptr_PrintOctetsHexArray(algo::memptr ary, cstring &out, bool caps) {
     out << "{";
-    ListSep ls(",");
+    algo::ListSep ls(",");
     frep_(i,elems_N(ary)) {
         out << ls;
         u64_PrintHex(ary[i],out,2,true,caps);
@@ -402,11 +402,11 @@ tempstr amc::ConstStringToCaseLabel(strptr rhs) {
         char_PrintCppSingleQuote(rhs[0], ret);
     } else {
         ret << "LE_STR" << rhs.n_elems << "(" ;
-        ListSep ls(",");
-        ary_beg(char,c,rhs) {
+        algo::ListSep ls(",");
+        for (int i=0; i<rhs.n_elems; i++) {
             ret << ls;
-            char_PrintCppSingleQuote(c,ret);
-        } ary_end;
+            char_PrintCppSingleQuote(rhs[i],ret);
+        }
         ret << ")";
     }
     return ret;
@@ -422,7 +422,7 @@ tempstr amc::VarStringToInteger(strptr name, i32 len) {
     vrfy_(len <= 8);
     tempstr ret;
     u32 offset = 0 ;
-    ListSep ls("|");
+    algo::ListSep ls("|");
     while (len) {
         tempstr off1;
         tempstr off8;
@@ -431,9 +431,9 @@ tempstr amc::VarStringToInteger(strptr name, i32 len) {
             off1 << "+" << offset;
             off8 << "<<"<< offset*8;
         }
-        if      (len >= 8) { x <<     "ReadLE64("<< name << ".elems"<<off1<<")";  len -= 8; offset += 8; }
-        else if (len >= 4) { x << "u64(ReadLE32("<< name << ".elems"<<off1<<"))"; len -= 4; offset += 4; }
-        else if (len >= 2) { x << "u64(ReadLE16("<< name << ".elems"<<off1<<"))"; len -= 2; offset += 2; }
+        if      (len >= 8) { x <<     "algo::ReadLE64("<< name << ".elems"<<off1<<")";  len -= 8; offset += 8; }
+        else if (len >= 4) { x << "u64(algo::ReadLE32("<< name << ".elems"<<off1<<"))"; len -= 4; offset += 4; }
+        else if (len >= 2) { x << "u64(algo::ReadLE16("<< name << ".elems"<<off1<<"))"; len -= 2; offset += 2; }
         else if (len >= 1) { x << "u64("<< name << "["<<offset<<"])";             len -= 1; offset += 1; }
         if (off8.ch_n > 0) {
             ret << ls << "(" << x << off8 << ")";
@@ -956,10 +956,10 @@ static void Main_ReportCycle() {
         gen_cycle_total += gen.cycle_total;
         verblog("amc.gen"
                 <<Keyval("gen",gen.gen)
-                <<Keyval("time", gen.cycle_total / get_cpu_hz()));
+                <<Keyval("time", gen.cycle_total / algo::get_cpu_hz()));
     }ind_end;
     verblog("amc.cycle_total"
-            <<Keyval("gen_time", gen_cycle_total / get_cpu_hz()));
+            <<Keyval("gen_time", gen_cycle_total / algo::get_cpu_hz()));
 }
 
 // -----------------------------------------------------------------------------
@@ -1094,24 +1094,29 @@ static void Main_Report() {
 
 // -----------------------------------------------------------------------------
 
-static void Main_Gen() {
+// Go over `amcdb.gen` table and invoke each global generator
+// Then, go over namespaces
+//    Go over per-namespace `amcdb.gen` entries and invoke them.
+// Collect performance data long the way
+// This is where amc spends most of the time. See the `amcdb.gen` table for more information.
+void amc::Main_Gen() {
     int prev_err=0;
     // run non-per-namespace generators
     ind_beg(amc::_db_gen_curs,gen,amc::_db) if (!gen.perns) {
-        u64 c=get_cycles();
+        u64 c=algo::get_cycles();
         gen.step();
         CheckCumulativeError(gen,prev_err);
-        gen.cycle_total += get_cycles()-c;
+        gen.cycle_total += algo::get_cycles()-c;
     }ind_end;
     // run per-namespace generators
     ind_beg(amc::_db_ns_curs, ns, amc::_db) {
         if (ns.select) {
             ind_beg(amc::_db_zs_gen_perns_curs,gen,amc::_db) {
-                u64 c=get_cycles();
+                u64 c=algo::get_cycles();
                 amc::_db.c_ns=&ns;
                 gen.step();
                 CheckCumulativeError(gen,prev_err);
-                gen.cycle_total += get_cycles()-c;
+                gen.cycle_total += algo::get_cycles()-c;
             }ind_end;
         }
     }ind_end;
@@ -1121,8 +1126,7 @@ static void Main_Gen() {
 // OUTPUT        Generate files for the namespace(s)
 
 void amc::Main() {
-    // create default malloc pool for each imd
-    // set imd->c_malloc to point to this pool
+    // Look up default allocator
     amc::_db.c_malloc = amc::ind_field_Find("algo_lib.FDb.malloc");
 
     ind_beg(amc::_db_ctype_curs,ctype,amc::_db) {
@@ -1141,8 +1145,10 @@ void amc::Main() {
     Main_ReportCycle();
 
     if (QueryModeQ()) {
+        // Print generated code to stdout
         Main_Querymode();
     } else {
+        // Save files
         if (algo_lib::_db.exit_code==0) {
             amc::_db.report.n_filemod += amc::SaveTuples(DirFileJoin(amc::_db.cmdline.out_dir,"data"));
         } else {

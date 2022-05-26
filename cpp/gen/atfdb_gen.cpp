@@ -95,7 +95,7 @@ bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,atfdb_FieldId_value); ret = true; break;
                 }
@@ -103,7 +103,7 @@ bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 6: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('t','a','r','g','e','t'): {
                     value_SetEnum(parent,atfdb_FieldId_target); ret = true; break;
                 }
@@ -111,7 +111,7 @@ bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 7: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
                 case LE_STR7('a','m','c','t','e','s','t'): {
                     value_SetEnum(parent,atfdb_FieldId_amctest); ret = true; break;
                 }
@@ -122,7 +122,7 @@ bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 8: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('t','e','s','t','n','a','m','e'): {
                     value_SetEnum(parent,atfdb_FieldId_testname); ret = true; break;
                 }
@@ -133,7 +133,7 @@ bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 9: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('n','o','r','m','c','h','e','c'): {
                     if (memcmp(rhs.elems+8,"k",1)==0) { value_SetEnum(parent,atfdb_FieldId_normcheck); ret = true; break; }
                     break;
@@ -226,7 +226,7 @@ algo::Smallstr16 atfdb::target_Get(atfdb::Unittest& parent) {
 }
 
 // --- atfdb.Unittest.target.Get2
-algo::Smallstr16 atfdb::Unittest_target_Get(strptr arg) {
+algo::Smallstr16 atfdb::Unittest_target_Get(algo::strptr arg) {
     algo::Smallstr16 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
@@ -238,7 +238,7 @@ algo::Smallstr50 atfdb::testname_Get(atfdb::Unittest& parent) {
 }
 
 // --- atfdb.Unittest.testname.Get2
-algo::Smallstr50 atfdb::Unittest_testname_Get(strptr arg) {
+algo::Smallstr50 atfdb::Unittest_testname_Get(algo::strptr arg) {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }

@@ -1,24 +1,24 @@
-# .bash_profile
-
-# Get the aliases and functions
+#!/usr/bin/env bash
 if [ -f ~/.bashrc ]; then
-. ~/.bashrc
+    . ~/.bashrc
 fi
 
-# variables
-# PROMPT_COMMAND: save history before displaying.
-# PATH: relative directory 'bin' allows having multiple git repos
-
-PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
-PATH=$PATH:$HOME/bin
-PATH=$PATH:bin
+PATH=$PATH:$HOME/bin:bin
 EDITOR="emacs -nw"
-HISTFILESIZE=100000
-HOSTNAME=`hostname -f 2>/dev/null`
-PS1="\e[0;34m[\$? \D{%b %d %H:%M:%S}] \u@$HOSTNAME\e[0;32m:\w\e[m \n\$ "
-LS_OPTIONS='--color=auto --quoting-style=shell'
 
-unset SSH_ASKPASS
+if [ "$PS1" != "" ]; then
+    unset SSH_ASKPASS
+    HISTFILESIZE=100000
+    HISTCONTROL="ignoreboth"
+    alias more=less
+    shopt -s histappend
+    PROMPT_COMMAND='history -a'
+    bind "set completion-query-items 1000"
+    HOSTNAME=`hostname -f 2>/dev/null`
+    PS1="\e[0;34m[\$? \D{%b %d %H:%M:%S}] \u@$HOSTNAME\e[0;32m:\w\e[m \n\$ "
+    LS_OPTIONS='--color=auto --quoting-style=shell'
+    complete -o default -o nospace -C acr_compl abt acr acr_compl acr_ed acr_in acr_my amc amc_gc amc_vis atf_amc atf_norm atf_unit mdbg mysql2ssim  src_func src_hdr src_lim ssim2csv ssim2mysql strconv
+fi
 
 # export section
 export PS1
@@ -26,13 +26,6 @@ export LS_OPTIONS
 export PATH
 export EDITOR
 export HISTFILESIZE
+export HISTCONTROL
+export PROMPT_COMMAND
 
-shopt -s histappend
-
-alias more=less
-
-bind "set completion-query-items 1000"
-
-# Generated with acr_compl -install
-# This is a script suitable for inclusion in .bash_profile
-complete -o default -o nospace -C acr_compl abt acr acr_compl acr_ed acr_in acr_my amc amc_dml amc_gc amc_vis atf_amc atf_norm atf_unit lib_ctype lib_exec mysql2ssim src_func src_hdr src_lim ssim2csv ssim2mysql strconv

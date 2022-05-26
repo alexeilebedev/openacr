@@ -102,7 +102,7 @@ namespace acr { // update-hdr
     // -------------------------------------------------------------------
     // cpp/acr/main.cpp
     //
-    UnTime FdModTime(algo::Fildes fd);
+    algo::UnTime FdModTime(algo::Fildes fd);
 
     // Parse query and return object
     acr::FQuery& ParseQuery(strptr expr);

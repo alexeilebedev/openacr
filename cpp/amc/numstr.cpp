@@ -70,6 +70,7 @@ void amc::tfunc_Numstr_qGetnum() {
     amc::FSmallstr &smallstr = *field.c_smallstr;
     amc::FNumstr &numstr = *smallstr.c_numstr;
     double str_max  = pow(numstr.base, smallstr.length)-1;
+    bool str_max_may_not_fit_in_u64 = ((smallstr.length * log2(numstr.base)) > 8*sizeof(u64));
 
     amc::FFunc& qgetnum = amc::CreateCurFunc();
     qgetnum.priv = true;
@@ -82,7 +83,7 @@ void amc::tfunc_Numstr_qGetnum() {
     Ins(&R, qgetnum.proto, "$name_qGetnum($Parent, u32 &ok)", false);
     Ins(&R, qgetnum.body        , "(void)ok;");
     Ins(&R, qgetnum.body        , "u64 val = 0;");
-    Ins(&R, qgetnum.body        , "strptr str = $name_Getary($pararg);");
+    Ins(&R, qgetnum.body        , "algo::strptr str = $name_Getary($pararg);");
     bool fast_path = (numstr.base == 10 && smallstr.length <= 16); // fast path for base-10 conversion
     if (numstr.issigned) {
         Ins(&R, qgetnum.body    , "bool is_neg = (str.n_elems > 0) && (str.elems[0] == '-');");
@@ -121,7 +122,7 @@ void amc::tfunc_Numstr_qGetnum() {
         if (numstr.base == 95) {
             Ins(&R, qgetnum.body, "    digit = u8((u8)ch - (u8)' ');");
         }
-        if (str_max > 0xffffffffffffffff) {
+        if (str_max_may_not_fit_in_u64) {
             Ins(&R, qgetnum.body, "    // Check for 64-bit overflow inside the loop");
             Ins(&R, qgetnum.body, "    u64 r1 = val*$base + digit;");
             Ins(&R, qgetnum.body, "    ok &= (val <= r1);");
@@ -134,12 +135,12 @@ void amc::tfunc_Numstr_qGetnum() {
 
     if (numstr.issigned) {
         Ins(&R, qgetnum.body    , "i64 ret = is_neg ? -val : val;");
-        if ((str_max >= numstr.nummax) && (str_max < 0xffffffffffffffff)) { // 64-bit overflow is already checked
+        if ((str_max >= numstr.nummax) && !str_max_may_not_fit_in_u64) { // 64-bit overflow is already checked
             Ins(&R, qgetnum.body    , "ok &= ret >= $nummin && ret <= $nummax;");// check for overflow
         }
         Ins(&R, qgetnum.body    , "return $Rtype(ret);");
     } else {
-        if ((str_max >= numstr.nummax) && (str_max < 0xffffffffffffffff)) { // 64-bit overflow is already checked
+        if ((str_max >= numstr.nummax) && !str_max_may_not_fit_in_u64) { // 64-bit overflow is already checked
             Ins(&R, qgetnum.body    , "ok &= val <= $nummax;");// check for overflow
         }
         Ins(&R, qgetnum.body    , "return $Rtype(val);");
@@ -212,11 +213,11 @@ void amc::tfunc_Numstr_SetnumMaybe() {
     }
 
     if ((numstr.base == 10) && ((numstr.numtype == "u16") || (numstr.numtype == "i16"))) {
-        Ins(&R, setnum.body    , "length = u16_FmtBuf(val, (u8*)buf + charpos);");
+        Ins(&R, setnum.body    , "length = algo::u16_FmtBuf(val, (u8*)buf + charpos);");
     } else if ((numstr.base == 10) && ((numstr.numtype == "u32") || (numstr.numtype == "i32"))) {
-        Ins(&R, setnum.body    , "length = u32_FmtBuf(val, (u8*)buf + charpos);");
+        Ins(&R, setnum.body    , "length = algo::u32_FmtBuf(val, (u8*)buf + charpos);");
     } else if ((numstr.base == 10) && ((numstr.numtype == "u64") || (numstr.numtype == "i64"))) {
-        Ins(&R, setnum.body    , "length = u64_FmtBuf(val, (u8*)buf + charpos);");
+        Ins(&R, setnum.body    , "length = algo::u64_FmtBuf(val, (u8*)buf + charpos);");
     } else {
         Ins(&R, setnum.body    , "charpos = sizeof(buf);");
         Ins(&R, setnum.body    , "do {");
@@ -257,7 +258,7 @@ void amc::tfunc_Numstr_SetnumMaybe() {
     }
     Ins(&R, setnum.body        , "bool retval = length <= $max_length;");
     Ins(&R, setnum.body        , "if (retval) {");
-    Ins(&R, setnum.body        , "    $name_SetStrptr($pararg, strptr(buf + charpos, length));");
+    Ins(&R, setnum.body        , "    $name_SetStrptr($pararg, algo::strptr(buf + charpos, length));");
     Ins(&R, setnum.body        , "}");
     Ins(&R, setnum.body        , "return retval;");
 }

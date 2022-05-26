@@ -27,6 +27,7 @@
 // Print ssim tuples desired by a specified process,
 // or print names of ssim files
 
+#include "include/algo.h"
 #include "include/gen/acr_in_gen.h"
 #include "include/gen/acr_in_gen.inl.h"
 

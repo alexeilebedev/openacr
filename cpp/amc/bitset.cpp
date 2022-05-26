@@ -41,8 +41,8 @@ void amc::tclass_Bitset() {
         algo_lib::_db.exit_code++;
     }
 
-    Set(R, "$idxshift"  , tempstr()<<FloorLog2(elem_bits));
-    Set(R, "$shiftmask" , tempstr()<<(1 << FloorLog2(elem_bits))-1);
+    Set(R, "$idxshift"  , tempstr()<<algo::FloorLog2(elem_bits));
+    Set(R, "$shiftmask" , tempstr()<<(1 << algo::FloorLog2(elem_bits))-1);
     Set(R, "$elembits"  , tempstr()<<elem_bits);
 }
 
@@ -348,7 +348,7 @@ void amc::tfunc_Bitset_Sup() {
         Ins(&R, sup.body, "for (int i = lim-1; i >= 0; i--) {");
         Ins(&R, sup.body, "    $Cpptype &val = $name_qFind($pararg, i);");
         Ins(&R, sup.body, "    if (val) {");
-        Ins(&R, sup.body, "        u32 bitidx = u64_BitScanReverse(val) + 1;");
+        Ins(&R, sup.body, "        u32 bitidx = algo::u64_BitScanReverse(val) + 1;");
         Ins(&R, sup.body, "        ret = i * $elembits + bitidx;");
         Ins(&R, sup.body, "        break;");
         Ins(&R, sup.body, "    }");

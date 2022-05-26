@@ -26,6 +26,18 @@
 
 #pragma once
 
+#ifdef WIN32
+inline u16 htobe16(u16 val) { return _byteswap_ushort(val); }
+inline u32 htobe32(u32 val) { return _byteswap_ulong(val); }
+inline u64 htobe64(u64 val) { return _byteswap_uint64(val); }
+inline u16 be16toh(u16 val) { return _byteswap_ushort(val); }
+inline u32 be32toh(u32 val) { return _byteswap_ulong(val); }
+inline u64 be64toh(u64 val) { return _byteswap_uint64(val); }
+inline u16 htole16(u16 val) { return val; }
+inline u32 htole32(u32 val) { return val; }
+inline u64 htole64(u64 val) { return val; }
+#endif
+
 // Taylor series expansion. For x around 0.01, this produces 2 digits per
 // iteration, so with N=4 will be reasonably fast.
 inline double algo::ExpTaylor(double x, int n) {
@@ -85,7 +97,12 @@ inline int algo::ParseHex1(u32 c, u8 &result) {
 // -----------------------------------------------------------------------------
 
 inline void algo::PageBufInit(PageBuf &F, u64 n, u64 align) {
+#ifdef WIN32
+    F.elems = (u8*)_aligned_malloc(n, align);
+    vrfy(F.elems!=NULL, "aligned_malloc");
+#else
     errno_vrfy(posix_memalign((void**)&F.elems, align, n)==0, "posix_memalign");
+#endif
     F.n_elems  = (int)n;
 }
 
@@ -448,6 +465,49 @@ inline bool operator !=(const algo::UnDiff &lhs, const algo::UnDiff &rhs) {
     return lhs.value != rhs.value;
 }
 
+inline bool operator > (const algo::WDiff &lhs, const algo::WDiff &rhs) {
+    return lhs.value >  rhs.value;
+}
+
+inline bool operator >=(const algo::WDiff &lhs, const algo::WDiff &rhs) {
+    return lhs.value >= rhs.value;
+}
+
+inline bool operator <=(const algo::WDiff &lhs, const algo::WDiff &rhs) {
+    return lhs.value <= rhs.value;
+}
+
+inline bool operator !=(const algo::WDiff &lhs, const algo::WDiff &rhs) {
+    return lhs.value != rhs.value;
+}
+
+inline algo::WTime operator+(const algo::WTime &t, const algo::WDiff &t2) {
+    return algo::WTime(t.value + t2.value);
+}
+
+inline algo::WDiff operator+(const algo::WDiff &t, const algo::WDiff &t2) {
+    return algo::WDiff(t.value + t2.value);
+}
+
+inline algo::WTime operator-(const algo::WTime &t, const algo::WDiff &t2) {
+    return algo::WTime(t.value - t2.value);
+}
+
+inline algo::WDiff operator-(const algo::WTime &t, const algo::WTime &t2) {
+    return algo::WDiff(t.value - t2.value);
+}
+
+inline algo::WDiff operator-(const algo::WDiff &t, const algo::WDiff &t2) {
+    return algo::WDiff(t.value - t2.value);
+}
+
+inline bool operator>(const algo::WTime &t, const algo::WTime &t2) {
+    return t.value > t2.value;
+}
+
+inline bool operator>=(const algo::WTime &t, const algo::WTime &t2) {
+    return t.value >= t2.value;
+}
 
 inline algo::SchedTime operator +  (const algo::SchedTime &a, algo::SchedTime d) {
     return algo::SchedTime(a.value + d.value);
@@ -499,7 +559,7 @@ inline u32 algo::u64_Count1s(u64 x) {
 }
 
 inline u32 algo::u128_Count1s(u128 x) {
-    return u64_Count1s(u64(x>>64)) + u64_Count1s(u64(x));
+    return u64_Count1s(u64(x>>u32(64))) + u64_Count1s(u64(x));
 }
 
 template<class T> inline void algo::ZeroBytes(T &t) {
@@ -536,45 +596,6 @@ inline float algo::float_NegateIf(float x, bool i) {
 
 inline double algo::double_NegateIf(double x, bool i) {
     return i ? -x : x;
-}
-
-static inline bool algo::CASU64(u64 volatile& what, u64& test_and_prev, u64 new_val) {
-    u8 ret;
-    __asm__ __volatile__("lock cmpxchgq %3,%0\n\t"
-                         "sete %1\n\t"
-                         :"+m"(what),
-                          "=r"(ret),
-                          "+a"(test_and_prev)
-                         :"r"(new_val)
-                         :"cc");
-    return ret;
-}
-
-static inline void algo::SwapMTU64(u64 volatile &mem, u64& x) {
-    asm volatile (
-                  "lock xchgq %1, %0\n" // add x to mem
-                  : "+m"(mem),
-                    "+r"(x)
-                  :
-                  : "memory");
-}
-
-template<class T> inline T algo::IncrMT(T *i, T by) {
-    return __sync_fetch_and_add(i, by)+by;
-}
-
-template<class T> inline T algo::DecrMT(T *i, T by) {
-    return __sync_fetch_and_sub(i, by)-by;
-}
-
-// ignore:ptr_byref
-template<class T> inline void algo::SwapMT(T* volatile &mem, T *&x) {
-    SwapMTU64((u64 volatile&)mem, (u64&)x);
-}
-
-// ignore:ptr_byref
-template<class T> inline bool algo::CAS(T *volatile & what, T*& test_and_prev, T* new_val) {
-    return CASU64((u64 volatile&)what, (u64&)test_and_prev, (u64)new_val);
 }
 
 inline double algo::DRound(double a) {
@@ -689,27 +710,48 @@ inline u64 algo::ReadLE64(const void *val) {
 // input argument must not be zero.
 // input result in 0 is undefined (see Intel manual)
 // http://www.intel.com/content/dam/doc/manual/64-ia-32-architectures-software-developer-vol-2a-2b-instruction-set-a-z-manual.pdf
+
 inline u32 algo::u32_BitScanForward(u32 v) {
+#ifdef WIN32
+    unsigned long r;
+    _BitScanForward(&r,v);
+#else
     u32 r;
     asm ("bsfl %1, %0" : "=r"(r) : "rm"(v) );
+#endif
     return r;
 }
 
 inline u64 algo::u64_BitScanForward(u64 v) {
+#ifdef WIN32
+    unsigned long r;
+    _BitScanForward64(&r,v);
+#else
     u64 r;
     asm ("bsfq %1, %0" : "=r"(r) : "rm"(v) );
+#endif
     return r;
 }
 
 inline u32 algo::u32_BitScanReverse(u32 v) {
+#ifdef WIN32
+    unsigned long r;
+    _BitScanReverse(&r,v);
+#else
     u32 r;
     asm ("bsrl %1, %0" : "=r"(r) : "rm"(v) );
+#endif
     return r;
 }
 
 inline u64 algo::u64_BitScanReverse(u64 v) {
+#ifdef WIN32
+    unsigned long r;
+    _BitScanReverse64(&r,v);
+#else
     u64 r;
     asm ("bsrq %1, %0" : "=r"(r) : "rm"(v) );
+#endif
     return r;
 }
 

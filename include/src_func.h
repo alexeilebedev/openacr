@@ -23,6 +23,7 @@
 // Recent Changes: alexei.lebedev
 //
 
+#include "include/algo.h"
 #include "include/gen/src_func_gen.h"
 #include "include/gen/src_func_gen.inl.h"
 
@@ -32,16 +33,6 @@ namespace src_func { // update-hdr
     //     source files. Editing this text is futile.
     //     To refresh the contents of this section, run 'update-hdr'.
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
-
-    // -------------------------------------------------------------------
-    // cpp/src/func/check.cpp -- Check source code for common errors
-    //
-    void InitBadline();
-
-    // Check current line for disallowed constructs
-    // This happens with no regard to position inside source (e.g. could be inside or outside of a function).
-    // Function-level checks live in ComputeIffy.
-    void CheckLine(strptr trimmedline, strptr fullline);
 
     // -------------------------------------------------------------------
     // cpp/src/func/edit.cpp -- Implementation of -e

@@ -269,7 +269,7 @@ void atf_amc::amctest_CdlistRemove() {
         vrfy_(!nb_typec        == atf_amc::cd_t_typec_EmptyQ  ());
     }
     frep_(i,100) {
-        vrfy_(item[i].typec = 100+i); // check if nothing has corrupted
+        vrfy_(item[i].typec == 100+i); // check if nothing has corrupted
     }
     // teardown
 }
@@ -307,7 +307,7 @@ void atf_amc::amctest_CdlistFlush100() {
     atf_amc::cd_t_typec_RemoveAll();
     // verify
     frep_(i,100) {
-        vrfy_(item[i].typec = 100+i); // check if nothing has corrupted
+        vrfy_(item[i].typec == 100+i); // check if nothing has corrupted
         vrfy_(false == atf_amc::cd_t_typec_InLlistQ(item[i]));
         vrfy_((atf_amc::FTypeC*)-1 == atf_amc::cd_t_typec_Next(item[i]));
         vrfy_(NULL == atf_amc::cd_t_typec_Prev(item[i]));

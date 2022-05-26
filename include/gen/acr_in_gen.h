@@ -1219,6 +1219,8 @@ struct FTarget { // acr_in.FTarget
     acr_in::FTarget*     zd_targ_visit_next;   // zslist link; -1 means not-in-list
     acr_in::FTarget*     zd_targ_visit_prev;   // previous element
     algo::Smallstr16     target;               //
+    algo::Smallstr50     license;              //
+    algo::Smallstr50     compat;               //   "Linux-%.%-%"
     acr_in::FTargdep**   c_targdep_elems;      // array of pointers
     u32                  c_targdep_n;          // array of pointers
     u32                  c_targdep_max;        // capacity of allocated array

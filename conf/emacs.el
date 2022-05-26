@@ -184,6 +184,14 @@
 
 ;;-----------------------------------------------------------------------------
 
+(add-hook 'python-mode-hook
+          (lambda ()
+            (local-set-key (kbd "<tab>") 'python-indent-shift-right)
+            (local-set-key (kbd "<backtab>") 'python-indent-shift-left)
+            ))
+
+;;-----------------------------------------------------------------------------
+
 (setq auto-mode-alist
       (append '(("\\.C$"  . c++-mode)
                 ("\\.cc$" . c++-mode)
@@ -319,7 +327,7 @@
 ;;------------------------------------------------------------------------------
 
 ; strip 'Directory '
-(setq compile-command              (concat "cd " ffroot-directory " && ai %"))
+(setq compile-command              (concat "cd " ffroot-directory " && ai % 2>&1 | break-long-lines"))
 
 (setq-default c-basic-offset               4)
 (setq-default indent-tabs-mode             nil)
@@ -451,4 +459,6 @@
 
 ;; disable vc-git
 ;; http://stackoverflow.com/questions/5748814/how-does-one-disable-vc-git-in-emacs
-(eval-after-load "vc" '(remove-hook 'find-file-hooks 'vc-find-file-hook))
+(require 'vc)
+(delete 'Git vc-handled-backends)
+(require 'vc)(remove-hook 'find-file-hook 'vc-find-file-hook)

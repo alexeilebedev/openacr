@@ -31,34 +31,46 @@ enum atf_norm_TableIdEnum {                   // atf_norm.TableId.value
     ,atf_norm_TableId_dev_builddir      = 0   // dev.builddir -> atf_norm.FBuilddir
     ,atf_norm_TableId_dev_Cfg           = 1   // dev.Cfg -> atf_norm.FCfg
     ,atf_norm_TableId_dev_cfg           = 1   // dev.cfg -> atf_norm.FCfg
-    ,atf_norm_TableId_dmmeta_Ns         = 2   // dmmeta.Ns -> atf_norm.FNs
-    ,atf_norm_TableId_dmmeta_ns         = 2   // dmmeta.ns -> atf_norm.FNs
-    ,atf_norm_TableId_dev_Readme        = 3   // dev.Readme -> atf_norm.FReadme
-    ,atf_norm_TableId_dev_readme        = 3   // dev.readme -> atf_norm.FReadme
-    ,atf_norm_TableId_dev_Scriptfile    = 4   // dev.Scriptfile -> atf_norm.FScriptfile
-    ,atf_norm_TableId_dev_scriptfile    = 4   // dev.scriptfile -> atf_norm.FScriptfile
-    ,atf_norm_TableId_dmmeta_Ssimfile   = 5   // dmmeta.Ssimfile -> atf_norm.FSsimfile
-    ,atf_norm_TableId_dmmeta_ssimfile   = 5   // dmmeta.ssimfile -> atf_norm.FSsimfile
+    ,atf_norm_TableId_dev_Gitfile       = 2   // dev.Gitfile -> atf_norm.FGitfile
+    ,atf_norm_TableId_dev_gitfile       = 2   // dev.gitfile -> atf_norm.FGitfile
+    ,atf_norm_TableId_dev_Noindent      = 3   // dev.Noindent -> atf_norm.FNoindent
+    ,atf_norm_TableId_dev_noindent      = 3   // dev.noindent -> atf_norm.FNoindent
+    ,atf_norm_TableId_dmmeta_Ns         = 4   // dmmeta.Ns -> atf_norm.FNs
+    ,atf_norm_TableId_dmmeta_ns         = 4   // dmmeta.ns -> atf_norm.FNs
+    ,atf_norm_TableId_dev_Readme        = 5   // dev.Readme -> atf_norm.FReadme
+    ,atf_norm_TableId_dev_readme        = 5   // dev.readme -> atf_norm.FReadme
+    ,atf_norm_TableId_dev_Scriptfile    = 6   // dev.Scriptfile -> atf_norm.FScriptfile
+    ,atf_norm_TableId_dev_scriptfile    = 6   // dev.scriptfile -> atf_norm.FScriptfile
+    ,atf_norm_TableId_dmmeta_Ssimfile   = 7   // dmmeta.Ssimfile -> atf_norm.FSsimfile
+    ,atf_norm_TableId_dmmeta_ssimfile   = 7   // dmmeta.ssimfile -> atf_norm.FSsimfile
+    ,atf_norm_TableId_dev_Targsrc       = 8   // dev.Targsrc -> atf_norm.FTargsrc
+    ,atf_norm_TableId_dev_targsrc       = 8   // dev.targsrc -> atf_norm.FTargsrc
 };
 
-enum { atf_norm_TableIdEnum_N = 12 };
+enum { atf_norm_TableIdEnum_N = 18 };
 
 namespace dev { struct Builddir; }
 namespace dev { struct Cfg; }
+namespace dev { struct Gitfile; }
+namespace dev { struct Noindent; }
 namespace atfdb { struct Normcheck; }
 namespace dmmeta { struct Ns; }
 namespace dev { struct Readme; }
 namespace dev { struct Scriptfile; }
 namespace dmmeta { struct Ssimfile; }
+namespace dev { struct Targsrc; }
 namespace atf_norm { struct FBuilddir; }
 namespace atf_norm { struct FCfg; }
 namespace atf_norm { struct trace; }
 namespace atf_norm { struct FDb; }
+namespace atf_norm { struct FGitfile; }
+namespace atf_norm { struct FNoindent; }
 namespace atf_norm { struct FNormcheck; }
 namespace atf_norm { struct FNs; }
 namespace atf_norm { struct FReadme; }
 namespace atf_norm { struct FScriptfile; }
 namespace atf_norm { struct FSsimfile; }
+namespace atf_norm { struct FTargsrc; }
 namespace atf_norm { struct FieldId; }
 namespace atf_norm { struct TableId; }
 namespace atf_norm { struct _db_normcheck_curs; }
@@ -72,6 +84,10 @@ namespace atf_norm { struct _db_readme_curs; }
 namespace atf_norm { struct _db_builddir_curs; }
 namespace atf_norm { struct _db_cfg_curs; }
 namespace atf_norm { struct _db_ind_builddir_curs; }
+namespace atf_norm { struct _db_gitfile_curs; }
+namespace atf_norm { struct _db_ind_gitfile_curs; }
+namespace atf_norm { struct _db_noindent_curs; }
+namespace atf_norm { struct _db_targsrc_curs; }
 namespace atf_norm {
 }//pkey typedefs
 namespace atf_norm {
@@ -79,6 +95,8 @@ extern const char *atf_norm_help;
 extern const char *atf_norm_syntax;
 extern FDb _db;
 typedef void (*normcheck_step_hook)();
+extern const char *dev_scriptfile_bin_update_gitfile; // "bin/update-gitfile"
+extern const char *dev_scriptfile_bin_update_scriptfile; // "bin/update-scriptfile"
 
 // --- atf_norm.FBuilddir
 // create: atf_norm.FDb.builddir (Lary)
@@ -119,6 +137,7 @@ void                 FBuilddir_Uninit(atf_norm::FBuilddir& builddir) __attribute
 // create: atf_norm.FDb.cfg (Lary)
 struct FCfg { // atf_norm.FCfg
     algo::Smallstr50   cfg;       //
+    algo::Smallstr5    suffix;    //
     algo::Comment      comment;   //
 private:
     friend atf_norm::FCfg&      cfg_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -175,6 +194,15 @@ struct FDb { // atf_norm.FDb
     atf_norm::FBuilddir**     ind_builddir_buckets_elems;     // pointer to bucket array
     i32                       ind_builddir_buckets_n;         // number of elements in bucket array
     i32                       ind_builddir_n;                 // number of elements in the hash table
+    atf_norm::FGitfile*       gitfile_lary[32];               // level array
+    i32                       gitfile_n;                      // number of elements in array
+    atf_norm::FGitfile**      ind_gitfile_buckets_elems;      // pointer to bucket array
+    i32                       ind_gitfile_buckets_n;          // number of elements in bucket array
+    i32                       ind_gitfile_n;                  // number of elements in the hash table
+    atf_norm::FNoindent*      noindent_lary[32];              // level array
+    i32                       noindent_n;                     // number of elements in array
+    atf_norm::FTargsrc*       targsrc_lary[32];               // level array
+    i32                       targsrc_n;                      // number of elements in array
     atf_norm::trace           trace;                          //
 };
 
@@ -303,8 +331,6 @@ bool                 ind_scriptfile_EmptyQ() __attribute__((nothrow));
 atf_norm::FScriptfile* ind_scriptfile_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Look up row by key and return reference. Throw exception if not found
 atf_norm::FScriptfile& ind_scriptfile_FindX(const algo::strptr& key);
-// Find row by key. If not found, create and x-reference a new row with with this key.
-atf_norm::FScriptfile& ind_scriptfile_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 i32                  ind_scriptfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
@@ -460,6 +486,107 @@ void                 ind_builddir_Remove(atf_norm::FBuilddir& row) __attribute__
 // Reserve enough room in the hash for N more elements. Return success code.
 void                 ind_builddir_Reserve(int n) __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_norm::FGitfile&  gitfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+atf_norm::FGitfile*  gitfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_norm::FGitfile*  gitfile_InsertMaybe(const dev::Gitfile &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                gitfile_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 gitfile_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+atf_norm::FGitfile*  gitfile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+atf_norm::FGitfile*  gitfile_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  gitfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 gitfile_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 gitfile_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+atf_norm::FGitfile&  gitfile_qFind(u64 t) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 gitfile_XrefMaybe(atf_norm::FGitfile &row);
+
+// Return true if hash is empty
+bool                 ind_gitfile_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+atf_norm::FGitfile*  ind_gitfile_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+atf_norm::FGitfile&  ind_gitfile_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+atf_norm::FGitfile&  ind_gitfile_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+i32                  ind_gitfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool                 ind_gitfile_InsertMaybe(atf_norm::FGitfile& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void                 ind_gitfile_Remove(atf_norm::FGitfile& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+void                 ind_gitfile_Reserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_norm::FNoindent& noindent_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+atf_norm::FNoindent* noindent_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_norm::FNoindent* noindent_InsertMaybe(const dev::Noindent &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                noindent_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 noindent_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+atf_norm::FNoindent* noindent_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+atf_norm::FNoindent* noindent_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  noindent_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 noindent_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 noindent_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+atf_norm::FNoindent& noindent_qFind(u64 t) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 noindent_XrefMaybe(atf_norm::FNoindent &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_norm::FTargsrc&  targsrc_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+atf_norm::FTargsrc*  targsrc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_norm::FTargsrc*  targsrc_InsertMaybe(const dev::Targsrc &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                targsrc_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 targsrc_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+atf_norm::FTargsrc*  targsrc_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+atf_norm::FTargsrc*  targsrc_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 targsrc_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 targsrc_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+atf_norm::FTargsrc&  targsrc_qFind(u64 t) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 targsrc_XrefMaybe(atf_norm::FTargsrc &row);
+
 // cursor points to valid item
 void                 _db_normcheck_curs_Reset(_db_normcheck_curs &curs, atf_norm::FDb &parent);
 // cursor points to valid item
@@ -516,9 +643,103 @@ bool                 _db_cfg_curs_ValidQ(_db_cfg_curs &curs);
 void                 _db_cfg_curs_Next(_db_cfg_curs &curs);
 // item access
 atf_norm::FCfg&      _db_cfg_curs_Access(_db_cfg_curs &curs);
+// cursor points to valid item
+void                 _db_gitfile_curs_Reset(_db_gitfile_curs &curs, atf_norm::FDb &parent);
+// cursor points to valid item
+bool                 _db_gitfile_curs_ValidQ(_db_gitfile_curs &curs);
+// proceed to next item
+void                 _db_gitfile_curs_Next(_db_gitfile_curs &curs);
+// item access
+atf_norm::FGitfile&  _db_gitfile_curs_Access(_db_gitfile_curs &curs);
+// cursor points to valid item
+void                 _db_noindent_curs_Reset(_db_noindent_curs &curs, atf_norm::FDb &parent);
+// cursor points to valid item
+bool                 _db_noindent_curs_ValidQ(_db_noindent_curs &curs);
+// proceed to next item
+void                 _db_noindent_curs_Next(_db_noindent_curs &curs);
+// item access
+atf_norm::FNoindent& _db_noindent_curs_Access(_db_noindent_curs &curs);
+// cursor points to valid item
+void                 _db_targsrc_curs_Reset(_db_targsrc_curs &curs, atf_norm::FDb &parent);
+// cursor points to valid item
+bool                 _db_targsrc_curs_ValidQ(_db_targsrc_curs &curs);
+// proceed to next item
+void                 _db_targsrc_curs_Next(_db_targsrc_curs &curs);
+// item access
+atf_norm::FTargsrc&  _db_targsrc_curs_Access(_db_targsrc_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
+
+// --- atf_norm.FGitfile
+// create: atf_norm.FDb.gitfile (Lary)
+// global access: ind_gitfile (Thash)
+struct FGitfile { // atf_norm.FGitfile
+    atf_norm::FGitfile*      ind_gitfile_next;   // hash next
+    algo::Smallstr200        gitfile;            //
+    atf_norm::FNoindent*     c_noindent;         // optional pointer
+    atf_norm::FScriptfile*   c_scriptfile;       // optional pointer
+    atf_norm::FTargsrc*      c_targsrc;          // optional pointer
+private:
+    friend atf_norm::FGitfile&  gitfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_norm::FGitfile*  gitfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 gitfile_RemoveAll() __attribute__((nothrow));
+    friend void                 gitfile_RemoveLast() __attribute__((nothrow));
+    FGitfile();
+    ~FGitfile();
+    FGitfile(const FGitfile&){ /*disallow copy constructor */}
+    void operator =(const FGitfile&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 gitfile_CopyOut(atf_norm::FGitfile &row, dev::Gitfile &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 gitfile_CopyIn(atf_norm::FGitfile &row, dev::Gitfile &in) __attribute__((nothrow));
+
+algo::Smallstr50     ext_Get(atf_norm::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow));
+
+// Insert row into pointer index. Return final membership status.
+bool                 c_noindent_InsertMaybe(atf_norm::FGitfile& gitfile, atf_norm::FNoindent& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+void                 c_noindent_Remove(atf_norm::FGitfile& gitfile, atf_norm::FNoindent& row) __attribute__((nothrow));
+
+// Insert row into pointer index. Return final membership status.
+bool                 c_scriptfile_InsertMaybe(atf_norm::FGitfile& gitfile, atf_norm::FScriptfile& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+void                 c_scriptfile_Remove(atf_norm::FGitfile& gitfile, atf_norm::FScriptfile& row) __attribute__((nothrow));
+
+// Insert row into pointer index. Return final membership status.
+bool                 c_targsrc_InsertMaybe(atf_norm::FGitfile& gitfile, atf_norm::FTargsrc& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+void                 c_targsrc_Remove(atf_norm::FGitfile& gitfile, atf_norm::FTargsrc& row) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 FGitfile_Init(atf_norm::FGitfile& gitfile);
+void                 FGitfile_Uninit(atf_norm::FGitfile& gitfile) __attribute__((nothrow));
+
+// --- atf_norm.FNoindent
+// create: atf_norm.FDb.noindent (Lary)
+// access: atf_norm.FGitfile.c_noindent (Ptr)
+struct FNoindent { // atf_norm.FNoindent
+    algo::Smallstr200   gitfile;   //
+    algo::Comment       comment;   //
+private:
+    friend atf_norm::FNoindent& noindent_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_norm::FNoindent* noindent_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 noindent_RemoveAll() __attribute__((nothrow));
+    friend void                 noindent_RemoveLast() __attribute__((nothrow));
+    FNoindent();
+    ~FNoindent();
+    FNoindent(const FNoindent&){ /*disallow copy constructor */}
+    void operator =(const FNoindent&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 noindent_CopyOut(atf_norm::FNoindent &row, dev::Noindent &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 noindent_CopyIn(atf_norm::FNoindent &row, dev::Noindent &in) __attribute__((nothrow));
+
+void                 FNoindent_Uninit(atf_norm::FNoindent& noindent) __attribute__((nothrow));
 
 // --- atf_norm.FNormcheck
 // create: atf_norm.FDb.normcheck (Lary)
@@ -603,6 +824,7 @@ void                 FReadme_Init(atf_norm::FReadme& readme);
 // --- atf_norm.FScriptfile
 // create: atf_norm.FDb.scriptfile (Lary)
 // global access: ind_scriptfile (Thash)
+// access: atf_norm.FGitfile.c_scriptfile (Ptr)
 struct FScriptfile { // atf_norm.FScriptfile
     atf_norm::FScriptfile*   ind_scriptfile_next;   // hash next
     algo::Smallstr200        gitfile;               //
@@ -659,6 +881,36 @@ algo::Smallstr50     name_Get(atf_norm::FSsimfile& ssimfile) __attribute__((__wa
 // Set all fields to initial values.
 void                 FSsimfile_Init(atf_norm::FSsimfile& ssimfile);
 void                 FSsimfile_Uninit(atf_norm::FSsimfile& ssimfile) __attribute__((nothrow));
+
+// --- atf_norm.FTargsrc
+// create: atf_norm.FDb.targsrc (Lary)
+// access: atf_norm.FGitfile.c_targsrc (Ptr)
+struct FTargsrc { // atf_norm.FTargsrc
+    algo::Smallstr100   targsrc;   //
+    algo::Comment       comment;   //
+private:
+    friend atf_norm::FTargsrc&  targsrc_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_norm::FTargsrc*  targsrc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 targsrc_RemoveAll() __attribute__((nothrow));
+    friend void                 targsrc_RemoveLast() __attribute__((nothrow));
+    FTargsrc();
+    ~FTargsrc();
+    FTargsrc(const FTargsrc&){ /*disallow copy constructor */}
+    void operator =(const FTargsrc&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 targsrc_CopyOut(atf_norm::FTargsrc &row, dev::Targsrc &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 targsrc_CopyIn(atf_norm::FTargsrc &row, dev::Targsrc &in) __attribute__((nothrow));
+
+algo::Smallstr16     target_Get(atf_norm::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+
+algo::Smallstr200    src_Get(atf_norm::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+
+algo::Smallstr10     ext_Get(atf_norm::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+
+void                 FTargsrc_Uninit(atf_norm::FTargsrc& targsrc) __attribute__((nothrow));
 
 // --- atf_norm.FieldId
 #pragma pack(push,1)
@@ -791,16 +1043,54 @@ struct _db_cfg_curs {// cursor
     _db_cfg_curs(){ parent=NULL; index=0; }
 };
 
+
+struct _db_gitfile_curs {// cursor
+    typedef atf_norm::FGitfile ChildType;
+    atf_norm::FDb *parent;
+    i64 index;
+    _db_gitfile_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_noindent_curs {// cursor
+    typedef atf_norm::FNoindent ChildType;
+    atf_norm::FDb *parent;
+    i64 index;
+    _db_noindent_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_targsrc_curs {// cursor
+    typedef atf_norm::FTargsrc ChildType;
+    atf_norm::FDb *parent;
+    i64 index;
+    _db_targsrc_curs(){ parent=NULL; index=0; }
+};
+
+// User-implemented function from gstatic:atf_norm.FDb.normcheck
+void                 normcheck_checkclean();
+// User-implemented function from gstatic:atf_norm.FDb.normcheck
+void                 normcheck_gitfile();
+// User-implemented function from gstatic:atf_norm.FDb.normcheck
+void                 normcheck_normalize_acr();
+// User-implemented function from gstatic:atf_norm.FDb.normcheck
+void                 normcheck_src_lim();
+// User-implemented function from gstatic:atf_norm.FDb.normcheck
+void                 normcheck_cppcheck();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_amc();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_bootstrap();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
-void                 normcheck_testamc();
+void                 normcheck_shebang();
+// User-implemented function from gstatic:atf_norm.FDb.normcheck
+void                 normcheck_encoding();
+// User-implemented function from gstatic:atf_norm.FDb.normcheck
+void                 normcheck_inline_readme();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_readme();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
-void                 normcheck_unit();
+void                 normcheck_bintests();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_copyright();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
@@ -810,7 +1100,7 @@ void                 normcheck_stray_gen();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_tempcode();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
-void                 normcheck_gitfile();
+void                 normcheck_lineendings();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_indent_srcfile();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
@@ -818,13 +1108,11 @@ void                 normcheck_indent_script();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_normalize_amc_vis();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
-void                 normcheck_src_lim();
-// User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_ssimfile();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
-void                 normcheck_normalize_acr();
-// User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_normalize_acr_my();
+// User-implemented function from gstatic:atf_norm.FDb.normcheck
+void                 normcheck_atf_unit();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_build_clang();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
@@ -835,6 +1123,8 @@ void                 normcheck_acr_ed_ssimfile();
 void                 normcheck_acr_ed_ssimdb();
 // User-implemented function from gstatic:atf_norm.FDb.normcheck
 void                 normcheck_acr_ed_target();
+// User-implemented function from gstatic:atf_norm.FDb.normcheck
+void                 normcheck_atf_amc();
 int                  main(int argc, char **argv);
 } // end namespace atf_norm
 namespace algo {

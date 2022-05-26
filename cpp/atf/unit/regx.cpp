@@ -108,9 +108,9 @@ static void ShortCircuitMatch(strptr regx_str, strptr str, int njunk, strptr jun
     }
     bool good =false;
     for (int iter=0; iter<100; iter++) {
-        u64 start=get_cycles();
+        u64 start=algo::get_cycles();
         bool result=Regx_Match(regx,test);
-        u64 end=get_cycles();
+        u64 end=algo::get_cycles();
         TESTCMP(result,expect);
         if (start + maxcycles > end) {
             good=true;

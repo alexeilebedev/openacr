@@ -24,7 +24,13 @@
 // Recent Changes: alexei.lebedev hayk.mkrtchyan edward.danileyko
 //
 
+#include "include/algo.h"
+#ifndef WIN32
 #include <arpa/inet.h>
+#endif
+#ifdef WIN32
+#include <stdio.h>
+#endif
 
 // -----------------------------------------------------------------------------
 
@@ -32,7 +38,7 @@
 // Determine if it needs quoting as an ssim key/value,
 // and return appropriate quote character. If no quote character is needed,
 // return NUL.
-static inline char _PickSsimQuoteChar(strptr value) {
+char algo::PickSsimQuoteChar(strptr value) {
     int singleq = 0;
     int needquotes = elems_N(value) == 0;
     frep_(i,elems_N(value)) {
@@ -81,7 +87,7 @@ bool float_ReadStrptrMaybe(float &row, algo::strptr str) {
 
 bool double_ReadStrptrMaybe(double &row, algo::strptr str) {
     bool retval = true;
-    StringIter iter(str);
+    algo::StringIter iter(str);
     double val=0;
     if (LIKELY(elems_N(str)==0 || (TryParseDouble(iter, val) && iter.index>0))) {
         row = val;
@@ -214,7 +220,7 @@ bool u128_ReadStrptrMaybe(u128 &row, algo::strptr str) {
     bool retval = true;
     u64 val;
     if (LIKELY(u64_ReadStrptrMaybe(val,str))) {
-        row = val;
+        row = u128(val);
     } else {
         retval=false;
     }
@@ -223,7 +229,7 @@ bool u128_ReadStrptrMaybe(u128 &row, algo::strptr str) {
 
 bool u64_ReadStrptrMaybe(u64    &row, algo::strptr str) {
     bool retval = true;
-    StringIter iter(str);
+    algo::StringIter iter(str);
     u64 val = 0;
     if (LIKELY(elems_N(str)==0 || (TryParseU64(iter, val) && iter.index>0))) {
         row=val;
@@ -240,7 +246,7 @@ bool i64_ReadStrptrMaybe(i64    &row, algo::strptr str) {
     i64 min = i64(0x8000000000000000);
     i64 max = i64(0x7fffffffffffffff);
     i64 val = 0;
-    StringIter iter(str);
+    algo::StringIter iter(str);
     if (LIKELY(elems_N(str)==0 || (TryParseI64(iter, val) && iter.index>0))) {
         if (val >= min && val <= max) {
             row=val;
@@ -270,7 +276,7 @@ bool i64_ReadStrptrMaybe(i64    &row, algo::strptr str) {
 // And %X is the nanosecond portion
 bool algo::UnTime_ReadStrptrMaybe(algo::UnTime &row, algo::strptr str) {
     bool retval = true;
-    StringIter iter(str);
+    algo::StringIter iter(str);
     TimeStruct time_struct;
     retval = TimeStruct_Read(time_struct, iter, "%Y-%m-%dT%T");//ISO 8601
     if (!retval) {
@@ -297,7 +303,7 @@ bool algo::UnTime_ReadStrptrMaybe(algo::UnTime &row, algo::strptr str) {
 
 bool algo::UnDiff_ReadStrptrMaybe(UnDiff &row, algo::strptr str) {
     bool retval = true;
-    StringIter iter(str);
+    algo::StringIter iter(str);
     TimeStruct time_struct;
     strptr format = "%-%T";
     retval = TimeStruct_Read(time_struct, iter, format);
@@ -369,6 +375,9 @@ bool algo::URL_ReadStrptrMaybe(URL &out, algo::strptr str) {
         out.dir = str;
     } else {
         i32_Range R = TFind(str,'/');
+        if(StrEqual(out.protocol,"scp",false)){
+            R = TFind(str,':');
+        }
         out.dir = R.end > R.beg ? RestFrom(str,R.end - (R.beg>0)) : strptr(); // proto:///dir/foo  -- dir = dir/foo
         str     = FirstN(str,R.beg); // www.example.com:80
         R            = TRevFind(str, '@');
@@ -393,7 +402,7 @@ bool algo::URL_ReadStrptrMaybe(URL &out, algo::strptr str) {
         }
         R      = TFind(str, ':');
         out.server = FirstN(str,R.beg);
-        StringIter iter(str,R.end);
+        algo::StringIter iter(str,R.end);
         int ret = TryParseI32(iter, out.port);
         (void)ret; // coverity
     }
@@ -403,7 +412,7 @@ bool algo::URL_ReadStrptrMaybe(URL &out, algo::strptr str) {
 bool ietf::Ipv4_ReadStrptrMaybe(ietf::Ipv4 &ip, algo::strptr str) {
     bool retval = true;
     ip.ipv4 = 0;
-    StringIter iter(str);
+    algo::StringIter iter(str);
     while (!iter.EofQ()) {
         int piece;
         if (TryParseI32(iter, piece)) {
@@ -423,7 +432,7 @@ bool ietf::Ipv4_ReadStrptrMaybe(ietf::Ipv4 &ip, algo::strptr str) {
 bool ietf::Ipv4Addr_ReadStrptrMaybe(ietf::Ipv4Addr &ip, algo::strptr str) {
     bool retval = true;
     u32 addr = 0;
-    StringIter iter(str);
+    algo::StringIter iter(str);
     while (!iter.EofQ()) {
         int octet;
         if (TryParseI32(iter, octet)) {
@@ -443,7 +452,7 @@ bool ietf::Ipv4Addr_ReadStrptrMaybe(ietf::Ipv4Addr &ip, algo::strptr str) {
 
 bool algo::Ipmask_ReadStrptrMaybe(Ipmask &row, algo::strptr str) {
     bool retval = true;
-    StringIter iter(str);
+    algo::StringIter iter(str);
     int ip = 0;
     int mask = 0;
     int asterisks = 0;
@@ -647,7 +656,7 @@ static inline bool ScientificQ(strptr str) {
 // If COMMAS is specified, the large numbers are printed in groups of 3 digits
 // with commas between them.
 void algo::double_PrintPrec(double d, cstring &out, int precision, bool omit_zeros, bool commas) {
-    char buf[128];
+    char buf[512];
     precision = Clipped(precision,20);
     // create a format string for the specified precision
     // i.e. %.7lf
@@ -691,7 +700,7 @@ void algo::strptr_PrintCamel(algo::strptr str, cstring& out) {
         } else {
             int ch=str.elems[i];
             if (needuc && ch != '_') {
-                ch=::ToUpper(ch);
+                ch=algo::ToUpper(ch);
                 needuc=false;
             }
             out << char(ch);
@@ -741,8 +750,8 @@ void algo::u128_PrintHex(u128 value, cstring &out, bool prefix) {
     int i=32;
     do {
         i--;
-        c[i]= "0123456789ABCDEF"[value&15];
-        value>>=4;
+        c[i]= "0123456789ABCDEF"[u32(value)&15];
+        value = value>>u32(4);
     } while (value);
     out<<c+i;
 }
@@ -795,7 +804,7 @@ void algo::char_PrintCppSingleQuote(int c, cstring &out) {
 
 void algo::memptr_Print(memptr ary, algo::cstring &out) {
     out << '"';
-    ary_beg(u8,c,ary) {
+    ind_beg_aryptr(u8,c,ary) {
         if (c == '\\' || c == '"') {
             out << "\\" << c;
         } else if (c >= 20 && c < 128) {
@@ -804,7 +813,7 @@ void algo::memptr_Print(memptr ary, algo::cstring &out) {
             out << "\\x";
             u64_PrintHex(c,out,2,false,true);
         }
-    }ary_end;
+    }ind_end_aryptr;
     out << '"';
 }
 
@@ -970,7 +979,7 @@ void i32_Print(i32 i, cstring &str) {
         n++;
         u = -i;
     }
-    n += u32_FmtBuf(u,(u8*)(str.ch_elems+n));
+    n += algo::u32_FmtBuf(u,(u8*)(str.ch_elems+n));
     str.ch_n=n;
 }
 
@@ -983,7 +992,7 @@ void i64_Print(i64 i, cstring &str) {
         n++;
         u = -i;
     }
-    n += u64_FmtBuf(u,(u8*)(str.ch_elems+n));
+    n += algo::u64_FmtBuf(u,(u8*)(str.ch_elems+n));
     str.ch_n=n;
 }
 
@@ -1006,14 +1015,14 @@ void i8_Print(i8 i, cstring &str) {
 void u32_Print(u32 i, cstring &str) {
     ch_Reserve(str, 32);
     int n = str.ch_n;
-    n += u32_FmtBuf(i,(u8*)(str.ch_elems+n));
+    n += algo::u32_FmtBuf(i,(u8*)(str.ch_elems+n));
     str.ch_n=n;
 }
 
 void u64_Print(u64 i, cstring &str) {
     ch_Reserve(str, 32);
     int n = str.ch_n;
-    n += u64_FmtBuf(i,(u8*)(str.ch_elems+n));
+    n += algo::u64_FmtBuf(i,(u8*)(str.ch_elems+n));
     str.ch_n=n;
 }
 
@@ -1022,8 +1031,8 @@ void u128_Print(u128 num, cstring &out) {
     int i=64;
     do {
         i--;
-        buf[i] = '0' + num%10;
-        num=num/10;
+        buf[i] = '0' + num % u32(10);
+        num=num / u32(10);
     } while (num != 0 && i > 0);
     out << strptr(buf+i, sizeof(buf)-i);
 }
@@ -1148,7 +1157,24 @@ static void i32_PrintNanosec(int val, cstring &str, int wid, int dflt) {
 // -----------------------------------------------------------------------------
 
 // print TIME to STR, according to spec SPEC
-// todo: document format chars...
+// The following control characters are supported in SPEC.
+// %Y     Year printed as 4 digits, e.g. 2002
+// %y     Last 2 digits of year printed as 2 digits
+// %B     Short month name (Feb)
+// %b     Long month name (February)
+// %a     Week day name (Monday)
+// %m     Month printed as 2 digits, with January being 01
+// %d     Day of month printed as at least 2 digits (or WIDTH)
+// %.X    where X is a number -- set width
+// %I     Hour using 12-hour format
+// %H     Hour using 24-hour format, printed as 2 digits
+// %M     Minute, printed as 2 digits
+// %S     Second, printed as 2 digits
+// %T     Shortcut for %H:%M:%S.%.9X
+// %X     Print fractions of a second according to width
+// %x     Print milliseconds with 3 decimal places
+// %-     Print - sign if timespec is negative
+// %%     Print % sign
 void algo::TimeStruct_Print(const TimeStruct &time, cstring &str, const algo::strptr &spec) {
     for(int i =0; i<elems_N(spec);) {
         int selector = spec[i++];
@@ -1353,13 +1379,9 @@ void algo::Errcode_Print(algo::Errcode &row, algo::cstring &str) {
 
 void algo_lib::ErrorX_Print(algo_lib::ErrorX &row, algo::cstring &str) {
     try {
-        ListSep sep(": ");
+        algo::ListSep sep(": ");
         if (ch_N(row.str)) {
             str << sep << row.str;
-        }
-        if (code_Get(row.err)!=0) {
-            str <<Keyval("errno", code_Get(row.err))
-                <<Keyval("errtext", row.err);
         }
     } catch (algo_lib::ErrorX &) {
         // appeasing coverity
@@ -1383,33 +1405,46 @@ bool ietf::Ipport_ReadStrptrMaybe(ietf::Ipport &row, strptr in) {
 // -----------------------------------------------------------------------------
 
 // Append STR to OUT, using comma-separated-values encoding
+// If QUOTE is 0, the need for quotes and the type of quote is determined automatically.
+// If it is any other value, then that type of quote is used
+// According to the CSV standard, the quote itself is the escape character.
+void algo::strptr_PrintCsv(algo::strptr str, cstring &out, char quote) {
+    if (quote ==0) {
+        bool has_comma=false;
+        bool has_quote=false;
+        ind_beg_aryptr(char,c,str) {
+            if (c == ',') {
+                has_comma=true;
+                continue;
+            }
+            if (c == '\'' || c == '"') {
+                has_quote=true;
+                continue;
+            }
+        }ind_end_aryptr;
+        if (has_comma || has_quote) {
+            quote = '"';
+        }
+    }
+    if (quote) {
+        out<<quote;
+    }
+    ind_beg_aryptr(char,c,str) {
+        if (c==quote) {
+            out << c;// repeat it
+        }
+        out << c;
+    }ind_end_aryptr;
+    if (quote) {
+        out<<quote;
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Print CSV field, auto-determine quotes
 void algo::strptr_PrintCsv(algo::strptr str, cstring &out) {
-    bool has_comma=false;
-    bool has_quote=false;
-    ary_beg(char,c,str) {
-        if (c == ',') {
-            has_comma=true;
-            continue;
-        }
-        if (c == '\'' || c == '"') {
-            has_quote=true;
-            continue;
-        }
-    }ary_end;
-    bool need_quote = has_comma || has_quote;
-    if (need_quote) {
-        out<<'"';
-    }
-    ary_beg(char,c,str) {
-        if (c=='"') {
-            out<<"\"\"";
-            continue;
-        }
-        out<<c;
-    }ary_end;
-    if (need_quote) {
-        out<<'"';
-    }
+    strptr_PrintCsv(str,out,0);
 }
 
 // -----------------------------------------------------------------------------
@@ -1419,9 +1454,9 @@ static void PrintRow(cstring &str, algo_lib::FTxtrow &row, bool use_style) {
         int extra = txtcell.width - ch_N(txtcell.rsep) - ch_N(txtcell.text);
         int l = txtcell.justify>0 ? extra
             : txtcell.justify<0 ? 0
-            : extra/2;
+                              : extra/2;
         char_PrintNTimes(' ', str,  l);
-        TermStyle style = use_style ? txtcell.style : TermStyle(algo_TermStyle_default);
+        algo::TermStyle style = use_style ? txtcell.style : algo::TermStyle(algo_TermStyle_default);
         if (style != algo_TermStyle_default) {
             if (style & algo_TermStyle_bold) {
                 // do it
@@ -1492,7 +1527,7 @@ static void Normalize(algo::NormTxttbl &norm, algo_lib::FTxttbl &txttbl) {
 
 void algo_lib::FTxttbl_Print(algo_lib::FTxttbl &T_, cstring &str) {
     algo_lib::FTxttbl            &txttbl         = const_cast<algo_lib::FTxttbl&>(T_);
-    bool              use_style = SaneTerminalQ();
+    bool              use_style = algo::SaneTerminalQ();
     if (!txttbl.normalized) {
         algo::NormTxttbl norm;
         txttbl.normalized = true;
@@ -1716,7 +1751,7 @@ bool algo::Tuple_ReadStrptr(algo::Tuple &tuple, strptr str, bool attronly) {
     ch_RemoveAll(tuple.head.name);
     ch_RemoveAll(tuple.head.value);
     attrs_RemoveAll(tuple);
-    StringIter iter(str);
+    algo::StringIter iter(str);
     bool need_head = !attronly;
     while (!iter.Ws().EofQ()) {
         Attr arg;
@@ -1745,7 +1780,7 @@ bool algo::Tuple_ReadStrptr(algo::Tuple &tuple, strptr str, bool attronly) {
 // basis function for reading tuples.
 // scan ITER for identifier, or quoted string.
 // return FALSE if attribute is malformed (i.e. unterminated string)
-bool algo::cstring_ReadCmdarg(cstring &out, StringIter &S, bool is_value) {
+bool algo::cstring_ReadCmdarg(cstring &out, algo::StringIter &S, bool is_value) {
     bool ret = false;
     char quote = S.Peek();
     if (quote == '"' || quote == '\'') {
@@ -1824,6 +1859,8 @@ bool algo::Charset_ReadStrptrMaybe(algo::Charset &lhs, strptr rhs) {
     return retval;
 }
 
+// -----------------------------------------------------------------------------
+
 // Print STR to OUT in a way that's acceptable as input for bash.
 void algo::strptr_PrintBash(strptr str, cstring &out) {
     int needquotes = elems_N(str) == 0; // need quotes if string is empty
@@ -1843,6 +1880,15 @@ void algo::strptr_PrintBash(strptr str, cstring &out) {
     } else {
         out<<str;
     }
+}
+
+// -----------------------------------------------------------------------------
+
+// Escape S according to bash rules and return result
+tempstr algo::strptr_ToBash(strptr str) {
+    tempstr out;
+    strptr_PrintBash(str,out);
+    return out;
 }
 
 // -----------------------------------------------------------------------------
@@ -1981,7 +2027,7 @@ void algo::strptr_PrintCpp(algo::strptr str, cstring &out) {
 // SSIM tokens use quotes only when the printed value contains
 // characters outside of the 'safe' set a-zA-Z0-9_;&*^%$@.!:,+/-
 void algo::strptr_PrintSsim(algo::strptr str, cstring &out) {
-    char quote_char = _PickSsimQuoteChar(str);
+    char quote_char = algo::PickSsimQuoteChar(str);
     if (quote_char) {
         strptr_PrintCppQuoted(str, out, quote_char);
     } else {
@@ -2012,7 +2058,7 @@ cstring &algo::EndKeyval(cstring &lhs, int start) {
     strptr val(lhs.ch_elems + start, lhs.ch_n - start);
     // rewrite tail of the string if it needs quoting.
     // empty strings need quoting
-    if (char quote_char = _PickSsimQuoteChar(val)) {
+    if (char quote_char = algo::PickSsimQuoteChar(val)) {
         tempstr temp(val);
         lhs.ch_n = start;// trim at the start
         strptr_PrintCppQuoted(temp, lhs, quote_char);
@@ -2235,4 +2281,30 @@ void algo::strptr_PrintRegxSql(algo::strptr value, cstring &str) {
         }
         str << value.elems[i];
     }
+}
+
+void algo::WDiff_Print(algo::WDiff row, algo::cstring &str) {
+    str << algo::ToUnDiff(row);
+}
+
+void algo::WTime_Print(algo::WTime row, algo::cstring &str) {
+    str << algo::ToUnTime(row);
+}
+
+bool algo::WDiff_ReadStrptrMaybe(algo::WDiff &parent, algo::strptr in_str) {
+    UnDiff d;
+    bool ret = UnDiff_ReadStrptrMaybe(d,in_str);
+    if (ret) {
+        parent = algo::ToWDiff(d);
+    }
+    return ret;
+}
+
+bool algo::WTime_ReadStrptrMaybe(algo::WTime &parent, algo::strptr in_str) {
+    UnTime d;
+    bool ret = UnTime_ReadStrptrMaybe(d,in_str);
+    if (ret) {
+        parent = algo::ToWTime(d);
+    }
+    return ret;
 }

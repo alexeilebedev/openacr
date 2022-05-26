@@ -50,7 +50,7 @@ static void ProcessLine_Ssimfile(ssim2mysql::FInput *input, ssim2mysql::FSsimfil
             }
         }
     }ind_end;
-    ListSep field_sep(",");
+    algo::ListSep field_sep(",");
     if (ssim2mysql::_db.n_cmd_rows > 0) {
         ssim2mysql::_db.c_cmd_cur->cmd << ",\n";
     }
@@ -114,7 +114,7 @@ static void ProcessLine(ssim2mysql::FInput *input, strptr line) {
         ssim2mysql::_db.c_cmd_cur = &cmd;
         cmd.cmd << (ssim2mysql::_db.cmdline.replace ? "REPLACE":"INSERT") << " INTO "<<sql_table;        // begin insert statement
 
-        ListSep field_sep(",");// build column list
+        algo::ListSep field_sep(",");// build column list
         cmd.cmd <<" (";
         ind_beg(ssim2mysql::ssimfile_c_column_curs, column,*ssimfile) {
             cmd.cmd << field_sep << "`" << name_Get(column) << "`";
@@ -163,7 +163,7 @@ static void EofActions() {
 //
 void ssim2mysql::cd_input_line_Step() {
     ssim2mysql::FInput &input = *ssim2mysql::cd_input_line_RotateFirst();
-    aryptr<char> line    = in_buf_GetMsg(input);
+    algo::aryptr<char> line    = in_buf_GetMsg(input);
     if (line.elems != NULL) {
         ProcessLine(&input, line);
         in_buf_SkipMsg(input);
@@ -259,7 +259,7 @@ static void Main_GenSchema_Table(ssim2mysql::FSsimfile &ssimfile) {
     createcmd.cmd << "CREATE TABLE `" << name_Get(ssimfile) << "` (\n";
 
     FixupFields(ctype);
-    ListSep ls("\n, ");
+    algo::ListSep ls("\n, ");
 
     if (surrogate_pkey) {
         createcmd.cmd << ls;
@@ -293,8 +293,14 @@ static void Main_GenSchema_Table(ssim2mysql::FSsimfile &ssimfile) {
             createcmd.cmd << " NOT NULL ";
             if (ch_N(dflt)) createcmd.cmd << " DEFAULT "<<dflt;
             if (ind_curs(fld).index == 0) {
-                createcmd.cmd << (surrogate_pkey ? " UNIQUE" : " PRIMARY");
-                createcmd.cmd << " KEY ";
+                createcmd.cmd << ", ";
+                createcmd.cmd << (surrogate_pkey ? " UNIQUE" : " PRIMARY") << " KEY ";
+                createcmd.cmd << "`" << name_Get(fld) << "`" << "(`" << name_Get(fld) << "`";
+                // unique prefix key index required for text fields
+                if (sqltype->expr == "text") {
+                    createcmd.cmd << "(767)";
+                }
+                createcmd.cmd << ")";
             }
         }
     }ind_end;

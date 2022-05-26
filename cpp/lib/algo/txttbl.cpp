@@ -24,6 +24,8 @@
 // Recent Changes: alexei.lebedev shreejith.lokegowda hayk.mkrtchyan
 //
 
+#include "include/algo.h"
+
 static algo_TextJustEnum DefaultJust(algo_lib::FTxttbl &txttbl, u32 col) {
     algo_TextJustEnum retval = algo_TextJust_j_left;
     u32 row = txttbl.hdr_row;

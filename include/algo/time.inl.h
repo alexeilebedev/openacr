@@ -42,6 +42,9 @@ inline double algo::get_cpu_hz() {
 // these calls may be pipelined and reordered, so measuring instruction
 // latency with these is not possible. for that, use rdtscp
 inline u64 algo::get_cycles() {
+#ifdef WIN32
+    return __rdtsc();
+#else
     unsigned low, high;
     asm volatile (
                   "rdtsc"
@@ -50,6 +53,7 @@ inline u64 algo::get_cycles() {
                   :
                   );
     return u64(high)<<32 | low;
+#endif
 }
 
 // Convert scheduler time units to seconds.
@@ -78,17 +82,24 @@ inline double algo::ToSecs(UnDiff t) {
     return t.value / double(UNTIME_PER_SEC);
 }
 
+inline double algo::ToSecs(UnTime t) {
+    return t.value / double(UNTIME_PER_SEC);
+}
+
 inline algo::UnixTime algo::CurrUnixTime(){
     time_t secs;
     time(&secs);
     return UnixTime(secs);
 }
-//
+
 // use this for performance measurements.
 // according to Intel software manual, lfence followed by rdtsc
 // is the beez knees.
-//
 inline u64 algo::rdtscp() {
+#ifdef WIN32
+    _ReadBarrier();
+    return get_cycles();
+#else
     unsigned low, high;
     asm volatile (
                   "lfence\n"
@@ -98,26 +109,31 @@ inline u64 algo::rdtscp() {
                   : "memory"                // clobbered
                   );
     return u64(high)<<32 | low;
+#endif
 }
 
-inline UnixDiff algo::UnixDiffHMS(i64 h, int m, int s) {
-    return UnixDiff(i64(h)*SECS_PER_HOUR + i64(m)*SECS_PER_MIN + s);
+inline algo::UnixDiff algo::UnixDiffHMS(i64 h, int m, int s) {
+    return algo::UnixDiff(i64(h)*SECS_PER_HOUR + i64(m)*SECS_PER_MIN + s);
 }
 
-inline UnDiff algo::UnDiffSecs(double d) {
-    return UnDiff(i64(d  * UNTIME_PER_SEC));
+inline algo::UnDiff algo::UnDiffSecs(double d) {
+    return algo::UnDiff(i64(d  * UNTIME_PER_SEC));
 }
 
-inline UnDiff algo::UnDiffSecs(i64 i) {
-    return UnDiff(    i  * UNTIME_PER_SEC);
+inline algo::UnTime algo::UnTimeSecs(double d) {
+    return algo::UnTime(i64(d  * UNTIME_PER_SEC));
 }
 
-inline UnDiff algo::UnDiffSecs(i32 i) {
-    return UnDiff(i64(i) * UNTIME_PER_SEC);
+inline algo::UnDiff algo::UnDiffSecs(i64 i) {
+    return algo::UnDiff(    i  * UNTIME_PER_SEC);
 }
 
-inline UnDiff algo::UnDiffHMS(int h, int m, int s) {
-    return UnDiffSecs(i64(h) * SECS_PER_HOUR + i64(m)*SECS_PER_MIN + s);
+inline algo::UnDiff algo::UnDiffSecs(i32 i) {
+    return algo::UnDiff(i64(i) * UNTIME_PER_SEC);
+}
+
+inline algo::UnDiff algo::UnDiffHMS(int h, int m, int s) {
+    return algo::UnDiffSecs(i64(h) * SECS_PER_HOUR + i64(m)*SECS_PER_MIN + s);
 }
 
 // Current value of get_cycles();
@@ -140,4 +156,38 @@ inline algo::TimeStruct::TimeStruct() {
 inline algo::TimeStruct::TimeStruct(const struct tm &t) : tm(t) {
     tm_nsec = 0;
     tm_neg = false;
+}
+
+inline algo::WDiff algo::ToWDiff(algo::UnixDiff d) {
+    return algo::WDiff(d.value * WTIME_PER_SEC);
+}
+
+inline algo::WDiff algo::ToWDiff(algo::UnDiff d) {
+    return algo::WDiff(d.value / 100);
+}
+
+inline algo::UnixDiff algo::ToUnixDiff(algo::WDiff d) {
+    return algo::UnixDiff(d.value / WTIME_PER_SEC);
+}
+
+inline algo::WTime algo::ToWTime(algo::UnTime s) {
+    return WTime(i64(s.value / (algo::UNTIME_PER_SEC / WTIME_PER_SEC) + WTIME_OFFSET));
+}
+
+inline algo::UnDiff algo::ToUnDiff(algo::WDiff d) {
+    return algo::UnDiff(d.value * 100);
+}
+
+inline algo::UnixTime algo::ToUnixTime(algo::WTime nt) {
+    i64 tmp(nt.value - WTIME_OFFSET);
+    // clip to the earliest possible UnixTime
+    return algo::UnixTime(tmp >= 0 ? int(u64(tmp) / WTIME_PER_SEC) : 0);
+}
+
+inline algo::WTime algo::ToWTime(algo::UnixTime t) {
+    return algo::WTime(i64(t.value) * WTIME_PER_SEC + WTIME_OFFSET);
+}
+
+inline double algo::ToSecs(algo::WDiff t) {
+    return t.value / double(algo::WTIME_PER_SEC);
 }

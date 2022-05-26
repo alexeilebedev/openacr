@@ -58,7 +58,7 @@ static void UpdateHeader(src_func::FTarget &target, strptr fname) {
     }ind_end;
     // no update if nothing is found
     if (nupdate>0) {
-        Refurbish(file);
+        algo::Refurbish(file);
         verblog2("src_func.update"
                  <<Keyval("file",fname));
         int nbefore = algo_lib::_db.stringtofile_nwrite;

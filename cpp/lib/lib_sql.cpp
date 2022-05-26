@@ -68,7 +68,7 @@ const tempstr lib_sql::SqlQuotedValue(Tuple &tuple, Attr &attr) {
 // Return a comma-separate SQL name-list
 const tempstr lib_sql::SqlNames(Tuple &tuple) {
     tempstr ret;
-    ListSep ls(",");
+    algo::ListSep ls(",");
     ind_beg(Tuple_attrs_curs,attr,tuple) {
         ret << ls << attr.name;
     }ind_end;
@@ -80,7 +80,7 @@ const tempstr lib_sql::SqlNames(Tuple &tuple) {
 // Return a comma-separate SQL name=value list
 const tempstr lib_sql::SqlNameValues(Tuple &tuple) {
     tempstr ret;
-    ListSep ls(",");
+    algo::ListSep ls(",");
     ind_beg(Tuple_attrs_curs,attr,tuple) {
         ret << ls << attr.name << "=" << SqlQuotedValue(tuple,attr);
     }ind_end;
@@ -92,7 +92,7 @@ const tempstr lib_sql::SqlNameValues(Tuple &tuple) {
 // Return a comma-separated SQL value list
 tempstr lib_sql::SqlValues(Tuple &tuple) {
     tempstr ret;
-    ListSep ls(",");
+    algo::ListSep ls(",");
     ind_beg(Tuple_attrs_curs,attr,tuple) {
         ret << ls << SqlQuotedValue(tuple,attr);
     }ind_end;

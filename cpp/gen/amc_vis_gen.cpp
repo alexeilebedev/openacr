@@ -16,6 +16,8 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
@@ -24,6 +26,7 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 amc_vis::FDb    amc_vis::_db;     // dependency found via dev.targdep
 
@@ -211,7 +214,7 @@ void amc_vis::trace_Print(amc_vis::trace & row, algo::cstring &str) {
 void amc_vis::lpool_FreeMem(void *mem, u64 size) {
     if (mem) {
         size = u64_Max(size,16); // enforce alignment
-        u64 cell = u64_BitScanReverse(size-1) + 1;
+        u64 cell = algo::u64_BitScanReverse(size-1) + 1;
         lpool_Lpblock *temp = (lpool_Lpblock*)mem; // push  singly linked list
         temp->next = _db.lpool_free[cell];
         _db.lpool_free[cell] = temp;
@@ -224,7 +227,7 @@ void amc_vis::lpool_FreeMem(void *mem, u64 size) {
 // The allocated block is 16-byte aligned
 void* amc_vis::lpool_AllocMem(u64 size) {
     size     = u64_Max(size,16); // enforce alignment
-    u64 cell = u64_BitScanReverse(size-1)+1;
+    u64 cell = algo::u64_BitScanReverse(size-1)+1;
     u64 i    = cell;
     u8 *retval = NULL;
     // try to find a block that's at least as large as required.
@@ -263,7 +266,7 @@ bool amc_vis::lpool_ReserveBuffers(int nbuf, u64 bufsize) {
     bool retval = true;
     bufsize = u64_Max(bufsize, 16);
     for (int i = 0; i < nbuf; i++) {
-        u64     cell = u64_BitScanReverse(bufsize-1)+1;
+        u64     cell = algo::u64_BitScanReverse(bufsize-1)+1;
         u64     size = 1ULL<<cell;
         lpool_Lpblock *temp = (lpool_Lpblock*)algo_lib::sbrk_AllocMem(size);
         if (temp == NULL) {
@@ -532,7 +535,7 @@ void amc_vis::MainArgs(int argc, char **argv) {
 // --- amc_vis.FDb._db.MainLoop
 // Main loop.
 void amc_vis::MainLoop() {
-    SchedTime time(get_cycles());
+    algo::SchedTime time(algo::get_cycles());
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
@@ -645,7 +648,7 @@ bool amc_vis::_db_XrefMaybe() {
 // --- amc_vis.FDb.ind_ctype.Find
 // Find row by key. Return NULL if not found.
 amc_vis::FCtype* amc_vis::ind_ctype_Find(const algo::strptr& key) {
-    u32 index = Smallstr50_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
     amc_vis::FCtype* *e = &_db.ind_ctype_buckets_elems[index];
     amc_vis::FCtype* ret=NULL;
     do {
@@ -687,7 +690,7 @@ bool amc_vis::ind_ctype_InsertMaybe(amc_vis::FCtype& row) {
     ind_ctype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctype_next == (amc_vis::FCtype*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         amc_vis::FCtype* *prev = &_db.ind_ctype_buckets_elems[index];
         do {
             amc_vis::FCtype* ret = *prev;
@@ -713,7 +716,7 @@ bool amc_vis::ind_ctype_InsertMaybe(amc_vis::FCtype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void amc_vis::ind_ctype_Remove(amc_vis::FCtype& row) {
     if (LIKELY(row.ind_ctype_next != (amc_vis::FCtype*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         amc_vis::FCtype* *prev = &_db.ind_ctype_buckets_elems[index]; // addr of pointer to current element
         while (amc_vis::FCtype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -734,7 +737,7 @@ void amc_vis::ind_ctype_Reserve(int n) {
     u32 new_nelems   = _db.ind_ctype_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(amc_vis::FCtype*);
         u32 new_size = new_nbuckets * sizeof(amc_vis::FCtype*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -750,7 +753,7 @@ void amc_vis::ind_ctype_Reserve(int n) {
             while (elem) {
                 amc_vis::FCtype &row        = *elem;
                 amc_vis::FCtype* next       = row.ind_ctype_next;
-                u32 index          = Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
                 row.ind_ctype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -766,7 +769,7 @@ void amc_vis::ind_ctype_Reserve(int n) {
 // --- amc_vis.FDb.ind_field.Find
 // Find row by key. Return NULL if not found.
 amc_vis::FField* amc_vis::ind_field_Find(const algo::strptr& key) {
-    u32 index = Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
     amc_vis::FField* *e = &_db.ind_field_buckets_elems[index];
     amc_vis::FField* ret=NULL;
     do {
@@ -792,7 +795,7 @@ bool amc_vis::ind_field_InsertMaybe(amc_vis::FField& row) {
     ind_field_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_field_next == (amc_vis::FField*)-1)) {// check if in hash already
-        u32 index = Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
         amc_vis::FField* *prev = &_db.ind_field_buckets_elems[index];
         do {
             amc_vis::FField* ret = *prev;
@@ -818,7 +821,7 @@ bool amc_vis::ind_field_InsertMaybe(amc_vis::FField& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void amc_vis::ind_field_Remove(amc_vis::FField& row) {
     if (LIKELY(row.ind_field_next != (amc_vis::FField*)-1)) {// check if in hash already
-        u32 index = Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
         amc_vis::FField* *prev = &_db.ind_field_buckets_elems[index]; // addr of pointer to current element
         while (amc_vis::FField *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -839,7 +842,7 @@ void amc_vis::ind_field_Reserve(int n) {
     u32 new_nelems   = _db.ind_field_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(amc_vis::FField*);
         u32 new_size = new_nbuckets * sizeof(amc_vis::FField*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -855,7 +858,7 @@ void amc_vis::ind_field_Reserve(int n) {
             while (elem) {
                 amc_vis::FField &row        = *elem;
                 amc_vis::FField* next       = row.ind_field_next;
-                u32 index          = Smallstr100_Hash(0, row.field) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.field) & (new_nbuckets-1);
                 row.ind_field_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -958,7 +961,7 @@ bool amc_vis::node_XrefMaybe(amc_vis::FNode &row) {
 // --- amc_vis.FDb.ind_node.Find
 // Find row by key. Return NULL if not found.
 amc_vis::FNode* amc_vis::ind_node_Find(const algo::strptr& key) {
-    u32 index = Smallstr100_Hash(0, key) & (_db.ind_node_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_node_buckets_n - 1);
     amc_vis::FNode* *e = &_db.ind_node_buckets_elems[index];
     amc_vis::FNode* ret=NULL;
     do {
@@ -1000,7 +1003,7 @@ bool amc_vis::ind_node_InsertMaybe(amc_vis::FNode& row) {
     ind_node_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_node_next == (amc_vis::FNode*)-1)) {// check if in hash already
-        u32 index = Smallstr100_Hash(0, row.node) & (_db.ind_node_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.node) & (_db.ind_node_buckets_n - 1);
         amc_vis::FNode* *prev = &_db.ind_node_buckets_elems[index];
         do {
             amc_vis::FNode* ret = *prev;
@@ -1026,7 +1029,7 @@ bool amc_vis::ind_node_InsertMaybe(amc_vis::FNode& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void amc_vis::ind_node_Remove(amc_vis::FNode& row) {
     if (LIKELY(row.ind_node_next != (amc_vis::FNode*)-1)) {// check if in hash already
-        u32 index = Smallstr100_Hash(0, row.node) & (_db.ind_node_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.node) & (_db.ind_node_buckets_n - 1);
         amc_vis::FNode* *prev = &_db.ind_node_buckets_elems[index]; // addr of pointer to current element
         while (amc_vis::FNode *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1047,7 +1050,7 @@ void amc_vis::ind_node_Reserve(int n) {
     u32 new_nelems   = _db.ind_node_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(amc_vis::FNode*);
         u32 new_size = new_nbuckets * sizeof(amc_vis::FNode*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -1063,7 +1066,7 @@ void amc_vis::ind_node_Reserve(int n) {
             while (elem) {
                 amc_vis::FNode &row        = *elem;
                 amc_vis::FNode* next       = row.ind_node_next;
-                u32 index          = Smallstr100_Hash(0, row.node) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.node) & (new_nbuckets-1);
                 row.ind_node_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1183,7 +1186,7 @@ bool amc_vis::link_XrefMaybe(amc_vis::Link &row) {
 // --- amc_vis.FDb.ind_link.Find
 // Find row by key. Return NULL if not found.
 amc_vis::Link* amc_vis::ind_link_Find(const algo::strptr& key) {
-    u32 index = Smallstr100_Hash(0, key) & (_db.ind_link_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_link_buckets_n - 1);
     amc_vis::Link* *e = &_db.ind_link_buckets_elems[index];
     amc_vis::Link* ret=NULL;
     do {
@@ -1209,7 +1212,7 @@ bool amc_vis::ind_link_InsertMaybe(amc_vis::Link& row) {
     ind_link_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_link_next == (amc_vis::Link*)-1)) {// check if in hash already
-        u32 index = Smallstr100_Hash(0, row.link) & (_db.ind_link_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.link) & (_db.ind_link_buckets_n - 1);
         amc_vis::Link* *prev = &_db.ind_link_buckets_elems[index];
         do {
             amc_vis::Link* ret = *prev;
@@ -1235,7 +1238,7 @@ bool amc_vis::ind_link_InsertMaybe(amc_vis::Link& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void amc_vis::ind_link_Remove(amc_vis::Link& row) {
     if (LIKELY(row.ind_link_next != (amc_vis::Link*)-1)) {// check if in hash already
-        u32 index = Smallstr100_Hash(0, row.link) & (_db.ind_link_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.link) & (_db.ind_link_buckets_n - 1);
         amc_vis::Link* *prev = &_db.ind_link_buckets_elems[index]; // addr of pointer to current element
         while (amc_vis::Link *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1256,7 +1259,7 @@ void amc_vis::ind_link_Reserve(int n) {
     u32 new_nelems   = _db.ind_link_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(amc_vis::Link*);
         u32 new_size = new_nbuckets * sizeof(amc_vis::Link*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -1272,7 +1275,7 @@ void amc_vis::ind_link_Reserve(int n) {
             while (elem) {
                 amc_vis::Link &row        = *elem;
                 amc_vis::Link* next       = row.ind_link_next;
-                u32 index          = Smallstr100_Hash(0, row.link) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.link) & (new_nbuckets-1);
                 row.ind_link_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1895,7 +1898,7 @@ bool amc_vis::reftype_XrefMaybe(amc_vis::FReftype &row) {
 // --- amc_vis.FDb.ind_reftype.Find
 // Find row by key. Return NULL if not found.
 amc_vis::FReftype* amc_vis::ind_reftype_Find(const algo::strptr& key) {
-    u32 index = Smallstr50_Hash(0, key) & (_db.ind_reftype_buckets_n - 1);
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_reftype_buckets_n - 1);
     amc_vis::FReftype* *e = &_db.ind_reftype_buckets_elems[index];
     amc_vis::FReftype* ret=NULL;
     do {
@@ -1937,7 +1940,7 @@ bool amc_vis::ind_reftype_InsertMaybe(amc_vis::FReftype& row) {
     ind_reftype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_reftype_next == (amc_vis::FReftype*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.reftype) & (_db.ind_reftype_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.reftype) & (_db.ind_reftype_buckets_n - 1);
         amc_vis::FReftype* *prev = &_db.ind_reftype_buckets_elems[index];
         do {
             amc_vis::FReftype* ret = *prev;
@@ -1963,7 +1966,7 @@ bool amc_vis::ind_reftype_InsertMaybe(amc_vis::FReftype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void amc_vis::ind_reftype_Remove(amc_vis::FReftype& row) {
     if (LIKELY(row.ind_reftype_next != (amc_vis::FReftype*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.reftype) & (_db.ind_reftype_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.reftype) & (_db.ind_reftype_buckets_n - 1);
         amc_vis::FReftype* *prev = &_db.ind_reftype_buckets_elems[index]; // addr of pointer to current element
         while (amc_vis::FReftype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1984,7 +1987,7 @@ void amc_vis::ind_reftype_Reserve(int n) {
     u32 new_nelems   = _db.ind_reftype_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(amc_vis::FReftype*);
         u32 new_size = new_nbuckets * sizeof(amc_vis::FReftype*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -2000,7 +2003,7 @@ void amc_vis::ind_reftype_Reserve(int n) {
             while (elem) {
                 amc_vis::FReftype &row        = *elem;
                 amc_vis::FReftype* next       = row.ind_reftype_next;
-                u32 index          = Smallstr50_Hash(0, row.reftype) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr50_Hash(0, row.reftype) & (new_nbuckets-1);
                 row.ind_reftype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -3285,7 +3288,7 @@ bool amc_vis::value_SetStrptrMaybe(amc_vis::FieldId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,amc_vis_FieldId_value); ret = true; break;
                 }
@@ -3684,13 +3687,15 @@ void amc_vis::text_RemoveLast(amc_vis::Outrow& outrow) {
 // Make sure N elements fit in array. Process dies if out of memory
 void amc_vis::text_AbsReserve(amc_vis::Outrow& outrow, int n) {
     u32 old_max  = outrow.text_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(outrow.text_elems, old_max * sizeof(u8), new_max * sizeof(u8));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("amc_vis.tary_nomem  field:amc_vis.Outrow.text  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(outrow.text_elems, old_max * sizeof(u8), new_max * sizeof(u8));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("amc_vis.tary_nomem  field:amc_vis.Outrow.text  comment:'out of memory'");
+        }
+        outrow.text_elems = (u8*)new_mem;
+        outrow.text_max = new_max;
     }
-    outrow.text_elems = (u8*)new_mem;
-    outrow.text_max = new_max;
 }
 
 // --- amc_vis.Outrow.text.Setary
@@ -3758,7 +3763,7 @@ bool amc_vis::value_SetStrptrMaybe(amc_vis::TableId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 12: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','C'): {
                     if (memcmp(rhs.elems+8,"type",4)==0) { value_SetEnum(parent,amc_vis_TableId_dmmeta_Ctype); ret = true; break; }
                     break;
@@ -3779,7 +3784,7 @@ bool amc_vis::value_SetStrptrMaybe(amc_vis::TableId& parent, algo::strptr rhs) {
             break;
         }
         case 13: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','F'): {
                     if (memcmp(rhs.elems+8,"input",5)==0) { value_SetEnum(parent,amc_vis_TableId_dmmeta_Finput); ret = true; break; }
                     break;
@@ -3792,7 +3797,7 @@ bool amc_vis::value_SetStrptrMaybe(amc_vis::TableId& parent, algo::strptr rhs) {
             break;
         }
         case 14: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','R'): {
                     if (memcmp(rhs.elems+8,"eftype",6)==0) { value_SetEnum(parent,amc_vis_TableId_dmmeta_Reftype); ret = true; break; }
                     break;
@@ -3844,6 +3849,7 @@ void amc_vis::TableId_Print(amc_vis::TableId & row, algo::cstring &str) {
 // --- amc_vis...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         amc_vis::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -3860,10 +3866,13 @@ int main(int argc, char **argv) {
     try {
         amc_vis::FDb_Uninit();
         algo_lib::FDb_Uninit();
-    } catch(algo_lib::ErrorX &x) {
+        lib_json::FDb_Uninit();
+    } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;
     }
+    // only the lower 1 byte makes it to the outside world
+    (void)i32_UpdateMin(algo_lib::_db.exit_code,255);
     return algo_lib::_db.exit_code;
 }
 
