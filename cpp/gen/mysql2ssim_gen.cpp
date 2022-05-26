@@ -14,6 +14,8 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/lib_mysql_gen.h"
@@ -22,6 +24,7 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb     lib_json::_db;      // dependency found via dev.targdep
 algo_lib::FDb     algo_lib::_db;      // dependency found via dev.targdep
 lib_mysql::FDb    lib_mysql::_db;     // dependency found via dev.targdep
 mysql2ssim::FDb   mysql2ssim::_db;    // dependency found via dev.targdep
@@ -87,7 +90,7 @@ void mysql2ssim::MainArgs(int argc, char **argv) {
 // --- mysql2ssim.FDb._db.MainLoop
 // Main loop.
 void mysql2ssim::MainLoop() {
-    SchedTime time(get_cycles());
+    algo::SchedTime time(algo::get_cycles());
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
@@ -239,13 +242,15 @@ void mysql2ssim::table_names_RemoveLast() {
 // Make sure N elements fit in array. Process dies if out of memory
 void mysql2ssim::table_names_AbsReserve(int n) {
     u32 old_max  = _db.table_names_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(_db.table_names_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("mysql2ssim.tary_nomem  field:mysql2ssim.FDb.table_names  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(_db.table_names_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("mysql2ssim.tary_nomem  field:mysql2ssim.FDb.table_names  comment:'out of memory'");
+        }
+        _db.table_names_elems = (algo::cstring*)new_mem;
+        _db.table_names_max = new_max;
     }
-    _db.table_names_elems = (algo::cstring*)new_mem;
-    _db.table_names_max = new_max;
 }
 
 // --- mysql2ssim.FDb.in_tables.Alloc
@@ -328,13 +333,15 @@ void mysql2ssim::in_tables_RemoveLast() {
 // Make sure N elements fit in array. Process dies if out of memory
 void mysql2ssim::in_tables_AbsReserve(int n) {
     u32 old_max  = _db.in_tables_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(_db.in_tables_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("mysql2ssim.tary_nomem  field:mysql2ssim.FDb.in_tables  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(_db.in_tables_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("mysql2ssim.tary_nomem  field:mysql2ssim.FDb.in_tables  comment:'out of memory'");
+        }
+        _db.in_tables_elems = (algo::cstring*)new_mem;
+        _db.in_tables_max = new_max;
     }
-    _db.in_tables_elems = (algo::cstring*)new_mem;
-    _db.in_tables_max = new_max;
 }
 
 // --- mysql2ssim.FDb.trace.RowidFind
@@ -459,13 +466,15 @@ void mysql2ssim::vals_RemoveLast(mysql2ssim::FTobltin& parent) {
 // Make sure N elements fit in array. Process dies if out of memory
 void mysql2ssim::vals_AbsReserve(mysql2ssim::FTobltin& parent, int n) {
     u32 old_max  = parent.vals_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(parent.vals_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("mysql2ssim.tary_nomem  field:mysql2ssim.FTobltin.vals  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.vals_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("mysql2ssim.tary_nomem  field:mysql2ssim.FTobltin.vals  comment:'out of memory'");
+        }
+        parent.vals_elems = (algo::cstring*)new_mem;
+        parent.vals_max = new_max;
     }
-    parent.vals_elems = (algo::cstring*)new_mem;
-    parent.vals_max = new_max;
 }
 
 // --- mysql2ssim.FTobltin.vals.Setary
@@ -522,7 +531,7 @@ bool mysql2ssim::value_SetStrptrMaybe(mysql2ssim::FieldId& parent, algo::strptr 
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,mysql2ssim_FieldId_value); ret = true; break;
                 }
@@ -569,6 +578,7 @@ void mysql2ssim::FieldId_Print(mysql2ssim::FieldId & row, algo::cstring &str) {
 // --- mysql2ssim...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         lib_mysql::FDb_Init();
         mysql2ssim::FDb_Init();
@@ -587,10 +597,13 @@ int main(int argc, char **argv) {
         mysql2ssim::FDb_Uninit();
         lib_mysql::FDb_Uninit();
         algo_lib::FDb_Uninit();
-    } catch(algo_lib::ErrorX &x) {
+        lib_json::FDb_Uninit();
+    } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;
     }
+    // only the lower 1 byte makes it to the outside world
+    (void)i32_UpdateMin(algo_lib::_db.exit_code,255);
     return algo_lib::_db.exit_code;
 }
 

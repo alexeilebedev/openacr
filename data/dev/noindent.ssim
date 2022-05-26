@@ -1,0 +1,7 @@
+dev.noindent  gitfile:bin/bootstrap/CYGWIN_NT-g++.release-i686  comment:""
+dev.noindent  gitfile:bin/bootstrap/CYGWIN_NT-g++.release-x86_64  comment:""
+dev.noindent  gitfile:bin/bootstrap/Darwin-clang++.release-x86_64  comment:""
+dev.noindent  gitfile:bin/bootstrap/FreeBSD-clang++.release-amd64  comment:""
+dev.noindent  gitfile:bin/bootstrap/Linux-clang++.release-x86_64  comment:""
+dev.noindent  gitfile:bin/bootstrap/Linux-g++-9.release-x86_64  comment:""
+dev.noindent  gitfile:bin/bootstrap/Linux-g++.release-x86_64  comment:""

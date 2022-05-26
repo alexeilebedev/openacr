@@ -29,7 +29,7 @@ void atf_norm::normcheck_acr_ed_ssimdb() {
     acr_ed.cmd.target="ssimdb";
     acr_ed.cmd.nstype=dmmeta_Nstype_nstype_ssimdb;
     acr_ed.cmd.sandbox=true;
-    acr_ed.cmd.sandbox_build=true;
+    acr_ed.cmd.showcpp=false;
     acr_ed.cmd.write=true;
     acr_ed_ExecX(acr_ed);
 
@@ -52,14 +52,14 @@ void atf_norm::normcheck_acr_ed_ssimfile() {
         acr_ed.cmd.target="ssimdb";
         acr_ed.cmd.nstype=dmmeta_Nstype_nstype_ssimdb;
         acr_ed.cmd.sandbox=true;
-        acr_ed.cmd.sandbox_build=false;
+        acr_ed.cmd.showcpp=false;
         acr_ed.cmd.write=true;
         acr_ed_ExecX(acr_ed);
     }
 
     // go inside sandbox
     errno_vrfy(chdir("temp/acr_ed")==0, "chdir");
-    
+
     {
         command::acr_ed_proc acr_ed;
         acr_ed.cmd.create=true;

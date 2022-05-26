@@ -1,0 +1,3 @@
+dmmeta.gsymbol  gsymbol:abt/dev.opt_type  inc:%  comment:""
+dmmeta.gsymbol  gsymbol:atf_norm/dev.scriptfile  inc:bin/update-%  comment:""
+dmmeta.gsymbol  gsymbol:src_hdr/dev.scriptfile  inc:bin/git-authors  comment:""

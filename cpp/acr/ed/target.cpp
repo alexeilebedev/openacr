@@ -55,6 +55,7 @@ void acr_ed::Main_CreateTarget() {
     }
     bool is_exe = acr_ed::_db.cmdline.nstype == dmmeta_Nstype_nstype_exe;
     bool is_lib = acr_ed::_db.cmdline.nstype == dmmeta_Nstype_nstype_lib;
+    bool is_protocol = acr_ed::_db.cmdline.nstype == dmmeta_Nstype_nstype_protocol;
     bool is_ssimdb = acr_ed::_db.cmdline.nstype == dmmeta_Nstype_nstype_ssimdb;
     Set(R, "$targdir", PickTargdir(_db.cmdline.target));
 
@@ -63,6 +64,10 @@ void acr_ed::Main_CreateTarget() {
                                       , acr_ed::_db.cmdline.nstype
                                       , algo::Comment(acr_ed::_db.cmdline.comment)) << eol;
 
+    if (is_protocol) {
+        acr_ed::_db.out_ssim<< dmmeta::Nsproto(acr_ed::_db.cmdline.target
+                                               , algo::Comment()) << eol;
+    }
     if (is_exe || is_lib) {
         acr_ed::_db.out_ssim<< dmmeta::Nsx(acr_ed::_db.cmdline.target
                                            , true/*genthrow*/
@@ -79,8 +84,10 @@ void acr_ed::Main_CreateTarget() {
     }
 
     // tuples for abt to build this executable
-    if (is_exe || is_lib) {
+    if (is_exe || is_lib || is_protocol) {
         Ins(&R, acr_ed::_db.out_ssim, "dev.target  target:$target");
+    }
+    if (is_exe || is_lib) {
         Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:$targdir/$target.cpp  comment:''");
         Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:include/$target.h  comment:''");
     }

@@ -58,6 +58,9 @@ bool amc::CopyPrivQ(amc::FCtype &ctype) {
                 if (field.c_fcleanup != NULL) {
                     SetCopyPriv(ctype, tempstr()<<"user-defined fcleanup on "<<field.field<<" prevents copy");
                 }
+                if (field.c_fuserinit != NULL) {
+                    SetCopyPriv(ctype, tempstr()<<"user-defined fuserinit on "<<field.field<<" prevents copy");
+                }
             }ind_end;
         }
     }

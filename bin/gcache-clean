@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+echo "cache before cleaning: $(gcache-stats)"
+find .gcache/ -type f -mtime +4 -delete
+echo "cache after  cleaning: $(gcache-stats)"

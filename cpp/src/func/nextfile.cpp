@@ -49,7 +49,7 @@ static tempstr FindRootDir(strptr fname) {
     while (ch_N(fname)>1 && !FileQ(DirFileJoin(fname,".ffroot"))) {
         fname=StripDirComponent(fname);
     }
-    return tempstr(fname)<<MaybeDirSep;
+    return tempstr(fname)<<algo::MaybeDirSep;
 }
 
 // -----------------------------------------------------------------------------

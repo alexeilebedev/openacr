@@ -16,12 +16,15 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 ssim2csv::FDb   ssim2csv::_db;    // dependency found via dev.targdep
 
@@ -74,7 +77,7 @@ void ssim2csv::MainArgs(int argc, char **argv) {
 // --- ssim2csv.FDb._db.MainLoop
 // Main loop.
 void ssim2csv::MainLoop() {
-    SchedTime time(get_cycles());
+    algo::SchedTime time(algo::get_cycles());
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
@@ -235,7 +238,7 @@ bool ssim2csv::expand_XrefMaybe(ssim2csv::FExpand &row) {
 // --- ssim2csv.FDb.ind_expand.Find
 // Find row by key. Return NULL if not found.
 ssim2csv::FExpand* ssim2csv::ind_expand_Find(const algo::strptr& key) {
-    u32 index = cstring_Hash(0, key) & (_db.ind_expand_buckets_n - 1);
+    u32 index = algo::cstring_Hash(0, key) & (_db.ind_expand_buckets_n - 1);
     ssim2csv::FExpand* *e = &_db.ind_expand_buckets_elems[index];
     ssim2csv::FExpand* ret=NULL;
     do {
@@ -277,7 +280,7 @@ bool ssim2csv::ind_expand_InsertMaybe(ssim2csv::FExpand& row) {
     ind_expand_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_expand_next == (ssim2csv::FExpand*)-1)) {// check if in hash already
-        u32 index = cstring_Hash(0, row.expand) & (_db.ind_expand_buckets_n - 1);
+        u32 index = algo::cstring_Hash(0, row.expand) & (_db.ind_expand_buckets_n - 1);
         ssim2csv::FExpand* *prev = &_db.ind_expand_buckets_elems[index];
         do {
             ssim2csv::FExpand* ret = *prev;
@@ -303,7 +306,7 @@ bool ssim2csv::ind_expand_InsertMaybe(ssim2csv::FExpand& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void ssim2csv::ind_expand_Remove(ssim2csv::FExpand& row) {
     if (LIKELY(row.ind_expand_next != (ssim2csv::FExpand*)-1)) {// check if in hash already
-        u32 index = cstring_Hash(0, row.expand) & (_db.ind_expand_buckets_n - 1);
+        u32 index = algo::cstring_Hash(0, row.expand) & (_db.ind_expand_buckets_n - 1);
         ssim2csv::FExpand* *prev = &_db.ind_expand_buckets_elems[index]; // addr of pointer to current element
         while (ssim2csv::FExpand *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -324,7 +327,7 @@ void ssim2csv::ind_expand_Reserve(int n) {
     u32 new_nelems   = _db.ind_expand_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(ssim2csv::FExpand*);
         u32 new_size = new_nbuckets * sizeof(ssim2csv::FExpand*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -340,7 +343,7 @@ void ssim2csv::ind_expand_Reserve(int n) {
             while (elem) {
                 ssim2csv::FExpand &row        = *elem;
                 ssim2csv::FExpand* next       = row.ind_expand_next;
-                u32 index          = cstring_Hash(0, row.expand) & (new_nbuckets-1);
+                u32 index          = algo::cstring_Hash(0, row.expand) & (new_nbuckets-1);
                 row.ind_expand_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -442,7 +445,7 @@ bool ssim2csv::outfile_XrefMaybe(ssim2csv::FOutfile &row) {
 // --- ssim2csv.FDb.ind_outfile.Find
 // Find row by key. Return NULL if not found.
 ssim2csv::FOutfile* ssim2csv::ind_outfile_Find(const algo::strptr& key) {
-    u32 index = cstring_Hash(0, key) & (_db.ind_outfile_buckets_n - 1);
+    u32 index = algo::cstring_Hash(0, key) & (_db.ind_outfile_buckets_n - 1);
     ssim2csv::FOutfile* *e = &_db.ind_outfile_buckets_elems[index];
     ssim2csv::FOutfile* ret=NULL;
     do {
@@ -484,7 +487,7 @@ bool ssim2csv::ind_outfile_InsertMaybe(ssim2csv::FOutfile& row) {
     ind_outfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_outfile_next == (ssim2csv::FOutfile*)-1)) {// check if in hash already
-        u32 index = cstring_Hash(0, row.outfile) & (_db.ind_outfile_buckets_n - 1);
+        u32 index = algo::cstring_Hash(0, row.outfile) & (_db.ind_outfile_buckets_n - 1);
         ssim2csv::FOutfile* *prev = &_db.ind_outfile_buckets_elems[index];
         do {
             ssim2csv::FOutfile* ret = *prev;
@@ -510,7 +513,7 @@ bool ssim2csv::ind_outfile_InsertMaybe(ssim2csv::FOutfile& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void ssim2csv::ind_outfile_Remove(ssim2csv::FOutfile& row) {
     if (LIKELY(row.ind_outfile_next != (ssim2csv::FOutfile*)-1)) {// check if in hash already
-        u32 index = cstring_Hash(0, row.outfile) & (_db.ind_outfile_buckets_n - 1);
+        u32 index = algo::cstring_Hash(0, row.outfile) & (_db.ind_outfile_buckets_n - 1);
         ssim2csv::FOutfile* *prev = &_db.ind_outfile_buckets_elems[index]; // addr of pointer to current element
         while (ssim2csv::FOutfile *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -531,7 +534,7 @@ void ssim2csv::ind_outfile_Reserve(int n) {
     u32 new_nelems   = _db.ind_outfile_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(ssim2csv::FOutfile*);
         u32 new_size = new_nbuckets * sizeof(ssim2csv::FOutfile*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -547,7 +550,7 @@ void ssim2csv::ind_outfile_Reserve(int n) {
             while (elem) {
                 ssim2csv::FOutfile &row        = *elem;
                 ssim2csv::FOutfile* next       = row.ind_outfile_next;
-                u32 index          = cstring_Hash(0, row.outfile) & (new_nbuckets-1);
+                u32 index          = algo::cstring_Hash(0, row.outfile) & (new_nbuckets-1);
                 row.ind_outfile_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -640,13 +643,15 @@ void ssim2csv::name_RemoveLast() {
 // Make sure N elements fit in array. Process dies if out of memory
 void ssim2csv::name_AbsReserve(int n) {
     u32 old_max  = _db.name_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(_db.name_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("ssim2csv.tary_nomem  field:ssim2csv.FDb.name  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(_db.name_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("ssim2csv.tary_nomem  field:ssim2csv.FDb.name  comment:'out of memory'");
+        }
+        _db.name_elems = (algo::cstring*)new_mem;
+        _db.name_max = new_max;
     }
-    _db.name_elems = (algo::cstring*)new_mem;
-    _db.name_max = new_max;
 }
 
 // --- ssim2csv.FDb.value.Alloc
@@ -729,13 +734,15 @@ void ssim2csv::value_RemoveLast() {
 // Make sure N elements fit in array. Process dies if out of memory
 void ssim2csv::value_AbsReserve(int n) {
     u32 old_max  = _db.value_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(_db.value_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("ssim2csv.tary_nomem  field:ssim2csv.FDb.value  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(_db.value_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("ssim2csv.tary_nomem  field:ssim2csv.FDb.value  comment:'out of memory'");
+        }
+        _db.value_elems = (algo::cstring*)new_mem;
+        _db.value_max = new_max;
     }
-    _db.value_elems = (algo::cstring*)new_mem;
-    _db.value_max = new_max;
 }
 
 // --- ssim2csv.FDb.flatten.Alloc
@@ -818,13 +825,15 @@ void ssim2csv::flatten_RemoveLast() {
 // Make sure N elements fit in array. Process dies if out of memory
 void ssim2csv::flatten_AbsReserve(int n) {
     u32 old_max  = _db.flatten_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(_db.flatten_elems, old_max * sizeof(ssim2csv::FFlatten), new_max * sizeof(ssim2csv::FFlatten));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("ssim2csv.tary_nomem  field:ssim2csv.FDb.flatten  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(_db.flatten_elems, old_max * sizeof(ssim2csv::FFlatten), new_max * sizeof(ssim2csv::FFlatten));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("ssim2csv.tary_nomem  field:ssim2csv.FDb.flatten  comment:'out of memory'");
+        }
+        _db.flatten_elems = (ssim2csv::FFlatten*)new_mem;
+        _db.flatten_max = new_max;
     }
-    _db.flatten_elems = (ssim2csv::FFlatten*)new_mem;
-    _db.flatten_max = new_max;
 }
 
 // --- ssim2csv.FDb.flatten.XrefMaybe
@@ -1015,7 +1024,7 @@ bool ssim2csv::value_SetStrptrMaybe(ssim2csv::FieldId& parent, algo::strptr rhs)
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,ssim2csv_FieldId_value); ret = true; break;
                 }
@@ -1062,6 +1071,7 @@ void ssim2csv::FieldId_Print(ssim2csv::FieldId & row, algo::cstring &str) {
 // --- ssim2csv...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         ssim2csv::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -1078,10 +1088,13 @@ int main(int argc, char **argv) {
     try {
         ssim2csv::FDb_Uninit();
         algo_lib::FDb_Uninit();
-    } catch(algo_lib::ErrorX &x) {
+        lib_json::FDb_Uninit();
+    } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;
     }
+    // only the lower 1 byte makes it to the outside world
+    (void)i32_UpdateMin(algo_lib::_db.exit_code,255);
     return algo_lib::_db.exit_code;
 }
 

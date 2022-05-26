@@ -26,15 +26,35 @@
 // AL: used sendfile() here previously, but don't like the random
 // failures; using read/write instead.
 
+#include "include/algo.h"
+
+#ifndef WIN32
 #include <fnmatch.h>
 #include <sys/mman.h>
+#endif
 
 // -----------------------------------------------------------------------------
 
-#if defined(__MACH__) || __FreeBSD__>0
+inline char *ToCstr(char *to, const strptr &x) {
+    memcpy(to,x.elems,x.n_elems);
+    to[x.n_elems]=0;
+    return to;
+}
+
+// function to convert strptr X to a nul-terminated char*
+// uses alloca
+#define TOCSTR(x) ToCstr((char*)alloca((x).n_elems+1),(x))
+
+// -----------------------------------------------------------------------------
+
+#if defined(__MACH__) || __FreeBSD__>0 || defined(__CYGWIN__) || defined(WIN32)
 // replacement for missing lseek64
-static i64 lseek64(int fd, off64_t off, int whence) {
+static i64 lseek64(int fd, i64 off, int whence) {
+#ifdef WIN32
+    return _lseeki64(fd,off,whence);
+#else
     return lseek(fd,off,whence);
+#endif
 }
 #endif
 
@@ -45,10 +65,10 @@ static i64 lseek64(int fd, off64_t off, int whence) {
 // Throw exception on failure.
 void algo::CopyFileX(strptr from, strptr to, int mode) {
     algo_lib::FFildes in;
-    in.fd = OpenRead(from, algo_FileFlags_throw);
+    in.fd = OpenRead(from, algo_FileFlags__throw);
     algo_lib::FFildes out;
     // make sure to supply O_TRUNC.
-    out.fd = Fildes(open(Zeroterm(tempstr() << to), O_WRONLY | O_CREAT | O_TRUNC, mode));
+    out.fd = Fildes(open(TOCSTR(to), O_WRONLY | O_CREAT | O_TRUNC, mode));
     (void)algo_lib::fildes_XrefMaybe(in);
     (void)algo_lib::fildes_XrefMaybe(out);
     errno_vrfy(ValidQ(out.fd),tempstr()<< "open ["<<to<<"]");
@@ -82,45 +102,82 @@ bool algo::CopyFd(Fildes in_fd, Fildes out_fd) NOTHROW {
 
 // -----------------------------------------------------------------------------
 
-// Test whether C is a directory separator.
-bool algo::DirSepQ(int c) NOTHROW {
-    return c=='/';
-}
-
-// -----------------------------------------------------------------------------
-
 // Test whether FNAME refers to a valid filesystem entity (file, directory, or special file)
+// If FNAME is a soft link, then TRUE is returned even if the link points to
+// a non-existent location.
 bool algo::FileObjectExistsQ(strptr fname) NOTHROW {
-    struct stat fst;
-    return 0==stat(algo::Zeroterm(tempstr(fname)), &fst);
+    StatStruct fst;
+    return 0==lstat(TOCSTR(fname), &fst);
 }
 
 // -----------------------------------------------------------------------------
 
 // Test whether PATH is an existing directory
 bool algo::DirectoryQ(strptr path) NOTHROW {
-    struct stat fst;
-    return 0==stat(Zeroterm(tempstr(path)), &fst) && S_ISDIR(fst.st_mode);
+    StatStruct fst;
+    return 0==stat(TOCSTR(path), &fst) && S_ISDIR(fst.st_mode);
 }
 
 // -----------------------------------------------------------------------------
 
 // Test if F refers to an existing regular file (i.e. not a special file or directory)
 bool algo::FileQ(strptr fname) NOTHROW {
-    struct stat fst;
-    int rc = stat(Zeroterm(tempstr(fname)), &fst);
+    StatStruct fst;
+    int rc = stat(TOCSTR(fname), &fst);
     return rc==0 && S_ISREG(fst.st_mode);
 }
 
 // -----------------------------------------------------------------------------
 
 // Wrapper for c library realpath function.
+// On Windows: read path and expand all soft links along the way; Also eat ..'s.
+// The following table shows successive values of LEFT and RIGHT as the loop executes
+// ExpandLinks("bin/amc")
+// LEFT                                   RIGHT
+// bin                                    amc
+// bin/amc
+//    link=../build/release/amc
+// bin                                    ../build/release/amc
+//                                        build/release/amc
+// build                                  release/amc
+// build/release                          amc
+//    link=CYGWIN_NT-cl.release-x86_64
+// build                                  CYGWIN_NT-cl.release-x86_64/amc
+// build/CYGWIN_NT-cl.release-x86_64      amc
+// build/CYGWIN_NT-cl.release-x86_64/amc
 tempstr algo::GetFullPath(strptr path) NOTHROW {
     tempstr ret;
+#ifdef WIN32
+    tempstr link;
+    tempstr newlink;
+    while (path.n_elems) {
+        strptr nextcomp = Pathcomp(path,"/LL");
+        path=Pathcomp(path,"/LR");
+        if (nextcomp == "..") {
+            ret.ch_n = TRevFind(ret, '/').beg;
+        } else if (nextcomp != "") {
+            ret << algo::MaybeDirSep << nextcomp;
+            newlink = algo::ReadLink(ret);
+            if (newlink != "") {
+                if (AbsolutePathQ(newlink)) {
+                    ret = newlink;
+                } else {
+                    if (path.n_elems) {
+                        newlink << algo::MaybeDirSep << path;
+                    }
+                    link = newlink;
+                    path = link;
+                    ret.ch_n = TRevFind(ret, '/').beg;
+                }
+            }
+        }
+    }
+#else
     char buf[PATH_MAX];
-    if (NULL != realpath(Zeroterm(tempstr(path)),buf)) {
+    if (NULL != realpath(TOCSTR(path),buf)) {
         ret << strptr(buf);
     }
+#endif
     return ret;
 }
 
@@ -130,7 +187,14 @@ tempstr algo::GetFullPath(strptr path) NOTHROW {
 // Return success code.
 bool algo::DeleteFile(strptr f) NOTHROW {
     bool ret = elems_N(f) > 0;
-    ret = ret && unlink(Zeroterm(tempstr() << f))==0;
+    tempstr fname(f);
+    // Dubious work-around for Windows -- many files are created with special
+    // attributes (read-only) that prevent deletion. These these now
+    // Once these files have been deleted, the line is no longer needed
+#ifdef WIN32
+    (void)SetFileAttributes(Zeroterm(fname), FILE_ATTRIBUTE_NORMAL);
+#endif
+    ret = ret && unlink(Zeroterm(fname)) == 0;
     return ret;
 }
 
@@ -140,7 +204,7 @@ bool algo::DeleteFile(strptr f) NOTHROW {
 // and return that. This is equivalent to Pathcomp(A,"/RR");
 strptr algo::StripDirName(strptr a) NOTHROW {
     int i = elems_N(a);
-    for ( ; i>0 && !DirSepQ(a[i-1]); i--) {
+    for ( ; i>0 && !algo_lib::DirSepQ(a[i-1]); i--) {
     }
     return RestFrom(a,i);
 }
@@ -151,7 +215,7 @@ strptr algo::StripDirName(strptr a) NOTHROW {
 // and return that. This is equivalent to Pathcomp(A,"/RL");
 strptr algo::GetDirName(strptr a) NOTHROW {
     int i=elems_N(a);
-    for (; i>0 && !DirSepQ(a[i-1]); i--) {
+    for (; i>0 && !algo_lib::DirSepQ(a[i-1]); i--) {
     }
     return FirstN(a,i);
 }
@@ -162,13 +226,13 @@ strptr algo::GetDirName(strptr a) NOTHROW {
 // using mode MODE for newly created directories.
 // if DO_THROW is specified, throw exceptions on failure.
 // If DO_THROW is false, return success value.
+// TODO: test on windows
 bool algo::CreateDirRecurse(strptr s, bool do_throw, u32 mode) {
     if (!elems_N(s))           return false;
     if (DirectoryQ(s)) return true;
     strptr base = StripDirComponent(s);
     if (elems_N(base) && !CreateDirRecurse(base, do_throw, mode)) return false;
-    tempstr v(s);
-    bool ok = mkdir(Zeroterm(v),mode)==0;
+    bool ok = mkdir(TOCSTR(s),mode)==0;
     ok     |= errno == EEXIST;
     errno_vrfy(!do_throw || ok,tempstr()<< "create dir ["<<s<<"]");
     return ok;
@@ -188,9 +252,9 @@ bool algo::CreateDirRecurse(strptr f) {
 // So, StripDirComponent("abcde/d") -> abcde/
 strptr algo::StripDirComponent(strptr a) NOTHROW {
     int len = elems_N(a);
-    while (len>0 && DirSepQ(a[len-1])) len--;
+    while (len>0 && algo_lib::DirSepQ(a[len-1])) len--;
     int i=len;
-    for (; i>0 && !DirSepQ(a[i-1]); i--) {}
+    for (; i>0 && !algo_lib::DirSepQ(a[i-1]); i--) {}
     return FirstN(a,i);
 }
 
@@ -217,7 +281,7 @@ tempstr algo::DirFileJoin(strptr a, strptr b) NOTHROW {
 // Pathcomp expression)
 strptr algo::StripExt(strptr a) NOTHROW {
     for (int i=elems_N(a)-1; i>=0; i--) {
-        if (DirSepQ(a[i])) {
+        if (algo_lib::DirSepQ(a[i])) {
             return a;
         }
         if (a[i]=='.') {
@@ -235,7 +299,7 @@ strptr algo::StripExt(strptr a) NOTHROW {
 // This function is equivalent to Pathcomp(A,"/RR.RR")
 strptr algo::GetFileExt(strptr a) NOTHROW {
     for (int i=elems_N(a)-1; i>=0; i--) {
-        if (DirSepQ(a[i])) {
+        if (algo_lib::DirSepQ(a[i])) {
             return strptr();
         }
         if (a[i]=='.') {
@@ -249,8 +313,14 @@ strptr algo::GetFileExt(strptr a) NOTHROW {
 
 // Check if path PATH is an absolute pathname,
 // meaning that it starts with / or ~
+// On windows, the same test is in force, but in addition any pathname
+// where the second character is a : (e.g. c:\blah) is recognized as an absolute
+// path name
 bool algo::AbsolutePathQ(strptr path) NOTHROW {
     bool ret = elems_N(path) > 0 && (path[0]=='/' || path[0]=='~');
+#ifdef WIN32
+    ret = ret || (elems_N(path) > 1 && (path[1]==':'));
+#endif
     return ret;
 }
 
@@ -284,28 +354,29 @@ tempstr algo::GetCurDir() NOTHROW {
 
 // Change current directory to DIR and return success status
 // errno is set as witih chdir() call
-bool algo::SetCurDir(strptr dir) NOTHROW {
-    tempstr ret(dir);
-    return chdir(Zeroterm(ret))==0;
+bool algo::SetCurDir(strptr in_dir) NOTHROW {
+    return chdir(TOCSTR(in_dir))==0;
 }
 
 // -----------------------------------------------------------------------------
 
 // Calculate size of file referred to by FILENAME.
-off64_t algo::GetFileSize(strptr filename) NOTHROW {
-    struct stat s;
-    if (stat(Zeroterm(tempstr(filename)),&s)) {
-        return -1;
+// If file is not found or an error occurs, 0 is returned.
+i64 algo::GetFileSize(strptr filename) NOTHROW {
+    i64 ret = 0;
+    StatStruct s;
+    if (stat(TOCSTR(filename),&s) == 0) {
+        ret = s.st_size;
     }
-    return s.st_size;
+    return ret;
 }
 
 // -----------------------------------------------------------------------------
 
 // Return size of file referred to by FD.
 // On error, return zero.
-off64_t algo::GetFileSize(Fildes fd) NOTHROW {
-    struct stat buf;
+i64 algo::GetFileSize(Fildes fd) NOTHROW {
+    StatStruct buf;
     ZeroBytes(buf);
     (void)fstat(fd.value, &buf);
     return buf.st_size;
@@ -327,24 +398,26 @@ strptr algo::GetFileName(const strptr& path) NOTHROW {
 tempstr algo::ReplaceFileName(const strptr& a, const strptr& b) {
     tempstr str;
     str << GetDirName(a);
-    if (ch_N(str) && !DirSepQ(ch_qLast(str))) str<<"/";
+    str << MaybeDirSep;
     str << StripDirName(b) << GetFileExt(a);
     return str;
 }
 
 // -----------------------------------------------------------------------------
 
-UnTime algo::ModTime(strptr filename) {
-    struct stat S;
+algo::UnTime algo::ModTime(strptr filename) {
+    StatStruct S;
     UnTime ret;
-    if (stat(Zeroterm(tempstr() << filename), &S)==0) {
+    if (stat(TOCSTR(filename), &S)==0) {
         ret = ToUnTime(UnixTime(S.st_mtime));
     }
     return ret;
 }
 
+// -----------------------------------------------------------------------------
+
 bool algo::RemDir(strptr name) {
-    bool ok = rmdir(Zeroterm(tempstr() << name))==0;
+    bool ok = rmdir(TOCSTR(name))==0;
     return ok;
 }
 
@@ -361,7 +434,7 @@ bool algo::RemDirRecurse(strptr name, bool remove_topmost) {
             if( E.is_dir ){
                 RemDirRecurse(E.pathname, true);
             } else {
-                DeleteFile(E.pathname);
+                (void)algo::DeleteFile(E.pathname);
             }
         }ind_end;
         if (remove_topmost) {
@@ -379,33 +452,12 @@ void algo::dir_handle_Cleanup(algo::DirEntry &dir_entry) {
     }
 }
 
-static void DirEntryFill(DirEntry &E) {
-    bool match = false;
-    if (!E.eof) {
-        E.filename = strptr(E.dir_ent->d_name);
-        E.pathname.ch_n =  ch_N(E.dirname);
-        E.pathname << MaybeDirSep << E.filename;
-        struct stat st;
-        if (0 == lstat(Zeroterm(E.pathname), &st)) {
-            E.is_dir = S_ISDIR(st.st_mode) != 0;
-            E.mode   = st.st_mode;
-            // can we grab the nanosecs too?
-            E.mtime  = ToUnTime(UnixTime(st.st_mtime));
-            E.ctime  = ToUnTime(UnixTime(st.st_ctime));
-            E.size   = st.st_size;
-            match    = E.filename != "." && E.filename != ".."; // never pass these back to user
-            match = match && fnmatch(Zeroterm(E.pattern), Zeroterm(E.filename), FNM_FILE_NAME)==0;
-        }
-    }
-    E.match = match;
-}
-
 // -----------------------------------------------------------------------------
 
 void algo_lib::fildes_Cleanup(algo_lib::FLockfile &lockfile) {
     if (ValidQ(lockfile.fildes.fd)) {
         (void)flock(lockfile.fildes.fd.value, LOCK_UN);
-        Refurbish(lockfile.fildes);
+        algo::Refurbish(lockfile.fildes);
         // delete file, but only if it was successfully locked.
         unlink(Zeroterm(lockfile.filename));
     }
@@ -427,25 +479,39 @@ void algo_lib::fildes_Cleanup(algo_lib::FLockfile &lockfile) {
 algo::Fildes algo::OpenFile(const strptr& filename, algo::FileFlags flags) {
     tempstr fn;
     fn<<filename;
-
     int os_flags = 0;
+    // append implies write
     if (append_Get(flags)) {
         write_Set(flags, true);
+    }
+    if (append_Get(flags)) {
         // #AL# without O_APPEND, 2 processes cannot reliably append to the same file
-        // #AL# warning: does not work on NFS systems (see man 2 open)
+        // #AL# warning: O_APPEND does not work on NFS systems (see man 2 open)
         //os_flags |= O_APPEND;
+        os_flags = O_RDWR | O_CREAT;
+    } else if (write_Get(flags)) {
+        os_flags = O_RDWR | O_CREAT | O_TRUNC;
+    } else if (read_Get(flags)) {
+        os_flags = O_RDONLY;
     }
-    if (read_Get(flags)) {
-        os_flags |= O_RDONLY;
+#ifdef WIN32
+    // windows: prevent interpretation of file contents!:
+    (void)_set_fmode(_O_BINARY);
+    if (linear_Get(flags)) {
+        os_flags |= O_SEQUENTIAL;
     }
-    if (write_Get(flags)) {
-        os_flags |= O_RDWR | O_CREAT;
-    }
-    if (write_Get(flags) && !append_Get(flags)) {
-        os_flags |= O_TRUNC;
-    }
-
+    os_flags |= _O_BINARY;
+    // if (algo::temp_Get(flags)) {
+    //     os_flags |= _O_TEMPORARY;
+    // }
+    // O_TMPFILE doesn't behave as you would expect --
+    // it creates a an anonymous file in directory specified by path
+    // so we ignore it here
+#endif
     Fildes fd(open(Zeroterm(fn), os_flags, 0644));
+    if (!ValidQ(fd) && printerr_Get(flags)) {
+        prerr("open ["<<filename<<"]: "<<strerror(errno));
+    }
     errno_vrfy(ValidQ(fd) || !(_throw_Get(flags))
                ,tempstr()<< "open ["<<filename<<"]");
 
@@ -472,7 +538,7 @@ void algo::WriteFileX(Fildes fd, memptr bytes) {
 
 // Set file position of FD to OFF
 // Return success status
-bool algo::SeekFile(Fildes fd, off64_t off) {
+bool algo::SeekFile(Fildes fd, i64 off) {
     bool ok = lseek64(fd.value, off, SEEK_SET) == (i64)off;
     return ok;
 }
@@ -482,7 +548,7 @@ bool algo::SeekFile(Fildes fd, off64_t off) {
 // Return current file position on FD
 // There is no provision to return an error code; only the offset is returned
 // (zero on failure?)
-off64_t algo::GetPos(Fildes fd) {
+i64 algo::GetPos(Fildes fd) {
     return lseek64(fd.value, 0, SEEK_CUR);
 }
 
@@ -490,7 +556,8 @@ off64_t algo::GetPos(Fildes fd) {
 
 // Truncate file indicated by FD to size SIZE.
 // Return success status
-bool algo::TruncateFile(Fildes fd, off64_t size) {
+// TODO: Test on windows
+bool algo::TruncateFile(Fildes fd, i64 size) {
     return ftruncate(fd.value, size)==0;
 }
 
@@ -503,6 +570,7 @@ bool algo::TruncateFile(Fildes fd, off64_t size) {
 //   and are sometimes zero-terminated.
 // File is read using a "safe" method of succesively calling read.
 // relying on reported file size or using mmap does not work in all cases
+// Todo: test on windows
 const tempstr algo::FileToString(const strptr& fname, algo::FileFlags flags) {
     algo_lib::FFildes fd;
     tempstr ret;
@@ -515,7 +583,7 @@ const tempstr algo::FileToString(const strptr& fname, algo::FileFlags flags) {
         u8 buf[4096];
         while (true) {
             ssize_t nread = read(fd.fd.value,buf,sizeof(buf));
-            errno_vrfy(nread>=0 || !(flags & algo_FileFlags_throw),tempstr()<< "read "<<fname);
+            errno_vrfy(nread>=0 || !(flags & algo_FileFlags__throw),tempstr()<< "read "<<fname);
             if (nread > 0) {
                 ch_Addary(ret, strptr((char*)buf, nread));
             }
@@ -537,7 +605,7 @@ const tempstr algo::FileToString(const strptr& fname, algo::FileFlags flags) {
 
 // Same Short version of FileToString, throw exception on error.
 const tempstr algo::FileToString(const strptr& fname) {
-    return FileToString(fname,algo_FileFlags_throw);
+    return FileToString(fname,algo_FileFlags__throw);
 }
 
 // -----------------------------------------------------------------------------
@@ -566,8 +634,8 @@ const tempstr algo::FdToString(Fildes in_fd) NOTHROW {
 // -----------------------------------------------------------------------------
 
 static i64 GetMode(char *fname, int dflt) {
-    struct stat st;
-    ZeroBytes(st);
+    StatStruct st;
+    algo::ZeroBytes(st);
     int rc=stat(fname,&st);
     return rc==-1 ? dflt : st.st_mode;
 }
@@ -577,7 +645,7 @@ static i64 GetMode(char *fname, int dflt) {
 static int CreateReplacementFile(cstring &oldfname, cstring &newfname, int dfltmode) {
     ch_RemoveAll(newfname);
     newfname << oldfname << "-XXXXXX";
-    mode_t old_mask = umask(0333);
+    mode_t old_mask = umask(033);
     int fd=mkstemp((char*)Zeroterm(newfname));
     (void)umask(old_mask);
     if (fd!=-1) {
@@ -620,6 +688,10 @@ bool algo::SafeStringToFile(const strptr& str, const strptr& filename, int dfltm
             (void)close(fd);
         }
         if (ok) {
+#ifdef WIN32
+            // Windows is unable to rename a file on top of an existing file
+            (void)unlink(Zeroterm(oldfile));
+#endif
             ok=rename(Zeroterm(newfile),Zeroterm(oldfile))==0;
         } else {
             int savederr=errno;
@@ -642,7 +714,7 @@ bool algo::SafeStringToFile(const strptr& str, const strptr& filename) {
 // Replace contents of file FILENAME with string STR.
 // If CHECK_SAME is specified, first compare contents and do not perform a write
 // if the contents are the same.
-// FLAGS may specify algo_FileFlags_throw, in which case an exception is thrown on error
+// FLAGS may specify algo_FileFlags__throw, in which case an exception is thrown on error
 bool algo::StringToFile(const strptr& str, const strptr& filename, algo::FileFlags flags, bool check_same){
     bool dowrite = elems_N(filename)>0;
     if (dowrite && check_same) {
@@ -654,7 +726,7 @@ bool algo::StringToFile(const strptr& str, const strptr& filename, algo::FileFla
         algo_lib::FFildes fildes;
         fildes.fd = OpenWrite(filename,flags); // file is automatically truncated
         bool write_ok=WriteFile(fildes.fd, (u8*)str.elems, str.n_elems);// does not throw
-        errno_vrfy(!(flags & algo_FileFlags_throw) || write_ok, "write");
+        errno_vrfy(!(flags & algo_FileFlags__throw) || write_ok, "write");
     }
     return dowrite;
 }
@@ -662,7 +734,7 @@ bool algo::StringToFile(const strptr& str, const strptr& filename, algo::FileFla
 // Short version of StringToFile: compares file contents before writing,
 // throws exception on error.
 bool algo::StringToFile(const strptr& str, const strptr& filename) {
-    return StringToFile(str,filename,algo_FileFlags_throw,true);
+    return StringToFile(str,filename,algo_FileFlags__throw,true);
 }
 
 // Short version of StringToFile: compares file contents before writing.
@@ -715,10 +787,29 @@ bool algo::WriteFile(algo::Fildes fildes, u8 *start, int nwrite) {
 // -----------------------------------------------------------------------------
 
 void algo::Dir_curs_Next(Dir_curs &curs) NOTHROW {
+    (void)curs;
     do {
-        curs.E.dir_ent = readdir(curs.E.dir_handle);
-        curs.E.eof     = curs.E.dir_ent == NULL;
-        DirEntryFill(curs.E);
+        algo::DirEntry &E = curs.E;
+        struct dirent *dir_ent = readdir(curs.E.dir_handle);
+        curs.E.eof     = dir_ent == NULL;
+        bool match = false;
+        if (!E.eof) {
+            E.filename = strptr(dir_ent->d_name);
+            E.pathname.ch_n =  ch_N(E.dirname);
+            E.pathname << algo::MaybeDirSep << E.filename;
+            StatStruct st;
+            if (0 == lstat(Zeroterm(E.pathname), &st)) {
+                E.is_dir = S_ISDIR(st.st_mode) != 0;
+                E.mode   = st.st_mode;
+                // can we grab the nanosecs too?
+                E.mtime  = ToUnTime(algo::UnixTime(st.st_mtime));
+                E.ctime  = ToUnTime(algo::UnixTime(st.st_ctime));
+                E.size   = st.st_size;
+                match    = E.filename != "." && E.filename != ".."; // never pass these back to user
+                match = match && fnmatch(Zeroterm(E.pattern), Zeroterm(E.filename), FNM_FILE_NAME)==0;
+            }
+        }
+        E.match = match;
     } while (!curs.E.eof && !curs.E.match);
 }
 
@@ -726,11 +817,11 @@ void algo::Dir_curs_Next(Dir_curs &curs) NOTHROW {
 
 // Begin scanning files matching shell pattern PATTERN.
 void algo::Dir_curs_Reset(Dir_curs &curs, strptr pattern) NOTHROW {
-    strptr dirname = Pathcomp(pattern,"/RL");
+    strptr dirname = GetDirName(pattern);
     if (!elems_N(dirname)) {
         dirname =".";
     }
-    strptr mask = Pathcomp(pattern,"/RR");
+    strptr mask = StripDirName(pattern);
     curs.E.dirname     = dirname;
     // empty dirname == current directory
     if (!ch_N(curs.E.dirname)) {
@@ -758,34 +849,92 @@ algo::DirEntry &algo::Dir_curs_Access(Dir_curs &curs) NOTHROW {
 // Set blocking mode on file descriptor FD to BLOCKING
 // Return result of FCNTL (0==success)
 int algo::SetBlockingMode(Fildes fildes, bool blocking) NOTHROW {
+    int ret = -1;
+#ifdef WIN32
+    // todo: move this to win32.cpp and implement fcntl
+    HANDLE h = ValidQ(fildes) ? (HANDLE)_get_osfhandle(fildes.value) : NULL;
+    if (h && GetFileType(h) == FILE_TYPE_PIPE) {
+        DWORD flags = blocking ? PIPE_WAIT : PIPE_NOWAIT;
+        if (SetNamedPipeHandleState(h, &flags, NULL, NULL)) {
+            ret=0;
+        }
+    }
+#else
     int flags = fcntl(fildes.value, F_GETFL);
     int fl    = blocking ? (flags & ~O_NONBLOCK) : (flags | O_NONBLOCK);
-    return fcntl(fildes.value, F_SETFL, fl);
+    ret = fcntl(fildes.value, F_SETFL, fl);
+#endif
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// If PATH is an existing path, leave it unchanged
+// On Windows, If PATH.EXE is an existing path, return that
+// Return true if file exists
+bool algo_lib::TryExeSuffix(cstring &path) {
+    bool ret = FileQ(path);
+#ifdef WIN32
+    if (!ret && ReadLink(path)=="") {
+        int n = path.ch_n;
+        path << ".exe";
+        ret = FileQ(path) && ReadLink(path)=="";
+        if (!ret) {
+            path.ch_n=n;
+        }
+    }
+#endif
+    return ret;
 }
 
 // -----------------------------------------------------------------------------
 
 static tempstr PathSearch(strptr fname) {
-    for (strptr path=getenv("PATH"); path != ""; path = Pathcomp(path,":LR")) {
-        strptr left = Pathcomp(path,":LL");
+    strptr path_first = ":LL";
+    strptr path_rest  = ":LR";
+#ifdef WIN32
+    path_first = ";LL";
+    path_rest  = ";LR";
+#endif
+    tempstr ret(fname);
+    for (strptr path=getenv("PATH"); path != ""; path = Pathcomp(path,path_rest)) {
+        strptr left = Pathcomp(path,path_first);
         tempstr candidate(DirFileJoin(left,fname));
-        if (FileQ(candidate)) {
-            return candidate;
+        if (algo_lib::TryExeSuffix(candidate)) {
+            ret=candidate;
+            break;
         }
     }
-    return tempstr(fname);
+    return ret;
 }
 
 // Update FNAME to be a filename that can be passed to Unix exec call.
-// If FNAME is an absolute path, do nothing
+// If FNAME is an absolute path, don't perform a search
 // If FNAME is a relative path, perform a search using the PATH environment
-// variable; upon finding a matching path, set FNAME to the filename found.
+// the first executable file that's found is the result.
 void algo_lib::ResolveExecFname(cstring &fname) {
     if (!AbsolutePathQ(fname)) {
-        if (FileQ(fname)) {
+        if (algo_lib::TryExeSuffix(fname)) {
             // all good
         } else {
             fname = PathSearch(fname);
         }
     }
+}
+
+// -----------------------------------------------------------------------------
+
+// Read soft link and return resulting path.
+// If PATH is not a soft link, return empty string
+// This is not the function to resolve symlinks (if link temp/x points to y, then
+// this function will return string "y", not "temp/y"), use GetFullPath for
+// full service
+tempstr algo::ReadLink(strptr path) {
+    tempstr ret;
+    char buf[4096];
+    int n=readlink(TOCSTR(path),buf,sizeof(buf));
+    if (n>0) {
+        ret << strptr(buf,n);
+    }
+    return ret;
 }

@@ -45,6 +45,7 @@ static bool ArgNeedsSourceQ(amc::FField &field) {
         || field.reftype == dmmeta_Reftype_reftype_Inlary
         || field.reftype == dmmeta_Reftype_reftype_Varlen // needs size of element
         || field.reftype == dmmeta_Reftype_reftype_Ptr
+        || field.reftype == dmmeta_Reftype_reftype_Bitfld
         || field.reftype == dmmeta_Reftype_reftype_Lary;
 }
 
@@ -61,7 +62,10 @@ static void CollectParentns(amc::FNs &tgt, amc::FNs &parentns) {
                 CollectParentns(tgt, *otherparent);
             }
         }ind_end;
-        if (target->p_ns->nstype == dmmeta_Nstype_nstype_lib || target->p_ns->nstype == dmmeta_Nstype_nstype_exe) {
+        if (target->p_ns->nstype == dmmeta_Nstype_nstype_lib
+            || target->p_ns->nstype == dmmeta_Nstype_nstype_exe
+            || target->p_ns->nstype == dmmeta_Nstype_nstype_objlist
+            ) {
             c_parentns_ScanInsertMaybe(tgt, parentns);
             c_cppincl_ScanInsertMaybe(tgt, parentns);
         }
@@ -187,7 +191,8 @@ void amc::GenUsedNs() {
     ind_beg(amc::_db_ns_curs, ns, amc::_db) {
         ind_beg(amc::ns_c_cppincl_curs, usedns, ns) if (&usedns != &ns) {
             if (usedns.nstype == dmmeta_Nstype_nstype_exe
-                || (ns.nstype == dmmeta_Nstype_nstype_protocol && usedns.nstype == dmmeta_Nstype_nstype_ssimdb)
+                || (ns.nstype == dmmeta_Nstype_nstype_protocol
+                    && usedns.nstype == dmmeta_Nstype_nstype_ssimdb)
                 || (ns.nstype == dmmeta_Nstype_nstype_ssimdb && ExeQ(usedns))) {
                 prerr("amc.execdep"
                       <<Keyval("ns1",ns.ns)

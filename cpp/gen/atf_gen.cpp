@@ -53,7 +53,7 @@ bool atf::value_SetStrptrMaybe(atf::FieldId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('n','_','c','m','p'): {
                     value_SetEnum(parent,atf_FieldId_n_cmp); ret = true; break;
                 }
@@ -64,7 +64,7 @@ bool atf::value_SetStrptrMaybe(atf::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 6: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('n','_','s','t','e','p'): {
                     value_SetEnum(parent,atf_FieldId_n_step); ret = true; break;
                 }
@@ -72,7 +72,7 @@ bool atf::value_SetStrptrMaybe(atf::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 7: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
                 case LE_STR7('c','o','m','m','e','n','t'): {
                     value_SetEnum(parent,atf_FieldId_comment); ret = true; break;
                 }
@@ -83,7 +83,7 @@ bool atf::value_SetStrptrMaybe(atf::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 10: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('t','e','s','t','r','e','s','u'): {
                     if (memcmp(rhs.elems+8,"lt",2)==0) { value_SetEnum(parent,atf_FieldId_testresult); ret = true; break; }
                     break;
@@ -169,7 +169,7 @@ bool atf::value_SetStrptrMaybe(atf::Testresult& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 6: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('F','A','I','L','E','D'): {
                     value_SetEnum(parent,atf_Testresult_FAILED); ret = true; break;
                 }
@@ -180,7 +180,7 @@ bool atf::value_SetStrptrMaybe(atf::Testresult& parent, algo::strptr rhs) {
             break;
         }
         case 7: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
                 case LE_STR7('T','I','M','E','O','U','T'): {
                     value_SetEnum(parent,atf_Testresult_TIMEOUT); ret = true; break;
                 }
@@ -188,7 +188,7 @@ bool atf::value_SetStrptrMaybe(atf::Testresult& parent, algo::strptr rhs) {
             break;
         }
         case 8: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('U','N','T','E','S','T','E','D'): {
                     value_SetEnum(parent,atf_Testresult_UNTESTED); ret = true; break;
                 }
@@ -196,7 +196,7 @@ bool atf::value_SetStrptrMaybe(atf::Testresult& parent, algo::strptr rhs) {
             break;
         }
         case 10: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('U','N','R','E','S','O','L','V'): {
                     if (memcmp(rhs.elems+8,"ED",2)==0) { value_SetEnum(parent,atf_Testresult_UNRESOLVED); ret = true; break; }
                     break;
@@ -205,7 +205,7 @@ bool atf::value_SetStrptrMaybe(atf::Testresult& parent, algo::strptr rhs) {
             break;
         }
         case 18: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('U','N','T','E','S','T','E','D'): {
                     if (memcmp(rhs.elems+8,"_PREPERROR",10)==0) { value_SetEnum(parent,atf_Testresult_UNTESTED_PREPERROR); ret = true; break; }
                     break;

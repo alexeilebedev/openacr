@@ -8,12 +8,12 @@
 
 
 #pragma once
-#include "include/gen/dev_gen.h"
-#include "include/gen/algo_gen.h"
-#include "include/gen/algo_lib_gen.h"
 #include "include/gen/dmmeta_gen.h"
+#include "include/gen/algo_gen.h"
 #include "include/gen/report_gen.h"
 #include "include/gen/command_gen.h"
+#include "include/gen/algo_lib_gen.h"
+#include "include/gen/dev_gen.h"
 //#pragma endinclude
 
 // --- src_func_FieldIdEnum
@@ -28,27 +28,24 @@ enum { src_func_FieldIdEnum_N = 1 };
 // --- src_func_TableIdEnum
 
 enum src_func_TableIdEnum {                   // src_func.TableId.value
-     src_func_TableId_dev_Badline       = 0   // dev.Badline -> src_func.FBadline
-    ,src_func_TableId_dev_badline       = 0   // dev.badline -> src_func.FBadline
-    ,src_func_TableId_dmmeta_Ctypelen   = 1   // dmmeta.Ctypelen -> src_func.FCtypelen
-    ,src_func_TableId_dmmeta_ctypelen   = 1   // dmmeta.ctypelen -> src_func.FCtypelen
-    ,src_func_TableId_dmmeta_Dispatch   = 2   // dmmeta.Dispatch -> src_func.FDispatch
-    ,src_func_TableId_dmmeta_dispatch   = 2   // dmmeta.dispatch -> src_func.FDispatch
-    ,src_func_TableId_dmmeta_Fstep      = 3   // dmmeta.Fstep -> src_func.FFstep
-    ,src_func_TableId_dmmeta_fstep      = 3   // dmmeta.fstep -> src_func.FFstep
-    ,src_func_TableId_dmmeta_Gstatic    = 4   // dmmeta.Gstatic -> src_func.FGstatic
-    ,src_func_TableId_dmmeta_gstatic    = 4   // dmmeta.gstatic -> src_func.FGstatic
-    ,src_func_TableId_dev_Target        = 5   // dev.Target -> src_func.FTarget
-    ,src_func_TableId_dev_target        = 5   // dev.target -> src_func.FTarget
-    ,src_func_TableId_dev_Targsrc       = 6   // dev.Targsrc -> src_func.FTargsrc
-    ,src_func_TableId_dev_targsrc       = 6   // dev.targsrc -> src_func.FTargsrc
+     src_func_TableId_dmmeta_Ctypelen   = 0   // dmmeta.Ctypelen -> src_func.FCtypelen
+    ,src_func_TableId_dmmeta_ctypelen   = 0   // dmmeta.ctypelen -> src_func.FCtypelen
+    ,src_func_TableId_dmmeta_Dispatch   = 1   // dmmeta.Dispatch -> src_func.FDispatch
+    ,src_func_TableId_dmmeta_dispatch   = 1   // dmmeta.dispatch -> src_func.FDispatch
+    ,src_func_TableId_dmmeta_Fstep      = 2   // dmmeta.Fstep -> src_func.FFstep
+    ,src_func_TableId_dmmeta_fstep      = 2   // dmmeta.fstep -> src_func.FFstep
+    ,src_func_TableId_dmmeta_Gstatic    = 3   // dmmeta.Gstatic -> src_func.FGstatic
+    ,src_func_TableId_dmmeta_gstatic    = 3   // dmmeta.gstatic -> src_func.FGstatic
+    ,src_func_TableId_dev_Target        = 4   // dev.Target -> src_func.FTarget
+    ,src_func_TableId_dev_target        = 4   // dev.target -> src_func.FTarget
+    ,src_func_TableId_dev_Targsrc       = 5   // dev.Targsrc -> src_func.FTargsrc
+    ,src_func_TableId_dev_targsrc       = 5   // dev.targsrc -> src_func.FTargsrc
 };
 
-enum { src_func_TableIdEnum_N = 14 };
+enum { src_func_TableIdEnum_N = 12 };
 
 namespace src_func { struct FTargsrc; }
 namespace src_func { struct FTarget; }
-namespace src_func { struct FBadline; }
 namespace src_func { struct FCtypelen; }
 namespace src_func { struct trace; }
 namespace src_func { struct FDb; }
@@ -73,8 +70,6 @@ namespace src_func { struct _db_gstatic_curs; }
 namespace src_func { struct _db_ind_genprefix_curs; }
 namespace src_func { struct _db_ctypelen_curs; }
 namespace src_func { struct _db_ind_ctypelen_curs; }
-namespace src_func { struct _db_badline_curs; }
-namespace src_func { struct _db_ind_badline_curs; }
 namespace src_func { struct target_cd_targsrc_curs; }
 namespace src_func { struct targsrc_zd_func_curs; }
 namespace src_func {
@@ -83,37 +78,6 @@ namespace src_func {
 extern const char *src_func_help;
 extern const char *src_func_syntax;
 extern FDb _db;
-
-// --- src_func.FBadline
-// create: src_func.FDb.badline (Lary)
-// global access: ind_badline (Thash)
-struct FBadline { // src_func.FBadline
-    algo::Smallstr50      badline;            //
-    algo::Smallstr200     expr;               //
-    algo::Smallstr50      targsrc_regx;       //
-    algo::Comment         comment;            //
-    algo_lib::Regx        regx;               //
-    algo_lib::Regx        _targsrc_regx;      //
-    src_func::FBadline*   ind_badline_next;   // hash next
-private:
-    friend src_func::FBadline&  badline_Alloc() __attribute__((__warn_unused_result__, nothrow));
-    friend src_func::FBadline*  badline_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 badline_RemoveAll() __attribute__((nothrow));
-    friend void                 badline_RemoveLast() __attribute__((nothrow));
-    FBadline();
-    ~FBadline();
-    FBadline(const FBadline&){ /*disallow copy constructor */}
-    void operator =(const FBadline&){ /*disallow direct assignment */}
-};
-
-// Copy fields out of row
-void                 badline_CopyOut(src_func::FBadline &row, dev::Badline &out) __attribute__((nothrow));
-// Copy fields in to row
-void                 badline_CopyIn(src_func::FBadline &row, dev::Badline &in) __attribute__((nothrow));
-
-// Set all fields to initial values.
-void                 FBadline_Init(src_func::FBadline& badline);
-void                 FBadline_Uninit(src_func::FBadline& badline) __attribute__((nothrow));
 
 // --- src_func.FCtypelen
 // create: src_func.FDb.ctypelen (Lary)
@@ -193,12 +157,6 @@ struct FDb { // src_func.FDb
     src_func::FCtypelen**    ind_ctypelen_buckets_elems;    // pointer to bucket array
     i32                      ind_ctypelen_buckets_n;        // number of elements in bucket array
     i32                      ind_ctypelen_n;                // number of elements in the hash table
-    src_func::FBadline*      badline_lary[32];              // level array
-    i32                      badline_n;                     // number of elements in array
-    src_func::FBadline**     ind_badline_buckets_elems;     // pointer to bucket array
-    i32                      ind_badline_buckets_n;         // number of elements in bucket array
-    i32                      ind_badline_n;                 // number of elements in the hash table
-    algo_lib::Regx           badline_union_regx;            //
     bool                     printed_user_impl_notice;      //   false
     src_func::trace          trace;                         //
 };
@@ -533,51 +491,6 @@ void                 ind_ctypelen_Remove(src_func::FCtypelen& row) __attribute__
 // Reserve enough room in the hash for N more elements. Return success code.
 void                 ind_ctypelen_Reserve(int n) __attribute__((nothrow));
 
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-src_func::FBadline&  badline_Alloc() __attribute__((__warn_unused_result__, nothrow));
-// Allocate memory for new element. If out of memory, return NULL.
-src_func::FBadline*  badline_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-src_func::FBadline*  badline_InsertMaybe(const dev::Badline &value) __attribute__((nothrow));
-// Allocate space for one element. If no memory available, return NULL.
-void*                badline_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-bool                 badline_EmptyQ() __attribute__((nothrow));
-// Look up row by row id. Return NULL if out of range
-src_func::FBadline*  badline_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
-// Return pointer to last element of array, or NULL if array is empty
-src_func::FBadline*  badline_Last() __attribute__((nothrow, pure));
-// Return number of items in the pool
-i32                  badline_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Remove all elements from Lary
-void                 badline_RemoveAll() __attribute__((nothrow));
-// Delete last element of array. Do nothing if array is empty.
-void                 badline_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-src_func::FBadline&  badline_qFind(u64 t) __attribute__((nothrow));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool                 badline_XrefMaybe(src_func::FBadline &row);
-
-// Return true if hash is empty
-bool                 ind_badline_EmptyQ() __attribute__((nothrow));
-// Find row by key. Return NULL if not found.
-src_func::FBadline*  ind_badline_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
-// Look up row by key and return reference. Throw exception if not found
-src_func::FBadline&  ind_badline_FindX(const algo::strptr& key);
-// Find row by key. If not found, create and x-reference a new row with with this key.
-src_func::FBadline&  ind_badline_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
-// Return number of items in the hash
-i32                  ind_badline_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool                 ind_badline_InsertMaybe(src_func::FBadline& row) __attribute__((nothrow));
-// Remove reference to element from hash index. If element is not in hash, do nothing
-void                 ind_badline_Remove(src_func::FBadline& row) __attribute__((nothrow));
-// Reserve enough room in the hash for N more elements. Return success code.
-void                 ind_badline_Reserve(int n) __attribute__((nothrow));
-
 // cursor points to valid item
 void                 _db_genprefix_curs_Reset(_db_genprefix_curs &curs, src_func::FDb &parent);
 // cursor points to valid item
@@ -651,14 +564,6 @@ bool                 _db_ctypelen_curs_ValidQ(_db_ctypelen_curs &curs);
 void                 _db_ctypelen_curs_Next(_db_ctypelen_curs &curs);
 // item access
 src_func::FCtypelen& _db_ctypelen_curs_Access(_db_ctypelen_curs &curs);
-// cursor points to valid item
-void                 _db_badline_curs_Reset(_db_badline_curs &curs, src_func::FDb &parent);
-// cursor points to valid item
-bool                 _db_badline_curs_ValidQ(_db_badline_curs &curs);
-// proceed to next item
-void                 _db_badline_curs_Next(_db_badline_curs &curs);
-// item access
-src_func::FBadline&  _db_badline_curs_Access(_db_badline_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
@@ -815,6 +720,8 @@ algo::Smallstr16     ns_Get(src_func::FGstatic& gstatic) __attribute__((__warn_u
 struct FTarget { // src_func.FTarget
     src_func::FTarget*    ind_target_next;   // hash next
     algo::Smallstr16      target;            //
+    algo::Smallstr50      license;           //
+    algo::Smallstr50      compat;            //   "Linux-%.%-%"
     src_func::FTargsrc*   cd_targsrc_head;   // zero-terminated doubly linked list
     i32                   cd_targsrc_n;      // zero-terminated doubly linked list
     bool                  select;            //   false
@@ -1095,14 +1002,6 @@ struct _db_ctypelen_curs {// cursor
     src_func::FDb *parent;
     i64 index;
     _db_ctypelen_curs(){ parent=NULL; index=0; }
-};
-
-
-struct _db_badline_curs {// cursor
-    typedef src_func::FBadline ChildType;
-    src_func::FDb *parent;
-    i64 index;
-    _db_badline_curs(){ parent=NULL; index=0; }
 };
 
 

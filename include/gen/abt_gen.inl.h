@@ -70,12 +70,12 @@ inline bool abt::srcfile_EmptyQ() {
 // --- abt.FDb.srcfile.Find
 // Look up row by row id. Return NULL if out of range
 inline abt::FSrcfile* abt::srcfile_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     abt::FSrcfile *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.srcfile_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.srcfile_lary[bsr][index];
     }
     return retval;
@@ -112,12 +112,12 @@ inline bool abt::targdep_EmptyQ() {
 // --- abt.FDb.targdep.Find
 // Look up row by row id. Return NULL if out of range
 inline abt::FTargdep* abt::targdep_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     abt::FTargdep *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.targdep_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.targdep_lary[bsr][index];
     }
     return retval;
@@ -154,12 +154,12 @@ inline bool abt::tool_opt_EmptyQ() {
 // --- abt.FDb.tool_opt.Find
 // Look up row by row id. Return NULL if out of range
 inline abt::FToolOpt* abt::tool_opt_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     abt::FToolOpt *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.tool_opt_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.tool_opt_lary[bsr][index];
     }
     return retval;
@@ -208,12 +208,12 @@ inline bool abt::target_EmptyQ() {
 // --- abt.FDb.target.Find
 // Look up row by row id. Return NULL if out of range
 inline abt::FTarget* abt::target_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     abt::FTarget *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.target_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.target_lary[bsr][index];
     }
     return retval;
@@ -262,12 +262,12 @@ inline bool abt::targsrc_EmptyQ() {
 // --- abt.FDb.targsrc.Find
 // Look up row by row id. Return NULL if out of range
 inline abt::FTargsrc* abt::targsrc_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     abt::FTargsrc *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.targsrc_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.targsrc_lary[bsr][index];
     }
     return retval;
@@ -304,12 +304,12 @@ inline bool abt::syscmddep_EmptyQ() {
 // --- abt.FDb.syscmddep.Find
 // Look up row by row id. Return NULL if out of range
 inline abt::FSyscmddep* abt::syscmddep_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     abt::FSyscmddep *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.syscmddep_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.syscmddep_lary[bsr][index];
     }
     return retval;
@@ -346,12 +346,12 @@ inline bool abt::syscmd_EmptyQ() {
 // --- abt.FDb.syscmd.Find
 // Look up row by row id. Return NULL if out of range
 inline abt::FSyscmd* abt::syscmd_Find(i32 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     abt::FSyscmd *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.syscmd_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.syscmd_lary[bsr][index];
     }
     return retval;
@@ -424,12 +424,12 @@ inline bool abt::cfg_EmptyQ() {
 // --- abt.FDb.cfg.Find
 // Look up row by row id. Return NULL if out of range
 inline abt::FCfg* abt::cfg_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     abt::FCfg *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.cfg_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.cfg_lary[bsr][index];
     }
     return retval;
@@ -478,12 +478,12 @@ inline bool abt::uname_EmptyQ() {
 // --- abt.FDb.uname.Find
 // Look up row by row id. Return NULL if out of range
 inline abt::FUname* abt::uname_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     abt::FUname *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.uname_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.uname_lary[bsr][index];
     }
     return retval;
@@ -532,12 +532,12 @@ inline bool abt::compiler_EmptyQ() {
 // --- abt.FDb.compiler.Find
 // Look up row by row id. Return NULL if out of range
 inline abt::FCompiler* abt::compiler_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     abt::FCompiler *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.compiler_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.compiler_lary[bsr][index];
     }
     return retval;
@@ -586,12 +586,12 @@ inline bool abt::arch_EmptyQ() {
 // --- abt.FDb.arch.Find
 // Look up row by row id. Return NULL if out of range
 inline abt::FArch* abt::arch_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     abt::FArch *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.arch_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.arch_lary[bsr][index];
     }
     return retval;
@@ -755,62 +755,6 @@ inline abt::FTarget& abt::zs_sel_target_qLast() {
     return *row;
 }
 
-// --- abt.FDb.zsl_libdep_visited.EmptyQ
-// Return true if index is empty
-inline bool abt::zsl_libdep_visited_EmptyQ() {
-    return _db.zsl_libdep_visited_head == NULL;
-}
-
-// --- abt.FDb.zsl_libdep_visited.First
-// If index empty, return NULL. Otherwise return pointer to first element in index
-inline abt::FTarget* abt::zsl_libdep_visited_First() {
-    abt::FTarget *row = NULL;
-    row = _db.zsl_libdep_visited_head;
-    return row;
-}
-
-// --- abt.FDb.zsl_libdep_visited.InLlistQ
-// Return true if row is in the linked list, false otherwise
-inline bool abt::zsl_libdep_visited_InLlistQ(abt::FTarget& row) {
-    bool result = false;
-    result = !(row.zsl_libdep_visited_next == (abt::FTarget*)-1);
-    return result;
-}
-
-// --- abt.FDb.zsl_libdep_visited.Next
-// Return pointer to next element in the list
-inline abt::FTarget* abt::zsl_libdep_visited_Next(abt::FTarget &row) {
-    return row.zsl_libdep_visited_next;
-}
-
-// --- abt.FDb.zsl_libdep.EmptyQ
-// Return true if index is empty
-inline bool abt::zsl_libdep_EmptyQ() {
-    return _db.zsl_libdep_head == NULL;
-}
-
-// --- abt.FDb.zsl_libdep.First
-// If index empty, return NULL. Otherwise return pointer to first element in index
-inline abt::FTarget* abt::zsl_libdep_First() {
-    abt::FTarget *row = NULL;
-    row = _db.zsl_libdep_head;
-    return row;
-}
-
-// --- abt.FDb.zsl_libdep.InLlistQ
-// Return true if row is in the linked list, false otherwise
-inline bool abt::zsl_libdep_InLlistQ(abt::FTarget& row) {
-    bool result = false;
-    result = !(row.zsl_libdep_next == (abt::FTarget*)-1);
-    return result;
-}
-
-// --- abt.FDb.zsl_libdep.Next
-// Return pointer to next element in the list
-inline abt::FTarget* abt::zsl_libdep_Next(abt::FTarget &row) {
-    return row.zsl_libdep_next;
-}
-
 // --- abt.FDb.targsyslib.EmptyQ
 // Return true if index is empty
 inline bool abt::targsyslib_EmptyQ() {
@@ -820,12 +764,12 @@ inline bool abt::targsyslib_EmptyQ() {
 // --- abt.FDb.targsyslib.Find
 // Look up row by row id. Return NULL if out of range
 inline abt::FTargsyslib* abt::targsyslib_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     abt::FTargsyslib *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.targsyslib_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.targsyslib_lary[bsr][index];
     }
     return retval;
@@ -862,12 +806,12 @@ inline bool abt::syslib_EmptyQ() {
 // --- abt.FDb.syslib.Find
 // Look up row by row id. Return NULL if out of range
 inline abt::FSyslib* abt::syslib_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     abt::FSyslib *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.syslib_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.syslib_lary[bsr][index];
     }
     return retval;
@@ -916,12 +860,12 @@ inline bool abt::include_EmptyQ() {
 // --- abt.FDb.include.Find
 // Look up row by row id. Return NULL if out of range
 inline abt::FInclude* abt::include_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     abt::FInclude *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.include_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.include_lary[bsr][index];
     }
     return retval;
@@ -1081,12 +1025,12 @@ inline bool abt::ns_EmptyQ() {
 // --- abt.FDb.ns.Find
 // Look up row by row id. Return NULL if out of range
 inline abt::FNs* abt::ns_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     abt::FNs *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ns_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ns_lary[bsr][index];
     }
     return retval;
@@ -1135,12 +1079,12 @@ inline bool abt::filestat_EmptyQ() {
 // --- abt.FDb.filestat.Find
 // Look up row by row id. Return NULL if out of range
 inline abt::FFilestat* abt::filestat_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     abt::FFilestat *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.filestat_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.filestat_lary[bsr][index];
     }
     return retval;
@@ -1178,6 +1122,62 @@ inline bool abt::ind_filestat_EmptyQ() {
 // Return number of items in the hash
 inline i32 abt::ind_filestat_N() {
     return _db.ind_filestat_n;
+}
+
+// --- abt.FDb.zd_inclstack.EmptyQ
+// Return true if index is empty
+inline bool abt::zd_inclstack_EmptyQ() {
+    return _db.zd_inclstack_head == NULL;
+}
+
+// --- abt.FDb.zd_inclstack.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline abt::FSrcfile* abt::zd_inclstack_First() {
+    abt::FSrcfile *row = NULL;
+    row = _db.zd_inclstack_head;
+    return row;
+}
+
+// --- abt.FDb.zd_inclstack.InLlistQ
+// Return true if row is in the linked list, false otherwise
+inline bool abt::zd_inclstack_InLlistQ(abt::FSrcfile& row) {
+    bool result = false;
+    result = !(row.zd_inclstack_next == (abt::FSrcfile*)-1);
+    return result;
+}
+
+// --- abt.FDb.zd_inclstack.Last
+// If index empty, return NULL. Otherwise return pointer to last element in index
+inline abt::FSrcfile* abt::zd_inclstack_Last() {
+    abt::FSrcfile *row = NULL;
+    row = _db.zd_inclstack_tail;
+    return row;
+}
+
+// --- abt.FDb.zd_inclstack.N
+// Return number of items in the linked list
+inline i32 abt::zd_inclstack_N() {
+    return _db.zd_inclstack_n;
+}
+
+// --- abt.FDb.zd_inclstack.Next
+// Return pointer to next element in the list
+inline abt::FSrcfile* abt::zd_inclstack_Next(abt::FSrcfile &row) {
+    return row.zd_inclstack_next;
+}
+
+// --- abt.FDb.zd_inclstack.Prev
+// Return pointer to previous element in the list
+inline abt::FSrcfile* abt::zd_inclstack_Prev(abt::FSrcfile &row) {
+    return row.zd_inclstack_prev;
+}
+
+// --- abt.FDb.zd_inclstack.qLast
+// Return reference to last element in the index. No bounds checking.
+inline abt::FSrcfile& abt::zd_inclstack_qLast() {
+    abt::FSrcfile *row = NULL;
+    row = _db.zd_inclstack_tail;
+    return *row;
 }
 
 // --- abt.FDb.srcfile_curs.Reset
@@ -1515,54 +1515,6 @@ inline abt::FTarget& abt::_db_zs_sel_target_curs_Access(_db_zs_sel_target_curs &
     return *curs.row;
 }
 
-// --- abt.FDb.zsl_libdep_visited_curs.Reset
-// cursor points to valid item
-inline void abt::_db_zsl_libdep_visited_curs_Reset(_db_zsl_libdep_visited_curs &curs, abt::FDb &parent) {
-    curs.row = parent.zsl_libdep_visited_head;
-}
-
-// --- abt.FDb.zsl_libdep_visited_curs.ValidQ
-// cursor points to valid item
-inline bool abt::_db_zsl_libdep_visited_curs_ValidQ(_db_zsl_libdep_visited_curs &curs) {
-    return curs.row != NULL;
-}
-
-// --- abt.FDb.zsl_libdep_visited_curs.Next
-// proceed to next item
-inline void abt::_db_zsl_libdep_visited_curs_Next(_db_zsl_libdep_visited_curs &curs) {
-    curs.row = (*curs.row).zsl_libdep_visited_next;
-}
-
-// --- abt.FDb.zsl_libdep_visited_curs.Access
-// item access
-inline abt::FTarget& abt::_db_zsl_libdep_visited_curs_Access(_db_zsl_libdep_visited_curs &curs) {
-    return *curs.row;
-}
-
-// --- abt.FDb.zsl_libdep_curs.Reset
-// cursor points to valid item
-inline void abt::_db_zsl_libdep_curs_Reset(_db_zsl_libdep_curs &curs, abt::FDb &parent) {
-    curs.row = parent.zsl_libdep_head;
-}
-
-// --- abt.FDb.zsl_libdep_curs.ValidQ
-// cursor points to valid item
-inline bool abt::_db_zsl_libdep_curs_ValidQ(_db_zsl_libdep_curs &curs) {
-    return curs.row != NULL;
-}
-
-// --- abt.FDb.zsl_libdep_curs.Next
-// proceed to next item
-inline void abt::_db_zsl_libdep_curs_Next(_db_zsl_libdep_curs &curs) {
-    curs.row = (*curs.row).zsl_libdep_next;
-}
-
-// --- abt.FDb.zsl_libdep_curs.Access
-// item access
-inline abt::FTarget& abt::_db_zsl_libdep_curs_Access(_db_zsl_libdep_curs &curs) {
-    return *curs.row;
-}
-
 // --- abt.FDb.targsyslib_curs.Reset
 // cursor points to valid item
 inline void abt::_db_targsyslib_curs_Reset(_db_targsyslib_curs &curs, abt::FDb &parent) {
@@ -1735,6 +1687,30 @@ inline void abt::_db_filestat_curs_Next(_db_filestat_curs &curs) {
 // item access
 inline abt::FFilestat& abt::_db_filestat_curs_Access(_db_filestat_curs &curs) {
     return filestat_qFind(u64(curs.index));
+}
+
+// --- abt.FDb.zd_inclstack_curs.Reset
+// cursor points to valid item
+inline void abt::_db_zd_inclstack_curs_Reset(_db_zd_inclstack_curs &curs, abt::FDb &parent) {
+    curs.row = parent.zd_inclstack_head;
+}
+
+// --- abt.FDb.zd_inclstack_curs.ValidQ
+// cursor points to valid item
+inline bool abt::_db_zd_inclstack_curs_ValidQ(_db_zd_inclstack_curs &curs) {
+    return curs.row != NULL;
+}
+
+// --- abt.FDb.zd_inclstack_curs.Next
+// proceed to next item
+inline void abt::_db_zd_inclstack_curs_Next(_db_zd_inclstack_curs &curs) {
+    curs.row = (*curs.row).zd_inclstack_next;
+}
+
+// --- abt.FDb.zd_inclstack_curs.Access
+// item access
+inline abt::FSrcfile& abt::_db_zd_inclstack_curs_Access(_db_zd_inclstack_curs &curs) {
+    return *curs.row;
 }
 inline abt::FFilestat::FFilestat() {
     abt::FFilestat_Init(*this);
@@ -2478,6 +2454,7 @@ inline void abt::FTargsyslib_Init(abt::FTargsyslib& targsyslib) {
     targsyslib.target_c_targsyslib_in_ary = bool(false);
 }
 inline abt::FToolOpt::FToolOpt() {
+    abt::FToolOpt_Init(*this);
 }
 
 inline abt::FUname::FUname() {

@@ -27,13 +27,17 @@
 #pragma once
 
 namespace algo {
-    static const i64    MSECS_PER_DAY     = 60*60*24*1000;
-    static const i64    SECS_PER_DAY      = 60*60*24;
-    static const i64    SECS_PER_HOUR     = 60*60;
-    static const i64    SECS_PER_MIN      = 60;
-    static const i64    UNTIME_PER_SEC    = 1*1000*1000*1000;
-    static const i64    UNTIME_PER_MSEC   = 1*1000*1000;
-    static const i64    UNTIME_PER_USEC   = 1*1000;
+    static const i64 MSECS_PER_DAY     = 60*60*24*1000;
+    static const i64 SECS_PER_DAY      = 60*60*24;
+    static const i64 SECS_PER_HOUR     = 60*60;
+    static const i64 SECS_PER_MIN      = 60;
+    static const i64 UNTIME_PER_SEC    = 1*1000*1000*1000;
+    static const i64 UNTIME_PER_MSEC   = 1*1000*1000;
+    static const i64 UNTIME_PER_USEC   = 1*1000;
+    static const i64 WTIME_OFFSET   = 116444736000000000LL;
+    static const i64 WTIME_PER_SEC  = 10000000;
+    static const i64 WTIME_PER_MSEC = 10000;
+    static const i64 WTIME_PER_USEC = 10;
 
     UnixDiff UnixDiffHMS(i64 h, int m=0, int s = 0);
     UnDiff UnDiffHMS(int h, int m=0, int s=0);
@@ -56,22 +60,18 @@ namespace algo { // update-hdr srcfile:"%/algo/time.%"
     // -------------------------------------------------------------------
     // cpp/lib/algo/time.cpp -- UnTime / UnDiff functions
     //
-    bool TimeStruct_Read(TimeStruct &out, StringIter &iter, const strptr& spec);
+    bool TimeStruct_Read(TimeStruct &out, algo::StringIter &iter, const strptr& spec);
     TimeStruct ToTimeStruct(UnDiff   U);
     TimeStruct ToTimeStruct(UnixDiff U);
-    UnixDiff ToUnixDiff(const TimeStruct &S);
-    UnDiff ToUnDiff(const TimeStruct &S);
-
-    // uses gettimeofday, returns UTC seconds + fractions
-    // UTC time for midnight; Local timezone is used in computation
-    void SetTz(strptr tz);
-    const UnixTime LocalDate(UnixTime in);
+    algo::UnixDiff ToUnixDiff(const TimeStruct &S);
+    algo::UnDiff ToUnDiff(const TimeStruct &S);
+    const algo::UnixTime LocalDate(UnixTime in);
     TimeStruct GetLocalTimeStruct(UnixTime U);
     TimeStruct GetLocalTimeStruct(UnTime U);
-    const UnTime LocalDate(UnTime in);
-    TimeStruct GetGMTimeStruct(UnTime U);
-    UnixTime ToUnixTime(const TimeStruct &S);
-    UnTime ToUnTime(const TimeStruct &S);
+    const algo::UnTime LocalDate(UnTime in);
+    algo::TimeStruct GetGMTimeStruct(algo::UnTime U);
+    algo::UnixTime ToUnixTime(const TimeStruct &S);
+    algo::UnTime ToUnTime(const TimeStruct &S);
 
     // empty string -> 0
     // invalid weekday -> -1
@@ -86,8 +86,15 @@ namespace algo { // update-hdr srcfile:"%/algo/time.%"
     const strptr GetMonthNameZeroBasedShort(int index);
 
     // DateCache -- Roughly 200x faster LocalDate
-    const UnTime DateCache_LocalDate(algo::DateCache &dc, UnTime in);
-    UnTime CurrUnTime();
+    const algo::UnTime DateCache_LocalDate(algo::DateCache &dc, UnTime in);
+
+    // Todo: test on windows
+    algo::UnTime CurrUnTime();
+    algo::UnTime ToUnTime(WTime s);
+
+    // Change TZ environment variable to specified value
+    // and notify C runtime lib of the change
+    void SetTz(strptr zone);
 
     // -------------------------------------------------------------------
     // include/algo/time.inl.h
@@ -112,23 +119,31 @@ namespace algo { // update-hdr srcfile:"%/algo/time.%"
     inline algo::UnTime ToUnTime(UnixTime t);
     inline algo::UnixTime ToUnixTime(UnTime t);
     inline double ToSecs(UnDiff t);
+    inline double ToSecs(UnTime t);
     inline algo::UnixTime CurrUnixTime();
 
-    //
     // use this for performance measurements.
     // according to Intel software manual, lfence followed by rdtsc
     // is the beez knees.
-    //
     inline u64 rdtscp();
-    inline UnixDiff UnixDiffHMS(i64 h, int m, int s);
-    inline UnDiff UnDiffSecs(double d);
-    inline UnDiff UnDiffSecs(i64 i);
-    inline UnDiff UnDiffSecs(i32 i);
-    inline UnDiff UnDiffHMS(int h, int m, int s);
+    inline algo::UnixDiff UnixDiffHMS(i64 h, int m, int s);
+    inline algo::UnDiff UnDiffSecs(double d);
+    inline algo::UnTime UnTimeSecs(double d);
+    inline algo::UnDiff UnDiffSecs(i64 i);
+    inline algo::UnDiff UnDiffSecs(i32 i);
+    inline algo::UnDiff UnDiffHMS(int h, int m, int s);
 
     // Current value of get_cycles();
     inline algo::SchedTime CurrSchedTime();
 
     // Elapsed time in seconds between two SchedTimes.
     inline double ElapsedSecs(algo::SchedTime start, algo::SchedTime end);
+    inline algo::WDiff ToWDiff(algo::UnixDiff d);
+    inline algo::WDiff ToWDiff(algo::UnDiff d);
+    inline algo::UnixDiff ToUnixDiff(algo::WDiff d);
+    inline algo::WTime ToWTime(algo::UnTime s);
+    inline algo::UnDiff ToUnDiff(algo::WDiff d);
+    inline algo::UnixTime ToUnixTime(algo::WTime nt);
+    inline algo::WTime ToWTime(algo::UnixTime t);
+    inline double ToSecs(algo::WDiff t);
 }

@@ -53,7 +53,7 @@ void amc::tfunc_Cmp_Nextchar() {
         nextch.priv = true;
         Ins(&R, nextch.comment, "Extract next character from STR and advance IDX");
         Ins(&R, nextch.ret  , "$Chtype", false);
-        Ins(&R, nextch.proto, "$name_Nextchar($Cparent, strptr &str, int &idx)", false);
+        Ins(&R, nextch.proto, "$name_Nextchar($Cparent, algo::strptr &str, int &idx)", false);
         Ins(&R,     nextch.body, "(void)$parname;");
         Ins(&R,     nextch.body, "int i = idx;");
         Ins(&R,     nextch.body, "$Chtype ch = str.elems[i];");
@@ -112,8 +112,8 @@ void amc::tfunc_Cmp_Cmp() {
             }
             Ins(&R, cmp.body, "int idx_a = 0;");
             Ins(&R, cmp.body, "int idx_b = 0;");
-            Ins(&R, cmp.body, "strptr str_a = $ch_Getary($a_val);");// convert to strptr (if string is padded, this strips padding once)
-            Ins(&R, cmp.body, "strptr str_b = $ch_Getary($b_val);");
+            Ins(&R, cmp.body, "algo::strptr str_a = $ch_Getary($a_val);");// convert to strptr (if string is padded, this strips padding once)
+            Ins(&R, cmp.body, "algo::strptr str_b = $ch_Getary($b_val);");
             Ins(&R, cmp.body, "int n_a   = elems_N(str_a);");
             Ins(&R, cmp.body, "int n_b   = elems_N(str_b);");
             Ins(&R, cmp.body, "retval    = i32_Cmp(n_a,n_b);");

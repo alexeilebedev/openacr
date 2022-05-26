@@ -73,7 +73,7 @@ void amc::tfunc_Substr_Get2() {
 
         amc::FFunc& get = amc::CreateCurFunc();
         Ins(&R, get.ret  , "$Fldtype", false);
-        Ins(&R, get.proto, "$Substrprefix_$name_Get(strptr arg)", false);
+        Ins(&R, get.proto, "$Substrprefix_$name_Get(algo::strptr arg)", false);
 
         Set(R, "$substrexpr", substr->expr.value);
         Set(R, "$pathexpr", tempstr()<<"algo::Pathcomp(arg, \"$substrexpr\")");

@@ -90,12 +90,12 @@ void amc::tfunc_Lary_Find() {
     find.inl = true;
     Ins(&R, find.ret  , "$Cpptype*", false);
     Ins(&R, find.proto, "$name_Find($Parent, $Rowid t)", false);
-    Ins(&R, find.body, "u64 x = t + 1;");
-    Ins(&R, find.body, "u64 bsr   = algo::u64_BitScanReverse(x);");
-    Ins(&R, find.body, "u64 base  = u64(1)<<bsr;");
-    Ins(&R, find.body, "u64 index = x-base;");
     Ins(&R, find.body, "$Cpptype *retval = NULL;");
     Ins(&R, find.body, "if (LIKELY(u64(t) < u64($parname.$name_n))) {");
+    Ins(&R, find.body, "    u64 x = t + 1;");
+    Ins(&R, find.body, "    u64 bsr   = algo::u64_BitScanReverse(x);");
+    Ins(&R, find.body, "    u64 base  = u64(1)<<bsr;");
+    Ins(&R, find.body, "    u64 index = x-base;");
     Ins(&R, find.body, "    retval = &$parname.$name_lary[bsr][index];");
     Ins(&R, find.body, "}");
     Ins(&R, find.body, "return retval;");

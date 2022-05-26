@@ -27,6 +27,10 @@
 
 #include "include/amc.h"
 
+static bool FieldBitsetQ(amc::FField &field) {
+    return !bh_bitfld_EmptyQ(field);
+}
+
 void amc::tclass_Fconst() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
@@ -41,7 +45,7 @@ void amc::tclass_Fconst() {
     //
     // +    Status(tdm_StatusEnum arg) : status(bool(arg)) {}
     // +    operator tdm_StatusEnum() const { return tdm_StatusEnum(status); }
-    if (!is_string && c_field_N(*field.p_ctype) == 1 && field.c_fcast) {
+    if (!is_string && c_field_N(*field.p_ctype) == 1 && field.c_fcast && !FieldBitsetQ(field)) {
         field.c_fcast->expr = Enumtype(field);
     }
 
@@ -75,7 +79,7 @@ void amc::tclass_Fconst() {
 void amc::tfunc_Fconst_GetEnum() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
-    if (!FieldStringQ(field)) {
+    if (!FieldStringQ(field) && !FieldBitsetQ(field)) {
         amc::FFunc& getenum = amc::CreateCurFunc();
         Ins(&R, getenum.comment, "Get value of field as enum type");
         Ins(&R, getenum.ret  , "$Enumtype", false);
@@ -91,7 +95,7 @@ void amc::tfunc_Fconst_GetEnum() {
 void amc::tfunc_Fconst_SetEnum() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
-    if (!FieldStringQ(field)) {
+    if (!FieldStringQ(field) && !FieldBitsetQ(field)) {
         amc::FFunc& setenum = amc::CreateCurFunc();
         Ins(&R, setenum.comment, "Set value of field from enum type.");
         Ins(&R, setenum.ret  , "void", false);
@@ -103,7 +107,7 @@ void amc::tfunc_Fconst_SetEnum() {
 void amc::tfunc_Fconst_ToCstr() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
-    if (!FieldStringQ(field)) {
+    if (!FieldStringQ(field) && !FieldBitsetQ(field)) {
         amc::FFunc& tocstr = amc::CreateCurFunc();
         Ins(&R, tocstr.comment, "Convert numeric value of field to one of predefined string constants.");
         Ins(&R, tocstr.comment, "If string is found, return a static C string. Otherwise, return NULL.");
@@ -132,7 +136,7 @@ void amc::tfunc_Fconst_ToCstr() {
 void amc::tfunc_Fconst_Print() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
-    if (!FieldStringQ(field)) {
+    if (!FieldStringQ(field) && !FieldBitsetQ(field)) {
         Set(R, "$getexpr", amc::FieldvalExpr(field.p_ctype,field,"$parname"));
         amc::FFunc& prn = amc::CreateCurFunc();
         Ins(&R, prn.comment, "Convert $name to a string. First, attempt conversion to a known string.");
@@ -151,7 +155,7 @@ void amc::tfunc_Fconst_Print() {
 void amc::tfunc_Fconst_SetStrptrMaybe() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
-    if (!FieldStringQ(field)) {
+    if (!FieldStringQ(field) && !FieldBitsetQ(field)) {
         amc::FFunc& mbssp = amc::CreateCurFunc();
         Ins(&R, mbssp.comment, "Convert string to field.");
         Ins(&R, mbssp.comment, "If the string is invalid, do not modify field and return false.");
@@ -220,7 +224,7 @@ void amc::tfunc_Fconst_SetStrptrMaybe() {
 void amc::tfunc_Fconst_SetStrptr() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
-    if (!FieldStringQ(field)) {
+    if (!FieldStringQ(field) && !FieldBitsetQ(field)) {
         amc::FFunc& ssp = amc::CreateCurFunc();
         Ins(&R, ssp.comment, "Convert string to field.");
         Ins(&R, ssp.comment, "If the string is invalid, set numeric value to DFLT");
@@ -233,7 +237,7 @@ void amc::tfunc_Fconst_SetStrptr() {
 void amc::tfunc_Fconst_ReadStrptrMaybe() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
-    if (!FieldStringQ(field) && HasReadQ(*field.p_ctype)) {
+    if (!FieldStringQ(field)  && !FieldBitsetQ(field) && HasReadQ(*field.p_ctype)) {
         amc::FFunc& rd = amc::CreateCurFunc();
         Ins(&R, rd.comment, "Convert string to field. Return success value");
         Ins(&R, rd.ret  , "bool", false);

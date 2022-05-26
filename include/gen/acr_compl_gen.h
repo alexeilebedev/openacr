@@ -16,15 +16,12 @@
 // --- acr_compl_BadnessEnum
 
 enum acr_compl_BadnessEnum {             // acr_compl.Badness.badness
-     acr_compl_Badness_full_match   = 0
-    ,acr_compl_Badness_first_word   = 1
-    ,acr_compl_Badness_last_word    = 2
-    ,acr_compl_Badness_first        = 3
-    ,acr_compl_Badness_last         = 4
-    ,acr_compl_Badness_substring    = 5
+     acr_compl_Badness_first       = 0   // prefix match
+    ,acr_compl_Badness_last_word   = 1   // last word prefix match
+    ,acr_compl_Badness_substring   = 2   // substrgng match
 };
 
-enum { acr_compl_BadnessEnum_N = 6 };
+enum { acr_compl_BadnessEnum_N = 3 };
 
 
 // --- acr_compl_FieldIdEnum
@@ -114,6 +111,7 @@ struct Badness { // acr_compl.Badness: Trading Session
     explicit Badness(u8                             in_badness);
     Badness(acr_compl_BadnessEnum arg);
     bool operator ==(const acr_compl::Badness &rhs) const;
+    bool operator !=(const acr_compl::Badness &rhs) const;
     bool operator <(const acr_compl::Badness &rhs) const;
     bool operator ==(acr_compl_BadnessEnum rhs) const;
     Badness();

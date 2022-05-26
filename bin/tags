@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+ctags $(acr targsrc -field src)

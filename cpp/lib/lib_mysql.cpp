@@ -48,7 +48,7 @@ void lib_mysql::MPrintQuoted(cstring &lhs, MYSQL *conn, strptr rhs, char quotes)
 // replace first occurence of ? in LHS with Y
 // QUOTES   quotes to use (' or "); if set to zero, quotes are omitted.
 void lib_mysql::MBind(MYSQL *conn, cstring &lhs, strptr y, char quotes) {
-    i32_Range R = ch_FindFirst(lhs,'?');
+    algo::i32_Range R = ch_FindFirst(lhs,'?');
     vrfy(R.end > R.beg,tempstr()<< "No unbound arguments left in ["<<lhs<<"]");
     tempstr tmp;
     tmp << ch_FirstN(lhs,R.beg);

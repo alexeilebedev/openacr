@@ -25,12 +25,12 @@ inline bool ssim2csv::expand_EmptyQ() {
 // --- ssim2csv.FDb.expand.Find
 // Look up row by row id. Return NULL if out of range
 inline ssim2csv::FExpand* ssim2csv::expand_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     ssim2csv::FExpand *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.expand_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.expand_lary[bsr][index];
     }
     return retval;
@@ -79,12 +79,12 @@ inline bool ssim2csv::outfile_EmptyQ() {
 // --- ssim2csv.FDb.outfile.Find
 // Look up row by row id. Return NULL if out of range
 inline ssim2csv::FOutfile* ssim2csv::outfile_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     ssim2csv::FOutfile *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.outfile_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.outfile_lary[bsr][index];
     }
     return retval;

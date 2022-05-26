@@ -18,12 +18,15 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/dmmeta_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 acr_my::FDb     acr_my::_db;      // dependency found via dev.targdep
 
@@ -164,13 +167,15 @@ void acr_my::ary_ns_RemoveLast() {
 // Make sure N elements fit in array. Process dies if out of memory
 void acr_my::ary_ns_AbsReserve(int n) {
     u32 old_max  = _db.ary_ns_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(_db.ary_ns_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("acr_my.tary_nomem  field:acr_my.FDb.ary_ns  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(_db.ary_ns_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("acr_my.tary_nomem  field:acr_my.FDb.ary_ns  comment:'out of memory'");
+        }
+        _db.ary_ns_elems = (algo::cstring*)new_mem;
+        _db.ary_ns_max = new_max;
     }
-    _db.ary_ns_elems = (algo::cstring*)new_mem;
-    _db.ary_ns_max = new_max;
 }
 
 // --- acr_my.FDb._db.MainArgs
@@ -187,7 +192,7 @@ void acr_my::MainArgs(int argc, char **argv) {
 // --- acr_my.FDb._db.MainLoop
 // Main loop.
 void acr_my::MainLoop() {
-    SchedTime time(get_cycles());
+    algo::SchedTime time(algo::get_cycles());
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
@@ -599,7 +604,7 @@ bool acr_my::value_SetStrptrMaybe(acr_my::FieldId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,acr_my_FieldId_value); ret = true; break;
                 }
@@ -675,7 +680,7 @@ bool acr_my::value_SetStrptrMaybe(acr_my::TableId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 11: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','N'): {
                     if (memcmp(rhs.elems+8,"sdb",3)==0) { value_SetEnum(parent,acr_my_TableId_dmmeta_Nsdb); ret = true; break; }
                     break;
@@ -688,7 +693,7 @@ bool acr_my::value_SetStrptrMaybe(acr_my::TableId& parent, algo::strptr rhs) {
             break;
         }
         case 15: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','S'): {
                     if (memcmp(rhs.elems+8,"simfile",7)==0) { value_SetEnum(parent,acr_my_TableId_dmmeta_Ssimfile); ret = true; break; }
                     break;
@@ -740,6 +745,7 @@ void acr_my::TableId_Print(acr_my::TableId & row, algo::cstring &str) {
 // --- acr_my...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         acr_my::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -756,10 +762,13 @@ int main(int argc, char **argv) {
     try {
         acr_my::FDb_Uninit();
         algo_lib::FDb_Uninit();
-    } catch(algo_lib::ErrorX &x) {
+        lib_json::FDb_Uninit();
+    } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;
     }
+    // only the lower 1 byte makes it to the outside world
+    (void)i32_UpdateMin(algo_lib::_db.exit_code,255);
     return algo_lib::_db.exit_code;
 }
 

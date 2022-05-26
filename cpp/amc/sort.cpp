@@ -368,7 +368,7 @@ void amc::tfunc_Sort_QuickSort() {
         Ins(&R, qsort.ret  , "void",false);
         Ins(&R, qsort.proto, "$name_QuickSort($Parent)",false);
         Ins(&R, qsort.body, "// compute max recursion depth based on number of elements in the array");
-        Ins(&R, qsort.body, "int max_depth = CeilingLog2(u32($name_N($pararg) + 1)) + 3;");
+        Ins(&R, qsort.body, "int max_depth = algo::CeilingLog2(u32($name_N($pararg) + 1)) + 3;");
         Ins(&R, qsort.body, "$aryelemtype *elems = $name_Getary($pararg).elems;");
         Ins(&R, qsort.body, "int n = $name_N($pararg);");
         Ins(&R, qsort.body, "$name_IntQuickSort(elems, n, max_depth);");

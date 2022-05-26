@@ -188,19 +188,26 @@ void atf_amc::amctest_msgbuf_test8() {
 
     atf_amc::Msgbuf msgbuf;
     in_BeginRead(msgbuf, read_fd);// set up iohook
+    // #AL# on platforms like Windows, the pipe may be
+    // market readable in IoHookAdd. until this is fixed, normalize desired state.
+    // it doesn't affect correctness
+    cd_in_msg_Remove(msgbuf);
     msgbuf.in_iohook.nodelete=true;
 
     atf_amc::MsgHeader hdr;
     hdr.length.value = sizeof(hdr);
     vrfyeq_((u64)write(write_fd.value, &hdr, sizeof(hdr)), sizeof(hdr));// write to the write end of the pipe
+    prlog("1");
     vrfyeq_(cd_in_msg_InLlistQ(msgbuf), false); // the buffer is not readable
     callback_Call(msgbuf.in_iohook, msgbuf.in_iohook);// call the iohook callback
+    prlog("2");
     vrfyeq_(cd_in_msg_InLlistQ(msgbuf), true);// the buffer should have become readable
 
     atf_amc::MsgHeader *msg = in_GetMsg(msgbuf);// access message
     vrfyeq_(msg !=NULL, true);// message must be there
     in_SkipMsg(msgbuf);// skip it
     vrfyeq_((u64)in_GetMsg(msgbuf), (u64)0);// access message -- this should return 0
+    prlog("3");
     vrfyeq_(cd_in_msg_InLlistQ(msgbuf), false);// the buffer should have become NOT readable
 
     char drain;
@@ -267,21 +274,21 @@ void atf_amc::amctest_msgbuf_test10() {
     while (nmsg_written < 10000 || nmsg_read < nmsg_written) {
         // rarely switch phases -- this forces system to visit different states
         srandom(12346);
-        if (i32_WeakRandom(100) < 5) phase1 = !phase1;
-        if (i32_WeakRandom(100) < 5) phase2 = !phase2;
-        if (i32_WeakRandom(100) < 5) phase3 = !phase3;
+        if (algo::i32_WeakRandom(100) < 5) phase1 = !phase1;
+        if (algo::i32_WeakRandom(100) < 5) phase2 = !phase2;
+        if (algo::i32_WeakRandom(100) < 5) phase3 = !phase3;
         phase1 &= nmsg_written < 10000;
         // phase 1: stuff messages into pipe
         if (phase1) {
             if (!msg_valid) {
-                msg_size = i32_Max(i32_WeakRandom(sizeof(buf)-1), 4);
+                msg_size = i32_Max(algo::i32_WeakRandom(sizeof(buf)-1), 4);
                 // randomly sized message
                 new (buf) atf_amc::MsgHeader(atf_amc::MsgType(nmsg_written), atf_amc::MsgLength(msg_size));
                 msg_valid = true;
                 msg_offset=0;
             }
             if (msg_valid) {
-                int nwrite = i32_Min(msg_size-msg_offset, i32_WeakRandom(sizeof(buf)-1));
+                int nwrite = i32_Min(msg_size-msg_offset, algo::i32_WeakRandom(sizeof(buf)-1));
                 int written=write(write_fd.value, buf+msg_offset, nwrite);
                 if (written>0) {
                     msg_offset += written;

@@ -42,23 +42,8 @@ namespace algo {
     // Shift pointer and cast.
     template<class T, class U> inline T      PtrAdd(U *ptr, int_ptr offset);
 
-    static inline bool CASU64(u64 volatile& what, u64& test_and_prev, u64 new_val);
-    static inline void SwapMTU64(u64 volatile &mem, u64& x);
-
-    template<class T> inline T IncrMT(T *i, T by = 1);
-    template<class T> inline T DecrMT(T *i, T by = 1);
-
-    template<class T> inline void SwapMT(T* volatile &mem, T *&x);
-    template<class T> inline bool CAS(T *volatile & what, T*& test_and_prev, T* new_val);
-
     algo::Errcode FromErrno(i64 val);
     algo::Errcode FromWinErr(i64 val);
-
-    // best performance is when swapping in chunks of 16 bytes.
-    // however, don't know how to explain to GCC about no-alias thing.
-    template<class T> inline void TSwap(T &a, T &b) ;
-
-    template<class T> inline  memptr     BytesOf(const T &t);
 
     struct PageBuf : memptr {
         PageBuf(){}
@@ -178,13 +163,6 @@ namespace algo { // update-hdr srcfile:'(%/algo/lib.%|include/algo.inl.h|include
     // cache.
     void Throw(strptr text, Errcode err) __attribute__((noreturn));
     void Throw() __attribute__((noreturn));
-
-    // This function uses vertical distance to simplify an input curve,
-    // which is assumed to be uniformly sampled.
-    // Returned is array $backidx, which lists indices of input points.
-    // Parameter tol specifies maximum vertical distance.
-    // "arrsim" stands for "Array Simplify".
-    void RunArrsimp(algo::Arrsimp &arrsimp, aryptr<double> in);
     bool Tuple_EqualQ(Tuple &t1, Tuple &t2, bool ignore_comment);
     Attr* attr_Find(Tuple &tuple, strptr name, int occurence);
     strptr attr_GetString(Tuple &T, strptr name, strptr dflt);
@@ -261,14 +239,6 @@ namespace algo { // update-hdr srcfile:'(%/algo/lib.%|include/algo.inl.h|include
     inline i64 i64_NegateIf(i64 x, bool i);
     inline float float_NegateIf(float x, bool i);
     inline double double_NegateIf(double x, bool i);
-    template<class T> inline T IncrMT(T *i, T by);
-    template<class T> inline T DecrMT(T *i, T by);
-
-    // ignore:ptr_byref
-    template<class T> inline void SwapMT(T* volatile &mem, T *&x);
-
-    // ignore:ptr_byref
-    template<class T> inline bool CAS(T *volatile & what, T*& test_and_prev, T* new_val);
     inline double DRound(double a);
     inline double DCeiling(double a);
     inline double DFloor(double a);
@@ -412,10 +382,15 @@ namespace algo_lib { // update-hdr
     //
     void fildes_Cleanup(algo_lib::FLockfile &lockfile);
 
+    // If PATH is an existing path, leave it unchanged
+    // On Windows, If PATH.EXE is an existing path, return that
+    // Return true if file exists
+    bool TryExeSuffix(cstring &path);
+
     // Update FNAME to be a filename that can be passed to Unix exec call.
-    // If FNAME is an absolute path, do nothing
+    // If FNAME is an absolute path, don't perform a search
     // If FNAME is a relative path, perform a search using the PATH environment
-    // variable; upon finding a matching path, set FNAME to the filename found.
+    // the first executable file that's found is the result.
     void ResolveExecFname(cstring &fname);
 
     // -------------------------------------------------------------------
@@ -474,15 +449,23 @@ namespace algo_lib { // update-hdr
     void TempfileInitX(algo_lib::FTempfile &tempfile, strptr prefix);
     void fildes_Cleanup(algo_lib::FTempfile &tempfile);
 
-    // Apply redirect for given fd, _exit on error
-    // This function is used to implement amc's Exec
+    // Interpret redirect string, return resulting fd
+    // If no redirect applies, return -1
+    // If a valid fd is returned, it is unique and may be closd with close()
     // Supported redirects:
     // >filename  -- on exit, dst_fd is writing to a file
     // <filename  -- on exit, dst_fd is reading from a file
     // >>filename -- on exit, dst_fd is appending to a file
     // >&fd       -- on exit, dst_fd is pointing to fd
     // <&fd       -- on exit, dst_fd is pointing to fd
-    void ApplyRedirect(strptr redirect, int dst_fd);
+    // This function could be called openex
+    int CreateRedirect(strptr redirect);
+
+    // Interpret redirect string and make DST_FD consistent with
+    // the intended state. Return 0 on success, -1 on failure
+    // This function is usually called in the child process right after fork
+    // See CreateRedirect for interpretation of redirect string
+    int ApplyRedirect(strptr redirect, int dst_fd);
     bool IpmaskValidQ(const strptr ipmask);
 
     // Read tuples from specified file descriptor.

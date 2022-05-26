@@ -359,7 +359,7 @@ static void TabulateLine(algo_lib::Tabulate &frame,strptr line, strptr sep, strp
 tempstr algo::Tabulated(strptr in, strptr sep, strptr fmt, int colspace) {
     algo_lib::Tabulate frame;
     rep_(pass,2) {
-        StringIter iter(in);
+        algo::StringIter iter(in);
         while (!iter.EofQ()) {
             strptr line  = GetLine(iter);
             TabulateLine(frame,line,sep,fmt,colspace,pass);
@@ -623,7 +623,11 @@ tempstr algo_lib::Tuple_Subst(algo_lib::Replscope &R, strptr text) {
 }
 
 algo::tempstr::tempstr() {
-    int          n = algo_lib::_db.n_temp;
+#ifdef WIN32
+    // since algo_lib is single-threaded,
+    // tempstr() cache cannot be used on Windows
+#else
+    int n = algo_lib::_db.n_temp;
     if (n > 0) {
         n--;
         cstring &str   = algo_lib::temp_strings_qFind(n);
@@ -635,9 +639,14 @@ algo::tempstr::tempstr() {
         str.ch_n    = 0;
         str.ch_max  = 0;
     }
+#endif
 }
 
 algo::tempstr::~tempstr() {
+#ifdef WIN32
+    // since algo_lib is single-threaded,
+    // tempstr() cache cannot be used on Windows
+#else
     i32        n   = algo_lib::_db.n_temp;
     if (n < algo_lib::temp_strings_N()) {
         cstring   &str = algo_lib::temp_strings_qFind(n);
@@ -651,6 +660,7 @@ algo::tempstr::~tempstr() {
         ch_n         = 0;
         ch_max       = 0;
     }
+#endif
 }
 
 // Return a run of characters up to next occurence of SEP (or to end of string)
@@ -658,7 +668,7 @@ algo::tempstr::~tempstr() {
 // sep="|", string = "a||b|"; return value -> "a", rest -> "b|";
 // sep="|", string = "a";     return value -> "a", rest -> "";
 // sep="|", string = "|x";    return value -> "" , rest -> "x";
-strptr algo::GetTokenChar(StringIter &S, char sep) {
+strptr algo::GetTokenChar(algo::StringIter &S, char sep) {
     int from = S.index;
     int to   = from;
     int lim  = elems_N(S.expr);
@@ -670,7 +680,7 @@ strptr algo::GetTokenChar(StringIter &S, char sep) {
     return qGetRegion(S.expr, from, to-from);
 }
 
-static inline strptr _GetWordCharf(StringIter &iter, bool (*sep)(u32)) {
+static inline algo::strptr _GetWordCharf(algo::StringIter &iter, bool (*sep)(u32)) {
     int from = iter.index;
     int lim  = elems_N(iter.expr);
     while (from < lim && sep(iter.expr[from])) from++;
@@ -683,14 +693,14 @@ static inline strptr _GetWordCharf(StringIter &iter, bool (*sep)(u32)) {
 // Skip leading characters matching SEP
 // Return run of characters up to next matching SEP, or EOF.
 // Do not skip trailing separators.
-strptr algo::GetWordCharf(StringIter &iter, bool (*sep)(u32)) {
+strptr algo::GetWordCharf(algo::StringIter &iter, bool (*sep)(u32)) {
     return _GetWordCharf(iter,sep);
 }
 
 // Skip leading whitespace characters
 // Return run of characters up to next whitespace, or EOF.
 // Do not skip trailing whitespace
-strptr algo::GetWordCharf(StringIter &iter) {
+strptr algo::GetWordCharf(algo::StringIter &iter) {
     // optimized using inline
     return _GetWordCharf(iter,algo_lib::WhiteCharQ);
 }
@@ -698,32 +708,32 @@ strptr algo::GetWordCharf(StringIter &iter) {
 // Skip any leading whitespace in STR.
 // Read and return next word.
 strptr algo::GetTypeTag(strptr str) {
-    StringIter iter(str);
+    algo::StringIter iter(str);
     iter.Ws();
     return _GetWordCharf(iter,algo_lib::WhiteCharQ);
 }
 
 // -----------------------------------------------------------------------------
 
-static algo::NumParseFlags ParseNumber(StringIter &S, u64 &result) {
+static algo::NumParseFlags ParseNumber(algo::StringIter &S, u64 &result) {
     strptr expr = S.expr;
     int index = S.index;
-    algo::NumParseFlags flags = algo_NumParseFlags_parse_ok;
+    algo::NumParseFlags flags = algo_NumParseFlags_ok;
     u64 num=0;
     char c;
     do {
         if (index == elems_N(expr)) {
-            return algo_NumParseFlags_parse_err;
+            return algo_NumParseFlags_err;
         }
         c = expr[index];
         index++;
         if (algo_lib::WhiteCharQ(c) || c=='+') {
         } else if (c=='-') {
-            flags = algo_NumParseFlagsEnum(flags | algo_NumParseFlags_parse_neg);
+            flags = algo_NumParseFlagsEnum(flags | algo_NumParseFlags_neg);
         } else if (algo_lib::DigitCharQ(c)) {
             break;
         } else {
-            return algo_NumParseFlags_parse_err;
+            return algo_NumParseFlags_err;
         }
     } while (true);
     num = c-'0';
@@ -738,12 +748,12 @@ static algo::NumParseFlags ParseNumber(StringIter &S, u64 &result) {
     if (c == 'x' || c == 'X') {
         index++;
         if (index == elems_N(expr)) {
-            return algo_NumParseFlags_parse_err;
+            return algo_NumParseFlags_err;
         }
         for (; index < elems_N(expr); index++) {
             c = expr[index];
             u8 val;
-            if (!ParseHex1(c, val)) {
+            if (!algo::ParseHex1(c, val)) {
                 break;
             }
             prev = num;
@@ -762,7 +772,7 @@ static algo::NumParseFlags ParseNumber(StringIter &S, u64 &result) {
         }
     }
     if (overflow) {
-        flags = algo_NumParseFlagsEnum(flags | algo_NumParseFlags_parse_overflow);
+        flags = algo_NumParseFlagsEnum(flags | algo_NumParseFlags_overflow);
     }
     result = num;
     S.index = index;
@@ -773,14 +783,14 @@ bool algo::TryParseI32(algo::StringIter &iter, i32 &result) {
     u64 v;
     u64 max = u32(-1) >> 1;
     algo::NumParseFlags flags = ParseNumber(iter, v);
-    if (flags & algo_NumParseFlags_parse_err) {
+    if (flags & algo_NumParseFlags_err) {
         return false;
     }
-    if ((v > max) | (flags & algo_NumParseFlags_parse_overflow)) {
+    if ((v > max) | (flags & algo_NumParseFlags_overflow)) {
         v = max;
     }
     i32 out = (i32)v;
-    if (flags & algo_NumParseFlags_parse_neg) {
+    if (flags & algo_NumParseFlags_neg) {
         out = -out;
     }
     result = out;
@@ -791,14 +801,14 @@ bool algo::TryParseI64(algo::StringIter &iter, i64 &result) {
     u64 v;
     u64 max = u64(-1) >> 1;
     algo::NumParseFlags flags = ParseNumber(iter, v);
-    if (flags & algo_NumParseFlags_parse_err) {
+    if (flags & algo_NumParseFlags_err) {
         return false;
     }
-    if ((v > max) | (flags & algo_NumParseFlags_parse_overflow)) {
+    if ((v > max) | (flags & algo_NumParseFlags_overflow)) {
         v = max;
     }
     i64 out = v;
-    if (flags & algo_NumParseFlags_parse_neg) {
+    if (flags & algo_NumParseFlags_neg) {
         out = -out;
     }
     result = out;
@@ -809,13 +819,13 @@ bool algo::TryParseU32(algo::StringIter &iter, u32 &result) {
     u64 v;
     u64 max = u32(-1);
     algo::NumParseFlags flags = ParseNumber(iter, v);
-    if (flags & algo_NumParseFlags_parse_err) {
+    if (flags & algo_NumParseFlags_err) {
         return false;
     }
-    if ((v > max) | (flags & algo_NumParseFlags_parse_overflow)) {
+    if ((v > max) | (flags & algo_NumParseFlags_overflow)) {
         v = max;
     }
-    if (flags & algo_NumParseFlags_parse_neg) {
+    if (flags & algo_NumParseFlags_neg) {
         v = 0;
     }
     result = (u32)v;
@@ -825,13 +835,13 @@ bool algo::TryParseU32(algo::StringIter &iter, u32 &result) {
 bool algo::TryParseU64(algo::StringIter &iter, u64 &result) {
     u64 v;
     algo::NumParseFlags flags = ParseNumber(iter, v);
-    if (flags & algo_NumParseFlags_parse_err) {
+    if (flags & algo_NumParseFlags_err) {
         return false;
     }
-    if (flags & algo_NumParseFlags_parse_overflow) {
+    if (flags & algo_NumParseFlags_overflow) {
         v = u64(-1);
     }
-    if (flags & algo_NumParseFlags_parse_neg) {
+    if (flags & algo_NumParseFlags_neg) {
         v = 0;
     }
     result = v;
@@ -842,7 +852,7 @@ bool algo::TryParseU64(algo::StringIter &iter, u64 &result) {
 
 // Read a series of digits and return resulting number.
 // Return success code
-bool algo::TryParseDigits(StringIter &S, double &result) {
+bool algo::TryParseDigits(algo::StringIter &S, double &result) {
     int inum;
     int limit = elems_N(S.expr);
     int c;
@@ -885,7 +895,7 @@ bool algo::TryParseDigits(StringIter &S, double &result) {
 // TODO: document these more carefully
 // Read a series of digits N, returning N / pow(10, length(N))
 // If successful, advance index. Otherwise, leave index where it was.
-bool algo::TryParseFraction(StringIter &S, double &result) {
+bool algo::TryParseFraction(algo::StringIter &S, double &result) {
     int ifrac,idenom;
     strptr expr = S.expr;
     int limit = elems_N(expr);
@@ -1104,7 +1114,7 @@ int algo::StringIter::GetDigit(int dflt) {
 void algo_lib::RunCsvParse(algo_lib::CsvParse &parsecsv) {
     ary_tok_RemoveAll(parsecsv);
     if (elems_N(parsecsv.input)) {
-        StringIter iter(parsecsv.input);
+        algo::StringIter iter(parsecsv.input);
         bool trailing_comma=false;
         do {
             iter.Ws();
@@ -1139,7 +1149,7 @@ void algo_lib::RunCsvParse(algo_lib::CsvParse &parsecsv) {
 // If found, return range corresponding to the match.
 // If not found, return range (S.n_elems,S.n_elems) -- an empty range positioned at
 // the end of S
-i32_Range algo::substr_FindFirst(const aryptr<char> &s, const aryptr<char> &match) {
+algo::i32_Range algo::substr_FindFirst(const aryptr<char> &s, const aryptr<char> &match) {
     int len = elems_N(match);
     int lim = elems_N(s) - (len-1);
     for (int i=0; i< lim; i++) {
@@ -1152,7 +1162,7 @@ i32_Range algo::substr_FindFirst(const aryptr<char> &s, const aryptr<char> &matc
 
 // Same as above but search right-to-left.
 // In case of failure, return range (0,0) -- empty range positioned at start of S.
-i32_Range algo::substr_FindLast(const aryptr<char> &s, const aryptr<char> &match) {
+algo::i32_Range algo::substr_FindLast(const aryptr<char> &s, const aryptr<char> &match) {
     int len = elems_N(match);
     rrep_(i,elems_N(s) - (len-1)) {
         if (qGetRegion(s,i,len) == match) {
@@ -1237,7 +1247,7 @@ void algo::Word_curs_Next(Word_curs &curs) {
 // " a  b " -> typetag is "a", rest is "b "
 // "a    b" -> typetag is "a", rest is "b"
 bool algo::StripTypeTag(strptr &in_str, strptr typetag) {
-    StringIter iter(in_str);
+    algo::StringIter iter(in_str);
     iter.Ws();             // skip leading whitespace
     strptr w = GetWordCharf(iter); // read next word
     bool retval = w == typetag;    // compare
@@ -1296,14 +1306,16 @@ bool algo::strptr_ReadStrptrMaybe(strptr , strptr ){
 
 // -----------------------------------------------------------------------------
 
-// Append a directory separator to string STR unless
-// STR already ends in one.
-// Example:
+// Append / to string STR unless STR already ends in one.
 // str << dirname << MaybeDirSep << filename.
+// The separator is always /. To support windows-specific pathnames,
+// use ToWindows path where appropriate.
 void algo::MaybeDirSep(cstring &str) {
     if (ch_N(str)) {
         char last=ch_qLast(str);
-        if (last!='\\' && last!='/') str<<"/";
+        if (last!='\\' && last!='/') {
+            str<<"/";
+        }
     }
 }
 
@@ -1368,7 +1380,7 @@ algo::Attr_curs::Attr_curs() {
 // -----------------------------------------------------------------------------
 
 void algo::Attr_curs_Reset(Attr_curs &curs, strptr line) {
-    curs.iter=StringIter(line);
+    curs.iter=algo::StringIter(line);
     curs.valid=true;
     Attr_curs_Next(curs);
 }
@@ -1477,4 +1489,33 @@ void algo::InsertIndent(algo::cstring &out, strptr text, int indent) {
         out << eol;
         indent = i32_Max(next_indent,0);
     }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
+// Convert unix path to windows path
+// This replaces slashes with backslashes
+tempstr algo::ToWindowsPath(strptr path) {
+    tempstr ret;
+    for (int i=0; i<path.n_elems; i++) {
+        if (path[i] == ':') {
+            // not an allowed character
+        } else if (path[i] == '/') {
+            if (ret.ch_n && ret.ch_elems[ret.ch_n-1]=='\\') {
+                // remove double slashes
+            } else {
+                ch_Alloc(ret) = '\\';
+            }
+        } else {
+            ch_Alloc(ret) = path[i];
+        }
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// compatibility
+void algo::reset(algo::cstring &lhs) {
+    ch_RemoveAll(lhs);
 }

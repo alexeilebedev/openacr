@@ -1,5 +1,42 @@
 ## Mdbg: Gdb front-end
 
+### Disambiguation
+
+There exists a microsoft-provided tool named mdbg. Please make sure
+this tool is first in PATH in order to avoid confusion.
+
+### Syntax
+```
+inline-command: bin/mdbg -h
+
+
+mdbg: My debugger
+Usage: mdbg [options]
+    [target]       string  Executable name
+    [args]         string  Additional module args
+    -cfg           string  Configuration to use. default: "debug"
+    -manywin               gdb-many-windows. default: false
+    -disas                 Show disassembly (use F12). default: false
+    -root                  Debug as root. default: false
+    -attach                Attach to a running process. default: false
+    -b             string  List of breakpoints, e.g. 'a.cpp:123 if cond1, func2'. default: "main"
+    -catchthrow            Stop on exceptions. default: true
+    -tui                   Use gdb -tui as the debugger. default: false
+    -bcmd          string  Evaluate command at breakpoint
+    -emacs                 Use emacs environment as the debugger. default: true
+    -follow_child          . default: false
+    -py                    Enable python scripting. default: false
+    -in            string  Input directory or filename, - for stdin. default: "data"
+    -verbose               Enable verbose mode
+    -debug                 Enable debug mode
+    -version               Show version information
+    -sig                   Print SHA1 signatures for dispatches
+    -help                  Print this screen and exit
+
+```
+
+### Description
+
 This is a wrapper for automating the invocation of `gdb` from command line.
 
 Mdbg uses abt to build a debug version of the debug target (By default,

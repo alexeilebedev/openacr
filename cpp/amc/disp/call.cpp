@@ -38,7 +38,7 @@ static void Call_UpdateCycles(amc::FDispatch &dispatch, amc::FDispatchmsg &dispm
     updatecycles.priv        = true;
     Ins(&R, updatecycles.ret    , "void",false);
     Ins(&R, updatecycles.proto  , "$Dname_$Msgname_UpdateCycles()",false);
-    Ins(&R, updatecycles.body, "u64 cur_cycles = get_cycles();");
+    Ins(&R, updatecycles.body, "u64 cur_cycles = algo::get_cycles();");
     Ins(&R, updatecycles.body, "$ns::_db.trace.dispatch_$Dname_$Msgname_cycles += cur_cycles - algo_lib::_db.clock;");
     Ins(&R, updatecycles.body, "algo_lib::_db.clock = algo::SchedTime(cur_cycles);");
 }

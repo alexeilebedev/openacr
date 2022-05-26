@@ -69,7 +69,7 @@ void acr::Main_Field() {
     ind_beg(acr::_db_zd_all_selrec_curs, rec,acr::_db) {
         strptr echo=acr::_db.cmdline.field;
         tempstr out;
-        ListSep ls("\t");
+        algo::ListSep ls("\t");
         while (elems_N(echo)>0) {
             strptr tok=Pathcomp(echo,",LL");// list of fields
             echo=Pathcomp(echo,",LR");
@@ -91,7 +91,7 @@ void acr::Main_Field() {
 void acr::Main_Regxof() {
     cstring out;
     int n=0;
-    ListSep ls("|");
+    algo::ListSep ls("|");
     acr::FCtype *ctype=NULL;
     acr::FField *field=NULL;
     acr::tempkey_RemoveAll();
@@ -191,7 +191,7 @@ static void CheckTimestamps(strptr fname) {
     // check timestamps
     bool timestamps_ok = true;
     ind_beg(acr::_db_file_curs, file,acr::_db) {
-        UnTime t = ModTime(file.file);
+        algo::UnTime t = ModTime(file.file);
         if (!UnTime_Eq(t, file.modtime)) {
             prerr("acr_util.file_changed"
                   <<Keyval("file",file.file)
@@ -210,7 +210,7 @@ void acr::Main_AcrEdit() {
     vrfy(!FileQ(fname),tempstr()<<"acr_util.tempfile"
          <<Keyval("filename",fname)
          <<Keyval("comment","other acr instance is running, or file may contain backup data"));
-    algo::Fildes fd = OpenWrite(fname, algo_FileFlags_throw|algo_FileFlags_append);
+    algo::Fildes fd = OpenWrite(fname, algo_FileFlags__throw|algo_FileFlags_append);
     if (flock(fd.value, LOCK_EX | LOCK_NB)!=0) {
         int err=errno;
         prerr("Cannot lock ["<<fname<<"]");

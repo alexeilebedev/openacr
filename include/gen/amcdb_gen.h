@@ -97,6 +97,7 @@ namespace amcdb { struct Tcursor; }
 namespace amcdb { struct Tfunc; }
 namespace amcdb {
     typedef algo::Smallstr50 CursPkey;
+    typedef algo::Smallstr50 GenPkey;
     typedef algo::Smallstr50 TclassPkey;
     typedef algo::Smallstr50 TfuncPkey;
 }//pkey typedefs
@@ -239,10 +240,10 @@ struct Tfunc { // amcdb.Tfunc
 };
 
 algo::Smallstr50     tclass_Get(amcdb::Tfunc& parent) __attribute__((__warn_unused_result__, nothrow));
-algo::Smallstr50     Tfunc_tclass_Get(strptr arg) __attribute__((nothrow));
+algo::Smallstr50     Tfunc_tclass_Get(algo::strptr arg) __attribute__((nothrow));
 
 algo::Smallstr50     name_Get(amcdb::Tfunc& parent) __attribute__((__warn_unused_result__, nothrow));
-algo::Smallstr50     Tfunc_name_Get(strptr arg) __attribute__((nothrow));
+algo::Smallstr50     Tfunc_name_Get(algo::strptr arg) __attribute__((nothrow));
 
 tempstr              Tfunc_Concat_tclass_name( const algo::strptr& tclass ,const algo::strptr& name );
 bool                 Tfunc_ReadFieldMaybe(amcdb::Tfunc &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));

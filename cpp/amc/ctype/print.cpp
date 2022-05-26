@@ -110,11 +110,11 @@ static void GenPrintVarlen(algo_lib::Replscope &R, amc::FField &field, amc::FFun
         Set(R, "$Ftype", valtype.cpp_type);
         Set(R, "$field", field.field);
         Ins(&R, print.body, "");// !! add code directly to print
-        Ins(&R, print.body, "aryptr<$Ftype> $name_ary = $name_Getary($pararg);");// note row vs. parent because of inlining
+        Ins(&R, print.body, "algo::aryptr<$Ftype> $name_ary = $name_Getary($pararg);");// note row vs. parent because of inlining
         if (field.arg == "char") {
             Ins(&R, print.body, "PrintAttrSpace(str, \"$name\", $name_ary); // print field $field");
         } else if (field.arg == "char" || field.arg == "u8") {
-            Ins(&R, print.body, "PrintAttrSpace(str, \"$name\", strptr((char*)$name_ary.elems, $name_ary.n_elems)); // print field $field");
+            Ins(&R, print.body, "PrintAttrSpace(str, \"$name\", algo::strptr((char*)$name_ary.elems, $name_ary.n_elems)); // print field $field");
         } else {
             Ins(&R, print.body, "for (int i = 0; i < $name_ary.n_elems; i++) { // print field $field as repeating group");
             print.body << "    "<<name_Get(*field.p_arg)<<"_Print("<<name_Get(field)<<"_ary.elems[i], "<<Subst(R,"$outstr")<<");\n";
@@ -183,7 +183,7 @@ static void GenPrintField(algo_lib::Replscope &R, amc::FField &field,  amc::FFun
 
 static void GenPrintTuple(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FCfmt &cfmt, amc::FFunc &print) {
     Set(R, "$outstr", "temp");
-    Set(R, "$rel", ctype.c_ssimfile ? strptr(ctype.c_ssimfile->ssimfile) : strptr(ctype.ctype));
+    Set(R, "$rel", ctype.c_ssimfile ? algo::strptr(ctype.c_ssimfile->ssimfile) : algo::strptr(ctype.ctype));
     Ins(&R, print.body, "algo::tempstr temp;");
     Ins(&R, print.body, "str << \"$rel\";");
     ind_beg(amc::ctype_c_field_curs, field,ctype) if (GoodForPrintingQ(field,cfmt)) {
@@ -255,6 +255,30 @@ static void GenPrintNontuple(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FC
 
 // -----------------------------------------------------------------------------
 
+static void GenPrintBitset(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FCfmt &cfmt, amc::FFunc &print) {
+    cstring sep;
+    strptr_PrintCppQuoted(cfmt.sep,sep,'"');
+    Set(R, "$sep", sep);
+    Set(R, "$outstr", "str");
+    Ins(&R, print.body        , "algo::ListSep ls($sep);");
+    ind_beg(amc::ctype_c_field_curs, field,ctype) if (field.arg == "bool") {
+        Set(R, "$name", name_Get(field));
+        if (amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Get"))) {
+            Set(R, "$pararg", GlobalQ(ctype) ? "" : "row");
+            Ins(&R, print.body, "if ($name_Get($pararg)) {");
+        } else {
+            Ins(&R, print.body, "if (row.$name) {");
+        }
+        Ins(&R, print.body    , "    str << ls << \"$name\";");
+        Ins(&R, print.body    , "}");
+    }ind_end;
+    amc::MaybeUnused(print, "ls");
+    amc::MaybeUnused(print, "row");
+    amc::MaybeUnused(print, "str");
+}
+
+// -----------------------------------------------------------------------------
+
 void amc::GenPrint(amc::FCtype &ctype, amc::FCfmt &cfmt) {
     algo_lib::Replscope R;
     Set(R, "$Cpptype",    ctype.cpp_type);
@@ -276,6 +300,8 @@ void amc::GenPrint(amc::FCtype &ctype, amc::FCfmt &cfmt) {
     if (!print.extrn) {
         if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Tuple) {
             GenPrintTuple(R, ctype, cfmt, print);
+        } else if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Bitset) {
+            GenPrintBitset(R, ctype, cfmt, print);
         } else {
             GenPrintNontuple(R, ctype, cfmt, print);
         }

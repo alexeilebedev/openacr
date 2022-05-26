@@ -171,7 +171,7 @@ inline i32 algo_lib::ary_Sup(algo_lib::Bitset& parent) {
     for (int i = lim-1; i >= 0; i--) {
         u64 &val = ary_qFind(parent, i);
         if (val) {
-            u32 bitidx = u64_BitScanReverse(val) + 1;
+            u32 bitidx = algo::u64_BitScanReverse(val) + 1;
             ret = i * 64 + bitidx;
             break;
         }
@@ -420,10 +420,8 @@ inline void algo_lib::CsvParse_Init(algo_lib::CsvParse& parsecsv) {
     parsecsv.ary_tok_n     	= 0; // (algo_lib.CsvParse.ary_tok)
     parsecsv.ary_tok_max   	= 0; // (algo_lib.CsvParse.ary_tok)
 }
-inline algo_lib::ErrorX::ErrorX(const algo::strptr&            in_str
-        ,const algo::Errcode&           in_err)
+inline algo_lib::ErrorX::ErrorX(const algo::strptr&            in_str)
     : str(in_str)
-    , err(in_err)
 {
 }
 inline algo_lib::ErrorX::ErrorX() {
@@ -615,12 +613,12 @@ inline bool algo_lib::imtable_EmptyQ() {
 // --- algo_lib.FDb.imtable.Find
 // Look up row by row id. Return NULL if out of range
 inline algo_lib::FImtable* algo_lib::imtable_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     algo_lib::FImtable *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.imtable_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.imtable_lary[bsr][index];
     }
     return retval;
@@ -706,12 +704,12 @@ inline bool algo_lib::dispsigcheck_EmptyQ() {
 // --- algo_lib.FDb.dispsigcheck.Find
 // Look up row by row id. Return NULL if out of range
 inline algo_lib::FDispsigcheck* algo_lib::dispsigcheck_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     algo_lib::FDispsigcheck *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.dispsigcheck_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.dispsigcheck_lary[bsr][index];
     }
     return retval;
@@ -819,62 +817,6 @@ inline i32 algo_lib::ind_imdb_N() {
     return _db.ind_imdb_n;
 }
 
-// --- algo_lib.FDb.zd_tempfile.EmptyQ
-// Return true if index is empty
-inline bool algo_lib::zd_tempfile_EmptyQ() {
-    return _db.zd_tempfile_head == NULL;
-}
-
-// --- algo_lib.FDb.zd_tempfile.First
-// If index empty, return NULL. Otherwise return pointer to first element in index
-inline algo_lib::FTempfile* algo_lib::zd_tempfile_First() {
-    algo_lib::FTempfile *row = NULL;
-    row = _db.zd_tempfile_head;
-    return row;
-}
-
-// --- algo_lib.FDb.zd_tempfile.InLlistQ
-// Return true if row is in the linked list, false otherwise
-inline bool algo_lib::zd_tempfile_InLlistQ(algo_lib::FTempfile& row) {
-    bool result = false;
-    result = !(row.zd_tempfile_next == (algo_lib::FTempfile*)-1);
-    return result;
-}
-
-// --- algo_lib.FDb.zd_tempfile.Last
-// If index empty, return NULL. Otherwise return pointer to last element in index
-inline algo_lib::FTempfile* algo_lib::zd_tempfile_Last() {
-    algo_lib::FTempfile *row = NULL;
-    row = _db.zd_tempfile_tail;
-    return row;
-}
-
-// --- algo_lib.FDb.zd_tempfile.N
-// Return number of items in the linked list
-inline i32 algo_lib::zd_tempfile_N() {
-    return _db.zd_tempfile_n;
-}
-
-// --- algo_lib.FDb.zd_tempfile.Next
-// Return pointer to next element in the list
-inline algo_lib::FTempfile* algo_lib::zd_tempfile_Next(algo_lib::FTempfile &row) {
-    return row.zd_tempfile_next;
-}
-
-// --- algo_lib.FDb.zd_tempfile.Prev
-// Return pointer to previous element in the list
-inline algo_lib::FTempfile* algo_lib::zd_tempfile_Prev(algo_lib::FTempfile &row) {
-    return row.zd_tempfile_prev;
-}
-
-// --- algo_lib.FDb.zd_tempfile.qLast
-// Return reference to last element in the index. No bounds checking.
-inline algo_lib::FTempfile& algo_lib::zd_tempfile_qLast() {
-    algo_lib::FTempfile *row = NULL;
-    row = _db.zd_tempfile_tail;
-    return *row;
-}
-
 // --- algo_lib.FDb.h_fatalerror.Call
 // Invoke function by pointer
 inline void algo_lib::h_fatalerror_Call() {
@@ -933,6 +875,14 @@ inline bool algo_lib::WhiteCharQ(u32 ch) {
     return ret;
 }
 
+// --- algo_lib.FDb.DirSep.Match
+inline bool algo_lib::DirSepQ(u32 ch) {
+    bool ret = false;
+    ret |= ch == '/';
+    ret |= ch == '\\';
+    return ret;
+}
+
 // --- algo_lib.FDb.IdentChar.Match
 inline bool algo_lib::IdentCharQ(u32 ch) {
     bool ret = false;
@@ -973,6 +923,51 @@ inline bool algo_lib::HexCharQ(u32 ch) {
 inline bool algo_lib::UpperCharQ(u32 ch) {
     bool ret = false;
     ret |= (ch - u32('A')) < u32(26);
+    return ret;
+}
+
+// --- algo_lib.FDb.CmdLineNameBreak.Match
+inline bool algo_lib::CmdLineNameBreakQ(u32 ch) {
+    bool ret = false;
+    ret |= (ch - u32('\t')) < u32(2);
+    ret |= ch == '\r';
+    ret |= ch == ' ';
+    ret |= (ch - u32('(')) < u32(2);
+    ret |= ch == ':';
+    ret |= ch == '[';
+    ret |= ch == ']';
+    ret |= ch == '{';
+    ret |= ch == '}';
+    return ret;
+}
+
+// --- algo_lib.FDb.CmdLineValueBreak.Match
+inline bool algo_lib::CmdLineValueBreakQ(u32 ch) {
+    bool ret = false;
+    ret |= (ch - u32('\t')) < u32(2);
+    ret |= ch == '\r';
+    ret |= ch == ' ';
+    ret |= (ch - u32('(')) < u32(2);
+    ret |= ch == '[';
+    ret |= ch == ']';
+    ret |= ch == '{';
+    ret |= ch == '}';
+    return ret;
+}
+
+// --- algo_lib.FDb.WordSeparator.Match
+inline bool algo_lib::WordSeparatorQ(u32 ch) {
+    bool ret = false;
+    ret |= (ch - u32('\t')) < u32(2);
+    ret |= ch == '\r';
+    ret |= (ch - u32(' ')) < u32(16);
+    ret |= ch == ';';
+    ret |= ch == '=';
+    ret |= (ch - u32('?')) < u32(2);
+    ret |= ch == '[';
+    ret |= (ch - u32(']')) < u32(2);
+    ret |= ch == '`';
+    ret |= (ch - u32('{')) < u32(4);
     return ret;
 }
 
@@ -1099,30 +1094,6 @@ inline void algo_lib::_db_imdb_curs_Next(_db_imdb_curs &curs) {
 inline algo_lib::FImdb& algo_lib::_db_imdb_curs_Access(_db_imdb_curs &curs) {
     return imdb_qFind(u64(curs.index));
 }
-
-// --- algo_lib.FDb.zd_tempfile_curs.Reset
-// cursor points to valid item
-inline void algo_lib::_db_zd_tempfile_curs_Reset(_db_zd_tempfile_curs &curs, algo_lib::FDb &parent) {
-    curs.row = parent.zd_tempfile_head;
-}
-
-// --- algo_lib.FDb.zd_tempfile_curs.ValidQ
-// cursor points to valid item
-inline bool algo_lib::_db_zd_tempfile_curs_ValidQ(_db_zd_tempfile_curs &curs) {
-    return curs.row != NULL;
-}
-
-// --- algo_lib.FDb.zd_tempfile_curs.Next
-// proceed to next item
-inline void algo_lib::_db_zd_tempfile_curs_Next(_db_zd_tempfile_curs &curs) {
-    curs.row = (*curs.row).zd_tempfile_next;
-}
-
-// --- algo_lib.FDb.zd_tempfile_curs.Access
-// item access
-inline algo_lib::FTempfile& algo_lib::_db_zd_tempfile_curs_Access(_db_zd_tempfile_curs &curs) {
-    return *curs.row;
-}
 inline algo_lib::FDispsigcheck::FDispsigcheck() {
     algo_lib::FDispsigcheck_Init(*this);
 }
@@ -1220,20 +1191,12 @@ inline void algo_lib::FReplvar_Init(algo_lib::FReplvar& replvar) {
     replvar.ind_replvar_next = (algo_lib::FReplvar*)-1; // (algo_lib.Replscope.ind_replvar) not-in-hash
 }
 inline algo_lib::FTempfile::FTempfile() {
-    algo_lib::FTempfile_Init(*this);
 }
 
 inline algo_lib::FTempfile::~FTempfile() {
     algo_lib::FTempfile_Uninit(*this);
 }
 
-
-// --- algo_lib.FTempfile..Init
-// Set all fields to initial values.
-inline void algo_lib::FTempfile_Init(algo_lib::FTempfile& tempfile) {
-    tempfile.zd_tempfile_next = (algo_lib::FTempfile*)-1; // (algo_lib.FDb.zd_tempfile) not-in-list
-    tempfile.zd_tempfile_prev = NULL; // (algo_lib.FDb.zd_tempfile)
-}
 inline algo_lib::FTxtcell::FTxtcell(algo_lib::FTxtrow*             in_p_txtrow
         ,algo::TextJust                 in_justify
         ,algo::TermStyle                in_style
@@ -1693,11 +1656,11 @@ inline void algo_lib::Regx_Init(algo_lib::Regx& regx) {
     regx.parseerror = bool(false);
     regx.accepts_all = bool(false);
 }
-inline algo_lib::RegxToken::RegxToken(u32                            in_type)
+inline algo_lib::RegxToken::RegxToken(i32                            in_type)
     : type(in_type)
 {
 }
-inline algo_lib::RegxToken::RegxToken(algo_lib_RegxToken_type_Enum arg) { this->type = u32(arg); }
+inline algo_lib::RegxToken::RegxToken(algo_lib_RegxToken_type_Enum arg) { this->type = i32(arg); }
 inline algo_lib::RegxToken::RegxToken() {
     algo_lib::RegxToken_Init(*this);
 }
@@ -1712,7 +1675,7 @@ inline algo_lib_RegxToken_type_Enum algo_lib::type_GetEnum(const algo_lib::RegxT
 // --- algo_lib.RegxToken.type.SetEnum
 // Set value of field from enum type.
 inline void algo_lib::type_SetEnum(algo_lib::RegxToken& parent, algo_lib_RegxToken_type_Enum rhs) {
-    parent.type = u32(rhs);
+    parent.type = i32(rhs);
 }
 
 // --- algo_lib.RegxToken.type.Cast
@@ -1723,7 +1686,7 @@ inline algo_lib::RegxToken::operator algo_lib_RegxToken_type_Enum () const {
 // --- algo_lib.RegxToken..Init
 // Set all fields to initial values.
 inline void algo_lib::RegxToken_Init(algo_lib::RegxToken& parent) {
-    parent.type = u32(0);
+    parent.type = i32(0);
 }
 inline algo_lib::RegxExpr::RegxExpr() {
     algo_lib::RegxExpr_Init(*this);

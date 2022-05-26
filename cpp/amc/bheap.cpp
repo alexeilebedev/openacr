@@ -44,11 +44,11 @@ void amc::tclass_Bheap() {
     // implementation helper
     // I starting index
     // RETURN new I
-    vrfy(field.c_sortfld, "sortfld must be specified");
+    vrfy(field.c_sortfld, tempstr() << "sortfld must be specified " << field.field);
     amc::FField   &sortfld   = *field.c_sortfld->p_sortfld;
     Set(R, "$sortfld"     , name_Get(sortfld));
     Set(R, "$Sortfldstore", sortfld.cpp_type);
-    Set(R, "$inscond"  , field.c_xref ? strptr(field.c_xref->inscond.value) : strptr("true"));
+    Set(R, "$inscond"  , field.c_xref ? algo::strptr(field.c_xref->inscond.value) : algo::strptr("true"));
 
     // helper fields
     InsVar(R, field.p_ctype     , "$Cpptype**", "$name_elems", "", "binary heap by $sortfld");

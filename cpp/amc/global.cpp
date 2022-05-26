@@ -74,9 +74,9 @@ void amc::tfunc_Global_Init() {
             AddRetval(func, "void", "", "");
             func.inl = false;
             Ins(&R, func.body, "algo_lib::_db.last_signal             = 0;");
-            Ins(&R, func.body, "ary_beg(cstring, str, algo_lib::temp_strings_Getary()) {");
+            Ins(&R, func.body, "ind_beg_aryptr(cstring, str, algo_lib::temp_strings_Getary()) {");
             Ins(&R, func.body, "    ch_Reserve(str, 256);");
-            Ins(&R, func.body, "}ary_end;");
+            Ins(&R, func.body, "}ind_end_aryptr;");
             Ins(&R, func.body, "algo_lib::_db.n_temp = algo_lib::temp_strings_N();");
             Ins(&R, func.body, "algo_lib::bh_timehook_Reserve(32);");
             Ins(&R, func.body, "algo_lib::InitCpuHz();");
@@ -89,7 +89,7 @@ void amc::tfunc_Global_Init() {
 
 static void GenLoadTuples(amc::FFunc &ldt, algo_lib::Replscope &R, amc::FField &field) {
     Ins(&R, ldt.body, "static const char *ssimfiles[] = {");
-    ListSep ls;
+    algo::ListSep ls;
     int nitem=0;
     ind_beg(amc::ns_c_ctype_ins_curs, ctype, *field.p_ctype->p_ns) if (FirstInst(ctype)) {
         amc::FField &inst = *FirstInst(ctype);
@@ -355,10 +355,12 @@ void amc::tfunc_Global_main() {
                 Ins(&R, main.body, tempstr()<<"    "<<parentns.c_globfld->p_arg->cpp_type<<"_Uninit();");
             }
         }
-        Ins(&R, main.body    , "} catch(algo_lib::ErrorX &x) {");
+        Ins(&R, main.body    , "} catch(algo_lib::ErrorX &) {");
         Ins(&R, main.body    , "    // don't print anything, might crash");
         Ins(&R, main.body    , "    algo_lib::_db.exit_code = 1;");
         Ins(&R, main.body    , "}");
+        Ins(&R, main.body    , "// only the lower 1 byte makes it to the outside world");
+        Ins(&R, main.body    , "(void)i32_UpdateMin(algo_lib::_db.exit_code,255);");
         Ins(&R, main.body    , "return algo_lib::_db.exit_code;");
     }
 }
@@ -405,7 +407,7 @@ void amc::tfunc_Global_MainLoop() {
         amc::FFunc& mainloop = amc::CreateCurFunc();
         Ins(&R, mainloop.ret    , "void",false);
         Ins(&R, mainloop.proto  , "MainLoop()",false);
-        Ins(&R, mainloop.body   , "SchedTime time(get_cycles());");
+        Ins(&R, mainloop.body   , "algo::SchedTime time(algo::get_cycles());");
         Ins(&R, mainloop.body   , "algo_lib::_db.clock          = time;");
         Ins(&R, mainloop.body   , "do {");
         Ins(&R, mainloop.body   , "    algo_lib::_db.next_loop.value = algo_lib::_db.limit;");
@@ -598,7 +600,7 @@ static void GenReadArgv(amc::FNs &ns, amc::FCtype &ctype) {
     *ns.hdr << "extern const char *"<<name<<"_syntax;" << eol;
     *ns.cpp << "const char *"<<name<<"_syntax =" << eol;
     tempstr syntax;
-    ListSep ls("\n ");
+    algo::ListSep ls("\n ");
     ind_beg(amc::ctype_c_field_curs, field, ctype) {
         syntax << ls;
         syntax << Dash(&field);

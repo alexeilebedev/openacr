@@ -45,8 +45,8 @@ struct Counter {
 // so the combinatins will have wider spread than for binary run
 
 enum {
-    GEN_MULTIPLY = 11
-    ,GEN_ADD      = 1
+      GEN_MULTIPLY = 11
+      ,GEN_ADD      = 1
 };
 
 // ----------------------------------------------------------------------------
@@ -68,10 +68,10 @@ struct GenNum {
 
 struct TimeTestIter {
     enum {
-        MIN_UTIME = -2208988800 // 1900-01-01 00:00:00 - min value to test
-        ,MAX_UTIME = 2147483647  // 2038-01-19 03:14:07 - max value to test
-        ,SPREAD    = MAX_UTIME - MIN_UTIME
-        ,LIMIT     = 1000        // iteration limit
+          MIN_UTIME = -2208988800 // 1900-01-01 00:00:00 - min value to test
+          ,MAX_UTIME = 2147483647  // 2038-01-19 03:14:07 - max value to test
+          ,SPREAD    = MAX_UTIME - MIN_UTIME
+          ,LIMIT     = 1000        // iteration limit
     };
 
     GenNum  gen_ut;              // unix time generator
@@ -144,23 +144,14 @@ bool   TimeTestIter::EndQ() {
 
 // helper macros to iterate time diff
 
-#define timediff_test_beg(in_dft,in_ups,in_off) {                   \
-    TimeTestIter v##Iter(in_ups,in_off);                            \
-    for (;!v##Iter.EndQ();v##Iter.Next()) {                         \
-    int v##_posneg = 0;                                             \
-    for (;v##_posneg < 2;++v##_posneg) {                            \
-    const i64 &in_dft = v##_posneg ? v##Iter.dft : -v##Iter.dft;
+#define timediff_test_beg(in_dft,in_ups,in_off) {           \
+    TimeTestIter v##Iter(in_ups,in_off);                    \
+    for (;!v##Iter.EndQ();v##Iter.Next()) {                 \
+    int v##_posneg = 0;                                     \
+    for (;v##_posneg < 2;++v##_posneg) {                    \
+    i64 in_dft = v##_posneg ? v##Iter.dft : -v##Iter.dft;
 
 #define timediff_test_end }}}
-
-// ----------------------------------------------------------------------------
-
-// Set GMT timezone
-
-static void TzSetGmt() {
-    setenv("TZ","GMT",1);
-    tzset();
-}
 
 // ----------------------------------------------------------------------------
 
@@ -192,13 +183,13 @@ template <typename T> void TestDiffToTimeStruct(i64 units_per_sec, i64 offset_se
         T t(td);
         TimeStruct S = ToTimeStruct(t);
         i64 test_diff = td;
-        vrfyeq_(S.tm_nsec, Abs((test_diff % units_per_sec) * (1000000000/units_per_sec)));
+        vrfyeq_(S.tm_nsec, algo::Abs((test_diff % units_per_sec) * (1000000000/units_per_sec)));
         test_diff /= units_per_sec;
-        vrfyeq_(S.tm_sec ,Abs(test_diff % 60));
+        vrfyeq_(S.tm_sec ,algo::Abs(test_diff % 60));
         test_diff /= 60;
-        vrfyeq_(S.tm_min ,Abs(test_diff % 60));
+        vrfyeq_(S.tm_min ,algo::Abs(test_diff % 60));
         test_diff /= 60;
-        vrfyeq_(S.tm_hour,Abs(test_diff));
+        vrfyeq_(S.tm_hour,algo::Abs(test_diff));
         vrfyeq_(S.tm_neg,td < 0);
     } timediff_test_end;
 }
@@ -224,13 +215,13 @@ template <typename T> void TestTimeStructToDiff(i64 units_per_sec, i64 offset_se
         i64 x = td;
         TimeStruct S;
         S.tm_neg = x < 0;
-        S.tm_nsec = Abs((x % units_per_sec) * (1000000000/units_per_sec));
+        S.tm_nsec = algo::Abs((x % units_per_sec) * (1000000000/units_per_sec));
         x /= units_per_sec;
-        S.tm_sec = Abs(x % 60);
+        S.tm_sec = algo::Abs(x % 60);
         x /= 60;
-        S.tm_min = Abs(x % 60);
+        S.tm_min = algo::Abs(x % 60);
         x /= 60;
-        S.tm_hour = Abs(x);
+        S.tm_hour = algo::Abs(x);
         T t = conv(S);
         vrfyeq_(t.value,td);
     } timediff_test_end;
@@ -257,9 +248,8 @@ template <typename T1, typename T2> void TestTimeConv(i64 units_per_sec, i64 off
 
 // -----------------------------------------------------------------------------
 
-//can be used to iterate backward.
-static void CheckTimeRange(algo::TstampCache& cache, strptr start_date, strptr end_date, i64 abs_nano_step){
-    UnTime beg, end;
+static void TstampCache_CheckTimeRange(algo::TstampCache& cache, strptr start_date, strptr end_date, i64 abs_nano_step){
+    algo::UnTime beg, end;
     vrfy_(UnTime_ReadStrptrMaybe(beg, start_date));
     vrfy_(UnTime_ReadStrptrMaybe(end, end_date));
     i64 nano_step = abs_nano_step *( end.value > beg.value ? 1 : -1);
@@ -283,62 +273,62 @@ static void CheckTimeRange(algo::TstampCache& cache, strptr start_date, strptr e
     }
 }
 
-static void CheckTimeSpec(strptr spec){
+static void TstampCache_CheckTimeSpec(strptr spec){
     cstring out1;
     cstring out2;
-    UnTime t;
+    algo::UnTime t;
     algo::TstampCache cache;
     algo::tstamp_cache_Init(cache, spec, false);
     //pass forward to leap year.
-    CheckTimeRange(cache, "1995/12/30 00:00:00", "1996/01/03 00:00:00", UNTIME_PER_SEC / 2 -1);
+    TstampCache_CheckTimeRange(cache, "1995/12/30 00:00:00", "1996/01/03 00:00:00", algo::UNTIME_PER_SEC / 2 -1);
     //pass backward from leap year
-    CheckTimeRange(cache, "1996/01/03 00:00:00", "1995/12/30 00:00:00", UNTIME_PER_SEC / 2 -1);
-    CheckTimeRange(cache, "1996/12/30 00:00:00", "1997/01/02 00:00:00", UNTIME_PER_SEC / 2 -1);
-    CheckTimeRange(cache, "1997/01/03 00:00:00", "1996/12/30 00:00:00", UNTIME_PER_SEC / 2 -1);
-    CheckTimeRange(cache, "1999/12/30 00:00:00", "2000/01/03 00:00:00", UNTIME_PER_SEC / 2 -1);
-    CheckTimeRange(cache, "1980/12/30 00:00:00", "2040/01/03 00:00:00", SECS_PER_DAY * (UNTIME_PER_SEC / 2 -1 ));
+    TstampCache_CheckTimeRange(cache, "1996/01/03 00:00:00", "1995/12/30 00:00:00", algo::UNTIME_PER_SEC / 2 -1);
+    TstampCache_CheckTimeRange(cache, "1996/12/30 00:00:00", "1997/01/02 00:00:00", algo::UNTIME_PER_SEC / 2 -1);
+    TstampCache_CheckTimeRange(cache, "1997/01/03 00:00:00", "1996/12/30 00:00:00", algo::UNTIME_PER_SEC / 2 -1);
+    TstampCache_CheckTimeRange(cache, "1999/12/30 00:00:00", "2000/01/03 00:00:00", algo::UNTIME_PER_SEC / 2 -1);
+    TstampCache_CheckTimeRange(cache, "1980/12/30 00:00:00", "2040/01/03 00:00:00", algo::SECS_PER_DAY * (algo::UNTIME_PER_SEC / 2 -1 ));
 }
 
 // ----------------------------------------------------------------------------
 
 void atf_unit::unittest_algo_lib_TimeConversion() {
     // conversion to time struct
-    TzSetGmt();
-    TestTimeToTimeStruct<UnixTime>(         1, 0);
-    TestTimeToTimeStruct<UnTime>  (1000000000, 0);
-    TestDiffToTimeStruct<UnDiff>  (1000000000, 0);
+    algo::SetTz("GMT");
+    TestTimeToTimeStruct<algo::UnixTime>(         1, 0);
+    TestTimeToTimeStruct<algo::UnTime>  (1000000000, 0);
+    TestDiffToTimeStruct<algo::UnDiff>  (1000000000, 0);
     // conversion from time struct
-    TestTimeStructToTime<UnixTime>(         1, 0,algo::ToUnixTime);
-    TestTimeStructToTime<UnTime>  (1000000000, 0,algo::ToUnTime  );
-    TestTimeStructToDiff<UnDiff>  (1000000000, 0,algo::ToUnDiff  );
+    TestTimeStructToTime<algo::UnixTime>(         1, 0,algo::ToUnixTime);
+    TestTimeStructToTime<algo::UnTime>  (1000000000, 0,algo::ToUnTime  );
+    TestTimeStructToDiff<algo::UnDiff>  (1000000000, 0,algo::ToUnDiff  );
     // conversion between types
-    TestTimeConv<UnixTime,UnTime>(1         , 0, 1         , 1000000000, 0, algo::ToUnTime);
-    TestTimeConv<UnTime,UnixTime>(1000000000, 0, 1000000000, 1         , 0, algo::ToUnixTime);
+    TestTimeConv<algo::UnixTime,algo::UnTime>(1         , 0, 1         , 1000000000, 0, algo::ToUnTime);
+    TestTimeConv<algo::UnTime,algo::UnixTime>(1000000000, 0, 1000000000, 1         , 0, algo::ToUnixTime);
 
     // print/parse roundtrip
     time_test_beg(ut,frac,test_time,1, 0) {
-        UnixTime t1(test_time);
+        algo::UnixTime t1(test_time);
         tempstr str;
         str << t1;
-        UnixTime t2;
+        algo::UnixTime t2;
         vrfy(UnixTime_ReadStrptrMaybe(t2, str), algo_lib::_db.errtext);
         vrfyeq_(t2.value,test_time);
     } time_test_end;
 
     time_test_beg(ut,frac,test_time,1000000000, 0) {
-        UnTime t1(test_time);
+        algo::UnTime t1(test_time);
         tempstr str;
         str << t1;
-        UnTime t2;
+        algo::UnTime t2;
         vrfy(UnTime_ReadStrptrMaybe(t2, str), algo_lib::_db.errtext);
         vrfyeq_(t2.value,test_time);
     } time_test_end;
 
     timediff_test_beg(test_diff, 1000000000, 0) {
-        UnDiff t1(test_diff);
+        algo::UnDiff t1(test_diff);
         tempstr str;
         str << t1;
-        UnDiff t2;
+        algo::UnDiff t2;
         vrfy(UnDiff_ReadStrptrMaybe(t2, str), algo_lib::_db.errtext);
         vrfyeq_(t2.value,test_diff);
     } timediff_test_end;
@@ -346,20 +336,23 @@ void atf_unit::unittest_algo_lib_TimeConversion() {
 
 // -----------------------------------------------------------------------------
 
+// Check that STR can be parsed as UnTime according to FORMAT,
+// and that when it's printed back using same FORMAT, it results in STR.
+// if PREC=0, then same roundtrip is checked for UnixTime format
 static void TestParseTime(const strptr& str, const char *format, int prec=0) {
     TimeStruct time_struct;
-    StringIter iter(str);
+    algo::StringIter iter(str);
     vrfy(TimeStruct_Read(time_struct, iter, format), "bad format");
 
     if (prec <= 9) {
         tempstr buf;
-        UnTime t = ToUnTime(time_struct);
+        algo::UnTime t = ToUnTime(time_struct);
         UnTime_PrintSpec(t, buf, format);
         vrfy_(buf == str);
     }
     if (prec == 0) {
         tempstr buf;
-        UnixTime t = ToUnixTime(time_struct);
+        algo::UnixTime t = ToUnixTime(time_struct);
         UnixTime_PrintSpec(t, buf, format);
         vrfy_(buf == str);
     }
@@ -367,11 +360,13 @@ static void TestParseTime(const strptr& str, const char *format, int prec=0) {
 
 // -----------------------------------------------------------------------------
 
-static void ParseUnTimeStr(const strptr& in, strptr result = strptr()) {
+// Check that IN, when parsed as UnTime, and printed back out,
+// results in RESULT
+static void ParseUnTimeStr(const strptr& in, strptr result) {
     if (!elems_N(result)) {
         result = in;
     }
-    UnTime test;
+    algo::UnTime test;
     vrfy(UnTime_ReadStrptrMaybe(test, in), algo_lib::_db.errtext);
     tempstr out;
     UnTime_Print(test, out);
@@ -381,14 +376,15 @@ static void ParseUnTimeStr(const strptr& in, strptr result = strptr()) {
 
 // -----------------------------------------------------------------------------
 
-static void TestParseUnDiff(const strptr& in, strptr result = strptr()) {
+// Check that reading IN as UnDiff and printing it back results in RESULT
+static void TestParseUnDiff(const strptr& in, strptr result) {
     if (!elems_N(result)) {
         result = in;
     }
-    StringIter iter(in);
+    algo::StringIter iter(in);
     TimeStruct time_struct;
     vrfy(TimeStruct_Read(time_struct, iter, "%-%T") ,tempstr()<<"can't parse "<<in);
-    UnDiff test = ToUnDiff(time_struct);
+    algo::UnDiff test = ToUnDiff(time_struct);
     tempstr    out;
     UnDiff_Print(test, out);
     vrfyeq_(out,result);
@@ -397,21 +393,28 @@ static void TestParseUnDiff(const strptr& in, strptr result = strptr()) {
 
 // -----------------------------------------------------------------------------
 
-void atf_unit::unittest_algo_lib_PrintTime(){
-    CheckTimeSpec("%Y/%m/%d %T");
-    CheckTimeSpec("%Y%m%d-%H-%M:%S.%X");
-    CheckTimeSpec("%Y%m%d-%H-%M:%S.%.9X");
-    CheckTimeSpec("%Y%m%d:%H:%M:%S.%X");
-    CheckTimeSpec("%Y%m%d-%H:%M:%S.%.3x");
-    CheckTimeSpec("%.3x%Y%m%d-%H:%M:%S.");
-    CheckTimeSpec("%M:%S.%X");
+void atf_unit::unittest_algo_lib_TstampCache(){
+    TstampCache_CheckTimeSpec("%Y/%m/%d %T");
+    TstampCache_CheckTimeSpec("%Y%m%d-%H-%M:%S.%X");
+    TstampCache_CheckTimeSpec("%Y%m%d-%H-%M:%S.%.9X");
+    TstampCache_CheckTimeSpec("%Y%m%d:%H:%M:%S.%X");
+    TstampCache_CheckTimeSpec("%Y%m%d-%H:%M:%S.%.3x");
+    TstampCache_CheckTimeSpec("%.3x%Y%m%d-%H:%M:%S.");
+    TstampCache_CheckTimeSpec("%M:%S.%X");
+}
+
+// -----------------------------------------------------------------------------
+
+void atf_unit::unittest_algo_lib_PrintUnTime(){
+    algo::SetTz("GMT");
+    vrfyeq_((tempstr() << algo::UnTime(4)),"1970-01-01T00:00:00.000000004");
 }
 
 // -----------------------------------------------------------------------------
 
 void atf_unit::unittest_algo_lib_ParseUnTime() {
-    ParseUnTimeStr("1970-02-01T12:13:14.567890123"                                   );
-    ParseUnTimeStr("1984-12-31T12:13:14.567"                                         );
+    ParseUnTimeStr("1970-02-01T12:13:14.567890123","1970-02-01T12:13:14.567890123");
+    ParseUnTimeStr("1984-12-31T12:13:14.567","1984-12-31T12:13:14.567");
     ParseUnTimeStr("2013-11-21T12:13:14.000123000crap" ,"2013-11-21T12:13:14.000123" );
     TestParseUnDiff("12:13:14.567890123","12:13:14.567890123");
     TestParseUnDiff("13:14.567890123", "00:13:14.567890123");
@@ -452,3 +455,62 @@ void atf_unit::unittest_algo_lib_DayName() {
 }
 
 // -----------------------------------------------------------------------------
+
+void atf_unit::unittest_algo_lib_CurrentTime() {
+    double totaldiff = 0;
+    int niter=100;
+    for (int i=0; i<niter; i++) {
+        algo::UnTime t = algo::CurrUnTime();
+        algo::UnixTime t2 = algo::CurrUnixTime();
+        double diff = abs(t.value/1e9 - t2.value);
+        totaldiff += diff;
+        verblog(Keyval("untime",t)
+                <<Keyval("unixtime",t2)
+                <<Keyval("diff",diff)
+                <<Keyval("totaldiff",totaldiff));
+        // check that individual sample difference between time values
+        // is not crazy
+        vrfy_(diff < 10.0);
+        algo::SleepMsec(5);
+    }
+    // max difference should be no more than half a second on average
+    // add some leeway in case the process gets interrupted
+    prlog("avg diff between UnTime and UnixTime: "<<totaldiff/niter);
+    vrfy_(totaldiff/niter < 0.9);
+}
+
+// -----------------------------------------------------------------------------
+
+void atf_unit::unittest_algo_lib_TimeConvert() {
+    {
+        algo::UnixDiff d(1);
+        vrfy_(ToWDiff(d).value == algo::WTIME_PER_SEC);
+    }
+    {
+        algo::UnDiff d(algo::UNTIME_PER_SEC);
+        vrfy_(ToWDiff(d).value == algo::WTIME_PER_SEC);
+        vrfy_(ToSecs(d) == 1.0);
+    }
+    {
+        algo::WDiff d(algo::WTIME_PER_SEC);
+        vrfy_(ToUnixDiff(d).value == 1);
+        vrfy_(ToUnDiff(d).value == algo::UNTIME_PER_SEC);
+        vrfy_(ToWDiff(ToUnDiff(d)).value == d.value);
+        vrfy_(ToWDiff(ToUnixDiff(d)).value == d.value);
+        vrfy_(ToSecs(d) == 1.0);
+    }
+    {
+        algo::UnTime t(0);
+        vrfy_(ToWTime(t).value == algo::WTIME_OFFSET);
+        vrfy_(ToUnTime(ToWTime(t)).value == t.value);
+    }
+    {
+        algo::UnTime t(0);
+        vrfy_(ToWTime(t).value == algo::WTIME_OFFSET);
+    }
+    {
+        algo::UnixTime t(0);
+        vrfy_(ToWTime(t).value == algo::WTIME_OFFSET);
+        vrfy_(ToUnixTime(ToWTime(t)).value == t.value);
+    }
+}

@@ -116,8 +116,6 @@ namespace abt { struct _db_bh_syscmd_curs; }
 namespace abt { struct _db_bh_syscmd_unordcurs; }
 namespace abt { struct _db_zs_srcfile_read_curs; }
 namespace abt { struct _db_zs_sel_target_curs; }
-namespace abt { struct _db_zsl_libdep_visited_curs; }
-namespace abt { struct _db_zsl_libdep_curs; }
 namespace abt { struct _db_targsyslib_curs; }
 namespace abt { struct _db_syslib_curs; }
 namespace abt { struct _db_ind_syslib_curs; }
@@ -129,6 +127,7 @@ namespace abt { struct _db_ns_curs; }
 namespace abt { struct _db_ind_ns_curs; }
 namespace abt { struct _db_filestat_curs; }
 namespace abt { struct _db_ind_filestat_curs; }
+namespace abt { struct _db_zd_inclstack_curs; }
 namespace abt { struct srcfile_zd_include_curs; }
 namespace abt { struct syscmd_c_prior_curs; }
 namespace abt { struct syscmd_c_next_curs; }
@@ -147,6 +146,14 @@ struct lpool_Lpblock {
 extern const char *abt_help;
 extern const char *abt_syntax;
 extern FDb _db;
+extern const char *dev_opt_type_AR; // "AR"
+extern const char *dev_opt_type_C; // "C"
+extern const char *dev_opt_type_CC; // "CC"
+extern const char *dev_opt_type_CPP; // "CPP"
+extern const char *dev_opt_type_HPP; // "HPP"
+extern const char *dev_opt_type_IGNOREME; // "IGNOREME"
+extern const char *dev_opt_type_LINK; // "LINK"
+extern const char *dev_opt_type_RC; // "RC"
 
 // --- abt.FArch
 // create: abt.FDb.arch (Lary)
@@ -179,6 +186,7 @@ void                 FArch_Uninit(abt::FArch& arch) __attribute__((nothrow));
 // global access: ind_cfg (Thash)
 struct FCfg { // abt.FCfg
     algo::Smallstr50   cfg;            //
+    algo::Smallstr5    suffix;         //
     algo::Comment      comment;        //
     abt::FCfg*         ind_cfg_next;   // hash next
 private:
@@ -208,6 +216,12 @@ struct FCompiler { // abt.FCompiler
     algo::Smallstr50   compiler;            //
     algo::Smallstr50   ranlib;              //
     algo::Smallstr50   ar;                  //
+    algo::Smallstr50   link;                //
+    algo::Smallstr50   libext;              //
+    algo::Smallstr20   exeext;              //
+    algo::Smallstr20   pchext;              //
+    algo::Smallstr20   objext;              //
+    algo::Smallstr50   rc;                  //
     algo::Comment      comment;             //
     abt::FCompiler*    ind_compiler_next;   // hash next
 private:
@@ -303,8 +317,6 @@ struct FDb { // abt.FDb
     i32                 zs_sel_target_n;              // zero-terminated singly linked list
     abt::FTarget*       zs_sel_target_tail;           // pointer to last element
     report::abt         report;                       //
-    abt::FTarget*       zsl_libdep_visited_head;      // zero-terminated singly linked list
-    abt::FTarget*       zsl_libdep_head;              // zero-terminated singly linked list
     abt::FTargsyslib*   targsyslib_lary[32];          // level array
     i32                 targsyslib_n;                 // number of elements in array
     abt::FSyslib*       syslib_lary[32];              // level array
@@ -334,6 +346,10 @@ struct FDb { // abt.FDb
     abt::FFilestat**    ind_filestat_buckets_elems;   // pointer to bucket array
     i32                 ind_filestat_buckets_n;       // number of elements in bucket array
     i32                 ind_filestat_n;               // number of elements in the hash table
+    algo::Smallstr50    builddir;                     // uname-compiler.cfg-arch
+    abt::FSrcfile*      zd_inclstack_head;            // zero-terminated doubly linked list
+    i32                 zd_inclstack_n;               // zero-terminated doubly linked list
+    abt::FSrcfile*      zd_inclstack_tail;            // pointer to last element
     abt::trace          trace;                        //
 };
 
@@ -869,42 +885,6 @@ abt::FTarget*        zs_sel_target_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 abt::FTarget&        zs_sel_target_qLast() __attribute__((__warn_unused_result__, nothrow));
 
-// Return true if index is empty
-bool                 zsl_libdep_visited_EmptyQ() __attribute__((__warn_unused_result__, nothrow));
-// If index empty, return NULL. Otherwise return pointer to first element in index
-abt::FTarget*        zsl_libdep_visited_First() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return true if row is in the linked list, false otherwise
-bool                 zsl_libdep_visited_InLlistQ(abt::FTarget& row) __attribute__((__warn_unused_result__, nothrow));
-// Insert row into linked list. If row is already in linked list, do nothing.
-void                 zsl_libdep_visited_Insert(abt::FTarget& row) __attribute__((nothrow));
-// Return pointer to next element in the list
-abt::FTarget*        zsl_libdep_visited_Next(abt::FTarget &row) __attribute__((__warn_unused_result__, nothrow));
-// Remove element from index. If element is not in index, do nothing.
-// Since the list is singly-linked, use linear search to locate the element.
-void                 zsl_libdep_visited_Remove(abt::FTarget& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-void                 zsl_libdep_visited_RemoveAll() __attribute__((nothrow));
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-abt::FTarget*        zsl_libdep_visited_RemoveFirst() __attribute__((nothrow));
-
-// Return true if index is empty
-bool                 zsl_libdep_EmptyQ() __attribute__((__warn_unused_result__, nothrow));
-// If index empty, return NULL. Otherwise return pointer to first element in index
-abt::FTarget*        zsl_libdep_First() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return true if row is in the linked list, false otherwise
-bool                 zsl_libdep_InLlistQ(abt::FTarget& row) __attribute__((__warn_unused_result__, nothrow));
-// Insert row into linked list. If row is already in linked list, do nothing.
-void                 zsl_libdep_Insert(abt::FTarget& row) __attribute__((nothrow));
-// Return pointer to next element in the list
-abt::FTarget*        zsl_libdep_Next(abt::FTarget &row) __attribute__((__warn_unused_result__, nothrow));
-// Remove element from index. If element is not in index, do nothing.
-// Since the list is singly-linked, use linear search to locate the element.
-void                 zsl_libdep_Remove(abt::FTarget& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-void                 zsl_libdep_RemoveAll() __attribute__((nothrow));
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-abt::FTarget*        zsl_libdep_RemoveFirst() __attribute__((nothrow));
-
 // Allocate memory for new default row.
 // If out of memory, process is killed.
 abt::FTargsyslib&    targsyslib_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -1152,6 +1132,31 @@ void                 ind_filestat_Remove(abt::FFilestat& row) __attribute__((not
 // Reserve enough room in the hash for N more elements. Return success code.
 void                 ind_filestat_Reserve(int n) __attribute__((nothrow));
 
+// Return true if index is empty
+bool                 zd_inclstack_EmptyQ() __attribute__((__warn_unused_result__, nothrow));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+abt::FSrcfile*       zd_inclstack_First() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+bool                 zd_inclstack_InLlistQ(abt::FSrcfile& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+void                 zd_inclstack_Insert(abt::FSrcfile& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+abt::FSrcfile*       zd_inclstack_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return number of items in the linked list
+i32                  zd_inclstack_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+abt::FSrcfile*       zd_inclstack_Next(abt::FSrcfile &row) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to previous element in the list
+abt::FSrcfile*       zd_inclstack_Prev(abt::FSrcfile &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+void                 zd_inclstack_Remove(abt::FSrcfile& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+void                 zd_inclstack_RemoveAll() __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+abt::FSrcfile*       zd_inclstack_RemoveFirst() __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+abt::FSrcfile&       zd_inclstack_qLast() __attribute__((__warn_unused_result__, nothrow));
+
 // cursor points to valid item
 void                 _db_srcfile_curs_Reset(_db_srcfile_curs &curs, abt::FDb &parent);
 // cursor points to valid item
@@ -1266,22 +1271,6 @@ void                 _db_zs_sel_target_curs_Next(_db_zs_sel_target_curs &curs);
 // item access
 abt::FTarget&        _db_zs_sel_target_curs_Access(_db_zs_sel_target_curs &curs);
 // cursor points to valid item
-void                 _db_zsl_libdep_visited_curs_Reset(_db_zsl_libdep_visited_curs &curs, abt::FDb &parent);
-// cursor points to valid item
-bool                 _db_zsl_libdep_visited_curs_ValidQ(_db_zsl_libdep_visited_curs &curs);
-// proceed to next item
-void                 _db_zsl_libdep_visited_curs_Next(_db_zsl_libdep_visited_curs &curs);
-// item access
-abt::FTarget&        _db_zsl_libdep_visited_curs_Access(_db_zsl_libdep_visited_curs &curs);
-// cursor points to valid item
-void                 _db_zsl_libdep_curs_Reset(_db_zsl_libdep_curs &curs, abt::FDb &parent);
-// cursor points to valid item
-bool                 _db_zsl_libdep_curs_ValidQ(_db_zsl_libdep_curs &curs);
-// proceed to next item
-void                 _db_zsl_libdep_curs_Next(_db_zsl_libdep_curs &curs);
-// item access
-abt::FTarget&        _db_zsl_libdep_curs_Access(_db_zsl_libdep_curs &curs);
-// cursor points to valid item
 void                 _db_targsyslib_curs_Reset(_db_targsyslib_curs &curs, abt::FDb &parent);
 // cursor points to valid item
 bool                 _db_targsyslib_curs_ValidQ(_db_targsyslib_curs &curs);
@@ -1336,6 +1325,14 @@ bool                 _db_filestat_curs_ValidQ(_db_filestat_curs &curs);
 void                 _db_filestat_curs_Next(_db_filestat_curs &curs);
 // item access
 abt::FFilestat&      _db_filestat_curs_Access(_db_filestat_curs &curs);
+// cursor points to valid item
+void                 _db_zd_inclstack_curs_Reset(_db_zd_inclstack_curs &curs, abt::FDb &parent);
+// cursor points to valid item
+bool                 _db_zd_inclstack_curs_ValidQ(_db_zd_inclstack_curs &curs);
+// proceed to next item
+void                 _db_zd_inclstack_curs_Next(_db_zd_inclstack_curs &curs);
+// item access
+abt::FSrcfile&       _db_zd_inclstack_curs_Access(_db_zd_inclstack_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
@@ -1433,12 +1430,15 @@ void                 FNs_Uninit(abt::FNs& ns) __attribute__((nothrow));
 // create: abt.FDb.srcfile (Lary)
 // global access: ind_srcfile (Thash)
 // global access: zs_srcfile_read (Llist)
+// global access: zd_inclstack (Llist)
 // access: abt.FInclude.p_header (Upptr)
 // access: abt.FTarget.c_precomp (Ptr)
 // access: abt.FTarget.c_srcfile (Ptrary)
 struct FSrcfile { // abt.FSrcfile: Source file or header (key is pathname)
     abt::FSrcfile*      ind_srcfile_next;       // hash next
     abt::FSrcfile*      zs_srcfile_read_next;   // zslist link; -1 means not-in-list
+    abt::FSrcfile*      zd_inclstack_next;      // zslist link; -1 means not-in-list
+    abt::FSrcfile*      zd_inclstack_prev;      // previous element
     algo::Smallstr200   srcfile;                //
     algo::UnTime        mod_time;               // File's modification time
     abt::FTarget*       p_target;               // reference to parent row
@@ -1531,8 +1531,8 @@ struct FSyscmd { // abt.FSyscmd
     bool                fail_prereq;        //   false  Set if one of pre-requisites fails
     bool                completed;          //   false  Completed?
     i32                 maxtime;            //   0  Optional max running time (used to use SIGALRM)
-    algo::cstring       stdout;             // filename for stdout output
-    algo::cstring       stderr;             // filename for stderr output
+    algo::cstring       fstdout;            // filename for stdout output
+    algo::cstring       fstderr;            // filename for stderr output
     abt::FSyscmddep**   c_prior_elems;      // array of pointers
     u32                 c_prior_n;          // array of pointers
     u32                 c_prior_max;        // capacity of allocated array
@@ -1721,48 +1721,48 @@ void                 FTargdep_Uninit(abt::FTargdep& targdep) __attribute__((noth
 // create: abt.FDb.target (Lary)
 // global access: ind_target (Thash)
 // global access: zs_sel_target (Llist)
-// global access: zsl_libdep_visited (Llist)
-// global access: zsl_libdep (Llist)
 // global access: zs_origsel_target (Llist)
 // access: abt.FSrcfile.p_target (Upptr)
 // access: abt.FTargdep.p_parent (Upptr)
 // access: abt.FTarget.c_alldep (Ptrary)
 // access: abt.FTargsrc.p_target (Upptr)
 struct FTarget { // abt.FTarget
-    abt::FTarget*        ind_target_next;           // hash next
-    abt::FTarget*        zs_sel_target_next;        // zslist link; -1 means not-in-list
-    abt::FTarget*        zsl_libdep_visited_next;   // zslist link; -1 means not-in-list
-    abt::FTarget*        zsl_libdep_next;           // zslist link; -1 means not-in-list
-    abt::FTarget*        zs_origsel_target_next;    // zslist link; -1 means not-in-list
-    algo::Smallstr16     target;                    //
-    algo::UnTime         cum_modtime;               // Cumulative modtime of all source files in this target
-    algo::cstring        outfile;                   //
-    bool                 ood;                       //   false
-    abt::FSyscmd*        targ_start;                // optional pointer
-    abt::FSyscmd*        targ_compile;              // optional pointer
-    abt::FSyscmd*        targ_link;                 // optional pointer
-    abt::FSyscmd*        targ_end;                  // optional pointer
-    abt::FSrcfile*       c_precomp;                 // Precompled header for this target. optional pointer
-    abt::FTargsrc**      c_targsrc_elems;           // array of pointers
-    u32                  c_targsrc_n;               // array of pointers
-    u32                  c_targsrc_max;             // capacity of allocated array
-    abt::FSrcfile**      c_srcfile_elems;           // array of pointers
-    u32                  c_srcfile_n;               // array of pointers
-    u32                  c_srcfile_max;             // capacity of allocated array
-    abt::FTargdep**      c_targdep_elems;           // array of pointers
-    u32                  c_targdep_n;               // array of pointers
-    u32                  c_targdep_max;             // capacity of allocated array
-    bool                 ood_visited;               //   false  Lockout for topo sort
-    abt::FTargsyslib**   c_targsyslib_elems;        // array of pointers
-    u32                  c_targsyslib_n;            // array of pointers
-    u32                  c_targsyslib_max;          // capacity of allocated array
-    abt::FTarget**       c_alldep_elems;            // array of pointers
-    u32                  c_alldep_n;                // array of pointers
-    u32                  c_alldep_max;              // capacity of allocated array
-    abt::FSyslib**       c_alllib_elems;            // array of pointers
-    u32                  c_alllib_n;                // array of pointers
-    u32                  c_alllib_max;              // capacity of allocated array
-    abt::FNs*            p_ns;                      // reference to parent row
+    abt::FTarget*        ind_target_next;          // hash next
+    abt::FTarget*        zs_sel_target_next;       // zslist link; -1 means not-in-list
+    abt::FTarget*        zs_origsel_target_next;   // zslist link; -1 means not-in-list
+    algo::Smallstr16     target;                   //
+    algo::Smallstr50     license;                  //
+    algo::Smallstr50     compat;                   //   "Linux-%.%-%"
+    algo::UnTime         cum_modtime;              // Cumulative modtime of all source files in this target
+    algo::cstring        outfile;                  //
+    bool                 ood;                      //   false
+    abt::FSyscmd*        targ_start;               // optional pointer
+    abt::FSyscmd*        targ_compile;             // optional pointer
+    abt::FSyscmd*        targ_link;                // optional pointer
+    abt::FSyscmd*        targ_end;                 // optional pointer
+    abt::FSrcfile*       c_precomp;                // Precompled header for this target. optional pointer
+    abt::FTargsrc**      c_targsrc_elems;          // array of pointers
+    u32                  c_targsrc_n;              // array of pointers
+    u32                  c_targsrc_max;            // capacity of allocated array
+    abt::FSrcfile**      c_srcfile_elems;          // array of pointers
+    u32                  c_srcfile_n;              // array of pointers
+    u32                  c_srcfile_max;            // capacity of allocated array
+    abt::FTargdep**      c_targdep_elems;          // array of pointers
+    u32                  c_targdep_n;              // array of pointers
+    u32                  c_targdep_max;            // capacity of allocated array
+    bool                 ood_visited;              //   false  Lockout for topo sort
+    abt::FTargsyslib**   c_targsyslib_elems;       // array of pointers
+    u32                  c_targsyslib_n;           // array of pointers
+    u32                  c_targsyslib_max;         // capacity of allocated array
+    abt::FTarget**       c_alldep_elems;           // array of pointers
+    u32                  c_alldep_n;               // array of pointers
+    u32                  c_alldep_max;             // capacity of allocated array
+    abt::FSyslib**       c_alllib_elems;           // array of pointers
+    u32                  c_alllib_n;               // array of pointers
+    u32                  c_alllib_max;             // capacity of allocated array
+    abt::FNs*            p_ns;                     // reference to parent row
+    bool                 libdep_visited;           //   false
+    algo::UnTime         out_modtime;              //
 private:
     friend abt::FTarget&        target_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend abt::FTarget*        target_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -2032,15 +2032,11 @@ void                 FTargsyslib_Uninit(abt::FTargsyslib& targsyslib) __attribut
 // --- abt.FToolOpt
 // create: abt.FDb.tool_opt (Lary)
 struct FToolOpt { // abt.FToolOpt
-    algo::RspaceStr10   tool_opt;   //
-    algo::Smallstr50    opt_type;   // name of variable (becomes exported makefile variable)
-    algo::Smallstr100   opt;        // value of the option
-    algo::Smallstr16    target;     // empty=match all. otherwise match name of target
-    algo::Smallstr50    uname;      // empty=match all. otherwise match value of `uname`
-    algo::Smallstr50    compiler;   // empty=match all. otherwise, match compiler name
-    algo::Smallstr50    cfg;        // empty=match all. otherwise, match configuration name
-    algo::Smallstr50    arch;       // empty=match all. otherwise, match value of `arch`
-    algo::Comment       comment;    //
+    algo::Smallstr100   tool_opt;      //
+    algo::Comment       comment;       //
+    algo_lib::Regx      regx_opt;      // Regx of algo::cstring
+    algo_lib::Regx      regx_target;   // Regx of algo::cstring
+    bool                select;        //   false
 private:
     friend abt::FToolOpt&       tool_opt_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend abt::FToolOpt*       tool_opt_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -2053,6 +2049,30 @@ void                 tool_opt_CopyOut(abt::FToolOpt &row, dev::ToolOpt &out) __a
 // Copy fields in to row
 void                 tool_opt_CopyIn(abt::FToolOpt &row, dev::ToolOpt &in) __attribute__((nothrow));
 
+algo::Smallstr50     opt_type_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
+
+algo::Smallstr100    opt_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
+
+algo::Smallstr50     target_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
+
+algo::Smallstr50     uname_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
+
+algo::Smallstr50     sortfld_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
+
+algo::Smallstr50     compiler_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
+
+algo::Smallstr50     cfg_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
+
+algo::Smallstr50     arch_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
+
+// Print back to string
+void                 regx_opt_Print(abt::FToolOpt& tool_opt, algo::cstring &out) __attribute__((nothrow));
+
+// Print back to string
+void                 regx_target_Print(abt::FToolOpt& tool_opt, algo::cstring &out) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 FToolOpt_Init(abt::FToolOpt& tool_opt);
 
 // --- abt.FUname
 // create: abt.FDb.uname (Lary)
@@ -2274,24 +2294,6 @@ struct _db_zs_sel_target_curs {// cursor
 };
 
 
-struct _db_zsl_libdep_visited_curs {// cursor
-    typedef abt::FTarget ChildType;
-    abt::FTarget* row;
-    _db_zsl_libdep_visited_curs() {
-        row = NULL;
-    }
-};
-
-
-struct _db_zsl_libdep_curs {// cursor
-    typedef abt::FTarget ChildType;
-    abt::FTarget* row;
-    _db_zsl_libdep_curs() {
-        row = NULL;
-    }
-};
-
-
 struct _db_targsyslib_curs {// cursor
     typedef abt::FTargsyslib ChildType;
     abt::FDb *parent;
@@ -2347,6 +2349,15 @@ struct _db_filestat_curs {// cursor
     abt::FDb *parent;
     i64 index;
     _db_filestat_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_zd_inclstack_curs {// cursor
+    typedef abt::FSrcfile ChildType;
+    abt::FSrcfile* row;
+    _db_zd_inclstack_curs() {
+        row = NULL;
+    }
 };
 
 

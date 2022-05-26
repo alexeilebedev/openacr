@@ -160,7 +160,7 @@ void atf_amc::amctest_AmcSort() {
         u32 length = sizeof(atf_amc::VarlenH)+100*sizeof(atf_amc::TypeH);
         atf_amc::VarlenH &varlenh=*(atf_amc::VarlenH*)malloc(length);
         varlenh.length=length;
-        aryptr<atf_amc::TypeH> ary = atf_amc::typeh_Getary(varlenh);
+        algo::aryptr<atf_amc::TypeH> ary = atf_amc::typeh_Getary(varlenh);
         frep_(i,100) {
             ary[i].typeh = (i*73) % 100;
         }
@@ -182,25 +182,25 @@ void atf_amc::amctest_PerfSortString() {
     int N = 1000000;
     frep_(i,N) {
         atf_amc::Cstr &str = orig_Alloc(frame);
-        frep_(j,60) str.val << "0123456789"[i32_WeakRandom(10)];
+        frep_(j,60) str.val << "0123456789"[algo::i32_WeakRandom(10)];
     }
     frep_(i,2) {
         prlog("--------------------------------------------------------------------------------");
         {
             sorted1_RemoveAll(frame);
             sorted1_Addary(frame, orig_Getary(frame));
-            u64 c = get_cycles();
+            u64 c = algo::get_cycles();
             std::sort(frame.sorted1_elems, frame.sorted1_elems + frame.sorted1_n);
-            c = get_cycles() - c;
+            c = algo::get_cycles() - c;
             prlog("STL sort of cstrings: "<<c/N<<" cycles/elem");
         }
         {
             sorted1_RemoveAll(frame);
             sorted1_Addary(frame, orig_Getary(frame));
-            u64 c = get_cycles();
+            u64 c = algo::get_cycles();
             // can AMC generate a quick sort for cstring??
             sorted1_QuickSort(frame);
-            c = get_cycles() - c;
+            c = algo::get_cycles() - c;
             prlog("AMC QuickSort of cstrings: "<<c/N<<" cycles/elem");
         }
     }

@@ -25,24 +25,29 @@
 // -----------------------------------------------------------------------------
 
 void acr_ed::BeginSandbox() {
-    acr_ed::_db.orig_dir = GetCurDir();
-    acr_ed::_db.sandbox_dir = DirFileJoin(GetCurDir(),"temp/acr_ed");
+    acr_ed::_db.orig_dir = algo::GetCurDir();
+    acr_ed::_db.sandbox_dir = algo::DirFileJoin(algo::GetCurDir(),"temp/acr_ed");
     CreateDirRecurse(acr_ed::_db.sandbox_dir);
     prerr("acr_ed.begin_sandbox"
           <<Keyval("orig_dir",_db.orig_dir)
           <<Keyval("sandbox",_db.sandbox_dir)
           );
-    SysCmd(tempstr()<<"rsync --delete -a .gitignore bin build cpp include extern data diff txt lock "
-           <<_db.sandbox_dir<<"/", FailokQ(false));
+    // files/directories to clone to the subdirectory
+    tempstr gitfiles(".gitignore");
+    ind_beg(_db_sandbox_curs,sandbox,_db) {
+        gitfiles<<" "<<sandbox.sandbox;
+    }ind_end;
+    SysCmd(tempstr()<<"rsync --delete -ac "<<gitfiles<<" "<<_db.sandbox_dir<<"/", FailokQ(false));
     EnterSandboxX();
     // prevent git from escaping the sandbox
-    SysCmd("git init", FailokQ(false));
+    SysCmd("git init .", FailokQ(false));
     // make sure git ls-files knows about these files;
     // acr_ed schedules update-gitfile, and there may be gsymbols
     // generated off of gitfile.ssim, so the list of versioned files
     // must be reasonably valid.
-    SysCmd("git add -f --ignore-removal bin cpp include extern data diff txt", FailokQ(false));
-    SysCmd("git commit --allow-empty -m initial-commit", FailokQ(false));
+    SysCmd(tempstr()<<"git add -f --ignore-removal "<<gitfiles, FailokQ(false));
+    SysCmd("git clean -df .", FailokQ(false));
+    SysCmd("git commit --allow-empty -m initial-commit | grep -v 'create mode'", FailokQ(false));
     (void)mkdir("temp", 0755);// may fail
 }
 
@@ -63,15 +68,4 @@ void acr_ed::ExitSandbox() {
               <<Keyval("orig_dir",_db.orig_dir));
         errno_vrfy(chdir(Zeroterm(_db.orig_dir)) == 0, "chdir");
     }
-}
-
-// -----------------------------------------------------------------------------
-
-// Build specified tools inside the sandbox
-// It is assumed that we're inside the sandbox
-void acr_ed::BuildX(strptr what) {
-    command::abt_proc abt;
-    abt.cmd.install = true;
-    abt.cmd.target.expr = what;
-    abt_ExecX(abt);
 }

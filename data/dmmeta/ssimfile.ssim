@@ -14,9 +14,13 @@ dmmeta.ssimfile  ssimfile:dev.cfg  ctype:dev.Cfg
 dmmeta.ssimfile  ssimfile:dev.compiler  ctype:dev.Compiler
 dmmeta.ssimfile  ssimfile:dev.gitfile  ctype:dev.Gitfile
 dmmeta.ssimfile  ssimfile:dev.gitinfo  ctype:dev.Gitinfo
+dmmeta.ssimfile  ssimfile:dev.htmlentity  ctype:dev.Htmlentity
+dmmeta.ssimfile  ssimfile:dev.license  ctype:dev.License
 dmmeta.ssimfile  ssimfile:dev.linelim  ctype:dev.Linelim
+dmmeta.ssimfile  ssimfile:dev.noindent  ctype:dev.Noindent
 dmmeta.ssimfile  ssimfile:dev.opt_type  ctype:dev.OptType
 dmmeta.ssimfile  ssimfile:dev.readme  ctype:dev.Readme
+dmmeta.ssimfile  ssimfile:dev.sandbox  ctype:dev.Sandbox
 dmmeta.ssimfile  ssimfile:dev.scriptfile  ctype:dev.Scriptfile
 dmmeta.ssimfile  ssimfile:dev.srcfile  ctype:dev.Srcfile
 dmmeta.ssimfile  ssimfile:dev.syslib  ctype:dev.Syslib
@@ -24,6 +28,7 @@ dmmeta.ssimfile  ssimfile:dev.targdep  ctype:dev.Targdep
 dmmeta.ssimfile  ssimfile:dev.target  ctype:dev.Target
 dmmeta.ssimfile  ssimfile:dev.targsrc  ctype:dev.Targsrc
 dmmeta.ssimfile  ssimfile:dev.targsyslib  ctype:dev.Targsyslib
+dmmeta.ssimfile  ssimfile:dev.timefmt  ctype:dev.Timefmt
 dmmeta.ssimfile  ssimfile:dev.tool_opt  ctype:dev.ToolOpt
 dmmeta.ssimfile  ssimfile:dev.uname  ctype:dev.Uname
 dmmeta.ssimfile  ssimfile:dmmeta.anonfld  ctype:dmmeta.Anonfld
@@ -83,6 +88,7 @@ dmmeta.ssimfile  ssimfile:dmmeta.fstep  ctype:dmmeta.Fstep
 dmmeta.ssimfile  ssimfile:dmmeta.ftrace  ctype:dmmeta.Ftrace
 dmmeta.ssimfile  ssimfile:dmmeta.ftuple  ctype:dmmeta.Ftuple
 dmmeta.ssimfile  ssimfile:dmmeta.funique  ctype:dmmeta.Funique
+dmmeta.ssimfile  ssimfile:dmmeta.fuserinit  ctype:dmmeta.Fuserinit
 dmmeta.ssimfile  ssimfile:dmmeta.fwddecl  ctype:dmmeta.Fwddecl
 dmmeta.ssimfile  ssimfile:dmmeta.gconst  ctype:dmmeta.Gconst
 dmmeta.ssimfile  ssimfile:dmmeta.gstatic  ctype:dmmeta.Gstatic

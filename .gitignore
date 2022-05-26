@@ -10,6 +10,6 @@
 build/
 cscope.out
 lock/
-tags
+/tags
 temp/
 vmlinux*

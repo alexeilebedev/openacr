@@ -63,7 +63,7 @@ void amc::tfunc_Lpool_FreeMem() {
     Ins(&R, func.proto, "$name_FreeMem($Parent, void *mem, u64 size)", false);
     Ins(&R, func.body, "if (mem) {");
     Ins(&R, func.body, "    size = u64_Max(size,16); // enforce alignment");
-    Ins(&R, func.body, "    u64 cell = u64_BitScanReverse(size-1) + 1;");
+    Ins(&R, func.body, "    u64 cell = algo::u64_BitScanReverse(size-1) + 1;");
     Ins(&R, func.body, "    $name_Lpblock *temp = ($name_Lpblock*)mem; // push  singly linked list");
     Ins(&R, func.body, "    temp->next = $parname.$name_free[cell];");
     Ins(&R, func.body, "    $parname.$name_free[cell] = temp;");
@@ -84,7 +84,7 @@ void amc::tfunc_Lpool_AllocMem() {
     Ins(&R, func.comment, "If not successful, return NULL");
     Ins(&R, func.comment, "The allocated block is 16-byte aligned");
     Ins(&R, func.body, "size     = u64_Max(size,16); // enforce alignment");
-    Ins(&R, func.body, "u64 cell = u64_BitScanReverse(size-1)+1;");
+    Ins(&R, func.body, "u64 cell = algo::u64_BitScanReverse(size-1)+1;");
     Ins(&R, func.body, "u64 i    = cell;");
     Ins(&R, func.body, "u8 *retval = NULL;");
     Ins(&R, func.body, "// try to find a block that's at least as large as required.");
@@ -130,7 +130,7 @@ void amc::tfunc_Lpool_ReserveBuffers() {
     Ins(&R, func.body, "bool retval = true;");
     Ins(&R, func.body, "bufsize = u64_Max(bufsize, 16);");
     Ins(&R, func.body, "for (int i = 0; i < nbuf; i++) {");
-    Ins(&R, func.body, "    u64     cell = u64_BitScanReverse(bufsize-1)+1;");
+    Ins(&R, func.body, "    u64     cell = algo::u64_BitScanReverse(bufsize-1)+1;");
     Ins(&R, func.body, "    u64     size = 1ULL<<cell;");
     Ins(&R, func.body, "    $name_Lpblock *temp = ($name_Lpblock*)$basepool_AllocMem(size);");
     Ins(&R, func.body, "    if (temp == NULL) {");
@@ -157,7 +157,7 @@ void amc::tfunc_Lpool_ReallocMem() {
     Ins(&R, func.body, "void* ret = oldmem;");
     Ins(&R, func.body, "if (new_size != old_size) {");
     Ins(&R, func.body, "    ret = $name_AllocMem($pararg, new_size);");
-    Ins(&R, func.body, "    if (ret && oldmem) {");
+    Ins(&R, func.body, "    if (ret && oldmem) {"); // check for oldmem if required for gcc -O2
     Ins(&R, func.body, "        memcpy(ret,oldmem,u64_Min(new_size,old_size));");
     Ins(&R, func.body, "        $name_FreeMem($pararg, oldmem, old_size);");
     Ins(&R, func.body, "    }");

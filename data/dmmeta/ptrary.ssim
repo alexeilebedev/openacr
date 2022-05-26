@@ -71,7 +71,8 @@ dmmeta.ptrary  field:lib_exec.FSyscmd.c_next  unique:Y
 dmmeta.ptrary  field:lib_exec.FSyscmd.c_prior  unique:Y
 dmmeta.ptrary  field:lib_json.FNode.c_child  unique:Y
 dmmeta.ptrary  field:mdbg.FCfg.c_builddir  unique:Y
-dmmeta.ptrary  field:src_hdr.FNs.c_targsrc  unique:Y
+dmmeta.ptrary  field:orgfile.FFilehash.c_filename  unique:Y
+dmmeta.ptrary  field:src_hdr.FTarget.c_targsrc  unique:Y
 dmmeta.ptrary  field:ssim2mysql.FCtype.c_field  unique:Y
 dmmeta.ptrary  field:ssim2mysql.FNs.c_ssimfile  unique:Y
 dmmeta.ptrary  field:ssim2mysql.FSsimfile.c_column  unique:Y

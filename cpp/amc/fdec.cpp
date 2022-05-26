@@ -40,7 +40,7 @@ void amc::tfunc_Dec_GetDouble() {
 
     amc::FFunc& func = amc::CreateCurFunc();
     Ins(&R, func.ret  , "double",false);
-    Ins(&R, func.proto, "$name_GetDouble($Parent)",false);
+    Ins(&R, func.proto, "$name_GetDouble($Cparent)",false);
     Ins(&R, func.body, "double ret;");
     Ins(&R, func.body, "ret = $fldval / double($fromdbl);");
     Ins(&R, func.body, "return ret;");
@@ -57,7 +57,7 @@ void amc::tfunc_Dec_GetInt() {
     amc::FFunc& func = amc::CreateCurFunc();
     Ins(&R, func.ret  , "$Cpptype",false);
     Ins(&R, func.comment  , "Return integer portion (divide number by $scale)",false);
-    Ins(&R, func.proto, "$name_GetInt($Parent)",false);
+    Ins(&R, func.proto, "$name_GetInt($Cparent)",false);
     Ins(&R, func.body, "$Ctype ret;");
     Ins(&R, func.body, "ret = $fldval / $scale;");
     Ins(&R, func.body, "return ret;");
@@ -245,6 +245,6 @@ void amc::tfunc_Dec_Print() {
             Ins(&R, print.body, "}");
         }
         Ins(&R, print.body, "u8 *$name_start = (u8*)(outstr.ch_elems + outstr.ch_n);");
-        Ins(&R, print.body, "outstr.ch_n += u64_FmtBufDec(value, $nplace, $name_start, $fixed);");
+        Ins(&R, print.body, "outstr.ch_n += algo::u64_FmtBufDec(value, $nplace, $name_start, $fixed);");
     }
 }

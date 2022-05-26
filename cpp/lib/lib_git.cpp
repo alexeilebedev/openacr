@@ -65,7 +65,7 @@ tempstr lib_git::GitModifiedFiles(strptr dir) {
     tempstr ret;
     bool clean = modfiles == strptr();
     if (!clean) {
-        ListSep ls(", ");
+        algo::ListSep ls(", ");
         int n = 0;
         ind_beg(Line_curs,line,modfiles) {
             ret << ls << line;
@@ -106,7 +106,7 @@ bool lib_git::GitRemoteExistsQ(strptr remote) {
 bool lib_git::GitBranchExistsQ(strptr branch) {
     bool found = false;
     tempstr git_br = SysEval("git branch 2>&1", FailokQ(false), 1024*1024);
-    StringIter it(git_br);
+    algo::StringIter it(git_br);
     while (!it.EofQ()) {
         if (GetWordCharf(it) == branch) {
             found = true;

@@ -39,13 +39,13 @@ void amc::tfunc_Step_UpdateCycles() {
     Ins(&R, func.comment, "Update cycles count from previous clock capture");
     Ins(&R, func.ret     , "void",false);
     Ins(&R, func.proto   , "$name_UpdateCycles()",false);
-    Ins(&R, func.body    , "u64 cur_cycles                      = get_cycles();");
+    Ins(&R, func.body    , "u64 cur_cycles                      = algo::get_cycles();");
     if (field.c_ftrace) {
         Ins(&R, func.body, "u64 prev_cycles                     = algo_lib::_db.clock.value;");
         Ins(&R, func.body, "++$ns::_db.trace.step_$name;");
         Ins(&R, func.body, "$ns::_db.trace.step_$name_cycles  += cur_cycles - prev_cycles;");
     }
-    Ins(&R, func.body    , "algo_lib::_db.clock                 = SchedTime(cur_cycles);");
+    Ins(&R, func.body    , "algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);");
 }
 
 // -----------------------------------------------------------------------------
@@ -70,17 +70,17 @@ void amc::tfunc_Step_Init() {
     if (fstep.steptype == dmmeta_Steptype_steptype_InlineRecur) {
         if (fstep.c_fdelay) {
             Set(R, "$delay", tempstr()<< value_GetDouble(fstep.c_fdelay->delay));
-            Ins(&R, init.body, "$ns::_db.$name_delay = ToSchedTime($delay); // initialize fstep delay ($field)");
+            Ins(&R, init.body, "$ns::_db.$name_delay = algo::ToSchedTime($delay); // initialize fstep delay ($field)");
         }
     } else if (fstep.steptype == dmmeta_Steptype_steptype_TimeHookRecur) {
         Ins(&R, init.body, "// initialize fstep timehook ($field)");
         Ins(&R, init.body, "// timehook is recurrent with initial frequency=max.");
         Ins(&R, init.body, "hook_Set0($parname.th_$name, $ns::$name_Call);");
-        Ins(&R, init.body, "ThInitRecur($parname.th_$name, SchedTime());");
+        Ins(&R, init.body, "ThInitRecur($parname.th_$name, algo::SchedTime());");
         if (fstep.c_fdelay) {
             vrfy(!fstep.c_fdelay->scale, "Scalable delay is only supported for InlineRecur step");
             Set(R, "$delay", tempstr()<< fstep.c_fdelay->delay);
-            Ins(&R, init.body, "$ns::_db.th_$name.delay = ToSchedTime($delay); // initialize fstep delay ($field)");
+            Ins(&R, init.body, "$ns::_db.th_$name.delay = algo::ToSchedTime($delay); // initialize fstep delay ($field)");
         }
     }
 }
@@ -223,5 +223,27 @@ void amc::tfunc_Step_FirstChanged() {
             // inline -- do nothing
             chg.priv = true;
         }
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+void amc::tfunc_Step_SetDelay() {
+    algo_lib::Replscope &R = amc::_db.genfield.R;
+    amc::FField &field = *amc::_db.genfield.p_field;
+    amc::FFstep &fstep = *field.c_fstep;
+    if (fstep.steptype == dmmeta_Steptype_steptype_InlineRecur) {
+        amc::FFunc& func = amc::CreateCurFunc();
+        Ins(&R, func.comment, "Set inter-step delay to specified value.");
+        Ins(&R, func.comment, "The difference between new delay and current delay is added to the next scheduled time.");
+        Ins(&R, func.ret  , "void", false);
+        Ins(&R, func.proto, "$name_SetDelay($Parent)", false);
+        AddProtoArg(func, "algo::SchedTime", "delay");
+        Ins(&R, func.body, "i64 diff = delay.value - $ns::_db.$name_next.value;");
+        Ins(&R, func.body, "if (diff > 0) {");
+        Ins(&R, func.body, "    $ns::_db.$name_next.value += diff;");
+        Ins(&R, func.body, "} else {");
+        Ins(&R, func.body, "    $ns::_db.$name_next.value = algo::u64_SubClip($ns::_db.$name_next.value,-diff);");
+        Ins(&R, func.body, "}");
     }
 }

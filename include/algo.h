@@ -29,6 +29,7 @@
 
 #include "include/sysincl.h"
 #include "include/typedef.h"
+#include "include/u128.h"
 #include "include/define.h"
 #include "include/gen/_gen.h"
 #include "include/gen/algo_gen.h"
@@ -47,6 +48,7 @@
 #include "include/gen/report_gen.h"
 #include "include/gen/ietf_gen.h"
 #include "algo/using.h"
+#include "include/algo/win32.h" // windows compatibility api
 
 // INLINE FILE SECTION
 

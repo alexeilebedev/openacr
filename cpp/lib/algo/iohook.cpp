@@ -29,6 +29,10 @@
 #include <sys/types.h>
 #include <sys/event.h>
 #include <sys/time.h>
+#elif defined(__CYGWIN__)
+#include <sys/types.h>
+#include <sys/time.h>
+//#include <Windows.h>
 #endif
 
 // -----------------------------------------------------------------------------
@@ -39,6 +43,8 @@ void algo_lib::IohookInit() {
     if (algo_lib::_db.epoll_fd == -1) {
         FatalErrorExit("kqueue");
     }
+#elif defined(__CYGWIN__)
+#elif defined(WIN32)
 #else
     algo_lib::_db.epoll_fd = epoll_create(1);
     if (algo_lib::_db.epoll_fd == -1) {
@@ -67,6 +73,12 @@ void algo_lib::IohookAdd(algo_lib::FIohook& iohook, algo::IOEvtFlags inflags) NO
         EV_SET(&ev, iohook.fildes.value, EVFILT_WRITE, EV_ADD | EV_CLEAR, 0, 0, &iohook);
         (void)kevent(algo_lib::_db.epoll_fd, &ev, 1, NULL, 0, NULL);
     }
+#elif defined(WIN32)
+    // TODO: windows
+    // always active
+    callback_Call(iohook,iohook);
+#elif defined(__CYGWIN__)
+    callback_Call(iohook,iohook);
 #else
     struct epoll_event ev;
     ev.events                     = 0;
@@ -106,6 +118,10 @@ void algo_lib::IohookRemove(algo_lib::FIohook& iohook) NOTHROW {
             EV_SET(&ev, iohook.fildes.value, EVFILT_WRITE, EV_DELETE, 0, 0, &iohook);
             (void)kevent(algo_lib::_db.epoll_fd, &ev, 1, NULL, 0, NULL);
         }
+#elif defined(WIN32)
+        // TODO: fix
+#elif defined(__CYGWIN__)
+
 #else
         // epoll_ctl:
         // passing NULL as last argument causes crash in DBL2.0
@@ -129,11 +145,20 @@ void algo_lib::IohookRemove(algo_lib::FIohook& iohook) NOTHROW {
 // Small sleeps (less than a few microseconds) are converted to spinning.
 static void SleepClocks(u64 clocks) {
     if (clocks > 10000) {
+#if defined(WIN32) || defined(__CYGWIN__)
+        u64 msec = clocks * algo_lib::_db.clocks_to_ns / 1000000;
+        if (msec > 0) {
+            algo::SleepMsec(msec);
+        }
+#else
+        // #AL# on some cygwin implementations, nanosleep doesn't work
+        // (delays by 20x the requested amount)
         u64 sleep_nsec = u64(clocks * algo_lib::_db.clocks_to_ns);
         struct timespec t;
         t.tv_sec = sleep_nsec / 1000000000;
         t.tv_nsec = sleep_nsec % 1000000000;
         nanosleep(&t,&t);
+#endif
     }
 }
 
@@ -204,6 +229,10 @@ static void _IohookWaitClocks(u64 wait_clocks) {
     if ((wait_clocks > 0) || (algo_lib::_db.giveup_count & 1) == 0) {
 #if defined(__MACH__) || __FreeBSD__>0
         IohookWaitClocks_Kqueue(wait_clocks);
+#elif defined(__CYGWIN__)
+
+#elif defined(WIN32)
+        // use WaitForSingleObjectEx
 #else
         IohookWaitClocks_Epoll(wait_clocks);
 #endif

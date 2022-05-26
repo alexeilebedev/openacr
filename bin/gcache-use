@@ -1,3 +1,2 @@
 #!/bin/sh
-ln -f -s /tmp/gcache .gcache
-
+ln -fsn /tmp/gcache .gcache

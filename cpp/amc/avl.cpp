@@ -259,13 +259,13 @@ void amc::tfunc_Atree_Rebalance(){
     func.inl = false;
     Ins(&R, func.proto, "$Rebalance($Cpptype& node)", false);
     Ins(&R, func.ret,   "void", false);
-    Ins(&R, func.body,  "if(Abs($Balance(node)) > 1){");
+    Ins(&R, func.body,  "if (algo::Abs($Balance(node)) > 1){");
     Ins(&R, func.body,  "    $Cpptype* deep1 = $TallerChild(node);");
     Ins(&R, func.body,  "    $Cpptype* deep2 = $TallerChild(*deep1);");
     Ins(&R, func.body,  "    bool turn = $Balance(*deep1)!=0 && (node.$Left == deep1) != (deep1->$Left == deep2);");
     Ins(&R, func.body,  "    if(turn){");
     Ins(&R, func.body,  "        $Turn(*deep2, *deep1);");
-    Ins(&R, func.body,  "        TSwap(deep1, deep2);");
+    Ins(&R, func.body,  "        algo::TSwap(deep1, deep2);");
     Ins(&R, func.body,  "    }");
     Ins(&R, func.body,  "    $Turn(*deep1, node);");
     Ins(&R, func.body,  "    $UpdateDepth(node);");

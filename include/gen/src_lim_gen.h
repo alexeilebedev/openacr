@@ -8,9 +8,10 @@
 
 
 #pragma once
-#include "include/gen/command_gen.h"
-#include "include/gen/algo_gen.h"
 #include "include/gen/dev_gen.h"
+#include "include/gen/algo_gen.h"
+#include "include/gen/algo_lib_gen.h"
+#include "include/gen/command_gen.h"
 //#pragma endinclude
 
 // --- src_lim_FieldIdEnum
@@ -25,18 +26,21 @@ enum { src_lim_FieldIdEnum_N = 1 };
 // --- src_lim_TableIdEnum
 
 enum src_lim_TableIdEnum {               // src_lim.TableId.value
-     src_lim_TableId_dev_Gitfile   = 0   // dev.Gitfile -> src_lim.FGitfile
-    ,src_lim_TableId_dev_gitfile   = 0   // dev.gitfile -> src_lim.FGitfile
-    ,src_lim_TableId_dev_Include   = 1   // dev.Include -> src_lim.FInclude
-    ,src_lim_TableId_dev_Linelim   = 2   // dev.Linelim -> src_lim.FLinelim
-    ,src_lim_TableId_dev_linelim   = 2   // dev.linelim -> src_lim.FLinelim
-    ,src_lim_TableId_dev_Targsrc   = 3   // dev.Targsrc -> src_lim.FTargsrc
-    ,src_lim_TableId_dev_targsrc   = 3   // dev.targsrc -> src_lim.FTargsrc
+     src_lim_TableId_dev_Badline   = 0   // dev.Badline -> src_lim.FBadline
+    ,src_lim_TableId_dev_badline   = 0   // dev.badline -> src_lim.FBadline
+    ,src_lim_TableId_dev_Gitfile   = 1   // dev.Gitfile -> src_lim.FGitfile
+    ,src_lim_TableId_dev_gitfile   = 1   // dev.gitfile -> src_lim.FGitfile
+    ,src_lim_TableId_dev_Include   = 2   // dev.Include -> src_lim.FInclude
+    ,src_lim_TableId_dev_Linelim   = 3   // dev.Linelim -> src_lim.FLinelim
+    ,src_lim_TableId_dev_linelim   = 3   // dev.linelim -> src_lim.FLinelim
+    ,src_lim_TableId_dev_Targsrc   = 4   // dev.Targsrc -> src_lim.FTargsrc
+    ,src_lim_TableId_dev_targsrc   = 4   // dev.targsrc -> src_lim.FTargsrc
 };
 
-enum { src_lim_TableIdEnum_N = 7 };
+enum { src_lim_TableIdEnum_N = 9 };
 
 namespace src_lim { struct FGitfile; }
+namespace src_lim { struct FBadline; }
 namespace src_lim { struct trace; }
 namespace src_lim { struct FDb; }
 namespace src_lim { struct FInclude; }
@@ -49,6 +53,7 @@ namespace src_lim { struct _db_linelim_curs; }
 namespace src_lim { struct _db_targsrc_curs; }
 namespace src_lim { struct _db_gitfile_curs; }
 namespace src_lim { struct _db_ind_gitfile_curs; }
+namespace src_lim { struct _db_badline_curs; }
 namespace src_lim { struct gitfile_zd_include_curs; }
 namespace src_lim {
 }//pkey typedefs
@@ -56,6 +61,36 @@ namespace src_lim {
 extern const char *src_lim_help;
 extern const char *src_lim_syntax;
 extern FDb _db;
+
+// --- src_lim.FBadline
+// create: src_lim.FDb.badline (Lary)
+struct FBadline { // src_lim.FBadline
+    algo::Smallstr50    badline;         //
+    algo::Smallstr200   expr;            //
+    algo::Smallstr50    targsrc_regx;    //
+    algo::Comment       comment;         //
+    algo_lib::Regx      regx;            //
+    algo_lib::Regx      _targsrc_regx;   //
+    bool                select;          //   false
+private:
+    friend src_lim::FBadline&   badline_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend src_lim::FBadline*   badline_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 badline_RemoveAll() __attribute__((nothrow));
+    friend void                 badline_RemoveLast() __attribute__((nothrow));
+    FBadline();
+    // value field src_lim.FBadline.regx is not copiable
+    // value field src_lim.FBadline._targsrc_regx is not copiable
+    FBadline(const FBadline&){ /*disallow copy constructor */}
+    void operator =(const FBadline&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 badline_CopyOut(src_lim::FBadline &row, dev::Badline &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 badline_CopyIn(src_lim::FBadline &row, dev::Badline &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 FBadline_Init(src_lim::FBadline& badline);
 
 // --- src_lim.trace
 #pragma pack(push,1)
@@ -83,6 +118,8 @@ struct FDb { // src_lim.FDb
     i32                   ind_gitfile_buckets_n;       // number of elements in bucket array
     i32                   ind_gitfile_n;               // number of elements in the hash table
     algo::cstring         outtext;                     //
+    src_lim::FBadline*    badline_lary[32];            // level array
+    i32                   badline_n;                   // number of elements in array
     src_lim::trace        trace;                       //
 };
 
@@ -227,6 +264,34 @@ void                 ind_gitfile_Remove(src_lim::FGitfile& row) __attribute__((n
 // Reserve enough room in the hash for N more elements. Return success code.
 void                 ind_gitfile_Reserve(int n) __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+src_lim::FBadline&   badline_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+src_lim::FBadline*   badline_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+src_lim::FBadline*   badline_InsertMaybe(const dev::Badline &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                badline_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 badline_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+src_lim::FBadline*   badline_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+src_lim::FBadline*   badline_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  badline_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 badline_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 badline_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+src_lim::FBadline&   badline_qFind(u64 t) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 badline_XrefMaybe(src_lim::FBadline &row);
+
 // cursor points to valid item
 void                 _db_include_curs_Reset(_db_include_curs &curs, src_lim::FDb &parent);
 // cursor points to valid item
@@ -259,6 +324,14 @@ bool                 _db_gitfile_curs_ValidQ(_db_gitfile_curs &curs);
 void                 _db_gitfile_curs_Next(_db_gitfile_curs &curs);
 // item access
 src_lim::FGitfile&   _db_gitfile_curs_Access(_db_gitfile_curs &curs);
+// cursor points to valid item
+void                 _db_badline_curs_Reset(_db_badline_curs &curs, src_lim::FDb &parent);
+// cursor points to valid item
+bool                 _db_badline_curs_ValidQ(_db_badline_curs &curs);
+// proceed to next item
+void                 _db_badline_curs_Next(_db_badline_curs &curs);
+// item access
+src_lim::FBadline&   _db_badline_curs_Access(_db_badline_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
@@ -410,6 +483,7 @@ struct FTargsrc { // src_lim.FTargsrc
     algo::Smallstr100    targsrc;     //
     algo::Comment        comment;     //
     src_lim::FGitfile*   p_gitfile;   // reference to parent row
+    bool                 select;      //   false
 private:
     friend src_lim::FTargsrc&   targsrc_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend src_lim::FTargsrc*   targsrc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -540,6 +614,14 @@ struct _db_gitfile_curs {// cursor
     src_lim::FDb *parent;
     i64 index;
     _db_gitfile_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_badline_curs {// cursor
+    typedef src_lim::FBadline ChildType;
+    src_lim::FDb *parent;
+    i64 index;
+    _db_badline_curs(){ parent=NULL; index=0; }
 };
 
 

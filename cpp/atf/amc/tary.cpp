@@ -37,7 +37,7 @@ void atf_amc::amctest_TaryInit() {
 void atf_amc::amctest_TaryInit2() {
     atf_amc::TaryU32 tary_u32;
     frep_(i,100) {
-        aryptr<u32> elems = tary_u32_AllocN(tary_u32, i);
+        algo::aryptr<u32> elems = tary_u32_AllocN(tary_u32, i);
         frep_(j,elems_N(elems)) {
             vrfyeq_(elems[j], u32(44));
         }
@@ -55,7 +55,7 @@ void atf_amc::amctest_TaryInit3() {
 void atf_amc::amctest_TaryInit4() {
     atf_amc::TaryU8 tary_u8;
     frep_(i,100) {
-        aryptr<u8> elems = ary_AllocN(tary_u8, i);
+        algo::aryptr<u8> elems = ary_AllocN(tary_u8, i);
         frep_(j,elems_N(elems)) {
             vrfyeq_(elems[j], u8(44));
         }

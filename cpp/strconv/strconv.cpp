@@ -24,14 +24,18 @@
 #include "include/strconv.h"
 
 void strconv::Main() {
-    tempstr out;
+    tempstr str(strconv::_db.cmdline.str);
+    tempstr temp;
     if (strconv::_db.cmdline.tocamelcase) {
-        strptr_PrintCamel(strconv::_db.cmdline.str, out);
+        strptr_PrintCamel(str, temp);
+        str = temp;
     } else if (strconv::_db.cmdline.tolowerunder) {
-        strptr_PrintLowerUnder(strconv::_db.cmdline.str, out);
+        strptr_PrintLowerUnder(str, temp);
+        str = temp;
     }
-    prlog_(out);// raw output
-    if (isatty(1)) {
-        prlog_("\n");// eol for tty output
+    if (_db.cmdline.pathcomp != "") {
+        temp = Pathcomp(str, _db.cmdline.pathcomp);
+        str = temp;
     }
+    prlog_(str << (isatty(1) ? "\n" : ""));
 }

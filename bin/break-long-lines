@@ -1,0 +1,18 @@
+#!/usr/bin/env perl
+$s="";
+open(my $log,">","log");
+$|++; # autoflush;
+my $x;
+while (read(STDIN, $x, 1)) {
+    $s .= $x;
+    $toolong = (length($s) >= 256);
+    $doprint = ($x eq "\n" || $x eq "\r") || $toolong;
+    if ($doprint) {
+        print $s;
+        $s = "";
+    }
+    if ($toolong) {
+        print "\n";
+    }
+}
+print $s;

@@ -16,10 +16,10 @@ my @linepat    = ();
 my @pathpat    = (
     '!'.
     join('|',
-         ('\.svn/'
-          ,'build/'
-          ,'temp/'
-          ,'\.git/'))
+         ('^\.svn/'
+          ,'^build/'
+          ,'^temp/'
+          ,'^\.git/'))
     );
 my @filepat    = (
     '!'.
@@ -125,6 +125,7 @@ if ($no_autogen) {
     push(@pathpat, "!/gen/");
     push(@pathpat, "!apssuite/");
     push(@pathpat, "!extern/");
+    push(@pathpat, "!temp/");
 }
 
 if (!@dirs) {
@@ -285,8 +286,22 @@ sub recurse {
             next;
         }
         my ($npos,$nneg,$totpos,$totneg) = match_pat($fname, \@filepat);
-        $verbose && print "test  fullpath:$fullpath  file:$fname\n";
         my ($npos2,$nneg2,$totpos2,$totneg2) = match_pat($fullpath, \@pathpat);
+        $verbose && print "test"
+            ."  fullpath:$fullpath"
+            ."  file:$fname"
+            ."  text:".(-T $fullpath)
+            ."  npos:$npos"
+            ."  nneg:$nneg"
+            ."  totpos:$totpos"
+            ."  totneg:$totneg"
+            ."  npos2:$npos2"
+            ."  nneg2:$nneg2  "
+            ."  totpos2:$totpos2"
+            ."  totneg2:$totneg2"
+            ."  filepat:".join("|",@filepat)
+            ."  pathpat:".join("|",@pathpat)
+            ."\n";
         next if $nneg>0 || $nneg2>0;
         next if $npos < $totpos || $npos2 < $totpos2;
         next if !-T $fullpath;

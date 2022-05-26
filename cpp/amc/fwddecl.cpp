@@ -59,7 +59,7 @@ bool amc::FwdDeclQ(amc::FField &field) {
 
 static void Fwddecl_GenStructNs(amc::FNs &ns) {
     ind_beg(amc::ns_c_ctype_curs, ctype,ns) {// forward-declare all ctypes in the namespace
-        if (!ctype.c_bltin && !ctype.c_cextern) {
+        if (!ctype.c_bltin && (!ctype.c_cextern || ctype.c_cextern->isstruct)) {
             AddFwdDecl(ns,ctype);
         }
     }ind_end;

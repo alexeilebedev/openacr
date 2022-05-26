@@ -875,6 +875,7 @@ struct Nodekey { // amc_vis.Nodekey: Correspodns to a ctype
         ,i32                            in_idx
         ,i32                            in_prev_xpos);
     bool operator ==(const amc_vis::Nodekey &rhs) const;
+    bool operator !=(const amc_vis::Nodekey &rhs) const;
     bool operator <(const amc_vis::Nodekey &rhs) const;
     Nodekey();
 };
@@ -1198,6 +1199,7 @@ struct Linkkey { // amc_vis.Linkkey: Correspodns to a ctype
         ,i32                            in_colweight
         ,i32                            in_topbot);
     bool operator ==(const amc_vis::Linkkey &rhs) const;
+    bool operator !=(const amc_vis::Linkkey &rhs) const;
     bool operator <(const amc_vis::Linkkey &rhs) const;
     Linkkey();
 };

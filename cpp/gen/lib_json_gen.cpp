@@ -41,7 +41,7 @@ void lib_json::trace_Print(lib_json::trace & row, algo::cstring &str) {
 void lib_json::lpool_FreeMem(void *mem, u64 size) {
     if (mem) {
         size = u64_Max(size,16); // enforce alignment
-        u64 cell = u64_BitScanReverse(size-1) + 1;
+        u64 cell = algo::u64_BitScanReverse(size-1) + 1;
         lpool_Lpblock *temp = (lpool_Lpblock*)mem; // push  singly linked list
         temp->next = _db.lpool_free[cell];
         _db.lpool_free[cell] = temp;
@@ -54,7 +54,7 @@ void lib_json::lpool_FreeMem(void *mem, u64 size) {
 // The allocated block is 16-byte aligned
 void* lib_json::lpool_AllocMem(u64 size) {
     size     = u64_Max(size,16); // enforce alignment
-    u64 cell = u64_BitScanReverse(size-1)+1;
+    u64 cell = algo::u64_BitScanReverse(size-1)+1;
     u64 i    = cell;
     u8 *retval = NULL;
     // try to find a block that's at least as large as required.
@@ -93,7 +93,7 @@ bool lib_json::lpool_ReserveBuffers(int nbuf, u64 bufsize) {
     bool retval = true;
     bufsize = u64_Max(bufsize, 16);
     for (int i = 0; i < nbuf; i++) {
-        u64     cell = u64_BitScanReverse(bufsize-1)+1;
+        u64     cell = algo::u64_BitScanReverse(bufsize-1)+1;
         u64     size = 1ULL<<cell;
         lpool_Lpblock *temp = (lpool_Lpblock*)algo_lib::sbrk_AllocMem(size);
         if (temp == NULL) {
@@ -301,7 +301,7 @@ bool lib_json::node_XrefMaybe(lib_json::FNode &row) {
 // --- lib_json.FDb.ind_objfld.Find
 // Find row by key. Return NULL if not found.
 lib_json::FNode* lib_json::ind_objfld_Find(const lib_json::FldKey& key) {
-    u32 index = FldKey_Hash(0, key) & (_db.ind_objfld_buckets_n - 1);
+    u32 index = lib_json::FldKey_Hash(0, key) & (_db.ind_objfld_buckets_n - 1);
     lib_json::FNode* *e = &_db.ind_objfld_buckets_elems[index];
     lib_json::FNode* ret=NULL;
     do {
@@ -319,7 +319,7 @@ bool lib_json::ind_objfld_InsertMaybe(lib_json::FNode& row) {
     ind_objfld_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_objfld_next == (lib_json::FNode*)-1)) {// check if in hash already
-        u32 index = FldKey_Hash(0, fldkey_Get(row)) & (_db.ind_objfld_buckets_n - 1);
+        u32 index = lib_json::FldKey_Hash(0, fldkey_Get(row)) & (_db.ind_objfld_buckets_n - 1);
         lib_json::FNode* *prev = &_db.ind_objfld_buckets_elems[index];
         do {
             lib_json::FNode* ret = *prev;
@@ -345,7 +345,7 @@ bool lib_json::ind_objfld_InsertMaybe(lib_json::FNode& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_json::ind_objfld_Remove(lib_json::FNode& row) {
     if (LIKELY(row.ind_objfld_next != (lib_json::FNode*)-1)) {// check if in hash already
-        u32 index = FldKey_Hash(0, fldkey_Get(row)) & (_db.ind_objfld_buckets_n - 1);
+        u32 index = lib_json::FldKey_Hash(0, fldkey_Get(row)) & (_db.ind_objfld_buckets_n - 1);
         lib_json::FNode* *prev = &_db.ind_objfld_buckets_elems[index]; // addr of pointer to current element
         while (lib_json::FNode *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -366,7 +366,7 @@ void lib_json::ind_objfld_Reserve(int n) {
     u32 new_nelems   = _db.ind_objfld_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(lib_json::FNode*);
         u32 new_size = new_nbuckets * sizeof(lib_json::FNode*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -382,7 +382,7 @@ void lib_json::ind_objfld_Reserve(int n) {
             while (elem) {
                 lib_json::FNode &row        = *elem;
                 lib_json::FNode* next       = row.ind_objfld_next;
-                u32 index          = FldKey_Hash(0, fldkey_Get(row)) & (new_nbuckets-1);
+                u32 index          = lib_json::FldKey_Hash(0, fldkey_Get(row)) & (new_nbuckets-1);
                 row.ind_objfld_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -413,7 +413,7 @@ void lib_json::FDb_Init() {
     memset(_db.lpool_free, 0, sizeof(_db.lpool_free));
     // node: initialize Tpool
     _db.node_free      = NULL;
-    _db.node_blocksize = BumpToPow2(64 * sizeof(lib_json::FNode)); // allocate 64-127 elements at a time
+    _db.node_blocksize = algo::BumpToPow2(64 * sizeof(lib_json::FNode)); // allocate 64-127 elements at a time
     // initialize hash table for lib_json::FNode;
     _db.ind_objfld_n             	= 0; // (lib_json.FDb.ind_objfld)
     _db.ind_objfld_buckets_n     	= 4; // (lib_json.FDb.ind_objfld)
@@ -561,7 +561,7 @@ bool lib_json::type_SetStrptrMaybe(lib_json::FNode& node, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 4: {
-            switch (u64(ReadLE32(rhs.elems))) {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('n','u','l','l'): {
                     type_SetEnum(node,lib_json_FNode_type_null); ret = true; break;
                 }
@@ -572,7 +572,7 @@ bool lib_json::type_SetStrptrMaybe(lib_json::FNode& node, algo::strptr rhs) {
             break;
         }
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('a','r','r','a','y'): {
                     type_SetEnum(node,lib_json_FNode_type_array); ret = true; break;
                 }
@@ -586,7 +586,7 @@ bool lib_json::type_SetStrptrMaybe(lib_json::FNode& node, algo::strptr rhs) {
             break;
         }
         case 6: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('n','u','m','b','e','r'): {
                     type_SetEnum(node,lib_json_FNode_type_number); ret = true; break;
                 }
@@ -681,7 +681,7 @@ bool lib_json::state_SetStrptrMaybe(lib_json::FParser& parent, algo::strptr rhs)
     bool ret = false;
     switch (elems_N(rhs)) {
         case 2: {
-            switch (u64(ReadLE16(rhs.elems))) {
+            switch (u64(algo::ReadLE16(rhs.elems))) {
                 case LE_STR2('w','s'): {
                     state_SetEnum(parent,lib_json_FParser_state_ws); ret = true; break;
                 }
@@ -689,7 +689,7 @@ bool lib_json::state_SetStrptrMaybe(lib_json::FParser& parent, algo::strptr rhs)
             break;
         }
         case 3: {
-            switch (u64(ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
                 case LE_STR3('e','r','r'): {
                     state_SetEnum(parent,lib_json_FParser_state_err); ret = true; break;
                 }
@@ -700,7 +700,7 @@ bool lib_json::state_SetStrptrMaybe(lib_json::FParser& parent, algo::strptr rhs)
             break;
         }
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('t','o','k','e','n'): {
                     state_SetEnum(parent,lib_json_FParser_state_token); ret = true; break;
                 }
@@ -711,7 +711,7 @@ bool lib_json::state_SetStrptrMaybe(lib_json::FParser& parent, algo::strptr rhs)
             break;
         }
         case 6: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('n','u','m','b','e','r'): {
                     state_SetEnum(parent,lib_json_FParser_state_number); ret = true; break;
                 }
@@ -719,7 +719,7 @@ bool lib_json::state_SetStrptrMaybe(lib_json::FParser& parent, algo::strptr rhs)
             break;
         }
         case 7: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
                 case LE_STR7('s','t','r','_','e','s','c'): {
                     state_SetEnum(parent,lib_json_FParser_state_str_esc); ret = true; break;
                 }
@@ -727,7 +727,7 @@ bool lib_json::state_SetStrptrMaybe(lib_json::FParser& parent, algo::strptr rhs)
             break;
         }
         case 8: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('s','e','c','_','l','i','n','e'): {
                     state_SetEnum(parent,lib_json_FParser_state_sec_line); ret = true; break;
                 }
@@ -738,7 +738,7 @@ bool lib_json::state_SetStrptrMaybe(lib_json::FParser& parent, algo::strptr rhs)
             break;
         }
         case 10: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('s','t','r','_','u','s','u','r'): {
                     if (memcmp(rhs.elems+8,"r1",2)==0) { state_SetEnum(parent,lib_json_FParser_state_str_usurr1); ret = true; break; }
                     if (memcmp(rhs.elems+8,"r2",2)==0) { state_SetEnum(parent,lib_json_FParser_state_str_usurr2); ret = true; break; }
@@ -857,7 +857,7 @@ bool lib_json::value_SetStrptrMaybe(lib_json::FieldId& parent, algo::strptr rhs)
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,lib_json_FieldId_value); ret = true; break;
                 }

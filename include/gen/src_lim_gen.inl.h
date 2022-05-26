@@ -8,10 +8,21 @@
 
 
 #pragma once
-#include "include/gen/command_gen.inl.h"
-#include "include/gen/algo_gen.inl.h"
 #include "include/gen/dev_gen.inl.h"
+#include "include/gen/algo_gen.inl.h"
+#include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/command_gen.inl.h"
 //#pragma endinclude
+inline src_lim::FBadline::FBadline() {
+    src_lim::FBadline_Init(*this);
+}
+
+
+// --- src_lim.FBadline..Init
+// Set all fields to initial values.
+inline void src_lim::FBadline_Init(src_lim::FBadline& badline) {
+    badline.select = bool(false);
+}
 inline src_lim::trace::trace() {
 }
 
@@ -25,12 +36,12 @@ inline bool src_lim::include_EmptyQ() {
 // --- src_lim.FDb.include.Find
 // Look up row by row id. Return NULL if out of range
 inline src_lim::FInclude* src_lim::include_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     src_lim::FInclude *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.include_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.include_lary[bsr][index];
     }
     return retval;
@@ -67,12 +78,12 @@ inline bool src_lim::linelim_EmptyQ() {
 // --- src_lim.FDb.linelim.Find
 // Look up row by row id. Return NULL if out of range
 inline src_lim::FLinelim* src_lim::linelim_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     src_lim::FLinelim *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.linelim_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.linelim_lary[bsr][index];
     }
     return retval;
@@ -109,12 +120,12 @@ inline bool src_lim::targsrc_EmptyQ() {
 // --- src_lim.FDb.targsrc.Find
 // Look up row by row id. Return NULL if out of range
 inline src_lim::FTargsrc* src_lim::targsrc_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     src_lim::FTargsrc *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.targsrc_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.targsrc_lary[bsr][index];
     }
     return retval;
@@ -151,12 +162,12 @@ inline bool src_lim::gitfile_EmptyQ() {
 // --- src_lim.FDb.gitfile.Find
 // Look up row by row id. Return NULL if out of range
 inline src_lim::FGitfile* src_lim::gitfile_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     src_lim::FGitfile *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.gitfile_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.gitfile_lary[bsr][index];
     }
     return retval;
@@ -194,6 +205,48 @@ inline bool src_lim::ind_gitfile_EmptyQ() {
 // Return number of items in the hash
 inline i32 src_lim::ind_gitfile_N() {
     return _db.ind_gitfile_n;
+}
+
+// --- src_lim.FDb.badline.EmptyQ
+// Return true if index is empty
+inline bool src_lim::badline_EmptyQ() {
+    return _db.badline_n == 0;
+}
+
+// --- src_lim.FDb.badline.Find
+// Look up row by row id. Return NULL if out of range
+inline src_lim::FBadline* src_lim::badline_Find(u64 t) {
+    src_lim::FBadline *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.badline_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.badline_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- src_lim.FDb.badline.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline src_lim::FBadline* src_lim::badline_Last() {
+    return badline_Find(u64(_db.badline_n-1));
+}
+
+// --- src_lim.FDb.badline.N
+// Return number of items in the pool
+inline i32 src_lim::badline_N() {
+    return _db.badline_n;
+}
+
+// --- src_lim.FDb.badline.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline src_lim::FBadline& src_lim::badline_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.badline_lary[bsr][index];
 }
 
 // --- src_lim.FDb.include_curs.Reset
@@ -294,6 +347,31 @@ inline void src_lim::_db_gitfile_curs_Next(_db_gitfile_curs &curs) {
 // item access
 inline src_lim::FGitfile& src_lim::_db_gitfile_curs_Access(_db_gitfile_curs &curs) {
     return gitfile_qFind(u64(curs.index));
+}
+
+// --- src_lim.FDb.badline_curs.Reset
+// cursor points to valid item
+inline void src_lim::_db_badline_curs_Reset(_db_badline_curs &curs, src_lim::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- src_lim.FDb.badline_curs.ValidQ
+// cursor points to valid item
+inline bool src_lim::_db_badline_curs_ValidQ(_db_badline_curs &curs) {
+    return curs.index < _db.badline_n;
+}
+
+// --- src_lim.FDb.badline_curs.Next
+// proceed to next item
+inline void src_lim::_db_badline_curs_Next(_db_badline_curs &curs) {
+    curs.index++;
+}
+
+// --- src_lim.FDb.badline_curs.Access
+// item access
+inline src_lim::FBadline& src_lim::_db_badline_curs_Access(_db_badline_curs &curs) {
+    return badline_qFind(u64(curs.index));
 }
 inline src_lim::FGitfile::FGitfile() {
     src_lim::FGitfile_Init(*this);
@@ -483,6 +561,7 @@ inline src_lim::FTargsrc::~FTargsrc() {
 // Set all fields to initial values.
 inline void src_lim::FTargsrc_Init(src_lim::FTargsrc& targsrc) {
     targsrc.p_gitfile = NULL;
+    targsrc.select = bool(false);
 }
 inline src_lim::FieldId::FieldId(i32                            in_value)
     : value(in_value)

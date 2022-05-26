@@ -29,9 +29,8 @@
 
 
 void atf_unit::unittest_algo_lib_PopCnt1() {
-    u32 t;// 32-bit
     vrfy_(algo::u32_Count1s(u32(0)) == 0);
-    u32 N = sizeof(t) * 8;
+    u32 N = sizeof(u32) * 8;
     rep_(i,int(N-1)) {
         vrfy_(algo::u32_Count1s(   u32(1) << i    ) == u32(1  ));
         vrfy_(algo::u32_Count1s(~( u32(1) << i   )) ==     N-1);
@@ -41,9 +40,8 @@ void atf_unit::unittest_algo_lib_PopCnt1() {
 }
 
 void atf_unit::unittest_algo_lib_PopCnt2() {
-    u64 t;// 64-bit
     vrfy_(algo::u32_Count1s(u32(0)) == 0);
-    u32 N = sizeof(t) * 8;
+    u32 N = sizeof(u64) * 8;
     rep_(i,int(N-1)) {
         vrfy_(algo::u64_Count1s(   u64(1) << i    ) == u32(1  ));
         vrfy_(algo::u64_Count1s(~( u64(1) << i   )) ==     N-1);
@@ -162,7 +160,7 @@ void atf_unit::unittest_algo_lib_TestFbitset4() {
     // set all 128 bits one by one
     for(int i=0; i<128; i++) {
         atf_unit::fld128_qSetBit(frame, i);
-        vrfyeq_(frame.fld128, (i==127 ? u128(-1) : (u128(1)<<(i+1))-1));
+        vrfyeq_(frame.fld128, (u64(i)==127 ? u128(-1) : (u128(1)<<(i+1))-u128(1)));
         vrfyeq_(fld128_Sum1s(frame), u128(i+1));
     }
     // clear all 128 bits one by one
@@ -181,9 +179,9 @@ struct RandomTypeName {
 // -----------------------------------------------------------------------------
 
 static void DoTest(double d) {
-    vrfyeq_(  DFloor(d),floor(d));
-    vrfyeq_(DCeiling(d),ceil(d));
-    vrfyeq_(  DTrunc(d),d-fmod(d,1));
+    vrfyeq_(  algo::DFloor(d),floor(d));
+    vrfyeq_(algo::DCeiling(d),ceil(d));
+    vrfyeq_(  algo::DTrunc(d),d-fmod(d,1));
 }
 
 void atf_unit::unittest_algo_lib_DoTestRounding() {
@@ -218,32 +216,10 @@ void atf_unit::unittest_algo_lib_CheckShiftMask() {
 
 // -----------------------------------------------------------------------------
 
-void atf_unit::unittest_algo_lib_Interlocked() {
-    int x=0;
-    vrfy_(IncrMT(&x,100) == 100);
-    vrfy_(IncrMT(&x,100) == 200);
-    vrfy_(IncrMT(&x,-100) == 100);
-    vrfy_(IncrMT(&x,-100) == 0);
-
-    int y=0;
-    vrfy_(algo::IncrMT(&y)==1);
-    vrfy_(algo::DecrMT(&y)==0);
-
-    {
-        void *A = (void*)0x1234;
-        void *B = (void*)0x5678;
-        algo::SwapMT(A,B);
-        vrfy_(A == (void*)0x5678);
-        vrfy_(B == (void*)0x1234);
-    }
-}
-
-// -----------------------------------------------------------------------------
-
 void atf_unit::unittest_algo_lib_ReadLine() {
     LineBuf acc;
     strptr str("abcde\n\n");
-    memptr data=strptr_ToMemptr(str);
+    algo::memptr data=strptr_ToMemptr(str);
     strptr line;
     LinebufBegin(acc,data,false);
     vrfy_(LinebufNext(acc,line) && line == "abcde");
@@ -284,34 +260,34 @@ void atf_unit::unittest_algo_lib_ReadLine() {
 // -----------------------------------------------------------------------------
 
 void atf_unit::unittest_algo_lib_Ceiling() {
-    vrfyeq_(CeilingLog2(u32(0)), 0);
-    vrfyeq_(CeilingLog2(u32(1)), 0);
-    vrfyeq_(CeilingLog2(u32(2)), 1);
-    vrfyeq_(CeilingLog2(u32(4)), 2);
-    vrfyeq_(CeilingLog2(u32(8)), 3);
-    vrfyeq_(CeilingLog2(u32(16)), 4);
-    vrfyeq_(CeilingLog2(u32(32)), 5);
-    vrfyeq_(CeilingLog2(u32(64)), 6);
+    vrfyeq_(algo::CeilingLog2(u32(0)), 0);
+    vrfyeq_(algo::CeilingLog2(u32(1)), 0);
+    vrfyeq_(algo::CeilingLog2(u32(2)), 1);
+    vrfyeq_(algo::CeilingLog2(u32(4)), 2);
+    vrfyeq_(algo::CeilingLog2(u32(8)), 3);
+    vrfyeq_(algo::CeilingLog2(u32(16)), 4);
+    vrfyeq_(algo::CeilingLog2(u32(32)), 5);
+    vrfyeq_(algo::CeilingLog2(u32(64)), 6);
 
-    //vrfyeq_(CeilingLog2(u32(0)), 0);
-    vrfyeq_(CeilingLog2(u32(1)), 0);
-    vrfyeq_(CeilingLog2(u32(3)), 2);
-    vrfyeq_(CeilingLog2(u32(7)), 3);
-    vrfyeq_(CeilingLog2(u32(15)), 4);
-    vrfyeq_(CeilingLog2(u32(31)), 5);
-    vrfyeq_(CeilingLog2(u32(63)), 6);
+    //vrfyeq_(algo::CeilingLog2(u32(0)), 0);
+    vrfyeq_(algo::CeilingLog2(u32(1)), 0);
+    vrfyeq_(algo::CeilingLog2(u32(3)), 2);
+    vrfyeq_(algo::CeilingLog2(u32(7)), 3);
+    vrfyeq_(algo::CeilingLog2(u32(15)), 4);
+    vrfyeq_(algo::CeilingLog2(u32(31)), 5);
+    vrfyeq_(algo::CeilingLog2(u32(63)), 6);
 
-    vrfyeq_(u32_CeilPow2((u32)4 ,(u32)8), 8);
-    vrfyeq_(u32_CeilPow2((u32)4, (u32)16), 16);
-    vrfyeq_(u32_CeilPow2((u32)4, (u32)64), 64);
+    vrfyeq_(algo::u32_CeilPow2((u32)4 ,(u32)8), 8);
+    vrfyeq_(algo::u32_CeilPow2((u32)4, (u32)16), 16);
+    vrfyeq_(algo::u32_CeilPow2((u32)4, (u32)64), 64);
 
-    vrfyeq_(u32_CeilPow2((u32)0 ,(u32)8), 0);
-    vrfyeq_(u32_CeilPow2((u32)0, (u32)16), 0);
-    vrfyeq_(u32_CeilPow2((u32)0, (u32)64), 0);
+    vrfyeq_(algo::u32_CeilPow2((u32)0 ,(u32)8), 0);
+    vrfyeq_(algo::u32_CeilPow2((u32)0, (u32)16), 0);
+    vrfyeq_(algo::u32_CeilPow2((u32)0, (u32)64), 0);
 
-    vrfyeq_(u32_CeilPow2((u32)7  ,(u32)8), 8);
-    vrfyeq_(u32_CeilPow2((u32)15, (u32)16), 16);
-    vrfyeq_(u32_CeilPow2((u32)63, (u32)64), 64);
+    vrfyeq_(algo::u32_CeilPow2((u32)7  ,(u32)8), 8);
+    vrfyeq_(algo::u32_CeilPow2((u32)15, (u32)16), 16);
+    vrfyeq_(algo::u32_CeilPow2((u32)63, (u32)64), 64);
 }
 
 
@@ -409,26 +385,26 @@ void atf_unit::unittest_algo_lib_CSVTokens() {
 void atf_unit::unittest_algo_lib_Strfind() {
     strptr s("abcde");
 
-    vrfyeq_(substr_FindFirst(s, strptr("a"))        ,i32_Range(0,1));
-    vrfyeq_(substr_FindFirst(s, strptr(""))         ,i32_Range(0,0));
-    vrfyeq_(substr_FindFirst(s, strptr("test"))     ,i32_Range(elems_N(s),elems_N(s)));
-    vrfyeq_(substr_FindFirst(s, strptr("abcde"))    ,i32_Range(0,5));
+    vrfyeq_(substr_FindFirst(s, strptr("a"))        ,algo::i32_Range(0,1));
+    vrfyeq_(substr_FindFirst(s, strptr(""))         ,algo::i32_Range(0,0));
+    vrfyeq_(substr_FindFirst(s, strptr("test"))     ,algo::i32_Range(elems_N(s),elems_N(s)));
+    vrfyeq_(substr_FindFirst(s, strptr("abcde"))    ,algo::i32_Range(0,5));
 
 
-    vrfyeq_(substr_FindLast(s, strptr("a"))     ,i32_Range(0,1));
-    vrfyeq_(substr_FindLast(s, strptr(""))      ,i32_Range(5,5));
-    vrfyeq_(substr_FindLast(s, strptr("test"))  ,i32_Range(0,0));
-    vrfyeq_(substr_FindLast(s, strptr("abcde")) ,i32_Range(0,5));
+    vrfyeq_(substr_FindLast(s, strptr("a"))     ,algo::i32_Range(0,1));
+    vrfyeq_(substr_FindLast(s, strptr(""))      ,algo::i32_Range(5,5));
+    vrfyeq_(substr_FindLast(s, strptr("test"))  ,algo::i32_Range(0,0));
+    vrfyeq_(substr_FindLast(s, strptr("abcde")) ,algo::i32_Range(0,5));
 
     s = "b,c,\nd\n";
 
     s = "12345";
-    vrfy_(TRevFind(s, '6') == i32_Range(0,0));
-    vrfy_(TFind(s, '6') == i32_Range(elems_N(s),elems_N(s)));
+    vrfy_(TRevFind(s, '6') == algo::i32_Range(0,0));
+    vrfy_(TFind(s, '6') == algo::i32_Range(elems_N(s),elems_N(s)));
 
     frep_(i,elems_N(s)) {
-        vrfy_(TFind(s,s[i]) == i32_Range(i,i+1));
-        vrfy_(TRevFind(s,s[i]) == i32_Range(i,i+1));
+        vrfy_(TFind(s,s[i]) == algo::i32_Range(i,i+1));
+        vrfy_(TRevFind(s,s[i]) == algo::i32_Range(i,i+1));
     }
 }
 
@@ -549,7 +525,7 @@ void atf_unit::unittest_algo_lib_ParseNumber_Overflow1() {
     algo::LnumStr7_U32_Base36 x;
     ch_SetStrptr(x, "1234XYZ");
     u32 val = ch_GetnumDflt(x,0);
-    vrfyeq_(val, 2302984187);
+    vrfyeq_(val, u32(2302984187));
 
     ch_SetStrptr(x, "XYZ1234");
     val = ch_GetnumDflt(x,0);
@@ -703,7 +679,7 @@ static void TestString(strptr before, strptr printed) {
     out << MaybeSpace;
     PrintAttr(out, "", before);
     vrfy_(out == printed);
-    StringIter iter(out);
+    algo::StringIter iter(out);
     cstring_ReadCmdarg(in, iter, false);
 }
 
@@ -719,7 +695,7 @@ void atf_unit::unittest_algo_lib_TestString() {
 
 void atf_unit::unittest_algo_lib_TestStringFmt() {
     cstring s;
-    u128 val = u128(1) * 1000 * 1000 * 1000 * 1000; // 12 zeros
+    u128 val = u128(1) * u32(1000) * u32(1000) * u32(1000) * u32(1000); // 12 zeros
     val = val * val;//24 zeros
     u128_Print(val,s);
     vrfyeq_(s, "1000000000000000000000000");
@@ -798,7 +774,7 @@ static void CheckWordIter(strptr a, strptr b) {// Rewrite string using Word_curs
 
 static void CheckWordcharf(strptr a, strptr b) {// Rewrite string using GetWordCharf
     tempstr out;
-    StringIter iter(a);
+    algo::StringIter iter(a);
     while (true) {
         strptr word = GetWordCharf(iter);
         if (word != "") {
@@ -811,37 +787,37 @@ static void CheckWordcharf(strptr a, strptr b) {// Rewrite string using GetWordC
 }
 
 static void TestParseDouble(strptr str, bool ok, double result) {
-    StringIter iter(str);
+    algo::StringIter iter(str);
     double d;
     vrfy_(TryParseDouble(iter, d)==ok && (!ok || d==result));
 }
 
 static void TestParseDigits(strptr str, bool ok, double result) {
-    StringIter iter(str);
+    algo::StringIter iter(str);
     double d;
     vrfy(TryParseDigits(iter, d)==ok && (!ok || d==result), tempstr()<<str<<" "<<ok<<" "<<result);
 }
 
 static void TestParseI64(strptr str, bool ok, i64 result) {
-    StringIter iter(str);
+    algo::StringIter iter(str);
     i64 d;
     vrfy_(TryParseI64(iter, d)==ok && (!ok || d==result));
 }
 
 static void TestParseI32(strptr str, bool ok, i32 result) {
-    StringIter iter(str);
+    algo::StringIter iter(str);
     i32 val;
     vrfy_(TryParseI32(iter,val)==ok && (!ok || val==result));
 }
 
 static void TestGetLine() {
-    StringIter iter;
-    iter = StringIter("\nxx\n\n");
+    algo::StringIter iter;
+    iter = algo::StringIter("\nxx\n\n");
     vrfy_(GetLine(iter) == strptr());
-    iter = StringIter("\nxx\n\n");
+    iter = algo::StringIter("\nxx\n\n");
     GetLine(iter);
     vrfy_(GetLine(iter) == "xx");
-    iter =StringIter("xyz\r\n\n");
+    iter =algo::StringIter("xyz\r\n\n");
     vrfy_(GetLine(iter) == "xyz");
 }
 
@@ -927,7 +903,7 @@ void atf_unit::unittest_algo_lib_test_strptr() {
 
     union { char c[5]; u32 i;} c1234 ={"1234"};
     char *c = c1234.c;
-    vrfy_(c1234.i == __builtin_bswap32(u32(MULTICHAR_CONST4('1','2','3','4'))));
+    vrfy_(c1234.i == u32(MULTICHAR_CONST4('4','3','2','1')));
     vrfy_((c[0]<<24|c[1]<<16|c[2]<<8|c[3]) == MULTICHAR_CONST4('1','2','3','4'));
 
     vrfy_(strptr("abc") == strptr("abc"));
@@ -981,15 +957,15 @@ void atf_unit::unittest_algo_lib_ParseOct1() {
         u8 res  = 0xff;
         // .. and straightforward (this will catch "encoding" error)
         switch (i) {
-        case '0': vrfyeq_(ParseOct1(i,res),1); vrfyeq_(res,0); break;
-        case '1': vrfyeq_(ParseOct1(i,res),1); vrfyeq_(res,1); break;
-        case '2': vrfyeq_(ParseOct1(i,res),1); vrfyeq_(res,2); break;
-        case '3': vrfyeq_(ParseOct1(i,res),1); vrfyeq_(res,3); break;
-        case '4': vrfyeq_(ParseOct1(i,res),1); vrfyeq_(res,4); break;
-        case '5': vrfyeq_(ParseOct1(i,res),1); vrfyeq_(res,5); break;
-        case '6': vrfyeq_(ParseOct1(i,res),1); vrfyeq_(res,6); break;
-        case '7': vrfyeq_(ParseOct1(i,res),1); vrfyeq_(res,7); break;
-        default : vrfyeq_(ParseOct1(i,res),0);                 break;
+        case '0': vrfyeq_(algo::ParseOct1(i,res),1); vrfyeq_(res,0); break;
+        case '1': vrfyeq_(algo::ParseOct1(i,res),1); vrfyeq_(res,1); break;
+        case '2': vrfyeq_(algo::ParseOct1(i,res),1); vrfyeq_(res,2); break;
+        case '3': vrfyeq_(algo::ParseOct1(i,res),1); vrfyeq_(res,3); break;
+        case '4': vrfyeq_(algo::ParseOct1(i,res),1); vrfyeq_(res,4); break;
+        case '5': vrfyeq_(algo::ParseOct1(i,res),1); vrfyeq_(res,5); break;
+        case '6': vrfyeq_(algo::ParseOct1(i,res),1); vrfyeq_(res,6); break;
+        case '7': vrfyeq_(algo::ParseOct1(i,res),1); vrfyeq_(res,7); break;
+        default : vrfyeq_(algo::ParseOct1(i,res),0);                 break;
         }
     }
 }
@@ -1000,29 +976,29 @@ void atf_unit::unittest_algo_lib_ParseHex1() {
         u8 res  = 0xff;
         // .. and straightforward (this will catch "encoding" error)
         switch (i) {
-        case '0': vrfyeq_(ParseHex1(i,res),1); vrfyeq_(res,0);  break;
-        case '1': vrfyeq_(ParseHex1(i,res),1); vrfyeq_(res,1);  break;
-        case '2': vrfyeq_(ParseHex1(i,res),1); vrfyeq_(res,2);  break;
-        case '3': vrfyeq_(ParseHex1(i,res),1); vrfyeq_(res,3);  break;
-        case '4': vrfyeq_(ParseHex1(i,res),1); vrfyeq_(res,4);  break;
-        case '5': vrfyeq_(ParseHex1(i,res),1); vrfyeq_(res,5);  break;
-        case '6': vrfyeq_(ParseHex1(i,res),1); vrfyeq_(res,6);  break;
-        case '7': vrfyeq_(ParseHex1(i,res),1); vrfyeq_(res,7);  break;
-        case '8': vrfyeq_(ParseHex1(i,res),1); vrfyeq_(res,8);  break;
-        case '9': vrfyeq_(ParseHex1(i,res),1); vrfyeq_(res,9);  break;
+        case '0': vrfyeq_(algo::ParseHex1(i,res),1); vrfyeq_(res,0);  break;
+        case '1': vrfyeq_(algo::ParseHex1(i,res),1); vrfyeq_(res,1);  break;
+        case '2': vrfyeq_(algo::ParseHex1(i,res),1); vrfyeq_(res,2);  break;
+        case '3': vrfyeq_(algo::ParseHex1(i,res),1); vrfyeq_(res,3);  break;
+        case '4': vrfyeq_(algo::ParseHex1(i,res),1); vrfyeq_(res,4);  break;
+        case '5': vrfyeq_(algo::ParseHex1(i,res),1); vrfyeq_(res,5);  break;
+        case '6': vrfyeq_(algo::ParseHex1(i,res),1); vrfyeq_(res,6);  break;
+        case '7': vrfyeq_(algo::ParseHex1(i,res),1); vrfyeq_(res,7);  break;
+        case '8': vrfyeq_(algo::ParseHex1(i,res),1); vrfyeq_(res,8);  break;
+        case '9': vrfyeq_(algo::ParseHex1(i,res),1); vrfyeq_(res,9);  break;
         case 'a':
-        case 'A': vrfyeq_(ParseHex1(i,res),1); vrfyeq_(res,10); break;
+        case 'A': vrfyeq_(algo::ParseHex1(i,res),1); vrfyeq_(res,10); break;
         case 'b':
-        case 'B': vrfyeq_(ParseHex1(i,res),1); vrfyeq_(res,11); break;
+        case 'B': vrfyeq_(algo::ParseHex1(i,res),1); vrfyeq_(res,11); break;
         case 'c':
-        case 'C': vrfyeq_(ParseHex1(i,res),1); vrfyeq_(res,12); break;
+        case 'C': vrfyeq_(algo::ParseHex1(i,res),1); vrfyeq_(res,12); break;
         case 'd':
-        case 'D': vrfyeq_(ParseHex1(i,res),1); vrfyeq_(res,13); break;
+        case 'D': vrfyeq_(algo::ParseHex1(i,res),1); vrfyeq_(res,13); break;
         case 'e':
-        case 'E': vrfyeq_(ParseHex1(i,res),1); vrfyeq_(res,14); break;
+        case 'E': vrfyeq_(algo::ParseHex1(i,res),1); vrfyeq_(res,14); break;
         case 'f':
-        case 'F': vrfyeq_(ParseHex1(i,res),1); vrfyeq_(res,15); break;
-        default : vrfyeq_(ParseHex1(i,res),0);
+        case 'F': vrfyeq_(algo::ParseHex1(i,res),1); vrfyeq_(res,15); break;
+        default : vrfyeq_(algo::ParseHex1(i,res),0);
         }
     }
 }
@@ -1035,73 +1011,80 @@ void atf_unit::unittest_algo_lib_ParseOct3() {
     // nominal cases for 1..3 digits
 
     res = 0xff;
-    vrfyeq_(1,ParseOct3(*(const u32 *)("0000"),1,res));
+    vrfyeq_(1,algo::ParseOct3(*(const u32 *)("0000"),1,res));
     vrfyeq_(0,res);
 
     res = 0xff;
-    vrfyeq_(1,ParseOct3(*(const u32 *)("0\0\0\0"),4,res));
+    vrfyeq_(1,algo::ParseOct3(*(const u32 *)("0\0\0\0"),4,res));
     vrfyeq_(0,res);
 
     res = 0xff;
-    vrfyeq_(2,ParseOct3(*(const u32 *)("0000"),2,res));
+    vrfyeq_(2,algo::ParseOct3(*(const u32 *)("0000"),2,res));
     vrfyeq_(0,res);
 
     res = 0xff;
-    vrfyeq_(2,ParseOct3(*(const u32 *)("00\0\0"),4,res));
+    vrfyeq_(2,algo::ParseOct3(*(const u32 *)("00\0\0"),4,res));
     vrfyeq_(0,res);
 
     res = 0xff;
-    vrfyeq_(3,ParseOct3(*(const u32 *)("0000"),3,res));
+    vrfyeq_(3,algo::ParseOct3(*(const u32 *)("0000"),3,res));
     vrfyeq_(0,res);
 
     res = 0xff;
-    vrfyeq_(3,ParseOct3(*(const u32 *)("000\0"),4,res));
+    vrfyeq_(3,algo::ParseOct3(*(const u32 *)("000\0"),4,res));
     vrfyeq_(0,res);
 
     // check that 4th digit is not taken
 
     res = 0xff;
-    vrfyeq_(3,ParseOct3(*(const u32 *)("0001"),4,res));
+    vrfyeq_(3,algo::ParseOct3(*(const u32 *)("0001"),4,res));
     vrfyeq_(0,res);
 
     // verify range
 
     res = 0;
-    vrfyeq_(3,ParseOct3(*(const u32 *)("3770"),4,res));
+    vrfyeq_(3,algo::ParseOct3(*(const u32 *)("3770"),4,res));
     vrfyeq_(0377,res);
 
     // verify order
 
     res = 0;
-    vrfyeq_(1,ParseOct3(*(const u32 *)("1\0\0\0"),4,res));
+    vrfyeq_(1,algo::ParseOct3(*(const u32 *)("1\0\0\0"),4,res));
     vrfyeq_(1,res);
 
     res = 0;
-    vrfyeq_(2,ParseOct3(*(const u32 *)("13\0\0"),4,res));
+    vrfyeq_(2,algo::ParseOct3(*(const u32 *)("13\0\0"),4,res));
     vrfyeq_(013,res);
 
     res = 0;
-    vrfyeq_(3,ParseOct3(*(const u32 *)("135\0\0"),4,res));
+    vrfyeq_(3,algo::ParseOct3(*(const u32 *)("135\0\0"),4,res));
     vrfyeq_(0135,res);
 
     res = 0;
-    vrfyeq_(3,ParseOct3(*(const u32 *)("1350"),4,res));
+    vrfyeq_(3,algo::ParseOct3(*(const u32 *)("1350"),4,res));
     vrfyeq_(0135,res);
 
     // verify hole
 
+#ifdef WIN32
+#pragma warning (push)
+#pragma warning (disable:4125) // decimal digit terminates octal escap sequence
+#endif
     res = 0;
-    vrfyeq_(1,ParseOct3(*(const u32 *)("1\350"),4,res));
+    vrfyeq_(1,algo::ParseOct3(*(const u32 *)("1\350"),4,res));
     vrfyeq_(1,res);
 
-    vrfyeq_(0,ParseOct3(*(const u32 *)("\1350"),4,res));
+    vrfyeq_(0,algo::ParseOct3(*(const u32 *)("\1350"),4,res));
+#ifdef WIN32
+#pragma warning(pop)
+#endif
 
     // verify non-octal digit
 
-    vrfyeq_(0,ParseOct3(*(const u32 *)("8000"),4,res));
-    vrfyeq_(1,ParseOct3(*(const u32 *)("0800"),4,res));
-    vrfyeq_(2,ParseOct3(*(const u32 *)("0080"),4,res));
-    vrfyeq_(3,ParseOct3(*(const u32 *)("0008"),4,res));
+    vrfyeq_(0,algo::ParseOct3(*(const u32 *)("8000"),4,res));
+    vrfyeq_(1,algo::ParseOct3(*(const u32 *)("0800"),4,res));
+    vrfyeq_(2,algo::ParseOct3(*(const u32 *)("0080"),4,res));
+    vrfyeq_(3,algo::ParseOct3(*(const u32 *)("0008"),4,res));
 }
 
 
@@ -1111,73 +1094,73 @@ void atf_unit::unittest_algo_lib_ParseHex2() {
     // nominal cases for 1..2 digits
 
     res = 0xff;
-    vrfyeq_(1,ParseHex2(*(const u32 *)("0000"),1,res));
+    vrfyeq_(1,algo::ParseHex2(*(const u32 *)("0000"),1,res));
     vrfyeq_(0,res);
 
     res = 0xff;
-    vrfyeq_(1,ParseHex2(*(const u32 *)("0\0\0\0"),4,res));
+    vrfyeq_(1,algo::ParseHex2(*(const u32 *)("0\0\0\0"),4,res));
     vrfyeq_(0,res);
 
     res = 0xff;
-    vrfyeq_(2,ParseHex2(*(const u32 *)("0000"),2,res));
+    vrfyeq_(2,algo::ParseHex2(*(const u32 *)("0000"),2,res));
     vrfyeq_(0,res);
 
     res = 0xff;
-    vrfyeq_(2,ParseHex2(*(const u32 *)("00\0\0"),4,res));
+    vrfyeq_(2,algo::ParseHex2(*(const u32 *)("00\0\0"),4,res));
     vrfyeq_(0,res);
 
     // check that 3rd and 4th digits are not taken
 
     res = 0xff;
-    vrfyeq_(2,ParseHex2(*(const u32 *)("001\0"),4,res));
+    vrfyeq_(2,algo::ParseHex2(*(const u32 *)("001\0"),4,res));
     vrfyeq_(0,res);
 
     res = 0xff;
-    vrfyeq_(2,ParseHex2(*(const u32 *)("0012"),4,res));
+    vrfyeq_(2,algo::ParseHex2(*(const u32 *)("0012"),4,res));
     vrfyeq_(0,res);
 
     // verify range
 
     res = 0;
-    vrfyeq_(2,ParseHex2(*(const u32 *)("fF\0\0"),4,res));
+    vrfyeq_(2,algo::ParseHex2(*(const u32 *)("fF\0\0"),4,res));
     vrfyeq_(0xff,res);
 
     // some interesting nominal cases
 
     res = 0;
-    vrfyeq_(2,ParseHex2(*(const u32 *)("9A\0\0"),4,res));
+    vrfyeq_(2,algo::ParseHex2(*(const u32 *)("9A\0\0"),4,res));
     vrfyeq_(0x9a,res);
 
     res = 0;
-    vrfyeq_(2,ParseHex2(*(const u32 *)("a1\0\0"),4,res));
+    vrfyeq_(2,algo::ParseHex2(*(const u32 *)("a1\0\0"),4,res));
     vrfyeq_(0xa1,res);
 
 
     // verify order
 
     res = 0;
-    vrfyeq_(1,ParseHex2(*(const u32 *)("1\0\0\0"),4,res));
+    vrfyeq_(1,algo::ParseHex2(*(const u32 *)("1\0\0\0"),4,res));
     vrfyeq_(1,res);
 
     res = 0;
-    vrfyeq_(2,ParseHex2(*(const u32 *)("13\0\0"),4,res));
+    vrfyeq_(2,algo::ParseHex2(*(const u32 *)("13\0\0"),4,res));
     vrfyeq_(0x13,res);
 
     // verify hole
 
-    vrfyeq_(0,ParseHex2(*(const u32 *)("\13\0\0"),4,res));
+    vrfyeq_(0,algo::ParseHex2(*(const u32 *)("\13\0\0"),4,res));
 
     // verify non-hexadecimal
 
-    vrfyeq_(0,ParseOct3(*(const u32 *)("/000"),4,res));
-    vrfyeq_(0,ParseOct3(*(const u32 *)(":000"),4,res));
-    vrfyeq_(0,ParseOct3(*(const u32 *)("@000"),4,res));
-    vrfyeq_(0,ParseOct3(*(const u32 *)("G000"),4,res));
-    vrfyeq_(0,ParseOct3(*(const u32 *)("`000"),4,res));
-    vrfyeq_(0,ParseOct3(*(const u32 *)("g000"),4,res));
+    vrfyeq_(0,algo::ParseOct3(*(const u32 *)("/000"),4,res));
+    vrfyeq_(0,algo::ParseOct3(*(const u32 *)(":000"),4,res));
+    vrfyeq_(0,algo::ParseOct3(*(const u32 *)("@000"),4,res));
+    vrfyeq_(0,algo::ParseOct3(*(const u32 *)("G000"),4,res));
+    vrfyeq_(0,algo::ParseOct3(*(const u32 *)("`000"),4,res));
+    vrfyeq_(0,algo::ParseOct3(*(const u32 *)("g000"),4,res));
 
-    vrfyeq_(1,ParseOct3(*(const u32 *)("0/00"),4,res));
-    vrfyeq_(2,ParseOct3(*(const u32 *)("00:0"),4,res));
+    vrfyeq_(1,algo::ParseOct3(*(const u32 *)("0/00"),4,res));
+    vrfyeq_(2,algo::ParseOct3(*(const u32 *)("00:0"),4,res));
 
 }
 
@@ -1224,7 +1207,7 @@ void atf_unit::unittest_algo_lib_UnescapeC() {
             memset(buf,0xff,sizeof(buf));
             buf[0] = u8(i);
             res = 0xff;
-            vrfyeq_(1,UnescapeC(buf_val->val,4,res));
+            vrfyeq_(1,algo::UnescapeC(buf_val->val,4,res));
             vrfyeq_(chk_val,res);
         }
         // octal
@@ -1234,7 +1217,7 @@ void atf_unit::unittest_algo_lib_UnescapeC() {
         buf[3] = u8(0xff);
 
         res = 0xff;
-        vrfyeq_(3,UnescapeC(buf_val->val,4,res));
+        vrfyeq_(3,algo::UnescapeC(buf_val->val,4,res));
         vrfyeq_(i,res);
 
         // w/o leading zeroes
@@ -1244,7 +1227,7 @@ void atf_unit::unittest_algo_lib_UnescapeC() {
             --cnt;
         }
         res = 0xff;
-        vrfyeq_(cnt,UnescapeC(buf_val->val,4,res));
+        vrfyeq_(cnt,algo::UnescapeC(buf_val->val,4,res));
         vrfyeq_(i,res);
 
         // hexadecimal
@@ -1256,12 +1239,12 @@ void atf_unit::unittest_algo_lib_UnescapeC() {
         buf[3] = 0xff;
 
         res = 0xff;
-        vrfyeq_(3,UnescapeC(buf_val->val,4,res));
+        vrfyeq_(3,algo::UnescapeC(buf_val->val,4,res));
         vrfyeq_(i,res);
 
         buf[0] = 'X';
         res = 0xff;
-        vrfyeq_(3,UnescapeC(buf_val->val,4,res));
+        vrfyeq_(3,algo::UnescapeC(buf_val->val,4,res));
         vrfyeq_(i,res);
 
         // w/o leading zero
@@ -1269,11 +1252,11 @@ void atf_unit::unittest_algo_lib_UnescapeC() {
             buf[0] = 'x';
             memmove(&buf[1],&buf[2],2);
             res = 0xff;
-            vrfyeq_(2,UnescapeC(buf_val->val,4,res));
+            vrfyeq_(2,algo::UnescapeC(buf_val->val,4,res));
             vrfyeq_(i,res);
             buf[0] = 'X';
             res = 0xff;
-            vrfyeq_(2,UnescapeC(buf_val->val,4,res));
+            vrfyeq_(2,algo::UnescapeC(buf_val->val,4,res));
             vrfyeq_(i,res);
         }
     }
@@ -1321,7 +1304,7 @@ void atf_unit::unittest_algo_lib_PerfParseNum() {
     str = algo::strptr("12345");
     {
         prlog("clear caches...");
-        ByteAry xxx;
+        algo::ByteAry xxx;
         Fill(ary_AllocN(xxx, 20*1024*1024), (unsigned char)0xff);
         u64 m = 0;
         frep_(i,ary_N(xxx)) {
@@ -1334,34 +1317,34 @@ void atf_unit::unittest_algo_lib_PerfParseNum() {
         u32 len = algo::ch_N(str);
 
         if (len<=8) {
-            u64 c = rdtscp();
+            u64 c = algo::rdtscp();
             u32 ok=false;
             u64 result=atoi((char*)str.ch);
-            c = rdtscp() -c;
+            c = algo::rdtscp() -c;
             prlog(result<<": "<<c<<" cycles (atoi). ok:"<<ok);
         }
 
         if (len<=8) {
-            u64 c = rdtscp();
+            u64 c = algo::rdtscp();
             u32 ok;
-            u64 result=ParseNum8(ReadBE64(str.ch),len,ok);
-            c = rdtscp() -c;
+            u64 result=algo::ParseNum8(algo::ReadBE64(str.ch),len,ok);
+            c = algo::rdtscp() -c;
             prlog(result<<": "<<c<<" cycles (ParseNum8). ok:"<<ok);
         }
 
         {
-            u64 c = rdtscp();
+            u64 c = algo::rdtscp();
             u32 ok;
-            u64 result=aParseNum16(str,ok);
-            c = rdtscp() -c;
+            u64 result=algo::aParseNum16(str,ok);
+            c = algo::rdtscp() -c;
             prlog(result<<": "<<c<<" cycles (aParseNum16). ok:"<<ok);
         }
 
         if (len<=4) {
-            u64 c = rdtscp();
+            u64 c = algo::rdtscp();
             u32 ok;
-            u64 result=ParseNum4(ReadBE32(str.ch),len,ok);
-            c = rdtscp() -c;
+            u64 result=algo::ParseNum4(algo::ReadBE32(str.ch),len,ok);
+            c = algo::rdtscp() -c;
             prlog(result<<": "<<c<<" cycles (ParseNum4). ok:"<<ok);
         }
     }
@@ -1370,34 +1353,34 @@ void atf_unit::unittest_algo_lib_PerfParseNum() {
 // -----------------------------------------------------------------------------
 
 void atf_unit::unittest_algo_lib_DirBeg() {
-    RemDirRecurse(".testdirbeg", true);
+    algo::RemDirRecurse(".testdirbeg", true);
     errno_vrfy(0==mkdir(".testdirbeg", 0755), "mkdir");
     prlog("Iterate over empty directory (must not pick up ., ..)");
     {
         cstring check;
-        ind_beg(Dir_curs,E,".testdirbeg/*") {
+        ind_beg(algo::Dir_curs,E,".testdirbeg/*") {
             check<<E.filename<<";";
         }ind_end;
         vrfyeq_(check,"");
     }
 
-    StringToFile("something",".testdirbeg/.file");
+    algo::StringToFile("something",".testdirbeg/.file");
 
     prlog("Directory with .-file (must see .-file)");
     {
         cstring check;
-        ind_beg(Dir_curs,E,".testdirbeg/*.*") {
+        ind_beg(algo::Dir_curs,E,".testdirbeg/*.*") {
             check<<E.filename<<";";
         }ind_end;
         vrfyeq_(check,".file;");
     }
 
-    StringToFile("something",".testdirbeg/file2");
+    algo::StringToFile("something",".testdirbeg/file2");
 
     prlog("Directory with regular file as well");
     {
         cstring check;
-        ind_beg(Dir_curs,E,".testdirbeg/*") {
+        ind_beg(algo::Dir_curs,E,".testdirbeg/*") {
             check<<E.filename<<";";
         }ind_end;
         vrfy_(check == "file2;.file;" || check == ".file;file2;");
@@ -1408,79 +1391,79 @@ void atf_unit::unittest_algo_lib_DirBeg() {
     prlog("No directory name (assume ./)");
     {
         cstring check;
-        ind_beg(Dir_curs,E,"*") {
+        ind_beg(algo::Dir_curs,E,"*") {
             check<<E.filename<<";";
         }ind_end;
         vrfy_(check == "file2;.file;" || check == ".file;file2;");
     }
 
     errno_vrfy(chdir("..")==0, "chdir");
-    RemDirRecurse(".testdirbeg", true);
+    algo::RemDirRecurse(".testdirbeg", true);
 }
 
 void atf_unit::unittest_algo_lib_RemDirRecurse() {
-    CreateDirRecurse("temp");
-    StringToFile("test", "temp/RemDirRecurse_unrelated");
-    vrfyeq_(FileQ("temp/RemDirRecurse_unrelated"), true);
+    algo::CreateDirRecurse("temp");
+    algo::StringToFile("test", "temp/RemDirRecurse_unrelated");
+    vrfyeq_(algo::FileQ("temp/RemDirRecurse_unrelated"), true);
 
-    RemDirRecurse("temp/RemDirRecurse_unrelated", true);//
+    algo::RemDirRecurse("temp/RemDirRecurse_unrelated", true);//
 
-    vrfyeq_(FileQ("temp/RemDirRecurse_unrelated"), true);//file must exist
+    vrfyeq_(algo::FileQ("temp/RemDirRecurse_unrelated"), true);//file must exist
     vrfyeq_(unlink("temp/RemDirRecurse_unrelated"), 0);// delete the file
 }
 
 void atf_unit::unittest_algo_lib_RemDirRecurse1() {
-    CreateDirRecurse("temp");
-    RemDirRecurse("temp/RemDirRecurse", true);
-    CreateDirRecurse("temp/RemDirRecurse");
-    vrfyeq_(DirectoryQ("temp/RemDirRecurse"), true);
+    algo::CreateDirRecurse("temp");
+    algo::RemDirRecurse("temp/RemDirRecurse", true);
+    algo::CreateDirRecurse("temp/RemDirRecurse");
+    vrfyeq_(algo::DirectoryQ("temp/RemDirRecurse"), true);
 
-    RemDirRecurse("temp/RemDirRecurse", true);
+    algo::RemDirRecurse("temp/RemDirRecurse", true);
 
-    vrfyeq_(DirectoryQ("temp/RemDirRecurse"), false);
+    vrfyeq_(algo::DirectoryQ("temp/RemDirRecurse"), false);
 }
 
 void atf_unit::unittest_algo_lib_RemDirRecurse2() {
-    CreateDirRecurse("temp");
-    CreateDirRecurse("temp/RemDirRecurse");
-    StringToFile("test"        , "temp/RemDirRecurse/unrelated");// this file should not get deleted
+    algo::CreateDirRecurse("temp");
+    algo::CreateDirRecurse("temp/RemDirRecurse");
+    algo::StringToFile("test"        , "temp/RemDirRecurse/unrelated");// this file should not get deleted
 
-    RemDirRecurse("temp/RemDirRecurse", false);// do not remove topmost -- returns true
+    algo::RemDirRecurse("temp/RemDirRecurse", false);// do not remove topmost -- returns true
 
-    vrfyeq_(DirectoryQ("temp/RemDirRecurse"), true);// dir must exist
-    vrfyeq_(FileQ("temp/RemDirRecurse/unrelated"), false);// file must not exist
+    vrfyeq_(algo::DirectoryQ("temp/RemDirRecurse"), true);// dir must exist
+    vrfyeq_(algo::FileQ("temp/RemDirRecurse/unrelated"), false);// file must not exist
     vrfyeq_(rmdir("temp/RemDirRecurse"), 0);// wipe the dir
 }
 
 void atf_unit::unittest_algo_lib_RemDirRecurse3() {
-    CreateDirRecurse("temp");
-    RemDirRecurse("temp/RemDirRecurse", true);
-    CreateDirRecurse("temp/RemDirRecurse/");
-    CreateDirRecurse("temp/RemDirRecurse2");
+    algo::CreateDirRecurse("temp");
+    algo::RemDirRecurse("temp/RemDirRecurse", true);
+    algo::CreateDirRecurse("temp/RemDirRecurse/");
+    algo::CreateDirRecurse("temp/RemDirRecurse2");
 
-    StringToFile("Test 1", "temp/RemDirRecurse/file1");
-    StringToFile("Test 2", "temp/RemDirRecurse2/file2");
+    algo::StringToFile("Test 1", "temp/RemDirRecurse/file1");
+    algo::StringToFile("Test 2", "temp/RemDirRecurse2/file2");
     vrfyeq_(symlink("../RemDirRecurse2", "temp/RemDirRecurse/dir2"), 0);
 
-    RemDirRecurse("temp/RemDirRecurse", true);
+    algo::RemDirRecurse("temp/RemDirRecurse", true);
 
-    vrfyeq_(DirectoryQ("temp/RemDirRecurse"), false);
-    vrfyeq_(DirectoryQ("temp/RemDirRecurse2"), true); // must exist!
+    vrfyeq_(algo::DirectoryQ("temp/RemDirRecurse"), false);
+    vrfyeq_(algo::DirectoryQ("temp/RemDirRecurse2"), true); // must exist!
 
-    RemDirRecurse("temp/RemDirRecurse2", true); // delete it too
+    algo::RemDirRecurse("temp/RemDirRecurse2", true); // delete it too
 
-    vrfyeq_(DirectoryQ("temp/RemDirRecurse2"), false);// must not exist now
+    vrfyeq_(algo::DirectoryQ("temp/RemDirRecurse2"), false);// must not exist now
 }
 
 void atf_unit::unittest_algo_lib_RemDirRecurse4() {
-    CreateDirRecurse("temp");
-    RemDirRecurse("temp/RemDirRecurse", true);
-    CreateDirRecurse("temp/RemDirRecurse/subdir/level3");
+    algo::CreateDirRecurse("temp");
+    algo::RemDirRecurse("temp/RemDirRecurse", true);
+    algo::CreateDirRecurse("temp/RemDirRecurse/subdir/level3");
 
-    StringToFile("Level 1 file", "temp/RemDirRecurse/file1");
-    StringToFile("Level 2 file", "temp/RemDirRecurse/subdir/plain-l2");
-    StringToFile("Level 3 file", "temp/RemDirRecurse/subdir/level3/plain-l3");
-    StringToFile("test"        , "temp/RemDirRecurse_unrelated");// this file should not get deleted
+    algo::StringToFile("Level 1 file", "temp/RemDirRecurse/file1");
+    algo::StringToFile("Level 2 file", "temp/RemDirRecurse/subdir/plain-l2");
+    algo::StringToFile("Level 3 file", "temp/RemDirRecurse/subdir/level3/plain-l3");
+    algo::StringToFile("test"        , "temp/RemDirRecurse_unrelated");// this file should not get deleted
 
     vrfyeq_(link("temp/RemDirRecurse/subdir/plain-l2", "temp/RemDirRecurse/hardlink1"), 0);
     vrfyeq_(link("temp/RemDirRecurse/file1"          , "temp/RemDirRecurse/subdir/hardlink2"), 0);
@@ -1488,11 +1471,11 @@ void atf_unit::unittest_algo_lib_RemDirRecurse4() {
     vrfyeq_(symlink("../subdir/plain-l2"             , "temp/RemDirRecurse/subdir/level3/softlink3"), 0);
 
     // check that unrelated file was not deleted!
-    RemDirRecurse("temp/RemDirRecurse", true);
+    algo::RemDirRecurse("temp/RemDirRecurse", true);
 
-    vrfyeq_(DirectoryQ("temp/RemDirRecurse"), false);
-    vrfyeq_(FileToString("temp/RemDirRecurse_unrelated"), "test");
-    DeleteFile("temp/RemDirRecurse_unrelated");
+    vrfyeq_(algo::DirectoryQ("temp/RemDirRecurse"), false);
+    vrfyeq_(algo::FileToString("temp/RemDirRecurse_unrelated"), "test");
+    algo::DeleteFile("temp/RemDirRecurse_unrelated");
 }
 
 // --------------------------------------------------------------------------------
@@ -1603,7 +1586,7 @@ void atf_unit::unittest_algo_lib_Keyval() {
 
 static i64 GetInode(strptr fname) {
     struct stat st;
-    ZeroBytes(st);
+    algo::ZeroBytes(st);
     (void)stat(Zeroterm(tempstr()<<fname),&st);
     return st.st_ino;
 }
@@ -1612,7 +1595,7 @@ static i64 GetInode(strptr fname) {
 
 static i64 GetMode(strptr fname) {
     struct stat st;
-    ZeroBytes(st);
+    algo::ZeroBytes(st);
     (void)stat(Zeroterm(tempstr()<<fname),&st);
     return st.st_mode;
 }
@@ -1652,6 +1635,9 @@ void atf_unit::unittest_algo_lib_StringToFile() {
         i64 inode3=GetInode(fname);
         vrfyeq_(ok,true);
         vrfyeq_(inode2==inode3, true);// inode should not have changed because no save occured
+
+        ok = SafeStringToFile("test2",fname); // new string to file
+        vrfyeq_(FileToString(fname),"test2");// must be there
     }
 }
 
@@ -1676,7 +1662,7 @@ void atf_unit::unittest_algo_lib_U128PrintHex() {
 // --------------------------------------------------------------------------------
 
 void atf_unit::unittest_algo_lib_FileToString() {
-    CreateDirRecurse("temp");
+    algo::CreateDirRecurse("temp");
 
     // test basic operation
     {
@@ -1691,7 +1677,7 @@ void atf_unit::unittest_algo_lib_FileToString() {
 #ifdef __linux__
     // check that FileToString can read /proc/cpuinfo
     // mac doesn't have these files.
-    vrfyeq_(FileToString("/proc/iomem")
+    vrfyeq_(algo::FileToString("/proc/iomem")
             ,SysEval("cat /proc/iomem",FailokQ(true),1024*1024*10));
 #endif
 }
@@ -1728,14 +1714,14 @@ void atf_unit::unittest_algo_lib_TimeConstants() {
 // --------------------------------------------------------------------------------
 
 void atf_unit::unittest_algo_lib_Datecache() {
-    UnTime from;
-    UnTime to;
+    algo::UnTime from;
+    algo::UnTime to;
     vrfy_(UnTime_ReadStrptrMaybe(from,"2016/01/01 00:00:00"));
     vrfy_(UnTime_ReadStrptrMaybe(to,"2016/31/31 23:59:59"));
     algo::DateCache cache;
     while (from < to) {
         vrfy_(DateCache_LocalDate(cache,from) == LocalDate(from));
-        from.value += UNTIME_PER_SEC * 60 * 15; // 15 minutes at a time.
+        from.value += algo::UNTIME_PER_SEC * 60 * 15; // 15 minutes at a time.
     }
     u64 c=0;
     DO_PERF_TEST("LocalDate",c+=LocalDate(from).value);
@@ -1802,46 +1788,53 @@ void atf_unit::unittest_algo_lib_StringSubrange() {
     vrfy_(ch_GetRegion(s,1,1) == "e");
     vrfy_(ch_GetRegion(s,1,10) == "empstr");
     vrfy_(ch_GetRegion(s,100,100) == "");
+#ifdef WIN32
+#pragma warning(push)
+#pragma warning(disable:4245) // conversion from int to u32, signed/unsigned mismatch
+#endif
     vrfy_(ch_GetRegion(s,-1,-100) == "");
+#ifdef WIN32
+#pragma warning(pop)
+#endif
 }
 
 // --------------------------------------------------------------------------------
 
 void atf_unit::unittest_algo_lib_Clipped() {
-    vrfy_(Clipped(0,0,1) == 0);
-    vrfy_(Clipped(-1,0,1) == 0);
-    vrfy_(Clipped(1,0,1) == 0);
+    vrfy_(algo::Clipped(0,0,1) == 0);
+    vrfy_(algo::Clipped(-1,0,1) == 0);
+    vrfy_(algo::Clipped(1,0,1) == 0);
 
-    vrfy_(Clipped(0,0,1) == 0);
-    vrfy_(Clipped(-1,0,1) == 0);
-    vrfy_(Clipped(1,0,1) == 0);
+    vrfy_(algo::Clipped(0,0,1) == 0);
+    vrfy_(algo::Clipped(-1,0,1) == 0);
+    vrfy_(algo::Clipped(1,0,1) == 0);
 
-    vrfy_(Clipped(1,10) == 1);
-    vrfy_(Clipped(10,10) == 9);
+    vrfy_(algo::Clipped(1,10) == 1);
+    vrfy_(algo::Clipped(10,10) == 9);
 
-    vrfy_(Clippedf(-0.1, 0.0, 1.0) == 0.0);
-    vrfy_(Clippedf(0.0, 0.0, 1.0) == 0.0);
-    vrfy_(Clippedf(0.1, 0.0, 1.0) == 0.1);
-    vrfy_(Clippedf(1.0, 0.0, 1.0) == 1.0);
-    vrfy_(Clippedf(1.1, 0.0, 1.0) == 1.0);
+    vrfy_(algo::Clippedf(-0.1, 0.0, 1.0) == 0.0);
+    vrfy_(algo::Clippedf(0.0, 0.0, 1.0) == 0.0);
+    vrfy_(algo::Clippedf(0.1, 0.0, 1.0) == 0.1);
+    vrfy_(algo::Clippedf(1.0, 0.0, 1.0) == 1.0);
+    vrfy_(algo::Clippedf(1.1, 0.0, 1.0) == 1.0);
 
-    vrfy_(u16_SubClip(1,0)==1);
-    vrfy_(u16_SubClip(1,1)==0);
-    vrfy_(u16_SubClip(1,2)==0);
+    vrfy_(algo::u16_SubClip(1,0)==1);
+    vrfy_(algo::u16_SubClip(1,1)==0);
+    vrfy_(algo::u16_SubClip(1,2)==0);
 
-    vrfy_(u32_SubClip(1,0)==1);
-    vrfy_(u32_SubClip(1,1)==0);
-    vrfy_(u32_SubClip(1,2)==0);
+    vrfy_(algo::u32_SubClip(1,0)==1);
+    vrfy_(algo::u32_SubClip(1,1)==0);
+    vrfy_(algo::u32_SubClip(1,2)==0);
 
-    vrfy_(u64_SubClip(1,0)==1);
-    vrfy_(u64_SubClip(1,1)==0);
-    vrfy_(u64_SubClip(1,2)==0);
+    vrfy_(algo::u64_SubClip(1,0)==1);
+    vrfy_(algo::u64_SubClip(1,1)==0);
+    vrfy_(algo::u64_SubClip(1,2)==0);
 }
 
 // --------------------------------------------------------------------------------
 
 template<class T> void TestAbs(T t, T result) {
-    vrfy_(Abs(t)==result);
+    vrfy_(algo::Abs(t)==result);
 }
 template<class T> void TestAbs2() {
     TestAbs<T>(0,0);
@@ -1886,7 +1879,7 @@ void atf_unit::unittest_algo_lib_PerfParseDouble() {
     {
         strptr data("123.1432");
         double d;
-        StringIter iter(data);
+        algo::StringIter iter(data);
         DO_PERF_TEST("ParseDouble 123.1432",
                      vrfy(double_ReadStrptrMaybe(d, data), algo_lib::_db.errtext)
                      );
@@ -1903,7 +1896,7 @@ void atf_unit::unittest_algo_lib_PerfParseDouble() {
     {
         strptr data("0.1");
         double d;
-        StringIter iter(data);
+        algo::StringIter iter(data);
         DO_PERF_TEST("ParseDouble 0.1",
                      vrfy(double_ReadStrptrMaybe(d, data), algo_lib::_db.errtext)
                      );
@@ -1928,25 +1921,25 @@ void atf_unit::unittest_algo_lib_PerfSort() {
         frep_(i,N) {
             atf_unit::Dbl &elem = orig_Alloc(frame);
             switch(input) {
-            case 0: elem.val = double_WeakRandom(1.0); method="random double"; break;
+            case 0: elem.val = algo::double_WeakRandom(1.0); method="random double"; break;
             case 1: elem.val = i; method = "ascending double"; break;
             case 2: elem.val = -i; method = "descending double"; break;
             case 3: elem.val = 0; method="zeros"; break;
-            case 4: elem.val = i32_WeakRandom(2); method="zeros and ones"; break;
+            case 4: elem.val = algo::i32_WeakRandom(2); method="zeros and ones"; break;
             }
         }
         frep_(iter,2) {
             sorted_RemoveAll(frame);
             sorted_Addary(frame, orig_Getary(frame));
-            u64 c = get_cycles();
+            u64 c = algo::get_cycles();
             std::sort(frame.sorted_elems, frame.sorted_elems + frame.sorted_n);
-            u64 stl_cycles_elem = (get_cycles() - c)/N;
+            u64 stl_cycles_elem = (algo::get_cycles() - c)/N;
 
             sorted_RemoveAll(frame);
             sorted_Addary(frame, orig_Getary(frame));
-            c = get_cycles();
+            c = algo::get_cycles();
             sorted_QuickSort(frame);
-            u64 amc_cycles_elem = (get_cycles() - c)/N;
+            u64 amc_cycles_elem = (algo::get_cycles() - c)/N;
 
             prlog("atf_unit.PerfSort"
                   <<Keyval("method",method)
@@ -2050,13 +2043,13 @@ static int FindSet(Numset& numset){
 
 static void RandomInsertAvl(int n){
     for(int i = 0 ; i < n; ++i){
-        InsertNumber(i32_WeakRandom(n));
+        InsertNumber(algo::i32_WeakRandom(n));
     }
 }
 
 static void RandomInsertSet(int n, Numset& numset){
     for(int i = 0 ; i < n; ++i){
-        numset.insert(i32_WeakRandom(n));
+        numset.insert(algo::i32_WeakRandom(n));
     }
 }
 
@@ -2075,52 +2068,54 @@ static void RemoveAvl(int n){
 void atf_unit::unittest_algo_lib_AvlvsMap(){
     //number_Reserve(10000);
     int n = 10000;
-    i64 c = get_cycles();
+    i64 c = algo::get_cycles();
     IncrementingInsert(n);
-    c = get_cycles() - c;
-    prlog("AvlInsert"<< Keyval("n", n)<< Keyval("t(Sec)",algo::ToSecs(SchedTime(c))));
+    c = algo::get_cycles() - c;
+    prlog("AvlInsert"<< Keyval("n", n)<< Keyval("t(Sec)",algo::ToSecs(algo::SchedTime(c))));
     Numset numset;
-    c = get_cycles();
+    c = algo::get_cycles();
     IncrementingInsertSet(n, numset);
-    c = get_cycles() - c;
-    prlog("SetInsert"<< Keyval("n", n)<< Keyval("t(Sec)",algo::ToSecs(SchedTime(c))));
+    c = algo::get_cycles() - c;
+    prlog("SetInsert"<< Keyval("n", n)<< Keyval("t(Sec)",algo::ToSecs(algo::SchedTime(c))));
     u64 res=0;
     DO_PERF_TEST("AvlIterate",res+=IterateAvl());
     DO_PERF_TEST("SetIterate",res+=IterateSet(numset));
     DO_PERF_TEST("AvlFind",res+=FindAvl());
     DO_PERF_TEST("SetFind",res+=FindSet(numset));
 
-    c = get_cycles();
+    c = algo::get_cycles();
     RandomInsertAvl(n);
-    c = get_cycles() - c;
-    prlog("AvlInsertRandom"<< Keyval("n", n)<< Keyval("t(Sec)",algo::ToSecs(SchedTime(c))));
-    c = get_cycles();
+    c = algo::get_cycles() - c;
+    prlog("AvlInsertRandom"<< Keyval("n", n)<< Keyval("t(Sec)",algo::ToSecs(algo::SchedTime(c))));
+    c = algo::get_cycles();
     RandomInsertSet(n, numset);
-    c = get_cycles() - c;
-    prlog("SetInsertRandom"<< Keyval("n", n)<< Keyval("t(Sec)",algo::ToSecs(SchedTime(c))));
+    c = algo::get_cycles() - c;
+    prlog("SetInsertRandom"<< Keyval("n", n)<< Keyval("t(Sec)",algo::ToSecs(algo::SchedTime(c))));
     DO_PERF_TEST("AvlIterate",res+=IterateAvl());
     DO_PERF_TEST("SetIterate",res+=IterateSet(numset));
     DO_PERF_TEST("AvlFind",res+=FindAvl());
     DO_PERF_TEST("SetFind",res+=FindSet(numset));
 
-    c = get_cycles();
+    c = algo::get_cycles();
     RemoveAvl(n);
-    c = get_cycles() - c;
-    prlog("AvlRemove"<< Keyval("n", n)<< Keyval("t(Sec)",algo::ToSecs(SchedTime(c))));
-    c = get_cycles();
+    c = algo::get_cycles() - c;
+    prlog("AvlRemove"<< Keyval("n", n)<< Keyval("t(Sec)",algo::ToSecs(algo::SchedTime(c))));
+    c = algo::get_cycles();
     RemoveSet(n, numset);
-    c = get_cycles() - c;
-    prlog("SetRemove"<< Keyval("n", n)<< Keyval("t(Sec)",algo::ToSecs(SchedTime(c))));
+    c = algo::get_cycles() - c;
+    prlog("SetRemove"<< Keyval("n", n)<< Keyval("t(Sec)",algo::ToSecs(algo::SchedTime(c))));
 }
 // --------------------------------------------------------------------------------
 
+#ifndef __CYGWIN__
 static void CheckSleep(double sec) {
     bool success=false;
-    for (int i=0; i<10 && !success; i++,sleep(1)) {
-        SchedTime c(get_cycles());
+    // try for up to 1 minute (in case of machine load)
+    for (int i=0; i<60 && !success; i++,sleep(1)) {
+        algo::SchedTime c(algo::get_cycles());
         algo::SleepMsec(sec*1000.0);
-        SchedTime c2(get_cycles());
-        double elapsed = ElapsedSecs(c,c2);
+        algo::SchedTime c2(algo::get_cycles());
+        double elapsed = algo::ElapsedSecs(c,c2);
         //some servers only give you 10% accuracy in sleep
         success = elapsed >= sec*0.75 && elapsed <= sec*1.25;
         verblog("atf_unit.check_sleep"
@@ -2130,11 +2125,16 @@ static void CheckSleep(double sec) {
     }
     vrfy(success,"SleepMsec test failed");
 }
+#endif
 
 void atf_unit::unittest_algo_lib_Sleep() {
+#ifdef __CYGWIN__
+    prlog("atf_unit: skipping Sleep test as it sometimes fails under Cygwin");
+#else
     CheckSleep(0.01);
     CheckSleep(1.0);
     CheckSleep(2.9);
+#endif
 }
 
 // --------------------------------------------------------------------------------
@@ -2176,7 +2176,7 @@ static void CheckSysEval(strptr cmd, strptr expect_output, int limit, bool expec
         out=SysEval(cmd,FailokQ(true),limit);
         test_ok = out==expect_output;
         out="";
-    } catch(algo_lib::ErrorX &x) {
+    } catch(algo_lib::ErrorX &) {
         test_ok=expect_success==false;
     }
     // re-test same command with FailokQ(false)
@@ -2184,7 +2184,7 @@ static void CheckSysEval(strptr cmd, strptr expect_output, int limit, bool expec
         try {
             out=SysEval(cmd,FailokQ(false),limit);
             test_ok = false;// must have thrown!!
-        } catch(algo_lib::ErrorX &x) {
+        } catch(algo_lib::ErrorX &) {
             test_ok = true;
         }
     }
@@ -2243,4 +2243,340 @@ void atf_unit::unittest_algo_lib_PrintWithCommas() {
     TestPrintWithCommas("12341234123412341234123412341234","12,341,234,123,412,341,234,123,412,341,234");
     TestPrintWithCommas("2341234123412341234123412341234","2,341,234,123,412,341,234,123,412,341,234");
     TestPrintWithCommas("1.11111","1.11111");
+}
+
+// -----------------------------------------------------------------------------
+
+void atf_unit::unittest_algo_lib_FTruncate() {
+    cstring s("1234567890");
+    strptr fname("temp/truncated");
+    DeleteFile(fname);
+    StringToFile(s,fname);
+    {
+        algo::Fildes fildes=OpenWrite(fname,algo_FileFlags_append);
+        TruncateFile(fildes,4);
+        close(fildes.value);
+        vrfy_(FileToString(fname) == "1234");
+    }
+}
+
+// --------------------------------------------------------------------------------
+
+void atf_unit::unittest_algo_lib_GetCpuHz() {
+    prlog("cpu hz: "<<algo::get_cpu_hz_int());
+}
+
+// --------------------------------------------------------------------------------
+
+void atf_unit::unittest_algo_lib_flock() {
+    algo::Fildes fd1= algo::OpenWrite("lock/file1");
+    vrfy_(ValidQ(fd1));
+    algo::Fildes fd2= algo::OpenWrite("lock/file1");
+    vrfy_(ValidQ(fd1));
+    vrfy_(fd1.value != fd2.value);
+
+    vrfy_(flock(fd1.value,LOCK_NB|LOCK_EX)==0);
+
+    // exclusive lock should fail on the second file
+    vrfy_(flock(fd2.value,LOCK_NB|LOCK_EX)==-1);
+
+    // unlock via fd1
+    vrfy_(flock(fd1.value,LOCK_UN)==0);
+
+    // lock via fd2 -- must succeed
+    vrfy_(flock(fd2.value,LOCK_NB|LOCK_EX)==0);
+
+    close(fd1.value);
+    close(fd2.value);
+}
+// --------------------------------------------------------------------------------
+
+static void ShowVal(i64 val, U128 u128val) {
+    (void)val;
+    (void)u128val;
+    // TODO
+    // prerr(Keyval("val",val)
+    //       <<Keyval("u128val",u128val));
+}
+#define vrfy_x(a,b) if (!(a)) { ShowVal(b,U128(b)); vrfy(0,#a); }
+
+// Test that construging is the same as assigning
+// And that resulting value matches
+static void U128TestConstruct(i64 val) {
+    if (val >= 0 && val <= 0x7fffffff) {
+        U128 x = U128(u32(val));
+        U128 y;
+        y=val;
+        vrfy_(u32(x)==val);
+        vrfy_(u32(y)==val);
+    }
+    if (val > -0x7fffffff && val < 0x7fffffff) {
+        U128 x = U128(i32(val));
+        U128 y;
+        y=val;
+        vrfy_(i32(x)==val);
+        vrfy_(i32(y)==val);
+    }
+    if (val > -0x7fffffffffffffff && val < 0x7fffffffffffffff) {
+        U128 x = U128(i64(val));
+        U128 y;
+        y=val;
+        vrfy_(u64(x)==u64(val));
+        vrfy_(u64(y)==u64(val));
+    }
+}
+
+static void u128_TestSmallIntConvert(i64 val) {
+    // true for all numbers
+    vrfy_x(U128(val) == U128(val), val);
+    vrfy_x(U128(val) != U128(val+1), val);
+    vrfy_x(U128(val) != u32(val+1), val);// always differs
+    vrfy_x(U128(val) != u64(val+1), val);// always differs
+    vrfy_x(u32(val+1) != U128(val), val);// always differs
+    vrfy_x(u32(val+1) != U128(val), val);// always differs
+    vrfy_x(U128(val) == U128(val), val);
+    vrfy_x(U128(val) == ~~U128(val), val);
+
+    if (val>=0) {
+        // initialize to a value and read that value back
+        vrfy_x(U128(u32(val)) == u32(val), val);
+        vrfy_x(U128(u64(val)) == u64(val), val);
+        // test with u128 on the right
+        vrfy_x(u32(val) == U128(u32(val)), val);
+        vrfy_x(u64(val) == U128(u64(val)), val);
+    }
+    if (val < 0) {
+        // construct u128, convert back to unsigne,d test
+        vrfy_x(-U128(i32(val)) == u32(-val), val);
+        vrfy_x(-U128(i64(val)) == u64(-val), val);
+    }
+    U128TestConstruct(val);
+    if (val > -0x7fffffff && val < 0x7fffffff) {
+        // construct from i32 same as from i64
+        vrfy_x(U128(i32(val)) == U128(i64(val)), val);
+    }
+    if (val >= 0 && val < 0x7fffffffffffffff) {
+        for (int shift=0; shift<64; shift++) {
+            vrfy_x((U128(val)>>shift)  == (u64(val)>>shift),val); // shifted right
+        }
+        vrfy_x(U128(val)   <  U128(val+1), val); // u128 vs u128
+        vrfy_x(U128(val+1) >  U128(val), val);   // u128 vs u128
+        vrfy_x(u64(U128(val))   <  u64(val+1), val);             // u128 vs i64
+        // not supported
+        vrfy_x(i64(val+1)             >  i64(u64(U128(val))), val);   // i64 vs u128
+
+        vrfy_x(!(U128(val) <  U128(val)), val);  // number against itself
+        vrfy_x(!(U128(val) >  U128(val)), val);  // same
+
+        vrfy_x(U128(val)     == U128(val), val);  // number equals itself
+        vrfy_x(!(U128(val)   != U128(val)), val); // doesn't differ from itself
+
+        vrfy_x(!(U128(val)   == U128(val+1)), val); // different numbers don't equal
+        vrfy_x(!(U128(val+1) == U128(val)), val);   // same
+
+        U128 a = U128(val);
+        U128 b = a;
+        vrfy_x(a == b,val);
+    }
+    if (val >= 0 && val < 0x7fffffffffffffff/2) {
+        // basic addition
+        vrfy_x(U128(val) + U128(val) == U128(val+val), val);
+    }
+    if (val >= 0 && val < 0x7fffffffffffffff/2) {
+        // #AL# TODO
+        // division by numberes higher than u32 doesn't work
+        for (u64 arg=1; arg <= 0x7fffffffffff; arg = arg*2) {
+            // multiply and divide by same number, should get same number back
+            vrfy_(U128(val)*arg / arg == U128(val));
+            // add and sutract same number - should get the same result
+            vrfy_x(U128(val) + U128(arg) - U128(arg) == U128(val), val);
+        }
+    }
+    // conversion to bool
+    vrfy_x(bool(U128(val)) == (val!=0), val);
+}
+
+static U128 U128Rand() {
+    U128 ret;
+    for (int i=0; i<8; i++) {
+        ret  = (ret<<u32(16)) | rand();
+    }
+    return ret;
+}
+
+void atf_unit::unittest_algo_lib_u128() {
+    u128_TestSmallIntConvert(0);
+    u128_TestSmallIntConvert(-1);
+    u128_TestSmallIntConvert(1);
+    u128_TestSmallIntConvert(0x7fffffff);
+    u128_TestSmallIntConvert(0xffffffffffffffff);
+    u128_TestSmallIntConvert(0x8000000000000000);
+    u128_TestSmallIntConvert(0x8000000000000000);
+
+    {
+        // set and clear all bits 1 through 127
+        U128 a(1);
+        for (int i=1; i<=127; i++) {
+            U128 b = U128(i64(1)) << i;
+            //verblog(Keyval("i",i)<<Keyval("a",a)<<Keyval("b",b));
+            vrfy_((a | b)  != a);
+            vrfy_((a & ~b) == a);
+            vrfy_((a & b) == U128(i32(0)));
+            vrfy_(((a | b) & ~b) == a);
+            vrfy_((b << 0) == b);
+            vrfy_((b >> 0) == b);
+
+            // add = shift left by 1
+            vrfy_((U128(1)<<(i-1)) + (U128(1)<<(i-1)) == (U128(1)<<i));
+            // so does multiply by 2
+            {
+                U128 s1_0 = U128(1)<<(i-1);
+                U128 s1 = s1_0*u32(2);
+                U128 s2 = (U128(1)<<i);
+                // verblog("i:"<<i
+                //         <<"  s1_0:"<<s1_0
+                //         <<"  s1:"<<s1
+                //         <<"  s2:"<<s2);
+                vrfy_(s1 == s2);
+            }
+            // non-zero
+            vrfy_(bool(U128(1)<<i) == true);
+        }
+        vrfy_(bool(U128(0)) == false);
+    }
+
+    for (int i=0; i<10000; i++) {
+        U128 a = U128Rand();
+        U128 b = U128Rand();
+        // test symmetry of bitwise operators
+        vrfy_((a & b) == (b & a));
+        vrfy_((a | b) == (b | a));
+
+        vrfy_(U128(u64(a))*U128(u64(b)) / U128(u64(b)) == U128(u64(a)));
+
+        // test that in-place operators match value operators
+        {
+            U128 c = a;
+            c &= b;
+            vrfy_(c == (a & b));
+        }
+        {
+            U128 c = a;
+            c |= b;
+            vrfy_(c == (a | b));
+        }
+        // shift number left/right, should stay the same
+        {
+            U128 c(a);
+            c<<=1;
+            c>>=2;
+            c<<=1;
+            U128 d(a);
+            d = d & ~U128(1);
+            d = d & ~(U128(1)<<127);
+            vrfy_(c==d);
+        }
+
+        // test that shift in-place matches shift by value
+        for (int shift=0; shift<128; shift++) {
+            U128 c = a;
+            c>>=shift;
+            vrfy_((a>>i32(shift)) == c);
+            vrfy_((a>>u32(shift)) == c);
+            vrfy_((a>>u64(shift)) == c);
+            c = a;
+            c<<=shift;
+            vrfy_((a<<i32(shift)) == c);
+            vrfy_((a<<u32(shift)) == c);
+            vrfy_((a<<u64(shift)) == c);
+        }
+    }
+
+}
+// --------------------------------------------------------------------------------
+
+void atf_unit::unittest_algo_lib_Mmap() {
+    strptr fname("temp/mmapfile");
+    // initial state
+    DeleteFile(fname);
+
+    // write string to file
+    StringToFile("sample text",fname);
+    MmapFile mmapfile;
+    algo_lib::FFildes readfd;
+    readfd.fd = OpenRead(fname);
+    vrfy_(MmapFile_LoadFd(mmapfile,readfd.fd));
+
+    // check that file view sees the string
+    vrfy_(mmapfile.text == "sample text");
+
+    // write to file via OS file api
+    {
+        algo_lib::FFildes writefd;
+        writefd.fd = OpenWrite(fname,algo_FileFlags_append);
+        lseek(writefd.fd.value,0,SEEK_SET);
+        ssize_t ret_val = write(writefd.fd.value, "123456", 6);
+        (void) ret_val;
+    }
+
+    // file mapping should have been updated
+    vrfy_(mmapfile.text == "123456 text");
+}
+// --------------------------------------------------------------------------------
+
+void atf_unit::unittest_algo_lib_FileQ() {
+    strptr fname("temp/linktest");
+    // clear state
+    DeleteFile(fname);
+    prlog("phase 1");
+    // file must not exist
+    vrfy_(!FileQ(fname));
+    vrfy_(!FileObjectExistsQ(fname));
+
+    prlog("phase 2");
+    // create a regular file
+    StringToFile("x",fname);
+    // check that it exists
+    vrfy_(FileQ(fname));
+    vrfy_(FileObjectExistsQ(fname));
+
+    // clear again
+    algo::DeleteFile(fname);
+    algo::DeleteFile("temp/non-existent");
+    prlog("phase 3");
+    // create a symlink to a non-existent entity
+    vrfy_(0==symlink(Zeroterm(tempstr()<<"non-existent"),Zeroterm(tempstr()<<fname)));
+    vrfy_(FileObjectExistsQ(fname));
+    // unfortunate platform difference
+#ifdef WIN32
+    vrfy_(FileQ(fname));
+#else
+    vrfy_(!FileQ(fname));
+#endif
+    vrfy_(algo::FileToString(algo::GetFullPath(fname),algo::FileFlags())=="");
+
+    DeleteFile(fname);
+    prlog("phase 4");
+    algo::StringToFile("x","temp/target");
+    vrfy_(0==symlink("target",Zeroterm(tempstr()<<fname)));
+    vrfy_(FileObjectExistsQ(fname));
+    vrfy_(FileQ(fname));
+    prlog(fname);
+    // under cygwin, FileToString(<symlink>) would return
+    // the contents of the symlink file
+    vrfy_(algo::FileToString(algo::GetFullPath(fname),algo::FileFlags())=="x");
+}
+// --------------------------------------------------------------------------------
+
+static void CheckExitCode(algo::strptr cmd, int code) {
+    command::bash_proc bash;
+    bash.cmd.c = cmd;
+    int rc = bash_Exec(bash);
+    vrfyeq_(rc,code);
+}
+
+void atf_unit::unittest_algo_lib_ExitCode() {
+    CheckExitCode("true", 0);
+    CheckExitCode("false", 256);
+    CheckExitCode("kill $$", 15);
 }

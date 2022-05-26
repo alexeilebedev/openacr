@@ -84,6 +84,7 @@ dmmeta.smallstr  field:algo.RnullStr9.ch  length:9  strtype:rightpad  pad:0  str
 dmmeta.smallstr  field:algo.RspaceStr10.ch  length:10  strtype:rightpad  pad:"' '"  strict:Y
 dmmeta.smallstr  field:algo.RspaceStr100.ch  length:100  strtype:rightpad  pad:"' '"  strict:Y
 dmmeta.smallstr  field:algo.RspaceStr11.ch  length:11  strtype:rightpad  pad:"' '"  strict:Y
+dmmeta.smallstr  field:algo.RspaceStr12.ch  length:12  strtype:rightpad  pad:"' '"  strict:Y
 dmmeta.smallstr  field:algo.RspaceStr16.ch  length:16  strtype:rightpad  pad:"' '"  strict:Y
 dmmeta.smallstr  field:algo.RspaceStr2.ch  length:2  strtype:rightpad  pad:"' '"  strict:Y
 dmmeta.smallstr  field:algo.RspaceStr20.ch  length:20  strtype:rightpad  pad:"' '"  strict:Y
@@ -114,7 +115,9 @@ dmmeta.smallstr  field:algo.Smallstr20.ch  length:20  strtype:rpascal  pad:""  s
 dmmeta.smallstr  field:algo.Smallstr200.ch  length:200  strtype:rpascal  pad:""  strict:Y
 dmmeta.smallstr  field:algo.Smallstr25.ch  length:25  strtype:rpascal  pad:""  strict:Y
 dmmeta.smallstr  field:algo.Smallstr250.ch  length:250  strtype:rpascal  pad:""  strict:Y
+dmmeta.smallstr  field:algo.Smallstr3.ch  length:3  strtype:rpascal  pad:""  strict:Y
 dmmeta.smallstr  field:algo.Smallstr30.ch  length:30  strtype:rpascal  pad:""  strict:Y
+dmmeta.smallstr  field:algo.Smallstr32.ch  length:32  strtype:rpascal  pad:""  strict:Y
 dmmeta.smallstr  field:algo.Smallstr4.ch  length:4  strtype:rpascal  pad:""  strict:Y
 dmmeta.smallstr  field:algo.Smallstr40.ch  length:40  strtype:rpascal  pad:""  strict:Y
 dmmeta.smallstr  field:algo.Smallstr5.ch  length:5  strtype:rpascal  pad:""  strict:Y

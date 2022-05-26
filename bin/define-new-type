@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# todo: make this the default output of
+#
+# acr_ed -create -ctype <typename> -subset <underlyingtype> -anonfld
+# add handling of anonfld to acr_ed
+# - if underlying type has cfmt, add a cfmt
+# - if underlying has small size, emit cheap_copy:Y
+#
+T=$1
+ARG=$2
+DFLT=${3:-0}
+if [ "$ARG" == "" ]; then
+    print "Usage: define-new-type <typename> <underlyingtype> [<dflt>=0]"
+    exit 1
+fi
+cat << EOF
+dmmeta.ctype  ctype:$T  comment:""
+dmmeta.cpptype  ctype:$T  ctor:Y  dtor:N  cheap_copy:Y
+dmmeta.field  field:$T.value     arg:$ARG  reftype:Val  dflt:'$DFLT'  comment:""
+dmmeta.anonfld  field:$T.value  comment:""
+dmmeta.cfmt  cfmt:$T.String  printfmt:Raw  read:Y  print:Y  sep:""  genop:Y  comment:""
+EOF

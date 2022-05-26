@@ -1,0 +1,11 @@
+nullPointer
+integerOverflow
+unknownMacro
+invalidFunctionArgBool
+memleakOnRealloc
+shiftTooManyBitsSigned
+syntaxError
+shiftNegative
+returnTempReference
+objectIndex
+mismatchingContainerExpression

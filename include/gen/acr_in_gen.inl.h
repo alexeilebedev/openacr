@@ -180,12 +180,12 @@ inline bool acr_in::tuple_EmptyQ() {
 // --- acr_in.FDb.tuple.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_in::FTuple* acr_in::tuple_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_in::FTuple *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.tuple_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.tuple_lary[bsr][index];
     }
     return retval;
@@ -234,12 +234,12 @@ inline bool acr_in::finput_EmptyQ() {
 // --- acr_in.FDb.finput.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_in::FFinput* acr_in::finput_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_in::FFinput *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.finput_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.finput_lary[bsr][index];
     }
     return retval;
@@ -276,12 +276,12 @@ inline bool acr_in::field_EmptyQ() {
 // --- acr_in.FDb.field.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_in::FField* acr_in::field_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_in::FField *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.field_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.field_lary[bsr][index];
     }
     return retval;
@@ -330,12 +330,12 @@ inline bool acr_in::ctype_EmptyQ() {
 // --- acr_in.FDb.ctype.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_in::FCtype* acr_in::ctype_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_in::FCtype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ctype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ctype_lary[bsr][index];
     }
     return retval;
@@ -384,12 +384,12 @@ inline bool acr_in::ssimfile_EmptyQ() {
 // --- acr_in.FDb.ssimfile.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_in::FSsimfile* acr_in::ssimfile_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_in::FSsimfile *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ssimfile_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ssimfile_lary[bsr][index];
     }
     return retval;
@@ -426,12 +426,12 @@ inline bool acr_in::ns_EmptyQ() {
 // --- acr_in.FDb.ns.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_in::FNs* acr_in::ns_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_in::FNs *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ns_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ns_lary[bsr][index];
     }
     return retval;
@@ -592,12 +592,12 @@ inline bool acr_in::substr_EmptyQ() {
 // --- acr_in.FDb.substr.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_in::FSubstr* acr_in::substr_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_in::FSubstr *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.substr_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.substr_lary[bsr][index];
     }
     return retval;
@@ -634,12 +634,12 @@ inline bool acr_in::dispsig_EmptyQ() {
 // --- acr_in.FDb.dispsig.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_in::FDispsig* acr_in::dispsig_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_in::FDispsig *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.dispsig_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.dispsig_lary[bsr][index];
     }
     return retval;
@@ -868,12 +868,12 @@ inline bool acr_in::target_EmptyQ() {
 // --- acr_in.FDb.target.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_in::FTarget* acr_in::target_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_in::FTarget *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.target_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.target_lary[bsr][index];
     }
     return retval;
@@ -922,12 +922,12 @@ inline bool acr_in::targdep_EmptyQ() {
 // --- acr_in.FDb.targdep.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_in::FTargdep* acr_in::targdep_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_in::FTargdep *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.targdep_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.targdep_lary[bsr][index];
     }
     return retval;
@@ -1593,6 +1593,7 @@ inline void acr_in::c_targdep_RemoveAll(acr_in::FTarget& target) {
 // --- acr_in.FTarget..Init
 // Set all fields to initial values.
 inline void acr_in::FTarget_Init(acr_in::FTarget& target) {
+    target.compat = algo::strptr("Linux-%.%-%");
     target.c_targdep_elems = NULL; // (acr_in.FTarget.c_targdep)
     target.c_targdep_n = 0; // (acr_in.FTarget.c_targdep)
     target.c_targdep_max = 0; // (acr_in.FTarget.c_targdep)

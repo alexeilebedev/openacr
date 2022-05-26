@@ -18,6 +18,8 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/dev_gen.h"
 #include "include/gen/dev_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
@@ -26,6 +28,7 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 acr_in::FDb     acr_in::_db;      // dependency found via dev.targdep
 
@@ -376,7 +379,7 @@ bool acr_in::tuple_XrefMaybe(acr_in::FTuple &row) {
 // --- acr_in.FDb.ind_tuple.Find
 // Find row by key. Return NULL if not found.
 acr_in::FTuple* acr_in::ind_tuple_Find(const algo::strptr& key) {
-    u32 index = cstring_Hash(0, key) & (_db.ind_tuple_buckets_n - 1);
+    u32 index = algo::cstring_Hash(0, key) & (_db.ind_tuple_buckets_n - 1);
     acr_in::FTuple* *e = &_db.ind_tuple_buckets_elems[index];
     acr_in::FTuple* ret=NULL;
     do {
@@ -418,7 +421,7 @@ bool acr_in::ind_tuple_InsertMaybe(acr_in::FTuple& row) {
     ind_tuple_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_tuple_next == (acr_in::FTuple*)-1)) {// check if in hash already
-        u32 index = cstring_Hash(0, row.key) & (_db.ind_tuple_buckets_n - 1);
+        u32 index = algo::cstring_Hash(0, row.key) & (_db.ind_tuple_buckets_n - 1);
         acr_in::FTuple* *prev = &_db.ind_tuple_buckets_elems[index];
         do {
             acr_in::FTuple* ret = *prev;
@@ -444,7 +447,7 @@ bool acr_in::ind_tuple_InsertMaybe(acr_in::FTuple& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_in::ind_tuple_Remove(acr_in::FTuple& row) {
     if (LIKELY(row.ind_tuple_next != (acr_in::FTuple*)-1)) {// check if in hash already
-        u32 index = cstring_Hash(0, row.key) & (_db.ind_tuple_buckets_n - 1);
+        u32 index = algo::cstring_Hash(0, row.key) & (_db.ind_tuple_buckets_n - 1);
         acr_in::FTuple* *prev = &_db.ind_tuple_buckets_elems[index]; // addr of pointer to current element
         while (acr_in::FTuple *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -465,7 +468,7 @@ void acr_in::ind_tuple_Reserve(int n) {
     u32 new_nelems   = _db.ind_tuple_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(acr_in::FTuple*);
         u32 new_size = new_nbuckets * sizeof(acr_in::FTuple*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -481,7 +484,7 @@ void acr_in::ind_tuple_Reserve(int n) {
             while (elem) {
                 acr_in::FTuple &row        = *elem;
                 acr_in::FTuple* next       = row.ind_tuple_next;
-                u32 index          = cstring_Hash(0, row.key) & (new_nbuckets-1);
+                u32 index          = algo::cstring_Hash(0, row.key) & (new_nbuckets-1);
                 row.ind_tuple_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -508,7 +511,7 @@ void acr_in::MainArgs(int argc, char **argv) {
 // --- acr_in.FDb._db.MainLoop
 // Main loop.
 void acr_in::MainLoop() {
-    SchedTime time(get_cycles());
+    algo::SchedTime time(algo::get_cycles());
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
@@ -538,7 +541,7 @@ static void acr_in::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_in.Input'  signature:'921f0867652e8602d2f5e2203a234a6e634c2874'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_in.Input'  signature:'25b797e7a1263fd6f1d607a6601cc19373971dff'");
 }
 
 // --- acr_in.FDb._db.StaticCheck
@@ -886,7 +889,7 @@ bool acr_in::field_XrefMaybe(acr_in::FField &row) {
 // --- acr_in.FDb.ind_field.Find
 // Find row by key. Return NULL if not found.
 acr_in::FField* acr_in::ind_field_Find(const algo::strptr& key) {
-    u32 index = Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
     acr_in::FField* *e = &_db.ind_field_buckets_elems[index];
     acr_in::FField* ret=NULL;
     do {
@@ -912,7 +915,7 @@ bool acr_in::ind_field_InsertMaybe(acr_in::FField& row) {
     ind_field_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_field_next == (acr_in::FField*)-1)) {// check if in hash already
-        u32 index = Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
         acr_in::FField* *prev = &_db.ind_field_buckets_elems[index];
         do {
             acr_in::FField* ret = *prev;
@@ -938,7 +941,7 @@ bool acr_in::ind_field_InsertMaybe(acr_in::FField& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_in::ind_field_Remove(acr_in::FField& row) {
     if (LIKELY(row.ind_field_next != (acr_in::FField*)-1)) {// check if in hash already
-        u32 index = Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
         acr_in::FField* *prev = &_db.ind_field_buckets_elems[index]; // addr of pointer to current element
         while (acr_in::FField *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -959,7 +962,7 @@ void acr_in::ind_field_Reserve(int n) {
     u32 new_nelems   = _db.ind_field_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(acr_in::FField*);
         u32 new_size = new_nbuckets * sizeof(acr_in::FField*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -975,7 +978,7 @@ void acr_in::ind_field_Reserve(int n) {
             while (elem) {
                 acr_in::FField &row        = *elem;
                 acr_in::FField* next       = row.ind_field_next;
-                u32 index          = Smallstr100_Hash(0, row.field) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.field) & (new_nbuckets-1);
                 row.ind_field_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1088,7 +1091,7 @@ bool acr_in::ctype_XrefMaybe(acr_in::FCtype &row) {
 // --- acr_in.FDb.ind_ctype.Find
 // Find row by key. Return NULL if not found.
 acr_in::FCtype* acr_in::ind_ctype_Find(const algo::strptr& key) {
-    u32 index = Smallstr50_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
     acr_in::FCtype* *e = &_db.ind_ctype_buckets_elems[index];
     acr_in::FCtype* ret=NULL;
     do {
@@ -1130,7 +1133,7 @@ bool acr_in::ind_ctype_InsertMaybe(acr_in::FCtype& row) {
     ind_ctype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctype_next == (acr_in::FCtype*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         acr_in::FCtype* *prev = &_db.ind_ctype_buckets_elems[index];
         do {
             acr_in::FCtype* ret = *prev;
@@ -1156,7 +1159,7 @@ bool acr_in::ind_ctype_InsertMaybe(acr_in::FCtype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_in::ind_ctype_Remove(acr_in::FCtype& row) {
     if (LIKELY(row.ind_ctype_next != (acr_in::FCtype*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         acr_in::FCtype* *prev = &_db.ind_ctype_buckets_elems[index]; // addr of pointer to current element
         while (acr_in::FCtype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1177,7 +1180,7 @@ void acr_in::ind_ctype_Reserve(int n) {
     u32 new_nelems   = _db.ind_ctype_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(acr_in::FCtype*);
         u32 new_size = new_nbuckets * sizeof(acr_in::FCtype*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -1193,7 +1196,7 @@ void acr_in::ind_ctype_Reserve(int n) {
             while (elem) {
                 acr_in::FCtype &row        = *elem;
                 acr_in::FCtype* next       = row.ind_ctype_next;
-                u32 index          = Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
                 row.ind_ctype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1412,7 +1415,7 @@ bool acr_in::ns_XrefMaybe(acr_in::FNs &row) {
 // --- acr_in.FDb.ind_ns.Find
 // Find row by key. Return NULL if not found.
 acr_in::FNs* acr_in::ind_ns_Find(const algo::strptr& key) {
-    u32 index = Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
+    u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
     acr_in::FNs* *e = &_db.ind_ns_buckets_elems[index];
     acr_in::FNs* ret=NULL;
     do {
@@ -1454,7 +1457,7 @@ bool acr_in::ind_ns_InsertMaybe(acr_in::FNs& row) {
     ind_ns_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ns_next == (acr_in::FNs*)-1)) {// check if in hash already
-        u32 index = Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
         acr_in::FNs* *prev = &_db.ind_ns_buckets_elems[index];
         do {
             acr_in::FNs* ret = *prev;
@@ -1480,7 +1483,7 @@ bool acr_in::ind_ns_InsertMaybe(acr_in::FNs& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_in::ind_ns_Remove(acr_in::FNs& row) {
     if (LIKELY(row.ind_ns_next != (acr_in::FNs*)-1)) {// check if in hash already
-        u32 index = Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
         acr_in::FNs* *prev = &_db.ind_ns_buckets_elems[index]; // addr of pointer to current element
         while (acr_in::FNs *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1501,7 +1504,7 @@ void acr_in::ind_ns_Reserve(int n) {
     u32 new_nelems   = _db.ind_ns_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(acr_in::FNs*);
         u32 new_size = new_nbuckets * sizeof(acr_in::FNs*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -1517,7 +1520,7 @@ void acr_in::ind_ns_Reserve(int n) {
             while (elem) {
                 acr_in::FNs &row        = *elem;
                 acr_in::FNs* next       = row.ind_ns_next;
-                u32 index          = Smallstr16_Hash(0, row.ns) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr16_Hash(0, row.ns) & (new_nbuckets-1);
                 row.ind_ns_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1885,7 +1888,7 @@ bool acr_in::dispsig_XrefMaybe(acr_in::FDispsig &row) {
 // --- acr_in.FDb.ind_dispsig.Find
 // Find row by key. Return NULL if not found.
 acr_in::FDispsig* acr_in::ind_dispsig_Find(const algo::strptr& key) {
-    u32 index = Smallstr50_Hash(0, key) & (_db.ind_dispsig_buckets_n - 1);
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_dispsig_buckets_n - 1);
     acr_in::FDispsig* *e = &_db.ind_dispsig_buckets_elems[index];
     acr_in::FDispsig* ret=NULL;
     do {
@@ -1911,7 +1914,7 @@ bool acr_in::ind_dispsig_InsertMaybe(acr_in::FDispsig& row) {
     ind_dispsig_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_dispsig_next == (acr_in::FDispsig*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.dispsig) & (_db.ind_dispsig_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.dispsig) & (_db.ind_dispsig_buckets_n - 1);
         acr_in::FDispsig* *prev = &_db.ind_dispsig_buckets_elems[index];
         do {
             acr_in::FDispsig* ret = *prev;
@@ -1937,7 +1940,7 @@ bool acr_in::ind_dispsig_InsertMaybe(acr_in::FDispsig& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_in::ind_dispsig_Remove(acr_in::FDispsig& row) {
     if (LIKELY(row.ind_dispsig_next != (acr_in::FDispsig*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.dispsig) & (_db.ind_dispsig_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.dispsig) & (_db.ind_dispsig_buckets_n - 1);
         acr_in::FDispsig* *prev = &_db.ind_dispsig_buckets_elems[index]; // addr of pointer to current element
         while (acr_in::FDispsig *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1958,7 +1961,7 @@ void acr_in::ind_dispsig_Reserve(int n) {
     u32 new_nelems   = _db.ind_dispsig_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(acr_in::FDispsig*);
         u32 new_size = new_nbuckets * sizeof(acr_in::FDispsig*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -1974,7 +1977,7 @@ void acr_in::ind_dispsig_Reserve(int n) {
             while (elem) {
                 acr_in::FDispsig &row        = *elem;
                 acr_in::FDispsig* next       = row.ind_dispsig_next;
-                u32 index          = Smallstr50_Hash(0, row.dispsig) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr50_Hash(0, row.dispsig) & (new_nbuckets-1);
                 row.ind_dispsig_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2206,7 +2209,7 @@ acr_in::FCtype* acr_in::zd_related_RemoveFirst() {
 // --- acr_in.FDb.ind_finput.Find
 // Find row by key. Return NULL if not found.
 acr_in::FFinput* acr_in::ind_finput_Find(const algo::strptr& key) {
-    u32 index = Smallstr100_Hash(0, key) & (_db.ind_finput_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_finput_buckets_n - 1);
     acr_in::FFinput* *e = &_db.ind_finput_buckets_elems[index];
     acr_in::FFinput* ret=NULL;
     do {
@@ -2232,7 +2235,7 @@ bool acr_in::ind_finput_InsertMaybe(acr_in::FFinput& row) {
     ind_finput_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_finput_next == (acr_in::FFinput*)-1)) {// check if in hash already
-        u32 index = Smallstr100_Hash(0, row.field) & (_db.ind_finput_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_finput_buckets_n - 1);
         acr_in::FFinput* *prev = &_db.ind_finput_buckets_elems[index];
         do {
             acr_in::FFinput* ret = *prev;
@@ -2258,7 +2261,7 @@ bool acr_in::ind_finput_InsertMaybe(acr_in::FFinput& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_in::ind_finput_Remove(acr_in::FFinput& row) {
     if (LIKELY(row.ind_finput_next != (acr_in::FFinput*)-1)) {// check if in hash already
-        u32 index = Smallstr100_Hash(0, row.field) & (_db.ind_finput_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_finput_buckets_n - 1);
         acr_in::FFinput* *prev = &_db.ind_finput_buckets_elems[index]; // addr of pointer to current element
         while (acr_in::FFinput *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2279,7 +2282,7 @@ void acr_in::ind_finput_Reserve(int n) {
     u32 new_nelems   = _db.ind_finput_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(acr_in::FFinput*);
         u32 new_size = new_nbuckets * sizeof(acr_in::FFinput*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -2295,7 +2298,7 @@ void acr_in::ind_finput_Reserve(int n) {
             while (elem) {
                 acr_in::FFinput &row        = *elem;
                 acr_in::FFinput* next       = row.ind_finput_next;
-                u32 index          = Smallstr100_Hash(0, row.field) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.field) & (new_nbuckets-1);
                 row.ind_finput_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2426,7 +2429,7 @@ bool acr_in::target_XrefMaybe(acr_in::FTarget &row) {
 // --- acr_in.FDb.ind_target.Find
 // Find row by key. Return NULL if not found.
 acr_in::FTarget* acr_in::ind_target_Find(const algo::strptr& key) {
-    u32 index = Smallstr16_Hash(0, key) & (_db.ind_target_buckets_n - 1);
+    u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_target_buckets_n - 1);
     acr_in::FTarget* *e = &_db.ind_target_buckets_elems[index];
     acr_in::FTarget* ret=NULL;
     do {
@@ -2452,7 +2455,7 @@ bool acr_in::ind_target_InsertMaybe(acr_in::FTarget& row) {
     ind_target_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_target_next == (acr_in::FTarget*)-1)) {// check if in hash already
-        u32 index = Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
+        u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
         acr_in::FTarget* *prev = &_db.ind_target_buckets_elems[index];
         do {
             acr_in::FTarget* ret = *prev;
@@ -2478,7 +2481,7 @@ bool acr_in::ind_target_InsertMaybe(acr_in::FTarget& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_in::ind_target_Remove(acr_in::FTarget& row) {
     if (LIKELY(row.ind_target_next != (acr_in::FTarget*)-1)) {// check if in hash already
-        u32 index = Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
+        u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
         acr_in::FTarget* *prev = &_db.ind_target_buckets_elems[index]; // addr of pointer to current element
         while (acr_in::FTarget *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2499,7 +2502,7 @@ void acr_in::ind_target_Reserve(int n) {
     u32 new_nelems   = _db.ind_target_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(acr_in::FTarget*);
         u32 new_size = new_nbuckets * sizeof(acr_in::FTarget*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -2515,7 +2518,7 @@ void acr_in::ind_target_Reserve(int n) {
             while (elem) {
                 acr_in::FTarget &row        = *elem;
                 acr_in::FTarget* next       = row.ind_target_next;
-                u32 index          = Smallstr16_Hash(0, row.target) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr16_Hash(0, row.target) & (new_nbuckets-1);
                 row.ind_target_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -3216,12 +3219,16 @@ void acr_in::FTargdep_Uninit(acr_in::FTargdep& targdep) {
 // Copy fields out of row
 void acr_in::target_CopyOut(acr_in::FTarget &row, dev::Target &out) {
     out.target = row.target;
+    out.license = row.license;
+    out.compat = row.compat;
 }
 
 // --- acr_in.FTarget.msghdr.CopyIn
 // Copy fields in to row
 void acr_in::target_CopyIn(acr_in::FTarget &row, dev::Target &in) {
     row.target = in.target;
+    row.license = in.license;
+    row.compat = in.compat;
 }
 
 // --- acr_in.FTarget.c_targdep.Insert
@@ -3493,7 +3500,7 @@ bool acr_in::value_SetStrptrMaybe(acr_in::FieldId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,acr_in_FieldId_value); ret = true; break;
                 }
@@ -3576,7 +3583,7 @@ bool acr_in::value_SetStrptrMaybe(acr_in::TableId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 9: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','N'): {
                     if (memcmp(rhs.elems+8,"s",1)==0) { value_SetEnum(parent,acr_in_TableId_dmmeta_Ns); ret = true; break; }
                     break;
@@ -3589,7 +3596,7 @@ bool acr_in::value_SetStrptrMaybe(acr_in::TableId& parent, algo::strptr rhs) {
             break;
         }
         case 10: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','e','v','.','T','a','r','g'): {
                     if (memcmp(rhs.elems+8,"et",2)==0) { value_SetEnum(parent,acr_in_TableId_dev_Target); ret = true; break; }
                     break;
@@ -3602,7 +3609,7 @@ bool acr_in::value_SetStrptrMaybe(acr_in::TableId& parent, algo::strptr rhs) {
             break;
         }
         case 11: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','e','v','.','T','a','r','g'): {
                     if (memcmp(rhs.elems+8,"dep",3)==0) { value_SetEnum(parent,acr_in_TableId_dev_Targdep); ret = true; break; }
                     break;
@@ -3615,7 +3622,7 @@ bool acr_in::value_SetStrptrMaybe(acr_in::TableId& parent, algo::strptr rhs) {
             break;
         }
         case 12: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','C'): {
                     if (memcmp(rhs.elems+8,"type",4)==0) { value_SetEnum(parent,acr_in_TableId_dmmeta_Ctype); ret = true; break; }
                     break;
@@ -3636,7 +3643,7 @@ bool acr_in::value_SetStrptrMaybe(acr_in::TableId& parent, algo::strptr rhs) {
             break;
         }
         case 13: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','F'): {
                     if (memcmp(rhs.elems+8,"input",5)==0) { value_SetEnum(parent,acr_in_TableId_dmmeta_Finput); ret = true; break; }
                     break;
@@ -3657,7 +3664,7 @@ bool acr_in::value_SetStrptrMaybe(acr_in::TableId& parent, algo::strptr rhs) {
             break;
         }
         case 14: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','D'): {
                     if (memcmp(rhs.elems+8,"ispsig",6)==0) { value_SetEnum(parent,acr_in_TableId_dmmeta_Dispsig); ret = true; break; }
                     break;
@@ -3670,7 +3677,7 @@ bool acr_in::value_SetStrptrMaybe(acr_in::TableId& parent, algo::strptr rhs) {
             break;
         }
         case 15: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','S'): {
                     if (memcmp(rhs.elems+8,"simfile",7)==0) { value_SetEnum(parent,acr_in_TableId_dmmeta_Ssimfile); ret = true; break; }
                     break;
@@ -3722,6 +3729,7 @@ void acr_in::TableId_Print(acr_in::TableId & row, algo::cstring &str) {
 // --- acr_in...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         acr_in::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -3738,10 +3746,13 @@ int main(int argc, char **argv) {
     try {
         acr_in::FDb_Uninit();
         algo_lib::FDb_Uninit();
-    } catch(algo_lib::ErrorX &x) {
+        lib_json::FDb_Uninit();
+    } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;
     }
+    // only the lower 1 byte makes it to the outside world
+    (void)i32_UpdateMin(algo_lib::_db.exit_code,255);
     return algo_lib::_db.exit_code;
 }
 

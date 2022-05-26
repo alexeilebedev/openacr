@@ -26,7 +26,9 @@
 
 #include "include/atf_unit.h"
 #include "include/lib/lib_exec.h"
+#ifndef WIN32
 #include <sys/resource.h>
+#endif
 
 void atf_unit::unittest_lib_exec_Parallel1() {
     bool success = false;
@@ -39,10 +41,10 @@ void atf_unit::unittest_lib_exec_Parallel1() {
             lib_exec::FSyscmd &cmd      = lib_exec::NewCmd(&glob_start,&glob_end);
             cmd.command << "sleep 1";
         }
-        u64 c = get_cycles();
+        u64 c = algo::get_cycles();
         lib_exec::SyscmdExecute();
-        c = get_cycles() - c;
-        success = c < get_cpu_hz() * 2.0;
+        c = algo::get_cycles() - c;
+        success = c < algo::get_cpu_hz() * 3.0;
         success &= !glob_end.fail_prereq;
     }
     vrfy(success, "parallel execution doesn't work");
@@ -84,8 +86,9 @@ void atf_unit::unittest_lib_exec_TooManyFds() {
 // --------------------------------------------------------------------------------
 
 void atf_unit::unittest_lib_exec_Timeout() {
+#ifndef __CYGWIN__
     // run a command with timeout
-    SchedTime start(CurrSchedTime());
+    algo::SchedTime start(algo::CurrSchedTime());
     lib_exec::syscmd_RemoveAll();
     lib_exec::FSyscmd &glob_start = lib_exec::NewCmd(NULL,NULL);
     lib_exec::FSyscmd &glob_end   = lib_exec::NewCmd(&glob_start,NULL);
@@ -97,7 +100,8 @@ void atf_unit::unittest_lib_exec_Timeout() {
     TESTCMP(cmd.completed, true);
     TESTCMP(cmd.status==0, false);
     // 10 seconds should be enough
-    TESTCMP(ElapsedSecs(start,CurrSchedTime()) < 30.0, true);
+    TESTCMP(ElapsedSecs(start,algo::CurrSchedTime()) < 30.0, true);
+#endif
 }
 
 // --------------------------------------------------------------------------------

@@ -28,7 +28,7 @@ static tempstr TocLink(strptr str) {
     tempstr ret;
     ret << "[" << str << "](#";
     for (int i=0; i < str.n_elems; i++) {
-        char c = ToLower(str.elems[i]);
+        char c = algo::ToLower(str.elems[i]);
         if (c == ':') {
             // skip
         } else {
@@ -49,6 +49,8 @@ static int GetHeaderLevel(strptr line) {
     }
     return i;
 }
+
+// -----------------------------------------------------------------------------
 
 // Scan string FROM for markdown header indicators
 // (##, ###, #### etc)
@@ -77,6 +79,11 @@ static void AppendToc(strptr from, cstring &to) {
 
 // -----------------------------------------------------------------------------
 
+// Read contents of FILENAME and output a string
+// corresponding to it.
+// If INL flag is set, then the file is returned as-is.
+// If INL is false, then the first line of the file is taken,
+// and a markdown hyperlink pointing to the file is created instead.
 static tempstr InlineFile(strptr filename, bool inl) {
     tempstr contents(FileToString(filename));
     if (!inl) {
@@ -89,6 +96,31 @@ static tempstr InlineFile(strptr filename, bool inl) {
         contents = abridged;
     }
     return contents;
+}
+
+// -----------------------------------------------------------------------------
+
+void atf_norm::normcheck_inline_readme() {
+    ind_beg(atf_norm::_db_readme_curs,readme,atf_norm::_db) {
+        cstring out;
+        bool inblock=false;
+        ind_beg(algo::FileLine_curs,line,readme.gitfile) {
+            if (StartsWithQ(line,"inline-command: ")) {
+                out << line << eol;
+                verblog(readme.gitfile<<": eval "<<line);
+                out << SysEval(tempstr()<<Pathcomp(line," LR")<<" 2>&1",FailokQ(true),1024*1024);
+                inblock = true;
+            } else {
+                if (inblock && StartsWithQ(line, "```")) {
+                    inblock = false;
+                }
+                if (!inblock) {
+                    out << line << eol;
+                }
+            }
+        }ind_end;
+        SafeStringToFile(out,readme.gitfile);
+    }ind_end;
 }
 
 // -----------------------------------------------------------------------------

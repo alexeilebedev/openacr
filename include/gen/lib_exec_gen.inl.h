@@ -26,12 +26,12 @@ inline bool lib_exec::syscmddep_EmptyQ() {
 // --- lib_exec.FDb.syscmddep.Find
 // Look up row by row id. Return NULL if out of range
 inline lib_exec::FSyscmddep* lib_exec::syscmddep_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     lib_exec::FSyscmddep *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.syscmddep_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.syscmddep_lary[bsr][index];
     }
     return retval;
@@ -68,12 +68,12 @@ inline bool lib_exec::syscmd_EmptyQ() {
 // --- lib_exec.FDb.syscmd.Find
 // Look up row by row id. Return NULL if out of range
 inline lib_exec::FSyscmd* lib_exec::syscmd_Find(i32 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     lib_exec::FSyscmd *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.syscmd_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.syscmd_lary[bsr][index];
     }
     return retval;

@@ -44,12 +44,6 @@ void acr_ed::Main_CreateUnittest() {
                         <<Keyval("comment","")
                         <<eol;
 
-    tempstr test_file = FileToString(Subst(R,"cpp/atf/unit/$ns.cpp"));
-    int nline=0;
-    ind_beg(Line_curs,line,test_file) {
-        nline++;
-        (void)line;
-    }ind_end;
     Ins(&R, acr_ed::_db.script, "cat >> cpp/atf/unit/$ns.cpp << EOF");
     Ins(&R, acr_ed::_db.script, "// --------------------------------------------------------------------------------");
     Ins(&R, acr_ed::_db.script, "");
@@ -58,8 +52,7 @@ void acr_ed::Main_CreateUnittest() {
     Ins(&R, acr_ed::_db.script, "}");
     Ins(&R, acr_ed::_db.script, "EOF");
     Ins(&R, acr_ed::_db.script, "amc");
-    Set(R, "$prefix", acr_ed::_db.cmdline.e ? "" : "# ");
-    Ins(&R, acr_ed::_db.script, tempstr()<<"$prefixemacs -nw +"<<nline+4<<" cpp/atf/unit/$ns.cpp");
+    ScriptEditFile(R,"cpp/atf/unit/$ns.cpp");
     Ins(&R, acr_ed::_db.script, "$prefixabt -install atf_unit && atf_unit $ns.$Name");
 }
 
@@ -71,6 +64,8 @@ void acr_ed::Main_CreateNormcheck() {
           <<Keyval("normcheck",acr_ed::_db.cmdline.normcheck));
     acr_ed::_db.out_ssim<<"atfdb.normcheck"
                         <<Keyval("normcheck",acr_ed::_db.cmdline.normcheck)
-                        <<Keyval("comment","")
+                        <<Keyval("comment",acr_ed::_db.cmdline.comment)
                         <<eol;
 }
+
+// -----------------------------------------------------------------------------

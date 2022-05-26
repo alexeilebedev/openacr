@@ -33,6 +33,7 @@ namespace algo { // update-hdr srcfile:%/algo/backtrace.%
     // -------------------------------------------------------------------
     // cpp/lib/algo/backtrace.cpp -- Print stack trace in case of crash
     //
+    void ShowStackTrace(uintptr_t start_ip, cstring &out);
     void FatalErrorExit(const char *a) __attribute__((noreturn));
 
     // catch fatal signals and show backtrace

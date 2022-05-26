@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+git fetch origin
+git checkout -B master origin/master
+for X in $(git branch | grep -v '^\*'); do
+    echo "---- $X ----"
+    git checkout $X
+    (
+        git rebase origin/master
+        git reset --hard
+        git rebase --abort
+    ) >/dev/null 2>&1
+done
+git checkout master

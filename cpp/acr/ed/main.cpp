@@ -81,10 +81,11 @@ void acr_ed::InsertSrcfileInclude(algo_lib::Replscope &R, bool mainheader) {
 // -----------------------------------------------------------------------------
 
 static void Main_Vis() {
-    ListSep ls("|");
+    algo::ListSep ls("|");
     // command for acr_in
     // feed both existing data and our proposed output to amc_vis
     tempstr cmd;
+    verblog(acr_ed::_db.out_ssim);
     StringToFile(acr_ed::_db.out_ssim, "temp/acr_ed.ssim");
     cmd << "(acr_in -data amc_vis -sigcheck:N; cat temp/acr_ed.ssim) | amc_vis -xref:N -in:- '(";
     ind_beg(acr_ed::_db_vis_curs, vis, acr_ed::_db) {
@@ -146,27 +147,40 @@ static void Create() {
 
 static void Delete() {
     int n_action = 0;
-    if (ch_N(acr_ed::_db.cmdline.srcfile) > 0) {
-        acr_ed::Main_DeleteSrcfile();
-        n_action++;
-    } else if (ch_N(acr_ed::_db.cmdline.target) > 0) {
-        acr_ed::Main_DeleteTarget();
-        acr_ed::NeedAmc();
-        n_action++;
-    } else if (ch_N(acr_ed::_db.cmdline.ssimfile) > 0) {
-        acr_ed::Main_DeleteSsimfile();
-        acr_ed::NeedAmc();
-        n_action++;
-    } else if (ch_N(acr_ed::_db.cmdline.ctype) > 0) {
-        acr_ed::Main_DeleteCtype();
-        acr_ed::NeedAmc();
-        n_action++;
-    } else if (ch_N(acr_ed::_db.cmdline.field) > 0) {
+    if (ch_N(acr_ed::_db.cmdline.field) > 0) {
         acr_ed::Main_DeleteField();
         acr_ed::NeedAmc();
         n_action++;
     }
-    vrfy(n_action<2, "Not sure what to delete.");
+    // if -del -ctype is specified, delete associated ssimfile (if exists)
+    if (ch_N(acr_ed::_db.cmdline.ctype) > 0) {
+        if (acr_ed::FCtype *ctype = acr_ed::ind_ctype_Find(acr_ed::_db.cmdline.ctype)) {
+            if (ctype->c_ssimfile) {
+                acr_ed::_db.cmdline.ssimfile = ctype->c_ssimfile->ssimfile;
+                acr_ed::_db.cmdline.ctype = "";// will be handled
+            }
+        }
+    }
+    if (ch_N(acr_ed::_db.cmdline.ctype) > 0) {
+        acr_ed::Main_DeleteCtype();
+        acr_ed::NeedAmc();
+        n_action++;
+    }
+    if (ch_N(acr_ed::_db.cmdline.ssimfile) > 0) {
+        acr_ed::Main_DeleteSsimfile();
+        acr_ed::NeedAmc();
+        n_action++;
+    }
+    if (ch_N(acr_ed::_db.cmdline.srcfile) > 0) {
+        acr_ed::Main_DeleteSrcfile();
+        n_action++;
+    }
+    if (ch_N(acr_ed::_db.cmdline.target) > 0) {
+        acr_ed::Main_DeleteTarget();
+        acr_ed::NeedAmc();
+        n_action++;
+    }
+    vrfy(n_action>0, "Not sure what to delete.");
 }
 
 // -----------------------------------------------------------------------------
@@ -192,7 +206,12 @@ static void Rename() {
         acr_ed::NeedAmc();
         n_action++;
     }
-    vrfy(n_action<2, "Not sure what to rename.");
+    if (ch_N(acr_ed::_db.cmdline.field) > 0) {
+        acr_ed::Main_RenameField();
+        acr_ed::NeedAmc();
+        n_action++;
+    }
+    vrfy(n_action>0, "Not sure what to rename.");
 }
 
 // -----------------------------------------------------------------------------
@@ -217,33 +236,64 @@ static void ExecuteTransaction() {
         final_script << "EOF" << eol;
         final_script << eol;
     }
+    // inside sandbox, always build & run amc
+    // because it may contain changes to be tested
+    if (acr_ed::_db.cmdline.sandbox) {
+        final_script << "ai amc && amc" << eol;
+    }
     // append accumulated script to 'script'
-    ind_beg(Line_curs,line,acr_ed::_db.script) {
-        if (acr_ed::_db.cmdline.showcpp && StartsWithQ(line,"git")) {
-            final_script << "#";
-        }
-        final_script << line << eol;
-    }ind_end;
+    final_script << acr_ed::_db.script;
     if (acr_ed::_db.need_amc) {
         final_script <<  "bin/amc" << eol;
     }
-    StringToFile(final_script, "temp/acr_ed.ssim", algo_FileFlags_throw);
-    DryrunQ dry_run(!acr_ed::_db.cmdline.write);
-    tempstr cmd = tempstr() << (acr_ed::_db.cmdline.write ? "bash" : "cat") << " < temp/acr_ed.ssim";
     // highlight proposed change
-    if (SaneTerminalQ()) {
-        algo_lib::Replscope R;
-        Set(R, "$field" , dmmeta::Field_name_Get(acr_ed::_db.cmdline.field));
-        Set(R, "$arg"   , acr_ed::_db.cmdline.arg);
-        Set(R, "$target", acr_ed::_db.cmdline.target);
-        cmd << Subst(R, "| hilite acr.insert $arg $field $target");
+    if (!acr_ed::_db.cmdline.write) {
+        StringToFile(final_script, "temp/acr_ed.ssim", algo_FileFlags__throw);
+        final_script = "cat temp/acr_ed.ssim";
+        if (algo::SaneTerminalQ()) {
+            algo_lib::Replscope R;
+            Set(R, "$field" , dmmeta::Field_name_Get(acr_ed::_db.cmdline.field));
+            Set(R, "$arg"   , acr_ed::_db.cmdline.arg);
+            Set(R, "$target", acr_ed::_db.cmdline.target);
+            final_script << Subst(R," | hilite acr.insert $arg $field $target");
+        }
     }
     // perform transaction
-    int rc=SysCmd(cmd, FailokQ(true), DryrunQ(false), EchoQ(false));
+    int rc=SysCmd(final_script, FailokQ(true));
     if (rc!=0) {
         algo_lib::_db.exit_code++;
     }
-    unlink("temp/acr_ed.ssim");
+    (void)unlink("temp/acr_ed.ssim");
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_ed::BuildTest() {
+    command::abt_proc abt;
+    abt.cmd.install = true;
+    abt.cmd.cfg = dev_Cfg_cfg_debug;
+    abt.cmd.target.expr = "atf%|amc%|abt%|acr%";
+    if (abt_Exec(abt)!=0) {
+        algo_lib::_db.exit_code=1;
+    }
+    command::atf_amc_proc atf_amc;
+    if (atf_amc_Exec(atf_amc)!=0) {
+        algo_lib::_db.exit_code=1;
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_ed::ScriptEditFile(algo_lib::Replscope &R, strptr fname) {
+    tempstr test_file = FileToString(Subst(R,fname),algo::FileFlags());
+    int nline=0;
+    ind_beg(Line_curs,line,test_file) {
+        nline++;
+        (void)line;
+    }ind_end;
+    Set(R, "$prefix", acr_ed::_db.cmdline.e ? "" : "# ");
+    Set(R, "$EDITOR", "$EDITOR", false);
+    Ins(&R, acr_ed::_db.script, tempstr()<<"$prefix $EDITOR +"<<nline+4<<" "<<fname);
 }
 
 // -----------------------------------------------------------------------------
@@ -272,8 +322,7 @@ void acr_ed::Main() {
 
     // BEGIN SANDBOX (if showcpp specified)
 
-    bool sandbox = acr_ed::_db.cmdline.showcpp || acr_ed::_db.cmdline.sandbox;
-    if (sandbox) {
+    if (acr_ed::_db.cmdline.sandbox) {
         BeginSandbox();
         acr_ed::_db.cmdline.write = true;// !!! enable write mode from now on
         NeedAmc();
@@ -281,14 +330,16 @@ void acr_ed::Main() {
 
     // execute/show proposed transaction
     ExecuteTransaction();
-    if (acr_ed::_db.cmdline.sandbox && acr_ed::_db.cmdline.sandbox_build) {
-        BuildX("amc|acr%|abt%");
+    if (acr_ed::_db.cmdline.test) {
+        BuildTest();
     }
     ExitSandbox();
     // not in sandbox anymore...
 
     if (acr_ed::_db.cmdline.showcpp) {
-        SysCmd("diff -I signature -U 8 -r ./cpp/gen .testgen/cpp/gen", FailokQ(true));
-        SysCmd("diff -I signature -U 8 -r ./include/gen .testgen/include/gen", FailokQ(true));
+        SysCmd("("
+               "diff -I signature -U 8 -r ./cpp/gen temp/acr_ed/cpp/gen; "
+               "diff -I signature -U 8 -r ./include/gen temp/acr_ed/include/gen"
+               ") | hilite -d | limit-output 10000", FailokQ(true));
     }
 }

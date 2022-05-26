@@ -152,7 +152,7 @@ bool lib_iconv::value_SetStrptrMaybe(lib_iconv::FieldId& parent, algo::strptr rh
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,lib_iconv_FieldId_value); ret = true; break;
                 }

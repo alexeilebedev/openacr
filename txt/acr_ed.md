@@ -1,12 +1,76 @@
 ## acr_ed: Acr Editor
 
-`Acr_ed` started its life as a cheat sheet generator, but now it's an indispensable 
-tool for common tasks such as creating, deleting, and renaming targets, ctypes, ssimfiles,
-xrefs, and source files.
+### Syntax
+
+```
+inline-command: acr_ed -h
+
+
+acr_ed: ACR Editor Set of useful recipes, uses acr, abt, git, and other tools
+Usage: acr_ed [options]
+    -in         string  Input directory or filename, - for stdin. default: "data"
+    -create             Create new entity (-finput, -target, -ctype, -field). default: false
+    -del                Delete mode. default: false
+    -rename     string  Rename to something else
+    -replace            Use acr -replace (default is -insert, fails on duplicate). default: false
+    -finput             Create in-memory table based on ssimfile. default: false
+    -foutput            Declare field as an output. default: false
+    -srcfile    string      Create source file
+    -gstatic            Like -finput, but data is loaded at compile time. default: false
+    -indexed            (with -finput) Add hash index. default: false
+    -target     string  Create new target
+    -nstype     string  (with -create -target): exe,lib,etc.. default: "exe"
+    -ctype      string  Create new ctype
+    -pooltype   string   Pool reftype (Lary,Lpool etc) for finput/ctype
+    -ssimfile   string    Ssimfile for new ctype
+    -subset     string    Primary key is a subset of this ctype
+    -subset2    string    Primary key is also a subset of this ctype
+    -separator  string      Key separator. default: "."
+    -field      string  Create field
+    -arg        string    Field type (e.g. u32, etc)
+    -dflt       string    Field default value
+    -anon                 Anonymous field (use with command lines). default: false
+    -bigend               Big-endian field. default: false
+    -cascdel              Field is cascdel. default: false
+    -before     string    Place field before this one
+    -substr     string    New field is a substring
+    -srcfield   string    Source field for bitfld/substr
+    -fstep      string    Add fstep record
+    -inscond    string    Insert condition (for xref). default: "true"
+    -reftype    string    Reftype (e.g. Val, Thash, Llist, etc)
+    -hashfld    string      (-reftype:Thash) Hash field
+    -sortfld    string      (-reftype:Bheap) Sort field
+    -unittest   string  Create unit test, <ns>.<functionname>
+    -normcheck  string  Create normalization check
+    -cppfunc    string  Field is a cppfunc, pass c++ expression as argument
+    -xref                   X-ref with field type. default: false
+    -via        string        X-ref argument (index, pointer, or index/key)
+    -write              Commit output to disk. default: false
+    -e                   (with -create -unittest) Edit new testcase. default: false
+    -comment    string  Comment for new entity
+    -sandbox            Make changes in sandbox. default: false
+    -test               Build resulting changes, run tests. default: false
+    -showcpp            (With -sandbox), show resulting diff. default: false
+    -verbose            Enable verbose mode
+    -debug              Enable debug mode
+    -version            Show version information
+    -sig                Print SHA1 signatures for dispatches
+    -help               Print this screen and exit
+
+```
+
+### Description
+
+`Acr_ed` is a cheat sheet generator, for common tasks such as creating
+, deleting, and renaming targets, ctypes, ssimfiles, xrefs, and source files.
 
 By default, `acr_ed` spits out an executable script to stdout. With
 `-write`, the script is executed (this has the same effect as piping output
-to sh)
+to sh).
+
+Optionally, `acr_ed` can make all changes in a sandbox (with `-sandbox` flag), 
+showing the diff between current and new versions. With `-test` flag, it builds 
+nall main executables and runs tests.
 
 ~~~
 
@@ -70,7 +134,9 @@ Options `-subset`, `-subset2` take ctype names.
 ### Source Files
 
 #### Create Source File
-When creating a source file, `acr_ed` automatically which target
+
+This option is used to create a .cpp, .h, or .md (readme) file.
+When creating a source file, `acr_ed` automatically determines which target
 this file will belong to based on the the other files in the same directory.
 If there is ambiguity, specify `-target ...` argument
 Headers are considered source files.
@@ -78,6 +144,8 @@ Headers are considered source files.
     $ acr_ed -create -srcfile cpp/...path.cpp
     ...
     $ acr_ed -create -srcfile include/path.h
+
+With `-e` option, the resulting file is opened for editing.
 
 #### Rename Source File
 
@@ -87,6 +155,11 @@ Headers are considered source files.
 #### Delete Source File
 
     $ acr_ed -del -srcfile cpp/path.cpp
+    ...
+
+#### Create Readme file
+
+    $ acr_ed -create -srcfile txt/abcd.md
     ...
 
 ### Ctypes

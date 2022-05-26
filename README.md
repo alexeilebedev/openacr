@@ -9,21 +9,30 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
    * [Directory Structure](#directory-structure)
       * [Binaries](#binaries)
 ; [Intermediate Files](#intermediate-files)
+   * [Writing Readmes](#writing-readmes)
+   * [Orgfile: organize and deduplicate files by timestamp and by contents](#orgfile-organize-and-deduplicate-files-by-timestamp-and-by-contents)
    * [Tutorial 1: Parts And Projects Tutorial](#tutorial-1-parts-and-projects-tutorial)
    * [Tutorial 2: Parts And Projects in SQL](#tutorial-2-parts-and-projects-in-sql)
    * [Tutorial 3: Scheduling And Main Loop](#tutorial-3-scheduling-and-main-loop)
    * [Tutorial 4: Command Lines](#tutorial-4-command-lines)
+   * [Tutorial 5: Running multiple subprocesses](#tutorial-5-running-multiple-subprocesses)
    * [Structured Keys](#structured-keys)
    * [acr: Auto Cross Reference](#acr-auto-cross-reference)
    * [acr_in: Show input tuples for target](#acr_in-show-input-tuples-for-target)
    * [abt: A Build Tool](#abt-a-build-tool)
    * [acr_ed: Acr Editor](#acr_ed-acr-editor)
    * [amc: Algo Model Compiler](#amc-algo-model-compiler)
+   * [Describing Protocols in AMC](#describing-protocols-in-amc)
+   * [Reading and Printing](#reading-and-printing)
+   * [Fconst/Gconst: Enumerated Types](#fconst-gconst-enumerated-types)
+   * [Amc: Size and field offset assertions](#amc-size-and-field-offset-assertions)
    * [Tests](#tests)
    * [Mdbg: Gdb front-end](#mdbg-gdb-front-end)
    * [Scriptlets](#scriptlets)
    * [Coding Style](#coding-style)
    * [Testimonials](#testimonials)
+   * [amc: Subprocess Invocation](#amc-subprocess-invocation)
+   * [amc: Program Startup & Main](#amc-program-startup---main)
 
 
 ## About
@@ -261,6 +270,29 @@ path to the .cpp file with `/`s replaced by `.`s.
     ...
 
 
+## Writing Readmes
+
+The top-level `README.md` file is created by processing 
+specific .md files under txt/.
+These files are described in the readme table (`acr readme`).
+Readme files can be in-line or included via a link. This is configured by the `inl` flag:
+
+```
+inline-command: acr readme | head -1
+dev.readme  gitfile:txt/about.md                   inl:Y  comment:""
+```
+
+The top-level README.md file is created with `make readme` or, in reality, `atf_norm readme`.
+It is a by-product of normalization and has to be up-to-date for every commit.
+
+In addition, output of arbitrary commands can be embedded inside readme files using
+the inline-command directive. Everything after this directive and before the next triple-backtick
+is replaced with the output of specified command. An example of such a command can be seen above
+
+
+## Orgfile: organize and deduplicate files by timestamp and by contents
+[See txt/orgfile.md](txt/orgfile.md)
+
 ## Tutorial 1: Parts And Projects Tutorial
 [See txt/tut1.md](txt/tut1.md)
 
@@ -272,6 +304,9 @@ path to the .cpp file with `/`s replaced by `.`s.
 
 ## Tutorial 4: Command Lines
 [See txt/tut4.md](txt/tut4.md)
+
+## Tutorial 5: Running multiple subprocesses
+[See txt/tut5.md](txt/tut5.md)
 
 ## Structured Keys
 [See txt/sknf.md](txt/sknf.md)
@@ -291,6 +326,18 @@ path to the .cpp file with `/`s replaced by `.`s.
 ## amc: Algo Model Compiler
 [See txt/amc.md](txt/amc.md)
 
+## Describing Protocols in AMC
+[See txt/amc/protocol.md](txt/amc/protocol.md)
+
+## Reading and Printing
+[See txt/amc/print.md](txt/amc/print.md)
+
+## Fconst/Gconst: Enumerated Types
+[See txt/amc/fconst.md](txt/amc/fconst.md)
+
+## Amc: Size and field offset assertions
+[See txt/amc/csize.md](txt/amc/csize.md)
+
 ## Tests
 [See txt/tests.md](txt/tests.md)
 
@@ -305,3 +352,9 @@ path to the .cpp file with `/`s replaced by `.`s.
 
 ## Testimonials
 [See txt/testimonials.md](txt/testimonials.md)
+
+## amc: Subprocess Invocation
+[See txt/amc/exec.md](txt/amc/exec.md)
+
+## amc: Program Startup & Main
+[See txt/amc/main.md](txt/amc/main.md)

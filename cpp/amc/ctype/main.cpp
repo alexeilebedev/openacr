@@ -528,6 +528,16 @@ void amc::tfunc_Ctype_Init() {
                 inl = inl && func->inl;
             }
         }
+        if (field.c_fuserinit) {
+            Set(R, "$field", field.field);
+            Set(R, "$pararg", refname);
+            Set(R, "$name", name_Get(field));
+            if (glob) {
+                Ins(&R, text, "Userinit(); // dmmeta.fuserinit:$field");
+            } else {
+                Ins(&R, text, "$name_Userinit($pararg); // dmmeta.fuserinit:$field");
+            }
+        }
     }ind_end;
 
     if (glob) {
@@ -909,7 +919,7 @@ void amc::tfunc_Ctype_GetAnon() {
             Ins(&R, getanon.body, "case($idx): return $fstr;");
             idx++;
         }ind_end;
-        Ins(&R, getanon.body    , "default: return strptr();");
+        Ins(&R, getanon.body    , "default: return algo::strptr();");
         Ins(&R, getanon.body    , "}");
     }
 }
@@ -943,7 +953,7 @@ void amc::tfunc_Ctype_GetMsgMemptr() {
             func.glob = true;
             Set(R, "$Cpptype", ctype.cpp_type);
             Set(R, "$LenExpr", LengthExpr(ctype,"const_cast<$Cpptype&>(row)"));
-            Ins(&R, func.body , "return memptr((u8*)&row, $LenExpr);");
+            Ins(&R, func.body , "return algo::memptr((u8*)&row, $LenExpr);");
         }
     }
 }

@@ -222,7 +222,7 @@ amc::FFunc *amc::init_GetOrCreate(amc::FCtype &ctype) {
         algo_lib::Replscope R;
         tempstr refname = amc::Refname(ctype);
         bool glob = GlobalQ(ctype);
-        Set(R, "$Parent" , glob ? strptr("")    : strptr(tempstr() << ctype.cpp_type << "& " << refname));
+        Set(R, "$Parent" , glob ? algo::strptr("") : algo::strptr(tempstr() << ctype.cpp_type << "& " << refname));
         Set(R, "$Name"   , name_Get(ctype));
         ret = &amc::ind_func_GetOrCreate(tempstr() << ctype.ctype << "..Init");
         Ins(&R, ret->comment, "Set all fields to initial values.");
@@ -240,7 +240,7 @@ amc::FFunc *amc::init_GetOrCreate(amc::FCtype &ctype) {
 static void PrintAttrs(amc::FFunc &func, cstring &out) {
     int start = out.ch_n;
     int nattr = 0;
-    ListSep ls;
+    algo::ListSep ls;
     out << " __attribute__((";
     if (func.deprecate) {
         out << ls << "deprecated";
@@ -272,7 +272,7 @@ static void PrintAttrs(amc::FFunc &func, cstring &out) {
 
 static void TmplPrefix(amc::FFunc& func, cstring &out, bool proto) {
     if (func.istmpl) {
-        ListSep ls(", ");
+        algo::ListSep ls(", ");
         out << "template<";
         ind_beg(amc::func_funcarg_curs,funcarg,func) {
             if (funcarg.typearg) {

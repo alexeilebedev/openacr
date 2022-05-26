@@ -33,19 +33,18 @@ enum report_FieldIdEnum {                 // report.FieldId.value
     ,report_FieldId_n_xref          = 16
     ,report_FieldId_n_filemod       = 17
     ,report_FieldId_n_test_total    = 18
-    ,report_FieldId_n_test_run      = 19
-    ,report_FieldId_n_test_step     = 20
-    ,report_FieldId_n_cmp           = 21
-    ,report_FieldId_n_line          = 22
-    ,report_FieldId_n_static        = 23
-    ,report_FieldId_n_inline        = 24
-    ,report_FieldId_n_mysteryfunc   = 25
-    ,report_FieldId_n_baddecl       = 26
-    ,report_FieldId_comment         = 27
-    ,report_FieldId_value           = 28
+    ,report_FieldId_success         = 19
+    ,report_FieldId_n_test_run      = 20
+    ,report_FieldId_n_line          = 21
+    ,report_FieldId_n_static        = 22
+    ,report_FieldId_n_inline        = 23
+    ,report_FieldId_n_mysteryfunc   = 24
+    ,report_FieldId_n_baddecl       = 25
+    ,report_FieldId_comment         = 26
+    ,report_FieldId_value           = 27
 };
 
-enum { report_FieldIdEnum_N = 29 };
+enum { report_FieldIdEnum_N = 28 };
 
 namespace report { struct FieldId; }
 namespace report { struct Protocol; }
@@ -192,11 +191,10 @@ void                 amc_Print(report::amc & row, algo::cstring &str) __attribut
 
 // --- report.atf_unit
 struct atf_unit { // report.atf_unit
-    u32   n_test_total;   //   0
-    u64   n_test_run;     //   0
-    u64   n_test_step;    //   0
-    u64   n_cmp;          //   0
-    u64   n_err;          //   0
+    u32    n_test_total;   //   0
+    bool   success;        //   false
+    u64    n_test_run;     //   0
+    u64    n_err;          //   0
     atf_unit();
 };
 

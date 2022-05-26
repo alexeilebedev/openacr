@@ -87,7 +87,7 @@ static void WriteFile(acr::FWrite &write, acr::FFile &file) {
 static void SaveSingleFile() {
     acr::Rec_SelectAll();
     acr::FPrint print;
-    print.stdout   = false;     // save it
+    print.fstdout   = false;     // save it
     print.tree     = acr::_db.cmdline.tree;
     print.pretty   = false;
     print.maxgroup = INT_MAX;

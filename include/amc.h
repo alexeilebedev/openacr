@@ -440,6 +440,19 @@ namespace amc { // update-hdr
     // void tfunc_Exec_Wait();
     // void tfunc_Exec_Kill();
     // void tfunc_Exec_Start();
+
+    // // Should this be generated?
+    // static algo::Fildes bash_StartRead(command::bash_proc &bash, algo_lib::FFildes &read) {
+    // int pipefd[2];
+    // int rc=pipe(pipefd);
+    // (void)rc;
+    // read.fd.value = pipefd[0];
+    // bash.fstdout  << ">&" << pipefd[1];
+    // bash_Start(bash);
+    // (void)close(pipefd[1]);
+    // return read.fd;
+    // }
+    // void tfunc_Exec_StartRead();
     // void tfunc_Exec_Exec();
     // void tfunc_Exec_ExecX();
     // void tfunc_Exec_ToCmdline();
@@ -525,6 +538,7 @@ namespace amc { // update-hdr
     // void tclass_Field();
     // void tclass_Field2();
     // void tfunc_Field_Cleanup();
+    // void tfunc_Field_Userinit();
     // void tfunc_Field_Cascdel();
     // void tfunc_Field2_ReadStrptrMaybe();
     // void tfunc_Field_Concat();
@@ -645,6 +659,11 @@ namespace amc { // update-hdr
     //
     //
     // void gen_gconst();
+
+    //
+    // Generate Fconst from a column of some table.
+    //
+    // void gen_bitfldenum();
     // void gen_prep_fconst();
 
     // Generate numeric fconsts from string fconsts
@@ -927,7 +946,7 @@ namespace amc { // update-hdr
     void GenPrintStmt(cstring &out, amc::FCtype &parenttype, amc::FField &field, strptr strname, strptr parentname);
 
     // print binary octet string as hex byte array initializer
-    void memptr_PrintOctetsHexArray(memptr ary, cstring &out, bool caps);
+    void memptr_PrintOctetsHexArray(algo::memptr ary, cstring &out, bool caps);
     bool FldfuncQ(amc::FField &field);
     bool CanCopyQ(amc::FCtype &ctype);
     bool PoolVarlenQ(amc::FField &field);
@@ -1044,6 +1063,13 @@ namespace amc { // update-hdr
     // void tclass_Cppstack();
     // void tclass_Pkey();
     int c_anonfld_N(amc::FCtype &ctype);
+
+    // Go over `amcdb.gen` table and invoke each global generator
+    // Then, go over namespaces
+    // Go over per-namespace `amcdb.gen` entries and invoke them.
+    // Collect performance data long the way
+    // This is where amc spends most of the time. See the `amcdb.gen` table for more information.
+    void Main_Gen();
 
     // OUTPUT        Generate files for the namespace(s)
     void Main();
@@ -1328,6 +1354,7 @@ namespace amc { // update-hdr
     // void tfunc_Step_Init();
     // void tfunc_Step_Call();
     // void tfunc_Step_FirstChanged();
+    // void tfunc_Step_SetDelay();
 
     // -------------------------------------------------------------------
     // cpp/amc/struct.cpp

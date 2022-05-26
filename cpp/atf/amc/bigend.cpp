@@ -44,8 +44,8 @@ void atf_amc::amctest_BigEndian() {
         const u16 val_be = 0xdcfe;
         atf_amc::TypeBE16 x;
         value_Set(x,val);
-        vrfy_(val_be == x.value_be);
-        vrfy_(val    == value_Get(x));
+        vrfyeq_(val_be, x.value_be);
+        vrfyeq_(val, value_Get(x));
     }
     // Big-endian u32
     {
@@ -53,8 +53,8 @@ void atf_amc::amctest_BigEndian() {
         const u32 val_be = 0x98badcfe;
         atf_amc::TypeBE32 x;
         value_Set(x,val);
-        vrfy_(val_be == x.value_be);
-        vrfy_(val    == value_Get(x));
+        vrfyeq_(val_be, x.value_be);
+        vrfyeq_(val, value_Get(x));
     }
     // Big-endian u64
     {
@@ -62,37 +62,39 @@ void atf_amc::amctest_BigEndian() {
         const u64 val_be = 0x1032547698badcfe;
         atf_amc::TypeBE64 x;
         value_Set(x,val);
-        vrfy_(val_be == x.value_be);
-        vrfy_(val    == value_Get(x));
+        vrfyeq_(val_be, x.value_be);
+        vrfyeq_(val, value_Get(x));
     }
     // Big-endian u64 dflt ctor
     {
         const u64 val    = 0xfedcba9876543210;
         const u64 val_be = 0x1032547698badcfe;
         atf_amc::TypeBE64dflt x;
-        vrfy_(val_be == x.value_be);
-        vrfy_(val    == value_Get(x));
+        vrfyeq_(val_be, x.value_be);
+        vrfyeq_(val, value_Get(x));
     }
     // Big-endian u64 ctor
     {
         const u64 val    = 0xfedcba9876543210;
         const u64 val_be = 0x1032547698badcfe;
         atf_amc::TypeBE64 x(val);
-        vrfy_(val_be == x.value_be);
-        vrfy_(val    == value_Get(x));
+        vrfyeq_(val_be, x.value_be);
+        vrfyeq_(val, value_Get(x));
     }
-    // Big-endian u64 enum
-    {
-        // with explicit ctor
-        atf_amc::TypeBE64en x(atf_amc_TypeBE64en_value_val1);
-        vrfy_(0x1032547698badcfe == x.value_be);
-        vrfy_(atf_amc_TypeBE64en_value_val1 == value_GetEnum(x));
+    // Big-endian u32 enum
+    prlog("big-endian u32 enum") {
+        prlog("with explicit ctor");
+        atf_amc::TypeBE32en x(atf_amc_TypeBE32en_value_val1);
+        // bytes are reversed so in the string representation, pairs of hex digits are reversed
+        vrfyeq_(0x78563412, x.value_be);
+        vrfyeq_(atf_amc_TypeBE32en_value_val1, value_GetEnum(x));
 
-        // with SetEnum
-        atf_amc::TypeBE64en y;
-        value_SetEnum(y,atf_amc_TypeBE64en_value_val1);
-        vrfy_(0x1032547698badcfe == y.value_be);
-        vrfy_(atf_amc_TypeBE64en_value_val1 == value_GetEnum(y));
+        prlog("with SetEnum");
+        atf_amc::TypeBE32en y;
+        value_SetEnum(y,atf_amc_TypeBE32en_value_val1);
+        prlog(x.value_be);
+        vrfyeq_(0x78563412, y.value_be);
+        vrfyeq_(atf_amc_TypeBE32en_value_val1, value_GetEnum(y));
     }
     // Big-endian u64 -- print
     {
@@ -102,46 +104,46 @@ void atf_amc::amctest_BigEndian() {
         atf_amc::TypeBE64 x(val) ;
         tempstr str_valx;
         str_valx << x;
-        vrfy_(str_val == str_valx);
+        vrfyeq_(str_val, str_valx);
     }
     // Big-endian u64 -- read
     {
-        const u64 val    = 0xfedcba9876543210;
+        const u64 val    = 0xfedcba987654321;
         tempstr str_val;
         str_val << val;
         atf_amc::TypeBE64 x;
         TypeBE64_ReadStrptrMaybe(x,str_val);
-        vrfy_(val == value_Get(x));
+        vrfyeq_(val, value_Get(x));
     }
     // Big-endian u64 -- read tuple
     {
-        const u64 val    = 0xfedcba9876543210;
+        const u64 val    = 0xfedcba987654321;
         Tuple t;
         attr_Add(t, "value", tempstr()<<val);
         atf_amc::TypeBE64 x;
         TypeBE64_ReadTupleMaybe(x,t);
-        vrfy_(val == value_Get(x));
+        vrfyeq_(val, value_Get(x));
     }
-    // Big-endian u64 -- print enum
+    // Big-endian u32 -- print enum
     {
-        atf_amc::TypeBE64en x(atf_amc_TypeBE64en_value_val1);
+        atf_amc::TypeBE32en x(atf_amc_TypeBE32en_value_val1);
         tempstr str_valx;
         str_valx << x;
-        vrfy_(str_valx == "val1");
+        vrfyeq_(str_valx, "val1");
     }
-    // Big-endian u64 -- read enum
+    // Big-endian u32 -- read enum
     {
-        atf_amc::TypeBE64en x;
-        TypeBE64en_ReadStrptrMaybe(x, "val1");
-        vrfy_(atf_amc_TypeBE64en_value_val1 == value_GetEnum(x));
+        atf_amc::TypeBE32en x;
+        TypeBE32en_ReadStrptrMaybe(x, "val1");
+        vrfyeq_(atf_amc_TypeBE32en_value_val1, value_GetEnum(x));
     }
-    // Big-endian u64 -- read enum tuple
+    // Big-endian u32 -- read enum tuple
     {
         Tuple t;
         attr_Add(t, "value", "val1");
-        atf_amc::TypeBE64en x;
-        TypeBE64en_ReadTupleMaybe(x,t);
-        vrfy_(atf_amc_TypeBE64en_value_val1 == value_GetEnum(x));
+        atf_amc::TypeBE32en x;
+        TypeBE32en_ReadTupleMaybe(x,t);
+        vrfyeq_(atf_amc_TypeBE32en_value_val1, value_GetEnum(x));
     }
     // Big-endian u64 -- bitfield
     {
@@ -152,14 +154,14 @@ void atf_amc::amctest_BigEndian() {
             u64 (*getfcn)(const atf_amc::TypeBE64sf&);
             void (*setfcn)(atf_amc::TypeBE64sf&, u64);
         } range[8] = {
-            {  63,  1, atf_amc::bit63_Get    , atf_amc::bit63_Set      }
-            , {  61,  2, atf_amc::bits62_61_Get, atf_amc::bits62_61_Set  }
-            , {  58,  3, atf_amc::bits60_58_Get, atf_amc::bits60_58_Set  }
-            , {  53,  5, atf_amc::bits57_53_Get, atf_amc::bits57_53_Set  }
-            , {  45,  8, atf_amc::bits52_45_Get, atf_amc::bits52_45_Set  }
-            , {  32, 13, atf_amc::bits44_32_Get, atf_amc::bits44_32_Set  }
-            , {  11, 21, atf_amc::bits31_11_Get, atf_amc::bits31_11_Set  }
-            , {   0, 11, atf_amc::bits10_0_Get , atf_amc::bits10_0_Set   }
+                      {  63,  1, atf_amc::bit63_Get    , atf_amc::bit63_Set      }
+                      , {  61,  2, atf_amc::bits62_61_Get, atf_amc::bits62_61_Set  }
+                      , {  58,  3, atf_amc::bits60_58_Get, atf_amc::bits60_58_Set  }
+                      , {  53,  5, atf_amc::bits57_53_Get, atf_amc::bits57_53_Set  }
+                      , {  45,  8, atf_amc::bits52_45_Get, atf_amc::bits52_45_Set  }
+                      , {  32, 13, atf_amc::bits44_32_Get, atf_amc::bits44_32_Set  }
+                      , {  11, 21, atf_amc::bits31_11_Get, atf_amc::bits31_11_Set  }
+                      , {   0, 11, atf_amc::bits10_0_Get , atf_amc::bits10_0_Set   }
         };
 
         // running 'one'

@@ -50,7 +50,7 @@ static void GenStruct_Ctor(amc::FCtype &ctype) {
     tempstr argstr;    // generate field-wise constructor
     int n_args = 0;
     amc::FField *single_arg=NULL;
-    ListSep ls("\n        ,");
+    algo::ListSep ls("\n        ,");
     tempstr initstr;
     strptr ls2 = strptr(":");
     ind_beg(amc::ctype_c_field_curs, field,ctype) if (PassFieldViaArgQ(field,ctype)) {
@@ -108,13 +108,13 @@ static void GenStruct_Ctor(amc::FCtype &ctype) {
 static void GenStruct_Cstring(algo_lib::Replscope &R, amc::FCtype &ctype) {
     amc::FNs &ns = *ctype.p_ns;
 
-    Ins(&R, *ns.hdr, "    cstring& operator =(const strptr &t);");
+    Ins(&R, *ns.hdr, "    cstring& operator =(const algo::strptr &t);");
     Ins(&R, *ns.hdr, "    cstring(const cstring &t);");
     Ins(&R, *ns.hdr, "    cstring& operator =(const cstring &s);");
-    Ins(&R, *ns.hdr, "    explicit cstring(const strptr &s);");
+    Ins(&R, *ns.hdr, "    explicit cstring(const algo::strptr &s);");
     Ins(&R, *ns.hdr, "    cstring(const tempstr &rhs);");
-    Ins(&R, *ns.hdr, "    operator strptr() const {");
-    Ins(&R, *ns.hdr, "        return strptr(const_cast<char*>(ch_elems),ch_n);");
+    Ins(&R, *ns.hdr, "    operator algo::strptr() const {");
+    Ins(&R, *ns.hdr, "        return algo::strptr(const_cast<char*>(ch_elems),ch_n);");
     Ins(&R, *ns.hdr, "    }");
 
     Ins(&R, *ns.cpp, "algo::cstring& algo::cstring::operator =(const algo::strptr &rhs) {");
@@ -135,7 +135,7 @@ static void GenStruct_Cstring(algo_lib::Replscope &R, amc::FCtype &ctype) {
     Ins(&R, *ns.inl, "}");
     Ins(&R, *ns.inl, "");
 
-    Ins(&R, *ns.inl, "inline  cstring::cstring(const strptr &rhs) {");
+    Ins(&R, *ns.inl, "inline  cstring::cstring(const algo::strptr &rhs) {");
     Ins(&R, *ns.inl, "    algo::cstring_Init(*this);");
     Ins(&R, *ns.inl, "    algo::ch_Addary(*this, aryptr<char>((char*)rhs.elems, rhs.n_elems));");
     Ins(&R, *ns.inl, "}");
@@ -284,10 +284,18 @@ static void GenStruct_Op(algo_lib::Replscope &R, amc::FCtype& ctype) {
     amc::FNs& ns = *ctype.p_ns;
     bool gen_cmpop = HasCcmpOpQ(ctype);
     if (gen_cmpop && amc::ind_func_Find(tempstr()<<ctype.ctype<<"..Eq")) {
+        // operator ==
         Ins(&R, *ns.hdr, "    bool operator ==(const $Cpptype &rhs) const;");
         Ins(&R, *ns.inl, "");
         Ins(&R, *ns.inl, "inline bool $Cpptype::operator ==(const $Cpptype &rhs) const {");
         Ins(&R, *ns.inl, "    return $Cpptype_Eq(const_cast<$Cpptype&>(*this),const_cast<$Cpptype&>(rhs));");
+        Ins(&R, *ns.inl, "}");
+
+        // operator !=
+        Ins(&R, *ns.hdr, "    bool operator !=(const $Cpptype &rhs) const;");
+        Ins(&R, *ns.inl, "");
+        Ins(&R, *ns.inl, "inline bool $Cpptype::operator !=(const $Cpptype &rhs) const {");
+        Ins(&R, *ns.inl, "    return !$Cpptype_Eq(const_cast<$Cpptype&>(*this),const_cast<$Cpptype&>(rhs));");
         Ins(&R, *ns.inl, "}");
     }
     if (gen_cmpop && amc::ind_func_Find(tempstr()<<ctype.ctype<<"..EqStrptr")) {
@@ -319,7 +327,7 @@ static void GenStruct_Op(algo_lib::Replscope &R, amc::FCtype& ctype) {
 // -----------------------------------------------------------------------------
 
 // Same as algo::Tabulated, but indent at most MAXGROUP lines at a time
-static tempstr ChunkyTabulated(strptr in, strptr sep, strptr fmt, int colspace, int maxgroup) {
+static tempstr ChunkyTabulated(algo::strptr in, algo::strptr sep, algo::strptr fmt, int colspace, int maxgroup) {
     int n=0;
     tempstr ret;
     tempstr temp;

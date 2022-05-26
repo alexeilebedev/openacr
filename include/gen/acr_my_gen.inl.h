@@ -93,12 +93,12 @@ inline bool acr_my::nsdb_EmptyQ() {
 // --- acr_my.FDb.nsdb.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_my::FNsdb* acr_my::nsdb_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_my::FNsdb *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.nsdb_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.nsdb_lary[bsr][index];
     }
     return retval;
@@ -135,12 +135,12 @@ inline bool acr_my::ssimfile_EmptyQ() {
 // --- acr_my.FDb.ssimfile.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_my::FSsimfile* acr_my::ssimfile_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_my::FSsimfile *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ssimfile_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ssimfile_lary[bsr][index];
     }
     return retval;

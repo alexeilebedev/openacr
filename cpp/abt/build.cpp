@@ -24,7 +24,6 @@
 //
 
 #include "include/abt.h"
-#include "include/algo.h"
 
 static tempstr PrintDoubleWithCommas(double d, int n) {
     tempstr ret;
@@ -43,11 +42,11 @@ static tempstr PrintDoublePercent(double d) {
 
 static void Build_Forkit(abt::FSyscmd *next_cmd) {
     if (next_cmd->redirect) {
-        next_cmd->stdout = tempstr() << "temp/abt-XXXXXX";
-        next_cmd->stderr = tempstr() << "temp/abt-XXXXXX";
+        next_cmd->fstdout = tempstr() << "temp/abt-XXXXXX";
+        next_cmd->fstderr = tempstr() << "temp/abt-XXXXXX";
         mode_t mask = umask(S_IXUSR | S_IRWXG | S_IWOTH | S_IXOTH);
-        next_cmd->fd_stdout.fd = algo::Fildes(mkstemp((char*)Zeroterm(next_cmd->stdout)));
-        next_cmd->fd_stderr.fd = algo::Fildes(mkstemp((char*)Zeroterm(next_cmd->stderr)));
+        next_cmd->fd_stdout.fd = algo::Fildes(mkstemp((char*)Zeroterm(next_cmd->fstdout)));
+        next_cmd->fd_stderr.fd = algo::Fildes(mkstemp((char*)Zeroterm(next_cmd->fstderr)));
         umask(mask);
     }
     int pid = fork();
@@ -56,8 +55,8 @@ static void Build_Forkit(abt::FSyscmd *next_cmd) {
     if (pid == 0) {
         algo_lib::DieWithParent();
         if (next_cmd->redirect) {
-            next_cmd->command << " 2> "<<next_cmd->stderr;
-            next_cmd->command << " 1> "<<next_cmd->stdout;
+            next_cmd->command << " 2> "<<next_cmd->fstderr;
+            next_cmd->command << " 1> "<<next_cmd->fstdout;
         }
         if (abt::_db.cmdline.printcmd) {
             // just print command that would have executed
@@ -79,10 +78,44 @@ static void Build_Forkit(abt::FSyscmd *next_cmd) {
 
 // -----------------------------------------------------------------------------
 
+// Special handling of CL.EXE output:
+// - single pathname on line by itself is skipped (CL echoes source filename to stdout)
+// - windows paths are translated to cygwin paths
+static void ClReveal(strptr text, algo::Fildes out) {
+    int nprint=0;
+    int nfilter=0;
+    ind_beg(Line_curs,line,text) {
+        if (nfilter==0 && (EndsWithQ(line,".cpp") || EndsWithQ(line,".c"))) {
+            nfilter++;
+            // filter echo of .cpp filename
+        } else {
+            // unixify path
+            tempstr newline(line);
+            if (StartsWithQ(Trimmed(line),"c:\\")) {
+                Replace(newline,"c:\\","/cygdrive/c/");
+                Replace(newline," : ",": ");
+                Replace(newline,"\\","/");
+            }
+            if (nprint==0 && ch_N(line)>0) {
+                WriteFile(out,(u8*)"\n",1);
+            }
+            newline << "\n";
+            nprint++;
+            WriteFile(out,(u8*)newline.ch_elems,newline.ch_n);
+        }
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
 static void RevealOutput(algo::Fildes a, algo::Fildes b, bool scan) {
     algo_lib::MmapFile mmap;
     if (MmapFile_LoadFd(mmap,a)) {
-        WriteFile(b,(u8*)mmap.text.elems,mmap.text.n_elems);
+        if (abt::_db.cmdline.compiler == dev_Compiler_compiler_cl) {
+            ClReveal(mmap.text,b);
+        } else {
+            WriteFile(b,(u8*)mmap.text.elems,mmap.text.n_elems);
+        }
         mmap.fd.fd = algo::Fildes();// forget it -- avoid double close
     }
     if (scan) {
@@ -109,11 +142,11 @@ static void Build_DumpOutput(abt::FSyscmd *compl_cmd) {
         abt::_db.report.n_err += compl_cmd->status != 0;
     }
     // remove temp files
-    if (ch_N(compl_cmd->stdout)) {
-        unlink(Zeroterm(compl_cmd->stdout));
+    if (ch_N(compl_cmd->fstdout)) {
+        unlink(Zeroterm(compl_cmd->fstdout));
     }
-    if (ch_N(compl_cmd->stderr)) {
-        unlink(Zeroterm(compl_cmd->stderr));
+    if (ch_N(compl_cmd->fstderr)) {
+        unlink(Zeroterm(compl_cmd->fstderr));
     }
 }
 
@@ -124,7 +157,7 @@ static void Build_CleanPartial(abt::FSyscmd *compl_cmd) {
         verblog("abt.cleanup"
                 <<Keyval("syscmd", compl_cmd->syscmd)
                 <<Keyval("outfile",compl_cmd->outfile));
-        DeleteFile(compl_cmd->outfile);
+        abt::DeleteFileV(compl_cmd->outfile);
     }
 }
 
@@ -133,7 +166,7 @@ static void Build_CleanPartial(abt::FSyscmd *compl_cmd) {
 static void Build_ShowCompl(abt::FSyscmd *compl_cmd) {
     bool print_cmd   = compl_cmd->status != 0 && !compl_cmd->fail_prereq;
     // #AL# NOTE: do not use Filestat here as it may be out of date
-    u64 stderr_len = ValidQ(compl_cmd->fd_stderr.fd) ? GetFileSize(compl_cmd->stderr) : 0;
+    u64 stderr_len = ValidQ(compl_cmd->fd_stderr.fd) ? GetFileSize(compl_cmd->fstderr) : 0;
 
     print_cmd |= stderr_len > 0;            // reveal command name if any error output present
     print_cmd &= algo_lib::_db.last_signal == 0;// but not if exiting on signal

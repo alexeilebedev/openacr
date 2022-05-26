@@ -20,6 +20,8 @@
 #include "include/gen/atfdb_gen.inl.h"
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/dmmeta_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
@@ -30,6 +32,7 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 lib_git::FDb    lib_git::_db;     // dependency found via dev.targdep
 atf_norm::FDb   atf_norm::_db;    // dependency found via dev.targdep
@@ -53,6 +56,10 @@ const char *atf_norm_syntax =
 " [normcheck]:string=\"%\"\n"
 ;
 } // namespace atf_norm
+namespace atf_norm { // gsymbol:atf_norm/dev.scriptfile
+    const char *dev_scriptfile_bin_update_gitfile = "bin/update-gitfile";
+    const char *dev_scriptfile_bin_update_scriptfile = "bin/update-scriptfile";
+}
 namespace atf_norm {
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
@@ -63,6 +70,9 @@ namespace atf_norm {
     static bool          readme_InputMaybe(dev::Readme &elem) __attribute__((nothrow));
     static bool          builddir_InputMaybe(dev::Builddir &elem) __attribute__((nothrow));
     static bool          cfg_InputMaybe(dev::Cfg &elem) __attribute__((nothrow));
+    static bool          gitfile_InputMaybe(dev::Gitfile &elem) __attribute__((nothrow));
+    static bool          noindent_InputMaybe(dev::Noindent &elem) __attribute__((nothrow));
+    static bool          targsrc_InputMaybe(dev::Targsrc &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
@@ -118,6 +128,7 @@ void atf_norm::FBuilddir_Uninit(atf_norm::FBuilddir& builddir) {
 // Copy fields out of row
 void atf_norm::cfg_CopyOut(atf_norm::FCfg &row, dev::Cfg &out) {
     out.cfg = row.cfg;
+    out.suffix = row.suffix;
     out.comment = row.comment;
 }
 
@@ -125,6 +136,7 @@ void atf_norm::cfg_CopyOut(atf_norm::FCfg &row, dev::Cfg &out) {
 // Copy fields in to row
 void atf_norm::cfg_CopyIn(atf_norm::FCfg &row, dev::Cfg &in) {
     row.cfg = in.cfg;
+    row.suffix = in.suffix;
     row.comment = in.comment;
 }
 
@@ -150,7 +162,7 @@ void atf_norm::MainArgs(int argc, char **argv) {
 // --- atf_norm.FDb._db.MainLoop
 // Main loop.
 void atf_norm::MainLoop() {
-    SchedTime time(get_cycles());
+    algo::SchedTime time(algo::get_cycles());
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
@@ -180,7 +192,7 @@ static void atf_norm::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_norm.Input'  signature:'3cb8129a191a643a1221a134ff6bd02fe1dd96a5'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_norm.Input'  signature:'3c2fccbb207224c170fcfd01c0692912424c20aa'");
 }
 
 // --- atf_norm.FDb._db.StaticCheck
@@ -233,6 +245,24 @@ bool atf_norm::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && cfg_InputMaybe(elem);
             break;
         }
+        case atf_norm_TableId_dev_Gitfile: { // finput:atf_norm.FDb.gitfile
+            dev::Gitfile elem;
+            retval = dev::Gitfile_ReadStrptrMaybe(elem, str);
+            retval = retval && gitfile_InputMaybe(elem);
+            break;
+        }
+        case atf_norm_TableId_dev_Noindent: { // finput:atf_norm.FDb.noindent
+            dev::Noindent elem;
+            retval = dev::Noindent_ReadStrptrMaybe(elem, str);
+            retval = retval && noindent_InputMaybe(elem);
+            break;
+        }
+        case atf_norm_TableId_dev_Targsrc: { // finput:atf_norm.FDb.targsrc
+            dev::Targsrc elem;
+            retval = dev::Targsrc_ReadStrptrMaybe(elem, str);
+            retval = retval && targsrc_InputMaybe(elem);
+            break;
+        }
         default:
         retval = algo_lib::InsertStrptrMaybe(str);
         break;
@@ -248,8 +278,9 @@ bool atf_norm::InsertStrptrMaybe(algo::strptr str) {
 bool atf_norm::LoadTuplesMaybe(algo::strptr root) {
     bool retval = true;
     static const char *ssimfiles[] = {
-        "dev.builddir", "dev.cfg", "dmmeta.ns", "dev.readme"
-        , "dev.scriptfile", "dmmeta.ssimfile"
+        "dev.builddir", "dev.cfg", "dev.gitfile", "dev.noindent"
+        , "dmmeta.ns", "dev.readme", "dev.scriptfile", "dmmeta.ssimfile"
+        , "dev.targsrc"
         , NULL};
         retval = algo_lib::DoLoadTuples(root, atf_norm::InsertStrptrMaybe, ssimfiles, true);
         return retval;
@@ -361,37 +392,44 @@ static void atf_norm::normcheck_LoadStatic() {
         const char *s;
         void (*step)();
     } data[] = {
-        { "atfdb.normcheck  normcheck:amc  comment:\"Run amc\"", atf_norm::normcheck_amc }
+        { "atfdb.normcheck  normcheck:checkclean  comment:\"Check that no files are modified\"", atf_norm::normcheck_checkclean }
+        ,{ "atfdb.normcheck  normcheck:gitfile  comment:\"Update gitfile tables by scanning filesystem\"", atf_norm::normcheck_gitfile }
+        ,{ "atfdb.normcheck  normcheck:normalize_acr  comment:\"Read ssim databases into memory and write back\"", atf_norm::normcheck_normalize_acr }
+        ,{ "atfdb.normcheck  normcheck:src_lim  comment:\"Source code police\"", atf_norm::normcheck_src_lim }
+        ,{ "atfdb.normcheck  normcheck:cppcheck  comment:\"Cppcheck static code analysis\"", atf_norm::normcheck_cppcheck }
+        ,{ "atfdb.normcheck  normcheck:amc  comment:\"Run amc\"", atf_norm::normcheck_amc }
         ,{ "atfdb.normcheck  normcheck:bootstrap  comment:\"Re-generate bootstrap files\"", atf_norm::normcheck_bootstrap }
-        ,{ "atfdb.normcheck  normcheck:testamc  comment:\"Test amc (run atf_amc)\"", atf_norm::normcheck_testamc }
+        ,{ "atfdb.normcheck  normcheck:shebang  comment:\"\"", atf_norm::normcheck_shebang }
+        ,{ "atfdb.normcheck  normcheck:encoding  comment:\"Check Encoding of h/cpp files\"", atf_norm::normcheck_encoding }
+        ,{ "atfdb.normcheck  normcheck:inline_readme  comment:\"Re-generate inline blocks for txt/*.md files\"", atf_norm::normcheck_inline_readme }
         ,{ "atfdb.normcheck  normcheck:readme  comment:\"Re-generate README.md table of contents\"", atf_norm::normcheck_readme }
-        ,{ "atfdb.normcheck  normcheck:unit  comment:\"Run unit tests\"", atf_norm::normcheck_unit }
+        ,{ "atfdb.normcheck  normcheck:bintests  comment:\"Run bin/test-* scripts\"", atf_norm::normcheck_bintests }
         ,{ "atfdb.normcheck  normcheck:copyright  comment:\"Update copyrights in source files\"", atf_norm::normcheck_copyright }
         ,{ "atfdb.normcheck  normcheck:iffy_src  comment:\"Check for iffy source constructs with src_func\"", atf_norm::normcheck_iffy_src }
         ,{ "atfdb.normcheck  normcheck:stray_gen  comment:\"*/gen/* file that doesn't appear to be generated by amc\"", atf_norm::normcheck_stray_gen }
         ,{ "atfdb.normcheck  normcheck:tempcode  comment:\"Check for temp code inserted for testing only\"", atf_norm::normcheck_tempcode }
-        ,{ "atfdb.normcheck  normcheck:gitfile  comment:\"Update gitfile tables by scanning filesystem\"", atf_norm::normcheck_gitfile }
+        ,{ "atfdb.normcheck  normcheck:lineendings  comment:\"Correct windows-style line endings in known text files\"", atf_norm::normcheck_lineendings }
         ,{ "atfdb.normcheck  normcheck:indent_srcfile  comment:\"Indent any source files modified in last commit\"", atf_norm::normcheck_indent_srcfile }
         ,{ "atfdb.normcheck  normcheck:indent_script  comment:\"Indent any bash script file\"", atf_norm::normcheck_indent_script }
         ,{ "atfdb.normcheck  normcheck:normalize_amc_vis  comment:\"Check that amc_vis doesn't see any circular dependencies\"", atf_norm::normcheck_normalize_amc_vis }
-        ,{ "atfdb.normcheck  normcheck:src_lim  comment:\"Source code police\"", atf_norm::normcheck_src_lim }
         ,{ "atfdb.normcheck  normcheck:ssimfile  comment:\"Check for .ssim files with no corresponding ssimfile entry\"", atf_norm::normcheck_ssimfile }
-        ,{ "atfdb.normcheck  normcheck:normalize_acr  comment:\"Read ssim databases into memory and write back\"", atf_norm::normcheck_normalize_acr }
         ,{ "atfdb.normcheck  normcheck:normalize_acr_my  comment:\"Round trip ssim databases through MariaDB and back\"", atf_norm::normcheck_normalize_acr_my }
+        ,{ "atfdb.normcheck  normcheck:atf_unit  comment:\"Run unit tests\"", atf_norm::normcheck_atf_unit }
         ,{ "atfdb.normcheck  normcheck:build_clang  comment:\"Build everything under clang\"", atf_norm::normcheck_build_clang }
         ,{ "atfdb.normcheck  normcheck:build_gcc9  comment:\"Build everything under g++-9\"", atf_norm::normcheck_build_gcc9 }
         ,{ "atfdb.normcheck  normcheck:acr_ed_ssimfile  comment:\"Create a new ssimfile\"", atf_norm::normcheck_acr_ed_ssimfile }
         ,{ "atfdb.normcheck  normcheck:acr_ed_ssimdb  comment:\"Create a new ssimdb\"", atf_norm::normcheck_acr_ed_ssimdb }
         ,{ "atfdb.normcheck  normcheck:acr_ed_target  comment:\"Takes a while - do it last\"", atf_norm::normcheck_acr_ed_target }
+        ,{ "atfdb.normcheck  normcheck:atf_amc  comment:\"Test amc (run atf_amc)\"", atf_norm::normcheck_atf_amc }
         ,{NULL, NULL}
     };
     (void)data;
     atfdb::Normcheck normcheck;
     for (int i=0; data[i].s; i++) {
-        (void)atfdb::Normcheck_ReadStrptrMaybe(normcheck, strptr(data[i].s));
+        (void)atfdb::Normcheck_ReadStrptrMaybe(normcheck, algo::strptr(data[i].s));
         atf_norm::FNormcheck *elem = normcheck_InsertMaybe(normcheck);
         vrfy(elem, tempstr("atf_norm.static_insert_fatal_error")
-        << Keyval("tuple",strptr(data[i].s))
+        << Keyval("tuple",algo::strptr(data[i].s))
         << Keyval("comment",algo_lib::DetachBadTags()));
         elem->step = data[i].step;
     }
@@ -506,7 +544,7 @@ bool atf_norm::ssimfile_XrefMaybe(atf_norm::FSsimfile &row) {
 // --- atf_norm.FDb.ind_ssimfile.Find
 // Find row by key. Return NULL if not found.
 atf_norm::FSsimfile* atf_norm::ind_ssimfile_Find(const algo::strptr& key) {
-    u32 index = Smallstr50_Hash(0, key) & (_db.ind_ssimfile_buckets_n - 1);
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ssimfile_buckets_n - 1);
     atf_norm::FSsimfile* *e = &_db.ind_ssimfile_buckets_elems[index];
     atf_norm::FSsimfile* ret=NULL;
     do {
@@ -548,7 +586,7 @@ bool atf_norm::ind_ssimfile_InsertMaybe(atf_norm::FSsimfile& row) {
     ind_ssimfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ssimfile_next == (atf_norm::FSsimfile*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
         atf_norm::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index];
         do {
             atf_norm::FSsimfile* ret = *prev;
@@ -574,7 +612,7 @@ bool atf_norm::ind_ssimfile_InsertMaybe(atf_norm::FSsimfile& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_norm::ind_ssimfile_Remove(atf_norm::FSsimfile& row) {
     if (LIKELY(row.ind_ssimfile_next != (atf_norm::FSsimfile*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
         atf_norm::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index]; // addr of pointer to current element
         while (atf_norm::FSsimfile *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -595,7 +633,7 @@ void atf_norm::ind_ssimfile_Reserve(int n) {
     u32 new_nelems   = _db.ind_ssimfile_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(atf_norm::FSsimfile*);
         u32 new_size = new_nbuckets * sizeof(atf_norm::FSsimfile*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -611,7 +649,7 @@ void atf_norm::ind_ssimfile_Reserve(int n) {
             while (elem) {
                 atf_norm::FSsimfile &row        = *elem;
                 atf_norm::FSsimfile* next       = row.ind_ssimfile_next;
-                u32 index          = Smallstr50_Hash(0, row.ssimfile) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr50_Hash(0, row.ssimfile) & (new_nbuckets-1);
                 row.ind_ssimfile_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -728,13 +766,27 @@ bool atf_norm::scriptfile_XrefMaybe(atf_norm::FScriptfile &row) {
             return false;
         }
     }
+    atf_norm::FGitfile* p_gitfile = atf_norm::ind_gitfile_Find(row.gitfile);
+    if (UNLIKELY(!p_gitfile)) {
+        algo_lib::ResetErrtext() << "atf_norm.bad_xref  index:atf_norm.FDb.ind_gitfile" << Keyval("key", row.gitfile);
+        return false;
+    }
+    // insert scriptfile into index c_scriptfile
+    if (true) { // user-defined insert condition
+        bool success = c_scriptfile_InsertMaybe(*p_gitfile, row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "atf_norm.duplicate_key  xref:atf_norm.FGitfile.c_scriptfile"; // check for duplicate key
+            return false;
+        }
+    }
     return retval;
 }
 
 // --- atf_norm.FDb.ind_scriptfile.Find
 // Find row by key. Return NULL if not found.
 atf_norm::FScriptfile* atf_norm::ind_scriptfile_Find(const algo::strptr& key) {
-    u32 index = Smallstr200_Hash(0, key) & (_db.ind_scriptfile_buckets_n - 1);
+    u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_scriptfile_buckets_n - 1);
     atf_norm::FScriptfile* *e = &_db.ind_scriptfile_buckets_elems[index];
     atf_norm::FScriptfile* ret=NULL;
     do {
@@ -754,29 +806,13 @@ atf_norm::FScriptfile& atf_norm::ind_scriptfile_FindX(const algo::strptr& key) {
     return *ret;
 }
 
-// --- atf_norm.FDb.ind_scriptfile.GetOrCreate
-// Find row by key. If not found, create and x-reference a new row with with this key.
-atf_norm::FScriptfile& atf_norm::ind_scriptfile_GetOrCreate(const algo::strptr& key) {
-    atf_norm::FScriptfile* ret = ind_scriptfile_Find(key);
-    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
-        ret         = &scriptfile_Alloc();
-        (*ret).gitfile = key;
-        bool good = scriptfile_XrefMaybe(*ret);
-        if (!good) {
-            scriptfile_RemoveLast(); // delete offending row, any existing xrefs are cleared
-            ret = NULL;
-        }
-    }
-    return *ret;
-}
-
 // --- atf_norm.FDb.ind_scriptfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool atf_norm::ind_scriptfile_InsertMaybe(atf_norm::FScriptfile& row) {
     ind_scriptfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_scriptfile_next == (atf_norm::FScriptfile*)-1)) {// check if in hash already
-        u32 index = Smallstr200_Hash(0, row.gitfile) & (_db.ind_scriptfile_buckets_n - 1);
+        u32 index = algo::Smallstr200_Hash(0, row.gitfile) & (_db.ind_scriptfile_buckets_n - 1);
         atf_norm::FScriptfile* *prev = &_db.ind_scriptfile_buckets_elems[index];
         do {
             atf_norm::FScriptfile* ret = *prev;
@@ -802,7 +838,7 @@ bool atf_norm::ind_scriptfile_InsertMaybe(atf_norm::FScriptfile& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_norm::ind_scriptfile_Remove(atf_norm::FScriptfile& row) {
     if (LIKELY(row.ind_scriptfile_next != (atf_norm::FScriptfile*)-1)) {// check if in hash already
-        u32 index = Smallstr200_Hash(0, row.gitfile) & (_db.ind_scriptfile_buckets_n - 1);
+        u32 index = algo::Smallstr200_Hash(0, row.gitfile) & (_db.ind_scriptfile_buckets_n - 1);
         atf_norm::FScriptfile* *prev = &_db.ind_scriptfile_buckets_elems[index]; // addr of pointer to current element
         while (atf_norm::FScriptfile *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -823,7 +859,7 @@ void atf_norm::ind_scriptfile_Reserve(int n) {
     u32 new_nelems   = _db.ind_scriptfile_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(atf_norm::FScriptfile*);
         u32 new_size = new_nbuckets * sizeof(atf_norm::FScriptfile*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -839,7 +875,7 @@ void atf_norm::ind_scriptfile_Reserve(int n) {
             while (elem) {
                 atf_norm::FScriptfile &row        = *elem;
                 atf_norm::FScriptfile* next       = row.ind_scriptfile_next;
-                u32 index          = Smallstr200_Hash(0, row.gitfile) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr200_Hash(0, row.gitfile) & (new_nbuckets-1);
                 row.ind_scriptfile_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -962,7 +998,7 @@ bool atf_norm::ns_XrefMaybe(atf_norm::FNs &row) {
 // --- atf_norm.FDb.ind_ns.Find
 // Find row by key. Return NULL if not found.
 atf_norm::FNs* atf_norm::ind_ns_Find(const algo::strptr& key) {
-    u32 index = Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
+    u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
     atf_norm::FNs* *e = &_db.ind_ns_buckets_elems[index];
     atf_norm::FNs* ret=NULL;
     do {
@@ -1004,7 +1040,7 @@ bool atf_norm::ind_ns_InsertMaybe(atf_norm::FNs& row) {
     ind_ns_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ns_next == (atf_norm::FNs*)-1)) {// check if in hash already
-        u32 index = Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
         atf_norm::FNs* *prev = &_db.ind_ns_buckets_elems[index];
         do {
             atf_norm::FNs* ret = *prev;
@@ -1030,7 +1066,7 @@ bool atf_norm::ind_ns_InsertMaybe(atf_norm::FNs& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_norm::ind_ns_Remove(atf_norm::FNs& row) {
     if (LIKELY(row.ind_ns_next != (atf_norm::FNs*)-1)) {// check if in hash already
-        u32 index = Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
         atf_norm::FNs* *prev = &_db.ind_ns_buckets_elems[index]; // addr of pointer to current element
         while (atf_norm::FNs *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1051,7 +1087,7 @@ void atf_norm::ind_ns_Reserve(int n) {
     u32 new_nelems   = _db.ind_ns_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(atf_norm::FNs*);
         u32 new_size = new_nbuckets * sizeof(atf_norm::FNs*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -1067,7 +1103,7 @@ void atf_norm::ind_ns_Reserve(int n) {
             while (elem) {
                 atf_norm::FNs &row        = *elem;
                 atf_norm::FNs* next       = row.ind_ns_next;
-                u32 index          = Smallstr16_Hash(0, row.ns) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr16_Hash(0, row.ns) & (new_nbuckets-1);
                 row.ind_ns_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1386,7 +1422,7 @@ bool atf_norm::cfg_XrefMaybe(atf_norm::FCfg &row) {
 // --- atf_norm.FDb.ind_builddir.Find
 // Find row by key. Return NULL if not found.
 atf_norm::FBuilddir* atf_norm::ind_builddir_Find(const algo::strptr& key) {
-    u32 index = Smallstr50_Hash(0, key) & (_db.ind_builddir_buckets_n - 1);
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_builddir_buckets_n - 1);
     atf_norm::FBuilddir* *e = &_db.ind_builddir_buckets_elems[index];
     atf_norm::FBuilddir* ret=NULL;
     do {
@@ -1428,7 +1464,7 @@ bool atf_norm::ind_builddir_InsertMaybe(atf_norm::FBuilddir& row) {
     ind_builddir_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_builddir_next == (atf_norm::FBuilddir*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.builddir) & (_db.ind_builddir_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.builddir) & (_db.ind_builddir_buckets_n - 1);
         atf_norm::FBuilddir* *prev = &_db.ind_builddir_buckets_elems[index];
         do {
             atf_norm::FBuilddir* ret = *prev;
@@ -1454,7 +1490,7 @@ bool atf_norm::ind_builddir_InsertMaybe(atf_norm::FBuilddir& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_norm::ind_builddir_Remove(atf_norm::FBuilddir& row) {
     if (LIKELY(row.ind_builddir_next != (atf_norm::FBuilddir*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.builddir) & (_db.ind_builddir_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.builddir) & (_db.ind_builddir_buckets_n - 1);
         atf_norm::FBuilddir* *prev = &_db.ind_builddir_buckets_elems[index]; // addr of pointer to current element
         while (atf_norm::FBuilddir *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1475,7 +1511,7 @@ void atf_norm::ind_builddir_Reserve(int n) {
     u32 new_nelems   = _db.ind_builddir_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(atf_norm::FBuilddir*);
         u32 new_size = new_nbuckets * sizeof(atf_norm::FBuilddir*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -1491,7 +1527,7 @@ void atf_norm::ind_builddir_Reserve(int n) {
             while (elem) {
                 atf_norm::FBuilddir &row        = *elem;
                 atf_norm::FBuilddir* next       = row.ind_builddir_next;
-                u32 index          = Smallstr50_Hash(0, row.builddir) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr50_Hash(0, row.builddir) & (new_nbuckets-1);
                 row.ind_builddir_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1502,6 +1538,458 @@ void atf_norm::ind_builddir_Reserve(int n) {
         _db.ind_builddir_buckets_elems = new_buckets;
         _db.ind_builddir_buckets_n = new_nbuckets;
     }
+}
+
+// --- atf_norm.FDb.gitfile.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_norm::FGitfile& atf_norm::gitfile_Alloc() {
+    atf_norm::FGitfile* row = gitfile_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_norm.out_of_mem  field:atf_norm.FDb.gitfile  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_norm.FDb.gitfile.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_norm::FGitfile* atf_norm::gitfile_AllocMaybe() {
+    atf_norm::FGitfile *row = (atf_norm::FGitfile*)gitfile_AllocMem();
+    if (row) {
+        new (row) atf_norm::FGitfile; // call constructor
+    }
+    return row;
+}
+
+// --- atf_norm.FDb.gitfile.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_norm::FGitfile* atf_norm::gitfile_InsertMaybe(const dev::Gitfile &value) {
+    atf_norm::FGitfile *row = &gitfile_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    gitfile_CopyIn(*row,const_cast<dev::Gitfile&>(value));
+    bool ok = gitfile_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        gitfile_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- atf_norm.FDb.gitfile.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* atf_norm::gitfile_AllocMem() {
+    u64 new_nelems     = _db.gitfile_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    atf_norm::FGitfile*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.gitfile_lary[bsr];
+        if (!lev) {
+            lev=(atf_norm::FGitfile*)algo_lib::malloc_AllocMem(sizeof(atf_norm::FGitfile) * (u64(1)<<bsr));
+            _db.gitfile_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.gitfile_n = new_nelems;
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- atf_norm.FDb.gitfile.RemoveAll
+// Remove all elements from Lary
+void atf_norm::gitfile_RemoveAll() {
+    for (u64 n = _db.gitfile_n; n>0; ) {
+        n--;
+        gitfile_qFind(u64(n)).~FGitfile(); // destroy last element
+        _db.gitfile_n = n;
+    }
+}
+
+// --- atf_norm.FDb.gitfile.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void atf_norm::gitfile_RemoveLast() {
+    u64 n = _db.gitfile_n;
+    if (n > 0) {
+        n -= 1;
+        gitfile_qFind(u64(n)).~FGitfile();
+        _db.gitfile_n = n;
+    }
+}
+
+// --- atf_norm.FDb.gitfile.InputMaybe
+static bool atf_norm::gitfile_InputMaybe(dev::Gitfile &elem) {
+    bool retval = true;
+    retval = gitfile_InsertMaybe(elem);
+    return retval;
+}
+
+// --- atf_norm.FDb.gitfile.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_norm::gitfile_XrefMaybe(atf_norm::FGitfile &row) {
+    bool retval = true;
+    (void)row;
+    // insert gitfile into index ind_gitfile
+    if (true) { // user-defined insert condition
+        bool success = ind_gitfile_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "atf_norm.duplicate_key  xref:atf_norm.FDb.ind_gitfile"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- atf_norm.FDb.ind_gitfile.Find
+// Find row by key. Return NULL if not found.
+atf_norm::FGitfile* atf_norm::ind_gitfile_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_gitfile_buckets_n - 1);
+    atf_norm::FGitfile* *e = &_db.ind_gitfile_buckets_elems[index];
+    atf_norm::FGitfile* ret=NULL;
+    do {
+        ret       = *e;
+        bool done = !ret || (*ret).gitfile == key;
+        if (done) break;
+        e         = &ret->ind_gitfile_next;
+    } while (true);
+    return ret;
+}
+
+// --- atf_norm.FDb.ind_gitfile.FindX
+// Look up row by key and return reference. Throw exception if not found
+atf_norm::FGitfile& atf_norm::ind_gitfile_FindX(const algo::strptr& key) {
+    atf_norm::FGitfile* ret = ind_gitfile_Find(key);
+    vrfy(ret, tempstr() << "atf_norm.key_error  table:ind_gitfile  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- atf_norm.FDb.ind_gitfile.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+atf_norm::FGitfile& atf_norm::ind_gitfile_GetOrCreate(const algo::strptr& key) {
+    atf_norm::FGitfile* ret = ind_gitfile_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &gitfile_Alloc();
+        (*ret).gitfile = key;
+        bool good = gitfile_XrefMaybe(*ret);
+        if (!good) {
+            gitfile_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return *ret;
+}
+
+// --- atf_norm.FDb.ind_gitfile.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool atf_norm::ind_gitfile_InsertMaybe(atf_norm::FGitfile& row) {
+    ind_gitfile_Reserve(1);
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_gitfile_next == (atf_norm::FGitfile*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr200_Hash(0, row.gitfile) & (_db.ind_gitfile_buckets_n - 1);
+        atf_norm::FGitfile* *prev = &_db.ind_gitfile_buckets_elems[index];
+        do {
+            atf_norm::FGitfile* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).gitfile == row.gitfile) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_gitfile_next;
+        } while (true);
+        if (retval) {
+            row.ind_gitfile_next = *prev;
+            _db.ind_gitfile_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- atf_norm.FDb.ind_gitfile.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void atf_norm::ind_gitfile_Remove(atf_norm::FGitfile& row) {
+    if (LIKELY(row.ind_gitfile_next != (atf_norm::FGitfile*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr200_Hash(0, row.gitfile) & (_db.ind_gitfile_buckets_n - 1);
+        atf_norm::FGitfile* *prev = &_db.ind_gitfile_buckets_elems[index]; // addr of pointer to current element
+        while (atf_norm::FGitfile *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_gitfile_next; // unlink (singly linked list)
+                _db.ind_gitfile_n--;
+                row.ind_gitfile_next = (atf_norm::FGitfile*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_gitfile_next;
+        }
+    }
+}
+
+// --- atf_norm.FDb.ind_gitfile.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void atf_norm::ind_gitfile_Reserve(int n) {
+    u32 old_nbuckets = _db.ind_gitfile_buckets_n;
+    u32 new_nelems   = _db.ind_gitfile_n + n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(atf_norm::FGitfile*);
+        u32 new_size = new_nbuckets * sizeof(atf_norm::FGitfile*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        atf_norm::FGitfile* *new_buckets = (atf_norm::FGitfile**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("atf_norm.out_of_memory  field:atf_norm.FDb.ind_gitfile");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_gitfile_buckets_n; i++) {
+            atf_norm::FGitfile* elem = _db.ind_gitfile_buckets_elems[i];
+            while (elem) {
+                atf_norm::FGitfile &row        = *elem;
+                atf_norm::FGitfile* next       = row.ind_gitfile_next;
+                u32 index          = algo::Smallstr200_Hash(0, row.gitfile) & (new_nbuckets-1);
+                row.ind_gitfile_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_gitfile_buckets_elems, old_size);
+        _db.ind_gitfile_buckets_elems = new_buckets;
+        _db.ind_gitfile_buckets_n = new_nbuckets;
+    }
+}
+
+// --- atf_norm.FDb.noindent.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_norm::FNoindent& atf_norm::noindent_Alloc() {
+    atf_norm::FNoindent* row = noindent_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_norm.out_of_mem  field:atf_norm.FDb.noindent  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_norm.FDb.noindent.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_norm::FNoindent* atf_norm::noindent_AllocMaybe() {
+    atf_norm::FNoindent *row = (atf_norm::FNoindent*)noindent_AllocMem();
+    if (row) {
+        new (row) atf_norm::FNoindent; // call constructor
+    }
+    return row;
+}
+
+// --- atf_norm.FDb.noindent.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_norm::FNoindent* atf_norm::noindent_InsertMaybe(const dev::Noindent &value) {
+    atf_norm::FNoindent *row = &noindent_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    noindent_CopyIn(*row,const_cast<dev::Noindent&>(value));
+    bool ok = noindent_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        noindent_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- atf_norm.FDb.noindent.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* atf_norm::noindent_AllocMem() {
+    u64 new_nelems     = _db.noindent_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    atf_norm::FNoindent*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.noindent_lary[bsr];
+        if (!lev) {
+            lev=(atf_norm::FNoindent*)algo_lib::malloc_AllocMem(sizeof(atf_norm::FNoindent) * (u64(1)<<bsr));
+            _db.noindent_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.noindent_n = new_nelems;
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- atf_norm.FDb.noindent.RemoveAll
+// Remove all elements from Lary
+void atf_norm::noindent_RemoveAll() {
+    for (u64 n = _db.noindent_n; n>0; ) {
+        n--;
+        noindent_qFind(u64(n)).~FNoindent(); // destroy last element
+        _db.noindent_n = n;
+    }
+}
+
+// --- atf_norm.FDb.noindent.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void atf_norm::noindent_RemoveLast() {
+    u64 n = _db.noindent_n;
+    if (n > 0) {
+        n -= 1;
+        noindent_qFind(u64(n)).~FNoindent();
+        _db.noindent_n = n;
+    }
+}
+
+// --- atf_norm.FDb.noindent.InputMaybe
+static bool atf_norm::noindent_InputMaybe(dev::Noindent &elem) {
+    bool retval = true;
+    retval = noindent_InsertMaybe(elem);
+    return retval;
+}
+
+// --- atf_norm.FDb.noindent.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_norm::noindent_XrefMaybe(atf_norm::FNoindent &row) {
+    bool retval = true;
+    (void)row;
+    atf_norm::FGitfile* p_gitfile = atf_norm::ind_gitfile_Find(row.gitfile);
+    if (UNLIKELY(!p_gitfile)) {
+        algo_lib::ResetErrtext() << "atf_norm.bad_xref  index:atf_norm.FDb.ind_gitfile" << Keyval("key", row.gitfile);
+        return false;
+    }
+    // insert noindent into index c_noindent
+    if (true) { // user-defined insert condition
+        bool success = c_noindent_InsertMaybe(*p_gitfile, row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "atf_norm.duplicate_key  xref:atf_norm.FGitfile.c_noindent"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- atf_norm.FDb.targsrc.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_norm::FTargsrc& atf_norm::targsrc_Alloc() {
+    atf_norm::FTargsrc* row = targsrc_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_norm.out_of_mem  field:atf_norm.FDb.targsrc  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_norm.FDb.targsrc.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_norm::FTargsrc* atf_norm::targsrc_AllocMaybe() {
+    atf_norm::FTargsrc *row = (atf_norm::FTargsrc*)targsrc_AllocMem();
+    if (row) {
+        new (row) atf_norm::FTargsrc; // call constructor
+    }
+    return row;
+}
+
+// --- atf_norm.FDb.targsrc.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_norm::FTargsrc* atf_norm::targsrc_InsertMaybe(const dev::Targsrc &value) {
+    atf_norm::FTargsrc *row = &targsrc_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    targsrc_CopyIn(*row,const_cast<dev::Targsrc&>(value));
+    bool ok = targsrc_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        targsrc_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- atf_norm.FDb.targsrc.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* atf_norm::targsrc_AllocMem() {
+    u64 new_nelems     = _db.targsrc_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    atf_norm::FTargsrc*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.targsrc_lary[bsr];
+        if (!lev) {
+            lev=(atf_norm::FTargsrc*)algo_lib::malloc_AllocMem(sizeof(atf_norm::FTargsrc) * (u64(1)<<bsr));
+            _db.targsrc_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.targsrc_n = new_nelems;
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- atf_norm.FDb.targsrc.RemoveAll
+// Remove all elements from Lary
+void atf_norm::targsrc_RemoveAll() {
+    for (u64 n = _db.targsrc_n; n>0; ) {
+        n--;
+        targsrc_qFind(u64(n)).~FTargsrc(); // destroy last element
+        _db.targsrc_n = n;
+    }
+}
+
+// --- atf_norm.FDb.targsrc.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void atf_norm::targsrc_RemoveLast() {
+    u64 n = _db.targsrc_n;
+    if (n > 0) {
+        n -= 1;
+        targsrc_qFind(u64(n)).~FTargsrc();
+        _db.targsrc_n = n;
+    }
+}
+
+// --- atf_norm.FDb.targsrc.InputMaybe
+static bool atf_norm::targsrc_InputMaybe(dev::Targsrc &elem) {
+    bool retval = true;
+    retval = targsrc_InsertMaybe(elem);
+    return retval;
+}
+
+// --- atf_norm.FDb.targsrc.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_norm::targsrc_XrefMaybe(atf_norm::FTargsrc &row) {
+    bool retval = true;
+    (void)row;
+    atf_norm::FGitfile* p_src = atf_norm::ind_gitfile_Find(src_Get(row));
+    if (UNLIKELY(!p_src)) {
+        algo_lib::ResetErrtext() << "atf_norm.bad_xref  index:atf_norm.FDb.ind_gitfile" << Keyval("key", src_Get(row));
+        return false;
+    }
+    // insert targsrc into index c_targsrc
+    if (true) { // user-defined insert condition
+        bool success = c_targsrc_InsertMaybe(*p_src, row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "atf_norm.duplicate_key  xref:atf_norm.FGitfile.c_targsrc"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
 }
 
 // --- atf_norm.FDb.trace.RowidFind
@@ -1629,6 +2117,47 @@ void atf_norm::FDb_Init() {
         FatalErrorExit("out of memory"); // (atf_norm.FDb.ind_builddir)
     }
     memset(_db.ind_builddir_buckets_elems, 0, sizeof(atf_norm::FBuilddir*)*_db.ind_builddir_buckets_n); // (atf_norm.FDb.ind_builddir)
+    // initialize LAry gitfile (atf_norm.FDb.gitfile)
+    _db.gitfile_n = 0;
+    memset(_db.gitfile_lary, 0, sizeof(_db.gitfile_lary)); // zero out all level pointers
+    atf_norm::FGitfile* gitfile_first = (atf_norm::FGitfile*)algo_lib::malloc_AllocMem(sizeof(atf_norm::FGitfile) * (u64(1)<<4));
+    if (!gitfile_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.gitfile_lary[i]  = gitfile_first;
+        gitfile_first    += 1ULL<<i;
+    }
+    // initialize hash table for atf_norm::FGitfile;
+    _db.ind_gitfile_n             	= 0; // (atf_norm.FDb.ind_gitfile)
+    _db.ind_gitfile_buckets_n     	= 4; // (atf_norm.FDb.ind_gitfile)
+    _db.ind_gitfile_buckets_elems 	= (atf_norm::FGitfile**)algo_lib::malloc_AllocMem(sizeof(atf_norm::FGitfile*)*_db.ind_gitfile_buckets_n); // initial buckets (atf_norm.FDb.ind_gitfile)
+    if (!_db.ind_gitfile_buckets_elems) {
+        FatalErrorExit("out of memory"); // (atf_norm.FDb.ind_gitfile)
+    }
+    memset(_db.ind_gitfile_buckets_elems, 0, sizeof(atf_norm::FGitfile*)*_db.ind_gitfile_buckets_n); // (atf_norm.FDb.ind_gitfile)
+    // initialize LAry noindent (atf_norm.FDb.noindent)
+    _db.noindent_n = 0;
+    memset(_db.noindent_lary, 0, sizeof(_db.noindent_lary)); // zero out all level pointers
+    atf_norm::FNoindent* noindent_first = (atf_norm::FNoindent*)algo_lib::malloc_AllocMem(sizeof(atf_norm::FNoindent) * (u64(1)<<4));
+    if (!noindent_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.noindent_lary[i]  = noindent_first;
+        noindent_first    += 1ULL<<i;
+    }
+    // initialize LAry targsrc (atf_norm.FDb.targsrc)
+    _db.targsrc_n = 0;
+    memset(_db.targsrc_lary, 0, sizeof(_db.targsrc_lary)); // zero out all level pointers
+    atf_norm::FTargsrc* targsrc_first = (atf_norm::FTargsrc*)algo_lib::malloc_AllocMem(sizeof(atf_norm::FTargsrc) * (u64(1)<<4));
+    if (!targsrc_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.targsrc_lary[i]  = targsrc_first;
+        targsrc_first    += 1ULL<<i;
+    }
 
     atf_norm::InitReflection();
     normcheck_LoadStatic();
@@ -1637,6 +2166,18 @@ void atf_norm::FDb_Init() {
 // --- atf_norm.FDb..Uninit
 void atf_norm::FDb_Uninit() {
     atf_norm::FDb &row = _db; (void)row;
+
+    // atf_norm.FDb.targsrc.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // atf_norm.FDb.noindent.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // atf_norm.FDb.ind_gitfile.Uninit (Thash)  //
+    // skip destruction of ind_gitfile in global scope
+
+    // atf_norm.FDb.gitfile.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // atf_norm.FDb.ind_builddir.Uninit (Thash)  //
     // skip destruction of ind_builddir in global scope
@@ -1670,6 +2211,53 @@ void atf_norm::FDb_Uninit() {
 
     // atf_norm.FDb.normcheck.Uninit (Lary)  //
     // skip destruction in global scope
+}
+
+// --- atf_norm.FGitfile.base.CopyOut
+// Copy fields out of row
+void atf_norm::gitfile_CopyOut(atf_norm::FGitfile &row, dev::Gitfile &out) {
+    out.gitfile = row.gitfile;
+}
+
+// --- atf_norm.FGitfile.base.CopyIn
+// Copy fields in to row
+void atf_norm::gitfile_CopyIn(atf_norm::FGitfile &row, dev::Gitfile &in) {
+    row.gitfile = in.gitfile;
+}
+
+// --- atf_norm.FGitfile.ext.Get
+algo::Smallstr50 atf_norm::ext_Get(atf_norm::FGitfile& gitfile) {
+    algo::Smallstr50 ret(algo::Pathcomp(gitfile.gitfile, "/RR.LR.RR"));
+    return ret;
+}
+
+// --- atf_norm.FGitfile..Uninit
+void atf_norm::FGitfile_Uninit(atf_norm::FGitfile& gitfile) {
+    atf_norm::FGitfile &row = gitfile; (void)row;
+    ind_gitfile_Remove(row); // remove gitfile from index ind_gitfile
+}
+
+// --- atf_norm.FNoindent.base.CopyOut
+// Copy fields out of row
+void atf_norm::noindent_CopyOut(atf_norm::FNoindent &row, dev::Noindent &out) {
+    out.gitfile = row.gitfile;
+    out.comment = row.comment;
+}
+
+// --- atf_norm.FNoindent.base.CopyIn
+// Copy fields in to row
+void atf_norm::noindent_CopyIn(atf_norm::FNoindent &row, dev::Noindent &in) {
+    row.gitfile = in.gitfile;
+    row.comment = in.comment;
+}
+
+// --- atf_norm.FNoindent..Uninit
+void atf_norm::FNoindent_Uninit(atf_norm::FNoindent& noindent) {
+    atf_norm::FNoindent &row = noindent; (void)row;
+    atf_norm::FGitfile* p_gitfile = atf_norm::ind_gitfile_Find(row.gitfile);
+    if (p_gitfile)  {
+        c_noindent_Remove(*p_gitfile, row);// remove noindent from index c_noindent
+    }
 }
 
 // --- atf_norm.FNormcheck.base.CopyOut
@@ -1744,6 +2332,10 @@ void atf_norm::scriptfile_CopyIn(atf_norm::FScriptfile &row, dev::Scriptfile &in
 void atf_norm::FScriptfile_Uninit(atf_norm::FScriptfile& scriptfile) {
     atf_norm::FScriptfile &row = scriptfile; (void)row;
     ind_scriptfile_Remove(row); // remove scriptfile from index ind_scriptfile
+    atf_norm::FGitfile* p_gitfile = atf_norm::ind_gitfile_Find(row.gitfile);
+    if (p_gitfile)  {
+        c_scriptfile_Remove(*p_gitfile, row);// remove scriptfile from index c_scriptfile
+    }
 }
 
 // --- atf_norm.FSsimfile.base.CopyOut
@@ -1784,6 +2376,47 @@ void atf_norm::FSsimfile_Uninit(atf_norm::FSsimfile& ssimfile) {
     ind_ssimfile_Remove(row); // remove ssimfile from index ind_ssimfile
 }
 
+// --- atf_norm.FTargsrc.base.CopyOut
+// Copy fields out of row
+void atf_norm::targsrc_CopyOut(atf_norm::FTargsrc &row, dev::Targsrc &out) {
+    out.targsrc = row.targsrc;
+    out.comment = row.comment;
+}
+
+// --- atf_norm.FTargsrc.base.CopyIn
+// Copy fields in to row
+void atf_norm::targsrc_CopyIn(atf_norm::FTargsrc &row, dev::Targsrc &in) {
+    row.targsrc = in.targsrc;
+    row.comment = in.comment;
+}
+
+// --- atf_norm.FTargsrc.target.Get
+algo::Smallstr16 atf_norm::target_Get(atf_norm::FTargsrc& targsrc) {
+    algo::Smallstr16 ret(algo::Pathcomp(targsrc.targsrc, "/LL"));
+    return ret;
+}
+
+// --- atf_norm.FTargsrc.src.Get
+algo::Smallstr200 atf_norm::src_Get(atf_norm::FTargsrc& targsrc) {
+    algo::Smallstr200 ret(algo::Pathcomp(targsrc.targsrc, "/LR"));
+    return ret;
+}
+
+// --- atf_norm.FTargsrc.ext.Get
+algo::Smallstr10 atf_norm::ext_Get(atf_norm::FTargsrc& targsrc) {
+    algo::Smallstr10 ret(algo::Pathcomp(targsrc.targsrc, ".RR"));
+    return ret;
+}
+
+// --- atf_norm.FTargsrc..Uninit
+void atf_norm::FTargsrc_Uninit(atf_norm::FTargsrc& targsrc) {
+    atf_norm::FTargsrc &row = targsrc; (void)row;
+    atf_norm::FGitfile* p_src = atf_norm::ind_gitfile_Find(src_Get(row));
+    if (p_src)  {
+        c_targsrc_Remove(*p_src, row);// remove targsrc from index c_targsrc
+    }
+}
+
 // --- atf_norm.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
@@ -1815,7 +2448,7 @@ bool atf_norm::value_SetStrptrMaybe(atf_norm::FieldId& parent, algo::strptr rhs)
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,atf_norm_FieldId_value); ret = true; break;
                 }
@@ -1867,10 +2500,13 @@ const char* atf_norm::value_ToCstr(const atf_norm::TableId& parent) {
     switch(value_GetEnum(parent)) {
         case atf_norm_TableId_dev_Builddir : ret = "dev.Builddir";  break;
         case atf_norm_TableId_dev_Cfg      : ret = "dev.Cfg";  break;
+        case atf_norm_TableId_dev_Gitfile  : ret = "dev.Gitfile";  break;
+        case atf_norm_TableId_dev_Noindent : ret = "dev.Noindent";  break;
         case atf_norm_TableId_dmmeta_Ns    : ret = "dmmeta.Ns";  break;
         case atf_norm_TableId_dev_Readme   : ret = "dev.Readme";  break;
         case atf_norm_TableId_dev_Scriptfile: ret = "dev.Scriptfile";  break;
         case atf_norm_TableId_dmmeta_Ssimfile: ret = "dmmeta.Ssimfile";  break;
+        case atf_norm_TableId_dev_Targsrc  : ret = "dev.Targsrc";  break;
     }
     return ret;
 }
@@ -1895,7 +2531,7 @@ bool atf_norm::value_SetStrptrMaybe(atf_norm::TableId& parent, algo::strptr rhs)
     bool ret = false;
     switch (elems_N(rhs)) {
         case 7: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
                 case LE_STR7('d','e','v','.','C','f','g'): {
                     value_SetEnum(parent,atf_norm_TableId_dev_Cfg); ret = true; break;
                 }
@@ -1906,7 +2542,7 @@ bool atf_norm::value_SetStrptrMaybe(atf_norm::TableId& parent, algo::strptr rhs)
             break;
         }
         case 9: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','N'): {
                     if (memcmp(rhs.elems+8,"s",1)==0) { value_SetEnum(parent,atf_norm_TableId_dmmeta_Ns); ret = true; break; }
                     break;
@@ -1919,7 +2555,7 @@ bool atf_norm::value_SetStrptrMaybe(atf_norm::TableId& parent, algo::strptr rhs)
             break;
         }
         case 10: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','e','v','.','R','e','a','d'): {
                     if (memcmp(rhs.elems+8,"me",2)==0) { value_SetEnum(parent,atf_norm_TableId_dev_Readme); ret = true; break; }
                     break;
@@ -1931,21 +2567,50 @@ bool atf_norm::value_SetStrptrMaybe(atf_norm::TableId& parent, algo::strptr rhs)
             }
             break;
         }
+        case 11: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','e','v','.','G','i','t','f'): {
+                    if (memcmp(rhs.elems+8,"ile",3)==0) { value_SetEnum(parent,atf_norm_TableId_dev_Gitfile); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','T','a','r','g'): {
+                    if (memcmp(rhs.elems+8,"src",3)==0) { value_SetEnum(parent,atf_norm_TableId_dev_Targsrc); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','g','i','t','f'): {
+                    if (memcmp(rhs.elems+8,"ile",3)==0) { value_SetEnum(parent,atf_norm_TableId_dev_gitfile); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','t','a','r','g'): {
+                    if (memcmp(rhs.elems+8,"src",3)==0) { value_SetEnum(parent,atf_norm_TableId_dev_targsrc); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
         case 12: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','e','v','.','B','u','i','l'): {
                     if (memcmp(rhs.elems+8,"ddir",4)==0) { value_SetEnum(parent,atf_norm_TableId_dev_Builddir); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','N','o','i','n'): {
+                    if (memcmp(rhs.elems+8,"dent",4)==0) { value_SetEnum(parent,atf_norm_TableId_dev_Noindent); ret = true; break; }
                     break;
                 }
                 case LE_STR8('d','e','v','.','b','u','i','l'): {
                     if (memcmp(rhs.elems+8,"ddir",4)==0) { value_SetEnum(parent,atf_norm_TableId_dev_builddir); ret = true; break; }
                     break;
                 }
+                case LE_STR8('d','e','v','.','n','o','i','n'): {
+                    if (memcmp(rhs.elems+8,"dent",4)==0) { value_SetEnum(parent,atf_norm_TableId_dev_noindent); ret = true; break; }
+                    break;
+                }
             }
             break;
         }
         case 14: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','e','v','.','S','c','r','i'): {
                     if (memcmp(rhs.elems+8,"ptfile",6)==0) { value_SetEnum(parent,atf_norm_TableId_dev_Scriptfile); ret = true; break; }
                     break;
@@ -1958,7 +2623,7 @@ bool atf_norm::value_SetStrptrMaybe(atf_norm::TableId& parent, algo::strptr rhs)
             break;
         }
         case 15: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','S'): {
                     if (memcmp(rhs.elems+8,"simfile",7)==0) { value_SetEnum(parent,atf_norm_TableId_dmmeta_Ssimfile); ret = true; break; }
                     break;
@@ -2010,6 +2675,7 @@ void atf_norm::TableId_Print(atf_norm::TableId & row, algo::cstring &str) {
 // --- atf_norm...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         lib_git::FDb_Init();
         atf_norm::FDb_Init();
@@ -2028,10 +2694,13 @@ int main(int argc, char **argv) {
         atf_norm::FDb_Uninit();
         lib_git::FDb_Uninit();
         algo_lib::FDb_Uninit();
-    } catch(algo_lib::ErrorX &x) {
+        lib_json::FDb_Uninit();
+    } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;
     }
+    // only the lower 1 byte makes it to the outside world
+    (void)i32_UpdateMin(algo_lib::_db.exit_code,255);
     return algo_lib::_db.exit_code;
 }
 

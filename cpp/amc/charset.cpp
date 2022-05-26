@@ -38,7 +38,13 @@ void amc::gen_newfield_charset() {
     // phase 1: determine if charset will be simple (implemented inline) or
     // implemented with a bitset.
     ind_beg(amc::_db_charset_curs,charset,amc::_db) {
-        algo::Charset_ReadStrptrMaybe(charset.chars, charset.expr);
+        if (charset.charrange) {
+            algo::Charset_ReadStrptrMaybe(charset.chars, charset.expr);
+        } else {
+            for (int i=0; i<ch_N(charset.expr); i++) {
+                algo::ch_SetBit(charset.chars, charset.expr.ch[i]);
+            }
+        }
     }ind_end;
 }
 

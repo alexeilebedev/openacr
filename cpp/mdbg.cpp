@@ -33,7 +33,7 @@
 
 // Set up breakpoints
 static void GenBreakpoints() {
-    StringIter breaklist(mdbg::_db.cmdline.b);
+    algo::StringIter breaklist(mdbg::_db.cmdline.b);
     cstring &out = mdbg::_db.gdbscript;
     while (!breaklist.EofQ()) {
         out << "break " << GetTokenChar(breaklist, ',') << eol;
@@ -47,7 +47,7 @@ static u32 Find_Pid(algo_lib::Replscope &R) {
     tempstr pid_str;
     pid_str << Trimmed(SysEval(Subst(R, "pidof $tgtfname"), FailokQ(true), 1024));
     u32 pid;
-    StringIter iter(pid_str);
+    algo::StringIter iter(pid_str);
     if (!TryParseU32(iter, pid)) { // if pid is a valid value
         prlog(Subst(R, "Could not find the pid of the process:$tgtfname to attach!"));
         prlog("Make sure process is running and -root option is enabled(if remote)...");
@@ -212,7 +212,7 @@ static void Main_Gdb(algo_lib::Replscope &R) {
     //Ins(&R, mdbg::_db.gdbscript, "set logging on"); - really unnecessary
     // on FreeBSD, emacs spawning gdb ends up in temp/ directory,
     // from where it can't find the executable
-    Ins(&R, mdbg::_db.gdbscript, tempstr()<<"cd "<< GetCurDir());
+    Ins(&R, mdbg::_db.gdbscript, tempstr()<<"cd "<< algo::GetCurDir());
     Ins(&R, mdbg::_db.gdbscript, "file $localexe");
     Ins(&R, mdbg::_db.gdbscript, "set args $args");
     if (mdbg::_db.cmdline.attach) {

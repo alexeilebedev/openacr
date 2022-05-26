@@ -34,7 +34,7 @@
 // -----------------------------------------------------------------------------
 
 #define DO_PERF_TEST(name,action) {                             \
-        u64 start =get_cycles();                                \
+        u64 start =algo::get_cycles();                          \
         u64 limit = start + atf_unit::_db.perf_cycle_budget;    \
         u64 end = 0;                                            \
         u64    nloops        = 0;                               \
@@ -43,7 +43,7 @@
                 action;                                         \
             }                                                   \
             nloops += 1000;                                     \
-            end = get_cycles();                                 \
+            end = algo::get_cycles();                           \
         } while (end<limit);                                    \
         atf_unit::PrintPerfSample(name,nloops,(end-start));     \
     }
@@ -136,6 +136,7 @@ namespace atf_unit { // update-hdr
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_algo_lib_FmtBufDec();
     // void unittest_algo_lib_CaseConversion();
+    // void unittest_algo_FileFlags();
 
     // -------------------------------------------------------------------
     // cpp/atf/unit/algo_lib.cpp
@@ -152,7 +153,6 @@ namespace atf_unit { // update-hdr
 
     // CPU should only use the lower 5 bits for shifting
     // void unittest_algo_lib_CheckShiftMask();
-    // void unittest_algo_lib_Interlocked();
     // void unittest_algo_lib_ReadLine();
     // void unittest_algo_lib_Ceiling();
 
@@ -235,6 +235,13 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_lib_SysEval();
     // void unittest_algo_lib_TrimZerosRight();
     // void unittest_algo_lib_PrintWithCommas();
+    // void unittest_algo_lib_FTruncate();
+    // void unittest_algo_lib_GetCpuHz();
+    // void unittest_algo_lib_flock();
+    // void unittest_algo_lib_u128();
+    // void unittest_algo_lib_Mmap();
+    // void unittest_algo_lib_FileQ();
+    // void unittest_algo_lib_ExitCode();
 
     // -------------------------------------------------------------------
     // cpp/atf/unit/bash.cpp
@@ -389,9 +396,15 @@ namespace atf_unit { // update-hdr
     // -------------------------------------------------------------------
     // cpp/atf/unit/main.cpp
     //
+
+    // Compare contents of file `outfname` with the reference file.
+    // Any difference = error
+    void CompareOutput(strptr outfname);
+
+    // Run specified test (called both with -nofork and without)
+    void Main_Test(atf_unit::FUnittest &test);
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_amc_Unit();
-    void Main();
 
     // usage:
     // DO_PERF_TEST("Testing XYZ",xyz());
@@ -399,6 +412,9 @@ namespace atf_unit { // update-hdr
     void PrintPerfSample(const strptr& action, u64 nloops, u64 clocks);
     void Testcmp(const char *file, int line, strptr value, strptr expect, bool eq);
     void Testcmp(const char *file, int line, const char *value, const char *expect, bool eq);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void unittest_atf_unit_Outfile();
+    void Main();
 
     // -------------------------------------------------------------------
     // cpp/atf/unit/parsenum.cpp
@@ -434,9 +450,12 @@ namespace atf_unit { // update-hdr
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_algo_lib_TimeConversion();
-    // void unittest_algo_lib_PrintTime();
+    // void unittest_algo_lib_TstampCache();
+    // void unittest_algo_lib_PrintUnTime();
     // void unittest_algo_lib_ParseUnTime();
     // void unittest_algo_lib_DayName();
+    // void unittest_algo_lib_CurrentTime();
+    // void unittest_algo_lib_TimeConvert();
 
     // -------------------------------------------------------------------
     // cpp/atf/unit/tuple.cpp

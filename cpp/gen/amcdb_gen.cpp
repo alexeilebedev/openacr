@@ -219,7 +219,7 @@ bool amcdb::value_SetStrptrMaybe(amcdb::FieldId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
-            switch (u64(ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
                 case LE_STR3('g','e','n'): {
                     value_SetEnum(parent,amcdb_FieldId_gen); ret = true; break;
                 }
@@ -233,7 +233,7 @@ bool amcdb::value_SetStrptrMaybe(amcdb::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 4: {
-            switch (u64(ReadLE32(rhs.elems))) {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('c','u','r','s'): {
                     value_SetEnum(parent,amcdb_FieldId_curs); ret = true; break;
                 }
@@ -250,7 +250,7 @@ bool amcdb::value_SetStrptrMaybe(amcdb::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('c','t','y','p','e'): {
                     value_SetEnum(parent,amcdb_FieldId_ctype); ret = true; break;
                 }
@@ -267,7 +267,7 @@ bool amcdb::value_SetStrptrMaybe(amcdb::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 6: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('t','c','l','a','s','s'): {
                     value_SetEnum(parent,amcdb_FieldId_tclass); ret = true; break;
                 }
@@ -275,7 +275,7 @@ bool amcdb::value_SetStrptrMaybe(amcdb::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 7: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
                 case LE_STR7('c','o','m','m','e','n','t'): {
                     value_SetEnum(parent,amcdb_FieldId_comment); ret = true; break;
                 }
@@ -289,7 +289,7 @@ bool amcdb::value_SetStrptrMaybe(amcdb::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 8: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('b','i','g','e','n','d','o','k'): {
                     value_SetEnum(parent,amcdb_FieldId_bigendok); ret = true; break;
                 }
@@ -476,7 +476,7 @@ algo::Smallstr50 amcdb::tclass_Get(amcdb::Tfunc& parent) {
 }
 
 // --- amcdb.Tfunc.tclass.Get2
-algo::Smallstr50 amcdb::Tfunc_tclass_Get(strptr arg) {
+algo::Smallstr50 amcdb::Tfunc_tclass_Get(algo::strptr arg) {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
@@ -488,7 +488,7 @@ algo::Smallstr50 amcdb::name_Get(amcdb::Tfunc& parent) {
 }
 
 // --- amcdb.Tfunc.name.Get2
-algo::Smallstr50 amcdb::Tfunc_name_Get(strptr arg) {
+algo::Smallstr50 amcdb::Tfunc_name_Get(algo::strptr arg) {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }

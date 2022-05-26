@@ -1,4 +1,5 @@
 dmmeta.printfmt  printfmt:Auto  comment:"Decide between Raw and Tuple based on # of fields"
+dmmeta.printfmt  printfmt:Bitset  comment:"Comma-separated list of names of set bits"
 dmmeta.printfmt  printfmt:CompactSep  comment:"Separator, omit default values."
 dmmeta.printfmt  printfmt:Extern  comment:"User-provided function"
 dmmeta.printfmt  printfmt:Raw  comment:"Print all fields one after another"

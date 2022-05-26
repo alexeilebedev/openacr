@@ -18,6 +18,8 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/dev_gen.h"
 #include "include/gen/dev_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
@@ -26,6 +28,7 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 acr_ed::FDb     acr_ed::_db;      // dependency found via dev.targdep
 
@@ -33,53 +36,54 @@ namespace acr_ed {
 const char *acr_ed_help =
 "acr_ed: ACR Editor Set of useful recipes, uses acr, abt, git, and other tools\n"
 "Usage: acr_ed [options]\n"
-"    -in             string  Input directory or filename, - for stdin. default: \"data\"\n"
-"    -create                 Create new entity (-finput, -target, -ctype, -field). default: false\n"
-"    -del                    Delete mode. default: false\n"
-"    -rename         string  Rename to something else\n"
-"    -replace                Use acr -replace (default is -insert, fails on duplicate). default: false\n"
-"    -finput                 Create in-memory table based on ssimfile. default: false\n"
-"    -srcfile        string      Create source file\n"
-"    -gstatic                Like -finput, but data is loaded at compile time. default: false\n"
-"    -indexed                (with -finput) Add hash index. default: false\n"
-"    -target         string  Create new target\n"
-"    -nstype         string  (with -create -target): exe,lib,etc.. default: \"exe\"\n"
-"    -ctype          string  Create new ctype\n"
-"    -pooltype       string   Pool reftype (Lary,Lpool etc) for finput/ctype\n"
-"    -ssimfile       string    Ssimfile for new ctype\n"
-"    -subset         string    Primary key is a subset of this ctype\n"
-"    -subset2        string    Primary key is also a subset of this ctype\n"
-"    -separator      string      Key separator. default: \".\"\n"
-"    -field          string  Create field\n"
-"    -arg            string    Field type (e.g. u32, etc)\n"
-"    -dflt           string    Field default value\n"
-"    -anon                     Anonymous field (use with command lines). default: false\n"
-"    -bigend                   Big-endian field. default: false\n"
-"    -cascdel                  Field is cascdel. default: false\n"
-"    -before         string    Place field before this one\n"
-"    -substr         string    New field is a substring\n"
-"    -srcfield       string    Source field for bitfld/substr\n"
-"    -fstep          string    Add fstep record\n"
-"    -inscond        string    Insert condition (for xref). default: \"true\"\n"
-"    -reftype        string    Reftype (e.g. Val, Thash, Llist, etc)\n"
-"    -hashfld        string      (-reftype:Thash) Hash field\n"
-"    -sortfld        string      (-reftype:Bheap) Sort field\n"
-"    -unittest       string  Create unit test, <ns>.<functionname>\n"
-"    -normcheck      string  Create normalization check\n"
-"    -cppfunc        string  Field is a cppfunc, pass c++ expression as argument\n"
-"    -xref                       X-ref with field type. default: false\n"
-"    -via            string        X-ref argument (index, pointer, or index/key)\n"
-"    -showcpp                Show resulting C++ code. default: false\n"
-"    -write                  Commit output to disk. default: false\n"
-"    -e                       (with -create -unittest) Edit new testcase. default: false\n"
-"    -comment        string  Comment for new entity\n"
-"    -sandbox                Make changes in sandbox. default: false\n"
-"    -sandbox_build            (with -sandbox) Do a build check. default: true\n"
-"    -verbose                Enable verbose mode\n"
-"    -debug                  Enable debug mode\n"
-"    -version                Show version information\n"
-"    -sig                    Print SHA1 signatures for dispatches\n"
-"    -help                   Print this screen and exit\n"
+"    -in         string  Input directory or filename, - for stdin. default: \"data\"\n"
+"    -create             Create new entity (-finput, -target, -ctype, -field). default: false\n"
+"    -del                Delete mode. default: false\n"
+"    -rename     string  Rename to something else\n"
+"    -replace            Use acr -replace (default is -insert, fails on duplicate). default: false\n"
+"    -finput             Create in-memory table based on ssimfile. default: false\n"
+"    -foutput            Declare field as an output. default: false\n"
+"    -srcfile    string      Create source file\n"
+"    -gstatic            Like -finput, but data is loaded at compile time. default: false\n"
+"    -indexed            (with -finput) Add hash index. default: false\n"
+"    -target     string  Create new target\n"
+"    -nstype     string  (with -create -target): exe,lib,etc.. default: \"exe\"\n"
+"    -ctype      string  Create new ctype\n"
+"    -pooltype   string   Pool reftype (Lary,Lpool etc) for finput/ctype\n"
+"    -ssimfile   string    Ssimfile for new ctype\n"
+"    -subset     string    Primary key is a subset of this ctype\n"
+"    -subset2    string    Primary key is also a subset of this ctype\n"
+"    -separator  string      Key separator. default: \".\"\n"
+"    -field      string  Create field\n"
+"    -arg        string    Field type (e.g. u32, etc)\n"
+"    -dflt       string    Field default value\n"
+"    -anon                 Anonymous field (use with command lines). default: false\n"
+"    -bigend               Big-endian field. default: false\n"
+"    -cascdel              Field is cascdel. default: false\n"
+"    -before     string    Place field before this one\n"
+"    -substr     string    New field is a substring\n"
+"    -srcfield   string    Source field for bitfld/substr\n"
+"    -fstep      string    Add fstep record\n"
+"    -inscond    string    Insert condition (for xref). default: \"true\"\n"
+"    -reftype    string    Reftype (e.g. Val, Thash, Llist, etc)\n"
+"    -hashfld    string      (-reftype:Thash) Hash field\n"
+"    -sortfld    string      (-reftype:Bheap) Sort field\n"
+"    -unittest   string  Create unit test, <ns>.<functionname>\n"
+"    -normcheck  string  Create normalization check\n"
+"    -cppfunc    string  Field is a cppfunc, pass c++ expression as argument\n"
+"    -xref                   X-ref with field type. default: false\n"
+"    -via        string        X-ref argument (index, pointer, or index/key)\n"
+"    -write              Commit output to disk. default: false\n"
+"    -e                   (with -create -unittest) Edit new testcase. default: false\n"
+"    -comment    string  Comment for new entity\n"
+"    -sandbox            Make changes in sandbox. default: false\n"
+"    -test               Build resulting changes, run tests. default: false\n"
+"    -showcpp            (With -sandbox), show resulting diff. default: false\n"
+"    -verbose            Enable verbose mode\n"
+"    -debug              Enable debug mode\n"
+"    -version            Show version information\n"
+"    -sig                Print SHA1 signatures for dispatches\n"
+"    -help               Print this screen and exit\n"
 ;
 
 
@@ -90,6 +94,7 @@ const char *acr_ed_syntax =
 " -rename:string=\n"
 " -replace:flag\n"
 " -finput:flag\n"
+" -foutput:flag\n"
 " -srcfile:string=\n"
 " -gstatic:flag\n"
 " -indexed:flag\n"
@@ -120,12 +125,12 @@ const char *acr_ed_syntax =
 " -cppfunc:string=\n"
 " -xref:flag\n"
 " -via:string=\n"
-" -showcpp:flag\n"
 " -write:flag\n"
 " -e:flag\n"
 " -comment:string=\n"
 " -sandbox:flag\n"
-" -sandbox_build:flag=true\n"
+" -test:flag\n"
+" -showcpp:flag\n"
 ;
 } // namespace acr_ed
 namespace acr_ed {
@@ -140,6 +145,7 @@ namespace acr_ed {
     static bool          fprefix_InputMaybe(dmmeta::Fprefix &elem) __attribute__((nothrow));
     static bool          target_InputMaybe(dev::Target &elem) __attribute__((nothrow));
     static bool          targsrc_InputMaybe(dev::Targsrc &elem) __attribute__((nothrow));
+    static bool          sandbox_InputMaybe(dev::Sandbox &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
@@ -379,7 +385,7 @@ bool acr_ed::ns_XrefMaybe(acr_ed::FNs &row) {
 // --- acr_ed.FDb.ind_ns.Find
 // Find row by key. Return NULL if not found.
 acr_ed::FNs* acr_ed::ind_ns_Find(const algo::strptr& key) {
-    u32 index = Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
+    u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
     acr_ed::FNs* *e = &_db.ind_ns_buckets_elems[index];
     acr_ed::FNs* ret=NULL;
     do {
@@ -421,7 +427,7 @@ bool acr_ed::ind_ns_InsertMaybe(acr_ed::FNs& row) {
     ind_ns_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ns_next == (acr_ed::FNs*)-1)) {// check if in hash already
-        u32 index = Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
         acr_ed::FNs* *prev = &_db.ind_ns_buckets_elems[index];
         do {
             acr_ed::FNs* ret = *prev;
@@ -447,7 +453,7 @@ bool acr_ed::ind_ns_InsertMaybe(acr_ed::FNs& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_ed::ind_ns_Remove(acr_ed::FNs& row) {
     if (LIKELY(row.ind_ns_next != (acr_ed::FNs*)-1)) {// check if in hash already
-        u32 index = Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
         acr_ed::FNs* *prev = &_db.ind_ns_buckets_elems[index]; // addr of pointer to current element
         while (acr_ed::FNs *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -468,7 +474,7 @@ void acr_ed::ind_ns_Reserve(int n) {
     u32 new_nelems   = _db.ind_ns_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(acr_ed::FNs*);
         u32 new_size = new_nbuckets * sizeof(acr_ed::FNs*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -484,7 +490,7 @@ void acr_ed::ind_ns_Reserve(int n) {
             while (elem) {
                 acr_ed::FNs &row        = *elem;
                 acr_ed::FNs* next       = row.ind_ns_next;
-                u32 index          = Smallstr16_Hash(0, row.ns) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr16_Hash(0, row.ns) & (new_nbuckets-1);
                 row.ind_ns_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -511,7 +517,7 @@ void acr_ed::MainArgs(int argc, char **argv) {
 // --- acr_ed.FDb._db.MainLoop
 // Main loop.
 void acr_ed::MainLoop() {
-    SchedTime time(get_cycles());
+    algo::SchedTime time(algo::get_cycles());
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
@@ -541,7 +547,7 @@ static void acr_ed::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_ed.Input'  signature:'ec24395020bd864339254458388b7df4e5a6fe28'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_ed.Input'  signature:'58862ba20a6f1dcea59c3cf8b18ffd602d8fca89'");
 }
 
 // --- acr_ed.FDb._db.StaticCheck
@@ -611,6 +617,12 @@ bool acr_ed::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && targsrc_InputMaybe(elem);
             break;
         }
+        case acr_ed_TableId_dev_Sandbox: { // finput:acr_ed.FDb.sandbox
+            dev::Sandbox elem;
+            retval = dev::Sandbox_ReadStrptrMaybe(elem, str);
+            retval = retval && sandbox_InputMaybe(elem);
+            break;
+        }
         default:
         retval = algo_lib::InsertStrptrMaybe(str);
         break;
@@ -627,8 +639,8 @@ bool acr_ed::LoadTuplesMaybe(algo::strptr root) {
     bool retval = true;
     static const char *ssimfiles[] = {
         "dmmeta.ns", "dmmeta.ctype", "dmmeta.cstr", "dmmeta.field"
-        , "dmmeta.fprefix", "dmmeta.listtype", "dmmeta.ssimfile", "dev.target"
-        , "dev.targsrc"
+        , "dmmeta.fprefix", "dmmeta.listtype", "dev.sandbox", "dmmeta.ssimfile"
+        , "dev.target", "dev.targsrc"
         , NULL};
         retval = algo_lib::DoLoadTuples(root, acr_ed::InsertStrptrMaybe, ssimfiles, true);
         return retval;
@@ -784,7 +796,7 @@ bool acr_ed::field_XrefMaybe(acr_ed::FField &row) {
 // --- acr_ed.FDb.ind_field.Find
 // Find row by key. Return NULL if not found.
 acr_ed::FField* acr_ed::ind_field_Find(const algo::strptr& key) {
-    u32 index = Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
     acr_ed::FField* *e = &_db.ind_field_buckets_elems[index];
     acr_ed::FField* ret=NULL;
     do {
@@ -810,7 +822,7 @@ bool acr_ed::ind_field_InsertMaybe(acr_ed::FField& row) {
     ind_field_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_field_next == (acr_ed::FField*)-1)) {// check if in hash already
-        u32 index = Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
         acr_ed::FField* *prev = &_db.ind_field_buckets_elems[index];
         do {
             acr_ed::FField* ret = *prev;
@@ -836,7 +848,7 @@ bool acr_ed::ind_field_InsertMaybe(acr_ed::FField& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_ed::ind_field_Remove(acr_ed::FField& row) {
     if (LIKELY(row.ind_field_next != (acr_ed::FField*)-1)) {// check if in hash already
-        u32 index = Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
         acr_ed::FField* *prev = &_db.ind_field_buckets_elems[index]; // addr of pointer to current element
         while (acr_ed::FField *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -857,7 +869,7 @@ void acr_ed::ind_field_Reserve(int n) {
     u32 new_nelems   = _db.ind_field_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(acr_ed::FField*);
         u32 new_size = new_nbuckets * sizeof(acr_ed::FField*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -873,7 +885,7 @@ void acr_ed::ind_field_Reserve(int n) {
             while (elem) {
                 acr_ed::FField &row        = *elem;
                 acr_ed::FField* next       = row.ind_field_next;
-                u32 index          = Smallstr100_Hash(0, row.field) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.field) & (new_nbuckets-1);
                 row.ind_field_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -995,7 +1007,7 @@ bool acr_ed::ctype_XrefMaybe(acr_ed::FCtype &row) {
 // --- acr_ed.FDb.ind_ctype.Find
 // Find row by key. Return NULL if not found.
 acr_ed::FCtype* acr_ed::ind_ctype_Find(const algo::strptr& key) {
-    u32 index = Smallstr50_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
     acr_ed::FCtype* *e = &_db.ind_ctype_buckets_elems[index];
     acr_ed::FCtype* ret=NULL;
     do {
@@ -1021,7 +1033,7 @@ bool acr_ed::ind_ctype_InsertMaybe(acr_ed::FCtype& row) {
     ind_ctype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctype_next == (acr_ed::FCtype*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         acr_ed::FCtype* *prev = &_db.ind_ctype_buckets_elems[index];
         do {
             acr_ed::FCtype* ret = *prev;
@@ -1047,7 +1059,7 @@ bool acr_ed::ind_ctype_InsertMaybe(acr_ed::FCtype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_ed::ind_ctype_Remove(acr_ed::FCtype& row) {
     if (LIKELY(row.ind_ctype_next != (acr_ed::FCtype*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         acr_ed::FCtype* *prev = &_db.ind_ctype_buckets_elems[index]; // addr of pointer to current element
         while (acr_ed::FCtype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1068,7 +1080,7 @@ void acr_ed::ind_ctype_Reserve(int n) {
     u32 new_nelems   = _db.ind_ctype_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(acr_ed::FCtype*);
         u32 new_size = new_nbuckets * sizeof(acr_ed::FCtype*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -1084,7 +1096,7 @@ void acr_ed::ind_ctype_Reserve(int n) {
             while (elem) {
                 acr_ed::FCtype &row        = *elem;
                 acr_ed::FCtype* next       = row.ind_ctype_next;
-                u32 index          = Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
                 row.ind_ctype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1215,7 +1227,7 @@ bool acr_ed::ssimfile_XrefMaybe(acr_ed::FSsimfile &row) {
 // --- acr_ed.FDb.ind_ssimfile.Find
 // Find row by key. Return NULL if not found.
 acr_ed::FSsimfile* acr_ed::ind_ssimfile_Find(const algo::strptr& key) {
-    u32 index = Smallstr50_Hash(0, key) & (_db.ind_ssimfile_buckets_n - 1);
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ssimfile_buckets_n - 1);
     acr_ed::FSsimfile* *e = &_db.ind_ssimfile_buckets_elems[index];
     acr_ed::FSsimfile* ret=NULL;
     do {
@@ -1241,7 +1253,7 @@ bool acr_ed::ind_ssimfile_InsertMaybe(acr_ed::FSsimfile& row) {
     ind_ssimfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ssimfile_next == (acr_ed::FSsimfile*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
         acr_ed::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index];
         do {
             acr_ed::FSsimfile* ret = *prev;
@@ -1267,7 +1279,7 @@ bool acr_ed::ind_ssimfile_InsertMaybe(acr_ed::FSsimfile& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_ed::ind_ssimfile_Remove(acr_ed::FSsimfile& row) {
     if (LIKELY(row.ind_ssimfile_next != (acr_ed::FSsimfile*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
         acr_ed::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index]; // addr of pointer to current element
         while (acr_ed::FSsimfile *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1288,7 +1300,7 @@ void acr_ed::ind_ssimfile_Reserve(int n) {
     u32 new_nelems   = _db.ind_ssimfile_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(acr_ed::FSsimfile*);
         u32 new_size = new_nbuckets * sizeof(acr_ed::FSsimfile*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -1304,7 +1316,7 @@ void acr_ed::ind_ssimfile_Reserve(int n) {
             while (elem) {
                 acr_ed::FSsimfile &row        = *elem;
                 acr_ed::FSsimfile* next       = row.ind_ssimfile_next;
-                u32 index          = Smallstr50_Hash(0, row.ssimfile) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr50_Hash(0, row.ssimfile) & (new_nbuckets-1);
                 row.ind_ssimfile_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1499,13 +1511,15 @@ void acr_ed::vis_RemoveLast() {
 // Make sure N elements fit in array. Process dies if out of memory
 void acr_ed::vis_AbsReserve(int n) {
     u32 old_max  = _db.vis_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::malloc_ReallocMem(_db.vis_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("acr_ed.tary_nomem  field:acr_ed.FDb.vis  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(_db.vis_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("acr_ed.tary_nomem  field:acr_ed.FDb.vis  comment:'out of memory'");
+        }
+        _db.vis_elems = (algo::cstring*)new_mem;
+        _db.vis_max = new_max;
     }
-    _db.vis_elems = (algo::cstring*)new_mem;
-    _db.vis_max = new_max;
 }
 
 // --- acr_ed.FDb.listtype.Alloc
@@ -1608,7 +1622,7 @@ bool acr_ed::listtype_XrefMaybe(acr_ed::FListtype &row) {
 // --- acr_ed.FDb.ind_listtype.Find
 // Find row by key. Return NULL if not found.
 acr_ed::FListtype* acr_ed::ind_listtype_Find(const algo::strptr& key) {
-    u32 index = Smallstr5_Hash(0, key) & (_db.ind_listtype_buckets_n - 1);
+    u32 index = algo::Smallstr5_Hash(0, key) & (_db.ind_listtype_buckets_n - 1);
     acr_ed::FListtype* *e = &_db.ind_listtype_buckets_elems[index];
     acr_ed::FListtype* ret=NULL;
     do {
@@ -1650,7 +1664,7 @@ bool acr_ed::ind_listtype_InsertMaybe(acr_ed::FListtype& row) {
     ind_listtype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_listtype_next == (acr_ed::FListtype*)-1)) {// check if in hash already
-        u32 index = Smallstr5_Hash(0, row.listtype) & (_db.ind_listtype_buckets_n - 1);
+        u32 index = algo::Smallstr5_Hash(0, row.listtype) & (_db.ind_listtype_buckets_n - 1);
         acr_ed::FListtype* *prev = &_db.ind_listtype_buckets_elems[index];
         do {
             acr_ed::FListtype* ret = *prev;
@@ -1676,7 +1690,7 @@ bool acr_ed::ind_listtype_InsertMaybe(acr_ed::FListtype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_ed::ind_listtype_Remove(acr_ed::FListtype& row) {
     if (LIKELY(row.ind_listtype_next != (acr_ed::FListtype*)-1)) {// check if in hash already
-        u32 index = Smallstr5_Hash(0, row.listtype) & (_db.ind_listtype_buckets_n - 1);
+        u32 index = algo::Smallstr5_Hash(0, row.listtype) & (_db.ind_listtype_buckets_n - 1);
         acr_ed::FListtype* *prev = &_db.ind_listtype_buckets_elems[index]; // addr of pointer to current element
         while (acr_ed::FListtype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1697,7 +1711,7 @@ void acr_ed::ind_listtype_Reserve(int n) {
     u32 new_nelems   = _db.ind_listtype_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(acr_ed::FListtype*);
         u32 new_size = new_nbuckets * sizeof(acr_ed::FListtype*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -1713,7 +1727,7 @@ void acr_ed::ind_listtype_Reserve(int n) {
             while (elem) {
                 acr_ed::FListtype &row        = *elem;
                 acr_ed::FListtype* next       = row.ind_listtype_next;
-                u32 index          = Smallstr5_Hash(0, row.listtype) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr5_Hash(0, row.listtype) & (new_nbuckets-1);
                 row.ind_listtype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1826,7 +1840,7 @@ bool acr_ed::fprefix_XrefMaybe(acr_ed::FFprefix &row) {
 // --- acr_ed.FDb.ind_fprefix.Find
 // Find row by key. Return NULL if not found.
 acr_ed::FFprefix* acr_ed::ind_fprefix_Find(const algo::strptr& key) {
-    u32 index = Smallstr5_Hash(0, key) & (_db.ind_fprefix_buckets_n - 1);
+    u32 index = algo::Smallstr5_Hash(0, key) & (_db.ind_fprefix_buckets_n - 1);
     acr_ed::FFprefix* *e = &_db.ind_fprefix_buckets_elems[index];
     acr_ed::FFprefix* ret=NULL;
     do {
@@ -1868,7 +1882,7 @@ bool acr_ed::ind_fprefix_InsertMaybe(acr_ed::FFprefix& row) {
     ind_fprefix_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_fprefix_next == (acr_ed::FFprefix*)-1)) {// check if in hash already
-        u32 index = Smallstr5_Hash(0, row.fprefix) & (_db.ind_fprefix_buckets_n - 1);
+        u32 index = algo::Smallstr5_Hash(0, row.fprefix) & (_db.ind_fprefix_buckets_n - 1);
         acr_ed::FFprefix* *prev = &_db.ind_fprefix_buckets_elems[index];
         do {
             acr_ed::FFprefix* ret = *prev;
@@ -1894,7 +1908,7 @@ bool acr_ed::ind_fprefix_InsertMaybe(acr_ed::FFprefix& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_ed::ind_fprefix_Remove(acr_ed::FFprefix& row) {
     if (LIKELY(row.ind_fprefix_next != (acr_ed::FFprefix*)-1)) {// check if in hash already
-        u32 index = Smallstr5_Hash(0, row.fprefix) & (_db.ind_fprefix_buckets_n - 1);
+        u32 index = algo::Smallstr5_Hash(0, row.fprefix) & (_db.ind_fprefix_buckets_n - 1);
         acr_ed::FFprefix* *prev = &_db.ind_fprefix_buckets_elems[index]; // addr of pointer to current element
         while (acr_ed::FFprefix *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1915,7 +1929,7 @@ void acr_ed::ind_fprefix_Reserve(int n) {
     u32 new_nelems   = _db.ind_fprefix_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(acr_ed::FFprefix*);
         u32 new_size = new_nbuckets * sizeof(acr_ed::FFprefix*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -1931,7 +1945,7 @@ void acr_ed::ind_fprefix_Reserve(int n) {
             while (elem) {
                 acr_ed::FFprefix &row        = *elem;
                 acr_ed::FFprefix* next       = row.ind_fprefix_next;
-                u32 index          = Smallstr5_Hash(0, row.fprefix) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr5_Hash(0, row.fprefix) & (new_nbuckets-1);
                 row.ind_fprefix_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2044,7 +2058,7 @@ bool acr_ed::target_XrefMaybe(acr_ed::FTarget &row) {
 // --- acr_ed.FDb.ind_target.Find
 // Find row by key. Return NULL if not found.
 acr_ed::FTarget* acr_ed::ind_target_Find(const algo::strptr& key) {
-    u32 index = Smallstr16_Hash(0, key) & (_db.ind_target_buckets_n - 1);
+    u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_target_buckets_n - 1);
     acr_ed::FTarget* *e = &_db.ind_target_buckets_elems[index];
     acr_ed::FTarget* ret=NULL;
     do {
@@ -2086,7 +2100,7 @@ bool acr_ed::ind_target_InsertMaybe(acr_ed::FTarget& row) {
     ind_target_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_target_next == (acr_ed::FTarget*)-1)) {// check if in hash already
-        u32 index = Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
+        u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
         acr_ed::FTarget* *prev = &_db.ind_target_buckets_elems[index];
         do {
             acr_ed::FTarget* ret = *prev;
@@ -2112,7 +2126,7 @@ bool acr_ed::ind_target_InsertMaybe(acr_ed::FTarget& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_ed::ind_target_Remove(acr_ed::FTarget& row) {
     if (LIKELY(row.ind_target_next != (acr_ed::FTarget*)-1)) {// check if in hash already
-        u32 index = Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
+        u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
         acr_ed::FTarget* *prev = &_db.ind_target_buckets_elems[index]; // addr of pointer to current element
         while (acr_ed::FTarget *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2133,7 +2147,7 @@ void acr_ed::ind_target_Reserve(int n) {
     u32 new_nelems   = _db.ind_target_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(acr_ed::FTarget*);
         u32 new_size = new_nbuckets * sizeof(acr_ed::FTarget*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -2149,7 +2163,7 @@ void acr_ed::ind_target_Reserve(int n) {
             while (elem) {
                 acr_ed::FTarget &row        = *elem;
                 acr_ed::FTarget* next       = row.ind_target_next;
-                u32 index          = Smallstr16_Hash(0, row.target) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr16_Hash(0, row.target) & (new_nbuckets-1);
                 row.ind_target_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2276,17 +2290,21 @@ int acr_ed::abt_Start() {
     int retval = 0;
     if (_db.abt_pid == 0) {
         verblog(abt_ToCmdline()); // maybe print command
-        _db.abt_status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(_db.abt_path);
+        tempstr cmdline(abt_ToCmdline());
+        _db.abt_pid = dospawn(Zeroterm(_db.abt_path),Zeroterm(cmdline),_db.abt_timeout,_db.abt_fstdin,_db.abt_fstdout,_db.abt_fstderr);
+#else
         _db.abt_pid = fork();
         if (_db.abt_pid == 0) { // child
             algo_lib::DieWithParent();
             if (_db.abt_timeout > 0) {
                 alarm(_db.abt_timeout);
             }
-            algo_lib::ApplyRedirect(_db.abt_stdin, 0);
-            algo_lib::ApplyRedirect(_db.abt_stdout, 1);
-            algo_lib::ApplyRedirect(_db.abt_stderr, 2);
-            retval = abt_Execv();
+            if (retval==0) retval=algo_lib::ApplyRedirect(_db.abt_fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(_db.abt_fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(_db.abt_fstderr, 2);
+            if (retval==0) retval= abt_Execv();
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("acr_ed.abt_execv"
@@ -2297,11 +2315,24 @@ int acr_ed::abt_Start() {
             _exit(127); // if failed to start, exit anyway
         } else if (_db.abt_pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = _db.abt_status; // parent
         }
+#endif
     }
+    _db.abt_status = _db.abt_pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- acr_ed.FDb.abt.StartRead
+// Start subprocess & Read output
+algo::Fildes acr_ed::abt_StartRead(algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    _db.abt_fstdout  << ">&" << pipefd[1];
+    abt_Start();
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- acr_ed.FDb.abt.Kill
@@ -2316,7 +2347,7 @@ void acr_ed::abt_Kill() {
 // --- acr_ed.FDb.abt.Wait
 // Wait for subprocess to return
 void acr_ed::abt_Wait() {
-    if (_db.abt_pid != 0) {
+    if (_db.abt_pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -2353,7 +2384,7 @@ void acr_ed::abt_ExecX() {
 // Call execv()
 // Call execv with specified parameters -- cprint:abt.Argv
 int acr_ed::abt_Execv() {
-    char *argv[24+2]; // start of first arg (future pointer)
+    char *argv[48+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -2479,13 +2510,6 @@ int acr_ed::abt_Execv() {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
-    if (_db.abt_cmd.testgen != false) {
-        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-testgen:";
-        bool_Print(_db.abt_cmd.testgen, temp);
-        ch_Alloc(temp) = 0;// NUL term for this arg
-    }
-
     if (_db.abt_cmd.install != false) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-install:";
@@ -2527,6 +2551,13 @@ int acr_ed::abt_Execv() {
         bool_Print(_db.abt_cmd.report, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
+
+    if (_db.abt_cmd.jcdb != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-jcdb:";
+        cstring_Print(_db.abt_cmd.jcdb, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
     for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-verbose";
@@ -2546,15 +2577,113 @@ algo::tempstr acr_ed::abt_ToCmdline() {
     algo::tempstr retval;
     retval << _db.abt_path << " ";
     command::abt_PrintArgv(_db.abt_cmd,retval);
-    if (ch_N(_db.abt_stdin)) {
-        retval << " " << _db.abt_stdin;
+    if (ch_N(_db.abt_fstdin)) {
+        retval << " " << _db.abt_fstdin;
     }
-    if (ch_N(_db.abt_stdout)) {
-        retval << " " << _db.abt_stdout;
+    if (ch_N(_db.abt_fstdout)) {
+        retval << " " << _db.abt_fstdout;
     }
-    if (ch_N(_db.abt_stderr)) {
-        retval << " 2" << _db.abt_stderr;
+    if (ch_N(_db.abt_fstderr)) {
+        retval << " 2" << _db.abt_fstderr;
     }
+    return retval;
+}
+
+// --- acr_ed.FDb.sandbox.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_ed::FSandbox& acr_ed::sandbox_Alloc() {
+    acr_ed::FSandbox* row = sandbox_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_ed.out_of_mem  field:acr_ed.FDb.sandbox  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_ed.FDb.sandbox.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_ed::FSandbox* acr_ed::sandbox_AllocMaybe() {
+    acr_ed::FSandbox *row = (acr_ed::FSandbox*)sandbox_AllocMem();
+    if (row) {
+        new (row) acr_ed::FSandbox; // call constructor
+    }
+    return row;
+}
+
+// --- acr_ed.FDb.sandbox.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_ed::FSandbox* acr_ed::sandbox_InsertMaybe(const dev::Sandbox &value) {
+    acr_ed::FSandbox *row = &sandbox_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    sandbox_CopyIn(*row,const_cast<dev::Sandbox&>(value));
+    bool ok = sandbox_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        sandbox_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_ed.FDb.sandbox.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_ed::sandbox_AllocMem() {
+    u64 new_nelems     = _db.sandbox_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_ed::FSandbox*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.sandbox_lary[bsr];
+        if (!lev) {
+            lev=(acr_ed::FSandbox*)algo_lib::malloc_AllocMem(sizeof(acr_ed::FSandbox) * (u64(1)<<bsr));
+            _db.sandbox_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.sandbox_n = new_nelems;
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_ed.FDb.sandbox.RemoveAll
+// Remove all elements from Lary
+void acr_ed::sandbox_RemoveAll() {
+    for (u64 n = _db.sandbox_n; n>0; ) {
+        n--;
+        sandbox_qFind(u64(n)).~FSandbox(); // destroy last element
+        _db.sandbox_n = n;
+    }
+}
+
+// --- acr_ed.FDb.sandbox.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_ed::sandbox_RemoveLast() {
+    u64 n = _db.sandbox_n;
+    if (n > 0) {
+        n -= 1;
+        sandbox_qFind(u64(n)).~FSandbox();
+        _db.sandbox_n = n;
+    }
+}
+
+// --- acr_ed.FDb.sandbox.InputMaybe
+static bool acr_ed::sandbox_InputMaybe(dev::Sandbox &elem) {
+    bool retval = true;
+    retval = sandbox_InsertMaybe(elem);
+    return retval;
+}
+
+// --- acr_ed.FDb.sandbox.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_ed::sandbox_XrefMaybe(acr_ed::FSandbox &row) {
+    bool retval = true;
+    (void)row;
     return retval;
 }
 
@@ -2736,6 +2865,17 @@ void acr_ed::FDb_Init() {
     _db.abt_pid = pid_t(0);
     _db.abt_timeout = i32(0);
     _db.abt_status = i32(0);
+    // initialize LAry sandbox (acr_ed.FDb.sandbox)
+    _db.sandbox_n = 0;
+    memset(_db.sandbox_lary, 0, sizeof(_db.sandbox_lary)); // zero out all level pointers
+    acr_ed::FSandbox* sandbox_first = (acr_ed::FSandbox*)algo_lib::malloc_AllocMem(sizeof(acr_ed::FSandbox) * (u64(1)<<4));
+    if (!sandbox_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.sandbox_lary[i]  = sandbox_first;
+        sandbox_first    += 1ULL<<i;
+    }
 
     acr_ed::InitReflection();
 }
@@ -2743,6 +2883,9 @@ void acr_ed::FDb_Init() {
 // --- acr_ed.FDb..Uninit
 void acr_ed::FDb_Uninit() {
     acr_ed::FDb &row = _db; (void)row;
+
+    // acr_ed.FDb.sandbox.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // acr_ed.FDb.abt.Uninit (Exec)  //
     abt_Kill(); // kill child, ensure forward progress
@@ -2932,6 +3075,20 @@ void acr_ed::FNs_Uninit(acr_ed::FNs& ns) {
     ind_ns_Remove(row); // remove ns from index ind_ns
 }
 
+// --- acr_ed.FSandbox.base.CopyOut
+// Copy fields out of row
+void acr_ed::sandbox_CopyOut(acr_ed::FSandbox &row, dev::Sandbox &out) {
+    out.sandbox = row.sandbox;
+    out.comment = row.comment;
+}
+
+// --- acr_ed.FSandbox.base.CopyIn
+// Copy fields in to row
+void acr_ed::sandbox_CopyIn(acr_ed::FSandbox &row, dev::Sandbox &in) {
+    row.sandbox = in.sandbox;
+    row.comment = in.comment;
+}
+
 // --- acr_ed.FSsimfile.msghdr.CopyOut
 // Copy fields out of row
 void acr_ed::ssimfile_CopyOut(acr_ed::FSsimfile &row, dmmeta::Ssimfile &out) {
@@ -2978,12 +3135,16 @@ void acr_ed::FSsimfile_Uninit(acr_ed::FSsimfile& ssimfile) {
 // Copy fields out of row
 void acr_ed::target_CopyOut(acr_ed::FTarget &row, dev::Target &out) {
     out.target = row.target;
+    out.license = row.license;
+    out.compat = row.compat;
 }
 
 // --- acr_ed.FTarget.base.CopyIn
 // Copy fields in to row
 void acr_ed::target_CopyIn(acr_ed::FTarget &row, dev::Target &in) {
     row.target = in.target;
+    row.license = in.license;
+    row.compat = in.compat;
 }
 
 // --- acr_ed.FTarget..Uninit
@@ -3055,7 +3216,7 @@ bool acr_ed::value_SetStrptrMaybe(acr_ed::FieldId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,acr_ed_FieldId_value); ret = true; break;
                 }
@@ -3111,6 +3272,7 @@ const char* acr_ed::value_ToCstr(const acr_ed::TableId& parent) {
         case acr_ed_TableId_dmmeta_Fprefix : ret = "dmmeta.Fprefix";  break;
         case acr_ed_TableId_dmmeta_Listtype: ret = "dmmeta.Listtype";  break;
         case acr_ed_TableId_dmmeta_Ns      : ret = "dmmeta.Ns";  break;
+        case acr_ed_TableId_dev_Sandbox    : ret = "dev.Sandbox";  break;
         case acr_ed_TableId_dmmeta_Ssimfile: ret = "dmmeta.Ssimfile";  break;
         case acr_ed_TableId_dev_Target     : ret = "dev.Target";  break;
         case acr_ed_TableId_dev_Targsrc    : ret = "dev.Targsrc";  break;
@@ -3138,7 +3300,7 @@ bool acr_ed::value_SetStrptrMaybe(acr_ed::TableId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 9: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','N'): {
                     if (memcmp(rhs.elems+8,"s",1)==0) { value_SetEnum(parent,acr_ed_TableId_dmmeta_Ns); ret = true; break; }
                     break;
@@ -3151,7 +3313,7 @@ bool acr_ed::value_SetStrptrMaybe(acr_ed::TableId& parent, algo::strptr rhs) {
             break;
         }
         case 10: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','e','v','.','T','a','r','g'): {
                     if (memcmp(rhs.elems+8,"et",2)==0) { value_SetEnum(parent,acr_ed_TableId_dev_Target); ret = true; break; }
                     break;
@@ -3164,9 +3326,17 @@ bool acr_ed::value_SetStrptrMaybe(acr_ed::TableId& parent, algo::strptr rhs) {
             break;
         }
         case 11: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','e','v','.','S','a','n','d'): {
+                    if (memcmp(rhs.elems+8,"box",3)==0) { value_SetEnum(parent,acr_ed_TableId_dev_Sandbox); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','e','v','.','T','a','r','g'): {
                     if (memcmp(rhs.elems+8,"src",3)==0) { value_SetEnum(parent,acr_ed_TableId_dev_Targsrc); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','s','a','n','d'): {
+                    if (memcmp(rhs.elems+8,"box",3)==0) { value_SetEnum(parent,acr_ed_TableId_dev_sandbox); ret = true; break; }
                     break;
                 }
                 case LE_STR8('d','e','v','.','t','a','r','g'): {
@@ -3185,7 +3355,7 @@ bool acr_ed::value_SetStrptrMaybe(acr_ed::TableId& parent, algo::strptr rhs) {
             break;
         }
         case 12: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','C'): {
                     if (memcmp(rhs.elems+8,"type",4)==0) { value_SetEnum(parent,acr_ed_TableId_dmmeta_Ctype); ret = true; break; }
                     break;
@@ -3206,7 +3376,7 @@ bool acr_ed::value_SetStrptrMaybe(acr_ed::TableId& parent, algo::strptr rhs) {
             break;
         }
         case 14: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','F'): {
                     if (memcmp(rhs.elems+8,"prefix",6)==0) { value_SetEnum(parent,acr_ed_TableId_dmmeta_Fprefix); ret = true; break; }
                     break;
@@ -3219,7 +3389,7 @@ bool acr_ed::value_SetStrptrMaybe(acr_ed::TableId& parent, algo::strptr rhs) {
             break;
         }
         case 15: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','L'): {
                     if (memcmp(rhs.elems+8,"isttype",7)==0) { value_SetEnum(parent,acr_ed_TableId_dmmeta_Listtype); ret = true; break; }
                     break;
@@ -3279,6 +3449,7 @@ void acr_ed::TableId_Print(acr_ed::TableId & row, algo::cstring &str) {
 // --- acr_ed...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         acr_ed::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -3295,10 +3466,13 @@ int main(int argc, char **argv) {
     try {
         acr_ed::FDb_Uninit();
         algo_lib::FDb_Uninit();
-    } catch(algo_lib::ErrorX &x) {
+        lib_json::FDb_Uninit();
+    } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;
     }
+    // only the lower 1 byte makes it to the outside world
+    (void)i32_UpdateMin(algo_lib::_db.exit_code,255);
     return algo_lib::_db.exit_code;
 }
 

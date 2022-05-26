@@ -130,6 +130,10 @@ inline bool amc::Enumstr::operator ==(const amc::Enumstr &rhs) const {
     return amc::Enumstr_Eq(const_cast<amc::Enumstr&>(*this),const_cast<amc::Enumstr&>(rhs));
 }
 
+inline bool amc::Enumstr::operator !=(const amc::Enumstr &rhs) const {
+    return !amc::Enumstr_Eq(const_cast<amc::Enumstr&>(*this),const_cast<amc::Enumstr&>(rhs));
+}
+
 inline bool amc::Enumstr::operator <(const amc::Enumstr &rhs) const {
     return amc::Enumstr_Lt(const_cast<amc::Enumstr&>(*this),const_cast<amc::Enumstr&>(rhs));
 }
@@ -252,6 +256,7 @@ inline void amc::FBitfld_Init(amc::FBitfld& bitfld) {
     bitfld.offset = i32(0);
     bitfld.width = i32(0);
     bitfld.p_srcfield = NULL;
+    bitfld.p_field = NULL;
     bitfld.bh_bitfld_idx = -1; // (amc.FField.bh_bitfld) not-in-heap
 }
 inline amc::FBltin::FBltin() {
@@ -356,6 +361,7 @@ inline amc::FCextern::~FCextern() {
 // Set all fields to initial values.
 inline void amc::FCextern_Init(amc::FCextern& cextern) {
     cextern.initmemset = bool(false);
+    cextern.isstruct = bool(false);
 }
 inline amc::FCfmt::FCfmt() {
     amc::FCfmt_Init(*this);
@@ -1834,12 +1840,12 @@ inline bool amc::fsort_EmptyQ() {
 // --- amc.FDb.fsort.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFsort* amc::fsort_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFsort *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fsort_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fsort_lary[bsr][index];
     }
     return retval;
@@ -1888,12 +1894,12 @@ inline bool amc::dispfilter_EmptyQ() {
 // --- amc.FDb.dispfilter.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FDispfilter* amc::dispfilter_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FDispfilter *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.dispfilter_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.dispfilter_lary[bsr][index];
     }
     return retval;
@@ -1930,12 +1936,12 @@ inline bool amc::usertracefld_EmptyQ() {
 // --- amc.FDb.usertracefld.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FUsertracefld* amc::usertracefld_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FUsertracefld *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.usertracefld_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.usertracefld_lary[bsr][index];
     }
     return retval;
@@ -1972,12 +1978,12 @@ inline bool amc::cfmt_EmptyQ() {
 // --- amc.FDb.cfmt.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FCfmt* amc::cfmt_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FCfmt *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.cfmt_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.cfmt_lary[bsr][index];
     }
     return retval;
@@ -2014,12 +2020,12 @@ inline bool amc::dispatch_EmptyQ() {
 // --- amc.FDb.dispatch.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FDispatch* amc::dispatch_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FDispatch *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.dispatch_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.dispatch_lary[bsr][index];
     }
     return retval;
@@ -2056,12 +2062,12 @@ inline bool amc::dispatch_msg_EmptyQ() {
 // --- amc.FDb.dispatch_msg.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FDispatchmsg* amc::dispatch_msg_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FDispatchmsg *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.dispatch_msg_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.dispatch_msg_lary[bsr][index];
     }
     return retval;
@@ -2098,12 +2104,12 @@ inline bool amc::ctype_EmptyQ() {
 // --- amc.FDb.ctype.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FCtype* amc::ctype_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FCtype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ctype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ctype_lary[bsr][index];
     }
     return retval;
@@ -2140,12 +2146,12 @@ inline bool amc::field_EmptyQ() {
 // --- amc.FDb.field.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FField* amc::field_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FField *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.field_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.field_lary[bsr][index];
     }
     return retval;
@@ -2182,12 +2188,12 @@ inline bool amc::basepool_EmptyQ() {
 // --- amc.FDb.basepool.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FBasepool* amc::basepool_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FBasepool *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.basepool_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.basepool_lary[bsr][index];
     }
     return retval;
@@ -2224,12 +2230,12 @@ inline bool amc::llist_EmptyQ() {
 // --- amc.FDb.llist.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FLlist* amc::llist_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FLlist *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.llist_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.llist_lary[bsr][index];
     }
     return retval;
@@ -2266,12 +2272,12 @@ inline bool amc::anonfld_EmptyQ() {
 // --- amc.FDb.anonfld.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FAnonfld* amc::anonfld_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FAnonfld *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.anonfld_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.anonfld_lary[bsr][index];
     }
     return retval;
@@ -2308,12 +2314,12 @@ inline bool amc::xref_EmptyQ() {
 // --- amc.FDb.xref.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FXref* amc::xref_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FXref *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.xref_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.xref_lary[bsr][index];
     }
     return retval;
@@ -2350,12 +2356,12 @@ inline bool amc::ns_EmptyQ() {
 // --- amc.FDb.ns.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FNs* amc::ns_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FNs *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ns_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ns_lary[bsr][index];
     }
     return retval;
@@ -2392,12 +2398,12 @@ inline bool amc::pnew_EmptyQ() {
 // --- amc.FDb.pnew.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FPnew* amc::pnew_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FPnew *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.pnew_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.pnew_lary[bsr][index];
     }
     return retval;
@@ -2434,12 +2440,12 @@ inline bool amc::fldoffset_EmptyQ() {
 // --- amc.FDb.fldoffset.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFldoffset* amc::fldoffset_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFldoffset *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fldoffset_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fldoffset_lary[bsr][index];
     }
     return retval;
@@ -2476,12 +2482,12 @@ inline bool amc::typefld_EmptyQ() {
 // --- amc.FDb.typefld.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FTypefld* amc::typefld_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FTypefld *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.typefld_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.typefld_lary[bsr][index];
     }
     return retval;
@@ -2518,12 +2524,12 @@ inline bool amc::lenfld_EmptyQ() {
 // --- amc.FDb.lenfld.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FLenfld* amc::lenfld_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FLenfld *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.lenfld_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.lenfld_lary[bsr][index];
     }
     return retval;
@@ -2560,12 +2566,12 @@ inline bool amc::bltin_EmptyQ() {
 // --- amc.FDb.bltin.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FBltin* amc::bltin_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FBltin *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.bltin_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.bltin_lary[bsr][index];
     }
     return retval;
@@ -2602,12 +2608,12 @@ inline bool amc::static_tuple_EmptyQ() {
 // --- amc.FDb.static_tuple.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FStatictuple* amc::static_tuple_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FStatictuple *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.static_tuple_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.static_tuple_lary[bsr][index];
     }
     return retval;
@@ -2644,12 +2650,12 @@ inline bool amc::msgtype_EmptyQ() {
 // --- amc.FDb.msgtype.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FMsgtype* amc::msgtype_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FMsgtype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.msgtype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.msgtype_lary[bsr][index];
     }
     return retval;
@@ -2686,12 +2692,12 @@ inline bool amc::gconst_EmptyQ() {
 // --- amc.FDb.gconst.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FGconst* amc::gconst_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FGconst *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.gconst_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.gconst_lary[bsr][index];
     }
     return retval;
@@ -2728,12 +2734,12 @@ inline bool amc::gstatic_EmptyQ() {
 // --- amc.FDb.gstatic.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FGstatic* amc::gstatic_Find(u32 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FGstatic *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.gstatic_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.gstatic_lary[bsr][index];
     }
     return retval;
@@ -2770,12 +2776,12 @@ inline bool amc::thash_EmptyQ() {
 // --- amc.FDb.thash.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FThash* amc::thash_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FThash *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.thash_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.thash_lary[bsr][index];
     }
     return retval;
@@ -2812,12 +2818,12 @@ inline bool amc::func_EmptyQ() {
 // --- amc.FDb.func.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFunc* amc::func_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFunc *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.func_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.func_lary[bsr][index];
     }
     return retval;
@@ -2854,12 +2860,12 @@ inline bool amc::smallstr_EmptyQ() {
 // --- amc.FDb.smallstr.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FSmallstr* amc::smallstr_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FSmallstr *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.smallstr_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.smallstr_lary[bsr][index];
     }
     return retval;
@@ -2896,12 +2902,12 @@ inline bool amc::numstr_EmptyQ() {
 // --- amc.FDb.numstr.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FNumstr* amc::numstr_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FNumstr *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.numstr_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.numstr_lary[bsr][index];
     }
     return retval;
@@ -2938,12 +2944,12 @@ inline bool amc::main_EmptyQ() {
 // --- amc.FDb.main.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FMain* amc::main_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FMain *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.main_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.main_lary[bsr][index];
     }
     return retval;
@@ -2980,12 +2986,12 @@ inline bool amc::reftype_EmptyQ() {
 // --- amc.FDb.reftype.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FReftype* amc::reftype_Find(dmmeta::ReftypeId t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FReftype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.reftype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.reftype_lary[bsr][index];
     }
     return retval;
@@ -3118,12 +3124,12 @@ inline bool amc::cpptype_EmptyQ() {
 // --- amc.FDb.cpptype.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FCpptype* amc::cpptype_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FCpptype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.cpptype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.cpptype_lary[bsr][index];
     }
     return retval;
@@ -3172,12 +3178,12 @@ inline bool amc::inlary_EmptyQ() {
 // --- amc.FDb.inlary.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FInlary* amc::inlary_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FInlary *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.inlary_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.inlary_lary[bsr][index];
     }
     return retval;
@@ -3226,12 +3232,12 @@ inline bool amc::tary_EmptyQ() {
 // --- amc.FDb.tary.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FTary* amc::tary_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FTary *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.tary_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.tary_lary[bsr][index];
     }
     return retval;
@@ -3280,12 +3286,12 @@ inline bool amc::cppfunc_EmptyQ() {
 // --- amc.FDb.cppfunc.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FCppfunc* amc::cppfunc_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FCppfunc *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.cppfunc_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.cppfunc_lary[bsr][index];
     }
     return retval;
@@ -3322,12 +3328,12 @@ inline bool amc::rowid_EmptyQ() {
 // --- amc.FDb.rowid.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FRowid* amc::rowid_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FRowid *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.rowid_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.rowid_lary[bsr][index];
     }
     return retval;
@@ -3376,12 +3382,12 @@ inline bool amc::cascdel_EmptyQ() {
 // --- amc.FDb.cascdel.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FCascdel* amc::cascdel_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FCascdel *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.cascdel_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.cascdel_lary[bsr][index];
     }
     return retval;
@@ -3418,12 +3424,12 @@ inline bool amc::substr_EmptyQ() {
 // --- amc.FDb.substr.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FSubstr* amc::substr_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FSubstr *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.substr_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.substr_lary[bsr][index];
     }
     return retval;
@@ -3460,12 +3466,12 @@ inline bool amc::bitfld_EmptyQ() {
 // --- amc.FDb.bitfld.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FBitfld* amc::bitfld_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FBitfld *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.bitfld_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.bitfld_lary[bsr][index];
     }
     return retval;
@@ -3502,12 +3508,12 @@ inline bool amc::ssimfile_EmptyQ() {
 // --- amc.FDb.ssimfile.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FSsimfile* amc::ssimfile_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FSsimfile *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ssimfile_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ssimfile_lary[bsr][index];
     }
     return retval;
@@ -3556,12 +3562,12 @@ inline bool amc::pack_EmptyQ() {
 // --- amc.FDb.pack.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FPack* amc::pack_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FPack *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.pack_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.pack_lary[bsr][index];
     }
     return retval;
@@ -3622,12 +3628,12 @@ inline bool amc::ptrary_EmptyQ() {
 // --- amc.FDb.ptrary.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FPtrary* amc::ptrary_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FPtrary *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ptrary_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ptrary_lary[bsr][index];
     }
     return retval;
@@ -3700,12 +3706,12 @@ inline bool amc::enumstr_EmptyQ() {
 // --- amc.FDb.enumstr.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FEnumstr* amc::enumstr_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FEnumstr *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.enumstr_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.enumstr_lary[bsr][index];
     }
     return retval;
@@ -3742,12 +3748,12 @@ inline bool amc::enumstr_len_EmptyQ() {
 // --- amc.FDb.enumstr_len.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FEnumstrLen* amc::enumstr_len_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FEnumstrLen *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.enumstr_len_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.enumstr_len_lary[bsr][index];
     }
     return retval;
@@ -3838,12 +3844,12 @@ inline bool amc::fbitset_EmptyQ() {
 // --- amc.FDb.fbitset.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFbitset* amc::fbitset_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFbitset *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fbitset_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fbitset_lary[bsr][index];
     }
     return retval;
@@ -3892,12 +3898,12 @@ inline bool amc::fcleanup_EmptyQ() {
 // --- amc.FDb.fcleanup.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFcleanup* amc::fcleanup_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFcleanup *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fcleanup_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fcleanup_lary[bsr][index];
     }
     return retval;
@@ -3934,12 +3940,12 @@ inline bool amc::fdec_EmptyQ() {
 // --- amc.FDb.fdec.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFdec* amc::fdec_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFdec *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fdec_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fdec_lary[bsr][index];
     }
     return retval;
@@ -4000,12 +4006,12 @@ inline bool amc::fconst_EmptyQ() {
 // --- amc.FDb.fconst.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFconst* amc::fconst_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFconst *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fconst_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fconst_lary[bsr][index];
     }
     return retval;
@@ -4090,12 +4096,12 @@ inline bool amc::finput_EmptyQ() {
 // --- amc.FDb.finput.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFinput* amc::finput_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFinput *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.finput_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.finput_lary[bsr][index];
     }
     return retval;
@@ -4132,12 +4138,12 @@ inline bool amc::foutput_EmptyQ() {
 // --- amc.FDb.foutput.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFoutput* amc::foutput_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFoutput *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.foutput_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.foutput_lary[bsr][index];
     }
     return retval;
@@ -4174,12 +4180,12 @@ inline bool amc::fbuf_EmptyQ() {
 // --- amc.FDb.fbuf.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFbuf* amc::fbuf_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFbuf *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fbuf_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fbuf_lary[bsr][index];
     }
     return retval;
@@ -4228,12 +4234,12 @@ inline bool amc::chash_EmptyQ() {
 // --- amc.FDb.chash.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FChash* amc::chash_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FChash *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.chash_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.chash_lary[bsr][index];
     }
     return retval;
@@ -4282,12 +4288,12 @@ inline bool amc::ccmp_EmptyQ() {
 // --- amc.FDb.ccmp.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FCcmp* amc::ccmp_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FCcmp *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ccmp_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ccmp_lary[bsr][index];
     }
     return retval;
@@ -4336,12 +4342,12 @@ inline bool amc::fbigend_EmptyQ() {
 // --- amc.FDb.fbigend.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFbigend* amc::fbigend_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFbigend *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fbigend_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fbigend_lary[bsr][index];
     }
     return retval;
@@ -4406,12 +4412,12 @@ inline bool amc::cstr_EmptyQ() {
 // --- amc.FDb.cstr.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FCstr* amc::cstr_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FCstr *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.cstr_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.cstr_lary[bsr][index];
     }
     return retval;
@@ -4448,12 +4454,12 @@ inline bool amc::listtype_EmptyQ() {
 // --- amc.FDb.listtype.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FListtype* amc::listtype_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FListtype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.listtype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.listtype_lary[bsr][index];
     }
     return retval;
@@ -4502,12 +4508,12 @@ inline bool amc::fstep_EmptyQ() {
 // --- amc.FDb.fstep.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFstep* amc::fstep_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFstep *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fstep_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fstep_lary[bsr][index];
     }
     return retval;
@@ -4544,12 +4550,12 @@ inline bool amc::cextern_EmptyQ() {
 // --- amc.FDb.cextern.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FCextern* amc::cextern_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FCextern *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.cextern_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.cextern_lary[bsr][index];
     }
     return retval;
@@ -4586,12 +4592,12 @@ inline bool amc::fdelay_EmptyQ() {
 // --- amc.FDb.fdelay.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFdelay* amc::fdelay_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFdelay *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fdelay_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fdelay_lary[bsr][index];
     }
     return retval;
@@ -4628,12 +4634,12 @@ inline bool amc::disptrace_EmptyQ() {
 // --- amc.FDb.disptrace.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FDisptrace* amc::disptrace_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FDisptrace *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.disptrace_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.disptrace_lary[bsr][index];
     }
     return retval;
@@ -4682,12 +4688,12 @@ inline bool amc::tracefld_EmptyQ() {
 // --- amc.FDb.tracefld.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FTracefld* amc::tracefld_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FTracefld *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.tracefld_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.tracefld_lary[bsr][index];
     }
     return retval;
@@ -4724,12 +4730,12 @@ inline bool amc::tracerec_EmptyQ() {
 // --- amc.FDb.tracerec.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FTracerec* amc::tracerec_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FTracerec *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.tracerec_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.tracerec_lary[bsr][index];
     }
     return retval;
@@ -4766,12 +4772,12 @@ inline bool amc::dispsig_EmptyQ() {
 // --- amc.FDb.dispsig.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FDispsig* amc::dispsig_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FDispsig *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.dispsig_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.dispsig_lary[bsr][index];
     }
     return retval;
@@ -4892,12 +4898,12 @@ inline bool amc::target_EmptyQ() {
 // --- amc.FDb.target.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FTarget* amc::target_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FTarget *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.target_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.target_lary[bsr][index];
     }
     return retval;
@@ -4946,12 +4952,12 @@ inline bool amc::targdep_EmptyQ() {
 // --- amc.FDb.targdep.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FTargdep* amc::targdep_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FTargdep *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.targdep_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.targdep_lary[bsr][index];
     }
     return retval;
@@ -4988,12 +4994,12 @@ inline bool amc::dispctx_EmptyQ() {
 // --- amc.FDb.dispctx.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FDispctx* amc::dispctx_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FDispctx *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.dispctx_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.dispctx_lary[bsr][index];
     }
     return retval;
@@ -5030,12 +5036,12 @@ inline bool amc::pmaskfld_EmptyQ() {
 // --- amc.FDb.pmaskfld.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FPmaskfld* amc::pmaskfld_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FPmaskfld *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.pmaskfld_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.pmaskfld_lary[bsr][index];
     }
     return retval;
@@ -5072,12 +5078,12 @@ inline bool amc::fwddecl_EmptyQ() {
 // --- amc.FDb.fwddecl.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFwddecl* amc::fwddecl_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFwddecl *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fwddecl_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fwddecl_lary[bsr][index];
     }
     return retval;
@@ -5126,12 +5132,12 @@ inline bool amc::tfunc_EmptyQ() {
 // --- amc.FDb.tfunc.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FTfunc* amc::tfunc_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FTfunc *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.tfunc_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.tfunc_lary[bsr][index];
     }
     return retval;
@@ -5180,12 +5186,12 @@ inline bool amc::gen_EmptyQ() {
 // --- amc.FDb.gen.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FGen* amc::gen_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FGen *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.gen_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.gen_lary[bsr][index];
     }
     return retval;
@@ -5222,12 +5228,12 @@ inline bool amc::fregx_EmptyQ() {
 // --- amc.FDb.fregx.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFregx* amc::fregx_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFregx *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fregx_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fregx_lary[bsr][index];
     }
     return retval;
@@ -5332,12 +5338,12 @@ inline bool amc::fcmp_EmptyQ() {
 // --- amc.FDb.fcmp.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFcmp* amc::fcmp_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFcmp *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fcmp_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fcmp_lary[bsr][index];
     }
     return retval;
@@ -5374,12 +5380,12 @@ inline bool amc::fcast_EmptyQ() {
 // --- amc.FDb.fcast.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFcast* amc::fcast_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFcast *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fcast_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fcast_lary[bsr][index];
     }
     return retval;
@@ -5416,12 +5422,12 @@ inline bool amc::noxref_EmptyQ() {
 // --- amc.FDb.noxref.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FNoxref* amc::noxref_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FNoxref *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.noxref_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.noxref_lary[bsr][index];
     }
     return retval;
@@ -5458,12 +5464,12 @@ inline bool amc::nocascdel_EmptyQ() {
 // --- amc.FDb.nocascdel.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FNocascdel* amc::nocascdel_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FNocascdel *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.nocascdel_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.nocascdel_lary[bsr][index];
     }
     return retval;
@@ -5500,12 +5506,12 @@ inline bool amc::cafter_EmptyQ() {
 // --- amc.FDb.cafter.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FCafter* amc::cafter_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FCafter *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.cafter_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.cafter_lary[bsr][index];
     }
     return retval;
@@ -5542,12 +5548,12 @@ inline bool amc::csize_EmptyQ() {
 // --- amc.FDb.csize.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FCsize* amc::csize_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FCsize *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.csize_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.csize_lary[bsr][index];
     }
     return retval;
@@ -5584,12 +5590,12 @@ inline bool amc::nsx_EmptyQ() {
 // --- amc.FDb.nsx.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FNsx* amc::nsx_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FNsx *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.nsx_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.nsx_lary[bsr][index];
     }
     return retval;
@@ -5626,12 +5632,12 @@ inline bool amc::fcompact_EmptyQ() {
 // --- amc.FDb.fcompact.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFcompact* amc::fcompact_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFcompact *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fcompact_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fcompact_lary[bsr][index];
     }
     return retval;
@@ -5668,12 +5674,12 @@ inline bool amc::findrem_EmptyQ() {
 // --- amc.FDb.findrem.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFindrem* amc::findrem_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFindrem *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.findrem_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.findrem_lary[bsr][index];
     }
     return retval;
@@ -5710,12 +5716,12 @@ inline bool amc::tcursor_EmptyQ() {
 // --- amc.FDb.tcursor.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FTcursor* amc::tcursor_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FTcursor *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.tcursor_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.tcursor_lary[bsr][index];
     }
     return retval;
@@ -5752,12 +5758,12 @@ inline bool amc::fcurs_EmptyQ() {
 // --- amc.FDb.fcurs.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFcurs* amc::fcurs_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFcurs *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fcurs_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fcurs_lary[bsr][index];
     }
     return retval;
@@ -5794,12 +5800,12 @@ inline bool amc::cdflt_EmptyQ() {
 // --- amc.FDb.cdflt.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FCdflt* amc::cdflt_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FCdflt *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.cdflt_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.cdflt_lary[bsr][index];
     }
     return retval;
@@ -5836,12 +5842,12 @@ inline bool amc::argvtype_EmptyQ() {
 // --- amc.FDb.argvtype.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FArgvtype* amc::argvtype_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FArgvtype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.argvtype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.argvtype_lary[bsr][index];
     }
     return retval;
@@ -5878,12 +5884,12 @@ inline bool amc::fcmdline_EmptyQ() {
 // --- amc.FDb.fcmdline.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFcmdline* amc::fcmdline_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFcmdline *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fcmdline_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fcmdline_lary[bsr][index];
     }
     return retval;
@@ -5932,12 +5938,12 @@ inline bool amc::floadtuples_EmptyQ() {
 // --- amc.FDb.floadtuples.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFloadtuples* amc::floadtuples_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFloadtuples *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.floadtuples_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.floadtuples_lary[bsr][index];
     }
     return retval;
@@ -5974,12 +5980,12 @@ inline bool amc::fcmap_EmptyQ() {
 // --- amc.FDb.fcmap.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFcmap* amc::fcmap_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFcmap *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fcmap_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fcmap_lary[bsr][index];
     }
     return retval;
@@ -6060,12 +6066,12 @@ inline bool amc::nsproto_EmptyQ() {
 // --- amc.FDb.nsproto.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FNsproto* amc::nsproto_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FNsproto *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.nsproto_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.nsproto_lary[bsr][index];
     }
     return retval;
@@ -6102,12 +6108,12 @@ inline bool amc::nsdb_EmptyQ() {
 // --- amc.FDb.nsdb.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FNsdb* amc::nsdb_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FNsdb *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.nsdb_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.nsdb_lary[bsr][index];
     }
     return retval;
@@ -6212,12 +6218,12 @@ inline bool amc::fprefix_EmptyQ() {
 // --- amc.FDb.fprefix.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFprefix* amc::fprefix_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFprefix *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fprefix_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fprefix_lary[bsr][index];
     }
     return retval;
@@ -6266,12 +6272,12 @@ inline bool amc::ftrace_EmptyQ() {
 // --- amc.FDb.ftrace.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFtrace* amc::ftrace_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFtrace *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ftrace_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ftrace_lary[bsr][index];
     }
     return retval;
@@ -6308,12 +6314,12 @@ inline bool amc::fnoremove_EmptyQ() {
 // --- amc.FDb.fnoremove.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFnoremove* amc::fnoremove_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFnoremove *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fnoremove_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fnoremove_lary[bsr][index];
     }
     return retval;
@@ -6390,12 +6396,12 @@ inline bool amc::ctypelen_EmptyQ() {
 // --- amc.FDb.ctypelen.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FCtypelen* amc::ctypelen_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FCtypelen *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ctypelen_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ctypelen_lary[bsr][index];
     }
     return retval;
@@ -6512,12 +6518,12 @@ inline bool amc::fbase_EmptyQ() {
 // --- amc.FDb.fbase.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFbase* amc::fbase_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFbase *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fbase_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fbase_lary[bsr][index];
     }
     return retval;
@@ -6566,12 +6572,12 @@ inline bool amc::nossimfile_EmptyQ() {
 // --- amc.FDb.nossimfile.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FNossimfile* amc::nossimfile_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FNossimfile *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.nossimfile_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.nossimfile_lary[bsr][index];
     }
     return retval;
@@ -6608,12 +6614,12 @@ inline bool amc::gsymbol_EmptyQ() {
 // --- amc.FDb.gsymbol.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FGsymbol* amc::gsymbol_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FGsymbol *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.gsymbol_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.gsymbol_lary[bsr][index];
     }
     return retval;
@@ -6650,12 +6656,12 @@ inline bool amc::sortfld_EmptyQ() {
 // --- amc.FDb.sortfld.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FSortfld* amc::sortfld_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FSortfld *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.sortfld_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.sortfld_lary[bsr][index];
     }
     return retval;
@@ -6692,12 +6698,12 @@ inline bool amc::cget_EmptyQ() {
 // --- amc.FDb.cget.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FCget* amc::cget_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FCget *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.cget_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.cget_lary[bsr][index];
     }
     return retval;
@@ -6790,12 +6796,12 @@ inline bool amc::cdecl_EmptyQ() {
 // --- amc.FDb.cdecl.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FCdecl* amc::cdecl_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FCdecl *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.cdecl_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.cdecl_lary[bsr][index];
     }
     return retval;
@@ -6876,12 +6882,12 @@ inline bool amc::hook_EmptyQ() {
 // --- amc.FDb.hook.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FHook* amc::hook_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FHook *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.hook_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.hook_lary[bsr][index];
     }
     return retval;
@@ -6918,12 +6924,12 @@ inline bool amc::charset_EmptyQ() {
 // --- amc.FDb.charset.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FCharset* amc::charset_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FCharset *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.charset_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.charset_lary[bsr][index];
     }
     return retval;
@@ -6965,12 +6971,12 @@ inline bool amc::nsinclude_EmptyQ() {
 // --- amc.FDb.nsinclude.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FNsinclude* amc::nsinclude_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FNsinclude *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.nsinclude_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.nsinclude_lary[bsr][index];
     }
     return retval;
@@ -7007,12 +7013,12 @@ inline bool amc::ssimvolatile_EmptyQ() {
 // --- amc.FDb.ssimvolatile.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FSsimvolatile* amc::ssimvolatile_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FSsimvolatile *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ssimvolatile_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ssimvolatile_lary[bsr][index];
     }
     return retval;
@@ -7049,12 +7055,12 @@ inline bool amc::funique_EmptyQ() {
 // --- amc.FDb.funique.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FFunique* amc::funique_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FFunique *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.funique_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.funique_lary[bsr][index];
     }
     return retval;
@@ -7080,6 +7086,48 @@ inline amc::FFunique& amc::funique_qFind(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     return _db.funique_lary[bsr][index];
+}
+
+// --- amc.FDb.fuserinit.EmptyQ
+// Return true if index is empty
+inline bool amc::fuserinit_EmptyQ() {
+    return _db.fuserinit_n == 0;
+}
+
+// --- amc.FDb.fuserinit.Find
+// Look up row by row id. Return NULL if out of range
+inline amc::FFuserinit* amc::fuserinit_Find(u64 t) {
+    amc::FFuserinit *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.fuserinit_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.fuserinit_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- amc.FDb.fuserinit.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline amc::FFuserinit* amc::fuserinit_Last() {
+    return fuserinit_Find(u64(_db.fuserinit_n-1));
+}
+
+// --- amc.FDb.fuserinit.N
+// Return number of items in the pool
+inline i32 amc::fuserinit_N() {
+    return _db.fuserinit_n;
+}
+
+// --- amc.FDb.fuserinit.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline amc::FFuserinit& amc::fuserinit_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.fuserinit_lary[bsr][index];
 }
 
 // --- amc.FDb.fsort_curs.Reset
@@ -9941,6 +9989,31 @@ inline void amc::_db_funique_curs_Next(_db_funique_curs &curs) {
 inline amc::FFunique& amc::_db_funique_curs_Access(_db_funique_curs &curs) {
     return funique_qFind(u64(curs.index));
 }
+
+// --- amc.FDb.fuserinit_curs.Reset
+// cursor points to valid item
+inline void amc::_db_fuserinit_curs_Reset(_db_fuserinit_curs &curs, amc::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- amc.FDb.fuserinit_curs.ValidQ
+// cursor points to valid item
+inline bool amc::_db_fuserinit_curs_ValidQ(_db_fuserinit_curs &curs) {
+    return curs.index < _db.fuserinit_n;
+}
+
+// --- amc.FDb.fuserinit_curs.Next
+// proceed to next item
+inline void amc::_db_fuserinit_curs_Next(_db_fuserinit_curs &curs) {
+    curs.index++;
+}
+
+// --- amc.FDb.fuserinit_curs.Access
+// item access
+inline amc::FFuserinit& amc::_db_fuserinit_curs_Access(_db_fuserinit_curs &curs) {
+    return fuserinit_qFind(u64(curs.index));
+}
 inline amc::FDispatch::FDispatch() {
     amc::FDispatch_Init(*this);
 }
@@ -11510,6 +11583,26 @@ inline void amc::c_funique_Remove(amc::FField& field, amc::FFunique& row) {
     }
 }
 
+// --- amc.FField.c_fuserinit.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool amc::c_fuserinit_InsertMaybe(amc::FField& field, amc::FFuserinit& row) {
+    amc::FFuserinit* ptr = field.c_fuserinit;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        field.c_fuserinit = &row;
+    }
+    return retval;
+}
+
+// --- amc.FField.c_fuserinit.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void amc::c_fuserinit_Remove(amc::FField& field, amc::FFuserinit& row) {
+    amc::FFuserinit *ptr = field.c_fuserinit;
+    if (LIKELY(ptr == &row)) {
+        field.c_fuserinit = NULL;
+    }
+}
+
 // --- amc.FField.c_ffunc_curs.Reset
 inline void amc::field_c_ffunc_curs_Reset(field_c_ffunc_curs &curs, amc::FField &parent) {
     curs.elems = parent.c_ffunc_elems;
@@ -11890,6 +11983,13 @@ inline amc::FFunique::~FFunique() {
     amc::FFunique_Uninit(*this);
 }
 
+inline amc::FFuserinit::FFuserinit() {
+}
+
+inline amc::FFuserinit::~FFuserinit() {
+    amc::FFuserinit_Uninit(*this);
+}
+
 inline amc::FFwddecl::FFwddecl() {
     amc::FFwddecl_Init(*this);
 }
@@ -11976,12 +12076,12 @@ inline bool amc::seen_EmptyQ(amc::FGenXref& parent) {
 // --- amc.FGenXref.seen.Find
 // Look up row by row id. Return NULL if out of range
 inline amc::FGenXrefSeen* amc::seen_Find(amc::FGenXref& parent, u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     amc::FGenXrefSeen *retval = NULL;
     if (LIKELY(u64(t) < u64(parent.seen_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &parent.seen_lary[bsr][index];
     }
     return retval;
@@ -13967,6 +14067,7 @@ inline void amc::c_targdep_RemoveAll(amc::FTarget& target) {
 // --- amc.FTarget..Init
 // Set all fields to initial values.
 inline void amc::FTarget_Init(amc::FTarget& target) {
+    target.compat = algo::strptr("Linux-%.%-%");
     target.c_targdep_elems = NULL; // (amc.FTarget.c_targdep)
     target.c_targdep_n = 0; // (amc.FTarget.c_targdep)
     target.c_targdep_max = 0; // (amc.FTarget.c_targdep)

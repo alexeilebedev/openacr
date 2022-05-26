@@ -28,35 +28,37 @@
 // Supports parentheses, char ranges, ?, *, + (full list of macros below)
 // escaped char -> cranges
 
-static RegxMacro _macro[]  = {
-    { 'n' ,"\n"}
-    ,{'r' ,"\r"}
-    ,{'t' ,"\t"}
-    ,{'a' ,"\a"}
-    ,{'e' ,"\x1b"} // standard way to indicate \e
-    ,{'v' ,"\v"}
-    ,{'f' ,"\f"}
-    ,{'[' ,"[" }
-    ,{']' ,"]" }
-    ,{'\\',"\\"}
-    ,{'$' ,"$" }
-    ,{'.' ,"." }
-    ,{'|' ,"|" }
-    ,{'?' ,"?" }
-    ,{'*' ,"*" }
-    ,{'+' ,"+" }
-    ,{'(' ,"(" }
-    ,{')' ,")" }
-    ,{'{' ,"{" }
-    ,{'}' ,"}" }
-    ,{'d' ,"0-9" }
-    ,{'D' ,"^0-9" }
-    ,{'w' ,"a-zA-Z0-9_"}
-    ,{'W' ,"^a-zA-Z0-9_"}
-    ,{'s' ,"\n\r\t\v \f"}
-    ,{'S' ,"^\n\r\t\v \f"}
+#include "include/algo.h"
+
+static algo::RegxMacro _macro[]  = {
+                                    { 'n' ,"\n"}
+                                    ,{'r' ,"\r"}
+                                    ,{'t' ,"\t"}
+                                    ,{'a' ,"\a"}
+                                    ,{'e' ,"\x1b"} // standard way to indicate \e
+                                    ,{'v' ,"\v"}
+                                    ,{'f' ,"\f"}
+                                    ,{'[' ,"[" }
+                                    ,{']' ,"]" }
+                                    ,{'\\',"\\"}
+                                    ,{'$' ,"$" }
+                                    ,{'.' ,"." }
+                                    ,{'|' ,"|" }
+                                    ,{'?' ,"?" }
+                                    ,{'*' ,"*" }
+                                    ,{'+' ,"+" }
+                                    ,{'(' ,"(" }
+                                    ,{')' ,")" }
+                                    ,{'{' ,"{" }
+                                    ,{'}' ,"}" }
+                                    ,{'d' ,"0-9" }
+                                    ,{'D' ,"^0-9" }
+                                    ,{'w' ,"a-zA-Z0-9_"}
+                                    ,{'W' ,"^a-zA-Z0-9_"}
+                                    ,{'s' ,"\n\r\t\v \f"}
+                                    ,{'S' ,"^\n\r\t\v \f"}
 };
-static aryptr<RegxMacro> _g_macro(_macro,sizeof(_macro)/sizeof(_macro[0]));
+static algo::aryptr<algo::RegxMacro> _g_macro(_macro,sizeof(_macro)/sizeof(_macro[0]));
 
 static int RegxState_ReadStrptrChClass(algo_lib::RegxState &state, strptr str);
 
@@ -66,7 +68,7 @@ static int RegxState_ReadStrptrChClass(algo_lib::RegxState &state, strptr str);
 static bool TotalQ(algo_lib::RegxState &state) {
     bool ret=false;
     ind_beg(algo_lib::state_ch_class_curs,ch_class,state) {
-        if (ch_class == i32_Range(0,INT_MAX)) {
+        if (ch_class == algo::i32_Range(0,INT_MAX)) {
             ret=true;
             break;
         }
@@ -110,13 +112,13 @@ static void CalcAcceptsAllQ(algo_lib::Regx &regx) {
 // Parses escaped chars such as d->digit, w->word, s->space, $->$
 static bool RegxState_ReadChar(algo_lib::RegxState &state, char c) {
     bool retval = false;
-    ary_beg(RegxMacro,macro,_g_macro) {
+    ind_beg_aryptr(algo::RegxMacro,macro,_g_macro) {
         if (c == macro.c) {
             RegxState_ReadStrptrChClass(state, macro.crange);
             retval = true;
             break;
         }
-    }ary_end;
+    }ind_end_aryptr;
     return retval;
 }
 
@@ -145,7 +147,7 @@ static int RegxState_ReadStrptrChClass(algo_lib::RegxState &state, strptr str) {
             c2=u8(str[i+2])+1;
             i+=2;
         }
-        ch_class_Alloc(state) = i32_Range(c,u32_Max(c2,c+1));
+        ch_class_Alloc(state) = algo::i32_Range(c,u32_Max(c2,c+1));
     }
 
     //
@@ -158,7 +160,7 @@ static int RegxState_ReadStrptrChClass(algo_lib::RegxState &state, strptr str) {
     int prev = -1;
     int end = 0;
     frep_(idx,ch_class_N(state)) {
-        i32_Range R = ch_class_qFind(state, idx);
+        algo::i32_Range R = ch_class_qFind(state, idx);
         R.beg = i32_Max(R.beg, end);    // remove overlap
         int new_end = i32_Max(end, R.end);
         if (prev>=0 && R.beg == end) { // coalesce
@@ -183,15 +185,15 @@ static int RegxState_ReadStrptrChClass(algo_lib::RegxState &state, strptr str) {
         int k = 0;
         int L = 0;
         frep_(idx, ch_class_N(state)) {
-            i32_Range R = ch_class_qFind(state, idx);
+            algo::i32_Range R = ch_class_qFind(state, idx);
             if (L < R.beg) {
-                ch_class_qFind(state, k) = i32_Range(L,R.beg);
+                ch_class_qFind(state, k) = algo::i32_Range(L,R.beg);
                 k++;
             }
             L             = R.end;
         }
         if (L < INT_MAX) {
-            ch_class_Alloc(state) = i32_Range(L,INT_MAX);
+            ch_class_Alloc(state) = algo::i32_Range(L,INT_MAX);
             k++;
         }
         state.ch_class_n = k; // trim
@@ -255,7 +257,7 @@ static void Reduce(algo_lib::RegxParse &regxparse, algo_lib::Regx &regx, int pre
         reduce = false;
         if (prec >= algo_lib_RegxToken_type_expr && t1 == algo_lib_RegxToken_type_expr && t2 == algo_lib_RegxToken_type_expr) {
             AddOut(regx, A, B.in);// concat
-            TSwap(A.out,B.out);
+            algo::TSwap(A.out,B.out);
             reduce=true;
         }
         if (prec >= algo_lib_RegxToken_type_or && t1 == algo_lib_RegxToken_type_or && t2 == algo_lib_RegxToken_type_expr) {
@@ -295,7 +297,7 @@ static void ClearBubbles(algo_lib::Regx &regx) {
     bool changed;
     do {
         changed = false;
-        ary_beg(algo_lib::RegxState,S,state_Getary(regx)) {
+        ind_beg_aryptr(algo_lib::RegxState,S,state_Getary(regx)) {
             ary_ClearBitsAll(clear);
             ary_ClearBitsAll(set  );
             bitset_beg(u32,out,S.out) {
@@ -308,7 +310,7 @@ static void ClearBubbles(algo_lib::Regx &regx) {
             }bitset_end;
             ary_OrBits  (S.out, set);
             ary_ClearBits(S.out, clear);
-        }ary_end;
+        }ind_end_aryptr;
     } while (changed);
 }
 
@@ -383,7 +385,7 @@ static bool LeftBracket(algo_lib::RegxParse &regxparse, algo_lib::Regx &regx, in
         i += j;
     } else { // take '[' char verbatim -- ignore built up char class
         ch_class_RemoveAll(state);
-        ch_class_Alloc(state) = i32_Range(u8('['),u8('['+1));
+        ch_class_Alloc(state) = algo::i32_Range(u8('['),u8('['+1));
     }
     return true;
 }
@@ -457,7 +459,7 @@ static void RunRegxParse(algo_lib::RegxParse &regxparse) {
             {
                 Reduce(regxparse,regx,algo_lib_RegxToken_type_expr);
                 algo_lib::RegxState &state = NewState(regxparse);
-                ch_class_Alloc(state) = i32_Range(0,INT_MAX);
+                ch_class_Alloc(state) = algo::i32_Range(0,INT_MAX);
                 processed = true;
             }
             break;
@@ -470,7 +472,7 @@ static void RunRegxParse(algo_lib::RegxParse &regxparse) {
             { // take char as-is
                 Reduce(regxparse,regx,algo_lib_RegxToken_type_expr);
                 algo_lib::RegxState &state = NewState(regxparse);
-                ch_class_Alloc(state) = i32_Range(u8(c),u8(c+1));
+                ch_class_Alloc(state) = algo::i32_Range(u8(c),u8(c+1));
                 processed = true;
             }
             break;
@@ -479,7 +481,7 @@ static void RunRegxParse(algo_lib::RegxParse &regxparse) {
             regx.parseerror = true;// non-fatal
             Reduce(regxparse,regx,algo_lib_RegxToken_type_expr);
             algo_lib::RegxState &state = NewState(regxparse);
-            ch_class_Alloc(state) = i32_Range(u8(c),u8(c+1));
+            ch_class_Alloc(state) = algo::i32_Range(u8(c),u8(c+1));
         }
     }
     Reduce(regxparse,regx,algo_lib_RegxToken_type_or);
@@ -489,7 +491,7 @@ static void RunRegxParse(algo_lib::RegxParse &regxparse) {
         ary_AllocBit(regx.next_front, state_N(regx));
         ary_AllocBit(regx.start     , state_N(regx));
         int acc = state_N(regx);
-        ch_class_Alloc(state_Alloc(regx)) = i32_Range(0,INT_MAX);
+        ch_class_Alloc(state_Alloc(regx)) = algo::i32_Range(0,INT_MAX);
         AddOut(regx, regx_expr, acc);
         int start = regx_expr.in;
         ClearBubbles(regx);
@@ -518,7 +520,7 @@ void algo_lib::Regx_Print(algo_lib::Regx &regx, cstring &lhs) {
 static bool ScanString(algo_lib::Regx &regx, const strptr &text) {
     ary_ClearBitsAll(regx.next_front);
     ary_Setary(regx.front, regx.start);
-    ary_beg(char,c,text) {// scan the string
+    ind_beg_aryptr(char,c,text) {// scan the string
         u32 match = 0;
         bitset_beg(u32,idx,regx.front) {
             algo_lib::RegxState &state  = state_qFind(regx, idx);
@@ -526,21 +528,21 @@ static bool ScanString(algo_lib::Regx &regx, const strptr &text) {
                 return true;
             }
             // test if char matches char class
-            ary_beg(i32_Range,r,ch_class_Getary(state)) {
+            ind_beg_aryptr(algo::i32_Range,r,ch_class_Getary(state)) {
                 if (u8(c) >= r.beg && u8(c) < r.end) {
                     match++;
                     ary_OrBits(regx.next_front, state.out);
                     break;
                 }
-            }ary_end;
+            }ind_end_aryptr;
         }bitset_end;
         ary_ClearBitsAll(regx.front);
         // is swapping arrays like this legal?
-        TSwap(regx.front,regx.next_front);
+        algo::TSwap(regx.front,regx.next_front);
         if (!match) {
             break;
         }
-    }ary_end;
+    }ind_end_aryptr;
     return ary_qGetBit(regx.front,regx.accept);
 }
 
@@ -645,6 +647,7 @@ void algo_lib::Regx_ReadSql(algo_lib::Regx &regx, strptr input, bool full) {
             case '.' : regx_str<<'\\'<<input[i]; break; // . -> \.
             case '*' : regx_str<<'\\'<<input[i]; break; // * -> \*
             case '?' : regx_str<<'\\'<<input[i]; break; // ? -> \?
+            case '+' : regx_str<<'\\'<<input[i]; break; // + -> \+
             default  : regx_str<<input[i]      ; break; // $X -> $X
             }
         }

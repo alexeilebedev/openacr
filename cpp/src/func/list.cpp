@@ -43,9 +43,9 @@ static tempstr FirstLineWithoutNs(src_func::FFunc &func, strptr ns) {
     tempstr nsstr = tempstr() << ns << "::";
     int paren=Find(strptr(proto),'(');
     strptr left=FirstN(strptr(proto),paren);
-    i32_Range r=substr_FindLast(left,nsstr);
+    algo::i32_Range r=substr_FindLast(left,nsstr);
     return tempstr() << FirstN(strptr(proto),r.beg)
-                     << Trimmed(RestFrom(strptr(proto),r.end));
+                     << algo::Trimmed(RestFrom(strptr(proto),r.end));
 }
 
 // -----------------------------------------------------------------------------

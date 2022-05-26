@@ -82,7 +82,7 @@ static void SuggestAlternatives(acr::FCtype &ctype, acr::FField &field, acr::FCh
     tempstr help;
     help << "Type               "<<field.arg << eol;
     help << "Valid values       ";
-    ListSep ls(", ");
+    algo::ListSep ls(", ");
     int idx = 0;
     ind_beg(acr::ctype_zd_trec_curs,  rec, *field.p_arg) {
         if (idx++ > 100) {

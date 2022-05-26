@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# fetch, pruning remote tracking branches
+# (this allows removing branches which have been meged to HEAD
+# but not to the remote tracking branch -- useless in our case)
+git fetch origin -P -p
+git checkout -B master origin/master
+# try to rebase all branches onto origin/master
+for X in $(git branch | grep -v ^*); do
+    git checkout  $X;
+    (
+        git rebase origin/master
+        git rebase --abort
+        git reset --hard
+        git checkout master
+    ) >/dev/null 2>/dev/null
+done
+# delete merged branches
+git-clean-branches

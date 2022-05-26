@@ -12,6 +12,8 @@
 #include "include/gen/strconv_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
@@ -20,6 +22,7 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 strconv::FDb    strconv::_db;     // dependency found via dev.targdep
 
@@ -31,6 +34,7 @@ const char *strconv_help =
 "    -tocamelcase           Convert string to camel case. default: false\n"
 "    -tolowerunder          Convert string to lower-under. default: false\n"
 "    -in            string  Input directory or filename, - for stdin. default: \"data\"\n"
+"    -pathcomp      string  Extract path component from string\n"
 "    -verbose               Enable verbose mode\n"
 "    -debug                 Enable debug mode\n"
 "    -version               Show version information\n"
@@ -44,6 +48,7 @@ const char *strconv_syntax =
 " -tocamelcase:flag\n"
 " -tolowerunder:flag\n"
 " -in:string=\"data\"\n"
+" -pathcomp:string=\n"
 ;
 } // namespace strconv
 namespace strconv {
@@ -78,7 +83,7 @@ void strconv::MainArgs(int argc, char **argv) {
 // --- strconv.FDb._db.MainLoop
 // Main loop.
 void strconv::MainLoop() {
-    SchedTime time(get_cycles());
+    algo::SchedTime time(algo::get_cycles());
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
@@ -205,7 +210,7 @@ bool strconv::value_SetStrptrMaybe(strconv::FieldId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,strconv_FieldId_value); ret = true; break;
                 }
@@ -252,6 +257,7 @@ void strconv::FieldId_Print(strconv::FieldId & row, algo::cstring &str) {
 // --- strconv...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         strconv::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -268,10 +274,13 @@ int main(int argc, char **argv) {
     try {
         strconv::FDb_Uninit();
         algo_lib::FDb_Uninit();
-    } catch(algo_lib::ErrorX &x) {
+        lib_json::FDb_Uninit();
+    } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;
     }
+    // only the lower 1 byte makes it to the outside world
+    (void)i32_UpdateMin(algo_lib::_db.exit_code,255);
     return algo_lib::_db.exit_code;
 }
 

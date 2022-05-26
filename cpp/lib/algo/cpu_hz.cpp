@@ -24,6 +24,8 @@
 // Recent Changes: alexei.lebedev
 //
 
+#include "include/algo.h"
+
 #if defined(__MACH__) || __FreeBSD__>0
 #include <sys/sysctl.h>
 #endif
@@ -32,8 +34,8 @@
 
 static double GetCpuHzSysdev(void) {
     i32 freq_khz = 0;
-    tempstr value = FileToString("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq", FileFlags());
-    StringIter iter(value);
+    tempstr value = algo::FileToString("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq", algo::FileFlags());
+    algo::StringIter iter(value);
     (void)TryParseI32(iter, freq_khz);
     return double(freq_khz)*1e3;
 }
@@ -74,6 +76,9 @@ static void CheckConstantTsc(strptr cpuinfo) {
 // -----------------------------------------------------------------------------
 
 void algo_lib::InitCpuHz() {
+    (void)&CheckConstantTsc;
+    (void)&GetCpuHzCpuinfo;
+    (void)&GetCpuHzSysdev;
     double hz = 0;
 #if __FreeBSD__>0
     uint64_t freq = 0;
@@ -81,30 +86,46 @@ void algo_lib::InitCpuHz() {
     if (sysctlbyname("machdep.tsc_freq", &freq, &size, NULL, 0) == 0) {
         hz = freq;
     }
-    (void)CheckConstantTsc;
 #elif defined(__MACH__)
     uint64_t freq = 0;
     size_t size = sizeof(freq);
     if (sysctlbyname("hw.cpufrequency", &freq, &size, NULL, 0) == 0) {
         hz = freq;
     }
-    (void)CheckConstantTsc;
+#elif defined(__CYGWIN__)
+    // sampling /proc/cpuinfo on a windows machine under cygwin
+    // can take a unnaturally long time, such as 13 seconds.
+    // stash a copy of cpuinfo, which cannot easily change, in /etc
+    if (!algo::FileQ("/etc/cpuinfo")) {
+        algo::StringToFile(algo::FileToString("/proc/cpuinfo", algo::FileFlags()), "/etc/cpuinfo");
+    }
+    hz = GetCpuHzCpuinfo(algo::FileToString("/etc/cpuinfo", algo::FileFlags()));
+#elif defined(WIN32)
+    HKEY hkey=NULL;
+    if (RegOpenKey(HKEY_LOCAL_MACHINE,"HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0",&hkey) == ERROR_SUCCESS) {
+        DWORD buf;
+        ULONG type;
+        DWORD size=sizeof(buf);
+        if (RegQueryValueEx(hkey,"~MHz",0,&type,(u8*)&buf,&size) == ERROR_SUCCESS) {
+            hz = buf*u64(1000000);
+        }
+        RegCloseKey(hkey);
+    }
 #else
-    tempstr cpuinfo(FileToString("/proc/cpuinfo", FileFlags()));
+    tempstr cpuinfo(FileToString("/proc/cpuinfo", algo::FileFlags()));
     hz = GetCpuHzSysdev();
     if (hz == 0) {
         hz = GetCpuHzCpuinfo(cpuinfo);
     }
-    CheckConstantTsc(cpuinfo);
+#endif
     if (!(hz>10000000 && hz<10000000000ULL)) {
         FatalErrorExit(Zeroterm(tempstr()<<"algo_lib.bad_hz"
                                 <<Keyval("hz",hz)));
     }
-#endif
     algo_lib::_db.hz = hz;//double
     algo_lib::_db.cpu_hz = hz;//int
     algo_lib::_db.clocks_to_ms = 1000.0 / algo_lib::_db.hz;
     algo_lib::_db.clocks_to_ns = 1000000000.0 / algo_lib::_db.hz;
-    algo_lib::_db.clock.value  = get_cycles();
+    algo_lib::_db.clock.value  = algo::get_cycles();
     algo_lib::_db.start_clock  = algo_lib::_db.clock;
 }

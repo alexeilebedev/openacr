@@ -43,7 +43,7 @@ void acr::Evalattr_Step(acr::FEvalattr &evalattr, algo::Tuple &tuple) {
     // evaluate substring expression
     if (evalattr.attr) {
         strptr str = evalattr.attr->value;
-        i32_Range R;
+        algo::i32_Range R;
         R.beg = 0;
         R.end = elems_N(str);
         for (int i = 0; i <= elems_N(substr_expr)-3; i += 3) {
@@ -85,7 +85,7 @@ void acr::Evalattr_Step(acr::FEvalattr &evalattr, algo::Tuple &tuple) {
     // and for bools (false=>N, true=>Y)
     if (!evalattr.attr && evalattr.pick_dflt) {
         if (ch_N(evalattr.field->dflt.value) > 0) {
-            StringIter iter(evalattr.field->dflt.value);
+            algo::StringIter iter(evalattr.field->dflt.value);
             cstring_ReadCmdarg(evalattr.value, iter, true);
         } else if (evalattr.field->p_arg && evalattr.field->p_arg->c_cdflt) {
             evalattr.value = evalattr.field->p_arg->c_cdflt->dflt.value;

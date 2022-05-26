@@ -156,9 +156,11 @@ inline dmmeta::Cdflt::Cdflt() {
 }
 
 inline dmmeta::Cextern::Cextern(const algo::strptr&            in_ctype
-        ,bool                           in_initmemset)
+        ,bool                           in_initmemset
+        ,bool                           in_isstruct)
     : ctype(in_ctype)
     , initmemset(in_initmemset)
+    , isstruct(in_isstruct)
 {
 }
 inline dmmeta::Cextern::Cextern() {
@@ -170,6 +172,7 @@ inline dmmeta::Cextern::Cextern() {
 // Set all fields to initial values.
 inline void dmmeta::Cextern_Init(dmmeta::Cextern& parent) {
     parent.initmemset = bool(false);
+    parent.isstruct = bool(false);
 }
 inline dmmeta::Cfmt::Cfmt(const algo::strptr&            in_cfmt
         ,const algo::strptr&            in_printfmt
@@ -677,6 +680,9 @@ inline dmmeta::Func::Func() {
 inline dmmeta::Funique::Funique() {
 }
 
+inline dmmeta::Fuserinit::Fuserinit() {
+}
+
 inline dmmeta::Fwddecl::Fwddecl() {
 }
 
@@ -852,11 +858,19 @@ inline dmmeta::Nsinclude::Nsinclude() {
 inline void dmmeta::Nsinclude_Init(dmmeta::Nsinclude& parent) {
     parent.sys = bool(false);
 }
+inline dmmeta::Nsproto::Nsproto(const algo::strptr&            in_ns
+        ,const algo::Comment&           in_comment)
+    : ns(in_ns)
+    , comment(in_comment)
+{
+}
 inline dmmeta::Nsproto::Nsproto() {
 }
 
-inline dmmeta::Nstype::Nstype(const algo::strptr&            in_nstype)
+inline dmmeta::Nstype::Nstype(const algo::strptr&            in_nstype
+        ,const algo::Comment&           in_comment)
     : nstype(in_nstype)
+    , comment(in_comment)
 {
 }
 inline dmmeta::Nstype::Nstype() {
@@ -1294,6 +1308,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Funiqu
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Fuserinit &row) {// cfmt:dmmeta.Fuserinit.String
+    dmmeta::Fuserinit_Print(const_cast<dmmeta::Fuserinit&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Gstatic &row) {// cfmt:dmmeta.Gstatic.String
     dmmeta::Gstatic_Print(const_cast<dmmeta::Gstatic&>(row), str);
     return str;
@@ -1331,6 +1350,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Ns &ro
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Nsinclude &row) {// cfmt:dmmeta.Nsinclude.String
     dmmeta::Nsinclude_Print(const_cast<dmmeta::Nsinclude&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Nsproto &row) {// cfmt:dmmeta.Nsproto.String
+    dmmeta::Nsproto_Print(const_cast<dmmeta::Nsproto&>(row), str);
     return str;
 }
 

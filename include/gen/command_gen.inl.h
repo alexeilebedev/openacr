@@ -289,6 +289,35 @@ inline void command::atf_norm_proc_Init(command::atf_norm_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
+inline command::atf_nrun::atf_nrun() {
+    command::atf_nrun_Init(*this);
+}
+
+
+// --- command.atf_nrun..Init
+// Set all fields to initial values.
+inline void command::atf_nrun_Init(command::atf_nrun& parent) {
+    parent.in = algo::strptr("data");
+    parent.maxjobs = i32(2);
+    parent.ncmd = i32(6);
+}
+inline command::atf_nrun_proc::atf_nrun_proc() {
+    command::atf_nrun_proc_Init(*this);
+}
+
+inline command::atf_nrun_proc::~atf_nrun_proc() {
+    command::atf_nrun_proc_Uninit(*this);
+}
+
+
+// --- command.atf_nrun_proc..Init
+// Set all fields to initial values.
+inline void command::atf_nrun_proc_Init(command::atf_nrun_proc& parent) {
+    parent.path = algo::strptr("bin/atf_nrun");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
 inline command::atf_unit::atf_unit() {
     command::atf_unit_Init(*this);
 }
@@ -319,6 +348,34 @@ inline command::bash::bash() {
 // Set all fields to initial values.
 inline void command::bash_Init(command::bash& parent) {
     parent.c = algo::strptr("");
+}
+inline command::bash2html::bash2html() {
+    command::bash2html_Init(*this);
+}
+
+
+// --- command.bash2html..Init
+// Set all fields to initial values.
+inline void command::bash2html_Init(command::bash2html& parent) {
+    parent.in = algo::strptr("data");
+    parent.test = bool(false);
+}
+inline command::bash2html_proc::bash2html_proc() {
+    command::bash2html_proc_Init(*this);
+}
+
+inline command::bash2html_proc::~bash2html_proc() {
+    command::bash2html_proc_Uninit(*this);
+}
+
+
+// --- command.bash2html_proc..Init
+// Set all fields to initial values.
+inline void command::bash2html_proc_Init(command::bash2html_proc& parent) {
+    parent.path = algo::strptr("bin/bash2html");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
 }
 inline command::bash_proc::bash_proc() {
     command::bash_proc_Init(*this);
@@ -410,6 +467,48 @@ inline command::mysql2ssim_proc::~mysql2ssim_proc() {
 // Set all fields to initial values.
 inline void command::mysql2ssim_proc_Init(command::mysql2ssim_proc& parent) {
     parent.path = algo::strptr("bin/mysql2ssim");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
+inline command::ntup::ntup() {
+    command::ntup_Init(*this);
+}
+
+inline command::ntup_proc::ntup_proc() {
+    command::ntup_proc_Init(*this);
+}
+
+inline command::ntup_proc::~ntup_proc() {
+    command::ntup_proc_Uninit(*this);
+}
+
+
+// --- command.ntup_proc..Init
+// Set all fields to initial values.
+inline void command::ntup_proc_Init(command::ntup_proc& parent) {
+    parent.path = algo::strptr("bin/ntup");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
+inline command::orgfile::orgfile() {
+    command::orgfile_Init(*this);
+}
+
+inline command::orgfile_proc::orgfile_proc() {
+    command::orgfile_proc_Init(*this);
+}
+
+inline command::orgfile_proc::~orgfile_proc() {
+    command::orgfile_proc_Uninit(*this);
+}
+
+
+// --- command.orgfile_proc..Init
+// Set all fields to initial values.
+inline void command::orgfile_proc_Init(command::orgfile_proc& parent) {
+    parent.path = algo::strptr("bin/orgfile");
     parent.pid = pid_t(0);
     parent.timeout = i32(0);
     parent.status = i32(0);
@@ -537,6 +636,7 @@ inline void command::strconv_Init(command::strconv& parent) {
     parent.tocamelcase = bool(false);
     parent.tolowerunder = bool(false);
     parent.in = algo::strptr("data");
+    parent.pathcomp = algo::strptr("");
 }
 inline command::strconv_proc::strconv_proc() {
     command::strconv_proc_Init(*this);

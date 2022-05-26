@@ -1,0 +1,7 @@
+#!/usr/bin/env perl
+$name=shift;
+system("echo dev.readme readme:txt/$name.md inl:Y | acr -merge -write");
+system("echo \"## $name\" > txt/$name.md");
+system("git add txt/$name.md");
+system("update-gitfile");
+system("make readme");

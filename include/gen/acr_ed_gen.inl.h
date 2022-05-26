@@ -165,12 +165,12 @@ inline bool acr_ed::ns_EmptyQ() {
 // --- acr_ed.FDb.ns.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_ed::FNs* acr_ed::ns_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_ed::FNs *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ns_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ns_lary[bsr][index];
     }
     return retval;
@@ -219,12 +219,12 @@ inline bool acr_ed::field_EmptyQ() {
 // --- acr_ed.FDb.field.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_ed::FField* acr_ed::field_Find(u32 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_ed::FField *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.field_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.field_lary[bsr][index];
     }
     return retval;
@@ -273,12 +273,12 @@ inline bool acr_ed::ctype_EmptyQ() {
 // --- acr_ed.FDb.ctype.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_ed::FCtype* acr_ed::ctype_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_ed::FCtype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ctype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ctype_lary[bsr][index];
     }
     return retval;
@@ -327,12 +327,12 @@ inline bool acr_ed::ssimfile_EmptyQ() {
 // --- acr_ed.FDb.ssimfile.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_ed::FSsimfile* acr_ed::ssimfile_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_ed::FSsimfile *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ssimfile_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ssimfile_lary[bsr][index];
     }
     return retval;
@@ -381,12 +381,12 @@ inline bool acr_ed::cstr_EmptyQ() {
 // --- acr_ed.FDb.cstr.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_ed::FCstr* acr_ed::cstr_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_ed::FCstr *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.cstr_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.cstr_lary[bsr][index];
     }
     return retval;
@@ -490,12 +490,12 @@ inline bool acr_ed::listtype_EmptyQ() {
 // --- acr_ed.FDb.listtype.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_ed::FListtype* acr_ed::listtype_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_ed::FListtype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.listtype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.listtype_lary[bsr][index];
     }
     return retval;
@@ -544,12 +544,12 @@ inline bool acr_ed::fprefix_EmptyQ() {
 // --- acr_ed.FDb.fprefix.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_ed::FFprefix* acr_ed::fprefix_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_ed::FFprefix *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fprefix_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.fprefix_lary[bsr][index];
     }
     return retval;
@@ -598,12 +598,12 @@ inline bool acr_ed::target_EmptyQ() {
 // --- acr_ed.FDb.target.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_ed::FTarget* acr_ed::target_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_ed::FTarget *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.target_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.target_lary[bsr][index];
     }
     return retval;
@@ -652,12 +652,12 @@ inline bool acr_ed::targsrc_EmptyQ() {
 // --- acr_ed.FDb.targsrc.Find
 // Look up row by row id. Return NULL if out of range
 inline acr_ed::FTargsrc* acr_ed::targsrc_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     acr_ed::FTargsrc *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.targsrc_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.targsrc_lary[bsr][index];
     }
     return retval;
@@ -683,6 +683,48 @@ inline acr_ed::FTargsrc& acr_ed::targsrc_qFind(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     return _db.targsrc_lary[bsr][index];
+}
+
+// --- acr_ed.FDb.sandbox.EmptyQ
+// Return true if index is empty
+inline bool acr_ed::sandbox_EmptyQ() {
+    return _db.sandbox_n == 0;
+}
+
+// --- acr_ed.FDb.sandbox.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_ed::FSandbox* acr_ed::sandbox_Find(u64 t) {
+    acr_ed::FSandbox *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.sandbox_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.sandbox_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_ed.FDb.sandbox.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_ed::FSandbox* acr_ed::sandbox_Last() {
+    return sandbox_Find(u64(_db.sandbox_n-1));
+}
+
+// --- acr_ed.FDb.sandbox.N
+// Return number of items in the pool
+inline i32 acr_ed::sandbox_N() {
+    return _db.sandbox_n;
+}
+
+// --- acr_ed.FDb.sandbox.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_ed::FSandbox& acr_ed::sandbox_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.sandbox_lary[bsr][index];
 }
 
 // --- acr_ed.FDb.ns_curs.Reset
@@ -934,6 +976,31 @@ inline void acr_ed::_db_targsrc_curs_Next(_db_targsrc_curs &curs) {
 inline acr_ed::FTargsrc& acr_ed::_db_targsrc_curs_Access(_db_targsrc_curs &curs) {
     return targsrc_qFind(u64(curs.index));
 }
+
+// --- acr_ed.FDb.sandbox_curs.Reset
+// cursor points to valid item
+inline void acr_ed::_db_sandbox_curs_Reset(_db_sandbox_curs &curs, acr_ed::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_ed.FDb.sandbox_curs.ValidQ
+// cursor points to valid item
+inline bool acr_ed::_db_sandbox_curs_ValidQ(_db_sandbox_curs &curs) {
+    return curs.index < _db.sandbox_n;
+}
+
+// --- acr_ed.FDb.sandbox_curs.Next
+// proceed to next item
+inline void acr_ed::_db_sandbox_curs_Next(_db_sandbox_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_ed.FDb.sandbox_curs.Access
+// item access
+inline acr_ed::FSandbox& acr_ed::_db_sandbox_curs_Access(_db_sandbox_curs &curs) {
+    return sandbox_qFind(u64(curs.index));
+}
 inline acr_ed::FField::FField() {
     acr_ed::FField_Init(*this);
 }
@@ -987,6 +1054,9 @@ inline acr_ed::FNs::~FNs() {
 inline void acr_ed::FNs_Init(acr_ed::FNs& ns) {
     ns.ind_ns_next = (acr_ed::FNs*)-1; // (acr_ed.FDb.ind_ns) not-in-hash
 }
+inline acr_ed::FSandbox::FSandbox() {
+}
+
 inline acr_ed::FSsimfile::FSsimfile() {
     acr_ed::FSsimfile_Init(*this);
 }
@@ -1014,6 +1084,7 @@ inline acr_ed::FTarget::~FTarget() {
 // --- acr_ed.FTarget..Init
 // Set all fields to initial values.
 inline void acr_ed::FTarget_Init(acr_ed::FTarget& target) {
+    target.compat = algo::strptr("Linux-%.%-%");
     target.score = u32(0);
     target.ind_target_next = (acr_ed::FTarget*)-1; // (acr_ed.FDb.ind_target) not-in-hash
 }

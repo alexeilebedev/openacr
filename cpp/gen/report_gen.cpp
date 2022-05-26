@@ -42,9 +42,8 @@ const char* report::value_ToCstr(const report::FieldId& parent) {
         case report_FieldId_n_xref         : ret = "n_xref";  break;
         case report_FieldId_n_filemod      : ret = "n_filemod";  break;
         case report_FieldId_n_test_total   : ret = "n_test_total";  break;
+        case report_FieldId_success        : ret = "success";  break;
         case report_FieldId_n_test_run     : ret = "n_test_run";  break;
-        case report_FieldId_n_test_step    : ret = "n_test_step";  break;
-        case report_FieldId_n_cmp          : ret = "n_cmp";  break;
         case report_FieldId_n_line         : ret = "n_line";  break;
         case report_FieldId_n_static       : ret = "n_static";  break;
         case report_FieldId_n_inline       : ret = "n_inline";  break;
@@ -76,7 +75,7 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 4: {
-            switch (u64(ReadLE32(rhs.elems))) {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('t','i','m','e'): {
                     value_SetEnum(parent,report_FieldId_time); ret = true; break;
                 }
@@ -84,10 +83,7 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
-                case LE_STR5('n','_','c','m','p'): {
-                    value_SetEnum(parent,report_FieldId_n_cmp); ret = true; break;
-                }
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('n','_','e','r','r'): {
                     value_SetEnum(parent,report_FieldId_n_err); ret = true; break;
                 }
@@ -98,7 +94,7 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 6: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('e','r','r','o','r','s'): {
                     value_SetEnum(parent,report_FieldId_errors); ret = true; break;
                 }
@@ -118,7 +114,7 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 7: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
                 case LE_STR7('c','o','m','m','e','n','t'): {
                     value_SetEnum(parent,report_FieldId_comment); ret = true; break;
                 }
@@ -128,11 +124,14 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('r','e','c','o','r','d','s'): {
                     value_SetEnum(parent,report_FieldId_records); ret = true; break;
                 }
+                case LE_STR7('s','u','c','c','e','s','s'): {
+                    value_SetEnum(parent,report_FieldId_success); ret = true; break;
+                }
             }
             break;
         }
         case 8: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('n','_','d','e','l','e','t','e'): {
                     value_SetEnum(parent,report_FieldId_n_delete); ret = true; break;
                 }
@@ -158,7 +157,7 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 9: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('n','_','b','a','d','d','e','c'): {
                     if (memcmp(rhs.elems+8,"l",1)==0) { value_SetEnum(parent,report_FieldId_n_baddecl); ret = true; break; }
                     break;
@@ -183,7 +182,7 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 10: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('n','_','f','i','l','e','_','m'): {
                     if (memcmp(rhs.elems+8,"od",2)==0) { value_SetEnum(parent,report_FieldId_n_file_mod); ret = true; break; }
                     break;
@@ -195,17 +194,8 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
             }
             break;
         }
-        case 11: {
-            switch (ReadLE64(rhs.elems)) {
-                case LE_STR8('n','_','t','e','s','t','_','s'): {
-                    if (memcmp(rhs.elems+8,"tep",3)==0) { value_SetEnum(parent,report_FieldId_n_test_step); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
         case 12: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('n','_','t','e','s','t','_','t'): {
                     if (memcmp(rhs.elems+8,"otal",4)==0) { value_SetEnum(parent,report_FieldId_n_test_total); ret = true; break; }
                     break;
@@ -214,7 +204,7 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 13: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('n','_','m','y','s','t','e','r'): {
                     if (memcmp(rhs.elems+8,"yfunc",5)==0) { value_SetEnum(parent,report_FieldId_n_mysteryfunc); ret = true; break; }
                     break;
@@ -475,9 +465,8 @@ bool report::atf_unit_ReadFieldMaybe(report::atf_unit &parent, algo::strptr fiel
     bool retval = true; // default is no error
     switch(field_id) {
         case report_FieldId_n_test_total: retval = u32_ReadStrptrMaybe(parent.n_test_total, strval); break;
+        case report_FieldId_success: retval = bool_ReadStrptrMaybe(parent.success, strval); break;
         case report_FieldId_n_test_run: retval = u64_ReadStrptrMaybe(parent.n_test_run, strval); break;
-        case report_FieldId_n_test_step: retval = u64_ReadStrptrMaybe(parent.n_test_step, strval); break;
-        case report_FieldId_n_cmp: retval = u64_ReadStrptrMaybe(parent.n_cmp, strval); break;
         case report_FieldId_n_err: retval = u64_ReadStrptrMaybe(parent.n_err, strval); break;
         default: break;
     }
@@ -508,14 +497,11 @@ void report::atf_unit_Print(report::atf_unit & row, algo::cstring &str) {
     u32_Print(row.n_test_total, temp);
     PrintAttrSpaceReset(str,"n_test_total", temp);
 
+    bool_Print(row.success, temp);
+    PrintAttrSpaceReset(str,"success", temp);
+
     u64_Print(row.n_test_run, temp);
     PrintAttrSpaceReset(str,"n_test_run", temp);
-
-    u64_Print(row.n_test_step, temp);
-    PrintAttrSpaceReset(str,"n_test_step", temp);
-
-    u64_Print(row.n_cmp, temp);
-    PrintAttrSpaceReset(str,"n_cmp", temp);
 
     u64_Print(row.n_err, temp);
     PrintAttrSpaceReset(str,"n_err", temp);
@@ -611,11 +597,10 @@ inline static void report::SizeCheck() {
     algo_assert(_offset_of(report::amc,n_filemod) == 20);
     algo_assert(sizeof(report::amc) == 24);
     algo_assert(_offset_of(report::atf_unit,n_test_total) == 0);
+    algo_assert(_offset_of(report::atf_unit,success) == 4);
     algo_assert(_offset_of(report::atf_unit,n_test_run) == 8);
-    algo_assert(_offset_of(report::atf_unit,n_test_step) == 16);
-    algo_assert(_offset_of(report::atf_unit,n_cmp) == 24);
-    algo_assert(_offset_of(report::atf_unit,n_err) == 32);
-    algo_assert(sizeof(report::atf_unit) == 40);
+    algo_assert(_offset_of(report::atf_unit,n_err) == 16);
+    algo_assert(sizeof(report::atf_unit) == 24);
     algo_assert(_offset_of(report::src_func,n_func) == 0);
     algo_assert(_offset_of(report::src_func,n_line) == 4);
     algo_assert(_offset_of(report::src_func,n_static) == 8);

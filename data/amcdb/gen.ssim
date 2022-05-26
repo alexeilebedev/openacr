@@ -7,6 +7,7 @@ amcdb.gen  gen:trace  perns:N  comment:"Generate trace counters (creates new cty
 amcdb.gen  gen:lookuppkey  perns:N  comment:"Rewrite Pkey->Val"
 amcdb.gen  gen:tableenum  perns:N  comment:"Create enum for tables"
 amcdb.gen  gen:gconst  perns:N  comment:"Generate fconsts from tables"
+amcdb.gen  gen:bitfldenum  perns:N  comment:"Generate fconsts from bool bitfield"
 amcdb.gen  gen:proc  perns:N  comment:"Create command::xyz_proc for every executable"
 amcdb.gen  gen:msgcurs  perns:N  comment:"Generate message cursors"
 amcdb.gen  gen:check_basefield  perns:N  comment:"Check Base usage"

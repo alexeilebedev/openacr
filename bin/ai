@@ -4,10 +4,18 @@ use strict;
 if (system("abt --version >/dev/null 2>/dev/null") != 0) {
     print("# abt doesn't seem to exist. selecting bootstrap file...\n");
     system("bin/select-bootstrap")==0 or die "bin/select-bootstrap: $?";
-    system("bin/abt", "-build", "src_hdr");# build this other tool
+}
+if (!-x "bin/src_hdr") {
+    # build this other tool
+    system("bin/abt", "-build", "src_hdr")==0 or die "abt failed: $?";
 }
 my $F = shift @ARGV;
 $F = "%" if !$F;
 # calls src_func -updateproto
+# allow this one to fail
 system("bin/src_hdr", "-write");
-system("bin/abt", "-build", $F, @ARGV);
+# rebuild abt itself if needed
+# this is temporary and is needed only while abt schema is in flux
+system("bin/abt -install abt >/dev/null 2>&1");
+# main build step
+exit (system("bin/abt", "-build", $F, @ARGV)==0 ? 0 : 1);

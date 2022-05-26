@@ -102,7 +102,18 @@ static amc::FCtype *LookupCppType(strptr s) {
 static int ParseCompileTimeConst(strptr s) {
     int idx=0;
     int ret=0;
-    if (StartsWithQ(s,"sizeof(")) {
+    if ((idx=FindChar(s,'*'))!=-1) {
+        strptr left=TrimmedRight(FirstN(s,idx));
+        strptr right=TrimmedLeft(RestFrom(s,idx+1));
+        ret= ParseCompileTimeConst(left) * ParseCompileTimeConst(right);
+    } else if ((idx=FindChar(s,'+'))!=-1) {
+        strptr left=TrimmedRight(FirstN(s,idx));
+        strptr right=TrimmedLeft(RestFrom(s,idx+1));
+        int sizeleft = ParseCompileTimeConst(left);
+        int sizeright = ParseCompileTimeConst(right);
+        // zero = bad size, respect that
+        ret= sizeleft > 0 && sizeright > 0 ? sizeleft + sizeright : 0;
+    } else if (StartsWithQ(s,"sizeof(")) {
         strptr arg=Trimmed(Pathcomp(s,"(LR)RL"));
         amc::FCtype *ctype=LookupCppType(arg);
         ret= ctype ? ComputeCtypeSize(ctype) : 0;
@@ -114,17 +125,6 @@ static int ParseCompileTimeConst(strptr s) {
         int size=ctype ? ComputeCtypeSize(ctype) : 0;
         int n=ParseCompileTimeConst(arg2);
         ret = (size*n+15)/16;
-    } else if ((idx=FindChar(s,'*'))!=-1) {
-        strptr left=TrimmedRight(FirstN(s,idx));
-        strptr right=TrimmedLeft(RestFrom(s,idx+1));
-        ret= ParseCompileTimeConst(left) * ParseCompileTimeConst(right);
-    } else if ((idx=FindChar(s,'+'))!=-1) {
-        strptr left=TrimmedRight(FirstN(s,idx));
-        strptr right=TrimmedLeft(RestFrom(s,idx+1));
-        int sizeleft = ParseCompileTimeConst(left);
-        int sizeright = ParseCompileTimeConst(right);
-        // zero = bad size, respect that
-        ret= sizeleft > 0 && sizeright > 0 ? sizeleft + sizeright : 0;
     } else {
         ret = ParseI32(s,0);
     }
@@ -274,7 +274,7 @@ tempstr amc::SizeEnum(amc::FCtype &ctype) {
 void amc::gen_ns_size_enums() {
     amc::FNs &ns=*amc::_db.c_ns;
     tempstr str;
-    ListSep ls(", ");
+    algo::ListSep ls(", ");
     ind_beg(amc::ns_c_ctype_curs,ctype,ns) {
         ind_beg(amc::ctype_c_field_curs,field,ctype) {
             field.p_arg->enum_visited=false;

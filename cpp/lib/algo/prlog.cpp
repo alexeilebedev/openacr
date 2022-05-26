@@ -25,6 +25,8 @@
 //
 // -----------------------------------------------------------------------------
 
+#include "include/algo.h"
+
 void algo::Prlog(int fd, cstring &str, int start, bool eol) {
     try {
         if (eol) {

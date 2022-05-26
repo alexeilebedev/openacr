@@ -4,28 +4,31 @@
 
 Amc is an extensible generator of source code from ssimfiles.
 
-Amc reads ssim tables, creates C++ in-memory database code as determined by these tables, 
+Amc reads ssim tables, creates C++ in-memory database code as determined by these tables,
 and outputs .h and .cpp files.
 By default, ssim tables are loaded from directory "data", and output
-is written to directories `cpp/gen` and `include/gen`.
+is written to directories `cpp/gen` and `include/gen`. With option `-in_dir`,
+the location of the input dataset can be specified. 
+With option `-out_dir`, the location of output directory can be specified. The default
+is `.`.
 
 Amc generates hash tables, arrays, linked lists, dequeues, binary heaps; trees;
 hierarchical, region-based memory allocators, including
-single and powers-of-two freelists, fifo, linear array (vector), 
+single and powers-of-two freelists, fifo, linear array (vector),
 indirect array (with permanent pointers); inline arrays and fixed-size arrays;
 Functions to convert any struct to/from a string or a bash command line; Enum support,
 both for integer and string values; presence masks; big-endian fields;
 sort functions on custom fields; incremental group-by indexes; tracking of pointers
 with automatic cascade delete; protection against linear scanning when deleting
 elements; scheduling constructs (for real-time modules); cycle accounting ('traces').
-C++ symbols from ssimfile columns; Statically loaded tables; Subprocess invocation.
-Asynchronous I/O. Bitsets on top of any array type. Char sets; 
+Generation of C++ symbols from ssimfile columns; Statically loaded tables; Subprocess invocation;
+Asynchronous I/O. Bitsets on top of any array type. Char sets;
 Fixed string types (Pascal strings, Left-padded strings, Right-padded
-strings, Fixed-length strings with numeric conversion); Scaled decimal types; 
-Dispatches (any group of ctypes), sharing a common header with a type field, or not.
+strings, Fixed-length strings with numeric conversion); Scaled decimal types;
+Dispatches (any group of ctypes), whether sharing a common header with a type field, or not.
 Printing, reading, calling dispatches given both binary and text input.
 Uniform cursor (iterator) interfaces for bheap, hash, tree, array,
-lines, files in directory, and more. I'm sure I'm forgetting something.
+lines, files in directory, and more.
 
 For each program, these things are generated in-place and
 from scratch, and can be iteratively customized.
@@ -33,57 +36,69 @@ The resulting code forms a *database of source code*,
 containing a superset of functions that will be used by the final
 application. The generated code is verbose, user-readable, properly commented,
 is intended to be readable by a human, corresponds directly to the final assembly
-code, and uses only a small, conservative subset of C++. 
+code, and uses only a small, conservative subset of C++.
 `Amc` does not modify or reverse-engineer user code, so it's not a framework
-where you have to "plug in" anything. It is a tool for constructing software
-based on your specifications.
+where you have to "plug in" anything. User always controls what functions will be called
+(dispatches and steps are an exception, but they are also explicitly controllable).
+`amc` is a tool for constructing software based on your specifications.
 
 `Amc` loads about 100 ssim tables. The full list can be obtained with
-`acr_in amc`. The exact actual `amc` input can be printed with `acr_in amc -data`.
-About 20% of these tables are responsible for 80% of the generated code, the rest deal with finer details.
+`acr_in amc`. The exact actual `amc` input can be printed with `acr_in
+amc -data`.  About 20% of these tables are responsible for 80% of the
+generated code, the rest deal with finer details.
 
-`Amc` was initially coded by hand, but once its capabilities became powerful enough, it was used to
-generate data structures for its next version. As a result, all of `Amc`'s internal data structures,
-both input, and computational, are defined as ssim tuples and can be queried with `acr ns:amc -xref`.
+`Amc` was initially coded by hand, but once its capabilities became
+powerful enough, it was used to generate data structures for its next
+version. As a result, all of `Amc`'s internal data structures, both
+input, and computational, are defined as ssim tuples and can be
+queried with `acr ns:amc -xref`.  The tool is thus unique in that it
+generates most of its own source code. Previous approaches focused
+either on interpreting the interpreter (LISP) or compiling the
+compiler. Generating a source-generator is a first.
 
 ### Why Generate?
 
-Good algorithms and data structures for most problems are known. 
-The problem is attaching them to an application. Usually the costs associated 
+Good algorithms and data structures for most problems are known.
+The problem is attaching them to an application. Usually the costs associated
 with using algorithms are:
 
 * Performance cost and complexity cost when using libraries.
-* Complexity cost due to symbol renamings (what happens with the C++ template sublanguage or with macro preprocessors). 
+* Difficulting understanding symbol renamings (this happens with the C++ templates or when using macro preprocessors).
+  Programmer's attention is a finite resource. When the programmer spends this attention in order
+  to understand what a program does, he can no longer confirm its correctness, and the program's
+  runtime behavior becomes more surprising. Another word for surprise is bug. So when a program doesn't
+  look trivial, this leads to more bugs.
 * Debugging and reliability cost when hand-coding algorithms.
-* Maintenance cost due to having too many lines of code (technical debt).
+* Maintenance cost due to having too many lines of code.
 * Unexpected changes in upstream generic libraries.
 
 #### Libraries Vs. Custom Code
 
 The motivation for writing generators is that writing code for reusability doesn't work.
 The reason it doesn't work is that the definition of correctness doesn't lie with
-the piece of reusable code -- it lies with the final application. And so the reusable 
+the piece of reusable code -- it lies with the final application. And so the reusable
 code always offers to the application too much and at the same time not enough.
 You need a singly linked list, but the library uses a doubly linked list. You need an extra index,
 but the library author didn't anticipate it. You have your own strategy for memory
 management, but the library insists on its own. And you can't customize the library, since
-for every feature, there is already some user out there who needs it to stay the same. 
-And when you update to the next version of the library, you get tons of features you didn't ask for.
-Code written for reusability rarely reaches its intended potential in terms
+for every feature you need to change, there is already some user out there who needs it to stay the same.
+When you update to the next version of the library, you get, almost by definition, features you didn't ask for.
+(Since you were already making do with the previous set of features).
+So, code written for reusability never reaches its intended potential in terms
 of either performance or utility.
 
 Leaving aside reusability for a moment, as can be seen from real life examples,
 all high-performance systems are hand-coded due to highly
 specific requirements, and because it allows writing only what's needed, debugging that,
-and leaving it to run and do its job indefinitely. Yet hand-coding is difficult and 
-requires a lot of debugging and chasing of memory errors and dangling pointers. 
+and leaving it to run and do its job indefinitely. Yet hand-coding is difficult and
+requires a lot of debugging and chasing of memory errors and dangling pointers.
 
 All of this may not matter when the problems are small and requirements negligible, but it
 really starts to matter when you are pushing against the limits of a single machine. The difference
 between code that runs in 1 millisecond and 10 milliseconds is eventually the difference between
-10 servers and 100 servers. 
+10 servers and 100 servers.
 
-Thus we have a mini-max problem, which is the first sign of a problem worth solving. 
+Thus we have a mini-max problem, which is the first sign of a problem worth solving.
 On one hand, we want maximally customizable code that does only what we want.
 On the other hand, we want to write and debug the minimal amount of code.
 
@@ -92,15 +107,15 @@ On the other hand, we want to write and debug the minimal amount of code.
 Software complexity models such as [COCOMO](https://en.wikipedia.org/wiki/COCOMO)
 estimate the defect rate to grow as an
 exponential function of number of source lines. This exponent should not be underestimated.
-It is about 1.2 for a national stock exchange with real-time and embedded constraints, meaning that 
+It is about 1.2 for a national stock exchange with real-time and embedded constraints, meaning that
 to write 1,000 lines of code, it costs you 3,981 units of effort.
 And if you write 100,000 lines of code, you pay a full 1,000,000 units. This exponential
 nature of the cost of lines of code is closely related to the cost of borrowing money.
-You basically have to pay back with interest, making every line of code 
- in a very real sense "technical debt". 
- 
+You basically have to pay back with interest, making every line of code
+ in a very real sense "technical debt".
+
 Massive code bases can slow development to a crawl and destroy projects.
-I don't want to present a macabre listing of all the software projects that failed 
+I don't want to present a macabre listing of all the software projects that failed
 because they had too much code; I will just assume that we all agree on the validity
 of the following equation:
 
@@ -108,10 +123,10 @@ of the following equation:
 
 In other words, we like the features of our system, with some weight `W`,
 and we pay with interest `B` and weight `A` for the amount
-of code we wrote to get these features. 
+of code we wrote to get these features.
 
 With that, let's see how far we are able to go in solving this problem, and what kinds
-of cool tricks we can make our generator do. 
+of cool tricks we can make our generator do.
 
 ### Running Amc
 
@@ -121,11 +136,11 @@ are necessary. The default invocation prints something like this:
     $ amc
     report.amc  n_cppfile:123  n_cppline:258301  n_ctype:970  n_func:22524  n_xref:460  n_filemod:0
 
-`Amc` processes generates about 1M LOC per second.
-Of course, this performance is not reflected in 
-the final executable, which means that adding new checks to amc is effectively free.
+With respect to generator performance, `amc` process generates about 1M LOC per second.
+Of course, this performance is not reflected in
+the final executable, which means that adding new checks or generator features to amc is effectively free.
 
-It is important that amc outputs are versioned in git, so we can trace the origin
+Amc outputs are versioned in git, so we can trace the origin
 of any change (with git annotate), and continue to make changes to amc
 without breaking existing code.
 
@@ -134,23 +149,23 @@ without breaking existing code.
 When amc is given an argument, it runs in query mode.
 Instead of modifying source files it simply prints to stdout all internal code
 sections whose key matches the specified regex (typically it's a ctype name or a function name).
-
 This is the fastest way to check how a certain function is implemented.
 
+Example:
     amc amc.%
 
-This would generate all functions which are used to compile amc itself. The apparent circularity
-exists because at some point, functions implementing amc were written by hand, 
+This generates all functions which are used to compile amc itself. The apparent circularity
+exists because at some point, functions implementing amc were written by hand,
 and then amc was modified to generate them and save them to `cpp/gen/amc_gen.cpp`.
 Please see [The Algorithm For Generating Any Code](#the-algorithm-for-generating-any-code)
 
 To limit amc's output to prototypes only, specify `-proto`:
 
     amc amc.% -proto
-    
+
 ### Ratio of Generated To Manual LOC
 
-It generates 15-25 lines of code per 1 line of ssimfile specification. 
+On average, `amc` generates 15-25 lines of code per 1 line of ssimfile specification.
 It is easy enough to check this claim:
 
     $ acr ns:amc -t | wc -l
@@ -159,25 +174,28 @@ It is easy enough to check this claim:
     47431
 
 The specification can be edited manually and adjusted frequently with Unix tools such as
-sed and perl, or by issuing `acr_ed` commands. This makes the cost of
-ssim specifications lower than the cost of regular code.
+sed and perl, or by issuing `acr_ed` commands. The compression factor, and the fact
+that ssim lines are relatively independent of each other makes the cost of
+ssim specifications much lower than the cost of regular code.
 
 ### Sandbox Mode
 
 The sandbox mode is provided to help add features to amc without creating a dead-end (where
 generated code is broken, but cannot be re-generated because amc needs to be rebuilt)
 
-`abt -testgen` compiles a debug version of amc, creates the sandbox directory .testgen, runs amc in the .testgen
-directory, shows a diff between current and sandboxed changes, builds all unit tests inside the sandbox
-and runs the tests. The command succeeds if all of the steps succeed.
+`acr_ed -showcpp -sandbox` runs amc in sandbox, shows resulting change using `git diff`,
+and then compiles and runs unit tests. The command succeeds if all of the steps succeed.
+This can be very useful when modifying amc itself, since introducing an error into a generator
+phase may break compiling of amc and thus prevent fixing of such error without resorting to
+`git reset --hard`.
 
 ### Reading Code of Amc Itself
 
 Amc source code is located under cpp/amc. The list of all the source files and headers
 can also be examined with `acr targsrc:amc/%`
 
-amc inpt tables are in `data/amcdb` and `data/dmmeta`; The full list can be obtained 
-with `acr_in amc`. 
+amc input tables are in `data/amcdb` and `data/dmmeta`; The full list can be obtained
+with `acr_in amc`.
 
 ### What is a Cross-reference?
 
@@ -185,17 +203,18 @@ The [Relational Model](https://en.wikipedia.org/wiki/Relational_model) is a univ
 way to represent knowledge, first described by Edgar Codd.
 It is related to [Zermelo–Fraenkel set theory](https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory).
 
-It is a good foundation. In a relational data model, individual records are represented by tuples
-(what we call a ctype). Each attribute (what we call a field) is either a basic type, or
-a reference to some other tuple.
+It is a good foundation. In a relational data model, all data stored in a set of tables.
+Each table has a set of records. Each record's first field is its key, and all other fields
+are either basic types (like integer or string), or references to other records.
 
 The reference can take several forms -- it could be a direct pointer (Upptr),
 or a primary key (Pkey). In either case, the whole
 reason we write compiled language programs instead of solving all problems using SQL and MariaDB,
-is that reversing the direction of reference lookup -- 
-*finding all records that point to a given record* -- is expensive. 
+is that reversing the direction of reference lookup --
+*finding all records that point to a given record* -- is expensive.
 Cheaper cross-references is really the reason why most programs exist in the first place.
-In database terms, a cross-reference is a group-by; in amc, cross-reference is
+In database terms, a cross-reference is called a group-by;
+In amc, cross-reference is
 always incremental -- automatically updated as new records are added or removed from tables.
 
 A cross-reference is established by use of an xref record. Here is a random example from amc, which
@@ -207,18 +226,18 @@ needs to keep track of targets and their dependencies.
 
 This says: Dear amc, whenever a `targdep` record is inserted in my program, find an instance
 of `target` by using global index `ind_target` with key `dev.Targdep.target` as the key, and
-insert `targdep` into an array of pointers rooted in `target`. 
+insert `targdep` into an array of pointers rooted in `target`.
 Whenever a `targdep` record is deleted, automatically remove it from the list.
 (Removing from a Ptrary is expensive but the last part won't be needed).
 
 The main xref types supported by amc are Ptr, Ptrary, Llist, Thash, Bheap, Atree and Count.
 
-Xrefs can be easily added and removed either by hand (with `acr -e` or by editing ssimfiles 
+Xrefs can be easily added and removed either by hand (with `acr -e` or by editing ssimfiles
 directly), or using `acr_ed`. In the example above, `acr_ed -create -field amc.FTarget.c_targdep -write`
 would be enough to establish the xref.
 
 There can be any number of xrefs between any two tables. So, if you want a record to be
-a member of ten linked lists and eleven binary heaps -- you're free to do so. 
+a member of ten linked lists and eleven binary heaps -- you're free to do so.
 Xrefs are exactly analogous to RDBMS indexes; except xrefs can be established between any two
 tables, so they are also `partitioned indexes` and incremental `group by`s at the same time.
 
@@ -226,7 +245,7 @@ I would re-state here the fact that these xrefs, or indexes, are secondary to th
 The information needed to establish the xrefs must be contained in the data itself. This typically means
 extra information in the leaves.
 
-It doesn't make sense to say "hash of X" or "tree of Y". Elements of X and Y are primary, and exist even 
+It doesn't make sense to say "hash of X" or "tree of Y". Elements of X and Y are primary, and exist even
 if you remove all meaningful access paths to them. Instead, we speak of "access to X". The indexes
 are roads, and there can be many roads to the same place.
 
@@ -234,9 +253,9 @@ To visualize xrefs, it may be useful to use `amc_vis`.
 
 ### Main Input Tables
 
-The main tables Amc uses as input are ns, ctype and field. 
+The main tables Amc uses as input are ns, ctype and field.
 Ns maps to a C++ namespace.
-Ctype corresponds to a struct. 
+Ctype corresponds to a struct.
 Field corresponds to a struct member or some derived value.
 
 The main attributes of a field are its name, arg, and reftype.
@@ -248,9 +267,9 @@ Arg is the type, and reftype is a modifier, or 'type constructor'.
 ### String types and how to use them:
 
 Throughout the code base, you will see several string types in use.
-They are fairly straightforward, and they're all described below. 
+They are fairly straightforward, and they're all described below.
 
-* `algo::strptr`: Length-delimited string pointer. 
+* `algo::strptr`: Length-delimited string pointer.
 There are two fields in this struct: `char *elems, int n_elems`;
 The string is just n chars starting at elems;
 No null-termination is assumed or allowed.
@@ -270,8 +289,8 @@ cstring, the contents are moved instead ("move constructor semantics").
 
 - DO NOT assign tempstr, cstring, or a temporary variable to a strptr, since strptr
 is just a pointer.
-- DO NOT pass cstring& to a function when strptr is sufficient. 
-- DO NOT return cstring from functions, it will result in extra alloc/copy/delete. 
+- DO NOT pass cstring& to a function when strptr is sufficient.
+- DO NOT return cstring from functions, it will result in extra alloc/copy/delete.
  Return tempstr instead.
 
 In addition to these string types, which are fully sufficient for all practical purposes,
@@ -293,7 +312,7 @@ Can be sent over the wire (included in protocol types)
 * `algo::LspaceStr{1..255}`: similar to the above
 
 * `algo::LnumStr{1..N}_U{32,64}`: Fixed-length string field, padded on the left with '0'
-(ascii character '0', not the NUL character). Includes functions to convert to/from a u32/u64. 
+(ascii character '0', not the NUL character). Includes functions to convert to/from a u32/u64.
 Number cannot be negative, because left-padding with 0 prevents that.
 
 * `LnumStr{1..N}_U{32,64}_Base{B}`: Same as above, but different base.
@@ -305,7 +324,7 @@ functions of any class. The function name is usually built from the name of the 
 field, plus a name. For example, a big-endian u32 called `value` will  cause a function
 named `value_Get` to be generated. A linked list field called `zd_target` will cause
 amc to create functions `zd_target_Insert`, `zd_target_Prev`, etc. These function names
-are readable because the field name contains a hint about its type. 
+are readable because the field name contains a hint about its type.
 
 The table `dmmeta.fprefix` defines a constraint between field prefix and a field reftype,
 as interpreted by amc. If the field's name begins with the prefix (such as zd), followed
@@ -313,13 +332,23 @@ by an underscore, then the field must have the specified reftype.
 
 The defined prefixes are:
 
-* `bh` -> Bheap
-* `c` -> Ptr or Ptrary
-* `cd, cdl, cs, csl, zd, zdl, zs, zsl` -> Llist
-* `cnt` -> Count
-* `ind` -> Thash
-* `p` -> Upptr
-* `tr` -> Atree
+```
+inline-command: acr fprefix -report:N -cmd 'printf "%5s %10s\n" $fprefix $reftype' |sh
+   bh      Bheap
+    c     Ptrary
+   cd      Llist
+  cdl      Llist
+  cnt      Count
+   cs      Llist
+  csl      Llist
+  ind      Thash
+    p      Upptr
+   tr      Atree
+   zd      Llist
+  zdl      Llist
+   zs      Llist
+  zsl      Llist
+```
 
 Additional prefixes may be defined by the user.
 
@@ -330,23 +359,24 @@ The main algorithm for generating any code (not just with amc) is simple:
 1. Manually write the code that you want to generate and make sure it works.
 2. Put a print statement around each line.
 3. Move the resulting code to the appropriate place in your generator.
-4. Run your generator. Now you have 2 copies of your code: one you started with, and the 
+4. Run your generator. Now you have 2 copies of your code: one you started with, and the
   other that was printed by the generator. If you did everygthing right, you should get a
   link error now.
 5. Delete the manually written code.
 6. Parameterize the generator so that it can generate a whole family of implementations that
   look similar.
 
-It is usually not a good idea to start programming new features in amc itself. 
-It is very tiresome to debug such code. The code should already have been written 
-by hand, possibly a couple of times, to the point where the duplication occurs, but the 
-different implementations cannot be unified because of either unacceptable performance costs, 
+It is usually not a good idea to start programming new features in amc itself.
+It is very tiresome to debug such code. The code should already have been written
+by hand, possibly a couple of times, to the point where the duplication occurs, but the
+different implementations cannot be unified because of either unacceptable performance costs,
 or too many dependencies. Such code is to be lifted into a generator.
 ## Dispatch
 
 
 
 ~TBD~
+
 ## Amc Features
 
 ### Scaled Decimal Types
@@ -362,7 +392,7 @@ Example:
     dmmeta.field  field:algo.U64Dec2.value  arg:u64  reftype:Val  dflt:""  comment:""
       dmmeta.fdec  field:algo.U64Dec2.value  nplace:2  fixedfmt:Y  comment:"0 prints as 0.00"
 
-The scaled decimal type generates functions to convert between the stored (scaled) value 
+The scaled decimal type generates functions to convert between the stored (scaled) value
 and a numeric value: `value_qSetDouble`, `value_SetDoubleMaybe`, `value_GetDouble`, `value_GetInt`.
 
     // Set value of field value.
@@ -397,7 +427,7 @@ Adding an `fbigend` record to a field indicates that the in-memory byte order is
 
     dmmeta.field  field:atf_amc.TypeBE16.value  arg:u16  reftype:Val  dflt:""  comment:""
       dmmeta.fbigend  field:atf_amc.TypeBE16.value  comment:""
-              
+
 Amc generates values `value_Get` and `value_Set` to access the value.
 
     u16                  value_Get(const atf_amc::TypeBE16& parent) __attribute__((__warn_unused_result__, nothrow));
@@ -424,13 +454,13 @@ becomes aware, should they choose to access it manually, that the field may be e
     inline void atf_amc::value_Set(atf_amc::TypeBE16& parent, u16 rhs) {
         parent.value_be = htobe16(rhs); // write big-endian value to memory
     }
-    
+
     ...
-    
+
 ### Bitfields
 
 Amc supports bitfields. In the example below, the field `bits5` is defined
-as bits 5..10 of the value of the field called `value`. It is important that 
+as bits 5..10 of the value of the field called `value`. It is important that
 the source field is explicitly specified. This eliminates any ambiguity about where
 in memory the bitfield may be. The source field can be any integer type.
 
@@ -440,13 +470,13 @@ on the source field. It is purely an arithmetic operation that produces the valu
 bitfield.
 
 If you've looked at Linux system headers for network protocols, you've seen ungainly `#ifdef` blocks.
-They are needed in C because C bitfields are defined against memory, not against the value of 
+They are needed in C because C bitfields are defined against memory, not against the value of
 a source field.
 
     dmmeta.field  field:atf_amc.BitfldType1.value  arg:u64  reftype:Val     dflt:""  comment:""
     dmmeta.field  field:atf_amc.BitfldType1.bits5   arg:u64  reftype:Bitfld  dflt:""  comment:""
       dmmeta.bitfld  field:atf_amc.BitfldType1.bits5   offset:5  width:10  srcfield:atf_amc.BitfldType1.value  comment:""
-                    
+
 A bitfield can have any type - `bool`, `u64`, or a custom type that wraps an integer.
 
     $ amc atf_amc.BitfldType1.bits5.% -proto
@@ -462,7 +492,7 @@ A bitfield can have any type - `bool`, `u64`, or a custom type that wraps an int
 The implementation is straightforward:
 
     $ amc atf_amc.BitfldType1.bits5.Set
-    
+
     // --- atf_amc.BitfldType1.bits5.Set
     // Set bitfield in value of field 'value'
     //    10 bits starting at bit 5.
@@ -474,17 +504,17 @@ The implementation is straightforward:
 
 bitfields can be read from string tuples just like other fields.
 When printing a ctype containing bitfields to an ssim tuple, amc does not print the source field;
-instead, all the bitfields are printed instead. 
+instead, all the bitfields are printed instead.
 
 When printing a ctype containing bitfields using the `Raw` format, only the source field is printed,
 and bitfields are skipped.
 
 It is an error to specify a combination of offset and width that is out of bounds for the source type.
-Amc will flag this. It is also an error to have two bitfields overlap. All of the `offset+width` 
+Amc will flag this. It is also an error to have two bitfields overlap. All of the `offset+width`
 ranges must be disjoint.
 
-Here is an example of the code amc generates when the source field is big-endian. 
-(Endianness tends to be confusing, because languages try hard to erase the boundary between 
+Here is an example of the code amc generates when the source field is big-endian.
+(Endianness tends to be confusing, because languages try hard to erase the boundary between
 memory and values, so the user gets an extra warning).
 
     $ amc atf_amc.TypeBE64sf.bit63.Get
@@ -498,37 +528,104 @@ memory and values, so the user gets an extra warning).
         return u64((value_Get(parent) >> 63) & 0x01);
     }
 
+In order to facilitate flexible handling of named bits within bitsets, 
+special enum constants are generated for bitfld with width=1 and bool arg.
+
+### Bitset
+
+Main goal of bitsets is compact string representation of set of named bits.
+
+Bitset is special print/read format for ctype. It deals with boolean fields only, other field types are ignored.
+It does not matter how boolean values are grouped - free ctype fields, or bitfields distributed among one 
+or more integer storage fields. All the same, it forms single space of named bits.
+
+The format is comma-separated list of field names those are set to `true`.
+For example, ctype has tree boolean fields: f1, f2, f3. Assume f1=true, f2=false, f3=true.
+Print result: `f1,f3`. Read function for this ctype recognizes such format and sets fields f1 and f3 to true.
 
 ### Steps
 
-*UNDER CONSTRUCTION*.
+Steps are a scheduling construct to associate actions to fields. A step is defined by adding
+a `dmmeta.fstep` record; `fstep is a subset of field, and specifically only global fields
+can have steps associated with them. When you define a step, you get a user-defined function
+which you can implement. The function is called each time the process goes through the main loop,
+(amc-generated function `$ns::MainLoop()`).
+and it's called only if the underlying field is considered non-empty (for bool/integer fields this
+just means non-zero).
 
-Steps are a scheduling construct to associate actions to fields.
+Using steps you can implement a pipeline for data processing. Since the state of any program
+can be represented as a set of tables, the only possible actions the program does throughout its
+life are insertion and deletion of records in these tables. Steps allow you to trigger these actions
+in a well-understood and very flexible way.
 
-A step can be thought of as a cooperative thread -- a function that's assigned to
-some top-level variable (pointer, bool, list or heap) that is invoked whenever that variable is non-empty,
-and advances the process towards its goal.
-
-The amc model for a server process is a top-level while loop, which calls
-a top-level Step function for each namespace linked into the process.
-The namespace Step function then performs some action for each fstep defined in that namespace.
-
-The main loop is defined in terms of real time: it executes until the value of CPU clock (rdtsc)
+The main loop executes until the value of CPU clock (rdtsc)
 reaches some limit (typically 2^64-1). The scheduling cycle begins by setting next\_loop to the limit,
 then executing all the steps. the steps adjust next\_loop down depending on their scheduling needs.
 At the end of the scheduling cycle, unused remaining time is given up to the OS via epoll or nanosleep
 (if there are no file descriptors open). This way, both hot-spinning and blocking processes are covered
 with minimal overhead.
 
-The following step types are defined: Inline, InlineRecur, TimeHookRecur, Callback
-To define a step that is performed periodically on a timer, use fdelay.
+The following step types are defined: `Inline`, `InlineRecur`, `TimeHookRecur`, `Callback`
+To define a step that is performed periodically on a timer, use `fdelay`.
 
-Inline step is the simplest: on every pass,
-the empty condition is checked on the underlying field, and a user-provided Step function
-is called if the field is non-empty.
+#### Defining a Step
 
-InlineRecur step requires an fdelay record specifying the initial delay between steps.
-The logic is the same as Inline, with a time-based delay between steps.
+To define a step, create an fstep record. It must be defined on a global field (FDb),
+since each step corresponds to 1 user-written function.
+Example:
+
+```
+dmmeta.ctype  ctype:atf_amc.FDb  comment:""
+  dmmeta.field  field:atf_amc.FDb.cd_in_msg  arg:atf_amc.Msgbuf  reftype:Llist  dflt:""  comment:""
+    dmmeta.fstep  fstep:atf_amc.FDb.cd_in_msg  steptype:Inline  comment:""
+
+```
+
+This declares the external (to be implemented by you) function `cd_in_msg_Step()`,
+generates the `cd_in_msg_Call()` function which checks conditions before calling the user-generated
+function, and modifies the generated `atf_amc::Step` to invoke the new step:
+
+```
+// forward declaration for user-defined function
+void cd_in_msg_Step() __attribute__((nothrow));
+
+// Main function that calls all steps in atf_amc namespace
+void atf_amc::Step() {
+    // ... other steps
+    cd_in_msg_Call();
+}
+
+// Function to invoke user -generated _Step function
+// if the conditions are right, and  modify scheduling parameters
+inline static void atf_amc::cd_in_msg_Call() {
+    if (!atf_amc::cd_in_msg_EmptyQ()) { // fstep:atf_amc.FDb.cd_in_msg
+        atf_amc::cd_in_msg_Step(); // steptype:Inline: call function on every step
+        cd_in_msg_UpdateCycles();
+        algo_lib::_db.next_loop = algo_lib::_db.clock;
+    }
+}
+
+```
+
+All steps have to satisfy the condition that underlying control field (index or boolean field) is non-empty
+before calling the user-defined function.
+
+#### Step Types
+
+There are several ways to get to the `_Step` function.
+1. We can call the user-defined function on every cycle through the main loop. This step type is called `Inline`.
+The only check performed is that the control field is non-empty.
+2. We can call the user-defined function when the `algo_lib::_db.clock` reaches a certain value. This
+step type is `InlineOnce`. The value is defined next to the field, with suffix `_next`.
+3. We can call the user-defined function every `_delay` clock units. This step type is called `InlineRecur`.
+Two control variables are defined, `_next` and `_delay` (of type u64). The delay can be controlled at
+runtime with `_SetDelay` function. Since the step type is still `Inline`, the cost of adding such step is a few
+instructions being added to the main loop.
+4. We can call the user-defined function every `_delay` clock units, but scheduled as a `Timehook` via a binary
+heap (this is a built-in index called `algo_lib.FDb.bh_timehook`. This is of course the most scalable
+and universal scheduling
+method, since checking the top entry in the heap is O(1) and rescheduling is O(log N), but if you want to design
+a tuned engine with optimal pipelining behavior, you will need to use `Inline` variants.
 
 ### Tracing
 
@@ -557,11 +654,60 @@ The binary heap is implemented as an flat array of pointers (e.g. a Ptrary).
 
 ### Bitset: Bitset over an array
 
-*UNDER CONSTRUCTION*.
+Amc can generate code to get / set bits in any field that is an integer (`u8`, `u16`,
+`u32`, `u64`, or an array of integers (`Inlary`, `Tary`).
 
-Bitsets can be created on top of any integer field (e.g. u8 to u128) or array field (Inlary, Tary).
-Amc generates functions to provide indexed access to bits of the underlying field.
+Here is an example:
 
+```
+inline-command: acr -t field:atf_unit.Bitset.fld8 | egrep Bitset
+    dmmeta.ctype  ctype:atf_unit.Bitset  comment:"Test bitset"
+      dmmeta.field  field:atf_unit.Bitset.fld8  arg:u8  reftype:Val  dflt:""  comment:"Bitset field"
+        dmmeta.fbitset  field:atf_unit.Bitset.fld8  comment:""
+```
+
+The generated functions are as follows:
+
+```
+inline-command: amc -report:N -proto atf_unit.Bitset.fld8.%
+// Return constant 1
+int                  fld8_N(atf_unit::Bitset& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Access value
+u8&                  fld8_qFind(atf_unit::Bitset& parent, int) __attribute__((__warn_unused_result__, nothrow));
+// Get max # of bits in the bitset
+// Return max. number of bits supported by array
+int                  fld8_Nbits(atf_unit::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
+// Retrieve value of bit #BIT_IDX in bit set. No bounds checking
+bool                 fld8_qGetBit(atf_unit::Bitset& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
+// Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
+bool                 fld8_GetBit(atf_unit::Bitset& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
+// Check if all the bits in the bitset are equal to zero
+bool                 fld8_BitsEmptyQ(atf_unit::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
+u64                  fld8_Sum1s(atf_unit::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
+// Clear bit # BIT_IDX in bit set. No bounds checking
+void                 fld8_qClearBit(atf_unit::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
+// Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
+void                 fld8_ClearBit(atf_unit::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
+// Set bit # BIT_IDX in bit set. No bounds checking
+void                 fld8_qSetBit(atf_unit::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
+// Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
+void                 fld8_SetBit(atf_unit::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
+// Set bit # BIT_IDX in bit set. No bounds checking
+void                 fld8_qSetBitVal(atf_unit::Bitset& parent, u32 bit_idx, bool val) __attribute__((nothrow));
+// Or bit # BIT_IDX in bit set. No bounds checking
+void                 fld8_qOrBitVal(atf_unit::Bitset& parent, u32 bit_idx, bool val) __attribute__((nothrow));
+// Set all bits of array to zero.
+// Note: this does not change what NBits will return.
+void                 fld8_ClearBitsAll(atf_unit::Bitset& parent) __attribute__((nothrow));
+// Zero in PARENT any bits that are set in RHS.
+void                 fld8_ClearBits(atf_unit::Bitset& parent, atf_unit::Bitset &rhs) __attribute__((nothrow));
+// Set PARENT to union of two bitsets.
+// (This function is not named Set.. to avoid triple entendre).
+void                 fld8_OrBits(atf_unit::Bitset& parent, atf_unit::Bitset &rhs) __attribute__((nothrow));
+// Return smallest number N such that indexes of all 1 bits are below N
+i32                  fld8_Sup(atf_unit::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
+
+```
 ### Count: Count elements
 
 *UNDER CONSTRUCTION*.
@@ -570,36 +716,156 @@ Count is a xref type that simply keeps track of the number of child
 elements referring to a given parent. The elements themselves are not accessible
 via this field.
 
-### Fconst: Enumerated type
-
-*UNDER CONSTRUCTION*.
-This reftype is not specified explicitly. It is applied when fconst record appears.
-Each fconst record names a symbol and a C++ expression (value). The symbol is the string representation
-of the vaule. Amc creates an enum type with values, and creates to-string and from-string functions
-that translate between values and symbols.
-
-A related record is Gconst, which can be used in place of fconst to create an enum type out of an entire table.
-
-When printing, if there is no symbol associated with the numeric value of the field being printed, the
-value is printed as a number. When reading, if input symbol doesn't map to any known value, it is parsed
-as an integer instead.
-
 ### Inlary: Inline array
 
-*UNDER CONSTRUCTION*.
+When `amc` sees an `inlary` record, it generates code to turn a single value field
+into an inline array of up to N values. An inline array's memory is reserve directly in the
+record which houses it. There is no dynamic allocation. There are two types of `Inlary`:
+ones where `min = max`, in this case a C++ array is generated and we talk of a `fixed` array.
+And the case where `min < max`. In this case, `amc` declares an array of `u8` of appropriate size,
+and generates generates usual pool functions `Alloc`, `RemoveLast`, `RemoveAll`.
 
-Inlary uses memory reserved directly inside the parent struct. A dmmeta.inlary record
-is required, specifying min,max elements. If min=max, it is considered a fixed array.
-Fixed array has neither Alloc nor Delete functions, and there is no count of elements.
-If min < max, then the first min elements are created when the parent is constructed, and the rest
-can be dynamically allocated. The Inlary supports random access because it is an array.
+```
+inline-command: acr -t field:algo_lib.FDb.temp_strings | egrep algo_lib.FDb
+    dmmeta.ctype  ctype:algo_lib.FDb  comment:""
+      dmmeta.field  field:algo_lib.FDb.temp_strings  arg:algo.cstring  reftype:Inlary  dflt:""  comment:"* initialization order is important *"
+        dmmeta.inlary  field:algo_lib.FDb.temp_strings  min:8  max:8  comment:""
+```
+
+Here is an example of functions generated for a fixed array:
+
+```
+inline-command: amc -report:N -proto algo_lib.FDb.temp_strings.%
+// Set all elements of fixed array to value RHS
+void                 temp_strings_Fill(const algo::cstring &rhs) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+algo::cstring*       temp_strings_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Access fixed array temp_strings as aryptr.
+algo::aryptr<algo::cstring> temp_strings_Getary() __attribute__((nothrow));
+// Return max number of items in the array
+i32                  temp_strings_Max() __attribute__((nothrow));
+// Return number of items in the array
+i32                  temp_strings_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Set contents of fixed array to RHS; Input length is trimmed as necessary
+void                 temp_strings_Setary(const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking in release.
+algo::cstring&       temp_strings_qFind(u64 t) __attribute__((nothrow));
+
+```
+```
+  dmmeta.field  field:algo_lib.FDb.temp_strings  arg:algo.cstring  reftype:Inlary  dflt:""  comment:""
+    dmmeta.inlary  field:algo_lib.FDb.temp_strings  min:8  max:8  comment:""
+```
+
+And here are the functions generated for a dynamically sized inline array:
+
+```
+inline-command: amc -report:N -proto atf_amc.FTypeA.typec.%
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_amc::FTypeC&     typec_Alloc(atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+atf_amc::FTypeC*     typec_AllocMaybe(atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_amc::FTypeC*     typec_InsertMaybe(atf_amc::FTypeA& typea, const atf_amc::TypeC &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                typec_AllocMem(atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 typec_EmptyQ(atf_amc::FTypeA& typea) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+atf_amc::FTypeC*     typec_Find(atf_amc::FTypeA& typea, u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array pointer by value
+algo::aryptr<atf_amc::FTypeC> typec_Getary(atf_amc::FTypeA& typea) __attribute__((nothrow));
+// Return constant 10 -- max. number of items in the pool
+i32                  typec_Max(atf_amc::FTypeA& typea) __attribute__((nothrow));
+// Return number of items in the array
+i32                  typec_N(const atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow, pure));
+// Destroy all elements of Inlary
+void                 typec_RemoveAll(atf_amc::FTypeA& typea) __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 typec_RemoveLast(atf_amc::FTypeA& typea) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking in release.
+atf_amc::FTypeC&     typec_qFind(atf_amc::FTypeA& typea, u64 t) __attribute__((nothrow));
+// Compute row id of element given element's address
+u64                  typec_rowid_Get(atf_amc::FTypeA& typea, atf_amc::FTypeC &row) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 typec_XrefMaybe(atf_amc::FTypeC &row);
+
+```
+
+### Inlary With Gstatic
 
 One particularly cool use of Inlary is with gstatic. Whenever gstatic is specified, the contents of an ssim
-table are ``statically'' included into the generated source file. When gstatic is combined with Inlary,
-amc creates a C++ compiler symbol with a name derived from the primary key of the source table.
-The symbol is a reference whose value is a compile-time constant since the offset to the variable
-is known. The symbol can be used at runtime to access the record, which is guaranteed to exist
-and be properly cross-referenced.
+table are ``statically'' included into the generated source file. This is done by reading the table
+at generating time and then inserting its elements, as strings, into the target table, as part of FDb's constructor.
+
+When gstatic is combined with Inlary and the field is global (i.e. in `FDb`), the individual addresses
+of elements in the table are compile-time constants. Amc celebrates this fact by declaring a C++ compiler symbol
+for each row of the table. By the time the user code starts executing, all of the elements have been inserted
+in the array and properly cross-referenced, and the user code can use the generated globals to access table rows.
+
+Amc itself uses gstatic in several places. Try `acr gstatic:amc.%` to check the uses.
+
+### Gstatic With Hook
+
+Tables marked `gstatic` have known contents. This enables associating entries of such tables with C functions.
+Consider this example from amc:
+```
+  dmmeta.field  field:amc.FDb.gen  arg:amc.FGen  reftype:Lary  dflt:""  comment:""
+    dmmeta.gstatic  field:amc.FDb.gen  comment:""
+
+  dmmeta.field  field:amc.FGen.step  arg:""  reftype:Hook  dflt:""  comment:""
+      dmmeta.hook  field:amc.FGen.step  comment:""
+```
+Here, a static table `gen` has been declared, and its contents are populated with entires from
+`amcdb.gen` in amc's FDb constructor. The table can have a hash index by primary key and there
+is not restriction on any other cross-references. For this pattern of declaration, amc forward-declares one
+function foreach element of the table, and assigns its address to the `hook` field of `amc::FGen` upon construction.
+If the function is not defined in the user process, a link error will result.
+
+This construct is very useful for things like unit tests, consistency checks, alerts, and other situations where
+an extensible list of functions is needed together with meta-information about them.
+Each function has an associated record which can be looked up by name, so it is possible to invoke all
+functions matching a regex passed on command line, or describe them with comments.
+
+Example:
+Show first 10 entries from amcdb.gen:
+
+```
+inline-command: acr amcdb.gen | sort -k 2 | head
+
+
+amcdb.gen  gen:basepool         perns:N  comment:"Create basepools based on defaults"
+amcdb.gen  gen:bitfldenum         perns:N  comment:"Generate fconsts from bool bitfield"
+amcdb.gen  gen:cget             perns:N  comment:"Generate helpful Q functions based on fconsts and bools"
+amcdb.gen  gen:check_basefield    perns:N  comment:"Check Base usage"
+amcdb.gen  gen:check_basepool   perns:N  comment:"Check basepool order"
+amcdb.gen  gen:check_bigend     perns:N  comment:"Check big-endians"
+amcdb.gen  gen:check_bitfld     perns:N  comment:"Check that bitfields don't overlap"
+amcdb.gen  gen:check_cascdel    perns:N  comment:""
+```
+
+Select first 10 functions from amc source code:
+```
+inline-command: src_func amc gen_% -proto -comment: | sort -k 3 | head
+cpp/amc/gen.cpp:219: void amc::gen_basepool() 
+cpp/amc/cget.cpp:123: void amc::gen_cget()
+cpp/amc/gen.cpp:574: void amc::gen_check_bigend() 
+cpp/amc/gen.cpp:295: void amc::gen_check_bitfld() 
+cpp/amc/gen.cpp:112: void amc::gen_check_cascdel() 
+cpp/amc/gen.cpp:459: void amc::gen_check_cpptype() 
+cpp/amc/gen.cpp:204: void amc::gen_check_prefix() 
+cpp/amc/gen.cpp:394: void amc::gen_check_reftype() 
+cpp/amc/gen.cpp:161: void amc::gen_check_static() 
+cpp/amc/checkxref.cpp:229: void amc::gen_check_xref() 
+```
+
+In language-centric systems, one would start by writing some functions, and then use "reflection" to
+scrape the functions from the code (usually at runtime) and do things with them. Starting with a plain text file
+on disk, and then generating C++ functions and in-memory tables from it is a lot more elegant. No "reflection"
+is needed, everything is forward-looking.
 
 ### Lary: Level array
 
@@ -718,12 +984,12 @@ matching the query, then it tries to remove them one by one, and rebuilds the ta
 (using abt) in a sandbox dir. If build succeeds with one of the records deleted
 it means it wasn't needed in the first place.
 
-Let's illustrate `amc_gc` by creating a new program and inputting a table. 
+Let's illustrate `amc_gc` by creating a new program and inputting a table.
 
     $ acr_ed -create -target sample -write
     $ acr_ed -create -finput -target sample -ssimfile dmmeta.ns -write
 
-Since the `ns` table is unused, `sample` will compile even if we remove it. This is the 
+Since the `ns` table is unused, `sample` will compile even if we remove it. This is the
 case that `amc_gc` detects, and can remove the table:
 
     $ amc_gc -target:sample -key:ctype:sample.%
@@ -740,12 +1006,12 @@ Let's finish by deleting the unused target
 
 Follow the steps below to create a new sample program.
 
-The program will print the names of all of its own structures, and 
-their fields, cross-referenced twice: first, by membership and 
+The program will print the names of all of its own structures, and
+their fields, cross-referenced twice: first, by membership and
 then by computing all back-references.
 
 This seems like an appropriately self-referential way to say hello
-using the tools at our disposal. Having a program print its own data 
+using the tools at our disposal. Having a program print its own data
 structure is also mind-boggling if you think about it for too long.
 
 Use this as a starting point, or to get motivated to read one of the tutorials.
@@ -785,7 +1051,7 @@ For each `ctype`, instances of which can be dynamically allocated
 This section will explain all of the available pool types, how to chain them
 so that one pool allocates its own memory from another, and provide examples.
 
-In `amc`, memory pools are fields with specific reftypes. They are given names and 
+In `amc`, memory pools are fields with specific reftypes. They are given names and
 they can be referred to.
 
 ### Types of Memory Pools
@@ -796,7 +1062,7 @@ in alphabetical order.
 
 * Blkpool - A mostly-fifo allocator based on refcounted blocks.
 * Delptr - Indirect Val; A single value, always freed in destructor.
-* Inlary - A piece of memory for min..max elements inside the parent struct. 
+* Inlary - A piece of memory for min..max elements inside the parent struct.
  When `min == max`, there is no `Alloc` function, and it behaves like N `Val`s.
  When `min < max`, new elements can be allocated. Only the last element can be freed.
 * Lary - Effectively an Inlary of 32 Tarys, each of size 2^k. Has permanent pointers.
@@ -804,9 +1070,9 @@ in alphabetical order.
 * Malloc - Simply calls malloc() / free().
 * Sbrk - Calls sbrk() to get memory.
 * Tary - Pointer to a resizable array (typically growing by powers of 2). Similar to std::vector.
-* Tpool - A singly linked list of free elements; Gets new memory from base pool, frees 
+* Tpool - A singly linked list of free elements; Gets new memory from base pool, frees
   elements into the list.
-* Val - A single value, automatically allocated in constructor, and freed in destructor. 
+* Val - A single value, automatically allocated in constructor, and freed in destructor.
 
 ### Declaring a Pool
 
@@ -827,7 +1093,7 @@ is called.
 
 For any pool, you can specify where to get memory from. This is called a basepool,
 and is specified with a `dmmeta.basepool` record.
-In the example below, the `Lpool` `algo_lib.FDb.lpool` calls `sbrk_AllocMem` 
+In the example below, the `Lpool` `algo_lib.FDb.lpool` calls `sbrk_AllocMem`
 whenever it needs more memory.
 
     dmmeta.field  field:algo_lib.FDb.sbrk   arg:u8  reftype:Sbrk   dflt:""  comment:"Base allocator for everything"
@@ -837,7 +1103,7 @@ whenever it needs more memory.
 The basepool is a really great feature. Imagine a realtime program with strict
 memory requirements; Everything must be pre-allocated and system calls are not allowed during runtime,
 since they would cause latency spikes 1000x of what's allowed. The configuration of memory
-pools can be done entirely outside of the source code base. One can write straightforward bash scripts that try 
+pools can be done entirely outside of the source code base. One can write straightforward bash scripts that try
 different memory pools and measure their relative performance.
 
 To avoid having to specify a base pool for every single pool in a given
@@ -939,7 +1205,7 @@ pool for most records.
 Here is an example of one:
 
     dmmeta.field  field:ssim2mysql.FDb.ctype  arg:ssim2mysql.FCtype  reftype:Lary  dflt:""  comment:""
-    
+
 And here are the generated functions.
 
 #### Alloc
@@ -1009,7 +1275,7 @@ Here is an example of an Lpool declaration:
     dmmeta.field  field:algo_lib.FDb.lpool  arg:u8  reftype:Lpool  dflt:""  comment:"private memory pool"
       dmmeta.basepool  field:algo_lib.FDb.lpool  base:algo_lib.FDb.sbrk
 
-And here are the generated functions. As always, the actual code 
+And here are the generated functions. As always, the actual code
 of these functions can be queried with `amc algo_lib.FDb.lpool.%`
 
 #### FreeMem
@@ -1035,7 +1301,7 @@ of these functions can be queried with `amc algo_lib.FDb.lpool.%`
     // New memory is always allocated (i.e. size reduction is not a no-op)
     // If no memory, return NULL: old memory untouched
     void*                lpool_ReallocMem(void *oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
-              
+
 ### Malloc
 
 Pass-through to libc's malloc / free.
@@ -1051,7 +1317,7 @@ is used for all elements.
 Taking the address of a Tary element is not allowed, although it cannot be prevented
 Records allocated with Tary cannot be cross-referenced, this is enforced by `amc`.
 `algo.ByteAry` is defined as Tary of u8. `algo.cstring` is defined as Tary of char.
-When growing a full Tary (such as from Reserve or Alloc functions), 
+When growing a full Tary (such as from Reserve or Alloc functions),
 the size is always at least doubled.
 
 Here is an example of a Tary field:
@@ -1063,8 +1329,8 @@ Here is an example of a Tary field:
 
 The `aliased` attribute of the `tary` record specifies whether functions involving
 `aryptr` will be generated.
-When they are, it is possible that the `aryptr` being passed to `Addary` or `Setary` is 
-a subrange of the array itself. A check is inserted for this condition, and it's a fatal 
+When they are, it is possible that the `aryptr` being passed to `Addary` or `Setary` is
+a subrange of the array itself. A check is inserted for this condition, and it's a fatal
 program error if the check fails. Even though `amc` could adjust the incoming pointer
 before and after calling `Reserve`, the caller still has a bad `aryptr` on their hands,
 which means there is a program error.
@@ -1175,8 +1441,8 @@ The following functions are generated:
 This pool type only supports fixed-size allocation. Free elements area stored in a singly
 linked list. if the list is empty, tpool uses the base allocator
 (or the namespace default allocator)
-to fulfill the request. The free list can be refilled with ReserveMem. 
-The memory obtained by Tpool from the base allocator is never returned. 
+to fulfill the request. The free list can be refilled with ReserveMem.
+The memory obtained by Tpool from the base allocator is never returned.
 Tpools can only be global (otherwise, memory leaks would occur).
 This is the fastest allocator, because it only takes a couple of instructions to peel a free element
 off of the free list.
@@ -1279,13 +1545,13 @@ In addition, the `algo_lib.FDb.imtable` table contains the list of all in-memory
 Reflection is generally considered a very powerful mechanism, but in the OpenACR world
 it's not used that frequently. While the ability to insert records dynamically (i.e. outside
 of a pre-declared code-path) and knowing the list of namespace linked into a given program is useful,
-it's not as useful as simply loading the ssimtables that describe *all* processes in the 
+it's not as useful as simply loading the ssimtables that describe *all* processes in the
 given universe, and doing something with them. An analogy would be surgery on yourself,
 especially brain surgery. Powerful? Yes. Best practice? Hardly.
 
 ## amc_vis: Visualize Ctype Dependencies and Access Paths
 
-The single parameter to `amc_vis` is a ctype regex, 
+The single parameter to `amc_vis` is a ctype regex,
 and whatever ctypes are matched by the regex will be shown
 via ASCII art.
 
@@ -1316,4 +1582,3 @@ amc_vis can also output an dot file, which can then be viewed in a browser:
         amc_vis.dot  out_dot:xyz.dot  out_svg:xyz.svg
 
     $ firefox xyz.svg
-

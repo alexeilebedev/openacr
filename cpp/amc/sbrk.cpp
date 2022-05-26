@@ -30,11 +30,6 @@
 void amc::tclass_Sbrk() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
-    amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
-
-    include_Alloc(ns) << "#include <sys/wait.h>";
-    include_Alloc(ns) << "#include <sys/mman.h>";
-
     InsVar(R, field.p_ctype, "u64", "$name_huge_limit", "", "Huge page limit in bytes -- set to 0 with fork!");
     InsVar(R, field.p_ctype, "u64", "$name_huge_alloc", "", "Huge page bytes allocated");
     InsVar(R, field.p_ctype, "bool", "$name_zeromem", "", "Zero allocated memory");
@@ -49,10 +44,11 @@ void amc::tfunc_Sbrk_AllocMem() {
     Ins(&R, allocmem.comment , "Allocate a new piece of memory at least SIZE bytes long.");
     Ins(&R, allocmem.comment , "If out of memory, return NULL");
     Ins(&R, allocmem.comment , "Newly allocated memory is initialized to zeros");
-    Ins(&R, allocmem.body    , "void *ret = MAP_FAILED;");
-    Ins(&R, allocmem.body    , "#if defined(__MACH__) || __FreeBSD__>0");
+    Ins(&R, allocmem.body    , "void *ret;");
+    Ins(&R, allocmem.body    , "#if defined(__MACH__) || __FreeBSD__>0 || __CYGWIN__>0 || defined(WIN32)");
     Ins(&R, allocmem.body    , "    ret = malloc(size);");
     Ins(&R, allocmem.body    , "#else");
+    Ins(&R, allocmem.body    , "ret = MAP_FAILED;");
     Ins(&R, allocmem.body    , "u32 bigsize = 1024*2048;");
     Ins(&R, allocmem.body    , "if (size >= bigsize) { // big block -- will be registered");
     Ins(&R, allocmem.body    , "    size = (size + bigsize - 1) / bigsize * bigsize;");
@@ -102,7 +98,7 @@ void amc::tfunc_Sbrk_FreeMem() {
     amc::FFunc& freemem = amc::CreateCurFunc();
     Ins(&R, freemem.ret  , "void", false);
     Ins(&R, freemem.proto, "$name_FreeMem($Parent, void *mem, u32 size)", false);
-    Ins(&R, freemem.body, "#if defined(__MACH__) || __FreeBSD__>0");
+    Ins(&R, freemem.body, "#if defined(__MACH__) || __FreeBSD__>0 || defined(WIN32)");
     Ins(&R, freemem.body, "    free(mem);");
     Ins(&R, freemem.body, "    (void)size;");
     Ins(&R, freemem.body, "#else");

@@ -24,6 +24,8 @@
 // Recent Changes: alexei.lebedev alexey.polovinkin
 //
 
+#include "include/algo.h"
+
 static void JsonParseError(lib_json::FParser &parser, strptr info) {
     if (lib_json::JsonParseOkQ(parser)) {
         parser.state      = lib_json_FParser_state_err;
@@ -90,6 +92,12 @@ lib_json::FNode &lib_json::NewArrayNode(lib_json::FNode *parent, strptr field) {
 
 lib_json::FNode &lib_json::NewStringNode(lib_json::FNode *parent, strptr field, strptr value) {
     lib_json::FNode &node = NewNodeSmart(parent, lib_json_FNode_type_string, field);
+    node.value = value;
+    return node;
+}
+
+lib_json::FNode &lib_json::NewNumberNode(lib_json::FNode *parent, strptr field, strptr value) {
+    lib_json::FNode &node = NewNodeSmart(parent, lib_json_FNode_type_number, field);
     node.value = value;
     return node;
 }
@@ -269,7 +277,7 @@ static void JsonParseNumber(lib_json::FParser &parser) {
 
 // encode as utf-8
 // todo check and not encode:
-// d800-dfff  : UTF-16 uses d800-dfff to encode it’s surrogate pairs, i.e. values that don’t fit in to 16 bits.
+// d800-dfff  : UTF-16 uses d800-dfff to encode it's surrogate pairs, i.e. values that don't fit in to 16 bits.
 //              This means UTF-8/UTF-32 are not allowed to encode these values.
 // fdd0-fdef  : Non-characters.
 // xfffe-xffff: Unassigned: x ranges from 0 to 10 (hex), so the values to check for are fffe-ffff, 1fffe-1ffff, etc.
@@ -315,7 +323,7 @@ static void JsonParseStringUnicode(lib_json::FParser &parser) {
     bool ok = true;
     for (;ok && parser.uesc_need && parser.ind<elems_N(parser.buf);--parser.uesc_need,++parser.ind) {
         u8 dig = 0;
-        ok &= ParseHex1(parser.buf[parser.ind],dig) == 1;
+        ok &= algo::ParseHex1(parser.buf[parser.ind],dig) == 1;
         parser.uesc_value <<= 4;
         parser.uesc_value  |= dig;
     }
@@ -576,12 +584,9 @@ void lib_json::JsonSerialize(lib_json::FNode* node, cstring &lhs, bool pretty, u
 
         case lib_json_FNode_type_array:
         case lib_json_FNode_type_object: {
-            if (!pretty) {
-                lhs<<'\n';// avoid lon lines
-            }
             lhs<< (node->type == lib_json_FNode_type_object ? '{' : '[');
             indent++;
-            ListSep ls(",");
+            algo::ListSep ls(",");
             ind_beg(lib_json::node_c_child_curs, child, *node) {
                 if (pretty) {
                     lhs<< '\n';
@@ -610,7 +615,7 @@ void lib_json::JsonSerialize(lib_json::FNode* node, cstring &lhs, bool pretty, u
 // e.g. path abc.def.ghi and parent {"abc:{"def":{"ghi":value}}}
 // yields value node
 lib_json::FNode* lib_json::node_Find(lib_json::FNode* parent, strptr path) {
-    StringIter it(path);
+    algo::StringIter it(path);
     while (!it.EofQ()) {
         if (!parent || parent->type!=lib_json_FNode_type_object) {
             return NULL;
@@ -651,7 +656,7 @@ lib_json::FNode* lib_json::node_GetArray(lib_json::FNode* parent, strptr path) {
 u32 lib_json::u32_Get(lib_json::FNode* parent, strptr path) {
     lib_json::FNode* node = lib_json::node_Find(parent,path);
     vrfy(node,"u32_Get: path is not found");
-    u32 ret;
+    u32 ret=0;
     if (node) {
         switch (node->type) {
         case lib_json_FNode_type_true  :   ret = 1;                             break;

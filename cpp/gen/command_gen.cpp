@@ -42,13 +42,13 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_maxjobs       : ret = "maxjobs";  break;
         case command_FieldId_printcmd      : ret = "printcmd";  break;
         case command_FieldId_force         : ret = "force";  break;
-        case command_FieldId_testgen       : ret = "testgen";  break;
         case command_FieldId_install       : ret = "install";  break;
         case command_FieldId_coverity      : ret = "coverity";  break;
         case command_FieldId_package       : ret = "package";  break;
         case command_FieldId_maxerr        : ret = "maxerr";  break;
         case command_FieldId_disas         : ret = "disas";  break;
         case command_FieldId_report        : ret = "report";  break;
+        case command_FieldId_jcdb          : ret = "jcdb";  break;
         case command_FieldId_query         : ret = "query";  break;
         case command_FieldId_select        : ret = "select";  break;
         case command_FieldId_del           : ret = "del";  break;
@@ -86,6 +86,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_type          : ret = "type";  break;
         case command_FieldId_create        : ret = "create";  break;
         case command_FieldId_finput        : ret = "finput";  break;
+        case command_FieldId_foutput       : ret = "foutput";  break;
         case command_FieldId_srcfile       : ret = "srcfile";  break;
         case command_FieldId_gstatic       : ret = "gstatic";  break;
         case command_FieldId_indexed       : ret = "indexed";  break;
@@ -113,10 +114,10 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_normcheck     : ret = "normcheck";  break;
         case command_FieldId_cppfunc       : ret = "cppfunc";  break;
         case command_FieldId_via           : ret = "via";  break;
-        case command_FieldId_showcpp       : ret = "showcpp";  break;
         case command_FieldId_comment       : ret = "comment";  break;
         case command_FieldId_sandbox       : ret = "sandbox";  break;
-        case command_FieldId_sandbox_build : ret = "sandbox_build";  break;
+        case command_FieldId_test          : ret = "test";  break;
+        case command_FieldId_showcpp       : ret = "showcpp";  break;
         case command_FieldId_ns            : ret = "ns";  break;
         case command_FieldId_data          : ret = "data";  break;
         case command_FieldId_sigcheck      : ret = "sigcheck";  break;
@@ -143,11 +144,14 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_noinput       : ret = "noinput";  break;
         case command_FieldId_render        : ret = "render";  break;
         case command_FieldId_amctest       : ret = "amctest";  break;
+        case command_FieldId_dofork        : ret = "dofork";  break;
+        case command_FieldId_q             : ret = "q";  break;
+        case command_FieldId_ncmd          : ret = "ncmd";  break;
         case command_FieldId_nofork        : ret = "nofork";  break;
         case command_FieldId_debug         : ret = "debug";  break;
         case command_FieldId_perf_secs     : ret = "perf_secs";  break;
         case command_FieldId_pertest_timeout: ret = "pertest_timeout";  break;
-        case command_FieldId_q             : ret = "q";  break;
+        case command_FieldId_capture       : ret = "capture";  break;
         case command_FieldId_complooo      : ret = "complooo";  break;
         case command_FieldId_args          : ret = "args";  break;
         case command_FieldId_manywin       : ret = "manywin";  break;
@@ -164,6 +168,12 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_tables        : ret = "tables";  break;
         case command_FieldId_nologo        : ret = "nologo";  break;
         case command_FieldId_baddbok       : ret = "baddbok";  break;
+        case command_FieldId_typetag       : ret = "typetag";  break;
+        case command_FieldId_move          : ret = "move";  break;
+        case command_FieldId_dedup         : ret = "dedup";  break;
+        case command_FieldId_commit        : ret = "commit";  break;
+        case command_FieldId_undo          : ret = "undo";  break;
+        case command_FieldId_hash          : ret = "hash";  break;
         case command_FieldId_targsrc       : ret = "targsrc";  break;
         case command_FieldId_name          : ret = "name";  break;
         case command_FieldId_body          : ret = "body";  break;
@@ -178,11 +188,13 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_showstatic    : ret = "showstatic";  break;
         case command_FieldId_showsortkey   : ret = "showsortkey";  break;
         case command_FieldId_sortname      : ret = "sortname";  break;
+        case command_FieldId_baddecl       : ret = "baddecl";  break;
         case command_FieldId_update_authors: ret = "update_authors";  break;
         case command_FieldId_indent        : ret = "indent";  break;
         case command_FieldId_linelim       : ret = "linelim";  break;
         case command_FieldId_strayfile     : ret = "strayfile";  break;
-        case command_FieldId_capture       : ret = "capture";  break;
+        case command_FieldId_badchar       : ret = "badchar";  break;
+        case command_FieldId_badline       : ret = "badline";  break;
         case command_FieldId_expand        : ret = "expand";  break;
         case command_FieldId_ignoreQuote   : ret = "ignoreQuote";  break;
         case command_FieldId_maxpacket     : ret = "maxpacket";  break;
@@ -191,6 +203,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_str           : ret = "str";  break;
         case command_FieldId_tocamelcase   : ret = "tocamelcase";  break;
         case command_FieldId_tolowerunder  : ret = "tolowerunder";  break;
+        case command_FieldId_pathcomp      : ret = "pathcomp";  break;
         case command_FieldId_value         : ret = "value";  break;
     }
     return ret;
@@ -233,7 +246,7 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 2: {
-            switch (u64(ReadLE16(rhs.elems))) {
+            switch (u64(algo::ReadLE16(rhs.elems))) {
                 case LE_STR2('d','b'): {
                     value_SetEnum(parent,command_FieldId_db); ret = true; break;
                 }
@@ -253,7 +266,7 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 3: {
-            switch (u64(ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
                 case LE_STR3('a','r','g'): {
                     value_SetEnum(parent,command_FieldId_arg); ret = true; break;
                 }
@@ -303,7 +316,7 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 4: {
-            switch (u64(ReadLE32(rhs.elems))) {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('a','n','o','n'): {
                     value_SetEnum(parent,command_FieldId_anon); ret = true; break;
                 }
@@ -331,8 +344,14 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('f','u','n','c'): {
                     value_SetEnum(parent,command_FieldId_func); ret = true; break;
                 }
+                case LE_STR4('h','a','s','h'): {
+                    value_SetEnum(parent,command_FieldId_hash); ret = true; break;
+                }
                 case LE_STR4('i','f','f','y'): {
                     value_SetEnum(parent,command_FieldId_iffy); ret = true; break;
+                }
+                case LE_STR4('j','c','d','b'): {
+                    value_SetEnum(parent,command_FieldId_jcdb); ret = true; break;
                 }
                 case LE_STR4('l','i','n','e'): {
                     value_SetEnum(parent,command_FieldId_line); ret = true; break;
@@ -343,8 +362,14 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('m','e','t','a'): {
                     value_SetEnum(parent,command_FieldId_meta); ret = true; break;
                 }
+                case LE_STR4('m','o','v','e'): {
+                    value_SetEnum(parent,command_FieldId_move); ret = true; break;
+                }
                 case LE_STR4('n','a','m','e'): {
                     value_SetEnum(parent,command_FieldId_name); ret = true; break;
+                }
+                case LE_STR4('n','c','m','d'): {
+                    value_SetEnum(parent,command_FieldId_ncmd); ret = true; break;
                 }
                 case LE_STR4('n','s','d','b'): {
                     value_SetEnum(parent,command_FieldId_nsdb); ret = true; break;
@@ -358,11 +383,17 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('s','t','o','p'): {
                     value_SetEnum(parent,command_FieldId_stop); ret = true; break;
                 }
+                case LE_STR4('t','e','s','t'): {
+                    value_SetEnum(parent,command_FieldId_test); ret = true; break;
+                }
                 case LE_STR4('t','r','e','e'): {
                     value_SetEnum(parent,command_FieldId_tree); ret = true; break;
                 }
                 case LE_STR4('t','y','p','e'): {
                     value_SetEnum(parent,command_FieldId_type); ret = true; break;
+                }
+                case LE_STR4('u','n','d','o'): {
+                    value_SetEnum(parent,command_FieldId_undo); ret = true; break;
                 }
                 case LE_STR4('x','r','e','f'): {
                     value_SetEnum(parent,command_FieldId_xref); ret = true; break;
@@ -371,7 +402,7 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('a','b','o','r','t'): {
                     value_SetEnum(parent,command_FieldId_abort); ret = true; break;
                 }
@@ -389,6 +420,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR5('d','e','b','u','g'): {
                     value_SetEnum(parent,command_FieldId_debug); ret = true; break;
+                }
+                case LE_STR5('d','e','d','u','p'): {
+                    value_SetEnum(parent,command_FieldId_dedup); ret = true; break;
                 }
                 case LE_STR5('d','i','s','a','s'): {
                     value_SetEnum(parent,command_FieldId_disas); ret = true; break;
@@ -457,7 +491,7 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 6: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('a','t','t','a','c','h'): {
                     value_SetEnum(parent,command_FieldId_attach); ret = true; break;
                 }
@@ -467,8 +501,14 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('b','i','g','e','n','d'): {
                     value_SetEnum(parent,command_FieldId_bigend); ret = true; break;
                 }
+                case LE_STR6('c','o','m','m','i','t'): {
+                    value_SetEnum(parent,command_FieldId_commit); ret = true; break;
+                }
                 case LE_STR6('c','r','e','a','t','e'): {
                     value_SetEnum(parent,command_FieldId_create); ret = true; break;
+                }
+                case LE_STR6('d','o','f','o','r','k'): {
+                    value_SetEnum(parent,command_FieldId_dofork); ret = true; break;
                 }
                 case LE_STR6('e','x','p','a','n','d'): {
                     value_SetEnum(parent,command_FieldId_expand); ret = true; break;
@@ -543,12 +583,21 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 7: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
                 case LE_STR7('a','m','c','t','e','s','t'): {
                     value_SetEnum(parent,command_FieldId_amctest); ret = true; break;
                 }
+                case LE_STR7('b','a','d','c','h','a','r'): {
+                    value_SetEnum(parent,command_FieldId_badchar); ret = true; break;
+                }
                 case LE_STR7('b','a','d','d','b','o','k'): {
                     value_SetEnum(parent,command_FieldId_baddbok); ret = true; break;
+                }
+                case LE_STR7('b','a','d','d','e','c','l'): {
+                    value_SetEnum(parent,command_FieldId_baddecl); ret = true; break;
+                }
+                case LE_STR7('b','a','d','l','i','n','e'): {
+                    value_SetEnum(parent,command_FieldId_badline); ret = true; break;
                 }
                 case LE_STR7('c','a','p','t','u','r','e'): {
                     value_SetEnum(parent,command_FieldId_capture); ret = true; break;
@@ -567,6 +616,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('f','l','d','f','u','n','c'): {
                     value_SetEnum(parent,command_FieldId_fldfunc); ret = true; break;
+                }
+                case LE_STR7('f','o','u','t','p','u','t'): {
+                    value_SetEnum(parent,command_FieldId_foutput); ret = true; break;
                 }
                 case LE_STR7('g','s','t','a','t','i','c'): {
                     value_SetEnum(parent,command_FieldId_gstatic); ret = true; break;
@@ -640,14 +692,14 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('t','a','r','g','s','r','c'): {
                     value_SetEnum(parent,command_FieldId_targsrc); ret = true; break;
                 }
-                case LE_STR7('t','e','s','t','g','e','n'): {
-                    value_SetEnum(parent,command_FieldId_testgen); ret = true; break;
+                case LE_STR7('t','y','p','e','t','a','g'): {
+                    value_SetEnum(parent,command_FieldId_typetag); ret = true; break;
                 }
             }
             break;
         }
         case 8: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('c','o','m','p','i','l','e','r'): {
                     value_SetEnum(parent,command_FieldId_compiler); ret = true; break;
                 }
@@ -675,6 +727,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR8('n','e','x','t','f','i','l','e'): {
                     value_SetEnum(parent,command_FieldId_nextfile); ret = true; break;
                 }
+                case LE_STR8('p','a','t','h','c','o','m','p'): {
+                    value_SetEnum(parent,command_FieldId_pathcomp); ret = true; break;
+                }
                 case LE_STR8('p','o','o','l','t','y','p','e'): {
                     value_SetEnum(parent,command_FieldId_pooltype); ret = true; break;
                 }
@@ -700,7 +755,7 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 9: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('c','h','e','c','k','a','b','l'): {
                     if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,command_FieldId_checkable); ret = true; break; }
                     break;
@@ -729,7 +784,7 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 10: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('c','a','t','c','h','t','h','r'): {
                     if (memcmp(rhs.elems+8,"ow",2)==0) { value_SetEnum(parent,command_FieldId_catchthrow); ret = true; break; }
                     break;
@@ -742,7 +797,7 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 11: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('i','g','n','o','r','e','Q','u'): {
                     if (memcmp(rhs.elems+8,"ote",3)==0) { value_SetEnum(parent,command_FieldId_ignoreQuote); ret = true; break; }
                     break;
@@ -767,7 +822,7 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 12: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('f','o','l','l','o','w','_','c'): {
                     if (memcmp(rhs.elems+8,"hild",4)==0) { value_SetEnum(parent,command_FieldId_follow_child); ret = true; break; }
                     break;
@@ -780,11 +835,7 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 13: {
-            switch (ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','n','d','b','o','x','_'): {
-                    if (memcmp(rhs.elems+8,"build",5)==0) { value_SetEnum(parent,command_FieldId_sandbox_build); ret = true; break; }
-                    break;
-                }
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('w','r','i','t','e','s','s','i'): {
                     if (memcmp(rhs.elems+8,"mfile",5)==0) { value_SetEnum(parent,command_FieldId_writessimfile); ret = true; break; }
                     break;
@@ -793,7 +844,7 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 14: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('u','p','d','a','t','e','_','a'): {
                     if (memcmp(rhs.elems+8,"uthors",6)==0) { value_SetEnum(parent,command_FieldId_update_authors); ret = true; break; }
                     break;
@@ -802,7 +853,7 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 15: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('p','e','r','t','e','s','t','_'): {
                     if (memcmp(rhs.elems+8,"timeout",7)==0) { value_SetEnum(parent,command_FieldId_pertest_timeout); ret = true; break; }
                     break;
@@ -905,13 +956,13 @@ bool command::abt_ReadFieldMaybe(command::abt &parent, algo::strptr field, algo:
         case command_FieldId_maxjobs: retval = i32_ReadStrptrMaybe(parent.maxjobs, strval); break;
         case command_FieldId_printcmd: retval = bool_ReadStrptrMaybe(parent.printcmd, strval); break;
         case command_FieldId_force: retval = bool_ReadStrptrMaybe(parent.force, strval); break;
-        case command_FieldId_testgen: retval = bool_ReadStrptrMaybe(parent.testgen, strval); break;
         case command_FieldId_install: retval = bool_ReadStrptrMaybe(parent.install, strval); break;
         case command_FieldId_coverity: retval = bool_ReadStrptrMaybe(parent.coverity, strval); break;
         case command_FieldId_package: retval = algo::cstring_ReadStrptrMaybe(parent.package, strval); break;
         case command_FieldId_maxerr: retval = u32_ReadStrptrMaybe(parent.maxerr, strval); break;
         case command_FieldId_disas: retval = disas_ReadStrptrMaybe(parent, strval); break;
         case command_FieldId_report: retval = bool_ReadStrptrMaybe(parent.report, strval); break;
+        case command_FieldId_jcdb: retval = algo::cstring_ReadStrptrMaybe(parent.jcdb, strval); break;
         default: break;
     }
     if (!retval) {
@@ -957,13 +1008,13 @@ void command::abt_Init(command::abt& parent) {
     parent.maxjobs = i32(0);
     parent.printcmd = bool(false);
     parent.force = bool(false);
-    parent.testgen = bool(false);
     parent.install = bool(false);
     parent.coverity = bool(false);
     parent.package = algo::strptr("");
     parent.maxerr = u32(100);
     Regx_ReadSql(parent.disas, "", true);
     parent.report = bool(true);
+    parent.jcdb = algo::strptr("");
 }
 
 // --- command.abt..PrintArgv
@@ -1073,12 +1124,6 @@ void command::abt_PrintArgv(command::abt & row, algo::cstring &str) {
         str << " -force:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.testgen == false)) {
-        ch_RemoveAll(temp);
-        bool_Print(row.testgen, temp);
-        str << " -testgen:";
-        strptr_PrintBash(temp,str);
-    }
     if (!(row.install == false)) {
         ch_RemoveAll(temp);
         bool_Print(row.install, temp);
@@ -1115,6 +1160,12 @@ void command::abt_PrintArgv(command::abt & row, algo::cstring &str) {
         str << " -report:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.jcdb == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.jcdb, temp);
+        str << " -jcdb:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.abt..ToCmdline
@@ -1139,7 +1190,7 @@ algo::strptr command::abt_GetAnon(command::abt &parent, i32 idx) {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("target", 6);
-        default: return strptr();
+        default: return algo::strptr();
     }
 }
 
@@ -1150,17 +1201,21 @@ int command::abt_Start(command::abt_proc& parent) {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(abt_ToCmdline(parent)); // maybe print command
-        parent.status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(abt_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.timeout > 0) {
                 alarm(parent.timeout);
             }
-            algo_lib::ApplyRedirect(parent.stdin, 0);
-            algo_lib::ApplyRedirect(parent.stdout, 1);
-            algo_lib::ApplyRedirect(parent.stderr, 2);
-            retval = abt_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= abt_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("command.abt_execv"
@@ -1171,11 +1226,24 @@ int command::abt_Start(command::abt_proc& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.status; // parent
         }
+#endif
     }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- command.abt_proc.abt.StartRead
+// Start subprocess & Read output
+algo::Fildes command::abt_StartRead(command::abt_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    abt_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- command.abt_proc.abt.Kill
@@ -1190,7 +1258,7 @@ void command::abt_Kill(command::abt_proc& parent) {
 // --- command.abt_proc.abt.Wait
 // Wait for subprocess to return
 void command::abt_Wait(command::abt_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -1227,7 +1295,7 @@ void command::abt_ExecX(command::abt_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:abt.Argv
 int command::abt_Execv(command::abt_proc& parent) {
-    char *argv[24+2]; // start of first arg (future pointer)
+    char *argv[48+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -1353,13 +1421,6 @@ int command::abt_Execv(command::abt_proc& parent) {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
-    if (parent.cmd.testgen != false) {
-        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-testgen:";
-        bool_Print(parent.cmd.testgen, temp);
-        ch_Alloc(temp) = 0;// NUL term for this arg
-    }
-
     if (parent.cmd.install != false) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-install:";
@@ -1401,6 +1462,13 @@ int command::abt_Execv(command::abt_proc& parent) {
         bool_Print(parent.cmd.report, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
+
+    if (parent.cmd.jcdb != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-jcdb:";
+        cstring_Print(parent.cmd.jcdb, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
     for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-verbose";
@@ -1420,14 +1488,14 @@ algo::tempstr command::abt_ToCmdline(command::abt_proc& parent) {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::abt_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.stdin)) {
-        retval << " " << parent.stdin;
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
     }
-    if (ch_N(parent.stdout)) {
-        retval << " " << parent.stdout;
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
     }
-    if (ch_N(parent.stderr)) {
-        retval << " 2" << parent.stderr;
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
     }
     return retval;
 }
@@ -1777,7 +1845,7 @@ algo::strptr command::acr_GetAnon(command::acr &parent, i32 idx) {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("query", 5);
-        default: return strptr();
+        default: return algo::strptr();
     }
 }
 
@@ -1869,17 +1937,21 @@ int command::acr_compl_Start(command::acr_compl_proc& parent) {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(acr_compl_ToCmdline(parent)); // maybe print command
-        parent.status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(acr_compl_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.timeout > 0) {
                 alarm(parent.timeout);
             }
-            algo_lib::ApplyRedirect(parent.stdin, 0);
-            algo_lib::ApplyRedirect(parent.stdout, 1);
-            algo_lib::ApplyRedirect(parent.stderr, 2);
-            retval = acr_compl_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= acr_compl_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("command.acr_compl_execv"
@@ -1890,11 +1962,24 @@ int command::acr_compl_Start(command::acr_compl_proc& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.status; // parent
         }
+#endif
     }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- command.acr_compl_proc.acr_compl.StartRead
+// Start subprocess & Read output
+algo::Fildes command::acr_compl_StartRead(command::acr_compl_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    acr_compl_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- command.acr_compl_proc.acr_compl.Kill
@@ -1909,7 +1994,7 @@ void command::acr_compl_Kill(command::acr_compl_proc& parent) {
 // --- command.acr_compl_proc.acr_compl.Wait
 // Wait for subprocess to return
 void command::acr_compl_Wait(command::acr_compl_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -1946,7 +2031,7 @@ void command::acr_compl_ExecX(command::acr_compl_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:acr_compl.Argv
 int command::acr_compl_Execv(command::acr_compl_proc& parent) {
-    char *argv[4+2]; // start of first arg (future pointer)
+    char *argv[8+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -1999,14 +2084,14 @@ algo::tempstr command::acr_compl_ToCmdline(command::acr_compl_proc& parent) {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::acr_compl_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.stdin)) {
-        retval << " " << parent.stdin;
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
     }
-    if (ch_N(parent.stdout)) {
-        retval << " " << parent.stdout;
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
     }
-    if (ch_N(parent.stderr)) {
-        retval << " 2" << parent.stderr;
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
     }
     return retval;
 }
@@ -2031,6 +2116,7 @@ bool command::acr_ed_ReadFieldMaybe(command::acr_ed &parent, algo::strptr field,
         case command_FieldId_rename: retval = algo::cstring_ReadStrptrMaybe(parent.rename, strval); break;
         case command_FieldId_replace: retval = bool_ReadStrptrMaybe(parent.replace, strval); break;
         case command_FieldId_finput: retval = bool_ReadStrptrMaybe(parent.finput, strval); break;
+        case command_FieldId_foutput: retval = bool_ReadStrptrMaybe(parent.foutput, strval); break;
         case command_FieldId_srcfile: retval = algo::cstring_ReadStrptrMaybe(parent.srcfile, strval); break;
         case command_FieldId_gstatic: retval = bool_ReadStrptrMaybe(parent.gstatic, strval); break;
         case command_FieldId_indexed: retval = bool_ReadStrptrMaybe(parent.indexed, strval); break;
@@ -2061,12 +2147,12 @@ bool command::acr_ed_ReadFieldMaybe(command::acr_ed &parent, algo::strptr field,
         case command_FieldId_cppfunc: retval = algo::cstring_ReadStrptrMaybe(parent.cppfunc, strval); break;
         case command_FieldId_xref: retval = bool_ReadStrptrMaybe(parent.xref, strval); break;
         case command_FieldId_via: retval = algo::cstring_ReadStrptrMaybe(parent.via, strval); break;
-        case command_FieldId_showcpp: retval = bool_ReadStrptrMaybe(parent.showcpp, strval); break;
         case command_FieldId_write: retval = bool_ReadStrptrMaybe(parent.write, strval); break;
         case command_FieldId_e: retval = bool_ReadStrptrMaybe(parent.e, strval); break;
         case command_FieldId_comment: retval = algo::cstring_ReadStrptrMaybe(parent.comment, strval); break;
         case command_FieldId_sandbox: retval = bool_ReadStrptrMaybe(parent.sandbox, strval); break;
-        case command_FieldId_sandbox_build: retval = bool_ReadStrptrMaybe(parent.sandbox_build, strval); break;
+        case command_FieldId_test: retval = bool_ReadStrptrMaybe(parent.test, strval); break;
+        case command_FieldId_showcpp: retval = bool_ReadStrptrMaybe(parent.showcpp, strval); break;
         default: break;
     }
     if (!retval) {
@@ -2097,6 +2183,7 @@ void command::acr_ed_Init(command::acr_ed& parent) {
     parent.rename = algo::strptr("");
     parent.replace = bool(false);
     parent.finput = bool(false);
+    parent.foutput = bool(false);
     parent.srcfile = algo::strptr("");
     parent.gstatic = bool(false);
     parent.indexed = bool(false);
@@ -2127,12 +2214,12 @@ void command::acr_ed_Init(command::acr_ed& parent) {
     parent.cppfunc = algo::strptr("");
     parent.xref = bool(false);
     parent.via = algo::strptr("");
-    parent.showcpp = bool(false);
     parent.write = bool(false);
     parent.e = bool(false);
     parent.comment = algo::strptr("");
     parent.sandbox = bool(false);
-    parent.sandbox_build = bool(true);
+    parent.test = bool(false);
+    parent.showcpp = bool(false);
 }
 
 // --- command.acr_ed..PrintArgv
@@ -2176,6 +2263,12 @@ void command::acr_ed_PrintArgv(command::acr_ed & row, algo::cstring &str) {
         ch_RemoveAll(temp);
         bool_Print(row.finput, temp);
         str << " -finput:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.foutput == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.foutput, temp);
+        str << " -foutput:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.srcfile == "")) {
@@ -2358,12 +2451,6 @@ void command::acr_ed_PrintArgv(command::acr_ed & row, algo::cstring &str) {
         str << " -via:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.showcpp == false)) {
-        ch_RemoveAll(temp);
-        bool_Print(row.showcpp, temp);
-        str << " -showcpp:";
-        strptr_PrintBash(temp,str);
-    }
     if (!(row.write == false)) {
         ch_RemoveAll(temp);
         bool_Print(row.write, temp);
@@ -2388,10 +2475,16 @@ void command::acr_ed_PrintArgv(command::acr_ed & row, algo::cstring &str) {
         str << " -sandbox:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.sandbox_build == true)) {
+    if (!(row.test == false)) {
         ch_RemoveAll(temp);
-        bool_Print(row.sandbox_build, temp);
-        str << " -sandbox_build:";
+        bool_Print(row.test, temp);
+        str << " -test:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.showcpp == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.showcpp, temp);
+        str << " -showcpp:";
         strptr_PrintBash(temp,str);
     }
 }
@@ -2420,17 +2513,21 @@ int command::acr_ed_Start(command::acr_ed_proc& parent) {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(acr_ed_ToCmdline(parent)); // maybe print command
-        parent.status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(acr_ed_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.timeout > 0) {
                 alarm(parent.timeout);
             }
-            algo_lib::ApplyRedirect(parent.stdin, 0);
-            algo_lib::ApplyRedirect(parent.stdout, 1);
-            algo_lib::ApplyRedirect(parent.stderr, 2);
-            retval = acr_ed_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= acr_ed_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("command.acr_ed_execv"
@@ -2441,11 +2538,24 @@ int command::acr_ed_Start(command::acr_ed_proc& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.status; // parent
         }
+#endif
     }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- command.acr_ed_proc.acr_ed.StartRead
+// Start subprocess & Read output
+algo::Fildes command::acr_ed_StartRead(command::acr_ed_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    acr_ed_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- command.acr_ed_proc.acr_ed.Kill
@@ -2460,7 +2570,7 @@ void command::acr_ed_Kill(command::acr_ed_proc& parent) {
 // --- command.acr_ed_proc.acr_ed.Wait
 // Wait for subprocess to return
 void command::acr_ed_Wait(command::acr_ed_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -2497,7 +2607,7 @@ void command::acr_ed_ExecX(command::acr_ed_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:acr_ed.Argv
 int command::acr_ed_Execv(command::acr_ed_proc& parent) {
-    char *argv[42+2]; // start of first arg (future pointer)
+    char *argv[86+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -2543,6 +2653,13 @@ int command::acr_ed_Execv(command::acr_ed_proc& parent) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-finput:";
         bool_Print(parent.cmd.finput, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.foutput != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-foutput:";
+        bool_Print(parent.cmd.foutput, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
@@ -2756,13 +2873,6 @@ int command::acr_ed_Execv(command::acr_ed_proc& parent) {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
-    if (parent.cmd.showcpp != false) {
-        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-showcpp:";
-        bool_Print(parent.cmd.showcpp, temp);
-        ch_Alloc(temp) = 0;// NUL term for this arg
-    }
-
     if (parent.cmd.write != false) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-write:";
@@ -2791,10 +2901,17 @@ int command::acr_ed_Execv(command::acr_ed_proc& parent) {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
-    if (parent.cmd.sandbox_build != true) {
+    if (parent.cmd.test != false) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-sandbox_build:";
-        bool_Print(parent.cmd.sandbox_build, temp);
+        temp << "-test:";
+        bool_Print(parent.cmd.test, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.showcpp != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-showcpp:";
+        bool_Print(parent.cmd.showcpp, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
     for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
@@ -2816,14 +2933,14 @@ algo::tempstr command::acr_ed_ToCmdline(command::acr_ed_proc& parent) {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::acr_ed_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.stdin)) {
-        retval << " " << parent.stdin;
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
     }
-    if (ch_N(parent.stdout)) {
-        retval << " " << parent.stdout;
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
     }
-    if (ch_N(parent.stderr)) {
-        retval << " 2" << parent.stderr;
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
     }
     return retval;
 }
@@ -3002,7 +3119,7 @@ algo::strptr command::acr_in_GetAnon(command::acr_in &parent, i32 idx) {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("ns", 2);
-        default: return strptr();
+        default: return algo::strptr();
     }
 }
 
@@ -3013,17 +3130,21 @@ int command::acr_in_Start(command::acr_in_proc& parent) {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(acr_in_ToCmdline(parent)); // maybe print command
-        parent.status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(acr_in_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.timeout > 0) {
                 alarm(parent.timeout);
             }
-            algo_lib::ApplyRedirect(parent.stdin, 0);
-            algo_lib::ApplyRedirect(parent.stdout, 1);
-            algo_lib::ApplyRedirect(parent.stderr, 2);
-            retval = acr_in_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= acr_in_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("command.acr_in_execv"
@@ -3034,11 +3155,24 @@ int command::acr_in_Start(command::acr_in_proc& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.status; // parent
         }
+#endif
     }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- command.acr_in_proc.acr_in.StartRead
+// Start subprocess & Read output
+algo::Fildes command::acr_in_StartRead(command::acr_in_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    acr_in_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- command.acr_in_proc.acr_in.Kill
@@ -3053,7 +3187,7 @@ void command::acr_in_Kill(command::acr_in_proc& parent) {
 // --- command.acr_in_proc.acr_in.Wait
 // Wait for subprocess to return
 void command::acr_in_Wait(command::acr_in_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -3090,7 +3224,7 @@ void command::acr_in_ExecX(command::acr_in_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:acr_in.Argv
 int command::acr_in_Execv(command::acr_in_proc& parent) {
-    char *argv[9+2]; // start of first arg (future pointer)
+    char *argv[18+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -3178,14 +3312,14 @@ algo::tempstr command::acr_in_ToCmdline(command::acr_in_proc& parent) {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::acr_in_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.stdin)) {
-        retval << " " << parent.stdin;
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
     }
-    if (ch_N(parent.stdout)) {
-        retval << " " << parent.stdout;
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
     }
-    if (ch_N(parent.stderr)) {
-        retval << " 2" << parent.stderr;
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
     }
     return retval;
 }
@@ -3366,7 +3500,7 @@ algo::strptr command::acr_my_GetAnon(command::acr_my &parent, i32 idx) {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("nsdb", 4);
-        default: return strptr();
+        default: return algo::strptr();
     }
 }
 
@@ -3377,17 +3511,21 @@ int command::acr_my_Start(command::acr_my_proc& parent) {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(acr_my_ToCmdline(parent)); // maybe print command
-        parent.status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(acr_my_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.timeout > 0) {
                 alarm(parent.timeout);
             }
-            algo_lib::ApplyRedirect(parent.stdin, 0);
-            algo_lib::ApplyRedirect(parent.stdout, 1);
-            algo_lib::ApplyRedirect(parent.stderr, 2);
-            retval = acr_my_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= acr_my_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("command.acr_my_execv"
@@ -3398,11 +3536,24 @@ int command::acr_my_Start(command::acr_my_proc& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.status; // parent
         }
+#endif
     }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- command.acr_my_proc.acr_my.StartRead
+// Start subprocess & Read output
+algo::Fildes command::acr_my_StartRead(command::acr_my_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    acr_my_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- command.acr_my_proc.acr_my.Kill
@@ -3417,7 +3568,7 @@ void command::acr_my_Kill(command::acr_my_proc& parent) {
 // --- command.acr_my_proc.acr_my.Wait
 // Wait for subprocess to return
 void command::acr_my_Wait(command::acr_my_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -3454,7 +3605,7 @@ void command::acr_my_ExecX(command::acr_my_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:acr_my.Argv
 int command::acr_my_Execv(command::acr_my_proc& parent) {
-    char *argv[11+2]; // start of first arg (future pointer)
+    char *argv[22+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -3556,14 +3707,14 @@ algo::tempstr command::acr_my_ToCmdline(command::acr_my_proc& parent) {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::acr_my_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.stdin)) {
-        retval << " " << parent.stdin;
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
     }
-    if (ch_N(parent.stdout)) {
-        retval << " " << parent.stdout;
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
     }
-    if (ch_N(parent.stderr)) {
-        retval << " 2" << parent.stderr;
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
     }
     return retval;
 }
@@ -3583,17 +3734,21 @@ int command::acr_Start(command::acr_proc& parent) {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(acr_ToCmdline(parent)); // maybe print command
-        parent.status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(acr_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.timeout > 0) {
                 alarm(parent.timeout);
             }
-            algo_lib::ApplyRedirect(parent.stdin, 0);
-            algo_lib::ApplyRedirect(parent.stdout, 1);
-            algo_lib::ApplyRedirect(parent.stderr, 2);
-            retval = acr_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= acr_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("command.acr_execv"
@@ -3604,11 +3759,24 @@ int command::acr_Start(command::acr_proc& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.status; // parent
         }
+#endif
     }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- command.acr_proc.acr.StartRead
+// Start subprocess & Read output
+algo::Fildes command::acr_StartRead(command::acr_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    acr_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- command.acr_proc.acr.Kill
@@ -3623,7 +3791,7 @@ void command::acr_Kill(command::acr_proc& parent) {
 // --- command.acr_proc.acr.Wait
 // Wait for subprocess to return
 void command::acr_Wait(command::acr_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -3660,7 +3828,7 @@ void command::acr_ExecX(command::acr_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:acr.Argv
 int command::acr_Execv(command::acr_proc& parent) {
-    char *argv[34+2]; // start of first arg (future pointer)
+    char *argv[68+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -3923,14 +4091,14 @@ algo::tempstr command::acr_ToCmdline(command::acr_proc& parent) {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::acr_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.stdin)) {
-        retval << " " << parent.stdin;
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
     }
-    if (ch_N(parent.stdout)) {
-        retval << " " << parent.stdout;
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
     }
-    if (ch_N(parent.stderr)) {
-        retval << " 2" << parent.stderr;
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
     }
     return retval;
 }
@@ -4079,7 +4247,7 @@ algo::strptr command::amc_GetAnon(command::amc &parent, i32 idx) {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("query", 5);
-        default: return strptr();
+        default: return algo::strptr();
     }
 }
 
@@ -4315,17 +4483,21 @@ int command::amc_gc_Start(command::amc_gc_proc& parent) {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(amc_gc_ToCmdline(parent)); // maybe print command
-        parent.status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(amc_gc_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.timeout > 0) {
                 alarm(parent.timeout);
             }
-            algo_lib::ApplyRedirect(parent.stdin, 0);
-            algo_lib::ApplyRedirect(parent.stdout, 1);
-            algo_lib::ApplyRedirect(parent.stderr, 2);
-            retval = amc_gc_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= amc_gc_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("command.amc_gc_execv"
@@ -4336,11 +4508,24 @@ int command::amc_gc_Start(command::amc_gc_proc& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.status; // parent
         }
+#endif
     }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- command.amc_gc_proc.amc_gc.StartRead
+// Start subprocess & Read output
+algo::Fildes command::amc_gc_StartRead(command::amc_gc_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    amc_gc_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- command.amc_gc_proc.amc_gc.Kill
@@ -4355,7 +4540,7 @@ void command::amc_gc_Kill(command::amc_gc_proc& parent) {
 // --- command.amc_gc_proc.amc_gc.Wait
 // Wait for subprocess to return
 void command::amc_gc_Wait(command::amc_gc_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -4392,7 +4577,7 @@ void command::amc_gc_ExecX(command::amc_gc_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:amc_gc.Argv
 int command::amc_gc_Execv(command::amc_gc_proc& parent) {
-    char *argv[4+2]; // start of first arg (future pointer)
+    char *argv[8+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -4445,14 +4630,14 @@ algo::tempstr command::amc_gc_ToCmdline(command::amc_gc_proc& parent) {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::amc_gc_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.stdin)) {
-        retval << " " << parent.stdin;
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
     }
-    if (ch_N(parent.stdout)) {
-        retval << " " << parent.stdout;
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
     }
-    if (ch_N(parent.stderr)) {
-        retval << " 2" << parent.stderr;
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
     }
     return retval;
 }
@@ -4472,17 +4657,21 @@ int command::amc_Start(command::amc_proc& parent) {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(amc_ToCmdline(parent)); // maybe print command
-        parent.status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(amc_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.timeout > 0) {
                 alarm(parent.timeout);
             }
-            algo_lib::ApplyRedirect(parent.stdin, 0);
-            algo_lib::ApplyRedirect(parent.stdout, 1);
-            algo_lib::ApplyRedirect(parent.stderr, 2);
-            retval = amc_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= amc_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("command.amc_execv"
@@ -4493,11 +4682,24 @@ int command::amc_Start(command::amc_proc& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.status; // parent
         }
+#endif
     }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- command.amc_proc.amc.StartRead
+// Start subprocess & Read output
+algo::Fildes command::amc_StartRead(command::amc_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    amc_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- command.amc_proc.amc.Kill
@@ -4512,7 +4714,7 @@ void command::amc_Kill(command::amc_proc& parent) {
 // --- command.amc_proc.amc.Wait
 // Wait for subprocess to return
 void command::amc_Wait(command::amc_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -4549,7 +4751,7 @@ void command::amc_ExecX(command::amc_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:amc.Argv
 int command::amc_Execv(command::amc_proc& parent) {
-    char *argv[7+2]; // start of first arg (future pointer)
+    char *argv[14+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -4623,14 +4825,14 @@ algo::tempstr command::amc_ToCmdline(command::amc_proc& parent) {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::amc_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.stdin)) {
-        retval << " " << parent.stdin;
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
     }
-    if (ch_N(parent.stdout)) {
-        retval << " " << parent.stdout;
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
     }
-    if (ch_N(parent.stderr)) {
-        retval << " 2" << parent.stderr;
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
     }
     return retval;
 }
@@ -4787,7 +4989,7 @@ algo::strptr command::amc_vis_GetAnon(command::amc_vis &parent, i32 idx) {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("ctype", 5);
-        default: return strptr();
+        default: return algo::strptr();
     }
 }
 
@@ -4798,17 +5000,21 @@ int command::amc_vis_Start(command::amc_vis_proc& parent) {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(amc_vis_ToCmdline(parent)); // maybe print command
-        parent.status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(amc_vis_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.timeout > 0) {
                 alarm(parent.timeout);
             }
-            algo_lib::ApplyRedirect(parent.stdin, 0);
-            algo_lib::ApplyRedirect(parent.stdout, 1);
-            algo_lib::ApplyRedirect(parent.stderr, 2);
-            retval = amc_vis_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= amc_vis_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("command.amc_vis_execv"
@@ -4819,11 +5025,24 @@ int command::amc_vis_Start(command::amc_vis_proc& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.status; // parent
         }
+#endif
     }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- command.amc_vis_proc.amc_vis.StartRead
+// Start subprocess & Read output
+algo::Fildes command::amc_vis_StartRead(command::amc_vis_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    amc_vis_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- command.amc_vis_proc.amc_vis.Kill
@@ -4838,7 +5057,7 @@ void command::amc_vis_Kill(command::amc_vis_proc& parent) {
 // --- command.amc_vis_proc.amc_vis.Wait
 // Wait for subprocess to return
 void command::amc_vis_Wait(command::amc_vis_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -4875,7 +5094,7 @@ void command::amc_vis_ExecX(command::amc_vis_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:amc_vis.Argv
 int command::amc_vis_Execv(command::amc_vis_proc& parent) {
-    char *argv[8+2]; // start of first arg (future pointer)
+    char *argv[16+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -4956,14 +5175,14 @@ algo::tempstr command::amc_vis_ToCmdline(command::amc_vis_proc& parent) {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::amc_vis_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.stdin)) {
-        retval << " " << parent.stdin;
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
     }
-    if (ch_N(parent.stdout)) {
-        retval << " " << parent.stdout;
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
     }
-    if (ch_N(parent.stderr)) {
-        retval << " 2" << parent.stderr;
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
     }
     return retval;
 }
@@ -4999,6 +5218,8 @@ bool command::atf_amc_ReadFieldMaybe(command::atf_amc &parent, algo::strptr fiel
     switch(field_id) {
         case command_FieldId_in: retval = algo::cstring_ReadStrptrMaybe(parent.in, strval); break;
         case command_FieldId_amctest: retval = amctest_ReadStrptrMaybe(parent, strval); break;
+        case command_FieldId_dofork: retval = bool_ReadStrptrMaybe(parent.dofork, strval); break;
+        case command_FieldId_q: retval = bool_ReadStrptrMaybe(parent.q, strval); break;
         default: break;
     }
     if (!retval) {
@@ -5029,6 +5250,8 @@ bool command::atf_amc_ReadTupleMaybe(command::atf_amc &parent, algo::Tuple &tupl
 void command::atf_amc_Init(command::atf_amc& parent) {
     parent.in = algo::strptr("data");
     Regx_ReadSql(parent.amctest, "%", true);
+    parent.dofork = bool(true);
+    parent.q = bool(false);
 }
 
 // --- command.atf_amc..PrintArgv
@@ -5048,6 +5271,18 @@ void command::atf_amc_PrintArgv(command::atf_amc & row, algo::cstring &str) {
     command::amctest_Print(const_cast<command::atf_amc&>(row), temp);
     str << " ";
     strptr_PrintBash(temp,str);
+    if (!(row.dofork == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.dofork, temp);
+        str << " -dofork:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.q == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.q, temp);
+        str << " -q:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.atf_amc..ToCmdline
@@ -5072,7 +5307,7 @@ algo::strptr command::atf_amc_GetAnon(command::atf_amc &parent, i32 idx) {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("amctest", 7);
-        default: return strptr();
+        default: return algo::strptr();
     }
 }
 
@@ -5083,17 +5318,21 @@ int command::atf_amc_Start(command::atf_amc_proc& parent) {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(atf_amc_ToCmdline(parent)); // maybe print command
-        parent.status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(atf_amc_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.timeout > 0) {
                 alarm(parent.timeout);
             }
-            algo_lib::ApplyRedirect(parent.stdin, 0);
-            algo_lib::ApplyRedirect(parent.stdout, 1);
-            algo_lib::ApplyRedirect(parent.stderr, 2);
-            retval = atf_amc_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= atf_amc_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("command.atf_amc_execv"
@@ -5104,11 +5343,24 @@ int command::atf_amc_Start(command::atf_amc_proc& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.status; // parent
         }
+#endif
     }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- command.atf_amc_proc.atf_amc.StartRead
+// Start subprocess & Read output
+algo::Fildes command::atf_amc_StartRead(command::atf_amc_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    atf_amc_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- command.atf_amc_proc.atf_amc.Kill
@@ -5123,7 +5375,7 @@ void command::atf_amc_Kill(command::atf_amc_proc& parent) {
 // --- command.atf_amc_proc.atf_amc.Wait
 // Wait for subprocess to return
 void command::atf_amc_Wait(command::atf_amc_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -5160,7 +5412,7 @@ void command::atf_amc_ExecX(command::atf_amc_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:atf_amc.Argv
 int command::atf_amc_Execv(command::atf_amc_proc& parent) {
-    char *argv[2+2]; // start of first arg (future pointer)
+    char *argv[8+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -5178,6 +5430,20 @@ int command::atf_amc_Execv(command::atf_amc_proc& parent) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-amctest:";
         command::amctest_Print(parent.cmd, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.dofork != true) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-dofork:";
+        bool_Print(parent.cmd.dofork, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.q != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-q:";
+        bool_Print(parent.cmd.q, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
     for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
@@ -5199,14 +5465,14 @@ algo::tempstr command::atf_amc_ToCmdline(command::atf_amc_proc& parent) {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::atf_amc_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.stdin)) {
-        retval << " " << parent.stdin;
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
     }
-    if (ch_N(parent.stdout)) {
-        retval << " " << parent.stdout;
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
     }
-    if (ch_N(parent.stderr)) {
-        retval << " 2" << parent.stderr;
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
     }
     return retval;
 }
@@ -5315,7 +5581,7 @@ algo::strptr command::atf_norm_GetAnon(command::atf_norm &parent, i32 idx) {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("normcheck", 9);
-        default: return strptr();
+        default: return algo::strptr();
     }
 }
 
@@ -5326,17 +5592,21 @@ int command::atf_norm_Start(command::atf_norm_proc& parent) {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(atf_norm_ToCmdline(parent)); // maybe print command
-        parent.status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(atf_norm_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.timeout > 0) {
                 alarm(parent.timeout);
             }
-            algo_lib::ApplyRedirect(parent.stdin, 0);
-            algo_lib::ApplyRedirect(parent.stdout, 1);
-            algo_lib::ApplyRedirect(parent.stderr, 2);
-            retval = atf_norm_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= atf_norm_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("command.atf_norm_execv"
@@ -5347,11 +5617,24 @@ int command::atf_norm_Start(command::atf_norm_proc& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.status; // parent
         }
+#endif
     }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- command.atf_norm_proc.atf_norm.StartRead
+// Start subprocess & Read output
+algo::Fildes command::atf_norm_StartRead(command::atf_norm_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    atf_norm_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- command.atf_norm_proc.atf_norm.Kill
@@ -5366,7 +5649,7 @@ void command::atf_norm_Kill(command::atf_norm_proc& parent) {
 // --- command.atf_norm_proc.atf_norm.Wait
 // Wait for subprocess to return
 void command::atf_norm_Wait(command::atf_norm_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -5403,7 +5686,7 @@ void command::atf_norm_ExecX(command::atf_norm_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:atf_norm.Argv
 int command::atf_norm_Execv(command::atf_norm_proc& parent) {
-    char *argv[2+2]; // start of first arg (future pointer)
+    char *argv[4+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -5442,14 +5725,14 @@ algo::tempstr command::atf_norm_ToCmdline(command::atf_norm_proc& parent) {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::atf_norm_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.stdin)) {
-        retval << " " << parent.stdin;
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
     }
-    if (ch_N(parent.stdout)) {
-        retval << " " << parent.stdout;
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
     }
-    if (ch_N(parent.stderr)) {
-        retval << " 2" << parent.stderr;
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
     }
     return retval;
 }
@@ -5460,6 +5743,258 @@ void command::atf_norm_proc_Uninit(command::atf_norm_proc& parent) {
 
     // command.atf_norm_proc.atf_norm.Uninit (Exec)  //
     atf_norm_Kill(parent); // kill child, ensure forward progress
+}
+
+// --- command.atf_nrun..ReadFieldMaybe
+bool command::atf_nrun_ReadFieldMaybe(command::atf_nrun &parent, algo::strptr field, algo::strptr strval) {
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case command_FieldId_in: retval = algo::cstring_ReadStrptrMaybe(parent.in, strval); break;
+        case command_FieldId_maxjobs: retval = i32_ReadStrptrMaybe(parent.maxjobs, strval); break;
+        case command_FieldId_ncmd: retval = i32_ReadStrptrMaybe(parent.ncmd, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.atf_nrun..ReadTupleMaybe
+// Read fields of command::atf_nrun from attributes of ascii tuple TUPLE
+bool command::atf_nrun_ReadTupleMaybe(command::atf_nrun &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    int anon_idx = 0;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        if (ch_N(attr.name) == 0) {
+            attr.name = atf_nrun_GetAnon(parent, anon_idx++);
+        }
+        retval = atf_nrun_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- command.atf_nrun..PrintArgv
+// print command-line args of command::atf_nrun to string  -- cprint:command.atf_nrun.Argv
+void command::atf_nrun_PrintArgv(command::atf_nrun & row, algo::cstring &str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)row;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.maxjobs == 2)) {
+        ch_RemoveAll(temp);
+        i32_Print(row.maxjobs, temp);
+        str << " -maxjobs:";
+        strptr_PrintBash(temp,str);
+    }
+    ch_RemoveAll(temp);
+    i32_Print(row.ncmd, temp);
+    str << " ";
+    strptr_PrintBash(temp,str);
+}
+
+// --- command.atf_nrun..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::atf_nrun_ToCmdline(command::atf_nrun & row) {
+    tempstr ret;
+    ret << "bin/atf_nrun ";
+    atf_nrun_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.atf_nrun..GetAnon
+algo::strptr command::atf_nrun_GetAnon(command::atf_nrun &parent, i32 idx) {
+    (void)parent;//only to avoid -Wunused-parameter
+    switch(idx) {
+        case(0): return strptr("ncmd", 4);
+        default: return algo::strptr();
+    }
+}
+
+// --- command.atf_nrun_proc.atf_nrun.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::atf_nrun_Start(command::atf_nrun_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(atf_nrun_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(atf_nrun_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= atf_nrun_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.atf_nrun_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.atf_nrun_proc.atf_nrun.StartRead
+// Start subprocess & Read output
+algo::Fildes command::atf_nrun_StartRead(command::atf_nrun_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    atf_nrun_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.atf_nrun_proc.atf_nrun.Kill
+// Kill subprocess and wait
+void command::atf_nrun_Kill(command::atf_nrun_proc& parent) {
+    if (parent.pid != 0) {
+        kill(parent.pid,9);
+        atf_nrun_Wait(parent);
+    }
+}
+
+// --- command.atf_nrun_proc.atf_nrun.Wait
+// Wait for subprocess to return
+void command::atf_nrun_Wait(command::atf_nrun_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.atf_nrun_proc.atf_nrun.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::atf_nrun_Exec(command::atf_nrun_proc& parent) {
+    atf_nrun_Start(parent);
+    atf_nrun_Wait(parent);
+    return parent.status;
+}
+
+// --- command.atf_nrun_proc.atf_nrun.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::atf_nrun_ExecX(command::atf_nrun_proc& parent) {
+    int rc = atf_nrun_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",atf_nrun_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.atf_nrun_proc.atf_nrun.Execv
+// Call execv()
+// Call execv with specified parameters -- cprint:atf_nrun.Argv
+int command::atf_nrun_Execv(command::atf_nrun_proc& parent) {
+    char *argv[6+2]; // start of first arg (future pointer)
+    algo::tempstr temp;
+    int n_argv=0;
+    argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+    temp << parent.path;
+    ch_Alloc(temp) = 0;// NUL term for pathname
+
+    if (parent.cmd.in != "data") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-in:";
+        cstring_Print(parent.cmd.in, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.maxjobs != 2) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-maxjobs:";
+        i32_Print(parent.cmd.maxjobs, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.ncmd != 6) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-ncmd:";
+        i32_Print(parent.cmd.ncmd, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+    for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-verbose";
+        ch_Alloc(temp) = 0;
+    }
+    argv[n_argv] = NULL; // last pointer
+    while (n_argv>0) { // shift pointers
+        argv[--n_argv] += (u64)temp.ch_elems;
+    }
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    return execv(Zeroterm(parent.path),argv);
+}
+
+// --- command.atf_nrun_proc.atf_nrun.ToCmdline
+algo::tempstr command::atf_nrun_ToCmdline(command::atf_nrun_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::atf_nrun_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.atf_nrun_proc..Uninit
+void command::atf_nrun_proc_Uninit(command::atf_nrun_proc& parent) {
+    command::atf_nrun_proc &row = parent; (void)row;
+
+    // command.atf_nrun_proc.atf_nrun.Uninit (Exec)  //
+    atf_nrun_Kill(parent); // kill child, ensure forward progress
 }
 
 // --- command.atf_unit.unittest.Print
@@ -5490,6 +6025,8 @@ bool command::atf_unit_ReadFieldMaybe(command::atf_unit &parent, algo::strptr fi
         case command_FieldId_debug: retval = bool_ReadStrptrMaybe(parent.debug, strval); break;
         case command_FieldId_perf_secs: retval = double_ReadStrptrMaybe(parent.perf_secs, strval); break;
         case command_FieldId_pertest_timeout: retval = u32_ReadStrptrMaybe(parent.pertest_timeout, strval); break;
+        case command_FieldId_report: retval = bool_ReadStrptrMaybe(parent.report, strval); break;
+        case command_FieldId_capture: retval = bool_ReadStrptrMaybe(parent.capture, strval); break;
         default: break;
     }
     if (!retval) {
@@ -5525,6 +6062,8 @@ void command::atf_unit_Init(command::atf_unit& parent) {
     parent.debug = bool(0);
     parent.perf_secs = double(1.0);
     parent.pertest_timeout = u32(900);
+    parent.report = bool(true);
+    parent.capture = bool(false);
 }
 
 // --- command.atf_unit..PrintArgv
@@ -5574,6 +6113,18 @@ void command::atf_unit_PrintArgv(command::atf_unit & row, algo::cstring &str) {
         str << " -pertest_timeout:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.report == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.report, temp);
+        str << " -report:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.capture == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.capture, temp);
+        str << " -capture:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.atf_unit..ToCmdline
@@ -5598,7 +6149,7 @@ algo::strptr command::atf_unit_GetAnon(command::atf_unit &parent, i32 idx) {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("unittest", 8);
-        default: return strptr();
+        default: return algo::strptr();
     }
 }
 
@@ -5609,17 +6160,21 @@ int command::atf_unit_Start(command::atf_unit_proc& parent) {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(atf_unit_ToCmdline(parent)); // maybe print command
-        parent.status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(atf_unit_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.timeout > 0) {
                 alarm(parent.timeout);
             }
-            algo_lib::ApplyRedirect(parent.stdin, 0);
-            algo_lib::ApplyRedirect(parent.stdout, 1);
-            algo_lib::ApplyRedirect(parent.stderr, 2);
-            retval = atf_unit_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= atf_unit_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("command.atf_unit_execv"
@@ -5630,11 +6185,24 @@ int command::atf_unit_Start(command::atf_unit_proc& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.status; // parent
         }
+#endif
     }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- command.atf_unit_proc.atf_unit.StartRead
+// Start subprocess & Read output
+algo::Fildes command::atf_unit_StartRead(command::atf_unit_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    atf_unit_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- command.atf_unit_proc.atf_unit.Kill
@@ -5649,7 +6217,7 @@ void command::atf_unit_Kill(command::atf_unit_proc& parent) {
 // --- command.atf_unit_proc.atf_unit.Wait
 // Wait for subprocess to return
 void command::atf_unit_Wait(command::atf_unit_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -5686,7 +6254,7 @@ void command::atf_unit_ExecX(command::atf_unit_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:atf_unit.Argv
 int command::atf_unit_Execv(command::atf_unit_proc& parent) {
-    char *argv[7+2]; // start of first arg (future pointer)
+    char *argv[18+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -5741,6 +6309,20 @@ int command::atf_unit_Execv(command::atf_unit_proc& parent) {
         u32_Print(parent.cmd.pertest_timeout, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
+
+    if (parent.cmd.report != true) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-report:";
+        bool_Print(parent.cmd.report, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.capture != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-capture:";
+        bool_Print(parent.cmd.capture, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
     for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-verbose";
@@ -5760,14 +6342,14 @@ algo::tempstr command::atf_unit_ToCmdline(command::atf_unit_proc& parent) {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::atf_unit_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.stdin)) {
-        retval << " " << parent.stdin;
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
     }
-    if (ch_N(parent.stdout)) {
-        retval << " " << parent.stdout;
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
     }
-    if (ch_N(parent.stderr)) {
-        retval << " 2" << parent.stderr;
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
     }
     return retval;
 }
@@ -5795,6 +6377,233 @@ void command::bash_PrintArgv(command::bash & row, algo::cstring &str) {
     }
 }
 
+// --- command.bash2html..ReadFieldMaybe
+bool command::bash2html_ReadFieldMaybe(command::bash2html &parent, algo::strptr field, algo::strptr strval) {
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case command_FieldId_in: retval = algo::cstring_ReadStrptrMaybe(parent.in, strval); break;
+        case command_FieldId_test: retval = bool_ReadStrptrMaybe(parent.test, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.bash2html..ReadTupleMaybe
+// Read fields of command::bash2html from attributes of ascii tuple TUPLE
+bool command::bash2html_ReadTupleMaybe(command::bash2html &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        retval = bash2html_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- command.bash2html..PrintArgv
+// print command-line args of command::bash2html to string  -- cprint:command.bash2html.Argv
+void command::bash2html_PrintArgv(command::bash2html & row, algo::cstring &str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)row;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.test == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.test, temp);
+        str << " -test:";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- command.bash2html..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::bash2html_ToCmdline(command::bash2html & row) {
+    tempstr ret;
+    ret << "bin/bash2html ";
+    bash2html_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.bash2html_proc.bash2html.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::bash2html_Start(command::bash2html_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(bash2html_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(bash2html_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= bash2html_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.bash2html_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.bash2html_proc.bash2html.StartRead
+// Start subprocess & Read output
+algo::Fildes command::bash2html_StartRead(command::bash2html_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    bash2html_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.bash2html_proc.bash2html.Kill
+// Kill subprocess and wait
+void command::bash2html_Kill(command::bash2html_proc& parent) {
+    if (parent.pid != 0) {
+        kill(parent.pid,9);
+        bash2html_Wait(parent);
+    }
+}
+
+// --- command.bash2html_proc.bash2html.Wait
+// Wait for subprocess to return
+void command::bash2html_Wait(command::bash2html_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.bash2html_proc.bash2html.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::bash2html_Exec(command::bash2html_proc& parent) {
+    bash2html_Start(parent);
+    bash2html_Wait(parent);
+    return parent.status;
+}
+
+// --- command.bash2html_proc.bash2html.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::bash2html_ExecX(command::bash2html_proc& parent) {
+    int rc = bash2html_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",bash2html_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.bash2html_proc.bash2html.Execv
+// Call execv()
+// Call execv with specified parameters -- cprint:bash2html.Argv
+int command::bash2html_Execv(command::bash2html_proc& parent) {
+    char *argv[4+2]; // start of first arg (future pointer)
+    algo::tempstr temp;
+    int n_argv=0;
+    argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+    temp << parent.path;
+    ch_Alloc(temp) = 0;// NUL term for pathname
+
+    if (parent.cmd.in != "data") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-in:";
+        cstring_Print(parent.cmd.in, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.test != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-test:";
+        bool_Print(parent.cmd.test, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+    for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-verbose";
+        ch_Alloc(temp) = 0;
+    }
+    argv[n_argv] = NULL; // last pointer
+    while (n_argv>0) { // shift pointers
+        argv[--n_argv] += (u64)temp.ch_elems;
+    }
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    return execv(Zeroterm(parent.path),argv);
+}
+
+// --- command.bash2html_proc.bash2html.ToCmdline
+algo::tempstr command::bash2html_ToCmdline(command::bash2html_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::bash2html_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.bash2html_proc..Uninit
+void command::bash2html_proc_Uninit(command::bash2html_proc& parent) {
+    command::bash2html_proc &row = parent; (void)row;
+
+    // command.bash2html_proc.bash2html.Uninit (Exec)  //
+    bash2html_Kill(parent); // kill child, ensure forward progress
+}
+
 // --- command.bash_proc.bash.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
@@ -5802,17 +6611,21 @@ int command::bash_Start(command::bash_proc& parent) {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(bash_ToCmdline(parent)); // maybe print command
-        parent.status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(bash_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.timeout > 0) {
                 alarm(parent.timeout);
             }
-            algo_lib::ApplyRedirect(parent.stdin, 0);
-            algo_lib::ApplyRedirect(parent.stdout, 1);
-            algo_lib::ApplyRedirect(parent.stderr, 2);
-            retval = bash_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= bash_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("command.bash_execv"
@@ -5823,11 +6636,24 @@ int command::bash_Start(command::bash_proc& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.status; // parent
         }
+#endif
     }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- command.bash_proc.bash.StartRead
+// Start subprocess & Read output
+algo::Fildes command::bash_StartRead(command::bash_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    bash_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- command.bash_proc.bash.Kill
@@ -5842,7 +6668,7 @@ void command::bash_Kill(command::bash_proc& parent) {
 // --- command.bash_proc.bash.Wait
 // Wait for subprocess to return
 void command::bash_Wait(command::bash_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -5879,7 +6705,7 @@ void command::bash_ExecX(command::bash_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:bash.Argv
 int command::bash_Execv(command::bash_proc& parent) {
-    char *argv[1+2]; // start of first arg (future pointer)
+    char *argv[2+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -5908,14 +6734,14 @@ algo::tempstr command::bash_ToCmdline(command::bash_proc& parent) {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::bash_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.stdin)) {
-        retval << " " << parent.stdin;
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
     }
-    if (ch_N(parent.stdout)) {
-        retval << " " << parent.stdout;
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
     }
-    if (ch_N(parent.stderr)) {
-        retval << " 2" << parent.stderr;
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
     }
     return retval;
 }
@@ -6253,7 +7079,7 @@ algo::strptr command::mdbg_GetAnon(command::mdbg &parent, i32 idx) {
     switch(idx) {
         case(0): return strptr("target", 6);
         case(1): return strptr("args", 4);
-        default: return strptr();
+        default: return algo::strptr();
     }
 }
 
@@ -6264,17 +7090,21 @@ int command::mdbg_Start(command::mdbg_proc& parent) {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(mdbg_ToCmdline(parent)); // maybe print command
-        parent.status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(mdbg_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.timeout > 0) {
                 alarm(parent.timeout);
             }
-            algo_lib::ApplyRedirect(parent.stdin, 0);
-            algo_lib::ApplyRedirect(parent.stdout, 1);
-            algo_lib::ApplyRedirect(parent.stderr, 2);
-            retval = mdbg_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= mdbg_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("command.mdbg_execv"
@@ -6285,11 +7115,24 @@ int command::mdbg_Start(command::mdbg_proc& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.status; // parent
         }
+#endif
     }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- command.mdbg_proc.mdbg.StartRead
+// Start subprocess & Read output
+algo::Fildes command::mdbg_StartRead(command::mdbg_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    mdbg_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- command.mdbg_proc.mdbg.Kill
@@ -6304,7 +7147,7 @@ void command::mdbg_Kill(command::mdbg_proc& parent) {
 // --- command.mdbg_proc.mdbg.Wait
 // Wait for subprocess to return
 void command::mdbg_Wait(command::mdbg_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -6341,7 +7184,7 @@ void command::mdbg_ExecX(command::mdbg_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:mdbg.Argv
 int command::mdbg_Execv(command::mdbg_proc& parent) {
-    char *argv[15+2]; // start of first arg (future pointer)
+    char *argv[30+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -6471,14 +7314,14 @@ algo::tempstr command::mdbg_ToCmdline(command::mdbg_proc& parent) {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::mdbg_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.stdin)) {
-        retval << " " << parent.stdin;
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
     }
-    if (ch_N(parent.stdout)) {
-        retval << " " << parent.stdout;
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
     }
-    if (ch_N(parent.stderr)) {
-        retval << " 2" << parent.stderr;
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
     }
     return retval;
 }
@@ -6606,7 +7449,7 @@ algo::strptr command::mysql2ssim_GetAnon(command::mysql2ssim &parent, i32 idx) {
     switch(idx) {
         case(0): return strptr("url", 3);
         case(1): return strptr("tables", 6);
-        default: return strptr();
+        default: return algo::strptr();
     }
 }
 
@@ -6617,17 +7460,21 @@ int command::mysql2ssim_Start(command::mysql2ssim_proc& parent) {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(mysql2ssim_ToCmdline(parent)); // maybe print command
-        parent.status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(mysql2ssim_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.timeout > 0) {
                 alarm(parent.timeout);
             }
-            algo_lib::ApplyRedirect(parent.stdin, 0);
-            algo_lib::ApplyRedirect(parent.stdout, 1);
-            algo_lib::ApplyRedirect(parent.stderr, 2);
-            retval = mysql2ssim_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= mysql2ssim_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("command.mysql2ssim_execv"
@@ -6638,11 +7485,24 @@ int command::mysql2ssim_Start(command::mysql2ssim_proc& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.status; // parent
         }
+#endif
     }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- command.mysql2ssim_proc.mysql2ssim.StartRead
+// Start subprocess & Read output
+algo::Fildes command::mysql2ssim_StartRead(command::mysql2ssim_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    mysql2ssim_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- command.mysql2ssim_proc.mysql2ssim.Kill
@@ -6657,7 +7517,7 @@ void command::mysql2ssim_Kill(command::mysql2ssim_proc& parent) {
 // --- command.mysql2ssim_proc.mysql2ssim.Wait
 // Wait for subprocess to return
 void command::mysql2ssim_Wait(command::mysql2ssim_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -6694,7 +7554,7 @@ void command::mysql2ssim_ExecX(command::mysql2ssim_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:mysql2ssim.Argv
 int command::mysql2ssim_Execv(command::mysql2ssim_proc& parent) {
-    char *argv[8+2]; // start of first arg (future pointer)
+    char *argv[16+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -6775,14 +7635,14 @@ algo::tempstr command::mysql2ssim_ToCmdline(command::mysql2ssim_proc& parent) {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::mysql2ssim_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.stdin)) {
-        retval << " " << parent.stdin;
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
     }
-    if (ch_N(parent.stdout)) {
-        retval << " " << parent.stdout;
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
     }
-    if (ch_N(parent.stderr)) {
-        retval << " 2" << parent.stderr;
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
     }
     return retval;
 }
@@ -6793,6 +7653,591 @@ void command::mysql2ssim_proc_Uninit(command::mysql2ssim_proc& parent) {
 
     // command.mysql2ssim_proc.mysql2ssim.Uninit (Exec)  //
     mysql2ssim_Kill(parent); // kill child, ensure forward progress
+}
+
+// --- command.ntup.typetag.Print
+// Print back to string
+void command::typetag_Print(command::ntup& parent, algo::cstring &out) {
+    Regx_Print(parent.typetag, out);
+}
+
+// --- command.ntup.typetag.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::typetag_ReadStrptrMaybe(command::ntup& parent, algo::strptr in) {
+    Regx_ReadSql(parent.typetag, in, true);
+    bool retval = true;// !parent.typetag.parseerror; -- TODO: uncomment
+    return retval;
+}
+
+// --- command.ntup..ReadFieldMaybe
+bool command::ntup_ReadFieldMaybe(command::ntup &parent, algo::strptr field, algo::strptr strval) {
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case command_FieldId_in: retval = algo::cstring_ReadStrptrMaybe(parent.in, strval); break;
+        case command_FieldId_cmd: retval = algo::cstring_ReadStrptrMaybe(parent.cmd, strval); break;
+        case command_FieldId_field: retval = algo::Smallstr50_ReadStrptrMaybe(parent.field, strval); break;
+        case command_FieldId_typetag: retval = typetag_ReadStrptrMaybe(parent, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.ntup..ReadTupleMaybe
+// Read fields of command::ntup from attributes of ascii tuple TUPLE
+bool command::ntup_ReadTupleMaybe(command::ntup &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        retval = ntup_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- command.ntup..Init
+// Set all fields to initial values.
+void command::ntup_Init(command::ntup& parent) {
+    parent.in = algo::strptr("data");
+    parent.cmd = algo::strptr("");
+    Regx_ReadSql(parent.typetag, "%", true);
+}
+
+// --- command.ntup..PrintArgv
+// print command-line args of command::ntup to string  -- cprint:command.ntup.Argv
+void command::ntup_PrintArgv(command::ntup & row, algo::cstring &str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)row;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.cmd == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.cmd, temp);
+        str << " -cmd:";
+        strptr_PrintBash(temp,str);
+    }
+    ch_RemoveAll(temp);
+    Smallstr50_Print(row.field, temp);
+    str << " -field:";
+    strptr_PrintBash(temp,str);
+    if (!(row.typetag.expr == "%")) {
+        ch_RemoveAll(temp);
+        command::typetag_Print(const_cast<command::ntup&>(row), temp);
+        str << " -typetag:";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- command.ntup..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::ntup_ToCmdline(command::ntup & row) {
+    tempstr ret;
+    ret << "bin/ntup ";
+    ntup_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.ntup_proc.ntup.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::ntup_Start(command::ntup_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(ntup_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(ntup_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= ntup_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.ntup_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.ntup_proc.ntup.StartRead
+// Start subprocess & Read output
+algo::Fildes command::ntup_StartRead(command::ntup_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    ntup_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.ntup_proc.ntup.Kill
+// Kill subprocess and wait
+void command::ntup_Kill(command::ntup_proc& parent) {
+    if (parent.pid != 0) {
+        kill(parent.pid,9);
+        ntup_Wait(parent);
+    }
+}
+
+// --- command.ntup_proc.ntup.Wait
+// Wait for subprocess to return
+void command::ntup_Wait(command::ntup_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.ntup_proc.ntup.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::ntup_Exec(command::ntup_proc& parent) {
+    ntup_Start(parent);
+    ntup_Wait(parent);
+    return parent.status;
+}
+
+// --- command.ntup_proc.ntup.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::ntup_ExecX(command::ntup_proc& parent) {
+    int rc = ntup_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",ntup_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.ntup_proc.ntup.Execv
+// Call execv()
+// Call execv with specified parameters -- cprint:ntup.Argv
+int command::ntup_Execv(command::ntup_proc& parent) {
+    char *argv[8+2]; // start of first arg (future pointer)
+    algo::tempstr temp;
+    int n_argv=0;
+    argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+    temp << parent.path;
+    ch_Alloc(temp) = 0;// NUL term for pathname
+
+    if (parent.cmd.in != "data") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-in:";
+        cstring_Print(parent.cmd.in, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.cmd != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-cmd:";
+        cstring_Print(parent.cmd.cmd, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (true) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-field:";
+        Smallstr50_Print(parent.cmd.field, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.typetag.expr != "%") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-typetag:";
+        command::typetag_Print(parent.cmd, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+    for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-verbose";
+        ch_Alloc(temp) = 0;
+    }
+    argv[n_argv] = NULL; // last pointer
+    while (n_argv>0) { // shift pointers
+        argv[--n_argv] += (u64)temp.ch_elems;
+    }
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    return execv(Zeroterm(parent.path),argv);
+}
+
+// --- command.ntup_proc.ntup.ToCmdline
+algo::tempstr command::ntup_ToCmdline(command::ntup_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::ntup_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.ntup_proc..Uninit
+void command::ntup_proc_Uninit(command::ntup_proc& parent) {
+    command::ntup_proc &row = parent; (void)row;
+
+    // command.ntup_proc.ntup.Uninit (Exec)  //
+    ntup_Kill(parent); // kill child, ensure forward progress
+}
+
+// --- command.orgfile.dedup.Print
+// Print back to string
+void command::dedup_Print(command::orgfile& parent, algo::cstring &out) {
+    Regx_Print(parent.dedup, out);
+}
+
+// --- command.orgfile.dedup.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::dedup_ReadStrptrMaybe(command::orgfile& parent, algo::strptr in) {
+    Regx_ReadSql(parent.dedup, in, true);
+    bool retval = true;// !parent.dedup.parseerror; -- TODO: uncomment
+    return retval;
+}
+
+// --- command.orgfile..ReadFieldMaybe
+bool command::orgfile_ReadFieldMaybe(command::orgfile &parent, algo::strptr field, algo::strptr strval) {
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case command_FieldId_in: retval = algo::cstring_ReadStrptrMaybe(parent.in, strval); break;
+        case command_FieldId_move: retval = algo::cstring_ReadStrptrMaybe(parent.move, strval); break;
+        case command_FieldId_dedup: retval = dedup_ReadStrptrMaybe(parent, strval); break;
+        case command_FieldId_commit: retval = bool_ReadStrptrMaybe(parent.commit, strval); break;
+        case command_FieldId_undo: retval = bool_ReadStrptrMaybe(parent.undo, strval); break;
+        case command_FieldId_hash: retval = algo::cstring_ReadStrptrMaybe(parent.hash, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.orgfile..ReadTupleMaybe
+// Read fields of command::orgfile from attributes of ascii tuple TUPLE
+bool command::orgfile_ReadTupleMaybe(command::orgfile &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        retval = orgfile_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- command.orgfile..Init
+// Set all fields to initial values.
+void command::orgfile_Init(command::orgfile& parent) {
+    parent.in = algo::strptr("data");
+    parent.move = algo::strptr("");
+    Regx_ReadSql(parent.dedup, "", true);
+    parent.commit = bool(false);
+    parent.undo = bool(false);
+    parent.hash = algo::strptr("sha1");
+}
+
+// --- command.orgfile..PrintArgv
+// print command-line args of command::orgfile to string  -- cprint:command.orgfile.Argv
+void command::orgfile_PrintArgv(command::orgfile & row, algo::cstring &str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)row;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.move == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.move, temp);
+        str << " -move:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.dedup.expr == "")) {
+        ch_RemoveAll(temp);
+        command::dedup_Print(const_cast<command::orgfile&>(row), temp);
+        str << " -dedup:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.commit == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.commit, temp);
+        str << " -commit:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.undo == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.undo, temp);
+        str << " -undo:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.hash == "sha1")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.hash, temp);
+        str << " -hash:";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- command.orgfile..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::orgfile_ToCmdline(command::orgfile & row) {
+    tempstr ret;
+    ret << "bin/orgfile ";
+    orgfile_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.orgfile_proc.orgfile.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::orgfile_Start(command::orgfile_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(orgfile_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(orgfile_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= orgfile_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.orgfile_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.orgfile_proc.orgfile.StartRead
+// Start subprocess & Read output
+algo::Fildes command::orgfile_StartRead(command::orgfile_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    orgfile_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.orgfile_proc.orgfile.Kill
+// Kill subprocess and wait
+void command::orgfile_Kill(command::orgfile_proc& parent) {
+    if (parent.pid != 0) {
+        kill(parent.pid,9);
+        orgfile_Wait(parent);
+    }
+}
+
+// --- command.orgfile_proc.orgfile.Wait
+// Wait for subprocess to return
+void command::orgfile_Wait(command::orgfile_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.orgfile_proc.orgfile.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::orgfile_Exec(command::orgfile_proc& parent) {
+    orgfile_Start(parent);
+    orgfile_Wait(parent);
+    return parent.status;
+}
+
+// --- command.orgfile_proc.orgfile.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::orgfile_ExecX(command::orgfile_proc& parent) {
+    int rc = orgfile_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",orgfile_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.orgfile_proc.orgfile.Execv
+// Call execv()
+// Call execv with specified parameters -- cprint:orgfile.Argv
+int command::orgfile_Execv(command::orgfile_proc& parent) {
+    char *argv[12+2]; // start of first arg (future pointer)
+    algo::tempstr temp;
+    int n_argv=0;
+    argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+    temp << parent.path;
+    ch_Alloc(temp) = 0;// NUL term for pathname
+
+    if (parent.cmd.in != "data") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-in:";
+        cstring_Print(parent.cmd.in, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.move != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-move:";
+        cstring_Print(parent.cmd.move, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.dedup.expr != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-dedup:";
+        command::dedup_Print(parent.cmd, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.commit != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-commit:";
+        bool_Print(parent.cmd.commit, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.undo != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-undo:";
+        bool_Print(parent.cmd.undo, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.hash != "sha1") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-hash:";
+        cstring_Print(parent.cmd.hash, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+    for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-verbose";
+        ch_Alloc(temp) = 0;
+    }
+    argv[n_argv] = NULL; // last pointer
+    while (n_argv>0) { // shift pointers
+        argv[--n_argv] += (u64)temp.ch_elems;
+    }
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    return execv(Zeroterm(parent.path),argv);
+}
+
+// --- command.orgfile_proc.orgfile.ToCmdline
+algo::tempstr command::orgfile_ToCmdline(command::orgfile_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::orgfile_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.orgfile_proc..Uninit
+void command::orgfile_proc_Uninit(command::orgfile_proc& parent) {
+    command::orgfile_proc &row = parent; (void)row;
+
+    // command.orgfile_proc.orgfile.Uninit (Exec)  //
+    orgfile_Kill(parent); // kill child, ensure forward progress
 }
 
 // --- command.src_func.targsrc.Print
@@ -6887,7 +8332,6 @@ bool command::src_func_ReadFieldMaybe(command::src_func &parent, algo::strptr fi
         case command_FieldId_updateproto: retval = bool_ReadStrptrMaybe(parent.updateproto, strval); break;
         case command_FieldId_listfunc: retval = bool_ReadStrptrMaybe(parent.listfunc, strval); break;
         case command_FieldId_iffy: retval = bool_ReadStrptrMaybe(parent.iffy, strval); break;
-        case command_FieldId_check: retval = bool_ReadStrptrMaybe(parent.check, strval); break;
         case command_FieldId_proto: retval = bool_ReadStrptrMaybe(parent.proto, strval); break;
         case command_FieldId_gen: retval = bool_ReadStrptrMaybe(parent.gen, strval); break;
         case command_FieldId_showloc: retval = bool_ReadStrptrMaybe(parent.showloc, strval); break;
@@ -6895,6 +8339,8 @@ bool command::src_func_ReadFieldMaybe(command::src_func &parent, algo::strptr fi
         case command_FieldId_showsortkey: retval = bool_ReadStrptrMaybe(parent.showsortkey, strval); break;
         case command_FieldId_sortname: retval = bool_ReadStrptrMaybe(parent.sortname, strval); break;
         case command_FieldId_e: retval = bool_ReadStrptrMaybe(parent.e, strval); break;
+        case command_FieldId_baddecl: retval = bool_ReadStrptrMaybe(parent.baddecl, strval); break;
+        case command_FieldId_report: retval = bool_ReadStrptrMaybe(parent.report, strval); break;
         default: break;
     }
     if (!retval) {
@@ -6934,7 +8380,6 @@ void command::src_func_Init(command::src_func& parent) {
     parent.updateproto = bool(false);
     parent.listfunc = bool(false);
     parent.iffy = bool(false);
-    parent.check = bool(false);
     parent.proto = bool(false);
     parent.gen = bool(false);
     parent.showloc = bool(true);
@@ -6942,6 +8387,8 @@ void command::src_func_Init(command::src_func& parent) {
     parent.showsortkey = bool(false);
     parent.sortname = bool(false);
     parent.e = bool(false);
+    parent.baddecl = bool(false);
+    parent.report = bool(false);
 }
 
 // --- command.src_func..PrintArgv
@@ -7011,12 +8458,6 @@ void command::src_func_PrintArgv(command::src_func & row, algo::cstring &str) {
         str << " -iffy:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.check == false)) {
-        ch_RemoveAll(temp);
-        bool_Print(row.check, temp);
-        str << " -check:";
-        strptr_PrintBash(temp,str);
-    }
     if (!(row.proto == false)) {
         ch_RemoveAll(temp);
         bool_Print(row.proto, temp);
@@ -7059,6 +8500,18 @@ void command::src_func_PrintArgv(command::src_func & row, algo::cstring &str) {
         str << " -e:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.baddecl == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.baddecl, temp);
+        str << " -baddecl:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.report == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.report, temp);
+        str << " -report:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.src_func..ToCmdline
@@ -7085,7 +8538,7 @@ algo::strptr command::src_func_GetAnon(command::src_func &parent, i32 idx) {
         case(0): return strptr("targsrc", 7);
         case(1): return strptr("name", 4);
         case(2): return strptr("body", 4);
-        default: return strptr();
+        default: return algo::strptr();
     }
 }
 
@@ -7096,17 +8549,21 @@ int command::src_func_Start(command::src_func_proc& parent) {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(src_func_ToCmdline(parent)); // maybe print command
-        parent.status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(src_func_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.timeout > 0) {
                 alarm(parent.timeout);
             }
-            algo_lib::ApplyRedirect(parent.stdin, 0);
-            algo_lib::ApplyRedirect(parent.stdout, 1);
-            algo_lib::ApplyRedirect(parent.stderr, 2);
-            retval = src_func_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= src_func_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("command.src_func_execv"
@@ -7117,11 +8574,24 @@ int command::src_func_Start(command::src_func_proc& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.status; // parent
         }
+#endif
     }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- command.src_func_proc.src_func.StartRead
+// Start subprocess & Read output
+algo::Fildes command::src_func_StartRead(command::src_func_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    src_func_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- command.src_func_proc.src_func.Kill
@@ -7136,7 +8606,7 @@ void command::src_func_Kill(command::src_func_proc& parent) {
 // --- command.src_func_proc.src_func.Wait
 // Wait for subprocess to return
 void command::src_func_Wait(command::src_func_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -7173,7 +8643,7 @@ void command::src_func_ExecX(command::src_func_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:src_func.Argv
 int command::src_func_Execv(command::src_func_proc& parent) {
-    char *argv[19+2]; // start of first arg (future pointer)
+    char *argv[40+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -7257,13 +8727,6 @@ int command::src_func_Execv(command::src_func_proc& parent) {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
-    if (parent.cmd.check != false) {
-        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-check:";
-        bool_Print(parent.cmd.check, temp);
-        ch_Alloc(temp) = 0;// NUL term for this arg
-    }
-
     if (parent.cmd.proto != false) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-proto:";
@@ -7312,6 +8775,20 @@ int command::src_func_Execv(command::src_func_proc& parent) {
         bool_Print(parent.cmd.e, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
+
+    if (parent.cmd.baddecl != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-baddecl:";
+        bool_Print(parent.cmd.baddecl, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.report != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-report:";
+        bool_Print(parent.cmd.report, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
     for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-verbose";
@@ -7331,14 +8808,14 @@ algo::tempstr command::src_func_ToCmdline(command::src_func_proc& parent) {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::src_func_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.stdin)) {
-        retval << " " << parent.stdin;
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
     }
-    if (ch_N(parent.stdout)) {
-        retval << " " << parent.stdout;
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
     }
-    if (ch_N(parent.stderr)) {
-        retval << " 2" << parent.stderr;
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
     }
     return retval;
 }
@@ -7471,17 +8948,21 @@ int command::src_hdr_Start(command::src_hdr_proc& parent) {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(src_hdr_ToCmdline(parent)); // maybe print command
-        parent.status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(src_hdr_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.timeout > 0) {
                 alarm(parent.timeout);
             }
-            algo_lib::ApplyRedirect(parent.stdin, 0);
-            algo_lib::ApplyRedirect(parent.stdout, 1);
-            algo_lib::ApplyRedirect(parent.stderr, 2);
-            retval = src_hdr_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= src_hdr_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("command.src_hdr_execv"
@@ -7492,11 +8973,24 @@ int command::src_hdr_Start(command::src_hdr_proc& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.status; // parent
         }
+#endif
     }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- command.src_hdr_proc.src_hdr.StartRead
+// Start subprocess & Read output
+algo::Fildes command::src_hdr_StartRead(command::src_hdr_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    src_hdr_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- command.src_hdr_proc.src_hdr.Kill
@@ -7511,7 +9005,7 @@ void command::src_hdr_Kill(command::src_hdr_proc& parent) {
 // --- command.src_hdr_proc.src_hdr.Wait
 // Wait for subprocess to return
 void command::src_hdr_Wait(command::src_hdr_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -7548,7 +9042,7 @@ void command::src_hdr_ExecX(command::src_hdr_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:src_hdr.Argv
 int command::src_hdr_Execv(command::src_hdr_proc& parent) {
-    char *argv[5+2]; // start of first arg (future pointer)
+    char *argv[10+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -7608,14 +9102,14 @@ algo::tempstr command::src_hdr_ToCmdline(command::src_hdr_proc& parent) {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::src_hdr_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.stdin)) {
-        retval << " " << parent.stdin;
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
     }
-    if (ch_N(parent.stdout)) {
-        retval << " " << parent.stdout;
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
     }
-    if (ch_N(parent.stderr)) {
-        retval << " 2" << parent.stderr;
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
     }
     return retval;
 }
@@ -7643,6 +9137,21 @@ bool command::srcfile_ReadStrptrMaybe(command::src_lim& parent, algo::strptr in)
     return retval;
 }
 
+// --- command.src_lim.badline.Print
+// Print back to string
+void command::badline_Print(command::src_lim& parent, algo::cstring &out) {
+    Regx_Print(parent.badline, out);
+}
+
+// --- command.src_lim.badline.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::badline_ReadStrptrMaybe(command::src_lim& parent, algo::strptr in) {
+    Regx_ReadSql(parent.badline, in, true);
+    bool retval = true;// !parent.badline.parseerror; -- TODO: uncomment
+    return retval;
+}
+
 // --- command.src_lim..ReadFieldMaybe
 bool command::src_lim_ReadFieldMaybe(command::src_lim &parent, algo::strptr field, algo::strptr strval) {
     command::FieldId field_id;
@@ -7655,6 +9164,8 @@ bool command::src_lim_ReadFieldMaybe(command::src_lim &parent, algo::strptr fiel
         case command_FieldId_strayfile: retval = bool_ReadStrptrMaybe(parent.strayfile, strval); break;
         case command_FieldId_capture: retval = bool_ReadStrptrMaybe(parent.capture, strval); break;
         case command_FieldId_write: retval = bool_ReadStrptrMaybe(parent.write, strval); break;
+        case command_FieldId_badchar: retval = bool_ReadStrptrMaybe(parent.badchar, strval); break;
+        case command_FieldId_badline: retval = badline_ReadStrptrMaybe(parent, strval); break;
         default: break;
     }
     if (!retval) {
@@ -7685,6 +9196,8 @@ void command::src_lim_Init(command::src_lim& parent) {
     parent.strayfile = bool(false);
     parent.capture = bool(false);
     parent.write = bool(false);
+    parent.badchar = bool(false);
+    Regx_ReadSql(parent.badline, "", true);
 }
 
 // --- command.src_lim..PrintArgv
@@ -7730,6 +9243,18 @@ void command::src_lim_PrintArgv(command::src_lim & row, algo::cstring &str) {
         str << " -write:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.badchar == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.badchar, temp);
+        str << " -badchar:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.badline.expr == "")) {
+        ch_RemoveAll(temp);
+        command::badline_Print(const_cast<command::src_lim&>(row), temp);
+        str << " -badline:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.src_lim..ToCmdline
@@ -7756,17 +9281,21 @@ int command::src_lim_Start(command::src_lim_proc& parent) {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(src_lim_ToCmdline(parent)); // maybe print command
-        parent.status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(src_lim_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.timeout > 0) {
                 alarm(parent.timeout);
             }
-            algo_lib::ApplyRedirect(parent.stdin, 0);
-            algo_lib::ApplyRedirect(parent.stdout, 1);
-            algo_lib::ApplyRedirect(parent.stderr, 2);
-            retval = src_lim_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= src_lim_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("command.src_lim_execv"
@@ -7777,11 +9306,24 @@ int command::src_lim_Start(command::src_lim_proc& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.status; // parent
         }
+#endif
     }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- command.src_lim_proc.src_lim.StartRead
+// Start subprocess & Read output
+algo::Fildes command::src_lim_StartRead(command::src_lim_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    src_lim_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- command.src_lim_proc.src_lim.Kill
@@ -7796,7 +9338,7 @@ void command::src_lim_Kill(command::src_lim_proc& parent) {
 // --- command.src_lim_proc.src_lim.Wait
 // Wait for subprocess to return
 void command::src_lim_Wait(command::src_lim_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -7833,7 +9375,7 @@ void command::src_lim_ExecX(command::src_lim_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:src_lim.Argv
 int command::src_lim_Execv(command::src_lim_proc& parent) {
-    char *argv[6+2]; // start of first arg (future pointer)
+    char *argv[16+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -7881,6 +9423,20 @@ int command::src_lim_Execv(command::src_lim_proc& parent) {
         bool_Print(parent.cmd.write, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
+
+    if (parent.cmd.badchar != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-badchar:";
+        bool_Print(parent.cmd.badchar, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.badline.expr != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-badline:";
+        command::badline_Print(parent.cmd, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
     for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-verbose";
@@ -7900,14 +9456,14 @@ algo::tempstr command::src_lim_ToCmdline(command::src_lim_proc& parent) {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::src_lim_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.stdin)) {
-        retval << " " << parent.stdin;
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
     }
-    if (ch_N(parent.stdout)) {
-        retval << " " << parent.stdout;
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
     }
-    if (ch_N(parent.stderr)) {
-        retval << " 2" << parent.stderr;
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
     }
     return retval;
 }
@@ -7994,17 +9550,21 @@ int command::ssim2csv_Start(command::ssim2csv_proc& parent) {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(ssim2csv_ToCmdline(parent)); // maybe print command
-        parent.status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(ssim2csv_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.timeout > 0) {
                 alarm(parent.timeout);
             }
-            algo_lib::ApplyRedirect(parent.stdin, 0);
-            algo_lib::ApplyRedirect(parent.stdout, 1);
-            algo_lib::ApplyRedirect(parent.stderr, 2);
-            retval = ssim2csv_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= ssim2csv_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("command.ssim2csv_execv"
@@ -8015,11 +9575,24 @@ int command::ssim2csv_Start(command::ssim2csv_proc& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.status; // parent
         }
+#endif
     }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- command.ssim2csv_proc.ssim2csv.StartRead
+// Start subprocess & Read output
+algo::Fildes command::ssim2csv_StartRead(command::ssim2csv_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    ssim2csv_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- command.ssim2csv_proc.ssim2csv.Kill
@@ -8034,7 +9607,7 @@ void command::ssim2csv_Kill(command::ssim2csv_proc& parent) {
 // --- command.ssim2csv_proc.ssim2csv.Wait
 // Wait for subprocess to return
 void command::ssim2csv_Wait(command::ssim2csv_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -8071,7 +9644,7 @@ void command::ssim2csv_ExecX(command::ssim2csv_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:ssim2csv.Argv
 int command::ssim2csv_Execv(command::ssim2csv_proc& parent) {
-    char *argv[2+2]; // start of first arg (future pointer)
+    char *argv[4+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -8110,14 +9683,14 @@ algo::tempstr command::ssim2csv_ToCmdline(command::ssim2csv_proc& parent) {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::ssim2csv_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.stdin)) {
-        retval << " " << parent.stdin;
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
     }
-    if (ch_N(parent.stdout)) {
-        retval << " " << parent.stdout;
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
     }
-    if (ch_N(parent.stderr)) {
-        retval << " 2" << parent.stderr;
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
     }
     return retval;
 }
@@ -8283,17 +9856,21 @@ int command::ssim2mysql_Start(command::ssim2mysql_proc& parent) {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(ssim2mysql_ToCmdline(parent)); // maybe print command
-        parent.status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(ssim2mysql_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.timeout > 0) {
                 alarm(parent.timeout);
             }
-            algo_lib::ApplyRedirect(parent.stdin, 0);
-            algo_lib::ApplyRedirect(parent.stdout, 1);
-            algo_lib::ApplyRedirect(parent.stderr, 2);
-            retval = ssim2mysql_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= ssim2mysql_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("command.ssim2mysql_execv"
@@ -8304,11 +9881,24 @@ int command::ssim2mysql_Start(command::ssim2mysql_proc& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.status; // parent
         }
+#endif
     }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- command.ssim2mysql_proc.ssim2mysql.StartRead
+// Start subprocess & Read output
+algo::Fildes command::ssim2mysql_StartRead(command::ssim2mysql_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    ssim2mysql_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- command.ssim2mysql_proc.ssim2mysql.Kill
@@ -8323,7 +9913,7 @@ void command::ssim2mysql_Kill(command::ssim2mysql_proc& parent) {
 // --- command.ssim2mysql_proc.ssim2mysql.Wait
 // Wait for subprocess to return
 void command::ssim2mysql_Wait(command::ssim2mysql_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -8360,7 +9950,7 @@ void command::ssim2mysql_ExecX(command::ssim2mysql_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:ssim2mysql.Argv
 int command::ssim2mysql_Execv(command::ssim2mysql_proc& parent) {
-    char *argv[11+2]; // start of first arg (future pointer)
+    char *argv[22+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -8462,14 +10052,14 @@ algo::tempstr command::ssim2mysql_ToCmdline(command::ssim2mysql_proc& parent) {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::ssim2mysql_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.stdin)) {
-        retval << " " << parent.stdin;
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
     }
-    if (ch_N(parent.stdout)) {
-        retval << " " << parent.stdout;
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
     }
-    if (ch_N(parent.stderr)) {
-        retval << " 2" << parent.stderr;
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
     }
     return retval;
 }
@@ -8492,6 +10082,7 @@ bool command::strconv_ReadFieldMaybe(command::strconv &parent, algo::strptr fiel
         case command_FieldId_tocamelcase: retval = bool_ReadStrptrMaybe(parent.tocamelcase, strval); break;
         case command_FieldId_tolowerunder: retval = bool_ReadStrptrMaybe(parent.tolowerunder, strval); break;
         case command_FieldId_in: retval = algo::cstring_ReadStrptrMaybe(parent.in, strval); break;
+        case command_FieldId_pathcomp: retval = algo::Smallstr100_ReadStrptrMaybe(parent.pathcomp, strval); break;
         default: break;
     }
     if (!retval) {
@@ -8546,6 +10137,12 @@ void command::strconv_PrintArgv(command::strconv & row, algo::cstring &str) {
         str << " -in:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.pathcomp == "")) {
+        ch_RemoveAll(temp);
+        Smallstr100_Print(row.pathcomp, temp);
+        str << " -pathcomp:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.strconv..ToCmdline
@@ -8570,7 +10167,7 @@ algo::strptr command::strconv_GetAnon(command::strconv &parent, i32 idx) {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("str", 3);
-        default: return strptr();
+        default: return algo::strptr();
     }
 }
 
@@ -8581,17 +10178,21 @@ int command::strconv_Start(command::strconv_proc& parent) {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(strconv_ToCmdline(parent)); // maybe print command
-        parent.status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(strconv_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.timeout > 0) {
                 alarm(parent.timeout);
             }
-            algo_lib::ApplyRedirect(parent.stdin, 0);
-            algo_lib::ApplyRedirect(parent.stdout, 1);
-            algo_lib::ApplyRedirect(parent.stderr, 2);
-            retval = strconv_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= strconv_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("command.strconv_execv"
@@ -8602,11 +10203,24 @@ int command::strconv_Start(command::strconv_proc& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.status; // parent
         }
+#endif
     }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- command.strconv_proc.strconv.StartRead
+// Start subprocess & Read output
+algo::Fildes command::strconv_StartRead(command::strconv_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    strconv_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- command.strconv_proc.strconv.Kill
@@ -8621,7 +10235,7 @@ void command::strconv_Kill(command::strconv_proc& parent) {
 // --- command.strconv_proc.strconv.Wait
 // Wait for subprocess to return
 void command::strconv_Wait(command::strconv_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -8658,7 +10272,7 @@ void command::strconv_ExecX(command::strconv_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:strconv.Argv
 int command::strconv_Execv(command::strconv_proc& parent) {
-    char *argv[4+2]; // start of first arg (future pointer)
+    char *argv[10+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -8692,6 +10306,13 @@ int command::strconv_Execv(command::strconv_proc& parent) {
         cstring_Print(parent.cmd.in, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
+
+    if (parent.cmd.pathcomp != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-pathcomp:";
+        Smallstr100_Print(parent.cmd.pathcomp, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
     for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-verbose";
@@ -8711,14 +10332,14 @@ algo::tempstr command::strconv_ToCmdline(command::strconv_proc& parent) {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::strconv_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.stdin)) {
-        retval << " " << parent.stdin;
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
     }
-    if (ch_N(parent.stdout)) {
-        retval << " " << parent.stdout;
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
     }
-    if (ch_N(parent.stderr)) {
-        retval << " 2" << parent.stderr;
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
     }
     return retval;
 }
@@ -8750,14 +10371,14 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::abt,maxjobs) == 344);
     algo_assert(_offset_of(command::abt,printcmd) == 348);
     algo_assert(_offset_of(command::abt,force) == 349);
-    algo_assert(_offset_of(command::abt,testgen) == 350);
-    algo_assert(_offset_of(command::abt,install) == 351);
-    algo_assert(_offset_of(command::abt,coverity) == 352);
-    algo_assert(_offset_of(command::abt,package) == 360);
-    algo_assert(_offset_of(command::abt,maxerr) == 376);
-    algo_assert(_offset_of(command::abt,disas) == 384);
-    algo_assert(_offset_of(command::abt,report) == 480);
-    algo_assert(sizeof(command::abt) == 488);
+    algo_assert(_offset_of(command::abt,install) == 350);
+    algo_assert(_offset_of(command::abt,coverity) == 351);
+    algo_assert(_offset_of(command::abt,package) == 352);
+    algo_assert(_offset_of(command::abt,maxerr) == 368);
+    algo_assert(_offset_of(command::abt,disas) == 376);
+    algo_assert(_offset_of(command::abt,report) == 472);
+    algo_assert(_offset_of(command::abt,jcdb) == 480);
+    algo_assert(sizeof(command::abt) == 496);
     algo_assert(_offset_of(command::acr,query) == 0);
     algo_assert(_offset_of(command::acr,select) == 16);
     algo_assert(_offset_of(command::acr,del) == 17);
@@ -8804,6 +10425,7 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::acr_ed,rename) == 24);
     algo_assert(_offset_of(command::acr_ed,replace) == 40);
     algo_assert(_offset_of(command::acr_ed,finput) == 41);
+    algo_assert(_offset_of(command::acr_ed,foutput) == 42);
     algo_assert(_offset_of(command::acr_ed,srcfile) == 48);
     algo_assert(_offset_of(command::acr_ed,gstatic) == 64);
     algo_assert(_offset_of(command::acr_ed,indexed) == 65);
@@ -8834,12 +10456,12 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::acr_ed,cppfunc) == 1312);
     algo_assert(_offset_of(command::acr_ed,xref) == 1328);
     algo_assert(_offset_of(command::acr_ed,via) == 1336);
-    algo_assert(_offset_of(command::acr_ed,showcpp) == 1352);
-    algo_assert(_offset_of(command::acr_ed,write) == 1353);
-    algo_assert(_offset_of(command::acr_ed,e) == 1354);
+    algo_assert(_offset_of(command::acr_ed,write) == 1352);
+    algo_assert(_offset_of(command::acr_ed,e) == 1353);
     algo_assert(_offset_of(command::acr_ed,comment) == 1360);
     algo_assert(_offset_of(command::acr_ed,sandbox) == 1376);
-    algo_assert(_offset_of(command::acr_ed,sandbox_build) == 1377);
+    algo_assert(_offset_of(command::acr_ed,test) == 1377);
+    algo_assert(_offset_of(command::acr_ed,showcpp) == 1378);
     algo_assert(sizeof(command::acr_ed) == 1384);
     algo_assert(_offset_of(command::acr_in,ns) == 0);
     algo_assert(_offset_of(command::acr_in,data) == 96);
@@ -8892,10 +10514,16 @@ inline static void command::SizeCheck() {
     algo_assert(sizeof(command::amc_vis) == 136);
     algo_assert(_offset_of(command::atf_amc,in) == 0);
     algo_assert(_offset_of(command::atf_amc,amctest) == 16);
-    algo_assert(sizeof(command::atf_amc) == 112);
+    algo_assert(_offset_of(command::atf_amc,dofork) == 112);
+    algo_assert(_offset_of(command::atf_amc,q) == 113);
+    algo_assert(sizeof(command::atf_amc) == 120);
     algo_assert(_offset_of(command::atf_norm,in) == 0);
     algo_assert(_offset_of(command::atf_norm,normcheck) == 16);
     algo_assert(sizeof(command::atf_norm) == 112);
+    algo_assert(_offset_of(command::atf_nrun,in) == 0);
+    algo_assert(_offset_of(command::atf_nrun,maxjobs) == 16);
+    algo_assert(_offset_of(command::atf_nrun,ncmd) == 20);
+    algo_assert(sizeof(command::atf_nrun) == 24);
     algo_assert(_offset_of(command::atf_unit,unittest) == 0);
     algo_assert(_offset_of(command::atf_unit,nofork) == 96);
     algo_assert(_offset_of(command::atf_unit,arg) == 104);
@@ -8903,14 +10531,19 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::atf_unit,debug) == 136);
     algo_assert(_offset_of(command::atf_unit,perf_secs) == 144);
     algo_assert(_offset_of(command::atf_unit,pertest_timeout) == 152);
+    algo_assert(_offset_of(command::atf_unit,report) == 156);
+    algo_assert(_offset_of(command::atf_unit,capture) == 157);
     algo_assert(sizeof(command::atf_unit) == 160);
     algo_assert(_offset_of(command::bash,c) == 0);
     algo_assert(sizeof(command::bash) == 16);
+    algo_assert(_offset_of(command::bash2html,in) == 0);
+    algo_assert(_offset_of(command::bash2html,test) == 16);
+    algo_assert(sizeof(command::bash2html) == 24);
     algo_assert(_offset_of(command::bash_proc,path) == 0);
     algo_assert(_offset_of(command::bash_proc,cmd) == 16);
-    algo_assert(_offset_of(command::bash_proc,stdin) == 32);
-    algo_assert(_offset_of(command::bash_proc,stdout) == 48);
-    algo_assert(_offset_of(command::bash_proc,stderr) == 64);
+    algo_assert(_offset_of(command::bash_proc,fstdin) == 32);
+    algo_assert(_offset_of(command::bash_proc,fstdout) == 48);
+    algo_assert(_offset_of(command::bash_proc,fstderr) == 64);
     algo_assert(_offset_of(command::bash_proc,pid) == 80);
     algo_assert(_offset_of(command::bash_proc,timeout) == 84);
     algo_assert(_offset_of(command::bash_proc,status) == 88);
@@ -8947,6 +10580,18 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::mysql2ssim,nologo) == 65);
     algo_assert(_offset_of(command::mysql2ssim,baddbok) == 66);
     algo_assert(sizeof(command::mysql2ssim) == 72);
+    algo_assert(_offset_of(command::ntup,in) == 0);
+    algo_assert(_offset_of(command::ntup,cmd) == 16);
+    algo_assert(_offset_of(command::ntup,field) == 32);
+    algo_assert(_offset_of(command::ntup,typetag) == 88);
+    algo_assert(sizeof(command::ntup) == 184);
+    algo_assert(_offset_of(command::orgfile,in) == 0);
+    algo_assert(_offset_of(command::orgfile,move) == 16);
+    algo_assert(_offset_of(command::orgfile,dedup) == 32);
+    algo_assert(_offset_of(command::orgfile,commit) == 128);
+    algo_assert(_offset_of(command::orgfile,undo) == 129);
+    algo_assert(_offset_of(command::orgfile,hash) == 136);
+    algo_assert(sizeof(command::orgfile) == 152);
     algo_assert(_offset_of(command::src_func,in) == 0);
     algo_assert(_offset_of(command::src_func,targsrc) == 16);
     algo_assert(_offset_of(command::src_func,name) == 112);
@@ -8958,14 +10603,15 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::src_func,updateproto) == 699);
     algo_assert(_offset_of(command::src_func,listfunc) == 700);
     algo_assert(_offset_of(command::src_func,iffy) == 701);
-    algo_assert(_offset_of(command::src_func,check) == 702);
-    algo_assert(_offset_of(command::src_func,proto) == 703);
-    algo_assert(_offset_of(command::src_func,gen) == 704);
-    algo_assert(_offset_of(command::src_func,showloc) == 705);
-    algo_assert(_offset_of(command::src_func,showstatic) == 706);
-    algo_assert(_offset_of(command::src_func,showsortkey) == 707);
-    algo_assert(_offset_of(command::src_func,sortname) == 708);
-    algo_assert(_offset_of(command::src_func,e) == 709);
+    algo_assert(_offset_of(command::src_func,proto) == 702);
+    algo_assert(_offset_of(command::src_func,gen) == 703);
+    algo_assert(_offset_of(command::src_func,showloc) == 704);
+    algo_assert(_offset_of(command::src_func,showstatic) == 705);
+    algo_assert(_offset_of(command::src_func,showsortkey) == 706);
+    algo_assert(_offset_of(command::src_func,sortname) == 707);
+    algo_assert(_offset_of(command::src_func,e) == 708);
+    algo_assert(_offset_of(command::src_func,baddecl) == 709);
+    algo_assert(_offset_of(command::src_func,report) == 710);
     algo_assert(sizeof(command::src_func) == 712);
     algo_assert(_offset_of(command::src_hdr,in) == 0);
     algo_assert(_offset_of(command::src_hdr,targsrc) == 16);
@@ -8979,7 +10625,9 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::src_lim,strayfile) == 120);
     algo_assert(_offset_of(command::src_lim,capture) == 121);
     algo_assert(_offset_of(command::src_lim,write) == 122);
-    algo_assert(sizeof(command::src_lim) == 128);
+    algo_assert(_offset_of(command::src_lim,badchar) == 123);
+    algo_assert(_offset_of(command::src_lim,badline) == 128);
+    algo_assert(sizeof(command::src_lim) == 224);
     algo_assert(_offset_of(command::ssim2csv,expand) == 0);
     algo_assert(_offset_of(command::ssim2csv,ignoreQuote) == 16);
     algo_assert(sizeof(command::ssim2csv) == 24);
@@ -8999,5 +10647,6 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::strconv,tocamelcase) == 16);
     algo_assert(_offset_of(command::strconv,tolowerunder) == 17);
     algo_assert(_offset_of(command::strconv,in) == 24);
-    algo_assert(sizeof(command::strconv) == 40);
+    algo_assert(_offset_of(command::strconv,pathcomp) == 40);
+    algo_assert(sizeof(command::strconv) == 144);
 }

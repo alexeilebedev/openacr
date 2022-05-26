@@ -20,7 +20,9 @@
 // Source: cpp/atf/amc/lpool.cpp
 //
 
+#ifndef WIN32
 #include <sys/resource.h>
+#endif
 #include "include/atf_amc.h"
 
 // -----------------------------------------------------------------------------
@@ -32,7 +34,7 @@ static void MarkOrCheckMem(void *mem, int n, bool mark) {
         if (mark) {
             *(u32*)((u8*)mem+i) = random();
         } else {
-            vrfy_(*(u32*)((u8*)mem+i) == random());
+            vrfy_(*(u32*)((u8*)mem+i) == (u32)random());
         }
     }
     for (; i+1 <= n; i += 1) {
@@ -128,6 +130,6 @@ void atf_amc::amctest_Lpool() {
         atf_amc::optalloc_FreeMem(elem1,1<<20);// free the original block
         vrfy_(atf_amc::_db.optalloc_n==0);
     } else {
-        verblog("# atf_amc: skipping Lpool LimitMem test, mlockall not available");
+        prlog("# atf_amc: skipping Lpool LimitMem test, mlockall not available");
     }
 }

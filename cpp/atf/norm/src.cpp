@@ -27,17 +27,34 @@
 
 // -----------------------------------------------------------------------------
 
+#ifndef __CYGWIN__
+static void IndentCPP() {
+    command::bash_proc bash;
+    bash.cmd.c << "git diff-tree --name-only HEAD -r --no-commit-id cpp include";
+    bash.fstdin << "</dev/null";// disable any prompting
+    algo_lib::FFildes read;
+    ind_beg(algo::FileLine_curs,fname,bash_StartRead(bash,read))  {
+        atf_norm::FGitfile *gitfile = atf_norm::ind_gitfile_Find(fname);
+        bool noindent = gitfile && gitfile->c_noindent;
+        bool ourfile = FindStr(fname,"/gen/") == -1 && FindStr(fname,"extern/") == -1;
+        if  (FileQ(fname) && ourfile && !noindent) {
+            SysCmd(tempstr()<<"bin/cpp-indent "<<fname<<" >/dev/null 2>&1");
+            prlog_("*");
+        }
+    }ind_end;
+    atf_norm::CheckCleanDirs("cpp include");
+}
+#endif
+
 // indent any source files modified in the last commit
+// indentation under CYGWIN is broken -- and we don't have a cross-platform
+// solution. so only try it on Linux
 void atf_norm::normcheck_indent_srcfile() {
-    // indent recently modified source files
-    SysCmd("for X in $(git diff-tree --name-only  HEAD -r --no-commit-id cpp include"
-           " | egrep -v '(cpp/gen/|include/gen|extern/)'); do if [ -f $X ]; then echo $X; fi; done "
-           "> temp/atf_norm_indent.list",FailokQ(true));
-    SysCmd("printf %s 'indenting files:';"
-           " for X in $(head temp/atf_norm_indent.list); do"
-           " printf '%c %s' ' ' $X; done; echo ...",FailokQ(false));
-    SysCmd("bin/cpp-indent $(cat temp/atf_norm_indent.list) > temp/atf_norm_indent.log 2>&1",FailokQ(false));
-    CheckCleanDirs("cpp include");
+#ifndef __CYGWIN__
+    prlog_("indenting ... ");
+    IndentCPP();
+    prlog(" done");
+#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -48,12 +65,16 @@ void atf_norm::normcheck_indent_script() {
     CheckCleanDirs(SsimFname(atf_norm::_db.cmdline.in, dmmeta_Ssimfile_ssimfile_dev_scriptfile));
     tempstr modfiles(SysEval("git diff-tree --name-only  HEAD -r --no-commit-id",FailokQ(true),1024*1024*10));
     ind_beg(Line_curs,line,modfiles) {
-        if (atf_norm::FScriptfile *scriptfile = ind_scriptfile_Find(line)) {
-            // indent script files -- there are few of them,
-            // so it takes no time to indent them all.
-            SysCmd(tempstr()<<"bin/cpp-indent "<<scriptfile->gitfile
-                   <<" >> temp/atf_norm_indent.log 2>&1",FailokQ(false));
-            CheckCleanDirs(scriptfile->gitfile);
+        if (atf_norm::FGitfile *gitfile = ind_gitfile_Find(line)) {
+            if (gitfile->c_scriptfile && !gitfile->c_noindent) {
+                // indent script files -- there are few of them,
+                // so it takes no time to indent them all.
+                SysCmd(tempstr()<<"bin/cpp-indent "<<gitfile->gitfile
+                       <<" >> temp/atf_norm_indent.log 2>&1",FailokQ(false));
+                // eliminate windows line endings from script files
+                SysCmd(tempstr()<<"sed -i 's/\\r$//' "<<gitfile->gitfile);
+                CheckCleanDirs(gitfile->gitfile);
+            }
         }
     }ind_end;
 }
@@ -74,7 +95,10 @@ void atf_norm::normcheck_copyright() {
 void atf_norm::normcheck_src_lim() {
     command::src_lim src_lim;
     src_lim.strayfile=true;
-    src_lim.linelim=true;
+    // #AL# temporarrily disabling line limit check
+    // because nobody is using it
+    src_lim.linelim=false;
+    src_lim.badline.expr="%";
     SysCmd(src_lim_ToCmdline(src_lim), FailokQ(false));
 }
 
@@ -93,8 +117,8 @@ void atf_norm::normcheck_amc() {
 void atf_norm::normcheck_tempcode() {
     // extra double-quote needed to avoid this check
     // from failing on this file
-    int rc=SysCmd("grep -RHn TEMP""CODE cpp include");
-    if (rc==0) {// FOUND???
+    int rc=SysCmd("acr targsrc -field:src | xargs -L100 grep -RHn TEMP""CODE");
+    if (rc == 0) {
         prerr("SCALPEL LEFT IN PATIENT");
         prerr("It looks like some testing code made its way into the commit.");
         prerr("Please examine the found instances above carefully.");
@@ -106,7 +130,7 @@ void atf_norm::normcheck_tempcode() {
 // -----------------------------------------------------------------------------
 
 static void GenCheck(strptr dir) {
-    ind_beg(Dir_curs,file,DirFileJoin(dir,"*")) {
+    ind_beg(algo::Dir_curs,file,DirFileJoin(dir,"*")) {
         int idx=FindStr(file.filename,"_gen.");
         if (idx!=-1) {
             atf_norm::FNs *ns=atf_norm::ind_ns_Find(ch_FirstN(file.filename,idx));
@@ -128,6 +152,7 @@ void atf_norm::normcheck_stray_gen() {
 
 static void BuildWith(strptr compiler) {
     if (SysEval(tempstr() << compiler << " --version",FailokQ(true),1024*10) != "") {
+        prlog("----- building everything with "<<compiler<<"  cfg:release -----");
         command::abt_proc abt;
         abt.cmd.compiler = compiler;
         abt.cmd.cfg = dev_Cfg_cfg_release;
@@ -141,11 +166,63 @@ static void BuildWith(strptr compiler) {
 // -----------------------------------------------------------------------------
 
 void atf_norm::normcheck_build_clang() {
-    BuildWith(dev_Compiler_compiler_clangPP);
+    (void)BuildWith;
+    //BuildWith(dev_Compiler_compiler_clangPP);
 }
 
 // -----------------------------------------------------------------------------
 
 void atf_norm::normcheck_build_gcc9() {
-    BuildWith(dev_Compiler_compiler_gPP_9);
+    //BuildWith(dev_Compiler_compiler_gPP_9);
+}
+
+// -----------------------------------------------------------------------------
+
+static bool BadCharQ(unsigned char c) {
+    return c >= 0x80
+        && c != 0x80 // Windows-1252 EUR symbol
+        && c != 0xA3 // Windows-1252 GBP symbol
+        && c != 0xA4 // Windows-1252 currency sign
+        && c != 0xA5 // Windows-1252 JPY symbol
+        ;
+}
+
+static bool HasBadCharQ(strptr s) {
+    bool ret=false;
+    for (int i=0; i<s.n_elems; i++) {
+        if (BadCharQ(s[i])) {
+            ret=true;
+            break;
+        }
+    }
+    return ret;
+}
+
+void atf_norm::normcheck_encoding() {
+    ind_beg(_db_gitfile_curs, gitfile, _db) {
+        const strptr ext = GetFileExt(gitfile.gitfile);
+        if (ext == ".cpp" || ext == ".h") {
+            ind_beg(algo::FileLine_curs, line, gitfile.gitfile) {
+                if (HasBadCharQ(line)) {
+                    prlog(gitfile.gitfile <<":" << ind_curs(line).i+1 << ": bad char in line: " << line);
+                    algo_lib::_db.exit_code = 1;
+                }
+            }ind_end;
+        }
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
+void atf_norm::normcheck_iffy_src() {
+    command::src_func src_func;
+    src_func.iffy = true;
+    src_func.listfunc = true;
+    src_func.proto = true;
+    src_func.report = false;
+    cstring output(Trimmed(SysEval(src_func_ToCmdline(src_func),FailokQ(false),1024*1024)));
+    if (output != "") {
+        prlog(output);
+        prerr("Please fix above instances of iffy code and retry");
+    }
 }

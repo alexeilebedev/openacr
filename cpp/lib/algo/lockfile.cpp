@@ -31,7 +31,7 @@ static int FlockTimeout(int fd, algo::UnDiff wait_timeout) {
     int flags = LOCK_EX | LOCK_NB;
     algo_lib::giveup_time_UpdateCycles();
     // calculate timeout
-    SchedTime time_limit = algo_lib::_db.clock + ToSchedTime(ToSecs(wait_timeout));
+    algo::SchedTime time_limit = algo_lib::_db.clock + algo::ToSchedTime(ToSecs(wait_timeout));
     int rc = -1;
     do {
         rc = flock(fd, flags);
@@ -66,7 +66,11 @@ bool algo_lib::LockFileInit(algo_lib::FLockfile &lockfile, strptr name, algo::Fa
         lockfile.filename = name;
         int old_mask = umask(0);
         //mode 666 so that different users can try to lock the resource
-        int os_flags = O_RDWR | O_CREAT | O_CLOEXEC;
+        int os_flags = O_RDWR | O_CREAT;
+#ifndef WIN32
+        // win32 doesn't seem to support O_CLOEXEC
+        os_flags |= O_CLOEXEC;
+#endif
         lockfile.fildes.fd.value = open(Zeroterm(lockfile.filename), os_flags, 0666);
         umask(old_mask);
     }

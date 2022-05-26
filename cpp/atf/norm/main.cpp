@@ -52,14 +52,14 @@ void atf_norm::CheckCleanDirs(strptr dirs) {
 }
 
 static void CheckCleanDirsAll() {
-    atf_norm::CheckCleanDirs("cpp include data sql gen");
+    atf_norm::CheckCleanDirs(".");
 }
 
 // -----------------------------------------------------------------------------
 
-void atf_norm::normcheck_testamc() {
+void atf_norm::normcheck_atf_amc() {
     command::atf_amc_proc atf_amc;
-    atf_amc.stdout = "> temp/atf_amc";
+    atf_amc.fstdout = "> temp/atf_amc";
     if (atf_amc_Exec(atf_amc)!=0) {
         SysCmd("cat temp/atf_amc");
         vrfy(0, "atf_amc returned an error");
@@ -68,25 +68,14 @@ void atf_norm::normcheck_testamc() {
 
 // -----------------------------------------------------------------------------
 
-void atf_norm::normcheck_unit() {
+void atf_norm::normcheck_atf_unit() {
     command::atf_unit_proc atf_unit;
     atf_unit.cmd.perf_secs=0;
-    atf_unit.stdout = "> temp/atf_unit";
+    atf_unit.fstdout = "> temp/atf_unit";
     if (atf_unit_Exec(atf_unit)!=0) {
         SysCmd("cat temp/atf_unit");
         vrfy(0, "atf_unit returned an error");
     }
-}
-
-// -----------------------------------------------------------------------------
-
-void atf_norm::normcheck_iffy_src() {
-    command::src_func src_func;
-    src_func.iffy = true;
-    src_func.check = true;
-    src_func.listfunc = true;
-    src_func.proto = true;
-    SysCmd(src_func_ToCmdline(src_func),FailokQ(false));
 }
 
 // -----------------------------------------------------------------------------
@@ -121,10 +110,12 @@ void atf_norm::normcheck_gitfile() {
 
 static bool RunCheck(atf_norm::FNormcheck &normcheck) {
     bool success=true;
-    UnTime start=CurrUnTime();
+    algo::UnTime start=algo::CurrUnTime();
     try {
         atf_norm::_db.c_normcheck=&normcheck;
+        int code_before = algo_lib::_db.exit_code;
         normcheck.step();
+        success = success && !(code_before ==0 && algo_lib::_db.exit_code != 0);
     } catch (algo_lib::ErrorX &x) {
         prlog(x.str);
         success=false;
@@ -137,7 +128,7 @@ static bool RunCheck(atf_norm::FNormcheck &normcheck) {
     }
     prlog("atf_norm.normcheck"
           <<Keyval("normcheck",normcheck.normcheck)
-          <<Keyval("runtime", CurrUnTime()-start)
+          <<Keyval("runtime", algo::CurrUnTime()-start)
           <<Keyval("success", Bool(success))
           <<Keyval("comment",normcheck.comment));
     return success;
@@ -146,11 +137,55 @@ static bool RunCheck(atf_norm::FNormcheck &normcheck) {
 
 // -----------------------------------------------------------------------------
 
+void atf_norm::normcheck_bintests() {
+    ind_beg(algo::Dir_curs,entry,"bin/test-*") {
+        if (!entry.is_dir && !EndsWithQ(entry.pathname,"~")) {
+            SysCmd(entry.pathname,FailokQ(false));
+        }
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
+// start with clean state
+void atf_norm::normcheck_checkclean() {
+    CheckCleanDirsAll();
+}
+
+// -----------------------------------------------------------------------------
+
+void atf_norm::normcheck_lineendings() {
+    algo_lib::Regx regx;
+    Regx_ReadSql(regx, "(txt/%)",true);
+    cstring files(SysEval("git ls-files",FailokQ(true),1024*1024*100));
+    ind_beg(Line_curs,fname,files) {
+        if (Regx_Match(regx,fname) && FileQ(fname)) {
+            SysCmd(tempstr() << "sed -i 's/\\r$//;s/\\r/\\n/g' "<<fname);
+        }
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
+void atf_norm::normcheck_shebang() {
+    ind_beg(_db_scriptfile_curs,scriptfile,_db) {
+        ind_beg(algo::FileLine_curs,line,scriptfile.gitfile) {
+            if (StartsWithQ(line,"#!")) {
+                strptr interpreter = Pathcomp(line,"!LR LL");
+                if (interpreter != "/bin/sh" && interpreter != "/usr/bin/env") {
+                    prerr(scriptfile.gitfile<<":1: Non-portable interpreter "<<interpreter<<" use /usr/bin/env");
+                    algo_lib::_db.exit_code=1;
+                }
+            }
+            break;// first line only
+        }ind_end;
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
 void atf_norm::Main() {
     algo_lib::DieWithParent();
-
-    // start with clean state
-    CheckCleanDirsAll();
 
     int n_run  = 0;
     int n_pass = 0;
@@ -158,17 +193,10 @@ void atf_norm::Main() {
         if (Regx_Match(atf_norm::_db.cmdline.normcheck, normcheck.normcheck)) {
             ++n_run;
             n_pass += RunCheck(normcheck);
-            CheckCleanDirsAll();
         }
     }ind_end;
 
     CheckCleanDirsAll();
-
-    prlog("report.atf_norm"
-          <<Keyval("n_normcheck", atf_norm::normcheck_N())
-          <<Keyval("n_run", n_run)
-          <<Keyval("n_pass", n_pass)
-          <<Keyval("exit_code", algo_lib::_db.exit_code));
 
     if (n_run==0) {
         algo_lib::_db.exit_code=1;
@@ -176,4 +204,24 @@ void atf_norm::Main() {
               <<Keyval("normcheck",atf_norm::_db.cmdline.normcheck)
               <<Keyval("comment","no tests matched specified pattern. run 'acr normcheck' to see the full list"));
     }
+
+    if (algo_lib::_db.exit_code != 0) {
+        ind_beg(_db_normcheck_curs,normcheck,_db) {
+            if (normcheck.nerr) {
+                prlog("atf_norm.failed"
+                      <<Keyval("normcheck",normcheck.normcheck)
+                      <<Keyval("success",Bool(false))
+                      <<Keyval("comment","See prior output for more information"));
+            }
+        }ind_end;
+    }
+
+    prlog("report.atf_norm"
+          <<Keyval("n_normcheck", atf_norm::normcheck_N())
+          <<Keyval("n_run", n_run)
+          <<Keyval("n_pass", n_pass)
+          <<Keyval("success", Bool(algo_lib::_db.exit_code==0))
+          <<Keyval("comment",(algo_lib::_db.exit_code==0
+                              ? "The coast is clear. Proceed with caution :-)"
+                              : "Some errors occured. Please examine them and try again.")));
 }

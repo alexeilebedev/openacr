@@ -76,7 +76,7 @@ void amc::tfunc_Exec_Wait() {
     amc::FFunc& wait = amc::CreateCurFunc();
     Ins(&R, wait.ret  , "void",false);
     Ins(&R, wait.proto, "$name_Wait($Parent)",false);
-    Ins(&R, wait.body, "if ($_pid != 0) {");
+    Ins(&R, wait.body, "if ($_pid > 0) {");
     Ins(&R, wait.body, "    int wait_flags = 0;");
     Ins(&R, wait.body, "    int wait_status = 0;");
     Ins(&R, wait.body, "    int rc = -1;");
@@ -115,17 +115,24 @@ void amc::tfunc_Exec_Start() {
     Ins(&R, start.body, "int retval = 0;");
     Ins(&R, start.body, "if ($_pid == 0) {");
     Ins(&R, start.body, "    verblog($name_ToCmdline($pararg)); // maybe print command");
-    Ins(&R, start.body, "    $_status = 0; // reset last status");
+    // todo: use posix_spawn instead of this mess and
+    // implement a portable posix spawn for both windows and unix
+    Ins(&R, start.body, "#ifdef WIN32");
+    Ins(&R, start.body, "    algo_lib::ResolveExecFname($_path);");
+    Ins(&R, start.body, "    tempstr cmdline($name_ToCmdline($pararg));");
+    Ins(&R, start.body, "    $_pid = dospawn(Zeroterm($_path),Zeroterm(cmdline),$_timeout,$_fstdin,$_fstdout,$_fstderr);");
+    Ins(&R, start.body, "#else");
     Ins(&R, start.body, "    $_pid = fork();");
     Ins(&R, start.body, "    if ($_pid == 0) { // child");
     Ins(&R, start.body, "        algo_lib::DieWithParent();");
     Ins(&R, start.body, "        if ($_timeout > 0) {");
     Ins(&R, start.body, "            alarm($_timeout);");
     Ins(&R, start.body, "        }");
-    Ins(&R, start.body, "        algo_lib::ApplyRedirect($_stdin, 0);");
-    Ins(&R, start.body, "        algo_lib::ApplyRedirect($_stdout, 1);");
-    Ins(&R, start.body, "        algo_lib::ApplyRedirect($_stderr, 2);");
-    Ins(&R, start.body, "        retval = $name_Execv($pararg);");
+    // todo: do something smart with ApplyRedirect failures other than cause exec failure?
+    Ins(&R, start.body, "        if (retval==0) retval=algo_lib::ApplyRedirect($_fstdin , 0);");
+    Ins(&R, start.body, "        if (retval==0) retval=algo_lib::ApplyRedirect($_fstdout, 1);");
+    Ins(&R, start.body, "        if (retval==0) retval=algo_lib::ApplyRedirect($_fstderr, 2);");
+    Ins(&R, start.body, "        if (retval==0) retval= $name_Execv($pararg);");
     Ins(&R, start.body, "        if (retval != 0) { // if start fails, print error");
     Ins(&R, start.body, "            int err=errno;");
     Ins(&R, start.body, "            prerr(\"$ns.$name_execv\"");
@@ -136,11 +143,37 @@ void amc::tfunc_Exec_Start() {
     Ins(&R, start.body, "        _exit(127); // if failed to start, exit anyway");
     Ins(&R, start.body, "    } else if ($_pid == -1) {");
     Ins(&R, start.body, "        retval = errno; // failed to fork");
-    Ins(&R, start.body, "    } else {");
-    Ins(&R, start.body, "        retval = $_status; // parent");
     Ins(&R, start.body, "    }");
+    Ins(&R, start.body, "#endif");
     Ins(&R, start.body, "}");
+    Ins(&R, start.body, "$_status = $_pid > 0 ? 0 : -1; // if didn't start, set error status");
     Ins(&R, start.body , "return retval;");
+}
+
+// // Should this be generated?
+// static algo::Fildes bash_StartRead(command::bash_proc &bash, algo_lib::FFildes &read) {
+//     int pipefd[2];
+//     int rc=pipe(pipefd);
+//     (void)rc;
+//     read.fd.value = pipefd[0];
+//     bash.fstdout  << ">&" << pipefd[1];
+//     bash_Start(bash);
+//     (void)close(pipefd[1]);
+//     return read.fd;
+// }
+void amc::tfunc_Exec_StartRead() {
+    algo_lib::Replscope &R = amc::_db.genfield.R;
+    amc::FFunc& exec = amc::CreateCurFunc(true);
+    exec.ret = "algo::Fildes";
+    AddArg(exec.proto, "algo_lib::FFildes &read");
+    Ins(&R, exec.body, "int pipefd[2];");
+    Ins(&R, exec.body, "int rc=pipe(pipefd);");
+    Ins(&R, exec.body, "(void)rc;");
+    Ins(&R, exec.body, "read.fd.value = pipefd[0];");
+    Ins(&R, exec.body, "$_fstdout  << \">&\" << pipefd[1];");
+    Ins(&R, exec.body, "$name_Start($pararg);");
+    Ins(&R, exec.body, "(void)close(pipefd[1]);");
+    Ins(&R, exec.body, "return read.fd;");
 }
 
 void amc::tfunc_Exec_Exec() {
@@ -181,14 +214,14 @@ void amc::tfunc_Exec_ToCmdline() {
     Ins(&R, tocmdline.body, "algo::tempstr retval;");
     Ins(&R, tocmdline.body, "retval << $_path << \" \";");
     Ins(&R, tocmdline.body, "command::$cmdname_PrintArgv($_cmd,retval);");
-    Ins(&R, tocmdline.body, "if (ch_N($_stdin)) {");
-    Ins(&R, tocmdline.body, "    retval << \" \" << $_stdin;");
+    Ins(&R, tocmdline.body, "if (ch_N($_fstdin)) {");
+    Ins(&R, tocmdline.body, "    retval << \" \" << $_fstdin;");
     Ins(&R, tocmdline.body, "}");
-    Ins(&R, tocmdline.body, "if (ch_N($_stdout)) {");
-    Ins(&R, tocmdline.body, "    retval << \" \" << $_stdout;");
+    Ins(&R, tocmdline.body, "if (ch_N($_fstdout)) {");
+    Ins(&R, tocmdline.body, "    retval << \" \" << $_fstdout;");
     Ins(&R, tocmdline.body, "}");
-    Ins(&R, tocmdline.body, "if (ch_N($_stderr)) {");
-    Ins(&R, tocmdline.body, "    retval << \" 2\" << $_stderr;");
+    Ins(&R, tocmdline.body, "if (ch_N($_fstderr)) {");
+    Ins(&R, tocmdline.body, "    retval << \" 2\" << $_fstderr;");
     Ins(&R, tocmdline.body, "}");
     Ins(&R, tocmdline.body, "return retval;");
 }
@@ -199,7 +232,7 @@ void amc::tfunc_Exec_Execv() {
     bool amc_command = ind_ns_Find(name_Get(*execfield.p_arg)) != NULL;
 
     amc::FFunc& execv = CreateCurFunc();
-    Set(R, "$ndatafld", tempstr()<<amc::c_datafld_N(*amc::_db.genfield.p_field->p_arg));
+    Set(R, "$ndatafld", tempstr()<<amc::c_datafld_N(*amc::_db.genfield.p_field->p_arg) * 2);
     Ins(&R, execv.ret    , "int",false);
     Ins(&R, execv.proto  , "$name_Execv($Parent)",false);
     Ins(&R, execv.comment, "Call execv with specified parameters -- cprint:$Ctype.Argv");
@@ -287,19 +320,19 @@ void amc::NewFieldExec() {
                                             , dmmeta::CppExpr()
                                             , algo::Comment("command line for child process")));
 
-        Field_AddChild(field, dmmeta::Field(SubfieldName(field, "stdin")
+        Field_AddChild(field, dmmeta::Field(SubfieldName(field, "fstdin")
                                             , "algo.cstring"
                                             , dmmeta_Reftype_reftype_Val
                                             , dmmeta::CppExpr()
                                             , algo::Comment("redirect for stdin")));
 
-        Field_AddChild(field, dmmeta::Field(SubfieldName(field, "stdout")
+        Field_AddChild(field, dmmeta::Field(SubfieldName(field, "fstdout")
                                             , "algo.cstring"
                                             , dmmeta_Reftype_reftype_Val
                                             , dmmeta::CppExpr()
                                             , algo::Comment("redirect for stdout")));
 
-        Field_AddChild(field, dmmeta::Field(SubfieldName(field, "stderr")
+        Field_AddChild(field, dmmeta::Field(SubfieldName(field, "fstderr")
                                             , "algo.cstring"
                                             , dmmeta_Reftype_reftype_Val
                                             , dmmeta::CppExpr()

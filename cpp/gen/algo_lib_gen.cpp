@@ -14,6 +14,8 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/dmmeta_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
@@ -22,8 +24,6 @@ algo_lib::_db_bh_timehook_curs::~_db_bh_timehook_curs() {
 
 }
 
-#include <sys/wait.h>
-#include <sys/mman.h>
 namespace algo_lib {
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
@@ -40,7 +40,7 @@ namespace algo_lib {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // Extract next character from STR and advance IDX
-    static u64           sortkey_Nextchar(const algo_lib::FTxtrow& txtrow, strptr &str, int &idx) __attribute__((nothrow));
+    static u64           sortkey_Nextchar(const algo_lib::FTxtrow& txtrow, algo::strptr &str, int &idx) __attribute__((nothrow));
     // Swap values elem_a and elem_b
     static void          c_txtrow_Swap(algo_lib::FTxtrow* &elem_a, algo_lib::FTxtrow* &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
@@ -159,13 +159,15 @@ void algo_lib::ary_RemoveLast(algo_lib::Bitset& parent) {
 // Make sure N elements fit in array. Process dies if out of memory
 void algo_lib::ary_AbsReserve(algo_lib::Bitset& parent, int n) {
     u32 old_max  = parent.ary_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::lpool_ReallocMem(parent.ary_elems, old_max * sizeof(u64), new_max * sizeof(u64));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.Bitset.ary  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::lpool_ReallocMem(parent.ary_elems, old_max * sizeof(u64), new_max * sizeof(u64));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.Bitset.ary  comment:'out of memory'");
+        }
+        parent.ary_elems = (u64*)new_mem;
+        parent.ary_max = new_max;
     }
-    parent.ary_elems = (u64*)new_mem;
-    parent.ary_max = new_max;
 }
 
 // --- algo_lib.Bitset.ary.Setary
@@ -292,13 +294,15 @@ void algo_lib::ary_tok_RemoveLast(algo_lib::CsvParse& parsecsv) {
 // Make sure N elements fit in array. Process dies if out of memory
 void algo_lib::ary_tok_AbsReserve(algo_lib::CsvParse& parsecsv, int n) {
     u32 old_max  = parsecsv.ary_tok_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::lpool_ReallocMem(parsecsv.ary_tok_elems, old_max * sizeof(algo::strptr), new_max * sizeof(algo::strptr));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.CsvParse.ary_tok  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::lpool_ReallocMem(parsecsv.ary_tok_elems, old_max * sizeof(algo::strptr), new_max * sizeof(algo::strptr));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.CsvParse.ary_tok  comment:'out of memory'");
+        }
+        parsecsv.ary_tok_elems = (algo::strptr*)new_mem;
+        parsecsv.ary_tok_max = new_max;
     }
-    parsecsv.ary_tok_elems = (algo::strptr*)new_mem;
-    parsecsv.ary_tok_max = new_max;
 }
 
 // --- algo_lib.CsvParse.ary_tok.Setary
@@ -448,10 +452,11 @@ void algo_lib::trace_Print(algo_lib::trace & row, algo::cstring &str) {
 // If out of memory, return NULL
 // Newly allocated memory is initialized to zeros
 void* algo_lib::sbrk_AllocMem(u32 size) {
-    void *ret = MAP_FAILED;
-#if defined(__MACH__) || __FreeBSD__>0
+    void *ret;
+#if defined(__MACH__) || __FreeBSD__>0 || __CYGWIN__>0 || defined(WIN32)
     ret = malloc(size);
 #else
+    ret = MAP_FAILED;
     u32 bigsize = 1024*2048;
     if (size >= bigsize) { // big block -- will be registered
         size = (size + bigsize - 1) / bigsize * bigsize;
@@ -497,7 +502,7 @@ void* algo_lib::sbrk_AllocMem(u32 size) {
 
 // --- algo_lib.FDb.sbrk.FreeMem
 void algo_lib::sbrk_FreeMem(void *mem, u32 size) {
-#if defined(__MACH__) || __FreeBSD__>0
+#if defined(__MACH__) || __FreeBSD__>0 || defined(WIN32)
     free(mem);
     (void)size;
 #else
@@ -513,7 +518,7 @@ void algo_lib::sbrk_FreeMem(void *mem, u32 size) {
 void algo_lib::lpool_FreeMem(void *mem, u64 size) {
     if (mem) {
         size = u64_Max(size,16); // enforce alignment
-        u64 cell = u64_BitScanReverse(size-1) + 1;
+        u64 cell = algo::u64_BitScanReverse(size-1) + 1;
         lpool_Lpblock *temp = (lpool_Lpblock*)mem; // push  singly linked list
         temp->next = _db.lpool_free[cell];
         _db.lpool_free[cell] = temp;
@@ -526,7 +531,7 @@ void algo_lib::lpool_FreeMem(void *mem, u64 size) {
 // The allocated block is 16-byte aligned
 void* algo_lib::lpool_AllocMem(u64 size) {
     size     = u64_Max(size,16); // enforce alignment
-    u64 cell = u64_BitScanReverse(size-1)+1;
+    u64 cell = algo::u64_BitScanReverse(size-1)+1;
     u64 i    = cell;
     u8 *retval = NULL;
     // try to find a block that's at least as large as required.
@@ -565,7 +570,7 @@ bool algo_lib::lpool_ReserveBuffers(int nbuf, u64 bufsize) {
     bool retval = true;
     bufsize = u64_Max(bufsize, 16);
     for (int i = 0; i < nbuf; i++) {
-        u64     cell = u64_BitScanReverse(bufsize-1)+1;
+        u64     cell = algo::u64_BitScanReverse(bufsize-1)+1;
         u64     size = 1ULL<<cell;
         lpool_Lpblock *temp = (lpool_Lpblock*)algo_lib::sbrk_AllocMem(size);
         if (temp == NULL) {
@@ -677,9 +682,9 @@ bool algo_lib::LoadTuplesMaybe(algo::strptr root) {
 // --- algo_lib.FDb._db.Init
 void algo_lib::Init() {
     algo_lib::_db.last_signal             = 0;
-    ary_beg(cstring, str, algo_lib::temp_strings_Getary()) {
+    ind_beg_aryptr(cstring, str, algo_lib::temp_strings_Getary()) {
         ch_Reserve(str, 256);
-    }ary_end;
+    }ind_end_aryptr;
     algo_lib::_db.n_temp = algo_lib::temp_strings_N();
     algo_lib::bh_timehook_Reserve(32);
     algo_lib::InitCpuHz();
@@ -807,7 +812,7 @@ bool algo_lib::imtable_XrefMaybe(algo_lib::FImtable &row) {
 // --- algo_lib.FDb.ind_imtable.Find
 // Find row by key. Return NULL if not found.
 algo_lib::FImtable* algo_lib::ind_imtable_Find(const algo::strptr& key) {
-    u32 index = Smallstr50_Hash(0, key) & (_db.ind_imtable_buckets_n - 1);
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_imtable_buckets_n - 1);
     algo_lib::FImtable* *e = &_db.ind_imtable_buckets_elems[index];
     algo_lib::FImtable* ret=NULL;
     do {
@@ -841,7 +846,7 @@ bool algo_lib::ind_imtable_InsertMaybe(algo_lib::FImtable& row) {
     ind_imtable_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_imtable_next == (algo_lib::FImtable*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.imtable) & (_db.ind_imtable_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.imtable) & (_db.ind_imtable_buckets_n - 1);
         algo_lib::FImtable* *prev = &_db.ind_imtable_buckets_elems[index];
         do {
             algo_lib::FImtable* ret = *prev;
@@ -867,7 +872,7 @@ bool algo_lib::ind_imtable_InsertMaybe(algo_lib::FImtable& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void algo_lib::ind_imtable_Remove(algo_lib::FImtable& row) {
     if (LIKELY(row.ind_imtable_next != (algo_lib::FImtable*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.imtable) & (_db.ind_imtable_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.imtable) & (_db.ind_imtable_buckets_n - 1);
         algo_lib::FImtable* *prev = &_db.ind_imtable_buckets_elems[index]; // addr of pointer to current element
         while (algo_lib::FImtable *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -888,7 +893,7 @@ void algo_lib::ind_imtable_Reserve(int n) {
     u32 new_nelems   = _db.ind_imtable_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(algo_lib::FImtable*);
         u32 new_size = new_nbuckets * sizeof(algo_lib::FImtable*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -904,7 +909,7 @@ void algo_lib::ind_imtable_Reserve(int n) {
             while (elem) {
                 algo_lib::FImtable &row        = *elem;
                 algo_lib::FImtable* next       = row.ind_imtable_next;
-                u32 index          = Smallstr50_Hash(0, row.imtable) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr50_Hash(0, row.imtable) & (new_nbuckets-1);
                 row.ind_imtable_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1249,11 +1254,11 @@ void algo_lib::bh_timehook_FirstChanged() {
 // --- algo_lib.FDb.bh_timehook.UpdateCycles
 // Update cycles count from previous clock capture
 void algo_lib::bh_timehook_UpdateCycles() {
-    u64 cur_cycles                      = get_cycles();
+    u64 cur_cycles                      = algo::get_cycles();
     u64 prev_cycles                     = algo_lib::_db.clock.value;
     ++algo_lib::_db.trace.step_bh_timehook;
     algo_lib::_db.trace.step_bh_timehook_cycles  += cur_cycles - prev_cycles;
-    algo_lib::_db.clock                 = SchedTime(cur_cycles);
+    algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
 // --- algo_lib.FDb.dispsigcheck.Alloc
@@ -1349,7 +1354,7 @@ bool algo_lib::dispsigcheck_XrefMaybe(algo_lib::FDispsigcheck &row) {
 // --- algo_lib.FDb.ind_dispsigcheck.Find
 // Find row by key. Return NULL if not found.
 algo_lib::FDispsigcheck* algo_lib::ind_dispsigcheck_Find(const algo::strptr& key) {
-    u32 index = Smallstr50_Hash(0, key) & (_db.ind_dispsigcheck_buckets_n - 1);
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_dispsigcheck_buckets_n - 1);
     algo_lib::FDispsigcheck* *e = &_db.ind_dispsigcheck_buckets_elems[index];
     algo_lib::FDispsigcheck* ret=NULL;
     do {
@@ -1383,7 +1388,7 @@ bool algo_lib::ind_dispsigcheck_InsertMaybe(algo_lib::FDispsigcheck& row) {
     ind_dispsigcheck_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_dispsigcheck_next == (algo_lib::FDispsigcheck*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.dispsig) & (_db.ind_dispsigcheck_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.dispsig) & (_db.ind_dispsigcheck_buckets_n - 1);
         algo_lib::FDispsigcheck* *prev = &_db.ind_dispsigcheck_buckets_elems[index];
         do {
             algo_lib::FDispsigcheck* ret = *prev;
@@ -1409,7 +1414,7 @@ bool algo_lib::ind_dispsigcheck_InsertMaybe(algo_lib::FDispsigcheck& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void algo_lib::ind_dispsigcheck_Remove(algo_lib::FDispsigcheck& row) {
     if (LIKELY(row.ind_dispsigcheck_next != (algo_lib::FDispsigcheck*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.dispsig) & (_db.ind_dispsigcheck_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.dispsig) & (_db.ind_dispsigcheck_buckets_n - 1);
         algo_lib::FDispsigcheck* *prev = &_db.ind_dispsigcheck_buckets_elems[index]; // addr of pointer to current element
         while (algo_lib::FDispsigcheck *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1430,7 +1435,7 @@ void algo_lib::ind_dispsigcheck_Reserve(int n) {
     u32 new_nelems   = _db.ind_dispsigcheck_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(algo_lib::FDispsigcheck*);
         u32 new_size = new_nbuckets * sizeof(algo_lib::FDispsigcheck*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -1446,7 +1451,7 @@ void algo_lib::ind_dispsigcheck_Reserve(int n) {
             while (elem) {
                 algo_lib::FDispsigcheck &row        = *elem;
                 algo_lib::FDispsigcheck* next       = row.ind_dispsigcheck_next;
-                u32 index          = Smallstr50_Hash(0, row.dispsig) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr50_Hash(0, row.dispsig) & (new_nbuckets-1);
                 row.ind_dispsigcheck_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1527,7 +1532,7 @@ bool algo_lib::imdb_XrefMaybe(algo_lib::FImdb &row) {
 // --- algo_lib.FDb.ind_imdb.Find
 // Find row by key. Return NULL if not found.
 algo_lib::FImdb* algo_lib::ind_imdb_Find(const algo::strptr& key) {
-    u32 index = Smallstr50_Hash(0, key) & (_db.ind_imdb_buckets_n - 1);
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_imdb_buckets_n - 1);
     algo_lib::FImdb* *e = &_db.ind_imdb_buckets_elems[index];
     algo_lib::FImdb* ret=NULL;
     do {
@@ -1561,7 +1566,7 @@ bool algo_lib::ind_imdb_InsertMaybe(algo_lib::FImdb& row) {
     ind_imdb_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_imdb_next == (algo_lib::FImdb*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.imdb) & (_db.ind_imdb_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.imdb) & (_db.ind_imdb_buckets_n - 1);
         algo_lib::FImdb* *prev = &_db.ind_imdb_buckets_elems[index];
         do {
             algo_lib::FImdb* ret = *prev;
@@ -1587,7 +1592,7 @@ bool algo_lib::ind_imdb_InsertMaybe(algo_lib::FImdb& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void algo_lib::ind_imdb_Remove(algo_lib::FImdb& row) {
     if (LIKELY(row.ind_imdb_next != (algo_lib::FImdb*)-1)) {// check if in hash already
-        u32 index = Smallstr50_Hash(0, row.imdb) & (_db.ind_imdb_buckets_n - 1);
+        u32 index = algo::Smallstr50_Hash(0, row.imdb) & (_db.ind_imdb_buckets_n - 1);
         algo_lib::FImdb* *prev = &_db.ind_imdb_buckets_elems[index]; // addr of pointer to current element
         while (algo_lib::FImdb *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1608,7 +1613,7 @@ void algo_lib::ind_imdb_Reserve(int n) {
     u32 new_nelems   = _db.ind_imdb_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(algo_lib::FImdb*);
         u32 new_size = new_nbuckets * sizeof(algo_lib::FImdb*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -1624,7 +1629,7 @@ void algo_lib::ind_imdb_Reserve(int n) {
             while (elem) {
                 algo_lib::FImdb &row        = *elem;
                 algo_lib::FImdb* next       = row.ind_imdb_next;
-                u32 index          = Smallstr50_Hash(0, row.imdb) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr50_Hash(0, row.imdb) & (new_nbuckets-1);
                 row.ind_imdb_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1883,91 +1888,6 @@ bool algo_lib::txttbl_XrefMaybe(algo_lib::FTxttbl &row) {
     return retval;
 }
 
-// --- algo_lib.FDb.tempfile.XrefMaybe
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool algo_lib::tempfile_XrefMaybe(algo_lib::FTempfile &row) {
-    bool retval = true;
-    (void)row;
-    // insert tempfile into index zd_tempfile
-    if (true) { // user-defined insert condition
-        zd_tempfile_Insert(row);
-    }
-    return retval;
-}
-
-// --- algo_lib.FDb.zd_tempfile.Insert
-// Insert row into linked list. If row is already in linked list, do nothing.
-void algo_lib::zd_tempfile_Insert(algo_lib::FTempfile& row) {
-    if (!zd_tempfile_InLlistQ(row)) {
-        algo_lib::FTempfile* old_tail = _db.zd_tempfile_tail;
-        row.zd_tempfile_next = NULL;
-        row.zd_tempfile_prev = old_tail;
-        _db.zd_tempfile_tail = &row;
-        algo_lib::FTempfile **new_row_a = &old_tail->zd_tempfile_next;
-        algo_lib::FTempfile **new_row_b = &_db.zd_tempfile_head;
-        algo_lib::FTempfile **new_row = old_tail ? new_row_a : new_row_b;
-        *new_row = &row;
-        _db.zd_tempfile_n++;
-    }
-}
-
-// --- algo_lib.FDb.zd_tempfile.Remove
-// Remove element from index. If element is not in index, do nothing.
-void algo_lib::zd_tempfile_Remove(algo_lib::FTempfile& row) {
-    if (zd_tempfile_InLlistQ(row)) {
-        algo_lib::FTempfile* old_head       = _db.zd_tempfile_head;
-        (void)old_head; // in case it's not used
-        algo_lib::FTempfile* prev = row.zd_tempfile_prev;
-        algo_lib::FTempfile* next = row.zd_tempfile_next;
-        // if element is first, adjust list head; otherwise, adjust previous element's next
-        algo_lib::FTempfile **new_next_a = &prev->zd_tempfile_next;
-        algo_lib::FTempfile **new_next_b = &_db.zd_tempfile_head;
-        algo_lib::FTempfile **new_next = prev ? new_next_a : new_next_b;
-        *new_next = next;
-        // if element is last, adjust list tail; otherwise, adjust next element's prev
-        algo_lib::FTempfile **new_prev_a = &next->zd_tempfile_prev;
-        algo_lib::FTempfile **new_prev_b = &_db.zd_tempfile_tail;
-        algo_lib::FTempfile **new_prev = next ? new_prev_a : new_prev_b;
-        *new_prev = prev;
-        _db.zd_tempfile_n--;
-        row.zd_tempfile_next=(algo_lib::FTempfile*)-1; // not-in-list
-    }
-}
-
-// --- algo_lib.FDb.zd_tempfile.RemoveAll
-// Empty the index. (The rows are not deleted)
-void algo_lib::zd_tempfile_RemoveAll() {
-    algo_lib::FTempfile* row = _db.zd_tempfile_head;
-    _db.zd_tempfile_head = NULL;
-    _db.zd_tempfile_tail = NULL;
-    _db.zd_tempfile_n = 0;
-    while (row) {
-        algo_lib::FTempfile* row_next = row->zd_tempfile_next;
-        row->zd_tempfile_next  = (algo_lib::FTempfile*)-1;
-        row->zd_tempfile_prev  = NULL;
-        row = row_next;
-    }
-}
-
-// --- algo_lib.FDb.zd_tempfile.RemoveFirst
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-algo_lib::FTempfile* algo_lib::zd_tempfile_RemoveFirst() {
-    algo_lib::FTempfile *row = NULL;
-    row = _db.zd_tempfile_head;
-    if (row) {
-        algo_lib::FTempfile *next = row->zd_tempfile_next;
-        _db.zd_tempfile_head = next;
-        algo_lib::FTempfile **new_end_a = &next->zd_tempfile_prev;
-        algo_lib::FTempfile **new_end_b = &_db.zd_tempfile_tail;
-        algo_lib::FTempfile **new_end = next ? new_end_a : new_end_b;
-        *new_end = NULL;
-        _db.zd_tempfile_n--;
-        row->zd_tempfile_next = (algo_lib::FTempfile*)-1; // mark as not-in-list
-    }
-    return row;
-}
-
 // --- algo_lib.FDb.replvar.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -2080,11 +2000,11 @@ bool algo_lib::replvar_XrefMaybe(algo_lib::FReplvar &row) {
 // --- algo_lib.FDb.giveup_time.UpdateCycles
 // Update cycles count from previous clock capture
 void algo_lib::giveup_time_UpdateCycles() {
-    u64 cur_cycles                      = get_cycles();
+    u64 cur_cycles                      = algo::get_cycles();
     u64 prev_cycles                     = algo_lib::_db.clock.value;
     ++algo_lib::_db.trace.step_giveup_time;
     algo_lib::_db.trace.step_giveup_time_cycles  += cur_cycles - prev_cycles;
-    algo_lib::_db.clock                 = SchedTime(cur_cycles);
+    algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
 // --- algo_lib.FDb.trace.RowidFind
@@ -2211,9 +2131,9 @@ void algo_lib::FDb_Init() {
     (void)Charset_ReadStrptrPlain(_db.SsimBreakValue, "[]{}()\t \r\n");
     (void)Charset_ReadStrptrMaybe(_db.SsimQuotesafe, "a-zA-Z0-9_;&*^%$@.!:,+/-");
     algo_lib::_db.last_signal             = 0;
-    ary_beg(cstring, str, algo_lib::temp_strings_Getary()) {
+    ind_beg_aryptr(cstring, str, algo_lib::temp_strings_Getary()) {
         ch_Reserve(str, 256);
-    }ary_end;
+    }ind_end_aryptr;
     algo_lib::_db.n_temp = algo_lib::temp_strings_N();
     algo_lib::bh_timehook_Reserve(32);
     algo_lib::InitCpuHz();
@@ -2272,18 +2192,15 @@ void algo_lib::FDb_Init() {
     memset(_db.ind_imdb_buckets_elems, 0, sizeof(algo_lib::FImdb*)*_db.ind_imdb_buckets_n); // (algo_lib.FDb.ind_imdb)
     // txtcell: initialize Tpool
     _db.txtcell_free      = NULL;
-    _db.txtcell_blocksize = BumpToPow2(64 * sizeof(algo_lib::FTxtcell)); // allocate 64-127 elements at a time
+    _db.txtcell_blocksize = algo::BumpToPow2(64 * sizeof(algo_lib::FTxtcell)); // allocate 64-127 elements at a time
     // txtrow: initialize Tpool
     _db.txtrow_free      = NULL;
-    _db.txtrow_blocksize = BumpToPow2(64 * sizeof(algo_lib::FTxtrow)); // allocate 64-127 elements at a time
+    _db.txtrow_blocksize = algo::BumpToPow2(64 * sizeof(algo_lib::FTxtrow)); // allocate 64-127 elements at a time
     _db.argc = i32(0);
     _db.argv = NULL;
-    _db.zd_tempfile_head = NULL; // (algo_lib.FDb.zd_tempfile)
-    _db.zd_tempfile_n = 0; // (algo_lib.FDb.zd_tempfile)
-    _db.zd_tempfile_tail = NULL; // (algo_lib.FDb.zd_tempfile)
     // replvar: initialize Tpool
     _db.replvar_free      = NULL;
-    _db.replvar_blocksize = BumpToPow2(64 * sizeof(algo_lib::FReplvar)); // allocate 64-127 elements at a time
+    _db.replvar_blocksize = algo::BumpToPow2(64 * sizeof(algo_lib::FReplvar)); // allocate 64-127 elements at a time
     _db.giveup_count = u64(0);
     _db.stringtofile_nwrite = u32(0);
     _db.giveup_time = bool(true);
@@ -2291,6 +2208,7 @@ void algo_lib::FDb_Init() {
     _db.last_sleep_clocks = u64(0);
     _db.show_insert_err_lim = u32(0);
     (void)Charset_ReadStrptrMaybe(_db.Urlsafe, "0-9a-zA-Z_.~");
+    _db.winjob = u64(0);
 
     algo_lib::InitReflection();
     _db.h_fatalerror = NULL;
@@ -2406,10 +2324,9 @@ void algo_lib::FReplvar_Uninit(algo_lib::FReplvar& replvar) {
 }
 
 // --- algo_lib.FTempfile..Uninit
-void algo_lib::FTempfile_Uninit(algo_lib::FTempfile& tempfile) {
-    algo_lib::FTempfile &row = tempfile; (void)row;
-    zd_tempfile_Remove(row); // remove tempfile from index zd_tempfile
-    fildes_Cleanup(tempfile); // dmmeta.fcleanup:algo_lib.FTempfile.fildes
+void algo_lib::FTempfile_Uninit(algo_lib::FTempfile& parent) {
+    algo_lib::FTempfile &row = parent; (void)row;
+    fildes_Cleanup(parent); // dmmeta.fcleanup:algo_lib.FTempfile.fildes
 }
 
 // --- algo_lib.FTxtcell..Uninit
@@ -2423,7 +2340,7 @@ void algo_lib::FTxtcell_Uninit(algo_lib::FTxtcell& txtcell) {
 
 // --- algo_lib.FTxtrow.sortkey.Nextchar
 // Extract next character from STR and advance IDX
-inline static u64 algo_lib::sortkey_Nextchar(const algo_lib::FTxtrow& txtrow, strptr &str, int &idx) {
+inline static u64 algo_lib::sortkey_Nextchar(const algo_lib::FTxtrow& txtrow, algo::strptr &str, int &idx) {
     (void)txtrow;
     int i = idx;
     u64 ch = str.elems[i];
@@ -2458,8 +2375,8 @@ i32 algo_lib::sortkey_Cmp(algo_lib::FTxtrow& txtrow, algo_lib::FTxtrow &rhs) {
     i32 retval = 0;
     int idx_a = 0;
     int idx_b = 0;
-    strptr str_a = ch_Getary(txtrow.sortkey);
-    strptr str_b = ch_Getary(rhs.sortkey);
+    algo::strptr str_a = ch_Getary(txtrow.sortkey);
+    algo::strptr str_b = ch_Getary(rhs.sortkey);
     int n_a   = elems_N(str_a);
     int n_b   = elems_N(str_b);
     retval    = i32_Cmp(n_a,n_b);
@@ -2805,7 +2722,7 @@ void algo_lib::c_txtrow_HeapSort(algo_lib::FTxttbl& txttbl) {
 // Quick sort
 void algo_lib::c_txtrow_QuickSort(algo_lib::FTxttbl& txttbl) {
     // compute max recursion depth based on number of elements in the array
-    int max_depth = CeilingLog2(u32(c_txtrow_N(txttbl) + 1)) + 3;
+    int max_depth = algo::CeilingLog2(u32(c_txtrow_N(txttbl) + 1)) + 3;
     algo_lib::FTxtrow* *elems = c_txtrow_Getary(txttbl).elems;
     int n = c_txtrow_N(txttbl);
     c_txtrow_IntQuickSort(elems, n, max_depth);
@@ -2865,7 +2782,7 @@ bool algo_lib::value_SetStrptrMaybe(algo_lib::FieldId& parent, algo::strptr rhs)
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
-            switch (u64(ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
                 case LE_STR3('s','i','g'): {
                     value_SetEnum(parent,algo_lib_FieldId_sig); ret = true; break;
                 }
@@ -2873,7 +2790,7 @@ bool algo_lib::value_SetStrptrMaybe(algo_lib::FieldId& parent, algo::strptr rhs)
             break;
         }
         case 4: {
-            switch (u64(ReadLE32(rhs.elems))) {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('e','x','p','r'): {
                     value_SetEnum(parent,algo_lib_FieldId_expr); ret = true; break;
                 }
@@ -2884,7 +2801,7 @@ bool algo_lib::value_SetStrptrMaybe(algo_lib::FieldId& parent, algo::strptr rhs)
             break;
         }
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('d','e','b','u','g'): {
                     value_SetEnum(parent,algo_lib_FieldId_debug); ret = true; break;
                 }
@@ -2904,7 +2821,7 @@ bool algo_lib::value_SetStrptrMaybe(algo_lib::FieldId& parent, algo::strptr rhs)
             break;
         }
         case 6: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('a','c','c','e','p','t'): {
                     value_SetEnum(parent,algo_lib_FieldId_accept); ret = true; break;
                 }
@@ -2912,7 +2829,7 @@ bool algo_lib::value_SetStrptrMaybe(algo_lib::FieldId& parent, algo::strptr rhs)
             break;
         }
         case 7: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
                 case LE_STR7('v','e','r','b','o','s','e'): {
                     value_SetEnum(parent,algo_lib_FieldId_verbose); ret = true; break;
                 }
@@ -2923,7 +2840,7 @@ bool algo_lib::value_SetStrptrMaybe(algo_lib::FieldId& parent, algo::strptr rhs)
             break;
         }
         case 9: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('s','i','g','n','a','t','u','r'): {
                     if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,algo_lib_FieldId_signature); ret = true; break; }
                     break;
@@ -2932,7 +2849,7 @@ bool algo_lib::value_SetStrptrMaybe(algo_lib::FieldId& parent, algo::strptr rhs)
             break;
         }
         case 10: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('n','e','x','t','_','f','r','o'): {
                     if (memcmp(rhs.elems+8,"nt",2)==0) { value_SetEnum(parent,algo_lib_FieldId_next_front); ret = true; break; }
                     break;
@@ -2945,7 +2862,7 @@ bool algo_lib::value_SetStrptrMaybe(algo_lib::FieldId& parent, algo::strptr rhs)
             break;
         }
         case 11: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('a','c','c','e','p','t','s','_'): {
                     if (memcmp(rhs.elems+8,"all",3)==0) { value_SetEnum(parent,algo_lib_FieldId_accepts_all); ret = true; break; }
                     break;
@@ -3108,13 +3025,15 @@ void algo_lib::state_RemoveLast(algo_lib::Regx& regx) {
 // Make sure N elements fit in array. Process dies if out of memory
 void algo_lib::state_AbsReserve(algo_lib::Regx& regx, int n) {
     u32 old_max  = regx.state_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::lpool_ReallocMem(regx.state_elems, old_max * sizeof(algo_lib::RegxState), new_max * sizeof(algo_lib::RegxState));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.Regx.state  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::lpool_ReallocMem(regx.state_elems, old_max * sizeof(algo_lib::RegxState), new_max * sizeof(algo_lib::RegxState));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.Regx.state  comment:'out of memory'");
+        }
+        regx.state_elems = (algo_lib::RegxState*)new_mem;
+        regx.state_max = new_max;
     }
-    regx.state_elems = (algo_lib::RegxState*)new_mem;
-    regx.state_max = new_max;
 }
 
 // --- algo_lib.Regx.state.XrefMaybe
@@ -3170,7 +3089,7 @@ bool algo_lib::type_SetStrptrMaybe(algo_lib::RegxToken& parent, algo::strptr rhs
     bool ret = false;
     switch (elems_N(rhs)) {
         case 2: {
-            switch (u64(ReadLE16(rhs.elems))) {
+            switch (u64(algo::ReadLE16(rhs.elems))) {
                 case LE_STR2('o','r'): {
                     type_SetEnum(parent,algo_lib_RegxToken_type_or); ret = true; break;
                 }
@@ -3178,7 +3097,7 @@ bool algo_lib::type_SetStrptrMaybe(algo_lib::RegxToken& parent, algo::strptr rhs
             break;
         }
         case 4: {
-            switch (u64(ReadLE32(rhs.elems))) {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('e','x','p','r'): {
                     type_SetEnum(parent,algo_lib_RegxToken_type_expr); ret = true; break;
                 }
@@ -3186,7 +3105,7 @@ bool algo_lib::type_SetStrptrMaybe(algo_lib::RegxToken& parent, algo::strptr rhs
             break;
         }
         case 6: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(ReadLE16(rhs.elems+4))<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('l','p','a','r','e','n'): {
                     type_SetEnum(parent,algo_lib_RegxToken_type_lparen); ret = true; break;
                 }
@@ -3284,13 +3203,15 @@ void algo_lib::ary_expr_RemoveLast(algo_lib::RegxParse& regxparse) {
 // Make sure N elements fit in array. Process dies if out of memory
 void algo_lib::ary_expr_AbsReserve(algo_lib::RegxParse& regxparse, int n) {
     u32 old_max  = regxparse.ary_expr_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::lpool_ReallocMem(regxparse.ary_expr_elems, old_max * sizeof(algo_lib::RegxExpr), new_max * sizeof(algo_lib::RegxExpr));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.RegxParse.ary_expr  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::lpool_ReallocMem(regxparse.ary_expr_elems, old_max * sizeof(algo_lib::RegxExpr), new_max * sizeof(algo_lib::RegxExpr));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.RegxParse.ary_expr  comment:'out of memory'");
+        }
+        regxparse.ary_expr_elems = (algo_lib::RegxExpr*)new_mem;
+        regxparse.ary_expr_max = new_max;
     }
-    regxparse.ary_expr_elems = (algo_lib::RegxExpr*)new_mem;
-    regxparse.ary_expr_max = new_max;
 }
 
 // --- algo_lib.RegxParse.ary_expr.XrefMaybe
@@ -3389,13 +3310,15 @@ void algo_lib::ch_class_RemoveLast(algo_lib::RegxState& state) {
 // Make sure N elements fit in array. Process dies if out of memory
 void algo_lib::ch_class_AbsReserve(algo_lib::RegxState& state, int n) {
     u32 old_max  = state.ch_class_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::lpool_ReallocMem(state.ch_class_elems, old_max * sizeof(algo::i32_Range), new_max * sizeof(algo::i32_Range));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.RegxState.ch_class  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::lpool_ReallocMem(state.ch_class_elems, old_max * sizeof(algo::i32_Range), new_max * sizeof(algo::i32_Range));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.RegxState.ch_class  comment:'out of memory'");
+        }
+        state.ch_class_elems = (algo::i32_Range*)new_mem;
+        state.ch_class_max = new_max;
     }
-    state.ch_class_elems = (algo::i32_Range*)new_mem;
-    state.ch_class_max = new_max;
 }
 
 // --- algo_lib.RegxState.ch_class.Setary
@@ -3573,7 +3496,7 @@ void algo_lib::ch_class_HeapSort(algo_lib::RegxState& state) {
 // Quick sort
 void algo_lib::ch_class_QuickSort(algo_lib::RegxState& state) {
     // compute max recursion depth based on number of elements in the array
-    int max_depth = CeilingLog2(u32(ch_class_N(state) + 1)) + 3;
+    int max_depth = algo::CeilingLog2(u32(ch_class_N(state) + 1)) + 3;
     algo::i32_Range *elems = ch_class_Getary(state).elems;
     int n = ch_class_N(state);
     ch_class_IntQuickSort(elems, n, max_depth);
@@ -3608,7 +3531,7 @@ void algo_lib::ind_replvar_Cascdel(algo_lib::Replscope& replscope) {
 // --- algo_lib.Replscope.ind_replvar.Find
 // Find row by key. Return NULL if not found.
 algo_lib::FReplvar* algo_lib::ind_replvar_Find(algo_lib::Replscope& replscope, const algo::strptr& key) {
-    u32 index = cstring_Hash(0, key) & (replscope.ind_replvar_buckets_n - 1);
+    u32 index = algo::cstring_Hash(0, key) & (replscope.ind_replvar_buckets_n - 1);
     algo_lib::FReplvar* *e = &replscope.ind_replvar_buckets_elems[index];
     algo_lib::FReplvar* ret=NULL;
     do {
@@ -3626,7 +3549,7 @@ bool algo_lib::ind_replvar_InsertMaybe(algo_lib::Replscope& replscope, algo_lib:
     ind_replvar_Reserve(replscope, 1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_replvar_next == (algo_lib::FReplvar*)-1)) {// check if in hash already
-        u32 index = cstring_Hash(0, row.key) & (replscope.ind_replvar_buckets_n - 1);
+        u32 index = algo::cstring_Hash(0, row.key) & (replscope.ind_replvar_buckets_n - 1);
         algo_lib::FReplvar* *prev = &replscope.ind_replvar_buckets_elems[index];
         do {
             algo_lib::FReplvar* ret = *prev;
@@ -3652,7 +3575,7 @@ bool algo_lib::ind_replvar_InsertMaybe(algo_lib::Replscope& replscope, algo_lib:
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void algo_lib::ind_replvar_Remove(algo_lib::Replscope& replscope, algo_lib::FReplvar& row) {
     if (LIKELY(row.ind_replvar_next != (algo_lib::FReplvar*)-1)) {// check if in hash already
-        u32 index = cstring_Hash(0, row.key) & (replscope.ind_replvar_buckets_n - 1);
+        u32 index = algo::cstring_Hash(0, row.key) & (replscope.ind_replvar_buckets_n - 1);
         algo_lib::FReplvar* *prev = &replscope.ind_replvar_buckets_elems[index]; // addr of pointer to current element
         while (algo_lib::FReplvar *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -3673,7 +3596,7 @@ void algo_lib::ind_replvar_Reserve(algo_lib::Replscope& replscope, int n) {
     u32 new_nelems   = replscope.ind_replvar_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(algo_lib::FReplvar*);
         u32 new_size = new_nbuckets * sizeof(algo_lib::FReplvar*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -3689,7 +3612,7 @@ void algo_lib::ind_replvar_Reserve(algo_lib::Replscope& replscope, int n) {
             while (elem) {
                 algo_lib::FReplvar &row        = *elem;
                 algo_lib::FReplvar* next       = row.ind_replvar_next;
-                u32 index          = cstring_Hash(0, row.key) & (new_nbuckets-1);
+                u32 index          = algo::cstring_Hash(0, row.key) & (new_nbuckets-1);
                 row.ind_replvar_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -3783,7 +3706,7 @@ bool algo_lib::value_SetStrptrMaybe(algo_lib::TableId& parent, algo::strptr rhs)
     bool ret = false;
     switch (elems_N(rhs)) {
         case 19: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','D'): {
                     if (memcmp(rhs.elems+8,"ispsigcheck",11)==0) { value_SetEnum(parent,algo_lib_TableId_dmmeta_Dispsigcheck); ret = true; break; }
                     break;
@@ -3896,13 +3819,15 @@ void algo_lib::width_RemoveLast(algo_lib::Tabulate& tabulate) {
 // Make sure N elements fit in array. Process dies if out of memory
 void algo_lib::width_AbsReserve(algo_lib::Tabulate& tabulate, int n) {
     u32 old_max  = tabulate.width_max;
-    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-    void *new_mem = algo_lib::lpool_ReallocMem(tabulate.width_elems, old_max * sizeof(i32), new_max * sizeof(i32));
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.Tabulate.width  comment:'out of memory'");
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::lpool_ReallocMem(tabulate.width_elems, old_max * sizeof(i32), new_max * sizeof(i32));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.Tabulate.width  comment:'out of memory'");
+        }
+        tabulate.width_elems = (i32*)new_mem;
+        tabulate.width_max = new_max;
     }
-    tabulate.width_elems = (i32*)new_mem;
-    tabulate.width_max = new_max;
 }
 
 // --- algo_lib.Tabulate.width.Setary

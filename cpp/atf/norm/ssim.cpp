@@ -40,6 +40,9 @@ void atf_norm::normcheck_normalize_acr() {
 // -----------------------------------------------------------------------------
 
 void atf_norm::normcheck_normalize_acr_my() {
+#if defined(__CYGWIN__)
+    prlog("cygwin doens't have a working mariadb install. skipping acr_my test");
+#else
     command::acr_my_proc acr_my;
     acr_my.cmd.abort = true;
     acr_my_ExecX(acr_my); //return to known state
@@ -48,20 +51,21 @@ void atf_norm::normcheck_normalize_acr_my() {
     acr_my2.cmd.stop  = true;
     acr_my2.cmd.nsdb.expr   = "%";
     acr_my_ExecX(acr_my2);//# round trip all data through mysql
+#endif
 }
 
 // -----------------------------------------------------------------------------
 
 void atf_norm::normcheck_ssimfile() {
-    ind_beg(Dir_curs,dir,"data/*") {
-        ind_beg(Dir_curs,file,tempstr()<<dir.pathname<<"/*.ssim") {
+    ind_beg(algo::Dir_curs,dir,"data/*") {
+        ind_beg(algo::Dir_curs,file,tempstr()<<dir.pathname<<"/*.ssim") {
             tempstr ssimfile(Pathcomp(file.pathname,"/LR.RL"));// data/acmdb/device.ssim -> acmdb/device
             Replace(ssimfile,"/",".");
-            normcheck(atf_norm::ind_ssimfile_Find(ssimfile)
-                      ,"atf_norm.stray_ssimfile"
-                      <<Keyval("fname",file.pathname)
-                      <<Keyval("ssimfile",ssimfile)
-                      <<Keyval("comment","No ssimfile entry exists for this file"));
+            vrfy(atf_norm::ind_ssimfile_Find(ssimfile)
+                 ,tempstr()<<"atf_norm.stray_ssimfile"
+                 <<Keyval("fname",file.pathname)
+                 <<Keyval("ssimfile",ssimfile)
+                 <<Keyval("comment","No ssimfile entry exists for this file"));
         }ind_end;
     }ind_end;
 }

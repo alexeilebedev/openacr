@@ -110,7 +110,7 @@ void amc::tfunc_Io_SaveSsimfile() {
         save.glob = true;
         Ins(&R, save.comment, "Save table to ssimfile");
         Ins(&R, save.ret    , "bool", false);
-        Ins(&R, save.proto  , "$name_SaveSsimfile(strptr fname)",false);
+        Ins(&R, save.proto  , "$name_SaveSsimfile(algo::strptr fname)",false);
         Ins(&R, save.body   , "cstring text;");
         Ins(&R, save.body   , "ind_beg($ns::_db_$name_curs, $name, $ns::_db) {");
         Ins(&R, save.body   , "    $Basetype out;");
@@ -118,6 +118,7 @@ void amc::tfunc_Io_SaveSsimfile() {
         Ins(&R, save.body   , "    $Basetype_Print(out, text);");
         Ins(&R, save.body   , "    text << eol;");
         Ins(&R, save.body   , "}ind_end;");
+        Ins(&R, save.body   , "(void)algo::CreateDirRecurse(algo::GetDirName(fname));");
         Ins(&R, save.body   , "// it is a silent error if the file cannot be saved.");
         Ins(&R, save.body   , "return algo::SafeStringToFile(text, fname);");
     }
@@ -177,7 +178,7 @@ static void Gstatic_DataTable(cstring &out, amc::FField &field) {
         }
     }ind_end;
     Ins(&R, out, "} data[] = {");
-    ListSep ls(",");
+    algo::ListSep ls(",");
     int nhooks=NHooks(field);
     ind_beg(amc::ctype_c_static_curs, static_tuple, *field.p_arg) {
         tempstr str;
@@ -206,7 +207,7 @@ static void Gstatic_Insert(amc::FFunc &func, amc::FField &field) {
     Set(R, "$Basetype", GetBaseType(*field.p_arg,field.p_arg)->cpp_type);
     Ins(&R,func.body     , "$Basetype $name;");
     Ins(&R,func.body     , "for (int i=0; data[i].s; i++) {");
-    Ins(&R, func.body    , "    (void)$Basetype_ReadStrptrMaybe($name, strptr(data[i].s));");
+    Ins(&R, func.body    , "    (void)$Basetype_ReadStrptrMaybe($name, algo::strptr(data[i].s));");
     int nhooks = NHooks(field);
     Ins(&R, func.body, "$Cpptype *elem = $name_InsertMaybe($name);");
     cstring text;
@@ -218,7 +219,7 @@ static void Gstatic_Insert(amc::FFunc &func, amc::FField &field) {
     }ind_end;
     if (must_succeed) {
         Ins(&R, text, "vrfy(elem, tempstr(\"$ns.static_insert_fatal_error\")"
-            "\n    << Keyval(\"tuple\",strptr(data[i].s))"
+            "\n    << Keyval(\"tuple\",algo::strptr(data[i].s))"
             "\n    << Keyval(\"comment\",algo_lib::DetachBadTags())"
             ");");
     }

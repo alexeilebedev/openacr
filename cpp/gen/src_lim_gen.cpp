@@ -10,20 +10,23 @@
 #include "include/algo.h"  // hard-coded include
 #include "include/gen/src_lim_gen.h"
 #include "include/gen/src_lim_gen.inl.h"
-#include "include/gen/command_gen.h"
-#include "include/gen/command_gen.inl.h"
-#include "include/gen/algo_gen.h"
-#include "include/gen/algo_gen.inl.h"
 #include "include/gen/dev_gen.h"
 #include "include/gen/dev_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
+#include "include/gen/algo_gen.h"
+#include "include/gen/algo_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/command_gen.h"
+#include "include/gen/command_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
+#include "include/gen/lib_prot_gen.h"
+#include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 src_lim::FDb    src_lim::_db;     // dependency found via dev.targdep
 
@@ -37,6 +40,8 @@ const char *src_lim_help =
 "    -strayfile          Check for unregistered source files. default: false\n"
 "    -capture            Generate new dev.linelim records. default: false\n"
 "    -write              Update ssim database (with -capture). default: false\n"
+"    -badchar            Check for bad chars in source files. default: false\n"
+"    -badline    string  Check badline (acr badline)\n"
 "    -verbose            Enable verbose mode\n"
 "    -debug              Enable debug mode\n"
 "    -version            Show version information\n"
@@ -52,6 +57,8 @@ const char *src_lim_syntax =
 " -strayfile:flag\n"
 " -capture:flag\n"
 " -write:flag\n"
+" -badchar:flag\n"
+" -badline:string=\n"
 ;
 } // namespace src_lim
 namespace src_lim {
@@ -61,12 +68,31 @@ namespace src_lim {
     static void          InitReflection();
     static bool          targsrc_InputMaybe(dev::Targsrc &elem) __attribute__((nothrow));
     static bool          gitfile_InputMaybe(dev::Gitfile &elem) __attribute__((nothrow));
+    static bool          badline_InputMaybe(dev::Badline &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
 } // end namespace src_lim
+
+// --- src_lim.FBadline.base.CopyOut
+// Copy fields out of row
+void src_lim::badline_CopyOut(src_lim::FBadline &row, dev::Badline &out) {
+    out.badline = row.badline;
+    out.expr = row.expr;
+    out.targsrc_regx = row.targsrc_regx;
+    out.comment = row.comment;
+}
+
+// --- src_lim.FBadline.base.CopyIn
+// Copy fields in to row
+void src_lim::badline_CopyIn(src_lim::FBadline &row, dev::Badline &in) {
+    row.badline = in.badline;
+    row.expr = in.expr;
+    row.targsrc_regx = in.targsrc_regx;
+    row.comment = in.comment;
+}
 
 // --- src_lim.trace..Print
 // print string representation of src_lim::trace to string LHS, no header -- cprint:src_lim.trace.String
@@ -280,7 +306,7 @@ void src_lim::MainArgs(int argc, char **argv) {
 // --- src_lim.FDb._db.MainLoop
 // Main loop.
 void src_lim::MainLoop() {
-    SchedTime time(get_cycles());
+    algo::SchedTime time(algo::get_cycles());
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
@@ -310,7 +336,7 @@ static void src_lim::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_lim.Input'  signature:'4d68024a255bb013457d44262892315524185d24'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_lim.Input'  signature:'03146c375643592de2ed3b7429d390f80565cb5e'");
 }
 
 // --- src_lim.FDb._db.StaticCheck
@@ -354,6 +380,12 @@ bool src_lim::InsertStrptrMaybe(algo::strptr str) {
             retval = true; // finput strict:N
             break;
         }
+        case src_lim_TableId_dev_Badline: { // finput:src_lim.FDb.badline
+            dev::Badline elem;
+            retval = dev::Badline_ReadStrptrMaybe(elem, str);
+            retval = retval && badline_InputMaybe(elem);
+            break;
+        }
         default:
         retval = algo_lib::InsertStrptrMaybe(str);
         break;
@@ -369,7 +401,8 @@ bool src_lim::InsertStrptrMaybe(algo::strptr str) {
 bool src_lim::LoadTuplesMaybe(algo::strptr root) {
     bool retval = true;
     static const char *ssimfiles[] = {
-        "dev.gitfile", "dev.linelim", "dev.targsrc"
+        "dev.badline", "dev.gitfile", "dev.linelim", "dev.targsrc"
+
         , NULL};
         retval = algo_lib::DoLoadTuples(root, src_lim::InsertStrptrMaybe, ssimfiles, true);
         return retval;
@@ -599,7 +632,7 @@ bool src_lim::gitfile_XrefMaybe(src_lim::FGitfile &row) {
 // --- src_lim.FDb.ind_gitfile.Find
 // Find row by key. Return NULL if not found.
 src_lim::FGitfile* src_lim::ind_gitfile_Find(const algo::strptr& key) {
-    u32 index = Smallstr200_Hash(0, key) & (_db.ind_gitfile_buckets_n - 1);
+    u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_gitfile_buckets_n - 1);
     src_lim::FGitfile* *e = &_db.ind_gitfile_buckets_elems[index];
     src_lim::FGitfile* ret=NULL;
     do {
@@ -641,7 +674,7 @@ bool src_lim::ind_gitfile_InsertMaybe(src_lim::FGitfile& row) {
     ind_gitfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gitfile_next == (src_lim::FGitfile*)-1)) {// check if in hash already
-        u32 index = Smallstr200_Hash(0, row.gitfile) & (_db.ind_gitfile_buckets_n - 1);
+        u32 index = algo::Smallstr200_Hash(0, row.gitfile) & (_db.ind_gitfile_buckets_n - 1);
         src_lim::FGitfile* *prev = &_db.ind_gitfile_buckets_elems[index];
         do {
             src_lim::FGitfile* ret = *prev;
@@ -667,7 +700,7 @@ bool src_lim::ind_gitfile_InsertMaybe(src_lim::FGitfile& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void src_lim::ind_gitfile_Remove(src_lim::FGitfile& row) {
     if (LIKELY(row.ind_gitfile_next != (src_lim::FGitfile*)-1)) {// check if in hash already
-        u32 index = Smallstr200_Hash(0, row.gitfile) & (_db.ind_gitfile_buckets_n - 1);
+        u32 index = algo::Smallstr200_Hash(0, row.gitfile) & (_db.ind_gitfile_buckets_n - 1);
         src_lim::FGitfile* *prev = &_db.ind_gitfile_buckets_elems[index]; // addr of pointer to current element
         while (src_lim::FGitfile *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -688,7 +721,7 @@ void src_lim::ind_gitfile_Reserve(int n) {
     u32 new_nelems   = _db.ind_gitfile_n + n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(BumpToPow2(new_nelems), u32(4));
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
         u32 old_size = old_nbuckets * sizeof(src_lim::FGitfile*);
         u32 new_size = new_nbuckets * sizeof(src_lim::FGitfile*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
@@ -704,7 +737,7 @@ void src_lim::ind_gitfile_Reserve(int n) {
             while (elem) {
                 src_lim::FGitfile &row        = *elem;
                 src_lim::FGitfile* next       = row.ind_gitfile_next;
-                u32 index          = Smallstr200_Hash(0, row.gitfile) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr200_Hash(0, row.gitfile) & (new_nbuckets-1);
                 row.ind_gitfile_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -715,6 +748,104 @@ void src_lim::ind_gitfile_Reserve(int n) {
         _db.ind_gitfile_buckets_elems = new_buckets;
         _db.ind_gitfile_buckets_n = new_nbuckets;
     }
+}
+
+// --- src_lim.FDb.badline.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+src_lim::FBadline& src_lim::badline_Alloc() {
+    src_lim::FBadline* row = badline_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("src_lim.out_of_mem  field:src_lim.FDb.badline  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- src_lim.FDb.badline.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+src_lim::FBadline* src_lim::badline_AllocMaybe() {
+    src_lim::FBadline *row = (src_lim::FBadline*)badline_AllocMem();
+    if (row) {
+        new (row) src_lim::FBadline; // call constructor
+    }
+    return row;
+}
+
+// --- src_lim.FDb.badline.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+src_lim::FBadline* src_lim::badline_InsertMaybe(const dev::Badline &value) {
+    src_lim::FBadline *row = &badline_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    badline_CopyIn(*row,const_cast<dev::Badline&>(value));
+    bool ok = badline_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        badline_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- src_lim.FDb.badline.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* src_lim::badline_AllocMem() {
+    u64 new_nelems     = _db.badline_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    src_lim::FBadline*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.badline_lary[bsr];
+        if (!lev) {
+            lev=(src_lim::FBadline*)algo_lib::malloc_AllocMem(sizeof(src_lim::FBadline) * (u64(1)<<bsr));
+            _db.badline_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.badline_n = new_nelems;
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- src_lim.FDb.badline.RemoveAll
+// Remove all elements from Lary
+void src_lim::badline_RemoveAll() {
+    for (u64 n = _db.badline_n; n>0; ) {
+        n--;
+        badline_qFind(u64(n)).~FBadline(); // destroy last element
+        _db.badline_n = n;
+    }
+}
+
+// --- src_lim.FDb.badline.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void src_lim::badline_RemoveLast() {
+    u64 n = _db.badline_n;
+    if (n > 0) {
+        n -= 1;
+        badline_qFind(u64(n)).~FBadline();
+        _db.badline_n = n;
+    }
+}
+
+// --- src_lim.FDb.badline.InputMaybe
+static bool src_lim::badline_InputMaybe(dev::Badline &elem) {
+    bool retval = true;
+    retval = badline_InsertMaybe(elem);
+    return retval;
+}
+
+// --- src_lim.FDb.badline.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool src_lim::badline_XrefMaybe(src_lim::FBadline &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
 }
 
 // --- src_lim.FDb.trace.RowidFind
@@ -784,6 +915,17 @@ void src_lim::FDb_Init() {
         FatalErrorExit("out of memory"); // (src_lim.FDb.ind_gitfile)
     }
     memset(_db.ind_gitfile_buckets_elems, 0, sizeof(src_lim::FGitfile*)*_db.ind_gitfile_buckets_n); // (src_lim.FDb.ind_gitfile)
+    // initialize LAry badline (src_lim.FDb.badline)
+    _db.badline_n = 0;
+    memset(_db.badline_lary, 0, sizeof(_db.badline_lary)); // zero out all level pointers
+    src_lim::FBadline* badline_first = (src_lim::FBadline*)algo_lib::malloc_AllocMem(sizeof(src_lim::FBadline) * (u64(1)<<4));
+    if (!badline_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.badline_lary[i]  = badline_first;
+        badline_first    += 1ULL<<i;
+    }
 
     src_lim::InitReflection();
 }
@@ -791,6 +933,9 @@ void src_lim::FDb_Init() {
 // --- src_lim.FDb..Uninit
 void src_lim::FDb_Uninit() {
     src_lim::FDb &row = _db; (void)row;
+
+    // src_lim.FDb.badline.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // src_lim.FDb.ind_gitfile.Uninit (Thash)  //
     // skip destruction of ind_gitfile in global scope
@@ -1050,7 +1195,7 @@ bool src_lim::value_SetStrptrMaybe(src_lim::FieldId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,src_lim_FieldId_value); ret = true; break;
                 }
@@ -1100,6 +1245,7 @@ void src_lim::FieldId_Print(src_lim::FieldId & row, algo::cstring &str) {
 const char* src_lim::value_ToCstr(const src_lim::TableId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
+        case src_lim_TableId_dev_Badline   : ret = "dev.Badline";  break;
         case src_lim_TableId_dev_Gitfile   : ret = "dev.Gitfile";  break;
         case src_lim_TableId_dev_Include   : ret = "dev.Include";  break;
         case src_lim_TableId_dev_Linelim   : ret = "dev.Linelim";  break;
@@ -1128,7 +1274,11 @@ bool src_lim::value_SetStrptrMaybe(src_lim::TableId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 11: {
-            switch (ReadLE64(rhs.elems)) {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','e','v','.','B','a','d','l'): {
+                    if (memcmp(rhs.elems+8,"ine",3)==0) { value_SetEnum(parent,src_lim_TableId_dev_Badline); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','e','v','.','G','i','t','f'): {
                     if (memcmp(rhs.elems+8,"ile",3)==0) { value_SetEnum(parent,src_lim_TableId_dev_Gitfile); ret = true; break; }
                     break;
@@ -1143,6 +1293,10 @@ bool src_lim::value_SetStrptrMaybe(src_lim::TableId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('d','e','v','.','T','a','r','g'): {
                     if (memcmp(rhs.elems+8,"src",3)==0) { value_SetEnum(parent,src_lim_TableId_dev_Targsrc); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','b','a','d','l'): {
+                    if (memcmp(rhs.elems+8,"ine",3)==0) { value_SetEnum(parent,src_lim_TableId_dev_badline); ret = true; break; }
                     break;
                 }
                 case LE_STR8('d','e','v','.','g','i','t','f'): {
@@ -1200,6 +1354,7 @@ void src_lim::TableId_Print(src_lim::TableId & row, algo::cstring &str) {
 // --- src_lim...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         src_lim::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -1216,10 +1371,13 @@ int main(int argc, char **argv) {
     try {
         src_lim::FDb_Uninit();
         algo_lib::FDb_Uninit();
-    } catch(algo_lib::ErrorX &x) {
+        lib_json::FDb_Uninit();
+    } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;
     }
+    // only the lower 1 byte makes it to the outside world
+    (void)i32_UpdateMin(algo_lib::_db.exit_code,255);
     return algo_lib::_db.exit_code;
 }
 

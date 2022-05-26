@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+git fetch origin
+git checkout -B master origin/master
+trap "git rebase --abort; git checkout master" EXIT
+for X in $(git branch | grep -v '^\*'); do
+    echo "---- $X ----"
+    (
+        git checkout $X
+        git rebase origin/master
+        git rebase --abort
+    ) 2>&1 >/dev/null
+done
+git checkout master
+git-clean-branches
+git checkout $BRANCH

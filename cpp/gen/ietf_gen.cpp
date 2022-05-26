@@ -51,7 +51,7 @@ bool ietf::value_SetStrptrMaybe(ietf::FieldId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 2: {
-            switch (u64(ReadLE16(rhs.elems))) {
+            switch (u64(algo::ReadLE16(rhs.elems))) {
                 case LE_STR2('i','p'): {
                     value_SetEnum(parent,ietf_FieldId_ip); ret = true; break;
                 }
@@ -59,7 +59,7 @@ bool ietf::value_SetStrptrMaybe(ietf::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 4: {
-            switch (u64(ReadLE32(rhs.elems))) {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('a','d','d','r'): {
                     value_SetEnum(parent,ietf_FieldId_addr); ret = true; break;
                 }
@@ -73,7 +73,7 @@ bool ietf::value_SetStrptrMaybe(ietf::FieldId& parent, algo::strptr rhs) {
             break;
         }
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,ietf_FieldId_value); ret = true; break;
                 }

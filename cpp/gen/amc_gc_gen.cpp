@@ -14,6 +14,8 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
@@ -22,6 +24,7 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 amc_gc::FDb     amc_gc::_db;      // dependency found via dev.targdep
 
@@ -65,17 +68,21 @@ int amc_gc::acr_Start(amc_gc::Acr& parent) {
     int retval = 0;
     if (parent.acr_pid == 0) {
         verblog(acr_ToCmdline(parent)); // maybe print command
-        parent.acr_status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.acr_path);
+        tempstr cmdline(acr_ToCmdline(parent));
+        parent.acr_pid = dospawn(Zeroterm(parent.acr_path),Zeroterm(cmdline),parent.acr_timeout,parent.acr_fstdin,parent.acr_fstdout,parent.acr_fstderr);
+#else
         parent.acr_pid = fork();
         if (parent.acr_pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.acr_timeout > 0) {
                 alarm(parent.acr_timeout);
             }
-            algo_lib::ApplyRedirect(parent.acr_stdin, 0);
-            algo_lib::ApplyRedirect(parent.acr_stdout, 1);
-            algo_lib::ApplyRedirect(parent.acr_stderr, 2);
-            retval = acr_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.acr_fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.acr_fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.acr_fstderr, 2);
+            if (retval==0) retval= acr_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("amc_gc.acr_execv"
@@ -86,11 +93,24 @@ int amc_gc::acr_Start(amc_gc::Acr& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.acr_pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.acr_status; // parent
         }
+#endif
     }
+    parent.acr_status = parent.acr_pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- amc_gc.Acr.acr.StartRead
+// Start subprocess & Read output
+algo::Fildes amc_gc::acr_StartRead(amc_gc::Acr& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.acr_fstdout  << ">&" << pipefd[1];
+    acr_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- amc_gc.Acr.acr.Kill
@@ -105,7 +125,7 @@ void amc_gc::acr_Kill(amc_gc::Acr& parent) {
 // --- amc_gc.Acr.acr.Wait
 // Wait for subprocess to return
 void amc_gc::acr_Wait(amc_gc::Acr& parent) {
-    if (parent.acr_pid != 0) {
+    if (parent.acr_pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -133,7 +153,7 @@ int amc_gc::acr_Exec(amc_gc::Acr& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:acr.Argv
 int amc_gc::acr_Execv(amc_gc::Acr& parent) {
-    char *argv[34+2]; // start of first arg (future pointer)
+    char *argv[68+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -396,14 +416,14 @@ algo::tempstr amc_gc::acr_ToCmdline(amc_gc::Acr& parent) {
     algo::tempstr retval;
     retval << parent.acr_path << " ";
     command::acr_PrintArgv(parent.acr_cmd,retval);
-    if (ch_N(parent.acr_stdin)) {
-        retval << " " << parent.acr_stdin;
+    if (ch_N(parent.acr_fstdin)) {
+        retval << " " << parent.acr_fstdin;
     }
-    if (ch_N(parent.acr_stdout)) {
-        retval << " " << parent.acr_stdout;
+    if (ch_N(parent.acr_fstdout)) {
+        retval << " " << parent.acr_fstdout;
     }
-    if (ch_N(parent.acr_stderr)) {
-        retval << " 2" << parent.acr_stderr;
+    if (ch_N(parent.acr_fstderr)) {
+        retval << " 2" << parent.acr_fstderr;
     }
     return retval;
 }
@@ -423,17 +443,21 @@ int amc_gc::acr_Start(amc_gc::Check& parent) {
     int retval = 0;
     if (parent.acr_pid == 0) {
         verblog(acr_ToCmdline(parent)); // maybe print command
-        parent.acr_status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.acr_path);
+        tempstr cmdline(acr_ToCmdline(parent));
+        parent.acr_pid = dospawn(Zeroterm(parent.acr_path),Zeroterm(cmdline),parent.acr_timeout,parent.acr_fstdin,parent.acr_fstdout,parent.acr_fstderr);
+#else
         parent.acr_pid = fork();
         if (parent.acr_pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.acr_timeout > 0) {
                 alarm(parent.acr_timeout);
             }
-            algo_lib::ApplyRedirect(parent.acr_stdin, 0);
-            algo_lib::ApplyRedirect(parent.acr_stdout, 1);
-            algo_lib::ApplyRedirect(parent.acr_stderr, 2);
-            retval = acr_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.acr_fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.acr_fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.acr_fstderr, 2);
+            if (retval==0) retval= acr_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("amc_gc.acr_execv"
@@ -444,11 +468,24 @@ int amc_gc::acr_Start(amc_gc::Check& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.acr_pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.acr_status; // parent
         }
+#endif
     }
+    parent.acr_status = parent.acr_pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- amc_gc.Check.acr.StartRead
+// Start subprocess & Read output
+algo::Fildes amc_gc::acr_StartRead(amc_gc::Check& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.acr_fstdout  << ">&" << pipefd[1];
+    acr_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- amc_gc.Check.acr.Kill
@@ -463,7 +500,7 @@ void amc_gc::acr_Kill(amc_gc::Check& parent) {
 // --- amc_gc.Check.acr.Wait
 // Wait for subprocess to return
 void amc_gc::acr_Wait(amc_gc::Check& parent) {
-    if (parent.acr_pid != 0) {
+    if (parent.acr_pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -491,7 +528,7 @@ int amc_gc::acr_Exec(amc_gc::Check& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:acr.Argv
 int amc_gc::acr_Execv(amc_gc::Check& parent) {
-    char *argv[34+2]; // start of first arg (future pointer)
+    char *argv[68+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -754,14 +791,14 @@ algo::tempstr amc_gc::acr_ToCmdline(amc_gc::Check& parent) {
     algo::tempstr retval;
     retval << parent.acr_path << " ";
     command::acr_PrintArgv(parent.acr_cmd,retval);
-    if (ch_N(parent.acr_stdin)) {
-        retval << " " << parent.acr_stdin;
+    if (ch_N(parent.acr_fstdin)) {
+        retval << " " << parent.acr_fstdin;
     }
-    if (ch_N(parent.acr_stdout)) {
-        retval << " " << parent.acr_stdout;
+    if (ch_N(parent.acr_fstdout)) {
+        retval << " " << parent.acr_fstdout;
     }
-    if (ch_N(parent.acr_stderr)) {
-        retval << " 2" << parent.acr_stderr;
+    if (ch_N(parent.acr_fstderr)) {
+        retval << " 2" << parent.acr_fstderr;
     }
     return retval;
 }
@@ -773,17 +810,21 @@ int amc_gc::amc_Start(amc_gc::Check& parent) {
     int retval = 0;
     if (parent.amc_pid == 0) {
         verblog(amc_ToCmdline(parent)); // maybe print command
-        parent.amc_status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.amc_path);
+        tempstr cmdline(amc_ToCmdline(parent));
+        parent.amc_pid = dospawn(Zeroterm(parent.amc_path),Zeroterm(cmdline),parent.amc_timeout,parent.amc_fstdin,parent.amc_fstdout,parent.amc_fstderr);
+#else
         parent.amc_pid = fork();
         if (parent.amc_pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.amc_timeout > 0) {
                 alarm(parent.amc_timeout);
             }
-            algo_lib::ApplyRedirect(parent.amc_stdin, 0);
-            algo_lib::ApplyRedirect(parent.amc_stdout, 1);
-            algo_lib::ApplyRedirect(parent.amc_stderr, 2);
-            retval = amc_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.amc_fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.amc_fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.amc_fstderr, 2);
+            if (retval==0) retval= amc_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("amc_gc.amc_execv"
@@ -794,11 +835,24 @@ int amc_gc::amc_Start(amc_gc::Check& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.amc_pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.amc_status; // parent
         }
+#endif
     }
+    parent.amc_status = parent.amc_pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- amc_gc.Check.amc.StartRead
+// Start subprocess & Read output
+algo::Fildes amc_gc::amc_StartRead(amc_gc::Check& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.amc_fstdout  << ">&" << pipefd[1];
+    amc_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- amc_gc.Check.amc.Kill
@@ -813,7 +867,7 @@ void amc_gc::amc_Kill(amc_gc::Check& parent) {
 // --- amc_gc.Check.amc.Wait
 // Wait for subprocess to return
 void amc_gc::amc_Wait(amc_gc::Check& parent) {
-    if (parent.amc_pid != 0) {
+    if (parent.amc_pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -841,7 +895,7 @@ int amc_gc::amc_Exec(amc_gc::Check& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:amc.Argv
 int amc_gc::amc_Execv(amc_gc::Check& parent) {
-    char *argv[7+2]; // start of first arg (future pointer)
+    char *argv[14+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -915,14 +969,14 @@ algo::tempstr amc_gc::amc_ToCmdline(amc_gc::Check& parent) {
     algo::tempstr retval;
     retval << parent.amc_path << " ";
     command::amc_PrintArgv(parent.amc_cmd,retval);
-    if (ch_N(parent.amc_stdin)) {
-        retval << " " << parent.amc_stdin;
+    if (ch_N(parent.amc_fstdin)) {
+        retval << " " << parent.amc_fstdin;
     }
-    if (ch_N(parent.amc_stdout)) {
-        retval << " " << parent.amc_stdout;
+    if (ch_N(parent.amc_fstdout)) {
+        retval << " " << parent.amc_fstdout;
     }
-    if (ch_N(parent.amc_stderr)) {
-        retval << " 2" << parent.amc_stderr;
+    if (ch_N(parent.amc_fstderr)) {
+        retval << " 2" << parent.amc_fstderr;
     }
     return retval;
 }
@@ -934,17 +988,21 @@ int amc_gc::abt_Start(amc_gc::Check& parent) {
     int retval = 0;
     if (parent.abt_pid == 0) {
         verblog(abt_ToCmdline(parent)); // maybe print command
-        parent.abt_status = 0; // reset last status
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.abt_path);
+        tempstr cmdline(abt_ToCmdline(parent));
+        parent.abt_pid = dospawn(Zeroterm(parent.abt_path),Zeroterm(cmdline),parent.abt_timeout,parent.abt_fstdin,parent.abt_fstdout,parent.abt_fstderr);
+#else
         parent.abt_pid = fork();
         if (parent.abt_pid == 0) { // child
             algo_lib::DieWithParent();
             if (parent.abt_timeout > 0) {
                 alarm(parent.abt_timeout);
             }
-            algo_lib::ApplyRedirect(parent.abt_stdin, 0);
-            algo_lib::ApplyRedirect(parent.abt_stdout, 1);
-            algo_lib::ApplyRedirect(parent.abt_stderr, 2);
-            retval = abt_Execv(parent);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.abt_fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.abt_fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.abt_fstderr, 2);
+            if (retval==0) retval= abt_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
                 prerr("amc_gc.abt_execv"
@@ -955,11 +1013,24 @@ int amc_gc::abt_Start(amc_gc::Check& parent) {
             _exit(127); // if failed to start, exit anyway
         } else if (parent.abt_pid == -1) {
             retval = errno; // failed to fork
-        } else {
-            retval = parent.abt_status; // parent
         }
+#endif
     }
+    parent.abt_status = parent.abt_pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
+}
+
+// --- amc_gc.Check.abt.StartRead
+// Start subprocess & Read output
+algo::Fildes amc_gc::abt_StartRead(amc_gc::Check& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.abt_fstdout  << ">&" << pipefd[1];
+    abt_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
 }
 
 // --- amc_gc.Check.abt.Kill
@@ -974,7 +1045,7 @@ void amc_gc::abt_Kill(amc_gc::Check& parent) {
 // --- amc_gc.Check.abt.Wait
 // Wait for subprocess to return
 void amc_gc::abt_Wait(amc_gc::Check& parent) {
-    if (parent.abt_pid != 0) {
+    if (parent.abt_pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
         int rc = -1;
@@ -1002,7 +1073,7 @@ int amc_gc::abt_Exec(amc_gc::Check& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:abt.Argv
 int amc_gc::abt_Execv(amc_gc::Check& parent) {
-    char *argv[24+2]; // start of first arg (future pointer)
+    char *argv[48+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -1128,13 +1199,6 @@ int amc_gc::abt_Execv(amc_gc::Check& parent) {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
-    if (parent.abt_cmd.testgen != false) {
-        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-testgen:";
-        bool_Print(parent.abt_cmd.testgen, temp);
-        ch_Alloc(temp) = 0;// NUL term for this arg
-    }
-
     if (parent.abt_cmd.install != false) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-install:";
@@ -1176,6 +1240,13 @@ int amc_gc::abt_Execv(amc_gc::Check& parent) {
         bool_Print(parent.abt_cmd.report, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
+
+    if (parent.abt_cmd.jcdb != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-jcdb:";
+        cstring_Print(parent.abt_cmd.jcdb, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
     for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-verbose";
@@ -1195,14 +1266,14 @@ algo::tempstr amc_gc::abt_ToCmdline(amc_gc::Check& parent) {
     algo::tempstr retval;
     retval << parent.abt_path << " ";
     command::abt_PrintArgv(parent.abt_cmd,retval);
-    if (ch_N(parent.abt_stdin)) {
-        retval << " " << parent.abt_stdin;
+    if (ch_N(parent.abt_fstdin)) {
+        retval << " " << parent.abt_fstdin;
     }
-    if (ch_N(parent.abt_stdout)) {
-        retval << " " << parent.abt_stdout;
+    if (ch_N(parent.abt_fstdout)) {
+        retval << " " << parent.abt_fstdout;
     }
-    if (ch_N(parent.abt_stderr)) {
-        retval << " 2" << parent.abt_stderr;
+    if (ch_N(parent.abt_fstderr)) {
+        retval << " 2" << parent.abt_fstderr;
     }
     return retval;
 }
@@ -1260,7 +1331,7 @@ void amc_gc::MainArgs(int argc, char **argv) {
 // --- amc_gc.FDb._db.MainLoop
 // Main loop.
 void amc_gc::MainLoop() {
-    SchedTime time(get_cycles());
+    algo::SchedTime time(algo::get_cycles());
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
@@ -1393,7 +1464,7 @@ bool amc_gc::value_SetStrptrMaybe(amc_gc::FieldId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
-            switch (u64(ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,amc_gc_FieldId_value); ret = true; break;
                 }
@@ -1440,6 +1511,7 @@ void amc_gc::FieldId_Print(amc_gc::FieldId & row, algo::cstring &str) {
 // --- amc_gc...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         amc_gc::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -1456,10 +1528,13 @@ int main(int argc, char **argv) {
     try {
         amc_gc::FDb_Uninit();
         algo_lib::FDb_Uninit();
-    } catch(algo_lib::ErrorX &x) {
+        lib_json::FDb_Uninit();
+    } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;
     }
+    // only the lower 1 byte makes it to the outside world
+    (void)i32_UpdateMin(algo_lib::_db.exit_code,255);
     return algo_lib::_db.exit_code;
 }
 

@@ -11,7 +11,6 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/report_gen.h"
-#include "include/gen/atf_gen.h"
 #include "include/gen/atfdb_gen.h"
 #include "include/gen/algo_lib_gen.h"
 //#pragma endinclude
@@ -36,7 +35,6 @@ enum atf_unit_FieldIdEnum {            // atf_unit.FieldId.value
 
 enum { atf_unit_FieldIdEnum_N = 13 };
 
-namespace atf_unit { struct FUnittest; }
 namespace atfdb { struct Unittest; }
 namespace atf_unit { struct Bitset; }
 namespace atf_unit { struct Cstr; }
@@ -46,7 +44,7 @@ namespace atf_unit { struct trace; }
 namespace atf_unit { struct FDb; }
 namespace atf_unit { struct FNumber; }
 namespace atf_unit { struct FPerfSort; }
-namespace atf_unit { struct FTestrun; }
+namespace atf_unit { struct FUnittest; }
 namespace atf_unit { struct FieldId; }
 namespace atf_unit { struct ShStream; }
 namespace atf_unit { struct ShStreamAry; }
@@ -57,8 +55,6 @@ namespace atf_unit { struct Bitset_fld1_curs; }
 namespace atf_unit { struct _db_tr_number_curs; }
 namespace atf_unit { struct _db_unittest_curs; }
 namespace atf_unit { struct _db_ind_unittest_curs; }
-namespace atf_unit { struct _db_ind_testrun_curs; }
-namespace atf_unit { struct _db_testrun_curs; }
 namespace atf_unit { struct FPerfSort_orig_curs; }
 namespace atf_unit { struct FPerfSort_sorted_curs; }
 namespace atf_unit { struct FPerfSort_index_curs; }
@@ -278,6 +274,7 @@ struct Dbl { // atf_unit.Dbl
     inline operator double() const;
     explicit Dbl(double                         in_val);
     bool operator ==(const atf_unit::Dbl &rhs) const;
+    bool operator !=(const atf_unit::Dbl &rhs) const;
     bool operator <(const atf_unit::Dbl &rhs) const;
     Dbl();
 };
@@ -349,21 +346,16 @@ struct FDb { // atf_unit.FDb
     i32                       ind_unittest_n;               // number of elements in the hash table
     command::atf_unit         cmdline;                      //
     algo::cstring             curdir;                       //
-    atf_unit::FUnittest*      c_test;                       // Currently running test. optional pointer
+    atf_unit::FUnittest*      c_curtest;                    // Currently running test. optional pointer
     algo::Smallstr100         cur_teststep;                 //
     report::atf_unit          report;                       //
     atf_unit::TestArgtuple1   cmdline2;                     //
     u64                       perf_cycle_budget;            //   0
-    atf_unit::FTestrun**      ind_testrun_buckets_elems;    // pointer to bucket array
-    i32                       ind_testrun_buckets_n;        // number of elements in bucket array
-    i32                       ind_testrun_n;                // number of elements in the hash table
-    atf_unit::FTestrun*       testrun_lary[32];             // level array
-    i32                       testrun_n;                    // number of elements in array
     algo::cstring             acr_ed_path;                  //   "bin/acr_ed"  path for executable
     command::acr_ed           acr_ed_cmd;                   // command line for child process
-    algo::cstring             acr_ed_stdin;                 // redirect for stdin
-    algo::cstring             acr_ed_stdout;                // redirect for stdout
-    algo::cstring             acr_ed_stderr;                // redirect for stderr
+    algo::cstring             acr_ed_fstdin;                // redirect for stdin
+    algo::cstring             acr_ed_fstdout;               // redirect for stdout
+    algo::cstring             acr_ed_fstderr;               // redirect for stderr
     pid_t                     acr_ed_pid;                   //   0  pid of running child process
     i32                       acr_ed_timeout;               //   0  optional timeout for child process
     i32                       acr_ed_status;                //   0  last exit status of child process
@@ -493,52 +485,11 @@ void                 ind_unittest_Remove(atf_unit::FUnittest& row) __attribute__
 // Reserve enough room in the hash for N more elements. Return success code.
 void                 ind_unittest_Reserve(int n) __attribute__((nothrow));
 
-// Return true if hash is empty
-bool                 ind_testrun_EmptyQ() __attribute__((nothrow));
-// Find row by key. Return NULL if not found.
-atf_unit::FTestrun*  ind_testrun_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
-// Look up row by key and return reference. Throw exception if not found
-atf_unit::FTestrun&  ind_testrun_FindX(const algo::strptr& key);
-// Return number of items in the hash
-i32                  ind_testrun_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool                 ind_testrun_InsertMaybe(atf_unit::FTestrun& row) __attribute__((nothrow));
-// Remove reference to element from hash index. If element is not in hash, do nothing
-void                 ind_testrun_Remove(atf_unit::FTestrun& row) __attribute__((nothrow));
-// Reserve enough room in the hash for N more elements. Return success code.
-void                 ind_testrun_Reserve(int n) __attribute__((nothrow));
-
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-atf_unit::FTestrun&  testrun_Alloc() __attribute__((__warn_unused_result__, nothrow));
-// Allocate memory for new element. If out of memory, return NULL.
-atf_unit::FTestrun*  testrun_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_unit::FTestrun*  testrun_InsertMaybe(const atf::Testrun &value) __attribute__((nothrow));
-// Allocate space for one element. If no memory available, return NULL.
-void*                testrun_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-bool                 testrun_EmptyQ() __attribute__((nothrow));
-// Look up row by row id. Return NULL if out of range
-atf_unit::FTestrun*  testrun_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
-// Return pointer to last element of array, or NULL if array is empty
-atf_unit::FTestrun*  testrun_Last() __attribute__((nothrow, pure));
-// Return number of items in the pool
-i32                  testrun_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Remove all elements from Lary
-void                 testrun_RemoveAll() __attribute__((nothrow));
-// Delete last element of array. Do nothing if array is empty.
-void                 testrun_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-atf_unit::FTestrun&  testrun_qFind(u64 t) __attribute__((nothrow));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool                 testrun_XrefMaybe(atf_unit::FTestrun &row);
-
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
 int                  acr_ed_Start() __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         acr_ed_StartRead(algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
 void                 acr_ed_Kill();
 // Wait for subprocess to return
@@ -570,14 +521,6 @@ bool                 _db_unittest_curs_ValidQ(_db_unittest_curs &curs);
 void                 _db_unittest_curs_Next(_db_unittest_curs &curs);
 // item access
 atf_unit::FUnittest& _db_unittest_curs_Access(_db_unittest_curs &curs);
-// cursor points to valid item
-void                 _db_testrun_curs_Reset(_db_testrun_curs &curs, atf_unit::FDb &parent);
-// cursor points to valid item
-bool                 _db_testrun_curs_ValidQ(_db_testrun_curs &curs);
-// proceed to next item
-void                 _db_testrun_curs_Next(_db_testrun_curs &curs);
-// item access
-atf_unit::FTestrun&  _db_testrun_curs_Access(_db_testrun_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
@@ -785,52 +728,17 @@ i32&                 FPerfSort_index_curs_Access(FPerfSort_index_curs &curs);
 void                 FPerfSort_Init(atf_unit::FPerfSort& parent);
 void                 FPerfSort_Uninit(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 
-// --- atf_unit.FTestrun
-// create: atf_unit.FDb.testrun (Lary)
-// global access: ind_testrun (Thash)
-// access: atf_unit.FUnittest.c_testrun (Ptr)
-struct FTestrun { // atf_unit.FTestrun
-    atf_unit::FTestrun*    ind_testrun_next;   // hash next
-    algo::Smallstr50       testrun;            // Test name
-    atf::Testresult        testresult;         //   0  Result
-    u64                    n_step;             //   0  Number of sub-steps
-    u64                    n_cmp;              //   0  Number of comparisons made during test
-    algo::cstring          comment;            // Testcase comment
-    atf_unit::FUnittest*   p_test;             // reference to parent row
-private:
-    friend atf_unit::FTestrun&  testrun_Alloc() __attribute__((__warn_unused_result__, nothrow));
-    friend atf_unit::FTestrun*  testrun_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 testrun_RemoveAll() __attribute__((nothrow));
-    friend void                 testrun_RemoveLast() __attribute__((nothrow));
-    FTestrun();
-    ~FTestrun();
-    FTestrun(const FTestrun&){ /*disallow copy constructor */}
-    void operator =(const FTestrun&){ /*disallow direct assignment */}
-};
-
-// Copy fields out of row
-void                 testrun_CopyOut(atf_unit::FTestrun &row, atf::Testrun &out) __attribute__((nothrow));
-// Copy fields in to row
-void                 testrun_CopyIn(atf_unit::FTestrun &row, atf::Testrun &in) __attribute__((nothrow));
-
-// Set all fields to initial values.
-void                 FTestrun_Init(atf_unit::FTestrun& testrun);
-void                 FTestrun_Uninit(atf_unit::FTestrun& testrun) __attribute__((nothrow));
-// print string representation of atf_unit::FTestrun to string LHS, no header -- cprint:atf_unit.FTestrun.String
-void                 FTestrun_Print(atf_unit::FTestrun & row, algo::cstring &str) __attribute__((nothrow));
-
 // --- atf_unit.FUnittest
 // create: atf_unit.FDb.unittest (Lary)
 // global access: ind_unittest (Thash)
-// global access: c_test (Ptr)
-// access: atf_unit.FTestrun.p_test (Upptr)
+// global access: c_curtest (Ptr)
 struct FUnittest { // atf_unit.FUnittest: Test function
     atf_unit::FUnittest*           ind_unittest_next;   // hash next
     algo::Smallstr50               unittest;            //
     algo::Comment                  comment;             //
     bool                           select;              //   false  Select test for running?
     atf_unit::unittest_step_hook   step;                //   NULL  Pointer to a function
-    atf_unit::FTestrun*            c_testrun;           // optional pointer
+    bool                           success;             //   false
 private:
     friend atf_unit::FUnittest& unittest_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_unit::FUnittest* unittest_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -853,11 +761,6 @@ algo::Smallstr50     testname_Get(atf_unit::FUnittest& unittest) __attribute__((
 
 // Invoke function by pointer
 void                 step_Call(atf_unit::FUnittest& unittest) __attribute__((nothrow));
-
-// Insert row into pointer index. Return final membership status.
-bool                 c_testrun_InsertMaybe(atf_unit::FUnittest& unittest, atf_unit::FTestrun& row) __attribute__((nothrow));
-// Remove element from index. If element is not in index, do nothing.
-void                 c_testrun_Remove(atf_unit::FUnittest& unittest, atf_unit::FTestrun& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FUnittest_Init(atf_unit::FUnittest& unittest);
@@ -984,6 +887,7 @@ void                 ShStreamAry_Uninit(atf_unit::ShStreamAry& parent) __attribu
 struct TypeA { // atf_unit.TypeA
     i32   typea;   //   0
     bool operator ==(const atf_unit::TypeA &rhs) const;
+    bool operator !=(const atf_unit::TypeA &rhs) const;
     bool operator <(const atf_unit::TypeA &rhs) const;
     TypeA();
 };
@@ -1009,6 +913,7 @@ struct TypeB { // atf_unit.TypeB
     i32   typea;   //   0
     i32   j;       //   0
     bool operator ==(const atf_unit::TypeB &rhs) const;
+    bool operator !=(const atf_unit::TypeB &rhs) const;
     bool operator <(const atf_unit::TypeB &rhs) const;
     TypeB();
 };
@@ -1082,14 +987,6 @@ struct _db_unittest_curs {// cursor
     atf_unit::FDb *parent;
     i64 index;
     _db_unittest_curs(){ parent=NULL; index=0; }
-};
-
-
-struct _db_testrun_curs {// cursor
-    typedef atf_unit::FTestrun ChildType;
-    atf_unit::FDb *parent;
-    i64 index;
-    _db_testrun_curs(){ parent=NULL; index=0; }
 };
 
 
@@ -1169,6 +1066,8 @@ void                 unittest_acr_Xref1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_acr_Xref2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+void                 unittest_algo_FileFlags();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_Abs();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_Aligned();
@@ -1199,6 +1098,8 @@ void                 unittest_algo_lib_Clipped();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_Cmp();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+void                 unittest_algo_lib_CurrentTime();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_Datecache();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_DayName();
@@ -1207,23 +1108,31 @@ void                 unittest_algo_lib_DirBeg();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_DoTestRounding();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+void                 unittest_algo_lib_ExitCode();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+void                 unittest_algo_lib_FTruncate();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_FileLine_curs();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+void                 unittest_algo_lib_FileQ();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_FileToString();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_FmtBufDec();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+void                 unittest_algo_lib_GetCpuHz();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_I32Dec3Fmt();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_IntPrice();
-// User-implemented function from gstatic:atf_unit.FDb.unittest
-void                 unittest_algo_lib_Interlocked();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_Keyval();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_Lockfile();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_MinMax();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+void                 unittest_algo_lib_Mmap();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_NToh();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
@@ -1279,7 +1188,7 @@ void                 unittest_algo_lib_PrintPad();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_PrintSsim();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
-void                 unittest_algo_lib_PrintTime();
+void                 unittest_algo_lib_PrintUnTime();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_PrintWithCommas();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
@@ -1355,7 +1264,11 @@ void                 unittest_algo_lib_TimeConstants();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_TimeConversion();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+void                 unittest_algo_lib_TimeConvert();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_TrimZerosRight();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+void                 unittest_algo_lib_TstampCache();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_Tuple();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
@@ -1367,11 +1280,17 @@ void                 unittest_algo_lib_U128PrintHex();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_UnescapeC();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+void                 unittest_algo_lib_flock();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_strptr_Eq();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_test_strptr();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+void                 unittest_algo_lib_u128();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_amc_Unit();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+void                 unittest_atf_unit_Outfile();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_lib_exec_Dependency();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
@@ -1600,7 +1519,6 @@ namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::Dbl &row);// cfmt:atf_unit.Dbl.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::TestArgtuple1 &row);// cfmt:atf_unit.TestArgtuple1.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::trace &row);// cfmt:atf_unit.trace.String
-inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::FTestrun &row);// cfmt:atf_unit.FTestrun.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::FUnittest &row);// cfmt:atf_unit.FUnittest.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::FieldId &row);// cfmt:atf_unit.FieldId.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::TypeA &row);// cfmt:atf_unit.TypeA.String

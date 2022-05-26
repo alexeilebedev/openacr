@@ -24,7 +24,6 @@
 //
 
 #pragma once
-#include "include/algo.h"
 
 namespace algo { // update-hdr srcfile:%/algo/file.%
     // Dear human:
@@ -46,10 +45,9 @@ namespace algo { // update-hdr srcfile:%/algo/file.%
     // Return success status.
     bool CopyFd(Fildes in_fd, Fildes out_fd) __attribute__((nothrow));
 
-    // Test whether C is a directory separator.
-    bool DirSepQ(int c) __attribute__((nothrow));
-
     // Test whether FNAME refers to a valid filesystem entity (file, directory, or special file)
+    // If FNAME is a soft link, then TRUE is returned even if the link points to
+    // a non-existent location.
     bool FileObjectExistsQ(strptr fname) __attribute__((nothrow));
 
     // Test whether PATH is an existing directory
@@ -59,6 +57,21 @@ namespace algo { // update-hdr srcfile:%/algo/file.%
     bool FileQ(strptr fname) __attribute__((nothrow));
 
     // Wrapper for c library realpath function.
+    // On Windows: read path and expand all soft links along the way; Also eat ..'s.
+    // The following table shows successive values of LEFT and RIGHT as the loop executes
+    // ExpandLinks("bin/amc")
+    // LEFT                                   RIGHT
+    // bin                                    amc
+    // bin/amc
+    // link=../build/release/amc
+    // bin                                    ../build/release/amc
+    // build/release/amc
+    // build                                  release/amc
+    // build/release                          amc
+    // link=CYGWIN_NT-cl.release-x86_64
+    // build                                  CYGWIN_NT-cl.release-x86_64/amc
+    // build/CYGWIN_NT-cl.release-x86_64      amc
+    // build/CYGWIN_NT-cl.release-x86_64/amc
     tempstr GetFullPath(strptr path) __attribute__((nothrow));
 
     // Delete file F.
@@ -77,6 +90,7 @@ namespace algo { // update-hdr srcfile:%/algo/file.%
     // using mode MODE for newly created directories.
     // if DO_THROW is specified, throw exceptions on failure.
     // If DO_THROW is false, return success value.
+    // TODO: test on windows
     bool CreateDirRecurse(strptr s, bool do_throw, u32 mode);
 
     // Short version of CreateDirRecurse -- throws exception on error,
@@ -108,6 +122,9 @@ namespace algo { // update-hdr srcfile:%/algo/file.%
 
     // Check if path PATH is an absolute pathname,
     // meaning that it starts with / or ~
+    // On windows, the same test is in force, but in addition any pathname
+    // where the second character is a : (e.g. c:\blah) is recognized as an absolute
+    // path name
     bool AbsolutePathQ(strptr path) __attribute__((nothrow));
 
     // Replace extension in pathname A with string B.
@@ -118,14 +135,15 @@ namespace algo { // update-hdr srcfile:%/algo/file.%
 
     // Change current directory to DIR and return success status
     // errno is set as witih chdir() call
-    bool SetCurDir(strptr dir) __attribute__((nothrow));
+    bool SetCurDir(strptr in_dir) __attribute__((nothrow));
 
     // Calculate size of file referred to by FILENAME.
-    off64_t GetFileSize(strptr filename) __attribute__((nothrow));
+    // If file is not found or an error occurs, 0 is returned.
+    i64 GetFileSize(strptr filename) __attribute__((nothrow));
 
     // Return size of file referred to by FD.
     // On error, return zero.
-    off64_t GetFileSize(Fildes fd) __attribute__((nothrow));
+    i64 GetFileSize(Fildes fd) __attribute__((nothrow));
 
     // Strip directory name in PATH. and return the rest
     // This is equivalent to Pathcomp(path,"/RR");
@@ -135,7 +153,7 @@ namespace algo { // update-hdr srcfile:%/algo/file.%
     // F  ("a.txt","b") -> "b.txt";
     // F  ("a.txt","/b.jpg") -> "b.jpg.txt"
     tempstr ReplaceFileName(const strptr& a, const strptr& b);
-    UnTime ModTime(strptr filename);
+    algo::UnTime ModTime(strptr filename);
     bool RemDir(strptr name);
 
     // Destroy directory NAME, and any subdirectories.
@@ -165,16 +183,17 @@ namespace algo { // update-hdr srcfile:%/algo/file.%
 
     // Set file position of FD to OFF
     // Return success status
-    bool SeekFile(Fildes fd, off64_t off);
+    bool SeekFile(Fildes fd, i64 off);
 
     // Return current file position on FD
     // There is no provision to return an error code; only the offset is returned
     // (zero on failure?)
-    off64_t GetPos(Fildes fd);
+    i64 GetPos(Fildes fd);
 
     // Truncate file indicated by FD to size SIZE.
     // Return success status
-    bool TruncateFile(Fildes fd, off64_t size);
+    // TODO: Test on windows
+    bool TruncateFile(Fildes fd, i64 size);
 
     // Return contents of file as string.
     // File is trimmed at first NULL character
@@ -183,6 +202,7 @@ namespace algo { // update-hdr srcfile:%/algo/file.%
     // and are sometimes zero-terminated.
     // File is read using a "safe" method of succesively calling read.
     // relying on reported file size or using mmap does not work in all cases
+    // Todo: test on windows
     const tempstr FileToString(const strptr& fname, algo::FileFlags flags);
 
     // Same Short version of FileToString, throw exception on error.
@@ -208,7 +228,7 @@ namespace algo { // update-hdr srcfile:%/algo/file.%
     // Replace contents of file FILENAME with string STR.
     // If CHECK_SAME is specified, first compare contents and do not perform a write
     // if the contents are the same.
-    // FLAGS may specify algo_FileFlags_throw, in which case an exception is thrown on error
+    // FLAGS may specify algo_FileFlags__throw, in which case an exception is thrown on error
     bool StringToFile(const strptr& str, const strptr& filename, algo::FileFlags flags, bool check_same);
 
     // Short version of StringToFile: compares file contents before writing,
@@ -237,4 +257,11 @@ namespace algo { // update-hdr srcfile:%/algo/file.%
     // Set blocking mode on file descriptor FD to BLOCKING
     // Return result of FCNTL (0==success)
     int SetBlockingMode(Fildes fildes, bool blocking) __attribute__((nothrow));
+
+    // Read soft link and return resulting path.
+    // If PATH is not a soft link, return empty string
+    // This is not the function to resolve symlinks (if link temp/x points to y, then
+    // this function will return string "y", not "temp/y"), use GetFullPath for
+    // full service
+    tempstr ReadLink(strptr path);
 }

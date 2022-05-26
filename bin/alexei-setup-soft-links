@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -x
+ln -sf $PWD/conf/emacs.el $HOME/.emacs
+ln -sf $PWD/conf/alexei/bash_profile $HOME/.bash_profile

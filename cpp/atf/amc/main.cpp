@@ -24,8 +24,6 @@
 //
 
 #include "include/atf_amc.h"
-#include <algorithm>
-
 
 // -----------------------------------------------------------------------------
 
@@ -303,14 +301,14 @@ void atf_amc::amctest_ImdXref() {
     atf_amc::ind_typea_Reserve(n);
 
     // insert N items into table A
-    u64 c=get_cycles();
+    u64 c=algo::get_cycles();
     frep_(i,n) {
         atf_amc::TypeA typea;
         typea.typea = i;
         vrfy(atf_amc::typea_InsertMaybe(typea), algo_lib::_db.errtext);
     }
 
-    c=get_cycles()-c;
+    c=algo::get_cycles()-c;
     verblog("tpool/hash insert "<<n<<" items: "<<c/n<<" cycles/item");
 
     // look up items
@@ -338,9 +336,9 @@ static void _StripTypeTag(strptr s, strptr w, bool cmp, strptr rest) {
 // -----------------------------------------------------------------------------
 
 void atf_amc::amctest_Typetag() {
-    vrfy_(GetTypeTag("a b") == "a");
-    vrfy_(GetTypeTag(" a b") == "a");
-    vrfy_(GetTypeTag(" a") == "a");
+    vrfy_(algo::GetTypeTag("a b") == "a");
+    vrfy_(algo::GetTypeTag(" a b") == "a");
+    vrfy_(algo::GetTypeTag(" a") == "a");
 
     _StripTypeTag("a b","a",true, "b");
     _StripTypeTag(" a b","a",true, "b");
@@ -358,7 +356,7 @@ void atf_amc::amctest_PrintRawGconst() {
 // -----------------------------------------------------------------------------
 
 void atf_amc::amctest_MsgLength() {
-    ByteAry buf;
+    algo::ByteAry buf;
     cstring temp;
     // try a bunch of sizes
     for (int i=0; i<100; i++) {
@@ -378,48 +376,53 @@ void atf_amc::Main() {
         amctest.select = Regx_Match(atf_amc::_db.cmdline.amctest, amctest.amctest);
         nmatch += amctest.select;
     }ind_end;
+    _db.dofork = _db.cmdline.dofork && nmatch>1;
+    if (!_db.cmdline.q) {
+        prlog("atf_amc.begin"
+              <<Keyval("amctest",_db.cmdline.amctest)
+              <<Keyval("nmatch",nmatch)
+              <<Keyval("dofork",Bool(_db.dofork)));
+    }
     ind_beg(atf_amc::_db_amctest_curs,amctest, atf_amc::_db) if (amctest.select) {
-        bool dofork=nmatch>1;
-#ifdef _DEBUG
-        dofork=false;
-#endif
-        bool success=false;
-        int child_pid=0;
         try {
-            if (dofork) {
-                child_pid = fork();
-                if (child_pid==0) {
-                    alarm(900);
-                }
-            }
-            errno_vrfy(child_pid!=-1, "fork");
-            if (child_pid==0) {
+            if (_db.dofork) {
+                command::atf_amc_proc child;
+                child.cmd.amctest.expr = amctest.amctest;// will match just 1
+                child.cmd.dofork = false;
+                child.cmd.q = true;// quiet mode
+                child.timeout = 900;
+                amctest.success = atf_amc_Exec(child)==0;
+            } else {
                 algo_lib::DetachBadTags();
-                (*amctest.step)();
-                success=true;
-            }
-            if (child_pid != 0 && dofork) {
-                int status = 0;
-                int ret    = waitpid(0,&status,0);
-                vrfy(ret == child_pid, "waitpid");
-                success = status==0;
-            }
-            if (child_pid == 0 && dofork) {
-                _exit(0);
+                verblog(amctest.amctest);
+                (*amctest.step)();// run test
+                amctest.success=true;// didn't throw
             }
         }catch(algo_lib::ErrorX &x) {
             prerr("atf_amc.error"
                   <<Keyval("amctest",amctest.amctest)
                   <<Keyval("comment",x.str));
-            if (child_pid==0) {
-                _exit(1);// child
-            }
-            success=false;
+            amctest.success=false;
         }
-        algo_lib::_db.exit_code += !success;
-        prlog("atf_amc.run"
-              <<Keyval("amctest",amctest.amctest)
-              <<Keyval("success",Bool(success))
-              <<Keyval("comment",amctest.comment));
+        // make process exit with error code if any test failed
+        algo_lib::_db.exit_code += !amctest.success;
+        if (!_db.cmdline.q) {
+            prlog("atf_amc.run"
+                  <<Keyval("amctest",amctest.amctest)
+                  <<Keyval("success",Bool(amctest.success))
+                  <<Keyval("comment",amctest.comment));
+        }
     }ind_end;
+
+    if (!_db.cmdline.q) {
+        // show failure summary
+        ind_beg(atf_amc::_db_amctest_curs,amctest, atf_amc::_db) {
+            if (amctest.select && !amctest.success) {
+                prlog("atf_amc.failure"
+                      <<Keyval("amctest",amctest.amctest)
+                      <<Keyval("success",Bool(amctest.success))
+                      <<Keyval("comment",amctest.comment));
+            }
+        }ind_end;
+    }
 }

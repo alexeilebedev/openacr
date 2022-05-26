@@ -23,6 +23,7 @@
 // Recent Changes: alexei.lebedev
 //
 
+#include "include/algo.h"
 #include "include/gen/abt_gen.h"
 #include "include/gen/abt_gen.inl.h"
 
@@ -60,19 +61,17 @@ namespace abt { // update-hdr
 
     // Return true if this file is a precompiled header file
     bool PchQ(abt::FSrcfile &srcfile);
-
-    // Return a canonic name describing current configuration
-    // This is not the actual build directory. That one is called "out_dir".
-    // Builddir is just the primary key of a build directory
-    tempstr GetBuilddir();
+    void DeleteFileV(strptr path);
+    void Main_PrepOpts();
     void Main();
 
     // -------------------------------------------------------------------
     // cpp/abt/opt.cpp -- Calculate compiler options
     //
+    tempstr EvalSrcfileCmdline(algo_lib::Replscope &R, abt::FTarget &target, abt::FSrcfile &srcfile);
 
-    // check if given opt value is in the set
-    bool Matches(abt::FToolOpt& opt);
-    tempstr EvalSrcfileOpts(abt::FTarget &target, abt::FSrcfile &srcfile);
-    tempstr EvalLinkCmdline(abt::FTarget &target);
+    // Return list of object file pathnames and library pathnames for target TARGET
+    // into output variables OBJS and LIBS
+    void DepsObjList(abt::FTarget &target, cstring &objs, cstring &libs);
+    tempstr EvalLinkCmdline(algo_lib::Replscope &R, abt::FTarget &target);
 }

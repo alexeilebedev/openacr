@@ -226,19 +226,28 @@ void amc::gen_basepool() {
 
 // ----------------------------------------------------------------------------
 
+static bool NeedNsxQ(amc::FNs &ns) {
+    return ns.nstype == dmmeta_Nstype_nstype_exe
+        || (ns.nstype == dmmeta_Nstype_nstype_objlist && amc::ind_ctype_Find(tempstr()<<ns.ns<<".FDb"));
+}
+
 // TODO: also check that targdep path exists between namespaces?
 void amc::gen_check_basepool() {
-    ind_beg(amc::_db_ns_curs, ns, amc::_db) if (ns.nstype == dmmeta_Nstype_nstype_exe && !ns.c_nsx) {
+    // Check that namespaces that require use of dmmeta.nsx have one defined
+    ind_beg(amc::_db_ns_curs, ns, amc::_db) if (!ns.c_nsx && NeedNsxQ(ns)) {
         prerr("amc.nsx_required"
               <<Keyval("ns",ns.ns)
-              <<Keyval("comment","targns requires nsx"));
+              <<Keyval("comment","this namespace requires an nsx record like one shown below"));
         prerr("dmmeta.nsx"
               <<Keyval("ns",ns.ns)
               <<Keyval("genthrow","Y")
               <<Keyval("pool","algo_lib.FDb.malloc"));
         algo_lib::_db.exit_code++;
     }ind_end;
+    // Validate nsx records
     ind_beg(amc::_db_nsx_curs, nsx, amc::_db) {
+        // Check that basepool is defined if the pool specified for nsx requires one
+        // (Basepool provides backing for another pool)
         if (nsx.p_pool->p_reftype->usebasepool && !nsx.p_pool->c_basepool) {
             prerr("amc.bad_nsaloc"
                   <<Keyval("nsx",nsx.ns)
@@ -246,6 +255,7 @@ void amc::gen_check_basepool() {
                   <<Keyval("comment","Default namespace pool must have a basepool"));
             algo_lib::_db.exit_code++;
         }
+        // Simple check for circular dependency (base pool pointing to itself)
         if (nsx.p_pool->c_basepool && nsx.p_pool->c_basepool->p_base == nsx.p_pool) {
             prerr("amc.bad_nsaloc"
                   <<Keyval("nsx",nsx.ns)
@@ -342,19 +352,28 @@ static amc::FField *ResolvePkey(amc::FField &field) {
 
 // Rewrite reftype:Pkey fields into reftype:Val
 void amc::gen_lookuppkey() {
-    ind_beg(amc::_db_field_curs, field,amc::_db) if (field.reftype == dmmeta_Reftype_reftype_Pkey) {
-        amc::FField *root = field.p_arg->c_pkeyfield;
-        if (!root) {
-            root =ResolvePkey(field);
-            field.p_arg->c_pkeyfield = root;// save it
-        }
-        field.reftype   = root->reftype;
-        field.arg       = root->arg;
-        field.p_arg     = root->p_arg;
-        field.p_reftype = root->p_reftype;
-        field.reftype   = root->reftype;
-        if (!FldfuncQ(field) && !ch_N(field.dflt.value)) {
-            field.dflt = root->dflt;
+    ind_beg(amc::_db_field_curs, field,amc::_db) {
+        if (field.reftype == dmmeta_Reftype_reftype_Pkey) {
+            amc::FField *root = field.p_arg->c_pkeyfield;
+            if (!root) {
+                root =ResolvePkey(field);
+                field.p_arg->c_pkeyfield = root;// save it
+            }
+            field.reftype   = root->reftype;
+            field.arg       = root->arg;
+            field.p_arg     = root->p_arg;
+            field.p_reftype = root->p_reftype;
+            field.reftype   = root->reftype;
+            if (!FldfuncQ(field) && !ch_N(field.dflt.value)) {
+                field.dflt = root->dflt;
+            }
+        } else if (c_field_Find(*field.p_ctype,0) == &field) {
+            // first field of every table is its pkey
+            if (field.reftype == dmmeta_Reftype_reftype_Val) {
+                if (!field.p_ctype->c_pkeyfield && field.p_ctype->p_ns->nstype == dmmeta_Nstype_nstype_ssimdb) {
+                    field.p_ctype->c_pkeyfield = &field;
+                }
+            }
         }
     }ind_end;
 }
@@ -507,7 +526,7 @@ void amc::gen_prep_field() {
         amc::FCtype& ctype     = *field.p_ctype;
 
         tempstr ident(name_Get(field));
-        StringIter s(ident);
+        algo::StringIter s(ident);
         if (field.c_anonfld) {
             field.c_anonfld->anon_idx  = ctype.next_anon_idx;
             ctype.next_anon_idx             = ctype.next_anon_idx + 1;
@@ -729,6 +748,25 @@ void amc::gen_gconst() {
 
 // -----------------------------------------------------------------------------
 
+//
+// Generate Fconst from a column of some table.
+//
+
+void amc::gen_bitfldenum() {
+    ind_beg(amc::_db_field_curs, srcfield, amc::_db) {
+        ind_beg(amc::field_bh_bitfld_curs,bitfld,srcfield) if (bitfld.width==1 && bitfld.p_field->arg == "bool") {
+            dmmeta::Fconst fconst;
+            fconst.fconst = tempstr() << srcfield.field << "/" << name_Get(*bitfld.p_field);
+            fconst.comment = algo::Comment(bitfld.field);
+            // cpp_type has not yet defined, assume cpp_type = ctype
+            fconst.value = dmmeta::CppExpr(tempstr() << "("<< srcfield.p_arg->ctype << "(1)<<" << bitfld.offset << ")");
+            amc::fconst_InsertMaybe(fconst);
+        }ind_end;
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
 void amc::gen_prep_fconst() {
     ind_beg(amc::_db_fconst_curs,fconst,amc::_db) {
         // create cpp symbol name:
@@ -743,7 +781,7 @@ void amc::gen_prep_fconst() {
         }
         amc::strptr_PrintCppIdent(temp, fconst.cpp_name);
 
-        StringIter s(fconst.value.value);
+        algo::StringIter s(fconst.value.value);
         // try to parse LE_STRd("c..")
         if (SkipStrptr(s, "LE_STR")) {
             tempstr errmsg;
@@ -759,11 +797,11 @@ void amc::gen_prep_fconst() {
             vrfy(len == ch_N(ch) ,tempstr()<< errmsg << ": mismatch between declared and actual length");
             tempstr val("LE_STR");
             val << len << "(" ;
-            ListSep ls(",");
-            ary_beg(char,c,ch) {
+            algo::ListSep ls(",");
+            ind_beg_aryptr(char,c,ch) {
                 val << ls;
                 char_PrintCppSingleQuote(c,val);
-            } ary_end;
+            }ind_end_aryptr;
             val << ")";
             fconst.cpp_value = val;
         } else {
@@ -789,7 +827,7 @@ void amc::gen_load_gstatic() {
              , tempstr()
              <<"amc.missing_ssimfile_for_gstatic"
              <<Keyval("field",field.field)
-             <<Keyval("basetype",(ctype ? strptr(ctype->ctype) : strptr()))
+             <<Keyval("basetype",(ctype ? algo::strptr(ctype->ctype) : algo::strptr()))
              <<Keyval("comment","cannot determine ssimfile to load."));
         tempstr      fname  = amc::SsimFilename("data", *ctype, true);
         MmapFile in;
@@ -800,7 +838,7 @@ void amc::gen_load_gstatic() {
             vrfy(Tuple_ReadStrptrMaybe(tuple,line), algo_lib::_db.errtext);
             if (attrs_N(tuple) > 0 && ch_N(tuple.head.value)) {
                 amc::FStatictuple& row = amc::static_tuple_Alloc();
-                TSwap(row.tuple, tuple);
+                algo::TSwap(row.tuple, tuple);
                 row.ctype = field.arg;
                 amc::static_tuple_XrefMaybe(row);
                 nrec++;

@@ -43,7 +43,6 @@ void src_func::Main_EditFunc() {
     cmd.comment.expr = src_func::_db.cmdline.comment.expr;
     cmd.iffy         = src_func::_db.cmdline.iffy;
     cmd.listfunc     = src_func::_db.cmdline.listfunc;
-    cmd.check        = src_func::_db.cmdline.check;
     cmd.proto        = src_func::_db.cmdline.proto;
     cmd.gen          = src_func::_db.cmdline.gen;
     cmd.showloc      = true;

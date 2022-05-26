@@ -354,13 +354,15 @@ void amc::tfunc_Tary_AbsReserve() {
         AddRetval(func, "void", "", "");
         AddProtoArg(func, "int", "n");
         Ins(&R, func.body, "u32 old_max  = $parname.$name_max;");
-        Ins(&R, func.body, "u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);");
-        Ins(&R, func.body, "void *new_mem = $basepool_ReallocMem($parname.$name_elems, old_max * sizeof($Cpptype), new_max * sizeof($Cpptype));");
-        Ins(&R, func.body, "if (UNLIKELY(!new_mem)) {");
-        Ins(&R, func.body, "    FatalErrorExit(\"$ns.tary_nomem  field:$field  comment:'out of memory'\");");
+        Ins(&R, func.body, "if (n > i32(old_max)) {");
+        Ins(&R, func.body, "    u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);");
+        Ins(&R, func.body, "    void *new_mem = $basepool_ReallocMem($parname.$name_elems, old_max * sizeof($Cpptype), new_max * sizeof($Cpptype));");
+        Ins(&R, func.body, "    if (UNLIKELY(!new_mem)) {");
+        Ins(&R, func.body, "        FatalErrorExit(\"$ns.tary_nomem  field:$field  comment:'out of memory'\");");
+        Ins(&R, func.body, "    }");
+        Ins(&R, func.body, "    $parname.$name_elems = ($Cpptype*)new_mem;");
+        Ins(&R, func.body, "    $parname.$name_max = new_max;");
         Ins(&R, func.body, "}");
-        Ins(&R, func.body, "$parname.$name_elems = ($Cpptype*)new_mem;");
-        Ins(&R, func.body, "$parname.$name_max = new_max;");
     }
 }
 

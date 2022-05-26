@@ -11,7 +11,6 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/report_gen.inl.h"
-#include "include/gen/atf_gen.inl.h"
 #include "include/gen/atfdb_gen.inl.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
@@ -171,7 +170,7 @@ inline i32 atf_unit::fld1_Sup(atf_unit::Bitset& parent) {
     for (int i = lim-1; i >= 0; i--) {
         u16 &val = fld1_qFind(parent, i);
         if (val) {
-            u32 bitidx = u64_BitScanReverse(val) + 1;
+            u32 bitidx = algo::u64_BitScanReverse(val) + 1;
             ret = i * 16 + bitidx;
             break;
         }
@@ -394,7 +393,7 @@ inline i32 atf_unit::fld8_Sup(atf_unit::Bitset& parent) {
     for (int i = lim-1; i >= 0; i--) {
         u8 &val = fld8_qFind(parent, i);
         if (val) {
-            u32 bitidx = u64_BitScanReverse(val) + 1;
+            u32 bitidx = algo::u64_BitScanReverse(val) + 1;
             ret = i * 8 + bitidx;
             break;
         }
@@ -566,7 +565,7 @@ inline i32 atf_unit::fld64_Sup(atf_unit::Bitset& parent) {
     for (int i = lim-1; i >= 0; i--) {
         u64 &val = fld64_qFind(parent, i);
         if (val) {
-            u32 bitidx = u64_BitScanReverse(val) + 1;
+            u32 bitidx = algo::u64_BitScanReverse(val) + 1;
             ret = i * 64 + bitidx;
             break;
         }
@@ -835,6 +834,10 @@ inline bool atf_unit::Dbl::operator ==(const atf_unit::Dbl &rhs) const {
     return atf_unit::Dbl_Eq(const_cast<atf_unit::Dbl&>(*this),const_cast<atf_unit::Dbl&>(rhs));
 }
 
+inline bool atf_unit::Dbl::operator !=(const atf_unit::Dbl &rhs) const {
+    return !atf_unit::Dbl_Eq(const_cast<atf_unit::Dbl&>(*this),const_cast<atf_unit::Dbl&>(rhs));
+}
+
 inline bool atf_unit::Dbl::operator <(const atf_unit::Dbl &rhs) const {
     return atf_unit::Dbl_Lt(const_cast<atf_unit::Dbl&>(*this),const_cast<atf_unit::Dbl&>(rhs));
 }
@@ -925,12 +928,12 @@ inline bool atf_unit::unittest_EmptyQ() {
 // --- atf_unit.FDb.unittest.Find
 // Look up row by row id. Return NULL if out of range
 inline atf_unit::FUnittest* atf_unit::unittest_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     atf_unit::FUnittest *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.unittest_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.unittest_lary[bsr][index];
     }
     return retval;
@@ -968,60 +971,6 @@ inline bool atf_unit::ind_unittest_EmptyQ() {
 // Return number of items in the hash
 inline i32 atf_unit::ind_unittest_N() {
     return _db.ind_unittest_n;
-}
-
-// --- atf_unit.FDb.ind_testrun.EmptyQ
-// Return true if hash is empty
-inline bool atf_unit::ind_testrun_EmptyQ() {
-    return _db.ind_testrun_n == 0;
-}
-
-// --- atf_unit.FDb.ind_testrun.N
-// Return number of items in the hash
-inline i32 atf_unit::ind_testrun_N() {
-    return _db.ind_testrun_n;
-}
-
-// --- atf_unit.FDb.testrun.EmptyQ
-// Return true if index is empty
-inline bool atf_unit::testrun_EmptyQ() {
-    return _db.testrun_n == 0;
-}
-
-// --- atf_unit.FDb.testrun.Find
-// Look up row by row id. Return NULL if out of range
-inline atf_unit::FTestrun* atf_unit::testrun_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
-    atf_unit::FTestrun *retval = NULL;
-    if (LIKELY(u64(t) < u64(_db.testrun_n))) {
-        retval = &_db.testrun_lary[bsr][index];
-    }
-    return retval;
-}
-
-// --- atf_unit.FDb.testrun.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline atf_unit::FTestrun* atf_unit::testrun_Last() {
-    return testrun_Find(u64(_db.testrun_n-1));
-}
-
-// --- atf_unit.FDb.testrun.N
-// Return number of items in the pool
-inline i32 atf_unit::testrun_N() {
-    return _db.testrun_n;
-}
-
-// --- atf_unit.FDb.testrun.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline atf_unit::FTestrun& atf_unit::testrun_qFind(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
-    return _db.testrun_lary[bsr][index];
 }
 
 // --- atf_unit.FDb.tr_number_curs.Reset
@@ -1071,31 +1020,6 @@ inline void atf_unit::_db_unittest_curs_Next(_db_unittest_curs &curs) {
 // item access
 inline atf_unit::FUnittest& atf_unit::_db_unittest_curs_Access(_db_unittest_curs &curs) {
     return unittest_qFind(u64(curs.index));
-}
-
-// --- atf_unit.FDb.testrun_curs.Reset
-// cursor points to valid item
-inline void atf_unit::_db_testrun_curs_Reset(_db_testrun_curs &curs, atf_unit::FDb &parent) {
-    curs.parent = &parent;
-    curs.index = 0;
-}
-
-// --- atf_unit.FDb.testrun_curs.ValidQ
-// cursor points to valid item
-inline bool atf_unit::_db_testrun_curs_ValidQ(_db_testrun_curs &curs) {
-    return curs.index < _db.testrun_n;
-}
-
-// --- atf_unit.FDb.testrun_curs.Next
-// proceed to next item
-inline void atf_unit::_db_testrun_curs_Next(_db_testrun_curs &curs) {
-    curs.index++;
-}
-
-// --- atf_unit.FDb.testrun_curs.Access
-// item access
-inline atf_unit::FTestrun& atf_unit::_db_testrun_curs_Access(_db_testrun_curs &curs) {
-    return testrun_qFind(u64(curs.index));
 }
 inline atf_unit::FNumber::FNumber() {
     atf_unit::FNumber_Init(*this);
@@ -1432,24 +1356,6 @@ inline void atf_unit::FPerfSort_Init(atf_unit::FPerfSort& parent) {
     parent.index_n     	= 0; // (atf_unit.FPerfSort.index)
     parent.index_max   	= 0; // (atf_unit.FPerfSort.index)
 }
-inline atf_unit::FTestrun::FTestrun() {
-    atf_unit::FTestrun_Init(*this);
-}
-
-inline atf_unit::FTestrun::~FTestrun() {
-    atf_unit::FTestrun_Uninit(*this);
-}
-
-
-// --- atf_unit.FTestrun..Init
-// Set all fields to initial values.
-inline void atf_unit::FTestrun_Init(atf_unit::FTestrun& testrun) {
-    testrun.testresult = atf_TestresultEnum(0);
-    testrun.n_step = u64(0);
-    testrun.n_cmp = u64(0);
-    testrun.p_test = NULL;
-    testrun.ind_testrun_next = (atf_unit::FTestrun*)-1; // (atf_unit.FDb.ind_testrun) not-in-hash
-}
 inline atf_unit::FUnittest::FUnittest() {
     atf_unit::FUnittest_Init(*this);
 }
@@ -1467,31 +1373,11 @@ inline void atf_unit::step_Call(atf_unit::FUnittest& unittest) {
     }
 }
 
-// --- atf_unit.FUnittest.c_testrun.InsertMaybe
-// Insert row into pointer index. Return final membership status.
-inline bool atf_unit::c_testrun_InsertMaybe(atf_unit::FUnittest& unittest, atf_unit::FTestrun& row) {
-    atf_unit::FTestrun* ptr = unittest.c_testrun;
-    bool retval = (ptr == NULL) | (ptr == &row);
-    if (retval) {
-        unittest.c_testrun = &row;
-    }
-    return retval;
-}
-
-// --- atf_unit.FUnittest.c_testrun.Remove
-// Remove element from index. If element is not in index, do nothing.
-inline void atf_unit::c_testrun_Remove(atf_unit::FUnittest& unittest, atf_unit::FTestrun& row) {
-    atf_unit::FTestrun *ptr = unittest.c_testrun;
-    if (LIKELY(ptr == &row)) {
-        unittest.c_testrun = NULL;
-    }
-}
-
 // --- atf_unit.FUnittest..Init
 // Set all fields to initial values.
 inline void atf_unit::FUnittest_Init(atf_unit::FUnittest& unittest) {
     unittest.select = bool(false);
-    unittest.c_testrun = NULL;
+    unittest.success = bool(false);
     unittest.ind_unittest_next = (atf_unit::FUnittest*)-1; // (atf_unit.FDb.ind_unittest) not-in-hash
     unittest.step = NULL;
 }
@@ -1644,6 +1530,10 @@ inline bool atf_unit::TypeA::operator ==(const atf_unit::TypeA &rhs) const {
     return atf_unit::TypeA_Eq(const_cast<atf_unit::TypeA&>(*this),const_cast<atf_unit::TypeA&>(rhs));
 }
 
+inline bool atf_unit::TypeA::operator !=(const atf_unit::TypeA &rhs) const {
+    return !atf_unit::TypeA_Eq(const_cast<atf_unit::TypeA&>(*this),const_cast<atf_unit::TypeA&>(rhs));
+}
+
 inline bool atf_unit::TypeA::operator <(const atf_unit::TypeA &rhs) const {
     return atf_unit::TypeA_Lt(const_cast<atf_unit::TypeA&>(*this),const_cast<atf_unit::TypeA&>(rhs));
 }
@@ -1695,6 +1585,10 @@ inline bool atf_unit::TypeA_Update(atf_unit::TypeA &lhs, atf_unit::TypeA & rhs) 
 
 inline bool atf_unit::TypeB::operator ==(const atf_unit::TypeB &rhs) const {
     return atf_unit::TypeB_Eq(const_cast<atf_unit::TypeB&>(*this),const_cast<atf_unit::TypeB&>(rhs));
+}
+
+inline bool atf_unit::TypeB::operator !=(const atf_unit::TypeB &rhs) const {
+    return !atf_unit::TypeB_Eq(const_cast<atf_unit::TypeB&>(*this),const_cast<atf_unit::TypeB&>(rhs));
 }
 
 inline bool atf_unit::TypeB::operator <(const atf_unit::TypeB &rhs) const {
@@ -1772,11 +1666,6 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_unit::Test
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_unit::trace &row) {// cfmt:atf_unit.trace.String
     atf_unit::trace_Print(const_cast<atf_unit::trace&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_unit::FTestrun &row) {// cfmt:atf_unit.FTestrun.String
-    atf_unit::FTestrun_Print(const_cast<atf_unit::FTestrun&>(row), str);
     return str;
 }
 

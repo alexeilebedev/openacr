@@ -52,7 +52,7 @@ static bool BalanceCheck(atf_amc::FAvl* root){
     if(root != NULL){
         i32 ldepth = Depth(root->tr_avl_left);
         i32 rdepth = Depth(root->tr_avl_right);
-        result &= Abs(ldepth - rdepth) < 2;
+        result &= algo::Abs(ldepth - rdepth) < 2;
         if(!result){
             prlog("Violation on node");
             PrintNode(*root);
@@ -183,7 +183,7 @@ static void ReverseOrderPrint(){
 
 static void RemoveAll(){
     atf_amc::FAvl* node;
-    while((node = atf_amc::tr_avl_First())){
+    while((node = atf_amc::tr_avl_First()) != NULL){
         Remove(*node);
     }
 }
@@ -268,7 +268,7 @@ void atf_amc::amctest_atree_test1(){
     SimpleCases();
     SpecialCases();
     frep_(i,17){
-        Add(i32_WeakRandom(100)%2);
+        Add(algo::i32_WeakRandom(100)%2);
     }
     InOrderPrint();
     RemoveAll();
@@ -283,26 +283,26 @@ void atf_amc::amctest_atree_test1(){
     RemoveAll();
     prlog("tight range:");
     frep_(i,1000){
-        Add(i32_WeakRandom(100)%3);
+        Add(algo::i32_WeakRandom(100)%3);
     }
     Add(2);
     Add(3);
     RemoveAll();
     InvariantCheck();
-    i64 c = get_cycles();
+    i64 c = algo::get_cycles();
     prlog("All random:");
     frep_(i,10000){
-        Add(i32_WeakRandom(100));
+        Add(algo::i32_WeakRandom(100));
     }
-    c = get_cycles() - c;
+    c = algo::get_cycles() - c;
     prlog("Insert  "<< atf_amc::_db.tr_avl_n<<" :"<<c<<" cycles");
-    c = get_cycles();
+    c = algo::get_cycles();
     atf_amc::FAvl* next = tr_avl_First();
     prlog("Iteration:");
     while(next){
         next = tr_avl_Next(*next);
     }
-    c = get_cycles() - c;
+    c = algo::get_cycles() - c;
     prlog("Iterate "<< atf_amc::_db.tr_avl_n<<" :"<<c<<" cycles");
     RemoveAll();
     InvariantCheck();
@@ -364,7 +364,7 @@ static void CheckRange(strptr elems, int left, int right, strptr result, bool eq
     if (!beg) {
         beg = atf_amc::tr_avl_First();
     }
-    ListSep ls(",");
+    algo::ListSep ls(",");
     tempstr actual_result;
     while (beg && beg->n < right) {
         if (beg->n >= left) {

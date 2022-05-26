@@ -205,12 +205,12 @@ inline bool ssim2mysql::ns_EmptyQ() {
 // --- ssim2mysql.FDb.ns.Find
 // Look up row by row id. Return NULL if out of range
 inline ssim2mysql::FNs* ssim2mysql::ns_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     ssim2mysql::FNs *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ns_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ns_lary[bsr][index];
     }
     return retval;
@@ -247,12 +247,12 @@ inline bool ssim2mysql::ctype_EmptyQ() {
 // --- ssim2mysql.FDb.ctype.Find
 // Look up row by row id. Return NULL if out of range
 inline ssim2mysql::FCtype* ssim2mysql::ctype_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     ssim2mysql::FCtype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ctype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ctype_lary[bsr][index];
     }
     return retval;
@@ -289,12 +289,12 @@ inline bool ssim2mysql::field_EmptyQ() {
 // --- ssim2mysql.FDb.field.Find
 // Look up row by row id. Return NULL if out of range
 inline ssim2mysql::FField* ssim2mysql::field_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     ssim2mysql::FField *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.field_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.field_lary[bsr][index];
     }
     return retval;
@@ -331,12 +331,12 @@ inline bool ssim2mysql::sqltype_EmptyQ() {
 // --- ssim2mysql.FDb.sqltype.Find
 // Look up row by row id. Return NULL if out of range
 inline ssim2mysql::FSqltype* ssim2mysql::sqltype_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     ssim2mysql::FSqltype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.sqltype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.sqltype_lary[bsr][index];
     }
     return retval;
@@ -373,12 +373,12 @@ inline bool ssim2mysql::column_EmptyQ() {
 // --- ssim2mysql.FDb.column.Find
 // Look up row by row id. Return NULL if out of range
 inline ssim2mysql::FColumn* ssim2mysql::column_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     ssim2mysql::FColumn *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.column_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.column_lary[bsr][index];
     }
     return retval;
@@ -451,12 +451,12 @@ inline bool ssim2mysql::substr_EmptyQ() {
 // --- ssim2mysql.FDb.substr.Find
 // Look up row by row id. Return NULL if out of range
 inline ssim2mysql::FSubstr* ssim2mysql::substr_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     ssim2mysql::FSubstr *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.substr_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.substr_lary[bsr][index];
     }
     return retval;
@@ -493,12 +493,12 @@ inline bool ssim2mysql::ssimfile_EmptyQ() {
 // --- ssim2mysql.FDb.ssimfile.Find
 // Look up row by row id. Return NULL if out of range
 inline ssim2mysql::FSsimfile* ssim2mysql::ssimfile_Find(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
     ssim2mysql::FSsimfile *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ssimfile_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
         retval = &_db.ssimfile_lary[bsr][index];
     }
     return retval;

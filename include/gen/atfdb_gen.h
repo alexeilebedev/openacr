@@ -30,6 +30,8 @@ namespace atfdb { struct FieldId; }
 namespace atfdb { struct Normcheck; }
 namespace atfdb { struct Unittest; }
 namespace atfdb {
+    typedef algo::Smallstr50 AmctestPkey;
+    typedef algo::Smallstr50 NormcheckPkey;
     typedef algo::Smallstr50 UnittestPkey;
 }//pkey typedefs
 namespace atfdb {
@@ -109,10 +111,10 @@ struct Unittest { // atfdb.Unittest
 };
 
 algo::Smallstr16     target_Get(atfdb::Unittest& parent) __attribute__((__warn_unused_result__, nothrow));
-algo::Smallstr16     Unittest_target_Get(strptr arg) __attribute__((nothrow));
+algo::Smallstr16     Unittest_target_Get(algo::strptr arg) __attribute__((nothrow));
 
 algo::Smallstr50     testname_Get(atfdb::Unittest& parent) __attribute__((__warn_unused_result__, nothrow));
-algo::Smallstr50     Unittest_testname_Get(strptr arg) __attribute__((nothrow));
+algo::Smallstr50     Unittest_testname_Get(algo::strptr arg) __attribute__((nothrow));
 
 tempstr              Unittest_Concat_target_testname( const algo::strptr& target ,const algo::strptr& testname );
 bool                 Unittest_ReadFieldMaybe(atfdb::Unittest &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
