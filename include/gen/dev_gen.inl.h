@@ -117,6 +117,16 @@ inline dev::Gitinfo::Gitinfo(const algo::strptr&            in_gitinfo
 inline dev::Gitinfo::Gitinfo() {
 }
 
+inline dev::GitlabProject::GitlabProject() {
+    dev::GitlabProject_Init(*this);
+}
+
+
+// --- dev.GitlabProject..Init
+// Set all fields to initial values.
+inline void dev::GitlabProject_Init(dev::GitlabProject& parent) {
+    parent.gitlab_project_id = u32(0);
+}
 inline dev::Htmlentity::Htmlentity() {
     dev::Htmlentity_Init(*this);
 }
@@ -331,6 +341,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::FieldId &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Gitfile &row) {// cfmt:dev.Gitfile.String
     dev::Gitfile_Print(const_cast<dev::Gitfile&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::GitlabProject &row) {// cfmt:dev.GitlabProject.String
+    dev::GitlabProject_Print(const_cast<dev::GitlabProject&>(row), str);
     return str;
 }
 

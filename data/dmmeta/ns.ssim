@@ -22,6 +22,7 @@ dmmeta.ns  ns:bash2html  nstype:exe  comment:"Convert bash output and colours to
 dmmeta.ns  ns:command  nstype:protocol  comment:"Command line descriptions"
 dmmeta.ns  ns:dev  nstype:ssimdb  comment:"Tables supporting compilation of programs"
 dmmeta.ns  ns:dmmeta  nstype:ssimdb  comment:"Tables holding metadata (data model meta)"
+dmmeta.ns  ns:gitlab  nstype:exe  comment:"Gitlab command line interface"
 dmmeta.ns  ns:ietf  nstype:protocol  comment:"Some IETF structs"
 dmmeta.ns  ns:lib_ctype  nstype:lib  comment:"Helpful library for reading/writing ctypes as text tuples"
 dmmeta.ns  ns:lib_exec  nstype:lib  comment:"Build and run a dag of subprocesses with N parallel jobs"

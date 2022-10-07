@@ -394,6 +394,27 @@ inline void command::bash_proc_Init(command::bash_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
+inline command::gitlab::gitlab() {
+    command::gitlab_Init(*this);
+}
+
+inline command::gitlab_proc::gitlab_proc() {
+    command::gitlab_proc_Init(*this);
+}
+
+inline command::gitlab_proc::~gitlab_proc() {
+    command::gitlab_proc_Uninit(*this);
+}
+
+
+// --- command.gitlab_proc..Init
+// Set all fields to initial values.
+inline void command::gitlab_proc_Init(command::gitlab_proc& parent) {
+    parent.path = algo::strptr("bin/gitlab");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
 inline command::lib_ctype::lib_ctype() {
     command::lib_ctype_Init(*this);
 }

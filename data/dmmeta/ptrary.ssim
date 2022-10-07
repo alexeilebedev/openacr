@@ -65,6 +65,10 @@ dmmeta.ptrary  field:amc_vis.FDb.c_linklist  unique:Y
 dmmeta.ptrary  field:atf_amc.FCascdel.c_child_ptrary  unique:Y
 dmmeta.ptrary  field:atf_amc.FDb.c_typek  unique:Y
 dmmeta.ptrary  field:atf_amc.FUnitSort.c_ptrary  unique:N
+dmmeta.ptrary  field:gitlab.FIssue.c_issue_note  unique:Y
+dmmeta.ptrary  field:gitlab.FMr.c_mr_note  unique:Y
+dmmeta.ptrary  field:gitlab.FProject.c_issue  unique:Y
+dmmeta.ptrary  field:gitlab.FProject.c_mr  unique:Y
 dmmeta.ptrary  field:lib_ctype.FCtype.c_cfmt  unique:Y
 dmmeta.ptrary  field:lib_ctype.FCtype.c_field  unique:Y
 dmmeta.ptrary  field:lib_exec.FSyscmd.c_next  unique:Y

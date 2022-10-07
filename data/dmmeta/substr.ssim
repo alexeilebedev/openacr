@@ -90,5 +90,13 @@ dmmeta.substr  field:dmmeta.Xref.keyfld  expr:/RR  srcfield:dmmeta.Xref.via
 dmmeta.substr  field:dmmeta.Xref.name  expr:.RR  srcfield:dmmeta.Xref.field
 dmmeta.substr  field:dmmeta.Xref.ns  expr:.LL  srcfield:dmmeta.Xref.field
 dmmeta.substr  field:dmmeta.Xref.viafld  expr:/LL  srcfield:dmmeta.Xref.via
+dmmeta.substr  field:gitlab.Issue.iid  expr:.RR  srcfield:gitlab.Issue.issue
+dmmeta.substr  field:gitlab.Issue.project  expr:.RL  srcfield:gitlab.Issue.issue
+dmmeta.substr  field:gitlab.IssueNote.id  expr:.RR  srcfield:gitlab.IssueNote.issue_note
+dmmeta.substr  field:gitlab.IssueNote.issue  expr:.RL  srcfield:gitlab.IssueNote.issue_note
+dmmeta.substr  field:gitlab.Mr.iid  expr:.RR  srcfield:gitlab.Mr.mr
+dmmeta.substr  field:gitlab.Mr.project  expr:.RL  srcfield:gitlab.Mr.mr
+dmmeta.substr  field:gitlab.MrNote.id  expr:.RR  srcfield:gitlab.MrNote.mr_note
+dmmeta.substr  field:gitlab.MrNote.mr  expr:.RL  srcfield:gitlab.MrNote.mr_note
 dmmeta.substr  field:ssim2mysql.FColumn.name  expr:.RR  srcfield:ssim2mysql.FColumn.column
 dmmeta.substr  field:ssim2mysql.FColumn.ssimfile  expr:.RL  srcfield:ssim2mysql.FColumn.column

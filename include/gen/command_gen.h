@@ -141,62 +141,80 @@ enum command_FieldIdEnum {                    // command.FieldId.value
     ,command_FieldId_perf_secs         = 124
     ,command_FieldId_pertest_timeout   = 125
     ,command_FieldId_capture           = 126
-    ,command_FieldId_complooo          = 127
-    ,command_FieldId_args              = 128
-    ,command_FieldId_manywin           = 129
-    ,command_FieldId_root              = 130
-    ,command_FieldId_attach            = 131
-    ,command_FieldId_catchthrow        = 132
-    ,command_FieldId_tui               = 133
-    ,command_FieldId_bcmd              = 134
-    ,command_FieldId_emacs             = 135
-    ,command_FieldId_follow_child      = 136
-    ,command_FieldId_py                = 137
-    ,command_FieldId_writessimfile     = 138
-    ,command_FieldId_url               = 139
-    ,command_FieldId_tables            = 140
-    ,command_FieldId_nologo            = 141
-    ,command_FieldId_baddbok           = 142
-    ,command_FieldId_typetag           = 143
-    ,command_FieldId_move              = 144
-    ,command_FieldId_dedup             = 145
-    ,command_FieldId_commit            = 146
-    ,command_FieldId_undo              = 147
-    ,command_FieldId_hash              = 148
-    ,command_FieldId_targsrc           = 149
-    ,command_FieldId_name              = 150
-    ,command_FieldId_body              = 151
-    ,command_FieldId_func              = 152
-    ,command_FieldId_nextfile          = 153
-    ,command_FieldId_other             = 154
-    ,command_FieldId_updateproto       = 155
-    ,command_FieldId_listfunc          = 156
-    ,command_FieldId_iffy              = 157
-    ,command_FieldId_gen               = 158
-    ,command_FieldId_showloc           = 159
-    ,command_FieldId_showstatic        = 160
-    ,command_FieldId_showsortkey       = 161
-    ,command_FieldId_sortname          = 162
-    ,command_FieldId_baddecl           = 163
-    ,command_FieldId_update_authors    = 164
-    ,command_FieldId_indent            = 165
-    ,command_FieldId_linelim           = 166
-    ,command_FieldId_strayfile         = 167
-    ,command_FieldId_badchar           = 168
-    ,command_FieldId_badline           = 169
-    ,command_FieldId_expand            = 170
-    ,command_FieldId_ignoreQuote       = 171
-    ,command_FieldId_maxpacket         = 172
-    ,command_FieldId_db                = 173
-    ,command_FieldId_createdb          = 174
-    ,command_FieldId_str               = 175
-    ,command_FieldId_tocamelcase       = 176
-    ,command_FieldId_tolowerunder      = 177
-    ,command_FieldId_pathcomp          = 178
-    ,command_FieldId_value             = 179
+    ,command_FieldId_issue             = 127
+    ,command_FieldId_server            = 128
+    ,command_FieldId_project           = 129
+    ,command_FieldId_auth_token        = 130
+    ,command_FieldId_mrlist            = 131
+    ,command_FieldId_mergereq          = 132
+    ,command_FieldId_ilist             = 133
+    ,command_FieldId_istart            = 134
+    ,command_FieldId_iadd              = 135
+    ,command_FieldId_ic                = 136
+    ,command_FieldId_iclose            = 137
+    ,command_FieldId_iassignto         = 138
+    ,command_FieldId_title             = 139
+    ,command_FieldId_description       = 140
+    ,command_FieldId_gitdir            = 141
+    ,command_FieldId_assignee          = 142
+    ,command_FieldId_ulist             = 143
+    ,command_FieldId_mraccept          = 144
+    ,command_FieldId_complooo          = 145
+    ,command_FieldId_args              = 146
+    ,command_FieldId_manywin           = 147
+    ,command_FieldId_root              = 148
+    ,command_FieldId_attach            = 149
+    ,command_FieldId_catchthrow        = 150
+    ,command_FieldId_tui               = 151
+    ,command_FieldId_bcmd              = 152
+    ,command_FieldId_emacs             = 153
+    ,command_FieldId_follow_child      = 154
+    ,command_FieldId_py                = 155
+    ,command_FieldId_writessimfile     = 156
+    ,command_FieldId_url               = 157
+    ,command_FieldId_tables            = 158
+    ,command_FieldId_nologo            = 159
+    ,command_FieldId_baddbok           = 160
+    ,command_FieldId_typetag           = 161
+    ,command_FieldId_move              = 162
+    ,command_FieldId_dedup             = 163
+    ,command_FieldId_commit            = 164
+    ,command_FieldId_undo              = 165
+    ,command_FieldId_hash              = 166
+    ,command_FieldId_targsrc           = 167
+    ,command_FieldId_name              = 168
+    ,command_FieldId_body              = 169
+    ,command_FieldId_func              = 170
+    ,command_FieldId_nextfile          = 171
+    ,command_FieldId_other             = 172
+    ,command_FieldId_updateproto       = 173
+    ,command_FieldId_listfunc          = 174
+    ,command_FieldId_iffy              = 175
+    ,command_FieldId_gen               = 176
+    ,command_FieldId_showloc           = 177
+    ,command_FieldId_showstatic        = 178
+    ,command_FieldId_showsortkey       = 179
+    ,command_FieldId_sortname          = 180
+    ,command_FieldId_baddecl           = 181
+    ,command_FieldId_update_authors    = 182
+    ,command_FieldId_indent            = 183
+    ,command_FieldId_linelim           = 184
+    ,command_FieldId_strayfile         = 185
+    ,command_FieldId_badchar           = 186
+    ,command_FieldId_badline           = 187
+    ,command_FieldId_expand            = 188
+    ,command_FieldId_ignoreQuote       = 189
+    ,command_FieldId_maxpacket         = 190
+    ,command_FieldId_db                = 191
+    ,command_FieldId_createdb          = 192
+    ,command_FieldId_str               = 193
+    ,command_FieldId_tocamelcase       = 194
+    ,command_FieldId_tolowerunder      = 195
+    ,command_FieldId_pathcomp          = 196
+    ,command_FieldId_value             = 197
 };
 
-enum { command_FieldIdEnum_N = 180 };
+enum { command_FieldIdEnum_N = 198 };
 
 namespace command { struct FieldId; }
 namespace command { struct Protocol; }
@@ -231,6 +249,8 @@ namespace command { struct bash; }
 namespace command { struct bash2html; }
 namespace command { struct bash2html_proc; }
 namespace command { struct bash_proc; }
+namespace command { struct gitlab; }
+namespace command { struct gitlab_proc; }
 namespace command { struct lib_ctype; }
 namespace command { struct lib_exec; }
 namespace command { struct mdbg; }
@@ -1458,6 +1478,99 @@ algo::tempstr        bash_ToCmdline(command::bash_proc& parent) __attribute__((n
 // Set all fields to initial values.
 void                 bash_proc_Init(command::bash_proc& parent);
 void                 bash_proc_Uninit(command::bash_proc& parent) __attribute__((nothrow));
+
+// --- command.gitlab
+// access: command.gitlab_proc.gitlab (Exec)
+struct gitlab { // command.gitlab
+    algo::cstring      in;            //   "data"  Input directory or filename, - for stdin
+    algo_lib::Regx     issue;         //   ""  Regx of algo::cstring
+    algo::cstring      server;        //   "gitlab.lon.algo"  (config) GitLab server host
+    algo::cstring      project;       //   "myproject"  (config) Project to use
+    algo::cstring      auth_token;    //   ""  (config) GitLab auth token
+    bool               mrlist;        //   false  (action) Show list of merge requests
+    bool               mergereq;      //   false  (action) Push current branch to origin, create merge request
+    bool               ilist;         //   false  (action) Show list of issues matching regx
+    bool               istart;        //   false  (action) Start working on the specified issue
+    bool               t;             //   false  Tree view: expand issue description
+    bool               iadd;          //   false  (action) Add new issue
+    bool               ic;            //   false  (action) Add issue comment
+    bool               iclose;        //   false  (action) Close issue
+    algo::Smallstr50   iassignto;     //   ""  (action) Assign issue to user
+    algo::cstring      title;         //   ""  (with -iadd), skip editor and use argument as title
+    algo::cstring      description;   //   ""  (with -iadd -title), use argument as description
+    algo::cstring      comment;       //   ""  (with -ic), skip editor and use argument as comment
+    algo::cstring      gitdir;        //   ""  (setup) Change directory of dit repository
+    algo_lib::Regx     assignee;      //   ""  Regx of algo::cstring
+    bool               ulist;         //   false  (action) List users
+    algo::cstring      mraccept;      //   ""  (action) Accept merge request
+    gitlab();
+};
+
+// Print back to string
+void                 issue_Print(command::gitlab& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+bool                 issue_ReadStrptrMaybe(command::gitlab& parent, algo::strptr in) __attribute__((nothrow));
+
+// Print back to string
+void                 assignee_Print(command::gitlab& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+bool                 assignee_ReadStrptrMaybe(command::gitlab& parent, algo::strptr in) __attribute__((nothrow));
+
+bool                 gitlab_ReadFieldMaybe(command::gitlab &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of command::gitlab from attributes of ascii tuple TUPLE
+bool                 gitlab_ReadTupleMaybe(command::gitlab &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 gitlab_Init(command::gitlab& parent);
+// print command-line args of command::gitlab to string  -- cprint:command.gitlab.Argv
+void                 gitlab_PrintArgv(command::gitlab & row, algo::cstring &str) __attribute__((nothrow));
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr              gitlab_ToCmdline(command::gitlab & row) __attribute__((nothrow));
+algo::strptr         gitlab_GetAnon(command::gitlab &parent, i32 idx) __attribute__((nothrow));
+
+// --- command.gitlab_proc
+struct gitlab_proc { // command.gitlab_proc: Subprocess: Gitlab command line interface
+    algo::cstring     path;      //   "bin/gitlab"  path for executable
+    command::gitlab   cmd;       // command line for child process
+    algo::cstring     fstdin;    // redirect for stdin
+    algo::cstring     fstdout;   // redirect for stdout
+    algo::cstring     fstderr;   // redirect for stderr
+    pid_t             pid;       //   0  pid of running child process
+    i32               timeout;   //   0  optional timeout for child process
+    i32               status;    //   0  last exit status of child process
+    gitlab_proc();
+    ~gitlab_proc();
+private:
+    // reftype of command.gitlab_proc.gitlab prohibits copy
+    gitlab_proc(const gitlab_proc&){ /*disallow copy constructor */}
+    void operator =(const gitlab_proc&){ /*disallow direct assignment */}
+};
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int                  gitlab_Start(command::gitlab_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         gitlab_StartRead(command::gitlab_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
+// Kill subprocess and wait
+void                 gitlab_Kill(command::gitlab_proc& parent);
+// Wait for subprocess to return
+void                 gitlab_Wait(command::gitlab_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+int                  gitlab_Exec(command::gitlab_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void                 gitlab_ExecX(command::gitlab_proc& parent);
+// Call execv()
+// Call execv with specified parameters -- cprint:gitlab.Argv
+int                  gitlab_Execv(command::gitlab_proc& parent) __attribute__((nothrow));
+algo::tempstr        gitlab_ToCmdline(command::gitlab_proc& parent) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 gitlab_proc_Init(command::gitlab_proc& parent);
+void                 gitlab_proc_Uninit(command::gitlab_proc& parent) __attribute__((nothrow));
 
 // --- command.lib_ctype
 struct lib_ctype { // command.lib_ctype

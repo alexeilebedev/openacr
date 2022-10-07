@@ -57,79 +57,82 @@ extern const char *  dev_Compiler_compiler_gPP_9;     // g++-9      fconst:dev.C
 
 // --- dev_FieldIdEnum
 
-enum dev_FieldIdEnum {                // dev.FieldId.value
-     dev_FieldId_arch           = 0
-    ,dev_FieldId_comment        = 1
-    ,dev_FieldId_badline        = 2
-    ,dev_FieldId_expr           = 3
-    ,dev_FieldId_targsrc_regx   = 4
-    ,dev_FieldId_builddir       = 5
-    ,dev_FieldId_uname          = 6
-    ,dev_FieldId_compiler       = 7
-    ,dev_FieldId_cfg            = 8
-    ,dev_FieldId_suffix         = 9
-    ,dev_FieldId_ranlib         = 10
-    ,dev_FieldId_ar             = 11
-    ,dev_FieldId_link           = 12
-    ,dev_FieldId_libext         = 13
-    ,dev_FieldId_exeext         = 14
-    ,dev_FieldId_pchext         = 15
-    ,dev_FieldId_objext         = 16
-    ,dev_FieldId_rc             = 17
-    ,dev_FieldId_gitfile        = 18
-    ,dev_FieldId_ext            = 19
-    ,dev_FieldId_gitinfo        = 20
-    ,dev_FieldId_author         = 21
-    ,dev_FieldId_compver        = 22
-    ,dev_FieldId_package        = 23
-    ,dev_FieldId_htmlentity     = 24
-    ,dev_FieldId_code           = 25
-    ,dev_FieldId_include        = 26
-    ,dev_FieldId_srcfile        = 27
-    ,dev_FieldId_filename       = 28
-    ,dev_FieldId_sys            = 29
-    ,dev_FieldId_license        = 30
-    ,dev_FieldId_nlongline      = 31
-    ,dev_FieldId_longestline    = 32
-    ,dev_FieldId_nbadws         = 33
-    ,dev_FieldId_maxws          = 34
-    ,dev_FieldId_nlongfunc      = 35
-    ,dev_FieldId_longestfunc    = 36
-    ,dev_FieldId_nmysteryfunc   = 37
-    ,dev_FieldId_badness        = 38
-    ,dev_FieldId_opt_type       = 39
-    ,dev_FieldId_sep            = 40
-    ,dev_FieldId_inl            = 41
-    ,dev_FieldId_sandbox        = 42
-    ,dev_FieldId_args           = 43
-    ,dev_FieldId_syscmd         = 44
-    ,dev_FieldId_execkey        = 45
-    ,dev_FieldId_command        = 46
-    ,dev_FieldId_pid            = 47
-    ,dev_FieldId_status         = 48
-    ,dev_FieldId_nprereq        = 49
-    ,dev_FieldId_fail_prereq    = 50
-    ,dev_FieldId_completed      = 51
-    ,dev_FieldId_maxtime        = 52
-    ,dev_FieldId_syscmddep      = 53
-    ,dev_FieldId_child          = 54
-    ,dev_FieldId_parent         = 55
-    ,dev_FieldId_syslib         = 56
-    ,dev_FieldId_targdep        = 57
-    ,dev_FieldId_target         = 58
-    ,dev_FieldId_compat         = 59
-    ,dev_FieldId_targsrc        = 60
-    ,dev_FieldId_src            = 61
-    ,dev_FieldId_targsyslib     = 62
-    ,dev_FieldId_timefmt        = 63
-    ,dev_FieldId_dirname        = 64
-    ,dev_FieldId_tool_opt       = 65
-    ,dev_FieldId_opt            = 66
-    ,dev_FieldId_sortfld        = 67
-    ,dev_FieldId_value          = 68
+enum dev_FieldIdEnum {                     // dev.FieldId.value
+     dev_FieldId_arch                = 0
+    ,dev_FieldId_comment             = 1
+    ,dev_FieldId_badline             = 2
+    ,dev_FieldId_expr                = 3
+    ,dev_FieldId_targsrc_regx        = 4
+    ,dev_FieldId_builddir            = 5
+    ,dev_FieldId_uname               = 6
+    ,dev_FieldId_compiler            = 7
+    ,dev_FieldId_cfg                 = 8
+    ,dev_FieldId_suffix              = 9
+    ,dev_FieldId_ranlib              = 10
+    ,dev_FieldId_ar                  = 11
+    ,dev_FieldId_link                = 12
+    ,dev_FieldId_libext              = 13
+    ,dev_FieldId_exeext              = 14
+    ,dev_FieldId_pchext              = 15
+    ,dev_FieldId_objext              = 16
+    ,dev_FieldId_rc                  = 17
+    ,dev_FieldId_gitfile             = 18
+    ,dev_FieldId_ext                 = 19
+    ,dev_FieldId_gitinfo             = 20
+    ,dev_FieldId_author              = 21
+    ,dev_FieldId_compver             = 22
+    ,dev_FieldId_package             = 23
+    ,dev_FieldId_gitlab_project      = 24
+    ,dev_FieldId_url                 = 25
+    ,dev_FieldId_gitlab_project_id   = 26
+    ,dev_FieldId_htmlentity          = 27
+    ,dev_FieldId_code                = 28
+    ,dev_FieldId_include             = 29
+    ,dev_FieldId_srcfile             = 30
+    ,dev_FieldId_filename            = 31
+    ,dev_FieldId_sys                 = 32
+    ,dev_FieldId_license             = 33
+    ,dev_FieldId_nlongline           = 34
+    ,dev_FieldId_longestline         = 35
+    ,dev_FieldId_nbadws              = 36
+    ,dev_FieldId_maxws               = 37
+    ,dev_FieldId_nlongfunc           = 38
+    ,dev_FieldId_longestfunc         = 39
+    ,dev_FieldId_nmysteryfunc        = 40
+    ,dev_FieldId_badness             = 41
+    ,dev_FieldId_opt_type            = 42
+    ,dev_FieldId_sep                 = 43
+    ,dev_FieldId_inl                 = 44
+    ,dev_FieldId_sandbox             = 45
+    ,dev_FieldId_args                = 46
+    ,dev_FieldId_syscmd              = 47
+    ,dev_FieldId_execkey             = 48
+    ,dev_FieldId_command             = 49
+    ,dev_FieldId_pid                 = 50
+    ,dev_FieldId_status              = 51
+    ,dev_FieldId_nprereq             = 52
+    ,dev_FieldId_fail_prereq         = 53
+    ,dev_FieldId_completed           = 54
+    ,dev_FieldId_maxtime             = 55
+    ,dev_FieldId_syscmddep           = 56
+    ,dev_FieldId_child               = 57
+    ,dev_FieldId_parent              = 58
+    ,dev_FieldId_syslib              = 59
+    ,dev_FieldId_targdep             = 60
+    ,dev_FieldId_target              = 61
+    ,dev_FieldId_compat              = 62
+    ,dev_FieldId_targsrc             = 63
+    ,dev_FieldId_src                 = 64
+    ,dev_FieldId_targsyslib          = 65
+    ,dev_FieldId_timefmt             = 66
+    ,dev_FieldId_dirname             = 67
+    ,dev_FieldId_tool_opt            = 68
+    ,dev_FieldId_opt                 = 69
+    ,dev_FieldId_sortfld             = 70
+    ,dev_FieldId_value               = 71
 };
 
-enum { dev_FieldIdEnum_N = 69 };
+enum { dev_FieldIdEnum_N = 72 };
 
 extern const char *  dev_Target_target_;             //               fconst:dev.Target.target/
 extern const char *  dev_Target_target_abt;          // abt           fconst:dev.Target.target/abt
@@ -148,6 +151,7 @@ extern const char *  dev_Target_target_atf_norm;     // atf_norm      fconst:dev
 extern const char *  dev_Target_target_atf_nrun;     // atf_nrun      fconst:dev.Target.target/atf_nrun
 extern const char *  dev_Target_target_atf_unit;     // atf_unit      fconst:dev.Target.target/atf_unit
 extern const char *  dev_Target_target_bash2html;    // bash2html     fconst:dev.Target.target/bash2html
+extern const char *  dev_Target_target_gitlab;       // gitlab        fconst:dev.Target.target/gitlab
 extern const char *  dev_Target_target_lib_ctype;    // lib_ctype     fconst:dev.Target.target/lib_ctype
 extern const char *  dev_Target_target_lib_exec;     // lib_exec      fconst:dev.Target.target/lib_exec
 extern const char *  dev_Target_target_lib_git;      // lib_git       fconst:dev.Target.target/lib_git
@@ -174,6 +178,7 @@ namespace dev { struct Compiler; }
 namespace dev { struct FieldId; }
 namespace dev { struct Gitfile; }
 namespace dev { struct Gitinfo; }
+namespace dev { struct GitlabProject; }
 namespace dev { struct Htmlentity; }
 namespace dev { struct Include; }
 namespace dev { struct License; }
@@ -202,6 +207,7 @@ namespace dev {
     typedef algo::Smallstr50 CompilerPkey;
     typedef algo::Smallstr200 GitfilePkey;
     typedef algo::Smallstr40 GitinfoPkey;
+    typedef algo::Smallstr50 GitlabProjectPkey;
     typedef algo::Smallstr50 HtmlentityPkey;
     typedef algo::Smallstr200 IncludePkey;
     typedef algo::Smallstr50 LicensePkey;
@@ -409,6 +415,24 @@ bool                 Gitinfo_ReadFieldMaybe(dev::Gitinfo &parent, algo::strptr f
 bool                 Gitinfo_ReadStrptrMaybe(dev::Gitinfo &parent, algo::strptr in_str);
 // print string representation of dev::Gitinfo to string LHS, no header -- cprint:dev.Gitinfo.String
 void                 Gitinfo_Print(dev::Gitinfo & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- dev.GitlabProject
+struct GitlabProject { // dev.GitlabProject: Gitlab project
+    algo::Smallstr50    gitlab_project;      //
+    algo::Smallstr200   url;                 //
+    algo::Comment       comment;             //
+    u32                 gitlab_project_id;   //   0  Numeric project ID on gitlab server, displayed on project overview Web page
+    GitlabProject();
+};
+
+bool                 GitlabProject_ReadFieldMaybe(dev::GitlabProject &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::GitlabProject from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 GitlabProject_ReadStrptrMaybe(dev::GitlabProject &parent, algo::strptr in_str);
+// Set all fields to initial values.
+void                 GitlabProject_Init(dev::GitlabProject& parent);
+// print string representation of dev::GitlabProject to string LHS, no header -- cprint:dev.GitlabProject.String
+void                 GitlabProject_Print(dev::GitlabProject & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dev.Htmlentity
 struct Htmlentity { // dev.Htmlentity
@@ -829,6 +853,7 @@ namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Badline &row);// cfmt:dev.Badline.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::FieldId &row);// cfmt:dev.FieldId.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Gitfile &row);// cfmt:dev.Gitfile.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::GitlabProject &row);// cfmt:dev.GitlabProject.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Htmlentity &row);// cfmt:dev.Htmlentity.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Include &row);// cfmt:dev.Include.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::License &row);// cfmt:dev.License.String

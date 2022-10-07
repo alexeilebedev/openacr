@@ -12,6 +12,7 @@ dmmeta.main  ns:atf_norm  ismodule:N
 dmmeta.main  ns:atf_nrun  ismodule:N
 dmmeta.main  ns:atf_unit  ismodule:N
 dmmeta.main  ns:bash2html  ismodule:N
+dmmeta.main  ns:gitlab  ismodule:N
 dmmeta.main  ns:mdbg  ismodule:N
 dmmeta.main  ns:mysql2ssim  ismodule:N
 dmmeta.main  ns:ntup  ismodule:N

@@ -70,6 +70,9 @@ dmmeta.fconst  fconst:atf_amc.TypeBE32en.value/val1  value:0x12345678  comment:"
 dmmeta.fconst  fconst:atf_amc.TypeBE32en.value/val2  value:0xabcdef01  comment:""
 dmmeta.fconst  fconst:atf_amc.Typefconst.value/strval1  value:1  comment:""
 dmmeta.fconst  fconst:atf_amc.Typefconst.value/strval2  value:2  comment:""
+dmmeta.fconst  fconst:gitlab.FHttp.request_method/GET  value:0  comment:GET
+dmmeta.fconst  fconst:gitlab.FHttp.request_method/POST  value:1  comment:POST
+dmmeta.fconst  fconst:gitlab.FHttp.request_method/PUT  value:2  comment:PUT
 dmmeta.fconst  fconst:lib_json.FNode.type/null  value:0  comment:""
 dmmeta.fconst  fconst:lib_json.FNode.type/false  value:1  comment:""
 dmmeta.fconst  fconst:lib_json.FNode.type/true  value:2  comment:""

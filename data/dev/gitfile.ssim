@@ -67,6 +67,7 @@ dev.gitfile  gitfile:bin/git-rebase-origin
 dev.gitfile  gitfile:bin/git-recent-branches
 dev.gitfile  gitfile:bin/git-rollback-file
 dev.gitfile  gitfile:bin/git-update-config
+dev.gitfile  gitfile:bin/gitlab
 dev.gitfile  gitfile:bin/grephunk
 dev.gitfile  gitfile:bin/hilite
 dev.gitfile  gitfile:bin/hilite-error
@@ -304,6 +305,7 @@ dev.gitfile  gitfile:cpp/gen/bash2html_gen.cpp
 dev.gitfile  gitfile:cpp/gen/command_gen.cpp
 dev.gitfile  gitfile:cpp/gen/dev_gen.cpp
 dev.gitfile  gitfile:cpp/gen/dmmeta_gen.cpp
+dev.gitfile  gitfile:cpp/gen/gitlab_gen.cpp
 dev.gitfile  gitfile:cpp/gen/ietf_gen.cpp
 dev.gitfile  gitfile:cpp/gen/lib_ctype_gen.cpp
 dev.gitfile  gitfile:cpp/gen/lib_exec_gen.cpp
@@ -324,6 +326,7 @@ dev.gitfile  gitfile:cpp/gen/src_lim_gen.cpp
 dev.gitfile  gitfile:cpp/gen/ssim2csv_gen.cpp
 dev.gitfile  gitfile:cpp/gen/ssim2mysql_gen.cpp
 dev.gitfile  gitfile:cpp/gen/strconv_gen.cpp
+dev.gitfile  gitfile:cpp/gitlab.cpp
 dev.gitfile  gitfile:cpp/lib/algo/arg.cpp
 dev.gitfile  gitfile:cpp/lib/algo/backtrace.cpp
 dev.gitfile  gitfile:cpp/lib/algo/cpu_hz.cpp
@@ -385,6 +388,7 @@ dev.gitfile  gitfile:data/dev/cfg.ssim
 dev.gitfile  gitfile:data/dev/compiler.ssim
 dev.gitfile  gitfile:data/dev/gitfile.ssim
 dev.gitfile  gitfile:data/dev/gitinfo.ssim
+dev.gitfile  gitfile:data/dev/gitlab_project.ssim
 dev.gitfile  gitfile:data/dev/htmlentity.ssim
 dev.gitfile  gitfile:data/dev/license.ssim
 dev.gitfile  gitfile:data/dev/linelim.ssim
@@ -583,6 +587,8 @@ dev.gitfile  gitfile:include/gen/dev_gen.h
 dev.gitfile  gitfile:include/gen/dev_gen.inl.h
 dev.gitfile  gitfile:include/gen/dmmeta_gen.h
 dev.gitfile  gitfile:include/gen/dmmeta_gen.inl.h
+dev.gitfile  gitfile:include/gen/gitlab_gen.h
+dev.gitfile  gitfile:include/gen/gitlab_gen.inl.h
 dev.gitfile  gitfile:include/gen/ietf_gen.h
 dev.gitfile  gitfile:include/gen/ietf_gen.inl.h
 dev.gitfile  gitfile:include/gen/lib_ctype_gen.h
@@ -623,6 +629,7 @@ dev.gitfile  gitfile:include/gen/ssim2mysql_gen.h
 dev.gitfile  gitfile:include/gen/ssim2mysql_gen.inl.h
 dev.gitfile  gitfile:include/gen/strconv_gen.h
 dev.gitfile  gitfile:include/gen/strconv_gen.inl.h
+dev.gitfile  gitfile:include/gitlab.h
 dev.gitfile  gitfile:include/lib/lib_ctype.h
 dev.gitfile  gitfile:include/lib/lib_exec.h
 dev.gitfile  gitfile:include/lib/lib_iconv.h
