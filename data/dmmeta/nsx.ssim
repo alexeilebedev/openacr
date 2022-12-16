@@ -20,6 +20,7 @@ dmmeta.nsx  ns:bash2html  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.m
 dmmeta.nsx  ns:command  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:N  pack:N  fldoffset_asserts:Y  comment:""
 dmmeta.nsx  ns:dev  genthrow:N  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:N  pack:N  fldoffset_asserts:N  comment:""
 dmmeta.nsx  ns:dmmeta  genthrow:N  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:N  pack:N  fldoffset_asserts:N  comment:""
+dmmeta.nsx  ns:gitlab  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  fldoffset_asserts:N  comment:""
 dmmeta.nsx  ns:ietf  genthrow:N  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:N  pack:Y  fldoffset_asserts:Y  comment:""
 dmmeta.nsx  ns:lib_ctype  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  fldoffset_asserts:N  comment:""
 dmmeta.nsx  ns:lib_exec  genthrow:N  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:N  pack:N  fldoffset_asserts:N  comment:""

@@ -89,6 +89,7 @@ const char *dev_Target_target_atf_norm     = "atf_norm";
 const char *dev_Target_target_atf_nrun     = "atf_nrun";
 const char *dev_Target_target_atf_unit     = "atf_unit";
 const char *dev_Target_target_bash2html    = "bash2html";
+const char *dev_Target_target_gitlab       = "gitlab";
 const char *dev_Target_target_lib_ctype    = "lib_ctype";
 const char *dev_Target_target_lib_exec     = "lib_exec";
 const char *dev_Target_target_lib_git      = "lib_git";
@@ -445,6 +446,9 @@ const char* dev::value_ToCstr(const dev::FieldId& parent) {
         case dev_FieldId_author            : ret = "author";  break;
         case dev_FieldId_compver           : ret = "compver";  break;
         case dev_FieldId_package           : ret = "package";  break;
+        case dev_FieldId_gitlab_project    : ret = "gitlab_project";  break;
+        case dev_FieldId_url               : ret = "url";  break;
+        case dev_FieldId_gitlab_project_id : ret = "gitlab_project_id";  break;
         case dev_FieldId_htmlentity        : ret = "htmlentity";  break;
         case dev_FieldId_code              : ret = "code";  break;
         case dev_FieldId_include           : ret = "include";  break;
@@ -549,6 +553,9 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR3('s','y','s'): {
                     value_SetEnum(parent,dev_FieldId_sys); ret = true; break;
+                }
+                case LE_STR3('u','r','l'): {
+                    value_SetEnum(parent,dev_FieldId_url); ret = true; break;
                 }
             }
             break;
@@ -786,6 +793,24 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
             }
             break;
         }
+        case 14: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('g','i','t','l','a','b','_','p'): {
+                    if (memcmp(rhs.elems+8,"roject",6)==0) { value_SetEnum(parent,dev_FieldId_gitlab_project); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 17: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('g','i','t','l','a','b','_','p'): {
+                    if (memcmp(rhs.elems+8,"roject_id",9)==0) { value_SetEnum(parent,dev_FieldId_gitlab_project_id); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
     }
     return ret;
 }
@@ -927,6 +952,55 @@ void dev::Gitinfo_Print(dev::Gitinfo & row, algo::cstring &str) {
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
+}
+
+// --- dev.GitlabProject..ReadFieldMaybe
+bool dev::GitlabProject_ReadFieldMaybe(dev::GitlabProject &parent, algo::strptr field, algo::strptr strval) {
+    dev::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case dev_FieldId_gitlab_project: retval = algo::Smallstr50_ReadStrptrMaybe(parent.gitlab_project, strval); break;
+        case dev_FieldId_url: retval = algo::Smallstr200_ReadStrptrMaybe(parent.url, strval); break;
+        case dev_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case dev_FieldId_gitlab_project_id: retval = u32_ReadStrptrMaybe(parent.gitlab_project_id, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dev.GitlabProject..ReadStrptrMaybe
+// Read fields of dev::GitlabProject from an ascii string.
+// The format of the string is an ssim Tuple
+bool dev::GitlabProject_ReadStrptrMaybe(dev::GitlabProject &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dev.gitlab_project") || algo::StripTypeTag(in_str, "dev.GitlabProject");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && GitlabProject_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dev.GitlabProject..Print
+// print string representation of dev::GitlabProject to string LHS, no header -- cprint:dev.GitlabProject.String
+void dev::GitlabProject_Print(dev::GitlabProject & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "dev.gitlab_project";
+
+    algo::Smallstr50_Print(row.gitlab_project, temp);
+    PrintAttrSpaceReset(str,"gitlab_project", temp);
+
+    algo::Smallstr200_Print(row.url, temp);
+    PrintAttrSpaceReset(str,"url", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+
+    u32_Print(row.gitlab_project_id, temp);
+    PrintAttrSpaceReset(str,"gitlab_project_id", temp);
 }
 
 // --- dev.Htmlentity..ReadFieldMaybe

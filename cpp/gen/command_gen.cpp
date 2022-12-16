@@ -152,6 +152,24 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_perf_secs     : ret = "perf_secs";  break;
         case command_FieldId_pertest_timeout: ret = "pertest_timeout";  break;
         case command_FieldId_capture       : ret = "capture";  break;
+        case command_FieldId_issue         : ret = "issue";  break;
+        case command_FieldId_server        : ret = "server";  break;
+        case command_FieldId_project       : ret = "project";  break;
+        case command_FieldId_auth_token    : ret = "auth_token";  break;
+        case command_FieldId_mrlist        : ret = "mrlist";  break;
+        case command_FieldId_mergereq      : ret = "mergereq";  break;
+        case command_FieldId_ilist         : ret = "ilist";  break;
+        case command_FieldId_istart        : ret = "istart";  break;
+        case command_FieldId_iadd          : ret = "iadd";  break;
+        case command_FieldId_ic            : ret = "ic";  break;
+        case command_FieldId_iclose        : ret = "iclose";  break;
+        case command_FieldId_iassignto     : ret = "iassignto";  break;
+        case command_FieldId_title         : ret = "title";  break;
+        case command_FieldId_description   : ret = "description";  break;
+        case command_FieldId_gitdir        : ret = "gitdir";  break;
+        case command_FieldId_assignee      : ret = "assignee";  break;
+        case command_FieldId_ulist         : ret = "ulist";  break;
+        case command_FieldId_mraccept      : ret = "mraccept";  break;
         case command_FieldId_complooo      : ret = "complooo";  break;
         case command_FieldId_args          : ret = "args";  break;
         case command_FieldId_manywin       : ret = "manywin";  break;
@@ -250,6 +268,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR2('d','b'): {
                     value_SetEnum(parent,command_FieldId_db); ret = true; break;
                 }
+                case LE_STR2('i','c'): {
+                    value_SetEnum(parent,command_FieldId_ic); ret = true; break;
+                }
                 case LE_STR2('i','n'): {
                     value_SetEnum(parent,command_FieldId_in); ret = true; break;
                 }
@@ -347,6 +368,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('h','a','s','h'): {
                     value_SetEnum(parent,command_FieldId_hash); ret = true; break;
                 }
+                case LE_STR4('i','a','d','d'): {
+                    value_SetEnum(parent,command_FieldId_iadd); ret = true; break;
+                }
                 case LE_STR4('i','f','f','y'): {
                     value_SetEnum(parent,command_FieldId_iffy); ret = true; break;
                 }
@@ -439,6 +463,12 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR5('f','s','t','e','p'): {
                     value_SetEnum(parent,command_FieldId_fstep); ret = true; break;
                 }
+                case LE_STR5('i','l','i','s','t'): {
+                    value_SetEnum(parent,command_FieldId_ilist); ret = true; break;
+                }
+                case LE_STR5('i','s','s','u','e'): {
+                    value_SetEnum(parent,command_FieldId_issue); ret = true; break;
+                }
                 case LE_STR5('l','o','o','s','e'): {
                     value_SetEnum(parent,command_FieldId_loose); ret = true; break;
                 }
@@ -472,11 +502,17 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR5('s','t','a','r','t'): {
                     value_SetEnum(parent,command_FieldId_start); ret = true; break;
                 }
+                case LE_STR5('t','i','t','l','e'): {
+                    value_SetEnum(parent,command_FieldId_title); ret = true; break;
+                }
                 case LE_STR5('t','r','a','c','e'): {
                     value_SetEnum(parent,command_FieldId_trace); ret = true; break;
                 }
                 case LE_STR5('t','r','u','n','c'): {
                     value_SetEnum(parent,command_FieldId_trunc); ret = true; break;
+                }
+                case LE_STR5('u','l','i','s','t'): {
+                    value_SetEnum(parent,command_FieldId_ulist); ret = true; break;
                 }
                 case LE_STR5('u','n','a','m','e'): {
                     value_SetEnum(parent,command_FieldId_uname); ret = true; break;
@@ -522,6 +558,12 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('g','c','o','n','s','t'): {
                     value_SetEnum(parent,command_FieldId_gconst); ret = true; break;
                 }
+                case LE_STR6('g','i','t','d','i','r'): {
+                    value_SetEnum(parent,command_FieldId_gitdir); ret = true; break;
+                }
+                case LE_STR6('i','c','l','o','s','e'): {
+                    value_SetEnum(parent,command_FieldId_iclose); ret = true; break;
+                }
                 case LE_STR6('i','n','_','d','i','r'): {
                     value_SetEnum(parent,command_FieldId_in_dir); ret = true; break;
                 }
@@ -531,8 +573,14 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('i','n','s','e','r','t'): {
                     value_SetEnum(parent,command_FieldId_insert); ret = true; break;
                 }
+                case LE_STR6('i','s','t','a','r','t'): {
+                    value_SetEnum(parent,command_FieldId_istart); ret = true; break;
+                }
                 case LE_STR6('m','a','x','e','r','r'): {
                     value_SetEnum(parent,command_FieldId_maxerr); ret = true; break;
+                }
+                case LE_STR6('m','r','l','i','s','t'): {
+                    value_SetEnum(parent,command_FieldId_mrlist); ret = true; break;
                 }
                 case LE_STR6('n','o','f','o','r','k'): {
                     value_SetEnum(parent,command_FieldId_nofork); ret = true; break;
@@ -563,6 +611,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR6('s','e','l','e','c','t'): {
                     value_SetEnum(parent,command_FieldId_select); ret = true; break;
+                }
+                case LE_STR6('s','e','r','v','e','r'): {
+                    value_SetEnum(parent,command_FieldId_server); ret = true; break;
                 }
                 case LE_STR6('s','u','b','s','e','t'): {
                     value_SetEnum(parent,command_FieldId_subset); ret = true; break;
@@ -662,6 +713,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('p','r','e','p','r','o','c'): {
                     value_SetEnum(parent,command_FieldId_preproc); ret = true; break;
                 }
+                case LE_STR7('p','r','o','j','e','c','t'): {
+                    value_SetEnum(parent,command_FieldId_project); ret = true; break;
+                }
                 case LE_STR7('r','e','f','t','y','p','e'): {
                     value_SetEnum(parent,command_FieldId_reftype); ret = true; break;
                 }
@@ -700,6 +754,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
         }
         case 8: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','s','s','i','g','n','e','e'): {
+                    value_SetEnum(parent,command_FieldId_assignee); ret = true; break;
+                }
                 case LE_STR8('c','o','m','p','i','l','e','r'): {
                     value_SetEnum(parent,command_FieldId_compiler); ret = true; break;
                 }
@@ -723,6 +780,12 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('m','a','x','g','r','o','u','p'): {
                     value_SetEnum(parent,command_FieldId_maxgroup); ret = true; break;
+                }
+                case LE_STR8('m','e','r','g','e','r','e','q'): {
+                    value_SetEnum(parent,command_FieldId_mergereq); ret = true; break;
+                }
+                case LE_STR8('m','r','a','c','c','e','p','t'): {
+                    value_SetEnum(parent,command_FieldId_mraccept); ret = true; break;
                 }
                 case LE_STR8('n','e','x','t','f','i','l','e'): {
                     value_SetEnum(parent,command_FieldId_nextfile); ret = true; break;
@@ -760,6 +823,10 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,command_FieldId_checkable); ret = true; break; }
                     break;
                 }
+                case LE_STR8('i','a','s','s','i','g','n','t'): {
+                    if (memcmp(rhs.elems+8,"o",1)==0) { value_SetEnum(parent,command_FieldId_iassignto); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('m','a','x','p','a','c','k','e'): {
                     if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,command_FieldId_maxpacket); ret = true; break; }
                     break;
@@ -785,6 +852,10 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
         }
         case 10: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','u','t','h','_','t','o','k'): {
+                    if (memcmp(rhs.elems+8,"en",2)==0) { value_SetEnum(parent,command_FieldId_auth_token); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('c','a','t','c','h','t','h','r'): {
                     if (memcmp(rhs.elems+8,"ow",2)==0) { value_SetEnum(parent,command_FieldId_catchthrow); ret = true; break; }
                     break;
@@ -798,6 +869,10 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
         }
         case 11: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','e','s','c','r','i','p','t'): {
+                    if (memcmp(rhs.elems+8,"ion",3)==0) { value_SetEnum(parent,command_FieldId_description); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('i','g','n','o','r','e','Q','u'): {
                     if (memcmp(rhs.elems+8,"ote",3)==0) { value_SetEnum(parent,command_FieldId_ignoreQuote); ret = true; break; }
                     break;
@@ -6754,6 +6829,566 @@ void command::bash_proc_Uninit(command::bash_proc& parent) {
     bash_Kill(parent); // kill child, ensure forward progress
 }
 
+// --- command.gitlab.issue.Print
+// Print back to string
+void command::issue_Print(command::gitlab& parent, algo::cstring &out) {
+    Regx_Print(parent.issue, out);
+}
+
+// --- command.gitlab.issue.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::issue_ReadStrptrMaybe(command::gitlab& parent, algo::strptr in) {
+    Regx_ReadSql(parent.issue, in, true);
+    bool retval = true;// !parent.issue.parseerror; -- TODO: uncomment
+    return retval;
+}
+
+// --- command.gitlab.assignee.Print
+// Print back to string
+void command::assignee_Print(command::gitlab& parent, algo::cstring &out) {
+    Regx_Print(parent.assignee, out);
+}
+
+// --- command.gitlab.assignee.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::assignee_ReadStrptrMaybe(command::gitlab& parent, algo::strptr in) {
+    Regx_ReadSql(parent.assignee, in, true);
+    bool retval = true;// !parent.assignee.parseerror; -- TODO: uncomment
+    return retval;
+}
+
+// --- command.gitlab..ReadFieldMaybe
+bool command::gitlab_ReadFieldMaybe(command::gitlab &parent, algo::strptr field, algo::strptr strval) {
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case command_FieldId_in: retval = algo::cstring_ReadStrptrMaybe(parent.in, strval); break;
+        case command_FieldId_issue: retval = issue_ReadStrptrMaybe(parent, strval); break;
+        case command_FieldId_server: retval = algo::cstring_ReadStrptrMaybe(parent.server, strval); break;
+        case command_FieldId_project: retval = algo::cstring_ReadStrptrMaybe(parent.project, strval); break;
+        case command_FieldId_auth_token: retval = algo::cstring_ReadStrptrMaybe(parent.auth_token, strval); break;
+        case command_FieldId_mrlist: retval = bool_ReadStrptrMaybe(parent.mrlist, strval); break;
+        case command_FieldId_mergereq: retval = bool_ReadStrptrMaybe(parent.mergereq, strval); break;
+        case command_FieldId_ilist: retval = bool_ReadStrptrMaybe(parent.ilist, strval); break;
+        case command_FieldId_istart: retval = bool_ReadStrptrMaybe(parent.istart, strval); break;
+        case command_FieldId_t: retval = bool_ReadStrptrMaybe(parent.t, strval); break;
+        case command_FieldId_iadd: retval = bool_ReadStrptrMaybe(parent.iadd, strval); break;
+        case command_FieldId_ic: retval = bool_ReadStrptrMaybe(parent.ic, strval); break;
+        case command_FieldId_iclose: retval = bool_ReadStrptrMaybe(parent.iclose, strval); break;
+        case command_FieldId_iassignto: retval = algo::Smallstr50_ReadStrptrMaybe(parent.iassignto, strval); break;
+        case command_FieldId_title: retval = algo::cstring_ReadStrptrMaybe(parent.title, strval); break;
+        case command_FieldId_description: retval = algo::cstring_ReadStrptrMaybe(parent.description, strval); break;
+        case command_FieldId_comment: retval = algo::cstring_ReadStrptrMaybe(parent.comment, strval); break;
+        case command_FieldId_gitdir: retval = algo::cstring_ReadStrptrMaybe(parent.gitdir, strval); break;
+        case command_FieldId_assignee: retval = assignee_ReadStrptrMaybe(parent, strval); break;
+        case command_FieldId_ulist: retval = bool_ReadStrptrMaybe(parent.ulist, strval); break;
+        case command_FieldId_mraccept: retval = algo::cstring_ReadStrptrMaybe(parent.mraccept, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.gitlab..ReadTupleMaybe
+// Read fields of command::gitlab from attributes of ascii tuple TUPLE
+bool command::gitlab_ReadTupleMaybe(command::gitlab &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    int anon_idx = 0;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        if (ch_N(attr.name) == 0) {
+            attr.name = gitlab_GetAnon(parent, anon_idx++);
+        }
+        retval = gitlab_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- command.gitlab..Init
+// Set all fields to initial values.
+void command::gitlab_Init(command::gitlab& parent) {
+    parent.in = algo::strptr("data");
+    Regx_ReadSql(parent.issue, "", true);
+    parent.server = algo::strptr("gitlab.lon.algo");
+    parent.project = algo::strptr("myproject");
+    parent.auth_token = algo::strptr("");
+    parent.mrlist = bool(false);
+    parent.mergereq = bool(false);
+    parent.ilist = bool(false);
+    parent.istart = bool(false);
+    parent.t = bool(false);
+    parent.iadd = bool(false);
+    parent.ic = bool(false);
+    parent.iclose = bool(false);
+    parent.iassignto = algo::strptr("");
+    parent.title = algo::strptr("");
+    parent.description = algo::strptr("");
+    parent.comment = algo::strptr("");
+    parent.gitdir = algo::strptr("");
+    Regx_ReadSql(parent.assignee, "", true);
+    parent.ulist = bool(false);
+    parent.mraccept = algo::strptr("");
+}
+
+// --- command.gitlab..PrintArgv
+// print command-line args of command::gitlab to string  -- cprint:command.gitlab.Argv
+void command::gitlab_PrintArgv(command::gitlab & row, algo::cstring &str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)row;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+    ch_RemoveAll(temp);
+    command::issue_Print(const_cast<command::gitlab&>(row), temp);
+    str << " ";
+    strptr_PrintBash(temp,str);
+    if (!(row.server == "gitlab.lon.algo")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.server, temp);
+        str << " -server:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.project == "myproject")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.project, temp);
+        str << " -project:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.auth_token == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.auth_token, temp);
+        str << " -auth_token:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.mrlist == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.mrlist, temp);
+        str << " -mrlist:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.mergereq == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.mergereq, temp);
+        str << " -mergereq:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.ilist == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.ilist, temp);
+        str << " -ilist:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.istart == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.istart, temp);
+        str << " -istart:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.t == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.t, temp);
+        str << " -t:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.iadd == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.iadd, temp);
+        str << " -iadd:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.ic == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.ic, temp);
+        str << " -ic:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.iclose == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.iclose, temp);
+        str << " -iclose:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.iassignto == "")) {
+        ch_RemoveAll(temp);
+        Smallstr50_Print(row.iassignto, temp);
+        str << " -iassignto:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.title == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.title, temp);
+        str << " -title:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.description == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.description, temp);
+        str << " -description:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.comment == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.comment, temp);
+        str << " -comment:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.gitdir == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.gitdir, temp);
+        str << " -gitdir:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.assignee.expr == "")) {
+        ch_RemoveAll(temp);
+        command::assignee_Print(const_cast<command::gitlab&>(row), temp);
+        str << " -assignee:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.ulist == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.ulist, temp);
+        str << " -ulist:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.mraccept == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.mraccept, temp);
+        str << " -mraccept:";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- command.gitlab..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::gitlab_ToCmdline(command::gitlab & row) {
+    tempstr ret;
+    ret << "bin/gitlab ";
+    gitlab_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.gitlab..GetAnon
+algo::strptr command::gitlab_GetAnon(command::gitlab &parent, i32 idx) {
+    (void)parent;//only to avoid -Wunused-parameter
+    switch(idx) {
+        case(0): return strptr("issue", 5);
+        default: return algo::strptr();
+    }
+}
+
+// --- command.gitlab_proc.gitlab.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::gitlab_Start(command::gitlab_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(gitlab_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(gitlab_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= gitlab_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.gitlab_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.gitlab_proc.gitlab.StartRead
+// Start subprocess & Read output
+algo::Fildes command::gitlab_StartRead(command::gitlab_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    gitlab_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.gitlab_proc.gitlab.Kill
+// Kill subprocess and wait
+void command::gitlab_Kill(command::gitlab_proc& parent) {
+    if (parent.pid != 0) {
+        kill(parent.pid,9);
+        gitlab_Wait(parent);
+    }
+}
+
+// --- command.gitlab_proc.gitlab.Wait
+// Wait for subprocess to return
+void command::gitlab_Wait(command::gitlab_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.gitlab_proc.gitlab.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::gitlab_Exec(command::gitlab_proc& parent) {
+    gitlab_Start(parent);
+    gitlab_Wait(parent);
+    return parent.status;
+}
+
+// --- command.gitlab_proc.gitlab.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::gitlab_ExecX(command::gitlab_proc& parent) {
+    int rc = gitlab_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",gitlab_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.gitlab_proc.gitlab.Execv
+// Call execv()
+// Call execv with specified parameters -- cprint:gitlab.Argv
+int command::gitlab_Execv(command::gitlab_proc& parent) {
+    char *argv[42+2]; // start of first arg (future pointer)
+    algo::tempstr temp;
+    int n_argv=0;
+    argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+    temp << parent.path;
+    ch_Alloc(temp) = 0;// NUL term for pathname
+
+    if (parent.cmd.in != "data") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-in:";
+        cstring_Print(parent.cmd.in, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.issue.expr != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-issue:";
+        command::issue_Print(parent.cmd, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.server != "gitlab.lon.algo") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-server:";
+        cstring_Print(parent.cmd.server, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.project != "myproject") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-project:";
+        cstring_Print(parent.cmd.project, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.auth_token != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-auth_token:";
+        cstring_Print(parent.cmd.auth_token, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.mrlist != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-mrlist:";
+        bool_Print(parent.cmd.mrlist, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.mergereq != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-mergereq:";
+        bool_Print(parent.cmd.mergereq, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.ilist != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-ilist:";
+        bool_Print(parent.cmd.ilist, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.istart != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-istart:";
+        bool_Print(parent.cmd.istart, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.t != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-t:";
+        bool_Print(parent.cmd.t, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.iadd != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-iadd:";
+        bool_Print(parent.cmd.iadd, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.ic != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-ic:";
+        bool_Print(parent.cmd.ic, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.iclose != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-iclose:";
+        bool_Print(parent.cmd.iclose, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.iassignto != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-iassignto:";
+        Smallstr50_Print(parent.cmd.iassignto, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.title != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-title:";
+        cstring_Print(parent.cmd.title, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.description != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-description:";
+        cstring_Print(parent.cmd.description, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.comment != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-comment:";
+        cstring_Print(parent.cmd.comment, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.gitdir != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-gitdir:";
+        cstring_Print(parent.cmd.gitdir, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.assignee.expr != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-assignee:";
+        command::assignee_Print(parent.cmd, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.ulist != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-ulist:";
+        bool_Print(parent.cmd.ulist, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.mraccept != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-mraccept:";
+        cstring_Print(parent.cmd.mraccept, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+    for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-verbose";
+        ch_Alloc(temp) = 0;
+    }
+    argv[n_argv] = NULL; // last pointer
+    while (n_argv>0) { // shift pointers
+        argv[--n_argv] += (u64)temp.ch_elems;
+    }
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    return execv(Zeroterm(parent.path),argv);
+}
+
+// --- command.gitlab_proc.gitlab.ToCmdline
+algo::tempstr command::gitlab_ToCmdline(command::gitlab_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::gitlab_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.gitlab_proc..Uninit
+void command::gitlab_proc_Uninit(command::gitlab_proc& parent) {
+    command::gitlab_proc &row = parent; (void)row;
+
+    // command.gitlab_proc.gitlab.Uninit (Exec)  //
+    gitlab_Kill(parent); // kill child, ensure forward progress
+}
+
 // --- command.lib_ctype..ReadFieldMaybe
 bool command::lib_ctype_ReadFieldMaybe(command::lib_ctype &parent, algo::strptr field, algo::strptr strval) {
     command::FieldId field_id;
@@ -10548,6 +11183,28 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::bash_proc,timeout) == 84);
     algo_assert(_offset_of(command::bash_proc,status) == 88);
     algo_assert(sizeof(command::bash_proc) == 96);
+    algo_assert(_offset_of(command::gitlab,in) == 0);
+    algo_assert(_offset_of(command::gitlab,issue) == 16);
+    algo_assert(_offset_of(command::gitlab,server) == 112);
+    algo_assert(_offset_of(command::gitlab,project) == 128);
+    algo_assert(_offset_of(command::gitlab,auth_token) == 144);
+    algo_assert(_offset_of(command::gitlab,mrlist) == 160);
+    algo_assert(_offset_of(command::gitlab,mergereq) == 161);
+    algo_assert(_offset_of(command::gitlab,ilist) == 162);
+    algo_assert(_offset_of(command::gitlab,istart) == 163);
+    algo_assert(_offset_of(command::gitlab,t) == 164);
+    algo_assert(_offset_of(command::gitlab,iadd) == 165);
+    algo_assert(_offset_of(command::gitlab,ic) == 166);
+    algo_assert(_offset_of(command::gitlab,iclose) == 167);
+    algo_assert(_offset_of(command::gitlab,iassignto) == 168);
+    algo_assert(_offset_of(command::gitlab,title) == 224);
+    algo_assert(_offset_of(command::gitlab,description) == 240);
+    algo_assert(_offset_of(command::gitlab,comment) == 256);
+    algo_assert(_offset_of(command::gitlab,gitdir) == 272);
+    algo_assert(_offset_of(command::gitlab,assignee) == 288);
+    algo_assert(_offset_of(command::gitlab,ulist) == 384);
+    algo_assert(_offset_of(command::gitlab,mraccept) == 392);
+    algo_assert(sizeof(command::gitlab) == 408);
     algo_assert(_offset_of(command::lib_ctype,in) == 0);
     algo_assert(sizeof(command::lib_ctype) == 16);
     algo_assert(_offset_of(command::lib_exec,dry_run) == 0);

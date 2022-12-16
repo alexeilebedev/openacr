@@ -220,6 +220,7 @@ extern const char *  dmmeta_Ns_ns_bash2html;    // bash2html     fconst:dmmeta.N
 extern const char *  dmmeta_Ns_ns_command;      // command       fconst:dmmeta.Ns.ns/command
 extern const char *  dmmeta_Ns_ns_dev;          // dev           fconst:dmmeta.Ns.ns/dev
 extern const char *  dmmeta_Ns_ns_dmmeta;       // dmmeta        fconst:dmmeta.Ns.ns/dmmeta
+extern const char *  dmmeta_Ns_ns_gitlab;       // gitlab        fconst:dmmeta.Ns.ns/gitlab
 extern const char *  dmmeta_Ns_ns_ietf;         // ietf          fconst:dmmeta.Ns.ns/ietf
 extern const char *  dmmeta_Ns_ns_lib_ctype;    // lib_ctype     fconst:dmmeta.Ns.ns/lib_ctype
 extern const char *  dmmeta_Ns_ns_lib_exec;     // lib_exec      fconst:dmmeta.Ns.ns/lib_exec
@@ -388,6 +389,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dev_cfg;               // dev.cfg 
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_compiler;          // dev.compiler           fconst:dmmeta.Ssimfile.ssimfile/dev.compiler
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_gitfile;           // dev.gitfile            fconst:dmmeta.Ssimfile.ssimfile/dev.gitfile
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_gitinfo;           // dev.gitinfo            fconst:dmmeta.Ssimfile.ssimfile/dev.gitinfo
+extern const char *  dmmeta_Ssimfile_ssimfile_dev_gitlab_project;    // dev.gitlab_project     fconst:dmmeta.Ssimfile.ssimfile/dev.gitlab_project
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_htmlentity;        // dev.htmlentity         fconst:dmmeta.Ssimfile.ssimfile/dev.htmlentity
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_license;           // dev.license            fconst:dmmeta.Ssimfile.ssimfile/dev.license
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_linelim;           // dev.linelim            fconst:dmmeta.Ssimfile.ssimfile/dev.linelim
