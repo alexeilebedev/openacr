@@ -8,7 +8,7 @@
 
 
 #pragma once
-#include <mysql/mysql.h>
+#include <mariadb/mysql.h>
 //#pragma endinclude
 
 // --- lib_mysql_FieldIdEnum

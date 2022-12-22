@@ -57,7 +57,6 @@ static void Cppcheck(strptr uname, strptr compiler, strptr platform) {
 void atf_norm::normcheck_cppcheck() {
 #ifdef __linux__
     Cppcheck("Linux","g++","unix64");
-    Cppcheck("CYGWIN_NT","cl","win64");
 #else
     (void)Cppcheck;
 #endif

@@ -1071,10 +1071,10 @@ void atf_unit::unittest_algo_lib_ParseOct3() {
 #pragma warning (disable:4125) // decimal digit terminates octal escap sequence
 #endif
     res = 0;
-    vrfyeq_(1,algo::ParseOct3(*(const u32 *)("1\350"),4,res));
+    vrfyeq_(1,algo::ParseOct3(*(const u32 *)("1\35000"),4,res));
     vrfyeq_(1,res);
 
-    vrfyeq_(0,algo::ParseOct3(*(const u32 *)("\1350"),4,res));
+    vrfyeq_(0,algo::ParseOct3(*(const u32 *)("\135000"),4,res));
 #ifdef WIN32
 #pragma warning(pop)
 #endif
