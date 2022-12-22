@@ -331,7 +331,7 @@ void* acr_in::tuple_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.tuple_n = new_nelems;
+        _db.tuple_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -343,7 +343,7 @@ void acr_in::tuple_RemoveAll() {
     for (u64 n = _db.tuple_n; n>0; ) {
         n--;
         tuple_qFind(u64(n)).~FTuple(); // destroy last element
-        _db.tuple_n = n;
+        _db.tuple_n = i32(n);
     }
 }
 
@@ -354,7 +354,7 @@ void acr_in::tuple_RemoveLast() {
     if (n > 0) {
         n -= 1;
         tuple_qFind(u64(n)).~FTuple();
-        _db.tuple_n = n;
+        _db.tuple_n = i32(n);
     }
 }
 
@@ -412,6 +412,7 @@ acr_in::FTuple& acr_in::ind_tuple_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "acr_in.create_error  table:ind_tuple  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -515,7 +516,7 @@ void acr_in::MainLoop() {
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
-        algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+        acr_in::Steps();
     } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
 }
 
@@ -644,6 +645,12 @@ bool acr_in::LoadSsimfileMaybe(algo::strptr fname) {
     return retval;
 }
 
+// --- acr_in.FDb._db.Steps
+// Calls Step function of dependencies
+void acr_in::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
 // --- acr_in.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -707,7 +714,7 @@ void* acr_in::finput_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.finput_n = new_nelems;
+        _db.finput_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -720,14 +727,14 @@ void acr_in::finput_RemoveLast() {
     if (n > 0) {
         n -= 1;
         finput_qFind(u64(n)).~FFinput();
-        _db.finput_n = n;
+        _db.finput_n = i32(n);
     }
 }
 
 // --- acr_in.FDb.finput.InputMaybe
 static bool acr_in::finput_InputMaybe(dmmeta::Finput &elem) {
     bool retval = true;
-    retval = finput_InsertMaybe(elem);
+    retval = finput_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -822,7 +829,7 @@ void* acr_in::field_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.field_n = new_nelems;
+        _db.field_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -835,14 +842,14 @@ void acr_in::field_RemoveLast() {
     if (n > 0) {
         n -= 1;
         field_qFind(u64(n)).~FField();
-        _db.field_n = n;
+        _db.field_n = i32(n);
     }
 }
 
 // --- acr_in.FDb.field.InputMaybe
 static bool acr_in::field_InputMaybe(dmmeta::Field &elem) {
     bool retval = true;
-    retval = field_InsertMaybe(elem);
+    retval = field_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1046,7 +1053,7 @@ void* acr_in::ctype_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ctype_n = new_nelems;
+        _db.ctype_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1059,14 +1066,14 @@ void acr_in::ctype_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ctype_qFind(u64(n)).~FCtype();
-        _db.ctype_n = n;
+        _db.ctype_n = i32(n);
     }
 }
 
 // --- acr_in.FDb.ctype.InputMaybe
 static bool acr_in::ctype_InputMaybe(dmmeta::Ctype &elem) {
     bool retval = true;
-    retval = ctype_InsertMaybe(elem);
+    retval = ctype_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1124,6 +1131,7 @@ acr_in::FCtype& acr_in::ind_ctype_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "acr_in.create_error  table:ind_ctype  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -1264,7 +1272,7 @@ void* acr_in::ssimfile_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ssimfile_n = new_nelems;
+        _db.ssimfile_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1277,14 +1285,14 @@ void acr_in::ssimfile_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ssimfile_qFind(u64(n)).~FSsimfile();
-        _db.ssimfile_n = n;
+        _db.ssimfile_n = i32(n);
     }
 }
 
 // --- acr_in.FDb.ssimfile.InputMaybe
 static bool acr_in::ssimfile_InputMaybe(dmmeta::Ssimfile &elem) {
     bool retval = true;
-    retval = ssimfile_InsertMaybe(elem);
+    retval = ssimfile_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1370,7 +1378,7 @@ void* acr_in::ns_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ns_n = new_nelems;
+        _db.ns_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1383,14 +1391,14 @@ void acr_in::ns_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ns_qFind(u64(n)).~FNs();
-        _db.ns_n = n;
+        _db.ns_n = i32(n);
     }
 }
 
 // --- acr_in.FDb.ns.InputMaybe
 static bool acr_in::ns_InputMaybe(dmmeta::Ns &elem) {
     bool retval = true;
-    retval = ns_InsertMaybe(elem);
+    retval = ns_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1448,6 +1456,7 @@ acr_in::FNs& acr_in::ind_ns_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "acr_in.create_error  table:ind_ns  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -1732,7 +1741,7 @@ void* acr_in::substr_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.substr_n = new_nelems;
+        _db.substr_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1745,14 +1754,14 @@ void acr_in::substr_RemoveLast() {
     if (n > 0) {
         n -= 1;
         substr_qFind(u64(n)).~FSubstr();
-        _db.substr_n = n;
+        _db.substr_n = i32(n);
     }
 }
 
 // --- acr_in.FDb.substr.InputMaybe
 static bool acr_in::substr_InputMaybe(dmmeta::Substr &elem) {
     bool retval = true;
-    retval = substr_InsertMaybe(elem);
+    retval = substr_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1834,7 +1843,7 @@ void* acr_in::dispsig_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.dispsig_n = new_nelems;
+        _db.dispsig_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1847,14 +1856,14 @@ void acr_in::dispsig_RemoveLast() {
     if (n > 0) {
         n -= 1;
         dispsig_qFind(u64(n)).~FDispsig();
-        _db.dispsig_n = n;
+        _db.dispsig_n = i32(n);
     }
 }
 
 // --- acr_in.FDb.dispsig.InputMaybe
 static bool acr_in::dispsig_InputMaybe(dmmeta::Dispsig &elem) {
     bool retval = true;
-    retval = dispsig_InsertMaybe(elem);
+    retval = dispsig_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -2366,7 +2375,7 @@ void* acr_in::target_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.target_n = new_nelems;
+        _db.target_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2379,14 +2388,14 @@ void acr_in::target_RemoveLast() {
     if (n > 0) {
         n -= 1;
         target_qFind(u64(n)).~FTarget();
-        _db.target_n = n;
+        _db.target_n = i32(n);
     }
 }
 
 // --- acr_in.FDb.target.InputMaybe
 static bool acr_in::target_InputMaybe(dev::Target &elem) {
     bool retval = true;
-    retval = target_InsertMaybe(elem);
+    retval = target_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -2586,7 +2595,7 @@ void* acr_in::targdep_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.targdep_n = new_nelems;
+        _db.targdep_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2599,14 +2608,14 @@ void acr_in::targdep_RemoveLast() {
     if (n > 0) {
         n -= 1;
         targdep_qFind(u64(n)).~FTargdep();
-        _db.targdep_n = n;
+        _db.targdep_n = i32(n);
     }
 }
 
 // --- acr_in.FDb.targdep.InputMaybe
 static bool acr_in::targdep_InputMaybe(dev::Targdep &elem) {
     bool retval = true;
-    retval = targdep_InsertMaybe(elem);
+    retval = targdep_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -3726,6 +3735,10 @@ void acr_in::TableId_Print(acr_in::TableId & row, algo::cstring &str) {
     acr_in::value_Print(row, str);
 }
 
+// --- acr_in...SizeCheck
+inline static void acr_in::SizeCheck() {
+}
+
 // --- acr_in...main
 int main(int argc, char **argv) {
     try {
@@ -3756,6 +3769,9 @@ int main(int argc, char **argv) {
     return algo_lib::_db.exit_code;
 }
 
-// --- acr_in...SizeCheck
-inline static void acr_in::SizeCheck() {
+// --- acr_in...WinMain
+#if defined(WIN32)
+int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int) {
+    return main(__argc,__argv);
 }
+#endif

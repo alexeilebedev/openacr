@@ -502,6 +502,14 @@ namespace algo_lib { // update-hdr
     // if OWN_FD is cleared, clean up file descriptor before it is closed
     void file_Cleanup(algo_lib::InTextFile &file);
 
+    // Walk child process tree for parent process pid, in post-order traversal way,
+    // and send signal sig to each process. Kill_topmost is an option whether
+    // to send signal to parent process itself. Return value - number of processes
+    // to whose the signal has been actually sent.
+    // Does not throw exceptions, just prints error message if kill() fails.
+    // Linux only.
+    int KillRecurse(int pid, int sig, bool kill_topmost);
+
     // -------------------------------------------------------------------
     // cpp/lib/algo/line.cpp -- Line processing
     //
@@ -530,6 +538,10 @@ namespace algo_lib { // update-hdr
     // If WAIT_TIMEOUT is non-zero, block up to WAIT_TIMEOUT seconds before failing
     // Write pid to file specified in NAME, and lock file using flock().
     bool LockFileInit(algo_lib::FLockfile &lockfile, strptr name, algo::FailokQ fail_ok, algo::UnDiff wait_timeout);
+
+    // Write pid to lockfile, separate function to update pid after fork().
+    // Sets error text in case of error, and return false.
+    bool WritePid(algo_lib::FLockfile &lockfile);
 
     // Non-blocking attempt to lock LOCKFILE
     // Return success status

@@ -239,7 +239,8 @@ void amc::tfunc_Step_SetDelay() {
         Ins(&R, func.ret  , "void", false);
         Ins(&R, func.proto, "$name_SetDelay($Parent)", false);
         AddProtoArg(func, "algo::SchedTime", "delay");
-        Ins(&R, func.body, "i64 diff = delay.value - $ns::_db.$name_next.value;");
+        Ins(&R, func.body, "i64 diff = delay.value - $ns::_db.$name_delay.value;");
+        Ins(&R, func.body, "$ns::_db.$name_delay = delay;");
         Ins(&R, func.body, "if (diff > 0) {");
         Ins(&R, func.body, "    $ns::_db.$name_next.value += diff;");
         Ins(&R, func.body, "} else {");

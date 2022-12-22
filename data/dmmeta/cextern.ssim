@@ -18,6 +18,7 @@ dmmeta.cextern  ctype:algo.ImrowPrintFcn  initmemset:Y  isstruct:N
 dmmeta.cextern  ctype:algo.ImrowRowidFindFcn  initmemset:Y  isstruct:N
 dmmeta.cextern  ctype:algo.ImrowXrefXFcn  initmemset:Y  isstruct:N
 dmmeta.cextern  ctype:algo.PageBuf  initmemset:N  isstruct:N
+dmmeta.cextern  ctype:algo.PrlogFcn  initmemset:N  isstruct:N
 dmmeta.cextern  ctype:algo.TFNNtTestAlert  initmemset:N  isstruct:N
 dmmeta.cextern  ctype:algo.memptr  initmemset:N  isstruct:N
 dmmeta.cextern  ctype:algo.strptr  initmemset:N  isstruct:N

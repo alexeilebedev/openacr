@@ -1,0 +1,2 @@
+atfdb.comptest  comptest:acr_ed.CreateCtype  timeout:10  memcheck:Y  exit_code:0  comment:""
+atfdb.comptest  comptest:acr_ed.CreateSsimfileBadNs  timeout:10  memcheck:Y  exit_code:1  comment:""

@@ -178,6 +178,20 @@ void acr_my::ary_ns_AbsReserve(int n) {
     }
 }
 
+// --- acr_my.FDb.ary_ns.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> acr_my::ary_ns_AllocNVal(int n_elems, const algo::cstring& val) {
+    ary_ns_Reserve(n_elems);
+    int old_n  = _db.ary_ns_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = _db.ary_ns_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(val);
+    }
+    _db.ary_ns_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
 // --- acr_my.FDb._db.MainArgs
 // Main function
 void acr_my::MainArgs(int argc, char **argv) {
@@ -196,7 +210,7 @@ void acr_my::MainLoop() {
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
-        algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+        acr_my::Steps();
     } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
 }
 
@@ -281,6 +295,12 @@ bool acr_my::LoadSsimfileMaybe(algo::strptr fname) {
     return retval;
 }
 
+// --- acr_my.FDb._db.Steps
+// Calls Step function of dependencies
+void acr_my::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
 // --- acr_my.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -344,7 +364,7 @@ void* acr_my::nsdb_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.nsdb_n = new_nelems;
+        _db.nsdb_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -357,14 +377,14 @@ void acr_my::nsdb_RemoveLast() {
     if (n > 0) {
         n -= 1;
         nsdb_qFind(u64(n)).~FNsdb();
-        _db.nsdb_n = n;
+        _db.nsdb_n = i32(n);
     }
 }
 
 // --- acr_my.FDb.nsdb.InputMaybe
 static bool acr_my::nsdb_InputMaybe(dmmeta::Nsdb &elem) {
     bool retval = true;
-    retval = nsdb_InsertMaybe(elem);
+    retval = nsdb_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -432,7 +452,7 @@ void* acr_my::ssimfile_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ssimfile_n = new_nelems;
+        _db.ssimfile_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -445,14 +465,14 @@ void acr_my::ssimfile_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ssimfile_qFind(u64(n)).~FSsimfile();
-        _db.ssimfile_n = n;
+        _db.ssimfile_n = i32(n);
     }
 }
 
 // --- acr_my.FDb.ssimfile.InputMaybe
 static bool acr_my::ssimfile_InputMaybe(dmmeta::Ssimfile &elem) {
     bool retval = true;
-    retval = ssimfile_InsertMaybe(elem);
+    retval = ssimfile_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -742,6 +762,10 @@ void acr_my::TableId_Print(acr_my::TableId & row, algo::cstring &str) {
     acr_my::value_Print(row, str);
 }
 
+// --- acr_my...SizeCheck
+inline static void acr_my::SizeCheck() {
+}
+
 // --- acr_my...main
 int main(int argc, char **argv) {
     try {
@@ -772,6 +796,9 @@ int main(int argc, char **argv) {
     return algo_lib::_db.exit_code;
 }
 
-// --- acr_my...SizeCheck
-inline static void acr_my::SizeCheck() {
+// --- acr_my...WinMain
+#if defined(WIN32)
+int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int) {
+    return main(__argc,__argv);
 }
+#endif

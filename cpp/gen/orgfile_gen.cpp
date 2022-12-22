@@ -94,7 +94,7 @@ void orgfile::MainLoop() {
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
-        algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+        orgfile::Steps();
     } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
 }
 
@@ -171,6 +171,12 @@ bool orgfile::LoadSsimfileMaybe(algo::strptr fname) {
         retval = algo_lib::LoadTuplesFile(fname, orgfile::InsertStrptrMaybe, true);
     }
     return retval;
+}
+
+// --- orgfile.FDb._db.Steps
+// Calls Step function of dependencies
+void orgfile::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
 // --- orgfile.FDb._db.XrefMaybe
@@ -444,7 +450,7 @@ void* orgfile::filehash_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.filehash_n = new_nelems;
+        _db.filehash_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -456,7 +462,7 @@ void orgfile::filehash_RemoveAll() {
     for (u64 n = _db.filehash_n; n>0; ) {
         n--;
         filehash_qFind(u64(n)).~FFilehash(); // destroy last element
-        _db.filehash_n = n;
+        _db.filehash_n = i32(n);
     }
 }
 
@@ -467,7 +473,7 @@ void orgfile::filehash_RemoveLast() {
     if (n > 0) {
         n -= 1;
         filehash_qFind(u64(n)).~FFilehash();
-        _db.filehash_n = n;
+        _db.filehash_n = i32(n);
     }
 }
 
@@ -525,6 +531,7 @@ orgfile::FFilehash& orgfile::ind_filehash_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "orgfile.create_error  table:ind_filehash  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -665,7 +672,7 @@ void* orgfile::timefmt_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.timefmt_n = new_nelems;
+        _db.timefmt_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -677,7 +684,7 @@ void orgfile::timefmt_RemoveAll() {
     for (u64 n = _db.timefmt_n; n>0; ) {
         n--;
         timefmt_qFind(u64(n)).~FTimefmt(); // destroy last element
-        _db.timefmt_n = n;
+        _db.timefmt_n = i32(n);
     }
 }
 
@@ -688,14 +695,14 @@ void orgfile::timefmt_RemoveLast() {
     if (n > 0) {
         n -= 1;
         timefmt_qFind(u64(n)).~FTimefmt();
-        _db.timefmt_n = n;
+        _db.timefmt_n = i32(n);
     }
 }
 
 // --- orgfile.FDb.timefmt.InputMaybe
 static bool orgfile::timefmt_InputMaybe(dev::Timefmt &elem) {
     bool retval = true;
-    retval = timefmt_InsertMaybe(elem);
+    retval = timefmt_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1165,6 +1172,10 @@ void orgfile::move_Print(orgfile::move & row, algo::cstring &str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
+// --- orgfile...SizeCheck
+inline static void orgfile::SizeCheck() {
+}
+
 // --- orgfile...main
 int main(int argc, char **argv) {
     try {
@@ -1195,6 +1206,9 @@ int main(int argc, char **argv) {
     return algo_lib::_db.exit_code;
 }
 
-// --- orgfile...SizeCheck
-inline static void orgfile::SizeCheck() {
+// --- orgfile...WinMain
+#if defined(WIN32)
+int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int) {
+    return main(__argc,__argv);
 }
+#endif

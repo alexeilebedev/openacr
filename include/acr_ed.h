@@ -139,5 +139,5 @@ namespace acr_ed { // update-hdr
     void Main_CreateUnittest();
 
     // Create a new normalization check
-    void Main_CreateNormcheck();
+    void Main_CreateCitest();
 }

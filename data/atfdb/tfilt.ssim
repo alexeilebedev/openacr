@@ -1,0 +1,2 @@
+atfdb.tfilt  comptest:acr_ed.CreateCtype  filter:cat  comment:""
+atfdb.tfilt  comptest:acr_ed.CreateSsimfileBadNs  filter:cat  comment:""

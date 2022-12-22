@@ -91,14 +91,8 @@ bool algo_lib::LockFileInit(algo_lib::FLockfile &lockfile, strptr name, algo::Fa
         // set the mode for the case where the file already existed
         // and had a bad mode
         fchmod(lockfile.fildes.fd.value, 0666);
-        TruncateFile(lockfile.fildes.fd, 0); // truncate file -- only after successful lock
-        tempstr str = tempstr() << getpid();
-        // write pid to file
-        if (!WriteFile(lockfile.fildes.fd, (u8*)str.ch_elems, str.ch_n)) {
-            err << "algo_lib.write_lockfile"
-                <<Keyval("filename",lockfile.filename)
-                <<Keyval("comment",strerror(errno));
-        }
+        // write file -- only after successful lock
+        WritePid(lockfile);
     }
     if (err != "") {
         // if we opened a file and experienced an error, close it.
@@ -108,6 +102,23 @@ bool algo_lib::LockFileInit(algo_lib::FLockfile &lockfile, strptr name, algo::Fa
             lockfile.fildes.fd = algo::Fildes();
         }
         vrfy(fail_ok, err);
+    }
+    return err == "";
+}
+
+// -----------------------------------------------------------------------------
+
+// Write pid to lockfile, separate function to update pid after fork().
+// Sets error text in case of error, and return false.
+bool algo_lib::WritePid(algo_lib::FLockfile &lockfile) {
+    cstring &err = algo_lib::ResetErrtext();
+    TruncateFile(lockfile.fildes.fd, 0);
+    tempstr str = tempstr() << getpid();
+    // write pid to file
+    if (!WriteFile(lockfile.fildes.fd, (u8*)str.ch_elems, str.ch_n)) {
+        err << "algo_lib.write_lockfile"
+            <<Keyval("filename",lockfile.filename)
+            <<Keyval("comment",strerror(errno));
     }
     return err == "";
 }

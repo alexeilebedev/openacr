@@ -59,11 +59,11 @@ void acr_ed::Main_CreateUnittest() {
 // -----------------------------------------------------------------------------
 
 // Create a new normalization check
-void acr_ed::Main_CreateNormcheck() {
-    prlog("acr_ed.create_normcheck"
-          <<Keyval("normcheck",acr_ed::_db.cmdline.normcheck));
-    acr_ed::_db.out_ssim<<"atfdb.normcheck"
-                        <<Keyval("normcheck",acr_ed::_db.cmdline.normcheck)
+void acr_ed::Main_CreateCitest() {
+    prlog("acr_ed.create_citest"
+          <<Keyval("citest",acr_ed::_db.cmdline.citest));
+    acr_ed::_db.out_ssim<<"atfdb.citest"
+                        <<Keyval("citest",acr_ed::_db.cmdline.citest)
                         <<Keyval("comment",acr_ed::_db.cmdline.comment)
                         <<eol;
 }

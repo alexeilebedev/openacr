@@ -62,6 +62,8 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -108,8 +110,11 @@ bool                 FieldId_ReadStrptrMaybe(ntup::FieldId &parent, algo::strptr
 void                 FieldId_Init(ntup::FieldId& parent);
 // print string representation of ntup::FieldId to string LHS, no header -- cprint:ntup.FieldId.String
 void                 FieldId_Print(ntup::FieldId & row, algo::cstring &str) __attribute__((nothrow));
-int                  main(int argc, char **argv);
 } // end namespace ntup
+int                  main(int argc, char **argv);
+#if defined(WIN32)
+int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
+#endif
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const ntup::trace &row);// cfmt:ntup.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const ntup::FieldId &row);// cfmt:ntup.FieldId.String

@@ -57,6 +57,18 @@ inline bool ietf::Ipv4::operator !=(const ietf::Ipv4 &rhs) const {
 inline bool ietf::Ipv4::operator <(const ietf::Ipv4 &rhs) const {
     return ietf::Ipv4_Lt(const_cast<ietf::Ipv4&>(*this),const_cast<ietf::Ipv4&>(rhs));
 }
+
+inline bool ietf::Ipv4::operator >(const ietf::Ipv4 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool ietf::Ipv4::operator <=(const ietf::Ipv4 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool ietf::Ipv4::operator >=(const ietf::Ipv4 &rhs) const {
+    return !(*this < rhs);
+}
 inline ietf::Ipv4::Ipv4() {
     ietf::Ipv4_Init(*this);
 }
@@ -119,6 +131,18 @@ inline bool ietf::Ipport::operator !=(const ietf::Ipport &rhs) const {
 
 inline bool ietf::Ipport::operator <(const ietf::Ipport &rhs) const {
     return ietf::Ipport_Lt(const_cast<ietf::Ipport&>(*this),const_cast<ietf::Ipport&>(rhs));
+}
+
+inline bool ietf::Ipport::operator >(const ietf::Ipport &rhs) const {
+    return rhs < *this;
+}
+
+inline bool ietf::Ipport::operator <=(const ietf::Ipport &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool ietf::Ipport::operator >=(const ietf::Ipport &rhs) const {
+    return !(*this < rhs);
 }
 inline ietf::Ipport::Ipport() {
     ietf::Ipport_Init(*this);
@@ -189,6 +213,18 @@ inline bool ietf::Ipv4Addr::operator !=(const ietf::Ipv4Addr &rhs) const {
 
 inline bool ietf::Ipv4Addr::operator <(const ietf::Ipv4Addr &rhs) const {
     return ietf::Ipv4Addr_Lt(const_cast<ietf::Ipv4Addr&>(*this),const_cast<ietf::Ipv4Addr&>(rhs));
+}
+
+inline bool ietf::Ipv4Addr::operator >(const ietf::Ipv4Addr &rhs) const {
+    return rhs < *this;
+}
+
+inline bool ietf::Ipv4Addr::operator <=(const ietf::Ipv4Addr &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool ietf::Ipv4Addr::operator >=(const ietf::Ipv4Addr &rhs) const {
+    return !(*this < rhs);
 }
 inline ietf::Ipv4Addr::Ipv4Addr() {
     ietf::Ipv4Addr_Init(*this);

@@ -35,6 +35,7 @@ namespace algo_lib {
     static int           bh_timehook_Upheap(algo_lib::FTimehook& row, int idx) __attribute__((nothrow));
     static bool          bh_timehook_ElemLt(algo_lib::FTimehook &a, algo_lib::FTimehook &b) __attribute__((nothrow));
     static void          _db_bh_timehook_curs_Add(_db_bh_timehook_curs &curs, algo_lib::FTimehook& row);
+    static void          logcat_LoadStatic() __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
@@ -182,6 +183,20 @@ void algo_lib::ary_Setary(algo_lib::Bitset& parent, algo_lib::Bitset &rhs) {
     }
 }
 
+// --- algo_lib.Bitset.ary.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<u64> algo_lib::ary_AllocNVal(algo_lib::Bitset& parent, int n_elems, const u64& val) {
+    ary_Reserve(parent, n_elems);
+    int old_n  = parent.ary_n;
+    int new_n = old_n + n_elems;
+    u64 *elems = parent.ary_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) u64(val);
+    }
+    parent.ary_n = new_n;
+    return algo::aryptr<u64>(elems + old_n, n_elems);
+}
+
 // --- algo_lib.Bitset..Uninit
 void algo_lib::Bitset_Uninit(algo_lib::Bitset& parent) {
     algo_lib::Bitset &row = parent; (void)row;
@@ -317,6 +332,20 @@ void algo_lib::ary_tok_Setary(algo_lib::CsvParse& parsecsv, algo_lib::CsvParse &
     }
 }
 
+// --- algo_lib.CsvParse.ary_tok.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::strptr> algo_lib::ary_tok_AllocNVal(algo_lib::CsvParse& parsecsv, int n_elems, const algo::strptr& val) {
+    ary_tok_Reserve(parsecsv, n_elems);
+    int old_n  = parsecsv.ary_tok_n;
+    int new_n = old_n + n_elems;
+    algo::strptr *elems = parsecsv.ary_tok_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::strptr(val);
+    }
+    parsecsv.ary_tok_n = new_n;
+    return algo::aryptr<algo::strptr>(elems + old_n, n_elems);
+}
+
 // --- algo_lib.CsvParse..Uninit
 void algo_lib::CsvParse_Uninit(algo_lib::CsvParse& parsecsv) {
     algo_lib::CsvParse &row = parsecsv; (void)row;
@@ -389,6 +418,30 @@ void algo_lib::imdb_CopyIn(algo_lib::FImdb &row, algo::Imdb &in) {
 void algo_lib::FImdb_Uninit(algo_lib::FImdb& imdb) {
     algo_lib::FImdb &row = imdb; (void)row;
     ind_imdb_Remove(row); // remove imdb from index ind_imdb
+}
+
+// --- algo_lib.FLogcat.base.CopyOut
+// Copy fields out of row
+void algo_lib::logcat_CopyOut(algo_lib::FLogcat &row, dmmeta::Logcat &out) {
+    out.logcat = row.logcat;
+    out.enabled = row.enabled;
+    out.builtin = row.builtin;
+    out.comment = row.comment;
+}
+
+// --- algo_lib.FLogcat.base.CopyIn
+// Copy fields in to row
+void algo_lib::logcat_CopyIn(algo_lib::FLogcat &row, dmmeta::Logcat &in) {
+    row.logcat = in.logcat;
+    row.enabled = in.enabled;
+    row.builtin = in.builtin;
+    row.comment = in.comment;
+}
+
+// --- algo_lib.FLogcat..Uninit
+void algo_lib::FLogcat_Uninit(algo_lib::FLogcat& logcat) {
+    algo_lib::FLogcat &row = logcat; (void)row;
+    ind_logcat_Remove(row); // remove logcat from index ind_logcat
 }
 
 // --- algo_lib.trace..Init
@@ -701,6 +754,12 @@ bool algo_lib::LoadSsimfileMaybe(algo::strptr fname) {
     return retval;
 }
 
+// --- algo_lib.FDb._db.Steps
+// Calls Step function of dependencies
+void algo_lib::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
 // --- algo_lib.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -764,7 +823,7 @@ void* algo_lib::imtable_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.imtable_n = new_nelems;
+        _db.imtable_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -776,7 +835,7 @@ void algo_lib::imtable_RemoveAll() {
     for (u64 n = _db.imtable_n; n>0; ) {
         n--;
         imtable_qFind(u64(n)).~FImtable(); // destroy last element
-        _db.imtable_n = n;
+        _db.imtable_n = i32(n);
     }
 }
 
@@ -787,7 +846,7 @@ void algo_lib::imtable_RemoveLast() {
     if (n > 0) {
         n -= 1;
         imtable_qFind(u64(n)).~FImtable();
-        _db.imtable_n = n;
+        _db.imtable_n = i32(n);
     }
 }
 
@@ -837,6 +896,7 @@ algo_lib::FImtable& algo_lib::ind_imtable_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "algo_lib.create_error  table:ind_imtable  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -1316,7 +1376,7 @@ void* algo_lib::dispsigcheck_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.dispsigcheck_n = new_nelems;
+        _db.dispsigcheck_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1329,7 +1389,7 @@ void algo_lib::dispsigcheck_RemoveLast() {
     if (n > 0) {
         n -= 1;
         dispsigcheck_qFind(u64(n)).~FDispsigcheck();
-        _db.dispsigcheck_n = n;
+        _db.dispsigcheck_n = i32(n);
     }
 }
 
@@ -1379,6 +1439,7 @@ algo_lib::FDispsigcheck& algo_lib::ind_dispsigcheck_GetOrCreate(const algo::strp
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "algo_lib.create_error  table:ind_dispsigcheck  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -1557,6 +1618,7 @@ algo_lib::FImdb& algo_lib::ind_imdb_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "algo_lib.create_error  table:ind_imdb  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -2007,6 +2069,215 @@ void algo_lib::giveup_time_UpdateCycles() {
     algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
+// --- algo_lib.FDb.logcat.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+algo_lib::FLogcat& algo_lib::logcat_Alloc() {
+    algo_lib::FLogcat* row = logcat_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("algo_lib.out_of_mem  field:algo_lib.FDb.logcat  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- algo_lib.FDb.logcat.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+algo_lib::FLogcat* algo_lib::logcat_AllocMaybe() {
+    algo_lib::FLogcat *row = (algo_lib::FLogcat*)logcat_AllocMem();
+    if (row) {
+        new (row) algo_lib::FLogcat; // call constructor
+    }
+    return row;
+}
+
+// --- algo_lib.FDb.logcat.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+algo_lib::FLogcat* algo_lib::logcat_InsertMaybe(const dmmeta::Logcat &value) {
+    algo_lib::FLogcat *row = &logcat_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    logcat_CopyIn(*row,const_cast<dmmeta::Logcat&>(value));
+    bool ok = logcat_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        logcat_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- algo_lib.FDb.logcat.RemoveAll
+// Destroy all elements of Inlary
+void algo_lib::logcat_RemoveAll() {
+    for (u64 n = _db.logcat_n; n>0; ) {
+        n--;
+        reinterpret_cast<algo_lib::FLogcat*>(_db.logcat_data)[n].~FLogcat(); // destroy last element
+        _db.logcat_n=n;
+    }
+}
+
+// --- algo_lib.FDb.logcat.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void algo_lib::logcat_RemoveLast() {
+    u64 n = _db.logcat_n;
+    if (n > 0) {
+        n -= 1;
+        reinterpret_cast<algo_lib::FLogcat*>(_db.logcat_data)[n].~FLogcat();
+        _db.logcat_n = n;
+    }
+}
+
+// --- algo_lib.FDb.logcat.LoadStatic
+static void algo_lib::logcat_LoadStatic() {
+    static struct _t {
+        const char *s;
+    } data[] = {
+        { "dmmeta.logcat  logcat:expect  enabled:N  builtin:N  comment:\"lib_ams expect implementation\"" }
+        ,{ "dmmeta.logcat  logcat:stderr  enabled:Y  builtin:Y  comment:\"Standard error (cannot be disabled)\"" }
+        ,{ "dmmeta.logcat  logcat:stdout  enabled:Y  builtin:Y  comment:\"Standard output (cannot be disabled)\"" }
+        ,{NULL}
+    };
+    (void)data;
+    dmmeta::Logcat logcat;
+    for (int i=0; data[i].s; i++) {
+        (void)dmmeta::Logcat_ReadStrptrMaybe(logcat, algo::strptr(data[i].s));
+        algo_lib::FLogcat *elem = logcat_InsertMaybe(logcat);
+        vrfy(elem, tempstr("algo_lib.static_insert_fatal_error")
+        << Keyval("tuple",algo::strptr(data[i].s))
+        << Keyval("comment",algo_lib::DetachBadTags()));
+    }
+}
+
+// --- algo_lib.FDb.logcat.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool algo_lib::logcat_XrefMaybe(algo_lib::FLogcat &row) {
+    bool retval = true;
+    (void)row;
+    // insert logcat into index ind_logcat
+    if (true) { // user-defined insert condition
+        bool success = ind_logcat_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "algo_lib.duplicate_key  xref:algo_lib.FDb.ind_logcat"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- algo_lib.FDb.ind_logcat.Find
+// Find row by key. Return NULL if not found.
+algo_lib::FLogcat* algo_lib::ind_logcat_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_logcat_buckets_n - 1);
+    algo_lib::FLogcat* *e = &_db.ind_logcat_buckets_elems[index];
+    algo_lib::FLogcat* ret=NULL;
+    do {
+        ret       = *e;
+        bool done = !ret || (*ret).logcat == key;
+        if (done) break;
+        e         = &ret->ind_logcat_next;
+    } while (true);
+    return ret;
+}
+
+// --- algo_lib.FDb.ind_logcat.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+algo_lib::FLogcat& algo_lib::ind_logcat_GetOrCreate(const algo::strptr& key) {
+    algo_lib::FLogcat* ret = ind_logcat_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &logcat_Alloc();
+        (*ret).logcat = key;
+        bool good = logcat_XrefMaybe(*ret);
+        if (!good) {
+            logcat_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "algo_lib.create_error  table:ind_logcat  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- algo_lib.FDb.ind_logcat.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool algo_lib::ind_logcat_InsertMaybe(algo_lib::FLogcat& row) {
+    ind_logcat_Reserve(1);
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_logcat_next == (algo_lib::FLogcat*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr50_Hash(0, row.logcat) & (_db.ind_logcat_buckets_n - 1);
+        algo_lib::FLogcat* *prev = &_db.ind_logcat_buckets_elems[index];
+        do {
+            algo_lib::FLogcat* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).logcat == row.logcat) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_logcat_next;
+        } while (true);
+        if (retval) {
+            row.ind_logcat_next = *prev;
+            _db.ind_logcat_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- algo_lib.FDb.ind_logcat.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void algo_lib::ind_logcat_Remove(algo_lib::FLogcat& row) {
+    if (LIKELY(row.ind_logcat_next != (algo_lib::FLogcat*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr50_Hash(0, row.logcat) & (_db.ind_logcat_buckets_n - 1);
+        algo_lib::FLogcat* *prev = &_db.ind_logcat_buckets_elems[index]; // addr of pointer to current element
+        while (algo_lib::FLogcat *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_logcat_next; // unlink (singly linked list)
+                _db.ind_logcat_n--;
+                row.ind_logcat_next = (algo_lib::FLogcat*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_logcat_next;
+        }
+    }
+}
+
+// --- algo_lib.FDb.ind_logcat.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void algo_lib::ind_logcat_Reserve(int n) {
+    u32 old_nbuckets = _db.ind_logcat_buckets_n;
+    u32 new_nelems   = _db.ind_logcat_n + n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(algo_lib::FLogcat*);
+        u32 new_size = new_nbuckets * sizeof(algo_lib::FLogcat*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        algo_lib::FLogcat* *new_buckets = (algo_lib::FLogcat**)algo_lib::lpool_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("algo_lib.out_of_memory  field:algo_lib.FDb.ind_logcat");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_logcat_buckets_n; i++) {
+            algo_lib::FLogcat* elem = _db.ind_logcat_buckets_elems[i];
+            while (elem) {
+                algo_lib::FLogcat &row        = *elem;
+                algo_lib::FLogcat* next       = row.ind_logcat_next;
+                u32 index          = algo::Smallstr50_Hash(0, row.logcat) & (new_nbuckets-1);
+                row.ind_logcat_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::lpool_FreeMem(_db.ind_logcat_buckets_elems, old_size);
+        _db.ind_logcat_buckets_elems = new_buckets;
+        _db.ind_logcat_buckets_n = new_nbuckets;
+    }
+}
+
 // --- algo_lib.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr algo_lib::trace_RowidFind(int t) {
@@ -2113,6 +2384,7 @@ void algo_lib::FDb_Init() {
     _db.sbrk_huge_limit = 0;
     _db.sbrk_huge_alloc = 0;
     _db.sbrk_zeromem = false;
+    _db.lpool_lock = 0;
     memset(_db.lpool_free, 0, sizeof(_db.lpool_free));
     _db.limit = algo::SchedTime(0x7fffffffffffffff);
     _db.clocks_to_ms = double(0.0);
@@ -2198,6 +2470,7 @@ void algo_lib::FDb_Init() {
     _db.txtrow_blocksize = algo::BumpToPow2(64 * sizeof(algo_lib::FTxtrow)); // allocate 64-127 elements at a time
     _db.argc = i32(0);
     _db.argv = NULL;
+    _db.varlenbuf = NULL;
     // replvar: initialize Tpool
     _db.replvar_free      = NULL;
     _db.replvar_blocksize = algo::BumpToPow2(64 * sizeof(algo_lib::FReplvar)); // allocate 64-127 elements at a time
@@ -2209,15 +2482,37 @@ void algo_lib::FDb_Init() {
     _db.show_insert_err_lim = u32(0);
     (void)Charset_ReadStrptrMaybe(_db.Urlsafe, "0-9a-zA-Z_.~");
     _db.winjob = u64(0);
+    _db.Prlog = algo::PrlogFcn(algo::Prlog);
+    _db.logcat_n = 0; // logcat: initialize count
+    // initialize hash table for algo_lib::FLogcat;
+    _db.ind_logcat_n             	= 0; // (algo_lib.FDb.ind_logcat)
+    _db.ind_logcat_buckets_n     	= 4; // (algo_lib.FDb.ind_logcat)
+    _db.ind_logcat_buckets_elems 	= (algo_lib::FLogcat**)algo_lib::lpool_AllocMem(sizeof(algo_lib::FLogcat*)*_db.ind_logcat_buckets_n); // initial buckets (algo_lib.FDb.ind_logcat)
+    if (!_db.ind_logcat_buckets_elems) {
+        FatalErrorExit("out of memory"); // (algo_lib.FDb.ind_logcat)
+    }
+    memset(_db.ind_logcat_buckets_elems, 0, sizeof(algo_lib::FLogcat*)*_db.ind_logcat_buckets_n); // (algo_lib.FDb.ind_logcat)
+    _db.show_tstamp = bool(false);
+    _db.tstamp_fmt = algo::strptr("%Y/%m/%dT%H:%M:%S.%.6X ");
+    _db.fildes_stdout = algo::Fildes(1);
+    _db.fildes_stderr = algo::Fildes(2);
+    _db.pending_eol = bool(false);
 
     algo_lib::InitReflection();
     _db.h_fatalerror = NULL;
     _db.h_fatalerror_ctx = 0;
+    logcat_LoadStatic();
 }
 
 // --- algo_lib.FDb..Uninit
 void algo_lib::FDb_Uninit() {
     algo_lib::FDb &row = _db; (void)row;
+
+    // algo_lib.FDb.ind_logcat.Uninit (Thash)  //
+    // skip destruction of ind_logcat in global scope
+
+    // algo_lib.FDb.logcat.Uninit (Inlary)  //
+    // skip destruction in global scope
 
     // algo_lib.FDb.ind_imdb.Uninit (Thash)  //
     // skip destruction of ind_imdb in global scope
@@ -3333,6 +3628,20 @@ void algo_lib::ch_class_Setary(algo_lib::RegxState& state, algo_lib::RegxState &
     }
 }
 
+// --- algo_lib.RegxState.ch_class.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::i32_Range> algo_lib::ch_class_AllocNVal(algo_lib::RegxState& state, int n_elems, const algo::i32_Range& val) {
+    ch_class_Reserve(state, n_elems);
+    int old_n  = state.ch_class_n;
+    int new_n = old_n + n_elems;
+    algo::i32_Range *elems = state.ch_class_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::i32_Range(val);
+    }
+    state.ch_class_n = new_n;
+    return algo::aryptr<algo::i32_Range>(elems + old_n, n_elems);
+}
+
 // --- algo_lib.RegxState.ch_class.Swap
 // Swap values elem_a and elem_b
 inline static void algo_lib::ch_class_Swap(algo::i32_Range &elem_a, algo::i32_Range &elem_b) {
@@ -3840,6 +4149,20 @@ void algo_lib::width_Setary(algo_lib::Tabulate& tabulate, algo_lib::Tabulate &rh
         new (tabulate.width_elems + i) i32(width_qFind(rhs, i));
         tabulate.width_n = i + 1;
     }
+}
+
+// --- algo_lib.Tabulate.width.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<i32> algo_lib::width_AllocNVal(algo_lib::Tabulate& tabulate, int n_elems, const i32& val) {
+    width_Reserve(tabulate, n_elems);
+    int old_n  = tabulate.width_n;
+    int new_n = old_n + n_elems;
+    i32 *elems = tabulate.width_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) i32(val);
+    }
+    tabulate.width_n = new_n;
+    return algo::aryptr<i32>(elems + old_n, n_elems);
 }
 
 // --- algo_lib.Tabulate..Uninit

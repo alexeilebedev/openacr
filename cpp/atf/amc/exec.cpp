@@ -101,8 +101,21 @@ void atf_amc::amctest_ExecSh() {
         command::bash_proc bash;
         algo_lib::_db.cmdline.verbose++;
         bash.cmd.c = "ls";
+        bash.fstdout = ">/dev/null";
         vrfy_(FindStr(bash_ToCmdline(bash),"verbose")==-1);
         vrfy_(bash_Exec(bash)==0);
         algo_lib::_db.cmdline.verbose--;
     }
+}
+
+void atf_amc::amctest_ExecVerbose() {
+    command::amc_proc amc;
+    amc.fstdout = ">/dev/null";
+    amc.fstderr = ">/dev/null";
+    u8 save = algo_lib::_db.cmdline.verbose;
+    // this will exec with verbose off by 1 (254)
+    // if no sufficient room allocated in argv, this will cause stack corruption
+    algo_lib::_db.cmdline.verbose = 255;
+    amc_ExecX(amc);
+    algo_lib::_db.cmdline.verbose = save;
 }

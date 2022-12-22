@@ -11,6 +11,9 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/dmmeta_gen.inl.h"
 //#pragma endinclude
+static algo_lib::FLogcat &algo_lib_logcat_expect   = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[0];
+static algo_lib::FLogcat &algo_lib_logcat_stderr   = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[1];
+static algo_lib::FLogcat &algo_lib_logcat_stdout   = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[2];
 inline algo_lib::Bitset::Bitset() {
     algo_lib::Bitset_Init(*this);
 }
@@ -519,6 +522,22 @@ inline void algo_lib::FImdb_Init(algo_lib::FImdb& imdb) {
     memset(&imdb.GetTrace, 0, sizeof(imdb.GetTrace));
     imdb.ind_imdb_next = (algo_lib::FImdb*)-1; // (algo_lib.FDb.ind_imdb) not-in-hash
 }
+inline algo_lib::FLogcat::FLogcat() {
+    algo_lib::FLogcat_Init(*this);
+}
+
+inline algo_lib::FLogcat::~FLogcat() {
+    algo_lib::FLogcat_Uninit(*this);
+}
+
+
+// --- algo_lib.FLogcat..Init
+// Set all fields to initial values.
+inline void algo_lib::FLogcat_Init(algo_lib::FLogcat& logcat) {
+    logcat.enabled = bool(false);
+    logcat.builtin = bool(false);
+    logcat.ind_logcat_next = (algo_lib::FLogcat*)-1; // (algo_lib.FDb.ind_logcat) not-in-hash
+}
 inline algo_lib::trace::trace() {
     algo_lib::trace_Init(*this);
 }
@@ -983,6 +1002,74 @@ inline bool algo_lib::UrlsafeQ(u32 ch) {
     return ch_GetBit(_db.Urlsafe, ch);
 }
 
+// --- algo_lib.FDb.logcat.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+inline void* algo_lib::logcat_AllocMem() {
+    void *row = reinterpret_cast<algo_lib::FLogcat*>(_db.logcat_data) + _db.logcat_n;
+    if (_db.logcat_n == 3) row = NULL;
+    if (row) _db.logcat_n++;
+    return row;
+}
+
+// --- algo_lib.FDb.logcat.EmptyQ
+// Return true if index is empty
+inline bool algo_lib::logcat_EmptyQ() {
+    return _db.logcat_n == 0;
+}
+
+// --- algo_lib.FDb.logcat.Find
+// Look up row by row id. Return NULL if out of range
+inline algo_lib::FLogcat* algo_lib::logcat_Find(u64 t) {
+    u64 idx = t;
+    u64 lim = _db.logcat_n;
+    return idx < lim ? reinterpret_cast<algo_lib::FLogcat*>(_db.logcat_data) + idx : NULL; // unsigned comparison with limit
+}
+
+// --- algo_lib.FDb.logcat.Getary
+// Return array pointer by value
+inline algo::aryptr<algo_lib::FLogcat> algo_lib::logcat_Getary() {
+    return algo::aryptr<algo_lib::FLogcat>(reinterpret_cast<algo_lib::FLogcat*>(_db.logcat_data), _db.logcat_n);
+}
+
+// --- algo_lib.FDb.logcat.Max
+// Return constant 3 -- max. number of items in the pool
+inline i32 algo_lib::logcat_Max() {
+    return 3;
+}
+
+// --- algo_lib.FDb.logcat.N
+// Return number of items in the array
+inline i32 algo_lib::logcat_N() {
+    (void)_db;//only to avoid -Wunused-parameter
+    return _db.logcat_n;
+}
+
+// --- algo_lib.FDb.logcat.qFind
+// 'quick' Access row by row id. No bounds checking in release.
+inline algo_lib::FLogcat& algo_lib::logcat_qFind(u64 t) {
+    u64 idx = t;
+    return reinterpret_cast<algo_lib::FLogcat*>(_db.logcat_data)[idx];
+}
+
+// --- algo_lib.FDb.logcat.rowid_Get
+// Compute row id of element given element's address
+inline u64 algo_lib::logcat_rowid_Get(algo_lib::FLogcat &row) {
+    u64 ret = u64(&row - reinterpret_cast<algo_lib::FLogcat*>(_db.logcat_data));
+    return u64(ret);
+}
+
+// --- algo_lib.FDb.ind_logcat.EmptyQ
+// Return true if hash is empty
+inline bool algo_lib::ind_logcat_EmptyQ() {
+    return _db.ind_logcat_n == 0;
+}
+
+// --- algo_lib.FDb.ind_logcat.N
+// Return number of items in the hash
+inline i32 algo_lib::ind_logcat_N() {
+    return _db.ind_logcat_n;
+}
+
 // --- algo_lib.FDb.temp_strings_curs.Reset
 // cursor points to valid item
 inline void algo_lib::_db_temp_strings_curs_Reset(_db_temp_strings_curs &curs, algo_lib::FDb &parent) {
@@ -1093,6 +1180,31 @@ inline void algo_lib::_db_imdb_curs_Next(_db_imdb_curs &curs) {
 // item access
 inline algo_lib::FImdb& algo_lib::_db_imdb_curs_Access(_db_imdb_curs &curs) {
     return imdb_qFind(u64(curs.index));
+}
+
+// --- algo_lib.FDb.logcat_curs.Reset
+// cursor points to valid item
+inline void algo_lib::_db_logcat_curs_Reset(_db_logcat_curs &curs, algo_lib::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- algo_lib.FDb.logcat_curs.ValidQ
+// cursor points to valid item
+inline bool algo_lib::_db_logcat_curs_ValidQ(_db_logcat_curs &curs) {
+    return u64(curs.index) < u64(curs.parent->logcat_n);
+}
+
+// --- algo_lib.FDb.logcat_curs.Next
+// proceed to next item
+inline void algo_lib::_db_logcat_curs_Next(_db_logcat_curs &curs) {
+    curs.index++;
+}
+
+// --- algo_lib.FDb.logcat_curs.Access
+// item access
+inline algo_lib::FLogcat& algo_lib::_db_logcat_curs_Access(_db_logcat_curs &curs) {
+    return logcat_qFind(u64(curs.index));
 }
 inline algo_lib::FDispsigcheck::FDispsigcheck() {
     algo_lib::FDispsigcheck_Init(*this);
@@ -1980,21 +2092,6 @@ inline void algo_lib::ShHdr_Init(algo_lib::ShHdr& parent) {
     parent.sof = u64(0);
     parent.bufsize = u64(0);
     parent.pad = u64(0);
-}
-inline algo_lib::ShStream::ShStream() {
-    algo_lib::ShStream_Init(*this);
-}
-
-
-// --- algo_lib.ShStream..Init
-// Set all fields to initial values.
-inline void algo_lib::ShStream_Init(algo_lib::ShStream& parent) {
-    parent.readseq = u64(1);
-    parent.readpos = u64(0);
-    parent.readable = bool(false);
-    parent.writable = bool(false);
-    parent.n_overrun = u64(0);
-    parent.n_read = u64(0);
 }
 inline algo_lib::Srng::Srng() {
     algo_lib::Srng_Init(*this);

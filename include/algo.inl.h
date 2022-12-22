@@ -431,56 +431,6 @@ inline algo::UnDiff operator -    (const algo::UnDiff &a, algo::UnDiff d) {
     return algo::UnDiff(a.value - d.value);
 }
 
-
-inline bool operator > (const algo::UnixDiff &lhs, const algo::UnixDiff &rhs) {
-    return lhs.value >  rhs.value;
-}
-
-inline bool operator >=(const algo::UnixDiff &lhs, const algo::UnixDiff &rhs) {
-    return lhs.value >= rhs.value;
-}
-
-inline bool operator <=(const algo::UnixDiff &lhs, const algo::UnixDiff &rhs) {
-    return lhs.value <= rhs.value;
-}
-
-inline bool operator !=(const algo::UnixDiff &lhs, const algo::UnixDiff &rhs) {
-    return lhs.value != rhs.value;
-}
-
-
-inline bool operator > (const algo::UnDiff &lhs, const algo::UnDiff &rhs) {
-    return lhs.value >  rhs.value;
-}
-
-inline bool operator >=(const algo::UnDiff &lhs, const algo::UnDiff &rhs) {
-    return lhs.value >= rhs.value;
-}
-
-inline bool operator <=(const algo::UnDiff &lhs, const algo::UnDiff &rhs) {
-    return lhs.value <= rhs.value;
-}
-
-inline bool operator !=(const algo::UnDiff &lhs, const algo::UnDiff &rhs) {
-    return lhs.value != rhs.value;
-}
-
-inline bool operator > (const algo::WDiff &lhs, const algo::WDiff &rhs) {
-    return lhs.value >  rhs.value;
-}
-
-inline bool operator >=(const algo::WDiff &lhs, const algo::WDiff &rhs) {
-    return lhs.value >= rhs.value;
-}
-
-inline bool operator <=(const algo::WDiff &lhs, const algo::WDiff &rhs) {
-    return lhs.value <= rhs.value;
-}
-
-inline bool operator !=(const algo::WDiff &lhs, const algo::WDiff &rhs) {
-    return lhs.value != rhs.value;
-}
-
 inline algo::WTime operator+(const algo::WTime &t, const algo::WDiff &t2) {
     return algo::WTime(t.value + t2.value);
 }
@@ -499,14 +449,6 @@ inline algo::WDiff operator-(const algo::WTime &t, const algo::WTime &t2) {
 
 inline algo::WDiff operator-(const algo::WDiff &t, const algo::WDiff &t2) {
     return algo::WDiff(t.value - t2.value);
-}
-
-inline bool operator>(const algo::WTime &t, const algo::WTime &t2) {
-    return t.value > t2.value;
-}
-
-inline bool operator>=(const algo::WTime &t, const algo::WTime &t2) {
-    return t.value >= t2.value;
 }
 
 inline algo::SchedTime operator +  (const algo::SchedTime &a, algo::SchedTime d) {

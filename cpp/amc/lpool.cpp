@@ -52,6 +52,7 @@ void amc::tclass_Lpool() {
         InsVar(R, field.p_ctype, "i64", "$name_n", "", "Number of elements");
     }
     InsVar(R, field.p_ctype, "$name_Lpblock*", "$name_free[$nlevels]", "", "Lpool levels");
+    InsVar(R, field.p_ctype, "u32", "$name_lock", "", "Lpool lock");
 }
 
 // -----------------------------------------------------------------------------
@@ -173,6 +174,7 @@ void amc::tfunc_Lpool_Init() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
+    Ins(&R, func.body, "$parname.$name_lock = 0;");
     Ins(&R, func.body, "memset($parname.$name_free, 0, sizeof($parname.$name_free));");
     if (HaveCountQ(*amc::_db.genfield.p_field)) {
         Ins(&R, func.body, "$parname.$name_n = 0;");

@@ -88,7 +88,7 @@ Typically, `build/$cfg` is a soft link installed by whatever bootstrap script yo
 
 ### Bootstrap System
 
-The bootstrap files are prepared by `atf_norm bootstrap` by scanning the `builddir` table 
+The bootstrap files are prepared by `atf_ci bootstrap` by scanning the `builddir` table 
 and invoking `abt` with `-build:N -printcmd` options. There is one bootstrap file for each tested
 combination of uname, compiler and arch. Bootstrap files are prepared only for the release configuation.
 The bootstrap files live in `bin/bootstrap`:

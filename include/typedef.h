@@ -61,6 +61,10 @@ typedef void               *thread_ret_t;
 typedef u64 off64_t;
 #endif
 
+namespace algo_lib {
+    struct FLogcat;
+}
+
 namespace algo {
     struct cstring;
     struct tempstr;
@@ -70,12 +74,14 @@ namespace algo {
     struct StringDesc;
     struct ImrowPtr;
     struct Tuple;
+    struct SchedTime;
     typedef void (*TuplecmdFcn)(Tuple&);
     typedef void(*InitFcn)(void* str);
     typedef bool(*SetnumFcn)(void* str, i64 num);
     typedef i64(*Geti64Fcn)(void* str, bool &out_ok);
     typedef algo::aryptr<char>(*GetaryFcn)(void* str);
     typedef bool (*ImdbInsertStrptrMaybeFcn)(strptr str);
+    typedef void (*PrlogFcn)(algo_lib::FLogcat *logcat, algo::SchedTime tstamp, strptr str);
     typedef void (*ImdbStepFcn)();
     typedef void (*ImdbMainLoopFcn)();
     typedef void (*ImdbGetTraceFcn)(cstring &str);

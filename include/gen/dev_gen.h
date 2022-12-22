@@ -24,10 +24,6 @@ extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_coverage_amd64;   // 
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_debug_amd64;      // FreeBSD-clang++.debug-amd64       fconst:dev.Builddir.builddir/FreeBSD-clang++.debug-amd64
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_profile_amd64;    // FreeBSD-clang++.profile-amd64     fconst:dev.Builddir.builddir/FreeBSD-clang++.profile-amd64
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_release_amd64;    // FreeBSD-clang++.release-amd64     fconst:dev.Builddir.builddir/FreeBSD-clang++.release-amd64
-extern const char *  dev_Builddir_builddir_Linux_clangPP_coverage_x86_64;    // Linux-clang++.coverage-x86_64     fconst:dev.Builddir.builddir/Linux-clang++.coverage-x86_64
-extern const char *  dev_Builddir_builddir_Linux_clangPP_debug_x86_64;       // Linux-clang++.debug-x86_64        fconst:dev.Builddir.builddir/Linux-clang++.debug-x86_64
-extern const char *  dev_Builddir_builddir_Linux_clangPP_profile_x86_64;     // Linux-clang++.profile-x86_64      fconst:dev.Builddir.builddir/Linux-clang++.profile-x86_64
-extern const char *  dev_Builddir_builddir_Linux_clangPP_release_x86_64;     // Linux-clang++.release-x86_64      fconst:dev.Builddir.builddir/Linux-clang++.release-x86_64
 extern const char *  dev_Builddir_builddir_Linux_gPP_9_coverage_x86_64;      // Linux-g++-9.coverage-x86_64       fconst:dev.Builddir.builddir/Linux-g++-9.coverage-x86_64
 extern const char *  dev_Builddir_builddir_Linux_gPP_9_debug_x86_64;         // Linux-g++-9.debug-x86_64          fconst:dev.Builddir.builddir/Linux-g++-9.debug-x86_64
 extern const char *  dev_Builddir_builddir_Linux_gPP_9_profile_x86_64;       // Linux-g++-9.profile-x86_64        fconst:dev.Builddir.builddir/Linux-g++-9.profile-x86_64
@@ -46,6 +42,17 @@ extern const char *  dev_Compiler_compiler_cl;        // cl         fconst:dev.C
 extern const char *  dev_Compiler_compiler_clangPP;   // clang++    fconst:dev.Compiler.compiler/clang++
 extern const char *  dev_Compiler_compiler_gPP;       // g++        fconst:dev.Compiler.compiler/g++
 extern const char *  dev_Compiler_compiler_gPP_9;     // g++-9      fconst:dev.Compiler.compiler/g++-9
+
+// --- dev_Covline_flag_Enum
+
+enum dev_Covline_flag_Enum {          // dev.Covline.flag
+     dev_Covline_flag_N       = 'N'   // Non-executable
+    ,dev_Covline_flag_E       = 'E'   // Executable
+    ,dev_Covline_flag_P       = 'P'   // Executable, partially executed
+};
+
+enum { dev_Covline_flag_Enum_N = 3 };
+
 
 // --- dev_FieldIdEnum
 
@@ -68,113 +75,142 @@ enum dev_FieldIdEnum {                     // dev.FieldId.value
     ,dev_FieldId_pchext              = 15
     ,dev_FieldId_objext              = 16
     ,dev_FieldId_rc                  = 17
-    ,dev_FieldId_gitfile             = 18
-    ,dev_FieldId_ext                 = 19
-    ,dev_FieldId_gitinfo             = 20
-    ,dev_FieldId_author              = 21
-    ,dev_FieldId_compver             = 22
-    ,dev_FieldId_package             = 23
-    ,dev_FieldId_gitlab_project      = 24
-    ,dev_FieldId_url                 = 25
-    ,dev_FieldId_gitlab_project_id   = 26
-    ,dev_FieldId_htmlentity          = 27
-    ,dev_FieldId_code                = 28
-    ,dev_FieldId_include             = 29
-    ,dev_FieldId_srcfile             = 30
-    ,dev_FieldId_filename            = 31
-    ,dev_FieldId_sys                 = 32
-    ,dev_FieldId_license             = 33
-    ,dev_FieldId_nlongline           = 34
-    ,dev_FieldId_longestline         = 35
-    ,dev_FieldId_nbadws              = 36
-    ,dev_FieldId_maxws               = 37
-    ,dev_FieldId_nlongfunc           = 38
-    ,dev_FieldId_longestfunc         = 39
-    ,dev_FieldId_nmysteryfunc        = 40
-    ,dev_FieldId_badness             = 41
-    ,dev_FieldId_opt_type            = 42
-    ,dev_FieldId_sep                 = 43
-    ,dev_FieldId_inl                 = 44
-    ,dev_FieldId_sandbox             = 45
-    ,dev_FieldId_args                = 46
-    ,dev_FieldId_syscmd              = 47
-    ,dev_FieldId_execkey             = 48
-    ,dev_FieldId_command             = 49
-    ,dev_FieldId_pid                 = 50
-    ,dev_FieldId_status              = 51
-    ,dev_FieldId_nprereq             = 52
-    ,dev_FieldId_fail_prereq         = 53
-    ,dev_FieldId_completed           = 54
-    ,dev_FieldId_maxtime             = 55
-    ,dev_FieldId_syscmddep           = 56
-    ,dev_FieldId_child               = 57
-    ,dev_FieldId_parent              = 58
-    ,dev_FieldId_syslib              = 59
-    ,dev_FieldId_targdep             = 60
-    ,dev_FieldId_target              = 61
-    ,dev_FieldId_compat              = 62
-    ,dev_FieldId_targsrc             = 63
-    ,dev_FieldId_src                 = 64
-    ,dev_FieldId_targsyslib          = 65
-    ,dev_FieldId_timefmt             = 66
-    ,dev_FieldId_dirname             = 67
-    ,dev_FieldId_tool_opt            = 68
-    ,dev_FieldId_opt                 = 69
-    ,dev_FieldId_sortfld             = 70
-    ,dev_FieldId_value               = 71
+    ,dev_FieldId_covfile             = 18
+    ,dev_FieldId_total               = 19
+    ,dev_FieldId_nonexe              = 20
+    ,dev_FieldId_exe                 = 21
+    ,dev_FieldId_exer                = 22
+    ,dev_FieldId_hit                 = 23
+    ,dev_FieldId_cov                 = 24
+    ,dev_FieldId_covline             = 25
+    ,dev_FieldId_src                 = 26
+    ,dev_FieldId_line                = 27
+    ,dev_FieldId_flag                = 28
+    ,dev_FieldId_text                = 29
+    ,dev_FieldId_covtarget           = 30
+    ,dev_FieldId_gitfile             = 31
+    ,dev_FieldId_ext                 = 32
+    ,dev_FieldId_gitinfo             = 33
+    ,dev_FieldId_author              = 34
+    ,dev_FieldId_compver             = 35
+    ,dev_FieldId_package             = 36
+    ,dev_FieldId_gitlab_project      = 37
+    ,dev_FieldId_url                 = 38
+    ,dev_FieldId_gitlab_project_id   = 39
+    ,dev_FieldId_hilite              = 40
+    ,dev_FieldId_color               = 41
+    ,dev_FieldId_htmlentity          = 42
+    ,dev_FieldId_code                = 43
+    ,dev_FieldId_include             = 44
+    ,dev_FieldId_srcfile             = 45
+    ,dev_FieldId_filename            = 46
+    ,dev_FieldId_sys                 = 47
+    ,dev_FieldId_license             = 48
+    ,dev_FieldId_nlongline           = 49
+    ,dev_FieldId_longestline         = 50
+    ,dev_FieldId_nbadws              = 51
+    ,dev_FieldId_maxws               = 52
+    ,dev_FieldId_nlongfunc           = 53
+    ,dev_FieldId_longestfunc         = 54
+    ,dev_FieldId_nmysteryfunc        = 55
+    ,dev_FieldId_badness             = 56
+    ,dev_FieldId_strict              = 57
+    ,dev_FieldId_opt_type            = 58
+    ,dev_FieldId_sep                 = 59
+    ,dev_FieldId_inl                 = 60
+    ,dev_FieldId_sandbox             = 61
+    ,dev_FieldId_args                = 62
+    ,dev_FieldId_syscmd              = 63
+    ,dev_FieldId_execkey             = 64
+    ,dev_FieldId_command             = 65
+    ,dev_FieldId_pid                 = 66
+    ,dev_FieldId_status              = 67
+    ,dev_FieldId_nprereq             = 68
+    ,dev_FieldId_fail_prereq         = 69
+    ,dev_FieldId_completed           = 70
+    ,dev_FieldId_maxtime             = 71
+    ,dev_FieldId_syscmddep           = 72
+    ,dev_FieldId_child               = 73
+    ,dev_FieldId_parent              = 74
+    ,dev_FieldId_syslib              = 75
+    ,dev_FieldId_targdep             = 76
+    ,dev_FieldId_target              = 77
+    ,dev_FieldId_compat              = 78
+    ,dev_FieldId_targsrc             = 79
+    ,dev_FieldId_targsyslib          = 80
+    ,dev_FieldId_cov_min             = 81
+    ,dev_FieldId_maxerr              = 82
+    ,dev_FieldId_timefmt             = 83
+    ,dev_FieldId_dirname             = 84
+    ,dev_FieldId_tool_opt            = 85
+    ,dev_FieldId_opt                 = 86
+    ,dev_FieldId_sortfld             = 87
+    ,dev_FieldId_field               = 88
+    ,dev_FieldId_value               = 89
 };
 
-enum { dev_FieldIdEnum_N = 72 };
+enum { dev_FieldIdEnum_N = 90 };
 
-extern const char *  dev_Target_target_;             //               fconst:dev.Target.target/
-extern const char *  dev_Target_target_abt;          // abt           fconst:dev.Target.target/abt
-extern const char *  dev_Target_target_acr;          // acr           fconst:dev.Target.target/acr
-extern const char *  dev_Target_target_acr_compl;    // acr_compl     fconst:dev.Target.target/acr_compl
-extern const char *  dev_Target_target_acr_ed;       // acr_ed        fconst:dev.Target.target/acr_ed
-extern const char *  dev_Target_target_acr_in;       // acr_in        fconst:dev.Target.target/acr_in
-extern const char *  dev_Target_target_acr_my;       // acr_my        fconst:dev.Target.target/acr_my
-extern const char *  dev_Target_target_algo_lib;     // algo_lib      fconst:dev.Target.target/algo_lib
-extern const char *  dev_Target_target_algo_pch;     // algo_pch      fconst:dev.Target.target/algo_pch
-extern const char *  dev_Target_target_amc;          // amc           fconst:dev.Target.target/amc
-extern const char *  dev_Target_target_amc_gc;       // amc_gc        fconst:dev.Target.target/amc_gc
-extern const char *  dev_Target_target_amc_vis;      // amc_vis       fconst:dev.Target.target/amc_vis
-extern const char *  dev_Target_target_atf_amc;      // atf_amc       fconst:dev.Target.target/atf_amc
-extern const char *  dev_Target_target_atf_norm;     // atf_norm      fconst:dev.Target.target/atf_norm
-extern const char *  dev_Target_target_atf_nrun;     // atf_nrun      fconst:dev.Target.target/atf_nrun
-extern const char *  dev_Target_target_atf_unit;     // atf_unit      fconst:dev.Target.target/atf_unit
-extern const char *  dev_Target_target_bash2html;    // bash2html     fconst:dev.Target.target/bash2html
-extern const char *  dev_Target_target_gitlab;       // gitlab        fconst:dev.Target.target/gitlab
-extern const char *  dev_Target_target_lib_ctype;    // lib_ctype     fconst:dev.Target.target/lib_ctype
-extern const char *  dev_Target_target_lib_exec;     // lib_exec      fconst:dev.Target.target/lib_exec
-extern const char *  dev_Target_target_lib_git;      // lib_git       fconst:dev.Target.target/lib_git
-extern const char *  dev_Target_target_lib_iconv;    // lib_iconv     fconst:dev.Target.target/lib_iconv
-extern const char *  dev_Target_target_lib_json;     // lib_json      fconst:dev.Target.target/lib_json
-extern const char *  dev_Target_target_lib_mysql;    // lib_mysql     fconst:dev.Target.target/lib_mysql
-extern const char *  dev_Target_target_lib_prot;     // lib_prot      fconst:dev.Target.target/lib_prot
-extern const char *  dev_Target_target_lib_sql;      // lib_sql       fconst:dev.Target.target/lib_sql
-extern const char *  dev_Target_target_mdbg;         // mdbg          fconst:dev.Target.target/mdbg
-extern const char *  dev_Target_target_mysql2ssim;   // mysql2ssim    fconst:dev.Target.target/mysql2ssim
-extern const char *  dev_Target_target_ntup;         // ntup          fconst:dev.Target.target/ntup
-extern const char *  dev_Target_target_orgfile;      // orgfile       fconst:dev.Target.target/orgfile
-extern const char *  dev_Target_target_src_func;     // src_func      fconst:dev.Target.target/src_func
-extern const char *  dev_Target_target_src_hdr;      // src_hdr       fconst:dev.Target.target/src_hdr
-extern const char *  dev_Target_target_src_lim;      // src_lim       fconst:dev.Target.target/src_lim
-extern const char *  dev_Target_target_ssim2csv;     // ssim2csv      fconst:dev.Target.target/ssim2csv
-extern const char *  dev_Target_target_ssim2mysql;   // ssim2mysql    fconst:dev.Target.target/ssim2mysql
-extern const char *  dev_Target_target_strconv;      // strconv       fconst:dev.Target.target/strconv
+extern const char *  dev_Target_target_;               //                 fconst:dev.Target.target/
+extern const char *  dev_Target_target_abt;            // abt             fconst:dev.Target.target/abt
+extern const char *  dev_Target_target_acr;            // acr             fconst:dev.Target.target/acr
+extern const char *  dev_Target_target_acr_compl;      // acr_compl       fconst:dev.Target.target/acr_compl
+extern const char *  dev_Target_target_acr_ed;         // acr_ed          fconst:dev.Target.target/acr_ed
+extern const char *  dev_Target_target_acr_in;         // acr_in          fconst:dev.Target.target/acr_in
+extern const char *  dev_Target_target_acr_my;         // acr_my          fconst:dev.Target.target/acr_my
+extern const char *  dev_Target_target_algo_lib;       // algo_lib        fconst:dev.Target.target/algo_lib
+extern const char *  dev_Target_target_algo_pch;       // algo_pch        fconst:dev.Target.target/algo_pch
+extern const char *  dev_Target_target_amc;            // amc             fconst:dev.Target.target/amc
+extern const char *  dev_Target_target_amc_gc;         // amc_gc          fconst:dev.Target.target/amc_gc
+extern const char *  dev_Target_target_amc_vis;        // amc_vis         fconst:dev.Target.target/amc_vis
+extern const char *  dev_Target_target_ams_cat;        // ams_cat         fconst:dev.Target.target/ams_cat
+extern const char *  dev_Target_target_ams_sendtest;   // ams_sendtest    fconst:dev.Target.target/ams_sendtest
+extern const char *  dev_Target_target_atf_amc;        // atf_amc         fconst:dev.Target.target/atf_amc
+extern const char *  dev_Target_target_atf_ci;         // atf_ci          fconst:dev.Target.target/atf_ci
+extern const char *  dev_Target_target_atf_comp;       // atf_comp        fconst:dev.Target.target/atf_comp
+extern const char *  dev_Target_target_atf_cov;        // atf_cov         fconst:dev.Target.target/atf_cov
+extern const char *  dev_Target_target_atf_nrun;       // atf_nrun        fconst:dev.Target.target/atf_nrun
+extern const char *  dev_Target_target_atf_unit;       // atf_unit        fconst:dev.Target.target/atf_unit
+extern const char *  dev_Target_target_bash2html;      // bash2html       fconst:dev.Target.target/bash2html
+extern const char *  dev_Target_target_gitlab;         // gitlab          fconst:dev.Target.target/gitlab
+extern const char *  dev_Target_target_lib_ams;        // lib_ams         fconst:dev.Target.target/lib_ams
+extern const char *  dev_Target_target_lib_ctype;      // lib_ctype       fconst:dev.Target.target/lib_ctype
+extern const char *  dev_Target_target_lib_exec;       // lib_exec        fconst:dev.Target.target/lib_exec
+extern const char *  dev_Target_target_lib_fm;         // lib_fm          fconst:dev.Target.target/lib_fm
+extern const char *  dev_Target_target_lib_git;        // lib_git         fconst:dev.Target.target/lib_git
+extern const char *  dev_Target_target_lib_iconv;      // lib_iconv       fconst:dev.Target.target/lib_iconv
+extern const char *  dev_Target_target_lib_json;       // lib_json        fconst:dev.Target.target/lib_json
+extern const char *  dev_Target_target_lib_mysql;      // lib_mysql       fconst:dev.Target.target/lib_mysql
+extern const char *  dev_Target_target_lib_prot;       // lib_prot        fconst:dev.Target.target/lib_prot
+extern const char *  dev_Target_target_lib_sql;        // lib_sql         fconst:dev.Target.target/lib_sql
+extern const char *  dev_Target_target_mdbg;           // mdbg            fconst:dev.Target.target/mdbg
+extern const char *  dev_Target_target_mysql2ssim;     // mysql2ssim      fconst:dev.Target.target/mysql2ssim
+extern const char *  dev_Target_target_ntup;           // ntup            fconst:dev.Target.target/ntup
+extern const char *  dev_Target_target_orgfile;        // orgfile         fconst:dev.Target.target/orgfile
+extern const char *  dev_Target_target_src_func;       // src_func        fconst:dev.Target.target/src_func
+extern const char *  dev_Target_target_src_hdr;        // src_hdr         fconst:dev.Target.target/src_hdr
+extern const char *  dev_Target_target_src_lim;        // src_lim         fconst:dev.Target.target/src_lim
+extern const char *  dev_Target_target_ssim2csv;       // ssim2csv        fconst:dev.Target.target/ssim2csv
+extern const char *  dev_Target_target_ssim2mysql;     // ssim2mysql      fconst:dev.Target.target/ssim2mysql
+extern const char *  dev_Target_target_strconv;        // strconv         fconst:dev.Target.target/strconv
 namespace dev { struct Arch; }
 namespace dev { struct Badline; }
 namespace dev { struct Builddir; }
 namespace dev { struct Cfg; }
 namespace dev { struct Compiler; }
+namespace dev { struct Covfile; }
+namespace dev { struct Covline; }
+namespace dev { struct Covtarget; }
 namespace dev { struct FieldId; }
 namespace dev { struct Gitfile; }
 namespace dev { struct Gitinfo; }
 namespace dev { struct GitlabProject; }
+namespace dev { struct Hilite; }
 namespace dev { struct Htmlentity; }
 namespace dev { struct Include; }
 namespace dev { struct License; }
 namespace dev { struct Linelim; }
+namespace dev { struct Msgfile; }
 namespace dev { struct Noindent; }
 namespace dev { struct OptType; }
 namespace dev { struct Readme; }
@@ -188,18 +224,22 @@ namespace dev { struct Targdep; }
 namespace dev { struct Target; }
 namespace dev { struct Targsrc; }
 namespace dev { struct Targsyslib; }
+namespace dev { struct Tgtcov; }
 namespace dev { struct Timefmt; }
 namespace dev { struct ToolOpt; }
 namespace dev { struct Uname; }
+namespace dev { struct Unstablefld; }
 namespace dev {
     typedef algo::Smallstr50 ArchPkey;
     typedef algo::Smallstr50 BadlinePkey;
     typedef algo::Smallstr50 BuilddirPkey;
     typedef algo::Smallstr50 CfgPkey;
     typedef algo::Smallstr50 CompilerPkey;
+    typedef algo::Smallstr200 CovlinePkey;
     typedef algo::Smallstr200 GitfilePkey;
     typedef algo::Smallstr40 GitinfoPkey;
     typedef algo::Smallstr50 GitlabProjectPkey;
+    typedef algo::Smallstr50 HilitePkey;
     typedef algo::Smallstr50 HtmlentityPkey;
     typedef algo::Smallstr200 IncludePkey;
     typedef algo::Smallstr50 LicensePkey;
@@ -328,6 +368,93 @@ bool                 Compiler_ReadStrptrMaybe(dev::Compiler &parent, algo::strpt
 // print string representation of dev::Compiler to string LHS, no header -- cprint:dev.Compiler.String
 void                 Compiler_Print(dev::Compiler & row, algo::cstring &str) __attribute__((nothrow));
 
+// --- dev.Covfile
+struct Covfile { // dev.Covfile
+    algo::Smallstr200   covfile;   // Source file
+    u32                 total;     //   0  Total lines
+    u32                 nonexe;    //   0  Non-executable lines
+    u32                 exe;       //   0  Executable lines
+    algo::U32Dec2       exer;      // Percentage of executable lines
+    u32                 hit;       //   0  Exercised lines
+    algo::U32Dec2       cov;       // Line coverage
+    Covfile();
+};
+
+bool                 Covfile_ReadFieldMaybe(dev::Covfile &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Covfile from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 Covfile_ReadStrptrMaybe(dev::Covfile &parent, algo::strptr in_str);
+// Set all fields to initial values.
+void                 Covfile_Init(dev::Covfile& parent);
+// print string representation of dev::Covfile to string LHS, no header -- cprint:dev.Covfile.String
+void                 Covfile_Print(dev::Covfile & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- dev.Covline
+struct Covline { // dev.Covline
+    algo::Smallstr200   covline;   // file:line
+    char                flag;      //   'N'  Flag
+    u32                 hit;       //   0  Number of hits
+    algo::cstring       text;      // Line text
+    Covline();
+};
+
+algo::Smallstr200    src_Get(dev::Covline& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::Smallstr200    Covline_src_Get(algo::strptr arg) __attribute__((nothrow));
+
+u32                  line_Get(dev::Covline& parent) __attribute__((__warn_unused_result__, nothrow));
+u32                  Covline_line_Get(algo::strptr arg) __attribute__((nothrow));
+
+// Get value of field as enum type
+dev_Covline_flag_Enum flag_GetEnum(const dev::Covline& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+void                 flag_SetEnum(dev::Covline& parent, dev_Covline_flag_Enum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char*          flag_ToCstr(const dev::Covline& parent) __attribute__((nothrow));
+// Convert flag to a string. First, attempt conversion to a known string.
+// If no string matches, print flag as a numeric value.
+void                 flag_Print(const dev::Covline& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool                 flag_SetStrptrMaybe(dev::Covline& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void                 flag_SetStrptr(dev::Covline& parent, algo::strptr rhs, dev_Covline_flag_Enum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+bool                 flag_ReadStrptrMaybe(dev::Covline& parent, algo::strptr rhs) __attribute__((nothrow));
+
+tempstr              Covline_Concat_src_line( const algo::strptr& src ,u32 line );
+bool                 Covline_ReadFieldMaybe(dev::Covline &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Covline from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 Covline_ReadStrptrMaybe(dev::Covline &parent, algo::strptr in_str);
+// Set all fields to initial values.
+void                 Covline_Init(dev::Covline& parent);
+// print string representation of dev::Covline to string LHS, no header -- cprint:dev.Covline.String
+void                 Covline_Print(dev::Covline & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- dev.Covtarget
+struct Covtarget { // dev.Covtarget
+    algo::Smallstr16   covtarget;   // Target
+    u32                total;       //   0  Total lines
+    u32                nonexe;      //   0  Non-executable lines
+    u32                exe;         //   0  Executable lines
+    algo::U32Dec2      exer;        // Percentage of executable lines
+    u32                hit;         //   0  Exercised lines
+    algo::U32Dec2      cov;         // Line coverage
+    Covtarget();
+};
+
+bool                 Covtarget_ReadFieldMaybe(dev::Covtarget &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Covtarget from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 Covtarget_ReadStrptrMaybe(dev::Covtarget &parent, algo::strptr in_str);
+// Set all fields to initial values.
+void                 Covtarget_Init(dev::Covtarget& parent);
+// print string representation of dev::Covtarget to string LHS, no header -- cprint:dev.Covtarget.String
+void                 Covtarget_Print(dev::Covtarget & row, algo::cstring &str) __attribute__((nothrow));
+
 // --- dev.FieldId
 #pragma pack(push,1)
 struct FieldId { // dev.FieldId: Field read helper
@@ -426,6 +553,21 @@ void                 GitlabProject_Init(dev::GitlabProject& parent);
 // print string representation of dev::GitlabProject to string LHS, no header -- cprint:dev.GitlabProject.String
 void                 GitlabProject_Print(dev::GitlabProject & row, algo::cstring &str) __attribute__((nothrow));
 
+// --- dev.Hilite
+struct Hilite { // dev.Hilite
+    algo::Smallstr50   hilite;    //
+    algo::Smallstr50   color;     //
+    algo::Comment      comment;   //
+    Hilite();
+};
+
+bool                 Hilite_ReadFieldMaybe(dev::Hilite &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Hilite from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 Hilite_ReadStrptrMaybe(dev::Hilite &parent, algo::strptr in_str);
+// print string representation of dev::Hilite to string LHS, no header -- cprint:dev.Hilite.String
+void                 Hilite_Print(dev::Hilite & row, algo::cstring &str) __attribute__((nothrow));
+
 // --- dev.Htmlentity
 struct Htmlentity { // dev.Htmlentity
     algo::Smallstr50   htmlentity;   //
@@ -503,6 +645,23 @@ bool                 Linelim_ReadStrptrMaybe(dev::Linelim &parent, algo::strptr 
 void                 Linelim_Init(dev::Linelim& parent);
 // print string representation of dev::Linelim to string LHS, no header -- cprint:dev.Linelim.String
 void                 Linelim_Print(dev::Linelim & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- dev.Msgfile
+struct Msgfile { // dev.Msgfile
+    algo::Smallstr200   gitfile;   // Name of file containing messages
+    bool                strict;    //   false  Delete unrecognizable lines (except comments)
+    algo::Comment       comment;   //
+    Msgfile();
+};
+
+bool                 Msgfile_ReadFieldMaybe(dev::Msgfile &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Msgfile from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 Msgfile_ReadStrptrMaybe(dev::Msgfile &parent, algo::strptr in_str);
+// Set all fields to initial values.
+void                 Msgfile_Init(dev::Msgfile& parent);
+// print string representation of dev::Msgfile to string LHS, no header -- cprint:dev.Msgfile.String
+void                 Msgfile_Print(dev::Msgfile & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dev.Noindent
 struct Noindent { // dev.Noindent
@@ -766,6 +925,22 @@ bool                 Targsyslib_ReadStrptrMaybe(dev::Targsyslib &parent, algo::s
 // print string representation of dev::Targsyslib to string LHS, no header -- cprint:dev.Targsyslib.String
 void                 Targsyslib_Print(dev::Targsyslib & row, algo::cstring &str) __attribute__((nothrow));
 
+// --- dev.Tgtcov
+struct Tgtcov { // dev.Tgtcov
+    algo::Smallstr16   target;    // Target
+    algo::U32Dec2      cov_min;   // Minimal coverage limit
+    algo::U32Dec2      maxerr;    // Tolerable error
+    algo::Comment      comment;   //
+    Tgtcov();
+};
+
+bool                 Tgtcov_ReadFieldMaybe(dev::Tgtcov &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Tgtcov from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 Tgtcov_ReadStrptrMaybe(dev::Tgtcov &parent, algo::strptr in_str);
+// print string representation of dev::Tgtcov to string LHS, no header -- cprint:dev.Tgtcov.String
+void                 Tgtcov_Print(dev::Tgtcov & row, algo::cstring &str) __attribute__((nothrow));
+
 // --- dev.Timefmt
 struct Timefmt { // dev.Timefmt: Time formats supported by orgfile
     algo::Smallstr100   timefmt;   //
@@ -840,16 +1015,35 @@ bool                 Uname_ReadFieldMaybe(dev::Uname &parent, algo::strptr field
 bool                 Uname_ReadStrptrMaybe(dev::Uname &parent, algo::strptr in_str);
 // print string representation of dev::Uname to string LHS, no header -- cprint:dev.Uname.String
 void                 Uname_Print(dev::Uname & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- dev.Unstablefld
+struct Unstablefld { // dev.Unstablefld
+    algo::Smallstr100   field;     //
+    algo::Comment       comment;   //
+    Unstablefld();
+};
+
+bool                 Unstablefld_ReadFieldMaybe(dev::Unstablefld &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Unstablefld from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 Unstablefld_ReadStrptrMaybe(dev::Unstablefld &parent, algo::strptr in_str);
+// print string representation of dev::Unstablefld to string LHS, no header -- cprint:dev.Unstablefld.String
+void                 Unstablefld_Print(dev::Unstablefld & row, algo::cstring &str) __attribute__((nothrow));
 } // end namespace dev
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Badline &row);// cfmt:dev.Badline.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Covfile &row);// cfmt:dev.Covfile.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Covline &row);// cfmt:dev.Covline.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Covtarget &row);// cfmt:dev.Covtarget.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::FieldId &row);// cfmt:dev.FieldId.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Gitfile &row);// cfmt:dev.Gitfile.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::GitlabProject &row);// cfmt:dev.GitlabProject.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Hilite &row);// cfmt:dev.Hilite.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Htmlentity &row);// cfmt:dev.Htmlentity.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Include &row);// cfmt:dev.Include.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::License &row);// cfmt:dev.License.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Linelim &row);// cfmt:dev.Linelim.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Msgfile &row);// cfmt:dev.Msgfile.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Noindent &row);// cfmt:dev.Noindent.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Readme &row);// cfmt:dev.Readme.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Sandbox &row);// cfmt:dev.Sandbox.String
@@ -862,7 +1056,9 @@ inline algo::cstring &operator <<(algo::cstring &str, const dev::Targdep &row);/
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Target &row);// cfmt:dev.Target.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Targsrc &row);// cfmt:dev.Targsrc.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Targsyslib &row);// cfmt:dev.Targsyslib.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Tgtcov &row);// cfmt:dev.Tgtcov.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Timefmt &row);// cfmt:dev.Timefmt.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::ToolOpt &row);// cfmt:dev.ToolOpt.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Uname &row);// cfmt:dev.Uname.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Unstablefld &row);// cfmt:dev.Unstablefld.String
 }

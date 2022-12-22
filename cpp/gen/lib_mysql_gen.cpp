@@ -89,6 +89,11 @@ bool lib_mysql::LoadSsimfileMaybe(algo::strptr fname) {
     return retval;
 }
 
+// --- lib_mysql.FDb._db.Steps
+// Calls Step function of dependencies
+void lib_mysql::Steps() {
+}
+
 // --- lib_mysql.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.

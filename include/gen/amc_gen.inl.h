@@ -137,6 +137,18 @@ inline bool amc::Enumstr::operator !=(const amc::Enumstr &rhs) const {
 inline bool amc::Enumstr::operator <(const amc::Enumstr &rhs) const {
     return amc::Enumstr_Lt(const_cast<amc::Enumstr&>(*this),const_cast<amc::Enumstr&>(rhs));
 }
+
+inline bool amc::Enumstr::operator >(const amc::Enumstr &rhs) const {
+    return rhs < *this;
+}
+
+inline bool amc::Enumstr::operator <=(const amc::Enumstr &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool amc::Enumstr::operator >=(const amc::Enumstr &rhs) const {
+    return !(*this < rhs);
+}
 inline amc::Enumstr::Enumstr() {
     amc::Enumstr_Init(*this);
 }
@@ -12171,6 +12183,8 @@ inline amc::FGsymbol::~FGsymbol() {
 // --- amc.FGsymbol..Init
 // Set all fields to initial values.
 inline void amc::FGsymbol_Init(amc::FGsymbol& gsymbol) {
+    gsymbol.p_ssimfile = NULL;
+    gsymbol.p_symboltype = NULL;
     gsymbol.ns_c_gsymbol_in_ary = bool(false);
 }
 inline amc::FHook::FHook() {

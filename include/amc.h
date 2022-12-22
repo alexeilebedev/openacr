@@ -699,6 +699,7 @@ namespace amc { // update-hdr
     // void gen_ns_operators();
     // void gen_ns_check_lim();
     // void gen_proc();
+    // void gen_check_varlen();
 
     // -------------------------------------------------------------------
     // cpp/amc/global.cpp
@@ -713,8 +714,10 @@ namespace amc { // update-hdr
     // void tfunc_Global_InitReflection();
     // void tfunc_Global_LoadSsimfileMaybe();
     // void tfunc_Global_main();
+    // void tfunc_Global_WinMain();
     // void tfunc_Global_MainArgs();
     // void tfunc_Global_MainLoop();
+    // void tfunc_Global_Steps();
     // void tfunc_Global_Step();
     // void tfunc_Global_Main();
     // void tfunc_Global_StaticCheck();
@@ -1108,6 +1111,7 @@ namespace amc { // update-hdr
     // void tfunc_Numstr_Geti64();
     // void tfunc_Numstr_SetnumMaybe();
     // void tfunc_Numstr_ForAllStrings();
+    // void gen_parsenum();
 
     // -------------------------------------------------------------------
     // cpp/amc/opt.cpp
@@ -1392,6 +1396,7 @@ namespace amc { // update-hdr
     // void tfunc_Tary_Alloc();
     // void tfunc_Tary_AllocAt();
     // void tfunc_Tary_AllocN();
+    // void tfunc_Tary_AllocNVal();
     // void tfunc_Tary_EmptyQ();
     // void tfunc_Tary_Find();
     // void tfunc_Tary_Getary();

@@ -1,0 +1,2 @@
+atfdb.targs  comptest:acr_ed.CreateCtype  args:"-create -ctype ams.ChildTypeMsg -subset ams.MsgHeader -msgtype:400 -reftype:Base"
+atfdb.targs  comptest:acr_ed.CreateSsimfileBadNs  args:"--create -ssimfile ams.test -subset algo.Smallstr10"

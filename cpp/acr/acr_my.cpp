@@ -96,16 +96,20 @@ static void Main_UploadNs(acr_my::FNsdb &nsdb) {
     tempstr cmd;
     cmd << "cat ";
     int nfile = 0;
-    ind_beg(acr_my::_db_ssimfile_curs, ssimfile, acr_my::_db) if (ns_Get(ssimfile) == nsdb.ns) {
-        tempstr fname(SsimFname(acr_my::_db.cmdline.in, ssimfile.ssimfile));
-        // avoid 'file not found' error -- ssimfiles are not supposed
-        // to always exist.
-        if (FileQ(fname)) {
-            cmd << " " << fname;
-            nfile++;
-        }
-    }ind_end;
-
+    if (algo::FileQ(acr_my::_db.cmdline.in)) {
+        cmd << acr_my::_db.cmdline.in;
+        nfile++;
+    } else {
+        ind_beg(acr_my::_db_ssimfile_curs, ssimfile, acr_my::_db) if (ns_Get(ssimfile) == nsdb.ns) {
+            tempstr fname(SsimFname(acr_my::_db.cmdline.in, ssimfile.ssimfile));
+            // avoid 'file not found' error -- ssimfiles are not supposed
+            // to always exist.
+            if (FileQ(fname)) {
+                cmd << " " << fname;
+                nfile++;
+            }
+        }ind_end;
+    }
     // cat will hang if it is not passed a list of filenames!
     if (nfile > 0) {
         cmd << " | " << ssim2mysql_ToCmdline(ssim2mysql);
@@ -123,6 +127,7 @@ static void Main_Upload() {
 
 static void Main_DownloadNs(acr_my::FNsdb &nsdb) {
     command::mysql2ssim mysql2ssim;
+    mysql2ssim.in = acr_my::_db.cmdline.in;
     mysql2ssim.url << Subst(acr_my::_db.R, "sock:///$data_dir/mysql.sock/") << nsdb.ns;
     mysql2ssim.baddbok = true; // missing database is OK, keep calm and carry on
     // write directly to ssimfile (but not if fldfunc)
@@ -131,7 +136,13 @@ static void Main_DownloadNs(acr_my::FNsdb &nsdb) {
     tempstr cmd;
     cmd << mysql2ssim_ToCmdline(mysql2ssim);
     if (acr_my::_db.cmdline.fldfunc) {
-        cmd << " | acr -replace -write -print:N -report:N";
+        command::acr acr;
+        acr.replace=true;
+        acr.write=true;
+        acr.report=false;
+        acr.print=false;
+        acr.in = acr_my::_db.cmdline.in;
+        cmd << " | " << command::acr_ToCmdline(acr);
     }
     SysCmd(cmd, FailokQ(false));
 }

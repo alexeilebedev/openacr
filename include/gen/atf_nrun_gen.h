@@ -79,6 +79,8 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -124,8 +126,6 @@ bool                 ind_running_InsertMaybe(atf_nrun::FEntry& row) __attribute_
 void                 ind_running_Remove(atf_nrun::FEntry& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 void                 ind_running_Reserve(int n) __attribute__((nothrow));
-// First element of index changed.
-void                 ind_running_FirstChanged() __attribute__((nothrow));
 void                 ind_running_Step() __attribute__((nothrow));
 // Set inter-step delay to specified value.
 // The difference between new delay and current delay is added to the next scheduled time.
@@ -291,8 +291,11 @@ struct _db_zd_todo_curs {// cursor
     }
 };
 
-int                  main(int argc, char **argv);
 } // end namespace atf_nrun
+int                  main(int argc, char **argv);
+#if defined(WIN32)
+int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
+#endif
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const atf_nrun::trace &row);// cfmt:atf_nrun.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_nrun::FieldId &row);// cfmt:atf_nrun.FieldId.String

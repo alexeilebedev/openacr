@@ -242,6 +242,13 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_lib_Mmap();
     // void unittest_algo_lib_FileQ();
     // void unittest_algo_lib_ExitCode();
+    // void unittest_algo_lib_KillRecurse();
+
+    // -------------------------------------------------------------------
+    // cpp/atf/unit/ams.cpp
+    //
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void unittest_ams_StreamId();
 
     // -------------------------------------------------------------------
     // cpp/atf/unit/bash.cpp
@@ -254,6 +261,19 @@ namespace atf_unit { // update-hdr
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_algo_lib_Charset();
+
+    // -------------------------------------------------------------------
+    // cpp/atf/unit/fm.cpp
+    //
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void unittest_fm();
+
+    // -------------------------------------------------------------------
+    // cpp/atf/unit/lib_ams.cpp
+    //
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void unittest_lib_ams_Test1();
+    // void unittest_ams_sendtest();
 
     // -------------------------------------------------------------------
     // cpp/atf/unit/lib_exec.cpp
@@ -396,6 +416,7 @@ namespace atf_unit { // update-hdr
     // -------------------------------------------------------------------
     // cpp/atf/unit/main.cpp
     //
+    void AdjustDebugPath(algo::cstring &path);
 
     // Compare contents of file `outfname` with the reference file.
     // Any difference = error
@@ -412,8 +433,6 @@ namespace atf_unit { // update-hdr
     void PrintPerfSample(const strptr& action, u64 nloops, u64 clocks);
     void Testcmp(const char *file, int line, strptr value, strptr expect, bool eq);
     void Testcmp(const char *file, int line, const char *value, const char *expect, bool eq);
-    //     (user-implemented function, prototype is in amc-generated header)
-    // void unittest_atf_unit_Outfile();
     void Main();
 
     // -------------------------------------------------------------------

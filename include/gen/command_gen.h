@@ -73,148 +73,188 @@ enum command_FieldIdEnum {                    // command.FieldId.value
     ,command_FieldId_line              = 56
     ,command_FieldId_point             = 57
     ,command_FieldId_type              = 58
-    ,command_FieldId_create            = 59
-    ,command_FieldId_finput            = 60
-    ,command_FieldId_foutput           = 61
-    ,command_FieldId_srcfile           = 62
-    ,command_FieldId_gstatic           = 63
-    ,command_FieldId_indexed           = 64
-    ,command_FieldId_nstype            = 65
-    ,command_FieldId_ctype             = 66
-    ,command_FieldId_pooltype          = 67
-    ,command_FieldId_ssimfile          = 68
-    ,command_FieldId_subset            = 69
-    ,command_FieldId_subset2           = 70
-    ,command_FieldId_separator         = 71
-    ,command_FieldId_arg               = 72
-    ,command_FieldId_dflt              = 73
-    ,command_FieldId_anon              = 74
-    ,command_FieldId_bigend            = 75
-    ,command_FieldId_cascdel           = 76
-    ,command_FieldId_before            = 77
-    ,command_FieldId_substr            = 78
-    ,command_FieldId_srcfield          = 79
-    ,command_FieldId_fstep             = 80
-    ,command_FieldId_inscond           = 81
-    ,command_FieldId_reftype           = 82
-    ,command_FieldId_hashfld           = 83
-    ,command_FieldId_sortfld           = 84
-    ,command_FieldId_unittest          = 85
-    ,command_FieldId_normcheck         = 86
-    ,command_FieldId_cppfunc           = 87
-    ,command_FieldId_via               = 88
-    ,command_FieldId_comment           = 89
-    ,command_FieldId_sandbox           = 90
-    ,command_FieldId_test              = 91
-    ,command_FieldId_showcpp           = 92
-    ,command_FieldId_ns                = 93
-    ,command_FieldId_data              = 94
-    ,command_FieldId_sigcheck          = 95
-    ,command_FieldId_data_dir          = 96
-    ,command_FieldId_related           = 97
-    ,command_FieldId_notssimfile       = 98
-    ,command_FieldId_checkable         = 99
-    ,command_FieldId_nsdb              = 100
-    ,command_FieldId_fkey              = 101
-    ,command_FieldId_start             = 102
-    ,command_FieldId_stop              = 103
-    ,command_FieldId_abort             = 104
-    ,command_FieldId_shell             = 105
-    ,command_FieldId_serv              = 106
-    ,command_FieldId_in_dir            = 107
-    ,command_FieldId_proto             = 108
-    ,command_FieldId_trace             = 109
-    ,command_FieldId_fconst            = 110
-    ,command_FieldId_gconst            = 111
-    ,command_FieldId_key               = 112
-    ,command_FieldId_include           = 113
-    ,command_FieldId_dot               = 114
-    ,command_FieldId_xns               = 115
-    ,command_FieldId_noinput           = 116
-    ,command_FieldId_render            = 117
-    ,command_FieldId_amctest           = 118
-    ,command_FieldId_dofork            = 119
-    ,command_FieldId_q                 = 120
-    ,command_FieldId_ncmd              = 121
-    ,command_FieldId_nofork            = 122
-    ,command_FieldId_debug             = 123
-    ,command_FieldId_perf_secs         = 124
-    ,command_FieldId_pertest_timeout   = 125
-    ,command_FieldId_capture           = 126
-    ,command_FieldId_issue             = 127
-    ,command_FieldId_server            = 128
-    ,command_FieldId_project           = 129
-    ,command_FieldId_auth_token        = 130
-    ,command_FieldId_mrlist            = 131
-    ,command_FieldId_mergereq          = 132
-    ,command_FieldId_ilist             = 133
-    ,command_FieldId_istart            = 134
-    ,command_FieldId_iadd              = 135
-    ,command_FieldId_ic                = 136
-    ,command_FieldId_iclose            = 137
-    ,command_FieldId_iassignto         = 138
-    ,command_FieldId_title             = 139
-    ,command_FieldId_description       = 140
-    ,command_FieldId_gitdir            = 141
-    ,command_FieldId_assignee          = 142
-    ,command_FieldId_ulist             = 143
-    ,command_FieldId_mraccept          = 144
-    ,command_FieldId_complooo          = 145
-    ,command_FieldId_args              = 146
-    ,command_FieldId_manywin           = 147
-    ,command_FieldId_root              = 148
-    ,command_FieldId_attach            = 149
-    ,command_FieldId_catchthrow        = 150
-    ,command_FieldId_tui               = 151
-    ,command_FieldId_bcmd              = 152
-    ,command_FieldId_emacs             = 153
-    ,command_FieldId_follow_child      = 154
-    ,command_FieldId_py                = 155
-    ,command_FieldId_writessimfile     = 156
-    ,command_FieldId_url               = 157
-    ,command_FieldId_tables            = 158
-    ,command_FieldId_nologo            = 159
-    ,command_FieldId_baddbok           = 160
-    ,command_FieldId_typetag           = 161
-    ,command_FieldId_move              = 162
-    ,command_FieldId_dedup             = 163
-    ,command_FieldId_commit            = 164
-    ,command_FieldId_undo              = 165
-    ,command_FieldId_hash              = 166
-    ,command_FieldId_targsrc           = 167
-    ,command_FieldId_name              = 168
-    ,command_FieldId_body              = 169
-    ,command_FieldId_func              = 170
-    ,command_FieldId_nextfile          = 171
-    ,command_FieldId_other             = 172
-    ,command_FieldId_updateproto       = 173
-    ,command_FieldId_listfunc          = 174
-    ,command_FieldId_iffy              = 175
-    ,command_FieldId_gen               = 176
-    ,command_FieldId_showloc           = 177
-    ,command_FieldId_showstatic        = 178
-    ,command_FieldId_showsortkey       = 179
-    ,command_FieldId_sortname          = 180
-    ,command_FieldId_baddecl           = 181
-    ,command_FieldId_update_authors    = 182
-    ,command_FieldId_indent            = 183
-    ,command_FieldId_linelim           = 184
-    ,command_FieldId_strayfile         = 185
-    ,command_FieldId_badchar           = 186
-    ,command_FieldId_badline           = 187
-    ,command_FieldId_expand            = 188
-    ,command_FieldId_ignoreQuote       = 189
-    ,command_FieldId_maxpacket         = 190
-    ,command_FieldId_db                = 191
-    ,command_FieldId_createdb          = 192
-    ,command_FieldId_str               = 193
-    ,command_FieldId_tocamelcase       = 194
-    ,command_FieldId_tolowerunder      = 195
-    ,command_FieldId_pathcomp          = 196
-    ,command_FieldId_value             = 197
+    ,command_FieldId_debug_log         = 59
+    ,command_FieldId_create            = 60
+    ,command_FieldId_finput            = 61
+    ,command_FieldId_foutput           = 62
+    ,command_FieldId_srcfile           = 63
+    ,command_FieldId_gstatic           = 64
+    ,command_FieldId_indexed           = 65
+    ,command_FieldId_nstype            = 66
+    ,command_FieldId_ctype             = 67
+    ,command_FieldId_pooltype          = 68
+    ,command_FieldId_ssimfile          = 69
+    ,command_FieldId_subset            = 70
+    ,command_FieldId_subset2           = 71
+    ,command_FieldId_separator         = 72
+    ,command_FieldId_arg               = 73
+    ,command_FieldId_dflt              = 74
+    ,command_FieldId_anon              = 75
+    ,command_FieldId_bigend            = 76
+    ,command_FieldId_cascdel           = 77
+    ,command_FieldId_before            = 78
+    ,command_FieldId_substr            = 79
+    ,command_FieldId_srcfield          = 80
+    ,command_FieldId_fstep             = 81
+    ,command_FieldId_inscond           = 82
+    ,command_FieldId_reftype           = 83
+    ,command_FieldId_hashfld           = 84
+    ,command_FieldId_sortfld           = 85
+    ,command_FieldId_unittest          = 86
+    ,command_FieldId_citest            = 87
+    ,command_FieldId_cppfunc           = 88
+    ,command_FieldId_via               = 89
+    ,command_FieldId_comment           = 90
+    ,command_FieldId_sandbox           = 91
+    ,command_FieldId_test              = 92
+    ,command_FieldId_showcpp           = 93
+    ,command_FieldId_msgtype           = 94
+    ,command_FieldId_ns                = 95
+    ,command_FieldId_data              = 96
+    ,command_FieldId_sigcheck          = 97
+    ,command_FieldId_data_dir          = 98
+    ,command_FieldId_related           = 99
+    ,command_FieldId_notssimfile       = 100
+    ,command_FieldId_checkable         = 101
+    ,command_FieldId_nsdb              = 102
+    ,command_FieldId_fkey              = 103
+    ,command_FieldId_start             = 104
+    ,command_FieldId_stop              = 105
+    ,command_FieldId_abort             = 106
+    ,command_FieldId_shell             = 107
+    ,command_FieldId_serv              = 108
+    ,command_FieldId_in_dir            = 109
+    ,command_FieldId_proto             = 110
+    ,command_FieldId_trace             = 111
+    ,command_FieldId_fconst            = 112
+    ,command_FieldId_gconst            = 113
+    ,command_FieldId_key               = 114
+    ,command_FieldId_include           = 115
+    ,command_FieldId_dot               = 116
+    ,command_FieldId_xns               = 117
+    ,command_FieldId_noinput           = 118
+    ,command_FieldId_render            = 119
+    ,command_FieldId_id                = 120
+    ,command_FieldId_file_prefix       = 121
+    ,command_FieldId_nchild            = 122
+    ,command_FieldId_blocking          = 123
+    ,command_FieldId_nmsg              = 124
+    ,command_FieldId_timeout           = 125
+    ,command_FieldId_recvdelay_ns      = 126
+    ,command_FieldId_senddelay_ns      = 127
+    ,command_FieldId_msgsize_min       = 128
+    ,command_FieldId_msgsize_max       = 129
+    ,command_FieldId_bufsize           = 130
+    ,command_FieldId_recvdelay         = 131
+    ,command_FieldId_amctest           = 132
+    ,command_FieldId_dofork            = 133
+    ,command_FieldId_q                 = 134
+    ,command_FieldId_cijob             = 135
+    ,command_FieldId_capture           = 136
+    ,command_FieldId_skipenv           = 137
+    ,command_FieldId_comptest          = 138
+    ,command_FieldId_mdbg              = 139
+    ,command_FieldId_run               = 140
+    ,command_FieldId_normalize         = 141
+    ,command_FieldId_covcapture        = 142
+    ,command_FieldId_covcheck          = 143
+    ,command_FieldId_compdir           = 144
+    ,command_FieldId_check_untracked   = 145
+    ,command_FieldId_memcheck          = 146
+    ,command_FieldId_callgrind         = 147
+    ,command_FieldId_stream            = 148
+    ,command_FieldId_i                 = 149
+    ,command_FieldId_covdir            = 150
+    ,command_FieldId_logfile           = 151
+    ,command_FieldId_runcmd            = 152
+    ,command_FieldId_exclude           = 153
+    ,command_FieldId_mergepath         = 154
+    ,command_FieldId_gcov              = 155
+    ,command_FieldId_ssim              = 156
+    ,command_FieldId_xmlpretty         = 157
+    ,command_FieldId_summary           = 158
+    ,command_FieldId_ncmd              = 159
+    ,command_FieldId_nofork            = 160
+    ,command_FieldId_debug             = 161
+    ,command_FieldId_perf_secs         = 162
+    ,command_FieldId_pertest_timeout   = 163
+    ,command_FieldId_issue             = 164
+    ,command_FieldId_server            = 165
+    ,command_FieldId_project           = 166
+    ,command_FieldId_auth_token        = 167
+    ,command_FieldId_mrlist            = 168
+    ,command_FieldId_mergereq          = 169
+    ,command_FieldId_ilist             = 170
+    ,command_FieldId_istart            = 171
+    ,command_FieldId_iadd              = 172
+    ,command_FieldId_ic                = 173
+    ,command_FieldId_iclose            = 174
+    ,command_FieldId_iassignto         = 175
+    ,command_FieldId_title             = 176
+    ,command_FieldId_description       = 177
+    ,command_FieldId_gitdir            = 178
+    ,command_FieldId_assignee          = 179
+    ,command_FieldId_ulist             = 180
+    ,command_FieldId_mraccept          = 181
+    ,command_FieldId_mslist            = 182
+    ,command_FieldId_milestone         = 183
+    ,command_FieldId_imilestone        = 184
+    ,command_FieldId_track             = 185
+    ,command_FieldId_complooo          = 186
+    ,command_FieldId_args              = 187
+    ,command_FieldId_manywin           = 188
+    ,command_FieldId_attach            = 189
+    ,command_FieldId_catchthrow        = 190
+    ,command_FieldId_tui               = 191
+    ,command_FieldId_bcmd              = 192
+    ,command_FieldId_emacs             = 193
+    ,command_FieldId_follow_child      = 194
+    ,command_FieldId_py                = 195
+    ,command_FieldId_writessimfile     = 196
+    ,command_FieldId_url               = 197
+    ,command_FieldId_tables            = 198
+    ,command_FieldId_nologo            = 199
+    ,command_FieldId_baddbok           = 200
+    ,command_FieldId_typetag           = 201
+    ,command_FieldId_move              = 202
+    ,command_FieldId_dedup             = 203
+    ,command_FieldId_commit            = 204
+    ,command_FieldId_undo              = 205
+    ,command_FieldId_hash              = 206
+    ,command_FieldId_targsrc           = 207
+    ,command_FieldId_name              = 208
+    ,command_FieldId_body              = 209
+    ,command_FieldId_func              = 210
+    ,command_FieldId_nextfile          = 211
+    ,command_FieldId_other             = 212
+    ,command_FieldId_updateproto       = 213
+    ,command_FieldId_listfunc          = 214
+    ,command_FieldId_iffy              = 215
+    ,command_FieldId_gen               = 216
+    ,command_FieldId_showloc           = 217
+    ,command_FieldId_showstatic        = 218
+    ,command_FieldId_showsortkey       = 219
+    ,command_FieldId_sortname          = 220
+    ,command_FieldId_baddecl           = 221
+    ,command_FieldId_update_authors    = 222
+    ,command_FieldId_indent            = 223
+    ,command_FieldId_linelim           = 224
+    ,command_FieldId_strayfile         = 225
+    ,command_FieldId_badchar           = 226
+    ,command_FieldId_badline           = 227
+    ,command_FieldId_expand            = 228
+    ,command_FieldId_ignoreQuote       = 229
+    ,command_FieldId_maxpacket         = 230
+    ,command_FieldId_db                = 231
+    ,command_FieldId_createdb          = 232
+    ,command_FieldId_str               = 233
+    ,command_FieldId_tocamelcase       = 234
+    ,command_FieldId_tolowerunder      = 235
+    ,command_FieldId_pathcomp          = 236
+    ,command_FieldId_value             = 237
 };
 
-enum { command_FieldIdEnum_N = 198 };
+enum { command_FieldIdEnum_N = 238 };
 
 namespace command { struct FieldId; }
 namespace command { struct Protocol; }
@@ -237,10 +277,18 @@ namespace command { struct amc_gc_proc; }
 namespace command { struct amc_proc; }
 namespace command { struct amc_vis; }
 namespace command { struct amc_vis_proc; }
+namespace command { struct ams_cat; }
+namespace command { struct ams_cat_proc; }
+namespace command { struct ams_sendtest; }
+namespace command { struct ams_sendtest_proc; }
 namespace command { struct atf_amc; }
 namespace command { struct atf_amc_proc; }
-namespace command { struct atf_norm; }
-namespace command { struct atf_norm_proc; }
+namespace command { struct atf_ci; }
+namespace command { struct atf_ci_proc; }
+namespace command { struct atf_comp; }
+namespace command { struct atf_comp_proc; }
+namespace command { struct atf_cov; }
+namespace command { struct atf_cov_proc; }
 namespace command { struct atf_nrun; }
 namespace command { struct atf_nrun_proc; }
 namespace command { struct atf_unit; }
@@ -478,10 +526,11 @@ algo::strptr         acr_GetAnon(command::acr &parent, i32 idx) __attribute__((n
 // --- command.acr_compl
 // access: command.acr_compl_proc.acr_compl (Exec)
 struct acr_compl { // command.acr_compl
-    algo::cstring   line;      //   ""  Simulates COMP_LINE (debug)
-    algo::cstring   point;     //   ""  Simulates COMP_POINT (debug). default: whole line
-    algo::cstring   type;      //   "9"  Simulates COMP_TYPE (debug)
-    bool            install;   //   false  Produce bash commands to install the handler
+    algo::cstring   line;        //   ""  Simulates COMP_LINE (debug)
+    algo::cstring   point;       //   ""  Simulates COMP_POINT (debug). default: whole line
+    algo::cstring   type;        //   "9"  Simulates COMP_TYPE (debug)
+    bool            install;     //   false  Produce bash commands to install the handler
+    algo::cstring   debug_log;   //   ""  Log file for debug information, overrides ACR_COMPL_DEBUG_LOG
     acr_compl();
 };
 
@@ -560,7 +609,7 @@ struct acr_ed { // command.acr_ed
     algo::Smallstr50    subset2;     //   ""    Primary key is also a subset of this ctype
     algo::cstring       separator;   //   "."      Key separator
     algo::Smallstr100   field;       //   ""  Create field
-    algo::Smallstr50    arg;         //   ""    Field type (e.g. u32, etc)
+    algo::Smallstr50    arg;         //   ""    Field type (e.g. u32, etc), (with -ctype) add the base field
     algo::cstring       dflt;        //   ""    Field default value
     bool                anon;        //   false    Anonymous field (use with command lines)
     bool                bigend;      //   false    Big-endian field
@@ -574,7 +623,7 @@ struct acr_ed { // command.acr_ed
     algo::Smallstr100   hashfld;     //   ""      (-reftype:Thash) Hash field
     algo::Smallstr100   sortfld;     //   ""      (-reftype:Bheap) Sort field
     algo::cstring       unittest;    //   ""  Create unit test, <ns>.<functionname>
-    algo::cstring       normcheck;   //   ""  Create normalization check
+    algo::cstring       citest;      //   ""  Create CI test
     algo::cstring       cppfunc;     //   ""  Field is a cppfunc, pass c++ expression as argument
     bool                xref;        //   false      X-ref with field type
     algo::cstring       via;         //   ""        X-ref argument (index, pointer, or index/key)
@@ -584,6 +633,7 @@ struct acr_ed { // command.acr_ed
     bool                sandbox;     //   false  Make changes in sandbox
     bool                test;        //   false  Build resulting changes, run tests
     bool                showcpp;     //   false  (With -sandbox), show resulting diff
+    algo::cstring       msgtype;     //   ""  (with -ctype) use this msgtype as type
     acr_ed();
 };
 
@@ -1088,6 +1138,145 @@ algo::tempstr        amc_vis_ToCmdline(command::amc_vis_proc& parent) __attribut
 void                 amc_vis_proc_Init(command::amc_vis_proc& parent);
 void                 amc_vis_proc_Uninit(command::amc_vis_proc& parent) __attribute__((nothrow));
 
+// --- command.ams_cat
+// access: command.ams_cat_proc.ams_cat (Exec)
+struct ams_cat { // command.ams_cat
+    algo::cstring   in;   //   "data"  Input directory or filename, - for stdin
+    ams_cat();
+};
+
+bool                 ams_cat_ReadFieldMaybe(command::ams_cat &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of command::ams_cat from attributes of ascii tuple TUPLE
+bool                 ams_cat_ReadTupleMaybe(command::ams_cat &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 ams_cat_Init(command::ams_cat& parent);
+// print command-line args of command::ams_cat to string  -- cprint:command.ams_cat.Argv
+void                 ams_cat_PrintArgv(command::ams_cat & row, algo::cstring &str) __attribute__((nothrow));
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr              ams_cat_ToCmdline(command::ams_cat & row) __attribute__((nothrow));
+
+// --- command.ams_cat_proc
+struct ams_cat_proc { // command.ams_cat_proc: Subprocess: 
+    algo::cstring      path;      //   "bin/ams_cat"  path for executable
+    command::ams_cat   cmd;       // command line for child process
+    algo::cstring      fstdin;    // redirect for stdin
+    algo::cstring      fstdout;   // redirect for stdout
+    algo::cstring      fstderr;   // redirect for stderr
+    pid_t              pid;       //   0  pid of running child process
+    i32                timeout;   //   0  optional timeout for child process
+    i32                status;    //   0  last exit status of child process
+    ams_cat_proc();
+    ~ams_cat_proc();
+private:
+    // reftype of command.ams_cat_proc.ams_cat prohibits copy
+    ams_cat_proc(const ams_cat_proc&){ /*disallow copy constructor */}
+    void operator =(const ams_cat_proc&){ /*disallow direct assignment */}
+};
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int                  ams_cat_Start(command::ams_cat_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         ams_cat_StartRead(command::ams_cat_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
+// Kill subprocess and wait
+void                 ams_cat_Kill(command::ams_cat_proc& parent);
+// Wait for subprocess to return
+void                 ams_cat_Wait(command::ams_cat_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+int                  ams_cat_Exec(command::ams_cat_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void                 ams_cat_ExecX(command::ams_cat_proc& parent);
+// Call execv()
+// Call execv with specified parameters -- cprint:ams_cat.Argv
+int                  ams_cat_Execv(command::ams_cat_proc& parent) __attribute__((nothrow));
+algo::tempstr        ams_cat_ToCmdline(command::ams_cat_proc& parent) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 ams_cat_proc_Init(command::ams_cat_proc& parent);
+void                 ams_cat_proc_Uninit(command::ams_cat_proc& parent) __attribute__((nothrow));
+
+// --- command.ams_sendtest
+// access: command.ams_sendtest_proc.ams_sendtest (Exec)
+struct ams_sendtest { // command.ams_sendtest
+    algo::cstring    in;             //   "data"  Input directory or filename, - for stdin
+    i32              id;             //   0  Process index (0=parent)
+    algo::cstring    file_prefix;    //   ""  Use file_prefix
+    i32              nchild;         //   1  Number of stream readers
+    bool             blocking;       //   false  Use blocking send mode
+    i32              nmsg;           //   1000  Number of messages to send/receive
+    algo_lib::Regx   trace;          //   ""  Regx of algo::cstring
+    i32              timeout;        //   30  Time limit for the send
+    i64              recvdelay_ns;   //   0  Pause nanoseconds between messages
+    i64              senddelay_ns;   //   0  Pause nanoseconds between messages
+    i32              msgsize_min;    //   64  Minimum message length
+    i32              msgsize_max;    //   1024  Maximum message length
+    i32              bufsize;        //   32768  Shared memory buffer size
+    i64              recvdelay;      //   0  Pause nanoseconds between messages
+    ams_sendtest();
+};
+
+// Print back to string
+void                 trace_Print(command::ams_sendtest& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+bool                 trace_ReadStrptrMaybe(command::ams_sendtest& parent, algo::strptr in) __attribute__((nothrow));
+
+bool                 ams_sendtest_ReadFieldMaybe(command::ams_sendtest &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of command::ams_sendtest from attributes of ascii tuple TUPLE
+bool                 ams_sendtest_ReadTupleMaybe(command::ams_sendtest &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 ams_sendtest_Init(command::ams_sendtest& parent);
+// print command-line args of command::ams_sendtest to string  -- cprint:command.ams_sendtest.Argv
+void                 ams_sendtest_PrintArgv(command::ams_sendtest & row, algo::cstring &str) __attribute__((nothrow));
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr              ams_sendtest_ToCmdline(command::ams_sendtest & row) __attribute__((nothrow));
+
+// --- command.ams_sendtest_proc
+struct ams_sendtest_proc { // command.ams_sendtest_proc: Subprocess: 
+    algo::cstring           path;      //   "bin/ams_sendtest"  path for executable
+    command::ams_sendtest   cmd;       // command line for child process
+    algo::cstring           fstdin;    // redirect for stdin
+    algo::cstring           fstdout;   // redirect for stdout
+    algo::cstring           fstderr;   // redirect for stderr
+    pid_t                   pid;       //   0  pid of running child process
+    i32                     timeout;   //   0  optional timeout for child process
+    i32                     status;    //   0  last exit status of child process
+    ams_sendtest_proc();
+    ~ams_sendtest_proc();
+private:
+    // reftype of command.ams_sendtest_proc.ams_sendtest prohibits copy
+    ams_sendtest_proc(const ams_sendtest_proc&){ /*disallow copy constructor */}
+    void operator =(const ams_sendtest_proc&){ /*disallow direct assignment */}
+};
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int                  ams_sendtest_Start(command::ams_sendtest_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         ams_sendtest_StartRead(command::ams_sendtest_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
+// Kill subprocess and wait
+void                 ams_sendtest_Kill(command::ams_sendtest_proc& parent);
+// Wait for subprocess to return
+void                 ams_sendtest_Wait(command::ams_sendtest_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+int                  ams_sendtest_Exec(command::ams_sendtest_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void                 ams_sendtest_ExecX(command::ams_sendtest_proc& parent);
+// Call execv()
+// Call execv with specified parameters -- cprint:ams_sendtest.Argv
+int                  ams_sendtest_Execv(command::ams_sendtest_proc& parent) __attribute__((nothrow));
+algo::tempstr        ams_sendtest_ToCmdline(command::ams_sendtest_proc& parent) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 ams_sendtest_proc_Init(command::ams_sendtest_proc& parent);
+void                 ams_sendtest_proc_Uninit(command::ams_sendtest_proc& parent) __attribute__((nothrow));
+
 // --- command.atf_amc
 // access: command.atf_amc_proc.atf_amc (Exec)
 struct atf_amc { // command.atf_amc
@@ -1158,73 +1347,252 @@ algo::tempstr        atf_amc_ToCmdline(command::atf_amc_proc& parent) __attribut
 void                 atf_amc_proc_Init(command::atf_amc_proc& parent);
 void                 atf_amc_proc_Uninit(command::atf_amc_proc& parent) __attribute__((nothrow));
 
-// --- command.atf_norm
-// access: command.atf_norm_proc.atf_norm (Exec)
-struct atf_norm { // command.atf_norm
-    algo::cstring    in;          //   "data"  Input directory or filename, - for stdin
-    algo_lib::Regx   normcheck;   //   "%"  Regx of atfdb::Normcheck
-    atf_norm();
+// --- command.atf_ci
+// access: command.atf_ci_proc.atf_ci (Exec)
+struct atf_ci { // command.atf_ci
+    algo::cstring    in;        //   "data"  Input directory or filename, - for stdin
+    algo_lib::Regx   citest;    //   "%"  Regx of atfdb::Citest
+    i32              maxerr;    //   0  Exit after this many errors
+    algo_lib::Regx   cijob;     //   "%"  Regx of atfdb::Cijob
+    bool             capture;   //   false  Capture the output of the test
+    bool             skipenv;   //   false  Do not run prepenv for any test
+    atf_ci();
 };
 
 // Print back to string
-void                 normcheck_Print(command::atf_norm& parent, algo::cstring &out) __attribute__((nothrow));
+void                 citest_Print(command::atf_ci& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
-bool                 normcheck_ReadStrptrMaybe(command::atf_norm& parent, algo::strptr in) __attribute__((nothrow));
+bool                 citest_ReadStrptrMaybe(command::atf_ci& parent, algo::strptr in) __attribute__((nothrow));
 
-bool                 atf_norm_ReadFieldMaybe(command::atf_norm &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of command::atf_norm from attributes of ascii tuple TUPLE
-bool                 atf_norm_ReadTupleMaybe(command::atf_norm &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Print back to string
+void                 cijob_Print(command::atf_ci& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+bool                 cijob_ReadStrptrMaybe(command::atf_ci& parent, algo::strptr in) __attribute__((nothrow));
+
+bool                 atf_ci_ReadFieldMaybe(command::atf_ci &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of command::atf_ci from attributes of ascii tuple TUPLE
+bool                 atf_ci_ReadTupleMaybe(command::atf_ci &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
-void                 atf_norm_Init(command::atf_norm& parent);
-// print command-line args of command::atf_norm to string  -- cprint:command.atf_norm.Argv
-void                 atf_norm_PrintArgv(command::atf_norm & row, algo::cstring &str) __attribute__((nothrow));
+void                 atf_ci_Init(command::atf_ci& parent);
+// print command-line args of command::atf_ci to string  -- cprint:command.atf_ci.Argv
+void                 atf_ci_PrintArgv(command::atf_ci & row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              atf_norm_ToCmdline(command::atf_norm & row) __attribute__((nothrow));
-algo::strptr         atf_norm_GetAnon(command::atf_norm &parent, i32 idx) __attribute__((nothrow));
+tempstr              atf_ci_ToCmdline(command::atf_ci & row) __attribute__((nothrow));
+algo::strptr         atf_ci_GetAnon(command::atf_ci &parent, i32 idx) __attribute__((nothrow));
 
-// --- command.atf_norm_proc
-struct atf_norm_proc { // command.atf_norm_proc: Subprocess: Normalization tests (see normcheck table)
-    algo::cstring       path;      //   "bin/atf_norm"  path for executable
-    command::atf_norm   cmd;       // command line for child process
+// --- command.atf_ci_proc
+struct atf_ci_proc { // command.atf_ci_proc: Subprocess: Normalization tests (see citest table)
+    algo::cstring     path;      //   "bin/atf_ci"  path for executable
+    command::atf_ci   cmd;       // command line for child process
+    algo::cstring     fstdin;    // redirect for stdin
+    algo::cstring     fstdout;   // redirect for stdout
+    algo::cstring     fstderr;   // redirect for stderr
+    pid_t             pid;       //   0  pid of running child process
+    i32               timeout;   //   0  optional timeout for child process
+    i32               status;    //   0  last exit status of child process
+    atf_ci_proc();
+    ~atf_ci_proc();
+private:
+    // reftype of command.atf_ci_proc.atf_ci prohibits copy
+    atf_ci_proc(const atf_ci_proc&){ /*disallow copy constructor */}
+    void operator =(const atf_ci_proc&){ /*disallow direct assignment */}
+};
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int                  atf_ci_Start(command::atf_ci_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         atf_ci_StartRead(command::atf_ci_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
+// Kill subprocess and wait
+void                 atf_ci_Kill(command::atf_ci_proc& parent);
+// Wait for subprocess to return
+void                 atf_ci_Wait(command::atf_ci_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+int                  atf_ci_Exec(command::atf_ci_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void                 atf_ci_ExecX(command::atf_ci_proc& parent);
+// Call execv()
+// Call execv with specified parameters -- cprint:atf_ci.Argv
+int                  atf_ci_Execv(command::atf_ci_proc& parent) __attribute__((nothrow));
+algo::tempstr        atf_ci_ToCmdline(command::atf_ci_proc& parent) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 atf_ci_proc_Init(command::atf_ci_proc& parent);
+void                 atf_ci_proc_Uninit(command::atf_ci_proc& parent) __attribute__((nothrow));
+
+// --- command.atf_comp
+// access: command.atf_comp_proc.atf_comp (Exec)
+struct atf_comp { // command.atf_comp
+    algo::cstring      in;                //   "data"  Input directory or filename, - for stdin
+    algo_lib::Regx     comptest;          //   "%"  Regx of atfdb::Comptest
+    bool               mdbg;              //   false  (action) Run component test under debugger
+    bool               run;               //   true  (action) Run selected component tests
+    bool               capture;           //   false  (action) Re-capture test results
+    bool               print;             //   false  (action) Print testcase
+    bool               e;                 //   false  (action) Open selected testcases in an editor
+    bool               normalize;         //   false  (action) Renumber and normalize tmsgs
+    bool               covcapture;        //   false  (action) Capture new coverage percentages and save back
+    bool               covcheck;          //   false  (action) Check coverage percentages against tgtcov table
+    algo::cstring      compdir;           //   ""  Component image directory (exe)
+    algo::Smallstr50   cfg;               //   "release"  Set config
+    bool               check_untracked;   //   true  Check for untracked file before allowing test to run
+    i32                maxerr;            //   1  Exit after this many errors
+    bool               build;             //   false  Build given cfg before test
+    bool               ood;               //   false  Check given cfg for ood before test
+    bool               memcheck;          //   false  Run under memory checker (valgrind)
+    bool               force;             //   false  (With -memcheck) run suppressed memcheck
+    bool               callgrind;         //   false  Run under callgrind profiler (valgrind)
+    i32                maxjobs;           //   1  Maximum number of tests run in parallel
+    bool               stream;            //   false  prints component's output
+    bool               i;                 //   false  Read and execute testcase from stdin
+    bool               write;             //   true  (implied with -e) Write any changes back to ssim tables
+    bool               report;            //   false  Print final report
+    algo::cstring      b;                 //   ""  Breakpoint passed to mdbg as-is
+    atf_comp();
+};
+
+// Print back to string
+void                 comptest_Print(command::atf_comp& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+bool                 comptest_ReadStrptrMaybe(command::atf_comp& parent, algo::strptr in) __attribute__((nothrow));
+
+bool                 atf_comp_ReadFieldMaybe(command::atf_comp &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of command::atf_comp from attributes of ascii tuple TUPLE
+bool                 atf_comp_ReadTupleMaybe(command::atf_comp &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 atf_comp_Init(command::atf_comp& parent);
+// print command-line args of command::atf_comp to string  -- cprint:command.atf_comp.Argv
+void                 atf_comp_PrintArgv(command::atf_comp & row, algo::cstring &str) __attribute__((nothrow));
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr              atf_comp_ToCmdline(command::atf_comp & row) __attribute__((nothrow));
+algo::strptr         atf_comp_GetAnon(command::atf_comp &parent, i32 idx) __attribute__((nothrow));
+
+// --- command.atf_comp_proc
+struct atf_comp_proc { // command.atf_comp_proc: Subprocess: 
+    algo::cstring       path;      //   "bin/atf_comp"  path for executable
+    command::atf_comp   cmd;       // command line for child process
     algo::cstring       fstdin;    // redirect for stdin
     algo::cstring       fstdout;   // redirect for stdout
     algo::cstring       fstderr;   // redirect for stderr
     pid_t               pid;       //   0  pid of running child process
     i32                 timeout;   //   0  optional timeout for child process
     i32                 status;    //   0  last exit status of child process
-    atf_norm_proc();
-    ~atf_norm_proc();
+    atf_comp_proc();
+    ~atf_comp_proc();
 private:
-    // reftype of command.atf_norm_proc.atf_norm prohibits copy
-    atf_norm_proc(const atf_norm_proc&){ /*disallow copy constructor */}
-    void operator =(const atf_norm_proc&){ /*disallow direct assignment */}
+    // reftype of command.atf_comp_proc.atf_comp prohibits copy
+    atf_comp_proc(const atf_comp_proc&){ /*disallow copy constructor */}
+    void operator =(const atf_comp_proc&){ /*disallow direct assignment */}
 };
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int                  atf_norm_Start(command::atf_norm_proc& parent) __attribute__((nothrow));
+int                  atf_comp_Start(command::atf_comp_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
-algo::Fildes         atf_norm_StartRead(command::atf_norm_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
+algo::Fildes         atf_comp_StartRead(command::atf_comp_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
-void                 atf_norm_Kill(command::atf_norm_proc& parent);
+void                 atf_comp_Kill(command::atf_comp_proc& parent);
 // Wait for subprocess to return
-void                 atf_norm_Wait(command::atf_norm_proc& parent) __attribute__((nothrow));
+void                 atf_comp_Wait(command::atf_comp_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
-int                  atf_norm_Exec(command::atf_norm_proc& parent) __attribute__((nothrow));
+int                  atf_comp_Exec(command::atf_comp_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
-void                 atf_norm_ExecX(command::atf_norm_proc& parent);
+void                 atf_comp_ExecX(command::atf_comp_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:atf_norm.Argv
-int                  atf_norm_Execv(command::atf_norm_proc& parent) __attribute__((nothrow));
-algo::tempstr        atf_norm_ToCmdline(command::atf_norm_proc& parent) __attribute__((nothrow));
+// Call execv with specified parameters -- cprint:atf_comp.Argv
+int                  atf_comp_Execv(command::atf_comp_proc& parent) __attribute__((nothrow));
+algo::tempstr        atf_comp_ToCmdline(command::atf_comp_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
-void                 atf_norm_proc_Init(command::atf_norm_proc& parent);
-void                 atf_norm_proc_Uninit(command::atf_norm_proc& parent) __attribute__((nothrow));
+void                 atf_comp_proc_Init(command::atf_comp_proc& parent);
+void                 atf_comp_proc_Uninit(command::atf_comp_proc& parent) __attribute__((nothrow));
+
+// --- command.atf_cov
+// access: command.atf_cov_proc.atf_cov (Exec)
+struct atf_cov { // command.atf_cov
+    algo::cstring    in;          //   "data"  Input directory or filename, - for stdin
+    algo::cstring    covdir;      //   "temp/covdata"  Output directory to save coverage data
+    algo::cstring    logfile;     //   ""  Log file
+    algo::cstring    runcmd;      //   ""  command to run
+    algo_lib::Regx   exclude;     //   "(extern|include/gen|cpp/gen)/%"  Regx of dev::Gitfile
+    algo::cstring    mergepath;   //   ""  colon-separated dir list to load .cov.ssim files from
+    bool             gcov;        //   false  run gcov
+    bool             ssim;        //   false  write out ssim files
+    bool             report;      //   false  write out all reports
+    bool             capture;     //   false  Write coverage information into tgtcov table
+    bool             xmlpretty;   //   false  Generate pretty-formatted XML
+    bool             summary;     //   true  Show summary figures
+    bool             check;       //   false  Check coverage information against tgtcov table
+    atf_cov();
+};
+
+// Print back to string
+void                 exclude_Print(command::atf_cov& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+bool                 exclude_ReadStrptrMaybe(command::atf_cov& parent, algo::strptr in) __attribute__((nothrow));
+
+bool                 atf_cov_ReadFieldMaybe(command::atf_cov &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of command::atf_cov from attributes of ascii tuple TUPLE
+bool                 atf_cov_ReadTupleMaybe(command::atf_cov &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 atf_cov_Init(command::atf_cov& parent);
+// print command-line args of command::atf_cov to string  -- cprint:command.atf_cov.Argv
+void                 atf_cov_PrintArgv(command::atf_cov & row, algo::cstring &str) __attribute__((nothrow));
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr              atf_cov_ToCmdline(command::atf_cov & row) __attribute__((nothrow));
+
+// --- command.atf_cov_proc
+struct atf_cov_proc { // command.atf_cov_proc: Subprocess: 
+    algo::cstring      path;      //   "bin/atf_cov"  path for executable
+    command::atf_cov   cmd;       // command line for child process
+    algo::cstring      fstdin;    // redirect for stdin
+    algo::cstring      fstdout;   // redirect for stdout
+    algo::cstring      fstderr;   // redirect for stderr
+    pid_t              pid;       //   0  pid of running child process
+    i32                timeout;   //   0  optional timeout for child process
+    i32                status;    //   0  last exit status of child process
+    atf_cov_proc();
+    ~atf_cov_proc();
+private:
+    // reftype of command.atf_cov_proc.atf_cov prohibits copy
+    atf_cov_proc(const atf_cov_proc&){ /*disallow copy constructor */}
+    void operator =(const atf_cov_proc&){ /*disallow direct assignment */}
+};
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int                  atf_cov_Start(command::atf_cov_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         atf_cov_StartRead(command::atf_cov_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
+// Kill subprocess and wait
+void                 atf_cov_Kill(command::atf_cov_proc& parent);
+// Wait for subprocess to return
+void                 atf_cov_Wait(command::atf_cov_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+int                  atf_cov_Exec(command::atf_cov_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void                 atf_cov_ExecX(command::atf_cov_proc& parent);
+// Call execv()
+// Call execv with specified parameters -- cprint:atf_cov.Argv
+int                  atf_cov_Execv(command::atf_cov_proc& parent) __attribute__((nothrow));
+algo::tempstr        atf_cov_ToCmdline(command::atf_cov_proc& parent) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 atf_cov_proc_Init(command::atf_cov_proc& parent);
+void                 atf_cov_proc_Uninit(command::atf_cov_proc& parent) __attribute__((nothrow));
 
 // --- command.atf_nrun
 // access: command.atf_nrun_proc.atf_nrun (Exec)
@@ -1301,6 +1669,7 @@ struct atf_unit { // command.atf_unit
     u32              pertest_timeout;   //   900  Max runtime of any individual unit test
     bool             report;            //   true  Print final report
     bool             capture;           //   false  Re-capture test results
+    bool             check_untracked;   //   true  Check for untracked file before allowing test to run
     atf_unit();
 };
 
@@ -1482,27 +1851,31 @@ void                 bash_proc_Uninit(command::bash_proc& parent) __attribute__(
 // --- command.gitlab
 // access: command.gitlab_proc.gitlab (Exec)
 struct gitlab { // command.gitlab
-    algo::cstring      in;            //   "data"  Input directory or filename, - for stdin
-    algo_lib::Regx     issue;         //   ""  Regx of algo::cstring
-    algo::cstring      server;        //   "gitlab.lon.algo"  (config) GitLab server host
-    algo::cstring      project;       //   "myproject"  (config) Project to use
-    algo::cstring      auth_token;    //   ""  (config) GitLab auth token
-    bool               mrlist;        //   false  (action) Show list of merge requests
-    bool               mergereq;      //   false  (action) Push current branch to origin, create merge request
-    bool               ilist;         //   false  (action) Show list of issues matching regx
-    bool               istart;        //   false  (action) Start working on the specified issue
-    bool               t;             //   false  Tree view: expand issue description
-    bool               iadd;          //   false  (action) Add new issue
-    bool               ic;            //   false  (action) Add issue comment
-    bool               iclose;        //   false  (action) Close issue
-    algo::Smallstr50   iassignto;     //   ""  (action) Assign issue to user
-    algo::cstring      title;         //   ""  (with -iadd), skip editor and use argument as title
-    algo::cstring      description;   //   ""  (with -iadd -title), use argument as description
-    algo::cstring      comment;       //   ""  (with -ic), skip editor and use argument as comment
-    algo::cstring      gitdir;        //   ""  (setup) Change directory of dit repository
-    algo_lib::Regx     assignee;      //   ""  Regx of algo::cstring
-    bool               ulist;         //   false  (action) List users
-    algo::cstring      mraccept;      //   ""  (action) Accept merge request
+    algo::cstring       in;            //   "data"  Input directory or filename, - for stdin
+    algo_lib::Regx      issue;         //   ""  Regx of algo::cstring
+    algo::cstring       server;        //   "gitlab.lon.algo"  (config) GitLab server host
+    algo::cstring       project;       //   "algouk"  (config) Project to use
+    algo::cstring       auth_token;    //   ""  (config) GitLab auth token
+    bool                mrlist;        //   false  (action) Show list of merge requests
+    bool                mergereq;      //   false  (action) Push current branch to origin, create merge request
+    bool                ilist;         //   false  (action) Show list of issues matching regx
+    bool                istart;        //   false  (action) Start working on the specified issue
+    bool                t;             //   false  Tree view: expand issue description
+    bool                iadd;          //   false  (action) Add new issue
+    bool                ic;            //   false  (action) Add issue comment
+    bool                iclose;        //   false  (action) Close issue
+    algo::Smallstr50    iassignto;     //   ""  (action) Assign issue to user
+    algo::cstring       title;         //   ""  (with -iadd), skip editor and use argument as title
+    algo::cstring       description;   //   ""  (with -iadd -title), use argument as description
+    algo::cstring       comment;       //   ""  (with -ic), skip editor and use argument as comment
+    algo::cstring       gitdir;        //   ""  (setup) Change directory of dit repository
+    algo_lib::Regx      assignee;      //   ""  Regx of algo::cstring
+    bool                ulist;         //   false  (action) List users
+    algo::cstring       mraccept;      //   ""  (action) Accept merge request
+    bool                mslist;        //   false  (action) List milestones
+    algo_lib::Regx      milestone;     //   "%"  Regx of algo::cstring
+    algo::Smallstr200   imilestone;    //   ""  (action) Assign issue to milestone
+    algo::cstring       track;         //   "origin/master"
     gitlab();
 };
 
@@ -1517,6 +1890,12 @@ void                 assignee_Print(command::gitlab& parent, algo::cstring &out)
 // Read Regx from string
 // Convert string to field. Return success value
 bool                 assignee_ReadStrptrMaybe(command::gitlab& parent, algo::strptr in) __attribute__((nothrow));
+
+// Print back to string
+void                 milestone_Print(command::gitlab& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+bool                 milestone_ReadStrptrMaybe(command::gitlab& parent, algo::strptr in) __attribute__((nothrow));
 
 bool                 gitlab_ReadFieldMaybe(command::gitlab &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::gitlab from attributes of ascii tuple TUPLE
@@ -1617,7 +1996,6 @@ struct mdbg { // command.mdbg
     algo::Smallstr50   cfg;            //   "debug"  Configuration to use
     bool               manywin;        //   false  gdb-many-windows
     bool               disas;          //   false  Show disassembly (use F12)
-    bool               root;           //   false  Debug as root
     bool               attach;         //   false  Attach to a running process
     algo::cstring      b;              //   "main"  List of breakpoints, e.g. 'a.cpp:123 if cond1, func2'
     bool               catchthrow;     //   true  Stop on exceptions

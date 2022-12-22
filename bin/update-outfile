@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -eu
+
+function remove_foreign_files() {
+    if [[ -d test/$1 ]]; then
+        for testfile in test/$1/*; do
+            testname=$(basename "$testfile")
+            [[ "$(acr $2:"$testname" -report:N | wc -c)" -ne 0 ]] || rm $testfile
+        done
+    fi
+}
+
+remove_foreign_files atf_ci   atfdb.citest
+remove_foreign_files atf_comp atfdb.comptest
+remove_foreign_files atf_unit atfdb.unittest

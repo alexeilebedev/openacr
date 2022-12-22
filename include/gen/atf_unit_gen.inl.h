@@ -12,7 +12,6 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/report_gen.inl.h"
 #include "include/gen/atfdb_gen.inl.h"
-#include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 inline atf_unit::Bitset::Bitset() {
     atf_unit::Bitset_Init(*this);
@@ -841,6 +840,18 @@ inline bool atf_unit::Dbl::operator !=(const atf_unit::Dbl &rhs) const {
 inline bool atf_unit::Dbl::operator <(const atf_unit::Dbl &rhs) const {
     return atf_unit::Dbl_Lt(const_cast<atf_unit::Dbl&>(*this),const_cast<atf_unit::Dbl&>(rhs));
 }
+
+inline bool atf_unit::Dbl::operator >(const atf_unit::Dbl &rhs) const {
+    return rhs < *this;
+}
+
+inline bool atf_unit::Dbl::operator <=(const atf_unit::Dbl &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool atf_unit::Dbl::operator >=(const atf_unit::Dbl &rhs) const {
+    return !(*this < rhs);
+}
 inline atf_unit::Dbl::Dbl() {
     atf_unit::Dbl_Init(*this);
 }
@@ -1413,118 +1424,6 @@ inline atf_unit::FieldId::operator atf_unit_FieldIdEnum () const {
 inline void atf_unit::FieldId_Init(atf_unit::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline atf_unit::ShStream::ShStream() {
-}
-
-inline atf_unit::ShStreamAry::ShStreamAry() {
-    atf_unit::ShStreamAry_Init(*this);
-}
-
-inline atf_unit::ShStreamAry::~ShStreamAry() {
-    atf_unit::ShStreamAry_Uninit(*this);
-}
-
-
-// --- atf_unit.ShStreamAry.shstream.EmptyQ
-// Return true if index is empty
-inline bool atf_unit::shstream_EmptyQ(atf_unit::ShStreamAry& parent) {
-    return parent.shstream_n == 0;
-}
-
-// --- atf_unit.ShStreamAry.shstream.Find
-// Look up row by row id. Return NULL if out of range
-inline atf_unit::ShStream* atf_unit::shstream_Find(atf_unit::ShStreamAry& parent, u64 t) {
-    u64 idx = t;
-    u64 lim = parent.shstream_n;
-    if (idx >= lim) return NULL;
-    return parent.shstream_elems + idx;
-}
-
-// --- atf_unit.ShStreamAry.shstream.Getary
-// Return array pointer by value
-inline algo::aryptr<atf_unit::ShStream> atf_unit::shstream_Getary(atf_unit::ShStreamAry& parent) {
-    return algo::aryptr<atf_unit::ShStream>(parent.shstream_elems, parent.shstream_n);
-}
-
-// --- atf_unit.ShStreamAry.shstream.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline atf_unit::ShStream* atf_unit::shstream_Last(atf_unit::ShStreamAry& parent) {
-    return shstream_Find(parent, u64(parent.shstream_n-1));
-}
-
-// --- atf_unit.ShStreamAry.shstream.Max
-// Return max. number of items in the array
-inline i32 atf_unit::shstream_Max(atf_unit::ShStreamAry& parent) {
-    (void)parent;
-    return parent.shstream_max;
-}
-
-// --- atf_unit.ShStreamAry.shstream.N
-// Return number of items in the array
-inline i32 atf_unit::shstream_N(const atf_unit::ShStreamAry& parent) {
-    return parent.shstream_n;
-}
-
-// --- atf_unit.ShStreamAry.shstream.Reserve
-// Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void atf_unit::shstream_Reserve(atf_unit::ShStreamAry& parent, int n) {
-    u32 new_n = parent.shstream_n + n;
-    if (UNLIKELY(new_n > parent.shstream_max)) {
-        shstream_AbsReserve(parent, new_n);
-    }
-}
-
-// --- atf_unit.ShStreamAry.shstream.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline atf_unit::ShStream& atf_unit::shstream_qFind(atf_unit::ShStreamAry& parent, u64 t) {
-    return parent.shstream_elems[t];
-}
-
-// --- atf_unit.ShStreamAry.shstream.qLast
-// Return reference to last element of array. No bounds checking
-inline atf_unit::ShStream& atf_unit::shstream_qLast(atf_unit::ShStreamAry& parent) {
-    return shstream_qFind(parent, u64(parent.shstream_n-1));
-}
-
-// --- atf_unit.ShStreamAry.shstream.rowid_Get
-// Return row id of specified element
-inline u64 atf_unit::shstream_rowid_Get(atf_unit::ShStreamAry& parent, atf_unit::ShStream &elem) {
-    u64 id = &elem - parent.shstream_elems;
-    return u64(id);
-}
-
-// --- atf_unit.ShStreamAry.shstream_curs.Next
-// proceed to next item
-inline void atf_unit::ShStreamAry_shstream_curs_Next(ShStreamAry_shstream_curs &curs) {
-    curs.index++;
-}
-
-// --- atf_unit.ShStreamAry.shstream_curs.Reset
-inline void atf_unit::ShStreamAry_shstream_curs_Reset(ShStreamAry_shstream_curs &curs, atf_unit::ShStreamAry &parent) {
-    curs.elems = parent.shstream_elems;
-    curs.n_elems = parent.shstream_n;
-    curs.index = 0;
-}
-
-// --- atf_unit.ShStreamAry.shstream_curs.ValidQ
-// cursor points to valid item
-inline bool atf_unit::ShStreamAry_shstream_curs_ValidQ(ShStreamAry_shstream_curs &curs) {
-    return curs.index < curs.n_elems;
-}
-
-// --- atf_unit.ShStreamAry.shstream_curs.Access
-// item access
-inline atf_unit::ShStream& atf_unit::ShStreamAry_shstream_curs_Access(ShStreamAry_shstream_curs &curs) {
-    return curs.elems[curs.index];
-}
-
-// --- atf_unit.ShStreamAry..Init
-// Set all fields to initial values.
-inline void atf_unit::ShStreamAry_Init(atf_unit::ShStreamAry& parent) {
-    parent.shstream_elems 	= 0; // (atf_unit.ShStreamAry.shstream)
-    parent.shstream_n     	= 0; // (atf_unit.ShStreamAry.shstream)
-    parent.shstream_max   	= 0; // (atf_unit.ShStreamAry.shstream)
-}
 
 inline bool atf_unit::TypeA::operator ==(const atf_unit::TypeA &rhs) const {
     return atf_unit::TypeA_Eq(const_cast<atf_unit::TypeA&>(*this),const_cast<atf_unit::TypeA&>(rhs));
@@ -1536,6 +1435,18 @@ inline bool atf_unit::TypeA::operator !=(const atf_unit::TypeA &rhs) const {
 
 inline bool atf_unit::TypeA::operator <(const atf_unit::TypeA &rhs) const {
     return atf_unit::TypeA_Lt(const_cast<atf_unit::TypeA&>(*this),const_cast<atf_unit::TypeA&>(rhs));
+}
+
+inline bool atf_unit::TypeA::operator >(const atf_unit::TypeA &rhs) const {
+    return rhs < *this;
+}
+
+inline bool atf_unit::TypeA::operator <=(const atf_unit::TypeA &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool atf_unit::TypeA::operator >=(const atf_unit::TypeA &rhs) const {
+    return !(*this < rhs);
 }
 inline atf_unit::TypeA::TypeA() {
     atf_unit::TypeA_Init(*this);
@@ -1593,6 +1504,18 @@ inline bool atf_unit::TypeB::operator !=(const atf_unit::TypeB &rhs) const {
 
 inline bool atf_unit::TypeB::operator <(const atf_unit::TypeB &rhs) const {
     return atf_unit::TypeB_Lt(const_cast<atf_unit::TypeB&>(*this),const_cast<atf_unit::TypeB&>(rhs));
+}
+
+inline bool atf_unit::TypeB::operator >(const atf_unit::TypeB &rhs) const {
+    return rhs < *this;
+}
+
+inline bool atf_unit::TypeB::operator <=(const atf_unit::TypeB &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool atf_unit::TypeB::operator >=(const atf_unit::TypeB &rhs) const {
+    return !(*this < rhs);
 }
 inline atf_unit::TypeB::TypeB() {
     atf_unit::TypeB_Init(*this);

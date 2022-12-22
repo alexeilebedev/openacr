@@ -174,6 +174,9 @@ struct CtypeTopoKey { // acr.CtypeTopoKey: Key for sorting print-line records
     bool operator ==(const acr::CtypeTopoKey &rhs) const;
     bool operator !=(const acr::CtypeTopoKey &rhs) const;
     bool operator <(const acr::CtypeTopoKey &rhs) const;
+    bool operator >(const acr::CtypeTopoKey &rhs) const;
+    bool operator <=(const acr::CtypeTopoKey &rhs) const;
+    bool operator >=(const acr::CtypeTopoKey &rhs) const;
     CtypeTopoKey();
 };
 
@@ -347,6 +350,8 @@ algo::cstring&       ary_name_qFind(acr::FCheck& check, u64 t) __attribute__((no
 algo::cstring&       ary_name_qLast(acr::FCheck& check) __attribute__((nothrow));
 // Return row id of specified element
 u64                  ary_name_rowid_Get(acr::FCheck& check, algo::cstring &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> ary_name_AllocNVal(acr::FCheck& check, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
 
 void                 check_c_bad_rec_curs_Reset(check_c_bad_rec_curs &curs, acr::FCheck &parent);
 // cursor points to valid item
@@ -665,9 +670,9 @@ void                 trace_Print(acr::trace & row, algo::cstring &str) __attribu
 // --- acr.FDb
 // create: acr.FDb._db (Global)
 struct FDb { // acr.FDb
-    u32                  pline_blocksize;                // # bytes per block
+    u64                  pline_blocksize;                // # bytes per block
     acr::FPline*         pline_free;                     //
-    u32                  pdep_blocksize;                 // # bytes per block
+    u64                  pdep_blocksize;                 // # bytes per block
     acr::FPdep*          pdep_free;                      //
     acr::FPline*         zd_pline_head;                  // zero-terminated doubly linked list
     acr::FPline*         zd_pline_tail;                  // pointer to last element
@@ -676,17 +681,17 @@ struct FDb { // acr.FDb
     command::acr         cmdline;                        // command line
     acr::FCtype*         ctype_lary[32];                 // level array
     i32                  ctype_n;                        // number of elements in array
-    u32                  err_blocksize;                  // # bytes per block
+    u64                  err_blocksize;                  // # bytes per block
     acr::FErr*           err_free;                       //
     acr::FAnonfld*       anonfld_lary[32];               // level array
     i32                  anonfld_n;                      // number of elements in array
     acr::FCdflt*         cdflt_lary[32];                 // level array
     i32                  cdflt_n;                        // number of elements in array
-    u32                  rec_blocksize;                  // # bytes per block
+    u64                  rec_blocksize;                  // # bytes per block
     acr::FRec*           rec_free;                       //
-    u32                  uniqueattr_blocksize;           // # bytes per block
+    u64                  uniqueattr_blocksize;           // # bytes per block
     acr::FUniqueattr*    uniqueattr_free;                //
-    u32                  query_blocksize;                // # bytes per block
+    u64                  query_blocksize;                // # bytes per block
     acr::FQuery*         query_free;                     //
     acr::FField*         field_lary[32];                 // level array
     i32                  field_n;                        // number of elements in array
@@ -1084,6 +1089,8 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -1981,6 +1988,9 @@ struct PlineKey { // acr.PlineKey: Key for sorting print-line records
     bool operator ==(const acr::PlineKey &rhs) const;
     bool operator !=(const acr::PlineKey &rhs) const;
     bool operator <(const acr::PlineKey &rhs) const;
+    bool operator >(const acr::PlineKey &rhs) const;
+    bool operator <=(const acr::PlineKey &rhs) const;
+    bool operator >=(const acr::PlineKey &rhs) const;
     PlineKey();
 };
 
@@ -2238,6 +2248,9 @@ struct RecSortkey { // acr.RecSortkey: One record
     bool operator ==(const acr::RecSortkey &rhs) const;
     bool operator !=(const acr::RecSortkey &rhs) const;
     bool operator <(const acr::RecSortkey &rhs) const;
+    bool operator >(const acr::RecSortkey &rhs) const;
+    bool operator <=(const acr::RecSortkey &rhs) const;
+    bool operator >=(const acr::RecSortkey &rhs) const;
     RecSortkey();
 };
 
@@ -3067,8 +3080,11 @@ struct write_c_cmtrec_curs {// cursor
     write_c_cmtrec_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-int                  main(int argc, char **argv);
 } // end namespace acr
+int                  main(int argc, char **argv);
+#if defined(WIN32)
+int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
+#endif
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const acr::CtypeTopoKey &row);// cfmt:acr.CtypeTopoKey.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr::trace &row);// cfmt:acr.trace.String

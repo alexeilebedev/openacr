@@ -1,0 +1,2 @@
+atfdb.msgdir  msgdir:exp  comment:"Expected output message"
+atfdb.msgdir  msgdir:in  comment:"Input message"

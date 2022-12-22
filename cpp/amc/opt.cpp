@@ -118,9 +118,11 @@ void amc::tfunc_Opt_ReadStrptrMaybe() {
         Ins(&R, doread.body, "bool retval = false;");
         if (field.p_arg->c_typefld) {
             Set(R, "$Fldhdrtype", field.p_arg->c_typefld->p_ctype->cpp_type);
-            Ins(&R, doread.body, "algo::ByteAry temp;");
-            Ins(&R, doread.body, "retval = $FldhdrtypeMsgs_ReadStrptrMaybe(in_str, temp); // read any of several message types here");
-            Ins(&R, doread.body, "ary_Setary(algo_lib::_db.varlenbuf, ary_Getary(temp)); // return it");
+            Ins(&R, doread.body, "if (algo_lib::_db.varlenbuf) {");
+            Ins(&R, doread.body, "    algo::ByteAry temp;");
+            Ins(&R, doread.body, "    retval = $FldhdrtypeMsgs_ReadStrptrMaybe(in_str, temp); // read any of several message types here");
+            Ins(&R, doread.body, "    ary_Setary(*algo_lib::_db.varlenbuf, ary_Getary(temp)); // return it");
+            Ins(&R, doread.body, "}");
             SetPresent(doread,Subst(R,"$parname"),field);
         } else {
             Ins(&R, doread.body, "// field cannot be read");

@@ -16,6 +16,7 @@ dmmeta.ptrary  field:acr.FRun.c_field  unique:N
 dmmeta.ptrary  field:acr.FRun.c_rec  unique:N
 dmmeta.ptrary  field:acr.FWrite.c_cmtrec  unique:N
 dmmeta.ptrary  field:acr_compl.FCtype.c_field  unique:Y
+dmmeta.ptrary  field:acr_ed.FCtype.c_cfmt  unique:N
 dmmeta.ptrary  field:acr_ed.FCtype.c_field  unique:Y
 dmmeta.ptrary  field:acr_in.FCtype.c_ctype  unique:N
 dmmeta.ptrary  field:acr_in.FCtype.c_field  unique:Y
@@ -65,6 +66,8 @@ dmmeta.ptrary  field:amc_vis.FDb.c_linklist  unique:Y
 dmmeta.ptrary  field:atf_amc.FCascdel.c_child_ptrary  unique:Y
 dmmeta.ptrary  field:atf_amc.FDb.c_typek  unique:Y
 dmmeta.ptrary  field:atf_amc.FUnitSort.c_ptrary  unique:N
+dmmeta.ptrary  field:atf_cov.FGitfile.c_covline  unique:Y
+dmmeta.ptrary  field:atf_cov.FTarget.c_targsrc  unique:Y
 dmmeta.ptrary  field:gitlab.FIssue.c_issue_note  unique:Y
 dmmeta.ptrary  field:gitlab.FMr.c_mr_note  unique:Y
 dmmeta.ptrary  field:gitlab.FProject.c_issue  unique:Y

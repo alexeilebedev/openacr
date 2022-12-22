@@ -244,6 +244,18 @@ inline bool atf_amc::Cstr::operator !=(const atf_amc::Cstr &rhs) const {
 inline bool atf_amc::Cstr::operator <(const atf_amc::Cstr &rhs) const {
     return atf_amc::Cstr_Lt(const_cast<atf_amc::Cstr&>(*this),const_cast<atf_amc::Cstr&>(rhs));
 }
+
+inline bool atf_amc::Cstr::operator >(const atf_amc::Cstr &rhs) const {
+    return rhs < *this;
+}
+
+inline bool atf_amc::Cstr::operator <=(const atf_amc::Cstr &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool atf_amc::Cstr::operator >=(const atf_amc::Cstr &rhs) const {
+    return !(*this < rhs);
+}
 inline atf_amc::Cstr::Cstr() {
 }
 
@@ -320,6 +332,18 @@ inline bool atf_amc::Ctype1Attr::operator !=(const atf_amc::Ctype1Attr &rhs) con
 inline bool atf_amc::Ctype1Attr::operator <(const atf_amc::Ctype1Attr &rhs) const {
     return atf_amc::Ctype1Attr_Lt(const_cast<atf_amc::Ctype1Attr&>(*this),const_cast<atf_amc::Ctype1Attr&>(rhs));
 }
+
+inline bool atf_amc::Ctype1Attr::operator >(const atf_amc::Ctype1Attr &rhs) const {
+    return rhs < *this;
+}
+
+inline bool atf_amc::Ctype1Attr::operator <=(const atf_amc::Ctype1Attr &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool atf_amc::Ctype1Attr::operator >=(const atf_amc::Ctype1Attr &rhs) const {
+    return !(*this < rhs);
+}
 inline atf_amc::Ctype1Attr::Ctype1Attr() {
     atf_amc::Ctype1Attr_Init(*this);
 }
@@ -387,6 +411,18 @@ inline bool atf_amc::Ctype2Attr::operator !=(const atf_amc::Ctype2Attr &rhs) con
 
 inline bool atf_amc::Ctype2Attr::operator <(const atf_amc::Ctype2Attr &rhs) const {
     return atf_amc::Ctype2Attr_Lt(const_cast<atf_amc::Ctype2Attr&>(*this),const_cast<atf_amc::Ctype2Attr&>(rhs));
+}
+
+inline bool atf_amc::Ctype2Attr::operator >(const atf_amc::Ctype2Attr &rhs) const {
+    return rhs < *this;
+}
+
+inline bool atf_amc::Ctype2Attr::operator <=(const atf_amc::Ctype2Attr &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool atf_amc::Ctype2Attr::operator >=(const atf_amc::Ctype2Attr &rhs) const {
+    return !(*this < rhs);
 }
 inline atf_amc::Ctype2Attr::Ctype2Attr() {
     atf_amc::Ctype2Attr_Init(*this);
@@ -2825,6 +2861,18 @@ inline bool atf_amc::TypeG::operator !=(const atf_amc::TypeG &rhs) const {
 inline bool atf_amc::TypeG::operator <(const atf_amc::TypeG &rhs) const {
     return atf_amc::TypeG_Lt(const_cast<atf_amc::TypeG&>(*this),const_cast<atf_amc::TypeG&>(rhs));
 }
+
+inline bool atf_amc::TypeG::operator >(const atf_amc::TypeG &rhs) const {
+    return rhs < *this;
+}
+
+inline bool atf_amc::TypeG::operator <=(const atf_amc::TypeG &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool atf_amc::TypeG::operator >=(const atf_amc::TypeG &rhs) const {
+    return !(*this < rhs);
+}
 inline atf_amc::TypeG::TypeG() {
     atf_amc::TypeG_Init(*this);
 }
@@ -3512,6 +3560,18 @@ inline bool atf_amc::TypeA::operator !=(const atf_amc::TypeA &rhs) const {
 inline bool atf_amc::TypeA::operator <(const atf_amc::TypeA &rhs) const {
     return atf_amc::TypeA_Lt(const_cast<atf_amc::TypeA&>(*this),const_cast<atf_amc::TypeA&>(rhs));
 }
+
+inline bool atf_amc::TypeA::operator >(const atf_amc::TypeA &rhs) const {
+    return rhs < *this;
+}
+
+inline bool atf_amc::TypeA::operator <=(const atf_amc::TypeA &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool atf_amc::TypeA::operator >=(const atf_amc::TypeA &rhs) const {
+    return !(*this < rhs);
+}
 inline atf_amc::TypeA::TypeA() {
     atf_amc::TypeA_Init(*this);
 }
@@ -4141,6 +4201,136 @@ inline i32 atf_amc::in_Max(atf_amc::Linebuf& linebuf) {
 inline i32 atf_amc::in_N(atf_amc::Linebuf& linebuf) {
     return linebuf.in_end - linebuf.in_start;
 }
+inline atf_amc::MsgHdrLT::MsgHdrLT(u8                             in_len
+        ,char                           in_type)
+    : len(in_len)
+    , type(in_type)
+{
+}
+inline atf_amc::MsgHdrLT::MsgHdrLT() {
+    atf_amc::MsgHdrLT_Init(*this);
+}
+
+
+// --- atf_amc.MsgHdrLT.type.GetEnum
+// Get value of field as enum type
+inline atf_amc_MsgHdrLT_type_Enum atf_amc::type_GetEnum(const atf_amc::MsgHdrLT& o) {
+    return atf_amc_MsgHdrLT_type_Enum(o.type);
+}
+
+// --- atf_amc.MsgHdrLT.type.SetEnum
+// Set value of field from enum type.
+inline void atf_amc::type_SetEnum(atf_amc::MsgHdrLT& o, atf_amc_MsgHdrLT_type_Enum rhs) {
+    o.type = char(rhs);
+}
+
+// --- atf_amc.MsgHdrLT..GetMsgLength
+// Message length (uses length field)
+inline i32 atf_amc::GetMsgLength(const atf_amc::MsgHdrLT& row) {
+    return i32(const_cast<atf_amc::MsgHdrLT&>(row).len + 2);
+}
+
+// --- atf_amc.MsgHdrLT..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgHdrLT& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<atf_amc::MsgHdrLT&>(row).len + 2));
+}
+
+// --- atf_amc.MsgHdrLT..Init
+// Set all fields to initial values.
+inline void atf_amc::MsgHdrLT_Init(atf_amc::MsgHdrLT& o) {
+    o.len = u8(0);
+    o.type = char(0);
+}
+inline atf_amc::MsgHdrLTMsgsCase::MsgHdrLTMsgsCase(u32                            in_value)
+    : value(in_value)
+{
+}
+inline atf_amc::MsgHdrLTMsgsCase::MsgHdrLTMsgsCase(atf_amc_MsgHdrLTMsgsCaseEnum arg) { this->value = u32(arg); }
+inline atf_amc::MsgHdrLTMsgsCase::MsgHdrLTMsgsCase() {
+    atf_amc::MsgHdrLTMsgsCase_Init(*this);
+}
+
+
+// --- atf_amc.MsgHdrLTMsgsCase.value.GetEnum
+// Get value of field as enum type
+inline atf_amc_MsgHdrLTMsgsCaseEnum atf_amc::value_GetEnum(const atf_amc::MsgHdrLTMsgsCase& parent) {
+    return atf_amc_MsgHdrLTMsgsCaseEnum(parent.value);
+}
+
+// --- atf_amc.MsgHdrLTMsgsCase.value.SetEnum
+// Set value of field from enum type.
+inline void atf_amc::value_SetEnum(atf_amc::MsgHdrLTMsgsCase& parent, atf_amc_MsgHdrLTMsgsCaseEnum rhs) {
+    parent.value = u32(rhs);
+}
+
+// --- atf_amc.MsgHdrLTMsgsCase.value.Cast
+inline atf_amc::MsgHdrLTMsgsCase::operator atf_amc_MsgHdrLTMsgsCaseEnum () const {
+    return atf_amc_MsgHdrLTMsgsCaseEnum((*this).value);
+}
+
+// --- atf_amc.MsgHdrLTMsgsCase..Init
+// Set all fields to initial values.
+inline void atf_amc::MsgHdrLTMsgsCase_Init(atf_amc::MsgHdrLTMsgsCase& parent) {
+    parent.value = u32(0);
+}
+inline atf_amc::MsgHdrLT_curs::MsgHdrLT_curs() {
+    atf_amc::MsgHdrLT_curs_Init(*this);
+}
+
+
+// --- atf_amc.MsgHdrLT_curs..ValidQ
+inline bool atf_amc::MsgHdrLT_curs_ValidQ(atf_amc::MsgHdrLT_curs& curs) {
+    return curs.msg != NULL;
+}
+
+// --- atf_amc.MsgHdrLT_curs..Reset
+inline void atf_amc::MsgHdrLT_curs_Reset(atf_amc::MsgHdrLT_curs& curs, algo::memptr buf) {
+    curs.bytes = buf.elems;
+    curs.limit = buf.n_elems;
+    atf_amc::MsgHdrLT *msg = NULL;
+    int msglen = 0;
+    if (curs.limit >= ssizeof(atf_amc::MsgHdrLT)) {
+        atf_amc::MsgHdrLT *ptr = (atf_amc::MsgHdrLT*)curs.bytes;
+        msglen = (*ptr).len;
+        if (msglen >= ssizeof(atf_amc::MsgHdrLT) && curs.limit >= msglen) {
+            msg = ptr;
+        }
+    }
+    curs.msg = msg;
+    curs.msglen = msglen;
+}
+
+// --- atf_amc.MsgHdrLT_curs..Access
+inline atf_amc::MsgHdrLT*& atf_amc::MsgHdrLT_curs_Access(atf_amc::MsgHdrLT_curs& curs) {
+    return curs.msg;
+}
+
+// --- atf_amc.MsgHdrLT_curs..Next
+inline void atf_amc::MsgHdrLT_curs_Next(atf_amc::MsgHdrLT_curs& curs) {
+    curs.bytes += curs.msglen;
+    curs.limit -= curs.msglen;
+    atf_amc::MsgHdrLT *msg = NULL;
+    int msglen = 0;
+    if (curs.limit >= ssizeof(atf_amc::MsgHdrLT)) {
+        atf_amc::MsgHdrLT *ptr = (atf_amc::MsgHdrLT*)curs.bytes;
+        msglen = (*ptr).len;
+        if (msglen >= ssizeof(atf_amc::MsgHdrLT) && curs.limit >= msglen) {
+            msg = ptr;
+        }
+    }
+    curs.msg = msg;
+    curs.msglen = msglen;
+}
+
+// --- atf_amc.MsgHdrLT_curs..Init
+// Set all fields to initial values.
+inline void atf_amc::MsgHdrLT_curs_Init(atf_amc::MsgHdrLT_curs& parent) {
+    parent.msg = NULL;
+    parent.bytes = NULL;
+    parent.limit = i32(0);
+    parent.msglen = i32(0);
+}
 inline atf_amc::MsgType::MsgType(u16                            in_value)
     : value(in_value)
 {
@@ -4157,6 +4347,18 @@ inline bool atf_amc::MsgType::operator !=(const atf_amc::MsgType &rhs) const {
 
 inline bool atf_amc::MsgType::operator <(const atf_amc::MsgType &rhs) const {
     return atf_amc::MsgType_Lt(const_cast<atf_amc::MsgType&>(*this),const_cast<atf_amc::MsgType&>(rhs));
+}
+
+inline bool atf_amc::MsgType::operator >(const atf_amc::MsgType &rhs) const {
+    return rhs < *this;
+}
+
+inline bool atf_amc::MsgType::operator <=(const atf_amc::MsgType &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool atf_amc::MsgType::operator >=(const atf_amc::MsgType &rhs) const {
+    return !(*this < rhs);
 }
 
 inline bool atf_amc::MsgType::operator ==(atf_amc_MsgTypeEnum rhs) const {
@@ -4398,6 +4600,228 @@ inline void atf_amc::MsgHeader_curs_Init(atf_amc::MsgHeader_curs& parent) {
     parent.bytes = NULL;
     parent.limit = i32(0);
     parent.msglen = i32(0);
+}
+inline atf_amc::MsgLTA::MsgLTA(const algo::strptr&            in_a)
+    : a(in_a)
+{
+    this->len = u8(ssizeof(*this) + (-2));
+    this->type = char('A');
+}
+inline atf_amc::MsgLTA::MsgLTA() {
+    atf_amc::MsgLTA_Init(*this);
+}
+
+
+// --- atf_amc.MsgLTA.base.Castdown
+// Check if atf_amc::MsgHdrLT is an instance of MsgLTA by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of MsgLTA.
+// If not successful, quietly return NULL.
+inline atf_amc::MsgLTA* atf_amc::MsgLTA_Castdown(atf_amc::MsgHdrLT &hdr) {
+    bool cond = hdr.type == ('A');
+    cond &= i32(hdr.len + 2) >= ssizeof(atf_amc::MsgLTA);
+    return cond ? reinterpret_cast<atf_amc::MsgLTA*>(&hdr) : NULL;
+}
+
+// --- atf_amc.MsgLTA.base.Castbase
+inline atf_amc::MsgHdrLT& atf_amc::Castbase(atf_amc::MsgLTA& parent) {
+    return reinterpret_cast<atf_amc::MsgHdrLT&>(parent);
+}
+
+// --- atf_amc.MsgLTA..GetMsgLength
+// Message length (uses length field)
+inline i32 atf_amc::GetMsgLength(const atf_amc::MsgLTA& row) {
+    return i32(const_cast<atf_amc::MsgLTA&>(row).len + 2);
+}
+
+// --- atf_amc.MsgLTA..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgLTA& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<atf_amc::MsgLTA&>(row).len + 2));
+}
+
+// --- atf_amc.MsgLTA..Init
+// Set all fields to initial values.
+inline void atf_amc::MsgLTA_Init(atf_amc::MsgLTA& parent) {
+    parent.len = u8(ssizeof(parent) + (-2));
+    parent.type = char('A');
+}
+inline atf_amc::MsgLTB::MsgLTB(const algo::strptr&            in_b)
+    : b(in_b)
+{
+    this->len = u8(ssizeof(*this) + (-2));
+    this->type = char('B');
+}
+inline atf_amc::MsgLTB::MsgLTB() {
+    atf_amc::MsgLTB_Init(*this);
+}
+
+
+// --- atf_amc.MsgLTB.base.Castdown
+// Check if atf_amc::MsgHdrLT is an instance of MsgLTB by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of MsgLTB.
+// If not successful, quietly return NULL.
+inline atf_amc::MsgLTB* atf_amc::MsgLTB_Castdown(atf_amc::MsgHdrLT &hdr) {
+    bool cond = hdr.type == ('B');
+    cond &= i32(hdr.len + 2) >= ssizeof(atf_amc::MsgLTB);
+    return cond ? reinterpret_cast<atf_amc::MsgLTB*>(&hdr) : NULL;
+}
+
+// --- atf_amc.MsgLTB.base.Castbase
+inline atf_amc::MsgHdrLT& atf_amc::Castbase(atf_amc::MsgLTB& parent) {
+    return reinterpret_cast<atf_amc::MsgHdrLT&>(parent);
+}
+
+// --- atf_amc.MsgLTB..GetMsgLength
+// Message length (uses length field)
+inline i32 atf_amc::GetMsgLength(const atf_amc::MsgLTB& row) {
+    return i32(const_cast<atf_amc::MsgLTB&>(row).len + 2);
+}
+
+// --- atf_amc.MsgLTB..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgLTB& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<atf_amc::MsgLTB&>(row).len + 2));
+}
+
+// --- atf_amc.MsgLTB..Init
+// Set all fields to initial values.
+inline void atf_amc::MsgLTB_Init(atf_amc::MsgLTB& parent) {
+    parent.len = u8(ssizeof(parent) + (-2));
+    parent.type = char('B');
+}
+inline atf_amc::MsgLTO::MsgLTO() {
+    atf_amc::MsgLTO_Init(*this);
+}
+
+
+// --- atf_amc.MsgLTO.base.Castdown
+// Check if atf_amc::MsgHdrLT is an instance of MsgLTO by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of MsgLTO.
+// If not successful, quietly return NULL.
+inline atf_amc::MsgLTO* atf_amc::MsgLTO_Castdown(atf_amc::MsgHdrLT &hdr) {
+    bool cond = hdr.type == ('O');
+    cond &= i32(hdr.len + 2) >= ssizeof(atf_amc::MsgLTO);
+    return cond ? reinterpret_cast<atf_amc::MsgLTO*>(&hdr) : NULL;
+}
+
+// --- atf_amc.MsgLTO.base.Castbase
+inline atf_amc::MsgHdrLT& atf_amc::Castbase(atf_amc::MsgLTO& parent) {
+    return reinterpret_cast<atf_amc::MsgHdrLT&>(parent);
+}
+
+// --- atf_amc.MsgLTO.o.Get
+// Return pointer to optional last element (NULL if none)
+// The parent's length field is assumed to have already been checked for validity.
+// If the parent's lengthis too short to allow a full-sized o, return NULL.
+// Since the last element is itself variable-length, two more checks are applied:
+// If o's length field value is too short, return NULL.
+// If o's length field value extends past parent's allowed length, return NULL.
+inline atf_amc::MsgHdrLT* atf_amc::o_Get(atf_amc::MsgLTO& parent) {
+    i32 totlen = i32(parent.len + 2);
+    u8 *end = (u8*)&parent + sizeof(atf_amc::MsgLTO);
+    atf_amc::MsgHdrLT *ptr = (atf_amc::MsgHdrLT*)end;
+    bool exists = ssizeof(atf_amc::MsgLTO) + sizeof_atf_amc_MsgHdrLT <= totlen;
+    exists = exists && i32((*ptr).len + 2) >= sizeof_atf_amc_MsgHdrLT && ssizeof(atf_amc::MsgLTO) + i32((*ptr).len + 2) <= totlen;
+    return exists ? ptr : NULL;
+}
+
+// --- atf_amc.MsgLTO..GetMsgLength
+// Message length (uses length field)
+inline i32 atf_amc::GetMsgLength(const atf_amc::MsgLTO& row) {
+    return i32(const_cast<atf_amc::MsgLTO&>(row).len + 2);
+}
+
+// --- atf_amc.MsgLTO..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgLTO& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<atf_amc::MsgLTO&>(row).len + 2));
+}
+
+// --- atf_amc.MsgLTO..Init
+// Set all fields to initial values.
+inline void atf_amc::MsgLTO_Init(atf_amc::MsgLTO& parent) {
+    parent.len = u8(ssizeof(parent) + (-2));
+    parent.type = char('O');
+}
+inline atf_amc::MsgLTV::MsgLTV() {
+    atf_amc::MsgLTV_Init(*this);
+}
+
+
+// --- atf_amc.MsgLTV.base.Castdown
+// Check if atf_amc::MsgHdrLT is an instance of MsgLTV by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of MsgLTV.
+// If not successful, quietly return NULL.
+inline atf_amc::MsgLTV* atf_amc::MsgLTV_Castdown(atf_amc::MsgHdrLT &hdr) {
+    bool cond = hdr.type == ('V');
+    cond &= i32(hdr.len + 2) >= ssizeof(atf_amc::MsgLTV);
+    return cond ? reinterpret_cast<atf_amc::MsgLTV*>(&hdr) : NULL;
+}
+
+// --- atf_amc.MsgLTV.base.Castbase
+inline atf_amc::MsgHdrLT& atf_amc::Castbase(atf_amc::MsgLTV& parent) {
+    return reinterpret_cast<atf_amc::MsgHdrLT&>(parent);
+}
+
+// --- atf_amc.MsgLTV.v.N
+// Return number of elements in varlen field
+inline u32 atf_amc::v_N(const atf_amc::MsgLTV& parent) {
+    u32 length = i32(((atf_amc::MsgLTV&)parent).len + 2);
+    u32 extra_bytes = u32_Max(length,sizeof(atf_amc::MsgLTV)) - sizeof(atf_amc::MsgLTV); // avoid unsigned subtraction underflow
+    return u32(extra_bytes / sizeof(u8));
+}
+
+// --- atf_amc.MsgLTV.v_curs.Reset
+inline void atf_amc::MsgLTV_v_curs_Reset(MsgLTV_v_curs &curs, atf_amc::MsgLTV &parent) {
+    curs.ptr = (u8*)&parent + sizeof(atf_amc::MsgLTV);
+    curs.length = i32(parent.len + 2) - sizeof(atf_amc::MsgLTV);
+    curs.index = 0;
+}
+
+// --- atf_amc.MsgLTV.v_curs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::MsgLTV_v_curs_ValidQ(MsgLTV_v_curs &curs) {
+    bool valid = ssizeof(atf_amc::MsgHdrLT) <= curs.length;
+    valid = valid && i32((*(atf_amc::MsgHdrLT*)curs.ptr).len + 2) <= curs.length;
+    return valid;
+}
+
+// --- atf_amc.MsgLTV.v_curs.Next
+// proceed to next item
+inline void atf_amc::MsgLTV_v_curs_Next(MsgLTV_v_curs &curs) {
+    i32 len = i32((*(atf_amc::MsgHdrLT*)curs.ptr).len + 2);
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- atf_amc.MsgLTV.v_curs.Access
+// item access
+inline atf_amc::MsgHdrLT& atf_amc::MsgLTV_v_curs_Access(MsgLTV_v_curs &curs) {
+    return *(atf_amc::MsgHdrLT*)curs.ptr;
+}
+
+// --- atf_amc.MsgLTV..GetMsgLength
+// Message length (uses length field)
+inline i32 atf_amc::GetMsgLength(const atf_amc::MsgLTV& row) {
+    return i32(const_cast<atf_amc::MsgLTV&>(row).len + 2);
+}
+
+// --- atf_amc.MsgLTV..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgLTV& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<atf_amc::MsgLTV&>(row).len + 2));
+}
+
+// --- atf_amc.MsgLTV..Init
+// Set all fields to initial values.
+inline void atf_amc::MsgLTV_Init(atf_amc::MsgLTV& parent) {
+    parent.len = u8(ssizeof(parent) + (-2));
+    parent.type = char('V');
 }
 inline atf_amc::Msgbuf::Msgbuf() {
     atf_amc::Msgbuf_Init(*this);
@@ -6575,6 +6999,18 @@ inline bool atf_amc::RnullStr6_U32::operator ==(const algo::strptr &rhs) const {
 inline bool atf_amc::RnullStr6_U32::operator <(const atf_amc::RnullStr6_U32 &rhs) const {
     return atf_amc::RnullStr6_U32_Lt(const_cast<atf_amc::RnullStr6_U32&>(*this),const_cast<atf_amc::RnullStr6_U32&>(rhs));
 }
+
+inline bool atf_amc::RnullStr6_U32::operator >(const atf_amc::RnullStr6_U32 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool atf_amc::RnullStr6_U32::operator <=(const atf_amc::RnullStr6_U32 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool atf_amc::RnullStr6_U32::operator >=(const atf_amc::RnullStr6_U32 &rhs) const {
+    return !(*this < rhs);
+}
 inline atf_amc::RnullStr6_U32::RnullStr6_U32() {
     atf_amc::RnullStr6_U32_Init(*this);
 }
@@ -6692,6 +7128,18 @@ inline bool atf_amc::RpasU32Str6::operator ==(const algo::strptr &rhs) const {
 
 inline bool atf_amc::RpasU32Str6::operator <(const atf_amc::RpasU32Str6 &rhs) const {
     return atf_amc::RpasU32Str6_Lt(const_cast<atf_amc::RpasU32Str6&>(*this),const_cast<atf_amc::RpasU32Str6&>(rhs));
+}
+
+inline bool atf_amc::RpasU32Str6::operator >(const atf_amc::RpasU32Str6 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool atf_amc::RpasU32Str6::operator <=(const atf_amc::RpasU32Str6 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool atf_amc::RpasU32Str6::operator >=(const atf_amc::RpasU32Str6 &rhs) const {
+    return !(*this < rhs);
 }
 inline atf_amc::RpasU32Str6::RpasU32Str6() {
     atf_amc::RpasU32Str6_Init(*this);
@@ -6835,6 +7283,18 @@ inline bool atf_amc::Sep1::operator !=(const atf_amc::Sep1 &rhs) const {
 inline bool atf_amc::Sep1::operator <(const atf_amc::Sep1 &rhs) const {
     return atf_amc::Sep1_Lt(const_cast<atf_amc::Sep1&>(*this),const_cast<atf_amc::Sep1&>(rhs));
 }
+
+inline bool atf_amc::Sep1::operator >(const atf_amc::Sep1 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool atf_amc::Sep1::operator <=(const atf_amc::Sep1 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool atf_amc::Sep1::operator >=(const atf_amc::Sep1 &rhs) const {
+    return !(*this < rhs);
+}
 inline atf_amc::Sep1::Sep1() {
     atf_amc::Sep1_Init(*this);
 }
@@ -6953,7 +7413,7 @@ inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::Seqmsg& row) {
 // Set all fields to initial values.
 inline void atf_amc::Seqmsg_Init(atf_amc::Seqmsg& parent) {
     parent.type = atf_amc_MsgTypeEnum(0x0905);
-    parent.length = atf_amc::MsgLength(sizeof(parent) + (0));
+    parent.length = atf_amc::MsgLength(ssizeof(parent) + (0));
 }
 inline atf_amc::SortedStr::SortedStr(const algo::strptr&            in_novs
         ,const algo::strptr&            in_vs)
@@ -6972,6 +7432,18 @@ inline bool atf_amc::SortedStr::operator !=(const atf_amc::SortedStr &rhs) const
 
 inline bool atf_amc::SortedStr::operator <(const atf_amc::SortedStr &rhs) const {
     return atf_amc::SortedStr_Lt(const_cast<atf_amc::SortedStr&>(*this),const_cast<atf_amc::SortedStr&>(rhs));
+}
+
+inline bool atf_amc::SortedStr::operator >(const atf_amc::SortedStr &rhs) const {
+    return rhs < *this;
+}
+
+inline bool atf_amc::SortedStr::operator <=(const atf_amc::SortedStr &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool atf_amc::SortedStr::operator >=(const atf_amc::SortedStr &rhs) const {
+    return !(*this < rhs);
 }
 inline atf_amc::SortedStr::SortedStr() {
 }
@@ -7362,27 +7834,31 @@ inline u32 atf_amc::text_N(const atf_amc::Text& parent) {
 
 // --- atf_amc.Text.text_curs.Reset
 inline void atf_amc::Text_text_curs_Reset(Text_text_curs &curs, atf_amc::Text &parent) {
-    curs.elems = text_Addr(parent);
-    curs.n_elems = text_N(parent);
+    curs.ptr = (u8*)&parent + sizeof(atf_amc::Text);
+    curs.length = i32(parent.length) - sizeof(atf_amc::Text);
     curs.index = 0;
 }
 
 // --- atf_amc.Text.text_curs.ValidQ
 // cursor points to valid item
 inline bool atf_amc::Text_text_curs_ValidQ(Text_text_curs &curs) {
-    return curs.index < curs.n_elems;
+    bool valid = ssizeof(char) <= curs.length;
+    return valid;
 }
 
 // --- atf_amc.Text.text_curs.Next
 // proceed to next item
 inline void atf_amc::Text_text_curs_Next(Text_text_curs &curs) {
-    curs.index++;
+    i32 len = i32(sizeof(char));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
 }
 
 // --- atf_amc.Text.text_curs.Access
 // item access
 inline char& atf_amc::Text_text_curs_Access(Text_text_curs &curs) {
-    return curs.elems[curs.index];
+    return *(char*)curs.ptr;
 }
 
 // --- atf_amc.Text..GetMsgLength
@@ -7401,7 +7877,7 @@ inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::Text& row) {
 // Set all fields to initial values.
 inline void atf_amc::Text_Init(atf_amc::Text& parent) {
     parent.type = atf_amc_MsgTypeEnum(0x0412);
-    parent.length = atf_amc::MsgLength(sizeof(parent) + (0));
+    parent.length = atf_amc::MsgLength(ssizeof(parent) + (0));
 }
 
 inline bool atf_amc::TypeB::operator ==(const atf_amc::TypeB &rhs) const {
@@ -7414,6 +7890,18 @@ inline bool atf_amc::TypeB::operator !=(const atf_amc::TypeB &rhs) const {
 
 inline bool atf_amc::TypeB::operator <(const atf_amc::TypeB &rhs) const {
     return atf_amc::TypeB_Lt(const_cast<atf_amc::TypeB&>(*this),const_cast<atf_amc::TypeB&>(rhs));
+}
+
+inline bool atf_amc::TypeB::operator >(const atf_amc::TypeB &rhs) const {
+    return rhs < *this;
+}
+
+inline bool atf_amc::TypeB::operator <=(const atf_amc::TypeB &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool atf_amc::TypeB::operator >=(const atf_amc::TypeB &rhs) const {
+    return !(*this < rhs);
 }
 inline atf_amc::TypeB::TypeB() {
     atf_amc::TypeB_Init(*this);
@@ -7573,6 +8061,18 @@ inline bool atf_amc::TypeBE64::operator !=(const atf_amc::TypeBE64 &rhs) const {
 
 inline bool atf_amc::TypeBE64::operator <(const atf_amc::TypeBE64 &rhs) const {
     return atf_amc::TypeBE64_Lt(const_cast<atf_amc::TypeBE64&>(*this),const_cast<atf_amc::TypeBE64&>(rhs));
+}
+
+inline bool atf_amc::TypeBE64::operator >(const atf_amc::TypeBE64 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool atf_amc::TypeBE64::operator <=(const atf_amc::TypeBE64 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool atf_amc::TypeBE64::operator >=(const atf_amc::TypeBE64 &rhs) const {
+    return !(*this < rhs);
 }
 inline atf_amc::TypeBE64::TypeBE64() {
     atf_amc::TypeBE64_Init(*this);
@@ -7863,6 +8363,18 @@ inline bool atf_amc::TypeC::operator !=(const atf_amc::TypeC &rhs) const {
 inline bool atf_amc::TypeC::operator <(const atf_amc::TypeC &rhs) const {
     return atf_amc::TypeC_Lt(const_cast<atf_amc::TypeC&>(*this),const_cast<atf_amc::TypeC&>(rhs));
 }
+
+inline bool atf_amc::TypeC::operator >(const atf_amc::TypeC &rhs) const {
+    return rhs < *this;
+}
+
+inline bool atf_amc::TypeC::operator <=(const atf_amc::TypeC &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool atf_amc::TypeC::operator >=(const atf_amc::TypeC &rhs) const {
+    return !(*this < rhs);
+}
 inline atf_amc::TypeC::TypeC() {
     atf_amc::TypeC_Init(*this);
 }
@@ -7919,6 +8431,18 @@ inline bool atf_amc::TypeH::operator !=(const atf_amc::TypeH &rhs) const {
 
 inline bool atf_amc::TypeH::operator <(const atf_amc::TypeH &rhs) const {
     return atf_amc::TypeH_Lt(const_cast<atf_amc::TypeH&>(*this),const_cast<atf_amc::TypeH&>(rhs));
+}
+
+inline bool atf_amc::TypeH::operator >(const atf_amc::TypeH &rhs) const {
+    return rhs < *this;
+}
+
+inline bool atf_amc::TypeH::operator <=(const atf_amc::TypeH &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool atf_amc::TypeH::operator >=(const atf_amc::TypeH &rhs) const {
+    return !(*this < rhs);
 }
 inline atf_amc::TypeH::TypeH() {
     atf_amc::TypeH_Init(*this);
@@ -8040,27 +8564,31 @@ inline u32 atf_amc::elem_N(const atf_amc::VarlenAlloc& varlenalloc) {
 
 // --- atf_amc.VarlenAlloc.elem_curs.Reset
 inline void atf_amc::varlenalloc_elem_curs_Reset(varlenalloc_elem_curs &curs, atf_amc::VarlenAlloc &parent) {
-    curs.elems = elem_Addr(parent);
-    curs.n_elems = elem_N(parent);
+    curs.ptr = (u8*)&parent + sizeof(atf_amc::VarlenAlloc);
+    curs.length = i32(parent.length) - sizeof(atf_amc::VarlenAlloc);
     curs.index = 0;
 }
 
 // --- atf_amc.VarlenAlloc.elem_curs.ValidQ
 // cursor points to valid item
 inline bool atf_amc::varlenalloc_elem_curs_ValidQ(varlenalloc_elem_curs &curs) {
-    return curs.index < curs.n_elems;
+    bool valid = ssizeof(i32) <= curs.length;
+    return valid;
 }
 
 // --- atf_amc.VarlenAlloc.elem_curs.Next
 // proceed to next item
 inline void atf_amc::varlenalloc_elem_curs_Next(varlenalloc_elem_curs &curs) {
-    curs.index++;
+    i32 len = i32(sizeof(i32));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
 }
 
 // --- atf_amc.VarlenAlloc.elem_curs.Access
 // item access
 inline i32& atf_amc::varlenalloc_elem_curs_Access(varlenalloc_elem_curs &curs) {
-    return curs.elems[curs.index];
+    return *(i32*)curs.ptr;
 }
 
 // --- atf_amc.VarlenAlloc..GetMsgLength
@@ -8095,27 +8623,31 @@ inline u32 atf_amc::varlen_N(const atf_amc::VarlenExtern& varlen_extern) {
 
 // --- atf_amc.VarlenExtern.varlen_curs.Reset
 inline void atf_amc::varlen_extern_varlen_curs_Reset(varlen_extern_varlen_curs &curs, atf_amc::VarlenExtern &parent) {
-    curs.elems = varlen_Addr(parent);
-    curs.n_elems = varlen_N(parent);
+    curs.ptr = (u8*)&parent + sizeof(atf_amc::VarlenExtern);
+    curs.length = i32(length_Get(parent)) - sizeof(atf_amc::VarlenExtern);
     curs.index = 0;
 }
 
 // --- atf_amc.VarlenExtern.varlen_curs.ValidQ
 // cursor points to valid item
 inline bool atf_amc::varlen_extern_varlen_curs_ValidQ(varlen_extern_varlen_curs &curs) {
-    return curs.index < curs.n_elems;
+    bool valid = ssizeof(u32) <= curs.length;
+    return valid;
 }
 
 // --- atf_amc.VarlenExtern.varlen_curs.Next
 // proceed to next item
 inline void atf_amc::varlen_extern_varlen_curs_Next(varlen_extern_varlen_curs &curs) {
-    curs.index++;
+    i32 len = i32(sizeof(u32));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
 }
 
 // --- atf_amc.VarlenExtern.varlen_curs.Access
 // item access
 inline u32& atf_amc::varlen_extern_varlen_curs_Access(varlen_extern_varlen_curs &curs) {
-    return curs.elems[curs.index];
+    return *(u32*)curs.ptr;
 }
 
 // --- atf_amc.VarlenExtern..GetMsgLength
@@ -8150,27 +8682,31 @@ inline u32 atf_amc::typeh_N(const atf_amc::VarlenH& parent) {
 
 // --- atf_amc.VarlenH.typeh_curs.Reset
 inline void atf_amc::VarlenH_typeh_curs_Reset(VarlenH_typeh_curs &curs, atf_amc::VarlenH &parent) {
-    curs.elems = typeh_Addr(parent);
-    curs.n_elems = typeh_N(parent);
+    curs.ptr = (u8*)&parent + sizeof(atf_amc::VarlenH);
+    curs.length = i32(parent.length) - sizeof(atf_amc::VarlenH);
     curs.index = 0;
 }
 
 // --- atf_amc.VarlenH.typeh_curs.ValidQ
 // cursor points to valid item
 inline bool atf_amc::VarlenH_typeh_curs_ValidQ(VarlenH_typeh_curs &curs) {
-    return curs.index < curs.n_elems;
+    bool valid = ssizeof(atf_amc::TypeH) <= curs.length;
+    return valid;
 }
 
 // --- atf_amc.VarlenH.typeh_curs.Next
 // proceed to next item
 inline void atf_amc::VarlenH_typeh_curs_Next(VarlenH_typeh_curs &curs) {
-    curs.index++;
+    i32 len = i32(sizeof(atf_amc::TypeH));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
 }
 
 // --- atf_amc.VarlenH.typeh_curs.Access
 // item access
 inline atf_amc::TypeH& atf_amc::VarlenH_typeh_curs_Access(VarlenH_typeh_curs &curs) {
-    return curs.elems[curs.index];
+    return *(atf_amc::TypeH*)curs.ptr;
 }
 
 // --- atf_amc.VarlenH..GetMsgLength
@@ -8205,27 +8741,31 @@ inline u32 atf_amc::i_N(const atf_amc::VarlenK& parent) {
 
 // --- atf_amc.VarlenK.i_curs.Reset
 inline void atf_amc::VarlenK_i_curs_Reset(VarlenK_i_curs &curs, atf_amc::VarlenK &parent) {
-    curs.elems = i_Addr(parent);
-    curs.n_elems = i_N(parent);
+    curs.ptr = (u8*)&parent + sizeof(atf_amc::VarlenK);
+    curs.length = i32(parent.length) - sizeof(atf_amc::VarlenK);
     curs.index = 0;
 }
 
 // --- atf_amc.VarlenK.i_curs.ValidQ
 // cursor points to valid item
 inline bool atf_amc::VarlenK_i_curs_ValidQ(VarlenK_i_curs &curs) {
-    return curs.index < curs.n_elems;
+    bool valid = ssizeof(u32) <= curs.length;
+    return valid;
 }
 
 // --- atf_amc.VarlenK.i_curs.Next
 // proceed to next item
 inline void atf_amc::VarlenK_i_curs_Next(VarlenK_i_curs &curs) {
-    curs.index++;
+    i32 len = i32(sizeof(u32));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
 }
 
 // --- atf_amc.VarlenK.i_curs.Access
 // item access
 inline u32& atf_amc::VarlenK_i_curs_Access(VarlenK_i_curs &curs) {
-    return curs.elems[curs.index];
+    return *(u32*)curs.ptr;
 }
 
 // --- atf_amc.VarlenK..GetMsgLength
@@ -8281,6 +8821,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::Field
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::MsgHdrLT &row) {// cfmt:atf_amc.MsgHdrLT.String
+    atf_amc::MsgHdrLT_Print(const_cast<atf_amc::MsgHdrLT&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::MsgType &row) {// cfmt:atf_amc.MsgType.String
     atf_amc::MsgType_Print(const_cast<atf_amc::MsgType&>(row), str);
     return str;
@@ -8293,6 +8838,26 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::MsgLe
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::MsgHeader &row) {// cfmt:atf_amc.MsgHeader.String
     atf_amc::MsgHeader_Print(const_cast<atf_amc::MsgHeader&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::MsgLTA &row) {// cfmt:atf_amc.MsgLTA.String
+    atf_amc::MsgLTA_Print(const_cast<atf_amc::MsgLTA&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::MsgLTB &row) {// cfmt:atf_amc.MsgLTB.String
+    atf_amc::MsgLTB_Print(const_cast<atf_amc::MsgLTB&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::MsgLTO &row) {// cfmt:atf_amc.MsgLTO.String
+    atf_amc::MsgLTO_Print(const_cast<atf_amc::MsgLTO&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::MsgLTV &row) {// cfmt:atf_amc.MsgLTV.String
+    atf_amc::MsgLTV_Print(const_cast<atf_amc::MsgLTV&>(row), str);
     return str;
 }
 

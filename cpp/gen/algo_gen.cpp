@@ -293,6 +293,18 @@ void algo::ch_Setary(algo::cstring& error, const algo::aryptr<char> &rhs) {
     ch_Addary(error, rhs);
 }
 
+// --- algo.cstring.ch.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<char> algo::ch_AllocNVal(algo::cstring& error, int n_elems, const char& val) {
+    ch_Reserve(error, n_elems);
+    int old_n  = error.ch_n;
+    int new_n = old_n + n_elems;
+    char *elems = error.ch_elems;
+    memset(elems + old_n, val, new_n - old_n); // initialize new space
+    error.ch_n = new_n;
+    return algo::aryptr<char>(elems + old_n, n_elems);
+}
+
 // --- algo.cstring..Uninit
 void algo::cstring_Uninit(algo::cstring& error) {
     algo::cstring &row = error; (void)row;
@@ -487,6 +499,20 @@ void algo::attrs_Setary(algo::Tuple& parent, const algo::aryptr<algo::Attr> &rhs
     attrs_Addary(parent, rhs);
 }
 
+// --- algo.Tuple.attrs.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::Attr> algo::attrs_AllocNVal(algo::Tuple& parent, int n_elems, const algo::Attr& val) {
+    attrs_Reserve(parent, n_elems);
+    int old_n  = parent.attrs_n;
+    int new_n = old_n + n_elems;
+    algo::Attr *elems = parent.attrs_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::Attr(val);
+    }
+    parent.attrs_n = new_n;
+    return algo::aryptr<algo::Attr>(elems + old_n, n_elems);
+}
+
 // --- algo.Tuple..Uninit
 void algo::Tuple_Uninit(algo::Tuple& parent) {
     algo::Tuple &row = parent; (void)row;
@@ -601,6 +627,20 @@ void algo::proto_Setary(algo::Argtuple& parent, algo::Argtuple &rhs) {
     }
 }
 
+// --- algo.Argtuple.proto.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::ArgProto> algo::proto_AllocNVal(algo::Argtuple& parent, int n_elems, const algo::ArgProto& val) {
+    proto_Reserve(parent, n_elems);
+    int old_n  = parent.proto_n;
+    int new_n = old_n + n_elems;
+    algo::ArgProto *elems = parent.proto_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::ArgProto(val);
+    }
+    parent.proto_n = new_n;
+    return algo::aryptr<algo::ArgProto>(elems + old_n, n_elems);
+}
+
 // --- algo.Argtuple.error.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -702,6 +742,20 @@ void algo::error_Setary(algo::Argtuple& parent, algo::Argtuple &rhs) {
         new (parent.error_elems + i) algo::cstring(error_qFind(rhs, i));
         parent.error_n = i + 1;
     }
+}
+
+// --- algo.Argtuple.error.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> algo::error_AllocNVal(algo::Argtuple& parent, int n_elems, const algo::cstring& val) {
+    error_Reserve(parent, n_elems);
+    int old_n  = parent.error_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = parent.error_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(val);
+    }
+    parent.error_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
 // --- algo.Argtuple..Init
@@ -872,6 +926,20 @@ void algo::out_Setary(algo::Arrsimp& parent, algo::Arrsimp &rhs) {
     }
 }
 
+// --- algo.Arrsimp.out.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<i32> algo::out_AllocNVal(algo::Arrsimp& parent, int n_elems, const i32& val) {
+    out_Reserve(parent, n_elems);
+    int old_n  = parent.out_n;
+    int new_n = old_n + n_elems;
+    i32 *elems = parent.out_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) i32(val);
+    }
+    parent.out_n = new_n;
+    return algo::aryptr<i32>(elems + old_n, n_elems);
+}
+
 // --- algo.Arrsimp.stack.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -961,6 +1029,20 @@ void algo::stack_Setary(algo::Arrsimp& parent, algo::Arrsimp &rhs) {
         new (parent.stack_elems + i) algo::i32_Range(stack_qFind(rhs, i));
         parent.stack_n = i + 1;
     }
+}
+
+// --- algo.Arrsimp.stack.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::i32_Range> algo::stack_AllocNVal(algo::Arrsimp& parent, int n_elems, const algo::i32_Range& val) {
+    stack_Reserve(parent, n_elems);
+    int old_n  = parent.stack_n;
+    int new_n = old_n + n_elems;
+    algo::i32_Range *elems = parent.stack_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::i32_Range(val);
+    }
+    parent.stack_n = new_n;
+    return algo::aryptr<algo::i32_Range>(elems + old_n, n_elems);
 }
 
 // --- algo.Arrsimp..Uninit
@@ -1187,6 +1269,18 @@ void algo::ary_Setary(algo::ByteAry& parent, algo::ByteAry &rhs) {
 void algo::ary_Setary(algo::ByteAry& parent, const algo::aryptr<u8> &rhs) {
     ary_RemoveAll(parent);
     ary_Addary(parent, rhs);
+}
+
+// --- algo.ByteAry.ary.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<u8> algo::ary_AllocNVal(algo::ByteAry& parent, int n_elems, const u8& val) {
+    ary_Reserve(parent, n_elems);
+    int old_n  = parent.ary_n;
+    int new_n = old_n + n_elems;
+    u8 *elems = parent.ary_elems;
+    memset(elems + old_n, val, new_n - old_n); // initialize new space
+    parent.ary_n = new_n;
+    return algo::aryptr<u8>(elems + old_n, n_elems);
 }
 
 // --- algo.ByteAry..Uninit
@@ -3734,6 +3828,18 @@ void algo::buf_Setary(algo::LineBuf& parent, algo::LineBuf &rhs) {
 void algo::buf_Setary(algo::LineBuf& parent, const algo::aryptr<char> &rhs) {
     buf_RemoveAll(parent);
     buf_Addary(parent, rhs);
+}
+
+// --- algo.LineBuf.buf.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<char> algo::buf_AllocNVal(algo::LineBuf& parent, int n_elems, const char& val) {
+    buf_Reserve(parent, n_elems);
+    int old_n  = parent.buf_n;
+    int new_n = old_n + n_elems;
+    char *elems = parent.buf_elems;
+    memset(elems + old_n, val, new_n - old_n); // initialize new space
+    parent.buf_n = new_n;
+    return algo::aryptr<char>(elems + old_n, n_elems);
 }
 
 // --- algo.LineBuf..Uninit
@@ -7849,6 +7955,20 @@ void algo::start_Setary(algo::NormTxttbl& parent, algo::NormTxttbl &rhs) {
     }
 }
 
+// --- algo.NormTxttbl.start.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<i32> algo::start_AllocNVal(algo::NormTxttbl& parent, int n_elems, const i32& val) {
+    start_Reserve(parent, n_elems);
+    int old_n  = parent.start_n;
+    int new_n = old_n + n_elems;
+    i32 *elems = parent.start_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) i32(val);
+    }
+    parent.start_n = new_n;
+    return algo::aryptr<i32>(elems + old_n, n_elems);
+}
+
 // --- algo.NormTxttbl..Uninit
 void algo::NormTxttbl_Uninit(algo::NormTxttbl& parent) {
     algo::NormTxttbl &row = parent; (void)row;
@@ -8006,6 +8126,7 @@ void algo::StaticCheck() {
     algo_assert(sizeof(algo::ImrowRowidFindFcn) == 8); // csize:algo.ImrowRowidFindFcn
     algo_assert(sizeof(algo::ImrowXrefXFcn) == 8); // csize:algo.ImrowXrefXFcn
     algo_assert(sizeof(algo::strptr) == 16); // csize:algo.strptr
+    algo_assert(sizeof(algo::PrlogFcn) == 8); // csize:algo.PrlogFcn
     algo_assert(sizeof(algo::memptr) == 16); // csize:algo.memptr
     algo_assert(_offset_of(algo::UnTime, value) + sizeof(((algo::UnTime*)0)->value) == sizeof(algo::UnTime));
     // check that bitfield fits width
@@ -8013,7 +8134,9 @@ void algo::StaticCheck() {
     algo_assert(_offset_of(algo::FieldId, value) + sizeof(((algo::FieldId*)0)->value) == sizeof(algo::FieldId));
     // check that bitfield fits width
     algo_assert(sizeof(((algo::FileFlags*)0)->value)*8 >= 10);
+    algo_assert(_offset_of(algo::I64Dec4, value) + sizeof(((algo::I64Dec4*)0)->value) == sizeof(algo::I64Dec4));
     algo_assert(_offset_of(algo::I64Dec5, value) + sizeof(((algo::I64Dec5*)0)->value) == sizeof(algo::I64Dec5));
+    algo_assert(_offset_of(algo::I64Dec8, value) + sizeof(((algo::I64Dec8*)0)->value) == sizeof(algo::I64Dec8));
     // check that bitfield fits width
     algo_assert(sizeof(((algo::IOEvtFlags*)0)->value)*8 >= 4);
     algo_assert(_offset_of(algo::SchedTime, value) + sizeof(((algo::SchedTime*)0)->value) == sizeof(algo::SchedTime));
@@ -8023,6 +8146,8 @@ void algo::StaticCheck() {
     algo_assert(_offset_of(algo::U16Dec2, value) + sizeof(((algo::U16Dec2*)0)->value) == sizeof(algo::U16Dec2));
     algo_assert(_offset_of(algo::U32Dec1, value) + sizeof(((algo::U32Dec1*)0)->value) == sizeof(algo::U32Dec1));
     algo_assert(_offset_of(algo::U64Dec2, value) + sizeof(((algo::U64Dec2*)0)->value) == sizeof(algo::U64Dec2));
+    algo_assert(_offset_of(algo::U64Dec4, value) + sizeof(((algo::U64Dec4*)0)->value) == sizeof(algo::U64Dec4));
+    algo_assert(_offset_of(algo::U64Dec8, value) + sizeof(((algo::U64Dec8*)0)->value) == sizeof(algo::U64Dec8));
     algo_assert(_offset_of(algo::UnDiff, value) + sizeof(((algo::UnDiff*)0)->value) == sizeof(algo::UnDiff));
     algo_assert(_offset_of(algo::UnixTime, value) + sizeof(((algo::UnixTime*)0)->value) == sizeof(algo::UnixTime));
     algo_assert(_offset_of(algo::WDiff, value) + sizeof(((algo::WDiff*)0)->value) == sizeof(algo::WDiff));
@@ -10738,7 +10863,7 @@ void algo::ch_SetStrptr(algo::RspaceStr10& parent, const algo::strptr &rhs) {
 }
 
 // --- algo.RspaceStr10..Hash
-u32 algo::RspaceStr10_Hash(u32 prev, const algo::RspaceStr10 & rhs) {
+u32 algo::RspaceStr10_Hash(u32 prev, algo::RspaceStr10 rhs) {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -10755,7 +10880,7 @@ bool algo::RspaceStr10_ReadStrptrMaybe(algo::RspaceStr10 &parent, algo::strptr i
 
 // --- algo.RspaceStr10..Print
 // print string representation of algo::RspaceStr10 to string LHS, no header -- cprint:algo.RspaceStr10.String
-void algo::RspaceStr10_Print(algo::RspaceStr10 & row, algo::cstring &str) {
+void algo::RspaceStr10_Print(algo::RspaceStr10 row, algo::cstring &str) {
     algo::ch_Print(row, str);
 }
 
@@ -10930,6 +11055,177 @@ void algo::RspaceStr12_Print(algo::RspaceStr12 row, algo::cstring &str) {
     algo::ch_Print(row, str);
 }
 
+// --- algo.RspaceStr128.ch.Print
+void algo::ch_Print(algo::RspaceStr128& parent, algo::cstring &out) {
+    ch_Addary(out, ch_Getary(parent));
+}
+
+// --- algo.RspaceStr128.ch.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr128& parent, algo::strptr rhs) {
+    bool retval = false;
+    if (rhs.n_elems <= 128) {
+        ch_SetStrptr(parent, rhs);
+        retval = true;
+    } else {
+        algo_lib::SaveBadTag("comment","text too long, limit 128");
+    }
+    return retval;
+}
+
+// --- algo.RspaceStr128.ch.SetStrptr
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void algo::ch_SetStrptr(algo::RspaceStr128& parent, const algo::strptr &rhs) {
+    int len = i32_Min(rhs.n_elems, 128);
+    char *rhs_elems = rhs.elems;
+    int i = 0;
+    int j = 0;
+    for (; i < len; i++, j++) {
+        parent.ch[j] = rhs_elems[i];
+    }
+    for (; j < 128; j++) {
+        parent.ch[j] = ' ';
+    }
+}
+
+// --- algo.RspaceStr128..Hash
+u32 algo::RspaceStr128_Hash(u32 prev, algo::RspaceStr128 rhs) {
+    algo::strptr ch_strptr = ch_Getary(rhs);
+    prev = ::strptr_Hash(prev, ch_strptr);
+    return prev;
+}
+
+// --- algo.RspaceStr128..ReadStrptrMaybe
+// Read fields of algo::RspaceStr128 from an ascii string.
+// The format of the string is the format of the algo::RspaceStr128's only field
+bool algo::RspaceStr128_ReadStrptrMaybe(algo::RspaceStr128 &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && algo::ch_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- algo.RspaceStr128..Print
+// print string representation of algo::RspaceStr128 to string LHS, no header -- cprint:algo.RspaceStr128.String
+void algo::RspaceStr128_Print(algo::RspaceStr128 row, algo::cstring &str) {
+    algo::ch_Print(row, str);
+}
+
+// --- algo.RspaceStr14.ch.Print
+void algo::ch_Print(algo::RspaceStr14& parent, algo::cstring &out) {
+    ch_Addary(out, ch_Getary(parent));
+}
+
+// --- algo.RspaceStr14.ch.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr14& parent, algo::strptr rhs) {
+    bool retval = false;
+    if (rhs.n_elems <= 14) {
+        ch_SetStrptr(parent, rhs);
+        retval = true;
+    } else {
+        algo_lib::SaveBadTag("comment","text too long, limit 14");
+    }
+    return retval;
+}
+
+// --- algo.RspaceStr14.ch.SetStrptr
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void algo::ch_SetStrptr(algo::RspaceStr14& parent, const algo::strptr &rhs) {
+    int len = i32_Min(rhs.n_elems, 14);
+    char *rhs_elems = rhs.elems;
+    int i = 0;
+    int j = 0;
+    for (; i < len; i++, j++) {
+        parent.ch[j] = rhs_elems[i];
+    }
+    for (; j < 14; j++) {
+        parent.ch[j] = ' ';
+    }
+}
+
+// --- algo.RspaceStr14..Hash
+u32 algo::RspaceStr14_Hash(u32 prev, algo::RspaceStr14 rhs) {
+    algo::strptr ch_strptr = ch_Getary(rhs);
+    prev = ::strptr_Hash(prev, ch_strptr);
+    return prev;
+}
+
+// --- algo.RspaceStr14..ReadStrptrMaybe
+// Read fields of algo::RspaceStr14 from an ascii string.
+// The format of the string is the format of the algo::RspaceStr14's only field
+bool algo::RspaceStr14_ReadStrptrMaybe(algo::RspaceStr14 &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && algo::ch_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- algo.RspaceStr14..Print
+// print string representation of algo::RspaceStr14 to string LHS, no header -- cprint:algo.RspaceStr14.String
+void algo::RspaceStr14_Print(algo::RspaceStr14 row, algo::cstring &str) {
+    algo::ch_Print(row, str);
+}
+
+// --- algo.RspaceStr15.ch.Print
+void algo::ch_Print(algo::RspaceStr15& parent, algo::cstring &out) {
+    ch_Addary(out, ch_Getary(parent));
+}
+
+// --- algo.RspaceStr15.ch.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr15& parent, algo::strptr rhs) {
+    bool retval = false;
+    if (rhs.n_elems <= 15) {
+        ch_SetStrptr(parent, rhs);
+        retval = true;
+    } else {
+        algo_lib::SaveBadTag("comment","text too long, limit 15");
+    }
+    return retval;
+}
+
+// --- algo.RspaceStr15.ch.SetStrptr
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void algo::ch_SetStrptr(algo::RspaceStr15& parent, const algo::strptr &rhs) {
+    int len = i32_Min(rhs.n_elems, 15);
+    char *rhs_elems = rhs.elems;
+    int i = 0;
+    int j = 0;
+    for (; i < len; i++, j++) {
+        parent.ch[j] = rhs_elems[i];
+    }
+    for (; j < 15; j++) {
+        parent.ch[j] = ' ';
+    }
+}
+
+// --- algo.RspaceStr15..Hash
+u32 algo::RspaceStr15_Hash(u32 prev, algo::RspaceStr15 rhs) {
+    algo::strptr ch_strptr = ch_Getary(rhs);
+    prev = ::strptr_Hash(prev, ch_strptr);
+    return prev;
+}
+
+// --- algo.RspaceStr15..ReadStrptrMaybe
+// Read fields of algo::RspaceStr15 from an ascii string.
+// The format of the string is the format of the algo::RspaceStr15's only field
+bool algo::RspaceStr15_ReadStrptrMaybe(algo::RspaceStr15 &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && algo::ch_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- algo.RspaceStr15..Print
+// print string representation of algo::RspaceStr15 to string LHS, no header -- cprint:algo.RspaceStr15.String
+void algo::RspaceStr15_Print(algo::RspaceStr15 row, algo::cstring &str) {
+    algo::ch_Print(row, str);
+}
+
 // --- algo.RspaceStr16.ch.Print
 void algo::ch_Print(algo::RspaceStr16& parent, algo::cstring &out) {
     ch_Addary(out, ch_Getary(parent));
@@ -10984,6 +11280,63 @@ bool algo::RspaceStr16_ReadStrptrMaybe(algo::RspaceStr16 &parent, algo::strptr i
 // --- algo.RspaceStr16..Print
 // print string representation of algo::RspaceStr16 to string LHS, no header -- cprint:algo.RspaceStr16.String
 void algo::RspaceStr16_Print(algo::RspaceStr16 row, algo::cstring &str) {
+    algo::ch_Print(row, str);
+}
+
+// --- algo.RspaceStr18.ch.Print
+void algo::ch_Print(algo::RspaceStr18& parent, algo::cstring &out) {
+    ch_Addary(out, ch_Getary(parent));
+}
+
+// --- algo.RspaceStr18.ch.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr18& parent, algo::strptr rhs) {
+    bool retval = false;
+    if (rhs.n_elems <= 18) {
+        ch_SetStrptr(parent, rhs);
+        retval = true;
+    } else {
+        algo_lib::SaveBadTag("comment","text too long, limit 18");
+    }
+    return retval;
+}
+
+// --- algo.RspaceStr18.ch.SetStrptr
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void algo::ch_SetStrptr(algo::RspaceStr18& parent, const algo::strptr &rhs) {
+    int len = i32_Min(rhs.n_elems, 18);
+    char *rhs_elems = rhs.elems;
+    int i = 0;
+    int j = 0;
+    for (; i < len; i++, j++) {
+        parent.ch[j] = rhs_elems[i];
+    }
+    for (; j < 18; j++) {
+        parent.ch[j] = ' ';
+    }
+}
+
+// --- algo.RspaceStr18..Hash
+u32 algo::RspaceStr18_Hash(u32 prev, algo::RspaceStr18 rhs) {
+    algo::strptr ch_strptr = ch_Getary(rhs);
+    prev = ::strptr_Hash(prev, ch_strptr);
+    return prev;
+}
+
+// --- algo.RspaceStr18..ReadStrptrMaybe
+// Read fields of algo::RspaceStr18 from an ascii string.
+// The format of the string is the format of the algo::RspaceStr18's only field
+bool algo::RspaceStr18_ReadStrptrMaybe(algo::RspaceStr18 &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && algo::ch_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- algo.RspaceStr18..Print
+// print string representation of algo::RspaceStr18 to string LHS, no header -- cprint:algo.RspaceStr18.String
+void algo::RspaceStr18_Print(algo::RspaceStr18 row, algo::cstring &str) {
     algo::ch_Print(row, str);
 }
 
@@ -11080,7 +11433,7 @@ void algo::ch_SetStrptr(algo::RspaceStr20& parent, const algo::strptr &rhs) {
 }
 
 // --- algo.RspaceStr20..Hash
-u32 algo::RspaceStr20_Hash(u32 prev, const algo::RspaceStr20 & rhs) {
+u32 algo::RspaceStr20_Hash(u32 prev, algo::RspaceStr20 rhs) {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -11097,7 +11450,7 @@ bool algo::RspaceStr20_ReadStrptrMaybe(algo::RspaceStr20 &parent, algo::strptr i
 
 // --- algo.RspaceStr20..Print
 // print string representation of algo::RspaceStr20 to string LHS, no header -- cprint:algo.RspaceStr20.String
-void algo::RspaceStr20_Print(algo::RspaceStr20 & row, algo::cstring &str) {
+void algo::RspaceStr20_Print(algo::RspaceStr20 row, algo::cstring &str) {
     algo::ch_Print(row, str);
 }
 
@@ -11536,7 +11889,7 @@ void algo::ch_SetStrptr(algo::RspaceStr32& parent, const algo::strptr &rhs) {
 }
 
 // --- algo.RspaceStr32..Hash
-u32 algo::RspaceStr32_Hash(u32 prev, const algo::RspaceStr32 & rhs) {
+u32 algo::RspaceStr32_Hash(u32 prev, algo::RspaceStr32 rhs) {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -11553,7 +11906,7 @@ bool algo::RspaceStr32_ReadStrptrMaybe(algo::RspaceStr32 &parent, algo::strptr i
 
 // --- algo.RspaceStr32..Print
 // print string representation of algo::RspaceStr32 to string LHS, no header -- cprint:algo.RspaceStr32.String
-void algo::RspaceStr32_Print(algo::RspaceStr32 & row, algo::cstring &str) {
+void algo::RspaceStr32_Print(algo::RspaceStr32 row, algo::cstring &str) {
     algo::ch_Print(row, str);
 }
 
@@ -11650,7 +12003,7 @@ void algo::ch_SetStrptr(algo::RspaceStr40& parent, const algo::strptr &rhs) {
 }
 
 // --- algo.RspaceStr40..Hash
-u32 algo::RspaceStr40_Hash(u32 prev, const algo::RspaceStr40 & rhs) {
+u32 algo::RspaceStr40_Hash(u32 prev, algo::RspaceStr40 rhs) {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -11667,7 +12020,7 @@ bool algo::RspaceStr40_ReadStrptrMaybe(algo::RspaceStr40 &parent, algo::strptr i
 
 // --- algo.RspaceStr40..Print
 // print string representation of algo::RspaceStr40 to string LHS, no header -- cprint:algo.RspaceStr40.String
-void algo::RspaceStr40_Print(algo::RspaceStr40 & row, algo::cstring &str) {
+void algo::RspaceStr40_Print(algo::RspaceStr40 row, algo::cstring &str) {
     algo::ch_Print(row, str);
 }
 
@@ -11764,7 +12117,7 @@ void algo::ch_SetStrptr(algo::RspaceStr50& parent, const algo::strptr &rhs) {
 }
 
 // --- algo.RspaceStr50..Hash
-u32 algo::RspaceStr50_Hash(u32 prev, const algo::RspaceStr50 & rhs) {
+u32 algo::RspaceStr50_Hash(u32 prev, algo::RspaceStr50 rhs) {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -11781,7 +12134,7 @@ bool algo::RspaceStr50_ReadStrptrMaybe(algo::RspaceStr50 &parent, algo::strptr i
 
 // --- algo.RspaceStr50..Print
 // print string representation of algo::RspaceStr50 to string LHS, no header -- cprint:algo.RspaceStr50.String
-void algo::RspaceStr50_Print(algo::RspaceStr50 & row, algo::cstring &str) {
+void algo::RspaceStr50_Print(algo::RspaceStr50 row, algo::cstring &str) {
     algo::ch_Print(row, str);
 }
 
@@ -11953,6 +12306,63 @@ bool algo::RspaceStr7_ReadStrptrMaybe(algo::RspaceStr7 &parent, algo::strptr in_
 // --- algo.RspaceStr7..Print
 // print string representation of algo::RspaceStr7 to string LHS, no header -- cprint:algo.RspaceStr7.String
 void algo::RspaceStr7_Print(algo::RspaceStr7 row, algo::cstring &str) {
+    algo::ch_Print(row, str);
+}
+
+// --- algo.RspaceStr75.ch.Print
+void algo::ch_Print(algo::RspaceStr75& parent, algo::cstring &out) {
+    ch_Addary(out, ch_Getary(parent));
+}
+
+// --- algo.RspaceStr75.ch.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr75& parent, algo::strptr rhs) {
+    bool retval = false;
+    if (rhs.n_elems <= 75) {
+        ch_SetStrptr(parent, rhs);
+        retval = true;
+    } else {
+        algo_lib::SaveBadTag("comment","text too long, limit 75");
+    }
+    return retval;
+}
+
+// --- algo.RspaceStr75.ch.SetStrptr
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void algo::ch_SetStrptr(algo::RspaceStr75& parent, const algo::strptr &rhs) {
+    int len = i32_Min(rhs.n_elems, 75);
+    char *rhs_elems = rhs.elems;
+    int i = 0;
+    int j = 0;
+    for (; i < len; i++, j++) {
+        parent.ch[j] = rhs_elems[i];
+    }
+    for (; j < 75; j++) {
+        parent.ch[j] = ' ';
+    }
+}
+
+// --- algo.RspaceStr75..Hash
+u32 algo::RspaceStr75_Hash(u32 prev, algo::RspaceStr75 rhs) {
+    algo::strptr ch_strptr = ch_Getary(rhs);
+    prev = ::strptr_Hash(prev, ch_strptr);
+    return prev;
+}
+
+// --- algo.RspaceStr75..ReadStrptrMaybe
+// Read fields of algo::RspaceStr75 from an ascii string.
+// The format of the string is the format of the algo::RspaceStr75's only field
+bool algo::RspaceStr75_ReadStrptrMaybe(algo::RspaceStr75 &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && algo::ch_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- algo.RspaceStr75..Print
+// print string representation of algo::RspaceStr75 to string LHS, no header -- cprint:algo.RspaceStr75.String
+void algo::RspaceStr75_Print(algo::RspaceStr75 row, algo::cstring &str) {
     algo::ch_Print(row, str);
 }
 
@@ -13731,6 +14141,20 @@ void algo::ary_Setary(algo::U64Ary& parent, algo::U64Ary &rhs) {
 void algo::ary_Setary(algo::U64Ary& parent, const algo::aryptr<u64> &rhs) {
     ary_RemoveAll(parent);
     ary_Addary(parent, rhs);
+}
+
+// --- algo.U64Ary.ary.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<u64> algo::ary_AllocNVal(algo::U64Ary& parent, int n_elems, const u64& val) {
+    ary_Reserve(parent, n_elems);
+    int old_n  = parent.ary_n;
+    int new_n = old_n + n_elems;
+    u64 *elems = parent.ary_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) u64(val);
+    }
+    parent.ary_n = new_n;
+    return algo::aryptr<u64>(elems + old_n, n_elems);
 }
 
 // --- algo.U64Ary..Uninit

@@ -1,6 +1,5 @@
 dmmeta.pnewtype  pnewtype:Memptr  comment:"Some region in memory"
-dmmeta.pnewtype  pnewtype:Pcbuf  comment:"Producer-consumer shared memory buffer (lossless)"
-dmmeta.pnewtype  pnewtype:Shbuf  comment:"Shared memory lossy buffer"
+dmmeta.pnewtype  pnewtype:AmsStream  comment:"Ams stream"
 dmmeta.pnewtype  pnewtype:Fixed  comment:"Fixed buffer"
 dmmeta.pnewtype  pnewtype:Dynamic  comment:"Dynamic buffer"
 dmmeta.pnewtype  pnewtype:ByteAry  comment:ByteAry

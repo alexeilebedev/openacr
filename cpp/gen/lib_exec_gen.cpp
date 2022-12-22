@@ -128,6 +128,12 @@ bool lib_exec::LoadSsimfileMaybe(algo::strptr fname) {
     return retval;
 }
 
+// --- lib_exec.FDb._db.Steps
+// Calls Step function of dependencies
+void lib_exec::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
 // --- lib_exec.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -191,7 +197,7 @@ void* lib_exec::syscmddep_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.syscmddep_n = new_nelems;
+        _db.syscmddep_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -203,7 +209,7 @@ void lib_exec::syscmddep_RemoveAll() {
     for (u64 n = _db.syscmddep_n; n>0; ) {
         n--;
         syscmddep_qFind(u64(n)).~FSyscmddep(); // destroy last element
-        _db.syscmddep_n = n;
+        _db.syscmddep_n = i32(n);
     }
 }
 
@@ -214,7 +220,7 @@ void lib_exec::syscmddep_RemoveLast() {
     if (n > 0) {
         n -= 1;
         syscmddep_qFind(u64(n)).~FSyscmddep();
-        _db.syscmddep_n = n;
+        _db.syscmddep_n = i32(n);
     }
 }
 
@@ -309,7 +315,7 @@ void* lib_exec::syscmd_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.syscmd_n = new_nelems;
+        _db.syscmd_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -321,7 +327,7 @@ void lib_exec::syscmd_RemoveAll() {
     for (u64 n = _db.syscmd_n; n>0; ) {
         n--;
         syscmd_qFind(i32(n)).~FSyscmd(); // destroy last element
-        _db.syscmd_n = n;
+        _db.syscmd_n = i32(n);
     }
 }
 
@@ -332,7 +338,7 @@ void lib_exec::syscmd_RemoveLast() {
     if (n > 0) {
         n -= 1;
         syscmd_qFind(i32(n)).~FSyscmd();
-        _db.syscmd_n = n;
+        _db.syscmd_n = i32(n);
     }
 }
 
@@ -382,6 +388,7 @@ lib_exec::FSyscmd& lib_exec::ind_running_GetOrCreate(i32 key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "lib_exec.create_error  table:ind_running  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 

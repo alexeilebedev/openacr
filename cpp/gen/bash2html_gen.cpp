@@ -81,7 +81,7 @@ void bash2html::MainLoop() {
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
-        algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+        bash2html::Steps();
     } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
 }
 
@@ -139,6 +139,12 @@ bool bash2html::LoadSsimfileMaybe(algo::strptr fname) {
         retval = algo_lib::LoadTuplesFile(fname, bash2html::InsertStrptrMaybe, true);
     }
     return retval;
+}
+
+// --- bash2html.FDb._db.Steps
+// Calls Step function of dependencies
+void bash2html::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
 // --- bash2html.FDb._db.XrefMaybe
@@ -248,6 +254,10 @@ void bash2html::FieldId_Print(bash2html::FieldId & row, algo::cstring &str) {
     bash2html::value_Print(row, str);
 }
 
+// --- bash2html...SizeCheck
+inline static void bash2html::SizeCheck() {
+}
+
 // --- bash2html...main
 int main(int argc, char **argv) {
     try {
@@ -278,6 +288,9 @@ int main(int argc, char **argv) {
     return algo_lib::_db.exit_code;
 }
 
-// --- bash2html...SizeCheck
-inline static void bash2html::SizeCheck() {
+// --- bash2html...WinMain
+#if defined(WIN32)
+int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int) {
+    return main(__argc,__argv);
 }
+#endif

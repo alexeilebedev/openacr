@@ -191,6 +191,8 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -633,8 +635,11 @@ struct gitfile_zd_include_curs {// cursor
     }
 };
 
-int                  main(int argc, char **argv);
 } // end namespace src_lim
+int                  main(int argc, char **argv);
+#if defined(WIN32)
+int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
+#endif
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const src_lim::trace &row);// cfmt:src_lim.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const src_lim::FieldId &row);// cfmt:src_lim.FieldId.String

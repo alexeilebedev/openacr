@@ -40,7 +40,7 @@ void amc::tclass_Tpool() {
 
     GenTclass(amc_tclass_Pool);
 
-    InsVar(R, field.p_ctype    , "u32", "$name_blocksize", "", "# bytes per block");
+    InsVar(R, field.p_ctype    , "u64", "$name_blocksize", "", "# bytes per block");
     InsVar(R, field.p_ctype    , "$Cpptype*", "$name_free", "", "");
     InsVar(R, field.p_arg      , "$Cpptype*", "$name_next", "", "Pointer to next free element int tpool");
     if (mtfree) {

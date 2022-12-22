@@ -30,6 +30,18 @@ inline bool acr_compl::Badness::operator <(const acr_compl::Badness &rhs) const 
     return acr_compl::Badness_Lt(const_cast<acr_compl::Badness&>(*this),const_cast<acr_compl::Badness&>(rhs));
 }
 
+inline bool acr_compl::Badness::operator >(const acr_compl::Badness &rhs) const {
+    return rhs < *this;
+}
+
+inline bool acr_compl::Badness::operator <=(const acr_compl::Badness &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool acr_compl::Badness::operator >=(const acr_compl::Badness &rhs) const {
+    return !(*this < rhs);
+}
+
 inline bool acr_compl::Badness::operator ==(acr_compl_BadnessEnum rhs) const {
     return acr_compl::Badness_EqEnum(const_cast<acr_compl::Badness&>(*this),rhs);
 }

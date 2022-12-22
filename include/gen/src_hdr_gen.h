@@ -65,7 +65,7 @@ namespace src_hdr {
 extern const char *src_hdr_help;
 extern const char *src_hdr_syntax;
 extern FDb _db;
-extern const char *dev_scriptfile_bin_git_authors; // "bin/git-authors"
+extern const char* dev_scriptfile_bin_git_authors; // "bin/git-authors"
 
 // --- src_hdr.trace
 #pragma pack(push,1)
@@ -119,6 +119,8 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -683,8 +685,11 @@ struct target_c_targsrc_curs {// cursor
     target_c_targsrc_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-int                  main(int argc, char **argv);
 } // end namespace src_hdr
+int                  main(int argc, char **argv);
+#if defined(WIN32)
+int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
+#endif
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const src_hdr::trace &row);// cfmt:src_hdr.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const src_hdr::FieldId &row);// cfmt:src_hdr.FieldId.String

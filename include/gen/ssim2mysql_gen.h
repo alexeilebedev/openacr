@@ -248,7 +248,7 @@ struct FDb { // ssim2mysql.FDb
     i32                       field_n;                      // number of elements in array
     ssim2mysql::FSqltype*     sqltype_lary[32];             // level array
     i32                       sqltype_n;                    // number of elements in array
-    u32                       cmd_blocksize;                // # bytes per block
+    u64                       cmd_blocksize;                // # bytes per block
     ssim2mysql::FCmd*         cmd_free;                     //
     ssim2mysql::FColumn*      column_lary[32];              // level array
     i32                       column_n;                     // number of elements in array
@@ -273,7 +273,7 @@ struct FDb { // ssim2mysql.FDb
     ssim2mysql::FCmd*         c_cmd_cur;                    // optional pointer
     ssim2mysql::FSsimfile*    c_ssimfile_cur;               // optional pointer
     u32                       n_cmd_rows;                   //   0
-    u32                       input_blocksize;              // # bytes per block
+    u64                       input_blocksize;              // # bytes per block
     ssim2mysql::FInput*       input_free;                   //
     ssim2mysql::FSsimfile*    zd_ssimfile_head;             // zero-terminated doubly linked list
     ssim2mysql::FSsimfile*    zd_ssimfile_tail;             // pointer to last element
@@ -465,6 +465,8 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -1271,8 +1273,11 @@ struct ssimfile_c_column_curs {// cursor
     ssimfile_c_column_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-int                  main(int argc, char **argv);
 } // end namespace ssim2mysql
+int                  main(int argc, char **argv);
+#if defined(WIN32)
+int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
+#endif
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const ssim2mysql::FCmd &row);// cfmt:ssim2mysql.FCmd.String
 inline algo::cstring &operator <<(algo::cstring &str, const ssim2mysql::FColumn &row);// cfmt:ssim2mysql.FColumn.String

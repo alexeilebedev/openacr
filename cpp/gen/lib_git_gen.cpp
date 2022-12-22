@@ -86,6 +86,12 @@ bool lib_git::LoadSsimfileMaybe(algo::strptr fname) {
     return retval;
 }
 
+// --- lib_git.FDb._db.Steps
+// Calls Step function of dependencies
+void lib_git::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
 // --- lib_git.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.

@@ -74,6 +74,24 @@ static void _GenFmtJson(amc::FCtype &ctype, amc::FCfmt *fcfmt) {
                 } else {
                     Set(R,"$return_json_node", "$Ftype_FmtJson($fldref,parent);");
                 }
+            } else if (field.reftype == dmmeta_Reftype_reftype_Tary) {
+                amc::FCtype& valtype = *(field).p_arg;
+                Set(R, "$Ftype", valtype.cpp_type);
+                Set(R, "$fldref", FieldvalExpr(&ctype, field, "const_cast<$Cpptype&>(row)"));
+                if (c_datafld_N(ctype)!=1) {
+                    Set(R, "$Fldtype", valtype.ctype);
+                    Set(R, "$name", name_Get(field));
+                    if (amc::ind_cfmt_Find(Subst(R, "$Fldtype.Json"))) {
+                        Ins(&R, fmtjson.body, "");
+                        Ins(&R, fmtjson.body, "algo::aryptr<$Ftype> $name_ary = $name_Getary(row);");
+                        Ins(&R, fmtjson.body, "lib_json::FNode& $name_node = lib_json::NewArrayNode(object_node, \"$name\");");
+                        Ins(&R, fmtjson.body, "for (int i = 0; i < $name_ary.n_elems; ++i) {");
+                        Ins(&R, fmtjson.body, "    $Ftype_FmtJson($name_ary[i], &$name_node);");
+                        Ins(&R, fmtjson.body, "}");
+                    }
+                } else {
+                    Set(R,"$return_json_node", "$Ftype_FmtJson($fldref,parent);");
+                }
             }
         }ind_end;
         Ins(&R, fmtjson.body, "return $return_json_node;");

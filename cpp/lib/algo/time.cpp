@@ -96,6 +96,17 @@ bool algo::TimeStruct_Read(TimeStruct &out, algo::StringIter &iter, const strptr
                     }
                 }
                 break;
+            case 'B':
+                {
+                    iter.Ws();
+                    strptr indent = RestFrom(iter.expr, iter.index);
+                    out.tm_mon = GetWholeMonthZeroBased(indent);
+                    if (out.tm_mon == -1) {
+                        return 0;
+                    }
+                    iter.index += elems_N(GetMonthNameZeroBased(out.tm_mon));
+                }
+                break;
             case 'a':
                 {
                     iter.Ws();
@@ -332,7 +343,7 @@ algo::UnTime algo::ToUnTime(const TimeStruct &S) {
 // -----------------------------------------------------------------------------
 
 static const char *weekdays_names[] = {
-                                       "Sun","Mon","Tue","Wed","Thu","Fri","Sat"
+    "Sun","Mon","Tue","Wed","Thu","Fri","Sat"
 };
 
 // empty string -> 0
@@ -349,15 +360,25 @@ const strptr algo::GetWeekdayName(int index){
     return LIKELY(u32(index) < u32(_array_count(weekdays_names))) ? weekdays_names[index] : strptr();
 }
 static const char *month_names[] = {
-                                    "January","February","March","April","May","June","July","August","September","October","November","December",
+    "January","February","March","April","May","June","July","August","September","October","November","December",
 };
 static const int month_days[] = {
-                                 31,29,31,30,31,30,31,31,30,31,30,31
+    31,29,31,30,31,30,31,31,30,31,30,31
 };
 int algo::GetMonthZeroBased(strptr month) {
     rep_(i,_array_count(month_names)) {
         strptr m = month_names[i];
         if (elems_N(month) <= elems_N(m) && StartsWithQ(m, month,false)) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+int algo::GetWholeMonthZeroBased(strptr s) {
+    rep_(i,_array_count(month_names)) {
+        strptr m = month_names[i];
+        if (StartsWithQ(s, m, false)) {
             return i;
         }
     }
@@ -409,8 +430,7 @@ algo::UnTime algo::ToUnTime(WTime s) {
     i64 result = LLONG_MAX;
     if (s.value < lower_bound) {
         result = 0;
-    }
-    else if (s.value <= upper_bound) {
+    } else if (s.value <= upper_bound) {
         result = (s.value - WTIME_OFFSET) * multiplier;
     }
     return UnTime(result);

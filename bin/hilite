@@ -73,7 +73,7 @@ sub asciicode($) {
 
 # initial sequence of colors
 my @defaultcolors=qw(green yellow blue cyan red magenta white darkwhite darkyellow
-    darkgreen darkblue darkcyan darkred darkmagenta darkblack black);
+                     darkgreen darkblue darkcyan darkred darkmagenta darkblack black);
 my $nextcolor=0;
 # current patterns
 # a ref to an array of [regex,colornum,blotter]
@@ -94,23 +94,20 @@ sub nextcolor {
 sub readcolors($$) {
     my ($patterns,$from)=@_;
     foreach my $pattern (@$from) {
-        if ($pattern eq "-diff" || $pattern eq "-d") {# diff mode
-            # syntax hilite for diff
-            push(@$patterns, ["^(index|diff) .*",$colors->{darkblue}, 0, 0]);
-            push(@$patterns, ["^-.*"            ,$colors->{darkred}, 0, 0]);
-            push(@$patterns, ["^\\+.*"          ,$colors->{darkgreen}, 0, 0]);
-            # --word-diff syntax
-            push(@$patterns, ["\\[-.*-\\]"      ,$colors->{darkgreen}, 0, 0]);
-            push(@$patterns, ["\\{\\+.*\\+\\}"  ,$colors->{darkgreen}, 0, 0]);
+        if ($pattern eq "-e" || $pattern eq "-diff" || $pattern eq "-d") {# diff mode
+            my ($patterns,$matchcomment)=@_;
+            open(FH, "acr hilite -cmd 'printf \"%s -> %s\\n\" \"\$hilite\" \"\$color\"' | bash|");
+            foreach (<FH>) {
+                if (/^(.*?) -> (.*?)$/) {
+                    push(@$patterns, [$1,$colors->{$2},0,0]);
+                }
+            }
         } elsif ($pattern =~ /(.*):(\w+)(%(\d+))?/ && defined($colors->{$2})) {
             # pick specific color
             my $pattern = $1;
             $pattern = '^.*$' if !$pattern;  # match entire line if not specified
             my $blotter=int($4);
             push(@$patterns, [$pattern          ,$colors->{$2}, $blotter, 0]);
-        } elsif ($pattern eq "-e") {# common errors
-            push(@$patterns, ["(success:Y|exitcode:0)",$colors->{yellow}, 0, 0]);
-            push(@$patterns, ["(success:N|exitcode:[^0])",$colors->{red}, 0, 0]);
         } else {
             push(@$patterns, [$pattern          ,$colors->{nextcolor()}, 0, 0]);
         }

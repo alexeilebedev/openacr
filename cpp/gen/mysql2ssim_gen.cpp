@@ -94,7 +94,7 @@ void mysql2ssim::MainLoop() {
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
-        algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+        mysql2ssim::Steps();
     } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
 }
 
@@ -152,6 +152,12 @@ bool mysql2ssim::LoadSsimfileMaybe(algo::strptr fname) {
         retval = algo_lib::LoadTuplesFile(fname, mysql2ssim::InsertStrptrMaybe, true);
     }
     return retval;
+}
+
+// --- mysql2ssim.FDb._db.Steps
+// Calls Step function of dependencies
+void mysql2ssim::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
 // --- mysql2ssim.FDb._db.XrefMaybe
@@ -253,6 +259,20 @@ void mysql2ssim::table_names_AbsReserve(int n) {
     }
 }
 
+// --- mysql2ssim.FDb.table_names.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> mysql2ssim::table_names_AllocNVal(int n_elems, const algo::cstring& val) {
+    table_names_Reserve(n_elems);
+    int old_n  = _db.table_names_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = _db.table_names_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(val);
+    }
+    _db.table_names_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
 // --- mysql2ssim.FDb.in_tables.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -342,6 +362,20 @@ void mysql2ssim::in_tables_AbsReserve(int n) {
         _db.in_tables_elems = (algo::cstring*)new_mem;
         _db.in_tables_max = new_max;
     }
+}
+
+// --- mysql2ssim.FDb.in_tables.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> mysql2ssim::in_tables_AllocNVal(int n_elems, const algo::cstring& val) {
+    in_tables_Reserve(n_elems);
+    int old_n  = _db.in_tables_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = _db.in_tables_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(val);
+    }
+    _db.in_tables_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
 // --- mysql2ssim.FDb.trace.RowidFind
@@ -489,6 +523,20 @@ void mysql2ssim::vals_Setary(mysql2ssim::FTobltin& parent, mysql2ssim::FTobltin 
     }
 }
 
+// --- mysql2ssim.FTobltin.vals.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> mysql2ssim::vals_AllocNVal(mysql2ssim::FTobltin& parent, int n_elems, const algo::cstring& val) {
+    vals_Reserve(parent, n_elems);
+    int old_n  = parent.vals_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = parent.vals_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(val);
+    }
+    parent.vals_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
 // --- mysql2ssim.FTobltin..Uninit
 void mysql2ssim::FTobltin_Uninit(mysql2ssim::FTobltin& parent) {
     mysql2ssim::FTobltin &row = parent; (void)row;
@@ -575,6 +623,10 @@ void mysql2ssim::FieldId_Print(mysql2ssim::FieldId & row, algo::cstring &str) {
     mysql2ssim::value_Print(row, str);
 }
 
+// --- mysql2ssim...SizeCheck
+inline static void mysql2ssim::SizeCheck() {
+}
+
 // --- mysql2ssim...main
 int main(int argc, char **argv) {
     try {
@@ -607,6 +659,9 @@ int main(int argc, char **argv) {
     return algo_lib::_db.exit_code;
 }
 
-// --- mysql2ssim...SizeCheck
-inline static void mysql2ssim::SizeCheck() {
+// --- mysql2ssim...WinMain
+#if defined(WIN32)
+int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int) {
+    return main(__argc,__argv);
 }
+#endif

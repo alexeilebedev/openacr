@@ -468,8 +468,10 @@ static void JsonParseValue(lib_json::FParser &parser) {
         case '"':   ++parser.ind; parser.state = lib_json_FParser_state_str;                         break;
         case ':':   ++parser.ind; parser.state = lib_json_FParser_state_ws; JsonField(parser);       break;
         case ',':   ++parser.ind; parser.state = lib_json_FParser_state_ws; JsonNextElem(parser);    break;
-        default :   if (lib_json::JsonFirstNumCharQ(parser.buf[parser.ind])) { parser.state = lib_json_FParser_state_number; }
-            else                                           { parser.state = lib_json_FParser_state_token; }
+        default :
+            if (lib_json::JsonFirstNumCharQ(parser.buf[parser.ind])) {
+                parser.state = lib_json_FParser_state_number;
+            } else                                           { parser.state = lib_json_FParser_state_token; }
             break;
         }
     }

@@ -236,7 +236,8 @@ void amc::tfunc_Exec_Execv() {
     Ins(&R, execv.ret    , "int",false);
     Ins(&R, execv.proto  , "$name_Execv($Parent)",false);
     Ins(&R, execv.comment, "Call execv with specified parameters -- cprint:$Ctype.Argv");
-    Ins(&R, execv.body, "char *argv[$ndatafld+2]; // start of first arg (future pointer)");
+    Ins(&R, execv.body, "char **argv = (char**)alloca(($ndatafld+2+algo_lib::_db.cmdline.verbose)*sizeof(char*));"
+        " // start of first arg (future pointer)");
     Ins(&R, execv.body, "algo::tempstr temp;");
     Ins(&R, execv.body, "int n_argv=0;");
 

@@ -715,11 +715,12 @@ strptr algo::GetTypeTag(strptr str) {
 
 // -----------------------------------------------------------------------------
 
-static algo::NumParseFlags ParseNumber(algo::StringIter &S, u64 &result) {
+// Works with: u32, u64, u128
+template <class T> static algo::NumParseFlags TParseNumber(algo::StringIter &S, T &result) {
     strptr expr = S.expr;
     int index = S.index;
     algo::NumParseFlags flags = algo_NumParseFlags_ok;
-    u64 num=0;
+    T num=0;
     char c;
     do {
         if (index == elems_N(expr)) {
@@ -743,7 +744,7 @@ static algo::NumParseFlags ParseNumber(algo::StringIter &S, u64 &result) {
         return flags;
     }
     c = expr[index];
-    u64 prev = num;
+    T prev = num;
     u32 overflow = 0;
     if (c == 'x' || c == 'X') {
         index++;
@@ -779,10 +780,11 @@ static algo::NumParseFlags ParseNumber(algo::StringIter &S, u64 &result) {
     return flags;
 }
 
+
 bool algo::TryParseI32(algo::StringIter &iter, i32 &result) {
-    u64 v;
-    u64 max = u32(-1) >> 1;
-    algo::NumParseFlags flags = ParseNumber(iter, v);
+    u32 v;
+    u32 max = u32(-1) >> 1;
+    algo::NumParseFlags flags = TParseNumber<u32>(iter, v);
     if (flags & algo_NumParseFlags_err) {
         return false;
     }
@@ -800,7 +802,7 @@ bool algo::TryParseI32(algo::StringIter &iter, i32 &result) {
 bool algo::TryParseI64(algo::StringIter &iter, i64 &result) {
     u64 v;
     u64 max = u64(-1) >> 1;
-    algo::NumParseFlags flags = ParseNumber(iter, v);
+    algo::NumParseFlags flags = TParseNumber<u64>(iter, v);
     if (flags & algo_NumParseFlags_err) {
         return false;
     }
@@ -816,9 +818,9 @@ bool algo::TryParseI64(algo::StringIter &iter, i64 &result) {
 }
 
 bool algo::TryParseU32(algo::StringIter &iter, u32 &result) {
-    u64 v;
-    u64 max = u32(-1);
-    algo::NumParseFlags flags = ParseNumber(iter, v);
+    u32 v;
+    u32 max = u32(-1);
+    algo::NumParseFlags flags = TParseNumber<u32>(iter, v);
     if (flags & algo_NumParseFlags_err) {
         return false;
     }
@@ -834,12 +836,28 @@ bool algo::TryParseU32(algo::StringIter &iter, u32 &result) {
 
 bool algo::TryParseU64(algo::StringIter &iter, u64 &result) {
     u64 v;
-    algo::NumParseFlags flags = ParseNumber(iter, v);
+    algo::NumParseFlags flags = TParseNumber<u64>(iter, v);
     if (flags & algo_NumParseFlags_err) {
         return false;
     }
     if (flags & algo_NumParseFlags_overflow) {
         v = u64(-1);
+    }
+    if (flags & algo_NumParseFlags_neg) {
+        v = 0;
+    }
+    result = v;
+    return true;
+}
+
+bool algo::TryParseU128(algo::StringIter &iter, u128 &result) {
+    u128 v;
+    algo::NumParseFlags flags = TParseNumber<u128>(iter, v);
+    if (flags & algo_NumParseFlags_err) {
+        return false;
+    }
+    if (flags & algo_NumParseFlags_overflow) {
+        v = u128(-1);
     }
     if (flags & algo_NumParseFlags_neg) {
         v = 0;

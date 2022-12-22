@@ -182,6 +182,7 @@ void                 trace_Print(amc_vis::trace & row, algo::cstring &str) __att
 // create: amc_vis.FDb._db (Global)
 struct FDb { // amc_vis.FDb
     lpool_Lpblock*        lpool_free[31];              // Lpool levels
+    u32                   lpool_lock;                  // Lpool lock
     command::amc_vis      cmdline;                     //
     amc_vis::FCtype*      ctype_lary[32];              // level array
     i32                   ctype_n;                     // number of elements in array
@@ -312,6 +313,8 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -877,6 +880,9 @@ struct Nodekey { // amc_vis.Nodekey: Correspodns to a ctype
     bool operator ==(const amc_vis::Nodekey &rhs) const;
     bool operator !=(const amc_vis::Nodekey &rhs) const;
     bool operator <(const amc_vis::Nodekey &rhs) const;
+    bool operator >(const amc_vis::Nodekey &rhs) const;
+    bool operator <=(const amc_vis::Nodekey &rhs) const;
+    bool operator >=(const amc_vis::Nodekey &rhs) const;
     Nodekey();
 };
 
@@ -1201,6 +1207,9 @@ struct Linkkey { // amc_vis.Linkkey: Correspodns to a ctype
     bool operator ==(const amc_vis::Linkkey &rhs) const;
     bool operator !=(const amc_vis::Linkkey &rhs) const;
     bool operator <(const amc_vis::Linkkey &rhs) const;
+    bool operator >(const amc_vis::Linkkey &rhs) const;
+    bool operator <=(const amc_vis::Linkkey &rhs) const;
+    bool operator >=(const amc_vis::Linkkey &rhs) const;
     Linkkey();
 };
 
@@ -1424,6 +1433,8 @@ u8&                  text_qFind(amc_vis::Outrow& outrow, u64 t) __attribute__((n
 u8&                  text_qLast(amc_vis::Outrow& outrow) __attribute__((nothrow));
 // Return row id of specified element
 u64                  text_rowid_Get(amc_vis::Outrow& outrow, u8 &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<u8>     text_AllocNVal(amc_vis::Outrow& outrow, int n_elems, const u8& val) __attribute__((__warn_unused_result__, nothrow));
 
 // proceed to next item
 void                 outrow_text_curs_Next(outrow_text_curs &curs);
@@ -1660,8 +1671,11 @@ struct outrow_text_curs {// cursor
     outrow_text_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-int                  main(int argc, char **argv);
 } // end namespace amc_vis
+int                  main(int argc, char **argv);
+#if defined(WIN32)
+int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
+#endif
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const amc_vis::trace &row);// cfmt:amc_vis.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const amc_vis::Nodekey &row);// cfmt:amc_vis.Nodekey.String

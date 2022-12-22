@@ -42,8 +42,7 @@ static void CsvPrint(algo::aryptr<cstring> in, cstring &out) {
         Translate(tok,"'\n\r","   ");
         if (ssim2csv::_db.cmdline.ignoreQuote) {
             out<<ls<<tok;
-        }
-        else {
+        } else {
             out<<ls<<"'"<<tok<<"'";
         }
     }

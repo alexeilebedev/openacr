@@ -24,6 +24,7 @@
 //
 
 #include "include/amc.h"
+#include <openssl/sha.h>
 #include "include/sha.h"
 
 // Recursive function to compute all ctype dependencies

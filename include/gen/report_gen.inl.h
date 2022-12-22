@@ -116,6 +116,24 @@ inline void report::amc_Init(report::amc& parent) {
     parent.n_xref = u32(0);
     parent.n_filemod = u32(0);
 }
+inline report::atf_comp::atf_comp() {
+    report::atf_comp_Init(*this);
+}
+
+
+// --- report.atf_comp..Init
+// Set all fields to initial values.
+inline void report::atf_comp_Init(report::atf_comp& parent) {
+    parent.ntest = i32(0);
+    parent.nselect = i32(0);
+    parent.npass = i32(0);
+    parent.nskip = i32(0);
+    parent.nrun = i32(0);
+    parent.nwrite = i32(0);
+    parent.nerr = i32(0);
+    parent.ninsert = i32(0);
+    parent.success = bool(false);
+}
 inline report::atf_unit::atf_unit() {
     report::atf_unit_Init(*this);
 }
@@ -168,6 +186,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const report::acr_ch
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const report::amc &row) {// cfmt:report.amc.String
     report::amc_Print(const_cast<report::amc&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const report::atf_comp &row) {// cfmt:report.atf_comp.String
+    report::atf_comp_Print(const_cast<report::atf_comp&>(row), str);
     return str;
 }
 

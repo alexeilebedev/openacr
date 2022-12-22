@@ -2,6 +2,9 @@ dmmeta.gconst  field:amc.BltinId.value  namefld:amcdb.Bltin.ctype  idfld:""  wan
 dmmeta.gconst  field:amc.CppkeywordId.id  namefld:dmmeta.Cppkeyword.cppkeyword  idfld:""  wantenum:N
 dmmeta.gconst  field:amcdb.Curs.curs  namefld:amcdb.Curs.curs  idfld:""  wantenum:N
 dmmeta.gconst  field:amcdb.Tclass.tclass  namefld:amcdb.Tclass.tclass  idfld:amcdb.Tclass.tclass  wantenum:N
+dmmeta.gconst  field:ams.ProcType.value  namefld:amsdb.ProcType.proctype  idfld:amsdb.ProcType.id  wantenum:Y
+dmmeta.gconst  field:ams.StreamType.value  namefld:amsdb.StreamType.streamtype  idfld:amsdb.StreamType.id  wantenum:Y
+dmmeta.gconst  field:atfdb.Msgdir.msgdir  namefld:atfdb.Msgdir.msgdir  idfld:""  wantenum:N
 dmmeta.gconst  field:dev.Arch.arch  namefld:dev.Arch.arch  idfld:""  wantenum:N
 dmmeta.gconst  field:dev.Builddir.builddir  namefld:dev.Builddir.builddir  idfld:""  wantenum:N
 dmmeta.gconst  field:dev.Cfg.cfg  namefld:dev.Cfg.cfg  idfld:""  wantenum:N

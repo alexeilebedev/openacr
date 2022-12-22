@@ -77,12 +77,10 @@
 // Similar problem has been discovered on Linux clang++ 10.
 // Catch occasinally does not catch exceptions. Using -stdlib=libc++ does not help.
 //
-// Clang++ support has to be proven on target platform and compiler version
+// Clang++ support has been discontinued until these issues will have been fixed
 //
 #ifdef __clang__
-#ifdef WIN32
-#pragma message clang++ may have problems with exception handling
-#endif
+#error clang++ is no longer supported
 #endif
 
 #define T_MAY_ALIAS                 __attribute__((__may_alias__))
@@ -169,23 +167,29 @@
 #define MULTICHAR_CONST3(b,c,d)   (          (b)<<16 | (c)<<8 | (d))
 #define MULTICHAR_CONST4(a,b,c,d) ((a)<<24 | (b)<<16 | (c)<<8 | (d))
 
-#define prlog_fd_(fd,x,eol)            {                \
-        algo::cstring &_outstr = algo_lib::_db.log_str; \
-        int _saved = ch_N(_outstr);                     \
-        _outstr << x;                                   \
-        algo::Prlog(fd, _outstr, _saved, eol);          \
+#define log_msg_(cat,x,eol) {                                           \
+        algo::SchedTime _tstamp = algo::CurrSchedTime();                \
+        algo::cstring &_outstr = algo_lib::_db.log_str;                 \
+        int _saved = ch_N(_outstr);                                     \
+        _outstr << x;                                                   \
+        if (eol) {                                                      \
+            _outstr << '\n';                                            \
+        }                                                               \
+        algo_lib::_db.Prlog(&cat, _tstamp, algo::ch_RestFrom(_outstr,_saved)); \
+        _outstr.ch_n = _saved;                                          \
     }
 
-#define prlog_(x)             prlog_fd_(1,x,false)
-#define prerr_(x)             prlog_fd_(2,x,false)
+#define prlog_(x)             log_msg_(algo_lib_logcat_stdout,x,false)
+#define prerr_(x)             log_msg_(algo_lib_logcat_stderr,x,false)
 
-#define prlog(x)              prlog_fd_(1,x,true)
-#define prerr(x)              prlog_fd_(2,x,true)
+#define prlog(x)              log_msg_(algo_lib_logcat_stdout,x,true)
+#define prerr(x)              log_msg_(algo_lib_logcat_stderr,x,true)
 
-#define verblog(x)            { if(UNLIKELY(algo_lib::_db.cmdline.verbose)) prlog_fd_(2,x,true); }
-#define verblog2(x)           { if(UNLIKELY(algo_lib::_db.cmdline.verbose>1)) prlog_fd_(2,x,true); }
-#define verblog3(x)           { if(UNLIKELY(algo_lib::_db.cmdline.verbose>2)) prlog_fd_(2,x,true); }
-#define dbglog(x)             { if(UNLIKELY(algo_lib::_db.cmdline.debug)) prlog_fd_(2,x,true); }
+#define prlog_cat(cat,x)      { if(UNLIKELY(cat.enabled)) log_msg_(cat,x,true); }
+#define verblog(x)            { if(UNLIKELY(algo_lib::_db.cmdline.verbose)) { log_msg_(algo_lib_logcat_stderr,x,true); }}
+#define verblog2(x)           { if(UNLIKELY(algo_lib::_db.cmdline.verbose>1)) { log_msg_(algo_lib_logcat_stderr,x,true); }}
+#define verblog3(x)           { if(UNLIKELY(algo_lib::_db.cmdline.verbose>2)) { log_msg_(algo_lib_logcat_stderr,x,true); }}
+#define dbglog(x)             { if(UNLIKELY(algo_lib::_db.cmdline.debug)) { log_msg_(algo_lib_logcat_stderr,x,true); }}
 
 #define bitset_beg(INDTYPE,IND,SET) {                                   \
     algo::aryptr<u64> IND##_temp(ary_Getary(SET));                      \

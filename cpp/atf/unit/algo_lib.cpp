@@ -798,17 +798,7 @@ static void TestParseDigits(strptr str, bool ok, double result) {
     vrfy(TryParseDigits(iter, d)==ok && (!ok || d==result), tempstr()<<str<<" "<<ok<<" "<<result);
 }
 
-static void TestParseI64(strptr str, bool ok, i64 result) {
-    algo::StringIter iter(str);
-    i64 d;
-    vrfy_(TryParseI64(iter, d)==ok && (!ok || d==result));
-}
-
-static void TestParseI32(strptr str, bool ok, i32 result) {
-    algo::StringIter iter(str);
-    i32 val;
-    vrfy_(TryParseI32(iter,val)==ok && (!ok || val==result));
-}
+// -----------------------------------------------------------------------------
 
 static void TestGetLine() {
     algo::StringIter iter;
@@ -849,28 +839,6 @@ void atf_unit::unittest_algo_lib_StringIter() {
     TestParseDouble(".e", false, 0);
     TestParseDouble("1e", false, 0);
     TestParseDouble("1e+", false, 0);
-    TestParseI64("123456789123456789", true, 123456789123456789LL);
-    TestParseI64("123456789123456789123456776545", true, LLONG_MAX);
-    TestParseI32("  0234 ", true, 234);
-    TestParseI32("  234", true, 234);
-    TestParseI32("\r\n\t -12222", true, -12222);
-    TestParseI32("3333333333333333333", true, INT_MAX);
-    TestParseI32("-3333333333333333333", true, -INT_MAX);
-    TestParseI32("2147483647", true, INT_MAX);
-    TestParseI32("2147483648", true, INT_MAX);
-    TestParseI32("2147483649", true, INT_MAX);
-    TestParseI32("3147483648", true, INT_MAX);
-    TestParseI32("4147483649", true, INT_MAX);
-    TestParseI32("12147483649", true, INT_MAX);
-    TestParseI32("0x10", true, 16);
-    TestParseI32("0x10000", true, 65536);
-    TestParseI32("0x", false, 0);
-    TestParseI32("xxx", false, 0);
-    TestParseI32("0", true, 0);
-    TestParseI32("1", true, 1);
-    TestParseI32("-1", true, -1);
-    TestParseI32("123x", true, 123);
-
     TestGetLine();
 
     CheckWordcharf("abc def", " abc def");
@@ -1066,18 +1034,14 @@ void atf_unit::unittest_algo_lib_ParseOct3() {
 
     // verify hole
 
-#ifdef WIN32
-#pragma warning (push)
-#pragma warning (disable:4125) // decimal digit terminates octal escap sequence
-#endif
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Warray-bounds"
     res = 0;
-    vrfyeq_(1,algo::ParseOct3(*(const u32 *)("1\35000"),4,res));
+    vrfyeq_(1,algo::ParseOct3(*(const u32 *)("1\350"),4,res));
     vrfyeq_(1,res);
 
-    vrfyeq_(0,algo::ParseOct3(*(const u32 *)("\135000"),4,res));
-#ifdef WIN32
-#pragma warning(pop)
-#endif
+    vrfyeq_(0,algo::ParseOct3(*(const u32 *)("\1350"),4,res));
+#pragma GCC diagnostic pop
 
     // verify non-octal digit
 
@@ -1877,6 +1841,57 @@ void atf_unit::unittest_algo_lib_PerfTruncVsFtol() {
 
 void atf_unit::unittest_algo_lib_PerfParseDouble() {
     {
+        strptr data("");
+        u32 d;
+        prlog("input: "<<data);
+        DO_PERF_TEST("u32_ReadStrPtrMaybe",
+                     vrfy(u32_ReadStrptrMaybe(d, data), algo_lib::_db.errtext)
+                     );
+        vrfy_(d==0);
+    }
+    {
+        strptr data("12345678");
+        u32 d;
+        prlog("input: "<<data);
+        DO_PERF_TEST("u32_ReadStrPtrMaybe",
+                     vrfy(u32_ReadStrptrMaybe(d, data), algo_lib::_db.errtext)
+                     );
+        vrfy_(d==12345678);
+        char *endptr = data.elems  + data.n_elems;
+        DO_PERF_TEST("strtoull",d=strtoull(data.elems,&endptr,10));
+        vrfy_(d==12345678);
+    }
+    {
+        strptr data("1234567812345678");
+        u64 d;
+        prlog("input: "<<data);
+        DO_PERF_TEST("u64_ReadStrPtrMaybe",
+                     vrfy(u64_ReadStrptrMaybe(d, data), algo_lib::_db.errtext)
+                     );
+        vrfy_(d==1234567812345678);
+        char *endptr = data.elems  + data.n_elems;
+        DO_PERF_TEST("strtoull",d=strtoull(data.elems,&endptr,10));
+        vrfy_(d==1234567812345678);
+    }
+    {
+        strptr data("1234567812345678");
+        u128 d;
+        prlog("input: "<<data);
+        DO_PERF_TEST("u128_ReadStrPtrMaybe",
+                     vrfy(u128_ReadStrptrMaybe(d, data), algo_lib::_db.errtext)
+                     );
+        vrfy_(d==1234567812345678);
+    }
+    {
+        strptr data("12345678123456781234567812345678");
+        u128 d;
+        prlog("input: "<<data);
+        DO_PERF_TEST("u128_ReadStrPtrMaybe",
+                     vrfy(u128_ReadStrptrMaybe(d, data), algo_lib::_db.errtext)
+                     );
+        vrfy_(d==u128(1234567812345678)*10000000000000000+1234567812345678);
+    }
+    {
         strptr data("123.1432");
         double d;
         algo::StringIter iter(data);
@@ -2117,7 +2132,7 @@ static void CheckSleep(double sec) {
         algo::SchedTime c2(algo::get_cycles());
         double elapsed = algo::ElapsedSecs(c,c2);
         //some servers only give you 10% accuracy in sleep
-        success = elapsed >= sec*0.75 && elapsed <= sec*1.25;
+        success = elapsed >= sec*0.5 && elapsed <= sec*1.5;
         verblog("atf_unit.check_sleep"
                 <<Keyval("want",sec)
                 <<Keyval("elapsed",elapsed)
@@ -2579,4 +2594,29 @@ void atf_unit::unittest_algo_lib_ExitCode() {
     CheckExitCode("true", 0);
     CheckExitCode("false", 256);
     CheckExitCode("kill $$", 15);
+}
+
+// --------------------------------------------------------------------------------
+
+static void CreateProcessTreeRecurse(int width, int levels, int sleep_sec) {
+    if (levels>0) {
+        frep_(i,width) {
+            if (!fork()) {
+                CreateProcessTreeRecurse(width,levels-1,sleep_sec);
+                sleep(sleep_sec);
+                exit(0);
+            }
+        }
+    }
+}
+
+void atf_unit::unittest_algo_lib_KillRecurse() {
+#ifdef __linux__
+    CreateProcessTreeRecurse(2,3,5);
+    sleep(1); // give some time to establish process tree
+    vrfyeq_(15,algo_lib::KillRecurse(getpid(),0,true));
+    vrfyeq_(14,algo_lib::KillRecurse(getpid(),SIGKILL,false));
+#else
+    (void)CreateProcessTreeRecurse;
+#endif
 }

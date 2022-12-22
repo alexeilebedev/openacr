@@ -32,10 +32,6 @@ const char *dev_Builddir_builddir_FreeBSD_clangPP_coverage_amd64   = "FreeBSD-cl
 const char *dev_Builddir_builddir_FreeBSD_clangPP_debug_amd64      = "FreeBSD-clang++.debug-amd64";
 const char *dev_Builddir_builddir_FreeBSD_clangPP_profile_amd64    = "FreeBSD-clang++.profile-amd64";
 const char *dev_Builddir_builddir_FreeBSD_clangPP_release_amd64    = "FreeBSD-clang++.release-amd64";
-const char *dev_Builddir_builddir_Linux_clangPP_coverage_x86_64    = "Linux-clang++.coverage-x86_64";
-const char *dev_Builddir_builddir_Linux_clangPP_debug_x86_64       = "Linux-clang++.debug-x86_64";
-const char *dev_Builddir_builddir_Linux_clangPP_profile_x86_64     = "Linux-clang++.profile-x86_64";
-const char *dev_Builddir_builddir_Linux_clangPP_release_x86_64     = "Linux-clang++.release-x86_64";
 const char *dev_Builddir_builddir_Linux_gPP_9_coverage_x86_64      = "Linux-g++-9.coverage-x86_64";
 const char *dev_Builddir_builddir_Linux_gPP_9_debug_x86_64         = "Linux-g++-9.debug-x86_64";
 const char *dev_Builddir_builddir_Linux_gPP_9_profile_x86_64       = "Linux-g++-9.profile-x86_64";
@@ -76,14 +72,21 @@ const char *dev_Target_target_amc         = "amc";
 const char *dev_Target_target_amc_gc    = "amc_gc";
 const char *dev_Target_target_amc_vis   = "amc_vis";
 
-const char *dev_Target_target_atf_amc      = "atf_amc";
-const char *dev_Target_target_atf_norm     = "atf_norm";
-const char *dev_Target_target_atf_nrun     = "atf_nrun";
-const char *dev_Target_target_atf_unit     = "atf_unit";
-const char *dev_Target_target_bash2html    = "bash2html";
-const char *dev_Target_target_gitlab       = "gitlab";
-const char *dev_Target_target_lib_ctype    = "lib_ctype";
-const char *dev_Target_target_lib_exec     = "lib_exec";
+const char *dev_Target_target_ams_cat        = "ams_cat";
+const char *dev_Target_target_ams_sendtest   = "ams_sendtest";
+const char *dev_Target_target_atf_amc        = "atf_amc";
+const char *dev_Target_target_atf_ci         = "atf_ci";
+const char *dev_Target_target_atf_comp       = "atf_comp";
+const char *dev_Target_target_atf_cov        = "atf_cov";
+const char *dev_Target_target_atf_nrun       = "atf_nrun";
+const char *dev_Target_target_atf_unit       = "atf_unit";
+const char *dev_Target_target_bash2html      = "bash2html";
+const char *dev_Target_target_gitlab         = "gitlab";
+const char *dev_Target_target_lib_ams        = "lib_ams";
+const char *dev_Target_target_lib_ctype      = "lib_ctype";
+const char *dev_Target_target_lib_exec       = "lib_exec";
+const char *dev_Target_target_lib_fm         = "lib_fm";
+
 const char *dev_Target_target_lib_git      = "lib_git";
 const char *dev_Target_target_lib_iconv    = "lib_iconv";
 const char *dev_Target_target_lib_json     = "lib_json";
@@ -408,6 +411,278 @@ void dev::Compiler_Print(dev::Compiler & row, algo::cstring &str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
+// --- dev.Covfile..ReadFieldMaybe
+bool dev::Covfile_ReadFieldMaybe(dev::Covfile &parent, algo::strptr field, algo::strptr strval) {
+    dev::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case dev_FieldId_covfile: retval = algo::Smallstr200_ReadStrptrMaybe(parent.covfile, strval); break;
+        case dev_FieldId_total: retval = u32_ReadStrptrMaybe(parent.total, strval); break;
+        case dev_FieldId_nonexe: retval = u32_ReadStrptrMaybe(parent.nonexe, strval); break;
+        case dev_FieldId_exe: retval = u32_ReadStrptrMaybe(parent.exe, strval); break;
+        case dev_FieldId_exer: retval = algo::U32Dec2_ReadStrptrMaybe(parent.exer, strval); break;
+        case dev_FieldId_hit: retval = u32_ReadStrptrMaybe(parent.hit, strval); break;
+        case dev_FieldId_cov: retval = algo::U32Dec2_ReadStrptrMaybe(parent.cov, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dev.Covfile..ReadStrptrMaybe
+// Read fields of dev::Covfile from an ascii string.
+// The format of the string is an ssim Tuple
+bool dev::Covfile_ReadStrptrMaybe(dev::Covfile &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dev.covfile") || algo::StripTypeTag(in_str, "dev.Covfile");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Covfile_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dev.Covfile..Print
+// print string representation of dev::Covfile to string LHS, no header -- cprint:dev.Covfile.String
+void dev::Covfile_Print(dev::Covfile & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "dev.covfile";
+
+    algo::Smallstr200_Print(row.covfile, temp);
+    PrintAttrSpaceReset(str,"covfile", temp);
+
+    u32_Print(row.total, temp);
+    PrintAttrSpaceReset(str,"total", temp);
+
+    u32_Print(row.nonexe, temp);
+    PrintAttrSpaceReset(str,"nonexe", temp);
+
+    u32_Print(row.exe, temp);
+    PrintAttrSpaceReset(str,"exe", temp);
+
+    algo::U32Dec2_Print(row.exer, temp);
+    PrintAttrSpaceReset(str,"exer", temp);
+
+    u32_Print(row.hit, temp);
+    PrintAttrSpaceReset(str,"hit", temp);
+
+    algo::U32Dec2_Print(row.cov, temp);
+    PrintAttrSpaceReset(str,"cov", temp);
+}
+
+// --- dev.Covline.src.Get
+algo::Smallstr200 dev::src_Get(dev::Covline& parent) {
+    algo::Smallstr200 ret(algo::Pathcomp(parent.covline, ":RL"));
+    return ret;
+}
+
+// --- dev.Covline.src.Get2
+algo::Smallstr200 dev::Covline_src_Get(algo::strptr arg) {
+    algo::Smallstr200 ret(algo::Pathcomp(arg, ":RL"));
+    return ret;
+}
+
+// --- dev.Covline.line.Get
+u32 dev::line_Get(dev::Covline& parent) {
+    u32 ret;
+    ret = 0; // default value
+    (void)u32_ReadStrptrMaybe(ret, algo::Pathcomp(parent.covline, ":RR"));
+    return ret;
+}
+
+// --- dev.Covline.line.Get2
+u32 dev::Covline_line_Get(algo::strptr arg) {
+    u32 ret;
+    ret = 0; // default value
+    (void)u32_ReadStrptrMaybe(ret, algo::Pathcomp(arg, ":RR"));
+    return ret;
+}
+
+// --- dev.Covline.flag.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* dev::flag_ToCstr(const dev::Covline& parent) {
+    const char *ret = NULL;
+    switch(flag_GetEnum(parent)) {
+        case dev_Covline_flag_N            : ret = "N";  break;
+        case dev_Covline_flag_E            : ret = "E";  break;
+        case dev_Covline_flag_P            : ret = "P";  break;
+    }
+    return ret;
+}
+
+// --- dev.Covline.flag.Print
+// Convert flag to a string. First, attempt conversion to a known string.
+// If no string matches, print flag as a numeric value.
+void dev::flag_Print(const dev::Covline& parent, algo::cstring &lhs) {
+    const char *strval = flag_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.flag;
+    }
+}
+
+// --- dev.Covline.flag.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool dev::flag_SetStrptrMaybe(dev::Covline& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 1: {
+            switch (u64(rhs[0])) {
+                case 'E': {
+                    flag_SetEnum(parent,dev_Covline_flag_E); ret = true; break;
+                }
+                case 'N': {
+                    flag_SetEnum(parent,dev_Covline_flag_N); ret = true; break;
+                }
+                case 'P': {
+                    flag_SetEnum(parent,dev_Covline_flag_P); ret = true; break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- dev.Covline.flag.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void dev::flag_SetStrptr(dev::Covline& parent, algo::strptr rhs, dev_Covline_flag_Enum dflt) {
+    if (!flag_SetStrptrMaybe(parent,rhs)) flag_SetEnum(parent,dflt);
+}
+
+// --- dev.Covline.flag.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool dev::flag_ReadStrptrMaybe(dev::Covline& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = flag_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = char_ReadStrptrMaybe(parent.flag,rhs);
+    }
+    return retval;
+}
+
+// --- dev.Covline..Concat_src_line
+tempstr dev::Covline_Concat_src_line( const algo::strptr& src ,u32 line ) {
+    return tempstr() << src <<':'<< line ;
+}
+
+// --- dev.Covline..ReadFieldMaybe
+bool dev::Covline_ReadFieldMaybe(dev::Covline &parent, algo::strptr field, algo::strptr strval) {
+    dev::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case dev_FieldId_covline: retval = algo::Smallstr200_ReadStrptrMaybe(parent.covline, strval); break;
+        case dev_FieldId_flag: retval = flag_ReadStrptrMaybe(parent, strval); break;
+        case dev_FieldId_hit: retval = u32_ReadStrptrMaybe(parent.hit, strval); break;
+        case dev_FieldId_text: retval = algo::cstring_ReadStrptrMaybe(parent.text, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dev.Covline..ReadStrptrMaybe
+// Read fields of dev::Covline from an ascii string.
+// The format of the string is an ssim Tuple
+bool dev::Covline_ReadStrptrMaybe(dev::Covline &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dev.covline") || algo::StripTypeTag(in_str, "dev.Covline");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Covline_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dev.Covline..Print
+// print string representation of dev::Covline to string LHS, no header -- cprint:dev.Covline.String
+void dev::Covline_Print(dev::Covline & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "dev.covline";
+
+    algo::Smallstr200_Print(row.covline, temp);
+    PrintAttrSpaceReset(str,"covline", temp);
+
+    dev::flag_Print(row, temp);
+    PrintAttrSpaceReset(str,"flag", temp);
+
+    u32_Print(row.hit, temp);
+    PrintAttrSpaceReset(str,"hit", temp);
+
+    algo::cstring_Print(row.text, temp);
+    PrintAttrSpaceReset(str,"text", temp);
+}
+
+// --- dev.Covtarget..ReadFieldMaybe
+bool dev::Covtarget_ReadFieldMaybe(dev::Covtarget &parent, algo::strptr field, algo::strptr strval) {
+    dev::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case dev_FieldId_covtarget: retval = algo::Smallstr16_ReadStrptrMaybe(parent.covtarget, strval); break;
+        case dev_FieldId_total: retval = u32_ReadStrptrMaybe(parent.total, strval); break;
+        case dev_FieldId_nonexe: retval = u32_ReadStrptrMaybe(parent.nonexe, strval); break;
+        case dev_FieldId_exe: retval = u32_ReadStrptrMaybe(parent.exe, strval); break;
+        case dev_FieldId_exer: retval = algo::U32Dec2_ReadStrptrMaybe(parent.exer, strval); break;
+        case dev_FieldId_hit: retval = u32_ReadStrptrMaybe(parent.hit, strval); break;
+        case dev_FieldId_cov: retval = algo::U32Dec2_ReadStrptrMaybe(parent.cov, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dev.Covtarget..ReadStrptrMaybe
+// Read fields of dev::Covtarget from an ascii string.
+// The format of the string is an ssim Tuple
+bool dev::Covtarget_ReadStrptrMaybe(dev::Covtarget &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dev.covtarget") || algo::StripTypeTag(in_str, "dev.Covtarget");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Covtarget_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dev.Covtarget..Print
+// print string representation of dev::Covtarget to string LHS, no header -- cprint:dev.Covtarget.String
+void dev::Covtarget_Print(dev::Covtarget & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "dev.covtarget";
+
+    algo::Smallstr16_Print(row.covtarget, temp);
+    PrintAttrSpaceReset(str,"covtarget", temp);
+
+    u32_Print(row.total, temp);
+    PrintAttrSpaceReset(str,"total", temp);
+
+    u32_Print(row.nonexe, temp);
+    PrintAttrSpaceReset(str,"nonexe", temp);
+
+    u32_Print(row.exe, temp);
+    PrintAttrSpaceReset(str,"exe", temp);
+
+    algo::U32Dec2_Print(row.exer, temp);
+    PrintAttrSpaceReset(str,"exer", temp);
+
+    u32_Print(row.hit, temp);
+    PrintAttrSpaceReset(str,"hit", temp);
+
+    algo::U32Dec2_Print(row.cov, temp);
+    PrintAttrSpaceReset(str,"cov", temp);
+}
+
 // --- dev.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
@@ -432,6 +707,19 @@ const char* dev::value_ToCstr(const dev::FieldId& parent) {
         case dev_FieldId_pchext            : ret = "pchext";  break;
         case dev_FieldId_objext            : ret = "objext";  break;
         case dev_FieldId_rc                : ret = "rc";  break;
+        case dev_FieldId_covfile           : ret = "covfile";  break;
+        case dev_FieldId_total             : ret = "total";  break;
+        case dev_FieldId_nonexe            : ret = "nonexe";  break;
+        case dev_FieldId_exe               : ret = "exe";  break;
+        case dev_FieldId_exer              : ret = "exer";  break;
+        case dev_FieldId_hit               : ret = "hit";  break;
+        case dev_FieldId_cov               : ret = "cov";  break;
+        case dev_FieldId_covline           : ret = "covline";  break;
+        case dev_FieldId_src               : ret = "src";  break;
+        case dev_FieldId_line              : ret = "line";  break;
+        case dev_FieldId_flag              : ret = "flag";  break;
+        case dev_FieldId_text              : ret = "text";  break;
+        case dev_FieldId_covtarget         : ret = "covtarget";  break;
         case dev_FieldId_gitfile           : ret = "gitfile";  break;
         case dev_FieldId_ext               : ret = "ext";  break;
         case dev_FieldId_gitinfo           : ret = "gitinfo";  break;
@@ -441,6 +729,8 @@ const char* dev::value_ToCstr(const dev::FieldId& parent) {
         case dev_FieldId_gitlab_project    : ret = "gitlab_project";  break;
         case dev_FieldId_url               : ret = "url";  break;
         case dev_FieldId_gitlab_project_id : ret = "gitlab_project_id";  break;
+        case dev_FieldId_hilite            : ret = "hilite";  break;
+        case dev_FieldId_color             : ret = "color";  break;
         case dev_FieldId_htmlentity        : ret = "htmlentity";  break;
         case dev_FieldId_code              : ret = "code";  break;
         case dev_FieldId_include           : ret = "include";  break;
@@ -456,6 +746,7 @@ const char* dev::value_ToCstr(const dev::FieldId& parent) {
         case dev_FieldId_longestfunc       : ret = "longestfunc";  break;
         case dev_FieldId_nmysteryfunc      : ret = "nmysteryfunc";  break;
         case dev_FieldId_badness           : ret = "badness";  break;
+        case dev_FieldId_strict            : ret = "strict";  break;
         case dev_FieldId_opt_type          : ret = "opt_type";  break;
         case dev_FieldId_sep               : ret = "sep";  break;
         case dev_FieldId_inl               : ret = "inl";  break;
@@ -478,13 +769,15 @@ const char* dev::value_ToCstr(const dev::FieldId& parent) {
         case dev_FieldId_target            : ret = "target";  break;
         case dev_FieldId_compat            : ret = "compat";  break;
         case dev_FieldId_targsrc           : ret = "targsrc";  break;
-        case dev_FieldId_src               : ret = "src";  break;
         case dev_FieldId_targsyslib        : ret = "targsyslib";  break;
+        case dev_FieldId_cov_min           : ret = "cov_min";  break;
+        case dev_FieldId_maxerr            : ret = "maxerr";  break;
         case dev_FieldId_timefmt           : ret = "timefmt";  break;
         case dev_FieldId_dirname           : ret = "dirname";  break;
         case dev_FieldId_tool_opt          : ret = "tool_opt";  break;
         case dev_FieldId_opt               : ret = "opt";  break;
         case dev_FieldId_sortfld           : ret = "sortfld";  break;
+        case dev_FieldId_field             : ret = "field";  break;
         case dev_FieldId_value             : ret = "value";  break;
     }
     return ret;
@@ -525,8 +818,17 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 case LE_STR3('c','f','g'): {
                     value_SetEnum(parent,dev_FieldId_cfg); ret = true; break;
                 }
+                case LE_STR3('c','o','v'): {
+                    value_SetEnum(parent,dev_FieldId_cov); ret = true; break;
+                }
+                case LE_STR3('e','x','e'): {
+                    value_SetEnum(parent,dev_FieldId_exe); ret = true; break;
+                }
                 case LE_STR3('e','x','t'): {
                     value_SetEnum(parent,dev_FieldId_ext); ret = true; break;
+                }
+                case LE_STR3('h','i','t'): {
+                    value_SetEnum(parent,dev_FieldId_hit); ret = true; break;
                 }
                 case LE_STR3('i','n','l'): {
                     value_SetEnum(parent,dev_FieldId_inl); ret = true; break;
@@ -563,11 +865,23 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('c','o','d','e'): {
                     value_SetEnum(parent,dev_FieldId_code); ret = true; break;
                 }
+                case LE_STR4('e','x','e','r'): {
+                    value_SetEnum(parent,dev_FieldId_exer); ret = true; break;
+                }
                 case LE_STR4('e','x','p','r'): {
                     value_SetEnum(parent,dev_FieldId_expr); ret = true; break;
                 }
+                case LE_STR4('f','l','a','g'): {
+                    value_SetEnum(parent,dev_FieldId_flag); ret = true; break;
+                }
+                case LE_STR4('l','i','n','e'): {
+                    value_SetEnum(parent,dev_FieldId_line); ret = true; break;
+                }
                 case LE_STR4('l','i','n','k'): {
                     value_SetEnum(parent,dev_FieldId_link); ret = true; break;
+                }
+                case LE_STR4('t','e','x','t'): {
+                    value_SetEnum(parent,dev_FieldId_text); ret = true; break;
                 }
             }
             break;
@@ -577,8 +891,17 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 case LE_STR5('c','h','i','l','d'): {
                     value_SetEnum(parent,dev_FieldId_child); ret = true; break;
                 }
+                case LE_STR5('c','o','l','o','r'): {
+                    value_SetEnum(parent,dev_FieldId_color); ret = true; break;
+                }
+                case LE_STR5('f','i','e','l','d'): {
+                    value_SetEnum(parent,dev_FieldId_field); ret = true; break;
+                }
                 case LE_STR5('m','a','x','w','s'): {
                     value_SetEnum(parent,dev_FieldId_maxws); ret = true; break;
+                }
+                case LE_STR5('t','o','t','a','l'): {
+                    value_SetEnum(parent,dev_FieldId_total); ret = true; break;
                 }
                 case LE_STR5('u','n','a','m','e'): {
                     value_SetEnum(parent,dev_FieldId_uname); ret = true; break;
@@ -600,11 +923,20 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('e','x','e','e','x','t'): {
                     value_SetEnum(parent,dev_FieldId_exeext); ret = true; break;
                 }
+                case LE_STR6('h','i','l','i','t','e'): {
+                    value_SetEnum(parent,dev_FieldId_hilite); ret = true; break;
+                }
                 case LE_STR6('l','i','b','e','x','t'): {
                     value_SetEnum(parent,dev_FieldId_libext); ret = true; break;
                 }
+                case LE_STR6('m','a','x','e','r','r'): {
+                    value_SetEnum(parent,dev_FieldId_maxerr); ret = true; break;
+                }
                 case LE_STR6('n','b','a','d','w','s'): {
                     value_SetEnum(parent,dev_FieldId_nbadws); ret = true; break;
+                }
+                case LE_STR6('n','o','n','e','x','e'): {
+                    value_SetEnum(parent,dev_FieldId_nonexe); ret = true; break;
                 }
                 case LE_STR6('o','b','j','e','x','t'): {
                     value_SetEnum(parent,dev_FieldId_objext); ret = true; break;
@@ -620,6 +952,9 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR6('s','t','a','t','u','s'): {
                     value_SetEnum(parent,dev_FieldId_status); ret = true; break;
+                }
+                case LE_STR6('s','t','r','i','c','t'): {
+                    value_SetEnum(parent,dev_FieldId_strict); ret = true; break;
                 }
                 case LE_STR6('s','u','f','f','i','x'): {
                     value_SetEnum(parent,dev_FieldId_suffix); ret = true; break;
@@ -652,6 +987,15 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('c','o','m','p','v','e','r'): {
                     value_SetEnum(parent,dev_FieldId_compver); ret = true; break;
+                }
+                case LE_STR7('c','o','v','_','m','i','n'): {
+                    value_SetEnum(parent,dev_FieldId_cov_min); ret = true; break;
+                }
+                case LE_STR7('c','o','v','f','i','l','e'): {
+                    value_SetEnum(parent,dev_FieldId_covfile); ret = true; break;
+                }
+                case LE_STR7('c','o','v','l','i','n','e'): {
+                    value_SetEnum(parent,dev_FieldId_covline); ret = true; break;
                 }
                 case LE_STR7('d','i','r','n','a','m','e'): {
                     value_SetEnum(parent,dev_FieldId_dirname); ret = true; break;
@@ -725,6 +1069,10 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('c','o','m','p','l','e','t','e'): {
                     if (memcmp(rhs.elems+8,"d",1)==0) { value_SetEnum(parent,dev_FieldId_completed); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('c','o','v','t','a','r','g','e'): {
+                    if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,dev_FieldId_covtarget); ret = true; break; }
                     break;
                 }
                 case LE_STR8('n','l','o','n','g','f','u','n'): {
@@ -995,6 +1343,51 @@ void dev::GitlabProject_Print(dev::GitlabProject & row, algo::cstring &str) {
     PrintAttrSpaceReset(str,"gitlab_project_id", temp);
 }
 
+// --- dev.Hilite..ReadFieldMaybe
+bool dev::Hilite_ReadFieldMaybe(dev::Hilite &parent, algo::strptr field, algo::strptr strval) {
+    dev::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case dev_FieldId_hilite: retval = algo::Smallstr50_ReadStrptrMaybe(parent.hilite, strval); break;
+        case dev_FieldId_color: retval = algo::Smallstr50_ReadStrptrMaybe(parent.color, strval); break;
+        case dev_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dev.Hilite..ReadStrptrMaybe
+// Read fields of dev::Hilite from an ascii string.
+// The format of the string is an ssim Tuple
+bool dev::Hilite_ReadStrptrMaybe(dev::Hilite &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dev.hilite") || algo::StripTypeTag(in_str, "dev.Hilite");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Hilite_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dev.Hilite..Print
+// print string representation of dev::Hilite to string LHS, no header -- cprint:dev.Hilite.String
+void dev::Hilite_Print(dev::Hilite & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "dev.hilite";
+
+    algo::Smallstr50_Print(row.hilite, temp);
+    PrintAttrSpaceReset(str,"hilite", temp);
+
+    algo::Smallstr50_Print(row.color, temp);
+    PrintAttrSpaceReset(str,"color", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
 // --- dev.Htmlentity..ReadFieldMaybe
 bool dev::Htmlentity_ReadFieldMaybe(dev::Htmlentity &parent, algo::strptr field, algo::strptr strval) {
     dev::FieldId field_id;
@@ -1222,6 +1615,51 @@ void dev::Linelim_Print(dev::Linelim & row, algo::cstring &str) {
 
     algo::Smallstr50_Print(row.badness, temp);
     PrintAttrSpaceReset(str,"badness", temp);
+}
+
+// --- dev.Msgfile..ReadFieldMaybe
+bool dev::Msgfile_ReadFieldMaybe(dev::Msgfile &parent, algo::strptr field, algo::strptr strval) {
+    dev::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case dev_FieldId_gitfile: retval = algo::Smallstr200_ReadStrptrMaybe(parent.gitfile, strval); break;
+        case dev_FieldId_strict: retval = bool_ReadStrptrMaybe(parent.strict, strval); break;
+        case dev_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dev.Msgfile..ReadStrptrMaybe
+// Read fields of dev::Msgfile from an ascii string.
+// The format of the string is an ssim Tuple
+bool dev::Msgfile_ReadStrptrMaybe(dev::Msgfile &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dev.msgfile") || algo::StripTypeTag(in_str, "dev.Msgfile");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Msgfile_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dev.Msgfile..Print
+// print string representation of dev::Msgfile to string LHS, no header -- cprint:dev.Msgfile.String
+void dev::Msgfile_Print(dev::Msgfile & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "dev.msgfile";
+
+    algo::Smallstr200_Print(row.gitfile, temp);
+    PrintAttrSpaceReset(str,"gitfile", temp);
+
+    bool_Print(row.strict, temp);
+    PrintAttrSpaceReset(str,"strict", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
 }
 
 // --- dev.Noindent..ReadFieldMaybe
@@ -1923,6 +2361,55 @@ void dev::Targsyslib_Print(dev::Targsyslib & row, algo::cstring &str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
+// --- dev.Tgtcov..ReadFieldMaybe
+bool dev::Tgtcov_ReadFieldMaybe(dev::Tgtcov &parent, algo::strptr field, algo::strptr strval) {
+    dev::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case dev_FieldId_target: retval = algo::Smallstr16_ReadStrptrMaybe(parent.target, strval); break;
+        case dev_FieldId_cov_min: retval = algo::U32Dec2_ReadStrptrMaybe(parent.cov_min, strval); break;
+        case dev_FieldId_maxerr: retval = algo::U32Dec2_ReadStrptrMaybe(parent.maxerr, strval); break;
+        case dev_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dev.Tgtcov..ReadStrptrMaybe
+// Read fields of dev::Tgtcov from an ascii string.
+// The format of the string is an ssim Tuple
+bool dev::Tgtcov_ReadStrptrMaybe(dev::Tgtcov &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dev.tgtcov") || algo::StripTypeTag(in_str, "dev.Tgtcov");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Tgtcov_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dev.Tgtcov..Print
+// print string representation of dev::Tgtcov to string LHS, no header -- cprint:dev.Tgtcov.String
+void dev::Tgtcov_Print(dev::Tgtcov & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "dev.tgtcov";
+
+    algo::Smallstr16_Print(row.target, temp);
+    PrintAttrSpaceReset(str,"target", temp);
+
+    algo::U32Dec2_Print(row.cov_min, temp);
+    PrintAttrSpaceReset(str,"cov_min", temp);
+
+    algo::U32Dec2_Print(row.maxerr, temp);
+    PrintAttrSpaceReset(str,"maxerr", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
 // --- dev.Timefmt..ReadFieldMaybe
 bool dev::Timefmt_ReadFieldMaybe(dev::Timefmt &parent, algo::strptr field, algo::strptr strval) {
     dev::FieldId field_id;
@@ -2146,6 +2633,47 @@ void dev::Uname_Print(dev::Uname & row, algo::cstring &str) {
 
     algo::Smallstr50_Print(row.uname, temp);
     PrintAttrSpaceReset(str,"uname", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
+// --- dev.Unstablefld..ReadFieldMaybe
+bool dev::Unstablefld_ReadFieldMaybe(dev::Unstablefld &parent, algo::strptr field, algo::strptr strval) {
+    dev::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case dev_FieldId_field: retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval); break;
+        case dev_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dev.Unstablefld..ReadStrptrMaybe
+// Read fields of dev::Unstablefld from an ascii string.
+// The format of the string is an ssim Tuple
+bool dev::Unstablefld_ReadStrptrMaybe(dev::Unstablefld &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dev.unstablefld") || algo::StripTypeTag(in_str, "dev.Unstablefld");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Unstablefld_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dev.Unstablefld..Print
+// print string representation of dev::Unstablefld to string LHS, no header -- cprint:dev.Unstablefld.String
+void dev::Unstablefld_Print(dev::Unstablefld & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "dev.unstablefld";
+
+    algo::Smallstr100_Print(row.field, temp);
+    PrintAttrSpaceReset(str,"field", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

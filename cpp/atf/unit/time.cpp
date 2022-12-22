@@ -45,8 +45,8 @@ struct Counter {
 // so the combinatins will have wider spread than for binary run
 
 enum {
-      GEN_MULTIPLY = 11
-      ,GEN_ADD      = 1
+    GEN_MULTIPLY = 11
+    ,GEN_ADD      = 1
 };
 
 // ----------------------------------------------------------------------------
@@ -67,11 +67,11 @@ struct GenNum {
 // ----------------------------------------------------------------------------
 
 struct TimeTestIter {
-    enum {
-          MIN_UTIME = -2208988800 // 1900-01-01 00:00:00 - min value to test
-          ,MAX_UTIME = 2147483647  // 2038-01-19 03:14:07 - max value to test
-          ,SPREAD    = MAX_UTIME - MIN_UTIME
-          ,LIMIT     = 1000        // iteration limit
+    enum : i64 {
+        MIN_UTIME = -2208988800 // 1900-01-01 00:00:00 - min value to test
+        ,MAX_UTIME = 2147483647  // 2038-01-19 03:14:07 - max value to test
+        ,SPREAD    = MAX_UTIME - MIN_UTIME
+        ,LIMIT     = 1000        // iteration limit
     };
 
     GenNum  gen_ut;              // unix time generator
@@ -371,7 +371,6 @@ static void ParseUnTimeStr(const strptr& in, strptr result) {
     tempstr out;
     UnTime_Print(test, out);
     vrfyeq_(out,result);
-    prlog(out);
 }
 
 // -----------------------------------------------------------------------------
@@ -388,7 +387,6 @@ static void TestParseUnDiff(const strptr& in, strptr result) {
     tempstr    out;
     UnDiff_Print(test, out);
     vrfyeq_(out,result);
-    prlog(out);
 }
 
 // -----------------------------------------------------------------------------
@@ -415,7 +413,9 @@ void atf_unit::unittest_algo_lib_PrintUnTime(){
 void atf_unit::unittest_algo_lib_ParseUnTime() {
     ParseUnTimeStr("1970-02-01T12:13:14.567890123","1970-02-01T12:13:14.567890123");
     ParseUnTimeStr("1984-12-31T12:13:14.567","1984-12-31T12:13:14.567");
-    ParseUnTimeStr("2013-11-21T12:13:14.000123000crap" ,"2013-11-21T12:13:14.000123" );
+    ParseUnTimeStr("2013-11-21T12:13:14.000123000crap","2013-11-21T12:13:14.000123");
+    ParseUnTimeStr("2013-11-21" ,"2013-11-21T00:00:00");
+    ParseUnTimeStr("2013/11/21" ,"2013-11-21T00:00:00");
     TestParseUnDiff("12:13:14.567890123","12:13:14.567890123");
     TestParseUnDiff("13:14.567890123", "00:13:14.567890123");
     TestParseUnDiff("14.567890123",  "00:00:14.567890123");
@@ -436,6 +436,18 @@ void atf_unit::unittest_algo_lib_ParseUnTime() {
     TestParseTime("2013/02/05 10:10:13"           , "%Y/%m/%d %T");
     TestParseTime("Jun 10, 2004:  09:30"          , "%b %d, %Y:  %H:%M");
     TestParseTime("FFF"                           , "FFF");
+    TestParseTime("May 11 1986 01:20:30"          , "%B %d %Y %H:%M:%S");
+    TestParseTime("January 11 1986 01:20:30"          , "%B %d %Y %H:%M:%S");
+    TestParseTime("January 11 1986 01:20:30.000000001", "%B %d %Y %H:%M:%S.%X", 9);
+    TestParseTime("January 11 1986 01:20:30.999999999", "%B %d %Y %H:%M:%S.%X", 9);
+    TestParseTime("January 11 1986 01:20:30.0000001"  , "%B %d %Y %H:%M:%S.%X", 7);
+    TestParseTime("January 11 1986 01:20:30.9999999"  , "%B %d %Y %H:%M:%S.%X", 7);
+    TestParseTime("January 11 1986 01:20:30.00001"    , "%B %d %Y %H:%M:%S.%X", 5);
+    TestParseTime("January 11 1986 01:20:30.99999"    , "%B %d %Y %H:%M:%S.%X", 5);
+    TestParseTime("January 11 1986 01:20:30.001"      , "%B %d %Y %H:%M:%S.%X", 3);
+    TestParseTime("January 11 1986 01:20:30.999"      , "%B %d %Y %H:%M:%S.%X", 3);
+    TestParseTime("%February 28 99"                    , "%%%B %d %y");
+    TestParseTime("June 10, 2004:  09:30"          , "%B %d, %Y:  %H:%M");
 }
 
 // -----------------------------------------------------------------------------

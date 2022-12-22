@@ -326,6 +326,10 @@ void algo::FatalErrorExit(const char *a) NORETURN {
 #if defined (_WIN32) && defined(_DEBUG)
     DebugBreak();
 #endif
+#ifdef WIN32
+    // wait a bit so that buffers in other threads are flushed to disk
+    Sleep(2000);
+#endif
     _exit(1);
 }
 

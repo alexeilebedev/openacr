@@ -339,6 +339,7 @@ namespace atf_amc { // update-hdr
     // void amctest_Exec_Status();
     // void amctest_ReadProc();
     // void amctest_ExecSh();
+    // void amctest_ExecVerbose();
 
     // -------------------------------------------------------------------
     // cpp/atf/amc/fbuf.cpp
@@ -382,6 +383,12 @@ namespace atf_amc { // update-hdr
     // void amctest_fstep_InlineOnce();
     // void amctest_fstep_InlineRecur();
     // void amctest_fstep_TimeHookRecur();
+
+    // -------------------------------------------------------------------
+    // cpp/atf/amc/gsymbol.cpp
+    //
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void amctest_Gsymbol();
 
     // -------------------------------------------------------------------
     // cpp/atf/amc/hook.cpp
@@ -554,6 +561,8 @@ namespace atf_amc { // update-hdr
     u32 length_Get(atf_amc::VarlenExtern &vl);
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_VarlenAlloc();
+    // void amctest_VarlenMsgs();
+    // void amctest_VarlenMsgsPnew();
 
     // -------------------------------------------------------------------
     // cpp/atf/amc/zdlist.cpp

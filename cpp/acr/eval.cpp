@@ -98,10 +98,7 @@ void acr::Evalattr_Step(acr::FEvalattr &evalattr, algo::Tuple &tuple) {
     if (evalattr.normalize) {
         if (evalattr.field->arg == strptr("bool",4)) {
             bool b = false;
-            if(bool_ReadStrptrMaybe(b, evalattr.value)&&b)
-                evalattr.value = ("Y");
-            else
-                evalattr.value = ("N");
+            evalattr.value = bool_ReadStrptrMaybe(b, evalattr.value) && b ? "Y" : "N";
         }
     }
 }

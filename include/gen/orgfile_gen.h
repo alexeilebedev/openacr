@@ -72,7 +72,7 @@ void                 trace_Print(orgfile::trace & row, algo::cstring &str) __att
 // create: orgfile.FDb._db (Global)
 struct FDb { // orgfile.FDb
     command::orgfile       cmdline;                      //
-    u32                    filename_blocksize;           // # bytes per block
+    u64                    filename_blocksize;           // # bytes per block
     orgfile::FFilename*    filename_free;                //
     orgfile::FFilename**   ind_filename_buckets_elems;   // pointer to bucket array
     i32                    ind_filename_buckets_n;       // number of elements in bucket array
@@ -103,6 +103,8 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -465,8 +467,11 @@ struct filehash_c_filename_curs {// cursor
     filehash_c_filename_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-int                  main(int argc, char **argv);
 } // end namespace orgfile
+int                  main(int argc, char **argv);
+#if defined(WIN32)
+int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
+#endif
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const orgfile::trace &row);// cfmt:orgfile.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const orgfile::FieldId &row);// cfmt:orgfile.FieldId.String

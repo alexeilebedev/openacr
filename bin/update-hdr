@@ -1,3 +1,2 @@
+#!/usr/bin/env bash
 src_hdr -write
-
-

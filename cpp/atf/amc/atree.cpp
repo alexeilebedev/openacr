@@ -40,10 +40,10 @@ static i32 Depth(atf_amc::FAvl* node){
 }
 
 static void PrintNode(atf_amc::FAvl& node){
-    prlog(Keyval("n",node.n) <<
-          Keyval("d",node.tr_avl_depth)<<
-          Keyval("l",node.tr_avl_left)<<
-          Keyval("r",node.tr_avl_right));
+    verblog(Keyval("n",node.n) <<
+            Keyval("d",node.tr_avl_depth)<<
+            Keyval("l",node.tr_avl_left)<<
+            Keyval("r",node.tr_avl_right));
 
 }
 //Check balance.
@@ -114,14 +114,14 @@ static i32 Count(atf_amc::FAvl* node){
 
 
 static void InOrderPrint(){
-    prlog("Ascending..");
-    prlog(Keyval("Root", atf_amc::_db.tr_avl_root)<<
-          Keyval("N", atf_amc::_db.tr_avl_n));
+    verblog("Ascending..");
+    verblog(Keyval("Root", atf_amc::_db.tr_avl_root)<<
+            Keyval("N", atf_amc::_db.tr_avl_n));
     ind_beg(atf_amc::_db_tr_avl_curs, elem, atf_amc::_db){
-        prlog(Keyval("n",elem.n) <<
-              Keyval("d",elem.tr_avl_depth)<<
-              Keyval("l",elem.tr_avl_left)<<
-              Keyval("r",elem.tr_avl_right));
+        verblog(Keyval("n",elem.n) <<
+                Keyval("d",elem.tr_avl_depth)<<
+                Keyval("l",elem.tr_avl_left)<<
+                Keyval("r",elem.tr_avl_right));
     }ind_end;
 }
 
@@ -172,10 +172,10 @@ static void Remove(atf_amc::FAvl& node){
 
 
 static void ReverseOrderPrint(){
-    prlog("Descending..");
+    verblog("Descending..");
     atf_amc::FAvl* node = atf_amc::tr_avl_Last();
     while(node){
-        prlog(node->n);
+        verblog(node->n);
         node = atf_amc::tr_avl_Prev(*node);
     }
 }
@@ -214,7 +214,7 @@ static void SimpleCases(){
 }
 
 static void SpecialCases(){
-    prlog("Some tricky cases:");
+    verblog("Some tricky cases:");
     Add(98);
     Add(97);
     Add(99);
@@ -252,7 +252,7 @@ static void SpecialCases(){
     Add(9);
     RemoveAll();
 
-    prlog("Random delete");
+    verblog("Random delete");
     atf_amc::FAvl* elem[100];
     frep_(i,100){
         elem[i] = Add(i);
@@ -274,14 +274,14 @@ void atf_amc::amctest_atree_test1(){
     RemoveAll();
 
 
-    prlog("All zeros:");
+    verblog("All zeros:");
     frep_(i,1000){
         Add(0);
     }
     Add(2);
     Add(3);
     RemoveAll();
-    prlog("tight range:");
+    verblog("tight range:");
     frep_(i,1000){
         Add(algo::i32_WeakRandom(100)%3);
     }
@@ -290,23 +290,23 @@ void atf_amc::amctest_atree_test1(){
     RemoveAll();
     InvariantCheck();
     i64 c = algo::get_cycles();
-    prlog("All random:");
+    verblog("All random:");
     frep_(i,10000){
         Add(algo::i32_WeakRandom(100));
     }
     c = algo::get_cycles() - c;
-    prlog("Insert  "<< atf_amc::_db.tr_avl_n<<" :"<<c<<" cycles");
+    verblog("Insert  "<< atf_amc::_db.tr_avl_n<<" :"<<c<<" cycles");
     c = algo::get_cycles();
     atf_amc::FAvl* next = tr_avl_First();
-    prlog("Iteration:");
+    verblog("Iteration:");
     while(next){
         next = tr_avl_Next(*next);
     }
     c = algo::get_cycles() - c;
-    prlog("Iterate "<< atf_amc::_db.tr_avl_n<<" :"<<c<<" cycles");
+    verblog("Iterate "<< atf_amc::_db.tr_avl_n<<" :"<<c<<" cycles");
     RemoveAll();
     InvariantCheck();
-    prlog("Done Testing Atree");
+    verblog("Done Testing Atree");
 }
 
 

@@ -1,0 +1,135 @@
+#!/usr/bin/env perl
+# current enum name
+use strict;
+my $enum_name = "";
+# current struct name
+my $struct_name = "";
+# map of ctypes seen in this input, used to look up names
+# so that we can fully qualify them with namespace name on output
+my $ctype={};
+# enum eBookCondition {
+#     DELAY_OPENING                  = 'D'                           // "delay_opening" delay opening
+#         ,STOP_TRADING                   = 'H'                           // "stop_trading" stop trading
+#         ,STOP_TRADING_WITH_NON_OPENING  = 'J'                           // "stop_trading_with_non_opening" stop trading with non opening
+#         ,DELAY_OPEN_WITH_NON_OPENING    = 'L'                           // "delay_open_with_non_opening" delay open with non opening
+#         ,NORMAL_TRADING                 = 'N'                           // "normal_trading " normal trading
+#         ,NON_OPENING                    = 'P'                           // "non_opening" non opening
+# };
+# struct Header {
+#     char                 type;
+#     explicit Header(char                           in_type);
+#     typedef _ValType< char >::T ValType;
+#     operator ValType() const { return ValType(type); }
+#     Header();
+# };
+my $ns=$ARGV[0];
+# determine namespace name from filename
+$ns =~ s/\..*//;
+$ns =~ s/.*\///;
+my $hdrprinted={};
+my $bitfldoffset=0;
+my $nfield=0;
+my $fldtype="";
+my $fldname="";
+
+# remove ''s in comment
+sub clean_comment {
+    my $x=$_[0];
+    $x =~ s/\'//g;
+    return $x;
+}
+
+while (<>) {
+    chomp;
+    # extract single-line comment
+    my $comment="";
+    if ($_ =~ s!//(.*)$!!) {
+        $comment=clean_comment($1);
+        $comment =~ s/^\s+//;
+        $comment =~ s/\s+$//;
+    }
+    if (!$struct_name && /enum e(.*) {/) { # detect enum definition
+        $enum_name = $1;
+    } elsif (/struct (.*) {/) { # detect struct declaration
+        $struct_name = $1;
+        $bitfldoffset=0;
+        if ($struct_name =~ /(.*) : (.*)/) {
+            $struct_name = $1;
+            print "dmmeta.field  field:$ns.$struct_name.base  arg:$ns.$2  reftype:Base\n";
+            if (!$hdrprinted->{$ns.$2}++) {
+                print "dmmeta.typefld  field:$ns.$2.type comment:'VALIDATE FIELD NAME'\n";
+            }
+            #print "header $2\n";
+        }
+        $nfield=0;
+        $ctype->{$struct_name}=1;
+        print "\n";
+        print "# ---- $ns.$struct_name ----\n";
+        print "dmmeta.ctype ctype:$ns.$struct_name\n";
+        print "dmmeta.pack ctype:$ns.$struct_name\n";
+        print "dmmeta.cfmt  cfmt:$ns.$struct_name.String  printfmt:Tuple  read:Y  print:Y  sep:\"\"  genop:Y\n";
+    } elsif (/^\s*};?$/) { # detect end of enum / struct
+        if ($struct_name) {
+            my $ctor=($nfield < 8 ? "Y" : "N");
+            # todo: set cheap_copy if size is small
+            print "dmmeta.cpptype ctype:$ns.$struct_name ctor:$ctor dtor:N cheap_copy:N\n";
+        }
+        undef $enum_name;
+        undef $struct_name;
+    }
+    if ($enum_name) { # parse enum field
+        my ($name,$val);
+        if (/(\w+)\s*=\s*('.*')\s*$/) { # blah = 'A'
+            ($name,$val)=($1,$2);
+        }
+        if (/(\w+)\s+=\s+(\d+)\s*$/) { # blah = 0
+            ($name,$val)=($1,$2);
+        }
+        if ($name) {
+            print "dmmeta.fconst fconst:$ns.$enum_name.value/$name  value:\"$val\"  comment:'$comment'\n";
+            print "dmmeta.anonfld field:$ns.$enum_name.value\n";
+            print "dmmeta.fcast field:$ns.$enum_name.value\n";
+        }
+    }
+    if ($struct_name) { # parse struct field
+        # remap AosCharField -> algo.RspaceStr
+        s/AosLCharField<(\d+),' '>/algo.LspaceStr$1/;
+        s/AosCharField<(\d+),' '>/algo.RspaceStr$1/;
+        # detect bigend types
+        my $bigend=s/NetU/u/;
+        if (/enum { Type = ('?.*'?) };/) { # msgtype
+            print "dmmeta.msgtype  ctype:$ns.$struct_name  type:\"$1\"\n";
+        } elsif (/^\s+([:\.\w]+)\s+(.*?);/ && !/\(/ && !/typedef/ && !/,/) { # regular field
+            $fldname = $2;
+            $fldtype = $1;
+            $fldtype =~ s/::/./;
+            $nfield++;
+            my $fldcount=1;
+            my $reftype="Val";
+            if ($fldname =~ s/\[(.*)\]//) {
+                $fldcount = $1;
+                $reftype="Inlary";
+            }
+            if ($ctype->{$fldtype}) { # fully qualify name
+                $fldtype = "$ns.$fldtype";
+            }
+            if ($fldname =~ s/: (\d+)//) { # detect bitfield: 'bool blah : 1'
+                if ($bitfldoffset == 0) {
+                    print "dmmeta.field  field:$ns.$struct_name.value  arg:u8  comment:'VALIDATE ARG'\n";
+                }
+                $reftype = "Bitfld";
+                print "dmmeta.bitfld  field:$ns.$struct_name.$fldname  offset:$bitfldoffset  width:$1 srcfield:$ns.$struct_name.value\n";
+                $bitfldoffset += $1;
+            }
+            if ($fldtype ne "T") { # skip template
+                print "dmmeta.field  field:$ns.$struct_name.$fldname  arg:$fldtype  reftype:$reftype  comment:'$comment'\n";
+            }
+            if ($fldcount > 1) {
+                print "dmmeta.inlary  field:$ns.$struct_name.$fldname  min:$fldcount  max:$fldcount\n";
+            }
+            if ($bigend) { # add bigend annotation if this is a NetU* type
+                print "dmmeta.fbigend  field:$ns.$struct_name.$fldname\n";
+            }
+        }
+    }
+}

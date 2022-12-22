@@ -257,7 +257,9 @@ static void ReadData_Ssim(Attr &head, lib_mysql::Res &res, int nfields, int skip
             str << eol;
         } else {
             //print string and flush
-            algo::Prlog(1/*stdout*/,str,0/*start index*/,true/*eol*/);
+            str << '\n';
+            algo::Prlog(&algo_lib_logcat_stdout,algo::SchedTime(),str);
+            ch_RemoveAll(str);
         }
     }
     if (mysql2ssim::_db.cmdline.writessimfile) {
@@ -391,6 +393,7 @@ void mysql2ssim::Main() {
         acr.write=true;
         acr.report=false;
         acr.print=false;
+        acr.in = mysql2ssim::_db.cmdline.in;
         int rc=SysCmd(acr_ToCmdline(acr)<<"< "<<mysql2ssim::_db.tempfile.filename);
         algo_lib::_db.exit_code += algo::Abs(rc);
     }

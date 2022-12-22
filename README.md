@@ -1,4 +1,4 @@
-This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do not edit*
+This file was created with 'atf_ci readme' from files in [txt/](txt/) -- *do not edit*
 
 ## Table Of Contents
    * [About](#about)
@@ -33,6 +33,12 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
    * [Testimonials](#testimonials)
    * [amc: Subprocess Invocation](#amc-subprocess-invocation)
    * [amc: Program Startup & Main](#amc-program-startup---main)
+   * [AMS: Algo Mesaging System](#ams-algo-mesaging-system)
+   * [atf_comp: A component test framework](#atf_comp-a-component-test-framework)
+   * [atf_cov: Code coverage measurement tool](#atf_cov-code-coverage-measurement-tool)
+   * [Tracing](#tracing)
+   * [Printing / Process output](#printing---process-output)
+   * [Fault Management](#fault-management)
 
 
 ## About
@@ -162,15 +168,9 @@ MariaDB (formerly MySQL) is not really required, but it's used by `acr_my`, `ssi
 
 ### Pre-requisites: Ubuntu/Debian
 
-    apt install -y mariadb-client mariadb-common mariadb-server libmariadb-dev libmariadbd-dev libssl-dev
+    apt install -y mariadb-server mariadb-client libmariadb-dev libmariadbd-dev \
+        libssl-dev libcurl4-openssl-dev liblz4-dev cppcheck
     apt install llvm llvm-dev  # to enable abt -compiler llvm
-
-You may need the following hacks as well. This is because mysql hasn't been fully renamed
-to mariadb yet.
-
-    (cd /usr/lib/x86_64-linux-gnu && ln -sf libmariadbclient.a libmysqlclient.a)
-    (cd /usr/lib/x86_64-linux-gnu && ln -sf libmariadbclient.so libmysqlclient.so)
-    (cd /usr/include && ln -sf mariadb mysql)
 
 ### Pre-requisites: MacOS
 
@@ -282,7 +282,7 @@ inline-command: acr readme | head -1
 dev.readme  gitfile:txt/about.md                   inl:Y  comment:""
 ```
 
-The top-level README.md file is created with `make readme` or, in reality, `atf_norm readme`.
+The top-level README.md file is created with `make readme` or, in reality, `atf_ci readme`.
 It is a by-product of normalization and has to be up-to-date for every commit.
 
 In addition, output of arbitrary commands can be embedded inside readme files using
@@ -358,3 +358,21 @@ is replaced with the output of specified command. An example of such a command c
 
 ## amc: Program Startup & Main
 [See txt/amc/main.md](txt/amc/main.md)
+
+## AMS: Algo Mesaging System
+[See txt/ams.md](txt/ams.md)
+
+## atf_comp: A component test framework
+[See txt/atf_comp.md](txt/atf_comp.md)
+
+## atf_cov: Code coverage measurement tool
+[See txt/atf_cov.md](txt/atf_cov.md)
+
+## Tracing
+[See txt/trace.md](txt/trace.md)
+
+## Printing / Process output
+[See txt/prlog.md](txt/prlog.md)
+
+## Fault Management
+[See txt/fm.md](txt/fm.md)

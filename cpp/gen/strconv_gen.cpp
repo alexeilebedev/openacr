@@ -87,7 +87,7 @@ void strconv::MainLoop() {
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
-        algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+        strconv::Steps();
     } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
 }
 
@@ -145,6 +145,12 @@ bool strconv::LoadSsimfileMaybe(algo::strptr fname) {
         retval = algo_lib::LoadTuplesFile(fname, strconv::InsertStrptrMaybe, true);
     }
     return retval;
+}
+
+// --- strconv.FDb._db.Steps
+// Calls Step function of dependencies
+void strconv::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
 // --- strconv.FDb._db.XrefMaybe
@@ -254,6 +260,10 @@ void strconv::FieldId_Print(strconv::FieldId & row, algo::cstring &str) {
     strconv::value_Print(row, str);
 }
 
+// --- strconv...SizeCheck
+inline static void strconv::SizeCheck() {
+}
+
 // --- strconv...main
 int main(int argc, char **argv) {
     try {
@@ -284,6 +294,9 @@ int main(int argc, char **argv) {
     return algo_lib::_db.exit_code;
 }
 
-// --- strconv...SizeCheck
-inline static void strconv::SizeCheck() {
+// --- strconv...WinMain
+#if defined(WIN32)
+int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int) {
+    return main(__argc,__argv);
 }
+#endif

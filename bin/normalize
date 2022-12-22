@@ -1,3 +1,6 @@
 #!/usr/bin/env bash
 set -o pipefail
-(ai && atf_norm) 2>&1 | hilite-error
+set -e
+job="${1:-normalize}"
+echo "# Running tests: $(acr atfdb.citest.cijob:$job -field citest | tr '\n' ',')"
+(ai && atf_ci -cijob:"${job}") 2>&1 | hilite -e

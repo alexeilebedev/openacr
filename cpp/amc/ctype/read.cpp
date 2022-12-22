@@ -233,8 +233,7 @@ void amc::tfunc_Ctype_ReadStrptrMaybe() {
             Ins(&R, readstrptr.ret  , "bool", false);
             Ins(&R, readstrptr.body, "bool retval = true;");
             if (VarlenQ(ctype)) {
-                Ins(&R, readstrptr.body, "ary_RemoveAll(algo_lib::_db.varlenbuf); // clear varlenbuf");
-                Ins(&R, readstrptr.comment, "Any varlen fields are returned in algo_lib::_db.varlenbuf");
+                Ins(&R, readstrptr.comment, "Any varlen fields are returned in algo_lib::_db.varlenbuf if set");
             }
             readstrptr.extrn = cfmt.printfmt == dmmeta_Printfmt_printfmt_Extern;
             Ins(&R, readstrptr.comment, "Read fields of $Cpptype from an ascii string.");

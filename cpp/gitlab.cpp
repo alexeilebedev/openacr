@@ -228,6 +228,21 @@ static void Main_ManageProject() {
 
 // -----------------------------------------------------------------------------
 
+// Collect labels for the issue into comma-separated list
+static tempstr GetLabels(lib_json::FNode &issue_obj) {
+    tempstr out;
+    lib_json::FNode *labels_array = lib_json::node_Find(&issue_obj,"labels");
+    if (labels_array && labels_array->type == lib_json_FNode_type_array) {
+        algo::ListSep ls(",");
+        ind_beg(lib_json::node_c_child_curs,label,*labels_array) {
+            out << ls << label.value;
+        }ind_end;
+    }
+    return out;
+}
+
+// -----------------------------------------------------------------------------
+
 static void LoadIssueNotes(gitlab::FIssue &issue) {
     cstring page("1");
     do {
@@ -292,6 +307,7 @@ static gitlab::FIssue *LoadIssueMaybe(u32 iid) {
     gitlab::Issue issue;
     issue.issue = tempstr() << gitlab::_db.cmdline.project << "." << u32_Get(&issue_obj,"iid");
     issue.title = strptr_Get(&issue_obj,"title");
+    issue.labels = GetLabels(issue_obj);
 
     gitlab::FIssue *fissue = gitlab::issue_InsertMaybe(issue);
     vrfy_(fissue);
@@ -337,7 +353,8 @@ static void Main_LoadIssueList() {
             issue.issue = gitlab::Issue_Concat_project_iid(gitlab::_db.cmdline.project, u32_Get(&issue_obj,"iid"));
             issue.assignee = strptr_Get(&issue_obj,"assignee.username");
             issue.title = strptr_Get(&issue_obj,"title");
-
+            issue.labels = GetLabels(issue_obj);
+            issue.milestone = strptr_Get(&issue_obj,"milestone.title");
             vrfy_(gitlab::issue_InsertMaybe(issue));
 
             gitlab::IssueDescription issue_description;
@@ -368,6 +385,7 @@ static void Main_ShowIssueList() {
         } else if (gitlab::_db.cmdline.assignee.expr != "") {
             issue.select = issue.select &&  Regx_Match(gitlab::_db.cmdline.assignee, issue.assignee);
         }
+        issue.select = issue.select && Regx_Match(gitlab::_db.cmdline.milestone,issue.milestone);
         nmatch += issue.select;
     }ind_end;
 
@@ -400,9 +418,11 @@ static void Main_ShowIssueList() {
         }ind_end;
     } else {
         cstring out;
-        out << "ISSUE\tASSIGNEE\tTITLE\n";
+        out << "ISSUE\tMILESTONE\tLABELS\tASSIGNEE\tTITLE\n";
         ind_beg(gitlab::_db_issue_curs, issue, gitlab::_db) if (issue.select) {
             out << issue.issue
+                << "\t" << issue.milestone
+                << "\t" << issue.labels
                 << "\t" << issue.assignee
                 << "\t" << issue.title
                 << eol;
@@ -673,9 +693,9 @@ static tempstr GitCmd(strptr gitcmd) {
 // -----------------------------------------------------------------------------
 
 // Interpret -issue argument as a number, or specific issue id
-// gitlab -issue 33           --> return 33
-// gitlab -issue myproject.33 --> return 33
-// gitlab -issue %            --> return 0
+// gitlab -issue 33        --> return 33
+// gitlab -issue algouk.33 --> return 33
+// gitlab -issue %         --> return 0
 int gitlab::IssueArgNumber() {
     strptr expr = Pathcomp(_db.cmdline.issue.expr, ".RR");
     i32 ret=0;
@@ -906,13 +926,14 @@ static void Main_DoIssueStart() {
 
     cstring commit_comment;
     commit_comment << "Issue #" << issuenum << " " << issue->title
-                   << "\n\n" << issue->c_issue_description->description;
+                   << "\n\n" << issue->c_issue_description->description
+                   << "\n\ncloses #" << issuenum;
 
     AssertGitWorkDirClean();
 
     SysCmd(GitCmd("fetch"), FailokQ(false), DryrunQ(false), algo_EchoQ_true);
     tempstr co_cmd;
-    co_cmd << "checkout --no-track -b " << issuekey << " origin/master";
+    co_cmd << "checkout --track -b " << issuekey << " " << gitlab::_db.cmdline.track;
     SysCmd(GitCmd(co_cmd), FailokQ(false), DryrunQ(false), algo_EchoQ_true);
 
     // strptr_ToBash is broken, so using temp file
@@ -922,6 +943,20 @@ static void Main_DoIssueStart() {
     tempstr cmt_cmd;
     cmt_cmd << "commit --allow-empty -F " << GetFullPath(tempfile.filename);
     SysCmd(GitCmd(cmt_cmd), FailokQ(true), DryrunQ(false), algo_EchoQ_true);
+
+    // Add InProgress label, assign to current user - best effort
+
+    // prepare REST request
+    gitlab::FHttp http;
+
+    http.request_method = gitlab_FHttp_request_method_PUT;
+    http.request_uri << gitlab::_db.rest_api
+                     << "/projects/" << gitlab::_db.project_id
+                     << "/issues/" << issuenum
+                     << "?add_labels=InProgress";
+    request_header_Alloc(http) << gitlab::_db.http_auth_header;
+    // execute request
+    CurlExec(http);
 }
 
 // -----------------------------------------------------------------------------
@@ -1059,6 +1094,122 @@ static void Main_DoMrAccept() {
 
 // -----------------------------------------------------------------------------
 
+static void LoadMilestones() {
+    cstring page("1");
+    do {
+        // prepare REST request
+        gitlab::FHttp http;
+        http.request_uri << gitlab::_db.rest_api
+                         << "/projects/" << gitlab::_db.project_id
+                         << "/milestones?active=true&per_page=100&page="<<page;
+        request_header_Alloc(http) << gitlab::_db.http_auth_header;
+        request_header_Alloc(http) << "Accept: application/json";
+
+        // execute request
+        CurlExec(http);
+
+        // prechecks on output
+        vrfy(http.response_status_code == 200, tempstr() << "Server request has failed:"
+             << http.response_status_line);
+        vrfy_(http.response_json_parser.root_node);
+        vrfy_(http.response_json_parser.root_node->type == lib_json_FNode_type_array);
+        ind_beg(lib_json::node_c_child_curs,milestone_obj,*http.response_json_parser.root_node){
+            vrfy_(milestone_obj.type == lib_json_FNode_type_object);
+            gitlab::Milestone milestone;
+            milestone.milestone = strptr_Get(&milestone_obj,"title");
+            milestone.id = u32_Get(&milestone_obj,"id");
+            gitlab::milestone_InsertMaybe(milestone);
+            gitlab::MilestoneDescription milestone_description;
+            milestone_description.milestone = milestone.milestone;
+            milestone_description.description = strptr_Get(&milestone_obj,"description");
+            vrfy_(gitlab::milestone_description_InsertMaybe(milestone_description));
+        }ind_end;
+        page = GetResponseHeaderValue(http,"x-next-page");
+    } while (page != "");
+}
+
+// -----------------------------------------------------------------------------
+
+static void MaybeLoadMilestones() {
+    if (!gitlab::milestone_N()) {
+        LoadMilestones();
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+static void Main_ShowMilestones() {
+    ind_beg(gitlab::_db_milestone_curs, milestone, gitlab::_db) {
+        milestone.select = Regx_Match(gitlab::_db.cmdline.milestone,milestone.milestone);
+    }ind_end;
+    if (gitlab::_db.cmdline.t) {
+        // tree view
+        ind_beg(gitlab::_db_milestone_curs, milestone, gitlab::_db) if (milestone.select) {
+            gitlab::Milestone out;
+            milestone_CopyOut(milestone,out);
+            prlog(out);
+            cstring str;
+            str << "\n";
+            InsertIndent(str,milestone.c_milestone_description->description,1);
+            str << "\n";
+            prlog(str);
+        }ind_end;
+    } else {
+        cstring out;
+        out << "MILESTONE\tID\n";
+        ind_beg(gitlab::_db_milestone_curs, milestone, gitlab::_db) if (milestone.select) {
+            out << milestone.milestone
+                << "\t" << milestone.id
+                << eol;
+        }ind_end;
+        prlog(Tabulated(out,"\t"));
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+u32 gitlab::GetMilestoneId(strptr milestone) {
+    gitlab::FMilestone *fmilestone = gitlab::ind_milestone_Find(milestone);
+    return fmilestone ? fmilestone->id : 0;
+}
+
+// -----------------------------------------------------------------------------
+
+static void Main_DoIssueAssignToMilestone() {
+    int issuenum = gitlab::IssueArgNumber();
+
+    u32 milestone_id = gitlab::GetMilestoneId(gitlab::_db.cmdline.imilestone);
+    vrfy(milestone_id, tempstr() << "Milestone " << gitlab::_db.cmdline.imilestone << " does not exist, see -mslist");
+
+    // prepare REST request
+    gitlab::FHttp http;
+
+    http.request_method = gitlab_FHttp_request_method_PUT;
+    http.request_uri << gitlab::_db.rest_api
+                     << "/projects/" << gitlab::_db.project_id
+                     << "/issues/" << issuenum
+                     << "?milestone_id=" << milestone_id;
+    request_header_Alloc(http) << gitlab::_db.http_auth_header;
+
+    // execute request
+    CurlExec(http);
+    vrfy(http.response_status_code == 200, tempstr() << "Server request has failed:"
+         << http.response_status_line);
+
+    vrfy_(http.response_json_parser.root_node);
+    vrfy_(http.response_json_parser.root_node->type == lib_json_FNode_type_object);
+    lib_json::FNode &issue_obj = *http.response_json_parser.root_node;
+    u32 id = u32_Get(&issue_obj,"milestone.id");
+    strptr milestone = strptr_Get(&issue_obj,"milestone.title");
+
+    tempstr issue = gitlab::Issue_Concat_project_iid(gitlab::_db.cmdline.project,issuenum);
+    vrfy(id == milestone_id, tempstr() << Keyval("issue",issue) << Keyval("milestone",milestone));
+    prlog("gitlab.success" << Keyval("issue",issue) << Keyval("milestone",milestone));
+}
+
+
+// -----------------------------------------------------------------------------
+
 void gitlab::Main() {
     Main_ManageEnv();
     Main_ManageAuth();
@@ -1067,8 +1218,8 @@ void gitlab::Main() {
 
     // Default -> display issue list
     if (!(_db.cmdline.iadd  || _db.cmdline.ic || _db.cmdline.istart || _db.cmdline.mrlist || _db.cmdline.mergereq
-          || _db.cmdline.iclose || _db.cmdline.ulist || _db.cmdline.iassignto != ""
-          || _db.cmdline.mraccept != "")) {
+          || _db.cmdline.iclose || _db.cmdline.ulist || _db.cmdline.mslist || _db.cmdline.iassignto != ""
+          || _db.cmdline.imilestone != "" || _db.cmdline.mraccept != "")) {
         _db.cmdline.ilist = true;
     }
 
@@ -1115,5 +1266,15 @@ void gitlab::Main() {
 
     if (gitlab::_db.cmdline.mraccept != "") {
         Main_DoMrAccept();
+    }
+
+    if (gitlab::_db.cmdline.mslist) {
+        MaybeLoadMilestones();
+        Main_ShowMilestones();
+    }
+
+    if (gitlab::_db.cmdline.imilestone != "") {
+        MaybeLoadMilestones();
+        Main_DoIssueAssignToMilestone();
     }
 }

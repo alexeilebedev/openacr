@@ -175,6 +175,11 @@ bool lib_json::LoadSsimfileMaybe(algo::strptr fname) {
     return retval;
 }
 
+// --- lib_json.FDb._db.Steps
+// Calls Step function of dependencies
+void lib_json::Steps() {
+}
+
 // --- lib_json.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -410,6 +415,7 @@ inline static i32 lib_json::trace_N() {
 // --- lib_json.FDb..Init
 // Set all fields to initial values.
 void lib_json::FDb_Init() {
+    _db.lpool_lock = 0;
     memset(_db.lpool_free, 0, sizeof(_db.lpool_free));
     // node: initialize Tpool
     _db.node_free      = NULL;

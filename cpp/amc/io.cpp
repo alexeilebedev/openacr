@@ -64,9 +64,9 @@ void amc::tfunc_Io_InputMaybe() {
             Ins(&R, input.body, "bool retval = true;");
             if (can_read) {
                 if (finput.update) {
-                    Ins(&R, input.body, "retval = $name_UpdateMaybe(elem);");// possibly an update, if called twice
+                    Ins(&R, input.body, "retval = $name_UpdateMaybe(elem) != nullptr;");// possibly an update, if called twice
                 } else {
-                    Ins(&R, input.body, "retval = $name_InsertMaybe(elem);");
+                    Ins(&R, input.body, "retval = $name_InsertMaybe(elem) != nullptr;");
                 }
             } else {
                 Ins(&R, input.body, "// $name cannot be read, no cfmt defined.");

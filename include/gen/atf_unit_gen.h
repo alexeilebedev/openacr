@@ -12,7 +12,6 @@
 #include "include/gen/command_gen.h"
 #include "include/gen/report_gen.h"
 #include "include/gen/atfdb_gen.h"
-#include "include/gen/algo_lib_gen.h"
 //#pragma endinclude
 
 // --- atf_unit_FieldIdEnum
@@ -46,8 +45,6 @@ namespace atf_unit { struct FNumber; }
 namespace atf_unit { struct FPerfSort; }
 namespace atf_unit { struct FUnittest; }
 namespace atf_unit { struct FieldId; }
-namespace atf_unit { struct ShStream; }
-namespace atf_unit { struct ShStreamAry; }
 namespace atf_unit { struct TypeA; }
 namespace atf_unit { struct TypeB; }
 namespace atf_unit { struct TestJson; }
@@ -58,7 +55,6 @@ namespace atf_unit { struct _db_ind_unittest_curs; }
 namespace atf_unit { struct FPerfSort_orig_curs; }
 namespace atf_unit { struct FPerfSort_sorted_curs; }
 namespace atf_unit { struct FPerfSort_index_curs; }
-namespace atf_unit { struct ShStreamAry_shstream_curs; }
 namespace atf_unit {
     typedef i32 TypeAPkey;
 }//pkey typedefs
@@ -276,6 +272,9 @@ struct Dbl { // atf_unit.Dbl
     bool operator ==(const atf_unit::Dbl &rhs) const;
     bool operator !=(const atf_unit::Dbl &rhs) const;
     bool operator <(const atf_unit::Dbl &rhs) const;
+    bool operator >(const atf_unit::Dbl &rhs) const;
+    bool operator <=(const atf_unit::Dbl &rhs) const;
+    bool operator >=(const atf_unit::Dbl &rhs) const;
     Dbl();
 };
 
@@ -335,7 +334,7 @@ void                 trace_Print(atf_unit::trace & row, algo::cstring &str) __at
 // --- atf_unit.FDb
 // create: atf_unit.FDb._db (Global)
 struct FDb { // atf_unit.FDb
-    u32                       number_blocksize;             // # bytes per block
+    u64                       number_blocksize;             // # bytes per block
     atf_unit::FNumber*        number_free;                  //
     atf_unit::FNumber*        tr_number_root;               // Root of the tree
     i32                       tr_number_n;                  // number of elements in the tree
@@ -464,6 +463,8 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -608,6 +609,8 @@ atf_unit::Dbl&       orig_qFind(atf_unit::FPerfSort& parent, u64 t) __attribute_
 atf_unit::Dbl&       orig_qLast(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  orig_rowid_Get(atf_unit::FPerfSort& parent, atf_unit::Dbl &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<atf_unit::Dbl> orig_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const atf_unit::Dbl& val) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 orig_XrefMaybe(atf_unit::Dbl &row);
@@ -656,6 +659,8 @@ atf_unit::Dbl&       sorted_qFind(atf_unit::FPerfSort& parent, u64 t) __attribut
 atf_unit::Dbl&       sorted_qLast(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  sorted_rowid_Get(atf_unit::FPerfSort& parent, atf_unit::Dbl &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<atf_unit::Dbl> sorted_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const atf_unit::Dbl& val) __attribute__((__warn_unused_result__, nothrow));
 // Verify whether array is sorted
 bool                 sorted_SortedQ(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Insertion sort
@@ -702,6 +707,8 @@ i32&                 index_qFind(atf_unit::FPerfSort& parent, u64 t) __attribute
 i32&                 index_qLast(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  index_rowid_Get(atf_unit::FPerfSort& parent, i32 &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<i32>    index_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const i32& val) __attribute__((__warn_unused_result__, nothrow));
 
 // proceed to next item
 void                 FPerfSort_orig_curs_Next(FPerfSort_orig_curs &curs);
@@ -807,88 +814,15 @@ void                 FieldId_Init(atf_unit::FieldId& parent);
 // print string representation of atf_unit::FieldId to string LHS, no header -- cprint:atf_unit.FieldId.String
 void                 FieldId_Print(atf_unit::FieldId & row, algo::cstring &str) __attribute__((nothrow));
 
-// --- atf_unit.ShStream
-// create: atf_unit.ShStreamAry.shstream (Tary)
-struct ShStream { // atf_unit.ShStream
-    algo_lib::ShStream   shstream;   //
-    ShStream();
-private:
-    // value field atf_unit.ShStream.shstream is not copiable
-    ShStream(const ShStream&){ /*disallow copy constructor */}
-    void operator =(const ShStream&){ /*disallow direct assignment */}
-};
-
-
-// --- atf_unit.ShStreamAry
-struct ShStreamAry { // atf_unit.ShStreamAry
-    atf_unit::ShStream*   shstream_elems;   // pointer to elements
-    u32                   shstream_n;       // number of elements in array
-    u32                   shstream_max;     // max. capacity of array before realloc
-    ShStreamAry();
-    ~ShStreamAry();
-private:
-    // value field atf_unit.ShStreamAry.shstream is not copiable
-    // reftype of atf_unit.ShStreamAry.shstream prohibits copy
-    ShStreamAry(const ShStreamAry&){ /*disallow copy constructor */}
-    void operator =(const ShStreamAry&){ /*disallow direct assignment */}
-};
-
-// Reserve space. Insert element at the end
-// The new element is initialized to a default value
-atf_unit::ShStream&  shstream_Alloc(atf_unit::ShStreamAry& parent) __attribute__((__warn_unused_result__, nothrow));
-// Reserve space for new element, reallocating the array if necessary
-// Insert new element at specified index. Index must be in range or a fatal error occurs.
-atf_unit::ShStream&  shstream_AllocAt(atf_unit::ShStreamAry& parent, int at) __attribute__((__warn_unused_result__, nothrow));
-// Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_unit::ShStream> shstream_AllocN(atf_unit::ShStreamAry& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-bool                 shstream_EmptyQ(atf_unit::ShStreamAry& parent) __attribute__((nothrow));
-// Look up row by row id. Return NULL if out of range
-atf_unit::ShStream*  shstream_Find(atf_unit::ShStreamAry& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
-// Return array pointer by value
-algo::aryptr<atf_unit::ShStream> shstream_Getary(atf_unit::ShStreamAry& parent) __attribute__((nothrow));
-// Return pointer to last element of array, or NULL if array is empty
-atf_unit::ShStream*  shstream_Last(atf_unit::ShStreamAry& parent) __attribute__((nothrow, pure));
-// Return max. number of items in the array
-i32                  shstream_Max(atf_unit::ShStreamAry& parent) __attribute__((nothrow));
-// Return number of items in the array
-i32                  shstream_N(const atf_unit::ShStreamAry& parent) __attribute__((__warn_unused_result__, nothrow, pure));
-// Remove item by index. If index outside of range, do nothing.
-void                 shstream_Remove(atf_unit::ShStreamAry& parent, u32 i) __attribute__((nothrow));
-void                 shstream_RemoveAll(atf_unit::ShStreamAry& parent) __attribute__((nothrow));
-// Delete last element of array. Do nothing if array is empty.
-void                 shstream_RemoveLast(atf_unit::ShStreamAry& parent) __attribute__((nothrow));
-// Make sure N *more* elements will fit in array. Process dies if out of memory
-void                 shstream_Reserve(atf_unit::ShStreamAry& parent, int n) __attribute__((nothrow));
-// Make sure N elements fit in array. Process dies if out of memory
-void                 shstream_AbsReserve(atf_unit::ShStreamAry& parent, int n) __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-atf_unit::ShStream&  shstream_qFind(atf_unit::ShStreamAry& parent, u64 t) __attribute__((nothrow));
-// Return reference to last element of array. No bounds checking
-atf_unit::ShStream&  shstream_qLast(atf_unit::ShStreamAry& parent) __attribute__((nothrow));
-// Return row id of specified element
-u64                  shstream_rowid_Get(atf_unit::ShStreamAry& parent, atf_unit::ShStream &elem) __attribute__((nothrow));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool                 shstream_XrefMaybe(atf_unit::ShStream &row);
-
-// proceed to next item
-void                 ShStreamAry_shstream_curs_Next(ShStreamAry_shstream_curs &curs);
-void                 ShStreamAry_shstream_curs_Reset(ShStreamAry_shstream_curs &curs, atf_unit::ShStreamAry &parent);
-// cursor points to valid item
-bool                 ShStreamAry_shstream_curs_ValidQ(ShStreamAry_shstream_curs &curs);
-// item access
-atf_unit::ShStream&  ShStreamAry_shstream_curs_Access(ShStreamAry_shstream_curs &curs);
-// Set all fields to initial values.
-void                 ShStreamAry_Init(atf_unit::ShStreamAry& parent);
-void                 ShStreamAry_Uninit(atf_unit::ShStreamAry& parent) __attribute__((nothrow));
-
 // --- atf_unit.TypeA
 struct TypeA { // atf_unit.TypeA
     i32   typea;   //   0
     bool operator ==(const atf_unit::TypeA &rhs) const;
     bool operator !=(const atf_unit::TypeA &rhs) const;
     bool operator <(const atf_unit::TypeA &rhs) const;
+    bool operator >(const atf_unit::TypeA &rhs) const;
+    bool operator <=(const atf_unit::TypeA &rhs) const;
+    bool operator >=(const atf_unit::TypeA &rhs) const;
     TypeA();
 };
 
@@ -915,6 +849,9 @@ struct TypeB { // atf_unit.TypeB
     bool operator ==(const atf_unit::TypeB &rhs) const;
     bool operator !=(const atf_unit::TypeB &rhs) const;
     bool operator <(const atf_unit::TypeB &rhs) const;
+    bool operator >(const atf_unit::TypeB &rhs) const;
+    bool operator <=(const atf_unit::TypeB &rhs) const;
+    bool operator >=(const atf_unit::TypeB &rhs) const;
     TypeB();
 };
 
@@ -1014,15 +951,6 @@ struct FPerfSort_index_curs {// cursor
     int n_elems;
     int index;
     FPerfSort_index_curs() { elems=NULL; n_elems=0; index=0; }
-};
-
-
-struct ShStreamAry_shstream_curs {// cursor
-    typedef atf_unit::ShStream ChildType;
-    atf_unit::ShStream* elems;
-    int n_elems;
-    int index;
-    ShStreamAry_shstream_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
 // User-implemented function from gstatic:atf_unit.FDb.unittest
@@ -1127,6 +1055,8 @@ void                 unittest_algo_lib_I32Dec3Fmt();
 void                 unittest_algo_lib_IntPrice();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_Keyval();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+void                 unittest_algo_lib_KillRecurse();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_algo_lib_Lockfile();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
@@ -1290,7 +1220,13 @@ void                 unittest_algo_lib_u128();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_amc_Unit();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
-void                 unittest_atf_unit_Outfile();
+void                 unittest_ams_StreamId();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+void                 unittest_ams_sendtest();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+void                 unittest_fm();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+void                 unittest_lib_ams_Test1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_lib_exec_Dependency();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
@@ -1513,8 +1449,11 @@ void                 unittest_lib_json_TokenTrue();
 void                 unittest_lib_json_Typical();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_lib_sql_Main();
-int                  main(int argc, char **argv);
 } // end namespace atf_unit
+int                  main(int argc, char **argv);
+#if defined(WIN32)
+int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
+#endif
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::Dbl &row);// cfmt:atf_unit.Dbl.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::TestArgtuple1 &row);// cfmt:atf_unit.TestArgtuple1.String

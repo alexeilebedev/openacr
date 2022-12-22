@@ -114,6 +114,8 @@ algo::cstring&       ary_ns_qFind(u64 t) __attribute__((nothrow));
 algo::cstring&       ary_ns_qLast() __attribute__((nothrow));
 // Return row id of specified element
 u64                  ary_ns_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> ary_ns_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
 
 // Main function
 void                 MainArgs(int argc, char **argv);
@@ -131,6 +133,8 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -359,8 +363,11 @@ struct _db_ssimfile_curs {// cursor
     _db_ssimfile_curs(){ parent=NULL; index=0; }
 };
 
-int                  main(int argc, char **argv);
 } // end namespace acr_my
+int                  main(int argc, char **argv);
+#if defined(WIN32)
+int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
+#endif
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const acr_my::trace &row);// cfmt:acr_my.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_my::FieldId &row);// cfmt:acr_my.FieldId.String

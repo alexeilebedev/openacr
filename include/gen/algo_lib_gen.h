@@ -55,6 +55,7 @@ enum algo_lib_TableIdEnum {                       // algo_lib.TableId.value
 enum { algo_lib_TableIdEnum_N = 1 };
 
 namespace dmmeta { struct Dispsigcheck; }
+namespace dmmeta { struct Logcat; }
 namespace algo_lib { struct Replscope; }
 namespace algo_lib { struct FTxtrow; }
 namespace algo_lib { struct FTxttbl; }
@@ -67,6 +68,7 @@ namespace algo_lib { struct FFildes; }
 namespace algo_lib { struct FLockfile; }
 namespace algo_lib { struct FTimehook; }
 namespace algo_lib { struct FImdb; }
+namespace algo_lib { struct FLogcat; }
 namespace algo_lib { struct trace; }
 namespace algo_lib { struct FDb; }
 namespace algo_lib { struct FDispsigcheck; }
@@ -84,7 +86,6 @@ namespace algo_lib { struct RegxExpr; }
 namespace algo_lib { struct RegxParse; }
 namespace algo_lib { struct RegxState; }
 namespace algo_lib { struct ShHdr; }
-namespace algo_lib { struct ShStream; }
 namespace algo_lib { struct Srng; }
 namespace algo_lib { struct TableId; }
 namespace algo_lib { struct Tabulate; }
@@ -99,6 +100,8 @@ namespace algo_lib { struct _db_dispsigcheck_curs; }
 namespace algo_lib { struct _db_ind_dispsigcheck_curs; }
 namespace algo_lib { struct _db_imdb_curs; }
 namespace algo_lib { struct _db_ind_imdb_curs; }
+namespace algo_lib { struct _db_logcat_curs; }
+namespace algo_lib { struct _db_ind_logcat_curs; }
 namespace algo_lib { struct txtrow_c_txtcell_curs; }
 namespace algo_lib { struct txttbl_c_txtrow_curs; }
 namespace algo_lib { struct InTextFile_temp_buf_curs; }
@@ -206,6 +209,8 @@ u64&                 ary_qFind(algo_lib::Bitset& parent, u64 t) __attribute__((n
 u64&                 ary_qLast(algo_lib::Bitset& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  ary_rowid_Get(algo_lib::Bitset& parent, u64 &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<u64>    ary_AllocNVal(algo_lib::Bitset& parent, int n_elems, const u64& val) __attribute__((__warn_unused_result__, nothrow));
 
 // proceed to next item
 void                 Bitset_ary_curs_Next(Bitset_ary_curs &curs);
@@ -290,6 +295,8 @@ algo::strptr&        ary_tok_qFind(algo_lib::CsvParse& parsecsv, u64 t) __attrib
 algo::strptr&        ary_tok_qLast(algo_lib::CsvParse& parsecsv) __attribute__((nothrow));
 // Return row id of specified element
 u64                  ary_tok_rowid_Get(algo_lib::CsvParse& parsecsv, algo::strptr &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::strptr> ary_tok_AllocNVal(algo_lib::CsvParse& parsecsv, int n_elems, const algo::strptr& val) __attribute__((__warn_unused_result__, nothrow));
 
 // proceed to next item
 void                 parsecsv_ary_tok_curs_Next(parsecsv_ary_tok_curs &curs);
@@ -420,6 +427,31 @@ void                 imdb_CopyIn(algo_lib::FImdb &row, algo::Imdb &in) __attribu
 void                 FImdb_Init(algo_lib::FImdb& imdb);
 void                 FImdb_Uninit(algo_lib::FImdb& imdb) __attribute__((nothrow));
 
+// --- algo_lib.FLogcat
+// create: algo_lib.FDb.logcat (Inlary)
+// global access: ind_logcat (Thash)
+struct FLogcat { // algo_lib.FLogcat
+    algo::Smallstr50     logcat;            //
+    bool                 enabled;           //   false
+    bool                 builtin;           //   false
+    algo::Comment        comment;           //
+    algo_lib::FLogcat*   ind_logcat_next;   // hash next
+    FLogcat();
+    ~FLogcat();
+private:
+    FLogcat(const FLogcat&){ /*disallow copy constructor */}
+    void operator =(const FLogcat&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 logcat_CopyOut(algo_lib::FLogcat &row, dmmeta::Logcat &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 logcat_CopyIn(algo_lib::FLogcat &row, dmmeta::Logcat &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 FLogcat_Init(algo_lib::FLogcat& logcat);
+void                 FLogcat_Uninit(algo_lib::FLogcat& logcat) __attribute__((nothrow));
+
 // --- algo_lib.trace
 #pragma pack(push,1)
 struct trace { // algo_lib.trace
@@ -446,81 +478,94 @@ void                 trace_Print(algo_lib::trace & row, algo::cstring &str) __at
 // --- algo_lib.FDb
 // create: algo_lib.FDb._db (Global)
 struct FDb { // algo_lib.FDb
-    u64                               sbrk_huge_limit;                           // Huge page limit in bytes -- set to 0 with fork!
-    u64                               sbrk_huge_alloc;                           // Huge page bytes allocated
-    bool                              sbrk_zeromem;                              // Zero allocated memory
-    lpool_Lpblock*                    lpool_free[31];                            // Lpool levels
-    algo::SchedTime                   next_loop;                                 //
-    algo::SchedTime                   limit;                                     //   0x7fffffffffffffff
-    double                            clocks_to_ms;                              //   0.0
-    u32                               n_iohook;                                  //   0  Number of iohooks in epoll
-    algo::SchedTime                   clock;                                     // Current cpu clock value
-    algo::SchedTime                   mainloop_clock;                            // Mainloop cpu clock value
-    algo::SchedTime                   start_clock;                               // cpu clock value at startup
-    double                            hz;                                        //   0.0
-    algo::SchedTime                   t_last_signal;                             // Time last async signal was processed
-    i32                               exit_code;                                 //   0  Exit code from main program. 0 = success (this is the unix exit code!)
-    double                            clocks_to_ns;                              //   0.0
-    u32                               n_temp;                                    //   0  * initialization order is important *
-    u32                               last_signal;                               //   0  Value of last signal (used by SetupExitSignals)
-    bool                              eol;                                       //   false
-    u64                               cpu_hz;                                    //   0  Cpu HZ, determined at startup
-    algo::cstring                     temp_strings_elems[8];                     // fixed array
-    algo::Charset                     ArgvIdent;                                 //
-    algo::Charset                     BashQuotesafe;                             //
-    algo::Charset                     RegxSqlSpecial;                            //
-    algo::Charset                     SsimBreakName;                             //
-    algo::Charset                     SsimBreakValue;                            //
-    algo::Charset                     SsimQuotesafe;                             //
-    algo_lib::FImtable*               imtable_lary[32];                          // level array
-    i32                               imtable_n;                                 // number of elements in array
-    algo_lib::FImtable**              ind_imtable_buckets_elems;                 // pointer to bucket array
-    i32                               ind_imtable_buckets_n;                     // number of elements in bucket array
-    i32                               ind_imtable_n;                             // number of elements in the hash table
-    algo::cstring                     log_str;                                   //
-    algo_lib::FTimehook**             bh_timehook_elems;                         // binary heap by time
-    i32                               bh_timehook_n;                             // number of elements in the heap
-    i32                               bh_timehook_max;                           // max elements in bh_timehook_elems
-    i32                               epoll_fd;                                  //   -1
-    algo_lib::FLockfile               lock_core;                                 //
-    algo_lib::FTimehook*              c_timehook;                                // TEMP: here only for dependency reasons. optional pointer
-    algo_lib::FTimehook               _timehook;                                 // Keep me here i'm special
-    algo_lib::FDispsigcheck*          dispsigcheck_lary[32];                     // level array
-    i32                               dispsigcheck_n;                            // number of elements in array
-    algo_lib::FDispsigcheck**         ind_dispsigcheck_buckets_elems;            // pointer to bucket array
-    i32                               ind_dispsigcheck_buckets_n;                // number of elements in bucket array
-    i32                               ind_dispsigcheck_n;                        // number of elements in the hash table
-    u128                              imdb_data[sizeu128(algo_lib::FImdb,32)];   // place for data
-    i32                               imdb_n;                                    // number of elems current in existence
+    u64                               sbrk_huge_limit;                              // Huge page limit in bytes -- set to 0 with fork!
+    u64                               sbrk_huge_alloc;                              // Huge page bytes allocated
+    bool                              sbrk_zeromem;                                 // Zero allocated memory
+    lpool_Lpblock*                    lpool_free[31];                               // Lpool levels
+    u32                               lpool_lock;                                   // Lpool lock
+    algo::SchedTime                   next_loop;                                    //
+    algo::SchedTime                   limit;                                        //   0x7fffffffffffffff
+    double                            clocks_to_ms;                                 //   0.0
+    u32                               n_iohook;                                     //   0  Number of iohooks in epoll
+    algo::SchedTime                   clock;                                        // Current cpu clock value
+    algo::SchedTime                   mainloop_clock;                               // Mainloop cpu clock value
+    algo::SchedTime                   start_clock;                                  // cpu clock value at startup
+    double                            hz;                                           //   0.0
+    algo::SchedTime                   t_last_signal;                                // Time last async signal was processed
+    i32                               exit_code;                                    //   0  Exit code from main program. 0 = success (this is the unix exit code!)
+    double                            clocks_to_ns;                                 //   0.0
+    u32                               n_temp;                                       //   0  * initialization order is important *
+    u32                               last_signal;                                  //   0  Value of last signal (used by SetupExitSignals)
+    bool                              eol;                                          //   false
+    u64                               cpu_hz;                                       //   0  Cpu HZ, determined at startup
+    algo::cstring                     temp_strings_elems[8];                        // fixed array
+    algo::Charset                     ArgvIdent;                                    //
+    algo::Charset                     BashQuotesafe;                                //
+    algo::Charset                     RegxSqlSpecial;                               //
+    algo::Charset                     SsimBreakName;                                //
+    algo::Charset                     SsimBreakValue;                               //
+    algo::Charset                     SsimQuotesafe;                                //
+    algo_lib::FImtable*               imtable_lary[32];                             // level array
+    i32                               imtable_n;                                    // number of elements in array
+    algo_lib::FImtable**              ind_imtable_buckets_elems;                    // pointer to bucket array
+    i32                               ind_imtable_buckets_n;                        // number of elements in bucket array
+    i32                               ind_imtable_n;                                // number of elements in the hash table
+    algo::cstring                     log_str;                                      //
+    algo_lib::FTimehook**             bh_timehook_elems;                            // binary heap by time
+    i32                               bh_timehook_n;                                // number of elements in the heap
+    i32                               bh_timehook_max;                              // max elements in bh_timehook_elems
+    i32                               epoll_fd;                                     //   -1
+    algo_lib::FLockfile               lock_core;                                    //
+    algo_lib::FTimehook*              c_timehook;                                   // TEMP: here only for dependency reasons. optional pointer
+    algo_lib::FTimehook               _timehook;                                    // Keep me here i'm special
+    algo_lib::FDispsigcheck*          dispsigcheck_lary[32];                        // level array
+    i32                               dispsigcheck_n;                               // number of elements in array
+    algo_lib::FDispsigcheck**         ind_dispsigcheck_buckets_elems;               // pointer to bucket array
+    i32                               ind_dispsigcheck_buckets_n;                   // number of elements in bucket array
+    i32                               ind_dispsigcheck_n;                           // number of elements in the hash table
+    u128                              imdb_data[sizeu128(algo_lib::FImdb,32)];      // place for data
+    i32                               imdb_n;                                       // number of elems current in existence
     enum { imdb_max = 32 };
-    algo_lib::FImdb**                 ind_imdb_buckets_elems;                    // pointer to bucket array
-    i32                               ind_imdb_buckets_n;                        // number of elements in bucket array
-    i32                               ind_imdb_n;                                // number of elements in the hash table
-    u32                               txtcell_blocksize;                         // # bytes per block
-    algo_lib::FTxtcell*               txtcell_free;                              //
-    u32                               txtrow_blocksize;                          // # bytes per block
-    algo_lib::FTxtrow*                txtrow_free;                               //
-    i32                               argc;                                      //   0
-    char**                            argv;                                      // optional pointer
-    algo::cstring                     xref_error;                                //
-    algo::cstring                     errtext;                                   //
-    algo::ByteAry                     varlenbuf;                                 //
-    u32                               replvar_blocksize;                         // # bytes per block
-    algo_lib::FReplvar*               replvar_free;                              //
-    algo_lib::Cmdline                 cmdline;                                   //
-    algo_lib::_db_h_fatalerror_hook   h_fatalerror;                              //   NULL  Pointer to a function
-    u64                               h_fatalerror_ctx;                          //   0  Callback context
-    u64                               giveup_count;                              //   0
-    algo::cstring                     fatalerr;                                  //
-    u32                               stringtofile_nwrite;                       //   0  Global counter of # of files written
-    bool                              giveup_time;                               //   true  Trigger for giveup_time loop
-    bool                              sleep_roundup;                             //   false
-    u64                               last_sleep_clocks;                         //   0
-    algo::ByteAry                     msgtemp;                                   //
-    u32                               show_insert_err_lim;                       //   0
-    algo::Charset                     Urlsafe;                                   //
-    u64                               winjob;                                    //   0
-    algo_lib::trace                   trace;                                     //
+    algo_lib::FImdb**                 ind_imdb_buckets_elems;                       // pointer to bucket array
+    i32                               ind_imdb_buckets_n;                           // number of elements in bucket array
+    i32                               ind_imdb_n;                                   // number of elements in the hash table
+    u64                               txtcell_blocksize;                            // # bytes per block
+    algo_lib::FTxtcell*               txtcell_free;                                 //
+    u64                               txtrow_blocksize;                             // # bytes per block
+    algo_lib::FTxtrow*                txtrow_free;                                  //
+    i32                               argc;                                         //   0
+    char**                            argv;                                         // optional pointer
+    algo::cstring                     xref_error;                                   //
+    algo::cstring                     errtext;                                      //
+    algo::ByteAry*                    varlenbuf;                                    // optional pointer
+    u64                               replvar_blocksize;                            // # bytes per block
+    algo_lib::FReplvar*               replvar_free;                                 //
+    algo_lib::Cmdline                 cmdline;                                      //
+    algo_lib::_db_h_fatalerror_hook   h_fatalerror;                                 //   NULL  Pointer to a function
+    u64                               h_fatalerror_ctx;                             //   0  Callback context
+    u64                               giveup_count;                                 //   0
+    algo::cstring                     fatalerr;                                     //
+    u32                               stringtofile_nwrite;                          //   0  Global counter of # of files written
+    bool                              giveup_time;                                  //   true  Trigger for giveup_time loop
+    bool                              sleep_roundup;                                //   false
+    u64                               last_sleep_clocks;                            //   0
+    algo::ByteAry                     msgtemp;                                      //
+    u32                               show_insert_err_lim;                          //   0
+    algo::Charset                     Urlsafe;                                      //
+    u64                               winjob;                                       //   0
+    algo::PrlogFcn                    Prlog;                                        //   algo::Prlog
+    u128                              logcat_data[sizeu128(algo_lib::FLogcat,3)];   // place for data
+    i32                               logcat_n;                                     // number of elems current in existence
+    enum { logcat_max = 3 };
+    algo_lib::FLogcat**               ind_logcat_buckets_elems;                     // pointer to bucket array
+    i32                               ind_logcat_buckets_n;                         // number of elements in bucket array
+    i32                               ind_logcat_n;                                 // number of elements in the hash table
+    bool                              show_tstamp;                                  //   false
+    algo::cstring                     tstamp_fmt;                                   //   "%Y/%m/%dT%H:%M:%S.%.6X "
+    algo::Fildes                      fildes_stdout;                                //   1
+    algo::Fildes                      fildes_stderr;                                //   2
+    bool                              pending_eol;                                  //   false
+    algo_lib::trace                   trace;                                        //
 };
 
 // Allocate a new piece of memory at least SIZE bytes long.
@@ -584,6 +629,8 @@ bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow))
 void                 Init() __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -924,6 +971,53 @@ bool                 LowerCharQ(u32 ch) __attribute__((nothrow));
 
 bool                 UrlsafeQ(u32 ch) __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+algo_lib::FLogcat&   logcat_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+algo_lib::FLogcat*   logcat_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+algo_lib::FLogcat*   logcat_InsertMaybe(const dmmeta::Logcat &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                logcat_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 logcat_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+algo_lib::FLogcat*   logcat_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array pointer by value
+algo::aryptr<algo_lib::FLogcat> logcat_Getary() __attribute__((nothrow));
+// Return constant 3 -- max. number of items in the pool
+i32                  logcat_Max() __attribute__((nothrow));
+// Return number of items in the array
+i32                  logcat_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Destroy all elements of Inlary
+void                 logcat_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 logcat_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking in release.
+algo_lib::FLogcat&   logcat_qFind(u64 t) __attribute__((nothrow));
+// Compute row id of element given element's address
+u64                  logcat_rowid_Get(algo_lib::FLogcat &row) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 logcat_XrefMaybe(algo_lib::FLogcat &row);
+
+// Return true if hash is empty
+bool                 ind_logcat_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+algo_lib::FLogcat*   ind_logcat_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Find row by key. If not found, create and x-reference a new row with with this key.
+algo_lib::FLogcat&   ind_logcat_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+i32                  ind_logcat_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool                 ind_logcat_InsertMaybe(algo_lib::FLogcat& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void                 ind_logcat_Remove(algo_lib::FLogcat& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+void                 ind_logcat_Reserve(int n) __attribute__((nothrow));
+
 // cursor points to valid item
 void                 _db_temp_strings_curs_Reset(_db_temp_strings_curs &curs, algo_lib::FDb &parent);
 // cursor points to valid item
@@ -967,6 +1061,14 @@ void                 _db_imdb_curs_Next(_db_imdb_curs &curs);
 algo_lib::FImdb&     _db_imdb_curs_Access(_db_imdb_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
+// cursor points to valid item
+void                 _db_logcat_curs_Reset(_db_logcat_curs &curs, algo_lib::FDb &parent);
+// cursor points to valid item
+bool                 _db_logcat_curs_ValidQ(_db_logcat_curs &curs);
+// proceed to next item
+void                 _db_logcat_curs_Next(_db_logcat_curs &curs);
+// item access
+algo_lib::FLogcat&   _db_logcat_curs_Access(_db_logcat_curs &curs);
 void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- algo_lib.FDispsigcheck
@@ -1649,6 +1751,8 @@ algo::i32_Range&     ch_class_qFind(algo_lib::RegxState& state, u64 t) __attribu
 algo::i32_Range&     ch_class_qLast(algo_lib::RegxState& state) __attribute__((nothrow));
 // Return row id of specified element
 u64                  ch_class_rowid_Get(algo_lib::RegxState& state, algo::i32_Range &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::i32_Range> ch_class_AllocNVal(algo_lib::RegxState& state, int n_elems, const algo::i32_Range& val) __attribute__((__warn_unused_result__, nothrow));
 // Verify whether array is sorted
 bool                 ch_class_SortedQ(algo_lib::RegxState& state) __attribute__((nothrow));
 // Insertion sort
@@ -1735,30 +1839,6 @@ struct ShHdr { // algo_lib.ShHdr
 
 // Set all fields to initial values.
 void                 ShHdr_Init(algo_lib::ShHdr& parent);
-
-// --- algo_lib.ShStream
-struct ShStream { // algo_lib.ShStream
-    u64                 readseq;     //   1
-    algo_lib::FFildes   file;        //
-    algo_lib::Mmap      map1;        // first portion (1 SHBUF_PREFIX header, buffer of size SIZE)
-    algo_lib::Mmap      map2;        // second portion (mirror copy of first half, size SIZE)
-    u64                 readpos;     //   0  Current position
-    bool                readable;    //   false  OK to read
-    bool                writable;    //   false  OK to write
-    u64                 n_overrun;   //   0  # of times a gap was detected
-    u64                 n_read;      //   0  # of messages read successfully
-    ShStream();
-private:
-    // value field algo_lib.ShStream.file is not copiable
-    // value field algo_lib.ShStream.map1 is not copiable
-    // value field algo_lib.ShStream.map2 is not copiable
-    // ... and several other reasons
-    ShStream(const ShStream&){ /*disallow copy constructor */}
-    void operator =(const ShStream&){ /*disallow direct assignment */}
-};
-
-// Set all fields to initial values.
-void                 ShStream_Init(algo_lib::ShStream& parent);
 
 // --- algo_lib.Srng
 struct Srng { // algo_lib.Srng: Command function, a single word
@@ -1859,6 +1939,8 @@ i32&                 width_qFind(algo_lib::Tabulate& tabulate, u64 t) __attribut
 i32&                 width_qLast(algo_lib::Tabulate& tabulate) __attribute__((nothrow));
 // Return row id of specified element
 u64                  width_rowid_Get(algo_lib::Tabulate& tabulate, i32 &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<i32>    width_AllocNVal(algo_lib::Tabulate& tabulate, int n_elems, const i32& val) __attribute__((__warn_unused_result__, nothrow));
 
 // proceed to next item
 void                 tabulate_width_curs_Next(tabulate_width_curs &curs);
@@ -1932,6 +2014,14 @@ struct _db_imdb_curs {// cursor
     int index;
     algo_lib::FDb *parent;
     _db_imdb_curs() { parent=NULL; index=0; }
+};
+
+
+struct _db_logcat_curs {// cursor
+    typedef algo_lib::FLogcat ChildType;
+    int index;
+    algo_lib::FDb *parent;
+    _db_logcat_curs() { parent=NULL; index=0; }
 };
 
 

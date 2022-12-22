@@ -306,3 +306,135 @@ void amc::tfunc_Numstr_ForAllStrings() {
         Ins(&R, forallstr.body      , "}");
     }
 }
+
+// -----------------------------------------------------------------------------
+
+// TYPE is the return type
+// VALTYPE is the temporary type used for calculations
+// ISSIGNED is set if TYPE supports negative numbers
+// MAXVAL is the maximum representable value by TYPE (either signed or unsigned)
+// CHECK_OVERFLOW is true if VALTYPE is unable to represent MAXVAL*10+9, neccessitating some extra
+// logic to check overflow
+static void GenParseNum(strptr type, strptr valtype, bool issigned, strptr maxval, bool check_overflow, int maxdig) {
+    Replscope R;
+    Set(R, "$type", type);
+    Set(R, "$valtype", valtype);
+    Set(R, "$maxval", maxval);
+    Set(R, "$negval", (issigned ? "-num" : "0"));
+    Set(R, "$maxdig", tempstr()<<maxdig);
+    amc::FFunc& func = amc::ind_func_GetOrCreate(Subst(R,"...$type_ReadStrptrMaybe"));
+    Ins(&R, func.comment, "Attempt to parse $type from str");
+    Ins(&R, func.comment, "Leading whitespace is silently skipped");
+    Ins(&R, func.comment, "Return success value; If false, RESULT is unchanged");
+    Ins(&R, func.comment, "String must be non-empty");
+    Ins(&R, func.comment, "Number may prefixed with + or - (with no space after)");
+    Ins(&R, func.comment, "If the value is outside of valid range for the type, it is clipped to the valid range");
+    Ins(&R, func.comment, "Supported bases: 10, 16 (if string starts with 0x or 0X");
+    Ins(&R, func.comment, "For hex numbers, there is no overflow (just take last N digits that fit the type)");
+    Ins(&R, func.proto, Subst(R,"$type_ReadStrptrMaybe()"), false);
+    AddRetval(func, "bool", "retval", "true");
+    AddProtoArg(func, Subst(R,"$type&"), "result");
+    AddProtoArg(func, "algo::strptr", "str");
+
+    Ins(&R, func.body, "int index = 0;");
+    Ins(&R, func.body, "bool neg=false;");
+    Ins(&R, func.body, "bool hex=false;");
+    Ins(&R, func.body, "$valtype num=0;");
+    Ins(&R, func.body, "char c;");
+    Ins(&R, func.body, "while (index < str.n_elems && algo_lib::WhiteCharQ(str.elems[index])) {");
+    Ins(&R, func.body, "    index++;");
+    Ins(&R, func.body, "}");
+    Ins(&R, func.body, "if (index < str.n_elems) {");
+    Ins(&R, func.body, "    c = str.elems[index];");
+    Ins(&R, func.body, "    index++;");
+    Ins(&R, func.body, "    if (c=='+') {");
+    Ins(&R, func.body, "    } else if (c=='-') {");
+    Ins(&R, func.body, "        neg=true;");
+    Ins(&R, func.body, "    } else if (algo_lib::DigitCharQ(c)) {");
+    Ins(&R, func.body, "        num = c-'0';");
+    Ins(&R, func.body, "        if (num==0 && index < str.n_elems) {");
+    Ins(&R, func.body, "            c = str.elems[index];");
+    Ins(&R, func.body, "            if (c == 'x' || c == 'X') {");
+    Ins(&R, func.body, "                hex=true;");
+    Ins(&R, func.body, "                index++;");
+    Ins(&R, func.body, "            }");
+    Ins(&R, func.body, "        }");
+    Ins(&R, func.body, "    } else {");
+    Ins(&R, func.body, "        retval=false;");// bad char
+    Ins(&R, func.body, "    }");
+    Ins(&R, func.body, "} else {");
+    Ins(&R, func.body, "    retval= index == 0;");
+    Ins(&R, func.body, "}");
+    Ins(&R, func.body, "if (hex) {");
+    Ins(&R, func.body, "    if (index == str.n_elems) {");
+    Ins(&R, func.body, "        retval=false;");
+    Ins(&R, func.body, "    }");
+    Ins(&R, func.body, "    for (; index < str.n_elems; index++) {");
+    Ins(&R, func.body, "        c = str.elems[index];");
+    Ins(&R, func.body, "        u8 val;");
+    Ins(&R, func.body, "        if (!algo::ParseHex1(c, val)) {");
+    Ins(&R, func.body, "            break;");
+    Ins(&R, func.body, "        }");
+    Ins(&R, func.body, "        num = num*16 + val;");
+    Ins(&R, func.body, "    }");
+    Ins(&R, func.body, "} else {");
+    Ins(&R, func.body, "    int lim = u32_Min(index+$maxdig-1, str.n_elems); // 1 digit already in num");
+    Ins(&R, func.body, "    for (; index < lim; index++) {");
+    Ins(&R, func.body, "        c = str.elems[index];");
+    Ins(&R, func.body, "        if (!algo_lib::DigitCharQ(c)) {");
+    Ins(&R, func.body, "            break;");
+    Ins(&R, func.body, "        }");
+    Ins(&R, func.body, "        num = num*10 + (c-'0');");
+    Ins(&R, func.body, "    }");
+    if (check_overflow) {
+        Ins(&R, func.body, "// 2nd batch of digits");
+        Ins(&R, func.body, "if (index < str.n_elems) {");
+        Ins(&R, func.body, "    lim = u32_Min(index+$maxdig, str.n_elems);");
+        Ins(&R, func.body, "    $valtype num2 = 0;");
+        Ins(&R, func.body, "    $valtype div = 1;");
+        Ins(&R, func.body, "    for (; index < lim; index++) {");
+        Ins(&R, func.body, "        c = str.elems[index];");
+        Ins(&R, func.body, "        if (!algo_lib::DigitCharQ(c)) {");
+        Ins(&R, func.body, "            break;");
+        Ins(&R, func.body, "        }");
+        Ins(&R, func.body, "        num2 = num2*10 + (c-'0');");
+        Ins(&R, func.body, "        div = div*10;");
+        Ins(&R, func.body, "    }");
+        Ins(&R, func.body, "    if (num > $maxval/div) {");
+        Ins(&R, func.body, "        num = $maxval;");
+        Ins(&R, func.body, "    } else {");
+        Ins(&R, func.body, "        num = num*div + num2;");
+        Ins(&R, func.body, "    }");
+        Ins(&R, func.body, "}");
+    } else {
+        Ins(&R, func.body, "if (num > $maxval) {");
+        Ins(&R, func.body, "    num = $maxval;");
+        Ins(&R, func.body, "}");
+    }
+    Ins(&R, func.body, "}");
+    Ins(&R, func.body, "if (neg) {");
+    Ins(&R, func.body, "    num = $negval;");
+    Ins(&R, func.body, "}");
+    Ins(&R, func.body, "if (retval) {");
+    Ins(&R, func.body, "    result = num;");
+    Ins(&R, func.body, "} else {");
+    Ins(&R, func.body, "    algo_lib::SaveBadTag(\"comment\", \"$type_ReadStrptrMaybe: bad number\");");
+    Ins(&R, func.body, "    algo_lib::SaveBadTag(\"value\",str);");
+    Ins(&R, func.body, "}");
+}
+
+void amc::gen_parsenum() {
+    GenParseNum("i8", "u32", true, "0x7f", false, 4);
+    GenParseNum("u8", "u32", false, "0xff", false, 4);
+
+    GenParseNum("i16", "u32", true, "0x7fff", false, 6);
+    GenParseNum("u16", "u32", false, "0xffff", false, 6);
+
+    GenParseNum("i32", "u64", true, "0x7fffffff", false, 12);
+    GenParseNum("u32", "u64", false, "0xffffffff", false, 12);
+
+    GenParseNum("i64", "u64", true, "0x7fffffffffffffffULL", true, 14);
+    GenParseNum("u64", "u64", false, "0xffffffffffffffffULL", true, 14);
+
+    GenParseNum("u128", "u128", false, "((u128(0xffffffffffffffffULL) << 64) | 0xffffffffffffffffULL)", true, 25);
+}

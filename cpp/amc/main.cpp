@@ -431,14 +431,14 @@ tempstr amc::VarStringToInteger(strptr name, i32 len) {
             off1 << "+" << offset;
             off8 << "<<"<< offset*8;
         }
-        if      (len >= 8) { x <<     "algo::ReadLE64("<< name << ".elems"<<off1<<")";  len -= 8; offset += 8; }
-        else if (len >= 4) { x << "u64(algo::ReadLE32("<< name << ".elems"<<off1<<"))"; len -= 4; offset += 4; }
-        else if (len >= 2) { x << "u64(algo::ReadLE16("<< name << ".elems"<<off1<<"))"; len -= 2; offset += 2; }
-        else if (len >= 1) { x << "u64("<< name << "["<<offset<<"])";             len -= 1; offset += 1; }
+        if        (len >= 8) { x <<     "algo::ReadLE64("<< name << ".elems"<<off1<<")";  len -= 8; offset += 8;
+        } else if (len >= 4) { x << "u64(algo::ReadLE32("<< name << ".elems"<<off1<<"))"; len -= 4; offset += 4;
+        } else if (len >= 2) { x << "u64(algo::ReadLE16("<< name << ".elems"<<off1<<"))"; len -= 2; offset += 2;
+        } else if (len >= 1) { x << "u64("<< name << "["<<offset<<"])";             len -= 1; offset += 1;
+        }
         if (off8.ch_n > 0) {
             ret << ls << "(" << x << off8 << ")";
-        }
-        else {
+        } else {
             ret << ls << x ;
         }
 

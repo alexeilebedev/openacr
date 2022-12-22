@@ -41,8 +41,16 @@ const char* report::value_ToCstr(const report::FieldId& parent) {
         case report_FieldId_n_func         : ret = "n_func";  break;
         case report_FieldId_n_xref         : ret = "n_xref";  break;
         case report_FieldId_n_filemod      : ret = "n_filemod";  break;
-        case report_FieldId_n_test_total   : ret = "n_test_total";  break;
+        case report_FieldId_ntest          : ret = "ntest";  break;
+        case report_FieldId_nselect        : ret = "nselect";  break;
+        case report_FieldId_npass          : ret = "npass";  break;
+        case report_FieldId_nskip          : ret = "nskip";  break;
+        case report_FieldId_nrun           : ret = "nrun";  break;
+        case report_FieldId_nwrite         : ret = "nwrite";  break;
+        case report_FieldId_nerr           : ret = "nerr";  break;
+        case report_FieldId_ninsert        : ret = "ninsert";  break;
         case report_FieldId_success        : ret = "success";  break;
+        case report_FieldId_n_test_total   : ret = "n_test_total";  break;
         case report_FieldId_n_test_run     : ret = "n_test_run";  break;
         case report_FieldId_n_line         : ret = "n_line";  break;
         case report_FieldId_n_static       : ret = "n_static";  break;
@@ -76,6 +84,12 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
     switch (elems_N(rhs)) {
         case 4: {
             switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('n','e','r','r'): {
+                    value_SetEnum(parent,report_FieldId_nerr); ret = true; break;
+                }
+                case LE_STR4('n','r','u','n'): {
+                    value_SetEnum(parent,report_FieldId_nrun); ret = true; break;
+                }
                 case LE_STR4('t','i','m','e'): {
                     value_SetEnum(parent,report_FieldId_time); ret = true; break;
                 }
@@ -86,6 +100,15 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('n','_','e','r','r'): {
                     value_SetEnum(parent,report_FieldId_n_err); ret = true; break;
+                }
+                case LE_STR5('n','p','a','s','s'): {
+                    value_SetEnum(parent,report_FieldId_npass); ret = true; break;
+                }
+                case LE_STR5('n','s','k','i','p'): {
+                    value_SetEnum(parent,report_FieldId_nskip); ret = true; break;
+                }
+                case LE_STR5('n','t','e','s','t'): {
+                    value_SetEnum(parent,report_FieldId_ntest); ret = true; break;
                 }
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,report_FieldId_value); ret = true; break;
@@ -110,6 +133,9 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('n','_','x','r','e','f'): {
                     value_SetEnum(parent,report_FieldId_n_xref); ret = true; break;
                 }
+                case LE_STR6('n','w','r','i','t','e'): {
+                    value_SetEnum(parent,report_FieldId_nwrite); ret = true; break;
+                }
             }
             break;
         }
@@ -120,6 +146,12 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('n','_','c','t','y','p','e'): {
                     value_SetEnum(parent,report_FieldId_n_ctype); ret = true; break;
+                }
+                case LE_STR7('n','i','n','s','e','r','t'): {
+                    value_SetEnum(parent,report_FieldId_ninsert); ret = true; break;
+                }
+                case LE_STR7('n','s','e','l','e','c','t'): {
+                    value_SetEnum(parent,report_FieldId_nselect); ret = true; break;
                 }
                 case LE_STR7('r','e','c','o','r','d','s'): {
                     value_SetEnum(parent,report_FieldId_records); ret = true; break;
@@ -458,6 +490,75 @@ void report::amc_Print(report::amc & row, algo::cstring &str) {
     PrintAttrSpaceReset(str,"n_filemod", temp);
 }
 
+// --- report.atf_comp..ReadFieldMaybe
+bool report::atf_comp_ReadFieldMaybe(report::atf_comp &parent, algo::strptr field, algo::strptr strval) {
+    report::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case report_FieldId_ntest: retval = i32_ReadStrptrMaybe(parent.ntest, strval); break;
+        case report_FieldId_nselect: retval = i32_ReadStrptrMaybe(parent.nselect, strval); break;
+        case report_FieldId_npass: retval = i32_ReadStrptrMaybe(parent.npass, strval); break;
+        case report_FieldId_nskip: retval = i32_ReadStrptrMaybe(parent.nskip, strval); break;
+        case report_FieldId_nrun: retval = i32_ReadStrptrMaybe(parent.nrun, strval); break;
+        case report_FieldId_nwrite: retval = i32_ReadStrptrMaybe(parent.nwrite, strval); break;
+        case report_FieldId_nerr: retval = i32_ReadStrptrMaybe(parent.nerr, strval); break;
+        case report_FieldId_ninsert: retval = i32_ReadStrptrMaybe(parent.ninsert, strval); break;
+        case report_FieldId_success: retval = bool_ReadStrptrMaybe(parent.success, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- report.atf_comp..ReadStrptrMaybe
+// Read fields of report::atf_comp from an ascii string.
+// The format of the string is an ssim Tuple
+bool report::atf_comp_ReadStrptrMaybe(report::atf_comp &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "report.atf_comp");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && atf_comp_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- report.atf_comp..Print
+// print string representation of report::atf_comp to string LHS, no header -- cprint:report.atf_comp.String
+void report::atf_comp_Print(report::atf_comp & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "report.atf_comp";
+
+    i32_Print(row.ntest, temp);
+    PrintAttrSpaceReset(str,"ntest", temp);
+
+    i32_Print(row.nselect, temp);
+    PrintAttrSpaceReset(str,"nselect", temp);
+
+    i32_Print(row.npass, temp);
+    PrintAttrSpaceReset(str,"npass", temp);
+
+    i32_Print(row.nskip, temp);
+    PrintAttrSpaceReset(str,"nskip", temp);
+
+    i32_Print(row.nrun, temp);
+    PrintAttrSpaceReset(str,"nrun", temp);
+
+    i32_Print(row.nwrite, temp);
+    PrintAttrSpaceReset(str,"nwrite", temp);
+
+    i32_Print(row.nerr, temp);
+    PrintAttrSpaceReset(str,"nerr", temp);
+
+    i32_Print(row.ninsert, temp);
+    PrintAttrSpaceReset(str,"ninsert", temp);
+
+    bool_Print(row.success, temp);
+    PrintAttrSpaceReset(str,"success", temp);
+}
+
 // --- report.atf_unit..ReadFieldMaybe
 bool report::atf_unit_ReadFieldMaybe(report::atf_unit &parent, algo::strptr field, algo::strptr strval) {
     report::FieldId field_id;
@@ -596,6 +697,16 @@ inline static void report::SizeCheck() {
     algo_assert(_offset_of(report::amc,n_xref) == 16);
     algo_assert(_offset_of(report::amc,n_filemod) == 20);
     algo_assert(sizeof(report::amc) == 24);
+    algo_assert(_offset_of(report::atf_comp,ntest) == 0);
+    algo_assert(_offset_of(report::atf_comp,nselect) == 4);
+    algo_assert(_offset_of(report::atf_comp,npass) == 8);
+    algo_assert(_offset_of(report::atf_comp,nskip) == 12);
+    algo_assert(_offset_of(report::atf_comp,nrun) == 16);
+    algo_assert(_offset_of(report::atf_comp,nwrite) == 20);
+    algo_assert(_offset_of(report::atf_comp,nerr) == 24);
+    algo_assert(_offset_of(report::atf_comp,ninsert) == 28);
+    algo_assert(_offset_of(report::atf_comp,success) == 32);
+    algo_assert(sizeof(report::atf_comp) == 36);
     algo_assert(_offset_of(report::atf_unit,n_test_total) == 0);
     algo_assert(_offset_of(report::atf_unit,success) == 4);
     algo_assert(_offset_of(report::atf_unit,n_test_run) == 8);

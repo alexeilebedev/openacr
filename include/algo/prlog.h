@@ -33,5 +33,13 @@ namespace algo { // update-hdr srcfile:%/algo/prlog.%
     // -------------------------------------------------------------------
     // cpp/lib/algo/prlog.cpp -- prlog macro
     //
-    void Prlog(int fd, cstring &str, int start, bool eol);
+
+    // Default implementation of prlog handler
+    //
+    // Notes on WriteFile use:
+    // some tools set fd 0 to nonblocking mode,
+    // which in case of a terminal makes output non-blocking too (bug in gnome terminal?)
+    // in any case it causes EAGAIN during fast writes, so we use WriteFile to
+    // write all bytes out.
+    void Prlog(algo_lib::FLogcat *logcat, algo::SchedTime tstamp, strptr str);
 }

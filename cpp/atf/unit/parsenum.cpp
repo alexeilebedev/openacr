@@ -183,6 +183,43 @@ static void TestNumber(u64 n) {
     }
 }
 
+// -----------------------------------------------------------------------------
+
+static void TestParseI32(strptr str, bool ok, i32 result) {
+    i32 val;
+    bool ret = i32_ReadStrptrMaybe(val,str);
+    vrfy(ret==ok && (!ok || val==result), tempstr()<<"TestParseI32 "<<ret<<" "<<val);
+}
+
+static void TestParseU32(strptr str, bool ok, u32 result) {
+    u32 val;
+    bool ret = u32_ReadStrptrMaybe(val,str);
+    vrfy(ret==ok && (!ok || val==result), tempstr()<<"TestParseU32 "<<ret<<" "<<val);
+}
+
+static void TestParseI64(strptr str, bool ok, i64 result) {
+    if (str == "123456789123456789") {
+        prlog("sfasdfasd");
+    }
+    i64 val;
+    bool ret = i64_ReadStrptrMaybe(val,str);
+    vrfy(ret==ok && (!ok || val==result), tempstr()<<"TestParseI64 "<<ret<<" "<<val);
+}
+
+static void TestParseU64(strptr str, bool ok, u64 result) {
+    u64 val;
+    bool ret = u64_ReadStrptrMaybe(val,str);
+    vrfy(ret==ok && (!ok || val==result), tempstr()<<"TestParseU64 "<<ret<<" "<<val);
+}
+
+static void TestParseU128(strptr str, bool ok, u128 result) {
+    u128 val;
+    bool ret = u128_ReadStrptrMaybe(val,str);
+    vrfy(ret==ok && (!ok || val==result), tempstr()<<"TestParseU128 "<<ret<<" "<<val);
+}
+
+// -----------------------------------------------------------------------------
+
 void atf_unit::unittest_algo_lib_ParseNumber() {
     TestStrNumConv<8,u64,u32>(algo::ParseNum8,0,0);
     TestStrNumConv<4,u32,u32>(algo::ParseNum4,0,0);
@@ -232,4 +269,119 @@ void atf_unit::unittest_algo_lib_ParseNumber() {
         vrfyeq_(ok, false);
     }
 
+    {
+        TestParseI64("123456789123456789", true, 123456789123456789LL);
+        TestParseI64("123456789123456789123456776545", true, 0x7fffffffffffffff);
+        TestParseI64("  0234 ", true, 234);
+        TestParseI64("  234", true, 234);
+        TestParseI64("\r\n\t -12222", true, -12222);
+        TestParseI64("-3333333333333333333", true, -3333333333333333333LL);
+        TestParseI64("2147483647", true, 2147483647);
+        TestParseI64("2147483648", true, 2147483648);
+        TestParseI64("2147483649", true, 2147483649);
+        TestParseI64("3147483648", true, 3147483648);
+        TestParseI64("4147483649", true, 4147483649);
+        TestParseI64("12147483649", true, 12147483649);
+        TestParseI64("0x10", true, 16);
+        TestParseI64("0x10000", true, 65536);
+        TestParseI64("0x", false, 0);
+        TestParseI64("xxx", false, 0);
+        TestParseI64("0", true, 0);
+        TestParseI64("1", true, 1);
+        TestParseI64("-1", true, -1);
+        TestParseI64("123x", true, 123);
+        for (i64 i=0; i<LLONG_MAX-10000; i += LLONG_MAX/10000) {
+            TestParseI64(tempstr()<<i, true, i);
+        }
+    }
+
+    {
+        TestParseU64("123456789123456789", true, 123456789123456789LL);
+        TestParseU64("123456789123456789123456776545", true, 0xffffffffffffffff);
+        TestParseU64("0x123456789123456789123456776545", true, 0x6789123456776545);
+        TestParseU64("  0234 ", true, 234);
+        TestParseU64("  234", true, 234);
+        TestParseU64("\r\n\t -12222", true, 0);
+        TestParseU64("-3333333333333333333", true, 0);
+        TestParseU64("2147483647", true, 2147483647);
+        TestParseU64("2147483648", true, 2147483648);
+        TestParseU64("2147483649", true, 2147483649);
+        TestParseU64("3147483648", true, 3147483648);
+        TestParseU64("4147483649", true, 4147483649);
+        TestParseU64("12147483649", true, 12147483649);
+        TestParseU64("0x10", true, 16);
+        TestParseU64("0x10000", true, 65536);
+        TestParseU64("0x", false, 0);
+        TestParseU64("xxx", false, 0);
+        TestParseU64("0", true, 0);
+        TestParseU64("1", true, 1);
+        TestParseU64("-1", true, 0);
+        TestParseU64("123x", true, 123);
+    }
+
+    {
+        TestParseI32("  0234 ", true, 234);
+        TestParseI32("  234", true, 234);
+        TestParseI32("\r\n\t -12222", true, -12222);
+        TestParseI32("3333333333333333333", true, INT_MAX);
+        TestParseI32("-3333333333333333333", true, -INT_MAX);
+        TestParseI32("2147483647", true, INT_MAX);
+        TestParseI32("2147483648", true, INT_MAX);
+        TestParseI32("4147483649", true, INT_MAX);
+        TestParseI32("12147483649", true, INT_MAX);
+        TestParseI32("0x10", true, 16);
+        TestParseI32("0x10000", true, 65536);
+        TestParseI32("0x", false, 0);
+        TestParseI32("xxx", false, 0);
+        TestParseI32("0", true, 0);
+        TestParseI32("1", true, 1);
+        TestParseI32("-1", true, -1);
+        TestParseI32("123x", true, 123);
+    }
+    {
+        TestParseU32("  0234 ", true, 234);
+        TestParseU32("  234", true, 234);
+        TestParseU32("\r\n\t -12222", true, 0);
+        TestParseU32("3333333333333333333", true, UINT_MAX);
+        TestParseU32("-3333333333333333333", true, 0);
+        TestParseU32("2147483647", true, 2147483647);
+        TestParseU32("2147483648", true, 2147483648);
+        TestParseU32("4147483649", true, 4147483649);
+        TestParseU32("12147483649", true, UINT_MAX);
+        TestParseU32("1214748364900000", true, UINT_MAX);
+        TestParseU32("0x10", true, 16);
+        TestParseU32("0x10000", true, 65536);
+        TestParseU32("0x", false, 0);
+        TestParseU32("xxx", false, 0);
+        TestParseU32("0", true, 0);
+        TestParseU32("1", true, 1);
+        TestParseU32("-1", true, 0);
+        TestParseU32("123x", true, 123);
+    }
+
+    {
+        TestParseU128("123456789123456789", true, 123456789123456789LL);
+        TestParseU128("123456789123456789123456776545", true, u128(1234567891234)*100000000000000000+u128(56789123456776545));
+        TestParseU128("123456789123456789123456776545123456789123456789123456776545", true
+                      , u128(0xffffffffffffffff)<<64|u128(0xffffffffffffffff));
+        TestParseU128("  0234 ", true, 234);
+        TestParseU128("  234", true, 234);
+        TestParseU128("\r\n\t -12222", true, 0);
+        TestParseU128("\r\n\t 12222", true, 12222);
+        TestParseU128("-3333333333333333333", true, 0);
+        TestParseU128("2147483647", true, 2147483647);
+        TestParseU128("2147483648", true, 2147483648);
+        TestParseU128("2147483649", true, 2147483649);
+        TestParseU128("3147483648", true, 3147483648);
+        TestParseU128("4147483649", true, 4147483649);
+        TestParseU128("12147483649", true, 12147483649);
+        TestParseU128("0x10", true, 16);
+        TestParseU128("0x10000", true, 65536);
+        TestParseU128("0x", false, 0);
+        TestParseU128("xxx", false, 0);
+        TestParseU128("0", true, 0);
+        TestParseU128("1", true, 1);
+        TestParseU128("-1", true, 0);
+        TestParseU128("123x", true, 123);
+    }
 }

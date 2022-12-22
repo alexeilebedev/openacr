@@ -425,6 +425,102 @@ inline i32 gitlab::ind_user_N() {
     return _db.ind_user_n;
 }
 
+// --- gitlab.FDb.milestone.EmptyQ
+// Return true if index is empty
+inline bool gitlab::milestone_EmptyQ() {
+    return _db.milestone_n == 0;
+}
+
+// --- gitlab.FDb.milestone.Find
+// Look up row by row id. Return NULL if out of range
+inline gitlab::FMilestone* gitlab::milestone_Find(u64 t) {
+    gitlab::FMilestone *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.milestone_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.milestone_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- gitlab.FDb.milestone.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline gitlab::FMilestone* gitlab::milestone_Last() {
+    return milestone_Find(u64(_db.milestone_n-1));
+}
+
+// --- gitlab.FDb.milestone.N
+// Return number of items in the pool
+inline i32 gitlab::milestone_N() {
+    return _db.milestone_n;
+}
+
+// --- gitlab.FDb.milestone.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline gitlab::FMilestone& gitlab::milestone_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.milestone_lary[bsr][index];
+}
+
+// --- gitlab.FDb.ind_milestone.EmptyQ
+// Return true if hash is empty
+inline bool gitlab::ind_milestone_EmptyQ() {
+    return _db.ind_milestone_n == 0;
+}
+
+// --- gitlab.FDb.ind_milestone.N
+// Return number of items in the hash
+inline i32 gitlab::ind_milestone_N() {
+    return _db.ind_milestone_n;
+}
+
+// --- gitlab.FDb.milestone_description.EmptyQ
+// Return true if index is empty
+inline bool gitlab::milestone_description_EmptyQ() {
+    return _db.milestone_description_n == 0;
+}
+
+// --- gitlab.FDb.milestone_description.Find
+// Look up row by row id. Return NULL if out of range
+inline gitlab::FMilestoneDescription* gitlab::milestone_description_Find(u64 t) {
+    gitlab::FMilestoneDescription *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.milestone_description_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.milestone_description_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- gitlab.FDb.milestone_description.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline gitlab::FMilestoneDescription* gitlab::milestone_description_Last() {
+    return milestone_description_Find(u64(_db.milestone_description_n-1));
+}
+
+// --- gitlab.FDb.milestone_description.N
+// Return number of items in the pool
+inline i32 gitlab::milestone_description_N() {
+    return _db.milestone_description_n;
+}
+
+// --- gitlab.FDb.milestone_description.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline gitlab::FMilestoneDescription& gitlab::milestone_description_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.milestone_description_lary[bsr][index];
+}
+
 // --- gitlab.FDb.project_curs.Reset
 // cursor points to valid item
 inline void gitlab::_db_project_curs_Reset(_db_project_curs &curs, gitlab::FDb &parent) {
@@ -623,6 +719,56 @@ inline void gitlab::_db_user_curs_Next(_db_user_curs &curs) {
 // item access
 inline gitlab::FUser& gitlab::_db_user_curs_Access(_db_user_curs &curs) {
     return user_qFind(u64(curs.index));
+}
+
+// --- gitlab.FDb.milestone_curs.Reset
+// cursor points to valid item
+inline void gitlab::_db_milestone_curs_Reset(_db_milestone_curs &curs, gitlab::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- gitlab.FDb.milestone_curs.ValidQ
+// cursor points to valid item
+inline bool gitlab::_db_milestone_curs_ValidQ(_db_milestone_curs &curs) {
+    return curs.index < _db.milestone_n;
+}
+
+// --- gitlab.FDb.milestone_curs.Next
+// proceed to next item
+inline void gitlab::_db_milestone_curs_Next(_db_milestone_curs &curs) {
+    curs.index++;
+}
+
+// --- gitlab.FDb.milestone_curs.Access
+// item access
+inline gitlab::FMilestone& gitlab::_db_milestone_curs_Access(_db_milestone_curs &curs) {
+    return milestone_qFind(u64(curs.index));
+}
+
+// --- gitlab.FDb.milestone_description_curs.Reset
+// cursor points to valid item
+inline void gitlab::_db_milestone_description_curs_Reset(_db_milestone_description_curs &curs, gitlab::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- gitlab.FDb.milestone_description_curs.ValidQ
+// cursor points to valid item
+inline bool gitlab::_db_milestone_description_curs_ValidQ(_db_milestone_description_curs &curs) {
+    return curs.index < _db.milestone_description_n;
+}
+
+// --- gitlab.FDb.milestone_description_curs.Next
+// proceed to next item
+inline void gitlab::_db_milestone_description_curs_Next(_db_milestone_description_curs &curs) {
+    curs.index++;
+}
+
+// --- gitlab.FDb.milestone_description_curs.Access
+// item access
+inline gitlab::FMilestoneDescription& gitlab::_db_milestone_description_curs_Access(_db_milestone_description_curs &curs) {
+    return milestone_description_qFind(u64(curs.index));
 }
 inline gitlab::FHttp::FHttp() {
     gitlab::FHttp_Init(*this);
@@ -952,6 +1098,57 @@ inline void gitlab::FIssueNote_Init(gitlab::FIssueNote& issue_note) {
     issue_note.p_issue = NULL;
     issue_note.issue_c_issue_note_in_ary = bool(false);
     issue_note.ind_issue_note_next = (gitlab::FIssueNote*)-1; // (gitlab.FDb.ind_issue_note) not-in-hash
+}
+inline gitlab::FMilestone::FMilestone() {
+    gitlab::FMilestone_Init(*this);
+}
+
+inline gitlab::FMilestone::~FMilestone() {
+    gitlab::FMilestone_Uninit(*this);
+}
+
+
+// --- gitlab.FMilestone.c_milestone_description.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool gitlab::c_milestone_description_InsertMaybe(gitlab::FMilestone& milestone, gitlab::FMilestoneDescription& row) {
+    gitlab::FMilestoneDescription* ptr = milestone.c_milestone_description;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        milestone.c_milestone_description = &row;
+    }
+    return retval;
+}
+
+// --- gitlab.FMilestone.c_milestone_description.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void gitlab::c_milestone_description_Remove(gitlab::FMilestone& milestone, gitlab::FMilestoneDescription& row) {
+    gitlab::FMilestoneDescription *ptr = milestone.c_milestone_description;
+    if (LIKELY(ptr == &row)) {
+        milestone.c_milestone_description = NULL;
+    }
+}
+
+// --- gitlab.FMilestone..Init
+// Set all fields to initial values.
+inline void gitlab::FMilestone_Init(gitlab::FMilestone& milestone) {
+    milestone.id = u32(0);
+    milestone.c_milestone_description = NULL;
+    milestone.select = bool(false);
+    milestone.ind_milestone_next = (gitlab::FMilestone*)-1; // (gitlab.FDb.ind_milestone) not-in-hash
+}
+inline gitlab::FMilestoneDescription::FMilestoneDescription() {
+    gitlab::FMilestoneDescription_Init(*this);
+}
+
+inline gitlab::FMilestoneDescription::~FMilestoneDescription() {
+    gitlab::FMilestoneDescription_Uninit(*this);
+}
+
+
+// --- gitlab.FMilestoneDescription..Init
+// Set all fields to initial values.
+inline void gitlab::FMilestoneDescription_Init(gitlab::FMilestoneDescription& milestone_description) {
+    milestone_description.p_milestone = NULL;
 }
 inline gitlab::FMr::FMr() {
     gitlab::FMr_Init(*this);
@@ -1283,6 +1480,19 @@ inline gitlab::IssueDescription::IssueDescription() {
 inline gitlab::IssueNote::IssueNote() {
 }
 
+inline gitlab::Milestone::Milestone() {
+    gitlab::Milestone_Init(*this);
+}
+
+
+// --- gitlab.Milestone..Init
+// Set all fields to initial values.
+inline void gitlab::Milestone_Init(gitlab::Milestone& parent) {
+    parent.id = u32(0);
+}
+inline gitlab::MilestoneDescription::MilestoneDescription() {
+}
+
 inline gitlab::Mr::Mr() {
 }
 
@@ -1372,6 +1582,16 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const gitlab::IssueD
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const gitlab::IssueNote &row) {// cfmt:gitlab.IssueNote.String
     gitlab::IssueNote_Print(const_cast<gitlab::IssueNote&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const gitlab::Milestone &row) {// cfmt:gitlab.Milestone.String
+    gitlab::Milestone_Print(const_cast<gitlab::Milestone&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const gitlab::MilestoneDescription &row) {// cfmt:gitlab.MilestoneDescription.String
+    gitlab::MilestoneDescription_Print(const_cast<gitlab::MilestoneDescription&>(row), str);
     return str;
 }
 

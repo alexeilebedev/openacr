@@ -17,7 +17,6 @@ Usage: mdbg [options]
     -cfg           string  Configuration to use. default: "debug"
     -manywin               gdb-many-windows. default: false
     -disas                 Show disassembly (use F12). default: false
-    -root                  Debug as root. default: false
     -attach                Attach to a running process. default: false
     -b             string  List of breakpoints, e.g. 'a.cpp:123 if cond1, func2'. default: "main"
     -catchthrow            Stop on exceptions. default: true

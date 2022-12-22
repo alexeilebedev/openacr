@@ -193,7 +193,7 @@ dmmeta.nstype  nstype:exe  comment:Executable
     dev.target  target:atf_nrun  license:""  compat:%-%.%-%
       dev.targdep  targdep:atf_nrun.algo_lib  comment:""
       dev.targdep  targdep:atf_nrun.algo_pch  comment:""
-      dev.targdep  targdep:atf_nrun.lib_prot  comment:""
+      dev.tgtcov  target:atf_nrun  cov_min:0.00  maxerr:0.00  comment:""
 
     dmmeta.ctype  ctype:atf_nrun.FDb  comment:""
       dmmeta.field  field:atf_nrun.FDb._db      arg:atf_nrun.FDb      reftype:Global  dflt:""  comment:""

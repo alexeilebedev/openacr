@@ -433,7 +433,8 @@ void acr::Print(acr::FPrint &print) {
 
 void acr::FlushStdout(acr::FPrint &print) {
     if (print.fstdout) {
-        algo::Prlog(1/*stdout*/, print.out, 0/*reset to char*/, false/*eol*/);
+        algo::Prlog(&algo_lib_logcat_stdout, algo::SchedTime(),print.out);
+        ch_RemoveAll(print.out);
     }
 }
 

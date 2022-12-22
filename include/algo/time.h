@@ -79,6 +79,7 @@ namespace algo { // update-hdr srcfile:"%/algo/time.%"
     int GetWeekday(strptr wday);
     const strptr GetWeekdayName(int index);
     int GetMonthZeroBased(strptr month);
+    int GetWholeMonthZeroBased(strptr s);
 
     // Inverse mapping to abbreviated month names (Jan, Feb, etc.)
     // If short_name==false, returns full name (January, February, etc.)
