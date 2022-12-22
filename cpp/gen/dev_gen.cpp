@@ -24,14 +24,6 @@ const char *dev_Arch_arch_x64      = "x64";
 const char *dev_Arch_arch_x86_64   = "x86_64";
 
 // compile-time string constants for dev.Builddir.builddir
-const char *dev_Builddir_builddir_CYGWIN_NT_gPP_coverage_i686      = "CYGWIN_NT-g++.coverage-i686";
-const char *dev_Builddir_builddir_CYGWIN_NT_gPP_coverage_x86_64    = "CYGWIN_NT-g++.coverage-x86_64";
-const char *dev_Builddir_builddir_CYGWIN_NT_gPP_debug_i686         = "CYGWIN_NT-g++.debug-i686";
-const char *dev_Builddir_builddir_CYGWIN_NT_gPP_debug_x86_64       = "CYGWIN_NT-g++.debug-x86_64";
-const char *dev_Builddir_builddir_CYGWIN_NT_gPP_profile_i686       = "CYGWIN_NT-g++.profile-i686";
-const char *dev_Builddir_builddir_CYGWIN_NT_gPP_profile_x86_64     = "CYGWIN_NT-g++.profile-x86_64";
-const char *dev_Builddir_builddir_CYGWIN_NT_gPP_release_i686       = "CYGWIN_NT-g++.release-i686";
-const char *dev_Builddir_builddir_CYGWIN_NT_gPP_release_x86_64     = "CYGWIN_NT-g++.release-x86_64";
 const char *dev_Builddir_builddir_Darwin_clangPP_coverage_x86_64   = "Darwin-clang++.coverage-x86_64";
 const char *dev_Builddir_builddir_Darwin_clangPP_debug_x86_64      = "Darwin-clang++.debug-x86_64";
 const char *dev_Builddir_builddir_Darwin_clangPP_profile_x86_64    = "Darwin-clang++.profile-x86_64";
