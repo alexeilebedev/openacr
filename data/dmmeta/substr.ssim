@@ -10,6 +10,8 @@ dmmeta.substr  field:dev.Builddir.cfg  expr:.LR-LL  srcfield:dev.Builddir.buildd
 dmmeta.substr  field:dev.Builddir.compiler  expr:.LL-LR  srcfield:dev.Builddir.builddir
 dmmeta.substr  field:dev.Builddir.uname  expr:.LL-LL  srcfield:dev.Builddir.builddir
 dmmeta.substr  field:dev.Gitfile.ext  expr:/RR.LR.RR  srcfield:dev.Gitfile.gitfile
+dmmeta.substr  field:dev.GitlabAuth.proj  expr:/LL  srcfield:dev.GitlabAuth.gitlab_auth
+dmmeta.substr  field:dev.GitlabAuth.token  expr:/LR  srcfield:dev.GitlabAuth.gitlab_auth
 dmmeta.substr  field:dev.Include.filename  expr::LR  srcfield:dev.Include.include
 dmmeta.substr  field:dev.Include.srcfile  expr::LL  srcfield:dev.Include.include
 dmmeta.substr  field:dev.Srcfile.ext  expr:.RR  srcfield:dev.Srcfile.srcfile

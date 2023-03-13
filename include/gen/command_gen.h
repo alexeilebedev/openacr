@@ -142,79 +142,78 @@ enum command_FieldIdEnum {                    // command.FieldId.value
     ,command_FieldId_pertest_timeout   = 125
     ,command_FieldId_capture           = 126
     ,command_FieldId_issue             = 127
-    ,command_FieldId_server            = 128
-    ,command_FieldId_project           = 129
-    ,command_FieldId_auth_token        = 130
-    ,command_FieldId_mrlist            = 131
-    ,command_FieldId_mergereq          = 132
-    ,command_FieldId_ilist             = 133
-    ,command_FieldId_istart            = 134
-    ,command_FieldId_iadd              = 135
-    ,command_FieldId_ic                = 136
-    ,command_FieldId_iclose            = 137
-    ,command_FieldId_iassignto         = 138
-    ,command_FieldId_title             = 139
-    ,command_FieldId_description       = 140
-    ,command_FieldId_gitdir            = 141
-    ,command_FieldId_assignee          = 142
-    ,command_FieldId_ulist             = 143
-    ,command_FieldId_mraccept          = 144
-    ,command_FieldId_complooo          = 145
-    ,command_FieldId_args              = 146
-    ,command_FieldId_manywin           = 147
-    ,command_FieldId_root              = 148
-    ,command_FieldId_attach            = 149
-    ,command_FieldId_catchthrow        = 150
-    ,command_FieldId_tui               = 151
-    ,command_FieldId_bcmd              = 152
-    ,command_FieldId_emacs             = 153
-    ,command_FieldId_follow_child      = 154
-    ,command_FieldId_py                = 155
-    ,command_FieldId_writessimfile     = 156
-    ,command_FieldId_url               = 157
-    ,command_FieldId_tables            = 158
-    ,command_FieldId_nologo            = 159
-    ,command_FieldId_baddbok           = 160
-    ,command_FieldId_typetag           = 161
-    ,command_FieldId_move              = 162
-    ,command_FieldId_dedup             = 163
-    ,command_FieldId_commit            = 164
-    ,command_FieldId_undo              = 165
-    ,command_FieldId_hash              = 166
-    ,command_FieldId_targsrc           = 167
-    ,command_FieldId_name              = 168
-    ,command_FieldId_body              = 169
-    ,command_FieldId_func              = 170
-    ,command_FieldId_nextfile          = 171
-    ,command_FieldId_other             = 172
-    ,command_FieldId_updateproto       = 173
-    ,command_FieldId_listfunc          = 174
-    ,command_FieldId_iffy              = 175
-    ,command_FieldId_gen               = 176
-    ,command_FieldId_showloc           = 177
-    ,command_FieldId_showstatic        = 178
-    ,command_FieldId_showsortkey       = 179
-    ,command_FieldId_sortname          = 180
-    ,command_FieldId_baddecl           = 181
-    ,command_FieldId_update_authors    = 182
-    ,command_FieldId_indent            = 183
-    ,command_FieldId_linelim           = 184
-    ,command_FieldId_strayfile         = 185
-    ,command_FieldId_badchar           = 186
-    ,command_FieldId_badline           = 187
-    ,command_FieldId_expand            = 188
-    ,command_FieldId_ignoreQuote       = 189
-    ,command_FieldId_maxpacket         = 190
-    ,command_FieldId_db                = 191
-    ,command_FieldId_createdb          = 192
-    ,command_FieldId_str               = 193
-    ,command_FieldId_tocamelcase       = 194
-    ,command_FieldId_tolowerunder      = 195
-    ,command_FieldId_pathcomp          = 196
-    ,command_FieldId_value             = 197
+    ,command_FieldId_mrlist            = 128
+    ,command_FieldId_mergereq          = 129
+    ,command_FieldId_ilist             = 130
+    ,command_FieldId_istart            = 131
+    ,command_FieldId_iadd              = 132
+    ,command_FieldId_ic                = 133
+    ,command_FieldId_iclose            = 134
+    ,command_FieldId_iassignto         = 135
+    ,command_FieldId_title             = 136
+    ,command_FieldId_description       = 137
+    ,command_FieldId_gitdir            = 138
+    ,command_FieldId_assignee          = 139
+    ,command_FieldId_ulist             = 140
+    ,command_FieldId_mraccept          = 141
+    ,command_FieldId_auth_token        = 142
+    ,command_FieldId_server            = 143
+    ,command_FieldId_complooo          = 144
+    ,command_FieldId_args              = 145
+    ,command_FieldId_manywin           = 146
+    ,command_FieldId_root              = 147
+    ,command_FieldId_attach            = 148
+    ,command_FieldId_catchthrow        = 149
+    ,command_FieldId_tui               = 150
+    ,command_FieldId_bcmd              = 151
+    ,command_FieldId_emacs             = 152
+    ,command_FieldId_follow_child      = 153
+    ,command_FieldId_py                = 154
+    ,command_FieldId_writessimfile     = 155
+    ,command_FieldId_url               = 156
+    ,command_FieldId_tables            = 157
+    ,command_FieldId_nologo            = 158
+    ,command_FieldId_baddbok           = 159
+    ,command_FieldId_typetag           = 160
+    ,command_FieldId_move              = 161
+    ,command_FieldId_dedup             = 162
+    ,command_FieldId_commit            = 163
+    ,command_FieldId_undo              = 164
+    ,command_FieldId_hash              = 165
+    ,command_FieldId_targsrc           = 166
+    ,command_FieldId_name              = 167
+    ,command_FieldId_body              = 168
+    ,command_FieldId_func              = 169
+    ,command_FieldId_nextfile          = 170
+    ,command_FieldId_other             = 171
+    ,command_FieldId_updateproto       = 172
+    ,command_FieldId_listfunc          = 173
+    ,command_FieldId_iffy              = 174
+    ,command_FieldId_gen               = 175
+    ,command_FieldId_showloc           = 176
+    ,command_FieldId_showstatic        = 177
+    ,command_FieldId_showsortkey       = 178
+    ,command_FieldId_sortname          = 179
+    ,command_FieldId_baddecl           = 180
+    ,command_FieldId_update_authors    = 181
+    ,command_FieldId_indent            = 182
+    ,command_FieldId_linelim           = 183
+    ,command_FieldId_strayfile         = 184
+    ,command_FieldId_badchar           = 185
+    ,command_FieldId_badline           = 186
+    ,command_FieldId_expand            = 187
+    ,command_FieldId_ignoreQuote       = 188
+    ,command_FieldId_maxpacket         = 189
+    ,command_FieldId_db                = 190
+    ,command_FieldId_createdb          = 191
+    ,command_FieldId_str               = 192
+    ,command_FieldId_tocamelcase       = 193
+    ,command_FieldId_tolowerunder      = 194
+    ,command_FieldId_pathcomp          = 195
+    ,command_FieldId_value             = 196
 };
 
-enum { command_FieldIdEnum_N = 198 };
+enum { command_FieldIdEnum_N = 197 };
 
 namespace command { struct FieldId; }
 namespace command { struct Protocol; }
@@ -1483,12 +1482,9 @@ void                 bash_proc_Uninit(command::bash_proc& parent) __attribute__(
 // access: command.gitlab_proc.gitlab (Exec)
 struct gitlab { // command.gitlab
     algo::cstring      in;            //   "data"  Input directory or filename, - for stdin
-    algo_lib::Regx     issue;         //   ""  Regx of algo::cstring
-    algo::cstring      server;        //   "gitlab.lon.algo"  (config) GitLab server host
-    algo::cstring      project;       //   "myproject"  (config) Project to use
-    algo::cstring      auth_token;    //   ""  (config) GitLab auth token
+    algo_lib::Regx     issue;         //   "%"  Regx of algo::cstring
     bool               mrlist;        //   false  (action) Show list of merge requests
-    bool               mergereq;      //   false  (action) Push current branch to origin, create merge request
+    bool               mergereq;      //   false  (action) Push current branch to project git repo, create merge request
     bool               ilist;         //   false  (action) Show list of issues matching regx
     bool               istart;        //   false  (action) Start working on the specified issue
     bool               t;             //   false  Tree view: expand issue description
@@ -1499,10 +1495,12 @@ struct gitlab { // command.gitlab
     algo::cstring      title;         //   ""  (with -iadd), skip editor and use argument as title
     algo::cstring      description;   //   ""  (with -iadd -title), use argument as description
     algo::cstring      comment;       //   ""  (with -ic), skip editor and use argument as comment
-    algo::cstring      gitdir;        //   ""  (setup) Change directory of dit repository
+    algo::cstring      gitdir;        //   ""  (setup) Change directory of git repository
     algo_lib::Regx     assignee;      //   ""  Regx of algo::cstring
     bool               ulist;         //   false  (action) List users
     algo::cstring      mraccept;      //   ""  (action) Accept merge request
+    algo::cstring      auth_token;    //   ""  (init) GitLab auth token, requires server, adds record to  ~/.ssim/dev/gitlab_auth.ssim
+    algo::cstring      server;        //   ""  (init) GitLab url, like http://localhost, requires auth_token
     gitlab();
 };
 

@@ -389,6 +389,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dev_cfg;               // dev.cfg 
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_compiler;          // dev.compiler           fconst:dmmeta.Ssimfile.ssimfile/dev.compiler
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_gitfile;           // dev.gitfile            fconst:dmmeta.Ssimfile.ssimfile/dev.gitfile
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_gitinfo;           // dev.gitinfo            fconst:dmmeta.Ssimfile.ssimfile/dev.gitinfo
+extern const char *  dmmeta_Ssimfile_ssimfile_dev_gitlab_auth;       // dev.gitlab_auth        fconst:dmmeta.Ssimfile.ssimfile/dev.gitlab_auth
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_gitlab_project;    // dev.gitlab_project     fconst:dmmeta.Ssimfile.ssimfile/dev.gitlab_project
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_htmlentity;        // dev.htmlentity         fconst:dmmeta.Ssimfile.ssimfile/dev.htmlentity
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_license;           // dev.license            fconst:dmmeta.Ssimfile.ssimfile/dev.license

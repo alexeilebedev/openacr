@@ -63,6 +63,7 @@ dev.gitfile  gitfile:bin/git-mod-plot
 dev.gitfile  gitfile:bin/git-praise
 dev.gitfile  gitfile:bin/git-rebase-all-branches
 dev.gitfile  gitfile:bin/git-rebase-origin
+dev.gitfile  gitfile:bin/git-rebase-remote
 dev.gitfile  gitfile:bin/git-recent-branches
 dev.gitfile  gitfile:bin/git-rollback-file
 dev.gitfile  gitfile:bin/git-update-config
@@ -670,6 +671,7 @@ dev.gitfile  gitfile:txt/amc/print.md
 dev.gitfile  gitfile:txt/amc/protocol.md
 dev.gitfile  gitfile:txt/coding-style.md
 dev.gitfile  gitfile:txt/directory-structure.md
+dev.gitfile  gitfile:txt/gitlab.md
 dev.gitfile  gitfile:txt/iohook.md
 dev.gitfile  gitfile:txt/mdbg.md
 dev.gitfile  gitfile:txt/orgfile.md

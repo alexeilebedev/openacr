@@ -162,6 +162,7 @@ const char *dmmeta_Ssimfile_ssimfile_dev_cfg              = "dev.cfg";
 const char *dmmeta_Ssimfile_ssimfile_dev_compiler         = "dev.compiler";
 const char *dmmeta_Ssimfile_ssimfile_dev_gitfile          = "dev.gitfile";
 const char *dmmeta_Ssimfile_ssimfile_dev_gitinfo          = "dev.gitinfo";
+const char *dmmeta_Ssimfile_ssimfile_dev_gitlab_auth      = "dev.gitlab_auth";
 const char *dmmeta_Ssimfile_ssimfile_dev_gitlab_project   = "dev.gitlab_project";
 const char *dmmeta_Ssimfile_ssimfile_dev_htmlentity       = "dev.htmlentity";
 const char *dmmeta_Ssimfile_ssimfile_dev_license          = "dev.license";

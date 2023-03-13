@@ -49,82 +49,91 @@ extern const char *  dev_Compiler_compiler_gPP_9;     // g++-9      fconst:dev.C
 
 // --- dev_FieldIdEnum
 
-enum dev_FieldIdEnum {                     // dev.FieldId.value
-     dev_FieldId_arch                = 0
-    ,dev_FieldId_comment             = 1
-    ,dev_FieldId_badline             = 2
-    ,dev_FieldId_expr                = 3
-    ,dev_FieldId_targsrc_regx        = 4
-    ,dev_FieldId_builddir            = 5
-    ,dev_FieldId_uname               = 6
-    ,dev_FieldId_compiler            = 7
-    ,dev_FieldId_cfg                 = 8
-    ,dev_FieldId_suffix              = 9
-    ,dev_FieldId_ranlib              = 10
-    ,dev_FieldId_ar                  = 11
-    ,dev_FieldId_link                = 12
-    ,dev_FieldId_libext              = 13
-    ,dev_FieldId_exeext              = 14
-    ,dev_FieldId_pchext              = 15
-    ,dev_FieldId_objext              = 16
-    ,dev_FieldId_rc                  = 17
-    ,dev_FieldId_gitfile             = 18
-    ,dev_FieldId_ext                 = 19
-    ,dev_FieldId_gitinfo             = 20
-    ,dev_FieldId_author              = 21
-    ,dev_FieldId_compver             = 22
-    ,dev_FieldId_package             = 23
-    ,dev_FieldId_gitlab_project      = 24
-    ,dev_FieldId_url                 = 25
-    ,dev_FieldId_gitlab_project_id   = 26
-    ,dev_FieldId_htmlentity          = 27
-    ,dev_FieldId_code                = 28
-    ,dev_FieldId_include             = 29
-    ,dev_FieldId_srcfile             = 30
-    ,dev_FieldId_filename            = 31
-    ,dev_FieldId_sys                 = 32
-    ,dev_FieldId_license             = 33
-    ,dev_FieldId_nlongline           = 34
-    ,dev_FieldId_longestline         = 35
-    ,dev_FieldId_nbadws              = 36
-    ,dev_FieldId_maxws               = 37
-    ,dev_FieldId_nlongfunc           = 38
-    ,dev_FieldId_longestfunc         = 39
-    ,dev_FieldId_nmysteryfunc        = 40
-    ,dev_FieldId_badness             = 41
-    ,dev_FieldId_opt_type            = 42
-    ,dev_FieldId_sep                 = 43
-    ,dev_FieldId_inl                 = 44
-    ,dev_FieldId_sandbox             = 45
-    ,dev_FieldId_args                = 46
-    ,dev_FieldId_syscmd              = 47
-    ,dev_FieldId_execkey             = 48
-    ,dev_FieldId_command             = 49
-    ,dev_FieldId_pid                 = 50
-    ,dev_FieldId_status              = 51
-    ,dev_FieldId_nprereq             = 52
-    ,dev_FieldId_fail_prereq         = 53
-    ,dev_FieldId_completed           = 54
-    ,dev_FieldId_maxtime             = 55
-    ,dev_FieldId_syscmddep           = 56
-    ,dev_FieldId_child               = 57
-    ,dev_FieldId_parent              = 58
-    ,dev_FieldId_syslib              = 59
-    ,dev_FieldId_targdep             = 60
-    ,dev_FieldId_target              = 61
-    ,dev_FieldId_compat              = 62
-    ,dev_FieldId_targsrc             = 63
-    ,dev_FieldId_src                 = 64
-    ,dev_FieldId_targsyslib          = 65
-    ,dev_FieldId_timefmt             = 66
-    ,dev_FieldId_dirname             = 67
-    ,dev_FieldId_tool_opt            = 68
-    ,dev_FieldId_opt                 = 69
-    ,dev_FieldId_sortfld             = 70
-    ,dev_FieldId_value               = 71
+enum dev_FieldIdEnum {                       // dev.FieldId.value
+     dev_FieldId_arch                  = 0
+    ,dev_FieldId_comment               = 1
+    ,dev_FieldId_badline               = 2
+    ,dev_FieldId_expr                  = 3
+    ,dev_FieldId_targsrc_regx          = 4
+    ,dev_FieldId_builddir              = 5
+    ,dev_FieldId_uname                 = 6
+    ,dev_FieldId_compiler              = 7
+    ,dev_FieldId_cfg                   = 8
+    ,dev_FieldId_suffix                = 9
+    ,dev_FieldId_ranlib                = 10
+    ,dev_FieldId_ar                    = 11
+    ,dev_FieldId_link                  = 12
+    ,dev_FieldId_libext                = 13
+    ,dev_FieldId_exeext                = 14
+    ,dev_FieldId_pchext                = 15
+    ,dev_FieldId_objext                = 16
+    ,dev_FieldId_rc                    = 17
+    ,dev_FieldId_gitfile               = 18
+    ,dev_FieldId_ext                   = 19
+    ,dev_FieldId_gitinfo               = 20
+    ,dev_FieldId_author                = 21
+    ,dev_FieldId_compver               = 22
+    ,dev_FieldId_package               = 23
+    ,dev_FieldId_gitlab_auth           = 24
+    ,dev_FieldId_proj                  = 25
+    ,dev_FieldId_token                 = 26
+    ,dev_FieldId_url                   = 27
+    ,dev_FieldId_default_branch        = 28
+    ,dev_FieldId_id                    = 29
+    ,dev_FieldId_name_with_namespace   = 30
+    ,dev_FieldId_ssh_url_to_repo       = 31
+    ,dev_FieldId_web_url               = 32
+    ,dev_FieldId_active                = 33
+    ,dev_FieldId_gitlab_project        = 34
+    ,dev_FieldId_gitlab_project_id     = 35
+    ,dev_FieldId_htmlentity            = 36
+    ,dev_FieldId_code                  = 37
+    ,dev_FieldId_include               = 38
+    ,dev_FieldId_srcfile               = 39
+    ,dev_FieldId_filename              = 40
+    ,dev_FieldId_sys                   = 41
+    ,dev_FieldId_license               = 42
+    ,dev_FieldId_nlongline             = 43
+    ,dev_FieldId_longestline           = 44
+    ,dev_FieldId_nbadws                = 45
+    ,dev_FieldId_maxws                 = 46
+    ,dev_FieldId_nlongfunc             = 47
+    ,dev_FieldId_longestfunc           = 48
+    ,dev_FieldId_nmysteryfunc          = 49
+    ,dev_FieldId_badness               = 50
+    ,dev_FieldId_opt_type              = 51
+    ,dev_FieldId_sep                   = 52
+    ,dev_FieldId_inl                   = 53
+    ,dev_FieldId_sandbox               = 54
+    ,dev_FieldId_args                  = 55
+    ,dev_FieldId_syscmd                = 56
+    ,dev_FieldId_execkey               = 57
+    ,dev_FieldId_command               = 58
+    ,dev_FieldId_pid                   = 59
+    ,dev_FieldId_status                = 60
+    ,dev_FieldId_nprereq               = 61
+    ,dev_FieldId_fail_prereq           = 62
+    ,dev_FieldId_completed             = 63
+    ,dev_FieldId_maxtime               = 64
+    ,dev_FieldId_syscmddep             = 65
+    ,dev_FieldId_child                 = 66
+    ,dev_FieldId_parent                = 67
+    ,dev_FieldId_syslib                = 68
+    ,dev_FieldId_targdep               = 69
+    ,dev_FieldId_target                = 70
+    ,dev_FieldId_compat                = 71
+    ,dev_FieldId_targsrc               = 72
+    ,dev_FieldId_src                   = 73
+    ,dev_FieldId_targsyslib            = 74
+    ,dev_FieldId_timefmt               = 75
+    ,dev_FieldId_dirname               = 76
+    ,dev_FieldId_tool_opt              = 77
+    ,dev_FieldId_opt                   = 78
+    ,dev_FieldId_sortfld               = 79
+    ,dev_FieldId_value                 = 80
 };
 
-enum { dev_FieldIdEnum_N = 72 };
+enum { dev_FieldIdEnum_N = 81 };
 
 extern const char *  dev_Target_target_;             //               fconst:dev.Target.target/
 extern const char *  dev_Target_target_abt;          // abt           fconst:dev.Target.target/abt
@@ -170,6 +179,7 @@ namespace dev { struct Compiler; }
 namespace dev { struct FieldId; }
 namespace dev { struct Gitfile; }
 namespace dev { struct Gitinfo; }
+namespace dev { struct GitlabAuth; }
 namespace dev { struct GitlabProject; }
 namespace dev { struct Htmlentity; }
 namespace dev { struct Include; }
@@ -199,6 +209,7 @@ namespace dev {
     typedef algo::Smallstr50 CompilerPkey;
     typedef algo::Smallstr200 GitfilePkey;
     typedef algo::Smallstr40 GitinfoPkey;
+    typedef algo::Smallstr250 GitlabAuthPkey;
     typedef algo::Smallstr50 GitlabProjectPkey;
     typedef algo::Smallstr50 HtmlentityPkey;
     typedef algo::Smallstr200 IncludePkey;
@@ -407,6 +418,35 @@ bool                 Gitinfo_ReadFieldMaybe(dev::Gitinfo &parent, algo::strptr f
 bool                 Gitinfo_ReadStrptrMaybe(dev::Gitinfo &parent, algo::strptr in_str);
 // print string representation of dev::Gitinfo to string LHS, no header -- cprint:dev.Gitinfo.String
 void                 Gitinfo_Print(dev::Gitinfo & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- dev.GitlabAuth
+struct GitlabAuth { // dev.GitlabAuth
+    algo::Smallstr250   gitlab_auth;           // gitlab project name/access token
+    algo::cstring       url;                   // gitlab url
+    algo::cstring       default_branch;        //   "origin"  git remote used in the workflow
+    algo::cstring       id;                    // gitlab project id
+    algo::cstring       name_with_namespace;   //
+    algo::cstring       ssh_url_to_repo;       //
+    algo::cstring       web_url;               //
+    bool                active;                //   true  set to false to ignore the line but keep it in the file
+    GitlabAuth();
+};
+
+algo::cstring        proj_Get(dev::GitlabAuth& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::cstring        GitlabAuth_proj_Get(algo::strptr arg) __attribute__((nothrow));
+
+algo::cstring        token_Get(dev::GitlabAuth& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::cstring        GitlabAuth_token_Get(algo::strptr arg) __attribute__((nothrow));
+
+tempstr              GitlabAuth_Concat_proj_token( const algo::strptr& proj ,const algo::strptr& token );
+bool                 GitlabAuth_ReadFieldMaybe(dev::GitlabAuth &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::GitlabAuth from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 GitlabAuth_ReadStrptrMaybe(dev::GitlabAuth &parent, algo::strptr in_str);
+// Set all fields to initial values.
+void                 GitlabAuth_Init(dev::GitlabAuth& parent);
+// print string representation of dev::GitlabAuth to string LHS, no header -- cprint:dev.GitlabAuth.String
+void                 GitlabAuth_Print(dev::GitlabAuth & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dev.GitlabProject
 struct GitlabProject { // dev.GitlabProject: Gitlab project
@@ -845,6 +885,7 @@ namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Badline &row);// cfmt:dev.Badline.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::FieldId &row);// cfmt:dev.FieldId.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Gitfile &row);// cfmt:dev.Gitfile.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::GitlabAuth &row);// cfmt:dev.GitlabAuth.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::GitlabProject &row);// cfmt:dev.GitlabProject.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Htmlentity &row);// cfmt:dev.Htmlentity.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Include &row);// cfmt:dev.Include.String

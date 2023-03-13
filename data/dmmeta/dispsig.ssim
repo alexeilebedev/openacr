@@ -12,7 +12,7 @@ dmmeta.dispsig  dispsig:atf_amc.Input  signature:3b9943558be9b03e79fade60297ec50
 dmmeta.dispsig  dispsig:atf_amc.Msgs  signature:f80a13e46fff2c18de1f4dbbbb11703d07c170d2
 dmmeta.dispsig  dispsig:atf_amc.Ssimfiles  signature:9a25d87b6ed236e8b6794b21dc308f66286505af
 dmmeta.dispsig  dispsig:atf_norm.Input  signature:3c2fccbb207224c170fcfd01c0692912424c20aa
-dmmeta.dispsig  dispsig:gitlab.Input  signature:cd941ad82205e82576bcadd62546d69d72cdbca6
+dmmeta.dispsig  dispsig:gitlab.Input  signature:774bc21221b341e4b3583b8c50dd6cbdfaabb10d
 dmmeta.dispsig  dispsig:lib_ctype.Input  signature:ab81c986e2e85d3e267eb18d62976fdef0a8ff70
 dmmeta.dispsig  dispsig:mdbg.Input  signature:a39a7508119d6dc51451d2cda9f120fd888b1184
 dmmeta.dispsig  dispsig:orgfile.Input  signature:dadfcf8accbcc44f5e5443f439ac4024afc89edf

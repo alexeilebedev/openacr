@@ -11,6 +11,17 @@
 
 // -----------------------------------------------------------------------------
 
+static tempstr GitCmd(strptr gitcmd) {
+    tempstr cmd("git");
+    if (gitlab::_db.cmdline.gitdir.ch_n) {
+        cmd << " -C " << gitlab::_db.cmdline.gitdir;
+    }
+    cmd << " " << gitcmd;
+    return cmd;
+}
+
+// -----------------------------------------------------------------------------
+
 // Clear all response fields for request reuse case
 static void ClearResponse(gitlab::FHttp &http) {
     http.response_status_line = strptr();
@@ -95,15 +106,22 @@ static size_t CurlRead(char *ptr, size_t size, size_t nmemb, void *userdata) {
 
 // -----------------------------------------------------------------------------
 
-static void CurlExec(gitlab::FHttp &http) {
+static void CurlExec(gitlab::FHttp &http, strptr http_auth_header) {
     ClearResponse(http);
 
     // Form headers:
     // note, curl does not copy values for itself,
     // so keep this structure unchanged!
+    request_header_Alloc(http) << http_auth_header;
+    request_header_Alloc(http) << "Accept: application/json";
+    request_header_Alloc(http) << "Content-Type: application/json";
+
+    verblog(Keyval("URL",http.request_uri));
+    verblog(Keyval("X",gitlab::request_method_ToCstr(http)));
     curl_slist *hdr(NULL);
     ind_beg(gitlab::FHttp_request_header_curs,rh,http){
         vrfy_(hdr=curl_slist_append(hdr,Zeroterm(rh)));
+        verblog(Keyval("H",rh));
     }ind_end;
 
     CURL *curl;
@@ -189,59 +207,142 @@ static void Main_ManageEnv() {
 
 // -----------------------------------------------------------------------------
 
+static void LoadProjects() {
+    cstring page("1");
+    tempstr http_auth_header;
+    http_auth_header << "Authorization: Bearer "<< Trimmed(gitlab::_db.cmdline.auth_token);
+    do {
+        // prepare REST request
+        gitlab::FHttp http;
+        http.request_uri << gitlab::_db.cmdline.server << "/api/v4"
+                         << "/projects?per_page=100&page="<<page;
+        // execute request
+        CurlExec(http, http_auth_header);
+
+        // prechecks on output
+        vrfy(http.response_status_code == 200, tempstr() << "Server request has failed:"
+             << http.response_status_line);
+        vrfy_(http.response_json_parser.root_node);
+        vrfy_(http.response_json_parser.root_node->type == lib_json_FNode_type_array);
+
+        ind_beg(lib_json::node_c_child_curs,proj_obj,*http.response_json_parser.root_node){
+            vrfy_(proj_obj.type == lib_json_FNode_type_object);
+            tempstr gitlab_auth_key;
+            gitlab_auth_key=dev::GitlabAuth_Concat_proj_token(strptr_Get(&proj_obj,"name"),Trimmed(gitlab::_db.cmdline.auth_token));
+            gitlab::FGitlabAuth &gitlab_auth=gitlab::ind_gitlab_auth_GetOrCreate(gitlab_auth_key);
+            gitlab_auth.id=strptr_Get(&proj_obj,"id");
+            gitlab_auth.default_branch=strptr_Get(&proj_obj,"default_branch");
+            gitlab_auth.ssh_url_to_repo=strptr_Get(&proj_obj,"ssh_url_to_repo");
+            gitlab_auth.name_with_namespace=strptr_Get(&proj_obj,"name_with_namespace");
+            gitlab_auth.web_url=strptr_Get(&proj_obj,"web_url");
+            gitlab_auth.url=gitlab::_db.cmdline.server;
+        }ind_end;
+        page = GetResponseHeaderValue(http,"x-next-page");
+    } while (page != "");
+
+    // record collected projects for the auth_token
+    tempstr out;
+    ind_beg(gitlab::_db_gitlab_auth_curs,gitlab_auth,gitlab::_db){
+        dev::GitlabAuth gitlab_auth_out;
+        gitlab_auth_CopyOut(gitlab_auth,gitlab_auth_out);
+        out<<gitlab_auth_out<<eol;
+
+        // Set .git/config remote to the project
+        // git remote add <proj> <ssh_url_to_repo>
+        // will fail if dup
+        tempstr remote_add_cmd;
+        remote_add_cmd<<" remote add " << proj_Get(gitlab_auth) << " " <<gitlab_auth.ssh_url_to_repo << " 2>/dev/null";
+        SysCmd(GitCmd(remote_add_cmd), FailokQ(true), DryrunQ(false), algo::EchoQ(algo_lib::_db.cmdline.verbose));
+    }ind_end;
+    verblog(out);
+
+    // Record the keys
+    // write gitlab_auth file
+    CreateDirRecurse(GetDirName(gitlab::_db.auth_file));
+    vrfy_(StringToFile(out,gitlab::_db.auth_file,algo::FileFlags(),false));
+    errno_vrfy_(!chmod(Zeroterm(gitlab::_db.auth_file),0600));
+
+}
+// -----------------------------------------------------------------------------
+static void SetProject(gitlab::FGitlabAuth &gitlab_auth){
+    gitlab::FProject &project=gitlab::ind_project_GetOrCreate(proj_Get(gitlab_auth));
+    gitlab::_db.p_project=&project;
+    project.project_id = gitlab_auth.id;
+    project.rest_api=gitlab_auth.url<<"/api/v4";
+    project.git_branch=gitlab_auth.default_branch;
+    project.git_remote=project.project;
+    // prepare http authorization header
+    project.http_auth_header << "Authorization: Bearer " << token_Get(gitlab_auth);
+}
+// -----------------------------------------------------------------------------
+
 // Prepare authorization header:
 // Manage -auth_token option, $HOME/.auth_token file.
 
 static void Main_ManageAuth() {
+    // auth file init if token is supplied on the command line
+    // read auth file
+    gitlab::_db.auth_file=SsimFname(DirFileJoin(gitlab::_db.home,".ssim"),dmmeta_Ssimfile_ssimfile_dev_gitlab_auth);
+    (void)gitlab::LoadSsimfileMaybe(gitlab::_db.auth_file);
     // auth token
-    gitlab::_db.auth_file = DirFileJoin(gitlab::_db.home, gitlab::_db.auth_file_name);
-    gitlab::_db.auth_token = Trimmed(gitlab::_db.cmdline.auth_token);
     if (gitlab::_db.cmdline.auth_token.ch_n) {
-        // case where token is supplied via command line
-        vrfy_(StringToFile(gitlab::_db.auth_token,gitlab::_db.auth_file,algo::FileFlags(),false));
-        errno_vrfy_(!chmod(Zeroterm(gitlab::_db.auth_file),0600));
-    } else if (FileQ(gitlab::_db.auth_file)) {
-        // case where token is read from file
-        gitlab::_db.auth_token = Trimmed(FileToString(gitlab::_db.auth_file));
+        // need server if the token is specified
+        vrfy(gitlab::_db.cmdline.server.ch_n,tempstr()
+             <<Keyval("server",gitlab::_db.cmdline.server)
+             <<Keyval("comment","gitlab server have to be supplied with auth_token for init")
+             );
+        LoadProjects();
+        exit(0);
+    } else {
+        // Find the first auth token matching the project
+        ind_beg(gitlab::_db_gitlab_auth_curs,gitlab_auth,gitlab::_db) if (gitlab_auth.active){
+            tempstr proj_dot;
+            proj_dot<<proj_Get(gitlab_auth)<<".";
+            if (algo::StartsWithQ(gitlab::_db.cmdline.issue.expr,proj_dot)
+                || algo::StartsWithQ(gitlab::_db.cmdline.mraccept,proj_dot)
+                ) {
+                SetProject(gitlab_auth);
+                break;
+            }
+        }ind_end;
+        // pick up first active environment if no match
+        if (!gitlab::_db.p_project){
+            ind_beg(gitlab::_db_gitlab_auth_curs,gitlab_auth,gitlab::_db) if (gitlab_auth.active){
+                SetProject(gitlab_auth);
+                break;
+            }ind_end;
+        }
     }
-    vrfy(gitlab::_db.auth_token.ch_n, gitlab::_db.usrmsg_no_token);
-    // prepare http authorization header
-    gitlab::_db.http_auth_header << "Authorization: Bearer " << gitlab::_db.auth_token;
+    vrfy(gitlab::_db.p_project,tempstr()
+         <<Keyval("issue",gitlab::_db.cmdline.issue.expr)
+         <<Keyval("mraccept",gitlab::_db.cmdline.mraccept)
+         <<Keyval("auth_file",gitlab::_db.auth_file)
+         <<eol
+         <<Keyval("comment","no project matching auth_file records is selected by issue or mraccept parameters")
+         <<eol
+         <<Keyval("comment","to initialize auth_file record please supply personal access token via -auth_token and -server option")
+         <<eol
+         <<Keyval("comment","visit <https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html> for directions")
+         );
+    verblog("gitlab.info"
+            <<Keyval("guessed_proj",gitlab::_db.p_project->project)
+            );
 }
-
-// -----------------------------------------------------------------------------
-
-// prepare API URI as base to add resource parts:
-// process server option
-static void Main_ManageServer() {
-    gitlab::_db.rest_api << "https://" << gitlab::_db.cmdline.server << "/api/v4";
-}
-
-// -----------------------------------------------------------------------------
-
-// Get numeric project id
-static void Main_ManageProject() {
-    gitlab::FProject *project = gitlab::ind_project_Find(gitlab::_db.cmdline.project);
-    vrfy(project, tempstr() << "Can't find project:" << gitlab::_db.cmdline.project);
-    gitlab::_db.project_id = project->gitlab_project_id;
-}
-
 // -----------------------------------------------------------------------------
 
 static void LoadIssueNotes(gitlab::FIssue &issue) {
+    gitlab::FProject &project=*issue.p_project;
     cstring page("1");
     do {
         // prepare REST request
         gitlab::FHttp http;
-        http.request_uri << gitlab::_db.rest_api
-                         << "/projects/" << gitlab::_db.project_id
+        http.request_uri << project.rest_api
+                         << "/projects/" << project.project_id
                          <<"/issues/" << iid_Get(issue)
                          << "/notes?per_page=100&page="<<page;
-        request_header_Alloc(http) << gitlab::_db.http_auth_header;
-        request_header_Alloc(http) << "Accept: application/json";
 
         // execute request
-        CurlExec(http);
+        CurlExec(http,project.http_auth_header);
 
         // prechecks on output
         vrfy(http.response_status_code == 200, tempstr() << "Server request has failed:"
@@ -266,17 +367,14 @@ static void LoadIssueNotes(gitlab::FIssue &issue) {
 // -----------------------------------------------------------------------------
 
 // load specific issue
-static gitlab::FIssue *LoadIssueMaybe(u32 iid) {
+static gitlab::FIssue *LoadIssueMaybe(u32 iid, gitlab::FProject &project) {
     // prepare REST request
     gitlab::FHttp http;
-    http.request_uri << gitlab::_db.rest_api
-                     << "/projects/" << gitlab::_db.project_id
+    http.request_uri << project.rest_api
+                     << "/projects/" << project.project_id
                      << "/issues/" << iid;
-    request_header_Alloc(http) << gitlab::_db.http_auth_header;
-    request_header_Alloc(http) << "Accept: application/json";
-
     // execute request
-    CurlExec(http);
+    CurlExec(http,project.http_auth_header);
 
     if (http.response_status_code == 404) {
         return NULL;
@@ -290,11 +388,12 @@ static gitlab::FIssue *LoadIssueMaybe(u32 iid) {
     vrfy_(issue_obj.type == lib_json_FNode_type_object);
 
     gitlab::Issue issue;
-    issue.issue = tempstr() << gitlab::_db.cmdline.project << "." << u32_Get(&issue_obj,"iid");
+    issue.issue = tempstr() << project.project << "." << u32_Get(&issue_obj,"iid");
     issue.title = strptr_Get(&issue_obj,"title");
 
     gitlab::FIssue *fissue = gitlab::issue_InsertMaybe(issue);
     vrfy_(fissue);
+    (void)c_issue_InsertMaybe(project,*fissue);
 
     gitlab::IssueDescription issue_description;
     issue_description.issue = issue.issue;
@@ -309,19 +408,16 @@ static gitlab::FIssue *LoadIssueMaybe(u32 iid) {
 
 // Read list of issues from gitlab
 // and populate _db.issue, _db.issue_desecription tables
-static void Main_LoadIssueList() {
+static void Main_LoadIssueList(gitlab::FProject &project) {
     cstring page("1");
     do {
         // prepare REST request
         gitlab::FHttp http;
-        http.request_uri << gitlab::_db.rest_api
-                         << "/projects/" << gitlab::_db.project_id
+        http.request_uri << project.rest_api
+                         << "/projects/" << project.project_id
                          << "/issues?state=opened&per_page=100&page="<<page;
-        request_header_Alloc(http) << gitlab::_db.http_auth_header;
-        request_header_Alloc(http) << "Accept: application/json";
-
         // execute request
-        CurlExec(http);
+        CurlExec(http,project.http_auth_header);
 
         // prechecks on output
         vrfy(http.response_status_code == 200, tempstr() << "Server request has failed:"
@@ -334,7 +430,7 @@ static void Main_LoadIssueList() {
             vrfy_(issue_obj.type == lib_json_FNode_type_object);
 
             gitlab::Issue issue;
-            issue.issue = gitlab::Issue_Concat_project_iid(gitlab::_db.cmdline.project, u32_Get(&issue_obj,"iid"));
+            issue.issue = gitlab::Issue_Concat_project_iid(project.project, u32_Get(&issue_obj,"iid"));
             issue.assignee = strptr_Get(&issue_obj,"assignee.username");
             issue.title = strptr_Get(&issue_obj,"title");
 
@@ -414,22 +510,19 @@ static void Main_ShowIssueList() {
 // -----------------------------------------------------------------------------
 
 // Load merge request for particular branch
-static u32 CountMrForBranch(strptr branch) {
+static u32 CountMrForBranch(strptr branch, gitlab::FProject &project) {
     u32 count = 0;
     cstring page("1");
     do {
         // prepare REST request
         gitlab::FHttp http;
-        http.request_uri << gitlab::_db.rest_api
-                         << "/projects/" << gitlab::_db.project_id
+        http.request_uri << project.rest_api
+                         << "/projects/" << project.project_id
                          << "/merge_requests/"
                          << "?source_branch=" << branch
                          << "&state=opened&per_page=100&page="<<page;
-        request_header_Alloc(http) << gitlab::_db.http_auth_header;
-        request_header_Alloc(http) << "Accept: application/json";
-
         // execute request
-        CurlExec(http);
+        CurlExec(http,project.http_auth_header);
 
         // prechecks on output
         vrfy(http.response_status_code == 200, tempstr() << "Server request has failed:"
@@ -462,16 +555,14 @@ static u32 CountMrForBranch(strptr branch) {
 
 // when getting one mr, there much more information than in getting mr list
 static void LoadMrDetails(gitlab::FMr &mr) {
+    gitlab::FProject &project=*mr.p_project;
     // prepare REST request
     gitlab::FHttp http;
-    http.request_uri << gitlab::_db.rest_api
-                     << "/projects/" << gitlab::_db.project_id
+    http.request_uri << project.rest_api
+                     << "/projects/" << project.project_id
                      << "/merge_requests/" << iid_Get(mr);
-    request_header_Alloc(http) << gitlab::_db.http_auth_header;
-    request_header_Alloc(http) << "Accept: application/json";
-
     // execute request
-    CurlExec(http);
+    CurlExec(http,project.http_auth_header);
 
     // prechecks on output
     vrfy(http.response_status_code == 200, tempstr() << "Server request has failed:"
@@ -485,19 +576,16 @@ static void LoadMrDetails(gitlab::FMr &mr) {
 }
 
 // load list of merge requests
-static void Main_LoadMrList() {
+static void Main_LoadMrList(gitlab::FProject &project) {
     cstring page("1");
     do {
         // prepare REST request
         gitlab::FHttp http;
-        http.request_uri << gitlab::_db.rest_api
-                         << "/projects/" << gitlab::_db.project_id
+        http.request_uri << project.rest_api
+                         << "/projects/" << project.project_id
                          << "/merge_requests?view=simple&state=opened&per_page=100&page="<<page;
-        request_header_Alloc(http) << gitlab::_db.http_auth_header;
-        request_header_Alloc(http) << "Accept: application/json";
-
         // execute request
-        CurlExec(http);
+        CurlExec(http,project.http_auth_header);
 
         // prechecks on output
         vrfy(http.response_status_code == 200, tempstr() << "Server request has failed:"
@@ -511,7 +599,7 @@ static void Main_LoadMrList() {
             u32 iid = u32_Get(&mr_obj,"iid");
             strptr title = strptr_Get(&mr_obj,"title");
             gitlab::Mr mr;
-            mr.mr = gitlab::Issue_Concat_project_iid(gitlab::_db.cmdline.project, iid);
+            mr.mr = gitlab::Issue_Concat_project_iid(project.project, iid);
             mr.title = title;
             gitlab::mr_InsertMaybe(mr);
         }ind_end;
@@ -541,16 +629,13 @@ static void Main_DoShowMrList() {
 
 // -----------------------------------------------------------------------------
 
-static u32 GetCurrentUserId() {
+static u32 GetCurrentUserId(gitlab::FProject &project) {
     // prepare REST request
     gitlab::FHttp http;
-    http.request_uri << gitlab::_db.rest_api
+    http.request_uri << project.rest_api
                      << "/user";
-    request_header_Alloc(http) << gitlab::_db.http_auth_header;
-    request_header_Alloc(http) << "Accept: application/json";
-
     // execute request
-    CurlExec(http);
+    CurlExec(http,project.http_auth_header);
 
     // prechecks on output
     vrfy(http.response_status_code == 200, tempstr() << "Server request has failed:"
@@ -569,19 +654,19 @@ static u32 GetCurrentUserId() {
 // Function length exception - for now keep it as is --
 // it is quite linear and understandable.
 // For further, I separete edit, execution, and printing parts
-static void Main_DoIssueAdd() {
-    u32 current_user_id = GetCurrentUserId();
+static void Main_DoIssueAdd(gitlab::FProject &project) {
+    u32 current_user_id = GetCurrentUserId(project);
 
     cstring file;
     cstring title(gitlab::_db.cmdline.title);
     cstring description(gitlab::_db.cmdline.description);
     if (!title.ch_n) {
         vrfy_(gitlab::_db.editor.ch_n);
-        file = DirFileJoin(gitlab::_db.home,".gitlab_issue");
+        file = DirFileJoin(gitlab::_db.home,tempstr()<<".gitlab_issue_"<<project.project);
         if (!FileQ(file)) {
             cstring tpl;
             tpl <<
-                "WIP: The first line is issue title\n"
+                "WIP: (Issue Project:"<<project.project<<") The first line is issue title\n"
                 "\n"
                 "Subsequent lines are issue description.\n"
                 "\n"
@@ -589,7 +674,6 @@ static void Main_DoIssueAdd() {
                 " you can save, exit, and continue later.\n"
                 "\n"
                 "Once finished, remove WIP: to submit the issue.\n";
-
             vrfy_(StringToFile(tpl,file,algo::FileFlags(),false));
         }
         cstring cmdline;
@@ -614,13 +698,9 @@ static void Main_DoIssueAdd() {
     gitlab::FHttp http;
 
     http.request_method = gitlab_FHttp_request_method_POST;
-    http.request_uri << gitlab::_db.rest_api
-                     << "/projects/" << gitlab::_db.project_id
+    http.request_uri << project.rest_api
+                     << "/projects/" << project.project_id
                      << "/issues";
-    request_header_Alloc(http) << gitlab::_db.http_auth_header;
-    request_header_Alloc(http) << "Accept: application/json";
-    request_header_Alloc(http) << "Content-Type: application/json";
-
     lib_json::FNode &obj = lib_json::NewObjectNode(NULL);
     lib_json::NewStringNode(&obj,"title",title);
     lib_json::NewStringNode(&obj,"description",description);
@@ -628,7 +708,7 @@ static void Main_DoIssueAdd() {
     lib_json::JsonSerialize(&obj,http.request_body);
 
     // execute request
-    CurlExec(http);
+    CurlExec(http,project.http_auth_header);
 
     vrfy(http.response_status_code == 201, tempstr() << "Server request has failed:"
          << http.response_status_line);
@@ -645,7 +725,7 @@ static void Main_DoIssueAdd() {
 
     // print result
     gitlab::Issue issue;
-    issue.issue = tempstr() << gitlab::Issue_Concat_project_iid(gitlab::_db.cmdline.project, u32_Get(&issue_obj,"iid"));
+    issue.issue = tempstr() << gitlab::Issue_Concat_project_iid(project.project, u32_Get(&issue_obj,"iid"));
     issue.title = strptr_Get(&issue_obj,"title");
     issue.assignee = strptr_Get(&issue_obj,"assignee.username");
     prlog(issue);
@@ -657,17 +737,6 @@ static void Main_DoIssueAdd() {
 
     // Assign command line argument to make possible further operations in one shot
     gitlab::_db.cmdline.issue.expr = issue.issue;
-}
-
-// -----------------------------------------------------------------------------
-
-static tempstr GitCmd(strptr gitcmd) {
-    tempstr cmd("git");
-    if (gitlab::_db.cmdline.gitdir.ch_n) {
-        cmd << " -C " << gitlab::_db.cmdline.gitdir;
-    }
-    cmd << " " << gitcmd;
-    return cmd;
 }
 
 // -----------------------------------------------------------------------------
@@ -702,7 +771,7 @@ u32 gitlab::GetUserId(strptr user) {
 
 // -----------------------------------------------------------------------------
 
-static void Main_DoIssueCommentAdd() {
+static void Main_DoIssueCommentAdd(gitlab::FProject &project) {
     cstring body(gitlab::_db.cmdline.comment);
     bool use_editor = !body.ch_n;
     int issuenum = gitlab::IssueArgNumber();
@@ -726,20 +795,16 @@ static void Main_DoIssueCommentAdd() {
     gitlab::FHttp http;
 
     http.request_method = gitlab_FHttp_request_method_POST;
-    http.request_uri << gitlab::_db.rest_api
-                     << "/projects/" << gitlab::_db.project_id
+    http.request_uri << project.rest_api
+                     << "/projects/" << project.project_id
                      << "/issues/" << issuenum
                      << "/notes";
-    request_header_Alloc(http) << gitlab::_db.http_auth_header;
-    request_header_Alloc(http) << "Accept: application/json";
-    request_header_Alloc(http) << "Content-Type: application/json";
-
     lib_json::FNode &obj = lib_json::NewObjectNode(NULL);
     lib_json::NewStringNode(&obj,"body",body);
     lib_json::JsonSerialize(&obj,http.request_body);
 
     // execute request
-    CurlExec(http);
+    CurlExec(http,project.http_auth_header);
 
     vrfy(http.response_status_code == 201, tempstr() << "Server request has failed:"
          << http.response_status_line);
@@ -756,7 +821,7 @@ static void Main_DoIssueCommentAdd() {
 
     // print result
     cstring issue_note;
-    issue_note << gitlab::Issue_Concat_project_iid(gitlab::_db.cmdline.project,u32_Get(&issue_obj,"noteable_iid"))
+    issue_note << gitlab::Issue_Concat_project_iid(project.project,u32_Get(&issue_obj,"noteable_iid"))
                << "."
                << u32_Get(&issue_obj,"id");
     cstring str;
@@ -769,21 +834,19 @@ static void Main_DoIssueCommentAdd() {
 
 // -----------------------------------------------------------------------------
 
-static void Main_DoIssueClose() {
+static void Main_DoIssueClose(gitlab::FProject &project) {
     int issuenum = gitlab::IssueArgNumber();
 
     // prepare REST request
     gitlab::FHttp http;
 
     http.request_method = gitlab_FHttp_request_method_PUT;
-    http.request_uri << gitlab::_db.rest_api
-                     << "/projects/" << gitlab::_db.project_id
+    http.request_uri << project.rest_api
+                     << "/projects/" << project.project_id
                      << "/issues/" << issuenum
                      << "?state_event=close";
-    request_header_Alloc(http) << gitlab::_db.http_auth_header;
-
     // execute request
-    CurlExec(http);
+    CurlExec(http,project.http_auth_header);
     vrfy(http.response_status_code == 200, tempstr() << "Server request has failed:"
          << http.response_status_line);
 
@@ -792,25 +855,22 @@ static void Main_DoIssueClose() {
     lib_json::FNode &issue_obj = *http.response_json_parser.root_node;
     strptr state = strptr_Get(&issue_obj,"state");
 
-    tempstr issue = gitlab::Issue_Concat_project_iid(gitlab::_db.cmdline.project,issuenum);
+    tempstr issue = gitlab::Issue_Concat_project_iid(project.project,issuenum);
     vrfy(state == "closed", tempstr() << Keyval("issue",issue) << Keyval("state",state));
     prlog("gitlab.success" << Keyval("issue",issue) << Keyval("state",state));
 }
 
 // -----------------------------------------------------------------------------
 
-static void LoadUsers() {
+static void LoadUsers(gitlab::FProject &project) {
     cstring page("1");
     do {
         // prepare REST request
         gitlab::FHttp http;
-        http.request_uri << gitlab::_db.rest_api
+        http.request_uri << project.rest_api
                          << "/users?active=true&per_page=100&page="<<page;
-        request_header_Alloc(http) << gitlab::_db.http_auth_header;
-        request_header_Alloc(http) << "Accept: application/json";
-
         // execute request
-        CurlExec(http);
+        CurlExec(http,project.http_auth_header);
 
         // prechecks on output
         vrfy(http.response_status_code == 200, tempstr() << "Server request has failed:"
@@ -832,9 +892,9 @@ static void LoadUsers() {
 
 // -----------------------------------------------------------------------------
 
-static void MaybeLoadUserList() {
+static void MaybeLoadUserList(gitlab::FProject &project) {
     if (!gitlab::user_N()) {
-        LoadUsers();
+        LoadUsers(project);
     }
 }
 
@@ -854,7 +914,7 @@ static void Main_ShowUserList() {
 
 // -----------------------------------------------------------------------------
 
-static void Main_DoIssueAssign() {
+static void Main_DoIssueAssign(gitlab::FProject &project) {
     int issuenum = gitlab::IssueArgNumber();
 
     u32 assignee_id = gitlab::GetUserId(gitlab::_db.cmdline.iassignto);
@@ -864,14 +924,12 @@ static void Main_DoIssueAssign() {
     gitlab::FHttp http;
 
     http.request_method = gitlab_FHttp_request_method_PUT;
-    http.request_uri << gitlab::_db.rest_api
-                     << "/projects/" << gitlab::_db.project_id
+    http.request_uri << project.rest_api
+                     << "/projects/" << project.project_id
                      << "/issues/" << issuenum
                      << "?assignee_id=" << assignee_id;
-    request_header_Alloc(http) << gitlab::_db.http_auth_header;
-
     // execute request
-    CurlExec(http);
+    CurlExec(http,project.http_auth_header);
     vrfy(http.response_status_code == 200, tempstr() << "Server request has failed:"
          << http.response_status_line);
 
@@ -881,8 +939,12 @@ static void Main_DoIssueAssign() {
     u32 id = u32_Get(&issue_obj,"assignee.id");
     strptr username = strptr_Get(&issue_obj,"assignee.username");
 
-    tempstr issue = gitlab::Issue_Concat_project_iid(gitlab::_db.cmdline.project,issuenum);
-    vrfy(id == assignee_id, tempstr() << Keyval("issue",issue) << Keyval("assignee",username));
+    tempstr issue = gitlab::Issue_Concat_project_iid(project.project,issuenum);
+    vrfy(id == assignee_id, tempstr()
+         << Keyval("issue",issue)
+         << Keyval("assignee",username)
+         << Keyval("comment","assignment failed")
+         );
     prlog("gitlab.success" << Keyval("issue",issue) << Keyval("assignee",username));
 }
 
@@ -896,12 +958,12 @@ static void AssertGitWorkDirClean() {
 
 // -----------------------------------------------------------------------------
 
-static void Main_DoIssueStart() {
+static void Main_DoIssueStart(gitlab::FProject &project) {
     vrfy_(gitlab::_db.unix_user.ch_n);
     vrfy(gitlab::_db.cmdline.issue.expr != "", "Please specify issue ID");
     int issuenum = gitlab::IssueArgNumber();
-    tempstr issuekey = gitlab::Issue_Concat_project_iid(gitlab::_db.cmdline.project, issuenum);
-    gitlab::FIssue *issue = LoadIssueMaybe(issuenum);
+    tempstr issuekey = gitlab::Issue_Concat_project_iid(project.project, issuenum);
+    gitlab::FIssue *issue = LoadIssueMaybe(issuenum,project);
     vrfy(issue,tempstr() << "Issue does not exist: " << issuekey);
 
     cstring commit_comment;
@@ -912,7 +974,7 @@ static void Main_DoIssueStart() {
 
     SysCmd(GitCmd("fetch"), FailokQ(false), DryrunQ(false), algo_EchoQ_true);
     tempstr co_cmd;
-    co_cmd << "checkout --no-track -b " << issuekey << " origin/master";
+    co_cmd << "checkout --no-track -b " << issuekey << " " << project.git_remote<<"/"<<project.git_branch;
     SysCmd(GitCmd(co_cmd), FailokQ(false), DryrunQ(false), algo_EchoQ_true);
 
     // strptr_ToBash is broken, so using temp file
@@ -926,7 +988,7 @@ static void Main_DoIssueStart() {
 
 // -----------------------------------------------------------------------------
 
-static void Main_DoMergeReq() {
+static void Main_DoMergeReq(gitlab::FProject &project) {
     AssertGitWorkDirClean();
 
     // git branch --show-current doesn't work on older gits
@@ -935,8 +997,8 @@ static void Main_DoMergeReq() {
     // (use temp string to avoid assigning substrin to itself)
     branch = tempstr() << Pathcomp(Trimmed(branch),"/RR");
     vrfy_(branch != "master");
-    SysCmd(GitCmd("push origin HEAD -f"), FailokQ(false), DryrunQ(false), algo_EchoQ_true);
-    int n_mr = CountMrForBranch(branch);
+    SysCmd(GitCmd(tempstr()<<"push "<<project.git_remote<<" HEAD -f"), FailokQ(false), DryrunQ(false), algo_EchoQ_true);
+    int n_mr = CountMrForBranch(branch,project);
 
     if (n_mr) {
         prlog("Merge request is already existing for this branch.");
@@ -983,13 +1045,9 @@ static void Main_DoMergeReq() {
     gitlab::FHttp http;
 
     http.request_method = gitlab_FHttp_request_method_POST;
-    http.request_uri << gitlab::_db.rest_api
-                     << "/projects/" << gitlab::_db.project_id
+    http.request_uri << project.rest_api
+                     << "/projects/" << project.project_id
                      << "/merge_requests";
-    request_header_Alloc(http) << gitlab::_db.http_auth_header;
-    request_header_Alloc(http) << "Accept: application/json";
-    request_header_Alloc(http) << "Content-Type: application/json";
-
     lib_json::FNode &obj = lib_json::NewObjectNode(NULL);
     lib_json::NewStringNode(&obj,"source_branch",branch);
     lib_json::NewStringNode(&obj,"target_branch","master");
@@ -998,7 +1056,7 @@ static void Main_DoMergeReq() {
     lib_json::JsonSerialize(&obj,http.request_body);
 
     // execute request
-    CurlExec(http);
+    CurlExec(http,project.http_auth_header);
 
     vrfy(http.response_status_code == 201, tempstr() << "Server request has failed:"
          << http.response_status_line);
@@ -1010,7 +1068,7 @@ static void Main_DoMergeReq() {
 
     // print result
     gitlab::Mr mr;
-    mr.mr = gitlab::Issue_Concat_project_iid(gitlab::_db.cmdline.project, u32_Get(&mr_obj,"iid"));
+    mr.mr = gitlab::Issue_Concat_project_iid(project.project, u32_Get(&mr_obj,"iid"));
     mr.title = strptr_Get(&mr_obj,"title");
     prlog(mr);
     cstring str;
@@ -1022,23 +1080,21 @@ static void Main_DoMergeReq() {
 
 // -----------------------------------------------------------------------------
 
-static void Main_DoMrAccept() {
+static void Main_DoMrAccept(gitlab::FProject &project) {
     int mrnum = gitlab::MrNumber(gitlab::_db.cmdline.mraccept);
 
     // prepare REST request
     gitlab::FHttp http;
 
     http.request_method = gitlab_FHttp_request_method_PUT;
-    http.request_uri << gitlab::_db.rest_api
-                     << "/projects/" << gitlab::_db.project_id
+    http.request_uri << project.rest_api
+                     << "/projects/" << project.project_id
                      << "/merge_requests/" << mrnum
                      << "/merge";
-    request_header_Alloc(http) << gitlab::_db.http_auth_header;
-
     // execute request
-    CurlExec(http);
+    CurlExec(http,project.http_auth_header);
 
-    tempstr mr = gitlab::Mr_Concat_project_iid(gitlab::_db.cmdline.project,mrnum);
+    tempstr mr = gitlab::Mr_Concat_project_iid(project.project,mrnum);
 
     vrfy(http.response_status_code != 405,  tempstr() << Keyval("mr",mr)
          << Keyval("reason","Merge request can not be accepted"));
@@ -1062,8 +1118,7 @@ static void Main_DoMrAccept() {
 void gitlab::Main() {
     Main_ManageEnv();
     Main_ManageAuth();
-    Main_ManageServer();
-    Main_ManageProject();
+    gitlab::FProject &project=*gitlab::_db.p_project;
 
     // Default -> display issue list
     if (!(_db.cmdline.iadd  || _db.cmdline.ic || _db.cmdline.istart || _db.cmdline.mrlist || _db.cmdline.mergereq
@@ -1073,47 +1128,47 @@ void gitlab::Main() {
     }
 
     if (gitlab::_db.cmdline.ilist) {
-        Main_LoadIssueList();
+        Main_LoadIssueList(project);
         Main_ShowIssueList();
     }
 
     if (gitlab::_db.cmdline.iadd) {
-        MaybeLoadUserList();
-        Main_DoIssueAdd();
+        MaybeLoadUserList(project);
+        Main_DoIssueAdd(project);
     }
 
     if (gitlab::_db.cmdline.ic) {
-        Main_DoIssueCommentAdd();
+        Main_DoIssueCommentAdd(project);
     }
 
     if (gitlab::_db.cmdline.istart) {
-        Main_DoIssueStart();
+        Main_DoIssueStart(project);
     }
 
     if (gitlab::_db.cmdline.mrlist) {
-        Main_LoadMrList();
+        Main_LoadMrList(project);
         Main_DoShowMrList();
     }
 
     if (gitlab::_db.cmdline.mergereq) {
-        Main_DoMergeReq();
+        Main_DoMergeReq(project);
     }
 
     if (gitlab::_db.cmdline.iclose) {
-        Main_DoIssueClose();
+        Main_DoIssueClose(project);
     }
 
     if (gitlab::_db.cmdline.ulist) {
-        MaybeLoadUserList();
+        MaybeLoadUserList(project);
         Main_ShowUserList();
     }
 
     if (gitlab::_db.cmdline.iassignto != "") {
-        MaybeLoadUserList();
-        Main_DoIssueAssign();
+        MaybeLoadUserList(project);
+        Main_DoIssueAssign(project);
     }
 
     if (gitlab::_db.cmdline.mraccept != "") {
-        Main_DoMrAccept();
+        Main_DoMrAccept(project);
     }
 }

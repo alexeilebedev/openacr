@@ -33,6 +33,7 @@ This file was created with 'atf_norm readme' from files in [txt/](txt/) -- *do n
    * [Testimonials](#testimonials)
    * [amc: Subprocess Invocation](#amc-subprocess-invocation)
    * [amc: Program Startup & Main](#amc-program-startup---main)
+   * [gitlab: Utility to help development workflow around gitlab](#gitlab-utility-to-help-development-workflow-around-gitlab)
 
 
 ## About
@@ -358,3 +359,6 @@ is replaced with the output of specified command. An example of such a command c
 
 ## amc: Program Startup & Main
 [See txt/amc/main.md](txt/amc/main.md)
+
+## gitlab: Utility to help development workflow around gitlab
+[See txt/gitlab.md](txt/gitlab.md)
