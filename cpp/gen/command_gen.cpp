@@ -152,10 +152,6 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_perf_secs     : ret = "perf_secs";  break;
         case command_FieldId_pertest_timeout: ret = "pertest_timeout";  break;
         case command_FieldId_capture       : ret = "capture";  break;
-        case command_FieldId_issue         : ret = "issue";  break;
-        case command_FieldId_server        : ret = "server";  break;
-        case command_FieldId_project       : ret = "project";  break;
-        case command_FieldId_auth_token    : ret = "auth_token";  break;
         case command_FieldId_mrlist        : ret = "mrlist";  break;
         case command_FieldId_mergereq      : ret = "mergereq";  break;
         case command_FieldId_ilist         : ret = "ilist";  break;
@@ -170,6 +166,8 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_assignee      : ret = "assignee";  break;
         case command_FieldId_ulist         : ret = "ulist";  break;
         case command_FieldId_mraccept      : ret = "mraccept";  break;
+        case command_FieldId_auth_token    : ret = "auth_token";  break;
+        case command_FieldId_host          : ret = "host";  break;
         case command_FieldId_complooo      : ret = "complooo";  break;
         case command_FieldId_args          : ret = "args";  break;
         case command_FieldId_manywin       : ret = "manywin";  break;
@@ -368,6 +366,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('h','a','s','h'): {
                     value_SetEnum(parent,command_FieldId_hash); ret = true; break;
                 }
+                case LE_STR4('h','o','s','t'): {
+                    value_SetEnum(parent,command_FieldId_host); ret = true; break;
+                }
                 case LE_STR4('i','a','d','d'): {
                     value_SetEnum(parent,command_FieldId_iadd); ret = true; break;
                 }
@@ -465,9 +466,6 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR5('i','l','i','s','t'): {
                     value_SetEnum(parent,command_FieldId_ilist); ret = true; break;
-                }
-                case LE_STR5('i','s','s','u','e'): {
-                    value_SetEnum(parent,command_FieldId_issue); ret = true; break;
                 }
                 case LE_STR5('l','o','o','s','e'): {
                     value_SetEnum(parent,command_FieldId_loose); ret = true; break;
@@ -612,9 +610,6 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('s','e','l','e','c','t'): {
                     value_SetEnum(parent,command_FieldId_select); ret = true; break;
                 }
-                case LE_STR6('s','e','r','v','e','r'): {
-                    value_SetEnum(parent,command_FieldId_server); ret = true; break;
-                }
                 case LE_STR6('s','u','b','s','e','t'): {
                     value_SetEnum(parent,command_FieldId_subset); ret = true; break;
                 }
@@ -712,9 +707,6 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('p','r','e','p','r','o','c'): {
                     value_SetEnum(parent,command_FieldId_preproc); ret = true; break;
-                }
-                case LE_STR7('p','r','o','j','e','c','t'): {
-                    value_SetEnum(parent,command_FieldId_project); ret = true; break;
                 }
                 case LE_STR7('r','e','f','t','y','p','e'): {
                     value_SetEnum(parent,command_FieldId_reftype); ret = true; break;
@@ -6829,18 +6821,18 @@ void command::bash_proc_Uninit(command::bash_proc& parent) {
     bash_Kill(parent); // kill child, ensure forward progress
 }
 
-// --- command.gitlab.issue.Print
+// --- command.gitlab.target.Print
 // Print back to string
-void command::issue_Print(command::gitlab& parent, algo::cstring &out) {
-    Regx_Print(parent.issue, out);
+void command::target_Print(command::gitlab& parent, algo::cstring &out) {
+    Regx_Print(parent.target, out);
 }
 
-// --- command.gitlab.issue.ReadStrptrMaybe
+// --- command.gitlab.target.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::issue_ReadStrptrMaybe(command::gitlab& parent, algo::strptr in) {
-    Regx_ReadSql(parent.issue, in, true);
-    bool retval = true;// !parent.issue.parseerror; -- TODO: uncomment
+bool command::target_ReadStrptrMaybe(command::gitlab& parent, algo::strptr in) {
+    Regx_ReadSql(parent.target, in, true);
+    bool retval = true;// !parent.target.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -6866,10 +6858,7 @@ bool command::gitlab_ReadFieldMaybe(command::gitlab &parent, algo::strptr field,
     bool retval = true; // default is no error
     switch(field_id) {
         case command_FieldId_in: retval = algo::cstring_ReadStrptrMaybe(parent.in, strval); break;
-        case command_FieldId_issue: retval = issue_ReadStrptrMaybe(parent, strval); break;
-        case command_FieldId_server: retval = algo::cstring_ReadStrptrMaybe(parent.server, strval); break;
-        case command_FieldId_project: retval = algo::cstring_ReadStrptrMaybe(parent.project, strval); break;
-        case command_FieldId_auth_token: retval = algo::cstring_ReadStrptrMaybe(parent.auth_token, strval); break;
+        case command_FieldId_target: retval = target_ReadStrptrMaybe(parent, strval); break;
         case command_FieldId_mrlist: retval = bool_ReadStrptrMaybe(parent.mrlist, strval); break;
         case command_FieldId_mergereq: retval = bool_ReadStrptrMaybe(parent.mergereq, strval); break;
         case command_FieldId_ilist: retval = bool_ReadStrptrMaybe(parent.ilist, strval); break;
@@ -6886,6 +6875,8 @@ bool command::gitlab_ReadFieldMaybe(command::gitlab &parent, algo::strptr field,
         case command_FieldId_assignee: retval = assignee_ReadStrptrMaybe(parent, strval); break;
         case command_FieldId_ulist: retval = bool_ReadStrptrMaybe(parent.ulist, strval); break;
         case command_FieldId_mraccept: retval = algo::cstring_ReadStrptrMaybe(parent.mraccept, strval); break;
+        case command_FieldId_auth_token: retval = algo::cstring_ReadStrptrMaybe(parent.auth_token, strval); break;
+        case command_FieldId_host: retval = algo::cstring_ReadStrptrMaybe(parent.host, strval); break;
         default: break;
     }
     if (!retval) {
@@ -6915,10 +6906,7 @@ bool command::gitlab_ReadTupleMaybe(command::gitlab &parent, algo::Tuple &tuple)
 // Set all fields to initial values.
 void command::gitlab_Init(command::gitlab& parent) {
     parent.in = algo::strptr("data");
-    Regx_ReadSql(parent.issue, "", true);
-    parent.server = algo::strptr("gitlab.lon.algo");
-    parent.project = algo::strptr("myproject");
-    parent.auth_token = algo::strptr("");
+    Regx_ReadSql(parent.target, "%", true);
     parent.mrlist = bool(false);
     parent.mergereq = bool(false);
     parent.ilist = bool(false);
@@ -6935,6 +6923,8 @@ void command::gitlab_Init(command::gitlab& parent) {
     Regx_ReadSql(parent.assignee, "", true);
     parent.ulist = bool(false);
     parent.mraccept = algo::strptr("");
+    parent.auth_token = algo::strptr("");
+    parent.host = algo::strptr("");
 }
 
 // --- command.gitlab..PrintArgv
@@ -6951,27 +6941,9 @@ void command::gitlab_PrintArgv(command::gitlab & row, algo::cstring &str) {
         strptr_PrintBash(temp,str);
     }
     ch_RemoveAll(temp);
-    command::issue_Print(const_cast<command::gitlab&>(row), temp);
+    command::target_Print(const_cast<command::gitlab&>(row), temp);
     str << " ";
     strptr_PrintBash(temp,str);
-    if (!(row.server == "gitlab.lon.algo")) {
-        ch_RemoveAll(temp);
-        cstring_Print(row.server, temp);
-        str << " -server:";
-        strptr_PrintBash(temp,str);
-    }
-    if (!(row.project == "myproject")) {
-        ch_RemoveAll(temp);
-        cstring_Print(row.project, temp);
-        str << " -project:";
-        strptr_PrintBash(temp,str);
-    }
-    if (!(row.auth_token == "")) {
-        ch_RemoveAll(temp);
-        cstring_Print(row.auth_token, temp);
-        str << " -auth_token:";
-        strptr_PrintBash(temp,str);
-    }
     if (!(row.mrlist == false)) {
         ch_RemoveAll(temp);
         bool_Print(row.mrlist, temp);
@@ -7068,6 +7040,18 @@ void command::gitlab_PrintArgv(command::gitlab & row, algo::cstring &str) {
         str << " -mraccept:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.auth_token == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.auth_token, temp);
+        str << " -auth_token:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.host == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.host, temp);
+        str << " -host:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.gitlab..ToCmdline
@@ -7091,7 +7075,7 @@ tempstr command::gitlab_ToCmdline(command::gitlab & row) {
 algo::strptr command::gitlab_GetAnon(command::gitlab &parent, i32 idx) {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
-        case(0): return strptr("issue", 5);
+        case(0): return strptr("target", 6);
         default: return algo::strptr();
     }
 }
@@ -7197,7 +7181,7 @@ void command::gitlab_ExecX(command::gitlab_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:gitlab.Argv
 int command::gitlab_Execv(command::gitlab_proc& parent) {
-    char *argv[42+2]; // start of first arg (future pointer)
+    char *argv[40+2]; // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -7211,31 +7195,10 @@ int command::gitlab_Execv(command::gitlab_proc& parent) {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
-    if (parent.cmd.issue.expr != "") {
+    if (parent.cmd.target.expr != "%") {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-issue:";
-        command::issue_Print(parent.cmd, temp);
-        ch_Alloc(temp) = 0;// NUL term for this arg
-    }
-
-    if (parent.cmd.server != "gitlab.lon.algo") {
-        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-server:";
-        cstring_Print(parent.cmd.server, temp);
-        ch_Alloc(temp) = 0;// NUL term for this arg
-    }
-
-    if (parent.cmd.project != "myproject") {
-        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-project:";
-        cstring_Print(parent.cmd.project, temp);
-        ch_Alloc(temp) = 0;// NUL term for this arg
-    }
-
-    if (parent.cmd.auth_token != "") {
-        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-auth_token:";
-        cstring_Print(parent.cmd.auth_token, temp);
+        temp << "-target:";
+        command::target_Print(parent.cmd, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
@@ -7348,6 +7311,20 @@ int command::gitlab_Execv(command::gitlab_proc& parent) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-mraccept:";
         cstring_Print(parent.cmd.mraccept, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.auth_token != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-auth_token:";
+        cstring_Print(parent.cmd.auth_token, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.host != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-host:";
+        cstring_Print(parent.cmd.host, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
     for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
@@ -11184,27 +11161,26 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::bash_proc,status) == 88);
     algo_assert(sizeof(command::bash_proc) == 96);
     algo_assert(_offset_of(command::gitlab,in) == 0);
-    algo_assert(_offset_of(command::gitlab,issue) == 16);
-    algo_assert(_offset_of(command::gitlab,server) == 112);
-    algo_assert(_offset_of(command::gitlab,project) == 128);
-    algo_assert(_offset_of(command::gitlab,auth_token) == 144);
-    algo_assert(_offset_of(command::gitlab,mrlist) == 160);
-    algo_assert(_offset_of(command::gitlab,mergereq) == 161);
-    algo_assert(_offset_of(command::gitlab,ilist) == 162);
-    algo_assert(_offset_of(command::gitlab,istart) == 163);
-    algo_assert(_offset_of(command::gitlab,t) == 164);
-    algo_assert(_offset_of(command::gitlab,iadd) == 165);
-    algo_assert(_offset_of(command::gitlab,ic) == 166);
-    algo_assert(_offset_of(command::gitlab,iclose) == 167);
-    algo_assert(_offset_of(command::gitlab,iassignto) == 168);
-    algo_assert(_offset_of(command::gitlab,title) == 224);
-    algo_assert(_offset_of(command::gitlab,description) == 240);
-    algo_assert(_offset_of(command::gitlab,comment) == 256);
-    algo_assert(_offset_of(command::gitlab,gitdir) == 272);
-    algo_assert(_offset_of(command::gitlab,assignee) == 288);
-    algo_assert(_offset_of(command::gitlab,ulist) == 384);
-    algo_assert(_offset_of(command::gitlab,mraccept) == 392);
-    algo_assert(sizeof(command::gitlab) == 408);
+    algo_assert(_offset_of(command::gitlab,target) == 16);
+    algo_assert(_offset_of(command::gitlab,mrlist) == 112);
+    algo_assert(_offset_of(command::gitlab,mergereq) == 113);
+    algo_assert(_offset_of(command::gitlab,ilist) == 114);
+    algo_assert(_offset_of(command::gitlab,istart) == 115);
+    algo_assert(_offset_of(command::gitlab,t) == 116);
+    algo_assert(_offset_of(command::gitlab,iadd) == 117);
+    algo_assert(_offset_of(command::gitlab,ic) == 118);
+    algo_assert(_offset_of(command::gitlab,iclose) == 119);
+    algo_assert(_offset_of(command::gitlab,iassignto) == 120);
+    algo_assert(_offset_of(command::gitlab,title) == 176);
+    algo_assert(_offset_of(command::gitlab,description) == 192);
+    algo_assert(_offset_of(command::gitlab,comment) == 208);
+    algo_assert(_offset_of(command::gitlab,gitdir) == 224);
+    algo_assert(_offset_of(command::gitlab,assignee) == 240);
+    algo_assert(_offset_of(command::gitlab,ulist) == 336);
+    algo_assert(_offset_of(command::gitlab,mraccept) == 344);
+    algo_assert(_offset_of(command::gitlab,auth_token) == 360);
+    algo_assert(_offset_of(command::gitlab,host) == 376);
+    algo_assert(sizeof(command::gitlab) == 392);
     algo_assert(_offset_of(command::lib_ctype,in) == 0);
     algo_assert(sizeof(command::lib_ctype) == 16);
     algo_assert(_offset_of(command::lib_exec,dry_run) == 0);

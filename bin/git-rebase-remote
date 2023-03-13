@@ -1,0 +1,11 @@
+#!/bin/sh
+ORIGIN=$1
+BRANCH=master
+git fetch
+# do this as a single command so that if reset fails, there is no commit attempt.
+git reset --soft $(git merge-base HEAD $ORIGIN/$BRANCH) && (
+    git commit -m "$(git log --format=%B --reverse HEAD..HEAD@{1})"
+    git commit --amend # allow editing comment
+)
+# keep-empty is needed so that base commit gets integrated
+git rebase --keep-empty --strategy=recursive  $ORIGIN/$BRANCH

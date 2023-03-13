@@ -8,10 +8,10 @@
 
 
 #pragma once
-#include "include/gen/command_gen.h"
 #include "include/gen/algo_gen.h"
-#include "include/gen/lib_json_gen.h"
+#include "include/gen/command_gen.h"
 #include "include/gen/dev_gen.h"
+#include "include/gen/lib_json_gen.h"
 //#pragma endinclude
 
 // --- gitlab_FHttp_request_method_Enum
@@ -36,9 +36,9 @@ enum { gitlab_FieldIdEnum_N = 1 };
 
 // --- gitlab_TableIdEnum
 
-enum gitlab_TableIdEnum {                      // gitlab.TableId.value
-     gitlab_TableId_dev_GitlabProject    = 0   // dev.GitlabProject -> gitlab.FProject
-    ,gitlab_TableId_dev_gitlab_project   = 0   // dev.gitlab_project -> gitlab.FProject
+enum gitlab_TableIdEnum {                   // gitlab.TableId.value
+     gitlab_TableId_dev_GitlabAuth    = 0   // dev.GitlabAuth -> gitlab.FGitlabAuth
+    ,gitlab_TableId_dev_gitlab_auth   = 0   // dev.gitlab_auth -> gitlab.FGitlabAuth
 };
 
 enum { gitlab_TableIdEnum_N = 2 };
@@ -55,6 +55,7 @@ namespace gitlab { struct MrNote; }
 namespace gitlab { struct User; }
 namespace gitlab { struct trace; }
 namespace gitlab { struct FDb; }
+namespace gitlab { struct FGitlabAuth; }
 namespace gitlab { struct FHttp; }
 namespace gitlab { struct FIssueDescription; }
 namespace gitlab { struct FIssueNote; }
@@ -63,8 +64,6 @@ namespace gitlab { struct FMrNote; }
 namespace gitlab { struct FUser; }
 namespace gitlab { struct FieldId; }
 namespace gitlab { struct TableId; }
-namespace gitlab { struct _db_project_curs; }
-namespace gitlab { struct _db_ind_project_curs; }
 namespace gitlab { struct _db_ind_issue_curs; }
 namespace gitlab { struct _db_issue_curs; }
 namespace gitlab { struct _db_issue_note_curs; }
@@ -77,6 +76,10 @@ namespace gitlab { struct _db_ind_mr_note_curs; }
 namespace gitlab { struct _db_mr_description_curs; }
 namespace gitlab { struct _db_user_curs; }
 namespace gitlab { struct _db_ind_user_curs; }
+namespace gitlab { struct _db_project_curs; }
+namespace gitlab { struct _db_ind_project_curs; }
+namespace gitlab { struct _db_gitlab_auth_curs; }
+namespace gitlab { struct _db_ind_gitlab_auth_curs; }
 namespace gitlab { struct FHttp_request_header_curs; }
 namespace gitlab { struct FHttp_response_header_curs; }
 namespace gitlab { struct issue_c_issue_note_curs; }
@@ -106,52 +109,52 @@ void                 trace_Print(gitlab::trace & row, algo::cstring &str) __attr
 // --- gitlab.FDb
 // create: gitlab.FDb._db (Global)
 struct FDb { // gitlab.FDb
-    command::gitlab              cmdline;                        //
-    algo::cstring                home;                           // User's HOME directory
-    algo::cstring                unix_user;                      // UNIX user login name
-    algo::cstring                auth_file_name;                 //   ".gitlab_auth"  Basename of the file where to store GitLab auth token
-    algo::cstring                auth_token;                     // GitLab auth token
-    algo::cstring                auth_file;                      // File where to store gitlab auth token
-    algo::cstring                usrmsg_no_token;                //   "Please supply personal access token via -auth_token option (could be done once). Visit <https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html> for directions. Token scope shall be 'api', i.e. whole GitLab API."  Message to show if no auth token
-    algo::cstring                http_auth_header;               // Ready-made HTTP authorization header
-    algo::cstring                rest_api;                       // Base URI of server REST API
-    gitlab::FProject*            project_lary[32];               // level array
-    i32                          project_n;                      // number of elements in array
-    u32                          project_id;                     //   0  Numeric project ID on gitlab server
-    gitlab::FProject**           ind_project_buckets_elems;      // pointer to bucket array
-    i32                          ind_project_buckets_n;          // number of elements in bucket array
-    i32                          ind_project_n;                  // number of elements in the hash table
-    gitlab::FIssue**             ind_issue_buckets_elems;        // pointer to bucket array
-    i32                          ind_issue_buckets_n;            // number of elements in bucket array
-    i32                          ind_issue_n;                    // number of elements in the hash table
-    gitlab::FIssue*              issue_lary[32];                 // level array
-    i32                          issue_n;                        // number of elements in array
-    gitlab::FIssueNote*          issue_note_lary[32];            // level array
-    i32                          issue_note_n;                   // number of elements in array
-    gitlab::FIssueNote**         ind_issue_note_buckets_elems;   // pointer to bucket array
-    i32                          ind_issue_note_buckets_n;       // number of elements in bucket array
-    i32                          ind_issue_note_n;               // number of elements in the hash table
-    gitlab::FIssueDescription*   issue_description_lary[32];     // level array
-    i32                          issue_description_n;            // number of elements in array
-    algo::cstring                editor;                         // Command line to invoke editor
-    gitlab::FMr**                ind_mr_buckets_elems;           // pointer to bucket array
-    i32                          ind_mr_buckets_n;               // number of elements in bucket array
-    i32                          ind_mr_n;                       // number of elements in the hash table
-    gitlab::FMr*                 mr_lary[32];                    // level array
-    i32                          mr_n;                           // number of elements in array
-    gitlab::FMrNote*             mr_note_lary[32];               // level array
-    i32                          mr_note_n;                      // number of elements in array
-    gitlab::FMrNote**            ind_mr_note_buckets_elems;      // pointer to bucket array
-    i32                          ind_mr_note_buckets_n;          // number of elements in bucket array
-    i32                          ind_mr_note_n;                  // number of elements in the hash table
-    gitlab::FMrDescription*      mr_description_lary[32];        // level array
-    i32                          mr_description_n;               // number of elements in array
-    gitlab::FUser*               user_lary[32];                  // level array
-    i32                          user_n;                         // number of elements in array
-    gitlab::FUser**              ind_user_buckets_elems;         // pointer to bucket array
-    i32                          ind_user_buckets_n;             // number of elements in bucket array
-    i32                          ind_user_n;                     // number of elements in the hash table
-    gitlab::trace                trace;                          //
+    algo::cstring                home;                            // User's HOME directory
+    algo::cstring                unix_user;                       // UNIX user login name
+    algo::cstring                auth_file;                       // name for projects file in ~/.ssim/
+    gitlab::FIssue**             ind_issue_buckets_elems;         // pointer to bucket array
+    i32                          ind_issue_buckets_n;             // number of elements in bucket array
+    i32                          ind_issue_n;                     // number of elements in the hash table
+    gitlab::FIssue*              issue_lary[32];                  // level array
+    i32                          issue_n;                         // number of elements in array
+    gitlab::FIssueNote*          issue_note_lary[32];             // level array
+    i32                          issue_note_n;                    // number of elements in array
+    gitlab::FIssueNote**         ind_issue_note_buckets_elems;    // pointer to bucket array
+    i32                          ind_issue_note_buckets_n;        // number of elements in bucket array
+    i32                          ind_issue_note_n;                // number of elements in the hash table
+    gitlab::FIssueDescription*   issue_description_lary[32];      // level array
+    i32                          issue_description_n;             // number of elements in array
+    algo::cstring                editor;                          // Command line to invoke editor
+    gitlab::FMr**                ind_mr_buckets_elems;            // pointer to bucket array
+    i32                          ind_mr_buckets_n;                // number of elements in bucket array
+    i32                          ind_mr_n;                        // number of elements in the hash table
+    gitlab::FMr*                 mr_lary[32];                     // level array
+    i32                          mr_n;                            // number of elements in array
+    gitlab::FMrNote*             mr_note_lary[32];                // level array
+    i32                          mr_note_n;                       // number of elements in array
+    gitlab::FMrNote**            ind_mr_note_buckets_elems;       // pointer to bucket array
+    i32                          ind_mr_note_buckets_n;           // number of elements in bucket array
+    i32                          ind_mr_note_n;                   // number of elements in the hash table
+    gitlab::FMrDescription*      mr_description_lary[32];         // level array
+    i32                          mr_description_n;                // number of elements in array
+    gitlab::FUser*               user_lary[32];                   // level array
+    i32                          user_n;                          // number of elements in array
+    gitlab::FUser**              ind_user_buckets_elems;          // pointer to bucket array
+    i32                          ind_user_buckets_n;              // number of elements in bucket array
+    i32                          ind_user_n;                      // number of elements in the hash table
+    gitlab::FProject*            project_lary[32];                // level array
+    i32                          project_n;                       // number of elements in array
+    gitlab::FProject**           ind_project_buckets_elems;       // pointer to bucket array
+    i32                          ind_project_buckets_n;           // number of elements in bucket array
+    i32                          ind_project_n;                   // number of elements in the hash table
+    gitlab::FProject*            p_project;                       // optional pointer
+    command::gitlab              cmdline;                         //
+    gitlab::FGitlabAuth*         gitlab_auth_lary[32];            // level array
+    i32                          gitlab_auth_n;                   // number of elements in array
+    gitlab::FGitlabAuth**        ind_gitlab_auth_buckets_elems;   // pointer to bucket array
+    i32                          ind_gitlab_auth_buckets_n;       // number of elements in bucket array
+    i32                          ind_gitlab_auth_n;               // number of elements in the hash table
+    gitlab::trace                trace;                           //
 };
 
 // Main function
@@ -168,56 +171,13 @@ void                 StaticCheck();
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
 bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
+// Save ssim data to given directory.
+u32                  SaveTuples(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
-
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-gitlab::FProject&    project_Alloc() __attribute__((__warn_unused_result__, nothrow));
-// Allocate memory for new element. If out of memory, return NULL.
-gitlab::FProject*    project_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gitlab::FProject*    project_InsertMaybe(const dev::GitlabProject &value) __attribute__((nothrow));
-// Allocate space for one element. If no memory available, return NULL.
-void*                project_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-bool                 project_EmptyQ() __attribute__((nothrow));
-// Look up row by row id. Return NULL if out of range
-gitlab::FProject*    project_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
-// Return pointer to last element of array, or NULL if array is empty
-gitlab::FProject*    project_Last() __attribute__((nothrow, pure));
-// Return number of items in the pool
-i32                  project_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Remove all elements from Lary
-void                 project_RemoveAll() __attribute__((nothrow));
-// Delete last element of array. Do nothing if array is empty.
-void                 project_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-gitlab::FProject&    project_qFind(u64 t) __attribute__((nothrow));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool                 project_XrefMaybe(gitlab::FProject &row);
-
-// Return true if hash is empty
-bool                 ind_project_EmptyQ() __attribute__((nothrow));
-// Find row by key. Return NULL if not found.
-gitlab::FProject*    ind_project_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
-// Look up row by key and return reference. Throw exception if not found
-gitlab::FProject&    ind_project_FindX(const algo::strptr& key);
-// Find row by key. If not found, create and x-reference a new row with with this key.
-gitlab::FProject&    ind_project_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
-// Return number of items in the hash
-i32                  ind_project_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool                 ind_project_InsertMaybe(gitlab::FProject& row) __attribute__((nothrow));
-// Remove reference to element from hash index. If element is not in hash, do nothing
-void                 ind_project_Remove(gitlab::FProject& row) __attribute__((nothrow));
-// Reserve enough room in the hash for N more elements. Return success code.
-void                 ind_project_Reserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 bool                 ind_issue_EmptyQ() __attribute__((nothrow));
@@ -492,14 +452,95 @@ void                 ind_user_Remove(gitlab::FUser& row) __attribute__((nothrow)
 // Reserve enough room in the hash for N more elements. Return success code.
 void                 ind_user_Reserve(int n) __attribute__((nothrow));
 
-// cursor points to valid item
-void                 _db_project_curs_Reset(_db_project_curs &curs, gitlab::FDb &parent);
-// cursor points to valid item
-bool                 _db_project_curs_ValidQ(_db_project_curs &curs);
-// proceed to next item
-void                 _db_project_curs_Next(_db_project_curs &curs);
-// item access
-gitlab::FProject&    _db_project_curs_Access(_db_project_curs &curs);
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+gitlab::FProject&    project_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+gitlab::FProject*    project_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                project_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 project_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+gitlab::FProject*    project_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+gitlab::FProject*    project_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  project_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 project_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 project_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+gitlab::FProject&    project_qFind(u64 t) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 project_XrefMaybe(gitlab::FProject &row);
+
+// Return true if hash is empty
+bool                 ind_project_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+gitlab::FProject*    ind_project_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+gitlab::FProject&    ind_project_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+gitlab::FProject&    ind_project_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+i32                  ind_project_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool                 ind_project_InsertMaybe(gitlab::FProject& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void                 ind_project_Remove(gitlab::FProject& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+void                 ind_project_Reserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+gitlab::FGitlabAuth& gitlab_auth_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+gitlab::FGitlabAuth* gitlab_auth_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+gitlab::FGitlabAuth* gitlab_auth_InsertMaybe(const dev::GitlabAuth &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                gitlab_auth_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 gitlab_auth_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+gitlab::FGitlabAuth* gitlab_auth_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+gitlab::FGitlabAuth* gitlab_auth_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  gitlab_auth_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 gitlab_auth_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 gitlab_auth_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+gitlab::FGitlabAuth& gitlab_auth_qFind(u64 t) __attribute__((nothrow));
+// Save table to ssimfile
+bool                 gitlab_auth_SaveSsimfile(algo::strptr fname) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 gitlab_auth_XrefMaybe(gitlab::FGitlabAuth &row);
+
+// Return true if hash is empty
+bool                 ind_gitlab_auth_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+gitlab::FGitlabAuth* ind_gitlab_auth_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+gitlab::FGitlabAuth& ind_gitlab_auth_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+gitlab::FGitlabAuth& ind_gitlab_auth_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+i32                  ind_gitlab_auth_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool                 ind_gitlab_auth_InsertMaybe(gitlab::FGitlabAuth& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void                 ind_gitlab_auth_Remove(gitlab::FGitlabAuth& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+void                 ind_gitlab_auth_Reserve(int n) __attribute__((nothrow));
+
 // cursor points to valid item
 void                 _db_issue_curs_Reset(_db_issue_curs &curs, gitlab::FDb &parent);
 // cursor points to valid item
@@ -556,9 +597,62 @@ bool                 _db_user_curs_ValidQ(_db_user_curs &curs);
 void                 _db_user_curs_Next(_db_user_curs &curs);
 // item access
 gitlab::FUser&       _db_user_curs_Access(_db_user_curs &curs);
+// cursor points to valid item
+void                 _db_project_curs_Reset(_db_project_curs &curs, gitlab::FDb &parent);
+// cursor points to valid item
+bool                 _db_project_curs_ValidQ(_db_project_curs &curs);
+// proceed to next item
+void                 _db_project_curs_Next(_db_project_curs &curs);
+// item access
+gitlab::FProject&    _db_project_curs_Access(_db_project_curs &curs);
+// cursor points to valid item
+void                 _db_gitlab_auth_curs_Reset(_db_gitlab_auth_curs &curs, gitlab::FDb &parent);
+// cursor points to valid item
+bool                 _db_gitlab_auth_curs_ValidQ(_db_gitlab_auth_curs &curs);
+// proceed to next item
+void                 _db_gitlab_auth_curs_Next(_db_gitlab_auth_curs &curs);
+// item access
+gitlab::FGitlabAuth& _db_gitlab_auth_curs_Access(_db_gitlab_auth_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
+
+// --- gitlab.FGitlabAuth
+// create: gitlab.FDb.gitlab_auth (Lary)
+// global access: ind_gitlab_auth (Thash)
+struct FGitlabAuth { // gitlab.FGitlabAuth
+    gitlab::FGitlabAuth*   ind_gitlab_auth_next;   // hash next
+    algo::Smallstr250      gitlab_auth;            // gitlab project name/access token
+    algo::cstring          url;                    // gitlab url
+    algo::cstring          default_branch;         //   "origin"  git remote used in the workflow
+    algo::cstring          id;                     // gitlab project id
+    algo::cstring          name_with_namespace;    //
+    algo::cstring          ssh_url_to_repo;        //
+    algo::cstring          web_url;                //
+    bool                   active;                 //   true  set to false to ignore the line but keep it in the file
+private:
+    friend gitlab::FGitlabAuth& gitlab_auth_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend gitlab::FGitlabAuth* gitlab_auth_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 gitlab_auth_RemoveAll() __attribute__((nothrow));
+    friend void                 gitlab_auth_RemoveLast() __attribute__((nothrow));
+    FGitlabAuth();
+    ~FGitlabAuth();
+    FGitlabAuth(const FGitlabAuth&){ /*disallow copy constructor */}
+    void operator =(const FGitlabAuth&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 gitlab_auth_CopyOut(gitlab::FGitlabAuth &row, dev::GitlabAuth &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 gitlab_auth_CopyIn(gitlab::FGitlabAuth &row, dev::GitlabAuth &in) __attribute__((nothrow));
+
+algo::cstring        proj_Get(gitlab::FGitlabAuth& gitlab_auth) __attribute__((__warn_unused_result__, nothrow));
+
+algo::cstring        token_Get(gitlab::FGitlabAuth& gitlab_auth) __attribute__((__warn_unused_result__, nothrow));
+
+// Set all fields to initial values.
+void                 FGitlabAuth_Init(gitlab::FGitlabAuth& gitlab_auth);
+void                 FGitlabAuth_Uninit(gitlab::FGitlabAuth& gitlab_auth) __attribute__((nothrow));
 
 // --- gitlab.FHttp
 struct FHttp { // gitlab.FHttp: HTTP request
@@ -716,12 +810,12 @@ struct FIssue { // gitlab.FIssue
     algo::Smallstr50             issue;                    // Identifier. must be in form project.iid
     algo::Smallstr50             assignee;                 // User the issue is assigned to
     algo::cstring                title;                    // Issue title
-    gitlab::FProject*            p_project;                // reference to parent row
     gitlab::FIssueNote**         c_issue_note_elems;       // array of pointers
     u32                          c_issue_note_n;           // array of pointers
     u32                          c_issue_note_max;         // capacity of allocated array
     gitlab::FIssueDescription*   c_issue_description;      // optional pointer
     bool                         select;                   //   false
+    gitlab::FProject*            p_project;                // reference to parent row
     bool                         project_c_issue_in_ary;   //   false  membership flag
 private:
     friend gitlab::FIssue&      issue_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -856,11 +950,11 @@ struct FMr { // gitlab.FMr
     algo::cstring             title;                 // Mr title
     algo::cstring             source_branch;         // Source branch
     algo::Smallstr20          pipeline_status;       // Pipeline status
-    gitlab::FProject*         p_project;             // reference to parent row
     gitlab::FMrNote**         c_mr_note_elems;       // array of pointers
     u32                       c_mr_note_n;           // array of pointers
     u32                       c_mr_note_max;         // capacity of allocated array
     gitlab::FMrDescription*   c_mr_description;      // optional pointer
+    gitlab::FProject*         p_project;             // reference to parent row
     bool                      project_c_mr_in_ary;   //   false  membership flag
 private:
     friend gitlab::FMr&         mr_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -986,20 +1080,23 @@ void                 FMrNote_Uninit(gitlab::FMrNote& mr_note) __attribute__((not
 // --- gitlab.FProject
 // create: gitlab.FDb.project (Lary)
 // global access: ind_project (Thash)
+// global access: p_project (Ptr)
 // access: gitlab.FIssue.p_project (Upptr)
 // access: gitlab.FMr.p_project (Upptr)
 struct FProject { // gitlab.FProject
-    gitlab::FProject*   ind_project_next;    // hash next
-    algo::Smallstr50    gitlab_project;      //
-    algo::Smallstr200   url;                 //
-    algo::Comment       comment;             //
-    u32                 gitlab_project_id;   //   0  Numeric project ID on gitlab server, displayed on project overview Web page
-    gitlab::FIssue**    c_issue_elems;       // array of pointers
-    u32                 c_issue_n;           // array of pointers
-    u32                 c_issue_max;         // capacity of allocated array
-    gitlab::FMr**       c_mr_elems;          // array of pointers
-    u32                 c_mr_n;              // array of pointers
-    u32                 c_mr_max;            // capacity of allocated array
+    gitlab::FProject*   ind_project_next;   // hash next
+    algo::cstring       rest_api;           // Base URI of server REST API
+    algo::cstring       http_auth_header;   // Ready-made HTTP authorization header
+    algo::Smallstr150   project;            //
+    algo::cstring       git_remote;         //
+    algo::cstring       git_branch;         //
+    algo::cstring       project_id;         //
+    gitlab::FIssue**    c_issue_elems;      // array of pointers
+    u32                 c_issue_n;          // array of pointers
+    u32                 c_issue_max;        // capacity of allocated array
+    gitlab::FMr**       c_mr_elems;         // array of pointers
+    u32                 c_mr_n;             // array of pointers
+    u32                 c_mr_max;           // capacity of allocated array
 private:
     friend gitlab::FProject&    project_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gitlab::FProject*    project_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -1010,11 +1107,6 @@ private:
     FProject(const FProject&){ /*disallow copy constructor */}
     void operator =(const FProject&){ /*disallow direct assignment */}
 };
-
-// Copy fields out of row
-void                 project_CopyOut(gitlab::FProject &row, dev::GitlabProject &out) __attribute__((nothrow));
-// Copy fields in to row
-void                 project_CopyIn(gitlab::FProject &row, dev::GitlabProject &in) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_issue_EmptyQ(gitlab::FProject& project) __attribute__((nothrow));
@@ -1283,14 +1375,6 @@ struct User { // gitlab.User
 // Set all fields to initial values.
 void                 User_Init(gitlab::User& parent);
 
-struct _db_project_curs {// cursor
-    typedef gitlab::FProject ChildType;
-    gitlab::FDb *parent;
-    i64 index;
-    _db_project_curs(){ parent=NULL; index=0; }
-};
-
-
 struct _db_issue_curs {// cursor
     typedef gitlab::FIssue ChildType;
     gitlab::FDb *parent;
@@ -1344,6 +1428,22 @@ struct _db_user_curs {// cursor
     gitlab::FDb *parent;
     i64 index;
     _db_user_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_project_curs {// cursor
+    typedef gitlab::FProject ChildType;
+    gitlab::FDb *parent;
+    i64 index;
+    _db_project_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_gitlab_auth_curs {// cursor
+    typedef gitlab::FGitlabAuth ChildType;
+    gitlab::FDb *parent;
+    i64 index;
+    _db_gitlab_auth_curs(){ parent=NULL; index=0; }
 };
 
 

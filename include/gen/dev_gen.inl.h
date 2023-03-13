@@ -117,6 +117,10 @@ inline dev::Gitinfo::Gitinfo(const algo::strptr&            in_gitinfo
 inline dev::Gitinfo::Gitinfo() {
 }
 
+inline dev::GitlabAuth::GitlabAuth() {
+    dev::GitlabAuth_Init(*this);
+}
+
 inline dev::GitlabProject::GitlabProject() {
     dev::GitlabProject_Init(*this);
 }
@@ -341,6 +345,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::FieldId &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Gitfile &row) {// cfmt:dev.Gitfile.String
     dev::Gitfile_Print(const_cast<dev::Gitfile&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::GitlabAuth &row) {// cfmt:dev.GitlabAuth.String
+    dev::GitlabAuth_Print(const_cast<dev::GitlabAuth&>(row), str);
     return str;
 }
 
