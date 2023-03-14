@@ -117,16 +117,10 @@ inline dev::Gitinfo::Gitinfo(const algo::strptr&            in_gitinfo
 inline dev::Gitinfo::Gitinfo() {
 }
 
-inline dev::GitlabProject::GitlabProject() {
-    dev::GitlabProject_Init(*this);
+inline dev::GitlabAuth::GitlabAuth() {
+    dev::GitlabAuth_Init(*this);
 }
 
-
-// --- dev.GitlabProject..Init
-// Set all fields to initial values.
-inline void dev::GitlabProject_Init(dev::GitlabProject& parent) {
-    parent.gitlab_project_id = u32(0);
-}
 inline dev::Htmlentity::Htmlentity() {
     dev::Htmlentity_Init(*this);
 }
@@ -344,8 +338,8 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Gitfile &
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::GitlabProject &row) {// cfmt:dev.GitlabProject.String
-    dev::GitlabProject_Print(const_cast<dev::GitlabProject&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::GitlabAuth &row) {// cfmt:dev.GitlabAuth.String
+    dev::GitlabAuth_Print(const_cast<dev::GitlabAuth&>(row), str);
     return str;
 }
 

@@ -1084,7 +1084,7 @@ static void ssim2mysql::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'ssim2mysql.Input'  signature:'7abba95113c0af13de74ea1e2904b75056b22891'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'ssim2mysql.Input'  signature:'37c5aaf8905ef5986c0c8365c74864d6f8ce03d5'");
 }
 
 // --- ssim2mysql.FDb._db.StaticCheck
@@ -3015,6 +3015,21 @@ void ssim2mysql::c_column_Reserve(ssim2mysql::FSsimfile& ssimfile, u32 n) {
     }
 }
 
+// --- ssim2mysql.FSsimfile..Init
+// Set all fields to initial values.
+void ssim2mysql::FSsimfile_Init(ssim2mysql::FSsimfile& ssimfile) {
+    ssimfile.select = bool(false);
+    ssimfile.p_ctype = NULL;
+    ssimfile.truncated = bool(false);
+    ssimfile.c_column_elems = NULL; // (ssim2mysql.FSsimfile.c_column)
+    ssimfile.c_column_n = 0; // (ssim2mysql.FSsimfile.c_column)
+    ssimfile.c_column_max = 0; // (ssim2mysql.FSsimfile.c_column)
+    ssimfile.ns_c_ssimfile_in_ary = bool(false);
+    ssimfile.ind_ssimfile_next = (ssim2mysql::FSsimfile*)-1; // (ssim2mysql.FDb.ind_ssimfile) not-in-hash
+    ssimfile.zd_ssimfile_next = (ssim2mysql::FSsimfile*)-1; // (ssim2mysql.FDb.zd_ssimfile) not-in-list
+    ssimfile.zd_ssimfile_prev = NULL; // (ssim2mysql.FDb.zd_ssimfile)
+}
+
 // --- ssim2mysql.FSsimfile..Uninit
 void ssim2mysql::FSsimfile_Uninit(ssim2mysql::FSsimfile& ssimfile) {
     ssim2mysql::FSsimfile &row = ssimfile; (void)row;
@@ -3044,6 +3059,9 @@ void ssim2mysql::FSsimfile_Print(ssim2mysql::FSsimfile & row, algo::cstring &str
 
     algo::Smallstr50_Print(row.ctype, temp);
     PrintAttrSpaceReset(str,"ctype", temp);
+
+    bool_Print(row.select, temp);
+    PrintAttrSpaceReset(str,"select", temp);
 
     bool_Print(row.truncated, temp);
     PrintAttrSpaceReset(str,"truncated", temp);

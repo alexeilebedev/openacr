@@ -30,25 +30,43 @@
 #include <sys/utsname.h> // for uname()
 
 // -----------------------------------------------------------------------------
-
-static void Main_Start() {
-    bool started=false;
-    // create mysql directory
-    CreateDirRecurse(acr_my::_db.data_dir);
-
+static tempstr MysqldSafeCmd(){
     tempstr cmd;
-    // assume mysqld_safe is in the path
     cmd << Subst(acr_my::_db.R, "mysqld_safe"
                  " --no-defaults"
+                 " --log-error=$data_logdir/mysqld.log"
+                 " --pid-file=$data_logdir/mysql_pid"
                  " --socket=$data_dir/mysql.sock"
-                 " --pid-file=$data_dir/mysql_pid"
                  " --datadir=$data_dir"
-                 " --log-error=$data_dir/mysqld.log"
-                 " --skip-grant-tables");
-
+                 " --skip-grant-tables"
+                 );
     if (!acr_my::_db.cmdline.serv) {
         cmd << " --skip-networking";
     }
+    return cmd;
+}
+// -----------------------------------------------------------------------------
+
+static void Main_Start() {
+    bool started=false;
+    // check if dir exist, and initialize if not
+    tempstr cmd;
+    if (!DirectoryQ(acr_my::_db.data_dir)){
+        // create mysql directory
+        CreateDirRecurse(acr_my::_db.data_dir);
+        // **VP** if logdir dir is the same as data_dir
+        // --initialize fails because it puts a record into data_dir
+        // and mysqld sees the dir as contaminated!
+        CreateDirRecurse(acr_my::_db.data_logdir);
+        // assume mysqld_safe is in the path
+        cmd << MysqldSafeCmd()
+            << " --initialize"
+            << " 1>/dev/null";
+        prlog("waiting for server init...");
+        SysCmd(cmd, FailokQ(false));
+    }
+    // assume mysqld_safe is in the path
+    cmd = MysqldSafeCmd();
     // In RH7, we use mariadb which requires innodb to be enabled.
     struct utsname my_uname;
     uname(&my_uname);
@@ -77,7 +95,7 @@ static void Main_Start() {
     if (!started) {
         prerr("acr_my.server_start_timeout"
               <<Keyval("comment","here are the last few lines of mysqld.log. perhaps it will help:"));
-        SysCmd(Subst(acr_my::_db.R,"tail -20 $data_dir/mysqld.log"));
+        SysCmd(Subst(acr_my::_db.R,"tail -20 $data_logdir/mysqld.log"));
         vrfy(0, "start failed");
     }
 }
@@ -109,7 +127,7 @@ static void Main_UploadNs(acr_my::FNsdb &nsdb) {
     // cat will hang if it is not passed a list of filenames!
     if (nfile > 0) {
         cmd << " | " << ssim2mysql_ToCmdline(ssim2mysql);
-        SysCmd(cmd, FailokQ(false));
+        SysCmd(cmd, FailokQ(false),DryrunQ(false),EchoQ(algo_lib::_db.cmdline.verbose));
     }
 }
 
@@ -136,25 +154,36 @@ static void Main_DownloadNs(acr_my::FNsdb &nsdb) {
     SysCmd(cmd, FailokQ(false));
 }
 
-static void Main_Download() {
-    ind_beg(acr_my::_db_nsdb_curs, nsdb, acr_my::_db) if (nsdb.select) {
-        Main_DownloadNs(nsdb);
-    }ind_end;
+// -----------------------------------------------------------------------------
+// returns 0 if mysqld is down
+// or its pid if it is up
+static int MysqlUpQ() {
+    int pid=0;
+    // recover pid from file
+    tempstr file_pid(Subst(acr_my::_db.R, "$data_logdir/mysql_pid"));
+    if (FileQ(file_pid)){
+        pid=ParseI32(algo::FileToString(file_pid,algo::FileFlags()),0);
+    }
+    // check if the process still active
+    if (!DirectoryQ(tempstr()<<"/proc/"<<pid<<"/fd")){
+        pid=0;
+    }
+    return pid;
 }
-
 // -----------------------------------------------------------------------------
 
-static bool MysqlUpQ(int pid) {
-    bool up = FileQ(Subst(acr_my::_db.R, "$data_dir/mysql_pid"));
-    up = up || (pid!=0 && DirectoryQ(tempstr()<<"/proc/"<<pid<<"/fd"));
-    return up;
+static void Main_Download() {
+    if (MysqlUpQ()){
+        ind_beg(acr_my::_db_nsdb_curs, nsdb, acr_my::_db) if (nsdb.select) {
+            Main_DownloadNs(nsdb);
+        }ind_end;
+    }
 }
 
 // -----------------------------------------------------------------------------
 
 static void Main_Stop() {
     int step=0;
-    int pid=ParseI32(algo::FileToString(Subst(acr_my::_db.R,"$data_dir/mysql_pid"),algo::FileFlags()),0);
     tempstr cmd = Subst(acr_my::_db.R
                         , "mysqladmin"
                         " --no-defaults"
@@ -163,10 +192,10 @@ static void Main_Stop() {
                         " shutdown"
                         " >/dev/null"
                         " 2>&1");
-    while (MysqlUpQ(pid)) {
+    while (MysqlUpQ()) {
         if (step%20==19) {
             prlog("acr_my.wait_shutdown"
-                  <<Keyval("pid",pid));
+                  <<Keyval("pid",MysqlUpQ()));
         }
         SysCmd(Zeroterm(cmd),FailokQ(true),DryrunQ(false));
         algo::SleepMsec(50);
@@ -209,6 +238,9 @@ void acr_my::Main() {
     // has to be a full pathname, otherwise mysql fails.
     acr_my::_db.data_dir << algo::GetCurDir() << "/temp/mysql";
     Set(acr_my::_db.R, "$data_dir", acr_my::_db.data_dir);
+    // log has to go to a different dir, otherwise mysql --initialise fails
+    acr_my::_db.data_logdir << algo::GetCurDir() << "/temp/mysql_log";
+    Set(acr_my::_db.R, "$data_logdir", acr_my::_db.data_logdir);
 
     ind_beg(acr_my::_db_nsdb_curs, nsdb,acr_my::_db) {
         bool match = Regx_Match(acr_my::_db.cmdline.nsdb, tempstr()<<nsdb.ns<<".");// allow dmmeta.% to match dmmeta

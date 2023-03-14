@@ -139,7 +139,7 @@ static void EofActions() {
         ssim2mysql::FNs &fns = ssim2mysql::ind_ns_FindX(ssim2mysql::_db.cmdline.db);
 
         // create foreign key constraints
-        ind_beg(ssim2mysql::ns_c_ssimfile_curs, ssimfile, fns) {
+        ind_beg(ssim2mysql::ns_c_ssimfile_curs, ssimfile, fns) if (ssimfile.select) {
             ind_beg(ssim2mysql::ctype_c_field_curs, field, *ssimfile.p_ctype) if (field.select && field.is_pkeyref) { // field, e.g. acmdb.Devchassis.chassis
                 ssim2mysql::FSsimfile *tgt_ssimfile = field.p_arg->c_ssimfile;// target ssimfile, e.g. acmdb.chassis
                 ssim2mysql::FField *tgt_field = c_field_Find(*field.p_arg, 0); // first field of target ctype, e.g. acmdb.Chassis.chassis
@@ -321,7 +321,7 @@ void ssim2mysql::zs_cmd_Step() {
         verblog(exec_cmd.cmd);
         if (!ssim2mysql::_db.cmdline.dry_run) {
             vrfy(mysql_query(lib_mysql::_db.mysql, Zeroterm(exec_cmd.cmd))==0
-                 , mysql_error(lib_mysql::_db.mysql));
+                 ,mysql_error(lib_mysql::_db.mysql));
         }
         ssim2mysql::cmd_Delete(exec_cmd);
     }
@@ -354,6 +354,12 @@ void ssim2mysql::Main() {
                                 , 0)
              , mysql_error(lib_mysql::_db.mysql));
     }
+    ind_beg(ssim2mysql::_db_ssimfile_curs, ssimfile, ssim2mysql::_db) {
+        // work only with ssimfiles that are present
+        // it is a legit case when ssimfile is absent
+        tempstr fname(SsimFname(ssim2mysql::_db.cmdline.data_dir, ssimfile.ssimfile));
+        ssimfile.select=FileQ(fname);
+    }ind_end;
 
     // Re-create database
     if (ssim2mysql::_db.cmdline.createdb) {
@@ -362,13 +368,13 @@ void ssim2mysql::Main() {
         NewCmd(tempstr() << "CREATE DATABASE `"<<ssim2mysql::_db.cmdline.db<<"` DEFAULT CHARACTER SET latin1 COLLATE latin1_general_cs;");
         NewCmd(tempstr() << "USE `"<<ssim2mysql::_db.cmdline.db<<"`;");
 
-        ind_beg(ssim2mysql::ns_c_ssimfile_curs, ssimfile,fns) {
+        ind_beg(ssim2mysql::ns_c_ssimfile_curs, ssimfile,fns) if (ssimfile.select){
             Main_GenSchema_Table(ssimfile);
         } ind_end;
     }
 
     // Create columns and fill in their properties
-    ind_beg(ssim2mysql::_db_ssimfile_curs, ssimfile, ssim2mysql::_db) {
+    ind_beg(ssim2mysql::_db_ssimfile_curs, ssimfile, ssim2mysql::_db) if (ssimfile.select){
         ssim2mysql::FCtype &ctype = *ssimfile.p_ctype;
         ind_beg(ssim2mysql::ctype_c_field_curs, field, ctype) if (!field.c_substr || ssim2mysql::_db.cmdline.fldfunc) {
             tempstr colkey;

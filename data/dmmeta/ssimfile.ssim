@@ -14,7 +14,7 @@ dmmeta.ssimfile  ssimfile:dev.cfg  ctype:dev.Cfg
 dmmeta.ssimfile  ssimfile:dev.compiler  ctype:dev.Compiler
 dmmeta.ssimfile  ssimfile:dev.gitfile  ctype:dev.Gitfile
 dmmeta.ssimfile  ssimfile:dev.gitinfo  ctype:dev.Gitinfo
-dmmeta.ssimfile  ssimfile:dev.gitlab_project  ctype:dev.GitlabProject
+dmmeta.ssimfile  ssimfile:dev.gitlab_auth  ctype:dev.GitlabAuth
 dmmeta.ssimfile  ssimfile:dev.htmlentity  ctype:dev.Htmlentity
 dmmeta.ssimfile  ssimfile:dev.license  ctype:dev.License
 dmmeta.ssimfile  ssimfile:dev.linelim  ctype:dev.Linelim

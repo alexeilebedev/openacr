@@ -1121,20 +1121,6 @@ inline void ssim2mysql::c_column_RemoveAll(ssim2mysql::FSsimfile& ssimfile) {
     ssimfile.c_column_n = 0;
 }
 
-// --- ssim2mysql.FSsimfile..Init
-// Set all fields to initial values.
-inline void ssim2mysql::FSsimfile_Init(ssim2mysql::FSsimfile& ssimfile) {
-    ssimfile.p_ctype = NULL;
-    ssimfile.truncated = bool(false);
-    ssimfile.c_column_elems = NULL; // (ssim2mysql.FSsimfile.c_column)
-    ssimfile.c_column_n = 0; // (ssim2mysql.FSsimfile.c_column)
-    ssimfile.c_column_max = 0; // (ssim2mysql.FSsimfile.c_column)
-    ssimfile.ns_c_ssimfile_in_ary = bool(false);
-    ssimfile.ind_ssimfile_next = (ssim2mysql::FSsimfile*)-1; // (ssim2mysql.FDb.ind_ssimfile) not-in-hash
-    ssimfile.zd_ssimfile_next = (ssim2mysql::FSsimfile*)-1; // (ssim2mysql.FDb.zd_ssimfile) not-in-list
-    ssimfile.zd_ssimfile_prev = NULL; // (ssim2mysql.FDb.zd_ssimfile)
-}
-
 // --- ssim2mysql.FSsimfile.c_column_curs.Reset
 inline void ssim2mysql::ssimfile_c_column_curs_Reset(ssimfile_c_column_curs &curs, ssim2mysql::FSsimfile &parent) {
     curs.elems = parent.c_column_elems;

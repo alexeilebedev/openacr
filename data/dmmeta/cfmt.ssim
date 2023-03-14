@@ -343,7 +343,7 @@ dmmeta.cfmt  cfmt:dev.Cfg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop
 dmmeta.cfmt  cfmt:dev.Compiler.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:N  comment:""
 dmmeta.cfmt  cfmt:dev.Gitfile.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:dev.Gitinfo.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:N  comment:""
-dmmeta.cfmt  cfmt:dev.GitlabProject.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+dmmeta.cfmt  cfmt:dev.GitlabAuth.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:dev.Htmlentity.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:dev.Include.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:dev.License.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""

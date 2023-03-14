@@ -8,68 +8,14 @@
 
 
 #pragma once
-#include "include/gen/command_gen.inl.h"
 #include "include/gen/algo_gen.inl.h"
-#include "include/gen/lib_json_gen.inl.h"
+#include "include/gen/command_gen.inl.h"
 #include "include/gen/dev_gen.inl.h"
+#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 inline gitlab::trace::trace() {
 }
 
-
-// --- gitlab.FDb.project.EmptyQ
-// Return true if index is empty
-inline bool gitlab::project_EmptyQ() {
-    return _db.project_n == 0;
-}
-
-// --- gitlab.FDb.project.Find
-// Look up row by row id. Return NULL if out of range
-inline gitlab::FProject* gitlab::project_Find(u64 t) {
-    gitlab::FProject *retval = NULL;
-    if (LIKELY(u64(t) < u64(_db.project_n))) {
-        u64 x = t + 1;
-        u64 bsr   = algo::u64_BitScanReverse(x);
-        u64 base  = u64(1)<<bsr;
-        u64 index = x-base;
-        retval = &_db.project_lary[bsr][index];
-    }
-    return retval;
-}
-
-// --- gitlab.FDb.project.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline gitlab::FProject* gitlab::project_Last() {
-    return project_Find(u64(_db.project_n-1));
-}
-
-// --- gitlab.FDb.project.N
-// Return number of items in the pool
-inline i32 gitlab::project_N() {
-    return _db.project_n;
-}
-
-// --- gitlab.FDb.project.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline gitlab::FProject& gitlab::project_qFind(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
-    return _db.project_lary[bsr][index];
-}
-
-// --- gitlab.FDb.ind_project.EmptyQ
-// Return true if hash is empty
-inline bool gitlab::ind_project_EmptyQ() {
-    return _db.ind_project_n == 0;
-}
-
-// --- gitlab.FDb.ind_project.N
-// Return number of items in the hash
-inline i32 gitlab::ind_project_N() {
-    return _db.ind_project_n;
-}
 
 // --- gitlab.FDb.ind_issue.EmptyQ
 // Return true if hash is empty
@@ -425,29 +371,112 @@ inline i32 gitlab::ind_user_N() {
     return _db.ind_user_n;
 }
 
-// --- gitlab.FDb.project_curs.Reset
-// cursor points to valid item
-inline void gitlab::_db_project_curs_Reset(_db_project_curs &curs, gitlab::FDb &parent) {
-    curs.parent = &parent;
-    curs.index = 0;
+// --- gitlab.FDb.project.EmptyQ
+// Return true if index is empty
+inline bool gitlab::project_EmptyQ() {
+    return _db.project_n == 0;
 }
 
-// --- gitlab.FDb.project_curs.ValidQ
-// cursor points to valid item
-inline bool gitlab::_db_project_curs_ValidQ(_db_project_curs &curs) {
-    return curs.index < _db.project_n;
+// --- gitlab.FDb.project.Find
+// Look up row by row id. Return NULL if out of range
+inline gitlab::FProject* gitlab::project_Find(u64 t) {
+    gitlab::FProject *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.project_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.project_lary[bsr][index];
+    }
+    return retval;
 }
 
-// --- gitlab.FDb.project_curs.Next
-// proceed to next item
-inline void gitlab::_db_project_curs_Next(_db_project_curs &curs) {
-    curs.index++;
+// --- gitlab.FDb.project.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline gitlab::FProject* gitlab::project_Last() {
+    return project_Find(u64(_db.project_n-1));
 }
 
-// --- gitlab.FDb.project_curs.Access
-// item access
-inline gitlab::FProject& gitlab::_db_project_curs_Access(_db_project_curs &curs) {
-    return project_qFind(u64(curs.index));
+// --- gitlab.FDb.project.N
+// Return number of items in the pool
+inline i32 gitlab::project_N() {
+    return _db.project_n;
+}
+
+// --- gitlab.FDb.project.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline gitlab::FProject& gitlab::project_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.project_lary[bsr][index];
+}
+
+// --- gitlab.FDb.ind_project.EmptyQ
+// Return true if hash is empty
+inline bool gitlab::ind_project_EmptyQ() {
+    return _db.ind_project_n == 0;
+}
+
+// --- gitlab.FDb.ind_project.N
+// Return number of items in the hash
+inline i32 gitlab::ind_project_N() {
+    return _db.ind_project_n;
+}
+
+// --- gitlab.FDb.gitlab_auth.EmptyQ
+// Return true if index is empty
+inline bool gitlab::gitlab_auth_EmptyQ() {
+    return _db.gitlab_auth_n == 0;
+}
+
+// --- gitlab.FDb.gitlab_auth.Find
+// Look up row by row id. Return NULL if out of range
+inline gitlab::FGitlabAuth* gitlab::gitlab_auth_Find(u64 t) {
+    gitlab::FGitlabAuth *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.gitlab_auth_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.gitlab_auth_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- gitlab.FDb.gitlab_auth.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline gitlab::FGitlabAuth* gitlab::gitlab_auth_Last() {
+    return gitlab_auth_Find(u64(_db.gitlab_auth_n-1));
+}
+
+// --- gitlab.FDb.gitlab_auth.N
+// Return number of items in the pool
+inline i32 gitlab::gitlab_auth_N() {
+    return _db.gitlab_auth_n;
+}
+
+// --- gitlab.FDb.gitlab_auth.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline gitlab::FGitlabAuth& gitlab::gitlab_auth_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.gitlab_auth_lary[bsr][index];
+}
+
+// --- gitlab.FDb.ind_gitlab_auth.EmptyQ
+// Return true if hash is empty
+inline bool gitlab::ind_gitlab_auth_EmptyQ() {
+    return _db.ind_gitlab_auth_n == 0;
+}
+
+// --- gitlab.FDb.ind_gitlab_auth.N
+// Return number of items in the hash
+inline i32 gitlab::ind_gitlab_auth_N() {
+    return _db.ind_gitlab_auth_n;
 }
 
 // --- gitlab.FDb.issue_curs.Reset
@@ -624,6 +653,64 @@ inline void gitlab::_db_user_curs_Next(_db_user_curs &curs) {
 inline gitlab::FUser& gitlab::_db_user_curs_Access(_db_user_curs &curs) {
     return user_qFind(u64(curs.index));
 }
+
+// --- gitlab.FDb.project_curs.Reset
+// cursor points to valid item
+inline void gitlab::_db_project_curs_Reset(_db_project_curs &curs, gitlab::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- gitlab.FDb.project_curs.ValidQ
+// cursor points to valid item
+inline bool gitlab::_db_project_curs_ValidQ(_db_project_curs &curs) {
+    return curs.index < _db.project_n;
+}
+
+// --- gitlab.FDb.project_curs.Next
+// proceed to next item
+inline void gitlab::_db_project_curs_Next(_db_project_curs &curs) {
+    curs.index++;
+}
+
+// --- gitlab.FDb.project_curs.Access
+// item access
+inline gitlab::FProject& gitlab::_db_project_curs_Access(_db_project_curs &curs) {
+    return project_qFind(u64(curs.index));
+}
+
+// --- gitlab.FDb.gitlab_auth_curs.Reset
+// cursor points to valid item
+inline void gitlab::_db_gitlab_auth_curs_Reset(_db_gitlab_auth_curs &curs, gitlab::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- gitlab.FDb.gitlab_auth_curs.ValidQ
+// cursor points to valid item
+inline bool gitlab::_db_gitlab_auth_curs_ValidQ(_db_gitlab_auth_curs &curs) {
+    return curs.index < _db.gitlab_auth_n;
+}
+
+// --- gitlab.FDb.gitlab_auth_curs.Next
+// proceed to next item
+inline void gitlab::_db_gitlab_auth_curs_Next(_db_gitlab_auth_curs &curs) {
+    curs.index++;
+}
+
+// --- gitlab.FDb.gitlab_auth_curs.Access
+// item access
+inline gitlab::FGitlabAuth& gitlab::_db_gitlab_auth_curs_Access(_db_gitlab_auth_curs &curs) {
+    return gitlab_auth_qFind(u64(curs.index));
+}
+inline gitlab::FGitlabAuth::FGitlabAuth() {
+    gitlab::FGitlabAuth_Init(*this);
+}
+
+inline gitlab::FGitlabAuth::~FGitlabAuth() {
+    gitlab::FGitlabAuth_Uninit(*this);
+}
+
 inline gitlab::FHttp::FHttp() {
     gitlab::FHttp_Init(*this);
 }
@@ -1168,7 +1255,6 @@ inline void gitlab::c_mr_RemoveAll(gitlab::FProject& project) {
 // --- gitlab.FProject..Init
 // Set all fields to initial values.
 inline void gitlab::FProject_Init(gitlab::FProject& project) {
-    project.gitlab_project_id = u32(0);
     project.c_issue_elems = NULL; // (gitlab.FProject.c_issue)
     project.c_issue_n = 0; // (gitlab.FProject.c_issue)
     project.c_issue_max = 0; // (gitlab.FProject.c_issue)

@@ -10,14 +10,14 @@
 #include "include/algo.h"  // hard-coded include
 #include "include/gen/gitlab_gen.h"
 #include "include/gen/gitlab_gen.inl.h"
-#include "include/gen/command_gen.h"
-#include "include/gen/command_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
+#include "include/gen/command_gen.h"
+#include "include/gen/command_gen.inl.h"
 #include "include/gen/dev_gen.h"
 #include "include/gen/dev_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
@@ -35,12 +35,9 @@ const char *gitlab_help =
 "gitlab: Gitlab command line interface\n"
 "Usage: gitlab [options]\n"
 "    -in           string  Input directory or filename, - for stdin. default: \"data\"\n"
-"    [issue]       string  Issue id (e.g. myproject.33, 33 or %)\n"
-"    -server       string  (config) GitLab server host. default: \"gitlab.lon.algo\"\n"
-"    -project      string  (config) Project to use. default: \"myproject\"\n"
-"    -auth_token   string  (config) GitLab auth token\n"
+"    [target]      string  Target id (e.g. issue myproject.33, 33 or % or project myproject). default: \"%\"\n"
 "    -mrlist               (action) Show list of merge requests. default: false\n"
-"    -mergereq             (action) Push current branch to origin, create merge request. default: false\n"
+"    -mergereq             (action) Push current branch to project git repo, create merge request. default: false\n"
 "    -ilist                (action) Show list of issues matching regx. default: false\n"
 "    -istart               (action) Start working on the specified issue. default: false\n"
 "    -t                    Tree view: expand issue description. default: false\n"
@@ -51,10 +48,12 @@ const char *gitlab_help =
 "    -title        string  (with -iadd), skip editor and use argument as title\n"
 "    -description  string  (with -iadd -title), use argument as description\n"
 "    -comment      string  (with -ic), skip editor and use argument as comment\n"
-"    -gitdir       string  (setup) Change directory of dit repository\n"
+"    -gitdir       string  (setup) Change directory of git repository\n"
 "    -assignee     string  Filter assignee. Default=current user only\n"
 "    -ulist                (action) List users. default: false\n"
 "    -mraccept     string  (action) Accept merge request\n"
+"    -auth_token   string  (init) GitLab auth token, requires host, adds record to  ~/.ssim/dev/gitlab_auth.ssim\n"
+"    -host         string  (init) GitLab url, like http://localhost, requires auth_token\n"
 "    -verbose              Enable verbose mode\n"
 "    -debug                Enable debug mode\n"
 "    -version              Show version information\n"
@@ -65,10 +64,7 @@ const char *gitlab_help =
 
 const char *gitlab_syntax =
 "-in:string=\"data\"\n"
-" [issue]:string=\n"
-" -server:string=\"gitlab.lon.algo\"\n"
-" -project:string=\"myproject\"\n"
-" -auth_token:string=\n"
+" [target]:string=\"%\"\n"
 " -mrlist:flag\n"
 " -mergereq:flag\n"
 " -ilist:flag\n"
@@ -85,12 +81,14 @@ const char *gitlab_syntax =
 " -assignee:string=\n"
 " -ulist:flag\n"
 " -mraccept:string=\n"
+" -auth_token:string=\n"
+" -host:string=\n"
 ;
 } // namespace gitlab
 namespace gitlab {
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
-    static bool          project_InputMaybe(dev::GitlabProject &elem) __attribute__((nothrow));
+    static bool          gitlab_auth_InputMaybe(dev::GitlabAuth &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
@@ -150,7 +148,7 @@ static void gitlab::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'gitlab.Input'  signature:'cd941ad82205e82576bcadd62546d69d72cdbca6'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'gitlab.Input'  signature:'774bc21221b341e4b3583b8c50dd6cbdfaabb10d'");
 }
 
 // --- gitlab.FDb._db.StaticCheck
@@ -166,10 +164,10 @@ bool gitlab::InsertStrptrMaybe(algo::strptr str) {
     gitlab::TableId table_id(-1);
     value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
     switch (value_GetEnum(table_id)) {
-        case gitlab_TableId_dev_GitlabProject: { // finput:gitlab.FDb.project
-            dev::GitlabProject elem;
-            retval = dev::GitlabProject_ReadStrptrMaybe(elem, str);
-            retval = retval && project_InputMaybe(elem);
+        case gitlab_TableId_dev_GitlabAuth: { // finput:gitlab.FDb.gitlab_auth
+            dev::GitlabAuth elem;
+            retval = dev::GitlabAuth_ReadStrptrMaybe(elem, str);
+            retval = retval && gitlab_auth_InputMaybe(elem);
             break;
         }
         default:
@@ -187,7 +185,7 @@ bool gitlab::InsertStrptrMaybe(algo::strptr str) {
 bool gitlab::LoadTuplesMaybe(algo::strptr root) {
     bool retval = true;
     static const char *ssimfiles[] = {
-        "dev.gitlab_project"
+        "dev.gitlab_auth"
         , NULL};
         retval = algo_lib::DoLoadTuples(root, gitlab::InsertStrptrMaybe, ssimfiles, true);
         return retval;
@@ -209,234 +207,6 @@ bool gitlab::LoadSsimfileMaybe(algo::strptr fname) {
 bool gitlab::_db_XrefMaybe() {
     bool retval = true;
     return retval;
-}
-
-// --- gitlab.FDb.project.Alloc
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-gitlab::FProject& gitlab::project_Alloc() {
-    gitlab::FProject* row = project_AllocMaybe();
-    if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("gitlab.out_of_mem  field:gitlab.FDb.project  comment:'Alloc failed'");
-    }
-    return *row;
-}
-
-// --- gitlab.FDb.project.AllocMaybe
-// Allocate memory for new element. If out of memory, return NULL.
-gitlab::FProject* gitlab::project_AllocMaybe() {
-    gitlab::FProject *row = (gitlab::FProject*)project_AllocMem();
-    if (row) {
-        new (row) gitlab::FProject; // call constructor
-    }
-    return row;
-}
-
-// --- gitlab.FDb.project.InsertMaybe
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gitlab::FProject* gitlab::project_InsertMaybe(const dev::GitlabProject &value) {
-    gitlab::FProject *row = &project_Alloc(); // if out of memory, process dies. if input error, return NULL.
-    project_CopyIn(*row,const_cast<dev::GitlabProject&>(value));
-    bool ok = project_XrefMaybe(*row); // this may return false
-    if (!ok) {
-        project_RemoveLast(); // delete offending row, any existing xrefs are cleared
-        row = NULL; // forget this ever happened
-    }
-    return row;
-}
-
-// --- gitlab.FDb.project.AllocMem
-// Allocate space for one element. If no memory available, return NULL.
-void* gitlab::project_AllocMem() {
-    u64 new_nelems     = _db.project_n+1;
-    // compute level and index on level
-    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
-    u64 base  = u64(1)<<bsr;
-    u64 index = new_nelems-base;
-    void *ret = NULL;
-    // if level doesn't exist yet, create it
-    gitlab::FProject*  lev   = NULL;
-    if (bsr < 32) {
-        lev = _db.project_lary[bsr];
-        if (!lev) {
-            lev=(gitlab::FProject*)algo_lib::malloc_AllocMem(sizeof(gitlab::FProject) * (u64(1)<<bsr));
-            _db.project_lary[bsr] = lev;
-        }
-    }
-    // allocate element from this level
-    if (lev) {
-        _db.project_n = new_nelems;
-        ret = lev + index;
-    }
-    return ret;
-}
-
-// --- gitlab.FDb.project.RemoveAll
-// Remove all elements from Lary
-void gitlab::project_RemoveAll() {
-    for (u64 n = _db.project_n; n>0; ) {
-        n--;
-        project_qFind(u64(n)).~FProject(); // destroy last element
-        _db.project_n = n;
-    }
-}
-
-// --- gitlab.FDb.project.RemoveLast
-// Delete last element of array. Do nothing if array is empty.
-void gitlab::project_RemoveLast() {
-    u64 n = _db.project_n;
-    if (n > 0) {
-        n -= 1;
-        project_qFind(u64(n)).~FProject();
-        _db.project_n = n;
-    }
-}
-
-// --- gitlab.FDb.project.InputMaybe
-static bool gitlab::project_InputMaybe(dev::GitlabProject &elem) {
-    bool retval = true;
-    retval = project_InsertMaybe(elem);
-    return retval;
-}
-
-// --- gitlab.FDb.project.XrefMaybe
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool gitlab::project_XrefMaybe(gitlab::FProject &row) {
-    bool retval = true;
-    (void)row;
-    // insert project into index ind_project
-    if (true) { // user-defined insert condition
-        bool success = ind_project_InsertMaybe(row);
-        if (UNLIKELY(!success)) {
-            ch_RemoveAll(algo_lib::_db.errtext);
-            algo_lib::_db.errtext << "gitlab.duplicate_key  xref:gitlab.FDb.ind_project"; // check for duplicate key
-            return false;
-        }
-    }
-    return retval;
-}
-
-// --- gitlab.FDb.ind_project.Find
-// Find row by key. Return NULL if not found.
-gitlab::FProject* gitlab::ind_project_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_project_buckets_n - 1);
-    gitlab::FProject* *e = &_db.ind_project_buckets_elems[index];
-    gitlab::FProject* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).gitlab_project == key;
-        if (done) break;
-        e         = &ret->ind_project_next;
-    } while (true);
-    return ret;
-}
-
-// --- gitlab.FDb.ind_project.FindX
-// Look up row by key and return reference. Throw exception if not found
-gitlab::FProject& gitlab::ind_project_FindX(const algo::strptr& key) {
-    gitlab::FProject* ret = ind_project_Find(key);
-    vrfy(ret, tempstr() << "gitlab.key_error  table:ind_project  key:'"<<key<<"'  comment:'key not found'");
-    return *ret;
-}
-
-// --- gitlab.FDb.ind_project.GetOrCreate
-// Find row by key. If not found, create and x-reference a new row with with this key.
-gitlab::FProject& gitlab::ind_project_GetOrCreate(const algo::strptr& key) {
-    gitlab::FProject* ret = ind_project_Find(key);
-    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
-        ret         = &project_Alloc();
-        (*ret).gitlab_project = key;
-        bool good = project_XrefMaybe(*ret);
-        if (!good) {
-            project_RemoveLast(); // delete offending row, any existing xrefs are cleared
-            ret = NULL;
-        }
-    }
-    return *ret;
-}
-
-// --- gitlab.FDb.ind_project.InsertMaybe
-// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gitlab::ind_project_InsertMaybe(gitlab::FProject& row) {
-    ind_project_Reserve(1);
-    bool retval = true; // if already in hash, InsertMaybe returns true
-    if (LIKELY(row.ind_project_next == (gitlab::FProject*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.gitlab_project) & (_db.ind_project_buckets_n - 1);
-        gitlab::FProject* *prev = &_db.ind_project_buckets_elems[index];
-        do {
-            gitlab::FProject* ret = *prev;
-            if (!ret) { // exit condition 1: reached the end of the list
-                break;
-            }
-            if ((*ret).gitlab_project == row.gitlab_project) { // exit condition 2: found matching key
-                retval = false;
-                break;
-            }
-            prev = &ret->ind_project_next;
-        } while (true);
-        if (retval) {
-            row.ind_project_next = *prev;
-            _db.ind_project_n++;
-            *prev = &row;
-        }
-    }
-    return retval;
-}
-
-// --- gitlab.FDb.ind_project.Remove
-// Remove reference to element from hash index. If element is not in hash, do nothing
-void gitlab::ind_project_Remove(gitlab::FProject& row) {
-    if (LIKELY(row.ind_project_next != (gitlab::FProject*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.gitlab_project) & (_db.ind_project_buckets_n - 1);
-        gitlab::FProject* *prev = &_db.ind_project_buckets_elems[index]; // addr of pointer to current element
-        while (gitlab::FProject *next = *prev) {                          // scan the collision chain for our element
-            if (next == &row) {        // found it?
-                *prev = next->ind_project_next; // unlink (singly linked list)
-                _db.ind_project_n--;
-                row.ind_project_next = (gitlab::FProject*)-1;// not-in-hash
-                break;
-            }
-            prev = &next->ind_project_next;
-        }
-    }
-}
-
-// --- gitlab.FDb.ind_project.Reserve
-// Reserve enough room in the hash for N more elements. Return success code.
-void gitlab::ind_project_Reserve(int n) {
-    u32 old_nbuckets = _db.ind_project_buckets_n;
-    u32 new_nelems   = _db.ind_project_n + n;
-    // # of elements has to be roughly equal to the number of buckets
-    if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
-        u32 old_size = old_nbuckets * sizeof(gitlab::FProject*);
-        u32 new_size = new_nbuckets * sizeof(gitlab::FProject*);
-        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
-        // means new memory will have to be allocated anyway
-        gitlab::FProject* *new_buckets = (gitlab::FProject**)algo_lib::malloc_AllocMem(new_size);
-        if (UNLIKELY(!new_buckets)) {
-            FatalErrorExit("gitlab.out_of_memory  field:gitlab.FDb.ind_project");
-        }
-        memset(new_buckets, 0, new_size); // clear pointers
-        // rehash all entries
-        for (int i = 0; i < _db.ind_project_buckets_n; i++) {
-            gitlab::FProject* elem = _db.ind_project_buckets_elems[i];
-            while (elem) {
-                gitlab::FProject &row        = *elem;
-                gitlab::FProject* next       = row.ind_project_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.gitlab_project) & (new_nbuckets-1);
-                row.ind_project_next     = new_buckets[index];
-                new_buckets[index] = &row;
-                elem               = next;
-            }
-        }
-        // free old array
-        algo_lib::malloc_FreeMem(_db.ind_project_buckets_elems, old_size);
-        _db.ind_project_buckets_elems = new_buckets;
-        _db.ind_project_buckets_n = new_nbuckets;
-    }
 }
 
 // --- gitlab.FDb.ind_issue.Find
@@ -641,10 +411,6 @@ bool gitlab::issue_XrefMaybe(gitlab::FIssue &row) {
     if (true) { // user-defined insert condition
         row.p_project = p_project;
     }
-    // insert issue into index c_issue
-    if (true) { // user-defined insert condition
-        c_issue_Insert(*p_project, row);
-    }
     // insert issue into index ind_issue
     if (true) { // user-defined insert condition
         bool success = ind_issue_InsertMaybe(row);
@@ -653,6 +419,10 @@ bool gitlab::issue_XrefMaybe(gitlab::FIssue &row) {
             algo_lib::_db.errtext << "gitlab.duplicate_key  xref:gitlab.FDb.ind_issue"; // check for duplicate key
             return false;
         }
+    }
+    // insert issue into index c_issue
+    if (true) { // user-defined insert condition
+        c_issue_Insert(*p_project, row);
     }
     return retval;
 }
@@ -1186,10 +956,6 @@ bool gitlab::mr_XrefMaybe(gitlab::FMr &row) {
     if (true) { // user-defined insert condition
         row.p_project = p_project;
     }
-    // insert mr into index c_mr
-    if (true) { // user-defined insert condition
-        c_mr_Insert(*p_project, row);
-    }
     // insert mr into index ind_mr
     if (true) { // user-defined insert condition
         bool success = ind_mr_InsertMaybe(row);
@@ -1198,6 +964,10 @@ bool gitlab::mr_XrefMaybe(gitlab::FMr &row) {
             algo_lib::_db.errtext << "gitlab.duplicate_key  xref:gitlab.FDb.ind_mr"; // check for duplicate key
             return false;
         }
+    }
+    // insert mr into index c_mr
+    if (true) { // user-defined insert condition
+        c_mr_Insert(*p_project, row);
     }
     return retval;
 }
@@ -1750,6 +1520,441 @@ void gitlab::ind_user_Reserve(int n) {
     }
 }
 
+// --- gitlab.FDb.project.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+gitlab::FProject& gitlab::project_Alloc() {
+    gitlab::FProject* row = project_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("gitlab.out_of_mem  field:gitlab.FDb.project  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- gitlab.FDb.project.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+gitlab::FProject* gitlab::project_AllocMaybe() {
+    gitlab::FProject *row = (gitlab::FProject*)project_AllocMem();
+    if (row) {
+        new (row) gitlab::FProject; // call constructor
+    }
+    return row;
+}
+
+// --- gitlab.FDb.project.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* gitlab::project_AllocMem() {
+    u64 new_nelems     = _db.project_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    gitlab::FProject*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.project_lary[bsr];
+        if (!lev) {
+            lev=(gitlab::FProject*)algo_lib::malloc_AllocMem(sizeof(gitlab::FProject) * (u64(1)<<bsr));
+            _db.project_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.project_n = new_nelems;
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- gitlab.FDb.project.RemoveAll
+// Remove all elements from Lary
+void gitlab::project_RemoveAll() {
+    for (u64 n = _db.project_n; n>0; ) {
+        n--;
+        project_qFind(u64(n)).~FProject(); // destroy last element
+        _db.project_n = n;
+    }
+}
+
+// --- gitlab.FDb.project.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void gitlab::project_RemoveLast() {
+    u64 n = _db.project_n;
+    if (n > 0) {
+        n -= 1;
+        project_qFind(u64(n)).~FProject();
+        _db.project_n = n;
+    }
+}
+
+// --- gitlab.FDb.project.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool gitlab::project_XrefMaybe(gitlab::FProject &row) {
+    bool retval = true;
+    (void)row;
+    // insert project into index ind_project
+    if (true) { // user-defined insert condition
+        bool success = ind_project_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "gitlab.duplicate_key  xref:gitlab.FDb.ind_project"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- gitlab.FDb.ind_project.Find
+// Find row by key. Return NULL if not found.
+gitlab::FProject* gitlab::ind_project_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr150_Hash(0, key) & (_db.ind_project_buckets_n - 1);
+    gitlab::FProject* *e = &_db.ind_project_buckets_elems[index];
+    gitlab::FProject* ret=NULL;
+    do {
+        ret       = *e;
+        bool done = !ret || (*ret).project == key;
+        if (done) break;
+        e         = &ret->ind_project_next;
+    } while (true);
+    return ret;
+}
+
+// --- gitlab.FDb.ind_project.FindX
+// Look up row by key and return reference. Throw exception if not found
+gitlab::FProject& gitlab::ind_project_FindX(const algo::strptr& key) {
+    gitlab::FProject* ret = ind_project_Find(key);
+    vrfy(ret, tempstr() << "gitlab.key_error  table:ind_project  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- gitlab.FDb.ind_project.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+gitlab::FProject& gitlab::ind_project_GetOrCreate(const algo::strptr& key) {
+    gitlab::FProject* ret = ind_project_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &project_Alloc();
+        (*ret).project = key;
+        bool good = project_XrefMaybe(*ret);
+        if (!good) {
+            project_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return *ret;
+}
+
+// --- gitlab.FDb.ind_project.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool gitlab::ind_project_InsertMaybe(gitlab::FProject& row) {
+    ind_project_Reserve(1);
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_project_next == (gitlab::FProject*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr150_Hash(0, row.project) & (_db.ind_project_buckets_n - 1);
+        gitlab::FProject* *prev = &_db.ind_project_buckets_elems[index];
+        do {
+            gitlab::FProject* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).project == row.project) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_project_next;
+        } while (true);
+        if (retval) {
+            row.ind_project_next = *prev;
+            _db.ind_project_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- gitlab.FDb.ind_project.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void gitlab::ind_project_Remove(gitlab::FProject& row) {
+    if (LIKELY(row.ind_project_next != (gitlab::FProject*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr150_Hash(0, row.project) & (_db.ind_project_buckets_n - 1);
+        gitlab::FProject* *prev = &_db.ind_project_buckets_elems[index]; // addr of pointer to current element
+        while (gitlab::FProject *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_project_next; // unlink (singly linked list)
+                _db.ind_project_n--;
+                row.ind_project_next = (gitlab::FProject*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_project_next;
+        }
+    }
+}
+
+// --- gitlab.FDb.ind_project.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void gitlab::ind_project_Reserve(int n) {
+    u32 old_nbuckets = _db.ind_project_buckets_n;
+    u32 new_nelems   = _db.ind_project_n + n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(gitlab::FProject*);
+        u32 new_size = new_nbuckets * sizeof(gitlab::FProject*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        gitlab::FProject* *new_buckets = (gitlab::FProject**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("gitlab.out_of_memory  field:gitlab.FDb.ind_project");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_project_buckets_n; i++) {
+            gitlab::FProject* elem = _db.ind_project_buckets_elems[i];
+            while (elem) {
+                gitlab::FProject &row        = *elem;
+                gitlab::FProject* next       = row.ind_project_next;
+                u32 index          = algo::Smallstr150_Hash(0, row.project) & (new_nbuckets-1);
+                row.ind_project_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_project_buckets_elems, old_size);
+        _db.ind_project_buckets_elems = new_buckets;
+        _db.ind_project_buckets_n = new_nbuckets;
+    }
+}
+
+// --- gitlab.FDb.gitlab_auth.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+gitlab::FGitlabAuth& gitlab::gitlab_auth_Alloc() {
+    gitlab::FGitlabAuth* row = gitlab_auth_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("gitlab.out_of_mem  field:gitlab.FDb.gitlab_auth  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- gitlab.FDb.gitlab_auth.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+gitlab::FGitlabAuth* gitlab::gitlab_auth_AllocMaybe() {
+    gitlab::FGitlabAuth *row = (gitlab::FGitlabAuth*)gitlab_auth_AllocMem();
+    if (row) {
+        new (row) gitlab::FGitlabAuth; // call constructor
+    }
+    return row;
+}
+
+// --- gitlab.FDb.gitlab_auth.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+gitlab::FGitlabAuth* gitlab::gitlab_auth_InsertMaybe(const dev::GitlabAuth &value) {
+    gitlab::FGitlabAuth *row = &gitlab_auth_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    gitlab_auth_CopyIn(*row,const_cast<dev::GitlabAuth&>(value));
+    bool ok = gitlab_auth_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        gitlab_auth_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- gitlab.FDb.gitlab_auth.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* gitlab::gitlab_auth_AllocMem() {
+    u64 new_nelems     = _db.gitlab_auth_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    gitlab::FGitlabAuth*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.gitlab_auth_lary[bsr];
+        if (!lev) {
+            lev=(gitlab::FGitlabAuth*)algo_lib::malloc_AllocMem(sizeof(gitlab::FGitlabAuth) * (u64(1)<<bsr));
+            _db.gitlab_auth_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.gitlab_auth_n = new_nelems;
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- gitlab.FDb.gitlab_auth.RemoveAll
+// Remove all elements from Lary
+void gitlab::gitlab_auth_RemoveAll() {
+    for (u64 n = _db.gitlab_auth_n; n>0; ) {
+        n--;
+        gitlab_auth_qFind(u64(n)).~FGitlabAuth(); // destroy last element
+        _db.gitlab_auth_n = n;
+    }
+}
+
+// --- gitlab.FDb.gitlab_auth.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void gitlab::gitlab_auth_RemoveLast() {
+    u64 n = _db.gitlab_auth_n;
+    if (n > 0) {
+        n -= 1;
+        gitlab_auth_qFind(u64(n)).~FGitlabAuth();
+        _db.gitlab_auth_n = n;
+    }
+}
+
+// --- gitlab.FDb.gitlab_auth.InputMaybe
+static bool gitlab::gitlab_auth_InputMaybe(dev::GitlabAuth &elem) {
+    bool retval = true;
+    retval = gitlab_auth_InsertMaybe(elem);
+    return retval;
+}
+
+// --- gitlab.FDb.gitlab_auth.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool gitlab::gitlab_auth_XrefMaybe(gitlab::FGitlabAuth &row) {
+    bool retval = true;
+    (void)row;
+    // insert gitlab_auth into index ind_gitlab_auth
+    if (true) { // user-defined insert condition
+        bool success = ind_gitlab_auth_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "gitlab.duplicate_key  xref:gitlab.FDb.ind_gitlab_auth"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- gitlab.FDb.ind_gitlab_auth.Find
+// Find row by key. Return NULL if not found.
+gitlab::FGitlabAuth* gitlab::ind_gitlab_auth_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_gitlab_auth_buckets_n - 1);
+    gitlab::FGitlabAuth* *e = &_db.ind_gitlab_auth_buckets_elems[index];
+    gitlab::FGitlabAuth* ret=NULL;
+    do {
+        ret       = *e;
+        bool done = !ret || (*ret).gitlab_auth == key;
+        if (done) break;
+        e         = &ret->ind_gitlab_auth_next;
+    } while (true);
+    return ret;
+}
+
+// --- gitlab.FDb.ind_gitlab_auth.FindX
+// Look up row by key and return reference. Throw exception if not found
+gitlab::FGitlabAuth& gitlab::ind_gitlab_auth_FindX(const algo::strptr& key) {
+    gitlab::FGitlabAuth* ret = ind_gitlab_auth_Find(key);
+    vrfy(ret, tempstr() << "gitlab.key_error  table:ind_gitlab_auth  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- gitlab.FDb.ind_gitlab_auth.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+gitlab::FGitlabAuth& gitlab::ind_gitlab_auth_GetOrCreate(const algo::strptr& key) {
+    gitlab::FGitlabAuth* ret = ind_gitlab_auth_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &gitlab_auth_Alloc();
+        (*ret).gitlab_auth = key;
+        bool good = gitlab_auth_XrefMaybe(*ret);
+        if (!good) {
+            gitlab_auth_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return *ret;
+}
+
+// --- gitlab.FDb.ind_gitlab_auth.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool gitlab::ind_gitlab_auth_InsertMaybe(gitlab::FGitlabAuth& row) {
+    ind_gitlab_auth_Reserve(1);
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_gitlab_auth_next == (gitlab::FGitlabAuth*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr250_Hash(0, row.gitlab_auth) & (_db.ind_gitlab_auth_buckets_n - 1);
+        gitlab::FGitlabAuth* *prev = &_db.ind_gitlab_auth_buckets_elems[index];
+        do {
+            gitlab::FGitlabAuth* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).gitlab_auth == row.gitlab_auth) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_gitlab_auth_next;
+        } while (true);
+        if (retval) {
+            row.ind_gitlab_auth_next = *prev;
+            _db.ind_gitlab_auth_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- gitlab.FDb.ind_gitlab_auth.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void gitlab::ind_gitlab_auth_Remove(gitlab::FGitlabAuth& row) {
+    if (LIKELY(row.ind_gitlab_auth_next != (gitlab::FGitlabAuth*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr250_Hash(0, row.gitlab_auth) & (_db.ind_gitlab_auth_buckets_n - 1);
+        gitlab::FGitlabAuth* *prev = &_db.ind_gitlab_auth_buckets_elems[index]; // addr of pointer to current element
+        while (gitlab::FGitlabAuth *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_gitlab_auth_next; // unlink (singly linked list)
+                _db.ind_gitlab_auth_n--;
+                row.ind_gitlab_auth_next = (gitlab::FGitlabAuth*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_gitlab_auth_next;
+        }
+    }
+}
+
+// --- gitlab.FDb.ind_gitlab_auth.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void gitlab::ind_gitlab_auth_Reserve(int n) {
+    u32 old_nbuckets = _db.ind_gitlab_auth_buckets_n;
+    u32 new_nelems   = _db.ind_gitlab_auth_n + n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(gitlab::FGitlabAuth*);
+        u32 new_size = new_nbuckets * sizeof(gitlab::FGitlabAuth*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        gitlab::FGitlabAuth* *new_buckets = (gitlab::FGitlabAuth**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("gitlab.out_of_memory  field:gitlab.FDb.ind_gitlab_auth");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_gitlab_auth_buckets_n; i++) {
+            gitlab::FGitlabAuth* elem = _db.ind_gitlab_auth_buckets_elems[i];
+            while (elem) {
+                gitlab::FGitlabAuth &row        = *elem;
+                gitlab::FGitlabAuth* next       = row.ind_gitlab_auth_next;
+                u32 index          = algo::Smallstr250_Hash(0, row.gitlab_auth) & (new_nbuckets-1);
+                row.ind_gitlab_auth_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_gitlab_auth_buckets_elems, old_size);
+        _db.ind_gitlab_auth_buckets_elems = new_buckets;
+        _db.ind_gitlab_auth_buckets_n = new_nbuckets;
+    }
+}
+
 // --- gitlab.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr gitlab::trace_RowidFind(int t) {
@@ -1765,28 +1970,6 @@ inline static i32 gitlab::trace_N() {
 // --- gitlab.FDb..Init
 // Set all fields to initial values.
 void gitlab::FDb_Init() {
-    _db.auth_file_name = algo::strptr(".gitlab_auth");
-    _db.usrmsg_no_token = algo::strptr("Please supply personal access token via -auth_token option (could be done once). Visit <https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html> for directions. Token scope shall be 'api', i.e. whole GitLab API.");
-    // initialize LAry project (gitlab.FDb.project)
-    _db.project_n = 0;
-    memset(_db.project_lary, 0, sizeof(_db.project_lary)); // zero out all level pointers
-    gitlab::FProject* project_first = (gitlab::FProject*)algo_lib::malloc_AllocMem(sizeof(gitlab::FProject) * (u64(1)<<4));
-    if (!project_first) {
-        FatalErrorExit("out of memory");
-    }
-    for (int i = 0; i < 4; i++) {
-        _db.project_lary[i]  = project_first;
-        project_first    += 1ULL<<i;
-    }
-    _db.project_id = u32(0);
-    // initialize hash table for gitlab::FProject;
-    _db.ind_project_n             	= 0; // (gitlab.FDb.ind_project)
-    _db.ind_project_buckets_n     	= 4; // (gitlab.FDb.ind_project)
-    _db.ind_project_buckets_elems 	= (gitlab::FProject**)algo_lib::malloc_AllocMem(sizeof(gitlab::FProject*)*_db.ind_project_buckets_n); // initial buckets (gitlab.FDb.ind_project)
-    if (!_db.ind_project_buckets_elems) {
-        FatalErrorExit("out of memory"); // (gitlab.FDb.ind_project)
-    }
-    memset(_db.ind_project_buckets_elems, 0, sizeof(gitlab::FProject*)*_db.ind_project_buckets_n); // (gitlab.FDb.ind_project)
     // initialize hash table for gitlab::FIssue;
     _db.ind_issue_n             	= 0; // (gitlab.FDb.ind_issue)
     _db.ind_issue_buckets_n     	= 4; // (gitlab.FDb.ind_issue)
@@ -1904,6 +2087,45 @@ void gitlab::FDb_Init() {
         FatalErrorExit("out of memory"); // (gitlab.FDb.ind_user)
     }
     memset(_db.ind_user_buckets_elems, 0, sizeof(gitlab::FUser*)*_db.ind_user_buckets_n); // (gitlab.FDb.ind_user)
+    // initialize LAry project (gitlab.FDb.project)
+    _db.project_n = 0;
+    memset(_db.project_lary, 0, sizeof(_db.project_lary)); // zero out all level pointers
+    gitlab::FProject* project_first = (gitlab::FProject*)algo_lib::malloc_AllocMem(sizeof(gitlab::FProject) * (u64(1)<<4));
+    if (!project_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.project_lary[i]  = project_first;
+        project_first    += 1ULL<<i;
+    }
+    // initialize hash table for gitlab::FProject;
+    _db.ind_project_n             	= 0; // (gitlab.FDb.ind_project)
+    _db.ind_project_buckets_n     	= 4; // (gitlab.FDb.ind_project)
+    _db.ind_project_buckets_elems 	= (gitlab::FProject**)algo_lib::malloc_AllocMem(sizeof(gitlab::FProject*)*_db.ind_project_buckets_n); // initial buckets (gitlab.FDb.ind_project)
+    if (!_db.ind_project_buckets_elems) {
+        FatalErrorExit("out of memory"); // (gitlab.FDb.ind_project)
+    }
+    memset(_db.ind_project_buckets_elems, 0, sizeof(gitlab::FProject*)*_db.ind_project_buckets_n); // (gitlab.FDb.ind_project)
+    _db.p_project = NULL;
+    // initialize LAry gitlab_auth (gitlab.FDb.gitlab_auth)
+    _db.gitlab_auth_n = 0;
+    memset(_db.gitlab_auth_lary, 0, sizeof(_db.gitlab_auth_lary)); // zero out all level pointers
+    gitlab::FGitlabAuth* gitlab_auth_first = (gitlab::FGitlabAuth*)algo_lib::malloc_AllocMem(sizeof(gitlab::FGitlabAuth) * (u64(1)<<4));
+    if (!gitlab_auth_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.gitlab_auth_lary[i]  = gitlab_auth_first;
+        gitlab_auth_first    += 1ULL<<i;
+    }
+    // initialize hash table for gitlab::FGitlabAuth;
+    _db.ind_gitlab_auth_n             	= 0; // (gitlab.FDb.ind_gitlab_auth)
+    _db.ind_gitlab_auth_buckets_n     	= 4; // (gitlab.FDb.ind_gitlab_auth)
+    _db.ind_gitlab_auth_buckets_elems 	= (gitlab::FGitlabAuth**)algo_lib::malloc_AllocMem(sizeof(gitlab::FGitlabAuth*)*_db.ind_gitlab_auth_buckets_n); // initial buckets (gitlab.FDb.ind_gitlab_auth)
+    if (!_db.ind_gitlab_auth_buckets_elems) {
+        FatalErrorExit("out of memory"); // (gitlab.FDb.ind_gitlab_auth)
+    }
+    memset(_db.ind_gitlab_auth_buckets_elems, 0, sizeof(gitlab::FGitlabAuth*)*_db.ind_gitlab_auth_buckets_n); // (gitlab.FDb.ind_gitlab_auth)
 
     gitlab::InitReflection();
 }
@@ -1911,6 +2133,18 @@ void gitlab::FDb_Init() {
 // --- gitlab.FDb..Uninit
 void gitlab::FDb_Uninit() {
     gitlab::FDb &row = _db; (void)row;
+
+    // gitlab.FDb.ind_gitlab_auth.Uninit (Thash)  //
+    // skip destruction of ind_gitlab_auth in global scope
+
+    // gitlab.FDb.gitlab_auth.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // gitlab.FDb.ind_project.Uninit (Thash)  //
+    // skip destruction of ind_project in global scope
+
+    // gitlab.FDb.project.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // gitlab.FDb.ind_user.Uninit (Thash)  //
     // skip destruction of ind_user in global scope
@@ -1947,12 +2181,58 @@ void gitlab::FDb_Uninit() {
 
     // gitlab.FDb.ind_issue.Uninit (Thash)  //
     // skip destruction of ind_issue in global scope
+}
 
-    // gitlab.FDb.ind_project.Uninit (Thash)  //
-    // skip destruction of ind_project in global scope
+// --- gitlab.FGitlabAuth.base.CopyOut
+// Copy fields out of row
+void gitlab::gitlab_auth_CopyOut(gitlab::FGitlabAuth &row, dev::GitlabAuth &out) {
+    out.gitlab_auth = row.gitlab_auth;
+    out.url = row.url;
+    out.default_branch = row.default_branch;
+    out.id = row.id;
+    out.name_with_namespace = row.name_with_namespace;
+    out.ssh_url_to_repo = row.ssh_url_to_repo;
+    out.web_url = row.web_url;
+    out.active = row.active;
+}
 
-    // gitlab.FDb.project.Uninit (Lary)  //
-    // skip destruction in global scope
+// --- gitlab.FGitlabAuth.base.CopyIn
+// Copy fields in to row
+void gitlab::gitlab_auth_CopyIn(gitlab::FGitlabAuth &row, dev::GitlabAuth &in) {
+    row.gitlab_auth = in.gitlab_auth;
+    row.url = in.url;
+    row.default_branch = in.default_branch;
+    row.id = in.id;
+    row.name_with_namespace = in.name_with_namespace;
+    row.ssh_url_to_repo = in.ssh_url_to_repo;
+    row.web_url = in.web_url;
+    row.active = in.active;
+}
+
+// --- gitlab.FGitlabAuth.proj.Get
+algo::cstring gitlab::proj_Get(gitlab::FGitlabAuth& gitlab_auth) {
+    algo::cstring ret(algo::Pathcomp(gitlab_auth.gitlab_auth, "/LL"));
+    return ret;
+}
+
+// --- gitlab.FGitlabAuth.token.Get
+algo::cstring gitlab::token_Get(gitlab::FGitlabAuth& gitlab_auth) {
+    algo::cstring ret(algo::Pathcomp(gitlab_auth.gitlab_auth, "/LR"));
+    return ret;
+}
+
+// --- gitlab.FGitlabAuth..Init
+// Set all fields to initial values.
+void gitlab::FGitlabAuth_Init(gitlab::FGitlabAuth& gitlab_auth) {
+    gitlab_auth.default_branch = algo::strptr("origin");
+    gitlab_auth.active = bool(true);
+    gitlab_auth.ind_gitlab_auth_next = (gitlab::FGitlabAuth*)-1; // (gitlab.FDb.ind_gitlab_auth) not-in-hash
+}
+
+// --- gitlab.FGitlabAuth..Uninit
+void gitlab::FGitlabAuth_Uninit(gitlab::FGitlabAuth& gitlab_auth) {
+    gitlab::FGitlabAuth &row = gitlab_auth; (void)row;
+    ind_gitlab_auth_Remove(row); // remove gitlab_auth from index ind_gitlab_auth
 }
 
 // --- gitlab.FHttp.request_header.Alloc
@@ -2315,8 +2595,8 @@ void gitlab::issue_CopyIn(gitlab::FIssue &row, gitlab::Issue &in) {
 }
 
 // --- gitlab.FIssue.project.Get
-algo::Smallstr50 gitlab::project_Get(gitlab::FIssue& issue) {
-    algo::Smallstr50 ret(algo::Pathcomp(issue.issue, ".RL"));
+algo::Smallstr150 gitlab::project_Get(gitlab::FIssue& issue) {
+    algo::Smallstr150 ret(algo::Pathcomp(issue.issue, ".RL"));
     return ret;
 }
 
@@ -2395,12 +2675,12 @@ void gitlab::c_issue_note_Reserve(gitlab::FIssue& issue, u32 n) {
 // --- gitlab.FIssue..Init
 // Set all fields to initial values.
 void gitlab::FIssue_Init(gitlab::FIssue& issue) {
-    issue.p_project = NULL;
     issue.c_issue_note_elems = NULL; // (gitlab.FIssue.c_issue_note)
     issue.c_issue_note_n = 0; // (gitlab.FIssue.c_issue_note)
     issue.c_issue_note_max = 0; // (gitlab.FIssue.c_issue_note)
     issue.c_issue_description = NULL;
     issue.select = bool(false);
+    issue.p_project = NULL;
     issue.project_c_issue_in_ary = bool(false);
     issue.ind_issue_next = (gitlab::FIssue*)-1; // (gitlab.FDb.ind_issue) not-in-hash
 }
@@ -2408,11 +2688,11 @@ void gitlab::FIssue_Init(gitlab::FIssue& issue) {
 // --- gitlab.FIssue..Uninit
 void gitlab::FIssue_Uninit(gitlab::FIssue& issue) {
     gitlab::FIssue &row = issue; (void)row;
+    ind_issue_Remove(row); // remove issue from index ind_issue
     gitlab::FProject* p_project = gitlab::ind_project_Find(project_Get(row));
     if (p_project)  {
         c_issue_Remove(*p_project, row);// remove issue from index c_issue
     }
-    ind_issue_Remove(row); // remove issue from index ind_issue
 
     // gitlab.FIssue.c_issue_note.Uninit (Ptrary)  //
     algo_lib::malloc_FreeMem(issue.c_issue_note_elems, sizeof(gitlab::FIssueNote*)*issue.c_issue_note_max); // (gitlab.FIssue.c_issue_note)
@@ -2481,8 +2761,8 @@ void gitlab::issue_note_CopyIn(gitlab::FIssueNote &row, gitlab::IssueNote &in) {
 }
 
 // --- gitlab.FIssueNote.issue.Get
-algo::Smallstr50 gitlab::issue_Get(gitlab::FIssueNote& issue_note) {
-    algo::Smallstr50 ret(algo::Pathcomp(issue_note.issue_note, ".RL"));
+algo::Smallstr150 gitlab::issue_Get(gitlab::FIssueNote& issue_note) {
+    algo::Smallstr150 ret(algo::Pathcomp(issue_note.issue_note, ".RL"));
     return ret;
 }
 
@@ -2523,8 +2803,8 @@ void gitlab::mr_CopyIn(gitlab::FMr &row, gitlab::Mr &in) {
 }
 
 // --- gitlab.FMr.project.Get
-algo::Smallstr50 gitlab::project_Get(gitlab::FMr& mr) {
-    algo::Smallstr50 ret(algo::Pathcomp(mr.mr, ".RL"));
+algo::Smallstr150 gitlab::project_Get(gitlab::FMr& mr) {
+    algo::Smallstr150 ret(algo::Pathcomp(mr.mr, ".RL"));
     return ret;
 }
 
@@ -2603,11 +2883,11 @@ void gitlab::c_mr_note_Reserve(gitlab::FMr& mr, u32 n) {
 // --- gitlab.FMr..Init
 // Set all fields to initial values.
 void gitlab::FMr_Init(gitlab::FMr& mr) {
-    mr.p_project = NULL;
     mr.c_mr_note_elems = NULL; // (gitlab.FMr.c_mr_note)
     mr.c_mr_note_n = 0; // (gitlab.FMr.c_mr_note)
     mr.c_mr_note_max = 0; // (gitlab.FMr.c_mr_note)
     mr.c_mr_description = NULL;
+    mr.p_project = NULL;
     mr.project_c_mr_in_ary = bool(false);
     mr.ind_mr_next = (gitlab::FMr*)-1; // (gitlab.FDb.ind_mr) not-in-hash
 }
@@ -2615,11 +2895,11 @@ void gitlab::FMr_Init(gitlab::FMr& mr) {
 // --- gitlab.FMr..Uninit
 void gitlab::FMr_Uninit(gitlab::FMr& mr) {
     gitlab::FMr &row = mr; (void)row;
+    ind_mr_Remove(row); // remove mr from index ind_mr
     gitlab::FProject* p_project = gitlab::ind_project_Find(project_Get(row));
     if (p_project)  {
         c_mr_Remove(*p_project, row);// remove mr from index c_mr
     }
-    ind_mr_Remove(row); // remove mr from index ind_mr
 
     // gitlab.FMr.c_mr_note.Uninit (Ptrary)  //
     algo_lib::malloc_FreeMem(mr.c_mr_note_elems, sizeof(gitlab::FMrNote*)*mr.c_mr_note_max); // (gitlab.FMr.c_mr_note)
@@ -2688,8 +2968,8 @@ void gitlab::mr_note_CopyIn(gitlab::FMrNote &row, gitlab::MrNote &in) {
 }
 
 // --- gitlab.FMrNote.mr.Get
-algo::Smallstr50 gitlab::mr_Get(gitlab::FMrNote& mr_note) {
-    algo::Smallstr50 ret(algo::Pathcomp(mr_note.mr_note, ".RL"));
+algo::Smallstr150 gitlab::mr_Get(gitlab::FMrNote& mr_note) {
+    algo::Smallstr150 ret(algo::Pathcomp(mr_note.mr_note, ".RL"));
     return ret;
 }
 
@@ -2709,24 +2989,6 @@ void gitlab::FMrNote_Uninit(gitlab::FMrNote& mr_note) {
     if (p_mr)  {
         c_mr_note_Remove(*p_mr, row);// remove mr_note from index c_mr_note
     }
-}
-
-// --- gitlab.FProject.base.CopyOut
-// Copy fields out of row
-void gitlab::project_CopyOut(gitlab::FProject &row, dev::GitlabProject &out) {
-    out.gitlab_project = row.gitlab_project;
-    out.url = row.url;
-    out.comment = row.comment;
-    out.gitlab_project_id = row.gitlab_project_id;
-}
-
-// --- gitlab.FProject.base.CopyIn
-// Copy fields in to row
-void gitlab::project_CopyIn(gitlab::FProject &row, dev::GitlabProject &in) {
-    row.gitlab_project = in.gitlab_project;
-    row.url = in.url;
-    row.comment = in.comment;
-    row.gitlab_project_id = in.gitlab_project_id;
 }
 
 // --- gitlab.FProject.c_issue.Insert
@@ -2967,8 +3229,8 @@ void gitlab::FieldId_Print(gitlab::FieldId & row, algo::cstring &str) {
 }
 
 // --- gitlab.Issue.project.Get
-algo::Smallstr50 gitlab::project_Get(gitlab::Issue& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.issue, ".RL"));
+algo::Smallstr150 gitlab::project_Get(gitlab::Issue& parent) {
+    algo::Smallstr150 ret(algo::Pathcomp(parent.issue, ".RL"));
     return ret;
 }
 
@@ -3007,7 +3269,7 @@ void gitlab::IssueDescription_Print(gitlab::IssueDescription & row, algo::cstrin
     algo::tempstr temp;
     str << "gitlab.IssueDescription";
 
-    algo::Smallstr50_Print(row.issue, temp);
+    algo::Smallstr150_Print(row.issue, temp);
     PrintAttrSpaceReset(str,"issue", temp);
 
     algo::cstring_Print(row.description, temp);
@@ -3015,8 +3277,8 @@ void gitlab::IssueDescription_Print(gitlab::IssueDescription & row, algo::cstrin
 }
 
 // --- gitlab.IssueNote.issue.Get
-algo::Smallstr50 gitlab::issue_Get(gitlab::IssueNote& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.issue_note, ".RL"));
+algo::Smallstr150 gitlab::issue_Get(gitlab::IssueNote& parent) {
+    algo::Smallstr150 ret(algo::Pathcomp(parent.issue_note, ".RL"));
     return ret;
 }
 
@@ -3047,8 +3309,8 @@ void gitlab::IssueNote_Print(gitlab::IssueNote & row, algo::cstring &str) {
 }
 
 // --- gitlab.Mr.project.Get
-algo::Smallstr50 gitlab::project_Get(gitlab::Mr& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.mr, ".RL"));
+algo::Smallstr150 gitlab::project_Get(gitlab::Mr& parent) {
+    algo::Smallstr150 ret(algo::Pathcomp(parent.mr, ".RL"));
     return ret;
 }
 
@@ -3090,7 +3352,7 @@ void gitlab::MrDescription_Print(gitlab::MrDescription & row, algo::cstring &str
     algo::tempstr temp;
     str << "gitlab.MrDescription";
 
-    algo::Smallstr50_Print(row.mr, temp);
+    algo::Smallstr150_Print(row.mr, temp);
     PrintAttrSpaceReset(str,"mr", temp);
 
     algo::cstring_Print(row.description, temp);
@@ -3098,8 +3360,8 @@ void gitlab::MrDescription_Print(gitlab::MrDescription & row, algo::cstring &str
 }
 
 // --- gitlab.MrNote.mr.Get
-algo::Smallstr50 gitlab::mr_Get(gitlab::MrNote& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.mr_note, ".RL"));
+algo::Smallstr150 gitlab::mr_Get(gitlab::MrNote& parent) {
+    algo::Smallstr150 ret(algo::Pathcomp(parent.mr_note, ".RL"));
     return ret;
 }
 
@@ -3135,7 +3397,7 @@ void gitlab::MrNote_Print(gitlab::MrNote & row, algo::cstring &str) {
 const char* gitlab::value_ToCstr(const gitlab::TableId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
-        case gitlab_TableId_dev_GitlabProject: ret = "dev.GitlabProject";  break;
+        case gitlab_TableId_dev_GitlabAuth : ret = "dev.GitlabAuth";  break;
     }
     return ret;
 }
@@ -3159,19 +3421,19 @@ void gitlab::value_Print(const gitlab::TableId& parent, algo::cstring &lhs) {
 bool gitlab::value_SetStrptrMaybe(gitlab::TableId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
-        case 17: {
+        case 14: {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','e','v','.','G','i','t','l'): {
-                    if (memcmp(rhs.elems+8,"abProject",9)==0) { value_SetEnum(parent,gitlab_TableId_dev_GitlabProject); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"abAuth",6)==0) { value_SetEnum(parent,gitlab_TableId_dev_GitlabAuth); ret = true; break; }
                     break;
                 }
             }
             break;
         }
-        case 18: {
+        case 15: {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','e','v','.','g','i','t','l'): {
-                    if (memcmp(rhs.elems+8,"ab_project",10)==0) { value_SetEnum(parent,gitlab_TableId_dev_gitlab_project); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"ab_auth",7)==0) { value_SetEnum(parent,gitlab_TableId_dev_gitlab_auth); ret = true; break; }
                     break;
                 }
             }

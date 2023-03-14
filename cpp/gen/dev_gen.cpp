@@ -438,9 +438,16 @@ const char* dev::value_ToCstr(const dev::FieldId& parent) {
         case dev_FieldId_author            : ret = "author";  break;
         case dev_FieldId_compver           : ret = "compver";  break;
         case dev_FieldId_package           : ret = "package";  break;
-        case dev_FieldId_gitlab_project    : ret = "gitlab_project";  break;
+        case dev_FieldId_gitlab_auth       : ret = "gitlab_auth";  break;
+        case dev_FieldId_proj              : ret = "proj";  break;
+        case dev_FieldId_token             : ret = "token";  break;
         case dev_FieldId_url               : ret = "url";  break;
-        case dev_FieldId_gitlab_project_id : ret = "gitlab_project_id";  break;
+        case dev_FieldId_default_branch    : ret = "default_branch";  break;
+        case dev_FieldId_id                : ret = "id";  break;
+        case dev_FieldId_name_with_namespace: ret = "name_with_namespace";  break;
+        case dev_FieldId_ssh_url_to_repo   : ret = "ssh_url_to_repo";  break;
+        case dev_FieldId_web_url           : ret = "web_url";  break;
+        case dev_FieldId_active            : ret = "active";  break;
         case dev_FieldId_htmlentity        : ret = "htmlentity";  break;
         case dev_FieldId_code              : ret = "code";  break;
         case dev_FieldId_include           : ret = "include";  break;
@@ -514,6 +521,9 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 case LE_STR2('a','r'): {
                     value_SetEnum(parent,dev_FieldId_ar); ret = true; break;
                 }
+                case LE_STR2('i','d'): {
+                    value_SetEnum(parent,dev_FieldId_id); ret = true; break;
+                }
                 case LE_STR2('r','c'): {
                     value_SetEnum(parent,dev_FieldId_rc); ret = true; break;
                 }
@@ -569,6 +579,9 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('l','i','n','k'): {
                     value_SetEnum(parent,dev_FieldId_link); ret = true; break;
                 }
+                case LE_STR4('p','r','o','j'): {
+                    value_SetEnum(parent,dev_FieldId_proj); ret = true; break;
+                }
             }
             break;
         }
@@ -579,6 +592,9 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR5('m','a','x','w','s'): {
                     value_SetEnum(parent,dev_FieldId_maxws); ret = true; break;
+                }
+                case LE_STR5('t','o','k','e','n'): {
+                    value_SetEnum(parent,dev_FieldId_token); ret = true; break;
                 }
                 case LE_STR5('u','n','a','m','e'): {
                     value_SetEnum(parent,dev_FieldId_uname); ret = true; break;
@@ -591,6 +607,9 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
         }
         case 6: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
+                case LE_STR6('a','c','t','i','v','e'): {
+                    value_SetEnum(parent,dev_FieldId_active); ret = true; break;
+                }
                 case LE_STR6('a','u','t','h','o','r'): {
                     value_SetEnum(parent,dev_FieldId_author); ret = true; break;
                 }
@@ -698,6 +717,9 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('t','i','m','e','f','m','t'): {
                     value_SetEnum(parent,dev_FieldId_timefmt); ret = true; break;
                 }
+                case LE_STR7('w','e','b','_','u','r','l'): {
+                    value_SetEnum(parent,dev_FieldId_web_url); ret = true; break;
+                }
             }
             break;
         }
@@ -761,6 +783,10 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"req",3)==0) { value_SetEnum(parent,dev_FieldId_fail_prereq); ret = true; break; }
                     break;
                 }
+                case LE_STR8('g','i','t','l','a','b','_','a'): {
+                    if (memcmp(rhs.elems+8,"uth",3)==0) { value_SetEnum(parent,dev_FieldId_gitlab_auth); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('l','o','n','g','e','s','t','f'): {
                     if (memcmp(rhs.elems+8,"unc",3)==0) { value_SetEnum(parent,dev_FieldId_longestfunc); ret = true; break; }
                     break;
@@ -787,17 +813,26 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
         }
         case 14: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('g','i','t','l','a','b','_','p'): {
-                    if (memcmp(rhs.elems+8,"roject",6)==0) { value_SetEnum(parent,dev_FieldId_gitlab_project); ret = true; break; }
+                case LE_STR8('d','e','f','a','u','l','t','_'): {
+                    if (memcmp(rhs.elems+8,"branch",6)==0) { value_SetEnum(parent,dev_FieldId_default_branch); ret = true; break; }
                     break;
                 }
             }
             break;
         }
-        case 17: {
+        case 15: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('g','i','t','l','a','b','_','p'): {
-                    if (memcmp(rhs.elems+8,"roject_id",9)==0) { value_SetEnum(parent,dev_FieldId_gitlab_project_id); ret = true; break; }
+                case LE_STR8('s','s','h','_','u','r','l','_'): {
+                    if (memcmp(rhs.elems+8,"to_repo",7)==0) { value_SetEnum(parent,dev_FieldId_ssh_url_to_repo); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 19: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('n','a','m','e','_','w','i','t'): {
+                    if (memcmp(rhs.elems+8,"h_namespace",11)==0) { value_SetEnum(parent,dev_FieldId_name_with_namespace); ret = true; break; }
                     break;
                 }
             }
@@ -946,16 +981,49 @@ void dev::Gitinfo_Print(dev::Gitinfo & row, algo::cstring &str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
-// --- dev.GitlabProject..ReadFieldMaybe
-bool dev::GitlabProject_ReadFieldMaybe(dev::GitlabProject &parent, algo::strptr field, algo::strptr strval) {
+// --- dev.GitlabAuth.proj.Get
+algo::cstring dev::proj_Get(dev::GitlabAuth& parent) {
+    algo::cstring ret(algo::Pathcomp(parent.gitlab_auth, "/LL"));
+    return ret;
+}
+
+// --- dev.GitlabAuth.proj.Get2
+algo::cstring dev::GitlabAuth_proj_Get(algo::strptr arg) {
+    algo::cstring ret(algo::Pathcomp(arg, "/LL"));
+    return ret;
+}
+
+// --- dev.GitlabAuth.token.Get
+algo::cstring dev::token_Get(dev::GitlabAuth& parent) {
+    algo::cstring ret(algo::Pathcomp(parent.gitlab_auth, "/LR"));
+    return ret;
+}
+
+// --- dev.GitlabAuth.token.Get2
+algo::cstring dev::GitlabAuth_token_Get(algo::strptr arg) {
+    algo::cstring ret(algo::Pathcomp(arg, "/LR"));
+    return ret;
+}
+
+// --- dev.GitlabAuth..Concat_proj_token
+tempstr dev::GitlabAuth_Concat_proj_token( const algo::strptr& proj ,const algo::strptr& token ) {
+    return tempstr() << proj <<'/'<< token ;
+}
+
+// --- dev.GitlabAuth..ReadFieldMaybe
+bool dev::GitlabAuth_ReadFieldMaybe(dev::GitlabAuth &parent, algo::strptr field, algo::strptr strval) {
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
     bool retval = true; // default is no error
     switch(field_id) {
-        case dev_FieldId_gitlab_project: retval = algo::Smallstr50_ReadStrptrMaybe(parent.gitlab_project, strval); break;
-        case dev_FieldId_url: retval = algo::Smallstr200_ReadStrptrMaybe(parent.url, strval); break;
-        case dev_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
-        case dev_FieldId_gitlab_project_id: retval = u32_ReadStrptrMaybe(parent.gitlab_project_id, strval); break;
+        case dev_FieldId_gitlab_auth: retval = algo::Smallstr250_ReadStrptrMaybe(parent.gitlab_auth, strval); break;
+        case dev_FieldId_url: retval = algo::cstring_ReadStrptrMaybe(parent.url, strval); break;
+        case dev_FieldId_default_branch: retval = algo::cstring_ReadStrptrMaybe(parent.default_branch, strval); break;
+        case dev_FieldId_id: retval = algo::cstring_ReadStrptrMaybe(parent.id, strval); break;
+        case dev_FieldId_name_with_namespace: retval = algo::cstring_ReadStrptrMaybe(parent.name_with_namespace, strval); break;
+        case dev_FieldId_ssh_url_to_repo: retval = algo::cstring_ReadStrptrMaybe(parent.ssh_url_to_repo, strval); break;
+        case dev_FieldId_web_url: retval = algo::cstring_ReadStrptrMaybe(parent.web_url, strval); break;
+        case dev_FieldId_active: retval = bool_ReadStrptrMaybe(parent.active, strval); break;
         default: break;
     }
     if (!retval) {
@@ -964,35 +1032,54 @@ bool dev::GitlabProject_ReadFieldMaybe(dev::GitlabProject &parent, algo::strptr 
     return retval;
 }
 
-// --- dev.GitlabProject..ReadStrptrMaybe
-// Read fields of dev::GitlabProject from an ascii string.
+// --- dev.GitlabAuth..ReadStrptrMaybe
+// Read fields of dev::GitlabAuth from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::GitlabProject_ReadStrptrMaybe(dev::GitlabProject &parent, algo::strptr in_str) {
+bool dev::GitlabAuth_ReadStrptrMaybe(dev::GitlabAuth &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "dev.gitlab_project") || algo::StripTypeTag(in_str, "dev.GitlabProject");
+    retval = algo::StripTypeTag(in_str, "dev.gitlab_auth") || algo::StripTypeTag(in_str, "dev.GitlabAuth");
     ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && GitlabProject_ReadFieldMaybe(parent, attr.name, attr.value);
+        retval = retval && GitlabAuth_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
     return retval;
 }
 
-// --- dev.GitlabProject..Print
-// print string representation of dev::GitlabProject to string LHS, no header -- cprint:dev.GitlabProject.String
-void dev::GitlabProject_Print(dev::GitlabProject & row, algo::cstring &str) {
+// --- dev.GitlabAuth..Init
+// Set all fields to initial values.
+void dev::GitlabAuth_Init(dev::GitlabAuth& parent) {
+    parent.default_branch = algo::strptr("origin");
+    parent.active = bool(true);
+}
+
+// --- dev.GitlabAuth..Print
+// print string representation of dev::GitlabAuth to string LHS, no header -- cprint:dev.GitlabAuth.String
+void dev::GitlabAuth_Print(dev::GitlabAuth & row, algo::cstring &str) {
     algo::tempstr temp;
-    str << "dev.gitlab_project";
+    str << "dev.gitlab_auth";
 
-    algo::Smallstr50_Print(row.gitlab_project, temp);
-    PrintAttrSpaceReset(str,"gitlab_project", temp);
+    algo::Smallstr250_Print(row.gitlab_auth, temp);
+    PrintAttrSpaceReset(str,"gitlab_auth", temp);
 
-    algo::Smallstr200_Print(row.url, temp);
+    algo::cstring_Print(row.url, temp);
     PrintAttrSpaceReset(str,"url", temp);
 
-    algo::Comment_Print(row.comment, temp);
-    PrintAttrSpaceReset(str,"comment", temp);
+    algo::cstring_Print(row.default_branch, temp);
+    PrintAttrSpaceReset(str,"default_branch", temp);
 
-    u32_Print(row.gitlab_project_id, temp);
-    PrintAttrSpaceReset(str,"gitlab_project_id", temp);
+    algo::cstring_Print(row.id, temp);
+    PrintAttrSpaceReset(str,"id", temp);
+
+    algo::cstring_Print(row.name_with_namespace, temp);
+    PrintAttrSpaceReset(str,"name_with_namespace", temp);
+
+    algo::cstring_Print(row.ssh_url_to_repo, temp);
+    PrintAttrSpaceReset(str,"ssh_url_to_repo", temp);
+
+    algo::cstring_Print(row.web_url, temp);
+    PrintAttrSpaceReset(str,"web_url", temp);
+
+    bool_Print(row.active, temp);
+    PrintAttrSpaceReset(str,"active", temp);
 }
 
 // --- dev.Htmlentity..ReadFieldMaybe

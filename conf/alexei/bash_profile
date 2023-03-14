@@ -17,7 +17,9 @@ if [ "$PS1" != "" ]; then
     HOSTNAME=`hostname -f 2>/dev/null`
     PS1="\e[0;34m[\$? \D{%b %d %H:%M:%S}] \u@$HOSTNAME\e[0;32m:\w\e[m \n\$ "
     LS_OPTIONS='--color=auto --quoting-style=shell'
-    complete -o default -o nospace -C acr_compl abt acr acr_compl acr_ed acr_in acr_my amc amc_gc amc_vis atf_amc atf_norm atf_unit mdbg mysql2ssim  src_func src_hdr src_lim ssim2csv ssim2mysql strconv
+    # acr_compl -install
+    # This is a script suitable for inclusion in .bash_profile
+    complete -o default -o nospace -C acr_compl abt acr acr_compl acr_ed acr_in acr_my amc amc_gc amc_vis atf_amc atf_norm atf_nrun atf_unit bash2html gitlab mdbg mysql2ssim ntup orgfile src_func src_hdr src_lim ssim2csv ssim2mysql strconv
 fi
 
 # export section

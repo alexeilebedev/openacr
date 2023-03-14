@@ -67,6 +67,7 @@ void                 trace_Print(acr_my::trace & row, algo::cstring &str) __attr
 struct FDb { // acr_my.FDb: Function to convert to mysql
     algo_lib::Replscope   R;                   //
     algo::cstring         data_dir;            //
+    algo::cstring         data_logdir;         //
     algo::cstring*        ary_ns_elems;        // pointer to elements
     u32                   ary_ns_n;            // number of elements in array
     u32                   ary_ns_max;          // max. capacity of array before realloc

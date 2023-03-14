@@ -993,6 +993,7 @@ struct FSsimfile { // ssim2mysql.FSsimfile
     ssim2mysql::FSsimfile*   zd_ssimfile_prev;       // previous element
     algo::Smallstr50         ssimfile;               //
     algo::Smallstr50         ctype;                  //
+    bool                     select;                 //   false
     ssim2mysql::FCtype*      p_ctype;                // reference to parent row
     bool                     truncated;              //   false  Already truncated in database
     ssim2mysql::FColumn**    c_column_elems;         // array of pointers

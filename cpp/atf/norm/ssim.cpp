@@ -41,7 +41,7 @@ void atf_norm::normcheck_normalize_acr() {
 
 void atf_norm::normcheck_normalize_acr_my() {
 #if defined(__CYGWIN__)
-    prlog("cygwin doens't have a working mariadb install. skipping acr_my test");
+    prlog("cygwin doesn't have a working mariadb install. skipping acr_my test");
 #else
     command::acr_my_proc acr_my;
     acr_my.cmd.abort = true;
