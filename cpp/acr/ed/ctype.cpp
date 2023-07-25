@@ -151,9 +151,13 @@ void acr_ed::Main_CreateCtype() {
 
     // print pkey -- if -subset was specified
     if (ch_N(acr_ed::_db.cmdline.subset) > 0) {
-        pkey.field = tempstr() << ctype.ctype << "." << pkey_name;
         if (acr_ed::_db.cmdline.reftype != "") {
             pkey.reftype = acr_ed::_db.cmdline.reftype;
+        }
+        if (pkey.reftype == dmmeta_Reftype_reftype_Base) {
+            pkey.field = dmmeta::Field_Concat_ctype_name(ctype.ctype, "base");
+        } else {
+            pkey.field = dmmeta::Field_Concat_ctype_name(ctype.ctype, pkey_name);
         }
         pkey.arg = ch_N(acr_ed::_db.cmdline.subset2) == 0
             ? strptr(acr_ed::_db.cmdline.subset)
@@ -161,6 +165,39 @@ void acr_ed::Main_CreateCtype() {
         acr_ed::_db.out_ssim << pkey << eol;
         acr_ed::_db.cmdline.field = pkey.field;//save it
         InsertFieldExtras(pkey.field, pkey.arg, acr_ed::_db.cmdline.reftype);
+        // create extra fields
+        auto *base_type = ind_ctype_Find(_db.cmdline.subset);
+        if (base_type && pkey.reftype == dmmeta_Reftype_reftype_Base) {
+            if (base_type->c_pack) {
+                dmmeta::Pack pack;
+                pack.ctype = ctype.ctype;
+                acr_ed::_db.out_ssim << pack << eol;
+            }
+            if (base_type->c_typefld) {
+                dmmeta::Msgtype msgtype;
+                msgtype.ctype = ctype.ctype;
+                dmmeta::CppExpr_ReadStrptrMaybe(msgtype.type,acr_ed::_db.cmdline.msgtype);
+                acr_ed::_db.out_ssim << msgtype << eol;
+            }
+            if (base_type->c_cpptype) {
+                dmmeta::Cpptype cpptype;
+                cpptype.ctype = ctype.ctype;
+                cpptype.ctor = false;
+                cpptype.dtor = false;
+                cpptype.cheap_copy = false;
+                acr_ed::_db.out_ssim << cpptype << eol;
+            }
+            ind_beg(acr_ed::ctype_c_cfmt_curs,c_cfmt,*base_type){
+                dmmeta::Cfmt cfmt;
+                cfmt.cfmt = dmmeta::Cfmt_Concat_ctype_strfmt(ctype.ctype, acr_ed::strfmt_Get(c_cfmt));
+                cfmt.printfmt = c_cfmt.printfmt;
+                cfmt.print = c_cfmt.print;
+                cfmt.read = c_cfmt.read;
+                cfmt.genop = c_cfmt.genop;
+                cfmt.sep = c_cfmt.sep;
+                acr_ed::_db.out_ssim << cfmt << eol;
+            }ind_end;
+        }
     }
 
     // subset of a 2 other ctypes: substrings using a separator

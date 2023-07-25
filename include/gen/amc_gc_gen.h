@@ -203,6 +203,8 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -249,8 +251,11 @@ bool                 FieldId_ReadStrptrMaybe(amc_gc::FieldId &parent, algo::strp
 void                 FieldId_Init(amc_gc::FieldId& parent);
 // print string representation of amc_gc::FieldId to string LHS, no header -- cprint:amc_gc.FieldId.String
 void                 FieldId_Print(amc_gc::FieldId & row, algo::cstring &str) __attribute__((nothrow));
-int                  main(int argc, char **argv);
 } // end namespace amc_gc
+int                  main(int argc, char **argv);
+#if defined(WIN32)
+int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
+#endif
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const amc_gc::trace &row);// cfmt:amc_gc.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const amc_gc::FieldId &row);// cfmt:amc_gc.FieldId.String

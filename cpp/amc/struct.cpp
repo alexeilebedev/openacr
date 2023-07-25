@@ -85,7 +85,7 @@ static void GenStruct_Ctor(amc::FCtype &ctype) {
                 Ins(&R, *ns.inl, "    $assign;");
             } else if (val && lenfld && ctype.c_msgtype) {
                 Set(R, "$extralen", tempstr() << lenfld->extra);
-                Set(R, "$assign", amc::AssignExpr(fld, "*this", "sizeof(*this) + ($extralen)", true));
+                Set(R, "$assign", amc::AssignExpr(fld, "*this", "ssizeof(*this) + ($extralen)", true));
                 Ins(&R, *ns.inl, "    $assign;");
             } else if (fld.c_fbigend) {
                 Set(R, "$name", name_Get(fld));
@@ -283,7 +283,9 @@ static bool HasCcmpOpQ(amc::FCtype &ctype) {
 static void GenStruct_Op(algo_lib::Replscope &R, amc::FCtype& ctype) {
     amc::FNs& ns = *ctype.p_ns;
     bool gen_cmpop = HasCcmpOpQ(ctype);
+    bool eq = false;
     if (gen_cmpop && amc::ind_func_Find(tempstr()<<ctype.ctype<<"..Eq")) {
+        eq = true;
         // operator ==
         Ins(&R, *ns.hdr, "    bool operator ==(const $Cpptype &rhs) const;");
         Ins(&R, *ns.inl, "");
@@ -299,6 +301,7 @@ static void GenStruct_Op(algo_lib::Replscope &R, amc::FCtype& ctype) {
         Ins(&R, *ns.inl, "}");
     }
     if (gen_cmpop && amc::ind_func_Find(tempstr()<<ctype.ctype<<"..EqStrptr")) {
+        eq = true;
         Ins(&R, *ns.hdr, "    bool operator ==(const algo::strptr &rhs) const;");
         Ins(&R, *ns.inl, "");
         Ins(&R, *ns.inl, "inline bool $Cpptype::operator ==(const algo::strptr &rhs) const {");
@@ -311,6 +314,27 @@ static void GenStruct_Op(algo_lib::Replscope &R, amc::FCtype& ctype) {
         Ins(&R, *ns.inl, "inline bool $Cpptype::operator <(const $Cpptype &rhs) const {");
         Ins(&R, *ns.inl, "    return $Cpptype_Lt(const_cast<$Cpptype&>(*this),const_cast<$Cpptype&>(rhs));");
         Ins(&R, *ns.inl, "}");
+
+        Ins(&R, *ns.hdr, "    bool operator >(const $Cpptype &rhs) const;");
+        Ins(&R, *ns.inl, "");
+        Ins(&R, *ns.inl, "inline bool $Cpptype::operator >(const $Cpptype &rhs) const {");
+        Ins(&R, *ns.inl, "    return rhs < *this;");
+        Ins(&R, *ns.inl, "}");
+
+        if (eq) {
+            Ins(&R, *ns.hdr, "    bool operator <=(const $Cpptype &rhs) const;");
+            Ins(&R, *ns.inl, "");
+            Ins(&R, *ns.inl, "inline bool $Cpptype::operator <=(const $Cpptype &rhs) const {");
+            Ins(&R, *ns.inl, "    return !(rhs < *this);");
+            Ins(&R, *ns.inl, "}");
+
+            Ins(&R, *ns.hdr, "    bool operator >=(const $Cpptype &rhs) const;");
+            Ins(&R, *ns.inl, "");
+            Ins(&R, *ns.inl, "inline bool $Cpptype::operator >=(const $Cpptype &rhs) const {");
+            Ins(&R, *ns.inl, "    return !(*this < rhs);");
+            Ins(&R, *ns.inl, "}");
+
+        }
     }
     // If enum comparison exists, then generate operator for it.
     // Ignore cmpop setting here

@@ -106,24 +106,35 @@ static bool GoodForPrintingQ(amc::FField& field, amc::FCfmt &cfmt) {
 // and not a single value.
 static void GenPrintVarlen(algo_lib::Replscope &R, amc::FField &field, amc::FFunc &print) {
     amc::FCtype& valtype = *(field).p_arg;
-    if (amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Getary"))) {// Must have Getary to proceed.
-        Set(R, "$Ftype", valtype.cpp_type);
-        Set(R, "$field", field.field);
-        Ins(&R, print.body, "");// !! add code directly to print
-        Ins(&R, print.body, "algo::aryptr<$Ftype> $name_ary = $name_Getary($pararg);");// note row vs. parent because of inlining
-        if (field.arg == "char") {
-            Ins(&R, print.body, "PrintAttrSpace(str, \"$name\", $name_ary); // print field $field");
-        } else if (field.arg == "char" || field.arg == "u8") {
-            Ins(&R, print.body, "PrintAttrSpace(str, \"$name\", algo::strptr((char*)$name_ary.elems, $name_ary.n_elems)); // print field $field");
-        } else {
-            Ins(&R, print.body, "for (int i = 0; i < $name_ary.n_elems; i++) { // print field $field as repeating group");
-            print.body << "    "<<name_Get(*field.p_arg)<<"_Print("<<name_Get(field)<<"_ary.elems[i], "<<Subst(R,"$outstr")<<");\n";
-            Ins(&R, print.body, "    tempstr name;");
-            Ins(&R, print.body, "    name << \"$name.\";");
-            Ins(&R, print.body, "    name << i;");
-            Ins(&R, print.body, "    PrintAttrSpaceReset(str, name, $outstr);");
-            Ins(&R, print.body, "};");
+    Set(R, "$Ftype", valtype.cpp_type);
+    Set(R, "$field", field.field);
+    Ins(&R, print.body, "");// !! add code directly to print
+    if (field.arg == "char" || field.arg == "u8") {
+        if (amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Getary"))) {
+            Ins(&R, print.body, "algo::aryptr<$Ftype> $name_ary = $name_Getary($pararg);");// note row vs. parent because of inlining
+            if (field.arg == "char") {
+                Ins(&R, print.body, "PrintAttrSpace(str, \"$name\", $name_ary); // print field $field");
+            } else {
+                Ins(&R, print.body, "PrintAttrSpace(str, \"$name\", algo::strptr((char*)$name_ary.elems, $name_ary.n_elems)); // print field $field");
+            }
         }
+    } else {
+        // $Parname - copy-paste from tclass.cpp
+        amc::FCtype& parent = *field.p_ctype;
+        amc::FField *pool=FirstInst(parent);
+        Set(R, "$Parname"  , (pool ? strptr(name_Get(*pool)) : strptr(name_Get(parent))));
+        Ins(&R, print.body, "ind_beg($Parname_$name_curs,$name,$pararg) {");
+        if (field.p_arg->c_typefld) {
+            Set(R, "$Fldhdrtype", field.p_arg->c_typefld->p_ctype->cpp_type);
+            Ins(&R, print.body, "    $FldhdrtypeMsgs_Print($outstr, $name, INT_MAX);");
+        } else {
+            print.body << "    "<<name_Get(*field.p_arg)<<"_Print("<<Subst(R,"$name")<<", "<<Subst(R,"$outstr")<<");\n";
+        }
+        Ins(&R, print.body, "    tempstr name;");
+        Ins(&R, print.body, "    name << \"$name.\";");
+        Ins(&R, print.body, "    name << ind_curs($name).index;");
+        Ins(&R, print.body, "    PrintAttrSpaceReset(str, name, $outstr);");
+        Ins(&R, print.body, "}ind_end;");
     }
 }
 

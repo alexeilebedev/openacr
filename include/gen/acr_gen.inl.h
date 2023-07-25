@@ -27,6 +27,18 @@ inline bool acr::CtypeTopoKey::operator !=(const acr::CtypeTopoKey &rhs) const {
 inline bool acr::CtypeTopoKey::operator <(const acr::CtypeTopoKey &rhs) const {
     return acr::CtypeTopoKey_Lt(const_cast<acr::CtypeTopoKey&>(*this),const_cast<acr::CtypeTopoKey&>(rhs));
 }
+
+inline bool acr::CtypeTopoKey::operator >(const acr::CtypeTopoKey &rhs) const {
+    return rhs < *this;
+}
+
+inline bool acr::CtypeTopoKey::operator <=(const acr::CtypeTopoKey &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool acr::CtypeTopoKey::operator >=(const acr::CtypeTopoKey &rhs) const {
+    return !(*this < rhs);
+}
 inline acr::CtypeTopoKey::CtypeTopoKey() {
     acr::CtypeTopoKey_Init(*this);
 }
@@ -2469,6 +2481,18 @@ inline bool acr::PlineKey::operator !=(const acr::PlineKey &rhs) const {
 inline bool acr::PlineKey::operator <(const acr::PlineKey &rhs) const {
     return acr::PlineKey_Lt(const_cast<acr::PlineKey&>(*this),const_cast<acr::PlineKey&>(rhs));
 }
+
+inline bool acr::PlineKey::operator >(const acr::PlineKey &rhs) const {
+    return rhs < *this;
+}
+
+inline bool acr::PlineKey::operator <=(const acr::PlineKey &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool acr::PlineKey::operator >=(const acr::PlineKey &rhs) const {
+    return !(*this < rhs);
+}
 inline acr::PlineKey::PlineKey() {
     acr::PlineKey_Init(*this);
 }
@@ -2763,6 +2787,18 @@ inline bool acr::RecSortkey::operator !=(const acr::RecSortkey &rhs) const {
 
 inline bool acr::RecSortkey::operator <(const acr::RecSortkey &rhs) const {
     return acr::RecSortkey_Lt(const_cast<acr::RecSortkey&>(*this),const_cast<acr::RecSortkey&>(rhs));
+}
+
+inline bool acr::RecSortkey::operator >(const acr::RecSortkey &rhs) const {
+    return rhs < *this;
+}
+
+inline bool acr::RecSortkey::operator <=(const acr::RecSortkey &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool acr::RecSortkey::operator >=(const acr::RecSortkey &rhs) const {
+    return !(*this < rhs);
 }
 inline acr::RecSortkey::RecSortkey() {
     acr::RecSortkey_Init(*this);

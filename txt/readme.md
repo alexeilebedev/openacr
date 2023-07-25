@@ -10,7 +10,7 @@ inline-command: acr readme | head -1
 dev.readme  gitfile:txt/about.md                   inl:Y  comment:""
 ```
 
-The top-level README.md file is created with `make readme` or, in reality, `atf_norm readme`.
+The top-level README.md file is created with `make readme` or, in reality, `atf_ci readme`.
 It is a by-product of normalization and has to be up-to-date for every commit.
 
 In addition, output of arbitrary commands can be embedded inside readme files using

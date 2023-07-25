@@ -514,6 +514,8 @@ static bool NeedFirstchangedQ(amc::FField &field) {
     // Ptr doesn't need firstchanged
     ret &= field.reftype != dmmeta_Reftype_reftype_Ptr;
     ret &= field.reftype != dmmeta_Reftype_reftype_Tary;
+    ret &= field.reftype != dmmeta_Reftype_reftype_Lary;
+    ret &= field.reftype != dmmeta_Reftype_reftype_Thash;
     ret &= !ValQ(field);
     return ret;
 }
@@ -628,7 +630,9 @@ void amc::gen_ctype_toposort() {
 tempstr amc::Argtype(amc::FField &field) {
     tempstr retval;
     // determine arg type
-    if (FixaryQ(field) || field.reftype == dmmeta_Reftype_reftype_Varlen) {
+    if (field.reftype == dmmeta_Reftype_reftype_Varlen && field.p_arg->c_lenfld) {
+        retval  = "algo::memptr";
+    } else if (FixaryQ(field) || field.reftype == dmmeta_Reftype_reftype_Varlen) {
         retval  = tempstr() << "algo::aryptr<" << amc::NsToCpp(field.p_arg->ctype) << " >";// varlen, array: by aryptr
     } else if (field.reftype == dmmeta_Reftype_reftype_Opt) {
         retval  = tempstr() << amc::NsToCpp(field.p_arg->ctype) << "*"; // optional parameter: by pointer
@@ -1227,7 +1231,7 @@ void amc::gen_ns_func() {
     algo_lib::Replscope R;
     Set(R, "$ns", ns.ns);
     ind_beg(amc::ns_c_func_curs, func,ns) {
-        if (!func.printed && !func.ismacro && !func.disable && !func.member) {
+        if (!func.printed && !func.ismacro && !func.disable && !func.member && !func.globns) {
             if (!func.priv && !func.oper) {
                 tempstr proto;
                 PrintFuncProto(func, NULL, proto);
@@ -1242,6 +1246,19 @@ void amc::gen_ns_func() {
     if (ch_N(ns.ns)) {
         Ins(&R, *ns.hdr,"} // end namespace $ns");
     }
+    ind_beg(amc::ns_c_func_curs, func,ns) {
+        if (!func.printed && !func.ismacro && !func.disable && !func.member && func.globns) {
+            if (!func.priv && !func.oper) {
+                tempstr proto;
+                PrintFuncProto(func, NULL, proto);
+                algo::InsertIndent(*ns.hdr, proto, 0);
+            }
+            if (!func.extrn) {
+                PrintFuncBody(ns, func);
+            }
+            func.printed = true;
+        }
+    }ind_end;
 }
 
 // -----------------------------------------------------------------------------
@@ -1343,6 +1360,21 @@ void amc::gen_proc() {
                 anonfld.field = field.field;
                 amc::anonfld_InsertMaybe(anonfld);
             }
+        }
+    }ind_end;
+}
+
+void amc::gen_check_varlen() {
+    ind_beg(amc::_db_ctype_curs,ctype,amc::_db) {
+        // messages with Varlen etc cannot be cheap copy
+        if ((ctype.c_varlenfld || ctype.c_optfld) && ctype.c_cpptype && ctype.c_cpptype->cheap_copy) {
+            prlog("ams.a_little_too_cheap"
+                  <<Keyval("ctype",ctype.ctype)
+                  <<Keyval("comment","Types with Varlen/Opt fields should not be marked cheap_copy. Merge the following line to fix error"));
+            prlog("dmmeta.cpptype"
+                  <<Keyval("ctype",ctype.ctype)
+                  <<Keyval("cheap_copy","N"));
+            algo_lib::_db.exit_code=1;
         }
     }ind_end;
 }

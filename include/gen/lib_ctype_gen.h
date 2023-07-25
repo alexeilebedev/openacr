@@ -10,6 +10,7 @@
 #pragma once
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/algo_gen.h"
+#include "include/gen/dev_gen.h"
 //#pragma endinclude
 
 // --- lib_ctype_FieldIdEnum
@@ -42,9 +43,11 @@ enum lib_ctype_TableIdEnum {                   // lib_ctype.TableId.value
     ,lib_ctype_TableId_dmmeta_ssimfile   = 7   // dmmeta.ssimfile -> lib_ctype.FSsimfile
     ,lib_ctype_TableId_dmmeta_Substr     = 8   // dmmeta.Substr -> lib_ctype.FSubstr
     ,lib_ctype_TableId_dmmeta_substr     = 8   // dmmeta.substr -> lib_ctype.FSubstr
+    ,lib_ctype_TableId_dev_Unstablefld   = 9   // dev.Unstablefld -> lib_ctype.FUnstablefld
+    ,lib_ctype_TableId_dev_unstablefld   = 9   // dev.unstablefld -> lib_ctype.FUnstablefld
 };
 
-enum { lib_ctype_TableIdEnum_N = 18 };
+enum { lib_ctype_TableIdEnum_N = 20 };
 
 namespace lib_ctype { struct FCtype; }
 namespace lib_ctype { struct FCdflt; }
@@ -57,6 +60,7 @@ namespace lib_ctype { struct FField; }
 namespace lib_ctype { struct FFtuple; }
 namespace lib_ctype { struct FSsimfile; }
 namespace lib_ctype { struct FSubstr; }
+namespace lib_ctype { struct FUnstablefld; }
 namespace lib_ctype { struct FieldId; }
 namespace lib_ctype { struct Match; }
 namespace lib_ctype { struct TableId; }
@@ -77,6 +81,7 @@ namespace lib_ctype { struct _db_cfmt_curs; }
 namespace lib_ctype { struct _db_ind_cfmt_curs; }
 namespace lib_ctype { struct _db_cppfunc_curs; }
 namespace lib_ctype { struct _db_substr_curs; }
+namespace lib_ctype { struct _db_unstablefld_curs; }
 namespace lib_ctype { struct field_zd_fconst_curs; }
 namespace lib_ctype {
 }//pkey typedefs
@@ -114,7 +119,7 @@ void                 FCdflt_Uninit(lib_ctype::FCdflt& cdflt) __attribute__((noth
 // global access: ind_cfmt (Thash)
 // access: lib_ctype.FCtype.c_cfmt (Ptrary)
 struct FCfmt { // lib_ctype.FCfmt
-    algo::Smallstr50    cfmt;                  //
+    algo::Smallstr100   cfmt;                  //
     algo::Smallstr50    printfmt;              //
     bool                read;                  //   false
     bool                print;                 //   false
@@ -290,46 +295,48 @@ void                 trace_Print(lib_ctype::trace & row, algo::cstring &str) __a
 // --- lib_ctype.FDb
 // create: lib_ctype.FDb._db (Global)
 struct FDb { // lib_ctype.FDb
-    lib_ctype::FFconst*      fconst_lary[32];                // level array
-    i32                      fconst_n;                       // number of elements in array
-    lib_ctype::FFconst**     ind_fconst_key_buckets_elems;   // pointer to bucket array
-    i32                      ind_fconst_key_buckets_n;       // number of elements in bucket array
-    i32                      ind_fconst_key_n;               // number of elements in the hash table
-    lib_ctype::FFconst**     ind_fconst_buckets_elems;       // pointer to bucket array
-    i32                      ind_fconst_buckets_n;           // number of elements in bucket array
-    i32                      ind_fconst_n;                   // number of elements in the hash table
-    lib_ctype::FSsimfile*    ssimfile_lary[32];              // level array
-    i32                      ssimfile_n;                     // number of elements in array
-    lib_ctype::FSsimfile**   ind_ssimfile_buckets_elems;     // pointer to bucket array
-    i32                      ind_ssimfile_buckets_n;         // number of elements in bucket array
-    i32                      ind_ssimfile_n;                 // number of elements in the hash table
-    lib_ctype::FFtuple*      ftuple_lary[32];                // level array
-    i32                      ftuple_n;                       // number of elements in array
-    lib_ctype::FCtype*       ctype_lary[32];                 // level array
-    i32                      ctype_n;                        // number of elements in array
-    lib_ctype::FCtype**      ind_ctype_buckets_elems;        // pointer to bucket array
-    i32                      ind_ctype_buckets_n;            // number of elements in bucket array
-    i32                      ind_ctype_n;                    // number of elements in the hash table
-    lib_ctype::FField*       field_lary[32];                 // level array
-    i32                      field_n;                        // number of elements in array
-    lib_ctype::FField**      ind_field_buckets_elems;        // pointer to bucket array
-    i32                      ind_field_buckets_n;            // number of elements in bucket array
-    i32                      ind_field_n;                    // number of elements in the hash table
-    lib_ctype::FCdflt*       cdflt_lary[32];                 // level array
-    i32                      cdflt_n;                        // number of elements in array
-    lib_ctype::FCfmt*        cfmt_lary[32];                  // level array
-    i32                      cfmt_n;                         // number of elements in array
-    lib_ctype::FCfmt**       ind_cfmt_buckets_elems;         // pointer to bucket array
-    i32                      ind_cfmt_buckets_n;             // number of elements in bucket array
-    i32                      ind_cfmt_n;                     // number of elements in the hash table
-    lib_ctype::FCppfunc*     cppfunc_lary[32];               // level array
-    i32                      cppfunc_n;                      // number of elements in array
-    lib_ctype::FSubstr*      substr_lary[32];                // level array
-    i32                      substr_n;                       // number of elements in array
-    lib_ctype::FCtype*       c_axprice;                      // optional pointer
-    lib_ctype::FField*       c_fixmsg;                       // optional pointer
-    lib_ctype::FCtype*       c_bool;                         // optional pointer
-    lib_ctype::trace         trace;                          //
+    lib_ctype::FFconst*        fconst_lary[32];                // level array
+    i32                        fconst_n;                       // number of elements in array
+    lib_ctype::FFconst**       ind_fconst_key_buckets_elems;   // pointer to bucket array
+    i32                        ind_fconst_key_buckets_n;       // number of elements in bucket array
+    i32                        ind_fconst_key_n;               // number of elements in the hash table
+    lib_ctype::FFconst**       ind_fconst_buckets_elems;       // pointer to bucket array
+    i32                        ind_fconst_buckets_n;           // number of elements in bucket array
+    i32                        ind_fconst_n;                   // number of elements in the hash table
+    lib_ctype::FSsimfile*      ssimfile_lary[32];              // level array
+    i32                        ssimfile_n;                     // number of elements in array
+    lib_ctype::FSsimfile**     ind_ssimfile_buckets_elems;     // pointer to bucket array
+    i32                        ind_ssimfile_buckets_n;         // number of elements in bucket array
+    i32                        ind_ssimfile_n;                 // number of elements in the hash table
+    lib_ctype::FFtuple*        ftuple_lary[32];                // level array
+    i32                        ftuple_n;                       // number of elements in array
+    lib_ctype::FCtype*         ctype_lary[32];                 // level array
+    i32                        ctype_n;                        // number of elements in array
+    lib_ctype::FCtype**        ind_ctype_buckets_elems;        // pointer to bucket array
+    i32                        ind_ctype_buckets_n;            // number of elements in bucket array
+    i32                        ind_ctype_n;                    // number of elements in the hash table
+    lib_ctype::FField*         field_lary[32];                 // level array
+    i32                        field_n;                        // number of elements in array
+    lib_ctype::FField**        ind_field_buckets_elems;        // pointer to bucket array
+    i32                        ind_field_buckets_n;            // number of elements in bucket array
+    i32                        ind_field_n;                    // number of elements in the hash table
+    lib_ctype::FCdflt*         cdflt_lary[32];                 // level array
+    i32                        cdflt_n;                        // number of elements in array
+    lib_ctype::FCfmt*          cfmt_lary[32];                  // level array
+    i32                        cfmt_n;                         // number of elements in array
+    lib_ctype::FCfmt**         ind_cfmt_buckets_elems;         // pointer to bucket array
+    i32                        ind_cfmt_buckets_n;             // number of elements in bucket array
+    i32                        ind_cfmt_n;                     // number of elements in the hash table
+    lib_ctype::FCppfunc*       cppfunc_lary[32];               // level array
+    i32                        cppfunc_n;                      // number of elements in array
+    lib_ctype::FSubstr*        substr_lary[32];                // level array
+    i32                        substr_n;                       // number of elements in array
+    lib_ctype::FCtype*         c_axprice;                      // optional pointer
+    lib_ctype::FField*         c_fixmsg;                       // optional pointer
+    lib_ctype::FCtype*         c_bool;                         // optional pointer
+    lib_ctype::FUnstablefld*   unstablefld_lary[32];           // level array
+    i32                        unstablefld_n;                  // number of elements in array
+    lib_ctype::trace           trace;                          //
 };
 
 // Allocate memory for new default row.
@@ -573,6 +580,8 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -674,6 +683,34 @@ lib_ctype::FSubstr&  substr_qFind(u64 t) __attribute__((nothrow));
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 substr_XrefMaybe(lib_ctype::FSubstr &row);
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+lib_ctype::FUnstablefld& unstablefld_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+lib_ctype::FUnstablefld* unstablefld_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+lib_ctype::FUnstablefld* unstablefld_InsertMaybe(const dev::Unstablefld &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                unstablefld_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 unstablefld_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+lib_ctype::FUnstablefld* unstablefld_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+lib_ctype::FUnstablefld* unstablefld_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  unstablefld_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 unstablefld_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 unstablefld_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+lib_ctype::FUnstablefld& unstablefld_qFind(u64 t) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 unstablefld_XrefMaybe(lib_ctype::FUnstablefld &row);
+
 // cursor points to valid item
 void                 _db_fconst_curs_Reset(_db_fconst_curs &curs, lib_ctype::FDb &parent);
 // cursor points to valid item
@@ -746,6 +783,14 @@ bool                 _db_substr_curs_ValidQ(_db_substr_curs &curs);
 void                 _db_substr_curs_Next(_db_substr_curs &curs);
 // item access
 lib_ctype::FSubstr&  _db_substr_curs_Access(_db_substr_curs &curs);
+// cursor points to valid item
+void                 _db_unstablefld_curs_Reset(_db_unstablefld_curs &curs, lib_ctype::FDb &parent);
+// cursor points to valid item
+bool                 _db_unstablefld_curs_ValidQ(_db_unstablefld_curs &curs);
+// proceed to next item
+void                 _db_unstablefld_curs_Next(_db_unstablefld_curs &curs);
+// item access
+lib_ctype::FUnstablefld& _db_unstablefld_curs_Access(_db_unstablefld_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
@@ -795,23 +840,24 @@ void                 FFconst_Print(lib_ctype::FFconst & row, algo::cstring &str)
 // global access: c_fixmsg (Ptr)
 // access: lib_ctype.FCtype.c_field (Ptrary)
 struct FField { // lib_ctype.FField
-    lib_ctype::FField*     ind_field_next;         // hash next
-    algo::Smallstr100      field;                  //
-    algo::Smallstr50       arg;                    // type of field
-    algo::Smallstr50       reftype;                //   "Val"
-    dmmeta::CppExpr        dflt;                   // default value (c++ expression)
-    algo::Comment          comment;                //
-    bool                   istuple_computed;       //   false
-    lib_ctype::FFtuple*    c_ftuple;               // optional pointer
-    lib_ctype::FCtype*     p_arg;                  // reference to parent row
-    bool                   has_fconst;             //   false
-    bool                   istuple;                //   false
-    lib_ctype::FFconst*    zd_fconst_head;         // zero-terminated doubly linked list
-    i32                    zd_fconst_n;            // zero-terminated doubly linked list
-    lib_ctype::FFconst*    zd_fconst_tail;         // pointer to last element
-    lib_ctype::FCppfunc*   c_cppfunc;              // optional pointer
-    lib_ctype::FSubstr*    c_substr;               // optional pointer
-    bool                   ctype_c_field_in_ary;   //   false  membership flag
+    lib_ctype::FField*         ind_field_next;         // hash next
+    algo::Smallstr100          field;                  //
+    algo::Smallstr50           arg;                    // type of field
+    algo::Smallstr50           reftype;                //   "Val"
+    dmmeta::CppExpr            dflt;                   // default value (c++ expression)
+    algo::Comment              comment;                //
+    bool                       istuple_computed;       //   false
+    lib_ctype::FFtuple*        c_ftuple;               // optional pointer
+    lib_ctype::FCtype*         p_arg;                  // reference to parent row
+    bool                       has_fconst;             //   false
+    bool                       istuple;                //   false
+    lib_ctype::FFconst*        zd_fconst_head;         // zero-terminated doubly linked list
+    i32                        zd_fconst_n;            // zero-terminated doubly linked list
+    lib_ctype::FFconst*        zd_fconst_tail;         // pointer to last element
+    lib_ctype::FCppfunc*       c_cppfunc;              // optional pointer
+    lib_ctype::FSubstr*        c_substr;               // optional pointer
+    lib_ctype::FUnstablefld*   c_unstablefld;          // optional pointer
+    bool                       ctype_c_field_in_ary;   //   false  membership flag
 private:
     friend lib_ctype::FField&   field_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend lib_ctype::FField*   field_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -872,6 +918,11 @@ void                 c_cppfunc_Remove(lib_ctype::FField& field, lib_ctype::FCppf
 bool                 c_substr_InsertMaybe(lib_ctype::FField& field, lib_ctype::FSubstr& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 void                 c_substr_Remove(lib_ctype::FField& field, lib_ctype::FSubstr& row) __attribute__((nothrow));
+
+// Insert row into pointer index. Return final membership status.
+bool                 c_unstablefld_InsertMaybe(lib_ctype::FField& field, lib_ctype::FUnstablefld& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+void                 c_unstablefld_Remove(lib_ctype::FField& field, lib_ctype::FUnstablefld& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FField_Init(lib_ctype::FField& field);
@@ -967,6 +1018,30 @@ void                 substr_CopyOut(lib_ctype::FSubstr &row, dmmeta::Substr &out
 void                 substr_CopyIn(lib_ctype::FSubstr &row, dmmeta::Substr &in) __attribute__((nothrow));
 
 void                 FSubstr_Uninit(lib_ctype::FSubstr& substr) __attribute__((nothrow));
+
+// --- lib_ctype.FUnstablefld
+// create: lib_ctype.FDb.unstablefld (Lary)
+// access: lib_ctype.FField.c_unstablefld (Ptr)
+struct FUnstablefld { // lib_ctype.FUnstablefld
+    algo::Smallstr100   field;     //
+    algo::Comment       comment;   //
+private:
+    friend lib_ctype::FUnstablefld& unstablefld_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_ctype::FUnstablefld* unstablefld_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 unstablefld_RemoveAll() __attribute__((nothrow));
+    friend void                 unstablefld_RemoveLast() __attribute__((nothrow));
+    FUnstablefld();
+    ~FUnstablefld();
+    FUnstablefld(const FUnstablefld&){ /*disallow copy constructor */}
+    void operator =(const FUnstablefld&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 unstablefld_CopyOut(lib_ctype::FUnstablefld &row, dev::Unstablefld &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 unstablefld_CopyIn(lib_ctype::FUnstablefld &row, dev::Unstablefld &in) __attribute__((nothrow));
+
+void                 FUnstablefld_Uninit(lib_ctype::FUnstablefld& unstablefld) __attribute__((nothrow));
 
 // --- lib_ctype.FieldId
 #pragma pack(push,1)
@@ -1149,6 +1224,14 @@ struct _db_substr_curs {// cursor
     lib_ctype::FDb *parent;
     i64 index;
     _db_substr_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_unstablefld_curs {// cursor
+    typedef lib_ctype::FUnstablefld ChildType;
+    lib_ctype::FDb *parent;
+    i64 index;
+    _db_unstablefld_curs(){ parent=NULL; index=0; }
 };
 
 

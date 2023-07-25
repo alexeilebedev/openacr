@@ -88,7 +88,8 @@ void                 trace_Print(lib_json::trace & row, algo::cstring &str) __at
 // create: lib_json.FDb._db (Global)
 struct FDb { // lib_json.FDb
     lpool_Lpblock*      lpool_free[31];             // Lpool levels
-    u32                 node_blocksize;             // # bytes per block
+    u32                 lpool_lock;                 // Lpool lock
+    u64                 node_blocksize;             // # bytes per block
     lib_json::FNode*    node_free;                  //
     lib_json::FNode**   ind_objfld_buckets_elems;   // pointer to bucket array
     i32                 ind_objfld_buckets_n;       // number of elements in bucket array
@@ -117,6 +118,8 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -173,6 +176,9 @@ struct FldKey { // lib_json.FldKey
     bool operator ==(const lib_json::FldKey &rhs) const;
     bool operator !=(const lib_json::FldKey &rhs) const;
     bool operator <(const lib_json::FldKey &rhs) const;
+    bool operator >(const lib_json::FldKey &rhs) const;
+    bool operator <=(const lib_json::FldKey &rhs) const;
+    bool operator >=(const lib_json::FldKey &rhs) const;
     FldKey();
 };
 

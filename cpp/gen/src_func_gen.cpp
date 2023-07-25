@@ -193,7 +193,7 @@ void* src_func::genprefix_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.genprefix_n = new_nelems;
+        _db.genprefix_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -205,7 +205,7 @@ void src_func::genprefix_RemoveAll() {
     for (u64 n = _db.genprefix_n; n>0; ) {
         n--;
         genprefix_qFind(u64(n)).~FGenprefix(); // destroy last element
-        _db.genprefix_n = n;
+        _db.genprefix_n = i32(n);
     }
 }
 
@@ -216,7 +216,7 @@ void src_func::genprefix_RemoveLast() {
     if (n > 0) {
         n -= 1;
         genprefix_qFind(u64(n)).~FGenprefix();
-        _db.genprefix_n = n;
+        _db.genprefix_n = i32(n);
     }
 }
 
@@ -256,7 +256,7 @@ void src_func::MainLoop() {
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
-        algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+        src_func::Steps();
     } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
 }
 
@@ -366,6 +366,12 @@ bool src_func::LoadSsimfileMaybe(algo::strptr fname) {
     return retval;
 }
 
+// --- src_func.FDb._db.Steps
+// Calls Step function of dependencies
+void src_func::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
 // --- src_func.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -429,7 +435,7 @@ void* src_func::targsrc_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.targsrc_n = new_nelems;
+        _db.targsrc_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -442,14 +448,14 @@ void src_func::targsrc_RemoveLast() {
     if (n > 0) {
         n -= 1;
         targsrc_qFind(u64(n)).~FTargsrc();
-        _db.targsrc_n = n;
+        _db.targsrc_n = i32(n);
     }
 }
 
 // --- src_func.FDb.targsrc.InputMaybe
 static bool src_func::targsrc_InputMaybe(dev::Targsrc &elem) {
     bool retval = true;
-    retval = targsrc_InsertMaybe(elem);
+    retval = targsrc_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -530,7 +536,7 @@ void* src_func::target_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.target_n = new_nelems;
+        _db.target_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -543,14 +549,14 @@ void src_func::target_RemoveLast() {
     if (n > 0) {
         n -= 1;
         target_qFind(u64(n)).~FTarget();
-        _db.target_n = n;
+        _db.target_n = i32(n);
     }
 }
 
 // --- src_func.FDb.target.InputMaybe
 static bool src_func::target_InputMaybe(dev::Target &elem) {
     bool retval = true;
-    retval = target_InsertMaybe(elem);
+    retval = target_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -608,6 +614,7 @@ src_func::FTarget& src_func::ind_target_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "src_func.create_error  table:ind_target  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -734,7 +741,7 @@ void* src_func::func_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.func_n = new_nelems;
+        _db.func_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -746,7 +753,7 @@ void src_func::func_RemoveAll() {
     for (u64 n = _db.func_n; n>0; ) {
         n--;
         func_qFind(u64(n)).~FFunc(); // destroy last element
-        _db.func_n = n;
+        _db.func_n = i32(n);
     }
 }
 
@@ -757,7 +764,7 @@ void src_func::func_RemoveLast() {
     if (n > 0) {
         n -= 1;
         func_qFind(u64(n)).~FFunc();
-        _db.func_n = n;
+        _db.func_n = i32(n);
     }
 }
 
@@ -1127,7 +1134,7 @@ void* src_func::dispatch_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.dispatch_n = new_nelems;
+        _db.dispatch_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1139,7 +1146,7 @@ void src_func::dispatch_RemoveAll() {
     for (u64 n = _db.dispatch_n; n>0; ) {
         n--;
         dispatch_qFind(u64(n)).~FDispatch(); // destroy last element
-        _db.dispatch_n = n;
+        _db.dispatch_n = i32(n);
     }
 }
 
@@ -1150,14 +1157,14 @@ void src_func::dispatch_RemoveLast() {
     if (n > 0) {
         n -= 1;
         dispatch_qFind(u64(n)).~FDispatch();
-        _db.dispatch_n = n;
+        _db.dispatch_n = i32(n);
     }
 }
 
 // --- src_func.FDb.dispatch.InputMaybe
 static bool src_func::dispatch_InputMaybe(dmmeta::Dispatch &elem) {
     bool retval = true;
-    retval = dispatch_InsertMaybe(elem);
+    retval = dispatch_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1225,7 +1232,7 @@ void* src_func::fstep_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fstep_n = new_nelems;
+        _db.fstep_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1237,7 +1244,7 @@ void src_func::fstep_RemoveAll() {
     for (u64 n = _db.fstep_n; n>0; ) {
         n--;
         fstep_qFind(u64(n)).~FFstep(); // destroy last element
-        _db.fstep_n = n;
+        _db.fstep_n = i32(n);
     }
 }
 
@@ -1248,14 +1255,14 @@ void src_func::fstep_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fstep_qFind(u64(n)).~FFstep();
-        _db.fstep_n = n;
+        _db.fstep_n = i32(n);
     }
 }
 
 // --- src_func.FDb.fstep.InputMaybe
 static bool src_func::fstep_InputMaybe(dmmeta::Fstep &elem) {
     bool retval = true;
-    retval = fstep_InsertMaybe(elem);
+    retval = fstep_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1323,7 +1330,7 @@ void* src_func::gstatic_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.gstatic_n = new_nelems;
+        _db.gstatic_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1335,7 +1342,7 @@ void src_func::gstatic_RemoveAll() {
     for (u64 n = _db.gstatic_n; n>0; ) {
         n--;
         gstatic_qFind(u64(n)).~FGstatic(); // destroy last element
-        _db.gstatic_n = n;
+        _db.gstatic_n = i32(n);
     }
 }
 
@@ -1346,14 +1353,14 @@ void src_func::gstatic_RemoveLast() {
     if (n > 0) {
         n -= 1;
         gstatic_qFind(u64(n)).~FGstatic();
-        _db.gstatic_n = n;
+        _db.gstatic_n = i32(n);
     }
 }
 
 // --- src_func.FDb.gstatic.InputMaybe
 static bool src_func::gstatic_InputMaybe(dmmeta::Gstatic &elem) {
     bool retval = true;
-    retval = gstatic_InsertMaybe(elem);
+    retval = gstatic_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1402,6 +1409,7 @@ src_func::FGenprefix& src_func::ind_genprefix_GetOrCreate(const algo::strptr& ke
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "src_func.create_error  table:ind_genprefix  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -1542,7 +1550,7 @@ void* src_func::ctypelen_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ctypelen_n = new_nelems;
+        _db.ctypelen_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1554,7 +1562,7 @@ void src_func::ctypelen_RemoveAll() {
     for (u64 n = _db.ctypelen_n; n>0; ) {
         n--;
         ctypelen_qFind(u64(n)).~FCtypelen(); // destroy last element
-        _db.ctypelen_n = n;
+        _db.ctypelen_n = i32(n);
     }
 }
 
@@ -1565,14 +1573,14 @@ void src_func::ctypelen_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ctypelen_qFind(u64(n)).~FCtypelen();
-        _db.ctypelen_n = n;
+        _db.ctypelen_n = i32(n);
     }
 }
 
 // --- src_func.FDb.ctypelen.InputMaybe
 static bool src_func::ctypelen_InputMaybe(dmmeta::Ctypelen &elem) {
     bool retval = true;
-    retval = ctypelen_InsertMaybe(elem);
+    retval = ctypelen_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1630,6 +1638,7 @@ src_func::FCtypelen& src_func::ind_ctypelen_GetOrCreate(const algo::strptr& key)
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "src_func.create_error  table:ind_ctypelen  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -2615,6 +2624,10 @@ void src_func::TableId_Print(src_func::TableId & row, algo::cstring &str) {
     src_func::value_Print(row, str);
 }
 
+// --- src_func...SizeCheck
+inline static void src_func::SizeCheck() {
+}
+
 // --- src_func...main
 int main(int argc, char **argv) {
     try {
@@ -2645,6 +2658,9 @@ int main(int argc, char **argv) {
     return algo_lib::_db.exit_code;
 }
 
-// --- src_func...SizeCheck
-inline static void src_func::SizeCheck() {
+// --- src_func...WinMain
+#if defined(WIN32)
+int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int) {
+    return main(__argc,__argv);
 }
+#endif

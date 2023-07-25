@@ -25,31 +25,43 @@ enum { acr_ed_FieldIdEnum_N = 1 };
 
 // --- acr_ed_TableIdEnum
 
-enum acr_ed_TableIdEnum {                   // acr_ed.TableId.value
-     acr_ed_TableId_dmmeta_Cstr       = 0   // dmmeta.Cstr -> acr_ed.FCstr
-    ,acr_ed_TableId_dmmeta_cstr       = 0   // dmmeta.cstr -> acr_ed.FCstr
-    ,acr_ed_TableId_dmmeta_Ctype      = 1   // dmmeta.Ctype -> acr_ed.FCtype
-    ,acr_ed_TableId_dmmeta_ctype      = 1   // dmmeta.ctype -> acr_ed.FCtype
-    ,acr_ed_TableId_dmmeta_Field      = 2   // dmmeta.Field -> acr_ed.FField
-    ,acr_ed_TableId_dmmeta_field      = 2   // dmmeta.field -> acr_ed.FField
-    ,acr_ed_TableId_dmmeta_Fprefix    = 3   // dmmeta.Fprefix -> acr_ed.FFprefix
-    ,acr_ed_TableId_dmmeta_fprefix    = 3   // dmmeta.fprefix -> acr_ed.FFprefix
-    ,acr_ed_TableId_dmmeta_Listtype   = 4   // dmmeta.Listtype -> acr_ed.FListtype
-    ,acr_ed_TableId_dmmeta_listtype   = 4   // dmmeta.listtype -> acr_ed.FListtype
-    ,acr_ed_TableId_dmmeta_Ns         = 5   // dmmeta.Ns -> acr_ed.FNs
-    ,acr_ed_TableId_dmmeta_ns         = 5   // dmmeta.ns -> acr_ed.FNs
-    ,acr_ed_TableId_dev_Sandbox       = 6   // dev.Sandbox -> acr_ed.FSandbox
-    ,acr_ed_TableId_dev_sandbox       = 6   // dev.sandbox -> acr_ed.FSandbox
-    ,acr_ed_TableId_dmmeta_Ssimfile   = 7   // dmmeta.Ssimfile -> acr_ed.FSsimfile
-    ,acr_ed_TableId_dmmeta_ssimfile   = 7   // dmmeta.ssimfile -> acr_ed.FSsimfile
-    ,acr_ed_TableId_dev_Target        = 8   // dev.Target -> acr_ed.FTarget
-    ,acr_ed_TableId_dev_target        = 8   // dev.target -> acr_ed.FTarget
-    ,acr_ed_TableId_dev_Targsrc       = 9   // dev.Targsrc -> acr_ed.FTargsrc
-    ,acr_ed_TableId_dev_targsrc       = 9   // dev.targsrc -> acr_ed.FTargsrc
+enum acr_ed_TableIdEnum {                    // acr_ed.TableId.value
+     acr_ed_TableId_dmmeta_Cfmt       = 0    // dmmeta.Cfmt -> acr_ed.FCfmt
+    ,acr_ed_TableId_dmmeta_cfmt       = 0    // dmmeta.cfmt -> acr_ed.FCfmt
+    ,acr_ed_TableId_dmmeta_Cpptype    = 1    // dmmeta.Cpptype -> acr_ed.FCpptype
+    ,acr_ed_TableId_dmmeta_cpptype    = 1    // dmmeta.cpptype -> acr_ed.FCpptype
+    ,acr_ed_TableId_dmmeta_Cstr       = 2    // dmmeta.Cstr -> acr_ed.FCstr
+    ,acr_ed_TableId_dmmeta_cstr       = 2    // dmmeta.cstr -> acr_ed.FCstr
+    ,acr_ed_TableId_dmmeta_Ctype      = 3    // dmmeta.Ctype -> acr_ed.FCtype
+    ,acr_ed_TableId_dmmeta_ctype      = 3    // dmmeta.ctype -> acr_ed.FCtype
+    ,acr_ed_TableId_dmmeta_Field      = 4    // dmmeta.Field -> acr_ed.FField
+    ,acr_ed_TableId_dmmeta_field      = 4    // dmmeta.field -> acr_ed.FField
+    ,acr_ed_TableId_dmmeta_Fprefix    = 5    // dmmeta.Fprefix -> acr_ed.FFprefix
+    ,acr_ed_TableId_dmmeta_fprefix    = 5    // dmmeta.fprefix -> acr_ed.FFprefix
+    ,acr_ed_TableId_dmmeta_Listtype   = 6    // dmmeta.Listtype -> acr_ed.FListtype
+    ,acr_ed_TableId_dmmeta_listtype   = 6    // dmmeta.listtype -> acr_ed.FListtype
+    ,acr_ed_TableId_dmmeta_Ns         = 7    // dmmeta.Ns -> acr_ed.FNs
+    ,acr_ed_TableId_dmmeta_ns         = 7    // dmmeta.ns -> acr_ed.FNs
+    ,acr_ed_TableId_dmmeta_Nsdb       = 8    // dmmeta.Nsdb -> acr_ed.FNsdb
+    ,acr_ed_TableId_dmmeta_nsdb       = 8    // dmmeta.nsdb -> acr_ed.FNsdb
+    ,acr_ed_TableId_dmmeta_Pack       = 9    // dmmeta.Pack -> acr_ed.FPack
+    ,acr_ed_TableId_dmmeta_pack       = 9    // dmmeta.pack -> acr_ed.FPack
+    ,acr_ed_TableId_dev_Sandbox       = 10   // dev.Sandbox -> acr_ed.FSandbox
+    ,acr_ed_TableId_dev_sandbox       = 10   // dev.sandbox -> acr_ed.FSandbox
+    ,acr_ed_TableId_dmmeta_Ssimfile   = 11   // dmmeta.Ssimfile -> acr_ed.FSsimfile
+    ,acr_ed_TableId_dmmeta_ssimfile   = 11   // dmmeta.ssimfile -> acr_ed.FSsimfile
+    ,acr_ed_TableId_dev_Target        = 12   // dev.Target -> acr_ed.FTarget
+    ,acr_ed_TableId_dev_target        = 12   // dev.target -> acr_ed.FTarget
+    ,acr_ed_TableId_dev_Targsrc       = 13   // dev.Targsrc -> acr_ed.FTargsrc
+    ,acr_ed_TableId_dev_targsrc       = 13   // dev.targsrc -> acr_ed.FTargsrc
+    ,acr_ed_TableId_dmmeta_Typefld    = 14   // dmmeta.Typefld -> acr_ed.FTypefld
+    ,acr_ed_TableId_dmmeta_typefld    = 14   // dmmeta.typefld -> acr_ed.FTypefld
 };
 
-enum { acr_ed_TableIdEnum_N = 20 };
+enum { acr_ed_TableIdEnum_N = 30 };
 
+namespace dmmeta { struct Cfmt; }
+namespace dmmeta { struct Cpptype; }
 namespace dmmeta { struct Cstr; }
 namespace dmmeta { struct Ctype; }
 namespace acr_ed { struct FNs; }
@@ -58,23 +70,32 @@ namespace acr_ed { struct FCtype; }
 namespace dmmeta { struct Fprefix; }
 namespace dmmeta { struct Listtype; }
 namespace dmmeta { struct Ns; }
+namespace dmmeta { struct Nsdb; }
+namespace dmmeta { struct Pack; }
 namespace dev { struct Sandbox; }
 namespace dmmeta { struct Ssimfile; }
 namespace dev { struct Target; }
 namespace dev { struct Targsrc; }
 namespace acr_ed { struct FTarget; }
+namespace dmmeta { struct Typefld; }
+namespace acr_ed { struct FCfmt; }
+namespace acr_ed { struct FCpptype; }
 namespace acr_ed { struct FCstr; }
 namespace acr_ed { struct trace; }
 namespace acr_ed { struct FDb; }
 namespace acr_ed { struct FField; }
 namespace acr_ed { struct FFprefix; }
 namespace acr_ed { struct FListtype; }
+namespace acr_ed { struct FNsdb; }
+namespace acr_ed { struct FPack; }
 namespace acr_ed { struct FSandbox; }
 namespace acr_ed { struct FSsimfile; }
 namespace acr_ed { struct FTargsrc; }
+namespace acr_ed { struct FTypefld; }
 namespace acr_ed { struct FieldId; }
 namespace acr_ed { struct TableId; }
 namespace acr_ed { struct ctype_c_field_curs; }
+namespace acr_ed { struct ctype_c_cfmt_curs; }
 namespace acr_ed { struct _db_ns_curs; }
 namespace acr_ed { struct _db_ind_ns_curs; }
 namespace acr_ed { struct _db_field_curs; }
@@ -93,12 +114,81 @@ namespace acr_ed { struct _db_target_curs; }
 namespace acr_ed { struct _db_ind_target_curs; }
 namespace acr_ed { struct _db_targsrc_curs; }
 namespace acr_ed { struct _db_sandbox_curs; }
+namespace acr_ed { struct _db_pack_curs; }
+namespace acr_ed { struct _db_typefld_curs; }
+namespace acr_ed { struct _db_cpptype_curs; }
+namespace acr_ed { struct _db_cfmt_curs; }
+namespace acr_ed { struct _db_nsdb_curs; }
+namespace acr_ed { struct _db_ind_nsdb_curs; }
 namespace acr_ed {
 }//pkey typedefs
 namespace acr_ed {
 extern const char *acr_ed_help;
 extern const char *acr_ed_syntax;
 extern FDb _db;
+
+// --- acr_ed.FCfmt
+// create: acr_ed.FDb.cfmt (Lary)
+// access: acr_ed.FCtype.c_cfmt (Ptrary)
+struct FCfmt { // acr_ed.FCfmt
+    algo::Smallstr100   cfmt;       //
+    algo::Smallstr50    printfmt;   //
+    bool                read;       //   false
+    bool                print;      //   false
+    algo::Smallstr20    sep;        //
+    bool                genop;      //   false
+    algo::Comment       comment;    //
+private:
+    friend acr_ed::FCfmt&       cfmt_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_ed::FCfmt*       cfmt_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 cfmt_RemoveAll() __attribute__((nothrow));
+    friend void                 cfmt_RemoveLast() __attribute__((nothrow));
+    FCfmt();
+    ~FCfmt();
+    FCfmt(const FCfmt&){ /*disallow copy constructor */}
+    void operator =(const FCfmt&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 cfmt_CopyOut(acr_ed::FCfmt &row, dmmeta::Cfmt &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 cfmt_CopyIn(acr_ed::FCfmt &row, dmmeta::Cfmt &in) __attribute__((nothrow));
+
+algo::Smallstr50     ctype_Get(acr_ed::FCfmt& cfmt) __attribute__((__warn_unused_result__, nothrow));
+
+algo::Smallstr50     strfmt_Get(acr_ed::FCfmt& cfmt) __attribute__((__warn_unused_result__, nothrow));
+
+// Set all fields to initial values.
+void                 FCfmt_Init(acr_ed::FCfmt& cfmt);
+void                 FCfmt_Uninit(acr_ed::FCfmt& cfmt) __attribute__((nothrow));
+
+// --- acr_ed.FCpptype
+// create: acr_ed.FDb.cpptype (Lary)
+// access: acr_ed.FCtype.c_cpptype (Ptr)
+struct FCpptype { // acr_ed.FCpptype
+    algo::Smallstr50   ctype;        //
+    bool               ctor;         //   false  if true, generate non-default constructor from all fields
+    bool               dtor;         //   true  generate non-default destructor
+    bool               cheap_copy;   //   false  Pass by value whenever possible
+private:
+    friend acr_ed::FCpptype&    cpptype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_ed::FCpptype*    cpptype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 cpptype_RemoveAll() __attribute__((nothrow));
+    friend void                 cpptype_RemoveLast() __attribute__((nothrow));
+    FCpptype();
+    ~FCpptype();
+    FCpptype(const FCpptype&){ /*disallow copy constructor */}
+    void operator =(const FCpptype&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 cpptype_CopyOut(acr_ed::FCpptype &row, dmmeta::Cpptype &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 cpptype_CopyIn(acr_ed::FCpptype &row, dmmeta::Cpptype &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 FCpptype_Init(acr_ed::FCpptype& cpptype);
+void                 FCpptype_Uninit(acr_ed::FCpptype& cpptype) __attribute__((nothrow));
 
 // --- acr_ed.FCstr
 // create: acr_ed.FDb.cstr (Lary)
@@ -141,6 +231,12 @@ struct FCtype { // acr_ed.FCtype
     acr_ed::FCstr*       c_cstr;           // optional pointer
     acr_ed::FNs*         p_ns;             // reference to parent row
     acr_ed::FSsimfile*   c_ssimfile;       // optional pointer
+    acr_ed::FPack*       c_pack;           // optional pointer
+    acr_ed::FTypefld*    c_typefld;        // optional pointer
+    acr_ed::FCpptype*    c_cpptype;        // optional pointer
+    acr_ed::FCfmt**      c_cfmt_elems;     // array of pointers
+    u32                  c_cfmt_n;         // array of pointers
+    u32                  c_cfmt_max;       // capacity of allocated array
     acr_ed::FCtype*      ind_ctype_next;   // hash next
 private:
     friend acr_ed::FCtype&      ctype_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -193,6 +289,44 @@ bool                 c_ssimfile_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FSsim
 // Remove element from index. If element is not in index, do nothing.
 void                 c_ssimfile_Remove(acr_ed::FCtype& ctype, acr_ed::FSsimfile& row) __attribute__((nothrow));
 
+// Insert row into pointer index. Return final membership status.
+bool                 c_pack_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FPack& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+void                 c_pack_Remove(acr_ed::FCtype& ctype, acr_ed::FPack& row) __attribute__((nothrow));
+
+// Insert row into pointer index. Return final membership status.
+bool                 c_typefld_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FTypefld& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+void                 c_typefld_Remove(acr_ed::FCtype& ctype, acr_ed::FTypefld& row) __attribute__((nothrow));
+
+// Insert row into pointer index. Return final membership status.
+bool                 c_cpptype_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FCpptype& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+void                 c_cpptype_Remove(acr_ed::FCtype& ctype, acr_ed::FCpptype& row) __attribute__((nothrow));
+
+// Return true if index is empty
+bool                 c_cfmt_EmptyQ(acr_ed::FCtype& ctype) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+acr_ed::FCfmt*       c_cfmt_Find(acr_ed::FCtype& ctype, u32 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array of pointers
+algo::aryptr<acr_ed::FCfmt*> c_cfmt_Getary(acr_ed::FCtype& ctype) __attribute__((nothrow));
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+void                 c_cfmt_Insert(acr_ed::FCtype& ctype, acr_ed::FCfmt& row) __attribute__((nothrow));
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Linear search is used to locate the element.
+// Return value: whether element was inserted into array.
+bool                 c_cfmt_ScanInsertMaybe(acr_ed::FCtype& ctype, acr_ed::FCfmt& row) __attribute__((nothrow));
+// Return number of items in the pointer array
+i32                  c_cfmt_N(const acr_ed::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void                 c_cfmt_Remove(acr_ed::FCtype& ctype, acr_ed::FCfmt& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+void                 c_cfmt_RemoveAll(acr_ed::FCtype& ctype) __attribute__((nothrow));
+// Reserve space in index for N more elements;
+void                 c_cfmt_Reserve(acr_ed::FCtype& ctype, u32 n) __attribute__((nothrow));
+
 void                 ctype_c_field_curs_Reset(ctype_c_field_curs &curs, acr_ed::FCtype &parent);
 // cursor points to valid item
 bool                 ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs);
@@ -200,6 +334,13 @@ bool                 ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs);
 void                 ctype_c_field_curs_Next(ctype_c_field_curs &curs);
 // item access
 acr_ed::FField&      ctype_c_field_curs_Access(ctype_c_field_curs &curs);
+void                 ctype_c_cfmt_curs_Reset(ctype_c_cfmt_curs &curs, acr_ed::FCtype &parent);
+// cursor points to valid item
+bool                 ctype_c_cfmt_curs_ValidQ(ctype_c_cfmt_curs &curs);
+// proceed to next item
+void                 ctype_c_cfmt_curs_Next(ctype_c_cfmt_curs &curs);
+// item access
+acr_ed::FCfmt&       ctype_c_cfmt_curs_Access(ctype_c_cfmt_curs &curs);
 // Set all fields to initial values.
 void                 FCtype_Init(acr_ed::FCtype& ctype);
 void                 FCtype_Uninit(acr_ed::FCtype& ctype) __attribute__((nothrow));
@@ -278,6 +419,19 @@ struct FDb { // acr_ed.FDb
     i32                   abt_status;                   //   0  last exit status of child process
     acr_ed::FSandbox*     sandbox_lary[32];             // level array
     i32                   sandbox_n;                    // number of elements in array
+    acr_ed::FPack*        pack_lary[32];                // level array
+    i32                   pack_n;                       // number of elements in array
+    acr_ed::FTypefld*     typefld_lary[32];             // level array
+    i32                   typefld_n;                    // number of elements in array
+    acr_ed::FCpptype*     cpptype_lary[32];             // level array
+    i32                   cpptype_n;                    // number of elements in array
+    acr_ed::FCfmt*        cfmt_lary[32];                // level array
+    i32                   cfmt_n;                       // number of elements in array
+    acr_ed::FNsdb*        nsdb_lary[32];                // level array
+    i32                   nsdb_n;                       // number of elements in array
+    acr_ed::FNsdb**       ind_nsdb_buckets_elems;       // pointer to bucket array
+    i32                   ind_nsdb_buckets_n;           // number of elements in bucket array
+    i32                   ind_nsdb_n;                   // number of elements in the hash table
     acr_ed::trace         trace;                        //
 };
 
@@ -340,6 +494,8 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -528,6 +684,8 @@ algo::cstring&       vis_qFind(u64 t) __attribute__((nothrow));
 algo::cstring&       vis_qLast() __attribute__((nothrow));
 // Return row id of specified element
 u64                  vis_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> vis_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -734,6 +892,163 @@ acr_ed::FSandbox&    sandbox_qFind(u64 t) __attribute__((nothrow));
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 sandbox_XrefMaybe(acr_ed::FSandbox &row);
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_ed::FPack&       pack_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+acr_ed::FPack*       pack_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_ed::FPack*       pack_InsertMaybe(const dmmeta::Pack &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                pack_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 pack_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+acr_ed::FPack*       pack_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+acr_ed::FPack*       pack_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  pack_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 pack_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 pack_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+acr_ed::FPack&       pack_qFind(u64 t) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 pack_XrefMaybe(acr_ed::FPack &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_ed::FTypefld&    typefld_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+acr_ed::FTypefld*    typefld_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_ed::FTypefld*    typefld_InsertMaybe(const dmmeta::Typefld &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                typefld_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 typefld_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+acr_ed::FTypefld*    typefld_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+acr_ed::FTypefld*    typefld_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  typefld_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 typefld_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 typefld_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+acr_ed::FTypefld&    typefld_qFind(u64 t) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 typefld_XrefMaybe(acr_ed::FTypefld &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_ed::FCpptype&    cpptype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+acr_ed::FCpptype*    cpptype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_ed::FCpptype*    cpptype_InsertMaybe(const dmmeta::Cpptype &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                cpptype_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 cpptype_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+acr_ed::FCpptype*    cpptype_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+acr_ed::FCpptype*    cpptype_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  cpptype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 cpptype_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 cpptype_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+acr_ed::FCpptype&    cpptype_qFind(u64 t) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 cpptype_XrefMaybe(acr_ed::FCpptype &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_ed::FCfmt&       cfmt_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+acr_ed::FCfmt*       cfmt_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_ed::FCfmt*       cfmt_InsertMaybe(const dmmeta::Cfmt &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                cfmt_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 cfmt_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+acr_ed::FCfmt*       cfmt_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+acr_ed::FCfmt*       cfmt_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  cfmt_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 cfmt_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 cfmt_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+acr_ed::FCfmt&       cfmt_qFind(u64 t) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 cfmt_XrefMaybe(acr_ed::FCfmt &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_ed::FNsdb&       nsdb_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+acr_ed::FNsdb*       nsdb_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_ed::FNsdb*       nsdb_InsertMaybe(const dmmeta::Nsdb &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                nsdb_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 nsdb_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+acr_ed::FNsdb*       nsdb_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+acr_ed::FNsdb*       nsdb_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  nsdb_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 nsdb_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 nsdb_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+acr_ed::FNsdb&       nsdb_qFind(u64 t) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 nsdb_XrefMaybe(acr_ed::FNsdb &row);
+
+// Return true if hash is empty
+bool                 ind_nsdb_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+acr_ed::FNsdb*       ind_nsdb_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+acr_ed::FNsdb&       ind_nsdb_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr_ed::FNsdb&       ind_nsdb_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+i32                  ind_nsdb_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool                 ind_nsdb_InsertMaybe(acr_ed::FNsdb& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void                 ind_nsdb_Remove(acr_ed::FNsdb& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+void                 ind_nsdb_Reserve(int n) __attribute__((nothrow));
+
 // cursor points to valid item
 void                 _db_ns_curs_Reset(_db_ns_curs &curs, acr_ed::FDb &parent);
 // cursor points to valid item
@@ -821,6 +1136,46 @@ bool                 _db_sandbox_curs_ValidQ(_db_sandbox_curs &curs);
 void                 _db_sandbox_curs_Next(_db_sandbox_curs &curs);
 // item access
 acr_ed::FSandbox&    _db_sandbox_curs_Access(_db_sandbox_curs &curs);
+// cursor points to valid item
+void                 _db_pack_curs_Reset(_db_pack_curs &curs, acr_ed::FDb &parent);
+// cursor points to valid item
+bool                 _db_pack_curs_ValidQ(_db_pack_curs &curs);
+// proceed to next item
+void                 _db_pack_curs_Next(_db_pack_curs &curs);
+// item access
+acr_ed::FPack&       _db_pack_curs_Access(_db_pack_curs &curs);
+// cursor points to valid item
+void                 _db_typefld_curs_Reset(_db_typefld_curs &curs, acr_ed::FDb &parent);
+// cursor points to valid item
+bool                 _db_typefld_curs_ValidQ(_db_typefld_curs &curs);
+// proceed to next item
+void                 _db_typefld_curs_Next(_db_typefld_curs &curs);
+// item access
+acr_ed::FTypefld&    _db_typefld_curs_Access(_db_typefld_curs &curs);
+// cursor points to valid item
+void                 _db_cpptype_curs_Reset(_db_cpptype_curs &curs, acr_ed::FDb &parent);
+// cursor points to valid item
+bool                 _db_cpptype_curs_ValidQ(_db_cpptype_curs &curs);
+// proceed to next item
+void                 _db_cpptype_curs_Next(_db_cpptype_curs &curs);
+// item access
+acr_ed::FCpptype&    _db_cpptype_curs_Access(_db_cpptype_curs &curs);
+// cursor points to valid item
+void                 _db_cfmt_curs_Reset(_db_cfmt_curs &curs, acr_ed::FDb &parent);
+// cursor points to valid item
+bool                 _db_cfmt_curs_ValidQ(_db_cfmt_curs &curs);
+// proceed to next item
+void                 _db_cfmt_curs_Next(_db_cfmt_curs &curs);
+// item access
+acr_ed::FCfmt&       _db_cfmt_curs_Access(_db_cfmt_curs &curs);
+// cursor points to valid item
+void                 _db_nsdb_curs_Reset(_db_nsdb_curs &curs, acr_ed::FDb &parent);
+// cursor points to valid item
+bool                 _db_nsdb_curs_ValidQ(_db_nsdb_curs &curs);
+// proceed to next item
+void                 _db_nsdb_curs_Next(_db_nsdb_curs &curs);
+// item access
+acr_ed::FNsdb&       _db_nsdb_curs_Access(_db_nsdb_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
@@ -951,6 +1306,57 @@ void                 ns_CopyIn(acr_ed::FNs &row, dmmeta::Ns &in) __attribute__((
 void                 FNs_Init(acr_ed::FNs& ns);
 void                 FNs_Uninit(acr_ed::FNs& ns) __attribute__((nothrow));
 
+// --- acr_ed.FNsdb
+// create: acr_ed.FDb.nsdb (Lary)
+// global access: ind_nsdb (Thash)
+struct FNsdb { // acr_ed.FNsdb
+    acr_ed::FNsdb*     ind_nsdb_next;   // hash next
+    algo::Smallstr16   ns;              //
+    algo::Comment      comment;         //
+private:
+    friend acr_ed::FNsdb&       nsdb_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_ed::FNsdb*       nsdb_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 nsdb_RemoveAll() __attribute__((nothrow));
+    friend void                 nsdb_RemoveLast() __attribute__((nothrow));
+    FNsdb();
+    ~FNsdb();
+    FNsdb(const FNsdb&){ /*disallow copy constructor */}
+    void operator =(const FNsdb&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 nsdb_CopyOut(acr_ed::FNsdb &row, dmmeta::Nsdb &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 nsdb_CopyIn(acr_ed::FNsdb &row, dmmeta::Nsdb &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 FNsdb_Init(acr_ed::FNsdb& nsdb);
+void                 FNsdb_Uninit(acr_ed::FNsdb& nsdb) __attribute__((nothrow));
+
+// --- acr_ed.FPack
+// create: acr_ed.FDb.pack (Lary)
+// access: acr_ed.FCtype.c_pack (Ptr)
+struct FPack { // acr_ed.FPack
+    algo::Smallstr50   ctype;     // Target ctype
+    algo::Comment      comment;   //
+private:
+    friend acr_ed::FPack&       pack_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_ed::FPack*       pack_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 pack_RemoveAll() __attribute__((nothrow));
+    friend void                 pack_RemoveLast() __attribute__((nothrow));
+    FPack();
+    ~FPack();
+    FPack(const FPack&){ /*disallow copy constructor */}
+    void operator =(const FPack&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 pack_CopyOut(acr_ed::FPack &row, dmmeta::Pack &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 pack_CopyIn(acr_ed::FPack &row, dmmeta::Pack &in) __attribute__((nothrow));
+
+void                 FPack_Uninit(acr_ed::FPack& pack) __attribute__((nothrow));
+
 // --- acr_ed.FSandbox
 // create: acr_ed.FDb.sandbox (Lary)
 struct FSandbox { // acr_ed.FSandbox
@@ -1064,6 +1470,32 @@ algo::Smallstr10     ext_Get(acr_ed::FTargsrc& targsrc) __attribute__((__warn_un
 // Set all fields to initial values.
 void                 FTargsrc_Init(acr_ed::FTargsrc& targsrc);
 
+// --- acr_ed.FTypefld
+// create: acr_ed.FDb.typefld (Lary)
+// access: acr_ed.FCtype.c_typefld (Ptr)
+struct FTypefld { // acr_ed.FTypefld
+    algo::Smallstr100   field;     //
+    algo::Comment       comment;   //
+private:
+    friend acr_ed::FTypefld&    typefld_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_ed::FTypefld*    typefld_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 typefld_RemoveAll() __attribute__((nothrow));
+    friend void                 typefld_RemoveLast() __attribute__((nothrow));
+    FTypefld();
+    ~FTypefld();
+    FTypefld(const FTypefld&){ /*disallow copy constructor */}
+    void operator =(const FTypefld&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 typefld_CopyOut(acr_ed::FTypefld &row, dmmeta::Typefld &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 typefld_CopyIn(acr_ed::FTypefld &row, dmmeta::Typefld &in) __attribute__((nothrow));
+
+algo::Smallstr50     ctype_Get(acr_ed::FTypefld& typefld) __attribute__((__warn_unused_result__, nothrow));
+
+void                 FTypefld_Uninit(acr_ed::FTypefld& typefld) __attribute__((nothrow));
+
 // --- acr_ed.FieldId
 #pragma pack(push,1)
 struct FieldId { // acr_ed.FieldId: Field read helper
@@ -1146,6 +1578,15 @@ struct ctype_c_field_curs {// cursor
     u32 n_elems;
     u32 index;
     ctype_c_field_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
+struct ctype_c_cfmt_curs {// cursor
+    typedef acr_ed::FCfmt ChildType;
+    acr_ed::FCfmt** elems;
+    u32 n_elems;
+    u32 index;
+    ctype_c_cfmt_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
 
@@ -1237,8 +1678,51 @@ struct _db_sandbox_curs {// cursor
     _db_sandbox_curs(){ parent=NULL; index=0; }
 };
 
-int                  main(int argc, char **argv);
+
+struct _db_pack_curs {// cursor
+    typedef acr_ed::FPack ChildType;
+    acr_ed::FDb *parent;
+    i64 index;
+    _db_pack_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_typefld_curs {// cursor
+    typedef acr_ed::FTypefld ChildType;
+    acr_ed::FDb *parent;
+    i64 index;
+    _db_typefld_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_cpptype_curs {// cursor
+    typedef acr_ed::FCpptype ChildType;
+    acr_ed::FDb *parent;
+    i64 index;
+    _db_cpptype_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_cfmt_curs {// cursor
+    typedef acr_ed::FCfmt ChildType;
+    acr_ed::FDb *parent;
+    i64 index;
+    _db_cfmt_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_nsdb_curs {// cursor
+    typedef acr_ed::FNsdb ChildType;
+    acr_ed::FDb *parent;
+    i64 index;
+    _db_nsdb_curs(){ parent=NULL; index=0; }
+};
+
 } // end namespace acr_ed
+int                  main(int argc, char **argv);
+#if defined(WIN32)
+int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
+#endif
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const acr_ed::trace &row);// cfmt:acr_ed.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_ed::FieldId &row);// cfmt:acr_ed.FieldId.String

@@ -13,25 +13,59 @@
 
 // --- atfdb_FieldIdEnum
 
-enum atfdb_FieldIdEnum {            // atfdb.FieldId.value
-     atfdb_FieldId_amctest     = 0
-    ,atfdb_FieldId_comment     = 1
-    ,atfdb_FieldId_normcheck   = 2
-    ,atfdb_FieldId_unittest    = 3
-    ,atfdb_FieldId_target      = 4
-    ,atfdb_FieldId_testname    = 5
-    ,atfdb_FieldId_value       = 6
+enum atfdb_FieldIdEnum {                       // atfdb.FieldId.value
+     atfdb_FieldId_amctest               = 0
+    ,atfdb_FieldId_comment               = 1
+    ,atfdb_FieldId_cijob                 = 2
+    ,atfdb_FieldId_citest                = 3
+    ,atfdb_FieldId_needenv               = 4
+    ,atfdb_FieldId_comptest              = 5
+    ,atfdb_FieldId_target                = 6
+    ,atfdb_FieldId_testname              = 7
+    ,atfdb_FieldId_timeout               = 8
+    ,atfdb_FieldId_memcheck              = 9
+    ,atfdb_FieldId_exit_code             = 10
+    ,atfdb_FieldId_msgdir                = 11
+    ,atfdb_FieldId_args                  = 12
+    ,atfdb_FieldId_test_gsymbol_char     = 13
+    ,atfdb_FieldId_test_gsymbol_pkey     = 14
+    ,atfdb_FieldId_test_gsymbol_strptr   = 15
+    ,atfdb_FieldId_filter                = 16
+    ,atfdb_FieldId_tmsg                  = 17
+    ,atfdb_FieldId_rank                  = 18
+    ,atfdb_FieldId_dir                   = 19
+    ,atfdb_FieldId_msg                   = 20
+    ,atfdb_FieldId_unittest              = 21
+    ,atfdb_FieldId_value                 = 22
 };
 
-enum { atfdb_FieldIdEnum_N = 7 };
+enum { atfdb_FieldIdEnum_N = 23 };
 
+extern const char *  atfdb_Msgdir_msgdir_exp;   // exp    fconst:atfdb.Msgdir.msgdir/exp
+extern const char *  atfdb_Msgdir_msgdir_in;    // in     fconst:atfdb.Msgdir.msgdir/in
 namespace atfdb { struct Amctest; }
+namespace atfdb { struct Cijob; }
+namespace atfdb { struct Citest; }
+namespace atfdb { struct Comptest; }
 namespace atfdb { struct FieldId; }
-namespace atfdb { struct Normcheck; }
+namespace atfdb { struct Msgdir; }
+namespace atfdb { struct Targs; }
+namespace atfdb { struct TestGsymbolChar; }
+namespace atfdb { struct TestGsymbolPkey; }
+namespace atfdb { struct TestGsymbolStrptr; }
+namespace atfdb { struct Tfilt; }
+namespace atfdb { struct Tmsg; }
 namespace atfdb { struct Unittest; }
 namespace atfdb {
     typedef algo::Smallstr50 AmctestPkey;
-    typedef algo::Smallstr50 NormcheckPkey;
+    typedef algo::Smallstr50 CijobPkey;
+    typedef algo::Smallstr50 CitestPkey;
+    typedef algo::Smallstr50 ComptestPkey;
+    typedef algo::Smallstr50 MsgdirPkey;
+    typedef algo::Smallstr50 TestGsymbolCharPkey;
+    typedef algo::Smallstr50 TestGsymbolPkeyPkey;
+    typedef algo::Smallstr50 TestGsymbolStrptrPkey;
+    typedef algo::Smallstr50 TmsgPkey;
     typedef algo::Smallstr50 UnittestPkey;
 }//pkey typedefs
 namespace atfdb {
@@ -49,6 +83,64 @@ bool                 Amctest_ReadFieldMaybe(atfdb::Amctest &parent, algo::strptr
 bool                 Amctest_ReadStrptrMaybe(atfdb::Amctest &parent, algo::strptr in_str);
 // print string representation of atfdb::Amctest to string LHS, no header -- cprint:atfdb.Amctest.String
 void                 Amctest_Print(atfdb::Amctest & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- atfdb.Cijob
+struct Cijob { // atfdb.Cijob
+    algo::Smallstr50   cijob;     //
+    algo::Comment      comment;   //
+    Cijob();
+};
+
+bool                 Cijob_ReadFieldMaybe(atfdb::Cijob &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atfdb::Cijob from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 Cijob_ReadStrptrMaybe(atfdb::Cijob &parent, algo::strptr in_str);
+// print string representation of atfdb::Cijob to string LHS, no header -- cprint:atfdb.Cijob.String
+void                 Cijob_Print(atfdb::Cijob & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- atfdb.Citest
+struct Citest { // atfdb.Citest
+    algo::Smallstr50   citest;    //
+    bool               needenv;   //   false
+    algo::Smallstr50   cijob;     //   "test"
+    algo::Comment      comment;   //
+    Citest();
+};
+
+bool                 Citest_ReadFieldMaybe(atfdb::Citest &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atfdb::Citest from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 Citest_ReadStrptrMaybe(atfdb::Citest &parent, algo::strptr in_str);
+// Set all fields to initial values.
+void                 Citest_Init(atfdb::Citest& parent);
+// print string representation of atfdb::Citest to string LHS, no header -- cprint:atfdb.Citest.String
+void                 Citest_Print(atfdb::Citest & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- atfdb.Comptest
+struct Comptest { // atfdb.Comptest
+    algo::Smallstr50   comptest;    //
+    i32                timeout;     //   10
+    bool               memcheck;    //   true
+    u8                 exit_code;   //   0  Exit code to check
+    algo::Comment      comment;     //
+    Comptest();
+};
+
+algo::Smallstr16     target_Get(atfdb::Comptest& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::Smallstr16     Comptest_target_Get(algo::strptr arg) __attribute__((nothrow));
+
+algo::Smallstr50     testname_Get(atfdb::Comptest& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::Smallstr50     Comptest_testname_Get(algo::strptr arg) __attribute__((nothrow));
+
+tempstr              Comptest_Concat_target_testname( const algo::strptr& target ,const algo::strptr& testname );
+bool                 Comptest_ReadFieldMaybe(atfdb::Comptest &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atfdb::Comptest from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 Comptest_ReadStrptrMaybe(atfdb::Comptest &parent, algo::strptr in_str);
+// Set all fields to initial values.
+void                 Comptest_Init(atfdb::Comptest& parent);
+// print string representation of atfdb::Comptest to string LHS, no header -- cprint:atfdb.Comptest.String
+void                 Comptest_Print(atfdb::Comptest & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- atfdb.FieldId
 #pragma pack(push,1)
@@ -89,19 +181,114 @@ void                 FieldId_Init(atfdb::FieldId& parent);
 // print string representation of atfdb::FieldId to string LHS, no header -- cprint:atfdb.FieldId.String
 void                 FieldId_Print(atfdb::FieldId & row, algo::cstring &str) __attribute__((nothrow));
 
-// --- atfdb.Normcheck
-struct Normcheck { // atfdb.Normcheck
-    algo::Smallstr50   normcheck;   //
-    algo::Comment      comment;     //
-    Normcheck();
+// --- atfdb.Msgdir
+struct Msgdir { // atfdb.Msgdir
+    algo::Smallstr50   msgdir;    //
+    algo::Comment      comment;   //
+    Msgdir();
 };
 
-bool                 Normcheck_ReadFieldMaybe(atfdb::Normcheck &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of atfdb::Normcheck from an ascii string.
+bool                 Msgdir_ReadFieldMaybe(atfdb::Msgdir &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atfdb::Msgdir from an ascii string.
 // The format of the string is an ssim Tuple
-bool                 Normcheck_ReadStrptrMaybe(atfdb::Normcheck &parent, algo::strptr in_str);
-// print string representation of atfdb::Normcheck to string LHS, no header -- cprint:atfdb.Normcheck.String
-void                 Normcheck_Print(atfdb::Normcheck & row, algo::cstring &str) __attribute__((nothrow));
+bool                 Msgdir_ReadStrptrMaybe(atfdb::Msgdir &parent, algo::strptr in_str);
+// print string representation of atfdb::Msgdir to string LHS, no header -- cprint:atfdb.Msgdir.String
+void                 Msgdir_Print(atfdb::Msgdir & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- atfdb.Targs
+struct Targs { // atfdb.Targs
+    algo::Smallstr50   comptest;   //
+    algo::cstring      args;       //
+    Targs();
+};
+
+bool                 Targs_ReadFieldMaybe(atfdb::Targs &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atfdb::Targs from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 Targs_ReadStrptrMaybe(atfdb::Targs &parent, algo::strptr in_str);
+// print string representation of atfdb::Targs to string LHS, no header -- cprint:atfdb.Targs.String
+void                 Targs_Print(atfdb::Targs & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- atfdb.TestGsymbolChar
+struct TestGsymbolChar { // atfdb.TestGsymbolChar
+    algo::Smallstr50   test_gsymbol_char;   //
+    algo::Comment      comment;             //
+    TestGsymbolChar();
+};
+
+bool                 TestGsymbolChar_ReadFieldMaybe(atfdb::TestGsymbolChar &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atfdb::TestGsymbolChar from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 TestGsymbolChar_ReadStrptrMaybe(atfdb::TestGsymbolChar &parent, algo::strptr in_str);
+// print string representation of atfdb::TestGsymbolChar to string LHS, no header -- cprint:atfdb.TestGsymbolChar.String
+void                 TestGsymbolChar_Print(atfdb::TestGsymbolChar & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- atfdb.TestGsymbolPkey
+struct TestGsymbolPkey { // atfdb.TestGsymbolPkey
+    algo::Smallstr50   test_gsymbol_pkey;   //
+    algo::Comment      comment;             //
+    TestGsymbolPkey();
+};
+
+bool                 TestGsymbolPkey_ReadFieldMaybe(atfdb::TestGsymbolPkey &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atfdb::TestGsymbolPkey from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 TestGsymbolPkey_ReadStrptrMaybe(atfdb::TestGsymbolPkey &parent, algo::strptr in_str);
+// print string representation of atfdb::TestGsymbolPkey to string LHS, no header -- cprint:atfdb.TestGsymbolPkey.String
+void                 TestGsymbolPkey_Print(atfdb::TestGsymbolPkey & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- atfdb.TestGsymbolStrptr
+struct TestGsymbolStrptr { // atfdb.TestGsymbolStrptr
+    algo::Smallstr50   test_gsymbol_strptr;   //
+    algo::Comment      comment;               //
+    TestGsymbolStrptr();
+};
+
+bool                 TestGsymbolStrptr_ReadFieldMaybe(atfdb::TestGsymbolStrptr &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atfdb::TestGsymbolStrptr from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 TestGsymbolStrptr_ReadStrptrMaybe(atfdb::TestGsymbolStrptr &parent, algo::strptr in_str);
+// print string representation of atfdb::TestGsymbolStrptr to string LHS, no header -- cprint:atfdb.TestGsymbolStrptr.String
+void                 TestGsymbolStrptr_Print(atfdb::TestGsymbolStrptr & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- atfdb.Tfilt
+struct Tfilt { // atfdb.Tfilt
+    algo::Smallstr50   comptest;   //
+    algo::cstring      filter;     //
+    algo::Comment      comment;    //
+    Tfilt();
+};
+
+bool                 Tfilt_ReadFieldMaybe(atfdb::Tfilt &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atfdb::Tfilt from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 Tfilt_ReadStrptrMaybe(atfdb::Tfilt &parent, algo::strptr in_str);
+// print string representation of atfdb::Tfilt to string LHS, no header -- cprint:atfdb.Tfilt.String
+void                 Tfilt_Print(atfdb::Tfilt & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- atfdb.Tmsg
+struct Tmsg { // atfdb.Tmsg
+    algo::Smallstr50   tmsg;   //
+    algo::cstring      msg;    //
+    Tmsg();
+};
+
+algo::Smallstr50     comptest_Get(atfdb::Tmsg& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::Smallstr50     Tmsg_comptest_Get(algo::strptr arg) __attribute__((nothrow));
+
+i32                  rank_Get(atfdb::Tmsg& parent) __attribute__((__warn_unused_result__, nothrow));
+i32                  Tmsg_rank_Get(algo::strptr arg) __attribute__((nothrow));
+
+algo::Smallstr50     dir_Get(atfdb::Tmsg& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::Smallstr50     Tmsg_dir_Get(algo::strptr arg) __attribute__((nothrow));
+
+tempstr              Tmsg_Concat_comptest_rank_dir( const algo::strptr& comptest ,i32 rank ,const algo::strptr& dir );
+bool                 Tmsg_ReadFieldMaybe(atfdb::Tmsg &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atfdb::Tmsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 Tmsg_ReadStrptrMaybe(atfdb::Tmsg &parent, algo::strptr in_str);
+// print string representation of atfdb::Tmsg to string LHS, no header -- cprint:atfdb.Tmsg.String
+void                 Tmsg_Print(atfdb::Tmsg & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- atfdb.Unittest
 struct Unittest { // atfdb.Unittest
@@ -127,5 +314,14 @@ bool                 Unittest_ReadTupleMaybe(atfdb::Unittest &parent, algo::Tupl
 void                 Unittest_Print(atfdb::Unittest & row, algo::cstring &str) __attribute__((nothrow));
 } // end namespace atfdb
 namespace algo {
+inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Cijob &row);// cfmt:atfdb.Cijob.String
+inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Comptest &row);// cfmt:atfdb.Comptest.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::FieldId &row);// cfmt:atfdb.FieldId.String
+inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Msgdir &row);// cfmt:atfdb.Msgdir.String
+inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Targs &row);// cfmt:atfdb.Targs.String
+inline algo::cstring &operator <<(algo::cstring &str, const atfdb::TestGsymbolChar &row);// cfmt:atfdb.TestGsymbolChar.String
+inline algo::cstring &operator <<(algo::cstring &str, const atfdb::TestGsymbolPkey &row);// cfmt:atfdb.TestGsymbolPkey.String
+inline algo::cstring &operator <<(algo::cstring &str, const atfdb::TestGsymbolStrptr &row);// cfmt:atfdb.TestGsymbolStrptr.String
+inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Tfilt &row);// cfmt:atfdb.Tfilt.String
+inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Tmsg &row);// cfmt:atfdb.Tmsg.String
 }

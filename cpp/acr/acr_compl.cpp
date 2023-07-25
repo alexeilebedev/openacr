@@ -378,12 +378,12 @@ static void Main_Line_Ctype(acr_compl::FCtype *ctype, strptr value, strptr compl
 // -----------------------------------------------------------------------------
 
 static char const *std_opt[] = {
-                                "verbose"
-                                ,"debug"
-                                ,"trace"
-                                ,"version"
-                                ,"help"
-                                ,"sig"
+    "verbose"
+    ,"debug"
+    ,"trace"
+    ,"version"
+    ,"help"
+    ,"sig"
 };
 
 static bool StdOptQ(strptr opt) {
@@ -417,8 +417,8 @@ static char const *FieldToOptionArgtype (strptr arg) {
 }
 
 static bool UniqueCompletionQ(int badness_limit=INT_MAX) {
-    int badness1 = 0;
-    int badness2 = 0;
+    int badness1 = INT_MAX;
+    int badness2 = INT_MAX;
     int iter = 0;
     ind_beg(acr_compl::_db_bh_completion_curs, completion, acr_compl::_db) {
         if (iter == 0) {
@@ -708,9 +708,11 @@ static void Main_Line() {
     // process only the leading badness class,
     // so if there are completions of badness 0 and 1, only 0 gets reported.
     int badness_limit = acr_compl::bh_completion_N() ? acr_compl::bh_completion_First()->badness+1 : INT_MAX;
+    int n_type = 0;
     ind_beg(acr_compl::_db_bh_completion_curs,completion,acr_compl::_db) {
         if (completion.badness >= badness_limit) break;// early escape!
         tempstr out;
+        n_type += StartsWithQ(completion.value,"<") && EndsWithQ(completion.value,">") ? 1 : 0;
         if (acr_compl::_db.cmdline.type == "63") {
             if (ch_N(completion.value)) {
                 // need to escape spaces if any
@@ -746,10 +748,26 @@ static void Main_Line() {
         // so that they have to be specified by the user explicitly,
         // or they have reasonable default, so better to do not to specify them at all.
         prlog(out);
+        dbglog(out);
     }ind_end;
+    // Ugly hack: In some unpredictable situations bash readline treats list completion that yields
+    // sole value as normal completion, i.e. completes instead of just display.
+    // We add second completion for ambuiguity, so it will not have a chance to complete on its own.
+    if (n_type == 1) {
+        prlog("value type");
+        dbglog("value type");
+    }
 }
 
 void acr_compl::Main() {
+    // debug log
+    if (!ch_N(acr_compl::_db.cmdline.debug_log)) {
+        acr_compl::_db.cmdline.debug_log = getenv("ACR_COMPL_DEBUG_LOG");
+    }
+    if (ch_N(acr_compl::_db.cmdline.debug_log)) {
+        algo_lib::_db.cmdline.debug = true;
+        algo_lib::_db.fildes_stderr = OpenWrite(acr_compl::_db.cmdline.debug_log,algo_FileFlags_append);
+    }
     // see how we are invoked
     strptr comp_line = getenv("COMP_LINE");
     if (elems_N(comp_line)) {
@@ -768,6 +786,7 @@ void acr_compl::Main() {
             acr_compl::_db.cmdline.point << ch_N(acr_compl::_db.cmdline.line);
         }
     }
+    dbglog(acr_compl_ToCmdline(acr_compl::_db.cmdline));
     vrfy(acr_compl::LoadTuplesMaybe("data"), algo_lib::_db.errtext);
     if (acr_compl::_db.cmdline.install) {
         Main_Install(algo_lib::_db.argv[0]);

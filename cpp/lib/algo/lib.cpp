@@ -692,3 +692,40 @@ void algo_lib::file_Cleanup(algo_lib::InTextFile &file) {
         file.file.fd = algo::Fildes();
     }
 }
+
+// -----------------------------------------------------------------------------
+
+// Walk child process tree for parent process pid, in post-order traversal way,
+// and send signal sig to each process. Kill_topmost is an option whether
+// to send signal to parent process itself. Return value - number of processes
+// to whose the signal has been actually sent.
+// Does not throw exceptions, just prints error message if kill() fails.
+// Linux only.
+int algo_lib::KillRecurse(int pid, int sig, bool kill_topmost) {
+    int ret(0);
+#ifdef __linux__
+    if (pid>0) {
+        ind_beg(algo::Dir_curs,T,tempstr()<<"/proc/"<<pid<<"/task/*") {
+            cstring ch_file(algo::DirFileJoin(T.pathname,"children"));
+            cstring ch(algo::FileToString(ch_file,algo::FileFlags()));
+            algo::StringIter iter(ch);
+            i64 ch_pid;
+            while (TryParseI64(iter, ch_pid)) {
+                ret += KillRecurse(ch_pid,sig,true);
+            }
+        }ind_end;
+        if (kill_topmost) {
+            int err = kill(pid,sig)==0 ? 0 : errno;
+            if (err && err != ESRCH) {
+                prerr("kill "<<pid<<" "<<sig<<": "<<strerror(err));
+            }
+            ret += err ? 0 : 1;
+        }
+    }
+#else
+    (void)pid;
+    (void)sig;
+    (void)kill_topmost;
+#endif
+    return ret;
+}

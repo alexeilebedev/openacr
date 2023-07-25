@@ -185,6 +185,40 @@ void amc::tfunc_Tary_AllocN() {
 
 // -----------------------------------------------------------------------------
 
+void amc::tfunc_Tary_AllocNVal() {
+    algo_lib::Replscope &R = amc::_db.genfield.R;
+    amc::FField &field = *amc::_db.genfield.p_field;
+    bool can_copy = !CopyPrivQ(*field.p_arg);
+    if (can_copy) {
+        bool can_memset = field.arg == "char" || field.arg == "u8";
+
+        {
+            amc::FFunc& allocnval = amc::CreateCurFunc();
+            Ins(&R, allocnval.ret     , "algo::aryptr<$Cpptype>", false);
+            Ins(&R, allocnval.proto   , "$name_AllocNVal($Parent, int n_elems, const $Cpptype& val)", false);
+            Ins(&R, allocnval.body    , "$name_Reserve($pararg, n_elems);");
+            Ins(&R, allocnval.body    , "int old_n  = $parname.$name_n;");
+            Ins(&R, allocnval.body    , "int new_n = old_n + n_elems;");
+            Ins(&R, allocnval.body    , "$Cpptype *elems = $parname.$name_elems;");
+            if (can_memset) {
+                Ins(&R, allocnval.body, "memset(elems + old_n, val, new_n - old_n); // initialize new space");
+            } else {
+                Ins(&R, allocnval.body, "for (int i = old_n; i < new_n; i++) {");
+                Ins(&R, allocnval.body, "    new (elems + i) $Cpptype(val);");
+                Ins(&R, allocnval.body, "}");
+            }
+            Ins(&R, allocnval.body    , "$parname.$name_n = new_n;");
+            if (field.do_trace) {
+                Set(R, "$partrace", Refname(*field.p_ctype));
+                Ins(&R, allocnval.body, "$ns::_db.trace.alloc_$partrace_$name += n_elems;");
+            }
+            Ins(&R, allocnval.body    , "return algo::aryptr<$Cpptype>(elems + old_n, n_elems);");
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 void amc::tfunc_Tary_EmptyQ() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
 

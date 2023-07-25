@@ -154,14 +154,14 @@ void atf_amc::amctest_BigEndian() {
             u64 (*getfcn)(const atf_amc::TypeBE64sf&);
             void (*setfcn)(atf_amc::TypeBE64sf&, u64);
         } range[8] = {
-                      {  63,  1, atf_amc::bit63_Get    , atf_amc::bit63_Set      }
-                      , {  61,  2, atf_amc::bits62_61_Get, atf_amc::bits62_61_Set  }
-                      , {  58,  3, atf_amc::bits60_58_Get, atf_amc::bits60_58_Set  }
-                      , {  53,  5, atf_amc::bits57_53_Get, atf_amc::bits57_53_Set  }
-                      , {  45,  8, atf_amc::bits52_45_Get, atf_amc::bits52_45_Set  }
-                      , {  32, 13, atf_amc::bits44_32_Get, atf_amc::bits44_32_Set  }
-                      , {  11, 21, atf_amc::bits31_11_Get, atf_amc::bits31_11_Set  }
-                      , {   0, 11, atf_amc::bits10_0_Get , atf_amc::bits10_0_Set   }
+            {  63,  1, atf_amc::bit63_Get    , atf_amc::bit63_Set      }
+            , {  61,  2, atf_amc::bits62_61_Get, atf_amc::bits62_61_Set  }
+            , {  58,  3, atf_amc::bits60_58_Get, atf_amc::bits60_58_Set  }
+            , {  53,  5, atf_amc::bits57_53_Get, atf_amc::bits57_53_Set  }
+            , {  45,  8, atf_amc::bits52_45_Get, atf_amc::bits52_45_Set  }
+            , {  32, 13, atf_amc::bits44_32_Get, atf_amc::bits44_32_Set  }
+            , {  11, 21, atf_amc::bits31_11_Get, atf_amc::bits31_11_Set  }
+            , {   0, 11, atf_amc::bits10_0_Get , atf_amc::bits10_0_Set   }
         };
 
         // running 'one'
@@ -242,7 +242,11 @@ void atf_amc::amctest_BigEndian() {
         vrfy_(!(x1 > x1));
         vrfy_(!(x2 > x2));
         vrfy_(!(x2 > x1));
-        vrfy_(  x1 > x2 );
+        vrfy_(x1 > x2);
+        vrfy_(x1 >= x1);
+        vrfy_(x1 <= x1);
+        vrfy_(x1 >= x2);
+        vrfy_(x2 <= x2);
     }
 }
 

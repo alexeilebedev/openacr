@@ -1058,6 +1058,18 @@ inline bool amc_vis::Nodekey::operator !=(const amc_vis::Nodekey &rhs) const {
 inline bool amc_vis::Nodekey::operator <(const amc_vis::Nodekey &rhs) const {
     return amc_vis::Nodekey_Lt(const_cast<amc_vis::Nodekey&>(*this),const_cast<amc_vis::Nodekey&>(rhs));
 }
+
+inline bool amc_vis::Nodekey::operator >(const amc_vis::Nodekey &rhs) const {
+    return rhs < *this;
+}
+
+inline bool amc_vis::Nodekey::operator <=(const amc_vis::Nodekey &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool amc_vis::Nodekey::operator >=(const amc_vis::Nodekey &rhs) const {
+    return !(*this < rhs);
+}
 inline amc_vis::Nodekey::Nodekey() {
     amc_vis::Nodekey_Init(*this);
 }
@@ -1561,6 +1573,18 @@ inline bool amc_vis::Linkkey::operator !=(const amc_vis::Linkkey &rhs) const {
 
 inline bool amc_vis::Linkkey::operator <(const amc_vis::Linkkey &rhs) const {
     return amc_vis::Linkkey_Lt(const_cast<amc_vis::Linkkey&>(*this),const_cast<amc_vis::Linkkey&>(rhs));
+}
+
+inline bool amc_vis::Linkkey::operator >(const amc_vis::Linkkey &rhs) const {
+    return rhs < *this;
+}
+
+inline bool amc_vis::Linkkey::operator <=(const amc_vis::Linkkey &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool amc_vis::Linkkey::operator >=(const amc_vis::Linkkey &rhs) const {
+    return !(*this < rhs);
 }
 inline amc_vis::Linkkey::Linkkey() {
     amc_vis::Linkkey_Init(*this);

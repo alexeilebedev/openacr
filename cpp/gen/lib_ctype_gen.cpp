@@ -14,6 +14,8 @@
 #include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/dev_gen.h"
+#include "include/gen/dev_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
@@ -33,6 +35,7 @@ namespace lib_ctype {
     static bool          cfmt_InputMaybe(dmmeta::Cfmt &elem) __attribute__((nothrow));
     static bool          cppfunc_InputMaybe(dmmeta::Cppfunc &elem) __attribute__((nothrow));
     static bool          substr_InputMaybe(dmmeta::Substr &elem) __attribute__((nothrow));
+    static bool          unstablefld_InputMaybe(dev::Unstablefld &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
@@ -131,7 +134,7 @@ void lib_ctype::FCfmt_Print(lib_ctype::FCfmt & row, algo::cstring &str) {
     algo::tempstr temp;
     str << "lib_ctype.FCfmt";
 
-    algo::Smallstr50_Print(row.cfmt, temp);
+    algo::Smallstr100_Print(row.cfmt, temp);
     PrintAttrSpaceReset(str,"cfmt", temp);
 
     algo::Smallstr50_Print(row.printfmt, temp);
@@ -408,7 +411,7 @@ void* lib_ctype::fconst_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fconst_n = new_nelems;
+        _db.fconst_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -421,14 +424,14 @@ void lib_ctype::fconst_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fconst_qFind(u64(n)).~FFconst();
-        _db.fconst_n = n;
+        _db.fconst_n = i32(n);
     }
 }
 
 // --- lib_ctype.FDb.fconst.InputMaybe
 static bool lib_ctype::fconst_InputMaybe(dmmeta::Fconst &elem) {
     bool retval = true;
-    retval = fconst_InsertMaybe(elem);
+    retval = fconst_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -724,7 +727,7 @@ void* lib_ctype::ssimfile_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ssimfile_n = new_nelems;
+        _db.ssimfile_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -737,14 +740,14 @@ void lib_ctype::ssimfile_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ssimfile_qFind(u64(n)).~FSsimfile();
-        _db.ssimfile_n = n;
+        _db.ssimfile_n = i32(n);
     }
 }
 
 // --- lib_ctype.FDb.ssimfile.InputMaybe
 static bool lib_ctype::ssimfile_InputMaybe(dmmeta::Ssimfile &elem) {
     bool retval = true;
-    retval = ssimfile_InsertMaybe(elem);
+    retval = ssimfile_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -935,7 +938,7 @@ void* lib_ctype::ftuple_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ftuple_n = new_nelems;
+        _db.ftuple_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -948,14 +951,14 @@ void lib_ctype::ftuple_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ftuple_qFind(u64(n)).~FFtuple();
-        _db.ftuple_n = n;
+        _db.ftuple_n = i32(n);
     }
 }
 
 // --- lib_ctype.FDb.ftuple.InputMaybe
 static bool lib_ctype::ftuple_InputMaybe(dmmeta::Ftuple &elem) {
     bool retval = true;
-    retval = ftuple_InsertMaybe(elem);
+    retval = ftuple_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1037,7 +1040,7 @@ void* lib_ctype::ctype_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ctype_n = new_nelems;
+        _db.ctype_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1050,14 +1053,14 @@ void lib_ctype::ctype_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ctype_qFind(u64(n)).~FCtype();
-        _db.ctype_n = n;
+        _db.ctype_n = i32(n);
     }
 }
 
 // --- lib_ctype.FDb.ctype.InputMaybe
 static bool lib_ctype::ctype_InputMaybe(dmmeta::Ctype &elem) {
     bool retval = true;
-    retval = ctype_InsertMaybe(elem);
+    retval = ctype_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1115,6 +1118,7 @@ lib_ctype::FCtype& lib_ctype::ind_ctype_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "lib_ctype.create_error  table:ind_ctype  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -1255,7 +1259,7 @@ void* lib_ctype::field_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.field_n = new_nelems;
+        _db.field_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1268,14 +1272,14 @@ void lib_ctype::field_RemoveLast() {
     if (n > 0) {
         n -= 1;
         field_qFind(u64(n)).~FField();
-        _db.field_n = n;
+        _db.field_n = i32(n);
     }
 }
 
 // --- lib_ctype.FDb.field.InputMaybe
 static bool lib_ctype::field_InputMaybe(dmmeta::Field &elem) {
     bool retval = true;
-    retval = field_InsertMaybe(elem);
+    retval = field_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1475,7 +1479,7 @@ void* lib_ctype::cdflt_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cdflt_n = new_nelems;
+        _db.cdflt_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1488,14 +1492,14 @@ void lib_ctype::cdflt_RemoveLast() {
     if (n > 0) {
         n -= 1;
         cdflt_qFind(u64(n)).~FCdflt();
-        _db.cdflt_n = n;
+        _db.cdflt_n = i32(n);
     }
 }
 
 // --- lib_ctype.FDb.cdflt.InputMaybe
 static bool lib_ctype::cdflt_InputMaybe(dmmeta::Cdflt &elem) {
     bool retval = true;
-    retval = cdflt_InsertMaybe(elem);
+    retval = cdflt_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1539,7 +1543,7 @@ static void lib_ctype::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ctype.Input'  signature:'ab81c986e2e85d3e267eb18d62976fdef0a8ff70'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ctype.Input'  signature:'56aa21e0268c9c94541e774db6c7745086f42899'");
 }
 
 // --- lib_ctype.FDb._db.StaticCheck
@@ -1609,6 +1613,12 @@ bool lib_ctype::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && substr_InputMaybe(elem);
             break;
         }
+        case lib_ctype_TableId_dev_Unstablefld: { // finput:lib_ctype.FDb.unstablefld
+            dev::Unstablefld elem;
+            retval = dev::Unstablefld_ReadStrptrMaybe(elem, str);
+            retval = retval && unstablefld_InputMaybe(elem);
+            break;
+        }
         default:
         retval = algo_lib::InsertStrptrMaybe(str);
         break;
@@ -1626,7 +1636,7 @@ bool lib_ctype::LoadTuplesMaybe(algo::strptr root) {
     static const char *ssimfiles[] = {
         "dmmeta.ctype", "dmmeta.cdflt", "dmmeta.cfmt", "dmmeta.field"
         , "dmmeta.cppfunc", "dmmeta.fconst", "dmmeta.ftuple", "dmmeta.ssimfile"
-        , "dmmeta.substr"
+        , "dmmeta.substr", "dev.unstablefld"
         , NULL};
         retval = algo_lib::DoLoadTuples(root, lib_ctype::InsertStrptrMaybe, ssimfiles, true);
         return retval;
@@ -1640,6 +1650,12 @@ bool lib_ctype::LoadSsimfileMaybe(algo::strptr fname) {
         retval = algo_lib::LoadTuplesFile(fname, lib_ctype::InsertStrptrMaybe, true);
     }
     return retval;
+}
+
+// --- lib_ctype.FDb._db.Steps
+// Calls Step function of dependencies
+void lib_ctype::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
 // --- lib_ctype.FDb._db.XrefMaybe
@@ -1705,7 +1721,7 @@ void* lib_ctype::cfmt_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cfmt_n = new_nelems;
+        _db.cfmt_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1718,14 +1734,14 @@ void lib_ctype::cfmt_RemoveLast() {
     if (n > 0) {
         n -= 1;
         cfmt_qFind(u64(n)).~FCfmt();
-        _db.cfmt_n = n;
+        _db.cfmt_n = i32(n);
     }
 }
 
 // --- lib_ctype.FDb.cfmt.InputMaybe
 static bool lib_ctype::cfmt_InputMaybe(dmmeta::Cfmt &elem) {
     bool retval = true;
-    retval = cfmt_InsertMaybe(elem);
+    retval = cfmt_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1759,7 +1775,7 @@ bool lib_ctype::cfmt_XrefMaybe(lib_ctype::FCfmt &row) {
 // --- lib_ctype.FDb.ind_cfmt.Find
 // Find row by key. Return NULL if not found.
 lib_ctype::FCfmt* lib_ctype::ind_cfmt_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_cfmt_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_cfmt_buckets_n - 1);
     lib_ctype::FCfmt* *e = &_db.ind_cfmt_buckets_elems[index];
     lib_ctype::FCfmt* ret=NULL;
     do {
@@ -1785,7 +1801,7 @@ bool lib_ctype::ind_cfmt_InsertMaybe(lib_ctype::FCfmt& row) {
     ind_cfmt_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_cfmt_next == (lib_ctype::FCfmt*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.cfmt) & (_db.ind_cfmt_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.cfmt) & (_db.ind_cfmt_buckets_n - 1);
         lib_ctype::FCfmt* *prev = &_db.ind_cfmt_buckets_elems[index];
         do {
             lib_ctype::FCfmt* ret = *prev;
@@ -1811,7 +1827,7 @@ bool lib_ctype::ind_cfmt_InsertMaybe(lib_ctype::FCfmt& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_ctype::ind_cfmt_Remove(lib_ctype::FCfmt& row) {
     if (LIKELY(row.ind_cfmt_next != (lib_ctype::FCfmt*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.cfmt) & (_db.ind_cfmt_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.cfmt) & (_db.ind_cfmt_buckets_n - 1);
         lib_ctype::FCfmt* *prev = &_db.ind_cfmt_buckets_elems[index]; // addr of pointer to current element
         while (lib_ctype::FCfmt *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1848,7 +1864,7 @@ void lib_ctype::ind_cfmt_Reserve(int n) {
             while (elem) {
                 lib_ctype::FCfmt &row        = *elem;
                 lib_ctype::FCfmt* next       = row.ind_cfmt_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.cfmt) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.cfmt) & (new_nbuckets-1);
                 row.ind_cfmt_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1916,7 +1932,7 @@ void* lib_ctype::cppfunc_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cppfunc_n = new_nelems;
+        _db.cppfunc_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1928,7 +1944,7 @@ void lib_ctype::cppfunc_RemoveAll() {
     for (u64 n = _db.cppfunc_n; n>0; ) {
         n--;
         cppfunc_qFind(u64(n)).~FCppfunc(); // destroy last element
-        _db.cppfunc_n = n;
+        _db.cppfunc_n = i32(n);
     }
 }
 
@@ -1939,14 +1955,14 @@ void lib_ctype::cppfunc_RemoveLast() {
     if (n > 0) {
         n -= 1;
         cppfunc_qFind(u64(n)).~FCppfunc();
-        _db.cppfunc_n = n;
+        _db.cppfunc_n = i32(n);
     }
 }
 
 // --- lib_ctype.FDb.cppfunc.InputMaybe
 static bool lib_ctype::cppfunc_InputMaybe(dmmeta::Cppfunc &elem) {
     bool retval = true;
-    retval = cppfunc_InsertMaybe(elem);
+    retval = cppfunc_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -2028,7 +2044,7 @@ void* lib_ctype::substr_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.substr_n = new_nelems;
+        _db.substr_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2040,7 +2056,7 @@ void lib_ctype::substr_RemoveAll() {
     for (u64 n = _db.substr_n; n>0; ) {
         n--;
         substr_qFind(u64(n)).~FSubstr(); // destroy last element
-        _db.substr_n = n;
+        _db.substr_n = i32(n);
     }
 }
 
@@ -2051,14 +2067,14 @@ void lib_ctype::substr_RemoveLast() {
     if (n > 0) {
         n -= 1;
         substr_qFind(u64(n)).~FSubstr();
-        _db.substr_n = n;
+        _db.substr_n = i32(n);
     }
 }
 
 // --- lib_ctype.FDb.substr.InputMaybe
 static bool lib_ctype::substr_InputMaybe(dmmeta::Substr &elem) {
     bool retval = true;
-    retval = substr_InsertMaybe(elem);
+    retval = substr_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -2079,6 +2095,118 @@ bool lib_ctype::substr_XrefMaybe(lib_ctype::FSubstr &row) {
         if (UNLIKELY(!success)) {
             ch_RemoveAll(algo_lib::_db.errtext);
             algo_lib::_db.errtext << "lib_ctype.duplicate_key  xref:lib_ctype.FField.c_substr"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- lib_ctype.FDb.unstablefld.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+lib_ctype::FUnstablefld& lib_ctype::unstablefld_Alloc() {
+    lib_ctype::FUnstablefld* row = unstablefld_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("lib_ctype.out_of_mem  field:lib_ctype.FDb.unstablefld  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- lib_ctype.FDb.unstablefld.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+lib_ctype::FUnstablefld* lib_ctype::unstablefld_AllocMaybe() {
+    lib_ctype::FUnstablefld *row = (lib_ctype::FUnstablefld*)unstablefld_AllocMem();
+    if (row) {
+        new (row) lib_ctype::FUnstablefld; // call constructor
+    }
+    return row;
+}
+
+// --- lib_ctype.FDb.unstablefld.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+lib_ctype::FUnstablefld* lib_ctype::unstablefld_InsertMaybe(const dev::Unstablefld &value) {
+    lib_ctype::FUnstablefld *row = &unstablefld_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    unstablefld_CopyIn(*row,const_cast<dev::Unstablefld&>(value));
+    bool ok = unstablefld_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        unstablefld_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- lib_ctype.FDb.unstablefld.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* lib_ctype::unstablefld_AllocMem() {
+    u64 new_nelems     = _db.unstablefld_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    lib_ctype::FUnstablefld*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.unstablefld_lary[bsr];
+        if (!lev) {
+            lev=(lib_ctype::FUnstablefld*)algo_lib::malloc_AllocMem(sizeof(lib_ctype::FUnstablefld) * (u64(1)<<bsr));
+            _db.unstablefld_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.unstablefld_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- lib_ctype.FDb.unstablefld.RemoveAll
+// Remove all elements from Lary
+void lib_ctype::unstablefld_RemoveAll() {
+    for (u64 n = _db.unstablefld_n; n>0; ) {
+        n--;
+        unstablefld_qFind(u64(n)).~FUnstablefld(); // destroy last element
+        _db.unstablefld_n = i32(n);
+    }
+}
+
+// --- lib_ctype.FDb.unstablefld.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void lib_ctype::unstablefld_RemoveLast() {
+    u64 n = _db.unstablefld_n;
+    if (n > 0) {
+        n -= 1;
+        unstablefld_qFind(u64(n)).~FUnstablefld();
+        _db.unstablefld_n = i32(n);
+    }
+}
+
+// --- lib_ctype.FDb.unstablefld.InputMaybe
+static bool lib_ctype::unstablefld_InputMaybe(dev::Unstablefld &elem) {
+    bool retval = true;
+    retval = unstablefld_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- lib_ctype.FDb.unstablefld.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool lib_ctype::unstablefld_XrefMaybe(lib_ctype::FUnstablefld &row) {
+    bool retval = true;
+    (void)row;
+    lib_ctype::FField* p_field = lib_ctype::ind_field_Find(row.field);
+    if (UNLIKELY(!p_field)) {
+        algo_lib::ResetErrtext() << "lib_ctype.bad_xref  index:lib_ctype.FDb.ind_field" << Keyval("key", row.field);
+        return false;
+    }
+    // insert unstablefld into index c_unstablefld
+    if (true) { // user-defined insert condition
+        bool success = c_unstablefld_InsertMaybe(*p_field, row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "lib_ctype.duplicate_key  xref:lib_ctype.FField.c_unstablefld"; // check for duplicate key
             return false;
         }
     }
@@ -2250,6 +2378,17 @@ void lib_ctype::FDb_Init() {
     _db.c_axprice = NULL;
     _db.c_fixmsg = NULL;
     _db.c_bool = NULL;
+    // initialize LAry unstablefld (lib_ctype.FDb.unstablefld)
+    _db.unstablefld_n = 0;
+    memset(_db.unstablefld_lary, 0, sizeof(_db.unstablefld_lary)); // zero out all level pointers
+    lib_ctype::FUnstablefld* unstablefld_first = (lib_ctype::FUnstablefld*)algo_lib::malloc_AllocMem(sizeof(lib_ctype::FUnstablefld) * (u64(1)<<4));
+    if (!unstablefld_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.unstablefld_lary[i]  = unstablefld_first;
+        unstablefld_first    += 1ULL<<i;
+    }
 
     lib_ctype::InitReflection();
 }
@@ -2257,6 +2396,9 @@ void lib_ctype::FDb_Init() {
 // --- lib_ctype.FDb..Uninit
 void lib_ctype::FDb_Uninit() {
     lib_ctype::FDb &row = _db; (void)row;
+
+    // lib_ctype.FDb.unstablefld.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // lib_ctype.FDb.substr.Uninit (Lary)  //
     // skip destruction in global scope
@@ -2486,6 +2628,7 @@ void lib_ctype::FField_Init(lib_ctype::FField& field) {
     field.zd_fconst_tail = NULL; // (lib_ctype.FField.zd_fconst)
     field.c_cppfunc = NULL;
     field.c_substr = NULL;
+    field.c_unstablefld = NULL;
     field.ctype_c_field_in_ary = bool(false);
     field.ind_field_next = (lib_ctype::FField*)-1; // (lib_ctype.FDb.ind_field) not-in-hash
 }
@@ -2538,6 +2681,9 @@ void lib_ctype::FField_Print(lib_ctype::FField & row, algo::cstring &str) {
 
     u64_PrintHex(u64((const lib_ctype::FSubstr*)row.c_substr), temp, 8, true);
     PrintAttrSpaceReset(str,"c_substr", temp);
+
+    u64_PrintHex(u64((const lib_ctype::FUnstablefld*)row.c_unstablefld), temp, 8, true);
+    PrintAttrSpaceReset(str,"c_unstablefld", temp);
 
     bool_Print(row.ctype_c_field_in_ary, temp);
     PrintAttrSpaceReset(str,"ctype_c_field_in_ary", temp);
@@ -2626,6 +2772,29 @@ void lib_ctype::FSubstr_Uninit(lib_ctype::FSubstr& substr) {
     lib_ctype::FField* p_field = lib_ctype::ind_field_Find(row.field);
     if (p_field)  {
         c_substr_Remove(*p_field, row);// remove substr from index c_substr
+    }
+}
+
+// --- lib_ctype.FUnstablefld.base.CopyOut
+// Copy fields out of row
+void lib_ctype::unstablefld_CopyOut(lib_ctype::FUnstablefld &row, dev::Unstablefld &out) {
+    out.field = row.field;
+    out.comment = row.comment;
+}
+
+// --- lib_ctype.FUnstablefld.base.CopyIn
+// Copy fields in to row
+void lib_ctype::unstablefld_CopyIn(lib_ctype::FUnstablefld &row, dev::Unstablefld &in) {
+    row.field = in.field;
+    row.comment = in.comment;
+}
+
+// --- lib_ctype.FUnstablefld..Uninit
+void lib_ctype::FUnstablefld_Uninit(lib_ctype::FUnstablefld& unstablefld) {
+    lib_ctype::FUnstablefld &row = unstablefld; (void)row;
+    lib_ctype::FField* p_field = lib_ctype::ind_field_Find(row.field);
+    if (p_field)  {
+        c_unstablefld_Remove(*p_field, row);// remove unstablefld from index c_unstablefld
     }
 }
 
@@ -2719,6 +2888,7 @@ const char* lib_ctype::value_ToCstr(const lib_ctype::TableId& parent) {
         case lib_ctype_TableId_dmmeta_Ftuple: ret = "dmmeta.Ftuple";  break;
         case lib_ctype_TableId_dmmeta_Ssimfile: ret = "dmmeta.Ssimfile";  break;
         case lib_ctype_TableId_dmmeta_Substr: ret = "dmmeta.Substr";  break;
+        case lib_ctype_TableId_dev_Unstablefld: ret = "dev.Unstablefld";  break;
     }
     return ret;
 }
@@ -2816,6 +2986,14 @@ bool lib_ctype::value_SetStrptrMaybe(lib_ctype::TableId& parent, algo::strptr rh
         }
         case 15: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','e','v','.','U','n','s','t'): {
+                    if (memcmp(rhs.elems+8,"ablefld",7)==0) { value_SetEnum(parent,lib_ctype_TableId_dev_Unstablefld); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','u','n','s','t'): {
+                    if (memcmp(rhs.elems+8,"ablefld",7)==0) { value_SetEnum(parent,lib_ctype_TableId_dev_unstablefld); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','m','m','e','t','a','.','S'): {
                     if (memcmp(rhs.elems+8,"simfile",7)==0) { value_SetEnum(parent,lib_ctype_TableId_dmmeta_Ssimfile); ret = true; break; }
                     break;

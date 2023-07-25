@@ -13,6 +13,32 @@
 inline atfdb::Amctest::Amctest() {
 }
 
+inline atfdb::Cijob::Cijob() {
+}
+
+inline atfdb::Citest::Citest() {
+    atfdb::Citest_Init(*this);
+}
+
+
+// --- atfdb.Citest..Init
+// Set all fields to initial values.
+inline void atfdb::Citest_Init(atfdb::Citest& parent) {
+    parent.needenv = bool(false);
+    parent.cijob = algo::strptr("test");
+}
+inline atfdb::Comptest::Comptest() {
+    atfdb::Comptest_Init(*this);
+}
+
+
+// --- atfdb.Comptest..Init
+// Set all fields to initial values.
+inline void atfdb::Comptest_Init(atfdb::Comptest& parent) {
+    parent.timeout = i32(10);
+    parent.memcheck = bool(true);
+    parent.exit_code = u8(0);
+}
 inline atfdb::FieldId::FieldId(i32                            in_value)
     : value(in_value)
 {
@@ -45,14 +71,77 @@ inline atfdb::FieldId::operator atfdb_FieldIdEnum () const {
 inline void atfdb::FieldId_Init(atfdb::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline atfdb::Normcheck::Normcheck() {
+inline atfdb::Msgdir::Msgdir() {
+}
+
+inline atfdb::Targs::Targs() {
+}
+
+inline atfdb::TestGsymbolChar::TestGsymbolChar() {
+}
+
+inline atfdb::TestGsymbolPkey::TestGsymbolPkey() {
+}
+
+inline atfdb::TestGsymbolStrptr::TestGsymbolStrptr() {
+}
+
+inline atfdb::Tfilt::Tfilt() {
+}
+
+inline atfdb::Tmsg::Tmsg() {
 }
 
 inline atfdb::Unittest::Unittest() {
 }
 
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Cijob &row) {// cfmt:atfdb.Cijob.String
+    atfdb::Cijob_Print(const_cast<atfdb::Cijob&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Comptest &row) {// cfmt:atfdb.Comptest.String
+    atfdb::Comptest_Print(const_cast<atfdb::Comptest&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::FieldId &row) {// cfmt:atfdb.FieldId.String
     atfdb::FieldId_Print(const_cast<atfdb::FieldId&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Msgdir &row) {// cfmt:atfdb.Msgdir.String
+    atfdb::Msgdir_Print(const_cast<atfdb::Msgdir&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Targs &row) {// cfmt:atfdb.Targs.String
+    atfdb::Targs_Print(const_cast<atfdb::Targs&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::TestGsymbolChar &row) {// cfmt:atfdb.TestGsymbolChar.String
+    atfdb::TestGsymbolChar_Print(const_cast<atfdb::TestGsymbolChar&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::TestGsymbolPkey &row) {// cfmt:atfdb.TestGsymbolPkey.String
+    atfdb::TestGsymbolPkey_Print(const_cast<atfdb::TestGsymbolPkey&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::TestGsymbolStrptr &row) {// cfmt:atfdb.TestGsymbolStrptr.String
+    atfdb::TestGsymbolStrptr_Print(const_cast<atfdb::TestGsymbolStrptr&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Tfilt &row) {// cfmt:atfdb.Tfilt.String
+    atfdb::Tfilt_Print(const_cast<atfdb::Tfilt&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Tmsg &row) {// cfmt:atfdb.Tmsg.String
+    atfdb::Tmsg_Print(const_cast<atfdb::Tmsg&>(row), str);
     return str;
 }

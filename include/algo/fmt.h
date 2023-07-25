@@ -51,6 +51,8 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
     // %Y-%m-%dT%T
     // %Y-%m-%d %T
     // %Y/%m/%d %T
+    // %Y-%m-%d
+    // %Y/%m/%d
     // Where %T is %H:%M:%S.%X
     // And %X is the nanosecond portion
     bool UnTime_ReadStrptrMaybe(algo::UnTime &row, algo::strptr str);
@@ -209,8 +211,8 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
     // The following control characters are supported in SPEC.
     // %Y     Year printed as 4 digits, e.g. 2002
     // %y     Last 2 digits of year printed as 2 digits
-    // %B     Short month name (Feb)
-    // %b     Long month name (February)
+    // %B     Long month name (February)
+    // %b     Short month name (Feb)
     // %a     Week day name (Monday)
     // %m     Month printed as 2 digits, with January being 01
     // %d     Day of month printed as at least 2 digits (or WIDTH)
@@ -407,6 +409,7 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
     void WTime_Print(algo::WTime row, algo::cstring &str);
     bool WDiff_ReadStrptrMaybe(algo::WDiff &parent, algo::strptr in_str);
     bool WTime_ReadStrptrMaybe(algo::WTime &parent, algo::strptr in_str);
+    void u64_PrintBase32(u64 k, algo::cstring &str);
 
     // -------------------------------------------------------------------
     // include/algo/fmt.inl.h

@@ -125,3 +125,7 @@
 #include <sys/wait.h>
 #include <sys/mman.h>
 #endif
+
+#ifdef WIN32
+#include <winnt.h> // temporary, for Interlocked*
+#endif

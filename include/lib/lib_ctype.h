@@ -48,8 +48,21 @@ namespace lib_ctype { // update-hdr
     // which is known to be of ctype CTYPE, to cstring TEXT.
     // Output fields in normalized order, respecting Base.
     // If SKIP_DFLT is true, do not print fields which happen to match their default.
-    // Suports Varlen fields with
+    // Suports Varlen fields.
+    // Attributes that are themselves tuples are recursively normalized as well.
     void PrintTupleAttrs(cstring& text, algo::Tuple &tuple, lib_ctype::FCtype &ctype, bool skip_dflt);
+
+    // Normalize a string that's supposed to correspond CTYPE
+    // If CTYPE is NULL, it is guessed from the type tag
+    // The following actions are done:
+    // 1. Print correct type tag back
+    // 2. Remove any attributes from tuple that don't correspond to fields of CTYPE
+    // 3. Print back any fields in ctype that don't appear in the string
+    // 4. Optionally skip printing any field that's already equal to the default value (if SKIP_DFLT is specified)
+    // 5. Recursively call NormalizeTuple on any field that has Tuple print format
+    // NOTE:
+    // Ctype from parent field has been removed, as it is wrong for derived types!
+    tempstr NormalizeSsimTuple(strptr str, bool skip_dflt);
 
     // Retrieve base type for the given ctype
     lib_ctype::FCtype *Basetype(lib_ctype::FCtype &ctype);
@@ -77,4 +90,7 @@ namespace lib_ctype { // update-hdr
     // Results of comparison, mostly represented as a match distance, are saved in MATCH.
     // Search exits early if match.distance exceeds match.maxdist.
     void Match_Tuple(lib_ctype::Match &match, Tuple &expect, Tuple &result);
+
+    // Remove unstable fields from a string that's supposed to correspond CTYPE
+    tempstr StabilizeSsimTuple(strptr str);
 }

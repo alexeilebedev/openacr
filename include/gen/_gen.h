@@ -43,6 +43,87 @@ struct pad_byte { // pad_byte
 
 // Set all fields to initial values.
 void                 pad_byte_Init(pad_byte& parent);
+// Attempt to parse i8 from str
+// Leading whitespace is silently skipped
+// Return success value; If false, RESULT is unchanged
+// String must be non-empty
+// Number may prefixed with + or - (with no space after)
+// If the value is outside of valid range for the type, it is clipped to the valid range
+// Supported bases: 10, 16 (if string starts with 0x or 0X
+// For hex numbers, there is no overflow (just take last N digits that fit the type)
+bool                 i8_ReadStrptrMaybe(i8& result, algo::strptr str);
+// Attempt to parse u8 from str
+// Leading whitespace is silently skipped
+// Return success value; If false, RESULT is unchanged
+// String must be non-empty
+// Number may prefixed with + or - (with no space after)
+// If the value is outside of valid range for the type, it is clipped to the valid range
+// Supported bases: 10, 16 (if string starts with 0x or 0X
+// For hex numbers, there is no overflow (just take last N digits that fit the type)
+bool                 u8_ReadStrptrMaybe(u8& result, algo::strptr str);
+// Attempt to parse i16 from str
+// Leading whitespace is silently skipped
+// Return success value; If false, RESULT is unchanged
+// String must be non-empty
+// Number may prefixed with + or - (with no space after)
+// If the value is outside of valid range for the type, it is clipped to the valid range
+// Supported bases: 10, 16 (if string starts with 0x or 0X
+// For hex numbers, there is no overflow (just take last N digits that fit the type)
+bool                 i16_ReadStrptrMaybe(i16& result, algo::strptr str);
+// Attempt to parse u16 from str
+// Leading whitespace is silently skipped
+// Return success value; If false, RESULT is unchanged
+// String must be non-empty
+// Number may prefixed with + or - (with no space after)
+// If the value is outside of valid range for the type, it is clipped to the valid range
+// Supported bases: 10, 16 (if string starts with 0x or 0X
+// For hex numbers, there is no overflow (just take last N digits that fit the type)
+bool                 u16_ReadStrptrMaybe(u16& result, algo::strptr str);
+// Attempt to parse i32 from str
+// Leading whitespace is silently skipped
+// Return success value; If false, RESULT is unchanged
+// String must be non-empty
+// Number may prefixed with + or - (with no space after)
+// If the value is outside of valid range for the type, it is clipped to the valid range
+// Supported bases: 10, 16 (if string starts with 0x or 0X
+// For hex numbers, there is no overflow (just take last N digits that fit the type)
+bool                 i32_ReadStrptrMaybe(i32& result, algo::strptr str);
+// Attempt to parse u32 from str
+// Leading whitespace is silently skipped
+// Return success value; If false, RESULT is unchanged
+// String must be non-empty
+// Number may prefixed with + or - (with no space after)
+// If the value is outside of valid range for the type, it is clipped to the valid range
+// Supported bases: 10, 16 (if string starts with 0x or 0X
+// For hex numbers, there is no overflow (just take last N digits that fit the type)
+bool                 u32_ReadStrptrMaybe(u32& result, algo::strptr str);
+// Attempt to parse i64 from str
+// Leading whitespace is silently skipped
+// Return success value; If false, RESULT is unchanged
+// String must be non-empty
+// Number may prefixed with + or - (with no space after)
+// If the value is outside of valid range for the type, it is clipped to the valid range
+// Supported bases: 10, 16 (if string starts with 0x or 0X
+// For hex numbers, there is no overflow (just take last N digits that fit the type)
+bool                 i64_ReadStrptrMaybe(i64& result, algo::strptr str);
+// Attempt to parse u64 from str
+// Leading whitespace is silently skipped
+// Return success value; If false, RESULT is unchanged
+// String must be non-empty
+// Number may prefixed with + or - (with no space after)
+// If the value is outside of valid range for the type, it is clipped to the valid range
+// Supported bases: 10, 16 (if string starts with 0x or 0X
+// For hex numbers, there is no overflow (just take last N digits that fit the type)
+bool                 u64_ReadStrptrMaybe(u64& result, algo::strptr str);
+// Attempt to parse u128 from str
+// Leading whitespace is silently skipped
+// Return success value; If false, RESULT is unchanged
+// String must be non-empty
+// Number may prefixed with + or - (with no space after)
+// If the value is outside of valid range for the type, it is clipped to the valid range
+// Supported bases: 10, 16 (if string starts with 0x or 0X
+// For hex numbers, there is no overflow (just take last N digits that fit the type)
+bool                 u128_ReadStrptrMaybe(u128& result, algo::strptr str);
 u32                  bool_Hash(u32 prev, bool rhs) __attribute__((nothrow));
 // Read fields of bool from an ascii string.
 // The function is implemented externally.

@@ -90,7 +90,7 @@ tempstr abt::EvalSrcfileCmdline(algo_lib::Replscope &R, abt::FTarget &target, ab
                     out << " /Yucommon.h";
                 } else {
                     out << " -iquote "<<GetDirName(src.objpath);
-                    out << " -include "<<src.objkey;
+                    out << " -include "<<src.srcfile;
                 }
                 // This is a hack to make coverity happy, because coverity doesn't recognize gcc pch.
                 if (abt::_db.cmdline.coverity && PchQ(src)) {

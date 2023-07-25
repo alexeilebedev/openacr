@@ -157,7 +157,7 @@ void* src_lim::include_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.include_n = new_nelems;
+        _db.include_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -170,14 +170,14 @@ void src_lim::include_RemoveLast() {
     if (n > 0) {
         n -= 1;
         include_qFind(u64(n)).~FInclude();
-        _db.include_n = n;
+        _db.include_n = i32(n);
     }
 }
 
 // --- src_lim.FDb.include.InputMaybe
 static bool src_lim::include_InputMaybe(dev::Include &elem) {
     bool retval = true;
-    retval = include_InsertMaybe(elem);
+    retval = include_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -245,7 +245,7 @@ void* src_lim::linelim_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.linelim_n = new_nelems;
+        _db.linelim_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -258,14 +258,14 @@ void src_lim::linelim_RemoveLast() {
     if (n > 0) {
         n -= 1;
         linelim_qFind(u64(n)).~FLinelim();
-        _db.linelim_n = n;
+        _db.linelim_n = i32(n);
     }
 }
 
 // --- src_lim.FDb.linelim.InputMaybe
 static bool src_lim::linelim_InputMaybe(dev::Linelim &elem) {
     bool retval = true;
-    retval = linelim_InsertMaybe(elem);
+    retval = linelim_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -310,7 +310,7 @@ void src_lim::MainLoop() {
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
-        algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+        src_lim::Steps();
     } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
 }
 
@@ -418,6 +418,12 @@ bool src_lim::LoadSsimfileMaybe(algo::strptr fname) {
     return retval;
 }
 
+// --- src_lim.FDb._db.Steps
+// Calls Step function of dependencies
+void src_lim::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
 // --- src_lim.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -481,7 +487,7 @@ void* src_lim::targsrc_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.targsrc_n = new_nelems;
+        _db.targsrc_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -494,14 +500,14 @@ void src_lim::targsrc_RemoveLast() {
     if (n > 0) {
         n -= 1;
         targsrc_qFind(u64(n)).~FTargsrc();
-        _db.targsrc_n = n;
+        _db.targsrc_n = i32(n);
     }
 }
 
 // --- src_lim.FDb.targsrc.InputMaybe
 static bool src_lim::targsrc_InputMaybe(dev::Targsrc &elem) {
     bool retval = true;
-    retval = targsrc_InsertMaybe(elem);
+    retval = targsrc_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -587,7 +593,7 @@ void* src_lim::gitfile_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.gitfile_n = new_nelems;
+        _db.gitfile_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -600,14 +606,14 @@ void src_lim::gitfile_RemoveLast() {
     if (n > 0) {
         n -= 1;
         gitfile_qFind(u64(n)).~FGitfile();
-        _db.gitfile_n = n;
+        _db.gitfile_n = i32(n);
     }
 }
 
 // --- src_lim.FDb.gitfile.InputMaybe
 static bool src_lim::gitfile_InputMaybe(dev::Gitfile &elem) {
     bool retval = true;
-    retval = gitfile_InsertMaybe(elem);
+    retval = gitfile_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -665,6 +671,7 @@ src_lim::FGitfile& src_lim::ind_gitfile_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "src_lim.create_error  table:ind_gitfile  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -805,7 +812,7 @@ void* src_lim::badline_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.badline_n = new_nelems;
+        _db.badline_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -817,7 +824,7 @@ void src_lim::badline_RemoveAll() {
     for (u64 n = _db.badline_n; n>0; ) {
         n--;
         badline_qFind(u64(n)).~FBadline(); // destroy last element
-        _db.badline_n = n;
+        _db.badline_n = i32(n);
     }
 }
 
@@ -828,14 +835,14 @@ void src_lim::badline_RemoveLast() {
     if (n > 0) {
         n -= 1;
         badline_qFind(u64(n)).~FBadline();
-        _db.badline_n = n;
+        _db.badline_n = i32(n);
     }
 }
 
 // --- src_lim.FDb.badline.InputMaybe
 static bool src_lim::badline_InputMaybe(dev::Badline &elem) {
     bool retval = true;
-    retval = badline_InsertMaybe(elem);
+    retval = badline_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1351,6 +1358,10 @@ void src_lim::TableId_Print(src_lim::TableId & row, algo::cstring &str) {
     src_lim::value_Print(row, str);
 }
 
+// --- src_lim...SizeCheck
+inline static void src_lim::SizeCheck() {
+}
+
 // --- src_lim...main
 int main(int argc, char **argv) {
     try {
@@ -1381,6 +1392,9 @@ int main(int argc, char **argv) {
     return algo_lib::_db.exit_code;
 }
 
-// --- src_lim...SizeCheck
-inline static void src_lim::SizeCheck() {
+// --- src_lim...WinMain
+#if defined(WIN32)
+int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int) {
+    return main(__argc,__argv);
 }
+#endif

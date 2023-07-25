@@ -29,6 +29,15 @@
 
 // -----------------------------------------------------------------------------
 
+void atf_unit::AdjustDebugPath(algo::cstring &path) {
+    (void)path;
+#ifdef _DEBUG
+    Replace(path,"release/","debug/");
+#endif
+}
+
+// -----------------------------------------------------------------------------
+
 // Compare contents of file `outfname` with the reference file.
 // Any difference = error
 void atf_unit::CompareOutput(strptr outfname) {
@@ -37,7 +46,7 @@ void atf_unit::CompareOutput(strptr outfname) {
         CopyFileX(outfname, expect_fname, 0644);
     } else {
         vrfy_(SysCmd(tempstr()
-                     << "git diff --no-index "
+                     << "git --no-pager diff --no-index "
                      << " " << expect_fname
                      << " " << outfname) == 0);
     }
@@ -90,6 +99,8 @@ void atf_unit::Main_Test(atf_unit::FUnittest &test) {
     cstring comment;
     if (atf_unit::_db.cmdline.nofork) {
         try {
+            prlog("atf_unit.begin"
+                  <<Keyval("unittest",test.unittest));
             alarm(atf_unit::_db.cmdline.pertest_timeout);// reasonable timeout
             (*test.step)();
         }catch(algo_lib::ErrorX &x) {
@@ -104,16 +115,19 @@ void atf_unit::Main_Test(atf_unit::FUnittest &test) {
         cmd.cmd.pertest_timeout = atf_unit::_db.cmdline.pertest_timeout;
         cmd.cmd.data_dir = atf_unit::_db.cmdline.data_dir;
         cmd.cmd.nofork = true;
+        cmd.cmd.check_untracked = atf_unit::_db.cmdline.check_untracked;
         cmd.cmd.report = false;// prevent double reporting
         int rc = atf_unit_Exec(cmd);
         if (rc!=0) {
             comment << "Subprocess exited with code "<<cmd.status;
         } else {
-            // check for untracked files
-            tempstr files;
-            CheckUntrackedFiles(files);
-            if (files != "") {
-                comment << "Test created untracked files: "<<files;
+            if (_db.cmdline.check_untracked) {
+                // check for untracked files
+                tempstr files;
+                CheckUntrackedFiles(files);
+                if (files != "") {
+                    comment << "Test created untracked files: "<<files;
+                }
             }
         }
     }
@@ -173,17 +187,6 @@ void atf_unit::Testcmp(const char *file, int line, const char *value, const char
 
 // -----------------------------------------------------------------------------
 
-void atf_unit::unittest_atf_unit_Outfile() {
-    ind_beg(algo::Dir_curs,entry,"test/atf_unit/*") {
-        if (!EndsWithQ(entry.filename,"~")) {
-            vrfy(atf_unit::ind_unittest_Find(entry.filename)
-                 ,tempstr()<<"foreign file "<<entry.pathname);
-        }
-    }ind_end;
-}
-
-// -----------------------------------------------------------------------------
-
 void atf_unit::Main() {
 
     atf_unit::_db.perf_cycle_budget = algo::ToSchedTime(atf_unit::_db.cmdline.perf_secs);
@@ -209,7 +212,9 @@ void atf_unit::Main() {
         _exit(0);
     }
 
-    Main_CheckUntrackedFiles();
+    if (_db.cmdline.check_untracked) {
+        Main_CheckUntrackedFiles();
+    }
 
     atf_unit::_db.report.n_test_total += atf_unit::unittest_N();
     ind_beg(atf_unit::_db_unittest_curs,unittest, atf_unit::_db) if (unittest.select) {

@@ -32,11 +32,23 @@
 // -----------------------------------------------------------------------------
 
 // Set up breakpoints
+// Breakpoint list is comma-separated
+// See
+// https://ftp.gnu.org/old-gnu/Manuals/gdb/html_node/gdb_28.html
+// Special syntax FUNCTION#N breaks on Nth crossing of the function
 static void GenBreakpoints() {
     algo::StringIter breaklist(mdbg::_db.cmdline.b);
     cstring &out = mdbg::_db.gdbscript;
     while (!breaklist.EofQ()) {
-        out << "break " << GetTokenChar(breaklist, ',') << eol;
+        strptr where=GetTokenChar(breaklist, ',');
+        where = Pathcomp(where,"#LL");
+        strptr count = Pathcomp(where, "#LR");
+        mdbg::_db.break_main=where=="main";
+        out << "break " << where << eol;
+        if (ch_N(count)) {
+            out << "ignore "<<mdbg::_db.bnum<<" "<<count << eol;
+        }
+        mdbg::_db.bnum++;
     }
 }
 
@@ -50,7 +62,7 @@ static u32 Find_Pid(algo_lib::Replscope &R) {
     algo::StringIter iter(pid_str);
     if (!TryParseU32(iter, pid)) { // if pid is a valid value
         prlog(Subst(R, "Could not find the pid of the process:$tgtfname to attach!"));
-        prlog("Make sure process is running and -root option is enabled(if remote)...");
+        prlog("Make sure process is running and use sudo option is enabled...");
         pid = 0;
     }
     return pid;
@@ -234,6 +246,7 @@ static void Main_Gdb(algo_lib::Replscope &R) {
     Ins(&R, mdbg::_db.gdbscript, "set pagination off");
     if (mdbg::_db.cmdline.catchthrow) {
         Ins(&R, mdbg::_db.gdbscript, "catch throw");
+        mdbg::_db.bnum++;
     }
     if (mdbg::_db.cmdline.follow_child) {
         Ins(&R, mdbg::_db.gdbscript, "set follow-fork-mode child");
@@ -255,10 +268,12 @@ static void Main_Gdb(algo_lib::Replscope &R) {
     }
 
     Ins(&R, mdbg::_db.gdbscript, "break algo::FatalErrorExit");
-    if (!mdbg::_db.cmdline.attach && mdbg::_db.cmdline.b != "main") {
+    mdbg::_db.bnum++;
+    if (!mdbg::_db.cmdline.attach && !mdbg::_db.break_main) {
         Ins(&R, mdbg::_db.gdbscript, "cont");
     }
 
+    verblog(mdbg::_db.gdbscript);
     StringToFile(mdbg::_db.gdbscript, "temp/mdbg.gdb");
 }
 

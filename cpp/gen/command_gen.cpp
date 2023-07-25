@@ -84,6 +84,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_line          : ret = "line";  break;
         case command_FieldId_point         : ret = "point";  break;
         case command_FieldId_type          : ret = "type";  break;
+        case command_FieldId_debug_log     : ret = "debug_log";  break;
         case command_FieldId_create        : ret = "create";  break;
         case command_FieldId_finput        : ret = "finput";  break;
         case command_FieldId_foutput       : ret = "foutput";  break;
@@ -111,13 +112,14 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_hashfld       : ret = "hashfld";  break;
         case command_FieldId_sortfld       : ret = "sortfld";  break;
         case command_FieldId_unittest      : ret = "unittest";  break;
-        case command_FieldId_normcheck     : ret = "normcheck";  break;
+        case command_FieldId_citest        : ret = "citest";  break;
         case command_FieldId_cppfunc       : ret = "cppfunc";  break;
         case command_FieldId_via           : ret = "via";  break;
         case command_FieldId_comment       : ret = "comment";  break;
         case command_FieldId_sandbox       : ret = "sandbox";  break;
         case command_FieldId_test          : ret = "test";  break;
         case command_FieldId_showcpp       : ret = "showcpp";  break;
+        case command_FieldId_msgtype       : ret = "msgtype";  break;
         case command_FieldId_ns            : ret = "ns";  break;
         case command_FieldId_data          : ret = "data";  break;
         case command_FieldId_sigcheck      : ret = "sigcheck";  break;
@@ -143,15 +145,50 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_xns           : ret = "xns";  break;
         case command_FieldId_noinput       : ret = "noinput";  break;
         case command_FieldId_render        : ret = "render";  break;
+        case command_FieldId_id            : ret = "id";  break;
+        case command_FieldId_file_prefix   : ret = "file_prefix";  break;
+        case command_FieldId_nchild        : ret = "nchild";  break;
+        case command_FieldId_blocking      : ret = "blocking";  break;
+        case command_FieldId_nmsg          : ret = "nmsg";  break;
+        case command_FieldId_timeout       : ret = "timeout";  break;
+        case command_FieldId_recvdelay_ns  : ret = "recvdelay_ns";  break;
+        case command_FieldId_senddelay_ns  : ret = "senddelay_ns";  break;
+        case command_FieldId_msgsize_min   : ret = "msgsize_min";  break;
+        case command_FieldId_msgsize_max   : ret = "msgsize_max";  break;
+        case command_FieldId_bufsize       : ret = "bufsize";  break;
+        case command_FieldId_recvdelay     : ret = "recvdelay";  break;
         case command_FieldId_amctest       : ret = "amctest";  break;
         case command_FieldId_dofork        : ret = "dofork";  break;
         case command_FieldId_q             : ret = "q";  break;
+        case command_FieldId_cijob         : ret = "cijob";  break;
+        case command_FieldId_capture       : ret = "capture";  break;
+        case command_FieldId_skipenv       : ret = "skipenv";  break;
+        case command_FieldId_comptest      : ret = "comptest";  break;
+        case command_FieldId_mdbg          : ret = "mdbg";  break;
+        case command_FieldId_run           : ret = "run";  break;
+        case command_FieldId_normalize     : ret = "normalize";  break;
+        case command_FieldId_covcapture    : ret = "covcapture";  break;
+        case command_FieldId_covcheck      : ret = "covcheck";  break;
+        case command_FieldId_compdir       : ret = "compdir";  break;
+        case command_FieldId_check_untracked: ret = "check_untracked";  break;
+        case command_FieldId_memcheck      : ret = "memcheck";  break;
+        case command_FieldId_callgrind     : ret = "callgrind";  break;
+        case command_FieldId_stream        : ret = "stream";  break;
+        case command_FieldId_i             : ret = "i";  break;
+        case command_FieldId_covdir        : ret = "covdir";  break;
+        case command_FieldId_logfile       : ret = "logfile";  break;
+        case command_FieldId_runcmd        : ret = "runcmd";  break;
+        case command_FieldId_exclude       : ret = "exclude";  break;
+        case command_FieldId_mergepath     : ret = "mergepath";  break;
+        case command_FieldId_gcov          : ret = "gcov";  break;
+        case command_FieldId_ssim          : ret = "ssim";  break;
+        case command_FieldId_xmlpretty     : ret = "xmlpretty";  break;
+        case command_FieldId_summary       : ret = "summary";  break;
         case command_FieldId_ncmd          : ret = "ncmd";  break;
         case command_FieldId_nofork        : ret = "nofork";  break;
         case command_FieldId_debug         : ret = "debug";  break;
         case command_FieldId_perf_secs     : ret = "perf_secs";  break;
         case command_FieldId_pertest_timeout: ret = "pertest_timeout";  break;
-        case command_FieldId_capture       : ret = "capture";  break;
         case command_FieldId_issue         : ret = "issue";  break;
         case command_FieldId_server        : ret = "server";  break;
         case command_FieldId_project       : ret = "project";  break;
@@ -170,10 +207,13 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_assignee      : ret = "assignee";  break;
         case command_FieldId_ulist         : ret = "ulist";  break;
         case command_FieldId_mraccept      : ret = "mraccept";  break;
+        case command_FieldId_mslist        : ret = "mslist";  break;
+        case command_FieldId_milestone     : ret = "milestone";  break;
+        case command_FieldId_imilestone    : ret = "imilestone";  break;
+        case command_FieldId_track         : ret = "track";  break;
         case command_FieldId_complooo      : ret = "complooo";  break;
         case command_FieldId_args          : ret = "args";  break;
         case command_FieldId_manywin       : ret = "manywin";  break;
-        case command_FieldId_root          : ret = "root";  break;
         case command_FieldId_attach        : ret = "attach";  break;
         case command_FieldId_catchthrow    : ret = "catchthrow";  break;
         case command_FieldId_tui           : ret = "tui";  break;
@@ -254,6 +294,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case 'e': {
                     value_SetEnum(parent,command_FieldId_e); ret = true; break;
                 }
+                case 'i': {
+                    value_SetEnum(parent,command_FieldId_i); ret = true; break;
+                }
                 case 'q': {
                     value_SetEnum(parent,command_FieldId_q); ret = true; break;
                 }
@@ -270,6 +313,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR2('i','c'): {
                     value_SetEnum(parent,command_FieldId_ic); ret = true; break;
+                }
+                case LE_STR2('i','d'): {
+                    value_SetEnum(parent,command_FieldId_id); ret = true; break;
                 }
                 case LE_STR2('i','n'): {
                     value_SetEnum(parent,command_FieldId_in); ret = true; break;
@@ -318,6 +364,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR3('o','o','d'): {
                     value_SetEnum(parent,command_FieldId_ood); ret = true; break;
                 }
+                case LE_STR3('r','u','n'): {
+                    value_SetEnum(parent,command_FieldId_run); ret = true; break;
+                }
                 case LE_STR3('s','t','r'): {
                     value_SetEnum(parent,command_FieldId_str); ret = true; break;
                 }
@@ -365,6 +414,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('f','u','n','c'): {
                     value_SetEnum(parent,command_FieldId_func); ret = true; break;
                 }
+                case LE_STR4('g','c','o','v'): {
+                    value_SetEnum(parent,command_FieldId_gcov); ret = true; break;
+                }
                 case LE_STR4('h','a','s','h'): {
                     value_SetEnum(parent,command_FieldId_hash); ret = true; break;
                 }
@@ -383,6 +435,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('l','i','s','t'): {
                     value_SetEnum(parent,command_FieldId_list); ret = true; break;
                 }
+                case LE_STR4('m','d','b','g'): {
+                    value_SetEnum(parent,command_FieldId_mdbg); ret = true; break;
+                }
                 case LE_STR4('m','e','t','a'): {
                     value_SetEnum(parent,command_FieldId_meta); ret = true; break;
                 }
@@ -395,14 +450,17 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('n','c','m','d'): {
                     value_SetEnum(parent,command_FieldId_ncmd); ret = true; break;
                 }
+                case LE_STR4('n','m','s','g'): {
+                    value_SetEnum(parent,command_FieldId_nmsg); ret = true; break;
+                }
                 case LE_STR4('n','s','d','b'): {
                     value_SetEnum(parent,command_FieldId_nsdb); ret = true; break;
                 }
-                case LE_STR4('r','o','o','t'): {
-                    value_SetEnum(parent,command_FieldId_root); ret = true; break;
-                }
                 case LE_STR4('s','e','r','v'): {
                     value_SetEnum(parent,command_FieldId_serv); ret = true; break;
+                }
+                case LE_STR4('s','s','i','m'): {
+                    value_SetEnum(parent,command_FieldId_ssim); ret = true; break;
                 }
                 case LE_STR4('s','t','o','p'): {
                     value_SetEnum(parent,command_FieldId_stop); ret = true; break;
@@ -435,6 +493,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR5('c','h','e','c','k'): {
                     value_SetEnum(parent,command_FieldId_check); ret = true; break;
+                }
+                case LE_STR5('c','i','j','o','b'): {
+                    value_SetEnum(parent,command_FieldId_cijob); ret = true; break;
                 }
                 case LE_STR5('c','l','e','a','n'): {
                     value_SetEnum(parent,command_FieldId_clean); ret = true; break;
@@ -508,6 +569,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR5('t','r','a','c','e'): {
                     value_SetEnum(parent,command_FieldId_trace); ret = true; break;
                 }
+                case LE_STR5('t','r','a','c','k'): {
+                    value_SetEnum(parent,command_FieldId_track); ret = true; break;
+                }
                 case LE_STR5('t','r','u','n','c'): {
                     value_SetEnum(parent,command_FieldId_trunc); ret = true; break;
                 }
@@ -537,8 +601,14 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('b','i','g','e','n','d'): {
                     value_SetEnum(parent,command_FieldId_bigend); ret = true; break;
                 }
+                case LE_STR6('c','i','t','e','s','t'): {
+                    value_SetEnum(parent,command_FieldId_citest); ret = true; break;
+                }
                 case LE_STR6('c','o','m','m','i','t'): {
                     value_SetEnum(parent,command_FieldId_commit); ret = true; break;
+                }
+                case LE_STR6('c','o','v','d','i','r'): {
+                    value_SetEnum(parent,command_FieldId_covdir); ret = true; break;
                 }
                 case LE_STR6('c','r','e','a','t','e'): {
                     value_SetEnum(parent,command_FieldId_create); ret = true; break;
@@ -582,6 +652,12 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('m','r','l','i','s','t'): {
                     value_SetEnum(parent,command_FieldId_mrlist); ret = true; break;
                 }
+                case LE_STR6('m','s','l','i','s','t'): {
+                    value_SetEnum(parent,command_FieldId_mslist); ret = true; break;
+                }
+                case LE_STR6('n','c','h','i','l','d'): {
+                    value_SetEnum(parent,command_FieldId_nchild); ret = true; break;
+                }
                 case LE_STR6('n','o','f','o','r','k'): {
                     value_SetEnum(parent,command_FieldId_nofork); ret = true; break;
                 }
@@ -606,6 +682,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('r','e','p','o','r','t'): {
                     value_SetEnum(parent,command_FieldId_report); ret = true; break;
                 }
+                case LE_STR6('r','u','n','c','m','d'): {
+                    value_SetEnum(parent,command_FieldId_runcmd); ret = true; break;
+                }
                 case LE_STR6('s','c','h','e','m','a'): {
                     value_SetEnum(parent,command_FieldId_schema); ret = true; break;
                 }
@@ -614,6 +693,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR6('s','e','r','v','e','r'): {
                     value_SetEnum(parent,command_FieldId_server); ret = true; break;
+                }
+                case LE_STR6('s','t','r','e','a','m'): {
+                    value_SetEnum(parent,command_FieldId_stream); ret = true; break;
                 }
                 case LE_STR6('s','u','b','s','e','t'): {
                     value_SetEnum(parent,command_FieldId_subset); ret = true; break;
@@ -650,6 +732,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('b','a','d','l','i','n','e'): {
                     value_SetEnum(parent,command_FieldId_badline); ret = true; break;
                 }
+                case LE_STR7('b','u','f','s','i','z','e'): {
+                    value_SetEnum(parent,command_FieldId_bufsize); ret = true; break;
+                }
                 case LE_STR7('c','a','p','t','u','r','e'): {
                     value_SetEnum(parent,command_FieldId_capture); ret = true; break;
                 }
@@ -659,11 +744,17 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('c','o','m','m','e','n','t'): {
                     value_SetEnum(parent,command_FieldId_comment); ret = true; break;
                 }
+                case LE_STR7('c','o','m','p','d','i','r'): {
+                    value_SetEnum(parent,command_FieldId_compdir); ret = true; break;
+                }
                 case LE_STR7('c','p','p','f','u','n','c'): {
                     value_SetEnum(parent,command_FieldId_cppfunc); ret = true; break;
                 }
                 case LE_STR7('d','r','y','_','r','u','n'): {
                     value_SetEnum(parent,command_FieldId_dry_run); ret = true; break;
+                }
+                case LE_STR7('e','x','c','l','u','d','e'): {
+                    value_SetEnum(parent,command_FieldId_exclude); ret = true; break;
                 }
                 case LE_STR7('f','l','d','f','u','n','c'): {
                     value_SetEnum(parent,command_FieldId_fldfunc); ret = true; break;
@@ -692,6 +783,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('l','i','n','e','l','i','m'): {
                     value_SetEnum(parent,command_FieldId_linelim); ret = true; break;
                 }
+                case LE_STR7('l','o','g','f','i','l','e'): {
+                    value_SetEnum(parent,command_FieldId_logfile); ret = true; break;
+                }
                 case LE_STR7('m','a','n','y','w','i','n'): {
                     value_SetEnum(parent,command_FieldId_manywin); ret = true; break;
                 }
@@ -700,6 +794,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('m','a','x','s','h','o','w'): {
                     value_SetEnum(parent,command_FieldId_maxshow); ret = true; break;
+                }
+                case LE_STR7('m','s','g','t','y','p','e'): {
+                    value_SetEnum(parent,command_FieldId_msgtype); ret = true; break;
                 }
                 case LE_STR7('n','o','i','n','p','u','t'): {
                     value_SetEnum(parent,command_FieldId_noinput); ret = true; break;
@@ -734,6 +831,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('s','h','o','w','l','o','c'): {
                     value_SetEnum(parent,command_FieldId_showloc); ret = true; break;
                 }
+                case LE_STR7('s','k','i','p','e','n','v'): {
+                    value_SetEnum(parent,command_FieldId_skipenv); ret = true; break;
+                }
                 case LE_STR7('s','o','r','t','f','l','d'): {
                     value_SetEnum(parent,command_FieldId_sortfld); ret = true; break;
                 }
@@ -743,8 +843,14 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('s','u','b','s','e','t','2'): {
                     value_SetEnum(parent,command_FieldId_subset2); ret = true; break;
                 }
+                case LE_STR7('s','u','m','m','a','r','y'): {
+                    value_SetEnum(parent,command_FieldId_summary); ret = true; break;
+                }
                 case LE_STR7('t','a','r','g','s','r','c'): {
                     value_SetEnum(parent,command_FieldId_targsrc); ret = true; break;
+                }
+                case LE_STR7('t','i','m','e','o','u','t'): {
+                    value_SetEnum(parent,command_FieldId_timeout); ret = true; break;
                 }
                 case LE_STR7('t','y','p','e','t','a','g'): {
                     value_SetEnum(parent,command_FieldId_typetag); ret = true; break;
@@ -757,11 +863,20 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR8('a','s','s','i','g','n','e','e'): {
                     value_SetEnum(parent,command_FieldId_assignee); ret = true; break;
                 }
+                case LE_STR8('b','l','o','c','k','i','n','g'): {
+                    value_SetEnum(parent,command_FieldId_blocking); ret = true; break;
+                }
                 case LE_STR8('c','o','m','p','i','l','e','r'): {
                     value_SetEnum(parent,command_FieldId_compiler); ret = true; break;
                 }
                 case LE_STR8('c','o','m','p','l','o','o','o'): {
                     value_SetEnum(parent,command_FieldId_complooo); ret = true; break;
+                }
+                case LE_STR8('c','o','m','p','t','e','s','t'): {
+                    value_SetEnum(parent,command_FieldId_comptest); ret = true; break;
+                }
+                case LE_STR8('c','o','v','c','h','e','c','k'): {
+                    value_SetEnum(parent,command_FieldId_covcheck); ret = true; break;
                 }
                 case LE_STR8('c','o','v','e','r','i','t','y'): {
                     value_SetEnum(parent,command_FieldId_coverity); ret = true; break;
@@ -780,6 +895,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('m','a','x','g','r','o','u','p'): {
                     value_SetEnum(parent,command_FieldId_maxgroup); ret = true; break;
+                }
+                case LE_STR8('m','e','m','c','h','e','c','k'): {
+                    value_SetEnum(parent,command_FieldId_memcheck); ret = true; break;
                 }
                 case LE_STR8('m','e','r','g','e','r','e','q'): {
                     value_SetEnum(parent,command_FieldId_mergereq); ret = true; break;
@@ -819,8 +937,16 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
         }
         case 9: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('c','a','l','l','g','r','i','n'): {
+                    if (memcmp(rhs.elems+8,"d",1)==0) { value_SetEnum(parent,command_FieldId_callgrind); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('c','h','e','c','k','a','b','l'): {
                     if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,command_FieldId_checkable); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','b','u','g','_','l','o'): {
+                    if (memcmp(rhs.elems+8,"g",1)==0) { value_SetEnum(parent,command_FieldId_debug_log); ret = true; break; }
                     break;
                 }
                 case LE_STR8('i','a','s','s','i','g','n','t'): {
@@ -831,12 +957,24 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,command_FieldId_maxpacket); ret = true; break; }
                     break;
                 }
-                case LE_STR8('n','o','r','m','c','h','e','c'): {
-                    if (memcmp(rhs.elems+8,"k",1)==0) { value_SetEnum(parent,command_FieldId_normcheck); ret = true; break; }
+                case LE_STR8('m','e','r','g','e','p','a','t'): {
+                    if (memcmp(rhs.elems+8,"h",1)==0) { value_SetEnum(parent,command_FieldId_mergepath); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('m','i','l','e','s','t','o','n'): {
+                    if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,command_FieldId_milestone); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('n','o','r','m','a','l','i','z'): {
+                    if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,command_FieldId_normalize); ret = true; break; }
                     break;
                 }
                 case LE_STR8('p','e','r','f','_','s','e','c'): {
                     if (memcmp(rhs.elems+8,"s",1)==0) { value_SetEnum(parent,command_FieldId_perf_secs); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('r','e','c','v','d','e','l','a'): {
+                    if (memcmp(rhs.elems+8,"y",1)==0) { value_SetEnum(parent,command_FieldId_recvdelay); ret = true; break; }
                     break;
                 }
                 case LE_STR8('s','e','p','a','r','a','t','o'): {
@@ -845,6 +983,10 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('s','t','r','a','y','f','i','l'): {
                     if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,command_FieldId_strayfile); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('x','m','l','p','r','e','t','t'): {
+                    if (memcmp(rhs.elems+8,"y",1)==0) { value_SetEnum(parent,command_FieldId_xmlpretty); ret = true; break; }
                     break;
                 }
             }
@@ -860,6 +1002,14 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"ow",2)==0) { value_SetEnum(parent,command_FieldId_catchthrow); ret = true; break; }
                     break;
                 }
+                case LE_STR8('c','o','v','c','a','p','t','u'): {
+                    if (memcmp(rhs.elems+8,"re",2)==0) { value_SetEnum(parent,command_FieldId_covcapture); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('i','m','i','l','e','s','t','o'): {
+                    if (memcmp(rhs.elems+8,"ne",2)==0) { value_SetEnum(parent,command_FieldId_imilestone); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('s','h','o','w','s','t','a','t'): {
                     if (memcmp(rhs.elems+8,"ic",2)==0) { value_SetEnum(parent,command_FieldId_showstatic); ret = true; break; }
                     break;
@@ -873,8 +1023,17 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"ion",3)==0) { value_SetEnum(parent,command_FieldId_description); ret = true; break; }
                     break;
                 }
+                case LE_STR8('f','i','l','e','_','p','r','e'): {
+                    if (memcmp(rhs.elems+8,"fix",3)==0) { value_SetEnum(parent,command_FieldId_file_prefix); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('i','g','n','o','r','e','Q','u'): {
                     if (memcmp(rhs.elems+8,"ote",3)==0) { value_SetEnum(parent,command_FieldId_ignoreQuote); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('m','s','g','s','i','z','e','_'): {
+                    if (memcmp(rhs.elems+8,"min",3)==0) { value_SetEnum(parent,command_FieldId_msgsize_min); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"max",3)==0) { value_SetEnum(parent,command_FieldId_msgsize_max); ret = true; break; }
                     break;
                 }
                 case LE_STR8('n','o','t','s','s','i','m','f'): {
@@ -900,6 +1059,14 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('f','o','l','l','o','w','_','c'): {
                     if (memcmp(rhs.elems+8,"hild",4)==0) { value_SetEnum(parent,command_FieldId_follow_child); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('r','e','c','v','d','e','l','a'): {
+                    if (memcmp(rhs.elems+8,"y_ns",4)==0) { value_SetEnum(parent,command_FieldId_recvdelay_ns); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('s','e','n','d','d','e','l','a'): {
+                    if (memcmp(rhs.elems+8,"y_ns",4)==0) { value_SetEnum(parent,command_FieldId_senddelay_ns); ret = true; break; }
                     break;
                 }
                 case LE_STR8('t','o','l','o','w','e','r','u'): {
@@ -929,6 +1096,10 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
         }
         case 15: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('c','h','e','c','k','_','u','n'): {
+                    if (memcmp(rhs.elems+8,"tracked",7)==0) { value_SetEnum(parent,command_FieldId_check_untracked); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('p','e','r','t','e','s','t','_'): {
                     if (memcmp(rhs.elems+8,"timeout",7)==0) { value_SetEnum(parent,command_FieldId_pertest_timeout); ret = true; break; }
                     break;
@@ -1370,7 +1541,7 @@ void command::abt_ExecX(command::abt_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:abt.Argv
 int command::abt_Execv(command::abt_proc& parent) {
-    char *argv[48+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((48+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -1934,6 +2105,7 @@ bool command::acr_compl_ReadFieldMaybe(command::acr_compl &parent, algo::strptr 
         case command_FieldId_point: retval = algo::cstring_ReadStrptrMaybe(parent.point, strval); break;
         case command_FieldId_type: retval = algo::cstring_ReadStrptrMaybe(parent.type, strval); break;
         case command_FieldId_install: retval = bool_ReadStrptrMaybe(parent.install, strval); break;
+        case command_FieldId_debug_log: retval = algo::cstring_ReadStrptrMaybe(parent.debug_log, strval); break;
         default: break;
     }
     if (!retval) {
@@ -1984,6 +2156,12 @@ void command::acr_compl_PrintArgv(command::acr_compl & row, algo::cstring &str) 
         ch_RemoveAll(temp);
         bool_Print(row.install, temp);
         str << " -install:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.debug_log == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.debug_log, temp);
+        str << " -debug_log:";
         strptr_PrintBash(temp,str);
     }
 }
@@ -2106,7 +2284,7 @@ void command::acr_compl_ExecX(command::acr_compl_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:acr_compl.Argv
 int command::acr_compl_Execv(command::acr_compl_proc& parent) {
-    char *argv[8+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((10+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -2138,6 +2316,13 @@ int command::acr_compl_Execv(command::acr_compl_proc& parent) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-install:";
         bool_Print(parent.cmd.install, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.debug_log != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-debug_log:";
+        cstring_Print(parent.cmd.debug_log, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
     for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
@@ -2218,7 +2403,7 @@ bool command::acr_ed_ReadFieldMaybe(command::acr_ed &parent, algo::strptr field,
         case command_FieldId_hashfld: retval = algo::Smallstr100_ReadStrptrMaybe(parent.hashfld, strval); break;
         case command_FieldId_sortfld: retval = algo::Smallstr100_ReadStrptrMaybe(parent.sortfld, strval); break;
         case command_FieldId_unittest: retval = algo::cstring_ReadStrptrMaybe(parent.unittest, strval); break;
-        case command_FieldId_normcheck: retval = algo::cstring_ReadStrptrMaybe(parent.normcheck, strval); break;
+        case command_FieldId_citest: retval = algo::cstring_ReadStrptrMaybe(parent.citest, strval); break;
         case command_FieldId_cppfunc: retval = algo::cstring_ReadStrptrMaybe(parent.cppfunc, strval); break;
         case command_FieldId_xref: retval = bool_ReadStrptrMaybe(parent.xref, strval); break;
         case command_FieldId_via: retval = algo::cstring_ReadStrptrMaybe(parent.via, strval); break;
@@ -2228,6 +2413,7 @@ bool command::acr_ed_ReadFieldMaybe(command::acr_ed &parent, algo::strptr field,
         case command_FieldId_sandbox: retval = bool_ReadStrptrMaybe(parent.sandbox, strval); break;
         case command_FieldId_test: retval = bool_ReadStrptrMaybe(parent.test, strval); break;
         case command_FieldId_showcpp: retval = bool_ReadStrptrMaybe(parent.showcpp, strval); break;
+        case command_FieldId_msgtype: retval = algo::cstring_ReadStrptrMaybe(parent.msgtype, strval); break;
         default: break;
     }
     if (!retval) {
@@ -2285,7 +2471,7 @@ void command::acr_ed_Init(command::acr_ed& parent) {
     parent.hashfld = algo::strptr("");
     parent.sortfld = algo::strptr("");
     parent.unittest = algo::strptr("");
-    parent.normcheck = algo::strptr("");
+    parent.citest = algo::strptr("");
     parent.cppfunc = algo::strptr("");
     parent.xref = bool(false);
     parent.via = algo::strptr("");
@@ -2295,6 +2481,7 @@ void command::acr_ed_Init(command::acr_ed& parent) {
     parent.sandbox = bool(false);
     parent.test = bool(false);
     parent.showcpp = bool(false);
+    parent.msgtype = algo::strptr("");
 }
 
 // --- command.acr_ed..PrintArgv
@@ -2502,10 +2689,10 @@ void command::acr_ed_PrintArgv(command::acr_ed & row, algo::cstring &str) {
         str << " -unittest:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.normcheck == "")) {
+    if (!(row.citest == "")) {
         ch_RemoveAll(temp);
-        cstring_Print(row.normcheck, temp);
-        str << " -normcheck:";
+        cstring_Print(row.citest, temp);
+        str << " -citest:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.cppfunc == "")) {
@@ -2560,6 +2747,12 @@ void command::acr_ed_PrintArgv(command::acr_ed & row, algo::cstring &str) {
         ch_RemoveAll(temp);
         bool_Print(row.showcpp, temp);
         str << " -showcpp:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.msgtype == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.msgtype, temp);
+        str << " -msgtype:";
         strptr_PrintBash(temp,str);
     }
 }
@@ -2682,7 +2875,7 @@ void command::acr_ed_ExecX(command::acr_ed_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:acr_ed.Argv
 int command::acr_ed_Execv(command::acr_ed_proc& parent) {
-    char *argv[86+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((88+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -2920,10 +3113,10 @@ int command::acr_ed_Execv(command::acr_ed_proc& parent) {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
-    if (parent.cmd.normcheck != "") {
+    if (parent.cmd.citest != "") {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-normcheck:";
-        cstring_Print(parent.cmd.normcheck, temp);
+        temp << "-citest:";
+        cstring_Print(parent.cmd.citest, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
@@ -2987,6 +3180,13 @@ int command::acr_ed_Execv(command::acr_ed_proc& parent) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-showcpp:";
         bool_Print(parent.cmd.showcpp, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.msgtype != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-msgtype:";
+        cstring_Print(parent.cmd.msgtype, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
     for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
@@ -3299,7 +3499,7 @@ void command::acr_in_ExecX(command::acr_in_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:acr_in.Argv
 int command::acr_in_Execv(command::acr_in_proc& parent) {
-    char *argv[18+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((18+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -3680,7 +3880,7 @@ void command::acr_my_ExecX(command::acr_my_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:acr_my.Argv
 int command::acr_my_Execv(command::acr_my_proc& parent) {
-    char *argv[22+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((22+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -3903,7 +4103,7 @@ void command::acr_ExecX(command::acr_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:acr.Argv
 int command::acr_Execv(command::acr_proc& parent) {
-    char *argv[68+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((68+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -4652,7 +4852,7 @@ void command::amc_gc_ExecX(command::amc_gc_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:amc_gc.Argv
 int command::amc_gc_Execv(command::amc_gc_proc& parent) {
-    char *argv[8+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((8+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -4826,7 +5026,7 @@ void command::amc_ExecX(command::amc_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:amc.Argv
 int command::amc_Execv(command::amc_proc& parent) {
-    char *argv[14+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((14+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -5169,7 +5369,7 @@ void command::amc_vis_ExecX(command::amc_vis_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:amc_vis.Argv
 int command::amc_vis_Execv(command::amc_vis_proc& parent) {
-    char *argv[16+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((16+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -5268,6 +5468,648 @@ void command::amc_vis_proc_Uninit(command::amc_vis_proc& parent) {
 
     // command.amc_vis_proc.amc_vis.Uninit (Exec)  //
     amc_vis_Kill(parent); // kill child, ensure forward progress
+}
+
+// --- command.ams_cat..ReadFieldMaybe
+bool command::ams_cat_ReadFieldMaybe(command::ams_cat &parent, algo::strptr field, algo::strptr strval) {
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case command_FieldId_in: retval = algo::cstring_ReadStrptrMaybe(parent.in, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.ams_cat..ReadTupleMaybe
+// Read fields of command::ams_cat from attributes of ascii tuple TUPLE
+bool command::ams_cat_ReadTupleMaybe(command::ams_cat &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        retval = ams_cat_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- command.ams_cat..PrintArgv
+// print command-line args of command::ams_cat to string  -- cprint:command.ams_cat.Argv
+void command::ams_cat_PrintArgv(command::ams_cat & row, algo::cstring &str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)row;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- command.ams_cat..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::ams_cat_ToCmdline(command::ams_cat & row) {
+    tempstr ret;
+    ret << "bin/ams_cat ";
+    ams_cat_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.ams_cat_proc.ams_cat.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::ams_cat_Start(command::ams_cat_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(ams_cat_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(ams_cat_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= ams_cat_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.ams_cat_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.ams_cat_proc.ams_cat.StartRead
+// Start subprocess & Read output
+algo::Fildes command::ams_cat_StartRead(command::ams_cat_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    ams_cat_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.ams_cat_proc.ams_cat.Kill
+// Kill subprocess and wait
+void command::ams_cat_Kill(command::ams_cat_proc& parent) {
+    if (parent.pid != 0) {
+        kill(parent.pid,9);
+        ams_cat_Wait(parent);
+    }
+}
+
+// --- command.ams_cat_proc.ams_cat.Wait
+// Wait for subprocess to return
+void command::ams_cat_Wait(command::ams_cat_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.ams_cat_proc.ams_cat.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::ams_cat_Exec(command::ams_cat_proc& parent) {
+    ams_cat_Start(parent);
+    ams_cat_Wait(parent);
+    return parent.status;
+}
+
+// --- command.ams_cat_proc.ams_cat.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::ams_cat_ExecX(command::ams_cat_proc& parent) {
+    int rc = ams_cat_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",ams_cat_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.ams_cat_proc.ams_cat.Execv
+// Call execv()
+// Call execv with specified parameters -- cprint:ams_cat.Argv
+int command::ams_cat_Execv(command::ams_cat_proc& parent) {
+    char **argv = (char**)alloca((2+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
+    algo::tempstr temp;
+    int n_argv=0;
+    argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+    temp << parent.path;
+    ch_Alloc(temp) = 0;// NUL term for pathname
+
+    if (parent.cmd.in != "data") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-in:";
+        cstring_Print(parent.cmd.in, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+    for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-verbose";
+        ch_Alloc(temp) = 0;
+    }
+    argv[n_argv] = NULL; // last pointer
+    while (n_argv>0) { // shift pointers
+        argv[--n_argv] += (u64)temp.ch_elems;
+    }
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    return execv(Zeroterm(parent.path),argv);
+}
+
+// --- command.ams_cat_proc.ams_cat.ToCmdline
+algo::tempstr command::ams_cat_ToCmdline(command::ams_cat_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::ams_cat_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.ams_cat_proc..Uninit
+void command::ams_cat_proc_Uninit(command::ams_cat_proc& parent) {
+    command::ams_cat_proc &row = parent; (void)row;
+
+    // command.ams_cat_proc.ams_cat.Uninit (Exec)  //
+    ams_cat_Kill(parent); // kill child, ensure forward progress
+}
+
+// --- command.ams_sendtest.trace.Print
+// Print back to string
+void command::trace_Print(command::ams_sendtest& parent, algo::cstring &out) {
+    Regx_Print(parent.trace, out);
+}
+
+// --- command.ams_sendtest.trace.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::trace_ReadStrptrMaybe(command::ams_sendtest& parent, algo::strptr in) {
+    Regx_ReadSql(parent.trace, in, true);
+    bool retval = true;// !parent.trace.parseerror; -- TODO: uncomment
+    return retval;
+}
+
+// --- command.ams_sendtest..ReadFieldMaybe
+bool command::ams_sendtest_ReadFieldMaybe(command::ams_sendtest &parent, algo::strptr field, algo::strptr strval) {
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case command_FieldId_in: retval = algo::cstring_ReadStrptrMaybe(parent.in, strval); break;
+        case command_FieldId_id: retval = i32_ReadStrptrMaybe(parent.id, strval); break;
+        case command_FieldId_file_prefix: retval = algo::cstring_ReadStrptrMaybe(parent.file_prefix, strval); break;
+        case command_FieldId_nchild: retval = i32_ReadStrptrMaybe(parent.nchild, strval); break;
+        case command_FieldId_blocking: retval = bool_ReadStrptrMaybe(parent.blocking, strval); break;
+        case command_FieldId_nmsg: retval = i32_ReadStrptrMaybe(parent.nmsg, strval); break;
+        case command_FieldId_trace: retval = trace_ReadStrptrMaybe(parent, strval); break;
+        case command_FieldId_timeout: retval = i32_ReadStrptrMaybe(parent.timeout, strval); break;
+        case command_FieldId_recvdelay_ns: retval = i64_ReadStrptrMaybe(parent.recvdelay_ns, strval); break;
+        case command_FieldId_senddelay_ns: retval = i64_ReadStrptrMaybe(parent.senddelay_ns, strval); break;
+        case command_FieldId_msgsize_min: retval = i32_ReadStrptrMaybe(parent.msgsize_min, strval); break;
+        case command_FieldId_msgsize_max: retval = i32_ReadStrptrMaybe(parent.msgsize_max, strval); break;
+        case command_FieldId_bufsize: retval = i32_ReadStrptrMaybe(parent.bufsize, strval); break;
+        case command_FieldId_recvdelay: retval = i64_ReadStrptrMaybe(parent.recvdelay, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.ams_sendtest..ReadTupleMaybe
+// Read fields of command::ams_sendtest from attributes of ascii tuple TUPLE
+bool command::ams_sendtest_ReadTupleMaybe(command::ams_sendtest &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        retval = ams_sendtest_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- command.ams_sendtest..Init
+// Set all fields to initial values.
+void command::ams_sendtest_Init(command::ams_sendtest& parent) {
+    parent.in = algo::strptr("data");
+    parent.id = i32(0);
+    parent.file_prefix = algo::strptr("");
+    parent.nchild = i32(1);
+    parent.blocking = bool(false);
+    parent.nmsg = i32(1000);
+    Regx_ReadSql(parent.trace, "", true);
+    parent.timeout = i32(30);
+    parent.recvdelay_ns = i64(0);
+    parent.senddelay_ns = i64(0);
+    parent.msgsize_min = i32(64);
+    parent.msgsize_max = i32(1024);
+    parent.bufsize = i32(32768);
+    parent.recvdelay = i64(0);
+}
+
+// --- command.ams_sendtest..PrintArgv
+// print command-line args of command::ams_sendtest to string  -- cprint:command.ams_sendtest.Argv
+void command::ams_sendtest_PrintArgv(command::ams_sendtest & row, algo::cstring &str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)row;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.id == 0)) {
+        ch_RemoveAll(temp);
+        i32_Print(row.id, temp);
+        str << " -id:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.file_prefix == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.file_prefix, temp);
+        str << " -file_prefix:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.nchild == 1)) {
+        ch_RemoveAll(temp);
+        i32_Print(row.nchild, temp);
+        str << " -nchild:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.blocking == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.blocking, temp);
+        str << " -blocking:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.nmsg == 1000)) {
+        ch_RemoveAll(temp);
+        i32_Print(row.nmsg, temp);
+        str << " -nmsg:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.trace.expr == "")) {
+        ch_RemoveAll(temp);
+        command::trace_Print(const_cast<command::ams_sendtest&>(row), temp);
+        str << " -trace:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.timeout == 30)) {
+        ch_RemoveAll(temp);
+        i32_Print(row.timeout, temp);
+        str << " -timeout:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.recvdelay_ns == 0)) {
+        ch_RemoveAll(temp);
+        i64_Print(row.recvdelay_ns, temp);
+        str << " -recvdelay_ns:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.senddelay_ns == 0)) {
+        ch_RemoveAll(temp);
+        i64_Print(row.senddelay_ns, temp);
+        str << " -senddelay_ns:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.msgsize_min == 64)) {
+        ch_RemoveAll(temp);
+        i32_Print(row.msgsize_min, temp);
+        str << " -msgsize_min:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.msgsize_max == 1024)) {
+        ch_RemoveAll(temp);
+        i32_Print(row.msgsize_max, temp);
+        str << " -msgsize_max:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.bufsize == 32768)) {
+        ch_RemoveAll(temp);
+        i32_Print(row.bufsize, temp);
+        str << " -bufsize:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.recvdelay == 0)) {
+        ch_RemoveAll(temp);
+        i64_Print(row.recvdelay, temp);
+        str << " -recvdelay:";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- command.ams_sendtest..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::ams_sendtest_ToCmdline(command::ams_sendtest & row) {
+    tempstr ret;
+    ret << "bin/ams_sendtest ";
+    ams_sendtest_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.ams_sendtest_proc.ams_sendtest.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::ams_sendtest_Start(command::ams_sendtest_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(ams_sendtest_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(ams_sendtest_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= ams_sendtest_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.ams_sendtest_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.ams_sendtest_proc.ams_sendtest.StartRead
+// Start subprocess & Read output
+algo::Fildes command::ams_sendtest_StartRead(command::ams_sendtest_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    ams_sendtest_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.ams_sendtest_proc.ams_sendtest.Kill
+// Kill subprocess and wait
+void command::ams_sendtest_Kill(command::ams_sendtest_proc& parent) {
+    if (parent.pid != 0) {
+        kill(parent.pid,9);
+        ams_sendtest_Wait(parent);
+    }
+}
+
+// --- command.ams_sendtest_proc.ams_sendtest.Wait
+// Wait for subprocess to return
+void command::ams_sendtest_Wait(command::ams_sendtest_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.ams_sendtest_proc.ams_sendtest.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::ams_sendtest_Exec(command::ams_sendtest_proc& parent) {
+    ams_sendtest_Start(parent);
+    ams_sendtest_Wait(parent);
+    return parent.status;
+}
+
+// --- command.ams_sendtest_proc.ams_sendtest.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::ams_sendtest_ExecX(command::ams_sendtest_proc& parent) {
+    int rc = ams_sendtest_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",ams_sendtest_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.ams_sendtest_proc.ams_sendtest.Execv
+// Call execv()
+// Call execv with specified parameters -- cprint:ams_sendtest.Argv
+int command::ams_sendtest_Execv(command::ams_sendtest_proc& parent) {
+    char **argv = (char**)alloca((28+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
+    algo::tempstr temp;
+    int n_argv=0;
+    argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+    temp << parent.path;
+    ch_Alloc(temp) = 0;// NUL term for pathname
+
+    if (parent.cmd.in != "data") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-in:";
+        cstring_Print(parent.cmd.in, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.id != 0) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-id:";
+        i32_Print(parent.cmd.id, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.file_prefix != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-file_prefix:";
+        cstring_Print(parent.cmd.file_prefix, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.nchild != 1) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-nchild:";
+        i32_Print(parent.cmd.nchild, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.blocking != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-blocking:";
+        bool_Print(parent.cmd.blocking, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.nmsg != 1000) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-nmsg:";
+        i32_Print(parent.cmd.nmsg, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.trace.expr != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-trace:";
+        command::trace_Print(parent.cmd, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.timeout != 30) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-timeout:";
+        i32_Print(parent.cmd.timeout, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.recvdelay_ns != 0) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-recvdelay_ns:";
+        i64_Print(parent.cmd.recvdelay_ns, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.senddelay_ns != 0) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-senddelay_ns:";
+        i64_Print(parent.cmd.senddelay_ns, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.msgsize_min != 64) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-msgsize_min:";
+        i32_Print(parent.cmd.msgsize_min, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.msgsize_max != 1024) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-msgsize_max:";
+        i32_Print(parent.cmd.msgsize_max, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.bufsize != 32768) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-bufsize:";
+        i32_Print(parent.cmd.bufsize, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.recvdelay != 0) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-recvdelay:";
+        i64_Print(parent.cmd.recvdelay, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+    for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-verbose";
+        ch_Alloc(temp) = 0;
+    }
+    argv[n_argv] = NULL; // last pointer
+    while (n_argv>0) { // shift pointers
+        argv[--n_argv] += (u64)temp.ch_elems;
+    }
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    return execv(Zeroterm(parent.path),argv);
+}
+
+// --- command.ams_sendtest_proc.ams_sendtest.ToCmdline
+algo::tempstr command::ams_sendtest_ToCmdline(command::ams_sendtest_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::ams_sendtest_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.ams_sendtest_proc..Uninit
+void command::ams_sendtest_proc_Uninit(command::ams_sendtest_proc& parent) {
+    command::ams_sendtest_proc &row = parent; (void)row;
+
+    // command.ams_sendtest_proc.ams_sendtest.Uninit (Exec)  //
+    ams_sendtest_Kill(parent); // kill child, ensure forward progress
 }
 
 // --- command.atf_amc.amctest.Print
@@ -5487,7 +6329,7 @@ void command::atf_amc_ExecX(command::atf_amc_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:atf_amc.Argv
 int command::atf_amc_Execv(command::atf_amc_proc& parent) {
-    char *argv[8+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((8+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -5560,29 +6402,48 @@ void command::atf_amc_proc_Uninit(command::atf_amc_proc& parent) {
     atf_amc_Kill(parent); // kill child, ensure forward progress
 }
 
-// --- command.atf_norm.normcheck.Print
+// --- command.atf_ci.citest.Print
 // Print back to string
-void command::normcheck_Print(command::atf_norm& parent, algo::cstring &out) {
-    Regx_Print(parent.normcheck, out);
+void command::citest_Print(command::atf_ci& parent, algo::cstring &out) {
+    Regx_Print(parent.citest, out);
 }
 
-// --- command.atf_norm.normcheck.ReadStrptrMaybe
+// --- command.atf_ci.citest.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::normcheck_ReadStrptrMaybe(command::atf_norm& parent, algo::strptr in) {
-    Regx_ReadSql(parent.normcheck, in, true);
-    bool retval = true;// !parent.normcheck.parseerror; -- TODO: uncomment
+bool command::citest_ReadStrptrMaybe(command::atf_ci& parent, algo::strptr in) {
+    Regx_ReadSql(parent.citest, in, true);
+    bool retval = true;// !parent.citest.parseerror; -- TODO: uncomment
     return retval;
 }
 
-// --- command.atf_norm..ReadFieldMaybe
-bool command::atf_norm_ReadFieldMaybe(command::atf_norm &parent, algo::strptr field, algo::strptr strval) {
+// --- command.atf_ci.cijob.Print
+// Print back to string
+void command::cijob_Print(command::atf_ci& parent, algo::cstring &out) {
+    Regx_Print(parent.cijob, out);
+}
+
+// --- command.atf_ci.cijob.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::cijob_ReadStrptrMaybe(command::atf_ci& parent, algo::strptr in) {
+    Regx_ReadSql(parent.cijob, in, true);
+    bool retval = true;// !parent.cijob.parseerror; -- TODO: uncomment
+    return retval;
+}
+
+// --- command.atf_ci..ReadFieldMaybe
+bool command::atf_ci_ReadFieldMaybe(command::atf_ci &parent, algo::strptr field, algo::strptr strval) {
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
     bool retval = true; // default is no error
     switch(field_id) {
         case command_FieldId_in: retval = algo::cstring_ReadStrptrMaybe(parent.in, strval); break;
-        case command_FieldId_normcheck: retval = normcheck_ReadStrptrMaybe(parent, strval); break;
+        case command_FieldId_citest: retval = citest_ReadStrptrMaybe(parent, strval); break;
+        case command_FieldId_maxerr: retval = i32_ReadStrptrMaybe(parent.maxerr, strval); break;
+        case command_FieldId_cijob: retval = cijob_ReadStrptrMaybe(parent, strval); break;
+        case command_FieldId_capture: retval = bool_ReadStrptrMaybe(parent.capture, strval); break;
+        case command_FieldId_skipenv: retval = bool_ReadStrptrMaybe(parent.skipenv, strval); break;
         default: break;
     }
     if (!retval) {
@@ -5591,16 +6452,16 @@ bool command::atf_norm_ReadFieldMaybe(command::atf_norm &parent, algo::strptr fi
     return retval;
 }
 
-// --- command.atf_norm..ReadTupleMaybe
-// Read fields of command::atf_norm from attributes of ascii tuple TUPLE
-bool command::atf_norm_ReadTupleMaybe(command::atf_norm &parent, algo::Tuple &tuple) {
+// --- command.atf_ci..ReadTupleMaybe
+// Read fields of command::atf_ci from attributes of ascii tuple TUPLE
+bool command::atf_ci_ReadTupleMaybe(command::atf_ci &parent, algo::Tuple &tuple) {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         if (ch_N(attr.name) == 0) {
-            attr.name = atf_norm_GetAnon(parent, anon_idx++);
+            attr.name = atf_ci_GetAnon(parent, anon_idx++);
         }
-        retval = atf_norm_ReadFieldMaybe(parent, attr.name, attr.value);
+        retval = atf_ci_ReadFieldMaybe(parent, attr.name, attr.value);
         if (!retval) {
             break;
         }
@@ -5608,16 +6469,20 @@ bool command::atf_norm_ReadTupleMaybe(command::atf_norm &parent, algo::Tuple &tu
     return retval;
 }
 
-// --- command.atf_norm..Init
+// --- command.atf_ci..Init
 // Set all fields to initial values.
-void command::atf_norm_Init(command::atf_norm& parent) {
+void command::atf_ci_Init(command::atf_ci& parent) {
     parent.in = algo::strptr("data");
-    Regx_ReadSql(parent.normcheck, "%", true);
+    Regx_ReadSql(parent.citest, "%", true);
+    parent.maxerr = i32(0);
+    Regx_ReadSql(parent.cijob, "%", true);
+    parent.capture = bool(false);
+    parent.skipenv = bool(false);
 }
 
-// --- command.atf_norm..PrintArgv
-// print command-line args of command::atf_norm to string  -- cprint:command.atf_norm.Argv
-void command::atf_norm_PrintArgv(command::atf_norm & row, algo::cstring &str) {
+// --- command.atf_ci..PrintArgv
+// print command-line args of command::atf_ci to string  -- cprint:command.atf_ci.Argv
+void command::atf_ci_PrintArgv(command::atf_ci & row, algo::cstring &str) {
     algo::tempstr temp;
     (void)temp;
     (void)row;
@@ -5629,18 +6494,42 @@ void command::atf_norm_PrintArgv(command::atf_norm & row, algo::cstring &str) {
         strptr_PrintBash(temp,str);
     }
     ch_RemoveAll(temp);
-    command::normcheck_Print(const_cast<command::atf_norm&>(row), temp);
+    command::citest_Print(const_cast<command::atf_ci&>(row), temp);
     str << " ";
     strptr_PrintBash(temp,str);
+    if (!(row.maxerr == 0)) {
+        ch_RemoveAll(temp);
+        i32_Print(row.maxerr, temp);
+        str << " -maxerr:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.cijob.expr == "%")) {
+        ch_RemoveAll(temp);
+        command::cijob_Print(const_cast<command::atf_ci&>(row), temp);
+        str << " -cijob:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.capture == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.capture, temp);
+        str << " -capture:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.skipenv == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.skipenv, temp);
+        str << " -skipenv:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
-// --- command.atf_norm..ToCmdline
+// --- command.atf_ci..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::atf_norm_ToCmdline(command::atf_norm & row) {
+tempstr command::atf_ci_ToCmdline(command::atf_ci & row) {
     tempstr ret;
-    ret << "bin/atf_norm ";
-    atf_norm_PrintArgv(row, ret);
+    ret << "bin/atf_ci ";
+    atf_ci_PrintArgv(row, ret);
     // inherit less intense verbose, debug options
     for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
         ret << " -verbose";
@@ -5651,25 +6540,25 @@ tempstr command::atf_norm_ToCmdline(command::atf_norm & row) {
     return ret;
 }
 
-// --- command.atf_norm..GetAnon
-algo::strptr command::atf_norm_GetAnon(command::atf_norm &parent, i32 idx) {
+// --- command.atf_ci..GetAnon
+algo::strptr command::atf_ci_GetAnon(command::atf_ci &parent, i32 idx) {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
-        case(0): return strptr("normcheck", 9);
+        case(0): return strptr("citest", 6);
         default: return algo::strptr();
     }
 }
 
-// --- command.atf_norm_proc.atf_norm.Start
+// --- command.atf_ci_proc.atf_ci.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::atf_norm_Start(command::atf_norm_proc& parent) {
+int command::atf_ci_Start(command::atf_ci_proc& parent) {
     int retval = 0;
     if (parent.pid == 0) {
-        verblog(atf_norm_ToCmdline(parent)); // maybe print command
+        verblog(atf_ci_ToCmdline(parent)); // maybe print command
 #ifdef WIN32
         algo_lib::ResolveExecFname(parent.path);
-        tempstr cmdline(atf_norm_ToCmdline(parent));
+        tempstr cmdline(atf_ci_ToCmdline(parent));
         parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
 #else
         parent.pid = fork();
@@ -5681,10 +6570,10 @@ int command::atf_norm_Start(command::atf_norm_proc& parent) {
             if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
             if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
             if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
-            if (retval==0) retval= atf_norm_Execv(parent);
+            if (retval==0) retval= atf_ci_Execv(parent);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
-                prerr("command.atf_norm_execv"
+                prerr("command.atf_ci_execv"
                 <<Keyval("errno",err)
                 <<Keyval("errstr",strerror(err))
                 <<Keyval("comment","Execv failed"));
@@ -5699,31 +6588,31 @@ int command::atf_norm_Start(command::atf_norm_proc& parent) {
     return retval;
 }
 
-// --- command.atf_norm_proc.atf_norm.StartRead
+// --- command.atf_ci_proc.atf_ci.StartRead
 // Start subprocess & Read output
-algo::Fildes command::atf_norm_StartRead(command::atf_norm_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::atf_ci_StartRead(command::atf_ci_proc& parent, algo_lib::FFildes &read) {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
     read.fd.value = pipefd[0];
     parent.fstdout  << ">&" << pipefd[1];
-    atf_norm_Start(parent);
+    atf_ci_Start(parent);
     (void)close(pipefd[1]);
     return read.fd;
 }
 
-// --- command.atf_norm_proc.atf_norm.Kill
+// --- command.atf_ci_proc.atf_ci.Kill
 // Kill subprocess and wait
-void command::atf_norm_Kill(command::atf_norm_proc& parent) {
+void command::atf_ci_Kill(command::atf_ci_proc& parent) {
     if (parent.pid != 0) {
         kill(parent.pid,9);
-        atf_norm_Wait(parent);
+        atf_ci_Wait(parent);
     }
 }
 
-// --- command.atf_norm_proc.atf_norm.Wait
+// --- command.atf_ci_proc.atf_ci.Wait
 // Wait for subprocess to return
-void command::atf_norm_Wait(command::atf_norm_proc& parent) {
+void command::atf_ci_Wait(command::atf_ci_proc& parent) {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -5739,29 +6628,29 @@ void command::atf_norm_Wait(command::atf_norm_proc& parent) {
     }
 }
 
-// --- command.atf_norm_proc.atf_norm.Exec
+// --- command.atf_ci_proc.atf_ci.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::atf_norm_Exec(command::atf_norm_proc& parent) {
-    atf_norm_Start(parent);
-    atf_norm_Wait(parent);
+int command::atf_ci_Exec(command::atf_ci_proc& parent) {
+    atf_ci_Start(parent);
+    atf_ci_Wait(parent);
     return parent.status;
 }
 
-// --- command.atf_norm_proc.atf_norm.ExecX
+// --- command.atf_ci_proc.atf_ci.ExecX
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
-void command::atf_norm_ExecX(command::atf_norm_proc& parent) {
-    int rc = atf_norm_Exec(parent);
-    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",atf_norm_ToCmdline(parent))
+void command::atf_ci_ExecX(command::atf_ci_proc& parent) {
+    int rc = atf_ci_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",atf_ci_ToCmdline(parent))
     << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
 }
 
-// --- command.atf_norm_proc.atf_norm.Execv
+// --- command.atf_ci_proc.atf_ci.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:atf_norm.Argv
-int command::atf_norm_Execv(command::atf_norm_proc& parent) {
-    char *argv[4+2]; // start of first arg (future pointer)
+// Call execv with specified parameters -- cprint:atf_ci.Argv
+int command::atf_ci_Execv(command::atf_ci_proc& parent) {
+    char **argv = (char**)alloca((12+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -5775,10 +6664,38 @@ int command::atf_norm_Execv(command::atf_norm_proc& parent) {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
-    if (parent.cmd.normcheck.expr != "%") {
+    if (parent.cmd.citest.expr != "%") {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-normcheck:";
-        command::normcheck_Print(parent.cmd, temp);
+        temp << "-citest:";
+        command::citest_Print(parent.cmd, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.maxerr != 0) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-maxerr:";
+        i32_Print(parent.cmd.maxerr, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.cijob.expr != "%") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-cijob:";
+        command::cijob_Print(parent.cmd, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.capture != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-capture:";
+        bool_Print(parent.cmd.capture, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.skipenv != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-skipenv:";
+        bool_Print(parent.cmd.skipenv, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
     for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
@@ -5795,11 +6712,11 @@ int command::atf_norm_Execv(command::atf_norm_proc& parent) {
     return execv(Zeroterm(parent.path),argv);
 }
 
-// --- command.atf_norm_proc.atf_norm.ToCmdline
-algo::tempstr command::atf_norm_ToCmdline(command::atf_norm_proc& parent) {
+// --- command.atf_ci_proc.atf_ci.ToCmdline
+algo::tempstr command::atf_ci_ToCmdline(command::atf_ci_proc& parent) {
     algo::tempstr retval;
     retval << parent.path << " ";
-    command::atf_norm_PrintArgv(parent.cmd,retval);
+    command::atf_ci_PrintArgv(parent.cmd,retval);
     if (ch_N(parent.fstdin)) {
         retval << " " << parent.fstdin;
     }
@@ -5812,12 +6729,1031 @@ algo::tempstr command::atf_norm_ToCmdline(command::atf_norm_proc& parent) {
     return retval;
 }
 
-// --- command.atf_norm_proc..Uninit
-void command::atf_norm_proc_Uninit(command::atf_norm_proc& parent) {
-    command::atf_norm_proc &row = parent; (void)row;
+// --- command.atf_ci_proc..Uninit
+void command::atf_ci_proc_Uninit(command::atf_ci_proc& parent) {
+    command::atf_ci_proc &row = parent; (void)row;
 
-    // command.atf_norm_proc.atf_norm.Uninit (Exec)  //
-    atf_norm_Kill(parent); // kill child, ensure forward progress
+    // command.atf_ci_proc.atf_ci.Uninit (Exec)  //
+    atf_ci_Kill(parent); // kill child, ensure forward progress
+}
+
+// --- command.atf_comp.comptest.Print
+// Print back to string
+void command::comptest_Print(command::atf_comp& parent, algo::cstring &out) {
+    Regx_Print(parent.comptest, out);
+}
+
+// --- command.atf_comp.comptest.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::comptest_ReadStrptrMaybe(command::atf_comp& parent, algo::strptr in) {
+    Regx_ReadSql(parent.comptest, in, true);
+    bool retval = true;// !parent.comptest.parseerror; -- TODO: uncomment
+    return retval;
+}
+
+// --- command.atf_comp..ReadFieldMaybe
+bool command::atf_comp_ReadFieldMaybe(command::atf_comp &parent, algo::strptr field, algo::strptr strval) {
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case command_FieldId_in: retval = algo::cstring_ReadStrptrMaybe(parent.in, strval); break;
+        case command_FieldId_comptest: retval = comptest_ReadStrptrMaybe(parent, strval); break;
+        case command_FieldId_mdbg: retval = bool_ReadStrptrMaybe(parent.mdbg, strval); break;
+        case command_FieldId_run: retval = bool_ReadStrptrMaybe(parent.run, strval); break;
+        case command_FieldId_capture: retval = bool_ReadStrptrMaybe(parent.capture, strval); break;
+        case command_FieldId_print: retval = bool_ReadStrptrMaybe(parent.print, strval); break;
+        case command_FieldId_e: retval = bool_ReadStrptrMaybe(parent.e, strval); break;
+        case command_FieldId_normalize: retval = bool_ReadStrptrMaybe(parent.normalize, strval); break;
+        case command_FieldId_covcapture: retval = bool_ReadStrptrMaybe(parent.covcapture, strval); break;
+        case command_FieldId_covcheck: retval = bool_ReadStrptrMaybe(parent.covcheck, strval); break;
+        case command_FieldId_compdir: retval = algo::cstring_ReadStrptrMaybe(parent.compdir, strval); break;
+        case command_FieldId_cfg: retval = algo::Smallstr50_ReadStrptrMaybe(parent.cfg, strval); break;
+        case command_FieldId_check_untracked: retval = bool_ReadStrptrMaybe(parent.check_untracked, strval); break;
+        case command_FieldId_maxerr: retval = i32_ReadStrptrMaybe(parent.maxerr, strval); break;
+        case command_FieldId_build: retval = bool_ReadStrptrMaybe(parent.build, strval); break;
+        case command_FieldId_ood: retval = bool_ReadStrptrMaybe(parent.ood, strval); break;
+        case command_FieldId_memcheck: retval = bool_ReadStrptrMaybe(parent.memcheck, strval); break;
+        case command_FieldId_force: retval = bool_ReadStrptrMaybe(parent.force, strval); break;
+        case command_FieldId_callgrind: retval = bool_ReadStrptrMaybe(parent.callgrind, strval); break;
+        case command_FieldId_maxjobs: retval = i32_ReadStrptrMaybe(parent.maxjobs, strval); break;
+        case command_FieldId_stream: retval = bool_ReadStrptrMaybe(parent.stream, strval); break;
+        case command_FieldId_i: retval = bool_ReadStrptrMaybe(parent.i, strval); break;
+        case command_FieldId_write: retval = bool_ReadStrptrMaybe(parent.write, strval); break;
+        case command_FieldId_report: retval = bool_ReadStrptrMaybe(parent.report, strval); break;
+        case command_FieldId_b: retval = algo::cstring_ReadStrptrMaybe(parent.b, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.atf_comp..ReadTupleMaybe
+// Read fields of command::atf_comp from attributes of ascii tuple TUPLE
+bool command::atf_comp_ReadTupleMaybe(command::atf_comp &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    int anon_idx = 0;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        if (ch_N(attr.name) == 0) {
+            attr.name = atf_comp_GetAnon(parent, anon_idx++);
+        }
+        retval = atf_comp_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- command.atf_comp..Init
+// Set all fields to initial values.
+void command::atf_comp_Init(command::atf_comp& parent) {
+    parent.in = algo::strptr("data");
+    Regx_ReadSql(parent.comptest, "%", true);
+    parent.mdbg = bool(false);
+    parent.run = bool(true);
+    parent.capture = bool(false);
+    parent.print = bool(false);
+    parent.e = bool(false);
+    parent.normalize = bool(false);
+    parent.covcapture = bool(false);
+    parent.covcheck = bool(false);
+    parent.compdir = algo::strptr("");
+    parent.cfg = algo::strptr("release");
+    parent.check_untracked = bool(true);
+    parent.maxerr = i32(1);
+    parent.build = bool(false);
+    parent.ood = bool(false);
+    parent.memcheck = bool(false);
+    parent.force = bool(false);
+    parent.callgrind = bool(false);
+    parent.maxjobs = i32(1);
+    parent.stream = bool(false);
+    parent.i = bool(false);
+    parent.write = bool(true);
+    parent.report = bool(false);
+    parent.b = algo::strptr("");
+}
+
+// --- command.atf_comp..PrintArgv
+// print command-line args of command::atf_comp to string  -- cprint:command.atf_comp.Argv
+void command::atf_comp_PrintArgv(command::atf_comp & row, algo::cstring &str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)row;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+    ch_RemoveAll(temp);
+    command::comptest_Print(const_cast<command::atf_comp&>(row), temp);
+    str << " ";
+    strptr_PrintBash(temp,str);
+    if (!(row.mdbg == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.mdbg, temp);
+        str << " -mdbg:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.run == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.run, temp);
+        str << " -run:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.capture == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.capture, temp);
+        str << " -capture:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.print == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.print, temp);
+        str << " -print:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.e == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.e, temp);
+        str << " -e:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.normalize == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.normalize, temp);
+        str << " -normalize:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.covcapture == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.covcapture, temp);
+        str << " -covcapture:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.covcheck == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.covcheck, temp);
+        str << " -covcheck:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.compdir == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.compdir, temp);
+        str << " -compdir:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.cfg == "release")) {
+        ch_RemoveAll(temp);
+        Smallstr50_Print(row.cfg, temp);
+        str << " -cfg:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.check_untracked == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.check_untracked, temp);
+        str << " -check_untracked:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.maxerr == 1)) {
+        ch_RemoveAll(temp);
+        i32_Print(row.maxerr, temp);
+        str << " -maxerr:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.build == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.build, temp);
+        str << " -build:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.ood == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.ood, temp);
+        str << " -ood:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.memcheck == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.memcheck, temp);
+        str << " -memcheck:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.force == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.force, temp);
+        str << " -force:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.callgrind == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.callgrind, temp);
+        str << " -callgrind:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.maxjobs == 1)) {
+        ch_RemoveAll(temp);
+        i32_Print(row.maxjobs, temp);
+        str << " -maxjobs:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.stream == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.stream, temp);
+        str << " -stream:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.i == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.i, temp);
+        str << " -i:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.write == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.write, temp);
+        str << " -write:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.report == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.report, temp);
+        str << " -report:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.b == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.b, temp);
+        str << " -b:";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- command.atf_comp..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::atf_comp_ToCmdline(command::atf_comp & row) {
+    tempstr ret;
+    ret << "bin/atf_comp ";
+    atf_comp_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.atf_comp..GetAnon
+algo::strptr command::atf_comp_GetAnon(command::atf_comp &parent, i32 idx) {
+    (void)parent;//only to avoid -Wunused-parameter
+    switch(idx) {
+        case(0): return strptr("comptest", 8);
+        default: return algo::strptr();
+    }
+}
+
+// --- command.atf_comp_proc.atf_comp.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::atf_comp_Start(command::atf_comp_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(atf_comp_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(atf_comp_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= atf_comp_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.atf_comp_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.atf_comp_proc.atf_comp.StartRead
+// Start subprocess & Read output
+algo::Fildes command::atf_comp_StartRead(command::atf_comp_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    atf_comp_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.atf_comp_proc.atf_comp.Kill
+// Kill subprocess and wait
+void command::atf_comp_Kill(command::atf_comp_proc& parent) {
+    if (parent.pid != 0) {
+        kill(parent.pid,9);
+        atf_comp_Wait(parent);
+    }
+}
+
+// --- command.atf_comp_proc.atf_comp.Wait
+// Wait for subprocess to return
+void command::atf_comp_Wait(command::atf_comp_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.atf_comp_proc.atf_comp.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::atf_comp_Exec(command::atf_comp_proc& parent) {
+    atf_comp_Start(parent);
+    atf_comp_Wait(parent);
+    return parent.status;
+}
+
+// --- command.atf_comp_proc.atf_comp.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::atf_comp_ExecX(command::atf_comp_proc& parent) {
+    int rc = atf_comp_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",atf_comp_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.atf_comp_proc.atf_comp.Execv
+// Call execv()
+// Call execv with specified parameters -- cprint:atf_comp.Argv
+int command::atf_comp_Execv(command::atf_comp_proc& parent) {
+    char **argv = (char**)alloca((50+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
+    algo::tempstr temp;
+    int n_argv=0;
+    argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+    temp << parent.path;
+    ch_Alloc(temp) = 0;// NUL term for pathname
+
+    if (parent.cmd.in != "data") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-in:";
+        cstring_Print(parent.cmd.in, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.comptest.expr != "%") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-comptest:";
+        command::comptest_Print(parent.cmd, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.mdbg != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-mdbg:";
+        bool_Print(parent.cmd.mdbg, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.run != true) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-run:";
+        bool_Print(parent.cmd.run, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.capture != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-capture:";
+        bool_Print(parent.cmd.capture, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.print != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-print:";
+        bool_Print(parent.cmd.print, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.e != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-e:";
+        bool_Print(parent.cmd.e, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.normalize != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-normalize:";
+        bool_Print(parent.cmd.normalize, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.covcapture != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-covcapture:";
+        bool_Print(parent.cmd.covcapture, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.covcheck != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-covcheck:";
+        bool_Print(parent.cmd.covcheck, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.compdir != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-compdir:";
+        cstring_Print(parent.cmd.compdir, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.cfg != "release") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-cfg:";
+        Smallstr50_Print(parent.cmd.cfg, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.check_untracked != true) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-check_untracked:";
+        bool_Print(parent.cmd.check_untracked, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.maxerr != 1) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-maxerr:";
+        i32_Print(parent.cmd.maxerr, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.build != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-build:";
+        bool_Print(parent.cmd.build, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.ood != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-ood:";
+        bool_Print(parent.cmd.ood, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.memcheck != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-memcheck:";
+        bool_Print(parent.cmd.memcheck, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.force != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-force:";
+        bool_Print(parent.cmd.force, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.callgrind != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-callgrind:";
+        bool_Print(parent.cmd.callgrind, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.maxjobs != 1) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-maxjobs:";
+        i32_Print(parent.cmd.maxjobs, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.stream != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-stream:";
+        bool_Print(parent.cmd.stream, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.i != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-i:";
+        bool_Print(parent.cmd.i, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.write != true) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-write:";
+        bool_Print(parent.cmd.write, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.report != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-report:";
+        bool_Print(parent.cmd.report, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.b != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-b:";
+        cstring_Print(parent.cmd.b, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+    for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-verbose";
+        ch_Alloc(temp) = 0;
+    }
+    argv[n_argv] = NULL; // last pointer
+    while (n_argv>0) { // shift pointers
+        argv[--n_argv] += (u64)temp.ch_elems;
+    }
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    return execv(Zeroterm(parent.path),argv);
+}
+
+// --- command.atf_comp_proc.atf_comp.ToCmdline
+algo::tempstr command::atf_comp_ToCmdline(command::atf_comp_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::atf_comp_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.atf_comp_proc..Uninit
+void command::atf_comp_proc_Uninit(command::atf_comp_proc& parent) {
+    command::atf_comp_proc &row = parent; (void)row;
+
+    // command.atf_comp_proc.atf_comp.Uninit (Exec)  //
+    atf_comp_Kill(parent); // kill child, ensure forward progress
+}
+
+// --- command.atf_cov.exclude.Print
+// Print back to string
+void command::exclude_Print(command::atf_cov& parent, algo::cstring &out) {
+    Regx_Print(parent.exclude, out);
+}
+
+// --- command.atf_cov.exclude.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::exclude_ReadStrptrMaybe(command::atf_cov& parent, algo::strptr in) {
+    Regx_ReadSql(parent.exclude, in, true);
+    bool retval = true;// !parent.exclude.parseerror; -- TODO: uncomment
+    return retval;
+}
+
+// --- command.atf_cov..ReadFieldMaybe
+bool command::atf_cov_ReadFieldMaybe(command::atf_cov &parent, algo::strptr field, algo::strptr strval) {
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case command_FieldId_in: retval = algo::cstring_ReadStrptrMaybe(parent.in, strval); break;
+        case command_FieldId_covdir: retval = algo::cstring_ReadStrptrMaybe(parent.covdir, strval); break;
+        case command_FieldId_logfile: retval = algo::cstring_ReadStrptrMaybe(parent.logfile, strval); break;
+        case command_FieldId_runcmd: retval = algo::cstring_ReadStrptrMaybe(parent.runcmd, strval); break;
+        case command_FieldId_exclude: retval = exclude_ReadStrptrMaybe(parent, strval); break;
+        case command_FieldId_mergepath: retval = algo::cstring_ReadStrptrMaybe(parent.mergepath, strval); break;
+        case command_FieldId_gcov: retval = bool_ReadStrptrMaybe(parent.gcov, strval); break;
+        case command_FieldId_ssim: retval = bool_ReadStrptrMaybe(parent.ssim, strval); break;
+        case command_FieldId_report: retval = bool_ReadStrptrMaybe(parent.report, strval); break;
+        case command_FieldId_capture: retval = bool_ReadStrptrMaybe(parent.capture, strval); break;
+        case command_FieldId_xmlpretty: retval = bool_ReadStrptrMaybe(parent.xmlpretty, strval); break;
+        case command_FieldId_summary: retval = bool_ReadStrptrMaybe(parent.summary, strval); break;
+        case command_FieldId_check: retval = bool_ReadStrptrMaybe(parent.check, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.atf_cov..ReadTupleMaybe
+// Read fields of command::atf_cov from attributes of ascii tuple TUPLE
+bool command::atf_cov_ReadTupleMaybe(command::atf_cov &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        retval = atf_cov_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- command.atf_cov..Init
+// Set all fields to initial values.
+void command::atf_cov_Init(command::atf_cov& parent) {
+    parent.in = algo::strptr("data");
+    parent.covdir = algo::strptr("temp/covdata");
+    parent.logfile = algo::strptr("");
+    parent.runcmd = algo::strptr("");
+    Regx_ReadSql(parent.exclude, "(extern|include/gen|cpp/gen)/%", true);
+    parent.mergepath = algo::strptr("");
+    parent.gcov = bool(false);
+    parent.ssim = bool(false);
+    parent.report = bool(false);
+    parent.capture = bool(false);
+    parent.xmlpretty = bool(false);
+    parent.summary = bool(true);
+    parent.check = bool(false);
+}
+
+// --- command.atf_cov..PrintArgv
+// print command-line args of command::atf_cov to string  -- cprint:command.atf_cov.Argv
+void command::atf_cov_PrintArgv(command::atf_cov & row, algo::cstring &str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)row;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.covdir == "temp/covdata")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.covdir, temp);
+        str << " -covdir:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.logfile == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.logfile, temp);
+        str << " -logfile:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.runcmd == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.runcmd, temp);
+        str << " -runcmd:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.exclude.expr == "(extern|include/gen|cpp/gen)/%")) {
+        ch_RemoveAll(temp);
+        command::exclude_Print(const_cast<command::atf_cov&>(row), temp);
+        str << " -exclude:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.mergepath == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.mergepath, temp);
+        str << " -mergepath:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.gcov == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.gcov, temp);
+        str << " -gcov:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.ssim == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.ssim, temp);
+        str << " -ssim:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.report == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.report, temp);
+        str << " -report:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.capture == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.capture, temp);
+        str << " -capture:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.xmlpretty == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.xmlpretty, temp);
+        str << " -xmlpretty:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.summary == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.summary, temp);
+        str << " -summary:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.check == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.check, temp);
+        str << " -check:";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- command.atf_cov..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::atf_cov_ToCmdline(command::atf_cov & row) {
+    tempstr ret;
+    ret << "bin/atf_cov ";
+    atf_cov_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.atf_cov_proc.atf_cov.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::atf_cov_Start(command::atf_cov_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(atf_cov_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(atf_cov_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= atf_cov_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.atf_cov_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.atf_cov_proc.atf_cov.StartRead
+// Start subprocess & Read output
+algo::Fildes command::atf_cov_StartRead(command::atf_cov_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    atf_cov_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.atf_cov_proc.atf_cov.Kill
+// Kill subprocess and wait
+void command::atf_cov_Kill(command::atf_cov_proc& parent) {
+    if (parent.pid != 0) {
+        kill(parent.pid,9);
+        atf_cov_Wait(parent);
+    }
+}
+
+// --- command.atf_cov_proc.atf_cov.Wait
+// Wait for subprocess to return
+void command::atf_cov_Wait(command::atf_cov_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.atf_cov_proc.atf_cov.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::atf_cov_Exec(command::atf_cov_proc& parent) {
+    atf_cov_Start(parent);
+    atf_cov_Wait(parent);
+    return parent.status;
+}
+
+// --- command.atf_cov_proc.atf_cov.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::atf_cov_ExecX(command::atf_cov_proc& parent) {
+    int rc = atf_cov_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",atf_cov_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.atf_cov_proc.atf_cov.Execv
+// Call execv()
+// Call execv with specified parameters -- cprint:atf_cov.Argv
+int command::atf_cov_Execv(command::atf_cov_proc& parent) {
+    char **argv = (char**)alloca((26+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
+    algo::tempstr temp;
+    int n_argv=0;
+    argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+    temp << parent.path;
+    ch_Alloc(temp) = 0;// NUL term for pathname
+
+    if (parent.cmd.in != "data") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-in:";
+        cstring_Print(parent.cmd.in, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.covdir != "temp/covdata") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-covdir:";
+        cstring_Print(parent.cmd.covdir, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.logfile != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-logfile:";
+        cstring_Print(parent.cmd.logfile, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.runcmd != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-runcmd:";
+        cstring_Print(parent.cmd.runcmd, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.exclude.expr != "(extern|include/gen|cpp/gen)/%") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-exclude:";
+        command::exclude_Print(parent.cmd, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.mergepath != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-mergepath:";
+        cstring_Print(parent.cmd.mergepath, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.gcov != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-gcov:";
+        bool_Print(parent.cmd.gcov, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.ssim != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-ssim:";
+        bool_Print(parent.cmd.ssim, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.report != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-report:";
+        bool_Print(parent.cmd.report, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.capture != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-capture:";
+        bool_Print(parent.cmd.capture, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.xmlpretty != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-xmlpretty:";
+        bool_Print(parent.cmd.xmlpretty, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.summary != true) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-summary:";
+        bool_Print(parent.cmd.summary, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.check != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-check:";
+        bool_Print(parent.cmd.check, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+    for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-verbose";
+        ch_Alloc(temp) = 0;
+    }
+    argv[n_argv] = NULL; // last pointer
+    while (n_argv>0) { // shift pointers
+        argv[--n_argv] += (u64)temp.ch_elems;
+    }
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    return execv(Zeroterm(parent.path),argv);
+}
+
+// --- command.atf_cov_proc.atf_cov.ToCmdline
+algo::tempstr command::atf_cov_ToCmdline(command::atf_cov_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::atf_cov_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.atf_cov_proc..Uninit
+void command::atf_cov_proc_Uninit(command::atf_cov_proc& parent) {
+    command::atf_cov_proc &row = parent; (void)row;
+
+    // command.atf_cov_proc.atf_cov.Uninit (Exec)  //
+    atf_cov_Kill(parent); // kill child, ensure forward progress
 }
 
 // --- command.atf_nrun..ReadFieldMaybe
@@ -6006,7 +7942,7 @@ void command::atf_nrun_ExecX(command::atf_nrun_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:atf_nrun.Argv
 int command::atf_nrun_Execv(command::atf_nrun_proc& parent) {
-    char *argv[6+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((6+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -6102,6 +8038,7 @@ bool command::atf_unit_ReadFieldMaybe(command::atf_unit &parent, algo::strptr fi
         case command_FieldId_pertest_timeout: retval = u32_ReadStrptrMaybe(parent.pertest_timeout, strval); break;
         case command_FieldId_report: retval = bool_ReadStrptrMaybe(parent.report, strval); break;
         case command_FieldId_capture: retval = bool_ReadStrptrMaybe(parent.capture, strval); break;
+        case command_FieldId_check_untracked: retval = bool_ReadStrptrMaybe(parent.check_untracked, strval); break;
         default: break;
     }
     if (!retval) {
@@ -6139,6 +8076,7 @@ void command::atf_unit_Init(command::atf_unit& parent) {
     parent.pertest_timeout = u32(900);
     parent.report = bool(true);
     parent.capture = bool(false);
+    parent.check_untracked = bool(true);
 }
 
 // --- command.atf_unit..PrintArgv
@@ -6198,6 +8136,12 @@ void command::atf_unit_PrintArgv(command::atf_unit & row, algo::cstring &str) {
         ch_RemoveAll(temp);
         bool_Print(row.capture, temp);
         str << " -capture:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.check_untracked == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.check_untracked, temp);
+        str << " -check_untracked:";
         strptr_PrintBash(temp,str);
     }
 }
@@ -6329,7 +8273,7 @@ void command::atf_unit_ExecX(command::atf_unit_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:atf_unit.Argv
 int command::atf_unit_Execv(command::atf_unit_proc& parent) {
-    char *argv[18+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((20+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -6396,6 +8340,13 @@ int command::atf_unit_Execv(command::atf_unit_proc& parent) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-capture:";
         bool_Print(parent.cmd.capture, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.check_untracked != true) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-check_untracked:";
+        bool_Print(parent.cmd.check_untracked, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
     for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
@@ -6620,7 +8571,7 @@ void command::bash2html_ExecX(command::bash2html_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:bash2html.Argv
 int command::bash2html_Execv(command::bash2html_proc& parent) {
-    char *argv[4+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((4+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -6780,7 +8731,7 @@ void command::bash_ExecX(command::bash_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:bash.Argv
 int command::bash_Execv(command::bash_proc& parent) {
-    char *argv[2+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((2+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -6859,6 +8810,21 @@ bool command::assignee_ReadStrptrMaybe(command::gitlab& parent, algo::strptr in)
     return retval;
 }
 
+// --- command.gitlab.milestone.Print
+// Print back to string
+void command::milestone_Print(command::gitlab& parent, algo::cstring &out) {
+    Regx_Print(parent.milestone, out);
+}
+
+// --- command.gitlab.milestone.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::milestone_ReadStrptrMaybe(command::gitlab& parent, algo::strptr in) {
+    Regx_ReadSql(parent.milestone, in, true);
+    bool retval = true;// !parent.milestone.parseerror; -- TODO: uncomment
+    return retval;
+}
+
 // --- command.gitlab..ReadFieldMaybe
 bool command::gitlab_ReadFieldMaybe(command::gitlab &parent, algo::strptr field, algo::strptr strval) {
     command::FieldId field_id;
@@ -6886,6 +8852,10 @@ bool command::gitlab_ReadFieldMaybe(command::gitlab &parent, algo::strptr field,
         case command_FieldId_assignee: retval = assignee_ReadStrptrMaybe(parent, strval); break;
         case command_FieldId_ulist: retval = bool_ReadStrptrMaybe(parent.ulist, strval); break;
         case command_FieldId_mraccept: retval = algo::cstring_ReadStrptrMaybe(parent.mraccept, strval); break;
+        case command_FieldId_mslist: retval = bool_ReadStrptrMaybe(parent.mslist, strval); break;
+        case command_FieldId_milestone: retval = milestone_ReadStrptrMaybe(parent, strval); break;
+        case command_FieldId_imilestone: retval = algo::Smallstr200_ReadStrptrMaybe(parent.imilestone, strval); break;
+        case command_FieldId_track: retval = algo::cstring_ReadStrptrMaybe(parent.track, strval); break;
         default: break;
     }
     if (!retval) {
@@ -6917,7 +8887,7 @@ void command::gitlab_Init(command::gitlab& parent) {
     parent.in = algo::strptr("data");
     Regx_ReadSql(parent.issue, "", true);
     parent.server = algo::strptr("gitlab.lon.algo");
-    parent.project = algo::strptr("myproject");
+    parent.project = algo::strptr("algouk");
     parent.auth_token = algo::strptr("");
     parent.mrlist = bool(false);
     parent.mergereq = bool(false);
@@ -6935,6 +8905,10 @@ void command::gitlab_Init(command::gitlab& parent) {
     Regx_ReadSql(parent.assignee, "", true);
     parent.ulist = bool(false);
     parent.mraccept = algo::strptr("");
+    parent.mslist = bool(false);
+    Regx_ReadSql(parent.milestone, "%", true);
+    parent.imilestone = algo::strptr("");
+    parent.track = algo::strptr("origin/master");
 }
 
 // --- command.gitlab..PrintArgv
@@ -6960,7 +8934,7 @@ void command::gitlab_PrintArgv(command::gitlab & row, algo::cstring &str) {
         str << " -server:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.project == "myproject")) {
+    if (!(row.project == "algouk")) {
         ch_RemoveAll(temp);
         cstring_Print(row.project, temp);
         str << " -project:";
@@ -7066,6 +9040,30 @@ void command::gitlab_PrintArgv(command::gitlab & row, algo::cstring &str) {
         ch_RemoveAll(temp);
         cstring_Print(row.mraccept, temp);
         str << " -mraccept:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.mslist == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.mslist, temp);
+        str << " -mslist:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.milestone.expr == "%")) {
+        ch_RemoveAll(temp);
+        command::milestone_Print(const_cast<command::gitlab&>(row), temp);
+        str << " -milestone:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.imilestone == "")) {
+        ch_RemoveAll(temp);
+        Smallstr200_Print(row.imilestone, temp);
+        str << " -imilestone:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.track == "origin/master")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.track, temp);
+        str << " -track:";
         strptr_PrintBash(temp,str);
     }
 }
@@ -7197,7 +9195,7 @@ void command::gitlab_ExecX(command::gitlab_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:gitlab.Argv
 int command::gitlab_Execv(command::gitlab_proc& parent) {
-    char *argv[42+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((50+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -7225,7 +9223,7 @@ int command::gitlab_Execv(command::gitlab_proc& parent) {
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
-    if (parent.cmd.project != "myproject") {
+    if (parent.cmd.project != "algouk") {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-project:";
         cstring_Print(parent.cmd.project, temp);
@@ -7348,6 +9346,34 @@ int command::gitlab_Execv(command::gitlab_proc& parent) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-mraccept:";
         cstring_Print(parent.cmd.mraccept, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.mslist != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-mslist:";
+        bool_Print(parent.cmd.mslist, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.milestone.expr != "%") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-milestone:";
+        command::milestone_Print(parent.cmd, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.imilestone != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-imilestone:";
+        Smallstr200_Print(parent.cmd.imilestone, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.track != "origin/master") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-track:";
+        cstring_Print(parent.cmd.track, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
     for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
@@ -7541,7 +9567,6 @@ bool command::mdbg_ReadFieldMaybe(command::mdbg &parent, algo::strptr field, alg
         case command_FieldId_cfg: retval = algo::Smallstr50_ReadStrptrMaybe(parent.cfg, strval); break;
         case command_FieldId_manywin: retval = bool_ReadStrptrMaybe(parent.manywin, strval); break;
         case command_FieldId_disas: retval = bool_ReadStrptrMaybe(parent.disas, strval); break;
-        case command_FieldId_root: retval = bool_ReadStrptrMaybe(parent.root, strval); break;
         case command_FieldId_attach: retval = bool_ReadStrptrMaybe(parent.attach, strval); break;
         case command_FieldId_b: retval = algo::cstring_ReadStrptrMaybe(parent.b, strval); break;
         case command_FieldId_catchthrow: retval = bool_ReadStrptrMaybe(parent.catchthrow, strval); break;
@@ -7584,7 +9609,6 @@ void command::mdbg_Init(command::mdbg& parent) {
     parent.cfg = algo::strptr("debug");
     parent.manywin = bool(false);
     parent.disas = bool(false);
-    parent.root = bool(false);
     parent.attach = bool(false);
     parent.b = algo::strptr("main");
     parent.catchthrow = bool(true);
@@ -7627,12 +9651,6 @@ void command::mdbg_PrintArgv(command::mdbg & row, algo::cstring &str) {
         ch_RemoveAll(temp);
         bool_Print(row.disas, temp);
         str << " -disas:";
-        strptr_PrintBash(temp,str);
-    }
-    if (!(row.root == false)) {
-        ch_RemoveAll(temp);
-        bool_Print(row.root, temp);
-        str << " -root:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.attach == false)) {
@@ -7819,7 +9837,7 @@ void command::mdbg_ExecX(command::mdbg_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:mdbg.Argv
 int command::mdbg_Execv(command::mdbg_proc& parent) {
-    char *argv[30+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((28+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -7858,13 +9876,6 @@ int command::mdbg_Execv(command::mdbg_proc& parent) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-disas:";
         bool_Print(parent.cmd.disas, temp);
-        ch_Alloc(temp) = 0;// NUL term for this arg
-    }
-
-    if (parent.cmd.root != false) {
-        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
-        temp << "-root:";
-        bool_Print(parent.cmd.root, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
 
@@ -8189,7 +10200,7 @@ void command::mysql2ssim_ExecX(command::mysql2ssim_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:mysql2ssim.Argv
 int command::mysql2ssim_Execv(command::mysql2ssim_proc& parent) {
-    char *argv[16+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((16+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -8493,7 +10504,7 @@ void command::ntup_ExecX(command::ntup_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:ntup.Argv
 int command::ntup_Execv(command::ntup_proc& parent) {
-    char *argv[8+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((8+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -8788,7 +10799,7 @@ void command::orgfile_ExecX(command::orgfile_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:orgfile.Argv
 int command::orgfile_Execv(command::orgfile_proc& parent) {
-    char *argv[12+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((12+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -9278,7 +11289,7 @@ void command::src_func_ExecX(command::src_func_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:src_func.Argv
 int command::src_func_Execv(command::src_func_proc& parent) {
-    char *argv[40+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((40+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -9677,7 +11688,7 @@ void command::src_hdr_ExecX(command::src_hdr_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:src_hdr.Argv
 int command::src_hdr_Execv(command::src_hdr_proc& parent) {
-    char *argv[10+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((10+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -10010,7 +12021,7 @@ void command::src_lim_ExecX(command::src_lim_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:src_lim.Argv
 int command::src_lim_Execv(command::src_lim_proc& parent) {
-    char *argv[16+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((16+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -10279,7 +12290,7 @@ void command::ssim2csv_ExecX(command::ssim2csv_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:ssim2csv.Argv
 int command::ssim2csv_Execv(command::ssim2csv_proc& parent) {
-    char *argv[4+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((4+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -10585,7 +12596,7 @@ void command::ssim2mysql_ExecX(command::ssim2mysql_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:ssim2mysql.Argv
 int command::ssim2mysql_Execv(command::ssim2mysql_proc& parent) {
-    char *argv[22+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((22+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -10907,7 +12918,7 @@ void command::strconv_ExecX(command::strconv_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:strconv.Argv
 int command::strconv_Execv(command::strconv_proc& parent) {
-    char *argv[10+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((10+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -11053,7 +13064,8 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::acr_compl,point) == 16);
     algo_assert(_offset_of(command::acr_compl,type) == 32);
     algo_assert(_offset_of(command::acr_compl,install) == 48);
-    algo_assert(sizeof(command::acr_compl) == 56);
+    algo_assert(_offset_of(command::acr_compl,debug_log) == 56);
+    algo_assert(sizeof(command::acr_compl) == 72);
     algo_assert(_offset_of(command::acr_ed,in) == 0);
     algo_assert(_offset_of(command::acr_ed,create) == 16);
     algo_assert(_offset_of(command::acr_ed,del) == 17);
@@ -11087,7 +13099,7 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::acr_ed,hashfld) == 1076);
     algo_assert(_offset_of(command::acr_ed,sortfld) == 1178);
     algo_assert(_offset_of(command::acr_ed,unittest) == 1280);
-    algo_assert(_offset_of(command::acr_ed,normcheck) == 1296);
+    algo_assert(_offset_of(command::acr_ed,citest) == 1296);
     algo_assert(_offset_of(command::acr_ed,cppfunc) == 1312);
     algo_assert(_offset_of(command::acr_ed,xref) == 1328);
     algo_assert(_offset_of(command::acr_ed,via) == 1336);
@@ -11097,7 +13109,8 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::acr_ed,sandbox) == 1376);
     algo_assert(_offset_of(command::acr_ed,test) == 1377);
     algo_assert(_offset_of(command::acr_ed,showcpp) == 1378);
-    algo_assert(sizeof(command::acr_ed) == 1384);
+    algo_assert(_offset_of(command::acr_ed,msgtype) == 1384);
+    algo_assert(sizeof(command::acr_ed) == 1400);
     algo_assert(_offset_of(command::acr_in,ns) == 0);
     algo_assert(_offset_of(command::acr_in,data) == 96);
     algo_assert(_offset_of(command::acr_in,sigcheck) == 97);
@@ -11147,14 +13160,75 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::amc_vis,check) == 131);
     algo_assert(_offset_of(command::amc_vis,render) == 132);
     algo_assert(sizeof(command::amc_vis) == 136);
+    algo_assert(_offset_of(command::ams_cat,in) == 0);
+    algo_assert(sizeof(command::ams_cat) == 16);
+    algo_assert(_offset_of(command::ams_sendtest,in) == 0);
+    algo_assert(_offset_of(command::ams_sendtest,id) == 16);
+    algo_assert(_offset_of(command::ams_sendtest,file_prefix) == 24);
+    algo_assert(_offset_of(command::ams_sendtest,nchild) == 40);
+    algo_assert(_offset_of(command::ams_sendtest,blocking) == 44);
+    algo_assert(_offset_of(command::ams_sendtest,nmsg) == 48);
+    algo_assert(_offset_of(command::ams_sendtest,trace) == 56);
+    algo_assert(_offset_of(command::ams_sendtest,timeout) == 152);
+    algo_assert(_offset_of(command::ams_sendtest,recvdelay_ns) == 160);
+    algo_assert(_offset_of(command::ams_sendtest,senddelay_ns) == 168);
+    algo_assert(_offset_of(command::ams_sendtest,msgsize_min) == 176);
+    algo_assert(_offset_of(command::ams_sendtest,msgsize_max) == 180);
+    algo_assert(_offset_of(command::ams_sendtest,bufsize) == 184);
+    algo_assert(_offset_of(command::ams_sendtest,recvdelay) == 192);
+    algo_assert(sizeof(command::ams_sendtest) == 200);
     algo_assert(_offset_of(command::atf_amc,in) == 0);
     algo_assert(_offset_of(command::atf_amc,amctest) == 16);
     algo_assert(_offset_of(command::atf_amc,dofork) == 112);
     algo_assert(_offset_of(command::atf_amc,q) == 113);
     algo_assert(sizeof(command::atf_amc) == 120);
-    algo_assert(_offset_of(command::atf_norm,in) == 0);
-    algo_assert(_offset_of(command::atf_norm,normcheck) == 16);
-    algo_assert(sizeof(command::atf_norm) == 112);
+    algo_assert(_offset_of(command::atf_ci,in) == 0);
+    algo_assert(_offset_of(command::atf_ci,citest) == 16);
+    algo_assert(_offset_of(command::atf_ci,maxerr) == 112);
+    algo_assert(_offset_of(command::atf_ci,cijob) == 120);
+    algo_assert(_offset_of(command::atf_ci,capture) == 216);
+    algo_assert(_offset_of(command::atf_ci,skipenv) == 217);
+    algo_assert(sizeof(command::atf_ci) == 224);
+    algo_assert(_offset_of(command::atf_comp,in) == 0);
+    algo_assert(_offset_of(command::atf_comp,comptest) == 16);
+    algo_assert(_offset_of(command::atf_comp,mdbg) == 112);
+    algo_assert(_offset_of(command::atf_comp,run) == 113);
+    algo_assert(_offset_of(command::atf_comp,capture) == 114);
+    algo_assert(_offset_of(command::atf_comp,print) == 115);
+    algo_assert(_offset_of(command::atf_comp,e) == 116);
+    algo_assert(_offset_of(command::atf_comp,normalize) == 117);
+    algo_assert(_offset_of(command::atf_comp,covcapture) == 118);
+    algo_assert(_offset_of(command::atf_comp,covcheck) == 119);
+    algo_assert(_offset_of(command::atf_comp,compdir) == 120);
+    algo_assert(_offset_of(command::atf_comp,cfg) == 136);
+    algo_assert(_offset_of(command::atf_comp,check_untracked) == 188);
+    algo_assert(_offset_of(command::atf_comp,maxerr) == 192);
+    algo_assert(_offset_of(command::atf_comp,build) == 196);
+    algo_assert(_offset_of(command::atf_comp,ood) == 197);
+    algo_assert(_offset_of(command::atf_comp,memcheck) == 198);
+    algo_assert(_offset_of(command::atf_comp,force) == 199);
+    algo_assert(_offset_of(command::atf_comp,callgrind) == 200);
+    algo_assert(_offset_of(command::atf_comp,maxjobs) == 204);
+    algo_assert(_offset_of(command::atf_comp,stream) == 208);
+    algo_assert(_offset_of(command::atf_comp,i) == 209);
+    algo_assert(_offset_of(command::atf_comp,write) == 210);
+    algo_assert(_offset_of(command::atf_comp,report) == 211);
+    algo_assert(_offset_of(command::atf_comp,b) == 216);
+    algo_assert(sizeof(command::atf_comp) == 232);
+    algo_assert(_offset_of(command::atf_cov,in) == 0);
+    algo_assert(_offset_of(command::atf_cov,covdir) == 16);
+    algo_assert(_offset_of(command::atf_cov,logfile) == 32);
+    algo_assert(_offset_of(command::atf_cov,runcmd) == 48);
+    algo_assert(_offset_of(command::atf_cov,exclude) == 64);
+    algo_assert(_offset_of(command::atf_cov,mergepath) == 160);
+    algo_assert(_offset_of(command::atf_cov,gcov) == 176);
+    algo_assert(_offset_of(command::atf_cov,ssim) == 177);
+    algo_assert(_offset_of(command::atf_cov,report) == 178);
+    algo_assert(_offset_of(command::atf_cov,capture) == 179);
+    algo_assert(_offset_of(command::atf_cov,xmlpretty) == 180);
+    algo_assert(_offset_of(command::atf_cov,summary) == 181);
+    algo_assert(_offset_of(command::atf_cov,check) == 182);
+    algo_assert(sizeof(command::atf_cov) == 184);
     algo_assert(_offset_of(command::atf_nrun,in) == 0);
     algo_assert(_offset_of(command::atf_nrun,maxjobs) == 16);
     algo_assert(_offset_of(command::atf_nrun,ncmd) == 20);
@@ -11168,6 +13242,7 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::atf_unit,pertest_timeout) == 152);
     algo_assert(_offset_of(command::atf_unit,report) == 156);
     algo_assert(_offset_of(command::atf_unit,capture) == 157);
+    algo_assert(_offset_of(command::atf_unit,check_untracked) == 158);
     algo_assert(sizeof(command::atf_unit) == 160);
     algo_assert(_offset_of(command::bash,c) == 0);
     algo_assert(sizeof(command::bash) == 16);
@@ -11204,7 +13279,11 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::gitlab,assignee) == 288);
     algo_assert(_offset_of(command::gitlab,ulist) == 384);
     algo_assert(_offset_of(command::gitlab,mraccept) == 392);
-    algo_assert(sizeof(command::gitlab) == 408);
+    algo_assert(_offset_of(command::gitlab,mslist) == 408);
+    algo_assert(_offset_of(command::gitlab,milestone) == 416);
+    algo_assert(_offset_of(command::gitlab,imilestone) == 512);
+    algo_assert(_offset_of(command::gitlab,track) == 720);
+    algo_assert(sizeof(command::gitlab) == 736);
     algo_assert(_offset_of(command::lib_ctype,in) == 0);
     algo_assert(sizeof(command::lib_ctype) == 16);
     algo_assert(_offset_of(command::lib_exec,dry_run) == 0);
@@ -11217,8 +13296,7 @@ inline static void command::SizeCheck() {
     algo_assert(_offset_of(command::mdbg,cfg) == 32);
     algo_assert(_offset_of(command::mdbg,manywin) == 84);
     algo_assert(_offset_of(command::mdbg,disas) == 85);
-    algo_assert(_offset_of(command::mdbg,root) == 86);
-    algo_assert(_offset_of(command::mdbg,attach) == 87);
+    algo_assert(_offset_of(command::mdbg,attach) == 86);
     algo_assert(_offset_of(command::mdbg,b) == 88);
     algo_assert(_offset_of(command::mdbg,catchthrow) == 104);
     algo_assert(_offset_of(command::mdbg,tui) == 105);

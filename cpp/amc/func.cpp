@@ -295,6 +295,9 @@ static void TmplPrefix(amc::FFunc& func, cstring &out, bool proto) {
 // If ctype_context is specified, then the declaration is intended to be
 // used inside the struct, so different C++ syntax rules apply.
 void amc::PrintFuncProto(amc::FFunc& func, amc::FCtype *ctype_context, cstring &out) {
+    if (func.prepcond != "") {
+        out << "#if " << func.prepcond << eol;
+    }
     if (ctype_context && !func.member) {
         out << "friend ";
     }
@@ -325,6 +328,9 @@ void amc::PrintFuncProto(amc::FFunc& func, amc::FCtype *ctype_context, cstring &
     PrintAttrs(func,out);
     out << ";";
     out << eol;
+    if (func.prepcond != "") {
+        out << "#endif" << eol;
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -362,9 +368,15 @@ void amc::PrintFuncBody(amc::FNs& ns, amc::FFunc& func) {
     if (func.ismacro) {
         proto << " // internal, automatically inlined";
     }
+    if (func.prepcond != "") {
+        impl << "#if " << func.prepcond << eol;
+    }
     impl << proto << eol;
     algo::InsertIndent(impl, func.body, 1);
     impl << "}" << eol;
+    if (func.prepcond != "") {
+        impl << "#endif" << eol;
+    }
 }
 
 // -----------------------------------------------------------------------------

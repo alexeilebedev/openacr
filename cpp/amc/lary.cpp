@@ -68,7 +68,7 @@ void amc::tfunc_Lary_AllocMem() {
     Ins(&R, alloc.body, "}");
     Ins(&R, alloc.body, "// allocate element from this level");
     Ins(&R, alloc.body, "if (lev) {");
-    Ins(&R, alloc.body, "    $parname.$name_n = new_nelems;");
+    Ins(&R, alloc.body, "    $parname.$name_n = i32(new_nelems);");
     Ins(&R, alloc.body, "    ret = lev + index;");
     Ins(&R, alloc.body, "}");
     Ins(&R, alloc.body, "return ret;");
@@ -157,7 +157,7 @@ void amc::tfunc_Lary_RemoveAll() {
             Ins(&R, removelast.body, "for (u64 n = $parname.$name_n; n>0; ) {");
             Ins(&R, removelast.body, "    n--;");
             Ins(&R, removelast.body, "    $name_qFind($pararg, $Rowid(n)).~$Ctype(); // destroy last element");
-            Ins(&R, removelast.body, "    $parname.$name_n = n;");
+            Ins(&R, removelast.body, "    $parname.$name_n = i32(n);");
             Ins(&R, removelast.body, "}");
         }
     }
@@ -181,7 +181,7 @@ void amc::tfunc_Lary_RemoveLast() {
     if (field.do_trace) {
         Ins(&R, remlast.body, "    ++$ns::_db.trace.del_$partrace_$name;");
     }
-    Ins(&R, remlast.body    , "    $parname.$name_n = n;");
+    Ins(&R, remlast.body    , "    $parname.$name_n = i32(n);");
     Ins(&R, remlast.body    , "}");
 }
 

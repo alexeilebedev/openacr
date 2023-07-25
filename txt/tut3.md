@@ -11,8 +11,8 @@ In the first instance, one line of code corresponds to one logical step of the a
 being implemented. In the second instance, each line corresponds to a few CPU instructions.
 This style is fully asynchronous and no blocking calls are typically allowed.
 
-In a full kernel bypass application, not even system calls are allowed. Both amc and `algo_lib` 
-support this use case. 
+In a full kernel bypass application, not even system calls are allowed. Both amc and `algo_lib`
+support this use case.
 
 It is also possible to mix these two paradigms, but the distinction is useful to keep
 in mind. If you keep RPC applications and engines separate, you get the best of both worlds:
@@ -61,7 +61,7 @@ of time if necessary by adjusting `limit`. By default, limit is set to the max p
 of `Steps` are performed, one per namespace.
 Each namespace's step calls zero or more of its `fsteps` (field-level steps), which are just functions.
 Each `fstep` is allowed to revise `next_loop` to the value
-when this step needs to be revisited. Thus, we compute the soonest time we are going to next need some CPU time. 
+when this step needs to be revisited. Thus, we compute the soonest time we are going to next need some CPU time.
 At the bottom of the loop, inside `algo_lib::Step`, we have
 `giveup_time_Step()`, which yields the unneeded time to the OS, either by calling a direct sleep function, or,
 if some `Iohooks` are defined, calling `kevent` (BSD systems) or `evoll_wait` (Linux systems) with a timeout.
@@ -187,7 +187,7 @@ Almost nothing interesting here... Let's check `zd_value_Call`:
     }
 
 Finally, the interesting bit. We see that the main `Step` checks to see if `zd_value` is empty.
-If not, it calls `zd_value_Step`, which is a user-defined function. The function cfan rely
+If not, it calls `zd_value_Step`, which is a user-defined function. The function can rely
 on the fact that the list is never empty when it's invoked, so it's safe to dereference the head
 pointer. We also see that `zd_value_Call` calls `UpdateCycles`, which is an accounting function
 that counts total cycles spent in `zd_value_Step`, and brings `next_loop` all the way down to
@@ -327,7 +327,7 @@ Now let's compile and run the program:
 
 And indeed, modifying the linked list of values was never even an issue, because amc automatically
 removed any deleted value from the list.
-Now is a good time to see that happens. 
+Now is a good time to see that happens.
 
 ### Auto Unref
 
@@ -347,8 +347,8 @@ to amc. (Amc cannot save you from committing suicide).
     }
 
 Here, amc knows that Value has two x-refs: `zd_value` and `ind_value`.
-Finally, let's look at the definition of value itself. 
-     
+Finally, let's look at the definition of value itself.
+
      // --- sample.Value
      // create: sample.FDb.value (Tpool)
      // global access: zd_value (Llist)
@@ -369,21 +369,21 @@ Finally, let's look at the definition of value itself.
          void operator =(const Value&){ /*disallow direct assignment */}
      };
      ...
-     
+
 Here, we see a few things of note:
 * Above the struct declaration, a list of places that `amc` considers access paths to value.
 This includes both x-refs and pools.
-* Field `_next` to support Tpool. With free-lists, it is sometimes customary to overwrite 
+* Field `_next` to support Tpool. With free-lists, it is sometimes customary to overwrite
 the first 8 bytes of a deleted element, because it's deleted anyway, who cares? But it's unsafe
-to do so -- use-after-free is an insiduous bug that's hard to find, and programs that "use 
-just a little bit" after free are strictly speaking correct, so `amc` takes the safe way and 
-introduces an extra field just to link dead elements together. This field is unused as long as 
+to do so -- use-after-free is an insiduous bug that's hard to find, and programs that "use
+just a little bit" after free are strictly speaking correct, so `amc` takes the safe way and
+introduces an extra field just to link dead elements together. This field is unused as long as
 `Value` is alive, and it can be used to detect double-freeing as well.
 * Fields `zd_value_next`, `zd_value_prev`: link fields for the doubly linked list.
 * Field `ind_value_next`: Next element in the hash bucket collision list.
 * Privately declared functions `Alloc`, `AllocMaybe`, private constructor, copy constructor,
   and `operator =`. Whenever `amc` sees an access path, it has disallows copying.
-  And whenever `amc` sees a pool, it disallows creating of the corresponding record 
+  And whenever `amc` sees a pool, it disallows creating of the corresponding record
   on the stack. (The reason is simple: how does one distinguish between a record allocated via
   a Tpool and a record on the stack? One would be free to call `_Delete` on either, yielding
   unpredictable results.)
@@ -398,7 +398,7 @@ about.
 
 ### Iohooks
 
-In a non-blocking single-threaded application, there can be only one situation where time is 
+In a non-blocking single-threaded application, there can be only one situation where time is
 yielded to the system: when that time is not needed. That's how we avoid taking 100% CPU
 while continuing to call ourselves `non-blocking`.
 The `Iohook` mechanism is a way to attach (hook?) file descriptor polling to the main loop.
@@ -457,7 +457,7 @@ Let's run the program:
     2019-05-17T16:26:56.931444 '\n'
     ^D
     <exits>
-    
+
 Our primitive non-blocking program does what we intended.
 This code could be combined with other non-blocking code,
 and the behaviors the two will be combined.

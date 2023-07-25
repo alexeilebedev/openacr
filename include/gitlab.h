@@ -19,13 +19,14 @@ namespace gitlab { // update-hdr
     //
 
     // Interpret -issue argument as a number, or specific issue id
-    // gitlab -issue 33           --> return 33
-    // gitlab -issue myproject.33 --> return 33
-    // gitlab -issue %            --> return 0
+    // gitlab -issue 33        --> return 33
+    // gitlab -issue algouk.33 --> return 33
+    // gitlab -issue %         --> return 0
     int IssueArgNumber();
 
     // same for mr
     int MrNumber(strptr in);
     u32 GetUserId(strptr user);
+    u32 GetMilestoneId(strptr milestone);
     void Main();
 }

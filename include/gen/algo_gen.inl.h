@@ -41,6 +41,18 @@ inline bool algo::cstring::operator !=(const algo::cstring &rhs) const {
 inline bool algo::cstring::operator <(const algo::cstring &rhs) const {
     return algo::cstring_Lt(const_cast<algo::cstring&>(*this),const_cast<algo::cstring&>(rhs));
 }
+
+inline bool algo::cstring::operator >(const algo::cstring &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::cstring::operator <=(const algo::cstring &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::cstring::operator >=(const algo::cstring &rhs) const {
+    return !(*this < rhs);
+}
 inline algo::cstring::cstring() {
     algo::cstring_Init(*this);
 }
@@ -1324,6 +1336,18 @@ inline bool algo::UnTime::operator !=(const algo::UnTime &rhs) const {
 inline bool algo::UnTime::operator <(const algo::UnTime &rhs) const {
     return algo::UnTime_Lt(const_cast<algo::UnTime&>(*this),const_cast<algo::UnTime&>(rhs));
 }
+
+inline bool algo::UnTime::operator >(const algo::UnTime &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::UnTime::operator <=(const algo::UnTime &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::UnTime::operator >=(const algo::UnTime &rhs) const {
+    return !(*this < rhs);
+}
 inline algo::UnTime::UnTime() {
     algo::UnTime_Init(*this);
 }
@@ -1633,6 +1657,18 @@ inline bool algo::Fildes::operator !=(const algo::Fildes &rhs) const {
 
 inline bool algo::Fildes::operator <(const algo::Fildes &rhs) const {
     return algo::Fildes_Lt(const_cast<algo::Fildes&>(*this),const_cast<algo::Fildes&>(rhs));
+}
+
+inline bool algo::Fildes::operator >(const algo::Fildes &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::Fildes::operator <=(const algo::Fildes &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::Fildes::operator >=(const algo::Fildes &rhs) const {
+    return !(*this < rhs);
 }
 inline algo::Fildes::Fildes() {
     algo::Fildes_Init(*this);
@@ -2822,6 +2858,18 @@ inline bool algo::Smallstr50::operator ==(const algo::strptr &rhs) const {
 
 inline bool algo::Smallstr50::operator <(const algo::Smallstr50 &rhs) const {
     return algo::Smallstr50_Lt(const_cast<algo::Smallstr50&>(*this),const_cast<algo::Smallstr50&>(rhs));
+}
+
+inline bool algo::Smallstr50::operator >(const algo::Smallstr50 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::Smallstr50::operator <=(const algo::Smallstr50 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::Smallstr50::operator >=(const algo::Smallstr50 &rhs) const {
+    return !(*this < rhs);
 }
 inline algo::Smallstr50::Smallstr50() {
     algo::Smallstr50_Init(*this);
@@ -7746,6 +7794,18 @@ inline bool algo::RnullStr1::operator ==(const algo::strptr &rhs) const {
 inline bool algo::RnullStr1::operator <(const algo::RnullStr1 &rhs) const {
     return algo::RnullStr1_Lt(const_cast<algo::RnullStr1&>(*this),const_cast<algo::RnullStr1&>(rhs));
 }
+
+inline bool algo::RnullStr1::operator >(const algo::RnullStr1 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr1::operator <=(const algo::RnullStr1 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr1::operator >=(const algo::RnullStr1 &rhs) const {
+    return !(*this < rhs);
+}
 inline algo::RnullStr1::RnullStr1() {
     algo::RnullStr1_Init(*this);
 }
@@ -7868,6 +7928,18 @@ inline bool algo::RnullStr10::operator ==(const algo::strptr &rhs) const {
 
 inline bool algo::RnullStr10::operator <(const algo::RnullStr10 &rhs) const {
     return algo::RnullStr10_Lt(const_cast<algo::RnullStr10&>(*this),const_cast<algo::RnullStr10&>(rhs));
+}
+
+inline bool algo::RnullStr10::operator >(const algo::RnullStr10 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr10::operator <=(const algo::RnullStr10 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr10::operator >=(const algo::RnullStr10 &rhs) const {
+    return !(*this < rhs);
 }
 inline algo::RnullStr10::RnullStr10() {
     algo::RnullStr10_Init(*this);
@@ -8099,6 +8171,18 @@ inline bool algo::RnullStr1000::operator ==(const algo::strptr &rhs) const {
 inline bool algo::RnullStr1000::operator <(const algo::RnullStr1000 &rhs) const {
     return algo::RnullStr1000_Lt(const_cast<algo::RnullStr1000&>(*this),const_cast<algo::RnullStr1000&>(rhs));
 }
+
+inline bool algo::RnullStr1000::operator >(const algo::RnullStr1000 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr1000::operator <=(const algo::RnullStr1000 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr1000::operator >=(const algo::RnullStr1000 &rhs) const {
+    return !(*this < rhs);
+}
 inline algo::RnullStr1000::RnullStr1000() {
     algo::RnullStr1000_Init(*this);
 }
@@ -8221,6 +8305,18 @@ inline bool algo::RnullStr11::operator ==(const algo::strptr &rhs) const {
 
 inline bool algo::RnullStr11::operator <(const algo::RnullStr11 &rhs) const {
     return algo::RnullStr11_Lt(const_cast<algo::RnullStr11&>(*this),const_cast<algo::RnullStr11&>(rhs));
+}
+
+inline bool algo::RnullStr11::operator >(const algo::RnullStr11 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr11::operator <=(const algo::RnullStr11 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr11::operator >=(const algo::RnullStr11 &rhs) const {
+    return !(*this < rhs);
 }
 inline algo::RnullStr11::RnullStr11() {
     algo::RnullStr11_Init(*this);
@@ -8345,6 +8441,18 @@ inline bool algo::RnullStr12::operator ==(const algo::strptr &rhs) const {
 inline bool algo::RnullStr12::operator <(const algo::RnullStr12 &rhs) const {
     return algo::RnullStr12_Lt(const_cast<algo::RnullStr12&>(*this),const_cast<algo::RnullStr12&>(rhs));
 }
+
+inline bool algo::RnullStr12::operator >(const algo::RnullStr12 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr12::operator <=(const algo::RnullStr12 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr12::operator >=(const algo::RnullStr12 &rhs) const {
+    return !(*this < rhs);
+}
 inline algo::RnullStr12::RnullStr12() {
     algo::RnullStr12_Init(*this);
 }
@@ -8467,6 +8575,18 @@ inline bool algo::RnullStr129::operator ==(const algo::strptr &rhs) const {
 
 inline bool algo::RnullStr129::operator <(const algo::RnullStr129 &rhs) const {
     return algo::RnullStr129_Lt(const_cast<algo::RnullStr129&>(*this),const_cast<algo::RnullStr129&>(rhs));
+}
+
+inline bool algo::RnullStr129::operator >(const algo::RnullStr129 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr129::operator <=(const algo::RnullStr129 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr129::operator >=(const algo::RnullStr129 &rhs) const {
+    return !(*this < rhs);
 }
 inline algo::RnullStr129::RnullStr129() {
     algo::RnullStr129_Init(*this);
@@ -8591,6 +8711,18 @@ inline bool algo::RnullStr13::operator ==(const algo::strptr &rhs) const {
 inline bool algo::RnullStr13::operator <(const algo::RnullStr13 &rhs) const {
     return algo::RnullStr13_Lt(const_cast<algo::RnullStr13&>(*this),const_cast<algo::RnullStr13&>(rhs));
 }
+
+inline bool algo::RnullStr13::operator >(const algo::RnullStr13 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr13::operator <=(const algo::RnullStr13 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr13::operator >=(const algo::RnullStr13 &rhs) const {
+    return !(*this < rhs);
+}
 inline algo::RnullStr13::RnullStr13() {
     algo::RnullStr13_Init(*this);
 }
@@ -8713,6 +8845,18 @@ inline bool algo::RnullStr14::operator ==(const algo::strptr &rhs) const {
 
 inline bool algo::RnullStr14::operator <(const algo::RnullStr14 &rhs) const {
     return algo::RnullStr14_Lt(const_cast<algo::RnullStr14&>(*this),const_cast<algo::RnullStr14&>(rhs));
+}
+
+inline bool algo::RnullStr14::operator >(const algo::RnullStr14 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr14::operator <=(const algo::RnullStr14 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr14::operator >=(const algo::RnullStr14 &rhs) const {
+    return !(*this < rhs);
 }
 inline algo::RnullStr14::RnullStr14() {
     algo::RnullStr14_Init(*this);
@@ -8837,6 +8981,18 @@ inline bool algo::RnullStr15::operator ==(const algo::strptr &rhs) const {
 inline bool algo::RnullStr15::operator <(const algo::RnullStr15 &rhs) const {
     return algo::RnullStr15_Lt(const_cast<algo::RnullStr15&>(*this),const_cast<algo::RnullStr15&>(rhs));
 }
+
+inline bool algo::RnullStr15::operator >(const algo::RnullStr15 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr15::operator <=(const algo::RnullStr15 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr15::operator >=(const algo::RnullStr15 &rhs) const {
+    return !(*this < rhs);
+}
 inline algo::RnullStr15::RnullStr15() {
     algo::RnullStr15_Init(*this);
 }
@@ -8959,6 +9115,18 @@ inline bool algo::RnullStr151::operator ==(const algo::strptr &rhs) const {
 
 inline bool algo::RnullStr151::operator <(const algo::RnullStr151 &rhs) const {
     return algo::RnullStr151_Lt(const_cast<algo::RnullStr151&>(*this),const_cast<algo::RnullStr151&>(rhs));
+}
+
+inline bool algo::RnullStr151::operator >(const algo::RnullStr151 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr151::operator <=(const algo::RnullStr151 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr151::operator >=(const algo::RnullStr151 &rhs) const {
+    return !(*this < rhs);
 }
 inline algo::RnullStr151::RnullStr151() {
     algo::RnullStr151_Init(*this);
@@ -9190,6 +9358,18 @@ inline bool algo::RnullStr17::operator ==(const algo::strptr &rhs) const {
 inline bool algo::RnullStr17::operator <(const algo::RnullStr17 &rhs) const {
     return algo::RnullStr17_Lt(const_cast<algo::RnullStr17&>(*this),const_cast<algo::RnullStr17&>(rhs));
 }
+
+inline bool algo::RnullStr17::operator >(const algo::RnullStr17 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr17::operator <=(const algo::RnullStr17 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr17::operator >=(const algo::RnullStr17 &rhs) const {
+    return !(*this < rhs);
+}
 inline algo::RnullStr17::RnullStr17() {
     algo::RnullStr17_Init(*this);
 }
@@ -9312,6 +9492,18 @@ inline bool algo::RnullStr18::operator ==(const algo::strptr &rhs) const {
 
 inline bool algo::RnullStr18::operator <(const algo::RnullStr18 &rhs) const {
     return algo::RnullStr18_Lt(const_cast<algo::RnullStr18&>(*this),const_cast<algo::RnullStr18&>(rhs));
+}
+
+inline bool algo::RnullStr18::operator >(const algo::RnullStr18 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr18::operator <=(const algo::RnullStr18 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr18::operator >=(const algo::RnullStr18 &rhs) const {
+    return !(*this < rhs);
 }
 inline algo::RnullStr18::RnullStr18() {
     algo::RnullStr18_Init(*this);
@@ -9543,6 +9735,18 @@ inline bool algo::RnullStr2::operator ==(const algo::strptr &rhs) const {
 inline bool algo::RnullStr2::operator <(const algo::RnullStr2 &rhs) const {
     return algo::RnullStr2_Lt(const_cast<algo::RnullStr2&>(*this),const_cast<algo::RnullStr2&>(rhs));
 }
+
+inline bool algo::RnullStr2::operator >(const algo::RnullStr2 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr2::operator <=(const algo::RnullStr2 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr2::operator >=(const algo::RnullStr2 &rhs) const {
+    return !(*this < rhs);
+}
 inline algo::RnullStr2::RnullStr2() {
     algo::RnullStr2_Init(*this);
 }
@@ -9665,6 +9869,18 @@ inline bool algo::RnullStr20::operator ==(const algo::strptr &rhs) const {
 
 inline bool algo::RnullStr20::operator <(const algo::RnullStr20 &rhs) const {
     return algo::RnullStr20_Lt(const_cast<algo::RnullStr20&>(*this),const_cast<algo::RnullStr20&>(rhs));
+}
+
+inline bool algo::RnullStr20::operator >(const algo::RnullStr20 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr20::operator <=(const algo::RnullStr20 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr20::operator >=(const algo::RnullStr20 &rhs) const {
+    return !(*this < rhs);
 }
 inline algo::RnullStr20::RnullStr20() {
     algo::RnullStr20_Init(*this);
@@ -9896,6 +10112,18 @@ inline bool algo::RnullStr24::operator ==(const algo::strptr &rhs) const {
 inline bool algo::RnullStr24::operator <(const algo::RnullStr24 &rhs) const {
     return algo::RnullStr24_Lt(const_cast<algo::RnullStr24&>(*this),const_cast<algo::RnullStr24&>(rhs));
 }
+
+inline bool algo::RnullStr24::operator >(const algo::RnullStr24 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr24::operator <=(const algo::RnullStr24 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr24::operator >=(const algo::RnullStr24 &rhs) const {
+    return !(*this < rhs);
+}
 inline algo::RnullStr24::RnullStr24() {
     algo::RnullStr24_Init(*this);
 }
@@ -10018,6 +10246,18 @@ inline bool algo::RnullStr25::operator ==(const algo::strptr &rhs) const {
 
 inline bool algo::RnullStr25::operator <(const algo::RnullStr25 &rhs) const {
     return algo::RnullStr25_Lt(const_cast<algo::RnullStr25&>(*this),const_cast<algo::RnullStr25&>(rhs));
+}
+
+inline bool algo::RnullStr25::operator >(const algo::RnullStr25 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr25::operator <=(const algo::RnullStr25 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr25::operator >=(const algo::RnullStr25 &rhs) const {
+    return !(*this < rhs);
 }
 inline algo::RnullStr25::RnullStr25() {
     algo::RnullStr25_Init(*this);
@@ -10142,6 +10382,18 @@ inline bool algo::RnullStr28::operator ==(const algo::strptr &rhs) const {
 inline bool algo::RnullStr28::operator <(const algo::RnullStr28 &rhs) const {
     return algo::RnullStr28_Lt(const_cast<algo::RnullStr28&>(*this),const_cast<algo::RnullStr28&>(rhs));
 }
+
+inline bool algo::RnullStr28::operator >(const algo::RnullStr28 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr28::operator <=(const algo::RnullStr28 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr28::operator >=(const algo::RnullStr28 &rhs) const {
+    return !(*this < rhs);
+}
 inline algo::RnullStr28::RnullStr28() {
     algo::RnullStr28_Init(*this);
 }
@@ -10264,6 +10516,18 @@ inline bool algo::RnullStr3::operator ==(const algo::strptr &rhs) const {
 
 inline bool algo::RnullStr3::operator <(const algo::RnullStr3 &rhs) const {
     return algo::RnullStr3_Lt(const_cast<algo::RnullStr3&>(*this),const_cast<algo::RnullStr3&>(rhs));
+}
+
+inline bool algo::RnullStr3::operator >(const algo::RnullStr3 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr3::operator <=(const algo::RnullStr3 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr3::operator >=(const algo::RnullStr3 &rhs) const {
+    return !(*this < rhs);
 }
 inline algo::RnullStr3::RnullStr3() {
     algo::RnullStr3_Init(*this);
@@ -10495,6 +10759,18 @@ inline bool algo::RnullStr32::operator ==(const algo::strptr &rhs) const {
 inline bool algo::RnullStr32::operator <(const algo::RnullStr32 &rhs) const {
     return algo::RnullStr32_Lt(const_cast<algo::RnullStr32&>(*this),const_cast<algo::RnullStr32&>(rhs));
 }
+
+inline bool algo::RnullStr32::operator >(const algo::RnullStr32 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr32::operator <=(const algo::RnullStr32 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr32::operator >=(const algo::RnullStr32 &rhs) const {
+    return !(*this < rhs);
+}
 inline algo::RnullStr32::RnullStr32() {
     algo::RnullStr32_Init(*this);
 }
@@ -10617,6 +10893,18 @@ inline bool algo::RnullStr33::operator ==(const algo::strptr &rhs) const {
 
 inline bool algo::RnullStr33::operator <(const algo::RnullStr33 &rhs) const {
     return algo::RnullStr33_Lt(const_cast<algo::RnullStr33&>(*this),const_cast<algo::RnullStr33&>(rhs));
+}
+
+inline bool algo::RnullStr33::operator >(const algo::RnullStr33 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr33::operator <=(const algo::RnullStr33 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr33::operator >=(const algo::RnullStr33 &rhs) const {
+    return !(*this < rhs);
 }
 inline algo::RnullStr33::RnullStr33() {
     algo::RnullStr33_Init(*this);
@@ -10741,6 +11029,18 @@ inline bool algo::RnullStr35::operator ==(const algo::strptr &rhs) const {
 inline bool algo::RnullStr35::operator <(const algo::RnullStr35 &rhs) const {
     return algo::RnullStr35_Lt(const_cast<algo::RnullStr35&>(*this),const_cast<algo::RnullStr35&>(rhs));
 }
+
+inline bool algo::RnullStr35::operator >(const algo::RnullStr35 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr35::operator <=(const algo::RnullStr35 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr35::operator >=(const algo::RnullStr35 &rhs) const {
+    return !(*this < rhs);
+}
 inline algo::RnullStr35::RnullStr35() {
     algo::RnullStr35_Init(*this);
 }
@@ -10863,6 +11163,18 @@ inline bool algo::RnullStr36::operator ==(const algo::strptr &rhs) const {
 
 inline bool algo::RnullStr36::operator <(const algo::RnullStr36 &rhs) const {
     return algo::RnullStr36_Lt(const_cast<algo::RnullStr36&>(*this),const_cast<algo::RnullStr36&>(rhs));
+}
+
+inline bool algo::RnullStr36::operator >(const algo::RnullStr36 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr36::operator <=(const algo::RnullStr36 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr36::operator >=(const algo::RnullStr36 &rhs) const {
+    return !(*this < rhs);
 }
 inline algo::RnullStr36::RnullStr36() {
     algo::RnullStr36_Init(*this);
@@ -11094,6 +11406,18 @@ inline bool algo::RnullStr40::operator ==(const algo::strptr &rhs) const {
 inline bool algo::RnullStr40::operator <(const algo::RnullStr40 &rhs) const {
     return algo::RnullStr40_Lt(const_cast<algo::RnullStr40&>(*this),const_cast<algo::RnullStr40&>(rhs));
 }
+
+inline bool algo::RnullStr40::operator >(const algo::RnullStr40 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr40::operator <=(const algo::RnullStr40 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr40::operator >=(const algo::RnullStr40 &rhs) const {
+    return !(*this < rhs);
+}
 inline algo::RnullStr40::RnullStr40() {
     algo::RnullStr40_Init(*this);
 }
@@ -11216,6 +11540,18 @@ inline bool algo::RnullStr41::operator ==(const algo::strptr &rhs) const {
 
 inline bool algo::RnullStr41::operator <(const algo::RnullStr41 &rhs) const {
     return algo::RnullStr41_Lt(const_cast<algo::RnullStr41&>(*this),const_cast<algo::RnullStr41&>(rhs));
+}
+
+inline bool algo::RnullStr41::operator >(const algo::RnullStr41 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr41::operator <=(const algo::RnullStr41 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr41::operator >=(const algo::RnullStr41 &rhs) const {
+    return !(*this < rhs);
 }
 inline algo::RnullStr41::RnullStr41() {
     algo::RnullStr41_Init(*this);
@@ -11875,6 +12211,18 @@ inline bool algo::RnullStr54::operator ==(const algo::strptr &rhs) const {
 inline bool algo::RnullStr54::operator <(const algo::RnullStr54 &rhs) const {
     return algo::RnullStr54_Lt(const_cast<algo::RnullStr54&>(*this),const_cast<algo::RnullStr54&>(rhs));
 }
+
+inline bool algo::RnullStr54::operator >(const algo::RnullStr54 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr54::operator <=(const algo::RnullStr54 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr54::operator >=(const algo::RnullStr54 &rhs) const {
+    return !(*this < rhs);
+}
 inline algo::RnullStr54::RnullStr54() {
     algo::RnullStr54_Init(*this);
 }
@@ -12105,6 +12453,18 @@ inline bool algo::RnullStr6::operator ==(const algo::strptr &rhs) const {
 inline bool algo::RnullStr6::operator <(const algo::RnullStr6 &rhs) const {
     return algo::RnullStr6_Lt(const_cast<algo::RnullStr6&>(*this),const_cast<algo::RnullStr6&>(rhs));
 }
+
+inline bool algo::RnullStr6::operator >(const algo::RnullStr6 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr6::operator <=(const algo::RnullStr6 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr6::operator >=(const algo::RnullStr6 &rhs) const {
+    return !(*this < rhs);
+}
 inline algo::RnullStr6::RnullStr6() {
     algo::RnullStr6_Init(*this);
 }
@@ -12228,6 +12588,18 @@ inline bool algo::RnullStr60::operator ==(const algo::strptr &rhs) const {
 inline bool algo::RnullStr60::operator <(const algo::RnullStr60 &rhs) const {
     return algo::RnullStr60_Lt(const_cast<algo::RnullStr60&>(*this),const_cast<algo::RnullStr60&>(rhs));
 }
+
+inline bool algo::RnullStr60::operator >(const algo::RnullStr60 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr60::operator <=(const algo::RnullStr60 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr60::operator >=(const algo::RnullStr60 &rhs) const {
+    return !(*this < rhs);
+}
 inline algo::RnullStr60::RnullStr60() {
     algo::RnullStr60_Init(*this);
 }
@@ -12350,6 +12722,18 @@ inline bool algo::RnullStr62::operator ==(const algo::strptr &rhs) const {
 
 inline bool algo::RnullStr62::operator <(const algo::RnullStr62 &rhs) const {
     return algo::RnullStr62_Lt(const_cast<algo::RnullStr62&>(*this),const_cast<algo::RnullStr62&>(rhs));
+}
+
+inline bool algo::RnullStr62::operator >(const algo::RnullStr62 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr62::operator <=(const algo::RnullStr62 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr62::operator >=(const algo::RnullStr62 &rhs) const {
+    return !(*this < rhs);
 }
 inline algo::RnullStr62::RnullStr62() {
     algo::RnullStr62_Init(*this);
@@ -12684,6 +13068,18 @@ inline bool algo::RnullStr7::operator ==(const algo::strptr &rhs) const {
 
 inline bool algo::RnullStr7::operator <(const algo::RnullStr7 &rhs) const {
     return algo::RnullStr7_Lt(const_cast<algo::RnullStr7&>(*this),const_cast<algo::RnullStr7&>(rhs));
+}
+
+inline bool algo::RnullStr7::operator >(const algo::RnullStr7 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr7::operator <=(const algo::RnullStr7 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr7::operator >=(const algo::RnullStr7 &rhs) const {
+    return !(*this < rhs);
 }
 inline algo::RnullStr7::RnullStr7() {
     algo::RnullStr7_Init(*this);
@@ -13022,6 +13418,18 @@ inline bool algo::RnullStr9::operator ==(const algo::strptr &rhs) const {
 inline bool algo::RnullStr9::operator <(const algo::RnullStr9 &rhs) const {
     return algo::RnullStr9_Lt(const_cast<algo::RnullStr9&>(*this),const_cast<algo::RnullStr9&>(rhs));
 }
+
+inline bool algo::RnullStr9::operator >(const algo::RnullStr9 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RnullStr9::operator <=(const algo::RnullStr9 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RnullStr9::operator >=(const algo::RnullStr9 &rhs) const {
+    return !(*this < rhs);
+}
 inline algo::RnullStr9::RnullStr9() {
     algo::RnullStr9_Init(*this);
 }
@@ -13210,7 +13618,7 @@ inline algo::RspaceStr10::operator algo::strptr () const {
 }
 
 // --- algo.RspaceStr10..Cmp
-inline i32 algo::RspaceStr10_Cmp(algo::RspaceStr10 & lhs, algo::RspaceStr10 & rhs) {
+inline i32 algo::RspaceStr10_Cmp(algo::RspaceStr10 lhs, algo::RspaceStr10 rhs) {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -13223,14 +13631,14 @@ inline void algo::RspaceStr10_Init(algo::RspaceStr10& parent) {
 }
 
 // --- algo.RspaceStr10..Eq
-inline bool algo::RspaceStr10_Eq(const algo::RspaceStr10 & lhs,const algo::RspaceStr10 & rhs) {
+inline bool algo::RspaceStr10_Eq(algo::RspaceStr10 lhs, algo::RspaceStr10 rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
 }
 
 // --- algo.RspaceStr10..EqStrptr
-inline bool algo::RspaceStr10_EqStrptr(algo::RspaceStr10 & lhs, const algo::strptr &rhs) {
+inline bool algo::RspaceStr10_EqStrptr(algo::RspaceStr10 lhs, const algo::strptr &rhs) {
     return algo::strptr_Eq(ch_Getary(lhs), rhs);
 }
 
@@ -13545,6 +13953,318 @@ inline bool algo::RspaceStr12_Eq(algo::RspaceStr12 lhs, algo::RspaceStr12 rhs) {
 inline bool algo::RspaceStr12_EqStrptr(algo::RspaceStr12 lhs, const algo::strptr &rhs) {
     return algo::strptr_Eq(ch_Getary(lhs), rhs);
 }
+
+inline bool algo::RspaceStr128::operator ==(const algo::RspaceStr128 &rhs) const {
+    return algo::RspaceStr128_Eq(const_cast<algo::RspaceStr128&>(*this),const_cast<algo::RspaceStr128&>(rhs));
+}
+
+inline bool algo::RspaceStr128::operator !=(const algo::RspaceStr128 &rhs) const {
+    return !algo::RspaceStr128_Eq(const_cast<algo::RspaceStr128&>(*this),const_cast<algo::RspaceStr128&>(rhs));
+}
+
+inline bool algo::RspaceStr128::operator ==(const algo::strptr &rhs) const {
+    return algo::RspaceStr128_EqStrptr(const_cast<algo::RspaceStr128&>(*this),rhs);
+}
+inline algo::RspaceStr128::RspaceStr128() {
+    algo::RspaceStr128_Init(*this);
+}
+
+
+// --- algo.RspaceStr128.ch.Getary
+// Access string as array of chars
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr128& parent) {
+    int len = ch_N(parent);
+    algo::aryptr<char> ret((char*)parent.ch, len);
+    return ret;
+}
+
+// --- algo.RspaceStr128.ch.HashStrptr
+inline u32 algo::RspaceStr128_Hash(u32 prev, const algo::strptr &str) {
+    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
+}
+
+// --- algo.RspaceStr128.ch.Init
+inline void algo::ch_Init(algo::RspaceStr128 &parent) {
+    memset(parent.ch, ' ', 128);
+}
+
+// --- algo.RspaceStr128.ch.Max
+// always return constant 128
+inline int algo::ch_Max(algo::RspaceStr128& parent) {
+    (void)parent;
+    return 128;
+}
+
+// --- algo.RspaceStr128.ch.N
+inline int algo::ch_N(const algo::RspaceStr128& parent) {
+    u64 ret;
+    ret = 128;
+    while (ret>0 && parent.ch[ret-1]==u8(' ')) {
+        ret--;
+    }
+    return int(ret);
+}
+
+// --- algo.RspaceStr128.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr128::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr128.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr128::operator =(const algo::RspaceStr128& parent) {
+    memcpy(ch, parent.ch, 128);
+}
+
+// --- algo.RspaceStr128.ch.Ctor
+inline  algo::RspaceStr128::RspaceStr128(const algo::RspaceStr128 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr128.ch.CtorStrptr
+inline  algo::RspaceStr128::RspaceStr128(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
+// --- algo.RspaceStr128.ch.Cast
+inline algo::RspaceStr128::operator algo::strptr () const {
+    return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr128..Cmp
+inline i32 algo::RspaceStr128_Cmp(algo::RspaceStr128 lhs, algo::RspaceStr128 rhs) {
+    i32 retval = 0;
+    retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
+    return retval;
+}
+
+// --- algo.RspaceStr128..Init
+// Set all fields to initial values.
+inline void algo::RspaceStr128_Init(algo::RspaceStr128& parent) {
+    memset(parent.ch, ' ', 128);
+}
+
+// --- algo.RspaceStr128..Eq
+inline bool algo::RspaceStr128_Eq(algo::RspaceStr128 lhs, algo::RspaceStr128 rhs) {
+    bool retval = true;
+    retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
+    return retval;
+}
+
+// --- algo.RspaceStr128..EqStrptr
+inline bool algo::RspaceStr128_EqStrptr(algo::RspaceStr128 lhs, const algo::strptr &rhs) {
+    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+}
+
+inline bool algo::RspaceStr14::operator ==(const algo::RspaceStr14 &rhs) const {
+    return algo::RspaceStr14_Eq(const_cast<algo::RspaceStr14&>(*this),const_cast<algo::RspaceStr14&>(rhs));
+}
+
+inline bool algo::RspaceStr14::operator !=(const algo::RspaceStr14 &rhs) const {
+    return !algo::RspaceStr14_Eq(const_cast<algo::RspaceStr14&>(*this),const_cast<algo::RspaceStr14&>(rhs));
+}
+
+inline bool algo::RspaceStr14::operator ==(const algo::strptr &rhs) const {
+    return algo::RspaceStr14_EqStrptr(const_cast<algo::RspaceStr14&>(*this),rhs);
+}
+inline algo::RspaceStr14::RspaceStr14() {
+    algo::RspaceStr14_Init(*this);
+}
+
+
+// --- algo.RspaceStr14.ch.Getary
+// Access string as array of chars
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr14& parent) {
+    int len = ch_N(parent);
+    algo::aryptr<char> ret((char*)parent.ch, len);
+    return ret;
+}
+
+// --- algo.RspaceStr14.ch.HashStrptr
+inline u32 algo::RspaceStr14_Hash(u32 prev, const algo::strptr &str) {
+    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
+}
+
+// --- algo.RspaceStr14.ch.Init
+inline void algo::ch_Init(algo::RspaceStr14 &parent) {
+    memset(parent.ch, ' ', 14);
+}
+
+// --- algo.RspaceStr14.ch.Max
+// always return constant 14
+inline int algo::ch_Max(algo::RspaceStr14& parent) {
+    (void)parent;
+    return 14;
+}
+
+// --- algo.RspaceStr14.ch.N
+inline int algo::ch_N(const algo::RspaceStr14& parent) {
+    u64 ret;
+    ret = 14;
+    while (ret>0 && parent.ch[ret-1]==u8(' ')) {
+        ret--;
+    }
+    return int(ret);
+}
+
+// --- algo.RspaceStr14.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr14::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr14.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr14::operator =(const algo::RspaceStr14& parent) {
+    memcpy(ch, parent.ch, 14);
+}
+
+// --- algo.RspaceStr14.ch.Ctor
+inline  algo::RspaceStr14::RspaceStr14(const algo::RspaceStr14 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr14.ch.CtorStrptr
+inline  algo::RspaceStr14::RspaceStr14(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
+// --- algo.RspaceStr14.ch.Cast
+inline algo::RspaceStr14::operator algo::strptr () const {
+    return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr14..Cmp
+inline i32 algo::RspaceStr14_Cmp(algo::RspaceStr14 lhs, algo::RspaceStr14 rhs) {
+    i32 retval = 0;
+    retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
+    return retval;
+}
+
+// --- algo.RspaceStr14..Init
+// Set all fields to initial values.
+inline void algo::RspaceStr14_Init(algo::RspaceStr14& parent) {
+    memset(parent.ch, ' ', 14);
+}
+
+// --- algo.RspaceStr14..Eq
+inline bool algo::RspaceStr14_Eq(algo::RspaceStr14 lhs, algo::RspaceStr14 rhs) {
+    bool retval = true;
+    retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
+    return retval;
+}
+
+// --- algo.RspaceStr14..EqStrptr
+inline bool algo::RspaceStr14_EqStrptr(algo::RspaceStr14 lhs, const algo::strptr &rhs) {
+    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+}
+
+inline bool algo::RspaceStr15::operator ==(const algo::RspaceStr15 &rhs) const {
+    return algo::RspaceStr15_Eq(const_cast<algo::RspaceStr15&>(*this),const_cast<algo::RspaceStr15&>(rhs));
+}
+
+inline bool algo::RspaceStr15::operator !=(const algo::RspaceStr15 &rhs) const {
+    return !algo::RspaceStr15_Eq(const_cast<algo::RspaceStr15&>(*this),const_cast<algo::RspaceStr15&>(rhs));
+}
+
+inline bool algo::RspaceStr15::operator ==(const algo::strptr &rhs) const {
+    return algo::RspaceStr15_EqStrptr(const_cast<algo::RspaceStr15&>(*this),rhs);
+}
+inline algo::RspaceStr15::RspaceStr15() {
+    algo::RspaceStr15_Init(*this);
+}
+
+
+// --- algo.RspaceStr15.ch.Getary
+// Access string as array of chars
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr15& parent) {
+    int len = ch_N(parent);
+    algo::aryptr<char> ret((char*)parent.ch, len);
+    return ret;
+}
+
+// --- algo.RspaceStr15.ch.HashStrptr
+inline u32 algo::RspaceStr15_Hash(u32 prev, const algo::strptr &str) {
+    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
+}
+
+// --- algo.RspaceStr15.ch.Init
+inline void algo::ch_Init(algo::RspaceStr15 &parent) {
+    memset(parent.ch, ' ', 15);
+}
+
+// --- algo.RspaceStr15.ch.Max
+// always return constant 15
+inline int algo::ch_Max(algo::RspaceStr15& parent) {
+    (void)parent;
+    return 15;
+}
+
+// --- algo.RspaceStr15.ch.N
+inline int algo::ch_N(const algo::RspaceStr15& parent) {
+    u64 ret;
+    ret = 15;
+    while (ret>0 && parent.ch[ret-1]==u8(' ')) {
+        ret--;
+    }
+    return int(ret);
+}
+
+// --- algo.RspaceStr15.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr15::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr15.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr15::operator =(const algo::RspaceStr15& parent) {
+    memcpy(ch, parent.ch, 15);
+}
+
+// --- algo.RspaceStr15.ch.Ctor
+inline  algo::RspaceStr15::RspaceStr15(const algo::RspaceStr15 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr15.ch.CtorStrptr
+inline  algo::RspaceStr15::RspaceStr15(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
+// --- algo.RspaceStr15.ch.Cast
+inline algo::RspaceStr15::operator algo::strptr () const {
+    return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr15..Cmp
+inline i32 algo::RspaceStr15_Cmp(algo::RspaceStr15 lhs, algo::RspaceStr15 rhs) {
+    i32 retval = 0;
+    retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
+    return retval;
+}
+
+// --- algo.RspaceStr15..Init
+// Set all fields to initial values.
+inline void algo::RspaceStr15_Init(algo::RspaceStr15& parent) {
+    memset(parent.ch, ' ', 15);
+}
+
+// --- algo.RspaceStr15..Eq
+inline bool algo::RspaceStr15_Eq(algo::RspaceStr15 lhs, algo::RspaceStr15 rhs) {
+    bool retval = true;
+    retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
+    return retval;
+}
+
+// --- algo.RspaceStr15..EqStrptr
+inline bool algo::RspaceStr15_EqStrptr(algo::RspaceStr15 lhs, const algo::strptr &rhs) {
+    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+}
 inline algo::RspaceStr16::RspaceStr16() {
     algo::RspaceStr16_Init(*this);
 }
@@ -13650,6 +14370,110 @@ inline bool algo::RspaceStr16_Update(algo::RspaceStr16 &lhs, algo::RspaceStr16 r
 
 // --- algo.RspaceStr16..EqStrptr
 inline bool algo::RspaceStr16_EqStrptr(algo::RspaceStr16 lhs, const algo::strptr &rhs) {
+    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+}
+
+inline bool algo::RspaceStr18::operator ==(const algo::RspaceStr18 &rhs) const {
+    return algo::RspaceStr18_Eq(const_cast<algo::RspaceStr18&>(*this),const_cast<algo::RspaceStr18&>(rhs));
+}
+
+inline bool algo::RspaceStr18::operator !=(const algo::RspaceStr18 &rhs) const {
+    return !algo::RspaceStr18_Eq(const_cast<algo::RspaceStr18&>(*this),const_cast<algo::RspaceStr18&>(rhs));
+}
+
+inline bool algo::RspaceStr18::operator ==(const algo::strptr &rhs) const {
+    return algo::RspaceStr18_EqStrptr(const_cast<algo::RspaceStr18&>(*this),rhs);
+}
+inline algo::RspaceStr18::RspaceStr18() {
+    algo::RspaceStr18_Init(*this);
+}
+
+
+// --- algo.RspaceStr18.ch.Getary
+// Access string as array of chars
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr18& parent) {
+    int len = ch_N(parent);
+    algo::aryptr<char> ret((char*)parent.ch, len);
+    return ret;
+}
+
+// --- algo.RspaceStr18.ch.HashStrptr
+inline u32 algo::RspaceStr18_Hash(u32 prev, const algo::strptr &str) {
+    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
+}
+
+// --- algo.RspaceStr18.ch.Init
+inline void algo::ch_Init(algo::RspaceStr18 &parent) {
+    memset(parent.ch, ' ', 18);
+}
+
+// --- algo.RspaceStr18.ch.Max
+// always return constant 18
+inline int algo::ch_Max(algo::RspaceStr18& parent) {
+    (void)parent;
+    return 18;
+}
+
+// --- algo.RspaceStr18.ch.N
+inline int algo::ch_N(const algo::RspaceStr18& parent) {
+    u64 ret;
+    ret = 18;
+    while (ret>0 && parent.ch[ret-1]==u8(' ')) {
+        ret--;
+    }
+    return int(ret);
+}
+
+// --- algo.RspaceStr18.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr18::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr18.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr18::operator =(const algo::RspaceStr18& parent) {
+    memcpy(ch, parent.ch, 18);
+}
+
+// --- algo.RspaceStr18.ch.Ctor
+inline  algo::RspaceStr18::RspaceStr18(const algo::RspaceStr18 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr18.ch.CtorStrptr
+inline  algo::RspaceStr18::RspaceStr18(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
+// --- algo.RspaceStr18.ch.Cast
+inline algo::RspaceStr18::operator algo::strptr () const {
+    return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr18..Cmp
+inline i32 algo::RspaceStr18_Cmp(algo::RspaceStr18 lhs, algo::RspaceStr18 rhs) {
+    i32 retval = 0;
+    retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
+    return retval;
+}
+
+// --- algo.RspaceStr18..Init
+// Set all fields to initial values.
+inline void algo::RspaceStr18_Init(algo::RspaceStr18& parent) {
+    memset(parent.ch, ' ', 18);
+}
+
+// --- algo.RspaceStr18..Eq
+inline bool algo::RspaceStr18_Eq(algo::RspaceStr18 lhs, algo::RspaceStr18 rhs) {
+    bool retval = true;
+    retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
+    return retval;
+}
+
+// --- algo.RspaceStr18..EqStrptr
+inline bool algo::RspaceStr18_EqStrptr(algo::RspaceStr18 lhs, const algo::strptr &rhs) {
     return algo::strptr_Eq(ch_Getary(lhs), rhs);
 }
 
@@ -13837,7 +14661,7 @@ inline algo::RspaceStr20::operator algo::strptr () const {
 }
 
 // --- algo.RspaceStr20..Cmp
-inline i32 algo::RspaceStr20_Cmp(algo::RspaceStr20 & lhs, algo::RspaceStr20 & rhs) {
+inline i32 algo::RspaceStr20_Cmp(algo::RspaceStr20 lhs, algo::RspaceStr20 rhs) {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -13850,14 +14674,14 @@ inline void algo::RspaceStr20_Init(algo::RspaceStr20& parent) {
 }
 
 // --- algo.RspaceStr20..Eq
-inline bool algo::RspaceStr20_Eq(const algo::RspaceStr20 & lhs,const algo::RspaceStr20 & rhs) {
+inline bool algo::RspaceStr20_Eq(algo::RspaceStr20 lhs, algo::RspaceStr20 rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
 }
 
 // --- algo.RspaceStr20..EqStrptr
-inline bool algo::RspaceStr20_EqStrptr(algo::RspaceStr20 & lhs, const algo::strptr &rhs) {
+inline bool algo::RspaceStr20_EqStrptr(algo::RspaceStr20 lhs, const algo::strptr &rhs) {
     return algo::strptr_Eq(ch_Getary(lhs), rhs);
 }
 
@@ -14672,7 +15496,7 @@ inline algo::RspaceStr32::operator algo::strptr () const {
 }
 
 // --- algo.RspaceStr32..Cmp
-inline i32 algo::RspaceStr32_Cmp(algo::RspaceStr32 & lhs, algo::RspaceStr32 & rhs) {
+inline i32 algo::RspaceStr32_Cmp(algo::RspaceStr32 lhs, algo::RspaceStr32 rhs) {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -14685,14 +15509,14 @@ inline void algo::RspaceStr32_Init(algo::RspaceStr32& parent) {
 }
 
 // --- algo.RspaceStr32..Eq
-inline bool algo::RspaceStr32_Eq(const algo::RspaceStr32 & lhs,const algo::RspaceStr32 & rhs) {
+inline bool algo::RspaceStr32_Eq(algo::RspaceStr32 lhs, algo::RspaceStr32 rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
 }
 
 // --- algo.RspaceStr32..EqStrptr
-inline bool algo::RspaceStr32_EqStrptr(algo::RspaceStr32 & lhs, const algo::strptr &rhs) {
+inline bool algo::RspaceStr32_EqStrptr(algo::RspaceStr32 lhs, const algo::strptr &rhs) {
     return algo::strptr_Eq(ch_Getary(lhs), rhs);
 }
 
@@ -14868,7 +15692,7 @@ inline algo::RspaceStr40::operator algo::strptr () const {
 }
 
 // --- algo.RspaceStr40..Cmp
-inline i32 algo::RspaceStr40_Cmp(algo::RspaceStr40 & lhs, algo::RspaceStr40 & rhs) {
+inline i32 algo::RspaceStr40_Cmp(algo::RspaceStr40 lhs, algo::RspaceStr40 rhs) {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -14881,14 +15705,14 @@ inline void algo::RspaceStr40_Init(algo::RspaceStr40& parent) {
 }
 
 // --- algo.RspaceStr40..Eq
-inline bool algo::RspaceStr40_Eq(const algo::RspaceStr40 & lhs,const algo::RspaceStr40 & rhs) {
+inline bool algo::RspaceStr40_Eq(algo::RspaceStr40 lhs, algo::RspaceStr40 rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
 }
 
 // --- algo.RspaceStr40..EqStrptr
-inline bool algo::RspaceStr40_EqStrptr(algo::RspaceStr40 & lhs, const algo::strptr &rhs) {
+inline bool algo::RspaceStr40_EqStrptr(algo::RspaceStr40 lhs, const algo::strptr &rhs) {
     return algo::strptr_Eq(ch_Getary(lhs), rhs);
 }
 
@@ -15076,7 +15900,7 @@ inline algo::RspaceStr50::operator algo::strptr () const {
 }
 
 // --- algo.RspaceStr50..Cmp
-inline i32 algo::RspaceStr50_Cmp(algo::RspaceStr50 & lhs, algo::RspaceStr50 & rhs) {
+inline i32 algo::RspaceStr50_Cmp(algo::RspaceStr50 lhs, algo::RspaceStr50 rhs) {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -15089,14 +15913,14 @@ inline void algo::RspaceStr50_Init(algo::RspaceStr50& parent) {
 }
 
 // --- algo.RspaceStr50..Eq
-inline bool algo::RspaceStr50_Eq(const algo::RspaceStr50 & lhs,const algo::RspaceStr50 & rhs) {
+inline bool algo::RspaceStr50_Eq(algo::RspaceStr50 lhs, algo::RspaceStr50 rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
 }
 
 // --- algo.RspaceStr50..EqStrptr
-inline bool algo::RspaceStr50_EqStrptr(algo::RspaceStr50 & lhs, const algo::strptr &rhs) {
+inline bool algo::RspaceStr50_EqStrptr(algo::RspaceStr50 lhs, const algo::strptr &rhs) {
     return algo::strptr_Eq(ch_Getary(lhs), rhs);
 }
 
@@ -15114,6 +15938,18 @@ inline bool algo::RspaceStr6::operator ==(const algo::strptr &rhs) const {
 
 inline bool algo::RspaceStr6::operator <(const algo::RspaceStr6 &rhs) const {
     return algo::RspaceStr6_Lt(const_cast<algo::RspaceStr6&>(*this),const_cast<algo::RspaceStr6&>(rhs));
+}
+
+inline bool algo::RspaceStr6::operator >(const algo::RspaceStr6 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::RspaceStr6::operator <=(const algo::RspaceStr6 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::RspaceStr6::operator >=(const algo::RspaceStr6 &rhs) const {
+    return !(*this < rhs);
 }
 inline algo::RspaceStr6::RspaceStr6() {
     algo::RspaceStr6_Init(*this);
@@ -15430,6 +16266,110 @@ inline bool algo::RspaceStr7_Eq(algo::RspaceStr7 lhs, algo::RspaceStr7 rhs) {
 inline bool algo::RspaceStr7_EqStrptr(algo::RspaceStr7 lhs, const algo::strptr &rhs) {
     return algo::strptr_Eq(ch_Getary(lhs), rhs);
 }
+
+inline bool algo::RspaceStr75::operator ==(const algo::RspaceStr75 &rhs) const {
+    return algo::RspaceStr75_Eq(const_cast<algo::RspaceStr75&>(*this),const_cast<algo::RspaceStr75&>(rhs));
+}
+
+inline bool algo::RspaceStr75::operator !=(const algo::RspaceStr75 &rhs) const {
+    return !algo::RspaceStr75_Eq(const_cast<algo::RspaceStr75&>(*this),const_cast<algo::RspaceStr75&>(rhs));
+}
+
+inline bool algo::RspaceStr75::operator ==(const algo::strptr &rhs) const {
+    return algo::RspaceStr75_EqStrptr(const_cast<algo::RspaceStr75&>(*this),rhs);
+}
+inline algo::RspaceStr75::RspaceStr75() {
+    algo::RspaceStr75_Init(*this);
+}
+
+
+// --- algo.RspaceStr75.ch.Getary
+// Access string as array of chars
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr75& parent) {
+    int len = ch_N(parent);
+    algo::aryptr<char> ret((char*)parent.ch, len);
+    return ret;
+}
+
+// --- algo.RspaceStr75.ch.HashStrptr
+inline u32 algo::RspaceStr75_Hash(u32 prev, const algo::strptr &str) {
+    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
+}
+
+// --- algo.RspaceStr75.ch.Init
+inline void algo::ch_Init(algo::RspaceStr75 &parent) {
+    memset(parent.ch, ' ', 75);
+}
+
+// --- algo.RspaceStr75.ch.Max
+// always return constant 75
+inline int algo::ch_Max(algo::RspaceStr75& parent) {
+    (void)parent;
+    return 75;
+}
+
+// --- algo.RspaceStr75.ch.N
+inline int algo::ch_N(const algo::RspaceStr75& parent) {
+    u64 ret;
+    ret = 75;
+    while (ret>0 && parent.ch[ret-1]==u8(' ')) {
+        ret--;
+    }
+    return int(ret);
+}
+
+// --- algo.RspaceStr75.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::RspaceStr75::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.RspaceStr75.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::RspaceStr75::operator =(const algo::RspaceStr75& parent) {
+    memcpy(ch, parent.ch, 75);
+}
+
+// --- algo.RspaceStr75.ch.Ctor
+inline  algo::RspaceStr75::RspaceStr75(const algo::RspaceStr75 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.RspaceStr75.ch.CtorStrptr
+inline  algo::RspaceStr75::RspaceStr75(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
+// --- algo.RspaceStr75.ch.Cast
+inline algo::RspaceStr75::operator algo::strptr () const {
+    return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr75..Cmp
+inline i32 algo::RspaceStr75_Cmp(algo::RspaceStr75 lhs, algo::RspaceStr75 rhs) {
+    i32 retval = 0;
+    retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
+    return retval;
+}
+
+// --- algo.RspaceStr75..Init
+// Set all fields to initial values.
+inline void algo::RspaceStr75_Init(algo::RspaceStr75& parent) {
+    memset(parent.ch, ' ', 75);
+}
+
+// --- algo.RspaceStr75..Eq
+inline bool algo::RspaceStr75_Eq(algo::RspaceStr75 lhs, algo::RspaceStr75 rhs) {
+    bool retval = true;
+    retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
+    return retval;
+}
+
+// --- algo.RspaceStr75..EqStrptr
+inline bool algo::RspaceStr75_EqStrptr(algo::RspaceStr75 lhs, const algo::strptr &rhs) {
+    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+}
 inline algo::RspaceStr8::RspaceStr8() {
     algo::RspaceStr8_Init(*this);
 }
@@ -15706,6 +16646,18 @@ inline bool algo::Sha1sig::operator !=(const algo::Sha1sig &rhs) const {
 
 inline bool algo::Sha1sig::operator <(const algo::Sha1sig &rhs) const {
     return algo::Sha1sig_Lt(const_cast<algo::Sha1sig&>(*this),const_cast<algo::Sha1sig&>(rhs));
+}
+
+inline bool algo::Sha1sig::operator >(const algo::Sha1sig &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::Sha1sig::operator <=(const algo::Sha1sig &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::Sha1sig::operator >=(const algo::Sha1sig &rhs) const {
+    return !(*this < rhs);
 }
 inline algo::Sha1sig::Sha1sig() {
     algo::Sha1sig_Init(*this);
@@ -16448,6 +17400,18 @@ inline bool algo::Smallstr20::operator ==(const algo::strptr &rhs) const {
 inline bool algo::Smallstr20::operator <(const algo::Smallstr20 &rhs) const {
     return algo::Smallstr20_Lt(const_cast<algo::Smallstr20&>(*this),const_cast<algo::Smallstr20&>(rhs));
 }
+
+inline bool algo::Smallstr20::operator >(const algo::Smallstr20 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::Smallstr20::operator <=(const algo::Smallstr20 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::Smallstr20::operator >=(const algo::Smallstr20 &rhs) const {
+    return !(*this < rhs);
+}
 inline algo::Smallstr20::Smallstr20() {
     algo::Smallstr20_Init(*this);
 }
@@ -16962,6 +17926,18 @@ inline bool algo::Smallstr30::operator ==(const algo::strptr &rhs) const {
 
 inline bool algo::Smallstr30::operator <(const algo::Smallstr30 &rhs) const {
     return algo::Smallstr30_Lt(const_cast<algo::Smallstr30&>(*this),const_cast<algo::Smallstr30&>(rhs));
+}
+
+inline bool algo::Smallstr30::operator >(const algo::Smallstr30 &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::Smallstr30::operator <=(const algo::Smallstr30 &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::Smallstr30::operator >=(const algo::Smallstr30 &rhs) const {
+    return !(*this < rhs);
 }
 inline algo::Smallstr30::Smallstr30() {
     algo::Smallstr30_Init(*this);
@@ -18634,6 +19610,18 @@ inline bool algo::UnDiff::operator !=(const algo::UnDiff &rhs) const {
 inline bool algo::UnDiff::operator <(const algo::UnDiff &rhs) const {
     return algo::UnDiff_Lt(const_cast<algo::UnDiff&>(*this),const_cast<algo::UnDiff&>(rhs));
 }
+
+inline bool algo::UnDiff::operator >(const algo::UnDiff &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::UnDiff::operator <=(const algo::UnDiff &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::UnDiff::operator >=(const algo::UnDiff &rhs) const {
+    return !(*this < rhs);
+}
 inline algo::UnDiff::UnDiff() {
     algo::UnDiff_Init(*this);
 }
@@ -18726,6 +19714,18 @@ inline bool algo::UnixDiff::operator !=(const algo::UnixDiff &rhs) const {
 
 inline bool algo::UnixDiff::operator <(const algo::UnixDiff &rhs) const {
     return algo::UnixDiff_Lt(const_cast<algo::UnixDiff&>(*this),const_cast<algo::UnixDiff&>(rhs));
+}
+
+inline bool algo::UnixDiff::operator >(const algo::UnixDiff &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::UnixDiff::operator <=(const algo::UnixDiff &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::UnixDiff::operator >=(const algo::UnixDiff &rhs) const {
+    return !(*this < rhs);
 }
 inline algo::UnixDiff::UnixDiff() {
     algo::UnixDiff_Init(*this);
@@ -18820,6 +19820,18 @@ inline bool algo::UnixTime::operator !=(const algo::UnixTime &rhs) const {
 inline bool algo::UnixTime::operator <(const algo::UnixTime &rhs) const {
     return algo::UnixTime_Lt(const_cast<algo::UnixTime&>(*this),const_cast<algo::UnixTime&>(rhs));
 }
+
+inline bool algo::UnixTime::operator >(const algo::UnixTime &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::UnixTime::operator <=(const algo::UnixTime &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::UnixTime::operator >=(const algo::UnixTime &rhs) const {
+    return !(*this < rhs);
+}
 inline algo::UnixTime::UnixTime() {
     algo::UnixTime_Init(*this);
 }
@@ -18913,6 +19925,18 @@ inline bool algo::WDiff::operator !=(const algo::WDiff &rhs) const {
 inline bool algo::WDiff::operator <(const algo::WDiff &rhs) const {
     return algo::WDiff_Lt(const_cast<algo::WDiff&>(*this),const_cast<algo::WDiff&>(rhs));
 }
+
+inline bool algo::WDiff::operator >(const algo::WDiff &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::WDiff::operator <=(const algo::WDiff &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::WDiff::operator >=(const algo::WDiff &rhs) const {
+    return !(*this < rhs);
+}
 inline algo::WDiff::WDiff() {
     algo::WDiff_Init(*this);
 }
@@ -19005,6 +20029,18 @@ inline bool algo::WTime::operator !=(const algo::WTime &rhs) const {
 
 inline bool algo::WTime::operator <(const algo::WTime &rhs) const {
     return algo::WTime_Lt(const_cast<algo::WTime&>(*this),const_cast<algo::WTime&>(rhs));
+}
+
+inline bool algo::WTime::operator >(const algo::WTime &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::WTime::operator <=(const algo::WTime &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::WTime::operator >=(const algo::WTime &rhs) const {
+    return !(*this < rhs);
 }
 inline algo::WTime::WTime() {
     algo::WTime_Init(*this);
@@ -19100,6 +20136,18 @@ inline bool algo::i32_Range::operator !=(const algo::i32_Range &rhs) const {
 
 inline bool algo::i32_Range::operator <(const algo::i32_Range &rhs) const {
     return algo::i32_Range_Lt(const_cast<algo::i32_Range&>(*this),const_cast<algo::i32_Range&>(rhs));
+}
+
+inline bool algo::i32_Range::operator >(const algo::i32_Range &rhs) const {
+    return rhs < *this;
+}
+
+inline bool algo::i32_Range::operator <=(const algo::i32_Range &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool algo::i32_Range::operator >=(const algo::i32_Range &rhs) const {
+    return !(*this < rhs);
 }
 inline algo::i32_Range::i32_Range() {
     algo::i32_Range_Init(*this);

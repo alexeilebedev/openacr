@@ -63,27 +63,25 @@ static void PnewByteAry(algo_lib::Replscope &R, amc::Genpnew &pnew) {
 
 // -----------------------------------------------------------------------------
 
-static void PnewPcbuf(algo_lib::Replscope &R, amc::Genpnew &pnew) {
-    AddProtoArg(*pnew.p_func, "algo::PCBuf &", "buf");
+static void PnewAmsStream(algo_lib::Replscope &R, amc::Genpnew &pnew) {
+    AddProtoArg(*pnew.p_func, "lib_ams::FStream &", "stream");
     pnew.req_pack=true;
-    Ins(&R, pnew.preamble, "msg = ($Cpptype*)BeginWrite(buf, (int)len);");
-}
 
-// -----------------------------------------------------------------------------
+    if (bool_Update(amc::_db.has_ams_fwd_declare,true)) {
+        if (amc::FNs *ns = amc::ind_ns_Find("lib_ams")) {
+            // forward-declare
+            Ins(&R, *ns->hdr, "struct FStream;");
+            Ins(&R, *ns->hdr, "void *BeginWrite(lib_ams::FStream &stream, int len);");
+            Ins(&R, *ns->hdr, "void EndWrite(lib_ams::FStream &stream, void *msg, int len);");
+        }
+    }
 
-static void PnewShbuf(algo_lib::Replscope &R, amc::Genpnew &pnew) {
-    AddProtoArg(*pnew.p_func, "volatile algo::ShHdr &", "buf");
-    pnew.req_pack=true;
-    Ins(&R, pnew.preamble, "u8 *start = PtrAdd<u8*>(&buf,SHBUF_PREFIX);");
-    Ins(&R, pnew.preamble, "u64 tail = buf.tail;");
-    Ins(&R, pnew.preamble, "u64 head = buf.head;");
-    Ins(&R, pnew.preamble, "u64 size = buf.size;");
-    Ins(&R, pnew.preamble, "buf.tail = tail + len;");
-    Ins(&R, pnew.preamble, "sfence();");
-    Ins(&R, pnew.preamble, "msg = ($Cpptype*)(start + (tail & (size-1)));");
+    Ins(&R, pnew.preamble, "msg = ($Cpptype*)lib_ams::BeginWrite(stream,int(len));");
+    Ins(&R, pnew.preamble, "if (!msg) {");
+    Ins(&R, pnew.preamble, "    return NULL; // no room.");
+    Ins(&R, pnew.preamble, "}");
 
-    Ins(&R, pnew.postamble, "sfence();");
-    Ins(&R, pnew.postamble, "buf.head = head + len;");
+    Ins(&R, pnew.postamble, "lib_ams::EndWrite(stream,msg,int(len));");
 }
 
 // -----------------------------------------------------------------------------
@@ -128,7 +126,7 @@ static void HandleLen(amc::Genpnew &genpnew) {
 
     if (ctype.c_varlenfld) {
         Set(R, "$name", name_Get(*ctype.c_varlenfld));
-        Set(R, "$Vartype", ctype.c_varlenfld->cpp_type);
+        Set(R, "$Vartype", ctype.c_varlenfld->p_arg->c_lenfld ? strptr("u8") : ctype.c_varlenfld->cpp_type);
         Ins(&R, func.body, tempstr() << "u32 ary_len = elems_N($name) * sizeof($Vartype);");
         Ins(&R, func.body, "len += ary_len;");
     }
@@ -153,9 +151,8 @@ static void DispatchBuftype(amc::FPnew &pnew, amc::Genpnew &genpnew) {
     value_SetStrptr(buftype_id,buftype_Get(pnew),dmmeta_BuftypeId_Memptr);
     switch(buftype_id) {
     case dmmeta_BuftypeId_Memptr      : PnewMemptr(R, genpnew); break;
-    case dmmeta_BuftypeId_Pcbuf       : PnewPcbuf(R, genpnew); break;
-    case dmmeta_BuftypeId_Shbuf       : PnewShbuf(R, genpnew); break;
     case dmmeta_BuftypeId_ByteAry     : PnewByteAry(R, genpnew); break;
+    case dmmeta_BuftypeId_AmsStream   : PnewAmsStream(R, genpnew); break;
     default                           : vrfy(0, "unsupported buftype"); break;
     }
 }

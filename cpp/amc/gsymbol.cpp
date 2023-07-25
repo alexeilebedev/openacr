@@ -35,6 +35,19 @@ static tempstr ToIdent(strptr s) {
 
 // -----------------------------------------------------------------------------
 
+static tempstr ResolveGsymboltype(amc::FGsymbol &gsymbol) {
+    tempstr ret;
+    if (ch_N(gsymbol.symboltype)) {
+        ret << amc::NsToCpp(gsymbol.p_symboltype->ctype);
+    } else {
+        ret << amc::NsToCpp(gsymbol.p_ssimfile->p_ctype->ctype)<<"Pkey";
+    }
+    //prlog(ret);
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
 // Generate regular c++ symbols from tables
 void amc::gen_ns_gsymbol() {
     amc::FNs &ns =*amc::_db.c_ns;
@@ -46,6 +59,7 @@ void amc::gen_ns_gsymbol() {
         tempstr fname(SsimFname(amc::_db.cmdline.in_dir,ssimfile_Get(gsymbol)));
         vrfy(MmapFile_Load(file,fname),tempstr()<<"amc.load"<<Keyval("filename",fname));
         *ns.cpp << "namespace "<<ns.ns<<" { // gsymbol:"<<gsymbol.gsymbol<<eol;
+        cstring symboltype = ResolveGsymboltype(gsymbol);
         ind_beg(Line_curs,line,file.text) {
             if (Regx_Match(regx,line)) {
                 Tuple tuple;
@@ -55,14 +69,14 @@ void amc::gen_ns_gsymbol() {
                     tempstr name = tempstr() << ToIdent(ssimfile_Get(gsymbol))
                                              << "_"
                                              << ToIdent(value);
-                    *ns.hdr << "extern const char *" << ToIdent(name);
+                    *ns.hdr << "extern const "<< symboltype << " " << ToIdent(name);
                     *ns.hdr << "; // ";
                     strptr_PrintCppQuoted(value, *ns.hdr, '"');
                     *ns.hdr << eol;
 
-                    *ns.cpp << "    const char *" << ToIdent(name) << " = ";
+                    *ns.cpp << "    const " << symboltype << " " << ToIdent(name) << "(";
                     strptr_PrintCppQuoted(value, *ns.cpp, '"');
-                    *ns.cpp << ";" << eol;
+                    *ns.cpp << ");" << eol;
                 }
             }
         }ind_end;

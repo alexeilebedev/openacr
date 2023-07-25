@@ -364,6 +364,24 @@ void amc::tfunc_Global_main() {
         Ins(&R, main.body    , "return algo_lib::_db.exit_code;");
     }
 }
+// -----------------------------------------------------------------------------
+
+void amc::tfunc_Global_WinMain() {
+    algo_lib::Replscope &R = amc::_db.genfield.R;
+    // generate WinMain() function only if main() exists
+    if (amc::ind_func_Find(Subst(R, "$ns...main"))) {
+        amc::FFunc& winmain = amc::ind_func_GetOrCreate(Subst(R, "$ns...WinMain"));
+        winmain.glob = true;
+        winmain.globns = true;
+        winmain.prepcond = "defined(WIN32)"; // windows only
+        winmain.ret = "int WINAPI";
+        Ins(&R, winmain.proto, "WinMain(HINSTANCE,HINSTANCE,LPSTR,int)", false);
+        // __argc, __argv are parsed command line args provided by MSVC runtime
+        Ins(&R, winmain.body    , "return main(__argc,__argv);");
+    }
+}
+
+// -----------------------------------------------------------------------------
 
 void amc::tfunc_Global_MainArgs() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
@@ -411,17 +429,31 @@ void amc::tfunc_Global_MainLoop() {
         Ins(&R, mainloop.body   , "algo_lib::_db.clock          = time;");
         Ins(&R, mainloop.body   , "do {");
         Ins(&R, mainloop.body   , "    algo_lib::_db.next_loop.value = algo_lib::_db.limit;");
+        Set(R, "ns", ns.ns);
+        Ins(&R, mainloop.body, "    $ns::Steps();");
+        Ins(&R, mainloop.body   , "} while (algo_lib::_db.next_loop < algo_lib::_db.limit);");
+    }
+}
+
+void amc::tfunc_Global_Steps() {
+    algo_lib::Replscope &R = amc::_db.genfield.R;
+    amc::FField &field = *amc::_db.genfield.p_field;
+    amc::FNs &ns = *field.p_ctype->p_ns;
+    if (c_parentns_N(ns) > 0) {
+        amc::FFunc& steps = amc::CreateCurFunc();
+        Ins(&R, steps.ret    , "void",false);
+        Ins(&R, steps.proto  , "Steps()",false);
         // parent ns
         for (int i = c_parentns_N(ns)-1; i>=0; i--) {
             amc::FNs &parent = *c_parentns_Find(ns,i);
             if (CountDirectSteps(parent) > 0) {
                 Set(R, "$parns", parent.ns);
-                Ins(&R, mainloop.body, "    $parns::Step(); // dependent namespace specified via (dev.targdep)");
+                Ins(&R, steps.body, "$parns::Step(); // dependent namespace specified via (dev.targdep)");
             }
         }
-        Ins(&R, mainloop.body   , "} while (algo_lib::_db.next_loop < algo_lib::_db.limit);");
     }
 }
+
 
 void amc::tfunc_Global_Step() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
@@ -484,8 +516,7 @@ static void FmtCppStr(cstring &lhs, strptr rhs) {
     int start = 0;
     do {
         int end = FindFrom(rhs, '\n', start);
-        if (end==-1) end=rhs.n_elems;
-        else end++;
+        if (end==-1) end=rhs.n_elems; else end++;
         strptr_PrintCpp(GetRegion(rhs,start,end-start), lhs);
         start=end;
         lhs << eol;

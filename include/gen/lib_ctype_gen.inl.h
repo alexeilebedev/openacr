@@ -10,6 +10,7 @@
 #pragma once
 #include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/dev_gen.inl.h"
 //#pragma endinclude
 inline lib_ctype::FCdflt::FCdflt() {
 }
@@ -658,6 +659,48 @@ inline lib_ctype::FSubstr& lib_ctype::substr_qFind(u64 t) {
     return _db.substr_lary[bsr][index];
 }
 
+// --- lib_ctype.FDb.unstablefld.EmptyQ
+// Return true if index is empty
+inline bool lib_ctype::unstablefld_EmptyQ() {
+    return _db.unstablefld_n == 0;
+}
+
+// --- lib_ctype.FDb.unstablefld.Find
+// Look up row by row id. Return NULL if out of range
+inline lib_ctype::FUnstablefld* lib_ctype::unstablefld_Find(u64 t) {
+    lib_ctype::FUnstablefld *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.unstablefld_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.unstablefld_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- lib_ctype.FDb.unstablefld.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline lib_ctype::FUnstablefld* lib_ctype::unstablefld_Last() {
+    return unstablefld_Find(u64(_db.unstablefld_n-1));
+}
+
+// --- lib_ctype.FDb.unstablefld.N
+// Return number of items in the pool
+inline i32 lib_ctype::unstablefld_N() {
+    return _db.unstablefld_n;
+}
+
+// --- lib_ctype.FDb.unstablefld.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline lib_ctype::FUnstablefld& lib_ctype::unstablefld_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.unstablefld_lary[bsr][index];
+}
+
 // --- lib_ctype.FDb.fconst_curs.Reset
 // cursor points to valid item
 inline void lib_ctype::_db_fconst_curs_Reset(_db_fconst_curs &curs, lib_ctype::FDb &parent) {
@@ -882,6 +925,31 @@ inline void lib_ctype::_db_substr_curs_Next(_db_substr_curs &curs) {
 inline lib_ctype::FSubstr& lib_ctype::_db_substr_curs_Access(_db_substr_curs &curs) {
     return substr_qFind(u64(curs.index));
 }
+
+// --- lib_ctype.FDb.unstablefld_curs.Reset
+// cursor points to valid item
+inline void lib_ctype::_db_unstablefld_curs_Reset(_db_unstablefld_curs &curs, lib_ctype::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- lib_ctype.FDb.unstablefld_curs.ValidQ
+// cursor points to valid item
+inline bool lib_ctype::_db_unstablefld_curs_ValidQ(_db_unstablefld_curs &curs) {
+    return curs.index < _db.unstablefld_n;
+}
+
+// --- lib_ctype.FDb.unstablefld_curs.Next
+// proceed to next item
+inline void lib_ctype::_db_unstablefld_curs_Next(_db_unstablefld_curs &curs) {
+    curs.index++;
+}
+
+// --- lib_ctype.FDb.unstablefld_curs.Access
+// item access
+inline lib_ctype::FUnstablefld& lib_ctype::_db_unstablefld_curs_Access(_db_unstablefld_curs &curs) {
+    return unstablefld_qFind(u64(curs.index));
+}
 inline lib_ctype::FFconst::FFconst() {
     lib_ctype::FFconst_Init(*this);
 }
@@ -1024,6 +1092,26 @@ inline void lib_ctype::c_substr_Remove(lib_ctype::FField& field, lib_ctype::FSub
     }
 }
 
+// --- lib_ctype.FField.c_unstablefld.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool lib_ctype::c_unstablefld_InsertMaybe(lib_ctype::FField& field, lib_ctype::FUnstablefld& row) {
+    lib_ctype::FUnstablefld* ptr = field.c_unstablefld;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        field.c_unstablefld = &row;
+    }
+    return retval;
+}
+
+// --- lib_ctype.FField.c_unstablefld.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void lib_ctype::c_unstablefld_Remove(lib_ctype::FField& field, lib_ctype::FUnstablefld& row) {
+    lib_ctype::FUnstablefld *ptr = field.c_unstablefld;
+    if (LIKELY(ptr == &row)) {
+        field.c_unstablefld = NULL;
+    }
+}
+
 // --- lib_ctype.FField.zd_fconst_curs.Reset
 // cursor points to valid item
 inline void lib_ctype::field_zd_fconst_curs_Reset(field_zd_fconst_curs &curs, lib_ctype::FField &parent) {
@@ -1074,6 +1162,13 @@ inline lib_ctype::FSubstr::FSubstr() {
 
 inline lib_ctype::FSubstr::~FSubstr() {
     lib_ctype::FSubstr_Uninit(*this);
+}
+
+inline lib_ctype::FUnstablefld::FUnstablefld() {
+}
+
+inline lib_ctype::FUnstablefld::~FUnstablefld() {
+    lib_ctype::FUnstablefld_Uninit(*this);
 }
 
 inline lib_ctype::FieldId::FieldId(i32                            in_value)

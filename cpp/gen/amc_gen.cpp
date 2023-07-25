@@ -2765,7 +2765,7 @@ void* amc::fsort_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fsort_n = new_nelems;
+        _db.fsort_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2778,14 +2778,14 @@ void amc::fsort_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fsort_qFind(u64(n)).~FFsort();
-        _db.fsort_n = n;
+        _db.fsort_n = i32(n);
     }
 }
 
 // --- amc.FDb.fsort.InputMaybe
 static bool amc::fsort_InputMaybe(dmmeta::Fsort &elem) {
     bool retval = true;
-    retval = fsort_InsertMaybe(elem);
+    retval = fsort_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -2828,7 +2828,7 @@ bool amc::fsort_XrefMaybe(amc::FFsort &row) {
 // --- amc.FDb.ind_cfmt.Find
 // Find row by key. Return NULL if not found.
 amc::FCfmt* amc::ind_cfmt_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_cfmt_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_cfmt_buckets_n - 1);
     amc::FCfmt* *e = &_db.ind_cfmt_buckets_elems[index];
     amc::FCfmt* ret=NULL;
     do {
@@ -2853,6 +2853,7 @@ amc::FCfmt& amc::ind_cfmt_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_cfmt  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -2862,7 +2863,7 @@ bool amc::ind_cfmt_InsertMaybe(amc::FCfmt& row) {
     ind_cfmt_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_cfmt_next == (amc::FCfmt*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.cfmt) & (_db.ind_cfmt_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.cfmt) & (_db.ind_cfmt_buckets_n - 1);
         amc::FCfmt* *prev = &_db.ind_cfmt_buckets_elems[index];
         do {
             amc::FCfmt* ret = *prev;
@@ -2888,7 +2889,7 @@ bool amc::ind_cfmt_InsertMaybe(amc::FCfmt& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void amc::ind_cfmt_Remove(amc::FCfmt& row) {
     if (LIKELY(row.ind_cfmt_next != (amc::FCfmt*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.cfmt) & (_db.ind_cfmt_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.cfmt) & (_db.ind_cfmt_buckets_n - 1);
         amc::FCfmt* *prev = &_db.ind_cfmt_buckets_elems[index]; // addr of pointer to current element
         while (amc::FCfmt *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2925,7 +2926,7 @@ void amc::ind_cfmt_Reserve(int n) {
             while (elem) {
                 amc::FCfmt &row        = *elem;
                 amc::FCfmt* next       = row.ind_cfmt_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.cfmt) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.cfmt) & (new_nbuckets-1);
                 row.ind_cfmt_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2993,7 +2994,7 @@ void* amc::dispfilter_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.dispfilter_n = new_nelems;
+        _db.dispfilter_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3006,14 +3007,14 @@ void amc::dispfilter_RemoveLast() {
     if (n > 0) {
         n -= 1;
         dispfilter_qFind(u64(n)).~FDispfilter();
-        _db.dispfilter_n = n;
+        _db.dispfilter_n = i32(n);
     }
 }
 
 // --- amc.FDb.dispfilter.InputMaybe
 static bool amc::dispfilter_InputMaybe(dmmeta::Dispfilter &elem) {
     bool retval = true;
-    retval = dispfilter_InsertMaybe(elem);
+    retval = dispfilter_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -3095,7 +3096,7 @@ void* amc::usertracefld_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.usertracefld_n = new_nelems;
+        _db.usertracefld_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3108,14 +3109,14 @@ void amc::usertracefld_RemoveLast() {
     if (n > 0) {
         n -= 1;
         usertracefld_qFind(u64(n)).~FUsertracefld();
-        _db.usertracefld_n = n;
+        _db.usertracefld_n = i32(n);
     }
 }
 
 // --- amc.FDb.usertracefld.InputMaybe
 static bool amc::usertracefld_InputMaybe(dmmeta::Usertracefld &elem) {
     bool retval = true;
-    retval = usertracefld_InsertMaybe(elem);
+    retval = usertracefld_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -3183,7 +3184,7 @@ void* amc::cfmt_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cfmt_n = new_nelems;
+        _db.cfmt_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3196,14 +3197,14 @@ void amc::cfmt_RemoveLast() {
     if (n > 0) {
         n -= 1;
         cfmt_qFind(u64(n)).~FCfmt();
-        _db.cfmt_n = n;
+        _db.cfmt_n = i32(n);
     }
 }
 
 // --- amc.FDb.cfmt.InputMaybe
 static bool amc::cfmt_InputMaybe(dmmeta::Cfmt &elem) {
     bool retval = true;
-    retval = cfmt_InsertMaybe(elem);
+    retval = cfmt_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -3289,7 +3290,7 @@ void* amc::dispatch_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.dispatch_n = new_nelems;
+        _db.dispatch_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3302,14 +3303,14 @@ void amc::dispatch_RemoveLast() {
     if (n > 0) {
         n -= 1;
         dispatch_qFind(u64(n)).~FDispatch();
-        _db.dispatch_n = n;
+        _db.dispatch_n = i32(n);
     }
 }
 
 // --- amc.FDb.dispatch.InputMaybe
 static bool amc::dispatch_InputMaybe(dmmeta::Dispatch &elem) {
     bool retval = true;
-    retval = dispatch_InsertMaybe(elem);
+    retval = dispatch_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -3399,7 +3400,7 @@ void* amc::dispatch_msg_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.dispatch_msg_n = new_nelems;
+        _db.dispatch_msg_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3412,14 +3413,14 @@ void amc::dispatch_msg_RemoveLast() {
     if (n > 0) {
         n -= 1;
         dispatch_msg_qFind(u64(n)).~FDispatchmsg();
-        _db.dispatch_msg_n = n;
+        _db.dispatch_msg_n = i32(n);
     }
 }
 
 // --- amc.FDb.dispatch_msg.InputMaybe
 static bool amc::dispatch_msg_InputMaybe(dmmeta::DispatchMsg &elem) {
     bool retval = true;
-    retval = dispatch_msg_InsertMaybe(elem);
+    retval = dispatch_msg_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -3509,7 +3510,7 @@ void* amc::ctype_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ctype_n = new_nelems;
+        _db.ctype_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3522,14 +3523,14 @@ void amc::ctype_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ctype_qFind(u64(n)).~FCtype();
-        _db.ctype_n = n;
+        _db.ctype_n = i32(n);
     }
 }
 
 // --- amc.FDb.ctype.InputMaybe
 static bool amc::ctype_InputMaybe(dmmeta::Ctype &elem) {
     bool retval = true;
-    retval = ctype_InsertMaybe(elem);
+    retval = ctype_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -3620,7 +3621,7 @@ void* amc::field_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.field_n = new_nelems;
+        _db.field_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3633,14 +3634,14 @@ void amc::field_RemoveLast() {
     if (n > 0) {
         n -= 1;
         field_qFind(u64(n)).~FField();
-        _db.field_n = n;
+        _db.field_n = i32(n);
     }
 }
 
 // --- amc.FDb.field.InputMaybe
 static bool amc::field_InputMaybe(dmmeta::Field &elem) {
     bool retval = true;
-    retval = field_InsertMaybe(elem);
+    retval = field_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -3752,7 +3753,7 @@ void* amc::basepool_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.basepool_n = new_nelems;
+        _db.basepool_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3765,14 +3766,14 @@ void amc::basepool_RemoveLast() {
     if (n > 0) {
         n -= 1;
         basepool_qFind(u64(n)).~FBasepool();
-        _db.basepool_n = n;
+        _db.basepool_n = i32(n);
     }
 }
 
 // --- amc.FDb.basepool.InputMaybe
 static bool amc::basepool_InputMaybe(dmmeta::Basepool &elem) {
     bool retval = true;
-    retval = basepool_InsertMaybe(elem);
+    retval = basepool_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -3867,7 +3868,7 @@ void* amc::llist_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.llist_n = new_nelems;
+        _db.llist_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3880,14 +3881,14 @@ void amc::llist_RemoveLast() {
     if (n > 0) {
         n -= 1;
         llist_qFind(u64(n)).~FLlist();
-        _db.llist_n = n;
+        _db.llist_n = i32(n);
     }
 }
 
 // --- amc.FDb.llist.InputMaybe
 static bool amc::llist_InputMaybe(dmmeta::Llist &elem) {
     bool retval = true;
-    retval = llist_InsertMaybe(elem);
+    retval = llist_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -3978,7 +3979,7 @@ void* amc::anonfld_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.anonfld_n = new_nelems;
+        _db.anonfld_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3991,14 +3992,14 @@ void amc::anonfld_RemoveLast() {
     if (n > 0) {
         n -= 1;
         anonfld_qFind(u64(n)).~FAnonfld();
-        _db.anonfld_n = n;
+        _db.anonfld_n = i32(n);
     }
 }
 
 // --- amc.FDb.anonfld.InputMaybe
 static bool amc::anonfld_InputMaybe(dmmeta::Anonfld &elem) {
     bool retval = true;
-    retval = anonfld_InsertMaybe(elem);
+    retval = anonfld_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -4080,7 +4081,7 @@ void* amc::xref_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.xref_n = new_nelems;
+        _db.xref_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -4093,14 +4094,14 @@ void amc::xref_RemoveLast() {
     if (n > 0) {
         n -= 1;
         xref_qFind(u64(n)).~FXref();
-        _db.xref_n = n;
+        _db.xref_n = i32(n);
     }
 }
 
 // --- amc.FDb.xref.InputMaybe
 static bool amc::xref_InputMaybe(dmmeta::Xref &elem) {
     bool retval = true;
-    retval = xref_InsertMaybe(elem);
+    retval = xref_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -4217,7 +4218,7 @@ void* amc::ns_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ns_n = new_nelems;
+        _db.ns_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -4230,14 +4231,14 @@ void amc::ns_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ns_qFind(u64(n)).~FNs();
-        _db.ns_n = n;
+        _db.ns_n = i32(n);
     }
 }
 
 // --- amc.FDb.ns.InputMaybe
 static bool amc::ns_InputMaybe(dmmeta::Ns &elem) {
     bool retval = true;
-    retval = ns_InsertMaybe(elem);
+    retval = ns_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -4314,7 +4315,7 @@ void* amc::pnew_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.pnew_n = new_nelems;
+        _db.pnew_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -4327,14 +4328,14 @@ void amc::pnew_RemoveLast() {
     if (n > 0) {
         n -= 1;
         pnew_qFind(u64(n)).~FPnew();
-        _db.pnew_n = n;
+        _db.pnew_n = i32(n);
     }
 }
 
 // --- amc.FDb.pnew.InputMaybe
 static bool amc::pnew_InputMaybe(dmmeta::Pnew &elem) {
     bool retval = true;
-    retval = pnew_InsertMaybe(elem);
+    retval = pnew_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -4433,7 +4434,7 @@ void* amc::fldoffset_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fldoffset_n = new_nelems;
+        _db.fldoffset_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -4446,14 +4447,14 @@ void amc::fldoffset_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fldoffset_qFind(u64(n)).~FFldoffset();
-        _db.fldoffset_n = n;
+        _db.fldoffset_n = i32(n);
     }
 }
 
 // --- amc.FDb.fldoffset.InputMaybe
 static bool amc::fldoffset_InputMaybe(dmmeta::Fldoffset &elem) {
     bool retval = true;
-    retval = fldoffset_InsertMaybe(elem);
+    retval = fldoffset_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -4539,7 +4540,7 @@ void* amc::typefld_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.typefld_n = new_nelems;
+        _db.typefld_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -4552,14 +4553,14 @@ void amc::typefld_RemoveLast() {
     if (n > 0) {
         n -= 1;
         typefld_qFind(u64(n)).~FTypefld();
-        _db.typefld_n = n;
+        _db.typefld_n = i32(n);
     }
 }
 
 // --- amc.FDb.typefld.InputMaybe
 static bool amc::typefld_InputMaybe(dmmeta::Typefld &elem) {
     bool retval = true;
-    retval = typefld_InsertMaybe(elem);
+    retval = typefld_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -4663,7 +4664,7 @@ void* amc::lenfld_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.lenfld_n = new_nelems;
+        _db.lenfld_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -4676,14 +4677,14 @@ void amc::lenfld_RemoveLast() {
     if (n > 0) {
         n -= 1;
         lenfld_qFind(u64(n)).~FLenfld();
-        _db.lenfld_n = n;
+        _db.lenfld_n = i32(n);
     }
 }
 
 // --- amc.FDb.lenfld.InputMaybe
 static bool amc::lenfld_InputMaybe(dmmeta::Lenfld &elem) {
     bool retval = true;
-    retval = lenfld_InsertMaybe(elem);
+    retval = lenfld_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -4774,7 +4775,7 @@ void* amc::bltin_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.bltin_n = new_nelems;
+        _db.bltin_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -4787,14 +4788,14 @@ void amc::bltin_RemoveLast() {
     if (n > 0) {
         n -= 1;
         bltin_qFind(u64(n)).~FBltin();
-        _db.bltin_n = n;
+        _db.bltin_n = i32(n);
     }
 }
 
 // --- amc.FDb.bltin.InputMaybe
 static bool amc::bltin_InputMaybe(amcdb::Bltin &elem) {
     bool retval = true;
-    retval = bltin_InsertMaybe(elem);
+    retval = bltin_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -4871,7 +4872,7 @@ void* amc::static_tuple_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.static_tuple_n = new_nelems;
+        _db.static_tuple_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -4883,7 +4884,7 @@ void amc::static_tuple_RemoveAll() {
     for (u64 n = _db.static_tuple_n; n>0; ) {
         n--;
         static_tuple_qFind(u64(n)).~FStatictuple(); // destroy last element
-        _db.static_tuple_n = n;
+        _db.static_tuple_n = i32(n);
     }
 }
 
@@ -4894,7 +4895,7 @@ void amc::static_tuple_RemoveLast() {
     if (n > 0) {
         n -= 1;
         static_tuple_qFind(u64(n)).~FStatictuple();
-        _db.static_tuple_n = n;
+        _db.static_tuple_n = i32(n);
     }
 }
 
@@ -4971,7 +4972,7 @@ void* amc::msgtype_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.msgtype_n = new_nelems;
+        _db.msgtype_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -4984,14 +4985,14 @@ void amc::msgtype_RemoveLast() {
     if (n > 0) {
         n -= 1;
         msgtype_qFind(u64(n)).~FMsgtype();
-        _db.msgtype_n = n;
+        _db.msgtype_n = i32(n);
     }
 }
 
 // --- amc.FDb.msgtype.InputMaybe
 static bool amc::msgtype_InputMaybe(dmmeta::Msgtype &elem) {
     bool retval = true;
-    retval = msgtype_InsertMaybe(elem);
+    retval = msgtype_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -5077,7 +5078,7 @@ void* amc::gconst_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.gconst_n = new_nelems;
+        _db.gconst_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -5090,14 +5091,14 @@ void amc::gconst_RemoveLast() {
     if (n > 0) {
         n -= 1;
         gconst_qFind(u64(n)).~FGconst();
-        _db.gconst_n = n;
+        _db.gconst_n = i32(n);
     }
 }
 
 // --- amc.FDb.gconst.InputMaybe
 static bool amc::gconst_InputMaybe(dmmeta::Gconst &elem) {
     bool retval = true;
-    retval = gconst_InsertMaybe(elem);
+    retval = gconst_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -5193,7 +5194,7 @@ void* amc::gstatic_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.gstatic_n = new_nelems;
+        _db.gstatic_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -5206,14 +5207,14 @@ void amc::gstatic_RemoveLast() {
     if (n > 0) {
         n -= 1;
         gstatic_qFind(u32(n)).~FGstatic();
-        _db.gstatic_n = n;
+        _db.gstatic_n = i32(n);
     }
 }
 
 // --- amc.FDb.gstatic.InputMaybe
 static bool amc::gstatic_InputMaybe(dmmeta::Gstatic &elem) {
     bool retval = true;
-    retval = gstatic_InsertMaybe(elem);
+    retval = gstatic_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -5308,7 +5309,7 @@ void* amc::thash_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.thash_n = new_nelems;
+        _db.thash_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -5321,14 +5322,14 @@ void amc::thash_RemoveLast() {
     if (n > 0) {
         n -= 1;
         thash_qFind(u64(n)).~FThash();
-        _db.thash_n = n;
+        _db.thash_n = i32(n);
     }
 }
 
 // --- amc.FDb.thash.InputMaybe
 static bool amc::thash_InputMaybe(dmmeta::Thash &elem) {
     bool retval = true;
-    retval = thash_InsertMaybe(elem);
+    retval = thash_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -5536,7 +5537,7 @@ void* amc::func_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.func_n = new_nelems;
+        _db.func_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -5549,14 +5550,14 @@ void amc::func_RemoveLast() {
     if (n > 0) {
         n -= 1;
         func_qFind(u64(n)).~FFunc();
-        _db.func_n = n;
+        _db.func_n = i32(n);
     }
 }
 
 // --- amc.FDb.func.InputMaybe
 static bool amc::func_InputMaybe(dmmeta::Func &elem) {
     bool retval = true;
-    retval = func_InsertMaybe(elem);
+    retval = func_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -5646,7 +5647,7 @@ void* amc::smallstr_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.smallstr_n = new_nelems;
+        _db.smallstr_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -5659,14 +5660,14 @@ void amc::smallstr_RemoveLast() {
     if (n > 0) {
         n -= 1;
         smallstr_qFind(u64(n)).~FSmallstr();
-        _db.smallstr_n = n;
+        _db.smallstr_n = i32(n);
     }
 }
 
 // --- amc.FDb.smallstr.InputMaybe
 static bool amc::smallstr_InputMaybe(dmmeta::Smallstr &elem) {
     bool retval = true;
-    retval = smallstr_InsertMaybe(elem);
+    retval = smallstr_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -5761,7 +5762,7 @@ void* amc::numstr_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.numstr_n = new_nelems;
+        _db.numstr_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -5774,14 +5775,14 @@ void amc::numstr_RemoveLast() {
     if (n > 0) {
         n -= 1;
         numstr_qFind(u64(n)).~FNumstr();
-        _db.numstr_n = n;
+        _db.numstr_n = i32(n);
     }
 }
 
 // --- amc.FDb.numstr.InputMaybe
 static bool amc::numstr_InputMaybe(dmmeta::Numstr &elem) {
     bool retval = true;
-    retval = numstr_InsertMaybe(elem);
+    retval = numstr_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -5872,7 +5873,7 @@ void* amc::main_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.main_n = new_nelems;
+        _db.main_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -5885,14 +5886,14 @@ void amc::main_RemoveLast() {
     if (n > 0) {
         n -= 1;
         main_qFind(u64(n)).~FMain();
-        _db.main_n = n;
+        _db.main_n = i32(n);
     }
 }
 
 // --- amc.FDb.main.InputMaybe
 static bool amc::main_InputMaybe(dmmeta::Main &elem) {
     bool retval = true;
-    retval = main_InsertMaybe(elem);
+    retval = main_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -5984,7 +5985,7 @@ void* amc::reftype_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.reftype_n = new_nelems;
+        _db.reftype_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -5996,7 +5997,7 @@ void amc::reftype_RemoveAll() {
     for (u64 n = _db.reftype_n; n>0; ) {
         n--;
         reftype_qFind(dmmeta::ReftypeId(n)).~FReftype(); // destroy last element
-        _db.reftype_n = n;
+        _db.reftype_n = i32(n);
     }
 }
 
@@ -6007,7 +6008,7 @@ void amc::reftype_RemoveLast() {
     if (n > 0) {
         n -= 1;
         reftype_qFind(dmmeta::ReftypeId(n)).~FReftype();
-        _db.reftype_n = n;
+        _db.reftype_n = i32(n);
     }
 }
 
@@ -6103,7 +6104,7 @@ void amc::MainLoop() {
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
-        algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+        amc::Steps();
     } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
 }
 
@@ -6129,7 +6130,7 @@ static void amc::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'017b956af8f5cd44aa23871e8b2cad26767813b9'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'efee9c9604be68edef6b800f2dc270d3e225b1c5'");
 }
 
 // --- amc.FDb._db.StaticCheck
@@ -6729,13 +6730,13 @@ bool amc::LoadTuplesMaybe(algo::strptr root) {
         , "dmmeta.fldoffset", "dmmeta.floadtuples", "dmmeta.fnoremove", "dmmeta.foutput"
         , "dmmeta.fprefix", "dmmeta.fregx", "dmmeta.fsort", "dmmeta.ftrace"
         , "dmmeta.funique", "dmmeta.fuserinit", "dmmeta.fwddecl", "dmmeta.gconst"
-        , "dmmeta.gstatic", "dmmeta.gsymbol", "dmmeta.hook", "dmmeta.inlary"
-        , "dmmeta.lenfld", "dmmeta.listtype", "dmmeta.llist", "dmmeta.main"
-        , "dmmeta.msgtype", "dmmeta.xref", "dmmeta.nocascdel", "dmmeta.nossimfile"
-        , "dmmeta.noxref", "dmmeta.nsdb", "dmmeta.nsinclude", "dmmeta.nsproto"
-        , "dmmeta.nsx", "dmmeta.smallstr", "dmmeta.numstr", "dmmeta.pack"
-        , "dmmeta.pmaskfld", "dmmeta.pnew", "dmmeta.ptrary", "dmmeta.rowid"
-        , "dmmeta.sortfld", "dmmeta.ssimfile", "dmmeta.ssimvolatile", "dmmeta.substr"
+        , "dmmeta.gstatic", "dmmeta.ssimfile", "dmmeta.gsymbol", "dmmeta.hook"
+        , "dmmeta.inlary", "dmmeta.lenfld", "dmmeta.listtype", "dmmeta.llist"
+        , "dmmeta.main", "dmmeta.msgtype", "dmmeta.xref", "dmmeta.nocascdel"
+        , "dmmeta.nossimfile", "dmmeta.noxref", "dmmeta.nsdb", "dmmeta.nsinclude"
+        , "dmmeta.nsproto", "dmmeta.nsx", "dmmeta.smallstr", "dmmeta.numstr"
+        , "dmmeta.pack", "dmmeta.pmaskfld", "dmmeta.pnew", "dmmeta.ptrary"
+        , "dmmeta.rowid", "dmmeta.sortfld", "dmmeta.ssimvolatile", "dmmeta.substr"
         , "dev.target", "dev.targdep", "dmmeta.tary", "amcdb.tcursor"
         , "dmmeta.thash", "dmmeta.typefld", "dmmeta.usertracefld"
         , NULL};
@@ -6764,6 +6765,12 @@ bool amc::LoadSsimfileMaybe(algo::strptr fname) {
         retval = algo_lib::LoadTuplesFile(fname, amc::InsertStrptrMaybe, true);
     }
     return retval;
+}
+
+// --- amc.FDb._db.Steps
+// Calls Step function of dependencies
+void amc::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
 // --- amc.FDb._db.XrefMaybe
@@ -6802,6 +6809,7 @@ amc::FBltin& amc::ind_bltin_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_bltin  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -6915,6 +6923,7 @@ amc::FCtype& amc::ind_ctype_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_ctype  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -7028,6 +7037,7 @@ amc::FDispatch& amc::ind_dispatch_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_dispatch  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -7141,6 +7151,7 @@ amc::FFunc& amc::ind_func_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_func  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -7351,6 +7362,7 @@ amc::FNs& amc::ind_ns_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_ns  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -7464,6 +7476,7 @@ amc::FPnew& amc::ind_pnew_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_pnew  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -7577,6 +7590,7 @@ amc::FXref& amc::ind_xref_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_xref  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -7717,7 +7731,7 @@ void* amc::cpptype_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cpptype_n = new_nelems;
+        _db.cpptype_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -7730,14 +7744,14 @@ void amc::cpptype_RemoveLast() {
     if (n > 0) {
         n -= 1;
         cpptype_qFind(u64(n)).~FCpptype();
-        _db.cpptype_n = n;
+        _db.cpptype_n = i32(n);
     }
 }
 
 // --- amc.FDb.cpptype.InputMaybe
 static bool amc::cpptype_InputMaybe(dmmeta::Cpptype &elem) {
     bool retval = true;
-    retval = cpptype_InsertMaybe(elem);
+    retval = cpptype_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -7805,6 +7819,7 @@ amc::FCpptype& amc::ind_cpptype_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_cpptype  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -7945,7 +7960,7 @@ void* amc::inlary_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.inlary_n = new_nelems;
+        _db.inlary_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -7958,14 +7973,14 @@ void amc::inlary_RemoveLast() {
     if (n > 0) {
         n -= 1;
         inlary_qFind(u64(n)).~FInlary();
-        _db.inlary_n = n;
+        _db.inlary_n = i32(n);
     }
 }
 
 // --- amc.FDb.inlary.InputMaybe
 static bool amc::inlary_InputMaybe(dmmeta::Inlary &elem) {
     bool retval = true;
-    retval = inlary_InsertMaybe(elem);
+    retval = inlary_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -8029,6 +8044,7 @@ amc::FInlary& amc::ind_inlary_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_inlary  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -8169,7 +8185,7 @@ void* amc::tary_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.tary_n = new_nelems;
+        _db.tary_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -8182,14 +8198,14 @@ void amc::tary_RemoveLast() {
     if (n > 0) {
         n -= 1;
         tary_qFind(u64(n)).~FTary();
-        _db.tary_n = n;
+        _db.tary_n = i32(n);
     }
 }
 
 // --- amc.FDb.tary.InputMaybe
 static bool amc::tary_InputMaybe(dmmeta::Tary &elem) {
     bool retval = true;
-    retval = tary_InsertMaybe(elem);
+    retval = tary_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -8257,6 +8273,7 @@ amc::FTary& amc::ind_tary_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_tary  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -8397,7 +8414,7 @@ void* amc::cppfunc_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cppfunc_n = new_nelems;
+        _db.cppfunc_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -8410,14 +8427,14 @@ void amc::cppfunc_RemoveLast() {
     if (n > 0) {
         n -= 1;
         cppfunc_qFind(u64(n)).~FCppfunc();
-        _db.cppfunc_n = n;
+        _db.cppfunc_n = i32(n);
     }
 }
 
 // --- amc.FDb.cppfunc.InputMaybe
 static bool amc::cppfunc_InputMaybe(dmmeta::Cppfunc &elem) {
     bool retval = true;
-    retval = cppfunc_InsertMaybe(elem);
+    retval = cppfunc_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -8499,7 +8516,7 @@ void* amc::rowid_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.rowid_n = new_nelems;
+        _db.rowid_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -8512,14 +8529,14 @@ void amc::rowid_RemoveLast() {
     if (n > 0) {
         n -= 1;
         rowid_qFind(u64(n)).~FRowid();
-        _db.rowid_n = n;
+        _db.rowid_n = i32(n);
     }
 }
 
 // --- amc.FDb.rowid.InputMaybe
 static bool amc::rowid_InputMaybe(dmmeta::Rowid &elem) {
     bool retval = true;
-    retval = rowid_InsertMaybe(elem);
+    retval = rowid_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -8583,6 +8600,7 @@ amc::FRowid& amc::ind_rowid_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_rowid  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -8723,7 +8741,7 @@ void* amc::cascdel_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cascdel_n = new_nelems;
+        _db.cascdel_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -8736,14 +8754,14 @@ void amc::cascdel_RemoveLast() {
     if (n > 0) {
         n -= 1;
         cascdel_qFind(u64(n)).~FCascdel();
-        _db.cascdel_n = n;
+        _db.cascdel_n = i32(n);
     }
 }
 
 // --- amc.FDb.cascdel.InputMaybe
 static bool amc::cascdel_InputMaybe(dmmeta::Cascdel &elem) {
     bool retval = true;
-    retval = cascdel_InsertMaybe(elem);
+    retval = cascdel_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -8829,7 +8847,7 @@ void* amc::substr_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.substr_n = new_nelems;
+        _db.substr_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -8842,14 +8860,14 @@ void amc::substr_RemoveLast() {
     if (n > 0) {
         n -= 1;
         substr_qFind(u64(n)).~FSubstr();
-        _db.substr_n = n;
+        _db.substr_n = i32(n);
     }
 }
 
 // --- amc.FDb.substr.InputMaybe
 static bool amc::substr_InputMaybe(dmmeta::Substr &elem) {
     bool retval = true;
-    retval = substr_InsertMaybe(elem);
+    retval = substr_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -8944,7 +8962,7 @@ void* amc::bitfld_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.bitfld_n = new_nelems;
+        _db.bitfld_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -8957,14 +8975,14 @@ void amc::bitfld_RemoveLast() {
     if (n > 0) {
         n -= 1;
         bitfld_qFind(u64(n)).~FBitfld();
-        _db.bitfld_n = n;
+        _db.bitfld_n = i32(n);
     }
 }
 
 // --- amc.FDb.bitfld.InputMaybe
 static bool amc::bitfld_InputMaybe(dmmeta::Bitfld &elem) {
     bool retval = true;
-    retval = bitfld_InsertMaybe(elem);
+    retval = bitfld_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -9063,7 +9081,7 @@ void* amc::ssimfile_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ssimfile_n = new_nelems;
+        _db.ssimfile_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -9076,14 +9094,14 @@ void amc::ssimfile_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ssimfile_qFind(u64(n)).~FSsimfile();
-        _db.ssimfile_n = n;
+        _db.ssimfile_n = i32(n);
     }
 }
 
 // --- amc.FDb.ssimfile.InputMaybe
 static bool amc::ssimfile_InputMaybe(dmmeta::Ssimfile &elem) {
     bool retval = true;
-    retval = ssimfile_InsertMaybe(elem);
+    retval = ssimfile_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -9151,6 +9169,7 @@ amc::FSsimfile& amc::ind_ssimfile_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_ssimfile  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -9291,7 +9310,7 @@ void* amc::pack_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.pack_n = new_nelems;
+        _db.pack_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -9304,14 +9323,14 @@ void amc::pack_RemoveLast() {
     if (n > 0) {
         n -= 1;
         pack_qFind(u64(n)).~FPack();
-        _db.pack_n = n;
+        _db.pack_n = i32(n);
     }
 }
 
 // --- amc.FDb.pack.InputMaybe
 static bool amc::pack_InputMaybe(dmmeta::Pack &elem) {
     bool retval = true;
-    retval = pack_InsertMaybe(elem);
+    retval = pack_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -9379,6 +9398,7 @@ amc::FPack& amc::ind_pack_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_pack  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -9492,6 +9512,7 @@ amc::FSmallstr& amc::ind_smallstr_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_smallstr  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -9632,7 +9653,7 @@ void* amc::ptrary_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ptrary_n = new_nelems;
+        _db.ptrary_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -9645,14 +9666,14 @@ void amc::ptrary_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ptrary_qFind(u64(n)).~FPtrary();
-        _db.ptrary_n = n;
+        _db.ptrary_n = i32(n);
     }
 }
 
 // --- amc.FDb.ptrary.InputMaybe
 static bool amc::ptrary_InputMaybe(dmmeta::Ptrary &elem) {
     bool retval = true;
-    retval = ptrary_InsertMaybe(elem);
+    retval = ptrary_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -9963,7 +9984,7 @@ void* amc::enumstr_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.enumstr_n = new_nelems;
+        _db.enumstr_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -9975,7 +9996,7 @@ void amc::enumstr_RemoveAll() {
     for (u64 n = _db.enumstr_n; n>0; ) {
         n--;
         enumstr_qFind(u64(n)).~FEnumstr(); // destroy last element
-        _db.enumstr_n = n;
+        _db.enumstr_n = i32(n);
     }
 }
 
@@ -9986,7 +10007,7 @@ void amc::enumstr_RemoveLast() {
     if (n > 0) {
         n -= 1;
         enumstr_qFind(u64(n)).~FEnumstr();
-        _db.enumstr_n = n;
+        _db.enumstr_n = i32(n);
     }
 }
 
@@ -10058,7 +10079,7 @@ void* amc::enumstr_len_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.enumstr_len_n = new_nelems;
+        _db.enumstr_len_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -10070,7 +10091,7 @@ void amc::enumstr_len_RemoveAll() {
     for (u64 n = _db.enumstr_len_n; n>0; ) {
         n--;
         enumstr_len_qFind(u64(n)).~FEnumstrLen(); // destroy last element
-        _db.enumstr_len_n = n;
+        _db.enumstr_len_n = i32(n);
     }
 }
 
@@ -10081,7 +10102,7 @@ void amc::enumstr_len_RemoveLast() {
     if (n > 0) {
         n -= 1;
         enumstr_len_qFind(u64(n)).~FEnumstrLen();
-        _db.enumstr_len_n = n;
+        _db.enumstr_len_n = i32(n);
     }
 }
 
@@ -10310,6 +10331,7 @@ amc::FEnumstrLen& amc::ind_enumstr_len_GetOrCreate(i32 key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_enumstr_len  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -10423,6 +10445,7 @@ amc::FEnumstr& amc::ind_enumstr_GetOrCreate(const amc::Enumstr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_enumstr  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -10563,7 +10586,7 @@ void* amc::fbitset_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fbitset_n = new_nelems;
+        _db.fbitset_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -10576,14 +10599,14 @@ void amc::fbitset_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fbitset_qFind(u64(n)).~FFbitset();
-        _db.fbitset_n = n;
+        _db.fbitset_n = i32(n);
     }
 }
 
 // --- amc.FDb.fbitset.InputMaybe
 static bool amc::fbitset_InputMaybe(dmmeta::Fbitset &elem) {
     bool retval = true;
-    retval = fbitset_InsertMaybe(elem);
+    retval = fbitset_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -10651,6 +10674,7 @@ amc::FFbitset& amc::ind_fbitset_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_fbitset  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -10791,7 +10815,7 @@ void* amc::fcleanup_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fcleanup_n = new_nelems;
+        _db.fcleanup_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -10804,14 +10828,14 @@ void amc::fcleanup_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fcleanup_qFind(u64(n)).~FFcleanup();
-        _db.fcleanup_n = n;
+        _db.fcleanup_n = i32(n);
     }
 }
 
 // --- amc.FDb.fcleanup.InputMaybe
 static bool amc::fcleanup_InputMaybe(dmmeta::Fcleanup &elem) {
     bool retval = true;
-    retval = fcleanup_InsertMaybe(elem);
+    retval = fcleanup_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -10897,7 +10921,7 @@ void* amc::fdec_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fdec_n = new_nelems;
+        _db.fdec_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -10910,14 +10934,14 @@ void amc::fdec_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fdec_qFind(u64(n)).~FFdec();
-        _db.fdec_n = n;
+        _db.fdec_n = i32(n);
     }
 }
 
 // --- amc.FDb.fdec.InputMaybe
 static bool amc::fdec_InputMaybe(dmmeta::Fdec &elem) {
     bool retval = true;
-    retval = fdec_InsertMaybe(elem);
+    retval = fdec_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -10985,6 +11009,7 @@ amc::FFdec& amc::ind_fdec_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_fdec  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -11098,6 +11123,7 @@ amc::FReftype& amc::ind_reftype_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_reftype  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -11238,7 +11264,7 @@ void* amc::fconst_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fconst_n = new_nelems;
+        _db.fconst_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -11251,14 +11277,14 @@ void amc::fconst_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fconst_qFind(u64(n)).~FFconst();
-        _db.fconst_n = n;
+        _db.fconst_n = i32(n);
     }
 }
 
 // --- amc.FDb.fconst.InputMaybe
 static bool amc::fconst_InputMaybe(dmmeta::Fconst &elem) {
     bool retval = true;
-    retval = fconst_InsertMaybe(elem);
+    retval = fconst_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -11321,6 +11347,7 @@ amc::FFconst& amc::ind_fconst_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_fconst  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -11534,7 +11561,7 @@ void* amc::finput_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.finput_n = new_nelems;
+        _db.finput_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -11547,14 +11574,14 @@ void amc::finput_RemoveLast() {
     if (n > 0) {
         n -= 1;
         finput_qFind(u64(n)).~FFinput();
-        _db.finput_n = n;
+        _db.finput_n = i32(n);
     }
 }
 
 // --- amc.FDb.finput.InputMaybe
 static bool amc::finput_InputMaybe(dmmeta::Finput &elem) {
     bool retval = true;
-    retval = finput_InsertMaybe(elem);
+    retval = finput_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -11649,7 +11676,7 @@ void* amc::foutput_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.foutput_n = new_nelems;
+        _db.foutput_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -11662,14 +11689,14 @@ void amc::foutput_RemoveLast() {
     if (n > 0) {
         n -= 1;
         foutput_qFind(u64(n)).~FFoutput();
-        _db.foutput_n = n;
+        _db.foutput_n = i32(n);
     }
 }
 
 // --- amc.FDb.foutput.InputMaybe
 static bool amc::foutput_InputMaybe(dmmeta::Foutput &elem) {
     bool retval = true;
-    retval = foutput_InsertMaybe(elem);
+    retval = foutput_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -11760,7 +11787,7 @@ void* amc::fbuf_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fbuf_n = new_nelems;
+        _db.fbuf_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -11773,14 +11800,14 @@ void amc::fbuf_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fbuf_qFind(u64(n)).~FFbuf();
-        _db.fbuf_n = n;
+        _db.fbuf_n = i32(n);
     }
 }
 
 // --- amc.FDb.fbuf.InputMaybe
 static bool amc::fbuf_InputMaybe(dmmeta::Fbuf &elem) {
     bool retval = true;
-    retval = fbuf_InsertMaybe(elem);
+    retval = fbuf_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -11862,6 +11889,7 @@ amc::FFbuf& amc::ind_fbuf_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_fbuf  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -12002,7 +12030,7 @@ void* amc::chash_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.chash_n = new_nelems;
+        _db.chash_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -12015,14 +12043,14 @@ void amc::chash_RemoveLast() {
     if (n > 0) {
         n -= 1;
         chash_qFind(u64(n)).~FChash();
-        _db.chash_n = n;
+        _db.chash_n = i32(n);
     }
 }
 
 // --- amc.FDb.chash.InputMaybe
 static bool amc::chash_InputMaybe(dmmeta::Chash &elem) {
     bool retval = true;
-    retval = chash_InsertMaybe(elem);
+    retval = chash_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -12086,6 +12114,7 @@ amc::FChash& amc::ind_chash_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_chash  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -12226,7 +12255,7 @@ void* amc::ccmp_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ccmp_n = new_nelems;
+        _db.ccmp_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -12239,14 +12268,14 @@ void amc::ccmp_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ccmp_qFind(u64(n)).~FCcmp();
-        _db.ccmp_n = n;
+        _db.ccmp_n = i32(n);
     }
 }
 
 // --- amc.FDb.ccmp.InputMaybe
 static bool amc::ccmp_InputMaybe(dmmeta::Ccmp &elem) {
     bool retval = true;
-    retval = ccmp_InsertMaybe(elem);
+    retval = ccmp_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -12310,6 +12339,7 @@ amc::FCcmp& amc::ind_ccmp_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_ccmp  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -12450,7 +12480,7 @@ void* amc::fbigend_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fbigend_n = new_nelems;
+        _db.fbigend_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -12463,14 +12493,14 @@ void amc::fbigend_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fbigend_qFind(u64(n)).~FFbigend();
-        _db.fbigend_n = n;
+        _db.fbigend_n = i32(n);
     }
 }
 
 // --- amc.FDb.fbigend.InputMaybe
 static bool amc::fbigend_InputMaybe(dmmeta::Fbigend &elem) {
     bool retval = true;
-    retval = fbigend_InsertMaybe(elem);
+    retval = fbigend_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -12618,7 +12648,7 @@ void* amc::cstr_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cstr_n = new_nelems;
+        _db.cstr_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -12631,14 +12661,14 @@ void amc::cstr_RemoveLast() {
     if (n > 0) {
         n -= 1;
         cstr_qFind(u64(n)).~FCstr();
-        _db.cstr_n = n;
+        _db.cstr_n = i32(n);
     }
 }
 
 // --- amc.FDb.cstr.InputMaybe
 static bool amc::cstr_InputMaybe(dmmeta::Cstr &elem) {
     bool retval = true;
-    retval = cstr_InsertMaybe(elem);
+    retval = cstr_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -12720,7 +12750,7 @@ void* amc::listtype_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.listtype_n = new_nelems;
+        _db.listtype_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -12733,14 +12763,14 @@ void amc::listtype_RemoveLast() {
     if (n > 0) {
         n -= 1;
         listtype_qFind(u64(n)).~FListtype();
-        _db.listtype_n = n;
+        _db.listtype_n = i32(n);
     }
 }
 
 // --- amc.FDb.listtype.InputMaybe
 static bool amc::listtype_InputMaybe(dmmeta::Listtype &elem) {
     bool retval = true;
-    retval = listtype_InsertMaybe(elem);
+    retval = listtype_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -12790,6 +12820,7 @@ amc::FListtype& amc::ind_listtype_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_listtype  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -12930,7 +12961,7 @@ void* amc::fstep_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fstep_n = new_nelems;
+        _db.fstep_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -12943,14 +12974,14 @@ void amc::fstep_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fstep_qFind(u64(n)).~FFstep();
-        _db.fstep_n = n;
+        _db.fstep_n = i32(n);
     }
 }
 
 // --- amc.FDb.fstep.InputMaybe
 static bool amc::fstep_InputMaybe(dmmeta::Fstep &elem) {
     bool retval = true;
-    retval = fstep_InsertMaybe(elem);
+    retval = fstep_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -13054,7 +13085,7 @@ void* amc::cextern_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cextern_n = new_nelems;
+        _db.cextern_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -13067,14 +13098,14 @@ void amc::cextern_RemoveLast() {
     if (n > 0) {
         n -= 1;
         cextern_qFind(u64(n)).~FCextern();
-        _db.cextern_n = n;
+        _db.cextern_n = i32(n);
     }
 }
 
 // --- amc.FDb.cextern.InputMaybe
 static bool amc::cextern_InputMaybe(dmmeta::Cextern &elem) {
     bool retval = true;
-    retval = cextern_InsertMaybe(elem);
+    retval = cextern_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -13156,7 +13187,7 @@ void* amc::fdelay_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fdelay_n = new_nelems;
+        _db.fdelay_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -13169,14 +13200,14 @@ void amc::fdelay_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fdelay_qFind(u64(n)).~FFdelay();
-        _db.fdelay_n = n;
+        _db.fdelay_n = i32(n);
     }
 }
 
 // --- amc.FDb.fdelay.InputMaybe
 static bool amc::fdelay_InputMaybe(dmmeta::Fdelay &elem) {
     bool retval = true;
-    retval = fdelay_InsertMaybe(elem);
+    retval = fdelay_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -13258,7 +13289,7 @@ void* amc::disptrace_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.disptrace_n = new_nelems;
+        _db.disptrace_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -13271,14 +13302,14 @@ void amc::disptrace_RemoveLast() {
     if (n > 0) {
         n -= 1;
         disptrace_qFind(u64(n)).~FDisptrace();
-        _db.disptrace_n = n;
+        _db.disptrace_n = i32(n);
     }
 }
 
 // --- amc.FDb.disptrace.InputMaybe
 static bool amc::disptrace_InputMaybe(dmmeta::Disptrace &elem) {
     bool retval = true;
-    retval = disptrace_InsertMaybe(elem);
+    retval = disptrace_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -13337,6 +13368,7 @@ amc::FFstep& amc::ind_fstep_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_fstep  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -13477,7 +13509,7 @@ void* amc::tracefld_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.tracefld_n = new_nelems;
+        _db.tracefld_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -13489,7 +13521,7 @@ void amc::tracefld_RemoveAll() {
     for (u64 n = _db.tracefld_n; n>0; ) {
         n--;
         tracefld_qFind(u64(n)).~FTracefld(); // destroy last element
-        _db.tracefld_n = n;
+        _db.tracefld_n = i32(n);
     }
 }
 
@@ -13500,7 +13532,7 @@ void amc::tracefld_RemoveLast() {
     if (n > 0) {
         n -= 1;
         tracefld_qFind(u64(n)).~FTracefld();
-        _db.tracefld_n = n;
+        _db.tracefld_n = i32(n);
     }
 }
 
@@ -13583,7 +13615,7 @@ void* amc::tracerec_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.tracerec_n = new_nelems;
+        _db.tracerec_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -13595,7 +13627,7 @@ void amc::tracerec_RemoveAll() {
     for (u64 n = _db.tracerec_n; n>0; ) {
         n--;
         tracerec_qFind(u64(n)).~FTracerec(); // destroy last element
-        _db.tracerec_n = n;
+        _db.tracerec_n = i32(n);
     }
 }
 
@@ -13606,7 +13638,7 @@ void amc::tracerec_RemoveLast() {
     if (n > 0) {
         n -= 1;
         tracerec_qFind(u64(n)).~FTracerec();
-        _db.tracerec_n = n;
+        _db.tracerec_n = i32(n);
     }
 }
 
@@ -13689,7 +13721,7 @@ void* amc::dispsig_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.dispsig_n = new_nelems;
+        _db.dispsig_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -13701,7 +13733,7 @@ void amc::dispsig_RemoveAll() {
     for (u64 n = _db.dispsig_n; n>0; ) {
         n--;
         dispsig_qFind(u64(n)).~FDispsig(); // destroy last element
-        _db.dispsig_n = n;
+        _db.dispsig_n = i32(n);
     }
 }
 
@@ -13712,7 +13744,7 @@ void amc::dispsig_RemoveLast() {
     if (n > 0) {
         n -= 1;
         dispsig_qFind(u64(n)).~FDispsig();
-        _db.dispsig_n = n;
+        _db.dispsig_n = i32(n);
     }
 }
 
@@ -14113,7 +14145,7 @@ void* amc::target_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.target_n = new_nelems;
+        _db.target_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -14126,14 +14158,14 @@ void amc::target_RemoveLast() {
     if (n > 0) {
         n -= 1;
         target_qFind(u64(n)).~FTarget();
-        _db.target_n = n;
+        _db.target_n = i32(n);
     }
 }
 
 // --- amc.FDb.target.InputMaybe
 static bool amc::target_InputMaybe(dev::Target &elem) {
     bool retval = true;
-    retval = target_InsertMaybe(elem);
+    retval = target_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -14201,6 +14233,7 @@ amc::FTarget& amc::ind_target_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_target  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -14341,7 +14374,7 @@ void* amc::targdep_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.targdep_n = new_nelems;
+        _db.targdep_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -14354,14 +14387,14 @@ void amc::targdep_RemoveLast() {
     if (n > 0) {
         n -= 1;
         targdep_qFind(u64(n)).~FTargdep();
-        _db.targdep_n = n;
+        _db.targdep_n = i32(n);
     }
 }
 
 // --- amc.FDb.targdep.InputMaybe
 static bool amc::targdep_InputMaybe(dev::Targdep &elem) {
     bool retval = true;
-    retval = targdep_InsertMaybe(elem);
+    retval = targdep_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -14451,7 +14484,7 @@ void* amc::dispctx_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.dispctx_n = new_nelems;
+        _db.dispctx_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -14464,14 +14497,14 @@ void amc::dispctx_RemoveLast() {
     if (n > 0) {
         n -= 1;
         dispctx_qFind(u64(n)).~FDispctx();
-        _db.dispctx_n = n;
+        _db.dispctx_n = i32(n);
     }
 }
 
 // --- amc.FDb.dispctx.InputMaybe
 static bool amc::dispctx_InputMaybe(dmmeta::Dispctx &elem) {
     bool retval = true;
-    retval = dispctx_InsertMaybe(elem);
+    retval = dispctx_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -14562,7 +14595,7 @@ void* amc::pmaskfld_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.pmaskfld_n = new_nelems;
+        _db.pmaskfld_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -14575,14 +14608,14 @@ void amc::pmaskfld_RemoveLast() {
     if (n > 0) {
         n -= 1;
         pmaskfld_qFind(u64(n)).~FPmaskfld();
-        _db.pmaskfld_n = n;
+        _db.pmaskfld_n = i32(n);
     }
 }
 
 // --- amc.FDb.pmaskfld.InputMaybe
 static bool amc::pmaskfld_InputMaybe(dmmeta::Pmaskfld &elem) {
     bool retval = true;
-    retval = pmaskfld_InsertMaybe(elem);
+    retval = pmaskfld_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -14682,7 +14715,7 @@ void* amc::fwddecl_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fwddecl_n = new_nelems;
+        _db.fwddecl_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -14695,14 +14728,14 @@ void amc::fwddecl_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fwddecl_qFind(u64(n)).~FFwddecl();
-        _db.fwddecl_n = n;
+        _db.fwddecl_n = i32(n);
     }
 }
 
 // --- amc.FDb.fwddecl.InputMaybe
 static bool amc::fwddecl_InputMaybe(dmmeta::Fwddecl &elem) {
     bool retval = true;
-    retval = fwddecl_InsertMaybe(elem);
+    retval = fwddecl_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -14761,6 +14794,7 @@ amc::FFwddecl& amc::ind_fwddecl_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_fwddecl  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -14901,7 +14935,7 @@ void* amc::tfunc_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.tfunc_n = new_nelems;
+        _db.tfunc_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -14913,7 +14947,7 @@ void amc::tfunc_RemoveAll() {
     for (u64 n = _db.tfunc_n; n>0; ) {
         n--;
         tfunc_qFind(u64(n)).~FTfunc(); // destroy last element
-        _db.tfunc_n = n;
+        _db.tfunc_n = i32(n);
     }
 }
 
@@ -14924,7 +14958,7 @@ void amc::tfunc_RemoveLast() {
     if (n > 0) {
         n -= 1;
         tfunc_qFind(u64(n)).~FTfunc();
-        _db.tfunc_n = n;
+        _db.tfunc_n = i32(n);
     }
 }
 
@@ -15108,6 +15142,7 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Global.N  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:Y  pure:Y  ismacro:N  comment:\"\"", amc::tfunc_Global_N }
         ,{ "amcdb.tfunc  tfunc:Global.MainArgs  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Main function\"", amc::tfunc_Global_MainArgs }
         ,{ "amcdb.tfunc  tfunc:Global.main  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Global_main }
+        ,{ "amcdb.tfunc  tfunc:Global.WinMain  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"WinMain for Win GUI executables\"", amc::tfunc_Global_WinMain }
         ,{ "amcdb.tfunc  tfunc:Global.MainLoop  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Main loop.\"", amc::tfunc_Global_MainLoop }
         ,{ "amcdb.tfunc  tfunc:Global.Step  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Main step\"", amc::tfunc_Global_Step }
         ,{ "amcdb.tfunc  tfunc:Global.Main  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Main function\"", amc::tfunc_Global_Main }
@@ -15118,6 +15153,7 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Global.SaveTuples  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Save ssim data to given directory.\"", amc::tfunc_Global_SaveTuples }
         ,{ "amcdb.tfunc  tfunc:Global.Init  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Global_Init }
         ,{ "amcdb.tfunc  tfunc:Global.LoadSsimfileMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Load specified ssimfile.\"", amc::tfunc_Global_LoadSsimfileMaybe }
+        ,{ "amcdb.tfunc  tfunc:Global.Steps  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Calls Step function of dependencies\"", amc::tfunc_Global_Steps }
         ,{ "amcdb.tfunc  tfunc:Hook.Call  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Invoke function by pointer\"", amc::tfunc_Hook_Call }
         ,{ "amcdb.tfunc  tfunc:Hook.Set0  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Assign 0-argument hook with no context pointer\"", amc::tfunc_Hook_Set0 }
         ,{ "amcdb.tfunc  tfunc:Hook.Set1  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Assign 1-argument hook with context pointer\"", amc::tfunc_Hook_Set1 }
@@ -15289,6 +15325,7 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Tary.qLast  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Return reference to last element of array. No bounds checking\"", amc::tfunc_Tary_qLast }
         ,{ "amcdb.tfunc  tfunc:Tary.rowid_Get  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Return row id of specified element\"", amc::tfunc_Tary_rowid_Get }
         ,{ "amcdb.tfunc  tfunc:Tary.curs  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Tary_curs }
+        ,{ "amcdb.tfunc  tfunc:Tary.AllocNVal  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:Y  pure:N  ismacro:N  comment:\"Reserve space. Insert N elements at the end of the array, return pointer to array\"", amc::tfunc_Tary_AllocNVal }
         ,{ "amcdb.tfunc  tfunc:Thash.Cascdel  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Delete all rows reachable through the hash index\"", amc::tfunc_Thash_Cascdel }
         ,{ "amcdb.tfunc  tfunc:Thash.EmptyQ  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Return true if hash is empty\"", amc::tfunc_Thash_EmptyQ }
         ,{ "amcdb.tfunc  tfunc:Thash.Find  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:Y  pure:N  ismacro:N  comment:\"Find row by key. Return NULL if not found.\"", amc::tfunc_Thash_Find }
@@ -15393,6 +15430,7 @@ amc::FTfunc& amc::ind_tfunc_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_tfunc  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -15533,7 +15571,7 @@ void* amc::gen_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.gen_n = new_nelems;
+        _db.gen_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -15545,7 +15583,7 @@ void amc::gen_RemoveAll() {
     for (u64 n = _db.gen_n; n>0; ) {
         n--;
         gen_qFind(u64(n)).~FGen(); // destroy last element
-        _db.gen_n = n;
+        _db.gen_n = i32(n);
     }
 }
 
@@ -15556,7 +15594,7 @@ void amc::gen_RemoveLast() {
     if (n > 0) {
         n -= 1;
         gen_qFind(u64(n)).~FGen();
-        _db.gen_n = n;
+        _db.gen_n = i32(n);
     }
 }
 
@@ -15580,6 +15618,7 @@ static void amc::gen_LoadStatic() {
         ,{ "amcdb.gen  gen:msgcurs  perns:N  comment:\"Generate message cursors\"", amc::gen_msgcurs }
         ,{ "amcdb.gen  gen:check_basefield  perns:N  comment:\"Check Base usage\"", amc::gen_check_basefield }
         ,{ "amcdb.gen  gen:clonefconst  perns:N  comment:\"Generate numeric fconsts for all string-based fconsts (creates new ctype)\"", amc::gen_clonefconst }
+        ,{ "amcdb.gen  gen:parsenum  perns:N  comment:\"Generate functions to parse {i,u}{32,64,128}\"", amc::gen_parsenum }
         ,{ "amcdb.gen  gen:prep_proto  perns:N  comment:\"Detect protocol namespaces\"", amc::gen_prep_proto }
         ,{ "amcdb.gen  gen:newfield_charset  perns:N  comment:\"Generate code for charsets -- earlyish\"", amc::gen_newfield_charset }
         ,{ "amcdb.gen  gen:newfield_count  perns:N  comment:\"Create new fields for Count\"", amc::gen_newfield_count }
@@ -15602,6 +15641,7 @@ static void amc::gen_LoadStatic() {
         ,{ "amcdb.gen  gen:check_cpptype  perns:N  comment:\"\"", amc::gen_check_cpptype }
         ,{ "amcdb.gen  gen:check_prefix  perns:N  comment:\"Check field prefixes\"", amc::gen_check_prefix }
         ,{ "amcdb.gen  gen:check_bitfld  perns:N  comment:\"Check that bitfields don't overlap\"", amc::gen_check_bitfld }
+        ,{ "amcdb.gen  gen:check_varlen  perns:N  comment:\"CHeck that msgtype is not cheap copy\"", amc::gen_check_varlen }
         ,{ "amcdb.gen  gen:xref_parent  perns:N  comment:\"Create p_parent links for xrefs\"", amc::gen_xref_parent }
         ,{ "amcdb.gen  gen:datafld  perns:N  comment:\"Create ctype.c_datafld\"", amc::gen_datafld }
         ,{ "amcdb.gen  gen:ctype_toposort  perns:N  comment:\"Determine ctype graph\"", amc::gen_ctype_toposort }
@@ -15725,7 +15765,7 @@ void* amc::fregx_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fregx_n = new_nelems;
+        _db.fregx_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -15738,14 +15778,14 @@ void amc::fregx_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fregx_qFind(u64(n)).~FFregx();
-        _db.fregx_n = n;
+        _db.fregx_n = i32(n);
     }
 }
 
 // --- amc.FDb.fregx.InputMaybe
 static bool amc::fregx_InputMaybe(dmmeta::Fregx &elem) {
     bool retval = true;
-    retval = fregx_InsertMaybe(elem);
+    retval = fregx_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -15943,6 +15983,7 @@ amc::FTclass& amc::ind_tclass_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_tclass  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -16083,7 +16124,7 @@ void* amc::fcmp_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fcmp_n = new_nelems;
+        _db.fcmp_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -16096,14 +16137,14 @@ void amc::fcmp_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fcmp_qFind(u64(n)).~FFcmp();
-        _db.fcmp_n = n;
+        _db.fcmp_n = i32(n);
     }
 }
 
 // --- amc.FDb.fcmp.InputMaybe
 static bool amc::fcmp_InputMaybe(dmmeta::Fcmp &elem) {
     bool retval = true;
-    retval = fcmp_InsertMaybe(elem);
+    retval = fcmp_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -16185,7 +16226,7 @@ void* amc::fcast_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fcast_n = new_nelems;
+        _db.fcast_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -16198,14 +16239,14 @@ void amc::fcast_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fcast_qFind(u64(n)).~FFcast();
-        _db.fcast_n = n;
+        _db.fcast_n = i32(n);
     }
 }
 
 // --- amc.FDb.fcast.InputMaybe
 static bool amc::fcast_InputMaybe(dmmeta::Fcast &elem) {
     bool retval = true;
-    retval = fcast_InsertMaybe(elem);
+    retval = fcast_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -16287,7 +16328,7 @@ void* amc::noxref_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.noxref_n = new_nelems;
+        _db.noxref_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -16300,14 +16341,14 @@ void amc::noxref_RemoveLast() {
     if (n > 0) {
         n -= 1;
         noxref_qFind(u64(n)).~FNoxref();
-        _db.noxref_n = n;
+        _db.noxref_n = i32(n);
     }
 }
 
 // --- amc.FDb.noxref.InputMaybe
 static bool amc::noxref_InputMaybe(dmmeta::Noxref &elem) {
     bool retval = true;
-    retval = noxref_InsertMaybe(elem);
+    retval = noxref_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -16389,7 +16430,7 @@ void* amc::nocascdel_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.nocascdel_n = new_nelems;
+        _db.nocascdel_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -16402,14 +16443,14 @@ void amc::nocascdel_RemoveLast() {
     if (n > 0) {
         n -= 1;
         nocascdel_qFind(u64(n)).~FNocascdel();
-        _db.nocascdel_n = n;
+        _db.nocascdel_n = i32(n);
     }
 }
 
 // --- amc.FDb.nocascdel.InputMaybe
 static bool amc::nocascdel_InputMaybe(dmmeta::Nocascdel &elem) {
     bool retval = true;
-    retval = nocascdel_InsertMaybe(elem);
+    retval = nocascdel_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -16491,7 +16532,7 @@ void* amc::cafter_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cafter_n = new_nelems;
+        _db.cafter_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -16504,14 +16545,14 @@ void amc::cafter_RemoveLast() {
     if (n > 0) {
         n -= 1;
         cafter_qFind(u64(n)).~FCafter();
-        _db.cafter_n = n;
+        _db.cafter_n = i32(n);
     }
 }
 
 // --- amc.FDb.cafter.InputMaybe
 static bool amc::cafter_InputMaybe(dmmeta::Cafter &elem) {
     bool retval = true;
-    retval = cafter_InsertMaybe(elem);
+    retval = cafter_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -16597,7 +16638,7 @@ void* amc::csize_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.csize_n = new_nelems;
+        _db.csize_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -16610,14 +16651,14 @@ void amc::csize_RemoveLast() {
     if (n > 0) {
         n -= 1;
         csize_qFind(u64(n)).~FCsize();
-        _db.csize_n = n;
+        _db.csize_n = i32(n);
     }
 }
 
 // --- amc.FDb.csize.InputMaybe
 static bool amc::csize_InputMaybe(dmmeta::Csize &elem) {
     bool retval = true;
-    retval = csize_InsertMaybe(elem);
+    retval = csize_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -16699,7 +16740,7 @@ void* amc::nsx_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.nsx_n = new_nelems;
+        _db.nsx_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -16712,14 +16753,14 @@ void amc::nsx_RemoveLast() {
     if (n > 0) {
         n -= 1;
         nsx_qFind(u64(n)).~FNsx();
-        _db.nsx_n = n;
+        _db.nsx_n = i32(n);
     }
 }
 
 // --- amc.FDb.nsx.InputMaybe
 static bool amc::nsx_InputMaybe(dmmeta::Nsx &elem) {
     bool retval = true;
-    retval = nsx_InsertMaybe(elem);
+    retval = nsx_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -16810,7 +16851,7 @@ void* amc::fcompact_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fcompact_n = new_nelems;
+        _db.fcompact_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -16823,14 +16864,14 @@ void amc::fcompact_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fcompact_qFind(u64(n)).~FFcompact();
-        _db.fcompact_n = n;
+        _db.fcompact_n = i32(n);
     }
 }
 
 // --- amc.FDb.fcompact.InputMaybe
 static bool amc::fcompact_InputMaybe(dmmeta::Fcompact &elem) {
     bool retval = true;
-    retval = fcompact_InsertMaybe(elem);
+    retval = fcompact_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -16912,7 +16953,7 @@ void* amc::findrem_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.findrem_n = new_nelems;
+        _db.findrem_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -16925,14 +16966,14 @@ void amc::findrem_RemoveLast() {
     if (n > 0) {
         n -= 1;
         findrem_qFind(u64(n)).~FFindrem();
-        _db.findrem_n = n;
+        _db.findrem_n = i32(n);
     }
 }
 
 // --- amc.FDb.findrem.InputMaybe
 static bool amc::findrem_InputMaybe(dmmeta::Findrem &elem) {
     bool retval = true;
-    retval = findrem_InsertMaybe(elem);
+    retval = findrem_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -17014,7 +17055,7 @@ void* amc::tcursor_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.tcursor_n = new_nelems;
+        _db.tcursor_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -17027,14 +17068,14 @@ void amc::tcursor_RemoveLast() {
     if (n > 0) {
         n -= 1;
         tcursor_qFind(u64(n)).~FTcursor();
-        _db.tcursor_n = n;
+        _db.tcursor_n = i32(n);
     }
 }
 
 // --- amc.FDb.tcursor.InputMaybe
 static bool amc::tcursor_InputMaybe(amcdb::Tcursor &elem) {
     bool retval = true;
-    retval = tcursor_InsertMaybe(elem);
+    retval = tcursor_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -17116,7 +17157,7 @@ void* amc::fcurs_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fcurs_n = new_nelems;
+        _db.fcurs_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -17129,14 +17170,14 @@ void amc::fcurs_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fcurs_qFind(u64(n)).~FFcurs();
-        _db.fcurs_n = n;
+        _db.fcurs_n = i32(n);
     }
 }
 
 // --- amc.FDb.fcurs.InputMaybe
 static bool amc::fcurs_InputMaybe(dmmeta::Fcurs &elem) {
     bool retval = true;
-    retval = fcurs_InsertMaybe(elem);
+    retval = fcurs_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -17213,7 +17254,7 @@ void* amc::cdflt_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cdflt_n = new_nelems;
+        _db.cdflt_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -17226,14 +17267,14 @@ void amc::cdflt_RemoveLast() {
     if (n > 0) {
         n -= 1;
         cdflt_qFind(u64(n)).~FCdflt();
-        _db.cdflt_n = n;
+        _db.cdflt_n = i32(n);
     }
 }
 
 // --- amc.FDb.cdflt.InputMaybe
 static bool amc::cdflt_InputMaybe(dmmeta::Cdflt &elem) {
     bool retval = true;
-    retval = cdflt_InsertMaybe(elem);
+    retval = cdflt_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -17315,7 +17356,7 @@ void* amc::argvtype_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.argvtype_n = new_nelems;
+        _db.argvtype_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -17328,14 +17369,14 @@ void amc::argvtype_RemoveLast() {
     if (n > 0) {
         n -= 1;
         argvtype_qFind(u64(n)).~FArgvtype();
-        _db.argvtype_n = n;
+        _db.argvtype_n = i32(n);
     }
 }
 
 // --- amc.FDb.argvtype.InputMaybe
 static bool amc::argvtype_InputMaybe(dmmeta::Argvtype &elem) {
     bool retval = true;
-    retval = argvtype_InsertMaybe(elem);
+    retval = argvtype_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -17417,7 +17458,7 @@ void* amc::fcmdline_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fcmdline_n = new_nelems;
+        _db.fcmdline_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -17430,14 +17471,14 @@ void amc::fcmdline_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fcmdline_qFind(u64(n)).~FFcmdline();
-        _db.fcmdline_n = n;
+        _db.fcmdline_n = i32(n);
     }
 }
 
 // --- amc.FDb.fcmdline.InputMaybe
 static bool amc::fcmdline_InputMaybe(dmmeta::Fcmdline &elem) {
     bool retval = true;
-    retval = fcmdline_InsertMaybe(elem);
+    retval = fcmdline_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -17501,6 +17542,7 @@ amc::FMain& amc::ind_main_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_main  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -17641,7 +17683,7 @@ void* amc::floadtuples_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.floadtuples_n = new_nelems;
+        _db.floadtuples_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -17654,14 +17696,14 @@ void amc::floadtuples_RemoveLast() {
     if (n > 0) {
         n -= 1;
         floadtuples_qFind(u64(n)).~FFloadtuples();
-        _db.floadtuples_n = n;
+        _db.floadtuples_n = i32(n);
     }
 }
 
 // --- amc.FDb.floadtuples.InputMaybe
 static bool amc::floadtuples_InputMaybe(dmmeta::Floadtuples &elem) {
     bool retval = true;
-    retval = floadtuples_InsertMaybe(elem);
+    retval = floadtuples_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -17752,7 +17794,7 @@ void* amc::fcmap_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fcmap_n = new_nelems;
+        _db.fcmap_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -17765,14 +17807,14 @@ void amc::fcmap_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fcmap_qFind(u64(n)).~FFcmap();
-        _db.fcmap_n = n;
+        _db.fcmap_n = i32(n);
     }
 }
 
 // --- amc.FDb.fcmap.InputMaybe
 static bool amc::fcmap_InputMaybe(dmmeta::Fcmap &elem) {
     bool retval = true;
-    retval = fcmap_InsertMaybe(elem);
+    retval = fcmap_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -17951,7 +17993,7 @@ void* amc::nsproto_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.nsproto_n = new_nelems;
+        _db.nsproto_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -17964,14 +18006,14 @@ void amc::nsproto_RemoveLast() {
     if (n > 0) {
         n -= 1;
         nsproto_qFind(u64(n)).~FNsproto();
-        _db.nsproto_n = n;
+        _db.nsproto_n = i32(n);
     }
 }
 
 // --- amc.FDb.nsproto.InputMaybe
 static bool amc::nsproto_InputMaybe(dmmeta::Nsproto &elem) {
     bool retval = true;
-    retval = nsproto_InsertMaybe(elem);
+    retval = nsproto_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -18053,7 +18095,7 @@ void* amc::nsdb_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.nsdb_n = new_nelems;
+        _db.nsdb_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -18066,14 +18108,14 @@ void amc::nsdb_RemoveLast() {
     if (n > 0) {
         n -= 1;
         nsdb_qFind(u64(n)).~FNsdb();
-        _db.nsdb_n = n;
+        _db.nsdb_n = i32(n);
     }
 }
 
 // --- amc.FDb.nsdb.InputMaybe
 static bool amc::nsdb_InputMaybe(dmmeta::Nsdb &elem) {
     bool retval = true;
-    retval = nsdb_InsertMaybe(elem);
+    retval = nsdb_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -18324,7 +18366,7 @@ void* amc::fprefix_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fprefix_n = new_nelems;
+        _db.fprefix_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -18337,14 +18379,14 @@ void amc::fprefix_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fprefix_qFind(u64(n)).~FFprefix();
-        _db.fprefix_n = n;
+        _db.fprefix_n = i32(n);
     }
 }
 
 // --- amc.FDb.fprefix.InputMaybe
 static bool amc::fprefix_InputMaybe(dmmeta::Fprefix &elem) {
     bool retval = true;
-    retval = fprefix_InsertMaybe(elem);
+    retval = fprefix_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -18403,6 +18445,7 @@ amc::FFprefix& amc::ind_prefix_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_prefix  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -18543,7 +18586,7 @@ void* amc::ftrace_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ftrace_n = new_nelems;
+        _db.ftrace_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -18556,14 +18599,14 @@ void amc::ftrace_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ftrace_qFind(u64(n)).~FFtrace();
-        _db.ftrace_n = n;
+        _db.ftrace_n = i32(n);
     }
 }
 
 // --- amc.FDb.ftrace.InputMaybe
 static bool amc::ftrace_InputMaybe(dmmeta::Ftrace &elem) {
     bool retval = true;
-    retval = ftrace_InsertMaybe(elem);
+    retval = ftrace_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -18645,7 +18688,7 @@ void* amc::fnoremove_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fnoremove_n = new_nelems;
+        _db.fnoremove_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -18658,14 +18701,14 @@ void amc::fnoremove_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fnoremove_qFind(u64(n)).~FFnoremove();
-        _db.fnoremove_n = n;
+        _db.fnoremove_n = i32(n);
     }
 }
 
 // --- amc.FDb.fnoremove.InputMaybe
 static bool amc::fnoremove_InputMaybe(dmmeta::Fnoremove &elem) {
     bool retval = true;
-    retval = fnoremove_InsertMaybe(elem);
+    retval = fnoremove_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -18977,7 +19020,7 @@ void* amc::ctypelen_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ctypelen_n = new_nelems;
+        _db.ctypelen_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -18989,7 +19032,7 @@ void amc::ctypelen_RemoveAll() {
     for (u64 n = _db.ctypelen_n; n>0; ) {
         n--;
         ctypelen_qFind(u64(n)).~FCtypelen(); // destroy last element
-        _db.ctypelen_n = n;
+        _db.ctypelen_n = i32(n);
     }
 }
 
@@ -19000,7 +19043,7 @@ void amc::ctypelen_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ctypelen_qFind(u64(n)).~FCtypelen();
-        _db.ctypelen_n = n;
+        _db.ctypelen_n = i32(n);
     }
 }
 
@@ -19395,7 +19438,7 @@ void* amc::fbase_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fbase_n = new_nelems;
+        _db.fbase_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -19407,7 +19450,7 @@ void amc::fbase_RemoveAll() {
     for (u64 n = _db.fbase_n; n>0; ) {
         n--;
         fbase_qFind(u64(n)).~FFbase(); // destroy last element
-        _db.fbase_n = n;
+        _db.fbase_n = i32(n);
     }
 }
 
@@ -19418,14 +19461,14 @@ void amc::fbase_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fbase_qFind(u64(n)).~FFbase();
-        _db.fbase_n = n;
+        _db.fbase_n = i32(n);
     }
 }
 
 // --- amc.FDb.fbase.InputMaybe
 static bool amc::fbase_InputMaybe(dmmeta::Fbase &elem) {
     bool retval = true;
-    retval = fbase_InsertMaybe(elem);
+    retval = fbase_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -19480,6 +19523,7 @@ amc::FFcmap& amc::ind_fcmap_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_fcmap  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -19620,7 +19664,7 @@ void* amc::nossimfile_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.nossimfile_n = new_nelems;
+        _db.nossimfile_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -19632,7 +19676,7 @@ void amc::nossimfile_RemoveAll() {
     for (u64 n = _db.nossimfile_n; n>0; ) {
         n--;
         nossimfile_qFind(u64(n)).~FNossimfile(); // destroy last element
-        _db.nossimfile_n = n;
+        _db.nossimfile_n = i32(n);
     }
 }
 
@@ -19643,14 +19687,14 @@ void amc::nossimfile_RemoveLast() {
     if (n > 0) {
         n -= 1;
         nossimfile_qFind(u64(n)).~FNossimfile();
-        _db.nossimfile_n = n;
+        _db.nossimfile_n = i32(n);
     }
 }
 
 // --- amc.FDb.nossimfile.InputMaybe
 static bool amc::nossimfile_InputMaybe(dmmeta::Nossimfile &elem) {
     bool retval = true;
-    retval = nossimfile_InsertMaybe(elem);
+    retval = nossimfile_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -19732,7 +19776,7 @@ void* amc::gsymbol_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.gsymbol_n = new_nelems;
+        _db.gsymbol_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -19744,7 +19788,7 @@ void amc::gsymbol_RemoveAll() {
     for (u64 n = _db.gsymbol_n; n>0; ) {
         n--;
         gsymbol_qFind(u64(n)).~FGsymbol(); // destroy last element
-        _db.gsymbol_n = n;
+        _db.gsymbol_n = i32(n);
     }
 }
 
@@ -19755,14 +19799,14 @@ void amc::gsymbol_RemoveLast() {
     if (n > 0) {
         n -= 1;
         gsymbol_qFind(u64(n)).~FGsymbol();
-        _db.gsymbol_n = n;
+        _db.gsymbol_n = i32(n);
     }
 }
 
 // --- amc.FDb.gsymbol.InputMaybe
 static bool amc::gsymbol_InputMaybe(dmmeta::Gsymbol &elem) {
     bool retval = true;
-    retval = gsymbol_InsertMaybe(elem);
+    retval = gsymbol_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -19772,6 +19816,24 @@ static bool amc::gsymbol_InputMaybe(dmmeta::Gsymbol &elem) {
 bool amc::gsymbol_XrefMaybe(amc::FGsymbol &row) {
     bool retval = true;
     (void)row;
+    amc::FSsimfile* p_ssimfile = amc::ind_ssimfile_Find(ssimfile_Get(row));
+    if (UNLIKELY(!p_ssimfile)) {
+        algo_lib::ResetErrtext() << "amc.bad_xref  index:amc.FDb.ind_ssimfile" << Keyval("key", ssimfile_Get(row));
+        return false;
+    }
+    // gsymbol: save pointer to ssimfile
+    if (true) { // user-defined insert condition
+        row.p_ssimfile = p_ssimfile;
+    }
+    amc::FCtype* p_symboltype = amc::ind_ctype_Find(row.symboltype);
+    if (UNLIKELY(!p_symboltype)) {
+        algo_lib::ResetErrtext() << "amc.bad_xref  index:amc.FDb.ind_ctype" << Keyval("key", row.symboltype);
+        return false;
+    }
+    // gsymbol: save pointer to symboltype
+    if (true) { // user-defined insert condition
+        row.p_symboltype = p_symboltype;
+    }
     amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(row));
     if (UNLIKELY(!p_ns)) {
         algo_lib::ResetErrtext() << "amc.bad_xref  index:amc.FDb.ind_ns" << Keyval("key", ns_Get(row));
@@ -19839,7 +19901,7 @@ void* amc::sortfld_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.sortfld_n = new_nelems;
+        _db.sortfld_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -19852,14 +19914,14 @@ void amc::sortfld_RemoveLast() {
     if (n > 0) {
         n -= 1;
         sortfld_qFind(u64(n)).~FSortfld();
-        _db.sortfld_n = n;
+        _db.sortfld_n = i32(n);
     }
 }
 
 // --- amc.FDb.sortfld.InputMaybe
 static bool amc::sortfld_InputMaybe(dmmeta::Sortfld &elem) {
     bool retval = true;
-    retval = sortfld_InsertMaybe(elem);
+    retval = sortfld_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -19950,7 +20012,7 @@ void* amc::cget_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cget_n = new_nelems;
+        _db.cget_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -19963,14 +20025,14 @@ void amc::cget_RemoveLast() {
     if (n > 0) {
         n -= 1;
         cget_qFind(u64(n)).~FCget();
-        _db.cget_n = n;
+        _db.cget_n = i32(n);
     }
 }
 
 // --- amc.FDb.cget.InputMaybe
 static bool amc::cget_InputMaybe(dmmeta::Cget &elem) {
     bool retval = true;
-    retval = cget_InsertMaybe(elem);
+    retval = cget_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -20128,7 +20190,7 @@ void* amc::cdecl_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cdecl_n = new_nelems;
+        _db.cdecl_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -20140,7 +20202,7 @@ void amc::cdecl_RemoveAll() {
     for (u64 n = _db.cdecl_n; n>0; ) {
         n--;
         cdecl_qFind(u64(n)).~FCdecl(); // destroy last element
-        _db.cdecl_n = n;
+        _db.cdecl_n = i32(n);
     }
 }
 
@@ -20151,14 +20213,14 @@ void amc::cdecl_RemoveLast() {
     if (n > 0) {
         n -= 1;
         cdecl_qFind(u64(n)).~FCdecl();
-        _db.cdecl_n = n;
+        _db.cdecl_n = i32(n);
     }
 }
 
 // --- amc.FDb.cdecl.InputMaybe
 static bool amc::cdecl_InputMaybe(dmmeta::Cdecl &elem) {
     bool retval = true;
-    retval = cdecl_InsertMaybe(elem);
+    retval = cdecl_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -20314,7 +20376,7 @@ void* amc::hook_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.hook_n = new_nelems;
+        _db.hook_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -20326,7 +20388,7 @@ void amc::hook_RemoveAll() {
     for (u64 n = _db.hook_n; n>0; ) {
         n--;
         hook_qFind(u64(n)).~FHook(); // destroy last element
-        _db.hook_n = n;
+        _db.hook_n = i32(n);
     }
 }
 
@@ -20337,14 +20399,14 @@ void amc::hook_RemoveLast() {
     if (n > 0) {
         n -= 1;
         hook_qFind(u64(n)).~FHook();
-        _db.hook_n = n;
+        _db.hook_n = i32(n);
     }
 }
 
 // --- amc.FDb.hook.InputMaybe
 static bool amc::hook_InputMaybe(dmmeta::Hook &elem) {
     bool retval = true;
-    retval = hook_InsertMaybe(elem);
+    retval = hook_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -20430,7 +20492,7 @@ void* amc::charset_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.charset_n = new_nelems;
+        _db.charset_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -20442,7 +20504,7 @@ void amc::charset_RemoveAll() {
     for (u64 n = _db.charset_n; n>0; ) {
         n--;
         charset_qFind(u64(n)).~FCharset(); // destroy last element
-        _db.charset_n = n;
+        _db.charset_n = i32(n);
     }
 }
 
@@ -20453,14 +20515,14 @@ void amc::charset_RemoveLast() {
     if (n > 0) {
         n -= 1;
         charset_qFind(u64(n)).~FCharset();
-        _db.charset_n = n;
+        _db.charset_n = i32(n);
     }
 }
 
 // --- amc.FDb.charset.InputMaybe
 static bool amc::charset_InputMaybe(dmmeta::Charset &elem) {
     bool retval = true;
-    retval = charset_InsertMaybe(elem);
+    retval = charset_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -20542,7 +20604,7 @@ void* amc::nsinclude_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.nsinclude_n = new_nelems;
+        _db.nsinclude_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -20554,7 +20616,7 @@ void amc::nsinclude_RemoveAll() {
     for (u64 n = _db.nsinclude_n; n>0; ) {
         n--;
         nsinclude_qFind(u64(n)).~FNsinclude(); // destroy last element
-        _db.nsinclude_n = n;
+        _db.nsinclude_n = i32(n);
     }
 }
 
@@ -20565,14 +20627,14 @@ void amc::nsinclude_RemoveLast() {
     if (n > 0) {
         n -= 1;
         nsinclude_qFind(u64(n)).~FNsinclude();
-        _db.nsinclude_n = n;
+        _db.nsinclude_n = i32(n);
     }
 }
 
 // --- amc.FDb.nsinclude.InputMaybe
 static bool amc::nsinclude_InputMaybe(dmmeta::Nsinclude &elem) {
     bool retval = true;
-    retval = nsinclude_InsertMaybe(elem);
+    retval = nsinclude_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -20649,7 +20711,7 @@ void* amc::ssimvolatile_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ssimvolatile_n = new_nelems;
+        _db.ssimvolatile_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -20661,7 +20723,7 @@ void amc::ssimvolatile_RemoveAll() {
     for (u64 n = _db.ssimvolatile_n; n>0; ) {
         n--;
         ssimvolatile_qFind(u64(n)).~FSsimvolatile(); // destroy last element
-        _db.ssimvolatile_n = n;
+        _db.ssimvolatile_n = i32(n);
     }
 }
 
@@ -20672,14 +20734,14 @@ void amc::ssimvolatile_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ssimvolatile_qFind(u64(n)).~FSsimvolatile();
-        _db.ssimvolatile_n = n;
+        _db.ssimvolatile_n = i32(n);
     }
 }
 
 // --- amc.FDb.ssimvolatile.InputMaybe
 static bool amc::ssimvolatile_InputMaybe(dmmeta::Ssimvolatile &elem) {
     bool retval = true;
-    retval = ssimvolatile_InsertMaybe(elem);
+    retval = ssimvolatile_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -20761,7 +20823,7 @@ void* amc::funique_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.funique_n = new_nelems;
+        _db.funique_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -20773,7 +20835,7 @@ void amc::funique_RemoveAll() {
     for (u64 n = _db.funique_n; n>0; ) {
         n--;
         funique_qFind(u64(n)).~FFunique(); // destroy last element
-        _db.funique_n = n;
+        _db.funique_n = i32(n);
     }
 }
 
@@ -20784,14 +20846,14 @@ void amc::funique_RemoveLast() {
     if (n > 0) {
         n -= 1;
         funique_qFind(u64(n)).~FFunique();
-        _db.funique_n = n;
+        _db.funique_n = i32(n);
     }
 }
 
 // --- amc.FDb.funique.InputMaybe
 static bool amc::funique_InputMaybe(dmmeta::Funique &elem) {
     bool retval = true;
-    retval = funique_InsertMaybe(elem);
+    retval = funique_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -20873,7 +20935,7 @@ void* amc::fuserinit_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fuserinit_n = new_nelems;
+        _db.fuserinit_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -20885,7 +20947,7 @@ void amc::fuserinit_RemoveAll() {
     for (u64 n = _db.fuserinit_n; n>0; ) {
         n--;
         fuserinit_qFind(u64(n)).~FFuserinit(); // destroy last element
-        _db.fuserinit_n = n;
+        _db.fuserinit_n = i32(n);
     }
 }
 
@@ -20896,14 +20958,14 @@ void amc::fuserinit_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fuserinit_qFind(u64(n)).~FFuserinit();
-        _db.fuserinit_n = n;
+        _db.fuserinit_n = i32(n);
     }
 }
 
 // --- amc.FDb.fuserinit.InputMaybe
 static bool amc::fuserinit_InputMaybe(dmmeta::Fuserinit &elem) {
     bool retval = true;
-    retval = fuserinit_InsertMaybe(elem);
+    retval = fuserinit_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -21033,6 +21095,7 @@ void amc::_db_bh_enumstr_len_curs_Next(_db_bh_enumstr_len_curs &curs) {
 // --- amc.FDb..Init
 // Set all fields to initial values.
 void amc::FDb_Init() {
+    _db.lpool_lock = 0;
     memset(_db.lpool_free, 0, sizeof(_db.lpool_free));
     // initialize LAry fsort (amc.FDb.fsort)
     _db.fsort_n = 0;
@@ -22479,6 +22542,7 @@ void amc::FDb_Init() {
         _db.fuserinit_lary[i]  = fuserinit_first;
         fuserinit_first    += 1ULL<<i;
     }
+    _db.has_ams_fwd_declare = bool(false);
 
     amc::InitReflection();
     tclass_LoadStatic();
@@ -25068,6 +25132,20 @@ void amc::funcarg_Setary(amc::FFunc& func, amc::FFunc &rhs) {
     }
 }
 
+// --- amc.FFunc.funcarg.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<amc::Funcarg> amc::funcarg_AllocNVal(amc::FFunc& func, int n_elems, const amc::Funcarg& val) {
+    funcarg_Reserve(func, n_elems);
+    int old_n  = func.funcarg_n;
+    int new_n = old_n + n_elems;
+    amc::Funcarg *elems = func.funcarg_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) amc::Funcarg(val);
+    }
+    func.funcarg_n = new_n;
+    return algo::aryptr<amc::Funcarg>(elems + old_n, n_elems);
+}
+
 // --- amc.FFunc.funcarg.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -25394,7 +25472,7 @@ void* amc::seen_AllocMem(amc::FGenXref& parent) {
     }
     // allocate element from this level
     if (lev) {
-        parent.seen_n = new_nelems;
+        parent.seen_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -25406,7 +25484,7 @@ void amc::seen_RemoveAll(amc::FGenXref& parent) {
     for (u64 n = parent.seen_n; n>0; ) {
         n--;
         seen_qFind(parent, u64(n)).~FGenXrefSeen(); // destroy last element
-        parent.seen_n = n;
+        parent.seen_n = i32(n);
     }
 }
 
@@ -25417,7 +25495,7 @@ void amc::seen_RemoveLast(amc::FGenXref& parent) {
     if (n > 0) {
         n -= 1;
         seen_qFind(parent, u64(n)).~FGenXrefSeen();
-        parent.seen_n = n;
+        parent.seen_n = i32(n);
     }
 }
 
@@ -25503,6 +25581,7 @@ void amc::FGstatic_Uninit(amc::FGstatic& gstatic) {
 void amc::gsymbol_CopyOut(amc::FGsymbol &row, dmmeta::Gsymbol &out) {
     out.gsymbol = row.gsymbol;
     out.inc = row.inc;
+    out.symboltype = row.symboltype;
     out.comment = row.comment;
 }
 
@@ -25511,6 +25590,7 @@ void amc::gsymbol_CopyOut(amc::FGsymbol &row, dmmeta::Gsymbol &out) {
 void amc::gsymbol_CopyIn(amc::FGsymbol &row, dmmeta::Gsymbol &in) {
     row.gsymbol = in.gsymbol;
     row.inc = in.inc;
+    row.symboltype = in.symboltype;
     row.comment = in.comment;
 }
 
@@ -26116,6 +26196,20 @@ void amc::include_Setary(amc::FNs& ns, amc::FNs &rhs) {
         new (ns.include_elems + i) algo::cstring(include_qFind(rhs, i));
         ns.include_n = i + 1;
     }
+}
+
+// --- amc.FNs.include.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> amc::include_AllocNVal(amc::FNs& ns, int n_elems, const algo::cstring& val) {
+    include_Reserve(ns, n_elems);
+    int old_n  = ns.include_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = ns.include_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(val);
+    }
+    ns.include_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
 // --- amc.FNs.c_ctype_ins.Insert
@@ -28865,6 +28959,10 @@ void amc::TableId_Print(amc::TableId & row, algo::cstring &str) {
     amc::value_Print(row, str);
 }
 
+// --- amc...SizeCheck
+inline static void amc::SizeCheck() {
+}
+
 // --- amc...main
 int main(int argc, char **argv) {
     try {
@@ -28895,6 +28993,9 @@ int main(int argc, char **argv) {
     return algo_lib::_db.exit_code;
 }
 
-// --- amc...SizeCheck
-inline static void amc::SizeCheck() {
+// --- amc...WinMain
+#if defined(WIN32)
+int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int) {
+    return main(__argc,__argv);
 }
+#endif

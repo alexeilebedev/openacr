@@ -90,8 +90,7 @@ void atf_nrun::MainLoop() {
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
-        atf_nrun::Step(); // dependent namespace specified via (dev.targdep)
-        algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+        atf_nrun::Steps();
     } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
 }
 
@@ -153,6 +152,13 @@ bool atf_nrun::LoadSsimfileMaybe(algo::strptr fname) {
     return retval;
 }
 
+// --- atf_nrun.FDb._db.Steps
+// Calls Step function of dependencies
+void atf_nrun::Steps() {
+    atf_nrun::Step(); // dependent namespace specified via (dev.targdep)
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
 // --- atf_nrun.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -202,7 +208,7 @@ void* atf_nrun::fentry_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fentry_n = new_nelems;
+        _db.fentry_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -214,7 +220,7 @@ void atf_nrun::fentry_RemoveAll() {
     for (u64 n = _db.fentry_n; n>0; ) {
         n--;
         fentry_qFind(u64(n)).~FEntry(); // destroy last element
-        _db.fentry_n = n;
+        _db.fentry_n = i32(n);
     }
 }
 
@@ -225,7 +231,7 @@ void atf_nrun::fentry_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fentry_qFind(u64(n)).~FEntry();
-        _db.fentry_n = n;
+        _db.fentry_n = i32(n);
     }
 }
 
@@ -274,6 +280,7 @@ atf_nrun::FEntry& atf_nrun::ind_running_GetOrCreate(i32 key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "atf_nrun.create_error  table:ind_running  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -359,11 +366,6 @@ void atf_nrun::ind_running_Reserve(int n) {
     }
 }
 
-// --- atf_nrun.FDb.ind_running.FirstChanged
-// First element of index changed.
-void atf_nrun::ind_running_FirstChanged() {
-}
-
 // --- atf_nrun.FDb.ind_running.UpdateCycles
 // Update cycles count from previous clock capture
 inline static void atf_nrun::ind_running_UpdateCycles() {
@@ -387,7 +389,8 @@ inline static void atf_nrun::ind_running_Call() {
 // Set inter-step delay to specified value.
 // The difference between new delay and current delay is added to the next scheduled time.
 void atf_nrun::ind_running_SetDelay(algo::SchedTime delay) {
-    i64 diff = delay.value - atf_nrun::_db.ind_running_next.value;
+    i64 diff = delay.value - atf_nrun::_db.ind_running_delay.value;
+    atf_nrun::_db.ind_running_delay = delay;
     if (diff > 0) {
         atf_nrun::_db.ind_running_next.value += diff;
     } else {
@@ -507,7 +510,8 @@ inline static void atf_nrun::zd_todo_Call() {
 // Set inter-step delay to specified value.
 // The difference between new delay and current delay is added to the next scheduled time.
 void atf_nrun::zd_todo_SetDelay(algo::SchedTime delay) {
-    i64 diff = delay.value - atf_nrun::_db.zd_todo_next.value;
+    i64 diff = delay.value - atf_nrun::_db.zd_todo_delay.value;
+    atf_nrun::_db.zd_todo_delay = delay;
     if (diff > 0) {
         atf_nrun::_db.zd_todo_next.value += diff;
     } else {
@@ -668,7 +672,7 @@ void atf_nrun::job_ExecX(atf_nrun::FEntry& fentry) {
 // Call execv()
 // Call execv with specified parameters -- cprint:bash.Argv
 int atf_nrun::job_Execv(atf_nrun::FEntry& fentry) {
-    char *argv[2+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((2+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -807,6 +811,10 @@ void atf_nrun::FieldId_Print(atf_nrun::FieldId & row, algo::cstring &str) {
     atf_nrun::value_Print(row, str);
 }
 
+// --- atf_nrun...SizeCheck
+inline static void atf_nrun::SizeCheck() {
+}
+
 // --- atf_nrun...main
 int main(int argc, char **argv) {
     try {
@@ -837,6 +845,9 @@ int main(int argc, char **argv) {
     return algo_lib::_db.exit_code;
 }
 
-// --- atf_nrun...SizeCheck
-inline static void atf_nrun::SizeCheck() {
+// --- atf_nrun...WinMain
+#if defined(WIN32)
+int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int) {
+    return main(__argc,__argv);
 }
+#endif

@@ -58,7 +58,7 @@ const char *src_hdr_syntax =
 ;
 } // namespace src_hdr
 namespace src_hdr { // gsymbol:src_hdr/dev.scriptfile
-    const char *dev_scriptfile_bin_git_authors = "bin/git-authors";
+    const char* dev_scriptfile_bin_git_authors("bin/git-authors");
 }
 namespace src_hdr {
     // Load statically available data into tables, register tables and database.
@@ -101,7 +101,7 @@ void src_hdr::MainLoop() {
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
-        algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+        src_hdr::Steps();
     } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
 }
 
@@ -205,6 +205,12 @@ bool src_hdr::LoadSsimfileMaybe(algo::strptr fname) {
     return retval;
 }
 
+// --- src_hdr.FDb._db.Steps
+// Calls Step function of dependencies
+void src_hdr::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
 // --- src_hdr.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -268,7 +274,7 @@ void* src_hdr::targsrc_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.targsrc_n = new_nelems;
+        _db.targsrc_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -281,14 +287,14 @@ void src_hdr::targsrc_RemoveLast() {
     if (n > 0) {
         n -= 1;
         targsrc_qFind(u64(n)).~FTargsrc();
-        _db.targsrc_n = n;
+        _db.targsrc_n = i32(n);
     }
 }
 
 // --- src_hdr.FDb.targsrc.InputMaybe
 static bool src_hdr::targsrc_InputMaybe(dev::Targsrc &elem) {
     bool retval = true;
-    retval = targsrc_InsertMaybe(elem);
+    retval = targsrc_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -369,7 +375,7 @@ void* src_hdr::ns_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ns_n = new_nelems;
+        _db.ns_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -382,14 +388,14 @@ void src_hdr::ns_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ns_qFind(u64(n)).~FNs();
-        _db.ns_n = n;
+        _db.ns_n = i32(n);
     }
 }
 
 // --- src_hdr.FDb.ns.InputMaybe
 static bool src_hdr::ns_InputMaybe(dmmeta::Ns &elem) {
     bool retval = true;
-    retval = ns_InsertMaybe(elem);
+    retval = ns_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -447,6 +453,7 @@ src_hdr::FNs& src_hdr::ind_ns_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "src_hdr.create_error  table:ind_ns  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -587,7 +594,7 @@ void* src_hdr::nsx_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.nsx_n = new_nelems;
+        _db.nsx_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -600,14 +607,14 @@ void src_hdr::nsx_RemoveLast() {
     if (n > 0) {
         n -= 1;
         nsx_qFind(u64(n)).~FNsx();
-        _db.nsx_n = n;
+        _db.nsx_n = i32(n);
     }
 }
 
 // --- src_hdr.FDb.nsx.InputMaybe
 static bool src_hdr::nsx_InputMaybe(dmmeta::Nsx &elem) {
     bool retval = true;
-    retval = nsx_InsertMaybe(elem);
+    retval = nsx_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -689,7 +696,7 @@ void* src_hdr::license_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.license_n = new_nelems;
+        _db.license_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -701,7 +708,7 @@ void src_hdr::license_RemoveAll() {
     for (u64 n = _db.license_n; n>0; ) {
         n--;
         license_qFind(u64(n)).~FLicense(); // destroy last element
-        _db.license_n = n;
+        _db.license_n = i32(n);
     }
 }
 
@@ -712,14 +719,14 @@ void src_hdr::license_RemoveLast() {
     if (n > 0) {
         n -= 1;
         license_qFind(u64(n)).~FLicense();
-        _db.license_n = n;
+        _db.license_n = i32(n);
     }
 }
 
 // --- src_hdr.FDb.license.InputMaybe
 static bool src_hdr::license_InputMaybe(dev::License &elem) {
     bool retval = true;
-    retval = license_InsertMaybe(elem);
+    retval = license_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -777,6 +784,7 @@ src_hdr::FLicense& src_hdr::ind_license_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "src_hdr.create_error  table:ind_license  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -917,7 +925,7 @@ void* src_hdr::target_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.target_n = new_nelems;
+        _db.target_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -929,7 +937,7 @@ void src_hdr::target_RemoveAll() {
     for (u64 n = _db.target_n; n>0; ) {
         n--;
         target_qFind(u64(n)).~FTarget(); // destroy last element
-        _db.target_n = n;
+        _db.target_n = i32(n);
     }
 }
 
@@ -940,14 +948,14 @@ void src_hdr::target_RemoveLast() {
     if (n > 0) {
         n -= 1;
         target_qFind(u64(n)).~FTarget();
-        _db.target_n = n;
+        _db.target_n = i32(n);
     }
 }
 
 // --- src_hdr.FDb.target.InputMaybe
 static bool src_hdr::target_InputMaybe(dev::Target &elem) {
     bool retval = true;
-    retval = target_InsertMaybe(elem);
+    retval = target_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1627,6 +1635,10 @@ void src_hdr::TableId_Print(src_hdr::TableId & row, algo::cstring &str) {
     src_hdr::value_Print(row, str);
 }
 
+// --- src_hdr...SizeCheck
+inline static void src_hdr::SizeCheck() {
+}
+
 // --- src_hdr...main
 int main(int argc, char **argv) {
     try {
@@ -1657,6 +1669,9 @@ int main(int argc, char **argv) {
     return algo_lib::_db.exit_code;
 }
 
-// --- src_hdr...SizeCheck
-inline static void src_hdr::SizeCheck() {
+// --- src_hdr...WinMain
+#if defined(WIN32)
+int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int) {
+    return main(__argc,__argv);
 }
+#endif

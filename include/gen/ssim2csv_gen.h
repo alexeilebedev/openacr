@@ -93,6 +93,8 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -216,6 +218,8 @@ algo::cstring&       name_qFind(u64 t) __attribute__((nothrow));
 algo::cstring&       name_qLast() __attribute__((nothrow));
 // Return row id of specified element
 u64                  name_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> name_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -252,6 +256,8 @@ algo::cstring&       value_qFind(u64 t) __attribute__((nothrow));
 algo::cstring&       value_qLast() __attribute__((nothrow));
 // Return row id of specified element
 u64                  value_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> value_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -288,6 +294,8 @@ ssim2csv::FFlatten&  flatten_qFind(u64 t) __attribute__((nothrow));
 ssim2csv::FFlatten&  flatten_qLast() __attribute__((nothrow));
 // Return row id of specified element
 u64                  flatten_rowid_Get(ssim2csv::FFlatten &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<ssim2csv::FFlatten> flatten_AllocNVal(int n_elems, const ssim2csv::FFlatten& val) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 flatten_XrefMaybe(ssim2csv::FFlatten &row);
@@ -473,8 +481,11 @@ struct _db_flatten_curs {// cursor
     _db_flatten_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-int                  main(int argc, char **argv);
 } // end namespace ssim2csv
+int                  main(int argc, char **argv);
+#if defined(WIN32)
+int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
+#endif
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const ssim2csv::trace &row);// cfmt:ssim2csv.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const ssim2csv::FExpand &row);// cfmt:ssim2csv.FExpand.String

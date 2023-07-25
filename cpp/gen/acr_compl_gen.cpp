@@ -34,15 +34,16 @@ namespace acr_compl {
 const char *acr_compl_help =
 "acr_compl: ACR shell auto-complete for all targets\n"
 "Usage: acr_compl [options]\n"
-"    -line     string  Simulates COMP_LINE (debug)\n"
-"    -point    string  Simulates COMP_POINT (debug). default: whole line\n"
-"    -type     string  Simulates COMP_TYPE (debug). default: \"9\"\n"
-"    -install          Produce bash commands to install the handler. default: false\n"
-"    -verbose          Enable verbose mode\n"
-"    -debug            Enable debug mode\n"
-"    -version          Show version information\n"
-"    -sig              Print SHA1 signatures for dispatches\n"
-"    -help             Print this screen and exit\n"
+"    -line       string  Simulates COMP_LINE (debug)\n"
+"    -point      string  Simulates COMP_POINT (debug). default: whole line\n"
+"    -type       string  Simulates COMP_TYPE (debug). default: \"9\"\n"
+"    -install            Produce bash commands to install the handler. default: false\n"
+"    -debug_log  string  Log file for debug information, overrides ACR_COMPL_DEBUG_LOG\n"
+"    -verbose            Enable verbose mode\n"
+"    -debug              Enable debug mode\n"
+"    -version            Show version information\n"
+"    -sig                Print SHA1 signatures for dispatches\n"
+"    -help               Print this screen and exit\n"
 ;
 
 
@@ -51,6 +52,7 @@ const char *acr_compl_syntax =
 " -point:string=\n"
 " -type:string=\"9\"\n"
 " -install:flag\n"
+" -debug_log:string=\n"
 ;
 } // namespace acr_compl
 acr_compl::_db_bh_completion_curs::~_db_bh_completion_curs() {
@@ -442,7 +444,7 @@ void acr_compl::MainLoop() {
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
-        algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+        acr_compl::Steps();
     } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
 }
 
@@ -546,6 +548,12 @@ bool acr_compl::LoadSsimfileMaybe(algo::strptr fname) {
     return retval;
 }
 
+// --- acr_compl.FDb._db.Steps
+// Calls Step function of dependencies
+void acr_compl::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
 // --- acr_compl.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -645,6 +653,20 @@ void acr_compl::word_AbsReserve(int n) {
     }
 }
 
+// --- acr_compl.FDb.word.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> acr_compl::word_AllocNVal(int n_elems, const algo::cstring& val) {
+    word_Reserve(n_elems);
+    int old_n  = _db.word_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = _db.word_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(val);
+    }
+    _db.word_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
 // --- acr_compl.FDb.ctype.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -700,7 +722,7 @@ void* acr_compl::ctype_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ctype_n = new_nelems;
+        _db.ctype_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -713,14 +735,14 @@ void acr_compl::ctype_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ctype_qFind(u64(n)).~FCtype();
-        _db.ctype_n = n;
+        _db.ctype_n = i32(n);
     }
 }
 
 // --- acr_compl.FDb.ctype.InputMaybe
 static bool acr_compl::ctype_InputMaybe(dmmeta::Ctype &elem) {
     bool retval = true;
-    retval = ctype_InsertMaybe(elem);
+    retval = ctype_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -770,6 +792,7 @@ acr_compl::FCtype& acr_compl::ind_ctype_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "acr_compl.create_error  table:ind_ctype  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -910,7 +933,7 @@ void* acr_compl::field_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.field_n = new_nelems;
+        _db.field_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -923,14 +946,14 @@ void acr_compl::field_RemoveLast() {
     if (n > 0) {
         n -= 1;
         field_qFind(u64(n)).~FField();
-        _db.field_n = n;
+        _db.field_n = i32(n);
     }
 }
 
 // --- acr_compl.FDb.field.InputMaybe
 static bool acr_compl::field_InputMaybe(dmmeta::Field &elem) {
     bool retval = true;
-    retval = field_InsertMaybe(elem);
+    retval = field_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1122,7 +1145,7 @@ void* acr_compl::ssimfile_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ssimfile_n = new_nelems;
+        _db.ssimfile_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1135,14 +1158,14 @@ void acr_compl::ssimfile_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ssimfile_qFind(u64(n)).~FSsimfile();
-        _db.ssimfile_n = n;
+        _db.ssimfile_n = i32(n);
     }
 }
 
 // --- acr_compl.FDb.ssimfile.InputMaybe
 static bool acr_compl::ssimfile_InputMaybe(dmmeta::Ssimfile &elem) {
     bool retval = true;
-    retval = ssimfile_InsertMaybe(elem);
+    retval = ssimfile_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1334,7 +1357,7 @@ void* acr_compl::completion_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.completion_n = new_nelems;
+        _db.completion_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1346,7 +1369,7 @@ void acr_compl::completion_RemoveAll() {
     for (u64 n = _db.completion_n; n>0; ) {
         n--;
         completion_qFind(u64(n)).~FCompletion(); // destroy last element
-        _db.completion_n = n;
+        _db.completion_n = i32(n);
     }
 }
 
@@ -1357,7 +1380,7 @@ void acr_compl::completion_RemoveLast() {
     if (n > 0) {
         n -= 1;
         completion_qFind(u64(n)).~FCompletion();
-        _db.completion_n = n;
+        _db.completion_n = i32(n);
     }
 }
 
@@ -1429,7 +1452,7 @@ void* acr_compl::anonfld_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.anonfld_n = new_nelems;
+        _db.anonfld_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1442,14 +1465,14 @@ void acr_compl::anonfld_RemoveLast() {
     if (n > 0) {
         n -= 1;
         anonfld_qFind(u64(n)).~FAnonfld();
-        _db.anonfld_n = n;
+        _db.anonfld_n = i32(n);
     }
 }
 
 // --- acr_compl.FDb.anonfld.InputMaybe
 static bool acr_compl::anonfld_InputMaybe(dmmeta::Anonfld &elem) {
     bool retval = true;
-    retval = anonfld_InsertMaybe(elem);
+    retval = anonfld_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1706,7 +1729,7 @@ void* acr_compl::ns_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ns_n = new_nelems;
+        _db.ns_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1718,7 +1741,7 @@ void acr_compl::ns_RemoveAll() {
     for (u64 n = _db.ns_n; n>0; ) {
         n--;
         ns_qFind(u64(n)).~FNs(); // destroy last element
-        _db.ns_n = n;
+        _db.ns_n = i32(n);
     }
 }
 
@@ -1729,14 +1752,14 @@ void acr_compl::ns_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ns_qFind(u64(n)).~FNs();
-        _db.ns_n = n;
+        _db.ns_n = i32(n);
     }
 }
 
 // --- acr_compl.FDb.ns.InputMaybe
 static bool acr_compl::ns_InputMaybe(dmmeta::Ns &elem) {
     bool retval = true;
-    retval = ns_InsertMaybe(elem);
+    retval = ns_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -2485,6 +2508,10 @@ void acr_compl::TableId_Print(acr_compl::TableId & row, algo::cstring &str) {
     acr_compl::value_Print(row, str);
 }
 
+// --- acr_compl...SizeCheck
+inline static void acr_compl::SizeCheck() {
+}
+
 // --- acr_compl...main
 int main(int argc, char **argv) {
     try {
@@ -2515,6 +2542,9 @@ int main(int argc, char **argv) {
     return algo_lib::_db.exit_code;
 }
 
-// --- acr_compl...SizeCheck
-inline static void acr_compl::SizeCheck() {
+// --- acr_compl...WinMain
+#if defined(WIN32)
+int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int) {
+    return main(__argc,__argv);
 }
+#endif

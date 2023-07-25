@@ -35,9 +35,9 @@ const char *gitlab_help =
 "gitlab: Gitlab command line interface\n"
 "Usage: gitlab [options]\n"
 "    -in           string  Input directory or filename, - for stdin. default: \"data\"\n"
-"    [issue]       string  Issue id (e.g. myproject.33, 33 or %)\n"
+"    [issue]       string  Issue id (e.g. algouk.33, 33 or %)\n"
 "    -server       string  (config) GitLab server host. default: \"gitlab.lon.algo\"\n"
-"    -project      string  (config) Project to use. default: \"myproject\"\n"
+"    -project      string  (config) Project to use. default: \"algouk\"\n"
 "    -auth_token   string  (config) GitLab auth token\n"
 "    -mrlist               (action) Show list of merge requests. default: false\n"
 "    -mergereq             (action) Push current branch to origin, create merge request. default: false\n"
@@ -55,6 +55,10 @@ const char *gitlab_help =
 "    -assignee     string  Filter assignee. Default=current user only\n"
 "    -ulist                (action) List users. default: false\n"
 "    -mraccept     string  (action) Accept merge request\n"
+"    -mslist               (action) List milestones. default: false\n"
+"    -milestone    string  Filter milestone. default: \"%\"\n"
+"    -imilestone   string  (action) Assign issue to milestone\n"
+"    -track        string  . default: \"origin/master\"\n"
 "    -verbose              Enable verbose mode\n"
 "    -debug                Enable debug mode\n"
 "    -version              Show version information\n"
@@ -67,7 +71,7 @@ const char *gitlab_syntax =
 "-in:string=\"data\"\n"
 " [issue]:string=\n"
 " -server:string=\"gitlab.lon.algo\"\n"
-" -project:string=\"myproject\"\n"
+" -project:string=\"algouk\"\n"
 " -auth_token:string=\n"
 " -mrlist:flag\n"
 " -mergereq:flag\n"
@@ -85,6 +89,10 @@ const char *gitlab_syntax =
 " -assignee:string=\n"
 " -ulist:flag\n"
 " -mraccept:string=\n"
+" -mslist:flag\n"
+" -milestone:string=\"%\"\n"
+" -imilestone:string=\n"
+" -track:string=\"origin/master\"\n"
 ;
 } // namespace gitlab
 namespace gitlab {
@@ -124,7 +132,7 @@ void gitlab::MainLoop() {
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
-        algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+        gitlab::Steps();
     } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
 }
 
@@ -203,6 +211,12 @@ bool gitlab::LoadSsimfileMaybe(algo::strptr fname) {
     return retval;
 }
 
+// --- gitlab.FDb._db.Steps
+// Calls Step function of dependencies
+void gitlab::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
 // --- gitlab.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -266,7 +280,7 @@ void* gitlab::project_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.project_n = new_nelems;
+        _db.project_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -278,7 +292,7 @@ void gitlab::project_RemoveAll() {
     for (u64 n = _db.project_n; n>0; ) {
         n--;
         project_qFind(u64(n)).~FProject(); // destroy last element
-        _db.project_n = n;
+        _db.project_n = i32(n);
     }
 }
 
@@ -289,14 +303,14 @@ void gitlab::project_RemoveLast() {
     if (n > 0) {
         n -= 1;
         project_qFind(u64(n)).~FProject();
-        _db.project_n = n;
+        _db.project_n = i32(n);
     }
 }
 
 // --- gitlab.FDb.project.InputMaybe
 static bool gitlab::project_InputMaybe(dev::GitlabProject &elem) {
     bool retval = true;
-    retval = project_InsertMaybe(elem);
+    retval = project_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -354,6 +368,7 @@ gitlab::FProject& gitlab::ind_project_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "gitlab.create_error  table:ind_project  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -599,7 +614,7 @@ void* gitlab::issue_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.issue_n = new_nelems;
+        _db.issue_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -611,7 +626,7 @@ void gitlab::issue_RemoveAll() {
     for (u64 n = _db.issue_n; n>0; ) {
         n--;
         issue_qFind(u64(n)).~FIssue(); // destroy last element
-        _db.issue_n = n;
+        _db.issue_n = i32(n);
     }
 }
 
@@ -622,7 +637,7 @@ void gitlab::issue_RemoveLast() {
     if (n > 0) {
         n -= 1;
         issue_qFind(u64(n)).~FIssue();
-        _db.issue_n = n;
+        _db.issue_n = i32(n);
     }
 }
 
@@ -641,10 +656,6 @@ bool gitlab::issue_XrefMaybe(gitlab::FIssue &row) {
     if (true) { // user-defined insert condition
         row.p_project = p_project;
     }
-    // insert issue into index c_issue
-    if (true) { // user-defined insert condition
-        c_issue_Insert(*p_project, row);
-    }
     // insert issue into index ind_issue
     if (true) { // user-defined insert condition
         bool success = ind_issue_InsertMaybe(row);
@@ -653,6 +664,10 @@ bool gitlab::issue_XrefMaybe(gitlab::FIssue &row) {
             algo_lib::_db.errtext << "gitlab.duplicate_key  xref:gitlab.FDb.ind_issue"; // check for duplicate key
             return false;
         }
+    }
+    // insert issue into index c_issue
+    if (true) { // user-defined insert condition
+        c_issue_Insert(*p_project, row);
     }
     return retval;
 }
@@ -712,7 +727,7 @@ void* gitlab::issue_note_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.issue_note_n = new_nelems;
+        _db.issue_note_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -724,7 +739,7 @@ void gitlab::issue_note_RemoveAll() {
     for (u64 n = _db.issue_note_n; n>0; ) {
         n--;
         issue_note_qFind(u64(n)).~FIssueNote(); // destroy last element
-        _db.issue_note_n = n;
+        _db.issue_note_n = i32(n);
     }
 }
 
@@ -735,7 +750,7 @@ void gitlab::issue_note_RemoveLast() {
     if (n > 0) {
         n -= 1;
         issue_note_qFind(u64(n)).~FIssueNote();
-        _db.issue_note_n = n;
+        _db.issue_note_n = i32(n);
     }
 }
 
@@ -930,7 +945,7 @@ void* gitlab::issue_description_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.issue_description_n = new_nelems;
+        _db.issue_description_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -942,7 +957,7 @@ void gitlab::issue_description_RemoveAll() {
     for (u64 n = _db.issue_description_n; n>0; ) {
         n--;
         issue_description_qFind(u64(n)).~FIssueDescription(); // destroy last element
-        _db.issue_description_n = n;
+        _db.issue_description_n = i32(n);
     }
 }
 
@@ -953,7 +968,7 @@ void gitlab::issue_description_RemoveLast() {
     if (n > 0) {
         n -= 1;
         issue_description_qFind(u64(n)).~FIssueDescription();
-        _db.issue_description_n = n;
+        _db.issue_description_n = i32(n);
     }
 }
 
@@ -1144,7 +1159,7 @@ void* gitlab::mr_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.mr_n = new_nelems;
+        _db.mr_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1156,7 +1171,7 @@ void gitlab::mr_RemoveAll() {
     for (u64 n = _db.mr_n; n>0; ) {
         n--;
         mr_qFind(u64(n)).~FMr(); // destroy last element
-        _db.mr_n = n;
+        _db.mr_n = i32(n);
     }
 }
 
@@ -1167,7 +1182,7 @@ void gitlab::mr_RemoveLast() {
     if (n > 0) {
         n -= 1;
         mr_qFind(u64(n)).~FMr();
-        _db.mr_n = n;
+        _db.mr_n = i32(n);
     }
 }
 
@@ -1186,10 +1201,6 @@ bool gitlab::mr_XrefMaybe(gitlab::FMr &row) {
     if (true) { // user-defined insert condition
         row.p_project = p_project;
     }
-    // insert mr into index c_mr
-    if (true) { // user-defined insert condition
-        c_mr_Insert(*p_project, row);
-    }
     // insert mr into index ind_mr
     if (true) { // user-defined insert condition
         bool success = ind_mr_InsertMaybe(row);
@@ -1198,6 +1209,10 @@ bool gitlab::mr_XrefMaybe(gitlab::FMr &row) {
             algo_lib::_db.errtext << "gitlab.duplicate_key  xref:gitlab.FDb.ind_mr"; // check for duplicate key
             return false;
         }
+    }
+    // insert mr into index c_mr
+    if (true) { // user-defined insert condition
+        c_mr_Insert(*p_project, row);
     }
     return retval;
 }
@@ -1257,7 +1272,7 @@ void* gitlab::mr_note_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.mr_note_n = new_nelems;
+        _db.mr_note_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1269,7 +1284,7 @@ void gitlab::mr_note_RemoveAll() {
     for (u64 n = _db.mr_note_n; n>0; ) {
         n--;
         mr_note_qFind(u64(n)).~FMrNote(); // destroy last element
-        _db.mr_note_n = n;
+        _db.mr_note_n = i32(n);
     }
 }
 
@@ -1280,7 +1295,7 @@ void gitlab::mr_note_RemoveLast() {
     if (n > 0) {
         n -= 1;
         mr_note_qFind(u64(n)).~FMrNote();
-        _db.mr_note_n = n;
+        _db.mr_note_n = i32(n);
     }
 }
 
@@ -1475,7 +1490,7 @@ void* gitlab::mr_description_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.mr_description_n = new_nelems;
+        _db.mr_description_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1487,7 +1502,7 @@ void gitlab::mr_description_RemoveAll() {
     for (u64 n = _db.mr_description_n; n>0; ) {
         n--;
         mr_description_qFind(u64(n)).~FMrDescription(); // destroy last element
-        _db.mr_description_n = n;
+        _db.mr_description_n = i32(n);
     }
 }
 
@@ -1498,7 +1513,7 @@ void gitlab::mr_description_RemoveLast() {
     if (n > 0) {
         n -= 1;
         mr_description_qFind(u64(n)).~FMrDescription();
-        _db.mr_description_n = n;
+        _db.mr_description_n = i32(n);
     }
 }
 
@@ -1584,7 +1599,7 @@ void* gitlab::user_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.user_n = new_nelems;
+        _db.user_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1596,7 +1611,7 @@ void gitlab::user_RemoveAll() {
     for (u64 n = _db.user_n; n>0; ) {
         n--;
         user_qFind(u64(n)).~FUser(); // destroy last element
-        _db.user_n = n;
+        _db.user_n = i32(n);
     }
 }
 
@@ -1607,7 +1622,7 @@ void gitlab::user_RemoveLast() {
     if (n > 0) {
         n -= 1;
         user_qFind(u64(n)).~FUser();
-        _db.user_n = n;
+        _db.user_n = i32(n);
     }
 }
 
@@ -1665,6 +1680,7 @@ gitlab::FUser& gitlab::ind_user_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "gitlab.create_error  table:ind_user  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -1748,6 +1764,337 @@ void gitlab::ind_user_Reserve(int n) {
         _db.ind_user_buckets_elems = new_buckets;
         _db.ind_user_buckets_n = new_nbuckets;
     }
+}
+
+// --- gitlab.FDb.milestone.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+gitlab::FMilestone& gitlab::milestone_Alloc() {
+    gitlab::FMilestone* row = milestone_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("gitlab.out_of_mem  field:gitlab.FDb.milestone  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- gitlab.FDb.milestone.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+gitlab::FMilestone* gitlab::milestone_AllocMaybe() {
+    gitlab::FMilestone *row = (gitlab::FMilestone*)milestone_AllocMem();
+    if (row) {
+        new (row) gitlab::FMilestone; // call constructor
+    }
+    return row;
+}
+
+// --- gitlab.FDb.milestone.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+gitlab::FMilestone* gitlab::milestone_InsertMaybe(const gitlab::Milestone &value) {
+    gitlab::FMilestone *row = &milestone_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    milestone_CopyIn(*row,const_cast<gitlab::Milestone&>(value));
+    bool ok = milestone_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        milestone_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- gitlab.FDb.milestone.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* gitlab::milestone_AllocMem() {
+    u64 new_nelems     = _db.milestone_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    gitlab::FMilestone*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.milestone_lary[bsr];
+        if (!lev) {
+            lev=(gitlab::FMilestone*)algo_lib::malloc_AllocMem(sizeof(gitlab::FMilestone) * (u64(1)<<bsr));
+            _db.milestone_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.milestone_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- gitlab.FDb.milestone.RemoveAll
+// Remove all elements from Lary
+void gitlab::milestone_RemoveAll() {
+    for (u64 n = _db.milestone_n; n>0; ) {
+        n--;
+        milestone_qFind(u64(n)).~FMilestone(); // destroy last element
+        _db.milestone_n = i32(n);
+    }
+}
+
+// --- gitlab.FDb.milestone.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void gitlab::milestone_RemoveLast() {
+    u64 n = _db.milestone_n;
+    if (n > 0) {
+        n -= 1;
+        milestone_qFind(u64(n)).~FMilestone();
+        _db.milestone_n = i32(n);
+    }
+}
+
+// --- gitlab.FDb.milestone.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool gitlab::milestone_XrefMaybe(gitlab::FMilestone &row) {
+    bool retval = true;
+    (void)row;
+    // insert milestone into index ind_milestone
+    if (true) { // user-defined insert condition
+        bool success = ind_milestone_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "gitlab.duplicate_key  xref:gitlab.FDb.ind_milestone"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- gitlab.FDb.ind_milestone.Find
+// Find row by key. Return NULL if not found.
+gitlab::FMilestone* gitlab::ind_milestone_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_milestone_buckets_n - 1);
+    gitlab::FMilestone* *e = &_db.ind_milestone_buckets_elems[index];
+    gitlab::FMilestone* ret=NULL;
+    do {
+        ret       = *e;
+        bool done = !ret || (*ret).milestone == key;
+        if (done) break;
+        e         = &ret->ind_milestone_next;
+    } while (true);
+    return ret;
+}
+
+// --- gitlab.FDb.ind_milestone.FindX
+// Look up row by key and return reference. Throw exception if not found
+gitlab::FMilestone& gitlab::ind_milestone_FindX(const algo::strptr& key) {
+    gitlab::FMilestone* ret = ind_milestone_Find(key);
+    vrfy(ret, tempstr() << "gitlab.key_error  table:ind_milestone  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- gitlab.FDb.ind_milestone.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+gitlab::FMilestone& gitlab::ind_milestone_GetOrCreate(const algo::strptr& key) {
+    gitlab::FMilestone* ret = ind_milestone_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &milestone_Alloc();
+        (*ret).milestone = key;
+        bool good = milestone_XrefMaybe(*ret);
+        if (!good) {
+            milestone_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "gitlab.create_error  table:ind_milestone  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- gitlab.FDb.ind_milestone.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool gitlab::ind_milestone_InsertMaybe(gitlab::FMilestone& row) {
+    ind_milestone_Reserve(1);
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_milestone_next == (gitlab::FMilestone*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr200_Hash(0, row.milestone) & (_db.ind_milestone_buckets_n - 1);
+        gitlab::FMilestone* *prev = &_db.ind_milestone_buckets_elems[index];
+        do {
+            gitlab::FMilestone* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).milestone == row.milestone) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_milestone_next;
+        } while (true);
+        if (retval) {
+            row.ind_milestone_next = *prev;
+            _db.ind_milestone_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- gitlab.FDb.ind_milestone.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void gitlab::ind_milestone_Remove(gitlab::FMilestone& row) {
+    if (LIKELY(row.ind_milestone_next != (gitlab::FMilestone*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr200_Hash(0, row.milestone) & (_db.ind_milestone_buckets_n - 1);
+        gitlab::FMilestone* *prev = &_db.ind_milestone_buckets_elems[index]; // addr of pointer to current element
+        while (gitlab::FMilestone *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_milestone_next; // unlink (singly linked list)
+                _db.ind_milestone_n--;
+                row.ind_milestone_next = (gitlab::FMilestone*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_milestone_next;
+        }
+    }
+}
+
+// --- gitlab.FDb.ind_milestone.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void gitlab::ind_milestone_Reserve(int n) {
+    u32 old_nbuckets = _db.ind_milestone_buckets_n;
+    u32 new_nelems   = _db.ind_milestone_n + n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(gitlab::FMilestone*);
+        u32 new_size = new_nbuckets * sizeof(gitlab::FMilestone*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        gitlab::FMilestone* *new_buckets = (gitlab::FMilestone**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("gitlab.out_of_memory  field:gitlab.FDb.ind_milestone");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_milestone_buckets_n; i++) {
+            gitlab::FMilestone* elem = _db.ind_milestone_buckets_elems[i];
+            while (elem) {
+                gitlab::FMilestone &row        = *elem;
+                gitlab::FMilestone* next       = row.ind_milestone_next;
+                u32 index          = algo::Smallstr200_Hash(0, row.milestone) & (new_nbuckets-1);
+                row.ind_milestone_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_milestone_buckets_elems, old_size);
+        _db.ind_milestone_buckets_elems = new_buckets;
+        _db.ind_milestone_buckets_n = new_nbuckets;
+    }
+}
+
+// --- gitlab.FDb.milestone_description.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+gitlab::FMilestoneDescription& gitlab::milestone_description_Alloc() {
+    gitlab::FMilestoneDescription* row = milestone_description_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("gitlab.out_of_mem  field:gitlab.FDb.milestone_description  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- gitlab.FDb.milestone_description.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+gitlab::FMilestoneDescription* gitlab::milestone_description_AllocMaybe() {
+    gitlab::FMilestoneDescription *row = (gitlab::FMilestoneDescription*)milestone_description_AllocMem();
+    if (row) {
+        new (row) gitlab::FMilestoneDescription; // call constructor
+    }
+    return row;
+}
+
+// --- gitlab.FDb.milestone_description.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+gitlab::FMilestoneDescription* gitlab::milestone_description_InsertMaybe(const gitlab::MilestoneDescription &value) {
+    gitlab::FMilestoneDescription *row = &milestone_description_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    milestone_description_CopyIn(*row,const_cast<gitlab::MilestoneDescription&>(value));
+    bool ok = milestone_description_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        milestone_description_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- gitlab.FDb.milestone_description.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* gitlab::milestone_description_AllocMem() {
+    u64 new_nelems     = _db.milestone_description_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    gitlab::FMilestoneDescription*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.milestone_description_lary[bsr];
+        if (!lev) {
+            lev=(gitlab::FMilestoneDescription*)algo_lib::malloc_AllocMem(sizeof(gitlab::FMilestoneDescription) * (u64(1)<<bsr));
+            _db.milestone_description_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.milestone_description_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- gitlab.FDb.milestone_description.RemoveAll
+// Remove all elements from Lary
+void gitlab::milestone_description_RemoveAll() {
+    for (u64 n = _db.milestone_description_n; n>0; ) {
+        n--;
+        milestone_description_qFind(u64(n)).~FMilestoneDescription(); // destroy last element
+        _db.milestone_description_n = i32(n);
+    }
+}
+
+// --- gitlab.FDb.milestone_description.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void gitlab::milestone_description_RemoveLast() {
+    u64 n = _db.milestone_description_n;
+    if (n > 0) {
+        n -= 1;
+        milestone_description_qFind(u64(n)).~FMilestoneDescription();
+        _db.milestone_description_n = i32(n);
+    }
+}
+
+// --- gitlab.FDb.milestone_description.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool gitlab::milestone_description_XrefMaybe(gitlab::FMilestoneDescription &row) {
+    bool retval = true;
+    (void)row;
+    gitlab::FMilestone* p_milestone = gitlab::ind_milestone_Find(row.milestone);
+    if (UNLIKELY(!p_milestone)) {
+        algo_lib::ResetErrtext() << "gitlab.bad_xref  index:gitlab.FDb.ind_milestone" << Keyval("key", row.milestone);
+        return false;
+    }
+    // milestone_description: save pointer to milestone
+    if (true) { // user-defined insert condition
+        row.p_milestone = p_milestone;
+    }
+    // insert milestone_description into index c_milestone_description
+    if (true) { // user-defined insert condition
+        bool success = c_milestone_description_InsertMaybe(*p_milestone, row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "gitlab.duplicate_key  xref:gitlab.FMilestone.c_milestone_description"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
 }
 
 // --- gitlab.FDb.trace.RowidFind
@@ -1904,6 +2251,36 @@ void gitlab::FDb_Init() {
         FatalErrorExit("out of memory"); // (gitlab.FDb.ind_user)
     }
     memset(_db.ind_user_buckets_elems, 0, sizeof(gitlab::FUser*)*_db.ind_user_buckets_n); // (gitlab.FDb.ind_user)
+    // initialize LAry milestone (gitlab.FDb.milestone)
+    _db.milestone_n = 0;
+    memset(_db.milestone_lary, 0, sizeof(_db.milestone_lary)); // zero out all level pointers
+    gitlab::FMilestone* milestone_first = (gitlab::FMilestone*)algo_lib::malloc_AllocMem(sizeof(gitlab::FMilestone) * (u64(1)<<4));
+    if (!milestone_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.milestone_lary[i]  = milestone_first;
+        milestone_first    += 1ULL<<i;
+    }
+    // initialize hash table for gitlab::FMilestone;
+    _db.ind_milestone_n             	= 0; // (gitlab.FDb.ind_milestone)
+    _db.ind_milestone_buckets_n     	= 4; // (gitlab.FDb.ind_milestone)
+    _db.ind_milestone_buckets_elems 	= (gitlab::FMilestone**)algo_lib::malloc_AllocMem(sizeof(gitlab::FMilestone*)*_db.ind_milestone_buckets_n); // initial buckets (gitlab.FDb.ind_milestone)
+    if (!_db.ind_milestone_buckets_elems) {
+        FatalErrorExit("out of memory"); // (gitlab.FDb.ind_milestone)
+    }
+    memset(_db.ind_milestone_buckets_elems, 0, sizeof(gitlab::FMilestone*)*_db.ind_milestone_buckets_n); // (gitlab.FDb.ind_milestone)
+    // initialize LAry milestone_description (gitlab.FDb.milestone_description)
+    _db.milestone_description_n = 0;
+    memset(_db.milestone_description_lary, 0, sizeof(_db.milestone_description_lary)); // zero out all level pointers
+    gitlab::FMilestoneDescription* milestone_description_first = (gitlab::FMilestoneDescription*)algo_lib::malloc_AllocMem(sizeof(gitlab::FMilestoneDescription) * (u64(1)<<4));
+    if (!milestone_description_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.milestone_description_lary[i]  = milestone_description_first;
+        milestone_description_first    += 1ULL<<i;
+    }
 
     gitlab::InitReflection();
 }
@@ -1911,6 +2288,15 @@ void gitlab::FDb_Init() {
 // --- gitlab.FDb..Uninit
 void gitlab::FDb_Uninit() {
     gitlab::FDb &row = _db; (void)row;
+
+    // gitlab.FDb.milestone_description.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // gitlab.FDb.ind_milestone.Uninit (Thash)  //
+    // skip destruction of ind_milestone in global scope
+
+    // gitlab.FDb.milestone.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // gitlab.FDb.ind_user.Uninit (Thash)  //
     // skip destruction of ind_user in global scope
@@ -2056,6 +2442,20 @@ void gitlab::request_header_Setary(gitlab::FHttp& parent, gitlab::FHttp &rhs) {
         new (parent.request_header_elems + i) algo::cstring(request_header_qFind(rhs, i));
         parent.request_header_n = i + 1;
     }
+}
+
+// --- gitlab.FHttp.request_header.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> gitlab::request_header_AllocNVal(gitlab::FHttp& parent, int n_elems, const algo::cstring& val) {
+    request_header_Reserve(parent, n_elems);
+    int old_n  = parent.request_header_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = parent.request_header_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(val);
+    }
+    parent.request_header_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
 // --- gitlab.FHttp.request_method.ToCstr
@@ -2223,6 +2623,20 @@ void gitlab::response_header_Setary(gitlab::FHttp& parent, gitlab::FHttp &rhs) {
     }
 }
 
+// --- gitlab.FHttp.response_header.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> gitlab::response_header_AllocNVal(gitlab::FHttp& parent, int n_elems, const algo::cstring& val) {
+    response_header_Reserve(parent, n_elems);
+    int old_n  = parent.response_header_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = parent.response_header_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(val);
+    }
+    parent.response_header_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
 // --- gitlab.FHttp..Init
 // Set all fields to initial values.
 void gitlab::FHttp_Init(gitlab::FHttp& parent) {
@@ -2303,6 +2717,8 @@ void gitlab::FHttp_Print(gitlab::FHttp & row, algo::cstring &str) {
 void gitlab::issue_CopyOut(gitlab::FIssue &row, gitlab::Issue &out) {
     out.issue = row.issue;
     out.assignee = row.assignee;
+    out.labels = row.labels;
+    out.milestone = row.milestone;
     out.title = row.title;
 }
 
@@ -2311,6 +2727,8 @@ void gitlab::issue_CopyOut(gitlab::FIssue &row, gitlab::Issue &out) {
 void gitlab::issue_CopyIn(gitlab::FIssue &row, gitlab::Issue &in) {
     row.issue = in.issue;
     row.assignee = in.assignee;
+    row.labels = in.labels;
+    row.milestone = in.milestone;
     row.title = in.title;
 }
 
@@ -2408,11 +2826,11 @@ void gitlab::FIssue_Init(gitlab::FIssue& issue) {
 // --- gitlab.FIssue..Uninit
 void gitlab::FIssue_Uninit(gitlab::FIssue& issue) {
     gitlab::FIssue &row = issue; (void)row;
+    ind_issue_Remove(row); // remove issue from index ind_issue
     gitlab::FProject* p_project = gitlab::ind_project_Find(project_Get(row));
     if (p_project)  {
         c_issue_Remove(*p_project, row);// remove issue from index c_issue
     }
-    ind_issue_Remove(row); // remove issue from index ind_issue
 
     // gitlab.FIssue.c_issue_note.Uninit (Ptrary)  //
     algo_lib::malloc_FreeMem(issue.c_issue_note_elems, sizeof(gitlab::FIssueNote*)*issue.c_issue_note_max); // (gitlab.FIssue.c_issue_note)
@@ -2429,6 +2847,12 @@ void gitlab::FIssue_Print(gitlab::FIssue & row, algo::cstring &str) {
 
     algo::Smallstr50_Print(row.assignee, temp);
     PrintAttrSpaceReset(str,"assignee", temp);
+
+    algo::cstring_Print(row.labels, temp);
+    PrintAttrSpaceReset(str,"labels", temp);
+
+    algo::cstring_Print(row.milestone, temp);
+    PrintAttrSpaceReset(str,"milestone", temp);
 
     algo::cstring_Print(row.title, temp);
     PrintAttrSpaceReset(str,"title", temp);
@@ -2501,6 +2925,49 @@ void gitlab::FIssueNote_Uninit(gitlab::FIssueNote& issue_note) {
     gitlab::FIssue* p_issue = gitlab::ind_issue_Find(issue_Get(row));
     if (p_issue)  {
         c_issue_note_Remove(*p_issue, row);// remove issue_note from index c_issue_note
+    }
+}
+
+// --- gitlab.FMilestone.base.CopyOut
+// Copy fields out of row
+void gitlab::milestone_CopyOut(gitlab::FMilestone &row, gitlab::Milestone &out) {
+    out.milestone = row.milestone;
+    out.id = row.id;
+}
+
+// --- gitlab.FMilestone.base.CopyIn
+// Copy fields in to row
+void gitlab::milestone_CopyIn(gitlab::FMilestone &row, gitlab::Milestone &in) {
+    row.milestone = in.milestone;
+    row.id = in.id;
+}
+
+// --- gitlab.FMilestone..Uninit
+void gitlab::FMilestone_Uninit(gitlab::FMilestone& milestone) {
+    gitlab::FMilestone &row = milestone; (void)row;
+    ind_milestone_Remove(row); // remove milestone from index ind_milestone
+}
+
+// --- gitlab.FMilestoneDescription.base.CopyOut
+// Copy fields out of row
+void gitlab::milestone_description_CopyOut(gitlab::FMilestoneDescription &row, gitlab::MilestoneDescription &out) {
+    out.milestone = row.milestone;
+    out.description = row.description;
+}
+
+// --- gitlab.FMilestoneDescription.base.CopyIn
+// Copy fields in to row
+void gitlab::milestone_description_CopyIn(gitlab::FMilestoneDescription &row, gitlab::MilestoneDescription &in) {
+    row.milestone = in.milestone;
+    row.description = in.description;
+}
+
+// --- gitlab.FMilestoneDescription..Uninit
+void gitlab::FMilestoneDescription_Uninit(gitlab::FMilestoneDescription& milestone_description) {
+    gitlab::FMilestoneDescription &row = milestone_description; (void)row;
+    gitlab::FMilestone* p_milestone = gitlab::ind_milestone_Find(row.milestone);
+    if (p_milestone)  {
+        c_milestone_description_Remove(*p_milestone, row);// remove milestone_description from index c_milestone_description
     }
 }
 
@@ -2615,11 +3082,11 @@ void gitlab::FMr_Init(gitlab::FMr& mr) {
 // --- gitlab.FMr..Uninit
 void gitlab::FMr_Uninit(gitlab::FMr& mr) {
     gitlab::FMr &row = mr; (void)row;
+    ind_mr_Remove(row); // remove mr from index ind_mr
     gitlab::FProject* p_project = gitlab::ind_project_Find(project_Get(row));
     if (p_project)  {
         c_mr_Remove(*p_project, row);// remove mr from index c_mr
     }
-    ind_mr_Remove(row); // remove mr from index ind_mr
 
     // gitlab.FMr.c_mr_note.Uninit (Ptrary)  //
     algo_lib::malloc_FreeMem(mr.c_mr_note_elems, sizeof(gitlab::FMrNote*)*mr.c_mr_note_max); // (gitlab.FMr.c_mr_note)
@@ -2997,6 +3464,12 @@ void gitlab::Issue_Print(gitlab::Issue & row, algo::cstring &str) {
     algo::Smallstr50_Print(row.assignee, temp);
     PrintAttrSpaceReset(str,"assignee", temp);
 
+    algo::cstring_Print(row.labels, temp);
+    PrintAttrSpaceReset(str,"labels", temp);
+
+    algo::cstring_Print(row.milestone, temp);
+    PrintAttrSpaceReset(str,"milestone", temp);
+
     algo::cstring_Print(row.title, temp);
     PrintAttrSpaceReset(str,"title", temp);
 }
@@ -3044,6 +3517,32 @@ void gitlab::IssueNote_Print(gitlab::IssueNote & row, algo::cstring &str) {
 
     algo::cstring_Print(row.body, temp);
     PrintAttrSpaceReset(str,"body", temp);
+}
+
+// --- gitlab.Milestone..Print
+// print string representation of gitlab::Milestone to string LHS, no header -- cprint:gitlab.Milestone.String
+void gitlab::Milestone_Print(gitlab::Milestone & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "gitlab.Milestone";
+
+    algo::Smallstr200_Print(row.milestone, temp);
+    PrintAttrSpaceReset(str,"milestone", temp);
+
+    u32_Print(row.id, temp);
+    PrintAttrSpaceReset(str,"id", temp);
+}
+
+// --- gitlab.MilestoneDescription..Print
+// print string representation of gitlab::MilestoneDescription to string LHS, no header -- cprint:gitlab.MilestoneDescription.String
+void gitlab::MilestoneDescription_Print(gitlab::MilestoneDescription & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "gitlab.MilestoneDescription";
+
+    algo::Smallstr200_Print(row.milestone, temp);
+    PrintAttrSpaceReset(str,"milestone", temp);
+
+    algo::cstring_Print(row.description, temp);
+    PrintAttrSpaceReset(str,"description", temp);
 }
 
 // --- gitlab.Mr.project.Get
@@ -3214,6 +3713,10 @@ void gitlab::TableId_Print(gitlab::TableId & row, algo::cstring &str) {
     gitlab::value_Print(row, str);
 }
 
+// --- gitlab...SizeCheck
+inline static void gitlab::SizeCheck() {
+}
+
 // --- gitlab...main
 int main(int argc, char **argv) {
     try {
@@ -3244,6 +3747,9 @@ int main(int argc, char **argv) {
     return algo_lib::_db.exit_code;
 }
 
-// --- gitlab...SizeCheck
-inline static void gitlab::SizeCheck() {
+// --- gitlab...WinMain
+#if defined(WIN32)
+int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int) {
+    return main(__argc,__argv);
 }
+#endif

@@ -94,6 +94,12 @@ bool lib_sql::LoadSsimfileMaybe(algo::strptr fname) {
     return retval;
 }
 
+// --- lib_sql.FDb._db.Steps
+// Calls Step function of dependencies
+void lib_sql::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
 // --- lib_sql.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -143,7 +149,7 @@ void* lib_sql::attr_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.attr_n = new_nelems;
+        _db.attr_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -155,7 +161,7 @@ void lib_sql::attr_RemoveAll() {
     for (u64 n = _db.attr_n; n>0; ) {
         n--;
         attr_qFind(u64(n)).~FAttr(); // destroy last element
-        _db.attr_n = n;
+        _db.attr_n = i32(n);
     }
 }
 
@@ -166,7 +172,7 @@ void lib_sql::attr_RemoveLast() {
     if (n > 0) {
         n -= 1;
         attr_qFind(u64(n)).~FAttr();
-        _db.attr_n = n;
+        _db.attr_n = i32(n);
     }
 }
 
@@ -224,6 +230,7 @@ lib_sql::FAttr& lib_sql::ind_attr_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "lib_sql.create_error  table:ind_attr  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 

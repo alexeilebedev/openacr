@@ -1,0 +1,11 @@
+# atf_comp -report:N -print acr_ed.CreateCtype | acr_ed -create -ctype ams.ChildTypeMsg -subset ams.MsgHeader -msgtype:400 -reftype:Base | cat
+bin/acr  '' -insert:Y -check:Y -write:Y -t:Y -rowid:Y << EOF
+dmmeta.ctype  ctype:ams.ChildTypeMsg  comment:""
+dmmeta.field  field:ams.ChildTypeMsg.base  arg:ams.MsgHeader  reftype:Base  dflt:""  comment:""
+dmmeta.pack  ctype:ams.ChildTypeMsg  comment:""
+dmmeta.msgtype  ctype:ams.ChildTypeMsg  type:400
+dmmeta.cpptype  ctype:ams.ChildTypeMsg  ctor:N  dtor:N  cheap_copy:N
+dmmeta.cfmt  cfmt:ams.ChildTypeMsg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+EOF
+
+bin/amc

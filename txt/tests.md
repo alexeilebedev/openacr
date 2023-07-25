@@ -7,11 +7,11 @@ that all files have an entry in the gitfile table, or round-tripping all data va
 through a temporary MariaDB instance to ensure portability. In addition, all of the unit
 tests are included here for convenience. You can run all possible tests with
 
-    $ atf_norm
+    $ atf_ci
     ...
 
 If you just want to invoke unit tests, you can run `atf_unit` directly.
-It is split into a separate executable from `atf_norm` for reasons of manageability.
+It is split into a separate executable from `atf_ci` for reasons of manageability.
 
     $ atf_unit
     ...
@@ -72,8 +72,8 @@ Alternatively, we could do:
     $ echo atfdb.normcheck normcheck:mycheck | acr -insert -write
     $ amc
 
-And then implement the function `atf_norm::normcheck_mycheck()` somewhere
-in a file that links with `atf_norm`.
+And then implement the function `atf_ci::citest_mycheck()` somewhere
+in a file that links with `atf_ci`.
 
 ### Debugging
 

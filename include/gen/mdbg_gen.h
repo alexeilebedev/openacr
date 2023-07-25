@@ -162,6 +162,7 @@ void                 trace_Print(mdbg::trace & row, algo::cstring &str) __attrib
 // create: mdbg.FDb._db (Global)
 struct FDb { // mdbg.FDb
     lpool_Lpblock*     lpool_free[31];          // Lpool levels
+    u32                lpool_lock;              // Lpool lock
     command::mdbg      cmdline;                 //
     algo::cstring      script;                  // Output script
     algo::cstring      gdbscript;               // GDB script
@@ -172,6 +173,8 @@ struct FDb { // mdbg.FDb
     i32                ind_cfg_n;               // number of elements in the hash table
     mdbg::FBuilddir*   builddir_lary[32];       // level array
     i32                builddir_n;              // number of elements in array
+    bool               break_main;              //   false  Breakpoint in main was requested at command line
+    i32                bnum;                    //   1  Breakpoint number for gdb
     mdbg::trace        trace;                   //
 };
 
@@ -204,6 +207,8 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -399,8 +404,11 @@ struct _db_builddir_curs {// cursor
     _db_builddir_curs(){ parent=NULL; index=0; }
 };
 
-int                  main(int argc, char **argv);
 } // end namespace mdbg
+int                  main(int argc, char **argv);
+#if defined(WIN32)
+int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
+#endif
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const mdbg::trace &row);// cfmt:mdbg.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const mdbg::FieldId &row);// cfmt:mdbg.FieldId.String

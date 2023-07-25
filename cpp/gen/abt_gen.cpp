@@ -103,14 +103,14 @@ abt::_db_bh_syscmd_curs::~_db_bh_syscmd_curs() {
 }
 
 namespace abt { // gsymbol:abt/dev.opt_type
-    const char *dev_opt_type_AR = "AR";
-    const char *dev_opt_type_C = "C";
-    const char *dev_opt_type_CC = "CC";
-    const char *dev_opt_type_CPP = "CPP";
-    const char *dev_opt_type_HPP = "HPP";
-    const char *dev_opt_type_IGNOREME = "IGNOREME";
-    const char *dev_opt_type_LINK = "LINK";
-    const char *dev_opt_type_RC = "RC";
+    const char* dev_opt_type_AR("AR");
+    const char* dev_opt_type_C("C");
+    const char* dev_opt_type_CC("CC");
+    const char* dev_opt_type_CPP("CPP");
+    const char* dev_opt_type_HPP("HPP");
+    const char* dev_opt_type_IGNOREME("IGNOREME");
+    const char* dev_opt_type_LINK("LINK");
+    const char* dev_opt_type_RC("RC");
 }
 namespace abt {
     static bool          targdep_InputMaybe(dev::Targdep &elem) __attribute__((nothrow));
@@ -372,7 +372,7 @@ void* abt::srcfile_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.srcfile_n = new_nelems;
+        _db.srcfile_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -384,7 +384,7 @@ void abt::srcfile_RemoveAll() {
     for (u64 n = _db.srcfile_n; n>0; ) {
         n--;
         srcfile_qFind(u64(n)).~FSrcfile(); // destroy last element
-        _db.srcfile_n = n;
+        _db.srcfile_n = i32(n);
     }
 }
 
@@ -395,7 +395,7 @@ void abt::srcfile_RemoveLast() {
     if (n > 0) {
         n -= 1;
         srcfile_qFind(u64(n)).~FSrcfile();
-        _db.srcfile_n = n;
+        _db.srcfile_n = i32(n);
     }
 }
 
@@ -476,7 +476,7 @@ void* abt::targdep_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.targdep_n = new_nelems;
+        _db.targdep_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -489,14 +489,14 @@ void abt::targdep_RemoveLast() {
     if (n > 0) {
         n -= 1;
         targdep_qFind(u64(n)).~FTargdep();
-        _db.targdep_n = n;
+        _db.targdep_n = i32(n);
     }
 }
 
 // --- abt.FDb.targdep.InputMaybe
 static bool abt::targdep_InputMaybe(dev::Targdep &elem) {
     bool retval = true;
-    retval = targdep_InsertMaybe(elem);
+    retval = targdep_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -582,7 +582,7 @@ void* abt::tool_opt_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.tool_opt_n = new_nelems;
+        _db.tool_opt_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -595,14 +595,14 @@ void abt::tool_opt_RemoveLast() {
     if (n > 0) {
         n -= 1;
         tool_opt_qFind(u64(n)).~FToolOpt();
-        _db.tool_opt_n = n;
+        _db.tool_opt_n = i32(n);
     }
 }
 
 // --- abt.FDb.tool_opt.InputMaybe
 static bool abt::tool_opt_InputMaybe(dev::ToolOpt &elem) {
     bool retval = true;
-    retval = tool_opt_InsertMaybe(elem);
+    retval = tool_opt_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -643,6 +643,7 @@ abt::FTarget& abt::ind_target_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "abt.create_error  table:ind_target  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -783,7 +784,7 @@ void* abt::target_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.target_n = new_nelems;
+        _db.target_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -796,14 +797,14 @@ void abt::target_RemoveLast() {
     if (n > 0) {
         n -= 1;
         target_qFind(u64(n)).~FTarget();
-        _db.target_n = n;
+        _db.target_n = i32(n);
     }
 }
 
 // --- abt.FDb.target.InputMaybe
 static bool abt::target_InputMaybe(dev::Target &elem) {
     bool retval = true;
-    retval = target_InsertMaybe(elem);
+    retval = target_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -862,6 +863,7 @@ abt::FTargsrc& abt::ind_targsrc_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "abt.create_error  table:ind_targsrc  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -1002,7 +1004,7 @@ void* abt::targsrc_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.targsrc_n = new_nelems;
+        _db.targsrc_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1015,14 +1017,14 @@ void abt::targsrc_RemoveLast() {
     if (n > 0) {
         n -= 1;
         targsrc_qFind(u64(n)).~FTargsrc();
-        _db.targsrc_n = n;
+        _db.targsrc_n = i32(n);
     }
 }
 
 // --- abt.FDb.targsrc.InputMaybe
 static bool abt::targsrc_InputMaybe(dev::Targsrc &elem) {
     bool retval = true;
-    retval = targsrc_InsertMaybe(elem);
+    retval = targsrc_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1112,7 +1114,7 @@ void* abt::syscmddep_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.syscmddep_n = new_nelems;
+        _db.syscmddep_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1125,14 +1127,14 @@ void abt::syscmddep_RemoveLast() {
     if (n > 0) {
         n -= 1;
         syscmddep_qFind(u64(n)).~FSyscmddep();
-        _db.syscmddep_n = n;
+        _db.syscmddep_n = i32(n);
     }
 }
 
 // --- abt.FDb.syscmddep.InputMaybe
 static bool abt::syscmddep_InputMaybe(dev::Syscmddep &elem) {
     bool retval = true;
-    retval = syscmddep_InsertMaybe(elem);
+    retval = syscmddep_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1227,7 +1229,7 @@ void* abt::syscmd_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.syscmd_n = new_nelems;
+        _db.syscmd_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1240,14 +1242,14 @@ void abt::syscmd_RemoveLast() {
     if (n > 0) {
         n -= 1;
         syscmd_qFind(i32(n)).~FSyscmd();
-        _db.syscmd_n = n;
+        _db.syscmd_n = i32(n);
     }
 }
 
 // --- abt.FDb.syscmd.InputMaybe
 static bool abt::syscmd_InputMaybe(dev::Syscmd &elem) {
     bool retval = true;
-    retval = syscmd_InsertMaybe(elem);
+    retval = syscmd_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1296,7 +1298,7 @@ void abt::MainLoop() {
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
-        algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+        abt::Steps();
     } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
 }
 
@@ -1455,6 +1457,12 @@ bool abt::LoadSsimfileMaybe(algo::strptr fname) {
     return retval;
 }
 
+// --- abt.FDb._db.Steps
+// Calls Step function of dependencies
+void abt::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
 // --- abt.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -1491,6 +1499,7 @@ abt::FSyscmd& abt::ind_syscmd_GetOrCreate(i64 key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "abt.create_error  table:ind_syscmd  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -1604,6 +1613,7 @@ abt::FSyscmd& abt::ind_running_GetOrCreate(i32 key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "abt.create_error  table:ind_running  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -1717,6 +1727,7 @@ abt::FSrcfile& abt::ind_srcfile_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "abt.create_error  table:ind_srcfile  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -1857,7 +1868,7 @@ void* abt::cfg_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cfg_n = new_nelems;
+        _db.cfg_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1870,14 +1881,14 @@ void abt::cfg_RemoveLast() {
     if (n > 0) {
         n -= 1;
         cfg_qFind(u64(n)).~FCfg();
-        _db.cfg_n = n;
+        _db.cfg_n = i32(n);
     }
 }
 
 // --- abt.FDb.cfg.InputMaybe
 static bool abt::cfg_InputMaybe(dev::Cfg &elem) {
     bool retval = true;
-    retval = cfg_InsertMaybe(elem);
+    retval = cfg_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -1927,6 +1938,7 @@ abt::FCfg& abt::ind_cfg_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "abt.create_error  table:ind_cfg  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -2067,7 +2079,7 @@ void* abt::uname_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.uname_n = new_nelems;
+        _db.uname_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2080,14 +2092,14 @@ void abt::uname_RemoveLast() {
     if (n > 0) {
         n -= 1;
         uname_qFind(u64(n)).~FUname();
-        _db.uname_n = n;
+        _db.uname_n = i32(n);
     }
 }
 
 // --- abt.FDb.uname.InputMaybe
 static bool abt::uname_InputMaybe(dev::Uname &elem) {
     bool retval = true;
-    retval = uname_InsertMaybe(elem);
+    retval = uname_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -2137,6 +2149,7 @@ abt::FUname& abt::ind_uname_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "abt.create_error  table:ind_uname  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -2277,7 +2290,7 @@ void* abt::compiler_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.compiler_n = new_nelems;
+        _db.compiler_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2290,14 +2303,14 @@ void abt::compiler_RemoveLast() {
     if (n > 0) {
         n -= 1;
         compiler_qFind(u64(n)).~FCompiler();
-        _db.compiler_n = n;
+        _db.compiler_n = i32(n);
     }
 }
 
 // --- abt.FDb.compiler.InputMaybe
 static bool abt::compiler_InputMaybe(dev::Compiler &elem) {
     bool retval = true;
-    retval = compiler_InsertMaybe(elem);
+    retval = compiler_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -2347,6 +2360,7 @@ abt::FCompiler& abt::ind_compiler_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "abt.create_error  table:ind_compiler  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -2487,7 +2501,7 @@ void* abt::arch_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.arch_n = new_nelems;
+        _db.arch_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2500,14 +2514,14 @@ void abt::arch_RemoveLast() {
     if (n > 0) {
         n -= 1;
         arch_qFind(u64(n)).~FArch();
-        _db.arch_n = n;
+        _db.arch_n = i32(n);
     }
 }
 
 // --- abt.FDb.arch.InputMaybe
 static bool abt::arch_InputMaybe(dev::Arch &elem) {
     bool retval = true;
-    retval = arch_InsertMaybe(elem);
+    retval = arch_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -2557,6 +2571,7 @@ abt::FArch& abt::ind_arch_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "abt.create_error  table:ind_arch  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -3026,7 +3041,7 @@ void* abt::targsyslib_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.targsyslib_n = new_nelems;
+        _db.targsyslib_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3039,14 +3054,14 @@ void abt::targsyslib_RemoveLast() {
     if (n > 0) {
         n -= 1;
         targsyslib_qFind(u64(n)).~FTargsyslib();
-        _db.targsyslib_n = n;
+        _db.targsyslib_n = i32(n);
     }
 }
 
 // --- abt.FDb.targsyslib.InputMaybe
 static bool abt::targsyslib_InputMaybe(dev::Targsyslib &elem) {
     bool retval = true;
-    retval = targsyslib_InsertMaybe(elem);
+    retval = targsyslib_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -3132,7 +3147,7 @@ void* abt::syslib_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.syslib_n = new_nelems;
+        _db.syslib_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3145,14 +3160,14 @@ void abt::syslib_RemoveLast() {
     if (n > 0) {
         n -= 1;
         syslib_qFind(u64(n)).~FSyslib();
-        _db.syslib_n = n;
+        _db.syslib_n = i32(n);
     }
 }
 
 // --- abt.FDb.syslib.InputMaybe
 static bool abt::syslib_InputMaybe(dev::Syslib &elem) {
     bool retval = true;
-    retval = syslib_InsertMaybe(elem);
+    retval = syslib_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -3202,6 +3217,7 @@ abt::FSyslib& abt::ind_syslib_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "abt.create_error  table:ind_syslib  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -3342,7 +3358,7 @@ void* abt::include_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.include_n = new_nelems;
+        _db.include_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3355,14 +3371,14 @@ void abt::include_RemoveLast() {
     if (n > 0) {
         n -= 1;
         include_qFind(u64(n)).~FInclude();
-        _db.include_n = n;
+        _db.include_n = i32(n);
     }
 }
 
 // --- abt.FDb.include.InputMaybe
 static bool abt::include_InputMaybe(dev::Include &elem) {
     bool retval = true;
-    retval = include_InsertMaybe(elem);
+    retval = include_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -3430,6 +3446,7 @@ abt::FInclude& abt::ind_include_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "abt.create_error  table:ind_include  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -3606,6 +3623,20 @@ void abt::sysincl_AbsReserve(int n) {
     }
 }
 
+// --- abt.FDb.sysincl.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> abt::sysincl_AllocNVal(int n_elems, const algo::cstring& val) {
+    sysincl_Reserve(n_elems);
+    int old_n  = _db.sysincl_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = _db.sysincl_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(val);
+    }
+    _db.sysincl_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
 // --- abt.FDb.zs_origsel_target.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void abt::zs_origsel_target_Insert(abt::FTarget& row) {
@@ -3736,7 +3767,7 @@ void* abt::ns_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ns_n = new_nelems;
+        _db.ns_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3749,14 +3780,14 @@ void abt::ns_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ns_qFind(u64(n)).~FNs();
-        _db.ns_n = n;
+        _db.ns_n = i32(n);
     }
 }
 
 // --- abt.FDb.ns.InputMaybe
 static bool abt::ns_InputMaybe(dmmeta::Ns &elem) {
     bool retval = true;
-    retval = ns_InsertMaybe(elem);
+    retval = ns_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -3806,6 +3837,7 @@ abt::FNs& abt::ind_ns_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "abt.create_error  table:ind_ns  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -3932,7 +3964,7 @@ void* abt::filestat_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.filestat_n = new_nelems;
+        _db.filestat_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -3944,7 +3976,7 @@ void abt::filestat_RemoveAll() {
     for (u64 n = _db.filestat_n; n>0; ) {
         n--;
         filestat_qFind(u64(n)).~FFilestat(); // destroy last element
-        _db.filestat_n = n;
+        _db.filestat_n = i32(n);
     }
 }
 
@@ -3955,7 +3987,7 @@ void abt::filestat_RemoveLast() {
     if (n > 0) {
         n -= 1;
         filestat_qFind(u64(n)).~FFilestat();
-        _db.filestat_n = n;
+        _db.filestat_n = i32(n);
     }
 }
 
@@ -4005,6 +4037,7 @@ abt::FFilestat& abt::ind_filestat_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "abt.create_error  table:ind_filestat  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -4265,6 +4298,7 @@ void abt::_db_bh_syscmd_curs_Next(_db_bh_syscmd_curs &curs) {
 // --- abt.FDb..Init
 // Set all fields to initial values.
 void abt::FDb_Init() {
+    _db.lpool_lock = 0;
     memset(_db.lpool_free, 0, sizeof(_db.lpool_free));
     // initialize LAry srcfile (abt.FDb.srcfile)
     _db.srcfile_n = 0;
@@ -6085,6 +6119,10 @@ void abt::TableId_Print(abt::TableId & row, algo::cstring &str) {
     abt::value_Print(row, str);
 }
 
+// --- abt...SizeCheck
+inline static void abt::SizeCheck() {
+}
+
 // --- abt...main
 int main(int argc, char **argv) {
     try {
@@ -6115,6 +6153,9 @@ int main(int argc, char **argv) {
     return algo_lib::_db.exit_code;
 }
 
-// --- abt...SizeCheck
-inline static void abt::SizeCheck() {
+// --- abt...WinMain
+#if defined(WIN32)
+int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int) {
+    return main(__argc,__argv);
 }
+#endif

@@ -1,0 +1,3 @@
+dmmeta.logcat  logcat:expect  enabled:N  builtin:N  comment:"lib_ams expect implementation"
+dmmeta.logcat  logcat:stderr  enabled:Y  builtin:Y  comment:"Standard error (cannot be disabled)"
+dmmeta.logcat  logcat:stdout  enabled:Y  builtin:Y  comment:"Standard output (cannot be disabled)"

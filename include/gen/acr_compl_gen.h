@@ -113,6 +113,9 @@ struct Badness { // acr_compl.Badness: Trading Session
     bool operator ==(const acr_compl::Badness &rhs) const;
     bool operator !=(const acr_compl::Badness &rhs) const;
     bool operator <(const acr_compl::Badness &rhs) const;
+    bool operator >(const acr_compl::Badness &rhs) const;
+    bool operator <=(const acr_compl::Badness &rhs) const;
+    bool operator >=(const acr_compl::Badness &rhs) const;
     bool operator ==(acr_compl_BadnessEnum rhs) const;
     Badness();
 };
@@ -365,6 +368,8 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -404,6 +409,8 @@ algo::cstring&       word_qFind(u64 t) __attribute__((nothrow));
 algo::cstring&       word_qLast() __attribute__((nothrow));
 // Return row id of specified element
 u64                  word_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> word_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -995,8 +1002,11 @@ struct _db_ns_curs {// cursor
     _db_ns_curs(){ parent=NULL; index=0; }
 };
 
-int                  main(int argc, char **argv);
 } // end namespace acr_compl
+int                  main(int argc, char **argv);
+#if defined(WIN32)
+int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
+#endif
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const acr_compl::trace &row);// cfmt:acr_compl.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_compl::FieldId &row);// cfmt:acr_compl.FieldId.String

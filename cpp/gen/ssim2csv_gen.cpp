@@ -81,7 +81,7 @@ void ssim2csv::MainLoop() {
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
-        algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+        ssim2csv::Steps();
     } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
 }
 
@@ -141,6 +141,12 @@ bool ssim2csv::LoadSsimfileMaybe(algo::strptr fname) {
     return retval;
 }
 
+// --- ssim2csv.FDb._db.Steps
+// Calls Step function of dependencies
+void ssim2csv::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
 // --- ssim2csv.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -190,7 +196,7 @@ void* ssim2csv::expand_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.expand_n = new_nelems;
+        _db.expand_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -202,7 +208,7 @@ void ssim2csv::expand_RemoveAll() {
     for (u64 n = _db.expand_n; n>0; ) {
         n--;
         expand_qFind(u64(n)).~FExpand(); // destroy last element
-        _db.expand_n = n;
+        _db.expand_n = i32(n);
     }
 }
 
@@ -213,7 +219,7 @@ void ssim2csv::expand_RemoveLast() {
     if (n > 0) {
         n -= 1;
         expand_qFind(u64(n)).~FExpand();
-        _db.expand_n = n;
+        _db.expand_n = i32(n);
     }
 }
 
@@ -271,6 +277,7 @@ ssim2csv::FExpand& ssim2csv::ind_expand_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "ssim2csv.create_error  table:ind_expand  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -397,7 +404,7 @@ void* ssim2csv::outfile_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.outfile_n = new_nelems;
+        _db.outfile_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -409,7 +416,7 @@ void ssim2csv::outfile_RemoveAll() {
     for (u64 n = _db.outfile_n; n>0; ) {
         n--;
         outfile_qFind(u64(n)).~FOutfile(); // destroy last element
-        _db.outfile_n = n;
+        _db.outfile_n = i32(n);
     }
 }
 
@@ -420,7 +427,7 @@ void ssim2csv::outfile_RemoveLast() {
     if (n > 0) {
         n -= 1;
         outfile_qFind(u64(n)).~FOutfile();
-        _db.outfile_n = n;
+        _db.outfile_n = i32(n);
     }
 }
 
@@ -478,6 +485,7 @@ ssim2csv::FOutfile& ssim2csv::ind_outfile_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "ssim2csv.create_error  table:ind_outfile  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -654,6 +662,20 @@ void ssim2csv::name_AbsReserve(int n) {
     }
 }
 
+// --- ssim2csv.FDb.name.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> ssim2csv::name_AllocNVal(int n_elems, const algo::cstring& val) {
+    name_Reserve(n_elems);
+    int old_n  = _db.name_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = _db.name_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(val);
+    }
+    _db.name_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
 // --- ssim2csv.FDb.value.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -745,6 +767,20 @@ void ssim2csv::value_AbsReserve(int n) {
     }
 }
 
+// --- ssim2csv.FDb.value.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> ssim2csv::value_AllocNVal(int n_elems, const algo::cstring& val) {
+    value_Reserve(n_elems);
+    int old_n  = _db.value_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = _db.value_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(val);
+    }
+    _db.value_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
 // --- ssim2csv.FDb.flatten.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -834,6 +870,20 @@ void ssim2csv::flatten_AbsReserve(int n) {
         _db.flatten_elems = (ssim2csv::FFlatten*)new_mem;
         _db.flatten_max = new_max;
     }
+}
+
+// --- ssim2csv.FDb.flatten.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<ssim2csv::FFlatten> ssim2csv::flatten_AllocNVal(int n_elems, const ssim2csv::FFlatten& val) {
+    flatten_Reserve(n_elems);
+    int old_n  = _db.flatten_n;
+    int new_n = old_n + n_elems;
+    ssim2csv::FFlatten *elems = _db.flatten_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) ssim2csv::FFlatten(val);
+    }
+    _db.flatten_n = new_n;
+    return algo::aryptr<ssim2csv::FFlatten>(elems + old_n, n_elems);
 }
 
 // --- ssim2csv.FDb.flatten.XrefMaybe
@@ -1068,6 +1118,10 @@ void ssim2csv::FieldId_Print(ssim2csv::FieldId & row, algo::cstring &str) {
     ssim2csv::value_Print(row, str);
 }
 
+// --- ssim2csv...SizeCheck
+inline static void ssim2csv::SizeCheck() {
+}
+
 // --- ssim2csv...main
 int main(int argc, char **argv) {
     try {
@@ -1098,6 +1152,9 @@ int main(int argc, char **argv) {
     return algo_lib::_db.exit_code;
 }
 
-// --- ssim2csv...SizeCheck
-inline static void ssim2csv::SizeCheck() {
+// --- ssim2csv...WinMain
+#if defined(WIN32)
+int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int) {
+    return main(__argc,__argv);
 }
+#endif

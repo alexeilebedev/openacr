@@ -546,7 +546,7 @@ static void Main_CreateJcdb(algo_lib::Replscope &R) {
             Set(R,"$objpath",srcfile.objpath);
             jcdb
                 << ls
-                << "{\"directory\":\".\""
+                << "{\"directory\":\"" << algo::GetCurDir() << "\""
                 << ",\"command\":\"" << abt::EvalSrcfileCmdline(R,target,srcfile) << "\""
                 << ",\"file\":\"" << srcfile.srcfile << "\"}" << eol;
         }ind_end;
@@ -775,10 +775,9 @@ static void CreateTmpdir() {
 // -----------------------------------------------------------------------------
 
 static void DetectCcache() {
-    // do not enable ccache on debug builds -- waste of space
-    // especially don't enable in coverity phase -- disables coverity
+    // don't enable in coverity phase -- disables coverity
     // ignore in 'printcmd' (bootstrap) mode
-    if (abt::_db.cmdline.cfg == dev_Cfg_cfg_release && !abt::_db.cmdline.printcmd && abt::_db.cmdline.jcdb=="") {
+    if (!abt::_db.cmdline.printcmd && abt::_db.cmdline.jcdb=="") {
         if (algo::DirectoryQ(".gcache/")) {
             abt::_db.gcache=true;
         } else if (algo::DirectoryQ(".ccache/")) {
@@ -958,7 +957,7 @@ static void Main_ComputeOutfile() {
 static void Main_ShowReport() {
     abt::_db.report.n_target = abt::zs_sel_target_N();
     ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) {
-        if (abt::_db.cmdline.install) {
+        if (abt::_db.cmdline.install && target.p_ns->nstype != dmmeta_Nstype_nstype_none) {
             abt::_db.report.n_install += target.targ_end->status ==0;
         }
     }ind_end;

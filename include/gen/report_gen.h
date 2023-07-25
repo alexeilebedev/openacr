@@ -32,19 +32,27 @@ enum report_FieldIdEnum {                 // report.FieldId.value
     ,report_FieldId_n_func          = 15
     ,report_FieldId_n_xref          = 16
     ,report_FieldId_n_filemod       = 17
-    ,report_FieldId_n_test_total    = 18
-    ,report_FieldId_success         = 19
-    ,report_FieldId_n_test_run      = 20
-    ,report_FieldId_n_line          = 21
-    ,report_FieldId_n_static        = 22
-    ,report_FieldId_n_inline        = 23
-    ,report_FieldId_n_mysteryfunc   = 24
-    ,report_FieldId_n_baddecl       = 25
-    ,report_FieldId_comment         = 26
-    ,report_FieldId_value           = 27
+    ,report_FieldId_ntest           = 18
+    ,report_FieldId_nselect         = 19
+    ,report_FieldId_npass           = 20
+    ,report_FieldId_nskip           = 21
+    ,report_FieldId_nrun            = 22
+    ,report_FieldId_nwrite          = 23
+    ,report_FieldId_nerr            = 24
+    ,report_FieldId_ninsert         = 25
+    ,report_FieldId_success         = 26
+    ,report_FieldId_n_test_total    = 27
+    ,report_FieldId_n_test_run      = 28
+    ,report_FieldId_n_line          = 29
+    ,report_FieldId_n_static        = 30
+    ,report_FieldId_n_inline        = 31
+    ,report_FieldId_n_mysteryfunc   = 32
+    ,report_FieldId_n_baddecl       = 33
+    ,report_FieldId_comment         = 34
+    ,report_FieldId_value           = 35
 };
 
-enum { report_FieldIdEnum_N = 28 };
+enum { report_FieldIdEnum_N = 36 };
 
 namespace report { struct FieldId; }
 namespace report { struct Protocol; }
@@ -52,6 +60,7 @@ namespace report { struct abt; }
 namespace report { struct acr; }
 namespace report { struct acr_check; }
 namespace report { struct amc; }
+namespace report { struct atf_comp; }
 namespace report { struct atf_unit; }
 namespace report { struct src_func; }
 namespace report {
@@ -189,6 +198,29 @@ void                 amc_Init(report::amc& parent);
 // print string representation of report::amc to string LHS, no header -- cprint:report.amc.String
 void                 amc_Print(report::amc & row, algo::cstring &str) __attribute__((nothrow));
 
+// --- report.atf_comp
+struct atf_comp { // report.atf_comp
+    i32    ntest;     //   0
+    i32    nselect;   //   0
+    i32    npass;     //   0
+    i32    nskip;     //   0
+    i32    nrun;      //   0
+    i32    nwrite;    //   0
+    i32    nerr;      //   0
+    i32    ninsert;   //   0
+    bool   success;   //   false
+    atf_comp();
+};
+
+bool                 atf_comp_ReadFieldMaybe(report::atf_comp &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of report::atf_comp from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 atf_comp_ReadStrptrMaybe(report::atf_comp &parent, algo::strptr in_str);
+// Set all fields to initial values.
+void                 atf_comp_Init(report::atf_comp& parent);
+// print string representation of report::atf_comp to string LHS, no header -- cprint:report.atf_comp.String
+void                 atf_comp_Print(report::atf_comp & row, algo::cstring &str) __attribute__((nothrow));
+
 // --- report.atf_unit
 struct atf_unit { // report.atf_unit
     u32    n_test_total;   //   0
@@ -235,6 +267,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const report::abt &row);//
 inline algo::cstring &operator <<(algo::cstring &str, const report::acr &row);// cfmt:report.acr.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::acr_check &row);// cfmt:report.acr_check.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::amc &row);// cfmt:report.amc.String
+inline algo::cstring &operator <<(algo::cstring &str, const report::atf_comp &row);// cfmt:report.atf_comp.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::atf_unit &row);// cfmt:report.atf_unit.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::src_func &row);// cfmt:report.src_func.String
 }

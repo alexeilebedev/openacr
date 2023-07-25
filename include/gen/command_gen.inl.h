@@ -82,6 +82,7 @@ inline void command::acr_compl_Init(command::acr_compl& parent) {
     parent.point = algo::strptr("");
     parent.type = algo::strptr("9");
     parent.install = bool(false);
+    parent.debug_log = algo::strptr("");
 }
 inline command::acr_compl_proc::acr_compl_proc() {
     command::acr_compl_proc_Init(*this);
@@ -247,6 +248,54 @@ inline void command::amc_vis_proc_Init(command::amc_vis_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
+inline command::ams_cat::ams_cat() {
+    command::ams_cat_Init(*this);
+}
+
+
+// --- command.ams_cat..Init
+// Set all fields to initial values.
+inline void command::ams_cat_Init(command::ams_cat& parent) {
+    parent.in = algo::strptr("data");
+}
+inline command::ams_cat_proc::ams_cat_proc() {
+    command::ams_cat_proc_Init(*this);
+}
+
+inline command::ams_cat_proc::~ams_cat_proc() {
+    command::ams_cat_proc_Uninit(*this);
+}
+
+
+// --- command.ams_cat_proc..Init
+// Set all fields to initial values.
+inline void command::ams_cat_proc_Init(command::ams_cat_proc& parent) {
+    parent.path = algo::strptr("bin/ams_cat");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
+inline command::ams_sendtest::ams_sendtest() {
+    command::ams_sendtest_Init(*this);
+}
+
+inline command::ams_sendtest_proc::ams_sendtest_proc() {
+    command::ams_sendtest_proc_Init(*this);
+}
+
+inline command::ams_sendtest_proc::~ams_sendtest_proc() {
+    command::ams_sendtest_proc_Uninit(*this);
+}
+
+
+// --- command.ams_sendtest_proc..Init
+// Set all fields to initial values.
+inline void command::ams_sendtest_proc_Init(command::ams_sendtest_proc& parent) {
+    parent.path = algo::strptr("bin/ams_sendtest");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
 inline command::atf_amc::atf_amc() {
     command::atf_amc_Init(*this);
 }
@@ -268,23 +317,65 @@ inline void command::atf_amc_proc_Init(command::atf_amc_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::atf_norm::atf_norm() {
-    command::atf_norm_Init(*this);
+inline command::atf_ci::atf_ci() {
+    command::atf_ci_Init(*this);
 }
 
-inline command::atf_norm_proc::atf_norm_proc() {
-    command::atf_norm_proc_Init(*this);
+inline command::atf_ci_proc::atf_ci_proc() {
+    command::atf_ci_proc_Init(*this);
 }
 
-inline command::atf_norm_proc::~atf_norm_proc() {
-    command::atf_norm_proc_Uninit(*this);
+inline command::atf_ci_proc::~atf_ci_proc() {
+    command::atf_ci_proc_Uninit(*this);
 }
 
 
-// --- command.atf_norm_proc..Init
+// --- command.atf_ci_proc..Init
 // Set all fields to initial values.
-inline void command::atf_norm_proc_Init(command::atf_norm_proc& parent) {
-    parent.path = algo::strptr("bin/atf_norm");
+inline void command::atf_ci_proc_Init(command::atf_ci_proc& parent) {
+    parent.path = algo::strptr("bin/atf_ci");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
+inline command::atf_comp::atf_comp() {
+    command::atf_comp_Init(*this);
+}
+
+inline command::atf_comp_proc::atf_comp_proc() {
+    command::atf_comp_proc_Init(*this);
+}
+
+inline command::atf_comp_proc::~atf_comp_proc() {
+    command::atf_comp_proc_Uninit(*this);
+}
+
+
+// --- command.atf_comp_proc..Init
+// Set all fields to initial values.
+inline void command::atf_comp_proc_Init(command::atf_comp_proc& parent) {
+    parent.path = algo::strptr("bin/atf_comp");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
+inline command::atf_cov::atf_cov() {
+    command::atf_cov_Init(*this);
+}
+
+inline command::atf_cov_proc::atf_cov_proc() {
+    command::atf_cov_proc_Init(*this);
+}
+
+inline command::atf_cov_proc::~atf_cov_proc() {
+    command::atf_cov_proc_Uninit(*this);
+}
+
+
+// --- command.atf_cov_proc..Init
+// Set all fields to initial values.
+inline void command::atf_cov_proc_Init(command::atf_cov_proc& parent) {
+    parent.path = algo::strptr("bin/atf_cov");
     parent.pid = pid_t(0);
     parent.timeout = i32(0);
     parent.status = i32(0);

@@ -87,3 +87,102 @@ void atf_amc::amctest_VarlenAlloc() {
         varlenalloc_Delete(*rec);
     }
 }
+
+// template is needed for string literal in order
+// to get correct length for NUL char inside
+template <typename T>
+static void Check(T &bin_literal, strptr str) {
+    strptr bin(bin_literal, sizeof bin_literal-1);
+    // print bin and compare with str
+    {
+        auto &hdr = *(atf_amc::MsgHdrLT*)bin.elems;
+        vrfyeq_(hdr.len,ch_N(bin)-2);
+        tempstr out;
+        atf_amc::MsgHdrLTMsgs_Print(out,hdr,sizeof bin);
+        verblog(out);
+        vrfyeq_(out,str);
+    }
+
+    // read str and compare with bin
+    {
+        algo::ByteAry buf;
+        vrfy_(atf_amc::MsgHdrLTMsgs_ReadStrptrMaybe(str,buf));
+        algo::memptr out(ary_Getary(buf));
+        verblog(out);
+        vrfyeq_(ToStrPtr(out),bin);
+    }
+}
+
+void atf_amc::amctest_VarlenMsgs() {
+    Check("\x04" "A" "1234"      ,"atf_amc.MsgLTA  a:1234");
+    Check("\x06" "B" "123456"    ,"atf_amc.MsgLTB  b:123456");
+    Check("\x00" "O"             ,"atf_amc.MsgLTO");
+    Check("\x00" "V"             ,"atf_amc.MsgLTV");
+    Check("\x06" "O"
+          "\x04" "A" "1234"      ,"atf_amc.MsgLTO  o:\"atf_amc.MsgLTA  a:1234\"");
+    Check("\x08" "O"
+          "\x06" "B" "123456"    ,"atf_amc.MsgLTO  o:\"atf_amc.MsgLTB  b:123456\"");
+    Check("\x08" "O"
+          "\x06" "O"
+          "\x04" "A" "1234"      ,"atf_amc.MsgLTO  o:'atf_amc.MsgLTO  o:\"atf_amc.MsgLTA  a:1234\"'");
+    Check("\x0a" "O"
+          "\x08" "O"
+          "\x06" "B" "123456"    ,"atf_amc.MsgLTO  o:'atf_amc.MsgLTO  o:\"atf_amc.MsgLTB  b:123456\"'");
+    Check("\x06" "V"
+          "\x04" "A" "1234"      ,"atf_amc.MsgLTV  v.0:\"atf_amc.MsgLTA  a:1234\"");
+    Check("\x08" "V"
+          "\x06" "B" "123456"    ,"atf_amc.MsgLTV  v.0:\"atf_amc.MsgLTB  b:123456\"");
+    Check("\x08" "V"
+          "\x06" "O"
+          "\x04" "A" "1234"      ,"atf_amc.MsgLTV  v.0:'atf_amc.MsgLTO  o:\"atf_amc.MsgLTA  a:1234\"'");
+    Check("\x0a" "V"
+          "\x08" "O"
+          "\x06" "B" "123456"    ,"atf_amc.MsgLTV  v.0:'atf_amc.MsgLTO  o:\"atf_amc.MsgLTB  b:123456\"'");
+    Check("\x08" "V"
+          "\x06" "V"
+          "\x04" "A" "1234"      ,"atf_amc.MsgLTV  v.0:'atf_amc.MsgLTV  v.0:\"atf_amc.MsgLTA  a:1234\"'");
+    Check("\x0a" "V"
+          "\x08" "V"
+          "\x06" "B" "123456"    ,"atf_amc.MsgLTV  v.0:'atf_amc.MsgLTV  v.0:\"atf_amc.MsgLTB  b:123456\"'");
+    Check("\x10" "V"
+          "\x00" "O"
+          "\x04" "A" "1234"
+          "\x06" "B" "123456"    ,"atf_amc.MsgLTV  v.0:atf_amc.MsgLTO  v.1:\"atf_amc.MsgLTA  a:1234\"  v.2:\"atf_amc.MsgLTB  b:123456\"");
+    Check("\x10" "V"
+          "\x06" "O"
+          "\x04" "A" "1234"
+          "\x06" "B" "123456"    ,"atf_amc.MsgLTV  v.0:'atf_amc.MsgLTO  o:\"atf_amc.MsgLTA  a:1234\"'  v.1:\"atf_amc.MsgLTB  b:123456\"");
+}
+
+template<class T> inline algo::memptr ToBytes(const T &t) {
+    return algo::memptr(reinterpret_cast<u8*>(const_cast<T*>(&t)),sizeof(t));
+}
+
+void atf_amc::amctest_VarlenMsgsPnew() {
+    algo::ByteAry vbuf;
+    ary_Addary(vbuf,ToBytes(atf_amc::MsgLTA("ab")));
+    ary_Addary(vbuf,ToBytes(atf_amc::MsgLTB("cd")));
+    algo::ByteAry msgvbuf;
+    atf_amc::MsgLTV *msgv = atf_amc::MsgLTV_FmtByteAry(msgvbuf,ary_Getary(vbuf));
+    vrfy_(msgv);
+    vrfyeq_(msgv->type,atf_amc_MsgHdrLT_type_atf_amc_MsgLTV);
+    vrfyeq_(msgv->len,ssizeof(atf_amc::MsgLTA)+ssizeof(atf_amc::MsgLTB)+ssizeof(atf_amc::MsgLTV)-2);
+
+    atf_amc::MsgLTV_v_curs vi;
+    MsgLTV_v_curs_Reset(vi,*msgv);
+    vrfy_(MsgLTV_v_curs_ValidQ(vi));
+    atf_amc::MsgHdrLT &ha = MsgLTV_v_curs_Access(vi);
+    atf_amc::MsgLTA *a = MsgLTA_Castdown(ha);
+    vrfy_(a);
+    vrfyeq_(a->a,"ab");
+
+    MsgLTV_v_curs_Next(vi);
+    vrfy_(MsgLTV_v_curs_ValidQ(vi));
+    atf_amc::MsgHdrLT &hb = MsgLTV_v_curs_Access(vi);
+    atf_amc::MsgLTB *b = MsgLTB_Castdown(hb);
+    vrfy_(b);
+    vrfyeq_(b->b,"cd");
+
+    MsgLTV_v_curs_Next(vi);
+    vrfy_(!MsgLTV_v_curs_ValidQ(vi));
+}

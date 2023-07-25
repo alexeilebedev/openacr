@@ -348,6 +348,7 @@ namespace algo { // update-hdr srcfile:'(%/algo/string.%|%/algo/line.%)'
     bool TryParseI64(algo::StringIter &iter, i64 &result);
     bool TryParseU32(algo::StringIter &iter, u32 &result);
     bool TryParseU64(algo::StringIter &iter, u64 &result);
+    bool TryParseU128(algo::StringIter &iter, u128 &result);
 
     // Read a series of digits and return resulting number.
     // Return success code

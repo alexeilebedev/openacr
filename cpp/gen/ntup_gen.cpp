@@ -85,7 +85,7 @@ void ntup::MainLoop() {
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
-        algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+        ntup::Steps();
     } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
 }
 
@@ -143,6 +143,12 @@ bool ntup::LoadSsimfileMaybe(algo::strptr fname) {
         retval = algo_lib::LoadTuplesFile(fname, ntup::InsertStrptrMaybe, true);
     }
     return retval;
+}
+
+// --- ntup.FDb._db.Steps
+// Calls Step function of dependencies
+void ntup::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
 // --- ntup.FDb._db.XrefMaybe
@@ -252,6 +258,10 @@ void ntup::FieldId_Print(ntup::FieldId & row, algo::cstring &str) {
     ntup::value_Print(row, str);
 }
 
+// --- ntup...SizeCheck
+inline static void ntup::SizeCheck() {
+}
+
 // --- ntup...main
 int main(int argc, char **argv) {
     try {
@@ -282,6 +292,9 @@ int main(int argc, char **argv) {
     return algo_lib::_db.exit_code;
 }
 
-// --- ntup...SizeCheck
-inline static void ntup::SizeCheck() {
+// --- ntup...WinMain
+#if defined(WIN32)
+int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int) {
+    return main(__argc,__argv);
 }
+#endif

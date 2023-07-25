@@ -70,6 +70,12 @@ void amc::Disp_Read(amc::FDispatch &disp) {
         Set(R, "$Msgname", name_Get(*msg.p_ctype));
         Set(R, "$msgns", ns_Get(*msg.p_ctype));
         Set(R, "$Ctype", amc::NsToCpp(ctype_Get(msg)));
+        cstring lenassign("len");
+        if (lenfld && lenfld->extra > 0) {
+            lenassign << "+" << lenfld->extra;
+        } else if (lenfld && lenfld->extra < 0) {
+            lenassign << lenfld->extra;
+        }
         Ins(&R, func.body        , "case $caseenumprefix_$msgns_$Msgname: {");
         amc::FCfmt *cfmt = FindStringRead(*msg.p_ctype);
         if (!cfmt) {
@@ -77,16 +83,22 @@ void amc::Disp_Read(amc::FDispatch &disp) {
         } else if (cfmt->printfmt == dmmeta_Printfmt_printfmt_Tuple || cfmt->printfmt == dmmeta_Printfmt_printfmt_Extern) {
             Ins(&R, func.body        , "    int len = sizeof($Ctype);");
             Ins(&R, func.body        , "    $Ctype *ctype = new(ary_AllocN(buf, len).elems) $Ctype; // default values");
+            if (is_varlen) {
+                Ins(&R, func.body    , "    algo::ByteAry varlenbuf;");
+                Ins(&R, func.body    , "    algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;");
+                Ins(&R, func.body    , "    algo_lib::_db.varlenbuf = &varlenbuf;");
+            }
             Ins(&R, func.body        , "    ok = $Msgname_ReadStrptrMaybe(*ctype, str); // now read attributes");
             if (is_varlen) {
-                Ins(&R, func.body    , "    len += ary_N(algo_lib::_db.varlenbuf);");
+                Ins(&R, func.body    , "    len += ary_N(varlenbuf);");
             }
             if (is_varlen && lenfld) {// for non-varlen, length is already valid
-                Set(R, "$assignlen", AssignExpr(*lenfld->p_field, "*ctype", "len", true));
+                Set(R, "$assignlen", AssignExpr(*lenfld->p_field, "*ctype", lenassign, true));
                 Ins(&R, func.body    , "    $assignlen;");
             }
             if (is_varlen) {
-                Ins(&R, func.body    , "    ary_Addary(buf, ary_Getary(algo_lib::_db.varlenbuf));");
+                Ins(&R, func.body    , "    ary_Addary(buf, ary_Getary(varlenbuf));");
+                Ins(&R, func.body    , "    algo_lib::_db.varlenbuf = varlenbuf_save;");
             }
         } else {
             prerr("amc.bad_dispatch_read"

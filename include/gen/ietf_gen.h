@@ -78,6 +78,9 @@ struct Ipv4 { // ietf.Ipv4
     bool operator ==(const ietf::Ipv4 &rhs) const;
     bool operator !=(const ietf::Ipv4 &rhs) const;
     bool operator <(const ietf::Ipv4 &rhs) const;
+    bool operator >(const ietf::Ipv4 &rhs) const;
+    bool operator <=(const ietf::Ipv4 &rhs) const;
+    bool operator >=(const ietf::Ipv4 &rhs) const;
     Ipv4();
 };
 #pragma pack(pop)
@@ -106,6 +109,9 @@ struct Ipport { // ietf.Ipport: IP+Port: host format
     bool operator ==(const ietf::Ipport &rhs) const;
     bool operator !=(const ietf::Ipport &rhs) const;
     bool operator <(const ietf::Ipport &rhs) const;
+    bool operator >(const ietf::Ipport &rhs) const;
+    bool operator <=(const ietf::Ipport &rhs) const;
+    bool operator >=(const ietf::Ipport &rhs) const;
     Ipport();
 };
 #pragma pack(pop)
@@ -132,6 +138,9 @@ struct Ipv4Addr { // ietf.Ipv4Addr
     bool operator ==(const ietf::Ipv4Addr &rhs) const;
     bool operator !=(const ietf::Ipv4Addr &rhs) const;
     bool operator <(const ietf::Ipv4Addr &rhs) const;
+    bool operator >(const ietf::Ipv4Addr &rhs) const;
+    bool operator <=(const ietf::Ipv4Addr &rhs) const;
+    bool operator >=(const ietf::Ipv4Addr &rhs) const;
     Ipv4Addr();
 };
 #pragma pack(pop)

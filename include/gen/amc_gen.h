@@ -398,6 +398,7 @@ namespace dmmeta { struct Gconst; }
 namespace amcdb { struct Gen; }
 namespace dmmeta { struct Gstatic; }
 namespace dmmeta { struct Gsymbol; }
+namespace amc { struct FSsimfile; }
 namespace dmmeta { struct Hook; }
 namespace dmmeta { struct Inlary; }
 namespace dmmeta { struct Lenfld; }
@@ -531,7 +532,6 @@ namespace amc { struct FPtrary; }
 namespace amc { struct FRowid; }
 namespace amc { struct FSmallstr; }
 namespace amc { struct FSortfld; }
-namespace amc { struct FSsimfile; }
 namespace amc { struct FSsimvolatile; }
 namespace amc { struct FStatictuple; }
 namespace amc { struct FSubstr; }
@@ -832,6 +832,9 @@ struct Enumstr { // amc.Enumstr: Key
     bool operator ==(const amc::Enumstr &rhs) const;
     bool operator !=(const amc::Enumstr &rhs) const;
     bool operator <(const amc::Enumstr &rhs) const;
+    bool operator >(const amc::Enumstr &rhs) const;
+    bool operator <=(const amc::Enumstr &rhs) const;
+    bool operator >=(const amc::Enumstr &rhs) const;
     Enumstr();
 };
 
@@ -1150,14 +1153,14 @@ void                 FCextern_Uninit(amc::FCextern& cextern) __attribute__((noth
 // global access: ind_cfmt (Thash)
 // access: amc.FCtype.zs_cfmt (Llist)
 struct FCfmt { // amc.FCfmt
-    algo::Smallstr50   cfmt;            //
-    algo::Smallstr50   printfmt;        //
-    bool               read;            //   false
-    bool               print;           //   false
-    algo::Smallstr20   sep;             //
-    bool               genop;           //   false
-    amc::FCfmt*        zs_cfmt_next;    // zslist link; -1 means not-in-list
-    amc::FCfmt*        ind_cfmt_next;   // hash next
+    algo::Smallstr100   cfmt;            //
+    algo::Smallstr50    printfmt;        //
+    bool                read;            //   false
+    bool                print;           //   false
+    algo::Smallstr20    sep;             //
+    bool                genop;           //   false
+    amc::FCfmt*         zs_cfmt_next;    // zslist link; -1 means not-in-list
+    amc::FCfmt*         ind_cfmt_next;   // hash next
 private:
     friend amc::FCfmt&          cfmt_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend amc::FCfmt*          cfmt_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -1374,6 +1377,7 @@ void                 FCstr_Uninit(amc::FCstr& cstr) __attribute__((nothrow));
 // access: amc.FDispctx.p_ctype (Upptr)
 // access: amc.FField.p_ctype (Upptr)
 // access: amc.FField.p_arg (Upptr)
+// access: amc.FGsymbol.p_symboltype (Upptr)
 // access: amc.FHook.p_funcptr (Upptr)
 // access: amc.FMsgtype.p_ctype (Upptr)
 // access: amc.FNs.c_ctype (Ptrary)
@@ -2086,6 +2090,7 @@ void                 trace_Print(amc::trace & row, algo::cstring &str) __attribu
 // create: amc.FDb._db (Global)
 struct FDb { // amc.FDb
     lpool_Lpblock*        lpool_free[31];                           // Lpool levels
+    u32                   lpool_lock;                               // Lpool lock
     amc::FFsort*          fsort_lary[32];                           // level array
     i32                   fsort_n;                                  // number of elements in array
     amc::FCfmt**          ind_cfmt_buckets_elems;                   // pointer to bucket array
@@ -2136,7 +2141,7 @@ struct FDb { // amc.FDb
     i32                   gstatic_n;                                // number of elements in array
     amc::FThash*          thash_lary[32];                           // level array
     i32                   thash_n;                                  // number of elements in array
-    u32                   outfile_blocksize;                        // # bytes per block
+    u64                   outfile_blocksize;                        // # bytes per block
     amc::FOutfile*        outfile_free;                             //
     amc::FFunc*           func_lary[32];                            // level array
     i32                   func_n;                                   // number of elements in array
@@ -2443,6 +2448,7 @@ struct FDb { // amc.FDb
     i32                   funique_n;                                // number of elements in array
     amc::FFuserinit*      fuserinit_lary[32];                       // level array
     i32                   fuserinit_n;                              // number of elements in array
+    bool                  has_ams_fwd_declare;                      //   false
     amc::trace            trace;                                    //
 };
 
@@ -3243,6 +3249,8 @@ bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow))
 u32                  SaveTuples(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -8637,6 +8645,7 @@ struct FFunc { // amc.FFunc
     bool                finalized;           //   false  Don't add any more code to me
     bool                isexplicit;          //   false  Is explicit constructor
     bool                istmpl;              //   false  Function is a template
+    algo::cstring       prepcond;            // Preprocessor #if condition
     bool                ns_c_func_in_ary;    //   false  membership flag
 private:
     friend amc::FFunc&          func_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -8698,6 +8707,8 @@ amc::Funcarg&        funcarg_qFind(amc::FFunc& func, u64 t) __attribute__((nothr
 amc::Funcarg&        funcarg_qLast(amc::FFunc& func) __attribute__((nothrow));
 // Return row id of specified element
 u64                  funcarg_rowid_Get(amc::FFunc& func, amc::Funcarg &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<amc::Funcarg> funcarg_AllocNVal(amc::FFunc& func, int n_elems, const amc::Funcarg& val) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 funcarg_XrefMaybe(amc::Funcarg &row);
@@ -8973,7 +8984,10 @@ void                 FGstatic_Uninit(amc::FGstatic& gstatic) __attribute__((noth
 struct FGsymbol { // amc.FGsymbol
     algo::Smallstr50    gsymbol;               //
     algo::Smallstr100   inc;                   // Regex to filter rows
+    algo::Smallstr50    symboltype;            //
     algo::Comment       comment;               //
+    amc::FSsimfile*     p_ssimfile;            // reference to parent row
+    amc::FCtype*        p_symboltype;          // reference to parent row
     bool                ns_c_gsymbol_in_ary;   //   false  membership flag
 private:
     friend amc::FGsymbol&       gsymbol_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -9492,6 +9506,8 @@ algo::cstring&       include_qFind(amc::FNs& ns, u64 t) __attribute__((nothrow))
 algo::cstring&       include_qLast(amc::FNs& ns) __attribute__((nothrow));
 // Return row id of specified element
 u64                  include_rowid_Get(amc::FNs& ns, algo::cstring &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> include_AllocNVal(amc::FNs& ns, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
 bool                 c_ctype_ins_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
@@ -10379,6 +10395,7 @@ void                 FSortfld_Uninit(amc::FSortfld& sortfld) __attribute__((noth
 // create: amc.FDb.ssimfile (Lary)
 // global access: ind_ssimfile (Thash)
 // access: amc.FCtype.c_ssimfile (Ptr)
+// access: amc.FGsymbol.p_ssimfile (Upptr)
 struct FSsimfile { // amc.FSsimfile
     amc::FSsimfile*       ind_ssimfile_next;   // hash next
     algo::Smallstr50      ssimfile;            //
@@ -12750,6 +12767,8 @@ void                 tfunc_Global_MainArgs();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Global_main();
 // User-implemented function from gstatic:amc.FDb.tfunc
+void                 tfunc_Global_WinMain();
+// User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Global_MainLoop();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Global_Step();
@@ -12769,6 +12788,8 @@ void                 tfunc_Global_SaveTuples();
 void                 tfunc_Global_Init();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Global_LoadSsimfileMaybe();
+// User-implemented function from gstatic:amc.FDb.tfunc
+void                 tfunc_Global_Steps();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Hook_Call();
 // User-implemented function from gstatic:amc.FDb.tfunc
@@ -13112,6 +13133,8 @@ void                 tfunc_Tary_rowid_Get();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Tary_curs();
 // User-implemented function from gstatic:amc.FDb.tfunc
+void                 tfunc_Tary_AllocNVal();
+// User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Thash_Cascdel();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Thash_EmptyQ();
@@ -13210,6 +13233,8 @@ void                 gen_check_basefield();
 // User-implemented function from gstatic:amc.FDb.gen
 void                 gen_clonefconst();
 // User-implemented function from gstatic:amc.FDb.gen
+void                 gen_parsenum();
+// User-implemented function from gstatic:amc.FDb.gen
 void                 gen_prep_proto();
 // User-implemented function from gstatic:amc.FDb.gen
 void                 gen_newfield_charset();
@@ -13253,6 +13278,8 @@ void                 gen_check_cpptype();
 void                 gen_check_prefix();
 // User-implemented function from gstatic:amc.FDb.gen
 void                 gen_check_bitfld();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_check_varlen();
 // User-implemented function from gstatic:amc.FDb.gen
 void                 gen_xref_parent();
 // User-implemented function from gstatic:amc.FDb.gen
@@ -13335,8 +13362,11 @@ void                 gen_ns_operators();
 void                 gen_ns_check_lim();
 // User-implemented function from gstatic:amc.FDb.gen
 void                 gen_ns_write();
-int                  main(int argc, char **argv);
 } // end namespace amc
+int                  main(int argc, char **argv);
+#if defined(WIN32)
+int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
+#endif
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const amc::BltinId &row);// cfmt:amc.BltinId.String
 inline algo::cstring &operator <<(algo::cstring &str, const amc::Enumstr &row);// cfmt:amc.Enumstr.String

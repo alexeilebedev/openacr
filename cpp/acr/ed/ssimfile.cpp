@@ -28,25 +28,23 @@
 // -----------------------------------------------------------------------------
 
 void acr_ed::Main_CreateSsimfile() {
-    Main_CreateCtype();
-    if (!ch_N(acr_ed::_db.cmdline.ctype)) {
-        prerr("acr_ed.createssimfile_noctype"
-              <<Keyval("comment","please specify a ctype"));
+    if (!ind_nsdb_Find(Pathcomp(acr_ed::_db.cmdline.ssimfile,".LL"))) {
+        prerr("acr_ed.createssimfile_bad_ssimns"
+              <<Keyval("comment","ssimns shall be on dmmeta.nsdb"));
         algo_lib::_db.exit_code++;
     } else {
+        Main_CreateCtype();
         // print ssimfile record
-        if (ch_N(acr_ed::_db.cmdline.ssimfile) > 0) {
-            dmmeta::Ssimfile ssimfile;
-            ssimfile.ssimfile = acr_ed::_db.cmdline.ssimfile;
-            ssimfile.ctype = acr_ed::_db.cmdline.ctype;
-            acr_ed::_db.out_ssim << ssimfile << eol;
+        dmmeta::Ssimfile ssimfile;
+        ssimfile.ssimfile = acr_ed::_db.cmdline.ssimfile;
+        ssimfile.ctype = acr_ed::_db.cmdline.ctype;
+        acr_ed::_db.out_ssim << ssimfile << eol;
 
-            // default sort  by primary key
-            dmmeta::Ssimsort ssimsort;
-            ssimsort.ssimfile = ssimfile.ssimfile;
-            ssimsort.sortfld = acr_ed::_db.cmdline.field;
-            acr_ed::_db.out_ssim << ssimsort << eol;
-        }
+        // default sort  by primary key
+        dmmeta::Ssimsort ssimsort;
+        ssimsort.ssimfile = ssimfile.ssimfile;
+        ssimsort.sortfld = acr_ed::_db.cmdline.field;
+        acr_ed::_db.out_ssim << ssimsort << eol;
 
         // field for comment
         // do not create a comment if base is specified -- it will cause an amc error later

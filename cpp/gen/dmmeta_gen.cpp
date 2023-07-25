@@ -14,12 +14,11 @@
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
 // compile-time string constants for dmmeta.Buftype.pnewtype
-const char *dmmeta_Buftype_pnewtype_Memptr    = "Memptr";
-const char *dmmeta_Buftype_pnewtype_Pcbuf     = "Pcbuf";
-const char *dmmeta_Buftype_pnewtype_Shbuf     = "Shbuf";
-const char *dmmeta_Buftype_pnewtype_Fixed     = "Fixed";
-const char *dmmeta_Buftype_pnewtype_Dynamic   = "Dynamic";
-const char *dmmeta_Buftype_pnewtype_ByteAry   = "ByteAry";
+const char *dmmeta_Buftype_pnewtype_Memptr      = "Memptr";
+const char *dmmeta_Buftype_pnewtype_AmsStream   = "AmsStream";
+const char *dmmeta_Buftype_pnewtype_Fixed       = "Fixed";
+const char *dmmeta_Buftype_pnewtype_Dynamic     = "Dynamic";
+const char *dmmeta_Buftype_pnewtype_ByteAry     = "ByteAry";
 
 // compile-time string constants for dmmeta.Fbufdir.fbufdir
 const char *dmmeta_Fbufdir_fbufdir_in    = "in";
@@ -50,34 +49,44 @@ const char *dmmeta_Ns_ns_amc_gc      = "amc_gc";
 const char *dmmeta_Ns_ns_amc_vis     = "amc_vis";
 const char *dmmeta_Ns_ns_amcdb       = "amcdb";
 
-const char *dmmeta_Ns_ns_atf          = "atf";
-const char *dmmeta_Ns_ns_atf_amc      = "atf_amc";
-const char *dmmeta_Ns_ns_atf_norm     = "atf_norm";
-const char *dmmeta_Ns_ns_atf_nrun     = "atf_nrun";
-const char *dmmeta_Ns_ns_atf_unit     = "atf_unit";
-const char *dmmeta_Ns_ns_atfdb        = "atfdb";
-const char *dmmeta_Ns_ns_bash2html    = "bash2html";
-const char *dmmeta_Ns_ns_command      = "command";
-const char *dmmeta_Ns_ns_dev          = "dev";
-const char *dmmeta_Ns_ns_dmmeta       = "dmmeta";
-const char *dmmeta_Ns_ns_gitlab       = "gitlab";
-const char *dmmeta_Ns_ns_ietf         = "ietf";
-const char *dmmeta_Ns_ns_lib_ctype    = "lib_ctype";
-const char *dmmeta_Ns_ns_lib_exec     = "lib_exec";
-const char *dmmeta_Ns_ns_lib_git      = "lib_git";
-const char *dmmeta_Ns_ns_lib_iconv    = "lib_iconv";
-const char *dmmeta_Ns_ns_lib_json     = "lib_json";
-const char *dmmeta_Ns_ns_lib_mysql    = "lib_mysql";
-const char *dmmeta_Ns_ns_lib_prot     = "lib_prot";
-const char *dmmeta_Ns_ns_lib_sql      = "lib_sql";
-const char *dmmeta_Ns_ns_mdbg         = "mdbg";
-const char *dmmeta_Ns_ns_mysql2ssim   = "mysql2ssim";
-const char *dmmeta_Ns_ns_ntup         = "ntup";
-const char *dmmeta_Ns_ns_orgfile      = "orgfile";
-const char *dmmeta_Ns_ns_report       = "report";
-const char *dmmeta_Ns_ns_src_func     = "src_func";
-const char *dmmeta_Ns_ns_src_hdr      = "src_hdr";
-const char *dmmeta_Ns_ns_src_lim      = "src_lim";
+const char *dmmeta_Ns_ns_ams            = "ams";
+const char *dmmeta_Ns_ns_ams_cat        = "ams_cat";
+const char *dmmeta_Ns_ns_ams_sendtest   = "ams_sendtest";
+const char *dmmeta_Ns_ns_amsdb          = "amsdb";
+const char *dmmeta_Ns_ns_atf            = "atf";
+const char *dmmeta_Ns_ns_atf_amc        = "atf_amc";
+const char *dmmeta_Ns_ns_atf_ci         = "atf_ci";
+const char *dmmeta_Ns_ns_atf_comp       = "atf_comp";
+const char *dmmeta_Ns_ns_atf_cov        = "atf_cov";
+const char *dmmeta_Ns_ns_atf_nrun       = "atf_nrun";
+const char *dmmeta_Ns_ns_atf_unit       = "atf_unit";
+const char *dmmeta_Ns_ns_atfdb          = "atfdb";
+const char *dmmeta_Ns_ns_bash2html      = "bash2html";
+const char *dmmeta_Ns_ns_command        = "command";
+const char *dmmeta_Ns_ns_dev            = "dev";
+const char *dmmeta_Ns_ns_dmmeta         = "dmmeta";
+const char *dmmeta_Ns_ns_fm             = "fm";
+const char *dmmeta_Ns_ns_fmdb           = "fmdb";
+const char *dmmeta_Ns_ns_gitlab         = "gitlab";
+const char *dmmeta_Ns_ns_ietf           = "ietf";
+const char *dmmeta_Ns_ns_lib_ams        = "lib_ams";
+const char *dmmeta_Ns_ns_lib_ctype      = "lib_ctype";
+const char *dmmeta_Ns_ns_lib_exec       = "lib_exec";
+const char *dmmeta_Ns_ns_lib_fm         = "lib_fm";
+const char *dmmeta_Ns_ns_lib_git        = "lib_git";
+const char *dmmeta_Ns_ns_lib_iconv      = "lib_iconv";
+const char *dmmeta_Ns_ns_lib_json       = "lib_json";
+const char *dmmeta_Ns_ns_lib_mysql      = "lib_mysql";
+const char *dmmeta_Ns_ns_lib_prot       = "lib_prot";
+const char *dmmeta_Ns_ns_lib_sql        = "lib_sql";
+const char *dmmeta_Ns_ns_mdbg           = "mdbg";
+const char *dmmeta_Ns_ns_mysql2ssim     = "mysql2ssim";
+const char *dmmeta_Ns_ns_ntup           = "ntup";
+const char *dmmeta_Ns_ns_orgfile        = "orgfile";
+const char *dmmeta_Ns_ns_report         = "report";
+const char *dmmeta_Ns_ns_src_func       = "src_func";
+const char *dmmeta_Ns_ns_src_hdr        = "src_hdr";
+const char *dmmeta_Ns_ns_src_lim        = "src_lim";
 
 const char *dmmeta_Ns_ns_ssim2csv     = "ssim2csv";
 const char *dmmeta_Ns_ns_ssim2mysql   = "ssim2mysql";
@@ -146,30 +155,48 @@ const char *dmmeta_Sorttype_sorttype_InsertionSort   = "InsertionSort";
 const char *dmmeta_Sorttype_sorttype_HeapSort        = "HeapSort";
 
 // compile-time string constants for dmmeta.Ssimfile.ssimfile
-const char *dmmeta_Ssimfile_ssimfile_amcdb_bltin          = "amcdb.bltin";
-const char *dmmeta_Ssimfile_ssimfile_amcdb_curs           = "amcdb.curs";
-const char *dmmeta_Ssimfile_ssimfile_amcdb_gen            = "amcdb.gen";
-const char *dmmeta_Ssimfile_ssimfile_amcdb_tclass         = "amcdb.tclass";
-const char *dmmeta_Ssimfile_ssimfile_amcdb_tcursor        = "amcdb.tcursor";
-const char *dmmeta_Ssimfile_ssimfile_amcdb_tfunc          = "amcdb.tfunc";
-const char *dmmeta_Ssimfile_ssimfile_atfdb_amctest        = "atfdb.amctest";
-const char *dmmeta_Ssimfile_ssimfile_atfdb_normcheck      = "atfdb.normcheck";
-const char *dmmeta_Ssimfile_ssimfile_atfdb_unittest       = "atfdb.unittest";
-const char *dmmeta_Ssimfile_ssimfile_dev_arch             = "dev.arch";
-const char *dmmeta_Ssimfile_ssimfile_dev_badline          = "dev.badline";
-const char *dmmeta_Ssimfile_ssimfile_dev_builddir         = "dev.builddir";
-const char *dmmeta_Ssimfile_ssimfile_dev_cfg              = "dev.cfg";
-const char *dmmeta_Ssimfile_ssimfile_dev_compiler         = "dev.compiler";
-const char *dmmeta_Ssimfile_ssimfile_dev_gitfile          = "dev.gitfile";
-const char *dmmeta_Ssimfile_ssimfile_dev_gitinfo          = "dev.gitinfo";
-const char *dmmeta_Ssimfile_ssimfile_dev_gitlab_project   = "dev.gitlab_project";
-const char *dmmeta_Ssimfile_ssimfile_dev_htmlentity       = "dev.htmlentity";
-const char *dmmeta_Ssimfile_ssimfile_dev_license          = "dev.license";
-const char *dmmeta_Ssimfile_ssimfile_dev_linelim          = "dev.linelim";
-const char *dmmeta_Ssimfile_ssimfile_dev_noindent         = "dev.noindent";
-const char *dmmeta_Ssimfile_ssimfile_dev_opt_type         = "dev.opt_type";
-const char *dmmeta_Ssimfile_ssimfile_dev_readme           = "dev.readme";
-const char *dmmeta_Ssimfile_ssimfile_dev_sandbox          = "dev.sandbox";
+const char *dmmeta_Ssimfile_ssimfile_amcdb_bltin        = "amcdb.bltin";
+const char *dmmeta_Ssimfile_ssimfile_amcdb_curs         = "amcdb.curs";
+const char *dmmeta_Ssimfile_ssimfile_amcdb_gen          = "amcdb.gen";
+const char *dmmeta_Ssimfile_ssimfile_amcdb_tclass       = "amcdb.tclass";
+const char *dmmeta_Ssimfile_ssimfile_amcdb_tcursor      = "amcdb.tcursor";
+const char *dmmeta_Ssimfile_ssimfile_amcdb_tfunc        = "amcdb.tfunc";
+const char *dmmeta_Ssimfile_ssimfile_amsdb_proctype     = "amsdb.proctype";
+const char *dmmeta_Ssimfile_ssimfile_amsdb_streamtype   = "amsdb.streamtype";
+const char *dmmeta_Ssimfile_ssimfile_atfdb_amctest      = "atfdb.amctest";
+const char *dmmeta_Ssimfile_ssimfile_atfdb_cijob        = "atfdb.cijob";
+
+const char *dmmeta_Ssimfile_ssimfile_atfdb_citest     = "atfdb.citest";
+const char *dmmeta_Ssimfile_ssimfile_atfdb_comptest   = "atfdb.comptest";
+
+const char *dmmeta_Ssimfile_ssimfile_atfdb_msgdir                = "atfdb.msgdir";
+const char *dmmeta_Ssimfile_ssimfile_atfdb_targs                 = "atfdb.targs";
+const char *dmmeta_Ssimfile_ssimfile_atfdb_test_gsymbol_char     = "atfdb.test_gsymbol_char";
+const char *dmmeta_Ssimfile_ssimfile_atfdb_test_gsymbol_pkey     = "atfdb.test_gsymbol_pkey";
+const char *dmmeta_Ssimfile_ssimfile_atfdb_test_gsymbol_strptr   = "atfdb.test_gsymbol_strptr";
+const char *dmmeta_Ssimfile_ssimfile_atfdb_tfilt                 = "atfdb.tfilt";
+const char *dmmeta_Ssimfile_ssimfile_atfdb_tmsg                  = "atfdb.tmsg";
+const char *dmmeta_Ssimfile_ssimfile_atfdb_unittest              = "atfdb.unittest";
+const char *dmmeta_Ssimfile_ssimfile_dev_arch                    = "dev.arch";
+const char *dmmeta_Ssimfile_ssimfile_dev_badline                 = "dev.badline";
+const char *dmmeta_Ssimfile_ssimfile_dev_builddir                = "dev.builddir";
+const char *dmmeta_Ssimfile_ssimfile_dev_cfg                     = "dev.cfg";
+const char *dmmeta_Ssimfile_ssimfile_dev_compiler                = "dev.compiler";
+const char *dmmeta_Ssimfile_ssimfile_dev_covfile                 = "dev.covfile";
+const char *dmmeta_Ssimfile_ssimfile_dev_covline                 = "dev.covline";
+const char *dmmeta_Ssimfile_ssimfile_dev_covtarget               = "dev.covtarget";
+const char *dmmeta_Ssimfile_ssimfile_dev_gitfile                 = "dev.gitfile";
+const char *dmmeta_Ssimfile_ssimfile_dev_gitinfo                 = "dev.gitinfo";
+const char *dmmeta_Ssimfile_ssimfile_dev_gitlab_project          = "dev.gitlab_project";
+const char *dmmeta_Ssimfile_ssimfile_dev_hilite                  = "dev.hilite";
+const char *dmmeta_Ssimfile_ssimfile_dev_htmlentity              = "dev.htmlentity";
+const char *dmmeta_Ssimfile_ssimfile_dev_license                 = "dev.license";
+const char *dmmeta_Ssimfile_ssimfile_dev_linelim                 = "dev.linelim";
+const char *dmmeta_Ssimfile_ssimfile_dev_msgfile                 = "dev.msgfile";
+const char *dmmeta_Ssimfile_ssimfile_dev_noindent                = "dev.noindent";
+const char *dmmeta_Ssimfile_ssimfile_dev_opt_type                = "dev.opt_type";
+const char *dmmeta_Ssimfile_ssimfile_dev_readme                  = "dev.readme";
+const char *dmmeta_Ssimfile_ssimfile_dev_sandbox                 = "dev.sandbox";
 
 const char *dmmeta_Ssimfile_ssimfile_dev_scriptfile        = "dev.scriptfile";
 const char *dmmeta_Ssimfile_ssimfile_dev_srcfile           = "dev.srcfile";
@@ -178,9 +205,11 @@ const char *dmmeta_Ssimfile_ssimfile_dev_targdep           = "dev.targdep";
 const char *dmmeta_Ssimfile_ssimfile_dev_target            = "dev.target";
 const char *dmmeta_Ssimfile_ssimfile_dev_targsrc           = "dev.targsrc";
 const char *dmmeta_Ssimfile_ssimfile_dev_targsyslib        = "dev.targsyslib";
+const char *dmmeta_Ssimfile_ssimfile_dev_tgtcov            = "dev.tgtcov";
 const char *dmmeta_Ssimfile_ssimfile_dev_timefmt           = "dev.timefmt";
 const char *dmmeta_Ssimfile_ssimfile_dev_tool_opt          = "dev.tool_opt";
 const char *dmmeta_Ssimfile_ssimfile_dev_uname             = "dev.uname";
+const char *dmmeta_Ssimfile_ssimfile_dev_unstablefld       = "dev.unstablefld";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_anonfld        = "dmmeta.anonfld";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_argvtype       = "dmmeta.argvtype";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_basepool       = "dmmeta.basepool";
@@ -252,6 +281,7 @@ const char *dmmeta_Ssimfile_ssimfile_dmmeta_inlary        = "dmmeta.inlary";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_lenfld        = "dmmeta.lenfld";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_listtype      = "dmmeta.listtype";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_llist         = "dmmeta.llist";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_logcat        = "dmmeta.logcat";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_main          = "dmmeta.main";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_msgtype       = "dmmeta.msgtype";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_nocascdel     = "dmmeta.nocascdel";
@@ -295,6 +325,11 @@ const char *dmmeta_Ssimfile_ssimfile_dmmeta_tracerec       = "dmmeta.tracerec";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_typefld        = "dmmeta.typefld";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_usertracefld   = "dmmeta.usertracefld";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_xref           = "dmmeta.xref";
+const char *dmmeta_Ssimfile_ssimfile_fmdb_alarm            = "fmdb.alarm";
+const char *dmmeta_Ssimfile_ssimfile_fmdb_alm_code         = "fmdb.alm_code";
+
+const char *dmmeta_Ssimfile_ssimfile_fmdb_alm_objtype   = "fmdb.alm_objtype";
+const char *dmmeta_Ssimfile_ssimfile_fmdb_alm_source    = "fmdb.alm_source";
 
 // compile-time string constants for dmmeta.Steptype.steptype
 const char *dmmeta_Steptype_steptype_Callback        = "Callback";
@@ -560,8 +595,7 @@ const char* dmmeta::value_ToCstr(const dmmeta::BuftypeId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case dmmeta_BuftypeId_Memptr       : ret = "Memptr";  break;
-        case dmmeta_BuftypeId_Pcbuf        : ret = "Pcbuf";  break;
-        case dmmeta_BuftypeId_Shbuf        : ret = "Shbuf";  break;
+        case dmmeta_BuftypeId_AmsStream    : ret = "AmsStream";  break;
         case dmmeta_BuftypeId_Fixed        : ret = "Fixed";  break;
         case dmmeta_BuftypeId_Dynamic      : ret = "Dynamic";  break;
         case dmmeta_BuftypeId_ByteAry      : ret = "ByteAry";  break;
@@ -593,12 +627,6 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::BuftypeId& parent, algo::strptr rhs) {
                 case LE_STR5('F','i','x','e','d'): {
                     value_SetEnum(parent,dmmeta_BuftypeId_Fixed); ret = true; break;
                 }
-                case LE_STR5('P','c','b','u','f'): {
-                    value_SetEnum(parent,dmmeta_BuftypeId_Pcbuf); ret = true; break;
-                }
-                case LE_STR5('S','h','b','u','f'): {
-                    value_SetEnum(parent,dmmeta_BuftypeId_Shbuf); ret = true; break;
-                }
             }
             break;
         }
@@ -617,6 +645,15 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::BuftypeId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('D','y','n','a','m','i','c'): {
                     value_SetEnum(parent,dmmeta_BuftypeId_Dynamic); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 9: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('A','m','s','S','t','r','e','a'): {
+                    if (memcmp(rhs.elems+8,"m",1)==0) { value_SetEnum(parent,dmmeta_BuftypeId_AmsStream); ret = true; break; }
+                    break;
                 }
             }
             break;
@@ -1023,7 +1060,7 @@ bool dmmeta::Cfmt_ReadFieldMaybe(dmmeta::Cfmt &parent, algo::strptr field, algo:
     (void)value_SetStrptrMaybe(field_id,field);
     bool retval = true; // default is no error
     switch(field_id) {
-        case dmmeta_FieldId_cfmt: retval = algo::Smallstr50_ReadStrptrMaybe(parent.cfmt, strval); break;
+        case dmmeta_FieldId_cfmt: retval = algo::Smallstr100_ReadStrptrMaybe(parent.cfmt, strval); break;
         case dmmeta_FieldId_printfmt: retval = algo::Smallstr50_ReadStrptrMaybe(parent.printfmt, strval); break;
         case dmmeta_FieldId_read: retval = bool_ReadStrptrMaybe(parent.read, strval); break;
         case dmmeta_FieldId_print: retval = bool_ReadStrptrMaybe(parent.print, strval); break;
@@ -1056,7 +1093,7 @@ void dmmeta::Cfmt_Print(dmmeta::Cfmt & row, algo::cstring &str) {
     algo::tempstr temp;
     str << "dmmeta.cfmt";
 
-    algo::Smallstr50_Print(row.cfmt, temp);
+    algo::Smallstr100_Print(row.cfmt, temp);
     PrintAttrSpaceReset(str,"cfmt", temp);
 
     algo::Smallstr50_Print(row.printfmt, temp);
@@ -3051,6 +3088,7 @@ const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) {
         case dmmeta_FieldId_gsymbol        : ret = "gsymbol";  break;
         case dmmeta_FieldId_ssimfile       : ret = "ssimfile";  break;
         case dmmeta_FieldId_inc            : ret = "inc";  break;
+        case dmmeta_FieldId_symboltype     : ret = "symboltype";  break;
         case dmmeta_FieldId_min            : ret = "min";  break;
         case dmmeta_FieldId_extra          : ret = "extra";  break;
         case dmmeta_FieldId_listtype       : ret = "listtype";  break;
@@ -3059,6 +3097,9 @@ const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) {
         case dmmeta_FieldId_instail        : ret = "instail";  break;
         case dmmeta_FieldId_havetail       : ret = "havetail";  break;
         case dmmeta_FieldId_havecount      : ret = "havecount";  break;
+        case dmmeta_FieldId_logcat         : ret = "logcat";  break;
+        case dmmeta_FieldId_enabled        : ret = "enabled";  break;
+        case dmmeta_FieldId_builtin        : ret = "builtin";  break;
         case dmmeta_FieldId_ismodule       : ret = "ismodule";  break;
         case dmmeta_FieldId_type           : ret = "type";  break;
         case dmmeta_FieldId_xref           : ret = "xref";  break;
@@ -3343,6 +3384,9 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('l','e','n','g','t','h'): {
                     value_SetEnum(parent,dmmeta_FieldId_length); ret = true; break;
                 }
+                case LE_STR6('l','o','g','c','a','t'): {
+                    value_SetEnum(parent,dmmeta_FieldId_logcat); ret = true; break;
+                }
                 case LE_STR6('m','i','n','m','a','x'): {
                     value_SetEnum(parent,dmmeta_FieldId_minmax); ret = true; break;
                 }
@@ -3387,6 +3431,9 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('b','u','f','t','y','p','e'): {
                     value_SetEnum(parent,dmmeta_FieldId_buftype); ret = true; break;
                 }
+                case LE_STR7('b','u','i','l','t','i','n'): {
+                    value_SetEnum(parent,dmmeta_FieldId_builtin); ret = true; break;
+                }
                 case LE_STR7('c','a','n','c','o','p','y'): {
                     value_SetEnum(parent,dmmeta_FieldId_cancopy); ret = true; break;
                 }
@@ -3401,6 +3448,9 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('d','i','s','p','s','i','g'): {
                     value_SetEnum(parent,dmmeta_FieldId_dispsig); ret = true; break;
+                }
+                case LE_STR7('e','n','a','b','l','e','d'): {
+                    value_SetEnum(parent,dmmeta_FieldId_enabled); ret = true; break;
                 }
                 case LE_STR7('f','b','u','f','d','i','r'): {
                     value_SetEnum(parent,dmmeta_FieldId_fbufdir); ret = true; break;
@@ -3609,6 +3659,10 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('r','i','g','h','t','F','i','e'): {
                     if (memcmp(rhs.elems+8,"ld",2)==0) { value_SetEnum(parent,dmmeta_FieldId_rightField); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('s','y','m','b','o','l','t','y'): {
+                    if (memcmp(rhs.elems+8,"pe",2)==0) { value_SetEnum(parent,dmmeta_FieldId_symboltype); ret = true; break; }
                     break;
                 }
             }
@@ -4744,6 +4798,7 @@ bool dmmeta::Gsymbol_ReadFieldMaybe(dmmeta::Gsymbol &parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_gsymbol: retval = algo::Smallstr50_ReadStrptrMaybe(parent.gsymbol, strval); break;
         case dmmeta_FieldId_inc: retval = algo::Smallstr100_ReadStrptrMaybe(parent.inc, strval); break;
+        case dmmeta_FieldId_symboltype: retval = algo::Smallstr50_ReadStrptrMaybe(parent.symboltype, strval); break;
         case dmmeta_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
         default: break;
     }
@@ -4776,6 +4831,9 @@ void dmmeta::Gsymbol_Print(dmmeta::Gsymbol & row, algo::cstring &str) {
 
     algo::Smallstr100_Print(row.inc, temp);
     PrintAttrSpaceReset(str,"inc", temp);
+
+    algo::Smallstr50_Print(row.symboltype, temp);
+    PrintAttrSpaceReset(str,"symboltype", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
@@ -5074,6 +5132,55 @@ void dmmeta::Llist_Print(dmmeta::Llist & row, algo::cstring &str) {
 
     bool_Print(row.havecount, temp);
     PrintAttrSpaceReset(str,"havecount", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
+// --- dmmeta.Logcat..ReadFieldMaybe
+bool dmmeta::Logcat_ReadFieldMaybe(dmmeta::Logcat &parent, algo::strptr field, algo::strptr strval) {
+    dmmeta::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case dmmeta_FieldId_logcat: retval = algo::Smallstr50_ReadStrptrMaybe(parent.logcat, strval); break;
+        case dmmeta_FieldId_enabled: retval = bool_ReadStrptrMaybe(parent.enabled, strval); break;
+        case dmmeta_FieldId_builtin: retval = bool_ReadStrptrMaybe(parent.builtin, strval); break;
+        case dmmeta_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dmmeta.Logcat..ReadStrptrMaybe
+// Read fields of dmmeta::Logcat from an ascii string.
+// The format of the string is an ssim Tuple
+bool dmmeta::Logcat_ReadStrptrMaybe(dmmeta::Logcat &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dmmeta.logcat") || algo::StripTypeTag(in_str, "dmmeta.Logcat");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Logcat_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dmmeta.Logcat..Print
+// print string representation of dmmeta::Logcat to string LHS, no header -- cprint:dmmeta.Logcat.String
+void dmmeta::Logcat_Print(dmmeta::Logcat & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "dmmeta.logcat";
+
+    algo::Smallstr50_Print(row.logcat, temp);
+    PrintAttrSpaceReset(str,"logcat", temp);
+
+    bool_Print(row.enabled, temp);
+    PrintAttrSpaceReset(str,"enabled", temp);
+
+    bool_Print(row.builtin, temp);
+    PrintAttrSpaceReset(str,"builtin", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

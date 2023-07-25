@@ -153,7 +153,7 @@ int amc_gc::acr_Exec(amc_gc::Acr& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:acr.Argv
 int amc_gc::acr_Execv(amc_gc::Acr& parent) {
-    char *argv[68+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((68+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -528,7 +528,7 @@ int amc_gc::acr_Exec(amc_gc::Check& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:acr.Argv
 int amc_gc::acr_Execv(amc_gc::Check& parent) {
-    char *argv[68+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((68+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -895,7 +895,7 @@ int amc_gc::amc_Exec(amc_gc::Check& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:amc.Argv
 int amc_gc::amc_Execv(amc_gc::Check& parent) {
-    char *argv[14+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((14+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -1073,7 +1073,7 @@ int amc_gc::abt_Exec(amc_gc::Check& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:abt.Argv
 int amc_gc::abt_Execv(amc_gc::Check& parent) {
-    char *argv[48+2]; // start of first arg (future pointer)
+    char **argv = (char**)alloca((48+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -1335,7 +1335,7 @@ void amc_gc::MainLoop() {
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
-        algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+        amc_gc::Steps();
     } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
 }
 
@@ -1393,6 +1393,12 @@ bool amc_gc::LoadSsimfileMaybe(algo::strptr fname) {
         retval = algo_lib::LoadTuplesFile(fname, amc_gc::InsertStrptrMaybe, true);
     }
     return retval;
+}
+
+// --- amc_gc.FDb._db.Steps
+// Calls Step function of dependencies
+void amc_gc::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
 // --- amc_gc.FDb._db.XrefMaybe
@@ -1508,6 +1514,10 @@ void amc_gc::FieldId_Print(amc_gc::FieldId & row, algo::cstring &str) {
     amc_gc::value_Print(row, str);
 }
 
+// --- amc_gc...SizeCheck
+inline static void amc_gc::SizeCheck() {
+}
+
 // --- amc_gc...main
 int main(int argc, char **argv) {
     try {
@@ -1538,6 +1548,9 @@ int main(int argc, char **argv) {
     return algo_lib::_db.exit_code;
 }
 
-// --- amc_gc...SizeCheck
-inline static void amc_gc::SizeCheck() {
+// --- amc_gc...WinMain
+#if defined(WIN32)
+int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int) {
+    return main(__argc,__argv);
 }
+#endif

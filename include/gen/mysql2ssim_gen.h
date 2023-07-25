@@ -74,6 +74,8 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -113,6 +115,8 @@ algo::cstring&       table_names_qFind(u64 t) __attribute__((nothrow));
 algo::cstring&       table_names_qLast() __attribute__((nothrow));
 // Return row id of specified element
 u64                  table_names_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> table_names_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -149,6 +153,8 @@ algo::cstring&       in_tables_qFind(u64 t) __attribute__((nothrow));
 algo::cstring&       in_tables_qLast() __attribute__((nothrow));
 // Return row id of specified element
 u64                  in_tables_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> in_tables_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
 
 // proceed to next item
 void                 _db_table_names_curs_Next(_db_table_names_curs &curs);
@@ -220,6 +226,8 @@ algo::cstring&       vals_qFind(mysql2ssim::FTobltin& parent, u64 t) __attribute
 algo::cstring&       vals_qLast(mysql2ssim::FTobltin& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  vals_rowid_Get(mysql2ssim::FTobltin& parent, algo::cstring &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> vals_AllocNVal(mysql2ssim::FTobltin& parent, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
 
 // proceed to next item
 void                 FTobltin_vals_curs_Next(FTobltin_vals_curs &curs);
@@ -297,8 +305,11 @@ struct FTobltin_vals_curs {// cursor
     FTobltin_vals_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-int                  main(int argc, char **argv);
 } // end namespace mysql2ssim
+int                  main(int argc, char **argv);
+#if defined(WIN32)
+int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
+#endif
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const mysql2ssim::trace &row);// cfmt:mysql2ssim.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const mysql2ssim::FieldId &row);// cfmt:mysql2ssim.FieldId.String

@@ -55,7 +55,8 @@ bool lib_ctype::EqualDefaultQ(algo::Attr *attr, lib_ctype::FField &field) {
 // which is known to be of ctype CTYPE, to cstring TEXT.
 // Output fields in normalized order, respecting Base.
 // If SKIP_DFLT is true, do not print fields which happen to match their default.
-// Suports Varlen fields with
+// Suports Varlen fields.
+// Attributes that are themselves tuples are recursively normalized as well.
 void lib_ctype::PrintTupleAttrs(cstring& text, algo::Tuple &tuple, lib_ctype::FCtype &ctype, bool skip_dflt) {
     ind_beg(lib_ctype::ctype_c_field_curs, field, ctype) {
         if (field.reftype == dmmeta_Reftype_reftype_Base) {// print base fields (recursive)
@@ -76,6 +77,38 @@ void lib_ctype::PrintTupleAttrs(cstring& text, algo::Tuple &tuple, lib_ctype::FC
             }
         }
     }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
+// Normalize a string that's supposed to correspond CTYPE
+// If CTYPE is NULL, it is guessed from the type tag
+// The following actions are done:
+// 1. Print correct type tag back
+// 2. Remove any attributes from tuple that don't correspond to fields of CTYPE
+// 3. Print back any fields in ctype that don't appear in the string
+// 4. Optionally skip printing any field that's already equal to the default value (if SKIP_DFLT is specified)
+// 5. Recursively call NormalizeTuple on any field that has Tuple print format
+// NOTE:
+// Ctype from parent field has been removed, as it is wrong for derived types!
+tempstr lib_ctype::NormalizeSsimTuple(strptr str, bool skip_dflt) {
+    Tuple tuple;
+    tempstr out;
+    if (Tuple_ReadStrptrMaybe(tuple,str)) {
+        lib_ctype::FCtype *ctype = lib_ctype::TagToCtype(tuple);
+        if (ctype) {
+            out << ctype->ctype;
+            ind_beg(lib_ctype::ctype_c_field_curs, field, *ctype) {
+                if (lib_ctype::TupleFieldQ(field)) {
+                    if (algo::Attr *attr=algo::attr_Find(tuple,name_Get(field),0)) {
+                        attr->value = NormalizeSsimTuple(attr->value, skip_dflt);
+                    }
+                }
+            }ind_end;
+            PrintTupleAttrs(out, tuple, *ctype, skip_dflt);
+        }
+    }
+    return out;
 }
 
 // -----------------------------------------------------------------------------
@@ -316,4 +349,30 @@ void lib_ctype::Match_Tuple(lib_ctype::Match &match, Tuple &expect, Tuple &resul
         match.distance += 1000;// high penalty
         match.nattr++;
     }
+}
+
+
+// -----------------------------------------------------------------------------
+
+// Remove unstable fields from a string that's supposed to correspond CTYPE
+tempstr lib_ctype::StabilizeSsimTuple(strptr str) {
+    Tuple tuple;
+    tempstr out;
+    if (Tuple_ReadStrptrMaybe(tuple,str)) {
+        lib_ctype::FCtype *ctype = lib_ctype::TagToCtype(tuple);
+        if (ctype) {
+            out << tuple.head.value;
+            ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+                lib_ctype::FField *field = ind_field_Find(dmmeta::Field_Concat_ctype_name(ctype->ctype,attr.name));
+                cstring value = field && field->c_unstablefld ? tempstr("***")
+                    : field && TupleFieldQ(*field) ?  StabilizeSsimTuple(attr.value)
+                    : attr.value;
+                PrintAttrSpace(out, attr.name, value);
+            }ind_end;
+        }
+    }
+    if (!ch_N(out)) {
+        out = str;
+    }
+    return out;
 }

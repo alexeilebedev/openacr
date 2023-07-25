@@ -13,6 +13,38 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/dev_gen.inl.h"
 //#pragma endinclude
+inline acr_ed::FCfmt::FCfmt() {
+    acr_ed::FCfmt_Init(*this);
+}
+
+inline acr_ed::FCfmt::~FCfmt() {
+    acr_ed::FCfmt_Uninit(*this);
+}
+
+
+// --- acr_ed.FCfmt..Init
+// Set all fields to initial values.
+inline void acr_ed::FCfmt_Init(acr_ed::FCfmt& cfmt) {
+    cfmt.read = bool(false);
+    cfmt.print = bool(false);
+    cfmt.genop = bool(false);
+}
+inline acr_ed::FCpptype::FCpptype() {
+    acr_ed::FCpptype_Init(*this);
+}
+
+inline acr_ed::FCpptype::~FCpptype() {
+    acr_ed::FCpptype_Uninit(*this);
+}
+
+
+// --- acr_ed.FCpptype..Init
+// Set all fields to initial values.
+inline void acr_ed::FCpptype_Init(acr_ed::FCpptype& cpptype) {
+    cpptype.ctor = bool(false);
+    cpptype.dtor = bool(true);
+    cpptype.cheap_copy = bool(false);
+}
 inline acr_ed::FCstr::FCstr() {
     acr_ed::FCstr_Init(*this);
 }
@@ -116,6 +148,102 @@ inline void acr_ed::c_ssimfile_Remove(acr_ed::FCtype& ctype, acr_ed::FSsimfile& 
     }
 }
 
+// --- acr_ed.FCtype.c_pack.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool acr_ed::c_pack_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FPack& row) {
+    acr_ed::FPack* ptr = ctype.c_pack;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        ctype.c_pack = &row;
+    }
+    return retval;
+}
+
+// --- acr_ed.FCtype.c_pack.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void acr_ed::c_pack_Remove(acr_ed::FCtype& ctype, acr_ed::FPack& row) {
+    acr_ed::FPack *ptr = ctype.c_pack;
+    if (LIKELY(ptr == &row)) {
+        ctype.c_pack = NULL;
+    }
+}
+
+// --- acr_ed.FCtype.c_typefld.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool acr_ed::c_typefld_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FTypefld& row) {
+    acr_ed::FTypefld* ptr = ctype.c_typefld;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        ctype.c_typefld = &row;
+    }
+    return retval;
+}
+
+// --- acr_ed.FCtype.c_typefld.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void acr_ed::c_typefld_Remove(acr_ed::FCtype& ctype, acr_ed::FTypefld& row) {
+    acr_ed::FTypefld *ptr = ctype.c_typefld;
+    if (LIKELY(ptr == &row)) {
+        ctype.c_typefld = NULL;
+    }
+}
+
+// --- acr_ed.FCtype.c_cpptype.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool acr_ed::c_cpptype_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FCpptype& row) {
+    acr_ed::FCpptype* ptr = ctype.c_cpptype;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        ctype.c_cpptype = &row;
+    }
+    return retval;
+}
+
+// --- acr_ed.FCtype.c_cpptype.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void acr_ed::c_cpptype_Remove(acr_ed::FCtype& ctype, acr_ed::FCpptype& row) {
+    acr_ed::FCpptype *ptr = ctype.c_cpptype;
+    if (LIKELY(ptr == &row)) {
+        ctype.c_cpptype = NULL;
+    }
+}
+
+// --- acr_ed.FCtype.c_cfmt.EmptyQ
+// Return true if index is empty
+inline bool acr_ed::c_cfmt_EmptyQ(acr_ed::FCtype& ctype) {
+    return ctype.c_cfmt_n == 0;
+}
+
+// --- acr_ed.FCtype.c_cfmt.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_ed::FCfmt* acr_ed::c_cfmt_Find(acr_ed::FCtype& ctype, u32 t) {
+    acr_ed::FCfmt *retval = NULL;
+    u64 idx = t;
+    u64 lim = ctype.c_cfmt_n;
+    if (idx < lim) {
+        retval = ctype.c_cfmt_elems[idx];
+    }
+    return retval;
+}
+
+// --- acr_ed.FCtype.c_cfmt.Getary
+// Return array of pointers
+inline algo::aryptr<acr_ed::FCfmt*> acr_ed::c_cfmt_Getary(acr_ed::FCtype& ctype) {
+    return algo::aryptr<acr_ed::FCfmt*>(ctype.c_cfmt_elems, ctype.c_cfmt_n);
+}
+
+// --- acr_ed.FCtype.c_cfmt.N
+// Return number of items in the pointer array
+inline i32 acr_ed::c_cfmt_N(const acr_ed::FCtype& ctype) {
+    return ctype.c_cfmt_n;
+}
+
+// --- acr_ed.FCtype.c_cfmt.RemoveAll
+// Empty the index. (The rows are not deleted)
+inline void acr_ed::c_cfmt_RemoveAll(acr_ed::FCtype& ctype) {
+    ctype.c_cfmt_n = 0;
+}
+
 // --- acr_ed.FCtype.c_field_curs.Reset
 inline void acr_ed::ctype_c_field_curs_Reset(ctype_c_field_curs &curs, acr_ed::FCtype &parent) {
     curs.elems = parent.c_field_elems;
@@ -141,16 +269,29 @@ inline acr_ed::FField& acr_ed::ctype_c_field_curs_Access(ctype_c_field_curs &cur
     return *curs.elems[curs.index];
 }
 
-// --- acr_ed.FCtype..Init
-// Set all fields to initial values.
-inline void acr_ed::FCtype_Init(acr_ed::FCtype& ctype) {
-    ctype.c_field_elems = NULL; // (acr_ed.FCtype.c_field)
-    ctype.c_field_n = 0; // (acr_ed.FCtype.c_field)
-    ctype.c_field_max = 0; // (acr_ed.FCtype.c_field)
-    ctype.c_cstr = NULL;
-    ctype.p_ns = NULL;
-    ctype.c_ssimfile = NULL;
-    ctype.ind_ctype_next = (acr_ed::FCtype*)-1; // (acr_ed.FDb.ind_ctype) not-in-hash
+// --- acr_ed.FCtype.c_cfmt_curs.Reset
+inline void acr_ed::ctype_c_cfmt_curs_Reset(ctype_c_cfmt_curs &curs, acr_ed::FCtype &parent) {
+    curs.elems = parent.c_cfmt_elems;
+    curs.n_elems = parent.c_cfmt_n;
+    curs.index = 0;
+}
+
+// --- acr_ed.FCtype.c_cfmt_curs.ValidQ
+// cursor points to valid item
+inline bool acr_ed::ctype_c_cfmt_curs_ValidQ(ctype_c_cfmt_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- acr_ed.FCtype.c_cfmt_curs.Next
+// proceed to next item
+inline void acr_ed::ctype_c_cfmt_curs_Next(ctype_c_cfmt_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_ed.FCtype.c_cfmt_curs.Access
+// item access
+inline acr_ed::FCfmt& acr_ed::ctype_c_cfmt_curs_Access(ctype_c_cfmt_curs &curs) {
+    return *curs.elems[curs.index];
 }
 inline acr_ed::trace::trace() {
 }
@@ -727,6 +868,228 @@ inline acr_ed::FSandbox& acr_ed::sandbox_qFind(u64 t) {
     return _db.sandbox_lary[bsr][index];
 }
 
+// --- acr_ed.FDb.pack.EmptyQ
+// Return true if index is empty
+inline bool acr_ed::pack_EmptyQ() {
+    return _db.pack_n == 0;
+}
+
+// --- acr_ed.FDb.pack.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_ed::FPack* acr_ed::pack_Find(u64 t) {
+    acr_ed::FPack *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.pack_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.pack_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_ed.FDb.pack.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_ed::FPack* acr_ed::pack_Last() {
+    return pack_Find(u64(_db.pack_n-1));
+}
+
+// --- acr_ed.FDb.pack.N
+// Return number of items in the pool
+inline i32 acr_ed::pack_N() {
+    return _db.pack_n;
+}
+
+// --- acr_ed.FDb.pack.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_ed::FPack& acr_ed::pack_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.pack_lary[bsr][index];
+}
+
+// --- acr_ed.FDb.typefld.EmptyQ
+// Return true if index is empty
+inline bool acr_ed::typefld_EmptyQ() {
+    return _db.typefld_n == 0;
+}
+
+// --- acr_ed.FDb.typefld.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_ed::FTypefld* acr_ed::typefld_Find(u64 t) {
+    acr_ed::FTypefld *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.typefld_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.typefld_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_ed.FDb.typefld.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_ed::FTypefld* acr_ed::typefld_Last() {
+    return typefld_Find(u64(_db.typefld_n-1));
+}
+
+// --- acr_ed.FDb.typefld.N
+// Return number of items in the pool
+inline i32 acr_ed::typefld_N() {
+    return _db.typefld_n;
+}
+
+// --- acr_ed.FDb.typefld.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_ed::FTypefld& acr_ed::typefld_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.typefld_lary[bsr][index];
+}
+
+// --- acr_ed.FDb.cpptype.EmptyQ
+// Return true if index is empty
+inline bool acr_ed::cpptype_EmptyQ() {
+    return _db.cpptype_n == 0;
+}
+
+// --- acr_ed.FDb.cpptype.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_ed::FCpptype* acr_ed::cpptype_Find(u64 t) {
+    acr_ed::FCpptype *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.cpptype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.cpptype_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_ed.FDb.cpptype.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_ed::FCpptype* acr_ed::cpptype_Last() {
+    return cpptype_Find(u64(_db.cpptype_n-1));
+}
+
+// --- acr_ed.FDb.cpptype.N
+// Return number of items in the pool
+inline i32 acr_ed::cpptype_N() {
+    return _db.cpptype_n;
+}
+
+// --- acr_ed.FDb.cpptype.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_ed::FCpptype& acr_ed::cpptype_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.cpptype_lary[bsr][index];
+}
+
+// --- acr_ed.FDb.cfmt.EmptyQ
+// Return true if index is empty
+inline bool acr_ed::cfmt_EmptyQ() {
+    return _db.cfmt_n == 0;
+}
+
+// --- acr_ed.FDb.cfmt.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_ed::FCfmt* acr_ed::cfmt_Find(u64 t) {
+    acr_ed::FCfmt *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.cfmt_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.cfmt_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_ed.FDb.cfmt.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_ed::FCfmt* acr_ed::cfmt_Last() {
+    return cfmt_Find(u64(_db.cfmt_n-1));
+}
+
+// --- acr_ed.FDb.cfmt.N
+// Return number of items in the pool
+inline i32 acr_ed::cfmt_N() {
+    return _db.cfmt_n;
+}
+
+// --- acr_ed.FDb.cfmt.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_ed::FCfmt& acr_ed::cfmt_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.cfmt_lary[bsr][index];
+}
+
+// --- acr_ed.FDb.nsdb.EmptyQ
+// Return true if index is empty
+inline bool acr_ed::nsdb_EmptyQ() {
+    return _db.nsdb_n == 0;
+}
+
+// --- acr_ed.FDb.nsdb.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_ed::FNsdb* acr_ed::nsdb_Find(u64 t) {
+    acr_ed::FNsdb *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.nsdb_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.nsdb_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_ed.FDb.nsdb.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_ed::FNsdb* acr_ed::nsdb_Last() {
+    return nsdb_Find(u64(_db.nsdb_n-1));
+}
+
+// --- acr_ed.FDb.nsdb.N
+// Return number of items in the pool
+inline i32 acr_ed::nsdb_N() {
+    return _db.nsdb_n;
+}
+
+// --- acr_ed.FDb.nsdb.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_ed::FNsdb& acr_ed::nsdb_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.nsdb_lary[bsr][index];
+}
+
+// --- acr_ed.FDb.ind_nsdb.EmptyQ
+// Return true if hash is empty
+inline bool acr_ed::ind_nsdb_EmptyQ() {
+    return _db.ind_nsdb_n == 0;
+}
+
+// --- acr_ed.FDb.ind_nsdb.N
+// Return number of items in the hash
+inline i32 acr_ed::ind_nsdb_N() {
+    return _db.ind_nsdb_n;
+}
+
 // --- acr_ed.FDb.ns_curs.Reset
 // cursor points to valid item
 inline void acr_ed::_db_ns_curs_Reset(_db_ns_curs &curs, acr_ed::FDb &parent) {
@@ -1001,6 +1364,131 @@ inline void acr_ed::_db_sandbox_curs_Next(_db_sandbox_curs &curs) {
 inline acr_ed::FSandbox& acr_ed::_db_sandbox_curs_Access(_db_sandbox_curs &curs) {
     return sandbox_qFind(u64(curs.index));
 }
+
+// --- acr_ed.FDb.pack_curs.Reset
+// cursor points to valid item
+inline void acr_ed::_db_pack_curs_Reset(_db_pack_curs &curs, acr_ed::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_ed.FDb.pack_curs.ValidQ
+// cursor points to valid item
+inline bool acr_ed::_db_pack_curs_ValidQ(_db_pack_curs &curs) {
+    return curs.index < _db.pack_n;
+}
+
+// --- acr_ed.FDb.pack_curs.Next
+// proceed to next item
+inline void acr_ed::_db_pack_curs_Next(_db_pack_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_ed.FDb.pack_curs.Access
+// item access
+inline acr_ed::FPack& acr_ed::_db_pack_curs_Access(_db_pack_curs &curs) {
+    return pack_qFind(u64(curs.index));
+}
+
+// --- acr_ed.FDb.typefld_curs.Reset
+// cursor points to valid item
+inline void acr_ed::_db_typefld_curs_Reset(_db_typefld_curs &curs, acr_ed::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_ed.FDb.typefld_curs.ValidQ
+// cursor points to valid item
+inline bool acr_ed::_db_typefld_curs_ValidQ(_db_typefld_curs &curs) {
+    return curs.index < _db.typefld_n;
+}
+
+// --- acr_ed.FDb.typefld_curs.Next
+// proceed to next item
+inline void acr_ed::_db_typefld_curs_Next(_db_typefld_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_ed.FDb.typefld_curs.Access
+// item access
+inline acr_ed::FTypefld& acr_ed::_db_typefld_curs_Access(_db_typefld_curs &curs) {
+    return typefld_qFind(u64(curs.index));
+}
+
+// --- acr_ed.FDb.cpptype_curs.Reset
+// cursor points to valid item
+inline void acr_ed::_db_cpptype_curs_Reset(_db_cpptype_curs &curs, acr_ed::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_ed.FDb.cpptype_curs.ValidQ
+// cursor points to valid item
+inline bool acr_ed::_db_cpptype_curs_ValidQ(_db_cpptype_curs &curs) {
+    return curs.index < _db.cpptype_n;
+}
+
+// --- acr_ed.FDb.cpptype_curs.Next
+// proceed to next item
+inline void acr_ed::_db_cpptype_curs_Next(_db_cpptype_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_ed.FDb.cpptype_curs.Access
+// item access
+inline acr_ed::FCpptype& acr_ed::_db_cpptype_curs_Access(_db_cpptype_curs &curs) {
+    return cpptype_qFind(u64(curs.index));
+}
+
+// --- acr_ed.FDb.cfmt_curs.Reset
+// cursor points to valid item
+inline void acr_ed::_db_cfmt_curs_Reset(_db_cfmt_curs &curs, acr_ed::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_ed.FDb.cfmt_curs.ValidQ
+// cursor points to valid item
+inline bool acr_ed::_db_cfmt_curs_ValidQ(_db_cfmt_curs &curs) {
+    return curs.index < _db.cfmt_n;
+}
+
+// --- acr_ed.FDb.cfmt_curs.Next
+// proceed to next item
+inline void acr_ed::_db_cfmt_curs_Next(_db_cfmt_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_ed.FDb.cfmt_curs.Access
+// item access
+inline acr_ed::FCfmt& acr_ed::_db_cfmt_curs_Access(_db_cfmt_curs &curs) {
+    return cfmt_qFind(u64(curs.index));
+}
+
+// --- acr_ed.FDb.nsdb_curs.Reset
+// cursor points to valid item
+inline void acr_ed::_db_nsdb_curs_Reset(_db_nsdb_curs &curs, acr_ed::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_ed.FDb.nsdb_curs.ValidQ
+// cursor points to valid item
+inline bool acr_ed::_db_nsdb_curs_ValidQ(_db_nsdb_curs &curs) {
+    return curs.index < _db.nsdb_n;
+}
+
+// --- acr_ed.FDb.nsdb_curs.Next
+// proceed to next item
+inline void acr_ed::_db_nsdb_curs_Next(_db_nsdb_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_ed.FDb.nsdb_curs.Access
+// item access
+inline acr_ed::FNsdb& acr_ed::_db_nsdb_curs_Access(_db_nsdb_curs &curs) {
+    return nsdb_qFind(u64(curs.index));
+}
 inline acr_ed::FField::FField() {
     acr_ed::FField_Init(*this);
 }
@@ -1054,6 +1542,27 @@ inline acr_ed::FNs::~FNs() {
 inline void acr_ed::FNs_Init(acr_ed::FNs& ns) {
     ns.ind_ns_next = (acr_ed::FNs*)-1; // (acr_ed.FDb.ind_ns) not-in-hash
 }
+inline acr_ed::FNsdb::FNsdb() {
+    acr_ed::FNsdb_Init(*this);
+}
+
+inline acr_ed::FNsdb::~FNsdb() {
+    acr_ed::FNsdb_Uninit(*this);
+}
+
+
+// --- acr_ed.FNsdb..Init
+// Set all fields to initial values.
+inline void acr_ed::FNsdb_Init(acr_ed::FNsdb& nsdb) {
+    nsdb.ind_nsdb_next = (acr_ed::FNsdb*)-1; // (acr_ed.FDb.ind_nsdb) not-in-hash
+}
+inline acr_ed::FPack::FPack() {
+}
+
+inline acr_ed::FPack::~FPack() {
+    acr_ed::FPack_Uninit(*this);
+}
+
 inline acr_ed::FSandbox::FSandbox() {
 }
 
@@ -1098,6 +1607,13 @@ inline acr_ed::FTargsrc::FTargsrc() {
 inline void acr_ed::FTargsrc_Init(acr_ed::FTargsrc& targsrc) {
     targsrc.p_target = NULL;
 }
+inline acr_ed::FTypefld::FTypefld() {
+}
+
+inline acr_ed::FTypefld::~FTypefld() {
+    acr_ed::FTypefld_Uninit(*this);
+}
+
 inline acr_ed::FieldId::FieldId(i32                            in_value)
     : value(in_value)
 {

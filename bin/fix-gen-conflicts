@@ -51,7 +51,7 @@ if ($modfiles) {
         }
         $modfiles = `git ls-files -m`;
         if ($modfiles eq "") {
-            $rc = system("ai && atf_norm '(amc%|bootstrap|copyright|iffy_src|tempcode|gitfile|indent%|src_lim)'");
+            $rc = system("ai && atf_ci '(amc%|bootstrap|copyright|iffy_src|tempcode|gitfile|indent%|src_lim)'");
         }
     }
     if ($rc == 0) {

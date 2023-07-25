@@ -264,6 +264,7 @@ void amc::tfunc_Thash_GetOrCreate() {
         Ins(&R, goc.body,         "        ret = NULL;");
         Ins(&R, goc.body,         "    }");
         Ins(&R, goc.body,         "}");
+        Ins(&R, goc.body,         "vrfy(ret, tempstr() << \"$ns.create_error  table:$name  key:'\"<<key<<\"'  comment:'bad xref'\");");
         Ins(&R, goc.body,         "return *ret;");
     }
 }

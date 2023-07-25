@@ -146,14 +146,14 @@ struct lpool_Lpblock {
 extern const char *abt_help;
 extern const char *abt_syntax;
 extern FDb _db;
-extern const char *dev_opt_type_AR; // "AR"
-extern const char *dev_opt_type_C; // "C"
-extern const char *dev_opt_type_CC; // "CC"
-extern const char *dev_opt_type_CPP; // "CPP"
-extern const char *dev_opt_type_HPP; // "HPP"
-extern const char *dev_opt_type_IGNOREME; // "IGNOREME"
-extern const char *dev_opt_type_LINK; // "LINK"
-extern const char *dev_opt_type_RC; // "RC"
+extern const char* dev_opt_type_AR; // "AR"
+extern const char* dev_opt_type_C; // "C"
+extern const char* dev_opt_type_CC; // "CC"
+extern const char* dev_opt_type_CPP; // "CPP"
+extern const char* dev_opt_type_HPP; // "HPP"
+extern const char* dev_opt_type_IGNOREME; // "IGNOREME"
+extern const char* dev_opt_type_LINK; // "LINK"
+extern const char* dev_opt_type_RC; // "RC"
 
 // --- abt.FArch
 // create: abt.FDb.arch (Lary)
@@ -257,6 +257,7 @@ void                 trace_Print(abt::trace & row, algo::cstring &str) __attribu
 // create: abt.FDb._db (Global)
 struct FDb { // abt.FDb
     lpool_Lpblock*      lpool_free[31];               // Lpool levels
+    u32                 lpool_lock;                   // Lpool lock
     command::abt        cmdline;                      //
     abt::FSrcfile*      srcfile_lary[32];             // level array
     i32                 srcfile_n;                    // number of elements in array
@@ -596,6 +597,8 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -1028,6 +1031,8 @@ algo::cstring&       sysincl_qFind(u64 t) __attribute__((nothrow));
 algo::cstring&       sysincl_qLast() __attribute__((nothrow));
 // Return row id of specified element
 u64                  sysincl_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> sysincl_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
 bool                 zs_origsel_target_EmptyQ() __attribute__((__warn_unused_result__, nothrow));
@@ -2441,8 +2446,11 @@ struct target_c_alllib_curs {// cursor
     target_c_alllib_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-int                  main(int argc, char **argv);
 } // end namespace abt
+int                  main(int argc, char **argv);
+#if defined(WIN32)
+int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
+#endif
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const abt::trace &row);// cfmt:abt.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const abt::FieldId &row);// cfmt:abt.FieldId.String

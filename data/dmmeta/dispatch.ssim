@@ -1,3 +1,5 @@
 dmmeta.dispatch  dispatch:atf_amc.Disp  unk:N  read:N  print:N  haslen:N  call:N  strict:N  comment:""
 dmmeta.dispatch  dispatch:atf_amc.Msgs  unk:N  read:Y  print:N  haslen:N  call:N  strict:N  comment:""
 dmmeta.dispatch  dispatch:atf_amc.Ssimfiles  unk:N  read:Y  print:N  haslen:N  call:N  strict:N  comment:""
+dmmeta.dispatch  dispatch:lib_ams.CtlConn  unk:N  read:N  print:N  haslen:N  call:N  strict:Y  comment:""
+dmmeta.dispatch  dispatch:lib_ams.CtlMsg  unk:N  read:N  print:N  haslen:N  call:Y  strict:N  comment:""

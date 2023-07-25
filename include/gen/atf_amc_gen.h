@@ -68,105 +68,135 @@ enum atf_amc_FieldIdEnum {                  // atf_amc.FieldId.value
     ,atf_amc_FieldId_intval          = 10
     ,atf_amc_FieldId_fixary          = 11
     ,atf_amc_FieldId_inlary          = 12
-    ,atf_amc_FieldId_type            = 13
-    ,atf_amc_FieldId_length          = 14
-    ,atf_amc_FieldId_typeg           = 15
-    ,atf_amc_FieldId_optg            = 16
-    ,atf_amc_FieldId_pmask           = 17
-    ,atf_amc_FieldId_value2          = 18
-    ,atf_amc_FieldId_value3          = 19
-    ,atf_amc_FieldId_value21         = 20
-    ,atf_amc_FieldId_value22         = 21
-    ,atf_amc_FieldId_value23         = 22
-    ,atf_amc_FieldId_value24         = 23
-    ,atf_amc_FieldId_value25         = 24
-    ,atf_amc_FieldId_value26         = 25
-    ,atf_amc_FieldId_value20         = 26
-    ,atf_amc_FieldId_value28         = 27
-    ,atf_amc_FieldId_value29         = 28
-    ,atf_amc_FieldId_value30         = 29
-    ,atf_amc_FieldId_value31         = 30
-    ,atf_amc_FieldId_value32         = 31
-    ,atf_amc_FieldId_value27         = 32
-    ,atf_amc_FieldId_value19         = 33
-    ,atf_amc_FieldId_value18         = 34
-    ,atf_amc_FieldId_value4          = 35
-    ,atf_amc_FieldId_value5          = 36
-    ,atf_amc_FieldId_value6          = 37
-    ,atf_amc_FieldId_value7          = 38
-    ,atf_amc_FieldId_value8          = 39
-    ,atf_amc_FieldId_value9          = 40
-    ,atf_amc_FieldId_value69         = 41
-    ,atf_amc_FieldId_value11         = 42
-    ,atf_amc_FieldId_value12         = 43
-    ,atf_amc_FieldId_value13         = 44
-    ,atf_amc_FieldId_value14         = 45
-    ,atf_amc_FieldId_value15         = 46
-    ,atf_amc_FieldId_value16         = 47
-    ,atf_amc_FieldId_value33         = 48
-    ,atf_amc_FieldId_value10         = 49
-    ,atf_amc_FieldId_value17         = 50
-    ,atf_amc_FieldId_value35         = 51
-    ,atf_amc_FieldId_value55         = 52
-    ,atf_amc_FieldId_value56         = 53
-    ,atf_amc_FieldId_value57         = 54
-    ,atf_amc_FieldId_value58         = 55
-    ,atf_amc_FieldId_value59         = 56
-    ,atf_amc_FieldId_value60         = 57
-    ,atf_amc_FieldId_value54         = 58
-    ,atf_amc_FieldId_value62         = 59
-    ,atf_amc_FieldId_value63         = 60
-    ,atf_amc_FieldId_value64         = 61
-    ,atf_amc_FieldId_value65         = 62
-    ,atf_amc_FieldId_value66         = 63
-    ,atf_amc_FieldId_value67         = 64
-    ,atf_amc_FieldId_value68         = 65
-    ,atf_amc_FieldId_value61         = 66
-    ,atf_amc_FieldId_value34         = 67
-    ,atf_amc_FieldId_value52         = 68
-    ,atf_amc_FieldId_value36         = 69
-    ,atf_amc_FieldId_value37         = 70
-    ,atf_amc_FieldId_value38         = 71
-    ,atf_amc_FieldId_value39         = 72
-    ,atf_amc_FieldId_value40         = 73
-    ,atf_amc_FieldId_value41         = 74
-    ,atf_amc_FieldId_value42         = 75
-    ,atf_amc_FieldId_value53         = 76
-    ,atf_amc_FieldId_value44         = 77
-    ,atf_amc_FieldId_value45         = 78
-    ,atf_amc_FieldId_value46         = 79
-    ,atf_amc_FieldId_value47         = 80
-    ,atf_amc_FieldId_value48         = 81
-    ,atf_amc_FieldId_value49         = 82
-    ,atf_amc_FieldId_value50         = 83
-    ,atf_amc_FieldId_value51         = 84
-    ,atf_amc_FieldId_value43         = 85
-    ,atf_amc_FieldId_value70         = 86
-    ,atf_amc_FieldId_value71         = 87
-    ,atf_amc_FieldId_ch              = 88
-    ,atf_amc_FieldId_val1            = 89
-    ,atf_amc_FieldId_val2            = 90
-    ,atf_amc_FieldId_val3            = 91
-    ,atf_amc_FieldId_msghdr          = 92
-    ,atf_amc_FieldId_payload         = 93
-    ,atf_amc_FieldId_val             = 94
-    ,atf_amc_FieldId_text            = 95
-    ,atf_amc_FieldId_typea           = 96
-    ,atf_amc_FieldId_j               = 97
-    ,atf_amc_FieldId_typec           = 98
-    ,atf_amc_FieldId_typeh           = 99
-    ,atf_amc_FieldId_types           = 100
-    ,atf_amc_FieldId_comment         = 101
-    ,atf_amc_FieldId_i               = 102
-    ,atf_amc_FieldId_strval_regx     = 103
-    ,atf_amc_FieldId_strval2_regx    = 104
-    ,atf_amc_FieldId_start_dateval   = 105
-    ,atf_amc_FieldId_end_dateval     = 106
-    ,atf_amc_FieldId_start_intval    = 107
-    ,atf_amc_FieldId_end_intval      = 108
+    ,atf_amc_FieldId_len             = 13
+    ,atf_amc_FieldId_type            = 14
+    ,atf_amc_FieldId_length          = 15
+    ,atf_amc_FieldId_base            = 16
+    ,atf_amc_FieldId_a               = 17
+    ,atf_amc_FieldId_b               = 18
+    ,atf_amc_FieldId_o               = 19
+    ,atf_amc_FieldId_v               = 20
+    ,atf_amc_FieldId_typeg           = 21
+    ,atf_amc_FieldId_optg            = 22
+    ,atf_amc_FieldId_pmask           = 23
+    ,atf_amc_FieldId_value2          = 24
+    ,atf_amc_FieldId_value3          = 25
+    ,atf_amc_FieldId_value21         = 26
+    ,atf_amc_FieldId_value22         = 27
+    ,atf_amc_FieldId_value23         = 28
+    ,atf_amc_FieldId_value24         = 29
+    ,atf_amc_FieldId_value25         = 30
+    ,atf_amc_FieldId_value26         = 31
+    ,atf_amc_FieldId_value20         = 32
+    ,atf_amc_FieldId_value28         = 33
+    ,atf_amc_FieldId_value29         = 34
+    ,atf_amc_FieldId_value30         = 35
+    ,atf_amc_FieldId_value31         = 36
+    ,atf_amc_FieldId_value32         = 37
+    ,atf_amc_FieldId_value27         = 38
+    ,atf_amc_FieldId_value19         = 39
+    ,atf_amc_FieldId_value18         = 40
+    ,atf_amc_FieldId_value4          = 41
+    ,atf_amc_FieldId_value5          = 42
+    ,atf_amc_FieldId_value6          = 43
+    ,atf_amc_FieldId_value7          = 44
+    ,atf_amc_FieldId_value8          = 45
+    ,atf_amc_FieldId_value9          = 46
+    ,atf_amc_FieldId_value69         = 47
+    ,atf_amc_FieldId_value11         = 48
+    ,atf_amc_FieldId_value12         = 49
+    ,atf_amc_FieldId_value13         = 50
+    ,atf_amc_FieldId_value14         = 51
+    ,atf_amc_FieldId_value15         = 52
+    ,atf_amc_FieldId_value16         = 53
+    ,atf_amc_FieldId_value33         = 54
+    ,atf_amc_FieldId_value10         = 55
+    ,atf_amc_FieldId_value17         = 56
+    ,atf_amc_FieldId_value35         = 57
+    ,atf_amc_FieldId_value55         = 58
+    ,atf_amc_FieldId_value56         = 59
+    ,atf_amc_FieldId_value57         = 60
+    ,atf_amc_FieldId_value58         = 61
+    ,atf_amc_FieldId_value59         = 62
+    ,atf_amc_FieldId_value60         = 63
+    ,atf_amc_FieldId_value54         = 64
+    ,atf_amc_FieldId_value62         = 65
+    ,atf_amc_FieldId_value63         = 66
+    ,atf_amc_FieldId_value64         = 67
+    ,atf_amc_FieldId_value65         = 68
+    ,atf_amc_FieldId_value66         = 69
+    ,atf_amc_FieldId_value67         = 70
+    ,atf_amc_FieldId_value68         = 71
+    ,atf_amc_FieldId_value61         = 72
+    ,atf_amc_FieldId_value34         = 73
+    ,atf_amc_FieldId_value52         = 74
+    ,atf_amc_FieldId_value36         = 75
+    ,atf_amc_FieldId_value37         = 76
+    ,atf_amc_FieldId_value38         = 77
+    ,atf_amc_FieldId_value39         = 78
+    ,atf_amc_FieldId_value40         = 79
+    ,atf_amc_FieldId_value41         = 80
+    ,atf_amc_FieldId_value42         = 81
+    ,atf_amc_FieldId_value53         = 82
+    ,atf_amc_FieldId_value44         = 83
+    ,atf_amc_FieldId_value45         = 84
+    ,atf_amc_FieldId_value46         = 85
+    ,atf_amc_FieldId_value47         = 86
+    ,atf_amc_FieldId_value48         = 87
+    ,atf_amc_FieldId_value49         = 88
+    ,atf_amc_FieldId_value50         = 89
+    ,atf_amc_FieldId_value51         = 90
+    ,atf_amc_FieldId_value43         = 91
+    ,atf_amc_FieldId_value70         = 92
+    ,atf_amc_FieldId_value71         = 93
+    ,atf_amc_FieldId_ch              = 94
+    ,atf_amc_FieldId_val1            = 95
+    ,atf_amc_FieldId_val2            = 96
+    ,atf_amc_FieldId_val3            = 97
+    ,atf_amc_FieldId_msghdr          = 98
+    ,atf_amc_FieldId_payload         = 99
+    ,atf_amc_FieldId_val             = 100
+    ,atf_amc_FieldId_text            = 101
+    ,atf_amc_FieldId_typea           = 102
+    ,atf_amc_FieldId_j               = 103
+    ,atf_amc_FieldId_typec           = 104
+    ,atf_amc_FieldId_typeh           = 105
+    ,atf_amc_FieldId_types           = 106
+    ,atf_amc_FieldId_comment         = 107
+    ,atf_amc_FieldId_i               = 108
+    ,atf_amc_FieldId_strval_regx     = 109
+    ,atf_amc_FieldId_strval2_regx    = 110
+    ,atf_amc_FieldId_start_dateval   = 111
+    ,atf_amc_FieldId_end_dateval     = 112
+    ,atf_amc_FieldId_start_intval    = 113
+    ,atf_amc_FieldId_end_intval      = 114
 };
 
-enum { atf_amc_FieldIdEnum_N = 109 };
+enum { atf_amc_FieldIdEnum_N = 115 };
+
+
+// --- atf_amc_MsgHdrLT_type_Enum
+
+enum atf_amc_MsgHdrLT_type_Enum {                  // atf_amc.MsgHdrLT.type
+     atf_amc_MsgHdrLT_type_atf_amc_MsgLTA   = 'A'
+    ,atf_amc_MsgHdrLT_type_atf_amc_MsgLTB   = 'B'
+    ,atf_amc_MsgHdrLT_type_atf_amc_MsgLTO   = 'O'
+    ,atf_amc_MsgHdrLT_type_atf_amc_MsgLTV   = 'V'
+};
+
+enum { atf_amc_MsgHdrLT_type_Enum_N = 4 };
+
+
+// --- atf_amc_MsgHdrLTMsgsCaseEnum
+
+enum atf_amc_MsgHdrLTMsgsCaseEnum {                   // atf_amc.MsgHdrLTMsgsCase.value
+     atf_amc_MsgHdrLTMsgsCase_atf_amc_MsgLTA   = 'A'
+    ,atf_amc_MsgHdrLTMsgsCase_atf_amc_MsgLTB   = 'B'
+    ,atf_amc_MsgHdrLTMsgsCase_atf_amc_MsgLTO   = 'O'
+    ,atf_amc_MsgHdrLTMsgsCase_atf_amc_MsgLTV   = 'V'
+};
+
+enum { atf_amc_MsgHdrLTMsgsCaseEnum_N = 4 };
 
 
 // --- atf_amc_MsgTypeEnum
@@ -248,6 +278,7 @@ namespace atf_amc { struct TypeB; }
 namespace atf_amc { struct TypeC; }
 namespace atf_amc { struct TypeS; }
 namespace atf_amc { struct TypeT; }
+namespace atf_amc { struct MsgHdrLT; }
 namespace atf_amc { struct MsgHeader; }
 namespace atf_amc { struct TypeH; }
 namespace atf_amc { struct DispType1; }
@@ -255,6 +286,10 @@ namespace atf_amc { struct DispType2; }
 namespace atf_amc { struct DispType3; }
 namespace atf_amc { struct VarlenK; }
 namespace dmmeta { struct Ctype; }
+namespace atf_amc { struct MsgLTA; }
+namespace atf_amc { struct MsgLTB; }
+namespace atf_amc { struct MsgLTO; }
+namespace atf_amc { struct MsgLTV; }
 namespace atf_amc { struct Seqmsg; }
 namespace atf_amc { struct Text; }
 namespace atf_amc { struct OptOptG; }
@@ -293,6 +328,8 @@ namespace atf_amc { struct Hooktype; }
 namespace atf_amc { struct InlaryPrint; }
 namespace atf_amc { struct Lary32; }
 namespace atf_amc { struct Linebuf; }
+namespace atf_amc { struct MsgHdrLTMsgsCase; }
+namespace atf_amc { struct MsgHdrLT_curs; }
 namespace atf_amc { struct MsgHeader_curs; }
 namespace atf_amc { struct Msgbuf; }
 namespace atf_amc { struct MsgsCase; }
@@ -366,6 +403,7 @@ namespace atf_amc { struct FUnitSort_fixary_curs; }
 namespace atf_amc { struct InlaryPrint_fixary_curs; }
 namespace atf_amc { struct InlaryPrint_inlary_curs; }
 namespace atf_amc { struct Lary32_lary_curs; }
+namespace atf_amc { struct MsgLTV_v_curs; }
 namespace atf_amc { struct PmaskU555_pmask_curs; }
 namespace atf_amc { struct TaryU32_tary_u32_curs; }
 namespace atf_amc { struct TaryU8_ary_curs; }
@@ -397,12 +435,16 @@ struct optg_Lpblock {
     optg_Lpblock* next;
 };
 typedef void (*parent_callback_hook)(void* userctx, atf_amc::Hooktype& arg);
+extern const char* atfdb_test_gsymbol_char_TestChar; // "TestChar"
+extern const atfdb::TestGsymbolPkeyPkey atfdb_test_gsymbol_pkey_TestPkey; // "TestPkey"
+extern const algo::strptr atfdb_test_gsymbol_strptr_TestStrptr; // "TestStrptr"
 
 // sizes types appearing as Opt or Varlen; these need to be here
 // to allow inline implementations of _Get functions and avoid
 // a circular dependency between headers
 enum {
     sizeof_atf_amc_TypeG = 4
+    , sizeof_atf_amc_MsgHdrLT = 2
     , sizeof_atf_amc_OptG = 4
     , sizeof_atf_amc_MsgHeader = 4
 };
@@ -598,6 +640,9 @@ struct Cstr { // atf_amc.Cstr
     bool operator ==(const atf_amc::Cstr &rhs) const;
     bool operator !=(const atf_amc::Cstr &rhs) const;
     bool operator <(const atf_amc::Cstr &rhs) const;
+    bool operator >(const atf_amc::Cstr &rhs) const;
+    bool operator <=(const atf_amc::Cstr &rhs) const;
+    bool operator >=(const atf_amc::Cstr &rhs) const;
     Cstr();
 };
 
@@ -631,6 +676,9 @@ struct Ctype1Attr { // atf_amc.Ctype1Attr
     bool operator ==(const atf_amc::Ctype1Attr &rhs) const;
     bool operator !=(const atf_amc::Ctype1Attr &rhs) const;
     bool operator <(const atf_amc::Ctype1Attr &rhs) const;
+    bool operator >(const atf_amc::Ctype1Attr &rhs) const;
+    bool operator <=(const atf_amc::Ctype1Attr &rhs) const;
+    bool operator >=(const atf_amc::Ctype1Attr &rhs) const;
     Ctype1Attr();
 };
 
@@ -657,6 +705,9 @@ struct Ctype2Attr { // atf_amc.Ctype2Attr
     bool operator ==(const atf_amc::Ctype2Attr &rhs) const;
     bool operator !=(const atf_amc::Ctype2Attr &rhs) const;
     bool operator <(const atf_amc::Ctype2Attr &rhs) const;
+    bool operator >(const atf_amc::Ctype2Attr &rhs) const;
+    bool operator <=(const atf_amc::Ctype2Attr &rhs) const;
+    bool operator >=(const atf_amc::Ctype2Attr &rhs) const;
     Ctype2Attr();
 };
 
@@ -1365,24 +1416,28 @@ struct FDb { // atf_amc.FDb
     i32                      ind_cstring_buckets_n;                            // number of elements in bucket array
     i32                      ind_cstring_n;                                    // number of elements in the hash table
     atf_amc::Msgbuf*         cd_in_msg_head;                                   // zero-terminated doubly linked list
-    u32                      typeb_blocksize;                                  // # bytes per block
+    u64                      typeb_blocksize;                                  // # bytes per block
     atf_amc::FTypeB*         typeb_free;                                       //
-    u32                      pooledbe64_blocksize;                             // # bytes per block
+    u64                      pooledbe64_blocksize;                             // # bytes per block
     atf_amc::PooledBE64*     pooledbe64_free;                                  //
     i64                      varlen_extern_n;                                  // Number of elements
     varlen_extern_Lpblock*   varlen_extern_free[31];                           // Lpool levels
+    u32                      varlen_extern_lock;                               // Lpool lock
     atf_amc::FAmctest*       amctest_lary[32];                                 // level array
     i32                      amctest_n;                                        // number of elements in array
-    u32                      cascdel_blocksize;                                // # bytes per block
+    u64                      cascdel_blocksize;                                // # bytes per block
     atf_amc::FCascdel*       cascdel_free;                                     //
     algo_lib::Bitset         cascdel_check;                                    // Bitset of FCascdel records in existence
     u32                      cascdel_next_key;                                 //   0  Next sequence number for FCascdel record
     i64                      optalloc_n;                                       // Number of elements
     optalloc_Lpblock*        optalloc_free[31];                                // Lpool levels
+    u32                      optalloc_lock;                                    // Lpool lock
     i64                      varlenalloc_n;                                    // Number of elements
     varlenalloc_Lpblock*     varlenalloc_free[31];                             // Lpool levels
+    u32                      varlenalloc_lock;                                 // Lpool lock
     i64                      optg_n;                                           // Number of elements
     optg_Lpblock*            optg_free[31];                                    // Lpool levels
+    u32                      optg_lock;                                        // Lpool lock
     atf_amc::FTypeK**        c_typek_elems;                                    // array of pointers
     u32                      c_typek_n;                                        // array of pointers
     u32                      c_typek_max;                                      // capacity of allocated array
@@ -1815,6 +1870,8 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -2433,6 +2490,9 @@ struct TypeG { // atf_amc.TypeG
     bool operator ==(const atf_amc::TypeG &rhs) const;
     bool operator !=(const atf_amc::TypeG &rhs) const;
     bool operator <(const atf_amc::TypeG &rhs) const;
+    bool operator >(const atf_amc::TypeG &rhs) const;
+    bool operator <=(const atf_amc::TypeG &rhs) const;
+    bool operator >=(const atf_amc::TypeG &rhs) const;
     TypeG();
 };
 #pragma pack(pop)
@@ -2536,6 +2596,8 @@ atf_amc::Cstr&       orig_qFind(atf_amc::FPerfSortString& parent, u64 t) __attri
 atf_amc::Cstr&       orig_qLast(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  orig_rowid_Get(atf_amc::FPerfSortString& parent, atf_amc::Cstr &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<atf_amc::Cstr> orig_AllocNVal(atf_amc::FPerfSortString& parent, int n_elems, const atf_amc::Cstr& val) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 orig_XrefMaybe(atf_amc::Cstr &row);
@@ -2584,6 +2646,8 @@ atf_amc::Cstr&       sorted1_qFind(atf_amc::FPerfSortString& parent, u64 t) __at
 atf_amc::Cstr&       sorted1_qLast(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  sorted1_rowid_Get(atf_amc::FPerfSortString& parent, atf_amc::Cstr &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<atf_amc::Cstr> sorted1_AllocNVal(atf_amc::FPerfSortString& parent, int n_elems, const atf_amc::Cstr& val) __attribute__((__warn_unused_result__, nothrow));
 // Verify whether array is sorted
 bool                 sorted1_SortedQ(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Insertion sort
@@ -2963,6 +3027,9 @@ struct TypeA { // atf_amc.TypeA
     bool operator ==(const atf_amc::TypeA &rhs) const;
     bool operator !=(const atf_amc::TypeA &rhs) const;
     bool operator <(const atf_amc::TypeA &rhs) const;
+    bool operator >(const atf_amc::TypeA &rhs) const;
+    bool operator <=(const atf_amc::TypeA &rhs) const;
+    bool operator >=(const atf_amc::TypeA &rhs) const;
     TypeA();
 };
 
@@ -3037,6 +3104,8 @@ atf_amc::TypeA&      tary_qFind(atf_amc::FUnitSort& parent, u64 t) __attribute__
 atf_amc::TypeA&      tary_qLast(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  tary_rowid_Get(atf_amc::FUnitSort& parent, atf_amc::TypeA &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<atf_amc::TypeA> tary_AllocNVal(atf_amc::FUnitSort& parent, int n_elems, const atf_amc::TypeA& val) __attribute__((__warn_unused_result__, nothrow));
 // Verify whether array is sorted
 bool                 tary_SortedQ(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Insertion sort
@@ -3378,6 +3447,113 @@ void                 Linebuf_Init(atf_amc::Linebuf& linebuf);
 // print string representation of atf_amc::Linebuf to string LHS, no header -- cprint:atf_amc.Linebuf.String
 void                 Linebuf_Print(atf_amc::Linebuf & row, algo::cstring &str) __attribute__((nothrow));
 
+// --- atf_amc.MsgHdrLT
+// create: atf_amc.MsgLTO.o (Opt)
+// create: atf_amc.MsgLTV.v (Varlen)
+// access: atf_amc.MsgLTA.base (Base)
+// access: atf_amc.MsgLTB.base (Base)
+// access: atf_amc.MsgLTO.base (Base)
+// access: atf_amc.MsgLTV.base (Base)
+// access: atf_amc.MsgHdrLT_curs.msg (Ptr)
+#pragma pack(push,1)
+struct MsgHdrLT { // atf_amc.MsgHdrLT: length-type header
+    u8     len;    //   0
+    char   type;   //   0
+    explicit MsgHdrLT(u8                             in_len
+        ,char                           in_type);
+    MsgHdrLT();
+};
+#pragma pack(pop)
+
+// Get value of field as enum type
+atf_amc_MsgHdrLT_type_Enum type_GetEnum(const atf_amc::MsgHdrLT& o) __attribute__((nothrow));
+// Set value of field from enum type.
+void                 type_SetEnum(atf_amc::MsgHdrLT& o, atf_amc_MsgHdrLT_type_Enum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char*          type_ToCstr(const atf_amc::MsgHdrLT& o) __attribute__((nothrow));
+// Convert type to a string. First, attempt conversion to a known string.
+// If no string matches, print type as a numeric value.
+void                 type_Print(const atf_amc::MsgHdrLT& o, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool                 type_SetStrptrMaybe(atf_amc::MsgHdrLT& o, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void                 type_SetStrptr(atf_amc::MsgHdrLT& o, algo::strptr rhs, atf_amc_MsgHdrLT_type_Enum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+bool                 type_ReadStrptrMaybe(atf_amc::MsgHdrLT& o, algo::strptr rhs) __attribute__((nothrow));
+
+bool                 MsgHdrLT_ReadFieldMaybe(atf_amc::MsgHdrLT &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atf_amc::MsgHdrLT from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 MsgHdrLT_ReadStrptrMaybe(atf_amc::MsgHdrLT &parent, algo::strptr in_str);
+// Message length (uses length field)
+i32                  GetMsgLength(const atf_amc::MsgHdrLT& row) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+algo::memptr         GetMsgMemptr(const atf_amc::MsgHdrLT& row) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 MsgHdrLT_Init(atf_amc::MsgHdrLT& o);
+// print string representation of atf_amc::MsgHdrLT to string LHS, no header -- cprint:atf_amc.MsgHdrLT.String
+void                 MsgHdrLT_Print(atf_amc::MsgHdrLT & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- atf_amc.MsgHdrLTMsgsCase
+#pragma pack(push,1)
+struct MsgHdrLTMsgsCase { // atf_amc.MsgHdrLTMsgsCase: Enum for dispatch atf_amc.MsgHdrLTMsgs
+    u32   value;   //   0
+    inline operator atf_amc_MsgHdrLTMsgsCaseEnum() const;
+    explicit MsgHdrLTMsgsCase(u32                            in_value);
+    MsgHdrLTMsgsCase(atf_amc_MsgHdrLTMsgsCaseEnum arg);
+    MsgHdrLTMsgsCase();
+};
+#pragma pack(pop)
+
+// Get value of field as enum type
+atf_amc_MsgHdrLTMsgsCaseEnum value_GetEnum(const atf_amc::MsgHdrLTMsgsCase& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+void                 value_SetEnum(atf_amc::MsgHdrLTMsgsCase& parent, atf_amc_MsgHdrLTMsgsCaseEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char*          value_ToCstr(const atf_amc::MsgHdrLTMsgsCase& parent) __attribute__((nothrow));
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+void                 value_Print(const atf_amc::MsgHdrLTMsgsCase& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool                 value_SetStrptrMaybe(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void                 value_SetStrptr(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs, atf_amc_MsgHdrLTMsgsCaseEnum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+bool                 value_ReadStrptrMaybe(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs) __attribute__((nothrow));
+
+// Read fields of atf_amc::MsgHdrLTMsgsCase from an ascii string.
+// The format of the string is the format of the atf_amc::MsgHdrLTMsgsCase's only field
+bool                 MsgHdrLTMsgsCase_ReadStrptrMaybe(atf_amc::MsgHdrLTMsgsCase &parent, algo::strptr in_str);
+// Set all fields to initial values.
+void                 MsgHdrLTMsgsCase_Init(atf_amc::MsgHdrLTMsgsCase& parent);
+
+// --- atf_amc.MsgHdrLT_curs
+#pragma pack(push,1)
+struct MsgHdrLT_curs { // atf_amc.MsgHdrLT_curs: Cursor for scanning messages in a memptr
+    typedef atf_amc::MsgHdrLT *ChildType;
+    atf_amc::MsgHdrLT*   msg;      // Pointer to current message. optional pointer
+    u8*                  bytes;    // Beginning of region. optional pointer
+    i32                  limit;    //   0  # Of bytes in the region
+    i32                  msglen;   //   0  Length of current message (if any)
+    MsgHdrLT_curs();
+};
+#pragma pack(pop)
+
+bool                 MsgHdrLT_curs_ValidQ(atf_amc::MsgHdrLT_curs& curs) __attribute__((nothrow));
+void                 MsgHdrLT_curs_Reset(atf_amc::MsgHdrLT_curs& curs, algo::memptr buf) __attribute__((nothrow));
+atf_amc::MsgHdrLT*&  MsgHdrLT_curs_Access(atf_amc::MsgHdrLT_curs& curs) __attribute__((nothrow));
+void                 MsgHdrLT_curs_Next(atf_amc::MsgHdrLT_curs& curs) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 MsgHdrLT_curs_Init(atf_amc::MsgHdrLT_curs& parent);
+
 // --- atf_amc.MsgType
 #pragma pack(push,1)
 struct MsgType { // atf_amc.MsgType
@@ -3388,6 +3564,9 @@ struct MsgType { // atf_amc.MsgType
     bool operator ==(const atf_amc::MsgType &rhs) const;
     bool operator !=(const atf_amc::MsgType &rhs) const;
     bool operator <(const atf_amc::MsgType &rhs) const;
+    bool operator >(const atf_amc::MsgType &rhs) const;
+    bool operator <=(const atf_amc::MsgType &rhs) const;
+    bool operator >=(const atf_amc::MsgType &rhs) const;
     bool operator ==(atf_amc_MsgTypeEnum rhs) const;
     MsgType();
 };
@@ -3503,6 +3682,161 @@ atf_amc::MsgHeader*& MsgHeader_curs_Access(atf_amc::MsgHeader_curs& curs) __attr
 void                 MsgHeader_curs_Next(atf_amc::MsgHeader_curs& curs) __attribute__((nothrow));
 // Set all fields to initial values.
 void                 MsgHeader_curs_Init(atf_amc::MsgHeader_curs& parent);
+
+// --- atf_amc.MsgLTA
+#pragma pack(push,1)
+struct MsgLTA { // atf_amc.MsgLTA
+    u8                 len;    //   ssizeof(parent) + (-2)
+    char               type;   //   'A'
+    algo::RspaceStr4   a;      //
+    explicit MsgLTA(const algo::strptr&            in_a);
+    MsgLTA();
+};
+#pragma pack(pop)
+
+// Check if atf_amc::MsgHdrLT is an instance of MsgLTA by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of MsgLTA.
+// If not successful, quietly return NULL.
+atf_amc::MsgLTA*     MsgLTA_Castdown(atf_amc::MsgHdrLT &hdr);
+atf_amc::MsgHdrLT&   Castbase(atf_amc::MsgLTA& parent);
+
+bool                 MsgLTA_ReadFieldMaybe(atf_amc::MsgLTA &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atf_amc::MsgLTA from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 MsgLTA_ReadStrptrMaybe(atf_amc::MsgLTA &parent, algo::strptr in_str);
+// Message length (uses length field)
+i32                  GetMsgLength(const atf_amc::MsgLTA& row) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+algo::memptr         GetMsgMemptr(const atf_amc::MsgLTA& row) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 MsgLTA_Init(atf_amc::MsgLTA& parent);
+// print string representation of atf_amc::MsgLTA to string LHS, no header -- cprint:atf_amc.MsgLTA.String
+void                 MsgLTA_Print(atf_amc::MsgLTA & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- atf_amc.MsgLTB
+#pragma pack(push,1)
+struct MsgLTB { // atf_amc.MsgLTB
+    u8                 len;    //   ssizeof(parent) + (-2)
+    char               type;   //   'B'
+    algo::RspaceStr6   b;      //
+    explicit MsgLTB(const algo::strptr&            in_b);
+    MsgLTB();
+};
+#pragma pack(pop)
+
+// Check if atf_amc::MsgHdrLT is an instance of MsgLTB by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of MsgLTB.
+// If not successful, quietly return NULL.
+atf_amc::MsgLTB*     MsgLTB_Castdown(atf_amc::MsgHdrLT &hdr);
+atf_amc::MsgHdrLT&   Castbase(atf_amc::MsgLTB& parent);
+
+bool                 MsgLTB_ReadFieldMaybe(atf_amc::MsgLTB &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atf_amc::MsgLTB from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 MsgLTB_ReadStrptrMaybe(atf_amc::MsgLTB &parent, algo::strptr in_str);
+// Message length (uses length field)
+i32                  GetMsgLength(const atf_amc::MsgLTB& row) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+algo::memptr         GetMsgMemptr(const atf_amc::MsgLTB& row) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 MsgLTB_Init(atf_amc::MsgLTB& parent);
+// print string representation of atf_amc::MsgLTB to string LHS, no header -- cprint:atf_amc.MsgLTB.String
+void                 MsgLTB_Print(atf_amc::MsgLTB & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- atf_amc.MsgLTO
+#pragma pack(push,1)
+struct MsgLTO { // atf_amc.MsgLTO
+    u8                        len;    //   ssizeof(parent) + (-2)
+    char                      type;   //   'O'
+    // atf_amc::MsgHdrLT      o[];                                      optional field
+    MsgLTO();
+};
+#pragma pack(pop)
+
+// Check if atf_amc::MsgHdrLT is an instance of MsgLTO by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of MsgLTO.
+// If not successful, quietly return NULL.
+atf_amc::MsgLTO*     MsgLTO_Castdown(atf_amc::MsgHdrLT &hdr);
+atf_amc::MsgHdrLT&   Castbase(atf_amc::MsgLTO& parent);
+
+// Return pointer to optional last element (NULL if none)
+// The parent's length field is assumed to have already been checked for validity.
+// If the parent's lengthis too short to allow a full-sized o, return NULL.
+// Since the last element is itself variable-length, two more checks are applied:
+// If o's length field value is too short, return NULL.
+// If o's length field value extends past parent's allowed length, return NULL.
+atf_amc::MsgHdrLT*   o_Get(atf_amc::MsgLTO& parent) __attribute__((__warn_unused_result__, nothrow));
+// Access optional portion as an array of bytes
+algo::aryptr<u8>     o_Getary(atf_amc::MsgLTO& parent) __attribute__((nothrow));
+void                 o_Print(atf_amc::MsgLTO& parent, cstring &out) __attribute__((nothrow));
+// Convert string to field. Return success value
+bool                 o_ReadStrptrMaybe(atf_amc::MsgLTO &parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 o_XrefMaybe(atf_amc::MsgHdrLT &row);
+
+bool                 MsgLTO_ReadFieldMaybe(atf_amc::MsgLTO &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of atf_amc::MsgLTO from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 MsgLTO_ReadStrptrMaybe(atf_amc::MsgLTO &parent, algo::strptr in_str);
+// Message length (uses length field)
+i32                  GetMsgLength(const atf_amc::MsgLTO& row) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+algo::memptr         GetMsgMemptr(const atf_amc::MsgLTO& row) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 MsgLTO_Init(atf_amc::MsgLTO& parent);
+// print string representation of atf_amc::MsgLTO to string LHS, no header -- cprint:atf_amc.MsgLTO.String
+void                 MsgLTO_Print(atf_amc::MsgLTO & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- atf_amc.MsgLTV
+#pragma pack(push,1)
+struct MsgLTV { // atf_amc.MsgLTV
+    u8     len;    //   ssizeof(parent) + (-2)
+    char   type;   //   'V'
+    // var-length field atf_amc.MsgLTV.v starts here. access it with v_Addr
+    MsgLTV();
+};
+#pragma pack(pop)
+
+// Check if atf_amc::MsgHdrLT is an instance of MsgLTV by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of MsgLTV.
+// If not successful, quietly return NULL.
+atf_amc::MsgLTV*     MsgLTV_Castdown(atf_amc::MsgHdrLT &hdr);
+atf_amc::MsgHdrLT&   Castbase(atf_amc::MsgLTV& parent);
+
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<u8>     v_Getary(atf_amc::MsgLTV& parent) __attribute__((nothrow));
+u8*                  v_Addr(atf_amc::MsgLTV& parent);
+// Return number of elements in varlen field
+u32                  v_N(const atf_amc::MsgLTV& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert string to field. Return success value
+bool                 v_ReadStrptrMaybe(atf_amc::MsgLTV& parent, algo::strptr in_str) __attribute__((nothrow));
+
+void                 MsgLTV_v_curs_Reset(MsgLTV_v_curs &curs, atf_amc::MsgLTV &parent);
+// cursor points to valid item
+bool                 MsgLTV_v_curs_ValidQ(MsgLTV_v_curs &curs);
+// proceed to next item
+void                 MsgLTV_v_curs_Next(MsgLTV_v_curs &curs);
+// item access
+atf_amc::MsgHdrLT&   MsgLTV_v_curs_Access(MsgLTV_v_curs &curs);
+bool                 MsgLTV_ReadFieldMaybe(atf_amc::MsgLTV &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of atf_amc::MsgLTV from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 MsgLTV_ReadStrptrMaybe(atf_amc::MsgLTV &parent, algo::strptr in_str);
+// Message length (uses length field)
+i32                  GetMsgLength(const atf_amc::MsgLTV& row) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+algo::memptr         GetMsgMemptr(const atf_amc::MsgLTV& row) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 MsgLTV_Init(atf_amc::MsgLTV& parent);
+// print string representation of atf_amc::MsgLTV to string LHS, no header -- cprint:atf_amc.MsgLTV.String
+void                 MsgLTV_Print(atf_amc::MsgLTV & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- atf_amc.Msgbuf
 // create: atf_amc.FDb.msgbuf (Cppstack)
@@ -3667,7 +4001,7 @@ bool                 typeg_ReadStrptrMaybe(atf_amc::OptAlloc &parent, algo::strp
 bool                 typeg_XrefMaybe(atf_amc::TypeG &row);
 
 bool                 OptAlloc_ReadFieldMaybe(atf_amc::OptAlloc &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Any varlen fields are returned in algo_lib::_db.varlenbuf
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::OptAlloc from an ascii string.
 // The format of the string is an ssim Tuple
 bool                 OptAlloc_ReadStrptrMaybe(atf_amc::OptAlloc &parent, algo::strptr in_str);
@@ -3702,7 +4036,7 @@ void                 typeg_Print(atf_amc::OptG& optg, cstring &out) __attribute_
 bool                 typeg_ReadStrptrMaybe(atf_amc::OptG &parent, algo::strptr in_str) __attribute__((nothrow));
 
 bool                 OptG_ReadFieldMaybe(atf_amc::OptG &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Any varlen fields are returned in algo_lib::_db.varlenbuf
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::OptG from an ascii string.
 // The format of the string is an ssim Tuple
 bool                 OptG_ReadStrptrMaybe(atf_amc::OptG &parent, algo::strptr in_str);
@@ -3741,7 +4075,7 @@ bool                 optg_ReadStrptrMaybe(atf_amc::OptOptG &parent, algo::strptr
 bool                 optg_XrefMaybe(atf_amc::OptG &row);
 
 bool                 OptOptG_ReadFieldMaybe(atf_amc::OptOptG &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Any varlen fields are returned in algo_lib::_db.varlenbuf
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::OptOptG from an ascii string.
 // The format of the string is an ssim Tuple
 bool                 OptOptG_ReadStrptrMaybe(atf_amc::OptOptG &parent, algo::strptr in_str);
@@ -4439,6 +4773,9 @@ struct RnullStr6_U32 { // atf_amc.RnullStr6_U32: number stored as ascii digits, 
     bool operator !=(const atf_amc::RnullStr6_U32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const atf_amc::RnullStr6_U32 &rhs) const;
+    bool operator >(const atf_amc::RnullStr6_U32 &rhs) const;
+    bool operator <=(const atf_amc::RnullStr6_U32 &rhs) const;
+    bool operator >=(const atf_amc::RnullStr6_U32 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -4500,6 +4837,9 @@ struct RpasU32Str6 { // atf_amc.RpasU32Str6: number stored as ascii digits, righ
     bool operator !=(const atf_amc::RpasU32Str6 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const atf_amc::RpasU32Str6 &rhs) const;
+    bool operator >(const atf_amc::RpasU32Str6 &rhs) const;
+    bool operator <=(const atf_amc::RpasU32Str6 &rhs) const;
+    bool operator >=(const atf_amc::RpasU32Str6 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -4569,6 +4909,9 @@ struct Sep1 { // atf_amc.Sep1: Check printing/reading of types with separators
     bool operator ==(const atf_amc::Sep1 &rhs) const;
     bool operator !=(const atf_amc::Sep1 &rhs) const;
     bool operator <(const atf_amc::Sep1 &rhs) const;
+    bool operator >(const atf_amc::Sep1 &rhs) const;
+    bool operator <=(const atf_amc::Sep1 &rhs) const;
+    bool operator >=(const atf_amc::Sep1 &rhs) const;
     Sep1();
 };
 
@@ -4591,8 +4934,8 @@ void                 Sep1_Print(atf_amc::Sep1 & row, algo::cstring &str) __attri
 #pragma pack(push,1)
 struct Seqmsg { // atf_amc.Seqmsg: Sequenced message for stream
     atf_amc::MsgType           type;        //   0x0905  Message type
-    atf_amc::MsgLength         length;      //   sizeof(parent) + (0)  Total message length, including this header
-    // atf_amc::MsgHeader      payload[];                                                                              optional field
+    atf_amc::MsgLength         length;      //   ssizeof(parent) + (0)  Total message length, including this header
+    // atf_amc::MsgHeader      payload[];                                                                               optional field
     Seqmsg();
 };
 #pragma pack(pop)
@@ -4618,7 +4961,7 @@ void                 payload_Print(atf_amc::Seqmsg& parent, cstring &out) __attr
 bool                 payload_ReadStrptrMaybe(atf_amc::Seqmsg &parent, algo::strptr in_str) __attribute__((nothrow));
 
 bool                 Seqmsg_ReadFieldMaybe(atf_amc::Seqmsg &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Any varlen fields are returned in algo_lib::_db.varlenbuf
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::Seqmsg from an ascii string.
 // The format of the string is an ssim Tuple
 bool                 Seqmsg_ReadStrptrMaybe(atf_amc::Seqmsg &parent, algo::strptr in_str);
@@ -4640,6 +4983,9 @@ struct SortedStr { // atf_amc.SortedStr
     bool operator ==(const atf_amc::SortedStr &rhs) const;
     bool operator !=(const atf_amc::SortedStr &rhs) const;
     bool operator <(const atf_amc::SortedStr &rhs) const;
+    bool operator >(const atf_amc::SortedStr &rhs) const;
+    bool operator <=(const atf_amc::SortedStr &rhs) const;
+    bool operator >=(const atf_amc::SortedStr &rhs) const;
     SortedStr();
 };
 
@@ -4785,6 +5131,8 @@ u32&                 tary_u32_qFind(atf_amc::TaryU32& parent, u64 t) __attribute
 u32&                 tary_u32_qLast(atf_amc::TaryU32& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  tary_u32_rowid_Get(atf_amc::TaryU32& parent, u32 &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<u32>    tary_u32_AllocNVal(atf_amc::TaryU32& parent, int n_elems, const u32& val) __attribute__((__warn_unused_result__, nothrow));
 
 // proceed to next item
 void                 TaryU32_tary_u32_curs_Next(TaryU32_tary_u32_curs &curs);
@@ -4847,6 +5195,8 @@ u8&                  ary_qFind(atf_amc::TaryU8& parent, u64 t) __attribute__((no
 u8&                  ary_qLast(atf_amc::TaryU8& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  ary_rowid_Get(atf_amc::TaryU8& parent, u8 &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<u8>     ary_AllocNVal(atf_amc::TaryU8& parent, int n_elems, const u8& val) __attribute__((__warn_unused_result__, nothrow));
 
 // proceed to next item
 void                 TaryU8_ary_curs_Next(TaryU8_ary_curs &curs);
@@ -4892,7 +5242,7 @@ void                 TestType_Print(atf_amc::TestType & row, algo::cstring &str)
 #pragma pack(push,1)
 struct Text { // atf_amc.Text
     atf_amc::MsgType     type;     //   0x0412  Message type
-    atf_amc::MsgLength   length;   //   sizeof(parent) + (0)  Total message length, including this header
+    atf_amc::MsgLength   length;   //   ssizeof(parent) + (0)  Total message length, including this header
     // var-length field atf_amc.Text.text starts here. access it with text_Addr
     Text();
 };
@@ -4921,7 +5271,7 @@ void                 Text_text_curs_Next(Text_text_curs &curs);
 // item access
 char&                Text_text_curs_Access(Text_text_curs &curs);
 bool                 Text_ReadFieldMaybe(atf_amc::Text &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Any varlen fields are returned in algo_lib::_db.varlenbuf
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::Text from an ascii string.
 // The format of the string is an ssim Tuple
 bool                 Text_ReadStrptrMaybe(atf_amc::Text &parent, algo::strptr in_str);
@@ -4942,6 +5292,9 @@ struct TypeB { // atf_amc.TypeB
     bool operator ==(const atf_amc::TypeB &rhs) const;
     bool operator !=(const atf_amc::TypeB &rhs) const;
     bool operator <(const atf_amc::TypeB &rhs) const;
+    bool operator >(const atf_amc::TypeB &rhs) const;
+    bool operator <=(const atf_amc::TypeB &rhs) const;
+    bool operator >=(const atf_amc::TypeB &rhs) const;
     TypeB();
 };
 
@@ -5037,6 +5390,9 @@ struct TypeBE64 { // atf_amc.TypeBE64
     bool operator ==(const atf_amc::TypeBE64 &rhs) const;
     bool operator !=(const atf_amc::TypeBE64 &rhs) const;
     bool operator <(const atf_amc::TypeBE64 &rhs) const;
+    bool operator >(const atf_amc::TypeBE64 &rhs) const;
+    bool operator <=(const atf_amc::TypeBE64 &rhs) const;
+    bool operator >=(const atf_amc::TypeBE64 &rhs) const;
     TypeBE64();
 };
 
@@ -5189,6 +5545,9 @@ struct TypeC { // atf_amc.TypeC
     bool operator ==(const atf_amc::TypeC &rhs) const;
     bool operator !=(const atf_amc::TypeC &rhs) const;
     bool operator <(const atf_amc::TypeC &rhs) const;
+    bool operator >(const atf_amc::TypeC &rhs) const;
+    bool operator <=(const atf_amc::TypeC &rhs) const;
+    bool operator >=(const atf_amc::TypeC &rhs) const;
     TypeC();
 };
 
@@ -5213,6 +5572,9 @@ struct TypeH { // atf_amc.TypeH
     bool operator ==(const atf_amc::TypeH &rhs) const;
     bool operator !=(const atf_amc::TypeH &rhs) const;
     bool operator <(const atf_amc::TypeH &rhs) const;
+    bool operator >(const atf_amc::TypeH &rhs) const;
+    bool operator <=(const atf_amc::TypeH &rhs) const;
+    bool operator >=(const atf_amc::TypeH &rhs) const;
     TypeH();
 };
 
@@ -5447,7 +5809,7 @@ void                 VarlenK_i_curs_Next(VarlenK_i_curs &curs);
 // item access
 u32&                 VarlenK_i_curs_Access(VarlenK_i_curs &curs);
 bool                 VarlenK_ReadFieldMaybe(atf_amc::VarlenK &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Any varlen fields are returned in algo_lib::_db.varlenbuf
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::VarlenK from an ascii string.
 // The format of the string is an ssim Tuple
 bool                 VarlenK_ReadStrptrMaybe(atf_amc::VarlenK &parent, algo::strptr in_str);
@@ -5799,6 +6161,15 @@ struct Lary32_lary_curs {// cursor
 };
 
 
+struct MsgLTV_v_curs {// cursor
+    typedef atf_amc::MsgHdrLT ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    MsgLTV_v_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
 struct PmaskU555_pmask_curs {// cursor
     typedef u64 ChildType;
     int index;
@@ -5827,46 +6198,46 @@ struct TaryU8_ary_curs {// cursor
 
 struct Text_text_curs {// cursor
     typedef char ChildType;
-    char* elems;
-    int n_elems;
+    u8 *ptr;
+    int length;
     int index;
-    Text_text_curs() { elems=NULL; n_elems=0; index=0; }
+    Text_text_curs() { ptr=NULL; length=0; index=0; }
 };
 
 
 struct varlenalloc_elem_curs {// cursor
     typedef i32 ChildType;
-    i32* elems;
-    int n_elems;
+    u8 *ptr;
+    int length;
     int index;
-    varlenalloc_elem_curs() { elems=NULL; n_elems=0; index=0; }
+    varlenalloc_elem_curs() { ptr=NULL; length=0; index=0; }
 };
 
 
 struct varlen_extern_varlen_curs {// cursor
     typedef u32 ChildType;
-    u32* elems;
-    int n_elems;
+    u8 *ptr;
+    int length;
     int index;
-    varlen_extern_varlen_curs() { elems=NULL; n_elems=0; index=0; }
+    varlen_extern_varlen_curs() { ptr=NULL; length=0; index=0; }
 };
 
 
 struct VarlenH_typeh_curs {// cursor
     typedef atf_amc::TypeH ChildType;
-    atf_amc::TypeH* elems;
-    int n_elems;
+    u8 *ptr;
+    int length;
     int index;
-    VarlenH_typeh_curs() { elems=NULL; n_elems=0; index=0; }
+    VarlenH_typeh_curs() { ptr=NULL; length=0; index=0; }
 };
 
 
 struct VarlenK_i_curs {// cursor
     typedef u32 ChildType;
-    u32* elems;
-    int n_elems;
+    u8 *ptr;
+    int length;
     int index;
-    VarlenK_i_curs() { elems=NULL; n_elems=0; index=0; }
+    VarlenK_i_curs() { ptr=NULL; length=0; index=0; }
 };
 
 // User-implemented function from gstatic:atf_amc.FDb.amctest
@@ -6002,11 +6373,15 @@ void                 amctest_DispReadSsimfile();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_ExecSh();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+void                 amctest_ExecVerbose();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_Exec_Status();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_Fcmp();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_Fconst();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+void                 amctest_Gsymbol();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_Hook1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
@@ -6148,6 +6523,10 @@ void                 amctest_VarlenAlloc();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_VarlenExternLength();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+void                 amctest_VarlenMsgs();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+void                 amctest_VarlenMsgsPnew();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_ZdlistDfltCtor();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_ZdlistFlush100();
@@ -6285,9 +6664,12 @@ void                 listtype_zdl(atf_amc::FListtype&);
 void                 listtype_zs(atf_amc::FListtype&);
 // User-implemented function from gstatic:atf_amc.FDb.listtype
 void                 listtype_zsl(atf_amc::FListtype&);
-int                  main(int argc, char **argv);
 // Test string conversion
 void                 ForAllStrings(void (*fcn)(algo::StringDesc&) );
+// Print message to STR. If message is too short for MSG_LEN, print nothing.
+// MSG.LENGTH must have already been validated against msg_len.
+// This function will additionally validate that sizeof(Msg) <= msg_len
+bool                 MsgHdrLTMsgs_Print(algo::cstring &str, atf_amc::MsgHdrLT &msg, u32 msg_len);
 // Print message to STR. If message is too short for MSG_LEN, print nothing.
 // MSG.LENGTH must have already been validated against msg_len.
 // This function will additionally validate that sizeof(Msg) <= msg_len
@@ -6301,9 +6683,19 @@ atf_amc::SsimfilesCase Ssimfiles_ReadStrptr(algo::strptr str, algo::ByteAry &buf
 // Parse ascii representation of message into binary, appending new data to BUF.
 bool                 Ssimfiles_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf);
 // Parse ascii representation of message into binary, appending new data to BUF.
+atf_amc::MsgHdrLTMsgsCase MsgHdrLTMsgs_ReadStrptr(algo::strptr str, algo::ByteAry &buf);
+// Parse ascii representation of message into binary, appending new data to BUF.
+bool                 MsgHdrLTMsgs_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf);
+// Parse ascii representation of message into binary, appending new data to BUF.
 atf_amc::MsgType     MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::ByteAry &buf);
 // Parse ascii representation of message into binary, appending new data to BUF.
 bool                 MsgHeaderMsgs_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf);
+// Construct a new atf_amc::MsgLTO in the space provided by BUF.
+// If BUF doesn't have enough space available, throw exception.
+atf_amc::MsgLTO *    MsgLTO_FmtByteAry(algo::ByteAry &buf, atf_amc::MsgHdrLT* o);
+// Construct a new atf_amc::MsgLTV in the space provided by BUF.
+// If BUF doesn't have enough space available, throw exception.
+atf_amc::MsgLTV *    MsgLTV_FmtByteAry(algo::ByteAry &buf, algo::memptr v);
 // Construct a new atf_amc::OptG in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
 atf_amc::OptG *      OptG_FmtByteAry(algo::ByteAry &buf, atf_amc::TypeG* typeg, int opt_len);
@@ -6329,6 +6721,10 @@ atf_amc::VarlenK *   VarlenK_FmtByteAry(algo::ByteAry &buf, algo::aryptr<u32 > i
 // After constructing, advance BUF appropriate number of bytes forward
 atf_amc::VarlenK *   VarlenK_FmtMemptr(algo::memptr &buf, algo::aryptr<u32 > i);
 } // end namespace atf_amc
+int                  main(int argc, char **argv);
+#if defined(WIN32)
+int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
+#endif
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::BitfldType1 &row);// cfmt:atf_amc.BitfldType1.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::BitfldType2 &row);// cfmt:atf_amc.BitfldType2.String
@@ -6337,9 +6733,14 @@ inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::Ctype2Attr 
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::trace &row);// cfmt:atf_amc.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::TypeG &row);// cfmt:atf_amc.TypeG.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::FieldId &row);// cfmt:atf_amc.FieldId.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgHdrLT &row);// cfmt:atf_amc.MsgHdrLT.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgType &row);// cfmt:atf_amc.MsgType.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgLength &row);// cfmt:atf_amc.MsgLength.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgHeader &row);// cfmt:atf_amc.MsgHeader.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgLTA &row);// cfmt:atf_amc.MsgLTA.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgLTB &row);// cfmt:atf_amc.MsgLTB.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgLTO &row);// cfmt:atf_amc.MsgLTO.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgLTV &row);// cfmt:atf_amc.MsgLTV.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::OptAlloc &row);// cfmt:atf_amc.OptAlloc.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::OptG &row);// cfmt:atf_amc.OptG.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::OptOptG &row);// cfmt:atf_amc.OptOptG.String

@@ -33,6 +33,10 @@
 #include <sys/mman.h>
 #endif
 
+#ifdef WIN32
+#include <aclapi.h>
+#endif
+
 // -----------------------------------------------------------------------------
 
 inline char *ToCstr(char *to, const strptr &x) {
@@ -465,6 +469,73 @@ void algo_lib::fildes_Cleanup(algo_lib::FLockfile &lockfile) {
 
 // -----------------------------------------------------------------------------
 
+// On Windows, open() does not respect POSIX permissions well.
+// Moreover, premissions inherit from parent apply.
+// Thus we need to clear ACL, and establish new one with correct owner, group,
+// and world permissions, and drop inheritance.
+// This is best-effort function, silently exits on any error.
+#ifdef WIN32
+static void WinChmod644(char *filename) {
+    // get owner and group
+    PSID owner(NULL);
+    PSID group(NULL);
+    PSECURITY_DESCRIPTOR sd(NULL); // used as storage for owner and group SID
+    if (GetNamedSecurityInfo(filename, SE_FILE_OBJECT,
+                             OWNER_SECURITY_INFORMATION | GROUP_SECURITY_INFORMATION,
+                             &owner, &group, NULL, NULL, &sd)!=ERROR_SUCCESS && sd) {
+        LocalFree(sd);
+        sd = NULL;
+        owner = NULL;
+        group = NULL;
+    }
+
+    // create new ACL
+    PACL acl(NULL);
+    if (owner && group) {
+        // create explicit access for owner
+        EXPLICIT_ACCESS ea[3];
+        ZeroMemory(&ea,sizeof ea);
+        // owner
+        ea[0].grfAccessPermissions = STANDARD_RIGHTS_ALL | GENERIC_READ | GENERIC_WRITE;
+        ea[0].grfAccessMode = SET_ACCESS;
+        ea[0].grfInheritance = NO_INHERITANCE;
+        BuildTrusteeWithSid(&ea[0].Trustee,owner);
+        // group
+        ea[1].grfAccessPermissions = GENERIC_READ;
+        ea[1].grfAccessMode = SET_ACCESS;
+        ea[1].grfInheritance = NO_INHERITANCE;
+        BuildTrusteeWithSid(&ea[1].Trustee,group);
+        // world
+        ea[2].grfAccessPermissions = GENERIC_READ;
+        ea[2].grfAccessMode = SET_ACCESS;
+        ea[2].grfInheritance = NO_INHERITANCE;
+        BuildTrusteeWithName(&ea[2].Trustee,"Everyone");
+
+        if (SetEntriesInAcl(_array_count(ea),ea,NULL,&acl)!=ERROR_SUCCESS && acl) {
+            LocalFree(acl);
+            acl = NULL;
+        }
+    }
+
+    // apply ACL
+    if (acl) {
+        SetNamedSecurityInfo(filename, SE_FILE_OBJECT,
+                             DACL_SECURITY_INFORMATION | PROTECTED_DACL_SECURITY_INFORMATION,
+                             NULL, NULL, acl, NULL);
+    }
+
+    // cleanup
+    if (acl) {
+        LocalFree(acl);
+    }
+    if (sd) {
+        LocalFree(sd);
+    }
+}
+#endif
+
+// -----------------------------------------------------------------------------
+
 // Open file FILENAME with flags FLAGS, return resulting file descriptor
 // Possible flags:
 // write   -> open file for writing, create file if missing
@@ -507,14 +578,33 @@ algo::Fildes algo::OpenFile(const strptr& filename, algo::FileFlags flags) {
     // O_TMPFILE doesn't behave as you would expect --
     // it creates a an anonymous file in directory specified by path
     // so we ignore it here
+
+    // we need to know if the file was newly created,
+    // in order to apply win ACL.
+    // O_EXCL will be indication of it.
+    if ((os_flags & O_CREAT)) {
+        os_flags |= O_EXCL;
+    }
 #endif
     Fildes fd(open(Zeroterm(fn), os_flags, 0644));
+#ifdef WIN32
+    if (!ValidQ(fd) && (os_flags & O_EXCL)) {
+        // drop O_EXCL and reopen file
+        os_flags &= ~int(O_EXCL);
+        fd = Fildes(open(Zeroterm(fn), os_flags, 0644));
+    }
+#endif
     if (!ValidQ(fd) && printerr_Get(flags)) {
         prerr("open ["<<filename<<"]: "<<strerror(errno));
     }
     errno_vrfy(ValidQ(fd) || !(_throw_Get(flags))
                ,tempstr()<< "open ["<<filename<<"]");
-
+#ifdef WIN32
+    if (ValidQ(fd) && (os_flags & O_EXCL)) {
+        // file was created, apply ACL
+        WinChmod644(Zeroterm(fn));
+    }
+#endif
     if (ValidQ(fd) && append_Get(flags)) {
         (void)SeekFile(fd,GetFileSize(fd));
     }

@@ -331,7 +331,11 @@ namespace algo { struct RspaceStr10; }
 namespace algo { struct RspaceStr100; }
 namespace algo { struct RspaceStr11; }
 namespace algo { struct RspaceStr12; }
+namespace algo { struct RspaceStr128; }
+namespace algo { struct RspaceStr14; }
+namespace algo { struct RspaceStr15; }
 namespace algo { struct RspaceStr16; }
+namespace algo { struct RspaceStr18; }
 namespace algo { struct RspaceStr2; }
 namespace algo { struct RspaceStr20; }
 namespace algo { struct RspaceStr200; }
@@ -349,6 +353,7 @@ namespace algo { struct RspaceStr50; }
 namespace algo { struct RspaceStr6; }
 namespace algo { struct RspaceStr64; }
 namespace algo { struct RspaceStr7; }
+namespace algo { struct RspaceStr75; }
 namespace algo { struct RspaceStr8; }
 namespace algo { struct RspaceStr9; }
 namespace algo { struct SeqType; }
@@ -426,6 +431,9 @@ struct cstring { // algo.cstring
     bool operator ==(const algo::cstring &rhs) const;
     bool operator !=(const algo::cstring &rhs) const;
     bool operator <(const algo::cstring &rhs) const;
+    bool operator >(const algo::cstring &rhs) const;
+    bool operator <=(const algo::cstring &rhs) const;
+    bool operator >=(const algo::cstring &rhs) const;
     cstring();
     ~cstring();
 };
@@ -476,6 +484,8 @@ char&                ch_qFind(algo::cstring& error, u64 t) __attribute__((nothro
 char&                ch_qLast(algo::cstring& error) __attribute__((nothrow));
 // Return row id of specified element
 u64                  ch_rowid_Get(algo::cstring& error, char &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<char>   ch_AllocNVal(algo::cstring& error, int n_elems, const char& val) __attribute__((__warn_unused_result__, nothrow));
 
 // proceed to next item
 void                 error_ch_curs_Next(error_ch_curs &curs);
@@ -604,6 +614,8 @@ algo::Attr&          attrs_qFind(algo::Tuple& parent, u64 t) __attribute__((noth
 algo::Attr&          attrs_qLast(algo::Tuple& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  attrs_rowid_Get(algo::Tuple& parent, algo::Attr &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::Attr> attrs_AllocNVal(algo::Tuple& parent, int n_elems, const algo::Attr& val) __attribute__((__warn_unused_result__, nothrow));
 
 // proceed to next item
 void                 Tuple_attrs_curs_Next(Tuple_attrs_curs &curs);
@@ -688,6 +700,8 @@ algo::ArgProto&      proto_qFind(algo::Argtuple& parent, u64 t) __attribute__((n
 algo::ArgProto&      proto_qLast(algo::Argtuple& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  proto_rowid_Get(algo::Argtuple& parent, algo::ArgProto &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::ArgProto> proto_AllocNVal(algo::Argtuple& parent, int n_elems, const algo::ArgProto& val) __attribute__((__warn_unused_result__, nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -726,6 +740,8 @@ algo::cstring&       error_qFind(algo::Argtuple& parent, u64 t) __attribute__((n
 algo::cstring&       error_qLast(algo::Argtuple& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  error_rowid_Get(algo::Argtuple& parent, algo::cstring &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> error_AllocNVal(algo::Argtuple& parent, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
 
 // proceed to next item
 void                 Argtuple_proto_curs_Next(Argtuple_proto_curs &curs);
@@ -802,6 +818,8 @@ i32&                 out_qFind(algo::Arrsimp& parent, u64 t) __attribute__((noth
 i32&                 out_qLast(algo::Arrsimp& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  out_rowid_Get(algo::Arrsimp& parent, i32 &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<i32>    out_AllocNVal(algo::Arrsimp& parent, int n_elems, const i32& val) __attribute__((__warn_unused_result__, nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -840,6 +858,8 @@ algo::i32_Range&     stack_qFind(algo::Arrsimp& parent, u64 t) __attribute__((no
 algo::i32_Range&     stack_qLast(algo::Arrsimp& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  stack_rowid_Get(algo::Arrsimp& parent, algo::i32_Range &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::i32_Range> stack_AllocNVal(algo::Arrsimp& parent, int n_elems, const algo::i32_Range& val) __attribute__((__warn_unused_result__, nothrow));
 
 // proceed to next item
 void                 Arrsimp_out_curs_Next(Arrsimp_out_curs &curs);
@@ -948,6 +968,8 @@ u8&                  ary_qFind(algo::ByteAry& parent, u64 t) __attribute__((noth
 u8&                  ary_qLast(algo::ByteAry& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  ary_rowid_Get(algo::ByteAry& parent, u8 &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<u8>     ary_AllocNVal(algo::ByteAry& parent, int n_elems, const u8& val) __attribute__((__warn_unused_result__, nothrow));
 
 // proceed to next item
 void                 ByteAry_ary_curs_Next(ByteAry_ary_curs &curs);
@@ -1110,6 +1132,9 @@ struct UnTime { // algo.UnTime: Unix time * 1e9 + nanoseconds
     bool operator ==(const algo::UnTime &rhs) const;
     bool operator !=(const algo::UnTime &rhs) const;
     bool operator <(const algo::UnTime &rhs) const;
+    bool operator >(const algo::UnTime &rhs) const;
+    bool operator <=(const algo::UnTime &rhs) const;
+    bool operator >=(const algo::UnTime &rhs) const;
     UnTime();
 };
 #pragma pack(pop)
@@ -1371,6 +1396,9 @@ struct Fildes { // algo.Fildes: File descriptor primary key
     bool operator ==(const algo::Fildes &rhs) const;
     bool operator !=(const algo::Fildes &rhs) const;
     bool operator <(const algo::Fildes &rhs) const;
+    bool operator >(const algo::Fildes &rhs) const;
+    bool operator <=(const algo::Fildes &rhs) const;
+    bool operator >=(const algo::Fildes &rhs) const;
     Fildes();
 };
 
@@ -1773,12 +1801,14 @@ void                 I64Dec3_Init(algo::I64Dec3& parent);
 void                 I64Dec3_Print(algo::I64Dec3 row, algo::cstring &str) __attribute__((nothrow));
 
 // --- algo.I64Dec4
+#pragma pack(push,1)
 struct I64Dec4 { // algo.I64Dec4
     i64   value;   //   0
     inline operator i64() const;
     explicit I64Dec4(i64                            in_value);
     I64Dec4();
 };
+#pragma pack(pop)
 
 // Set value of field value.
 // The value is rounded to the nearest integer.
@@ -1915,12 +1945,14 @@ void                 I64Dec7_Init(algo::I64Dec7& parent);
 void                 I64Dec7_Print(algo::I64Dec7 row, algo::cstring &str) __attribute__((nothrow));
 
 // --- algo.I64Dec8
+#pragma pack(push,1)
 struct I64Dec8 { // algo.I64Dec8: signed i64, scale 1e8
     i64   value;   //   0
     inline operator i64() const;
     explicit I64Dec8(i64                            in_value);
     I64Dec8();
 };
+#pragma pack(pop)
 
 // Set value of field value.
 // The value is rounded to the nearest integer.
@@ -2047,6 +2079,7 @@ void                 IPoint_Init(algo::IPoint& parent);
 void                 IPoint_Print(algo::IPoint & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- algo.Smallstr50
+#pragma pack(push,1)
 struct Smallstr50 { // algo.Smallstr50
     enum { ch_max = 50 };
     u8 ch[50+1];
@@ -2057,6 +2090,9 @@ struct Smallstr50 { // algo.Smallstr50
     bool operator !=(const algo::Smallstr50 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::Smallstr50 &rhs) const;
+    bool operator >(const algo::Smallstr50 &rhs) const;
+    bool operator <=(const algo::Smallstr50 &rhs) const;
+    bool operator >=(const algo::Smallstr50 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -2066,6 +2102,7 @@ struct Smallstr50 { // algo.Smallstr50
     Smallstr50(const algo::strptr &rhs) __attribute__((nothrow));
     Smallstr50();
 };
+#pragma pack(pop)
 
 // Append character to string.
 // If there is no space for an extra character, do nothing.
@@ -2250,6 +2287,8 @@ char&                buf_qFind(algo::LineBuf& parent, u64 t) __attribute__((noth
 char&                buf_qLast(algo::LineBuf& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  buf_rowid_Get(algo::LineBuf& parent, char &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<char>   buf_AllocNVal(algo::LineBuf& parent, int n_elems, const char& val) __attribute__((__warn_unused_result__, nothrow));
 
 // proceed to next item
 void                 LineBuf_buf_curs_Next(LineBuf_buf_curs &curs);
@@ -4543,6 +4582,8 @@ i32&                 start_qFind(algo::NormTxttbl& parent, u64 t) __attribute__(
 i32&                 start_qLast(algo::NormTxttbl& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  start_rowid_Get(algo::NormTxttbl& parent, i32 &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<i32>    start_AllocNVal(algo::NormTxttbl& parent, int n_elems, const i32& val) __attribute__((__warn_unused_result__, nothrow));
 
 // proceed to next item
 void                 NormTxttbl_start_curs_Next(NormTxttbl_start_curs &curs);
@@ -4629,6 +4670,9 @@ struct RnullStr1 { // algo.RnullStr1
     bool operator !=(const algo::RnullStr1 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr1 &rhs) const;
+    bool operator >(const algo::RnullStr1 &rhs) const;
+    bool operator <=(const algo::RnullStr1 &rhs) const;
+    bool operator >=(const algo::RnullStr1 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -4680,6 +4724,9 @@ struct RnullStr10 { // algo.RnullStr10
     bool operator !=(const algo::RnullStr10 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr10 &rhs) const;
+    bool operator >(const algo::RnullStr10 &rhs) const;
+    bool operator <=(const algo::RnullStr10 &rhs) const;
+    bool operator >=(const algo::RnullStr10 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -4778,6 +4825,9 @@ struct RnullStr1000 { // algo.RnullStr1000
     bool operator !=(const algo::RnullStr1000 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr1000 &rhs) const;
+    bool operator >(const algo::RnullStr1000 &rhs) const;
+    bool operator <=(const algo::RnullStr1000 &rhs) const;
+    bool operator >=(const algo::RnullStr1000 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -4829,6 +4879,9 @@ struct RnullStr11 { // algo.RnullStr11
     bool operator !=(const algo::RnullStr11 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr11 &rhs) const;
+    bool operator >(const algo::RnullStr11 &rhs) const;
+    bool operator <=(const algo::RnullStr11 &rhs) const;
+    bool operator >=(const algo::RnullStr11 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -4880,6 +4933,9 @@ struct RnullStr12 { // algo.RnullStr12
     bool operator !=(const algo::RnullStr12 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr12 &rhs) const;
+    bool operator >(const algo::RnullStr12 &rhs) const;
+    bool operator <=(const algo::RnullStr12 &rhs) const;
+    bool operator >=(const algo::RnullStr12 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -4931,6 +4987,9 @@ struct RnullStr129 { // algo.RnullStr129
     bool operator !=(const algo::RnullStr129 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr129 &rhs) const;
+    bool operator >(const algo::RnullStr129 &rhs) const;
+    bool operator <=(const algo::RnullStr129 &rhs) const;
+    bool operator >=(const algo::RnullStr129 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -4982,6 +5041,9 @@ struct RnullStr13 { // algo.RnullStr13
     bool operator !=(const algo::RnullStr13 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr13 &rhs) const;
+    bool operator >(const algo::RnullStr13 &rhs) const;
+    bool operator <=(const algo::RnullStr13 &rhs) const;
+    bool operator >=(const algo::RnullStr13 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -5033,6 +5095,9 @@ struct RnullStr14 { // algo.RnullStr14
     bool operator !=(const algo::RnullStr14 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr14 &rhs) const;
+    bool operator >(const algo::RnullStr14 &rhs) const;
+    bool operator <=(const algo::RnullStr14 &rhs) const;
+    bool operator >=(const algo::RnullStr14 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -5084,6 +5149,9 @@ struct RnullStr15 { // algo.RnullStr15
     bool operator !=(const algo::RnullStr15 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr15 &rhs) const;
+    bool operator >(const algo::RnullStr15 &rhs) const;
+    bool operator <=(const algo::RnullStr15 &rhs) const;
+    bool operator >=(const algo::RnullStr15 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -5135,6 +5203,9 @@ struct RnullStr151 { // algo.RnullStr151
     bool operator !=(const algo::RnullStr151 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr151 &rhs) const;
+    bool operator >(const algo::RnullStr151 &rhs) const;
+    bool operator <=(const algo::RnullStr151 &rhs) const;
+    bool operator >=(const algo::RnullStr151 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -5233,6 +5304,9 @@ struct RnullStr17 { // algo.RnullStr17
     bool operator !=(const algo::RnullStr17 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr17 &rhs) const;
+    bool operator >(const algo::RnullStr17 &rhs) const;
+    bool operator <=(const algo::RnullStr17 &rhs) const;
+    bool operator >=(const algo::RnullStr17 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -5284,6 +5358,9 @@ struct RnullStr18 { // algo.RnullStr18
     bool operator !=(const algo::RnullStr18 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr18 &rhs) const;
+    bool operator >(const algo::RnullStr18 &rhs) const;
+    bool operator <=(const algo::RnullStr18 &rhs) const;
+    bool operator >=(const algo::RnullStr18 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -5382,6 +5459,9 @@ struct RnullStr2 { // algo.RnullStr2
     bool operator !=(const algo::RnullStr2 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr2 &rhs) const;
+    bool operator >(const algo::RnullStr2 &rhs) const;
+    bool operator <=(const algo::RnullStr2 &rhs) const;
+    bool operator >=(const algo::RnullStr2 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -5433,6 +5513,9 @@ struct RnullStr20 { // algo.RnullStr20
     bool operator !=(const algo::RnullStr20 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr20 &rhs) const;
+    bool operator >(const algo::RnullStr20 &rhs) const;
+    bool operator <=(const algo::RnullStr20 &rhs) const;
+    bool operator >=(const algo::RnullStr20 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -5531,6 +5614,9 @@ struct RnullStr24 { // algo.RnullStr24
     bool operator !=(const algo::RnullStr24 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr24 &rhs) const;
+    bool operator >(const algo::RnullStr24 &rhs) const;
+    bool operator <=(const algo::RnullStr24 &rhs) const;
+    bool operator >=(const algo::RnullStr24 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -5582,6 +5668,9 @@ struct RnullStr25 { // algo.RnullStr25
     bool operator !=(const algo::RnullStr25 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr25 &rhs) const;
+    bool operator >(const algo::RnullStr25 &rhs) const;
+    bool operator <=(const algo::RnullStr25 &rhs) const;
+    bool operator >=(const algo::RnullStr25 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -5633,6 +5722,9 @@ struct RnullStr28 { // algo.RnullStr28
     bool operator !=(const algo::RnullStr28 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr28 &rhs) const;
+    bool operator >(const algo::RnullStr28 &rhs) const;
+    bool operator <=(const algo::RnullStr28 &rhs) const;
+    bool operator >=(const algo::RnullStr28 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -5684,6 +5776,9 @@ struct RnullStr3 { // algo.RnullStr3
     bool operator !=(const algo::RnullStr3 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr3 &rhs) const;
+    bool operator >(const algo::RnullStr3 &rhs) const;
+    bool operator <=(const algo::RnullStr3 &rhs) const;
+    bool operator >=(const algo::RnullStr3 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -5782,6 +5877,9 @@ struct RnullStr32 { // algo.RnullStr32
     bool operator !=(const algo::RnullStr32 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr32 &rhs) const;
+    bool operator >(const algo::RnullStr32 &rhs) const;
+    bool operator <=(const algo::RnullStr32 &rhs) const;
+    bool operator >=(const algo::RnullStr32 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -5833,6 +5931,9 @@ struct RnullStr33 { // algo.RnullStr33
     bool operator !=(const algo::RnullStr33 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr33 &rhs) const;
+    bool operator >(const algo::RnullStr33 &rhs) const;
+    bool operator <=(const algo::RnullStr33 &rhs) const;
+    bool operator >=(const algo::RnullStr33 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -5883,6 +5984,9 @@ struct RnullStr35 { // algo.RnullStr35
     bool operator !=(const algo::RnullStr35 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr35 &rhs) const;
+    bool operator >(const algo::RnullStr35 &rhs) const;
+    bool operator <=(const algo::RnullStr35 &rhs) const;
+    bool operator >=(const algo::RnullStr35 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -5933,6 +6037,9 @@ struct RnullStr36 { // algo.RnullStr36
     bool operator !=(const algo::RnullStr36 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr36 &rhs) const;
+    bool operator >(const algo::RnullStr36 &rhs) const;
+    bool operator <=(const algo::RnullStr36 &rhs) const;
+    bool operator >=(const algo::RnullStr36 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -6031,6 +6138,9 @@ struct RnullStr40 { // algo.RnullStr40
     bool operator !=(const algo::RnullStr40 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr40 &rhs) const;
+    bool operator >(const algo::RnullStr40 &rhs) const;
+    bool operator <=(const algo::RnullStr40 &rhs) const;
+    bool operator >=(const algo::RnullStr40 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -6082,6 +6192,9 @@ struct RnullStr41 { // algo.RnullStr41
     bool operator !=(const algo::RnullStr41 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr41 &rhs) const;
+    bool operator >(const algo::RnullStr41 &rhs) const;
+    bool operator <=(const algo::RnullStr41 &rhs) const;
+    bool operator >=(const algo::RnullStr41 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -6368,6 +6481,9 @@ struct RnullStr54 { // algo.RnullStr54
     bool operator !=(const algo::RnullStr54 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr54 &rhs) const;
+    bool operator >(const algo::RnullStr54 &rhs) const;
+    bool operator <=(const algo::RnullStr54 &rhs) const;
+    bool operator >=(const algo::RnullStr54 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -6466,6 +6582,9 @@ struct RnullStr6 { // algo.RnullStr6
     bool operator !=(const algo::RnullStr6 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr6 &rhs) const;
+    bool operator >(const algo::RnullStr6 &rhs) const;
+    bool operator <=(const algo::RnullStr6 &rhs) const;
+    bool operator >=(const algo::RnullStr6 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -6517,6 +6636,9 @@ struct RnullStr60 { // algo.RnullStr60
     bool operator !=(const algo::RnullStr60 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr60 &rhs) const;
+    bool operator >(const algo::RnullStr60 &rhs) const;
+    bool operator <=(const algo::RnullStr60 &rhs) const;
+    bool operator >=(const algo::RnullStr60 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -6568,6 +6690,9 @@ struct RnullStr62 { // algo.RnullStr62
     bool operator !=(const algo::RnullStr62 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr62 &rhs) const;
+    bool operator >(const algo::RnullStr62 &rhs) const;
+    bool operator <=(const algo::RnullStr62 &rhs) const;
+    bool operator >=(const algo::RnullStr62 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -6724,6 +6849,9 @@ struct RnullStr7 { // algo.RnullStr7
     bool operator !=(const algo::RnullStr7 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr7 &rhs) const;
+    bool operator >(const algo::RnullStr7 &rhs) const;
+    bool operator <=(const algo::RnullStr7 &rhs) const;
+    bool operator >=(const algo::RnullStr7 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -6869,6 +6997,9 @@ struct RnullStr9 { // algo.RnullStr9
     bool operator !=(const algo::RnullStr9 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RnullStr9 &rhs) const;
+    bool operator >(const algo::RnullStr9 &rhs) const;
+    bool operator <=(const algo::RnullStr9 &rhs) const;
+    bool operator >=(const algo::RnullStr9 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -6945,17 +7076,17 @@ bool                 ch_ReadStrptrMaybe(algo::RspaceStr10& parent, algo::strptr 
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::RspaceStr10& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
-u32                  RspaceStr10_Hash(u32 prev, const algo::RspaceStr10 & rhs) __attribute__((nothrow));
+u32                  RspaceStr10_Hash(u32 prev, algo::RspaceStr10 rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr10 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr10's only field
 bool                 RspaceStr10_ReadStrptrMaybe(algo::RspaceStr10 &parent, algo::strptr in_str);
-i32                  RspaceStr10_Cmp(algo::RspaceStr10 & lhs, algo::RspaceStr10 & rhs) __attribute__((nothrow));
+i32                  RspaceStr10_Cmp(algo::RspaceStr10 lhs, algo::RspaceStr10 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 void                 RspaceStr10_Init(algo::RspaceStr10& parent);
-bool                 RspaceStr10_Eq(const algo::RspaceStr10 & lhs,const algo::RspaceStr10 & rhs) __attribute__((nothrow));
-bool                 RspaceStr10_EqStrptr(algo::RspaceStr10 & lhs, const algo::strptr &rhs) __attribute__((nothrow));
+bool                 RspaceStr10_Eq(algo::RspaceStr10 lhs, algo::RspaceStr10 rhs) __attribute__((nothrow));
+bool                 RspaceStr10_EqStrptr(algo::RspaceStr10 lhs, const algo::strptr &rhs) __attribute__((nothrow));
 // print string representation of algo::RspaceStr10 to string LHS, no header -- cprint:algo.RspaceStr10.String
-void                 RspaceStr10_Print(algo::RspaceStr10 & row, algo::cstring &str) __attribute__((nothrow));
+void                 RspaceStr10_Print(algo::RspaceStr10 row, algo::cstring &str) __attribute__((nothrow));
 
 // --- algo.RspaceStr100
 #pragma pack(push,1)
@@ -7098,6 +7229,147 @@ bool                 RspaceStr12_EqStrptr(algo::RspaceStr12 lhs, const algo::str
 // print string representation of algo::RspaceStr12 to string LHS, no header -- cprint:algo.RspaceStr12.String
 void                 RspaceStr12_Print(algo::RspaceStr12 row, algo::cstring &str) __attribute__((nothrow));
 
+// --- algo.RspaceStr128
+#pragma pack(push,1)
+struct RspaceStr128 { // algo.RspaceStr128
+    enum { ch_max = 128 };
+    u8 ch[128];
+    inline operator algo::strptr() const;
+    bool operator ==(const algo::RspaceStr128 &rhs) const;
+    bool operator !=(const algo::RspaceStr128 &rhs) const;
+    bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr128& parent) __attribute__((nothrow));
+    RspaceStr128(const algo::RspaceStr128 &rhs) __attribute__((nothrow));
+    RspaceStr128(const algo::strptr &rhs) __attribute__((nothrow));
+    RspaceStr128();
+};
+#pragma pack(pop)
+
+// Access string as array of chars
+algo::aryptr<char>   ch_Getary(const algo::RspaceStr128& parent) __attribute__((nothrow));
+u32                  RspaceStr128_Hash(u32 prev, const algo::strptr &str);
+void                 ch_Init(algo::RspaceStr128 &parent) __attribute__((nothrow));
+// always return constant 128
+int                  ch_Max(algo::RspaceStr128& parent) __attribute__((nothrow));
+int                  ch_N(const algo::RspaceStr128& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+void                 ch_Print(algo::RspaceStr128& parent, algo::cstring &out) __attribute__((nothrow));
+// Convert string to field. Return success value
+bool                 ch_ReadStrptrMaybe(algo::RspaceStr128& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void                 ch_SetStrptr(algo::RspaceStr128& parent, const algo::strptr &rhs) __attribute__((nothrow));
+
+u32                  RspaceStr128_Hash(u32 prev, algo::RspaceStr128 rhs) __attribute__((nothrow));
+// Read fields of algo::RspaceStr128 from an ascii string.
+// The format of the string is the format of the algo::RspaceStr128's only field
+bool                 RspaceStr128_ReadStrptrMaybe(algo::RspaceStr128 &parent, algo::strptr in_str);
+i32                  RspaceStr128_Cmp(algo::RspaceStr128 lhs, algo::RspaceStr128 rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 RspaceStr128_Init(algo::RspaceStr128& parent);
+bool                 RspaceStr128_Eq(algo::RspaceStr128 lhs, algo::RspaceStr128 rhs) __attribute__((nothrow));
+bool                 RspaceStr128_EqStrptr(algo::RspaceStr128 lhs, const algo::strptr &rhs) __attribute__((nothrow));
+// print string representation of algo::RspaceStr128 to string LHS, no header -- cprint:algo.RspaceStr128.String
+void                 RspaceStr128_Print(algo::RspaceStr128 row, algo::cstring &str) __attribute__((nothrow));
+
+// --- algo.RspaceStr14
+#pragma pack(push,1)
+struct RspaceStr14 { // algo.RspaceStr14
+    enum { ch_max = 14 };
+    u8 ch[14];
+    inline operator algo::strptr() const;
+    bool operator ==(const algo::RspaceStr14 &rhs) const;
+    bool operator !=(const algo::RspaceStr14 &rhs) const;
+    bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr14& parent) __attribute__((nothrow));
+    RspaceStr14(const algo::RspaceStr14 &rhs) __attribute__((nothrow));
+    RspaceStr14(const algo::strptr &rhs) __attribute__((nothrow));
+    RspaceStr14();
+};
+#pragma pack(pop)
+
+// Access string as array of chars
+algo::aryptr<char>   ch_Getary(const algo::RspaceStr14& parent) __attribute__((nothrow));
+u32                  RspaceStr14_Hash(u32 prev, const algo::strptr &str);
+void                 ch_Init(algo::RspaceStr14 &parent) __attribute__((nothrow));
+// always return constant 14
+int                  ch_Max(algo::RspaceStr14& parent) __attribute__((nothrow));
+int                  ch_N(const algo::RspaceStr14& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+void                 ch_Print(algo::RspaceStr14& parent, algo::cstring &out) __attribute__((nothrow));
+// Convert string to field. Return success value
+bool                 ch_ReadStrptrMaybe(algo::RspaceStr14& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void                 ch_SetStrptr(algo::RspaceStr14& parent, const algo::strptr &rhs) __attribute__((nothrow));
+
+u32                  RspaceStr14_Hash(u32 prev, algo::RspaceStr14 rhs) __attribute__((nothrow));
+// Read fields of algo::RspaceStr14 from an ascii string.
+// The format of the string is the format of the algo::RspaceStr14's only field
+bool                 RspaceStr14_ReadStrptrMaybe(algo::RspaceStr14 &parent, algo::strptr in_str);
+i32                  RspaceStr14_Cmp(algo::RspaceStr14 lhs, algo::RspaceStr14 rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 RspaceStr14_Init(algo::RspaceStr14& parent);
+bool                 RspaceStr14_Eq(algo::RspaceStr14 lhs, algo::RspaceStr14 rhs) __attribute__((nothrow));
+bool                 RspaceStr14_EqStrptr(algo::RspaceStr14 lhs, const algo::strptr &rhs) __attribute__((nothrow));
+// print string representation of algo::RspaceStr14 to string LHS, no header -- cprint:algo.RspaceStr14.String
+void                 RspaceStr14_Print(algo::RspaceStr14 row, algo::cstring &str) __attribute__((nothrow));
+
+// --- algo.RspaceStr15
+#pragma pack(push,1)
+struct RspaceStr15 { // algo.RspaceStr15
+    enum { ch_max = 15 };
+    u8 ch[15];
+    inline operator algo::strptr() const;
+    bool operator ==(const algo::RspaceStr15 &rhs) const;
+    bool operator !=(const algo::RspaceStr15 &rhs) const;
+    bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr15& parent) __attribute__((nothrow));
+    RspaceStr15(const algo::RspaceStr15 &rhs) __attribute__((nothrow));
+    RspaceStr15(const algo::strptr &rhs) __attribute__((nothrow));
+    RspaceStr15();
+};
+#pragma pack(pop)
+
+// Access string as array of chars
+algo::aryptr<char>   ch_Getary(const algo::RspaceStr15& parent) __attribute__((nothrow));
+u32                  RspaceStr15_Hash(u32 prev, const algo::strptr &str);
+void                 ch_Init(algo::RspaceStr15 &parent) __attribute__((nothrow));
+// always return constant 15
+int                  ch_Max(algo::RspaceStr15& parent) __attribute__((nothrow));
+int                  ch_N(const algo::RspaceStr15& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+void                 ch_Print(algo::RspaceStr15& parent, algo::cstring &out) __attribute__((nothrow));
+// Convert string to field. Return success value
+bool                 ch_ReadStrptrMaybe(algo::RspaceStr15& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void                 ch_SetStrptr(algo::RspaceStr15& parent, const algo::strptr &rhs) __attribute__((nothrow));
+
+u32                  RspaceStr15_Hash(u32 prev, algo::RspaceStr15 rhs) __attribute__((nothrow));
+// Read fields of algo::RspaceStr15 from an ascii string.
+// The format of the string is the format of the algo::RspaceStr15's only field
+bool                 RspaceStr15_ReadStrptrMaybe(algo::RspaceStr15 &parent, algo::strptr in_str);
+i32                  RspaceStr15_Cmp(algo::RspaceStr15 lhs, algo::RspaceStr15 rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 RspaceStr15_Init(algo::RspaceStr15& parent);
+bool                 RspaceStr15_Eq(algo::RspaceStr15 lhs, algo::RspaceStr15 rhs) __attribute__((nothrow));
+bool                 RspaceStr15_EqStrptr(algo::RspaceStr15 lhs, const algo::strptr &rhs) __attribute__((nothrow));
+// print string representation of algo::RspaceStr15 to string LHS, no header -- cprint:algo.RspaceStr15.String
+void                 RspaceStr15_Print(algo::RspaceStr15 row, algo::cstring &str) __attribute__((nothrow));
+
 // --- algo.RspaceStr16
 #pragma pack(push,1)
 struct RspaceStr16 { // algo.RspaceStr16
@@ -7144,6 +7416,53 @@ bool                 RspaceStr16_Update(algo::RspaceStr16 &lhs, algo::RspaceStr1
 bool                 RspaceStr16_EqStrptr(algo::RspaceStr16 lhs, const algo::strptr &rhs) __attribute__((nothrow));
 // print string representation of algo::RspaceStr16 to string LHS, no header -- cprint:algo.RspaceStr16.String
 void                 RspaceStr16_Print(algo::RspaceStr16 row, algo::cstring &str) __attribute__((nothrow));
+
+// --- algo.RspaceStr18
+#pragma pack(push,1)
+struct RspaceStr18 { // algo.RspaceStr18
+    enum { ch_max = 18 };
+    u8 ch[18];
+    inline operator algo::strptr() const;
+    bool operator ==(const algo::RspaceStr18 &rhs) const;
+    bool operator !=(const algo::RspaceStr18 &rhs) const;
+    bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr18& parent) __attribute__((nothrow));
+    RspaceStr18(const algo::RspaceStr18 &rhs) __attribute__((nothrow));
+    RspaceStr18(const algo::strptr &rhs) __attribute__((nothrow));
+    RspaceStr18();
+};
+#pragma pack(pop)
+
+// Access string as array of chars
+algo::aryptr<char>   ch_Getary(const algo::RspaceStr18& parent) __attribute__((nothrow));
+u32                  RspaceStr18_Hash(u32 prev, const algo::strptr &str);
+void                 ch_Init(algo::RspaceStr18 &parent) __attribute__((nothrow));
+// always return constant 18
+int                  ch_Max(algo::RspaceStr18& parent) __attribute__((nothrow));
+int                  ch_N(const algo::RspaceStr18& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+void                 ch_Print(algo::RspaceStr18& parent, algo::cstring &out) __attribute__((nothrow));
+// Convert string to field. Return success value
+bool                 ch_ReadStrptrMaybe(algo::RspaceStr18& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void                 ch_SetStrptr(algo::RspaceStr18& parent, const algo::strptr &rhs) __attribute__((nothrow));
+
+u32                  RspaceStr18_Hash(u32 prev, algo::RspaceStr18 rhs) __attribute__((nothrow));
+// Read fields of algo::RspaceStr18 from an ascii string.
+// The format of the string is the format of the algo::RspaceStr18's only field
+bool                 RspaceStr18_ReadStrptrMaybe(algo::RspaceStr18 &parent, algo::strptr in_str);
+i32                  RspaceStr18_Cmp(algo::RspaceStr18 lhs, algo::RspaceStr18 rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 RspaceStr18_Init(algo::RspaceStr18& parent);
+bool                 RspaceStr18_Eq(algo::RspaceStr18 lhs, algo::RspaceStr18 rhs) __attribute__((nothrow));
+bool                 RspaceStr18_EqStrptr(algo::RspaceStr18 lhs, const algo::strptr &rhs) __attribute__((nothrow));
+// print string representation of algo::RspaceStr18 to string LHS, no header -- cprint:algo.RspaceStr18.String
+void                 RspaceStr18_Print(algo::RspaceStr18 row, algo::cstring &str) __attribute__((nothrow));
 
 // --- algo.RspaceStr2
 #pragma pack(push,1)
@@ -7227,17 +7546,17 @@ bool                 ch_ReadStrptrMaybe(algo::RspaceStr20& parent, algo::strptr 
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::RspaceStr20& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
-u32                  RspaceStr20_Hash(u32 prev, const algo::RspaceStr20 & rhs) __attribute__((nothrow));
+u32                  RspaceStr20_Hash(u32 prev, algo::RspaceStr20 rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr20 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr20's only field
 bool                 RspaceStr20_ReadStrptrMaybe(algo::RspaceStr20 &parent, algo::strptr in_str);
-i32                  RspaceStr20_Cmp(algo::RspaceStr20 & lhs, algo::RspaceStr20 & rhs) __attribute__((nothrow));
+i32                  RspaceStr20_Cmp(algo::RspaceStr20 lhs, algo::RspaceStr20 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 void                 RspaceStr20_Init(algo::RspaceStr20& parent);
-bool                 RspaceStr20_Eq(const algo::RspaceStr20 & lhs,const algo::RspaceStr20 & rhs) __attribute__((nothrow));
-bool                 RspaceStr20_EqStrptr(algo::RspaceStr20 & lhs, const algo::strptr &rhs) __attribute__((nothrow));
+bool                 RspaceStr20_Eq(algo::RspaceStr20 lhs, algo::RspaceStr20 rhs) __attribute__((nothrow));
+bool                 RspaceStr20_EqStrptr(algo::RspaceStr20 lhs, const algo::strptr &rhs) __attribute__((nothrow));
 // print string representation of algo::RspaceStr20 to string LHS, no header -- cprint:algo.RspaceStr20.String
-void                 RspaceStr20_Print(algo::RspaceStr20 & row, algo::cstring &str) __attribute__((nothrow));
+void                 RspaceStr20_Print(algo::RspaceStr20 row, algo::cstring &str) __attribute__((nothrow));
 
 // --- algo.RspaceStr200
 #pragma pack(push,1)
@@ -7603,17 +7922,17 @@ bool                 ch_ReadStrptrMaybe(algo::RspaceStr32& parent, algo::strptr 
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::RspaceStr32& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
-u32                  RspaceStr32_Hash(u32 prev, const algo::RspaceStr32 & rhs) __attribute__((nothrow));
+u32                  RspaceStr32_Hash(u32 prev, algo::RspaceStr32 rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr32 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr32's only field
 bool                 RspaceStr32_ReadStrptrMaybe(algo::RspaceStr32 &parent, algo::strptr in_str);
-i32                  RspaceStr32_Cmp(algo::RspaceStr32 & lhs, algo::RspaceStr32 & rhs) __attribute__((nothrow));
+i32                  RspaceStr32_Cmp(algo::RspaceStr32 lhs, algo::RspaceStr32 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 void                 RspaceStr32_Init(algo::RspaceStr32& parent);
-bool                 RspaceStr32_Eq(const algo::RspaceStr32 & lhs,const algo::RspaceStr32 & rhs) __attribute__((nothrow));
-bool                 RspaceStr32_EqStrptr(algo::RspaceStr32 & lhs, const algo::strptr &rhs) __attribute__((nothrow));
+bool                 RspaceStr32_Eq(algo::RspaceStr32 lhs, algo::RspaceStr32 rhs) __attribute__((nothrow));
+bool                 RspaceStr32_EqStrptr(algo::RspaceStr32 lhs, const algo::strptr &rhs) __attribute__((nothrow));
 // print string representation of algo::RspaceStr32 to string LHS, no header -- cprint:algo.RspaceStr32.String
-void                 RspaceStr32_Print(algo::RspaceStr32 & row, algo::cstring &str) __attribute__((nothrow));
+void                 RspaceStr32_Print(algo::RspaceStr32 row, algo::cstring &str) __attribute__((nothrow));
 
 // --- algo.RspaceStr4
 #pragma pack(push,1)
@@ -7694,17 +8013,17 @@ bool                 ch_ReadStrptrMaybe(algo::RspaceStr40& parent, algo::strptr 
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::RspaceStr40& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
-u32                  RspaceStr40_Hash(u32 prev, const algo::RspaceStr40 & rhs) __attribute__((nothrow));
+u32                  RspaceStr40_Hash(u32 prev, algo::RspaceStr40 rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr40 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr40's only field
 bool                 RspaceStr40_ReadStrptrMaybe(algo::RspaceStr40 &parent, algo::strptr in_str);
-i32                  RspaceStr40_Cmp(algo::RspaceStr40 & lhs, algo::RspaceStr40 & rhs) __attribute__((nothrow));
+i32                  RspaceStr40_Cmp(algo::RspaceStr40 lhs, algo::RspaceStr40 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 void                 RspaceStr40_Init(algo::RspaceStr40& parent);
-bool                 RspaceStr40_Eq(const algo::RspaceStr40 & lhs,const algo::RspaceStr40 & rhs) __attribute__((nothrow));
-bool                 RspaceStr40_EqStrptr(algo::RspaceStr40 & lhs, const algo::strptr &rhs) __attribute__((nothrow));
+bool                 RspaceStr40_Eq(algo::RspaceStr40 lhs, algo::RspaceStr40 rhs) __attribute__((nothrow));
+bool                 RspaceStr40_EqStrptr(algo::RspaceStr40 lhs, const algo::strptr &rhs) __attribute__((nothrow));
 // print string representation of algo::RspaceStr40 to string LHS, no header -- cprint:algo.RspaceStr40.String
-void                 RspaceStr40_Print(algo::RspaceStr40 & row, algo::cstring &str) __attribute__((nothrow));
+void                 RspaceStr40_Print(algo::RspaceStr40 row, algo::cstring &str) __attribute__((nothrow));
 
 // --- algo.RspaceStr5
 #pragma pack(push,1)
@@ -7788,17 +8107,17 @@ bool                 ch_ReadStrptrMaybe(algo::RspaceStr50& parent, algo::strptr 
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::RspaceStr50& parent, const algo::strptr &rhs) __attribute__((nothrow));
 
-u32                  RspaceStr50_Hash(u32 prev, const algo::RspaceStr50 & rhs) __attribute__((nothrow));
+u32                  RspaceStr50_Hash(u32 prev, algo::RspaceStr50 rhs) __attribute__((nothrow));
 // Read fields of algo::RspaceStr50 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr50's only field
 bool                 RspaceStr50_ReadStrptrMaybe(algo::RspaceStr50 &parent, algo::strptr in_str);
-i32                  RspaceStr50_Cmp(algo::RspaceStr50 & lhs, algo::RspaceStr50 & rhs) __attribute__((nothrow));
+i32                  RspaceStr50_Cmp(algo::RspaceStr50 lhs, algo::RspaceStr50 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 void                 RspaceStr50_Init(algo::RspaceStr50& parent);
-bool                 RspaceStr50_Eq(const algo::RspaceStr50 & lhs,const algo::RspaceStr50 & rhs) __attribute__((nothrow));
-bool                 RspaceStr50_EqStrptr(algo::RspaceStr50 & lhs, const algo::strptr &rhs) __attribute__((nothrow));
+bool                 RspaceStr50_Eq(algo::RspaceStr50 lhs, algo::RspaceStr50 rhs) __attribute__((nothrow));
+bool                 RspaceStr50_EqStrptr(algo::RspaceStr50 lhs, const algo::strptr &rhs) __attribute__((nothrow));
 // print string representation of algo::RspaceStr50 to string LHS, no header -- cprint:algo.RspaceStr50.String
-void                 RspaceStr50_Print(algo::RspaceStr50 & row, algo::cstring &str) __attribute__((nothrow));
+void                 RspaceStr50_Print(algo::RspaceStr50 row, algo::cstring &str) __attribute__((nothrow));
 
 // --- algo.RspaceStr6
 #pragma pack(push,1)
@@ -7810,6 +8129,9 @@ struct RspaceStr6 { // algo.RspaceStr6
     bool operator !=(const algo::RspaceStr6 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::RspaceStr6 &rhs) const;
+    bool operator >(const algo::RspaceStr6 &rhs) const;
+    bool operator <=(const algo::RspaceStr6 &rhs) const;
+    bool operator >=(const algo::RspaceStr6 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -7943,6 +8265,53 @@ bool                 RspaceStr7_EqStrptr(algo::RspaceStr7 lhs, const algo::strpt
 // print string representation of algo::RspaceStr7 to string LHS, no header -- cprint:algo.RspaceStr7.String
 void                 RspaceStr7_Print(algo::RspaceStr7 row, algo::cstring &str) __attribute__((nothrow));
 
+// --- algo.RspaceStr75
+#pragma pack(push,1)
+struct RspaceStr75 { // algo.RspaceStr75
+    enum { ch_max = 75 };
+    u8 ch[75];
+    inline operator algo::strptr() const;
+    bool operator ==(const algo::RspaceStr75 &rhs) const;
+    bool operator !=(const algo::RspaceStr75 &rhs) const;
+    bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::RspaceStr75& parent) __attribute__((nothrow));
+    RspaceStr75(const algo::RspaceStr75 &rhs) __attribute__((nothrow));
+    RspaceStr75(const algo::strptr &rhs) __attribute__((nothrow));
+    RspaceStr75();
+};
+#pragma pack(pop)
+
+// Access string as array of chars
+algo::aryptr<char>   ch_Getary(const algo::RspaceStr75& parent) __attribute__((nothrow));
+u32                  RspaceStr75_Hash(u32 prev, const algo::strptr &str);
+void                 ch_Init(algo::RspaceStr75 &parent) __attribute__((nothrow));
+// always return constant 75
+int                  ch_Max(algo::RspaceStr75& parent) __attribute__((nothrow));
+int                  ch_N(const algo::RspaceStr75& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+void                 ch_Print(algo::RspaceStr75& parent, algo::cstring &out) __attribute__((nothrow));
+// Convert string to field. Return success value
+bool                 ch_ReadStrptrMaybe(algo::RspaceStr75& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void                 ch_SetStrptr(algo::RspaceStr75& parent, const algo::strptr &rhs) __attribute__((nothrow));
+
+u32                  RspaceStr75_Hash(u32 prev, algo::RspaceStr75 rhs) __attribute__((nothrow));
+// Read fields of algo::RspaceStr75 from an ascii string.
+// The format of the string is the format of the algo::RspaceStr75's only field
+bool                 RspaceStr75_ReadStrptrMaybe(algo::RspaceStr75 &parent, algo::strptr in_str);
+i32                  RspaceStr75_Cmp(algo::RspaceStr75 lhs, algo::RspaceStr75 rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 RspaceStr75_Init(algo::RspaceStr75& parent);
+bool                 RspaceStr75_Eq(algo::RspaceStr75 lhs, algo::RspaceStr75 rhs) __attribute__((nothrow));
+bool                 RspaceStr75_EqStrptr(algo::RspaceStr75 lhs, const algo::strptr &rhs) __attribute__((nothrow));
+// print string representation of algo::RspaceStr75 to string LHS, no header -- cprint:algo.RspaceStr75.String
+void                 RspaceStr75_Print(algo::RspaceStr75 row, algo::cstring &str) __attribute__((nothrow));
+
 // --- algo.RspaceStr8
 #pragma pack(push,1)
 struct RspaceStr8 { // algo.RspaceStr8
@@ -8067,6 +8436,9 @@ struct Sha1sig { // algo.Sha1sig
     bool operator ==(const algo::Sha1sig &rhs) const;
     bool operator !=(const algo::Sha1sig &rhs) const;
     bool operator <(const algo::Sha1sig &rhs) const;
+    bool operator >(const algo::Sha1sig &rhs) const;
+    bool operator <=(const algo::Sha1sig &rhs) const;
+    bool operator >=(const algo::Sha1sig &rhs) const;
     Sha1sig();
 };
 
@@ -8396,6 +8768,9 @@ struct Smallstr20 { // algo.Smallstr20
     bool operator !=(const algo::Smallstr20 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::Smallstr20 &rhs) const;
+    bool operator >(const algo::Smallstr20 &rhs) const;
+    bool operator <=(const algo::Smallstr20 &rhs) const;
+    bool operator >=(const algo::Smallstr20 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -8617,6 +8992,9 @@ struct Smallstr30 { // algo.Smallstr30
     bool operator !=(const algo::Smallstr30 &rhs) const;
     bool operator ==(const algo::strptr &rhs) const;
     bool operator <(const algo::Smallstr30 &rhs) const;
+    bool operator >(const algo::Smallstr30 &rhs) const;
+    bool operator <=(const algo::Smallstr30 &rhs) const;
+    bool operator >=(const algo::Smallstr30 &rhs) const;
     // Copy from strptr (operator=)
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
@@ -9245,6 +9623,8 @@ u64&                 ary_qFind(algo::U64Ary& parent, u64 t) __attribute__((nothr
 u64&                 ary_qLast(algo::U64Ary& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  ary_rowid_Get(algo::U64Ary& parent, u64 &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<u64>    ary_AllocNVal(algo::U64Ary& parent, int n_elems, const u64& val) __attribute__((__warn_unused_result__, nothrow));
 
 // proceed to next item
 void                 U64Ary_ary_curs_Next(U64Ary_ary_curs &curs);
@@ -9330,12 +9710,14 @@ void                 U64Dec2_Init(algo::U64Dec2& parent);
 void                 U64Dec2_Print(algo::U64Dec2 row, algo::cstring &str) __attribute__((nothrow));
 
 // --- algo.U64Dec4
+#pragma pack(push,1)
 struct U64Dec4 { // algo.U64Dec4
     u64   value;   //   0
     inline operator u64() const;
     explicit U64Dec4(u64                            in_value);
     U64Dec4();
 };
+#pragma pack(pop)
 
 // Set value of field value.
 // The value is rounded to the nearest integer.
@@ -9470,11 +9852,13 @@ void                 U64Dec7_Init(algo::U64Dec7& parent);
 void                 U64Dec7_Print(algo::U64Dec7 row, algo::cstring &str) __attribute__((nothrow));
 
 // --- algo.U64Dec8
+#pragma pack(push,1)
 struct U64Dec8 { // algo.U64Dec8: unsigned u64, scale 1e8
     u64   value;   //   0
     explicit U64Dec8(u64                            in_value);
     U64Dec8();
 };
+#pragma pack(pop)
 
 // Set value of field value.
 // The value is rounded to the nearest integer.
@@ -9575,6 +9959,9 @@ struct UnDiff { // algo.UnDiff: Unix diff * 1e9 + nanoseconds
     bool operator ==(const algo::UnDiff &rhs) const;
     bool operator !=(const algo::UnDiff &rhs) const;
     bool operator <(const algo::UnDiff &rhs) const;
+    bool operator >(const algo::UnDiff &rhs) const;
+    bool operator <=(const algo::UnDiff &rhs) const;
+    bool operator >=(const algo::UnDiff &rhs) const;
     UnDiff();
 };
 #pragma pack(pop)
@@ -9608,6 +9995,9 @@ struct UnixDiff { // algo.UnixDiff: Difference between two UnixTimes; units: sec
     bool operator ==(const algo::UnixDiff &rhs) const;
     bool operator !=(const algo::UnixDiff &rhs) const;
     bool operator <(const algo::UnixDiff &rhs) const;
+    bool operator >(const algo::UnixDiff &rhs) const;
+    bool operator <=(const algo::UnixDiff &rhs) const;
+    bool operator >=(const algo::UnixDiff &rhs) const;
     UnixDiff();
 };
 
@@ -9641,6 +10031,9 @@ struct UnixTime { // algo.UnixTime: Unix epoch time, in seconds
     bool operator ==(const algo::UnixTime &rhs) const;
     bool operator !=(const algo::UnixTime &rhs) const;
     bool operator <(const algo::UnixTime &rhs) const;
+    bool operator >(const algo::UnixTime &rhs) const;
+    bool operator <=(const algo::UnixTime &rhs) const;
+    bool operator >=(const algo::UnixTime &rhs) const;
     UnixTime();
 };
 #pragma pack(pop)
@@ -9675,6 +10068,9 @@ struct WDiff { // algo.WDiff: Difference between two WinTimes
     bool operator ==(const algo::WDiff &rhs) const;
     bool operator !=(const algo::WDiff &rhs) const;
     bool operator <(const algo::WDiff &rhs) const;
+    bool operator >(const algo::WDiff &rhs) const;
+    bool operator <=(const algo::WDiff &rhs) const;
+    bool operator >=(const algo::WDiff &rhs) const;
     WDiff();
 };
 #pragma pack(pop)
@@ -9709,6 +10105,9 @@ struct WTime { // algo.WTime: Units: 100nsec; Number of units since Jan 1, 1600
     bool operator ==(const algo::WTime &rhs) const;
     bool operator !=(const algo::WTime &rhs) const;
     bool operator <(const algo::WTime &rhs) const;
+    bool operator >(const algo::WTime &rhs) const;
+    bool operator <=(const algo::WTime &rhs) const;
+    bool operator >=(const algo::WTime &rhs) const;
     WTime();
 };
 #pragma pack(pop)
@@ -9745,6 +10144,9 @@ struct i32_Range { // algo.i32_Range
     bool operator ==(const algo::i32_Range &rhs) const;
     bool operator !=(const algo::i32_Range &rhs) const;
     bool operator <(const algo::i32_Range &rhs) const;
+    bool operator >(const algo::i32_Range &rhs) const;
+    bool operator <=(const algo::i32_Range &rhs) const;
+    bool operator >=(const algo::i32_Range &rhs) const;
     i32_Range();
 };
 

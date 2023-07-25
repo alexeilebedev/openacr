@@ -27,7 +27,7 @@ Usage: acr_ed [options]
     -subset2    string    Primary key is also a subset of this ctype
     -separator  string      Key separator. default: "."
     -field      string  Create field
-    -arg        string    Field type (e.g. u32, etc)
+    -arg        string    Field type (e.g. u32, etc), (with -ctype) add the base field
     -dflt       string    Field default value
     -anon                 Anonymous field (use with command lines). default: false
     -bigend               Big-endian field. default: false
@@ -41,7 +41,7 @@ Usage: acr_ed [options]
     -hashfld    string      (-reftype:Thash) Hash field
     -sortfld    string      (-reftype:Bheap) Sort field
     -unittest   string  Create unit test, <ns>.<functionname>
-    -normcheck  string  Create normalization check
+    -citest     string  Create CI test
     -cppfunc    string  Field is a cppfunc, pass c++ expression as argument
     -xref                   X-ref with field type. default: false
     -via        string        X-ref argument (index, pointer, or index/key)
@@ -51,6 +51,7 @@ Usage: acr_ed [options]
     -sandbox            Make changes in sandbox. default: false
     -test               Build resulting changes, run tests. default: false
     -showcpp            (With -sandbox), show resulting diff. default: false
+    -msgtype    string  (with -ctype) use this msgtype as type
     -verbose            Enable verbose mode
     -debug              Enable debug mode
     -version            Show version information

@@ -800,6 +800,17 @@ inline void dmmeta::Llist_Init(dmmeta::Llist& parent) {
     parent.havetail = bool(true);
     parent.havecount = bool(false);
 }
+inline dmmeta::Logcat::Logcat() {
+    dmmeta::Logcat_Init(*this);
+}
+
+
+// --- dmmeta.Logcat..Init
+// Set all fields to initial values.
+inline void dmmeta::Logcat_Init(dmmeta::Logcat& parent) {
+    parent.enabled = bool(false);
+    parent.builtin = bool(false);
+}
 inline dmmeta::Main::Main(const algo::strptr&            in_ns
         ,bool                           in_ismodule)
     : ns(in_ns)
@@ -1218,6 +1229,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Anonfl
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Bitfld &row) {// cfmt:dmmeta.Bitfld.String
+    dmmeta::Bitfld_Print(const_cast<dmmeta::Bitfld&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::BuftypeId &row) {// cfmt:dmmeta.BuftypeId.String
     dmmeta::BuftypeId_Print(const_cast<dmmeta::BuftypeId&>(row), str);
     return str;
@@ -1245,6 +1261,16 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Cfmt &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Charset &row) {// cfmt:dmmeta.Charset.String
     dmmeta::Charset_Print(const_cast<dmmeta::Charset&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Cpptype &row) {// cfmt:dmmeta.Cpptype.String
+    dmmeta::Cpptype_Print(const_cast<dmmeta::Cpptype&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Csize &row) {// cfmt:dmmeta.Csize.String
+    dmmeta::Csize_Print(const_cast<dmmeta::Csize&>(row), str);
     return str;
 }
 
@@ -1293,6 +1319,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Finput
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Fldoffset &row) {// cfmt:dmmeta.Fldoffset.String
+    dmmeta::Fldoffset_Print(const_cast<dmmeta::Fldoffset&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Fnoremove &row) {// cfmt:dmmeta.Fnoremove.String
     dmmeta::Fnoremove_Print(const_cast<dmmeta::Fnoremove&>(row), str);
     return str;
@@ -1328,13 +1359,28 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Hook &
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Lenfld &row) {// cfmt:dmmeta.Lenfld.String
+    dmmeta::Lenfld_Print(const_cast<dmmeta::Lenfld&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Llist &row) {// cfmt:dmmeta.Llist.String
     dmmeta::Llist_Print(const_cast<dmmeta::Llist&>(row), str);
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Logcat &row) {// cfmt:dmmeta.Logcat.String
+    dmmeta::Logcat_Print(const_cast<dmmeta::Logcat&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Main &row) {// cfmt:dmmeta.Main.String
     dmmeta::Main_Print(const_cast<dmmeta::Main&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Msgtype &row) {// cfmt:dmmeta.Msgtype.String
+    dmmeta::Msgtype_Print(const_cast<dmmeta::Msgtype&>(row), str);
     return str;
 }
 
@@ -1360,6 +1406,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Nsprot
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Nsx &row) {// cfmt:dmmeta.Nsx.String
     dmmeta::Nsx_Print(const_cast<dmmeta::Nsx&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Pack &row) {// cfmt:dmmeta.Pack.String
+    dmmeta::Pack_Print(const_cast<dmmeta::Pack&>(row), str);
     return str;
 }
 
@@ -1405,6 +1456,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Tary &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Thash &row) {// cfmt:dmmeta.Thash.String
     dmmeta::Thash_Print(const_cast<dmmeta::Thash&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Typefld &row) {// cfmt:dmmeta.Typefld.String
+    dmmeta::Typefld_Print(const_cast<dmmeta::Typefld&>(row), str);
     return str;
 }
 

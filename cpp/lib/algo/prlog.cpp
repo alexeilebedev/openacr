@@ -27,17 +27,51 @@
 
 #include "include/algo.h"
 
-void algo::Prlog(int fd, cstring &str, int start, bool eol) {
+// Default implementation of prlog handler
+//
+// Notes on WriteFile use:
+// some tools set fd 0 to nonblocking mode,
+// which in case of a terminal makes output non-blocking too (bug in gnome terminal?)
+// in any case it causes EAGAIN during fast writes, so we use WriteFile to
+// write all bytes out.
+void algo::Prlog(algo_lib::FLogcat *logcat, algo::SchedTime tstamp, strptr str) {
     try {
-        if (eol) {
-            str << '\n';
+        algo::Fildes fildes = logcat == &algo_lib_logcat_stdout
+            ? algo_lib::_db.fildes_stdout
+            : algo_lib::_db.fildes_stderr;
+        if (algo_lib::_db.show_tstamp || (logcat && !logcat->builtin)) {
+            // rich and slow case
+            algo::UnTime time = algo::CurrUnTime() - algo::UnDiffSecs(double(get_cycles() - tstamp) / get_cpu_hz());
+            i32 pos(0);
+            i32 start(0);
+            while(pos<ch_N(str)) {
+                if (str[pos++] == '\n') {
+                    // get whole line including eol
+                    strptr line = ch_GetRegion(str,start,pos-start);
+                    start = pos; // advance to next line
+                    if (algo_lib::_db.pending_eol) {
+                        WriteFile(fildes,(u8*)line.elems,line.n_elems);
+                        algo_lib::_db.pending_eol = false;
+                    } else {
+                        // format log line
+                        // time logcat: text
+                        tempstr out;
+                        if (algo_lib::_db.show_tstamp) {
+                            UnTime_PrintSpec(time,out,algo_lib::_db.tstamp_fmt);
+                        }
+                        if (logcat && !logcat->builtin) {
+                            out << logcat->logcat <<": ";
+                        }
+                        out << line;
+                        WriteFile(fildes,(u8*)out.ch_elems,out.ch_n);
+                    }
+                }
+            }
+            algo_lib::_db.pending_eol = start != pos;
+        } else {
+            // simple and fast case
+            WriteFile(fildes, (u8*)str.elems, i32(str.n_elems));
         }
-        // some tools set fd 0 to nonblocking mode,
-        // which in case of a terminal makes output non-blocking too (bug in gnome terminal?)
-        // in any case it causes EAGAIN during fast writes, so we use WriteFile to
-        // write all bytes out.
-        WriteFile(algo::Fildes(fd), (u8*)str.ch_elems + start, i32(str.ch_n - start));
-        str.ch_n = start;
     } catch (...) {
         // coverity UNCAUGHT_EXCEPT --
         // do not allow this function to throw exception.

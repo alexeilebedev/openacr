@@ -114,155 +114,6 @@ bool bool_ReadStrptrMaybe(bool &row, algo::strptr str) {
     return retval;
 }
 
-bool u8_ReadStrptrMaybe(u8    &row, algo::strptr str) {
-    i32 min = i32(        0x00000000);
-    i32 max = i32(        0x000000ff);
-    i32 val;
-    bool retval = i32_ReadStrptrMaybe(val, str);
-    if (LIKELY(retval)) {
-        if (val >= min && val <= max) {
-            row = u8(val);
-        } else {
-            retval = false;
-            algo_lib::SaveBadTag("comment", "value outside of valid range");
-            algo_lib::SaveBadTag("value",str);
-        }
-    }
-    return retval;
-}
-
-bool i8_ReadStrptrMaybe(i8    &row, algo::strptr str) {
-    i32 min = i32(        0xffffff80);
-    i32 max = i32(        0x0000007f);
-    i32 val;
-    bool retval = i32_ReadStrptrMaybe(val, str);
-    if (LIKELY(retval)) {
-        if (LIKELY(val >= min && val <= max)) {
-            row = i8(val);
-        } else {
-            retval = false;
-            algo_lib::SaveBadTag("comment", "value outside of valid range");
-            algo_lib::SaveBadTag("value",str);
-        }
-    }
-    return retval;
-}
-
-bool u16_ReadStrptrMaybe(u16    &row, algo::strptr str) {
-    i32 min = i32(        0x00000000);
-    i32 max = i32(        0x0000ffff);
-    i64 val=0;
-    bool retval = i64_ReadStrptrMaybe(val, str);
-    if (LIKELY(retval)) {
-        if (LIKELY(val >= min && val <= max)) {
-            row = u16(val);
-        } else {
-            retval = false;
-            algo_lib::SaveBadTag("comment", "value outside of valid range");
-            algo_lib::SaveBadTag("value",str);
-        }
-    }
-    return retval;
-}
-
-bool i16_ReadStrptrMaybe(i16    &row, algo::strptr str) {
-    i32 min = i32(        0xffff8000);
-    i32 max = i32(        0x00007fff);
-    i64 val = 0;
-    bool retval = i64_ReadStrptrMaybe(val, str);
-    if (LIKELY(retval)) {
-        if (LIKELY(val >= min && val <= max)) {
-            row = i16(val);
-        } else {
-            retval = false;
-            algo_lib::SaveBadTag("comment", "value outside of valid range");
-            algo_lib::SaveBadTag("value",str);
-        }
-    }
-    return retval;
-}
-
-bool u32_ReadStrptrMaybe(u32    &row, algo::strptr str) {
-    u64 min = u64(0x0000000000000000);
-    u64 max = u64(0x00000000ffffffff);
-    u64 val = 0;
-    bool retval = u64_ReadStrptrMaybe(val, str);
-    if (LIKELY(retval)) {
-        if (LIKELY(val >= min && val <= max)) {
-            row = u32(val);
-        } else {
-            retval = false;
-            algo_lib::SaveBadTag("comment", "value outside of valid range");
-            algo_lib::SaveBadTag("value",str);
-        }
-    }
-    return retval;
-}
-
-bool i32_ReadStrptrMaybe(i32    &row, algo::strptr str) {
-    i64 min = i64(0xffffffff80000000);
-    i64 max = i64(0x000000007fffffff);
-    i64 val = 0;
-    bool retval = i64_ReadStrptrMaybe(val, str);
-    if (LIKELY(retval)) {
-        if (LIKELY(val >= min && val <= max)) {
-            row = i32(val);
-        } else {
-            retval = false;
-            algo_lib::SaveBadTag("comment", "value outside of valid range");
-            algo_lib::SaveBadTag("value",str);
-        }
-    }
-    return retval;
-}
-
-bool u128_ReadStrptrMaybe(u128 &row, algo::strptr str) {
-    bool retval = true;
-    u64 val;
-    if (LIKELY(u64_ReadStrptrMaybe(val,str))) {
-        row = u128(val);
-    } else {
-        retval=false;
-    }
-    return retval;
-}
-
-bool u64_ReadStrptrMaybe(u64    &row, algo::strptr str) {
-    bool retval = true;
-    algo::StringIter iter(str);
-    u64 val = 0;
-    if (LIKELY(elems_N(str)==0 || (TryParseU64(iter, val) && iter.index>0))) {
-        row=val;
-    } else {
-        retval = false;
-        algo_lib::SaveBadTag("comment", "bad number");
-        algo_lib::SaveBadTag("value",str);
-    }
-    return retval;
-}
-
-bool i64_ReadStrptrMaybe(i64    &row, algo::strptr str) {
-    bool retval = true;
-    i64 min = i64(0x8000000000000000);
-    i64 max = i64(0x7fffffffffffffff);
-    i64 val = 0;
-    algo::StringIter iter(str);
-    if (LIKELY(elems_N(str)==0 || (TryParseI64(iter, val) && iter.index>0))) {
-        if (val >= min && val <= max) {
-            row=val;
-        } else {
-            retval = false;
-            algo_lib::SaveBadTag("comment", "value outside of valid range");
-            algo_lib::SaveBadTag("value",str);
-        }
-    } else {
-        retval = false;
-        algo_lib::SaveBadTag("comment", "bad number");
-        algo_lib::SaveBadTag("value",str);
-    }
-    return retval;
-}
-
 // -----------------------------------------------------------------------------
 
 // Read time from STR to ROW
@@ -272,6 +123,8 @@ bool i64_ReadStrptrMaybe(i64    &row, algo::strptr str) {
 // %Y-%m-%dT%T
 // %Y-%m-%d %T
 // %Y/%m/%d %T
+// %Y-%m-%d
+// %Y/%m/%d
 // Where %T is %H:%M:%S.%X
 // And %X is the nanosecond portion
 bool algo::UnTime_ReadStrptrMaybe(algo::UnTime &row, algo::strptr str) {
@@ -288,6 +141,16 @@ bool algo::UnTime_ReadStrptrMaybe(algo::UnTime &row, algo::strptr str) {
         iter.index = 0;
         Refurbish(time_struct);
         retval = TimeStruct_Read(time_struct, iter, "%Y/%m/%d %T");
+    }
+    if (!retval) {
+        iter.index = 0;
+        Refurbish(time_struct);
+        retval = TimeStruct_Read(time_struct, iter, "%Y-%m-%d");
+    }
+    if (!retval) {
+        iter.index = 0;
+        Refurbish(time_struct);
+        retval = TimeStruct_Read(time_struct, iter, "%Y/%m/%d");
     }
     if (LIKELY(retval)) {
         row = ToUnTime(time_struct);
@@ -1160,8 +1023,8 @@ static void i32_PrintNanosec(int val, cstring &str, int wid, int dflt) {
 // The following control characters are supported in SPEC.
 // %Y     Year printed as 4 digits, e.g. 2002
 // %y     Last 2 digits of year printed as 2 digits
-// %B     Short month name (Feb)
-// %b     Long month name (February)
+// %B     Long month name (February)
+// %b     Short month name (Feb)
 // %a     Week day name (Monday)
 // %m     Month printed as 2 digits, with January being 01
 // %d     Day of month printed as at least 2 digits (or WIDTH)
@@ -1197,7 +1060,7 @@ void algo::TimeStruct_Print(const TimeStruct &time, cstring &str, const algo::st
             i64_PrintPadLeft(time.tm_year+1900>=2000 ? time.tm_year-100 : time.tm_year, str, 2);
             break;
         case 'B':
-            str<<GetMonthNameZeroBasedShort(Clipped(time.tm_mon,12));
+            str<<GetMonthNameZeroBased(Clipped(time.tm_mon,12));
             break;
         case 'b':
             str<<GetRegion(GetMonthNameZeroBasedShort(Clipped(time.tm_mon,12)), 0,3);
@@ -1454,7 +1317,7 @@ static void PrintRow(cstring &str, algo_lib::FTxtrow &row, bool use_style) {
         int extra = txtcell.width - ch_N(txtcell.rsep) - ch_N(txtcell.text);
         int l = txtcell.justify>0 ? extra
             : txtcell.justify<0 ? 0
-                              : extra/2;
+            : extra/2;
         char_PrintNTimes(' ', str,  l);
         algo::TermStyle style = use_style ? txtcell.style : algo::TermStyle(algo_TermStyle_default);
         if (style != algo_TermStyle_default) {
@@ -2307,4 +2170,16 @@ bool algo::WTime_ReadStrptrMaybe(algo::WTime &parent, algo::strptr in_str) {
         parent = algo::ToWTime(d);
     }
     return ret;
+}
+
+void algo::u64_PrintBase32(u64 k, algo::cstring &str) {
+    enum { MAXCHARS = 20 };
+    char buf[MAXCHARS];
+    int start = MAXCHARS;
+    do {
+        u32 idx = u32(k&31);
+        buf[--start] = (idx < 10 ? char('0' + idx) : char('A' + idx-10));
+        k>>=5;
+    } while (k);
+    ch_Addary(str, algo::strptr(buf+start, MAXCHARS-start));
 }

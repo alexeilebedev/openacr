@@ -837,6 +837,7 @@ Show first 10 entries from amcdb.gen:
 inline-command: acr amcdb.gen | sort -k 2 | head
 
 
+
 amcdb.gen  gen:basepool         perns:N  comment:"Create basepools based on defaults"
 amcdb.gen  gen:bitfldenum         perns:N  comment:"Generate fconsts from bool bitfield"
 amcdb.gen  gen:cget             perns:N  comment:"Generate helpful Q functions based on fconsts and bools"
@@ -844,7 +845,6 @@ amcdb.gen  gen:check_basefield    perns:N  comment:"Check Base usage"
 amcdb.gen  gen:check_basepool   perns:N  comment:"Check basepool order"
 amcdb.gen  gen:check_bigend     perns:N  comment:"Check big-endians"
 amcdb.gen  gen:check_bitfld     perns:N  comment:"Check that bitfields don't overlap"
-amcdb.gen  gen:check_cascdel    perns:N  comment:""
 ```
 
 Select first 10 functions from amc source code:
@@ -852,14 +852,14 @@ Select first 10 functions from amc source code:
 inline-command: src_func amc gen_% -proto -comment: | sort -k 3 | head
 cpp/amc/gen.cpp:219: void amc::gen_basepool() 
 cpp/amc/cget.cpp:123: void amc::gen_cget()
-cpp/amc/gen.cpp:574: void amc::gen_check_bigend() 
+cpp/amc/gen.cpp:576: void amc::gen_check_bigend() 
 cpp/amc/gen.cpp:295: void amc::gen_check_bitfld() 
 cpp/amc/gen.cpp:112: void amc::gen_check_cascdel() 
 cpp/amc/gen.cpp:459: void amc::gen_check_cpptype() 
 cpp/amc/gen.cpp:204: void amc::gen_check_prefix() 
 cpp/amc/gen.cpp:394: void amc::gen_check_reftype() 
 cpp/amc/gen.cpp:161: void amc::gen_check_static() 
-cpp/amc/checkxref.cpp:229: void amc::gen_check_xref() 
+cpp/amc/gen.cpp:1367: void amc::gen_check_varlen() 
 ```
 
 In language-centric systems, one would start by writing some functions, and then use "reflection" to

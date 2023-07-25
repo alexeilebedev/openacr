@@ -70,6 +70,18 @@ inline bool lib_json::FldKey::operator !=(const lib_json::FldKey &rhs) const {
 inline bool lib_json::FldKey::operator <(const lib_json::FldKey &rhs) const {
     return lib_json::FldKey_Lt(const_cast<lib_json::FldKey&>(*this),const_cast<lib_json::FldKey&>(rhs));
 }
+
+inline bool lib_json::FldKey::operator >(const lib_json::FldKey &rhs) const {
+    return rhs < *this;
+}
+
+inline bool lib_json::FldKey::operator <=(const lib_json::FldKey &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool lib_json::FldKey::operator >=(const lib_json::FldKey &rhs) const {
+    return !(*this < rhs);
+}
 inline lib_json::FldKey::FldKey() {
     lib_json::FldKey_Init(*this);
 }

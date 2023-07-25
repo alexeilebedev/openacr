@@ -39,7 +39,6 @@ const char *mdbg_help =
 "    -cfg           string  Configuration to use. default: \"debug\"\n"
 "    -manywin               gdb-many-windows. default: false\n"
 "    -disas                 Show disassembly (use F12). default: false\n"
-"    -root                  Debug as root. default: false\n"
 "    -attach                Attach to a running process. default: false\n"
 "    -b             string  List of breakpoints, e.g. 'a.cpp:123 if cond1, func2'. default: \"main\"\n"
 "    -catchthrow            Stop on exceptions. default: true\n"
@@ -63,7 +62,6 @@ const char *mdbg_syntax =
 " -cfg:string=\"debug\"\n"
 " -manywin:flag\n"
 " -disas:flag\n"
-" -root:flag\n"
 " -attach:flag\n"
 " -b:string=\"main\"\n"
 " -catchthrow:flag=true\n"
@@ -336,7 +334,7 @@ void mdbg::MainLoop() {
     algo_lib::_db.clock          = time;
     do {
         algo_lib::_db.next_loop.value = algo_lib::_db.limit;
-        algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+        mdbg::Steps();
     } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
 }
 
@@ -421,6 +419,12 @@ bool mdbg::LoadSsimfileMaybe(algo::strptr fname) {
     return retval;
 }
 
+// --- mdbg.FDb._db.Steps
+// Calls Step function of dependencies
+void mdbg::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
 // --- mdbg.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -484,7 +488,7 @@ void* mdbg::cfg_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cfg_n = new_nelems;
+        _db.cfg_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -496,7 +500,7 @@ void mdbg::cfg_RemoveAll() {
     for (u64 n = _db.cfg_n; n>0; ) {
         n--;
         cfg_qFind(u64(n)).~FCfg(); // destroy last element
-        _db.cfg_n = n;
+        _db.cfg_n = i32(n);
     }
 }
 
@@ -507,14 +511,14 @@ void mdbg::cfg_RemoveLast() {
     if (n > 0) {
         n -= 1;
         cfg_qFind(u64(n)).~FCfg();
-        _db.cfg_n = n;
+        _db.cfg_n = i32(n);
     }
 }
 
 // --- mdbg.FDb.cfg.InputMaybe
 static bool mdbg::cfg_InputMaybe(dev::Cfg &elem) {
     bool retval = true;
-    retval = cfg_InsertMaybe(elem);
+    retval = cfg_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -564,6 +568,7 @@ mdbg::FCfg& mdbg::ind_cfg_GetOrCreate(const algo::strptr& key) {
             ret = NULL;
         }
     }
+    vrfy(ret, tempstr() << "mdbg.create_error  table:ind_cfg  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -704,7 +709,7 @@ void* mdbg::builddir_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.builddir_n = new_nelems;
+        _db.builddir_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -716,7 +721,7 @@ void mdbg::builddir_RemoveAll() {
     for (u64 n = _db.builddir_n; n>0; ) {
         n--;
         builddir_qFind(u64(n)).~FBuilddir(); // destroy last element
-        _db.builddir_n = n;
+        _db.builddir_n = i32(n);
     }
 }
 
@@ -727,14 +732,14 @@ void mdbg::builddir_RemoveLast() {
     if (n > 0) {
         n -= 1;
         builddir_qFind(u64(n)).~FBuilddir();
-        _db.builddir_n = n;
+        _db.builddir_n = i32(n);
     }
 }
 
 // --- mdbg.FDb.builddir.InputMaybe
 static bool mdbg::builddir_InputMaybe(dev::Builddir &elem) {
     bool retval = true;
-    retval = builddir_InsertMaybe(elem);
+    retval = builddir_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
@@ -771,6 +776,7 @@ inline static i32 mdbg::trace_N() {
 // --- mdbg.FDb..Init
 // Set all fields to initial values.
 void mdbg::FDb_Init() {
+    _db.lpool_lock = 0;
     memset(_db.lpool_free, 0, sizeof(_db.lpool_free));
     // initialize LAry cfg (mdbg.FDb.cfg)
     _db.cfg_n = 0;
@@ -802,6 +808,8 @@ void mdbg::FDb_Init() {
         _db.builddir_lary[i]  = builddir_first;
         builddir_first    += 1ULL<<i;
     }
+    _db.break_main = bool(false);
+    _db.bnum = i32(1);
 
     mdbg::InitReflection();
 }
@@ -987,6 +995,10 @@ void mdbg::TableId_Print(mdbg::TableId & row, algo::cstring &str) {
     mdbg::value_Print(row, str);
 }
 
+// --- mdbg...SizeCheck
+inline static void mdbg::SizeCheck() {
+}
+
 // --- mdbg...main
 int main(int argc, char **argv) {
     try {
@@ -1017,6 +1029,9 @@ int main(int argc, char **argv) {
     return algo_lib::_db.exit_code;
 }
 
-// --- mdbg...SizeCheck
-inline static void mdbg::SizeCheck() {
+// --- mdbg...WinMain
+#if defined(WIN32)
+int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int) {
+    return main(__argc,__argv);
 }
+#endif

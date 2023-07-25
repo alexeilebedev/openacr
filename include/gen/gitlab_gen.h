@@ -48,6 +48,9 @@ namespace gitlab { struct FProject; }
 namespace gitlab { struct IssueDescription; }
 namespace gitlab { struct FIssue; }
 namespace gitlab { struct IssueNote; }
+namespace gitlab { struct Milestone; }
+namespace gitlab { struct MilestoneDescription; }
+namespace gitlab { struct FMilestone; }
 namespace gitlab { struct Mr; }
 namespace gitlab { struct MrDescription; }
 namespace gitlab { struct FMr; }
@@ -58,6 +61,7 @@ namespace gitlab { struct FDb; }
 namespace gitlab { struct FHttp; }
 namespace gitlab { struct FIssueDescription; }
 namespace gitlab { struct FIssueNote; }
+namespace gitlab { struct FMilestoneDescription; }
 namespace gitlab { struct FMrDescription; }
 namespace gitlab { struct FMrNote; }
 namespace gitlab { struct FUser; }
@@ -77,6 +81,9 @@ namespace gitlab { struct _db_ind_mr_note_curs; }
 namespace gitlab { struct _db_mr_description_curs; }
 namespace gitlab { struct _db_user_curs; }
 namespace gitlab { struct _db_ind_user_curs; }
+namespace gitlab { struct _db_milestone_curs; }
+namespace gitlab { struct _db_ind_milestone_curs; }
+namespace gitlab { struct _db_milestone_description_curs; }
 namespace gitlab { struct FHttp_request_header_curs; }
 namespace gitlab { struct FHttp_response_header_curs; }
 namespace gitlab { struct issue_c_issue_note_curs; }
@@ -85,6 +92,7 @@ namespace gitlab { struct project_c_issue_curs; }
 namespace gitlab { struct project_c_mr_curs; }
 namespace gitlab {
     typedef algo::Smallstr50 IssuePkey;
+    typedef algo::Smallstr200 MilestonePkey;
     typedef algo::Smallstr50 MrPkey;
     typedef algo::Smallstr50 UserPkey;
 }//pkey typedefs
@@ -106,52 +114,59 @@ void                 trace_Print(gitlab::trace & row, algo::cstring &str) __attr
 // --- gitlab.FDb
 // create: gitlab.FDb._db (Global)
 struct FDb { // gitlab.FDb
-    command::gitlab              cmdline;                        //
-    algo::cstring                home;                           // User's HOME directory
-    algo::cstring                unix_user;                      // UNIX user login name
-    algo::cstring                auth_file_name;                 //   ".gitlab_auth"  Basename of the file where to store GitLab auth token
-    algo::cstring                auth_token;                     // GitLab auth token
-    algo::cstring                auth_file;                      // File where to store gitlab auth token
-    algo::cstring                usrmsg_no_token;                //   "Please supply personal access token via -auth_token option (could be done once). Visit <https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html> for directions. Token scope shall be 'api', i.e. whole GitLab API."  Message to show if no auth token
-    algo::cstring                http_auth_header;               // Ready-made HTTP authorization header
-    algo::cstring                rest_api;                       // Base URI of server REST API
-    gitlab::FProject*            project_lary[32];               // level array
-    i32                          project_n;                      // number of elements in array
-    u32                          project_id;                     //   0  Numeric project ID on gitlab server
-    gitlab::FProject**           ind_project_buckets_elems;      // pointer to bucket array
-    i32                          ind_project_buckets_n;          // number of elements in bucket array
-    i32                          ind_project_n;                  // number of elements in the hash table
-    gitlab::FIssue**             ind_issue_buckets_elems;        // pointer to bucket array
-    i32                          ind_issue_buckets_n;            // number of elements in bucket array
-    i32                          ind_issue_n;                    // number of elements in the hash table
-    gitlab::FIssue*              issue_lary[32];                 // level array
-    i32                          issue_n;                        // number of elements in array
-    gitlab::FIssueNote*          issue_note_lary[32];            // level array
-    i32                          issue_note_n;                   // number of elements in array
-    gitlab::FIssueNote**         ind_issue_note_buckets_elems;   // pointer to bucket array
-    i32                          ind_issue_note_buckets_n;       // number of elements in bucket array
-    i32                          ind_issue_note_n;               // number of elements in the hash table
-    gitlab::FIssueDescription*   issue_description_lary[32];     // level array
-    i32                          issue_description_n;            // number of elements in array
-    algo::cstring                editor;                         // Command line to invoke editor
-    gitlab::FMr**                ind_mr_buckets_elems;           // pointer to bucket array
-    i32                          ind_mr_buckets_n;               // number of elements in bucket array
-    i32                          ind_mr_n;                       // number of elements in the hash table
-    gitlab::FMr*                 mr_lary[32];                    // level array
-    i32                          mr_n;                           // number of elements in array
-    gitlab::FMrNote*             mr_note_lary[32];               // level array
-    i32                          mr_note_n;                      // number of elements in array
-    gitlab::FMrNote**            ind_mr_note_buckets_elems;      // pointer to bucket array
-    i32                          ind_mr_note_buckets_n;          // number of elements in bucket array
-    i32                          ind_mr_note_n;                  // number of elements in the hash table
-    gitlab::FMrDescription*      mr_description_lary[32];        // level array
-    i32                          mr_description_n;               // number of elements in array
-    gitlab::FUser*               user_lary[32];                  // level array
-    i32                          user_n;                         // number of elements in array
-    gitlab::FUser**              ind_user_buckets_elems;         // pointer to bucket array
-    i32                          ind_user_buckets_n;             // number of elements in bucket array
-    i32                          ind_user_n;                     // number of elements in the hash table
-    gitlab::trace                trace;                          //
+    command::gitlab                  cmdline;                          //
+    algo::cstring                    home;                             // User's HOME directory
+    algo::cstring                    unix_user;                        // UNIX user login name
+    algo::cstring                    auth_file_name;                   //   ".gitlab_auth"  Basename of the file where to store GitLab auth token
+    algo::cstring                    auth_token;                       // GitLab auth token
+    algo::cstring                    auth_file;                        // File where to store gitlab auth token
+    algo::cstring                    usrmsg_no_token;                  //   "Please supply personal access token via -auth_token option (could be done once). Visit <https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html> for directions. Token scope shall be 'api', i.e. whole GitLab API."  Message to show if no auth token
+    algo::cstring                    http_auth_header;                 // Ready-made HTTP authorization header
+    algo::cstring                    rest_api;                         // Base URI of server REST API
+    gitlab::FProject*                project_lary[32];                 // level array
+    i32                              project_n;                        // number of elements in array
+    u32                              project_id;                       //   0  Numeric project ID on gitlab server
+    gitlab::FProject**               ind_project_buckets_elems;        // pointer to bucket array
+    i32                              ind_project_buckets_n;            // number of elements in bucket array
+    i32                              ind_project_n;                    // number of elements in the hash table
+    gitlab::FIssue**                 ind_issue_buckets_elems;          // pointer to bucket array
+    i32                              ind_issue_buckets_n;              // number of elements in bucket array
+    i32                              ind_issue_n;                      // number of elements in the hash table
+    gitlab::FIssue*                  issue_lary[32];                   // level array
+    i32                              issue_n;                          // number of elements in array
+    gitlab::FIssueNote*              issue_note_lary[32];              // level array
+    i32                              issue_note_n;                     // number of elements in array
+    gitlab::FIssueNote**             ind_issue_note_buckets_elems;     // pointer to bucket array
+    i32                              ind_issue_note_buckets_n;         // number of elements in bucket array
+    i32                              ind_issue_note_n;                 // number of elements in the hash table
+    gitlab::FIssueDescription*       issue_description_lary[32];       // level array
+    i32                              issue_description_n;              // number of elements in array
+    algo::cstring                    editor;                           // Command line to invoke editor
+    gitlab::FMr**                    ind_mr_buckets_elems;             // pointer to bucket array
+    i32                              ind_mr_buckets_n;                 // number of elements in bucket array
+    i32                              ind_mr_n;                         // number of elements in the hash table
+    gitlab::FMr*                     mr_lary[32];                      // level array
+    i32                              mr_n;                             // number of elements in array
+    gitlab::FMrNote*                 mr_note_lary[32];                 // level array
+    i32                              mr_note_n;                        // number of elements in array
+    gitlab::FMrNote**                ind_mr_note_buckets_elems;        // pointer to bucket array
+    i32                              ind_mr_note_buckets_n;            // number of elements in bucket array
+    i32                              ind_mr_note_n;                    // number of elements in the hash table
+    gitlab::FMrDescription*          mr_description_lary[32];          // level array
+    i32                              mr_description_n;                 // number of elements in array
+    gitlab::FUser*                   user_lary[32];                    // level array
+    i32                              user_n;                           // number of elements in array
+    gitlab::FUser**                  ind_user_buckets_elems;           // pointer to bucket array
+    i32                              ind_user_buckets_n;               // number of elements in bucket array
+    i32                              ind_user_n;                       // number of elements in the hash table
+    gitlab::FMilestone*              milestone_lary[32];               // level array
+    i32                              milestone_n;                      // number of elements in array
+    gitlab::FMilestone**             ind_milestone_buckets_elems;      // pointer to bucket array
+    i32                              ind_milestone_buckets_n;          // number of elements in bucket array
+    i32                              ind_milestone_n;                  // number of elements in the hash table
+    gitlab::FMilestoneDescription*   milestone_description_lary[32];   // level array
+    i32                              milestone_description_n;          // number of elements in array
+    gitlab::trace                    trace;                            //
 };
 
 // Main function
@@ -170,6 +185,8 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+// Calls Step function of dependencies
+void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
@@ -492,6 +509,79 @@ void                 ind_user_Remove(gitlab::FUser& row) __attribute__((nothrow)
 // Reserve enough room in the hash for N more elements. Return success code.
 void                 ind_user_Reserve(int n) __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+gitlab::FMilestone&  milestone_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+gitlab::FMilestone*  milestone_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+gitlab::FMilestone*  milestone_InsertMaybe(const gitlab::Milestone &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                milestone_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 milestone_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+gitlab::FMilestone*  milestone_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+gitlab::FMilestone*  milestone_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  milestone_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 milestone_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 milestone_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+gitlab::FMilestone&  milestone_qFind(u64 t) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 milestone_XrefMaybe(gitlab::FMilestone &row);
+
+// Return true if hash is empty
+bool                 ind_milestone_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+gitlab::FMilestone*  ind_milestone_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+gitlab::FMilestone&  ind_milestone_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+gitlab::FMilestone&  ind_milestone_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+i32                  ind_milestone_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool                 ind_milestone_InsertMaybe(gitlab::FMilestone& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void                 ind_milestone_Remove(gitlab::FMilestone& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+void                 ind_milestone_Reserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+gitlab::FMilestoneDescription& milestone_description_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+gitlab::FMilestoneDescription* milestone_description_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+gitlab::FMilestoneDescription* milestone_description_InsertMaybe(const gitlab::MilestoneDescription &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                milestone_description_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 milestone_description_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+gitlab::FMilestoneDescription* milestone_description_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+gitlab::FMilestoneDescription* milestone_description_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  milestone_description_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 milestone_description_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 milestone_description_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+gitlab::FMilestoneDescription& milestone_description_qFind(u64 t) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 milestone_description_XrefMaybe(gitlab::FMilestoneDescription &row);
+
 // cursor points to valid item
 void                 _db_project_curs_Reset(_db_project_curs &curs, gitlab::FDb &parent);
 // cursor points to valid item
@@ -556,6 +646,22 @@ bool                 _db_user_curs_ValidQ(_db_user_curs &curs);
 void                 _db_user_curs_Next(_db_user_curs &curs);
 // item access
 gitlab::FUser&       _db_user_curs_Access(_db_user_curs &curs);
+// cursor points to valid item
+void                 _db_milestone_curs_Reset(_db_milestone_curs &curs, gitlab::FDb &parent);
+// cursor points to valid item
+bool                 _db_milestone_curs_ValidQ(_db_milestone_curs &curs);
+// proceed to next item
+void                 _db_milestone_curs_Next(_db_milestone_curs &curs);
+// item access
+gitlab::FMilestone&  _db_milestone_curs_Access(_db_milestone_curs &curs);
+// cursor points to valid item
+void                 _db_milestone_description_curs_Reset(_db_milestone_description_curs &curs, gitlab::FDb &parent);
+// cursor points to valid item
+bool                 _db_milestone_description_curs_ValidQ(_db_milestone_description_curs &curs);
+// proceed to next item
+void                 _db_milestone_description_curs_Next(_db_milestone_description_curs &curs);
+// item access
+gitlab::FMilestoneDescription& _db_milestone_description_curs_Access(_db_milestone_description_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
@@ -628,6 +734,8 @@ algo::cstring&       request_header_qFind(gitlab::FHttp& parent, u64 t) __attrib
 algo::cstring&       request_header_qLast(gitlab::FHttp& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  request_header_rowid_Get(gitlab::FHttp& parent, algo::cstring &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> request_header_AllocNVal(gitlab::FHttp& parent, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
 
 // Get value of field as enum type
 gitlab_FHttp_request_method_Enum request_method_GetEnum(const gitlab::FHttp& parent) __attribute__((nothrow));
@@ -684,6 +792,8 @@ algo::cstring&       response_header_qFind(gitlab::FHttp& parent, u64 t) __attri
 algo::cstring&       response_header_qLast(gitlab::FHttp& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  response_header_rowid_Get(gitlab::FHttp& parent, algo::cstring &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> response_header_AllocNVal(gitlab::FHttp& parent, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
 
 // proceed to next item
 void                 FHttp_request_header_curs_Next(FHttp_request_header_curs &curs);
@@ -715,6 +825,8 @@ struct FIssue { // gitlab.FIssue
     gitlab::FIssue*              ind_issue_next;           // hash next
     algo::Smallstr50             issue;                    // Identifier. must be in form project.iid
     algo::Smallstr50             assignee;                 // User the issue is assigned to
+    algo::cstring                labels;                   // Issue labels - comma-separated list
+    algo::cstring                milestone;                // Issue milestone, blank if none
     algo::cstring                title;                    // Issue title
     gitlab::FProject*            p_project;                // reference to parent row
     gitlab::FIssueNote**         c_issue_note_elems;       // array of pointers
@@ -843,6 +955,68 @@ u32                  id_Get(gitlab::FIssueNote& issue_note) __attribute__((__war
 // Set all fields to initial values.
 void                 FIssueNote_Init(gitlab::FIssueNote& issue_note);
 void                 FIssueNote_Uninit(gitlab::FIssueNote& issue_note) __attribute__((nothrow));
+
+// --- gitlab.FMilestone
+// create: gitlab.FDb.milestone (Lary)
+// global access: ind_milestone (Thash)
+// access: gitlab.FMilestoneDescription.p_milestone (Upptr)
+struct FMilestone { // gitlab.FMilestone
+    gitlab::FMilestone*              ind_milestone_next;        // hash next
+    algo::Smallstr200                milestone;                 // Milestone title
+    u32                              id;                        //   0  Milestone global id
+    gitlab::FMilestoneDescription*   c_milestone_description;   // optional pointer
+    bool                             select;                    //   false
+private:
+    friend gitlab::FMilestone&  milestone_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend gitlab::FMilestone*  milestone_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 milestone_RemoveAll() __attribute__((nothrow));
+    friend void                 milestone_RemoveLast() __attribute__((nothrow));
+    FMilestone();
+    ~FMilestone();
+    FMilestone(const FMilestone&){ /*disallow copy constructor */}
+    void operator =(const FMilestone&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 milestone_CopyOut(gitlab::FMilestone &row, gitlab::Milestone &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 milestone_CopyIn(gitlab::FMilestone &row, gitlab::Milestone &in) __attribute__((nothrow));
+
+// Insert row into pointer index. Return final membership status.
+bool                 c_milestone_description_InsertMaybe(gitlab::FMilestone& milestone, gitlab::FMilestoneDescription& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+void                 c_milestone_description_Remove(gitlab::FMilestone& milestone, gitlab::FMilestoneDescription& row) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 FMilestone_Init(gitlab::FMilestone& milestone);
+void                 FMilestone_Uninit(gitlab::FMilestone& milestone) __attribute__((nothrow));
+
+// --- gitlab.FMilestoneDescription
+// create: gitlab.FDb.milestone_description (Lary)
+// access: gitlab.FMilestone.c_milestone_description (Ptr)
+struct FMilestoneDescription { // gitlab.FMilestoneDescription
+    algo::Smallstr200     milestone;     //
+    algo::cstring         description;   //
+    gitlab::FMilestone*   p_milestone;   // reference to parent row
+private:
+    friend gitlab::FMilestoneDescription& milestone_description_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend gitlab::FMilestoneDescription* milestone_description_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 milestone_description_RemoveAll() __attribute__((nothrow));
+    friend void                 milestone_description_RemoveLast() __attribute__((nothrow));
+    FMilestoneDescription();
+    ~FMilestoneDescription();
+    FMilestoneDescription(const FMilestoneDescription&){ /*disallow copy constructor */}
+    void operator =(const FMilestoneDescription&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 milestone_description_CopyOut(gitlab::FMilestoneDescription &row, gitlab::MilestoneDescription &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 milestone_description_CopyIn(gitlab::FMilestoneDescription &row, gitlab::MilestoneDescription &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 FMilestoneDescription_Init(gitlab::FMilestoneDescription& milestone_description);
+void                 FMilestoneDescription_Uninit(gitlab::FMilestoneDescription& milestone_description) __attribute__((nothrow));
 
 // --- gitlab.FMr
 // create: gitlab.FDb.mr (Lary)
@@ -1148,9 +1322,11 @@ void                 FieldId_Print(gitlab::FieldId & row, algo::cstring &str) __
 // --- gitlab.Issue
 // access: gitlab.FIssue.base (Base)
 struct Issue { // gitlab.Issue: Gitlab project issue
-    algo::Smallstr50   issue;      // Identifier. must be in form project.iid
-    algo::Smallstr50   assignee;   // User the issue is assigned to
-    algo::cstring      title;      // Issue title
+    algo::Smallstr50   issue;       // Identifier. must be in form project.iid
+    algo::Smallstr50   assignee;    // User the issue is assigned to
+    algo::cstring      labels;      // Issue labels - comma-separated list
+    algo::cstring      milestone;   // Issue milestone, blank if none
+    algo::cstring      title;       // Issue title
     Issue();
 };
 
@@ -1188,6 +1364,30 @@ u32                  id_Get(gitlab::IssueNote& parent) __attribute__((__warn_unu
 tempstr              IssueNote_Concat_issue_id( const algo::strptr& issue ,u32 id );
 // print string representation of gitlab::IssueNote to string LHS, no header -- cprint:gitlab.IssueNote.String
 void                 IssueNote_Print(gitlab::IssueNote & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- gitlab.Milestone
+// access: gitlab.FMilestone.base (Base)
+struct Milestone { // gitlab.Milestone: Gitlab project milestone
+    algo::Smallstr200   milestone;   // Milestone title
+    u32                 id;          //   0  Milestone global id
+    Milestone();
+};
+
+// Set all fields to initial values.
+void                 Milestone_Init(gitlab::Milestone& parent);
+// print string representation of gitlab::Milestone to string LHS, no header -- cprint:gitlab.Milestone.String
+void                 Milestone_Print(gitlab::Milestone & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- gitlab.MilestoneDescription
+// access: gitlab.FMilestoneDescription.base (Base)
+struct MilestoneDescription { // gitlab.MilestoneDescription: Milestone description
+    algo::Smallstr200   milestone;     //
+    algo::cstring       description;   //
+    MilestoneDescription();
+};
+
+// print string representation of gitlab::MilestoneDescription to string LHS, no header -- cprint:gitlab.MilestoneDescription.String
+void                 MilestoneDescription_Print(gitlab::MilestoneDescription & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- gitlab.Mr
 // access: gitlab.FMr.base (Base)
@@ -1347,6 +1547,22 @@ struct _db_user_curs {// cursor
 };
 
 
+struct _db_milestone_curs {// cursor
+    typedef gitlab::FMilestone ChildType;
+    gitlab::FDb *parent;
+    i64 index;
+    _db_milestone_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_milestone_description_curs {// cursor
+    typedef gitlab::FMilestoneDescription ChildType;
+    gitlab::FDb *parent;
+    i64 index;
+    _db_milestone_description_curs(){ parent=NULL; index=0; }
+};
+
+
 struct FHttp_request_header_curs {// cursor
     typedef algo::cstring ChildType;
     algo::cstring* elems;
@@ -1400,8 +1616,11 @@ struct project_c_mr_curs {// cursor
     project_c_mr_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-int                  main(int argc, char **argv);
 } // end namespace gitlab
+int                  main(int argc, char **argv);
+#if defined(WIN32)
+int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
+#endif
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const gitlab::trace &row);// cfmt:gitlab.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const gitlab::FHttp &row);// cfmt:gitlab.FHttp.String
@@ -1411,6 +1630,8 @@ inline algo::cstring &operator <<(algo::cstring &str, const gitlab::FieldId &row
 inline algo::cstring &operator <<(algo::cstring &str, const gitlab::Issue &row);// cfmt:gitlab.Issue.String
 inline algo::cstring &operator <<(algo::cstring &str, const gitlab::IssueDescription &row);// cfmt:gitlab.IssueDescription.String
 inline algo::cstring &operator <<(algo::cstring &str, const gitlab::IssueNote &row);// cfmt:gitlab.IssueNote.String
+inline algo::cstring &operator <<(algo::cstring &str, const gitlab::Milestone &row);// cfmt:gitlab.Milestone.String
+inline algo::cstring &operator <<(algo::cstring &str, const gitlab::MilestoneDescription &row);// cfmt:gitlab.MilestoneDescription.String
 inline algo::cstring &operator <<(algo::cstring &str, const gitlab::Mr &row);// cfmt:gitlab.Mr.String
 inline algo::cstring &operator <<(algo::cstring &str, const gitlab::MrDescription &row);// cfmt:gitlab.MrDescription.String
 inline algo::cstring &operator <<(algo::cstring &str, const gitlab::MrNote &row);// cfmt:gitlab.MrNote.String

@@ -7,4 +7,9 @@
     for X in $(find bin -exec file -L {} \; | egrep -i script | cut -f1 -d: | grep -v "~"); do
         echo dev.scriptfile gitfile:$X
     done
+    for X in $(find bin -type f -executable | grep -v \~); do
+        if head -1 $X | grep python >/dev/null; then
+            echo dev.scriptfile gitfile:$X
+        fi
+    done
 ) | acr -merge -write -print:N

@@ -61,6 +61,55 @@ inline dev::Compiler::Compiler(const algo::strptr&            in_compiler
 inline dev::Compiler::Compiler() {
 }
 
+inline dev::Covfile::Covfile() {
+    dev::Covfile_Init(*this);
+}
+
+
+// --- dev.Covfile..Init
+// Set all fields to initial values.
+inline void dev::Covfile_Init(dev::Covfile& parent) {
+    parent.total = u32(0);
+    parent.nonexe = u32(0);
+    parent.exe = u32(0);
+    parent.hit = u32(0);
+}
+inline dev::Covline::Covline() {
+    dev::Covline_Init(*this);
+}
+
+
+// --- dev.Covline.flag.GetEnum
+// Get value of field as enum type
+inline dev_Covline_flag_Enum dev::flag_GetEnum(const dev::Covline& parent) {
+    return dev_Covline_flag_Enum(parent.flag);
+}
+
+// --- dev.Covline.flag.SetEnum
+// Set value of field from enum type.
+inline void dev::flag_SetEnum(dev::Covline& parent, dev_Covline_flag_Enum rhs) {
+    parent.flag = char(rhs);
+}
+
+// --- dev.Covline..Init
+// Set all fields to initial values.
+inline void dev::Covline_Init(dev::Covline& parent) {
+    parent.flag = char('N');
+    parent.hit = u32(0);
+}
+inline dev::Covtarget::Covtarget() {
+    dev::Covtarget_Init(*this);
+}
+
+
+// --- dev.Covtarget..Init
+// Set all fields to initial values.
+inline void dev::Covtarget_Init(dev::Covtarget& parent) {
+    parent.total = u32(0);
+    parent.nonexe = u32(0);
+    parent.exe = u32(0);
+    parent.hit = u32(0);
+}
 inline dev::FieldId::FieldId(i32                            in_value)
     : value(in_value)
 {
@@ -127,6 +176,9 @@ inline dev::GitlabProject::GitlabProject() {
 inline void dev::GitlabProject_Init(dev::GitlabProject& parent) {
     parent.gitlab_project_id = u32(0);
 }
+inline dev::Hilite::Hilite() {
+}
+
 inline dev::Htmlentity::Htmlentity() {
     dev::Htmlentity_Init(*this);
 }
@@ -165,6 +217,16 @@ inline void dev::Linelim_Init(dev::Linelim& parent) {
     parent.nlongfunc = u32(0);
     parent.longestfunc = u32(0);
     parent.nmysteryfunc = u32(0);
+}
+inline dev::Msgfile::Msgfile() {
+    dev::Msgfile_Init(*this);
+}
+
+
+// --- dev.Msgfile..Init
+// Set all fields to initial values.
+inline void dev::Msgfile_Init(dev::Msgfile& parent) {
+    parent.strict = bool(false);
 }
 inline dev::Noindent::Noindent() {
 }
@@ -300,6 +362,9 @@ inline dev::Targsrc::Targsrc() {
 inline dev::Targsyslib::Targsyslib() {
 }
 
+inline dev::Tgtcov::Tgtcov() {
+}
+
 inline dev::Timefmt::Timefmt() {
     dev::Timefmt_Init(*this);
 }
@@ -328,9 +393,27 @@ inline dev::Uname::Uname(const algo::strptr&            in_uname
 inline dev::Uname::Uname() {
 }
 
+inline dev::Unstablefld::Unstablefld() {
+}
+
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Badline &row) {// cfmt:dev.Badline.String
     dev::Badline_Print(const_cast<dev::Badline&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Covfile &row) {// cfmt:dev.Covfile.String
+    dev::Covfile_Print(const_cast<dev::Covfile&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Covline &row) {// cfmt:dev.Covline.String
+    dev::Covline_Print(const_cast<dev::Covline&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Covtarget &row) {// cfmt:dev.Covtarget.String
+    dev::Covtarget_Print(const_cast<dev::Covtarget&>(row), str);
     return str;
 }
 
@@ -346,6 +429,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Gitfile &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::GitlabProject &row) {// cfmt:dev.GitlabProject.String
     dev::GitlabProject_Print(const_cast<dev::GitlabProject&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Hilite &row) {// cfmt:dev.Hilite.String
+    dev::Hilite_Print(const_cast<dev::Hilite&>(row), str);
     return str;
 }
 
@@ -366,6 +454,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::License &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Linelim &row) {// cfmt:dev.Linelim.String
     dev::Linelim_Print(const_cast<dev::Linelim&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Msgfile &row) {// cfmt:dev.Msgfile.String
+    dev::Msgfile_Print(const_cast<dev::Msgfile&>(row), str);
     return str;
 }
 
@@ -429,6 +522,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Targsysli
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Tgtcov &row) {// cfmt:dev.Tgtcov.String
+    dev::Tgtcov_Print(const_cast<dev::Tgtcov&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Timefmt &row) {// cfmt:dev.Timefmt.String
     dev::Timefmt_Print(const_cast<dev::Timefmt&>(row), str);
     return str;
@@ -441,5 +539,10 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::ToolOpt &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Uname &row) {// cfmt:dev.Uname.String
     dev::Uname_Print(const_cast<dev::Uname&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Unstablefld &row) {// cfmt:dev.Unstablefld.String
+    dev::Unstablefld_Print(const_cast<dev::Unstablefld&>(row), str);
     return str;
 }
