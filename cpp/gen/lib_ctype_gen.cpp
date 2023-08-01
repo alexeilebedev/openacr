@@ -23,7 +23,7 @@
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
-namespace lib_ctype {
+namespace lib_ctype { // gen:ns_print_proto
     static bool          fconst_InputMaybe(dmmeta::Fconst &elem) __attribute__((nothrow));
     static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
     static bool          ftuple_InputMaybe(dmmeta::Ftuple &elem) __attribute__((nothrow));
@@ -41,7 +41,7 @@ namespace lib_ctype {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace lib_ctype
+} // gen:ns_print_proto
 
 // --- lib_ctype.FCdflt.base.CopyOut
 // Copy fields out of row

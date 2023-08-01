@@ -9,6 +9,7 @@
 
 #pragma once
 //#pragma endinclude
+// gen:ns_enums
 
 // --- algo_pch_FieldIdEnum
 
@@ -18,10 +19,13 @@ enum algo_pch_FieldIdEnum {        // algo_pch.FieldId.value
 
 enum { algo_pch_FieldIdEnum_N = 1 };
 
+namespace algo_pch { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace algo_pch { // gen:ns_field
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace algo_pch { struct FieldId; }
-namespace algo_pch {
-}//pkey typedefs
-namespace algo_pch {
+namespace algo_pch { // gen:ns_print_struct
 
 // --- algo_pch.FieldId
 #pragma pack(push,1)
@@ -61,7 +65,10 @@ bool                 FieldId_ReadStrptrMaybe(algo_pch::FieldId &parent, algo::st
 void                 FieldId_Init(algo_pch::FieldId& parent);
 // print string representation of algo_pch::FieldId to string LHS, no header -- cprint:algo_pch.FieldId.String
 void                 FieldId_Print(algo_pch::FieldId & row, algo::cstring &str) __attribute__((nothrow));
-} // end namespace algo_pch
+} // gen:ns_print_struct
+namespace algo_pch { // gen:ns_func
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const algo_pch::FieldId &row);// cfmt:algo_pch.FieldId.String
 }

@@ -13,9 +13,9 @@
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
-namespace lib_prot {
+namespace lib_prot { // gen:ns_print_proto
     static void          SizeCheck();
-} // end namespace lib_prot
+} // gen:ns_print_proto
 
 // --- lib_prot.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.

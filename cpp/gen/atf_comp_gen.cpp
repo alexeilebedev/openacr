@@ -99,7 +99,7 @@ const char *atf_comp_syntax =
 " -b:string=\n"
 ;
 } // namespace atf_comp
-namespace atf_comp {
+namespace atf_comp { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     static bool          comptest_InputMaybe(atfdb::Comptest &elem) __attribute__((nothrow));
@@ -119,7 +119,7 @@ namespace atf_comp {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace atf_comp
+} // gen:ns_print_proto
 
 // --- atf_comp.FComptest.base.CopyOut
 // Copy fields out of row

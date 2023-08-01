@@ -12,6 +12,7 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/command_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- amc_vis_FieldIdEnum
 
@@ -37,6 +38,17 @@ enum amc_vis_TableIdEnum {                  // amc_vis.TableId.value
 
 enum { amc_vis_TableIdEnum_N = 8 };
 
+namespace amc_vis { // gen:ns_pkeytypedef
+    typedef i32 OutrowPkey;
+} // gen:ns_pkeytypedef
+namespace amc_vis { // gen:ns_field
+struct lpool_Lpblock {
+    lpool_Lpblock* next;
+};
+extern const char *amc_vis_help;
+extern const char *amc_vis_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace dmmeta { struct Ctype; }
 namespace amc_vis { struct FCtype; }
 namespace dmmeta { struct Field; }
@@ -45,34 +57,16 @@ namespace dmmeta { struct Finput; }
 namespace amc_vis { struct FNode; }
 namespace dmmeta { struct Reftype; }
 namespace amc_vis { struct Link; }
-namespace amc_vis { struct trace; }
-namespace amc_vis { struct FDb; }
-namespace amc_vis { struct FField; }
-namespace amc_vis { struct FFinput; }
-namespace amc_vis { struct Nodekey; }
-namespace amc_vis { struct FNodedep; }
-namespace amc_vis { struct FieldId; }
-namespace amc_vis { struct Linkkey; }
-namespace amc_vis { struct Linkdep; }
-namespace amc_vis { struct Outrow; }
-namespace amc_vis { struct TableId; }
 namespace amc_vis { struct ctype_c_field_curs; }
 namespace amc_vis { struct _db_ctype_curs; }
 namespace amc_vis { struct _db_field_curs; }
-namespace amc_vis { struct _db_ind_ctype_curs; }
-namespace amc_vis { struct _db_ind_field_curs; }
 namespace amc_vis { struct _db_node_curs; }
-namespace amc_vis { struct _db_ind_node_curs; }
 namespace amc_vis { struct _db_link_curs; }
-namespace amc_vis { struct _db_ind_link_curs; }
 namespace amc_vis { struct _db_linkdep_curs; }
 namespace amc_vis { struct _db_c_linklist_curs; }
 namespace amc_vis { struct _db_bh_node_curs; }
-namespace amc_vis { struct _db_bh_node_unordcurs; }
 namespace amc_vis { struct _db_bh_link_curs; }
-namespace amc_vis { struct _db_bh_link_unordcurs; }
 namespace amc_vis { struct _db_reftype_curs; }
-namespace amc_vis { struct _db_ind_reftype_curs; }
 namespace amc_vis { struct _db_nodedep_curs; }
 namespace amc_vis { struct _db_outrow_curs; }
 namespace amc_vis { struct _db_zd_select_curs; }
@@ -84,16 +78,19 @@ namespace amc_vis { struct node_zd_link_in_curs; }
 namespace amc_vis { struct link_zd_linkdep_out_curs; }
 namespace amc_vis { struct link_zd_linkdep_in_curs; }
 namespace amc_vis { struct outrow_text_curs; }
-namespace amc_vis {
-    typedef i32 OutrowPkey;
-}//pkey typedefs
-namespace amc_vis {
-struct lpool_Lpblock {
-    lpool_Lpblock* next;
-};
-extern const char *amc_vis_help;
-extern const char *amc_vis_syntax;
-extern FDb _db;
+namespace amc_vis { struct trace; }
+namespace amc_vis { struct FDb; }
+namespace amc_vis { struct FField; }
+namespace amc_vis { struct FFinput; }
+namespace amc_vis { struct Nodekey; }
+namespace amc_vis { struct FNodedep; }
+namespace amc_vis { struct FieldId; }
+namespace amc_vis { struct Linkkey; }
+namespace amc_vis { struct Linkdep; }
+namespace amc_vis { struct Outrow; }
+namespace amc_vis { struct TableId; }
+namespace amc_vis { extern struct amc_vis::FDb _db; }
+namespace amc_vis { // gen:ns_print_struct
 
 // --- amc_vis.FCtype
 // create: amc_vis.FDb.ctype (Lary)
@@ -1485,8 +1482,10 @@ bool                 TableId_ReadStrptrMaybe(amc_vis::TableId &parent, algo::str
 void                 TableId_Init(amc_vis::TableId& parent);
 // print string representation of amc_vis::TableId to string LHS, no header -- cprint:amc_vis.TableId.String
 void                 TableId_Print(amc_vis::TableId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace amc_vis { // gen:ns_curstext
 
-struct ctype_c_field_curs {// cursor
+struct ctype_c_field_curs {// fcurs:amc_vis.FCtype.c_field/curs
     typedef amc_vis::FField ChildType;
     amc_vis::FField** elems;
     u32 n_elems;
@@ -1535,7 +1534,7 @@ struct _db_linkdep_curs {// cursor
 };
 
 
-struct _db_c_linklist_curs {// cursor
+struct _db_c_linklist_curs {// fcurs:amc_vis.FDb.c_linklist/curs
     typedef amc_vis::Link ChildType;
     amc_vis::Link** elems;
     u32 n_elems;
@@ -1592,7 +1591,7 @@ struct _db_outrow_curs {// cursor
 };
 
 
-struct _db_zd_select_curs {// cursor
+struct _db_zd_select_curs {// fcurs:amc_vis.FDb.zd_select/curs
     typedef amc_vis::FCtype ChildType;
     amc_vis::FCtype* row;
     _db_zd_select_curs() {
@@ -1609,7 +1608,7 @@ struct _db_finput_curs {// cursor
 };
 
 
-struct node_zd_nodedep_out_curs {// cursor
+struct node_zd_nodedep_out_curs {// fcurs:amc_vis.FNode.zd_nodedep_out/curs
     typedef amc_vis::FNodedep ChildType;
     amc_vis::FNodedep* row;
     node_zd_nodedep_out_curs() {
@@ -1618,7 +1617,7 @@ struct node_zd_nodedep_out_curs {// cursor
 };
 
 
-struct node_zd_nodedep_in_curs {// cursor
+struct node_zd_nodedep_in_curs {// fcurs:amc_vis.FNode.zd_nodedep_in/curs
     typedef amc_vis::FNodedep ChildType;
     amc_vis::FNodedep* row;
     node_zd_nodedep_in_curs() {
@@ -1627,7 +1626,7 @@ struct node_zd_nodedep_in_curs {// cursor
 };
 
 
-struct node_zd_link_out_curs {// cursor
+struct node_zd_link_out_curs {// fcurs:amc_vis.FNode.zd_link_out/curs
     typedef amc_vis::Link ChildType;
     amc_vis::Link* row;
     node_zd_link_out_curs() {
@@ -1636,7 +1635,7 @@ struct node_zd_link_out_curs {// cursor
 };
 
 
-struct node_zd_link_in_curs {// cursor
+struct node_zd_link_in_curs {// fcurs:amc_vis.FNode.zd_link_in/curs
     typedef amc_vis::Link ChildType;
     amc_vis::Link* row;
     node_zd_link_in_curs() {
@@ -1645,7 +1644,7 @@ struct node_zd_link_in_curs {// cursor
 };
 
 
-struct link_zd_linkdep_out_curs {// cursor
+struct link_zd_linkdep_out_curs {// fcurs:amc_vis.Link.zd_linkdep_out/curs
     typedef amc_vis::Linkdep ChildType;
     amc_vis::Linkdep* row;
     link_zd_linkdep_out_curs() {
@@ -1654,7 +1653,7 @@ struct link_zd_linkdep_out_curs {// cursor
 };
 
 
-struct link_zd_linkdep_in_curs {// cursor
+struct link_zd_linkdep_in_curs {// fcurs:amc_vis.Link.zd_linkdep_in/curs
     typedef amc_vis::Linkdep ChildType;
     amc_vis::Linkdep* row;
     link_zd_linkdep_in_curs() {
@@ -1671,11 +1670,14 @@ struct outrow_text_curs {// cursor
     outrow_text_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-} // end namespace amc_vis
+} // gen:ns_curstext
+namespace amc_vis { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const amc_vis::trace &row);// cfmt:amc_vis.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const amc_vis::Nodekey &row);// cfmt:amc_vis.Nodekey.String

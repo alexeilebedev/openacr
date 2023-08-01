@@ -70,9 +70,11 @@ static void PnewAmsStream(algo_lib::Replscope &R, amc::Genpnew &pnew) {
     if (bool_Update(amc::_db.has_ams_fwd_declare,true)) {
         if (amc::FNs *ns = amc::ind_ns_Find("lib_ams")) {
             // forward-declare
+            Ins(&R, *ns->hdr, "namespace lib_ams {");
             Ins(&R, *ns->hdr, "struct FStream;");
             Ins(&R, *ns->hdr, "void *BeginWrite(lib_ams::FStream &stream, int len);");
             Ins(&R, *ns->hdr, "void EndWrite(lib_ams::FStream &stream, void *msg, int len);");
+            Ins(&R, *ns->hdr, "} // namespace lib_ams");
         }
     }
 

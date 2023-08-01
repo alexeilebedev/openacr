@@ -10,6 +10,7 @@
 #pragma once
 #include "include/gen/command_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- ntup_FieldIdEnum
 
@@ -19,15 +20,18 @@ enum ntup_FieldIdEnum {        // ntup.FieldId.value
 
 enum { ntup_FieldIdEnum_N = 1 };
 
+namespace ntup { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace ntup { // gen:ns_field
+extern const char *ntup_help;
+extern const char *ntup_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace ntup { struct trace; }
 namespace ntup { struct FDb; }
 namespace ntup { struct FieldId; }
-namespace ntup {
-}//pkey typedefs
-namespace ntup {
-extern const char *ntup_help;
-extern const char *ntup_syntax;
-extern FDb _db;
+namespace ntup { extern struct ntup::FDb _db; }
+namespace ntup { // gen:ns_print_struct
 
 // --- ntup.trace
 #pragma pack(push,1)
@@ -110,11 +114,14 @@ bool                 FieldId_ReadStrptrMaybe(ntup::FieldId &parent, algo::strptr
 void                 FieldId_Init(ntup::FieldId& parent);
 // print string representation of ntup::FieldId to string LHS, no header -- cprint:ntup.FieldId.String
 void                 FieldId_Print(ntup::FieldId & row, algo::cstring &str) __attribute__((nothrow));
-} // end namespace ntup
+} // gen:ns_print_struct
+namespace ntup { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const ntup::trace &row);// cfmt:ntup.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const ntup::FieldId &row);// cfmt:ntup.FieldId.String

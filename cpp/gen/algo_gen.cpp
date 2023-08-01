@@ -11,7 +11,7 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
-namespace algo {
+namespace algo { // gen:ns_print_proto
     static bool          append_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          read_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          write_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
@@ -142,7 +142,7 @@ namespace algo {
     // The special case of an empty string is evaluated to zero.
     static u32           ch_qGetnum(algo::RnullStr6_U32& parent, u32 &ok) __attribute__((nothrow));
     static void          SizeCheck();
-} // end namespace algo
+} // gen:ns_print_proto
 algo::cstring& algo::cstring::operator =(const algo::strptr &rhs) {
     algo::ch_Setary(*this, rhs);
     return *this;

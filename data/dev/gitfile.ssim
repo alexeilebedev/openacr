@@ -401,10 +401,10 @@ dev.gitfile  gitfile:cpp/ssim2csv.cpp
 dev.gitfile  gitfile:cpp/ssim2mysql.cpp
 dev.gitfile  gitfile:cpp/strconv/strconv.cpp
 dev.gitfile  gitfile:data/amcdb/bltin.ssim
-dev.gitfile  gitfile:data/amcdb/curs.ssim
+dev.gitfile  gitfile:data/amcdb/curstype.ssim
 dev.gitfile  gitfile:data/amcdb/gen.ssim
 dev.gitfile  gitfile:data/amcdb/tclass.ssim
-dev.gitfile  gitfile:data/amcdb/tcursor.ssim
+dev.gitfile  gitfile:data/amcdb/tcurs.ssim
 dev.gitfile  gitfile:data/amcdb/tfunc.ssim
 dev.gitfile  gitfile:data/amsdb/proctype.ssim
 dev.gitfile  gitfile:data/amsdb/streamtype.ssim

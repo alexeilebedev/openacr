@@ -10,6 +10,7 @@
 #pragma once
 #include "include/gen/command_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- ams_cat_FieldIdEnum
 
@@ -19,15 +20,18 @@ enum ams_cat_FieldIdEnum {        // ams_cat.FieldId.value
 
 enum { ams_cat_FieldIdEnum_N = 1 };
 
+namespace ams_cat { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace ams_cat { // gen:ns_field
+extern const char *ams_cat_help;
+extern const char *ams_cat_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace ams_cat { struct trace; }
 namespace ams_cat { struct FDb; }
 namespace ams_cat { struct FieldId; }
-namespace ams_cat {
-}//pkey typedefs
-namespace ams_cat {
-extern const char *ams_cat_help;
-extern const char *ams_cat_syntax;
-extern FDb _db;
+namespace ams_cat { extern struct ams_cat::FDb _db; }
+namespace ams_cat { // gen:ns_print_struct
 
 // --- ams_cat.trace
 #pragma pack(push,1)
@@ -110,11 +114,14 @@ bool                 FieldId_ReadStrptrMaybe(ams_cat::FieldId &parent, algo::str
 void                 FieldId_Init(ams_cat::FieldId& parent);
 // print string representation of ams_cat::FieldId to string LHS, no header -- cprint:ams_cat.FieldId.String
 void                 FieldId_Print(ams_cat::FieldId & row, algo::cstring &str) __attribute__((nothrow));
-} // end namespace ams_cat
+} // gen:ns_print_struct
+namespace ams_cat { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const ams_cat::trace &row);// cfmt:ams_cat.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const ams_cat::FieldId &row);// cfmt:ams_cat.FieldId.String

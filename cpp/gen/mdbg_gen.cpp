@@ -73,7 +73,7 @@ const char *mdbg_syntax =
 " -in:string=\"data\"\n"
 ;
 } // namespace mdbg
-namespace mdbg {
+namespace mdbg { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     static bool          cfg_InputMaybe(dev::Cfg &elem) __attribute__((nothrow));
@@ -83,7 +83,7 @@ namespace mdbg {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace mdbg
+} // gen:ns_print_proto
 
 // --- mdbg.FBuilddir.base.CopyOut
 // Copy fields out of row

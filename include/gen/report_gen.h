@@ -10,6 +10,7 @@
 #pragma once
 #include "include/gen/algo_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- report_FieldIdEnum
 
@@ -54,6 +55,11 @@ enum report_FieldIdEnum {                 // report.FieldId.value
 
 enum { report_FieldIdEnum_N = 36 };
 
+namespace report { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace report { // gen:ns_field
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace report { struct FieldId; }
 namespace report { struct Protocol; }
 namespace report { struct abt; }
@@ -63,9 +69,7 @@ namespace report { struct amc; }
 namespace report { struct atf_comp; }
 namespace report { struct atf_unit; }
 namespace report { struct src_func; }
-namespace report {
-}//pkey typedefs
-namespace report {
+namespace report { // gen:ns_print_struct
 
 // --- report.FieldId
 #pragma pack(push,1)
@@ -260,7 +264,10 @@ bool                 src_func_ReadStrptrMaybe(report::src_func &parent, algo::st
 void                 src_func_Init(report::src_func& parent);
 // print string representation of report::src_func to string LHS, no header -- cprint:report.src_func.String
 void                 src_func_Print(report::src_func & row, algo::cstring &str) __attribute__((nothrow));
-} // end namespace report
+} // gen:ns_print_struct
+namespace report { // gen:ns_func
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const report::FieldId &row);// cfmt:report.FieldId.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::abt &row);// cfmt:report.abt.String

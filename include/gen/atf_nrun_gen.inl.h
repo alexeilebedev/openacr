@@ -165,7 +165,8 @@ inline bool atf_nrun::_db_zd_todo_curs_ValidQ(_db_zd_todo_curs &curs) {
 // --- atf_nrun.FDb.zd_todo_curs.Next
 // proceed to next item
 inline void atf_nrun::_db_zd_todo_curs_Next(_db_zd_todo_curs &curs) {
-    curs.row = (*curs.row).zd_todo_next;
+    atf_nrun::FEntry *next = (*curs.row).zd_todo_next;
+    curs.row = next;
 }
 
 // --- atf_nrun.FDb.zd_todo_curs.Access

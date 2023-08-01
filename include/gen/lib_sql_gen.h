@@ -10,6 +10,7 @@
 #pragma once
 #include "include/gen/algo_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- lib_sql_FieldIdEnum
 
@@ -19,16 +20,18 @@ enum lib_sql_FieldIdEnum {        // lib_sql.FieldId.value
 
 enum { lib_sql_FieldIdEnum_N = 1 };
 
+namespace lib_sql { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace lib_sql { // gen:ns_field
+} // gen:ns_field
+// gen:ns_fwddecl2
+namespace lib_sql { struct _db_attr_curs; }
 namespace lib_sql { struct FAttr; }
 namespace lib_sql { struct trace; }
 namespace lib_sql { struct FDb; }
 namespace lib_sql { struct FieldId; }
-namespace lib_sql { struct _db_attr_curs; }
-namespace lib_sql { struct _db_ind_attr_curs; }
-namespace lib_sql {
-}//pkey typedefs
-namespace lib_sql {
-extern FDb _db;
+namespace lib_sql { extern struct lib_sql::FDb _db; }
+namespace lib_sql { // gen:ns_print_struct
 
 // --- lib_sql.FAttr
 // create: lib_sql.FDb.attr (Lary)
@@ -179,6 +182,8 @@ bool                 FieldId_ReadStrptrMaybe(lib_sql::FieldId &parent, algo::str
 void                 FieldId_Init(lib_sql::FieldId& parent);
 // print string representation of lib_sql::FieldId to string LHS, no header -- cprint:lib_sql.FieldId.String
 void                 FieldId_Print(lib_sql::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace lib_sql { // gen:ns_curstext
 
 struct _db_attr_curs {// cursor
     typedef lib_sql::FAttr ChildType;
@@ -187,7 +192,10 @@ struct _db_attr_curs {// cursor
     _db_attr_curs(){ parent=NULL; index=0; }
 };
 
-} // end namespace lib_sql
+} // gen:ns_curstext
+namespace lib_sql { // gen:ns_func
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const lib_sql::trace &row);// cfmt:lib_sql.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const lib_sql::FieldId &row);// cfmt:lib_sql.FieldId.String

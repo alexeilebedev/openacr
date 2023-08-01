@@ -10,6 +10,7 @@
 #pragma once
 #include "include/gen/algo_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- atfdb_FieldIdEnum
 
@@ -43,6 +44,21 @@ enum { atfdb_FieldIdEnum_N = 23 };
 
 extern const char *  atfdb_Msgdir_msgdir_exp;   // exp    fconst:atfdb.Msgdir.msgdir/exp
 extern const char *  atfdb_Msgdir_msgdir_in;    // in     fconst:atfdb.Msgdir.msgdir/in
+namespace atfdb { // gen:ns_pkeytypedef
+    typedef algo::Smallstr50 AmctestPkey;
+    typedef algo::Smallstr50 CijobPkey;
+    typedef algo::Smallstr50 CitestPkey;
+    typedef algo::Smallstr50 ComptestPkey;
+    typedef algo::Smallstr50 MsgdirPkey;
+    typedef algo::Smallstr50 TestGsymbolCharPkey;
+    typedef algo::Smallstr50 TestGsymbolPkeyPkey;
+    typedef algo::Smallstr50 TestGsymbolStrptrPkey;
+    typedef algo::Smallstr50 TmsgPkey;
+    typedef algo::Smallstr50 UnittestPkey;
+} // gen:ns_pkeytypedef
+namespace atfdb { // gen:ns_field
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace atfdb { struct Amctest; }
 namespace atfdb { struct Cijob; }
 namespace atfdb { struct Citest; }
@@ -56,19 +72,7 @@ namespace atfdb { struct TestGsymbolStrptr; }
 namespace atfdb { struct Tfilt; }
 namespace atfdb { struct Tmsg; }
 namespace atfdb { struct Unittest; }
-namespace atfdb {
-    typedef algo::Smallstr50 AmctestPkey;
-    typedef algo::Smallstr50 CijobPkey;
-    typedef algo::Smallstr50 CitestPkey;
-    typedef algo::Smallstr50 ComptestPkey;
-    typedef algo::Smallstr50 MsgdirPkey;
-    typedef algo::Smallstr50 TestGsymbolCharPkey;
-    typedef algo::Smallstr50 TestGsymbolPkeyPkey;
-    typedef algo::Smallstr50 TestGsymbolStrptrPkey;
-    typedef algo::Smallstr50 TmsgPkey;
-    typedef algo::Smallstr50 UnittestPkey;
-}//pkey typedefs
-namespace atfdb {
+namespace atfdb { // gen:ns_print_struct
 
 // --- atfdb.Amctest
 struct Amctest { // atfdb.Amctest
@@ -312,7 +316,10 @@ bool                 Unittest_ReadStrptrMaybe(atfdb::Unittest &parent, algo::str
 bool                 Unittest_ReadTupleMaybe(atfdb::Unittest &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // print string representation of atfdb::Unittest to string LHS, no header -- cprint:atfdb.Unittest.String
 void                 Unittest_Print(atfdb::Unittest & row, algo::cstring &str) __attribute__((nothrow));
-} // end namespace atfdb
+} // gen:ns_print_struct
+namespace atfdb { // gen:ns_func
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Cijob &row);// cfmt:atfdb.Cijob.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Comptest &row);// cfmt:atfdb.Comptest.String

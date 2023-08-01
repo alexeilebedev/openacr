@@ -13,6 +13,7 @@
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/amsdb_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- lib_ams_CtlConnCaseEnum
 
@@ -45,30 +46,22 @@ enum lib_ams_FieldIdEnum {        // lib_ams.FieldId.value
 
 enum { lib_ams_FieldIdEnum_N = 1 };
 
+namespace lib_ams { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace lib_ams { // gen:ns_field
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace lib_ams { struct FStream; }
 namespace lib_ams { struct FProc; }
 namespace lib_ams { struct FStreamType; }
-namespace lib_ams { struct CtlConnCase; }
-namespace lib_ams { struct CtlMsgCase; }
-namespace lib_ams { struct trace; }
-namespace lib_ams { struct FDb; }
-namespace lib_ams { struct FFdin; }
-namespace lib_ams { struct FMember; }
-namespace lib_ams { struct FReadfile; }
-namespace lib_ams { struct FWritefile; }
-namespace lib_ams { struct FieldId; }
 namespace lib_ams { struct _db_fdin_curs; }
 namespace lib_ams { struct _db_cd_fdin_eof_curs; }
 namespace lib_ams { struct _db_cd_fdin_read_curs; }
 namespace lib_ams { struct _db_zd_flush_curs; }
 namespace lib_ams { struct _db_stream_curs; }
-namespace lib_ams { struct _db_ind_stream_curs; }
 namespace lib_ams { struct _db_cd_stream_hb_curs; }
 namespace lib_ams { struct _db_cd_poll_read_curs; }
-namespace lib_ams { struct _db_ind_proc_curs; }
-namespace lib_ams { struct _db_ind_member_curs; }
 namespace lib_ams { struct _db_streamtype_curs; }
-namespace lib_ams { struct _db_ind_streamtype_curs; }
 namespace lib_ams { struct _db_zd_ctlin_curs; }
 namespace lib_ams { struct _db_zd_proc_curs; }
 namespace lib_ams { struct proc_zd_member_byproc_curs; }
@@ -78,22 +71,37 @@ namespace lib_ams { struct FReadfile_offset_curs; }
 namespace lib_ams { struct stream_zd_member_bystream_curs; }
 namespace lib_ams { struct writefile_buf_curs; }
 namespace lib_ams { struct writefile_cbuf_curs; }
+namespace lib_ams { struct CtlConnCase; }
+namespace lib_ams { struct CtlMsgCase; }
+namespace lib_ams { struct trace; }
+namespace lib_ams { struct FDb; }
+namespace lib_ams { struct FFdin; }
+namespace lib_ams { struct FMember; }
+namespace lib_ams { struct FReadfile; }
+namespace lib_ams { struct FWritefile; }
+namespace lib_ams { struct FieldId; }
+namespace lib_ams { extern struct lib_ams::FDb _db; }
+namespace lib_ams { // hook_fcn_typedef
+    typedef void (*stream_h_msg_hook)(void* userctx, ams::MsgHeader& arg); // hook:lib_ams.FStream.h_msg
+    typedef void (*stream_h_msg_orig_hook)(void* userctx, ams::MsgHeader& arg); // hook:lib_ams.FStream.h_msg_orig
+} // hook_decl
+namespace lib_ams { // gen:ns_gsymbol
+    extern const char* amsdb_proctype__0; // "0"
+    extern const char* amsdb_proctype_amstest; // "amstest"
+} // gen:ns_gsymbol
+namespace lib_ams { // gen:ns_gsymbol
+    extern const char* amsdb_streamtype__0; // "0"
+    extern const char* amsdb_streamtype_ctl; // "ctl"
+    extern const char* amsdb_streamtype_io; // "io"
+    extern const char* amsdb_streamtype_out; // "out"
+    extern const char* amsdb_streamtype_trace; // "trace"
+} // gen:ns_gsymbol
 namespace lib_ams {
-}//pkey typedefs
-namespace lib_ams {
-extern FDb _db;
-typedef void (*stream_h_msg_hook)(void* userctx, ams::MsgHeader& arg);
-typedef void (*stream_h_msg_orig_hook)(void* userctx, ams::MsgHeader& arg);
-extern const char* amsdb_proctype__0; // "0"
-extern const char* amsdb_proctype_amstest; // "amstest"
-extern const char* amsdb_streamtype__0; // "0"
-extern const char* amsdb_streamtype_ctl; // "ctl"
-extern const char* amsdb_streamtype_io; // "io"
-extern const char* amsdb_streamtype_out; // "out"
-extern const char* amsdb_streamtype_trace; // "trace"
 struct FStream;
 void *BeginWrite(lib_ams::FStream &stream, int len);
 void EndWrite(lib_ams::FStream &stream, void *msg, int len);
+} // namespace lib_ams
+namespace lib_ams { // gen:ns_print_struct
 
 // --- lib_ams.CtlConnCase
 #pragma pack(push,1)
@@ -1407,6 +1415,8 @@ bool                 FieldId_ReadStrptrMaybe(lib_ams::FieldId &parent, algo::str
 void                 FieldId_Init(lib_ams::FieldId& parent);
 // print string representation of lib_ams::FieldId to string LHS, no header -- cprint:lib_ams.FieldId.String
 void                 FieldId_Print(lib_ams::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace lib_ams { // gen:ns_curstext
 
 struct _db_fdin_curs {// cursor
     typedef lib_ams::FFdin ChildType;
@@ -1416,10 +1426,10 @@ struct _db_fdin_curs {// cursor
 };
 
 
-struct _db_cd_fdin_eof_curs {// cursor
+struct _db_cd_fdin_eof_curs {// fcurs:lib_ams.FDb.cd_fdin_eof/curs
     typedef lib_ams::FFdin ChildType;
     lib_ams::FFdin* row;
-    lib_ams::FFdin* head;
+    lib_ams::FFdin** head; // address of head element
     _db_cd_fdin_eof_curs() {
         row = NULL;
         head = NULL;
@@ -1427,10 +1437,10 @@ struct _db_cd_fdin_eof_curs {// cursor
 };
 
 
-struct _db_cd_fdin_read_curs {// cursor
+struct _db_cd_fdin_read_curs {// fcurs:lib_ams.FDb.cd_fdin_read/curs
     typedef lib_ams::FFdin ChildType;
     lib_ams::FFdin* row;
-    lib_ams::FFdin* head;
+    lib_ams::FFdin** head; // address of head element
     _db_cd_fdin_read_curs() {
         row = NULL;
         head = NULL;
@@ -1438,7 +1448,7 @@ struct _db_cd_fdin_read_curs {// cursor
 };
 
 
-struct _db_zd_flush_curs {// cursor
+struct _db_zd_flush_curs {// fcurs:lib_ams.FDb.zd_flush/curs
     typedef lib_ams::FWritefile ChildType;
     lib_ams::FWritefile* row;
     _db_zd_flush_curs() {
@@ -1455,10 +1465,10 @@ struct _db_stream_curs {// cursor
 };
 
 
-struct _db_cd_stream_hb_curs {// cursor
+struct _db_cd_stream_hb_curs {// fcurs:lib_ams.FDb.cd_stream_hb/curs
     typedef lib_ams::FStream ChildType;
     lib_ams::FStream* row;
-    lib_ams::FStream* head;
+    lib_ams::FStream** head; // address of head element
     _db_cd_stream_hb_curs() {
         row = NULL;
         head = NULL;
@@ -1466,10 +1476,10 @@ struct _db_cd_stream_hb_curs {// cursor
 };
 
 
-struct _db_cd_poll_read_curs {// cursor
+struct _db_cd_poll_read_curs {// fcurs:lib_ams.FDb.cd_poll_read/curs
     typedef lib_ams::FStream ChildType;
     lib_ams::FStream* row;
-    lib_ams::FStream* head;
+    lib_ams::FStream** head; // address of head element
     _db_cd_poll_read_curs() {
         row = NULL;
         head = NULL;
@@ -1485,7 +1495,7 @@ struct _db_streamtype_curs {// cursor
 };
 
 
-struct _db_zd_ctlin_curs {// cursor
+struct _db_zd_ctlin_curs {// fcurs:lib_ams.FDb.zd_ctlin/curs
     typedef lib_ams::FStream ChildType;
     lib_ams::FStream* row;
     _db_zd_ctlin_curs() {
@@ -1494,7 +1504,7 @@ struct _db_zd_ctlin_curs {// cursor
 };
 
 
-struct _db_zd_proc_curs {// cursor
+struct _db_zd_proc_curs {// fcurs:lib_ams.FDb.zd_proc/curs
     typedef lib_ams::FProc ChildType;
     lib_ams::FProc* row;
     _db_zd_proc_curs() {
@@ -1503,7 +1513,7 @@ struct _db_zd_proc_curs {// cursor
 };
 
 
-struct proc_zd_member_byproc_curs {// cursor
+struct proc_zd_member_byproc_curs {// fcurs:lib_ams.FProc.zd_member_byproc/curs
     typedef lib_ams::FMember ChildType;
     lib_ams::FMember* row;
     proc_zd_member_byproc_curs() {
@@ -1539,7 +1549,7 @@ struct FReadfile_offset_curs {// cursor
 };
 
 
-struct stream_zd_member_bystream_curs {// cursor
+struct stream_zd_member_bystream_curs {// fcurs:lib_ams.FStream.zd_member_bystream/curs
     typedef lib_ams::FMember ChildType;
     lib_ams::FMember* row;
     stream_zd_member_bystream_curs() {
@@ -1565,6 +1575,8 @@ struct writefile_cbuf_curs {// cursor
     writefile_cbuf_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
+} // gen:ns_curstext
+namespace lib_ams { // gen:ns_func
 // User-implemented callback function for dispatch CtlMsg
 void                 CtlMsg_DumpStreamTableMsg(ams::DumpStreamTableMsg &msg);
 // User-implemented callback function for dispatch CtlMsg
@@ -1616,7 +1628,8 @@ ams::TraceMsg *      TraceMsg_FmtAmsStream(lib_ams::FStream &stream, ams::ProcId
 // Construct a new ams::UdpFrame in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
 ams::UdpFrame *      UdpFrame_FmtAmsStream(lib_ams::FStream &stream, algo::UnTime timestamp, ietf::Ipv4 src_ip, ietf::Ipv4 dst_ip, u16 src_port, u16 dst_port, algo::aryptr<u8 > payload);
-} // end namespace lib_ams
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const lib_ams::trace &row);// cfmt:lib_ams.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const lib_ams::FReadfile &row);// cfmt:lib_ams.FReadfile.String

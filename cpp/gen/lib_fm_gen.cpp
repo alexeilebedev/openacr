@@ -23,16 +23,16 @@
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
-namespace lib_fm { // gsymbol:lib_fm/fmdb.alm_code
+namespace lib_fm { // gen:ns_gsymbol
     const char* fmdb_alm_code_TEST_EXER("TEST-EXER");
-}
-namespace lib_fm { // gsymbol:lib_fm/fmdb.alm_objtype
+} // gen:ns_gsymbol
+namespace lib_fm { // gen:ns_gsymbol
     const char* fmdb_alm_objtype_SYS("SYS");
-}
-namespace lib_fm { // gsymbol:lib_fm/fmdb.alm_source
+} // gen:ns_gsymbol
+namespace lib_fm { // gen:ns_gsymbol
     const char* fmdb_alm_source_UnitTest("UnitTest");
-}
-namespace lib_fm {
+} // gen:ns_gsymbol
+namespace lib_fm { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     static bool          alm_code_InputMaybe(fmdb::AlmCode &elem) __attribute__((nothrow));
@@ -42,7 +42,7 @@ namespace lib_fm {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace lib_fm
+} // gen:ns_print_proto
 
 // --- lib_fm.FAlarm.base.CopyOut
 // Copy fields out of row

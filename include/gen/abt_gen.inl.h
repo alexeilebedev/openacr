@@ -1482,7 +1482,8 @@ inline bool abt::_db_zs_srcfile_read_curs_ValidQ(_db_zs_srcfile_read_curs &curs)
 // --- abt.FDb.zs_srcfile_read_curs.Next
 // proceed to next item
 inline void abt::_db_zs_srcfile_read_curs_Next(_db_zs_srcfile_read_curs &curs) {
-    curs.row = (*curs.row).zs_srcfile_read_next;
+    abt::FSrcfile *next = (*curs.row).zs_srcfile_read_next;
+    curs.row = next;
 }
 
 // --- abt.FDb.zs_srcfile_read_curs.Access
@@ -1506,7 +1507,8 @@ inline bool abt::_db_zs_sel_target_curs_ValidQ(_db_zs_sel_target_curs &curs) {
 // --- abt.FDb.zs_sel_target_curs.Next
 // proceed to next item
 inline void abt::_db_zs_sel_target_curs_Next(_db_zs_sel_target_curs &curs) {
-    curs.row = (*curs.row).zs_sel_target_next;
+    abt::FTarget *next = (*curs.row).zs_sel_target_next;
+    curs.row = next;
 }
 
 // --- abt.FDb.zs_sel_target_curs.Access
@@ -1630,7 +1632,8 @@ inline bool abt::_db_zs_origsel_target_curs_ValidQ(_db_zs_origsel_target_curs &c
 // --- abt.FDb.zs_origsel_target_curs.Next
 // proceed to next item
 inline void abt::_db_zs_origsel_target_curs_Next(_db_zs_origsel_target_curs &curs) {
-    curs.row = (*curs.row).zs_origsel_target_next;
+    abt::FTarget *next = (*curs.row).zs_origsel_target_next;
+    curs.row = next;
 }
 
 // --- abt.FDb.zs_origsel_target_curs.Access
@@ -1704,7 +1707,8 @@ inline bool abt::_db_zd_inclstack_curs_ValidQ(_db_zd_inclstack_curs &curs) {
 // --- abt.FDb.zd_inclstack_curs.Next
 // proceed to next item
 inline void abt::_db_zd_inclstack_curs_Next(_db_zd_inclstack_curs &curs) {
-    curs.row = (*curs.row).zd_inclstack_next;
+    abt::FSrcfile *next = (*curs.row).zd_inclstack_next;
+    curs.row = next;
 }
 
 // --- abt.FDb.zd_inclstack_curs.Access
@@ -1842,7 +1846,8 @@ inline bool abt::srcfile_zd_include_curs_ValidQ(srcfile_zd_include_curs &curs) {
 // --- abt.FSrcfile.zd_include_curs.Next
 // proceed to next item
 inline void abt::srcfile_zd_include_curs_Next(srcfile_zd_include_curs &curs) {
-    curs.row = (*curs.row).zd_include_next;
+    abt::FInclude *next = (*curs.row).zd_include_next;
+    curs.row = next;
 }
 
 // --- abt.FSrcfile.zd_include_curs.Access

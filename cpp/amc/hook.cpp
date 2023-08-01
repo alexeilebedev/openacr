@@ -73,21 +73,6 @@ void amc::gen_newfield_hook() {
 
 // -----------------------------------------------------------------------------
 
-// Create typedef for the function pointer matching the hook
-static void FuncPtrTypedef(algo_lib::Replscope &R, amc::FField &field) {
-    amc::FNs &ns = *field.p_ctype->p_ns;
-    amc::FHook &hook = *field.c_hook;
-    Ins(&R, *ns.hdr, tempstr()<<"typedef void (*"<<name_Get(*hook.p_funcptr)<<")();");
-    if (!StaticQ(hook)) {// user context (any reference -- assigned via template)
-        amc::AddArg(*ns.hdr, tempstr() << "void*" << " userctx");
-    }
-    if (field.arg != "") {// additional argument
-        amc::AddArg(*ns.hdr, tempstr() << amc::Refto(field.p_arg->cpp_type) << " arg");
-    }
-}
-
-// -----------------------------------------------------------------------------
-
 void amc::tclass_Hook() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
 
@@ -97,9 +82,6 @@ void amc::tclass_Hook() {
 
     Set(R, "$HookCtype", hook.p_funcptr->ctype);
     Set(R, "$HookCpptype", hook.p_funcptr->cpp_type);
-
-    // typedef for this function pointer
-    FuncPtrTypedef(R, field);
 
     InsVar(R, field.p_ctype, "$HookCpptype", "$name", "NULL", "Pointer to a function");
     if (!StaticQ(hook)) {

@@ -504,7 +504,8 @@ inline bool src_lim::gitfile_zd_include_curs_ValidQ(gitfile_zd_include_curs &cur
 // --- src_lim.FGitfile.zd_include_curs.Next
 // proceed to next item
 inline void src_lim::gitfile_zd_include_curs_Next(gitfile_zd_include_curs &curs) {
-    curs.row = (*curs.row).zd_include_next;
+    src_lim::FInclude *next = (*curs.row).zd_include_next;
+    curs.row = next;
 }
 
 // --- src_lim.FGitfile.zd_include_curs.Access

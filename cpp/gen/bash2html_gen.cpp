@@ -45,7 +45,7 @@ const char *bash2html_syntax =
 " -test:flag\n"
 ;
 } // namespace bash2html
-namespace bash2html {
+namespace bash2html { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
@@ -53,7 +53,7 @@ namespace bash2html {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace bash2html
+} // gen:ns_print_proto
 
 // --- bash2html.trace..Print
 // print string representation of bash2html::trace to string LHS, no header -- cprint:bash2html.trace.String

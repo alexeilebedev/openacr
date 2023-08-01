@@ -15,9 +15,9 @@
 #include "include/gen/ams_gen.h"
 #include "include/gen/ams_gen.inl.h"
 //#pragma endinclude
-namespace amsdb {
+namespace amsdb { // gen:ns_print_proto
     static void          SizeCheck();
-} // end namespace amsdb
+} // gen:ns_print_proto
 
 // --- amsdb.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.

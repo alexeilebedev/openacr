@@ -276,7 +276,8 @@ inline bool lib_exec::_db_zd_started_curs_ValidQ(_db_zd_started_curs &curs) {
 // --- lib_exec.FDb.zd_started_curs.Next
 // proceed to next item
 inline void lib_exec::_db_zd_started_curs_Next(_db_zd_started_curs &curs) {
-    curs.row = (*curs.row).zd_started_next;
+    lib_exec::FSyscmd *next = (*curs.row).zd_started_next;
+    curs.row = next;
 }
 
 // --- lib_exec.FDb.zd_started_curs.Access

@@ -11,6 +11,7 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/command_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- amc_gc_FieldIdEnum
 
@@ -20,17 +21,20 @@ enum amc_gc_FieldIdEnum {        // amc_gc.FieldId.value
 
 enum { amc_gc_FieldIdEnum_N = 1 };
 
+namespace amc_gc { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace amc_gc { // gen:ns_field
+extern const char *amc_gc_help;
+extern const char *amc_gc_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace amc_gc { struct Acr; }
 namespace amc_gc { struct Check; }
 namespace amc_gc { struct trace; }
 namespace amc_gc { struct FDb; }
 namespace amc_gc { struct FieldId; }
-namespace amc_gc {
-}//pkey typedefs
-namespace amc_gc {
-extern const char *amc_gc_help;
-extern const char *amc_gc_syntax;
-extern FDb _db;
+namespace amc_gc { extern struct amc_gc::FDb _db; }
+namespace amc_gc { // gen:ns_print_struct
 
 // --- amc_gc.Acr
 struct Acr { // amc_gc.Acr
@@ -251,11 +255,14 @@ bool                 FieldId_ReadStrptrMaybe(amc_gc::FieldId &parent, algo::strp
 void                 FieldId_Init(amc_gc::FieldId& parent);
 // print string representation of amc_gc::FieldId to string LHS, no header -- cprint:amc_gc.FieldId.String
 void                 FieldId_Print(amc_gc::FieldId & row, algo::cstring &str) __attribute__((nothrow));
-} // end namespace amc_gc
+} // gen:ns_print_struct
+namespace amc_gc { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const amc_gc::trace &row);// cfmt:amc_gc.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const amc_gc::FieldId &row);// cfmt:amc_gc.FieldId.String

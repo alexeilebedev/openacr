@@ -15,6 +15,7 @@
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/dmmeta_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- atf_amc_BitfldType2_value_Enum
 
@@ -267,6 +268,27 @@ enum atf_amc_Typefconst_value_Enum {         // atf_amc.Typefconst.value
 
 enum { atf_amc_Typefconst_value_Enum_N = 2 };
 
+namespace atf_amc { // gen:ns_pkeytypedef
+    typedef i32 TypeAPkey;
+    typedef i32 TypeSPkey;
+} // gen:ns_pkeytypedef
+namespace atf_amc { // gen:ns_field
+extern const char *atf_amc_help;
+extern const char *atf_amc_syntax;
+struct varlen_extern_Lpblock {
+    varlen_extern_Lpblock* next;
+};
+struct optalloc_Lpblock {
+    optalloc_Lpblock* next;
+};
+struct varlenalloc_Lpblock {
+    varlenalloc_Lpblock* next;
+};
+struct optg_Lpblock {
+    optg_Lpblock* next;
+};
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace atfdb { struct Amctest; }
 namespace atf_amc { struct FCascdel; }
 namespace atf_amc { struct Cstring; }
@@ -295,6 +317,59 @@ namespace atf_amc { struct Text; }
 namespace atf_amc { struct OptOptG; }
 namespace atf_amc { struct MsgType; }
 namespace atf_amc { struct MsgLength; }
+namespace atf_amc { struct DispFilter_pmask_curs; }
+namespace atf_amc { struct cascdel_c_child_ptrary_curs; }
+namespace atf_amc { struct cascdel_bh_child_bheap_curs; }
+namespace atf_amc { struct cascdel_zd_childlist_curs; }
+namespace atf_amc { struct cascdel_tr_child_atree_curs; }
+namespace atf_amc { struct _db_bh_typec_curs; }
+namespace atf_amc { struct _db_zdl_h_typec_curs; }
+namespace atf_amc { struct _db_zd_t_typec_curs; }
+namespace atf_amc { struct _db_zd_typed_curs; }
+namespace atf_amc { struct _db_zd_typed_delcurs; }
+namespace atf_amc { struct _db_zs_t_typed_curs; }
+namespace atf_amc { struct _db_zs_t_typed_delcurs; }
+namespace atf_amc { struct _db_cd_typed_curs; }
+namespace atf_amc { struct _db_cd_typed_delcurs; }
+namespace atf_amc { struct _db_zsl_h_typec_curs; }
+namespace atf_amc { struct _db_zs_t_typec_curs; }
+namespace atf_amc { struct _db_zdl_hnt_typec_curs; }
+namespace atf_amc { struct _db_cdl_h_typec_curs; }
+namespace atf_amc { struct _db_cd_t_typec_curs; }
+namespace atf_amc { struct _db_csl_h_typec_curs; }
+namespace atf_amc { struct _db_cs_t_typec_curs; }
+namespace atf_amc { struct _db_typea_curs; }
+namespace atf_amc { struct _db_types_curs; }
+namespace atf_amc { struct _db_typet_curs; }
+namespace atf_amc { struct _db_cstring_curs; }
+namespace atf_amc { struct _db_cd_in_msg_curs; }
+namespace atf_amc { struct _db_amctest_curs; }
+namespace atf_amc { struct _db_c_typek_curs; }
+namespace atf_amc { struct _db_c_typek_oncecurs; }
+namespace atf_amc { struct _db_avl_curs; }
+namespace atf_amc { struct _db_tr_avl_curs; }
+namespace atf_amc { struct _db_listtype_curs; }
+namespace atf_amc { struct FPerfSortString_orig_curs; }
+namespace atf_amc { struct FPerfSortString_sorted1_curs; }
+namespace atf_amc { struct typea_typec_curs; }
+namespace atf_amc { struct typea_zdl_typeb_curs; }
+namespace atf_amc { struct typea_bh_typeb_curs; }
+namespace atf_amc { struct types_zdl_typet_curs; }
+namespace atf_amc { struct FUnitSort_tary_curs; }
+namespace atf_amc { struct FUnitSort_c_ptrary_curs; }
+namespace atf_amc { struct FUnitSort_fixary_curs; }
+namespace atf_amc { struct InlaryPrint_fixary_curs; }
+namespace atf_amc { struct InlaryPrint_inlary_curs; }
+namespace atf_amc { struct Lary32_lary_curs; }
+namespace atf_amc { struct MsgLTV_v_curs; }
+namespace atf_amc { struct PmaskU555_pmask_curs; }
+namespace atf_amc { struct TaryU32_tary_u32_curs; }
+namespace atf_amc { struct TaryU8_ary_curs; }
+namespace atf_amc { struct Text_text_curs; }
+namespace atf_amc { struct varlenalloc_elem_curs; }
+namespace atf_amc { struct varlen_extern_varlen_curs; }
+namespace atf_amc { struct VarlenH_typeh_curs; }
+namespace atf_amc { struct VarlenK_i_curs; }
 namespace atf_amc { struct AmcCleanup2; }
 namespace atf_amc { struct AmcSubstr1; }
 namespace atf_amc { struct BitfldType1; }
@@ -319,6 +394,7 @@ namespace atf_amc { struct FPerfSortString; }
 namespace atf_amc { struct FTypeC; }
 namespace atf_amc { struct FTypeA; }
 namespace atf_amc { struct FTypeB; }
+namespace atf_amc { struct FTypeD; }
 namespace atf_amc { struct FTypeK; }
 namespace atf_amc { struct FTypeS; }
 namespace atf_amc { struct FTypeT; }
@@ -359,85 +435,21 @@ namespace atf_amc { struct Typefconst; }
 namespace atf_amc { struct VarlenAlloc; }
 namespace atf_amc { struct VarlenExtern; }
 namespace atf_amc { struct VarlenH; }
-namespace atf_amc { struct DispFilter_pmask_curs; }
-namespace atf_amc { struct cascdel_c_child_ptrary_curs; }
-namespace atf_amc { struct cascdel_ind_child_thash_curs; }
-namespace atf_amc { struct cascdel_bh_child_bheap_curs; }
-namespace atf_amc { struct cascdel_bh_child_bheap_unordcurs; }
-namespace atf_amc { struct cascdel_zd_childlist_curs; }
-namespace atf_amc { struct cascdel_tr_child_atree_curs; }
-namespace atf_amc { struct _db_bh_typec_curs; }
-namespace atf_amc { struct _db_bh_typec_unordcurs; }
-namespace atf_amc { struct _db_zdl_h_typec_curs; }
-namespace atf_amc { struct _db_zd_t_typec_curs; }
-namespace atf_amc { struct _db_zsl_h_typec_curs; }
-namespace atf_amc { struct _db_zs_t_typec_curs; }
-namespace atf_amc { struct _db_zdl_hnt_typec_curs; }
-namespace atf_amc { struct _db_cdl_h_typec_curs; }
-namespace atf_amc { struct _db_cd_t_typec_curs; }
-namespace atf_amc { struct _db_csl_h_typec_curs; }
-namespace atf_amc { struct _db_cs_t_typec_curs; }
-namespace atf_amc { struct _db_typea_curs; }
-namespace atf_amc { struct _db_types_curs; }
-namespace atf_amc { struct _db_ind_types_curs; }
-namespace atf_amc { struct _db_ind_typea_curs; }
-namespace atf_amc { struct _db_typet_curs; }
-namespace atf_amc { struct _db_cstring_curs; }
-namespace atf_amc { struct _db_ind_cstring_curs; }
-namespace atf_amc { struct _db_cd_in_msg_curs; }
-namespace atf_amc { struct _db_amctest_curs; }
-namespace atf_amc { struct _db_c_typek_curs; }
-namespace atf_amc { struct _db_avl_curs; }
-namespace atf_amc { struct _db_tr_avl_curs; }
-namespace atf_amc { struct _db_listtype_curs; }
-namespace atf_amc { struct FPerfSortString_orig_curs; }
-namespace atf_amc { struct FPerfSortString_sorted1_curs; }
-namespace atf_amc { struct typea_typec_curs; }
-namespace atf_amc { struct typea_zdl_typeb_curs; }
-namespace atf_amc { struct typea_bh_typeb_curs; }
-namespace atf_amc { struct typea_bh_typeb_unordcurs; }
-namespace atf_amc { struct types_zdl_typet_curs; }
-namespace atf_amc { struct FUnitSort_tary_curs; }
-namespace atf_amc { struct FUnitSort_c_ptrary_curs; }
-namespace atf_amc { struct FUnitSort_fixary_curs; }
-namespace atf_amc { struct InlaryPrint_fixary_curs; }
-namespace atf_amc { struct InlaryPrint_inlary_curs; }
-namespace atf_amc { struct Lary32_lary_curs; }
-namespace atf_amc { struct MsgLTV_v_curs; }
-namespace atf_amc { struct PmaskU555_pmask_curs; }
-namespace atf_amc { struct TaryU32_tary_u32_curs; }
-namespace atf_amc { struct TaryU8_ary_curs; }
-namespace atf_amc { struct Text_text_curs; }
-namespace atf_amc { struct varlenalloc_elem_curs; }
-namespace atf_amc { struct varlen_extern_varlen_curs; }
-namespace atf_amc { struct VarlenH_typeh_curs; }
-namespace atf_amc { struct VarlenK_i_curs; }
-namespace atf_amc {
-    typedef i32 TypeAPkey;
-    typedef i32 TypeSPkey;
-}//pkey typedefs
-namespace atf_amc {
-typedef void (*amctest_step_hook)();
-typedef void (*listtype_step_hook)(atf_amc::FListtype& arg);
-extern const char *atf_amc_help;
-extern const char *atf_amc_syntax;
-extern FDb _db;
-struct varlen_extern_Lpblock {
-    varlen_extern_Lpblock* next;
-};
-struct optalloc_Lpblock {
-    optalloc_Lpblock* next;
-};
-struct varlenalloc_Lpblock {
-    varlenalloc_Lpblock* next;
-};
-struct optg_Lpblock {
-    optg_Lpblock* next;
-};
-typedef void (*parent_callback_hook)(void* userctx, atf_amc::Hooktype& arg);
-extern const char* atfdb_test_gsymbol_char_TestChar; // "TestChar"
-extern const atfdb::TestGsymbolPkeyPkey atfdb_test_gsymbol_pkey_TestPkey; // "TestPkey"
-extern const algo::strptr atfdb_test_gsymbol_strptr_TestStrptr; // "TestStrptr"
+namespace atf_amc { extern struct atf_amc::FDb _db; }
+namespace atf_amc { // hook_fcn_typedef
+    typedef void (*amctest_step_hook)(); // hook:atf_amc.FAmctest.step
+    typedef void (*listtype_step_hook)(atf_amc::FListtype& arg); // hook:atf_amc.FListtype.step
+    typedef void (*parent_callback_hook)(void* userctx, atf_amc::Hooktype& arg); // hook:atf_amc.Hooktype.callback
+} // hook_decl
+namespace atf_amc { // gen:ns_gsymbol
+    extern const char* atfdb_test_gsymbol_char_TestChar; // "TestChar"
+} // gen:ns_gsymbol
+namespace atf_amc { // gen:ns_gsymbol
+    extern const atfdb::TestGsymbolPkeyPkey atfdb_test_gsymbol_pkey_TestPkey; // "TestPkey"
+} // gen:ns_gsymbol
+namespace atf_amc { // gen:ns_gsymbol
+    extern const algo::strptr atfdb_test_gsymbol_strptr_TestStrptr; // "TestStrptr"
+} // gen:ns_gsymbol
 
 // sizes types appearing as Opt or Varlen; these need to be here
 // to allow inline implementations of _Get functions and avoid
@@ -448,6 +460,7 @@ enum {
     , sizeof_atf_amc_OptG = 4
     , sizeof_atf_amc_MsgHeader = 4
 };
+namespace atf_amc { // gen:ns_print_struct
 
 // --- atf_amc.AmcCleanup2
 struct AmcCleanup2 { // atf_amc.AmcCleanup2
@@ -1371,6 +1384,14 @@ struct FDb { // atf_amc.FDb
     atf_amc::FTypeC*         zd_t_typec_head;                                  // zero-terminated doubly linked list
     i32                      zd_t_typec_n;                                     // zero-terminated doubly linked list
     atf_amc::FTypeC*         zd_t_typec_tail;                                  // pointer to last element
+    atf_amc::FTypeD*         zd_typed_head;                                    // zero-terminated doubly linked list
+    i32                      zd_typed_n;                                       // zero-terminated doubly linked list
+    atf_amc::FTypeD*         zd_typed_tail;                                    // pointer to last element
+    atf_amc::FTypeD*         zs_t_typed_head;                                  // zero-terminated singly linked list
+    i32                      zs_t_typed_n;                                     // zero-terminated singly linked list
+    atf_amc::FTypeD*         zs_t_typed_tail;                                  // pointer to last element
+    atf_amc::FTypeD*         cd_typed_head;                                    // zero-terminated doubly linked list
+    i32                      cd_typed_n;                                       // zero-terminated doubly linked list
     atf_amc::FTypeC*         zsl_h_typec_head;                                 // zero-terminated singly linked list
     i32                      zsl_h_typec_n;                                    // zero-terminated singly linked list
     atf_amc::FTypeC*         zsl_h_typec_tail;                                 // pointer to last element
@@ -1449,6 +1470,8 @@ struct FDb { // atf_amc.FDb
     i32                      listtype_n;                                       // number of elems current in existence
     enum { listtype_max = 10 };
     bool                     dofork;                                           //   false
+    u64                      typed_blocksize;                                  // # bytes per block
+    atf_amc::FTypeD*         typed_free;                                       //
     atf_amc::trace           trace;                                            //
 };
 
@@ -1540,6 +1563,83 @@ void                 zd_t_typec_RemoveAll() __attribute__((nothrow));
 atf_amc::FTypeC*     zd_t_typec_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 atf_amc::FTypeC&     zd_t_typec_qLast() __attribute__((__warn_unused_result__, nothrow));
+
+// Return true if index is empty
+bool                 zd_typed_EmptyQ() __attribute__((__warn_unused_result__, nothrow));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+atf_amc::FTypeD*     zd_typed_First() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+bool                 zd_typed_InLlistQ(atf_amc::FTypeD& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+void                 zd_typed_Insert(atf_amc::FTypeD& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+atf_amc::FTypeD*     zd_typed_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return number of items in the linked list
+i32                  zd_typed_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+atf_amc::FTypeD*     zd_typed_Next(atf_amc::FTypeD &row) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to previous element in the list
+atf_amc::FTypeD*     zd_typed_Prev(atf_amc::FTypeD &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+void                 zd_typed_Remove(atf_amc::FTypeD& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+void                 zd_typed_RemoveAll() __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+atf_amc::FTypeD*     zd_typed_RemoveFirst() __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+atf_amc::FTypeD&     zd_typed_qLast() __attribute__((__warn_unused_result__, nothrow));
+
+// Return true if index is empty
+bool                 zs_t_typed_EmptyQ() __attribute__((__warn_unused_result__, nothrow));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+atf_amc::FTypeD*     zs_t_typed_First() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+bool                 zs_t_typed_InLlistQ(atf_amc::FTypeD& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+void                 zs_t_typed_Insert(atf_amc::FTypeD& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+atf_amc::FTypeD*     zs_t_typed_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return number of items in the linked list
+i32                  zs_t_typed_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+atf_amc::FTypeD*     zs_t_typed_Next(atf_amc::FTypeD &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// Since the list is singly-linked, use linear search to locate the element.
+void                 zs_t_typed_Remove(atf_amc::FTypeD& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+void                 zs_t_typed_RemoveAll() __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+atf_amc::FTypeD*     zs_t_typed_RemoveFirst() __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+atf_amc::FTypeD&     zs_t_typed_qLast() __attribute__((__warn_unused_result__, nothrow));
+
+// Return true if index is empty
+bool                 cd_typed_EmptyQ() __attribute__((__warn_unused_result__, nothrow));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+atf_amc::FTypeD*     cd_typed_First() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+bool                 cd_typed_InLlistQ(atf_amc::FTypeD& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+void                 cd_typed_Insert(atf_amc::FTypeD& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+atf_amc::FTypeD*     cd_typed_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return number of items in the linked list
+i32                  cd_typed_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+atf_amc::FTypeD*     cd_typed_Next(atf_amc::FTypeD &row) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to previous element in the list
+atf_amc::FTypeD*     cd_typed_Prev(atf_amc::FTypeD &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+void                 cd_typed_Remove(atf_amc::FTypeD& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+void                 cd_typed_RemoveAll() __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+atf_amc::FTypeD*     cd_typed_RemoveFirst() __attribute__((nothrow));
+// If linked list is empty, return NULL.
+// Otherwise return head item and advance head to the next item.
+atf_amc::FTypeD*     cd_typed_RotateFirst() __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+atf_amc::FTypeD&     cd_typed_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
 bool                 zsl_h_typec_EmptyQ() __attribute__((__warn_unused_result__, nothrow));
@@ -2316,6 +2416,31 @@ u64                  listtype_rowid_Get(atf_amc::FListtype &row) __attribute__((
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 listtype_XrefMaybe(atf_amc::FListtype &row);
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_amc::FTypeD&     typed_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+atf_amc::FTypeD*     typed_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_amc::FTypeD*     typed_InsertMaybe(const atf_amc::TypeC &value) __attribute__((nothrow));
+// Remove row from all global and cross indices, then deallocate row
+void                 typed_Delete(atf_amc::FTypeD &row) __attribute__((nothrow));
+// Allocate space for one element
+// If no memory available, return NULL.
+void*                typed_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Remove mem from all global and cross indices, then deallocate mem
+void                 typed_FreeMem(atf_amc::FTypeD &row) __attribute__((nothrow));
+// Preallocate memory for N more elements
+// Return number of elements actually reserved.
+u64                  typed_Reserve(u64 n_elems) __attribute__((nothrow));
+// Allocate block of given size, break up into small elements and append to free list.
+// Return number of elements reserved.
+u64                  typed_ReserveMem(u64 size) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 typed_XrefMaybe(atf_amc::FTypeD &row);
+
 void                 _db_bh_typec_curs_Reserve(_db_bh_typec_curs &curs, int n);
 // Reset cursor. If HEAP is non-empty, add its top element to CURS.
 void                 _db_bh_typec_curs_Reset(_db_bh_typec_curs &curs, atf_amc::FDb &parent);
@@ -2341,6 +2466,54 @@ bool                 _db_zd_t_typec_curs_ValidQ(_db_zd_t_typec_curs &curs);
 void                 _db_zd_t_typec_curs_Next(_db_zd_t_typec_curs &curs);
 // item access
 atf_amc::FTypeC&     _db_zd_t_typec_curs_Access(_db_zd_t_typec_curs &curs);
+// cursor points to valid item
+void                 _db_zd_typed_curs_Reset(_db_zd_typed_curs &curs, atf_amc::FDb &parent);
+// cursor points to valid item
+bool                 _db_zd_typed_curs_ValidQ(_db_zd_typed_curs &curs);
+// proceed to next item
+void                 _db_zd_typed_curs_Next(_db_zd_typed_curs &curs);
+// item access
+atf_amc::FTypeD&     _db_zd_typed_curs_Access(_db_zd_typed_curs &curs);
+// cursor points to valid item
+void                 _db_zd_typed_delcurs_Reset(_db_zd_typed_delcurs &curs, atf_amc::FDb &parent);
+// cursor points to valid item
+bool                 _db_zd_typed_delcurs_ValidQ(_db_zd_typed_delcurs &curs);
+// proceed to next item
+void                 _db_zd_typed_delcurs_Next(_db_zd_typed_delcurs &curs);
+// item access
+atf_amc::FTypeD&     _db_zd_typed_delcurs_Access(_db_zd_typed_delcurs &curs);
+// cursor points to valid item
+void                 _db_zs_t_typed_curs_Reset(_db_zs_t_typed_curs &curs, atf_amc::FDb &parent);
+// cursor points to valid item
+bool                 _db_zs_t_typed_curs_ValidQ(_db_zs_t_typed_curs &curs);
+// proceed to next item
+void                 _db_zs_t_typed_curs_Next(_db_zs_t_typed_curs &curs);
+// item access
+atf_amc::FTypeD&     _db_zs_t_typed_curs_Access(_db_zs_t_typed_curs &curs);
+// cursor points to valid item
+void                 _db_zs_t_typed_delcurs_Reset(_db_zs_t_typed_delcurs &curs, atf_amc::FDb &parent);
+// cursor points to valid item
+bool                 _db_zs_t_typed_delcurs_ValidQ(_db_zs_t_typed_delcurs &curs);
+// proceed to next item
+void                 _db_zs_t_typed_delcurs_Next(_db_zs_t_typed_delcurs &curs);
+// item access
+atf_amc::FTypeD&     _db_zs_t_typed_delcurs_Access(_db_zs_t_typed_delcurs &curs);
+// cursor points to valid item
+void                 _db_cd_typed_curs_Reset(_db_cd_typed_curs &curs, atf_amc::FDb &parent);
+// cursor points to valid item
+bool                 _db_cd_typed_curs_ValidQ(_db_cd_typed_curs &curs);
+// proceed to next item
+void                 _db_cd_typed_curs_Next(_db_cd_typed_curs &curs);
+// item access
+atf_amc::FTypeD&     _db_cd_typed_curs_Access(_db_cd_typed_curs &curs);
+// cursor points to valid item
+void                 _db_cd_typed_delcurs_Reset(_db_cd_typed_delcurs &curs, atf_amc::FDb &parent);
+// cursor points to valid item
+bool                 _db_cd_typed_delcurs_ValidQ(_db_cd_typed_delcurs &curs);
+// proceed to next item
+void                 _db_cd_typed_delcurs_Next(_db_cd_typed_delcurs &curs);
+// item access
+atf_amc::FTypeD&     _db_cd_typed_delcurs_Access(_db_cd_typed_delcurs &curs);
 // cursor points to valid item
 void                 _db_zsl_h_typec_curs_Reset(_db_zsl_h_typec_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
@@ -2452,6 +2625,13 @@ bool                 _db_c_typek_curs_ValidQ(_db_c_typek_curs &curs);
 void                 _db_c_typek_curs_Next(_db_c_typek_curs &curs);
 // item access
 atf_amc::FTypeK&     _db_c_typek_curs_Access(_db_c_typek_curs &curs);
+void                 _db_c_typek_oncecurs_Reset(_db_c_typek_oncecurs &curs, atf_amc::FDb &parent);
+// cursor points to valid item
+bool                 _db_c_typek_oncecurs_ValidQ(_db_c_typek_oncecurs &curs);
+// proceed to next item
+void                 _db_c_typek_oncecurs_Next(_db_c_typek_oncecurs &curs);
+// item access
+atf_amc::FTypeK&     _db_c_typek_oncecurs_Access(_db_c_typek_oncecurs &curs);
 // cursor points to valid item
 void                 _db_avl_curs_Reset(_db_avl_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
@@ -2910,6 +3090,40 @@ void                 FTypeB_Init(atf_amc::FTypeB& typeb);
 void                 FTypeB_Uninit(atf_amc::FTypeB& typeb) __attribute__((nothrow));
 // print string representation of atf_amc::FTypeB to string LHS, no header -- cprint:atf_amc.FTypeB.String
 void                 FTypeB_Print(atf_amc::FTypeB & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- atf_amc.FTypeD
+// create: atf_amc.FDb.typed (Tpool)
+// global access: zd_typed (Llist)
+// global access: zs_t_typed (Llist)
+// global access: cd_typed (Llist)
+struct FTypeD { // atf_amc.FTypeD
+    atf_amc::FTypeD*   zd_typed_next;     // zslist link; -1 means not-in-list
+    atf_amc::FTypeD*   zd_typed_prev;     // previous element
+    atf_amc::FTypeD*   zs_t_typed_next;   // zslist link; -1 means not-in-list
+    atf_amc::FTypeD*   cd_typed_next;     // zslist link; -1 means not-in-list
+    atf_amc::FTypeD*   cd_typed_prev;     // previous element
+    atf_amc::FTypeD*   typed_next;        // Pointer to next free element int tpool
+    i32                typec;             //   0
+private:
+    friend atf_amc::FTypeD&     typed_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_amc::FTypeD*     typed_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 typed_Delete(atf_amc::FTypeD &row) __attribute__((nothrow));
+    FTypeD();
+    ~FTypeD();
+    FTypeD(const FTypeD&){ /*disallow copy constructor */}
+    void operator =(const FTypeD&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 typed_CopyOut(atf_amc::FTypeD &row, atf_amc::TypeC &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 typed_CopyIn(atf_amc::FTypeD &row, atf_amc::TypeC &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 FTypeD_Init(atf_amc::FTypeD& typed);
+void                 FTypeD_Uninit(atf_amc::FTypeD& typed) __attribute__((nothrow));
+// print string representation of atf_amc::FTypeD to string LHS, no header -- cprint:atf_amc.FTypeD.String
+void                 FTypeD_Print(atf_amc::FTypeD & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- atf_amc.FTypeK
 // global access: c_typek (Ptrary)
@@ -5540,6 +5754,7 @@ void                 TypeBE64sf_Init(atf_amc::TypeBE64sf& parent);
 
 // --- atf_amc.TypeC
 // access: atf_amc.FTypeC.msghdr (Base)
+// access: atf_amc.FTypeD.msghdr (Base)
 struct TypeC { // atf_amc.TypeC
     i32   typec;   //   0
     bool operator ==(const atf_amc::TypeC &rhs) const;
@@ -5821,6 +6036,8 @@ algo::memptr         GetMsgMemptr(const atf_amc::VarlenK& row) __attribute__((no
 void                 VarlenK_Init(atf_amc::VarlenK& parent);
 // print string representation of atf_amc::VarlenK to string LHS, no header -- cprint:atf_amc.VarlenK.String
 void                 VarlenK_Print(atf_amc::VarlenK & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace atf_amc { // gen:ns_curstext
 
 struct DispFilter_pmask_curs {// cursor
     typedef u64 ChildType;
@@ -5830,7 +6047,7 @@ struct DispFilter_pmask_curs {// cursor
 };
 
 
-struct cascdel_c_child_ptrary_curs {// cursor
+struct cascdel_c_child_ptrary_curs {// fcurs:atf_amc.FCascdel.c_child_ptrary/curs
     typedef atf_amc::FCascdel ChildType;
     atf_amc::FCascdel** elems;
     u32 n_elems;
@@ -5851,7 +6068,7 @@ struct cascdel_bh_child_bheap_curs {
 };
 
 
-struct cascdel_zd_childlist_curs {// cursor
+struct cascdel_zd_childlist_curs {// fcurs:atf_amc.FCascdel.zd_childlist/curs
     typedef atf_amc::FCascdel ChildType;
     atf_amc::FCascdel* row;
     cascdel_zd_childlist_curs() {
@@ -5881,7 +6098,7 @@ struct _db_bh_typec_curs {
 };
 
 
-struct _db_zdl_h_typec_curs {// cursor
+struct _db_zdl_h_typec_curs {// fcurs:atf_amc.FDb.zdl_h_typec/curs
     typedef atf_amc::FTypeC ChildType;
     atf_amc::FTypeC* row;
     _db_zdl_h_typec_curs() {
@@ -5890,7 +6107,7 @@ struct _db_zdl_h_typec_curs {// cursor
 };
 
 
-struct _db_zd_t_typec_curs {// cursor
+struct _db_zd_t_typec_curs {// fcurs:atf_amc.FDb.zd_t_typec/curs
     typedef atf_amc::FTypeC ChildType;
     atf_amc::FTypeC* row;
     _db_zd_t_typec_curs() {
@@ -5899,7 +6116,71 @@ struct _db_zd_t_typec_curs {// cursor
 };
 
 
-struct _db_zsl_h_typec_curs {// cursor
+struct _db_zd_typed_curs {// fcurs:atf_amc.FDb.zd_typed/curs
+    typedef atf_amc::FTypeD ChildType;
+    atf_amc::FTypeD* row;
+    _db_zd_typed_curs() {
+        row = NULL;
+    }
+};
+
+
+struct _db_zd_typed_delcurs {// fcurs:atf_amc.FDb.zd_typed/delcurs
+    typedef atf_amc::FTypeD ChildType;
+    atf_amc::FTypeD* row;
+    atf_amc::FTypeD *next;
+    _db_zd_typed_delcurs() {
+        row = NULL;
+        next = NULL;
+    }
+};
+
+
+struct _db_zs_t_typed_curs {// fcurs:atf_amc.FDb.zs_t_typed/curs
+    typedef atf_amc::FTypeD ChildType;
+    atf_amc::FTypeD* row;
+    _db_zs_t_typed_curs() {
+        row = NULL;
+    }
+};
+
+
+struct _db_zs_t_typed_delcurs {// fcurs:atf_amc.FDb.zs_t_typed/delcurs
+    typedef atf_amc::FTypeD ChildType;
+    atf_amc::FTypeD* row;
+    atf_amc::FTypeD *next;
+    _db_zs_t_typed_delcurs() {
+        row = NULL;
+        next = NULL;
+    }
+};
+
+
+struct _db_cd_typed_curs {// fcurs:atf_amc.FDb.cd_typed/curs
+    typedef atf_amc::FTypeD ChildType;
+    atf_amc::FTypeD* row;
+    atf_amc::FTypeD** head; // address of head element
+    _db_cd_typed_curs() {
+        row = NULL;
+        head = NULL;
+    }
+};
+
+
+struct _db_cd_typed_delcurs {// fcurs:atf_amc.FDb.cd_typed/delcurs
+    typedef atf_amc::FTypeD ChildType;
+    atf_amc::FTypeD* row;
+    atf_amc::FTypeD** head; // address of head element
+    atf_amc::FTypeD *next;
+    _db_cd_typed_delcurs() {
+        row = NULL;
+        head = NULL;
+        next = NULL;
+    }
+};
+
+
+struct _db_zsl_h_typec_curs {// fcurs:atf_amc.FDb.zsl_h_typec/curs
     typedef atf_amc::FTypeC ChildType;
     atf_amc::FTypeC* row;
     _db_zsl_h_typec_curs() {
@@ -5908,7 +6189,7 @@ struct _db_zsl_h_typec_curs {// cursor
 };
 
 
-struct _db_zs_t_typec_curs {// cursor
+struct _db_zs_t_typec_curs {// fcurs:atf_amc.FDb.zs_t_typec/curs
     typedef atf_amc::FTypeC ChildType;
     atf_amc::FTypeC* row;
     _db_zs_t_typec_curs() {
@@ -5917,7 +6198,7 @@ struct _db_zs_t_typec_curs {// cursor
 };
 
 
-struct _db_zdl_hnt_typec_curs {// cursor
+struct _db_zdl_hnt_typec_curs {// fcurs:atf_amc.FDb.zdl_hnt_typec/curs
     typedef atf_amc::FTypeC ChildType;
     atf_amc::FTypeC* row;
     _db_zdl_hnt_typec_curs() {
@@ -5926,10 +6207,10 @@ struct _db_zdl_hnt_typec_curs {// cursor
 };
 
 
-struct _db_cdl_h_typec_curs {// cursor
+struct _db_cdl_h_typec_curs {// fcurs:atf_amc.FDb.cdl_h_typec/curs
     typedef atf_amc::FTypeC ChildType;
     atf_amc::FTypeC* row;
-    atf_amc::FTypeC* head;
+    atf_amc::FTypeC** head; // address of head element
     _db_cdl_h_typec_curs() {
         row = NULL;
         head = NULL;
@@ -5937,10 +6218,10 @@ struct _db_cdl_h_typec_curs {// cursor
 };
 
 
-struct _db_cd_t_typec_curs {// cursor
+struct _db_cd_t_typec_curs {// fcurs:atf_amc.FDb.cd_t_typec/curs
     typedef atf_amc::FTypeC ChildType;
     atf_amc::FTypeC* row;
-    atf_amc::FTypeC* head;
+    atf_amc::FTypeC** head; // address of head element
     _db_cd_t_typec_curs() {
         row = NULL;
         head = NULL;
@@ -5948,10 +6229,10 @@ struct _db_cd_t_typec_curs {// cursor
 };
 
 
-struct _db_csl_h_typec_curs {// cursor
+struct _db_csl_h_typec_curs {// fcurs:atf_amc.FDb.csl_h_typec/curs
     typedef atf_amc::FTypeC ChildType;
     atf_amc::FTypeC* row;
-    atf_amc::FTypeC* head;
+    atf_amc::FTypeC** head; // address of head element
     _db_csl_h_typec_curs() {
         row = NULL;
         head = NULL;
@@ -5959,10 +6240,10 @@ struct _db_csl_h_typec_curs {// cursor
 };
 
 
-struct _db_cs_t_typec_curs {// cursor
+struct _db_cs_t_typec_curs {// fcurs:atf_amc.FDb.cs_t_typec/curs
     typedef atf_amc::FTypeC ChildType;
     atf_amc::FTypeC* row;
-    atf_amc::FTypeC* head;
+    atf_amc::FTypeC** head; // address of head element
     _db_cs_t_typec_curs() {
         row = NULL;
         head = NULL;
@@ -6002,10 +6283,10 @@ struct _db_cstring_curs {// cursor
 };
 
 
-struct _db_cd_in_msg_curs {// cursor
+struct _db_cd_in_msg_curs {// fcurs:atf_amc.FDb.cd_in_msg/curs
     typedef atf_amc::Msgbuf ChildType;
     atf_amc::Msgbuf* row;
-    atf_amc::Msgbuf* head;
+    atf_amc::Msgbuf** head; // address of head element
     _db_cd_in_msg_curs() {
         row = NULL;
         head = NULL;
@@ -6021,12 +6302,21 @@ struct _db_amctest_curs {// cursor
 };
 
 
-struct _db_c_typek_curs {// cursor
+struct _db_c_typek_curs {// fcurs:atf_amc.FDb.c_typek/curs
     typedef atf_amc::FTypeK ChildType;
     atf_amc::FTypeK** elems;
     u32 n_elems;
     u32 index;
     _db_c_typek_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
+struct _db_c_typek_oncecurs {// fcurs:atf_amc.FDb.c_typek/oncecurs
+    typedef atf_amc::FTypeK ChildType;
+    atf_amc::FTypeK** elems;
+    u32 n_elems;
+    u32 index;
+    _db_c_typek_oncecurs() { elems=NULL; n_elems=0; index=0; }
 };
 
 
@@ -6081,7 +6371,7 @@ struct typea_typec_curs {// cursor
 };
 
 
-struct typea_zdl_typeb_curs {// cursor
+struct typea_zdl_typeb_curs {// fcurs:atf_amc.FTypeA.zdl_typeb/curs
     typedef atf_amc::FTypeB ChildType;
     atf_amc::FTypeB* row;
     typea_zdl_typeb_curs() {
@@ -6102,7 +6392,7 @@ struct typea_bh_typeb_curs {
 };
 
 
-struct types_zdl_typet_curs {// cursor
+struct types_zdl_typet_curs {// fcurs:atf_amc.FTypeS.zdl_typet/curs
     typedef atf_amc::FTypeT ChildType;
     atf_amc::FTypeT* row;
     types_zdl_typet_curs() {
@@ -6120,7 +6410,7 @@ struct FUnitSort_tary_curs {// cursor
 };
 
 
-struct FUnitSort_c_ptrary_curs {// cursor
+struct FUnitSort_c_ptrary_curs {// fcurs:atf_amc.FUnitSort.c_ptrary/curs
     typedef atf_amc::TypeA ChildType;
     atf_amc::TypeA** elems;
     u32 n_elems;
@@ -6240,6 +6530,10 @@ struct VarlenK_i_curs {// cursor
     VarlenK_i_curs() { ptr=NULL; length=0; index=0; }
 };
 
+} // gen:ns_curstext
+namespace atf_amc { // gen:ns_func
+// Test string conversion
+void                 ForAllStrings(void (*fcn)(algo::StringDesc&) );
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_AmcSort();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
@@ -6443,6 +6737,8 @@ void                 amctest_PrintBase36();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_PrintRawGconst();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+void                 amctest_PtraryCursor();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_PtraryInsert();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_ReadProc();
@@ -6526,6 +6822,8 @@ void                 amctest_VarlenExternLength();
 void                 amctest_VarlenMsgs();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_VarlenMsgsPnew();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+void                 amctest_ZdlistDelCurs();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_ZdlistDfltCtor();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
@@ -6664,8 +6962,6 @@ void                 listtype_zdl(atf_amc::FListtype&);
 void                 listtype_zs(atf_amc::FListtype&);
 // User-implemented function from gstatic:atf_amc.FDb.listtype
 void                 listtype_zsl(atf_amc::FListtype&);
-// Test string conversion
-void                 ForAllStrings(void (*fcn)(algo::StringDesc&) );
 // Print message to STR. If message is too short for MSG_LEN, print nothing.
 // MSG.LENGTH must have already been validated against msg_len.
 // This function will additionally validate that sizeof(Msg) <= msg_len
@@ -6720,11 +7016,12 @@ atf_amc::VarlenK *   VarlenK_FmtByteAry(algo::ByteAry &buf, algo::aryptr<u32 > i
 // If BUF doesn't have enough space available, throw exception.
 // After constructing, advance BUF appropriate number of bytes forward
 atf_amc::VarlenK *   VarlenK_FmtMemptr(algo::memptr &buf, algo::aryptr<u32 > i);
-} // end namespace atf_amc
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::BitfldType1 &row);// cfmt:atf_amc.BitfldType1.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::BitfldType2 &row);// cfmt:atf_amc.BitfldType2.String

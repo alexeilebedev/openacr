@@ -778,7 +778,7 @@ inline void src_func::FTarget_Init(src_func::FTarget& target) {
 // cursor points to valid item
 inline void src_func::target_cd_targsrc_curs_Reset(target_cd_targsrc_curs &curs, src_func::FTarget &parent) {
     curs.row = parent.cd_targsrc_head;
-    curs.head = parent.cd_targsrc_head;
+    curs.head = &parent.cd_targsrc_head;
 }
 
 // --- src_func.FTarget.cd_targsrc_curs.ValidQ
@@ -790,8 +790,9 @@ inline bool src_func::target_cd_targsrc_curs_ValidQ(target_cd_targsrc_curs &curs
 // --- src_func.FTarget.cd_targsrc_curs.Next
 // proceed to next item
 inline void src_func::target_cd_targsrc_curs_Next(target_cd_targsrc_curs &curs) {
-    curs.row = (*curs.row).cd_targsrc_next;
-    if (curs.row == curs.head) {
+    src_func::FTargsrc *next = (*curs.row).cd_targsrc_next;
+    curs.row = next;
+    if (curs.row == *curs.head) {
         curs.row = NULL;
     }
 }
@@ -892,7 +893,8 @@ inline bool src_func::targsrc_zd_func_curs_ValidQ(targsrc_zd_func_curs &curs) {
 // --- src_func.FTargsrc.zd_func_curs.Next
 // proceed to next item
 inline void src_func::targsrc_zd_func_curs_Next(targsrc_zd_func_curs &curs) {
-    curs.row = (*curs.row).zd_func_next;
+    src_func::FFunc *next = (*curs.row).zd_func_next;
+    curs.row = next;
 }
 
 // --- src_func.FTargsrc.zd_func_curs.Access

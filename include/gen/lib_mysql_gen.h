@@ -10,6 +10,7 @@
 #pragma once
 #include <mariadb/mysql.h>
 //#pragma endinclude
+// gen:ns_enums
 
 // --- lib_mysql_FieldIdEnum
 
@@ -19,14 +20,17 @@ enum lib_mysql_FieldIdEnum {        // lib_mysql.FieldId.value
 
 enum { lib_mysql_FieldIdEnum_N = 1 };
 
+namespace lib_mysql { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace lib_mysql { // gen:ns_field
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace lib_mysql { struct trace; }
 namespace lib_mysql { struct FDb; }
 namespace lib_mysql { struct FieldId; }
 namespace lib_mysql { struct Res; }
-namespace lib_mysql {
-}//pkey typedefs
-namespace lib_mysql {
-extern FDb _db;
+namespace lib_mysql { extern struct lib_mysql::FDb _db; }
+namespace lib_mysql { // gen:ns_print_struct
 
 // --- lib_mysql.trace
 #pragma pack(push,1)
@@ -127,7 +131,10 @@ void                 res_Cleanup(lib_mysql::Res& res) __attribute__((nothrow));
 // Set all fields to initial values.
 void                 Res_Init(lib_mysql::Res& res);
 void                 Res_Uninit(lib_mysql::Res& res) __attribute__((nothrow));
-} // end namespace lib_mysql
+} // gen:ns_print_struct
+namespace lib_mysql { // gen:ns_func
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const lib_mysql::trace &row);// cfmt:lib_mysql.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const lib_mysql::FieldId &row);// cfmt:lib_mysql.FieldId.String

@@ -872,7 +872,8 @@ inline bool ssim2mysql::_db_zs_cmd_curs_ValidQ(_db_zs_cmd_curs &curs) {
 // --- ssim2mysql.FDb.zs_cmd_curs.Next
 // proceed to next item
 inline void ssim2mysql::_db_zs_cmd_curs_Next(_db_zs_cmd_curs &curs) {
-    curs.row = (*curs.row).zs_cmd_next;
+    ssim2mysql::FCmd *next = (*curs.row).zs_cmd_next;
+    curs.row = next;
 }
 
 // --- ssim2mysql.FDb.zs_cmd_curs.Access
@@ -896,7 +897,8 @@ inline bool ssim2mysql::_db_zd_ssimfile_curs_ValidQ(_db_zd_ssimfile_curs &curs) 
 // --- ssim2mysql.FDb.zd_ssimfile_curs.Next
 // proceed to next item
 inline void ssim2mysql::_db_zd_ssimfile_curs_Next(_db_zd_ssimfile_curs &curs) {
-    curs.row = (*curs.row).zd_ssimfile_next;
+    ssim2mysql::FSsimfile *next = (*curs.row).zd_ssimfile_next;
+    curs.row = next;
 }
 
 // --- ssim2mysql.FDb.zd_ssimfile_curs.Access
@@ -909,7 +911,7 @@ inline ssim2mysql::FSsimfile& ssim2mysql::_db_zd_ssimfile_curs_Access(_db_zd_ssi
 // cursor points to valid item
 inline void ssim2mysql::_db_cd_input_line_curs_Reset(_db_cd_input_line_curs &curs, ssim2mysql::FDb &parent) {
     curs.row = parent.cd_input_line_head;
-    curs.head = parent.cd_input_line_head;
+    curs.head = &parent.cd_input_line_head;
 }
 
 // --- ssim2mysql.FDb.cd_input_line_curs.ValidQ
@@ -921,8 +923,9 @@ inline bool ssim2mysql::_db_cd_input_line_curs_ValidQ(_db_cd_input_line_curs &cu
 // --- ssim2mysql.FDb.cd_input_line_curs.Next
 // proceed to next item
 inline void ssim2mysql::_db_cd_input_line_curs_Next(_db_cd_input_line_curs &curs) {
-    curs.row = (*curs.row).cd_input_line_next;
-    if (curs.row == curs.head) {
+    ssim2mysql::FInput *next = (*curs.row).cd_input_line_next;
+    curs.row = next;
+    if (curs.row == *curs.head) {
         curs.row = NULL;
     }
 }

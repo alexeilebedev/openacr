@@ -686,7 +686,7 @@ inline lib_ams::FFdin& lib_ams::_db_fdin_curs_Access(_db_fdin_curs &curs) {
 // cursor points to valid item
 inline void lib_ams::_db_cd_fdin_eof_curs_Reset(_db_cd_fdin_eof_curs &curs, lib_ams::FDb &parent) {
     curs.row = parent.cd_fdin_eof_head;
-    curs.head = parent.cd_fdin_eof_head;
+    curs.head = &parent.cd_fdin_eof_head;
 }
 
 // --- lib_ams.FDb.cd_fdin_eof_curs.ValidQ
@@ -698,8 +698,9 @@ inline bool lib_ams::_db_cd_fdin_eof_curs_ValidQ(_db_cd_fdin_eof_curs &curs) {
 // --- lib_ams.FDb.cd_fdin_eof_curs.Next
 // proceed to next item
 inline void lib_ams::_db_cd_fdin_eof_curs_Next(_db_cd_fdin_eof_curs &curs) {
-    curs.row = (*curs.row).cd_fdin_eof_next;
-    if (curs.row == curs.head) {
+    lib_ams::FFdin *next = (*curs.row).cd_fdin_eof_next;
+    curs.row = next;
+    if (curs.row == *curs.head) {
         curs.row = NULL;
     }
 }
@@ -714,7 +715,7 @@ inline lib_ams::FFdin& lib_ams::_db_cd_fdin_eof_curs_Access(_db_cd_fdin_eof_curs
 // cursor points to valid item
 inline void lib_ams::_db_cd_fdin_read_curs_Reset(_db_cd_fdin_read_curs &curs, lib_ams::FDb &parent) {
     curs.row = parent.cd_fdin_read_head;
-    curs.head = parent.cd_fdin_read_head;
+    curs.head = &parent.cd_fdin_read_head;
 }
 
 // --- lib_ams.FDb.cd_fdin_read_curs.ValidQ
@@ -726,8 +727,9 @@ inline bool lib_ams::_db_cd_fdin_read_curs_ValidQ(_db_cd_fdin_read_curs &curs) {
 // --- lib_ams.FDb.cd_fdin_read_curs.Next
 // proceed to next item
 inline void lib_ams::_db_cd_fdin_read_curs_Next(_db_cd_fdin_read_curs &curs) {
-    curs.row = (*curs.row).cd_fdin_read_next;
-    if (curs.row == curs.head) {
+    lib_ams::FFdin *next = (*curs.row).cd_fdin_read_next;
+    curs.row = next;
+    if (curs.row == *curs.head) {
         curs.row = NULL;
     }
 }
@@ -753,7 +755,8 @@ inline bool lib_ams::_db_zd_flush_curs_ValidQ(_db_zd_flush_curs &curs) {
 // --- lib_ams.FDb.zd_flush_curs.Next
 // proceed to next item
 inline void lib_ams::_db_zd_flush_curs_Next(_db_zd_flush_curs &curs) {
-    curs.row = (*curs.row).zd_flush_next;
+    lib_ams::FWritefile *next = (*curs.row).zd_flush_next;
+    curs.row = next;
 }
 
 // --- lib_ams.FDb.zd_flush_curs.Access
@@ -791,7 +794,7 @@ inline lib_ams::FStream& lib_ams::_db_stream_curs_Access(_db_stream_curs &curs) 
 // cursor points to valid item
 inline void lib_ams::_db_cd_stream_hb_curs_Reset(_db_cd_stream_hb_curs &curs, lib_ams::FDb &parent) {
     curs.row = parent.cd_stream_hb_head;
-    curs.head = parent.cd_stream_hb_head;
+    curs.head = &parent.cd_stream_hb_head;
 }
 
 // --- lib_ams.FDb.cd_stream_hb_curs.ValidQ
@@ -803,8 +806,9 @@ inline bool lib_ams::_db_cd_stream_hb_curs_ValidQ(_db_cd_stream_hb_curs &curs) {
 // --- lib_ams.FDb.cd_stream_hb_curs.Next
 // proceed to next item
 inline void lib_ams::_db_cd_stream_hb_curs_Next(_db_cd_stream_hb_curs &curs) {
-    curs.row = (*curs.row).cd_stream_hb_next;
-    if (curs.row == curs.head) {
+    lib_ams::FStream *next = (*curs.row).cd_stream_hb_next;
+    curs.row = next;
+    if (curs.row == *curs.head) {
         curs.row = NULL;
     }
 }
@@ -819,7 +823,7 @@ inline lib_ams::FStream& lib_ams::_db_cd_stream_hb_curs_Access(_db_cd_stream_hb_
 // cursor points to valid item
 inline void lib_ams::_db_cd_poll_read_curs_Reset(_db_cd_poll_read_curs &curs, lib_ams::FDb &parent) {
     curs.row = parent.cd_poll_read_head;
-    curs.head = parent.cd_poll_read_head;
+    curs.head = &parent.cd_poll_read_head;
 }
 
 // --- lib_ams.FDb.cd_poll_read_curs.ValidQ
@@ -831,8 +835,9 @@ inline bool lib_ams::_db_cd_poll_read_curs_ValidQ(_db_cd_poll_read_curs &curs) {
 // --- lib_ams.FDb.cd_poll_read_curs.Next
 // proceed to next item
 inline void lib_ams::_db_cd_poll_read_curs_Next(_db_cd_poll_read_curs &curs) {
-    curs.row = (*curs.row).cd_poll_read_next;
-    if (curs.row == curs.head) {
+    lib_ams::FStream *next = (*curs.row).cd_poll_read_next;
+    curs.row = next;
+    if (curs.row == *curs.head) {
         curs.row = NULL;
     }
 }
@@ -883,7 +888,8 @@ inline bool lib_ams::_db_zd_ctlin_curs_ValidQ(_db_zd_ctlin_curs &curs) {
 // --- lib_ams.FDb.zd_ctlin_curs.Next
 // proceed to next item
 inline void lib_ams::_db_zd_ctlin_curs_Next(_db_zd_ctlin_curs &curs) {
-    curs.row = (*curs.row).zd_ctlin_next;
+    lib_ams::FStream *next = (*curs.row).zd_ctlin_next;
+    curs.row = next;
 }
 
 // --- lib_ams.FDb.zd_ctlin_curs.Access
@@ -907,7 +913,8 @@ inline bool lib_ams::_db_zd_proc_curs_ValidQ(_db_zd_proc_curs &curs) {
 // --- lib_ams.FDb.zd_proc_curs.Next
 // proceed to next item
 inline void lib_ams::_db_zd_proc_curs_Next(_db_zd_proc_curs &curs) {
-    curs.row = (*curs.row).zd_proc_next;
+    lib_ams::FProc *next = (*curs.row).zd_proc_next;
+    curs.row = next;
 }
 
 // --- lib_ams.FDb.zd_proc_curs.Access
@@ -1057,7 +1064,8 @@ inline bool lib_ams::proc_zd_member_byproc_curs_ValidQ(proc_zd_member_byproc_cur
 // --- lib_ams.FProc.zd_member_byproc_curs.Next
 // proceed to next item
 inline void lib_ams::proc_zd_member_byproc_curs_Next(proc_zd_member_byproc_curs &curs) {
-    curs.row = (*curs.row).zd_member_byproc_next;
+    lib_ams::FMember *next = (*curs.row).zd_member_byproc_next;
+    curs.row = next;
 }
 
 // --- lib_ams.FProc.zd_member_byproc_curs.Access
@@ -1521,7 +1529,8 @@ inline bool lib_ams::stream_zd_member_bystream_curs_ValidQ(stream_zd_member_byst
 // --- lib_ams.FStream.zd_member_bystream_curs.Next
 // proceed to next item
 inline void lib_ams::stream_zd_member_bystream_curs_Next(stream_zd_member_bystream_curs &curs) {
-    curs.row = (*curs.row).zd_member_bystream_next;
+    lib_ams::FMember *next = (*curs.row).zd_member_bystream_next;
+    curs.row = next;
 }
 
 // --- lib_ams.FStream.zd_member_bystream_curs.Access

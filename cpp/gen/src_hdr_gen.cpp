@@ -57,10 +57,10 @@ const char *src_hdr_syntax =
 " -indent:flag\n"
 ;
 } // namespace src_hdr
-namespace src_hdr { // gsymbol:src_hdr/dev.scriptfile
+namespace src_hdr { // gen:ns_gsymbol
     const char* dev_scriptfile_bin_git_authors("bin/git-authors");
-}
-namespace src_hdr {
+} // gen:ns_gsymbol
+namespace src_hdr { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     static bool          targsrc_InputMaybe(dev::Targsrc &elem) __attribute__((nothrow));
@@ -73,7 +73,7 @@ namespace src_hdr {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace src_hdr
+} // gen:ns_print_proto
 
 // --- src_hdr.trace..Print
 // print string representation of src_hdr::trace to string LHS, no header -- cprint:src_hdr.trace.String

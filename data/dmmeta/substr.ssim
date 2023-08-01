@@ -1,4 +1,5 @@
 dmmeta.substr  field:amc.FOutfile.ns  expr:/RR_RL  srcfield:amc.FOutfile.outfile
+dmmeta.substr  field:amcdb.Tcurs.curstype  expr:.RR  srcfield:amcdb.Tcurs.tfunc
 dmmeta.substr  field:amcdb.Tfunc.name  expr:.RR  srcfield:amcdb.Tfunc.tfunc
 dmmeta.substr  field:amcdb.Tfunc.tclass  expr:.RL  srcfield:amcdb.Tfunc.tfunc
 dmmeta.substr  field:atf_amc.AmcSubstr1.boolval  expr:.LR  srcfield:atf_amc.AmcSubstr1.strval
@@ -56,7 +57,7 @@ dmmeta.substr  field:dmmeta.Fcmap.rightVal  expr:"=LR/LR"  srcfield:dmmeta.Fcmap
 dmmeta.substr  field:dmmeta.Fconst.field  expr:/LL  srcfield:dmmeta.Fconst.fconst
 dmmeta.substr  field:dmmeta.Fconst.name  expr:/LR  srcfield:dmmeta.Fconst.fconst
 dmmeta.substr  field:dmmeta.Fcurs.ctype  expr:/RL.RL  srcfield:dmmeta.Fcurs.fcurs
-dmmeta.substr  field:dmmeta.Fcurs.curs  expr:/RR  srcfield:dmmeta.Fcurs.fcurs
+dmmeta.substr  field:dmmeta.Fcurs.curstype  expr:/RR  srcfield:dmmeta.Fcurs.fcurs
 dmmeta.substr  field:dmmeta.Fcurs.field  expr:/RL  srcfield:dmmeta.Fcurs.fcurs
 dmmeta.substr  field:dmmeta.Field.ctype  expr:.RL  srcfield:dmmeta.Field.field
 dmmeta.substr  field:dmmeta.Field.name  expr:.RR  srcfield:dmmeta.Field.field

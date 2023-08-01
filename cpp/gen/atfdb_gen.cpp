@@ -17,9 +17,9 @@
 const char *atfdb_Msgdir_msgdir_exp   = "exp";
 const char *atfdb_Msgdir_msgdir_in    = "in";
 
-namespace atfdb {
+namespace atfdb { // gen:ns_print_proto
     static void          SizeCheck();
-} // end namespace atfdb
+} // gen:ns_print_proto
 
 // --- atfdb.Amctest..ReadFieldMaybe
 bool atfdb::Amctest_ReadFieldMaybe(atfdb::Amctest &parent, algo::strptr field, algo::strptr strval) {

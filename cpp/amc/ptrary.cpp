@@ -283,50 +283,72 @@ void amc::tfunc_Ptrary_Uninit() {
     Ins(&R, uninit.body, "$basepool_FreeMem($parname.$name_elems, sizeof($Cpptype*)*$parname.$name_max); // ($field)");
 }
 
-void amc::tfunc_Ptrary_curs() {
+void amc::Ptrary_curs(bool once) {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
+    amc::FField &field = *amc::_db.genfield.p_field;
+    amc::FPtrary &ptrary = *field.c_ptrary;
 
     Ins(&R, ns.curstext, "");
-    Ins(&R, ns.curstext, "struct $Parname_$name_curs {// cursor");
+    Ins(&R, ns.curstext, "struct $Parname_$name_$curstype {// fcurs:$fcurs");
     Ins(&R, ns.curstext, "    typedef $Cpptype ChildType;");
     Ins(&R, ns.curstext, "    $Cpptype** elems;");
     Ins(&R, ns.curstext, "    u32 n_elems;");
     Ins(&R, ns.curstext, "    u32 index;");
-    Ins(&R, ns.curstext, "    $Parname_$name_curs() { elems=NULL; n_elems=0; index=0; }");
+    Ins(&R, ns.curstext, "    $Parname_$name_$curstype() { elems=NULL; n_elems=0; index=0; }");
     Ins(&R, ns.curstext, "};");
     Ins(&R, ns.curstext, "");
 
     {
-        amc::FFunc& curs_reset = amc::ind_func_GetOrCreate(Subst(R,"$field_curs.Reset"));
-        curs_reset.inl = true;
-        Ins(&R, curs_reset.ret  , "void", false);
-        Ins(&R, curs_reset.proto, "$Parname_$name_curs_Reset($Parname_$name_curs &curs, $Partype &parent)", false);
-        Ins(&R, curs_reset.body, "curs.elems = parent.$name_elems;");
-        Ins(&R, curs_reset.body, "curs.n_elems = parent.$name_n;");
-        Ins(&R, curs_reset.body, "curs.index = 0;");
+        amc::FFunc& func = amc::ind_func_GetOrCreate(Subst(R,"$field_$curstype.Reset"));
+        func.inl = true;
+        Ins(&R, func.ret  , "void", false);
+        Ins(&R, func.proto, "$Parname_$name_$curstype_Reset($Parname_$name_$curstype &curs, $Partype &parent)", false);
+        Ins(&R, func.body, "curs.elems = parent.$name_elems;");
+        Ins(&R, func.body, "curs.n_elems = parent.$name_n;");
+        if (once) {
+            Ins(&R, func.body, "parent.$name_n = 0;");
+        }
+        Ins(&R, func.body, "curs.index = 0;");
     }
 
     {
-        amc::FFunc& curs_validq = amc::ind_func_GetOrCreate(Subst(R,"$field_curs.ValidQ"));
-        curs_validq.inl = true;
-        Ins(&R, curs_validq.comment, "cursor points to valid item");
-        Ins(&R, curs_validq.ret  , "bool", false);
-        Ins(&R, curs_validq.proto, "$Parname_$name_curs_ValidQ($Parname_$name_curs &curs)", false);
-        Ins(&R, curs_validq.body, "return curs.index < curs.n_elems;");
+        amc::FFunc& func = amc::ind_func_GetOrCreate(Subst(R,"$field_$curstype.ValidQ"));
+        func.inl = true;
+        Ins(&R, func.comment, "cursor points to valid item");
+        Ins(&R, func.ret  , "bool", false);
+        Ins(&R, func.proto, "$Parname_$name_$curstype_ValidQ($Parname_$name_$curstype &curs)", false);
+        Ins(&R, func.body, "return curs.index < curs.n_elems;");
     }
 
-    amc::FFunc& curs_next = amc::ind_func_GetOrCreate(Subst(R,"$field_curs.Next"));
-    curs_next.inl = true;
-    Ins(&R, curs_next.comment, "proceed to next item");
-    Ins(&R, curs_next.ret  , "void", false);
-    Ins(&R, curs_next.proto, "$Parname_$name_curs_Next($Parname_$name_curs &curs)", false);
-    Ins(&R, curs_next.body, "curs.index++;");
+    {
+        amc::FFunc& func = amc::ind_func_GetOrCreate(Subst(R,"$field_$curstype.Next"));
+        func.inl = true;
+        Ins(&R, func.comment, "proceed to next item");
+        Ins(&R, func.ret  , "void", false);
+        Ins(&R, func.proto, "$Parname_$name_$curstype_Next($Parname_$name_$curstype &curs)", false);
+        if (once && ptrary.unique) {
+            Ins(&R, func.body, "    curs.elems[curs.index]->$parname_$name_in_ary = false;");
+        }
+        Ins(&R, func.body, "curs.index++;");
+    }
 
-    amc::FFunc& curs_access = amc::ind_func_GetOrCreate(Subst(R,"$field_curs.Access"));
-    curs_access.inl = true;
-    Ins(&R, curs_access.comment, "item access");
-    Ins(&R, curs_access.ret  , "$Cpptype&", false);
-    Ins(&R, curs_access.proto, "$Parname_$name_curs_Access($Parname_$name_curs &curs)", false);
-    Ins(&R, curs_access.body, "return *curs.elems[curs.index];");
+    {
+        amc::FFunc& func = amc::ind_func_GetOrCreate(Subst(R,"$field_$curstype.Access"));
+        func.inl = true;
+        Ins(&R, func.comment, "item access");
+        Ins(&R, func.ret  , "$Cpptype&", false);
+        Ins(&R, func.proto, "$Parname_$name_$curstype_Access($Parname_$name_$curstype &curs)", false);
+        Ins(&R, func.body, "return *curs.elems[curs.index];");
+    }
+}
+
+void amc::tfunc_Ptrary_curs() {
+    bool once=false;
+    Ptrary_curs(once);
+}
+
+void amc::tfunc_Ptrary_oncecurs() {
+    bool once=true;
+    Ptrary_curs(once);
 }

@@ -14,6 +14,7 @@
 #include "include/gen/ams_gen.h"
 #include "include/gen/lib_ams_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- ams_sendtest_FieldIdEnum
 
@@ -23,18 +24,21 @@ enum ams_sendtest_FieldIdEnum {        // ams_sendtest.FieldId.value
 
 enum { ams_sendtest_FieldIdEnum_N = 1 };
 
+namespace ams_sendtest { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace ams_sendtest { // gen:ns_field
+extern const char *ams_sendtest_help;
+extern const char *ams_sendtest_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
+namespace ams_sendtest { struct _db_child_curs; }
 namespace ams_sendtest { struct AmsSendTest; }
 namespace ams_sendtest { struct FChild; }
 namespace ams_sendtest { struct trace; }
 namespace ams_sendtest { struct FDb; }
 namespace ams_sendtest { struct FieldId; }
-namespace ams_sendtest { struct _db_child_curs; }
-namespace ams_sendtest {
-}//pkey typedefs
-namespace ams_sendtest {
-extern const char *ams_sendtest_help;
-extern const char *ams_sendtest_syntax;
-extern FDb _db;
+namespace ams_sendtest { extern struct ams_sendtest::FDb _db; }
+namespace ams_sendtest { // gen:ns_print_struct
 
 // --- ams_sendtest.AmsSendTest
 struct AmsSendTest { // ams_sendtest.AmsSendTest
@@ -222,6 +226,8 @@ bool                 FieldId_ReadStrptrMaybe(ams_sendtest::FieldId &parent, algo
 void                 FieldId_Init(ams_sendtest::FieldId& parent);
 // print string representation of ams_sendtest::FieldId to string LHS, no header -- cprint:ams_sendtest.FieldId.String
 void                 FieldId_Print(ams_sendtest::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace ams_sendtest { // gen:ns_curstext
 
 struct _db_child_curs {// cursor
     typedef ams_sendtest::FChild ChildType;
@@ -230,11 +236,14 @@ struct _db_child_curs {// cursor
     _db_child_curs(){ parent=NULL; index=0; }
 };
 
-} // end namespace ams_sendtest
+} // gen:ns_curstext
+namespace ams_sendtest { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const ams_sendtest::AmsSendTest &row);// cfmt:ams_sendtest.AmsSendTest.String
 inline algo::cstring &operator <<(algo::cstring &str, const ams_sendtest::trace &row);// cfmt:ams_sendtest.trace.String

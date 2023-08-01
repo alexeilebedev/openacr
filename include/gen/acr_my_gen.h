@@ -13,6 +13,7 @@
 #include "include/gen/command_gen.h"
 #include "include/gen/dmmeta_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- acr_my_FieldIdEnum
 
@@ -34,23 +35,26 @@ enum acr_my_TableIdEnum {                   // acr_my.TableId.value
 
 enum { acr_my_TableIdEnum_N = 4 };
 
+namespace acr_my { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace acr_my { // gen:ns_field
+extern const char *acr_my_help;
+extern const char *acr_my_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace dmmeta { struct Nsdb; }
 namespace dmmeta { struct Ssimfile; }
+namespace acr_my { struct _db_ary_ns_curs; }
+namespace acr_my { struct _db_nsdb_curs; }
+namespace acr_my { struct _db_ssimfile_curs; }
 namespace acr_my { struct trace; }
 namespace acr_my { struct FDb; }
 namespace acr_my { struct FNsdb; }
 namespace acr_my { struct FSsimfile; }
 namespace acr_my { struct FieldId; }
 namespace acr_my { struct TableId; }
-namespace acr_my { struct _db_ary_ns_curs; }
-namespace acr_my { struct _db_nsdb_curs; }
-namespace acr_my { struct _db_ssimfile_curs; }
-namespace acr_my {
-}//pkey typedefs
-namespace acr_my {
-extern const char *acr_my_help;
-extern const char *acr_my_syntax;
-extern FDb _db;
+namespace acr_my { extern struct acr_my::FDb _db; }
+namespace acr_my { // gen:ns_print_struct
 
 // --- acr_my.trace
 #pragma pack(push,1)
@@ -338,6 +342,8 @@ bool                 TableId_ReadStrptrMaybe(acr_my::TableId &parent, algo::strp
 void                 TableId_Init(acr_my::TableId& parent);
 // print string representation of acr_my::TableId to string LHS, no header -- cprint:acr_my.TableId.String
 void                 TableId_Print(acr_my::TableId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace acr_my { // gen:ns_curstext
 
 struct _db_ary_ns_curs {// cursor
     typedef algo::cstring ChildType;
@@ -363,11 +369,14 @@ struct _db_ssimfile_curs {// cursor
     _db_ssimfile_curs(){ parent=NULL; index=0; }
 };
 
-} // end namespace acr_my
+} // gen:ns_curstext
+namespace acr_my { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const acr_my::trace &row);// cfmt:acr_my.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_my::FieldId &row);// cfmt:acr_my.FieldId.String

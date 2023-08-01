@@ -156,10 +156,10 @@ const char *dmmeta_Sorttype_sorttype_HeapSort        = "HeapSort";
 
 // compile-time string constants for dmmeta.Ssimfile.ssimfile
 const char *dmmeta_Ssimfile_ssimfile_amcdb_bltin        = "amcdb.bltin";
-const char *dmmeta_Ssimfile_ssimfile_amcdb_curs         = "amcdb.curs";
+const char *dmmeta_Ssimfile_ssimfile_amcdb_curstype     = "amcdb.curstype";
 const char *dmmeta_Ssimfile_ssimfile_amcdb_gen          = "amcdb.gen";
 const char *dmmeta_Ssimfile_ssimfile_amcdb_tclass       = "amcdb.tclass";
-const char *dmmeta_Ssimfile_ssimfile_amcdb_tcursor      = "amcdb.tcursor";
+const char *dmmeta_Ssimfile_ssimfile_amcdb_tcurs        = "amcdb.tcurs";
 const char *dmmeta_Ssimfile_ssimfile_amcdb_tfunc        = "amcdb.tfunc";
 const char *dmmeta_Ssimfile_ssimfile_amsdb_proctype     = "amsdb.proctype";
 const char *dmmeta_Ssimfile_ssimfile_amsdb_streamtype   = "amsdb.streamtype";
@@ -351,9 +351,9 @@ const char *dmmeta_Strtype_strtype_rpascal    = "rpascal";
 const char *dmmeta_Strtype_strtype_rightpad   = "rightpad";
 const char *dmmeta_Strtype_strtype_leftpad    = "leftpad";
 
-namespace dmmeta {
+namespace dmmeta { // gen:ns_print_proto
     static void          SizeCheck();
-} // end namespace dmmeta
+} // gen:ns_print_proto
 
 // --- dmmeta.Anonfld..ReadFieldMaybe
 bool dmmeta::Anonfld_ReadFieldMaybe(dmmeta::Anonfld &parent, algo::strptr field, algo::strptr strval) {
@@ -2730,21 +2730,21 @@ algo::Smallstr50 dmmeta::Fcurs_ctype_Get(algo::strptr arg) {
     return ret;
 }
 
-// --- dmmeta.Fcurs.curs.Get
-algo::Smallstr50 dmmeta::curs_Get(dmmeta::Fcurs& parent) {
+// --- dmmeta.Fcurs.curstype.Get
+algo::Smallstr50 dmmeta::curstype_Get(dmmeta::Fcurs& parent) {
     algo::Smallstr50 ret(algo::Pathcomp(parent.fcurs, "/RR"));
     return ret;
 }
 
-// --- dmmeta.Fcurs.curs.Get2
-algo::Smallstr50 dmmeta::Fcurs_curs_Get(algo::strptr arg) {
+// --- dmmeta.Fcurs.curstype.Get2
+algo::Smallstr50 dmmeta::Fcurs_curstype_Get(algo::strptr arg) {
     algo::Smallstr50 ret(algo::Pathcomp(arg, "/RR"));
     return ret;
 }
 
-// --- dmmeta.Fcurs..Concat_field_curs
-tempstr dmmeta::Fcurs_Concat_field_curs( const algo::strptr& field ,const algo::strptr& curs ) {
-    return tempstr() << field <<'/'<< curs ;
+// --- dmmeta.Fcurs..Concat_field_curstype
+tempstr dmmeta::Fcurs_Concat_field_curstype( const algo::strptr& field ,const algo::strptr& curstype ) {
+    return tempstr() << field <<'/'<< curstype ;
 }
 
 // --- dmmeta.Fcurs..ReadFieldMaybe
@@ -3058,7 +3058,7 @@ const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) {
         case dmmeta_FieldId_casesens       : ret = "casesens";  break;
         case dmmeta_FieldId_fconst         : ret = "fconst";  break;
         case dmmeta_FieldId_fcurs          : ret = "fcurs";  break;
-        case dmmeta_FieldId_curs           : ret = "curs";  break;
+        case dmmeta_FieldId_curstype       : ret = "curstype";  break;
         case dmmeta_FieldId_nplace         : ret = "nplace";  break;
         case dmmeta_FieldId_fixedfmt       : ret = "fixedfmt";  break;
         case dmmeta_FieldId_fstep          : ret = "fstep";  break;
@@ -3238,9 +3238,6 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR4('c','t','o','r'): {
                     value_SetEnum(parent,dmmeta_FieldId_ctor); ret = true; break;
-                }
-                case LE_STR4('c','u','r','s'): {
-                    value_SetEnum(parent,dmmeta_FieldId_curs); ret = true; break;
                 }
                 case LE_STR4('d','f','l','t'): {
                     value_SetEnum(parent,dmmeta_FieldId_dflt); ret = true; break;
@@ -3516,6 +3513,9 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('c','i','r','c','u','l','a','r'): {
                     value_SetEnum(parent,dmmeta_FieldId_circular); ret = true; break;
+                }
+                case LE_STR8('c','u','r','s','t','y','p','e'): {
+                    value_SetEnum(parent,dmmeta_FieldId_curstype); ret = true; break;
                 }
                 case LE_STR8('d','i','s','p','a','t','c','h'): {
                     value_SetEnum(parent,dmmeta_FieldId_dispatch); ret = true; break;

@@ -10,6 +10,7 @@
 #pragma once
 #include "include/gen/algo_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- lib_json_FNode_type_Enum
 
@@ -54,21 +55,23 @@ enum lib_json_FieldIdEnum {        // lib_json.FieldId.value
 
 enum { lib_json_FieldIdEnum_N = 1 };
 
+namespace lib_json { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace lib_json { // gen:ns_field
+struct lpool_Lpblock {
+    lpool_Lpblock* next;
+};
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace lib_json { struct FNode; }
+namespace lib_json { struct node_c_child_curs; }
 namespace lib_json { struct trace; }
 namespace lib_json { struct FDb; }
 namespace lib_json { struct FldKey; }
 namespace lib_json { struct FParser; }
 namespace lib_json { struct FieldId; }
-namespace lib_json { struct _db_ind_objfld_curs; }
-namespace lib_json { struct node_c_child_curs; }
-namespace lib_json {
-}//pkey typedefs
-namespace lib_json {
-struct lpool_Lpblock {
-    lpool_Lpblock* next;
-};
-extern FDb _db;
+namespace lib_json { extern struct lib_json::FDb _db; }
+namespace lib_json { // gen:ns_print_struct
 
 // --- lib_json.trace
 #pragma pack(push,1)
@@ -368,8 +371,10 @@ bool                 FieldId_ReadStrptrMaybe(lib_json::FieldId &parent, algo::st
 void                 FieldId_Init(lib_json::FieldId& parent);
 // print string representation of lib_json::FieldId to string LHS, no header -- cprint:lib_json.FieldId.String
 void                 FieldId_Print(lib_json::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace lib_json { // gen:ns_curstext
 
-struct node_c_child_curs {// cursor
+struct node_c_child_curs {// fcurs:lib_json.FNode.c_child/curs
     typedef lib_json::FNode ChildType;
     lib_json::FNode** elems;
     u32 n_elems;
@@ -377,7 +382,10 @@ struct node_c_child_curs {// cursor
     node_c_child_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-} // end namespace lib_json
+} // gen:ns_curstext
+namespace lib_json { // gen:ns_func
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const lib_json::trace &row);// cfmt:lib_json.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const lib_json::FldKey &row);// cfmt:lib_json.FldKey.String

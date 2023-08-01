@@ -34,7 +34,7 @@ inline void amcdb::Bltin_Init(amcdb::Bltin& parent) {
     parent.bigendok = bool(false);
     parent.issigned = bool(false);
 }
-inline amcdb::Curs::Curs() {
+inline amcdb::Curstype::Curstype() {
 }
 
 inline amcdb::FieldId::FieldId(i32                            in_value)
@@ -82,9 +82,16 @@ inline void amcdb::Gen_Init(amcdb::Gen& parent) {
 inline amcdb::Tclass::Tclass() {
 }
 
-inline amcdb::Tcursor::Tcursor() {
+inline amcdb::Tcurs::Tcurs() {
+    amcdb::Tcurs_Init(*this);
 }
 
+
+// --- amcdb.Tcurs..Init
+// Set all fields to initial values.
+inline void amcdb::Tcurs_Init(amcdb::Tcurs& parent) {
+    parent.dflt = bool(false);
+}
 inline amcdb::Tfunc::Tfunc() {
     amcdb::Tfunc_Init(*this);
 }
@@ -92,5 +99,10 @@ inline amcdb::Tfunc::Tfunc() {
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const amcdb::FieldId &row) {// cfmt:amcdb.FieldId.String
     amcdb::FieldId_Print(const_cast<amcdb::FieldId&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const amcdb::Tcurs &row) {// cfmt:amcdb.Tcurs.String
+    amcdb::Tcurs_Print(const_cast<amcdb::Tcurs&>(row), str);
     return str;
 }

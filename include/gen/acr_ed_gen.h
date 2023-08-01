@@ -13,6 +13,7 @@
 #include "include/gen/command_gen.h"
 #include "include/gen/dev_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- acr_ed_FieldIdEnum
 
@@ -60,6 +61,13 @@ enum acr_ed_TableIdEnum {                    // acr_ed.TableId.value
 
 enum { acr_ed_TableIdEnum_N = 30 };
 
+namespace acr_ed { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace acr_ed { // gen:ns_field
+extern const char *acr_ed_help;
+extern const char *acr_ed_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace dmmeta { struct Cfmt; }
 namespace dmmeta { struct Cpptype; }
 namespace dmmeta { struct Cstr; }
@@ -78,6 +86,24 @@ namespace dev { struct Target; }
 namespace dev { struct Targsrc; }
 namespace acr_ed { struct FTarget; }
 namespace dmmeta { struct Typefld; }
+namespace acr_ed { struct ctype_c_field_curs; }
+namespace acr_ed { struct ctype_c_cfmt_curs; }
+namespace acr_ed { struct _db_ns_curs; }
+namespace acr_ed { struct _db_field_curs; }
+namespace acr_ed { struct _db_ctype_curs; }
+namespace acr_ed { struct _db_ssimfile_curs; }
+namespace acr_ed { struct _db_cstr_curs; }
+namespace acr_ed { struct _db_vis_curs; }
+namespace acr_ed { struct _db_listtype_curs; }
+namespace acr_ed { struct _db_fprefix_curs; }
+namespace acr_ed { struct _db_target_curs; }
+namespace acr_ed { struct _db_targsrc_curs; }
+namespace acr_ed { struct _db_sandbox_curs; }
+namespace acr_ed { struct _db_pack_curs; }
+namespace acr_ed { struct _db_typefld_curs; }
+namespace acr_ed { struct _db_cpptype_curs; }
+namespace acr_ed { struct _db_cfmt_curs; }
+namespace acr_ed { struct _db_nsdb_curs; }
 namespace acr_ed { struct FCfmt; }
 namespace acr_ed { struct FCpptype; }
 namespace acr_ed { struct FCstr; }
@@ -94,38 +120,8 @@ namespace acr_ed { struct FTargsrc; }
 namespace acr_ed { struct FTypefld; }
 namespace acr_ed { struct FieldId; }
 namespace acr_ed { struct TableId; }
-namespace acr_ed { struct ctype_c_field_curs; }
-namespace acr_ed { struct ctype_c_cfmt_curs; }
-namespace acr_ed { struct _db_ns_curs; }
-namespace acr_ed { struct _db_ind_ns_curs; }
-namespace acr_ed { struct _db_field_curs; }
-namespace acr_ed { struct _db_ind_field_curs; }
-namespace acr_ed { struct _db_ctype_curs; }
-namespace acr_ed { struct _db_ind_ctype_curs; }
-namespace acr_ed { struct _db_ssimfile_curs; }
-namespace acr_ed { struct _db_ind_ssimfile_curs; }
-namespace acr_ed { struct _db_cstr_curs; }
-namespace acr_ed { struct _db_vis_curs; }
-namespace acr_ed { struct _db_listtype_curs; }
-namespace acr_ed { struct _db_ind_listtype_curs; }
-namespace acr_ed { struct _db_fprefix_curs; }
-namespace acr_ed { struct _db_ind_fprefix_curs; }
-namespace acr_ed { struct _db_target_curs; }
-namespace acr_ed { struct _db_ind_target_curs; }
-namespace acr_ed { struct _db_targsrc_curs; }
-namespace acr_ed { struct _db_sandbox_curs; }
-namespace acr_ed { struct _db_pack_curs; }
-namespace acr_ed { struct _db_typefld_curs; }
-namespace acr_ed { struct _db_cpptype_curs; }
-namespace acr_ed { struct _db_cfmt_curs; }
-namespace acr_ed { struct _db_nsdb_curs; }
-namespace acr_ed { struct _db_ind_nsdb_curs; }
-namespace acr_ed {
-}//pkey typedefs
-namespace acr_ed {
-extern const char *acr_ed_help;
-extern const char *acr_ed_syntax;
-extern FDb _db;
+namespace acr_ed { extern struct acr_ed::FDb _db; }
+namespace acr_ed { // gen:ns_print_struct
 
 // --- acr_ed.FCfmt
 // create: acr_ed.FDb.cfmt (Lary)
@@ -1571,8 +1567,10 @@ bool                 TableId_ReadStrptrMaybe(acr_ed::TableId &parent, algo::strp
 void                 TableId_Init(acr_ed::TableId& parent);
 // print string representation of acr_ed::TableId to string LHS, no header -- cprint:acr_ed.TableId.String
 void                 TableId_Print(acr_ed::TableId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace acr_ed { // gen:ns_curstext
 
-struct ctype_c_field_curs {// cursor
+struct ctype_c_field_curs {// fcurs:acr_ed.FCtype.c_field/curs
     typedef acr_ed::FField ChildType;
     acr_ed::FField** elems;
     u32 n_elems;
@@ -1581,7 +1579,7 @@ struct ctype_c_field_curs {// cursor
 };
 
 
-struct ctype_c_cfmt_curs {// cursor
+struct ctype_c_cfmt_curs {// fcurs:acr_ed.FCtype.c_cfmt/curs
     typedef acr_ed::FCfmt ChildType;
     acr_ed::FCfmt** elems;
     u32 n_elems;
@@ -1718,11 +1716,14 @@ struct _db_nsdb_curs {// cursor
     _db_nsdb_curs(){ parent=NULL; index=0; }
 };
 
-} // end namespace acr_ed
+} // gen:ns_curstext
+namespace acr_ed { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const acr_ed::trace &row);// cfmt:acr_ed.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_ed::FieldId &row);// cfmt:acr_ed.FieldId.String

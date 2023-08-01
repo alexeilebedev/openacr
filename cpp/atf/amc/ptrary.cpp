@@ -60,3 +60,21 @@ void atf_amc::amctest_PtraryInsert() {
     vrfy_(a._db_c_typek_in_ary ==true);
     vrfy_(c_typek_N()==1);
 }
+
+
+void atf_amc::amctest_PtraryCursor() {
+    atf_amc::FTypeK a,b;
+
+    c_typek_Insert(a);
+    c_typek_Insert(b);
+    vrfy_(a._db_c_typek_in_ary ==true);
+    vrfy_(b._db_c_typek_in_ary ==true);
+    // check that once cursor on unique array removes elements from list
+    ind_beg(_db_c_typek_oncecurs,typek,_db) {
+        vrfy_(ind_curs(typek).index!=0 || &typek == &a);
+        vrfy_(ind_curs(typek).index!=1 || &typek == &b);
+    }ind_end;
+    vrfy_(c_typek_N()==0);
+    vrfy_(a._db_c_typek_in_ary ==false);
+    vrfy_(b._db_c_typek_in_ary ==false);
+}

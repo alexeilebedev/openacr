@@ -850,16 +850,16 @@ amcdb.gen  gen:check_bitfld     perns:N  comment:"Check that bitfields don't ove
 Select first 10 functions from amc source code:
 ```
 inline-command: src_func amc gen_% -proto -comment: | sort -k 3 | head
-cpp/amc/gen.cpp:219: void amc::gen_basepool() 
+cpp/amc/gen.cpp:220: void amc::gen_basepool() 
 cpp/amc/cget.cpp:123: void amc::gen_cget()
-cpp/amc/gen.cpp:576: void amc::gen_check_bigend() 
-cpp/amc/gen.cpp:295: void amc::gen_check_bitfld() 
+cpp/amc/gen.cpp:577: void amc::gen_check_bigend() 
+cpp/amc/gen.cpp:296: void amc::gen_check_bitfld() 
 cpp/amc/gen.cpp:112: void amc::gen_check_cascdel() 
-cpp/amc/gen.cpp:459: void amc::gen_check_cpptype() 
-cpp/amc/gen.cpp:204: void amc::gen_check_prefix() 
-cpp/amc/gen.cpp:394: void amc::gen_check_reftype() 
+cpp/amc/gen.cpp:460: void amc::gen_check_cpptype() 
+cpp/amc/gen.cpp:1365: void amc::gen_check_fcurs() 
+cpp/amc/gen.cpp:205: void amc::gen_check_prefix() 
+cpp/amc/gen.cpp:395: void amc::gen_check_reftype() 
 cpp/amc/gen.cpp:161: void amc::gen_check_static() 
-cpp/amc/gen.cpp:1367: void amc::gen_check_varlen() 
 ```
 
 In language-centric systems, one would start by writing some functions, and then use "reflection" to

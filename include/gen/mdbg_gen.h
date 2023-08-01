@@ -12,6 +12,7 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/command_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- mdbg_FieldIdEnum
 
@@ -33,25 +34,27 @@ enum mdbg_TableIdEnum {                // mdbg.TableId.value
 
 enum { mdbg_TableIdEnum_N = 4 };
 
+namespace mdbg { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace mdbg { // gen:ns_field
+struct lpool_Lpblock {
+    lpool_Lpblock* next;
+};
+extern const char *mdbg_help;
+extern const char *mdbg_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
+namespace mdbg { struct cfg_c_builddir_curs; }
+namespace mdbg { struct _db_cfg_curs; }
+namespace mdbg { struct _db_builddir_curs; }
 namespace mdbg { struct FBuilddir; }
 namespace mdbg { struct FCfg; }
 namespace mdbg { struct trace; }
 namespace mdbg { struct FDb; }
 namespace mdbg { struct FieldId; }
 namespace mdbg { struct TableId; }
-namespace mdbg { struct cfg_c_builddir_curs; }
-namespace mdbg { struct _db_cfg_curs; }
-namespace mdbg { struct _db_ind_cfg_curs; }
-namespace mdbg { struct _db_builddir_curs; }
-namespace mdbg {
-}//pkey typedefs
-namespace mdbg {
-struct lpool_Lpblock {
-    lpool_Lpblock* next;
-};
-extern const char *mdbg_help;
-extern const char *mdbg_syntax;
-extern FDb _db;
+namespace mdbg { extern struct mdbg::FDb _db; }
+namespace mdbg { // gen:ns_print_struct
 
 // --- mdbg.FBuilddir
 // create: mdbg.FDb.builddir (Lary)
@@ -379,8 +382,10 @@ bool                 TableId_ReadStrptrMaybe(mdbg::TableId &parent, algo::strptr
 void                 TableId_Init(mdbg::TableId& parent);
 // print string representation of mdbg::TableId to string LHS, no header -- cprint:mdbg.TableId.String
 void                 TableId_Print(mdbg::TableId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace mdbg { // gen:ns_curstext
 
-struct cfg_c_builddir_curs {// cursor
+struct cfg_c_builddir_curs {// fcurs:mdbg.FCfg.c_builddir/curs
     typedef mdbg::FBuilddir ChildType;
     mdbg::FBuilddir** elems;
     u32 n_elems;
@@ -404,11 +409,14 @@ struct _db_builddir_curs {// cursor
     _db_builddir_curs(){ parent=NULL; index=0; }
 };
 
-} // end namespace mdbg
+} // gen:ns_curstext
+namespace mdbg { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const mdbg::trace &row);// cfmt:mdbg.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const mdbg::FieldId &row);// cfmt:mdbg.FieldId.String

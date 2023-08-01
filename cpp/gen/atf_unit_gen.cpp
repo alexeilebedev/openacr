@@ -79,7 +79,7 @@ const char *atf_unit_syntax =
 " -check_untracked:flag=true\n"
 ;
 } // namespace atf_unit
-namespace atf_unit {
+namespace atf_unit { // gen:ns_print_proto
     // Extract next character from STR and advance IDX
     static int           val_Nextchar(const atf_unit::Cstr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
     // Returns the child that has greater height.
@@ -113,7 +113,7 @@ namespace atf_unit {
     // Quick sort engine
     static void          sorted_IntQuickSort(atf_unit::Dbl *elems, int n, int depth) __attribute__((nothrow));
     static void          SizeCheck();
-} // end namespace atf_unit
+} // gen:ns_print_proto
 
 // --- atf_unit.Cstr.val.Nextchar
 // Extract next character from STR and advance IDX

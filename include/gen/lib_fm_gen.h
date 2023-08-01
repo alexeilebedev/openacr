@@ -12,6 +12,7 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/fm_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- lib_fm_FieldIdEnum
 
@@ -33,6 +34,14 @@ enum lib_fm_TableIdEnum {                    // lib_fm.TableId.value
 
 enum { lib_fm_TableIdEnum_N = 4 };
 
+namespace lib_fm { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace lib_fm { // gen:ns_field
+} // gen:ns_field
+// gen:ns_fwddecl2
+namespace lib_fm { struct _db_alarm_curs; }
+namespace lib_fm { struct _db_alm_code_curs; }
+namespace lib_fm { struct _db_alm_objtype_curs; }
 namespace lib_fm { struct FAlarm; }
 namespace lib_fm { struct FAlmCode; }
 namespace lib_fm { struct FAlmObjtype; }
@@ -40,20 +49,20 @@ namespace lib_fm { struct trace; }
 namespace lib_fm { struct FDb; }
 namespace lib_fm { struct FieldId; }
 namespace lib_fm { struct TableId; }
-namespace lib_fm { struct _db_alarm_curs; }
-namespace lib_fm { struct _db_ind_alarm_curs; }
-namespace lib_fm { struct _db_alm_code_curs; }
-namespace lib_fm { struct _db_ind_alm_code_curs; }
-namespace lib_fm { struct _db_alm_objtype_curs; }
-namespace lib_fm { struct _db_ind_alm_objtype_curs; }
-namespace lib_fm {
-}//pkey typedefs
-namespace lib_fm {
-extern FDb _db;
-typedef void (*_db_h_alarm_hook)(void* userctx, lib_fm::FAlarm& arg);
-extern const char* fmdb_alm_code_TEST_EXER; // "TEST-EXER"
-extern const char* fmdb_alm_objtype_SYS; // "SYS"
-extern const char* fmdb_alm_source_UnitTest; // "UnitTest"
+namespace lib_fm { extern struct lib_fm::FDb _db; }
+namespace lib_fm { // hook_fcn_typedef
+    typedef void (*_db_h_alarm_hook)(void* userctx, lib_fm::FAlarm& arg); // hook:lib_fm.FDb.h_alarm
+} // hook_decl
+namespace lib_fm { // gen:ns_gsymbol
+    extern const char* fmdb_alm_code_TEST_EXER; // "TEST-EXER"
+} // gen:ns_gsymbol
+namespace lib_fm { // gen:ns_gsymbol
+    extern const char* fmdb_alm_objtype_SYS; // "SYS"
+} // gen:ns_gsymbol
+namespace lib_fm { // gen:ns_gsymbol
+    extern const char* fmdb_alm_source_UnitTest; // "UnitTest"
+} // gen:ns_gsymbol
+namespace lib_fm { // gen:ns_print_struct
 
 // --- lib_fm.FAlarm
 // create: lib_fm.FDb.alarm (Lary)
@@ -458,6 +467,8 @@ bool                 TableId_ReadStrptrMaybe(lib_fm::TableId &parent, algo::strp
 void                 TableId_Init(lib_fm::TableId& parent);
 // print string representation of lib_fm::TableId to string LHS, no header -- cprint:lib_fm.TableId.String
 void                 TableId_Print(lib_fm::TableId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace lib_fm { // gen:ns_curstext
 
 struct _db_alarm_curs {// cursor
     typedef lib_fm::FAlarm ChildType;
@@ -482,7 +493,10 @@ struct _db_alm_objtype_curs {// cursor
     _db_alm_objtype_curs(){ parent=NULL; index=0; }
 };
 
-} // end namespace lib_fm
+} // gen:ns_curstext
+namespace lib_fm { // gen:ns_func
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const lib_fm::trace &row);// cfmt:lib_fm.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const lib_fm::FieldId &row);// cfmt:lib_fm.FieldId.String

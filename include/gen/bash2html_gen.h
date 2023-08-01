@@ -10,6 +10,7 @@
 #pragma once
 #include "include/gen/command_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- bash2html_FieldIdEnum
 
@@ -19,15 +20,18 @@ enum bash2html_FieldIdEnum {        // bash2html.FieldId.value
 
 enum { bash2html_FieldIdEnum_N = 1 };
 
+namespace bash2html { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace bash2html { // gen:ns_field
+extern const char *bash2html_help;
+extern const char *bash2html_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace bash2html { struct trace; }
 namespace bash2html { struct FDb; }
 namespace bash2html { struct FieldId; }
-namespace bash2html {
-}//pkey typedefs
-namespace bash2html {
-extern const char *bash2html_help;
-extern const char *bash2html_syntax;
-extern FDb _db;
+namespace bash2html { extern struct bash2html::FDb _db; }
+namespace bash2html { // gen:ns_print_struct
 
 // --- bash2html.trace
 #pragma pack(push,1)
@@ -110,11 +114,14 @@ bool                 FieldId_ReadStrptrMaybe(bash2html::FieldId &parent, algo::s
 void                 FieldId_Init(bash2html::FieldId& parent);
 // print string representation of bash2html::FieldId to string LHS, no header -- cprint:bash2html.FieldId.String
 void                 FieldId_Print(bash2html::FieldId & row, algo::cstring &str) __attribute__((nothrow));
-} // end namespace bash2html
+} // gen:ns_print_struct
+namespace bash2html { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const bash2html::trace &row);// cfmt:bash2html.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const bash2html::FieldId &row);// cfmt:bash2html.FieldId.String

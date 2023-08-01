@@ -24,7 +24,7 @@ algo_lib::_db_bh_timehook_curs::~_db_bh_timehook_curs() {
 
 }
 
-namespace algo_lib {
+namespace algo_lib { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     // Find new location for ROW starting at IDX
@@ -71,7 +71,7 @@ namespace algo_lib {
     // Quick sort engine
     static void          ch_class_IntQuickSort(algo::i32_Range *elems, int n, int depth) __attribute__((nothrow));
     static void          SizeCheck();
-} // end namespace algo_lib
+} // gen:ns_print_proto
 
 // --- algo_lib.Bitset.ary.ExpandBits
 // Make sure the array supports at least NBITS bits.

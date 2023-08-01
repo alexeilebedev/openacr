@@ -71,7 +71,7 @@ amc_vis::_db_bh_link_curs::~_db_bh_link_curs() {
 
 }
 
-namespace amc_vis {
+namespace amc_vis { // gen:ns_print_proto
     static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
     static bool          field_InputMaybe(dmmeta::Field &elem) __attribute__((nothrow));
     // Load statically available data into tables, register tables and database.
@@ -99,7 +99,7 @@ namespace amc_vis {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace amc_vis
+} // gen:ns_print_proto
 
 // --- amc_vis.FCtype.msghdr.CopyOut
 // Copy fields out of row

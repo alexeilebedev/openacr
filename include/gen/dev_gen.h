@@ -10,6 +10,7 @@
 #pragma once
 #include "include/gen/algo_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 extern const char *  dev_Arch_arch_;         //           fconst:dev.Arch.arch/
 extern const char *  dev_Arch_arch_amd64;    // amd64     fconst:dev.Arch.arch/amd64
 extern const char *  dev_Arch_arch_i686;     // i686      fconst:dev.Arch.arch/i686
@@ -193,6 +194,37 @@ extern const char *  dev_Target_target_src_lim;        // src_lim         fconst
 extern const char *  dev_Target_target_ssim2csv;       // ssim2csv        fconst:dev.Target.target/ssim2csv
 extern const char *  dev_Target_target_ssim2mysql;     // ssim2mysql      fconst:dev.Target.target/ssim2mysql
 extern const char *  dev_Target_target_strconv;        // strconv         fconst:dev.Target.target/strconv
+namespace dev { // gen:ns_pkeytypedef
+    typedef algo::Smallstr50 ArchPkey;
+    typedef algo::Smallstr50 BadlinePkey;
+    typedef algo::Smallstr50 BuilddirPkey;
+    typedef algo::Smallstr50 CfgPkey;
+    typedef algo::Smallstr50 CompilerPkey;
+    typedef algo::Smallstr200 CovlinePkey;
+    typedef algo::Smallstr200 GitfilePkey;
+    typedef algo::Smallstr40 GitinfoPkey;
+    typedef algo::Smallstr50 GitlabProjectPkey;
+    typedef algo::Smallstr50 HilitePkey;
+    typedef algo::Smallstr50 HtmlentityPkey;
+    typedef algo::Smallstr200 IncludePkey;
+    typedef algo::Smallstr50 LicensePkey;
+    typedef algo::Smallstr50 OptTypePkey;
+    typedef algo::Smallstr50 SandboxPkey;
+    typedef algo::Smallstr200 SrcfilePkey;
+    typedef i64 SyscmdPkey;
+    typedef algo::RspaceStr16 SyscmddepPkey;
+    typedef algo::Smallstr50 SyslibPkey;
+    typedef algo::Smallstr50 TargdepPkey;
+    typedef algo::Smallstr16 TargetPkey;
+    typedef algo::Smallstr100 TargsrcPkey;
+    typedef algo::Smallstr50 TargsyslibPkey;
+    typedef algo::Smallstr100 TimefmtPkey;
+    typedef algo::Smallstr100 ToolOptPkey;
+    typedef algo::Smallstr50 UnamePkey;
+} // gen:ns_pkeytypedef
+namespace dev { // gen:ns_field
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace dev { struct Arch; }
 namespace dev { struct Badline; }
 namespace dev { struct Builddir; }
@@ -229,35 +261,7 @@ namespace dev { struct Timefmt; }
 namespace dev { struct ToolOpt; }
 namespace dev { struct Uname; }
 namespace dev { struct Unstablefld; }
-namespace dev {
-    typedef algo::Smallstr50 ArchPkey;
-    typedef algo::Smallstr50 BadlinePkey;
-    typedef algo::Smallstr50 BuilddirPkey;
-    typedef algo::Smallstr50 CfgPkey;
-    typedef algo::Smallstr50 CompilerPkey;
-    typedef algo::Smallstr200 CovlinePkey;
-    typedef algo::Smallstr200 GitfilePkey;
-    typedef algo::Smallstr40 GitinfoPkey;
-    typedef algo::Smallstr50 GitlabProjectPkey;
-    typedef algo::Smallstr50 HilitePkey;
-    typedef algo::Smallstr50 HtmlentityPkey;
-    typedef algo::Smallstr200 IncludePkey;
-    typedef algo::Smallstr50 LicensePkey;
-    typedef algo::Smallstr50 OptTypePkey;
-    typedef algo::Smallstr50 SandboxPkey;
-    typedef algo::Smallstr200 SrcfilePkey;
-    typedef i64 SyscmdPkey;
-    typedef algo::RspaceStr16 SyscmddepPkey;
-    typedef algo::Smallstr50 SyslibPkey;
-    typedef algo::Smallstr50 TargdepPkey;
-    typedef algo::Smallstr16 TargetPkey;
-    typedef algo::Smallstr100 TargsrcPkey;
-    typedef algo::Smallstr50 TargsyslibPkey;
-    typedef algo::Smallstr100 TimefmtPkey;
-    typedef algo::Smallstr100 ToolOptPkey;
-    typedef algo::Smallstr50 UnamePkey;
-}//pkey typedefs
-namespace dev {
+namespace dev { // gen:ns_print_struct
 
 // --- dev.Arch
 struct Arch { // dev.Arch
@@ -1029,7 +1033,10 @@ bool                 Unstablefld_ReadFieldMaybe(dev::Unstablefld &parent, algo::
 bool                 Unstablefld_ReadStrptrMaybe(dev::Unstablefld &parent, algo::strptr in_str);
 // print string representation of dev::Unstablefld to string LHS, no header -- cprint:dev.Unstablefld.String
 void                 Unstablefld_Print(dev::Unstablefld & row, algo::cstring &str) __attribute__((nothrow));
-} // end namespace dev
+} // gen:ns_print_struct
+namespace dev { // gen:ns_func
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Badline &row);// cfmt:dev.Badline.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Covfile &row);// cfmt:dev.Covfile.String

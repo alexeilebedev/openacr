@@ -19,7 +19,7 @@
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
-namespace lib_sql {
+namespace lib_sql { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
@@ -27,7 +27,7 @@ namespace lib_sql {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace lib_sql
+} // gen:ns_print_proto
 
 // --- lib_sql.FAttr..Uninit
 void lib_sql::FAttr_Uninit(lib_sql::FAttr& attr) {

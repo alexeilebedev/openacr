@@ -16,6 +16,7 @@
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/dev_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- amc_BltinIdEnum
 
@@ -318,8 +319,8 @@ enum amc_TableIdEnum {                        // amc.TableId.value
     ,amc_TableId_dev_target            = 85   // dev.target -> amc.FTarget
     ,amc_TableId_dmmeta_Tary           = 86   // dmmeta.Tary -> amc.FTary
     ,amc_TableId_dmmeta_tary           = 86   // dmmeta.tary -> amc.FTary
-    ,amc_TableId_amcdb_Tcursor         = 87   // amcdb.Tcursor -> amc.FTcursor
-    ,amc_TableId_amcdb_tcursor         = 87   // amcdb.tcursor -> amc.FTcursor
+    ,amc_TableId_amcdb_Tcurs           = 87   // amcdb.Tcurs -> amc.FTcurs
+    ,amc_TableId_amcdb_tcurs           = 87   // amcdb.tcurs -> amc.FTcurs
     ,amc_TableId_dmmeta_Thash          = 88   // dmmeta.Thash -> amc.FThash
     ,amc_TableId_dmmeta_thash          = 88   // dmmeta.thash -> amc.FThash
     ,amc_TableId_dmmeta_Typefld        = 89   // dmmeta.Typefld -> amc.FTypefld
@@ -332,6 +333,16 @@ enum amc_TableIdEnum {                        // amc.TableId.value
 
 enum { amc_TableIdEnum_N = 183 };
 
+namespace amc { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace amc { // gen:ns_field
+struct lpool_Lpblock {
+    lpool_Lpblock* next;
+};
+extern const char *amc_help;
+extern const char *amc_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace dmmeta { struct Anonfld; }
 namespace dmmeta { struct Argvtype; }
 namespace dmmeta { struct Basepool; }
@@ -433,7 +444,7 @@ namespace amc { struct FTarget; }
 namespace dev { struct Target; }
 namespace dmmeta { struct Tary; }
 namespace amcdb { struct Tclass; }
-namespace amcdb { struct Tcursor; }
+namespace amcdb { struct Tcurs; }
 namespace amcdb { struct Tfunc; }
 namespace dmmeta { struct Thash; }
 namespace dmmeta { struct Tracefld; }
@@ -443,6 +454,165 @@ namespace dmmeta { struct Usertracefld; }
 namespace dmmeta { struct Xref; }
 namespace amc { struct FTfunc; }
 namespace amc { struct FFunc; }
+namespace amc { struct ctype_zs_cfmt_curs; }
+namespace amc { struct ctype_c_field_curs; }
+namespace amc { struct ctype_c_static_curs; }
+namespace amc { struct ctype_c_parent_curs; }
+namespace amc { struct ctype_c_datafld_curs; }
+namespace amc { struct ctype_zd_inst_curs; }
+namespace amc { struct ctype_zs_xref_curs; }
+namespace amc { struct ctype_c_ffunc_curs; }
+namespace amc { struct ctype_zd_cafter_curs; }
+namespace amc { struct ctype_zd_access_curs; }
+namespace amc { struct ctype_c_fcurs_curs; }
+namespace amc { struct ctype_c_cdecl_curs; }
+namespace amc { struct tclass_c_tfunc_curs; }
+namespace amc { struct _db_fsort_curs; }
+namespace amc { struct _db_dispfilter_curs; }
+namespace amc { struct _db_usertracefld_curs; }
+namespace amc { struct _db_cfmt_curs; }
+namespace amc { struct _db_dispatch_curs; }
+namespace amc { struct _db_dispatch_msg_curs; }
+namespace amc { struct _db_ctype_curs; }
+namespace amc { struct _db_field_curs; }
+namespace amc { struct _db_basepool_curs; }
+namespace amc { struct _db_llist_curs; }
+namespace amc { struct _db_anonfld_curs; }
+namespace amc { struct _db_xref_curs; }
+namespace amc { struct _db_ns_curs; }
+namespace amc { struct _db_pnew_curs; }
+namespace amc { struct _db_fldoffset_curs; }
+namespace amc { struct _db_typefld_curs; }
+namespace amc { struct _db_lenfld_curs; }
+namespace amc { struct _db_bltin_curs; }
+namespace amc { struct _db_static_tuple_curs; }
+namespace amc { struct _db_msgtype_curs; }
+namespace amc { struct _db_gconst_curs; }
+namespace amc { struct _db_gstatic_curs; }
+namespace amc { struct _db_thash_curs; }
+namespace amc { struct _db_func_curs; }
+namespace amc { struct _db_smallstr_curs; }
+namespace amc { struct _db_numstr_curs; }
+namespace amc { struct _db_main_curs; }
+namespace amc { struct _db_reftype_curs; }
+namespace amc { struct _db_cpptype_curs; }
+namespace amc { struct _db_inlary_curs; }
+namespace amc { struct _db_tary_curs; }
+namespace amc { struct _db_cppfunc_curs; }
+namespace amc { struct _db_rowid_curs; }
+namespace amc { struct _db_cascdel_curs; }
+namespace amc { struct _db_substr_curs; }
+namespace amc { struct _db_bitfld_curs; }
+namespace amc { struct _db_ssimfile_curs; }
+namespace amc { struct _db_pack_curs; }
+namespace amc { struct _db_ptrary_curs; }
+namespace amc { struct _db_c_ctype_sorted_curs; }
+namespace amc { struct _db_enumstr_curs; }
+namespace amc { struct _db_enumstr_len_curs; }
+namespace amc { struct _db_bh_enumstr_len_curs; }
+namespace amc { struct _db_fbitset_curs; }
+namespace amc { struct _db_fcleanup_curs; }
+namespace amc { struct _db_fdec_curs; }
+namespace amc { struct _db_fconst_curs; }
+namespace amc { struct _db_c_ns_sorted_curs; }
+namespace amc { struct _db_finput_curs; }
+namespace amc { struct _db_foutput_curs; }
+namespace amc { struct _db_fbuf_curs; }
+namespace amc { struct _db_chash_curs; }
+namespace amc { struct _db_ccmp_curs; }
+namespace amc { struct _db_fbigend_curs; }
+namespace amc { struct _db_zsl_ctype_pack_tran_curs; }
+namespace amc { struct _db_cstr_curs; }
+namespace amc { struct _db_listtype_curs; }
+namespace amc { struct _db_fstep_curs; }
+namespace amc { struct _db_cextern_curs; }
+namespace amc { struct _db_fdelay_curs; }
+namespace amc { struct _db_disptrace_curs; }
+namespace amc { struct _db_tracefld_curs; }
+namespace amc { struct _db_tracerec_curs; }
+namespace amc { struct _db_dispsig_curs; }
+namespace amc { struct _db_c_dispsig_sorted_curs; }
+namespace amc { struct _db_zs_sig_visit_curs; }
+namespace amc { struct _db_target_curs; }
+namespace amc { struct _db_targdep_curs; }
+namespace amc { struct _db_dispctx_curs; }
+namespace amc { struct _db_pmaskfld_curs; }
+namespace amc { struct _db_fwddecl_curs; }
+namespace amc { struct _db_tfunc_curs; }
+namespace amc { struct _db_gen_curs; }
+namespace amc { struct _db_fregx_curs; }
+namespace amc { struct _db_tclass_curs; }
+namespace amc { struct _db_fcmp_curs; }
+namespace amc { struct _db_fcast_curs; }
+namespace amc { struct _db_noxref_curs; }
+namespace amc { struct _db_nocascdel_curs; }
+namespace amc { struct _db_cafter_curs; }
+namespace amc { struct _db_csize_curs; }
+namespace amc { struct _db_nsx_curs; }
+namespace amc { struct _db_fcompact_curs; }
+namespace amc { struct _db_findrem_curs; }
+namespace amc { struct _db_fcurs_curs; }
+namespace amc { struct _db_cdflt_curs; }
+namespace amc { struct _db_argvtype_curs; }
+namespace amc { struct _db_fcmdline_curs; }
+namespace amc { struct _db_floadtuples_curs; }
+namespace amc { struct _db_fcmap_curs; }
+namespace amc { struct _db_zs_ordkeyfield_curs; }
+namespace amc { struct _db_nsproto_curs; }
+namespace amc { struct _db_nsdb_curs; }
+namespace amc { struct _db_zd_substr_params_curs; }
+namespace amc { struct _db_fprefix_curs; }
+namespace amc { struct _db_ftrace_curs; }
+namespace amc { struct _db_fnoremove_curs; }
+namespace amc { struct _db_c_substr_field_curs; }
+namespace amc { struct _db_ctypelen_curs; }
+namespace amc { struct _db_c_ctypelen_curs; }
+namespace amc { struct _db_c_tempfield_curs; }
+namespace amc { struct _db_fbase_curs; }
+namespace amc { struct _db_nossimfile_curs; }
+namespace amc { struct _db_gsymbol_curs; }
+namespace amc { struct _db_sortfld_curs; }
+namespace amc { struct _db_cget_curs; }
+namespace amc { struct _db_cd_temp_func_curs; }
+namespace amc { struct _db_cdecl_curs; }
+namespace amc { struct _db_zs_gen_perns_curs; }
+namespace amc { struct _db_hook_curs; }
+namespace amc { struct _db_charset_curs; }
+namespace amc { struct _db_nsinclude_curs; }
+namespace amc { struct _db_ssimvolatile_curs; }
+namespace amc { struct _db_funique_curs; }
+namespace amc { struct _db_fuserinit_curs; }
+namespace amc { struct _db_tcurs_curs; }
+namespace amc { struct dispatch_c_dispatch_msg_curs; }
+namespace amc { struct enumstr_c_fconst_curs; }
+namespace amc { struct enumstr_len_bh_enumstr_curs; }
+namespace amc { struct field_c_ffunc_curs; }
+namespace amc { struct field_c_fconst_curs; }
+namespace amc { struct field_zd_xref_keyfld_curs; }
+namespace amc { struct field_zs_fcmap_curs; }
+namespace amc { struct field_bh_bitfld_curs; }
+namespace amc { struct func_funcarg_curs; }
+namespace amc { struct FGenXref_seen_curs; }
+namespace amc { struct ns_c_ctype_curs; }
+namespace amc { struct ns_c_func_curs; }
+namespace amc { struct ns_c_dispatch_curs; }
+namespace amc { struct ns_c_gstatic_curs; }
+namespace amc { struct ns_include_curs; }
+namespace amc { struct ns_c_ctype_ins_curs; }
+namespace amc { struct ns_c_dispsig_curs; }
+namespace amc { struct ns_c_parentns_curs; }
+namespace amc { struct ns_c_cppincl_curs; }
+namespace amc { struct ns_c_hdrincl_curs; }
+namespace amc { struct ns_c_fwddecl_curs; }
+namespace amc { struct ns_c_pnew_curs; }
+namespace amc { struct ns_c_outfile_curs; }
+namespace amc { struct ns_c_finput_curs; }
+namespace amc { struct ns_c_foutput_curs; }
+namespace amc { struct ns_c_fstep_curs; }
+namespace amc { struct ns_c_gsymbol_curs; }
+namespace amc { struct ns_c_nsinclude_curs; }
+namespace amc { struct reftype_zs_fprefix_curs; }
+namespace amc { struct target_c_targdep_curs; }
 namespace amc { struct BltinId; }
 namespace amc { struct CppkeywordId; }
 namespace amc { struct Enumstr; }
@@ -537,7 +707,7 @@ namespace amc { struct FStatictuple; }
 namespace amc { struct FSubstr; }
 namespace amc { struct FTargdep; }
 namespace amc { struct FTary; }
-namespace amc { struct FTcursor; }
+namespace amc { struct FTcurs; }
 namespace amc { struct FThash; }
 namespace amc { struct FTracefld; }
 namespace amc { struct FTracerec; }
@@ -548,216 +718,13 @@ namespace amc { struct FieldId; }
 namespace amc { struct Funcarg; }
 namespace amc { struct Genpnew; }
 namespace amc { struct TableId; }
-namespace amc { struct ctype_zs_cfmt_curs; }
-namespace amc { struct ctype_c_field_curs; }
-namespace amc { struct ctype_c_static_curs; }
-namespace amc { struct ctype_c_parent_curs; }
-namespace amc { struct ctype_c_datafld_curs; }
-namespace amc { struct ctype_zd_inst_curs; }
-namespace amc { struct ctype_zs_xref_curs; }
-namespace amc { struct ctype_c_ffunc_curs; }
-namespace amc { struct ctype_zd_cafter_curs; }
-namespace amc { struct ctype_zd_access_curs; }
-namespace amc { struct ctype_c_fcurs_curs; }
-namespace amc { struct ctype_c_cdecl_curs; }
-namespace amc { struct tclass_c_tfunc_curs; }
-namespace amc { struct _db_fsort_curs; }
-namespace amc { struct _db_ind_cfmt_curs; }
-namespace amc { struct _db_dispfilter_curs; }
-namespace amc { struct _db_usertracefld_curs; }
-namespace amc { struct _db_cfmt_curs; }
-namespace amc { struct _db_dispatch_curs; }
-namespace amc { struct _db_dispatch_msg_curs; }
-namespace amc { struct _db_ctype_curs; }
-namespace amc { struct _db_field_curs; }
-namespace amc { struct _db_basepool_curs; }
-namespace amc { struct _db_llist_curs; }
-namespace amc { struct _db_anonfld_curs; }
-namespace amc { struct _db_xref_curs; }
-namespace amc { struct _db_ns_curs; }
-namespace amc { struct _db_pnew_curs; }
-namespace amc { struct _db_fldoffset_curs; }
-namespace amc { struct _db_typefld_curs; }
-namespace amc { struct _db_lenfld_curs; }
-namespace amc { struct _db_bltin_curs; }
-namespace amc { struct _db_static_tuple_curs; }
-namespace amc { struct _db_msgtype_curs; }
-namespace amc { struct _db_gconst_curs; }
-namespace amc { struct _db_gstatic_curs; }
-namespace amc { struct _db_thash_curs; }
-namespace amc { struct _db_func_curs; }
-namespace amc { struct _db_smallstr_curs; }
-namespace amc { struct _db_numstr_curs; }
-namespace amc { struct _db_main_curs; }
-namespace amc { struct _db_reftype_curs; }
-namespace amc { struct _db_ind_bltin_curs; }
-namespace amc { struct _db_ind_ctype_curs; }
-namespace amc { struct _db_ind_dispatch_curs; }
-namespace amc { struct _db_ind_func_curs; }
-namespace amc { struct _db_ind_field_curs; }
-namespace amc { struct _db_ind_ns_curs; }
-namespace amc { struct _db_ind_pnew_curs; }
-namespace amc { struct _db_ind_xref_curs; }
-namespace amc { struct _db_cpptype_curs; }
-namespace amc { struct _db_ind_cpptype_curs; }
-namespace amc { struct _db_inlary_curs; }
-namespace amc { struct _db_ind_inlary_curs; }
-namespace amc { struct _db_tary_curs; }
-namespace amc { struct _db_ind_tary_curs; }
-namespace amc { struct _db_cppfunc_curs; }
-namespace amc { struct _db_rowid_curs; }
-namespace amc { struct _db_ind_rowid_curs; }
-namespace amc { struct _db_cascdel_curs; }
-namespace amc { struct _db_substr_curs; }
-namespace amc { struct _db_bitfld_curs; }
-namespace amc { struct _db_ssimfile_curs; }
-namespace amc { struct _db_ind_ssimfile_curs; }
-namespace amc { struct _db_pack_curs; }
-namespace amc { struct _db_ind_pack_curs; }
-namespace amc { struct _db_ind_smallstr_curs; }
-namespace amc { struct _db_ptrary_curs; }
-namespace amc { struct _db_c_ctype_sorted_curs; }
-namespace amc { struct _db_enumstr_curs; }
-namespace amc { struct _db_enumstr_len_curs; }
-namespace amc { struct _db_bh_enumstr_len_curs; }
-namespace amc { struct _db_bh_enumstr_len_unordcurs; }
-namespace amc { struct _db_ind_enumstr_len_curs; }
-namespace amc { struct _db_ind_enumstr_curs; }
-namespace amc { struct _db_fbitset_curs; }
-namespace amc { struct _db_ind_fbitset_curs; }
-namespace amc { struct _db_fcleanup_curs; }
-namespace amc { struct _db_fdec_curs; }
-namespace amc { struct _db_ind_fdec_curs; }
-namespace amc { struct _db_ind_reftype_curs; }
-namespace amc { struct _db_fconst_curs; }
-namespace amc { struct _db_ind_fconst_curs; }
-namespace amc { struct _db_c_ns_sorted_curs; }
-namespace amc { struct _db_finput_curs; }
-namespace amc { struct _db_foutput_curs; }
-namespace amc { struct _db_fbuf_curs; }
-namespace amc { struct _db_ind_fbuf_curs; }
-namespace amc { struct _db_chash_curs; }
-namespace amc { struct _db_ind_chash_curs; }
-namespace amc { struct _db_ccmp_curs; }
-namespace amc { struct _db_ind_ccmp_curs; }
-namespace amc { struct _db_fbigend_curs; }
-namespace amc { struct _db_zsl_ctype_pack_tran_curs; }
-namespace amc { struct _db_cstr_curs; }
-namespace amc { struct _db_listtype_curs; }
-namespace amc { struct _db_ind_listtype_curs; }
-namespace amc { struct _db_fstep_curs; }
-namespace amc { struct _db_cextern_curs; }
-namespace amc { struct _db_fdelay_curs; }
-namespace amc { struct _db_disptrace_curs; }
-namespace amc { struct _db_ind_fstep_curs; }
-namespace amc { struct _db_tracefld_curs; }
-namespace amc { struct _db_tracerec_curs; }
-namespace amc { struct _db_dispsig_curs; }
-namespace amc { struct _db_c_dispsig_sorted_curs; }
-namespace amc { struct _db_zs_sig_visit_curs; }
-namespace amc { struct _db_target_curs; }
-namespace amc { struct _db_ind_target_curs; }
-namespace amc { struct _db_targdep_curs; }
-namespace amc { struct _db_dispctx_curs; }
-namespace amc { struct _db_pmaskfld_curs; }
-namespace amc { struct _db_fwddecl_curs; }
-namespace amc { struct _db_ind_fwddecl_curs; }
-namespace amc { struct _db_tfunc_curs; }
-namespace amc { struct _db_ind_tfunc_curs; }
-namespace amc { struct _db_gen_curs; }
-namespace amc { struct _db_fregx_curs; }
-namespace amc { struct _db_tclass_curs; }
-namespace amc { struct _db_ind_tclass_curs; }
-namespace amc { struct _db_fcmp_curs; }
-namespace amc { struct _db_fcast_curs; }
-namespace amc { struct _db_noxref_curs; }
-namespace amc { struct _db_nocascdel_curs; }
-namespace amc { struct _db_cafter_curs; }
-namespace amc { struct _db_csize_curs; }
-namespace amc { struct _db_nsx_curs; }
-namespace amc { struct _db_fcompact_curs; }
-namespace amc { struct _db_findrem_curs; }
-namespace amc { struct _db_tcursor_curs; }
-namespace amc { struct _db_fcurs_curs; }
-namespace amc { struct _db_cdflt_curs; }
-namespace amc { struct _db_argvtype_curs; }
-namespace amc { struct _db_fcmdline_curs; }
-namespace amc { struct _db_ind_main_curs; }
-namespace amc { struct _db_floadtuples_curs; }
-namespace amc { struct _db_fcmap_curs; }
-namespace amc { struct _db_zs_ordkeyfield_curs; }
-namespace amc { struct _db_nsproto_curs; }
-namespace amc { struct _db_nsdb_curs; }
-namespace amc { struct _db_zd_substr_params_curs; }
-namespace amc { struct _db_ind_fconst_int_curs; }
-namespace amc { struct _db_fprefix_curs; }
-namespace amc { struct _db_ind_prefix_curs; }
-namespace amc { struct _db_ftrace_curs; }
-namespace amc { struct _db_fnoremove_curs; }
-namespace amc { struct _db_c_substr_field_curs; }
-namespace amc { struct _db_ctypelen_curs; }
-namespace amc { struct _db_c_ctypelen_curs; }
-namespace amc { struct _db_c_tempfield_curs; }
-namespace amc { struct _db_fbase_curs; }
-namespace amc { struct _db_ind_fcmap_curs; }
-namespace amc { struct _db_nossimfile_curs; }
-namespace amc { struct _db_gsymbol_curs; }
-namespace amc { struct _db_sortfld_curs; }
-namespace amc { struct _db_cget_curs; }
-namespace amc { struct _db_cd_temp_func_curs; }
-namespace amc { struct _db_cdecl_curs; }
-namespace amc { struct _db_zs_gen_perns_curs; }
-namespace amc { struct _db_hook_curs; }
-namespace amc { struct _db_charset_curs; }
-namespace amc { struct _db_nsinclude_curs; }
-namespace amc { struct _db_ssimvolatile_curs; }
-namespace amc { struct _db_funique_curs; }
-namespace amc { struct _db_fuserinit_curs; }
-namespace amc { struct dispatch_c_dispatch_msg_curs; }
-namespace amc { struct enumstr_c_fconst_curs; }
-namespace amc { struct enumstr_len_bh_enumstr_curs; }
-namespace amc { struct enumstr_len_bh_enumstr_unordcurs; }
-namespace amc { struct field_c_ffunc_curs; }
-namespace amc { struct field_c_fconst_curs; }
-namespace amc { struct field_zd_xref_keyfld_curs; }
-namespace amc { struct field_zs_fcmap_curs; }
-namespace amc { struct field_bh_bitfld_curs; }
-namespace amc { struct field_bh_bitfld_unordcurs; }
-namespace amc { struct func_funcarg_curs; }
-namespace amc { struct FGenXref_ind_seen_curs; }
-namespace amc { struct FGenXref_seen_curs; }
-namespace amc { struct ns_c_ctype_curs; }
-namespace amc { struct ns_c_func_curs; }
-namespace amc { struct ns_c_dispatch_curs; }
-namespace amc { struct ns_c_gstatic_curs; }
-namespace amc { struct ns_include_curs; }
-namespace amc { struct ns_c_ctype_ins_curs; }
-namespace amc { struct ns_c_dispsig_curs; }
-namespace amc { struct ns_c_parentns_curs; }
-namespace amc { struct ns_c_cppincl_curs; }
-namespace amc { struct ns_c_hdrincl_curs; }
-namespace amc { struct ns_c_fwddecl_curs; }
-namespace amc { struct ns_c_pnew_curs; }
-namespace amc { struct ns_c_outfile_curs; }
-namespace amc { struct ns_c_finput_curs; }
-namespace amc { struct ns_c_foutput_curs; }
-namespace amc { struct ns_c_fstep_curs; }
-namespace amc { struct ns_c_gsymbol_curs; }
-namespace amc { struct ns_c_nsinclude_curs; }
-namespace amc { struct reftype_zs_fprefix_curs; }
-namespace amc { struct target_c_targdep_curs; }
-namespace amc {
-}//pkey typedefs
-namespace amc {
-typedef void (*tclass_step_hook)();
-struct lpool_Lpblock {
-    lpool_Lpblock* next;
-};
-extern const char *amc_help;
-extern const char *amc_syntax;
-extern FDb _db;
-typedef void (*gen_step_hook)();
-typedef void (*tfunc_step_hook)();
+namespace amc { extern struct amc::FDb _db; }
+namespace amc { // hook_fcn_typedef
+    typedef void (*tclass_step_hook)(); // hook:amc.FTclass.step
+    typedef void (*gen_step_hook)(); // hook:amc.FGen.step
+    typedef void (*tfunc_step_hook)(); // hook:amc.FTfunc.step
+} // hook_decl
+namespace amc { // gen:ns_print_struct
 
 // --- amc.BltinId
 struct BltinId { // amc.BltinId
@@ -2363,8 +2330,6 @@ struct FDb { // amc.FDb
     i32                   fcompact_n;                               // number of elements in array
     amc::FFindrem*        findrem_lary[32];                         // level array
     i32                   findrem_n;                                // number of elements in array
-    amc::FTcursor*        tcursor_lary[32];                         // level array
-    i32                   tcursor_n;                                // number of elements in array
     amc::FFcurs*          fcurs_lary[32];                           // level array
     i32                   fcurs_n;                                  // number of elements in array
     amc::FCdflt*          cdflt_lary[32];                           // level array
@@ -2448,6 +2413,12 @@ struct FDb { // amc.FDb
     i32                   funique_n;                                // number of elements in array
     amc::FFuserinit*      fuserinit_lary[32];                       // level array
     i32                   fuserinit_n;                              // number of elements in array
+    amc::FFcurs**         ind_fcurs_buckets_elems;                  // pointer to bucket array
+    i32                   ind_fcurs_buckets_n;                      // number of elements in bucket array
+    i32                   ind_fcurs_n;                              // number of elements in the hash table
+    amc::FTcurs*          tcurs_lary[32];                           // level array
+    i32                   tcurs_n;                                  // number of elements in array
+    algo::cstring         cur_gen;                                  //
     bool                  has_ams_fwd_declare;                      //   false
     amc::trace            trace;                                    //
 };
@@ -5179,32 +5150,6 @@ bool                 findrem_XrefMaybe(amc::FFindrem &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-amc::FTcursor&       tcursor_Alloc() __attribute__((__warn_unused_result__, nothrow));
-// Allocate memory for new element. If out of memory, return NULL.
-amc::FTcursor*       tcursor_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-amc::FTcursor*       tcursor_InsertMaybe(const amcdb::Tcursor &value) __attribute__((nothrow));
-// Allocate space for one element. If no memory available, return NULL.
-void*                tcursor_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-bool                 tcursor_EmptyQ() __attribute__((nothrow));
-// Look up row by row id. Return NULL if out of range
-amc::FTcursor*       tcursor_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
-// Return pointer to last element of array, or NULL if array is empty
-amc::FTcursor*       tcursor_Last() __attribute__((nothrow, pure));
-// Return number of items in the pool
-i32                  tcursor_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Delete last element of array. Do nothing if array is empty.
-void                 tcursor_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-amc::FTcursor&       tcursor_qFind(u64 t) __attribute__((nothrow));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool                 tcursor_XrefMaybe(amc::FTcursor &row);
-
-// Allocate memory for new default row.
-// If out of memory, process is killed.
 amc::FFcurs&         fcurs_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
 amc::FFcurs*         fcurs_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -6090,6 +6035,49 @@ amc::FFuserinit&     fuserinit_qFind(u64 t) __attribute__((nothrow));
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 fuserinit_XrefMaybe(amc::FFuserinit &row);
 
+// Return true if hash is empty
+bool                 ind_fcurs_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+amc::FFcurs*         ind_fcurs_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Find row by key. If not found, create and x-reference a new row with with this key.
+amc::FFcurs&         ind_fcurs_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+i32                  ind_fcurs_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool                 ind_fcurs_InsertMaybe(amc::FFcurs& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void                 ind_fcurs_Remove(amc::FFcurs& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+void                 ind_fcurs_Reserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+amc::FTcurs&         tcurs_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+amc::FTcurs*         tcurs_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc::FTcurs*         tcurs_InsertMaybe(const amcdb::Tcurs &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                tcurs_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 tcurs_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+amc::FTcurs*         tcurs_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+amc::FTcurs*         tcurs_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  tcurs_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 tcurs_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 tcurs_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+amc::FTcurs&         tcurs_qFind(u64 t) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 tcurs_XrefMaybe(amc::FTcurs &row);
+
 // cursor points to valid item
 void                 _db_fsort_curs_Reset(_db_fsort_curs &curs, amc::FDb &parent);
 // cursor points to valid item
@@ -6761,14 +6749,6 @@ void                 _db_findrem_curs_Next(_db_findrem_curs &curs);
 // item access
 amc::FFindrem&       _db_findrem_curs_Access(_db_findrem_curs &curs);
 // cursor points to valid item
-void                 _db_tcursor_curs_Reset(_db_tcursor_curs &curs, amc::FDb &parent);
-// cursor points to valid item
-bool                 _db_tcursor_curs_ValidQ(_db_tcursor_curs &curs);
-// proceed to next item
-void                 _db_tcursor_curs_Next(_db_tcursor_curs &curs);
-// item access
-amc::FTcursor&       _db_tcursor_curs_Access(_db_tcursor_curs &curs);
-// cursor points to valid item
 void                 _db_fcurs_curs_Reset(_db_fcurs_curs &curs, amc::FDb &parent);
 // cursor points to valid item
 bool                 _db_fcurs_curs_ValidQ(_db_fcurs_curs &curs);
@@ -7013,6 +6993,14 @@ bool                 _db_fuserinit_curs_ValidQ(_db_fuserinit_curs &curs);
 void                 _db_fuserinit_curs_Next(_db_fuserinit_curs &curs);
 // item access
 amc::FFuserinit&     _db_fuserinit_curs_Access(_db_fuserinit_curs &curs);
+// cursor points to valid item
+void                 _db_tcurs_curs_Reset(_db_tcurs_curs &curs, amc::FDb &parent);
+// cursor points to valid item
+bool                 _db_tcurs_curs_ValidQ(_db_tcurs_curs &curs);
+// proceed to next item
+void                 _db_tcurs_curs_Next(_db_tcurs_curs &curs);
+// item access
+amc::FTcurs&         _db_tcurs_curs_Access(_db_tcurs_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
@@ -7684,10 +7672,13 @@ void                 FFconst_Uninit(amc::FFconst& fconst) __attribute__((nothrow
 
 // --- amc.FFcurs
 // create: amc.FDb.fcurs (Lary)
+// global access: ind_fcurs (Thash)
 // access: amc.FCtype.c_fcurs (Ptrary)
 struct FFcurs { // amc.FFcurs
+    amc::FFcurs*       ind_fcurs_next;         // hash next
     algo::Smallstr50   fcurs;                  //
     algo::Comment      comment;                //
+    amc::FField*       p_field;                // reference to parent row
     bool               ctype_c_fcurs_in_ary;   //   false  membership flag
 private:
     friend amc::FFcurs&         fcurs_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -7708,7 +7699,7 @@ algo::Smallstr100    field_Get(amc::FFcurs& fcurs) __attribute__((__warn_unused_
 
 algo::Smallstr50     ctype_Get(amc::FFcurs& fcurs) __attribute__((__warn_unused_result__, nothrow));
 
-algo::Smallstr50     curs_Get(amc::FFcurs& fcurs) __attribute__((__warn_unused_result__, nothrow));
+algo::Smallstr50     curstype_Get(amc::FFcurs& fcurs) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 void                 FFcurs_Init(amc::FFcurs& fcurs);
@@ -7792,6 +7783,7 @@ void                 FFdelay_Uninit(amc::FFdelay& fdelay) __attribute__((nothrow
 // access: amc.FFcmap.p_rightField (Upptr)
 // access: amc.FFcmdline.p_field (Upptr)
 // access: amc.FFconst.p_field (Upptr)
+// access: amc.FFcurs.p_field (Upptr)
 // access: amc.FFdec.p_field (Upptr)
 // access: amc.FFinput.p_field (Upptr)
 // access: amc.FFldoffset.p_field (Upptr)
@@ -10628,28 +10620,34 @@ void                 tary_CopyIn(amc::FTary &row, dmmeta::Tary &in) __attribute_
 void                 FTary_Init(amc::FTary& tary);
 void                 FTary_Uninit(amc::FTary& tary) __attribute__((nothrow));
 
-// --- amc.FTcursor
-// create: amc.FDb.tcursor (Lary)
-// access: amc.FTfunc.c_tcursor (Ptr)
-struct FTcursor { // amc.FTcursor
+// --- amc.FTcurs
+// create: amc.FDb.tcurs (Lary)
+// access: amc.FTfunc.c_tcurs (Ptr)
+struct FTcurs { // amc.FTcurs
     algo::Smallstr50   tfunc;     //
+    bool               dflt;      //   false  Generate cursor by default? (if not, require fcurs)
     algo::Comment      comment;   //
 private:
-    friend amc::FTcursor&       tcursor_Alloc() __attribute__((__warn_unused_result__, nothrow));
-    friend amc::FTcursor*       tcursor_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 tcursor_RemoveLast() __attribute__((nothrow));
-    FTcursor();
-    ~FTcursor();
-    FTcursor(const FTcursor&){ /*disallow copy constructor */}
-    void operator =(const FTcursor&){ /*disallow direct assignment */}
+    friend amc::FTcurs&         tcurs_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend amc::FTcurs*         tcurs_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 tcurs_RemoveAll() __attribute__((nothrow));
+    friend void                 tcurs_RemoveLast() __attribute__((nothrow));
+    FTcurs();
+    ~FTcurs();
+    FTcurs(const FTcurs&){ /*disallow copy constructor */}
+    void operator =(const FTcurs&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
-void                 tcursor_CopyOut(amc::FTcursor &row, amcdb::Tcursor &out) __attribute__((nothrow));
+void                 tcurs_CopyOut(amc::FTcurs &row, amcdb::Tcurs &out) __attribute__((nothrow));
 // Copy fields in to row
-void                 tcursor_CopyIn(amc::FTcursor &row, amcdb::Tcursor &in) __attribute__((nothrow));
+void                 tcurs_CopyIn(amc::FTcurs &row, amcdb::Tcurs &in) __attribute__((nothrow));
 
-void                 FTcursor_Uninit(amc::FTcursor& tcursor) __attribute__((nothrow));
+algo::Smallstr50     curstype_Get(amc::FTcurs& tcurs) __attribute__((__warn_unused_result__, nothrow));
+
+// Set all fields to initial values.
+void                 FTcurs_Init(amc::FTcurs& tcurs);
+void                 FTcurs_Uninit(amc::FTcurs& tcurs) __attribute__((nothrow));
 
 // --- amc.FTfunc
 // create: amc.FDb.tfunc (Lary)
@@ -10667,8 +10665,8 @@ struct FTfunc { // amc.FTfunc
     bool                   pure;                    //   false  OK to call fewer times than specified in text
     bool                   ismacro;                 //   false
     algo::Comment          comment;                 //
-    amc::FTcursor*         c_tcursor;               // optional pointer
     amc::tfunc_step_hook   step;                    //   NULL  Pointer to a function
+    amc::FTcurs*           c_tcurs;                 // optional pointer
     bool                   tclass_c_tfunc_in_ary;   //   false  membership flag
 private:
     friend amc::FTfunc&         tfunc_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -10690,13 +10688,13 @@ algo::Smallstr50     tclass_Get(amc::FTfunc& tfunc) __attribute__((__warn_unused
 
 algo::Smallstr50     name_Get(amc::FTfunc& tfunc) __attribute__((__warn_unused_result__, nothrow));
 
-// Insert row into pointer index. Return final membership status.
-bool                 c_tcursor_InsertMaybe(amc::FTfunc& tfunc, amc::FTcursor& row) __attribute__((nothrow));
-// Remove element from index. If element is not in index, do nothing.
-void                 c_tcursor_Remove(amc::FTfunc& tfunc, amc::FTcursor& row) __attribute__((nothrow));
-
 // Invoke function by pointer
 void                 step_Call(amc::FTfunc& tfunc) __attribute__((nothrow));
+
+// Insert row into pointer index. Return final membership status.
+bool                 c_tcurs_InsertMaybe(amc::FTfunc& tfunc, amc::FTcurs& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+void                 c_tcurs_Remove(amc::FTfunc& tfunc, amc::FTcurs& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FTfunc_Init(amc::FTfunc& tfunc);
@@ -10982,8 +10980,10 @@ bool                 TableId_ReadStrptrMaybe(amc::TableId &parent, algo::strptr 
 void                 TableId_Init(amc::TableId& parent);
 // print string representation of amc::TableId to string LHS, no header -- cprint:amc.TableId.String
 void                 TableId_Print(amc::TableId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace amc { // gen:ns_curstext
 
-struct ctype_zs_cfmt_curs {// cursor
+struct ctype_zs_cfmt_curs {// fcurs:amc.FCtype.zs_cfmt/curs
     typedef amc::FCfmt ChildType;
     amc::FCfmt* row;
     ctype_zs_cfmt_curs() {
@@ -10992,7 +10992,7 @@ struct ctype_zs_cfmt_curs {// cursor
 };
 
 
-struct ctype_c_field_curs {// cursor
+struct ctype_c_field_curs {// fcurs:amc.FCtype.c_field/curs
     typedef amc::FField ChildType;
     amc::FField** elems;
     u32 n_elems;
@@ -11001,7 +11001,7 @@ struct ctype_c_field_curs {// cursor
 };
 
 
-struct ctype_c_static_curs {// cursor
+struct ctype_c_static_curs {// fcurs:amc.FCtype.c_static/curs
     typedef amc::FStatictuple ChildType;
     amc::FStatictuple** elems;
     u32 n_elems;
@@ -11010,7 +11010,7 @@ struct ctype_c_static_curs {// cursor
 };
 
 
-struct ctype_c_parent_curs {// cursor
+struct ctype_c_parent_curs {// fcurs:amc.FCtype.c_parent/curs
     typedef amc::FCtype ChildType;
     amc::FCtype** elems;
     u32 n_elems;
@@ -11019,7 +11019,7 @@ struct ctype_c_parent_curs {// cursor
 };
 
 
-struct ctype_c_datafld_curs {// cursor
+struct ctype_c_datafld_curs {// fcurs:amc.FCtype.c_datafld/curs
     typedef amc::FField ChildType;
     amc::FField** elems;
     u32 n_elems;
@@ -11028,7 +11028,7 @@ struct ctype_c_datafld_curs {// cursor
 };
 
 
-struct ctype_zd_inst_curs {// cursor
+struct ctype_zd_inst_curs {// fcurs:amc.FCtype.zd_inst/curs
     typedef amc::FField ChildType;
     amc::FField* row;
     ctype_zd_inst_curs() {
@@ -11037,7 +11037,7 @@ struct ctype_zd_inst_curs {// cursor
 };
 
 
-struct ctype_zs_xref_curs {// cursor
+struct ctype_zs_xref_curs {// fcurs:amc.FCtype.zs_xref/curs
     typedef amc::FXref ChildType;
     amc::FXref* row;
     ctype_zs_xref_curs() {
@@ -11046,7 +11046,7 @@ struct ctype_zs_xref_curs {// cursor
 };
 
 
-struct ctype_c_ffunc_curs {// cursor
+struct ctype_c_ffunc_curs {// fcurs:amc.FCtype.c_ffunc/curs
     typedef amc::FFunc ChildType;
     amc::FFunc** elems;
     u32 n_elems;
@@ -11055,7 +11055,7 @@ struct ctype_c_ffunc_curs {// cursor
 };
 
 
-struct ctype_zd_cafter_curs {// cursor
+struct ctype_zd_cafter_curs {// fcurs:amc.FCtype.zd_cafter/curs
     typedef amc::FCafter ChildType;
     amc::FCafter* row;
     ctype_zd_cafter_curs() {
@@ -11064,7 +11064,7 @@ struct ctype_zd_cafter_curs {// cursor
 };
 
 
-struct ctype_zd_access_curs {// cursor
+struct ctype_zd_access_curs {// fcurs:amc.FCtype.zd_access/curs
     typedef amc::FField ChildType;
     amc::FField* row;
     ctype_zd_access_curs() {
@@ -11073,7 +11073,7 @@ struct ctype_zd_access_curs {// cursor
 };
 
 
-struct ctype_c_fcurs_curs {// cursor
+struct ctype_c_fcurs_curs {// fcurs:amc.FCtype.c_fcurs/curs
     typedef amc::FFcurs ChildType;
     amc::FFcurs** elems;
     u32 n_elems;
@@ -11082,7 +11082,7 @@ struct ctype_c_fcurs_curs {// cursor
 };
 
 
-struct ctype_c_cdecl_curs {// cursor
+struct ctype_c_cdecl_curs {// fcurs:amc.FCtype.c_cdecl/curs
     typedef amc::FCdecl ChildType;
     amc::FCdecl** elems;
     u32 n_elems;
@@ -11091,7 +11091,7 @@ struct ctype_c_cdecl_curs {// cursor
 };
 
 
-struct tclass_c_tfunc_curs {// cursor
+struct tclass_c_tfunc_curs {// fcurs:amc.FTclass.c_tfunc/curs
     typedef amc::FTfunc ChildType;
     amc::FTfunc** elems;
     u32 n_elems;
@@ -11412,7 +11412,7 @@ struct _db_ptrary_curs {// cursor
 };
 
 
-struct _db_c_ctype_sorted_curs {// cursor
+struct _db_c_ctype_sorted_curs {// fcurs:amc.FDb.c_ctype_sorted/curs
     typedef amc::FCtype ChildType;
     amc::FCtype** elems;
     u32 n_elems;
@@ -11481,7 +11481,7 @@ struct _db_fconst_curs {// cursor
 };
 
 
-struct _db_c_ns_sorted_curs {// cursor
+struct _db_c_ns_sorted_curs {// fcurs:amc.FDb.c_ns_sorted/curs
     typedef amc::FNs ChildType;
     amc::FNs** elems;
     u32 n_elems;
@@ -11538,7 +11538,7 @@ struct _db_fbigend_curs {// cursor
 };
 
 
-struct _db_zsl_ctype_pack_tran_curs {// cursor
+struct _db_zsl_ctype_pack_tran_curs {// fcurs:amc.FDb.zsl_ctype_pack_tran/curs
     typedef amc::FCtype ChildType;
     amc::FCtype* row;
     _db_zsl_ctype_pack_tran_curs() {
@@ -11619,7 +11619,7 @@ struct _db_dispsig_curs {// cursor
 };
 
 
-struct _db_c_dispsig_sorted_curs {// cursor
+struct _db_c_dispsig_sorted_curs {// fcurs:amc.FDb.c_dispsig_sorted/curs
     typedef amc::FDispsig ChildType;
     amc::FDispsig** elems;
     u32 n_elems;
@@ -11628,7 +11628,7 @@ struct _db_c_dispsig_sorted_curs {// cursor
 };
 
 
-struct _db_zs_sig_visit_curs {// cursor
+struct _db_zs_sig_visit_curs {// fcurs:amc.FDb.zs_sig_visit/curs
     typedef amc::FCtype ChildType;
     amc::FCtype* row;
     _db_zs_sig_visit_curs() {
@@ -11781,14 +11781,6 @@ struct _db_findrem_curs {// cursor
 };
 
 
-struct _db_tcursor_curs {// cursor
-    typedef amc::FTcursor ChildType;
-    amc::FDb *parent;
-    i64 index;
-    _db_tcursor_curs(){ parent=NULL; index=0; }
-};
-
-
 struct _db_fcurs_curs {// cursor
     typedef amc::FFcurs ChildType;
     amc::FDb *parent;
@@ -11837,7 +11829,7 @@ struct _db_fcmap_curs {// cursor
 };
 
 
-struct _db_zs_ordkeyfield_curs {// cursor
+struct _db_zs_ordkeyfield_curs {// fcurs:amc.FDb.zs_ordkeyfield/curs
     typedef amc::FField ChildType;
     amc::FField* row;
     _db_zs_ordkeyfield_curs() {
@@ -11862,7 +11854,7 @@ struct _db_nsdb_curs {// cursor
 };
 
 
-struct _db_zd_substr_params_curs {// cursor
+struct _db_zd_substr_params_curs {// fcurs:amc.FDb.zd_substr_params/curs
     typedef amc::FSubstr ChildType;
     amc::FSubstr* row;
     _db_zd_substr_params_curs() {
@@ -11895,7 +11887,7 @@ struct _db_fnoremove_curs {// cursor
 };
 
 
-struct _db_c_substr_field_curs {// cursor
+struct _db_c_substr_field_curs {// fcurs:amc.FDb.c_substr_field/curs
     typedef amc::FSubstr ChildType;
     amc::FSubstr** elems;
     u32 n_elems;
@@ -11912,7 +11904,7 @@ struct _db_ctypelen_curs {// cursor
 };
 
 
-struct _db_c_ctypelen_curs {// cursor
+struct _db_c_ctypelen_curs {// fcurs:amc.FDb.c_ctypelen/curs
     typedef amc::FCtypelen ChildType;
     amc::FCtypelen** elems;
     u32 n_elems;
@@ -11921,7 +11913,7 @@ struct _db_c_ctypelen_curs {// cursor
 };
 
 
-struct _db_c_tempfield_curs {// cursor
+struct _db_c_tempfield_curs {// fcurs:amc.FDb.c_tempfield/curs
     typedef amc::FField ChildType;
     amc::FField** elems;
     u32 n_elems;
@@ -11970,10 +11962,10 @@ struct _db_cget_curs {// cursor
 };
 
 
-struct _db_cd_temp_func_curs {// cursor
+struct _db_cd_temp_func_curs {// fcurs:amc.FDb.cd_temp_func/curs
     typedef amc::FFunc ChildType;
     amc::FFunc* row;
-    amc::FFunc* head;
+    amc::FFunc** head; // address of head element
     _db_cd_temp_func_curs() {
         row = NULL;
         head = NULL;
@@ -11989,7 +11981,7 @@ struct _db_cdecl_curs {// cursor
 };
 
 
-struct _db_zs_gen_perns_curs {// cursor
+struct _db_zs_gen_perns_curs {// fcurs:amc.FDb.zs_gen_perns/curs
     typedef amc::FGen ChildType;
     amc::FGen* row;
     _db_zs_gen_perns_curs() {
@@ -12046,7 +12038,15 @@ struct _db_fuserinit_curs {// cursor
 };
 
 
-struct dispatch_c_dispatch_msg_curs {// cursor
+struct _db_tcurs_curs {// cursor
+    typedef amc::FTcurs ChildType;
+    amc::FDb *parent;
+    i64 index;
+    _db_tcurs_curs(){ parent=NULL; index=0; }
+};
+
+
+struct dispatch_c_dispatch_msg_curs {// fcurs:amc.FDispatch.c_dispatch_msg/curs
     typedef amc::FDispatchmsg ChildType;
     amc::FDispatchmsg** elems;
     u32 n_elems;
@@ -12055,7 +12055,7 @@ struct dispatch_c_dispatch_msg_curs {// cursor
 };
 
 
-struct enumstr_c_fconst_curs {// cursor
+struct enumstr_c_fconst_curs {// fcurs:amc.FEnumstr.c_fconst/curs
     typedef amc::FFconst ChildType;
     amc::FFconst** elems;
     u32 n_elems;
@@ -12076,7 +12076,7 @@ struct enumstr_len_bh_enumstr_curs {
 };
 
 
-struct field_c_ffunc_curs {// cursor
+struct field_c_ffunc_curs {// fcurs:amc.FField.c_ffunc/curs
     typedef amc::FFunc ChildType;
     amc::FFunc** elems;
     u32 n_elems;
@@ -12085,7 +12085,7 @@ struct field_c_ffunc_curs {// cursor
 };
 
 
-struct field_c_fconst_curs {// cursor
+struct field_c_fconst_curs {// fcurs:amc.FField.c_fconst/curs
     typedef amc::FFconst ChildType;
     amc::FFconst** elems;
     u32 n_elems;
@@ -12094,7 +12094,7 @@ struct field_c_fconst_curs {// cursor
 };
 
 
-struct field_zd_xref_keyfld_curs {// cursor
+struct field_zd_xref_keyfld_curs {// fcurs:amc.FField.zd_xref_keyfld/curs
     typedef amc::FXref ChildType;
     amc::FXref* row;
     field_zd_xref_keyfld_curs() {
@@ -12103,7 +12103,7 @@ struct field_zd_xref_keyfld_curs {// cursor
 };
 
 
-struct field_zs_fcmap_curs {// cursor
+struct field_zs_fcmap_curs {// fcurs:amc.FField.zs_fcmap/curs
     typedef amc::FFcmap ChildType;
     amc::FFcmap* row;
     field_zs_fcmap_curs() {
@@ -12141,7 +12141,7 @@ struct FGenXref_seen_curs {// cursor
 };
 
 
-struct ns_c_ctype_curs {// cursor
+struct ns_c_ctype_curs {// fcurs:amc.FNs.c_ctype/curs
     typedef amc::FCtype ChildType;
     amc::FCtype** elems;
     u32 n_elems;
@@ -12150,7 +12150,7 @@ struct ns_c_ctype_curs {// cursor
 };
 
 
-struct ns_c_func_curs {// cursor
+struct ns_c_func_curs {// fcurs:amc.FNs.c_func/curs
     typedef amc::FFunc ChildType;
     amc::FFunc** elems;
     u32 n_elems;
@@ -12159,7 +12159,7 @@ struct ns_c_func_curs {// cursor
 };
 
 
-struct ns_c_dispatch_curs {// cursor
+struct ns_c_dispatch_curs {// fcurs:amc.FNs.c_dispatch/curs
     typedef amc::FDispatch ChildType;
     amc::FDispatch** elems;
     u32 n_elems;
@@ -12168,7 +12168,7 @@ struct ns_c_dispatch_curs {// cursor
 };
 
 
-struct ns_c_gstatic_curs {// cursor
+struct ns_c_gstatic_curs {// fcurs:amc.FNs.c_gstatic/curs
     typedef amc::FGstatic ChildType;
     amc::FGstatic** elems;
     u32 n_elems;
@@ -12186,7 +12186,7 @@ struct ns_include_curs {// cursor
 };
 
 
-struct ns_c_ctype_ins_curs {// cursor
+struct ns_c_ctype_ins_curs {// fcurs:amc.FNs.c_ctype_ins/curs
     typedef amc::FCtype ChildType;
     amc::FCtype** elems;
     u32 n_elems;
@@ -12195,7 +12195,7 @@ struct ns_c_ctype_ins_curs {// cursor
 };
 
 
-struct ns_c_dispsig_curs {// cursor
+struct ns_c_dispsig_curs {// fcurs:amc.FNs.c_dispsig/curs
     typedef amc::FDispsig ChildType;
     amc::FDispsig** elems;
     u32 n_elems;
@@ -12204,7 +12204,7 @@ struct ns_c_dispsig_curs {// cursor
 };
 
 
-struct ns_c_parentns_curs {// cursor
+struct ns_c_parentns_curs {// fcurs:amc.FNs.c_parentns/curs
     typedef amc::FNs ChildType;
     amc::FNs** elems;
     u32 n_elems;
@@ -12213,7 +12213,7 @@ struct ns_c_parentns_curs {// cursor
 };
 
 
-struct ns_c_cppincl_curs {// cursor
+struct ns_c_cppincl_curs {// fcurs:amc.FNs.c_cppincl/curs
     typedef amc::FNs ChildType;
     amc::FNs** elems;
     u32 n_elems;
@@ -12222,7 +12222,7 @@ struct ns_c_cppincl_curs {// cursor
 };
 
 
-struct ns_c_hdrincl_curs {// cursor
+struct ns_c_hdrincl_curs {// fcurs:amc.FNs.c_hdrincl/curs
     typedef amc::FNs ChildType;
     amc::FNs** elems;
     u32 n_elems;
@@ -12231,7 +12231,7 @@ struct ns_c_hdrincl_curs {// cursor
 };
 
 
-struct ns_c_fwddecl_curs {// cursor
+struct ns_c_fwddecl_curs {// fcurs:amc.FNs.c_fwddecl/curs
     typedef amc::FFwddecl ChildType;
     amc::FFwddecl** elems;
     u32 n_elems;
@@ -12240,7 +12240,7 @@ struct ns_c_fwddecl_curs {// cursor
 };
 
 
-struct ns_c_pnew_curs {// cursor
+struct ns_c_pnew_curs {// fcurs:amc.FNs.c_pnew/curs
     typedef amc::FPnew ChildType;
     amc::FPnew** elems;
     u32 n_elems;
@@ -12249,7 +12249,7 @@ struct ns_c_pnew_curs {// cursor
 };
 
 
-struct ns_c_outfile_curs {// cursor
+struct ns_c_outfile_curs {// fcurs:amc.FNs.c_outfile/curs
     typedef amc::FOutfile ChildType;
     amc::FOutfile** elems;
     u32 n_elems;
@@ -12258,7 +12258,7 @@ struct ns_c_outfile_curs {// cursor
 };
 
 
-struct ns_c_finput_curs {// cursor
+struct ns_c_finput_curs {// fcurs:amc.FNs.c_finput/curs
     typedef amc::FFinput ChildType;
     amc::FFinput** elems;
     u32 n_elems;
@@ -12267,7 +12267,7 @@ struct ns_c_finput_curs {// cursor
 };
 
 
-struct ns_c_foutput_curs {// cursor
+struct ns_c_foutput_curs {// fcurs:amc.FNs.c_foutput/curs
     typedef amc::FFoutput ChildType;
     amc::FFoutput** elems;
     u32 n_elems;
@@ -12276,7 +12276,7 @@ struct ns_c_foutput_curs {// cursor
 };
 
 
-struct ns_c_fstep_curs {// cursor
+struct ns_c_fstep_curs {// fcurs:amc.FNs.c_fstep/curs
     typedef amc::FFstep ChildType;
     amc::FFstep** elems;
     u32 n_elems;
@@ -12285,7 +12285,7 @@ struct ns_c_fstep_curs {// cursor
 };
 
 
-struct ns_c_gsymbol_curs {// cursor
+struct ns_c_gsymbol_curs {// fcurs:amc.FNs.c_gsymbol/curs
     typedef amc::FGsymbol ChildType;
     amc::FGsymbol** elems;
     u32 n_elems;
@@ -12294,7 +12294,7 @@ struct ns_c_gsymbol_curs {// cursor
 };
 
 
-struct ns_c_nsinclude_curs {// cursor
+struct ns_c_nsinclude_curs {// fcurs:amc.FNs.c_nsinclude/curs
     typedef amc::FNsinclude ChildType;
     amc::FNsinclude** elems;
     u32 n_elems;
@@ -12303,7 +12303,7 @@ struct ns_c_nsinclude_curs {// cursor
 };
 
 
-struct reftype_zs_fprefix_curs {// cursor
+struct reftype_zs_fprefix_curs {// fcurs:amc.FReftype.zs_fprefix/curs
     typedef amc::FFprefix ChildType;
     amc::FFprefix* row;
     reftype_zs_fprefix_curs() {
@@ -12312,7 +12312,7 @@ struct reftype_zs_fprefix_curs {// cursor
 };
 
 
-struct target_c_targdep_curs {// cursor
+struct target_c_targdep_curs {// fcurs:amc.FTarget.c_targdep/curs
     typedef amc::FTargdep ChildType;
     amc::FTargdep** elems;
     u32 n_elems;
@@ -12320,6 +12320,8 @@ struct target_c_targdep_curs {// cursor
     target_c_targdep_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
+} // gen:ns_curstext
+namespace amc { // gen:ns_func
 // User-implemented function from gstatic:amc.FDb.tclass
 void                 tclass_Atree();
 // User-implemented function from gstatic:amc.FDb.tclass
@@ -12761,8 +12763,6 @@ void                 tfunc_Field2_ReadStrptrMaybe();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Global_ReadArgv();
 // User-implemented function from gstatic:amc.FDb.tfunc
-void                 tfunc_Global_N();
-// User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Global_MainArgs();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Global_main();
@@ -12907,6 +12907,8 @@ void                 tfunc_Llist_qLast();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Llist_curs();
 // User-implemented function from gstatic:amc.FDb.tfunc
+void                 tfunc_Llist_delcurs();
+// User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Lpool_Init();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Lpool_FreeMem();
@@ -13004,6 +13006,8 @@ void                 tfunc_Ptrary_Reserve();
 void                 tfunc_Ptrary_Uninit();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Ptrary_curs();
+// User-implemented function from gstatic:amc.FDb.tfunc
+void                 tfunc_Ptrary_oncecurs();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_RegxSql_Init();
 // User-implemented function from gstatic:amc.FDb.tfunc
@@ -13275,6 +13279,8 @@ void                 gen_check_cascdel();
 // User-implemented function from gstatic:amc.FDb.gen
 void                 gen_check_cpptype();
 // User-implemented function from gstatic:amc.FDb.gen
+void                 gen_check_fcurs();
+// User-implemented function from gstatic:amc.FDb.gen
 void                 gen_check_prefix();
 // User-implemented function from gstatic:amc.FDb.gen
 void                 gen_check_bitfld();
@@ -13307,17 +13313,15 @@ void                 gen_xref2();
 // User-implemented function from gstatic:amc.FDb.gen
 void                 gen_check_xref();
 // User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_fwddecl();
-// User-implemented function from gstatic:amc.FDb.gen
 void                 gen_ns_enums();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_fwddecl2();
 // User-implemented function from gstatic:amc.FDb.gen
 void                 gen_ns_pkeytypedef();
 // User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_begin();
-// User-implemented function from gstatic:amc.FDb.gen
 void                 gen_ns_field();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_fwddecl();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_fwddecl2();
 // User-implemented function from gstatic:amc.FDb.gen
 void                 gen_ns_gstatic();
 // User-implemented function from gstatic:amc.FDb.gen
@@ -13362,11 +13366,12 @@ void                 gen_ns_operators();
 void                 gen_ns_check_lim();
 // User-implemented function from gstatic:amc.FDb.gen
 void                 gen_ns_write();
-} // end namespace amc
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const amc::BltinId &row);// cfmt:amc.BltinId.String
 inline algo::cstring &operator <<(algo::cstring &str, const amc::Enumstr &row);// cfmt:amc.Enumstr.String

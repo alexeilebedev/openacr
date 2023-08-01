@@ -102,7 +102,7 @@ abt::_db_bh_syscmd_curs::~_db_bh_syscmd_curs() {
 
 }
 
-namespace abt { // gsymbol:abt/dev.opt_type
+namespace abt { // gen:ns_gsymbol
     const char* dev_opt_type_AR("AR");
     const char* dev_opt_type_C("C");
     const char* dev_opt_type_CC("CC");
@@ -111,8 +111,8 @@ namespace abt { // gsymbol:abt/dev.opt_type
     const char* dev_opt_type_IGNOREME("IGNOREME");
     const char* dev_opt_type_LINK("LINK");
     const char* dev_opt_type_RC("RC");
-}
-namespace abt {
+} // gen:ns_gsymbol
+namespace abt { // gen:ns_print_proto
     static bool          targdep_InputMaybe(dev::Targdep &elem) __attribute__((nothrow));
     static bool          tool_opt_InputMaybe(dev::ToolOpt &elem) __attribute__((nothrow));
     static bool          target_InputMaybe(dev::Target &elem) __attribute__((nothrow));
@@ -142,7 +142,7 @@ namespace abt {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace abt
+} // gen:ns_print_proto
 
 // --- abt.FArch.msghdr.CopyOut
 // Copy fields out of row

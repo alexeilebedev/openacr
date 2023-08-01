@@ -961,7 +961,8 @@ inline bool amc_vis::_db_zd_select_curs_ValidQ(_db_zd_select_curs &curs) {
 // --- amc_vis.FDb.zd_select_curs.Next
 // proceed to next item
 inline void amc_vis::_db_zd_select_curs_Next(_db_zd_select_curs &curs) {
-    curs.row = (*curs.row).zd_select_next;
+    amc_vis::FCtype *next = (*curs.row).zd_select_next;
+    curs.row = next;
 }
 
 // --- amc_vis.FDb.zd_select_curs.Access
@@ -1391,7 +1392,8 @@ inline bool amc_vis::node_zd_nodedep_out_curs_ValidQ(node_zd_nodedep_out_curs &c
 // --- amc_vis.FNode.zd_nodedep_out_curs.Next
 // proceed to next item
 inline void amc_vis::node_zd_nodedep_out_curs_Next(node_zd_nodedep_out_curs &curs) {
-    curs.row = (*curs.row).zd_nodedep_out_next;
+    amc_vis::FNodedep *next = (*curs.row).zd_nodedep_out_next;
+    curs.row = next;
 }
 
 // --- amc_vis.FNode.zd_nodedep_out_curs.Access
@@ -1415,7 +1417,8 @@ inline bool amc_vis::node_zd_nodedep_in_curs_ValidQ(node_zd_nodedep_in_curs &cur
 // --- amc_vis.FNode.zd_nodedep_in_curs.Next
 // proceed to next item
 inline void amc_vis::node_zd_nodedep_in_curs_Next(node_zd_nodedep_in_curs &curs) {
-    curs.row = (*curs.row).zd_nodedep_in_next;
+    amc_vis::FNodedep *next = (*curs.row).zd_nodedep_in_next;
+    curs.row = next;
 }
 
 // --- amc_vis.FNode.zd_nodedep_in_curs.Access
@@ -1439,7 +1442,8 @@ inline bool amc_vis::node_zd_link_out_curs_ValidQ(node_zd_link_out_curs &curs) {
 // --- amc_vis.FNode.zd_link_out_curs.Next
 // proceed to next item
 inline void amc_vis::node_zd_link_out_curs_Next(node_zd_link_out_curs &curs) {
-    curs.row = (*curs.row).zd_link_out_next;
+    amc_vis::Link *next = (*curs.row).zd_link_out_next;
+    curs.row = next;
 }
 
 // --- amc_vis.FNode.zd_link_out_curs.Access
@@ -1463,7 +1467,8 @@ inline bool amc_vis::node_zd_link_in_curs_ValidQ(node_zd_link_in_curs &curs) {
 // --- amc_vis.FNode.zd_link_in_curs.Next
 // proceed to next item
 inline void amc_vis::node_zd_link_in_curs_Next(node_zd_link_in_curs &curs) {
-    curs.row = (*curs.row).zd_link_in_next;
+    amc_vis::Link *next = (*curs.row).zd_link_in_next;
+    curs.row = next;
 }
 
 // --- amc_vis.FNode.zd_link_in_curs.Access
@@ -1761,7 +1766,8 @@ inline bool amc_vis::link_zd_linkdep_out_curs_ValidQ(link_zd_linkdep_out_curs &c
 // --- amc_vis.Link.zd_linkdep_out_curs.Next
 // proceed to next item
 inline void amc_vis::link_zd_linkdep_out_curs_Next(link_zd_linkdep_out_curs &curs) {
-    curs.row = (*curs.row).zd_linkdep_out_next;
+    amc_vis::Linkdep *next = (*curs.row).zd_linkdep_out_next;
+    curs.row = next;
 }
 
 // --- amc_vis.Link.zd_linkdep_out_curs.Access
@@ -1785,7 +1791,8 @@ inline bool amc_vis::link_zd_linkdep_in_curs_ValidQ(link_zd_linkdep_in_curs &cur
 // --- amc_vis.Link.zd_linkdep_in_curs.Next
 // proceed to next item
 inline void amc_vis::link_zd_linkdep_in_curs_Next(link_zd_linkdep_in_curs &curs) {
-    curs.row = (*curs.row).zd_linkdep_in_next;
+    amc_vis::Linkdep *next = (*curs.row).zd_linkdep_in_next;
+    curs.row = next;
 }
 
 // --- amc_vis.Link.zd_linkdep_in_curs.Access

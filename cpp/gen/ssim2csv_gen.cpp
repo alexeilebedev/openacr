@@ -47,7 +47,7 @@ const char *ssim2csv_syntax =
 " -ignoreQuote:flag\n"
 ;
 } // namespace ssim2csv
-namespace ssim2csv {
+namespace ssim2csv { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
@@ -55,7 +55,7 @@ namespace ssim2csv {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace ssim2csv
+} // gen:ns_print_proto
 
 // --- ssim2csv.trace..Print
 // print string representation of ssim2csv::trace to string LHS, no header -- cprint:ssim2csv.trace.String

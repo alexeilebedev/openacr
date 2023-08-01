@@ -10,6 +10,7 @@
 #pragma once
 #include "include/gen/algo_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 extern const char *  dmmeta_Buftype_pnewtype_Memptr;      // Memptr       fconst:dmmeta.Buftype.pnewtype/Memptr
 extern const char *  dmmeta_Buftype_pnewtype_AmsStream;   // AmsStream    fconst:dmmeta.Buftype.pnewtype/AmsStream
 extern const char *  dmmeta_Buftype_pnewtype_Fixed;       // Fixed        fconst:dmmeta.Buftype.pnewtype/Fixed
@@ -109,7 +110,7 @@ enum dmmeta_FieldIdEnum {                        // dmmeta.FieldId.value
     ,dmmeta_FieldId_casesens              = 69
     ,dmmeta_FieldId_fconst                = 70
     ,dmmeta_FieldId_fcurs                 = 71
-    ,dmmeta_FieldId_curs                  = 72
+    ,dmmeta_FieldId_curstype              = 72
     ,dmmeta_FieldId_nplace                = 73
     ,dmmeta_FieldId_fixedfmt              = 74
     ,dmmeta_FieldId_fstep                 = 75
@@ -386,10 +387,10 @@ extern const char *  dmmeta_Sorttype_sorttype_QuickSort;       // QuickSort     
 extern const char *  dmmeta_Sorttype_sorttype_InsertionSort;   // InsertionSort    fconst:dmmeta.Sorttype.sorttype/InsertionSort
 extern const char *  dmmeta_Sorttype_sorttype_HeapSort;        // HeapSort         fconst:dmmeta.Sorttype.sorttype/HeapSort
 extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_bltin;                 // amcdb.bltin                  fconst:dmmeta.Ssimfile.ssimfile/amcdb.bltin
-extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_curs;                  // amcdb.curs                   fconst:dmmeta.Ssimfile.ssimfile/amcdb.curs
+extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_curstype;              // amcdb.curstype               fconst:dmmeta.Ssimfile.ssimfile/amcdb.curstype
 extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_gen;                   // amcdb.gen                    fconst:dmmeta.Ssimfile.ssimfile/amcdb.gen
 extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_tclass;                // amcdb.tclass                 fconst:dmmeta.Ssimfile.ssimfile/amcdb.tclass
-extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_tcursor;               // amcdb.tcursor                fconst:dmmeta.Ssimfile.ssimfile/amcdb.tcursor
+extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_tcurs;                 // amcdb.tcurs                  fconst:dmmeta.Ssimfile.ssimfile/amcdb.tcurs
 extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_tfunc;                 // amcdb.tfunc                  fconst:dmmeta.Ssimfile.ssimfile/amcdb.tfunc
 extern const char *  dmmeta_Ssimfile_ssimfile_amsdb_proctype;              // amsdb.proctype               fconst:dmmeta.Ssimfile.ssimfile/amsdb.proctype
 extern const char *  dmmeta_Ssimfile_ssimfile_amsdb_streamtype;            // amsdb.streamtype             fconst:dmmeta.Ssimfile.ssimfile/amsdb.streamtype
@@ -563,6 +564,53 @@ extern const char *  dmmeta_Strfmt_strfmt_Tuple;     // Tuple      fconst:dmmeta
 extern const char *  dmmeta_Strtype_strtype_rpascal;    // rpascal     fconst:dmmeta.Strtype.strtype/rpascal
 extern const char *  dmmeta_Strtype_strtype_rightpad;   // rightpad    fconst:dmmeta.Strtype.strtype/rightpad
 extern const char *  dmmeta_Strtype_strtype_leftpad;    // leftpad     fconst:dmmeta.Strtype.strtype/leftpad
+namespace dmmeta { // gen:ns_pkeytypedef
+    typedef algo::Smallstr50 BuftypePkey;
+    typedef u8 BuftypeIdPkey;
+    typedef algo::Smallstr50 CafterPkey;
+    typedef algo::Smallstr250 CppExprPkey;
+    typedef algo::Smallstr100 CfmtPkey;
+    typedef algo::Smallstr20 CppkeywordPkey;
+    typedef algo::Smallstr50 CtypePkey;
+    typedef algo::Smallstr50 DispatchPkey;
+    typedef algo::Smallstr100 DispatchMsgPkey;
+    typedef algo::Smallstr50 DispsigPkey;
+    typedef algo::Smallstr50 FbufdirPkey;
+    typedef algo::Smallstr50 FbuftypePkey;
+    typedef algo::Smallstr250 FcmapPkey;
+    typedef algo::Smallstr100 FconstPkey;
+    typedef algo::Smallstr50 FcursPkey;
+    typedef algo::Smallstr100 FieldPkey;
+    typedef algo::Smallstr5 FprefixPkey;
+    typedef algo::Smallstr100 FstepPkey;
+    typedef algo::Smallstr100 FuncPkey;
+    typedef algo::Smallstr100 FwddeclPkey;
+    typedef algo::Smallstr50 GsymbolPkey;
+    typedef algo::Smallstr50 HashtypePkey;
+    typedef algo::Smallstr5 ListtypePkey;
+    typedef algo::Smallstr50 LogcatPkey;
+    typedef algo::Smallstr16 NsPkey;
+    typedef algo::Smallstr16 NsdbPkey;
+    typedef algo::Smallstr50 NsincludePkey;
+    typedef algo::Smallstr50 NstypePkey;
+    typedef algo::Smallstr100 PnewPkey;
+    typedef algo::Smallstr50 PrintfmtPkey;
+    typedef algo::Smallstr50 ReftypePkey;
+    typedef u8 ReftypeIdPkey;
+    typedef algo::Smallstr100 SmallstrPkey;
+    typedef algo::Smallstr50 SorttypePkey;
+    typedef algo::Smallstr50 SsimfilePkey;
+    typedef algo::Smallstr50 SteptypePkey;
+    typedef algo::Smallstr50 StrfmtPkey;
+    typedef algo::Smallstr50 StrtypePkey;
+    typedef algo::Smallstr100 SubstrPkey;
+    typedef algo::Smallstr100 TracefldPkey;
+    typedef algo::Smallstr50 TracerecPkey;
+    typedef algo::Smallstr100 XrefPkey;
+} // gen:ns_pkeytypedef
+namespace dmmeta { // gen:ns_field
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace dmmeta { struct Anonfld; }
 namespace dmmeta { struct Argvtype; }
 namespace dmmeta { struct Basepool; }
@@ -678,51 +726,7 @@ namespace dmmeta { struct Tracerec; }
 namespace dmmeta { struct Typefld; }
 namespace dmmeta { struct Usertracefld; }
 namespace dmmeta { struct Xref; }
-namespace dmmeta {
-    typedef algo::Smallstr50 BuftypePkey;
-    typedef u8 BuftypeIdPkey;
-    typedef algo::Smallstr50 CafterPkey;
-    typedef algo::Smallstr250 CppExprPkey;
-    typedef algo::Smallstr100 CfmtPkey;
-    typedef algo::Smallstr20 CppkeywordPkey;
-    typedef algo::Smallstr50 CtypePkey;
-    typedef algo::Smallstr50 DispatchPkey;
-    typedef algo::Smallstr100 DispatchMsgPkey;
-    typedef algo::Smallstr50 DispsigPkey;
-    typedef algo::Smallstr50 FbufdirPkey;
-    typedef algo::Smallstr50 FbuftypePkey;
-    typedef algo::Smallstr250 FcmapPkey;
-    typedef algo::Smallstr100 FconstPkey;
-    typedef algo::Smallstr50 FcursPkey;
-    typedef algo::Smallstr100 FieldPkey;
-    typedef algo::Smallstr5 FprefixPkey;
-    typedef algo::Smallstr100 FstepPkey;
-    typedef algo::Smallstr100 FuncPkey;
-    typedef algo::Smallstr100 FwddeclPkey;
-    typedef algo::Smallstr50 GsymbolPkey;
-    typedef algo::Smallstr50 HashtypePkey;
-    typedef algo::Smallstr5 ListtypePkey;
-    typedef algo::Smallstr50 LogcatPkey;
-    typedef algo::Smallstr16 NsPkey;
-    typedef algo::Smallstr16 NsdbPkey;
-    typedef algo::Smallstr50 NsincludePkey;
-    typedef algo::Smallstr50 NstypePkey;
-    typedef algo::Smallstr100 PnewPkey;
-    typedef algo::Smallstr50 PrintfmtPkey;
-    typedef algo::Smallstr50 ReftypePkey;
-    typedef u8 ReftypeIdPkey;
-    typedef algo::Smallstr100 SmallstrPkey;
-    typedef algo::Smallstr50 SorttypePkey;
-    typedef algo::Smallstr50 SsimfilePkey;
-    typedef algo::Smallstr50 SteptypePkey;
-    typedef algo::Smallstr50 StrfmtPkey;
-    typedef algo::Smallstr50 StrtypePkey;
-    typedef algo::Smallstr100 SubstrPkey;
-    typedef algo::Smallstr100 TracefldPkey;
-    typedef algo::Smallstr50 TracerecPkey;
-    typedef algo::Smallstr100 XrefPkey;
-}//pkey typedefs
-namespace dmmeta {
+namespace dmmeta { // gen:ns_print_struct
 
 // --- dmmeta.Anonfld
 struct Anonfld { // dmmeta.Anonfld
@@ -1610,10 +1614,10 @@ algo::Smallstr100    Fcurs_field_Get(algo::strptr arg) __attribute__((nothrow));
 algo::Smallstr50     ctype_Get(dmmeta::Fcurs& parent) __attribute__((__warn_unused_result__, nothrow));
 algo::Smallstr50     Fcurs_ctype_Get(algo::strptr arg) __attribute__((nothrow));
 
-algo::Smallstr50     curs_Get(dmmeta::Fcurs& parent) __attribute__((__warn_unused_result__, nothrow));
-algo::Smallstr50     Fcurs_curs_Get(algo::strptr arg) __attribute__((nothrow));
+algo::Smallstr50     curstype_Get(dmmeta::Fcurs& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::Smallstr50     Fcurs_curstype_Get(algo::strptr arg) __attribute__((nothrow));
 
-tempstr              Fcurs_Concat_field_curs( const algo::strptr& field ,const algo::strptr& curs );
+tempstr              Fcurs_Concat_field_curstype( const algo::strptr& field ,const algo::strptr& curstype );
 bool                 Fcurs_ReadFieldMaybe(dmmeta::Fcurs &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dmmeta::Fcurs from an ascii string.
 // The format of the string is an ssim Tuple
@@ -2987,7 +2991,10 @@ bool                 Xref_ReadStrptrMaybe(dmmeta::Xref &parent, algo::strptr in_
 void                 Xref_Init(dmmeta::Xref& parent);
 // print string representation of dmmeta::Xref to string LHS, no header -- cprint:dmmeta.Xref.String
 void                 Xref_Print(dmmeta::Xref & row, algo::cstring &str) __attribute__((nothrow));
-} // end namespace dmmeta
+} // gen:ns_print_struct
+namespace dmmeta { // gen:ns_func
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Anonfld &row);// cfmt:dmmeta.Anonfld.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Bitfld &row);// cfmt:dmmeta.Bitfld.String

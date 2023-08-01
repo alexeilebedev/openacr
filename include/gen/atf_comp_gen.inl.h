@@ -134,7 +134,8 @@ inline bool atf_comp::comptest_zd_tmsg_curs_ValidQ(comptest_zd_tmsg_curs &curs) 
 // --- atf_comp.FComptest.zd_tmsg_curs.Next
 // proceed to next item
 inline void atf_comp::comptest_zd_tmsg_curs_Next(comptest_zd_tmsg_curs &curs) {
-    curs.row = (*curs.row).zd_tmsg_next;
+    atf_comp::FTmsg *next = (*curs.row).zd_tmsg_next;
+    curs.row = next;
 }
 
 // --- atf_comp.FComptest.zd_tmsg_curs.Access
@@ -660,7 +661,8 @@ inline bool atf_comp::_db_zd_sel_comptest_curs_ValidQ(_db_zd_sel_comptest_curs &
 // --- atf_comp.FDb.zd_sel_comptest_curs.Next
 // proceed to next item
 inline void atf_comp::_db_zd_sel_comptest_curs_Next(_db_zd_sel_comptest_curs &curs) {
-    curs.row = (*curs.row).zd_sel_comptest_next;
+    atf_comp::FComptest *next = (*curs.row).zd_sel_comptest_next;
+    curs.row = next;
 }
 
 // --- atf_comp.FDb.zd_sel_comptest_curs.Access
@@ -734,7 +736,8 @@ inline bool atf_comp::_db_zd_run_comptest_curs_ValidQ(_db_zd_run_comptest_curs &
 // --- atf_comp.FDb.zd_run_comptest_curs.Next
 // proceed to next item
 inline void atf_comp::_db_zd_run_comptest_curs_Next(_db_zd_run_comptest_curs &curs) {
-    curs.row = (*curs.row).zd_run_comptest_next;
+    atf_comp::FComptest *next = (*curs.row).zd_run_comptest_next;
+    curs.row = next;
 }
 
 // --- atf_comp.FDb.zd_run_comptest_curs.Access
@@ -758,7 +761,8 @@ inline bool atf_comp::_db_zd_out_tmsg_curs_ValidQ(_db_zd_out_tmsg_curs &curs) {
 // --- atf_comp.FDb.zd_out_tmsg_curs.Next
 // proceed to next item
 inline void atf_comp::_db_zd_out_tmsg_curs_Next(_db_zd_out_tmsg_curs &curs) {
-    curs.row = (*curs.row).zd_out_tmsg_next;
+    atf_comp::FTmsg *next = (*curs.row).zd_out_tmsg_next;
+    curs.row = next;
 }
 
 // --- atf_comp.FDb.zd_out_tmsg_curs.Access
@@ -782,7 +786,8 @@ inline bool atf_comp::_db_zd_out_comptest_curs_ValidQ(_db_zd_out_comptest_curs &
 // --- atf_comp.FDb.zd_out_comptest_curs.Next
 // proceed to next item
 inline void atf_comp::_db_zd_out_comptest_curs_Next(_db_zd_out_comptest_curs &curs) {
-    curs.row = (*curs.row).zd_out_comptest_next;
+    atf_comp::FComptest *next = (*curs.row).zd_out_comptest_next;
+    curs.row = next;
 }
 
 // --- atf_comp.FDb.zd_out_comptest_curs.Access
@@ -806,7 +811,8 @@ inline bool atf_comp::_db_zd_out_tfilt_curs_ValidQ(_db_zd_out_tfilt_curs &curs) 
 // --- atf_comp.FDb.zd_out_tfilt_curs.Next
 // proceed to next item
 inline void atf_comp::_db_zd_out_tfilt_curs_Next(_db_zd_out_tfilt_curs &curs) {
-    curs.row = (*curs.row).zd_out_tfilt_next;
+    atf_comp::FTfilt *next = (*curs.row).zd_out_tfilt_next;
+    curs.row = next;
 }
 
 // --- atf_comp.FDb.zd_out_tfilt_curs.Access
@@ -830,7 +836,8 @@ inline bool atf_comp::_db_zd_out_targs_curs_ValidQ(_db_zd_out_targs_curs &curs) 
 // --- atf_comp.FDb.zd_out_targs_curs.Next
 // proceed to next item
 inline void atf_comp::_db_zd_out_targs_curs_Next(_db_zd_out_targs_curs &curs) {
-    curs.row = (*curs.row).zd_out_targs_next;
+    atf_comp::FTargs *next = (*curs.row).zd_out_targs_next;
+    curs.row = next;
 }
 
 // --- atf_comp.FDb.zd_out_targs_curs.Access

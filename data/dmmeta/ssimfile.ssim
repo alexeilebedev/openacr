@@ -1,8 +1,8 @@
 dmmeta.ssimfile  ssimfile:amcdb.bltin  ctype:amcdb.Bltin
-dmmeta.ssimfile  ssimfile:amcdb.curs  ctype:amcdb.Curs
+dmmeta.ssimfile  ssimfile:amcdb.curstype  ctype:amcdb.Curstype
 dmmeta.ssimfile  ssimfile:amcdb.gen  ctype:amcdb.Gen
 dmmeta.ssimfile  ssimfile:amcdb.tclass  ctype:amcdb.Tclass
-dmmeta.ssimfile  ssimfile:amcdb.tcursor  ctype:amcdb.Tcursor
+dmmeta.ssimfile  ssimfile:amcdb.tcurs  ctype:amcdb.Tcurs
 dmmeta.ssimfile  ssimfile:amcdb.tfunc  ctype:amcdb.Tfunc
 dmmeta.ssimfile  ssimfile:amsdb.proctype  ctype:amsdb.ProcType
 dmmeta.ssimfile  ssimfile:amsdb.streamtype  ctype:amsdb.StreamType

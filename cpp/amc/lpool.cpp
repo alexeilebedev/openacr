@@ -118,6 +118,11 @@ void amc::tfunc_Lpool_AllocMem() {
     if (HaveCountQ(*amc::_db.genfield.p_field)) {
         Ins(&R, func.body, "$parname.$name_n += retval != NULL;");
     }
+    amc::FField &field = *amc::_db.genfield.p_field;
+    if (field.do_trace) {
+        Set(R, "$partrace", Refname(*field.p_ctype));
+        Ins(&R, func.body, "    ++$ns::_db.trace.alloc_$partrace_$name;");
+    }
     Ins(&R, func.body, "return retval;");
 }
 

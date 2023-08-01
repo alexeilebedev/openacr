@@ -60,7 +60,7 @@ acr_compl::_db_bh_completion_curs::~_db_bh_completion_curs() {
 
 }
 
-namespace acr_compl {
+namespace acr_compl { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
@@ -81,7 +81,7 @@ namespace acr_compl {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace acr_compl
+} // gen:ns_print_proto
 
 // --- acr_compl.Badness.badness.ToCstr
 // Convert numeric value of field to one of predefined string constants.

@@ -58,7 +58,8 @@ void amc::gen_ns_gsymbol() {
         MmapFile file;
         tempstr fname(SsimFname(amc::_db.cmdline.in_dir,ssimfile_Get(gsymbol)));
         vrfy(MmapFile_Load(file,fname),tempstr()<<"amc.load"<<Keyval("filename",fname));
-        *ns.cpp << "namespace "<<ns.ns<<" { // gsymbol:"<<gsymbol.gsymbol<<eol;
+        amc::BeginNsBlock(*ns.hdr, ns, "");
+        amc::BeginNsBlock(*ns.cpp, ns, "");
         cstring symboltype = ResolveGsymboltype(gsymbol);
         ind_beg(Line_curs,line,file.text) {
             if (Regx_Match(regx,line)) {
@@ -69,7 +70,7 @@ void amc::gen_ns_gsymbol() {
                     tempstr name = tempstr() << ToIdent(ssimfile_Get(gsymbol))
                                              << "_"
                                              << ToIdent(value);
-                    *ns.hdr << "extern const "<< symboltype << " " << ToIdent(name);
+                    *ns.hdr << "    extern const "<< symboltype << " " << ToIdent(name);
                     *ns.hdr << "; // ";
                     strptr_PrintCppQuoted(value, *ns.hdr, '"');
                     *ns.hdr << eol;
@@ -80,6 +81,7 @@ void amc::gen_ns_gsymbol() {
                 }
             }
         }ind_end;
-        *ns.cpp << "}"<<eol;
+        amc::EndNsBlock(*ns.hdr, ns, "");
+        amc::EndNsBlock(*ns.cpp, ns, "");
     }ind_end;
 }

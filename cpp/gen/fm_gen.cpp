@@ -15,9 +15,9 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
-namespace fm {
+namespace fm { // gen:ns_print_proto
     static void          SizeCheck();
-} // end namespace fm
+} // gen:ns_print_proto
 
 // --- fm.Code.ch.Print
 void fm::ch_Print(fm::Code& parent, algo::cstring &out) {

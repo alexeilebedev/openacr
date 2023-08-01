@@ -13,6 +13,7 @@
 #include "include/gen/command_gen.h"
 #include "include/gen/algo_lib_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- atf_cov_FieldIdEnum
 
@@ -56,6 +57,13 @@ enum atf_cov_TableIdEnum {                 // atf_cov.TableId.value
 
 enum { atf_cov_TableIdEnum_N = 14 };
 
+namespace atf_cov { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace atf_cov { // gen:ns_field
+extern const char *atf_cov_help;
+extern const char *atf_cov_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace dev { struct Covfile; }
 namespace dev { struct Covline; }
 namespace atf_cov { struct FGitfile; }
@@ -65,6 +73,15 @@ namespace dev { struct Target; }
 namespace dev { struct Targsrc; }
 namespace atf_cov { struct FTarget; }
 namespace dev { struct Tgtcov; }
+namespace atf_cov { struct _db_covline_curs; }
+namespace atf_cov { struct _db_target_curs; }
+namespace atf_cov { struct _db_targsrc_curs; }
+namespace atf_cov { struct _db_gitfile_curs; }
+namespace atf_cov { struct _db_covtarget_curs; }
+namespace atf_cov { struct _db_covfile_curs; }
+namespace atf_cov { struct _db_tgtcov_curs; }
+namespace atf_cov { struct gitfile_c_covline_curs; }
+namespace atf_cov { struct target_c_targsrc_curs; }
 namespace atf_cov { struct FCovfile; }
 namespace atf_cov { struct FCovline; }
 namespace atf_cov { struct FCovtarget; }
@@ -75,26 +92,8 @@ namespace atf_cov { struct FTgtcov; }
 namespace atf_cov { struct FieldId; }
 namespace atf_cov { struct Phase; }
 namespace atf_cov { struct TableId; }
-namespace atf_cov { struct _db_covline_curs; }
-namespace atf_cov { struct _db_ind_covline_curs; }
-namespace atf_cov { struct _db_target_curs; }
-namespace atf_cov { struct _db_ind_target_curs; }
-namespace atf_cov { struct _db_targsrc_curs; }
-namespace atf_cov { struct _db_ind_targsrc_curs; }
-namespace atf_cov { struct _db_gitfile_curs; }
-namespace atf_cov { struct _db_ind_gitfile_curs; }
-namespace atf_cov { struct _db_covtarget_curs; }
-namespace atf_cov { struct _db_covfile_curs; }
-namespace atf_cov { struct _db_tgtcov_curs; }
-namespace atf_cov { struct _db_ind_tgtcov_curs; }
-namespace atf_cov { struct gitfile_c_covline_curs; }
-namespace atf_cov { struct target_c_targsrc_curs; }
-namespace atf_cov {
-}//pkey typedefs
-namespace atf_cov {
-extern const char *atf_cov_help;
-extern const char *atf_cov_syntax;
-extern FDb _db;
+namespace atf_cov { extern struct atf_cov::FDb _db; }
+namespace atf_cov { // gen:ns_print_struct
 
 // --- atf_cov.FCovfile
 // create: atf_cov.FDb.covfile (Lary)
@@ -948,6 +947,8 @@ bool                 TableId_ReadStrptrMaybe(atf_cov::TableId &parent, algo::str
 void                 TableId_Init(atf_cov::TableId& parent);
 // print string representation of atf_cov::TableId to string LHS, no header -- cprint:atf_cov.TableId.String
 void                 TableId_Print(atf_cov::TableId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace atf_cov { // gen:ns_curstext
 
 struct _db_covline_curs {// cursor
     typedef atf_cov::FCovline ChildType;
@@ -1005,7 +1006,7 @@ struct _db_tgtcov_curs {// cursor
 };
 
 
-struct gitfile_c_covline_curs {// cursor
+struct gitfile_c_covline_curs {// fcurs:atf_cov.FGitfile.c_covline/curs
     typedef atf_cov::FCovline ChildType;
     atf_cov::FCovline** elems;
     u32 n_elems;
@@ -1014,7 +1015,7 @@ struct gitfile_c_covline_curs {// cursor
 };
 
 
-struct target_c_targsrc_curs {// cursor
+struct target_c_targsrc_curs {// fcurs:atf_cov.FTarget.c_targsrc/curs
     typedef atf_cov::FTargsrc ChildType;
     atf_cov::FTargsrc** elems;
     u32 n_elems;
@@ -1022,11 +1023,14 @@ struct target_c_targsrc_curs {// cursor
     target_c_targsrc_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-} // end namespace atf_cov
+} // gen:ns_curstext
+namespace atf_cov { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const atf_cov::FCovline &row);// cfmt:atf_cov.FCovline.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_cov::trace &row);// cfmt:atf_cov.trace.String

@@ -12,6 +12,7 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_lib_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- ssim2csv_FieldIdEnum
 
@@ -21,25 +22,26 @@ enum ssim2csv_FieldIdEnum {        // ssim2csv.FieldId.value
 
 enum { ssim2csv_FieldIdEnum_N = 1 };
 
+namespace ssim2csv { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace ssim2csv { // gen:ns_field
+extern const char *ssim2csv_help;
+extern const char *ssim2csv_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
+namespace ssim2csv { struct _db_expand_curs; }
+namespace ssim2csv { struct _db_outfile_curs; }
+namespace ssim2csv { struct _db_name_curs; }
+namespace ssim2csv { struct _db_value_curs; }
+namespace ssim2csv { struct _db_flatten_curs; }
 namespace ssim2csv { struct trace; }
 namespace ssim2csv { struct FDb; }
 namespace ssim2csv { struct FExpand; }
 namespace ssim2csv { struct FFlatten; }
 namespace ssim2csv { struct FOutfile; }
 namespace ssim2csv { struct FieldId; }
-namespace ssim2csv { struct _db_expand_curs; }
-namespace ssim2csv { struct _db_ind_expand_curs; }
-namespace ssim2csv { struct _db_outfile_curs; }
-namespace ssim2csv { struct _db_ind_outfile_curs; }
-namespace ssim2csv { struct _db_name_curs; }
-namespace ssim2csv { struct _db_value_curs; }
-namespace ssim2csv { struct _db_flatten_curs; }
-namespace ssim2csv {
-}//pkey typedefs
-namespace ssim2csv {
-extern const char *ssim2csv_help;
-extern const char *ssim2csv_syntax;
-extern FDb _db;
+namespace ssim2csv { extern struct ssim2csv::FDb _db; }
+namespace ssim2csv { // gen:ns_print_struct
 
 // --- ssim2csv.trace
 #pragma pack(push,1)
@@ -438,6 +440,8 @@ bool                 FieldId_ReadStrptrMaybe(ssim2csv::FieldId &parent, algo::st
 void                 FieldId_Init(ssim2csv::FieldId& parent);
 // print string representation of ssim2csv::FieldId to string LHS, no header -- cprint:ssim2csv.FieldId.String
 void                 FieldId_Print(ssim2csv::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace ssim2csv { // gen:ns_curstext
 
 struct _db_expand_curs {// cursor
     typedef ssim2csv::FExpand ChildType;
@@ -481,11 +485,14 @@ struct _db_flatten_curs {// cursor
     _db_flatten_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-} // end namespace ssim2csv
+} // gen:ns_curstext
+namespace ssim2csv { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const ssim2csv::trace &row);// cfmt:ssim2csv.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const ssim2csv::FExpand &row);// cfmt:ssim2csv.FExpand.String

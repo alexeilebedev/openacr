@@ -1,2 +1,6 @@
 dmmeta.fcurs  fcurs:acr.FCtype.ind_rec/curs  comment:""
 dmmeta.fcurs  fcurs:algo_lib.Replscope.ind_replvar/curs  comment:""
+dmmeta.fcurs  fcurs:atf_amc.FDb.c_typek/oncecurs  comment:""
+dmmeta.fcurs  fcurs:atf_amc.FDb.cd_typed/delcurs  comment:""
+dmmeta.fcurs  fcurs:atf_amc.FDb.zd_typed/delcurs  comment:""
+dmmeta.fcurs  fcurs:atf_amc.FDb.zs_t_typed/delcurs  comment:""

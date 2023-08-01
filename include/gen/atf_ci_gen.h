@@ -14,6 +14,7 @@
 #include "include/gen/command_gen.h"
 #include "include/gen/dmmeta_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- atf_ci_FieldIdEnum
 
@@ -51,6 +52,13 @@ enum atf_ci_TableIdEnum {                   // atf_ci.TableId.value
 
 enum { atf_ci_TableIdEnum_N = 20 };
 
+namespace atf_ci { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace atf_ci { // gen:ns_field
+extern const char *atf_ci_help;
+extern const char *atf_ci_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace dev { struct Builddir; }
 namespace dev { struct Cfg; }
 namespace atfdb { struct Citest; }
@@ -62,6 +70,17 @@ namespace dev { struct Readme; }
 namespace dev { struct Scriptfile; }
 namespace dmmeta { struct Ssimfile; }
 namespace dev { struct Targsrc; }
+namespace atf_ci { struct _db_citest_curs; }
+namespace atf_ci { struct _db_ssimfile_curs; }
+namespace atf_ci { struct _db_scriptfile_curs; }
+namespace atf_ci { struct _db_ns_curs; }
+namespace atf_ci { struct _db_readme_curs; }
+namespace atf_ci { struct _db_builddir_curs; }
+namespace atf_ci { struct _db_cfg_curs; }
+namespace atf_ci { struct _db_gitfile_curs; }
+namespace atf_ci { struct _db_noindent_curs; }
+namespace atf_ci { struct _db_targsrc_curs; }
+namespace atf_ci { struct _db_msgfile_curs; }
 namespace atf_ci { struct FBuilddir; }
 namespace atf_ci { struct FCfg; }
 namespace atf_ci { struct FCitest; }
@@ -78,38 +97,25 @@ namespace atf_ci { struct FSsimfile; }
 namespace atf_ci { struct FTargsrc; }
 namespace atf_ci { struct FieldId; }
 namespace atf_ci { struct TableId; }
-namespace atf_ci { struct _db_citest_curs; }
-namespace atf_ci { struct _db_ssimfile_curs; }
-namespace atf_ci { struct _db_ind_ssimfile_curs; }
-namespace atf_ci { struct _db_scriptfile_curs; }
-namespace atf_ci { struct _db_ind_scriptfile_curs; }
-namespace atf_ci { struct _db_ns_curs; }
-namespace atf_ci { struct _db_ind_ns_curs; }
-namespace atf_ci { struct _db_readme_curs; }
-namespace atf_ci { struct _db_builddir_curs; }
-namespace atf_ci { struct _db_cfg_curs; }
-namespace atf_ci { struct _db_ind_builddir_curs; }
-namespace atf_ci { struct _db_gitfile_curs; }
-namespace atf_ci { struct _db_ind_gitfile_curs; }
-namespace atf_ci { struct _db_noindent_curs; }
-namespace atf_ci { struct _db_targsrc_curs; }
-namespace atf_ci { struct _db_msgfile_curs; }
-namespace atf_ci { struct _db_ind_citest_curs; }
-namespace atf_ci {
-}//pkey typedefs
-namespace atf_ci {
-typedef void (*citest_step_hook)();
-extern const char *atf_ci_help;
-extern const char *atf_ci_syntax;
-extern FDb _db;
-extern const atfdb::CijobPkey atfdb_cijob_comp; // "comp"
-extern const atfdb::CijobPkey atfdb_cijob_memcheck; // "memcheck"
-extern const atfdb::CijobPkey atfdb_cijob_normalize; // "normalize"
-extern const char* dev_scriptfile_bin_fix_gen_conflicts; // "bin/fix-gen-conflicts"
-extern const char* dev_scriptfile_bin_update_gitfile; // "bin/update-gitfile"
-extern const char* dev_scriptfile_bin_update_hdr; // "bin/update-hdr"
-extern const char* dev_scriptfile_bin_update_outfile; // "bin/update-outfile"
-extern const char* dev_scriptfile_bin_update_scriptfile; // "bin/update-scriptfile"
+namespace atf_ci { extern struct atf_ci::FDb _db; }
+namespace atf_ci { // hook_fcn_typedef
+    typedef void (*citest_step_hook)(); // hook:atf_ci.FCitest.step
+} // hook_decl
+namespace atf_ci { // gen:ns_gsymbol
+    extern const atfdb::CijobPkey atfdb_cijob_comp; // "comp"
+    extern const atfdb::CijobPkey atfdb_cijob_memcheck; // "memcheck"
+    extern const atfdb::CijobPkey atfdb_cijob_normalize; // "normalize"
+} // gen:ns_gsymbol
+namespace atf_ci { // gen:ns_gsymbol
+} // gen:ns_gsymbol
+namespace atf_ci { // gen:ns_gsymbol
+    extern const char* dev_scriptfile_bin_fix_gen_conflicts; // "bin/fix-gen-conflicts"
+    extern const char* dev_scriptfile_bin_update_gitfile; // "bin/update-gitfile"
+    extern const char* dev_scriptfile_bin_update_hdr; // "bin/update-hdr"
+    extern const char* dev_scriptfile_bin_update_outfile; // "bin/update-outfile"
+    extern const char* dev_scriptfile_bin_update_scriptfile; // "bin/update-scriptfile"
+} // gen:ns_gsymbol
+namespace atf_ci { // gen:ns_print_struct
 
 // --- atf_ci.FBuilddir
 // create: atf_ci.FDb.builddir (Lary)
@@ -1094,6 +1100,8 @@ bool                 TableId_ReadStrptrMaybe(atf_ci::TableId &parent, algo::strp
 void                 TableId_Init(atf_ci::TableId& parent);
 // print string representation of atf_ci::TableId to string LHS, no header -- cprint:atf_ci.TableId.String
 void                 TableId_Print(atf_ci::TableId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace atf_ci { // gen:ns_curstext
 
 struct _db_citest_curs {// cursor
     typedef atf_ci::FCitest ChildType;
@@ -1182,6 +1190,8 @@ struct _db_msgfile_curs {// cursor
     _db_msgfile_curs(){ parent=NULL; index=0; }
 };
 
+} // gen:ns_curstext
+namespace atf_ci { // gen:ns_func
 // User-implemented function from gstatic:atf_ci.FDb.citest
 void                 citest_checkclean();
 // User-implemented function from gstatic:atf_ci.FDb.citest
@@ -1246,11 +1256,12 @@ void                 citest_acr_ed_ssimfile();
 void                 citest_acr_ed_ssimdb();
 // User-implemented function from gstatic:atf_ci.FDb.citest
 void                 citest_acr_ed_target();
-} // end namespace atf_ci
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const atf_ci::trace &row);// cfmt:atf_ci.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_ci::FieldId &row);// cfmt:atf_ci.FieldId.String

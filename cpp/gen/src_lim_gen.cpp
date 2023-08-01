@@ -61,7 +61,7 @@ const char *src_lim_syntax =
 " -badline:string=\n"
 ;
 } // namespace src_lim
-namespace src_lim {
+namespace src_lim { // gen:ns_print_proto
     static bool          include_InputMaybe(dev::Include &elem) __attribute__((nothrow));
     static bool          linelim_InputMaybe(dev::Linelim &elem) __attribute__((nothrow));
     // Load statically available data into tables, register tables and database.
@@ -74,7 +74,7 @@ namespace src_lim {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace src_lim
+} // gen:ns_print_proto
 
 // --- src_lim.FBadline.base.CopyOut
 // Copy fields out of row

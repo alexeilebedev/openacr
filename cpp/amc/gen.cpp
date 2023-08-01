@@ -166,6 +166,7 @@ void amc::gen_check_static() {
             bool isxref = field.p_reftype->isxref;
             isxref |= (field.reftype == dmmeta_Reftype_reftype_Ptrary && field.c_xref);
             isxref |= (field.reftype == dmmeta_Reftype_reftype_Ptr && field.c_xref);
+            isxref |= (field.reftype == dmmeta_Reftype_reftype_Hook);
             amc::FField *inst = amc::FirstInst(*field.p_arg);
             if (!isxref && inst && inst->c_finput) {
                 amccheck(0,"amc.gstatic_uses_finput"
@@ -1087,14 +1088,14 @@ void amc::gen_ns_check_path() {
 
 void amc::gen_ns_pkeytypedef() {
     ind_beg(amc::_db_ns_curs, ns, amc::_db) if (ns.select) {
-        *ns.hdr<<"namespace "<<ns.ns<<" {"<<eol;
+        amc::BeginNsBlock(*ns.hdr, ns, "");
         ind_beg(amc::ns_c_ctype_curs, ctype,ns) if (ctype.c_pkeyfield) {
             *ns.hdr<<"    typedef"
                    <<" "<<ctype.c_pkeyfield->cpp_type
                    <<" "<<name_Get(ctype)<<"Pkey"
                    <<";"<<eol;
         }ind_end;
-        *ns.hdr<<"}//pkey typedefs"<<eol;
+        amc::EndNsBlock(*ns.hdr, ns, "");
     }ind_end;
 }
 
@@ -1102,27 +1103,20 @@ void amc::gen_ns_pkeytypedef() {
 
 void amc::gen_ns_enums() {
     ind_beg(amc::_db_ns_curs, ns, amc::_db) if (ns.select) {
+        *ns.hdr<<"// gen:ns_enums" << eol;
         ind_beg(amc::ns_c_ctype_curs, ctype, ns) {
             amc::Main_GenEnum(ns, ctype); // experimental
         }ind_end;
     }ind_end;
 }
 
-void amc::gen_ns_begin() {
-    ind_beg(amc::_db_ns_curs, ns, amc::_db) if (ns.select) {
-        if (ch_N(ns.ns)) {
-            algo_lib::Replscope R;
-            Set(R, "$ns", ns.ns);
-            Ins(&R, *ns.hdr, "namespace $ns {");
-        }
-    }ind_end;
-}
-
 void amc::gen_ns_field() {
     ind_beg(amc::_db_ns_curs, ns, amc::_db) if (ns.select) {
+        amc::BeginNsBlock(*ns.hdr, ns, "");
         ind_beg(amc::ns_c_ctype_curs, ctype,ns) {
             GenTclass_Fields(ctype);
         }ind_end;
+        amc::EndNsBlock(*ns.hdr, ns, "");
     }ind_end;
 }
 
@@ -1157,7 +1151,7 @@ void amc::gen_ns_print_proto() {
     amc::FNs &ns =*amc::_db.c_ns;
     algo_lib::Replscope R;
     Set(R, "$ns", ns.ns);
-    Ins(&R, *ns.cpp,"namespace $ns {");
+    amc::BeginNsBlock(*ns.cpp, ns, "");
     ind_beg(amc::ns_c_func_curs, func,ns) {
         bool print = func.priv && !func.ismacro && !func.globns && !func.oper && !func.disable && !func.member;
         if (print) {
@@ -1166,12 +1160,13 @@ void amc::gen_ns_print_proto() {
             algo::InsertIndent(*ns.cpp, proto, 1);
         }
     }ind_end;
-    Ins(&R, *ns.cpp,"} // end namespace $ns");
+    amc::EndNsBlock(*ns.cpp, ns, "");
     amc::_db.lim_ind_func=amc::ind_func_N();
 }
 
 void amc::gen_ns_print_struct() {
     amc::FNs &ns =*amc::_db.c_ns;
+    amc::BeginNsBlock(*ns.hdr, ns, "");
     ind_beg(amc::ns_c_ctype_curs, ctype,ns) {
         if (!ctype.c_cextern) {
             amc::GenStruct(ns, ctype);
@@ -1209,14 +1204,17 @@ void amc::gen_ns_print_struct() {
             }
         }ind_end;
     }ind_end;
+    amc::EndNsBlock(*ns.hdr, ns, "");
 }
 
 void amc::gen_ns_curstext() {
     amc::FNs &ns =*amc::_db.c_ns;
     if (ch_N(ns.curstext)) {
+        amc::BeginNsBlock(*ns.hdr, ns, "");
         *ns.hdr << ns.curstext;
+        Refurbish(ns.curstext);// free up ram
+        amc::EndNsBlock(*ns.hdr, ns, "");
     }
-    Refurbish(ns.curstext);// free up ram
 }
 
 void amc::gen_ns_pnew() {
@@ -1230,6 +1228,7 @@ void amc::gen_ns_func() {
     amc::FNs &ns =*amc::_db.c_ns;
     algo_lib::Replscope R;
     Set(R, "$ns", ns.ns);
+    amc::BeginNsBlock(*ns.hdr, ns, "");
     ind_beg(amc::ns_c_func_curs, func,ns) {
         if (!func.printed && !func.ismacro && !func.disable && !func.member && !func.globns) {
             if (!func.priv && !func.oper) {
@@ -1243,9 +1242,7 @@ void amc::gen_ns_func() {
             func.printed = true;
         }
     }ind_end;
-    if (ch_N(ns.ns)) {
-        Ins(&R, *ns.hdr,"} // end namespace $ns");
-    }
+    amc::EndNsBlock(*ns.hdr, ns, "");
     ind_beg(amc::ns_c_func_curs, func,ns) {
         if (!func.printed && !func.ismacro && !func.disable && !func.member && func.globns) {
             if (!func.priv && !func.oper) {
@@ -1302,6 +1299,7 @@ void amc::gen_ns_operators() {
     amc::FNs &ns =*amc::_db.c_ns;
     algo_lib::Replscope R;
     // generate "operator <<" for every print function...
+    *ns.hdr<<"// gen:ns_operators" << eol;
     *ns.hdr << "namespace algo {" << eol;
     ind_beg(amc::ns_c_ctype_curs, ctype, ns) {
         GenOperators(R,ns,ctype);
@@ -1360,6 +1358,20 @@ void amc::gen_proc() {
                 anonfld.field = field.field;
                 amc::anonfld_InsertMaybe(anonfld);
             }
+        }
+    }ind_end;
+}
+
+void amc::gen_check_fcurs() {
+    ind_beg(_db_fcurs_curs,fcurs,_db) {
+        tempstr key = amcdb::Tfunc_Concat_tclass_name(fcurs.p_field->reftype, curstype_Get(fcurs));
+        amc::FTfunc *tfunc=ind_tfunc_Find(key);
+        if (!tfunc || !tfunc->c_tcurs) {
+            prlog("amc.cursory_examination"
+                  <<Keyval("fcurs",fcurs.fcurs)
+                  <<Keyval("reftype",fcurs.p_field->reftype)
+                  <<Keyval("comment","Reftype doesn't support specified cursor"));
+            algo_lib::_db.exit_code=1;
         }
     }ind_end;
 }

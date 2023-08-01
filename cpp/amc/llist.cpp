@@ -668,7 +668,8 @@ void amc::tfunc_ZSListMT_Init() {
     Ins(&R, init.body     , "$parname.$name_mt = NULL; // ($field)");
 }
 
-void amc::tfunc_Llist_curs() {
+// Generate cursor for llist
+void amc::Llist_curs(bool needdel) {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
     amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
@@ -677,59 +678,107 @@ void amc::tfunc_Llist_curs() {
     bool circular  = listtype.circular;
 
     Ins(&R, ns.curstext    , "");
-    Ins(&R, ns.curstext    , "struct $Parname_$name_curs {// cursor");
+    Ins(&R, ns.curstext    , "struct $Parname_$name_$curstype {// fcurs:$fcurs");
     Ins(&R, ns.curstext    , "    typedef $Cpptype ChildType;");
     Ins(&R, ns.curstext    , "    $Cpptype* row;");
     if (circular) {
-        Ins(&R, ns.curstext, "    $Cpptype* head;");
+        Ins(&R, ns.curstext, "    $Cpptype** head; // address of head element");
     }
-    Ins(&R, ns.curstext    , "    $Parname_$name_curs() {");
+    if (needdel) {
+        Ins(&R, ns.curstext, "    $Cpptype *next;");
+    }
+    Ins(&R, ns.curstext    , "    $Parname_$name_$curstype() {");
     Ins(&R, ns.curstext    , "        row = NULL;");
     if (circular) {
         Ins(&R, ns.curstext, "        head = NULL;");
+    }
+    if (needdel) {
+        Ins(&R, ns.curstext, "        next = NULL;");
     }
     Ins(&R, ns.curstext    , "    }");
     Ins(&R, ns.curstext    , "};");
     Ins(&R, ns.curstext    , "");
 
     {
-        amc::FFunc& curs_reset = amc::ind_func_GetOrCreate(Subst(R,"$field_curs.Reset"));
-        curs_reset.inl = true;
-        Ins(&R, curs_reset.comment, "cursor points to valid item");
-        Ins(&R, curs_reset.ret  , "void", false);
-        Ins(&R, curs_reset.proto, "$Parname_$name_curs_Reset($Parname_$name_curs &curs, $Partype &parent)", false);
-        Ins(&R, curs_reset.body, "curs.row = parent.$name_head;");
+        amc::FFunc& func = amc::ind_func_GetOrCreate(Subst(R,"$field_$curstype.Reset"));
+        func.inl = true;
+        Ins(&R, func.comment, "cursor points to valid item");
+        Ins(&R, func.ret  , "void", false);
+        Ins(&R, func.proto, "$Parname_$name_$curstype_Reset($Parname_$name_$curstype &curs, $Partype &parent)", false);
+        Ins(&R, func.body, "curs.row = parent.$name_head;");
         if (circular) {
-            Ins(&R, curs_reset.body, "curs.head = parent.$name_head;");
+            Ins(&R, func.body, "curs.head = &parent.$name_head;");
+        }
+        // prefetch next element
+        // for a delcurs on a circular list of size 1, next will point to the
+        // same element (curs.row == *curs.head)
+        // so it must be ignored.
+        if (needdel) {
+            Ins(&R, func.body, "if (curs.row) {");
+            Ins(&R, func.body, "    curs.next = (*curs.row).$name_next;");
+            if (circular) {
+                Ins(&R, func.body, "    if (curs.next == *curs.head) {");
+                Ins(&R, func.body, "        curs.next = NULL;");
+                Ins(&R, func.body, "    }");
+            }
+            Ins(&R, func.body, "}");
         }
     }
 
     {
-        amc::FFunc& curs_validq = amc::ind_func_GetOrCreate(Subst(R,"$field_curs.ValidQ"));
-        curs_validq.inl = true;
-        Ins(&R, curs_validq.comment, "cursor points to valid item");
-        Ins(&R, curs_validq.ret  , "bool", false);
-        Ins(&R, curs_validq.proto, "$Parname_$name_curs_ValidQ($Parname_$name_curs &curs)", false);
-        Ins(&R, curs_validq.body, "return curs.row != NULL;");
+        amc::FFunc& func = amc::ind_func_GetOrCreate(Subst(R,"$field_$curstype.ValidQ"));
+        func.inl = true;
+        Ins(&R, func.comment, "cursor points to valid item");
+        Ins(&R, func.ret  , "bool", false);
+        Ins(&R, func.proto, "$Parname_$name_$curstype_ValidQ($Parname_$name_$curstype &curs)", false);
+        Ins(&R, func.body, "return curs.row != NULL;");
     }
 
-    amc::FFunc& curs_next = amc::ind_func_GetOrCreate(Subst(R,"$field_curs.Next"));
-    curs_next.inl = true;
-    Ins(&R, curs_next.comment, "proceed to next item");
-    Ins(&R, curs_next.ret  , "void", false);
-    Ins(&R, curs_next.proto, "$Parname_$name_curs_Next($Parname_$name_curs &curs)", false);
-    Ins(&R, curs_next.body, "curs.row = (*curs.row).$name_next;");
-    if (circular) {
-        Ins(&R, curs_next.body, "if (curs.row == curs.head) {");
-        Ins(&R, curs_next.body, "    curs.row = NULL;");
-        Ins(&R, curs_next.body, "}");
+    {
+        amc::FFunc& func = amc::ind_func_GetOrCreate(Subst(R,"$field_$curstype.Next"));
+        func.inl = true;
+        Ins(&R, func.comment, "proceed to next item");
+        Ins(&R, func.ret  , "void", false);
+        Ins(&R, func.proto, "$Parname_$name_$curstype_Next($Parname_$name_$curstype &curs)", false);
+        if (needdel) {
+            Ins(&R, func.body, "$Cpptype *next = curs.next;");
+        } else {
+            Ins(&R, func.body, "$Cpptype *next = (*curs.row).$name_next;");
+        }
+        Ins(&R, func.body, "curs.row = next;");
+        if (circular && !needdel) {
+            Ins(&R, func.body, "if (curs.row == *curs.head) {");
+            Ins(&R, func.body, "    curs.row = NULL;");
+            Ins(&R, func.body, "}");
+        }
+        if (needdel) {
+            Ins(&R, func.body, "if (curs.row) {");
+            Ins(&R, func.body, "    curs.next = (*curs.row).$name_next;");
+            if (circular) {
+                Ins(&R, func.body, "if (curs.next == *curs.head) {");
+                Ins(&R, func.body, "    curs.next = NULL;");
+                Ins(&R, func.body, "}");
+            }
+            Ins(&R, func.body, "}");
+        }
     }
 
-    amc::FFunc& curs_access = amc::ind_func_GetOrCreate(Subst(R,"$field_curs.Access"));
-    curs_access.inl = true;
-    Ins(&R, curs_access.comment, "item access");
-    Ins(&R, curs_access.ret  , "$Cpptype&", false);
-    Ins(&R, curs_access.proto, "$Parname_$name_curs_Access($Parname_$name_curs &curs)", false);
-    Ins(&R, curs_access.body, "return *curs.row;");
+    {
+        amc::FFunc& func = amc::ind_func_GetOrCreate(Subst(R,"$field_$curstype.Access"));
+        func.inl = true;
+        Ins(&R, func.comment, "item access");
+        Ins(&R, func.ret  , "$Cpptype&", false);
+        Ins(&R, func.proto, "$Parname_$name_$curstype_Access($Parname_$name_$curstype &curs)", false);
+        Ins(&R, func.body, "return *curs.row;");
+    }
+}
 
+void amc::tfunc_Llist_curs() {
+    bool needdel=false;
+    Llist_curs(needdel);
+}
+
+void amc::tfunc_Llist_delcurs() {
+    bool needdel=true;
+    Llist_curs(needdel);
 }

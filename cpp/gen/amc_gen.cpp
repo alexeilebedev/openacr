@@ -80,7 +80,7 @@ amc::field_bh_bitfld_curs::~field_bh_bitfld_curs() {
 
 }
 
-namespace amc {
+namespace amc { // gen:ns_print_proto
     // Extract next character from STR and advance IDX
     static int           str_Nextchar(const amc::Enumstr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
     // Swap values elem_a and elem_b
@@ -207,7 +207,6 @@ namespace amc {
     static bool          nsx_InputMaybe(dmmeta::Nsx &elem) __attribute__((nothrow));
     static bool          fcompact_InputMaybe(dmmeta::Fcompact &elem) __attribute__((nothrow));
     static bool          findrem_InputMaybe(dmmeta::Findrem &elem) __attribute__((nothrow));
-    static bool          tcursor_InputMaybe(amcdb::Tcursor &elem) __attribute__((nothrow));
     static bool          fcurs_InputMaybe(dmmeta::Fcurs &elem) __attribute__((nothrow));
     static bool          cdflt_InputMaybe(dmmeta::Cdflt &elem) __attribute__((nothrow));
     static bool          argvtype_InputMaybe(dmmeta::Argvtype &elem) __attribute__((nothrow));
@@ -259,6 +258,7 @@ namespace amc {
     static bool          ssimvolatile_InputMaybe(dmmeta::Ssimvolatile &elem) __attribute__((nothrow));
     static bool          funique_InputMaybe(dmmeta::Funique &elem) __attribute__((nothrow));
     static bool          fuserinit_InputMaybe(dmmeta::Fuserinit &elem) __attribute__((nothrow));
+    static bool          tcurs_InputMaybe(amcdb::Tcurs &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
@@ -280,7 +280,7 @@ namespace amc {
     static bool          bh_bitfld_ElemLt(amc::FField& field, amc::FBitfld &a, amc::FBitfld &b) __attribute__((nothrow));
     static void          field_bh_bitfld_curs_Add(field_bh_bitfld_curs &curs, amc::FBitfld& row);
     static void          SizeCheck();
-} // end namespace amc
+} // gen:ns_print_proto
 
 // --- amc.BltinId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
@@ -6130,7 +6130,7 @@ static void amc::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'efee9c9604be68edef6b800f2dc270d3e225b1c5'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'d0406da8a808917ae21e07edf1a8336c2250e5a2'");
 }
 
 // --- amc.FDb._db.StaticCheck
@@ -6557,12 +6557,6 @@ bool amc::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && findrem_InputMaybe(elem);
             break;
         }
-        case amc_TableId_amcdb_Tcursor: { // finput:amc.FDb.tcursor
-            amcdb::Tcursor elem;
-            retval = amcdb::Tcursor_ReadStrptrMaybe(elem, str);
-            retval = retval && tcursor_InputMaybe(elem);
-            break;
-        }
         case amc_TableId_dmmeta_Fcurs: { // finput:amc.FDb.fcurs
             dmmeta::Fcurs elem;
             retval = dmmeta::Fcurs_ReadStrptrMaybe(elem, str);
@@ -6701,6 +6695,12 @@ bool amc::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && fuserinit_InputMaybe(elem);
             break;
         }
+        case amc_TableId_amcdb_Tcurs: { // finput:amc.FDb.tcurs
+            amcdb::Tcurs elem;
+            retval = amcdb::Tcurs_ReadStrptrMaybe(elem, str);
+            retval = retval && tcurs_InputMaybe(elem);
+            break;
+        }
         default:
         retval = algo_lib::InsertStrptrMaybe(str);
         break;
@@ -6737,7 +6737,7 @@ bool amc::LoadTuplesMaybe(algo::strptr root) {
         , "dmmeta.nsproto", "dmmeta.nsx", "dmmeta.smallstr", "dmmeta.numstr"
         , "dmmeta.pack", "dmmeta.pmaskfld", "dmmeta.pnew", "dmmeta.ptrary"
         , "dmmeta.rowid", "dmmeta.sortfld", "dmmeta.ssimvolatile", "dmmeta.substr"
-        , "dev.target", "dev.targdep", "dmmeta.tary", "amcdb.tcursor"
+        , "dev.target", "dev.targdep", "dmmeta.tary", "amcdb.tcurs"
         , "dmmeta.thash", "dmmeta.typefld", "dmmeta.usertracefld"
         , NULL};
         retval = algo_lib::DoLoadTuples(root, amc::InsertStrptrMaybe, ssimfiles, true);
@@ -15139,7 +15139,6 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Field.Concat  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Generate Concat functin if the field is a sourcefield\"", amc::tfunc_Field_Concat }
         ,{ "amcdb.tfunc  tfunc:Field2.ReadStrptrMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Field2_ReadStrptrMaybe }
         ,{ "amcdb.tfunc  tfunc:Global.ReadArgv  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Global_ReadArgv }
-        ,{ "amcdb.tfunc  tfunc:Global.N  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:Y  pure:Y  ismacro:N  comment:\"\"", amc::tfunc_Global_N }
         ,{ "amcdb.tfunc  tfunc:Global.MainArgs  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Main function\"", amc::tfunc_Global_MainArgs }
         ,{ "amcdb.tfunc  tfunc:Global.main  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Global_main }
         ,{ "amcdb.tfunc  tfunc:Global.WinMain  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"WinMain for Win GUI executables\"", amc::tfunc_Global_WinMain }
@@ -15212,6 +15211,7 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Llist.RotateFirst  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"If linked list is empty, return NULL.\\nOtherwise return head item and advance head to the next item.\"", amc::tfunc_Llist_RotateFirst }
         ,{ "amcdb.tfunc  tfunc:Llist.qLast  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:Y  pure:N  ismacro:N  comment:\"Return reference to last element in the index. No bounds checking.\"", amc::tfunc_Llist_qLast }
         ,{ "amcdb.tfunc  tfunc:Llist.curs  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Llist_curs }
+        ,{ "amcdb.tfunc  tfunc:Llist.delcurs  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Llist_delcurs }
         ,{ "amcdb.tfunc  tfunc:Lpool.Init  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:\"\"", amc::tfunc_Lpool_Init }
         ,{ "amcdb.tfunc  tfunc:Lpool.FreeMem  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Free block of memory previously returned by Lpool.\"", amc::tfunc_Lpool_FreeMem }
         ,{ "amcdb.tfunc  tfunc:Lpool.AllocMem  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:Y  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Lpool_AllocMem }
@@ -15261,6 +15261,7 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Ptrary.Reserve  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Reserve space in index for N more elements;\"", amc::tfunc_Ptrary_Reserve }
         ,{ "amcdb.tfunc  tfunc:Ptrary.Uninit  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:\"\"", amc::tfunc_Ptrary_Uninit }
         ,{ "amcdb.tfunc  tfunc:Ptrary.curs  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ptrary_curs }
+        ,{ "amcdb.tfunc  tfunc:Ptrary.oncecurs  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ptrary_oncecurs }
         ,{ "amcdb.tfunc  tfunc:RegxSql.Init  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:\"\"", amc::tfunc_RegxSql_Init }
         ,{ "amcdb.tfunc  tfunc:RegxSql.Print  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Print back to string\"", amc::tfunc_RegxSql_Print }
         ,{ "amcdb.tfunc  tfunc:RegxSql.ReadStrptrMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Read Regx from string\"", amc::tfunc_RegxSql_ReadStrptrMaybe }
@@ -15639,6 +15640,7 @@ static void amc::gen_LoadStatic() {
         ,{ "amcdb.gen  gen:check_cheapcopy  perns:N  comment:\"Check that cheapcopy is consistently applied\"", amc::gen_check_cheapcopy }
         ,{ "amcdb.gen  gen:check_cascdel  perns:N  comment:\"\"", amc::gen_check_cascdel }
         ,{ "amcdb.gen  gen:check_cpptype  perns:N  comment:\"\"", amc::gen_check_cpptype }
+        ,{ "amcdb.gen  gen:check_fcurs  perns:N  comment:\"Check that cursors can be generated\"", amc::gen_check_fcurs }
         ,{ "amcdb.gen  gen:check_prefix  perns:N  comment:\"Check field prefixes\"", amc::gen_check_prefix }
         ,{ "amcdb.gen  gen:check_bitfld  perns:N  comment:\"Check that bitfields don't overlap\"", amc::gen_check_bitfld }
         ,{ "amcdb.gen  gen:check_varlen  perns:N  comment:\"CHeck that msgtype is not cheap copy\"", amc::gen_check_varlen }
@@ -15655,12 +15657,11 @@ static void amc::gen_LoadStatic() {
         ,{ "amcdb.gen  gen:ssimdb  perns:N  comment:\"Check nsdb table consistency\"", amc::gen_ssimdb }
         ,{ "amcdb.gen  gen:xref2  perns:N  comment:\"For each ctype, calculate list of xrefs where the ctype is a child\"", amc::gen_xref2 }
         ,{ "amcdb.gen  gen:check_xref  perns:N  comment:\"Validate xrefs\"", amc::gen_check_xref }
-        ,{ "amcdb.gen  gen:ns_fwddecl  perns:N  comment:\"Forward-declaration of steps\"", amc::gen_ns_fwddecl }
         ,{ "amcdb.gen  gen:ns_enums  perns:N  comment:\"Output enums\"", amc::gen_ns_enums }
-        ,{ "amcdb.gen  gen:ns_fwddecl2  perns:N  comment:\"Output forward declarations of structs\"", amc::gen_ns_fwddecl2 }
         ,{ "amcdb.gen  gen:ns_pkeytypedef  perns:N  comment:\"Pkey typedefs\"", amc::gen_ns_pkeytypedef }
-        ,{ "amcdb.gen  gen:ns_begin  perns:N  comment:\"begin namespace block\"", amc::gen_ns_begin }
         ,{ "amcdb.gen  gen:ns_field  perns:N  comment:\"Recursively visit all fields and generate code for them\"", amc::gen_ns_field }
+        ,{ "amcdb.gen  gen:ns_fwddecl  perns:N  comment:\"Forward-declaration of steps\"", amc::gen_ns_fwddecl }
+        ,{ "amcdb.gen  gen:ns_fwddecl2  perns:N  comment:\"Output forward declarations of structs\"", amc::gen_ns_fwddecl2 }
         ,{ "amcdb.gen  gen:ns_gstatic  perns:N  comment:\"Generate step function pointers for gstatic tables\"", amc::gen_ns_gstatic }
         ,{ "amcdb.gen  gen:compute_size  perns:N  comment:\"Compute sizes of all ctypes\"", amc::gen_compute_size }
         ,{ "amcdb.gen  gen:cget  perns:N  comment:\"Generate helpful Q functions based on fconsts and bools\"", amc::gen_cget }
@@ -17000,108 +17001,6 @@ bool amc::findrem_XrefMaybe(amc::FFindrem &row) {
     return retval;
 }
 
-// --- amc.FDb.tcursor.Alloc
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-amc::FTcursor& amc::tcursor_Alloc() {
-    amc::FTcursor* row = tcursor_AllocMaybe();
-    if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("amc.out_of_mem  field:amc.FDb.tcursor  comment:'Alloc failed'");
-    }
-    return *row;
-}
-
-// --- amc.FDb.tcursor.AllocMaybe
-// Allocate memory for new element. If out of memory, return NULL.
-amc::FTcursor* amc::tcursor_AllocMaybe() {
-    amc::FTcursor *row = (amc::FTcursor*)tcursor_AllocMem();
-    if (row) {
-        new (row) amc::FTcursor; // call constructor
-    }
-    return row;
-}
-
-// --- amc.FDb.tcursor.InsertMaybe
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-amc::FTcursor* amc::tcursor_InsertMaybe(const amcdb::Tcursor &value) {
-    amc::FTcursor *row = &tcursor_Alloc(); // if out of memory, process dies. if input error, return NULL.
-    tcursor_CopyIn(*row,const_cast<amcdb::Tcursor&>(value));
-    bool ok = tcursor_XrefMaybe(*row); // this may return false
-    if (!ok) {
-        tcursor_RemoveLast(); // delete offending row, any existing xrefs are cleared
-        row = NULL; // forget this ever happened
-    }
-    return row;
-}
-
-// --- amc.FDb.tcursor.AllocMem
-// Allocate space for one element. If no memory available, return NULL.
-void* amc::tcursor_AllocMem() {
-    u64 new_nelems     = _db.tcursor_n+1;
-    // compute level and index on level
-    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
-    u64 base  = u64(1)<<bsr;
-    u64 index = new_nelems-base;
-    void *ret = NULL;
-    // if level doesn't exist yet, create it
-    amc::FTcursor*  lev   = NULL;
-    if (bsr < 32) {
-        lev = _db.tcursor_lary[bsr];
-        if (!lev) {
-            lev=(amc::FTcursor*)amc::lpool_AllocMem(sizeof(amc::FTcursor) * (u64(1)<<bsr));
-            _db.tcursor_lary[bsr] = lev;
-        }
-    }
-    // allocate element from this level
-    if (lev) {
-        _db.tcursor_n = i32(new_nelems);
-        ret = lev + index;
-    }
-    return ret;
-}
-
-// --- amc.FDb.tcursor.RemoveLast
-// Delete last element of array. Do nothing if array is empty.
-void amc::tcursor_RemoveLast() {
-    u64 n = _db.tcursor_n;
-    if (n > 0) {
-        n -= 1;
-        tcursor_qFind(u64(n)).~FTcursor();
-        _db.tcursor_n = i32(n);
-    }
-}
-
-// --- amc.FDb.tcursor.InputMaybe
-static bool amc::tcursor_InputMaybe(amcdb::Tcursor &elem) {
-    bool retval = true;
-    retval = tcursor_InsertMaybe(elem) != nullptr;
-    return retval;
-}
-
-// --- amc.FDb.tcursor.XrefMaybe
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool amc::tcursor_XrefMaybe(amc::FTcursor &row) {
-    bool retval = true;
-    (void)row;
-    amc::FTfunc* p_tfunc = amc::ind_tfunc_Find(row.tfunc);
-    if (UNLIKELY(!p_tfunc)) {
-        algo_lib::ResetErrtext() << "amc.bad_xref  index:amc.FDb.ind_tfunc" << Keyval("key", row.tfunc);
-        return false;
-    }
-    // insert tcursor into index c_tcursor
-    if (true) { // user-defined insert condition
-        bool success = c_tcursor_InsertMaybe(*p_tfunc, row);
-        if (UNLIKELY(!success)) {
-            ch_RemoveAll(algo_lib::_db.errtext);
-            algo_lib::_db.errtext << "amc.duplicate_key  xref:amc.FTfunc.c_tcursor"; // check for duplicate key
-            return false;
-        }
-    }
-    return retval;
-}
-
 // --- amc.FDb.fcurs.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -17187,6 +17086,15 @@ static bool amc::fcurs_InputMaybe(dmmeta::Fcurs &elem) {
 bool amc::fcurs_XrefMaybe(amc::FFcurs &row) {
     bool retval = true;
     (void)row;
+    amc::FField* p_field = amc::ind_field_Find(field_Get(row));
+    if (UNLIKELY(!p_field)) {
+        algo_lib::ResetErrtext() << "amc.bad_xref  index:amc.FDb.ind_field" << Keyval("key", field_Get(row));
+        return false;
+    }
+    // fcurs: save pointer to field
+    if (true) { // user-defined insert condition
+        row.p_field = p_field;
+    }
     amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(row));
     if (UNLIKELY(!p_ctype)) {
         algo_lib::ResetErrtext() << "amc.bad_xref  index:amc.FDb.ind_ctype" << Keyval("key", ctype_Get(row));
@@ -17195,6 +17103,15 @@ bool amc::fcurs_XrefMaybe(amc::FFcurs &row) {
     // insert fcurs into index c_fcurs
     if (true) { // user-defined insert condition
         c_fcurs_Insert(*p_ctype, row);
+    }
+    // insert fcurs into index ind_fcurs
+    if (true) { // user-defined insert condition
+        bool success = ind_fcurs_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "amc.duplicate_key  xref:amc.FDb.ind_fcurs"; // check for duplicate key
+            return false;
+        }
     }
     return retval;
 }
@@ -20992,6 +20909,232 @@ bool amc::fuserinit_XrefMaybe(amc::FFuserinit &row) {
     return retval;
 }
 
+// --- amc.FDb.ind_fcurs.Find
+// Find row by key. Return NULL if not found.
+amc::FFcurs* amc::ind_fcurs_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_fcurs_buckets_n - 1);
+    amc::FFcurs* *e = &_db.ind_fcurs_buckets_elems[index];
+    amc::FFcurs* ret=NULL;
+    do {
+        ret       = *e;
+        bool done = !ret || (*ret).fcurs == key;
+        if (done) break;
+        e         = &ret->ind_fcurs_next;
+    } while (true);
+    return ret;
+}
+
+// --- amc.FDb.ind_fcurs.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+amc::FFcurs& amc::ind_fcurs_GetOrCreate(const algo::strptr& key) {
+    amc::FFcurs* ret = ind_fcurs_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &fcurs_Alloc();
+        (*ret).fcurs = key;
+        bool good = fcurs_XrefMaybe(*ret);
+        if (!good) {
+            fcurs_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_fcurs  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- amc.FDb.ind_fcurs.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool amc::ind_fcurs_InsertMaybe(amc::FFcurs& row) {
+    ind_fcurs_Reserve(1);
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_fcurs_next == (amc::FFcurs*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr50_Hash(0, row.fcurs) & (_db.ind_fcurs_buckets_n - 1);
+        amc::FFcurs* *prev = &_db.ind_fcurs_buckets_elems[index];
+        do {
+            amc::FFcurs* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).fcurs == row.fcurs) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_fcurs_next;
+        } while (true);
+        if (retval) {
+            row.ind_fcurs_next = *prev;
+            _db.ind_fcurs_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- amc.FDb.ind_fcurs.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void amc::ind_fcurs_Remove(amc::FFcurs& row) {
+    if (LIKELY(row.ind_fcurs_next != (amc::FFcurs*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr50_Hash(0, row.fcurs) & (_db.ind_fcurs_buckets_n - 1);
+        amc::FFcurs* *prev = &_db.ind_fcurs_buckets_elems[index]; // addr of pointer to current element
+        while (amc::FFcurs *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_fcurs_next; // unlink (singly linked list)
+                _db.ind_fcurs_n--;
+                row.ind_fcurs_next = (amc::FFcurs*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_fcurs_next;
+        }
+    }
+}
+
+// --- amc.FDb.ind_fcurs.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void amc::ind_fcurs_Reserve(int n) {
+    u32 old_nbuckets = _db.ind_fcurs_buckets_n;
+    u32 new_nelems   = _db.ind_fcurs_n + n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(amc::FFcurs*);
+        u32 new_size = new_nbuckets * sizeof(amc::FFcurs*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        amc::FFcurs* *new_buckets = (amc::FFcurs**)amc::lpool_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("amc.out_of_memory  field:amc.FDb.ind_fcurs");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_fcurs_buckets_n; i++) {
+            amc::FFcurs* elem = _db.ind_fcurs_buckets_elems[i];
+            while (elem) {
+                amc::FFcurs &row        = *elem;
+                amc::FFcurs* next       = row.ind_fcurs_next;
+                u32 index          = algo::Smallstr50_Hash(0, row.fcurs) & (new_nbuckets-1);
+                row.ind_fcurs_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        amc::lpool_FreeMem(_db.ind_fcurs_buckets_elems, old_size);
+        _db.ind_fcurs_buckets_elems = new_buckets;
+        _db.ind_fcurs_buckets_n = new_nbuckets;
+    }
+}
+
+// --- amc.FDb.tcurs.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+amc::FTcurs& amc::tcurs_Alloc() {
+    amc::FTcurs* row = tcurs_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("amc.out_of_mem  field:amc.FDb.tcurs  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- amc.FDb.tcurs.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+amc::FTcurs* amc::tcurs_AllocMaybe() {
+    amc::FTcurs *row = (amc::FTcurs*)tcurs_AllocMem();
+    if (row) {
+        new (row) amc::FTcurs; // call constructor
+    }
+    return row;
+}
+
+// --- amc.FDb.tcurs.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc::FTcurs* amc::tcurs_InsertMaybe(const amcdb::Tcurs &value) {
+    amc::FTcurs *row = &tcurs_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    tcurs_CopyIn(*row,const_cast<amcdb::Tcurs&>(value));
+    bool ok = tcurs_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        tcurs_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- amc.FDb.tcurs.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* amc::tcurs_AllocMem() {
+    u64 new_nelems     = _db.tcurs_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    amc::FTcurs*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.tcurs_lary[bsr];
+        if (!lev) {
+            lev=(amc::FTcurs*)amc::lpool_AllocMem(sizeof(amc::FTcurs) * (u64(1)<<bsr));
+            _db.tcurs_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.tcurs_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- amc.FDb.tcurs.RemoveAll
+// Remove all elements from Lary
+void amc::tcurs_RemoveAll() {
+    for (u64 n = _db.tcurs_n; n>0; ) {
+        n--;
+        tcurs_qFind(u64(n)).~FTcurs(); // destroy last element
+        _db.tcurs_n = i32(n);
+    }
+}
+
+// --- amc.FDb.tcurs.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void amc::tcurs_RemoveLast() {
+    u64 n = _db.tcurs_n;
+    if (n > 0) {
+        n -= 1;
+        tcurs_qFind(u64(n)).~FTcurs();
+        _db.tcurs_n = i32(n);
+    }
+}
+
+// --- amc.FDb.tcurs.InputMaybe
+static bool amc::tcurs_InputMaybe(amcdb::Tcurs &elem) {
+    bool retval = true;
+    retval = tcurs_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- amc.FDb.tcurs.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool amc::tcurs_XrefMaybe(amc::FTcurs &row) {
+    bool retval = true;
+    (void)row;
+    amc::FTfunc* p_tfunc = amc::ind_tfunc_Find(row.tfunc);
+    if (UNLIKELY(!p_tfunc)) {
+        algo_lib::ResetErrtext() << "amc.bad_xref  index:amc.FDb.ind_tfunc" << Keyval("key", row.tfunc);
+        return false;
+    }
+    // insert tcurs into index c_tcurs
+    if (true) { // user-defined insert condition
+        bool success = c_tcurs_InsertMaybe(*p_tfunc, row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "amc.duplicate_key  xref:amc.FTfunc.c_tcurs"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
 // --- amc.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr amc::trace_RowidFind(int t) {
@@ -22213,17 +22356,6 @@ void amc::FDb_Init() {
         _db.findrem_lary[i]  = findrem_first;
         findrem_first    += 1ULL<<i;
     }
-    // initialize LAry tcursor (amc.FDb.tcursor)
-    _db.tcursor_n = 0;
-    memset(_db.tcursor_lary, 0, sizeof(_db.tcursor_lary)); // zero out all level pointers
-    amc::FTcursor* tcursor_first = (amc::FTcursor*)amc::lpool_AllocMem(sizeof(amc::FTcursor) * (u64(1)<<4));
-    if (!tcursor_first) {
-        FatalErrorExit("out of memory");
-    }
-    for (int i = 0; i < 4; i++) {
-        _db.tcursor_lary[i]  = tcursor_first;
-        tcursor_first    += 1ULL<<i;
-    }
     // initialize LAry fcurs (amc.FDb.fcurs)
     _db.fcurs_n = 0;
     memset(_db.fcurs_lary, 0, sizeof(_db.fcurs_lary)); // zero out all level pointers
@@ -22542,6 +22674,25 @@ void amc::FDb_Init() {
         _db.fuserinit_lary[i]  = fuserinit_first;
         fuserinit_first    += 1ULL<<i;
     }
+    // initialize hash table for amc::FFcurs;
+    _db.ind_fcurs_n             	= 0; // (amc.FDb.ind_fcurs)
+    _db.ind_fcurs_buckets_n     	= 4; // (amc.FDb.ind_fcurs)
+    _db.ind_fcurs_buckets_elems 	= (amc::FFcurs**)amc::lpool_AllocMem(sizeof(amc::FFcurs*)*_db.ind_fcurs_buckets_n); // initial buckets (amc.FDb.ind_fcurs)
+    if (!_db.ind_fcurs_buckets_elems) {
+        FatalErrorExit("out of memory"); // (amc.FDb.ind_fcurs)
+    }
+    memset(_db.ind_fcurs_buckets_elems, 0, sizeof(amc::FFcurs*)*_db.ind_fcurs_buckets_n); // (amc.FDb.ind_fcurs)
+    // initialize LAry tcurs (amc.FDb.tcurs)
+    _db.tcurs_n = 0;
+    memset(_db.tcurs_lary, 0, sizeof(_db.tcurs_lary)); // zero out all level pointers
+    amc::FTcurs* tcurs_first = (amc::FTcurs*)amc::lpool_AllocMem(sizeof(amc::FTcurs) * (u64(1)<<4));
+    if (!tcurs_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.tcurs_lary[i]  = tcurs_first;
+        tcurs_first    += 1ULL<<i;
+    }
     _db.has_ams_fwd_declare = bool(false);
 
     amc::InitReflection();
@@ -22554,6 +22705,12 @@ void amc::FDb_Init() {
 // --- amc.FDb..Uninit
 void amc::FDb_Uninit() {
     amc::FDb &row = _db; (void)row;
+
+    // amc.FDb.tcurs.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // amc.FDb.ind_fcurs.Uninit (Thash)  //
+    // skip destruction of ind_fcurs in global scope
 
     // amc.FDb.fuserinit.Uninit (Lary)  //
     // skip destruction in global scope
@@ -22646,9 +22803,6 @@ void amc::FDb_Uninit() {
     // skip destruction in global scope
 
     // amc.FDb.fcurs.Uninit (Lary)  //
-    // skip destruction in global scope
-
-    // amc.FDb.tcursor.Uninit (Lary)  //
     // skip destruction in global scope
 
     // amc.FDb.findrem.Uninit (Lary)  //
@@ -23934,8 +24088,8 @@ algo::Smallstr50 amc::ctype_Get(amc::FFcurs& fcurs) {
     return ret;
 }
 
-// --- amc.FFcurs.curs.Get
-algo::Smallstr50 amc::curs_Get(amc::FFcurs& fcurs) {
+// --- amc.FFcurs.curstype.Get
+algo::Smallstr50 amc::curstype_Get(amc::FFcurs& fcurs) {
     algo::Smallstr50 ret(algo::Pathcomp(fcurs.fcurs, "/RR"));
     return ret;
 }
@@ -23947,6 +24101,7 @@ void amc::FFcurs_Uninit(amc::FFcurs& fcurs) {
     if (p_ctype)  {
         c_fcurs_Remove(*p_ctype, row);// remove fcurs from index c_fcurs
     }
+    ind_fcurs_Remove(row); // remove fcurs from index ind_fcurs
 }
 
 // --- amc.FFdec.msghdr.CopyIn
@@ -27884,26 +28039,34 @@ void amc::FTary_Uninit(amc::FTary& tary) {
     }
 }
 
-// --- amc.FTcursor.base.CopyOut
+// --- amc.FTcurs.base.CopyOut
 // Copy fields out of row
-void amc::tcursor_CopyOut(amc::FTcursor &row, amcdb::Tcursor &out) {
+void amc::tcurs_CopyOut(amc::FTcurs &row, amcdb::Tcurs &out) {
     out.tfunc = row.tfunc;
+    out.dflt = row.dflt;
     out.comment = row.comment;
 }
 
-// --- amc.FTcursor.base.CopyIn
+// --- amc.FTcurs.base.CopyIn
 // Copy fields in to row
-void amc::tcursor_CopyIn(amc::FTcursor &row, amcdb::Tcursor &in) {
+void amc::tcurs_CopyIn(amc::FTcurs &row, amcdb::Tcurs &in) {
     row.tfunc = in.tfunc;
+    row.dflt = in.dflt;
     row.comment = in.comment;
 }
 
-// --- amc.FTcursor..Uninit
-void amc::FTcursor_Uninit(amc::FTcursor& tcursor) {
-    amc::FTcursor &row = tcursor; (void)row;
+// --- amc.FTcurs.curstype.Get
+algo::Smallstr50 amc::curstype_Get(amc::FTcurs& tcurs) {
+    algo::Smallstr50 ret(algo::Pathcomp(tcurs.tfunc, ".RR"));
+    return ret;
+}
+
+// --- amc.FTcurs..Uninit
+void amc::FTcurs_Uninit(amc::FTcurs& tcurs) {
+    amc::FTcurs &row = tcurs; (void)row;
     amc::FTfunc* p_tfunc = amc::ind_tfunc_Find(row.tfunc);
     if (p_tfunc)  {
-        c_tcursor_Remove(*p_tfunc, row);// remove tcursor from index c_tcursor
+        c_tcurs_Remove(*p_tfunc, row);// remove tcurs from index c_tcurs
     }
 }
 
@@ -27957,7 +28120,7 @@ void amc::FTfunc_Init(amc::FTfunc& tfunc) {
     tfunc.wur = bool(false);
     tfunc.pure = bool(false);
     tfunc.ismacro = bool(false);
-    tfunc.c_tcursor = NULL;
+    tfunc.c_tcurs = NULL;
     tfunc.tclass_c_tfunc_in_ary = bool(false);
     tfunc.ind_tfunc_next = (amc::FTfunc*)-1; // (amc.FDb.ind_tfunc) not-in-hash
     tfunc.step = NULL;
@@ -28338,7 +28501,7 @@ const char* amc::value_ToCstr(const amc::TableId& parent) {
         case amc_TableId_dev_Targdep       : ret = "dev.Targdep";  break;
         case amc_TableId_dev_Target        : ret = "dev.Target";  break;
         case amc_TableId_dmmeta_Tary       : ret = "dmmeta.Tary";  break;
-        case amc_TableId_amcdb_Tcursor     : ret = "amcdb.Tcursor";  break;
+        case amc_TableId_amcdb_Tcurs       : ret = "amcdb.Tcurs";  break;
         case amc_TableId_dmmeta_Thash      : ret = "dmmeta.Thash";  break;
         case amc_TableId_dmmeta_Typefld    : ret = "dmmeta.Typefld";  break;
         case amc_TableId_dmmeta_Usertracefld: ret = "dmmeta.Usertracefld";  break;
@@ -28406,8 +28569,16 @@ bool amc::value_SetStrptrMaybe(amc::TableId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"tin",3)==0) { value_SetEnum(parent,amc_TableId_amcdb_Bltin); ret = true; break; }
                     break;
                 }
+                case LE_STR8('a','m','c','d','b','.','T','c'): {
+                    if (memcmp(rhs.elems+8,"urs",3)==0) { value_SetEnum(parent,amc_TableId_amcdb_Tcurs); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('a','m','c','d','b','.','b','l'): {
                     if (memcmp(rhs.elems+8,"tin",3)==0) { value_SetEnum(parent,amc_TableId_amcdb_bltin); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('a','m','c','d','b','.','t','c'): {
+                    if (memcmp(rhs.elems+8,"urs",3)==0) { value_SetEnum(parent,amc_TableId_amcdb_tcurs); ret = true; break; }
                     break;
                 }
                 case LE_STR8('d','e','v','.','T','a','r','g'): {
@@ -28567,14 +28738,6 @@ bool amc::value_SetStrptrMaybe(amc::TableId& parent, algo::strptr rhs) {
         }
         case 13: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','m','c','d','b','.','T','c'): {
-                    if (memcmp(rhs.elems+8,"ursor",5)==0) { value_SetEnum(parent,amc_TableId_amcdb_Tcursor); ret = true; break; }
-                    break;
-                }
-                case LE_STR8('a','m','c','d','b','.','t','c'): {
-                    if (memcmp(rhs.elems+8,"ursor",5)==0) { value_SetEnum(parent,amc_TableId_amcdb_tcursor); ret = true; break; }
-                    break;
-                }
                 case LE_STR8('d','m','m','e','t','a','.','B'): {
                     if (memcmp(rhs.elems+8,"itfld",5)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Bitfld); ret = true; break; }
                     break;

@@ -95,7 +95,7 @@ const char *gitlab_syntax =
 " -track:string=\"origin/master\"\n"
 ;
 } // namespace gitlab
-namespace gitlab {
+namespace gitlab { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     static bool          project_InputMaybe(dev::GitlabProject &elem) __attribute__((nothrow));
@@ -104,7 +104,7 @@ namespace gitlab {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace gitlab
+} // gen:ns_print_proto
 
 // --- gitlab.trace..Print
 // print string representation of gitlab::trace to string LHS, no header -- cprint:gitlab.trace.String

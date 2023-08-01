@@ -13,6 +13,7 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_lib_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- lib_exec_FieldIdEnum
 
@@ -22,25 +23,26 @@ enum lib_exec_FieldIdEnum {        // lib_exec.FieldId.value
 
 enum { lib_exec_FieldIdEnum_N = 1 };
 
+namespace lib_exec { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace lib_exec { // gen:ns_field
+extern const char *lib_exec_help;
+extern const char *lib_exec_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace lib_exec { struct FSyscmd; }
+namespace lib_exec { struct _db_syscmddep_curs; }
+namespace lib_exec { struct _db_syscmd_curs; }
+namespace lib_exec { struct _db_bh_syscmd_curs; }
+namespace lib_exec { struct _db_zd_started_curs; }
+namespace lib_exec { struct syscmd_c_prior_curs; }
+namespace lib_exec { struct syscmd_c_next_curs; }
 namespace lib_exec { struct trace; }
 namespace lib_exec { struct FDb; }
 namespace lib_exec { struct FSyscmddep; }
 namespace lib_exec { struct FieldId; }
-namespace lib_exec { struct _db_syscmddep_curs; }
-namespace lib_exec { struct _db_syscmd_curs; }
-namespace lib_exec { struct _db_ind_running_curs; }
-namespace lib_exec { struct _db_bh_syscmd_curs; }
-namespace lib_exec { struct _db_bh_syscmd_unordcurs; }
-namespace lib_exec { struct _db_zd_started_curs; }
-namespace lib_exec { struct syscmd_c_prior_curs; }
-namespace lib_exec { struct syscmd_c_next_curs; }
-namespace lib_exec {
-}//pkey typedefs
-namespace lib_exec {
-extern const char *lib_exec_help;
-extern const char *lib_exec_syntax;
-extern FDb _db;
+namespace lib_exec { extern struct lib_exec::FDb _db; }
+namespace lib_exec { // gen:ns_print_struct
 
 // --- lib_exec.trace
 #pragma pack(push,1)
@@ -440,6 +442,8 @@ bool                 FieldId_ReadStrptrMaybe(lib_exec::FieldId &parent, algo::st
 void                 FieldId_Init(lib_exec::FieldId& parent);
 // print string representation of lib_exec::FieldId to string LHS, no header -- cprint:lib_exec.FieldId.String
 void                 FieldId_Print(lib_exec::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace lib_exec { // gen:ns_curstext
 
 struct _db_syscmddep_curs {// cursor
     typedef lib_exec::FSyscmddep ChildType;
@@ -469,7 +473,7 @@ struct _db_bh_syscmd_curs {
 };
 
 
-struct _db_zd_started_curs {// cursor
+struct _db_zd_started_curs {// fcurs:lib_exec.FDb.zd_started/curs
     typedef lib_exec::FSyscmd ChildType;
     lib_exec::FSyscmd* row;
     _db_zd_started_curs() {
@@ -478,7 +482,7 @@ struct _db_zd_started_curs {// cursor
 };
 
 
-struct syscmd_c_prior_curs {// cursor
+struct syscmd_c_prior_curs {// fcurs:lib_exec.FSyscmd.c_prior/curs
     typedef lib_exec::FSyscmddep ChildType;
     lib_exec::FSyscmddep** elems;
     u32 n_elems;
@@ -487,7 +491,7 @@ struct syscmd_c_prior_curs {// cursor
 };
 
 
-struct syscmd_c_next_curs {// cursor
+struct syscmd_c_next_curs {// fcurs:lib_exec.FSyscmd.c_next/curs
     typedef lib_exec::FSyscmddep ChildType;
     lib_exec::FSyscmddep** elems;
     u32 n_elems;
@@ -495,7 +499,10 @@ struct syscmd_c_next_curs {// cursor
     syscmd_c_next_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-} // end namespace lib_exec
+} // gen:ns_curstext
+namespace lib_exec { // gen:ns_func
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const lib_exec::trace &row);// cfmt:lib_exec.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const lib_exec::FieldId &row);// cfmt:lib_exec.FieldId.String

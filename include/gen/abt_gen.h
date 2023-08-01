@@ -15,6 +15,7 @@
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/algo_lib_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- abt_FieldIdEnum
 
@@ -57,6 +58,16 @@ enum abt_TableIdEnum {                   // abt.TableId.value
 
 enum { abt_TableIdEnum_N = 25 };
 
+namespace abt { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace abt { // gen:ns_field
+struct lpool_Lpblock {
+    lpool_Lpblock* next;
+};
+extern const char *abt_help;
+extern const char *abt_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace dev { struct Arch; }
 namespace dev { struct Cfg; }
 namespace dev { struct Compiler; }
@@ -77,6 +88,37 @@ namespace dev { struct Targsyslib; }
 namespace abt { struct FSyslib; }
 namespace dev { struct ToolOpt; }
 namespace dev { struct Uname; }
+namespace abt { struct _db_srcfile_curs; }
+namespace abt { struct _db_targdep_curs; }
+namespace abt { struct _db_tool_opt_curs; }
+namespace abt { struct _db_target_curs; }
+namespace abt { struct _db_targsrc_curs; }
+namespace abt { struct _db_syscmddep_curs; }
+namespace abt { struct _db_syscmd_curs; }
+namespace abt { struct _db_cfg_curs; }
+namespace abt { struct _db_uname_curs; }
+namespace abt { struct _db_compiler_curs; }
+namespace abt { struct _db_arch_curs; }
+namespace abt { struct _db_bh_syscmd_curs; }
+namespace abt { struct _db_zs_srcfile_read_curs; }
+namespace abt { struct _db_zs_sel_target_curs; }
+namespace abt { struct _db_targsyslib_curs; }
+namespace abt { struct _db_syslib_curs; }
+namespace abt { struct _db_include_curs; }
+namespace abt { struct _db_sysincl_curs; }
+namespace abt { struct _db_zs_origsel_target_curs; }
+namespace abt { struct _db_ns_curs; }
+namespace abt { struct _db_filestat_curs; }
+namespace abt { struct _db_zd_inclstack_curs; }
+namespace abt { struct srcfile_zd_include_curs; }
+namespace abt { struct syscmd_c_prior_curs; }
+namespace abt { struct syscmd_c_next_curs; }
+namespace abt { struct target_c_targsrc_curs; }
+namespace abt { struct target_c_srcfile_curs; }
+namespace abt { struct target_c_targdep_curs; }
+namespace abt { struct target_c_targsyslib_curs; }
+namespace abt { struct target_c_alldep_curs; }
+namespace abt { struct target_c_alllib_curs; }
 namespace abt { struct FArch; }
 namespace abt { struct FCfg; }
 namespace abt { struct FCompiler; }
@@ -92,68 +134,18 @@ namespace abt { struct FToolOpt; }
 namespace abt { struct FUname; }
 namespace abt { struct FieldId; }
 namespace abt { struct TableId; }
-namespace abt { struct _db_srcfile_curs; }
-namespace abt { struct _db_targdep_curs; }
-namespace abt { struct _db_tool_opt_curs; }
-namespace abt { struct _db_ind_target_curs; }
-namespace abt { struct _db_target_curs; }
-namespace abt { struct _db_ind_targsrc_curs; }
-namespace abt { struct _db_targsrc_curs; }
-namespace abt { struct _db_syscmddep_curs; }
-namespace abt { struct _db_syscmd_curs; }
-namespace abt { struct _db_ind_syscmd_curs; }
-namespace abt { struct _db_ind_running_curs; }
-namespace abt { struct _db_ind_srcfile_curs; }
-namespace abt { struct _db_cfg_curs; }
-namespace abt { struct _db_ind_cfg_curs; }
-namespace abt { struct _db_uname_curs; }
-namespace abt { struct _db_ind_uname_curs; }
-namespace abt { struct _db_compiler_curs; }
-namespace abt { struct _db_ind_compiler_curs; }
-namespace abt { struct _db_arch_curs; }
-namespace abt { struct _db_ind_arch_curs; }
-namespace abt { struct _db_bh_syscmd_curs; }
-namespace abt { struct _db_bh_syscmd_unordcurs; }
-namespace abt { struct _db_zs_srcfile_read_curs; }
-namespace abt { struct _db_zs_sel_target_curs; }
-namespace abt { struct _db_targsyslib_curs; }
-namespace abt { struct _db_syslib_curs; }
-namespace abt { struct _db_ind_syslib_curs; }
-namespace abt { struct _db_include_curs; }
-namespace abt { struct _db_ind_include_curs; }
-namespace abt { struct _db_sysincl_curs; }
-namespace abt { struct _db_zs_origsel_target_curs; }
-namespace abt { struct _db_ns_curs; }
-namespace abt { struct _db_ind_ns_curs; }
-namespace abt { struct _db_filestat_curs; }
-namespace abt { struct _db_ind_filestat_curs; }
-namespace abt { struct _db_zd_inclstack_curs; }
-namespace abt { struct srcfile_zd_include_curs; }
-namespace abt { struct syscmd_c_prior_curs; }
-namespace abt { struct syscmd_c_next_curs; }
-namespace abt { struct target_c_targsrc_curs; }
-namespace abt { struct target_c_srcfile_curs; }
-namespace abt { struct target_c_targdep_curs; }
-namespace abt { struct target_c_targsyslib_curs; }
-namespace abt { struct target_c_alldep_curs; }
-namespace abt { struct target_c_alllib_curs; }
-namespace abt {
-}//pkey typedefs
-namespace abt {
-struct lpool_Lpblock {
-    lpool_Lpblock* next;
-};
-extern const char *abt_help;
-extern const char *abt_syntax;
-extern FDb _db;
-extern const char* dev_opt_type_AR; // "AR"
-extern const char* dev_opt_type_C; // "C"
-extern const char* dev_opt_type_CC; // "CC"
-extern const char* dev_opt_type_CPP; // "CPP"
-extern const char* dev_opt_type_HPP; // "HPP"
-extern const char* dev_opt_type_IGNOREME; // "IGNOREME"
-extern const char* dev_opt_type_LINK; // "LINK"
-extern const char* dev_opt_type_RC; // "RC"
+namespace abt { extern struct abt::FDb _db; }
+namespace abt { // gen:ns_gsymbol
+    extern const char* dev_opt_type_AR; // "AR"
+    extern const char* dev_opt_type_C; // "C"
+    extern const char* dev_opt_type_CC; // "CC"
+    extern const char* dev_opt_type_CPP; // "CPP"
+    extern const char* dev_opt_type_HPP; // "HPP"
+    extern const char* dev_opt_type_IGNOREME; // "IGNOREME"
+    extern const char* dev_opt_type_LINK; // "LINK"
+    extern const char* dev_opt_type_RC; // "RC"
+} // gen:ns_gsymbol
+namespace abt { // gen:ns_print_struct
 
 // --- abt.FArch
 // create: abt.FDb.arch (Lary)
@@ -2180,6 +2172,8 @@ bool                 TableId_ReadStrptrMaybe(abt::TableId &parent, algo::strptr 
 void                 TableId_Init(abt::TableId& parent);
 // print string representation of abt::TableId to string LHS, no header -- cprint:abt.TableId.String
 void                 TableId_Print(abt::TableId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace abt { // gen:ns_curstext
 
 struct _db_srcfile_curs {// cursor
     typedef abt::FSrcfile ChildType;
@@ -2281,7 +2275,7 @@ struct _db_bh_syscmd_curs {
 };
 
 
-struct _db_zs_srcfile_read_curs {// cursor
+struct _db_zs_srcfile_read_curs {// fcurs:abt.FDb.zs_srcfile_read/curs
     typedef abt::FSrcfile ChildType;
     abt::FSrcfile* row;
     _db_zs_srcfile_read_curs() {
@@ -2290,7 +2284,7 @@ struct _db_zs_srcfile_read_curs {// cursor
 };
 
 
-struct _db_zs_sel_target_curs {// cursor
+struct _db_zs_sel_target_curs {// fcurs:abt.FDb.zs_sel_target/curs
     typedef abt::FTarget ChildType;
     abt::FTarget* row;
     _db_zs_sel_target_curs() {
@@ -2332,7 +2326,7 @@ struct _db_sysincl_curs {// cursor
 };
 
 
-struct _db_zs_origsel_target_curs {// cursor
+struct _db_zs_origsel_target_curs {// fcurs:abt.FDb.zs_origsel_target/curs
     typedef abt::FTarget ChildType;
     abt::FTarget* row;
     _db_zs_origsel_target_curs() {
@@ -2357,7 +2351,7 @@ struct _db_filestat_curs {// cursor
 };
 
 
-struct _db_zd_inclstack_curs {// cursor
+struct _db_zd_inclstack_curs {// fcurs:abt.FDb.zd_inclstack/curs
     typedef abt::FSrcfile ChildType;
     abt::FSrcfile* row;
     _db_zd_inclstack_curs() {
@@ -2366,7 +2360,7 @@ struct _db_zd_inclstack_curs {// cursor
 };
 
 
-struct srcfile_zd_include_curs {// cursor
+struct srcfile_zd_include_curs {// fcurs:abt.FSrcfile.zd_include/curs
     typedef abt::FInclude ChildType;
     abt::FInclude* row;
     srcfile_zd_include_curs() {
@@ -2375,7 +2369,7 @@ struct srcfile_zd_include_curs {// cursor
 };
 
 
-struct syscmd_c_prior_curs {// cursor
+struct syscmd_c_prior_curs {// fcurs:abt.FSyscmd.c_prior/curs
     typedef abt::FSyscmddep ChildType;
     abt::FSyscmddep** elems;
     u32 n_elems;
@@ -2384,7 +2378,7 @@ struct syscmd_c_prior_curs {// cursor
 };
 
 
-struct syscmd_c_next_curs {// cursor
+struct syscmd_c_next_curs {// fcurs:abt.FSyscmd.c_next/curs
     typedef abt::FSyscmddep ChildType;
     abt::FSyscmddep** elems;
     u32 n_elems;
@@ -2393,7 +2387,7 @@ struct syscmd_c_next_curs {// cursor
 };
 
 
-struct target_c_targsrc_curs {// cursor
+struct target_c_targsrc_curs {// fcurs:abt.FTarget.c_targsrc/curs
     typedef abt::FTargsrc ChildType;
     abt::FTargsrc** elems;
     u32 n_elems;
@@ -2402,7 +2396,7 @@ struct target_c_targsrc_curs {// cursor
 };
 
 
-struct target_c_srcfile_curs {// cursor
+struct target_c_srcfile_curs {// fcurs:abt.FTarget.c_srcfile/curs
     typedef abt::FSrcfile ChildType;
     abt::FSrcfile** elems;
     u32 n_elems;
@@ -2411,7 +2405,7 @@ struct target_c_srcfile_curs {// cursor
 };
 
 
-struct target_c_targdep_curs {// cursor
+struct target_c_targdep_curs {// fcurs:abt.FTarget.c_targdep/curs
     typedef abt::FTargdep ChildType;
     abt::FTargdep** elems;
     u32 n_elems;
@@ -2420,7 +2414,7 @@ struct target_c_targdep_curs {// cursor
 };
 
 
-struct target_c_targsyslib_curs {// cursor
+struct target_c_targsyslib_curs {// fcurs:abt.FTarget.c_targsyslib/curs
     typedef abt::FTargsyslib ChildType;
     abt::FTargsyslib** elems;
     u32 n_elems;
@@ -2429,7 +2423,7 @@ struct target_c_targsyslib_curs {// cursor
 };
 
 
-struct target_c_alldep_curs {// cursor
+struct target_c_alldep_curs {// fcurs:abt.FTarget.c_alldep/curs
     typedef abt::FTarget ChildType;
     abt::FTarget** elems;
     u32 n_elems;
@@ -2438,7 +2432,7 @@ struct target_c_alldep_curs {// cursor
 };
 
 
-struct target_c_alllib_curs {// cursor
+struct target_c_alllib_curs {// fcurs:abt.FTarget.c_alllib/curs
     typedef abt::FSyslib ChildType;
     abt::FSyslib** elems;
     u32 n_elems;
@@ -2446,11 +2440,14 @@ struct target_c_alllib_curs {// cursor
     target_c_alllib_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-} // end namespace abt
+} // gen:ns_curstext
+namespace abt { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const abt::trace &row);// cfmt:abt.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const abt::FieldId &row);// cfmt:abt.FieldId.String

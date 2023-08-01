@@ -151,6 +151,34 @@ amc::FField *amc::GetKeyfld(amc::FXref &xref) {
 
 // -----------------------------------------------------------------------------
 
+void amc::BeginNsBlock(cstring &out, amc::FNs &ns, strptr tag) {
+    tempstr comment;
+    if (tag == "") {
+        comment << "gen:"<<amc::_db.cur_gen;
+    } else {
+        comment = tag;
+    }
+    if (ch_N(ns.ns)) {
+        out<<"namespace "<<ns.ns<<" { // "<<comment<<eol;
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+void amc::EndNsBlock(cstring &out, amc::FNs &ns, strptr tag) {
+    tempstr comment;
+    if (tag == "") {
+        comment << "gen:"<<amc::_db.cur_gen;
+    } else {
+        comment = tag;
+    }
+    if (ch_N(ns.ns)) {
+        out<<"} // "<<comment << eol;
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 bool amc::PtrQ(amc::FField &field) {
     return field.reftype == dmmeta_Reftype_reftype_Ptr
         || field.reftype == dmmeta_Reftype_reftype_Upptr;
@@ -1104,6 +1132,7 @@ void amc::Main_Gen() {
     // run non-per-namespace generators
     ind_beg(amc::_db_gen_curs,gen,amc::_db) if (!gen.perns) {
         u64 c=algo::get_cycles();
+        _db.cur_gen=gen.gen;
         gen.step();
         CheckCumulativeError(gen,prev_err);
         gen.cycle_total += algo::get_cycles()-c;
@@ -1114,6 +1143,7 @@ void amc::Main_Gen() {
             ind_beg(amc::_db_zs_gen_perns_curs,gen,amc::_db) {
                 u64 c=algo::get_cycles();
                 amc::_db.c_ns=&ns;
+                _db.cur_gen=gen.gen;
                 gen.step();
                 CheckCumulativeError(gen,prev_err);
                 gen.cycle_total += algo::get_cycles()-c;

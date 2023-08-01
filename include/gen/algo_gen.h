@@ -9,6 +9,7 @@
 
 #pragma once
 //#pragma endinclude
+// gen:ns_enums
 
 // --- algo_BoolEnum
 
@@ -188,6 +189,24 @@ enum algo_TextJustEnum {            // algo.TextJust.value
 
 enum { algo_TextJustEnum_N = 3 };
 
+namespace algo { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace algo { // gen:ns_field
+} // gen:ns_field
+// gen:ns_fwddecl2
+namespace algo { struct error_ch_curs; }
+namespace algo { struct Tuple_attrs_curs; }
+namespace algo { struct Argtuple_proto_curs; }
+namespace algo { struct Argtuple_error_curs; }
+namespace algo { struct Arrsimp_out_curs; }
+namespace algo { struct Arrsimp_stack_curs; }
+namespace algo { struct ByteAry_ary_curs; }
+namespace algo { struct Charset_ch_curs; }
+namespace algo { struct LineBuf_buf_curs; }
+namespace algo { struct Md5Digest_value_curs; }
+namespace algo { struct NormTxttbl_start_curs; }
+namespace algo { struct Sha1sig_sha1sig_curs; }
+namespace algo { struct U64Ary_ary_curs; }
 namespace algo { struct cstring; }
 namespace algo { struct ArgProto; }
 namespace algo { struct Attr; }
@@ -397,22 +416,7 @@ namespace algo { struct UnixTime; }
 namespace algo { struct WDiff; }
 namespace algo { struct WTime; }
 namespace algo { struct i32_Range; }
-namespace algo { struct error_ch_curs; }
-namespace algo { struct Tuple_attrs_curs; }
-namespace algo { struct Argtuple_proto_curs; }
-namespace algo { struct Argtuple_error_curs; }
-namespace algo { struct Arrsimp_out_curs; }
-namespace algo { struct Arrsimp_stack_curs; }
-namespace algo { struct ByteAry_ary_curs; }
-namespace algo { struct Charset_ch_curs; }
-namespace algo { struct LineBuf_buf_curs; }
-namespace algo { struct Md5Digest_value_curs; }
-namespace algo { struct NormTxttbl_start_curs; }
-namespace algo { struct Sha1sig_sha1sig_curs; }
-namespace algo { struct U64Ary_ary_curs; }
-namespace algo {
-}//pkey typedefs
-namespace algo {
+namespace algo { // gen:ns_print_struct
 
 // --- algo.cstring
 // create: algo.Argtuple.error (Tary)
@@ -10160,6 +10164,8 @@ bool                 i32_Range_Eq(const algo::i32_Range & lhs,const algo::i32_Ra
 bool                 i32_Range_Update(algo::i32_Range &lhs, algo::i32_Range & rhs) __attribute__((nothrow));
 // Convert algo::i32_Range to a string (user-implemented function)
 void                 i32_Range_Print(algo::i32_Range & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace algo { // gen:ns_curstext
 
 struct error_ch_curs {// cursor
     typedef char ChildType;
@@ -10274,9 +10280,12 @@ struct U64Ary_ary_curs {// cursor
     U64Ary_ary_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
+} // gen:ns_curstext
+namespace algo { // gen:ns_func
 // Test string conversion
 void                 ForAllStrings(void (*fcn)(algo::StringDesc&) );
-} // end namespace algo
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const algo::ArgProto &row);// cfmt:algo.ArgProto.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::Attr &row);// cfmt:algo.Attr.String

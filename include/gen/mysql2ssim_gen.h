@@ -11,6 +11,7 @@
 #include "include/gen/command_gen.h"
 #include "include/gen/algo_lib_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- mysql2ssim_FieldIdEnum
 
@@ -20,19 +21,22 @@ enum mysql2ssim_FieldIdEnum {        // mysql2ssim.FieldId.value
 
 enum { mysql2ssim_FieldIdEnum_N = 1 };
 
+namespace mysql2ssim { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace mysql2ssim { // gen:ns_field
+extern const char *mysql2ssim_help;
+extern const char *mysql2ssim_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
+namespace mysql2ssim { struct _db_table_names_curs; }
+namespace mysql2ssim { struct _db_in_tables_curs; }
+namespace mysql2ssim { struct FTobltin_vals_curs; }
 namespace mysql2ssim { struct trace; }
 namespace mysql2ssim { struct FDb; }
 namespace mysql2ssim { struct FTobltin; }
 namespace mysql2ssim { struct FieldId; }
-namespace mysql2ssim { struct _db_table_names_curs; }
-namespace mysql2ssim { struct _db_in_tables_curs; }
-namespace mysql2ssim { struct FTobltin_vals_curs; }
-namespace mysql2ssim {
-}//pkey typedefs
-namespace mysql2ssim {
-extern const char *mysql2ssim_help;
-extern const char *mysql2ssim_syntax;
-extern FDb _db;
+namespace mysql2ssim { extern struct mysql2ssim::FDb _db; }
+namespace mysql2ssim { // gen:ns_print_struct
 
 // --- mysql2ssim.trace
 #pragma pack(push,1)
@@ -278,6 +282,8 @@ bool                 FieldId_ReadStrptrMaybe(mysql2ssim::FieldId &parent, algo::
 void                 FieldId_Init(mysql2ssim::FieldId& parent);
 // print string representation of mysql2ssim::FieldId to string LHS, no header -- cprint:mysql2ssim.FieldId.String
 void                 FieldId_Print(mysql2ssim::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace mysql2ssim { // gen:ns_curstext
 
 struct _db_table_names_curs {// cursor
     typedef algo::cstring ChildType;
@@ -305,11 +311,14 @@ struct FTobltin_vals_curs {// cursor
     FTobltin_vals_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-} // end namespace mysql2ssim
+} // gen:ns_curstext
+namespace mysql2ssim { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const mysql2ssim::trace &row);// cfmt:mysql2ssim.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const mysql2ssim::FieldId &row);// cfmt:mysql2ssim.FieldId.String

@@ -105,9 +105,9 @@ const char *dev_Target_target_ssim2csv     = "ssim2csv";
 const char *dev_Target_target_ssim2mysql   = "ssim2mysql";
 const char *dev_Target_target_strconv      = "strconv";
 
-namespace dev {
+namespace dev { // gen:ns_print_proto
     static void          SizeCheck();
-} // end namespace dev
+} // gen:ns_print_proto
 
 // --- dev.Arch..ReadFieldMaybe
 bool dev::Arch_ReadFieldMaybe(dev::Arch &parent, algo::strptr field, algo::strptr strval) {

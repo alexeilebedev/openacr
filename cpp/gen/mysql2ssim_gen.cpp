@@ -60,7 +60,7 @@ const char *mysql2ssim_syntax =
 " -baddbok:flag\n"
 ;
 } // namespace mysql2ssim
-namespace mysql2ssim {
+namespace mysql2ssim { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
@@ -68,7 +68,7 @@ namespace mysql2ssim {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace mysql2ssim
+} // gen:ns_print_proto
 
 // --- mysql2ssim.trace..Print
 // print string representation of mysql2ssim::trace to string LHS, no header -- cprint:mysql2ssim.trace.String

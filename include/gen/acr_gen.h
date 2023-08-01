@@ -15,6 +15,7 @@
 #include "include/gen/report_gen.h"
 #include "include/gen/algo_lib_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- acr_Queryop_value_Enum
 
@@ -68,6 +69,13 @@ enum acr_TableIdEnum {                    // acr.TableId.value
 
 enum { acr_TableIdEnum_N = 22 };
 
+namespace acr { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace acr { // gen:ns_field
+extern const char *acr_help;
+extern const char *acr_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace dmmeta { struct Anonfld; }
 namespace amcdb { struct Bltin; }
 namespace dmmeta { struct Cdflt; }
@@ -85,6 +93,43 @@ namespace dmmeta { struct Smallstr; }
 namespace dmmeta { struct Ssimfile; }
 namespace dmmeta { struct Ssimsort; }
 namespace dmmeta { struct Substr; }
+namespace acr { struct check_c_bad_rec_curs; }
+namespace acr { struct check_ary_name_curs; }
+namespace acr { struct ctype_c_field_curs; }
+namespace acr { struct ctype_zd_trec_curs; }
+namespace acr { struct ctype_ind_rec_curs; }
+namespace acr { struct ctype_zd_selrec_curs; }
+namespace acr { struct ctype_c_child_curs; }
+namespace acr { struct ctype_zd_arg_curs; }
+namespace acr { struct _db_zd_pline_curs; }
+namespace acr { struct _db_zd_pdep_curs; }
+namespace acr { struct _db_ctype_curs; }
+namespace acr { struct _db_anonfld_curs; }
+namespace acr { struct _db_cdflt_curs; }
+namespace acr { struct _db_field_curs; }
+namespace acr { struct _db_file_curs; }
+namespace acr { struct _db_zd_all_selrec_curs; }
+namespace acr { struct _db_zd_all_err_curs; }
+namespace acr { struct _db_zd_sel_ctype_curs; }
+namespace acr { struct _db_bh_pline_curs; }
+namespace acr { struct _db_substr_curs; }
+namespace acr { struct _db_ssimfile_curs; }
+namespace acr { struct _db_tempkey_curs; }
+namespace acr { struct _db_zs_query_curs; }
+namespace acr { struct _db_ssimsort_curs; }
+namespace acr { struct _db_smallstr_curs; }
+namespace acr { struct _db_funique_curs; }
+namespace acr { struct _db_bltin_curs; }
+namespace acr { struct _db_bh_ctype_topo_curs; }
+namespace acr { struct _db_cppfunc_curs; }
+namespace acr { struct file_zd_frec_curs; }
+namespace acr { struct pline_zd_child_curs; }
+namespace acr { struct print_c_pline_curs; }
+namespace acr { struct run_c_ctype_curs; }
+namespace acr { struct run_c_field_curs; }
+namespace acr { struct run_c_rec_curs; }
+namespace acr { struct run_c_child_curs; }
+namespace acr { struct write_c_cmtrec_curs; }
 namespace acr { struct CtypeTopoKey; }
 namespace acr { struct FAnonfld; }
 namespace acr { struct FBltin; }
@@ -113,59 +158,8 @@ namespace acr { struct FUniqueattr; }
 namespace acr { struct FWrite; }
 namespace acr { struct FieldId; }
 namespace acr { struct TableId; }
-namespace acr { struct check_c_bad_rec_curs; }
-namespace acr { struct check_ary_name_curs; }
-namespace acr { struct ctype_c_field_curs; }
-namespace acr { struct ctype_zd_trec_curs; }
-namespace acr { struct ctype_ind_rec_curs; }
-namespace acr { struct ctype_zd_selrec_curs; }
-namespace acr { struct ctype_c_child_curs; }
-namespace acr { struct ctype_zd_arg_curs; }
-namespace acr { struct _db_zd_pline_curs; }
-namespace acr { struct _db_zd_pdep_curs; }
-namespace acr { struct _db_ctype_curs; }
-namespace acr { struct _db_anonfld_curs; }
-namespace acr { struct _db_cdflt_curs; }
-namespace acr { struct _db_field_curs; }
-namespace acr { struct _db_file_curs; }
-namespace acr { struct _db_ind_ctype_curs; }
-namespace acr { struct _db_ind_field_curs; }
-namespace acr { struct _db_ind_file_curs; }
-namespace acr { struct _db_zd_all_selrec_curs; }
-namespace acr { struct _db_zd_all_err_curs; }
-namespace acr { struct _db_zd_sel_ctype_curs; }
-namespace acr { struct _db_bh_pline_curs; }
-namespace acr { struct _db_bh_pline_unordcurs; }
-namespace acr { struct _db_substr_curs; }
-namespace acr { struct _db_ssimfile_curs; }
-namespace acr { struct _db_tempkey_curs; }
-namespace acr { struct _db_ind_tempkey_curs; }
-namespace acr { struct _db_ind_ssimfile_curs; }
-namespace acr { struct _db_zs_query_curs; }
-namespace acr { struct _db_ssimsort_curs; }
-namespace acr { struct _db_ind_ssimsort_curs; }
-namespace acr { struct _db_smallstr_curs; }
-namespace acr { struct _db_funique_curs; }
-namespace acr { struct _db_ind_uniqueattr_curs; }
-namespace acr { struct _db_bltin_curs; }
-namespace acr { struct _db_bh_ctype_topo_curs; }
-namespace acr { struct _db_bh_ctype_topo_unordcurs; }
-namespace acr { struct _db_cppfunc_curs; }
-namespace acr { struct file_zd_frec_curs; }
-namespace acr { struct pline_zd_child_curs; }
-namespace acr { struct print_ind_printattr_curs; }
-namespace acr { struct print_c_pline_curs; }
-namespace acr { struct run_c_ctype_curs; }
-namespace acr { struct run_c_field_curs; }
-namespace acr { struct run_c_rec_curs; }
-namespace acr { struct run_c_child_curs; }
-namespace acr { struct write_c_cmtrec_curs; }
-namespace acr {
-}//pkey typedefs
-namespace acr {
-extern const char *acr_help;
-extern const char *acr_syntax;
-extern FDb _db;
+namespace acr { extern struct acr::FDb _db; }
+namespace acr { // gen:ns_print_struct
 
 // --- acr.CtypeTopoKey
 struct CtypeTopoKey { // acr.CtypeTopoKey: Key for sorting print-line records
@@ -2754,8 +2748,10 @@ bool                 TableId_ReadStrptrMaybe(acr::TableId &parent, algo::strptr 
 void                 TableId_Init(acr::TableId& parent);
 // print string representation of acr::TableId to string LHS, no header -- cprint:acr.TableId.String
 void                 TableId_Print(acr::TableId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace acr { // gen:ns_curstext
 
-struct check_c_bad_rec_curs {// cursor
+struct check_c_bad_rec_curs {// fcurs:acr.FCheck.c_bad_rec/curs
     typedef acr::FRec ChildType;
     acr::FRec** elems;
     u32 n_elems;
@@ -2773,7 +2769,7 @@ struct check_ary_name_curs {// cursor
 };
 
 
-struct ctype_c_field_curs {// cursor
+struct ctype_c_field_curs {// fcurs:acr.FCtype.c_field/curs
     typedef acr::FField ChildType;
     acr::FField** elems;
     u32 n_elems;
@@ -2782,7 +2778,7 @@ struct ctype_c_field_curs {// cursor
 };
 
 
-struct ctype_zd_trec_curs {// cursor
+struct ctype_zd_trec_curs {// fcurs:acr.FCtype.zd_trec/curs
     typedef acr::FRec ChildType;
     acr::FRec* row;
     ctype_zd_trec_curs() {
@@ -2800,7 +2796,7 @@ struct ctype_ind_rec_curs {// cursor
 };
 
 
-struct ctype_zd_selrec_curs {// cursor
+struct ctype_zd_selrec_curs {// fcurs:acr.FCtype.zd_selrec/curs
     typedef acr::FRec ChildType;
     acr::FRec* row;
     ctype_zd_selrec_curs() {
@@ -2809,7 +2805,7 @@ struct ctype_zd_selrec_curs {// cursor
 };
 
 
-struct ctype_c_child_curs {// cursor
+struct ctype_c_child_curs {// fcurs:acr.FCtype.c_child/curs
     typedef acr::FCtype ChildType;
     acr::FCtype** elems;
     u32 n_elems;
@@ -2818,7 +2814,7 @@ struct ctype_c_child_curs {// cursor
 };
 
 
-struct ctype_zd_arg_curs {// cursor
+struct ctype_zd_arg_curs {// fcurs:acr.FCtype.zd_arg/curs
     typedef acr::FField ChildType;
     acr::FField* row;
     ctype_zd_arg_curs() {
@@ -2827,7 +2823,7 @@ struct ctype_zd_arg_curs {// cursor
 };
 
 
-struct _db_zd_pline_curs {// cursor
+struct _db_zd_pline_curs {// fcurs:acr.FDb.zd_pline/curs
     typedef acr::FPline ChildType;
     acr::FPline* row;
     _db_zd_pline_curs() {
@@ -2836,7 +2832,7 @@ struct _db_zd_pline_curs {// cursor
 };
 
 
-struct _db_zd_pdep_curs {// cursor
+struct _db_zd_pdep_curs {// fcurs:acr.FDb.zd_pdep/curs
     typedef acr::FPdep ChildType;
     acr::FPdep* row;
     _db_zd_pdep_curs() {
@@ -2885,7 +2881,7 @@ struct _db_file_curs {// cursor
 };
 
 
-struct _db_zd_all_selrec_curs {// cursor
+struct _db_zd_all_selrec_curs {// fcurs:acr.FDb.zd_all_selrec/curs
     typedef acr::FRec ChildType;
     acr::FRec* row;
     _db_zd_all_selrec_curs() {
@@ -2894,7 +2890,7 @@ struct _db_zd_all_selrec_curs {// cursor
 };
 
 
-struct _db_zd_all_err_curs {// cursor
+struct _db_zd_all_err_curs {// fcurs:acr.FDb.zd_all_err/curs
     typedef acr::FErr ChildType;
     acr::FErr* row;
     _db_zd_all_err_curs() {
@@ -2903,7 +2899,7 @@ struct _db_zd_all_err_curs {// cursor
 };
 
 
-struct _db_zd_sel_ctype_curs {// cursor
+struct _db_zd_sel_ctype_curs {// fcurs:acr.FDb.zd_sel_ctype/curs
     typedef acr::FCtype ChildType;
     acr::FCtype* row;
     _db_zd_sel_ctype_curs() {
@@ -2948,7 +2944,7 @@ struct _db_tempkey_curs {// cursor
 };
 
 
-struct _db_zs_query_curs {// cursor
+struct _db_zs_query_curs {// fcurs:acr.FDb.zs_query/curs
     typedef acr::FQuery ChildType;
     acr::FQuery* row;
     _db_zs_query_curs() {
@@ -3009,7 +3005,7 @@ struct _db_cppfunc_curs {// cursor
 };
 
 
-struct file_zd_frec_curs {// cursor
+struct file_zd_frec_curs {// fcurs:acr.FFile.zd_frec/curs
     typedef acr::FRec ChildType;
     acr::FRec* row;
     file_zd_frec_curs() {
@@ -3018,7 +3014,7 @@ struct file_zd_frec_curs {// cursor
 };
 
 
-struct pline_zd_child_curs {// cursor
+struct pline_zd_child_curs {// fcurs:acr.FPline.zd_child/curs
     typedef acr::FPdep ChildType;
     acr::FPdep* row;
     pline_zd_child_curs() {
@@ -3027,7 +3023,7 @@ struct pline_zd_child_curs {// cursor
 };
 
 
-struct print_c_pline_curs {// cursor
+struct print_c_pline_curs {// fcurs:acr.FPrint.c_pline/curs
     typedef acr::FPline ChildType;
     acr::FPline** elems;
     u32 n_elems;
@@ -3036,7 +3032,7 @@ struct print_c_pline_curs {// cursor
 };
 
 
-struct run_c_ctype_curs {// cursor
+struct run_c_ctype_curs {// fcurs:acr.FRun.c_ctype/curs
     typedef acr::FCtype ChildType;
     acr::FCtype** elems;
     u32 n_elems;
@@ -3045,7 +3041,7 @@ struct run_c_ctype_curs {// cursor
 };
 
 
-struct run_c_field_curs {// cursor
+struct run_c_field_curs {// fcurs:acr.FRun.c_field/curs
     typedef acr::FField ChildType;
     acr::FField** elems;
     u32 n_elems;
@@ -3054,7 +3050,7 @@ struct run_c_field_curs {// cursor
 };
 
 
-struct run_c_rec_curs {// cursor
+struct run_c_rec_curs {// fcurs:acr.FRun.c_rec/curs
     typedef acr::FRec ChildType;
     acr::FRec** elems;
     u32 n_elems;
@@ -3063,7 +3059,7 @@ struct run_c_rec_curs {// cursor
 };
 
 
-struct run_c_child_curs {// cursor
+struct run_c_child_curs {// fcurs:acr.FRun.c_child/curs
     typedef acr::FCtype ChildType;
     acr::FCtype** elems;
     u32 n_elems;
@@ -3072,7 +3068,7 @@ struct run_c_child_curs {// cursor
 };
 
 
-struct write_c_cmtrec_curs {// cursor
+struct write_c_cmtrec_curs {// fcurs:acr.FWrite.c_cmtrec/curs
     typedef acr::FRec ChildType;
     acr::FRec** elems;
     u32 n_elems;
@@ -3080,11 +3076,14 @@ struct write_c_cmtrec_curs {// cursor
     write_c_cmtrec_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-} // end namespace acr
+} // gen:ns_curstext
+namespace acr { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const acr::CtypeTopoKey &row);// cfmt:acr.CtypeTopoKey.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr::trace &row);// cfmt:acr.trace.String

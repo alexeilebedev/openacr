@@ -57,6 +57,7 @@ dmmeta.thash  field:amc.FDb.ind_fbuf  hashfld:dmmeta.Fbuf.field  unique:Y  comme
 dmmeta.thash  field:amc.FDb.ind_fcmap  hashfld:dmmeta.Fcmap.fcmap  unique:Y  comment:""
 dmmeta.thash  field:amc.FDb.ind_fconst  hashfld:dmmeta.Fconst.fconst  unique:Y  comment:""
 dmmeta.thash  field:amc.FDb.ind_fconst_int  hashfld:amc.FFconst.cpp_value  unique:Y  comment:""
+dmmeta.thash  field:amc.FDb.ind_fcurs  hashfld:dmmeta.Fcurs.fcurs  unique:Y  comment:""
 dmmeta.thash  field:amc.FDb.ind_fdec  hashfld:dmmeta.Fdec.field  unique:Y  comment:""
 dmmeta.thash  field:amc.FDb.ind_field  hashfld:dmmeta.Field.field  unique:Y  comment:""
 dmmeta.thash  field:amc.FDb.ind_fstep  hashfld:dmmeta.Fstep.fstep  unique:Y  comment:""
