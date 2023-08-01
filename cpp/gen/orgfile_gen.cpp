@@ -57,7 +57,7 @@ const char *orgfile_syntax =
 " -hash:string=\"sha1\"\n"
 ;
 } // namespace orgfile
-namespace orgfile {
+namespace orgfile { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     static bool          timefmt_InputMaybe(dev::Timefmt &elem) __attribute__((nothrow));
@@ -66,7 +66,7 @@ namespace orgfile {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace orgfile
+} // gen:ns_print_proto
 
 // --- orgfile.trace..Print
 // print string representation of orgfile::trace to string LHS, no header -- cprint:orgfile.trace.String

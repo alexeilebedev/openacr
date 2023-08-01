@@ -11,6 +11,7 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/fm_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- fmdb_FieldIdEnum
 
@@ -41,18 +42,21 @@ enum fmdb_FieldIdEnum {                   // fmdb.FieldId.value
 
 enum { fmdb_FieldIdEnum_N = 22 };
 
+namespace fmdb { // gen:ns_pkeytypedef
+    typedef algo::Smallstr200 AlarmPkey;
+    typedef fm::Code AlmCodePkey;
+    typedef fm::Objtype AlmObjtypePkey;
+    typedef fm::Source AlmSourcePkey;
+} // gen:ns_pkeytypedef
+namespace fmdb { // gen:ns_field
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace fmdb { struct Alarm; }
 namespace fmdb { struct AlmCode; }
 namespace fmdb { struct AlmObjtype; }
 namespace fmdb { struct AlmSource; }
 namespace fmdb { struct FieldId; }
-namespace fmdb {
-    typedef algo::Smallstr200 AlarmPkey;
-    typedef fm::Code AlmCodePkey;
-    typedef fm::Objtype AlmObjtypePkey;
-    typedef fm::Source AlmSourcePkey;
-}//pkey typedefs
-namespace fmdb {
+namespace fmdb { // gen:ns_print_struct
 
 // --- fmdb.Alarm
 struct Alarm { // fmdb.Alarm
@@ -179,7 +183,10 @@ bool                 FieldId_ReadStrptrMaybe(fmdb::FieldId &parent, algo::strptr
 void                 FieldId_Init(fmdb::FieldId& parent);
 // print string representation of fmdb::FieldId to string LHS, no header -- cprint:fmdb.FieldId.String
 void                 FieldId_Print(fmdb::FieldId & row, algo::cstring &str) __attribute__((nothrow));
-} // end namespace fmdb
+} // gen:ns_print_struct
+namespace fmdb { // gen:ns_func
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const fmdb::Alarm &row);// cfmt:fmdb.Alarm.String
 inline algo::cstring &operator <<(algo::cstring &str, const fmdb::AlmCode &row);// cfmt:fmdb.AlmCode.String

@@ -127,7 +127,7 @@ acr::_db_bh_ctype_topo_curs::~_db_bh_ctype_topo_curs() {
 
 }
 
-namespace acr {
+namespace acr { // gen:ns_print_proto
     static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
     static bool          anonfld_InputMaybe(dmmeta::Anonfld &elem) __attribute__((nothrow));
     static bool          cdflt_InputMaybe(dmmeta::Cdflt &elem) __attribute__((nothrow));
@@ -176,7 +176,7 @@ namespace acr {
     // Quick sort engine
     static void          c_cmtrec_IntQuickSort(acr::FRec* *elems, int n, int depth) __attribute__((nothrow));
     static void          SizeCheck();
-} // end namespace acr
+} // gen:ns_print_proto
 
 // --- acr.CtypeTopoKey..Print
 // print string representation of acr::CtypeTopoKey to string LHS, no header -- cprint:acr.CtypeTopoKey.String

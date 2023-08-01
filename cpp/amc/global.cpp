@@ -56,13 +56,6 @@ void amc::tclass_Global() {
     }ind_end;
 }
 
-void amc::tfunc_Global_N() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
-
-    Ins(&R, *ns.hdr, "extern $Ctype $name;");
-}
-
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Global_Init() {

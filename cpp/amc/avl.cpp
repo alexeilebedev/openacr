@@ -26,17 +26,6 @@
 #include "include/amc.h"
 #include "include/gen/amc_gen.h"
 
-//Load my functions into genfield.R
-static void LoadTFunc(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FTclass* tclass = amc::ind_tclass_Find("Atree");
-    ind_beg(amc::tclass_c_tfunc_curs, tfunc, *tclass){
-        cstring func("$");
-        func<<(name_Get(tfunc));
-        Set(R, func , tempstr()<<"$name_"<<name_Get(tfunc));
-    }ind_end;
-}
-
 //Initialize the structs etc.
 void amc::tclass_Atree(){
     algo_lib::Replscope &R = amc::_db.genfield.R;
@@ -52,7 +41,6 @@ void amc::tclass_Atree(){
     Set(R, "$Depth"     , "$name_depth");
     Set(R, "$Root"      , "$parname.$name_root");
     Set(R, "$NElem"     , "$parname.$name_n");
-    LoadTFunc();
 
     InsVar(R, field.p_ctype     , "$Cpptype*", "$name_root", "", "Root of the tree");
     InsVar(R, field.p_ctype     , "i32", "$name_n", "", "number of elements in the tree");
@@ -80,7 +68,7 @@ void amc::tfunc_Atree_ElemLt(){
     lt.priv = true;
 
     Ins(&R, lt.ret  , "bool",false);
-    Ins(&R, lt.proto, "$ElemLt($Parent, $Cpptype &a, $Cpptype &b)",false);
+    Ins(&R, lt.proto, "$name_ElemLt($Parent, $Cpptype &a, $Cpptype &b)",false);
     Ins(&R, lt.body, "(void)$parname;");
     amc::FCtype *base = GetBaseType(*field.p_arg,NULL);
 
@@ -99,9 +87,9 @@ static void GenIter(strptr name, bool next){
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
-    Ins(&R, func.proto, tempstr()<<"$"<<name<<"($Cpptype& node)", false);
+    Ins(&R, func.proto, tempstr()<<"$name_"<<name<<"($Cpptype& node)", false);
     Set(R, "$IterNextElem"  , next ? "$Right" :  "$Left" );
-    Set(R, "$IterNextExpr"  , next ? "$FirstImpl" : "$LastImpl");
+    Set(R, "$IterNextExpr"  , next ? "$name_FirstImpl" : "$name_LastImpl");
     AddRetval(func, Subst(R,"$Cpptype*"),"result","&node");
     Ins(&R, func.body, "if(result->$IterNextElem == NULL){");
     Ins(&R, func.body, "    while(result->$Up != NULL && result->$Up->$IterNextElem == result){");
@@ -140,7 +128,7 @@ void amc::tfunc_Atree_InTreeQ(){
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FFunc& func = amc::CreateCurFunc();
     Ins(&R, func.ret  , "bool", false);
-    Ins(&R, func.proto, "$InTreeQ($Cpptype& row)", false);
+    Ins(&R, func.proto, "$name_InTreeQ($Cpptype& row)", false);
     Ins(&R, func.body, "return row.$Up != ($Cpptype*)-1;");
 }
 
@@ -150,7 +138,7 @@ void amc::tfunc_Atree_InTreeQ(){
 void amc::tfunc_Atree_EmptyQ(){
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FFunc& func = amc::CreateCurFunc();
-    Ins(&R, func.proto, "$EmptyQ($Parent)", false);
+    Ins(&R, func.proto, "$name_EmptyQ($Parent)", false);
     Ins(&R, func.ret  , "bool", false);
     Ins(&R, func.body, "return $Root == NULL;");
 }
@@ -162,7 +150,7 @@ void amc::tfunc_Atree_FirstImpl(){
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
-    Ins(&R, func.proto, "$FirstImpl($Cpptype* root)" , false);
+    Ins(&R, func.proto, "$name_FirstImpl($Cpptype* root)" , false);
     AddRetval(func, Subst(R,"$Cpptype*"),"result","root");
     Ins(&R, func.body, "while(result != NULL && result->$Left != NULL){");
     Ins(&R, func.body, "    result = result->$Left;");
@@ -174,7 +162,7 @@ void amc::tfunc_Atree_LastImpl(){
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
-    Ins(&R, func.proto, "$LastImpl($Cpptype* root)" , false);
+    Ins(&R, func.proto, "$name_LastImpl($Cpptype* root)" , false);
     AddRetval(func, Subst(R,"$Cpptype*"),"result","root");
     Ins(&R, func.body, "while(result != NULL && result->$Right != NULL){");
     Ins(&R, func.body, "    result = result->$Right;");
@@ -187,9 +175,9 @@ void amc::tfunc_Atree_First(){
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
-    Ins(&R, func.proto, "$First($Parent)" , false);
+    Ins(&R, func.proto, "$name_First($Parent)" , false);
     Ins(&R, func.ret, Subst(R,"$Cpptype*"), false);
-    Ins(&R, func.body, "return $FirstImpl($Root);");
+    Ins(&R, func.body, "return $name_FirstImpl($Root);");
 }
 
 //Returns the largest element.
@@ -197,9 +185,9 @@ void amc::tfunc_Atree_Last(){
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
-    Ins(&R, func.proto, "$Last($Parent)" , false);
+    Ins(&R, func.proto, "$name_Last($Parent)" , false);
     Ins(&R, func.ret, Subst(R,"$Cpptype*"), false);
-    Ins(&R, func.body, "return $LastImpl($Root);");
+    Ins(&R, func.body, "return $name_LastImpl($Root);");
 }
 
 //Finds the child that violates the balance. Left child if no disbalance.
@@ -209,8 +197,8 @@ void amc::tfunc_Atree_TallerChild(){
     func.inl = true;
     func.priv = true;
     Ins(&R, func.ret,   Subst(R, "$Cpptype*"), false);
-    Ins(&R, func.proto, "$TallerChild($Cpptype& node)", false);
-    Ins(&R, func.body, "return $Balance(node) < 0 ? node.$Right : node.$Left;");
+    Ins(&R, func.proto, "$name_TallerChild($Cpptype& node)", false);
+    Ins(&R, func.body, "return $name_Balance(node) < 0 ? node.$Right : node.$Left;");
 }
 
 //Disconnect the node from its parent.
@@ -220,7 +208,7 @@ void amc::tfunc_Atree_Disconnect(){
     func.inl = false;
     func.priv = true;
     Ins(&R, func.ret,   "void", false);
-    Ins(&R, func.proto, "$Disconnect($Cpptype& node)", false);
+    Ins(&R, func.proto, "$name_Disconnect($Cpptype& node)", false);
     Ins(&R, func.body,  "$Cpptype* parent = node.$Up;");
     Ins(&R, func.body,  "if(parent != NULL){");
     Ins(&R, func.body,  "    bool left = parent->$Left == &node;");
@@ -236,15 +224,15 @@ void amc::tfunc_Atree_Turn(){
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
     func.priv = true;
-    Ins(&R, func.proto, "$Turn($Cpptype& from, $Cpptype& to)", false);
+    Ins(&R, func.proto, "$name_Turn($Cpptype& from, $Cpptype& to)", false);
     Ins(&R, func.ret,   "void", false);
     Ins(&R, func.body,  "$Cpptype* root = to.$Up;");
     Ins(&R, func.body,  "bool dir = root && root->$Left == &to;");
-    Ins(&R, func.body,  "$Connect(root, &from, dir);");
+    Ins(&R, func.body,  "$name_Connect(root, &from, dir);");
     Ins(&R, func.body,  "dir = to.$Left == &from;");
     Ins(&R, func.body,  "$Cpptype* orphan = (dir ? from.$Right : from.$Left);//other side");
-    Ins(&R, func.body,  "$Connect(&from, &to , !dir);");
-    Ins(&R, func.body,  "$Connect(&to, orphan, dir);");
+    Ins(&R, func.body,  "$name_Connect(&from, &to , !dir);");
+    Ins(&R, func.body,  "$name_Connect(&to, orphan, dir);");
 }
 
 
@@ -257,17 +245,17 @@ void amc::tfunc_Atree_Rebalance(){
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
-    Ins(&R, func.proto, "$Rebalance($Cpptype& node)", false);
+    Ins(&R, func.proto, "$name_Rebalance($Cpptype& node)", false);
     Ins(&R, func.ret,   "void", false);
-    Ins(&R, func.body,  "if (algo::Abs($Balance(node)) > 1){");
-    Ins(&R, func.body,  "    $Cpptype* deep1 = $TallerChild(node);");
-    Ins(&R, func.body,  "    $Cpptype* deep2 = $TallerChild(*deep1);");
-    Ins(&R, func.body,  "    bool turn = $Balance(*deep1)!=0 && (node.$Left == deep1) != (deep1->$Left == deep2);");
+    Ins(&R, func.body,  "if (algo::Abs($name_Balance(node)) > 1){");
+    Ins(&R, func.body,  "    $Cpptype* deep1 = $name_TallerChild(node);");
+    Ins(&R, func.body,  "    $Cpptype* deep2 = $name_TallerChild(*deep1);");
+    Ins(&R, func.body,  "    bool turn = $name_Balance(*deep1)!=0 && (node.$Left == deep1) != (deep1->$Left == deep2);");
     Ins(&R, func.body,  "    if(turn){");
-    Ins(&R, func.body,  "        $Turn(*deep2, *deep1);");
+    Ins(&R, func.body,  "        $name_Turn(*deep2, *deep1);");
     Ins(&R, func.body,  "        algo::TSwap(deep1, deep2);");
     Ins(&R, func.body,  "    }");
-    Ins(&R, func.body,  "    $Turn(*deep1, node);");
+    Ins(&R, func.body,  "    $name_Turn(*deep1, node);");
     Ins(&R, func.body,  "    $UpdateDepth(node);");
     Ins(&R, func.body,  "    $UpdateDepth(*deep2);");
     Ins(&R, func.body,  "    $UpdateDepth(*deep1);");
@@ -294,12 +282,12 @@ void amc::tfunc_Atree_Propagate(){
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
-    Ins(&R, func.proto, "$Propagate($Cpptype& pnode)", false);
+    Ins(&R, func.proto, "$name_Propagate($Cpptype& pnode)", false);
     AddRetval(func, Subst(R,"$Cpptype*"),"root","&pnode");
     Ins(&R, func.body,  "$Cpptype* node = &pnode;");
     Ins(&R, func.body,  "while(node != NULL){");
     Ins(&R, func.body,  "    $UpdateDepth(*node);");
-    Ins(&R, func.body,  "    $Rebalance(*node);");
+    Ins(&R, func.body,  "    $name_Rebalance(*node);");
     Ins(&R, func.body,  "    root = node;");
     Ins(&R, func.body,  "    node = node->$Up;");
     Ins(&R, func.body,  "}");
@@ -315,17 +303,17 @@ void amc::tfunc_Atree_InsertImpl(){
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
     Ins(&R, func.ret,   "void", false);
-    Ins(&R, func.proto, "$InsertImpl($Parent, $Cpptype* parent, $Cpptype& row)" , false);
+    Ins(&R, func.proto, "$name_InsertImpl($Parent, $Cpptype* parent, $Cpptype& row)" , false);
     Ins(&R, func.body,  "bool left = false;");
     Ins(&R, func.body,  "while(parent != NULL){");
-    Ins(&R, func.body,  "    left = $ElemLt($pararg, row, *parent);");
+    Ins(&R, func.body,  "    left = $name_ElemLt($pararg, row, *parent);");
     Ins(&R, func.body,  "    $Cpptype* side = left ? parent->$Left : parent->$Right;");
     Ins(&R, func.body,  "    if(side == NULL){");
     Ins(&R, func.body,  "        break;");
     Ins(&R, func.body,  "    }");
     Ins(&R, func.body,  "    parent = side;");
     Ins(&R, func.body,  "}");
-    Ins(&R, func.body,  "$Connect(parent, &row, left);");
+    Ins(&R, func.body,  "$name_Connect(parent, &row, left);");
 }
 
 //1.Insert element starting from the root.
@@ -334,12 +322,12 @@ void amc::tfunc_Atree_InsertImpl(){
 void amc::tfunc_Atree_Insert(){
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FFunc& func = amc::CreateCurFunc();
-    Ins(&R, func.proto,"$Insert($Parent, $Cpptype& row)", false);
+    Ins(&R, func.proto,"$name_Insert($Parent, $Cpptype& row)", false);
     Ins(&R, func.ret,  "void", false);
-    Ins(&R, func.body, "if(!$InTreeQ(row)){");
+    Ins(&R, func.body, "if(!$name_InTreeQ(row)){");
     Ins(&R, func.body, "    $NElem++;");
-    Ins(&R, func.body, "    $InsertImpl($pararg, $Root, row);");
-    Ins(&R, func.body, "    $Root = $Propagate(row);");
+    Ins(&R, func.body, "    $name_InsertImpl($pararg, $Root, row);");
+    Ins(&R, func.body, "    $Root = $name_Propagate(row);");
     Ins(&R, func.body, "}");
 }
 
@@ -349,7 +337,7 @@ void amc::tfunc_Atree_Balance(){
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
     Ins(&R, func.ret  , "i32", false);
-    Ins(&R, func.proto, "$Balance($Cpptype& row)", false);
+    Ins(&R, func.proto, "$name_Balance($Cpptype& row)", false);
     Ins(&R, func.body , "i32 left  = row.$Left  ? row.$Left->$Depth  : 0;");
     Ins(&R, func.body , "i32 right = row.$Right ? row.$Right->$Depth : 0;");
     Ins(&R, func.body , "return left - right;");
@@ -363,11 +351,11 @@ void amc::tfunc_Atree_RemoveAllImpl(){
     amc::FField& field = *_db.genfield.p_field;
     amc::FFunc& func = amc::CreateCurFunc();
     Ins(&R, func.ret  , "void", false);
-    Ins(&R, func.proto, "$RemoveAllImpl($Parent, $Cpptype* root, bool del)", false);
+    Ins(&R, func.proto, "$name_RemoveAllImpl($Parent, $Cpptype* root, bool del)", false);
     Ins(&R, func.body ,     "if(root != NULL){");
-    Ins(&R, func.body ,     "    $RemoveAllImpl($pararg, root->$Left, del);");
-    Ins(&R, func.body ,     "    $RemoveAllImpl($pararg, root->$Right, del);");
-    Ins(&R, func.body ,     "    $Disconnect(*root);");
+    Ins(&R, func.body ,     "    $name_RemoveAllImpl($pararg, root->$Left, del);");
+    Ins(&R, func.body ,     "    $name_RemoveAllImpl($pararg, root->$Right, del);");
+    Ins(&R, func.body ,     "    $name_Disconnect(*root);");
     Ins(&R, func.body ,     "    root->$Depth = 0;//the pointers are taken care of by Disconnect");
     Ins(&R, func.body ,     "    root->$Up = ($Cpptype*)-1;//the pointers are taken care of by Disconnect");
     if (field.c_cascdel){
@@ -383,7 +371,7 @@ void amc::tfunc_Atree_Cascdel(){
     amc::FField &field = *amc::_db.genfield.p_field;
     if (field.c_cascdel){
         amc::FFunc& func = amc::CreateCurFunc();
-        Ins(&R, func.body , "$RemoveAllImpl($pararg, $Root, true);");
+        Ins(&R, func.body , "$name_RemoveAllImpl($pararg, $Root, true);");
         Ins(&R, func.body, "$Root = NULL;");
         Ins(&R, func.body, "$NElem = 0;");
     }
@@ -395,8 +383,8 @@ void amc::tfunc_Atree_RemoveAll(){
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = true;
     Ins(&R, func.ret  , "void", false);
-    Ins(&R, func.proto, "$RemoveAll($Parent)", false);
-    Ins(&R, func.body , "$RemoveAllImpl($pararg, $Root, false);");
+    Ins(&R, func.proto, "$name_RemoveAll($Parent)", false);
+    Ins(&R, func.body , "$name_RemoveAllImpl($pararg, $Root, false);");
     Ins(&R, func.body , "$Root = NULL;");
     Ins(&R, func.body , "$NElem = 0;");
 }
@@ -407,9 +395,9 @@ void amc::tfunc_Atree_RemoveFirst(){
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FFunc& func = amc::CreateCurFunc();
     Ins(&R, func.ret  , "void", false);
-    Ins(&R, func.proto, "$RemoveFirst($Parent)", false);
-    Ins(&R, func.body , "if(!$EmptyQ($pararg)){");
-    Ins(&R, func.body , "    $Remove($pararg, *$First($pararg));");
+    Ins(&R, func.proto, "$name_RemoveFirst($Parent)", false);
+    Ins(&R, func.body , "if(!$name_EmptyQ($pararg)){");
+    Ins(&R, func.body , "    $name_Remove($pararg, *$name_First($pararg));");
     Ins(&R, func.body , "}");
 }
 
@@ -418,9 +406,9 @@ void amc::tfunc_Atree_Reinsert(){
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FFunc& func = amc::CreateCurFunc();
     Ins(&R, func.ret  , "void", false);
-    Ins(&R, func.proto, "$Reinsert($Parent, $Cpptype& node)", false);
-    Ins(&R, func.body, "$Remove($pararg, node);");
-    Ins(&R, func.body, "$Insert($pararg, node);");
+    Ins(&R, func.proto, "$name_Reinsert($Parent, $Cpptype& node)", false);
+    Ins(&R, func.body, "$name_Remove($pararg, node);");
+    Ins(&R, func.body, "$name_Insert($pararg, node);");
 }
 
 //Connect 2 elements (either can be NULL).
@@ -430,7 +418,7 @@ void amc::tfunc_Atree_Connect(){
     func.inl = true;
     func.priv = true;
     Ins(&R, func.ret  , "void", false);
-    Ins(&R, func.proto, "$Connect($Cpptype* parent, $Cpptype* child, bool left)", false);
+    Ins(&R, func.proto, "$name_Connect($Cpptype* parent, $Cpptype* child, bool left)", false);
     Ins(&R, func.body , "if(parent){");
     Ins(&R, func.body , "    (left ? parent->$Left : parent->$Right) = child;");
     Ins(&R, func.body , "}");
@@ -448,29 +436,29 @@ void amc::tfunc_Atree_Remove(){
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
     Ins(&R, func.ret  , "void", false);
-    Ins(&R, func.proto, "$Remove($Parent, $Cpptype& row)", false);
-    Ins(&R, func.body , "if(!$InTreeQ(row)){");
+    Ins(&R, func.proto, "$name_Remove($Parent, $Cpptype& row)", false);
+    Ins(&R, func.body , "if(!$name_InTreeQ(row)){");
     Ins(&R, func.body , "    return;");
     Ins(&R, func.body , "}");
     Ins(&R, func.body , "$Cpptype* next = NULL;");
     Ins(&R, func.body , "if(row.$Depth > 1){");
-    Ins(&R, func.body , "    next = $Balance(row) < 0 ? $FirstImpl(row.$Right) : $LastImpl(row.$Left);");
-    Ins(&R, func.body , "    $Cpptype* leaf = $TallerChild(*next);");
+    Ins(&R, func.body , "    next = $name_Balance(row) < 0 ? $name_FirstImpl(row.$Right) : $name_LastImpl(row.$Left);");
+    Ins(&R, func.body , "    $Cpptype* leaf = $name_TallerChild(*next);");
     Ins(&R, func.body , "    if(leaf){");
-    Ins(&R, func.body , "        $Turn(*leaf, *next);");
+    Ins(&R, func.body , "        $name_Turn(*leaf, *next);");
     Ins(&R, func.body , "    }");
     Ins(&R, func.body , "}");
     Ins(&R, func.body , "$Cpptype* root = row.$Up;");
     Ins(&R, func.body , "$Cpptype* prop = root;//propagate point");
     Ins(&R, func.body , "if(next){");
     Ins(&R, func.body , "    prop = next->$Up == &row ? next : next->$Up;");
-    Ins(&R, func.body , "    $Disconnect(*next);");
-    Ins(&R, func.body , "    $Connect(next, row.$Left, true);");
-    Ins(&R, func.body , "    $Connect(next, row.$Right, false);");
+    Ins(&R, func.body , "    $name_Disconnect(*next);");
+    Ins(&R, func.body , "    $name_Connect(next, row.$Left, true);");
+    Ins(&R, func.body , "    $name_Connect(next, row.$Right, false);");
     Ins(&R, func.body , "}");
     Ins(&R, func.body , "bool dir = root && root->$Left == &row;");
-    Ins(&R, func.body , "$Connect(root, next, dir);");
-    Ins(&R, func.body , "$Root = prop ? $Propagate(*prop) : NULL;");
+    Ins(&R, func.body , "$name_Connect(root, next, dir);");
+    Ins(&R, func.body , "$Root = prop ? $name_Propagate(*prop) : NULL;");
     Ins(&R, func.body , "row.$Depth = 0;");
     Ins(&R, func.body , "row.$Left = NULL;");
     Ins(&R, func.body , "row.$Right = NULL;");
@@ -486,13 +474,13 @@ static void GenFind(strptr name, bool greater){
     amc::FField   &sortfld   = *field.c_sortfld->p_sortfld;
     amc::FFunc& func = amc::CreateCurFunc();
     Set(R, "$aval"     , FieldvalExpr(field.p_arg, sortfld, "(*result)"));
-    Set(R, "$Dir"      , greater ? "$Next" : "$Prev");
+    Set(R, "$Dir"      , greater ? "$name_Next" : "$name_Prev");
     // use operator < only
     Set(R, "$CompDir"  , greater ? "!($aval < val)" : "val < $aval");
     Set(R, "$CompNext" , greater ? "$aval < val"  : "!($aval < val)");
     func.inl = false;
     Ins(&R, func.ret  , "$Cpptype*", false);
-    Ins(&R, func.proto, tempstr()<<"$"<<name<<"($Parent, const $Sortstore& val)", false);
+    Ins(&R, func.proto, tempstr()<<"$name_"<<name<<"($Parent, const $Sortstore& val)", false);
     Ins(&R, func.body , "$Cpptype* result = $Root;");
     Ins(&R, func.body , "bool left = false;");
     Ins(&R, func.body , "while(result){");
@@ -544,7 +532,7 @@ void amc::tfunc_Atree_curs() {
     Ins(&R, curs_reset.comment, "cursor points to valid item");
     Ins(&R, curs_reset.ret  , "void", false);
     Ins(&R, curs_reset.proto, "$Parname_$name_curs_Reset($Parname_$name_curs &curs, $Partype& $CursArg)", false);
-    Ins(&R, curs_reset.body, "curs.row = $First($CursArg);");
+    Ins(&R, curs_reset.body, "curs.row = $name_First($CursArg);");
 
     amc::FFunc& curs_validq = amc::ind_func_GetOrCreate(Subst(R,"$field_curs.ValidQ"));
     curs_validq.inl = true;
@@ -558,7 +546,7 @@ void amc::tfunc_Atree_curs() {
     Ins(&R, curs_next.comment, "proceed to next item");
     Ins(&R, curs_next.ret  , "void", false);
     Ins(&R, curs_next.proto, "$Parname_$name_curs_Next($Parname_$name_curs &curs)", false);
-    Ins(&R, curs_next.body, "curs.row = $Next(*curs.row);");
+    Ins(&R, curs_next.body, "curs.row = $name_Next(*curs.row);");
 
     amc::FFunc& curs_access = amc::ind_func_GetOrCreate(Subst(R,"$field_curs.Access"));
     curs_access.inl = true;

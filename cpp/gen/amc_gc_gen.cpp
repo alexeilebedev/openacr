@@ -51,7 +51,7 @@ const char *amc_gc_syntax =
 " -in:string=\"data\"\n"
 ;
 } // namespace amc_gc
-namespace amc_gc {
+namespace amc_gc { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
@@ -59,7 +59,7 @@ namespace amc_gc {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace amc_gc
+} // gen:ns_print_proto
 
 // --- amc_gc.Acr.acr.Start
 // Start subprocess

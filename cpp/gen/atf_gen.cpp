@@ -13,9 +13,9 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
-namespace atf {
+namespace atf { // gen:ns_print_proto
     static void          SizeCheck();
-} // end namespace atf
+} // gen:ns_print_proto
 
 // --- atf.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.

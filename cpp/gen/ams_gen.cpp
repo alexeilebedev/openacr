@@ -17,7 +17,7 @@
 #include "include/gen/fm_gen.h"
 #include "include/gen/fm_gen.inl.h"
 //#pragma endinclude
-namespace ams {
+namespace ams { // gen:ns_print_proto
     static bool          write_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          read_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          nonblock_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
@@ -26,7 +26,7 @@ namespace ams {
     static bool          write_err_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          trace_text_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     static void          SizeCheck();
-} // end namespace ams
+} // gen:ns_print_proto
 
 // --- ams.AlarmSyncMsg..ReadFieldMaybe
 bool ams::AlarmSyncMsg_ReadFieldMaybe(ams::AlarmSyncMsg &parent, algo::strptr field, algo::strptr strval) {

@@ -11,6 +11,7 @@
 #include "include/gen/ams_gen.h"
 #include "include/gen/algo_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- fm_Flag_value_Enum
 
@@ -59,6 +60,11 @@ enum fm_FieldIdEnum {                   // fm.FieldId.value
 
 enum { fm_FieldIdEnum_N = 19 };
 
+namespace fm { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace fm { // gen:ns_field
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace fm { struct Code; }
 namespace fm { struct Objtype; }
 namespace fm { struct Objinst; }
@@ -69,9 +75,7 @@ namespace fm { struct Description; }
 namespace fm { struct Source; }
 namespace fm { struct FieldId; }
 namespace fm { struct Protocol; }
-namespace fm {
-}//pkey typedefs
-namespace fm {
+namespace fm { // gen:ns_print_struct
 
 // --- fm.Code
 #pragma pack(push,1)
@@ -541,7 +545,10 @@ struct Protocol { // fm.Protocol: amc-generated struct for internal purposes
 
 void                 StaticCheck();
 
-} // end namespace fm
+} // gen:ns_print_struct
+namespace fm { // gen:ns_func
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const fm::Flag &row);// cfmt:fm.Flag.String
 inline algo::cstring &operator <<(algo::cstring &str, const fm::Severity &row);// cfmt:fm.Severity.String

@@ -7,6 +7,8 @@
 //
 
 
+// gen:ns_enums
+// gen:ns_fwddecl2
 namespace acr { struct FQuery; }
 namespace acr { struct FSsimfile; }
 namespace algo { struct DateCache; }
@@ -29,8 +31,6 @@ namespace atf_amc { struct Hooktype; }
 namespace atf_amc { struct MsgHeader; }
 namespace lib_json { struct FNode; }
 struct pad_byte;
-namespace  {
-}//pkey typedefs
 
 // --- pad_byte
 #pragma pack(push,1)
@@ -379,6 +379,7 @@ bool                 u64_Update(u64 &lhs, u64 rhs) __attribute__((nothrow));
 void                 u64_Print(u64 row, algo::cstring &str) __attribute__((nothrow));
 // Create JSON representation of u64 under PARENT node -- implemented externally
 lib_json::FNode *    u64_FmtJson(u64 row, lib_json::FNode *parent) __attribute__((nothrow));
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const bool &row);// cfmt:bool.String
 inline algo::cstring &operator <<(algo::cstring &str, const char &row);// cfmt:char.String

@@ -10,6 +10,7 @@
 #pragma once
 #include <iconv.h>
 //#pragma endinclude
+// gen:ns_enums
 
 // --- lib_iconv_FieldIdEnum
 
@@ -19,14 +20,17 @@ enum lib_iconv_FieldIdEnum {        // lib_iconv.FieldId.value
 
 enum { lib_iconv_FieldIdEnum_N = 1 };
 
+namespace lib_iconv { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace lib_iconv { // gen:ns_field
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace lib_iconv { struct trace; }
 namespace lib_iconv { struct FDb; }
 namespace lib_iconv { struct FieldId; }
 namespace lib_iconv { struct Icd; }
-namespace lib_iconv {
-}//pkey typedefs
-namespace lib_iconv {
-extern FDb _db;
+namespace lib_iconv { extern struct lib_iconv::FDb _db; }
+namespace lib_iconv { // gen:ns_print_struct
 
 // --- lib_iconv.trace
 #pragma pack(push,1)
@@ -125,7 +129,10 @@ void                 Icd_Init(lib_iconv::Icd& icd);
 void                 Icd_Uninit(lib_iconv::Icd& icd) __attribute__((nothrow));
 // print string representation of lib_iconv::Icd to string LHS, no header -- cprint:lib_iconv.Icd.String
 void                 Icd_Print(lib_iconv::Icd & row, algo::cstring &str) __attribute__((nothrow));
-} // end namespace lib_iconv
+} // gen:ns_print_struct
+namespace lib_iconv { // gen:ns_func
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const lib_iconv::trace &row);// cfmt:lib_iconv.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const lib_iconv::FieldId &row);// cfmt:lib_iconv.FieldId.String

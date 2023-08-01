@@ -11,6 +11,7 @@
 #include "include/gen/command_gen.h"
 #include "include/gen/algo_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- atf_nrun_FieldIdEnum
 
@@ -20,19 +21,21 @@ enum atf_nrun_FieldIdEnum {        // atf_nrun.FieldId.value
 
 enum { atf_nrun_FieldIdEnum_N = 1 };
 
+namespace atf_nrun { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace atf_nrun { // gen:ns_field
+extern const char *atf_nrun_help;
+extern const char *atf_nrun_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
+namespace atf_nrun { struct _db_fentry_curs; }
+namespace atf_nrun { struct _db_zd_todo_curs; }
 namespace atf_nrun { struct trace; }
 namespace atf_nrun { struct FDb; }
 namespace atf_nrun { struct FEntry; }
 namespace atf_nrun { struct FieldId; }
-namespace atf_nrun { struct _db_fentry_curs; }
-namespace atf_nrun { struct _db_ind_running_curs; }
-namespace atf_nrun { struct _db_zd_todo_curs; }
-namespace atf_nrun {
-}//pkey typedefs
-namespace atf_nrun {
-extern const char *atf_nrun_help;
-extern const char *atf_nrun_syntax;
-extern FDb _db;
+namespace atf_nrun { extern struct atf_nrun::FDb _db; }
+namespace atf_nrun { // gen:ns_print_struct
 
 // --- atf_nrun.trace
 #pragma pack(push,1)
@@ -274,6 +277,8 @@ bool                 FieldId_ReadStrptrMaybe(atf_nrun::FieldId &parent, algo::st
 void                 FieldId_Init(atf_nrun::FieldId& parent);
 // print string representation of atf_nrun::FieldId to string LHS, no header -- cprint:atf_nrun.FieldId.String
 void                 FieldId_Print(atf_nrun::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace atf_nrun { // gen:ns_curstext
 
 struct _db_fentry_curs {// cursor
     typedef atf_nrun::FEntry ChildType;
@@ -283,7 +288,7 @@ struct _db_fentry_curs {// cursor
 };
 
 
-struct _db_zd_todo_curs {// cursor
+struct _db_zd_todo_curs {// fcurs:atf_nrun.FDb.zd_todo/curs
     typedef atf_nrun::FEntry ChildType;
     atf_nrun::FEntry* row;
     _db_zd_todo_curs() {
@@ -291,11 +296,14 @@ struct _db_zd_todo_curs {// cursor
     }
 };
 
-} // end namespace atf_nrun
+} // gen:ns_curstext
+namespace atf_nrun { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const atf_nrun::trace &row);// cfmt:atf_nrun.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_nrun::FieldId &row);// cfmt:atf_nrun.FieldId.String

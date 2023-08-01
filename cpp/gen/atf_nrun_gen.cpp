@@ -48,7 +48,7 @@ const char *atf_nrun_syntax =
 " [ncmd]:int=6\n"
 ;
 } // namespace atf_nrun
-namespace atf_nrun {
+namespace atf_nrun { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     // Update cycles count from previous clock capture
@@ -62,7 +62,7 @@ namespace atf_nrun {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace atf_nrun
+} // gen:ns_print_proto
 
 // --- atf_nrun.trace..Print
 // print string representation of atf_nrun::trace to string LHS, no header -- cprint:atf_nrun.trace.String

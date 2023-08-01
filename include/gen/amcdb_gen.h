@@ -10,8 +10,11 @@
 #pragma once
 #include "include/gen/algo_gen.h"
 //#pragma endinclude
-extern const char *  amcdb_Curs_curs_curs;        // curs         fconst:amcdb.Curs.curs/curs
-extern const char *  amcdb_Curs_curs_unordcurs;   // unordcurs    fconst:amcdb.Curs.curs/unordcurs
+// gen:ns_enums
+extern const char *  amcdb_Curstype_curstype_curs;        // curs         fconst:amcdb.Curstype.curstype/curs
+extern const char *  amcdb_Curstype_curstype_delcurs;     // delcurs      fconst:amcdb.Curstype.curstype/delcurs
+extern const char *  amcdb_Curstype_curstype_oncecurs;    // oncecurs     fconst:amcdb.Curstype.curstype/oncecurs
+extern const char *  amcdb_Curstype_curstype_unordcurs;   // unordcurs    fconst:amcdb.Curstype.curstype/unordcurs
 
 // --- amcdb_FieldIdEnum
 
@@ -21,23 +24,24 @@ enum amcdb_FieldIdEnum {            // amcdb.FieldId.value
     ,amcdb_FieldId_bigendok   = 2
     ,amcdb_FieldId_issigned   = 3
     ,amcdb_FieldId_comment    = 4
-    ,amcdb_FieldId_curs       = 5
+    ,amcdb_FieldId_curstype   = 5
     ,amcdb_FieldId_gen        = 6
     ,amcdb_FieldId_perns      = 7
     ,amcdb_FieldId_tclass     = 8
     ,amcdb_FieldId_tfunc      = 9
-    ,amcdb_FieldId_name       = 10
-    ,amcdb_FieldId_hasthrow   = 11
-    ,amcdb_FieldId_leaf       = 12
-    ,amcdb_FieldId_poolfunc   = 13
-    ,amcdb_FieldId_inl        = 14
-    ,amcdb_FieldId_wur        = 15
-    ,amcdb_FieldId_pure       = 16
-    ,amcdb_FieldId_ismacro    = 17
-    ,amcdb_FieldId_value      = 18
+    ,amcdb_FieldId_dflt       = 10
+    ,amcdb_FieldId_name       = 11
+    ,amcdb_FieldId_hasthrow   = 12
+    ,amcdb_FieldId_leaf       = 13
+    ,amcdb_FieldId_poolfunc   = 14
+    ,amcdb_FieldId_inl        = 15
+    ,amcdb_FieldId_wur        = 16
+    ,amcdb_FieldId_pure       = 17
+    ,amcdb_FieldId_ismacro    = 18
+    ,amcdb_FieldId_value      = 19
 };
 
-enum { amcdb_FieldIdEnum_N = 19 };
+enum { amcdb_FieldIdEnum_N = 20 };
 
 extern const char *  amcdb_Tclass_tclass_Atree;      // Atree       fconst:amcdb.Tclass.tclass/Atree
 extern const char *  amcdb_Tclass_tclass_Base;       // Base        fconst:amcdb.Tclass.tclass/Base
@@ -88,20 +92,23 @@ extern const char *  amcdb_Tclass_tclass_Upptr;      // Upptr       fconst:amcdb
 extern const char *  amcdb_Tclass_tclass_Val;        // Val         fconst:amcdb.Tclass.tclass/Val
 extern const char *  amcdb_Tclass_tclass_Varlen;     // Varlen      fconst:amcdb.Tclass.tclass/Varlen
 extern const char *  amcdb_Tclass_tclass_ZSListMT;   // ZSListMT    fconst:amcdb.Tclass.tclass/ZSListMT
-namespace amcdb { struct Bltin; }
-namespace amcdb { struct Curs; }
-namespace amcdb { struct FieldId; }
-namespace amcdb { struct Gen; }
-namespace amcdb { struct Tclass; }
-namespace amcdb { struct Tcursor; }
-namespace amcdb { struct Tfunc; }
-namespace amcdb {
-    typedef algo::Smallstr50 CursPkey;
+namespace amcdb { // gen:ns_pkeytypedef
+    typedef algo::Smallstr50 CurstypePkey;
     typedef algo::Smallstr50 GenPkey;
     typedef algo::Smallstr50 TclassPkey;
     typedef algo::Smallstr50 TfuncPkey;
-}//pkey typedefs
-namespace amcdb {
+} // gen:ns_pkeytypedef
+namespace amcdb { // gen:ns_field
+} // gen:ns_field
+// gen:ns_fwddecl2
+namespace amcdb { struct Bltin; }
+namespace amcdb { struct Curstype; }
+namespace amcdb { struct FieldId; }
+namespace amcdb { struct Gen; }
+namespace amcdb { struct Tclass; }
+namespace amcdb { struct Tcurs; }
+namespace amcdb { struct Tfunc; }
+namespace amcdb { // gen:ns_print_struct
 
 // --- amcdb.Bltin
 struct Bltin { // amcdb.Bltin
@@ -127,19 +134,19 @@ void                 Bltin_Init(amcdb::Bltin& parent);
 // print string representation of amcdb::Bltin to string LHS, no header -- cprint:amcdb.Bltin.String
 void                 Bltin_Print(amcdb::Bltin & row, algo::cstring &str) __attribute__((nothrow));
 
-// --- amcdb.Curs
-struct Curs { // amcdb.Curs
-    algo::Smallstr50   curs;      //
-    algo::Comment      comment;   //
-    Curs();
+// --- amcdb.Curstype
+struct Curstype { // amcdb.Curstype: Cursor type
+    algo::Smallstr50   curstype;   //
+    algo::Comment      comment;    //
+    Curstype();
 };
 
-bool                 Curs_ReadFieldMaybe(amcdb::Curs &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of amcdb::Curs from an ascii string.
+bool                 Curstype_ReadFieldMaybe(amcdb::Curstype &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of amcdb::Curstype from an ascii string.
 // The format of the string is an ssim Tuple
-bool                 Curs_ReadStrptrMaybe(amcdb::Curs &parent, algo::strptr in_str);
-// print string representation of amcdb::Curs to string LHS, no header -- cprint:amcdb.Curs.String
-void                 Curs_Print(amcdb::Curs & row, algo::cstring &str) __attribute__((nothrow));
+bool                 Curstype_ReadStrptrMaybe(amcdb::Curstype &parent, algo::strptr in_str);
+// print string representation of amcdb::Curstype to string LHS, no header -- cprint:amcdb.Curstype.String
+void                 Curstype_Print(amcdb::Curstype & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- amcdb.FieldId
 #pragma pack(push,1)
@@ -211,19 +218,25 @@ bool                 Tclass_ReadStrptrMaybe(amcdb::Tclass &parent, algo::strptr 
 // print string representation of amcdb::Tclass to string LHS, no header -- cprint:amcdb.Tclass.String
 void                 Tclass_Print(amcdb::Tclass & row, algo::cstring &str) __attribute__((nothrow));
 
-// --- amcdb.Tcursor
-struct Tcursor { // amcdb.Tcursor
+// --- amcdb.Tcurs
+struct Tcurs { // amcdb.Tcurs: Cursor template
     algo::Smallstr50   tfunc;     //
+    bool               dflt;      //   false  Generate cursor by default? (if not, require fcurs)
     algo::Comment      comment;   //
-    Tcursor();
+    Tcurs();
 };
 
-bool                 Tcursor_ReadFieldMaybe(amcdb::Tcursor &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of amcdb::Tcursor from an ascii string.
+algo::Smallstr50     curstype_Get(amcdb::Tcurs& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::Smallstr50     Tcurs_curstype_Get(algo::strptr arg) __attribute__((nothrow));
+
+bool                 Tcurs_ReadFieldMaybe(amcdb::Tcurs &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of amcdb::Tcurs from an ascii string.
 // The format of the string is an ssim Tuple
-bool                 Tcursor_ReadStrptrMaybe(amcdb::Tcursor &parent, algo::strptr in_str);
-// print string representation of amcdb::Tcursor to string LHS, no header -- cprint:amcdb.Tcursor.String
-void                 Tcursor_Print(amcdb::Tcursor & row, algo::cstring &str) __attribute__((nothrow));
+bool                 Tcurs_ReadStrptrMaybe(amcdb::Tcurs &parent, algo::strptr in_str);
+// Set all fields to initial values.
+void                 Tcurs_Init(amcdb::Tcurs& parent);
+// print string representation of amcdb::Tcurs to string LHS, no header -- cprint:amcdb.Tcurs.String
+void                 Tcurs_Print(amcdb::Tcurs & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- amcdb.Tfunc
 struct Tfunc { // amcdb.Tfunc
@@ -254,7 +267,11 @@ bool                 Tfunc_ReadStrptrMaybe(amcdb::Tfunc &parent, algo::strptr in
 void                 Tfunc_Init(amcdb::Tfunc& parent);
 // print string representation of amcdb::Tfunc to string LHS, no header -- cprint:amcdb.Tfunc.String
 void                 Tfunc_Print(amcdb::Tfunc & row, algo::cstring &str) __attribute__((nothrow));
-} // end namespace amcdb
+} // gen:ns_print_struct
+namespace amcdb { // gen:ns_func
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const amcdb::FieldId &row);// cfmt:amcdb.FieldId.String
+inline algo::cstring &operator <<(algo::cstring &str, const amcdb::Tcurs &row);// cfmt:amcdb.Tcurs.String
 }

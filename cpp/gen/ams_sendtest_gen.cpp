@@ -75,7 +75,7 @@ const char *ams_sendtest_syntax =
 " -recvdelay:int=0\n"
 ;
 } // namespace ams_sendtest
-namespace ams_sendtest {
+namespace ams_sendtest { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
@@ -83,7 +83,7 @@ namespace ams_sendtest {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace ams_sendtest
+} // gen:ns_print_proto
 
 // --- ams_sendtest.AmsSendTest..Print
 // print string representation of ams_sendtest::AmsSendTest to string LHS, no header -- cprint:ams_sendtest.AmsSendTest.String

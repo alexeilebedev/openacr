@@ -67,7 +67,7 @@ const char *acr_my_syntax =
 " -serv:flag\n"
 ;
 } // namespace acr_my
-namespace acr_my {
+namespace acr_my { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     static bool          nsdb_InputMaybe(dmmeta::Nsdb &elem) __attribute__((nothrow));
@@ -77,7 +77,7 @@ namespace acr_my {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace acr_my
+} // gen:ns_print_proto
 
 // --- acr_my.trace..Print
 // print string representation of acr_my::trace to string LHS, no header -- cprint:acr_my.trace.String

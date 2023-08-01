@@ -1,6 +1,6 @@
 dmmeta.gconst  field:amc.BltinId.value  namefld:amcdb.Bltin.ctype  idfld:""  wantenum:N
 dmmeta.gconst  field:amc.CppkeywordId.id  namefld:dmmeta.Cppkeyword.cppkeyword  idfld:""  wantenum:N
-dmmeta.gconst  field:amcdb.Curs.curs  namefld:amcdb.Curs.curs  idfld:""  wantenum:N
+dmmeta.gconst  field:amcdb.Curstype.curstype  namefld:amcdb.Curstype.curstype  idfld:""  wantenum:N
 dmmeta.gconst  field:amcdb.Tclass.tclass  namefld:amcdb.Tclass.tclass  idfld:amcdb.Tclass.tclass  wantenum:N
 dmmeta.gconst  field:ams.ProcType.value  namefld:amsdb.ProcType.proctype  idfld:amsdb.ProcType.id  wantenum:Y
 dmmeta.gconst  field:ams.StreamType.value  namefld:amsdb.StreamType.streamtype  idfld:amsdb.StreamType.id  wantenum:Y

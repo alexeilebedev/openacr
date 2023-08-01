@@ -45,7 +45,9 @@ bool amc::FwdDeclExistsQ(amc::FNs &ns, amc::FFwddecl &fwddecl) {
 
 // -----------------------------------------------------------------------------
 
-// Return TRUE if FIELD requires a forward declaration
+// Return TRUE if FIELD requires a forward declaration for its type
+// This may be required since the type may be unknown at the point where the field is being
+// defined.
 bool amc::FwdDeclQ(amc::FField &field) {
     return ns_Get(*field.p_arg)!=""
         && !field.p_arg->c_cextern
@@ -68,22 +70,41 @@ static void Fwddecl_GenStructNs(amc::FNs &ns) {
             AddFwdDecl(ns,*field.p_arg);
         }ind_end;
     }ind_end;
-    // forward declarations for cursors
-    ind_beg(amc::ns_c_ctype_curs, ctype,ns) {
-        ind_beg(amc::ctype_c_field_curs, field,ctype) {
-            ind_beg(amc::tclass_c_tfunc_curs, tfunc, *field.p_reftype->p_tclass) if (tfunc.c_tcursor) {
-                amc::FField *pool = FirstInst(ctype);
-                tempstr parname = pool ? tempstr(name_Get(*pool)) : tempstr(name_Get(ctype));
-                amc::ind_fwddecl_GetOrCreate(tempstr()<<ns.ns<<"."<<ns.ns<<"."<<parname<<"_"<<name_Get(field)<<"_"<<name_Get(tfunc));
-            }ind_end;
-        }ind_end;
-    }ind_end;
+
     ind_beg(amc::ns_c_fwddecl_curs,fwddecl,ns) {
         dmmeta::CtypePkey ctypepkey=ctype_Get(fwddecl);// may be a non-existent ctype -- such as a cursor
         if (!FwdDeclExistsQ(ns,fwddecl)) {
             *ns.hdr << "namespace "<<dmmeta::Ctype_ns_Get(ctypepkey)<<" { struct "<<dmmeta::Ctype_name_Get(ctypepkey)<<"; }"<<eol;
         }
     }ind_end;
+    // extern declaration for global variables (usually just one, FDb)
+    if (amc::FField *field = ns.c_globfld) {
+        *ns.hdr << "namespace "<<ns.ns<<" { extern struct "<<field->cpp_type<<" "<<name_Get(*field)<<"; }"<<eol;
+    }
+
+    // hook function typedefs
+    {
+        tempstr out;
+        int n=0;
+        BeginNsBlock(out,ns,"hook_fcn_typedef");
+        ind_beg(amc::ns_c_ctype_curs, ctype,ns) {
+            ind_beg(amc::ctype_c_field_curs, field,ctype) if (field.c_hook) {
+                amc::FHook &hook=*field.c_hook;
+                out<<"    typedef void (*"<<name_Get(*hook.p_funcptr)<<")(); // hook:"<<field.field<<eol;
+                n++;
+                if (!StaticQ(hook)) {// user context (any reference -- assigned via template)
+                    amc::AddArg(out, tempstr() << "void*" << " userctx");
+                }
+                if (field.arg != "") {// additional argument
+                    amc::AddArg(out, tempstr() << amc::Refto(field.p_arg->cpp_type) << " arg");
+                }
+            }ind_end;
+        }ind_end;
+        EndNsBlock(out,ns,"hook_decl");
+        if (n) {
+            *ns.hdr << out;
+        }
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -109,6 +130,7 @@ static void Fwddecl_Global(amc::FNs &ns) {
 void amc::gen_ns_fwddecl2() {
     ind_beg(amc::_db_ns_curs, ns, amc::_db) {
         if (ns.select) {
+            *ns.hdr << "// gen:ns_fwddecl2" << eol;
             Fwddecl_GenStructNs(ns);
             if (ns.ns == "") {
                 Fwddecl_Global(ns);

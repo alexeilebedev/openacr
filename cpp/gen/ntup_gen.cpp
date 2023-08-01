@@ -49,7 +49,7 @@ const char *ntup_syntax =
 " -typetag:string=\"%\"\n"
 ;
 } // namespace ntup
-namespace ntup {
+namespace ntup { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
@@ -57,7 +57,7 @@ namespace ntup {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace ntup
+} // gen:ns_print_proto
 
 // --- ntup.trace..Print
 // print string representation of ntup::trace to string LHS, no header -- cprint:ntup.trace.String

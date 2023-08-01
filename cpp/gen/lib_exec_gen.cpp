@@ -51,7 +51,7 @@ lib_exec::_db_bh_syscmd_curs::~_db_bh_syscmd_curs() {
 
 }
 
-namespace lib_exec {
+namespace lib_exec { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     // Find new location for ROW starting at IDX
@@ -67,7 +67,7 @@ namespace lib_exec {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace lib_exec
+} // gen:ns_print_proto
 
 // --- lib_exec.trace..Print
 // print string representation of lib_exec::trace to string LHS, no header -- cprint:lib_exec.trace.String

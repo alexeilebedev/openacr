@@ -9,6 +9,7 @@
 
 #pragma once
 //#pragma endinclude
+// gen:ns_enums
 
 // --- lib_prot_FieldIdEnum
 
@@ -18,10 +19,13 @@ enum lib_prot_FieldIdEnum {        // lib_prot.FieldId.value
 
 enum { lib_prot_FieldIdEnum_N = 1 };
 
+namespace lib_prot { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace lib_prot { // gen:ns_field
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace lib_prot { struct FieldId; }
-namespace lib_prot {
-}//pkey typedefs
-namespace lib_prot {
+namespace lib_prot { // gen:ns_print_struct
 
 // --- lib_prot.FieldId
 #pragma pack(push,1)
@@ -61,7 +65,10 @@ bool                 FieldId_ReadStrptrMaybe(lib_prot::FieldId &parent, algo::st
 void                 FieldId_Init(lib_prot::FieldId& parent);
 // print string representation of lib_prot::FieldId to string LHS, no header -- cprint:lib_prot.FieldId.String
 void                 FieldId_Print(lib_prot::FieldId & row, algo::cstring &str) __attribute__((nothrow));
-} // end namespace lib_prot
+} // gen:ns_print_struct
+namespace lib_prot { // gen:ns_func
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const lib_prot::FieldId &row);// cfmt:lib_prot.FieldId.String
 }

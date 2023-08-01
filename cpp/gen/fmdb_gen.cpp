@@ -15,9 +15,9 @@
 #include "include/gen/fm_gen.h"
 #include "include/gen/fm_gen.inl.h"
 //#pragma endinclude
-namespace fmdb {
+namespace fmdb { // gen:ns_print_proto
     static void          SizeCheck();
-} // end namespace fmdb
+} // gen:ns_print_proto
 
 // --- fmdb.Alarm.code.Get
 fm::Code fmdb::code_Get(fmdb::Alarm& parent) {

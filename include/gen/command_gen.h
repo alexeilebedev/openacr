@@ -10,6 +10,7 @@
 #pragma once
 #include "include/gen/algo_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- command_FieldIdEnum
 
@@ -256,6 +257,11 @@ enum command_FieldIdEnum {                    // command.FieldId.value
 
 enum { command_FieldIdEnum_N = 238 };
 
+namespace command { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace command { // gen:ns_field
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace command { struct FieldId; }
 namespace command { struct Protocol; }
 namespace command { struct abt; }
@@ -321,9 +327,7 @@ namespace command { struct ssim2mysql; }
 namespace command { struct ssim2mysql_proc; }
 namespace command { struct strconv; }
 namespace command { struct strconv_proc; }
-namespace command {
-}//pkey typedefs
-namespace command {
+namespace command { // gen:ns_print_struct
 
 // --- command.FieldId
 #pragma pack(push,1)
@@ -2724,7 +2728,10 @@ algo::tempstr        strconv_ToCmdline(command::strconv_proc& parent) __attribut
 // Set all fields to initial values.
 void                 strconv_proc_Init(command::strconv_proc& parent);
 void                 strconv_proc_Uninit(command::strconv_proc& parent) __attribute__((nothrow));
-} // end namespace command
+} // gen:ns_print_struct
+namespace command { // gen:ns_func
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const command::FieldId &row);// cfmt:command.FieldId.String
 }

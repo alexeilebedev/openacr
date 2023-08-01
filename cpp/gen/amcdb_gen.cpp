@@ -13,9 +13,11 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
-// compile-time string constants for amcdb.Curs.curs
-const char *amcdb_Curs_curs_curs        = "curs";
-const char *amcdb_Curs_curs_unordcurs   = "unordcurs";
+// compile-time string constants for amcdb.Curstype.curstype
+const char *amcdb_Curstype_curstype_curs        = "curs";
+const char *amcdb_Curstype_curstype_delcurs     = "delcurs";
+const char *amcdb_Curstype_curstype_oncecurs    = "oncecurs";
+const char *amcdb_Curstype_curstype_unordcurs   = "unordcurs";
 
 // compile-time string constants for amcdb.Tclass.tclass
 const char *amcdb_Tclass_tclass_Atree     = "Atree";
@@ -72,9 +74,9 @@ const char *amcdb_Tclass_tclass_Val        = "Val";
 const char *amcdb_Tclass_tclass_Varlen     = "Varlen";
 const char *amcdb_Tclass_tclass_ZSListMT   = "ZSListMT";
 
-namespace amcdb {
+namespace amcdb { // gen:ns_print_proto
     static void          SizeCheck();
-} // end namespace amcdb
+} // gen:ns_print_proto
 
 // --- amcdb.Bltin..ReadFieldMaybe
 bool amcdb::Bltin_ReadFieldMaybe(amcdb::Bltin &parent, algo::strptr field, algo::strptr strval) {
@@ -129,13 +131,13 @@ void amcdb::Bltin_Print(amcdb::Bltin & row, algo::cstring &str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
-// --- amcdb.Curs..ReadFieldMaybe
-bool amcdb::Curs_ReadFieldMaybe(amcdb::Curs &parent, algo::strptr field, algo::strptr strval) {
+// --- amcdb.Curstype..ReadFieldMaybe
+bool amcdb::Curstype_ReadFieldMaybe(amcdb::Curstype &parent, algo::strptr field, algo::strptr strval) {
     amcdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
     bool retval = true; // default is no error
     switch(field_id) {
-        case amcdb_FieldId_curs: retval = algo::Smallstr50_ReadStrptrMaybe(parent.curs, strval); break;
+        case amcdb_FieldId_curstype: retval = algo::Smallstr50_ReadStrptrMaybe(parent.curstype, strval); break;
         case amcdb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
         default: break;
     }
@@ -145,26 +147,26 @@ bool amcdb::Curs_ReadFieldMaybe(amcdb::Curs &parent, algo::strptr field, algo::s
     return retval;
 }
 
-// --- amcdb.Curs..ReadStrptrMaybe
-// Read fields of amcdb::Curs from an ascii string.
+// --- amcdb.Curstype..ReadStrptrMaybe
+// Read fields of amcdb::Curstype from an ascii string.
 // The format of the string is an ssim Tuple
-bool amcdb::Curs_ReadStrptrMaybe(amcdb::Curs &parent, algo::strptr in_str) {
+bool amcdb::Curstype_ReadStrptrMaybe(amcdb::Curstype &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "amcdb.curs") || algo::StripTypeTag(in_str, "amcdb.Curs");
+    retval = algo::StripTypeTag(in_str, "amcdb.curstype") || algo::StripTypeTag(in_str, "amcdb.Curstype");
     ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && Curs_ReadFieldMaybe(parent, attr.name, attr.value);
+        retval = retval && Curstype_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
     return retval;
 }
 
-// --- amcdb.Curs..Print
-// print string representation of amcdb::Curs to string LHS, no header -- cprint:amcdb.Curs.String
-void amcdb::Curs_Print(amcdb::Curs & row, algo::cstring &str) {
+// --- amcdb.Curstype..Print
+// print string representation of amcdb::Curstype to string LHS, no header -- cprint:amcdb.Curstype.String
+void amcdb::Curstype_Print(amcdb::Curstype & row, algo::cstring &str) {
     algo::tempstr temp;
-    str << "amcdb.curs";
+    str << "amcdb.curstype";
 
-    algo::Smallstr50_Print(row.curs, temp);
-    PrintAttrSpaceReset(str,"curs", temp);
+    algo::Smallstr50_Print(row.curstype, temp);
+    PrintAttrSpaceReset(str,"curstype", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
@@ -181,11 +183,12 @@ const char* amcdb::value_ToCstr(const amcdb::FieldId& parent) {
         case amcdb_FieldId_bigendok        : ret = "bigendok";  break;
         case amcdb_FieldId_issigned        : ret = "issigned";  break;
         case amcdb_FieldId_comment         : ret = "comment";  break;
-        case amcdb_FieldId_curs            : ret = "curs";  break;
+        case amcdb_FieldId_curstype        : ret = "curstype";  break;
         case amcdb_FieldId_gen             : ret = "gen";  break;
         case amcdb_FieldId_perns           : ret = "perns";  break;
         case amcdb_FieldId_tclass          : ret = "tclass";  break;
         case amcdb_FieldId_tfunc           : ret = "tfunc";  break;
+        case amcdb_FieldId_dflt            : ret = "dflt";  break;
         case amcdb_FieldId_name            : ret = "name";  break;
         case amcdb_FieldId_hasthrow        : ret = "hasthrow";  break;
         case amcdb_FieldId_leaf            : ret = "leaf";  break;
@@ -234,8 +237,8 @@ bool amcdb::value_SetStrptrMaybe(amcdb::FieldId& parent, algo::strptr rhs) {
         }
         case 4: {
             switch (u64(algo::ReadLE32(rhs.elems))) {
-                case LE_STR4('c','u','r','s'): {
-                    value_SetEnum(parent,amcdb_FieldId_curs); ret = true; break;
+                case LE_STR4('d','f','l','t'): {
+                    value_SetEnum(parent,amcdb_FieldId_dflt); ret = true; break;
                 }
                 case LE_STR4('l','e','a','f'): {
                     value_SetEnum(parent,amcdb_FieldId_leaf); ret = true; break;
@@ -292,6 +295,9 @@ bool amcdb::value_SetStrptrMaybe(amcdb::FieldId& parent, algo::strptr rhs) {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('b','i','g','e','n','d','o','k'): {
                     value_SetEnum(parent,amcdb_FieldId_bigendok); ret = true; break;
+                }
+                case LE_STR8('c','u','r','s','t','y','p','e'): {
+                    value_SetEnum(parent,amcdb_FieldId_curstype); ret = true; break;
                 }
                 case LE_STR8('h','a','s','t','h','r','o','w'): {
                     value_SetEnum(parent,amcdb_FieldId_hasthrow); ret = true; break;
@@ -428,13 +434,26 @@ void amcdb::Tclass_Print(amcdb::Tclass & row, algo::cstring &str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
-// --- amcdb.Tcursor..ReadFieldMaybe
-bool amcdb::Tcursor_ReadFieldMaybe(amcdb::Tcursor &parent, algo::strptr field, algo::strptr strval) {
+// --- amcdb.Tcurs.curstype.Get
+algo::Smallstr50 amcdb::curstype_Get(amcdb::Tcurs& parent) {
+    algo::Smallstr50 ret(algo::Pathcomp(parent.tfunc, ".RR"));
+    return ret;
+}
+
+// --- amcdb.Tcurs.curstype.Get2
+algo::Smallstr50 amcdb::Tcurs_curstype_Get(algo::strptr arg) {
+    algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
+    return ret;
+}
+
+// --- amcdb.Tcurs..ReadFieldMaybe
+bool amcdb::Tcurs_ReadFieldMaybe(amcdb::Tcurs &parent, algo::strptr field, algo::strptr strval) {
     amcdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
     bool retval = true; // default is no error
     switch(field_id) {
         case amcdb_FieldId_tfunc: retval = algo::Smallstr50_ReadStrptrMaybe(parent.tfunc, strval); break;
+        case amcdb_FieldId_dflt: retval = bool_ReadStrptrMaybe(parent.dflt, strval); break;
         case amcdb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
         default: break;
     }
@@ -444,26 +463,29 @@ bool amcdb::Tcursor_ReadFieldMaybe(amcdb::Tcursor &parent, algo::strptr field, a
     return retval;
 }
 
-// --- amcdb.Tcursor..ReadStrptrMaybe
-// Read fields of amcdb::Tcursor from an ascii string.
+// --- amcdb.Tcurs..ReadStrptrMaybe
+// Read fields of amcdb::Tcurs from an ascii string.
 // The format of the string is an ssim Tuple
-bool amcdb::Tcursor_ReadStrptrMaybe(amcdb::Tcursor &parent, algo::strptr in_str) {
+bool amcdb::Tcurs_ReadStrptrMaybe(amcdb::Tcurs &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "amcdb.tcursor") || algo::StripTypeTag(in_str, "amcdb.Tcursor");
+    retval = algo::StripTypeTag(in_str, "amcdb.tcurs") || algo::StripTypeTag(in_str, "amcdb.Tcurs");
     ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && Tcursor_ReadFieldMaybe(parent, attr.name, attr.value);
+        retval = retval && Tcurs_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
     return retval;
 }
 
-// --- amcdb.Tcursor..Print
-// print string representation of amcdb::Tcursor to string LHS, no header -- cprint:amcdb.Tcursor.String
-void amcdb::Tcursor_Print(amcdb::Tcursor & row, algo::cstring &str) {
+// --- amcdb.Tcurs..Print
+// print string representation of amcdb::Tcurs to string LHS, no header -- cprint:amcdb.Tcurs.String
+void amcdb::Tcurs_Print(amcdb::Tcurs & row, algo::cstring &str) {
     algo::tempstr temp;
-    str << "amcdb.tcursor";
+    str << "amcdb.tcurs";
 
     algo::Smallstr50_Print(row.tfunc, temp);
     PrintAttrSpaceReset(str,"tfunc", temp);
+
+    bool_Print(row.dflt, temp);
+    PrintAttrSpaceReset(str,"dflt", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

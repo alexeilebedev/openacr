@@ -70,7 +70,7 @@ const char *ssim2mysql_syntax =
 " -fkey:flag\n"
 ;
 } // namespace ssim2mysql
-namespace ssim2mysql {
+namespace ssim2mysql { // gen:ns_print_proto
     static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
     static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
     static bool          field_InputMaybe(dmmeta::Field &elem) __attribute__((nothrow));
@@ -98,7 +98,7 @@ namespace ssim2mysql {
     // Shift existing bytes over to the beginning of the buffer
     static void          in_buf_Shift(ssim2mysql::FInput& input) __attribute__((nothrow));
     static void          SizeCheck();
-} // end namespace ssim2mysql
+} // gen:ns_print_proto
 
 // --- ssim2mysql.FCmd..Uninit
 void ssim2mysql::FCmd_Uninit(ssim2mysql::FCmd& cmd) {

@@ -37,6 +37,22 @@ void amc::GenTclass(amc::FTclass &tclass) {
     ind_beg(amc::tclass_c_tfunc_curs,tfunc,tclass) {
         amc::_db.genfield.p_tfunc = &tfunc;
         bool skip = tfunc.hasthrow && !GenThrowQ(ns);
+        // cursor:
+        // Set variables $curs (cursor name), $fcurs (key)
+        // skip cursor generation if it's non-default and not explicitly requested
+        if (tfunc.c_tcurs) {
+            tempstr key=tempstr()<<amc::_db.genfield.p_field->field<<"/"<<curstype_Get(*tfunc.c_tcurs);
+            amc::FFcurs *fcurs = amc::ind_fcurs_Find(key);
+            if (!tfunc.c_tcurs->dflt && fcurs == NULL) {
+                skip=true;
+            }
+            algo_lib::Replscope &R = amc::_db.genfield.R;
+            Set(R,"$fcurs",key);
+            Set(R,"$curstype",curstype_Get(*tfunc.c_tcurs));
+            if (!skip) {
+                amc::ind_fwddecl_GetOrCreate(Subst(R,"$ns.$ns.$Parname_$name_$curstype"));
+            }
+        }
         if (!skip) {
             tfunc.step();
         }
@@ -142,6 +158,9 @@ static void GenTclass_Field(amc::FField &field) {
 // -----------------------------------------------------------------------------
 
 // Call tfunc generators for every field in this ctype
+// Each field triggers zero or more tclass generators
+// (template class, no relation to C++ notion of template or class)
+// based on its type and associated records, and each tclass generates zero or more tfuncs
 void amc::GenTclass_Fields(amc::FCtype &ctype) {
     amc::_db.genfield.p_ctype = &ctype;
     ind_beg(amc::ctype_c_field_curs, field,ctype) {

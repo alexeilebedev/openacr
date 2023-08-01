@@ -1440,7 +1440,8 @@ inline bool amc::ctype_zs_cfmt_curs_ValidQ(ctype_zs_cfmt_curs &curs) {
 // --- amc.FCtype.zs_cfmt_curs.Next
 // proceed to next item
 inline void amc::ctype_zs_cfmt_curs_Next(ctype_zs_cfmt_curs &curs) {
-    curs.row = (*curs.row).zs_cfmt_next;
+    amc::FCfmt *next = (*curs.row).zs_cfmt_next;
+    curs.row = next;
 }
 
 // --- amc.FCtype.zs_cfmt_curs.Access
@@ -1564,7 +1565,8 @@ inline bool amc::ctype_zd_inst_curs_ValidQ(ctype_zd_inst_curs &curs) {
 // --- amc.FCtype.zd_inst_curs.Next
 // proceed to next item
 inline void amc::ctype_zd_inst_curs_Next(ctype_zd_inst_curs &curs) {
-    curs.row = (*curs.row).zd_inst_next;
+    amc::FField *next = (*curs.row).zd_inst_next;
+    curs.row = next;
 }
 
 // --- amc.FCtype.zd_inst_curs.Access
@@ -1588,7 +1590,8 @@ inline bool amc::ctype_zs_xref_curs_ValidQ(ctype_zs_xref_curs &curs) {
 // --- amc.FCtype.zs_xref_curs.Next
 // proceed to next item
 inline void amc::ctype_zs_xref_curs_Next(ctype_zs_xref_curs &curs) {
-    curs.row = (*curs.row).zs_xref_next;
+    amc::FXref *next = (*curs.row).zs_xref_next;
+    curs.row = next;
 }
 
 // --- amc.FCtype.zs_xref_curs.Access
@@ -1637,7 +1640,8 @@ inline bool amc::ctype_zd_cafter_curs_ValidQ(ctype_zd_cafter_curs &curs) {
 // --- amc.FCtype.zd_cafter_curs.Next
 // proceed to next item
 inline void amc::ctype_zd_cafter_curs_Next(ctype_zd_cafter_curs &curs) {
-    curs.row = (*curs.row).zd_cafter_next;
+    amc::FCafter *next = (*curs.row).zd_cafter_next;
+    curs.row = next;
 }
 
 // --- amc.FCtype.zd_cafter_curs.Access
@@ -1661,7 +1665,8 @@ inline bool amc::ctype_zd_access_curs_ValidQ(ctype_zd_access_curs &curs) {
 // --- amc.FCtype.zd_access_curs.Next
 // proceed to next item
 inline void amc::ctype_zd_access_curs_Next(ctype_zd_access_curs &curs) {
-    curs.row = (*curs.row).zd_access_next;
+    amc::FField *next = (*curs.row).zd_access_next;
+    curs.row = next;
 }
 
 // --- amc.FCtype.zd_access_curs.Access
@@ -5719,48 +5724,6 @@ inline amc::FFindrem& amc::findrem_qFind(u64 t) {
     return _db.findrem_lary[bsr][index];
 }
 
-// --- amc.FDb.tcursor.EmptyQ
-// Return true if index is empty
-inline bool amc::tcursor_EmptyQ() {
-    return _db.tcursor_n == 0;
-}
-
-// --- amc.FDb.tcursor.Find
-// Look up row by row id. Return NULL if out of range
-inline amc::FTcursor* amc::tcursor_Find(u64 t) {
-    amc::FTcursor *retval = NULL;
-    if (LIKELY(u64(t) < u64(_db.tcursor_n))) {
-        u64 x = t + 1;
-        u64 bsr   = algo::u64_BitScanReverse(x);
-        u64 base  = u64(1)<<bsr;
-        u64 index = x-base;
-        retval = &_db.tcursor_lary[bsr][index];
-    }
-    return retval;
-}
-
-// --- amc.FDb.tcursor.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline amc::FTcursor* amc::tcursor_Last() {
-    return tcursor_Find(u64(_db.tcursor_n-1));
-}
-
-// --- amc.FDb.tcursor.N
-// Return number of items in the pool
-inline i32 amc::tcursor_N() {
-    return _db.tcursor_n;
-}
-
-// --- amc.FDb.tcursor.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline amc::FTcursor& amc::tcursor_qFind(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
-    return _db.tcursor_lary[bsr][index];
-}
-
 // --- amc.FDb.fcurs.EmptyQ
 // Return true if index is empty
 inline bool amc::fcurs_EmptyQ() {
@@ -7142,6 +7105,60 @@ inline amc::FFuserinit& amc::fuserinit_qFind(u64 t) {
     return _db.fuserinit_lary[bsr][index];
 }
 
+// --- amc.FDb.ind_fcurs.EmptyQ
+// Return true if hash is empty
+inline bool amc::ind_fcurs_EmptyQ() {
+    return _db.ind_fcurs_n == 0;
+}
+
+// --- amc.FDb.ind_fcurs.N
+// Return number of items in the hash
+inline i32 amc::ind_fcurs_N() {
+    return _db.ind_fcurs_n;
+}
+
+// --- amc.FDb.tcurs.EmptyQ
+// Return true if index is empty
+inline bool amc::tcurs_EmptyQ() {
+    return _db.tcurs_n == 0;
+}
+
+// --- amc.FDb.tcurs.Find
+// Look up row by row id. Return NULL if out of range
+inline amc::FTcurs* amc::tcurs_Find(u64 t) {
+    amc::FTcurs *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.tcurs_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.tcurs_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- amc.FDb.tcurs.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline amc::FTcurs* amc::tcurs_Last() {
+    return tcurs_Find(u64(_db.tcurs_n-1));
+}
+
+// --- amc.FDb.tcurs.N
+// Return number of items in the pool
+inline i32 amc::tcurs_N() {
+    return _db.tcurs_n;
+}
+
+// --- amc.FDb.tcurs.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline amc::FTcurs& amc::tcurs_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.tcurs_lary[bsr][index];
+}
+
 // --- amc.FDb.fsort_curs.Reset
 // cursor points to valid item
 inline void amc::_db_fsort_curs_Reset(_db_fsort_curs &curs, amc::FDb &parent) {
@@ -8494,7 +8511,8 @@ inline bool amc::_db_zsl_ctype_pack_tran_curs_ValidQ(_db_zsl_ctype_pack_tran_cur
 // --- amc.FDb.zsl_ctype_pack_tran_curs.Next
 // proceed to next item
 inline void amc::_db_zsl_ctype_pack_tran_curs_Next(_db_zsl_ctype_pack_tran_curs &curs) {
-    curs.row = (*curs.row).zsl_ctype_pack_tran_next;
+    amc::FCtype *next = (*curs.row).zsl_ctype_pack_tran_next;
+    curs.row = next;
 }
 
 // --- amc.FDb.zsl_ctype_pack_tran_curs.Access
@@ -8768,7 +8786,8 @@ inline bool amc::_db_zs_sig_visit_curs_ValidQ(_db_zs_sig_visit_curs &curs) {
 // --- amc.FDb.zs_sig_visit_curs.Next
 // proceed to next item
 inline void amc::_db_zs_sig_visit_curs_Next(_db_zs_sig_visit_curs &curs) {
-    curs.row = (*curs.row).zs_sig_visit_next;
+    amc::FCtype *next = (*curs.row).zs_sig_visit_next;
+    curs.row = next;
 }
 
 // --- amc.FDb.zs_sig_visit_curs.Access
@@ -9227,31 +9246,6 @@ inline amc::FFindrem& amc::_db_findrem_curs_Access(_db_findrem_curs &curs) {
     return findrem_qFind(u64(curs.index));
 }
 
-// --- amc.FDb.tcursor_curs.Reset
-// cursor points to valid item
-inline void amc::_db_tcursor_curs_Reset(_db_tcursor_curs &curs, amc::FDb &parent) {
-    curs.parent = &parent;
-    curs.index = 0;
-}
-
-// --- amc.FDb.tcursor_curs.ValidQ
-// cursor points to valid item
-inline bool amc::_db_tcursor_curs_ValidQ(_db_tcursor_curs &curs) {
-    return curs.index < _db.tcursor_n;
-}
-
-// --- amc.FDb.tcursor_curs.Next
-// proceed to next item
-inline void amc::_db_tcursor_curs_Next(_db_tcursor_curs &curs) {
-    curs.index++;
-}
-
-// --- amc.FDb.tcursor_curs.Access
-// item access
-inline amc::FTcursor& amc::_db_tcursor_curs_Access(_db_tcursor_curs &curs) {
-    return tcursor_qFind(u64(curs.index));
-}
-
 // --- amc.FDb.fcurs_curs.Reset
 // cursor points to valid item
 inline void amc::_db_fcurs_curs_Reset(_db_fcurs_curs &curs, amc::FDb &parent) {
@@ -9417,7 +9411,8 @@ inline bool amc::_db_zs_ordkeyfield_curs_ValidQ(_db_zs_ordkeyfield_curs &curs) {
 // --- amc.FDb.zs_ordkeyfield_curs.Next
 // proceed to next item
 inline void amc::_db_zs_ordkeyfield_curs_Next(_db_zs_ordkeyfield_curs &curs) {
-    curs.row = (*curs.row).zs_ordkeyfield_next;
+    amc::FField *next = (*curs.row).zs_ordkeyfield_next;
+    curs.row = next;
 }
 
 // --- amc.FDb.zs_ordkeyfield_curs.Access
@@ -9491,7 +9486,8 @@ inline bool amc::_db_zd_substr_params_curs_ValidQ(_db_zd_substr_params_curs &cur
 // --- amc.FDb.zd_substr_params_curs.Next
 // proceed to next item
 inline void amc::_db_zd_substr_params_curs_Next(_db_zd_substr_params_curs &curs) {
-    curs.row = (*curs.row).zd_substr_params_next;
+    amc::FSubstr *next = (*curs.row).zd_substr_params_next;
+    curs.row = next;
 }
 
 // --- amc.FDb.zd_substr_params_curs.Access
@@ -9804,7 +9800,7 @@ inline amc::FCget& amc::_db_cget_curs_Access(_db_cget_curs &curs) {
 // cursor points to valid item
 inline void amc::_db_cd_temp_func_curs_Reset(_db_cd_temp_func_curs &curs, amc::FDb &parent) {
     curs.row = parent.cd_temp_func_head;
-    curs.head = parent.cd_temp_func_head;
+    curs.head = &parent.cd_temp_func_head;
 }
 
 // --- amc.FDb.cd_temp_func_curs.ValidQ
@@ -9816,8 +9812,9 @@ inline bool amc::_db_cd_temp_func_curs_ValidQ(_db_cd_temp_func_curs &curs) {
 // --- amc.FDb.cd_temp_func_curs.Next
 // proceed to next item
 inline void amc::_db_cd_temp_func_curs_Next(_db_cd_temp_func_curs &curs) {
-    curs.row = (*curs.row).cd_temp_func_next;
-    if (curs.row == curs.head) {
+    amc::FFunc *next = (*curs.row).cd_temp_func_next;
+    curs.row = next;
+    if (curs.row == *curs.head) {
         curs.row = NULL;
     }
 }
@@ -9868,7 +9865,8 @@ inline bool amc::_db_zs_gen_perns_curs_ValidQ(_db_zs_gen_perns_curs &curs) {
 // --- amc.FDb.zs_gen_perns_curs.Next
 // proceed to next item
 inline void amc::_db_zs_gen_perns_curs_Next(_db_zs_gen_perns_curs &curs) {
-    curs.row = (*curs.row).zs_gen_perns_next;
+    amc::FGen *next = (*curs.row).zs_gen_perns_next;
+    curs.row = next;
 }
 
 // --- amc.FDb.zs_gen_perns_curs.Access
@@ -10025,6 +10023,31 @@ inline void amc::_db_fuserinit_curs_Next(_db_fuserinit_curs &curs) {
 // item access
 inline amc::FFuserinit& amc::_db_fuserinit_curs_Access(_db_fuserinit_curs &curs) {
     return fuserinit_qFind(u64(curs.index));
+}
+
+// --- amc.FDb.tcurs_curs.Reset
+// cursor points to valid item
+inline void amc::_db_tcurs_curs_Reset(_db_tcurs_curs &curs, amc::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- amc.FDb.tcurs_curs.ValidQ
+// cursor points to valid item
+inline bool amc::_db_tcurs_curs_ValidQ(_db_tcurs_curs &curs) {
+    return curs.index < _db.tcurs_n;
+}
+
+// --- amc.FDb.tcurs_curs.Next
+// proceed to next item
+inline void amc::_db_tcurs_curs_Next(_db_tcurs_curs &curs) {
+    curs.index++;
+}
+
+// --- amc.FDb.tcurs_curs.Access
+// item access
+inline amc::FTcurs& amc::_db_tcurs_curs_Access(_db_tcurs_curs &curs) {
+    return tcurs_qFind(u64(curs.index));
 }
 inline amc::FDispatch::FDispatch() {
     amc::FDispatch_Init(*this);
@@ -10527,7 +10550,9 @@ inline amc::FFcurs::~FFcurs() {
 // --- amc.FFcurs..Init
 // Set all fields to initial values.
 inline void amc::FFcurs_Init(amc::FFcurs& fcurs) {
+    fcurs.p_field = NULL;
     fcurs.ctype_c_fcurs_in_ary = bool(false);
+    fcurs.ind_fcurs_next = (amc::FFcurs*)-1; // (amc.FDb.ind_fcurs) not-in-hash
 }
 inline amc::FFdec::FFdec() {
     amc::FFdec_Init(*this);
@@ -11680,7 +11705,8 @@ inline bool amc::field_zd_xref_keyfld_curs_ValidQ(field_zd_xref_keyfld_curs &cur
 // --- amc.FField.zd_xref_keyfld_curs.Next
 // proceed to next item
 inline void amc::field_zd_xref_keyfld_curs_Next(field_zd_xref_keyfld_curs &curs) {
-    curs.row = (*curs.row).zd_xref_keyfld_next;
+    amc::FXref *next = (*curs.row).zd_xref_keyfld_next;
+    curs.row = next;
 }
 
 // --- amc.FField.zd_xref_keyfld_curs.Access
@@ -11704,7 +11730,8 @@ inline bool amc::field_zs_fcmap_curs_ValidQ(field_zs_fcmap_curs &curs) {
 // --- amc.FField.zs_fcmap_curs.Next
 // proceed to next item
 inline void amc::field_zs_fcmap_curs_Next(field_zs_fcmap_curs &curs) {
-    curs.row = (*curs.row).zs_fcmap_next;
+    amc::FFcmap *next = (*curs.row).zs_fcmap_next;
+    curs.row = next;
 }
 
 // --- amc.FField.zs_fcmap_curs.Access
@@ -13863,7 +13890,8 @@ inline bool amc::reftype_zs_fprefix_curs_ValidQ(reftype_zs_fprefix_curs &curs) {
 // --- amc.FReftype.zs_fprefix_curs.Next
 // proceed to next item
 inline void amc::reftype_zs_fprefix_curs_Next(reftype_zs_fprefix_curs &curs) {
-    curs.row = (*curs.row).zs_fprefix_next;
+    amc::FFprefix *next = (*curs.row).zs_fprefix_next;
+    curs.row = next;
 }
 
 // --- amc.FReftype.zs_fprefix_curs.Access
@@ -14129,13 +14157,20 @@ inline void amc::FTary_Init(amc::FTary& tary) {
     tary.p_field = NULL;
     tary.ind_tary_next = (amc::FTary*)-1; // (amc.FDb.ind_tary) not-in-hash
 }
-inline amc::FTcursor::FTcursor() {
+inline amc::FTcurs::FTcurs() {
+    amc::FTcurs_Init(*this);
 }
 
-inline amc::FTcursor::~FTcursor() {
-    amc::FTcursor_Uninit(*this);
+inline amc::FTcurs::~FTcurs() {
+    amc::FTcurs_Uninit(*this);
 }
 
+
+// --- amc.FTcurs..Init
+// Set all fields to initial values.
+inline void amc::FTcurs_Init(amc::FTcurs& tcurs) {
+    tcurs.dflt = bool(false);
+}
 inline amc::FTfunc::FTfunc() {
     amc::FTfunc_Init(*this);
 }
@@ -14145,31 +14180,31 @@ inline amc::FTfunc::~FTfunc() {
 }
 
 
-// --- amc.FTfunc.c_tcursor.InsertMaybe
-// Insert row into pointer index. Return final membership status.
-inline bool amc::c_tcursor_InsertMaybe(amc::FTfunc& tfunc, amc::FTcursor& row) {
-    amc::FTcursor* ptr = tfunc.c_tcursor;
-    bool retval = (ptr == NULL) | (ptr == &row);
-    if (retval) {
-        tfunc.c_tcursor = &row;
-    }
-    return retval;
-}
-
-// --- amc.FTfunc.c_tcursor.Remove
-// Remove element from index. If element is not in index, do nothing.
-inline void amc::c_tcursor_Remove(amc::FTfunc& tfunc, amc::FTcursor& row) {
-    amc::FTcursor *ptr = tfunc.c_tcursor;
-    if (LIKELY(ptr == &row)) {
-        tfunc.c_tcursor = NULL;
-    }
-}
-
 // --- amc.FTfunc.step.Call
 // Invoke function by pointer
 inline void amc::step_Call(amc::FTfunc& tfunc) {
     if (tfunc.step) {
         tfunc.step();
+    }
+}
+
+// --- amc.FTfunc.c_tcurs.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool amc::c_tcurs_InsertMaybe(amc::FTfunc& tfunc, amc::FTcurs& row) {
+    amc::FTcurs* ptr = tfunc.c_tcurs;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        tfunc.c_tcurs = &row;
+    }
+    return retval;
+}
+
+// --- amc.FTfunc.c_tcurs.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void amc::c_tcurs_Remove(amc::FTfunc& tfunc, amc::FTcurs& row) {
+    amc::FTcurs *ptr = tfunc.c_tcurs;
+    if (LIKELY(ptr == &row)) {
+        tfunc.c_tcurs = NULL;
     }
 }
 inline amc::FThash::FThash() {

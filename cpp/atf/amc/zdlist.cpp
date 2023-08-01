@@ -591,3 +591,69 @@ void atf_amc::amctest_ZdlistInsertHeadNoTail3() {
     vrfy_(3==nb_iter);
     // teardown
 }
+
+// -----------------------------------------------------------------------------
+
+void atf_amc::amctest_ZdlistDelCurs() {
+    for (int listtype=0; listtype<3; listtype++) {
+        for (int nelem=1; nelem<4; nelem++) {
+            for (int delwhich=0; delwhich<nelem; delwhich++) {
+                prlog("ZdlistDelCurs"
+                      <<Keyval("listtype",listtype)
+                      <<Keyval("nelem",nelem)
+                      <<Keyval("delwhich",delwhich));
+                atf_amc::FTypeD *t[4];
+                for (int i=0; i<nelem; i++) {
+                    t[i] = &typed_Alloc();
+                    typed_XrefMaybe(*t[i]);
+                }
+
+                vrfy_(zd_typed_N()==nelem);
+                vrfy_(cd_typed_N()==nelem);
+                vrfy_(zs_t_typed_N()==nelem);
+
+                int n=0;
+                if (listtype == 0) {
+                    ind_beg(_db_zd_typed_delcurs,typed,_db) {
+                        if (n==delwhich) {
+                            typed_Delete(typed);
+                        }
+                        n++;
+                    }ind_end;
+                } else if (listtype == 1) {
+                    ind_beg(_db_cd_typed_delcurs,typed,_db) {
+                        if (n==delwhich) {
+                            typed_Delete(typed);
+                        }
+                        n++;
+                    }ind_end;
+                } else if (listtype == 2) {
+                    ind_beg(_db_zs_t_typed_delcurs,typed,_db) {
+                        if (n==delwhich) {
+                            typed_Delete(typed);
+                        }
+                        n++;
+                    }ind_end;
+                }
+
+                t[delwhich]=NULL;
+                vrfy_(zd_typed_N()==nelem-1);
+                vrfy_(cd_typed_N()==nelem-1);
+                vrfy_(zs_t_typed_N()==nelem-1);
+
+                for (int i=0; i<nelem; i++) {
+                    if (i!=delwhich) {
+                        vrfy_(zd_typed_InLlistQ(*t[i]));
+                        vrfy_(zs_t_typed_InLlistQ(*t[i]));
+                        vrfy_(cd_typed_InLlistQ(*t[i]));
+                    }
+                }
+                for (int i=0; i<nelem; i++) {
+                    if (i!=delwhich) {
+                        typed_Delete(*t[i]);
+                    }
+                }
+            }
+        }
+    }
+}

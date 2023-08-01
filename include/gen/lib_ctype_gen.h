@@ -12,6 +12,7 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/dev_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- lib_ctype_FieldIdEnum
 
@@ -49,7 +50,25 @@ enum lib_ctype_TableIdEnum {                   // lib_ctype.TableId.value
 
 enum { lib_ctype_TableIdEnum_N = 20 };
 
+namespace lib_ctype { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace lib_ctype { // gen:ns_field
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace lib_ctype { struct FCtype; }
+namespace lib_ctype { struct ctype_c_field_curs; }
+namespace lib_ctype { struct ctype_c_cfmt_curs; }
+namespace lib_ctype { struct _db_fconst_curs; }
+namespace lib_ctype { struct _db_ssimfile_curs; }
+namespace lib_ctype { struct _db_ftuple_curs; }
+namespace lib_ctype { struct _db_ctype_curs; }
+namespace lib_ctype { struct _db_field_curs; }
+namespace lib_ctype { struct _db_cdflt_curs; }
+namespace lib_ctype { struct _db_cfmt_curs; }
+namespace lib_ctype { struct _db_cppfunc_curs; }
+namespace lib_ctype { struct _db_substr_curs; }
+namespace lib_ctype { struct _db_unstablefld_curs; }
+namespace lib_ctype { struct field_zd_fconst_curs; }
 namespace lib_ctype { struct FCdflt; }
 namespace lib_ctype { struct FCfmt; }
 namespace lib_ctype { struct FCppfunc; }
@@ -64,29 +83,8 @@ namespace lib_ctype { struct FUnstablefld; }
 namespace lib_ctype { struct FieldId; }
 namespace lib_ctype { struct Match; }
 namespace lib_ctype { struct TableId; }
-namespace lib_ctype { struct ctype_c_field_curs; }
-namespace lib_ctype { struct ctype_c_cfmt_curs; }
-namespace lib_ctype { struct _db_fconst_curs; }
-namespace lib_ctype { struct _db_ind_fconst_key_curs; }
-namespace lib_ctype { struct _db_ind_fconst_curs; }
-namespace lib_ctype { struct _db_ssimfile_curs; }
-namespace lib_ctype { struct _db_ind_ssimfile_curs; }
-namespace lib_ctype { struct _db_ftuple_curs; }
-namespace lib_ctype { struct _db_ctype_curs; }
-namespace lib_ctype { struct _db_ind_ctype_curs; }
-namespace lib_ctype { struct _db_field_curs; }
-namespace lib_ctype { struct _db_ind_field_curs; }
-namespace lib_ctype { struct _db_cdflt_curs; }
-namespace lib_ctype { struct _db_cfmt_curs; }
-namespace lib_ctype { struct _db_ind_cfmt_curs; }
-namespace lib_ctype { struct _db_cppfunc_curs; }
-namespace lib_ctype { struct _db_substr_curs; }
-namespace lib_ctype { struct _db_unstablefld_curs; }
-namespace lib_ctype { struct field_zd_fconst_curs; }
-namespace lib_ctype {
-}//pkey typedefs
-namespace lib_ctype {
-extern FDb _db;
+namespace lib_ctype { extern struct lib_ctype::FDb _db; }
+namespace lib_ctype { // gen:ns_print_struct
 
 // --- lib_ctype.FCdflt
 // create: lib_ctype.FDb.cdflt (Lary)
@@ -1136,8 +1134,10 @@ bool                 TableId_ReadStrptrMaybe(lib_ctype::TableId &parent, algo::s
 void                 TableId_Init(lib_ctype::TableId& parent);
 // print string representation of lib_ctype::TableId to string LHS, no header -- cprint:lib_ctype.TableId.String
 void                 TableId_Print(lib_ctype::TableId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace lib_ctype { // gen:ns_curstext
 
-struct ctype_c_field_curs {// cursor
+struct ctype_c_field_curs {// fcurs:lib_ctype.FCtype.c_field/curs
     typedef lib_ctype::FField ChildType;
     lib_ctype::FField** elems;
     u32 n_elems;
@@ -1146,7 +1146,7 @@ struct ctype_c_field_curs {// cursor
 };
 
 
-struct ctype_c_cfmt_curs {// cursor
+struct ctype_c_cfmt_curs {// fcurs:lib_ctype.FCtype.c_cfmt/curs
     typedef lib_ctype::FCfmt ChildType;
     lib_ctype::FCfmt** elems;
     u32 n_elems;
@@ -1235,7 +1235,7 @@ struct _db_unstablefld_curs {// cursor
 };
 
 
-struct field_zd_fconst_curs {// cursor
+struct field_zd_fconst_curs {// fcurs:lib_ctype.FField.zd_fconst/curs
     typedef lib_ctype::FFconst ChildType;
     lib_ctype::FFconst* row;
     field_zd_fconst_curs() {
@@ -1243,7 +1243,10 @@ struct field_zd_fconst_curs {// cursor
     }
 };
 
-} // end namespace lib_ctype
+} // gen:ns_curstext
+namespace lib_ctype { // gen:ns_func
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const lib_ctype::trace &row);// cfmt:lib_ctype.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const lib_ctype::FieldId &row);// cfmt:lib_ctype.FieldId.String

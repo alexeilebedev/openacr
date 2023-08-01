@@ -13,6 +13,7 @@
 #include "include/gen/command_gen.h"
 #include "include/gen/dev_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- acr_in_FieldIdEnum
 
@@ -48,6 +49,13 @@ enum acr_in_TableIdEnum {                   // acr_in.TableId.value
 
 enum { acr_in_TableIdEnum_N = 18 };
 
+namespace acr_in { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace acr_in { // gen:ns_field
+extern const char *acr_in_help;
+extern const char *acr_in_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace dmmeta { struct Ctype; }
 namespace dmmeta { struct Dispsig; }
 namespace acr_in { struct FNs; }
@@ -61,6 +69,27 @@ namespace dmmeta { struct Substr; }
 namespace dev { struct Targdep; }
 namespace acr_in { struct FTarget; }
 namespace dev { struct Target; }
+namespace acr_in { struct ctype_c_field_curs; }
+namespace acr_in { struct ctype_c_ctype_curs; }
+namespace acr_in { struct _db_tuple_curs; }
+namespace acr_in { struct _db_finput_curs; }
+namespace acr_in { struct _db_field_curs; }
+namespace acr_in { struct _db_ctype_curs; }
+namespace acr_in { struct _db_ssimfile_curs; }
+namespace acr_in { struct _db_ns_curs; }
+namespace acr_in { struct _db_zd_todo_curs; }
+namespace acr_in { struct _db_zd_ssimfile_curs; }
+namespace acr_in { struct _db_substr_curs; }
+namespace acr_in { struct _db_dispsig_curs; }
+namespace acr_in { struct _db_zd_select_curs; }
+namespace acr_in { struct _db_zd_deselect_curs; }
+namespace acr_in { struct _db_zd_related_curs; }
+namespace acr_in { struct _db_target_curs; }
+namespace acr_in { struct _db_targdep_curs; }
+namespace acr_in { struct _db_zd_targ_visit_curs; }
+namespace acr_in { struct target_c_targdep_curs; }
+namespace acr_in { struct tuple_c_child_curs; }
+namespace acr_in { struct tuple_c_parent_curs; }
 namespace acr_in { struct trace; }
 namespace acr_in { struct FDb; }
 namespace acr_in { struct FDispsig; }
@@ -71,40 +100,8 @@ namespace acr_in { struct FTargdep; }
 namespace acr_in { struct FTuple; }
 namespace acr_in { struct FieldId; }
 namespace acr_in { struct TableId; }
-namespace acr_in { struct ctype_c_field_curs; }
-namespace acr_in { struct ctype_c_ctype_curs; }
-namespace acr_in { struct _db_tuple_curs; }
-namespace acr_in { struct _db_ind_tuple_curs; }
-namespace acr_in { struct _db_finput_curs; }
-namespace acr_in { struct _db_field_curs; }
-namespace acr_in { struct _db_ind_field_curs; }
-namespace acr_in { struct _db_ctype_curs; }
-namespace acr_in { struct _db_ind_ctype_curs; }
-namespace acr_in { struct _db_ssimfile_curs; }
-namespace acr_in { struct _db_ns_curs; }
-namespace acr_in { struct _db_ind_ns_curs; }
-namespace acr_in { struct _db_zd_todo_curs; }
-namespace acr_in { struct _db_zd_ssimfile_curs; }
-namespace acr_in { struct _db_substr_curs; }
-namespace acr_in { struct _db_dispsig_curs; }
-namespace acr_in { struct _db_ind_dispsig_curs; }
-namespace acr_in { struct _db_zd_select_curs; }
-namespace acr_in { struct _db_zd_deselect_curs; }
-namespace acr_in { struct _db_zd_related_curs; }
-namespace acr_in { struct _db_ind_finput_curs; }
-namespace acr_in { struct _db_target_curs; }
-namespace acr_in { struct _db_ind_target_curs; }
-namespace acr_in { struct _db_targdep_curs; }
-namespace acr_in { struct _db_zd_targ_visit_curs; }
-namespace acr_in { struct target_c_targdep_curs; }
-namespace acr_in { struct tuple_c_child_curs; }
-namespace acr_in { struct tuple_c_parent_curs; }
-namespace acr_in {
-}//pkey typedefs
-namespace acr_in {
-extern const char *acr_in_help;
-extern const char *acr_in_syntax;
-extern FDb _db;
+namespace acr_in { extern struct acr_in::FDb _db; }
+namespace acr_in { // gen:ns_print_struct
 
 // --- acr_in.FCtype
 // create: acr_in.FDb.ctype (Lary)
@@ -1448,8 +1445,10 @@ bool                 TableId_ReadStrptrMaybe(acr_in::TableId &parent, algo::strp
 void                 TableId_Init(acr_in::TableId& parent);
 // print string representation of acr_in::TableId to string LHS, no header -- cprint:acr_in.TableId.String
 void                 TableId_Print(acr_in::TableId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace acr_in { // gen:ns_curstext
 
-struct ctype_c_field_curs {// cursor
+struct ctype_c_field_curs {// fcurs:acr_in.FCtype.c_field/curs
     typedef acr_in::FField ChildType;
     acr_in::FField** elems;
     u32 n_elems;
@@ -1458,7 +1457,7 @@ struct ctype_c_field_curs {// cursor
 };
 
 
-struct ctype_c_ctype_curs {// cursor
+struct ctype_c_ctype_curs {// fcurs:acr_in.FCtype.c_ctype/curs
     typedef acr_in::FCtype ChildType;
     acr_in::FCtype** elems;
     u32 n_elems;
@@ -1515,7 +1514,7 @@ struct _db_ns_curs {// cursor
 };
 
 
-struct _db_zd_todo_curs {// cursor
+struct _db_zd_todo_curs {// fcurs:acr_in.FDb.zd_todo/curs
     typedef acr_in::FCtype ChildType;
     acr_in::FCtype* row;
     _db_zd_todo_curs() {
@@ -1524,7 +1523,7 @@ struct _db_zd_todo_curs {// cursor
 };
 
 
-struct _db_zd_ssimfile_curs {// cursor
+struct _db_zd_ssimfile_curs {// fcurs:acr_in.FDb.zd_ssimfile/curs
     typedef acr_in::FSsimfile ChildType;
     acr_in::FSsimfile* row;
     _db_zd_ssimfile_curs() {
@@ -1549,7 +1548,7 @@ struct _db_dispsig_curs {// cursor
 };
 
 
-struct _db_zd_select_curs {// cursor
+struct _db_zd_select_curs {// fcurs:acr_in.FDb.zd_select/curs
     typedef acr_in::FTuple ChildType;
     acr_in::FTuple* row;
     _db_zd_select_curs() {
@@ -1558,7 +1557,7 @@ struct _db_zd_select_curs {// cursor
 };
 
 
-struct _db_zd_deselect_curs {// cursor
+struct _db_zd_deselect_curs {// fcurs:acr_in.FDb.zd_deselect/curs
     typedef acr_in::FTuple ChildType;
     acr_in::FTuple* row;
     _db_zd_deselect_curs() {
@@ -1567,7 +1566,7 @@ struct _db_zd_deselect_curs {// cursor
 };
 
 
-struct _db_zd_related_curs {// cursor
+struct _db_zd_related_curs {// fcurs:acr_in.FDb.zd_related/curs
     typedef acr_in::FCtype ChildType;
     acr_in::FCtype* row;
     _db_zd_related_curs() {
@@ -1592,7 +1591,7 @@ struct _db_targdep_curs {// cursor
 };
 
 
-struct _db_zd_targ_visit_curs {// cursor
+struct _db_zd_targ_visit_curs {// fcurs:acr_in.FDb.zd_targ_visit/curs
     typedef acr_in::FTarget ChildType;
     acr_in::FTarget* row;
     _db_zd_targ_visit_curs() {
@@ -1601,7 +1600,7 @@ struct _db_zd_targ_visit_curs {// cursor
 };
 
 
-struct target_c_targdep_curs {// cursor
+struct target_c_targdep_curs {// fcurs:acr_in.FTarget.c_targdep/curs
     typedef acr_in::FTargdep ChildType;
     acr_in::FTargdep** elems;
     u32 n_elems;
@@ -1610,7 +1609,7 @@ struct target_c_targdep_curs {// cursor
 };
 
 
-struct tuple_c_child_curs {// cursor
+struct tuple_c_child_curs {// fcurs:acr_in.FTuple.c_child/curs
     typedef acr_in::FTuple ChildType;
     acr_in::FTuple** elems;
     u32 n_elems;
@@ -1619,7 +1618,7 @@ struct tuple_c_child_curs {// cursor
 };
 
 
-struct tuple_c_parent_curs {// cursor
+struct tuple_c_parent_curs {// fcurs:acr_in.FTuple.c_parent/curs
     typedef acr_in::FTuple ChildType;
     acr_in::FTuple** elems;
     u32 n_elems;
@@ -1627,11 +1626,14 @@ struct tuple_c_parent_curs {// cursor
     tuple_c_parent_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-} // end namespace acr_in
+} // gen:ns_curstext
+namespace acr_in { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const acr_in::trace &row);// cfmt:acr_in.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_in::FieldId &row);// cfmt:acr_in.FieldId.String

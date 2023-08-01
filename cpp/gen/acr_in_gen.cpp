@@ -65,7 +65,7 @@ const char *acr_in_syntax =
 " -checkable:flag\n"
 ;
 } // namespace acr_in
-namespace acr_in {
+namespace acr_in { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     static bool          finput_InputMaybe(dmmeta::Finput &elem) __attribute__((nothrow));
@@ -82,7 +82,7 @@ namespace acr_in {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace acr_in
+} // gen:ns_print_proto
 
 // --- acr_in.FCtype.msghdr.CopyOut
 // Copy fields out of row

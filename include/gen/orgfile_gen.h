@@ -12,6 +12,7 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/dev_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- orgfile_FieldIdEnum
 
@@ -36,7 +37,18 @@ enum orgfile_TableIdEnum {               // orgfile.TableId.value
 
 enum { orgfile_TableIdEnum_N = 2 };
 
+namespace orgfile { // gen:ns_pkeytypedef
+    typedef algo::Smallstr40 FFilehashPkey;
+} // gen:ns_pkeytypedef
+namespace orgfile { // gen:ns_field
+extern const char *orgfile_help;
+extern const char *orgfile_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace orgfile { struct FFilehash; }
+namespace orgfile { struct _db_filehash_curs; }
+namespace orgfile { struct _db_timefmt_curs; }
+namespace orgfile { struct filehash_c_filename_curs; }
 namespace orgfile { struct trace; }
 namespace orgfile { struct FDb; }
 namespace orgfile { struct FFilename; }
@@ -45,18 +57,8 @@ namespace orgfile { struct FieldId; }
 namespace orgfile { struct TableId; }
 namespace orgfile { struct dedup; }
 namespace orgfile { struct move; }
-namespace orgfile { struct _db_ind_filename_curs; }
-namespace orgfile { struct _db_filehash_curs; }
-namespace orgfile { struct _db_ind_filehash_curs; }
-namespace orgfile { struct _db_timefmt_curs; }
-namespace orgfile { struct filehash_c_filename_curs; }
-namespace orgfile {
-    typedef algo::Smallstr40 FFilehashPkey;
-}//pkey typedefs
-namespace orgfile {
-extern const char *orgfile_help;
-extern const char *orgfile_syntax;
-extern FDb _db;
+namespace orgfile { extern struct orgfile::FDb _db; }
+namespace orgfile { // gen:ns_print_struct
 
 // --- orgfile.trace
 #pragma pack(push,1)
@@ -442,6 +444,8 @@ bool                 move_ReadFieldMaybe(orgfile::move &parent, algo::strptr fie
 bool                 move_ReadStrptrMaybe(orgfile::move &parent, algo::strptr in_str);
 // print string representation of orgfile::move to string LHS, no header -- cprint:orgfile.move.String
 void                 move_Print(orgfile::move & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace orgfile { // gen:ns_curstext
 
 struct _db_filehash_curs {// cursor
     typedef orgfile::FFilehash ChildType;
@@ -459,7 +463,7 @@ struct _db_timefmt_curs {// cursor
 };
 
 
-struct filehash_c_filename_curs {// cursor
+struct filehash_c_filename_curs {// fcurs:orgfile.FFilehash.c_filename/curs
     typedef orgfile::FFilename ChildType;
     orgfile::FFilename** elems;
     u32 n_elems;
@@ -467,11 +471,14 @@ struct filehash_c_filename_curs {// cursor
     filehash_c_filename_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-} // end namespace orgfile
+} // gen:ns_curstext
+namespace orgfile { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const orgfile::trace &row);// cfmt:orgfile.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const orgfile::FieldId &row);// cfmt:orgfile.FieldId.String

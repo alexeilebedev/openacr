@@ -70,7 +70,7 @@ const char *atf_cov_syntax =
 " -check:flag\n"
 ;
 } // namespace atf_cov
-namespace atf_cov {
+namespace atf_cov { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     static bool          covline_InputMaybe(dev::Covline &elem) __attribute__((nothrow));
@@ -85,7 +85,7 @@ namespace atf_cov {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace atf_cov
+} // gen:ns_print_proto
 
 // --- atf_cov.FCovfile.base.CopyOut
 // Copy fields out of row

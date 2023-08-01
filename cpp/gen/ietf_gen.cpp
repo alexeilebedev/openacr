@@ -11,10 +11,10 @@
 #include "include/gen/ietf_gen.h"
 #include "include/gen/ietf_gen.inl.h"
 //#pragma endinclude
-namespace ietf {
+namespace ietf { // gen:ns_print_proto
     static bool          addr_ReadStrptrMaybe(ietf::Ipv4Addr &parent, algo::strptr in_str) __attribute__((nothrow));
     static void          SizeCheck();
-} // end namespace ietf
+} // gen:ns_print_proto
 
 // --- ietf.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.

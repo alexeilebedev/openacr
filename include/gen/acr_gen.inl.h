@@ -678,7 +678,8 @@ inline bool acr::ctype_zd_trec_curs_ValidQ(ctype_zd_trec_curs &curs) {
 // --- acr.FCtype.zd_trec_curs.Next
 // proceed to next item
 inline void acr::ctype_zd_trec_curs_Next(ctype_zd_trec_curs &curs) {
-    curs.row = (*curs.row).zd_trec_next;
+    acr::FRec *next = (*curs.row).zd_trec_next;
+    curs.row = next;
 }
 
 // --- acr.FCtype.zd_trec_curs.Access
@@ -725,7 +726,8 @@ inline bool acr::ctype_zd_selrec_curs_ValidQ(ctype_zd_selrec_curs &curs) {
 // --- acr.FCtype.zd_selrec_curs.Next
 // proceed to next item
 inline void acr::ctype_zd_selrec_curs_Next(ctype_zd_selrec_curs &curs) {
-    curs.row = (*curs.row).zd_selrec_next;
+    acr::FRec *next = (*curs.row).zd_selrec_next;
+    curs.row = next;
 }
 
 // --- acr.FCtype.zd_selrec_curs.Access
@@ -774,7 +776,8 @@ inline bool acr::ctype_zd_arg_curs_ValidQ(ctype_zd_arg_curs &curs) {
 // --- acr.FCtype.zd_arg_curs.Next
 // proceed to next item
 inline void acr::ctype_zd_arg_curs_Next(ctype_zd_arg_curs &curs) {
-    curs.row = (*curs.row).zd_arg_next;
+    acr::FField *next = (*curs.row).zd_arg_next;
+    curs.row = next;
 }
 
 // --- acr.FCtype.zd_arg_curs.Access
@@ -1797,7 +1800,8 @@ inline bool acr::_db_zd_pline_curs_ValidQ(_db_zd_pline_curs &curs) {
 // --- acr.FDb.zd_pline_curs.Next
 // proceed to next item
 inline void acr::_db_zd_pline_curs_Next(_db_zd_pline_curs &curs) {
-    curs.row = (*curs.row).zd_pline_next;
+    acr::FPline *next = (*curs.row).zd_pline_next;
+    curs.row = next;
 }
 
 // --- acr.FDb.zd_pline_curs.Access
@@ -1821,7 +1825,8 @@ inline bool acr::_db_zd_pdep_curs_ValidQ(_db_zd_pdep_curs &curs) {
 // --- acr.FDb.zd_pdep_curs.Next
 // proceed to next item
 inline void acr::_db_zd_pdep_curs_Next(_db_zd_pdep_curs &curs) {
-    curs.row = (*curs.row).zd_pdep_next;
+    acr::FPdep *next = (*curs.row).zd_pdep_next;
+    curs.row = next;
 }
 
 // --- acr.FDb.zd_pdep_curs.Access
@@ -1970,7 +1975,8 @@ inline bool acr::_db_zd_all_selrec_curs_ValidQ(_db_zd_all_selrec_curs &curs) {
 // --- acr.FDb.zd_all_selrec_curs.Next
 // proceed to next item
 inline void acr::_db_zd_all_selrec_curs_Next(_db_zd_all_selrec_curs &curs) {
-    curs.row = (*curs.row).zd_all_selrec_next;
+    acr::FRec *next = (*curs.row).zd_all_selrec_next;
+    curs.row = next;
 }
 
 // --- acr.FDb.zd_all_selrec_curs.Access
@@ -1994,7 +2000,8 @@ inline bool acr::_db_zd_all_err_curs_ValidQ(_db_zd_all_err_curs &curs) {
 // --- acr.FDb.zd_all_err_curs.Next
 // proceed to next item
 inline void acr::_db_zd_all_err_curs_Next(_db_zd_all_err_curs &curs) {
-    curs.row = (*curs.row).zd_all_err_next;
+    acr::FErr *next = (*curs.row).zd_all_err_next;
+    curs.row = next;
 }
 
 // --- acr.FDb.zd_all_err_curs.Access
@@ -2018,7 +2025,8 @@ inline bool acr::_db_zd_sel_ctype_curs_ValidQ(_db_zd_sel_ctype_curs &curs) {
 // --- acr.FDb.zd_sel_ctype_curs.Next
 // proceed to next item
 inline void acr::_db_zd_sel_ctype_curs_Next(_db_zd_sel_ctype_curs &curs) {
-    curs.row = (*curs.row).zd_sel_ctype_next;
+    acr::FCtype *next = (*curs.row).zd_sel_ctype_next;
+    curs.row = next;
 }
 
 // --- acr.FDb.zd_sel_ctype_curs.Access
@@ -2129,7 +2137,8 @@ inline bool acr::_db_zs_query_curs_ValidQ(_db_zs_query_curs &curs) {
 // --- acr.FDb.zs_query_curs.Next
 // proceed to next item
 inline void acr::_db_zs_query_curs_Next(_db_zs_query_curs &curs) {
-    curs.row = (*curs.row).zs_query_next;
+    acr::FQuery *next = (*curs.row).zs_query_next;
+    curs.row = next;
 }
 
 // --- acr.FDb.zs_query_curs.Access
@@ -2436,7 +2445,8 @@ inline bool acr::file_zd_frec_curs_ValidQ(file_zd_frec_curs &curs) {
 // --- acr.FFile.zd_frec_curs.Next
 // proceed to next item
 inline void acr::file_zd_frec_curs_Next(file_zd_frec_curs &curs) {
-    curs.row = (*curs.row).zd_frec_next;
+    acr::FRec *next = (*curs.row).zd_frec_next;
+    curs.row = next;
 }
 
 // --- acr.FFile.zd_frec_curs.Access
@@ -2630,7 +2640,8 @@ inline bool acr::pline_zd_child_curs_ValidQ(pline_zd_child_curs &curs) {
 // --- acr.FPline.zd_child_curs.Next
 // proceed to next item
 inline void acr::pline_zd_child_curs_Next(pline_zd_child_curs &curs) {
-    curs.row = (*curs.row).zd_child_next;
+    acr::FPdep *next = (*curs.row).zd_child_next;
+    curs.row = next;
 }
 
 // --- acr.FPline.zd_child_curs.Access

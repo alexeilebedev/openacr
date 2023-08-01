@@ -1234,7 +1234,8 @@ inline bool atf_amc::cascdel_zd_childlist_curs_ValidQ(cascdel_zd_childlist_curs 
 // --- atf_amc.FCascdel.zd_childlist_curs.Next
 // proceed to next item
 inline void atf_amc::cascdel_zd_childlist_curs_Next(cascdel_zd_childlist_curs &curs) {
-    curs.row = (*curs.row).zd_childlist_next;
+    atf_amc::FCascdel *next = (*curs.row).zd_childlist_next;
+    curs.row = next;
 }
 
 // --- atf_amc.FCascdel.zd_childlist_curs.Access
@@ -1451,6 +1452,168 @@ inline atf_amc::FTypeC* atf_amc::zd_t_typec_Prev(atf_amc::FTypeC &row) {
 inline atf_amc::FTypeC& atf_amc::zd_t_typec_qLast() {
     atf_amc::FTypeC *row = NULL;
     row = _db.zd_t_typec_tail;
+    return *row;
+}
+
+// --- atf_amc.FDb.zd_typed.EmptyQ
+// Return true if index is empty
+inline bool atf_amc::zd_typed_EmptyQ() {
+    return _db.zd_typed_head == NULL;
+}
+
+// --- atf_amc.FDb.zd_typed.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline atf_amc::FTypeD* atf_amc::zd_typed_First() {
+    atf_amc::FTypeD *row = NULL;
+    row = _db.zd_typed_head;
+    return row;
+}
+
+// --- atf_amc.FDb.zd_typed.InLlistQ
+// Return true if row is in the linked list, false otherwise
+inline bool atf_amc::zd_typed_InLlistQ(atf_amc::FTypeD& row) {
+    bool result = false;
+    result = !(row.zd_typed_next == (atf_amc::FTypeD*)-1);
+    return result;
+}
+
+// --- atf_amc.FDb.zd_typed.Last
+// If index empty, return NULL. Otherwise return pointer to last element in index
+inline atf_amc::FTypeD* atf_amc::zd_typed_Last() {
+    atf_amc::FTypeD *row = NULL;
+    row = _db.zd_typed_tail;
+    return row;
+}
+
+// --- atf_amc.FDb.zd_typed.N
+// Return number of items in the linked list
+inline i32 atf_amc::zd_typed_N() {
+    return _db.zd_typed_n;
+}
+
+// --- atf_amc.FDb.zd_typed.Next
+// Return pointer to next element in the list
+inline atf_amc::FTypeD* atf_amc::zd_typed_Next(atf_amc::FTypeD &row) {
+    return row.zd_typed_next;
+}
+
+// --- atf_amc.FDb.zd_typed.Prev
+// Return pointer to previous element in the list
+inline atf_amc::FTypeD* atf_amc::zd_typed_Prev(atf_amc::FTypeD &row) {
+    return row.zd_typed_prev;
+}
+
+// --- atf_amc.FDb.zd_typed.qLast
+// Return reference to last element in the index. No bounds checking.
+inline atf_amc::FTypeD& atf_amc::zd_typed_qLast() {
+    atf_amc::FTypeD *row = NULL;
+    row = _db.zd_typed_tail;
+    return *row;
+}
+
+// --- atf_amc.FDb.zs_t_typed.EmptyQ
+// Return true if index is empty
+inline bool atf_amc::zs_t_typed_EmptyQ() {
+    return _db.zs_t_typed_head == NULL;
+}
+
+// --- atf_amc.FDb.zs_t_typed.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline atf_amc::FTypeD* atf_amc::zs_t_typed_First() {
+    atf_amc::FTypeD *row = NULL;
+    row = _db.zs_t_typed_head;
+    return row;
+}
+
+// --- atf_amc.FDb.zs_t_typed.InLlistQ
+// Return true if row is in the linked list, false otherwise
+inline bool atf_amc::zs_t_typed_InLlistQ(atf_amc::FTypeD& row) {
+    bool result = false;
+    result = !(row.zs_t_typed_next == (atf_amc::FTypeD*)-1);
+    return result;
+}
+
+// --- atf_amc.FDb.zs_t_typed.Last
+// If index empty, return NULL. Otherwise return pointer to last element in index
+inline atf_amc::FTypeD* atf_amc::zs_t_typed_Last() {
+    atf_amc::FTypeD *row = NULL;
+    row = _db.zs_t_typed_tail;
+    return row;
+}
+
+// --- atf_amc.FDb.zs_t_typed.N
+// Return number of items in the linked list
+inline i32 atf_amc::zs_t_typed_N() {
+    return _db.zs_t_typed_n;
+}
+
+// --- atf_amc.FDb.zs_t_typed.Next
+// Return pointer to next element in the list
+inline atf_amc::FTypeD* atf_amc::zs_t_typed_Next(atf_amc::FTypeD &row) {
+    return row.zs_t_typed_next;
+}
+
+// --- atf_amc.FDb.zs_t_typed.qLast
+// Return reference to last element in the index. No bounds checking.
+inline atf_amc::FTypeD& atf_amc::zs_t_typed_qLast() {
+    atf_amc::FTypeD *row = NULL;
+    row = _db.zs_t_typed_tail;
+    return *row;
+}
+
+// --- atf_amc.FDb.cd_typed.EmptyQ
+// Return true if index is empty
+inline bool atf_amc::cd_typed_EmptyQ() {
+    return _db.cd_typed_head == NULL;
+}
+
+// --- atf_amc.FDb.cd_typed.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline atf_amc::FTypeD* atf_amc::cd_typed_First() {
+    atf_amc::FTypeD *row = NULL;
+    row = _db.cd_typed_head;
+    return row;
+}
+
+// --- atf_amc.FDb.cd_typed.InLlistQ
+// Return true if row is in the linked list, false otherwise
+inline bool atf_amc::cd_typed_InLlistQ(atf_amc::FTypeD& row) {
+    bool result = false;
+    result = !(row.cd_typed_next == (atf_amc::FTypeD*)-1);
+    return result;
+}
+
+// --- atf_amc.FDb.cd_typed.Last
+// If index empty, return NULL. Otherwise return pointer to last element in index
+inline atf_amc::FTypeD* atf_amc::cd_typed_Last() {
+    atf_amc::FTypeD *row = NULL;
+    row = _db.cd_typed_head ? _db.cd_typed_head->cd_typed_prev : NULL;
+    return row;
+}
+
+// --- atf_amc.FDb.cd_typed.N
+// Return number of items in the linked list
+inline i32 atf_amc::cd_typed_N() {
+    return _db.cd_typed_n;
+}
+
+// --- atf_amc.FDb.cd_typed.Next
+// Return pointer to next element in the list
+inline atf_amc::FTypeD* atf_amc::cd_typed_Next(atf_amc::FTypeD &row) {
+    return row.cd_typed_next;
+}
+
+// --- atf_amc.FDb.cd_typed.Prev
+// Return pointer to previous element in the list
+inline atf_amc::FTypeD* atf_amc::cd_typed_Prev(atf_amc::FTypeD &row) {
+    return row.cd_typed_prev;
+}
+
+// --- atf_amc.FDb.cd_typed.qLast
+// Return reference to last element in the index. No bounds checking.
+inline atf_amc::FTypeD& atf_amc::cd_typed_qLast() {
+    atf_amc::FTypeD *row = NULL;
+    row = _db.cd_typed_head ? _db.cd_typed_head->cd_typed_prev : NULL;
     return *row;
 }
 
@@ -2381,7 +2544,8 @@ inline bool atf_amc::_db_zdl_h_typec_curs_ValidQ(_db_zdl_h_typec_curs &curs) {
 // --- atf_amc.FDb.zdl_h_typec_curs.Next
 // proceed to next item
 inline void atf_amc::_db_zdl_h_typec_curs_Next(_db_zdl_h_typec_curs &curs) {
-    curs.row = (*curs.row).zdl_h_typec_next;
+    atf_amc::FTypeC *next = (*curs.row).zdl_h_typec_next;
+    curs.row = next;
 }
 
 // --- atf_amc.FDb.zdl_h_typec_curs.Access
@@ -2405,12 +2569,192 @@ inline bool atf_amc::_db_zd_t_typec_curs_ValidQ(_db_zd_t_typec_curs &curs) {
 // --- atf_amc.FDb.zd_t_typec_curs.Next
 // proceed to next item
 inline void atf_amc::_db_zd_t_typec_curs_Next(_db_zd_t_typec_curs &curs) {
-    curs.row = (*curs.row).zd_t_typec_next;
+    atf_amc::FTypeC *next = (*curs.row).zd_t_typec_next;
+    curs.row = next;
 }
 
 // --- atf_amc.FDb.zd_t_typec_curs.Access
 // item access
 inline atf_amc::FTypeC& atf_amc::_db_zd_t_typec_curs_Access(_db_zd_t_typec_curs &curs) {
+    return *curs.row;
+}
+
+// --- atf_amc.FDb.zd_typed_curs.Reset
+// cursor points to valid item
+inline void atf_amc::_db_zd_typed_curs_Reset(_db_zd_typed_curs &curs, atf_amc::FDb &parent) {
+    curs.row = parent.zd_typed_head;
+}
+
+// --- atf_amc.FDb.zd_typed_curs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::_db_zd_typed_curs_ValidQ(_db_zd_typed_curs &curs) {
+    return curs.row != NULL;
+}
+
+// --- atf_amc.FDb.zd_typed_curs.Next
+// proceed to next item
+inline void atf_amc::_db_zd_typed_curs_Next(_db_zd_typed_curs &curs) {
+    atf_amc::FTypeD *next = (*curs.row).zd_typed_next;
+    curs.row = next;
+}
+
+// --- atf_amc.FDb.zd_typed_curs.Access
+// item access
+inline atf_amc::FTypeD& atf_amc::_db_zd_typed_curs_Access(_db_zd_typed_curs &curs) {
+    return *curs.row;
+}
+
+// --- atf_amc.FDb.zd_typed_delcurs.Reset
+// cursor points to valid item
+inline void atf_amc::_db_zd_typed_delcurs_Reset(_db_zd_typed_delcurs &curs, atf_amc::FDb &parent) {
+    curs.row = parent.zd_typed_head;
+    if (curs.row) {
+        curs.next = (*curs.row).zd_typed_next;
+    }
+}
+
+// --- atf_amc.FDb.zd_typed_delcurs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::_db_zd_typed_delcurs_ValidQ(_db_zd_typed_delcurs &curs) {
+    return curs.row != NULL;
+}
+
+// --- atf_amc.FDb.zd_typed_delcurs.Next
+// proceed to next item
+inline void atf_amc::_db_zd_typed_delcurs_Next(_db_zd_typed_delcurs &curs) {
+    atf_amc::FTypeD *next = curs.next;
+    curs.row = next;
+    if (curs.row) {
+        curs.next = (*curs.row).zd_typed_next;
+    }
+}
+
+// --- atf_amc.FDb.zd_typed_delcurs.Access
+// item access
+inline atf_amc::FTypeD& atf_amc::_db_zd_typed_delcurs_Access(_db_zd_typed_delcurs &curs) {
+    return *curs.row;
+}
+
+// --- atf_amc.FDb.zs_t_typed_curs.Reset
+// cursor points to valid item
+inline void atf_amc::_db_zs_t_typed_curs_Reset(_db_zs_t_typed_curs &curs, atf_amc::FDb &parent) {
+    curs.row = parent.zs_t_typed_head;
+}
+
+// --- atf_amc.FDb.zs_t_typed_curs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::_db_zs_t_typed_curs_ValidQ(_db_zs_t_typed_curs &curs) {
+    return curs.row != NULL;
+}
+
+// --- atf_amc.FDb.zs_t_typed_curs.Next
+// proceed to next item
+inline void atf_amc::_db_zs_t_typed_curs_Next(_db_zs_t_typed_curs &curs) {
+    atf_amc::FTypeD *next = (*curs.row).zs_t_typed_next;
+    curs.row = next;
+}
+
+// --- atf_amc.FDb.zs_t_typed_curs.Access
+// item access
+inline atf_amc::FTypeD& atf_amc::_db_zs_t_typed_curs_Access(_db_zs_t_typed_curs &curs) {
+    return *curs.row;
+}
+
+// --- atf_amc.FDb.zs_t_typed_delcurs.Reset
+// cursor points to valid item
+inline void atf_amc::_db_zs_t_typed_delcurs_Reset(_db_zs_t_typed_delcurs &curs, atf_amc::FDb &parent) {
+    curs.row = parent.zs_t_typed_head;
+    if (curs.row) {
+        curs.next = (*curs.row).zs_t_typed_next;
+    }
+}
+
+// --- atf_amc.FDb.zs_t_typed_delcurs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::_db_zs_t_typed_delcurs_ValidQ(_db_zs_t_typed_delcurs &curs) {
+    return curs.row != NULL;
+}
+
+// --- atf_amc.FDb.zs_t_typed_delcurs.Next
+// proceed to next item
+inline void atf_amc::_db_zs_t_typed_delcurs_Next(_db_zs_t_typed_delcurs &curs) {
+    atf_amc::FTypeD *next = curs.next;
+    curs.row = next;
+    if (curs.row) {
+        curs.next = (*curs.row).zs_t_typed_next;
+    }
+}
+
+// --- atf_amc.FDb.zs_t_typed_delcurs.Access
+// item access
+inline atf_amc::FTypeD& atf_amc::_db_zs_t_typed_delcurs_Access(_db_zs_t_typed_delcurs &curs) {
+    return *curs.row;
+}
+
+// --- atf_amc.FDb.cd_typed_curs.Reset
+// cursor points to valid item
+inline void atf_amc::_db_cd_typed_curs_Reset(_db_cd_typed_curs &curs, atf_amc::FDb &parent) {
+    curs.row = parent.cd_typed_head;
+    curs.head = &parent.cd_typed_head;
+}
+
+// --- atf_amc.FDb.cd_typed_curs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::_db_cd_typed_curs_ValidQ(_db_cd_typed_curs &curs) {
+    return curs.row != NULL;
+}
+
+// --- atf_amc.FDb.cd_typed_curs.Next
+// proceed to next item
+inline void atf_amc::_db_cd_typed_curs_Next(_db_cd_typed_curs &curs) {
+    atf_amc::FTypeD *next = (*curs.row).cd_typed_next;
+    curs.row = next;
+    if (curs.row == *curs.head) {
+        curs.row = NULL;
+    }
+}
+
+// --- atf_amc.FDb.cd_typed_curs.Access
+// item access
+inline atf_amc::FTypeD& atf_amc::_db_cd_typed_curs_Access(_db_cd_typed_curs &curs) {
+    return *curs.row;
+}
+
+// --- atf_amc.FDb.cd_typed_delcurs.Reset
+// cursor points to valid item
+inline void atf_amc::_db_cd_typed_delcurs_Reset(_db_cd_typed_delcurs &curs, atf_amc::FDb &parent) {
+    curs.row = parent.cd_typed_head;
+    curs.head = &parent.cd_typed_head;
+    if (curs.row) {
+        curs.next = (*curs.row).cd_typed_next;
+        if (curs.next == *curs.head) {
+            curs.next = NULL;
+        }
+    }
+}
+
+// --- atf_amc.FDb.cd_typed_delcurs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::_db_cd_typed_delcurs_ValidQ(_db_cd_typed_delcurs &curs) {
+    return curs.row != NULL;
+}
+
+// --- atf_amc.FDb.cd_typed_delcurs.Next
+// proceed to next item
+inline void atf_amc::_db_cd_typed_delcurs_Next(_db_cd_typed_delcurs &curs) {
+    atf_amc::FTypeD *next = curs.next;
+    curs.row = next;
+    if (curs.row) {
+        curs.next = (*curs.row).cd_typed_next;
+        if (curs.next == *curs.head) {
+            curs.next = NULL;
+        }
+    }
+}
+
+// --- atf_amc.FDb.cd_typed_delcurs.Access
+// item access
+inline atf_amc::FTypeD& atf_amc::_db_cd_typed_delcurs_Access(_db_cd_typed_delcurs &curs) {
     return *curs.row;
 }
 
@@ -2429,7 +2773,8 @@ inline bool atf_amc::_db_zsl_h_typec_curs_ValidQ(_db_zsl_h_typec_curs &curs) {
 // --- atf_amc.FDb.zsl_h_typec_curs.Next
 // proceed to next item
 inline void atf_amc::_db_zsl_h_typec_curs_Next(_db_zsl_h_typec_curs &curs) {
-    curs.row = (*curs.row).zsl_h_typec_next;
+    atf_amc::FTypeC *next = (*curs.row).zsl_h_typec_next;
+    curs.row = next;
 }
 
 // --- atf_amc.FDb.zsl_h_typec_curs.Access
@@ -2453,7 +2798,8 @@ inline bool atf_amc::_db_zs_t_typec_curs_ValidQ(_db_zs_t_typec_curs &curs) {
 // --- atf_amc.FDb.zs_t_typec_curs.Next
 // proceed to next item
 inline void atf_amc::_db_zs_t_typec_curs_Next(_db_zs_t_typec_curs &curs) {
-    curs.row = (*curs.row).zs_t_typec_next;
+    atf_amc::FTypeC *next = (*curs.row).zs_t_typec_next;
+    curs.row = next;
 }
 
 // --- atf_amc.FDb.zs_t_typec_curs.Access
@@ -2477,7 +2823,8 @@ inline bool atf_amc::_db_zdl_hnt_typec_curs_ValidQ(_db_zdl_hnt_typec_curs &curs)
 // --- atf_amc.FDb.zdl_hnt_typec_curs.Next
 // proceed to next item
 inline void atf_amc::_db_zdl_hnt_typec_curs_Next(_db_zdl_hnt_typec_curs &curs) {
-    curs.row = (*curs.row).zdl_hnt_typec_next;
+    atf_amc::FTypeC *next = (*curs.row).zdl_hnt_typec_next;
+    curs.row = next;
 }
 
 // --- atf_amc.FDb.zdl_hnt_typec_curs.Access
@@ -2490,7 +2837,7 @@ inline atf_amc::FTypeC& atf_amc::_db_zdl_hnt_typec_curs_Access(_db_zdl_hnt_typec
 // cursor points to valid item
 inline void atf_amc::_db_cdl_h_typec_curs_Reset(_db_cdl_h_typec_curs &curs, atf_amc::FDb &parent) {
     curs.row = parent.cdl_h_typec_head;
-    curs.head = parent.cdl_h_typec_head;
+    curs.head = &parent.cdl_h_typec_head;
 }
 
 // --- atf_amc.FDb.cdl_h_typec_curs.ValidQ
@@ -2502,8 +2849,9 @@ inline bool atf_amc::_db_cdl_h_typec_curs_ValidQ(_db_cdl_h_typec_curs &curs) {
 // --- atf_amc.FDb.cdl_h_typec_curs.Next
 // proceed to next item
 inline void atf_amc::_db_cdl_h_typec_curs_Next(_db_cdl_h_typec_curs &curs) {
-    curs.row = (*curs.row).cdl_h_typec_next;
-    if (curs.row == curs.head) {
+    atf_amc::FTypeC *next = (*curs.row).cdl_h_typec_next;
+    curs.row = next;
+    if (curs.row == *curs.head) {
         curs.row = NULL;
     }
 }
@@ -2518,7 +2866,7 @@ inline atf_amc::FTypeC& atf_amc::_db_cdl_h_typec_curs_Access(_db_cdl_h_typec_cur
 // cursor points to valid item
 inline void atf_amc::_db_cd_t_typec_curs_Reset(_db_cd_t_typec_curs &curs, atf_amc::FDb &parent) {
     curs.row = parent.cd_t_typec_head;
-    curs.head = parent.cd_t_typec_head;
+    curs.head = &parent.cd_t_typec_head;
 }
 
 // --- atf_amc.FDb.cd_t_typec_curs.ValidQ
@@ -2530,8 +2878,9 @@ inline bool atf_amc::_db_cd_t_typec_curs_ValidQ(_db_cd_t_typec_curs &curs) {
 // --- atf_amc.FDb.cd_t_typec_curs.Next
 // proceed to next item
 inline void atf_amc::_db_cd_t_typec_curs_Next(_db_cd_t_typec_curs &curs) {
-    curs.row = (*curs.row).cd_t_typec_next;
-    if (curs.row == curs.head) {
+    atf_amc::FTypeC *next = (*curs.row).cd_t_typec_next;
+    curs.row = next;
+    if (curs.row == *curs.head) {
         curs.row = NULL;
     }
 }
@@ -2546,7 +2895,7 @@ inline atf_amc::FTypeC& atf_amc::_db_cd_t_typec_curs_Access(_db_cd_t_typec_curs 
 // cursor points to valid item
 inline void atf_amc::_db_csl_h_typec_curs_Reset(_db_csl_h_typec_curs &curs, atf_amc::FDb &parent) {
     curs.row = parent.csl_h_typec_head;
-    curs.head = parent.csl_h_typec_head;
+    curs.head = &parent.csl_h_typec_head;
 }
 
 // --- atf_amc.FDb.csl_h_typec_curs.ValidQ
@@ -2558,8 +2907,9 @@ inline bool atf_amc::_db_csl_h_typec_curs_ValidQ(_db_csl_h_typec_curs &curs) {
 // --- atf_amc.FDb.csl_h_typec_curs.Next
 // proceed to next item
 inline void atf_amc::_db_csl_h_typec_curs_Next(_db_csl_h_typec_curs &curs) {
-    curs.row = (*curs.row).csl_h_typec_next;
-    if (curs.row == curs.head) {
+    atf_amc::FTypeC *next = (*curs.row).csl_h_typec_next;
+    curs.row = next;
+    if (curs.row == *curs.head) {
         curs.row = NULL;
     }
 }
@@ -2574,7 +2924,7 @@ inline atf_amc::FTypeC& atf_amc::_db_csl_h_typec_curs_Access(_db_csl_h_typec_cur
 // cursor points to valid item
 inline void atf_amc::_db_cs_t_typec_curs_Reset(_db_cs_t_typec_curs &curs, atf_amc::FDb &parent) {
     curs.row = parent.cs_t_typec_head;
-    curs.head = parent.cs_t_typec_head;
+    curs.head = &parent.cs_t_typec_head;
 }
 
 // --- atf_amc.FDb.cs_t_typec_curs.ValidQ
@@ -2586,8 +2936,9 @@ inline bool atf_amc::_db_cs_t_typec_curs_ValidQ(_db_cs_t_typec_curs &curs) {
 // --- atf_amc.FDb.cs_t_typec_curs.Next
 // proceed to next item
 inline void atf_amc::_db_cs_t_typec_curs_Next(_db_cs_t_typec_curs &curs) {
-    curs.row = (*curs.row).cs_t_typec_next;
-    if (curs.row == curs.head) {
+    atf_amc::FTypeC *next = (*curs.row).cs_t_typec_next;
+    curs.row = next;
+    if (curs.row == *curs.head) {
         curs.row = NULL;
     }
 }
@@ -2702,7 +3053,7 @@ inline atf_amc::FCstring& atf_amc::_db_cstring_curs_Access(_db_cstring_curs &cur
 // cursor points to valid item
 inline void atf_amc::_db_cd_in_msg_curs_Reset(_db_cd_in_msg_curs &curs, atf_amc::FDb &parent) {
     curs.row = parent.cd_in_msg_head;
-    curs.head = parent.cd_in_msg_head;
+    curs.head = &parent.cd_in_msg_head;
 }
 
 // --- atf_amc.FDb.cd_in_msg_curs.ValidQ
@@ -2714,8 +3065,9 @@ inline bool atf_amc::_db_cd_in_msg_curs_ValidQ(_db_cd_in_msg_curs &curs) {
 // --- atf_amc.FDb.cd_in_msg_curs.Next
 // proceed to next item
 inline void atf_amc::_db_cd_in_msg_curs_Next(_db_cd_in_msg_curs &curs) {
-    curs.row = (*curs.row).cd_in_msg_next;
-    if (curs.row == curs.head) {
+    atf_amc::Msgbuf *next = (*curs.row).cd_in_msg_next;
+    curs.row = next;
+    if (curs.row == *curs.head) {
         curs.row = NULL;
     }
 }
@@ -2773,6 +3125,33 @@ inline void atf_amc::_db_c_typek_curs_Next(_db_c_typek_curs &curs) {
 // --- atf_amc.FDb.c_typek_curs.Access
 // item access
 inline atf_amc::FTypeK& atf_amc::_db_c_typek_curs_Access(_db_c_typek_curs &curs) {
+    return *curs.elems[curs.index];
+}
+
+// --- atf_amc.FDb.c_typek_oncecurs.Reset
+inline void atf_amc::_db_c_typek_oncecurs_Reset(_db_c_typek_oncecurs &curs, atf_amc::FDb &parent) {
+    curs.elems = parent.c_typek_elems;
+    curs.n_elems = parent.c_typek_n;
+    parent.c_typek_n = 0;
+    curs.index = 0;
+}
+
+// --- atf_amc.FDb.c_typek_oncecurs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::_db_c_typek_oncecurs_ValidQ(_db_c_typek_oncecurs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- atf_amc.FDb.c_typek_oncecurs.Next
+// proceed to next item
+inline void atf_amc::_db_c_typek_oncecurs_Next(_db_c_typek_oncecurs &curs) {
+    curs.elems[curs.index]->_db_c_typek_in_ary = false;
+    curs.index++;
+}
+
+// --- atf_amc.FDb.c_typek_oncecurs.Access
+// item access
+inline atf_amc::FTypeK& atf_amc::_db_c_typek_oncecurs_Access(_db_c_typek_oncecurs &curs) {
     return *curs.elems[curs.index];
 }
 
@@ -3383,7 +3762,8 @@ inline bool atf_amc::typea_zdl_typeb_curs_ValidQ(typea_zdl_typeb_curs &curs) {
 // --- atf_amc.FTypeA.zdl_typeb_curs.Next
 // proceed to next item
 inline void atf_amc::typea_zdl_typeb_curs_Next(typea_zdl_typeb_curs &curs) {
-    curs.row = (*curs.row).zdl_typeb_next;
+    atf_amc::FTypeB *next = (*curs.row).zdl_typeb_next;
+    curs.row = next;
 }
 
 // --- atf_amc.FTypeA.zdl_typeb_curs.Access
@@ -3421,6 +3801,26 @@ inline void atf_amc::FTypeB_Init(atf_amc::FTypeB& typeb) {
     typeb.zdl_typeb_next = (atf_amc::FTypeB*)-1; // (atf_amc.FTypeA.zdl_typeb) not-in-list
     typeb.zdl_typeb_prev = NULL; // (atf_amc.FTypeA.zdl_typeb)
     typeb.bh_typeb_idx = -1; // (atf_amc.FTypeA.bh_typeb) not-in-heap
+}
+inline atf_amc::FTypeD::FTypeD() {
+    atf_amc::FTypeD_Init(*this);
+}
+
+inline atf_amc::FTypeD::~FTypeD() {
+    atf_amc::FTypeD_Uninit(*this);
+}
+
+
+// --- atf_amc.FTypeD..Init
+// Set all fields to initial values.
+inline void atf_amc::FTypeD_Init(atf_amc::FTypeD& typed) {
+    typed.typec = i32(0);
+    typed.zd_typed_next = (atf_amc::FTypeD*)-1; // (atf_amc.FDb.zd_typed) not-in-list
+    typed.zd_typed_prev = NULL; // (atf_amc.FDb.zd_typed)
+    typed.zs_t_typed_next = (atf_amc::FTypeD*)-1; // (atf_amc.FDb.zs_t_typed) not-in-list
+    typed.cd_typed_next = (atf_amc::FTypeD*)-1; // (atf_amc.FDb.cd_typed) not-in-list
+    typed.cd_typed_prev = NULL; // (atf_amc.FDb.cd_typed)
+    typed.typed_next = (atf_amc::FTypeD*)-1; // (atf_amc.FDb.typed) not-in-tpool's freelist
 }
 inline atf_amc::FTypeK::FTypeK() {
     atf_amc::FTypeK_Init(*this);
@@ -3523,7 +3923,8 @@ inline bool atf_amc::types_zdl_typet_curs_ValidQ(types_zdl_typet_curs &curs) {
 // --- atf_amc.FTypeS.zdl_typet_curs.Next
 // proceed to next item
 inline void atf_amc::types_zdl_typet_curs_Next(types_zdl_typet_curs &curs) {
-    curs.row = (*curs.row).zdl_typet_next;
+    atf_amc::FTypeT *next = (*curs.row).zdl_typet_next;
+    curs.row = next;
 }
 
 // --- atf_amc.FTypeS.zdl_typet_curs.Access

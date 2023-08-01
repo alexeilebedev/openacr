@@ -135,7 +135,7 @@ const char *acr_ed_syntax =
 " -msgtype:string=\n"
 ;
 } // namespace acr_ed
-namespace acr_ed {
+namespace acr_ed { // gen:ns_print_proto
     static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
@@ -158,7 +158,7 @@ namespace acr_ed {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace acr_ed
+} // gen:ns_print_proto
 
 // --- acr_ed.FCfmt.base.CopyOut
 // Copy fields out of row

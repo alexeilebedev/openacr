@@ -12,6 +12,7 @@
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/command_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- ssim2mysql_FieldIdEnum
 
@@ -41,9 +42,29 @@ enum ssim2mysql_TableIdEnum {                   // ssim2mysql.TableId.value
 
 enum { ssim2mysql_TableIdEnum_N = 12 };
 
+namespace ssim2mysql { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace ssim2mysql { // gen:ns_field
+extern const char *ssim2mysql_help;
+extern const char *ssim2mysql_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace ssim2mysql { struct FField; }
 namespace ssim2mysql { struct FNs; }
 namespace ssim2mysql { struct FCtype; }
+namespace ssim2mysql { struct ctype_c_field_curs; }
+namespace ssim2mysql { struct _db_ns_curs; }
+namespace ssim2mysql { struct _db_ctype_curs; }
+namespace ssim2mysql { struct _db_field_curs; }
+namespace ssim2mysql { struct _db_sqltype_curs; }
+namespace ssim2mysql { struct _db_column_curs; }
+namespace ssim2mysql { struct _db_substr_curs; }
+namespace ssim2mysql { struct _db_ssimfile_curs; }
+namespace ssim2mysql { struct _db_zs_cmd_curs; }
+namespace ssim2mysql { struct _db_zd_ssimfile_curs; }
+namespace ssim2mysql { struct _db_cd_input_line_curs; }
+namespace ssim2mysql { struct ns_c_ssimfile_curs; }
+namespace ssim2mysql { struct ssimfile_c_column_curs; }
 namespace ssim2mysql { struct FCmd; }
 namespace ssim2mysql { struct FColumn; }
 namespace ssim2mysql { struct trace; }
@@ -54,30 +75,8 @@ namespace ssim2mysql { struct FSsimfile; }
 namespace ssim2mysql { struct FSubstr; }
 namespace ssim2mysql { struct FieldId; }
 namespace ssim2mysql { struct TableId; }
-namespace ssim2mysql { struct ctype_c_field_curs; }
-namespace ssim2mysql { struct _db_ind_column_curs; }
-namespace ssim2mysql { struct _db_ns_curs; }
-namespace ssim2mysql { struct _db_ctype_curs; }
-namespace ssim2mysql { struct _db_field_curs; }
-namespace ssim2mysql { struct _db_sqltype_curs; }
-namespace ssim2mysql { struct _db_column_curs; }
-namespace ssim2mysql { struct _db_ind_ns_curs; }
-namespace ssim2mysql { struct _db_ind_ctype_curs; }
-namespace ssim2mysql { struct _db_ind_field_curs; }
-namespace ssim2mysql { struct _db_substr_curs; }
-namespace ssim2mysql { struct _db_ssimfile_curs; }
-namespace ssim2mysql { struct _db_ind_ssimfile_curs; }
-namespace ssim2mysql { struct _db_zs_cmd_curs; }
-namespace ssim2mysql { struct _db_zd_ssimfile_curs; }
-namespace ssim2mysql { struct _db_cd_input_line_curs; }
-namespace ssim2mysql { struct ns_c_ssimfile_curs; }
-namespace ssim2mysql { struct ssimfile_c_column_curs; }
-namespace ssim2mysql {
-}//pkey typedefs
-namespace ssim2mysql {
-extern const char *ssim2mysql_help;
-extern const char *ssim2mysql_syntax;
-extern FDb _db;
+namespace ssim2mysql { extern struct ssim2mysql::FDb _db; }
+namespace ssim2mysql { // gen:ns_print_struct
 
 // --- ssim2mysql.FCmd
 // create: ssim2mysql.FDb.cmd (Tpool)
@@ -1161,8 +1160,10 @@ bool                 TableId_ReadStrptrMaybe(ssim2mysql::TableId &parent, algo::
 void                 TableId_Init(ssim2mysql::TableId& parent);
 // print string representation of ssim2mysql::TableId to string LHS, no header -- cprint:ssim2mysql.TableId.String
 void                 TableId_Print(ssim2mysql::TableId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace ssim2mysql { // gen:ns_curstext
 
-struct ctype_c_field_curs {// cursor
+struct ctype_c_field_curs {// fcurs:ssim2mysql.FCtype.c_field/curs
     typedef ssim2mysql::FField ChildType;
     ssim2mysql::FField** elems;
     u32 n_elems;
@@ -1227,7 +1228,7 @@ struct _db_ssimfile_curs {// cursor
 };
 
 
-struct _db_zs_cmd_curs {// cursor
+struct _db_zs_cmd_curs {// fcurs:ssim2mysql.FDb.zs_cmd/curs
     typedef ssim2mysql::FCmd ChildType;
     ssim2mysql::FCmd* row;
     _db_zs_cmd_curs() {
@@ -1236,7 +1237,7 @@ struct _db_zs_cmd_curs {// cursor
 };
 
 
-struct _db_zd_ssimfile_curs {// cursor
+struct _db_zd_ssimfile_curs {// fcurs:ssim2mysql.FDb.zd_ssimfile/curs
     typedef ssim2mysql::FSsimfile ChildType;
     ssim2mysql::FSsimfile* row;
     _db_zd_ssimfile_curs() {
@@ -1245,10 +1246,10 @@ struct _db_zd_ssimfile_curs {// cursor
 };
 
 
-struct _db_cd_input_line_curs {// cursor
+struct _db_cd_input_line_curs {// fcurs:ssim2mysql.FDb.cd_input_line/curs
     typedef ssim2mysql::FInput ChildType;
     ssim2mysql::FInput* row;
-    ssim2mysql::FInput* head;
+    ssim2mysql::FInput** head; // address of head element
     _db_cd_input_line_curs() {
         row = NULL;
         head = NULL;
@@ -1256,7 +1257,7 @@ struct _db_cd_input_line_curs {// cursor
 };
 
 
-struct ns_c_ssimfile_curs {// cursor
+struct ns_c_ssimfile_curs {// fcurs:ssim2mysql.FNs.c_ssimfile/curs
     typedef ssim2mysql::FSsimfile ChildType;
     ssim2mysql::FSsimfile** elems;
     u32 n_elems;
@@ -1265,7 +1266,7 @@ struct ns_c_ssimfile_curs {// cursor
 };
 
 
-struct ssimfile_c_column_curs {// cursor
+struct ssimfile_c_column_curs {// fcurs:ssim2mysql.FSsimfile.c_column/curs
     typedef ssim2mysql::FColumn ChildType;
     ssim2mysql::FColumn** elems;
     u32 n_elems;
@@ -1273,11 +1274,14 @@ struct ssimfile_c_column_curs {// cursor
     ssimfile_c_column_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-} // end namespace ssim2mysql
+} // gen:ns_curstext
+namespace ssim2mysql { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const ssim2mysql::FCmd &row);// cfmt:ssim2mysql.FCmd.String
 inline algo::cstring &operator <<(algo::cstring &str, const ssim2mysql::FColumn &row);// cfmt:ssim2mysql.FColumn.String

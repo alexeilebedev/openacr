@@ -8,8 +8,6 @@
 
 
 #include "include/algo.h"  // hard-coded include
-namespace {
-} // end namespace 
 
 // --- ...i8_ReadStrptrMaybe
 // Attempt to parse i8 from str

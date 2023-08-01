@@ -10,6 +10,7 @@
 #pragma once
 #include "include/gen/command_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- strconv_FieldIdEnum
 
@@ -19,15 +20,18 @@ enum strconv_FieldIdEnum {        // strconv.FieldId.value
 
 enum { strconv_FieldIdEnum_N = 1 };
 
+namespace strconv { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace strconv { // gen:ns_field
+extern const char *strconv_help;
+extern const char *strconv_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace strconv { struct trace; }
 namespace strconv { struct FDb; }
 namespace strconv { struct FieldId; }
-namespace strconv {
-}//pkey typedefs
-namespace strconv {
-extern const char *strconv_help;
-extern const char *strconv_syntax;
-extern FDb _db;
+namespace strconv { extern struct strconv::FDb _db; }
+namespace strconv { // gen:ns_print_struct
 
 // --- strconv.trace
 #pragma pack(push,1)
@@ -110,11 +114,14 @@ bool                 FieldId_ReadStrptrMaybe(strconv::FieldId &parent, algo::str
 void                 FieldId_Init(strconv::FieldId& parent);
 // print string representation of strconv::FieldId to string LHS, no header -- cprint:strconv.FieldId.String
 void                 FieldId_Print(strconv::FieldId & row, algo::cstring &str) __attribute__((nothrow));
-} // end namespace strconv
+} // gen:ns_print_struct
+namespace strconv { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const strconv::trace &row);// cfmt:strconv.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const strconv::FieldId &row);// cfmt:strconv.FieldId.String

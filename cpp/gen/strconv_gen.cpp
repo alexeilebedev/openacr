@@ -51,7 +51,7 @@ const char *strconv_syntax =
 " -pathcomp:string=\n"
 ;
 } // namespace strconv
-namespace strconv {
+namespace strconv { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
@@ -59,7 +59,7 @@ namespace strconv {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace strconv
+} // gen:ns_print_proto
 
 // --- strconv.trace..Print
 // print string representation of strconv::trace to string LHS, no header -- cprint:strconv.trace.String

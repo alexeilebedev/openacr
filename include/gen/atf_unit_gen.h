@@ -13,6 +13,7 @@
 #include "include/gen/report_gen.h"
 #include "include/gen/atfdb_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- atf_unit_FieldIdEnum
 
@@ -34,7 +35,21 @@ enum atf_unit_FieldIdEnum {            // atf_unit.FieldId.value
 
 enum { atf_unit_FieldIdEnum_N = 13 };
 
+namespace atf_unit { // gen:ns_pkeytypedef
+    typedef i32 TypeAPkey;
+} // gen:ns_pkeytypedef
+namespace atf_unit { // gen:ns_field
+extern const char *atf_unit_help;
+extern const char *atf_unit_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace atfdb { struct Unittest; }
+namespace atf_unit { struct Bitset_fld1_curs; }
+namespace atf_unit { struct _db_tr_number_curs; }
+namespace atf_unit { struct _db_unittest_curs; }
+namespace atf_unit { struct FPerfSort_orig_curs; }
+namespace atf_unit { struct FPerfSort_sorted_curs; }
+namespace atf_unit { struct FPerfSort_index_curs; }
 namespace atf_unit { struct Bitset; }
 namespace atf_unit { struct Cstr; }
 namespace atf_unit { struct Dbl; }
@@ -48,21 +63,11 @@ namespace atf_unit { struct FieldId; }
 namespace atf_unit { struct TypeA; }
 namespace atf_unit { struct TypeB; }
 namespace atf_unit { struct TestJson; }
-namespace atf_unit { struct Bitset_fld1_curs; }
-namespace atf_unit { struct _db_tr_number_curs; }
-namespace atf_unit { struct _db_unittest_curs; }
-namespace atf_unit { struct _db_ind_unittest_curs; }
-namespace atf_unit { struct FPerfSort_orig_curs; }
-namespace atf_unit { struct FPerfSort_sorted_curs; }
-namespace atf_unit { struct FPerfSort_index_curs; }
-namespace atf_unit {
-    typedef i32 TypeAPkey;
-}//pkey typedefs
-namespace atf_unit {
-extern const char *atf_unit_help;
-extern const char *atf_unit_syntax;
-extern FDb _db;
-typedef void (*unittest_step_hook)();
+namespace atf_unit { extern struct atf_unit::FDb _db; }
+namespace atf_unit { // hook_fcn_typedef
+    typedef void (*unittest_step_hook)(); // hook:atf_unit.FUnittest.step
+} // hook_decl
+namespace atf_unit { // gen:ns_print_struct
 
 // --- atf_unit.Bitset
 struct Bitset { // atf_unit.Bitset: Test bitset
@@ -901,6 +906,8 @@ void                 TestJson_Init(atf_unit::TestJson& parent);
 void                 TestJson_Print(atf_unit::TestJson & row, algo::cstring &str) __attribute__((nothrow));
 // Create JSON representation of atf_unit::TestJson under PARENT node -- cprint:atf_unit.TestJson.Json
 lib_json::FNode *    TestJson_FmtJson(atf_unit::TestJson & row, lib_json::FNode *parent) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace atf_unit { // gen:ns_curstext
 
 struct Bitset_fld1_curs {// cursor
     typedef u16 ChildType;
@@ -953,6 +960,8 @@ struct FPerfSort_index_curs {// cursor
     FPerfSort_index_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
+} // gen:ns_curstext
+namespace atf_unit { // gen:ns_func
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_acr_Check1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
@@ -1449,11 +1458,12 @@ void                 unittest_lib_json_TokenTrue();
 void                 unittest_lib_json_Typical();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 void                 unittest_lib_sql_Main();
-} // end namespace atf_unit
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::Dbl &row);// cfmt:atf_unit.Dbl.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::TestArgtuple1 &row);// cfmt:atf_unit.TestArgtuple1.String

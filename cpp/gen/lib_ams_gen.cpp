@@ -27,18 +27,18 @@
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
-namespace lib_ams { // gsymbol:lib_ams/amsdb.proctype
+namespace lib_ams { // gen:ns_gsymbol
     const char* amsdb_proctype__0("0");
     const char* amsdb_proctype_amstest("amstest");
-}
-namespace lib_ams { // gsymbol:lib_ams/amsdb.streamtype
+} // gen:ns_gsymbol
+namespace lib_ams { // gen:ns_gsymbol
     const char* amsdb_streamtype__0("0");
     const char* amsdb_streamtype_ctl("ctl");
     const char* amsdb_streamtype_io("io");
     const char* amsdb_streamtype_out("out");
     const char* amsdb_streamtype_trace("trace");
-}
-namespace lib_ams {
+} // gen:ns_gsymbol
+namespace lib_ams { // gen:ns_print_proto
     // First element of index changed.
     static void          cd_fdin_eof_FirstChanged() __attribute__((nothrow));
     // Update cycles count from previous clock capture
@@ -72,7 +72,7 @@ namespace lib_ams {
     // Shift existing bytes over to the beginning of the buffer
     static void          in_Shift(lib_ams::FFdin& fdin) __attribute__((nothrow));
     static void          SizeCheck();
-} // end namespace lib_ams
+} // gen:ns_print_proto
 
 // --- lib_ams.CtlConnCase.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.

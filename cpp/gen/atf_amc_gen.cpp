@@ -70,16 +70,16 @@ atf_amc::typea_bh_typeb_curs::~typea_bh_typeb_curs() {
 
 }
 
-namespace atf_amc { // gsymbol:atf_amc/atfdb.test_gsymbol_char
+namespace atf_amc { // gen:ns_gsymbol
     const char* atfdb_test_gsymbol_char_TestChar("TestChar");
-}
-namespace atf_amc { // gsymbol:atf_amc/atfdb.test_gsymbol_pkey
+} // gen:ns_gsymbol
+namespace atf_amc { // gen:ns_gsymbol
     const atfdb::TestGsymbolPkeyPkey atfdb_test_gsymbol_pkey_TestPkey("TestPkey");
-}
-namespace atf_amc { // gsymbol:atf_amc/atfdb.test_gsymbol_strptr
+} // gen:ns_gsymbol
+namespace atf_amc { // gen:ns_gsymbol
     const algo::strptr atfdb_test_gsymbol_strptr_TestStrptr("TestStrptr");
-}
-namespace atf_amc {
+} // gen:ns_gsymbol
+namespace atf_amc { // gen:ns_print_proto
     static bool          bit1_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          bits5_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          bit0_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) __attribute__((nothrow));
@@ -324,7 +324,7 @@ namespace atf_amc {
     // Quick sort engine
     static void          typeh_IntQuickSort(atf_amc::TypeH *elems, int n, int depth) __attribute__((nothrow));
     static void          SizeCheck();
-} // end namespace atf_amc
+} // gen:ns_print_proto
 
 // --- atf_amc.AmcCleanup2..Uninit
 void atf_amc::AmcCleanup2_Uninit(atf_amc::AmcCleanup2& parent) {
@@ -2646,6 +2646,238 @@ atf_amc::FTypeC* atf_amc::zd_t_typec_RemoveFirst() {
     return row;
 }
 
+// --- atf_amc.FDb.zd_typed.Insert
+// Insert row into linked list. If row is already in linked list, do nothing.
+void atf_amc::zd_typed_Insert(atf_amc::FTypeD& row) {
+    if (!zd_typed_InLlistQ(row)) {
+        atf_amc::FTypeD* old_tail = _db.zd_typed_tail;
+        row.zd_typed_next = NULL;
+        row.zd_typed_prev = old_tail;
+        _db.zd_typed_tail = &row;
+        atf_amc::FTypeD **new_row_a = &old_tail->zd_typed_next;
+        atf_amc::FTypeD **new_row_b = &_db.zd_typed_head;
+        atf_amc::FTypeD **new_row = old_tail ? new_row_a : new_row_b;
+        *new_row = &row;
+        _db.zd_typed_n++;
+    }
+}
+
+// --- atf_amc.FDb.zd_typed.Remove
+// Remove element from index. If element is not in index, do nothing.
+void atf_amc::zd_typed_Remove(atf_amc::FTypeD& row) {
+    if (zd_typed_InLlistQ(row)) {
+        atf_amc::FTypeD* old_head       = _db.zd_typed_head;
+        (void)old_head; // in case it's not used
+        atf_amc::FTypeD* prev = row.zd_typed_prev;
+        atf_amc::FTypeD* next = row.zd_typed_next;
+        // if element is first, adjust list head; otherwise, adjust previous element's next
+        atf_amc::FTypeD **new_next_a = &prev->zd_typed_next;
+        atf_amc::FTypeD **new_next_b = &_db.zd_typed_head;
+        atf_amc::FTypeD **new_next = prev ? new_next_a : new_next_b;
+        *new_next = next;
+        // if element is last, adjust list tail; otherwise, adjust next element's prev
+        atf_amc::FTypeD **new_prev_a = &next->zd_typed_prev;
+        atf_amc::FTypeD **new_prev_b = &_db.zd_typed_tail;
+        atf_amc::FTypeD **new_prev = next ? new_prev_a : new_prev_b;
+        *new_prev = prev;
+        _db.zd_typed_n--;
+        row.zd_typed_next=(atf_amc::FTypeD*)-1; // not-in-list
+    }
+}
+
+// --- atf_amc.FDb.zd_typed.RemoveAll
+// Empty the index. (The rows are not deleted)
+void atf_amc::zd_typed_RemoveAll() {
+    atf_amc::FTypeD* row = _db.zd_typed_head;
+    _db.zd_typed_head = NULL;
+    _db.zd_typed_tail = NULL;
+    _db.zd_typed_n = 0;
+    while (row) {
+        atf_amc::FTypeD* row_next = row->zd_typed_next;
+        row->zd_typed_next  = (atf_amc::FTypeD*)-1;
+        row->zd_typed_prev  = NULL;
+        row = row_next;
+    }
+}
+
+// --- atf_amc.FDb.zd_typed.RemoveFirst
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+atf_amc::FTypeD* atf_amc::zd_typed_RemoveFirst() {
+    atf_amc::FTypeD *row = NULL;
+    row = _db.zd_typed_head;
+    if (row) {
+        atf_amc::FTypeD *next = row->zd_typed_next;
+        _db.zd_typed_head = next;
+        atf_amc::FTypeD **new_end_a = &next->zd_typed_prev;
+        atf_amc::FTypeD **new_end_b = &_db.zd_typed_tail;
+        atf_amc::FTypeD **new_end = next ? new_end_a : new_end_b;
+        *new_end = NULL;
+        _db.zd_typed_n--;
+        row->zd_typed_next = (atf_amc::FTypeD*)-1; // mark as not-in-list
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.zs_t_typed.Insert
+// Insert row into linked list. If row is already in linked list, do nothing.
+void atf_amc::zs_t_typed_Insert(atf_amc::FTypeD& row) {
+    if (!zs_t_typed_InLlistQ(row)) {
+        atf_amc::FTypeD* old_tail       = _db.zs_t_typed_tail;
+        row.zs_t_typed_next  = NULL;
+        _db.zs_t_typed_tail = &row;
+        atf_amc::FTypeD **new_row_a = &old_tail->zs_t_typed_next;
+        atf_amc::FTypeD **new_row_b = &_db.zs_t_typed_head;
+        atf_amc::FTypeD **new_row = old_tail ? new_row_a : new_row_b;
+        *new_row = &row;
+        _db.zs_t_typed_n++;
+    }
+}
+
+// --- atf_amc.FDb.zs_t_typed.Remove
+// Remove element from index. If element is not in index, do nothing.
+// Since the list is singly-linked, use linear search to locate the element.
+void atf_amc::zs_t_typed_Remove(atf_amc::FTypeD& row) {
+    if (zs_t_typed_InLlistQ(row)) {
+        atf_amc::FTypeD* old_head       = _db.zs_t_typed_head;
+        (void)old_head; // in case it's not used
+        atf_amc::FTypeD* prev=NULL;
+        atf_amc::FTypeD* cur     = _db.zs_t_typed_head;
+        while (cur) {  // search for element by pointer
+            atf_amc::FTypeD* next = cur->zs_t_typed_next;
+            if (cur == &row) {
+                _db.zs_t_typed_n--;  // adjust count
+
+                if (!next) {
+                    _db.zs_t_typed_tail = prev;  // adjust tail pointer
+                }
+                // disconnect element from linked list
+                if (prev) {
+                    prev->zs_t_typed_next = next;
+                } else {
+                    _db.zs_t_typed_head = next;
+                }
+                row.zs_t_typed_next = (atf_amc::FTypeD*)-1; // not-in-list
+                break;
+            }
+            prev = cur;
+            cur  = next;
+        }
+    }
+}
+
+// --- atf_amc.FDb.zs_t_typed.RemoveAll
+// Empty the index. (The rows are not deleted)
+void atf_amc::zs_t_typed_RemoveAll() {
+    atf_amc::FTypeD* row = _db.zs_t_typed_head;
+    _db.zs_t_typed_head = NULL;
+    _db.zs_t_typed_tail = NULL;
+    _db.zs_t_typed_n = 0;
+    while (row) {
+        atf_amc::FTypeD* row_next = row->zs_t_typed_next;
+        row->zs_t_typed_next  = (atf_amc::FTypeD*)-1;
+        row = row_next;
+    }
+}
+
+// --- atf_amc.FDb.zs_t_typed.RemoveFirst
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+atf_amc::FTypeD* atf_amc::zs_t_typed_RemoveFirst() {
+    atf_amc::FTypeD *row = NULL;
+    row = _db.zs_t_typed_head;
+    if (row) {
+        atf_amc::FTypeD *next = row->zs_t_typed_next;
+        _db.zs_t_typed_head = next;
+        // clear list's tail pointer if list is empty.
+        if (!next) {
+            _db.zs_t_typed_tail = NULL;
+        }
+        _db.zs_t_typed_n--;
+        row->zs_t_typed_next = (atf_amc::FTypeD*)-1; // mark as not-in-list
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.cd_typed.Insert
+// Insert row into linked list. If row is already in linked list, do nothing.
+void atf_amc::cd_typed_Insert(atf_amc::FTypeD& row) {
+    if (!cd_typed_InLlistQ(row)) {
+        if (_db.cd_typed_head) {
+            row.cd_typed_next = _db.cd_typed_head;
+            row.cd_typed_prev = _db.cd_typed_head->cd_typed_prev;
+            row.cd_typed_prev->cd_typed_next = &row;
+            row.cd_typed_next->cd_typed_prev = &row;
+        } else {
+            row.cd_typed_next = &row;
+            row.cd_typed_prev = &row;
+            _db.cd_typed_head = &row;
+        }
+        _db.cd_typed_n++;
+    }
+}
+
+// --- atf_amc.FDb.cd_typed.Remove
+// Remove element from index. If element is not in index, do nothing.
+void atf_amc::cd_typed_Remove(atf_amc::FTypeD& row) {
+    if (cd_typed_InLlistQ(row)) {
+        atf_amc::FTypeD* old_head       = _db.cd_typed_head;
+        (void)old_head; // in case it's not used
+        atf_amc::FTypeD *oldnext = row.cd_typed_next;
+        atf_amc::FTypeD *oldprev = row.cd_typed_prev;
+        oldnext->cd_typed_prev = oldprev; // remove element from list
+        oldprev->cd_typed_next = oldnext;
+        _db.cd_typed_n--;  // adjust count
+        if (&row == _db.cd_typed_head) {
+            _db.cd_typed_head = oldnext==&row ? NULL : oldnext; // adjust list head
+        }
+        row.cd_typed_next = (atf_amc::FTypeD*)-1; // mark element as not-in-list);
+        row.cd_typed_prev = NULL; // clear back-pointer
+    }
+}
+
+// --- atf_amc.FDb.cd_typed.RemoveAll
+// Empty the index. (The rows are not deleted)
+void atf_amc::cd_typed_RemoveAll() {
+    atf_amc::FTypeD* row = _db.cd_typed_head;
+    atf_amc::FTypeD* head = _db.cd_typed_head;
+    _db.cd_typed_head = NULL;
+    _db.cd_typed_n = 0;
+    while (row) {
+        atf_amc::FTypeD* row_next = row->cd_typed_next;
+        row->cd_typed_next  = (atf_amc::FTypeD*)-1;
+        row->cd_typed_prev  = NULL;
+        row = row_next != head  ? row_next : NULL;
+    }
+}
+
+// --- atf_amc.FDb.cd_typed.RemoveFirst
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+atf_amc::FTypeD* atf_amc::cd_typed_RemoveFirst() {
+    atf_amc::FTypeD *row = NULL;
+    row = _db.cd_typed_head;
+    if (row) {
+        bool hasmore = row!=row->cd_typed_next;
+        _db.cd_typed_head = hasmore ? row->cd_typed_next : NULL;
+        row->cd_typed_next->cd_typed_prev = row->cd_typed_prev;
+        row->cd_typed_prev->cd_typed_next = row->cd_typed_next;
+        row->cd_typed_prev = NULL;
+        _db.cd_typed_n--;
+        row->cd_typed_next = (atf_amc::FTypeD*)-1; // mark as not-in-list
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.cd_typed.RotateFirst
+// If linked list is empty, return NULL.
+// Otherwise return head item and advance head to the next item.
+atf_amc::FTypeD* atf_amc::cd_typed_RotateFirst() {
+    atf_amc::FTypeD *row = NULL;
+    row = _db.cd_typed_head;
+    if (row) {
+        _db.cd_typed_head = row->cd_typed_next;
+    }
+    return row;
+}
+
 // --- atf_amc.FDb.zsl_h_typec.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void atf_amc::zsl_h_typec_Insert(atf_amc::FTypeC& row) {
@@ -4860,7 +5092,7 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:BhFirstChanged1  comment:\"\"", atf_amc::amctest_BhFirstChanged1 }
         ,{ "atfdb.amctest  amctest:BhFirstChanged2  comment:\"Insert 100 items in ascending order -- check that trigger fires once\"", atf_amc::amctest_BhFirstChanged2 }
         ,{ "atfdb.amctest  amctest:BhFirstChanged3  comment:\"Insert 100 items in descending order -- check that trigger fires for each\"", atf_amc::amctest_BhFirstChanged3 }
-        ,{ "atfdb.amctest  amctest:BheapCursor  comment:\"Test for cascade deletion\"", atf_amc::amctest_BheapCursor }
+        ,{ "atfdb.amctest  amctest:BheapCursor  comment:\"Test bheap cursor, cascade deletion\"", atf_amc::amctest_BheapCursor }
         ,{ "atfdb.amctest  amctest:BheapInsert100  comment:\"Ascending, descending, mixed\"", atf_amc::amctest_BheapInsert100 }
         ,{ "atfdb.amctest  amctest:BigEndian  comment:\"\"", atf_amc::amctest_BigEndian }
         ,{ "atfdb.amctest  amctest:BigendFconst  comment:\"\"", atf_amc::amctest_BigendFconst }
@@ -4957,6 +5189,7 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:PerfSortString  comment:\"\"", atf_amc::amctest_PerfSortString }
         ,{ "atfdb.amctest  amctest:PrintBase36  comment:\"\"", atf_amc::amctest_PrintBase36 }
         ,{ "atfdb.amctest  amctest:PrintRawGconst  comment:\"Check that gconst field within tuple is printed as raw\"", atf_amc::amctest_PrintRawGconst }
+        ,{ "atfdb.amctest  amctest:PtraryCursor  comment:\"Test Ptrary cursor\"", atf_amc::amctest_PtraryCursor }
         ,{ "atfdb.amctest  amctest:PtraryInsert  comment:\"Insert/Remove invariants for Ptrary\"", atf_amc::amctest_PtraryInsert }
         ,{ "atfdb.amctest  amctest:ReadProc  comment:\"Read from subprocess\"", atf_amc::amctest_ReadProc }
         ,{ "atfdb.amctest  amctest:ReadTuple1  comment:\"A single field is printed without field name\"", atf_amc::amctest_ReadTuple1 }
@@ -4999,6 +5232,7 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:VarlenExternLength  comment:\"\"", atf_amc::amctest_VarlenExternLength }
         ,{ "atfdb.amctest  amctest:VarlenMsgs  comment:\"Variable-length messages (Opt+Varlen)\"", atf_amc::amctest_VarlenMsgs }
         ,{ "atfdb.amctest  amctest:VarlenMsgsPnew  comment:\"Variable-length messages (Opt+Varlen) pnew\"", atf_amc::amctest_VarlenMsgsPnew }
+        ,{ "atfdb.amctest  amctest:ZdlistDelCurs  comment:\"\"", atf_amc::amctest_ZdlistDelCurs }
         ,{ "atfdb.amctest  amctest:ZdlistDfltCtor  comment:\"\"", atf_amc::amctest_ZdlistDfltCtor }
         ,{ "atfdb.amctest  amctest:ZdlistFlush100  comment:\"\"", atf_amc::amctest_ZdlistFlush100 }
         ,{ "atfdb.amctest  amctest:ZdlistFlushEmpty  comment:\"\"", atf_amc::amctest_ZdlistFlushEmpty }
@@ -6136,6 +6370,127 @@ bool atf_amc::listtype_XrefMaybe(atf_amc::FListtype &row) {
     return retval;
 }
 
+// --- atf_amc.FDb.typed.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_amc::FTypeD& atf_amc::typed_Alloc() {
+    atf_amc::FTypeD* row = typed_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.typed  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_amc.FDb.typed.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_amc::FTypeD* atf_amc::typed_AllocMaybe() {
+    atf_amc::FTypeD *row = (atf_amc::FTypeD*)typed_AllocMem();
+    if (row) {
+        new (row) atf_amc::FTypeD; // call constructor
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.typed.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_amc::FTypeD* atf_amc::typed_InsertMaybe(const atf_amc::TypeC &value) {
+    atf_amc::FTypeD *row = &typed_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    typed_CopyIn(*row,const_cast<atf_amc::TypeC&>(value));
+    bool ok = typed_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        typed_Delete(*row); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.typed.Delete
+// Remove row from all global and cross indices, then deallocate row
+void atf_amc::typed_Delete(atf_amc::FTypeD &row) {
+    row.~FTypeD();
+    typed_FreeMem(row);
+}
+
+// --- atf_amc.FDb.typed.AllocMem
+// Allocate space for one element
+// If no memory available, return NULL.
+void* atf_amc::typed_AllocMem() {
+    atf_amc::FTypeD *row = _db.typed_free;
+    if (UNLIKELY(!row)) {
+        typed_Reserve(1);
+        row = _db.typed_free;
+    }
+    if (row) {
+        _db.typed_free = row->typed_next;
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.typed.FreeMem
+// Remove mem from all global and cross indices, then deallocate mem
+void atf_amc::typed_FreeMem(atf_amc::FTypeD &row) {
+    if (UNLIKELY(row.typed_next != (atf_amc::FTypeD*)-1)) {
+        FatalErrorExit("atf_amc.tpool_double_delete  pool:atf_amc.FDb.typed  comment:'double deletion caught'");
+    }
+    row.typed_next = _db.typed_free; // insert into free list
+    _db.typed_free  = &row;
+}
+
+// --- atf_amc.FDb.typed.Reserve
+// Preallocate memory for N more elements
+// Return number of elements actually reserved.
+u64 atf_amc::typed_Reserve(u64 n_elems) {
+    u64 ret = 0;
+    while (ret < n_elems) {
+        u64 size = _db.typed_blocksize; // underlying allocator is probably Lpool
+        u64 reserved = typed_ReserveMem(size);
+        ret += reserved;
+        if (reserved == 0) {
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.typed.ReserveMem
+// Allocate block of given size, break up into small elements and append to free list.
+// Return number of elements reserved.
+u64 atf_amc::typed_ReserveMem(u64 size) {
+    u64 ret = 0;
+    if (size >= sizeof(atf_amc::FTypeD)) {
+        atf_amc::FTypeD *mem = (atf_amc::FTypeD*)algo_lib::malloc_AllocMem(size);
+        ret = mem ? size / sizeof(atf_amc::FTypeD) : 0;
+        // add newly allocated elements to the free list;
+        for (u64 i=0; i < ret; i++) {
+            mem[i].typed_next = _db.typed_free;
+            _db.typed_free = mem+i;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.typed.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_amc::typed_XrefMaybe(atf_amc::FTypeD &row) {
+    bool retval = true;
+    (void)row;
+    // insert typed into index zd_typed
+    if (true) { // user-defined insert condition
+        zd_typed_Insert(row);
+    }
+    // insert typed into index zs_t_typed
+    if (true) { // user-defined insert condition
+        zs_t_typed_Insert(row);
+    }
+    // insert typed into index cd_typed
+    if (true) { // user-defined insert condition
+        cd_typed_Insert(row);
+    }
+    return retval;
+}
+
 // --- atf_amc.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr atf_amc::trace_RowidFind(int t) {
@@ -6248,6 +6603,14 @@ void atf_amc::FDb_Init() {
     _db.zd_t_typec_head = NULL; // (atf_amc.FDb.zd_t_typec)
     _db.zd_t_typec_n = 0; // (atf_amc.FDb.zd_t_typec)
     _db.zd_t_typec_tail = NULL; // (atf_amc.FDb.zd_t_typec)
+    _db.zd_typed_head = NULL; // (atf_amc.FDb.zd_typed)
+    _db.zd_typed_n = 0; // (atf_amc.FDb.zd_typed)
+    _db.zd_typed_tail = NULL; // (atf_amc.FDb.zd_typed)
+    _db.zs_t_typed_head = NULL; // (atf_amc.FDb.zs_t_typed)
+    _db.zs_t_typed_n = 0; // (atf_amc.FDb.zs_t_typed)
+    _db.zs_t_typed_tail = NULL; // (atf_amc.FDb.zs_t_typed)
+    _db.cd_typed_head = NULL; // (atf_amc.FDb.cd_typed)
+    _db.cd_typed_n = 0; // (atf_amc.FDb.cd_typed)
     _db.zsl_h_typec_head = NULL; // (atf_amc.FDb.zsl_h_typec)
     _db.zsl_h_typec_n = 0; // (atf_amc.FDb.zsl_h_typec)
     _db.zsl_h_typec_tail = NULL; // (atf_amc.FDb.zsl_h_typec)
@@ -6394,6 +6757,9 @@ void atf_amc::FDb_Init() {
     _db.tr_avl_n = 0;
     _db.listtype_n = 0; // listtype: initialize count
     _db.dofork = bool(false);
+    // typed: initialize Tpool
+    _db.typed_free      = NULL;
+    _db.typed_blocksize = algo::BumpToPow2(64 * sizeof(atf_amc::FTypeD)); // allocate 64-127 elements at a time
 
     atf_amc::InitReflection();
     amctest_LoadStatic();
@@ -7480,6 +7846,32 @@ void atf_amc::FTypeB_Print(atf_amc::FTypeB & row, algo::cstring &str) {
 
     i32_Print(row.j, temp);
     PrintAttrSpaceReset(str,"j", temp);
+}
+
+// --- atf_amc.FTypeD.msghdr.CopyOut
+// Copy fields out of row
+void atf_amc::typed_CopyOut(atf_amc::FTypeD &row, atf_amc::TypeC &out) {
+    out.typec = row.typec;
+}
+
+// --- atf_amc.FTypeD.msghdr.CopyIn
+// Copy fields in to row
+void atf_amc::typed_CopyIn(atf_amc::FTypeD &row, atf_amc::TypeC &in) {
+    row.typec = in.typec;
+}
+
+// --- atf_amc.FTypeD..Uninit
+void atf_amc::FTypeD_Uninit(atf_amc::FTypeD& typed) {
+    atf_amc::FTypeD &row = typed; (void)row;
+    zd_typed_Remove(row); // remove typed from index zd_typed
+    zs_t_typed_Remove(row); // remove typed from index zs_t_typed
+    cd_typed_Remove(row); // remove typed from index cd_typed
+}
+
+// --- atf_amc.FTypeD..Print
+// print string representation of atf_amc::FTypeD to string LHS, no header -- cprint:atf_amc.FTypeD.String
+void atf_amc::FTypeD_Print(atf_amc::FTypeD & row, algo::cstring &str) {
+    i32_Print(row.typec, str);
 }
 
 // --- atf_amc.FTypeS.msghdr.CopyOut

@@ -15,9 +15,9 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
-namespace command {
+namespace command { // gen:ns_print_proto
     static void          SizeCheck();
-} // end namespace command
+} // gen:ns_print_proto
 
 // --- command.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.

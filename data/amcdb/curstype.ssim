@@ -1,0 +1,4 @@
+amcdb.curstype  curstype:curs  comment:"Regular forward cursor"
+amcdb.curstype  curstype:delcurs  comment:"Allow ind_del to delete current element during scanning"
+amcdb.curstype  curstype:oncecurs  comment:"Scan index once, removing elements after scanning"
+amcdb.curstype  curstype:unordcurs  comment:"Scan bheap in non-sorted order (faster)"

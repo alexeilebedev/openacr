@@ -293,7 +293,6 @@ dmmeta.xref  field:amc.FFbigend.p_field  inscond:true  via:amc.FDb.ind_field/dmm
 dmmeta.xref  field:amc.FNs.c_target  inscond:true  via:amc.FDb.ind_ns/dev.Target.target
 dmmeta.xref  field:amc.FField.c_fcompact  inscond:true  via:amc.FDb.ind_field/dmmeta.Fcompact.field
 dmmeta.xref  field:amc.FField.c_findrem  inscond:true  via:amc.FDb.ind_field/dmmeta.Findrem.field
-dmmeta.xref  field:amc.FTfunc.c_tcursor  inscond:true  via:amc.FDb.ind_tfunc/amcdb.Tcursor.tfunc
 dmmeta.xref  field:amc.FNsx.p_pool  inscond:true  via:amc.FDb.ind_field/dmmeta.Nsx.pool
 dmmeta.xref  field:amc.FCtype.zd_access  inscond:true  via:amc.FDb.ind_ctype/dmmeta.Field.arg
 dmmeta.xref  field:amc.FCtype.c_fcurs  inscond:true  via:amc.FDb.ind_ctype/dmmeta.Fcurs.ctype
@@ -344,6 +343,9 @@ dmmeta.xref  field:amc.FSsimfile.c_ssimvolatile  inscond:true  via:amc.FDb.ind_s
 dmmeta.xref  field:amc.FField.c_funique  inscond:true  via:amc.FDb.ind_field/dmmeta.Funique.field
 dmmeta.xref  field:amc.FField.c_fuserinit  inscond:true  via:amc.FDb.ind_field/dmmeta.Fuserinit.field
 dmmeta.xref  field:amc.FBitfld.p_field  inscond:true  via:amc.FDb.ind_field/dmmeta.Bitfld.field
+dmmeta.xref  field:amc.FDb.ind_fcurs  inscond:true  via:""
+dmmeta.xref  field:amc.FTfunc.c_tcurs  inscond:true  via:amc.FDb.ind_tfunc/amcdb.Tcurs.tfunc
+dmmeta.xref  field:amc.FFcurs.p_field  inscond:true  via:amc.FDb.ind_field/dmmeta.Fcurs.field
 dmmeta.xref  field:amc.FGsymbol.p_ssimfile  inscond:true  via:amc.FDb.ind_ssimfile/dmmeta.Gsymbol.ssimfile
 dmmeta.xref  field:amc.FGsymbol.p_symboltype  inscond:true  via:amc.FDb.ind_ctype/dmmeta.Gsymbol.symboltype
 dmmeta.xref  field:amc_vis.FDb.ind_ctype  inscond:true  via:""
@@ -372,6 +374,9 @@ dmmeta.xref  field:atf_amc.FDb.zs_mt_typec  inscond:false  via:""
 dmmeta.xref  field:atf_amc.FDb.bh_typec  inscond:false  via:""
 dmmeta.xref  field:atf_amc.FDb.zdl_h_typec  inscond:false  via:""
 dmmeta.xref  field:atf_amc.FDb.zd_t_typec  inscond:false  via:""
+dmmeta.xref  field:atf_amc.FDb.zd_typed  inscond:true  via:""
+dmmeta.xref  field:atf_amc.FDb.zs_t_typed  inscond:true  via:""
+dmmeta.xref  field:atf_amc.FDb.cd_typed  inscond:true  via:""
 dmmeta.xref  field:atf_amc.FDb.zdl_hnt_typec  inscond:false  via:""
 dmmeta.xref  field:atf_amc.FDb.csl_h_typec  inscond:false  via:""
 dmmeta.xref  field:atf_amc.FDb.cs_t_typec  inscond:false  via:""

@@ -11,6 +11,7 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/ietf_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- ams_ProcTypeEnum
 
@@ -172,6 +173,11 @@ enum ams_StreamFlagsEnum {                        // ams.StreamFlags.value
 
 enum { ams_StreamFlagsEnum_N = 7 };
 
+namespace ams { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace ams { // gen:ns_field
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace ams { struct MsgHeader; }
 namespace ams { struct AlarmSyncMsg; }
 namespace ams { struct DfltStream; }
@@ -198,6 +204,15 @@ namespace fm { struct AlarmMsg; }
 namespace ams { struct ProcId; }
 namespace ams { struct SeqmsgId; }
 namespace ietf { struct Ipv4; }
+namespace ams { struct ExpectMsg_text_curs; }
+namespace ams { struct InputLineMsg_payload_curs; }
+namespace ams { struct LogMsg_text_curs; }
+namespace ams { struct MsgBlock_messages_curs; }
+namespace ams { struct Trace2Msg_data_curs; }
+namespace ams { struct TraceInfo2Msg_data_curs; }
+namespace ams { struct TraceInfoMsg_data_curs; }
+namespace ams { struct TraceMsg_data_curs; }
+namespace ams { struct UdpFrame_payload_curs; }
 namespace ams { struct ProcType; }
 namespace ams { struct StreamType; }
 namespace ams { struct StreamId; }
@@ -208,18 +223,6 @@ namespace ams { struct MsgHeader_curs; }
 namespace ams { struct StreamPos; }
 namespace ams { struct Protocol; }
 namespace ams { struct StreamFlags; }
-namespace ams { struct ExpectMsg_text_curs; }
-namespace ams { struct InputLineMsg_payload_curs; }
-namespace ams { struct LogMsg_text_curs; }
-namespace ams { struct MsgBlock_messages_curs; }
-namespace ams { struct Trace2Msg_data_curs; }
-namespace ams { struct TraceInfo2Msg_data_curs; }
-namespace ams { struct TraceInfoMsg_data_curs; }
-namespace ams { struct TraceMsg_data_curs; }
-namespace ams { struct UdpFrame_payload_curs; }
-namespace ams {
-}//pkey typedefs
-namespace ams {
 
 // sizes types appearing as Opt or Varlen; these need to be here
 // to allow inline implementations of _Get functions and avoid
@@ -227,6 +230,7 @@ namespace ams {
 enum {
     sizeof_ams_MsgHeader = 8
 };
+namespace ams { // gen:ns_print_struct
 
 // --- ams.AlarmSyncMsg
 #pragma pack(push,1)
@@ -1588,6 +1592,8 @@ algo::memptr         GetMsgMemptr(const ams::UdpFrame& row) __attribute__((nothr
 void                 UdpFrame_Init(ams::UdpFrame& parent);
 // print string representation of ams::UdpFrame to string LHS, no header -- cprint:ams.UdpFrame.String
 void                 UdpFrame_Print(ams::UdpFrame & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace ams { // gen:ns_curstext
 
 struct ExpectMsg_text_curs {// cursor
     typedef char ChildType;
@@ -1669,6 +1675,8 @@ struct UdpFrame_payload_curs {// cursor
     UdpFrame_payload_curs() { ptr=NULL; length=0; index=0; }
 };
 
+} // gen:ns_curstext
+namespace ams { // gen:ns_func
 // Print message to STR. If message is too short for MSG_LEN, print nothing.
 // MSG.LENGTH must have already been validated against msg_len.
 // This function will additionally validate that sizeof(Msg) <= msg_len
@@ -1709,7 +1717,8 @@ ams::UdpFrame *      UdpFrame_FmtByteAry(algo::ByteAry &buf, algo::UnTime timest
 // If BUF doesn't have enough space available, throw exception.
 // After constructing, advance BUF appropriate number of bytes forward
 ams::UdpFrame *      UdpFrame_FmtMemptr(algo::memptr &buf, algo::UnTime timestamp, ietf::Ipv4 src_ip, ietf::Ipv4 dst_ip, u16 src_port, u16 dst_port, algo::aryptr<u8 > payload);
-} // end namespace ams
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const ams::AlarmSyncMsg &row);// cfmt:ams.AlarmSyncMsg.String
 inline algo::cstring &operator <<(algo::cstring &str, const ams::ProcId &row);// cfmt:ams.ProcId.String

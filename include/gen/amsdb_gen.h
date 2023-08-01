@@ -11,6 +11,7 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/ams_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- amsdb_FieldIdEnum
 
@@ -24,14 +25,17 @@ enum amsdb_FieldIdEnum {             // amsdb.FieldId.value
 
 enum { amsdb_FieldIdEnum_N = 5 };
 
+namespace amsdb { // gen:ns_pkeytypedef
+    typedef algo::Smallstr50 ProcTypePkey;
+    typedef algo::Smallstr50 StreamTypePkey;
+} // gen:ns_pkeytypedef
+namespace amsdb { // gen:ns_field
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace amsdb { struct FieldId; }
 namespace amsdb { struct ProcType; }
 namespace amsdb { struct StreamType; }
-namespace amsdb {
-    typedef algo::Smallstr50 ProcTypePkey;
-    typedef algo::Smallstr50 StreamTypePkey;
-}//pkey typedefs
-namespace amsdb {
+namespace amsdb { // gen:ns_print_struct
 
 // --- amsdb.FieldId
 #pragma pack(push,1)
@@ -103,7 +107,10 @@ bool                 StreamType_ReadFieldMaybe(amsdb::StreamType &parent, algo::
 bool                 StreamType_ReadStrptrMaybe(amsdb::StreamType &parent, algo::strptr in_str);
 // print string representation of amsdb::StreamType to string LHS, no header -- cprint:amsdb.StreamType.String
 void                 StreamType_Print(amsdb::StreamType & row, algo::cstring &str) __attribute__((nothrow));
-} // end namespace amsdb
+} // gen:ns_print_struct
+namespace amsdb { // gen:ns_func
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const amsdb::FieldId &row);// cfmt:amsdb.FieldId.String
 inline algo::cstring &operator <<(algo::cstring &str, const amsdb::ProcType &row);// cfmt:amsdb.ProcType.String

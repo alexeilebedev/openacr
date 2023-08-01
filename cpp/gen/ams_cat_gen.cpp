@@ -45,7 +45,7 @@ const char *ams_cat_syntax =
 "-in:string=\"data\"\n"
 ;
 } // namespace ams_cat
-namespace ams_cat {
+namespace ams_cat { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
@@ -53,7 +53,7 @@ namespace ams_cat {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace ams_cat
+} // gen:ns_print_proto
 
 // --- ams_cat.trace..Print
 // print string representation of ams_cat::trace to string LHS, no header -- cprint:ams_cat.trace.String

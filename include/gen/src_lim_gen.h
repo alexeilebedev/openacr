@@ -13,6 +13,7 @@
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/command_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- src_lim_FieldIdEnum
 
@@ -39,7 +40,20 @@ enum src_lim_TableIdEnum {               // src_lim.TableId.value
 
 enum { src_lim_TableIdEnum_N = 9 };
 
+namespace src_lim { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace src_lim { // gen:ns_field
+extern const char *src_lim_help;
+extern const char *src_lim_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace src_lim { struct FGitfile; }
+namespace src_lim { struct _db_include_curs; }
+namespace src_lim { struct _db_linelim_curs; }
+namespace src_lim { struct _db_targsrc_curs; }
+namespace src_lim { struct _db_gitfile_curs; }
+namespace src_lim { struct _db_badline_curs; }
+namespace src_lim { struct gitfile_zd_include_curs; }
 namespace src_lim { struct FBadline; }
 namespace src_lim { struct trace; }
 namespace src_lim { struct FDb; }
@@ -48,19 +62,8 @@ namespace src_lim { struct FLinelim; }
 namespace src_lim { struct FTargsrc; }
 namespace src_lim { struct FieldId; }
 namespace src_lim { struct TableId; }
-namespace src_lim { struct _db_include_curs; }
-namespace src_lim { struct _db_linelim_curs; }
-namespace src_lim { struct _db_targsrc_curs; }
-namespace src_lim { struct _db_gitfile_curs; }
-namespace src_lim { struct _db_ind_gitfile_curs; }
-namespace src_lim { struct _db_badline_curs; }
-namespace src_lim { struct gitfile_zd_include_curs; }
-namespace src_lim {
-}//pkey typedefs
-namespace src_lim {
-extern const char *src_lim_help;
-extern const char *src_lim_syntax;
-extern FDb _db;
+namespace src_lim { extern struct src_lim::FDb _db; }
+namespace src_lim { // gen:ns_print_struct
 
 // --- src_lim.FBadline
 // create: src_lim.FDb.badline (Lary)
@@ -586,6 +589,8 @@ bool                 TableId_ReadStrptrMaybe(src_lim::TableId &parent, algo::str
 void                 TableId_Init(src_lim::TableId& parent);
 // print string representation of src_lim::TableId to string LHS, no header -- cprint:src_lim.TableId.String
 void                 TableId_Print(src_lim::TableId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace src_lim { // gen:ns_curstext
 
 struct _db_include_curs {// cursor
     typedef src_lim::FInclude ChildType;
@@ -627,7 +632,7 @@ struct _db_badline_curs {// cursor
 };
 
 
-struct gitfile_zd_include_curs {// cursor
+struct gitfile_zd_include_curs {// fcurs:src_lim.FGitfile.zd_include/curs
     typedef src_lim::FInclude ChildType;
     src_lim::FInclude* row;
     gitfile_zd_include_curs() {
@@ -635,11 +640,14 @@ struct gitfile_zd_include_curs {// cursor
     }
 };
 
-} // end namespace src_lim
+} // gen:ns_curstext
+namespace src_lim { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const src_lim::trace &row);// cfmt:src_lim.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const src_lim::FieldId &row);// cfmt:src_lim.FieldId.String

@@ -11,9 +11,9 @@
 #include "include/gen/algo_pch_gen.h"
 #include "include/gen/algo_pch_gen.inl.h"
 //#pragma endinclude
-namespace algo_pch {
+namespace algo_pch { // gen:ns_print_proto
     static void          SizeCheck();
-} // end namespace algo_pch
+} // gen:ns_print_proto
 
 // --- algo_pch.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.

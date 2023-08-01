@@ -599,7 +599,9 @@ namespace amc { // update-hdr
     // included in ns_gen.h
     bool FwdDeclExistsQ(amc::FNs &ns, amc::FFwddecl &fwddecl);
 
-    // Return TRUE if FIELD requires a forward declaration
+    // Return TRUE if FIELD requires a forward declaration for its type
+    // This may be required since the type may be unknown at the point where the field is being
+    // defined.
     bool FwdDeclQ(amc::FField &field);
     //     (user-implemented function, prototype is in amc-generated header)
     // void gen_ns_fwddecl2();
@@ -684,7 +686,6 @@ namespace amc { // update-hdr
     // void gen_ns_check_path();
     // void gen_ns_pkeytypedef();
     // void gen_ns_enums();
-    // void gen_ns_begin();
     // void gen_ns_field();
     // void gen_ns_include();
     // void gen_ns_funcindex();
@@ -699,6 +700,7 @@ namespace amc { // update-hdr
     // void gen_ns_operators();
     // void gen_ns_check_lim();
     // void gen_proc();
+    // void gen_check_fcurs();
     // void gen_check_varlen();
 
     // -------------------------------------------------------------------
@@ -706,7 +708,6 @@ namespace amc { // update-hdr
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Global();
-    // void tfunc_Global_N();
     // void tfunc_Global_Init();
     // void tfunc_Global_LoadTuplesMaybe();
     // void tfunc_Global_SaveTuples();
@@ -887,7 +888,12 @@ namespace amc { // update-hdr
     // void tfunc_ZSListMT_Insert();
     // void tfunc_ZSListMT_Remove();
     // void tfunc_ZSListMT_Init();
+
+    // Generate cursor for llist
+    void Llist_curs(bool needdel);
+    //     (user-implemented function, prototype is in amc-generated header)
     // void tfunc_Llist_curs();
+    // void tfunc_Llist_delcurs();
 
     // -------------------------------------------------------------------
     // cpp/amc/lpool.cpp
@@ -913,6 +919,8 @@ namespace amc { // update-hdr
     tempstr DeleteExpr(amc::FField &field, strptr parentref, strptr childref);
     amc::FField *GetViafld(amc::FXref &xref);
     amc::FField *GetKeyfld(amc::FXref &xref);
+    void BeginNsBlock(cstring &out, amc::FNs &ns, strptr tag);
+    void EndNsBlock(cstring &out, amc::FNs &ns, strptr tag);
     bool PtrQ(amc::FField &field);
 
     // make sure the specified type is forward-declared
@@ -1224,7 +1232,10 @@ namespace amc { // update-hdr
     // void tfunc_Ptrary_RemoveAll();
     // void tfunc_Ptrary_Reserve();
     // void tfunc_Ptrary_Uninit();
+    void Ptrary_curs(bool once);
+    //     (user-implemented function, prototype is in amc-generated header)
     // void tfunc_Ptrary_curs();
+    // void tfunc_Ptrary_oncecurs();
 
     // -------------------------------------------------------------------
     // cpp/amc/query.cpp
@@ -1432,6 +1443,9 @@ namespace amc { // update-hdr
     amc::FField *GetBasepool(amc::FField &field);
 
     // Call tfunc generators for every field in this ctype
+    // Each field triggers zero or more tclass generators
+    // (template class, no relation to C++ notion of template or class)
+    // based on its type and associated records, and each tclass generates zero or more tfuncs
     void GenTclass_Fields(amc::FCtype &ctype);
 
     // Call tfunc generators without field context (Ctype generators)

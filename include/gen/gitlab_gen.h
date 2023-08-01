@@ -13,6 +13,7 @@
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/dev_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- gitlab_FHttp_request_method_Enum
 
@@ -43,6 +44,17 @@ enum gitlab_TableIdEnum {                      // gitlab.TableId.value
 
 enum { gitlab_TableIdEnum_N = 2 };
 
+namespace gitlab { // gen:ns_pkeytypedef
+    typedef algo::Smallstr50 IssuePkey;
+    typedef algo::Smallstr200 MilestonePkey;
+    typedef algo::Smallstr50 MrPkey;
+    typedef algo::Smallstr50 UserPkey;
+} // gen:ns_pkeytypedef
+namespace gitlab { // gen:ns_field
+extern const char *gitlab_help;
+extern const char *gitlab_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace gitlab { struct Issue; }
 namespace gitlab { struct FProject; }
 namespace gitlab { struct IssueDescription; }
@@ -56,6 +68,22 @@ namespace gitlab { struct MrDescription; }
 namespace gitlab { struct FMr; }
 namespace gitlab { struct MrNote; }
 namespace gitlab { struct User; }
+namespace gitlab { struct _db_project_curs; }
+namespace gitlab { struct _db_issue_curs; }
+namespace gitlab { struct _db_issue_note_curs; }
+namespace gitlab { struct _db_issue_description_curs; }
+namespace gitlab { struct _db_mr_curs; }
+namespace gitlab { struct _db_mr_note_curs; }
+namespace gitlab { struct _db_mr_description_curs; }
+namespace gitlab { struct _db_user_curs; }
+namespace gitlab { struct _db_milestone_curs; }
+namespace gitlab { struct _db_milestone_description_curs; }
+namespace gitlab { struct FHttp_request_header_curs; }
+namespace gitlab { struct FHttp_response_header_curs; }
+namespace gitlab { struct issue_c_issue_note_curs; }
+namespace gitlab { struct mr_c_mr_note_curs; }
+namespace gitlab { struct project_c_issue_curs; }
+namespace gitlab { struct project_c_mr_curs; }
 namespace gitlab { struct trace; }
 namespace gitlab { struct FDb; }
 namespace gitlab { struct FHttp; }
@@ -67,39 +95,8 @@ namespace gitlab { struct FMrNote; }
 namespace gitlab { struct FUser; }
 namespace gitlab { struct FieldId; }
 namespace gitlab { struct TableId; }
-namespace gitlab { struct _db_project_curs; }
-namespace gitlab { struct _db_ind_project_curs; }
-namespace gitlab { struct _db_ind_issue_curs; }
-namespace gitlab { struct _db_issue_curs; }
-namespace gitlab { struct _db_issue_note_curs; }
-namespace gitlab { struct _db_ind_issue_note_curs; }
-namespace gitlab { struct _db_issue_description_curs; }
-namespace gitlab { struct _db_ind_mr_curs; }
-namespace gitlab { struct _db_mr_curs; }
-namespace gitlab { struct _db_mr_note_curs; }
-namespace gitlab { struct _db_ind_mr_note_curs; }
-namespace gitlab { struct _db_mr_description_curs; }
-namespace gitlab { struct _db_user_curs; }
-namespace gitlab { struct _db_ind_user_curs; }
-namespace gitlab { struct _db_milestone_curs; }
-namespace gitlab { struct _db_ind_milestone_curs; }
-namespace gitlab { struct _db_milestone_description_curs; }
-namespace gitlab { struct FHttp_request_header_curs; }
-namespace gitlab { struct FHttp_response_header_curs; }
-namespace gitlab { struct issue_c_issue_note_curs; }
-namespace gitlab { struct mr_c_mr_note_curs; }
-namespace gitlab { struct project_c_issue_curs; }
-namespace gitlab { struct project_c_mr_curs; }
-namespace gitlab {
-    typedef algo::Smallstr50 IssuePkey;
-    typedef algo::Smallstr200 MilestonePkey;
-    typedef algo::Smallstr50 MrPkey;
-    typedef algo::Smallstr50 UserPkey;
-}//pkey typedefs
-namespace gitlab {
-extern const char *gitlab_help;
-extern const char *gitlab_syntax;
-extern FDb _db;
+namespace gitlab { extern struct gitlab::FDb _db; }
+namespace gitlab { // gen:ns_print_struct
 
 // --- gitlab.trace
 #pragma pack(push,1)
@@ -1482,6 +1479,8 @@ struct User { // gitlab.User
 
 // Set all fields to initial values.
 void                 User_Init(gitlab::User& parent);
+} // gen:ns_print_struct
+namespace gitlab { // gen:ns_curstext
 
 struct _db_project_curs {// cursor
     typedef gitlab::FProject ChildType;
@@ -1581,7 +1580,7 @@ struct FHttp_response_header_curs {// cursor
 };
 
 
-struct issue_c_issue_note_curs {// cursor
+struct issue_c_issue_note_curs {// fcurs:gitlab.FIssue.c_issue_note/curs
     typedef gitlab::FIssueNote ChildType;
     gitlab::FIssueNote** elems;
     u32 n_elems;
@@ -1590,7 +1589,7 @@ struct issue_c_issue_note_curs {// cursor
 };
 
 
-struct mr_c_mr_note_curs {// cursor
+struct mr_c_mr_note_curs {// fcurs:gitlab.FMr.c_mr_note/curs
     typedef gitlab::FMrNote ChildType;
     gitlab::FMrNote** elems;
     u32 n_elems;
@@ -1599,7 +1598,7 @@ struct mr_c_mr_note_curs {// cursor
 };
 
 
-struct project_c_issue_curs {// cursor
+struct project_c_issue_curs {// fcurs:gitlab.FProject.c_issue/curs
     typedef gitlab::FIssue ChildType;
     gitlab::FIssue** elems;
     u32 n_elems;
@@ -1608,7 +1607,7 @@ struct project_c_issue_curs {// cursor
 };
 
 
-struct project_c_mr_curs {// cursor
+struct project_c_mr_curs {// fcurs:gitlab.FProject.c_mr/curs
     typedef gitlab::FMr ChildType;
     gitlab::FMr** elems;
     u32 n_elems;
@@ -1616,11 +1615,14 @@ struct project_c_mr_curs {// cursor
     project_c_mr_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-} // end namespace gitlab
+} // gen:ns_curstext
+namespace gitlab { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const gitlab::trace &row);// cfmt:gitlab.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const gitlab::FHttp &row);// cfmt:gitlab.FHttp.String

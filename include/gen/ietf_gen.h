@@ -9,6 +9,7 @@
 
 #pragma once
 //#pragma endinclude
+// gen:ns_enums
 
 // --- ietf_FieldIdEnum
 
@@ -22,14 +23,17 @@ enum ietf_FieldIdEnum {        // ietf.FieldId.value
 
 enum { ietf_FieldIdEnum_N = 5 };
 
+namespace ietf { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace ietf { // gen:ns_field
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace ietf { struct FieldId; }
 namespace ietf { struct Ipv4; }
 namespace ietf { struct Ipport; }
 namespace ietf { struct Ipv4Addr; }
 namespace ietf { struct Protocol; }
-namespace ietf {
-}//pkey typedefs
-namespace ietf {
+namespace ietf { // gen:ns_print_struct
 
 // --- ietf.FieldId
 #pragma pack(push,1)
@@ -172,7 +176,10 @@ struct Protocol { // ietf.Protocol: amc-generated struct for internal purposes
 
 void                 StaticCheck();
 
-} // end namespace ietf
+} // gen:ns_print_struct
+namespace ietf { // gen:ns_func
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const ietf::FieldId &row);// cfmt:ietf.FieldId.String
 inline algo::cstring &operator <<(algo::cstring &str, const ietf::Ipv4 &row);// cfmt:ietf.Ipv4.String

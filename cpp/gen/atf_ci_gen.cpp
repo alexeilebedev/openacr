@@ -64,21 +64,21 @@ const char *atf_ci_syntax =
 " -skipenv:flag\n"
 ;
 } // namespace atf_ci
-namespace atf_ci { // gsymbol:atf_ci/atfdb.cijob
+namespace atf_ci { // gen:ns_gsymbol
     const atfdb::CijobPkey atfdb_cijob_comp("comp");
     const atfdb::CijobPkey atfdb_cijob_memcheck("memcheck");
     const atfdb::CijobPkey atfdb_cijob_normalize("normalize");
-}
-namespace atf_ci { // gsymbol:atf_ci/dev.gitfile
-}
-namespace atf_ci { // gsymbol:atf_ci/dev.scriptfile
+} // gen:ns_gsymbol
+namespace atf_ci { // gen:ns_gsymbol
+} // gen:ns_gsymbol
+namespace atf_ci { // gen:ns_gsymbol
     const char* dev_scriptfile_bin_fix_gen_conflicts("bin/fix-gen-conflicts");
     const char* dev_scriptfile_bin_update_gitfile("bin/update-gitfile");
     const char* dev_scriptfile_bin_update_hdr("bin/update-hdr");
     const char* dev_scriptfile_bin_update_outfile("bin/update-outfile");
     const char* dev_scriptfile_bin_update_scriptfile("bin/update-scriptfile");
-}
-namespace atf_ci {
+} // gen:ns_gsymbol
+namespace atf_ci { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     static void          citest_LoadStatic() __attribute__((nothrow));
@@ -97,7 +97,7 @@ namespace atf_ci {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace atf_ci
+} // gen:ns_print_proto
 
 // --- atf_ci.FBuilddir.base.CopyOut
 // Copy fields out of row

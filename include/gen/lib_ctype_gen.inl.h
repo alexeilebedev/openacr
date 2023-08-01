@@ -1127,7 +1127,8 @@ inline bool lib_ctype::field_zd_fconst_curs_ValidQ(field_zd_fconst_curs &curs) {
 // --- lib_ctype.FField.zd_fconst_curs.Next
 // proceed to next item
 inline void lib_ctype::field_zd_fconst_curs_Next(field_zd_fconst_curs &curs) {
-    curs.row = (*curs.row).zd_fconst_next;
+    lib_ctype::FFconst *next = (*curs.row).zd_fconst_next;
+    curs.row = next;
 }
 
 // --- lib_ctype.FField.zd_fconst_curs.Access

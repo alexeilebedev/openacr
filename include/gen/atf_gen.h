@@ -10,6 +10,7 @@
 #pragma once
 #include "include/gen/algo_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- atf_FieldIdEnum
 
@@ -38,13 +39,16 @@ enum atf_TestresultEnum {                      // atf.Testresult.value
 
 enum { atf_TestresultEnum_N = 6 };
 
+namespace atf { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace atf { // gen:ns_field
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace atf { struct FieldId; }
 namespace atf { struct Protocol; }
 namespace atf { struct Testresult; }
 namespace atf { struct Testrun; }
-namespace atf {
-}//pkey typedefs
-namespace atf {
+namespace atf { // gen:ns_print_struct
 
 // --- atf.FieldId
 #pragma pack(push,1)
@@ -156,7 +160,10 @@ bool                 Testrun_ReadStrptrMaybe(atf::Testrun &parent, algo::strptr 
 void                 Testrun_Init(atf::Testrun& parent);
 // print string representation of atf::Testrun to string LHS, no header -- cprint:atf.Testrun.String
 void                 Testrun_Print(atf::Testrun & row, algo::cstring &str) __attribute__((nothrow));
-} // end namespace atf
+} // gen:ns_print_struct
+namespace atf { // gen:ns_func
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const atf::FieldId &row);// cfmt:atf.FieldId.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf::Testresult &row);// cfmt:atf.Testresult.String

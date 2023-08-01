@@ -9,6 +9,7 @@
 
 #pragma once
 //#pragma endinclude
+// gen:ns_enums
 
 // --- lib_git_FieldIdEnum
 
@@ -18,13 +19,16 @@ enum lib_git_FieldIdEnum {        // lib_git.FieldId.value
 
 enum { lib_git_FieldIdEnum_N = 1 };
 
+namespace lib_git { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace lib_git { // gen:ns_field
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace lib_git { struct trace; }
 namespace lib_git { struct FDb; }
 namespace lib_git { struct FieldId; }
-namespace lib_git {
-}//pkey typedefs
-namespace lib_git {
-extern FDb _db;
+namespace lib_git { extern struct lib_git::FDb _db; }
+namespace lib_git { // gen:ns_print_struct
 
 // --- lib_git.trace
 #pragma pack(push,1)
@@ -98,7 +102,10 @@ bool                 FieldId_ReadStrptrMaybe(lib_git::FieldId &parent, algo::str
 void                 FieldId_Init(lib_git::FieldId& parent);
 // print string representation of lib_git::FieldId to string LHS, no header -- cprint:lib_git.FieldId.String
 void                 FieldId_Print(lib_git::FieldId & row, algo::cstring &str) __attribute__((nothrow));
-} // end namespace lib_git
+} // gen:ns_print_struct
+namespace lib_git { // gen:ns_func
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const lib_git::trace &row);// cfmt:lib_git.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const lib_git::FieldId &row);// cfmt:lib_git.FieldId.String

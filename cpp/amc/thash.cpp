@@ -421,74 +421,63 @@ void amc::tfunc_Thash_Uninit() {
 
 // -----------------------------------------------------------------------------
 
-static bool CursN(amc::FField &field) {
-    int n=0;
-    ind_beg(amc::ctype_c_fcurs_curs,fcurs,*field.p_ctype) {
-        n += field_Get(fcurs) == field.field;
-    }ind_end;
-    return n;
-}
-
 void amc::tfunc_Thash_curs() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    //amc::FField &field = *amc::_db.genfield.p_field;
     Set(R, "$curspararg", ch_N(Subst(R,"$pararg")) ? "*curs.$parname" : "");
 
-    // zero-density hash shouldn't need a cursor
-    if (CursN(field)>0) {
-        Ins(&R, ns.curstext    , "");
-        Ins(&R, ns.curstext    , "struct $Parname_$name_curs {// cursor");
-        Ins(&R, ns.curstext    , "    typedef $Cpptype ChildType;");
-        Ins(&R, ns.curstext    , "    $Partype *parent;");
-        Ins(&R, ns.curstext    , "    int bucket;");
-        Ins(&R, ns.curstext    , "    $Cpptype **prow;");
-        Ins(&R, ns.curstext    , "    $Parname_$name_curs() { parent=NULL; bucket=0; prow=NULL; }");
-        Ins(&R, ns.curstext    , "};");
-        Ins(&R, ns.curstext    , "");
+    Ins(&R, ns.curstext    , "");
+    Ins(&R, ns.curstext    , "struct $Parname_$name_curs {// cursor");
+    Ins(&R, ns.curstext    , "    typedef $Cpptype ChildType;");
+    Ins(&R, ns.curstext    , "    $Partype *parent;");
+    Ins(&R, ns.curstext    , "    int bucket;");
+    Ins(&R, ns.curstext    , "    $Cpptype **prow;");
+    Ins(&R, ns.curstext    , "    $Parname_$name_curs() { parent=NULL; bucket=0; prow=NULL; }");
+    Ins(&R, ns.curstext    , "};");
+    Ins(&R, ns.curstext    , "");
 
-        {
-            amc::FFunc& reset = amc::ind_func_GetOrCreate(Subst(R,"$field_curs.Reset"));
-            Ins(&R, reset.ret  , "void", false);
-            Ins(&R, reset.proto, "$Parname_$name_curs_Reset($Parname_$name_curs &curs, $Partype &parent)", false);
-            Ins(&R, reset.body, "curs.bucket = 0;");
-            Ins(&R, reset.body, "curs.parent = &parent;");
-            Ins(&R, reset.body, "curs.prow = &parent.$name_buckets_elems[0]; // hash never has zero buckets");
-            Ins(&R, reset.body, "while (!*curs.prow) {");
-            Ins(&R, reset.body, "    curs.bucket += 1;");
-            Ins(&R, reset.body, "    if (curs.bucket == parent.$name_buckets_n) break;");
-            Ins(&R, reset.body, "    curs.prow = &parent.$name_buckets_elems[curs.bucket];");
-            Ins(&R, reset.body, "}");
-        }
-
-        {
-            amc::FFunc& curs_validq = amc::ind_func_GetOrCreate(Subst(R,"$field_curs.ValidQ"));
-            curs_validq.inl = true;
-            Ins(&R, curs_validq.comment, "cursor points to valid item");
-            Ins(&R, curs_validq.ret  , "bool", false);
-            Ins(&R, curs_validq.proto, "$Parname_$name_curs_ValidQ($Parname_$name_curs &curs)", false);
-            Ins(&R, curs_validq.body, "return *curs.prow != NULL;");
-        }
-
-        {
-            amc::FFunc& curs_next = amc::ind_func_GetOrCreate(Subst(R,"$field_curs.Next"));
-            curs_next.inl = true;
-            Ins(&R, curs_next.comment, "proceed to next item");
-            Ins(&R, curs_next.ret  , "void", false);
-            Ins(&R, curs_next.proto, "$Parname_$name_curs_Next($Parname_$name_curs &curs)", false);
-            Ins(&R, curs_next.body, "curs.prow = &(*curs.prow)->$name_next;");
-            Ins(&R, curs_next.body, "while (!*curs.prow) {");
-            Ins(&R, curs_next.body, "    curs.bucket += 1;");
-            Ins(&R, curs_next.body, "    if (curs.bucket >= curs.parent->$name_buckets_n) break;");
-            Ins(&R, curs_next.body, "    curs.prow = &curs.parent->$name_buckets_elems[curs.bucket];");
-            Ins(&R, curs_next.body, "}");
-        }
-
-        amc::FFunc& curs_access = amc::ind_func_GetOrCreate(Subst(R,"$field_curs.Access"));
-        curs_access.inl = true;
-        Ins(&R, curs_access.comment, "item access");
-        Ins(&R, curs_access.ret  , "$Cpptype&", false);
-        Ins(&R, curs_access.proto, "$Parname_$name_curs_Access($Parname_$name_curs &curs)", false);
-        Ins(&R, curs_access.body, "return **curs.prow;");
+    {
+        amc::FFunc& reset = amc::ind_func_GetOrCreate(Subst(R,"$field_curs.Reset"));
+        Ins(&R, reset.ret  , "void", false);
+        Ins(&R, reset.proto, "$Parname_$name_curs_Reset($Parname_$name_curs &curs, $Partype &parent)", false);
+        Ins(&R, reset.body, "curs.bucket = 0;");
+        Ins(&R, reset.body, "curs.parent = &parent;");
+        Ins(&R, reset.body, "curs.prow = &parent.$name_buckets_elems[0]; // hash never has zero buckets");
+        Ins(&R, reset.body, "while (!*curs.prow) {");
+        Ins(&R, reset.body, "    curs.bucket += 1;");
+        Ins(&R, reset.body, "    if (curs.bucket == parent.$name_buckets_n) break;");
+        Ins(&R, reset.body, "    curs.prow = &parent.$name_buckets_elems[curs.bucket];");
+        Ins(&R, reset.body, "}");
     }
+
+    {
+        amc::FFunc& curs_validq = amc::ind_func_GetOrCreate(Subst(R,"$field_curs.ValidQ"));
+        curs_validq.inl = true;
+        Ins(&R, curs_validq.comment, "cursor points to valid item");
+        Ins(&R, curs_validq.ret  , "bool", false);
+        Ins(&R, curs_validq.proto, "$Parname_$name_curs_ValidQ($Parname_$name_curs &curs)", false);
+        Ins(&R, curs_validq.body, "return *curs.prow != NULL;");
+    }
+
+    {
+        amc::FFunc& curs_next = amc::ind_func_GetOrCreate(Subst(R,"$field_curs.Next"));
+        curs_next.inl = true;
+        Ins(&R, curs_next.comment, "proceed to next item");
+        Ins(&R, curs_next.ret  , "void", false);
+        Ins(&R, curs_next.proto, "$Parname_$name_curs_Next($Parname_$name_curs &curs)", false);
+        Ins(&R, curs_next.body, "curs.prow = &(*curs.prow)->$name_next;");
+        Ins(&R, curs_next.body, "while (!*curs.prow) {");
+        Ins(&R, curs_next.body, "    curs.bucket += 1;");
+        Ins(&R, curs_next.body, "    if (curs.bucket >= curs.parent->$name_buckets_n) break;");
+        Ins(&R, curs_next.body, "    curs.prow = &curs.parent->$name_buckets_elems[curs.bucket];");
+        Ins(&R, curs_next.body, "}");
+    }
+
+    amc::FFunc& curs_access = amc::ind_func_GetOrCreate(Subst(R,"$field_curs.Access"));
+    curs_access.inl = true;
+    Ins(&R, curs_access.comment, "item access");
+    Ins(&R, curs_access.ret  , "$Cpptype&", false);
+    Ins(&R, curs_access.proto, "$Parname_$name_curs_Access($Parname_$name_curs &curs)", false);
+    Ins(&R, curs_access.body, "return **curs.prow;");
 }

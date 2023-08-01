@@ -12,6 +12,7 @@
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/command_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- acr_compl_BadnessEnum
 
@@ -66,6 +67,13 @@ enum acr_compl_TableIdEnum {                   // acr_compl.TableId.value
 
 enum { acr_compl_TableIdEnum_N = 10 };
 
+namespace acr_compl { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace acr_compl { // gen:ns_field
+extern const char *acr_compl_help;
+extern const char *acr_compl_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace dmmeta { struct Anonfld; }
 namespace acr_compl { struct Completion; }
 namespace dmmeta { struct Ctype; }
@@ -73,6 +81,15 @@ namespace dmmeta { struct Field; }
 namespace acr_compl { struct FCtype; }
 namespace dmmeta { struct Ns; }
 namespace dmmeta { struct Ssimfile; }
+namespace acr_compl { struct ctype_c_field_curs; }
+namespace acr_compl { struct _db_word_curs; }
+namespace acr_compl { struct _db_ctype_curs; }
+namespace acr_compl { struct _db_field_curs; }
+namespace acr_compl { struct _db_ssimfile_curs; }
+namespace acr_compl { struct _db_completion_curs; }
+namespace acr_compl { struct _db_anonfld_curs; }
+namespace acr_compl { struct _db_bh_completion_curs; }
+namespace acr_compl { struct _db_ns_curs; }
 namespace acr_compl { struct Badness; }
 namespace acr_compl { struct FAnonfld; }
 namespace acr_compl { struct FCompletion; }
@@ -84,25 +101,8 @@ namespace acr_compl { struct FSsimfile; }
 namespace acr_compl { struct FieldId; }
 namespace acr_compl { struct Shellqtype; }
 namespace acr_compl { struct TableId; }
-namespace acr_compl { struct ctype_c_field_curs; }
-namespace acr_compl { struct _db_word_curs; }
-namespace acr_compl { struct _db_ctype_curs; }
-namespace acr_compl { struct _db_ind_ctype_curs; }
-namespace acr_compl { struct _db_field_curs; }
-namespace acr_compl { struct _db_ind_field_curs; }
-namespace acr_compl { struct _db_ssimfile_curs; }
-namespace acr_compl { struct _db_ind_ssimfile_curs; }
-namespace acr_compl { struct _db_completion_curs; }
-namespace acr_compl { struct _db_anonfld_curs; }
-namespace acr_compl { struct _db_bh_completion_curs; }
-namespace acr_compl { struct _db_bh_completion_unordcurs; }
-namespace acr_compl { struct _db_ns_curs; }
-namespace acr_compl {
-}//pkey typedefs
-namespace acr_compl {
-extern const char *acr_compl_help;
-extern const char *acr_compl_syntax;
-extern FDb _db;
+namespace acr_compl { extern struct acr_compl::FDb _db; }
+namespace acr_compl { // gen:ns_print_struct
 
 // --- acr_compl.Badness
 struct Badness { // acr_compl.Badness: Trading Session
@@ -924,8 +924,10 @@ bool                 TableId_ReadStrptrMaybe(acr_compl::TableId &parent, algo::s
 void                 TableId_Init(acr_compl::TableId& parent);
 // print string representation of acr_compl::TableId to string LHS, no header -- cprint:acr_compl.TableId.String
 void                 TableId_Print(acr_compl::TableId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace acr_compl { // gen:ns_curstext
 
-struct ctype_c_field_curs {// cursor
+struct ctype_c_field_curs {// fcurs:acr_compl.FCtype.c_field/curs
     typedef acr_compl::FField ChildType;
     acr_compl::FField** elems;
     u32 n_elems;
@@ -1002,11 +1004,14 @@ struct _db_ns_curs {// cursor
     _db_ns_curs(){ parent=NULL; index=0; }
 };
 
-} // end namespace acr_compl
+} // gen:ns_curstext
+namespace acr_compl { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const acr_compl::trace &row);// cfmt:acr_compl.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_compl::FieldId &row);// cfmt:acr_compl.FieldId.String

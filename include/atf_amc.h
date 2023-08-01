@@ -518,6 +518,7 @@ namespace atf_amc { // update-hdr
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_PtraryInsert();
+    // void amctest_PtraryCursor();
 
     // -------------------------------------------------------------------
     // cpp/atf/amc/readstr.cpp
@@ -654,6 +655,7 @@ namespace atf_amc { // update-hdr
     // Insert 3 elements in the list, check if it they are really in the list
     //
     // void amctest_ZdlistInsertHeadNoTail3();
+    // void amctest_ZdlistDelCurs();
 
     // -------------------------------------------------------------------
     // cpp/atf/amc/zslist.cpp

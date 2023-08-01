@@ -13,6 +13,7 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/dmmeta_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- src_hdr_FieldIdEnum
 
@@ -40,32 +41,34 @@ enum src_hdr_TableIdEnum {               // src_hdr.TableId.value
 
 enum { src_hdr_TableIdEnum_N = 10 };
 
+namespace src_hdr { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace src_hdr { // gen:ns_field
+extern const char *src_hdr_help;
+extern const char *src_hdr_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace src_hdr { struct FTargsrc; }
 namespace src_hdr { struct FLicense; }
 namespace src_hdr { struct FNs; }
 namespace src_hdr { struct FTarget; }
+namespace src_hdr { struct _db_targsrc_curs; }
+namespace src_hdr { struct _db_ns_curs; }
+namespace src_hdr { struct _db_nsx_curs; }
+namespace src_hdr { struct _db_license_curs; }
+namespace src_hdr { struct _db_target_curs; }
+namespace src_hdr { struct target_c_targsrc_curs; }
 namespace src_hdr { struct trace; }
 namespace src_hdr { struct FDb; }
 namespace src_hdr { struct FNsx; }
 namespace src_hdr { struct FSrc; }
 namespace src_hdr { struct FieldId; }
 namespace src_hdr { struct TableId; }
-namespace src_hdr { struct _db_targsrc_curs; }
-namespace src_hdr { struct _db_ns_curs; }
-namespace src_hdr { struct _db_ind_ns_curs; }
-namespace src_hdr { struct _db_nsx_curs; }
-namespace src_hdr { struct _db_license_curs; }
-namespace src_hdr { struct _db_ind_license_curs; }
-namespace src_hdr { struct _db_target_curs; }
-namespace src_hdr { struct _db_ind_target_curs; }
-namespace src_hdr { struct target_c_targsrc_curs; }
-namespace src_hdr {
-}//pkey typedefs
-namespace src_hdr {
-extern const char *src_hdr_help;
-extern const char *src_hdr_syntax;
-extern FDb _db;
-extern const char* dev_scriptfile_bin_git_authors; // "bin/git-authors"
+namespace src_hdr { extern struct src_hdr::FDb _db; }
+namespace src_hdr { // gen:ns_gsymbol
+    extern const char* dev_scriptfile_bin_git_authors; // "bin/git-authors"
+} // gen:ns_gsymbol
+namespace src_hdr { // gen:ns_print_struct
 
 // --- src_hdr.trace
 #pragma pack(push,1)
@@ -636,6 +639,8 @@ bool                 TableId_ReadStrptrMaybe(src_hdr::TableId &parent, algo::str
 void                 TableId_Init(src_hdr::TableId& parent);
 // print string representation of src_hdr::TableId to string LHS, no header -- cprint:src_hdr.TableId.String
 void                 TableId_Print(src_hdr::TableId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace src_hdr { // gen:ns_curstext
 
 struct _db_targsrc_curs {// cursor
     typedef src_hdr::FTargsrc ChildType;
@@ -677,7 +682,7 @@ struct _db_target_curs {// cursor
 };
 
 
-struct target_c_targsrc_curs {// cursor
+struct target_c_targsrc_curs {// fcurs:src_hdr.FTarget.c_targsrc/curs
     typedef src_hdr::FTargsrc ChildType;
     src_hdr::FTargsrc** elems;
     u32 n_elems;
@@ -685,11 +690,14 @@ struct target_c_targsrc_curs {// cursor
     target_c_targsrc_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-} // end namespace src_hdr
+} // gen:ns_curstext
+namespace src_hdr { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const src_hdr::trace &row);// cfmt:src_hdr.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const src_hdr::FieldId &row);// cfmt:src_hdr.FieldId.String

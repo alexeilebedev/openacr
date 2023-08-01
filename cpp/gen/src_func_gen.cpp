@@ -94,7 +94,7 @@ src_func::_db_bh_func_curs::~_db_bh_func_curs() {
 
 }
 
-namespace src_func {
+namespace src_func { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     static bool          targsrc_InputMaybe(dev::Targsrc &elem) __attribute__((nothrow));
@@ -118,7 +118,7 @@ namespace src_func {
     // Extract next character from STR and advance IDX
     static u64           sortkey_Nextchar(const src_func::FFunc& func, algo::strptr &str, int &idx) __attribute__((nothrow));
     static void          SizeCheck();
-} // end namespace src_func
+} // gen:ns_print_proto
 
 // --- src_func.FCtypelen.base.CopyOut
 // Copy fields out of row

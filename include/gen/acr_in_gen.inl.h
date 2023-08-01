@@ -1176,7 +1176,8 @@ inline bool acr_in::_db_zd_todo_curs_ValidQ(_db_zd_todo_curs &curs) {
 // --- acr_in.FDb.zd_todo_curs.Next
 // proceed to next item
 inline void acr_in::_db_zd_todo_curs_Next(_db_zd_todo_curs &curs) {
-    curs.row = (*curs.row).zd_todo_next;
+    acr_in::FCtype *next = (*curs.row).zd_todo_next;
+    curs.row = next;
 }
 
 // --- acr_in.FDb.zd_todo_curs.Access
@@ -1200,7 +1201,8 @@ inline bool acr_in::_db_zd_ssimfile_curs_ValidQ(_db_zd_ssimfile_curs &curs) {
 // --- acr_in.FDb.zd_ssimfile_curs.Next
 // proceed to next item
 inline void acr_in::_db_zd_ssimfile_curs_Next(_db_zd_ssimfile_curs &curs) {
-    curs.row = (*curs.row).zd_ssimfile_next;
+    acr_in::FSsimfile *next = (*curs.row).zd_ssimfile_next;
+    curs.row = next;
 }
 
 // --- acr_in.FDb.zd_ssimfile_curs.Access
@@ -1274,7 +1276,8 @@ inline bool acr_in::_db_zd_select_curs_ValidQ(_db_zd_select_curs &curs) {
 // --- acr_in.FDb.zd_select_curs.Next
 // proceed to next item
 inline void acr_in::_db_zd_select_curs_Next(_db_zd_select_curs &curs) {
-    curs.row = (*curs.row).zd_select_next;
+    acr_in::FTuple *next = (*curs.row).zd_select_next;
+    curs.row = next;
 }
 
 // --- acr_in.FDb.zd_select_curs.Access
@@ -1298,7 +1301,8 @@ inline bool acr_in::_db_zd_deselect_curs_ValidQ(_db_zd_deselect_curs &curs) {
 // --- acr_in.FDb.zd_deselect_curs.Next
 // proceed to next item
 inline void acr_in::_db_zd_deselect_curs_Next(_db_zd_deselect_curs &curs) {
-    curs.row = (*curs.row).zd_deselect_next;
+    acr_in::FTuple *next = (*curs.row).zd_deselect_next;
+    curs.row = next;
 }
 
 // --- acr_in.FDb.zd_deselect_curs.Access
@@ -1322,7 +1326,8 @@ inline bool acr_in::_db_zd_related_curs_ValidQ(_db_zd_related_curs &curs) {
 // --- acr_in.FDb.zd_related_curs.Next
 // proceed to next item
 inline void acr_in::_db_zd_related_curs_Next(_db_zd_related_curs &curs) {
-    curs.row = (*curs.row).zd_related_next;
+    acr_in::FCtype *next = (*curs.row).zd_related_next;
+    curs.row = next;
 }
 
 // --- acr_in.FDb.zd_related_curs.Access
@@ -1396,7 +1401,8 @@ inline bool acr_in::_db_zd_targ_visit_curs_ValidQ(_db_zd_targ_visit_curs &curs) 
 // --- acr_in.FDb.zd_targ_visit_curs.Next
 // proceed to next item
 inline void acr_in::_db_zd_targ_visit_curs_Next(_db_zd_targ_visit_curs &curs) {
-    curs.row = (*curs.row).zd_targ_visit_next;
+    acr_in::FTarget *next = (*curs.row).zd_targ_visit_next;
+    curs.row = next;
 }
 
 // --- acr_in.FDb.zd_targ_visit_curs.Access

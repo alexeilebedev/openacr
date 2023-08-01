@@ -13,7 +13,7 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
-namespace lib_json {
+namespace lib_json { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
@@ -21,7 +21,7 @@ namespace lib_json {
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
-} // end namespace lib_json
+} // gen:ns_print_proto
 
 // --- lib_json.trace..Print
 // print string representation of lib_json::trace to string LHS, no header -- cprint:lib_json.trace.String

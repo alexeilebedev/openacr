@@ -14,6 +14,7 @@
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/report_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- atf_comp_FieldIdEnum
 
@@ -39,21 +40,19 @@ enum atf_comp_TableIdEnum {                  // atf_comp.TableId.value
 
 enum { atf_comp_TableIdEnum_N = 8 };
 
+namespace atf_comp { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace atf_comp { // gen:ns_field
+extern const char *atf_comp_help;
+extern const char *atf_comp_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace atfdb { struct Comptest; }
 namespace atfdb { struct Targs; }
 namespace atfdb { struct Tfilt; }
 namespace atfdb { struct Tmsg; }
-namespace atf_comp { struct FComptest; }
-namespace atf_comp { struct trace; }
-namespace atf_comp { struct FDb; }
-namespace atf_comp { struct FTargs; }
-namespace atf_comp { struct FTfilt; }
-namespace atf_comp { struct FTmsg; }
-namespace atf_comp { struct FieldId; }
-namespace atf_comp { struct TableId; }
 namespace atf_comp { struct comptest_zd_tmsg_curs; }
 namespace atf_comp { struct _db_comptest_curs; }
-namespace atf_comp { struct _db_ind_comptest_curs; }
 namespace atf_comp { struct _db_zd_sel_comptest_curs; }
 namespace atf_comp { struct _db_targs_curs; }
 namespace atf_comp { struct _db_tfilt_curs; }
@@ -62,12 +61,16 @@ namespace atf_comp { struct _db_zd_out_tmsg_curs; }
 namespace atf_comp { struct _db_zd_out_comptest_curs; }
 namespace atf_comp { struct _db_zd_out_tfilt_curs; }
 namespace atf_comp { struct _db_zd_out_targs_curs; }
-namespace atf_comp {
-}//pkey typedefs
-namespace atf_comp {
-extern const char *atf_comp_help;
-extern const char *atf_comp_syntax;
-extern FDb _db;
+namespace atf_comp { struct FComptest; }
+namespace atf_comp { struct trace; }
+namespace atf_comp { struct FDb; }
+namespace atf_comp { struct FTargs; }
+namespace atf_comp { struct FTfilt; }
+namespace atf_comp { struct FTmsg; }
+namespace atf_comp { struct FieldId; }
+namespace atf_comp { struct TableId; }
+namespace atf_comp { extern struct atf_comp::FDb _db; }
+namespace atf_comp { // gen:ns_print_struct
 
 // --- atf_comp.FComptest
 // create: atf_comp.FDb.comptest (Lary)
@@ -793,8 +796,10 @@ bool                 TableId_ReadStrptrMaybe(atf_comp::TableId &parent, algo::st
 void                 TableId_Init(atf_comp::TableId& parent);
 // print string representation of atf_comp::TableId to string LHS, no header -- cprint:atf_comp.TableId.String
 void                 TableId_Print(atf_comp::TableId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace atf_comp { // gen:ns_curstext
 
-struct comptest_zd_tmsg_curs {// cursor
+struct comptest_zd_tmsg_curs {// fcurs:atf_comp.FComptest.zd_tmsg/curs
     typedef atf_comp::FTmsg ChildType;
     atf_comp::FTmsg* row;
     comptest_zd_tmsg_curs() {
@@ -811,7 +816,7 @@ struct _db_comptest_curs {// cursor
 };
 
 
-struct _db_zd_sel_comptest_curs {// cursor
+struct _db_zd_sel_comptest_curs {// fcurs:atf_comp.FDb.zd_sel_comptest/curs
     typedef atf_comp::FComptest ChildType;
     atf_comp::FComptest* row;
     _db_zd_sel_comptest_curs() {
@@ -836,7 +841,7 @@ struct _db_tfilt_curs {// cursor
 };
 
 
-struct _db_zd_run_comptest_curs {// cursor
+struct _db_zd_run_comptest_curs {// fcurs:atf_comp.FDb.zd_run_comptest/curs
     typedef atf_comp::FComptest ChildType;
     atf_comp::FComptest* row;
     _db_zd_run_comptest_curs() {
@@ -845,7 +850,7 @@ struct _db_zd_run_comptest_curs {// cursor
 };
 
 
-struct _db_zd_out_tmsg_curs {// cursor
+struct _db_zd_out_tmsg_curs {// fcurs:atf_comp.FDb.zd_out_tmsg/curs
     typedef atf_comp::FTmsg ChildType;
     atf_comp::FTmsg* row;
     _db_zd_out_tmsg_curs() {
@@ -854,7 +859,7 @@ struct _db_zd_out_tmsg_curs {// cursor
 };
 
 
-struct _db_zd_out_comptest_curs {// cursor
+struct _db_zd_out_comptest_curs {// fcurs:atf_comp.FDb.zd_out_comptest/curs
     typedef atf_comp::FComptest ChildType;
     atf_comp::FComptest* row;
     _db_zd_out_comptest_curs() {
@@ -863,7 +868,7 @@ struct _db_zd_out_comptest_curs {// cursor
 };
 
 
-struct _db_zd_out_tfilt_curs {// cursor
+struct _db_zd_out_tfilt_curs {// fcurs:atf_comp.FDb.zd_out_tfilt/curs
     typedef atf_comp::FTfilt ChildType;
     atf_comp::FTfilt* row;
     _db_zd_out_tfilt_curs() {
@@ -872,7 +877,7 @@ struct _db_zd_out_tfilt_curs {// cursor
 };
 
 
-struct _db_zd_out_targs_curs {// cursor
+struct _db_zd_out_targs_curs {// fcurs:atf_comp.FDb.zd_out_targs/curs
     typedef atf_comp::FTargs ChildType;
     atf_comp::FTargs* row;
     _db_zd_out_targs_curs() {
@@ -880,11 +885,14 @@ struct _db_zd_out_targs_curs {// cursor
     }
 };
 
-} // end namespace atf_comp
+} // gen:ns_curstext
+namespace atf_comp { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const atf_comp::trace &row);// cfmt:atf_comp.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_comp::FieldId &row);// cfmt:atf_comp.FieldId.String

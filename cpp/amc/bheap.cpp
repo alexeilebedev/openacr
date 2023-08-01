@@ -513,16 +513,6 @@ void amc::tfunc_Bheap_ElemLtval() {
 
 // -----------------------------------------------------------------------------
 
-static bool HasUnordCursQ(amc::FField &field) {
-    bool has_unord = false;
-    ind_beg(amc::ctype_c_fcurs_curs,fcurs,*field.p_ctype) {
-        if (field_Get(fcurs) == field.field && curs_Get(fcurs)==amcdb_Curs_curs_unordcurs) {
-            has_unord=true;
-        }
-    }ind_end;
-    return has_unord;
-}
-
 void amc::tfunc_Bheap_unordcurs() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
@@ -531,56 +521,53 @@ void amc::tfunc_Bheap_unordcurs() {
     Set(R, "$cursparent", glob ? "_db" : "(*curs.parent)");
     Set(R, "$curspararg", glob ? "" : "(*curs.parent)");
 
-    bool has_unord = HasUnordCursQ(field);
-    if (has_unord) {
-        {
-            Ins(&R, ns.curstext, "");
-            Ins(&R, ns.curstext, "struct $Parname_$name_unordcurs {// unordered cursor -- iterate over heap in arbitrary order");
-            Ins(&R, ns.curstext, "    typedef $Cpptype ChildType;");
-            Ins(&R, ns.curstext, "    $Cpptype** elems;");
-            Ins(&R, ns.curstext, "    u32 n_elems;");
-            Ins(&R, ns.curstext, "    u32 index;");
-            Ins(&R, ns.curstext, "    $Parname_$name_unordcurs() { elems=NULL; n_elems=0; index=0; }");
-            Ins(&R, ns.curstext, "};");
-            Ins(&R, ns.curstext, "");
-        }
+    {
+        Ins(&R, ns.curstext, "");
+        Ins(&R, ns.curstext, "struct $Parname_$name_unordcurs {// unordered cursor -- iterate over heap in arbitrary order");
+        Ins(&R, ns.curstext, "    typedef $Cpptype ChildType;");
+        Ins(&R, ns.curstext, "    $Cpptype** elems;");
+        Ins(&R, ns.curstext, "    u32 n_elems;");
+        Ins(&R, ns.curstext, "    u32 index;");
+        Ins(&R, ns.curstext, "    $Parname_$name_unordcurs() { elems=NULL; n_elems=0; index=0; }");
+        Ins(&R, ns.curstext, "};");
+        Ins(&R, ns.curstext, "");
+    }
 
-        {
-            amc::FFunc& curs_reset = amc::ind_func_GetOrCreate(Subst(R,"$field.unordcurs_Reset"));
-            curs_reset.inl = true;
-            Ins(&R, curs_reset.ret  , "void", false);
-            Ins(&R, curs_reset.proto, "$Parname_$name_unordcurs_Reset($Parname_$name_unordcurs &unordcurs, $Partype &parent)", false);
-            Ins(&R, curs_reset.body, "unordcurs.elems = parent.$name_elems;");
-            Ins(&R, curs_reset.body, "unordcurs.n_elems = parent.$name_n;");
-            Ins(&R, curs_reset.body, "unordcurs.index = 0;");
-        }
+    {
+        amc::FFunc& curs_reset = amc::ind_func_GetOrCreate(Subst(R,"$field.unordcurs_Reset"));
+        curs_reset.inl = true;
+        Ins(&R, curs_reset.ret  , "void", false);
+        Ins(&R, curs_reset.proto, "$Parname_$name_unordcurs_Reset($Parname_$name_unordcurs &unordcurs, $Partype &parent)", false);
+        Ins(&R, curs_reset.body, "unordcurs.elems = parent.$name_elems;");
+        Ins(&R, curs_reset.body, "unordcurs.n_elems = parent.$name_n;");
+        Ins(&R, curs_reset.body, "unordcurs.index = 0;");
+    }
 
-        {
-            amc::FFunc& curs_validq = amc::ind_func_GetOrCreate(Subst(R,"$field.unordcurs_ValidQ"));
-            curs_validq.inl = true;
-            Ins(&R, curs_validq.comment, "cursor points to valid item");
-            Ins(&R, curs_validq.ret  , "bool", false);
-            Ins(&R, curs_validq.proto, "$Parname_$name_unordcurs_ValidQ($Parname_$name_unordcurs &unordcurs)", false);
-            Ins(&R, curs_validq.body, "return unordcurs.index < unordcurs.n_elems;");
-        }
+    {
+        amc::FFunc& curs_validq = amc::ind_func_GetOrCreate(Subst(R,"$field.unordcurs_ValidQ"));
+        curs_validq.inl = true;
+        Ins(&R, curs_validq.comment, "cursor points to valid item");
+        Ins(&R, curs_validq.ret  , "bool", false);
+        Ins(&R, curs_validq.proto, "$Parname_$name_unordcurs_ValidQ($Parname_$name_unordcurs &unordcurs)", false);
+        Ins(&R, curs_validq.body, "return unordcurs.index < unordcurs.n_elems;");
+    }
 
-        {
-            amc::FFunc& curs_next = amc::ind_func_GetOrCreate(Subst(R,"$field.unordcurs_Next"));
-            curs_next.inl = true;
-            Ins(&R, curs_next.comment, "proceed to next item");
-            Ins(&R, curs_next.ret  , "void", false);
-            Ins(&R, curs_next.proto, "$Parname_$name_unordcurs_Next($Parname_$name_unordcurs &unordcurs)", false);
-            Ins(&R, curs_next.body, "unordcurs.index++;");
-        }
+    {
+        amc::FFunc& curs_next = amc::ind_func_GetOrCreate(Subst(R,"$field.unordcurs_Next"));
+        curs_next.inl = true;
+        Ins(&R, curs_next.comment, "proceed to next item");
+        Ins(&R, curs_next.ret  , "void", false);
+        Ins(&R, curs_next.proto, "$Parname_$name_unordcurs_Next($Parname_$name_unordcurs &unordcurs)", false);
+        Ins(&R, curs_next.body, "unordcurs.index++;");
+    }
 
-        {
-            amc::FFunc& curs_access = amc::ind_func_GetOrCreate(Subst(R,"$field.unordcurs_Access"));
-            curs_access.inl = true;
-            Ins(&R, curs_access.comment, "item access");
-            Ins(&R, curs_access.ret  , "$Cpptype&", false);
-            Ins(&R, curs_access.proto, "$Parname_$name_unordcurs_Access($Parname_$name_unordcurs &unordcurs)", false);
-            Ins(&R, curs_access.body, "return *unordcurs.elems[unordcurs.index];");
-        }
+    {
+        amc::FFunc& curs_access = amc::ind_func_GetOrCreate(Subst(R,"$field.unordcurs_Access"));
+        curs_access.inl = true;
+        Ins(&R, curs_access.comment, "item access");
+        Ins(&R, curs_access.ret  , "$Cpptype&", false);
+        Ins(&R, curs_access.proto, "$Parname_$name_unordcurs_Access($Parname_$name_unordcurs &unordcurs)", false);
+        Ins(&R, curs_access.body, "return *unordcurs.elems[unordcurs.index];");
     }
 }
 

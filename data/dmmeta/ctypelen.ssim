@@ -358,7 +358,7 @@ dmmeta.ctypelen  ctype:amc.FCsize  len:60  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:amc.FCstr  len:53  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amc.FCtype  len:768  alignment:8  padbytes:33
 dmmeta.ctypelen  ctype:amc.FCtypelen  len:68  alignment:4  padbytes:3
-dmmeta.ctypelen  ctype:amc.FDb  len:32640  alignment:16  padbytes:418
+dmmeta.ctypelen  ctype:amc.FDb  len:32688  alignment:16  padbytes:434
 dmmeta.ctypelen  ctype:amc.FDispatch  len:168  alignment:8  padbytes:17
 dmmeta.ctypelen  ctype:amc.FDispatchmsg  len:144  alignment:8  padbytes:9
 dmmeta.ctypelen  ctype:amc.FDispctx  len:112  alignment:8  padbytes:0
@@ -378,7 +378,7 @@ dmmeta.ctypelen  ctype:amc.FFcmdline  len:264  alignment:8  padbytes:1
 dmmeta.ctypelen  ctype:amc.FFcmp  len:257  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amc.FFcompact  len:254  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amc.FFconst  len:584  alignment:8  padbytes:13
-dmmeta.ctypelen  ctype:amc.FFcurs  len:205  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:amc.FFcurs  len:232  alignment:8  padbytes:11
 dmmeta.ctypelen  ctype:amc.FFdec  len:128  alignment:8  padbytes:5
 dmmeta.ctypelen  ctype:amc.FFdelay  len:120  alignment:8  padbytes:9
 dmmeta.ctypelen  ctype:amc.FField  len:1168  alignment:8  padbytes:16
@@ -436,7 +436,7 @@ dmmeta.ctypelen  ctype:amc.FTargdep  len:80  alignment:8  padbytes:11
 dmmeta.ctypelen  ctype:amc.FTarget  len:160  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:amc.FTary  len:120  alignment:8  padbytes:1
 dmmeta.ctypelen  ctype:amc.FTclass  len:88  alignment:8  padbytes:4
-dmmeta.ctypelen  ctype:amc.FTcursor  len:204  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:amc.FTcurs  len:205  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amc.FTfunc  len:248  alignment:8  padbytes:12
 dmmeta.ctypelen  ctype:amc.FThash  len:224  alignment:8  padbytes:3
 dmmeta.ctypelen  ctype:amc.FTracefld  len:254  alignment:1  padbytes:0
@@ -463,10 +463,10 @@ dmmeta.ctypelen  ctype:amc_vis.Linkkey  len:16  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:amc_vis.Nodekey  len:12  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:amc_vis.Outrow  len:24  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:amcdb.Bltin  len:207  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:amcdb.Curs  len:204  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:amcdb.Curstype  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amcdb.Gen  len:205  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amcdb.Tclass  len:204  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:amcdb.Tcursor  len:204  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:amcdb.Tcurs  len:205  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amcdb.Tfunc  len:211  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:ams.AlarmSyncMsg  len:16  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:ams.DfltStream  len:12  alignment:1  padbytes:0
@@ -525,13 +525,14 @@ dmmeta.ctypelen  ctype:atf_amc.FAmctest  len:216  alignment:8  padbytes:2
 dmmeta.ctypelen  ctype:atf_amc.FAvl  len:40  alignment:8  padbytes:8
 dmmeta.ctypelen  ctype:atf_amc.FCascdel  len:184  alignment:8  padbytes:15
 dmmeta.ctypelen  ctype:atf_amc.FCstring  len:24  alignment:8  padbytes:0
-dmmeta.ctypelen  ctype:atf_amc.FDb  len:5120  alignment:16  padbytes:95
+dmmeta.ctypelen  ctype:atf_amc.FDb  len:5200  alignment:16  padbytes:107
 dmmeta.ctypelen  ctype:atf_amc.FListtype  len:184  alignment:8  padbytes:13
 dmmeta.ctypelen  ctype:atf_amc.FOptG  len:4  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.FPerfSortString  len:32  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.FTypeA  len:1440  alignment:16  padbytes:24
 dmmeta.ctypelen  ctype:atf_amc.FTypeB  len:40  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:atf_amc.FTypeC  len:136  alignment:8  padbytes:8
+dmmeta.ctypelen  ctype:atf_amc.FTypeD  len:56  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:atf_amc.FTypeK  len:8  alignment:4  padbytes:3
 dmmeta.ctypelen  ctype:atf_amc.FTypeS  len:192  alignment:8  padbytes:8
 dmmeta.ctypelen  ctype:atf_amc.FTypeT  len:24  alignment:8  padbytes:0

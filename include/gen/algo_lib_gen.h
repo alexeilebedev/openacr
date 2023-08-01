@@ -11,6 +11,7 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/dmmeta_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- algo_lib_FieldIdEnum
 
@@ -54,12 +55,36 @@ enum algo_lib_TableIdEnum {                       // algo_lib.TableId.value
 
 enum { algo_lib_TableIdEnum_N = 1 };
 
+namespace algo_lib { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace algo_lib { // gen:ns_field
+struct lpool_Lpblock {
+    lpool_Lpblock* next;
+};
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace dmmeta { struct Dispsigcheck; }
 namespace dmmeta { struct Logcat; }
 namespace algo_lib { struct Replscope; }
 namespace algo_lib { struct FTxtrow; }
 namespace algo_lib { struct FTxttbl; }
 namespace algo_lib { struct Regx; }
+namespace algo_lib { struct Bitset_ary_curs; }
+namespace algo_lib { struct parsecsv_ary_tok_curs; }
+namespace algo_lib { struct _db_temp_strings_curs; }
+namespace algo_lib { struct _db_imtable_curs; }
+namespace algo_lib { struct _db_bh_timehook_curs; }
+namespace algo_lib { struct _db_dispsigcheck_curs; }
+namespace algo_lib { struct _db_imdb_curs; }
+namespace algo_lib { struct _db_logcat_curs; }
+namespace algo_lib { struct txtrow_c_txtcell_curs; }
+namespace algo_lib { struct txttbl_c_txtrow_curs; }
+namespace algo_lib { struct InTextFile_temp_buf_curs; }
+namespace algo_lib { struct regx_state_curs; }
+namespace algo_lib { struct regxparse_ary_expr_curs; }
+namespace algo_lib { struct state_ch_class_curs; }
+namespace algo_lib { struct replscope_ind_replvar_curs; }
+namespace algo_lib { struct tabulate_width_curs; }
 namespace algo_lib { struct Bitset; }
 namespace algo_lib { struct Cmdline; }
 namespace algo_lib { struct CsvParse; }
@@ -89,37 +114,13 @@ namespace algo_lib { struct ShHdr; }
 namespace algo_lib { struct Srng; }
 namespace algo_lib { struct TableId; }
 namespace algo_lib { struct Tabulate; }
-namespace algo_lib { struct Bitset_ary_curs; }
-namespace algo_lib { struct parsecsv_ary_tok_curs; }
-namespace algo_lib { struct _db_temp_strings_curs; }
-namespace algo_lib { struct _db_imtable_curs; }
-namespace algo_lib { struct _db_ind_imtable_curs; }
-namespace algo_lib { struct _db_bh_timehook_curs; }
-namespace algo_lib { struct _db_bh_timehook_unordcurs; }
-namespace algo_lib { struct _db_dispsigcheck_curs; }
-namespace algo_lib { struct _db_ind_dispsigcheck_curs; }
-namespace algo_lib { struct _db_imdb_curs; }
-namespace algo_lib { struct _db_ind_imdb_curs; }
-namespace algo_lib { struct _db_logcat_curs; }
-namespace algo_lib { struct _db_ind_logcat_curs; }
-namespace algo_lib { struct txtrow_c_txtcell_curs; }
-namespace algo_lib { struct txttbl_c_txtrow_curs; }
-namespace algo_lib { struct InTextFile_temp_buf_curs; }
-namespace algo_lib { struct regx_state_curs; }
-namespace algo_lib { struct regxparse_ary_expr_curs; }
-namespace algo_lib { struct state_ch_class_curs; }
-namespace algo_lib { struct replscope_ind_replvar_curs; }
-namespace algo_lib { struct tabulate_width_curs; }
-namespace algo_lib {
-}//pkey typedefs
-namespace algo_lib {
-typedef void (*timehook_hook_hook)(void* userctx, algo_lib::FTimehook& arg);
-struct lpool_Lpblock {
-    lpool_Lpblock* next;
-};
-extern FDb _db;
-typedef void (*_db_h_fatalerror_hook)(void* userctx);
-typedef void (*iohook_callback_hook)(void* userctx, algo_lib::FIohook& arg);
+namespace algo_lib { extern struct algo_lib::FDb _db; }
+namespace algo_lib { // hook_fcn_typedef
+    typedef void (*timehook_hook_hook)(void* userctx, algo_lib::FTimehook& arg); // hook:algo_lib.FTimehook.hook
+    typedef void (*_db_h_fatalerror_hook)(void* userctx); // hook:algo_lib.FDb.h_fatalerror
+    typedef void (*iohook_callback_hook)(void* userctx, algo_lib::FIohook& arg); // hook:algo_lib.FIohook.callback
+} // hook_decl
+namespace algo_lib { // gen:ns_print_struct
 
 // --- algo_lib.Bitset
 struct Bitset { // algo_lib.Bitset
@@ -1954,6 +1955,8 @@ void                 Tabulate_Init(algo_lib::Tabulate& tabulate);
 void                 Tabulate_Uninit(algo_lib::Tabulate& tabulate) __attribute__((nothrow));
 // print string representation of algo_lib::Tabulate to string LHS, no header -- cprint:algo_lib.Tabulate.String
 void                 Tabulate_Print(algo_lib::Tabulate & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace algo_lib { // gen:ns_curstext
 
 struct Bitset_ary_curs {// cursor
     typedef u64 ChildType;
@@ -2025,7 +2028,7 @@ struct _db_logcat_curs {// cursor
 };
 
 
-struct txtrow_c_txtcell_curs {// cursor
+struct txtrow_c_txtcell_curs {// fcurs:algo_lib.FTxtrow.c_txtcell/curs
     typedef algo_lib::FTxtcell ChildType;
     algo_lib::FTxtcell** elems;
     u32 n_elems;
@@ -2034,7 +2037,7 @@ struct txtrow_c_txtcell_curs {// cursor
 };
 
 
-struct txttbl_c_txtrow_curs {// cursor
+struct txttbl_c_txtrow_curs {// fcurs:algo_lib.FTxttbl.c_txtrow/curs
     typedef algo_lib::FTxtrow ChildType;
     algo_lib::FTxtrow** elems;
     u32 n_elems;
@@ -2095,7 +2098,10 @@ struct tabulate_width_curs {// cursor
     tabulate_width_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-} // end namespace algo_lib
+} // gen:ns_curstext
+namespace algo_lib { // gen:ns_func
+} // gen:ns_func
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const algo_lib::CsvParse &row);// cfmt:algo_lib.CsvParse.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo_lib::ErrorX &row);// cfmt:algo_lib.ErrorX.String

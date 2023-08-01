@@ -15,6 +15,7 @@
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/dev_gen.h"
 //#pragma endinclude
+// gen:ns_enums
 
 // --- src_func_FieldIdEnum
 
@@ -44,8 +45,26 @@ enum src_func_TableIdEnum {                   // src_func.TableId.value
 
 enum { src_func_TableIdEnum_N = 12 };
 
+namespace src_func { // gen:ns_pkeytypedef
+} // gen:ns_pkeytypedef
+namespace src_func { // gen:ns_field
+extern const char *src_func_help;
+extern const char *src_func_syntax;
+} // gen:ns_field
+// gen:ns_fwddecl2
 namespace src_func { struct FTargsrc; }
 namespace src_func { struct FTarget; }
+namespace src_func { struct _db_genprefix_curs; }
+namespace src_func { struct _db_targsrc_curs; }
+namespace src_func { struct _db_target_curs; }
+namespace src_func { struct _db_func_curs; }
+namespace src_func { struct _db_bh_func_curs; }
+namespace src_func { struct _db_dispatch_curs; }
+namespace src_func { struct _db_fstep_curs; }
+namespace src_func { struct _db_gstatic_curs; }
+namespace src_func { struct _db_ctypelen_curs; }
+namespace src_func { struct target_cd_targsrc_curs; }
+namespace src_func { struct targsrc_zd_func_curs; }
 namespace src_func { struct FCtypelen; }
 namespace src_func { struct trace; }
 namespace src_func { struct FDb; }
@@ -56,28 +75,8 @@ namespace src_func { struct FGenprefix; }
 namespace src_func { struct FGstatic; }
 namespace src_func { struct FieldId; }
 namespace src_func { struct TableId; }
-namespace src_func { struct _db_genprefix_curs; }
-namespace src_func { struct _db_targsrc_curs; }
-namespace src_func { struct _db_target_curs; }
-namespace src_func { struct _db_ind_target_curs; }
-namespace src_func { struct _db_func_curs; }
-namespace src_func { struct _db_ind_func_curs; }
-namespace src_func { struct _db_bh_func_curs; }
-namespace src_func { struct _db_bh_func_unordcurs; }
-namespace src_func { struct _db_dispatch_curs; }
-namespace src_func { struct _db_fstep_curs; }
-namespace src_func { struct _db_gstatic_curs; }
-namespace src_func { struct _db_ind_genprefix_curs; }
-namespace src_func { struct _db_ctypelen_curs; }
-namespace src_func { struct _db_ind_ctypelen_curs; }
-namespace src_func { struct target_cd_targsrc_curs; }
-namespace src_func { struct targsrc_zd_func_curs; }
-namespace src_func {
-}//pkey typedefs
-namespace src_func {
-extern const char *src_func_help;
-extern const char *src_func_syntax;
-extern FDb _db;
+namespace src_func { extern struct src_func::FDb _db; }
+namespace src_func { // gen:ns_print_struct
 
 // --- src_func.FCtypelen
 // create: src_func.FDb.ctypelen (Lary)
@@ -930,6 +929,8 @@ bool                 TableId_ReadStrptrMaybe(src_func::TableId &parent, algo::st
 void                 TableId_Init(src_func::TableId& parent);
 // print string representation of src_func::TableId to string LHS, no header -- cprint:src_func.TableId.String
 void                 TableId_Print(src_func::TableId & row, algo::cstring &str) __attribute__((nothrow));
+} // gen:ns_print_struct
+namespace src_func { // gen:ns_curstext
 
 struct _db_genprefix_curs {// cursor
     typedef src_func::FGenprefix ChildType;
@@ -1007,10 +1008,10 @@ struct _db_ctypelen_curs {// cursor
 };
 
 
-struct target_cd_targsrc_curs {// cursor
+struct target_cd_targsrc_curs {// fcurs:src_func.FTarget.cd_targsrc/curs
     typedef src_func::FTargsrc ChildType;
     src_func::FTargsrc* row;
-    src_func::FTargsrc* head;
+    src_func::FTargsrc** head; // address of head element
     target_cd_targsrc_curs() {
         row = NULL;
         head = NULL;
@@ -1018,7 +1019,7 @@ struct target_cd_targsrc_curs {// cursor
 };
 
 
-struct targsrc_zd_func_curs {// cursor
+struct targsrc_zd_func_curs {// fcurs:src_func.FTargsrc.zd_func/curs
     typedef src_func::FFunc ChildType;
     src_func::FFunc* row;
     targsrc_zd_func_curs() {
@@ -1026,11 +1027,14 @@ struct targsrc_zd_func_curs {// cursor
     }
 };
 
-} // end namespace src_func
+} // gen:ns_curstext
+namespace src_func { // gen:ns_func
+} // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
+// gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const src_func::trace &row);// cfmt:src_func.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const src_func::FieldId &row);// cfmt:src_func.FieldId.String
