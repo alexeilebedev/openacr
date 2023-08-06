@@ -13,3 +13,12 @@ lock/
 /tags
 temp/
 vmlinux*
+
+# ignore some editor and linters temp files
+.clangd
+compile_commands.json
+.cache/
+compile_flags.txt
+.vscode/
+.ccls
+.ccls-cache/
