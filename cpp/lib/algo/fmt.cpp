@@ -1836,10 +1836,11 @@ static inline int _PrintQuotedChar(char c, char *buf, char quote_char) {
             buf[1]='r';
             n=2;
         } else {
+            unsigned x = c&0xff;
             buf[0]='\\';
-            buf[1]='0' + ((u32(c)>>6) & 7);
-            buf[2]='0' + ((u32(c)>>3) & 7);
-            buf[3]='0' + ((u32(c)>>0) & 7);
+            buf[1]='0' + ((x>>6) & 7);
+            buf[2]='0' + ((x>>3) & 7);
+            buf[3]='0' + ((x>>0) & 7);
             n=4;
         }
     } else {
