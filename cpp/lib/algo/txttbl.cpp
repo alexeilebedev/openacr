@@ -39,7 +39,7 @@ static algo_TextJustEnum DefaultJust(algo_lib::FTxttbl &txttbl, u32 col) {
 }
 
 // Add new cell to the given row.
-algo_lib::FTxtcell &algo_lib::AddCell(algo_lib::FTxtrow &txtrow, strptr title, algo_TextJustEnum justify, int span) {
+algo_lib::FTxtcell &algo_lib::AddCell(algo_lib::FTxtrow &txtrow, algo::strptr title, algo_TextJustEnum justify, int span) {
     algo_lib::FTxtcell &txtcell = algo_lib::txtcell_Alloc();
     txtcell.p_txtrow = &txtrow;
     txtcell.justify = justify;
@@ -50,7 +50,7 @@ algo_lib::FTxtcell &algo_lib::AddCell(algo_lib::FTxtrow &txtrow, strptr title, a
     return txtcell;
 }
 
-algo_lib::FTxtcell &algo_lib::AddCell(algo_lib::FTxtrow &txtrow, strptr title, algo_TextJustEnum justify) {
+algo_lib::FTxtcell &algo_lib::AddCell(algo_lib::FTxtrow &txtrow, algo::strptr title, algo_TextJustEnum justify) {
     return AddCell(txtrow, title, justify, 1);
 }
 
@@ -82,17 +82,17 @@ algo_lib::FTxtcell &algo_lib::AddCellEx(algo_lib::FTxttbl &txttbl) {
 // Text table is a table with rows; Each row has an array of cells.
 // Each call has text, col span, text justification, and optional style (color).
 // Add column to the last row of table.
-void algo_lib::AddCol(algo_lib::FTxttbl &txttbl, strptr col, algo_TextJustEnum justify) {
+void algo_lib::AddCol(algo_lib::FTxttbl &txttbl, algo::strptr col, algo_TextJustEnum justify) {
     algo_lib::FTxtcell &txtcell = AddCellEx(txttbl);
     txtcell.text    = col;
     txtcell.justify = justify;
 }
 
-void algo_lib::AddCol(algo_lib::FTxttbl &txttbl, strptr col) {
+void algo_lib::AddCol(algo_lib::FTxttbl &txttbl, algo::strptr col) {
     AddCol(txttbl, col, algo_TextJust_j_left);
 }
 
-cstring &algo_lib::AddCell(algo_lib::FTxttbl &txttbl) {
+algo::cstring &algo_lib::AddCell(algo_lib::FTxttbl &txttbl) {
     return AddCellEx(txttbl).text;
 }
 

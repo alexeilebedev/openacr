@@ -74,10 +74,10 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
     //
     bool URL_ReadStrptrMaybe(URL &out, algo::strptr str);
     bool Ipmask_ReadStrptrMaybe(Ipmask &row, algo::strptr str);
-    void Ptr_Print(void *ptr, cstring &out);
+    void Ptr_Print(void *ptr, algo::cstring &out);
 
     // pads with zeros on the left so that at least 'atleast' characters are output.
-    void i64_PrintPadLeft(i64 num, cstring &out, int atleast);
+    void i64_PrintPadLeft(i64 num, algo::cstring &out, int atleast);
 
     // Assuming SRC is a number, Transfer SRC to OUT, inserting
     // commas between groups of 3 numbers.
@@ -87,7 +87,7 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
     // 3333 -> 3,333
     // 4567.3 -> 4,567.3
     // 1.11111 -> 1.11111
-    void strptr_PrintWithCommas(strptr src, cstring &out);
+    void strptr_PrintWithCommas(strptr src, algo::cstring &out);
 
     // Assuming STR is a number, remove any unnecessary characters from the right of it.
     // Unnecessary characters are trailing zeros after a dot.
@@ -118,10 +118,10 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
     // If OMIT_ZEROS is specified, trailing zeros that are safe to omit are omitted.
     // If COMMAS is specified, the large numbers are printed in groups of 3 digits
     // with commas between them.
-    void double_PrintPrec(double d, cstring &out, int precision, bool omit_zeros, bool commas);
+    void double_PrintPrec(double d, algo::cstring &out, int precision, bool omit_zeros, bool commas);
 
     // Print string, replacing '_x' with 'X', and capitalizing first word.
-    void strptr_PrintCamel(algo::strptr str, cstring& out);
+    void strptr_PrintCamel(algo::strptr str, algo::cstring& out);
 
     // Convert CamelCase to lower_under.
     // A consecutive run of caps gets a single leading underscore.
@@ -130,50 +130,50 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
     // Example: "Abcd" -> "abcd"
     // Example: "BBOPrice" -> "bboprice"
     // Example: "SymbolID" -> "symbol_id"
-    void strptr_PrintLowerUnder(algo::strptr str, cstring &out);
+    void strptr_PrintLowerUnder(algo::strptr str, algo::cstring &out);
 
     // Output string STR to OUT changing all characters to uppercase.
-    void strptr_ToUpper(algo::strptr str, cstring& out);
-    void u128_PrintHex(u128 value, cstring &out, bool prefix);
-    void u64_PrintHex(u64 value, cstring &out, int atleast, bool prefix,  bool caps);
+    void strptr_ToUpper(algo::strptr str, algo::cstring& out);
+    void u128_PrintHex(u128 value, algo::cstring &out, bool prefix);
+    void u64_PrintHex(u64 value, algo::cstring &out, int atleast, bool prefix,  bool caps);
 
     // Print value VALUE to string OUT,
     // producing least ATLEAST hex characters.
     // Include prefix 0x.
-    void u64_PrintHex(u64 value, cstring &out, int atleast);
+    void u64_PrintHex(u64 value, algo::cstring &out, int atleast);
 
     // Print value VALUE to string OUT,
     // producing least ATLEAST hex characters.
     // if PREFIX is specified, include prefix 0x.
-    void u64_PrintHex(u64 value, cstring &out, int atleast, bool prefix);
+    void u64_PrintHex(u64 value, algo::cstring &out, int atleast, bool prefix);
 
     // print character as c++ character, surrounded by single quotes
     // and properly escaped.
-    void char_PrintCppSingleQuote(int c, cstring &out);
+    void char_PrintCppSingleQuote(int c, algo::cstring &out);
     void memptr_Print(memptr ary, algo::cstring &out);
 
     // print 64 bytes per line
-    void memptr_PrintHex(memptr bytes, cstring &str);
+    void memptr_PrintHex(memptr bytes, algo::cstring &str);
 
     // prints a character suitable for appearance inside an XML string.
     // character is either printed as-is, or is escaped so that its meaning does not change.
-    void char_PrintXml(char c, cstring &out, bool quoted);
+    void char_PrintXml(char c, algo::cstring &out, bool quoted);
 
     // Print string NAME as a TeX identifier to OUT, converting digits to letters
     // (0 -> zero, etc) and squashing other characters not belonging to TeX
     // identifier character class
-    void strptr_PrintTexIdent(strptr name, cstring &out);
+    void strptr_PrintTexIdent(strptr name, algo::cstring &out);
 
     // print STR to OUT, escaping TeX characters that switch modes
     // (_, #, &, $)
-    void strptr_PrintTexString(strptr str, cstring &out);
+    void strptr_PrintTexString(strptr str, algo::cstring &out);
 
     // Print string using XML rules.
-    void strptr_PrintXml(algo::strptr s, cstring &out, bool quoted);
+    void strptr_PrintXml(algo::strptr s, algo::cstring &out, bool quoted);
 
     // Append N instances of character C to string OUT.
-    void char_PrintNTimes(char c, cstring &out, int n);
-    void strptr_PrintAligned(algo::strptr str, cstring &out, int nplaces, algo::TextJust align, char c);
+    void char_PrintNTimes(char c, algo::cstring &out, int n);
+    void strptr_PrintAligned(algo::strptr str, algo::cstring &out, int nplaces, algo::TextJust align, char c);
     void cstring_Print(algo::cstring &row, algo::cstring &str);
     void strptr_Print(const algo::strptr &row, algo::cstring &str);
 
@@ -183,9 +183,9 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
     // print value*100
     // Example:
     // double_PrintPercent(0.334, str, 1) -> "33.4%"
-    void double_PrintPercent(double value, cstring &str, int prec);
-    void i32_Range_Print(algo::i32_Range &r, cstring &o);
-    void double_PrintWithCommas(double value, cstring &str, int prec);
+    void double_PrintPercent(double value, algo::cstring &str, int prec);
+    void i32_Range_Print(algo::i32_Range &r, algo::cstring &o);
+    void double_PrintWithCommas(double value, algo::cstring &str, int prec);
 
     // ignore:bigret
     algo::cstring double_PrintWithCommas(double value, int prec);
@@ -226,8 +226,8 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
     // %x     Print milliseconds with 3 decimal places
     // %-     Print - sign if timespec is negative
     // %%     Print % sign
-    void TimeStruct_Print(const TimeStruct &time, cstring &str, const algo::strptr &spec);
-    void Tuple_Print(algo::Tuple &row_, cstring &str);
+    void TimeStruct_Print(const TimeStruct &time, algo::cstring &str, const algo::strptr &spec);
+    void Tuple_Print(algo::Tuple &row_, algo::cstring &str);
     void Bool_Print(algo::Bool row, algo::cstring &str);
     void UnDiff_Print(UnDiff row, algo::cstring &str);
     void UnixDiff_Print(UnixDiff row, algo::cstring &str);
@@ -244,23 +244,23 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
     // If QUOTE is 0, the need for quotes and the type of quote is determined automatically.
     // If it is any other value, then that type of quote is used
     // According to the CSV standard, the quote itself is the escape character.
-    void strptr_PrintCsv(algo::strptr str, cstring &out, char quote);
+    void strptr_PrintCsv(algo::strptr str, algo::cstring &out, char quote);
 
     // Print CSV field, auto-determine quotes
-    void strptr_PrintCsv(algo::strptr str, cstring &out);
-    void URL_Print(algo::URL &url, cstring &str);
+    void strptr_PrintCsv(algo::strptr str, algo::cstring &out);
+    void URL_Print(algo::URL &url, algo::cstring &str);
 
     // Append STR to OUT, and pad remainder with character FILL
-    void strptr_PrintPadRight(algo::strptr str, cstring &out, int nplaces, char fill);
+    void strptr_PrintPadRight(algo::strptr str, algo::cstring &out, int nplaces, char fill);
 
     // Append STR to OUT, and pad remainder with space characters
-    void strptr_PrintPadRight(algo::strptr str, cstring &out, int nplaces);
+    void strptr_PrintPadRight(algo::strptr str, algo::cstring &out, int nplaces);
 
     // Append STR to OUT, padding start with character FILL
-    void strptr_PrintPadLeft(algo::strptr str, cstring &out, int nplaces, char fill);
+    void strptr_PrintPadLeft(algo::strptr str, algo::cstring &out, int nplaces, char fill);
 
     // Append STR to OUT, padding start with spaces.
-    void strptr_PrintPadLeft(algo::strptr str, cstring &out, int nplaces);
+    void strptr_PrintPadLeft(algo::strptr str, algo::cstring &out, int nplaces);
 
     // Append STR to OUT as an SQL string using quote character Q.
     // Escaped characters:
@@ -271,9 +271,9 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
     // \n
     // \r
     // \t
-    void strptr_PrintSql(algo::strptr str, cstring &out, char q);
-    void strptr_PrintSql(algo::strptr str, cstring &out);
-    void Attr_Print(algo::Attr &attr, cstring &str);
+    void strptr_PrintSql(algo::strptr str, algo::cstring &out, char q);
+    void strptr_PrintSql(algo::strptr str, algo::cstring &out);
+    void Attr_Print(algo::Attr &attr, algo::cstring &str);
 
     // Print a string suitable for parsing with Tuple
     // If the string doesn't need quotes, it is printed as-is.
@@ -285,7 +285,7 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
 
     // copy string B to TO, using ORIG as a case template
     // I.e. PrintCopyCase("AbcD", to, "somestring") -> "SomEstring"
-    void strptr_PrintCopyCase(const algo::strptr &orig, cstring &to, const algo::strptr &b);
+    void strptr_PrintCopyCase(const algo::strptr &orig, algo::cstring &to, const algo::strptr &b);
     bool Tuple_ReadStrptrMaybe(Tuple &row, algo::strptr s);
 
     // T             target tuple. the tuple is not emptied before parsing.
@@ -312,38 +312,38 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
     bool Charset_ReadStrptrMaybe(algo::Charset &lhs, strptr rhs);
 
     // Print STR to OUT in a way that's acceptable as input for bash.
-    void strptr_PrintBash(strptr str, cstring &out);
+    void strptr_PrintBash(strptr str, algo::cstring &out);
 
     // Escape S according to bash rules and return result
     tempstr strptr_ToBash(strptr str);
 
     // encode uri component.
     // before ? use plus=false (no + substitution by space)
-    void strptr_PrintUri(strptr str, cstring &out, bool plus);
+    void strptr_PrintUri(strptr str, algo::cstring &out, bool plus);
 
     // Print string, escaping characters in a way suitable for graphviz dot format
-    void strptr_PrintDot(strptr s, cstring &out);
+    void strptr_PrintDot(strptr s, algo::cstring &out);
 
     // print binary octet string as hex
-    void Sha1sig_Print(algo::Sha1sig &sha1sig, cstring &out);
+    void Sha1sig_Print(algo::Sha1sig &sha1sig, algo::cstring &out);
     bool Sha1sig_ReadStrptrMaybe(algo::Sha1sig &sha1sig, algo::strptr str);
 
     // Write character C into string OUT, using C++ character escapement rules
     // QUOTE_CHAR also gets escaped.
-    void char_PrintCppEsc(char c, cstring &out, char quote_char);
+    void char_PrintCppEsc(char c, algo::cstring &out, char quote_char);
 
     // Print STR, surrounded by quotes as C++ string
     // surrounded by QUOTE_CHAR quotes, to buffer OUT.
     // All string characters are escaped using char_PrintCppEsc.
-    void strptr_PrintCppQuoted(algo::strptr str, cstring &out, char quote_char);
+    void strptr_PrintCppQuoted(algo::strptr str, algo::cstring &out, char quote_char);
 
     // Print STR as a C++ string to OUT.
-    void strptr_PrintCpp(algo::strptr str, cstring &out);
+    void strptr_PrintCpp(algo::strptr str, algo::cstring &out);
 
     // Print STR as a valid SSIM key/value to OUT.
     // SSIM tokens use quotes only when the printed value contains
     // characters outside of the 'safe' set a-zA-Z0-9_;&*^%$@.!:,+/-
-    void strptr_PrintSsim(algo::strptr str, cstring &out);
+    void strptr_PrintSsim(algo::strptr str, algo::cstring &out);
 
     // Begin append key/value to string LHS
     int BeginKeyval(cstring &lhs, const strptr &name);
@@ -356,11 +356,11 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
 
     // Append key-value pair NAME:VALUE to string STR, and remove all
     // characters from VALUE (used by amc)
-    void PrintAttrSpaceReset(cstring &str, const algo::strptr &name, cstring &value);
+    void PrintAttrSpaceReset(cstring &str, const algo::strptr &name, algo::cstring &value);
 
     // Append key-value pair NAME:VALUE to string STR,
     // and remove all characters from VALUE (used by amc)
-    void PrintAttrSpaceReset(cstring &str, const char *name, cstring &value);
+    void PrintAttrSpaceReset(cstring &str, const char *name, algo::cstring &value);
 
     // Convert VALUE to a string, encoded as a u64.
     // Value must be >=0 and <100000000.
@@ -404,7 +404,7 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
 
     // Print a string as a classic regex, escaping all special
     // characters. This regex will only match the specified string.
-    void strptr_PrintRegxSql(algo::strptr value, cstring &str);
+    void strptr_PrintRegxSql(algo::strptr value, algo::cstring &str);
     void WDiff_Print(algo::WDiff row, algo::cstring &str);
     void WTime_Print(algo::WTime row, algo::cstring &str);
     bool WDiff_ReadStrptrMaybe(algo::WDiff &parent, algo::strptr in_str);
@@ -449,7 +449,7 @@ private:
     }
 };
 
-template<class Val> inline cstring &operator <<(cstring &lhs, const Keyval_<Val> &kv) {
+template<class Val> inline algo::cstring &operator <<(algo::cstring &lhs, const Keyval_<Val> &kv) {
     int start=algo::BeginKeyval(lhs,kv.key);
     lhs<<kv.val;
     return algo::EndKeyval(lhs,start);

@@ -940,10 +940,10 @@ namespace amc { // update-hdr
     bool ExternStepQ(amc::FFstep &fstep);
 
     // add text to c++ body of class
-    void InsStruct(algo_lib::Replscope &R, amc::FCtype *ctype, const strptr &text);
+    void InsStruct(algo_lib::Replscope &R, amc::FCtype *ctype, const algo::strptr &text);
 
     // Insert variable declaration into body of struct corresponding to CTYPE,.
-    void InsVar(algo_lib::Replscope &R, amc::FCtype *ctype, const strptr &type, const strptr &name, const strptr &dflt, const strptr &comment);
+    void InsVar(algo_lib::Replscope &R, amc::FCtype *ctype, const algo::strptr &type, const algo::strptr &name, const algo::strptr &dflt, const algo::strptr &comment);
 
     // True if ctype can be read from string
     bool ConstructFromStringQ(amc::FCtype &ctype);

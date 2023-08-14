@@ -962,7 +962,7 @@ int algo::SetBlockingMode(Fildes fildes, bool blocking) NOTHROW {
 // If PATH is an existing path, leave it unchanged
 // On Windows, If PATH.EXE is an existing path, return that
 // Return true if file exists
-bool algo_lib::TryExeSuffix(cstring &path) {
+bool algo_lib::TryExeSuffix(algo::cstring &path) {
     bool ret = FileQ(path);
 #ifdef WIN32
     if (!ret && ReadLink(path)=="") {
@@ -1002,7 +1002,7 @@ static tempstr PathSearch(strptr fname) {
 // If FNAME is an absolute path, don't perform a search
 // If FNAME is a relative path, perform a search using the PATH environment
 // the first executable file that's found is the result.
-void algo_lib::ResolveExecFname(cstring &fname) {
+void algo_lib::ResolveExecFname(algo::cstring &fname) {
     if (!AbsolutePathQ(fname)) {
         if (algo_lib::TryExeSuffix(fname)) {
             // all good

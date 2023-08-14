@@ -55,147 +55,146 @@ enum dmmeta_FieldIdEnum {                        // dmmeta.FieldId.value
     ,dmmeta_FieldId_genop                 = 14
     ,dmmeta_FieldId_order                 = 15
     ,dmmeta_FieldId_minmax                = 16
-    ,dmmeta_FieldId_fwddecl               = 17
-    ,dmmeta_FieldId_gen_using             = 18
-    ,dmmeta_FieldId_dflt                  = 19
-    ,dmmeta_FieldId_cppdflt               = 20
-    ,dmmeta_FieldId_ssimdflt              = 21
-    ,dmmeta_FieldId_initmemset            = 22
-    ,dmmeta_FieldId_isstruct              = 23
-    ,dmmeta_FieldId_cfmt                  = 24
-    ,dmmeta_FieldId_strfmt                = 25
-    ,dmmeta_FieldId_printfmt              = 26
-    ,dmmeta_FieldId_read                  = 27
-    ,dmmeta_FieldId_print                 = 28
-    ,dmmeta_FieldId_sep                   = 29
-    ,dmmeta_FieldId_expr                  = 30
-    ,dmmeta_FieldId_charrange             = 31
-    ,dmmeta_FieldId_calc                  = 32
-    ,dmmeta_FieldId_hashtype              = 33
-    ,dmmeta_FieldId_cppkeyword            = 34
-    ,dmmeta_FieldId_ctor                  = 35
-    ,dmmeta_FieldId_dtor                  = 36
-    ,dmmeta_FieldId_cheap_copy            = 37
-    ,dmmeta_FieldId_size                  = 38
-    ,dmmeta_FieldId_alignment             = 39
-    ,dmmeta_FieldId_strequiv              = 40
-    ,dmmeta_FieldId_ns                    = 41
-    ,dmmeta_FieldId_len                   = 42
-    ,dmmeta_FieldId_padbytes              = 43
-    ,dmmeta_FieldId_dispatch              = 44
-    ,dmmeta_FieldId_unk                   = 45
-    ,dmmeta_FieldId_haslen                = 46
-    ,dmmeta_FieldId_call                  = 47
-    ,dmmeta_FieldId_strict                = 48
-    ,dmmeta_FieldId_dispatch_msg          = 49
-    ,dmmeta_FieldId_match_all             = 50
-    ,dmmeta_FieldId_dispsig               = 51
-    ,dmmeta_FieldId_signature             = 52
-    ,dmmeta_FieldId_cycle                 = 53
-    ,dmmeta_FieldId_stripcomment          = 54
-    ,dmmeta_FieldId_fbufdir               = 55
-    ,dmmeta_FieldId_max                   = 56
-    ,dmmeta_FieldId_fbuftype              = 57
-    ,dmmeta_FieldId_insready              = 58
-    ,dmmeta_FieldId_inseof                = 59
-    ,dmmeta_FieldId_getmsg                = 60
-    ,dmmeta_FieldId_skipbytes             = 61
-    ,dmmeta_FieldId_fcmap                 = 62
-    ,dmmeta_FieldId_leftField             = 63
-    ,dmmeta_FieldId_leftVal               = 64
-    ,dmmeta_FieldId_rightVal              = 65
-    ,dmmeta_FieldId_rightField            = 66
-    ,dmmeta_FieldId_bidir                 = 67
-    ,dmmeta_FieldId_versionsort           = 68
-    ,dmmeta_FieldId_casesens              = 69
-    ,dmmeta_FieldId_fconst                = 70
-    ,dmmeta_FieldId_fcurs                 = 71
-    ,dmmeta_FieldId_curstype              = 72
-    ,dmmeta_FieldId_nplace                = 73
-    ,dmmeta_FieldId_fixedfmt              = 74
-    ,dmmeta_FieldId_fstep                 = 75
-    ,dmmeta_FieldId_delay                 = 76
-    ,dmmeta_FieldId_scale                 = 77
-    ,dmmeta_FieldId_arg                   = 78
-    ,dmmeta_FieldId_reftype               = 79
-    ,dmmeta_FieldId_update                = 80
-    ,dmmeta_FieldId_fprefix               = 81
-    ,dmmeta_FieldId_partial               = 82
-    ,dmmeta_FieldId_sorttype              = 83
-    ,dmmeta_FieldId_sortfld               = 84
-    ,dmmeta_FieldId_steptype              = 85
-    ,dmmeta_FieldId_func                  = 86
-    ,dmmeta_FieldId_inl                   = 87
-    ,dmmeta_FieldId_proto                 = 88
-    ,dmmeta_FieldId_body                  = 89
-    ,dmmeta_FieldId_deprecate             = 90
-    ,dmmeta_FieldId_ismacro               = 91
-    ,dmmeta_FieldId_glob                  = 92
-    ,dmmeta_FieldId_priv                  = 93
-    ,dmmeta_FieldId_ret                   = 94
-    ,dmmeta_FieldId_namefld               = 95
-    ,dmmeta_FieldId_idfld                 = 96
-    ,dmmeta_FieldId_wantenum              = 97
-    ,dmmeta_FieldId_namefldctyp           = 98
-    ,dmmeta_FieldId_gsymbol               = 99
-    ,dmmeta_FieldId_ssimfile              = 100
-    ,dmmeta_FieldId_inc                   = 101
-    ,dmmeta_FieldId_symboltype            = 102
-    ,dmmeta_FieldId_min                   = 103
-    ,dmmeta_FieldId_extra                 = 104
-    ,dmmeta_FieldId_listtype              = 105
-    ,dmmeta_FieldId_circular              = 106
-    ,dmmeta_FieldId_haveprev              = 107
-    ,dmmeta_FieldId_instail               = 108
-    ,dmmeta_FieldId_havetail              = 109
-    ,dmmeta_FieldId_havecount             = 110
-    ,dmmeta_FieldId_logcat                = 111
-    ,dmmeta_FieldId_enabled               = 112
-    ,dmmeta_FieldId_builtin               = 113
-    ,dmmeta_FieldId_ismodule              = 114
-    ,dmmeta_FieldId_type                  = 115
-    ,dmmeta_FieldId_xref                  = 116
-    ,dmmeta_FieldId_nstype                = 117
-    ,dmmeta_FieldId_nsinclude             = 118
-    ,dmmeta_FieldId_sys                   = 119
-    ,dmmeta_FieldId_version               = 120
-    ,dmmeta_FieldId_genthrow              = 121
-    ,dmmeta_FieldId_correct_getorcreate   = 122
-    ,dmmeta_FieldId_pool                  = 123
-    ,dmmeta_FieldId_sortxref              = 124
-    ,dmmeta_FieldId_pack                  = 125
-    ,dmmeta_FieldId_fldoffset_asserts     = 126
-    ,dmmeta_FieldId_numtype               = 127
-    ,dmmeta_FieldId_min_len               = 128
-    ,dmmeta_FieldId_pnew                  = 129
-    ,dmmeta_FieldId_buftype               = 130
-    ,dmmeta_FieldId_unique                = 131
-    ,dmmeta_FieldId_isval                 = 132
-    ,dmmeta_FieldId_cascins               = 133
-    ,dmmeta_FieldId_usebasepool           = 134
-    ,dmmeta_FieldId_cancopy               = 135
-    ,dmmeta_FieldId_isxref                = 136
-    ,dmmeta_FieldId_del                   = 137
-    ,dmmeta_FieldId_up                    = 138
-    ,dmmeta_FieldId_isnew                 = 139
-    ,dmmeta_FieldId_hasalloc              = 140
-    ,dmmeta_FieldId_inst                  = 141
-    ,dmmeta_FieldId_varlen                = 142
-    ,dmmeta_FieldId_length                = 143
-    ,dmmeta_FieldId_strtype               = 144
-    ,dmmeta_FieldId_pad                   = 145
-    ,dmmeta_FieldId_ssimns                = 146
-    ,dmmeta_FieldId_aliased               = 147
-    ,dmmeta_FieldId_hashfld               = 148
-    ,dmmeta_FieldId_tracefld              = 149
-    ,dmmeta_FieldId_tracerec              = 150
-    ,dmmeta_FieldId_inscond               = 151
-    ,dmmeta_FieldId_via                   = 152
-    ,dmmeta_FieldId_viafld                = 153
-    ,dmmeta_FieldId_keyfld                = 154
+    ,dmmeta_FieldId_dflt                  = 17
+    ,dmmeta_FieldId_cppdflt               = 18
+    ,dmmeta_FieldId_ssimdflt              = 19
+    ,dmmeta_FieldId_initmemset            = 20
+    ,dmmeta_FieldId_isstruct              = 21
+    ,dmmeta_FieldId_cfmt                  = 22
+    ,dmmeta_FieldId_strfmt                = 23
+    ,dmmeta_FieldId_printfmt              = 24
+    ,dmmeta_FieldId_read                  = 25
+    ,dmmeta_FieldId_print                 = 26
+    ,dmmeta_FieldId_sep                   = 27
+    ,dmmeta_FieldId_expr                  = 28
+    ,dmmeta_FieldId_charrange             = 29
+    ,dmmeta_FieldId_calc                  = 30
+    ,dmmeta_FieldId_hashtype              = 31
+    ,dmmeta_FieldId_cppkeyword            = 32
+    ,dmmeta_FieldId_ctor                  = 33
+    ,dmmeta_FieldId_dtor                  = 34
+    ,dmmeta_FieldId_cheap_copy            = 35
+    ,dmmeta_FieldId_size                  = 36
+    ,dmmeta_FieldId_alignment             = 37
+    ,dmmeta_FieldId_strequiv              = 38
+    ,dmmeta_FieldId_ns                    = 39
+    ,dmmeta_FieldId_len                   = 40
+    ,dmmeta_FieldId_padbytes              = 41
+    ,dmmeta_FieldId_dispatch              = 42
+    ,dmmeta_FieldId_unk                   = 43
+    ,dmmeta_FieldId_haslen                = 44
+    ,dmmeta_FieldId_call                  = 45
+    ,dmmeta_FieldId_strict                = 46
+    ,dmmeta_FieldId_dispatch_msg          = 47
+    ,dmmeta_FieldId_match_all             = 48
+    ,dmmeta_FieldId_dispsig               = 49
+    ,dmmeta_FieldId_signature             = 50
+    ,dmmeta_FieldId_cycle                 = 51
+    ,dmmeta_FieldId_stripcomment          = 52
+    ,dmmeta_FieldId_fbufdir               = 53
+    ,dmmeta_FieldId_max                   = 54
+    ,dmmeta_FieldId_fbuftype              = 55
+    ,dmmeta_FieldId_insready              = 56
+    ,dmmeta_FieldId_inseof                = 57
+    ,dmmeta_FieldId_getmsg                = 58
+    ,dmmeta_FieldId_skipbytes             = 59
+    ,dmmeta_FieldId_fcmap                 = 60
+    ,dmmeta_FieldId_leftField             = 61
+    ,dmmeta_FieldId_leftVal               = 62
+    ,dmmeta_FieldId_rightVal              = 63
+    ,dmmeta_FieldId_rightField            = 64
+    ,dmmeta_FieldId_bidir                 = 65
+    ,dmmeta_FieldId_versionsort           = 66
+    ,dmmeta_FieldId_casesens              = 67
+    ,dmmeta_FieldId_fconst                = 68
+    ,dmmeta_FieldId_fcurs                 = 69
+    ,dmmeta_FieldId_curstype              = 70
+    ,dmmeta_FieldId_nplace                = 71
+    ,dmmeta_FieldId_fixedfmt              = 72
+    ,dmmeta_FieldId_fstep                 = 73
+    ,dmmeta_FieldId_delay                 = 74
+    ,dmmeta_FieldId_scale                 = 75
+    ,dmmeta_FieldId_arg                   = 76
+    ,dmmeta_FieldId_reftype               = 77
+    ,dmmeta_FieldId_update                = 78
+    ,dmmeta_FieldId_fprefix               = 79
+    ,dmmeta_FieldId_partial               = 80
+    ,dmmeta_FieldId_sorttype              = 81
+    ,dmmeta_FieldId_sortfld               = 82
+    ,dmmeta_FieldId_steptype              = 83
+    ,dmmeta_FieldId_func                  = 84
+    ,dmmeta_FieldId_inl                   = 85
+    ,dmmeta_FieldId_proto                 = 86
+    ,dmmeta_FieldId_body                  = 87
+    ,dmmeta_FieldId_deprecate             = 88
+    ,dmmeta_FieldId_ismacro               = 89
+    ,dmmeta_FieldId_glob                  = 90
+    ,dmmeta_FieldId_priv                  = 91
+    ,dmmeta_FieldId_ret                   = 92
+    ,dmmeta_FieldId_fwddecl               = 93
+    ,dmmeta_FieldId_namefld               = 94
+    ,dmmeta_FieldId_idfld                 = 95
+    ,dmmeta_FieldId_wantenum              = 96
+    ,dmmeta_FieldId_namefldctyp           = 97
+    ,dmmeta_FieldId_gsymbol               = 98
+    ,dmmeta_FieldId_ssimfile              = 99
+    ,dmmeta_FieldId_inc                   = 100
+    ,dmmeta_FieldId_symboltype            = 101
+    ,dmmeta_FieldId_min                   = 102
+    ,dmmeta_FieldId_extra                 = 103
+    ,dmmeta_FieldId_listtype              = 104
+    ,dmmeta_FieldId_circular              = 105
+    ,dmmeta_FieldId_haveprev              = 106
+    ,dmmeta_FieldId_instail               = 107
+    ,dmmeta_FieldId_havetail              = 108
+    ,dmmeta_FieldId_havecount             = 109
+    ,dmmeta_FieldId_logcat                = 110
+    ,dmmeta_FieldId_enabled               = 111
+    ,dmmeta_FieldId_builtin               = 112
+    ,dmmeta_FieldId_ismodule              = 113
+    ,dmmeta_FieldId_type                  = 114
+    ,dmmeta_FieldId_xref                  = 115
+    ,dmmeta_FieldId_nstype                = 116
+    ,dmmeta_FieldId_nsinclude             = 117
+    ,dmmeta_FieldId_sys                   = 118
+    ,dmmeta_FieldId_version               = 119
+    ,dmmeta_FieldId_genthrow              = 120
+    ,dmmeta_FieldId_correct_getorcreate   = 121
+    ,dmmeta_FieldId_pool                  = 122
+    ,dmmeta_FieldId_sortxref              = 123
+    ,dmmeta_FieldId_pack                  = 124
+    ,dmmeta_FieldId_fldoffset_asserts     = 125
+    ,dmmeta_FieldId_numtype               = 126
+    ,dmmeta_FieldId_min_len               = 127
+    ,dmmeta_FieldId_pnew                  = 128
+    ,dmmeta_FieldId_buftype               = 129
+    ,dmmeta_FieldId_unique                = 130
+    ,dmmeta_FieldId_isval                 = 131
+    ,dmmeta_FieldId_cascins               = 132
+    ,dmmeta_FieldId_usebasepool           = 133
+    ,dmmeta_FieldId_cancopy               = 134
+    ,dmmeta_FieldId_isxref                = 135
+    ,dmmeta_FieldId_del                   = 136
+    ,dmmeta_FieldId_up                    = 137
+    ,dmmeta_FieldId_isnew                 = 138
+    ,dmmeta_FieldId_hasalloc              = 139
+    ,dmmeta_FieldId_inst                  = 140
+    ,dmmeta_FieldId_varlen                = 141
+    ,dmmeta_FieldId_length                = 142
+    ,dmmeta_FieldId_strtype               = 143
+    ,dmmeta_FieldId_pad                   = 144
+    ,dmmeta_FieldId_ssimns                = 145
+    ,dmmeta_FieldId_aliased               = 146
+    ,dmmeta_FieldId_hashfld               = 147
+    ,dmmeta_FieldId_tracefld              = 148
+    ,dmmeta_FieldId_tracerec              = 149
+    ,dmmeta_FieldId_inscond               = 150
+    ,dmmeta_FieldId_via                   = 151
+    ,dmmeta_FieldId_viafld                = 152
+    ,dmmeta_FieldId_keyfld                = 153
 };
 
-enum { dmmeta_FieldIdEnum_N = 155 };
+enum { dmmeta_FieldIdEnum_N = 154 };
 
 extern const char *  dmmeta_Hashtype_hashtype_Extern;   // Extern    fconst:dmmeta.Hashtype.hashtype/Extern
 extern const char *  dmmeta_Hashtype_hashtype_CRC32;    // CRC32     fconst:dmmeta.Hashtype.hashtype/CRC32
@@ -445,7 +444,6 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_bitfld;               // dm
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_cafter;               // dmmeta.cafter                fconst:dmmeta.Ssimfile.ssimfile/dmmeta.cafter
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_cascdel;              // dmmeta.cascdel               fconst:dmmeta.Ssimfile.ssimfile/dmmeta.cascdel
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_ccmp;                 // dmmeta.ccmp                  fconst:dmmeta.Ssimfile.ssimfile/dmmeta.ccmp
-extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_cdecl;                // dmmeta.cdecl                 fconst:dmmeta.Ssimfile.ssimfile/dmmeta.cdecl
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_cdflt;                // dmmeta.cdflt                 fconst:dmmeta.Ssimfile.ssimfile/dmmeta.cdflt
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_cextern;              // dmmeta.cextern               fconst:dmmeta.Ssimfile.ssimfile/dmmeta.cextern
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_cfmt;                 // dmmeta.cfmt                  fconst:dmmeta.Ssimfile.ssimfile/dmmeta.cfmt
@@ -620,7 +618,6 @@ namespace dmmeta { struct BuftypeId; }
 namespace dmmeta { struct Cafter; }
 namespace dmmeta { struct Cascdel; }
 namespace dmmeta { struct Ccmp; }
-namespace dmmeta { struct Cdecl; }
 namespace dmmeta { struct CppExpr; }
 namespace dmmeta { struct Cdflt; }
 namespace dmmeta { struct Cextern; }
@@ -729,7 +726,7 @@ namespace dmmeta { struct Xref; }
 namespace dmmeta { // gen:ns_print_struct
 
 // --- dmmeta.Anonfld
-struct Anonfld { // dmmeta.Anonfld
+struct Anonfld { // dmmeta.Anonfld: Omit field name where possible (command line, enums, constants)
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
     explicit Anonfld(const algo::strptr&            in_field
@@ -745,7 +742,7 @@ bool                 Anonfld_ReadStrptrMaybe(dmmeta::Anonfld &parent, algo::strp
 void                 Anonfld_Print(dmmeta::Anonfld & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Argvtype
-struct Argvtype { // dmmeta.Argvtype
+struct Argvtype { // dmmeta.Argvtype: Customize parsing of command lines (rarely used)
     algo::Smallstr50   ctype;      //
     algo::Smallstr50   argvtype;   //
     algo::Comment      comment;    //
@@ -760,7 +757,7 @@ bool                 Argvtype_ReadStrptrMaybe(dmmeta::Argvtype &parent, algo::st
 void                 Argvtype_Print(dmmeta::Argvtype & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Basepool
-struct Basepool { // dmmeta.Basepool
+struct Basepool { // dmmeta.Basepool: Specify pool to be used for allocating elements of a type
     algo::Smallstr100   field;   //
     algo::Smallstr100   base;    //
     explicit Basepool(const algo::strptr&            in_field
@@ -776,7 +773,7 @@ bool                 Basepool_ReadStrptrMaybe(dmmeta::Basepool &parent, algo::st
 void                 Basepool_Print(dmmeta::Basepool & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Bitfld
-struct Bitfld { // dmmeta.Bitfld
+struct Bitfld { // dmmeta.Bitfld: Specify offset/width of a bitfield within another field
     algo::Smallstr100   field;      //
     i32                 offset;     //   0  Offset, in bits, within parent field
     i32                 width;      //   0  Width, in bits, within parent field.
@@ -856,7 +853,7 @@ void                 BuftypeId_Init(dmmeta::BuftypeId& parent);
 void                 BuftypeId_Print(dmmeta::BuftypeId row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Cafter
-struct Cafter { // dmmeta.Cafter
+struct Cafter { // dmmeta.Cafter: Control amc processing order for unrelated types (used in rare situations)
     algo::Smallstr50   cafter;    //
     algo::Comment      comment;   //
     Cafter();
@@ -918,24 +915,6 @@ void                 Ccmp_Init(dmmeta::Ccmp& parent);
 // print string representation of dmmeta::Ccmp to string LHS, no header -- cprint:dmmeta.Ccmp.String
 void                 Ccmp_Print(dmmeta::Ccmp & row, algo::cstring &str) __attribute__((nothrow));
 
-// --- dmmeta.Cdecl
-struct Cdecl { // dmmeta.Cdecl
-    algo::Smallstr50   ctype;       //
-    bool               fwddecl;     //   false
-    bool               gen_using;   //   false
-    algo::Comment      comment;     //
-    Cdecl();
-};
-
-bool                 Cdecl_ReadFieldMaybe(dmmeta::Cdecl &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of dmmeta::Cdecl from an ascii string.
-// The format of the string is an ssim Tuple
-bool                 Cdecl_ReadStrptrMaybe(dmmeta::Cdecl &parent, algo::strptr in_str);
-// Set all fields to initial values.
-void                 Cdecl_Init(dmmeta::Cdecl& parent);
-// print string representation of dmmeta::Cdecl to string LHS, no header -- cprint:dmmeta.Cdecl.String
-void                 Cdecl_Print(dmmeta::Cdecl & row, algo::cstring &str) __attribute__((nothrow));
-
 // --- dmmeta.CppExpr
 struct CppExpr { // dmmeta.CppExpr
     algo::Smallstr250   value;   // expression
@@ -950,7 +929,7 @@ bool                 CppExpr_ReadStrptrMaybe(dmmeta::CppExpr &parent, algo::strp
 void                 CppExpr_Print(dmmeta::CppExpr & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Cdflt
-struct Cdflt { // dmmeta.Cdflt
+struct Cdflt { // dmmeta.Cdflt: Specify default value for single-value types that lack fields
     algo::Smallstr50   ctype;      //
     dmmeta::CppExpr    dflt;       //
     dmmeta::CppExpr    cppdflt;    //
@@ -987,7 +966,7 @@ void                 Cextern_Init(dmmeta::Cextern& parent);
 void                 Cextern_Print(dmmeta::Cextern & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Cfmt
-struct Cfmt { // dmmeta.Cfmt
+struct Cfmt { // dmmeta.Cfmt: Specify options for printing/reading ctypes into multiple formats
     algo::Smallstr100   cfmt;       //
     algo::Smallstr50    printfmt;   //
     bool                read;       //   false
@@ -1036,7 +1015,7 @@ bool                 Cget_ReadStrptrMaybe(dmmeta::Cget &parent, algo::strptr in_
 void                 Cget_Print(dmmeta::Cget & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Charset
-struct Charset { // dmmeta.Charset
+struct Charset { // dmmeta.Charset: Generate functions to determine if a character is a member of a set
     algo::Smallstr100   field;       //
     algo::Smallstr100   expr;        //
     bool                charrange;   //   false
@@ -1101,7 +1080,7 @@ bool                 Cppkeyword_ReadStrptrMaybe(dmmeta::Cppkeyword &parent, algo
 void                 Cppkeyword_Print(dmmeta::Cppkeyword & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Cpptype
-struct Cpptype { // dmmeta.Cpptype
+struct Cpptype { // dmmeta.Cpptype: Specify whether a ctype can be passed by value, and other c++ options
     algo::Smallstr50   ctype;        //
     bool               ctor;         //   false  if true, generate non-default constructor from all fields
     bool               dtor;         //   true  generate non-default destructor
@@ -1123,7 +1102,7 @@ void                 Cpptype_Init(dmmeta::Cpptype& parent);
 void                 Cpptype_Print(dmmeta::Cpptype & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Csize
-struct Csize { // dmmeta.Csize
+struct Csize { // dmmeta.Csize: Specify size/alignment for built-in C++ types
     algo::Smallstr50   ctype;       //
     u32                size;        //   0
     u32                alignment;   //   1
@@ -1145,7 +1124,7 @@ void                 Csize_Init(dmmeta::Csize& parent);
 void                 Csize_Print(dmmeta::Csize & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Cstr
-struct Cstr { // dmmeta.Cstr
+struct Cstr { // dmmeta.Cstr: Specify that type behaves like a string
     algo::Smallstr50   ctype;      //
     bool               strequiv;   //   false  Use strptr instead of this type when possible
     algo::Comment      comment;    //
@@ -1162,7 +1141,7 @@ void                 Cstr_Init(dmmeta::Cstr& parent);
 void                 Cstr_Print(dmmeta::Cstr & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Ctype
-struct Ctype { // dmmeta.Ctype: C structure
+struct Ctype { // dmmeta.Ctype: Conceptual type (or C type)
     algo::Smallstr50   ctype;     // Identifier. must be ns.typename
     algo::Comment      comment;   //
     explicit Ctype(const algo::strptr&            in_ctype
@@ -1207,7 +1186,7 @@ void                 Ctypelen_Init(dmmeta::Ctypelen& parent);
 void                 Ctypelen_Print(dmmeta::Ctypelen & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Dispatch
-struct Dispatch { // dmmeta.Dispatch: Multi-way branch
+struct Dispatch { // dmmeta.Dispatch: Generate code for a multi-way branch
     algo::Smallstr50   dispatch;   //
     bool               unk;        //   false  Want default case?
     bool               read;       //   false
@@ -1244,7 +1223,7 @@ void                 Dispatch_Init(dmmeta::Dispatch& parent);
 void                 Dispatch_Print(dmmeta::Dispatch & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.DispatchMsg
-struct DispatchMsg { // dmmeta.DispatchMsg
+struct DispatchMsg { // dmmeta.DispatchMsg: Add message to a dispatch
     algo::Smallstr100   dispatch_msg;   //
     algo::Comment       comment;        //
     explicit DispatchMsg(const algo::strptr&            in_dispatch_msg
@@ -1282,7 +1261,7 @@ bool                 Dispctx_ReadStrptrMaybe(dmmeta::Dispctx &parent, algo::strp
 void                 Dispctx_Print(dmmeta::Dispctx & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Dispfilter
-struct Dispfilter { // dmmeta.Dispfilter
+struct Dispfilter { // dmmeta.Dispfilter: Generate filter function on dispatch
     algo::Smallstr50   dispatch;    //
     bool               match_all;   //   false
     algo::Comment      comment;     //
@@ -1336,7 +1315,7 @@ bool                 Dispsigcheck_ReadStrptrMaybe(dmmeta::Dispsigcheck &parent, 
 void                 Dispsigcheck_Print(dmmeta::Dispsigcheck & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Disptrace
-struct Disptrace { // dmmeta.Disptrace
+struct Disptrace { // dmmeta.Disptrace: Generate trace fields (cycles, counts) for all dispatch branches
     algo::Smallstr50   dispatch;   //
     bool               cycle;      //   false
     algo::Comment      comment;    //
@@ -1353,7 +1332,7 @@ void                 Disptrace_Init(dmmeta::Disptrace& parent);
 void                 Disptrace_Print(dmmeta::Disptrace & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Fbase
-struct Fbase { // dmmeta.Fbase
+struct Fbase { // dmmeta.Fbase: Customize imported Base fields
     algo::Smallstr100   field;          //
     bool                stripcomment;   //   false
     algo::Comment       comment;        //
@@ -1370,7 +1349,7 @@ void                 Fbase_Init(dmmeta::Fbase& parent);
 void                 Fbase_Print(dmmeta::Fbase & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Fbigend
-struct Fbigend { // dmmeta.Fbigend
+struct Fbigend { // dmmeta.Fbigend: Annotate field as having big-endian storage
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
     Fbigend();
@@ -1384,7 +1363,7 @@ bool                 Fbigend_ReadStrptrMaybe(dmmeta::Fbigend &parent, algo::strp
 void                 Fbigend_Print(dmmeta::Fbigend & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Fbitset
-struct Fbitset { // dmmeta.Fbitset
+struct Fbitset { // dmmeta.Fbitset: Generate bitset functions over integer field or array
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
     explicit Fbitset(const algo::strptr&            in_field
@@ -1400,7 +1379,7 @@ bool                 Fbitset_ReadStrptrMaybe(dmmeta::Fbitset &parent, algo::strp
 void                 Fbitset_Print(dmmeta::Fbitset & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Fbuf
-struct Fbuf { // dmmeta.Fbuf
+struct Fbuf { // dmmeta.Fbuf: Buffer for reading/writing messages, works with Iohook
     algo::Smallstr100   field;      //
     u32                 max;        //   0  Size of buffer in bytes
     algo::Smallstr50    fbuftype;   // Type of buffer
@@ -1459,7 +1438,7 @@ void                 Fbuftype_Init(dmmeta::Fbuftype& parent);
 void                 Fbuftype_Print(dmmeta::Fbuftype & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Fcast
-struct Fcast { // dmmeta.Fcast
+struct Fcast { // dmmeta.Fcast: Generate implicit conversion from field to c++ expression
     algo::Smallstr100   field;     //
     algo::Smallstr100   expr;      //
     algo::Comment       comment;   //
@@ -1477,7 +1456,7 @@ bool                 Fcast_ReadStrptrMaybe(dmmeta::Fcast &parent, algo::strptr i
 void                 Fcast_Print(dmmeta::Fcast & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Fcleanup
-struct Fcleanup { // dmmeta.Fcleanup
+struct Fcleanup { // dmmeta.Fcleanup: Request user-implemented function to be called at Uninit time for a field
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
     Fcleanup();
@@ -1491,7 +1470,7 @@ bool                 Fcleanup_ReadStrptrMaybe(dmmeta::Fcleanup &parent, algo::st
 void                 Fcleanup_Print(dmmeta::Fcleanup & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Fcmap
-struct Fcmap { // dmmeta.Fcmap
+struct Fcmap { // dmmeta.Fcmap: Bidirectional mapping between fconst values
     algo::Smallstr250   fcmap;     // cstring maybe?
     bool                bidir;     //   true
     algo::Comment       comment;   //
@@ -1521,7 +1500,7 @@ void                 Fcmap_Init(dmmeta::Fcmap& parent);
 void                 Fcmap_Print(dmmeta::Fcmap & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Fcmdline
-struct Fcmdline { // dmmeta.Fcmdline
+struct Fcmdline { // dmmeta.Fcmdline: Annotate field that holds process command line
     algo::Smallstr100   field;     //
     bool                read;      //   true
     algo::Comment       comment;   //
@@ -1538,7 +1517,7 @@ void                 Fcmdline_Init(dmmeta::Fcmdline& parent);
 void                 Fcmdline_Print(dmmeta::Fcmdline & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Fcmp
-struct Fcmp { // dmmeta.Fcmp: Generate hash function
+struct Fcmp { // dmmeta.Fcmp: Request versionsort or case-insensitive sort for field
     algo::Smallstr100   field;         // Target field
     bool                versionsort;   //   false  Use version sort (detect embedded integers in string)
     bool                casesens;      //   true  Comparison is case-sensitive
@@ -1562,7 +1541,7 @@ void                 Fcmp_Init(dmmeta::Fcmp& parent);
 void                 Fcmp_Print(dmmeta::Fcmp & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Fcompact
-struct Fcompact { // dmmeta.Fcompact
+struct Fcompact { // dmmeta.Fcompact: Request compaction upon removal from index
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
     Fcompact();
@@ -1576,7 +1555,7 @@ bool                 Fcompact_ReadStrptrMaybe(dmmeta::Fcompact &parent, algo::st
 void                 Fcompact_Print(dmmeta::Fcompact & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Fconst
-struct Fconst { // dmmeta.Fconst
+struct Fconst { // dmmeta.Fconst: Specify enum value (integer + string constant) for a field
     algo::Smallstr100   fconst;    //
     dmmeta::CppExpr     value;     //
     inline operator dmmeta::CppExpr() const;
@@ -1602,7 +1581,7 @@ bool                 Fconst_ReadStrptrMaybe(dmmeta::Fconst &parent, algo::strptr
 void                 Fconst_Print(dmmeta::Fconst & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Fcurs
-struct Fcurs { // dmmeta.Fcurs
+struct Fcurs { // dmmeta.Fcurs: Request generation of custom cursor
     algo::Smallstr50   fcurs;     //
     algo::Comment      comment;   //
     Fcurs();
@@ -1626,7 +1605,7 @@ bool                 Fcurs_ReadStrptrMaybe(dmmeta::Fcurs &parent, algo::strptr i
 void                 Fcurs_Print(dmmeta::Fcurs & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Fdec
-struct Fdec { // dmmeta.Fdec
+struct Fdec { // dmmeta.Fdec: Specify that field has an implied # of decimal places and specify formatting options
     algo::Smallstr100   field;      // Target field
     i32                 nplace;     //   0  Number of implied decimal places
     bool                fixedfmt;   //   false  Print exactly SCALE chars after decimal point
@@ -1644,7 +1623,7 @@ void                 Fdec_Init(dmmeta::Fdec& parent);
 void                 Fdec_Print(dmmeta::Fdec & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Fdelay
-struct Fdelay { // dmmeta.Fdelay
+struct Fdelay { // dmmeta.Fdelay: Control elapsed time between execution of a step
     algo::Smallstr100   fstep;     //
     algo::I64Dec9       delay;     // Delay between steps in seconds
     bool                scale;     //   false  Does delay apply to the whole list?
@@ -1662,7 +1641,7 @@ void                 Fdelay_Init(dmmeta::Fdelay& parent);
 void                 Fdelay_Print(dmmeta::Fdelay & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Field
-struct Field { // dmmeta.Field: Ctype attribute
+struct Field { // dmmeta.Field: Specify field of a struct
     algo::Smallstr100   field;     //
     algo::Smallstr50    arg;       // type of field
     algo::Smallstr50    reftype;   //   "Val"
@@ -1735,7 +1714,7 @@ void                 FieldId_Init(dmmeta::FieldId& parent);
 void                 FieldId_Print(dmmeta::FieldId & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Findrem
-struct Findrem { // dmmeta.Findrem
+struct Findrem { // dmmeta.Findrem: Request generation of FindRemove function
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
     Findrem();
@@ -1776,7 +1755,7 @@ void                 Finput_Init(dmmeta::Finput& parent);
 void                 Finput_Print(dmmeta::Finput & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Fldoffset
-struct Fldoffset { // dmmeta.Fldoffset: Offset assertion
+struct Fldoffset { // dmmeta.Fldoffset: Assert field offset - will result in compile-time error if violated
     algo::Smallstr100   field;    //
     i32                 offset;   //   0
     explicit Fldoffset(const algo::strptr&            in_field
@@ -1794,7 +1773,7 @@ void                 Fldoffset_Init(dmmeta::Fldoffset& parent);
 void                 Fldoffset_Print(dmmeta::Fldoffset & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Floadtuples
-struct Floadtuples { // dmmeta.Floadtuples
+struct Floadtuples { // dmmeta.Floadtuples: Request that process automatically load any input tables on startup
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
     Floadtuples();
@@ -1811,7 +1790,7 @@ bool                 Floadtuples_ReadStrptrMaybe(dmmeta::Floadtuples &parent, al
 void                 Floadtuples_Print(dmmeta::Floadtuples & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Fnoremove
-struct Fnoremove { // dmmeta.Fnoremove
+struct Fnoremove { // dmmeta.Fnoremove: Omit any functions for removing elements from table; Table is append-only
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
     Fnoremove();
@@ -1825,7 +1804,7 @@ bool                 Fnoremove_ReadStrptrMaybe(dmmeta::Fnoremove &parent, algo::
 void                 Fnoremove_Print(dmmeta::Fnoremove & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Foutput
-struct Foutput { // dmmeta.Foutput
+struct Foutput { // dmmeta.Foutput: Generate function to save index/table back to disk
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
     Foutput();
@@ -1842,7 +1821,7 @@ bool                 Foutput_ReadStrptrMaybe(dmmeta::Foutput &parent, algo::strp
 void                 Foutput_Print(dmmeta::Foutput & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Fprefix
-struct Fprefix { // dmmeta.Fprefix
+struct Fprefix { // dmmeta.Fprefix: Mapping between field prefix and Reftype
     algo::Smallstr5    fprefix;   //
     algo::Smallstr50   reftype;   //
     algo::Comment      comment;   //
@@ -1857,7 +1836,7 @@ bool                 Fprefix_ReadStrptrMaybe(dmmeta::Fprefix &parent, algo::strp
 void                 Fprefix_Print(dmmeta::Fprefix & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Fregx
-struct Fregx { // dmmeta.Fregx
+struct Fregx { // dmmeta.Fregx: Specify options for command-line regx field
     algo::Smallstr100   field;     //
     bool                partial;   //   false
     algo::Comment       comment;   //
@@ -1874,7 +1853,7 @@ void                 Fregx_Init(dmmeta::Fregx& parent);
 void                 Fregx_Print(dmmeta::Fregx & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Fsort
-struct Fsort { // dmmeta.Fsort
+struct Fsort { // dmmeta.Fsort: Generate custom sort function for array field
     algo::Smallstr100   field;      // Field (array etc) being sorted
     algo::Smallstr50    sorttype;   // Kind of sort to generate
     algo::Smallstr100   sortfld;    // Field to sort on
@@ -1890,7 +1869,7 @@ bool                 Fsort_ReadStrptrMaybe(dmmeta::Fsort &parent, algo::strptr i
 void                 Fsort_Print(dmmeta::Fsort & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Fstep
-struct Fstep { // dmmeta.Fstep
+struct Fstep { // dmmeta.Fstep: Generate a main loop step to be executed whenever a field is non-empty
     algo::Smallstr100   fstep;      //
     algo::Smallstr50    steptype;   //
     algo::Comment       comment;    //
@@ -1915,7 +1894,7 @@ bool                 Fstep_ReadStrptrMaybe(dmmeta::Fstep &parent, algo::strptr i
 void                 Fstep_Print(dmmeta::Fstep & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Ftrace
-struct Ftrace { // dmmeta.Ftrace
+struct Ftrace { // dmmeta.Ftrace: Generate cycle/step counting fields for a step
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
     Ftrace();
@@ -1981,7 +1960,7 @@ void                 Func_Init(dmmeta::Func& parent);
 void                 Func_Print(dmmeta::Func & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Funique
-struct Funique { // dmmeta.Funique
+struct Funique { // dmmeta.Funique: This field must be unique in the table. Not needed for primary key
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
     Funique();
@@ -1995,7 +1974,7 @@ bool                 Funique_ReadStrptrMaybe(dmmeta::Funique &parent, algo::strp
 void                 Funique_Print(dmmeta::Funique & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Fuserinit
-struct Fuserinit { // dmmeta.Fuserinit
+struct Fuserinit { // dmmeta.Fuserinit: Add user-defined initialization function for field (see fcleanup)
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
     Fuserinit();
@@ -2009,7 +1988,7 @@ bool                 Fuserinit_ReadStrptrMaybe(dmmeta::Fuserinit &parent, algo::
 void                 Fuserinit_Print(dmmeta::Fuserinit & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Fwddecl
-struct Fwddecl { // dmmeta.Fwddecl
+struct Fwddecl { // dmmeta.Fwddecl: Request forward declaration of a field
     algo::Smallstr100   fwddecl;   //
     algo::Comment       comment;   //
     Fwddecl();
@@ -2030,7 +2009,7 @@ bool                 Fwddecl_ReadStrptrMaybe(dmmeta::Fwddecl &parent, algo::strp
 void                 Fwddecl_Print(dmmeta::Fwddecl & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Gconst
-struct Gconst { // dmmeta.Gconst
+struct Gconst { // dmmeta.Gconst: Import ssim table columns as fconst for a field
     algo::Smallstr100   field;      // Field with which to associate constants
     algo::Smallstr100   namefld;    // Field which gives the name of the constant
     algo::Smallstr100   idfld;      // Optional attribute of namefld that gives numeric ID for gconst
@@ -2055,7 +2034,7 @@ void                 Gconst_Init(dmmeta::Gconst& parent);
 void                 Gconst_Print(dmmeta::Gconst & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Gstatic
-struct Gstatic { // dmmeta.Gstatic
+struct Gstatic { // dmmeta.Gstatic: Load entries for this table at startup time
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
     explicit Gstatic(const algo::strptr&            in_field
@@ -2074,7 +2053,7 @@ bool                 Gstatic_ReadStrptrMaybe(dmmeta::Gstatic &parent, algo::strp
 void                 Gstatic_Print(dmmeta::Gstatic & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Gsymbol
-struct Gsymbol { // dmmeta.Gsymbol: Create C++ symbols from entries in table
+struct Gsymbol { // dmmeta.Gsymbol: Create C++ symbols from entries in ssim table
     algo::Smallstr50    gsymbol;      //
     algo::Smallstr100   inc;          // Regex to filter rows
     algo::Smallstr50    symboltype;   //
@@ -2113,7 +2092,7 @@ bool                 Hashtype_ReadStrptrMaybe(dmmeta::Hashtype &parent, algo::st
 void                 Hashtype_Print(dmmeta::Hashtype & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Hook
-struct Hook { // dmmeta.Hook
+struct Hook { // dmmeta.Hook: Required on Hook fields
     algo::Smallstr100   field;     // The field
     algo::Comment       comment;   //
     Hook();
@@ -2127,7 +2106,7 @@ bool                 Hook_ReadStrptrMaybe(dmmeta::Hook &parent, algo::strptr in_
 void                 Hook_Print(dmmeta::Hook & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Inlary
-struct Inlary { // dmmeta.Inlary
+struct Inlary { // dmmeta.Inlary: Generate inline array of fixed or variable length (all entries fit within parent struct)
     algo::Smallstr100   field;     //
     i32                 min;       //   0  Min. elements to preallocate
     i32                 max;       //   0  Max. elements
@@ -2170,7 +2149,7 @@ void                 Lenfld_Init(dmmeta::Lenfld& parent);
 void                 Lenfld_Print(dmmeta::Lenfld & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Listtype
-struct Listtype { // dmmeta.Listtype
+struct Listtype { // dmmeta.Listtype: Specify structure of linked list based on field prefix
     algo::Smallstr5   listtype;   //
     bool              circular;   //   false  Circular list
     bool              haveprev;   //   false  Previous link
@@ -2189,7 +2168,7 @@ void                 Listtype_Init(dmmeta::Listtype& parent);
 void                 Listtype_Print(dmmeta::Listtype & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Llist
-struct Llist { // dmmeta.Llist
+struct Llist { // dmmeta.Llist: Options for Llist field
     algo::Smallstr100   field;       // Index in question
     bool                havetail;    //   true  Generate 'tail' field
     bool                havecount;   //   false  Generate count of elements
@@ -2232,7 +2211,7 @@ void                 Logcat_Init(dmmeta::Logcat& parent);
 void                 Logcat_Print(dmmeta::Logcat & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Main
-struct Main { // dmmeta.Main
+struct Main { // dmmeta.Main: Generate Main function for namespace
     algo::Smallstr16   ns;         //
     bool               ismodule;   //   false
     explicit Main(const algo::strptr&            in_ns
@@ -2250,7 +2229,7 @@ void                 Main_Init(dmmeta::Main& parent);
 void                 Main_Print(dmmeta::Main & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Msgtype
-struct Msgtype { // dmmeta.Msgtype: Specify message type for each eligible message
+struct Msgtype { // dmmeta.Msgtype: Specify message type for each eligible message, controls dispatch
     algo::Smallstr50   ctype;   //
     dmmeta::CppExpr    type;    //
     explicit Msgtype(const algo::strptr&            in_ctype
@@ -2266,7 +2245,7 @@ bool                 Msgtype_ReadStrptrMaybe(dmmeta::Msgtype &parent, algo::strp
 void                 Msgtype_Print(dmmeta::Msgtype & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Nocascdel
-struct Nocascdel { // dmmeta.Nocascdel
+struct Nocascdel { // dmmeta.Nocascdel: Remove cascade delete for this index
     algo::Smallstr100   xref;      //
     algo::Comment       comment;   //
     Nocascdel();
@@ -2294,7 +2273,7 @@ bool                 Nossimfile_ReadStrptrMaybe(dmmeta::Nossimfile &parent, algo
 void                 Nossimfile_Print(dmmeta::Nossimfile & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Noxref
-struct Noxref { // dmmeta.Noxref
+struct Noxref { // dmmeta.Noxref: Explicitly specify that no x-ref exists between tables (don't use unless forced)
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
     Noxref();
@@ -2326,7 +2305,7 @@ bool                 Ns_ReadStrptrMaybe(dmmeta::Ns &parent, algo::strptr in_str)
 void                 Ns_Print(dmmeta::Ns & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Nsdb
-struct Nsdb { // dmmeta.Nsdb
+struct Nsdb { // dmmeta.Nsdb: Annotate ssimdb namespaces
     algo::Smallstr16   ns;        //
     algo::Comment      comment;   //
     Nsdb();
@@ -2340,7 +2319,7 @@ bool                 Nsdb_ReadStrptrMaybe(dmmeta::Nsdb &parent, algo::strptr in_
 void                 Nsdb_Print(dmmeta::Nsdb & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Nsinclude
-struct Nsinclude { // dmmeta.Nsinclude
+struct Nsinclude { // dmmeta.Nsinclude: Explicitly specify a C++ include file for namespace
     algo::Smallstr50   nsinclude;   //
     bool               sys;         //   false
     algo::Comment      comment;     //
@@ -2364,7 +2343,7 @@ void                 Nsinclude_Init(dmmeta::Nsinclude& parent);
 void                 Nsinclude_Print(dmmeta::Nsinclude & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Nsproto
-struct Nsproto { // dmmeta.Nsproto
+struct Nsproto { // dmmeta.Nsproto: Annotate protocol namespace (collection of types, no state)
     algo::Smallstr16   ns;        //
     algo::Comment      comment;   //
     explicit Nsproto(const algo::strptr&            in_ns
@@ -2411,7 +2390,7 @@ bool                 Nsversion_ReadStrptrMaybe(dmmeta::Nsversion &parent, algo::
 void                 Nsversion_Print(dmmeta::Nsversion & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Nsx
-struct Nsx { // dmmeta.Nsx
+struct Nsx { // dmmeta.Nsx: Control code-generation and exception handling options for process/library
     algo::Smallstr16    ns;                    //
     bool                genthrow;              //   false
     bool                correct_getorcreate;   //   false
@@ -2441,7 +2420,7 @@ void                 Nsx_Init(dmmeta::Nsx& parent);
 void                 Nsx_Print(dmmeta::Nsx & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Numstr
-struct Numstr { // dmmeta.Numstr
+struct Numstr { // dmmeta.Numstr: Add functions to read numbers out of a string field
     algo::Smallstr100   field;     // String type
     algo::Smallstr50    numtype;   // Corresponding numeric type
     i32                 base;      //   0  Base for conversion
@@ -2479,7 +2458,7 @@ bool                 Pack_ReadStrptrMaybe(dmmeta::Pack &parent, algo::strptr in_
 void                 Pack_Print(dmmeta::Pack & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Pmaskfld
-struct Pmaskfld { // dmmeta.Pmaskfld
+struct Pmaskfld { // dmmeta.Pmaskfld: Specify which fields holds presence mask bits (one for each field in struct)
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
     explicit Pmaskfld(const algo::strptr&            in_field
@@ -2498,7 +2477,7 @@ bool                 Pmaskfld_ReadStrptrMaybe(dmmeta::Pmaskfld &parent, algo::st
 void                 Pmaskfld_Print(dmmeta::Pmaskfld & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Pnew
-struct Pnew { // dmmeta.Pnew: placement new
+struct Pnew { // dmmeta.Pnew: Generate custom constructor (placement new), for use with binary protocols
     algo::Smallstr100   pnew;      //
     algo::Comment       comment;   //
     explicit Pnew(const algo::strptr&            in_pnew
@@ -2538,7 +2517,7 @@ bool                 Printfmt_ReadStrptrMaybe(dmmeta::Printfmt &parent, algo::st
 void                 Printfmt_Print(dmmeta::Printfmt & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Ptrary
-struct Ptrary { // dmmeta.Ptrary
+struct Ptrary { // dmmeta.Ptrary: Required for fields with reftype:Ptrary
     algo::Smallstr100   field;    //
     bool                unique;   //   false  Search for and ignore duplicates
     explicit Ptrary(const algo::strptr&            in_field
@@ -2666,7 +2645,7 @@ bool                 Rowid_ReadStrptrMaybe(dmmeta::Rowid &parent, algo::strptr i
 void                 Rowid_Print(dmmeta::Rowid & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Smallstr
-struct Smallstr { // dmmeta.Smallstr
+struct Smallstr { // dmmeta.Smallstr: Generated fixed-length padded or length-delimited string field
     algo::Smallstr100   field;     //
     i32                 length;    //   0  Maximum characters in the string
     algo::Smallstr50    strtype;   // Data format for string
@@ -2688,7 +2667,7 @@ void                 Smallstr_Init(dmmeta::Smallstr& parent);
 void                 Smallstr_Print(dmmeta::Smallstr & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Sortfld
-struct Sortfld { // dmmeta.Sortfld
+struct Sortfld { // dmmeta.Sortfld: Specify what field an index (Bheap,Atree) is sorted on
     algo::Smallstr100   field;     //
     algo::Smallstr100   sortfld;   // Field to sort by
     explicit Sortfld(const algo::strptr&            in_field
@@ -2773,7 +2752,7 @@ bool                 Ssimsort_ReadStrptrMaybe(dmmeta::Ssimsort &parent, algo::st
 void                 Ssimsort_Print(dmmeta::Ssimsort & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Ssimvolatile
-struct Ssimvolatile { // dmmeta.Ssimvolatile
+struct Ssimvolatile { // dmmeta.Ssimvolatile: Types based on ssim files marked this way cannot be cross-referenced
     algo::Smallstr50   ssimfile;   //
     algo::Comment      comment;    //
     Ssimvolatile();
@@ -2829,7 +2808,7 @@ bool                 Strtype_ReadStrptrMaybe(dmmeta::Strtype &parent, algo::strp
 void                 Strtype_Print(dmmeta::Strtype & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Substr
-struct Substr { // dmmeta.Substr: Computed field
+struct Substr { // dmmeta.Substr: Specify that the field value is computed from a substring of another field
     algo::Smallstr100   field;      //
     dmmeta::CppExpr     expr;       //
     algo::Smallstr100   srcfield;   //
@@ -2847,7 +2826,7 @@ bool                 Substr_ReadStrptrMaybe(dmmeta::Substr &parent, algo::strptr
 void                 Substr_Print(dmmeta::Substr & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Tary
-struct Tary { // dmmeta.Tary: Indirect linear array
+struct Tary { // dmmeta.Tary: Indirect linear dynamically alocated array (used for strings, arrays of data, etc)
     algo::Smallstr100   field;     //
     bool                aliased;   //   false  Geneate functions to copy from aryptr
     algo::Comment       comment;   //
@@ -2864,7 +2843,7 @@ void                 Tary_Init(dmmeta::Tary& parent);
 void                 Tary_Print(dmmeta::Tary & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Thash
-struct Thash { // dmmeta.Thash
+struct Thash { // dmmeta.Thash: Hash index, required for fields with reftype Thash
     algo::Smallstr100   field;     //
     algo::Smallstr100   hashfld;   // Field on which hash function is computed
     bool                unique;    //   true  Enforce uniqueness of member elements
@@ -2947,7 +2926,7 @@ bool                 Typefld_ReadStrptrMaybe(dmmeta::Typefld &parent, algo::strp
 void                 Typefld_Print(dmmeta::Typefld & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Usertracefld
-struct Usertracefld { // dmmeta.Usertracefld
+struct Usertracefld { // dmmeta.Usertracefld: Add custom user trace fields to process's trace struct
     algo::Smallstr100   tracefld;   //
     algo::Comment       comment;    //
     Usertracefld();
@@ -2961,7 +2940,7 @@ bool                 Usertracefld_ReadStrptrMaybe(dmmeta::Usertracefld &parent, 
 void                 Usertracefld_Print(dmmeta::Usertracefld & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- dmmeta.Xref
-struct Xref { // dmmeta.Xref: X-reference
+struct Xref { // dmmeta.Xref: Specify how to cross-reference (i.e. project, or group-by) one record with another
     algo::Smallstr100   field;     //
     dmmeta::CppExpr     inscond;   //   "true"  Insert condition
     algo::Smallstr200   via;       //
@@ -3000,7 +2979,6 @@ inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Anonfld &row
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Bitfld &row);// cfmt:dmmeta.Bitfld.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::BuftypeId &row);// cfmt:dmmeta.BuftypeId.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Cascdel &row);// cfmt:dmmeta.Cascdel.String
-inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Cdecl &row);// cfmt:dmmeta.Cdecl.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::CppExpr &row);// cfmt:dmmeta.CppExpr.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Cfmt &row);// cfmt:dmmeta.Cfmt.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Charset &row);// cfmt:dmmeta.Charset.String

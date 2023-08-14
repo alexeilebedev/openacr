@@ -311,5 +311,5 @@ void atf_unit::unittest_acr_Replace1() {
 // so for this query we use the default data set instead of good old temp/x.
 void atf_unit::unittest_acr_Meta1() {
     tempstr result=SysEval("acr ctype:u8 -meta | head -1",FailokQ(false),1024*1024);
-    TESTCMP(strptr(result), strptr("dmmeta.ctype  ctype:dmmeta.Ctype  comment:\"C structure\"\n"));
+    TESTCMP(strptr(result), strptr("dmmeta.ctype  ctype:dmmeta.Ctype  comment:\"Conceptual type (or C type)\"\n"));
 }

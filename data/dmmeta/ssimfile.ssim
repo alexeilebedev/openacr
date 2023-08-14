@@ -57,7 +57,6 @@ dmmeta.ssimfile  ssimfile:dmmeta.bitfld  ctype:dmmeta.Bitfld
 dmmeta.ssimfile  ssimfile:dmmeta.cafter  ctype:dmmeta.Cafter
 dmmeta.ssimfile  ssimfile:dmmeta.cascdel  ctype:dmmeta.Cascdel
 dmmeta.ssimfile  ssimfile:dmmeta.ccmp  ctype:dmmeta.Ccmp
-dmmeta.ssimfile  ssimfile:dmmeta.cdecl  ctype:dmmeta.Cdecl
 dmmeta.ssimfile  ssimfile:dmmeta.cdflt  ctype:dmmeta.Cdflt
 dmmeta.ssimfile  ssimfile:dmmeta.cextern  ctype:dmmeta.Cextern
 dmmeta.ssimfile  ssimfile:dmmeta.cfmt  ctype:dmmeta.Cfmt

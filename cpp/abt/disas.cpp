@@ -33,7 +33,7 @@ static bool Disas_Prefilter(cstring &objfile) {
     int rc=SysCmd(tempstr()<<"objdump --syms -C "<<objfile<<"> temp/abt.syms 2>&1",FailokQ(true),DryrunQ(false));
     bool retval=false;
     if (rc==0) {
-        MmapFile syms_file;
+        algo_lib::MmapFile syms_file;
         MmapFile_Load(syms_file, "temp/abt.syms");
         ind_beg(algo::Line_curs, line, syms_file.text) if (Regx_Match(text_regx,line)) {        // Insert tuples
             if (Regx_Match(abt::_db.cmdline.disas,line)) {
@@ -54,7 +54,7 @@ static void Disas_Show(cstring &objfile) {
     unlink("temp/abt.s");
     int rc=SysCmd(tempstr()<<"objdump --disassemble -C "<<objfile<<"> temp/abt.s 2>&1",FailokQ(true),DryrunQ(false));
     if (rc==0) {
-        MmapFile disas_file;
+        algo_lib::MmapFile disas_file;
         MmapFile_Load(disas_file, "temp/abt.s");
         bool interesting_section=false;
         cstring section_text;

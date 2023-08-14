@@ -9,28 +9,7 @@
 
 // gen:ns_enums
 // gen:ns_fwddecl2
-namespace acr { struct FQuery; }
-namespace acr { struct FSsimfile; }
-namespace algo { struct DateCache; }
-namespace algo { struct Errcode; }
-namespace algo { struct ImrowPtr; }
-namespace algo { struct LineBuf; }
-namespace algo { struct PageBuf; }
-namespace algo { struct Tuple; }
-namespace algo { struct cstring; }
-using algo::cstring;
-namespace algo { struct i32_Range; }
-namespace algo_lib { struct FDb; }
-namespace algo_lib { struct FIohook; }
-namespace algo_lib { struct InTextFile; }
-namespace algo_lib { struct MmapFile; }
-using algo_lib::MmapFile;
-namespace algo_lib { struct Replscope; }
-using algo_lib::Replscope;
-namespace atf_amc { struct Hooktype; }
-namespace atf_amc { struct MsgHeader; }
 namespace lib_json { struct FNode; }
-struct pad_byte;
 
 // --- pad_byte
 #pragma pack(push,1)

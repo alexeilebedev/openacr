@@ -111,7 +111,7 @@ namespace amcdb { struct Tfunc; }
 namespace amcdb { // gen:ns_print_struct
 
 // --- amcdb.Bltin
-struct Bltin { // amcdb.Bltin
+struct Bltin { // amcdb.Bltin: Specify properties of a C built-in type
     algo::Smallstr50   ctype;      //
     bool               likeu64;    //   false
     bool               bigendok;   //   false

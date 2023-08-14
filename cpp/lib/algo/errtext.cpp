@@ -38,7 +38,7 @@ void algo_lib::SaveBadField(strptr name, strptr value) {
 // Reset value of algo_lib::_db.errtext and return it for further editing
 // Usage:
 // algo_lib::ResetBadTags() << ...errors...
-cstring &algo_lib::ResetErrtext() {
+algo::cstring &algo_lib::ResetErrtext() {
     ch_RemoveAll(algo_lib::_db.errtext);
     return algo_lib::_db.errtext;
 }

@@ -32,7 +32,7 @@
 // Replace middle with prototypes for namespace XYZ
 // When finished, save file
 static void UpdateHeader(src_func::FTarget &target, strptr fname) {
-    MmapFile file;
+    algo_lib::MmapFile file;
     MmapFile_Load(file,fname);
     cstring newfile;
     cstring ns;

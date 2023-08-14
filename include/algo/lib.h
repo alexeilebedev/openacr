@@ -351,7 +351,7 @@ namespace algo_lib { // update-hdr
     // Reset value of algo_lib::_db.errtext and return it for further editing
     // Usage:
     // algo_lib::ResetBadTags() << ...errors...
-    cstring &ResetErrtext();
+    algo::cstring &ResetErrtext();
 
     // Add key-value pair to algo_lib::_db.errtext
     // Error text beyond a reasonable limit is discarded -- keep errors short!
@@ -385,19 +385,19 @@ namespace algo_lib { // update-hdr
     // If PATH is an existing path, leave it unchanged
     // On Windows, If PATH.EXE is an existing path, return that
     // Return true if file exists
-    bool TryExeSuffix(cstring &path);
+    bool TryExeSuffix(algo::cstring &path);
 
     // Update FNAME to be a filename that can be passed to Unix exec call.
     // If FNAME is an absolute path, don't perform a search
     // If FNAME is a relative path, perform a search using the PATH environment
     // the first executable file that's found is the result.
-    void ResolveExecFname(cstring &fname);
+    void ResolveExecFname(algo::cstring &fname);
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/fmt.cpp -- Print to string / Read from string
     //
     void ErrorX_Print(algo_lib::ErrorX &row, algo::cstring &str);
-    void FTxttbl_Print(algo_lib::FTxttbl &T_, cstring &str);
+    void FTxttbl_Print(algo_lib::FTxttbl &T_, algo::cstring &str);
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/iohook.cpp
@@ -575,34 +575,34 @@ namespace algo_lib { // update-hdr
     // -------------------------------------------------------------------
     // cpp/lib/algo/regx.cpp -- Sql Regx implementation
     //
-    void Regx_Print(algo_lib::Regx &regx, cstring &lhs);
+    void Regx_Print(algo_lib::Regx &regx, algo::cstring &lhs);
 
     // Check if REGX matches S, return result
-    bool Regx_Match(algo_lib::Regx &regx, strptr text);
+    bool Regx_Match(algo_lib::Regx &regx, algo::strptr text);
 
     // Parse string INPUT as regex and store in REGX.
     // Supported features:
     // \n,\r,\t,\a,\e,\v,\f, [..], $, ^,
     // ., *, +, (..), {..}, \d,\D,\w,\W,\s,\S
-    void Regx_ReadDflt(algo_lib::Regx &regx, strptr input);
+    void Regx_ReadDflt(algo_lib::Regx &regx, algo::strptr input);
 
     // Parse bash-style regx:
     // * -> .*
     // ? -> .?
     // All other regx chars are escaped away
     // if FULL is set to false, input is treated as ".*input.*"
-    void Regx_ReadShell(algo_lib::Regx &regx, strptr input, bool full);
+    void Regx_ReadShell(algo_lib::Regx &regx, algo::strptr input, bool full);
 
     // Parse SQL-style regx:
     // % -> .*
     // _ -> .
     // All other regx chars are escaped away
     // if FULL is set to false, input is treated as ".*input.*"
-    void Regx_ReadSql(algo_lib::Regx &regx, strptr input, bool full);
-    bool Regx_ReadStrptrMaybe(algo_lib::Regx &regx, strptr input);
+    void Regx_ReadSql(algo_lib::Regx &regx, algo::strptr input, bool full);
+    bool Regx_ReadStrptrMaybe(algo_lib::Regx &regx, algo::strptr input);
 
     // Check if string contains a SQL regular expression
-    bool SqlRegxQ(strptr s);
+    bool SqlRegxQ(algo::strptr s);
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/string.cpp -- cstring functions
@@ -623,8 +623,8 @@ namespace algo_lib { // update-hdr
     // EOL      append end-of-line (default)
     // SCOPE    if not NULL, replace any $-string in TEXT with corresponding value.
     // it is an error if any $-string does not expand.
-    void Ins(algo_lib::Replscope *scope, cstring &out, strptr text, bool eol);
-    void Ins(algo_lib::Replscope *scope, cstring &out, strptr text);
+    void Ins(algo_lib::Replscope *scope, algo::cstring &out, strptr text, bool eol);
+    void Ins(algo_lib::Replscope *scope, algo::cstring &out, strptr text);
 
     // Enable comma-eating (default true)
     void SetEatComma(algo_lib::Replscope &scope, bool enable);
@@ -663,8 +663,8 @@ namespace algo_lib { // update-hdr
     //
 
     // Add new cell to the given row.
-    algo_lib::FTxtcell &AddCell(algo_lib::FTxtrow &txtrow, strptr title, algo_TextJustEnum justify, int span);
-    algo_lib::FTxtcell &AddCell(algo_lib::FTxtrow &txtrow, strptr title, algo_TextJustEnum justify);
+    algo_lib::FTxtcell &AddCell(algo_lib::FTxtrow &txtrow, algo::strptr title, algo_TextJustEnum justify, int span);
+    algo_lib::FTxtcell &AddCell(algo_lib::FTxtrow &txtrow, algo::strptr title, algo_TextJustEnum justify);
 
     // Add new cell to the last row of of table and return references to its text
     algo_lib::FTxtrow &AddRow(algo_lib::FTxttbl &txttbl);
@@ -676,9 +676,9 @@ namespace algo_lib { // update-hdr
     // Text table is a table with rows; Each row has an array of cells.
     // Each call has text, col span, text justification, and optional style (color).
     // Add column to the last row of table.
-    void AddCol(algo_lib::FTxttbl &txttbl, strptr col, algo_TextJustEnum justify);
-    void AddCol(algo_lib::FTxttbl &txttbl, strptr col);
-    cstring &AddCell(algo_lib::FTxttbl &txttbl);
+    void AddCol(algo_lib::FTxttbl &txttbl, algo::strptr col, algo_TextJustEnum justify);
+    void AddCol(algo_lib::FTxttbl &txttbl, algo::strptr col);
+    algo::cstring &AddCell(algo_lib::FTxttbl &txttbl);
 
     // Use prlog(txttbl) to print.
     void TxttblCsv(algo_lib::FTxttbl &tbl);

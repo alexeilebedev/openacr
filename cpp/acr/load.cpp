@@ -37,7 +37,7 @@ void acr::LoadSsimfile(acr::FSsimfile& ssimfile) {
         ssimfile.c_file = file;
         file->autoloaded = true;
         file->filename = file->file; // save filename
-        MmapFile in;
+        algo_lib::MmapFile in;
         if (MmapFile_Load(in, file->file)) {
             file->modtime = FdModTime(in.fd.fd);
             verblog("acr.load"<<Keyval("fname",file->file));

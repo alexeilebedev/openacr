@@ -509,7 +509,7 @@ static void RunRegxParse(algo_lib::RegxParse &regxparse) {
 
 // -----------------------------------------------------------------------------
 
-void algo_lib::Regx_Print(algo_lib::Regx &regx, cstring &lhs) {
+void algo_lib::Regx_Print(algo_lib::Regx &regx, algo::cstring &lhs) {
     // there is not enough information in a regx expression to fully specify it.
     // sql vs shell vs classic regx, partial vs full.
     lhs << regx.expr;// copout -- printing regx as it was read
@@ -517,7 +517,7 @@ void algo_lib::Regx_Print(algo_lib::Regx &regx, cstring &lhs) {
 
 // -----------------------------------------------------------------------------
 
-static bool ScanString(algo_lib::Regx &regx, const strptr &text) {
+static bool ScanString(algo_lib::Regx &regx, const algo::strptr &text) {
     ary_ClearBitsAll(regx.next_front);
     ary_Setary(regx.front, regx.start);
     ind_beg_aryptr(char,c,text) {// scan the string
@@ -549,7 +549,7 @@ static bool ScanString(algo_lib::Regx &regx, const strptr &text) {
 // -----------------------------------------------------------------------------
 
 // Check if REGX matches S, return result
-bool algo_lib::Regx_Match(algo_lib::Regx &regx, strptr text) {
+bool algo_lib::Regx_Match(algo_lib::Regx &regx, algo::strptr text) {
     bool ret = false;
     if (regx.accepts_all) {
         ret = true;// matches all strings
@@ -570,7 +570,7 @@ bool algo_lib::Regx_Match(algo_lib::Regx &regx, strptr text) {
 // Supported features:
 // \n,\r,\t,\a,\e,\v,\f, [..], $, ^,
 // ., *, +, (..), {..}, \d,\D,\w,\W,\s,\S
-void algo_lib::Regx_ReadDflt(algo_lib::Regx &regx, strptr input) {
+void algo_lib::Regx_ReadDflt(algo_lib::Regx &regx, algo::strptr input) {
     regx.expr = input;
     algo_lib::RegxParse regxparse;
     regxparse.input = input;
@@ -585,7 +585,7 @@ void algo_lib::Regx_ReadDflt(algo_lib::Regx &regx, strptr input) {
 // ? -> .?
 // All other regx chars are escaped away
 // if FULL is set to false, input is treated as ".*input.*"
-void algo_lib::Regx_ReadShell(algo_lib::Regx &regx, strptr input, bool full) {
+void algo_lib::Regx_ReadShell(algo_lib::Regx &regx, algo::strptr input, bool full) {
     regx.expr = input;
     tempstr regx_str;
     if (!full) regx_str << ".*";
@@ -620,7 +620,7 @@ void algo_lib::Regx_ReadShell(algo_lib::Regx &regx, strptr input, bool full) {
 // _ -> .
 // All other regx chars are escaped away
 // if FULL is set to false, input is treated as ".*input.*"
-void algo_lib::Regx_ReadSql(algo_lib::Regx &regx, strptr input, bool full) {
+void algo_lib::Regx_ReadSql(algo_lib::Regx &regx, algo::strptr input, bool full) {
     regx.expr = input;
     tempstr regx_str;
     if (!full) {
@@ -663,7 +663,7 @@ void algo_lib::Regx_ReadSql(algo_lib::Regx &regx, strptr input, bool full) {
 
 // -----------------------------------------------------------------------------
 
-bool algo_lib::Regx_ReadStrptrMaybe(algo_lib::Regx &regx, strptr input) {
+bool algo_lib::Regx_ReadStrptrMaybe(algo_lib::Regx &regx, algo::strptr input) {
     Regx_ReadSql(regx,input,true);
     return true;
 }
@@ -671,7 +671,7 @@ bool algo_lib::Regx_ReadStrptrMaybe(algo_lib::Regx &regx, strptr input) {
 // -----------------------------------------------------------------------------
 
 // Check if string contains a SQL regular expression
-bool algo_lib::SqlRegxQ(strptr s) {
+bool algo_lib::SqlRegxQ(algo::strptr s) {
     bool ret = false;
     frep_(i, elems_N(s)) {
         char c = s[i];

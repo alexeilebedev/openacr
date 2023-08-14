@@ -243,7 +243,7 @@ static void Main_Data() {
     ind_beg(acr_in::_db_zd_ssimfile_curs, ssimfile, acr_in::_db) {
         tempstr fname;
         fname << SsimFname(acr_in::_db.cmdline.data_dir, ssimfile.ssimfile);
-        MmapFile fmap;
+        algo_lib::MmapFile fmap;
         algo_lib::MmapFile_Load(fmap, fname);
         ind_beg(algo::Line_curs, line, fmap.text) {        // Insert tuples
             LoadTuple(ssimfile,line,dag);

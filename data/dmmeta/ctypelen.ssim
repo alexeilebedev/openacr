@@ -345,7 +345,6 @@ dmmeta.ctypelen  ctype:amc.FBltin  len:64  alignment:8  padbytes:1
 dmmeta.ctypelen  ctype:amc.FCafter  len:80  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:amc.FCascdel  len:112  alignment:8  padbytes:2
 dmmeta.ctypelen  ctype:amc.FCcmp  len:64  alignment:8  padbytes:0
-dmmeta.ctypelen  ctype:amc.FCdecl  len:224  alignment:8  padbytes:9
 dmmeta.ctypelen  ctype:amc.FCdflt  len:760  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amc.FCextern  len:54  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amc.FCfmt  len:200  alignment:8  padbytes:5
@@ -356,9 +355,9 @@ dmmeta.ctypelen  ctype:amc.FCppfunc  len:354  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amc.FCpptype  len:72  alignment:8  padbytes:1
 dmmeta.ctypelen  ctype:amc.FCsize  len:60  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:amc.FCstr  len:53  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:amc.FCtype  len:768  alignment:8  padbytes:33
+dmmeta.ctypelen  ctype:amc.FCtype  len:752  alignment:8  padbytes:33
 dmmeta.ctypelen  ctype:amc.FCtypelen  len:68  alignment:4  padbytes:3
-dmmeta.ctypelen  ctype:amc.FDb  len:32688  alignment:16  padbytes:434
+dmmeta.ctypelen  ctype:amc.FDb  len:32416  alignment:16  padbytes:422
 dmmeta.ctypelen  ctype:amc.FDispatch  len:168  alignment:8  padbytes:17
 dmmeta.ctypelen  ctype:amc.FDispatchmsg  len:144  alignment:8  padbytes:9
 dmmeta.ctypelen  ctype:amc.FDispctx  len:112  alignment:8  padbytes:0
@@ -715,7 +714,6 @@ dmmeta.ctypelen  ctype:dmmeta.BuftypeId  len:1  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Cafter  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Cascdel  len:254  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Ccmp  len:208  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:dmmeta.Cdecl  len:206  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Cdflt  len:760  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Cextern  len:54  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Cfmt  len:331  alignment:1  padbytes:0

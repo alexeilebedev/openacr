@@ -162,176 +162,174 @@ enum amc_TableIdEnum {                        // amc.TableId.value
     ,amc_TableId_dmmeta_cascdel        = 6    // dmmeta.cascdel -> amc.FCascdel
     ,amc_TableId_dmmeta_Ccmp           = 7    // dmmeta.Ccmp -> amc.FCcmp
     ,amc_TableId_dmmeta_ccmp           = 7    // dmmeta.ccmp -> amc.FCcmp
-    ,amc_TableId_dmmeta_Cdecl          = 8    // dmmeta.Cdecl -> amc.FCdecl
-    ,amc_TableId_dmmeta_cdecl          = 8    // dmmeta.cdecl -> amc.FCdecl
-    ,amc_TableId_dmmeta_Cdflt          = 9    // dmmeta.Cdflt -> amc.FCdflt
-    ,amc_TableId_dmmeta_cdflt          = 9    // dmmeta.cdflt -> amc.FCdflt
-    ,amc_TableId_dmmeta_Cextern        = 10   // dmmeta.Cextern -> amc.FCextern
-    ,amc_TableId_dmmeta_cextern        = 10   // dmmeta.cextern -> amc.FCextern
-    ,amc_TableId_dmmeta_Cfmt           = 11   // dmmeta.Cfmt -> amc.FCfmt
-    ,amc_TableId_dmmeta_cfmt           = 11   // dmmeta.cfmt -> amc.FCfmt
-    ,amc_TableId_dmmeta_Cget           = 12   // dmmeta.Cget -> amc.FCget
-    ,amc_TableId_dmmeta_cget           = 12   // dmmeta.cget -> amc.FCget
-    ,amc_TableId_dmmeta_Charset        = 13   // dmmeta.Charset -> amc.FCharset
-    ,amc_TableId_dmmeta_charset        = 13   // dmmeta.charset -> amc.FCharset
-    ,amc_TableId_dmmeta_Chash          = 14   // dmmeta.Chash -> amc.FChash
-    ,amc_TableId_dmmeta_chash          = 14   // dmmeta.chash -> amc.FChash
-    ,amc_TableId_dmmeta_Cppfunc        = 15   // dmmeta.Cppfunc -> amc.FCppfunc
-    ,amc_TableId_dmmeta_cppfunc        = 15   // dmmeta.cppfunc -> amc.FCppfunc
-    ,amc_TableId_dmmeta_Cpptype        = 16   // dmmeta.Cpptype -> amc.FCpptype
-    ,amc_TableId_dmmeta_cpptype        = 16   // dmmeta.cpptype -> amc.FCpptype
-    ,amc_TableId_dmmeta_Csize          = 17   // dmmeta.Csize -> amc.FCsize
-    ,amc_TableId_dmmeta_csize          = 17   // dmmeta.csize -> amc.FCsize
-    ,amc_TableId_dmmeta_Cstr           = 18   // dmmeta.Cstr -> amc.FCstr
-    ,amc_TableId_dmmeta_cstr           = 18   // dmmeta.cstr -> amc.FCstr
-    ,amc_TableId_dmmeta_Ctype          = 19   // dmmeta.Ctype -> amc.FCtype
-    ,amc_TableId_dmmeta_ctype          = 19   // dmmeta.ctype -> amc.FCtype
-    ,amc_TableId_dmmeta_Dispatch       = 20   // dmmeta.Dispatch -> amc.FDispatch
-    ,amc_TableId_dmmeta_dispatch       = 20   // dmmeta.dispatch -> amc.FDispatch
-    ,amc_TableId_dmmeta_DispatchMsg    = 21   // dmmeta.DispatchMsg -> amc.FDispatchmsg
-    ,amc_TableId_dmmeta_dispatch_msg   = 21   // dmmeta.dispatch_msg -> amc.FDispatchmsg
-    ,amc_TableId_dmmeta_Dispctx        = 22   // dmmeta.Dispctx -> amc.FDispctx
-    ,amc_TableId_dmmeta_dispctx        = 22   // dmmeta.dispctx -> amc.FDispctx
-    ,amc_TableId_dmmeta_Dispfilter     = 23   // dmmeta.Dispfilter -> amc.FDispfilter
-    ,amc_TableId_dmmeta_dispfilter     = 23   // dmmeta.dispfilter -> amc.FDispfilter
-    ,amc_TableId_dmmeta_Disptrace      = 24   // dmmeta.Disptrace -> amc.FDisptrace
-    ,amc_TableId_dmmeta_disptrace      = 24   // dmmeta.disptrace -> amc.FDisptrace
-    ,amc_TableId_dmmeta_Fbase          = 25   // dmmeta.Fbase -> amc.FFbase
-    ,amc_TableId_dmmeta_fbase          = 25   // dmmeta.fbase -> amc.FFbase
-    ,amc_TableId_dmmeta_Fbigend        = 26   // dmmeta.Fbigend -> amc.FFbigend
-    ,amc_TableId_dmmeta_fbigend        = 26   // dmmeta.fbigend -> amc.FFbigend
-    ,amc_TableId_dmmeta_Fbitset        = 27   // dmmeta.Fbitset -> amc.FFbitset
-    ,amc_TableId_dmmeta_fbitset        = 27   // dmmeta.fbitset -> amc.FFbitset
-    ,amc_TableId_dmmeta_Fbuf           = 28   // dmmeta.Fbuf -> amc.FFbuf
-    ,amc_TableId_dmmeta_fbuf           = 28   // dmmeta.fbuf -> amc.FFbuf
-    ,amc_TableId_dmmeta_Fcast          = 29   // dmmeta.Fcast -> amc.FFcast
-    ,amc_TableId_dmmeta_fcast          = 29   // dmmeta.fcast -> amc.FFcast
-    ,amc_TableId_dmmeta_Fcleanup       = 30   // dmmeta.Fcleanup -> amc.FFcleanup
-    ,amc_TableId_dmmeta_fcleanup       = 30   // dmmeta.fcleanup -> amc.FFcleanup
-    ,amc_TableId_dmmeta_Fcmap          = 31   // dmmeta.Fcmap -> amc.FFcmap
-    ,amc_TableId_dmmeta_fcmap          = 31   // dmmeta.fcmap -> amc.FFcmap
-    ,amc_TableId_dmmeta_Fcmdline       = 32   // dmmeta.Fcmdline -> amc.FFcmdline
-    ,amc_TableId_dmmeta_fcmdline       = 32   // dmmeta.fcmdline -> amc.FFcmdline
-    ,amc_TableId_dmmeta_Fcmp           = 33   // dmmeta.Fcmp -> amc.FFcmp
-    ,amc_TableId_dmmeta_fcmp           = 33   // dmmeta.fcmp -> amc.FFcmp
-    ,amc_TableId_dmmeta_Fcompact       = 34   // dmmeta.Fcompact -> amc.FFcompact
-    ,amc_TableId_dmmeta_fcompact       = 34   // dmmeta.fcompact -> amc.FFcompact
-    ,amc_TableId_dmmeta_Fconst         = 35   // dmmeta.Fconst -> amc.FFconst
-    ,amc_TableId_dmmeta_fconst         = 35   // dmmeta.fconst -> amc.FFconst
-    ,amc_TableId_dmmeta_Fcurs          = 36   // dmmeta.Fcurs -> amc.FFcurs
-    ,amc_TableId_dmmeta_fcurs          = 36   // dmmeta.fcurs -> amc.FFcurs
-    ,amc_TableId_dmmeta_Fdec           = 37   // dmmeta.Fdec -> amc.FFdec
-    ,amc_TableId_dmmeta_fdec           = 37   // dmmeta.fdec -> amc.FFdec
-    ,amc_TableId_dmmeta_Fdelay         = 38   // dmmeta.Fdelay -> amc.FFdelay
-    ,amc_TableId_dmmeta_fdelay         = 38   // dmmeta.fdelay -> amc.FFdelay
-    ,amc_TableId_dmmeta_Field          = 39   // dmmeta.Field -> amc.FField
-    ,amc_TableId_dmmeta_field          = 39   // dmmeta.field -> amc.FField
-    ,amc_TableId_dmmeta_Findrem        = 40   // dmmeta.Findrem -> amc.FFindrem
-    ,amc_TableId_dmmeta_findrem        = 40   // dmmeta.findrem -> amc.FFindrem
-    ,amc_TableId_dmmeta_Finput         = 41   // dmmeta.Finput -> amc.FFinput
-    ,amc_TableId_dmmeta_finput         = 41   // dmmeta.finput -> amc.FFinput
-    ,amc_TableId_dmmeta_Fldoffset      = 42   // dmmeta.Fldoffset -> amc.FFldoffset
-    ,amc_TableId_dmmeta_fldoffset      = 42   // dmmeta.fldoffset -> amc.FFldoffset
-    ,amc_TableId_dmmeta_Floadtuples    = 43   // dmmeta.Floadtuples -> amc.FFloadtuples
-    ,amc_TableId_dmmeta_floadtuples    = 43   // dmmeta.floadtuples -> amc.FFloadtuples
-    ,amc_TableId_dmmeta_Fnoremove      = 44   // dmmeta.Fnoremove -> amc.FFnoremove
-    ,amc_TableId_dmmeta_fnoremove      = 44   // dmmeta.fnoremove -> amc.FFnoremove
-    ,amc_TableId_dmmeta_Foutput        = 45   // dmmeta.Foutput -> amc.FFoutput
-    ,amc_TableId_dmmeta_foutput        = 45   // dmmeta.foutput -> amc.FFoutput
-    ,amc_TableId_dmmeta_Fprefix        = 46   // dmmeta.Fprefix -> amc.FFprefix
-    ,amc_TableId_dmmeta_fprefix        = 46   // dmmeta.fprefix -> amc.FFprefix
-    ,amc_TableId_dmmeta_Fregx          = 47   // dmmeta.Fregx -> amc.FFregx
-    ,amc_TableId_dmmeta_fregx          = 47   // dmmeta.fregx -> amc.FFregx
-    ,amc_TableId_dmmeta_Fsort          = 48   // dmmeta.Fsort -> amc.FFsort
-    ,amc_TableId_dmmeta_fsort          = 48   // dmmeta.fsort -> amc.FFsort
-    ,amc_TableId_dmmeta_Fstep          = 49   // dmmeta.Fstep -> amc.FFstep
-    ,amc_TableId_dmmeta_fstep          = 49   // dmmeta.fstep -> amc.FFstep
-    ,amc_TableId_dmmeta_Ftrace         = 50   // dmmeta.Ftrace -> amc.FFtrace
-    ,amc_TableId_dmmeta_ftrace         = 50   // dmmeta.ftrace -> amc.FFtrace
-    ,amc_TableId_dmmeta_Func           = 51   // dmmeta.Func -> amc.FFunc
-    ,amc_TableId_dmmeta_Funique        = 52   // dmmeta.Funique -> amc.FFunique
-    ,amc_TableId_dmmeta_funique        = 52   // dmmeta.funique -> amc.FFunique
-    ,amc_TableId_dmmeta_Fuserinit      = 53   // dmmeta.Fuserinit -> amc.FFuserinit
-    ,amc_TableId_dmmeta_fuserinit      = 53   // dmmeta.fuserinit -> amc.FFuserinit
-    ,amc_TableId_dmmeta_Fwddecl        = 54   // dmmeta.Fwddecl -> amc.FFwddecl
-    ,amc_TableId_dmmeta_fwddecl        = 54   // dmmeta.fwddecl -> amc.FFwddecl
-    ,amc_TableId_dmmeta_Gconst         = 55   // dmmeta.Gconst -> amc.FGconst
-    ,amc_TableId_dmmeta_gconst         = 55   // dmmeta.gconst -> amc.FGconst
-    ,amc_TableId_dmmeta_Gstatic        = 56   // dmmeta.Gstatic -> amc.FGstatic
-    ,amc_TableId_dmmeta_gstatic        = 56   // dmmeta.gstatic -> amc.FGstatic
-    ,amc_TableId_dmmeta_Gsymbol        = 57   // dmmeta.Gsymbol -> amc.FGsymbol
-    ,amc_TableId_dmmeta_gsymbol        = 57   // dmmeta.gsymbol -> amc.FGsymbol
-    ,amc_TableId_dmmeta_Hook           = 58   // dmmeta.Hook -> amc.FHook
-    ,amc_TableId_dmmeta_hook           = 58   // dmmeta.hook -> amc.FHook
-    ,amc_TableId_dmmeta_Inlary         = 59   // dmmeta.Inlary -> amc.FInlary
-    ,amc_TableId_dmmeta_inlary         = 59   // dmmeta.inlary -> amc.FInlary
-    ,amc_TableId_dmmeta_Lenfld         = 60   // dmmeta.Lenfld -> amc.FLenfld
-    ,amc_TableId_dmmeta_lenfld         = 60   // dmmeta.lenfld -> amc.FLenfld
-    ,amc_TableId_dmmeta_Listtype       = 61   // dmmeta.Listtype -> amc.FListtype
-    ,amc_TableId_dmmeta_listtype       = 61   // dmmeta.listtype -> amc.FListtype
-    ,amc_TableId_dmmeta_Llist          = 62   // dmmeta.Llist -> amc.FLlist
-    ,amc_TableId_dmmeta_llist          = 62   // dmmeta.llist -> amc.FLlist
-    ,amc_TableId_dmmeta_Main           = 63   // dmmeta.Main -> amc.FMain
-    ,amc_TableId_dmmeta_main           = 63   // dmmeta.main -> amc.FMain
-    ,amc_TableId_dmmeta_Msgtype        = 64   // dmmeta.Msgtype -> amc.FMsgtype
-    ,amc_TableId_dmmeta_msgtype        = 64   // dmmeta.msgtype -> amc.FMsgtype
-    ,amc_TableId_dmmeta_Nocascdel      = 65   // dmmeta.Nocascdel -> amc.FNocascdel
-    ,amc_TableId_dmmeta_nocascdel      = 65   // dmmeta.nocascdel -> amc.FNocascdel
-    ,amc_TableId_dmmeta_Nossimfile     = 66   // dmmeta.Nossimfile -> amc.FNossimfile
-    ,amc_TableId_dmmeta_nossimfile     = 66   // dmmeta.nossimfile -> amc.FNossimfile
-    ,amc_TableId_dmmeta_Noxref         = 67   // dmmeta.Noxref -> amc.FNoxref
-    ,amc_TableId_dmmeta_noxref         = 67   // dmmeta.noxref -> amc.FNoxref
-    ,amc_TableId_dmmeta_Ns             = 68   // dmmeta.Ns -> amc.FNs
-    ,amc_TableId_dmmeta_ns             = 68   // dmmeta.ns -> amc.FNs
-    ,amc_TableId_dmmeta_Nsdb           = 69   // dmmeta.Nsdb -> amc.FNsdb
-    ,amc_TableId_dmmeta_nsdb           = 69   // dmmeta.nsdb -> amc.FNsdb
-    ,amc_TableId_dmmeta_Nsinclude      = 70   // dmmeta.Nsinclude -> amc.FNsinclude
-    ,amc_TableId_dmmeta_nsinclude      = 70   // dmmeta.nsinclude -> amc.FNsinclude
-    ,amc_TableId_dmmeta_Nsproto        = 71   // dmmeta.Nsproto -> amc.FNsproto
-    ,amc_TableId_dmmeta_nsproto        = 71   // dmmeta.nsproto -> amc.FNsproto
-    ,amc_TableId_dmmeta_Nsx            = 72   // dmmeta.Nsx -> amc.FNsx
-    ,amc_TableId_dmmeta_nsx            = 72   // dmmeta.nsx -> amc.FNsx
-    ,amc_TableId_dmmeta_Numstr         = 73   // dmmeta.Numstr -> amc.FNumstr
-    ,amc_TableId_dmmeta_numstr         = 73   // dmmeta.numstr -> amc.FNumstr
-    ,amc_TableId_dmmeta_Pack           = 74   // dmmeta.Pack -> amc.FPack
-    ,amc_TableId_dmmeta_pack           = 74   // dmmeta.pack -> amc.FPack
-    ,amc_TableId_dmmeta_Pmaskfld       = 75   // dmmeta.Pmaskfld -> amc.FPmaskfld
-    ,amc_TableId_dmmeta_pmaskfld       = 75   // dmmeta.pmaskfld -> amc.FPmaskfld
-    ,amc_TableId_dmmeta_Pnew           = 76   // dmmeta.Pnew -> amc.FPnew
-    ,amc_TableId_dmmeta_pnew           = 76   // dmmeta.pnew -> amc.FPnew
-    ,amc_TableId_dmmeta_Ptrary         = 77   // dmmeta.Ptrary -> amc.FPtrary
-    ,amc_TableId_dmmeta_ptrary         = 77   // dmmeta.ptrary -> amc.FPtrary
-    ,amc_TableId_dmmeta_Rowid          = 78   // dmmeta.Rowid -> amc.FRowid
-    ,amc_TableId_dmmeta_rowid          = 78   // dmmeta.rowid -> amc.FRowid
-    ,amc_TableId_dmmeta_Smallstr       = 79   // dmmeta.Smallstr -> amc.FSmallstr
-    ,amc_TableId_dmmeta_smallstr       = 79   // dmmeta.smallstr -> amc.FSmallstr
-    ,amc_TableId_dmmeta_Sortfld        = 80   // dmmeta.Sortfld -> amc.FSortfld
-    ,amc_TableId_dmmeta_sortfld        = 80   // dmmeta.sortfld -> amc.FSortfld
-    ,amc_TableId_dmmeta_Ssimfile       = 81   // dmmeta.Ssimfile -> amc.FSsimfile
-    ,amc_TableId_dmmeta_ssimfile       = 81   // dmmeta.ssimfile -> amc.FSsimfile
-    ,amc_TableId_dmmeta_Ssimvolatile   = 82   // dmmeta.Ssimvolatile -> amc.FSsimvolatile
-    ,amc_TableId_dmmeta_ssimvolatile   = 82   // dmmeta.ssimvolatile -> amc.FSsimvolatile
-    ,amc_TableId_dmmeta_Substr         = 83   // dmmeta.Substr -> amc.FSubstr
-    ,amc_TableId_dmmeta_substr         = 83   // dmmeta.substr -> amc.FSubstr
-    ,amc_TableId_dev_Targdep           = 84   // dev.Targdep -> amc.FTargdep
-    ,amc_TableId_dev_targdep           = 84   // dev.targdep -> amc.FTargdep
-    ,amc_TableId_dev_Target            = 85   // dev.Target -> amc.FTarget
-    ,amc_TableId_dev_target            = 85   // dev.target -> amc.FTarget
-    ,amc_TableId_dmmeta_Tary           = 86   // dmmeta.Tary -> amc.FTary
-    ,amc_TableId_dmmeta_tary           = 86   // dmmeta.tary -> amc.FTary
-    ,amc_TableId_amcdb_Tcurs           = 87   // amcdb.Tcurs -> amc.FTcurs
-    ,amc_TableId_amcdb_tcurs           = 87   // amcdb.tcurs -> amc.FTcurs
-    ,amc_TableId_dmmeta_Thash          = 88   // dmmeta.Thash -> amc.FThash
-    ,amc_TableId_dmmeta_thash          = 88   // dmmeta.thash -> amc.FThash
-    ,amc_TableId_dmmeta_Typefld        = 89   // dmmeta.Typefld -> amc.FTypefld
-    ,amc_TableId_dmmeta_typefld        = 89   // dmmeta.typefld -> amc.FTypefld
-    ,amc_TableId_dmmeta_Usertracefld   = 90   // dmmeta.Usertracefld -> amc.FUsertracefld
-    ,amc_TableId_dmmeta_usertracefld   = 90   // dmmeta.usertracefld -> amc.FUsertracefld
-    ,amc_TableId_dmmeta_Xref           = 91   // dmmeta.Xref -> amc.FXref
-    ,amc_TableId_dmmeta_xref           = 91   // dmmeta.xref -> amc.FXref
+    ,amc_TableId_dmmeta_Cdflt          = 8    // dmmeta.Cdflt -> amc.FCdflt
+    ,amc_TableId_dmmeta_cdflt          = 8    // dmmeta.cdflt -> amc.FCdflt
+    ,amc_TableId_dmmeta_Cextern        = 9    // dmmeta.Cextern -> amc.FCextern
+    ,amc_TableId_dmmeta_cextern        = 9    // dmmeta.cextern -> amc.FCextern
+    ,amc_TableId_dmmeta_Cfmt           = 10   // dmmeta.Cfmt -> amc.FCfmt
+    ,amc_TableId_dmmeta_cfmt           = 10   // dmmeta.cfmt -> amc.FCfmt
+    ,amc_TableId_dmmeta_Cget           = 11   // dmmeta.Cget -> amc.FCget
+    ,amc_TableId_dmmeta_cget           = 11   // dmmeta.cget -> amc.FCget
+    ,amc_TableId_dmmeta_Charset        = 12   // dmmeta.Charset -> amc.FCharset
+    ,amc_TableId_dmmeta_charset        = 12   // dmmeta.charset -> amc.FCharset
+    ,amc_TableId_dmmeta_Chash          = 13   // dmmeta.Chash -> amc.FChash
+    ,amc_TableId_dmmeta_chash          = 13   // dmmeta.chash -> amc.FChash
+    ,amc_TableId_dmmeta_Cppfunc        = 14   // dmmeta.Cppfunc -> amc.FCppfunc
+    ,amc_TableId_dmmeta_cppfunc        = 14   // dmmeta.cppfunc -> amc.FCppfunc
+    ,amc_TableId_dmmeta_Cpptype        = 15   // dmmeta.Cpptype -> amc.FCpptype
+    ,amc_TableId_dmmeta_cpptype        = 15   // dmmeta.cpptype -> amc.FCpptype
+    ,amc_TableId_dmmeta_Csize          = 16   // dmmeta.Csize -> amc.FCsize
+    ,amc_TableId_dmmeta_csize          = 16   // dmmeta.csize -> amc.FCsize
+    ,amc_TableId_dmmeta_Cstr           = 17   // dmmeta.Cstr -> amc.FCstr
+    ,amc_TableId_dmmeta_cstr           = 17   // dmmeta.cstr -> amc.FCstr
+    ,amc_TableId_dmmeta_Ctype          = 18   // dmmeta.Ctype -> amc.FCtype
+    ,amc_TableId_dmmeta_ctype          = 18   // dmmeta.ctype -> amc.FCtype
+    ,amc_TableId_dmmeta_Dispatch       = 19   // dmmeta.Dispatch -> amc.FDispatch
+    ,amc_TableId_dmmeta_dispatch       = 19   // dmmeta.dispatch -> amc.FDispatch
+    ,amc_TableId_dmmeta_DispatchMsg    = 20   // dmmeta.DispatchMsg -> amc.FDispatchmsg
+    ,amc_TableId_dmmeta_dispatch_msg   = 20   // dmmeta.dispatch_msg -> amc.FDispatchmsg
+    ,amc_TableId_dmmeta_Dispctx        = 21   // dmmeta.Dispctx -> amc.FDispctx
+    ,amc_TableId_dmmeta_dispctx        = 21   // dmmeta.dispctx -> amc.FDispctx
+    ,amc_TableId_dmmeta_Dispfilter     = 22   // dmmeta.Dispfilter -> amc.FDispfilter
+    ,amc_TableId_dmmeta_dispfilter     = 22   // dmmeta.dispfilter -> amc.FDispfilter
+    ,amc_TableId_dmmeta_Disptrace      = 23   // dmmeta.Disptrace -> amc.FDisptrace
+    ,amc_TableId_dmmeta_disptrace      = 23   // dmmeta.disptrace -> amc.FDisptrace
+    ,amc_TableId_dmmeta_Fbase          = 24   // dmmeta.Fbase -> amc.FFbase
+    ,amc_TableId_dmmeta_fbase          = 24   // dmmeta.fbase -> amc.FFbase
+    ,amc_TableId_dmmeta_Fbigend        = 25   // dmmeta.Fbigend -> amc.FFbigend
+    ,amc_TableId_dmmeta_fbigend        = 25   // dmmeta.fbigend -> amc.FFbigend
+    ,amc_TableId_dmmeta_Fbitset        = 26   // dmmeta.Fbitset -> amc.FFbitset
+    ,amc_TableId_dmmeta_fbitset        = 26   // dmmeta.fbitset -> amc.FFbitset
+    ,amc_TableId_dmmeta_Fbuf           = 27   // dmmeta.Fbuf -> amc.FFbuf
+    ,amc_TableId_dmmeta_fbuf           = 27   // dmmeta.fbuf -> amc.FFbuf
+    ,amc_TableId_dmmeta_Fcast          = 28   // dmmeta.Fcast -> amc.FFcast
+    ,amc_TableId_dmmeta_fcast          = 28   // dmmeta.fcast -> amc.FFcast
+    ,amc_TableId_dmmeta_Fcleanup       = 29   // dmmeta.Fcleanup -> amc.FFcleanup
+    ,amc_TableId_dmmeta_fcleanup       = 29   // dmmeta.fcleanup -> amc.FFcleanup
+    ,amc_TableId_dmmeta_Fcmap          = 30   // dmmeta.Fcmap -> amc.FFcmap
+    ,amc_TableId_dmmeta_fcmap          = 30   // dmmeta.fcmap -> amc.FFcmap
+    ,amc_TableId_dmmeta_Fcmdline       = 31   // dmmeta.Fcmdline -> amc.FFcmdline
+    ,amc_TableId_dmmeta_fcmdline       = 31   // dmmeta.fcmdline -> amc.FFcmdline
+    ,amc_TableId_dmmeta_Fcmp           = 32   // dmmeta.Fcmp -> amc.FFcmp
+    ,amc_TableId_dmmeta_fcmp           = 32   // dmmeta.fcmp -> amc.FFcmp
+    ,amc_TableId_dmmeta_Fcompact       = 33   // dmmeta.Fcompact -> amc.FFcompact
+    ,amc_TableId_dmmeta_fcompact       = 33   // dmmeta.fcompact -> amc.FFcompact
+    ,amc_TableId_dmmeta_Fconst         = 34   // dmmeta.Fconst -> amc.FFconst
+    ,amc_TableId_dmmeta_fconst         = 34   // dmmeta.fconst -> amc.FFconst
+    ,amc_TableId_dmmeta_Fcurs          = 35   // dmmeta.Fcurs -> amc.FFcurs
+    ,amc_TableId_dmmeta_fcurs          = 35   // dmmeta.fcurs -> amc.FFcurs
+    ,amc_TableId_dmmeta_Fdec           = 36   // dmmeta.Fdec -> amc.FFdec
+    ,amc_TableId_dmmeta_fdec           = 36   // dmmeta.fdec -> amc.FFdec
+    ,amc_TableId_dmmeta_Fdelay         = 37   // dmmeta.Fdelay -> amc.FFdelay
+    ,amc_TableId_dmmeta_fdelay         = 37   // dmmeta.fdelay -> amc.FFdelay
+    ,amc_TableId_dmmeta_Field          = 38   // dmmeta.Field -> amc.FField
+    ,amc_TableId_dmmeta_field          = 38   // dmmeta.field -> amc.FField
+    ,amc_TableId_dmmeta_Findrem        = 39   // dmmeta.Findrem -> amc.FFindrem
+    ,amc_TableId_dmmeta_findrem        = 39   // dmmeta.findrem -> amc.FFindrem
+    ,amc_TableId_dmmeta_Finput         = 40   // dmmeta.Finput -> amc.FFinput
+    ,amc_TableId_dmmeta_finput         = 40   // dmmeta.finput -> amc.FFinput
+    ,amc_TableId_dmmeta_Fldoffset      = 41   // dmmeta.Fldoffset -> amc.FFldoffset
+    ,amc_TableId_dmmeta_fldoffset      = 41   // dmmeta.fldoffset -> amc.FFldoffset
+    ,amc_TableId_dmmeta_Floadtuples    = 42   // dmmeta.Floadtuples -> amc.FFloadtuples
+    ,amc_TableId_dmmeta_floadtuples    = 42   // dmmeta.floadtuples -> amc.FFloadtuples
+    ,amc_TableId_dmmeta_Fnoremove      = 43   // dmmeta.Fnoremove -> amc.FFnoremove
+    ,amc_TableId_dmmeta_fnoremove      = 43   // dmmeta.fnoremove -> amc.FFnoremove
+    ,amc_TableId_dmmeta_Foutput        = 44   // dmmeta.Foutput -> amc.FFoutput
+    ,amc_TableId_dmmeta_foutput        = 44   // dmmeta.foutput -> amc.FFoutput
+    ,amc_TableId_dmmeta_Fprefix        = 45   // dmmeta.Fprefix -> amc.FFprefix
+    ,amc_TableId_dmmeta_fprefix        = 45   // dmmeta.fprefix -> amc.FFprefix
+    ,amc_TableId_dmmeta_Fregx          = 46   // dmmeta.Fregx -> amc.FFregx
+    ,amc_TableId_dmmeta_fregx          = 46   // dmmeta.fregx -> amc.FFregx
+    ,amc_TableId_dmmeta_Fsort          = 47   // dmmeta.Fsort -> amc.FFsort
+    ,amc_TableId_dmmeta_fsort          = 47   // dmmeta.fsort -> amc.FFsort
+    ,amc_TableId_dmmeta_Fstep          = 48   // dmmeta.Fstep -> amc.FFstep
+    ,amc_TableId_dmmeta_fstep          = 48   // dmmeta.fstep -> amc.FFstep
+    ,amc_TableId_dmmeta_Ftrace         = 49   // dmmeta.Ftrace -> amc.FFtrace
+    ,amc_TableId_dmmeta_ftrace         = 49   // dmmeta.ftrace -> amc.FFtrace
+    ,amc_TableId_dmmeta_Func           = 50   // dmmeta.Func -> amc.FFunc
+    ,amc_TableId_dmmeta_Funique        = 51   // dmmeta.Funique -> amc.FFunique
+    ,amc_TableId_dmmeta_funique        = 51   // dmmeta.funique -> amc.FFunique
+    ,amc_TableId_dmmeta_Fuserinit      = 52   // dmmeta.Fuserinit -> amc.FFuserinit
+    ,amc_TableId_dmmeta_fuserinit      = 52   // dmmeta.fuserinit -> amc.FFuserinit
+    ,amc_TableId_dmmeta_Fwddecl        = 53   // dmmeta.Fwddecl -> amc.FFwddecl
+    ,amc_TableId_dmmeta_fwddecl        = 53   // dmmeta.fwddecl -> amc.FFwddecl
+    ,amc_TableId_dmmeta_Gconst         = 54   // dmmeta.Gconst -> amc.FGconst
+    ,amc_TableId_dmmeta_gconst         = 54   // dmmeta.gconst -> amc.FGconst
+    ,amc_TableId_dmmeta_Gstatic        = 55   // dmmeta.Gstatic -> amc.FGstatic
+    ,amc_TableId_dmmeta_gstatic        = 55   // dmmeta.gstatic -> amc.FGstatic
+    ,amc_TableId_dmmeta_Gsymbol        = 56   // dmmeta.Gsymbol -> amc.FGsymbol
+    ,amc_TableId_dmmeta_gsymbol        = 56   // dmmeta.gsymbol -> amc.FGsymbol
+    ,amc_TableId_dmmeta_Hook           = 57   // dmmeta.Hook -> amc.FHook
+    ,amc_TableId_dmmeta_hook           = 57   // dmmeta.hook -> amc.FHook
+    ,amc_TableId_dmmeta_Inlary         = 58   // dmmeta.Inlary -> amc.FInlary
+    ,amc_TableId_dmmeta_inlary         = 58   // dmmeta.inlary -> amc.FInlary
+    ,amc_TableId_dmmeta_Lenfld         = 59   // dmmeta.Lenfld -> amc.FLenfld
+    ,amc_TableId_dmmeta_lenfld         = 59   // dmmeta.lenfld -> amc.FLenfld
+    ,amc_TableId_dmmeta_Listtype       = 60   // dmmeta.Listtype -> amc.FListtype
+    ,amc_TableId_dmmeta_listtype       = 60   // dmmeta.listtype -> amc.FListtype
+    ,amc_TableId_dmmeta_Llist          = 61   // dmmeta.Llist -> amc.FLlist
+    ,amc_TableId_dmmeta_llist          = 61   // dmmeta.llist -> amc.FLlist
+    ,amc_TableId_dmmeta_Main           = 62   // dmmeta.Main -> amc.FMain
+    ,amc_TableId_dmmeta_main           = 62   // dmmeta.main -> amc.FMain
+    ,amc_TableId_dmmeta_Msgtype        = 63   // dmmeta.Msgtype -> amc.FMsgtype
+    ,amc_TableId_dmmeta_msgtype        = 63   // dmmeta.msgtype -> amc.FMsgtype
+    ,amc_TableId_dmmeta_Nocascdel      = 64   // dmmeta.Nocascdel -> amc.FNocascdel
+    ,amc_TableId_dmmeta_nocascdel      = 64   // dmmeta.nocascdel -> amc.FNocascdel
+    ,amc_TableId_dmmeta_Nossimfile     = 65   // dmmeta.Nossimfile -> amc.FNossimfile
+    ,amc_TableId_dmmeta_nossimfile     = 65   // dmmeta.nossimfile -> amc.FNossimfile
+    ,amc_TableId_dmmeta_Noxref         = 66   // dmmeta.Noxref -> amc.FNoxref
+    ,amc_TableId_dmmeta_noxref         = 66   // dmmeta.noxref -> amc.FNoxref
+    ,amc_TableId_dmmeta_Ns             = 67   // dmmeta.Ns -> amc.FNs
+    ,amc_TableId_dmmeta_ns             = 67   // dmmeta.ns -> amc.FNs
+    ,amc_TableId_dmmeta_Nsdb           = 68   // dmmeta.Nsdb -> amc.FNsdb
+    ,amc_TableId_dmmeta_nsdb           = 68   // dmmeta.nsdb -> amc.FNsdb
+    ,amc_TableId_dmmeta_Nsinclude      = 69   // dmmeta.Nsinclude -> amc.FNsinclude
+    ,amc_TableId_dmmeta_nsinclude      = 69   // dmmeta.nsinclude -> amc.FNsinclude
+    ,amc_TableId_dmmeta_Nsproto        = 70   // dmmeta.Nsproto -> amc.FNsproto
+    ,amc_TableId_dmmeta_nsproto        = 70   // dmmeta.nsproto -> amc.FNsproto
+    ,amc_TableId_dmmeta_Nsx            = 71   // dmmeta.Nsx -> amc.FNsx
+    ,amc_TableId_dmmeta_nsx            = 71   // dmmeta.nsx -> amc.FNsx
+    ,amc_TableId_dmmeta_Numstr         = 72   // dmmeta.Numstr -> amc.FNumstr
+    ,amc_TableId_dmmeta_numstr         = 72   // dmmeta.numstr -> amc.FNumstr
+    ,amc_TableId_dmmeta_Pack           = 73   // dmmeta.Pack -> amc.FPack
+    ,amc_TableId_dmmeta_pack           = 73   // dmmeta.pack -> amc.FPack
+    ,amc_TableId_dmmeta_Pmaskfld       = 74   // dmmeta.Pmaskfld -> amc.FPmaskfld
+    ,amc_TableId_dmmeta_pmaskfld       = 74   // dmmeta.pmaskfld -> amc.FPmaskfld
+    ,amc_TableId_dmmeta_Pnew           = 75   // dmmeta.Pnew -> amc.FPnew
+    ,amc_TableId_dmmeta_pnew           = 75   // dmmeta.pnew -> amc.FPnew
+    ,amc_TableId_dmmeta_Ptrary         = 76   // dmmeta.Ptrary -> amc.FPtrary
+    ,amc_TableId_dmmeta_ptrary         = 76   // dmmeta.ptrary -> amc.FPtrary
+    ,amc_TableId_dmmeta_Rowid          = 77   // dmmeta.Rowid -> amc.FRowid
+    ,amc_TableId_dmmeta_rowid          = 77   // dmmeta.rowid -> amc.FRowid
+    ,amc_TableId_dmmeta_Smallstr       = 78   // dmmeta.Smallstr -> amc.FSmallstr
+    ,amc_TableId_dmmeta_smallstr       = 78   // dmmeta.smallstr -> amc.FSmallstr
+    ,amc_TableId_dmmeta_Sortfld        = 79   // dmmeta.Sortfld -> amc.FSortfld
+    ,amc_TableId_dmmeta_sortfld        = 79   // dmmeta.sortfld -> amc.FSortfld
+    ,amc_TableId_dmmeta_Ssimfile       = 80   // dmmeta.Ssimfile -> amc.FSsimfile
+    ,amc_TableId_dmmeta_ssimfile       = 80   // dmmeta.ssimfile -> amc.FSsimfile
+    ,amc_TableId_dmmeta_Ssimvolatile   = 81   // dmmeta.Ssimvolatile -> amc.FSsimvolatile
+    ,amc_TableId_dmmeta_ssimvolatile   = 81   // dmmeta.ssimvolatile -> amc.FSsimvolatile
+    ,amc_TableId_dmmeta_Substr         = 82   // dmmeta.Substr -> amc.FSubstr
+    ,amc_TableId_dmmeta_substr         = 82   // dmmeta.substr -> amc.FSubstr
+    ,amc_TableId_dev_Targdep           = 83   // dev.Targdep -> amc.FTargdep
+    ,amc_TableId_dev_targdep           = 83   // dev.targdep -> amc.FTargdep
+    ,amc_TableId_dev_Target            = 84   // dev.Target -> amc.FTarget
+    ,amc_TableId_dev_target            = 84   // dev.target -> amc.FTarget
+    ,amc_TableId_dmmeta_Tary           = 85   // dmmeta.Tary -> amc.FTary
+    ,amc_TableId_dmmeta_tary           = 85   // dmmeta.tary -> amc.FTary
+    ,amc_TableId_amcdb_Tcurs           = 86   // amcdb.Tcurs -> amc.FTcurs
+    ,amc_TableId_amcdb_tcurs           = 86   // amcdb.tcurs -> amc.FTcurs
+    ,amc_TableId_dmmeta_Thash          = 87   // dmmeta.Thash -> amc.FThash
+    ,amc_TableId_dmmeta_thash          = 87   // dmmeta.thash -> amc.FThash
+    ,amc_TableId_dmmeta_Typefld        = 88   // dmmeta.Typefld -> amc.FTypefld
+    ,amc_TableId_dmmeta_typefld        = 88   // dmmeta.typefld -> amc.FTypefld
+    ,amc_TableId_dmmeta_Usertracefld   = 89   // dmmeta.Usertracefld -> amc.FUsertracefld
+    ,amc_TableId_dmmeta_usertracefld   = 89   // dmmeta.usertracefld -> amc.FUsertracefld
+    ,amc_TableId_dmmeta_Xref           = 90   // dmmeta.Xref -> amc.FXref
+    ,amc_TableId_dmmeta_xref           = 90   // dmmeta.xref -> amc.FXref
 };
 
-enum { amc_TableIdEnum_N = 183 };
+enum { amc_TableIdEnum_N = 181 };
 
 namespace amc { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -353,7 +351,6 @@ namespace dmmeta { struct Cafter; }
 namespace amc { struct FCtype; }
 namespace dmmeta { struct Cascdel; }
 namespace dmmeta { struct Ccmp; }
-namespace dmmeta { struct Cdecl; }
 namespace dmmeta { struct Cdflt; }
 namespace dmmeta { struct Cextern; }
 namespace dmmeta { struct Cfmt; }
@@ -465,7 +462,6 @@ namespace amc { struct ctype_c_ffunc_curs; }
 namespace amc { struct ctype_zd_cafter_curs; }
 namespace amc { struct ctype_zd_access_curs; }
 namespace amc { struct ctype_c_fcurs_curs; }
-namespace amc { struct ctype_c_cdecl_curs; }
 namespace amc { struct tclass_c_tfunc_curs; }
 namespace amc { struct _db_fsort_curs; }
 namespace amc { struct _db_dispfilter_curs; }
@@ -574,7 +570,6 @@ namespace amc { struct _db_gsymbol_curs; }
 namespace amc { struct _db_sortfld_curs; }
 namespace amc { struct _db_cget_curs; }
 namespace amc { struct _db_cd_temp_func_curs; }
-namespace amc { struct _db_cdecl_curs; }
 namespace amc { struct _db_zs_gen_perns_curs; }
 namespace amc { struct _db_hook_curs; }
 namespace amc { struct _db_charset_curs; }
@@ -624,7 +619,6 @@ namespace amc { struct FBltin; }
 namespace amc { struct FCafter; }
 namespace amc { struct FCascdel; }
 namespace amc { struct FCcmp; }
-namespace amc { struct FCdecl; }
 namespace amc { struct FCdflt; }
 namespace amc { struct FCextern; }
 namespace amc { struct FCfmt; }
@@ -1035,36 +1029,6 @@ void                 ccmp_CopyIn(amc::FCcmp &row, dmmeta::Ccmp &in) __attribute_
 void                 FCcmp_Init(amc::FCcmp& ccmp);
 void                 FCcmp_Uninit(amc::FCcmp& ccmp) __attribute__((nothrow));
 
-// --- amc.FCdecl
-// create: amc.FDb.cdecl (Lary)
-// access: amc.FCtype.c_cdecl (Ptrary)
-struct FCdecl { // amc.FCdecl
-    algo::Smallstr50   ctype;                  //
-    bool               fwddecl;                //   false
-    bool               gen_using;              //   false
-    algo::Comment      comment;                //
-    amc::FCtype*       p_ctype;                // reference to parent row
-    bool               ctype_c_cdecl_in_ary;   //   false  membership flag
-private:
-    friend amc::FCdecl&         cdecl_Alloc() __attribute__((__warn_unused_result__, nothrow));
-    friend amc::FCdecl*         cdecl_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 cdecl_RemoveAll() __attribute__((nothrow));
-    friend void                 cdecl_RemoveLast() __attribute__((nothrow));
-    FCdecl();
-    ~FCdecl();
-    FCdecl(const FCdecl&){ /*disallow copy constructor */}
-    void operator =(const FCdecl&){ /*disallow direct assignment */}
-};
-
-// Copy fields out of row
-void                 cdecl_CopyOut(amc::FCdecl &row, dmmeta::Cdecl &out) __attribute__((nothrow));
-// Copy fields in to row
-void                 cdecl_CopyIn(amc::FCdecl &row, dmmeta::Cdecl &in) __attribute__((nothrow));
-
-// Set all fields to initial values.
-void                 FCdecl_Init(amc::FCdecl& cdecl);
-void                 FCdecl_Uninit(amc::FCdecl& cdecl) __attribute__((nothrow));
-
 // --- amc.FCdflt
 // create: amc.FDb.cdflt (Lary)
 // access: amc.FCtype.c_cdflt (Ptr)
@@ -1334,7 +1298,6 @@ void                 FCstr_Uninit(amc::FCstr& cstr) __attribute__((nothrow));
 // global access: zs_sig_visit (Llist)
 // global access: c_u64 (Ptr)
 // access: amc.FCafter.p_after (Upptr)
-// access: amc.FCdecl.p_ctype (Upptr)
 // access: amc.FCget.p_ctype (Upptr)
 // access: amc.FCpptype.p_ctype (Upptr)
 // access: amc.FCtype.c_parent (Ptrary)
@@ -1434,9 +1397,6 @@ struct FCtype { // amc.FCtype
     i32                   n_xref;                     //   0
     i32                   next_anon_idx;              //   0  sequence to enumerate positional fields
     amc::FNossimfile*     c_nossimfile;               // optional pointer
-    amc::FCdecl**         c_cdecl_elems;              // array of pointers
-    u32                   c_cdecl_n;                  // array of pointers
-    u32                   c_cdecl_max;                // capacity of allocated array
     bool                  ns_c_ctype_in_ary;          //   false  membership flag
     bool                  ns_c_ctype_ins_in_ary;      //   false  membership flag
     amc::FCtype*          ind_ctype_next;             // hash next
@@ -1825,28 +1785,6 @@ bool                 c_nossimfile_InsertMaybe(amc::FCtype& ctype, amc::FNossimfi
 // Remove element from index. If element is not in index, do nothing.
 void                 c_nossimfile_Remove(amc::FCtype& ctype, amc::FNossimfile& row) __attribute__((nothrow));
 
-// Return true if index is empty
-bool                 c_cdecl_EmptyQ(amc::FCtype& ctype) __attribute__((nothrow));
-// Look up row by row id. Return NULL if out of range
-amc::FCdecl*         c_cdecl_Find(amc::FCtype& ctype, u32 t) __attribute__((__warn_unused_result__, nothrow));
-// Return array of pointers
-algo::aryptr<amc::FCdecl*> c_cdecl_Getary(amc::FCtype& ctype) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
-void                 c_cdecl_Insert(amc::FCtype& ctype, amc::FCdecl& row) __attribute__((nothrow));
-// Insert pointer to row in array.
-// If row is already in the array, do nothing.
-// Return value: whether element was inserted into array.
-bool                 c_cdecl_InsertMaybe(amc::FCtype& ctype, amc::FCdecl& row) __attribute__((nothrow));
-// Return number of items in the pointer array
-i32                  c_cdecl_N(const amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
-// Find element using linear scan. If element is in array, remove, otherwise do nothing
-void                 c_cdecl_Remove(amc::FCtype& ctype, amc::FCdecl& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-void                 c_cdecl_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
-// Reserve space in index for N more elements;
-void                 c_cdecl_Reserve(amc::FCtype& ctype, u32 n) __attribute__((nothrow));
-
 // cursor points to valid item
 void                 ctype_zs_cfmt_curs_Reset(ctype_zs_cfmt_curs &curs, amc::FCtype &parent);
 // cursor points to valid item
@@ -1929,13 +1867,6 @@ bool                 ctype_c_fcurs_curs_ValidQ(ctype_c_fcurs_curs &curs);
 void                 ctype_c_fcurs_curs_Next(ctype_c_fcurs_curs &curs);
 // item access
 amc::FFcurs&         ctype_c_fcurs_curs_Access(ctype_c_fcurs_curs &curs);
-void                 ctype_c_cdecl_curs_Reset(ctype_c_cdecl_curs &curs, amc::FCtype &parent);
-// cursor points to valid item
-bool                 ctype_c_cdecl_curs_ValidQ(ctype_c_cdecl_curs &curs);
-// proceed to next item
-void                 ctype_c_cdecl_curs_Next(ctype_c_cdecl_curs &curs);
-// item access
-amc::FCdecl&         ctype_c_cdecl_curs_Access(ctype_c_cdecl_curs &curs);
 // Set all fields to initial values.
 void                 FCtype_Init(amc::FCtype& ctype);
 void                 FCtype_Uninit(amc::FCtype& ctype) __attribute__((nothrow));
@@ -2396,8 +2327,6 @@ struct FDb { // amc.FDb
     i32                   cget_n;                                   // number of elements in array
     amc::FFunc*           cd_temp_func_head;                        // zero-terminated doubly linked list
     i32                   cd_temp_func_n;                           // zero-terminated doubly linked list
-    amc::FCdecl*          cdecl_lary[32];                           // level array
-    i32                   cdecl_n;                                  // number of elements in array
     amc::FGen*            zs_gen_perns_head;                        // zero-terminated singly linked list
     amc::FGen*            zs_gen_perns_tail;                        // pointer to last element
     amc::FHook*           hook_lary[32];                            // level array
@@ -5815,34 +5744,6 @@ amc::FFunc*          cd_temp_func_RotateFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 amc::FFunc&          cd_temp_func_qLast() __attribute__((__warn_unused_result__, nothrow));
 
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-amc::FCdecl&         cdecl_Alloc() __attribute__((__warn_unused_result__, nothrow));
-// Allocate memory for new element. If out of memory, return NULL.
-amc::FCdecl*         cdecl_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-amc::FCdecl*         cdecl_InsertMaybe(const dmmeta::Cdecl &value) __attribute__((nothrow));
-// Allocate space for one element. If no memory available, return NULL.
-void*                cdecl_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-bool                 cdecl_EmptyQ() __attribute__((nothrow));
-// Look up row by row id. Return NULL if out of range
-amc::FCdecl*         cdecl_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
-// Return pointer to last element of array, or NULL if array is empty
-amc::FCdecl*         cdecl_Last() __attribute__((nothrow, pure));
-// Return number of items in the pool
-i32                  cdecl_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Remove all elements from Lary
-void                 cdecl_RemoveAll() __attribute__((nothrow));
-// Delete last element of array. Do nothing if array is empty.
-void                 cdecl_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-amc::FCdecl&         cdecl_qFind(u64 t) __attribute__((nothrow));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool                 cdecl_XrefMaybe(amc::FCdecl &row);
-
 // Return true if index is empty
 bool                 zs_gen_perns_EmptyQ() __attribute__((__warn_unused_result__, nothrow));
 // If index empty, return NULL. Otherwise return pointer to first element in index
@@ -6929,14 +6830,6 @@ bool                 _db_cd_temp_func_curs_ValidQ(_db_cd_temp_func_curs &curs);
 void                 _db_cd_temp_func_curs_Next(_db_cd_temp_func_curs &curs);
 // item access
 amc::FFunc&          _db_cd_temp_func_curs_Access(_db_cd_temp_func_curs &curs);
-// cursor points to valid item
-void                 _db_cdecl_curs_Reset(_db_cdecl_curs &curs, amc::FDb &parent);
-// cursor points to valid item
-bool                 _db_cdecl_curs_ValidQ(_db_cdecl_curs &curs);
-// proceed to next item
-void                 _db_cdecl_curs_Next(_db_cdecl_curs &curs);
-// item access
-amc::FCdecl&         _db_cdecl_curs_Access(_db_cdecl_curs &curs);
 // cursor points to valid item
 void                 _db_zs_gen_perns_curs_Reset(_db_zs_gen_perns_curs &curs, amc::FDb &parent);
 // cursor points to valid item
@@ -11082,15 +10975,6 @@ struct ctype_c_fcurs_curs {// fcurs:amc.FCtype.c_fcurs/curs
 };
 
 
-struct ctype_c_cdecl_curs {// fcurs:amc.FCtype.c_cdecl/curs
-    typedef amc::FCdecl ChildType;
-    amc::FCdecl** elems;
-    u32 n_elems;
-    u32 index;
-    ctype_c_cdecl_curs() { elems=NULL; n_elems=0; index=0; }
-};
-
-
 struct tclass_c_tfunc_curs {// fcurs:amc.FTclass.c_tfunc/curs
     typedef amc::FTfunc ChildType;
     amc::FTfunc** elems;
@@ -11970,14 +11854,6 @@ struct _db_cd_temp_func_curs {// fcurs:amc.FDb.cd_temp_func/curs
         row = NULL;
         head = NULL;
     }
-};
-
-
-struct _db_cdecl_curs {// cursor
-    typedef amc::FCdecl ChildType;
-    amc::FDb *parent;
-    i64 index;
-    _db_cdecl_curs(){ parent=NULL; index=0; }
 };
 
 

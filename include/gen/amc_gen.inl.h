@@ -336,23 +336,6 @@ inline void amc::FCcmp_Init(amc::FCcmp& ccmp) {
     ccmp.minmax = bool(false);
     ccmp.ind_ccmp_next = (amc::FCcmp*)-1; // (amc.FDb.ind_ccmp) not-in-hash
 }
-inline amc::FCdecl::FCdecl() {
-    amc::FCdecl_Init(*this);
-}
-
-inline amc::FCdecl::~FCdecl() {
-    amc::FCdecl_Uninit(*this);
-}
-
-
-// --- amc.FCdecl..Init
-// Set all fields to initial values.
-inline void amc::FCdecl_Init(amc::FCdecl& cdecl) {
-    cdecl.fwddecl = bool(false);
-    cdecl.gen_using = bool(false);
-    cdecl.p_ctype = NULL;
-    cdecl.ctype_c_cdecl_in_ary = bool(false);
-}
 inline amc::FCdflt::FCdflt() {
 }
 
@@ -1385,46 +1368,6 @@ inline void amc::c_nossimfile_Remove(amc::FCtype& ctype, amc::FNossimfile& row) 
     }
 }
 
-// --- amc.FCtype.c_cdecl.EmptyQ
-// Return true if index is empty
-inline bool amc::c_cdecl_EmptyQ(amc::FCtype& ctype) {
-    return ctype.c_cdecl_n == 0;
-}
-
-// --- amc.FCtype.c_cdecl.Find
-// Look up row by row id. Return NULL if out of range
-inline amc::FCdecl* amc::c_cdecl_Find(amc::FCtype& ctype, u32 t) {
-    amc::FCdecl *retval = NULL;
-    u64 idx = t;
-    u64 lim = ctype.c_cdecl_n;
-    if (idx < lim) {
-        retval = ctype.c_cdecl_elems[idx];
-    }
-    return retval;
-}
-
-// --- amc.FCtype.c_cdecl.Getary
-// Return array of pointers
-inline algo::aryptr<amc::FCdecl*> amc::c_cdecl_Getary(amc::FCtype& ctype) {
-    return algo::aryptr<amc::FCdecl*>(ctype.c_cdecl_elems, ctype.c_cdecl_n);
-}
-
-// --- amc.FCtype.c_cdecl.N
-// Return number of items in the pointer array
-inline i32 amc::c_cdecl_N(const amc::FCtype& ctype) {
-    return ctype.c_cdecl_n;
-}
-
-// --- amc.FCtype.c_cdecl.RemoveAll
-// Empty the index. (The rows are not deleted)
-inline void amc::c_cdecl_RemoveAll(amc::FCtype& ctype) {
-    for (u32 i = 0; i < ctype.c_cdecl_n; i++) {
-        // mark all elements as not-in-array
-        ctype.c_cdecl_elems[i]->ctype_c_cdecl_in_ary = false;
-    }
-    ctype.c_cdecl_n = 0;
-}
-
 // --- amc.FCtype.zs_cfmt_curs.Reset
 // cursor points to valid item
 inline void amc::ctype_zs_cfmt_curs_Reset(ctype_zs_cfmt_curs &curs, amc::FCtype &parent) {
@@ -1697,31 +1640,6 @@ inline void amc::ctype_c_fcurs_curs_Next(ctype_c_fcurs_curs &curs) {
 // --- amc.FCtype.c_fcurs_curs.Access
 // item access
 inline amc::FFcurs& amc::ctype_c_fcurs_curs_Access(ctype_c_fcurs_curs &curs) {
-    return *curs.elems[curs.index];
-}
-
-// --- amc.FCtype.c_cdecl_curs.Reset
-inline void amc::ctype_c_cdecl_curs_Reset(ctype_c_cdecl_curs &curs, amc::FCtype &parent) {
-    curs.elems = parent.c_cdecl_elems;
-    curs.n_elems = parent.c_cdecl_n;
-    curs.index = 0;
-}
-
-// --- amc.FCtype.c_cdecl_curs.ValidQ
-// cursor points to valid item
-inline bool amc::ctype_c_cdecl_curs_ValidQ(ctype_c_cdecl_curs &curs) {
-    return curs.index < curs.n_elems;
-}
-
-// --- amc.FCtype.c_cdecl_curs.Next
-// proceed to next item
-inline void amc::ctype_c_cdecl_curs_Next(ctype_c_cdecl_curs &curs) {
-    curs.index++;
-}
-
-// --- amc.FCtype.c_cdecl_curs.Access
-// item access
-inline amc::FCdecl& amc::ctype_c_cdecl_curs_Access(ctype_c_cdecl_curs &curs) {
     return *curs.elems[curs.index];
 }
 inline amc::FCtypelen::FCtypelen() {
@@ -6762,48 +6680,6 @@ inline amc::FFunc& amc::cd_temp_func_qLast() {
     return *row;
 }
 
-// --- amc.FDb.cdecl.EmptyQ
-// Return true if index is empty
-inline bool amc::cdecl_EmptyQ() {
-    return _db.cdecl_n == 0;
-}
-
-// --- amc.FDb.cdecl.Find
-// Look up row by row id. Return NULL if out of range
-inline amc::FCdecl* amc::cdecl_Find(u64 t) {
-    amc::FCdecl *retval = NULL;
-    if (LIKELY(u64(t) < u64(_db.cdecl_n))) {
-        u64 x = t + 1;
-        u64 bsr   = algo::u64_BitScanReverse(x);
-        u64 base  = u64(1)<<bsr;
-        u64 index = x-base;
-        retval = &_db.cdecl_lary[bsr][index];
-    }
-    return retval;
-}
-
-// --- amc.FDb.cdecl.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline amc::FCdecl* amc::cdecl_Last() {
-    return cdecl_Find(u64(_db.cdecl_n-1));
-}
-
-// --- amc.FDb.cdecl.N
-// Return number of items in the pool
-inline i32 amc::cdecl_N() {
-    return _db.cdecl_n;
-}
-
-// --- amc.FDb.cdecl.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline amc::FCdecl& amc::cdecl_qFind(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
-    return _db.cdecl_lary[bsr][index];
-}
-
 // --- amc.FDb.zs_gen_perns.EmptyQ
 // Return true if index is empty
 inline bool amc::zs_gen_perns_EmptyQ() {
@@ -9823,31 +9699,6 @@ inline void amc::_db_cd_temp_func_curs_Next(_db_cd_temp_func_curs &curs) {
 // item access
 inline amc::FFunc& amc::_db_cd_temp_func_curs_Access(_db_cd_temp_func_curs &curs) {
     return *curs.row;
-}
-
-// --- amc.FDb.cdecl_curs.Reset
-// cursor points to valid item
-inline void amc::_db_cdecl_curs_Reset(_db_cdecl_curs &curs, amc::FDb &parent) {
-    curs.parent = &parent;
-    curs.index = 0;
-}
-
-// --- amc.FDb.cdecl_curs.ValidQ
-// cursor points to valid item
-inline bool amc::_db_cdecl_curs_ValidQ(_db_cdecl_curs &curs) {
-    return curs.index < _db.cdecl_n;
-}
-
-// --- amc.FDb.cdecl_curs.Next
-// proceed to next item
-inline void amc::_db_cdecl_curs_Next(_db_cdecl_curs &curs) {
-    curs.index++;
-}
-
-// --- amc.FDb.cdecl_curs.Access
-// item access
-inline amc::FCdecl& amc::_db_cdecl_curs_Access(_db_cdecl_curs &curs) {
-    return cdecl_qFind(u64(curs.index));
 }
 
 // --- amc.FDb.zs_gen_perns_curs.Reset

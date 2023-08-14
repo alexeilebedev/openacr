@@ -207,6 +207,7 @@ namespace algo { struct Md5Digest_value_curs; }
 namespace algo { struct NormTxttbl_start_curs; }
 namespace algo { struct Sha1sig_sha1sig_curs; }
 namespace algo { struct U64Ary_ary_curs; }
+namespace lib_json { struct FNode; }
 namespace algo { struct cstring; }
 namespace algo { struct ArgProto; }
 namespace algo { struct Attr; }

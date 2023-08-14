@@ -1,5 +1,128 @@
 ## amc: Algo Model Compiler
 
+### Syntax
+
+```
+inline-command: amc -h
+
+
+amc: Algo Model Compiler: generate code under include/gen and cpp/gen
+Usage: amc [options]
+    -in_dir   string  Root of input ssim dir. default: "data"
+    [query]   string  Query mode: generate code for specified object
+    -out_dir  string  Root of output cpp dir. default: "."
+    -proto            Print prototype. default: false
+    -report           Final report. default: true
+    -e                Open matching records in editor. default: false
+    -trace    string  Regx of something to trace code generation
+    -verbose          Enable verbose mode
+    -debug            Enable debug mode
+    -version          Show version information
+    -sig              Print SHA1 signatures for dispatches
+    -help             Print this screen and exit
+
+```
+
+### Input tables
+
+```
+inline-command: acr ctype:$(acr_in amc | acr -in:- % -regxof:ctype)
+dmmeta.ctype  ctype:amcdb.Bltin         comment:"Specify properties of a C built-in type"
+dmmeta.ctype  ctype:amcdb.Tcurs         comment:"Cursor template"
+dmmeta.ctype  ctype:dev.Targdep         comment:"Dependency between targets"
+dmmeta.ctype  ctype:dev.Target          comment:"Build target"
+dmmeta.ctype  ctype:dmmeta.Anonfld      comment:"Omit field name where possible (command line, enums, constants)"
+dmmeta.ctype  ctype:dmmeta.Argvtype     comment:"Customize parsing of command lines (rarely used)"
+dmmeta.ctype  ctype:dmmeta.Basepool     comment:"Specify pool to be used for allocating elements of a type"
+dmmeta.ctype  ctype:dmmeta.Bitfld       comment:"Specify offset/width of a bitfield within another field"
+dmmeta.ctype  ctype:dmmeta.Cafter       comment:"Control amc processing order for unrelated types (used in rare situations)"
+dmmeta.ctype  ctype:dmmeta.Cascdel      comment:"Request cascading delete of referenced rows"
+dmmeta.ctype  ctype:dmmeta.Ccmp         comment:"Generate hash function"
+dmmeta.ctype  ctype:dmmeta.Cdflt        comment:"Specify default value for single-value types that lack fields"
+dmmeta.ctype  ctype:dmmeta.Cextern      comment:"Externally defined ctype (a struct from system header, or from a c++ library)"
+dmmeta.ctype  ctype:dmmeta.Cfmt         comment:"Specify options for printing/reading ctypes into multiple formats"
+dmmeta.ctype  ctype:dmmeta.Cget         comment:"Generate state functions for these ctypes"
+dmmeta.ctype  ctype:dmmeta.Charset      comment:"Generate functions to determine if a character is a member of a set"
+dmmeta.ctype  ctype:dmmeta.Chash        comment:"Generate hash function"
+dmmeta.ctype  ctype:dmmeta.Cppfunc      comment:"Value of field provided by this expression"
+dmmeta.ctype  ctype:dmmeta.Cpptype      comment:"Specify whether a ctype can be passed by value, and other c++ options"
+dmmeta.ctype  ctype:dmmeta.Csize        comment:"Specify size/alignment for built-in C++ types"
+dmmeta.ctype  ctype:dmmeta.Cstr         comment:"Specify that type behaves like a string"
+dmmeta.ctype  ctype:dmmeta.Ctype        comment:"Conceptual type (or C type)"
+dmmeta.ctype  ctype:dmmeta.Dispatch     comment:"Generate code for a multi-way branch"
+dmmeta.ctype  ctype:dmmeta.DispatchMsg  comment:"Add message to a dispatch"
+dmmeta.ctype  ctype:dmmeta.Dispctx      comment:"Use context with dispatch"
+dmmeta.ctype  ctype:dmmeta.Dispfilter   comment:"Generate filter function on dispatch"
+
+dmmeta.ctype  ctype:dmmeta.Disptrace    comment:"Generate trace fields (cycles, counts) for all dispatch branches"
+dmmeta.ctype  ctype:dmmeta.Fbase        comment:"Customize imported Base fields"
+dmmeta.ctype  ctype:dmmeta.Fbigend      comment:"Annotate field as having big-endian storage"
+dmmeta.ctype  ctype:dmmeta.Fbitset      comment:"Generate bitset functions over integer field or array"
+dmmeta.ctype  ctype:dmmeta.Fbuf         comment:"Buffer for reading/writing messages, works with Iohook"
+dmmeta.ctype  ctype:dmmeta.Fcast        comment:"Generate implicit conversion from field to c++ expression"
+dmmeta.ctype  ctype:dmmeta.Fcleanup     comment:"Request user-implemented function to be called at Uninit time for a field"
+dmmeta.ctype  ctype:dmmeta.Fcmap        comment:"Bidirectional mapping between fconst values"
+dmmeta.ctype  ctype:dmmeta.Fcmdline     comment:"Annotate field that holds process command line"
+dmmeta.ctype  ctype:dmmeta.Fcmp         comment:"Request versionsort or case-insensitive sort for field"
+dmmeta.ctype  ctype:dmmeta.Fcompact     comment:"Request compaction upon removal from index"
+dmmeta.ctype  ctype:dmmeta.Fconst       comment:"Specify enum value (integer + string constant) for a field"
+dmmeta.ctype  ctype:dmmeta.Fcurs        comment:"Request generation of custom cursor"
+dmmeta.ctype  ctype:dmmeta.Fdec         comment:"Specify that field has an implied # of decimal places and specify formatting options"
+dmmeta.ctype  ctype:dmmeta.Fdelay       comment:"Control elapsed time between execution of a step"
+dmmeta.ctype  ctype:dmmeta.Field        comment:"Specify field of a struct"
+dmmeta.ctype  ctype:dmmeta.Findrem      comment:"Request generation of FindRemove function"
+dmmeta.ctype  ctype:dmmeta.Finput       comment:"Describe input table of a program"
+dmmeta.ctype  ctype:dmmeta.Fldoffset    comment:"Assert field offset - will result in compile-time error if violated"
+dmmeta.ctype  ctype:dmmeta.Floadtuples  comment:"Request that process automatically load any input tables on startup"
+dmmeta.ctype  ctype:dmmeta.Fnoremove    comment:"Omit any functions for removing elements from table; Table is append-only"
+dmmeta.ctype  ctype:dmmeta.Foutput      comment:"Generate function to save index/table back to disk"
+dmmeta.ctype  ctype:dmmeta.Fprefix      comment:"Mapping between field prefix and Reftype"
+dmmeta.ctype  ctype:dmmeta.Fregx        comment:"Specify options for command-line regx field"
+dmmeta.ctype  ctype:dmmeta.Fsort        comment:"Generate custom sort function for array field"
+dmmeta.ctype  ctype:dmmeta.Fstep        comment:"Generate a main loop step to be executed whenever a field is non-empty"
+
+dmmeta.ctype  ctype:dmmeta.Ftrace      comment:"Generate cycle/step counting fields for a step"
+dmmeta.ctype  ctype:dmmeta.Funique     comment:"This field must be unique in the table. Not needed for primary key"
+dmmeta.ctype  ctype:dmmeta.Fuserinit   comment:"Add user-defined initialization function for field (see fcleanup)"
+dmmeta.ctype  ctype:dmmeta.Fwddecl     comment:"Request forward declaration of a field"
+dmmeta.ctype  ctype:dmmeta.Gconst      comment:"Import ssim table columns as fconst for a field"
+dmmeta.ctype  ctype:dmmeta.Gstatic     comment:"Load entries for this table at startup time"
+dmmeta.ctype  ctype:dmmeta.Gsymbol     comment:"Create C++ symbols from entries in ssim table"
+dmmeta.ctype  ctype:dmmeta.Hook        comment:"Required on Hook fields"
+dmmeta.ctype  ctype:dmmeta.Inlary      comment:"Generate inline array of fixed or variable length (all entries fit within parent struct)"
+dmmeta.ctype  ctype:dmmeta.Lenfld      comment:"Specify which gives length of varlen portion in bytes"
+dmmeta.ctype  ctype:dmmeta.Listtype    comment:"Specify structure of linked list based on field prefix"
+dmmeta.ctype  ctype:dmmeta.Llist       comment:"Options for Llist field"
+dmmeta.ctype  ctype:dmmeta.Main        comment:"Generate Main function for namespace"
+dmmeta.ctype  ctype:dmmeta.Msgtype     comment:"Specify message type for each eligible message, controls dispatch"
+dmmeta.ctype  ctype:dmmeta.Nocascdel   comment:"Remove cascade delete for this index"
+dmmeta.ctype  ctype:dmmeta.Nossimfile  comment:"Indicates that ssimfile does not exist for this ssimdb ctype"
+dmmeta.ctype  ctype:dmmeta.Noxref      comment:"Explicitly specify that no x-ref exists between tables (don't use unless forced)"
+dmmeta.ctype  ctype:dmmeta.Ns          comment:"Namespace (for in-memory database, protocol, etc)"
+dmmeta.ctype  ctype:dmmeta.Nsdb        comment:"Annotate ssimdb namespaces"
+dmmeta.ctype  ctype:dmmeta.Nsinclude   comment:"Explicitly specify a C++ include file for namespace"
+dmmeta.ctype  ctype:dmmeta.Nsproto     comment:"Annotate protocol namespace (collection of types, no state)"
+dmmeta.ctype  ctype:dmmeta.Nsx         comment:"Control code-generation and exception handling options for process/library"
+dmmeta.ctype  ctype:dmmeta.Numstr      comment:"Add functions to read numbers out of a string field"
+dmmeta.ctype  ctype:dmmeta.Pack        comment:"Request byte-packing of structure fields"
+dmmeta.ctype  ctype:dmmeta.Pmaskfld    comment:"Specify which fields holds presence mask bits (one for each field in struct)"
+dmmeta.ctype  ctype:dmmeta.Pnew        comment:"Generate custom constructor (placement new), for use with binary protocols"
+
+dmmeta.ctype  ctype:dmmeta.Ptrary        comment:"Required for fields with reftype:Ptrary"
+dmmeta.ctype  ctype:dmmeta.Rowid         comment:"Initialize field to row id of element"
+dmmeta.ctype  ctype:dmmeta.Smallstr      comment:"Generated fixed-length padded or length-delimited string field"
+dmmeta.ctype  ctype:dmmeta.Sortfld       comment:"Specify what field an index (Bheap,Atree) is sorted on"
+dmmeta.ctype  ctype:dmmeta.Ssimfile      comment:"Ssim tuple name for structure"
+dmmeta.ctype  ctype:dmmeta.Ssimvolatile  comment:"Types based on ssim files marked this way cannot be cross-referenced"
+dmmeta.ctype  ctype:dmmeta.Substr        comment:"Specify that the field value is computed from a substring of another field"
+dmmeta.ctype  ctype:dmmeta.Tary          comment:"Indirect linear dynamically alocated array (used for strings, arrays of data, etc)"
+dmmeta.ctype  ctype:dmmeta.Thash         comment:"Hash index, required for fields with reftype Thash"
+dmmeta.ctype  ctype:dmmeta.Typefld       comment:"Specifies which field of a message carries the type"
+dmmeta.ctype  ctype:dmmeta.Usertracefld  comment:"Add custom user trace fields to process's trace struct"
+dmmeta.ctype  ctype:dmmeta.Xref          comment:"Specify how to cross-reference (i.e. project, or group-by) one record with another"
+report.acr  n_select:90  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+```
+
 ### Introduction
 
 Amc is an extensible generator of source code from ssimfiles.
@@ -20,15 +143,16 @@ Functions to convert any struct to/from a string or a bash command line; Enum su
 both for integer and string values; presence masks; big-endian fields;
 sort functions on custom fields; incremental group-by indexes; tracking of pointers
 with automatic cascade delete; protection against linear scanning when deleting
-elements; scheduling constructs (for real-time modules); cycle accounting ('traces').
+elements of singly linked lists; scheduling constructs (for real-time modules); cycle accounting ('traces').
 Generation of C++ symbols from ssimfile columns; Statically loaded tables; Subprocess invocation;
 Asynchronous I/O. Bitsets on top of any array type. Char sets;
 Fixed string types (Pascal strings, Left-padded strings, Right-padded
 strings, Fixed-length strings with numeric conversion); Scaled decimal types;
+Bidirectional mappings between enumerated types;
 Dispatches (any group of ctypes), whether sharing a common header with a type field, or not.
 Printing, reading, calling dispatches given both binary and text input.
 Uniform cursor (iterator) interfaces for bheap, hash, tree, array,
-lines, files in directory, and more.
+lines, files in directory, messages in a memory region, and more.
 
 For each program, these things are generated in-place and
 from scratch, and can be iteratively customized.
@@ -36,11 +160,38 @@ The resulting code forms a *database of source code*,
 containing a superset of functions that will be used by the final
 application. The generated code is verbose, user-readable, properly commented,
 is intended to be readable by a human, corresponds directly to the final assembly
-code, and uses only a small, conservative subset of C++.
+code, and intentionally uses only a small, conservative subset of C++. 
 `Amc` does not modify or reverse-engineer user code, so it's not a framework
 where you have to "plug in" anything. User always controls what functions will be called
 (dispatches and steps are an exception, but they are also explicitly controllable).
-`amc` is a tool for constructing software based on your specifications.
+`amc` is a tool for constructing robust software based on your specifications.
+
+The authors have spent many years using template-based libraries and
+class hierarchies, and found them to be unmaintainable in the long
+run.  amc represents a step forward by stepping away from these
+concepts; The templates, which are a form of compile-time code
+generation, are fully superseded by explicit code generation, which
+can perform deductive reaasoning on closed sets, something that's not
+available to templates. Templates, which are based on the idea of
+substitution of expressions, cannot in princple insert or remove
+fields at runtime, or delete certain functions, or create multiple
+symbols, and are hard to debug because they break the mapping between
+lines of code and assembly, which is required for debugging system
+code. Annotated, generated code overcomes this while eliminating an
+entire complex sublanguage.  Virtual functions, or function pointers,
+can be useful and even unavoidable, (and are implemented in amc as
+Hooks), but they negatively affect process reliability. Dijkstra's
+predicate transformer, which is the only available theoretical tool
+for reasoning about imperative software, requires that each action has
+known pre- and post-conditions. A virtual call always leaves the
+possibility open that the target function will do something that
+violates the post-condition, which makes the calling code statically
+unanalyzable. That's why our approach is to construct lists or
+priority queues of "todo" items in a process, and then process them
+with a well-defined loop or step.  This forces distinct cases to be
+enumerated by some state field or an enum, and collects the code for
+processing the distinct cases into one place, making it possible to think
+about post-conditions again.
 
 `Amc` loads about 100 ssim tables. The full list can be obtained with
 `acr_in amc`. The exact actual `amc` input can be printed with `acr_in
@@ -50,11 +201,11 @@ generated code, the rest deal with finer details.
 `Amc` was initially coded by hand, but once its capabilities became
 powerful enough, it was used to generate data structures for its next
 version. As a result, all of `Amc`'s internal data structures, both
-input, and computational, are defined as ssim tuples and can be
-queried with `acr ns:amc -xref`.  The tool is thus unique in that it
+input, and computational (internal), are defined as ssim tuples and can be
+queried with `acr ns:amc -xref`. The tool is thus unique in that it
 generates most of its own source code. Previous approaches focused
 either on interpreting the interpreter (LISP) or compiling the
-compiler. Generating a source-generator is a first.
+compiler. Generating a source-generator is a first as far as we know.
 
 ### Why Generate?
 
@@ -63,7 +214,7 @@ The problem is attaching them to an application. Usually the costs associated
 with using algorithms are:
 
 * Performance cost and complexity cost when using libraries.
-* Difficulting understanding symbol renamings (this happens with the C++ templates or when using macro preprocessors).
+* Difficulty understanding symbol renamings (this happens with the C++ templates or when using macro preprocessors).
   Programmer's attention is a finite resource. When the programmer spends this attention in order
   to understand what a program does, he can no longer confirm its correctness, and the program's
   runtime behavior becomes more surprising. Another word for surprise is bug. So when a program doesn't

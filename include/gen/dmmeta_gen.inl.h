@@ -134,17 +134,6 @@ inline void dmmeta::Ccmp_Init(dmmeta::Ccmp& parent) {
     parent.order = bool(false);
     parent.minmax = bool(false);
 }
-inline dmmeta::Cdecl::Cdecl() {
-    dmmeta::Cdecl_Init(*this);
-}
-
-
-// --- dmmeta.Cdecl..Init
-// Set all fields to initial values.
-inline void dmmeta::Cdecl_Init(dmmeta::Cdecl& parent) {
-    parent.fwddecl = bool(false);
-    parent.gen_using = bool(false);
-}
 inline dmmeta::CppExpr::CppExpr(const algo::strptr&            in_value)
     : value(in_value)
 {
@@ -1241,11 +1230,6 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Buftyp
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Cascdel &row) {// cfmt:dmmeta.Cascdel.String
     dmmeta::Cascdel_Print(const_cast<dmmeta::Cascdel&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Cdecl &row) {// cfmt:dmmeta.Cdecl.String
-    dmmeta::Cdecl_Print(const_cast<dmmeta::Cdecl&>(row), str);
     return str;
 }
 
