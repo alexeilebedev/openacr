@@ -165,7 +165,9 @@ void amc::tfunc_Varlen_curs() {
             Ins(&R, curs_validq.body, "bool valid = ssizeof($Cpptype) <= curs.length;");
             if (field.p_arg->c_lenfld) {
                 Set(R, "$childlenexpr", LengthExpr(*field.p_arg, "(*($Cpptype*)curs.ptr)"));
-                Ins(&R, curs_validq.body, "valid = valid && $childlenexpr <= curs.length;");
+                // check that len is >= ssizeof($Cppexpr) && <= curs.length (remaining length)
+                // using unsigned comparison trick
+                Ins(&R, curs_validq.body, "valid = valid && unsigned($childlenexpr-ssizeof($Cpptype)) <= curs.length-ssizeof($Cpptype);");
             }
             Ins(&R, curs_validq.body, "return valid;");
         }

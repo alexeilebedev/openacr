@@ -5187,7 +5187,7 @@ inline void atf_amc::MsgLTV_v_curs_Reset(MsgLTV_v_curs &curs, atf_amc::MsgLTV &p
 // cursor points to valid item
 inline bool atf_amc::MsgLTV_v_curs_ValidQ(MsgLTV_v_curs &curs) {
     bool valid = ssizeof(atf_amc::MsgHdrLT) <= curs.length;
-    valid = valid && i32((*(atf_amc::MsgHdrLT*)curs.ptr).len + 2) <= curs.length;
+    valid = valid && unsigned(i32((*(atf_amc::MsgHdrLT*)curs.ptr).len + 2)-ssizeof(atf_amc::MsgHdrLT)) <= curs.length-ssizeof(atf_amc::MsgHdrLT);
     return valid;
 }
 
