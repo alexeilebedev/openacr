@@ -158,7 +158,7 @@ static int CheckLim(dev::Linelim &ideallim, dev::Linelim &customlim, dev::Lineli
     int nerr=0;
     bool infunc=false;
     u32 funclen=0;
-    MmapFile file;
+    algo_lib::MmapFile file;
     MmapFile_Load(file,ideallim.gitfile);
     cstring func_comment;
     bool show_workaround=false;
@@ -365,7 +365,7 @@ static void Main_FinishCapture() {
 // -----------------------------------------------------------------------------
 
 static void CheckBadline(src_lim::FTargsrc &targsrc) {
-    MmapFile file;
+    algo_lib::MmapFile file;
     tempstr fname(src_Get(targsrc));
     MmapFile_Load(file,fname);
     ind_beg(algo::Line_curs, line, file.text) {

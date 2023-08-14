@@ -554,7 +554,7 @@ static strptr ScanVar(algo_lib::Replscope &R, strptr text, int &i) {
 // EOL      append end-of-line (default)
 // SCOPE    if not NULL, replace any $-string in TEXT with corresponding value.
 //            it is an error if any $-string does not expand.
-void algo_lib::Ins(algo_lib::Replscope *scope, cstring &out, strptr text, bool eol) {
+void algo_lib::Ins(algo_lib::Replscope *scope, algo::cstring &out, strptr text, bool eol) {
     int i=0;
     int lim = text.n_elems;
     int start=0;
@@ -577,7 +577,7 @@ void algo_lib::Ins(algo_lib::Replscope *scope, cstring &out, strptr text, bool e
     }
 }
 
-void algo_lib::Ins(algo_lib::Replscope *scope, cstring &out, strptr text) {
+void algo_lib::Ins(algo_lib::Replscope *scope, algo::cstring &out, strptr text) {
     Ins(scope,out,text,true);
 }
 

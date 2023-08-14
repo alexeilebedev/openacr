@@ -220,7 +220,7 @@ static bool ScanTargsrcQ(src_hdr::FTargsrc &targsrc, algo_lib::Regx &exclude) {
 // -----------------------------------------------------------------------------
 
 static void ScanTargsrc(src_hdr::FTargsrc &targsrc) {
-    MmapFile file;
+    algo_lib::MmapFile file;
     if (MmapFile_Load(file,src_Get(targsrc))) {
         src_hdr::FSrc src;
         src.p_targsrc=&targsrc;

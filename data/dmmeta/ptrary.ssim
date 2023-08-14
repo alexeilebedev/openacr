@@ -25,7 +25,6 @@ dmmeta.ptrary  field:acr_in.FTuple.c_child  unique:N
 dmmeta.ptrary  field:acr_in.FTuple.c_parent  unique:N
 dmmeta.ptrary  field:algo_lib.FTxtrow.c_txtcell  unique:Y
 dmmeta.ptrary  field:algo_lib.FTxttbl.c_txtrow  unique:Y
-dmmeta.ptrary  field:amc.FCtype.c_cdecl  unique:Y
 dmmeta.ptrary  field:amc.FCtype.c_datafld  unique:Y
 dmmeta.ptrary  field:amc.FCtype.c_fcurs  unique:Y
 dmmeta.ptrary  field:amc.FCtype.c_ffunc  unique:N

@@ -278,12 +278,12 @@ bool amc::ExternStepQ(amc::FFstep &fstep) {
 // -----------------------------------------------------------------------------
 
 // add text to c++ body of class
-void amc::InsStruct(algo_lib::Replscope &R, amc::FCtype *ctype, const strptr &text) {
+void amc::InsStruct(algo_lib::Replscope &R, amc::FCtype *ctype, const algo::strptr &text) {
     algo_lib::Ins(&R,ctype->body,text);
 }
 
 // Insert variable declaration into body of struct corresponding to CTYPE,.
-void amc::InsVar(algo_lib::Replscope &R, amc::FCtype *ctype, const strptr &type, const strptr &name, const strptr &dflt, const strptr &comment) {
+void amc::InsVar(algo_lib::Replscope &R, amc::FCtype *ctype, const algo::strptr &type, const algo::strptr &name, const algo::strptr &dflt, const algo::strptr &comment) {
     cstring &t = ctype->body;
     t << Subst(R,type)
       << " \t" << Subst(R,name) << ";"

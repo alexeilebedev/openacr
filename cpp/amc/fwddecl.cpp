@@ -109,32 +109,11 @@ static void Fwddecl_GenStructNs(amc::FNs &ns) {
 
 // -----------------------------------------------------------------------------
 
-static void Fwddecl_Global(amc::FNs &ns) {
-    // Forward-declarations of all ctypes for which cdecl.fwddecl is set.
-    ind_beg(amc::_db_cdecl_curs,cdecl,amc::_db) {
-        if (cdecl.fwddecl) {
-            if (cdecl.p_ctype->p_ns->ns == "") {
-                *ns.hdr << "struct "<<cdecl.p_ctype->cpp_type<<";\n";
-            } else {
-                *ns.hdr << "namespace "<<ns_Get(*cdecl.p_ctype)<<" { struct "<<name_Get(*cdecl.p_ctype)<<"; }\n";
-            }
-        }
-        if (cdecl.gen_using) {
-            *ns.hdr << "using "<<cdecl.p_ctype->cpp_type<<";\n";
-        }
-    }ind_end;
-}
-
-// -----------------------------------------------------------------------------
-
 void amc::gen_ns_fwddecl2() {
     ind_beg(amc::_db_ns_curs, ns, amc::_db) {
         if (ns.select) {
             *ns.hdr << "// gen:ns_fwddecl2" << eol;
             Fwddecl_GenStructNs(ns);
-            if (ns.ns == "") {
-                Fwddecl_Global(ns);
-            }
         }
     }ind_end;
 }
@@ -168,6 +147,15 @@ static void Hook_FwdDecl(amc::FField &field, amc::FGstatic &gstatic) {
 // emit forward-declarations of steps
 void amc::gen_ns_fwddecl() {
     ind_beg(amc::_db_ns_curs, ns, amc::_db) if (ns.select) {
+        // fwd declaration for json formatters
+        ind_beg(amc::ns_c_ctype_curs, ctype, ns) {
+            ind_beg(amc::ctype_zs_cfmt_curs, cfmt, ctype) {
+                if (cfmt.print && strfmt_Get(cfmt) == dmmeta_Strfmt_strfmt_Json) {
+                    amc::ind_fwddecl_GetOrCreate(tempstr()<<ns_Get(ctype)<<".lib_json.FNode");
+                }
+            }ind_end;
+        }ind_end;
+        // hooks
         ind_beg(amc::ns_c_gstatic_curs, gstatic,ns) {
             ind_beg(amc::ctype_c_field_curs, field, *gstatic.p_field->p_arg) {
                 if (field.reftype == dmmeta_Reftype_reftype_Hook) {

@@ -251,7 +251,6 @@ namespace amc { // gen:ns_print_proto
     static bool          gsymbol_InputMaybe(dmmeta::Gsymbol &elem) __attribute__((nothrow));
     static bool          sortfld_InputMaybe(dmmeta::Sortfld &elem) __attribute__((nothrow));
     static bool          cget_InputMaybe(dmmeta::Cget &elem) __attribute__((nothrow));
-    static bool          cdecl_InputMaybe(dmmeta::Cdecl &elem) __attribute__((nothrow));
     static bool          hook_InputMaybe(dmmeta::Hook &elem) __attribute__((nothrow));
     static bool          charset_InputMaybe(dmmeta::Charset &elem) __attribute__((nothrow));
     static bool          nsinclude_InputMaybe(dmmeta::Nsinclude &elem) __attribute__((nothrow));
@@ -1105,33 +1104,6 @@ void amc::FCcmp_Uninit(amc::FCcmp& ccmp) {
         c_ccmp_Remove(*p_ctype, row);// remove ccmp from index c_ccmp
     }
     ind_ccmp_Remove(row); // remove ccmp from index ind_ccmp
-}
-
-// --- amc.FCdecl.base.CopyOut
-// Copy fields out of row
-void amc::cdecl_CopyOut(amc::FCdecl &row, dmmeta::Cdecl &out) {
-    out.ctype = row.ctype;
-    out.fwddecl = row.fwddecl;
-    out.gen_using = row.gen_using;
-    out.comment = row.comment;
-}
-
-// --- amc.FCdecl.base.CopyIn
-// Copy fields in to row
-void amc::cdecl_CopyIn(amc::FCdecl &row, dmmeta::Cdecl &in) {
-    row.ctype = in.ctype;
-    row.fwddecl = in.fwddecl;
-    row.gen_using = in.gen_using;
-    row.comment = in.comment;
-}
-
-// --- amc.FCdecl..Uninit
-void amc::FCdecl_Uninit(amc::FCdecl& cdecl) {
-    amc::FCdecl &row = cdecl; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
-    if (p_ctype)  {
-        c_cdecl_Remove(*p_ctype, row);// remove cdecl from index c_cdecl
-    }
 }
 
 // --- amc.FCdflt.base.CopyOut
@@ -2325,70 +2297,6 @@ void amc::c_fcurs_Reserve(amc::FCtype& ctype, u32 n) {
     }
 }
 
-// --- amc.FCtype.c_cdecl.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
-void amc::c_cdecl_Insert(amc::FCtype& ctype, amc::FCdecl& row) {
-    if (bool_Update(row.ctype_c_cdecl_in_ary,true)) {
-        // reserve space
-        c_cdecl_Reserve(ctype, 1);
-        u32 n  = ctype.c_cdecl_n;
-        u32 at = n;
-        amc::FCdecl* *elems = ctype.c_cdecl_elems;
-        elems[at] = &row;
-        ctype.c_cdecl_n = n+1;
-
-    }
-}
-
-// --- amc.FCtype.c_cdecl.InsertMaybe
-// Insert pointer to row in array.
-// If row is already in the array, do nothing.
-// Return value: whether element was inserted into array.
-bool amc::c_cdecl_InsertMaybe(amc::FCtype& ctype, amc::FCdecl& row) {
-    bool retval = !row.ctype_c_cdecl_in_ary;
-    c_cdecl_Insert(ctype,row); // check is performed in _Insert again
-    return retval;
-}
-
-// --- amc.FCtype.c_cdecl.Remove
-// Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_cdecl_Remove(amc::FCtype& ctype, amc::FCdecl& row) {
-    if (bool_Update(row.ctype_c_cdecl_in_ary,false)) {
-        int lim = ctype.c_cdecl_n;
-        amc::FCdecl* *elems = ctype.c_cdecl_elems;
-        // search backward, so that most recently added element is found first.
-        // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
-            amc::FCdecl* elem = elems[i]; // fetch element
-            if (elem == &row) {
-                int j = i + 1;
-                size_t nbytes = sizeof(amc::FCdecl*) * (lim - j);
-                memmove(elems + i, elems + j, nbytes);
-                ctype.c_cdecl_n = lim - 1;
-                break;
-            }
-        }
-    }
-}
-
-// --- amc.FCtype.c_cdecl.Reserve
-// Reserve space in index for N more elements;
-void amc::c_cdecl_Reserve(amc::FCtype& ctype, u32 n) {
-    u32 old_max = ctype.c_cdecl_max;
-    if (UNLIKELY(ctype.c_cdecl_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(amc::FCdecl*);
-        u32 new_size = new_max * sizeof(amc::FCdecl*);
-        void *new_mem = amc::lpool_ReallocMem(ctype.c_cdecl_elems, old_size, new_size);
-        if (UNLIKELY(!new_mem)) {
-            FatalErrorExit("amc.out_of_memory  field:amc.FCtype.c_cdecl");
-        }
-        ctype.c_cdecl_elems = (amc::FCdecl**)new_mem;
-        ctype.c_cdecl_max = new_max;
-    }
-}
-
 // --- amc.FCtype..Init
 // Set all fields to initial values.
 void amc::FCtype_Init(amc::FCtype& ctype) {
@@ -2461,9 +2369,6 @@ void amc::FCtype_Init(amc::FCtype& ctype) {
     ctype.n_xref = i32(0);
     ctype.next_anon_idx = i32(0);
     ctype.c_nossimfile = NULL;
-    ctype.c_cdecl_elems = NULL; // (amc.FCtype.c_cdecl)
-    ctype.c_cdecl_n = 0; // (amc.FCtype.c_cdecl)
-    ctype.c_cdecl_max = 0; // (amc.FCtype.c_cdecl)
     ctype.ns_c_ctype_in_ary = bool(false);
     ctype.ns_c_ctype_ins_in_ary = bool(false);
     ctype.ind_ctype_next = (amc::FCtype*)-1; // (amc.FDb.ind_ctype) not-in-hash
@@ -2484,9 +2389,6 @@ void amc::FCtype_Uninit(amc::FCtype& ctype) {
     }
     zsl_ctype_pack_tran_Remove(row); // remove ctype from index zsl_ctype_pack_tran
     zs_sig_visit_Remove(row); // remove ctype from index zs_sig_visit
-
-    // amc.FCtype.c_cdecl.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ctype.c_cdecl_elems, sizeof(amc::FCdecl*)*ctype.c_cdecl_max); // (amc.FCtype.c_cdecl)
 
     // amc.FCtype.c_fcurs.Uninit (Ptrary)  //
     amc::lpool_FreeMem(ctype.c_fcurs_elems, sizeof(amc::FFcurs*)*ctype.c_fcurs_max); // (amc.FCtype.c_fcurs)
@@ -6130,7 +6032,7 @@ static void amc::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'d0406da8a808917ae21e07edf1a8336c2250e5a2'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'14122266c68d0c532f10b510dab70b7d62b67ef8'");
 }
 
 // --- amc.FDb._db.StaticCheck
@@ -6653,12 +6555,6 @@ bool amc::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && cget_InputMaybe(elem);
             break;
         }
-        case amc_TableId_dmmeta_Cdecl: { // finput:amc.FDb.cdecl
-            dmmeta::Cdecl elem;
-            retval = dmmeta::Cdecl_ReadStrptrMaybe(elem, str);
-            retval = retval && cdecl_InputMaybe(elem);
-            break;
-        }
         case amc_TableId_dmmeta_Hook: { // finput:amc.FDb.hook
             dmmeta::Hook elem;
             retval = dmmeta::Hook_ReadStrptrMaybe(elem, str);
@@ -6718,27 +6614,27 @@ bool amc::LoadTuplesMaybe(algo::strptr root) {
     static const char *ssimfiles[] = {
         "dmmeta.ns", "dmmeta.ctype", "dmmeta.field", "dmmeta.anonfld"
         , "dmmeta.argvtype", "dmmeta.basepool", "dmmeta.bitfld", "amcdb.bltin"
-        , "dmmeta.cafter", "dmmeta.cascdel", "dmmeta.ccmp", "dmmeta.cdecl"
-        , "dmmeta.cdflt", "dmmeta.cextern", "dmmeta.cfmt", "dmmeta.cget"
-        , "dmmeta.charset", "dmmeta.chash", "dmmeta.cppfunc", "dmmeta.cpptype"
-        , "dmmeta.csize", "dmmeta.cstr", "dmmeta.dispatch", "dmmeta.dispatch_msg"
-        , "dmmeta.dispctx", "dmmeta.dispfilter", "dmmeta.disptrace", "dmmeta.fbase"
-        , "dmmeta.fbigend", "dmmeta.fbitset", "dmmeta.fbuf", "dmmeta.fcast"
-        , "dmmeta.fcleanup", "dmmeta.fcmap", "dmmeta.fcmdline", "dmmeta.fcmp"
-        , "dmmeta.fcompact", "dmmeta.fconst", "dmmeta.fcurs", "dmmeta.fdec"
-        , "dmmeta.fstep", "dmmeta.fdelay", "dmmeta.findrem", "dmmeta.finput"
-        , "dmmeta.fldoffset", "dmmeta.floadtuples", "dmmeta.fnoremove", "dmmeta.foutput"
-        , "dmmeta.fprefix", "dmmeta.fregx", "dmmeta.fsort", "dmmeta.ftrace"
-        , "dmmeta.funique", "dmmeta.fuserinit", "dmmeta.fwddecl", "dmmeta.gconst"
-        , "dmmeta.gstatic", "dmmeta.ssimfile", "dmmeta.gsymbol", "dmmeta.hook"
-        , "dmmeta.inlary", "dmmeta.lenfld", "dmmeta.listtype", "dmmeta.llist"
-        , "dmmeta.main", "dmmeta.msgtype", "dmmeta.xref", "dmmeta.nocascdel"
-        , "dmmeta.nossimfile", "dmmeta.noxref", "dmmeta.nsdb", "dmmeta.nsinclude"
-        , "dmmeta.nsproto", "dmmeta.nsx", "dmmeta.smallstr", "dmmeta.numstr"
-        , "dmmeta.pack", "dmmeta.pmaskfld", "dmmeta.pnew", "dmmeta.ptrary"
-        , "dmmeta.rowid", "dmmeta.sortfld", "dmmeta.ssimvolatile", "dmmeta.substr"
-        , "dev.target", "dev.targdep", "dmmeta.tary", "amcdb.tcurs"
-        , "dmmeta.thash", "dmmeta.typefld", "dmmeta.usertracefld"
+        , "dmmeta.cafter", "dmmeta.cascdel", "dmmeta.ccmp", "dmmeta.cdflt"
+        , "dmmeta.cextern", "dmmeta.cfmt", "dmmeta.cget", "dmmeta.charset"
+        , "dmmeta.chash", "dmmeta.cppfunc", "dmmeta.cpptype", "dmmeta.csize"
+        , "dmmeta.cstr", "dmmeta.dispatch", "dmmeta.dispatch_msg", "dmmeta.dispctx"
+        , "dmmeta.dispfilter", "dmmeta.disptrace", "dmmeta.fbase", "dmmeta.fbigend"
+        , "dmmeta.fbitset", "dmmeta.fbuf", "dmmeta.fcast", "dmmeta.fcleanup"
+        , "dmmeta.fcmap", "dmmeta.fcmdline", "dmmeta.fcmp", "dmmeta.fcompact"
+        , "dmmeta.fconst", "dmmeta.fcurs", "dmmeta.fdec", "dmmeta.fstep"
+        , "dmmeta.fdelay", "dmmeta.findrem", "dmmeta.finput", "dmmeta.fldoffset"
+        , "dmmeta.floadtuples", "dmmeta.fnoremove", "dmmeta.foutput", "dmmeta.fprefix"
+        , "dmmeta.fregx", "dmmeta.fsort", "dmmeta.ftrace", "dmmeta.funique"
+        , "dmmeta.fuserinit", "dmmeta.fwddecl", "dmmeta.gconst", "dmmeta.gstatic"
+        , "dmmeta.ssimfile", "dmmeta.gsymbol", "dmmeta.hook", "dmmeta.inlary"
+        , "dmmeta.lenfld", "dmmeta.listtype", "dmmeta.llist", "dmmeta.main"
+        , "dmmeta.msgtype", "dmmeta.xref", "dmmeta.nocascdel", "dmmeta.nossimfile"
+        , "dmmeta.noxref", "dmmeta.nsdb", "dmmeta.nsinclude", "dmmeta.nsproto"
+        , "dmmeta.nsx", "dmmeta.smallstr", "dmmeta.numstr", "dmmeta.pack"
+        , "dmmeta.pmaskfld", "dmmeta.pnew", "dmmeta.ptrary", "dmmeta.rowid"
+        , "dmmeta.sortfld", "dmmeta.ssimvolatile", "dmmeta.substr", "dev.target"
+        , "dev.targdep", "dmmeta.tary", "amcdb.tcurs", "dmmeta.thash"
+        , "dmmeta.typefld", "dmmeta.usertracefld"
         , NULL};
         retval = algo_lib::DoLoadTuples(root, amc::InsertStrptrMaybe, ssimfiles, true);
         return retval;
@@ -20052,117 +19948,6 @@ amc::FFunc* amc::cd_temp_func_RotateFirst() {
     return row;
 }
 
-// --- amc.FDb.cdecl.Alloc
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-amc::FCdecl& amc::cdecl_Alloc() {
-    amc::FCdecl* row = cdecl_AllocMaybe();
-    if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("amc.out_of_mem  field:amc.FDb.cdecl  comment:'Alloc failed'");
-    }
-    return *row;
-}
-
-// --- amc.FDb.cdecl.AllocMaybe
-// Allocate memory for new element. If out of memory, return NULL.
-amc::FCdecl* amc::cdecl_AllocMaybe() {
-    amc::FCdecl *row = (amc::FCdecl*)cdecl_AllocMem();
-    if (row) {
-        new (row) amc::FCdecl; // call constructor
-    }
-    return row;
-}
-
-// --- amc.FDb.cdecl.InsertMaybe
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-amc::FCdecl* amc::cdecl_InsertMaybe(const dmmeta::Cdecl &value) {
-    amc::FCdecl *row = &cdecl_Alloc(); // if out of memory, process dies. if input error, return NULL.
-    cdecl_CopyIn(*row,const_cast<dmmeta::Cdecl&>(value));
-    bool ok = cdecl_XrefMaybe(*row); // this may return false
-    if (!ok) {
-        cdecl_RemoveLast(); // delete offending row, any existing xrefs are cleared
-        row = NULL; // forget this ever happened
-    }
-    return row;
-}
-
-// --- amc.FDb.cdecl.AllocMem
-// Allocate space for one element. If no memory available, return NULL.
-void* amc::cdecl_AllocMem() {
-    u64 new_nelems     = _db.cdecl_n+1;
-    // compute level and index on level
-    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
-    u64 base  = u64(1)<<bsr;
-    u64 index = new_nelems-base;
-    void *ret = NULL;
-    // if level doesn't exist yet, create it
-    amc::FCdecl*  lev   = NULL;
-    if (bsr < 32) {
-        lev = _db.cdecl_lary[bsr];
-        if (!lev) {
-            lev=(amc::FCdecl*)amc::lpool_AllocMem(sizeof(amc::FCdecl) * (u64(1)<<bsr));
-            _db.cdecl_lary[bsr] = lev;
-        }
-    }
-    // allocate element from this level
-    if (lev) {
-        _db.cdecl_n = i32(new_nelems);
-        ret = lev + index;
-    }
-    return ret;
-}
-
-// --- amc.FDb.cdecl.RemoveAll
-// Remove all elements from Lary
-void amc::cdecl_RemoveAll() {
-    for (u64 n = _db.cdecl_n; n>0; ) {
-        n--;
-        cdecl_qFind(u64(n)).~FCdecl(); // destroy last element
-        _db.cdecl_n = i32(n);
-    }
-}
-
-// --- amc.FDb.cdecl.RemoveLast
-// Delete last element of array. Do nothing if array is empty.
-void amc::cdecl_RemoveLast() {
-    u64 n = _db.cdecl_n;
-    if (n > 0) {
-        n -= 1;
-        cdecl_qFind(u64(n)).~FCdecl();
-        _db.cdecl_n = i32(n);
-    }
-}
-
-// --- amc.FDb.cdecl.InputMaybe
-static bool amc::cdecl_InputMaybe(dmmeta::Cdecl &elem) {
-    bool retval = true;
-    retval = cdecl_InsertMaybe(elem) != nullptr;
-    return retval;
-}
-
-// --- amc.FDb.cdecl.XrefMaybe
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool amc::cdecl_XrefMaybe(amc::FCdecl &row) {
-    bool retval = true;
-    (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
-    if (UNLIKELY(!p_ctype)) {
-        algo_lib::ResetErrtext() << "amc.bad_xref  index:amc.FDb.ind_ctype" << Keyval("key", row.ctype);
-        return false;
-    }
-    // cdecl: save pointer to ctype
-    if (true) { // user-defined insert condition
-        row.p_ctype = p_ctype;
-    }
-    // insert cdecl into index c_cdecl
-    if (true) { // user-defined insert condition
-        c_cdecl_Insert(*p_ctype, row);
-    }
-    return retval;
-}
-
 // --- amc.FDb.zs_gen_perns.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void amc::zs_gen_perns_Insert(amc::FGen& row) {
@@ -22594,17 +22379,6 @@ void amc::FDb_Init() {
     }
     _db.cd_temp_func_head = NULL; // (amc.FDb.cd_temp_func)
     _db.cd_temp_func_n = 0; // (amc.FDb.cd_temp_func)
-    // initialize LAry cdecl (amc.FDb.cdecl)
-    _db.cdecl_n = 0;
-    memset(_db.cdecl_lary, 0, sizeof(_db.cdecl_lary)); // zero out all level pointers
-    amc::FCdecl* cdecl_first = (amc::FCdecl*)amc::lpool_AllocMem(sizeof(amc::FCdecl) * (u64(1)<<4));
-    if (!cdecl_first) {
-        FatalErrorExit("out of memory");
-    }
-    for (int i = 0; i < 4; i++) {
-        _db.cdecl_lary[i]  = cdecl_first;
-        cdecl_first    += 1ULL<<i;
-    }
     _db.zs_gen_perns_head = NULL; // (amc.FDb.zs_gen_perns)
     _db.zs_gen_perns_tail = NULL; // (amc.FDb.zs_gen_perns)
     // initialize LAry hook (amc.FDb.hook)
@@ -22728,9 +22502,6 @@ void amc::FDb_Uninit() {
     // skip destruction in global scope
 
     // amc.FDb.hook.Uninit (Lary)  //
-    // skip destruction in global scope
-
-    // amc.FDb.cdecl.Uninit (Lary)  //
     // skip destruction in global scope
 
     // amc.FDb.cget.Uninit (Lary)  //
@@ -28422,7 +28193,6 @@ const char* amc::value_ToCstr(const amc::TableId& parent) {
         case amc_TableId_dmmeta_Cafter     : ret = "dmmeta.Cafter";  break;
         case amc_TableId_dmmeta_Cascdel    : ret = "dmmeta.Cascdel";  break;
         case amc_TableId_dmmeta_Ccmp       : ret = "dmmeta.Ccmp";  break;
-        case amc_TableId_dmmeta_Cdecl      : ret = "dmmeta.Cdecl";  break;
         case amc_TableId_dmmeta_Cdflt      : ret = "dmmeta.Cdflt";  break;
         case amc_TableId_dmmeta_Cextern    : ret = "dmmeta.Cextern";  break;
         case amc_TableId_dmmeta_Cfmt       : ret = "dmmeta.Cfmt";  break;
@@ -28672,7 +28442,6 @@ bool amc::value_SetStrptrMaybe(amc::TableId& parent, algo::strptr rhs) {
         case 12: {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','C'): {
-                    if (memcmp(rhs.elems+8,"decl",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Cdecl); ret = true; break; }
                     if (memcmp(rhs.elems+8,"dflt",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Cdflt); ret = true; break; }
                     if (memcmp(rhs.elems+8,"hash",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Chash); ret = true; break; }
                     if (memcmp(rhs.elems+8,"size",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Csize); ret = true; break; }
@@ -28703,7 +28472,6 @@ bool amc::value_SetStrptrMaybe(amc::TableId& parent, algo::strptr rhs) {
                     break;
                 }
                 case LE_STR8('d','m','m','e','t','a','.','c'): {
-                    if (memcmp(rhs.elems+8,"decl",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_cdecl); ret = true; break; }
                     if (memcmp(rhs.elems+8,"dflt",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_cdflt); ret = true; break; }
                     if (memcmp(rhs.elems+8,"hash",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_chash); ret = true; break; }
                     if (memcmp(rhs.elems+8,"size",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_csize); ret = true; break; }

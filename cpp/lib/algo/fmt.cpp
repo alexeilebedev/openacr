@@ -373,12 +373,12 @@ bool algo::Ipmask_ReadStrptrMaybe(Ipmask &row, algo::strptr str) {
 
 // -----------------------------------------------------------------------------
 
-void algo::Ptr_Print(void *ptr, cstring &out) {
+void algo::Ptr_Print(void *ptr, algo::cstring &out) {
     u64_PrintHex(u64(ptr), out, sizeof(u64), true ,false);
 }
 
 // pads with zeros on the left so that at least 'atleast' characters are output.
-void algo::i64_PrintPadLeft(i64 num, cstring &out, int atleast) {
+void algo::i64_PrintPadLeft(i64 num, algo::cstring &out, int atleast) {
     i64 number=num;
     char c[32];
     int ndig = 0;
@@ -416,7 +416,7 @@ void algo::i64_PrintPadLeft(i64 num, cstring &out, int atleast) {
 // 3333 -> 3,333
 // 4567.3 -> 4,567.3
 // 1.11111 -> 1.11111
-void algo::strptr_PrintWithCommas(strptr src, cstring &out) {
+void algo::strptr_PrintWithCommas(strptr src, algo::cstring &out) {
     int dec = Find(src, '.');
     if (dec==-1) {
         dec=src.n_elems;
@@ -518,7 +518,7 @@ static inline bool ScientificQ(strptr str) {
 // If OMIT_ZEROS is specified, trailing zeros that are safe to omit are omitted.
 // If COMMAS is specified, the large numbers are printed in groups of 3 digits
 // with commas between them.
-void algo::double_PrintPrec(double d, cstring &out, int precision, bool omit_zeros, bool commas) {
+void algo::double_PrintPrec(double d, algo::cstring &out, int precision, bool omit_zeros, bool commas) {
     char buf[512];
     precision = Clipped(precision,20);
     // create a format string for the specified precision
@@ -555,7 +555,7 @@ void algo::double_PrintPrec(double d, cstring &out, int precision, bool omit_zer
 // -----------------------------------------------------------------------------
 
 // Print string, replacing '_x' with 'X', and capitalizing first word.
-void algo::strptr_PrintCamel(algo::strptr str, cstring& out) {
+void algo::strptr_PrintCamel(algo::strptr str, algo::cstring& out) {
     int needuc=true;
     for (int i=0; i<str.n_elems; i++) {
         if (str.elems[i] == '_' && !needuc) {
@@ -580,7 +580,7 @@ void algo::strptr_PrintCamel(algo::strptr str, cstring& out) {
 // Example: "Abcd" -> "abcd"
 // Example: "BBOPrice" -> "bboprice"
 // Example: "SymbolID" -> "symbol_id"
-void algo::strptr_PrintLowerUnder(algo::strptr str, cstring &out) {
+void algo::strptr_PrintLowerUnder(algo::strptr str, algo::cstring &out) {
     int prevlc = false;
     frep_(i,str.n_elems) {
         char c= str.elems[i];
@@ -598,7 +598,7 @@ void algo::strptr_PrintLowerUnder(algo::strptr str, cstring &out) {
 // -----------------------------------------------------------------------------
 
 // Output string STR to OUT changing all characters to uppercase.
-void algo::strptr_ToUpper(algo::strptr str, cstring& out) {
+void algo::strptr_ToUpper(algo::strptr str, algo::cstring& out) {
     u32 n = elems_N(str);
     u32 i =0;
     while (i < n) {
@@ -606,7 +606,7 @@ void algo::strptr_ToUpper(algo::strptr str, cstring& out) {
     }
 }
 
-void algo::u128_PrintHex(u128 value, cstring &out, bool prefix) {
+void algo::u128_PrintHex(u128 value, algo::cstring &out, bool prefix) {
     if (prefix) out<< "0X";
     char c[32+1];
     c[32]=0;
@@ -619,7 +619,7 @@ void algo::u128_PrintHex(u128 value, cstring &out, bool prefix) {
     out<<c+i;
 }
 
-void algo::u64_PrintHex(u64 value, cstring &out, int atleast, bool prefix,  bool caps) {
+void algo::u64_PrintHex(u64 value, algo::cstring &out, int atleast, bool prefix,  bool caps) {
     if (prefix) out<<(caps ? "0X" : "0x");
     char c[16+1];
     c[16]=0;
@@ -638,7 +638,7 @@ void algo::u64_PrintHex(u64 value, cstring &out, int atleast, bool prefix,  bool
 // Print value VALUE to string OUT,
 // producing least ATLEAST hex characters.
 // Include prefix 0x.
-void algo::u64_PrintHex(u64 value, cstring &out, int atleast) {
+void algo::u64_PrintHex(u64 value, algo::cstring &out, int atleast) {
     u64_PrintHex(value,out,atleast,true,false);
 }
 
@@ -647,7 +647,7 @@ void algo::u64_PrintHex(u64 value, cstring &out, int atleast) {
 // Print value VALUE to string OUT,
 // producing least ATLEAST hex characters.
 // if PREFIX is specified, include prefix 0x.
-void algo::u64_PrintHex(u64 value, cstring &out, int atleast, bool prefix) {
+void algo::u64_PrintHex(u64 value, algo::cstring &out, int atleast, bool prefix) {
     u64_PrintHex(value,out,atleast,prefix,false);
 }
 
@@ -655,7 +655,7 @@ void algo::u64_PrintHex(u64 value, cstring &out, int atleast, bool prefix) {
 
 // print character as c++ character, surrounded by single quotes
 // and properly escaped.
-void algo::char_PrintCppSingleQuote(int c, cstring &out) {
+void algo::char_PrintCppSingleQuote(int c, algo::cstring &out) {
     out<<'\'';
     if (c=='\'') {
         out<<"\\'";
@@ -683,7 +683,7 @@ void algo::memptr_Print(memptr ary, algo::cstring &out) {
 // -----------------------------------------------------------------------------
 
 // print 64 bytes per line
-void algo::memptr_PrintHex(memptr bytes, cstring &str) {
+void algo::memptr_PrintHex(memptr bytes, algo::cstring &str) {
     bool non_printable=false;
     frep_(i,elems_N(bytes)) {
         if (!isprint(bytes[i])){
@@ -705,7 +705,7 @@ void algo::memptr_PrintHex(memptr bytes, cstring &str) {
 
 // prints a character suitable for appearance inside an XML string.
 // character is either printed as-is, or is escaped so that its meaning does not change.
-void algo::char_PrintXml(char c, cstring &out, bool quoted) {
+void algo::char_PrintXml(char c, algo::cstring &out, bool quoted) {
     switch (c) {
     case '&':
         out<<"&amp;";
@@ -742,7 +742,7 @@ void algo::char_PrintXml(char c, cstring &out, bool quoted) {
 // Print string NAME as a TeX identifier to OUT, converting digits to letters
 // (0 -> zero, etc) and squashing other characters not belonging to TeX
 // identifier character class
-void algo::strptr_PrintTexIdent(strptr name, cstring &out) {
+void algo::strptr_PrintTexIdent(strptr name, algo::cstring &out) {
     for (int i=0; i<name.n_elems; i++) {
         char ch=name.elems[i];
         switch(ch) {
@@ -772,7 +772,7 @@ void algo::strptr_PrintTexIdent(strptr name, cstring &out) {
 
 // print STR to OUT, escaping TeX characters that switch modes
 // (_, #, &, $)
-void algo::strptr_PrintTexString(strptr str, cstring &out) {
+void algo::strptr_PrintTexString(strptr str, algo::cstring &out) {
     ch_Reserve(out,str.n_elems*4);
     int j=ch_N(out);
     for (int i=0; i<str.n_elems; i++) {
@@ -797,7 +797,7 @@ void algo::strptr_PrintTexString(strptr str, cstring &out) {
 // -----------------------------------------------------------------------------
 
 // Print string using XML rules.
-void algo::strptr_PrintXml(algo::strptr s, cstring &out, bool quoted) {
+void algo::strptr_PrintXml(algo::strptr s, algo::cstring &out, bool quoted) {
     strptr q;
     if (quoted) {
         q="\"";
@@ -813,13 +813,13 @@ void algo::strptr_PrintXml(algo::strptr s, cstring &out, bool quoted) {
 
 // Append N instances of character C to string OUT.
 
-void algo::char_PrintNTimes(char c, cstring &out, int n) {
+void algo::char_PrintNTimes(char c, algo::cstring &out, int n) {
     if (n>0) {
         Fill(ch_AllocN(out, n),c);
     }
 }
 
-void algo::strptr_PrintAligned(algo::strptr str, cstring &out, int nplaces, algo::TextJust align, char c) {
+void algo::strptr_PrintAligned(algo::strptr str, algo::cstring &out, int nplaces, algo::TextJust align, char c) {
     int extra  = i32_Max(nplaces - elems_N(str), 0);
     int before = 0;
     if (align == algo_TextJust_j_center) {
@@ -833,7 +833,7 @@ void algo::strptr_PrintAligned(algo::strptr str, cstring &out, int nplaces, algo
     char_PrintNTimes(c, out, extra-before);
 }
 
-void i32_Print(i32 i, cstring &str) {
+void i32_Print(i32 i, algo::cstring &str) {
     ch_Reserve(str, 32);
     u32 u = i;
     int n = str.ch_n;
@@ -846,7 +846,7 @@ void i32_Print(i32 i, cstring &str) {
     str.ch_n=n;
 }
 
-void i64_Print(i64 i, cstring &str) {
+void i64_Print(i64 i, algo::cstring &str) {
     ch_Reserve(str, 32);
     u64 u = i;
     int n = str.ch_n;
@@ -859,37 +859,37 @@ void i64_Print(i64 i, cstring &str) {
     str.ch_n=n;
 }
 
-void i16_Print(i16 i, cstring &str) {
+void i16_Print(i16 i, algo::cstring &str) {
     i32_Print(i, str);
 }
 
-void u16_Print(u16 i, cstring &str) {
+void u16_Print(u16 i, algo::cstring &str) {
     u32_Print(i, str);
 }
 
-void u8_Print(u8 i, cstring &str) {
+void u8_Print(u8 i, algo::cstring &str) {
     u32_Print(i, str);
 }
 
-void i8_Print(i8 i, cstring &str) {
+void i8_Print(i8 i, algo::cstring &str) {
     i32_Print(i, str);
 }
 
-void u32_Print(u32 i, cstring &str) {
+void u32_Print(u32 i, algo::cstring &str) {
     ch_Reserve(str, 32);
     int n = str.ch_n;
     n += algo::u32_FmtBuf(i,(u8*)(str.ch_elems+n));
     str.ch_n=n;
 }
 
-void u64_Print(u64 i, cstring &str) {
+void u64_Print(u64 i, algo::cstring &str) {
     ch_Reserve(str, 32);
     int n = str.ch_n;
     n += algo::u64_FmtBuf(i,(u8*)(str.ch_elems+n));
     str.ch_n=n;
 }
 
-void u128_Print(u128 num, cstring &out) {
+void u128_Print(u128 num, algo::cstring &out) {
     char buf[64];
     int i=64;
     do {
@@ -918,24 +918,24 @@ void  algo::MaybeSpace(cstring &str) {
 // print value*100
 // Example:
 // double_PrintPercent(0.334, str, 1) -> "33.4%"
-void algo::double_PrintPercent(double value, cstring &str, int prec) {
+void algo::double_PrintPercent(double value, algo::cstring &str, int prec) {
     double_PrintPrec(value*100.0, str, prec, true, false);
 }
 
-void algo::i32_Range_Print(algo::i32_Range &r, cstring &o) {
+void algo::i32_Range_Print(algo::i32_Range &r, algo::cstring &o) {
     o<<r.beg<<' '<<r.end;
 }
 
-void double_Print(double d, cstring &str) {
+void double_Print(double d, algo::cstring &str) {
     char c[128];
     ch_Addary(str, strptr(c,sprintf(c,"%g",d)));
 }
 
-void float_Print(float d, cstring &str) {
+void float_Print(float d, algo::cstring &str) {
     double_Print(d, str);
 }
 
-void algo::double_PrintWithCommas(double value, cstring &str, int prec) {
+void algo::double_PrintWithCommas(double value, algo::cstring &str, int prec) {
     double_PrintPrec(value, str, prec, true /*omit zeros*/, true /*commas*/);
 }
 
@@ -1007,7 +1007,7 @@ u32 algo::u64_FmtBufDec(u64 num, int scale, u8 *buf) {
 
 // -----------------------------------------------------------------------------
 
-static void i32_PrintNanosec(int val, cstring &str, int wid, int dflt) {
+static void i32_PrintNanosec(int val, algo::cstring &str, int wid, int dflt) {
     i64_PrintPadLeft(val, str, wid ? wid : dflt);
     // trim trailing 0s if width was default
     if (wid==0) {
@@ -1038,7 +1038,7 @@ static void i32_PrintNanosec(int val, cstring &str, int wid, int dflt) {
 // %x     Print milliseconds with 3 decimal places
 // %-     Print - sign if timespec is negative
 // %%     Print % sign
-void algo::TimeStruct_Print(const TimeStruct &time, cstring &str, const algo::strptr &spec) {
+void algo::TimeStruct_Print(const TimeStruct &time, algo::cstring &str, const algo::strptr &spec) {
     for(int i =0; i<elems_N(spec);) {
         int selector = spec[i++];
         if (selector != '%') {
@@ -1133,7 +1133,7 @@ void algo::TimeStruct_Print(const TimeStruct &time, cstring &str, const algo::st
 }
 
 
-void algo::Tuple_Print(algo::Tuple &row_, cstring &str) {
+void algo::Tuple_Print(algo::Tuple &row_, algo::cstring &str) {
     int start = -1;
     int spaces = 2;
     Tuple &row = (Tuple&)row_;
@@ -1150,7 +1150,7 @@ void algo::Tuple_Print(algo::Tuple &row_, cstring &str) {
     }
 }
 
-void char_Print(char c, cstring &str) {
+void char_Print(char c, algo::cstring &str) {
     ch_Alloc(str) = c;
 }
 
@@ -1271,7 +1271,7 @@ bool ietf::Ipport_ReadStrptrMaybe(ietf::Ipport &row, strptr in) {
 // If QUOTE is 0, the need for quotes and the type of quote is determined automatically.
 // If it is any other value, then that type of quote is used
 // According to the CSV standard, the quote itself is the escape character.
-void algo::strptr_PrintCsv(algo::strptr str, cstring &out, char quote) {
+void algo::strptr_PrintCsv(algo::strptr str, algo::cstring &out, char quote) {
     if (quote ==0) {
         bool has_comma=false;
         bool has_quote=false;
@@ -1306,7 +1306,7 @@ void algo::strptr_PrintCsv(algo::strptr str, cstring &out, char quote) {
 // -----------------------------------------------------------------------------
 
 // Print CSV field, auto-determine quotes
-void algo::strptr_PrintCsv(algo::strptr str, cstring &out) {
+void algo::strptr_PrintCsv(algo::strptr str, algo::cstring &out) {
     strptr_PrintCsv(str,out,0);
 }
 
@@ -1388,7 +1388,7 @@ static void Normalize(algo::NormTxttbl &norm, algo_lib::FTxttbl &txttbl) {
     }ind_end;;
 }
 
-void algo_lib::FTxttbl_Print(algo_lib::FTxttbl &T_, cstring &str) {
+void algo_lib::FTxttbl_Print(algo_lib::FTxttbl &T_, algo::cstring &str) {
     algo_lib::FTxttbl            &txttbl         = const_cast<algo_lib::FTxttbl&>(T_);
     bool              use_style = algo::SaneTerminalQ();
     if (!txttbl.normalized) {
@@ -1401,7 +1401,7 @@ void algo_lib::FTxttbl_Print(algo_lib::FTxttbl &T_, cstring &str) {
     }ind_end;
 }
 
-void algo::URL_Print(algo::URL &url, cstring &str) {
+void algo::URL_Print(algo::URL &url, algo::cstring &str) {
     if (ch_N(url.protocol)) {
         str<<url.protocol<<"://";
     }
@@ -1435,7 +1435,7 @@ void algo::URL_Print(algo::URL &url, cstring &str) {
 }
 
 // Append STR to OUT, and pad remainder with character FILL
-void algo::strptr_PrintPadRight(algo::strptr str, cstring &out, int nplaces, char fill) {
+void algo::strptr_PrintPadRight(algo::strptr str, algo::cstring &out, int nplaces, char fill) {
     int pos  = ch_N(out);
     ch_Addary(out, str);
     int npad = nplaces-(ch_N(out)-pos);
@@ -1445,14 +1445,14 @@ void algo::strptr_PrintPadRight(algo::strptr str, cstring &out, int nplaces, cha
 // -----------------------------------------------------------------------------
 
 // Append STR to OUT, and pad remainder with space characters
-void algo::strptr_PrintPadRight(algo::strptr str, cstring &out, int nplaces) {
+void algo::strptr_PrintPadRight(algo::strptr str, algo::cstring &out, int nplaces) {
     strptr_PrintPadRight(str,out,nplaces,' ');
 }
 
 // -----------------------------------------------------------------------------
 
 // Append STR to OUT, padding start with character FILL
-void algo::strptr_PrintPadLeft(algo::strptr str, cstring &out, int nplaces, char fill) {
+void algo::strptr_PrintPadLeft(algo::strptr str, algo::cstring &out, int nplaces, char fill) {
     int npad = nplaces-ch_N(str);
     char_PrintNTimes(fill, out,  npad);
     ch_Addary(out, str);
@@ -1461,7 +1461,7 @@ void algo::strptr_PrintPadLeft(algo::strptr str, cstring &out, int nplaces, char
 // -----------------------------------------------------------------------------
 
 // Append STR to OUT, padding start with spaces.
-void algo::strptr_PrintPadLeft(algo::strptr str, cstring &out, int nplaces) {
+void algo::strptr_PrintPadLeft(algo::strptr str, algo::cstring &out, int nplaces) {
     strptr_PrintPadLeft(str,out,nplaces,' ');
 }
 
@@ -1476,7 +1476,7 @@ void algo::strptr_PrintPadLeft(algo::strptr str, cstring &out, int nplaces) {
 // \n
 // \r
 // \t
-void algo::strptr_PrintSql(algo::strptr str, cstring &out, char q) {
+void algo::strptr_PrintSql(algo::strptr str, algo::cstring &out, char q) {
     ch_Reserve(out, elems_N(str) * 2 + 2);
     char *elems = out.ch_elems;
     int j = out.ch_n;
@@ -1531,13 +1531,13 @@ void algo::strptr_PrintSql(algo::strptr str, cstring &out, char q) {
 
 // -----------------------------------------------------------------------------
 
-void algo::strptr_PrintSql(algo::strptr str, cstring &out) {
+void algo::strptr_PrintSql(algo::strptr str, algo::cstring &out) {
     strptr_PrintSql(str,out,'\'');
 }
 
 // -----------------------------------------------------------------------------
 
-void algo::Attr_Print(algo::Attr &attr, cstring &str) {
+void algo::Attr_Print(algo::Attr &attr, algo::cstring &str) {
     PrintAttr(str, attr.name, attr.value);
 }
 
@@ -1562,7 +1562,7 @@ void algo::ListSep_Print(const algo::ListSep &t, algo::cstring &str) {
 
 // copy string B to TO, using ORIG as a case template
 // I.e. PrintCopyCase("AbcD", to, "somestring") -> "SomEstring"
-void algo::strptr_PrintCopyCase(const algo::strptr &orig, cstring &to, const algo::strptr &b) {
+void algo::strptr_PrintCopyCase(const algo::strptr &orig, algo::cstring &to, const algo::strptr &b) {
     if (elems_N(b)) {
         int nupper=0, nlower=0, nletters=0;
         int lim = i32_Min(elems_N(b),elems_N(orig));
@@ -1725,7 +1725,7 @@ bool algo::Charset_ReadStrptrMaybe(algo::Charset &lhs, strptr rhs) {
 // -----------------------------------------------------------------------------
 
 // Print STR to OUT in a way that's acceptable as input for bash.
-void algo::strptr_PrintBash(strptr str, cstring &out) {
+void algo::strptr_PrintBash(strptr str, algo::cstring &out) {
     int needquotes = elems_N(str) == 0; // need quotes if string is empty
     bool needdollar = false;
     frep_(i,elems_N(str)) {
@@ -1758,7 +1758,7 @@ tempstr algo::strptr_ToBash(strptr str) {
 
 // encode uri component.
 // before ? use plus=false (no + substitution by space)
-void algo::strptr_PrintUri(strptr str, cstring &out, bool plus) {
+void algo::strptr_PrintUri(strptr str, algo::cstring &out, bool plus) {
     int i=0;
     for(;i<elems_N(str);++i) {
         if (algo_lib::UrlsafeQ(str[i])) {
@@ -1775,7 +1775,7 @@ void algo::strptr_PrintUri(strptr str, cstring &out, bool plus) {
 // -----------------------------------------------------------------------------
 
 // Print string, escaping characters in a way suitable for graphviz dot format
-void algo::strptr_PrintDot(strptr s, cstring &out) {
+void algo::strptr_PrintDot(strptr s, algo::cstring &out) {
     tempstr t(s);
     Translate(t,"<>:\"'","_____");
     out <<"\"";
@@ -1786,7 +1786,7 @@ void algo::strptr_PrintDot(strptr s, cstring &out) {
 // -----------------------------------------------------------------------------
 
 // print binary octet string as hex
-void algo::Sha1sig_Print(algo::Sha1sig &sha1sig, cstring &out) {
+void algo::Sha1sig_Print(algo::Sha1sig &sha1sig, algo::cstring &out) {
     ind_beg(algo::Sha1sig_sha1sig_curs,_byte,const_cast<algo::Sha1sig&>(sha1sig)) {
         u64_PrintHex(_byte,out,2,false/*prefix*/,false/*caps*/);
     }ind_end;
@@ -1854,7 +1854,7 @@ static inline int _PrintQuotedChar(char c, char *buf, char quote_char) {
 
 // Write character C into string OUT, using C++ character escapement rules
 // QUOTE_CHAR also gets escaped.
-void algo::char_PrintCppEsc(char c, cstring &out, char quote_char) {
+void algo::char_PrintCppEsc(char c, algo::cstring &out, char quote_char) {
     ch_Reserve(out, 4);
     out.ch_n += _PrintQuotedChar(c, out.ch_elems + out.ch_n, quote_char);
 }
@@ -1864,7 +1864,7 @@ void algo::char_PrintCppEsc(char c, cstring &out, char quote_char) {
 // Print STR, surrounded by quotes as C++ string
 // surrounded by QUOTE_CHAR quotes, to buffer OUT.
 // All string characters are escaped using char_PrintCppEsc.
-void algo::strptr_PrintCppQuoted(algo::strptr str, cstring &out, char quote_char) {
+void algo::strptr_PrintCppQuoted(algo::strptr str, algo::cstring &out, char quote_char) {
     ch_Reserve(out, 2+str.n_elems*4);// max possible
     char *srcbuf=str.elems;// source string
     char *buf = out.ch_elems;// destination buffer
@@ -1881,7 +1881,7 @@ void algo::strptr_PrintCppQuoted(algo::strptr str, cstring &out, char quote_char
 // -----------------------------------------------------------------------------
 
 // Print STR as a C++ string to OUT.
-void algo::strptr_PrintCpp(algo::strptr str, cstring &out) {
+void algo::strptr_PrintCpp(algo::strptr str, algo::cstring &out) {
     algo::strptr_PrintCppQuoted(str,out,'"');
 }
 
@@ -1890,7 +1890,7 @@ void algo::strptr_PrintCpp(algo::strptr str, cstring &out) {
 // Print STR as a valid SSIM key/value to OUT.
 // SSIM tokens use quotes only when the printed value contains
 // characters outside of the 'safe' set a-zA-Z0-9_;&*^%$@.!:,+/-
-void algo::strptr_PrintSsim(algo::strptr str, cstring &out) {
+void algo::strptr_PrintSsim(algo::strptr str, algo::cstring &out) {
     char quote_char = algo::PickSsimQuoteChar(str);
     if (quote_char) {
         strptr_PrintCppQuoted(str, out, quote_char);
@@ -1943,7 +1943,7 @@ void algo::PrintAttr(cstring &str, const algo::strptr &name, const strptr &value
 
 // Append key-value pair NAME:VALUE to string STR, and remove all
 // characters from VALUE (used by amc)
-void algo::PrintAttrSpaceReset(cstring &str, const algo::strptr &name, cstring &value) {
+void algo::PrintAttrSpaceReset(cstring &str, const algo::strptr &name, algo::cstring &value) {
     ch_Addary(str, strptr("  ",2));
     PrintAttr(str,name,value);
     ch_RemoveAll(value);
@@ -1951,7 +1951,7 @@ void algo::PrintAttrSpaceReset(cstring &str, const algo::strptr &name, cstring &
 
 // Append key-value pair NAME:VALUE to string STR,
 // and remove all characters from VALUE (used by amc)
-void algo::PrintAttrSpaceReset(cstring &str, const char *name, cstring &value) {
+void algo::PrintAttrSpaceReset(cstring &str, const char *name, algo::cstring &value) {
     PrintAttrSpaceReset(str, strptr(name), value);
 }
 
@@ -2138,7 +2138,7 @@ u32 algo::ParseNum8(u64 x, u32 len, u32 &ok) {
 
 // Print a string as a classic regex, escaping all special
 // characters. This regex will only match the specified string.
-void algo::strptr_PrintRegxSql(algo::strptr value, cstring &str) {
+void algo::strptr_PrintRegxSql(algo::strptr value, algo::cstring &str) {
     frep_(i, elems_N(value)) {
         if (algo_lib::RegxSqlSpecialQ(value.elems[i])) {
             str << '\\';

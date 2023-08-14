@@ -332,8 +332,6 @@ dmmeta.xref  field:amc.FField.c_sortfld  inscond:true  via:amc.FDb.ind_field/dmm
 dmmeta.xref  field:amc.FCpptype.p_ctype  inscond:true  via:amc.FDb.ind_ctype/dmmeta.Cpptype.ctype
 dmmeta.xref  field:amc.FCget.p_ctype  inscond:true  via:amc.FDb.ind_ctype/dmmeta.Cget.ctype
 dmmeta.xref  field:amc.FDb.cd_temp_func  inscond:false  via:""
-dmmeta.xref  field:amc.FCtype.c_cdecl  inscond:true  via:amc.FDb.ind_ctype/dmmeta.Cdecl.ctype
-dmmeta.xref  field:amc.FCdecl.p_ctype  inscond:true  via:amc.FDb.ind_ctype/dmmeta.Cdecl.ctype
 dmmeta.xref  field:amc.FDb.zs_gen_perns  inscond:row.perns  via:""
 dmmeta.xref  field:amc.FField.c_hook  inscond:true  via:amc.FDb.ind_field/dmmeta.Hook.field
 dmmeta.xref  field:amc.FHook.p_field  inscond:true  via:amc.FDb.ind_field/dmmeta.Hook.field

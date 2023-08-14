@@ -292,7 +292,7 @@ static void Main_ComputeSysincl() {
 
 static void line_n_Update(abt::FSrcfile *srcfile) {
     if (srcfile->line_n == 0) {
-        MmapFile file;
+        algo_lib::MmapFile file;
         MmapFile_Load(file,srcfile->srcfile);
         ind_beg(Line_curs, curs, file.text) {
             (void)curs;
@@ -304,7 +304,7 @@ static void line_n_Update(abt::FSrcfile *srcfile) {
 // -----------------------------------------------------------------------------
 
 static void ScanHeaders(abt::FSrcfile *srcfile) {
-    MmapFile file;
+    algo_lib::MmapFile file;
     MmapFile_Load(file,srcfile->srcfile);
     u64 bytes_not_scanned = 0;
     u64 bytes_total = file.text.n_elems;

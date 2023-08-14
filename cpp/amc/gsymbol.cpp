@@ -55,7 +55,7 @@ void amc::gen_ns_gsymbol() {
     ind_beg(amc::ns_c_gsymbol_curs, gsymbol,ns) {
         algo_lib::Regx regx;
         (void)Regx_ReadSql(regx, tempstr() <<"%("<<gsymbol.inc<<")%", true);
-        MmapFile file;
+        algo_lib::MmapFile file;
         tempstr fname(SsimFname(amc::_db.cmdline.in_dir,ssimfile_Get(gsymbol)));
         vrfy(MmapFile_Load(file,fname),tempstr()<<"amc.load"<<Keyval("filename",fname));
         amc::BeginNsBlock(*ns.hdr, ns, "");

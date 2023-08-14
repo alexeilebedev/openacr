@@ -63,7 +63,6 @@ struct lpool_Lpblock {
 };
 } // gen:ns_field
 // gen:ns_fwddecl2
-namespace lib_json { struct FNode; }
 namespace lib_json { struct node_c_child_curs; }
 namespace lib_json { struct trace; }
 namespace lib_json { struct FDb; }

@@ -2520,7 +2520,7 @@ void atf_unit::unittest_algo_lib_Mmap() {
 
     // write string to file
     StringToFile("sample text",fname);
-    MmapFile mmapfile;
+    algo_lib::MmapFile mmapfile;
     algo_lib::FFildes readfd;
     readfd.fd = OpenRead(fname);
     vrfy_(MmapFile_LoadFd(mmapfile,readfd.fd));

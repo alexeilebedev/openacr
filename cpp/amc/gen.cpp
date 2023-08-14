@@ -710,7 +710,7 @@ void amc::gen_gconst() {
         tempstr      fname = SsimFilename("data",*namefld.p_ctype, true);
         bool is_string = field.p_arg->c_cstr != NULL && field.arg != "char";
         bool is_char = field.arg == "char";
-        MmapFile file;
+        algo_lib::MmapFile file;
         vrfy(MmapFile_Load(file,fname),tempstr()<<"amc.load"<<Keyval("filename",fname));
         int idx = 0;
         int nrec = 0;
@@ -835,7 +835,7 @@ void amc::gen_load_gstatic() {
              <<Keyval("basetype",(ctype ? algo::strptr(ctype->ctype) : algo::strptr()))
              <<Keyval("comment","cannot determine ssimfile to load."));
         tempstr      fname  = amc::SsimFilename("data", *ctype, true);
-        MmapFile in;
+        algo_lib::MmapFile in;
         MmapFile_Load(in, fname);
         Tuple tuple;
         int nrec=0;

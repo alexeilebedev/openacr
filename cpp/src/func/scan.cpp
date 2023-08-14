@@ -123,7 +123,7 @@ static src_func::FFunc *CreateFunc(src_func::FTargsrc &targsrc, strptr funcline,
 
 // Scan contents of FNAME and create function records
 static void ScanFile(src_func::FTargsrc &targsrc) {
-    MmapFile file;
+    algo_lib::MmapFile file;
     verblog2("src_func.scanfile"
              <<Keyval("src",src_Get(targsrc)));
     MmapFile_Load(file,src_Get(targsrc));

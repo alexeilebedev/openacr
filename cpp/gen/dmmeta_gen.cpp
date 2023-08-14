@@ -217,7 +217,6 @@ const char *dmmeta_Ssimfile_ssimfile_dmmeta_bitfld         = "dmmeta.bitfld";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_cafter         = "dmmeta.cafter";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_cascdel        = "dmmeta.cascdel";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_ccmp           = "dmmeta.ccmp";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_cdecl          = "dmmeta.cdecl";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_cdflt          = "dmmeta.cdflt";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_cextern        = "dmmeta.cextern";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_cfmt           = "dmmeta.cfmt";
@@ -858,55 +857,6 @@ void dmmeta::Ccmp_Print(dmmeta::Ccmp & row, algo::cstring &str) {
 
     bool_Print(row.minmax, temp);
     PrintAttrSpaceReset(str,"minmax", temp);
-
-    algo::Comment_Print(row.comment, temp);
-    PrintAttrSpaceReset(str,"comment", temp);
-}
-
-// --- dmmeta.Cdecl..ReadFieldMaybe
-bool dmmeta::Cdecl_ReadFieldMaybe(dmmeta::Cdecl &parent, algo::strptr field, algo::strptr strval) {
-    dmmeta::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
-    switch(field_id) {
-        case dmmeta_FieldId_ctype: retval = algo::Smallstr50_ReadStrptrMaybe(parent.ctype, strval); break;
-        case dmmeta_FieldId_fwddecl: retval = bool_ReadStrptrMaybe(parent.fwddecl, strval); break;
-        case dmmeta_FieldId_gen_using: retval = bool_ReadStrptrMaybe(parent.gen_using, strval); break;
-        case dmmeta_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
-        default: break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- dmmeta.Cdecl..ReadStrptrMaybe
-// Read fields of dmmeta::Cdecl from an ascii string.
-// The format of the string is an ssim Tuple
-bool dmmeta::Cdecl_ReadStrptrMaybe(dmmeta::Cdecl &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "dmmeta.cdecl") || algo::StripTypeTag(in_str, "dmmeta.Cdecl");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && Cdecl_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- dmmeta.Cdecl..Print
-// print string representation of dmmeta::Cdecl to string LHS, no header -- cprint:dmmeta.Cdecl.String
-void dmmeta::Cdecl_Print(dmmeta::Cdecl & row, algo::cstring &str) {
-    algo::tempstr temp;
-    str << "dmmeta.cdecl";
-
-    algo::Smallstr50_Print(row.ctype, temp);
-    PrintAttrSpaceReset(str,"ctype", temp);
-
-    bool_Print(row.fwddecl, temp);
-    PrintAttrSpaceReset(str,"fwddecl", temp);
-
-    bool_Print(row.gen_using, temp);
-    PrintAttrSpaceReset(str,"gen_using", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
@@ -3003,8 +2953,6 @@ const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) {
         case dmmeta_FieldId_genop          : ret = "genop";  break;
         case dmmeta_FieldId_order          : ret = "order";  break;
         case dmmeta_FieldId_minmax         : ret = "minmax";  break;
-        case dmmeta_FieldId_fwddecl        : ret = "fwddecl";  break;
-        case dmmeta_FieldId_gen_using      : ret = "gen_using";  break;
         case dmmeta_FieldId_dflt           : ret = "dflt";  break;
         case dmmeta_FieldId_cppdflt        : ret = "cppdflt";  break;
         case dmmeta_FieldId_ssimdflt       : ret = "ssimdflt";  break;
@@ -3081,6 +3029,7 @@ const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) {
         case dmmeta_FieldId_glob           : ret = "glob";  break;
         case dmmeta_FieldId_priv           : ret = "priv";  break;
         case dmmeta_FieldId_ret            : ret = "ret";  break;
+        case dmmeta_FieldId_fwddecl        : ret = "fwddecl";  break;
         case dmmeta_FieldId_namefld        : ret = "namefld";  break;
         case dmmeta_FieldId_idfld          : ret = "idfld";  break;
         case dmmeta_FieldId_wantenum       : ret = "wantenum";  break;
@@ -3610,10 +3559,6 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('d','e','p','r','e','c','a','t'): {
                     if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,dmmeta_FieldId_deprecate); ret = true; break; }
-                    break;
-                }
-                case LE_STR8('g','e','n','_','u','s','i','n'): {
-                    if (memcmp(rhs.elems+8,"g",1)==0) { value_SetEnum(parent,dmmeta_FieldId_gen_using); ret = true; break; }
                     break;
                 }
                 case LE_STR8('h','a','v','e','c','o','u','n'): {

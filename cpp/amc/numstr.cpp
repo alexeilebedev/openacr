@@ -316,7 +316,7 @@ void amc::tfunc_Numstr_ForAllStrings() {
 // CHECK_OVERFLOW is true if VALTYPE is unable to represent MAXVAL*10+9, neccessitating some extra
 // logic to check overflow
 static void GenParseNum(strptr type, strptr valtype, bool issigned, strptr maxval, bool check_overflow, int maxdig) {
-    Replscope R;
+    algo_lib::Replscope R;
     Set(R, "$type", type);
     Set(R, "$valtype", valtype);
     Set(R, "$maxval", maxval);

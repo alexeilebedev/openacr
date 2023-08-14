@@ -458,7 +458,6 @@ dev.gitfile  gitfile:data/dmmeta/bitfld.ssim
 dev.gitfile  gitfile:data/dmmeta/cafter.ssim
 dev.gitfile  gitfile:data/dmmeta/cascdel.ssim
 dev.gitfile  gitfile:data/dmmeta/ccmp.ssim
-dev.gitfile  gitfile:data/dmmeta/cdecl.ssim
 dev.gitfile  gitfile:data/dmmeta/cdflt.ssim
 dev.gitfile  gitfile:data/dmmeta/cextern.ssim
 dev.gitfile  gitfile:data/dmmeta/cfmt.ssim
