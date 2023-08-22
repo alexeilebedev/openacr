@@ -74,7 +74,13 @@ static void Fwddecl_GenStructNs(amc::FNs &ns) {
     ind_beg(amc::ns_c_fwddecl_curs,fwddecl,ns) {
         dmmeta::CtypePkey ctypepkey=ctype_Get(fwddecl);// may be a non-existent ctype -- such as a cursor
         if (!FwdDeclExistsQ(ns,fwddecl)) {
-            *ns.hdr << "namespace "<<dmmeta::Ctype_ns_Get(ctypepkey)<<" { struct "<<dmmeta::Ctype_name_Get(ctypepkey)<<"; }"<<eol;
+            dmmeta::NsPkey nskey = dmmeta::Ctype_ns_Get(ctypepkey);
+            tempstr fwddef = tempstr() << "struct "<<dmmeta::Ctype_name_Get(ctypepkey)<<";";
+            if (nskey == "") {
+                *ns.hdr << fwddef << eol;
+            } else {
+                *ns.hdr << "namespace "<<nskey<<" { " << fwddef << " }" << eol;
+            }
         }
     }ind_end;
     // extern declaration for global variables (usually just one, FDb)
