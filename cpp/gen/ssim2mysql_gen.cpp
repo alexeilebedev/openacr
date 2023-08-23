@@ -93,8 +93,10 @@ namespace ssim2mysql { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // Internal function to scan for a message
     //
     static void          in_buf_Scanmsg(ssim2mysql::FInput& input) __attribute__((nothrow));
+    // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     static void          in_buf_Shift(ssim2mysql::FInput& input) __attribute__((nothrow));
     static void          SizeCheck();
@@ -2576,8 +2578,9 @@ void ssim2mysql::FField_Print(ssim2mysql::FField & row, algo::cstring &str) {
 }
 
 // --- ssim2mysql.FInput.in_buf.BeginRead
+// Attach fbuf to Iohook for reading
 // Attach file descriptor and begin reading using edge-triggered epoll.
-// File descriptor becomes owned by char via FIohook field.
+// File descriptor becomes owned by ssim2mysql::FInput.in_buf via FIohook field.
 // Whenever the file descriptor becomes readable, insert input into cd_input_line.
 void ssim2mysql::in_buf_BeginRead(ssim2mysql::FInput& input, algo::Fildes fd) {
     callback_Set1(input.in_buf_iohook, input, ssim2mysql::cd_input_line_Insert);
@@ -2601,6 +2604,7 @@ void ssim2mysql::in_buf_EndRead(ssim2mysql::FInput& input) {
 }
 
 // --- ssim2mysql.FInput.in_buf.GetMsg
+// Detect incoming message in buffer and return it
 // Look for valid message at current position in the buffer.
 // If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
 // If there is no message, read once from underlying file descriptor and try again.
@@ -2662,6 +2666,7 @@ bool ssim2mysql::in_buf_Refill(ssim2mysql::FInput& input) {
 }
 
 // --- ssim2mysql.FInput.in_buf.RemoveAll
+// Empty bfufer
 // Discard contents of the buffer.
 void ssim2mysql::in_buf_RemoveAll(ssim2mysql::FInput& input) {
     input.in_buf_start    = 0;
@@ -2671,6 +2676,7 @@ void ssim2mysql::in_buf_RemoveAll(ssim2mysql::FInput& input) {
 }
 
 // --- ssim2mysql.FInput.in_buf.Scanmsg
+// Internal function to scan for a message
 // 
 static void ssim2mysql::in_buf_Scanmsg(ssim2mysql::FInput& input) {
     char *hdr = (char*)(input.in_buf_elems + input.in_buf_start);
@@ -2696,6 +2702,7 @@ static void ssim2mysql::in_buf_Scanmsg(ssim2mysql::FInput& input) {
 }
 
 // --- ssim2mysql.FInput.in_buf.Shift
+// Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
 static void ssim2mysql::in_buf_Shift(ssim2mysql::FInput& input) {
     i32 start = input.in_buf_start;
@@ -2708,6 +2715,7 @@ static void ssim2mysql::in_buf_Shift(ssim2mysql::FInput& input) {
 }
 
 // --- ssim2mysql.FInput.in_buf.SkipBytes
+// Skip N bytes when reading
 // Mark some buffer contents as read.
 // 
 void ssim2mysql::in_buf_SkipBytes(ssim2mysql::FInput& input, int n) {
@@ -2717,6 +2725,7 @@ void ssim2mysql::in_buf_SkipBytes(ssim2mysql::FInput& input, int n) {
 }
 
 // --- ssim2mysql.FInput.in_buf.SkipMsg
+// Skip current message, if any
 // Skip current message, if any.
 void ssim2mysql::in_buf_SkipMsg(ssim2mysql::FInput& input) {
     if (input.in_buf_msgvalid) {
@@ -2731,6 +2740,7 @@ void ssim2mysql::in_buf_SkipMsg(ssim2mysql::FInput& input) {
 }
 
 // --- ssim2mysql.FInput.in_buf.WriteAll
+// Attempt to write buffer contents to fd
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.

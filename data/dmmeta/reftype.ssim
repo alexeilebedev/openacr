@@ -8,7 +8,7 @@ dmmeta.reftype  reftype:Count  isval:N  cascins:N  usebasepool:N  cancopy:N  isx
 dmmeta.reftype  reftype:Cppstack  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:Y  varlen:N
 dmmeta.reftype  reftype:Delptr  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:Y  varlen:N
 dmmeta.reftype  reftype:Exec  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:Fbuf  isval:Y  cascins:Y  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N
+dmmeta.reftype  reftype:Fbuf  isval:Y  cascins:Y  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N
 dmmeta.reftype  reftype:Global  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N
 dmmeta.reftype  reftype:Hook  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
 dmmeta.reftype  reftype:Inlary  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N

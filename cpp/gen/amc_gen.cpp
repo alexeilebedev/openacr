@@ -5929,7 +5929,7 @@ static void amc::reftype_LoadStatic() {
         ,{ "dmmeta.reftype  reftype:Cppstack  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:Y  varlen:N" }
         ,{ "dmmeta.reftype  reftype:Delptr  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:Y  varlen:N" }
         ,{ "dmmeta.reftype  reftype:Exec  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Fbuf  isval:Y  cascins:Y  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N" }
+        ,{ "dmmeta.reftype  reftype:Fbuf  isval:Y  cascins:Y  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N" }
         ,{ "dmmeta.reftype  reftype:Global  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N" }
         ,{ "dmmeta.reftype  reftype:Hook  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N" }
         ,{ "dmmeta.reftype  reftype:Inlary  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N" }
@@ -15004,23 +15004,25 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Exec.ToCmdline  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Exec_ToCmdline }
         ,{ "amcdb.tfunc  tfunc:Exec.Init  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Exec_Init }
         ,{ "amcdb.tfunc  tfunc:Exec.Uninit  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:\"\"", amc::tfunc_Exec_Uninit }
-        ,{ "amcdb.tfunc  tfunc:Fbuf.BeginRead  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Fbuf_BeginRead }
+        ,{ "amcdb.tfunc  tfunc:Fbuf.BeginRead  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Attach fbuf to Iohook for reading\"", amc::tfunc_Fbuf_BeginRead }
         ,{ "amcdb.tfunc  tfunc:Fbuf.EndRead  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Set EOF flag\"", amc::tfunc_Fbuf_EndRead }
         ,{ "amcdb.tfunc  tfunc:Fbuf.EndWrite  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Send zero-byte write\"", amc::tfunc_Fbuf_EndWrite }
-        ,{ "amcdb.tfunc  tfunc:Fbuf.BeginWrite  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Fbuf_BeginWrite }
-        ,{ "amcdb.tfunc  tfunc:Fbuf.GetMsg  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Fbuf_GetMsg }
+        ,{ "amcdb.tfunc  tfunc:Fbuf.BeginWrite  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Attach fbuf to Iohook for writing\"", amc::tfunc_Fbuf_BeginWrite }
+        ,{ "amcdb.tfunc  tfunc:Fbuf.GetMsg  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Detect incoming message in buffer and return it\"", amc::tfunc_Fbuf_GetMsg }
+        ,{ "amcdb.tfunc  tfunc:Fbuf.Realloc  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Set buffer size.\"", amc::tfunc_Fbuf_Realloc }
         ,{ "amcdb.tfunc  tfunc:Fbuf.Init  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:\"\"", amc::tfunc_Fbuf_Init }
         ,{ "amcdb.tfunc  tfunc:Fbuf.Max  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Return max. number of bytes in the buffer.\"", amc::tfunc_Fbuf_Max }
         ,{ "amcdb.tfunc  tfunc:Fbuf.N  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:Y  pure:Y  ismacro:N  comment:\"Return number of bytes in the buffer.\"", amc::tfunc_Fbuf_N }
         ,{ "amcdb.tfunc  tfunc:Fbuf.Outflow  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Transfer bytes from buffer to fd using write()\"", amc::tfunc_Fbuf_Outflow }
         ,{ "amcdb.tfunc  tfunc:Fbuf.Refill  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Refill buffer. Return false if no further refill possible (input buffer exhausted)\"", amc::tfunc_Fbuf_Refill }
-        ,{ "amcdb.tfunc  tfunc:Fbuf.RemoveAll  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Fbuf_RemoveAll }
-        ,{ "amcdb.tfunc  tfunc:Fbuf.Scanmsg  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Fbuf_Scanmsg }
-        ,{ "amcdb.tfunc  tfunc:Fbuf.Shift  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Fbuf_Shift }
-        ,{ "amcdb.tfunc  tfunc:Fbuf.SkipBytes  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Fbuf_SkipBytes }
-        ,{ "amcdb.tfunc  tfunc:Fbuf.SkipMsg  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Fbuf_SkipMsg }
-        ,{ "amcdb.tfunc  tfunc:Fbuf.WriteAll  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Fbuf_WriteAll }
+        ,{ "amcdb.tfunc  tfunc:Fbuf.RemoveAll  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Empty bfufer\"", amc::tfunc_Fbuf_RemoveAll }
+        ,{ "amcdb.tfunc  tfunc:Fbuf.Scanmsg  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Internal function to scan for a message\"", amc::tfunc_Fbuf_Scanmsg }
+        ,{ "amcdb.tfunc  tfunc:Fbuf.Shift  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Internal function to shift data left\"", amc::tfunc_Fbuf_Shift }
+        ,{ "amcdb.tfunc  tfunc:Fbuf.SkipBytes  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Skip N bytes when reading\"", amc::tfunc_Fbuf_SkipBytes }
+        ,{ "amcdb.tfunc  tfunc:Fbuf.SkipMsg  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Skip current message, if any\"", amc::tfunc_Fbuf_SkipMsg }
+        ,{ "amcdb.tfunc  tfunc:Fbuf.WriteAll  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Attempt to write buffer contents to fd\"", amc::tfunc_Fbuf_WriteAll }
         ,{ "amcdb.tfunc  tfunc:Fbuf.WriteMsg  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Write message to buffer. If the entire message is written, return true, otherwise false.\"", amc::tfunc_Fbuf_WriteMsg }
+        ,{ "amcdb.tfunc  tfunc:Fbuf.Uninit  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:\"Free memory\"", amc::tfunc_Fbuf_Uninit }
         ,{ "amcdb.tfunc  tfunc:Fcast.Cast  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Fcast_Cast }
         ,{ "amcdb.tfunc  tfunc:Fconst.GetEnum  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Fconst_GetEnum }
         ,{ "amcdb.tfunc  tfunc:Fconst.SetEnum  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Fconst_SetEnum }

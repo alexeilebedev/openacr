@@ -283,6 +283,8 @@ void amc::InsStruct(algo_lib::Replscope &R, amc::FCtype *ctype, const algo::strp
 }
 
 // Insert variable declaration into body of struct corresponding to CTYPE,.
+// NOTE: field must be explicitly initialized in Init function, this function
+// will not provide initialization in constructor!
 void amc::InsVar(algo_lib::Replscope &R, amc::FCtype *ctype, const algo::strptr &type, const algo::strptr &name, const algo::strptr &dflt, const algo::strptr &comment) {
     cstring &t = ctype->body;
     t << Subst(R,type)

@@ -84,8 +84,12 @@ namespace atf_amc { // gen:ns_print_proto
     static bool          bits5_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          bit0_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          bit1_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     static void          in_Shift(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
+    // Internal function to shift data left
+    // Shift existing bytes over to the beginning of the buffer
+    static void          in_Shift(atf_amc::BytebufDyn& bytebuf_dyn) __attribute__((nothrow));
     // Extract next character from STR and advance IDX
     static int           val_Nextchar(const atf_amc::Cstr& orig, algo::strptr &str, int &idx) __attribute__((nothrow));
     static bool          strval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
@@ -212,12 +216,16 @@ namespace atf_amc { // gen:ns_print_proto
     static void          fixary_IntHeapSort(atf_amc::TypeA *elems, int n) __attribute__((nothrow));
     // Quick sort engine
     static void          fixary_IntQuickSort(atf_amc::TypeA *elems, int n, int depth) __attribute__((nothrow));
+    // Internal function to scan for a message
     //
     static void          in_Scanmsg(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
+    // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     static void          in_Shift(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
+    // Internal function to scan for a message
     //
     static void          in_Scanmsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+    // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     static void          in_Shift(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
     static bool          value_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
@@ -497,6 +505,7 @@ void atf_amc::BitfldType2_Print(atf_amc::BitfldType2 & row, algo::cstring &str) 
 }
 
 // --- atf_amc.Bytebuf.in.GetMsg
+// Detect incoming message in buffer and return it
 // Look for valid message at current position in the buffer.
 // If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
 // If there is no message, read once from underlying file descriptor and try again.
@@ -515,6 +524,7 @@ algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::Bytebuf& bytebuf) {
 }
 
 // --- atf_amc.Bytebuf.in.RemoveAll
+// Empty bfufer
 // Discard contents of the buffer.
 void atf_amc::in_RemoveAll(atf_amc::Bytebuf& bytebuf) {
     bytebuf.in_start    = 0;
@@ -522,6 +532,7 @@ void atf_amc::in_RemoveAll(atf_amc::Bytebuf& bytebuf) {
 }
 
 // --- atf_amc.Bytebuf.in.Shift
+// Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
 static void atf_amc::in_Shift(atf_amc::Bytebuf& bytebuf) {
     i32 start = bytebuf.in_start;
@@ -534,6 +545,7 @@ static void atf_amc::in_Shift(atf_amc::Bytebuf& bytebuf) {
 }
 
 // --- atf_amc.Bytebuf.in.SkipBytes
+// Skip N bytes when reading
 // Mark some buffer contents as read.
 // 
 void atf_amc::in_SkipBytes(atf_amc::Bytebuf& bytebuf, int n) {
@@ -543,6 +555,7 @@ void atf_amc::in_SkipBytes(atf_amc::Bytebuf& bytebuf, int n) {
 }
 
 // --- atf_amc.Bytebuf.in.WriteAll
+// Attempt to write buffer contents to fd
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
@@ -575,6 +588,125 @@ void atf_amc::Bytebuf_Init(atf_amc::Bytebuf& bytebuf) {
 // --- atf_amc.Bytebuf..Print
 // print string representation of atf_amc::Bytebuf to string LHS, no header -- cprint:atf_amc.Bytebuf.String
 void atf_amc::Bytebuf_Print(atf_amc::Bytebuf & row, algo::cstring &str) {
+    (void)row;//only to avoid -Wunused-parameter
+    (void)str;//only to avoid -Wunused-parameter
+}
+
+// --- atf_amc.BytebufDyn.in.GetMsg
+// Detect incoming message in buffer and return it
+// Look for valid message at current position in the buffer.
+// If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
+// If there is no message, read once from underlying file descriptor and try again.
+// The message is any number of bytes > 0
+// 
+algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::BytebufDyn& bytebuf_dyn) {
+    algo::aryptr<char> ret;
+    if (in_N(bytebuf_dyn) == 0) {
+    }
+    char *hdr = (char*)(bytebuf_dyn.in_elems + bytebuf_dyn.in_start);
+    if (in_N(bytebuf_dyn)) {
+        ret.elems = hdr; // if no elements, return value is NULL
+        ret.n_elems = in_N(bytebuf_dyn);
+    }
+    return ret;
+}
+
+// --- atf_amc.BytebufDyn.in.Realloc
+// Set buffer size.
+// Unconditionally reallocate buffer to have size NEW_MAX
+// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
+// (best to call this before filling the buffer)
+void atf_amc::in_Realloc(atf_amc::BytebufDyn& bytebuf_dyn, int new_max) {
+    new_max = i32_Max(new_max, bytebuf_dyn.in_end);
+    u8 *new_mem = bytebuf_dyn.in_elems
+    ? (u8*)algo_lib::malloc_ReallocMem(bytebuf_dyn.in_elems, bytebuf_dyn.in_max, new_max)
+    : (u8*)algo_lib::malloc_AllocMem(new_max);
+    if (UNLIKELY(!new_mem)) {
+        FatalErrorExit("atf_amc.fbuf_nomem  field:atf_amc.BytebufDyn.in  comment:'out of memory'");
+    }
+    bytebuf_dyn.in_elems = new_mem;
+    bytebuf_dyn.in_max = new_max;
+}
+
+// --- atf_amc.BytebufDyn.in.RemoveAll
+// Empty bfufer
+// Discard contents of the buffer.
+void atf_amc::in_RemoveAll(atf_amc::BytebufDyn& bytebuf_dyn) {
+    bytebuf_dyn.in_start    = 0;
+    bytebuf_dyn.in_end      = 0;
+}
+
+// --- atf_amc.BytebufDyn.in.Shift
+// Internal function to shift data left
+// Shift existing bytes over to the beginning of the buffer
+static void atf_amc::in_Shift(atf_amc::BytebufDyn& bytebuf_dyn) {
+    i32 start = bytebuf_dyn.in_start;
+    i32 bytes_n = bytebuf_dyn.in_end - start;
+    if (bytes_n > 0) {
+        memmove(bytebuf_dyn.in_elems, bytebuf_dyn.in_elems + start, bytes_n);
+    }
+    bytebuf_dyn.in_end = bytes_n;
+    bytebuf_dyn.in_start = 0;
+}
+
+// --- atf_amc.BytebufDyn.in.SkipBytes
+// Skip N bytes when reading
+// Mark some buffer contents as read.
+// 
+void atf_amc::in_SkipBytes(atf_amc::BytebufDyn& bytebuf_dyn, int n) {
+    int avail = bytebuf_dyn.in_end - bytebuf_dyn.in_start;
+    n = i32_Min(n,avail);
+    bytebuf_dyn.in_start += n;
+}
+
+// --- atf_amc.BytebufDyn.in.WriteAll
+// Attempt to write buffer contents to fd
+// Write bytes to the buffer. If the entire block is written, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+// 
+bool atf_amc::in_WriteAll(atf_amc::BytebufDyn& bytebuf_dyn, u8 *in, i32 in_n) {
+    int max = in_Max(bytebuf_dyn);
+    // check if message doesn't fit. if so, shift bytes over.
+    if (bytebuf_dyn.in_end + in_n > max) {
+        in_Shift(bytebuf_dyn);
+    }
+    // now try to write the message.
+    i32 end = bytebuf_dyn.in_end;
+    bool fits = end + in_n <= max;
+    if (fits && in_n > 0) {
+        memcpy(bytebuf_dyn.in_elems + end, in, in_n);
+        bytebuf_dyn.in_end = end + in_n;
+    }
+    return fits;
+}
+
+// --- atf_amc.BytebufDyn..Init
+// Set all fields to initial values.
+void atf_amc::BytebufDyn_Init(atf_amc::BytebufDyn& bytebuf_dyn) {
+    bytebuf_dyn.in_elems = NULL; // in: initialize
+    bytebuf_dyn.in_max = 0; // in: initialize
+    bytebuf_dyn.in_end = 0; // in: initialize
+    bytebuf_dyn.in_start = 0; // in: initialize
+    bytebuf_dyn.in_eof = false; // in: initialize
+    bytebuf_dyn.in_epoll_enable = true; // in: initialize
+}
+
+// --- atf_amc.BytebufDyn..Uninit
+void atf_amc::BytebufDyn_Uninit(atf_amc::BytebufDyn& bytebuf_dyn) {
+    atf_amc::BytebufDyn &row = bytebuf_dyn; (void)row;
+
+    // atf_amc.BytebufDyn.in.Uninit (Fbuf)  //Streaming buffer
+    if (bytebuf_dyn.in_elems) {
+        algo_lib::malloc_FreeMem(bytebuf_dyn.in_elems, sizeof(char)*bytebuf_dyn.in_max); // (atf_amc.BytebufDyn.in)
+    }
+    bytebuf_dyn.in_elems = NULL;
+    bytebuf_dyn.in_max = 0;
+}
+
+// --- atf_amc.BytebufDyn..Print
+// print string representation of atf_amc::BytebufDyn to string LHS, no header -- cprint:atf_amc.BytebufDyn.String
+void atf_amc::BytebufDyn_Print(atf_amc::BytebufDyn & row, algo::cstring &str) {
     (void)row;//only to avoid -Wunused-parameter
     (void)str;//only to avoid -Wunused-parameter
 }
@@ -5270,6 +5402,7 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:atree_RangeSearch  comment:\"Range searching on atree\"", atf_amc::amctest_atree_RangeSearch }
         ,{ "atfdb.amctest  amctest:atree_test1  comment:\"Play with the tree, constantly verify invariants\"", atf_amc::amctest_atree_test1 }
         ,{ "atfdb.amctest  amctest:atree_test2  comment:\"Test FirstGe and LastLt\"", atf_amc::amctest_atree_test2 }
+        ,{ "atfdb.amctest  amctest:bytebuf_dyn_test1  comment:\"Check buffer sizes\"", atf_amc::amctest_bytebuf_dyn_test1 }
         ,{ "atfdb.amctest  amctest:bytebuf_test1  comment:\"Initial state -- no data\"", atf_amc::amctest_bytebuf_test1 }
         ,{ "atfdb.amctest  amctest:bytebuf_test2  comment:\"Write some bytes, read back\"", atf_amc::amctest_bytebuf_test2 }
         ,{ "atfdb.amctest  amctest:fstep_Inline  comment:\"Check step type\"", atf_amc::amctest_fstep_Inline }
@@ -6488,6 +6621,15 @@ bool atf_amc::typed_XrefMaybe(atf_amc::FTypeD &row) {
     if (true) { // user-defined insert condition
         cd_typed_Insert(row);
     }
+    return retval;
+}
+
+// --- atf_amc.FDb.bytebuf_dyn.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_amc::bytebuf_dyn_XrefMaybe(atf_amc::BytebufDyn &row) {
+    bool retval = true;
+    (void)row;
     return retval;
 }
 
@@ -9597,6 +9739,7 @@ void atf_amc::Lary32_Uninit(atf_amc::Lary32& parent) {
 }
 
 // --- atf_amc.Linebuf.in.GetMsg
+// Detect incoming message in buffer and return it
 // Look for valid message at current position in the buffer.
 // If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
 // If there is no message, read once from underlying file descriptor and try again.
@@ -9621,6 +9764,7 @@ algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::Linebuf& linebuf) {
 }
 
 // --- atf_amc.Linebuf.in.RemoveAll
+// Empty bfufer
 // Discard contents of the buffer.
 void atf_amc::in_RemoveAll(atf_amc::Linebuf& linebuf) {
     linebuf.in_start    = 0;
@@ -9630,6 +9774,7 @@ void atf_amc::in_RemoveAll(atf_amc::Linebuf& linebuf) {
 }
 
 // --- atf_amc.Linebuf.in.Scanmsg
+// Internal function to scan for a message
 // 
 static void atf_amc::in_Scanmsg(atf_amc::Linebuf& linebuf) {
     char *hdr = (char*)(linebuf.in_elems + linebuf.in_start);
@@ -9655,6 +9800,7 @@ static void atf_amc::in_Scanmsg(atf_amc::Linebuf& linebuf) {
 }
 
 // --- atf_amc.Linebuf.in.Shift
+// Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
 static void atf_amc::in_Shift(atf_amc::Linebuf& linebuf) {
     i32 start = linebuf.in_start;
@@ -9667,6 +9813,7 @@ static void atf_amc::in_Shift(atf_amc::Linebuf& linebuf) {
 }
 
 // --- atf_amc.Linebuf.in.SkipBytes
+// Skip N bytes when reading
 // Mark some buffer contents as read.
 // 
 void atf_amc::in_SkipBytes(atf_amc::Linebuf& linebuf, int n) {
@@ -9676,6 +9823,7 @@ void atf_amc::in_SkipBytes(atf_amc::Linebuf& linebuf, int n) {
 }
 
 // --- atf_amc.Linebuf.in.SkipMsg
+// Skip current message, if any
 // Skip current message, if any.
 void atf_amc::in_SkipMsg(atf_amc::Linebuf& linebuf) {
     if (linebuf.in_msgvalid) {
@@ -9690,6 +9838,7 @@ void atf_amc::in_SkipMsg(atf_amc::Linebuf& linebuf) {
 }
 
 // --- atf_amc.Linebuf.in.WriteAll
+// Attempt to write buffer contents to fd
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
@@ -10263,8 +10412,9 @@ void atf_amc::MsgLTV_Print(atf_amc::MsgLTV & row, algo::cstring &str) {
 }
 
 // --- atf_amc.Msgbuf.in.BeginRead
+// Attach fbuf to Iohook for reading
 // Attach file descriptor and begin reading using edge-triggered epoll.
-// File descriptor becomes owned by atf_amc::MsgHeader via FIohook field.
+// File descriptor becomes owned by atf_amc::Msgbuf.in via FIohook field.
 // Whenever the file descriptor becomes readable, insert msgbuf into cd_in_msg.
 void atf_amc::in_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes fd) {
     callback_Set1(msgbuf.in_iohook, msgbuf, atf_amc::cd_in_msg_Insert);
@@ -10288,6 +10438,7 @@ void atf_amc::in_EndRead(atf_amc::Msgbuf& msgbuf) {
 }
 
 // --- atf_amc.Msgbuf.in.GetMsg
+// Detect incoming message in buffer and return it
 // Look for valid message at current position in the buffer.
 // If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
 // If there is no message, read once from underlying file descriptor and try again.
@@ -10341,6 +10492,7 @@ bool atf_amc::in_Refill(atf_amc::Msgbuf& msgbuf) {
 }
 
 // --- atf_amc.Msgbuf.in.RemoveAll
+// Empty bfufer
 // Discard contents of the buffer.
 void atf_amc::in_RemoveAll(atf_amc::Msgbuf& msgbuf) {
     msgbuf.in_start    = 0;
@@ -10350,6 +10502,7 @@ void atf_amc::in_RemoveAll(atf_amc::Msgbuf& msgbuf) {
 }
 
 // --- atf_amc.Msgbuf.in.Scanmsg
+// Internal function to scan for a message
 // 
 static void atf_amc::in_Scanmsg(atf_amc::Msgbuf& msgbuf) {
     atf_amc::MsgHeader *hdr = (atf_amc::MsgHeader*)(msgbuf.in_elems + msgbuf.in_start);
@@ -10370,6 +10523,7 @@ static void atf_amc::in_Scanmsg(atf_amc::Msgbuf& msgbuf) {
 }
 
 // --- atf_amc.Msgbuf.in.Shift
+// Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
 static void atf_amc::in_Shift(atf_amc::Msgbuf& msgbuf) {
     i32 start = msgbuf.in_start;
@@ -10382,6 +10536,7 @@ static void atf_amc::in_Shift(atf_amc::Msgbuf& msgbuf) {
 }
 
 // --- atf_amc.Msgbuf.in.SkipMsg
+// Skip current message, if any
 // Skip current message, if any.
 void atf_amc::in_SkipMsg(atf_amc::Msgbuf& msgbuf) {
     if (msgbuf.in_msgvalid) {
@@ -10395,6 +10550,7 @@ void atf_amc::in_SkipMsg(atf_amc::Msgbuf& msgbuf) {
 }
 
 // --- atf_amc.Msgbuf.in.WriteAll
+// Attempt to write buffer contents to fd
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.

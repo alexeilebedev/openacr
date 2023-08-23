@@ -512,6 +512,7 @@ dmmeta.ctypelen  ctype:atf_amc.BitfldType2  len:16  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:atf_amc.BitfldU128  len:16  alignment:16  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.BitfldU16  len:2  alignment:2  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.Bytebuf  len:96  alignment:8  padbytes:14
+dmmeta.ctypelen  ctype:atf_amc.BytebufDyn  len:40  alignment:8  padbytes:10
 dmmeta.ctypelen  ctype:atf_amc.Cstr  len:16  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.Cstring  len:16  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.Ctype1Attr  len:4  alignment:4  padbytes:0

@@ -12587,6 +12587,8 @@ void                 tfunc_Fbuf_BeginWrite();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Fbuf_GetMsg();
 // User-implemented function from gstatic:amc.FDb.tfunc
+void                 tfunc_Fbuf_Realloc();
+// User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Fbuf_Init();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Fbuf_Max();
@@ -12610,6 +12612,8 @@ void                 tfunc_Fbuf_SkipMsg();
 void                 tfunc_Fbuf_WriteAll();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Fbuf_WriteMsg();
+// User-implemented function from gstatic:amc.FDb.tfunc
+void                 tfunc_Fbuf_Uninit();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Fcast_Cast();
 // User-implemented function from gstatic:amc.FDb.tfunc
