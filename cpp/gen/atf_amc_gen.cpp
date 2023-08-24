@@ -8868,6 +8868,7 @@ const char* atf_amc::value_ToCstr(const atf_amc::FieldId& parent) {
         case atf_amc_FieldId_types         : ret = "types";  break;
         case atf_amc_FieldId_comment       : ret = "comment";  break;
         case atf_amc_FieldId_i             : ret = "i";  break;
+        case atf_amc_FieldId_k             : ret = "k";  break;
         case atf_amc_FieldId_strval_regx   : ret = "strval_regx";  break;
         case atf_amc_FieldId_strval2_regx  : ret = "strval2_regx";  break;
         case atf_amc_FieldId_start_dateval : ret = "start_dateval";  break;
@@ -8910,6 +8911,9 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
                 }
                 case 'j': {
                     value_SetEnum(parent,atf_amc_FieldId_j); ret = true; break;
+                }
+                case 'k': {
+                    value_SetEnum(parent,atf_amc_FieldId_k); ret = true; break;
                 }
                 case 'o': {
                     value_SetEnum(parent,atf_amc_FieldId_o); ret = true; break;
@@ -9914,6 +9918,7 @@ const char* atf_amc::value_ToCstr(const atf_amc::MsgType& parent) {
     switch(value_GetEnum(parent)) {
         case atf_amc_MsgType_atf_amc_Seqmsg: ret = "atf_amc.Seqmsg";  break;
         case atf_amc_MsgType_atf_amc_Text  : ret = "atf_amc.Text";  break;
+        case atf_amc_MsgType_atf_amc_VarlenMsg: ret = "atf_amc.VarlenMsg";  break;
     }
     return ret;
 }
@@ -9950,6 +9955,15 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgType& parent, algo::strptr rhs) {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('a','t','f','_','a','m','c','.'): {
                     if (memcmp(rhs.elems+8,"Seqmsg",6)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_Seqmsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 17: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','t','f','_','a','m','c','.'): {
+                    if (memcmp(rhs.elems+8,"VarlenMsg",9)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_VarlenMsg); ret = true; break; }
                     break;
                 }
             }
@@ -13838,24 +13852,24 @@ bool atf_amc::typeh_XrefMaybe(atf_amc::TypeH &row) {
 
 // --- atf_amc.VarlenK.i.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<u32> atf_amc::i_Getary(atf_amc::VarlenK& parent) {
-    return algo::aryptr<u32>(i_Addr(parent), i_N(parent));
+algo::aryptr<u32> atf_amc::i_Getary(atf_amc::VarlenK& k) {
+    return algo::aryptr<u32>(i_Addr(k), i_N(k));
 }
 
 // --- atf_amc.VarlenK.i.Addr
-u32* atf_amc::i_Addr(atf_amc::VarlenK& parent) {
-    return (u32*)((u8*)&parent + sizeof(atf_amc::VarlenK)); // address of varlen portion
+u32* atf_amc::i_Addr(atf_amc::VarlenK& k) {
+    return (u32*)((u8*)&k + sizeof(atf_amc::VarlenK)); // address of varlen portion
 }
 
 // --- atf_amc.VarlenK.i.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::i_ReadStrptrMaybe(atf_amc::VarlenK& parent, algo::strptr in_str) {
+bool atf_amc::i_ReadStrptrMaybe(atf_amc::VarlenK& k, algo::strptr in_str) {
     bool retval = true;
     if (algo_lib::_db.varlenbuf) {
         u32 *i_tmp = new(ary_AllocN(*algo_lib::_db.varlenbuf, sizeof(u32)).elems) u32;
         retval = u32_ReadStrptrMaybe(*i_tmp, in_str);
     }
-    (void)parent;//only to avoid -Wunused-parameter
+    (void)k;//only to avoid -Wunused-parameter
     return retval;
 }
 
@@ -13893,11 +13907,86 @@ void atf_amc::VarlenK_Print(atf_amc::VarlenK & row, algo::cstring &str) {
     algo::tempstr temp;
     str << "atf_amc.VarlenK";
 
-    ind_beg(VarlenK_i_curs,i,row) {
+    ind_beg(k_i_curs,i,row) {
         u32_Print(i, temp);
         tempstr name;
         name << "i.";
         name << ind_curs(i).index;
+        PrintAttrSpaceReset(str, name, temp);
+    }ind_end;
+}
+
+// --- atf_amc.VarlenMsg.k.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<u8> atf_amc::k_Getary(atf_amc::VarlenMsg& parent) {
+    return algo::aryptr<u8>(k_Addr(parent), k_N(parent));
+}
+
+// --- atf_amc.VarlenMsg.k.Addr
+u8* atf_amc::k_Addr(atf_amc::VarlenMsg& parent) {
+    return (u8*)((u8*)&parent + sizeof(atf_amc::VarlenMsg)); // address of varlen portion
+}
+
+// --- atf_amc.VarlenMsg.k.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool atf_amc::k_ReadStrptrMaybe(atf_amc::VarlenMsg& parent, algo::strptr in_str) {
+    bool retval = true;
+    if (algo_lib::_db.varlenbuf) {
+        atf_amc::VarlenK *k_tmp = new(ary_AllocN(*algo_lib::_db.varlenbuf, sizeof(atf_amc::VarlenK)).elems) atf_amc::VarlenK;
+        retval = atf_amc::VarlenK_ReadStrptrMaybe(*k_tmp, in_str);
+    }
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.VarlenMsg.k.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_amc::k_XrefMaybe(atf_amc::VarlenK &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
+// --- atf_amc.VarlenMsg..ReadFieldMaybe
+bool atf_amc::VarlenMsg_ReadFieldMaybe(atf_amc::VarlenMsg &parent, algo::strptr field, algo::strptr strval) {
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case atf_amc_FieldId_k: retval = k_ReadStrptrMaybe(parent, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.VarlenMsg..ReadStrptrMaybe
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of atf_amc::VarlenMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool atf_amc::VarlenMsg_ReadStrptrMaybe(atf_amc::VarlenMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atf_amc.VarlenMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && VarlenMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.VarlenMsg..Print
+// print string representation of atf_amc::VarlenMsg to string LHS, no header -- cprint:atf_amc.VarlenMsg.String
+void atf_amc::VarlenMsg_Print(atf_amc::VarlenMsg & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "atf_amc.VarlenMsg";
+
+    ind_beg(VarlenMsg_k_curs,k,row) {
+        VarlenK_Print(k, temp);
+        tempstr name;
+        name << "k.";
+        name << ind_curs(k).index;
         PrintAttrSpaceReset(str, name, temp);
     }ind_end;
 }
@@ -13992,6 +14081,11 @@ bool atf_amc::MsgHeaderMsgs_Print(algo::cstring &str, atf_amc::MsgHeader &msg, u
         case 0x0412: {
             if (sizeof(atf_amc::Text) > msg_len) { return false; }
             Text_Print((atf_amc::Text&)(msg), str);
+            return true;
+        }
+        case 0x1000: {
+            if (sizeof(atf_amc::VarlenMsg) > msg_len) { return false; }
+            VarlenMsg_Print((atf_amc::VarlenMsg&)(msg), str);
             return true;
         }
         default:
@@ -14158,6 +14252,19 @@ atf_amc::MsgType atf_amc::MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::ByteA
             ary_Addary(buf, ary_Getary(varlenbuf));
             algo_lib::_db.varlenbuf = varlenbuf_save;
         } break; // atf_amc::Text case
+
+        case atf_amc_MsgType_atf_amc_VarlenMsg: {
+            int len = sizeof(atf_amc::VarlenMsg);
+            atf_amc::VarlenMsg *ctype = new(ary_AllocN(buf, len).elems) atf_amc::VarlenMsg; // default values
+            algo::ByteAry varlenbuf;
+            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
+            algo_lib::_db.varlenbuf = &varlenbuf;
+            ok = VarlenMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+            len += ary_N(varlenbuf);
+            ctype->length = atf_amc::MsgLength(len);
+            ary_Addary(buf, ary_Getary(varlenbuf));
+            algo_lib::_db.varlenbuf = varlenbuf_save;
+        } break; // atf_amc::VarlenMsg case
 
         default: break;
     }

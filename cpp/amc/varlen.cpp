@@ -124,7 +124,7 @@ void amc::tfunc_Varlen_ReadStrptrMaybe() {
         }
         Ins(&R, rd.body, "}");
         SetPresent(rd,Subst(R,"$parname"),field);
-        MaybeUnused(rd,"parent");
+        MaybeUnused(rd,Subst(R,"$parname"));
         MaybeUnused(rd,"in_str");
         Ins(&R, rd.body, "return retval;");
     }

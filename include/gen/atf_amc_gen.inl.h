@@ -9134,14 +9134,14 @@ inline atf_amc::VarlenK::VarlenK() {
 
 // --- atf_amc.VarlenK.i.N
 // Return number of elements in varlen field
-inline u32 atf_amc::i_N(const atf_amc::VarlenK& parent) {
-    u32 length = i32(((atf_amc::VarlenK&)parent).length);
+inline u32 atf_amc::i_N(const atf_amc::VarlenK& k) {
+    u32 length = i32(((atf_amc::VarlenK&)k).length);
     u32 extra_bytes = u32_Max(length,sizeof(atf_amc::VarlenK)) - sizeof(atf_amc::VarlenK); // avoid unsigned subtraction underflow
     return u32(extra_bytes / sizeof(u32));
 }
 
 // --- atf_amc.VarlenK.i_curs.Reset
-inline void atf_amc::VarlenK_i_curs_Reset(VarlenK_i_curs &curs, atf_amc::VarlenK &parent) {
+inline void atf_amc::k_i_curs_Reset(k_i_curs &curs, atf_amc::VarlenK &parent) {
     curs.ptr = (u8*)&parent + sizeof(atf_amc::VarlenK);
     curs.length = i32(parent.length) - sizeof(atf_amc::VarlenK);
     curs.index = 0;
@@ -9149,14 +9149,14 @@ inline void atf_amc::VarlenK_i_curs_Reset(VarlenK_i_curs &curs, atf_amc::VarlenK
 
 // --- atf_amc.VarlenK.i_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::VarlenK_i_curs_ValidQ(VarlenK_i_curs &curs) {
+inline bool atf_amc::k_i_curs_ValidQ(k_i_curs &curs) {
     bool valid = ssizeof(u32) <= curs.length;
     return valid;
 }
 
 // --- atf_amc.VarlenK.i_curs.Next
 // proceed to next item
-inline void atf_amc::VarlenK_i_curs_Next(VarlenK_i_curs &curs) {
+inline void atf_amc::k_i_curs_Next(k_i_curs &curs) {
     i32 len = i32(sizeof(u32));
     curs.ptr += len;
     curs.length -= len;
@@ -9165,7 +9165,7 @@ inline void atf_amc::VarlenK_i_curs_Next(VarlenK_i_curs &curs) {
 
 // --- atf_amc.VarlenK.i_curs.Access
 // item access
-inline u32& atf_amc::VarlenK_i_curs_Access(VarlenK_i_curs &curs) {
+inline u32& atf_amc::k_i_curs_Access(k_i_curs &curs) {
     return *(u32*)curs.ptr;
 }
 
@@ -9183,8 +9183,85 @@ inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenK& row) {
 
 // --- atf_amc.VarlenK..Init
 // Set all fields to initial values.
-inline void atf_amc::VarlenK_Init(atf_amc::VarlenK& parent) {
-    parent.length = u32(0);
+inline void atf_amc::VarlenK_Init(atf_amc::VarlenK& k) {
+    k.length = u32(0);
+}
+inline atf_amc::VarlenMsg::VarlenMsg() {
+    atf_amc::VarlenMsg_Init(*this);
+}
+
+
+// --- atf_amc.VarlenMsg.base.Castdown
+// Check if atf_amc::MsgHeader is an instance of VarlenMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of VarlenMsg.
+// If not successful, quietly return NULL.
+inline atf_amc::VarlenMsg* atf_amc::VarlenMsg_Castdown(atf_amc::MsgHeader &hdr) {
+    bool cond = hdr.type == (0x1000);
+    cond &= i32(hdr.length) >= ssizeof(atf_amc::VarlenMsg);
+    return cond ? reinterpret_cast<atf_amc::VarlenMsg*>(&hdr) : NULL;
+}
+
+// --- atf_amc.VarlenMsg.base.Castbase
+inline atf_amc::MsgHeader& atf_amc::Castbase(atf_amc::VarlenMsg& parent) {
+    return reinterpret_cast<atf_amc::MsgHeader&>(parent);
+}
+
+// --- atf_amc.VarlenMsg.k.N
+// Return number of elements in varlen field
+inline u32 atf_amc::k_N(const atf_amc::VarlenMsg& parent) {
+    u32 length = i32(((atf_amc::VarlenMsg&)parent).length);
+    u32 extra_bytes = u32_Max(length,sizeof(atf_amc::VarlenMsg)) - sizeof(atf_amc::VarlenMsg); // avoid unsigned subtraction underflow
+    return u32(extra_bytes / sizeof(u8));
+}
+
+// --- atf_amc.VarlenMsg.k_curs.Reset
+inline void atf_amc::VarlenMsg_k_curs_Reset(VarlenMsg_k_curs &curs, atf_amc::VarlenMsg &parent) {
+    curs.ptr = (u8*)&parent + sizeof(atf_amc::VarlenMsg);
+    curs.length = i32(parent.length) - sizeof(atf_amc::VarlenMsg);
+    curs.index = 0;
+}
+
+// --- atf_amc.VarlenMsg.k_curs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::VarlenMsg_k_curs_ValidQ(VarlenMsg_k_curs &curs) {
+    bool valid = ssizeof(atf_amc::VarlenK) <= curs.length;
+    valid = valid && unsigned(i32((*(atf_amc::VarlenK*)curs.ptr).length)-ssizeof(atf_amc::VarlenK)) <= curs.length-ssizeof(atf_amc::VarlenK);
+    return valid;
+}
+
+// --- atf_amc.VarlenMsg.k_curs.Next
+// proceed to next item
+inline void atf_amc::VarlenMsg_k_curs_Next(VarlenMsg_k_curs &curs) {
+    i32 len = i32((*(atf_amc::VarlenK*)curs.ptr).length);
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- atf_amc.VarlenMsg.k_curs.Access
+// item access
+inline atf_amc::VarlenK& atf_amc::VarlenMsg_k_curs_Access(VarlenMsg_k_curs &curs) {
+    return *(atf_amc::VarlenK*)curs.ptr;
+}
+
+// --- atf_amc.VarlenMsg..GetMsgLength
+// Message length (uses length field)
+inline i32 atf_amc::GetMsgLength(const atf_amc::VarlenMsg& row) {
+    return i32(const_cast<atf_amc::VarlenMsg&>(row).length);
+}
+
+// --- atf_amc.VarlenMsg..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<atf_amc::VarlenMsg&>(row).length));
+}
+
+// --- atf_amc.VarlenMsg..Init
+// Set all fields to initial values.
+inline void atf_amc::VarlenMsg_Init(atf_amc::VarlenMsg& parent) {
+    parent.type = atf_amc_MsgTypeEnum(0x1000);
+    parent.length = atf_amc::MsgLength(ssizeof(parent) + (0));
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::BitfldType1 &row) {// cfmt:atf_amc.BitfldType1.String
@@ -9314,5 +9391,10 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::TypeB
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::Typefconst &row) {// cfmt:atf_amc.Typefconst.String
     atf_amc::Typefconst_Print(const_cast<atf_amc::Typefconst&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::VarlenMsg &row) {// cfmt:atf_amc.VarlenMsg.String
+    atf_amc::VarlenMsg_Print(const_cast<atf_amc::VarlenMsg&>(row), str);
     return str;
 }

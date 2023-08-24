@@ -165,15 +165,16 @@ enum atf_amc_FieldIdEnum {                  // atf_amc.FieldId.value
     ,atf_amc_FieldId_types           = 106
     ,atf_amc_FieldId_comment         = 107
     ,atf_amc_FieldId_i               = 108
-    ,atf_amc_FieldId_strval_regx     = 109
-    ,atf_amc_FieldId_strval2_regx    = 110
-    ,atf_amc_FieldId_start_dateval   = 111
-    ,atf_amc_FieldId_end_dateval     = 112
-    ,atf_amc_FieldId_start_intval    = 113
-    ,atf_amc_FieldId_end_intval      = 114
+    ,atf_amc_FieldId_k               = 109
+    ,atf_amc_FieldId_strval_regx     = 110
+    ,atf_amc_FieldId_strval2_regx    = 111
+    ,atf_amc_FieldId_start_dateval   = 112
+    ,atf_amc_FieldId_end_dateval     = 113
+    ,atf_amc_FieldId_start_intval    = 114
+    ,atf_amc_FieldId_end_intval      = 115
 };
 
-enum { atf_amc_FieldIdEnum_N = 115 };
+enum { atf_amc_FieldIdEnum_N = 116 };
 
 
 // --- atf_amc_MsgHdrLT_type_Enum
@@ -202,12 +203,13 @@ enum { atf_amc_MsgHdrLTMsgsCaseEnum_N = 4 };
 
 // --- atf_amc_MsgTypeEnum
 
-enum atf_amc_MsgTypeEnum {                       // atf_amc.MsgType.value
-     atf_amc_MsgType_atf_amc_Seqmsg   = 0x0905   // Sequenced message for stream
-    ,atf_amc_MsgType_atf_amc_Text     = 0x0412
+enum atf_amc_MsgTypeEnum {                          // atf_amc.MsgType.value
+     atf_amc_MsgType_atf_amc_Seqmsg      = 0x0905   // Sequenced message for stream
+    ,atf_amc_MsgType_atf_amc_Text        = 0x0412
+    ,atf_amc_MsgType_atf_amc_VarlenMsg   = 0x1000
 };
 
-enum { atf_amc_MsgTypeEnum_N = 2 };
+enum { atf_amc_MsgTypeEnum_N = 3 };
 
 
 // --- atf_amc_MsgsCaseEnum
@@ -303,10 +305,10 @@ namespace atf_amc { struct TypeT; }
 namespace atf_amc { struct MsgHdrLT; }
 namespace atf_amc { struct MsgHeader; }
 namespace atf_amc { struct TypeH; }
+namespace atf_amc { struct VarlenK; }
 namespace atf_amc { struct DispType1; }
 namespace atf_amc { struct DispType2; }
 namespace atf_amc { struct DispType3; }
-namespace atf_amc { struct VarlenK; }
 namespace dmmeta { struct Ctype; }
 namespace atf_amc { struct MsgLTA; }
 namespace atf_amc { struct MsgLTB; }
@@ -314,6 +316,7 @@ namespace atf_amc { struct MsgLTO; }
 namespace atf_amc { struct MsgLTV; }
 namespace atf_amc { struct Seqmsg; }
 namespace atf_amc { struct Text; }
+namespace atf_amc { struct VarlenMsg; }
 namespace atf_amc { struct OptOptG; }
 namespace atf_amc { struct MsgType; }
 namespace atf_amc { struct MsgLength; }
@@ -369,7 +372,8 @@ namespace atf_amc { struct Text_text_curs; }
 namespace atf_amc { struct varlenalloc_elem_curs; }
 namespace atf_amc { struct varlen_extern_varlen_curs; }
 namespace atf_amc { struct VarlenH_typeh_curs; }
-namespace atf_amc { struct VarlenK_i_curs; }
+namespace atf_amc { struct k_i_curs; }
+namespace atf_amc { struct VarlenMsg_k_curs; }
 namespace atf_amc { struct AmcCleanup2; }
 namespace atf_amc { struct AmcSubstr1; }
 namespace atf_amc { struct BitfldType1; }
@@ -3851,6 +3855,7 @@ void                 MsgLength_Print(atf_amc::MsgLength row, algo::cstring &str)
 // create: atf_amc.Seqmsg.payload (Opt)
 // access: atf_amc.Seqmsg.msghdr (Base)
 // access: atf_amc.Text.msghdr (Base)
+// access: atf_amc.VarlenMsg.base (Base)
 // access: atf_amc.MsgHeader_curs.msg (Ptr)
 #pragma pack(push,1)
 struct MsgHeader { // atf_amc.MsgHeader
@@ -6000,6 +6005,7 @@ algo::memptr         GetMsgMemptr(const atf_amc::VarlenH& row) __attribute__((no
 void                 VarlenH_Init(atf_amc::VarlenH& parent);
 
 // --- atf_amc.VarlenK
+// create: atf_amc.VarlenMsg.k (Varlen)
 #pragma pack(push,1)
 struct VarlenK { // atf_amc.VarlenK: An optional instance of atf_unit.A
     u32   length;   //   0
@@ -6009,20 +6015,20 @@ struct VarlenK { // atf_amc.VarlenK: An optional instance of atf_unit.A
 #pragma pack(pop)
 
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<u32>    i_Getary(atf_amc::VarlenK& parent) __attribute__((nothrow));
-u32*                 i_Addr(atf_amc::VarlenK& parent);
+algo::aryptr<u32>    i_Getary(atf_amc::VarlenK& k) __attribute__((nothrow));
+u32*                 i_Addr(atf_amc::VarlenK& k);
 // Return number of elements in varlen field
-u32                  i_N(const atf_amc::VarlenK& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+u32                  i_N(const atf_amc::VarlenK& k) __attribute__((__warn_unused_result__, nothrow, pure));
 // Convert string to field. Return success value
-bool                 i_ReadStrptrMaybe(atf_amc::VarlenK& parent, algo::strptr in_str) __attribute__((nothrow));
+bool                 i_ReadStrptrMaybe(atf_amc::VarlenK& k, algo::strptr in_str) __attribute__((nothrow));
 
-void                 VarlenK_i_curs_Reset(VarlenK_i_curs &curs, atf_amc::VarlenK &parent);
+void                 k_i_curs_Reset(k_i_curs &curs, atf_amc::VarlenK &parent);
 // cursor points to valid item
-bool                 VarlenK_i_curs_ValidQ(VarlenK_i_curs &curs);
+bool                 k_i_curs_ValidQ(k_i_curs &curs);
 // proceed to next item
-void                 VarlenK_i_curs_Next(VarlenK_i_curs &curs);
+void                 k_i_curs_Next(k_i_curs &curs);
 // item access
-u32&                 VarlenK_i_curs_Access(VarlenK_i_curs &curs);
+u32&                 k_i_curs_Access(k_i_curs &curs);
 bool                 VarlenK_ReadFieldMaybe(atf_amc::VarlenK &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::VarlenK from an ascii string.
@@ -6033,9 +6039,58 @@ i32                  GetMsgLength(const atf_amc::VarlenK& row) __attribute__((no
 // Memptr encompassing the message (uses length field)
 algo::memptr         GetMsgMemptr(const atf_amc::VarlenK& row) __attribute__((nothrow));
 // Set all fields to initial values.
-void                 VarlenK_Init(atf_amc::VarlenK& parent);
+void                 VarlenK_Init(atf_amc::VarlenK& k);
 // print string representation of atf_amc::VarlenK to string LHS, no header -- cprint:atf_amc.VarlenK.String
 void                 VarlenK_Print(atf_amc::VarlenK & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- atf_amc.VarlenMsg
+#pragma pack(push,1)
+struct VarlenMsg { // atf_amc.VarlenMsg
+    atf_amc::MsgType     type;     //   0x1000  Message type
+    atf_amc::MsgLength   length;   //   ssizeof(parent) + (0)  Total message length, including this header
+    // var-length field atf_amc.VarlenMsg.k starts here. access it with k_Addr
+    VarlenMsg();
+};
+#pragma pack(pop)
+
+// Check if atf_amc::MsgHeader is an instance of VarlenMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of VarlenMsg.
+// If not successful, quietly return NULL.
+atf_amc::VarlenMsg*  VarlenMsg_Castdown(atf_amc::MsgHeader &hdr);
+atf_amc::MsgHeader&  Castbase(atf_amc::VarlenMsg& parent);
+
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<u8>     k_Getary(atf_amc::VarlenMsg& parent) __attribute__((nothrow));
+u8*                  k_Addr(atf_amc::VarlenMsg& parent);
+// Return number of elements in varlen field
+u32                  k_N(const atf_amc::VarlenMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert string to field. Return success value
+bool                 k_ReadStrptrMaybe(atf_amc::VarlenMsg& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 k_XrefMaybe(atf_amc::VarlenK &row);
+
+void                 VarlenMsg_k_curs_Reset(VarlenMsg_k_curs &curs, atf_amc::VarlenMsg &parent);
+// cursor points to valid item
+bool                 VarlenMsg_k_curs_ValidQ(VarlenMsg_k_curs &curs);
+// proceed to next item
+void                 VarlenMsg_k_curs_Next(VarlenMsg_k_curs &curs);
+// item access
+atf_amc::VarlenK&    VarlenMsg_k_curs_Access(VarlenMsg_k_curs &curs);
+bool                 VarlenMsg_ReadFieldMaybe(atf_amc::VarlenMsg &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of atf_amc::VarlenMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 VarlenMsg_ReadStrptrMaybe(atf_amc::VarlenMsg &parent, algo::strptr in_str);
+// Message length (uses length field)
+i32                  GetMsgLength(const atf_amc::VarlenMsg& row) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+algo::memptr         GetMsgMemptr(const atf_amc::VarlenMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 VarlenMsg_Init(atf_amc::VarlenMsg& parent);
+// print string representation of atf_amc::VarlenMsg to string LHS, no header -- cprint:atf_amc.VarlenMsg.String
+void                 VarlenMsg_Print(atf_amc::VarlenMsg & row, algo::cstring &str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace atf_amc { // gen:ns_curstext
 
@@ -6522,12 +6577,21 @@ struct VarlenH_typeh_curs {// cursor
 };
 
 
-struct VarlenK_i_curs {// cursor
+struct k_i_curs {// cursor
     typedef u32 ChildType;
     u8 *ptr;
     int length;
     int index;
-    VarlenK_i_curs() { ptr=NULL; length=0; index=0; }
+    k_i_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
+struct VarlenMsg_k_curs {// cursor
+    typedef atf_amc::VarlenK ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    VarlenMsg_k_curs() { ptr=NULL; length=0; index=0; }
 };
 
 } // gen:ns_curstext
@@ -7049,4 +7113,5 @@ inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::TestRegx1 &
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::TypeBE32en &row);// cfmt:atf_amc.TypeBE32en.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::TypeBE64 &row);// cfmt:atf_amc.TypeBE64.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::Typefconst &row);// cfmt:atf_amc.Typefconst.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::VarlenMsg &row);// cfmt:atf_amc.VarlenMsg.String
 }

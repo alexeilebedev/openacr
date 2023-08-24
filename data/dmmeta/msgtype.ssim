@@ -25,4 +25,5 @@ dmmeta.msgtype  ctype:atf_amc.MsgLTO  type:"'O'"
 dmmeta.msgtype  ctype:atf_amc.MsgLTV  type:"'V'"
 dmmeta.msgtype  ctype:atf_amc.Seqmsg  type:0x0905
 dmmeta.msgtype  ctype:atf_amc.Text  type:0x0412
+dmmeta.msgtype  ctype:atf_amc.VarlenMsg  type:0x1000
 dmmeta.msgtype  ctype:fm.AlarmMsg  type:17

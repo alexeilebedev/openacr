@@ -234,6 +234,8 @@ dmmeta.cpptype  ctype:atf_amc.TypeBE32en  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:atf_amc.TypeBE64  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:atf_amc.TypeBE64dflt  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:atf_amc.Typefconst  ctor:Y  dtor:Y  cheap_copy:N
+dmmeta.cpptype  ctype:atf_amc.VarlenK  ctor:N  dtor:N  cheap_copy:N
+dmmeta.cpptype  ctype:atf_amc.VarlenMsg  ctor:N  dtor:N  cheap_copy:N
 dmmeta.cpptype  ctype:atf_cov.Phase  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:atf_unit.Cstr  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:atf_unit.Dbl  ctor:Y  dtor:N  cheap_copy:Y
