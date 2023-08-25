@@ -598,6 +598,7 @@ dmmeta.ctype  ctype:atf_amc.VarlenAlloc  comment:"An optional instance of atf_un
 dmmeta.ctype  ctype:atf_amc.VarlenExtern  comment:"A varlen array at the end of a struct, but lenfld is external"
 dmmeta.ctype  ctype:atf_amc.VarlenH  comment:""
 dmmeta.ctype  ctype:atf_amc.VarlenK  comment:"An optional instance of atf_unit.A"
+dmmeta.ctype  ctype:atf_amc.VarlenMsg  comment:""
 dmmeta.ctype  ctype:atf_ci.FBuilddir  comment:""
 dmmeta.ctype  ctype:atf_ci.FCfg  comment:""
 dmmeta.ctype  ctype:atf_ci.FCitest  comment:""

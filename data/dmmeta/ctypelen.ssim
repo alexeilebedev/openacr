@@ -584,6 +584,7 @@ dmmeta.ctypelen  ctype:atf_amc.VarlenAlloc  len:4  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.VarlenExtern  len:4  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.VarlenH  len:4  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.VarlenK  len:4  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:atf_amc.VarlenMsg  len:4  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atf_ci.FBuilddir  len:216  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:atf_ci.FCfg  len:211  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atf_ci.FCitest  len:280  alignment:8  padbytes:3

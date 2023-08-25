@@ -2032,6 +2032,8 @@ dmmeta.field  field:atf_amc.VarlenH.length  arg:u32  reftype:Val  dflt:""  comme
 dmmeta.field  field:atf_amc.VarlenH.typeh  arg:atf_amc.TypeH  reftype:Varlen  dflt:""  comment:""
 dmmeta.field  field:atf_amc.VarlenK.length  arg:u32  reftype:Val  dflt:""  comment:""
 dmmeta.field  field:atf_amc.VarlenK.i  arg:u32  reftype:Varlen  dflt:""  comment:""
+dmmeta.field  field:atf_amc.VarlenMsg.base  arg:atf_amc.MsgHeader  reftype:Base  dflt:""  comment:""
+dmmeta.field  field:atf_amc.VarlenMsg.k  arg:atf_amc.VarlenK  reftype:Varlen  dflt:""  comment:""
 dmmeta.field  field:atf_ci.FBuilddir.base  arg:dev.Builddir  reftype:Base  dflt:""  comment:""
 dmmeta.field  field:atf_ci.FCfg.base  arg:dev.Cfg  reftype:Base  dflt:""  comment:""
 dmmeta.field  field:atf_ci.FCitest.base  arg:atfdb.Citest  reftype:Base  dflt:""  comment:""
