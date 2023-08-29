@@ -851,12 +851,14 @@ private:
     void operator =(const FInput&){ /*disallow direct assignment */}
 };
 
+// Attach fbuf to Iohook for reading
 // Attach file descriptor and begin reading using edge-triggered epoll.
-// File descriptor becomes owned by char via FIohook field.
+// File descriptor becomes owned by ssim2mysql::FInput.in_buf via FIohook field.
 // Whenever the file descriptor becomes readable, insert input into cd_input_line.
 void                 in_buf_BeginRead(ssim2mysql::FInput& input, algo::Fildes fd) __attribute__((nothrow));
 // Set EOF flag
 void                 in_buf_EndRead(ssim2mysql::FInput& input) __attribute__((nothrow));
+// Detect incoming message in buffer and return it
 // Look for valid message at current position in the buffer.
 // If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
 // If there is no message, read once from underlying file descriptor and try again.
@@ -874,13 +876,17 @@ i32                  in_buf_Max(ssim2mysql::FInput& input) __attribute__((nothro
 i32                  in_buf_N(ssim2mysql::FInput& input) __attribute__((__warn_unused_result__, nothrow, pure));
 // Refill buffer. Return false if no further refill possible (input buffer exhausted)
 bool                 in_buf_Refill(ssim2mysql::FInput& input) __attribute__((nothrow));
+// Empty bfufer
 // Discard contents of the buffer.
 void                 in_buf_RemoveAll(ssim2mysql::FInput& input) __attribute__((nothrow));
+// Skip N bytes when reading
 // Mark some buffer contents as read.
 //
 void                 in_buf_SkipBytes(ssim2mysql::FInput& input, int n) __attribute__((nothrow));
+// Skip current message, if any
 // Skip current message, if any.
 void                 in_buf_SkipMsg(ssim2mysql::FInput& input) __attribute__((nothrow));
+// Attempt to write buffer contents to fd
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.

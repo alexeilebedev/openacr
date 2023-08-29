@@ -384,3 +384,26 @@ void atf_amc::amctest_bytebuf_test2() {
     line = in_GetMsg(bytebuf);
     vrfyeq_(line, strptr("",0));
 }
+
+void atf_amc::amctest_bytebuf_dyn_test1() {
+    atf_amc::BytebufDyn bytebuf;
+    vrfy_(in_Max(bytebuf)==0);
+    vrfy_(in_WriteAll(bytebuf, (u8*)"abcd", 4)==false);// doesn't have a buffer
+
+    in_Realloc(bytebuf, 10);
+    vrfy_(in_Max(bytebuf)==10);// added buffer space
+
+    vrfy_(in_WriteAll(bytebuf, (u8*)"abcd", 4));
+
+    in_Realloc(bytebuf, 3);
+    vrfy_(in_Max(bytebuf)==4);// won't lose data
+
+    strptr line = in_GetMsg(bytebuf);
+    vrfyeq_(line, strptr("abcd",4));
+    in_SkipBytes(bytebuf, 1);// skip 1
+    line = in_GetMsg(bytebuf);
+    vrfyeq_(line, strptr("bcd",3));
+    in_SkipBytes(bytebuf, 5);// skip too many
+    line = in_GetMsg(bytebuf);
+    vrfyeq_(line, strptr("",0));
+}

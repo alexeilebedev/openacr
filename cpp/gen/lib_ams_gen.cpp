@@ -67,8 +67,10 @@ namespace lib_ams { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // Internal function to scan for a message
     //
     static void          in_Scanmsg(lib_ams::FFdin& fdin) __attribute__((nothrow));
+    // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     static void          in_Shift(lib_ams::FFdin& fdin) __attribute__((nothrow));
     static void          SizeCheck();
@@ -2239,8 +2241,9 @@ void lib_ams::FDb_Uninit() {
 }
 
 // --- lib_ams.FFdin.in.BeginRead
+// Attach fbuf to Iohook for reading
 // Attach file descriptor and begin reading using edge-triggered epoll.
-// File descriptor becomes owned by char via FIohook field.
+// File descriptor becomes owned by lib_ams::FFdin.in via FIohook field.
 // Whenever the file descriptor becomes readable, insert fdin into cd_fdin_read.
 void lib_ams::in_BeginRead(lib_ams::FFdin& fdin, algo::Fildes fd) {
     callback_Set1(fdin.in_iohook, fdin, lib_ams::cd_fdin_read_Insert);
@@ -2264,6 +2267,7 @@ void lib_ams::in_EndRead(lib_ams::FFdin& fdin) {
 }
 
 // --- lib_ams.FFdin.in.GetMsg
+// Detect incoming message in buffer and return it
 // Look for valid message at current position in the buffer.
 // If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
 // If there is no message, read once from underlying file descriptor and try again.
@@ -2328,6 +2332,7 @@ bool lib_ams::in_Refill(lib_ams::FFdin& fdin) {
 }
 
 // --- lib_ams.FFdin.in.RemoveAll
+// Empty bfufer
 // Discard contents of the buffer.
 void lib_ams::in_RemoveAll(lib_ams::FFdin& fdin) {
     fdin.in_start    = 0;
@@ -2337,6 +2342,7 @@ void lib_ams::in_RemoveAll(lib_ams::FFdin& fdin) {
 }
 
 // --- lib_ams.FFdin.in.Scanmsg
+// Internal function to scan for a message
 // 
 static void lib_ams::in_Scanmsg(lib_ams::FFdin& fdin) {
     char *hdr = (char*)(fdin.in_elems + fdin.in_start);
@@ -2362,6 +2368,7 @@ static void lib_ams::in_Scanmsg(lib_ams::FFdin& fdin) {
 }
 
 // --- lib_ams.FFdin.in.Shift
+// Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
 static void lib_ams::in_Shift(lib_ams::FFdin& fdin) {
     i32 start = fdin.in_start;
@@ -2374,6 +2381,7 @@ static void lib_ams::in_Shift(lib_ams::FFdin& fdin) {
 }
 
 // --- lib_ams.FFdin.in.SkipBytes
+// Skip N bytes when reading
 // Mark some buffer contents as read.
 // 
 void lib_ams::in_SkipBytes(lib_ams::FFdin& fdin, int n) {
@@ -2383,6 +2391,7 @@ void lib_ams::in_SkipBytes(lib_ams::FFdin& fdin, int n) {
 }
 
 // --- lib_ams.FFdin.in.SkipMsg
+// Skip current message, if any
 // Skip current message, if any.
 void lib_ams::in_SkipMsg(lib_ams::FFdin& fdin) {
     if (fdin.in_msgvalid) {
@@ -2397,6 +2406,7 @@ void lib_ams::in_SkipMsg(lib_ams::FFdin& fdin) {
 }
 
 // --- lib_ams.FFdin.in.WriteAll
+// Attempt to write buffer contents to fd
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.

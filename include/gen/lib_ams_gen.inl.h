@@ -936,8 +936,8 @@ inline lib_ams::FFdin::~FFdin() {
 // --- lib_ams.FFdin.in.Max
 // Return max. number of bytes in the buffer.
 inline i32 lib_ams::in_Max(lib_ams::FFdin& fdin) {
-    (void)fdin;//only to avoid -Wunused-parameter
     return 8192;
+    (void)fdin;//only to avoid -Wunused-parameter
 }
 
 // --- lib_ams.FFdin.in.N

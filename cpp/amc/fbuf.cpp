@@ -55,7 +55,12 @@ void amc::tclass_Fbuf() {
     Set(R, "$Rettype", (inmsgbuf ? "$Cpptype*" : "algo::aryptr<$Cpptype>"));
 
     // how to force the elems to go to the end of of the struct?
-    InsVar(R, field.p_ctype    , "u8", "$name_elems[$bufsize]", "", "pointer to elements of inline array");
+    if (fbuf.max == 0) {
+        InsVar(R, field.p_ctype    , "u8*", "$name_elems", "NULL", "pointer to elements of indirect array");
+        InsVar(R, field.p_ctype    , "u32", "$name_max", "0", "current length of allocated array");
+    } else {
+        InsVar(R, field.p_ctype    , "u8", "$name_elems[$bufsize]", "", "pointer to elements of inline array");
+    }
     InsVar(R, field.p_ctype    , "i32", "$name_start", "", "beginning of valid bytes (in bytes)");
     InsVar(R, field.p_ctype    , "i32", "$name_end", "", "end of valid bytes (in bytes)");
     InsVar(R, field.p_ctype    , "bool", "$name_eof", "", "no more data will be written to buffer");
@@ -73,7 +78,9 @@ void amc::tclass_Fbuf() {
         InsVar(R, field.p_ctype, "u64", "$name_n_eagain", "", "eagain counter");
     }
     InsVar(R, field.p_ctype    , "bool", "$name_epoll_enable", "", "use epoll?");
-    InsStruct(R, field.p_ctype    , "enum { $name_max = $bufsize };");
+    if (fbuf.max > 0) {
+        InsStruct(R, field.p_ctype    , "enum { $name_max = $bufsize };");
+    }
 
     Set(R, "$ready", name_Get(*fbuf.p_insready));
     Set(R, "$eof", name_Get(*fbuf.p_inseof));
@@ -96,7 +103,7 @@ void amc::tfunc_Fbuf_BeginRead() {
     if (ReadQ(fbuf) && fbuf.insready != fbuf.field) {
         amc::FFunc& func = amc::CreateCurFunc();
         Ins(&R, func.comment, "Attach file descriptor and begin reading using edge-triggered epoll.");
-        Ins(&R, func.comment, "File descriptor becomes owned by $Cpptype via FIohook field.");
+        Ins(&R, func.comment, "File descriptor becomes owned by $Partype.$name via FIohook field.");
         Ins(&R, func.comment, "Whenever the file descriptor becomes readable, insert $parname into $ready.");
         Ins(&R, func.proto, "$name_BeginRead($Parent, algo::Fildes fd)",false);
         Ins(&R, func.ret  , "void",false);
@@ -198,6 +205,10 @@ void amc::tfunc_Fbuf_Init() {
 
     amc::FFunc& init = amc::CreateCurFunc();
     init.inl = false;
+    if (fbuf.max == 0) {
+        Ins(&R, init.body    , "$parname.$name_elems = NULL; // $name: initialize");
+        Ins(&R, init.body    , "$parname.$name_max = 0; // $name: initialize");
+    }
     Ins(&R, init.body    , "$parname.$name_end = 0; // $name: initialize");
     Ins(&R, init.body    , "$parname.$name_start = 0; // $name: initialize");
     Ins(&R, init.body    , "$parname.$name_eof = false; // $name: initialize");
@@ -214,11 +225,17 @@ void amc::tfunc_Fbuf_Init() {
 
 void amc::tfunc_Fbuf_Max() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
+    amc::FField &field = *amc::_db.genfield.p_field;
+    amc::FFbuf &fbuf = *field.c_fbuf;
     amc::FFunc& maxitems = amc::CreateCurFunc();
     Ins(&R, maxitems.ret  , "i32", false);
     Ins(&R, maxitems.proto, "$name_Max($Parent)", false);
+    if (fbuf.max == 0) {
+        Ins(&R, maxitems.body, "return $pararg.$name_max;");
+    } else {
+        Ins(&R, maxitems.body, "return $bufsize;");
+    }
     MaybeUnused(maxitems,Subst(R,"$pararg"));
-    Ins(&R, maxitems.body, "return $bufsize;");
 }
 
 void amc::tfunc_Fbuf_N() {
@@ -564,5 +581,44 @@ void amc::tfunc_Fbuf_EndWrite() {
         Ins(&R, func.body, "    ssize_t rc=write($parname.$name_iohook.fildes.value, \"\", 0);");
         Ins(&R, func.body, "    (void)rc;");
         Ins(&R, func.body, "}");
+    }
+}
+
+void amc::tfunc_Fbuf_Realloc() {
+    algo_lib::Replscope &R = amc::_db.genfield.R;
+    amc::FField &field = *amc::_db.genfield.p_field;
+    amc::FFbuf &fbuf = *field.c_fbuf;
+
+    if (fbuf.max==0) {
+        amc::FFunc& func = amc::CreateCurFunc();
+        Ins(&R, func.comment, "Unconditionally reallocate buffer to have size NEW_MAX");
+        Ins(&R, func.comment, "If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost");
+        Ins(&R, func.comment, "(best to call this before filling the buffer)");
+        Ins(&R, func.proto, "$name_Realloc($Parent, int new_max)",false);
+        Ins(&R, func.ret  , "void",false);
+        Ins(&R, func.body, "new_max = i32_Max(new_max, $parname.$name_end);");
+        Ins(&R, func.body, "u8 *new_mem = $parname.$name_elems");
+        Ins(&R, func.body, "            ? (u8*)$basepool_ReallocMem($parname.$name_elems, $parname.$name_max, new_max)");
+        Ins(&R, func.body, "            : (u8*)$basepool_AllocMem(new_max);");
+        Ins(&R, func.body, "if (UNLIKELY(!new_mem)) {");
+        Ins(&R, func.body, "    FatalErrorExit(\"$ns.fbuf_nomem  field:$field  comment:'out of memory'\");");
+        Ins(&R, func.body, "}");
+        Ins(&R, func.body, "$parname.$name_elems = new_mem;");
+        Ins(&R, func.body, "$parname.$name_max = new_max;");
+    }
+}
+
+void amc::tfunc_Fbuf_Uninit() {
+    algo_lib::Replscope &R = amc::_db.genfield.R;
+    amc::FField &field = *amc::_db.genfield.p_field;
+    amc::FFbuf &fbuf = *field.c_fbuf;
+
+    if (fbuf.max==0) {
+        amc::FFunc& uninit = amc::CreateCurFunc();
+        Ins(&R, uninit.body, "if ($parname.$name_elems) {");
+        Ins(&R, uninit.body, "    $basepool_FreeMem($parname.$name_elems, sizeof($Cpptype)*$parname.$name_max); // ($field)");
+        Ins(&R, uninit.body, "}");
+        Ins(&R, uninit.body, "$parname.$name_elems = NULL;");
+        Ins(&R, uninit.body, "$parname.$name_max = 0;");
     }
 }

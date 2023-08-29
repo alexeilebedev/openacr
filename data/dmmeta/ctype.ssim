@@ -525,6 +525,7 @@ dmmeta.ctype  ctype:atf_amc.BitfldType2  comment:"Test type 2 for testing readin
 dmmeta.ctype  ctype:atf_amc.BitfldU128  comment:"Test of bitfield functionality"
 dmmeta.ctype  ctype:atf_amc.BitfldU16  comment:"Test of bitfield functionality"
 dmmeta.ctype  ctype:atf_amc.Bytebuf  comment:""
+dmmeta.ctype  ctype:atf_amc.BytebufDyn  comment:""
 dmmeta.ctype  ctype:atf_amc.Cstr  comment:""
 dmmeta.ctype  ctype:atf_amc.Cstring  comment:""
 dmmeta.ctype  ctype:atf_amc.Ctype1Attr  comment:""

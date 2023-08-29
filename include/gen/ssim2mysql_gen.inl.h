@@ -977,8 +977,8 @@ inline ssim2mysql::FInput::~FInput() {
 // --- ssim2mysql.FInput.in_buf.Max
 // Return max. number of bytes in the buffer.
 inline i32 ssim2mysql::in_buf_Max(ssim2mysql::FInput& input) {
-    (void)input;//only to avoid -Wunused-parameter
     return 65536;
+    (void)input;//only to avoid -Wunused-parameter
 }
 
 // --- ssim2mysql.FInput.in_buf.N

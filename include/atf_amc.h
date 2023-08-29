@@ -366,6 +366,7 @@ namespace atf_amc { // update-hdr
     // void amctest_linebuf_test5();
     // void amctest_bytebuf_test1();
     // void amctest_bytebuf_test2();
+    // void amctest_bytebuf_dyn_test1();
 
     // -------------------------------------------------------------------
     // cpp/atf/amc/fconst.cpp

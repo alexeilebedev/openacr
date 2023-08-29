@@ -381,6 +381,7 @@ namespace atf_amc { struct BitfldType2; }
 namespace atf_amc { struct BitfldU128; }
 namespace atf_amc { struct BitfldU16; }
 namespace atf_amc { struct Bytebuf; }
+namespace atf_amc { struct BytebufDyn; }
 namespace atf_amc { struct Cstr; }
 namespace atf_amc { struct Ctype1Attr; }
 namespace atf_amc { struct Ctype2Attr; }
@@ -621,6 +622,7 @@ private:
     void operator =(const Bytebuf&){ /*disallow direct assignment */}
 };
 
+// Detect incoming message in buffer and return it
 // Look for valid message at current position in the buffer.
 // If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
 // If there is no message, read once from underlying file descriptor and try again.
@@ -631,11 +633,14 @@ algo::aryptr<char>   in_GetMsg(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow
 i32                  in_Max(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
 // Return number of bytes in the buffer.
 i32                  in_N(atf_amc::Bytebuf& bytebuf) __attribute__((__warn_unused_result__, nothrow, pure));
+// Empty bfufer
 // Discard contents of the buffer.
 void                 in_RemoveAll(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
+// Skip N bytes when reading
 // Mark some buffer contents as read.
 //
 void                 in_SkipBytes(atf_amc::Bytebuf& bytebuf, int n) __attribute__((nothrow));
+// Attempt to write buffer contents to fd
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
@@ -646,6 +651,60 @@ bool                 in_WriteAll(atf_amc::Bytebuf& bytebuf, u8 *in, i32 in_n) __
 void                 Bytebuf_Init(atf_amc::Bytebuf& bytebuf);
 // print string representation of atf_amc::Bytebuf to string LHS, no header -- cprint:atf_amc.Bytebuf.String
 void                 Bytebuf_Print(atf_amc::Bytebuf & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- atf_amc.BytebufDyn
+// create: atf_amc.FDb.bytebuf_dyn (Cppstack)
+struct BytebufDyn { // atf_amc.BytebufDyn
+    u8*             in_elems;          //   NULL  pointer to elements of indirect array
+    u32             in_max;            //   0  current length of allocated array
+    i32             in_start;          // beginning of valid bytes (in bytes)
+    i32             in_end;            // end of valid bytes (in bytes)
+    bool            in_eof;            // no more data will be written to buffer
+    algo::Errcode   in_err;            // system error code
+    bool            in_epoll_enable;   // use epoll?
+    BytebufDyn();
+    ~BytebufDyn();
+private:
+    // reftype of atf_amc.BytebufDyn.in prohibits copy
+    BytebufDyn(const BytebufDyn&){ /*disallow copy constructor */}
+    void operator =(const BytebufDyn&){ /*disallow direct assignment */}
+};
+
+// Detect incoming message in buffer and return it
+// Look for valid message at current position in the buffer.
+// If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
+// If there is no message, read once from underlying file descriptor and try again.
+// The message is any number of bytes > 0
+//
+algo::aryptr<char>   in_GetMsg(atf_amc::BytebufDyn& bytebuf_dyn) __attribute__((nothrow));
+// Set buffer size.
+// Unconditionally reallocate buffer to have size NEW_MAX
+// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
+// (best to call this before filling the buffer)
+void                 in_Realloc(atf_amc::BytebufDyn& bytebuf_dyn, int new_max) __attribute__((nothrow));
+// Return max. number of bytes in the buffer.
+i32                  in_Max(atf_amc::BytebufDyn& bytebuf_dyn) __attribute__((nothrow));
+// Return number of bytes in the buffer.
+i32                  in_N(atf_amc::BytebufDyn& bytebuf_dyn) __attribute__((__warn_unused_result__, nothrow, pure));
+// Empty bfufer
+// Discard contents of the buffer.
+void                 in_RemoveAll(atf_amc::BytebufDyn& bytebuf_dyn) __attribute__((nothrow));
+// Skip N bytes when reading
+// Mark some buffer contents as read.
+//
+void                 in_SkipBytes(atf_amc::BytebufDyn& bytebuf_dyn, int n) __attribute__((nothrow));
+// Attempt to write buffer contents to fd
+// Write bytes to the buffer. If the entire block is written, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+//
+bool                 in_WriteAll(atf_amc::BytebufDyn& bytebuf_dyn, u8 *in, i32 in_n) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 BytebufDyn_Init(atf_amc::BytebufDyn& bytebuf_dyn);
+void                 BytebufDyn_Uninit(atf_amc::BytebufDyn& bytebuf_dyn) __attribute__((nothrow));
+// print string representation of atf_amc::BytebufDyn to string LHS, no header -- cprint:atf_amc.BytebufDyn.String
+void                 BytebufDyn_Print(atf_amc::BytebufDyn & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- atf_amc.Cstr
 // create: atf_amc.FPerfSortString.orig (Tary)
@@ -2445,6 +2504,10 @@ u64                  typed_ReserveMem(u64 size) __attribute__((nothrow));
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 typed_XrefMaybe(atf_amc::FTypeD &row);
 
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 bytebuf_dyn_XrefMaybe(atf_amc::BytebufDyn &row);
+
 void                 _db_bh_typec_curs_Reserve(_db_bh_typec_curs &curs, int n);
 // Reset cursor. If HEAP is non-empty, add its top element to CURS.
 void                 _db_bh_typec_curs_Reset(_db_bh_typec_curs &curs, atf_amc::FDb &parent);
@@ -3632,6 +3695,7 @@ private:
     void operator =(const Linebuf&){ /*disallow direct assignment */}
 };
 
+// Detect incoming message in buffer and return it
 // Look for valid message at current position in the buffer.
 // If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
 // If there is no message, read once from underlying file descriptor and try again.
@@ -3647,13 +3711,17 @@ algo::aryptr<char>   in_GetMsg(atf_amc::Linebuf& linebuf) __attribute__((nothrow
 i32                  in_Max(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
 // Return number of bytes in the buffer.
 i32                  in_N(atf_amc::Linebuf& linebuf) __attribute__((__warn_unused_result__, nothrow, pure));
+// Empty bfufer
 // Discard contents of the buffer.
 void                 in_RemoveAll(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
+// Skip N bytes when reading
 // Mark some buffer contents as read.
 //
 void                 in_SkipBytes(atf_amc::Linebuf& linebuf, int n) __attribute__((nothrow));
+// Skip current message, if any
 // Skip current message, if any.
 void                 in_SkipMsg(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
+// Attempt to write buffer contents to fd
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
@@ -4080,12 +4148,14 @@ private:
     void operator =(const Msgbuf&){ /*disallow direct assignment */}
 };
 
+// Attach fbuf to Iohook for reading
 // Attach file descriptor and begin reading using edge-triggered epoll.
-// File descriptor becomes owned by atf_amc::MsgHeader via FIohook field.
+// File descriptor becomes owned by atf_amc::Msgbuf.in via FIohook field.
 // Whenever the file descriptor becomes readable, insert msgbuf into cd_in_msg.
 void                 in_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes fd) __attribute__((nothrow));
 // Set EOF flag
 void                 in_EndRead(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// Detect incoming message in buffer and return it
 // Look for valid message at current position in the buffer.
 // If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
 // If there is no message, read once from underlying file descriptor and try again.
@@ -4098,10 +4168,13 @@ i32                  in_Max(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 i32                  in_N(atf_amc::Msgbuf& msgbuf) __attribute__((__warn_unused_result__, nothrow, pure));
 // Refill buffer. Return false if no further refill possible (input buffer exhausted)
 bool                 in_Refill(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// Empty bfufer
 // Discard contents of the buffer.
 void                 in_RemoveAll(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// Skip current message, if any
 // Skip current message, if any.
 void                 in_SkipMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// Attempt to write buffer contents to fd
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
@@ -6962,6 +7035,8 @@ void                 amctest_atree_RangeSearch();
 void                 amctest_atree_test1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_atree_test2();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+void                 amctest_bytebuf_dyn_test1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_bytebuf_test1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest

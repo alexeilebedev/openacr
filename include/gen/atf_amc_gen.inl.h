@@ -219,14 +219,36 @@ inline atf_amc::Bytebuf::Bytebuf() {
 // --- atf_amc.Bytebuf.in.Max
 // Return max. number of bytes in the buffer.
 inline i32 atf_amc::in_Max(atf_amc::Bytebuf& bytebuf) {
-    (void)bytebuf;//only to avoid -Wunused-parameter
     return 64;
+    (void)bytebuf;//only to avoid -Wunused-parameter
 }
 
 // --- atf_amc.Bytebuf.in.N
 // Return number of bytes in the buffer.
 inline i32 atf_amc::in_N(atf_amc::Bytebuf& bytebuf) {
     return bytebuf.in_end - bytebuf.in_start;
+}
+inline atf_amc::BytebufDyn::BytebufDyn() {
+    atf_amc::BytebufDyn_Init(*this);
+    // added because atf_amc.BytebufDyn.in (Fbuf) does not need initialization
+    // coverity[uninit_member]
+}
+
+inline atf_amc::BytebufDyn::~BytebufDyn() {
+    atf_amc::BytebufDyn_Uninit(*this);
+}
+
+
+// --- atf_amc.BytebufDyn.in.Max
+// Return max. number of bytes in the buffer.
+inline i32 atf_amc::in_Max(atf_amc::BytebufDyn& bytebuf_dyn) {
+    return bytebuf_dyn.in_max;
+}
+
+// --- atf_amc.BytebufDyn.in.N
+// Return number of bytes in the buffer.
+inline i32 atf_amc::in_N(atf_amc::BytebufDyn& bytebuf_dyn) {
+    return bytebuf_dyn.in_end - bytebuf_dyn.in_start;
 }
 inline atf_amc::Cstr::Cstr(const algo::strptr&            in_val)
     : val(in_val)
@@ -4593,8 +4615,8 @@ inline atf_amc::Linebuf::Linebuf() {
 // --- atf_amc.Linebuf.in.Max
 // Return max. number of bytes in the buffer.
 inline i32 atf_amc::in_Max(atf_amc::Linebuf& linebuf) {
-    (void)linebuf;//only to avoid -Wunused-parameter
     return 64;
+    (void)linebuf;//only to avoid -Wunused-parameter
 }
 
 // --- atf_amc.Linebuf.in.N
@@ -5238,8 +5260,8 @@ inline atf_amc::Msgbuf::~Msgbuf() {
 // --- atf_amc.Msgbuf.in.Max
 // Return max. number of bytes in the buffer.
 inline i32 atf_amc::in_Max(atf_amc::Msgbuf& msgbuf) {
-    (void)msgbuf;//only to avoid -Wunused-parameter
     return 64;
+    (void)msgbuf;//only to avoid -Wunused-parameter
 }
 
 // --- atf_amc.Msgbuf.in.N
