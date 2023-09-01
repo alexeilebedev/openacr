@@ -2471,7 +2471,7 @@ void atf_ci::FDb_Init() {
     memset(_db.ind_citest_buckets_elems, 0, sizeof(atf_ci::FCitest*)*_db.ind_citest_buckets_n); // (atf_ci.FDb.ind_citest)
 
     atf_ci::InitReflection();
-    citest_LoadStatic();
+    citest_LoadStatic(); // gen:ns_gstatic  gstatic:atf_ci.FDb.citest  load atf_ci.FCitest records
 }
 
 // --- atf_ci.FDb..Uninit

@@ -2369,6 +2369,7 @@ void amc::FCtype_Init(amc::FCtype& ctype) {
     ctype.n_xref = i32(0);
     ctype.next_anon_idx = i32(0);
     ctype.c_nossimfile = NULL;
+    ctype.topo_idx = i32(0);
     ctype.ns_c_ctype_in_ary = bool(false);
     ctype.ns_c_ctype_ins_in_ary = bool(false);
     ctype.ind_ctype_next = (amc::FCtype*)-1; // (amc.FDb.ind_ctype) not-in-hash
@@ -6032,7 +6033,7 @@ static void amc::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'14122266c68d0c532f10b510dab70b7d62b67ef8'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'58d789747f0ceb65a212de340c0510e65339a43b'");
 }
 
 // --- amc.FDb._db.StaticCheck
@@ -22472,10 +22473,10 @@ void amc::FDb_Init() {
     _db.has_ams_fwd_declare = bool(false);
 
     amc::InitReflection();
-    tclass_LoadStatic();
-    tfunc_LoadStatic();
-    gen_LoadStatic();
-    reftype_LoadStatic();
+    tclass_LoadStatic(); // gen:ns_gstatic  gstatic:amc.FDb.tclass  load amc.FTclass records
+    gen_LoadStatic(); // gen:ns_gstatic  gstatic:amc.FDb.gen  load amc.FGen records
+    reftype_LoadStatic(); // gen:ns_gstatic  gstatic:amc.FDb.reftype  load amc.FReftype records
+    tfunc_LoadStatic(); // gen:ns_gstatic  gstatic:amc.FDb.tfunc  load amc.FTfunc records
 }
 
 // --- amc.FDb..Uninit

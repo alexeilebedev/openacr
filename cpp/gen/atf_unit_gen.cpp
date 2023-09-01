@@ -1726,7 +1726,7 @@ void atf_unit::FDb_Init() {
     _db.acr_ed_status = i32(0);
 
     atf_unit::InitReflection();
-    unittest_LoadStatic();
+    unittest_LoadStatic(); // gen:ns_gstatic  gstatic:atf_unit.FDb.unittest  load atf_unit.FUnittest records
 }
 
 // --- atf_unit.FDb..Uninit

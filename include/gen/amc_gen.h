@@ -1397,6 +1397,7 @@ struct FCtype { // amc.FCtype
     i32                   n_xref;                     //   0
     i32                   next_anon_idx;              //   0  sequence to enumerate positional fields
     amc::FNossimfile*     c_nossimfile;               // optional pointer
+    i32                   topo_idx;                   //   0  Index of ctype in array c_ctype (after topological sort)
     bool                  ns_c_ctype_in_ary;          //   false  membership flag
     bool                  ns_c_ctype_ins_in_ary;      //   false  membership flag
     amc::FCtype*          ind_ctype_next;             // hash next
@@ -12198,6 +12199,164 @@ struct target_c_targdep_curs {// fcurs:amc.FTarget.c_targdep/curs
 
 } // gen:ns_curstext
 namespace amc { // gen:ns_func
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_prep_signature();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_select_ns();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_dispenum();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_countxref();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_detectinst();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_trace();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_lookuppkey();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_tableenum();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_gconst();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_bitfldenum();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_proc();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_msgcurs();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_check_basefield();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_clonefconst();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_parsenum();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_prep_proto();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_newfield_charset();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_newfield_count();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_newfield_hook();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_newfield_exec();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_newfield_sortfld();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_newfield_cbase();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_newfield_ptrary();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_newfield_cfmt();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_newfield_dispatch();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_fieldid();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_prep_field();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_basepool();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_check_basepool();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_check_bigend();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_check_reftype();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_check_static();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_check_cheapcopy();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_check_cascdel();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_check_cpptype();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_check_fcurs();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_check_prefix();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_check_bitfld();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_check_varlen();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_xref_parent();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_datafld();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ctype_toposort();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_prep_ctype();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_prep_fconst();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_usedns();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_include();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_load_gstatic();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_copypriv();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_pmask();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ssimdb();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_xref2();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_check_xref();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_enums();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_pkeytypedef();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_field();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_fwddecl();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_fwddecl2();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_gstatic();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_compute_size();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_cget();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_fcmap();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_include();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_gsymbol();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_size_enums();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_ctype();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_check_path();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_check_pack();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_check_nstype();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_check_main();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_dispatch();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_pnew();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_funcindex();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_print_proto();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_print_struct();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_curstext();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_func();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_operators();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_check_lim();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_ns_write();
 // User-implemented function from gstatic:amc.FDb.tclass
 void                 tclass_Atree();
 // User-implemented function from gstatic:amc.FDb.tclass
@@ -13088,164 +13247,6 @@ void                 tfunc_ZSListMT_Insert();
 void                 tfunc_ZSListMT_Remove();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_ZSListMT_RemoveFirst();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_prep_signature();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_select_ns();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_dispenum();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_countxref();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_detectinst();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_trace();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_lookuppkey();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_tableenum();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_gconst();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_bitfldenum();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_proc();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_msgcurs();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_check_basefield();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_clonefconst();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_parsenum();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_prep_proto();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_newfield_charset();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_newfield_count();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_newfield_hook();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_newfield_exec();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_newfield_sortfld();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_newfield_cbase();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_newfield_ptrary();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_newfield_cfmt();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_newfield_dispatch();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_fieldid();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_prep_field();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_basepool();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_check_basepool();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_check_bigend();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_check_reftype();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_check_static();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_check_cheapcopy();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_check_cascdel();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_check_cpptype();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_check_fcurs();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_check_prefix();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_check_bitfld();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_check_varlen();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_xref_parent();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_datafld();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ctype_toposort();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_prep_ctype();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_prep_fconst();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_usedns();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_include();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_load_gstatic();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_copypriv();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_pmask();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ssimdb();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_xref2();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_check_xref();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_enums();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_pkeytypedef();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_field();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_fwddecl();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_fwddecl2();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_gstatic();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_compute_size();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_cget();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_fcmap();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_include();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_gsymbol();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_size_enums();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_ctype();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_check_path();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_check_pack();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_check_nstype();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_check_main();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_dispatch();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_pnew();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_funcindex();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_print_proto();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_print_struct();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_curstext();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_func();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_operators();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_check_lim();
-// User-implemented function from gstatic:amc.FDb.gen
-void                 gen_ns_write();
 } // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)

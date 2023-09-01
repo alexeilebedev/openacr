@@ -2211,7 +2211,7 @@ void lib_ams::FDb_Init() {
     _db.c_stream_out = NULL;
 
     lib_ams::InitReflection();
-    streamtype_LoadStatic();
+    streamtype_LoadStatic(); // gen:ns_gstatic  gstatic:lib_ams.FDb.streamtype  load lib_ams.FStreamType records
 }
 
 // --- lib_ams.FDb..Uninit

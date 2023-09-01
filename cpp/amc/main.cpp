@@ -958,6 +958,7 @@ void amc::TopoSortVisit(amc::FNs& ns, amc::FCtype& ctype) {
         ind_beg(amc::ctype_c_field_curs, field,ctype) if (field.c_smallstr && field.c_smallstr->c_numstr) {// numstr
             amc::TopoSortVisit(ns,*field.c_smallstr->c_numstr->p_numtype);
         } ind_end;
+        ctype.topo_idx = amc::c_ctype_N(ns);
         amc::c_ctype_Insert(ns, ctype);
     }
 }

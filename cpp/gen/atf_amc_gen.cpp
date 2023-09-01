@@ -6904,8 +6904,8 @@ void atf_amc::FDb_Init() {
     _db.typed_blocksize = algo::BumpToPow2(64 * sizeof(atf_amc::FTypeD)); // allocate 64-127 elements at a time
 
     atf_amc::InitReflection();
-    amctest_LoadStatic();
-    listtype_LoadStatic();
+    amctest_LoadStatic(); // gen:ns_gstatic  gstatic:atf_amc.FDb.amctest  load atf_amc.FAmctest records
+    listtype_LoadStatic(); // gen:ns_gstatic  gstatic:atf_amc.FDb.listtype  load atf_amc.FListtype records
 }
 
 // --- atf_amc.FDb..Uninit
