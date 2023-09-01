@@ -144,6 +144,7 @@ dmmeta.ssimfile  ssimfile:dmmeta.sortfld  ctype:dmmeta.Sortfld
 dmmeta.ssimfile  ssimfile:dmmeta.sorttype  ctype:dmmeta.Sorttype
 dmmeta.ssimfile  ssimfile:dmmeta.sqltype  ctype:dmmeta.Sqltype
 dmmeta.ssimfile  ssimfile:dmmeta.ssimfile  ctype:dmmeta.Ssimfile
+dmmeta.ssimfile  ssimfile:dmmeta.ssimreq  ctype:dmmeta.Ssimreq
 dmmeta.ssimfile  ssimfile:dmmeta.ssimsort  ctype:dmmeta.Ssimsort
 dmmeta.ssimfile  ssimfile:dmmeta.ssimvolatile  ctype:dmmeta.Ssimvolatile
 dmmeta.ssimfile  ssimfile:dmmeta.steptype  ctype:dmmeta.Steptype

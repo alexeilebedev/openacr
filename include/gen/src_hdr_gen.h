@@ -428,7 +428,6 @@ struct FNsx { // src_hdr.FNsx
     algo::Smallstr100   pool;                  //
     bool                sortxref;              //   false
     bool                pack;                  //   false
-    bool                fldoffset_asserts;     //   false
     algo::Comment       comment;               //
 private:
     friend src_hdr::FNsx&       nsx_Alloc() __attribute__((__warn_unused_result__, nothrow));

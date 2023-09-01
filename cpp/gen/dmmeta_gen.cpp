@@ -311,6 +311,7 @@ const char *dmmeta_Ssimfile_ssimfile_dmmeta_sortfld        = "dmmeta.sortfld";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_sorttype       = "dmmeta.sorttype";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_sqltype        = "dmmeta.sqltype";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_ssimfile       = "dmmeta.ssimfile";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_ssimreq        = "dmmeta.ssimreq";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_ssimsort       = "dmmeta.ssimsort";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_ssimvolatile   = "dmmeta.ssimvolatile";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_steptype       = "dmmeta.steptype";
@@ -3061,7 +3062,6 @@ const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) {
         case dmmeta_FieldId_pool           : ret = "pool";  break;
         case dmmeta_FieldId_sortxref       : ret = "sortxref";  break;
         case dmmeta_FieldId_pack           : ret = "pack";  break;
-        case dmmeta_FieldId_fldoffset_asserts: ret = "fldoffset_asserts";  break;
         case dmmeta_FieldId_numtype        : ret = "numtype";  break;
         case dmmeta_FieldId_min_len        : ret = "min_len";  break;
         case dmmeta_FieldId_pnew           : ret = "pnew";  break;
@@ -3638,15 +3638,6 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('s','t','r','i','p','c','o','m'): {
                     if (memcmp(rhs.elems+8,"ment",4)==0) { value_SetEnum(parent,dmmeta_FieldId_stripcomment); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 17: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('f','l','d','o','f','f','s','e'): {
-                    if (memcmp(rhs.elems+8,"t_asserts",9)==0) { value_SetEnum(parent,dmmeta_FieldId_fldoffset_asserts); ret = true; break; }
                     break;
                 }
             }
@@ -5635,7 +5626,6 @@ bool dmmeta::Nsx_ReadFieldMaybe(dmmeta::Nsx &parent, algo::strptr field, algo::s
         case dmmeta_FieldId_pool: retval = algo::Smallstr100_ReadStrptrMaybe(parent.pool, strval); break;
         case dmmeta_FieldId_sortxref: retval = bool_ReadStrptrMaybe(parent.sortxref, strval); break;
         case dmmeta_FieldId_pack: retval = bool_ReadStrptrMaybe(parent.pack, strval); break;
-        case dmmeta_FieldId_fldoffset_asserts: retval = bool_ReadStrptrMaybe(parent.fldoffset_asserts, strval); break;
         case dmmeta_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
         default: break;
     }
@@ -5680,9 +5670,6 @@ void dmmeta::Nsx_Print(dmmeta::Nsx & row, algo::cstring &str) {
 
     bool_Print(row.pack, temp);
     PrintAttrSpaceReset(str,"pack", temp);
-
-    bool_Print(row.fldoffset_asserts, temp);
-    PrintAttrSpaceReset(str,"fldoffset_asserts", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
@@ -6831,6 +6818,59 @@ void dmmeta::Ssimfile_Print(dmmeta::Ssimfile & row, algo::cstring &str) {
 
     algo::Smallstr50_Print(row.ctype, temp);
     PrintAttrSpaceReset(str,"ctype", temp);
+}
+
+// --- dmmeta.Ssimreq..ReadFieldMaybe
+bool dmmeta::Ssimreq_ReadFieldMaybe(dmmeta::Ssimreq &parent, algo::strptr field, algo::strptr strval) {
+    dmmeta::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case dmmeta_FieldId_ssimfile: retval = algo::Smallstr50_ReadStrptrMaybe(parent.ssimfile, strval); break;
+        case dmmeta_FieldId_field: retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval); break;
+        case dmmeta_FieldId_value: retval = algo::Smallstr100_ReadStrptrMaybe(parent.value, strval); break;
+        case dmmeta_FieldId_bidir: retval = bool_ReadStrptrMaybe(parent.bidir, strval); break;
+        case dmmeta_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dmmeta.Ssimreq..ReadStrptrMaybe
+// Read fields of dmmeta::Ssimreq from an ascii string.
+// The format of the string is an ssim Tuple
+bool dmmeta::Ssimreq_ReadStrptrMaybe(dmmeta::Ssimreq &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dmmeta.ssimreq") || algo::StripTypeTag(in_str, "dmmeta.Ssimreq");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Ssimreq_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dmmeta.Ssimreq..Print
+// print string representation of dmmeta::Ssimreq to string LHS, no header -- cprint:dmmeta.Ssimreq.String
+void dmmeta::Ssimreq_Print(dmmeta::Ssimreq & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "dmmeta.ssimreq";
+
+    algo::Smallstr50_Print(row.ssimfile, temp);
+    PrintAttrSpaceReset(str,"ssimfile", temp);
+
+    algo::Smallstr100_Print(row.field, temp);
+    PrintAttrSpaceReset(str,"field", temp);
+
+    algo::Smallstr100_Print(row.value, temp);
+    PrintAttrSpaceReset(str,"value", temp);
+
+    bool_Print(row.bidir, temp);
+    PrintAttrSpaceReset(str,"bidir", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
 }
 
 // --- dmmeta.Ssimsort..ReadFieldMaybe

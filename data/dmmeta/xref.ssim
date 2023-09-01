@@ -61,6 +61,9 @@ dmmeta.xref  field:acr.FDb.ind_uniqueattr  inscond:true  via:""
 dmmeta.xref  field:acr.FCtype.c_bltin  inscond:true  via:acr.FDb.ind_ctype/amcdb.Bltin.ctype
 dmmeta.xref  field:acr.FCtype.zd_arg  inscond:true  via:acr.FDb.ind_ctype/dmmeta.Field.arg
 dmmeta.xref  field:acr.FDb.bh_ctype_topo  inscond:true  via:""
+dmmeta.xref  field:acr.FSsimreq.p_ssimfile  inscond:true  via:acr.FDb.ind_ssimfile/dmmeta.Ssimreq.ssimfile
+dmmeta.xref  field:acr.FSsimreq.p_field  inscond:true  via:acr.FDb.ind_field/dmmeta.Ssimreq.field
+dmmeta.xref  field:acr.FSsimfile.c_ssimreq  inscond:true  via:acr.FDb.ind_ssimfile/dmmeta.Ssimreq.ssimfile
 dmmeta.xref  field:acr_compl.FDb.ind_ctype  inscond:true  via:""
 dmmeta.xref  field:acr_compl.FDb.ind_field  inscond:true  via:""
 dmmeta.xref  field:acr_compl.FDb.ind_ssimfile  inscond:true  via:""

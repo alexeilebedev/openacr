@@ -127,7 +127,7 @@ static void src_hdr::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_hdr.Input'  signature:'553c16476a908ef27d29d77ef42d6bdf74e987f4'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_hdr.Input'  signature:'b094e0ededb567160099dabcfd654447a2dd1f31'");
 }
 
 // --- src_hdr.FDb._db.StaticCheck
@@ -1278,7 +1278,6 @@ void src_hdr::nsx_CopyOut(src_hdr::FNsx &row, dmmeta::Nsx &out) {
     out.pool = row.pool;
     out.sortxref = row.sortxref;
     out.pack = row.pack;
-    out.fldoffset_asserts = row.fldoffset_asserts;
     out.comment = row.comment;
 }
 
@@ -1291,7 +1290,6 @@ void src_hdr::nsx_CopyIn(src_hdr::FNsx &row, dmmeta::Nsx &in) {
     row.pool = in.pool;
     row.sortxref = in.sortxref;
     row.pack = in.pack;
-    row.fldoffset_asserts = in.fldoffset_asserts;
     row.comment = in.comment;
 }
 

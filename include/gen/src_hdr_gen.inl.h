@@ -452,7 +452,6 @@ inline void src_hdr::FNsx_Init(src_hdr::FNsx& nsx) {
     nsx.correct_getorcreate = bool(false);
     nsx.sortxref = bool(false);
     nsx.pack = bool(false);
-    nsx.fldoffset_asserts = bool(false);
 }
 inline src_hdr::FSrc::FSrc() {
     src_hdr::FSrc_Init(*this);

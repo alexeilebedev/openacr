@@ -13573,7 +13573,6 @@ inline void amc::FNsx_Init(amc::FNsx& nsx) {
     nsx.correct_getorcreate = bool(false);
     nsx.sortxref = bool(false);
     nsx.pack = bool(false);
-    nsx.fldoffset_asserts = bool(false);
     nsx.p_pool = NULL;
 }
 inline amc::FNumstr::FNumstr() {

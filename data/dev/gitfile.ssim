@@ -544,6 +544,7 @@ dev.gitfile  gitfile:data/dmmeta/sortfld.ssim
 dev.gitfile  gitfile:data/dmmeta/sorttype.ssim
 dev.gitfile  gitfile:data/dmmeta/sqltype.ssim
 dev.gitfile  gitfile:data/dmmeta/ssimfile.ssim
+dev.gitfile  gitfile:data/dmmeta/ssimreq.ssim
 dev.gitfile  gitfile:data/dmmeta/ssimsort.ssim
 dev.gitfile  gitfile:data/dmmeta/steptype.ssim
 dev.gitfile  gitfile:data/dmmeta/strfmt.ssim
