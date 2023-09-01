@@ -355,7 +355,7 @@ dmmeta.ctypelen  ctype:amc.FCppfunc  len:354  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amc.FCpptype  len:72  alignment:8  padbytes:1
 dmmeta.ctypelen  ctype:amc.FCsize  len:60  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:amc.FCstr  len:53  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:amc.FCtype  len:752  alignment:8  padbytes:33
+dmmeta.ctypelen  ctype:amc.FCtype  len:752  alignment:8  padbytes:29
 dmmeta.ctypelen  ctype:amc.FCtypelen  len:68  alignment:4  padbytes:3
 dmmeta.ctypelen  ctype:amc.FDb  len:32416  alignment:16  padbytes:422
 dmmeta.ctypelen  ctype:amc.FDispatch  len:168  alignment:8  padbytes:17

@@ -103,7 +103,7 @@ dmmeta.ssimsort  ssimfile:dmmeta.funique  sortfld:dmmeta.Funique.field  comment:
 dmmeta.ssimsort  ssimfile:dmmeta.fuserinit  sortfld:dmmeta.Fuserinit.field  comment:""
 dmmeta.ssimsort  ssimfile:dmmeta.fwddecl  sortfld:dmmeta.Fwddecl.fwddecl  comment:""
 dmmeta.ssimsort  ssimfile:dmmeta.gconst  sortfld:dmmeta.Gconst.field  comment:""
-dmmeta.ssimsort  ssimfile:dmmeta.gstatic  sortfld:dmmeta.Gstatic.ns  comment:""
+dmmeta.ssimsort  ssimfile:dmmeta.gstatic  sortfld:dmmeta.Gstatic.field  comment:""
 dmmeta.ssimsort  ssimfile:dmmeta.gsymbol  sortfld:dmmeta.Gsymbol.gsymbol  comment:""
 dmmeta.ssimsort  ssimfile:dmmeta.hook  sortfld:dmmeta.Hook.field  comment:""
 dmmeta.ssimsort  ssimfile:dmmeta.inlary  sortfld:dmmeta.Inlary.field  comment:""

@@ -2501,7 +2501,7 @@ void algo_lib::FDb_Init() {
     algo_lib::InitReflection();
     _db.h_fatalerror = NULL;
     _db.h_fatalerror_ctx = 0;
-    logcat_LoadStatic();
+    logcat_LoadStatic(); // gen:ns_gstatic  gstatic:algo_lib.FDb.logcat  load algo_lib.FLogcat records
 }
 
 // --- algo_lib.FDb..Uninit

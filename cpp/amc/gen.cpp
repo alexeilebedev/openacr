@@ -175,7 +175,7 @@ void amc::gen_check_static() {
                          <<Keyval("via",field.field)
                          <<Keyval("comment","A statically loaded table cannot refer to a dynamically loaded one."));
             }
-            if (!isxref && inst && inst->c_gstatic && gstatic.rowid < inst->c_gstatic->rowid) {
+            if (!isxref && inst && inst->c_gstatic && gstatic.p_field->p_arg->topo_idx < inst->c_gstatic->p_field->p_arg->topo_idx) {
                 amccheck(0,"amc.gstatic_dep"
                          <<Keyval("ctype",gstatic.p_field->arg)
                          <<Keyval("uses",field.arg)
@@ -1308,19 +1308,33 @@ void amc::gen_ns_operators() {
 }
 
 // -----------------------------------------------------------------------------
-//
-// process tables that need to be loaded at startup.
-//
+
+// Generate code to load gstatic tables
+// (added to FDb Init function)
+// Gstatics are loaded in the order of their ctypes
 void amc::gen_ns_gstatic() {
     ind_beg(amc::_db_ns_curs, ns, amc::_db) {
         algo_lib::Replscope R;
+        Set(R, "$cur_gen", amc::_db.cur_gen);
         // insert initialization code
-        ind_beg(amc::ns_c_gstatic_curs, gstatic,ns) {
-            vrfy(ns.c_globfld, "not an imd -- cannot load static");
-            amc::FFunc *init = amc::init_GetOrCreate(*ns.c_globfld->p_arg);
-            amc::FField& field = *gstatic.p_field;
-            Set(R, "$name", name_Get(field));
-            Ins(&R, init->body, "$name_LoadStatic();");
+        ind_beg(amc::ns_c_ctype_curs, ctype, ns) {
+            amc::FField *inst = FirstInst(ctype);
+            if (inst && inst->c_gstatic) {
+                amc::FGstatic &gstatic = *inst->c_gstatic;
+                if (!ns.c_globfld) {
+                    prerr("amc.null_gstatic"
+                          <<Keyval("gstatic",gstatic.field)
+                          <<Keyval("comment","no in-memory database -- cannot load static"));
+                    algo_lib::_db.exit_code=1;
+                    break;
+                }
+                amc::FFunc *init = amc::init_GetOrCreate(*ns.c_globfld->p_arg);
+                amc::FField& field = *gstatic.p_field;
+                Set(R, "$name", name_Get(field));
+                Set(R, "$gstatic", gstatic.field);
+                Set(R, "$Ctype", ctype.ctype);
+                Ins(&R, init->body, "$name_LoadStatic(); // gen:$cur_gen  gstatic:$gstatic  load $Ctype records");
+            }
         }ind_end;
     }ind_end;
 }
