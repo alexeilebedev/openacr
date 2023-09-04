@@ -218,5 +218,5 @@ dmmeta.nstype  nstype:exe  comment:Executable
       dmmeta.field  field:atf_nrun.FEntry.job      arg:command.bash  reftype:Exec  dflt:""  comment:Subprocess
 
     dmmeta.main  ns:atf_nrun  ismodule:N
-    dmmeta.nsx  ns:atf_nrun  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  fldoffset_asserts:N  comment:""
+    dmmeta.nsx  ns:atf_nrun  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  comment:""
 ```

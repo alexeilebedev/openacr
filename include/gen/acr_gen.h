@@ -61,13 +61,15 @@ enum acr_TableIdEnum {                    // acr.TableId.value
     ,acr_TableId_dmmeta_smallstr   = 7    // dmmeta.smallstr -> acr.FSmallstr
     ,acr_TableId_dmmeta_Ssimfile   = 8    // dmmeta.Ssimfile -> acr.FSsimfile
     ,acr_TableId_dmmeta_ssimfile   = 8    // dmmeta.ssimfile -> acr.FSsimfile
-    ,acr_TableId_dmmeta_Ssimsort   = 9    // dmmeta.Ssimsort -> acr.FSsimsort
-    ,acr_TableId_dmmeta_ssimsort   = 9    // dmmeta.ssimsort -> acr.FSsimsort
-    ,acr_TableId_dmmeta_Substr     = 10   // dmmeta.Substr -> acr.FSubstr
-    ,acr_TableId_dmmeta_substr     = 10   // dmmeta.substr -> acr.FSubstr
+    ,acr_TableId_dmmeta_Ssimreq    = 9    // dmmeta.Ssimreq -> acr.FSsimreq
+    ,acr_TableId_dmmeta_ssimreq    = 9    // dmmeta.ssimreq -> acr.FSsimreq
+    ,acr_TableId_dmmeta_Ssimsort   = 10   // dmmeta.Ssimsort -> acr.FSsimsort
+    ,acr_TableId_dmmeta_ssimsort   = 10   // dmmeta.ssimsort -> acr.FSsimsort
+    ,acr_TableId_dmmeta_Substr     = 11   // dmmeta.Substr -> acr.FSubstr
+    ,acr_TableId_dmmeta_substr     = 11   // dmmeta.substr -> acr.FSubstr
 };
 
-enum { acr_TableIdEnum_N = 22 };
+enum { acr_TableIdEnum_N = 24 };
 
 namespace acr { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -91,6 +93,9 @@ namespace acr { struct FPrint; }
 namespace acr { struct FFile; }
 namespace dmmeta { struct Smallstr; }
 namespace dmmeta { struct Ssimfile; }
+namespace dmmeta { struct Ssimreq; }
+namespace acr { struct FSsimfile; }
+namespace acr { struct FField; }
 namespace dmmeta { struct Ssimsort; }
 namespace dmmeta { struct Substr; }
 namespace acr { struct check_c_bad_rec_curs; }
@@ -122,6 +127,7 @@ namespace acr { struct _db_funique_curs; }
 namespace acr { struct _db_bltin_curs; }
 namespace acr { struct _db_bh_ctype_topo_curs; }
 namespace acr { struct _db_cppfunc_curs; }
+namespace acr { struct _db_ssimreq_curs; }
 namespace acr { struct file_zd_frec_curs; }
 namespace acr { struct pline_zd_child_curs; }
 namespace acr { struct print_c_pline_curs; }
@@ -140,7 +146,6 @@ namespace acr { struct trace; }
 namespace acr { struct FDb; }
 namespace acr { struct FErr; }
 namespace acr { struct FEvalattr; }
-namespace acr { struct FField; }
 namespace acr { struct FFunique; }
 namespace acr { struct FPdep; }
 namespace acr { struct PlineKey; }
@@ -150,7 +155,7 @@ namespace acr { struct FQuery; }
 namespace acr { struct RecSortkey; }
 namespace acr { struct FRun; }
 namespace acr { struct FSmallstr; }
-namespace acr { struct FSsimfile; }
+namespace acr { struct FSsimreq; }
 namespace acr { struct FSsimsort; }
 namespace acr { struct FSubstr; }
 namespace acr { struct FTempkey; }
@@ -750,6 +755,8 @@ struct FDb { // acr.FDb
     i32                  bh_ctype_topo_max;              // max elements in bh_ctype_topo_elems
     acr::FCppfunc*       cppfunc_lary[32];               // level array
     i32                  cppfunc_n;                      // number of elements in array
+    acr::FSsimreq*       ssimreq_lary[32];               // level array
+    i32                  ssimreq_n;                      // number of elements in array
     acr::trace           trace;                          //
 };
 
@@ -1584,6 +1591,34 @@ acr::FCppfunc&       cppfunc_qFind(u64 t) __attribute__((nothrow));
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 cppfunc_XrefMaybe(acr::FCppfunc &row);
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr::FSsimreq&       ssimreq_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+acr::FSsimreq*       ssimreq_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr::FSsimreq*       ssimreq_InsertMaybe(const dmmeta::Ssimreq &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                ssimreq_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 ssimreq_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+acr::FSsimreq*       ssimreq_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+acr::FSsimreq*       ssimreq_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  ssimreq_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 ssimreq_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 ssimreq_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+acr::FSsimreq&       ssimreq_qFind(u64 t) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 ssimreq_XrefMaybe(acr::FSsimreq &row);
+
 // cursor points to valid item
 void                 _db_zd_pline_curs_Reset(_db_zd_pline_curs &curs, acr::FDb &parent);
 // cursor points to valid item
@@ -1754,6 +1789,14 @@ bool                 _db_cppfunc_curs_ValidQ(_db_cppfunc_curs &curs);
 void                 _db_cppfunc_curs_Next(_db_cppfunc_curs &curs);
 // item access
 acr::FCppfunc&       _db_cppfunc_curs_Access(_db_cppfunc_curs &curs);
+// cursor points to valid item
+void                 _db_ssimreq_curs_Reset(_db_ssimreq_curs &curs, acr::FDb &parent);
+// cursor points to valid item
+bool                 _db_ssimreq_curs_ValidQ(_db_ssimreq_curs &curs);
+// proceed to next item
+void                 _db_ssimreq_curs_Next(_db_ssimreq_curs &curs);
+// item access
+acr::FSsimreq&       _db_ssimreq_curs_Access(_db_ssimreq_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
@@ -1817,6 +1860,7 @@ void                 FEvalattr_Init(acr::FEvalattr& parent);
 // access: acr.FCtype.zd_arg (Llist)
 // access: acr.FEvalattr.field (Ptr)
 // access: acr.FRun.c_field (Ptrary)
+// access: acr.FSsimreq.p_field (Upptr)
 // access: acr.FErr.fld (Ptr)
 struct FField { // acr.FField
     acr::FField*        zd_arg_next;            // zslist link; -1 means not-in-list
@@ -2493,6 +2537,7 @@ void                 FSmallstr_Init(acr::FSmallstr& smallstr);
 // create: acr.FDb.ssimfile (Lary)
 // global access: ind_ssimfile (Thash)
 // access: acr.FCtype.c_ssimfile (Ptr)
+// access: acr.FSsimreq.p_ssimfile (Upptr)
 struct FSsimfile { // acr.FSsimfile: One full table
     acr::FSsimfile*    ind_ssimfile_next;   // hash next
     algo::Smallstr50   ssimfile;            //
@@ -2500,6 +2545,7 @@ struct FSsimfile { // acr.FSsimfile: One full table
     acr::FFile*        c_file;              // optional!. optional pointer
     acr::FCtype*       p_ctype;             // reference to parent row
     acr::FSsimsort*    c_ssimsort;          // Optional sort order. optional pointer
+    acr::FSsimreq*     c_ssimreq;           // optional pointer
 private:
     friend acr::FSsimfile&      ssimfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FSsimfile*      ssimfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -2524,9 +2570,45 @@ bool                 c_ssimsort_InsertMaybe(acr::FSsimfile& ssimfile, acr::FSsim
 // Remove element from index. If element is not in index, do nothing.
 void                 c_ssimsort_Remove(acr::FSsimfile& ssimfile, acr::FSsimsort& row) __attribute__((nothrow));
 
+// Insert row into pointer index. Return final membership status.
+bool                 c_ssimreq_InsertMaybe(acr::FSsimfile& ssimfile, acr::FSsimreq& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+void                 c_ssimreq_Remove(acr::FSsimfile& ssimfile, acr::FSsimreq& row) __attribute__((nothrow));
+
 // Set all fields to initial values.
 void                 FSsimfile_Init(acr::FSsimfile& ssimfile);
 void                 FSsimfile_Uninit(acr::FSsimfile& ssimfile) __attribute__((nothrow));
+
+// --- acr.FSsimreq
+// create: acr.FDb.ssimreq (Lary)
+// access: acr.FSsimfile.c_ssimreq (Ptr)
+struct FSsimreq { // acr.FSsimreq
+    algo::Smallstr50    ssimfile;     // Ssimfile with constraint
+    algo::Smallstr100   field;        // Field (must belong to pkey superset)
+    algo::Smallstr100   value;        // Regx of required value
+    bool                bidir;        //   false  Constraint is bidirectional
+    algo::Comment       comment;      //
+    acr::FSsimfile*     p_ssimfile;   // reference to parent row
+    acr::FField*        p_field;      // reference to parent row
+private:
+    friend acr::FSsimreq&       ssimreq_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr::FSsimreq*       ssimreq_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 ssimreq_RemoveAll() __attribute__((nothrow));
+    friend void                 ssimreq_RemoveLast() __attribute__((nothrow));
+    FSsimreq();
+    ~FSsimreq();
+    FSsimreq(const FSsimreq&){ /*disallow copy constructor */}
+    void operator =(const FSsimreq&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 ssimreq_CopyOut(acr::FSsimreq &row, dmmeta::Ssimreq &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 ssimreq_CopyIn(acr::FSsimreq &row, dmmeta::Ssimreq &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 FSsimreq_Init(acr::FSsimreq& ssimreq);
+void                 FSsimreq_Uninit(acr::FSsimreq& ssimreq) __attribute__((nothrow));
 
 // --- acr.FSsimsort
 // create: acr.FDb.ssimsort (Lary)
@@ -3002,6 +3084,14 @@ struct _db_cppfunc_curs {// cursor
     acr::FDb *parent;
     i64 index;
     _db_cppfunc_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_ssimreq_curs {// cursor
+    typedef acr::FSsimreq ChildType;
+    acr::FDb *parent;
+    i64 index;
+    _db_ssimreq_curs(){ parent=NULL; index=0; }
 };
 
 

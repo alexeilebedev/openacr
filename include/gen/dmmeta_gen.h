@@ -163,38 +163,37 @@ enum dmmeta_FieldIdEnum {                        // dmmeta.FieldId.value
     ,dmmeta_FieldId_pool                  = 122
     ,dmmeta_FieldId_sortxref              = 123
     ,dmmeta_FieldId_pack                  = 124
-    ,dmmeta_FieldId_fldoffset_asserts     = 125
-    ,dmmeta_FieldId_numtype               = 126
-    ,dmmeta_FieldId_min_len               = 127
-    ,dmmeta_FieldId_pnew                  = 128
-    ,dmmeta_FieldId_buftype               = 129
-    ,dmmeta_FieldId_unique                = 130
-    ,dmmeta_FieldId_isval                 = 131
-    ,dmmeta_FieldId_cascins               = 132
-    ,dmmeta_FieldId_usebasepool           = 133
-    ,dmmeta_FieldId_cancopy               = 134
-    ,dmmeta_FieldId_isxref                = 135
-    ,dmmeta_FieldId_del                   = 136
-    ,dmmeta_FieldId_up                    = 137
-    ,dmmeta_FieldId_isnew                 = 138
-    ,dmmeta_FieldId_hasalloc              = 139
-    ,dmmeta_FieldId_inst                  = 140
-    ,dmmeta_FieldId_varlen                = 141
-    ,dmmeta_FieldId_length                = 142
-    ,dmmeta_FieldId_strtype               = 143
-    ,dmmeta_FieldId_pad                   = 144
-    ,dmmeta_FieldId_ssimns                = 145
-    ,dmmeta_FieldId_aliased               = 146
-    ,dmmeta_FieldId_hashfld               = 147
-    ,dmmeta_FieldId_tracefld              = 148
-    ,dmmeta_FieldId_tracerec              = 149
-    ,dmmeta_FieldId_inscond               = 150
-    ,dmmeta_FieldId_via                   = 151
-    ,dmmeta_FieldId_viafld                = 152
-    ,dmmeta_FieldId_keyfld                = 153
+    ,dmmeta_FieldId_numtype               = 125
+    ,dmmeta_FieldId_min_len               = 126
+    ,dmmeta_FieldId_pnew                  = 127
+    ,dmmeta_FieldId_buftype               = 128
+    ,dmmeta_FieldId_unique                = 129
+    ,dmmeta_FieldId_isval                 = 130
+    ,dmmeta_FieldId_cascins               = 131
+    ,dmmeta_FieldId_usebasepool           = 132
+    ,dmmeta_FieldId_cancopy               = 133
+    ,dmmeta_FieldId_isxref                = 134
+    ,dmmeta_FieldId_del                   = 135
+    ,dmmeta_FieldId_up                    = 136
+    ,dmmeta_FieldId_isnew                 = 137
+    ,dmmeta_FieldId_hasalloc              = 138
+    ,dmmeta_FieldId_inst                  = 139
+    ,dmmeta_FieldId_varlen                = 140
+    ,dmmeta_FieldId_length                = 141
+    ,dmmeta_FieldId_strtype               = 142
+    ,dmmeta_FieldId_pad                   = 143
+    ,dmmeta_FieldId_ssimns                = 144
+    ,dmmeta_FieldId_aliased               = 145
+    ,dmmeta_FieldId_hashfld               = 146
+    ,dmmeta_FieldId_tracefld              = 147
+    ,dmmeta_FieldId_tracerec              = 148
+    ,dmmeta_FieldId_inscond               = 149
+    ,dmmeta_FieldId_via                   = 150
+    ,dmmeta_FieldId_viafld                = 151
+    ,dmmeta_FieldId_keyfld                = 152
 };
 
-enum { dmmeta_FieldIdEnum_N = 154 };
+enum { dmmeta_FieldIdEnum_N = 153 };
 
 extern const char *  dmmeta_Hashtype_hashtype_Extern;   // Extern    fconst:dmmeta.Hashtype.hashtype/Extern
 extern const char *  dmmeta_Hashtype_hashtype_CRC32;    // CRC32     fconst:dmmeta.Hashtype.hashtype/CRC32
@@ -531,6 +530,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_sortfld;              // dm
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_sorttype;             // dmmeta.sorttype              fconst:dmmeta.Ssimfile.ssimfile/dmmeta.sorttype
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_sqltype;              // dmmeta.sqltype               fconst:dmmeta.Ssimfile.ssimfile/dmmeta.sqltype
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_ssimfile;             // dmmeta.ssimfile              fconst:dmmeta.Ssimfile.ssimfile/dmmeta.ssimfile
+extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_ssimreq;              // dmmeta.ssimreq               fconst:dmmeta.Ssimfile.ssimfile/dmmeta.ssimreq
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_ssimsort;             // dmmeta.ssimsort              fconst:dmmeta.Ssimfile.ssimfile/dmmeta.ssimsort
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_ssimvolatile;         // dmmeta.ssimvolatile          fconst:dmmeta.Ssimfile.ssimfile/dmmeta.ssimvolatile
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_steptype;             // dmmeta.steptype              fconst:dmmeta.Ssimfile.ssimfile/dmmeta.steptype
@@ -710,6 +710,7 @@ namespace dmmeta { struct Sortfld; }
 namespace dmmeta { struct Sorttype; }
 namespace dmmeta { struct Sqltype; }
 namespace dmmeta { struct Ssimfile; }
+namespace dmmeta { struct Ssimreq; }
 namespace dmmeta { struct Ssimsort; }
 namespace dmmeta { struct Ssimvolatile; }
 namespace dmmeta { struct Steptype; }
@@ -2397,7 +2398,6 @@ struct Nsx { // dmmeta.Nsx: Control code-generation and exception handling optio
     algo::Smallstr100   pool;                  //
     bool                sortxref;              //   false
     bool                pack;                  //   false
-    bool                fldoffset_asserts;     //   false
     algo::Comment       comment;               //
     explicit Nsx(const algo::strptr&            in_ns
         ,bool                           in_genthrow
@@ -2405,7 +2405,6 @@ struct Nsx { // dmmeta.Nsx: Control code-generation and exception handling optio
         ,const algo::strptr&            in_pool
         ,bool                           in_sortxref
         ,bool                           in_pack
-        ,bool                           in_fldoffset_asserts
         ,const algo::Comment&           in_comment);
     Nsx();
 };
@@ -2736,6 +2735,25 @@ bool                 Ssimfile_ReadStrptrMaybe(dmmeta::Ssimfile &parent, algo::st
 // print string representation of dmmeta::Ssimfile to string LHS, no header -- cprint:dmmeta.Ssimfile.String
 void                 Ssimfile_Print(dmmeta::Ssimfile & row, algo::cstring &str) __attribute__((nothrow));
 
+// --- dmmeta.Ssimreq
+struct Ssimreq { // dmmeta.Ssimreq: Presence of ssimfile requires that superset field has a certain value
+    algo::Smallstr50    ssimfile;   // Ssimfile with constraint
+    algo::Smallstr100   field;      // Field (must belong to pkey superset)
+    algo::Smallstr100   value;      // Regx of required value
+    bool                bidir;      //   false  Constraint is bidirectional
+    algo::Comment       comment;    //
+    Ssimreq();
+};
+
+bool                 Ssimreq_ReadFieldMaybe(dmmeta::Ssimreq &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dmmeta::Ssimreq from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 Ssimreq_ReadStrptrMaybe(dmmeta::Ssimreq &parent, algo::strptr in_str);
+// Set all fields to initial values.
+void                 Ssimreq_Init(dmmeta::Ssimreq& parent);
+// print string representation of dmmeta::Ssimreq to string LHS, no header -- cprint:dmmeta.Ssimreq.String
+void                 Ssimreq_Print(dmmeta::Ssimreq & row, algo::cstring &str) __attribute__((nothrow));
+
 // --- dmmeta.Ssimsort
 struct Ssimsort { // dmmeta.Ssimsort
     algo::Smallstr50    ssimfile;   //
@@ -3016,6 +3034,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Ptrary &row)
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::ReftypeId &row);// cfmt:dmmeta.ReftypeId.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Sortfld &row);// cfmt:dmmeta.Sortfld.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Ssimfile &row);// cfmt:dmmeta.Ssimfile.String
+inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Ssimreq &row);// cfmt:dmmeta.Ssimreq.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Ssimsort &row);// cfmt:dmmeta.Ssimsort.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Ssimvolatile &row);// cfmt:dmmeta.Ssimvolatile.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Substr &row);// cfmt:dmmeta.Substr.String

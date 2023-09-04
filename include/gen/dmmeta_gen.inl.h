@@ -885,7 +885,6 @@ inline dmmeta::Nsx::Nsx(const algo::strptr&            in_ns
         ,const algo::strptr&            in_pool
         ,bool                           in_sortxref
         ,bool                           in_pack
-        ,bool                           in_fldoffset_asserts
         ,const algo::Comment&           in_comment)
     : ns(in_ns)
     , genthrow(in_genthrow)
@@ -893,7 +892,6 @@ inline dmmeta::Nsx::Nsx(const algo::strptr&            in_ns
     , pool(in_pool)
     , sortxref(in_sortxref)
     , pack(in_pack)
-    , fldoffset_asserts(in_fldoffset_asserts)
     , comment(in_comment)
 {
 }
@@ -909,7 +907,6 @@ inline void dmmeta::Nsx_Init(dmmeta::Nsx& parent) {
     parent.correct_getorcreate = bool(false);
     parent.sortxref = bool(false);
     parent.pack = bool(false);
-    parent.fldoffset_asserts = bool(false);
 }
 inline dmmeta::Numstr::Numstr(const algo::strptr&            in_field
         ,const algo::strptr&            in_numtype
@@ -1090,6 +1087,16 @@ inline dmmeta::Ssimfile::Ssimfile(const algo::strptr&            in_ssimfile
 inline dmmeta::Ssimfile::Ssimfile() {
 }
 
+inline dmmeta::Ssimreq::Ssimreq() {
+    dmmeta::Ssimreq_Init(*this);
+}
+
+
+// --- dmmeta.Ssimreq..Init
+// Set all fields to initial values.
+inline void dmmeta::Ssimreq_Init(dmmeta::Ssimreq& parent) {
+    parent.bidir = bool(false);
+}
 inline dmmeta::Ssimsort::Ssimsort() {
 }
 
@@ -1415,6 +1422,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Sortfl
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Ssimfile &row) {// cfmt:dmmeta.Ssimfile.String
     dmmeta::Ssimfile_Print(const_cast<dmmeta::Ssimfile&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Ssimreq &row) {// cfmt:dmmeta.Ssimreq.String
+    dmmeta::Ssimreq_Print(const_cast<dmmeta::Ssimreq&>(row), str);
     return str;
 }
 

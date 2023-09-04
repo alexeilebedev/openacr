@@ -1785,6 +1785,48 @@ inline acr::FCppfunc& acr::cppfunc_qFind(u64 t) {
     return _db.cppfunc_lary[bsr][index];
 }
 
+// --- acr.FDb.ssimreq.EmptyQ
+// Return true if index is empty
+inline bool acr::ssimreq_EmptyQ() {
+    return _db.ssimreq_n == 0;
+}
+
+// --- acr.FDb.ssimreq.Find
+// Look up row by row id. Return NULL if out of range
+inline acr::FSsimreq* acr::ssimreq_Find(u64 t) {
+    acr::FSsimreq *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.ssimreq_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.ssimreq_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr.FDb.ssimreq.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr::FSsimreq* acr::ssimreq_Last() {
+    return ssimreq_Find(u64(_db.ssimreq_n-1));
+}
+
+// --- acr.FDb.ssimreq.N
+// Return number of items in the pool
+inline i32 acr::ssimreq_N() {
+    return _db.ssimreq_n;
+}
+
+// --- acr.FDb.ssimreq.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr::FSsimreq& acr::ssimreq_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.ssimreq_lary[bsr][index];
+}
+
 // --- acr.FDb.zd_pline_curs.Reset
 // cursor points to valid item
 inline void acr::_db_zd_pline_curs_Reset(_db_zd_pline_curs &curs, acr::FDb &parent) {
@@ -2282,6 +2324,31 @@ inline void acr::_db_cppfunc_curs_Next(_db_cppfunc_curs &curs) {
 // item access
 inline acr::FCppfunc& acr::_db_cppfunc_curs_Access(_db_cppfunc_curs &curs) {
     return cppfunc_qFind(u64(curs.index));
+}
+
+// --- acr.FDb.ssimreq_curs.Reset
+// cursor points to valid item
+inline void acr::_db_ssimreq_curs_Reset(_db_ssimreq_curs &curs, acr::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr.FDb.ssimreq_curs.ValidQ
+// cursor points to valid item
+inline bool acr::_db_ssimreq_curs_ValidQ(_db_ssimreq_curs &curs) {
+    return curs.index < _db.ssimreq_n;
+}
+
+// --- acr.FDb.ssimreq_curs.Next
+// proceed to next item
+inline void acr::_db_ssimreq_curs_Next(_db_ssimreq_curs &curs) {
+    curs.index++;
+}
+
+// --- acr.FDb.ssimreq_curs.Access
+// item access
+inline acr::FSsimreq& acr::_db_ssimreq_curs_Access(_db_ssimreq_curs &curs) {
+    return ssimreq_qFind(u64(curs.index));
 }
 inline acr::FErr::FErr() {
     acr::FErr_Init(*this);
@@ -3216,13 +3283,50 @@ inline void acr::c_ssimsort_Remove(acr::FSsimfile& ssimfile, acr::FSsimsort& row
     }
 }
 
+// --- acr.FSsimfile.c_ssimreq.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool acr::c_ssimreq_InsertMaybe(acr::FSsimfile& ssimfile, acr::FSsimreq& row) {
+    acr::FSsimreq* ptr = ssimfile.c_ssimreq;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        ssimfile.c_ssimreq = &row;
+    }
+    return retval;
+}
+
+// --- acr.FSsimfile.c_ssimreq.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void acr::c_ssimreq_Remove(acr::FSsimfile& ssimfile, acr::FSsimreq& row) {
+    acr::FSsimreq *ptr = ssimfile.c_ssimreq;
+    if (LIKELY(ptr == &row)) {
+        ssimfile.c_ssimreq = NULL;
+    }
+}
+
 // --- acr.FSsimfile..Init
 // Set all fields to initial values.
 inline void acr::FSsimfile_Init(acr::FSsimfile& ssimfile) {
     ssimfile.c_file = NULL;
     ssimfile.p_ctype = NULL;
     ssimfile.c_ssimsort = NULL;
+    ssimfile.c_ssimreq = NULL;
     ssimfile.ind_ssimfile_next = (acr::FSsimfile*)-1; // (acr.FDb.ind_ssimfile) not-in-hash
+}
+inline acr::FSsimreq::FSsimreq() {
+    acr::FSsimreq_Init(*this);
+}
+
+inline acr::FSsimreq::~FSsimreq() {
+    acr::FSsimreq_Uninit(*this);
+}
+
+
+// --- acr.FSsimreq..Init
+// Set all fields to initial values.
+inline void acr::FSsimreq_Init(acr::FSsimreq& ssimreq) {
+    ssimreq.bidir = bool(false);
+    ssimreq.p_ssimfile = NULL;
+    ssimreq.p_field = NULL;
 }
 inline acr::FSsimsort::FSsimsort() {
     acr::FSsimsort_Init(*this);

@@ -157,6 +157,7 @@ namespace acr { // gen:ns_print_proto
     static bool          bh_ctype_topo_ElemLt(acr::FCtype &a, acr::FCtype &b) __attribute__((nothrow));
     static void          _db_bh_ctype_topo_curs_Add(_db_bh_ctype_topo_curs &curs, acr::FCtype& row);
     static bool          cppfunc_InputMaybe(dmmeta::Cppfunc &elem) __attribute__((nothrow));
+    static bool          ssimreq_InputMaybe(dmmeta::Ssimreq &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
@@ -2379,7 +2380,7 @@ static void acr::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr.Input'  signature:'d017798c923e992bdb4a0e62987d4fdcb8cb49d1'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr.Input'  signature:'808414dd4e29705c49bde554897fcda05841ff73'");
 }
 
 // --- acr.FDb._db.StaticCheck
@@ -2472,6 +2473,12 @@ bool acr::InsertStrptrMaybe(algo::strptr str) {
             retval = true; // finput strict:N
             break;
         }
+        case acr_TableId_dmmeta_Ssimreq: { // finput:acr.FDb.ssimreq
+            dmmeta::Ssimreq elem;
+            retval = dmmeta::Ssimreq_ReadStrptrMaybe(elem, str);
+            retval = retval && ssimreq_InputMaybe(elem);
+            break;
+        }
         default:
         retval = algo_lib::InsertStrptrMaybe(str);
         break;
@@ -2489,7 +2496,8 @@ bool acr::LoadTuplesMaybe(algo::strptr root) {
     static const char *ssimfiles[] = {
         "dmmeta.anonfld", "dmmeta.ctype", "amcdb.bltin", "dmmeta.cdflt"
         , "dmmeta.cppfunc", "dmmeta.field", "dmmeta.funique", "dmmeta.smallstr"
-        , "dmmeta.ssimfile", "dmmeta.ssimsort", "dmmeta.substr"
+        , "dmmeta.ssimfile", "dmmeta.ssimreq", "dmmeta.ssimsort", "dmmeta.substr"
+
         , NULL};
         retval = algo_lib::DoLoadTuples(root, acr::InsertStrptrMaybe, ssimfiles, true);
         return retval;
@@ -4793,6 +4801,131 @@ bool acr::cppfunc_XrefMaybe(acr::FCppfunc &row) {
     return retval;
 }
 
+// --- acr.FDb.ssimreq.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr::FSsimreq& acr::ssimreq_Alloc() {
+    acr::FSsimreq* row = ssimreq_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr.out_of_mem  field:acr.FDb.ssimreq  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr.FDb.ssimreq.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr::FSsimreq* acr::ssimreq_AllocMaybe() {
+    acr::FSsimreq *row = (acr::FSsimreq*)ssimreq_AllocMem();
+    if (row) {
+        new (row) acr::FSsimreq; // call constructor
+    }
+    return row;
+}
+
+// --- acr.FDb.ssimreq.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr::FSsimreq* acr::ssimreq_InsertMaybe(const dmmeta::Ssimreq &value) {
+    acr::FSsimreq *row = &ssimreq_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    ssimreq_CopyIn(*row,const_cast<dmmeta::Ssimreq&>(value));
+    bool ok = ssimreq_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        ssimreq_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr.FDb.ssimreq.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr::ssimreq_AllocMem() {
+    u64 new_nelems     = _db.ssimreq_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr::FSsimreq*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.ssimreq_lary[bsr];
+        if (!lev) {
+            lev=(acr::FSsimreq*)algo_lib::malloc_AllocMem(sizeof(acr::FSsimreq) * (u64(1)<<bsr));
+            _db.ssimreq_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.ssimreq_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr.FDb.ssimreq.RemoveAll
+// Remove all elements from Lary
+void acr::ssimreq_RemoveAll() {
+    for (u64 n = _db.ssimreq_n; n>0; ) {
+        n--;
+        ssimreq_qFind(u64(n)).~FSsimreq(); // destroy last element
+        _db.ssimreq_n = i32(n);
+    }
+}
+
+// --- acr.FDb.ssimreq.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr::ssimreq_RemoveLast() {
+    u64 n = _db.ssimreq_n;
+    if (n > 0) {
+        n -= 1;
+        ssimreq_qFind(u64(n)).~FSsimreq();
+        _db.ssimreq_n = i32(n);
+    }
+}
+
+// --- acr.FDb.ssimreq.InputMaybe
+static bool acr::ssimreq_InputMaybe(dmmeta::Ssimreq &elem) {
+    bool retval = true;
+    retval = ssimreq_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr.FDb.ssimreq.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr::ssimreq_XrefMaybe(acr::FSsimreq &row) {
+    bool retval = true;
+    (void)row;
+    acr::FSsimfile* p_ssimfile = acr::ind_ssimfile_Find(row.ssimfile);
+    if (UNLIKELY(!p_ssimfile)) {
+        algo_lib::ResetErrtext() << "acr.bad_xref  index:acr.FDb.ind_ssimfile" << Keyval("key", row.ssimfile);
+        return false;
+    }
+    // ssimreq: save pointer to ssimfile
+    if (true) { // user-defined insert condition
+        row.p_ssimfile = p_ssimfile;
+    }
+    acr::FField* p_field = acr::ind_field_Find(row.field);
+    if (UNLIKELY(!p_field)) {
+        algo_lib::ResetErrtext() << "acr.bad_xref  index:acr.FDb.ind_field" << Keyval("key", row.field);
+        return false;
+    }
+    // ssimreq: save pointer to field
+    if (true) { // user-defined insert condition
+        row.p_field = p_field;
+    }
+    // insert ssimreq into index c_ssimreq
+    if (true) { // user-defined insert condition
+        bool success = c_ssimreq_InsertMaybe(*p_ssimfile, row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr.duplicate_key  xref:acr.FSsimfile.c_ssimreq"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
 // --- acr.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr acr::trace_RowidFind(int t) {
@@ -5226,6 +5359,17 @@ void acr::FDb_Init() {
         _db.cppfunc_lary[i]  = cppfunc_first;
         cppfunc_first    += 1ULL<<i;
     }
+    // initialize LAry ssimreq (acr.FDb.ssimreq)
+    _db.ssimreq_n = 0;
+    memset(_db.ssimreq_lary, 0, sizeof(_db.ssimreq_lary)); // zero out all level pointers
+    acr::FSsimreq* ssimreq_first = (acr::FSsimreq*)algo_lib::malloc_AllocMem(sizeof(acr::FSsimreq) * (u64(1)<<4));
+    if (!ssimreq_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.ssimreq_lary[i]  = ssimreq_first;
+        ssimreq_first    += 1ULL<<i;
+    }
 
     acr::InitReflection();
 }
@@ -5235,6 +5379,9 @@ void acr::FDb_Uninit() {
     acr::FDb &row = _db; (void)row;
     zd_pdep_Cascdel(); // dmmeta.cascdel:acr.FDb.zd_pdep
     zd_pline_Cascdel(); // dmmeta.cascdel:acr.FDb.zd_pline
+
+    // acr.FDb.ssimreq.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // acr.FDb.cppfunc.Uninit (Lary)  //
     // skip destruction in global scope
@@ -6386,6 +6533,35 @@ void acr::FSsimfile_Uninit(acr::FSsimfile& ssimfile) {
     ind_ssimfile_Remove(row); // remove ssimfile from index ind_ssimfile
 }
 
+// --- acr.FSsimreq.base.CopyOut
+// Copy fields out of row
+void acr::ssimreq_CopyOut(acr::FSsimreq &row, dmmeta::Ssimreq &out) {
+    out.ssimfile = row.ssimfile;
+    out.field = row.field;
+    out.value = row.value;
+    out.bidir = row.bidir;
+    out.comment = row.comment;
+}
+
+// --- acr.FSsimreq.base.CopyIn
+// Copy fields in to row
+void acr::ssimreq_CopyIn(acr::FSsimreq &row, dmmeta::Ssimreq &in) {
+    row.ssimfile = in.ssimfile;
+    row.field = in.field;
+    row.value = in.value;
+    row.bidir = in.bidir;
+    row.comment = in.comment;
+}
+
+// --- acr.FSsimreq..Uninit
+void acr::FSsimreq_Uninit(acr::FSsimreq& ssimreq) {
+    acr::FSsimreq &row = ssimreq; (void)row;
+    acr::FSsimfile* p_ssimfile = acr::ind_ssimfile_Find(row.ssimfile);
+    if (p_ssimfile)  {
+        c_ssimreq_Remove(*p_ssimfile, row);// remove ssimreq from index c_ssimreq
+    }
+}
+
 // --- acr.FSsimsort.base.CopyIn
 // Copy fields in to row
 void acr::ssimsort_CopyIn(acr::FSsimsort &row, dmmeta::Ssimsort &in) {
@@ -6770,6 +6946,7 @@ const char* acr::value_ToCstr(const acr::TableId& parent) {
         case acr_TableId_dmmeta_Funique    : ret = "dmmeta.Funique";  break;
         case acr_TableId_dmmeta_Smallstr   : ret = "dmmeta.Smallstr";  break;
         case acr_TableId_dmmeta_Ssimfile   : ret = "dmmeta.Ssimfile";  break;
+        case acr_TableId_dmmeta_Ssimreq    : ret = "dmmeta.Ssimreq";  break;
         case acr_TableId_dmmeta_Ssimsort   : ret = "dmmeta.Ssimsort";  break;
         case acr_TableId_dmmeta_Substr     : ret = "dmmeta.Substr";  break;
     }
@@ -6858,6 +7035,10 @@ bool acr::value_SetStrptrMaybe(acr::TableId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"unique",6)==0) { value_SetEnum(parent,acr_TableId_dmmeta_Funique); ret = true; break; }
                     break;
                 }
+                case LE_STR8('d','m','m','e','t','a','.','S'): {
+                    if (memcmp(rhs.elems+8,"simreq",6)==0) { value_SetEnum(parent,acr_TableId_dmmeta_Ssimreq); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','m','m','e','t','a','.','a'): {
                     if (memcmp(rhs.elems+8,"nonfld",6)==0) { value_SetEnum(parent,acr_TableId_dmmeta_anonfld); ret = true; break; }
                     break;
@@ -6868,6 +7049,10 @@ bool acr::value_SetStrptrMaybe(acr::TableId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('d','m','m','e','t','a','.','f'): {
                     if (memcmp(rhs.elems+8,"unique",6)==0) { value_SetEnum(parent,acr_TableId_dmmeta_funique); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','m','m','e','t','a','.','s'): {
+                    if (memcmp(rhs.elems+8,"simreq",6)==0) { value_SetEnum(parent,acr_TableId_dmmeta_ssimreq); ret = true; break; }
                     break;
                 }
             }

@@ -243,7 +243,7 @@ void amc::gen_compute_size() {
                     ctypelen.alignment = ctype.alignment;
                     ctypelen.padbytes = ctype.n_padbytes;
                     amc::ctypelen_InsertMaybe(ctypelen);// create it
-                    if (ctype.p_ns->c_nsx && ctype.p_ns->c_nsx->fldoffset_asserts) {
+                    if (ctype.p_ns->c_nsx && ctype.p_ns->c_nsx->pack) {
                         check->body << ctype.sizecheck;
                         check->body << "    algo_assert(sizeof("<<ctype.cpp_type<<") == "<<ctype.totsize_byte<<");\n";
                         Refurbish(ctype.sizecheck);

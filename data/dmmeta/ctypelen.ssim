@@ -23,7 +23,7 @@ dmmeta.ctypelen  ctype:acr.FCdflt  len:608  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:acr.FCheck  len:40  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:acr.FCppfunc  len:354  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:acr.FCtype  len:424  alignment:8  padbytes:35
-dmmeta.ctypelen  ctype:acr.FDb  len:3992  alignment:8  padbytes:60
+dmmeta.ctypelen  ctype:acr.FDb  len:4256  alignment:8  padbytes:64
 dmmeta.ctypelen  ctype:acr.FErr  len:72  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:acr.FEvalattr  len:48  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:acr.FField  len:680  alignment:8  padbytes:10
@@ -37,7 +37,8 @@ dmmeta.ctypelen  ctype:acr.FQuery  len:128  alignment:8  padbytes:20
 dmmeta.ctypelen  ctype:acr.FRec  len:224  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:acr.FRun  len:256  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:acr.FSmallstr  len:416  alignment:4  padbytes:5
-dmmeta.ctypelen  ctype:acr.FSsimfile  len:136  alignment:8  padbytes:0
+dmmeta.ctypelen  ctype:acr.FSsimfile  len:144  alignment:8  padbytes:0
+dmmeta.ctypelen  ctype:acr.FSsimreq  len:432  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:acr.FSsimsort  len:168  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:acr.FSubstr  len:456  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:acr.FTempkey  len:24  alignment:8  padbytes:0
@@ -416,7 +417,7 @@ dmmeta.ctypelen  ctype:amc.FNs  len:680  alignment:8  padbytes:20
 dmmeta.ctypelen  ctype:amc.FNsdb  len:170  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amc.FNsinclude  len:206  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amc.FNsproto  len:170  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:amc.FNsx  len:288  alignment:8  padbytes:3
+dmmeta.ctypelen  ctype:amc.FNsx  len:288  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:amc.FNumstr  len:200  alignment:8  padbytes:13
 dmmeta.ctypelen  ctype:amc.FOutfile  len:272  alignment:8  padbytes:5
 dmmeta.ctypelen  ctype:amc.FPack  len:72  alignment:8  padbytes:4
@@ -791,7 +792,7 @@ dmmeta.ctypelen  ctype:dmmeta.Nsinclude  len:205  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Nsproto  len:170  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Nstype  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Nsversion  len:182  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:dmmeta.Nsx  len:277  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:dmmeta.Nsx  len:276  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Numstr  len:164  alignment:4  padbytes:2
 dmmeta.ctypelen  ctype:dmmeta.Pack  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Pmaskfld  len:254  alignment:1  padbytes:0
@@ -806,6 +807,7 @@ dmmeta.ctypelen  ctype:dmmeta.Sortfld  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Sorttype  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Sqltype  len:306  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Ssimfile  len:104  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:dmmeta.Ssimreq  len:409  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Ssimsort  len:306  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Ssimvolatile  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Steptype  len:204  alignment:1  padbytes:0
@@ -925,7 +927,7 @@ dmmeta.ctypelen  ctype:src_func.FTargsrc  len:304  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:src_hdr.FDb  len:1496  alignment:8  padbytes:27
 dmmeta.ctypelen  ctype:src_hdr.FLicense  len:232  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:src_hdr.FNs  len:240  alignment:8  padbytes:2
-dmmeta.ctypelen  ctype:src_hdr.FNsx  len:277  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:src_hdr.FNsx  len:276  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:src_hdr.FSrc  len:128  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:src_hdr.FTarget  len:168  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:src_hdr.FTargsrc  len:272  alignment:8  padbytes:8

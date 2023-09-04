@@ -9929,7 +9929,6 @@ struct FNsx { // amc.FNsx
     algo::Smallstr100   pool;                  //
     bool                sortxref;              //   false
     bool                pack;                  //   false
-    bool                fldoffset_asserts;     //   false
     algo::Comment       comment;               //
     amc::FField*        p_pool;                // reference to parent row
 private:

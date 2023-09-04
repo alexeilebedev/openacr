@@ -75,7 +75,6 @@ void acr_ed::Main_CreateTarget() {
                                            , "algo_lib.FDb.malloc"
                                            , true/*sortxref*/
                                            , /*pack*/false
-                                           , /*field offsets*/false
                                            , algo::Comment()) << eol;
     }
     // don't emit 'main' for libraries

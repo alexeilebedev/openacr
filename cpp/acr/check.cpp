@@ -157,6 +157,53 @@ static void CheckFunique() {
 
 // -----------------------------------------------------------------------------
 
+static void CheckSsimreq() {
+    // reverse check for ssimreq
+    ind_beg(acr::_db_ssimreq_curs,ssimreq,acr::_db) if (ssimreq.bidir) {
+        algo_lib::Regx regx;
+        Regx_ReadSql(regx,ssimreq.value,true);
+        ind_beg(acr::ctype_zd_selrec_curs, rec, *ssimreq.p_field->p_ctype) {
+            tempstr value(acr::EvalAttr(rec.tuple, *ssimreq.p_field));// find attribute value
+            if (Regx_Match(regx,value)) {
+                acr::FRec *childrec = ind_rec_Find(*ssimreq.p_ssimfile->p_ctype,rec.pkey);
+                // #AL# here it might be a good idea to actually create the missing record
+                // with defaults...
+                if (!childrec) {
+                    NoteErr(NULL,&rec,ssimreq.p_field,tempstr()<<"acr.ssimreq"
+                            <<Keyval("rec",tempstr()<<ssimreq.p_field->p_ctype->ctype<<":"<<rec.pkey)
+                            <<Keyval("value",tempstr()<<name_Get(*ssimreq.p_field)<<":"<<value)
+                            <<Keyval("comment",tempstr()<<"This value requires a corresponding entry in "<<ssimreq.ssimfile));
+                }
+            }
+        }ind_end;
+    }ind_end;
+    ind_beg(acr::_db_zd_sel_ctype_curs, ctype, acr::_db) {
+        // select ctypes whose ssimfile has a ssimreq record
+        if (ctype.c_ssimfile && ctype.c_ssimfile->c_ssimreq) {
+            acr::FSsimreq *ssimreq = ctype.c_ssimfile->c_ssimreq;
+            algo_lib::Regx regx;
+            Regx_ReadSql(regx,ssimreq->value,true);
+            acr::FCtype *supertype = c_field_N(ctype) > 0 ? c_field_Find(ctype, 0)->p_arg : NULL;
+            if (supertype && supertype->c_ssimfile) {
+                ind_beg(acr::ctype_zd_selrec_curs, rec, ctype) {// loop through all records for this ctype
+                    acr::FRec *parentrec=ind_rec_Find(*supertype,rec.pkey);
+                    if (parentrec) {
+                        tempstr value(acr::EvalAttr(parentrec->tuple, *ssimreq->p_field));// find attribute value
+                        if (!Regx_Match(regx,value)) {
+                            NoteErr(NULL,&rec,ssimreq->p_field,tempstr()<<"acr.ssimreq"
+                                    <<Keyval("comment",tempstr()<<ssimreq->ssimfile
+                                             <<" requires that "<<supertype->c_ssimfile->ssimfile<<"."<<name_Get(*ssimreq->p_field)
+                                             <<" have value "<<ssimreq->value<<" (found:"<<value<<")"));
+                        }
+                    }
+                }ind_end;
+            }
+        }
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
 static void CheckPkey() {
     ind_beg(acr::_db_zd_sel_ctype_curs, ctype, acr::_db) if (ctype.c_ssimfile) {
         ind_beg(acr::ctype_c_field_curs,  field, ctype){
@@ -205,6 +252,9 @@ void acr::Main_Check() {
 
     // X-reference -- check one field at a time
     CheckXrefs(check);
+
+    // check constraints specified in ssimreq
+    CheckSsimreq();
 
     // select only bad records
     SelectErrRecs();

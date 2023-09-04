@@ -6033,7 +6033,7 @@ static void amc::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'58d789747f0ceb65a212de340c0510e65339a43b'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'b32f531a0231c4892582e172153de94e812d3c78'");
 }
 
 // --- amc.FDb._db.StaticCheck
@@ -27244,7 +27244,6 @@ void amc::nsx_CopyOut(amc::FNsx &row, dmmeta::Nsx &out) {
     out.pool = row.pool;
     out.sortxref = row.sortxref;
     out.pack = row.pack;
-    out.fldoffset_asserts = row.fldoffset_asserts;
     out.comment = row.comment;
 }
 
@@ -27257,7 +27256,6 @@ void amc::nsx_CopyIn(amc::FNsx &row, dmmeta::Nsx &in) {
     row.pool = in.pool;
     row.sortxref = in.sortxref;
     row.pack = in.pack;
-    row.fldoffset_asserts = in.fldoffset_asserts;
     row.comment = in.comment;
 }
 

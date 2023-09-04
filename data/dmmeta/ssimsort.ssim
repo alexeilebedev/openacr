@@ -134,6 +134,7 @@ dmmeta.ssimsort  ssimfile:dmmeta.smallstr  sortfld:dmmeta.Smallstr.field  commen
 dmmeta.ssimsort  ssimfile:dmmeta.sortfld  sortfld:dmmeta.Sortfld.field  comment:""
 dmmeta.ssimsort  ssimfile:dmmeta.sqltype  sortfld:dmmeta.Sqltype.ctype  comment:""
 dmmeta.ssimsort  ssimfile:dmmeta.ssimfile  sortfld:dmmeta.Ssimfile.ssimfile  comment:""
+dmmeta.ssimsort  ssimfile:dmmeta.ssimreq  sortfld:dmmeta.Ssimreq.ssimfile  comment:""
 dmmeta.ssimsort  ssimfile:dmmeta.ssimsort  sortfld:dmmeta.Ssimsort.ssimfile  comment:""
 dmmeta.ssimsort  ssimfile:dmmeta.ssimvolatile  sortfld:dmmeta.Ssimvolatile.ssimfile  comment:""
 dmmeta.ssimsort  ssimfile:dmmeta.steptype  sortfld:dmmeta.Steptype.steptype  comment:""
