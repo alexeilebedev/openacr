@@ -47,6 +47,14 @@ static acr_ed::FCtype *GuessArg(strptr field) {
 
 // -----------------------------------------------------------------------------
 
+static bool IsPkey(acr_ed::FCtype &ctype, algo::strptr fieldname) {
+    acr_ed::FCtype *ctypebase = acr_ed::Basetype(ctype);
+    return ctypebase && c_field_N(*ctypebase)>0 && c_field_Find(*ctypebase,0)->field==fieldname;
+}
+
+// -----------------------------------------------------------------------------
+
+// Try to find a field in CHILD which could be used to locate a record of PARENT
 static tempstr GuessXreffld(dmmeta::Field &field, acr_ed::FCtype &parent, acr_ed::FCtype &child) {
     acr_ed::FCtype *childbase = acr_ed::Basetype(child);
     acr_ed::FCtype *parentbase = acr_ed::Basetype(parent);
@@ -108,12 +116,18 @@ static tempstr GuessXreffld(dmmeta::Field &field, acr_ed::FCtype &parent, acr_ed
 
 // -----------------------------------------------------------------------------
 
+// Guess reftype based on field prefix (see fprefix table)
+// There is one little difficulty... Both Ptr and Ptrary use c_ prefix,
+// so we must guess which one to use:
+// If the cardinality of field's arg is the same or smaller as the parent type,
+// pick Ptr.
 static void GuessReftype(dmmeta::Field &field) {
     dmmeta::FprefixPkey key(Pathcomp(name_Get(field),"_LL"));
     acr_ed::FFprefix *fprefix=acr_ed::ind_fprefix_Find(key);
     if (fprefix) {
         acr_ed::_db.cmdline.reftype = fprefix->reftype;
     }
+    acr_ed::_db.could_be_ptr = acr_ed::_db.cmdline.reftype == dmmeta_Reftype_reftype_Ptrary;
 }
 
 // -----------------------------------------------------------------------------
@@ -223,6 +237,21 @@ void acr_ed::Main_CreateField() {
 
     acr_ed::FField *existing_field = acr_ed::ind_field_Find(field.field);
 
+    // no arg specified, but a field is a cross product of 2 other types
+    // use Smallstr50 as the field type
+    // the two other types will be read as substrings
+    if (acr_ed::_db.cmdline.arg == "" && acr_ed::_db.cmdline.subset != "" && acr_ed::_db.cmdline.subset2 != "") {
+        acr_ed::_db.cmdline.arg = "algo.Smallstr50";
+    }
+
+    // -subset can be used in place of -arg:
+    // acr_ed -create -field a.B.c -subset x.Y is rewritten as
+    //    acr_ed -create -field a.B.c -arg x.Y -reftype Pkey
+    if (acr_ed::_db.cmdline.arg == "" && acr_ed::_db.cmdline.subset != "" && acr_ed::_db.cmdline.subset2 == "") {
+        acr_ed::_db.cmdline.arg = acr_ed::_db.cmdline.subset;
+        acr_ed::_db.cmdline.reftype = SubsetPickReftype(acr_ed::_db.cmdline.subset);
+    }
+
     // guess target type from field name
     if (!existing_field && acr_ed::_db.cmdline.arg == "") {
         if (acr_ed::FCtype *farg = GuessArg(acr_ed::_db.cmdline.field)) {
@@ -250,9 +279,6 @@ void acr_ed::Main_CreateField() {
     if (!ch_N(field.reftype)) {
         field.reftype = dmmeta_Reftype_reftype_Val;
     }
-    if (!existing_field) {
-        PrintNewField(field);
-    }
 
     acr_ed::FCtype *parent = &acr_ed::ind_ctype_FindX(ctype_Get(field));
     acr_ed::FCtype *child = &acr_ed::ind_ctype_FindX(field.arg);
@@ -279,6 +305,18 @@ void acr_ed::Main_CreateField() {
     // must pick an xreffld. look in fields of child type until we find a field of type pkey parent.
     if (acr_ed::_db.cmdline.xref && !is_global && ch_N(acr_ed::_db.keyfld) == 0) {
         acr_ed::_db.keyfld = GuessXreffld(field, *parent, *child);
+        prlog("keyfield is "<<acr_ed::_db.keyfld<<", child is "<<child->ctype<<", is pkey?"<<IsPkey(*child,acr_ed::_db.keyfld));
+        if (IsPkey(*child, acr_ed::_db.keyfld) && acr_ed::_db.could_be_ptr) {
+            prlog("acr_ed.subset"
+                  <<Keyval("field",field.field)
+                  <<Keyval("comment","Chooseing Ptr reftype because xref goes through primary key"));
+            field.reftype = dmmeta_Reftype_reftype_Ptr;
+        }
+    }
+
+    // output the computed field
+    if (!existing_field) {
+        PrintNewField(field);
     }
 
     // create fstep should be a separate thing.
@@ -342,8 +380,14 @@ void acr_ed::Main_CreateField() {
         acr_ed::_db.out_ssim << xref << eol;
     }
 
+    if (_db.cmdline.subset2 != "") {
+        dmmeta::Ctype ctype;
+        ctype_CopyOut(*parent,ctype);
+        acr_ed::CreateCrossProduct(ctype, field);
+    }
+
     if (existing_field == NULL) {
-        InsertFieldExtras(field.field, field.arg, acr_ed::_db.cmdline.reftype);
+        InsertFieldExtras(field.field, field.arg, field.reftype);
     }
     if (_db.cmdline.indexed) {
         CreateHashIndex(field);

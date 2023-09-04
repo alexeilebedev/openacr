@@ -374,6 +374,7 @@ dmmeta.field  field:acr_ed.FDb.cpptype  arg:acr_ed.FCpptype  reftype:Lary  dflt:
 dmmeta.field  field:acr_ed.FDb.cfmt  arg:acr_ed.FCfmt  reftype:Lary  dflt:""  comment:""
 dmmeta.field  field:acr_ed.FDb.nsdb  arg:acr_ed.FNsdb  reftype:Lary  dflt:""  comment:""
 dmmeta.field  field:acr_ed.FDb.ind_nsdb  arg:acr_ed.FNsdb  reftype:Thash  dflt:""  comment:""
+dmmeta.field  field:acr_ed.FDb.could_be_ptr  arg:bool  reftype:Val  dflt:""  comment:"Used to automatically guess Ptr or Ptrary reftype on new fields"
 dmmeta.field  field:acr_ed.FField.msghdr  arg:dmmeta.Field  reftype:Base  dflt:""  comment:""
 dmmeta.field  field:acr_ed.FField.p_ctype  arg:acr_ed.FCtype  reftype:Upptr  dflt:""  comment:""
 dmmeta.field  field:acr_ed.FField.rowid  arg:u32  reftype:Val  dflt:""  comment:""

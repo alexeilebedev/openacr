@@ -428,6 +428,7 @@ struct FDb { // acr_ed.FDb
     acr_ed::FNsdb**       ind_nsdb_buckets_elems;       // pointer to bucket array
     i32                   ind_nsdb_buckets_n;           // number of elements in bucket array
     i32                   ind_nsdb_n;                   // number of elements in the hash table
+    bool                  could_be_ptr;                 //   false  Used to automatically guess Ptr or Ptrary reftype on new fields
     acr_ed::trace         trace;                        //
 };
 

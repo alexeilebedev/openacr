@@ -37,6 +37,16 @@ namespace acr_ed { // update-hdr
     // cpp/acr/ed/ctype.cpp -- Create, delete, rename ctype
     //
 
+    // Pick a default reftype when creating a subset
+    // If the target type is relational, use Pkey. Otherwise use Val
+    dmmeta::ReftypePkey SubsetPickReftype(algo::strptr ctype_key);
+
+    // Structured pkey creation: triggered with -subset X -subset2 Y -separator Z
+    // Two fields are created under CTYPE:
+    // one referring to ctype cmdline.subset, the other to cmdline.subset2
+    // The fields are substrings of FIELD_PKEY
+    void CreateCrossProduct(dmmeta::Ctype &ctype, dmmeta::Field &field_pkey);
+
     // Create a new ctype
     // The new type can be relational, i.e. a subset of a cross product of 2 other types,
     // or an in-memory type.
