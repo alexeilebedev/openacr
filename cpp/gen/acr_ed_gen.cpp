@@ -3839,6 +3839,7 @@ void acr_ed::FDb_Init() {
         FatalErrorExit("out of memory"); // (acr_ed.FDb.ind_nsdb)
     }
     memset(_db.ind_nsdb_buckets_elems, 0, sizeof(acr_ed::FNsdb*)*_db.ind_nsdb_buckets_n); // (acr_ed.FDb.ind_nsdb)
+    _db.could_be_ptr = bool(false);
 
     acr_ed::InitReflection();
 }

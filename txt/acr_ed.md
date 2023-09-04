@@ -71,7 +71,8 @@ to sh).
 
 Optionally, `acr_ed` can make all changes in a sandbox (with `-sandbox` flag), 
 showing the diff between current and new versions. With `-test` flag, it builds 
-nall main executables and runs tests.
+nall main executables and runs tests. With `-showcpp` flag, it shows a colored diff
+between the current directory and the sandbox after executing the transaction in sandbox.
 
 ~~~
 
@@ -175,6 +176,32 @@ With `-e` option, the resulting file is opened for editing.
     $ acr_ed -ctype ns.Name -rename ns2.Name2
     ...
 
+#### Create a Ctype with a single field
+If `-reftype` is omitted, it will be guessed
+If the field refers to a relational table, `reftype:Pkey` is picked by default
+If the field looks like a value, `reftype:Val` is used;
+
+    $ acr_ed -create -ctype ns.Name -subset ns2.Name2
+    ...
+
+#### Create a string field that's a cross-product of two other keys
+If field type is omitted, `algo.Smallstr50` is picked.
+This creates three fields: the requested one, and two substring fields that are extracted
+from the created field as `fldfunc`s (in C++, this is implemented with a `_Get` function).
+The arguments to `-subset` and `-subset2` can be either relational or values.
+If the argument is relational (i.e. the ctype has an associated ssimfile), then `reftype:Pkey` is picked.
+Otherwise, `reftype:Val` is picked. You can use `-subset i32`, and you will get an integer-valued field,
+but it will be parsed from the parent field on every access.
+
+    $ acr_ed -create -field ns.Name.field -subset ns2.Name2 -subset2 ns.Name3 -separator .
+    ...
+
+#### Create a substring directly
+Create a field named `field` that is extracted as a substring from another source field.
+The `substr` specification is described in txt/acr.md (look for Pathcomp)
+
+    $ acr_ed -create -field ns.Name.field -substr .LL -srcfield ns.Name.field2
+    
 #### Delete A Ctype
 
     $ acr_ed -del -ctype ns.Name
@@ -220,6 +247,76 @@ To throw in a hash index, specify `-indexed`
     EOF
 
 ### Create An Index
+`acr_ed` can create both global and partitioned indexes. The rule is as follows:
+You can create an index in table A of records of type B if there exists a function that can locate B given A.
+Since the global database (`FDb`) is always accessible, you can always create a global index.
+To create a partitioned index, `acr_ed` will perform a search over fields of B and over global hashes
+to see if any of the keys can be used to find an instance of A. If no paths exist, it's an error.
+If more than one path exists, it is also an error but only as far as the guessing is concerned.
+You can specify the path from B to A using `-via` argument. `-via` can be a pointer field in B, or
+an expression in the form `hash_field/key`. Examples will show the difference
+
+#### Create an Upptr (reference)
+Let's start by creating a new executable with an in-memory database, called `samp_xref`. We'll
+input two tables, `ns` and `ctype`. These are related because `ctype` key contains a reference to `ns`.
+
+    $ acr_ed -create -target samp_xref -write
+    $ acr_ed -create -finput -ssimfile dmmeta.ns -target samp_xref -indexed -write
+    $ acr_ed -create -finput -ssimfile dmmeta.ctype -target samp_xref -write
+
+Let's check the structure of the in-memory database:
+
+```
+    $ amc_vis sampe_xref.%                                     
+                                     
+     / samp_xref.FDb                 
+     |                               
+     |Lary ctype-->/ samp_xref.FCtype
+     |             -                 
+     |                               
+     |                               
+     |Lary ns------->/ samp_xref.FNs 
+     |Thash ind_ns-->|               
+     -               |               
+                     |               
+                     -               
+```
+                                                                                       
+                                     
+We can now create a pointer from `ctype` to `ns` directly. This is called an `Upptr` because
+`ns` logically is above ctype.
+
+    $ acr_ed -create -field samp_xref.FCtype.p_ns
+
+This is equivalent to writing:
+
+    $ acr_ed -create -field samp_xref.FCtype.p_ns -via samp_xref.FDb.ind_ns/dmmeta.Ctype.ns
+    
+In this case, the `-via` parameter is omitted to `acr_ed` because the path is unique and can be guessed.
+We can also create a Ptr reference from `ns` down to `ctype:
+
+    $ acr_ed -create -field samp_xref.FNs.c_ctype
+
+The resulting structure is as follows:
+                                                     
+```                                                     
+    / samp_xref.FDb                                  
+    |                                                
+    |Lary ctype------------------->/ samp_xref.FCtype
+    |                              |                 
+    |Lary ns------->/ samp_xref.FNs|                 
+    |Thash ind_ns-->|              |                 
+    -               |              |                 
+                    |              |                 
+                    |Ptr c_ctype-->|                 
+                    |<-------------|Upptr p_ns       
+                    |              -                 
+                    |                                
+                    -                                
+
+```
+
+Other index types are available.
 
 #### Create A Hash Table
 
@@ -231,11 +328,46 @@ To throw in a hash index, specify `-indexed`
     $ acr_ed -create -field sample.FDb.bh_table
     $ acr_ed -create -field sample.FDb.bh_table -sortfld <fieldname>
 
+#### Create a circular, doubly linked list
+The structure of the linked list is described by the field prefix.
+amc supports 32 types of linked lists: singly and doubly linked, circular or zero-terminated,
+with default tail and head insertion, with and without a count, and with or without a tail pointer.
+
+    $ acr_ed -create -field sample.FDb.cd_table
+    $ acr_ed -create -field sample.FDb.cd_table
+
+The full list of linked list types can be gleaned from this table:
+```
+inline-command: acr listtype
+dmmeta.listtype  listtype:cd   circular:Y  haveprev:Y  instail:Y  comment:"Circular doubly-linked queue"
+dmmeta.listtype  listtype:cdl  circular:Y  haveprev:Y  instail:N  comment:"Circular double-linked lifo (stack)"
+dmmeta.listtype  listtype:cs   circular:Y  haveprev:N  instail:Y  comment:"Circular singly-linked queue"
+dmmeta.listtype  listtype:csl  circular:Y  haveprev:N  instail:N  comment:"Circular singly-linked lifo (stack)"
+dmmeta.listtype  listtype:zd   circular:N  haveprev:Y  instail:Y  comment:"Zero-terminated doubly-linked queue"
+dmmeta.listtype  listtype:zdl  circular:N  haveprev:Y  instail:N  comment:"Zero-terminated doubly-linked lifo (stack)"
+dmmeta.listtype  listtype:zs   circular:N  haveprev:N  instail:Y  comment:"Zero-terminated singly-linked queue"
+dmmeta.listtype  listtype:zsl  circular:N  haveprev:N  instail:N  comment:"Zero-terminated singly-linked lifo (stack)"
+report.acr  n_select:8  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+```
+
+The arguments `havetail` and `havecount` are specified directly in the `llist` record which is required for a linked list.
+
 #### Create An AVL Tree
 
     $ acr_ed -create -field sample.FDb.tr_table
     $ acr_ed -create -field sample.FDb.tr_table -sortfld <fieldname>
 
-### Conditional X-Ref
+#### Create a Pointer array
+
+    $ acr_ed -create -field sample.FDb.c_table
+    $ acr_ed -create -field sample.FDb.c_table
+
+#### Conditional X-Ref
+There are two phases to the creation of each record in the in-memory databases created by amc.
+One is to allocate the record and fill out its fields, and the other is to call `_XrefMaybe`.
+The x-reference step inserts the record into any indexes, as described in the schema. The code for x-referencing
+is generated by amc. By default, xrefs are always applied. But sometimes it's useful not to insert
+a record into an index until later time (as determined by the programmer). In this case, an `-inscond` can be supplied,
+which ends up in the `dmmeta.xref.inscond` field and becomes an if-statement to be tested before doing the xref.
 
     $ acr_ed -create -field sample.FDb.ind_table -inscond false

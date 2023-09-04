@@ -41,16 +41,30 @@ static tempstr PkeyName(strptr ctype) {
 
 // -----------------------------------------------------------------------------
 
+// Pick a default reftype when creating a subset
+// If the target type is relational, use Pkey. Otherwise use Val
+dmmeta::ReftypePkey acr_ed::SubsetPickReftype(algo::strptr ctype_key) {
+    dmmeta::ReftypePkey ret(dmmeta_Reftype_reftype_Pkey);
+    acr_ed::FCtype *ctype=ind_ctype_Find(ctype_key);
+    if (ctype && !ctype->c_ssimfile) {
+        ret=dmmeta_Reftype_reftype_Val;
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
 // Structured pkey creation: triggered with -subset X -subset2 Y -separator Z
-// The key consists of 2 substrs, each of which is a foreign key, separated
-// by a certain character.
-static void CreateCrossProduct(dmmeta::Ctype &ctype, dmmeta::Field &field_pkey) {
+// Two fields are created under CTYPE:
+// one referring to ctype cmdline.subset, the other to cmdline.subset2
+// The fields are substrings of FIELD_PKEY
+void acr_ed::CreateCrossProduct(dmmeta::Ctype &ctype, dmmeta::Field &field_pkey) {
     acr_ed::_db.out_ssim<<eol;
     // left half
     dmmeta::Field field_substr1;
     field_substr1.field   = tempstr()<<ctype.ctype << "." << PkeyName(acr_ed::_db.cmdline.subset);
     field_substr1.arg     = acr_ed::_db.cmdline.subset;
-    field_substr1.reftype = dmmeta_Reftype_reftype_Pkey;
+    field_substr1.reftype = SubsetPickReftype(acr_ed::_db.cmdline.subset);
     acr_ed::_db.out_ssim << field_substr1 << eol;
 
     dmmeta::Substr substr_substr1;
@@ -67,7 +81,7 @@ static void CreateCrossProduct(dmmeta::Ctype &ctype, dmmeta::Field &field_pkey) 
     acr_ed::FCtype &ctype2 = acr_ed::ind_ctype_FindX(acr_ed::_db.cmdline.subset2);
     field_substr2.field   = tempstr()<<ctype.ctype << "." << PkeyName(acr_ed::_db.cmdline.subset2);
     field_substr2.arg     = acr_ed::_db.cmdline.subset2;
-    field_substr2.reftype = dmmeta_Reftype_reftype_Pkey;
+    field_substr2.reftype = SubsetPickReftype(acr_ed::_db.cmdline.subset2);
     if (ctype2.c_cstr) {
         field_substr2.field    = tempstr() << ctype_Get(field_substr2) << ".name";
         field_substr2.reftype =  dmmeta_Reftype_reftype_Val;
