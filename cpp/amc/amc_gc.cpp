@@ -198,7 +198,7 @@ void amc_gc::Main() {
     tempstr recs = QueryRecords();
     Begin(recs);
     SysCmd("mkdir -p .testgen .testgen/temp"); // setup!
-    SysCmd("rsync --delete -ac bin cpp algo distrib include extern data .testgen"
+    SysCmd("rsync --delete -ac bin cpp algo build include extern data .testgen"
            ,FailokQ(false),DryrunQ(false));// copy everything over
 
     ind_beg(Line_curs,line,recs) {
