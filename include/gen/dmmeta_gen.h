@@ -3019,6 +3019,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Fuserinit &r
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Gstatic &row);// cfmt:dmmeta.Gstatic.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Gsymbol &row);// cfmt:dmmeta.Gsymbol.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Hook &row);// cfmt:dmmeta.Hook.String
+inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Inlary &row);// cfmt:dmmeta.Inlary.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Lenfld &row);// cfmt:dmmeta.Lenfld.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Llist &row);// cfmt:dmmeta.Llist.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Logcat &row);// cfmt:dmmeta.Logcat.String

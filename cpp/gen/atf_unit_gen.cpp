@@ -1334,7 +1334,7 @@ void atf_unit::acr_ed_ExecX() {
 // Call execv()
 // Call execv with specified parameters -- cprint:acr_ed.Argv
 int atf_unit::acr_ed_Execv() {
-    char **argv = (char**)alloca((88+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
+    char **argv = (char**)alloca((90+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -1646,6 +1646,13 @@ int atf_unit::acr_ed_Execv() {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-msgtype:";
         cstring_Print(_db.acr_ed_cmd.msgtype, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (_db.acr_ed_cmd.anonfld != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-anonfld:";
+        bool_Print(_db.acr_ed_cmd.anonfld, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
     for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {

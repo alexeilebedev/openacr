@@ -80,6 +80,7 @@ const char *acr_ed_help =
 "    -test               Build resulting changes, run tests. default: false\n"
 "    -showcpp            (With -sandbox), show resulting diff. default: false\n"
 "    -msgtype    string  (with -ctype) use this msgtype as type\n"
+"    -anonfld            Create anonfld. default: false\n"
 "    -verbose            Enable verbose mode\n"
 "    -debug              Enable debug mode\n"
 "    -version            Show version information\n"
@@ -133,6 +134,7 @@ const char *acr_ed_syntax =
 " -test:flag\n"
 " -showcpp:flag\n"
 " -msgtype:string=\n"
+" -anonfld:flag\n"
 ;
 } // namespace acr_ed
 namespace acr_ed { // gen:ns_print_proto

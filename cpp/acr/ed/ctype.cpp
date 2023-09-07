@@ -226,6 +226,20 @@ void acr_ed::Main_CreateCtype() {
         pool.arg = ctype.ctype;
         pool.reftype = acr_ed::_db.cmdline.pooltype;
         acr_ed::_db.out_ssim << pool << eol;
+
+        // output required records for this pool type
+        if (ch_N(acr_ed::_db.cmdline.pooltype) && acr_ed::_db.cmdline.pooltype == dmmeta_Reftype_reftype_Tary) {
+            dmmeta::Tary tary;
+            tary.field = pool.field;
+            acr_ed::_db.out_ssim << tary << eol;
+        }
+        if (ch_N(acr_ed::_db.cmdline.pooltype) && acr_ed::_db.cmdline.pooltype == dmmeta_Reftype_reftype_Inlary) {
+            dmmeta::Inlary inlary;
+            inlary.field = pool.field;
+            inlary.min=0;
+            inlary.max=1;
+            acr_ed::_db.out_ssim << inlary << eol;
+        }
     }
 
     if (acr_ed::_db.cmdline.indexed && name_Get(pkey) != "") {
