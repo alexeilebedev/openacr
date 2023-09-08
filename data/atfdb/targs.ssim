@@ -1,3 +1,7 @@
+atfdb.targs  comptest:acr.BadNs  args:"-insert -write -check"
+atfdb.targs  comptest:acr.BadPkey  args:"-insert -write -check"
+atfdb.targs  comptest:acr.BadReftype  args:"-insert -write -check"
+atfdb.targs  comptest:acr.BadReftype2  args:"-insert -write -check"
 atfdb.targs  comptest:acr_ed.CreateCtype  args:"-create -ctype ams.ChildTypeMsg -subset ams.MsgHeader -msgtype:400 -reftype:Base"
 atfdb.targs  comptest:acr_ed.CreateSsimfileBadNs  args:"--create -ssimfile ams.test -subset algo.Smallstr10"
 atfdb.targs  comptest:sv2ssim.Convert1  args:"test/csv/2.csv -ctype a.B -schema -data"

@@ -1,0 +1,11 @@
+# atf_comp -report:N -print acr.BadReftype | acr -insert -write -check | cat
+stdin-insert:1: Invalid value reftype:
+dmmeta.field  field:command.acr_ed.blah  arg:bool
+
+Type               dmmeta.Reftype
+Valid values       Atree, Base, Bheap, Bitfld, Blkpool, Charset, Count, Cppstack, Delptr, Exec, Fbuf, Global, Hook, Inlary, Lary, Llist, Lpool, Malloc, Opt, Pkey, Protocol, Ptr, Ptrary, RegxSql, Sbrk, Smallstr, Tary, Thash, Tpool, Upptr, Val, Varlen, ZSListMT
+
+acr.badrefs  ctype:dmmeta.Field  nbad:1
+
+report.acr_check  records:4  errors:3
+report.acr  n_select:1  n_insert:1  n_delete:0  n_update:1  n_file_mod:0

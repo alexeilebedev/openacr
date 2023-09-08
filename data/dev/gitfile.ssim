@@ -740,6 +740,10 @@ dev.gitfile  gitfile:lock/.empty
 dev.gitfile  gitfile:run/.empty
 dev.gitfile  gitfile:run/.ffskip
 dev.gitfile  gitfile:temp/.empty
+dev.gitfile  gitfile:test/atf_comp/acr.BadNs
+dev.gitfile  gitfile:test/atf_comp/acr.BadPkey
+dev.gitfile  gitfile:test/atf_comp/acr.BadReftype
+dev.gitfile  gitfile:test/atf_comp/acr.BadReftype2
 dev.gitfile  gitfile:test/atf_comp/acr_ed.CreateCtype
 dev.gitfile  gitfile:test/atf_comp/acr_ed.CreateSsimfileBadNs
 dev.gitfile  gitfile:test/atf_comp/sv2ssim.Convert1

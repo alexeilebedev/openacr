@@ -261,6 +261,7 @@ const char* atfdb::value_ToCstr(const atfdb::FieldId& parent) {
         case atfdb_FieldId_tmsg            : ret = "tmsg";  break;
         case atfdb_FieldId_rank            : ret = "rank";  break;
         case atfdb_FieldId_dir             : ret = "dir";  break;
+        case atfdb_FieldId_istuple         : ret = "istuple";  break;
         case atfdb_FieldId_msg             : ret = "msg";  break;
         case atfdb_FieldId_unittest        : ret = "unittest";  break;
         case atfdb_FieldId_value           : ret = "value";  break;
@@ -347,6 +348,9 @@ bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('c','o','m','m','e','n','t'): {
                     value_SetEnum(parent,atfdb_FieldId_comment); ret = true; break;
+                }
+                case LE_STR7('i','s','t','u','p','l','e'): {
+                    value_SetEnum(parent,atfdb_FieldId_istuple); ret = true; break;
                 }
                 case LE_STR7('n','e','e','d','e','n','v'): {
                     value_SetEnum(parent,atfdb_FieldId_needenv); ret = true; break;
@@ -786,6 +790,7 @@ bool atfdb::Tmsg_ReadFieldMaybe(atfdb::Tmsg &parent, algo::strptr field, algo::s
     bool retval = true; // default is no error
     switch(field_id) {
         case atfdb_FieldId_tmsg: retval = algo::Smallstr50_ReadStrptrMaybe(parent.tmsg, strval); break;
+        case atfdb_FieldId_istuple: retval = bool_ReadStrptrMaybe(parent.istuple, strval); break;
         case atfdb_FieldId_msg: retval = algo::cstring_ReadStrptrMaybe(parent.msg, strval); break;
         default: break;
     }
@@ -815,6 +820,9 @@ void atfdb::Tmsg_Print(atfdb::Tmsg & row, algo::cstring &str) {
 
     algo::Smallstr50_Print(row.tmsg, temp);
     PrintAttrSpaceReset(str,"tmsg", temp);
+
+    bool_Print(row.istuple, temp);
+    PrintAttrSpaceReset(str,"istuple", temp);
 
     algo::cstring_Print(row.msg, temp);
     PrintAttrSpaceReset(str,"msg", temp);

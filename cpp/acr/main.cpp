@@ -302,13 +302,13 @@ void acr::Main() {
     } else if (acr::_db.cmdline.print) {
         Main_Print();
     }
-    if (acr::_db.cmdline.write) {
+    // do not write files if an error occurred
+    if (acr::_db.cmdline.write && (acr::_db.cmdline.e || algo_lib::_db.exit_code==0)) {
         acr::WriteFiles();
     }
     // in interactive mode, return # of files modified
     // amc -e mode uses this flag
     if (acr::_db.cmdline.e) {
-
         algo_lib::_db.exit_code = acr::_db.report.n_file_mod;
     }
     PrintReport();

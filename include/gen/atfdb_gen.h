@@ -36,12 +36,13 @@ enum atfdb_FieldIdEnum {                       // atfdb.FieldId.value
     ,atfdb_FieldId_tmsg                  = 18
     ,atfdb_FieldId_rank                  = 19
     ,atfdb_FieldId_dir                   = 20
-    ,atfdb_FieldId_msg                   = 21
-    ,atfdb_FieldId_unittest              = 22
-    ,atfdb_FieldId_value                 = 23
+    ,atfdb_FieldId_istuple               = 21
+    ,atfdb_FieldId_msg                   = 22
+    ,atfdb_FieldId_unittest              = 23
+    ,atfdb_FieldId_value                 = 24
 };
 
-enum { atfdb_FieldIdEnum_N = 24 };
+enum { atfdb_FieldIdEnum_N = 25 };
 
 extern const char *  atfdb_Msgdir_msgdir_exp;   // exp    fconst:atfdb.Msgdir.msgdir/exp
 extern const char *  atfdb_Msgdir_msgdir_in;    // in     fconst:atfdb.Msgdir.msgdir/in
@@ -289,8 +290,9 @@ void                 Tfilt_Print(atfdb::Tfilt & row, algo::cstring &str) __attri
 
 // --- atfdb.Tmsg
 struct Tmsg { // atfdb.Tmsg
-    algo::Smallstr50   tmsg;   //
-    algo::cstring      msg;    //
+    algo::Smallstr50   tmsg;      //
+    bool               istuple;   //   false
+    algo::cstring      msg;       //
     Tmsg();
 };
 
@@ -308,6 +310,8 @@ bool                 Tmsg_ReadFieldMaybe(atfdb::Tmsg &parent, algo::strptr field
 // Read fields of atfdb::Tmsg from an ascii string.
 // The format of the string is an ssim Tuple
 bool                 Tmsg_ReadStrptrMaybe(atfdb::Tmsg &parent, algo::strptr in_str);
+// Set all fields to initial values.
+void                 Tmsg_Init(atfdb::Tmsg& parent);
 // print string representation of atfdb::Tmsg to string LHS, no header -- cprint:atfdb.Tmsg.String
 void                 Tmsg_Print(atfdb::Tmsg & row, algo::cstring &str) __attribute__((nothrow));
 

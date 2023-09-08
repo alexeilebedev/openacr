@@ -157,47 +157,49 @@ static void CheckFunique() {
 
 // -----------------------------------------------------------------------------
 
-static void CheckSsimreq() {
-    // reverse check for ssimreq
-    ind_beg(acr::_db_ssimreq_curs,ssimreq,acr::_db) if (ssimreq.bidir) {
+void acr::CheckSsimreq() {
+    ind_beg(acr::_db_ssimreq_curs,ssimreq,acr::_db) {
+        acr::FCtype *sub = ssimreq.p_ssimfile->p_ctype;
+        acr::FCtype *super = ssimreq.p_field->p_ctype;
+
+        // load files that are needed to execute the check
+        // (but only if the involved records are already loaded)
+        if (!acr::zd_selrec_EmptyQ(*sub) && super->c_ssimfile && !super->c_ssimfile->c_file) {
+            LoadSsimfile(*super->c_ssimfile);
+        }
+        if (ssimreq.bidir) {
+            if (!acr::zd_selrec_EmptyQ(*super) && !sub->c_ssimfile->c_file) {
+                LoadSsimfile(*sub->c_ssimfile);
+            }
+        }
+
         algo_lib::Regx regx;
         Regx_ReadSql(regx,ssimreq.value,true);
-        ind_beg(acr::ctype_zd_selrec_curs, rec, *ssimreq.p_field->p_ctype) {
-            tempstr value(acr::EvalAttr(rec.tuple, *ssimreq.p_field));// find attribute value
-            if (Regx_Match(regx,value)) {
-                acr::FRec *childrec = ind_rec_Find(*ssimreq.p_ssimfile->p_ctype,rec.pkey);
-                // #AL# here it might be a good idea to actually create the missing record
-                // with defaults...
-                if (!childrec) {
+
+        // check that every subtype record has a corresponding supertype record
+        ind_beg(acr::ctype_zd_selrec_curs, rec, *sub) {
+            if (acr::FRec *parentrec=ind_rec_Find(*super,rec.pkey)) {
+                tempstr value(acr::EvalAttr(parentrec->tuple, *ssimreq.p_field));
+                if (!Regx_Match(regx,value)) {
                     NoteErr(NULL,&rec,ssimreq.p_field,tempstr()<<"acr.ssimreq"
-                            <<Keyval("rec",tempstr()<<ssimreq.p_field->p_ctype->ctype<<":"<<rec.pkey)
-                            <<Keyval("value",tempstr()<<name_Get(*ssimreq.p_field)<<":"<<value)
-                            <<Keyval("comment",tempstr()<<"This value requires a corresponding entry in "<<ssimreq.ssimfile));
+                            <<Keyval("comment",tempstr()<<ssimreq.ssimfile
+                                     <<" requires that "<<super->c_ssimfile->ssimfile<<"."<<name_Get(*ssimreq.p_field)
+                                     <<" have value "<<ssimreq.value<<" (found:"<<value<<")"));
                 }
             }
         }ind_end;
-    }ind_end;
-    ind_beg(acr::_db_zd_sel_ctype_curs, ctype, acr::_db) {
-        // select ctypes whose ssimfile has a ssimreq record
-        if (ctype.c_ssimfile && ctype.c_ssimfile->c_ssimreq) {
-            acr::FSsimreq *ssimreq = ctype.c_ssimfile->c_ssimreq;
-            algo_lib::Regx regx;
-            Regx_ReadSql(regx,ssimreq->value,true);
-            acr::FCtype *supertype = c_field_N(ctype) > 0 ? c_field_Find(ctype, 0)->p_arg : NULL;
-            if (supertype && supertype->c_ssimfile) {
-                ind_beg(acr::ctype_zd_selrec_curs, rec, ctype) {// loop through all records for this ctype
-                    acr::FRec *parentrec=ind_rec_Find(*supertype,rec.pkey);
-                    if (parentrec) {
-                        tempstr value(acr::EvalAttr(parentrec->tuple, *ssimreq->p_field));// find attribute value
-                        if (!Regx_Match(regx,value)) {
-                            NoteErr(NULL,&rec,ssimreq->p_field,tempstr()<<"acr.ssimreq"
-                                    <<Keyval("comment",tempstr()<<ssimreq->ssimfile
-                                             <<" requires that "<<supertype->c_ssimfile->ssimfile<<"."<<name_Get(*ssimreq->p_field)
-                                             <<" have value "<<ssimreq->value<<" (found:"<<value<<")"));
-                        }
-                    }
-                }ind_end;
-            }
+
+        // check that every supertype record has a corresponding subtype record
+        if (ssimreq.bidir) {
+            ind_beg(acr::ctype_zd_selrec_curs, rec, *super) {
+                tempstr value(acr::EvalAttr(rec.tuple, *ssimreq.p_field));
+                if (Regx_Match(regx,value) && !ind_rec_Find(*sub,rec.pkey)) {
+                    NoteErr(NULL,&rec,ssimreq.p_field,tempstr()<<"acr.ssimreq"
+                            <<Keyval("rec",tempstr()<<super->ctype<<":"<<rec.pkey)
+                            <<Keyval("value",tempstr()<<name_Get(*ssimreq.p_field)<<":"<<value)
+                            <<Keyval("comment",tempstr()<<"This value requires a corresponding entry in "<<ssimreq.ssimfile));
+                }
+            }ind_end;
         }
     }ind_end;
 }
