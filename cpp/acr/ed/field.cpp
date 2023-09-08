@@ -368,6 +368,11 @@ void acr_ed::Main_CreateField() {
         cascdel.field = field.field;
         acr_ed::_db.out_ssim << cascdel << eol;
     }
+    if (acr_ed::_db.cmdline.anonfld) {
+        dmmeta::Anonfld anonfld;
+        anonfld.field = field.field;
+        acr_ed::_db.out_ssim << anonfld << eol;
+    }
 
     // this field is cross-referenced with arg.
     if (acr_ed::_db.cmdline.xref) {

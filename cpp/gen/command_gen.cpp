@@ -120,6 +120,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_test          : ret = "test";  break;
         case command_FieldId_showcpp       : ret = "showcpp";  break;
         case command_FieldId_msgtype       : ret = "msgtype";  break;
+        case command_FieldId_anonfld       : ret = "anonfld";  break;
         case command_FieldId_ns            : ret = "ns";  break;
         case command_FieldId_data          : ret = "data";  break;
         case command_FieldId_sigcheck      : ret = "sigcheck";  break;
@@ -719,6 +720,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
                 case LE_STR7('a','m','c','t','e','s','t'): {
                     value_SetEnum(parent,command_FieldId_amctest); ret = true; break;
+                }
+                case LE_STR7('a','n','o','n','f','l','d'): {
+                    value_SetEnum(parent,command_FieldId_anonfld); ret = true; break;
                 }
                 case LE_STR7('b','a','d','c','h','a','r'): {
                     value_SetEnum(parent,command_FieldId_badchar); ret = true; break;
@@ -2414,6 +2418,7 @@ bool command::acr_ed_ReadFieldMaybe(command::acr_ed &parent, algo::strptr field,
         case command_FieldId_test: retval = bool_ReadStrptrMaybe(parent.test, strval); break;
         case command_FieldId_showcpp: retval = bool_ReadStrptrMaybe(parent.showcpp, strval); break;
         case command_FieldId_msgtype: retval = algo::cstring_ReadStrptrMaybe(parent.msgtype, strval); break;
+        case command_FieldId_anonfld: retval = bool_ReadStrptrMaybe(parent.anonfld, strval); break;
         default: break;
     }
     if (!retval) {
@@ -2482,6 +2487,7 @@ void command::acr_ed_Init(command::acr_ed& parent) {
     parent.test = bool(false);
     parent.showcpp = bool(false);
     parent.msgtype = algo::strptr("");
+    parent.anonfld = bool(false);
 }
 
 // --- command.acr_ed..PrintArgv
@@ -2755,6 +2761,12 @@ void command::acr_ed_PrintArgv(command::acr_ed & row, algo::cstring &str) {
         str << " -msgtype:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.anonfld == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.anonfld, temp);
+        str << " -anonfld:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.acr_ed..ToCmdline
@@ -2875,7 +2887,7 @@ void command::acr_ed_ExecX(command::acr_ed_proc& parent) {
 // Call execv()
 // Call execv with specified parameters -- cprint:acr_ed.Argv
 int command::acr_ed_Execv(command::acr_ed_proc& parent) {
-    char **argv = (char**)alloca((88+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
+    char **argv = (char**)alloca((90+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
     algo::tempstr temp;
     int n_argv=0;
     argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
@@ -3187,6 +3199,13 @@ int command::acr_ed_Execv(command::acr_ed_proc& parent) {
         argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
         temp << "-msgtype:";
         cstring_Print(parent.cmd.msgtype, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.anonfld != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-anonfld:";
+        bool_Print(parent.cmd.anonfld, temp);
         ch_Alloc(temp) = 0;// NUL term for this arg
     }
     for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {

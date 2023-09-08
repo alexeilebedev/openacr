@@ -2365,6 +2365,7 @@ dmmeta.field  field:command.acr_ed.sandbox  arg:bool  reftype:Val  dflt:false  c
 dmmeta.field  field:command.acr_ed.test  arg:bool  reftype:Val  dflt:false  comment:"Build resulting changes, run tests"
 dmmeta.field  field:command.acr_ed.showcpp  arg:bool  reftype:Val  dflt:""  comment:"(With -sandbox), show resulting diff"
 dmmeta.field  field:command.acr_ed.msgtype  arg:algo.cstring  reftype:Val  dflt:'""'  comment:"(with -ctype) use this msgtype as type"
+dmmeta.field  field:command.acr_ed.anonfld  arg:bool  reftype:Val  dflt:""  comment:"Create anonfld"
 dmmeta.field  field:command.acr_in.ns  arg:dmmeta.Ns  reftype:RegxSql  dflt:""  comment:"Regx of matching namespace"
 dmmeta.field  field:command.acr_in.data  arg:bool  reftype:Val  dflt:false  comment:"List ssimfile contents"
 dmmeta.field  field:command.acr_in.sigcheck  arg:bool  reftype:Val  dflt:true  comment:"Output sigcheck records for schema version mismatch detection"

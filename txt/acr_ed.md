@@ -52,6 +52,7 @@ Usage: acr_ed [options]
     -test               Build resulting changes, run tests. default: false
     -showcpp            (With -sandbox), show resulting diff. default: false
     -msgtype    string  (with -ctype) use this msgtype as type
+    -anonfld            Create anonfld. default: false
     -verbose            Enable verbose mode
     -debug              Enable debug mode
     -version            Show version information

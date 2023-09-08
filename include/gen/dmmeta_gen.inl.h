@@ -1350,6 +1350,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Hook &
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Inlary &row) {// cfmt:dmmeta.Inlary.String
+    dmmeta::Inlary_Print(const_cast<dmmeta::Inlary&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Lenfld &row) {// cfmt:dmmeta.Lenfld.String
     dmmeta::Lenfld_Print(const_cast<dmmeta::Lenfld&>(row), str);
     return str;
