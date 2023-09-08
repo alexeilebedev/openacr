@@ -237,16 +237,24 @@ void amc::gen_check_xref() {
         }
     }ind_end;
     ind_beg(amc::_db_xref_curs,xref,amc::_db) {
-        CheckXref_Via(xref);
-        CheckXref_Volatile(xref);
-        CheckXref_Double(xref);
-        CheckXref_Impossible(xref);
-        CheckXref_Xreffld(xref);
-        if (xref.p_field->c_cascdel) {
-            CheckXref_Cascdel(xref);
-        } else {
-            CheckXref_Nocascdel(xref);
+        if (!xref.p_field->p_ctype->p_ns->c_globfld) {
+            prerr("amc.missing_glob"
+                  <<Keyval("field",xref.field)
+                  <<Keyval("comment","namespace is missing a Global field required to process x-refs"));
+            algo_lib::_db.exit_code++;
         }
-        CheckXref_DanglingUpref(xref);
+        if (algo_lib::_db.exit_code == 0) {
+            CheckXref_Via(xref);
+            CheckXref_Volatile(xref);
+            CheckXref_Double(xref);
+            CheckXref_Impossible(xref);
+            CheckXref_Xreffld(xref);
+            if (xref.p_field->c_cascdel) {
+                CheckXref_Cascdel(xref);
+            } else {
+                CheckXref_Nocascdel(xref);
+            }
+            CheckXref_DanglingUpref(xref);
+        }
     }ind_end;
 }

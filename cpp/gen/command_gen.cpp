@@ -185,6 +185,12 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_ssim          : ret = "ssim";  break;
         case command_FieldId_xmlpretty     : ret = "xmlpretty";  break;
         case command_FieldId_summary       : ret = "summary";  break;
+        case command_FieldId_reprofile     : ret = "reprofile";  break;
+        case command_FieldId_args          : ret = "args";  break;
+        case command_FieldId_inputfile     : ret = "inputfile";  break;
+        case command_FieldId_fuzzstrat     : ret = "fuzzstrat";  break;
+        case command_FieldId_seed          : ret = "seed";  break;
+        case command_FieldId_testprob      : ret = "testprob";  break;
         case command_FieldId_ncmd          : ret = "ncmd";  break;
         case command_FieldId_nofork        : ret = "nofork";  break;
         case command_FieldId_debug         : ret = "debug";  break;
@@ -213,7 +219,6 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_imilestone    : ret = "imilestone";  break;
         case command_FieldId_track         : ret = "track";  break;
         case command_FieldId_complooo      : ret = "complooo";  break;
-        case command_FieldId_args          : ret = "args";  break;
         case command_FieldId_manywin       : ret = "manywin";  break;
         case command_FieldId_attach        : ret = "attach";  break;
         case command_FieldId_catchthrow    : ret = "catchthrow";  break;
@@ -456,6 +461,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR4('n','s','d','b'): {
                     value_SetEnum(parent,command_FieldId_nsdb); ret = true; break;
+                }
+                case LE_STR4('s','e','e','d'): {
+                    value_SetEnum(parent,command_FieldId_seed); ret = true; break;
                 }
                 case LE_STR4('s','e','r','v'): {
                     value_SetEnum(parent,command_FieldId_serv); ret = true; break;
@@ -933,6 +941,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR8('s','s','i','m','f','i','l','e'): {
                     value_SetEnum(parent,command_FieldId_ssimfile); ret = true; break;
                 }
+                case LE_STR8('t','e','s','t','p','r','o','b'): {
+                    value_SetEnum(parent,command_FieldId_testprob); ret = true; break;
+                }
                 case LE_STR8('u','n','i','t','t','e','s','t'): {
                     value_SetEnum(parent,command_FieldId_unittest); ret = true; break;
                 }
@@ -953,8 +964,16 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"g",1)==0) { value_SetEnum(parent,command_FieldId_debug_log); ret = true; break; }
                     break;
                 }
+                case LE_STR8('f','u','z','z','s','t','r','a'): {
+                    if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,command_FieldId_fuzzstrat); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('i','a','s','s','i','g','n','t'): {
                     if (memcmp(rhs.elems+8,"o",1)==0) { value_SetEnum(parent,command_FieldId_iassignto); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('i','n','p','u','t','f','i','l'): {
+                    if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,command_FieldId_inputfile); ret = true; break; }
                     break;
                 }
                 case LE_STR8('m','a','x','p','a','c','k','e'): {
@@ -979,6 +998,10 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('r','e','c','v','d','e','l','a'): {
                     if (memcmp(rhs.elems+8,"y",1)==0) { value_SetEnum(parent,command_FieldId_recvdelay); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('r','e','p','r','o','f','i','l'): {
+                    if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,command_FieldId_reprofile); ret = true; break; }
                     break;
                 }
                 case LE_STR8('s','e','p','a','r','a','t','o'): {
@@ -7773,6 +7796,355 @@ void command::atf_cov_proc_Uninit(command::atf_cov_proc& parent) {
 
     // command.atf_cov_proc.atf_cov.Uninit (Exec)  //
     atf_cov_Kill(parent); // kill child, ensure forward progress
+}
+
+// --- command.atf_fuzz.fuzzstrat.Print
+// Print back to string
+void command::fuzzstrat_Print(command::atf_fuzz& parent, algo::cstring &out) {
+    Regx_Print(parent.fuzzstrat, out);
+}
+
+// --- command.atf_fuzz.fuzzstrat.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::fuzzstrat_ReadStrptrMaybe(command::atf_fuzz& parent, algo::strptr in) {
+    Regx_ReadSql(parent.fuzzstrat, in, true);
+    bool retval = true;// !parent.fuzzstrat.parseerror; -- TODO: uncomment
+    return retval;
+}
+
+// --- command.atf_fuzz..ReadFieldMaybe
+bool command::atf_fuzz_ReadFieldMaybe(command::atf_fuzz &parent, algo::strptr field, algo::strptr strval) {
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case command_FieldId_reprofile: retval = algo::cstring_ReadStrptrMaybe(parent.reprofile, strval); break;
+        case command_FieldId_target: retval = algo::Smallstr16_ReadStrptrMaybe(parent.target, strval); break;
+        case command_FieldId_args: retval = algo::cstring_ReadStrptrMaybe(parent.args, strval); break;
+        case command_FieldId_inputfile: retval = algo::cstring_ReadStrptrMaybe(parent.inputfile, strval); break;
+        case command_FieldId_fuzzstrat: retval = fuzzstrat_ReadStrptrMaybe(parent, strval); break;
+        case command_FieldId_in: retval = algo::cstring_ReadStrptrMaybe(parent.in, strval); break;
+        case command_FieldId_seed: retval = i32_ReadStrptrMaybe(parent.seed, strval); break;
+        case command_FieldId_testprob: retval = double_ReadStrptrMaybe(parent.testprob, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.atf_fuzz..ReadTupleMaybe
+// Read fields of command::atf_fuzz from attributes of ascii tuple TUPLE
+bool command::atf_fuzz_ReadTupleMaybe(command::atf_fuzz &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    int anon_idx = 0;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        if (ch_N(attr.name) == 0) {
+            attr.name = atf_fuzz_GetAnon(parent, anon_idx++);
+        }
+        retval = atf_fuzz_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- command.atf_fuzz..Init
+// Set all fields to initial values.
+void command::atf_fuzz_Init(command::atf_fuzz& parent) {
+    parent.reprofile = algo::strptr("temp/atf_fuzz.repro");
+    parent.target = algo::strptr("");
+    parent.args = algo::strptr("");
+    parent.inputfile = algo::strptr("");
+    Regx_ReadSql(parent.fuzzstrat, "%", true);
+    parent.in = algo::strptr("data");
+    parent.seed = i32(0);
+    parent.testprob = double(1);
+}
+
+// --- command.atf_fuzz..PrintArgv
+// print command-line args of command::atf_fuzz to string  -- cprint:command.atf_fuzz.Argv
+void command::atf_fuzz_PrintArgv(command::atf_fuzz & row, algo::cstring &str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)row;
+    (void)str;
+    if (!(row.reprofile == "temp/atf_fuzz.repro")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.reprofile, temp);
+        str << " -reprofile:";
+        strptr_PrintBash(temp,str);
+    }
+    ch_RemoveAll(temp);
+    Smallstr16_Print(row.target, temp);
+    str << " ";
+    strptr_PrintBash(temp,str);
+    ch_RemoveAll(temp);
+    cstring_Print(row.args, temp);
+    str << " ";
+    strptr_PrintBash(temp,str);
+    if (!(row.inputfile == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.inputfile, temp);
+        str << " -inputfile:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.fuzzstrat.expr == "%")) {
+        ch_RemoveAll(temp);
+        command::fuzzstrat_Print(const_cast<command::atf_fuzz&>(row), temp);
+        str << " -fuzzstrat:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.seed == 0)) {
+        ch_RemoveAll(temp);
+        i32_Print(row.seed, temp);
+        str << " -seed:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.testprob == 1)) {
+        ch_RemoveAll(temp);
+        double_Print(row.testprob, temp);
+        str << " -testprob:";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- command.atf_fuzz..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::atf_fuzz_ToCmdline(command::atf_fuzz & row) {
+    tempstr ret;
+    ret << "bin/atf_fuzz ";
+    atf_fuzz_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.atf_fuzz..GetAnon
+algo::strptr command::atf_fuzz_GetAnon(command::atf_fuzz &parent, i32 idx) {
+    (void)parent;//only to avoid -Wunused-parameter
+    switch(idx) {
+        case(0): return strptr("target", 6);
+        case(1): return strptr("args", 4);
+        default: return algo::strptr();
+    }
+}
+
+// --- command.atf_fuzz_proc.atf_fuzz.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::atf_fuzz_Start(command::atf_fuzz_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(atf_fuzz_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(atf_fuzz_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= atf_fuzz_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.atf_fuzz_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.atf_fuzz_proc.atf_fuzz.StartRead
+// Start subprocess & Read output
+algo::Fildes command::atf_fuzz_StartRead(command::atf_fuzz_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    atf_fuzz_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.atf_fuzz_proc.atf_fuzz.Kill
+// Kill subprocess and wait
+void command::atf_fuzz_Kill(command::atf_fuzz_proc& parent) {
+    if (parent.pid != 0) {
+        kill(parent.pid,9);
+        atf_fuzz_Wait(parent);
+    }
+}
+
+// --- command.atf_fuzz_proc.atf_fuzz.Wait
+// Wait for subprocess to return
+void command::atf_fuzz_Wait(command::atf_fuzz_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.atf_fuzz_proc.atf_fuzz.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::atf_fuzz_Exec(command::atf_fuzz_proc& parent) {
+    atf_fuzz_Start(parent);
+    atf_fuzz_Wait(parent);
+    return parent.status;
+}
+
+// --- command.atf_fuzz_proc.atf_fuzz.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::atf_fuzz_ExecX(command::atf_fuzz_proc& parent) {
+    int rc = atf_fuzz_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",atf_fuzz_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.atf_fuzz_proc.atf_fuzz.Execv
+// Call execv()
+// Call execv with specified parameters -- cprint:atf_fuzz.Argv
+int command::atf_fuzz_Execv(command::atf_fuzz_proc& parent) {
+    char **argv = (char**)alloca((16+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
+    algo::tempstr temp;
+    int n_argv=0;
+    argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+    temp << parent.path;
+    ch_Alloc(temp) = 0;// NUL term for pathname
+
+    if (parent.cmd.reprofile != "temp/atf_fuzz.repro") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-reprofile:";
+        cstring_Print(parent.cmd.reprofile, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.target != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-target:";
+        Smallstr16_Print(parent.cmd.target, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.args != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-args:";
+        cstring_Print(parent.cmd.args, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.inputfile != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-inputfile:";
+        cstring_Print(parent.cmd.inputfile, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.fuzzstrat.expr != "%") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-fuzzstrat:";
+        command::fuzzstrat_Print(parent.cmd, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.in != "data") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-in:";
+        cstring_Print(parent.cmd.in, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.seed != 0) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-seed:";
+        i32_Print(parent.cmd.seed, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.testprob != 1) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-testprob:";
+        double_Print(parent.cmd.testprob, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+    for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-verbose";
+        ch_Alloc(temp) = 0;
+    }
+    argv[n_argv] = NULL; // last pointer
+    while (n_argv>0) { // shift pointers
+        argv[--n_argv] += (u64)temp.ch_elems;
+    }
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    return execv(Zeroterm(parent.path),argv);
+}
+
+// --- command.atf_fuzz_proc.atf_fuzz.ToCmdline
+algo::tempstr command::atf_fuzz_ToCmdline(command::atf_fuzz_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::atf_fuzz_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.atf_fuzz_proc..Uninit
+void command::atf_fuzz_proc_Uninit(command::atf_fuzz_proc& parent) {
+    command::atf_fuzz_proc &row = parent; (void)row;
+
+    // command.atf_fuzz_proc.atf_fuzz.Uninit (Exec)  //
+    atf_fuzz_Kill(parent); // kill child, ensure forward progress
 }
 
 // --- command.atf_nrun..ReadFieldMaybe

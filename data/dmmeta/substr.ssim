@@ -54,6 +54,7 @@ dmmeta.substr  field:dmmeta.Fcmap.leftField  expr:"=LL/LL"  srcfield:dmmeta.Fcma
 dmmeta.substr  field:dmmeta.Fcmap.leftVal  expr:"=LL/LR"  srcfield:dmmeta.Fcmap.fcmap
 dmmeta.substr  field:dmmeta.Fcmap.rightField  expr:"=LR/LL"  srcfield:dmmeta.Fcmap.fcmap
 dmmeta.substr  field:dmmeta.Fcmap.rightVal  expr:"=LR/LR"  srcfield:dmmeta.Fcmap.fcmap
+dmmeta.substr  field:dmmeta.Fcmdline.ns  expr:.RL.RL  srcfield:dmmeta.Fcmdline.field
 dmmeta.substr  field:dmmeta.Fconst.field  expr:/LL  srcfield:dmmeta.Fconst.fconst
 dmmeta.substr  field:dmmeta.Fconst.name  expr:/LR  srcfield:dmmeta.Fconst.fconst
 dmmeta.substr  field:dmmeta.Fcurs.ctype  expr:/RL.RL  srcfield:dmmeta.Fcurs.fcurs

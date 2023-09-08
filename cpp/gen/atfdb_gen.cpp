@@ -251,6 +251,7 @@ const char* atfdb::value_ToCstr(const atfdb::FieldId& parent) {
         case atfdb_FieldId_timeout         : ret = "timeout";  break;
         case atfdb_FieldId_memcheck        : ret = "memcheck";  break;
         case atfdb_FieldId_exit_code       : ret = "exit_code";  break;
+        case atfdb_FieldId_fuzzstrat       : ret = "fuzzstrat";  break;
         case atfdb_FieldId_msgdir          : ret = "msgdir";  break;
         case atfdb_FieldId_args            : ret = "args";  break;
         case atfdb_FieldId_test_gsymbol_char: ret = "test_gsymbol_char";  break;
@@ -379,6 +380,10 @@ bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,atfdb_FieldId_exit_code); ret = true; break; }
                     break;
                 }
+                case LE_STR8('f','u','z','z','s','t','r','a'): {
+                    if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,atfdb_FieldId_fuzzstrat); ret = true; break; }
+                    break;
+                }
             }
             break;
         }
@@ -436,6 +441,47 @@ bool atfdb::FieldId_ReadStrptrMaybe(atfdb::FieldId &parent, algo::strptr in_str)
 // print string representation of atfdb::FieldId to string LHS, no header -- cprint:atfdb.FieldId.String
 void atfdb::FieldId_Print(atfdb::FieldId & row, algo::cstring &str) {
     atfdb::value_Print(row, str);
+}
+
+// --- atfdb.Fuzzstrat..ReadFieldMaybe
+bool atfdb::Fuzzstrat_ReadFieldMaybe(atfdb::Fuzzstrat &parent, algo::strptr field, algo::strptr strval) {
+    atfdb::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case atfdb_FieldId_fuzzstrat: retval = algo::Smallstr50_ReadStrptrMaybe(parent.fuzzstrat, strval); break;
+        case atfdb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atfdb.Fuzzstrat..ReadStrptrMaybe
+// Read fields of atfdb::Fuzzstrat from an ascii string.
+// The format of the string is an ssim Tuple
+bool atfdb::Fuzzstrat_ReadStrptrMaybe(atfdb::Fuzzstrat &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atfdb.fuzzstrat") || algo::StripTypeTag(in_str, "atfdb.Fuzzstrat");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Fuzzstrat_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atfdb.Fuzzstrat..Print
+// print string representation of atfdb::Fuzzstrat to string LHS, no header -- cprint:atfdb.Fuzzstrat.String
+void atfdb::Fuzzstrat_Print(atfdb::Fuzzstrat & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "atfdb.fuzzstrat";
+
+    algo::Smallstr50_Print(row.fuzzstrat, temp);
+    PrintAttrSpaceReset(str,"fuzzstrat", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
 }
 
 // --- atfdb.Msgdir..ReadFieldMaybe

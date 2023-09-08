@@ -175,88 +175,93 @@ enum command_FieldIdEnum {                    // command.FieldId.value
     ,command_FieldId_ssim              = 157
     ,command_FieldId_xmlpretty         = 158
     ,command_FieldId_summary           = 159
-    ,command_FieldId_ncmd              = 160
-    ,command_FieldId_nofork            = 161
-    ,command_FieldId_debug             = 162
-    ,command_FieldId_perf_secs         = 163
-    ,command_FieldId_pertest_timeout   = 164
-    ,command_FieldId_issue             = 165
-    ,command_FieldId_server            = 166
-    ,command_FieldId_project           = 167
-    ,command_FieldId_auth_token        = 168
-    ,command_FieldId_mrlist            = 169
-    ,command_FieldId_mergereq          = 170
-    ,command_FieldId_ilist             = 171
-    ,command_FieldId_istart            = 172
-    ,command_FieldId_iadd              = 173
-    ,command_FieldId_ic                = 174
-    ,command_FieldId_iclose            = 175
-    ,command_FieldId_iassignto         = 176
-    ,command_FieldId_title             = 177
-    ,command_FieldId_description       = 178
-    ,command_FieldId_gitdir            = 179
-    ,command_FieldId_assignee          = 180
-    ,command_FieldId_ulist             = 181
-    ,command_FieldId_mraccept          = 182
-    ,command_FieldId_mslist            = 183
-    ,command_FieldId_milestone         = 184
-    ,command_FieldId_imilestone        = 185
-    ,command_FieldId_track             = 186
-    ,command_FieldId_complooo          = 187
-    ,command_FieldId_args              = 188
-    ,command_FieldId_manywin           = 189
-    ,command_FieldId_attach            = 190
-    ,command_FieldId_catchthrow        = 191
-    ,command_FieldId_tui               = 192
-    ,command_FieldId_bcmd              = 193
-    ,command_FieldId_emacs             = 194
-    ,command_FieldId_follow_child      = 195
-    ,command_FieldId_py                = 196
-    ,command_FieldId_writessimfile     = 197
-    ,command_FieldId_url               = 198
-    ,command_FieldId_tables            = 199
-    ,command_FieldId_nologo            = 200
-    ,command_FieldId_baddbok           = 201
-    ,command_FieldId_typetag           = 202
-    ,command_FieldId_move              = 203
-    ,command_FieldId_dedup             = 204
-    ,command_FieldId_commit            = 205
-    ,command_FieldId_undo              = 206
-    ,command_FieldId_hash              = 207
-    ,command_FieldId_targsrc           = 208
-    ,command_FieldId_name              = 209
-    ,command_FieldId_body              = 210
-    ,command_FieldId_func              = 211
-    ,command_FieldId_nextfile          = 212
-    ,command_FieldId_other             = 213
-    ,command_FieldId_updateproto       = 214
-    ,command_FieldId_listfunc          = 215
-    ,command_FieldId_iffy              = 216
-    ,command_FieldId_gen               = 217
-    ,command_FieldId_showloc           = 218
-    ,command_FieldId_showstatic        = 219
-    ,command_FieldId_showsortkey       = 220
-    ,command_FieldId_sortname          = 221
-    ,command_FieldId_baddecl           = 222
-    ,command_FieldId_update_authors    = 223
-    ,command_FieldId_indent            = 224
-    ,command_FieldId_linelim           = 225
-    ,command_FieldId_strayfile         = 226
-    ,command_FieldId_badchar           = 227
-    ,command_FieldId_badline           = 228
-    ,command_FieldId_expand            = 229
-    ,command_FieldId_ignoreQuote       = 230
-    ,command_FieldId_maxpacket         = 231
-    ,command_FieldId_db                = 232
-    ,command_FieldId_createdb          = 233
-    ,command_FieldId_str               = 234
-    ,command_FieldId_tocamelcase       = 235
-    ,command_FieldId_tolowerunder      = 236
-    ,command_FieldId_pathcomp          = 237
-    ,command_FieldId_value             = 238
+    ,command_FieldId_reprofile         = 160
+    ,command_FieldId_args              = 161
+    ,command_FieldId_inputfile         = 162
+    ,command_FieldId_fuzzstrat         = 163
+    ,command_FieldId_seed              = 164
+    ,command_FieldId_testprob          = 165
+    ,command_FieldId_ncmd              = 166
+    ,command_FieldId_nofork            = 167
+    ,command_FieldId_debug             = 168
+    ,command_FieldId_perf_secs         = 169
+    ,command_FieldId_pertest_timeout   = 170
+    ,command_FieldId_issue             = 171
+    ,command_FieldId_server            = 172
+    ,command_FieldId_project           = 173
+    ,command_FieldId_auth_token        = 174
+    ,command_FieldId_mrlist            = 175
+    ,command_FieldId_mergereq          = 176
+    ,command_FieldId_ilist             = 177
+    ,command_FieldId_istart            = 178
+    ,command_FieldId_iadd              = 179
+    ,command_FieldId_ic                = 180
+    ,command_FieldId_iclose            = 181
+    ,command_FieldId_iassignto         = 182
+    ,command_FieldId_title             = 183
+    ,command_FieldId_description       = 184
+    ,command_FieldId_gitdir            = 185
+    ,command_FieldId_assignee          = 186
+    ,command_FieldId_ulist             = 187
+    ,command_FieldId_mraccept          = 188
+    ,command_FieldId_mslist            = 189
+    ,command_FieldId_milestone         = 190
+    ,command_FieldId_imilestone        = 191
+    ,command_FieldId_track             = 192
+    ,command_FieldId_complooo          = 193
+    ,command_FieldId_manywin           = 194
+    ,command_FieldId_attach            = 195
+    ,command_FieldId_catchthrow        = 196
+    ,command_FieldId_tui               = 197
+    ,command_FieldId_bcmd              = 198
+    ,command_FieldId_emacs             = 199
+    ,command_FieldId_follow_child      = 200
+    ,command_FieldId_py                = 201
+    ,command_FieldId_writessimfile     = 202
+    ,command_FieldId_url               = 203
+    ,command_FieldId_tables            = 204
+    ,command_FieldId_nologo            = 205
+    ,command_FieldId_baddbok           = 206
+    ,command_FieldId_typetag           = 207
+    ,command_FieldId_move              = 208
+    ,command_FieldId_dedup             = 209
+    ,command_FieldId_commit            = 210
+    ,command_FieldId_undo              = 211
+    ,command_FieldId_hash              = 212
+    ,command_FieldId_targsrc           = 213
+    ,command_FieldId_name              = 214
+    ,command_FieldId_body              = 215
+    ,command_FieldId_func              = 216
+    ,command_FieldId_nextfile          = 217
+    ,command_FieldId_other             = 218
+    ,command_FieldId_updateproto       = 219
+    ,command_FieldId_listfunc          = 220
+    ,command_FieldId_iffy              = 221
+    ,command_FieldId_gen               = 222
+    ,command_FieldId_showloc           = 223
+    ,command_FieldId_showstatic        = 224
+    ,command_FieldId_showsortkey       = 225
+    ,command_FieldId_sortname          = 226
+    ,command_FieldId_baddecl           = 227
+    ,command_FieldId_update_authors    = 228
+    ,command_FieldId_indent            = 229
+    ,command_FieldId_linelim           = 230
+    ,command_FieldId_strayfile         = 231
+    ,command_FieldId_badchar           = 232
+    ,command_FieldId_badline           = 233
+    ,command_FieldId_expand            = 234
+    ,command_FieldId_ignoreQuote       = 235
+    ,command_FieldId_maxpacket         = 236
+    ,command_FieldId_db                = 237
+    ,command_FieldId_createdb          = 238
+    ,command_FieldId_str               = 239
+    ,command_FieldId_tocamelcase       = 240
+    ,command_FieldId_tolowerunder      = 241
+    ,command_FieldId_pathcomp          = 242
+    ,command_FieldId_value             = 243
 };
 
-enum { command_FieldIdEnum_N = 239 };
+enum { command_FieldIdEnum_N = 244 };
 
 namespace command { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -296,6 +301,8 @@ namespace command { struct atf_comp; }
 namespace command { struct atf_comp_proc; }
 namespace command { struct atf_cov; }
 namespace command { struct atf_cov_proc; }
+namespace command { struct atf_fuzz; }
+namespace command { struct atf_fuzz_proc; }
 namespace command { struct atf_nrun; }
 namespace command { struct atf_nrun_proc; }
 namespace command { struct atf_unit; }
@@ -1599,6 +1606,80 @@ algo::tempstr        atf_cov_ToCmdline(command::atf_cov_proc& parent) __attribut
 // Set all fields to initial values.
 void                 atf_cov_proc_Init(command::atf_cov_proc& parent);
 void                 atf_cov_proc_Uninit(command::atf_cov_proc& parent) __attribute__((nothrow));
+
+// --- command.atf_fuzz
+// access: command.atf_fuzz_proc.atf_fuzz (Exec)
+struct atf_fuzz { // command.atf_fuzz
+    algo::cstring      reprofile;   //   "temp/atf_fuzz.repro"  File where repros are stored
+    algo::Smallstr16   target;      //   ""  Target to fuzz
+    algo::cstring      args;        //   ""  Additional arguments to target
+    algo::cstring      inputfile;   //   ""  File with input tuples.
+    algo_lib::Regx     fuzzstrat;   //   "%"  Regx of atfdb::Fuzzstrat
+    algo::cstring      in;          //   "data"  Input directory or filename, - for stdin
+    i32                seed;        //   0  Random seed
+    double             testprob;    //   1  Run each case with this probability
+    atf_fuzz();
+};
+
+// Print back to string
+void                 fuzzstrat_Print(command::atf_fuzz& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+bool                 fuzzstrat_ReadStrptrMaybe(command::atf_fuzz& parent, algo::strptr in) __attribute__((nothrow));
+
+bool                 atf_fuzz_ReadFieldMaybe(command::atf_fuzz &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of command::atf_fuzz from attributes of ascii tuple TUPLE
+bool                 atf_fuzz_ReadTupleMaybe(command::atf_fuzz &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 atf_fuzz_Init(command::atf_fuzz& parent);
+// print command-line args of command::atf_fuzz to string  -- cprint:command.atf_fuzz.Argv
+void                 atf_fuzz_PrintArgv(command::atf_fuzz & row, algo::cstring &str) __attribute__((nothrow));
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr              atf_fuzz_ToCmdline(command::atf_fuzz & row) __attribute__((nothrow));
+algo::strptr         atf_fuzz_GetAnon(command::atf_fuzz &parent, i32 idx) __attribute__((nothrow));
+
+// --- command.atf_fuzz_proc
+struct atf_fuzz_proc { // command.atf_fuzz_proc: Subprocess: 
+    algo::cstring       path;      //   "bin/atf_fuzz"  path for executable
+    command::atf_fuzz   cmd;       // command line for child process
+    algo::cstring       fstdin;    // redirect for stdin
+    algo::cstring       fstdout;   // redirect for stdout
+    algo::cstring       fstderr;   // redirect for stderr
+    pid_t               pid;       //   0  pid of running child process
+    i32                 timeout;   //   0  optional timeout for child process
+    i32                 status;    //   0  last exit status of child process
+    atf_fuzz_proc();
+    ~atf_fuzz_proc();
+private:
+    // reftype of command.atf_fuzz_proc.atf_fuzz prohibits copy
+    atf_fuzz_proc(const atf_fuzz_proc&){ /*disallow copy constructor */}
+    void operator =(const atf_fuzz_proc&){ /*disallow direct assignment */}
+};
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int                  atf_fuzz_Start(command::atf_fuzz_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         atf_fuzz_StartRead(command::atf_fuzz_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
+// Kill subprocess and wait
+void                 atf_fuzz_Kill(command::atf_fuzz_proc& parent);
+// Wait for subprocess to return
+void                 atf_fuzz_Wait(command::atf_fuzz_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+int                  atf_fuzz_Exec(command::atf_fuzz_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void                 atf_fuzz_ExecX(command::atf_fuzz_proc& parent);
+// Call execv()
+// Call execv with specified parameters -- cprint:atf_fuzz.Argv
+int                  atf_fuzz_Execv(command::atf_fuzz_proc& parent) __attribute__((nothrow));
+algo::tempstr        atf_fuzz_ToCmdline(command::atf_fuzz_proc& parent) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 atf_fuzz_proc_Init(command::atf_fuzz_proc& parent);
+void                 atf_fuzz_proc_Uninit(command::atf_fuzz_proc& parent) __attribute__((nothrow));
 
 // --- command.atf_nrun
 // access: command.atf_nrun_proc.atf_nrun (Exec)

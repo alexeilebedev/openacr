@@ -71,6 +71,9 @@ inline atfdb::FieldId::operator atfdb_FieldIdEnum () const {
 inline void atfdb::FieldId_Init(atfdb::FieldId& parent) {
     parent.value = i32(-1);
 }
+inline atfdb::Fuzzstrat::Fuzzstrat() {
+}
+
 inline atfdb::Msgdir::Msgdir() {
 }
 
@@ -108,6 +111,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Comptes
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::FieldId &row) {// cfmt:atfdb.FieldId.String
     atfdb::FieldId_Print(const_cast<atfdb::FieldId&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Fuzzstrat &row) {// cfmt:atfdb.Fuzzstrat.String
+    atfdb::Fuzzstrat_Print(const_cast<atfdb::Fuzzstrat&>(row), str);
     return str;
 }
 

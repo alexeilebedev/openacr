@@ -10,6 +10,7 @@ dmmeta.ssimfile  ssimfile:atfdb.amctest  ctype:atfdb.Amctest
 dmmeta.ssimfile  ssimfile:atfdb.cijob  ctype:atfdb.Cijob
 dmmeta.ssimfile  ssimfile:atfdb.citest  ctype:atfdb.Citest
 dmmeta.ssimfile  ssimfile:atfdb.comptest  ctype:atfdb.Comptest
+dmmeta.ssimfile  ssimfile:atfdb.fuzzstrat  ctype:atfdb.Fuzzstrat
 dmmeta.ssimfile  ssimfile:atfdb.msgdir  ctype:atfdb.Msgdir
 dmmeta.ssimfile  ssimfile:atfdb.targs  ctype:atfdb.Targs
 dmmeta.ssimfile  ssimfile:atfdb.test_gsymbol_char  ctype:atfdb.TestGsymbolChar

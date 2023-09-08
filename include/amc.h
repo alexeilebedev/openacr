@@ -393,7 +393,8 @@ namespace amc { // update-hdr
 
     // Create new fields for dispatch filters.
     void Disp_NewField();
-    void Disp_Enum();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void gen_dispenum();
 
     // -------------------------------------------------------------------
     // cpp/amc/disp/msg.cpp
@@ -656,7 +657,6 @@ namespace amc { // update-hdr
     // void gen_pmask();
     // void gen_xref2();
     // void gen_select_ns();
-    // void gen_dispenum();
 
     //
     // Generate Fconst from a column of some table.

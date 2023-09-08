@@ -130,6 +130,11 @@ void amc::Disp_CreateCasetype(amc::FDispatch &dispatch) {
     dispatch.p_ctype_hdr = multiheader ? NULL : common_base;
     ind_beg(amc::dispatch_c_dispatch_msg_curs, dispmsg, dispatch) {
         if (dispatch.p_ctype_hdr && !multiheader) {
+            vrfy(dispmsg.p_ctype->c_msgtype,
+                 tempstr()<<"amc.bad_dispatch_msg"
+                 <<Keyval("dispatch_msg",dispmsg.dispatch_msg)
+                 <<Keyval("ctype",ctype_Get(dispmsg))
+                 <<Keyval("comment","Ctype is missing a msgtype field"));
             dispmsg.selector << dispmsg.p_ctype->c_msgtype->type.value;
         } else {
             dispmsg.selector << ind_curs(dispmsg).index+1;

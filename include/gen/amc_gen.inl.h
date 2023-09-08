@@ -10345,18 +10345,12 @@ inline amc::FFcmdline::~FFcmdline() {
 }
 
 
-// --- amc.FFcmdline.p_ns.Get
-inline amc::FNs* amc::p_ns_Get(amc::FFcmdline& fcmdline) {
-    amc::FFcmdline &parent = fcmdline; // needed in case 'expr' refers to 'parent'
-    (void)parent;
-    return (amc::FNs*)(fcmdline.p_field->p_ctype->p_ns);
-}
-
 // --- amc.FFcmdline..Init
 // Set all fields to initial values.
 inline void amc::FFcmdline_Init(amc::FFcmdline& fcmdline) {
     fcmdline.read = bool(true);
     fcmdline.p_field = NULL;
+    fcmdline.p_ns = NULL;
 }
 inline amc::FFcmp::FFcmp() {
     amc::FFcmp_Init(*this);

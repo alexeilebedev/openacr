@@ -21,6 +21,7 @@ dmmeta.ns  ns:atf_amc  nstype:exe  comment:"Unit tests for amc (see amctest tabl
 dmmeta.ns  ns:atf_ci  nstype:exe  comment:"Normalization tests (see citest table)"
 dmmeta.ns  ns:atf_comp  nstype:exe  comment:""
 dmmeta.ns  ns:atf_cov  nstype:exe  comment:""
+dmmeta.ns  ns:atf_fuzz  nstype:exe  comment:""
 dmmeta.ns  ns:atf_nrun  nstype:exe  comment:""
 dmmeta.ns  ns:atf_unit  nstype:exe  comment:"Unit tests (see unittest table)"
 dmmeta.ns  ns:atfdb  nstype:ssimdb  comment:"Support tables for testing"

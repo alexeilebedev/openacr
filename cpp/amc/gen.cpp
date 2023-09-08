@@ -221,6 +221,10 @@ void amc::gen_basepool() {
     ind_beg(amc::_db_field_curs,field,amc::_db) if (field.p_reftype->usebasepool && !field.c_basepool) {
         amc::FNs &ns = *field.p_ctype->p_ns;
         amc::FField* basepool= ns.c_nsx ? ns.c_nsx->p_pool : amc::_db.c_malloc;
+        vrfy(basepool, tempstr()
+             <<"amc.missingpool"
+             <<Keyval("ns",ns.ns)
+             <<Keyval("comment","missing nsx record for namespace"));
         amc::basepool_InsertMaybe(dmmeta::Basepool(field.field,basepool->field));
     }ind_end;
 }
@@ -692,10 +696,6 @@ void amc::gen_select_ns() {
     }ind_end;
 }
 
-
-void amc::gen_dispenum() {
-    amc::Disp_Enum();
-}
 
 //
 // Generate Fconst from a column of some table.

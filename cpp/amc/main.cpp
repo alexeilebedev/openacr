@@ -1159,9 +1159,6 @@ void amc::Main_Gen() {
 // OUTPUT        Generate files for the namespace(s)
 
 void amc::Main() {
-    // Look up default allocator
-    amc::_db.c_malloc = amc::ind_field_Find("algo_lib.FDb.malloc");
-
     ind_beg(amc::_db_ctype_curs,ctype,amc::_db) {
         c_field_QuickSort(ctype);
     }ind_end;
@@ -1171,6 +1168,11 @@ void amc::Main() {
         Main_Edit();
     }
     vrfy(amc::LoadTuplesMaybe(amc::_db.cmdline.in_dir), algo_lib::_db.errtext);
+    // Look up default allocator
+    amc::_db.c_malloc = amc::ind_field_Find("algo_lib.FDb.malloc");
+    vrfy(amc::_db.c_malloc, tempstr()<<"amc.fieldnotfound"
+         <<Keyval("field","algo_lib.FDb.malloc")
+         <<Keyval("comment", "missing pre-requisite record"));
 
     // generated files are written somewhere inside
     // this step

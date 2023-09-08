@@ -380,6 +380,27 @@ inline void command::atf_cov_proc_Init(command::atf_cov_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
+inline command::atf_fuzz::atf_fuzz() {
+    command::atf_fuzz_Init(*this);
+}
+
+inline command::atf_fuzz_proc::atf_fuzz_proc() {
+    command::atf_fuzz_proc_Init(*this);
+}
+
+inline command::atf_fuzz_proc::~atf_fuzz_proc() {
+    command::atf_fuzz_proc_Uninit(*this);
+}
+
+
+// --- command.atf_fuzz_proc..Init
+// Set all fields to initial values.
+inline void command::atf_fuzz_proc_Init(command::atf_fuzz_proc& parent) {
+    parent.path = algo::strptr("bin/atf_fuzz");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
 inline command::atf_nrun::atf_nrun() {
     command::atf_nrun_Init(*this);
 }

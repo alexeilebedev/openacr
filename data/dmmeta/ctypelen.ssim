@@ -374,7 +374,7 @@ dmmeta.ctypelen  ctype:amc.FFbuf  len:392  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:amc.FFcast  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amc.FFcleanup  len:112  alignment:8  padbytes:2
 dmmeta.ctypelen  ctype:amc.FFcmap  len:448  alignment:8  padbytes:3
-dmmeta.ctypelen  ctype:amc.FFcmdline  len:264  alignment:8  padbytes:1
+dmmeta.ctypelen  ctype:amc.FFcmdline  len:272  alignment:8  padbytes:1
 dmmeta.ctypelen  ctype:amc.FFcmp  len:257  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amc.FFcompact  len:254  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amc.FFconst  len:584  alignment:8  padbytes:13
@@ -613,6 +613,9 @@ dmmeta.ctypelen  ctype:atf_cov.FTarget  len:168  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:atf_cov.FTargsrc  len:288  alignment:8  padbytes:9
 dmmeta.ctypelen  ctype:atf_cov.FTgtcov  len:192  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:atf_cov.Phase  len:1  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:atf_fuzz.FDb  len:760  alignment:8  padbytes:15
+dmmeta.ctypelen  ctype:atf_fuzz.FFuzzstrat  len:216  alignment:8  padbytes:4
+dmmeta.ctypelen  ctype:atf_fuzz.FTarget  len:136  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:atf_nrun.FDb  len:368  alignment:8  padbytes:15
 dmmeta.ctypelen  ctype:atf_nrun.FEntry  len:144  alignment:8  padbytes:8
 dmmeta.ctypelen  ctype:atf_unit.Bitset  len:48  alignment:16  padbytes:15
@@ -630,6 +633,7 @@ dmmeta.ctypelen  ctype:atfdb.Amctest  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atfdb.Cijob  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atfdb.Citest  len:257  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atfdb.Comptest  len:212  alignment:4  padbytes:2
+dmmeta.ctypelen  ctype:atfdb.Fuzzstrat  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atfdb.Msgdir  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atfdb.Targs  len:72  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:atfdb.TestGsymbolChar  len:204  alignment:1  padbytes:0
@@ -655,6 +659,7 @@ dmmeta.ctypelen  ctype:command.atf_amc  len:120  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:command.atf_ci  len:224  alignment:8  padbytes:10
 dmmeta.ctypelen  ctype:command.atf_comp  len:232  alignment:8  padbytes:10
 dmmeta.ctypelen  ctype:command.atf_cov  len:184  alignment:8  padbytes:1
+dmmeta.ctypelen  ctype:command.atf_fuzz  len:200  alignment:8  padbytes:10
 dmmeta.ctypelen  ctype:command.atf_nrun  len:24  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:command.atf_unit  len:160  alignment:8  padbytes:15
 dmmeta.ctypelen  ctype:command.bash  len:16  alignment:8  padbytes:0

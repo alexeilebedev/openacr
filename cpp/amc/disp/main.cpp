@@ -56,7 +56,7 @@ void amc::Disp_NewField() {
 
 // -----------------------------------------------------------------------------
 
-void amc::Disp_Enum() {
+void amc::gen_dispenum() {
     Disp_CreateFromMsg();
     // If there is no common header, create a case type that enumerates
     // members of the dispatch

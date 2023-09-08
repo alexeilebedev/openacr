@@ -8,6 +8,7 @@ dmmeta.ssimsort  ssimfile:amsdb.streamtype  sortfld:amsdb.StreamType.streamtype 
 dmmeta.ssimsort  ssimfile:atfdb.amctest  sortfld:atfdb.Amctest.amctest  comment:""
 dmmeta.ssimsort  ssimfile:atfdb.cijob  sortfld:atfdb.Cijob.cijob  comment:""
 dmmeta.ssimsort  ssimfile:atfdb.comptest  sortfld:atfdb.Comptest.comptest  comment:""
+dmmeta.ssimsort  ssimfile:atfdb.fuzzstrat  sortfld:atfdb.Fuzzstrat.fuzzstrat  comment:""
 dmmeta.ssimsort  ssimfile:atfdb.msgdir  sortfld:atfdb.Msgdir.msgdir  comment:""
 dmmeta.ssimsort  ssimfile:atfdb.targs  sortfld:atfdb.Targs.comptest  comment:""
 dmmeta.ssimsort  ssimfile:atfdb.test_gsymbol_char  sortfld:atfdb.TestGsymbolChar.test_gsymbol_char  comment:""
