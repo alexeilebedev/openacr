@@ -247,9 +247,9 @@ void amc::tfunc_Pool_InsertMaybe() {
         // carry opt/varlen portion into the new field
         // this only occurs when a ctype with Opt/Varlen field is used as a base.
         if (NeedAllocExtraQ(field)) {
-            Set(R,"$inslenexpr", FieldvalExpr(field.p_arg, *field.p_arg->c_lenfld->p_field, "value"));
-            Ins(&R, ins.body    , "u8 *addon_addr = (u8*)&value + sizeof($Basetype);");
-            Ins(&R, ins.body    , "int addon_len = $inslenexpr - sizeof($Basetype);");
+            Set(R,"$inslenexpr", amc::LengthExpr(*field.p_arg, "value"));
+            Ins(&R, ins.body    , "u8 *addon_addr = (u8*)&value + ssizeof($Basetype);");
+            Ins(&R, ins.body    , "int addon_len = $inslenexpr - ssizeof($Basetype);");
             Ins(&R, ins.body    , "$Cpptype *row = &$name_AllocExtra($pararg, addon_addr, addon_len);");
         } else {
             Ins(&R, ins.body    , "$Cpptype *row = &$name_Alloc($pararg); // if out of memory, process dies. if input error, return NULL.");
@@ -335,11 +335,8 @@ void amc::tfunc_Pool_UpdateMaybe() {
 // pointed to by NAME, whose type is CTYPE
 static tempstr TotlenExpr(algo_lib::Replscope &R, amc::FCtype *ctype, strptr name) {
     tempstr ret;
-    if (amc::FLenfld *lenfld = ctype->c_lenfld) {
-        ret << FieldvalExpr(ctype, *lenfld->p_field, name);
-        if (lenfld->extra != 0) {
-            ret << " + (" << lenfld->extra << ")";
-        }
+    if (ctype->c_lenfld) {
+        ret << amc::LengthExpr(*ctype, name);
     } else if (ctype->c_varlenfld) {
         Set(R, "$vartype", ctype->c_varlenfld->cpp_type);
         ret << "sizeof($Cpptype) + $varfld_N("<<name<<") * sizeof($vartype);";

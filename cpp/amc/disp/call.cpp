@@ -153,7 +153,7 @@ static void Call_Hdr(algo_lib::Replscope &R, amc::FDispatch &dispatch) {
         amc::AddArg(func.body, amc::Castto(dispatch.p_casetype->cpp_type
                                            , FieldvalExpr(hdr, *hdr->c_typefld->p_field, "msg")));
         amc::AddArg(func.body, "(u8*)&msg");
-        amc::AddArg(func.body, !dispatch.haslen ? strptr(FieldvalExpr(hdr, *hdr->c_lenfld->p_field, "msg")) : strptr("msg_len"));
+        amc::AddArg(func.body, !dispatch.haslen ? amc::LengthExpr(*hdr, "msg") : strptr("msg_len"));
     }
 }
 

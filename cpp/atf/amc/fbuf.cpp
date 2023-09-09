@@ -321,6 +321,47 @@ void atf_amc::amctest_msgbuf_test10() {
     }
 }
 
+void atf_amc::amctest_msgbuf_extra_test() {
+    atf_amc::Msgbuf msgbuf;
+    atf_amc::MsgHdrLT hdr1(1,'A');
+    atf_amc::MsgHdrLT hdr2(1,'B');
+    atf_amc::MsgHdrLT hdr3(1,'O');
+    out_extra_WriteMsg(msgbuf, hdr1);
+    out_extra_WriteMsg(msgbuf, hdr2);
+    out_extra_WriteMsg(msgbuf, hdr3);
+    algo::memptr msgs(msgbuf.out_extra_elems, msgbuf.out_extra_end);
+    // test the curs
+    i32 cnt = 0;
+    ind_beg(atf_amc::MsgHdrLT_curs,msg,msgs) {
+        ++cnt;
+        switch (cnt) {
+            break; case 1: vrfyeq(msg->type,hdr1.type,"msg.1"); vrfyeq(msg->len,hdr1.len,"msg.1");
+            break; case 2: vrfyeq(msg->type,hdr2.type,"msg.2"); vrfyeq(msg->len,hdr2.len,"msg.2");
+            break; case 3: vrfyeq(msg->type,hdr3.type,"msg.3"); vrfyeq(msg->len,hdr3.len,"msg.3");
+        }
+    }ind_end;
+    vrfyeq_(cnt, 3);
+    in_extra_WriteAll(msgbuf, msgbuf.out_extra_elems, msgbuf.out_extra_end);
+    atf_amc::MsgHdrLT *msg;
+    msg = in_extra_GetMsg(msgbuf);
+    vrfy(msg,"msg.1");
+    vrfyeq(msg->type,hdr1.type,"msg.1");
+    vrfyeq(msg->len,hdr1.len,"msg.1");
+    in_extra_SkipMsg(msgbuf);
+    msg = in_extra_GetMsg(msgbuf);
+    vrfy(msg,"msg.2");
+    vrfyeq(msg->type,hdr2.type,"msg.2");
+    vrfyeq(msg->len,hdr2.len,"msg.2");
+    in_extra_SkipMsg(msgbuf);
+    msg = in_extra_GetMsg(msgbuf);
+    vrfy(msg,"msg.3");
+    vrfyeq(msg->type,hdr3.type,"msg.3");
+    vrfyeq(msg->len,hdr3.len,"msg.3");
+    in_extra_SkipMsg(msgbuf);
+    msg = in_extra_GetMsg(msgbuf);
+    vrfy_(msg == nullptr);
+}
+
 void atf_amc::amctest_linebuf_test1() {
     atf_amc::Linebuf linebuf;
     strptr line = in_GetMsg(linebuf);

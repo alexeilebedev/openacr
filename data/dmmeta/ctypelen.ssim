@@ -550,7 +550,7 @@ dmmeta.ctypelen  ctype:atf_amc.MsgLTO  len:2  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.MsgLTV  len:2  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.MsgLength  len:2  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.MsgType  len:2  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:atf_amc.Msgbuf  len:160  alignment:8  padbytes:17
+dmmeta.ctypelen  ctype:atf_amc.Msgbuf  len:344  alignment:8  padbytes:32
 dmmeta.ctypelen  ctype:atf_amc.NetBitfld1  len:2  alignment:2  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.OptAlloc  len:4  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.OptG  len:4  alignment:1  padbytes:0

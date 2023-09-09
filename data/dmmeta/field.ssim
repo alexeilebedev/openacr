@@ -1907,6 +1907,8 @@ dmmeta.field  field:atf_amc.MsgLTV.v  arg:atf_amc.MsgHdrLT  reftype:Varlen  dflt
 dmmeta.field  field:atf_amc.MsgLength.value  arg:u16  reftype:Val  dflt:""  comment:""
 dmmeta.field  field:atf_amc.MsgType.value  arg:u16  reftype:Val  dflt:""  comment:""
 dmmeta.field  field:atf_amc.Msgbuf.in  arg:atf_amc.MsgHeader  reftype:Fbuf  dflt:""  comment:"Message-based buffer"
+dmmeta.field  field:atf_amc.Msgbuf.out_extra  arg:atf_amc.MsgHdrLT  reftype:Fbuf  dflt:""  comment:"Message-based buffer"
+dmmeta.field  field:atf_amc.Msgbuf.in_extra  arg:atf_amc.MsgHdrLT  reftype:Fbuf  dflt:""  comment:"Message-based buffer"
 dmmeta.field  field:atf_amc.NetBitfld1.value  arg:u16  reftype:Val  dflt:""  comment:""
 dmmeta.field  field:atf_amc.NetBitfld1.bits0_4  arg:u8  reftype:Bitfld  dflt:""  comment:""
 dmmeta.field  field:atf_amc.NetBitfld1.bits8_12  arg:u8  reftype:Bitfld  dflt:""  comment:""

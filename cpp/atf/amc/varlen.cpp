@@ -96,7 +96,7 @@ static void Check(T &bin_literal, strptr str) {
     // print bin and compare with str
     {
         auto &hdr = *(atf_amc::MsgHdrLT*)bin.elems;
-        vrfyeq_(hdr.len,ch_N(bin)-2);
+        vrfyeq(hdr.len,ch_N(bin)-2,bin);
         tempstr out;
         atf_amc::MsgHdrLTMsgs_Print(out,hdr,sizeof bin);
         verblog(out);

@@ -228,6 +228,15 @@ namespace atf_amc { // gen:ns_print_proto
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     static void          in_Shift(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+    // Internal function to shift data left
+    // Shift existing bytes over to the beginning of the buffer
+    static void          out_extra_Shift(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+    // Internal function to scan for a message
+    //
+    static void          in_extra_Scanmsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+    // Internal function to shift data left
+    // Shift existing bytes over to the beginning of the buffer
+    static void          in_extra_Shift(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
     static bool          value_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          value2_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          value3_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
@@ -5118,7 +5127,7 @@ atf_amc::VarlenExtern* atf_amc::varlen_extern_AllocExtraMaybe(void *extra, i32 n
 // --- atf_amc.FDb.varlen_extern.Delete
 // Remove row from all global and cross indices, then deallocate row
 void atf_amc::varlen_extern_Delete(atf_amc::VarlenExtern &row) {
-    int length = length_Get(row);
+    int length = i32(length_Get(row));
     row.~VarlenExtern();
     varlen_extern_FreeMem(&row, length);
 }
@@ -5414,6 +5423,7 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:linebuf_test3  comment:\"write a line in two phases, no message in between\"", atf_amc::amctest_linebuf_test3 }
         ,{ "atfdb.amctest  amctest:linebuf_test4  comment:\"Write an empty line, read line back\"", atf_amc::amctest_linebuf_test4 }
         ,{ "atfdb.amctest  amctest:linebuf_test5  comment:\"Line too large -- will never fit. Set EOF\"", atf_amc::amctest_linebuf_test5 }
+        ,{ "atfdb.amctest  amctest:msgbuf_extra_test  comment:\"Write messages with extra len to temp buffer and read them\"", atf_amc::amctest_msgbuf_extra_test }
         ,{ "atfdb.amctest  amctest:msgbuf_test0  comment:\"initial state - no message\"", atf_amc::amctest_msgbuf_test0 }
         ,{ "atfdb.amctest  amctest:msgbuf_test1  comment:\"write message, read message back\"", atf_amc::amctest_msgbuf_test1 }
         ,{ "atfdb.amctest  amctest:msgbuf_test10  comment:\"Force 10,000 messages of various sizes through a pipe\"", atf_amc::amctest_msgbuf_test10 }
@@ -5699,7 +5709,7 @@ atf_amc::OptAlloc* atf_amc::optalloc_AllocExtraMaybe(void *extra, i32 nbyte_extr
 // --- atf_amc.FDb.optalloc.Delete
 // Remove row from all global and cross indices, then deallocate row
 void atf_amc::optalloc_Delete(atf_amc::OptAlloc &row) {
-    int length = row.length;
+    int length = i32(row.length);
     row.~OptAlloc();
     optalloc_FreeMem(&row, length);
 }
@@ -5839,7 +5849,7 @@ atf_amc::VarlenAlloc* atf_amc::varlenalloc_AllocExtraMaybe(void *extra, i32 nbyt
 // --- atf_amc.FDb.varlenalloc.Delete
 // Remove row from all global and cross indices, then deallocate row
 void atf_amc::varlenalloc_Delete(atf_amc::VarlenAlloc &row) {
-    int length = row.length;
+    int length = i32(row.length);
     row.~VarlenAlloc();
     varlenalloc_FreeMem(&row, length);
 }
@@ -5969,8 +5979,8 @@ atf_amc::FOptG* atf_amc::optg_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
 atf_amc::FOptG* atf_amc::optg_InsertMaybe(const atf_amc::OptG &value) {
-    u8 *addon_addr = (u8*)&value + sizeof(atf_amc::OptG);
-    int addon_len = value.length - sizeof(atf_amc::OptG);
+    u8 *addon_addr = (u8*)&value + ssizeof(atf_amc::OptG);
+    int addon_len = i32(value.length) - ssizeof(atf_amc::OptG);
     atf_amc::FOptG *row = &optg_AllocExtra(addon_addr, addon_len);
     optg_CopyIn(*row,const_cast<atf_amc::OptG&>(value));
     bool ok = optg_XrefMaybe(*row); // this may return false
@@ -5984,7 +5994,7 @@ atf_amc::FOptG* atf_amc::optg_InsertMaybe(const atf_amc::OptG &value) {
 // --- atf_amc.FDb.optg.Delete
 // Remove row from all global and cross indices, then deallocate row
 void atf_amc::optg_Delete(atf_amc::FOptG &row) {
-    int length = row.length;
+    int length = i32(row.length);
     row.~FOptG();
     optg_FreeMem(&row, length);
 }
@@ -10525,7 +10535,7 @@ static void atf_amc::in_Scanmsg(atf_amc::Msgbuf& msgbuf) {
     bool found = false;
     msglen = ssizeof(atf_amc::MsgHeader);
     if (avail >= msglen) {
-        msglen = (*hdr).length + (0); // check rest of the message
+        msglen = i32((*hdr).length); // check rest of the message
     }
     found = msglen >= ssizeof(atf_amc::MsgHeader) && avail >= msglen;
     if (msglen < ssizeof(atf_amc::MsgHeader) || msglen > in_Max(msgbuf)) {
@@ -10594,6 +10604,162 @@ bool atf_amc::in_XrefMaybe(atf_amc::MsgHeader &row) {
     return retval;
 }
 
+// --- atf_amc.Msgbuf.out_extra.RemoveAll
+// Empty bfufer
+// Discard contents of the buffer.
+void atf_amc::out_extra_RemoveAll(atf_amc::Msgbuf& msgbuf) {
+    msgbuf.out_extra_start    = 0;
+    msgbuf.out_extra_end      = 0;
+}
+
+// --- atf_amc.Msgbuf.out_extra.Shift
+// Internal function to shift data left
+// Shift existing bytes over to the beginning of the buffer
+static void atf_amc::out_extra_Shift(atf_amc::Msgbuf& msgbuf) {
+    i32 start = msgbuf.out_extra_start;
+    i32 bytes_n = msgbuf.out_extra_end - start;
+    if (bytes_n > 0) {
+        memmove(msgbuf.out_extra_elems, msgbuf.out_extra_elems + start, bytes_n);
+    }
+    msgbuf.out_extra_end = bytes_n;
+    msgbuf.out_extra_start = 0;
+}
+
+// --- atf_amc.Msgbuf.out_extra.SkipBytes
+// Skip N bytes when reading
+// Mark some buffer contents as read.
+// 
+void atf_amc::out_extra_SkipBytes(atf_amc::Msgbuf& msgbuf, int n) {
+    int avail = msgbuf.out_extra_end - msgbuf.out_extra_start;
+    n = i32_Min(n,avail);
+    msgbuf.out_extra_start += n;
+}
+
+// --- atf_amc.Msgbuf.out_extra.WriteAll
+// Attempt to write buffer contents to fd
+// Write bytes to the buffer. If the entire block is written, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+// 
+bool atf_amc::out_extra_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
+    int max = out_extra_Max(msgbuf);
+    // check if message doesn't fit. if so, shift bytes over.
+    if (msgbuf.out_extra_end + in_n > max) {
+        out_extra_Shift(msgbuf);
+    }
+    // now try to write the message.
+    i32 end = msgbuf.out_extra_end;
+    bool fits = end + in_n <= max;
+    if (fits && in_n > 0) {
+        memcpy(msgbuf.out_extra_elems + end, in, in_n);
+        msgbuf.out_extra_end = end + in_n;
+    }
+    return fits;
+}
+
+// --- atf_amc.Msgbuf.out_extra.WriteMsg
+// Write message to buffer. If the entire message is written, return true, otherwise false.
+bool atf_amc::out_extra_WriteMsg(atf_amc::Msgbuf& msgbuf, atf_amc::MsgHdrLT &msg) {
+    return out_extra_WriteAll(msgbuf, (u8*)&msg, i32(msg.len + 2));
+}
+
+// --- atf_amc.Msgbuf.in_extra.GetMsg
+// Detect incoming message in buffer and return it
+// Look for valid message at current position in the buffer.
+// If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
+// If there is no message, read once from underlying file descriptor and try again.
+// The message is length-delimited based on field len field
+// 
+atf_amc::MsgHdrLT* atf_amc::in_extra_GetMsg(atf_amc::Msgbuf& msgbuf) {
+    atf_amc::MsgHdrLT* ret;
+    if (!msgbuf.in_extra_msgvalid) {
+        in_extra_Scanmsg(msgbuf);
+    }
+    atf_amc::MsgHdrLT *hdr = (atf_amc::MsgHdrLT*)(msgbuf.in_extra_elems + msgbuf.in_extra_start);
+    ret = msgbuf.in_extra_msgvalid ? hdr : NULL;
+    return ret;
+}
+
+// --- atf_amc.Msgbuf.in_extra.RemoveAll
+// Empty bfufer
+// Discard contents of the buffer.
+void atf_amc::in_extra_RemoveAll(atf_amc::Msgbuf& msgbuf) {
+    msgbuf.in_extra_start    = 0;
+    msgbuf.in_extra_end      = 0;
+    msgbuf.in_extra_msgvalid = false;
+    msgbuf.in_extra_msglen   = 0; // reset message length -- important for delimited streams
+}
+
+// --- atf_amc.Msgbuf.in_extra.Scanmsg
+// Internal function to scan for a message
+// 
+static void atf_amc::in_extra_Scanmsg(atf_amc::Msgbuf& msgbuf) {
+    atf_amc::MsgHdrLT *hdr = (atf_amc::MsgHdrLT*)(msgbuf.in_extra_elems + msgbuf.in_extra_start);
+    i32 avail = in_extra_N(msgbuf);
+    i32 msglen;
+    bool found = false;
+    msglen = ssizeof(atf_amc::MsgHdrLT);
+    if (avail >= msglen) {
+        msglen = i32((*hdr).len + 2); // check rest of the message
+    }
+    found = msglen >= ssizeof(atf_amc::MsgHdrLT) && avail >= msglen;
+    if (msglen < ssizeof(atf_amc::MsgHdrLT) || msglen > in_extra_Max(msgbuf)) {
+        msgbuf.in_extra_eof = true; // cause user to detect eof
+        msgbuf.in_extra_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
+    }
+    msgbuf.in_extra_msglen = msglen;
+    msgbuf.in_extra_msgvalid = found;
+}
+
+// --- atf_amc.Msgbuf.in_extra.Shift
+// Internal function to shift data left
+// Shift existing bytes over to the beginning of the buffer
+static void atf_amc::in_extra_Shift(atf_amc::Msgbuf& msgbuf) {
+    i32 start = msgbuf.in_extra_start;
+    i32 bytes_n = msgbuf.in_extra_end - start;
+    if (bytes_n > 0) {
+        memmove(msgbuf.in_extra_elems, msgbuf.in_extra_elems + start, bytes_n);
+    }
+    msgbuf.in_extra_end = bytes_n;
+    msgbuf.in_extra_start = 0;
+}
+
+// --- atf_amc.Msgbuf.in_extra.SkipMsg
+// Skip current message, if any
+// Skip current message, if any.
+void atf_amc::in_extra_SkipMsg(atf_amc::Msgbuf& msgbuf) {
+    if (msgbuf.in_extra_msgvalid) {
+        int skip = msgbuf.in_extra_msglen;
+        i32 start = msgbuf.in_extra_start;
+        start += skip;
+        msgbuf.in_extra_start = start;
+        msgbuf.in_extra_msgvalid = false;
+        msgbuf.in_extra_msglen   = 0; // reset message length -- important for delimited streams
+    }
+}
+
+// --- atf_amc.Msgbuf.in_extra.WriteAll
+// Attempt to write buffer contents to fd
+// Write bytes to the buffer. If the entire block is written, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+// 
+bool atf_amc::in_extra_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
+    int max = in_extra_Max(msgbuf);
+    // check if message doesn't fit. if so, shift bytes over.
+    if (msgbuf.in_extra_end + in_n > max) {
+        in_extra_Shift(msgbuf);
+    }
+    // now try to write the message.
+    i32 end = msgbuf.in_extra_end;
+    bool fits = end + in_n <= max;
+    if (fits && in_n > 0) {
+        memcpy(msgbuf.in_extra_elems + end, in, in_n);
+        msgbuf.in_extra_end = end + in_n;
+    }
+    return fits;
+}
+
 // --- atf_amc.Msgbuf..Init
 // Set all fields to initial values.
 void atf_amc::Msgbuf_Init(atf_amc::Msgbuf& msgbuf) {
@@ -10603,6 +10769,16 @@ void atf_amc::Msgbuf_Init(atf_amc::Msgbuf& msgbuf) {
     msgbuf.in_msgvalid = false; // in: initialize
     msgbuf.in_msglen = 0; // in: initialize
     msgbuf.in_epoll_enable = true; // in: initialize
+    msgbuf.out_extra_end = 0; // out_extra: initialize
+    msgbuf.out_extra_start = 0; // out_extra: initialize
+    msgbuf.out_extra_eof = false; // out_extra: initialize
+    msgbuf.out_extra_epoll_enable = true; // out_extra: initialize
+    msgbuf.in_extra_end = 0; // in_extra: initialize
+    msgbuf.in_extra_start = 0; // in_extra: initialize
+    msgbuf.in_extra_eof = false; // in_extra: initialize
+    msgbuf.in_extra_msgvalid = false; // in_extra: initialize
+    msgbuf.in_extra_msglen = 0; // in_extra: initialize
+    msgbuf.in_extra_epoll_enable = true; // in_extra: initialize
     msgbuf.cd_in_msg_next = (atf_amc::Msgbuf*)-1; // (atf_amc.FDb.cd_in_msg) not-in-list
     msgbuf.cd_in_msg_prev = NULL; // (atf_amc.FDb.cd_in_msg)
 }

@@ -25,7 +25,7 @@
 // -----------------------------------------------------------------------------
 
 static void CursLookup(algo_lib::Replscope &R, amc::FField &lenfld, amc::FFunc &func) {
-    Set(R, "$getlength", amc::FieldvalExpr(lenfld.p_ctype, lenfld, "(*ptr)"));
+    Set(R, "$getlength", amc::LengthExpr(*lenfld.p_ctype, "(*ptr)"));
     Ins(&R, func.body, "$Cpptype *msg = NULL;");
     Ins(&R, func.body, "int msglen = 0;");
     Ins(&R, func.body, "if (curs.limit >= ssizeof($Cpptype)) {");

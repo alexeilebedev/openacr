@@ -359,6 +359,7 @@ namespace atf_amc { // update-hdr
     // void amctest_msgbuf_test8();
     // void amctest_msgbuf_test9();
     // void amctest_msgbuf_test10();
+    // void amctest_msgbuf_extra_test();
     // void amctest_linebuf_test1();
     // void amctest_linebuf_test2();
     // void amctest_linebuf_test3();
