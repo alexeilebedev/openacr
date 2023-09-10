@@ -28,3 +28,4 @@ dmmeta.main  ns:src_lim  ismodule:N
 dmmeta.main  ns:ssim2csv  ismodule:N
 dmmeta.main  ns:ssim2mysql  ismodule:N
 dmmeta.main  ns:strconv  ismodule:N
+dmmeta.main  ns:sv2ssim  ismodule:N

@@ -268,6 +268,10 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_tocamelcase   : ret = "tocamelcase";  break;
         case command_FieldId_tolowerunder  : ret = "tolowerunder";  break;
         case command_FieldId_pathcomp      : ret = "pathcomp";  break;
+        case command_FieldId_fname         : ret = "fname";  break;
+        case command_FieldId_outseparator  : ret = "outseparator";  break;
+        case command_FieldId_header        : ret = "header";  break;
+        case command_FieldId_prefer_signed : ret = "prefer_signed";  break;
         case command_FieldId_value         : ret = "value";  break;
     }
     return ret;
@@ -527,6 +531,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR5('f','i','e','l','d'): {
                     value_SetEnum(parent,command_FieldId_field); ret = true; break;
                 }
+                case LE_STR5('f','n','a','m','e'): {
+                    value_SetEnum(parent,command_FieldId_fname); ret = true; break;
+                }
                 case LE_STR5('f','o','r','c','e'): {
                     value_SetEnum(parent,command_FieldId_force); ret = true; break;
                 }
@@ -639,6 +646,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR6('g','i','t','d','i','r'): {
                     value_SetEnum(parent,command_FieldId_gitdir); ret = true; break;
+                }
+                case LE_STR6('h','e','a','d','e','r'): {
+                    value_SetEnum(parent,command_FieldId_header); ret = true; break;
                 }
                 case LE_STR6('i','c','l','o','s','e'): {
                     value_SetEnum(parent,command_FieldId_iclose); ret = true; break;
@@ -1088,6 +1098,10 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"hild",4)==0) { value_SetEnum(parent,command_FieldId_follow_child); ret = true; break; }
                     break;
                 }
+                case LE_STR8('o','u','t','s','e','p','a','r'): {
+                    if (memcmp(rhs.elems+8,"ator",4)==0) { value_SetEnum(parent,command_FieldId_outseparator); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('r','e','c','v','d','e','l','a'): {
                     if (memcmp(rhs.elems+8,"y_ns",4)==0) { value_SetEnum(parent,command_FieldId_recvdelay_ns); ret = true; break; }
                     break;
@@ -1105,6 +1119,10 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
         }
         case 13: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('p','r','e','f','e','r','_','s'): {
+                    if (memcmp(rhs.elems+8,"igned",5)==0) { value_SetEnum(parent,command_FieldId_prefer_signed); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('w','r','i','t','e','s','s','i'): {
                     if (memcmp(rhs.elems+8,"mfile",5)==0) { value_SetEnum(parent,command_FieldId_writessimfile); ret = true; break; }
                     break;
@@ -13387,6 +13405,415 @@ void command::strconv_proc_Uninit(command::strconv_proc& parent) {
 
     // command.strconv_proc.strconv.Uninit (Exec)  //
     strconv_Kill(parent); // kill child, ensure forward progress
+}
+
+// --- command.sv2ssim.field.Print
+// Print back to string
+void command::field_Print(command::sv2ssim& parent, algo::cstring &out) {
+    Regx_Print(parent.field, out);
+}
+
+// --- command.sv2ssim.field.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::field_ReadStrptrMaybe(command::sv2ssim& parent, algo::strptr in) {
+    Regx_ReadSql(parent.field, in, true);
+    bool retval = true;// !parent.field.parseerror; -- TODO: uncomment
+    return retval;
+}
+
+// --- command.sv2ssim..ReadFieldMaybe
+bool command::sv2ssim_ReadFieldMaybe(command::sv2ssim &parent, algo::strptr field, algo::strptr strval) {
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case command_FieldId_in: retval = algo::cstring_ReadStrptrMaybe(parent.in, strval); break;
+        case command_FieldId_fname: retval = algo::cstring_ReadStrptrMaybe(parent.fname, strval); break;
+        case command_FieldId_separator: retval = char_ReadStrptrMaybe(parent.separator, strval); break;
+        case command_FieldId_outseparator: retval = algo::cstring_ReadStrptrMaybe(parent.outseparator, strval); break;
+        case command_FieldId_header: retval = bool_ReadStrptrMaybe(parent.header, strval); break;
+        case command_FieldId_ctype: retval = algo::cstring_ReadStrptrMaybe(parent.ctype, strval); break;
+        case command_FieldId_ssimfile: retval = algo::cstring_ReadStrptrMaybe(parent.ssimfile, strval); break;
+        case command_FieldId_schema: retval = bool_ReadStrptrMaybe(parent.schema, strval); break;
+        case command_FieldId_field: retval = field_ReadStrptrMaybe(parent, strval); break;
+        case command_FieldId_data: retval = bool_ReadStrptrMaybe(parent.data, strval); break;
+        case command_FieldId_report: retval = bool_ReadStrptrMaybe(parent.report, strval); break;
+        case command_FieldId_prefer_signed: retval = bool_ReadStrptrMaybe(parent.prefer_signed, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.sv2ssim..ReadTupleMaybe
+// Read fields of command::sv2ssim from attributes of ascii tuple TUPLE
+bool command::sv2ssim_ReadTupleMaybe(command::sv2ssim &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    int anon_idx = 0;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        if (ch_N(attr.name) == 0) {
+            attr.name = sv2ssim_GetAnon(parent, anon_idx++);
+        }
+        retval = sv2ssim_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- command.sv2ssim..Init
+// Set all fields to initial values.
+void command::sv2ssim_Init(command::sv2ssim& parent) {
+    parent.in = algo::strptr("data");
+    parent.separator = char(',');
+    parent.outseparator = algo::strptr("");
+    parent.header = bool(true);
+    parent.ctype = algo::strptr("");
+    parent.ssimfile = algo::strptr("");
+    parent.schema = bool(false);
+    Regx_ReadSql(parent.field, "%", true);
+    parent.data = bool(false);
+    parent.report = bool(true);
+    parent.prefer_signed = bool(false);
+}
+
+// --- command.sv2ssim..PrintArgv
+// print command-line args of command::sv2ssim to string  -- cprint:command.sv2ssim.Argv
+void command::sv2ssim_PrintArgv(command::sv2ssim & row, algo::cstring &str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)row;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+    ch_RemoveAll(temp);
+    cstring_Print(row.fname, temp);
+    str << " ";
+    strptr_PrintBash(temp,str);
+    if (!(row.separator == ',')) {
+        ch_RemoveAll(temp);
+        char_Print(row.separator, temp);
+        str << " -separator:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.outseparator == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.outseparator, temp);
+        str << " -outseparator:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.header == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.header, temp);
+        str << " -header:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.ctype == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.ctype, temp);
+        str << " -ctype:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.ssimfile == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.ssimfile, temp);
+        str << " -ssimfile:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.schema == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.schema, temp);
+        str << " -schema:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.field.expr == "%")) {
+        ch_RemoveAll(temp);
+        command::field_Print(const_cast<command::sv2ssim&>(row), temp);
+        str << " -field:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.data == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.data, temp);
+        str << " -data:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.report == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.report, temp);
+        str << " -report:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.prefer_signed == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.prefer_signed, temp);
+        str << " -prefer_signed:";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- command.sv2ssim..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::sv2ssim_ToCmdline(command::sv2ssim & row) {
+    tempstr ret;
+    ret << "bin/sv2ssim ";
+    sv2ssim_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.sv2ssim..GetAnon
+algo::strptr command::sv2ssim_GetAnon(command::sv2ssim &parent, i32 idx) {
+    (void)parent;//only to avoid -Wunused-parameter
+    switch(idx) {
+        case(0): return strptr("fname", 5);
+        default: return algo::strptr();
+    }
+}
+
+// --- command.sv2ssim_proc.sv2ssim.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::sv2ssim_Start(command::sv2ssim_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(sv2ssim_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(sv2ssim_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= sv2ssim_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.sv2ssim_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.sv2ssim_proc.sv2ssim.StartRead
+// Start subprocess & Read output
+algo::Fildes command::sv2ssim_StartRead(command::sv2ssim_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    sv2ssim_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.sv2ssim_proc.sv2ssim.Kill
+// Kill subprocess and wait
+void command::sv2ssim_Kill(command::sv2ssim_proc& parent) {
+    if (parent.pid != 0) {
+        kill(parent.pid,9);
+        sv2ssim_Wait(parent);
+    }
+}
+
+// --- command.sv2ssim_proc.sv2ssim.Wait
+// Wait for subprocess to return
+void command::sv2ssim_Wait(command::sv2ssim_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.sv2ssim_proc.sv2ssim.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::sv2ssim_Exec(command::sv2ssim_proc& parent) {
+    sv2ssim_Start(parent);
+    sv2ssim_Wait(parent);
+    return parent.status;
+}
+
+// --- command.sv2ssim_proc.sv2ssim.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::sv2ssim_ExecX(command::sv2ssim_proc& parent) {
+    int rc = sv2ssim_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",sv2ssim_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.sv2ssim_proc.sv2ssim.Execv
+// Call execv()
+// Call execv with specified parameters -- cprint:sv2ssim.Argv
+int command::sv2ssim_Execv(command::sv2ssim_proc& parent) {
+    char **argv = (char**)alloca((24+2+algo_lib::_db.cmdline.verbose)*sizeof(char*)); // start of first arg (future pointer)
+    algo::tempstr temp;
+    int n_argv=0;
+    argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+    temp << parent.path;
+    ch_Alloc(temp) = 0;// NUL term for pathname
+
+    if (parent.cmd.in != "data") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-in:";
+        cstring_Print(parent.cmd.in, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (true) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-fname:";
+        cstring_Print(parent.cmd.fname, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.separator != ',') {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-separator:";
+        char_Print(parent.cmd.separator, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.outseparator != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-outseparator:";
+        cstring_Print(parent.cmd.outseparator, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.header != true) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-header:";
+        bool_Print(parent.cmd.header, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.ctype != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-ctype:";
+        cstring_Print(parent.cmd.ctype, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.ssimfile != "") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-ssimfile:";
+        cstring_Print(parent.cmd.ssimfile, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.schema != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-schema:";
+        bool_Print(parent.cmd.schema, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.field.expr != "%") {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-field:";
+        command::field_Print(parent.cmd, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.data != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-data:";
+        bool_Print(parent.cmd.data, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.report != true) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-report:";
+        bool_Print(parent.cmd.report, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+
+    if (parent.cmd.prefer_signed != false) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-prefer_signed:";
+        bool_Print(parent.cmd.prefer_signed, temp);
+        ch_Alloc(temp) = 0;// NUL term for this arg
+    }
+    for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {
+        argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer
+        temp << "-verbose";
+        ch_Alloc(temp) = 0;
+    }
+    argv[n_argv] = NULL; // last pointer
+    while (n_argv>0) { // shift pointers
+        argv[--n_argv] += (u64)temp.ch_elems;
+    }
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    return execv(Zeroterm(parent.path),argv);
+}
+
+// --- command.sv2ssim_proc.sv2ssim.ToCmdline
+algo::tempstr command::sv2ssim_ToCmdline(command::sv2ssim_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::sv2ssim_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.sv2ssim_proc..Uninit
+void command::sv2ssim_proc_Uninit(command::sv2ssim_proc& parent) {
+    command::sv2ssim_proc &row = parent; (void)row;
+
+    // command.sv2ssim_proc.sv2ssim.Uninit (Exec)  //
+    sv2ssim_Kill(parent); // kill child, ensure forward progress
 }
 
 // --- command...SizeCheck

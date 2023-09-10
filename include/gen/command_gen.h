@@ -258,10 +258,14 @@ enum command_FieldIdEnum {                    // command.FieldId.value
     ,command_FieldId_tocamelcase       = 240
     ,command_FieldId_tolowerunder      = 241
     ,command_FieldId_pathcomp          = 242
-    ,command_FieldId_value             = 243
+    ,command_FieldId_fname             = 243
+    ,command_FieldId_outseparator      = 244
+    ,command_FieldId_header            = 245
+    ,command_FieldId_prefer_signed     = 246
+    ,command_FieldId_value             = 247
 };
 
-enum { command_FieldIdEnum_N = 244 };
+enum { command_FieldIdEnum_N = 248 };
 
 namespace command { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -335,6 +339,8 @@ namespace command { struct ssim2mysql; }
 namespace command { struct ssim2mysql_proc; }
 namespace command { struct strconv; }
 namespace command { struct strconv_proc; }
+namespace command { struct sv2ssim; }
+namespace command { struct sv2ssim_proc; }
 namespace command { // gen:ns_print_struct
 
 // --- command.FieldId
@@ -2811,6 +2817,84 @@ algo::tempstr        strconv_ToCmdline(command::strconv_proc& parent) __attribut
 // Set all fields to initial values.
 void                 strconv_proc_Init(command::strconv_proc& parent);
 void                 strconv_proc_Uninit(command::strconv_proc& parent) __attribute__((nothrow));
+
+// --- command.sv2ssim
+// access: command.sv2ssim_proc.sv2ssim (Exec)
+struct sv2ssim { // command.sv2ssim
+    algo::cstring    in;              //   "data"  Input directory or filename, - for stdin
+    algo::cstring    fname;           // Input file, use - for stdin
+    char             separator;       //   ','  Input field separator
+    algo::cstring    outseparator;    //   ""  Output separator. Default: ssim
+    bool             header;          //   true  File has header line
+    algo::cstring    ctype;           //   ""  Type tag for output tuples
+    algo::cstring    ssimfile;        //   ""  (with -schema) Create ssimfile definition
+    bool             schema;          //   false  (output)Generate schema from input file
+    algo_lib::Regx   field;           //   "%"  Regx of algo::cstring
+    bool             data;            //   false  (output) Convert input file to ssim tuples
+    bool             report;          //   true  Print final report
+    bool             prefer_signed;   //   false  Prefer signed types when given a choice
+    sv2ssim();
+};
+
+// Print back to string
+void                 field_Print(command::sv2ssim& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+bool                 field_ReadStrptrMaybe(command::sv2ssim& parent, algo::strptr in) __attribute__((nothrow));
+
+bool                 sv2ssim_ReadFieldMaybe(command::sv2ssim &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of command::sv2ssim from attributes of ascii tuple TUPLE
+bool                 sv2ssim_ReadTupleMaybe(command::sv2ssim &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 sv2ssim_Init(command::sv2ssim& parent);
+// print command-line args of command::sv2ssim to string  -- cprint:command.sv2ssim.Argv
+void                 sv2ssim_PrintArgv(command::sv2ssim & row, algo::cstring &str) __attribute__((nothrow));
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr              sv2ssim_ToCmdline(command::sv2ssim & row) __attribute__((nothrow));
+algo::strptr         sv2ssim_GetAnon(command::sv2ssim &parent, i32 idx) __attribute__((nothrow));
+
+// --- command.sv2ssim_proc
+struct sv2ssim_proc { // command.sv2ssim_proc: Subprocess: 
+    algo::cstring      path;      //   "bin/sv2ssim"  path for executable
+    command::sv2ssim   cmd;       // command line for child process
+    algo::cstring      fstdin;    // redirect for stdin
+    algo::cstring      fstdout;   // redirect for stdout
+    algo::cstring      fstderr;   // redirect for stderr
+    pid_t              pid;       //   0  pid of running child process
+    i32                timeout;   //   0  optional timeout for child process
+    i32                status;    //   0  last exit status of child process
+    sv2ssim_proc();
+    ~sv2ssim_proc();
+private:
+    // reftype of command.sv2ssim_proc.sv2ssim prohibits copy
+    sv2ssim_proc(const sv2ssim_proc&){ /*disallow copy constructor */}
+    void operator =(const sv2ssim_proc&){ /*disallow direct assignment */}
+};
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int                  sv2ssim_Start(command::sv2ssim_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+algo::Fildes         sv2ssim_StartRead(command::sv2ssim_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
+// Kill subprocess and wait
+void                 sv2ssim_Kill(command::sv2ssim_proc& parent);
+// Wait for subprocess to return
+void                 sv2ssim_Wait(command::sv2ssim_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+int                  sv2ssim_Exec(command::sv2ssim_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void                 sv2ssim_ExecX(command::sv2ssim_proc& parent);
+// Call execv()
+// Call execv with specified parameters -- cprint:sv2ssim.Argv
+int                  sv2ssim_Execv(command::sv2ssim_proc& parent) __attribute__((nothrow));
+algo::tempstr        sv2ssim_ToCmdline(command::sv2ssim_proc& parent) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 sv2ssim_proc_Init(command::sv2ssim_proc& parent);
+void                 sv2ssim_proc_Uninit(command::sv2ssim_proc& parent) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace command { // gen:ns_func
 } // gen:ns_func

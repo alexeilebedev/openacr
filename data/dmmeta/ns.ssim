@@ -54,3 +54,4 @@ dmmeta.ns  ns:src_lim  nstype:exe  comment:"Enforce line length, function length
 dmmeta.ns  ns:ssim2csv  nstype:exe  comment:"Ssim -> csv conversion tool"
 dmmeta.ns  ns:ssim2mysql  nstype:exe  comment:"Ssim -> mysql"
 dmmeta.ns  ns:strconv  nstype:exe  comment:"A simple string utility"
+dmmeta.ns  ns:sv2ssim  nstype:exe  comment:""

@@ -105,6 +105,7 @@ const char *dev_Target_target_src_lim      = "src_lim";
 const char *dev_Target_target_ssim2csv     = "ssim2csv";
 const char *dev_Target_target_ssim2mysql   = "ssim2mysql";
 const char *dev_Target_target_strconv      = "strconv";
+const char *dev_Target_target_sv2ssim      = "sv2ssim";
 
 namespace dev { // gen:ns_print_proto
     static void          SizeCheck();

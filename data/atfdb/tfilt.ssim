@@ -1,2 +1,7 @@
 atfdb.tfilt  comptest:acr_ed.CreateCtype  filter:cat  comment:""
 atfdb.tfilt  comptest:acr_ed.CreateSsimfileBadNs  filter:cat  comment:""
+atfdb.tfilt  comptest:sv2ssim.Convert1  filter:cat  comment:""
+atfdb.tfilt  comptest:sv2ssim.Convert1Signed  filter:cat  comment:""
+atfdb.tfilt  comptest:sv2ssim.Convert2  filter:cat  comment:""
+atfdb.tfilt  comptest:sv2ssim.Convert2Tsv  filter:cat  comment:""
+atfdb.tfilt  comptest:sv2ssim.UniqueFieldName  filter:cat  comment:""

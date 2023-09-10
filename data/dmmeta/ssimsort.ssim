@@ -141,6 +141,7 @@ dmmeta.ssimsort  ssimfile:dmmeta.ssimvolatile  sortfld:dmmeta.Ssimvolatile.ssimf
 dmmeta.ssimsort  ssimfile:dmmeta.steptype  sortfld:dmmeta.Steptype.steptype  comment:""
 dmmeta.ssimsort  ssimfile:dmmeta.strfmt  sortfld:dmmeta.Strfmt.strfmt  comment:""
 dmmeta.ssimsort  ssimfile:dmmeta.substr  sortfld:dmmeta.Substr.field  comment:""
+dmmeta.ssimsort  ssimfile:dmmeta.svtype  sortfld:dmmeta.Svtype.ctype  comment:""
 dmmeta.ssimsort  ssimfile:dmmeta.tary  sortfld:dmmeta.Tary.field  comment:""
 dmmeta.ssimsort  ssimfile:dmmeta.thash  sortfld:dmmeta.Thash.field  comment:""
 dmmeta.ssimsort  ssimfile:dmmeta.tracerec  sortfld:dmmeta.Tracerec.tracerec  comment:""

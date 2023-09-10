@@ -788,6 +788,27 @@ inline void command::strconv_proc_Init(command::strconv_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
+inline command::sv2ssim::sv2ssim() {
+    command::sv2ssim_Init(*this);
+}
+
+inline command::sv2ssim_proc::sv2ssim_proc() {
+    command::sv2ssim_proc_Init(*this);
+}
+
+inline command::sv2ssim_proc::~sv2ssim_proc() {
+    command::sv2ssim_proc_Uninit(*this);
+}
+
+
+// --- command.sv2ssim_proc..Init
+// Set all fields to initial values.
+inline void command::sv2ssim_proc_Init(command::sv2ssim_proc& parent) {
+    parent.path = algo::strptr("bin/sv2ssim");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const command::FieldId &row) {// cfmt:command.FieldId.String
     command::FieldId_Print(const_cast<command::FieldId&>(row), str);

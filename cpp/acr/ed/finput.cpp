@@ -47,7 +47,7 @@ void acr_ed::Main_CreateFinput() {
           <<Keyval("target",acr_ed::_db.cmdline.target)
           <<Keyval("ssimfile",acr_ed::_db.cmdline.ssimfile));
     acr_ed::FSsimfile *ssimfile = acr_ed::ind_ssimfile_Find(acr_ed::_db.cmdline.ssimfile);
-    vrfy(ssimfile, "acr_ed.finput_ambiguous  comment:'please specify -ssimfile'");
+    vrfy(ssimfile, "acr_ed.ssimfile_not_found");
     acr_ed::FCtype *fbase = ssimfile->p_ctype;
     vrfy(c_field_N(*fbase), "acr_ed.finput_nofields  comment:'base has no fields'");
     tempstr name(strptr(name_Get(*ssimfile)));

@@ -550,3 +550,6 @@ dmmeta.xref  field:ssim2mysql.FNs.c_ssimfile  inscond:true  via:ssim2mysql.FDb.i
 dmmeta.xref  field:ssim2mysql.FSsimfile.p_ctype  inscond:true  via:ssim2mysql.FDb.ind_ctype/dmmeta.Ssimfile.ctype
 dmmeta.xref  field:ssim2mysql.FSsimfile.c_column  inscond:true  via:ssim2mysql.FDb.ind_ssimfile/ssim2mysql.FColumn.ssimfile
 dmmeta.xref  field:ssim2mysql.FSubstr.p_field  inscond:true  via:ssim2mysql.FDb.ind_field/dmmeta.Substr.field
+dmmeta.xref  field:sv2ssim.FDb.ind_field  inscond:true  via:""
+dmmeta.xref  field:sv2ssim.FDb.zd_selfield  inscond:false  via:""
+dmmeta.xref  field:sv2ssim.FDb.ind_bltin  inscond:true  via:""

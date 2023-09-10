@@ -195,6 +195,7 @@ extern const char *  dev_Target_target_src_lim;        // src_lim         fconst
 extern const char *  dev_Target_target_ssim2csv;       // ssim2csv        fconst:dev.Target.target/ssim2csv
 extern const char *  dev_Target_target_ssim2mysql;     // ssim2mysql      fconst:dev.Target.target/ssim2mysql
 extern const char *  dev_Target_target_strconv;        // strconv         fconst:dev.Target.target/strconv
+extern const char *  dev_Target_target_sv2ssim;        // sv2ssim         fconst:dev.Target.target/sv2ssim
 namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 ArchPkey;
     typedef algo::Smallstr50 BadlinePkey;

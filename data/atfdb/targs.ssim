@@ -1,2 +1,7 @@
 atfdb.targs  comptest:acr_ed.CreateCtype  args:"-create -ctype ams.ChildTypeMsg -subset ams.MsgHeader -msgtype:400 -reftype:Base"
 atfdb.targs  comptest:acr_ed.CreateSsimfileBadNs  args:"--create -ssimfile ams.test -subset algo.Smallstr10"
+atfdb.targs  comptest:sv2ssim.Convert1  args:"test/csv/2.csv -ctype a.B -schema -data"
+atfdb.targs  comptest:sv2ssim.Convert1Signed  args:"test/csv/2.csv -ctype a.B -schema -data -prefer_signed"
+atfdb.targs  comptest:sv2ssim.Convert2  args:"test/csv/1.csv -ctype a.B -schema -data -outseparator:, -header:N"
+atfdb.targs  comptest:sv2ssim.Convert2Tsv  args:"test/csv/1.csv -ctype a.B -schema -data -outseparator:$'\\t' -header:N"
+atfdb.targs  comptest:sv2ssim.UniqueFieldName  args:"- -ctype a.B -schema -data"

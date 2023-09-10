@@ -41,6 +41,7 @@ This file was created with 'atf_ci readme' from files in [txt/](txt/) -- *do not
    * [Fault Management](#fault-management)
    * [Troubleshooting build errors](#troubleshooting-build-errors)
    * [atf_fuzz: fuzz tester](#atf_fuzz-fuzz-tester)
+   * [sv2ssim - Separated Value file processor](#sv2ssim---separated-value-file-processor)
 
 
 ## About
@@ -384,3 +385,6 @@ is replaced with the output of specified command. An example of such a command c
 
 ## atf_fuzz: fuzz tester
 [See txt/atf_fuzz.md](txt/atf_fuzz.md)
+
+## sv2ssim - Separated Value file processor
+[See txt/sv2ssim.md](txt/sv2ssim.md)

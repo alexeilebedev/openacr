@@ -41,3 +41,4 @@ dev.target  target:src_lim  license:GPL  compat:%-%g%.%-%
 dev.target  target:ssim2csv  license:GPL  compat:%-%g%.%-%
 dev.target  target:ssim2mysql  license:GPL  compat:%-%g%.%-%
 dev.target  target:strconv  license:GPL  compat:%-%g%.%-%
+dev.target  target:sv2ssim  license:""  compat:Linux-%.%-%

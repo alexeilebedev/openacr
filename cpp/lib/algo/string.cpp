@@ -1129,37 +1129,63 @@ int algo::StringIter::GetDigit(int dflt) {
 
 // -----------------------------------------------------------------------------
 
-void algo_lib::RunCsvParse(algo_lib::CsvParse &parsecsv) {
-    ary_tok_RemoveAll(parsecsv);
-    if (elems_N(parsecsv.input)) {
-        algo::StringIter iter(parsecsv.input);
-        bool trailing_comma=false;
-        do {
-            iter.Ws();
-            int ch = iter.Peek();
-            strptr tok;
-            if (ch=='\'' || ch=='"') {
-                iter.index++;
-                tok = GetTokenChar(iter, u8(ch));
-                iter.Ws();
-            } else {
-                int from=iter.index;
-                while (iter.index < elems_N(iter.expr) && iter.expr[iter.index] != parsecsv.sep) {
-                    iter.index++;
-                }
-                tok = qGetRegion(iter.expr,from,iter.index-from);
-                tok = TrimmedRight(tok);
+void algo_lib::RunCsvParse(algo_lib::CsvParse &csvparse) {
+    ary_tok_RemoveAll(csvparse);
+    int i=0;
+    bool allowquote = csvparse.quotechar1 || csvparse.quotechar2;
+    char *chars=csvparse.input.elems;
+    int lim=csvparse.input.n_elems;
+    // separator outside of quotes: add current val to array of tokens
+    // inside quotes: replace double quote with
+    // whitespace after token start: skip
+    while (i<lim) {
+        cstring &curval=ary_tok_Alloc(csvparse);
+        int quote=-1;
+        // START READING TOKEN
+        // if quotes are enabled, skip leading whitespace
+        if (allowquote) {
+            for (; i<lim && WhiteCharQ(chars[i]); i++) {
             }
-            ary_tok_Alloc(parsecsv) = tok;
-            trailing_comma = SkipChar(iter, parsecsv.sep);
-            if (!(trailing_comma || iter.EofQ())) {
-                break; // invalid token -- break early
-            }
-        } while (!iter.EofQ());
-        if (trailing_comma) {
-            algo::strptr &ignore = ary_tok_Alloc(parsecsv);// extra element at the end
-            (void)ignore;
         }
+        // SCAN QUOTES
+        if (i<lim && allowquote) {
+            if (chars[i]==csvparse.quotechar1 || chars[i]==csvparse.quotechar2) {
+                quote=chars[i];
+                for (i++; i<lim; i++) {
+                    if (chars[i]==quote) {
+                        i++;
+                        if (i < lim && chars[i]==quote) {// double quote = escape char
+                            ch_Alloc(curval)=chars[i];
+                        } else {
+                            quote=0;// closing quote found
+                            break;
+                        }
+                    } else {
+                        ch_Alloc(curval)=chars[i];// default: add char to current value
+                    }
+                }
+                // skip trailing whitespace after quote
+                for (; i<lim && WhiteCharQ(chars[i]); i++) {
+                }
+            }
+        }
+        // READ REST OF TOKEN UNTIL SEPARATOR
+        // NOTE: a token like "B"C is read as "BC"
+        for (; i<lim; i++) {
+            if (chars[i]==csvparse.sep) {
+                i++;
+                if (i==lim) {
+                    cstring &tok = ary_tok_Alloc(csvparse);// trailing separator -> create empty token
+                    (void)tok;
+                }
+                break;// end of token
+            } else {
+                ch_Alloc(curval)=chars[i];// default: add char to current value
+            }
+        }
+        // if still inside quote, note this
+        csvparse.openquote = quote !=0;
+        // END READ TOKEN
     }
 }
 

@@ -145,3 +145,5 @@ dmmeta.thash  field:ssim2mysql.FDb.ind_ctype  hashfld:dmmeta.Ctype.ctype  unique
 dmmeta.thash  field:ssim2mysql.FDb.ind_field  hashfld:dmmeta.Field.field  unique:Y  comment:""
 dmmeta.thash  field:ssim2mysql.FDb.ind_ns  hashfld:dmmeta.Ns.ns  unique:Y  comment:""
 dmmeta.thash  field:ssim2mysql.FDb.ind_ssimfile  hashfld:dmmeta.Ssimfile.ssimfile  unique:Y  comment:""
+dmmeta.thash  field:sv2ssim.FDb.ind_bltin  hashfld:amcdb.Bltin.ctype  unique:Y  comment:""
+dmmeta.thash  field:sv2ssim.FDb.ind_field  hashfld:sv2ssim.FField.name  unique:Y  comment:""
