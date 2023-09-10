@@ -58,6 +58,7 @@ const char *dmmeta_Ns_ns_atf_amc        = "atf_amc";
 const char *dmmeta_Ns_ns_atf_ci         = "atf_ci";
 const char *dmmeta_Ns_ns_atf_comp       = "atf_comp";
 const char *dmmeta_Ns_ns_atf_cov        = "atf_cov";
+const char *dmmeta_Ns_ns_atf_fuzz       = "atf_fuzz";
 const char *dmmeta_Ns_ns_atf_nrun       = "atf_nrun";
 const char *dmmeta_Ns_ns_atf_unit       = "atf_unit";
 const char *dmmeta_Ns_ns_atfdb          = "atfdb";
@@ -169,6 +170,7 @@ const char *dmmeta_Ssimfile_ssimfile_atfdb_cijob        = "atfdb.cijob";
 const char *dmmeta_Ssimfile_ssimfile_atfdb_citest     = "atfdb.citest";
 const char *dmmeta_Ssimfile_ssimfile_atfdb_comptest   = "atfdb.comptest";
 
+const char *dmmeta_Ssimfile_ssimfile_atfdb_fuzzstrat             = "atfdb.fuzzstrat";
 const char *dmmeta_Ssimfile_ssimfile_atfdb_msgdir                = "atfdb.msgdir";
 const char *dmmeta_Ssimfile_ssimfile_atfdb_targs                 = "atfdb.targs";
 const char *dmmeta_Ssimfile_ssimfile_atfdb_test_gsymbol_char     = "atfdb.test_gsymbol_char";
@@ -2442,6 +2444,18 @@ void dmmeta::Fcmap_Print(dmmeta::Fcmap & row, algo::cstring &str) {
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
+}
+
+// --- dmmeta.Fcmdline.ns.Get
+algo::Smallstr16 dmmeta::ns_Get(dmmeta::Fcmdline& parent) {
+    algo::Smallstr16 ret(algo::Pathcomp(parent.field, ".RL.RL"));
+    return ret;
+}
+
+// --- dmmeta.Fcmdline.ns.Get2
+algo::Smallstr16 dmmeta::Fcmdline_ns_Get(algo::strptr arg) {
+    algo::Smallstr16 ret(algo::Pathcomp(arg, ".RL.RL"));
+    return ret;
 }
 
 // --- dmmeta.Fcmdline..ReadFieldMaybe

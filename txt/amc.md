@@ -1003,13 +1003,13 @@ Select first 10 functions from amc source code:
 inline-command: src_func amc gen_% -proto -comment: | sort -k 3 | head
 cpp/amc/gen.cpp:220: void amc::gen_basepool() 
 cpp/amc/cget.cpp:123: void amc::gen_cget()
-cpp/amc/gen.cpp:577: void amc::gen_check_bigend() 
-cpp/amc/gen.cpp:296: void amc::gen_check_bitfld() 
+cpp/amc/gen.cpp:581: void amc::gen_check_bigend() 
+cpp/amc/gen.cpp:300: void amc::gen_check_bitfld() 
 cpp/amc/gen.cpp:112: void amc::gen_check_cascdel() 
-cpp/amc/gen.cpp:460: void amc::gen_check_cpptype() 
+cpp/amc/gen.cpp:464: void amc::gen_check_cpptype() 
 cpp/amc/gen.cpp:1379: void amc::gen_check_fcurs() 
 cpp/amc/gen.cpp:205: void amc::gen_check_prefix() 
-cpp/amc/gen.cpp:395: void amc::gen_check_reftype() 
+cpp/amc/gen.cpp:399: void amc::gen_check_reftype() 
 cpp/amc/gen.cpp:161: void amc::gen_check_static() 
 ```
 

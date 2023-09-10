@@ -16,6 +16,7 @@ dev.target  target:atf_amc  license:GPL  compat:%-%g%.%-%
 dev.target  target:atf_ci  license:GPL  compat:%-%.%-%
 dev.target  target:atf_comp  license:""  compat:Linux-%.%-%
 dev.target  target:atf_cov  license:""  compat:Linux-%.%-%
+dev.target  target:atf_fuzz  license:""  compat:Linux-%.%-%
 dev.target  target:atf_nrun  license:""  compat:%-%.%-%
 dev.target  target:atf_unit  license:GPL  compat:%-%.%-%
 dev.target  target:bash2html  license:""  compat:%-%.%-%

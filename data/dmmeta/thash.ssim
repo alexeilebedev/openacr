@@ -101,6 +101,7 @@ dmmeta.thash  field:atf_cov.FDb.ind_gitfile  hashfld:dev.Gitfile.gitfile  unique
 dmmeta.thash  field:atf_cov.FDb.ind_target  hashfld:dev.Target.target  unique:Y  comment:""
 dmmeta.thash  field:atf_cov.FDb.ind_targsrc  hashfld:dev.Targsrc.targsrc  unique:Y  comment:""
 dmmeta.thash  field:atf_cov.FDb.ind_tgtcov  hashfld:dev.Tgtcov.target  unique:Y  comment:""
+dmmeta.thash  field:atf_fuzz.FDb.ind_target  hashfld:dev.Target.target  unique:Y  comment:""
 dmmeta.thash  field:atf_nrun.FDb.ind_running  hashfld:atf_nrun.FEntry.pid  unique:Y  comment:""
 dmmeta.thash  field:atf_unit.FDb.ind_unittest  hashfld:atfdb.Unittest.unittest  unique:Y  comment:""
 dmmeta.thash  field:gitlab.FDb.ind_issue  hashfld:gitlab.Issue.issue  unique:Y  comment:""

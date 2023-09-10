@@ -220,6 +220,7 @@ extern const char *  dmmeta_Ns_ns_atf_amc;        // atf_amc         fconst:dmme
 extern const char *  dmmeta_Ns_ns_atf_ci;         // atf_ci          fconst:dmmeta.Ns.ns/atf_ci
 extern const char *  dmmeta_Ns_ns_atf_comp;       // atf_comp        fconst:dmmeta.Ns.ns/atf_comp
 extern const char *  dmmeta_Ns_ns_atf_cov;        // atf_cov         fconst:dmmeta.Ns.ns/atf_cov
+extern const char *  dmmeta_Ns_ns_atf_fuzz;       // atf_fuzz        fconst:dmmeta.Ns.ns/atf_fuzz
 extern const char *  dmmeta_Ns_ns_atf_nrun;       // atf_nrun        fconst:dmmeta.Ns.ns/atf_nrun
 extern const char *  dmmeta_Ns_ns_atf_unit;       // atf_unit        fconst:dmmeta.Ns.ns/atf_unit
 extern const char *  dmmeta_Ns_ns_atfdb;          // atfdb           fconst:dmmeta.Ns.ns/atfdb
@@ -396,6 +397,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_amctest;               // at
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_cijob;                 // atfdb.cijob                  fconst:dmmeta.Ssimfile.ssimfile/atfdb.cijob
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_citest;                // atfdb.citest                 fconst:dmmeta.Ssimfile.ssimfile/atfdb.citest
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_comptest;              // atfdb.comptest               fconst:dmmeta.Ssimfile.ssimfile/atfdb.comptest
+extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_fuzzstrat;             // atfdb.fuzzstrat              fconst:dmmeta.Ssimfile.ssimfile/atfdb.fuzzstrat
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_msgdir;                // atfdb.msgdir                 fconst:dmmeta.Ssimfile.ssimfile/atfdb.msgdir
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_targs;                 // atfdb.targs                  fconst:dmmeta.Ssimfile.ssimfile/atfdb.targs
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_test_gsymbol_char;     // atfdb.test_gsymbol_char      fconst:dmmeta.Ssimfile.ssimfile/atfdb.test_gsymbol_char
@@ -1507,6 +1509,9 @@ struct Fcmdline { // dmmeta.Fcmdline: Annotate field that holds process command 
     algo::Comment       comment;   //
     Fcmdline();
 };
+
+algo::Smallstr16     ns_Get(dmmeta::Fcmdline& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::Smallstr16     Fcmdline_ns_Get(algo::strptr arg) __attribute__((nothrow));
 
 bool                 Fcmdline_ReadFieldMaybe(dmmeta::Fcmdline &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dmmeta::Fcmdline from an ascii string.

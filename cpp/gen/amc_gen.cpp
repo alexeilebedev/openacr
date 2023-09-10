@@ -6033,7 +6033,7 @@ static void amc::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'b32f531a0231c4892582e172153de94e812d3c78'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'269cf76898bf9288667fdbf0f84fb0002a5c31d7'");
 }
 
 // --- amc.FDb._db.StaticCheck
@@ -17313,7 +17313,16 @@ bool amc::fcmdline_XrefMaybe(amc::FFcmdline &row) {
     if (true) { // user-defined insert condition
         row.p_field = p_field;
     }
-    amc::FNs* p_p_ns = p_ns_Get(row);
+    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(row));
+    if (UNLIKELY(!p_ns)) {
+        algo_lib::ResetErrtext() << "amc.bad_xref  index:amc.FDb.ind_ns" << Keyval("key", ns_Get(row));
+        return false;
+    }
+    // fcmdline: save pointer to ns
+    if (true) { // user-defined insert condition
+        row.p_ns = p_ns;
+    }
+    amc::FNs* p_p_ns = row.p_ns;
     if (UNLIKELY(!p_p_ns)) {
         algo_lib::ResetErrtext() << "amc.null_ref  xref:amc.FNs.c_fcmdline";
         return false;
@@ -23727,10 +23736,16 @@ void amc::fcmdline_CopyIn(amc::FFcmdline &row, dmmeta::Fcmdline &in) {
     row.comment = in.comment;
 }
 
+// --- amc.FFcmdline.ns.Get
+algo::Smallstr16 amc::ns_Get(amc::FFcmdline& fcmdline) {
+    algo::Smallstr16 ret(algo::Pathcomp(fcmdline.field, ".RL.RL"));
+    return ret;
+}
+
 // --- amc.FFcmdline..Uninit
 void amc::FFcmdline_Uninit(amc::FFcmdline& fcmdline) {
     amc::FFcmdline &row = fcmdline; (void)row;
-    amc::FNs* p_p_ns = p_ns_Get(row);
+    amc::FNs* p_p_ns = row.p_ns;
     if (p_p_ns)  {
         c_fcmdline_Remove(*p_p_ns, row);// remove fcmdline from index c_fcmdline
     }

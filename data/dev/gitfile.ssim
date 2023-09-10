@@ -20,6 +20,7 @@ dev.gitfile  gitfile:bin/atf_amc
 dev.gitfile  gitfile:bin/atf_ci
 dev.gitfile  gitfile:bin/atf_comp
 dev.gitfile  gitfile:bin/atf_cov
+dev.gitfile  gitfile:bin/atf_fuzz
 dev.gitfile  gitfile:bin/atf_nrun
 dev.gitfile  gitfile:bin/atf_unit
 dev.gitfile  gitfile:bin/bash2html
@@ -264,6 +265,7 @@ dev.gitfile  gitfile:cpp/atf/amc/varlen.cpp
 dev.gitfile  gitfile:cpp/atf/amc/zdlist.cpp
 dev.gitfile  gitfile:cpp/atf/amc/zslist.cpp
 dev.gitfile  gitfile:cpp/atf/atf_cov.cpp
+dev.gitfile  gitfile:cpp/atf/atf_fuzz.cpp
 dev.gitfile  gitfile:cpp/atf/atf_nrun.cpp
 dev.gitfile  gitfile:cpp/atf/ci/acr_ed.cpp
 dev.gitfile  gitfile:cpp/atf/ci/bootstrap.cpp
@@ -317,6 +319,7 @@ dev.gitfile  gitfile:cpp/gen/atf_amc_gen.cpp
 dev.gitfile  gitfile:cpp/gen/atf_ci_gen.cpp
 dev.gitfile  gitfile:cpp/gen/atf_comp_gen.cpp
 dev.gitfile  gitfile:cpp/gen/atf_cov_gen.cpp
+dev.gitfile  gitfile:cpp/gen/atf_fuzz_gen.cpp
 dev.gitfile  gitfile:cpp/gen/atf_gen.cpp
 dev.gitfile  gitfile:cpp/gen/atf_nrun_gen.cpp
 dev.gitfile  gitfile:cpp/gen/atf_unit_gen.cpp
@@ -412,6 +415,7 @@ dev.gitfile  gitfile:data/atfdb/amctest.ssim
 dev.gitfile  gitfile:data/atfdb/cijob.ssim
 dev.gitfile  gitfile:data/atfdb/citest.ssim
 dev.gitfile  gitfile:data/atfdb/comptest.ssim
+dev.gitfile  gitfile:data/atfdb/fuzzstrat.ssim
 dev.gitfile  gitfile:data/atfdb/msgdir.ssim
 dev.gitfile  gitfile:data/atfdb/targs.ssim
 dev.gitfile  gitfile:data/atfdb/test_gsymbol_char.ssim
@@ -589,6 +593,7 @@ dev.gitfile  gitfile:include/atf_amc.h
 dev.gitfile  gitfile:include/atf_ci.h
 dev.gitfile  gitfile:include/atf_comp.h
 dev.gitfile  gitfile:include/atf_cov.h
+dev.gitfile  gitfile:include/atf_fuzz.h
 dev.gitfile  gitfile:include/atf_nrun.h
 dev.gitfile  gitfile:include/atf_unit.h
 dev.gitfile  gitfile:include/bash2html.h
@@ -637,6 +642,8 @@ dev.gitfile  gitfile:include/gen/atf_comp_gen.h
 dev.gitfile  gitfile:include/gen/atf_comp_gen.inl.h
 dev.gitfile  gitfile:include/gen/atf_cov_gen.h
 dev.gitfile  gitfile:include/gen/atf_cov_gen.inl.h
+dev.gitfile  gitfile:include/gen/atf_fuzz_gen.h
+dev.gitfile  gitfile:include/gen/atf_fuzz_gen.inl.h
 dev.gitfile  gitfile:include/gen/atf_gen.h
 dev.gitfile  gitfile:include/gen/atf_gen.inl.h
 dev.gitfile  gitfile:include/gen/atf_nrun_gen.h
@@ -734,6 +741,7 @@ dev.gitfile  gitfile:test/orgfile/a.txt
 dev.gitfile  gitfile:test/orgfile/b.txt
 dev.gitfile  gitfile:test/orgfile/c.txt
 dev.gitfile  gitfile:txt/about.md
+dev.gitfile  gitfile:txt/abt-troubleshoot.md
 dev.gitfile  gitfile:txt/abt.md
 dev.gitfile  gitfile:txt/acr-commit-log.txt
 dev.gitfile  gitfile:txt/acr.md
@@ -750,6 +758,7 @@ dev.gitfile  gitfile:txt/amc/protocol.md
 dev.gitfile  gitfile:txt/ams.md
 dev.gitfile  gitfile:txt/atf_comp.md
 dev.gitfile  gitfile:txt/atf_cov.md
+dev.gitfile  gitfile:txt/atf_fuzz.md
 dev.gitfile  gitfile:txt/coding-style.md
 dev.gitfile  gitfile:txt/directory-structure.md
 dev.gitfile  gitfile:txt/fm.md

@@ -26,21 +26,22 @@ enum atfdb_FieldIdEnum {                       // atfdb.FieldId.value
     ,atfdb_FieldId_timeout               = 8
     ,atfdb_FieldId_memcheck              = 9
     ,atfdb_FieldId_exit_code             = 10
-    ,atfdb_FieldId_msgdir                = 11
-    ,atfdb_FieldId_args                  = 12
-    ,atfdb_FieldId_test_gsymbol_char     = 13
-    ,atfdb_FieldId_test_gsymbol_pkey     = 14
-    ,atfdb_FieldId_test_gsymbol_strptr   = 15
-    ,atfdb_FieldId_filter                = 16
-    ,atfdb_FieldId_tmsg                  = 17
-    ,atfdb_FieldId_rank                  = 18
-    ,atfdb_FieldId_dir                   = 19
-    ,atfdb_FieldId_msg                   = 20
-    ,atfdb_FieldId_unittest              = 21
-    ,atfdb_FieldId_value                 = 22
+    ,atfdb_FieldId_fuzzstrat             = 11
+    ,atfdb_FieldId_msgdir                = 12
+    ,atfdb_FieldId_args                  = 13
+    ,atfdb_FieldId_test_gsymbol_char     = 14
+    ,atfdb_FieldId_test_gsymbol_pkey     = 15
+    ,atfdb_FieldId_test_gsymbol_strptr   = 16
+    ,atfdb_FieldId_filter                = 17
+    ,atfdb_FieldId_tmsg                  = 18
+    ,atfdb_FieldId_rank                  = 19
+    ,atfdb_FieldId_dir                   = 20
+    ,atfdb_FieldId_msg                   = 21
+    ,atfdb_FieldId_unittest              = 22
+    ,atfdb_FieldId_value                 = 23
 };
 
-enum { atfdb_FieldIdEnum_N = 23 };
+enum { atfdb_FieldIdEnum_N = 24 };
 
 extern const char *  atfdb_Msgdir_msgdir_exp;   // exp    fconst:atfdb.Msgdir.msgdir/exp
 extern const char *  atfdb_Msgdir_msgdir_in;    // in     fconst:atfdb.Msgdir.msgdir/in
@@ -49,6 +50,7 @@ namespace atfdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 CijobPkey;
     typedef algo::Smallstr50 CitestPkey;
     typedef algo::Smallstr50 ComptestPkey;
+    typedef algo::Smallstr50 FuzzstratPkey;
     typedef algo::Smallstr50 MsgdirPkey;
     typedef algo::Smallstr50 TestGsymbolCharPkey;
     typedef algo::Smallstr50 TestGsymbolPkeyPkey;
@@ -64,6 +66,7 @@ namespace atfdb { struct Cijob; }
 namespace atfdb { struct Citest; }
 namespace atfdb { struct Comptest; }
 namespace atfdb { struct FieldId; }
+namespace atfdb { struct Fuzzstrat; }
 namespace atfdb { struct Msgdir; }
 namespace atfdb { struct Targs; }
 namespace atfdb { struct TestGsymbolChar; }
@@ -184,6 +187,20 @@ bool                 FieldId_ReadStrptrMaybe(atfdb::FieldId &parent, algo::strpt
 void                 FieldId_Init(atfdb::FieldId& parent);
 // print string representation of atfdb::FieldId to string LHS, no header -- cprint:atfdb.FieldId.String
 void                 FieldId_Print(atfdb::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- atfdb.Fuzzstrat
+struct Fuzzstrat { // atfdb.Fuzzstrat
+    algo::Smallstr50   fuzzstrat;   //
+    algo::Comment      comment;     //
+    Fuzzstrat();
+};
+
+bool                 Fuzzstrat_ReadFieldMaybe(atfdb::Fuzzstrat &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atfdb::Fuzzstrat from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 Fuzzstrat_ReadStrptrMaybe(atfdb::Fuzzstrat &parent, algo::strptr in_str);
+// print string representation of atfdb::Fuzzstrat to string LHS, no header -- cprint:atfdb.Fuzzstrat.String
+void                 Fuzzstrat_Print(atfdb::Fuzzstrat & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- atfdb.Msgdir
 struct Msgdir { // atfdb.Msgdir
@@ -324,6 +341,7 @@ namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Cijob &row);// cfmt:atfdb.Cijob.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Comptest &row);// cfmt:atfdb.Comptest.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::FieldId &row);// cfmt:atfdb.FieldId.String
+inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Fuzzstrat &row);// cfmt:atfdb.Fuzzstrat.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Msgdir &row);// cfmt:atfdb.Msgdir.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Targs &row);// cfmt:atfdb.Targs.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::TestGsymbolChar &row);// cfmt:atfdb.TestGsymbolChar.String

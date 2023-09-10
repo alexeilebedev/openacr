@@ -39,6 +39,8 @@ This file was created with 'atf_ci readme' from files in [txt/](txt/) -- *do not
    * [Tracing](#tracing)
    * [Printing / Process output](#printing---process-output)
    * [Fault Management](#fault-management)
+   * [Troubleshooting build errors](#troubleshooting-build-errors)
+   * [atf_fuzz: fuzz tester](#atf_fuzz-fuzz-tester)
 
 
 ## About
@@ -376,3 +378,9 @@ is replaced with the output of specified command. An example of such a command c
 
 ## Fault Management
 [See txt/fm.md](txt/fm.md)
+
+## Troubleshooting build errors
+[See txt/abt-troubleshoot.md](txt/abt-troubleshoot.md)
+
+## atf_fuzz: fuzz tester
+[See txt/atf_fuzz.md](txt/atf_fuzz.md)

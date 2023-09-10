@@ -13,6 +13,7 @@ dmmeta.main  ns:atf_amc  ismodule:N
 dmmeta.main  ns:atf_ci  ismodule:N
 dmmeta.main  ns:atf_comp  ismodule:N
 dmmeta.main  ns:atf_cov  ismodule:N
+dmmeta.main  ns:atf_fuzz  ismodule:N
 dmmeta.main  ns:atf_nrun  ismodule:N
 dmmeta.main  ns:atf_unit  ismodule:N
 dmmeta.main  ns:bash2html  ismodule:N

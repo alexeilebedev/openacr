@@ -306,6 +306,7 @@ dmmeta.xref  field:amc.FPnew.p_ns  inscond:true  via:amc.FDb.ind_ns/dmmeta.Pnew.
 dmmeta.xref  field:amc.FCtype.c_cdflt  inscond:true  via:amc.FDb.ind_ctype/dmmeta.Cdflt.ctype
 dmmeta.xref  field:amc.FCtype.c_argvtype  inscond:true  via:amc.FDb.ind_ctype/dmmeta.Argvtype.ctype
 dmmeta.xref  field:amc.FFcmdline.p_field  inscond:true  via:amc.FDb.ind_field/dmmeta.Fcmdline.field
+dmmeta.xref  field:amc.FFcmdline.p_ns  inscond:true  via:amc.FDb.ind_ns/dmmeta.Fcmdline.ns
 dmmeta.xref  field:amc.FNs.c_fcmdline  inscond:true  via:amc.FFcmdline.p_ns
 dmmeta.xref  field:amc.FDb.ind_main  inscond:true  via:""
 dmmeta.xref  field:amc.FCtype.c_floadtuples  inscond:true  via:amc.FDb.ind_ctype/dmmeta.Floadtuples.ctype
@@ -430,6 +431,7 @@ dmmeta.xref  field:atf_cov.FTarget.c_covtarget  inscond:true  via:atf_cov.FDb.in
 dmmeta.xref  field:atf_cov.FGitfile.c_covfile  inscond:true  via:atf_cov.FDb.ind_gitfile/dev.Covfile.covfile
 dmmeta.xref  field:atf_cov.FDb.ind_tgtcov  inscond:true  via:""
 dmmeta.xref  field:atf_cov.FTarget.c_tgtcov  inscond:true  via:atf_cov.FDb.ind_target/dev.Tgtcov.target
+dmmeta.xref  field:atf_fuzz.FDb.ind_target  inscond:true  via:""
 dmmeta.xref  field:atf_nrun.FDb.ind_running  inscond:false  via:""
 dmmeta.xref  field:atf_nrun.FDb.zd_todo  inscond:false  via:""
 dmmeta.xref  field:atf_unit.FDb.tr_number  inscond:true  via:""

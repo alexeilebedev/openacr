@@ -7450,6 +7450,7 @@ struct FFcmdline { // amc.FFcmdline
     bool                read;      //   true
     algo::Comment       comment;   //
     amc::FField*        p_field;   // reference to parent row
+    amc::FNs*           p_ns;      // reference to parent row
 private:
     friend amc::FFcmdline&      fcmdline_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend amc::FFcmdline*      fcmdline_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -7465,8 +7466,7 @@ void                 fcmdline_CopyOut(amc::FFcmdline &row, dmmeta::Fcmdline &out
 // Copy fields in to row
 void                 fcmdline_CopyIn(amc::FFcmdline &row, dmmeta::Fcmdline &in) __attribute__((nothrow));
 
-amc::FNs*            p_ns_Get(amc::FFcmdline& fcmdline) __attribute__((__warn_unused_result__, nothrow));
-void                 p_ns_Set(amc::FFcmdline& fcmdline, amc::FNs* rhs) __attribute__((nothrow));
+algo::Smallstr16     ns_Get(amc::FFcmdline& fcmdline) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 void                 FFcmdline_Init(amc::FFcmdline& fcmdline);

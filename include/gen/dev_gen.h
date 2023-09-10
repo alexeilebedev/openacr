@@ -170,6 +170,7 @@ extern const char *  dev_Target_target_atf_amc;        // atf_amc         fconst
 extern const char *  dev_Target_target_atf_ci;         // atf_ci          fconst:dev.Target.target/atf_ci
 extern const char *  dev_Target_target_atf_comp;       // atf_comp        fconst:dev.Target.target/atf_comp
 extern const char *  dev_Target_target_atf_cov;        // atf_cov         fconst:dev.Target.target/atf_cov
+extern const char *  dev_Target_target_atf_fuzz;       // atf_fuzz        fconst:dev.Target.target/atf_fuzz
 extern const char *  dev_Target_target_atf_nrun;       // atf_nrun        fconst:dev.Target.target/atf_nrun
 extern const char *  dev_Target_target_atf_unit;       // atf_unit        fconst:dev.Target.target/atf_unit
 extern const char *  dev_Target_target_bash2html;      // bash2html       fconst:dev.Target.target/bash2html

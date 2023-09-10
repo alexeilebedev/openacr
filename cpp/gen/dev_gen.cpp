@@ -78,6 +78,7 @@ const char *dev_Target_target_atf_amc        = "atf_amc";
 const char *dev_Target_target_atf_ci         = "atf_ci";
 const char *dev_Target_target_atf_comp       = "atf_comp";
 const char *dev_Target_target_atf_cov        = "atf_cov";
+const char *dev_Target_target_atf_fuzz       = "atf_fuzz";
 const char *dev_Target_target_atf_nrun       = "atf_nrun";
 const char *dev_Target_target_atf_unit       = "atf_unit";
 const char *dev_Target_target_bash2html      = "bash2html";
