@@ -152,6 +152,7 @@ dmmeta.ssimfile  ssimfile:dmmeta.steptype  ctype:dmmeta.Steptype
 dmmeta.ssimfile  ssimfile:dmmeta.strfmt  ctype:dmmeta.Strfmt
 dmmeta.ssimfile  ssimfile:dmmeta.strtype  ctype:dmmeta.Strtype
 dmmeta.ssimfile  ssimfile:dmmeta.substr  ctype:dmmeta.Substr
+dmmeta.ssimfile  ssimfile:dmmeta.svtype  ctype:dmmeta.Svtype
 dmmeta.ssimfile  ssimfile:dmmeta.tary  ctype:dmmeta.Tary
 dmmeta.ssimfile  ssimfile:dmmeta.thash  ctype:dmmeta.Thash
 dmmeta.ssimfile  ssimfile:dmmeta.tracefld  ctype:dmmeta.Tracefld

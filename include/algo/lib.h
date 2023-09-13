@@ -641,7 +641,7 @@ namespace algo_lib { // update-hdr
     // write tuple back.
     // return resulting string
     tempstr Tuple_Subst(algo_lib::Replscope &R, strptr text);
-    void RunCsvParse(algo_lib::CsvParse &parsecsv);
+    void RunCsvParse(algo_lib::CsvParse &csvparse);
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/timehook.cpp

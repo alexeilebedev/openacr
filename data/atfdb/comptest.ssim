@@ -1,2 +1,7 @@
 atfdb.comptest  comptest:acr_ed.CreateCtype  timeout:10  memcheck:Y  exit_code:0  comment:""
 atfdb.comptest  comptest:acr_ed.CreateSsimfileBadNs  timeout:10  memcheck:Y  exit_code:1  comment:""
+atfdb.comptest  comptest:sv2ssim.Convert1  timeout:10  memcheck:Y  exit_code:0  comment:""
+atfdb.comptest  comptest:sv2ssim.Convert1Signed  timeout:10  memcheck:Y  exit_code:0  comment:""
+atfdb.comptest  comptest:sv2ssim.Convert2  timeout:10  memcheck:Y  exit_code:0  comment:""
+atfdb.comptest  comptest:sv2ssim.Convert2Tsv  timeout:10  memcheck:Y  exit_code:0  comment:""
+atfdb.comptest  comptest:sv2ssim.UniqueFieldName  timeout:10  memcheck:Y  exit_code:0  comment:""

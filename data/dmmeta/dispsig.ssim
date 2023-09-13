@@ -26,3 +26,4 @@ dmmeta.dispsig  dispsig:src_func.Input  signature:e2e33d5cf56507e68cc0ab81237691
 dmmeta.dispsig  dispsig:src_hdr.Input  signature:b094e0ededb567160099dabcfd654447a2dd1f31
 dmmeta.dispsig  dispsig:src_lim.Input  signature:03146c375643592de2ed3b7429d390f80565cb5e
 dmmeta.dispsig  dispsig:ssim2mysql.Input  signature:7abba95113c0af13de74ea1e2904b75056b22891
+dmmeta.dispsig  dispsig:sv2ssim.Input  signature:af79eaf9b4ed5338f63e526d8cc7f32e470fe2ad

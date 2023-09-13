@@ -98,6 +98,7 @@ dev.gitfile  gitfile:bin/src_lim
 dev.gitfile  gitfile:bin/ssim2csv
 dev.gitfile  gitfile:bin/ssim2mysql
 dev.gitfile  gitfile:bin/strconv
+dev.gitfile  gitfile:bin/sv2ssim
 dev.gitfile  gitfile:bin/tags
 dev.gitfile  gitfile:bin/targ-diff
 dev.gitfile  gitfile:bin/test-orgfile
@@ -353,6 +354,7 @@ dev.gitfile  gitfile:cpp/gen/src_lim_gen.cpp
 dev.gitfile  gitfile:cpp/gen/ssim2csv_gen.cpp
 dev.gitfile  gitfile:cpp/gen/ssim2mysql_gen.cpp
 dev.gitfile  gitfile:cpp/gen/strconv_gen.cpp
+dev.gitfile  gitfile:cpp/gen/sv2ssim_gen.cpp
 dev.gitfile  gitfile:cpp/gitlab.cpp
 dev.gitfile  gitfile:cpp/lib/algo/arg.cpp
 dev.gitfile  gitfile:cpp/lib/algo/backtrace.cpp
@@ -403,6 +405,7 @@ dev.gitfile  gitfile:cpp/src/lim.cpp
 dev.gitfile  gitfile:cpp/ssim2csv.cpp
 dev.gitfile  gitfile:cpp/ssim2mysql.cpp
 dev.gitfile  gitfile:cpp/strconv/strconv.cpp
+dev.gitfile  gitfile:cpp/sv2ssim.cpp
 dev.gitfile  gitfile:data/amcdb/bltin.ssim
 dev.gitfile  gitfile:data/amcdb/curstype.ssim
 dev.gitfile  gitfile:data/amcdb/gen.ssim
@@ -554,6 +557,7 @@ dev.gitfile  gitfile:data/dmmeta/steptype.ssim
 dev.gitfile  gitfile:data/dmmeta/strfmt.ssim
 dev.gitfile  gitfile:data/dmmeta/strtype.ssim
 dev.gitfile  gitfile:data/dmmeta/substr.ssim
+dev.gitfile  gitfile:data/dmmeta/svtype.ssim
 dev.gitfile  gitfile:data/dmmeta/tary.ssim
 dev.gitfile  gitfile:data/dmmeta/thash.ssim
 dev.gitfile  gitfile:data/dmmeta/tracefld.ssim
@@ -710,6 +714,8 @@ dev.gitfile  gitfile:include/gen/ssim2mysql_gen.h
 dev.gitfile  gitfile:include/gen/ssim2mysql_gen.inl.h
 dev.gitfile  gitfile:include/gen/strconv_gen.h
 dev.gitfile  gitfile:include/gen/strconv_gen.inl.h
+dev.gitfile  gitfile:include/gen/sv2ssim_gen.h
+dev.gitfile  gitfile:include/gen/sv2ssim_gen.inl.h
 dev.gitfile  gitfile:include/gitlab.h
 dev.gitfile  gitfile:include/lib/lib_ctype.h
 dev.gitfile  gitfile:include/lib/lib_exec.h
@@ -726,6 +732,7 @@ dev.gitfile  gitfile:include/orgfile.h
 dev.gitfile  gitfile:include/sha.h
 dev.gitfile  gitfile:include/src_func.h
 dev.gitfile  gitfile:include/strconv.h
+dev.gitfile  gitfile:include/sv2ssim.h
 dev.gitfile  gitfile:include/sysincl.h
 dev.gitfile  gitfile:include/typedef.h
 dev.gitfile  gitfile:include/u128.h
@@ -735,7 +742,19 @@ dev.gitfile  gitfile:run/.ffskip
 dev.gitfile  gitfile:temp/.empty
 dev.gitfile  gitfile:test/atf_comp/acr_ed.CreateCtype
 dev.gitfile  gitfile:test/atf_comp/acr_ed.CreateSsimfileBadNs
+dev.gitfile  gitfile:test/atf_comp/sv2ssim.Convert1
+dev.gitfile  gitfile:test/atf_comp/sv2ssim.Convert1Signed
+dev.gitfile  gitfile:test/atf_comp/sv2ssim.Convert2
+dev.gitfile  gitfile:test/atf_comp/sv2ssim.Convert2Tsv
+dev.gitfile  gitfile:test/atf_comp/sv2ssim.UniqueFieldName
 dev.gitfile  gitfile:test/cppcheck-suppressions.txt
+dev.gitfile  gitfile:test/csv/1.csv
+dev.gitfile  gitfile:test/csv/2.csv
+dev.gitfile  gitfile:test/csv/3.csv
+dev.gitfile  gitfile:test/csv/4.csv
+dev.gitfile  gitfile:test/csv/5.csv
+dev.gitfile  gitfile:test/csv/6.csv
+dev.gitfile  gitfile:test/csv/7.csv
 dev.gitfile  gitfile:test/orgfile/PSX_20200101.txt
 dev.gitfile  gitfile:test/orgfile/a.txt
 dev.gitfile  gitfile:test/orgfile/b.txt
@@ -770,6 +789,7 @@ dev.gitfile  gitfile:txt/readme.md
 dev.gitfile  gitfile:txt/script.md
 dev.gitfile  gitfile:txt/setup-and-installation.md
 dev.gitfile  gitfile:txt/sknf.md
+dev.gitfile  gitfile:txt/sv2ssim.md
 dev.gitfile  gitfile:txt/testimonials.md
 dev.gitfile  gitfile:txt/tests.md
 dev.gitfile  gitfile:txt/trace.md

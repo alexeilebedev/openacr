@@ -70,7 +70,7 @@ namespace algo_lib { struct FTxtrow; }
 namespace algo_lib { struct FTxttbl; }
 namespace algo_lib { struct Regx; }
 namespace algo_lib { struct Bitset_ary_curs; }
-namespace algo_lib { struct parsecsv_ary_tok_curs; }
+namespace algo_lib { struct csvparse_ary_tok_curs; }
 namespace algo_lib { struct _db_temp_strings_curs; }
 namespace algo_lib { struct _db_imtable_curs; }
 namespace algo_lib { struct _db_bh_timehook_curs; }
@@ -242,15 +242,21 @@ bool                 Cmdline_ReadTupleMaybe(algo_lib::Cmdline &parent, algo::Tup
 void                 Cmdline_Init(algo_lib::Cmdline& parent);
 
 // --- algo_lib.CsvParse
-// create: algo_lib.FDb.parsecsv (Cppstack)
+// create: algo_lib.FDb.csvparse (Cppstack)
 struct CsvParse { // algo_lib.CsvParse
-    algo::strptr    input;           // Input string
-    char            sep;             //   ','  Input: separator
-    algo::strptr*   ary_tok_elems;   // pointer to elements
-    u32             ary_tok_n;       // number of elements in array
-    u32             ary_tok_max;     // max. capacity of array before realloc
+    algo::strptr     input;           // Input string
+    char             sep;             //   ','  Input: separator
+    char             quotechar1;      //   '\"'  Allow this quote
+    char             quotechar2;      //   '\''  Allow this quote as well
+    algo::cstring*   ary_tok_elems;   // pointer to elements
+    u32              ary_tok_n;       // number of elements in array
+    u32              ary_tok_max;     // max. capacity of array before realloc
+    bool             openquote;       //   true  On output: set if unbalanced quote found
     explicit CsvParse(algo::strptr                   in_input
-        ,char                           in_sep);
+        ,char                           in_sep
+        ,char                           in_quotechar1
+        ,char                           in_quotechar2
+        ,bool                           in_openquote);
     CsvParse();
     ~CsvParse();
 private:
@@ -261,54 +267,54 @@ private:
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::strptr&        ary_tok_Alloc(algo_lib::CsvParse& parsecsv) __attribute__((__warn_unused_result__, nothrow));
+algo::cstring&       ary_tok_Alloc(algo_lib::CsvParse& csvparse) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::strptr&        ary_tok_AllocAt(algo_lib::CsvParse& parsecsv, int at) __attribute__((__warn_unused_result__, nothrow));
+algo::cstring&       ary_tok_AllocAt(algo_lib::CsvParse& csvparse, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::strptr> ary_tok_AllocN(algo_lib::CsvParse& parsecsv, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> ary_tok_AllocN(algo_lib::CsvParse& csvparse, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
-bool                 ary_tok_EmptyQ(algo_lib::CsvParse& parsecsv) __attribute__((nothrow));
+bool                 ary_tok_EmptyQ(algo_lib::CsvParse& csvparse) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
-algo::strptr*        ary_tok_Find(algo_lib::CsvParse& parsecsv, u64 t) __attribute__((__warn_unused_result__, nothrow));
+algo::cstring*       ary_tok_Find(algo_lib::CsvParse& csvparse, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
-algo::aryptr<algo::strptr> ary_tok_Getary(algo_lib::CsvParse& parsecsv) __attribute__((nothrow));
+algo::aryptr<algo::cstring> ary_tok_Getary(algo_lib::CsvParse& csvparse) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
-algo::strptr*        ary_tok_Last(algo_lib::CsvParse& parsecsv) __attribute__((nothrow, pure));
+algo::cstring*       ary_tok_Last(algo_lib::CsvParse& csvparse) __attribute__((nothrow, pure));
 // Return max. number of items in the array
-i32                  ary_tok_Max(algo_lib::CsvParse& parsecsv) __attribute__((nothrow));
+i32                  ary_tok_Max(algo_lib::CsvParse& csvparse) __attribute__((nothrow));
 // Return number of items in the array
-i32                  ary_tok_N(const algo_lib::CsvParse& parsecsv) __attribute__((__warn_unused_result__, nothrow, pure));
+i32                  ary_tok_N(const algo_lib::CsvParse& csvparse) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
-void                 ary_tok_Remove(algo_lib::CsvParse& parsecsv, u32 i) __attribute__((nothrow));
-void                 ary_tok_RemoveAll(algo_lib::CsvParse& parsecsv) __attribute__((nothrow));
+void                 ary_tok_Remove(algo_lib::CsvParse& csvparse, u32 i) __attribute__((nothrow));
+void                 ary_tok_RemoveAll(algo_lib::CsvParse& csvparse) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
-void                 ary_tok_RemoveLast(algo_lib::CsvParse& parsecsv) __attribute__((nothrow));
+void                 ary_tok_RemoveLast(algo_lib::CsvParse& csvparse) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-void                 ary_tok_Reserve(algo_lib::CsvParse& parsecsv, int n) __attribute__((nothrow));
+void                 ary_tok_Reserve(algo_lib::CsvParse& csvparse, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
-void                 ary_tok_AbsReserve(algo_lib::CsvParse& parsecsv, int n) __attribute__((nothrow));
+void                 ary_tok_AbsReserve(algo_lib::CsvParse& csvparse, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
-void                 ary_tok_Setary(algo_lib::CsvParse& parsecsv, algo_lib::CsvParse &rhs) __attribute__((nothrow));
+void                 ary_tok_Setary(algo_lib::CsvParse& csvparse, algo_lib::CsvParse &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
-algo::strptr&        ary_tok_qFind(algo_lib::CsvParse& parsecsv, u64 t) __attribute__((nothrow));
+algo::cstring&       ary_tok_qFind(algo_lib::CsvParse& csvparse, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
-algo::strptr&        ary_tok_qLast(algo_lib::CsvParse& parsecsv) __attribute__((nothrow));
+algo::cstring&       ary_tok_qLast(algo_lib::CsvParse& csvparse) __attribute__((nothrow));
 // Return row id of specified element
-u64                  ary_tok_rowid_Get(algo_lib::CsvParse& parsecsv, algo::strptr &elem) __attribute__((nothrow));
+u64                  ary_tok_rowid_Get(algo_lib::CsvParse& csvparse, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::strptr> ary_tok_AllocNVal(algo_lib::CsvParse& parsecsv, int n_elems, const algo::strptr& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> ary_tok_AllocNVal(algo_lib::CsvParse& csvparse, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
 
 // proceed to next item
-void                 parsecsv_ary_tok_curs_Next(parsecsv_ary_tok_curs &curs);
-void                 parsecsv_ary_tok_curs_Reset(parsecsv_ary_tok_curs &curs, algo_lib::CsvParse &parent);
+void                 csvparse_ary_tok_curs_Next(csvparse_ary_tok_curs &curs);
+void                 csvparse_ary_tok_curs_Reset(csvparse_ary_tok_curs &curs, algo_lib::CsvParse &parent);
 // cursor points to valid item
-bool                 parsecsv_ary_tok_curs_ValidQ(parsecsv_ary_tok_curs &curs);
+bool                 csvparse_ary_tok_curs_ValidQ(csvparse_ary_tok_curs &curs);
 // item access
-algo::strptr&        parsecsv_ary_tok_curs_Access(parsecsv_ary_tok_curs &curs);
+algo::cstring&       csvparse_ary_tok_curs_Access(csvparse_ary_tok_curs &curs);
 // Set all fields to initial values.
-void                 CsvParse_Init(algo_lib::CsvParse& parsecsv);
-void                 CsvParse_Uninit(algo_lib::CsvParse& parsecsv) __attribute__((nothrow));
+void                 CsvParse_Init(algo_lib::CsvParse& csvparse);
+void                 CsvParse_Uninit(algo_lib::CsvParse& csvparse) __attribute__((nothrow));
 // print string representation of algo_lib::CsvParse to string LHS, no header -- cprint:algo_lib.CsvParse.String
 void                 CsvParse_Print(algo_lib::CsvParse & row, algo::cstring &str) __attribute__((nothrow));
 
@@ -711,7 +717,7 @@ bool                 error_XrefMaybe(algo_lib::ErrorX &row);
 
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool                 parsecsv_XrefMaybe(algo_lib::CsvParse &row);
+bool                 csvparse_XrefMaybe(algo_lib::CsvParse &row);
 
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -1967,12 +1973,12 @@ struct Bitset_ary_curs {// cursor
 };
 
 
-struct parsecsv_ary_tok_curs {// cursor
-    typedef algo::strptr ChildType;
-    algo::strptr* elems;
+struct csvparse_ary_tok_curs {// cursor
+    typedef algo::cstring ChildType;
+    algo::cstring* elems;
     int n_elems;
     int index;
-    parsecsv_ary_tok_curs() { elems=NULL; n_elems=0; index=0; }
+    csvparse_ary_tok_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
 

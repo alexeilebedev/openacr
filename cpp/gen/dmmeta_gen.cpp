@@ -92,6 +92,7 @@ const char *dmmeta_Ns_ns_src_lim        = "src_lim";
 const char *dmmeta_Ns_ns_ssim2csv     = "ssim2csv";
 const char *dmmeta_Ns_ns_ssim2mysql   = "ssim2mysql";
 const char *dmmeta_Ns_ns_strconv      = "strconv";
+const char *dmmeta_Ns_ns_sv2ssim      = "sv2ssim";
 
 // compile-time string constants for dmmeta.Nstype.nstype
 const char *dmmeta_Nstype_nstype_exe   = "exe";
@@ -320,6 +321,7 @@ const char *dmmeta_Ssimfile_ssimfile_dmmeta_steptype       = "dmmeta.steptype";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_strfmt         = "dmmeta.strfmt";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_strtype        = "dmmeta.strtype";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_substr         = "dmmeta.substr";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_svtype         = "dmmeta.svtype";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_tary           = "dmmeta.tary";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_thash          = "dmmeta.thash";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_tracefld       = "dmmeta.tracefld";
@@ -3096,6 +3098,9 @@ const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) {
         case dmmeta_FieldId_strtype        : ret = "strtype";  break;
         case dmmeta_FieldId_pad            : ret = "pad";  break;
         case dmmeta_FieldId_ssimns         : ret = "ssimns";  break;
+        case dmmeta_FieldId_maxwid         : ret = "maxwid";  break;
+        case dmmeta_FieldId_fixedwid1      : ret = "fixedwid1";  break;
+        case dmmeta_FieldId_fixedwid2      : ret = "fixedwid2";  break;
         case dmmeta_FieldId_aliased        : ret = "aliased";  break;
         case dmmeta_FieldId_hashfld        : ret = "hashfld";  break;
         case dmmeta_FieldId_tracefld       : ret = "tracefld";  break;
@@ -3347,6 +3352,9 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('l','o','g','c','a','t'): {
                     value_SetEnum(parent,dmmeta_FieldId_logcat); ret = true; break;
                 }
+                case LE_STR6('m','a','x','w','i','d'): {
+                    value_SetEnum(parent,dmmeta_FieldId_maxwid); ret = true; break;
+                }
                 case LE_STR6('m','i','n','m','a','x'): {
                     value_SetEnum(parent,dmmeta_FieldId_minmax); ret = true; break;
                 }
@@ -3573,6 +3581,11 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('d','e','p','r','e','c','a','t'): {
                     if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,dmmeta_FieldId_deprecate); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('f','i','x','e','d','w','i','d'): {
+                    if (memcmp(rhs.elems+8,"1",1)==0) { value_SetEnum(parent,dmmeta_FieldId_fixedwid1); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"2",1)==0) { value_SetEnum(parent,dmmeta_FieldId_fixedwid2); ret = true; break; }
                     break;
                 }
                 case LE_STR8('h','a','v','e','c','o','u','n'): {
@@ -7098,6 +7111,59 @@ void dmmeta::Substr_Print(dmmeta::Substr & row, algo::cstring &str) {
 
     algo::Smallstr100_Print(row.srcfield, temp);
     PrintAttrSpaceReset(str,"srcfield", temp);
+}
+
+// --- dmmeta.Svtype..ReadFieldMaybe
+bool dmmeta::Svtype_ReadFieldMaybe(dmmeta::Svtype &parent, algo::strptr field, algo::strptr strval) {
+    dmmeta::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case dmmeta_FieldId_ctype: retval = algo::Smallstr50_ReadStrptrMaybe(parent.ctype, strval); break;
+        case dmmeta_FieldId_maxwid: retval = i32_ReadStrptrMaybe(parent.maxwid, strval); break;
+        case dmmeta_FieldId_fixedwid1: retval = i32_ReadStrptrMaybe(parent.fixedwid1, strval); break;
+        case dmmeta_FieldId_fixedwid2: retval = i32_ReadStrptrMaybe(parent.fixedwid2, strval); break;
+        case dmmeta_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dmmeta.Svtype..ReadStrptrMaybe
+// Read fields of dmmeta::Svtype from an ascii string.
+// The format of the string is an ssim Tuple
+bool dmmeta::Svtype_ReadStrptrMaybe(dmmeta::Svtype &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dmmeta.svtype") || algo::StripTypeTag(in_str, "dmmeta.Svtype");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Svtype_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dmmeta.Svtype..Print
+// print string representation of dmmeta::Svtype to string LHS, no header -- cprint:dmmeta.Svtype.String
+void dmmeta::Svtype_Print(dmmeta::Svtype & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "dmmeta.svtype";
+
+    algo::Smallstr50_Print(row.ctype, temp);
+    PrintAttrSpaceReset(str,"ctype", temp);
+
+    i32_Print(row.maxwid, temp);
+    PrintAttrSpaceReset(str,"maxwid", temp);
+
+    i32_Print(row.fixedwid1, temp);
+    PrintAttrSpaceReset(str,"fixedwid1", temp);
+
+    i32_Print(row.fixedwid2, temp);
+    PrintAttrSpaceReset(str,"fixedwid2", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
 }
 
 // --- dmmeta.Tary..ReadFieldMaybe

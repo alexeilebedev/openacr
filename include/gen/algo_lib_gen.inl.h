@@ -303,9 +303,15 @@ inline void algo_lib::Cmdline_Init(algo_lib::Cmdline& parent) {
     parent.signature = bool(false);
 }
 inline algo_lib::CsvParse::CsvParse(algo::strptr                   in_input
-        ,char                           in_sep)
+        ,char                           in_sep
+        ,char                           in_quotechar1
+        ,char                           in_quotechar2
+        ,bool                           in_openquote)
     : input(in_input)
     , sep(in_sep)
+    , quotechar1(in_quotechar1)
+    , quotechar2(in_quotechar2)
+    , openquote(in_openquote)
 {
 }
 inline algo_lib::CsvParse::CsvParse() {
@@ -319,85 +325,80 @@ inline algo_lib::CsvParse::~CsvParse() {
 
 // --- algo_lib.CsvParse.ary_tok.EmptyQ
 // Return true if index is empty
-inline bool algo_lib::ary_tok_EmptyQ(algo_lib::CsvParse& parsecsv) {
-    return parsecsv.ary_tok_n == 0;
+inline bool algo_lib::ary_tok_EmptyQ(algo_lib::CsvParse& csvparse) {
+    return csvparse.ary_tok_n == 0;
 }
 
 // --- algo_lib.CsvParse.ary_tok.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::strptr* algo_lib::ary_tok_Find(algo_lib::CsvParse& parsecsv, u64 t) {
+inline algo::cstring* algo_lib::ary_tok_Find(algo_lib::CsvParse& csvparse, u64 t) {
     u64 idx = t;
-    u64 lim = parsecsv.ary_tok_n;
+    u64 lim = csvparse.ary_tok_n;
     if (idx >= lim) return NULL;
-    return parsecsv.ary_tok_elems + idx;
+    return csvparse.ary_tok_elems + idx;
 }
 
 // --- algo_lib.CsvParse.ary_tok.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::strptr> algo_lib::ary_tok_Getary(algo_lib::CsvParse& parsecsv) {
-    return algo::aryptr<algo::strptr>(parsecsv.ary_tok_elems, parsecsv.ary_tok_n);
+inline algo::aryptr<algo::cstring> algo_lib::ary_tok_Getary(algo_lib::CsvParse& csvparse) {
+    return algo::aryptr<algo::cstring>(csvparse.ary_tok_elems, csvparse.ary_tok_n);
 }
 
 // --- algo_lib.CsvParse.ary_tok.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::strptr* algo_lib::ary_tok_Last(algo_lib::CsvParse& parsecsv) {
-    return ary_tok_Find(parsecsv, u64(parsecsv.ary_tok_n-1));
+inline algo::cstring* algo_lib::ary_tok_Last(algo_lib::CsvParse& csvparse) {
+    return ary_tok_Find(csvparse, u64(csvparse.ary_tok_n-1));
 }
 
 // --- algo_lib.CsvParse.ary_tok.Max
 // Return max. number of items in the array
-inline i32 algo_lib::ary_tok_Max(algo_lib::CsvParse& parsecsv) {
-    (void)parsecsv;
-    return parsecsv.ary_tok_max;
+inline i32 algo_lib::ary_tok_Max(algo_lib::CsvParse& csvparse) {
+    (void)csvparse;
+    return csvparse.ary_tok_max;
 }
 
 // --- algo_lib.CsvParse.ary_tok.N
 // Return number of items in the array
-inline i32 algo_lib::ary_tok_N(const algo_lib::CsvParse& parsecsv) {
-    return parsecsv.ary_tok_n;
-}
-
-// --- algo_lib.CsvParse.ary_tok.RemoveAll
-inline void algo_lib::ary_tok_RemoveAll(algo_lib::CsvParse& parsecsv) {
-    parsecsv.ary_tok_n = 0;
+inline i32 algo_lib::ary_tok_N(const algo_lib::CsvParse& csvparse) {
+    return csvparse.ary_tok_n;
 }
 
 // --- algo_lib.CsvParse.ary_tok.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void algo_lib::ary_tok_Reserve(algo_lib::CsvParse& parsecsv, int n) {
-    u32 new_n = parsecsv.ary_tok_n + n;
-    if (UNLIKELY(new_n > parsecsv.ary_tok_max)) {
-        ary_tok_AbsReserve(parsecsv, new_n);
+inline void algo_lib::ary_tok_Reserve(algo_lib::CsvParse& csvparse, int n) {
+    u32 new_n = csvparse.ary_tok_n + n;
+    if (UNLIKELY(new_n > csvparse.ary_tok_max)) {
+        ary_tok_AbsReserve(csvparse, new_n);
     }
 }
 
 // --- algo_lib.CsvParse.ary_tok.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::strptr& algo_lib::ary_tok_qFind(algo_lib::CsvParse& parsecsv, u64 t) {
-    return parsecsv.ary_tok_elems[t];
+inline algo::cstring& algo_lib::ary_tok_qFind(algo_lib::CsvParse& csvparse, u64 t) {
+    return csvparse.ary_tok_elems[t];
 }
 
 // --- algo_lib.CsvParse.ary_tok.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::strptr& algo_lib::ary_tok_qLast(algo_lib::CsvParse& parsecsv) {
-    return ary_tok_qFind(parsecsv, u64(parsecsv.ary_tok_n-1));
+inline algo::cstring& algo_lib::ary_tok_qLast(algo_lib::CsvParse& csvparse) {
+    return ary_tok_qFind(csvparse, u64(csvparse.ary_tok_n-1));
 }
 
 // --- algo_lib.CsvParse.ary_tok.rowid_Get
 // Return row id of specified element
-inline u64 algo_lib::ary_tok_rowid_Get(algo_lib::CsvParse& parsecsv, algo::strptr &elem) {
-    u64 id = &elem - parsecsv.ary_tok_elems;
+inline u64 algo_lib::ary_tok_rowid_Get(algo_lib::CsvParse& csvparse, algo::cstring &elem) {
+    u64 id = &elem - csvparse.ary_tok_elems;
     return u64(id);
 }
 
 // --- algo_lib.CsvParse.ary_tok_curs.Next
 // proceed to next item
-inline void algo_lib::parsecsv_ary_tok_curs_Next(parsecsv_ary_tok_curs &curs) {
+inline void algo_lib::csvparse_ary_tok_curs_Next(csvparse_ary_tok_curs &curs) {
     curs.index++;
 }
 
 // --- algo_lib.CsvParse.ary_tok_curs.Reset
-inline void algo_lib::parsecsv_ary_tok_curs_Reset(parsecsv_ary_tok_curs &curs, algo_lib::CsvParse &parent) {
+inline void algo_lib::csvparse_ary_tok_curs_Reset(csvparse_ary_tok_curs &curs, algo_lib::CsvParse &parent) {
     curs.elems = parent.ary_tok_elems;
     curs.n_elems = parent.ary_tok_n;
     curs.index = 0;
@@ -405,23 +406,26 @@ inline void algo_lib::parsecsv_ary_tok_curs_Reset(parsecsv_ary_tok_curs &curs, a
 
 // --- algo_lib.CsvParse.ary_tok_curs.ValidQ
 // cursor points to valid item
-inline bool algo_lib::parsecsv_ary_tok_curs_ValidQ(parsecsv_ary_tok_curs &curs) {
+inline bool algo_lib::csvparse_ary_tok_curs_ValidQ(csvparse_ary_tok_curs &curs) {
     return curs.index < curs.n_elems;
 }
 
 // --- algo_lib.CsvParse.ary_tok_curs.Access
 // item access
-inline algo::strptr& algo_lib::parsecsv_ary_tok_curs_Access(parsecsv_ary_tok_curs &curs) {
+inline algo::cstring& algo_lib::csvparse_ary_tok_curs_Access(csvparse_ary_tok_curs &curs) {
     return curs.elems[curs.index];
 }
 
 // --- algo_lib.CsvParse..Init
 // Set all fields to initial values.
-inline void algo_lib::CsvParse_Init(algo_lib::CsvParse& parsecsv) {
-    parsecsv.sep = char(',');
-    parsecsv.ary_tok_elems 	= 0; // (algo_lib.CsvParse.ary_tok)
-    parsecsv.ary_tok_n     	= 0; // (algo_lib.CsvParse.ary_tok)
-    parsecsv.ary_tok_max   	= 0; // (algo_lib.CsvParse.ary_tok)
+inline void algo_lib::CsvParse_Init(algo_lib::CsvParse& csvparse) {
+    csvparse.sep = char(',');
+    csvparse.quotechar1 = char('\"');
+    csvparse.quotechar2 = char('\'');
+    csvparse.ary_tok_elems 	= 0; // (algo_lib.CsvParse.ary_tok)
+    csvparse.ary_tok_n     	= 0; // (algo_lib.CsvParse.ary_tok)
+    csvparse.ary_tok_max   	= 0; // (algo_lib.CsvParse.ary_tok)
+    csvparse.openquote = bool(true);
 }
 inline algo_lib::ErrorX::ErrorX(const algo::strptr&            in_str)
     : str(in_str)

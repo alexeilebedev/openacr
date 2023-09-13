@@ -1,0 +1,20 @@
+# atf_comp -report:N -print sv2ssim.Convert1 | sv2ssim test/csv/2.csv -ctype a.B -schema -data | cat
+a.B  Month:JAN  _1958:340  _1959:360  _1960:417
+a.B  Month:FEB  _1958:318  _1959:342  _1960:391
+a.B  Month:MAR  _1958:362  _1959:406  _1960:419
+a.B  Month:APR  _1958:348  _1959:396  _1960:461
+a.B  Month:MAY  _1958:363  _1959:420  _1960:472
+a.B  Month:JUN  _1958:435  _1959:472  _1960:535
+a.B  Month:JUL  _1958:491  _1959:548  _1960:622
+a.B  Month:AUG  _1958:505  _1959:559  _1960:606
+a.B  Month:SEP  _1958:404  _1959:463  _1960:508
+a.B  Month:OCT  _1958:359  _1959:407  _1960:461
+a.B  Month:NOV  _1958:310  _1959:362  _1960:390
+a.B  Month:DEC  _1958:337  _1959:405  _1960:432
+sv2ssim.report  n_line:13  n_nonempty_line:13  n_field:4  n_wideline:1
+dmmeta.ctype  ctype:a.B  comment:""
+dmmeta.cfmt  cfmt:a.B.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+dmmeta.field  field:a.B.Month  arg:algo.Smallstr10  reftype:Val  dflt:""  comment:""
+dmmeta.field  field:a.B._1958  arg:u32  reftype:Val  dflt:""  comment:""
+dmmeta.field  field:a.B._1959  arg:u32  reftype:Val  dflt:""  comment:""
+dmmeta.field  field:a.B._1960  arg:u32  reftype:Val  dflt:""  comment:""

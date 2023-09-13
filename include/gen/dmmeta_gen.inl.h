@@ -1141,6 +1141,18 @@ inline dmmeta::Substr::Substr(const algo::strptr&            in_field
 inline dmmeta::Substr::Substr() {
 }
 
+inline dmmeta::Svtype::Svtype() {
+    dmmeta::Svtype_Init(*this);
+}
+
+
+// --- dmmeta.Svtype..Init
+// Set all fields to initial values.
+inline void dmmeta::Svtype_Init(dmmeta::Svtype& parent) {
+    parent.maxwid = i32(0);
+    parent.fixedwid1 = i32(0);
+    parent.fixedwid2 = i32(0);
+}
 inline dmmeta::Tary::Tary() {
     dmmeta::Tary_Init(*this);
 }
@@ -1447,6 +1459,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Ssimvo
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Substr &row) {// cfmt:dmmeta.Substr.String
     dmmeta::Substr_Print(const_cast<dmmeta::Substr&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Svtype &row) {// cfmt:dmmeta.Svtype.String
+    dmmeta::Svtype_Print(const_cast<dmmeta::Svtype&>(row), str);
     return str;
 }
 

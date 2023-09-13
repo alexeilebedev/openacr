@@ -15784,7 +15784,7 @@ static void amc::tclass_LoadStatic() {
         ,{ "amcdb.tclass  tclass:Cmp  comment:Comparison", amc::tclass_Cmp }
         ,{ "amcdb.tclass  tclass:Count  comment:\"A cross-reference that simply counts # of children\"", amc::tclass_Count }
         ,{ "amcdb.tclass  tclass:Cppfunc  comment:\"\"", amc::tclass_Cppfunc }
-        ,{ "amcdb.tclass  tclass:Cppstack  comment:\"X-reference: count of elements\"", amc::tclass_Cppstack }
+        ,{ "amcdb.tclass  tclass:Cppstack  comment:\"Provides default name for variables of this type\"", amc::tclass_Cppstack }
         ,{ "amcdb.tclass  tclass:Ctype  comment:\"\"", amc::tclass_Ctype }
         ,{ "amcdb.tclass  tclass:Dec  comment:\"\"", amc::tclass_Dec }
         ,{ "amcdb.tclass  tclass:Delptr  comment:\"Pointer to a private cascade-delete value (like Val by starts as NULL)\"", amc::tclass_Delptr }

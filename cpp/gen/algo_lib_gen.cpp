@@ -244,117 +244,129 @@ bool algo_lib::Cmdline_ReadTupleMaybe(algo_lib::Cmdline &parent, algo::Tuple &tu
 // --- algo_lib.CsvParse.ary_tok.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::strptr& algo_lib::ary_tok_Alloc(algo_lib::CsvParse& parsecsv) {
-    ary_tok_Reserve(parsecsv, 1);
-    int n  = parsecsv.ary_tok_n;
+algo::cstring& algo_lib::ary_tok_Alloc(algo_lib::CsvParse& csvparse) {
+    ary_tok_Reserve(csvparse, 1);
+    int n  = csvparse.ary_tok_n;
     int at = n;
-    algo::strptr *elems = parsecsv.ary_tok_elems;
-    new (elems + at) algo::strptr(); // construct new element, default initializer
-    parsecsv.ary_tok_n = n+1;
+    algo::cstring *elems = csvparse.ary_tok_elems;
+    new (elems + at) algo::cstring(); // construct new element, default initializer
+    csvparse.ary_tok_n = n+1;
     return elems[at];
 }
 
 // --- algo_lib.CsvParse.ary_tok.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::strptr& algo_lib::ary_tok_AllocAt(algo_lib::CsvParse& parsecsv, int at) {
-    ary_tok_Reserve(parsecsv, 1);
-    int n  = parsecsv.ary_tok_n;
+algo::cstring& algo_lib::ary_tok_AllocAt(algo_lib::CsvParse& csvparse, int at) {
+    ary_tok_Reserve(csvparse, 1);
+    int n  = csvparse.ary_tok_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("algo_lib.bad_alloc_at  field:algo_lib.CsvParse.ary_tok  comment:'index out of range'");
     }
-    algo::strptr *elems = parsecsv.ary_tok_elems;
-    memmove(elems + at + 1, elems + at, (n - at) * sizeof(algo::strptr));
-    new (elems + at) algo::strptr(); // construct element, default initializer
-    parsecsv.ary_tok_n = n+1;
+    algo::cstring *elems = csvparse.ary_tok_elems;
+    memmove(elems + at + 1, elems + at, (n - at) * sizeof(algo::cstring));
+    new (elems + at) algo::cstring(); // construct element, default initializer
+    csvparse.ary_tok_n = n+1;
     return elems[at];
 }
 
 // --- algo_lib.CsvParse.ary_tok.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::strptr> algo_lib::ary_tok_AllocN(algo_lib::CsvParse& parsecsv, int n_elems) {
-    ary_tok_Reserve(parsecsv, n_elems);
-    int old_n  = parsecsv.ary_tok_n;
+algo::aryptr<algo::cstring> algo_lib::ary_tok_AllocN(algo_lib::CsvParse& csvparse, int n_elems) {
+    ary_tok_Reserve(csvparse, n_elems);
+    int old_n  = csvparse.ary_tok_n;
     int new_n = old_n + n_elems;
-    algo::strptr *elems = parsecsv.ary_tok_elems;
+    algo::cstring *elems = csvparse.ary_tok_elems;
     for (int i = old_n; i < new_n; i++) {
-        new (elems + i) algo::strptr(); // construct new element, default initialize
+        new (elems + i) algo::cstring(); // construct new element, default initialize
     }
-    parsecsv.ary_tok_n = new_n;
-    return algo::aryptr<algo::strptr>(elems + old_n, n_elems);
+    csvparse.ary_tok_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
 // --- algo_lib.CsvParse.ary_tok.Remove
 // Remove item by index. If index outside of range, do nothing.
-void algo_lib::ary_tok_Remove(algo_lib::CsvParse& parsecsv, u32 i) {
-    u32 lim = parsecsv.ary_tok_n;
-    algo::strptr *elems = parsecsv.ary_tok_elems;
+void algo_lib::ary_tok_Remove(algo_lib::CsvParse& csvparse, u32 i) {
+    u32 lim = csvparse.ary_tok_n;
+    algo::cstring *elems = csvparse.ary_tok_elems;
     if (i < lim) {
-        memmove(elems + i, elems + (i + 1), sizeof(algo::strptr) * (lim - (i + 1)));
-        parsecsv.ary_tok_n = lim - 1;
+        elems[i].~cstring(); // destroy element
+        memmove(elems + i, elems + (i + 1), sizeof(algo::cstring) * (lim - (i + 1)));
+        csvparse.ary_tok_n = lim - 1;
+    }
+}
+
+// --- algo_lib.CsvParse.ary_tok.RemoveAll
+void algo_lib::ary_tok_RemoveAll(algo_lib::CsvParse& csvparse) {
+    u32 n = csvparse.ary_tok_n;
+    while (n > 0) {
+        n -= 1;
+        csvparse.ary_tok_elems[n].~cstring();
+        csvparse.ary_tok_n = n;
     }
 }
 
 // --- algo_lib.CsvParse.ary_tok.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void algo_lib::ary_tok_RemoveLast(algo_lib::CsvParse& parsecsv) {
-    u64 n = parsecsv.ary_tok_n;
+void algo_lib::ary_tok_RemoveLast(algo_lib::CsvParse& csvparse) {
+    u64 n = csvparse.ary_tok_n;
     if (n > 0) {
         n -= 1;
-        parsecsv.ary_tok_n = n;
+        ary_tok_qFind(csvparse, u64(n)).~cstring();
+        csvparse.ary_tok_n = n;
     }
 }
 
 // --- algo_lib.CsvParse.ary_tok.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void algo_lib::ary_tok_AbsReserve(algo_lib::CsvParse& parsecsv, int n) {
-    u32 old_max  = parsecsv.ary_tok_max;
+void algo_lib::ary_tok_AbsReserve(algo_lib::CsvParse& csvparse, int n) {
+    u32 old_max  = csvparse.ary_tok_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-        void *new_mem = algo_lib::lpool_ReallocMem(parsecsv.ary_tok_elems, old_max * sizeof(algo::strptr), new_max * sizeof(algo::strptr));
+        void *new_mem = algo_lib::lpool_ReallocMem(csvparse.ary_tok_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.CsvParse.ary_tok  comment:'out of memory'");
         }
-        parsecsv.ary_tok_elems = (algo::strptr*)new_mem;
-        parsecsv.ary_tok_max = new_max;
+        csvparse.ary_tok_elems = (algo::cstring*)new_mem;
+        csvparse.ary_tok_max = new_max;
     }
 }
 
 // --- algo_lib.CsvParse.ary_tok.Setary
 // Copy contents of RHS to PARENT.
-void algo_lib::ary_tok_Setary(algo_lib::CsvParse& parsecsv, algo_lib::CsvParse &rhs) {
-    ary_tok_RemoveAll(parsecsv);
+void algo_lib::ary_tok_Setary(algo_lib::CsvParse& csvparse, algo_lib::CsvParse &rhs) {
+    ary_tok_RemoveAll(csvparse);
     int nnew = rhs.ary_tok_n;
-    ary_tok_Reserve(parsecsv, nnew); // reserve space
+    ary_tok_Reserve(csvparse, nnew); // reserve space
     for (int i = 0; i < nnew; i++) { // copy elements over
-        new (parsecsv.ary_tok_elems + i) algo::strptr(ary_tok_qFind(rhs, i));
-        parsecsv.ary_tok_n = i + 1;
+        new (csvparse.ary_tok_elems + i) algo::cstring(ary_tok_qFind(rhs, i));
+        csvparse.ary_tok_n = i + 1;
     }
 }
 
 // --- algo_lib.CsvParse.ary_tok.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::strptr> algo_lib::ary_tok_AllocNVal(algo_lib::CsvParse& parsecsv, int n_elems, const algo::strptr& val) {
-    ary_tok_Reserve(parsecsv, n_elems);
-    int old_n  = parsecsv.ary_tok_n;
+algo::aryptr<algo::cstring> algo_lib::ary_tok_AllocNVal(algo_lib::CsvParse& csvparse, int n_elems, const algo::cstring& val) {
+    ary_tok_Reserve(csvparse, n_elems);
+    int old_n  = csvparse.ary_tok_n;
     int new_n = old_n + n_elems;
-    algo::strptr *elems = parsecsv.ary_tok_elems;
+    algo::cstring *elems = csvparse.ary_tok_elems;
     for (int i = old_n; i < new_n; i++) {
-        new (elems + i) algo::strptr(val);
+        new (elems + i) algo::cstring(val);
     }
-    parsecsv.ary_tok_n = new_n;
-    return algo::aryptr<algo::strptr>(elems + old_n, n_elems);
+    csvparse.ary_tok_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
 // --- algo_lib.CsvParse..Uninit
-void algo_lib::CsvParse_Uninit(algo_lib::CsvParse& parsecsv) {
-    algo_lib::CsvParse &row = parsecsv; (void)row;
+void algo_lib::CsvParse_Uninit(algo_lib::CsvParse& csvparse) {
+    algo_lib::CsvParse &row = csvparse; (void)row;
 
     // algo_lib.CsvParse.ary_tok.Uninit (Tary)  //Output: array of tokens
     // remove all elements from algo_lib.CsvParse.ary_tok
-    ary_tok_RemoveAll(parsecsv);
+    ary_tok_RemoveAll(csvparse);
     // free memory for Tary algo_lib.CsvParse.ary_tok
-    algo_lib::lpool_FreeMem(parsecsv.ary_tok_elems, sizeof(algo::strptr)*parsecsv.ary_tok_max); // (algo_lib.CsvParse.ary_tok)
+    algo_lib::lpool_FreeMem(csvparse.ary_tok_elems, sizeof(algo::cstring)*csvparse.ary_tok_max); // (algo_lib.CsvParse.ary_tok)
 }
 
 // --- algo_lib.CsvParse..Print
@@ -365,6 +377,15 @@ void algo_lib::CsvParse_Print(algo_lib::CsvParse & row, algo::cstring &str) {
 
     char_Print(row.sep, temp);
     PrintAttrSpaceReset(str,"sep", temp);
+
+    char_Print(row.quotechar1, temp);
+    PrintAttrSpaceReset(str,"quotechar1", temp);
+
+    char_Print(row.quotechar2, temp);
+    PrintAttrSpaceReset(str,"quotechar2", temp);
+
+    bool_Print(row.openquote, temp);
+    PrintAttrSpaceReset(str,"openquote", temp);
 }
 
 // --- algo_lib.FFildes..Uninit
@@ -1076,10 +1097,10 @@ bool algo_lib::error_XrefMaybe(algo_lib::ErrorX &row) {
     return retval;
 }
 
-// --- algo_lib.FDb.parsecsv.XrefMaybe
+// --- algo_lib.FDb.csvparse.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool algo_lib::parsecsv_XrefMaybe(algo_lib::CsvParse &row) {
+bool algo_lib::csvparse_XrefMaybe(algo_lib::CsvParse &row) {
     bool retval = true;
     (void)row;
     return retval;

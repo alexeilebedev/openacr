@@ -1272,17 +1272,14 @@ bool ietf::Ipport_ReadStrptrMaybe(ietf::Ipport &row, strptr in) {
 // If it is any other value, then that type of quote is used
 // According to the CSV standard, the quote itself is the escape character.
 void algo::strptr_PrintCsv(algo::strptr str, algo::cstring &out, char quote) {
-    if (quote ==0) {
+    if (quote == 0) {
         bool has_comma=false;
         bool has_quote=false;
         ind_beg_aryptr(char,c,str) {
             if (c == ',') {
                 has_comma=true;
-                continue;
-            }
-            if (c == '\'' || c == '"') {
+            } else if (c == '\'' || c == '"' || algo_lib::WhiteCharQ(c)) {
                 has_quote=true;
-                continue;
             }
         }ind_end_aryptr;
         if (has_comma || has_quote) {

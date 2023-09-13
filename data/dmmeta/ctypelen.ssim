@@ -307,7 +307,7 @@ dmmeta.ctypelen  ctype:algo.memptr  len:16  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:algo.strptr  len:16  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:algo_lib.Bitset  len:16  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:algo_lib.Cmdline  len:6  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:algo_lib.CsvParse  len:40  alignment:8  padbytes:7
+dmmeta.ctypelen  ctype:algo_lib.CsvParse  len:48  alignment:8  padbytes:12
 dmmeta.ctypelen  ctype:algo_lib.ErrorX  len:16  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:algo_lib.FDb  len:10640  alignment:16  padbytes:88
 dmmeta.ctypelen  ctype:algo_lib.FDispsigcheck  len:80  alignment:8  padbytes:0
@@ -678,6 +678,7 @@ dmmeta.ctypelen  ctype:command.src_lim  len:224  alignment:8  padbytes:11
 dmmeta.ctypelen  ctype:command.ssim2csv  len:24  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:command.ssim2mysql  len:80  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:command.strconv  len:144  alignment:8  padbytes:8
+dmmeta.ctypelen  ctype:command.sv2ssim  len:208  alignment:8  padbytes:26
 dmmeta.ctypelen  ctype:dev.Arch  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Badline  len:458  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Builddir  len:204  alignment:1  padbytes:0
@@ -819,6 +820,7 @@ dmmeta.ctypelen  ctype:dmmeta.Steptype  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Strfmt  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Strtype  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Substr  len:456  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:dmmeta.Svtype  len:216  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Tary  len:255  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Thash  len:357  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Tracefld  len:254  alignment:1  padbytes:0
@@ -957,3 +959,7 @@ dmmeta.ctypelen  ctype:ssim2mysql.FSqltype  len:306  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:ssim2mysql.FSsimfile  len:168  alignment:8  padbytes:14
 dmmeta.ctypelen  ctype:ssim2mysql.FSubstr  len:464  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:strconv.FDb  len:152  alignment:8  padbytes:7
+dmmeta.ctypelen  ctype:sv2ssim.FBltin  len:216  alignment:8  padbytes:1
+dmmeta.ctypelen  ctype:sv2ssim.FDb  len:1088  alignment:8  padbytes:27
+dmmeta.ctypelen  ctype:sv2ssim.FField  len:136  alignment:8  padbytes:0
+dmmeta.ctypelen  ctype:sv2ssim.FSvtype  len:216  alignment:4  padbytes:0

@@ -8,7 +8,7 @@ amcdb.tclass  tclass:Charset  comment:""
 amcdb.tclass  tclass:Cmp  comment:Comparison
 amcdb.tclass  tclass:Count  comment:"A cross-reference that simply counts # of children"
 amcdb.tclass  tclass:Cppfunc  comment:""
-amcdb.tclass  tclass:Cppstack  comment:"X-reference: count of elements"
+amcdb.tclass  tclass:Cppstack  comment:"Provides default name for variables of this type"
 amcdb.tclass  tclass:Ctype  comment:""
 amcdb.tclass  tclass:Dec  comment:""
 amcdb.tclass  tclass:Delptr  comment:"Pointer to a private cascade-delete value (like Val by starts as NULL)"

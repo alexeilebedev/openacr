@@ -183,17 +183,20 @@ enum dmmeta_FieldIdEnum {                        // dmmeta.FieldId.value
     ,dmmeta_FieldId_strtype               = 142
     ,dmmeta_FieldId_pad                   = 143
     ,dmmeta_FieldId_ssimns                = 144
-    ,dmmeta_FieldId_aliased               = 145
-    ,dmmeta_FieldId_hashfld               = 146
-    ,dmmeta_FieldId_tracefld              = 147
-    ,dmmeta_FieldId_tracerec              = 148
-    ,dmmeta_FieldId_inscond               = 149
-    ,dmmeta_FieldId_via                   = 150
-    ,dmmeta_FieldId_viafld                = 151
-    ,dmmeta_FieldId_keyfld                = 152
+    ,dmmeta_FieldId_maxwid                = 145
+    ,dmmeta_FieldId_fixedwid1             = 146
+    ,dmmeta_FieldId_fixedwid2             = 147
+    ,dmmeta_FieldId_aliased               = 148
+    ,dmmeta_FieldId_hashfld               = 149
+    ,dmmeta_FieldId_tracefld              = 150
+    ,dmmeta_FieldId_tracerec              = 151
+    ,dmmeta_FieldId_inscond               = 152
+    ,dmmeta_FieldId_via                   = 153
+    ,dmmeta_FieldId_viafld                = 154
+    ,dmmeta_FieldId_keyfld                = 155
 };
 
-enum { dmmeta_FieldIdEnum_N = 153 };
+enum { dmmeta_FieldIdEnum_N = 156 };
 
 extern const char *  dmmeta_Hashtype_hashtype_Extern;   // Extern    fconst:dmmeta.Hashtype.hashtype/Extern
 extern const char *  dmmeta_Hashtype_hashtype_CRC32;    // CRC32     fconst:dmmeta.Hashtype.hashtype/CRC32
@@ -253,6 +256,7 @@ extern const char *  dmmeta_Ns_ns_src_lim;        // src_lim         fconst:dmme
 extern const char *  dmmeta_Ns_ns_ssim2csv;       // ssim2csv        fconst:dmmeta.Ns.ns/ssim2csv
 extern const char *  dmmeta_Ns_ns_ssim2mysql;     // ssim2mysql      fconst:dmmeta.Ns.ns/ssim2mysql
 extern const char *  dmmeta_Ns_ns_strconv;        // strconv         fconst:dmmeta.Ns.ns/strconv
+extern const char *  dmmeta_Ns_ns_sv2ssim;        // sv2ssim         fconst:dmmeta.Ns.ns/sv2ssim
 extern const char *  dmmeta_Nstype_nstype_exe;        // exe         fconst:dmmeta.Nstype.nstype/exe
 extern const char *  dmmeta_Nstype_nstype_lib;        // lib         fconst:dmmeta.Nstype.nstype/lib
 extern const char *  dmmeta_Nstype_nstype_none;       // none        fconst:dmmeta.Nstype.nstype/none
@@ -539,6 +543,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_steptype;             // dm
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_strfmt;               // dmmeta.strfmt                fconst:dmmeta.Ssimfile.ssimfile/dmmeta.strfmt
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_strtype;              // dmmeta.strtype               fconst:dmmeta.Ssimfile.ssimfile/dmmeta.strtype
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_substr;               // dmmeta.substr                fconst:dmmeta.Ssimfile.ssimfile/dmmeta.substr
+extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_svtype;               // dmmeta.svtype                fconst:dmmeta.Ssimfile.ssimfile/dmmeta.svtype
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_tary;                 // dmmeta.tary                  fconst:dmmeta.Ssimfile.ssimfile/dmmeta.tary
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_thash;                // dmmeta.thash                 fconst:dmmeta.Ssimfile.ssimfile/dmmeta.thash
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_tracefld;             // dmmeta.tracefld              fconst:dmmeta.Ssimfile.ssimfile/dmmeta.tracefld
@@ -719,6 +724,7 @@ namespace dmmeta { struct Steptype; }
 namespace dmmeta { struct Strfmt; }
 namespace dmmeta { struct Strtype; }
 namespace dmmeta { struct Substr; }
+namespace dmmeta { struct Svtype; }
 namespace dmmeta { struct Tary; }
 namespace dmmeta { struct Thash; }
 namespace dmmeta { struct Tracefld; }
@@ -2848,6 +2854,25 @@ bool                 Substr_ReadStrptrMaybe(dmmeta::Substr &parent, algo::strptr
 // print string representation of dmmeta::Substr to string LHS, no header -- cprint:dmmeta.Substr.String
 void                 Substr_Print(dmmeta::Substr & row, algo::cstring &str) __attribute__((nothrow));
 
+// --- dmmeta.Svtype
+struct Svtype { // dmmeta.Svtype: Table for determining ctype from separated value file
+    algo::Smallstr50   ctype;       // Type to choose
+    i32                maxwid;      //   0  Maximum width in chars of input field
+    i32                fixedwid1;   //   0  Max chars before decimal point
+    i32                fixedwid2;   //   0  Max chars after decimal point
+    algo::Comment      comment;     //
+    Svtype();
+};
+
+bool                 Svtype_ReadFieldMaybe(dmmeta::Svtype &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dmmeta::Svtype from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 Svtype_ReadStrptrMaybe(dmmeta::Svtype &parent, algo::strptr in_str);
+// Set all fields to initial values.
+void                 Svtype_Init(dmmeta::Svtype& parent);
+// print string representation of dmmeta::Svtype to string LHS, no header -- cprint:dmmeta.Svtype.String
+void                 Svtype_Print(dmmeta::Svtype & row, algo::cstring &str) __attribute__((nothrow));
+
 // --- dmmeta.Tary
 struct Tary { // dmmeta.Tary: Indirect linear dynamically alocated array (used for strings, arrays of data, etc)
     algo::Smallstr100   field;     //
@@ -3044,6 +3069,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Ssimreq &row
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Ssimsort &row);// cfmt:dmmeta.Ssimsort.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Ssimvolatile &row);// cfmt:dmmeta.Ssimvolatile.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Substr &row);// cfmt:dmmeta.Substr.String
+inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Svtype &row);// cfmt:dmmeta.Svtype.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Tary &row);// cfmt:dmmeta.Tary.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Thash &row);// cfmt:dmmeta.Thash.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Typefld &row);// cfmt:dmmeta.Typefld.String

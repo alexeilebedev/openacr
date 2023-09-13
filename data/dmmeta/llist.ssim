@@ -82,3 +82,4 @@ dmmeta.llist  field:src_lim.FGitfile.zd_include  havetail:Y  havecount:Y  commen
 dmmeta.llist  field:ssim2mysql.FDb.cd_input_line  havetail:N  havecount:N  comment:""
 dmmeta.llist  field:ssim2mysql.FDb.zd_ssimfile  havetail:Y  havecount:N  comment:""
 dmmeta.llist  field:ssim2mysql.FDb.zs_cmd  havetail:Y  havecount:N  comment:""
+dmmeta.llist  field:sv2ssim.FDb.zd_selfield  havetail:Y  havecount:Y  comment:""
