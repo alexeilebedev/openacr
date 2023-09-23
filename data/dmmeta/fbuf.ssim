@@ -2,5 +2,7 @@ dmmeta.fbuf  field:atf_amc.Bytebuf.in  max:64  fbuftype:Bytebuf  insready:atf_am
 dmmeta.fbuf  field:atf_amc.BytebufDyn.in  max:0  fbuftype:Bytebuf  insready:atf_amc.BytebufDyn.in  inseof:atf_amc.BytebufDyn.in  comment:""
 dmmeta.fbuf  field:atf_amc.Linebuf.in  max:64  fbuftype:Linebuf  insready:atf_amc.Linebuf.in  inseof:atf_amc.Linebuf.in  comment:""
 dmmeta.fbuf  field:atf_amc.Msgbuf.in  max:64  fbuftype:Msgbuf  insready:atf_amc.FDb.cd_in_msg  inseof:atf_amc.Msgbuf.in  comment:""
+dmmeta.fbuf  field:atf_amc.Msgbuf.in_extra  max:64  fbuftype:Msgbuf  insready:atf_amc.Msgbuf.in_extra  inseof:atf_amc.Msgbuf.in_extra  comment:""
+dmmeta.fbuf  field:atf_amc.Msgbuf.out_extra  max:64  fbuftype:Msgbuf  insready:atf_amc.Msgbuf.out_extra  inseof:atf_amc.Msgbuf.out_extra  comment:""
 dmmeta.fbuf  field:lib_ams.FFdin.in  max:8192  fbuftype:Linebuf  insready:lib_ams.FDb.cd_fdin_read  inseof:lib_ams.FDb.cd_fdin_eof  comment:""
 dmmeta.fbuf  field:ssim2mysql.FInput.in_buf  max:65536  fbuftype:Linebuf  insready:ssim2mysql.FDb.cd_input_line  inseof:ssim2mysql.FInput.in_buf  comment:""

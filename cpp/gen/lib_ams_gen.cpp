@@ -3373,7 +3373,7 @@ int lib_ams::CtlMsgDispatchRaw(lib_ams::CtlMsgCase type, u8 *msg, u32 len) {
 
 // --- lib_ams.CtlMsg..Dispatch
 int lib_ams::CtlMsgDispatch(ams::MsgHeader& msg) {
-    return CtlMsgDispatchRaw(lib_ams::CtlMsgCase(msg.type), (u8*)&msg, msg.length);
+    return CtlMsgDispatchRaw(lib_ams::CtlMsgCase(msg.type), (u8*)&msg, i32(msg.length));
 }
 
 // --- lib_ams.CtlMsg..Dispatch2

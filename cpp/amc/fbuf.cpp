@@ -88,8 +88,7 @@ void amc::tclass_Fbuf() {
     amc::FCtype &arg = *field.p_arg;
     if (inmsgbuf) {
         Set(R, "$lenfld", name_Get(*arg.c_lenfld->p_field));
-        Set(R, "$lenval", FieldvalExpr(&arg, *arg.c_lenfld->p_field, "(*hdr)"));
-        Set(R, "$extra", tempstr() << arg.c_lenfld->extra);
+        Set(R, "$lenval", LengthExpr(arg, "(*hdr)"));
     }
 }
 
@@ -341,7 +340,7 @@ void amc::tfunc_Fbuf_Scanmsg() {
         } else {
             Ins(&R, scanmsg.body, "msglen = ssizeof($Cpptype);");// this is the minimum readable message
             Ins(&R, scanmsg.body, "if (avail >= msglen) {");
-            Ins(&R, scanmsg.body, "    msglen = $lenval + ($extra); // check rest of the message");
+            Ins(&R, scanmsg.body, "    msglen = $lenval; // check rest of the message");
             Ins(&R, scanmsg.body, "}");
             Ins(&R, scanmsg.body, "found = msglen >= ssizeof($Cpptype) && avail >= msglen;");
             Ins(&R, scanmsg.body, "if (msglen < ssizeof($Cpptype) || msglen > $name_Max($pararg)) {");
@@ -473,7 +472,7 @@ void amc::tfunc_Fbuf_WriteMsg() {
         writeall.inl = false;
         Ins(&R, writeall.ret  , "bool",false);
         if (arg.c_lenfld) {
-            Set(R, "$writemsg_lenval", FieldvalExpr(&arg, *arg.c_lenfld->p_field, "msg"));
+            Set(R, "$writemsg_lenval", amc::LengthExpr(arg, "msg"));
             Ins(&R, writeall.proto, "$name_WriteMsg($Parent, $Cpptype &msg)",false);
             Ins(&R, writeall.body    , "return $name_WriteAll($pararg, (u8*)&msg, $writemsg_lenval);");
         } else {

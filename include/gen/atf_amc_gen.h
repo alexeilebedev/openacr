@@ -3736,6 +3736,8 @@ void                 Linebuf_Print(atf_amc::Linebuf & row, algo::cstring &str) _
 // --- atf_amc.MsgHdrLT
 // create: atf_amc.MsgLTO.o (Opt)
 // create: atf_amc.MsgLTV.v (Varlen)
+// create: atf_amc.Msgbuf.out_extra (Fbuf)
+// create: atf_amc.Msgbuf.in_extra (Fbuf)
 // access: atf_amc.MsgLTA.base (Base)
 // access: atf_amc.MsgLTB.base (Base)
 // access: atf_amc.MsgLTO.base (Base)
@@ -4129,18 +4131,34 @@ void                 MsgLTV_Print(atf_amc::MsgLTV & row, algo::cstring &str) __a
 // create: atf_amc.FDb.msgbuf (Cppstack)
 // global access: cd_in_msg (Llist)
 struct Msgbuf { // atf_amc.Msgbuf
-    atf_amc::Msgbuf*    cd_in_msg_next;    // zslist link; -1 means not-in-list
-    atf_amc::Msgbuf*    cd_in_msg_prev;    // previous element
-    u8                  in_elems[64];      // pointer to elements of inline array
-    i32                 in_start;          // beginning of valid bytes (in bytes)
-    i32                 in_end;            // end of valid bytes (in bytes)
-    bool                in_eof;            // no more data will be written to buffer
-    algo::Errcode       in_err;            // system error code
-    bool                in_msgvalid;       // current message is valid
-    i32                 in_msglen;         // current message length
-    algo_lib::FIohook   in_iohook;         // edge-triggered hook for refilling buffer
-    bool                in_epoll_enable;   // use epoll?
+    atf_amc::Msgbuf*    cd_in_msg_next;           // zslist link; -1 means not-in-list
+    atf_amc::Msgbuf*    cd_in_msg_prev;           // previous element
+    u8                  in_elems[64];             // pointer to elements of inline array
+    i32                 in_start;                 // beginning of valid bytes (in bytes)
+    i32                 in_end;                   // end of valid bytes (in bytes)
+    bool                in_eof;                   // no more data will be written to buffer
+    algo::Errcode       in_err;                   // system error code
+    bool                in_msgvalid;              // current message is valid
+    i32                 in_msglen;                // current message length
+    algo_lib::FIohook   in_iohook;                // edge-triggered hook for refilling buffer
+    bool                in_epoll_enable;          // use epoll?
     enum { in_max = 64 };
+    u8                  out_extra_elems[64];      // pointer to elements of inline array
+    i32                 out_extra_start;          // beginning of valid bytes (in bytes)
+    i32                 out_extra_end;            // end of valid bytes (in bytes)
+    bool                out_extra_eof;            // no more data will be written to buffer
+    algo::Errcode       out_extra_err;            // system error code
+    bool                out_extra_epoll_enable;   // use epoll?
+    enum { out_extra_max = 64 };
+    u8                  in_extra_elems[64];       // pointer to elements of inline array
+    i32                 in_extra_start;           // beginning of valid bytes (in bytes)
+    i32                 in_extra_end;             // end of valid bytes (in bytes)
+    bool                in_extra_eof;             // no more data will be written to buffer
+    algo::Errcode       in_extra_err;             // system error code
+    bool                in_extra_msgvalid;        // current message is valid
+    i32                 in_extra_msglen;          // current message length
+    bool                in_extra_epoll_enable;    // use epoll?
+    enum { in_extra_max = 64 };
     Msgbuf();
     ~Msgbuf();
 private:
@@ -4183,6 +4201,50 @@ bool                 in_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) __at
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 in_XrefMaybe(atf_amc::MsgHeader &row);
+
+// Return max. number of bytes in the buffer.
+i32                  out_extra_Max(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// Return number of bytes in the buffer.
+i32                  out_extra_N(atf_amc::Msgbuf& msgbuf) __attribute__((__warn_unused_result__, nothrow, pure));
+// Empty bfufer
+// Discard contents of the buffer.
+void                 out_extra_RemoveAll(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// Skip N bytes when reading
+// Mark some buffer contents as read.
+//
+void                 out_extra_SkipBytes(atf_amc::Msgbuf& msgbuf, int n) __attribute__((nothrow));
+// Attempt to write buffer contents to fd
+// Write bytes to the buffer. If the entire block is written, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+//
+bool                 out_extra_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) __attribute__((nothrow));
+// Write message to buffer. If the entire message is written, return true, otherwise false.
+bool                 out_extra_WriteMsg(atf_amc::Msgbuf& msgbuf, atf_amc::MsgHdrLT &msg) __attribute__((nothrow));
+
+// Detect incoming message in buffer and return it
+// Look for valid message at current position in the buffer.
+// If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
+// If there is no message, read once from underlying file descriptor and try again.
+// The message is length-delimited based on field len field
+//
+atf_amc::MsgHdrLT*   in_extra_GetMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// Return max. number of bytes in the buffer.
+i32                  in_extra_Max(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// Return number of bytes in the buffer.
+i32                  in_extra_N(atf_amc::Msgbuf& msgbuf) __attribute__((__warn_unused_result__, nothrow, pure));
+// Empty bfufer
+// Discard contents of the buffer.
+void                 in_extra_RemoveAll(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// Skip current message, if any
+// Skip current message, if any.
+void                 in_extra_SkipMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// Attempt to write buffer contents to fd
+// Write bytes to the buffer. If the entire block is written, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+//
+bool                 in_extra_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 Msgbuf_Init(atf_amc::Msgbuf& msgbuf);
@@ -7059,6 +7121,8 @@ void                 amctest_linebuf_test3();
 void                 amctest_linebuf_test4();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_linebuf_test5();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+void                 amctest_msgbuf_extra_test();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_msgbuf_test0();
 // User-implemented function from gstatic:atf_amc.FDb.amctest

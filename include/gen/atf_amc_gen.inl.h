@@ -4715,7 +4715,7 @@ inline void atf_amc::MsgHdrLT_curs_Reset(atf_amc::MsgHdrLT_curs& curs, algo::mem
     int msglen = 0;
     if (curs.limit >= ssizeof(atf_amc::MsgHdrLT)) {
         atf_amc::MsgHdrLT *ptr = (atf_amc::MsgHdrLT*)curs.bytes;
-        msglen = (*ptr).len;
+        msglen = i32((*ptr).len + 2);
         if (msglen >= ssizeof(atf_amc::MsgHdrLT) && curs.limit >= msglen) {
             msg = ptr;
         }
@@ -4737,7 +4737,7 @@ inline void atf_amc::MsgHdrLT_curs_Next(atf_amc::MsgHdrLT_curs& curs) {
     int msglen = 0;
     if (curs.limit >= ssizeof(atf_amc::MsgHdrLT)) {
         atf_amc::MsgHdrLT *ptr = (atf_amc::MsgHdrLT*)curs.bytes;
-        msglen = (*ptr).len;
+        msglen = i32((*ptr).len + 2);
         if (msglen >= ssizeof(atf_amc::MsgHdrLT) && curs.limit >= msglen) {
             msg = ptr;
         }
@@ -4985,7 +4985,7 @@ inline void atf_amc::MsgHeader_curs_Reset(atf_amc::MsgHeader_curs& curs, algo::m
     int msglen = 0;
     if (curs.limit >= ssizeof(atf_amc::MsgHeader)) {
         atf_amc::MsgHeader *ptr = (atf_amc::MsgHeader*)curs.bytes;
-        msglen = (*ptr).length;
+        msglen = i32((*ptr).length);
         if (msglen >= ssizeof(atf_amc::MsgHeader) && curs.limit >= msglen) {
             msg = ptr;
         }
@@ -5007,7 +5007,7 @@ inline void atf_amc::MsgHeader_curs_Next(atf_amc::MsgHeader_curs& curs) {
     int msglen = 0;
     if (curs.limit >= ssizeof(atf_amc::MsgHeader)) {
         atf_amc::MsgHeader *ptr = (atf_amc::MsgHeader*)curs.bytes;
-        msglen = (*ptr).length;
+        msglen = i32((*ptr).length);
         if (msglen >= ssizeof(atf_amc::MsgHeader) && curs.limit >= msglen) {
             msg = ptr;
         }
@@ -5268,6 +5268,32 @@ inline i32 atf_amc::in_Max(atf_amc::Msgbuf& msgbuf) {
 // Return number of bytes in the buffer.
 inline i32 atf_amc::in_N(atf_amc::Msgbuf& msgbuf) {
     return msgbuf.in_end - msgbuf.in_start;
+}
+
+// --- atf_amc.Msgbuf.out_extra.Max
+// Return max. number of bytes in the buffer.
+inline i32 atf_amc::out_extra_Max(atf_amc::Msgbuf& msgbuf) {
+    return 64;
+    (void)msgbuf;//only to avoid -Wunused-parameter
+}
+
+// --- atf_amc.Msgbuf.out_extra.N
+// Return number of bytes in the buffer.
+inline i32 atf_amc::out_extra_N(atf_amc::Msgbuf& msgbuf) {
+    return msgbuf.out_extra_end - msgbuf.out_extra_start;
+}
+
+// --- atf_amc.Msgbuf.in_extra.Max
+// Return max. number of bytes in the buffer.
+inline i32 atf_amc::in_extra_Max(atf_amc::Msgbuf& msgbuf) {
+    return 64;
+    (void)msgbuf;//only to avoid -Wunused-parameter
+}
+
+// --- atf_amc.Msgbuf.in_extra.N
+// Return number of bytes in the buffer.
+inline i32 atf_amc::in_extra_N(atf_amc::Msgbuf& msgbuf) {
+    return msgbuf.in_extra_end - msgbuf.in_extra_start;
 }
 inline atf_amc::MsgsCase::MsgsCase(u32                            in_value)
     : value(in_value)

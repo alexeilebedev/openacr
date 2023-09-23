@@ -157,7 +157,7 @@ static void Filter_Match(algo_lib::Replscope &R, amc::FDispatch &dispatch) {
     Set(R, "$Hdrtype" , amc::NsToCpp(hdr->ctype));
     Set(R, "$ns"  , ns_Get(dispatch));
     Set(R, "$typefld", FieldvalExpr(hdr, *hdr->c_typefld->p_field, "msg"));
-    Set(R, "$lenexpr" , !dispatch.haslen ? strptr(FieldvalExpr(hdr, *hdr->c_lenfld->p_field, "msg")) : strptr("msg_len"));
+    Set(R, "$lenexpr" , !dispatch.haslen ? strptr(amc::LengthExpr(*hdr, "msg")) : strptr("msg_len"));
     Set(R, "$lenarg", dispatch.haslen ? ", msg_len" : "");
     amc::FFunc &func = amc::ind_func_GetOrCreate(Subst(R, "$ns.$DispnameFilter..Match"));
     func.ret = "bool";

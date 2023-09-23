@@ -952,7 +952,7 @@ inline void ams::MsgHeader_curs_Reset(ams::MsgHeader_curs& curs, algo::memptr bu
     int msglen = 0;
     if (curs.limit >= ssizeof(ams::MsgHeader)) {
         ams::MsgHeader *ptr = (ams::MsgHeader*)curs.bytes;
-        msglen = (*ptr).length;
+        msglen = i32((*ptr).length);
         if (msglen >= ssizeof(ams::MsgHeader) && curs.limit >= msglen) {
             msg = ptr;
         }
@@ -974,7 +974,7 @@ inline void ams::MsgHeader_curs_Next(ams::MsgHeader_curs& curs) {
     int msglen = 0;
     if (curs.limit >= ssizeof(ams::MsgHeader)) {
         ams::MsgHeader *ptr = (ams::MsgHeader*)curs.bytes;
-        msglen = (*ptr).length;
+        msglen = i32((*ptr).length);
         if (msglen >= ssizeof(ams::MsgHeader) && curs.limit >= msglen) {
             msg = ptr;
         }
