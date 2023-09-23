@@ -93,8 +93,15 @@ inline atfdb::Tfilt::Tfilt() {
 }
 
 inline atfdb::Tmsg::Tmsg() {
+    atfdb::Tmsg_Init(*this);
 }
 
+
+// --- atfdb.Tmsg..Init
+// Set all fields to initial values.
+inline void atfdb::Tmsg_Init(atfdb::Tmsg& parent) {
+    parent.istuple = bool(false);
+}
 inline atfdb::Unittest::Unittest() {
 }
 

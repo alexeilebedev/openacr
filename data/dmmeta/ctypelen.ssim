@@ -603,7 +603,7 @@ dmmeta.ctypelen  ctype:atf_comp.FComptest  len:616  alignment:8  padbytes:28
 dmmeta.ctypelen  ctype:atf_comp.FDb  len:1304  alignment:8  padbytes:51
 dmmeta.ctypelen  ctype:atf_comp.FTargs  len:88  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:atf_comp.FTfilt  len:240  alignment:8  padbytes:4
-dmmeta.ctypelen  ctype:atf_comp.FTmsg  len:112  alignment:8  padbytes:4
+dmmeta.ctypelen  ctype:atf_comp.FTmsg  len:112  alignment:8  padbytes:3
 dmmeta.ctypelen  ctype:atf_cov.FCovfile  len:228  alignment:4  padbytes:2
 dmmeta.ctypelen  ctype:atf_cov.FCovline  len:248  alignment:8  padbytes:8
 dmmeta.ctypelen  ctype:atf_cov.FCovtarget  len:44  alignment:4  padbytes:2
@@ -640,7 +640,7 @@ dmmeta.ctypelen  ctype:atfdb.TestGsymbolChar  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atfdb.TestGsymbolPkey  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atfdb.TestGsymbolStrptr  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atfdb.Tfilt  len:224  alignment:8  padbytes:4
-dmmeta.ctypelen  ctype:atfdb.Tmsg  len:72  alignment:8  padbytes:4
+dmmeta.ctypelen  ctype:atfdb.Tmsg  len:72  alignment:8  padbytes:3
 dmmeta.ctypelen  ctype:atfdb.Unittest  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:bash2html.FDb  len:32  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:command.abt  len:496  alignment:8  padbytes:12

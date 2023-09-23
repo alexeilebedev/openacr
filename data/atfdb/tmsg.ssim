@@ -1,2 +1,6 @@
-atfdb.tmsg  tmsg:sv2ssim.UniqueFieldName/100000.in  msg:1,1,1,1,,
-atfdb.tmsg  tmsg:sv2ssim.UniqueFieldName/100010.in  msg:2,2,2,2,2
+atfdb.tmsg  tmsg:acr.BadNs/100000.in  istuple:N  msg:"dmmeta.ctype ctype:x.Y"
+atfdb.tmsg  tmsg:acr.BadPkey/100000.in  istuple:N  msg:dmmeta.ctype
+atfdb.tmsg  tmsg:acr.BadReftype/100000.in  istuple:N  msg:"dmmeta.field field:command.acr_ed.blah arg:bool"
+atfdb.tmsg  tmsg:acr.BadReftype2/100000.in  istuple:N  msg:"dmmeta.field field:command.acr_ed.blah arg:i32 reftype:Tary"
+atfdb.tmsg  tmsg:sv2ssim.UniqueFieldName/100000.in  istuple:N  msg:1,1,1,1,,
+atfdb.tmsg  tmsg:sv2ssim.UniqueFieldName/100010.in  istuple:N  msg:2,2,2,2,2

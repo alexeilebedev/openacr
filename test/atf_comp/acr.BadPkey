@@ -1,0 +1,4 @@
+# atf_comp -report:N -print acr.BadPkey | acr -insert -write -check | cat
+stdin-insert:1: acr.insert  ctype:dmmeta.Ctype  attr:ctype  warning:"missing primary key attribute"
+report.acr_check  records:0  errors:0
+report.acr  n_select:0  n_insert:0  n_delete:0  n_update:0  n_file_mod:0

@@ -321,7 +321,7 @@ static void atf_comp::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_comp.Input'  signature:'fede55307ae62f6d1e6f2071802d1b8557a72a06'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_comp.Input'  signature:'0937ed56ba6798cf6b37c0f581d9e9a1f56a1fd7'");
 }
 
 // --- atf_comp.FDb._db.StaticCheck
@@ -1743,6 +1743,7 @@ void atf_comp::FTfilt_Uninit(atf_comp::FTfilt& tfilt) {
 // Copy fields out of row
 void atf_comp::tmsg_CopyOut(atf_comp::FTmsg &row, atfdb::Tmsg &out) {
     out.tmsg = row.tmsg;
+    out.istuple = row.istuple;
     out.msg = row.msg;
 }
 
@@ -1750,6 +1751,7 @@ void atf_comp::tmsg_CopyOut(atf_comp::FTmsg &row, atfdb::Tmsg &out) {
 // Copy fields in to row
 void atf_comp::tmsg_CopyIn(atf_comp::FTmsg &row, atfdb::Tmsg &in) {
     row.tmsg = in.tmsg;
+    row.istuple = in.istuple;
     row.msg = in.msg;
 }
 

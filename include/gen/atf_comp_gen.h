@@ -695,6 +695,7 @@ struct FTmsg { // atf_comp.FTmsg
     atf_comp::FTmsg*   zd_out_tmsg_next;   // zslist link; -1 means not-in-list
     atf_comp::FTmsg*   zd_out_tmsg_prev;   // previous element
     algo::Smallstr50   tmsg;               //
+    bool               istuple;            //   false
     algo::cstring      msg;                //
 private:
     friend atf_comp::FTmsg&     tmsg_Alloc() __attribute__((__warn_unused_result__, nothrow));

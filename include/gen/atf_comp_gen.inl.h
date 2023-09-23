@@ -887,6 +887,7 @@ inline atf_comp::FTmsg::~FTmsg() {
 // --- atf_comp.FTmsg..Init
 // Set all fields to initial values.
 inline void atf_comp::FTmsg_Init(atf_comp::FTmsg& tmsg) {
+    tmsg.istuple = bool(false);
     tmsg.zd_tmsg_next = (atf_comp::FTmsg*)-1; // (atf_comp.FComptest.zd_tmsg) not-in-list
     tmsg.zd_tmsg_prev = NULL; // (atf_comp.FComptest.zd_tmsg)
     tmsg.tmsg_next = (atf_comp::FTmsg*)-1; // (atf_comp.FDb.tmsg) not-in-tpool's freelist

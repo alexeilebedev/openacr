@@ -419,14 +419,9 @@ void atf_comp::Main_Normalize() {
             rank++;
             comptest.need_write=true;
             _db.nchange++;
-            bool skip_dflt=false;
-            tempstr result = lib_ctype::NormalizeSsimTuple(tmsg.msg, skip_dflt);
-            // 1. leave unparseable values as raw
-            // 2. Seqmsg doesn't normalize properly
-            if (StartsWithQ(tmsg.msg, "ams.Seqmsg") || result == "") {
-                prlog("atf_comp.normalize_skip"
-                      <<"  "<<tmsg.tmsg<<"  "<<tmsg.msg);
-            } else {
+            if (tmsg.istuple) {
+                bool skip_dflt=false;
+                tempstr result = lib_ctype::NormalizeSsimTuple(tmsg.msg, skip_dflt);
                 tmsg.msg = result;
             }
         }ind_end;
