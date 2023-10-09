@@ -1,5 +1,8 @@
-// (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,13 +17,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: atf_unit (exe) -- Unit tests (see unittest table)
 // Exceptions: yes
 // Source: cpp/atf/unit/algo_fmt.cpp
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/atf_unit.h"
@@ -96,4 +95,31 @@ void atf_unit::unittest_algo_FileFlags() {
     vrfy_((tempstr() << algo::FileFlags(algo_FileFlags_read | algo_FileFlags_write)) == "read,write");
     vrfy_((tempstr() << algo::FileFlags(algo_FileFlags_write | algo_FileFlags_read)) == "read,write");
     vrfy_((tempstr() << algo::FileFlags()) == "");
+}
+
+static tempstr ToBase64(strptr s) {
+    tempstr ret;
+    strptr_PrintBase64(s,ret);
+    return ret;
+}
+
+static void TestBase64(strptr decoded, strptr encoded) {
+    vrfyeq_(ToBase64(decoded),encoded);
+}
+
+void atf_unit::unittest_algo_Base64() {
+    TestBase64("","");
+    TestBase64("a"     ,"YQ==");
+    TestBase64("ab"    ,"YWI=");
+    TestBase64("abc"   ,"YWJj");
+    TestBase64("abcd"  ,"YWJjZA==");
+    TestBase64("abcde" ,"YWJjZGU=");
+    TestBase64("abcdef","YWJjZGVm");
+    // check whole alphabet
+    TestBase64(strptr(
+                      "\x00\x10\x83\x10\x51\x87\x20\x92\x8b\x30\xd3\x8f\x41\x14\x93\x51"
+                      "\x55\x97\x61\x96\x9b\x71\xd7\x9f\x82\x18\xa3\x92\x59\xa7\xa2\x9a"
+                      "\xab\xb2\xdb\xaf\xc3\x1c\xb3\xd3\x5d\xb7\xe3\x9e\xbb\xf3\xdf\xbf"
+                      ,16*3),
+               "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
 }

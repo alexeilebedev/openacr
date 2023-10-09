@@ -1,21 +1,42 @@
 #!/usr/bin/env perl
+# Copyright (C) 2023 AlgoRND
+#
+# License: GPL
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+
 use strict;
-# check if abt exists
-if (system("abt --version >/dev/null 2>/dev/null") != 0) {
-    print("# abt doesn't seem to exist. selecting bootstrap file...\n");
-    system("bin/select-bootstrap")==0 or die "bin/select-bootstrap: $?";
+use warnings;
+sub Die {
+    my ($file,$line) = (caller)[1,2];
+    print "error $_[0]. more info in txt/abt-troubleshoot.md\n";
+    exit(1);
 }
-if (!-x "bin/src_hdr") {
-    # build this other tool
-    system("bin/abt", "-build", "src_hdr")==0 or die "abt failed: $?";
+my $clean = scalar(grep(/^-clean$/,@ARGV)) || system("abt --version >/dev/null 2>/dev/null")!=0;
+@ARGV = grep(!/^-clean$/,@ARGV);
+# check if abt exists
+if ($clean) {
+    print("# selecting bootstrap file...\n");
+    system("bin/select-bootstrap")==0 or Die("bin/select-bootstrap: $?");
 }
 my $F = shift @ARGV;
 $F = "%" if !$F;
+# build abt & src_hdr, which must be up-to-date in order
+# to execute the rest of the script
+system("bin/abt", "-install", "abt|src_hdr", "-report:N")==0 or Die("abt failed: $?");
 # calls src_func -updateproto
 # allow this one to fail
-system("bin/src_hdr", "-write");
-# rebuild abt itself if needed
-# this is temporary and is needed only while abt schema is in flux
-system("bin/abt -install abt >/dev/null 2>&1");
+system("bin/src_hdr", "-write", "-targsrc:%");
 # main build step
-exit (system("bin/abt", "-build", $F, @ARGV)==0 ? 0 : 1);
+system("bin/abt", "-build", $F, @ARGV)==0 or Die("abt failed: $?");

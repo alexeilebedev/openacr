@@ -22,10 +22,11 @@ A stream ID is a 32-bit entity consisting of four 8-bit fields: process type, pr
 Process types are registered in table `amsdb.proctype`. The standard types are:
 
 ```
-inline-command: acr proctype
-amsdb.proctype  proctype:0        id:0  comment:"No process"
-amsdb.proctype  proctype:amstest  id:5  comment:"Ams testing"
-report.acr  n_select:2  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+inline-command: acr proctype | ssimfilt ^ -t
+PROCTYPE  ID  COMMENT
+0         0   No process
+amstest   5   Ams testing
+
 ```
 
 Stream types are registered in table `amsdb.streamtype`. The standard types are:
@@ -63,8 +64,9 @@ and length.
 
 ```
 inline-command: acr ctype:ams.ProcAddMsg -t | awk -v RS='' '/dmmeta.ctype/'
+dev.license  license:GPL  comment:""
 dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"
-  dmmeta.ns  ns:ams  nstype:protocol  comment:"Algo Messaging System protocol"
+  dmmeta.ns  ns:ams  nstype:protocol  license:GPL  comment:"Algo Messaging System protocol"
     dmmeta.ctype  ctype:ams.ProcAddMsg  comment:"Add process to process group"
       dmmeta.cpptype  ctype:ams.ProcAddMsg  ctor:Y  dtor:N  cheap_copy:N
       dmmeta.msgtype  ctype:ams.ProcAddMsg  type:4
@@ -83,8 +85,9 @@ The control stream reads output of the child process. By default, the output is 
 
 ```
 inline-command: acr ctype:ams.ProcRemoveMsg -t | awk -v RS='' '/dmmeta.ctype/'
+dev.license  license:GPL  comment:""
 dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"
-  dmmeta.ns  ns:ams  nstype:protocol  comment:"Algo Messaging System protocol"
+  dmmeta.ns  ns:ams  nstype:protocol  license:GPL  comment:"Algo Messaging System protocol"
     dmmeta.ctype  ctype:ams.ProcRemoveMsg  comment:"Remove process from process group"
       dmmeta.cpptype  ctype:ams.ProcRemoveMsg  ctor:Y  dtor:N  cheap_copy:N
       dmmeta.msgtype  ctype:ams.ProcRemoveMsg  type:5
@@ -106,8 +109,9 @@ of creation.
 
 ```
 inline-command: acr ctype:ams.Seqmsg -t | awk -v RS='' '/dmmeta.ctype/'
+dev.license  license:GPL  comment:""
 dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"
-  dmmeta.ns  ns:ams  nstype:protocol  comment:"Algo Messaging System protocol"
+  dmmeta.ns  ns:ams  nstype:protocol  license:GPL  comment:"Algo Messaging System protocol"
     dmmeta.ctype  ctype:ams.Seqmsg  comment:"Sequenced stream message"
       dmmeta.cpptype  ctype:ams.Seqmsg  ctor:Y  dtor:N  cheap_copy:N
       dmmeta.msgtype  ctype:ams.Seqmsg  type:10
@@ -124,8 +128,9 @@ dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"
 
 ```
 inline-command: acr ctype:ams.OpenMsg -t | awk -v RS='' '/dmmeta.ctype/'
+dev.license  license:GPL  comment:""
 dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"
-  dmmeta.ns  ns:ams  nstype:protocol  comment:"Algo Messaging System protocol"
+  dmmeta.ns  ns:ams  nstype:protocol  license:GPL  comment:"Algo Messaging System protocol"
     dmmeta.ctype  ctype:ams.OpenMsg  comment:"Open stream for reading"
       dmmeta.cpptype  ctype:ams.OpenMsg  ctor:Y  dtor:N  cheap_copy:N
       dmmeta.msgtype  ctype:ams.OpenMsg  type:7
@@ -147,8 +152,9 @@ Only one process can write to a given shared memory area, but multiple processes
 
 ```
 inline-command: acr ctype:ams.StreamHbMsg -t | awk -v RS='' '/dmmeta.ctype/'
+dev.license  license:GPL  comment:""
 dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"
-  dmmeta.ns  ns:ams  nstype:protocol  comment:"Algo Messaging System protocol"
+  dmmeta.ns  ns:ams  nstype:protocol  license:GPL  comment:"Algo Messaging System protocol"
     dmmeta.ctype  ctype:ams.StreamHbMsg  comment:"Stream heartbeat"
       dmmeta.cpptype  ctype:ams.StreamHbMsg  ctor:Y  dtor:N  cheap_copy:N
       dmmeta.msgtype  ctype:ams.StreamHbMsg  type:3

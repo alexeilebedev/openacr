@@ -1,5 +1,7 @@
-// (C) 2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +16,6 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
 // Source: cpp/amc/protocol.cpp

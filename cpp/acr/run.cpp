@@ -1,6 +1,8 @@
-// (C) AlgoEngineering LLC 2008-2013
-// (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2013 AlgoEngineering LLC
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,16 +17,21 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: acr (exe) -- Algo Cross-Reference - ssimfile database & update tool
 // Exceptions: NO
 // Source: cpp/acr/run.cpp -- Run query
 //
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
-//
 
 #include "include/acr.h"
+
+// -----------------------------------------------------------------------------
+
+static void MarkModified(acr::FRun &run, acr::FRec &rec) {
+    if (!rec.mod) {
+        run.n_mod_rec++;
+        rec.mod=true;
+    }
+}
 
 // -----------------------------------------------------------------------------
 
@@ -35,15 +42,16 @@
 //   1. Schedule rename of appropriate column in the affected ssimfile
 //   2. Rename acr's field record (update schema)
 static void ScheduleCascadeUpdate(acr::FRec& rec, strptr old_val, strptr new_val) {
-    ind_beg(acr::ctype_c_child_curs,  child, *rec.p_ctype) {
+    ind_beg(acr::ctype_c_child_curs,  child, *rec.p_ctype) if (child.c_ssimfile && bool_Update(child.mark_cascupdate,true)) {
         ind_beg(acr::ctype_c_field_curs, childfld, child) {
             if (childfld.p_arg == rec.p_ctype) {
                 acr::FQuery& next  = acr::query_Alloc();
                 next.queryop = acr_Queryop_value_set_attr;
-                next.ctype   = child.ctype;
-                next.field   = name_Get(childfld);
-                next.value   = old_val;
+                Regx_ReadLiteral(next.ssimfile, child.c_ssimfile->ssimfile);
+                Regx_ReadLiteral(next.query.name, name_Get(childfld));
+                Regx_ReadLiteral(next.query.value, old_val);
                 next.new_val = new_val;
+                next.comment << "cascade update of "<<childfld.field<<" triggered by "<<rec.pkey;
                 (void)acr::query_XrefMaybe(next);
             }
         }ind_end;
@@ -51,21 +59,23 @@ static void ScheduleCascadeUpdate(acr::FRec& rec, strptr old_val, strptr new_val
 
     if (rec.p_ctype->ctype == "dmmeta.Field") {
         acr::FCtype *ctype = acr::ind_ctype_Find(StripExt(new_val));
-        if (ctype) {
+        if (ctype && ctype->c_ssimfile) {
             acr::FQuery& next  = acr::query_Alloc();
-            next.ctype        = ctype->ctype;
+            Regx_ReadLiteral(next.ssimfile, ctype->c_ssimfile->ssimfile);
             next.queryop      = acr_Queryop_value_rename_attr;
-            next.field        = StripNs("",old_val);
-            next.value        = "%";
+            Regx_ReadLiteral(next.query.name, StripNs("",old_val));
+            Regx_ReadAcr(next.query.value, "%", true);
             next.new_val      = StripNs("",new_val);
+            next.comment << "ssimfile update triggered by "<<rec.pkey<<" (Field)";
             (void)acr::query_XrefMaybe(next);
         }
         // finish renaming the field (reindex)
         {
             acr::FQuery& next  = acr::query_Alloc();
             next.queryop      = acr_Queryop_value_finish_rename_field;
-            next.field        = old_val;
+            Regx_ReadLiteral(next.query.name, old_val);
             next.new_val      = new_val;
+            next.comment << "ssimfile field rename update";
             (void)acr::query_XrefMaybe(next);
         }
     }
@@ -73,34 +83,69 @@ static void ScheduleCascadeUpdate(acr::FRec& rec, strptr old_val, strptr new_val
 
 // -----------------------------------------------------------------------------
 
-static void VisitField(acr::FQuery& query, acr::FRec& rec, acr::FField &field, algo_lib::Regx &value_regx) {
+// Check that ALL args in query (QUERY.ARGS)
+// have matching name:value attributes in REC, which is of type CTYPE.
+// Return TRUE if all fields match
+static bool MatchWhere(acr::FQuery &query, acr::FRec &rec, acr::FCtype &ctype) {
+    bool argmatch=true;
+    ind_beg(acr::query_where_curs,where,query) {
+        ind_beg(acr::ctype_c_field_curs,otherfield,ctype) {
+            if (Regx_Match(where.name,name_Get(otherfield))) {
+                acr::FEvalattr otherattr;
+                otherattr.field = &otherfield;
+                Evalattr_Step(otherattr, rec.tuple);
+                argmatch = Regx_Match(where.value, otherattr.value);
+                if (!argmatch) {
+                    break;
+                }
+            }
+        }ind_end;
+        if (!argmatch) {
+            break;
+        }
+    }ind_end;
+    return argmatch;
+}
+
+// -----------------------------------------------------------------------------
+
+// Check whether attribute of record REC described by FIELD matches VALUE_REGX
+// If it does, perform action as determined by the query
+// - del_attr: remove attribute from tuple
+// - rename_attr: set name of attribute to QUERY.NEW_VAL
+// - set_attr: set value of attribute to QUERY.NEW_VAL
+//     Schedule cascading update of related records
+// - select: select parent record
+// Return TRUE if the action was performed
+static bool VisitField(acr::FRun &run, acr::FQuery& query, acr::FRec& rec, acr::FField &field, algo_lib::Regx &value_regx) {
+    run.n_visit_field++;
     acr::FEvalattr evalattr;
     evalattr.field = &field;
     Evalattr_Step(evalattr, rec.tuple);
-    bool         match  = Regx_Match(value_regx, query.pk?rec.pkey:evalattr.value);
+    run.n_regx_match++;
+    bool match = Regx_Match(value_regx, evalattr.value) && MatchWhere(query,rec,*field.p_ctype);
     if (match) {
-        Attr   *attr      = attr_Find(rec.tuple, name_Get(field), 0);
         switch(value_GetEnum(query.queryop)) {
         case acr_Queryop_value_del_attr: {
-            if (attr) {
+            if (evalattr.attr) {
                 acr::_db.report.n_update++;
-                rec.mod = true;
-                attrs_Remove(rec.tuple, attrs_rowid_Get(rec.tuple, *attr));
+                MarkModified(run,rec);
+                attrs_Remove(rec.tuple, attrs_rowid_Get(rec.tuple, *evalattr.attr));
             }
         } break;
 
         case acr_Queryop_value_rename_attr: {
-            if (attr) {
+            if (evalattr.attr) {
                 acr::_db.report.n_update++;
-                rec.mod = true;
-                attr->name = query.new_val;
+                MarkModified(run,rec);
+                evalattr.attr->name = query.new_val;
             }
         } break;
 
         case acr_Queryop_value_set_attr: {
             acr::_db.report.n_update++;
-            rec.mod = true;
             if (evalattr.attr) {
+                MarkModified(run,rec);
                 tempstr newval;
                 newval << ch_FirstN(evalattr.attr->value, evalattr.val_range.beg);// left part
                 newval << query.new_val;//insert new value
@@ -122,6 +167,7 @@ static void VisitField(acr::FQuery& query, acr::FRec& rec, acr::FField &field, a
 
         }
     }
+    return match;
 }
 
 // -----------------------------------------------------------------------------
@@ -210,11 +256,17 @@ static void SelectUp(acr::FRun &, acr::FQuery &query) {
 
 // -----------------------------------------------------------------------------
 
+// Visit all selected ctypes in RUN, scan all records
+// of each ctype and match QUERY against each record.
+// The record matches if QUERY's NAME:VALUE pair matches at least one field
+// The field values are determined from the  attributes of each record
+// (This may require computing substrings of attrs)
 static void VisitRecords(acr::FRun &run, acr::FQuery &query) {
     ind_beg(acr::run_c_ctype_curs, ctype, run) if (c_field_N(ctype) > 0) {
-        // specifying an
-        bool is_pkey = !ch_N(query.field);
-        is_pkey |= query.field == name_Get(*c_field_Find(ctype, 0));
+        run.n_visit_ctype++;
+        // match on pkey if the query field is omitted
+        bool is_pkey = !ch_N(query.query.name.expr)
+            || (query.query.name.literal && query.query.name.expr == name_Get(*c_field_Find(ctype, 0)));
 
         // determine set of fields to scan
         // if query is for pkey, we already have that indexed.
@@ -223,7 +275,8 @@ static void VisitRecords(acr::FRun &run, acr::FQuery &query) {
             c_field_Insert(run, *c_field_Find(ctype, 0));
         } else {
             ind_beg(acr::ctype_c_field_curs, field, ctype) {
-                if (Regx_Match(run.field_regx, name_Get(field))) {
+                run.n_regx_match++;
+                if (Regx_Match(query.query.name, name_Get(field))) {
                     c_field_Insert(run, field);
                 }
             }ind_end;
@@ -231,8 +284,8 @@ static void VisitRecords(acr::FRun &run, acr::FQuery &query) {
 
         // determine set of records to scan
         c_rec_RemoveAll(run);
-        if (is_pkey && !algo_lib::SqlRegxQ(query.value)) {
-            acr::FRec *rec = acr::ind_rec_Find(ctype, query.value);
+        if (is_pkey && query.query.value.literal) {
+            acr::FRec *rec = acr::ind_rec_Find(ctype, query.query.value.expr);
             if (rec) {
                 c_rec_Insert(run, *rec);
             }
@@ -245,7 +298,7 @@ static void VisitRecords(acr::FRun &run, acr::FQuery &query) {
         // scan records
         ind_beg(acr::run_c_rec_curs, rec, run) {
             ind_beg(acr::run_c_field_curs, field, run) {
-                VisitField(query,rec,field,run.value_regx);
+                VisitField(run,query,rec,field,query.query.value);
             }ind_end;
         }ind_end;
     }ind_end;
@@ -253,37 +306,28 @@ static void VisitRecords(acr::FRun &run, acr::FQuery &query) {
 
 // -----------------------------------------------------------------------------
 
-static void SelectCtypes(acr::FRun &run, acr::FQuery &query) {
-    if (algo_lib::SqlRegxQ(query.regx_ssimfile)) {
-        algo_lib::Regx ssimfile_regx;
-        Regx_ReadSql(ssimfile_regx, query.regx_ssimfile, true);
-        ind_beg(acr::_db_ssimfile_curs, ssimfile,acr::_db) {
-            bool match = Regx_Match(ssimfile_regx, ssimfile.ssimfile);
-            if (match) {
-                c_ctype_Insert(run, *ssimfile.p_ctype);
-            }
-        }ind_end;
-    } else {
-        acr::FSsimfile *ssimfile = acr::ind_ssimfile_Find(query.regx_ssimfile);
-        if (ssimfile) {
-            c_ctype_Insert(run, *ssimfile->p_ctype);
-        }
-    }
+static void SelectCtype(acr::FRun &run, acr::FCtype &ctype) {
+    acr::c_ctype_Insert(run,ctype);
+    acr::zd_sel_ctype_Insert(ctype);
+}
 
-    // compute list of potential ctypes that contain matches
-    if (algo_lib::SqlRegxQ(query.ctype)) {
-        algo_lib::Regx ctype_regx;
-        Regx_ReadSql(ctype_regx, query.ctype, true);
-        ind_beg(acr::_db_ctype_curs, ctype,acr::_db) {
-            bool match = Regx_Match(ctype_regx, ctype.ctype);
+// -----------------------------------------------------------------------------
+
+// Build list run.c_ctype by calculating which ctypes can possibly match the query
+static void SelectCtypes(acr::FRun &run, acr::FQuery &query) {
+    if (!query.ssimfile.literal) {
+        ind_beg(acr::_db_ssimfile_curs, ssimfile,acr::_db) {
+            run.n_regx_match++;
+            verblog("# match ssimfile "<<ssimfile.ssimfile<<" against "<<query.ssimfile.expr);
+            bool match = Regx_Match(query.ssimfile, ssimfile.ssimfile);
             if (match) {
-                c_ctype_Insert(run, ctype);
+                SelectCtype(run, *ssimfile.p_ctype);
             }
         }ind_end;
     } else {
-        acr::FCtype *ctype = acr::ind_ctype_Find(query.ctype);
-        if (ctype) {
-            c_ctype_Insert(run, *ctype);
+        acr::FSsimfile *ssimfile = acr::ind_ssimfile_Find(query.ssimfile.expr);
+        if (ssimfile) {
+            SelectCtype(run, *ssimfile->p_ctype);
         }
     }
 }
@@ -302,7 +346,7 @@ static void LoadSsimfiles(acr::FRun &run) {
 
 // -----------------------------------------------------------------------------
 
-static void Xref(acr::FRun &run, acr::FQuery &query) {
+static void SelectUpDown(acr::FRun &run, acr::FQuery &query) {
     if (query.nup > 0) {
         SelectUp(run,query);
     }
@@ -336,8 +380,10 @@ static void MarkDelete(acr::FQuery &query) {
 //   Matching records are added to zd_all_selrec index;
 //   Matching ssimfiles are added to db.c_sel_ctype index.
 void acr::RunQuery(acr::FQuery &query) {
+    verblog("#"<<query);
     if (query.queryop == acr_Queryop_value_finish_rename_field) {
-        if (acr::FField *field = acr::ind_field_Find(query.field)) {
+        // field rename is done separately since it affects acr's own schema
+        if (acr::FField *field = acr::ind_field_Find(query.query.name.expr)) {
             ind_field_Remove(*field);
             field->field = query.new_val;
             ind_field_InsertMaybe(*field);
@@ -348,14 +394,14 @@ void acr::RunQuery(acr::FQuery &query) {
         SelectCtypes(run,query);
         // load ssimfiles (if necessary)
         LoadSsimfiles(run);
-        // determine fields and records to scan
-        Regx_ReadSql(run.field_regx  , query.field, true);
-        Regx_ReadSql(run.value_regx  , query.value, true);
         VisitRecords(run,query);
-        // next step -- x-ref the thing
-        Xref(run,query);
+        SelectUpDown(run,query);
         MarkDelete(query);
         c_child_RemoveAll(run);
+        if (query.selmeta) {
+            SelectMeta();
+        }
+        verblog("#"<<run);
     }
 }
 

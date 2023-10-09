@@ -4,123 +4,124 @@
 
 ```
 inline-command: amc -h
-
-
 amc: Algo Model Compiler: generate code under include/gen and cpp/gen
-Usage: amc [options]
-    -in_dir   string  Root of input ssim dir. default: "data"
-    [query]   string  Query mode: generate code for specified object
-    -out_dir  string  Root of output cpp dir. default: "."
-    -proto            Print prototype. default: false
-    -report           Final report. default: true
-    -e                Open matching records in editor. default: false
-    -trace    string  Regx of something to trace code generation
-    -verbose          Enable verbose mode
-    -debug            Enable debug mode
-    -version          Show version information
-    -sig              Print SHA1 signatures for dispatches
-    -help             Print this screen and exit
+Usage: amc [[-query:]<string>] [options]
+    OPTION      TYPE    DFLT    COMMENT
+    -in_dir     string  "data"  Root of input ssim dir
+    [query]     string  ""      Query mode: generate code for specified object
+    -out_dir    string  "."     Root of output cpp dir
+    -proto                      Print prototype
+    -report             Y       Final report
+    -e                          Open matching records in editor
+    -trace      regx    ""      Regx of something to trace code generation
+    -verbose    int             Verbosity level (0..255); alias -v; cumulative
+    -debug      int             Debug level (0..255); alias -d; cumulative
+    -help                       Print help an exit; alias -h
+    -version                    Print version and exit
+    -signature                  Show signatures and exit; alias -sig
 
 ```
 
 ### Input tables
 
 ```
-inline-command: acr ctype:$(acr_in amc | acr -in:- % -regxof:ctype)
-dmmeta.ctype  ctype:amcdb.Bltin         comment:"Specify properties of a C built-in type"
-dmmeta.ctype  ctype:amcdb.Tcurs         comment:"Cursor template"
-dmmeta.ctype  ctype:dev.Targdep         comment:"Dependency between targets"
-dmmeta.ctype  ctype:dev.Target          comment:"Build target"
-dmmeta.ctype  ctype:dmmeta.Anonfld      comment:"Omit field name where possible (command line, enums, constants)"
-dmmeta.ctype  ctype:dmmeta.Argvtype     comment:"Customize parsing of command lines (rarely used)"
-dmmeta.ctype  ctype:dmmeta.Basepool     comment:"Specify pool to be used for allocating elements of a type"
-dmmeta.ctype  ctype:dmmeta.Bitfld       comment:"Specify offset/width of a bitfield within another field"
-dmmeta.ctype  ctype:dmmeta.Cafter       comment:"Control amc processing order for unrelated types (used in rare situations)"
-dmmeta.ctype  ctype:dmmeta.Cascdel      comment:"Request cascading delete of referenced rows"
-dmmeta.ctype  ctype:dmmeta.Ccmp         comment:"Generate hash function"
-dmmeta.ctype  ctype:dmmeta.Cdflt        comment:"Specify default value for single-value types that lack fields"
-dmmeta.ctype  ctype:dmmeta.Cextern      comment:"Externally defined ctype (a struct from system header, or from a c++ library)"
-dmmeta.ctype  ctype:dmmeta.Cfmt         comment:"Specify options for printing/reading ctypes into multiple formats"
-dmmeta.ctype  ctype:dmmeta.Cget         comment:"Generate state functions for these ctypes"
-dmmeta.ctype  ctype:dmmeta.Charset      comment:"Generate functions to determine if a character is a member of a set"
-dmmeta.ctype  ctype:dmmeta.Chash        comment:"Generate hash function"
-dmmeta.ctype  ctype:dmmeta.Cppfunc      comment:"Value of field provided by this expression"
-dmmeta.ctype  ctype:dmmeta.Cpptype      comment:"Specify whether a ctype can be passed by value, and other c++ options"
-dmmeta.ctype  ctype:dmmeta.Csize        comment:"Specify size/alignment for built-in C++ types"
-dmmeta.ctype  ctype:dmmeta.Cstr         comment:"Specify that type behaves like a string"
-dmmeta.ctype  ctype:dmmeta.Ctype        comment:"Conceptual type (or C type)"
-dmmeta.ctype  ctype:dmmeta.Dispatch     comment:"Generate code for a multi-way branch"
-dmmeta.ctype  ctype:dmmeta.DispatchMsg  comment:"Add message to a dispatch"
-dmmeta.ctype  ctype:dmmeta.Dispctx      comment:"Use context with dispatch"
-dmmeta.ctype  ctype:dmmeta.Dispfilter   comment:"Generate filter function on dispatch"
+inline-command: acr ctype:$(acr_in amc | acr -in:- % -regxof:ctype) | ssimfilt ^ -t
+CTYPE                COMMENT
+amcdb.Bltin          Specify properties of a C built-in type
+amcdb.Tcurs          Cursor template
+dev.License
+dev.Targdep          Dependency between targets
+dev.Target           Build target
+dmmeta.Anonfld       Omit field name where possible (command line, enums, constants)
+dmmeta.Argvtype      Customize parsing of command lines (rarely used)
+dmmeta.Basepool      Specify pool to be used for allocating elements of a type
+dmmeta.Bitfld        Specify offset/width of a bitfield within another field
+dmmeta.Cafter        Control amc processing order for unrelated types (used in rare situations)
+dmmeta.Cascdel       Request cascading delete of referenced rows
+dmmeta.Ccmp          Generate hash function
+dmmeta.Cdflt         Specify default value for single-value types that lack fields
+dmmeta.Cextern       Externally defined ctype (a struct from system header, or from a c++ library)
+dmmeta.Cfmt          Specify options for printing/reading ctypes into multiple formats
+dmmeta.Cget          Generate state functions for these ctypes
+dmmeta.Charset       Generate functions to determine if a character is a member of a set
+dmmeta.Chash         Generate hash function
+dmmeta.Cppfunc       Value of field provided by this expression
+dmmeta.Cpptype       Specify whether a ctype can be passed by value, and other c++ options
+dmmeta.Csize         Specify size/alignment for built-in C++ types
+dmmeta.Cstr          Specify that type behaves like a string
+dmmeta.Ctype         Conceptual type (or C type)
+dmmeta.Dispatch      Generate code for a multi-way branch
+dmmeta.DispatchMsg   Add message to a dispatch
+dmmeta.Dispctx       Use context with dispatch
+dmmeta.Dispfilter    Generate filter function on dispatch
+dmmeta.Disptrace     Generate trace fields (cycles, counts) for all dispatch branches
+dmmeta.Falias
+dmmeta.Fbase         Customize imported Base fields
+dmmeta.Fbigend       Annotate field as having big-endian storage
+dmmeta.Fbitset       Generate bitset functions over integer field or array
+dmmeta.Fbuf          Buffer for reading/writing messages, works with Iohook
+dmmeta.Fcast         Generate implicit conversion from field to c++ expression
+dmmeta.Fcleanup      Request user-implemented function to be called at Uninit time for a field
+dmmeta.Fcmap         Bidirectional mapping between fconst values
+dmmeta.Fcmdline      Annotate field that holds process command line
+dmmeta.Fcmp          Request versionsort or case-insensitive sort for field
+dmmeta.Fcompact      Request compaction upon removal from index
+dmmeta.Fconst        Specify enum value (integer + string constant) for a field
+dmmeta.Fcurs         Request generation of custom cursor
+dmmeta.Fdec          Specify that field has an implied # of decimal places and specify formatting options
+dmmeta.Fdelay        Control elapsed time between execution of a step
+dmmeta.Fflag         Options for command-line flags
+dmmeta.Field         Specify field of a struct
+dmmeta.Findrem       Request generation of FindRemove function
+dmmeta.Finput        Describe input table of a program
+dmmeta.Fldoffset     Assert field offset - will result in compile-time error if violated
+dmmeta.Floadtuples   Request that process automatically load any input tables on startup
+dmmeta.Fnoremove     Omit any functions for removing elements from table; Table is append-only
+dmmeta.Foutput       Generate function to save index/table back to disk
+dmmeta.Fprefix       Mapping between field prefix and Reftype
+dmmeta.Fregx         Specify options for command-line regx field
+dmmeta.Fsort         Generate custom sort function for array field
+dmmeta.Fstep         Generate a main loop step to be executed whenever a field is non-empty
+dmmeta.Ftrace        Generate cycle/step counting fields for a step
+dmmeta.Funique       This field must be unique in the table. Not needed for primary key
+dmmeta.Fuserinit     Add user-defined initialization function for field (see fcleanup)
+dmmeta.Fwddecl       Request forward declaration of a field
+dmmeta.Gconst        Import ssim table columns as fconst for a field
+dmmeta.Gstatic       Load entries for this table at startup time
+dmmeta.Gsymbol       Create C++ symbols from entries in ssim table
+dmmeta.Hook          Required on Hook fields
+dmmeta.Inlary        Generate inline array of fixed or variable length (all entries fit within parent struct)
+dmmeta.Lenfld        Specify which gives length of varlen portion in bytes
+dmmeta.Listtype      Specify structure of linked list based on field prefix
+dmmeta.Llist         Options for Llist field
+dmmeta.Main          Generate Main function for namespace
+dmmeta.Msgtype       Specify message type for each eligible message, controls dispatch
+dmmeta.Nocascdel     Remove cascade delete for this index
+dmmeta.Nossimfile    Indicates that ssimfile does not exist for this ssimdb ctype
+dmmeta.Noxref        Explicitly specify that no x-ref exists between tables (don't use unless forced)
+dmmeta.Ns            Namespace (for in-memory database, protocol, etc)
+dmmeta.Nscpp         Generate C++ code for this namespace
+dmmeta.Nsdb          Annotate ssimdb namespaces
+dmmeta.Nsinclude     Explicitly specify a C++ include file for namespace
+dmmeta.Nsproto       Annotate protocol namespace (collection of types, no state)
+dmmeta.Nsx           Control code-generation and exception handling options for process/library
+dmmeta.Numstr        Add functions to read numbers out of a string field
+dmmeta.Pack          Request byte-packing of structure fields
+dmmeta.Pmaskfld      Specify which fields holds presence mask bits (one for each field in struct)
+dmmeta.Pnew          Generate custom constructor (placement new), for use with binary protocols
+dmmeta.Ptrary        Required for fields with reftype:Ptrary
+dmmeta.Rowid         Initialize field to row id of element
+dmmeta.Smallstr      Generated fixed-length padded or length-delimited string field
+dmmeta.Sortfld       Specify what field an index (Bheap,Atree) is sorted on
+dmmeta.Ssimfile      Ssim tuple name for structure
+dmmeta.Ssimvolatile  Types based on ssim files marked this way cannot be cross-referenced
+dmmeta.Substr        Specify that the field value is computed from a substring of another field
+dmmeta.Tary          Indirect linear dynamically alocated array (used for strings, arrays of data, etc)
+dmmeta.Thash         Hash index, required for fields with reftype Thash
+dmmeta.Typefld       Specifies which field of a message carries the type
+dmmeta.Usertracefld  Add custom user trace fields to process's trace struct
+dmmeta.Xref          Specify how to cross-reference (i.e. project, or group-by) one record with another
 
-dmmeta.ctype  ctype:dmmeta.Disptrace    comment:"Generate trace fields (cycles, counts) for all dispatch branches"
-dmmeta.ctype  ctype:dmmeta.Fbase        comment:"Customize imported Base fields"
-dmmeta.ctype  ctype:dmmeta.Fbigend      comment:"Annotate field as having big-endian storage"
-dmmeta.ctype  ctype:dmmeta.Fbitset      comment:"Generate bitset functions over integer field or array"
-dmmeta.ctype  ctype:dmmeta.Fbuf         comment:"Buffer for reading/writing messages, works with Iohook"
-dmmeta.ctype  ctype:dmmeta.Fcast        comment:"Generate implicit conversion from field to c++ expression"
-dmmeta.ctype  ctype:dmmeta.Fcleanup     comment:"Request user-implemented function to be called at Uninit time for a field"
-dmmeta.ctype  ctype:dmmeta.Fcmap        comment:"Bidirectional mapping between fconst values"
-dmmeta.ctype  ctype:dmmeta.Fcmdline     comment:"Annotate field that holds process command line"
-dmmeta.ctype  ctype:dmmeta.Fcmp         comment:"Request versionsort or case-insensitive sort for field"
-dmmeta.ctype  ctype:dmmeta.Fcompact     comment:"Request compaction upon removal from index"
-dmmeta.ctype  ctype:dmmeta.Fconst       comment:"Specify enum value (integer + string constant) for a field"
-dmmeta.ctype  ctype:dmmeta.Fcurs        comment:"Request generation of custom cursor"
-dmmeta.ctype  ctype:dmmeta.Fdec         comment:"Specify that field has an implied # of decimal places and specify formatting options"
-dmmeta.ctype  ctype:dmmeta.Fdelay       comment:"Control elapsed time between execution of a step"
-dmmeta.ctype  ctype:dmmeta.Field        comment:"Specify field of a struct"
-dmmeta.ctype  ctype:dmmeta.Findrem      comment:"Request generation of FindRemove function"
-dmmeta.ctype  ctype:dmmeta.Finput       comment:"Describe input table of a program"
-dmmeta.ctype  ctype:dmmeta.Fldoffset    comment:"Assert field offset - will result in compile-time error if violated"
-dmmeta.ctype  ctype:dmmeta.Floadtuples  comment:"Request that process automatically load any input tables on startup"
-dmmeta.ctype  ctype:dmmeta.Fnoremove    comment:"Omit any functions for removing elements from table; Table is append-only"
-dmmeta.ctype  ctype:dmmeta.Foutput      comment:"Generate function to save index/table back to disk"
-dmmeta.ctype  ctype:dmmeta.Fprefix      comment:"Mapping between field prefix and Reftype"
-dmmeta.ctype  ctype:dmmeta.Fregx        comment:"Specify options for command-line regx field"
-dmmeta.ctype  ctype:dmmeta.Fsort        comment:"Generate custom sort function for array field"
-dmmeta.ctype  ctype:dmmeta.Fstep        comment:"Generate a main loop step to be executed whenever a field is non-empty"
-
-dmmeta.ctype  ctype:dmmeta.Ftrace      comment:"Generate cycle/step counting fields for a step"
-dmmeta.ctype  ctype:dmmeta.Funique     comment:"This field must be unique in the table. Not needed for primary key"
-dmmeta.ctype  ctype:dmmeta.Fuserinit   comment:"Add user-defined initialization function for field (see fcleanup)"
-dmmeta.ctype  ctype:dmmeta.Fwddecl     comment:"Request forward declaration of a field"
-dmmeta.ctype  ctype:dmmeta.Gconst      comment:"Import ssim table columns as fconst for a field"
-dmmeta.ctype  ctype:dmmeta.Gstatic     comment:"Load entries for this table at startup time"
-dmmeta.ctype  ctype:dmmeta.Gsymbol     comment:"Create C++ symbols from entries in ssim table"
-dmmeta.ctype  ctype:dmmeta.Hook        comment:"Required on Hook fields"
-dmmeta.ctype  ctype:dmmeta.Inlary      comment:"Generate inline array of fixed or variable length (all entries fit within parent struct)"
-dmmeta.ctype  ctype:dmmeta.Lenfld      comment:"Specify which gives length of varlen portion in bytes"
-dmmeta.ctype  ctype:dmmeta.Listtype    comment:"Specify structure of linked list based on field prefix"
-dmmeta.ctype  ctype:dmmeta.Llist       comment:"Options for Llist field"
-dmmeta.ctype  ctype:dmmeta.Main        comment:"Generate Main function for namespace"
-dmmeta.ctype  ctype:dmmeta.Msgtype     comment:"Specify message type for each eligible message, controls dispatch"
-dmmeta.ctype  ctype:dmmeta.Nocascdel   comment:"Remove cascade delete for this index"
-dmmeta.ctype  ctype:dmmeta.Nossimfile  comment:"Indicates that ssimfile does not exist for this ssimdb ctype"
-dmmeta.ctype  ctype:dmmeta.Noxref      comment:"Explicitly specify that no x-ref exists between tables (don't use unless forced)"
-dmmeta.ctype  ctype:dmmeta.Ns          comment:"Namespace (for in-memory database, protocol, etc)"
-dmmeta.ctype  ctype:dmmeta.Nsdb        comment:"Annotate ssimdb namespaces"
-dmmeta.ctype  ctype:dmmeta.Nsinclude   comment:"Explicitly specify a C++ include file for namespace"
-dmmeta.ctype  ctype:dmmeta.Nsproto     comment:"Annotate protocol namespace (collection of types, no state)"
-dmmeta.ctype  ctype:dmmeta.Nsx         comment:"Control code-generation and exception handling options for process/library"
-dmmeta.ctype  ctype:dmmeta.Numstr      comment:"Add functions to read numbers out of a string field"
-dmmeta.ctype  ctype:dmmeta.Pack        comment:"Request byte-packing of structure fields"
-dmmeta.ctype  ctype:dmmeta.Pmaskfld    comment:"Specify which fields holds presence mask bits (one for each field in struct)"
-dmmeta.ctype  ctype:dmmeta.Pnew        comment:"Generate custom constructor (placement new), for use with binary protocols"
-
-dmmeta.ctype  ctype:dmmeta.Ptrary        comment:"Required for fields with reftype:Ptrary"
-dmmeta.ctype  ctype:dmmeta.Rowid         comment:"Initialize field to row id of element"
-dmmeta.ctype  ctype:dmmeta.Smallstr      comment:"Generated fixed-length padded or length-delimited string field"
-dmmeta.ctype  ctype:dmmeta.Sortfld       comment:"Specify what field an index (Bheap,Atree) is sorted on"
-dmmeta.ctype  ctype:dmmeta.Ssimfile      comment:"Ssim tuple name for structure"
-dmmeta.ctype  ctype:dmmeta.Ssimvolatile  comment:"Types based on ssim files marked this way cannot be cross-referenced"
-dmmeta.ctype  ctype:dmmeta.Substr        comment:"Specify that the field value is computed from a substring of another field"
-dmmeta.ctype  ctype:dmmeta.Tary          comment:"Indirect linear dynamically alocated array (used for strings, arrays of data, etc)"
-dmmeta.ctype  ctype:dmmeta.Thash         comment:"Hash index, required for fields with reftype Thash"
-dmmeta.ctype  ctype:dmmeta.Typefld       comment:"Specifies which field of a message carries the type"
-dmmeta.ctype  ctype:dmmeta.Usertracefld  comment:"Add custom user trace fields to process's trace struct"
-dmmeta.ctype  ctype:dmmeta.Xref          comment:"Specify how to cross-reference (i.e. project, or group-by) one record with another"
-report.acr  n_select:90  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
 ```
 
 ### Introduction
@@ -484,21 +485,23 @@ by an underscore, then the field must have the specified reftype.
 The defined prefixes are:
 
 ```
-inline-command: acr fprefix -report:N -cmd 'printf "%5s %10s\n" $fprefix $reftype' |sh
-   bh      Bheap
-    c     Ptrary
-   cd      Llist
-  cdl      Llist
-  cnt      Count
-   cs      Llist
-  csl      Llist
-  ind      Thash
-    p      Upptr
-   tr      Atree
-   zd      Llist
-  zdl      Llist
-   zs      Llist
-  zsl      Llist
+inline-command: acr fprefix | ssimfilt ^ -t
+FPREFIX  REFTYPE  COMMENT
+bh       Bheap
+c        Ptrary
+cd       Llist
+cdl      Llist
+cnt      Count
+cs       Llist
+csl      Llist
+ind      Thash
+p        Upptr
+tr       Atree
+zd       Llist
+zdl      Llist
+zs       Llist
+zsl      Llist
+
 ```
 
 Additional prefixes may be defined by the user.
@@ -812,51 +815,12 @@ Here is an example:
 
 ```
 inline-command: acr -t field:atf_unit.Bitset.fld8 | egrep Bitset
-    dmmeta.ctype  ctype:atf_unit.Bitset  comment:"Test bitset"
-      dmmeta.field  field:atf_unit.Bitset.fld8  arg:u8  reftype:Val  dflt:""  comment:"Bitset field"
-        dmmeta.fbitset  field:atf_unit.Bitset.fld8  comment:""
 ```
 
 The generated functions are as follows:
 
 ```
 inline-command: amc -report:N -proto atf_unit.Bitset.fld8.%
-// Return constant 1
-int                  fld8_N(atf_unit::Bitset& parent) __attribute__((__warn_unused_result__, nothrow, pure));
-// Access value
-u8&                  fld8_qFind(atf_unit::Bitset& parent, int) __attribute__((__warn_unused_result__, nothrow));
-// Get max # of bits in the bitset
-// Return max. number of bits supported by array
-int                  fld8_Nbits(atf_unit::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
-// Retrieve value of bit #BIT_IDX in bit set. No bounds checking
-bool                 fld8_qGetBit(atf_unit::Bitset& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
-// Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
-bool                 fld8_GetBit(atf_unit::Bitset& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
-// Check if all the bits in the bitset are equal to zero
-bool                 fld8_BitsEmptyQ(atf_unit::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
-u64                  fld8_Sum1s(atf_unit::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
-// Clear bit # BIT_IDX in bit set. No bounds checking
-void                 fld8_qClearBit(atf_unit::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
-// Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
-void                 fld8_ClearBit(atf_unit::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
-// Set bit # BIT_IDX in bit set. No bounds checking
-void                 fld8_qSetBit(atf_unit::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
-// Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
-void                 fld8_SetBit(atf_unit::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
-// Set bit # BIT_IDX in bit set. No bounds checking
-void                 fld8_qSetBitVal(atf_unit::Bitset& parent, u32 bit_idx, bool val) __attribute__((nothrow));
-// Or bit # BIT_IDX in bit set. No bounds checking
-void                 fld8_qOrBitVal(atf_unit::Bitset& parent, u32 bit_idx, bool val) __attribute__((nothrow));
-// Set all bits of array to zero.
-// Note: this does not change what NBits will return.
-void                 fld8_ClearBitsAll(atf_unit::Bitset& parent) __attribute__((nothrow));
-// Zero in PARENT any bits that are set in RHS.
-void                 fld8_ClearBits(atf_unit::Bitset& parent, atf_unit::Bitset &rhs) __attribute__((nothrow));
-// Set PARENT to union of two bitsets.
-// (This function is not named Set.. to avoid triple entendre).
-void                 fld8_OrBits(atf_unit::Bitset& parent, atf_unit::Bitset &rhs) __attribute__((nothrow));
-// Return smallest number N such that indexes of all 1 bits are below N
-i32                  fld8_Sup(atf_unit::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
 
 ```
 ### Count: Count elements
@@ -985,32 +949,31 @@ Example:
 Show first 10 entries from amcdb.gen:
 
 ```
-inline-command: acr amcdb.gen | sort -k 2 | head
+inline-command: acr amcdb.gen | sort -k 2 | head | ssimfilt ^ -t
+GEN              PERNS  COMMENT
+basepool         N      Create basepools based on defaults
+bitfldenum       N      Generate fconsts from bool bitfield
+cget             N      Generate helpful Q functions based on fconsts and bools
+check_basefield  N      Check Base usage
+check_basepool   N      Check basepool order
+check_bigend     N      Check big-endians
+check_bitfld     N      Check that bitfields don't overlap
 
-
-
-amcdb.gen  gen:basepool         perns:N  comment:"Create basepools based on defaults"
-amcdb.gen  gen:bitfldenum         perns:N  comment:"Generate fconsts from bool bitfield"
-amcdb.gen  gen:cget             perns:N  comment:"Generate helpful Q functions based on fconsts and bools"
-amcdb.gen  gen:check_basefield    perns:N  comment:"Check Base usage"
-amcdb.gen  gen:check_basepool   perns:N  comment:"Check basepool order"
-amcdb.gen  gen:check_bigend     perns:N  comment:"Check big-endians"
-amcdb.gen  gen:check_bitfld     perns:N  comment:"Check that bitfields don't overlap"
 ```
 
 Select first 10 functions from amc source code:
 ```
 inline-command: src_func amc gen_% -proto -comment: | sort -k 3 | head
-cpp/amc/gen.cpp:220: void amc::gen_basepool() 
-cpp/amc/cget.cpp:123: void amc::gen_cget()
-cpp/amc/gen.cpp:581: void amc::gen_check_bigend() 
-cpp/amc/gen.cpp:300: void amc::gen_check_bitfld() 
-cpp/amc/gen.cpp:112: void amc::gen_check_cascdel() 
-cpp/amc/gen.cpp:464: void amc::gen_check_cpptype() 
-cpp/amc/gen.cpp:1379: void amc::gen_check_fcurs() 
-cpp/amc/gen.cpp:205: void amc::gen_check_prefix() 
-cpp/amc/gen.cpp:399: void amc::gen_check_reftype() 
-cpp/amc/gen.cpp:161: void amc::gen_check_static() 
+cpp/amc/gen.cpp:218: void amc::gen_basepool() 
+cpp/amc/cget.cpp:121: void amc::gen_cget()
+cpp/amc/gen.cpp:602: void amc::gen_check_bigend() 
+cpp/amc/gen.cpp:298: void amc::gen_check_bitfld() 
+cpp/amc/gen.cpp:110: void amc::gen_check_cascdel() 
+cpp/amc/gen.cpp:485: void amc::gen_check_cpptype() 
+cpp/amc/gen.cpp:1401: void amc::gen_check_fcurs() 
+cpp/amc/gen.cpp:203: void amc::gen_check_prefix() 
+cpp/amc/gen.cpp:420: void amc::gen_check_reftype() 
+cpp/amc/gen.cpp:159: void amc::gen_check_static() 
 ```
 
 In language-centric systems, one would start by writing some functions, and then use "reflection" to

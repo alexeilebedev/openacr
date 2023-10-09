@@ -8,29 +8,29 @@ this tool is first in PATH in order to avoid confusion.
 ### Syntax
 ```
 inline-command: bin/mdbg -h
-
-
 mdbg: My debugger
-Usage: mdbg [options]
-    [target]       string  Executable name
-    [args]         string  Additional module args
-    -cfg           string  Configuration to use. default: "debug"
-    -manywin               gdb-many-windows. default: false
-    -disas                 Show disassembly (use F12). default: false
-    -attach                Attach to a running process. default: false
-    -b             string  List of breakpoints, e.g. 'a.cpp:123 if cond1, func2'. default: "main"
-    -catchthrow            Stop on exceptions. default: true
-    -tui                   Use gdb -tui as the debugger. default: false
-    -bcmd          string  Evaluate command at breakpoint
-    -emacs                 Use emacs environment as the debugger. default: true
-    -follow_child          . default: false
-    -py                    Enable python scripting. default: false
-    -in            string  Input directory or filename, - for stdin. default: "data"
-    -verbose               Enable verbose mode
-    -debug                 Enable debug mode
-    -version               Show version information
-    -sig                   Print SHA1 signatures for dispatches
-    -help                  Print this screen and exit
+Usage: mdbg [-target:]<string> [[-args:]<string>] [options]
+    OPTION         TYPE    DFLT     COMMENT
+    [target]       string           Executable name
+    -in            string  "data"   Input directory or filename, - for stdin
+    [args]...      string           Additional module args
+    -cfg           string  "debug"  Configuration to use
+    -disas                          Show disassembly (use F12)
+    -attach                         Attach to a running process
+    -b...          string           Set breakpoint, e.g. 'a.cpp:123 if cond1', 'func#3'
+    -catchthrow            Y        Stop on exceptions
+    -tui                            Use gdb -tui as the debugger
+    -bcmd          string  ""       Evaluate command at breakpoint
+    -emacs                 Y        Use emacs environment as the debugger
+    -manywin                        Use gdb-many-windows emacs mode
+    -follow_child
+    -py                             Enable python scripting
+    -dry_run                        Print commands but don't execute
+    -verbose       int              Verbosity level (0..255); alias -v; cumulative
+    -debug         int              Debug level (0..255); alias -d; cumulative
+    -help                           Print help an exit; alias -h
+    -version                        Print version and exit
+    -signature                      Show signatures and exit; alias -sig
 
 ```
 

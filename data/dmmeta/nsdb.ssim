@@ -1,6 +1,8 @@
+dmmeta.nsdb  ns:algo  comment:""
 dmmeta.nsdb  ns:amcdb  comment:""
 dmmeta.nsdb  ns:amsdb  comment:""
 dmmeta.nsdb  ns:atfdb  comment:""
 dmmeta.nsdb  ns:dev  comment:""
 dmmeta.nsdb  ns:dmmeta  comment:""
 dmmeta.nsdb  ns:fmdb  comment:""
+dmmeta.nsdb  ns:gclidb  comment:""

@@ -1,0 +1,8 @@
+gclidb.gact  gact:accept  comment:""
+gclidb.gact  gact:approve  comment:""
+gclidb.gact  gact:create  comment:""
+gclidb.gact  gact:list  comment:""
+gclidb.gact  gact:needs_work  comment:""
+gclidb.gact  gact:start  comment:""
+gclidb.gact  gact:stop  comment:""
+gclidb.gact  gact:update  comment:""

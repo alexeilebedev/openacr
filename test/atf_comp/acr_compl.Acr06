@@ -1,0 +1,2 @@
+# atf_comp -report:N -printinput acr_compl.Acr06 | acr_compl -line:"acr unittest" | cat
+atfdb.unittest:

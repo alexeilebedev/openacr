@@ -1,6 +1,9 @@
-// (C) AlgoEngineering LLC 2008-2013
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2013 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,14 +18,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: algo_lib (lib) -- Support library for all executables
 // Exceptions: NO
 // Header: include/algo/fmt.h -- Print/Read functions
-//
-// Created By: alexei.lebedev shreejith.lokegowda
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev hayk.mkrtchyan shreejith.lokegowda
 //
 
 #pragma once
@@ -317,6 +315,9 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
     // Escape S according to bash rules and return result
     tempstr strptr_ToBash(strptr str);
 
+    // Escape S according to ssim rules and return result
+    tempstr strptr_ToSsim(strptr str);
+
     // encode uri component.
     // before ? use plus=false (no + substitution by space)
     void strptr_PrintUri(strptr str, algo::cstring &out, bool plus);
@@ -421,6 +422,22 @@ namespace algo { // update-hdr srcfile:%/algo/fmt.%
     inline algo::cstring &operator<<(algo::cstring &out, const strptr &t);
     inline algo::cstring &operator<<(algo::cstring &out, void (*t)(algo::cstring &));
 }
+
+namespace algo { // update-hdr srcfile:%/algo/base64.%
+    // Dear human:
+    //     Text from here to the closing curly brace was produced by scanning
+    //     source files. Editing this text is futile.
+    //     To refresh the contents of this section, run 'update-hdr'.
+    //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+
+    // -------------------------------------------------------------------
+    // cpp/lib/algo/base64.cpp -- base64 encoding
+    //
+
+    // print base64-encoded string
+    void strptr_PrintBase64(strptr str, cstring &out);
+}
+
 
 // -----------------------------------------------------------------------------
 

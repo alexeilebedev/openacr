@@ -96,6 +96,7 @@ dmmeta.smallstr  field:algo.RspaceStr200.ch  length:200  strtype:rightpad  pad:"
 dmmeta.smallstr  field:algo.RspaceStr21.ch  length:21  strtype:rightpad  pad:"' '"  strict:Y
 dmmeta.smallstr  field:algo.RspaceStr24.ch  length:24  strtype:rightpad  pad:"' '"  strict:Y
 dmmeta.smallstr  field:algo.RspaceStr240.ch  length:240  strtype:rightpad  pad:"' '"  strict:Y
+dmmeta.smallstr  field:algo.RspaceStr25.ch  length:25  strtype:rightpad  pad:"' '"  strict:Y
 dmmeta.smallstr  field:algo.RspaceStr26.ch  length:26  strtype:rightpad  pad:"' '"  strict:Y
 dmmeta.smallstr  field:algo.RspaceStr3.ch  length:3  strtype:rightpad  pad:"' '"  strict:Y
 dmmeta.smallstr  field:algo.RspaceStr31.ch  length:31  strtype:rightpad  pad:"' '"  strict:Y

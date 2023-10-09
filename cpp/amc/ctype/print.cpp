@@ -1,5 +1,8 @@
-// (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,13 +17,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
 // Source: cpp/amc/ctype/print.cpp -- Print ctype to string
-//
-// Created By: alexei.lebedev hayk.mkrtchyan
-// Recent Changes: alexei.lebedev hayk.mkrtchyan
 //
 
 #include "include/amc.h"
@@ -57,7 +56,7 @@ tempstr amc::CheckDfltExpr(amc::FField &field, strptr text, bool canskip) {
     bool cheap_copy = field.p_arg->c_cpptype && field.p_arg->c_cpptype->cheap_copy;
 
     if (canskip) {
-        if (field.reftype==dmmeta_Reftype_reftype_RegxSql && ch_N(dflt) > 0) {
+        if (field.reftype==dmmeta_Reftype_reftype_Regx && ch_N(dflt) > 0) {
             checkexpr << FieldvalExpr(field.p_ctype,field,"row")<<".expr == "<<dflt;// known to be a cstring
         } else if (field.reftype==dmmeta_Reftype_reftype_Val && ch_N(dflt) > 0) {
             checkexpr << EqExpr(*field.p_arg, FieldvalExpr(field.p_ctype,field,"row"), dflt);// compare with default expression
@@ -88,7 +87,7 @@ static bool GoodForPrintingQ(amc::FField& field, amc::FCfmt &cfmt) {
     good = good || field.reftype == dmmeta_Reftype_reftype_Ptr;
     good = good || field.reftype == dmmeta_Reftype_reftype_Opt;
     good = good || field.reftype == dmmeta_Reftype_reftype_Bitfld;
-    good = good || field.reftype == dmmeta_Reftype_reftype_RegxSql;
+    good = good || field.reftype == dmmeta_Reftype_reftype_Regx;
     good = good && (!field.c_substr);// do not read these
     good = good && (!field.c_cppfunc);// do not read these
     good = good && (!field.c_bitfld || !israw);// OK to print bitflds in tuple or sep

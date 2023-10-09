@@ -17,23 +17,26 @@ even today, almost fifty years after the publication of the paper. The first fou
 have *access path anomalies* -- i.e. they are unable to represent conditions such as an ownership
 of a part that's not associated with any project, or a project with no parts. If you are a software
 developer and want to write programs without bugs, I would really recommend reading at least the
-first few pages of Codd's paper and meditating on them for a long, long time.
+first few pages of Codd's paper and meditating on them for a long, long time, because the paper
+illustrates where pretty much all software bugs come from.
 
 When presenting his four schemas with anomalies, Codd is
-basically describing what we, programmers, know as a data structure, i.e. a structuring of data into layers,
-where you access subsequent layers from previous layers. He is pointing out a fatal flaw that lies in the
-idea of *subordination* of one set to another: by introducing an access path dependence into your data model,
+describing what programmers know as a data structure, i.e. a structuring of data into layers,
+where you access subsequent layers from previous layers.
+He is pointing out a fatal flaw that lies in the idea of *subordination* of one set to another:
+by introducing an access path dependence into your data model,
 you lose the ability to represent configurations that lie outside of your narrowed world view. 
 
 It is hard to overestimate the importance of this idea: 
 If even a simple projects-and-parts example has five possible schemas that can represent it, out of which
 four have inherent design bugs with provably bad consequences, then what can be said about
-a larger software project? Any software project can be viewed as a large database
-with a veritable rat's nest of references; and if it's a database, but not a carefully structured
+a larger software project?
+
+Any software project can be viewed as a large database
+with a veritable rat's nest of references; it doesn't matter if the language provides for safe pointers
+or garbage collection, that is a different issue: if it's a database, but not a carefully structured
 one (perhaps it came about by some natural accretion of code, as usually happens with software), then what 
-are the chances that it is free of anomalies?
-How many design bugs does a software project have that can be shown to exist from its code organization alone,
-before we even run it?
+are the chances that it is free of anomalies? The answer is, there is no chance. There are bugs.
 
 ### Creating MariaDB Tables
 
@@ -75,6 +78,7 @@ Now let's add the foreign key constraints. Only `partproj` table has these.
 
 It's time to populate some data. As a reminder, the MariaDB syntax for the `insert` statement
 is as follows:
+
 `insert into <tablename> (column1,column2) values ("row1.col1","row1.col2"), ("row2.col1","row2.col2")`.
 
     MariaDB [test]> insert into part (part) values ("part1"), ("part2");
@@ -195,7 +199,7 @@ part of that list.
 
 We will then place the list of known namespaces in the
 table `data/dmmeta/ns.ssim` and these will all be tagged as `dmmeta.ns`.
-But because we already have a namespace `dmmeta`, we will include its definition.
+Because we already have a namespace `dmmeta`, we will include its definition.
 So far we have two namespaces:
 
     $ cat > data/dmmeta/ns.ssim << EOF
@@ -216,8 +220,9 @@ We must include ctypes for all ctypes mentioned so far, this includes `ns` and `
     dmmeta.ctype  ctype:test.Project
     EOF
 
-We then modify the ssimfile table so that each ssimfile has related ctype.
-This is analogous to the `partproj` relation. 
+We then modify the ssimfile table so that each ssimfile has a related ctype, because we
+want all ssimfiles to be mappable to C++.
+(This is analogous to the `partproj` relation). 
 
     $ cat > data/dmmeta/ssimfile.ssim << EOF
     dmmeta.ssimfile  ssimfile:dmmeta.ssimfile ctype:dmmeta.Ssimfile
@@ -234,17 +239,21 @@ At this point, the only thing that's missing is some description of the columns.
 
 ### Describing The Columns
 
-We will need a new table, with one record for every type of column we have used so far.
+We will need a new table, with one record for every column we have used so far.
 We will call it `dmmeta.field`, so now we need to add field's `ssimfile` and `ctype` lines to 
 the appropriate ssmifiles:
 
-    $ echo 'dmmeta.ctype  ctype:dmmeta.Field' >> data/dmmeta/ctype.ssim
-    $ echo 'dmmeta.ssimfile  ssimfile:dmmeta.field  ctype:dmmeta.Field' >> data/dmmeta/ctype.ssim
+    $ cat >> data/dmmeta/ctype.ssim << EOF
+    dmmeta.ctype  ctype:dmmeta.Field
+    
+    $ cat >> data/dmmeta/ssimfile.ssim << EOF
+    dmmeta.ssimfile  ssimfile:dmmeta.field  ctype:dmmeta.Field
+    EOF
 
 The primary key for a field will be formed by concatenating the parent `ctype` with the 
 field name, with a dot in between, e.g. `dmmeta.Ns.ns` will be the name of the field
 describing the primary key of `ns`. We decide that whenever we need to look for a primary
-key, we will just take the first field from the relevant ctype. This convention means that
+key, we will just take the first field from the ctype. This convention means that
 we don't have to annotate the fields as being primary keys or not.
 
 In addition, as we describe the field, we will need to address the concept of a constraint.
@@ -252,9 +261,15 @@ In our schema, there are two types of fields: a value type, and a reference to a
 of another table. We will call these `reftypes`. We can easily enter the description of the 
 reftypes, and some reftype records, using the tools we have so far:
 
-    $ echo 'dmmeta.ctype  ctype:dmmeta.Reftype ' >> data/dmmeta/ctype.ssim
-    $ echo 'dmmeta.ssimfile  ssimfile:dmmeta.reftype  ctype:dmmeta.Reftype ' >> data/dmmeta/ssimfile.ssim
-    $ cat > data/dmmeta/reftype.ssim <<EOF
+    cat >> data/dmmeta/ctype.ssim << EOF
+    dmmeta.ctype  ctype:dmmeta.Reftype
+    EOF
+    
+    cat >> data/dmmeta/ssimfile.ssim << EOF
+    dmmeta.ssimfile  ssimfile:dmmeta.reftype  ctype:dmmeta.Reftype
+    EOF
+    
+    $ cat > data/dmmeta/reftype.ssim << EOF
     dmmeta.reftype  reftype:Val
     dmmeta.reftype  reftype:Pkey
     EOF
@@ -264,8 +279,13 @@ This will be our equivalent of `varchar(50)`.
 We create a new namespace called `algo`, because we want the `dmmeta`
 namespace to be used exclusively for ctypes that have ssimfiles associated with them.
 
-    $ echo 'dmmeta.ns ns:algo' >> data/dmmeta/ns.ssim
-    $ echo 'dmmeta.ctype ctype:algo.Smallstr50' >> data/dmmeta/ctype.ssim
+    cat >> data/dmmeta/ns.ssim << EOF
+    dmmeta.ns ns:algo
+    EOF
+    
+    cat >> data/dmmeta/ctype.ssim << EOF
+    dmmeta.ctype ctype:algo.Smallstr50
+    EOF
 
 And now we are ready to describe the fields. The table below includes descriptions of
 all fields we referenced so far.
@@ -285,11 +305,13 @@ all fields we referenced so far.
     dmmeta.field  field:test.Project.project      arg:algo.Smallstr50  reftype:Val
     EOF
     
-If your head is not at least a little bit exploding when you see the line:
+The method we have been following so far is as follows: for each set of things that
+we want to operate on, create a ssimfile and populate it with the names of those things.
+There is a certain magic in the fact that you end up with self-describing lines like
+the following:
 
     dmmeta.field  field:dmmeta.Field.reftype      arg:dmmeta.Reftype  reftype:Pkey
 
-Then you need to read the above text again. 
 All of our moves so far have been forced. We are simply adding descriptions
 of things as they pop up.
 
@@ -297,7 +319,8 @@ We are almost done. All that remains is adding a description of the constraint f
 of fields. For instance, a substring of the field's primary key must refer to a valid ctype,
 and similarly a substring of ctype's primary key must refer to a namespace.
 For this, we will add some records describing the substrings, and place them all 
-into the appropriate ssimfiles:
+into the appropriate ssimfiles. Below I will simply list those records and from the type tags
+alone it is clear which files they should go into:
 
     dmmeta.ctype  ctype:dmmeta.Substr  comment:"Computed field"
       dmmeta.field  field:dmmeta.Substr.field     arg:dmmeta.Field    reftype:Pkey  dflt:""  comment:""
@@ -314,7 +337,7 @@ And now we can describe the fields which are implicitly contained in other field
     dmmeta.field  field:dmmeta.Ctype.ns  arg:dmmeta.Ns  reftype:Pkey  dflt:""  comment:"translates to c++ namespace"
       dmmeta.substr  field:dmmeta.Ctype.ns  expr:.RL  srcfield:dmmeta.Ctype.ctype
 
-And place these records into their corresponding ctypes as well.
+And place these records into their corresponding files as well.
 The expression `.RL` means "scan for character . from the Right. then take everything to the Left of the found character".
 We will also allow expressions with any number of triples and any search characters, e.g. `/RR@LL` or `.LR.LR.LR`.
 We may want to describe additional substrings (such as field's name), but this should be sufficient
@@ -322,36 +345,49 @@ to show the process of building up the concepts.
 
 ### Adding Tools
 
-At this point, it is clear what kinds of actions we are performing on these data sets. Let's introduce some tools.
-
 First, we need a query tool that can fetch records of a given type, and then find all related
 records as a transitive closure over the Pkey references. Because the tool 
 automatically cross-references all the tables in our system, we will call it `Auto Cross Reference`
 or `acr`. We will equip `acr` with options like `-check` so that it can find any broken
-`Pkey` references, and other options to make it useful. We will describe all the command-line options
-as fields of the ctype `command.acr`.
+`Pkey` references, and other options to make it useful.
+We will also add an option `-insert`, which reads tuples from stdin, and places them into appropriate ssimfiles.
 
-For shell command-line completion, we will write `acr_compl`, which will now be able to auto-complete
-both arguments to acr, and even queries, by reading appropriate ssim files.
+We will describe all the command-line for acr with a ctype called `command.acr`, introducing the `command`
+namespace. All of the options that `acr` takes will become fields of `command.acr`. This means that
+we can add new command-line flags to `acr` using `acr` itself, having implemented the `-insert` option.
+
+As we introduce other tools, we will describe their command lines with `command.<ns>`.
+For shell command-line completion, we introduce the tool `acr_compl`, which will now be able to auto-complete
+command-line options of all tools in the system, including itself of course. We will use `acr` to add
+command-line options to `acr_compl` and `acr_compl` to auto-complete `acr` queries.
+Both of these tools are of course already in the system, and can be readily used.
 
 Second, we will need a tool that takes some command lines and prints shell scripts of the 
 sort we used above, which we can then pipe through `sh` in order to make the edits. 
-We will call this tool `acr_ed`, for `editor`.
+We will call this tool `acr_ed`, by analogy with `sed`.
 
 Third, since we already have all the descriptions of our records nicely arranged in tables,
-we don't want to repeat ourselves. We actually want to generate the C++ structs, with fields and 
+we will generate the C++ structs, with fields and 
 everything, by reading the `ctype`, `field` and `ns` tables, and creating C++ headers and source
-files with correspondin structs. Then, as we load these tables, we will map them onto the structs
+files with corresponding structs, and whatever operations are applicable to them.
+Then, as we load these tables, we will map them onto the structs
 and everything will be nice and strictly typed. This model compiler will be called `amc`, or 
 `A Model Compiler`. 
 
 In order to compile all these tools, we will need `A Build Tool`, or `abt`. A regular Makefile-based
 systrem won't do, because we already have a lot of data in `ssimfiles`, and we have the `ctypes` to handle
-them in C++. We would be introducing anomalies if we were to go outside this model.
+them in C++. We would be introducing a lot of extra manual maintenance work (and anomalies)
+if we were to go outside this model.
 
 ### Describing The Tools
 
-Any running program is nothing more than a temporary database containing some number of tables.
+As mentioned above, any running program is nothing more than a temporary database containing some number of tables
+and records. If it doesn't look like that, consider the following: a C++ program uses some built-in types
+and a finite number of structs. At any given time, the memory of the program is populated with instances of these
+structs, sitting at various memory locations (on the stack, hidden inside some buffers, allocated with malloc,
+sitting in arrays, etc). How these instances were allocated, and whether they are all discoverable is irrelevant.
+The set of all the instances of some struct X is to be considered the `table X` in that program.
+
 At any given time, the program performs an instruction that either reads some field of some 
 row from some in-memory table, or writes some field of some row to some in-memory table.
 
@@ -372,7 +408,7 @@ by virtue of loading the `dmmeta.ctype  ctype:dmmeta.Ctype` record. There is a r
 of a different type than what we had with ssimfiles: with ssimfiles, even though they seemed to be
 circular in their descriptions, they were not. The solution is to manually enter the definition of 
 `dmmeta::Ctype` into `amc`'s source code, but only in order to read the `dmmeta.ctype` records into it.
-After we do that, the output of amc will include `dmmeta::Ctype` simply because it loaded that record.
+After we do that, the output of amc will include `dmmeta::Ctype` simply because it has loaded that record.
 We then take the output of amc, and link it back to `amc`. At this point we will get a link error, 
 since we already have the original, manually entered definition of `dmmeta::Ctype`. We can now delete
 the manual version, making `amc`'s source code smaller. We repeat this many times, re-creating different
@@ -395,10 +431,10 @@ There is a more general pattern here:
 
 ### Representation & Manipulation
 
-We can represent any concept as a point in a multi-dimensional sparse space of tuples.
+We can represent any concept as a point in a multi-dimensional sparse space of tuples (this follows from ZFC).
 Whenever we extend our representable universe with
 additional concepts, such as a physcial set of C++ files on disk, or a set of dev and production environments
-with some configuration, we include its relational description, or map, as a set of tables in our data set. 
+with some configuration, we include its description as a set of tables in our data set. 
 We then write tools that enforce a unidirectional or bidirectional correspondence between this new object and
 the records that describe it. In this way we make the object programmable and editable with the
 same fundamental set of tools we use on the tuples themselves.
@@ -410,20 +446,20 @@ where the rules created by a system begin to apply to the system itself.
 Let's briefly consider some such systems.
 
 * The most famous one is the LISP interpreter as expressed in LISP itself,
-as expressed by the famous top-level expression `(loop (print (eval (read))))`. 
+described by the famous self-referential expression `(loop (print (eval (read))))`. 
 * Another example is the [self-compiling compiler](#https://en.wikipedia.org/wiki/Bootstrapping_(compilers)).
 All compiled languages have one (and *no* interpreted language has one).
 * And a third example is the template meta-programming sublanguage of C++,
-using which you can manipulate the very types from which the underlying
+using which you can manipulate, using substitution, the very types from which the underlying
 C++ program is written.
 
 Joining this list is OpenACR, which is of a different kind: 
 it not only generates most of its own source code and lets you modify this source code with
 plain command-line tools like sed and awk, and even SQL, without introducing
-any new language or an interpreter; but it serves as a sort of planter from which
-you can grow other applications that share these same properties. 
+any new language or even an interpreter; but it serves as a sort of planter from which
+you can grow other applications that share these same properties and inter-operate with existing tools.
 
-Let's go back to our three examples and consider one cycle of application of them.
+Let's go back to our three examples and consider one cycle of application development using them.
 
 * When a LISP interpreter written in LISP interprets more LISP, it is
 qualitatively different: it is slower. It can only
@@ -431,18 +467,20 @@ run smaller jobs than its parent. In order to be the same, the homoiconic interp
 would have to be vastly different; At the very least it would have to contain a
 memory model of the underlying computer and its file system, so it could then target them.
 That's why no interpreted language today uses a self-hosting interpreter -- nobody
-wants to pay for the slowdown.
+wants to pay for the quadratic slowdown.
+
 * The output of a self-compiling compiler is an object file -- unreadable
 for all practical purposes. So even though the compiler can compile itself, and the resulting
 compiler can run even faster than the one before (the opposite of what happens in LISP),
-this is a one-time gain.
+this is a one-time gain, because the object file is not source code.
+
 * Finally, the C++ template sublanguage, our third example, is strictly less powerful
 than its parent language; you can't loop over the fields of a struct, 
-or check how many structs are defined, or if the name of a function contains an uppercase S.
-Neither the C++ language, nor its template sublanguage contain words that 
-describe themselves.
+or check how many structs are defined, or delete fields, or check if the name of a
+function contains an uppercase S. Neither the C++ language, nor its template sublanguage
+contain words that describe themselves, even though their descriptions contain a lot of other words.
 
-So, after one cycle of application, you get to a new and better place, but that place is
+So, after one cycle of application of these tools, you get to a new and better place, but that place is
 either inaccessible (e.g. object file), or built at some unmaintainable expense;
 in either case, the gains are temporary. Yet *it is* possible to lock them in.
 For that, we need tools whose input is readable and writable
@@ -450,7 +488,8 @@ by both human and the machine, and where the system of names applies equally wel
 description of itself and the tools. 
 
 When the input format is both machine and human-readable and most of the source code
-is generated, any tool works with almost any other tool. 
+is generated, any tool works with almost any other tool, yielding an insanely compact
+and powerful development environment.
 
     'abt acr' builds acr.
     'abt abt' builds itself.
@@ -473,12 +512,18 @@ is generated, any tool works with almost any other tool.
     'acr ns:abt -t' shows the definitions of all abt structures
     'acr ns:acr -t' shows the definitions of its own structures
 
+    'amc_gc acr -key:ctype:acr.%' analyzes and elimintes unused records in acr
+    'amc_gc acr -key:ctype:amc_gc.%' analyzes and elimintes unused records in amc_gc
+
+    'atf_fuzz acr' performs input fuzzing on acr, based on its declared inputs
+    'atf_fuzz atf_fuzz' performs input fuzzing on atf_fuzz, based on its declared inputs
+
     'mdbg acr' debugs acr
     'mdbg "mdbg acr"' debugs the debugger debugging acr (in principle)
-    
+
 And of course, even though this is fun, 
-the point of these tools is not to compile themselves; 
-That economy is just a by-product of some naming conventions.
+the point of these tools is not to compile themselves: that economy is just a by-product of the naming conventions.
 The point is to allow the creation of new applications,
 using plain-text files to describe new domains while continuing
 to apply the same small set of tools -- bash, acr, perl, etc. on each cycle.
+

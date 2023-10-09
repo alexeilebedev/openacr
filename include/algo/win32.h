@@ -1,4 +1,7 @@
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -31,14 +34,14 @@ extern "C" {
         u64 rlim_max;
     };
     enum SaFlagsEnum {
-                      SA_RESTART=1
+        SA_RESTART=1
     };
     enum SignalEnum {
-                     SIGBUS=128
-                     ,SIGHUP
-                     ,SIGPIPE
-                     ,SIGALRM
-                     ,SIGKILL
+        SIGBUS=128
+        ,SIGHUP
+        ,SIGPIPE
+        ,SIGALRM
+        ,SIGKILL
     };
     typedef void (*HandlerFunc)(int signal);
     typedef void (*SignalFunc)(int signal, siginfo_t *_si, void *context);
@@ -80,14 +83,14 @@ struct tm *gmtime_r(const time_t *timep, struct tm *result);
 int mkdir(const char *path, int mode);
 int mkstemp(char *tmpl);
 enum LockFlags {
-                LOCK_UN=1
-                ,LOCK_NB=2
-                ,LOCK_EX=4
+    LOCK_UN=1
+    ,LOCK_NB=2
+    ,LOCK_EX=4
 };
 enum {
-      STDIN_FILENO=0
-      ,STDOUT_FILENO=1
-      ,STDERR_FILENO=2
+    STDIN_FILENO=0
+    ,STDOUT_FILENO=1
+    ,STDERR_FILENO=2
 };
 int isatty(int fd);
 int flock(int fd, int flags);
@@ -107,7 +110,7 @@ int WIFSTOPPED(int status);
 int WCOREDUMP(int status);
 int WSTOPSIG(int status);
 enum {
-      WNOHANG=1
+    WNOHANG=1
 };
 inline int S_ISDIR(int flags) {
     return flags & _S_IFDIR;
@@ -116,29 +119,29 @@ inline int S_ISREG(int flags) {
     return flags & _S_IFREG;
 }
 enum {
-      S_IXUSR=1
-      ,S_IRWXG=2
-      ,S_IXOTH=16
+    S_IXUSR=1
+    ,S_IRWXG=2
+    ,S_IXOTH=16
 };
 enum {
-      FNM_FILE_NAME
+    FNM_FILE_NAME
 };
 int fnmatch(const char *pattern, const char *filename, int flags);
 void sleep(int sec);
 enum RlimitEnum {
-                 RLIMIT_CPU=1
-                 ,RLIMIT_NOFILE
-                 ,RLIMIT_DATA
-                 ,RLIMIT_AS // address space
+    RLIMIT_CPU=1
+    ,RLIMIT_NOFILE
+    ,RLIMIT_DATA
+    ,RLIMIT_AS // address space
 };
 void sigemptyset(u32 *mask);
 enum {
-      SA_SIGINFO=1
+    SA_SIGINFO=1
 };
 int sigaction(int signal, struct sigaction *sa, void*);
 enum {
-      S_IWGRP=1
-      ,S_IWOTH=1
+    S_IWGRP=1
+    ,S_IWOTH=1
 };
 int getrlimit(RlimitEnum what, rlimit *r);
 int setrlimit(RlimitEnum what, const rlimit *r);
@@ -164,17 +167,17 @@ template<class T> inline T *__sync_val_compare_and_swap(T **addr, T *oldval, voi
 int dospawn(char *path, char *cmdline, int timeout, strptr fstdin, strptr fstdout, strptr fstderr);
 int readlink(const char *path, char *out, int bufsize);
 enum {
-      _SC_NPROCESSORS_ONLN=1
+    _SC_NPROCESSORS_ONLN=1
 };
 int sysconf(int selector);
 // Close specified handle if it open
 // Set value to NULL
 void CloseHandleSafe(HANDLE &handle);
 enum MmapProt {
-               PROT_READ=1
+    PROT_READ=1
 };
 enum MmapFlags {
-                MAP_PRIVATE=1
+    MAP_PRIVATE=1
 };
 void *mmap(void *base_addr, i64 size, MmapProt prot, MmapFlags mapflags, int fd, int flags2);
 int munmap(void *base_addr, i64 size);

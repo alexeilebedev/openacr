@@ -1,6 +1,8 @@
-// (C) AlgoEngineering LLC 2008-2012
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2012 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,14 +17,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
 // Source: cpp/amc/base.cpp
-//
-// Created By: alexei.lebedev hayk.mkrtchyan
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev hayk.mkrtchyan
 //
 
 #include "include/amc.h"
@@ -31,14 +28,6 @@
 
 static bool StripCommentQ(amc::FField &field) {
     return field.c_fbase && field.c_fbase->stripcomment;
-}
-
-// -----------------------------------------------------------------------------
-
-static bool AllowCopyoutQ(amc::FField &field) {
-    return !StripCommentQ(field)
-        && amc::CanCopyQ(*field.p_ctype)
-        && !zd_inst_EmptyQ(*field.p_ctype);
 }
 
 // -----------------------------------------------------------------------------
@@ -61,47 +50,64 @@ void amc::tclass_Base() {
 
 // -----------------------------------------------------------------------------
 
+// Generate a function to copy fields from a ctype to its base type
 void amc::tfunc_Base_CopyOut() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
-    if (AllowCopyoutQ(field)) {
-        amc::FFunc& copyout = amc::CreateCurFunc();
-        Ins(&R, copyout.ret  , "void", false);
-        Ins(&R, copyout.proto, "$parname_CopyOut($Partype &row, $Cpptype &out)", false);
-        ind_beg(amc::ctype_c_field_curs, fld, *field.p_arg) {
-            Set(R, "$cppname", name_Get(fld));
-            if (NeedCopyQ(fld)) {
-                Ins(&R, copyout.body, "out.$cppname = row.$cppname;");
-            } else if (fld.reftype == dmmeta_Reftype_reftype_RegxSql) {
-                // #AL# TODO: copy operator for RegxSql field
-                Ins(&R, copyout.body, "(void)Regx_ReadStrptrMaybe(out.$cppname, row.$cppname.expr);");
-            }
-        }ind_end;
-        MaybeUnused(copyout,"row");
-        MaybeUnused(copyout,"out");
-    }
+    amc::FField &fldbase = *amc::_db.genfield.p_field;
+    amc::FFunc& copyout = amc::CreateCurFunc();
+    Ins(&R, copyout.ret  , "void", false);
+    Ins(&R, copyout.proto, "$parname_CopyOut($Partype &row, $Cpptype &out)", false);
+    ind_beg(amc::ctype_c_field_curs, field, *fldbase.p_arg) {
+        Set(R, "$cppname", name_Get(field));
+        Set(R, "$reftype", field.reftype);
+        if (!FindFieldByName(*fldbase.p_ctype, name_Get(field))) {
+            Ins(&R, copyout.body, "// $cppname: field stripped (see dmmeta.fbase:$field)");
+        } else if (field.c_fregx) {
+            Set(R, "$Regxtype", field.c_fregx->regxtype);
+            Ins(&R, copyout.body, "(void)Regx_Read$Regxtype(out.$cppname, row.$cppname.expr, true);");
+        } else if (FldfuncQ(field)) {// cppfunc, substr, alias
+            //Ins(&R, copyout.body, "// $cppname: fldfunc, skipped");
+        } else if (ComputedFieldQ(field)) {// lenfld, typefld
+            Ins(&R, copyout.body, "// $cppname: field value is computed");
+        } else if (field.c_tary) {// tary
+            Ins(&R, copyout.body, "$cppname_Setary(out, $cppname_Getary(row));");
+        } else if (ValQ(field)) {
+            Ins(&R, copyout.body, "out.$cppname = row.$cppname;");
+        } else {
+            Ins(&R, copyout.body, "// $cppname: unknown field type ($reftype), skipped");
+        }
+    }ind_end;
+    MaybeUnused(copyout,"row");
+    MaybeUnused(copyout,"out");
 }
 
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Base_CopyIn() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
-    if (amc::CanCopyQ(*field.p_ctype) && !zd_inst_EmptyQ(*field.p_ctype)) {
+    amc::FField &fldbase = *amc::_db.genfield.p_field;
+    if (amc::CanCopyQ(*fldbase.p_ctype) && !zd_inst_EmptyQ(*fldbase.p_ctype)) {
         amc::FFunc& copyin = amc::CreateCurFunc();
         Ins(&R, copyin.ret  , "void", false);
         Ins(&R, copyin.proto, "$parname_CopyIn($Partype &row, $Cpptype &in)", false);
-        ind_beg(amc::ctype_c_field_curs, basefield, *field.p_arg) {
-            Set(R, "$cppname", name_Get(basefield));
-            if (NeedCopyQ(basefield)) {// assign all fields of base class
-                if (ChildFieldExistsQ(basefield, *field.p_ctype)) {
-                    Ins(&R, copyin.body, "row.$cppname = in.$cppname;");
-                } else {
-                    Ins(&R, copyin.body, "// comment stripped, see dmmeta.fbase:$field");
-                }
-            } else if (basefield.reftype == dmmeta_Reftype_reftype_RegxSql) {
-                // #AL# TODO: copy operator for RegxSql field
-                Ins(&R, copyin.body, "(void)Regx_ReadStrptrMaybe(row.$cppname, in.$cppname.expr);");
+        ind_beg(amc::ctype_c_field_curs, field, *fldbase.p_arg) {
+            Set(R, "$reftype", field.reftype);
+            Set(R, "$cppname", name_Get(field));
+            if (!FindFieldByName(*fldbase.p_ctype, name_Get(field))) {
+                Ins(&R, copyin.body, "// $cppname: field stripped (see dmmeta.fbase:$field)");
+            } else if (field.c_fregx) {
+                Set(R, "$Regxtype", field.c_fregx->regxtype);
+                Ins(&R, copyin.body, "(void)Regx_Read$Regxtype(row.$cppname, in.$cppname.expr, true);");
+            } else if (FldfuncQ(field)) {// cppfunc, substr
+                //Ins(&R, copyin.body, "// $cppname: fldfunc, skipped");
+            } else if (ComputedFieldQ(field)) {// lenfld, typefld
+                Ins(&R, copyin.body, "// $cppname: field value is computed");
+            } else if (field.c_tary) {// tary
+                Ins(&R, copyin.body, "$cppname_Setary(row, $cppname_Getary(in));");
+            } else if (ValQ(field)) {
+                Ins(&R, copyin.body, "row.$cppname = in.$cppname;");
+            } else {
+                Ins(&R, copyin.body, "// $cppname: unknown field reftype ($reftype), skipped");
             }
         }ind_end;
         MaybeUnused(copyin,"row");
@@ -244,11 +250,25 @@ void amc::CloneFields(amc::FCtype &from, amc::FCtype &to, double next_rowid, amc
             newcppfunc.field = newfield.field;
             amc::cppfunc_InsertMaybe(newcppfunc);
         }
+        if (field.c_falias) {
+            dmmeta::Falias newfalias;
+            amc::falias_CopyOut(*field.c_falias, newfalias);
+            newfalias.field = newfield.field;
+            newfalias.basefield = dmmeta::Field_Concat_ctype_name(ctype_Get(newfield),name_Get(*field.c_falias->p_basefield));
+            amc::falias_InsertMaybe(newfalias);
+        }
         if (field.c_fbigend) {
             dmmeta::Fbigend newfbigend;
             amc::fbigend_CopyOut(*field.c_fbigend, newfbigend);
             newfbigend.field = newfield.field;
             amc::fbigend_InsertMaybe(newfbigend);
+        }
+        if (field.c_fregx) {
+            dmmeta::Fregx newfregx;
+            newfregx.partial=field.c_fregx->partial;
+            newfregx.regxtype=field.c_fregx->regxtype;
+            newfregx.field = newfield.field;
+            amc::fregx_InsertMaybe(newfregx);
         }
         if (field.c_pmaskfld) {
             dmmeta::Pmaskfld newpmaskfld;

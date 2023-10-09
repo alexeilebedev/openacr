@@ -1,6 +1,9 @@
-// (C) AlgoEngineering LLC 2008-2013
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2013 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,14 +18,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: algo_lib (lib) -- Support library for all executables
 // Exceptions: NO
 // Source: cpp/lib/algo/lib.cpp -- Main file
-//
-// Created By: alexei.lebedev
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/algo.h"
@@ -728,4 +726,34 @@ int algo_lib::KillRecurse(int pid, int sig, bool kill_topmost) {
     (void)kill_topmost;
 #endif
     return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Return computed name for sandbox SANDBOX
+tempstr algo_lib::SandboxDir(algo::strptr sandbox) {
+    tempstr ret;
+    if (sandbox != "") {
+        ret << "temp/sandbox." << sandbox;
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Enter sandbox and remember previous directory
+void algo_lib::SandboxEnter(algo::strptr sandbox) {
+    algo_lib::_db.sandbox_orig_dir=algo::GetCurDir();
+    verblog("sandbox.begin"
+            <<Keyval("dir",sandbox));
+    errno_vrfy(chdir(Zeroterm(algo_lib::SandboxDir(sandbox)))==0, "chdir sandbox");
+}
+
+// -----------------------------------------------------------------------------
+
+// Change to the directory that was current before sandbox mode
+// Must be balanced with SandboxEnter
+void algo_lib::SandboxExit() {
+    verblog("sandbox.end");
+    errno_vrfy(chdir(Zeroterm(algo_lib::_db.sandbox_orig_dir))==0, "chdir");
 }

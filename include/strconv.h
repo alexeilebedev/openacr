@@ -1,5 +1,7 @@
-// (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,13 +16,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: strconv (exe) -- A simple string utility
 // Exceptions: yes
 // Header: include/strconv.h
-//
-// Created By: vladimir.parizhsky luke.huang
-// Recent Changes: vladimir.parizhsky luke.huang alexei.lebedev
 //
 
 #include "include/gen/strconv_gen.h"

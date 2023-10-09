@@ -1,30 +1,41 @@
 #!/usr/bin/env perl
-# (C) NYSE | Intercontinental Exchange 2013-2014
-# Author: Alexei Lebedev
+# Copyright 2013-2014 (C) NYSE | Intercontinental Exchange
+# Copyright (C) 2023 AlgoRND
 #
+# License: GPL
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# Contacting ICE: <https://www.theice.com/contact>
 # filter to colorize output
 # Usage 1:
 # <some command> | hilite <term1> <term2> ...
 # each term is a regex that is highlighted using a separate color.
 # colors are picked automatically from a default sequence
-#
 # to specify a color explicitly, use its name: term1:green term2:yellow
-#
 # blotter mode:
 # to highlight every other line, use term1:green%2; to highlight every other 5 lines,
 # use term1:green%5
-#
 # If multiple patterns match a given input line, patterns specified later
 # on the command line override previous patterns; Each pattern can match multiple
 # times within the line.
-#
 # inline specification:
 # highlighting rules can be provided as part of the input.
 # If a line starts with the special word 'hilite.colors', e.g.
 # hilite.colors <term1> <term2> ...
 # Then the previous rules are flushed,
 # and new terms are processed as if they were read from the command line
-#
+
 use strict;
 
 # map of supported named escape sequences

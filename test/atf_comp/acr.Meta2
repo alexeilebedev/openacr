@@ -1,0 +1,13 @@
+# atf_comp -report:N -printinput acr.Meta2 | acr ftuple -meta | cat
+dmmeta.ctype  ctype:dmmeta.Ftuple  comment:""
+  dmmeta.field  field:dmmeta.Ftuple.field    arg:dmmeta.Field  reftype:Pkey  dflt:""  comment:""
+  dmmeta.field  field:dmmeta.Ftuple.comment  arg:algo.Comment  reftype:Val   dflt:""  comment:""
+  dmmeta.cfmt  cfmt:dmmeta.Ftuple.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+  dmmeta.ctypelen  ctype:dmmeta.Ftuple  len:254  alignment:1  padbytes:0
+
+dmmeta.field  field:lib_ctype.FFtuple.msghdr  arg:dmmeta.Ftuple  reftype:Base  dflt:""  comment:""
+dmmeta.ssimfile  ssimfile:dmmeta.ftuple  ctype:dmmeta.Ftuple
+  dmmeta.ssimsort  ssimfile:dmmeta.ftuple  sortfld:dmmeta.Ftuple.field  comment:""
+
+dmmeta.xref  field:lib_ctype.FField.c_ftuple  inscond:true  via:lib_ctype.FDb.ind_field/dmmeta.Ftuple.field
+report.acr  n_select:9  n_insert:0  n_delete:0  n_update:0  n_file_mod:0

@@ -1,10 +1,24 @@
+// Copyright (C) 2023 AlgoRND
+//
+// License: GPL
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Target: atf_fuzz (exe)
 // Exceptions: yes
 // Source: cpp/atf/atf_fuzz.cpp
 //
 
-#include "include/algo.h"
 #include "include/atf_fuzz.h"
 
 void atf_fuzz::fuzzstrat_skip_inputs() {
@@ -30,18 +44,19 @@ void atf_fuzz::fuzzstrat_skip_inputs() {
           <<Keyval("nline",nline));
     DeleteFile(_db.cmdline.reprofile);
     int ncrash=0;
-    prlog("atf_fuzz: preparing sandbox");
-    strptr sandbox="temp/atf_fuzz.sandbox/";
-    command::bash_proc init;
-    init.cmd.c << "(grep -v build .gitignore; echo .git) > temp/atf_fuzz.filter" << eol;
-    init.cmd.c << "rsync -ac --filter=':- temp/atf_fuzz.filter' ./ "<<sandbox;
-    vrfy(bash_Exec(init)==0,tempstr()<<"failed: "<<init.cmd.c);
+    {
+        command::sandbox_proc sandbox;
+        sandbox.cmd.name.expr = dev_Sandbox_sandbox_atf_fuzz;
+        sandbox.cmd.reset = true;
+        sandbox_ExecX(sandbox);
+    }
+    tempstr sbpath = algo_lib::SandboxDir(dev_Sandbox_sandbox_atf_fuzz);
     int iter=0;
     ind_beg(Line_curs,line,inputs) {
         if (algo::double_WeakRandom(1) <= _db.cmdline.testprob) {
             prlog(iter+1<<" of "<<nline);
             command::bash_proc sh;
-            sh.cmd.c<<"cd "<<sandbox
+            sh.cmd.c<<"cd "<<sbpath
                     <<" && echo "<<strptr_ToBash(tempstr()<<"acr.delete "<<line)
                     <<" | acr -insert -write >/dev/null"
                     <<" && "<<_db.cmdline.target<<" "<<_db.cmdline.args;
@@ -59,10 +74,10 @@ void atf_fuzz::fuzzstrat_skip_inputs() {
                 prlog("CRASH "<<sh.cmd.c);
                 StringToFile(sh.cmd.c,_db.cmdline.reprofile,algo_FileFlags_append);
             }
-            // restore sandbox data dir
-            command::bash_proc cleanup;
-            cleanup.cmd.c<<"rsync -a data/ "<<sandbox<<"/data/";
-            vrfy(bash_Exec(cleanup)==0,tempstr()<<"failed: "<<cleanup.cmd.c);
+            command::sandbox_proc cleanup;
+            cleanup.cmd.name.expr = dev_Sandbox_sandbox_atf_fuzz;
+            cleanup.cmd.clean = true;
+            sandbox_ExecX(cleanup);
         }
         iter++;
     }ind_end;

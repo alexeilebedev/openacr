@@ -1,10 +1,28 @@
 #!/bin/sh
-git fetch origin
-BRANCH=master
-# do this as a single command so that if reset fails, there is no commit attempt.
-git reset --soft $(git merge-base HEAD origin/$BRANCH) && (
-    git commit -m "$(git log --format=%B --reverse HEAD..HEAD@{1})"
-    git commit --amend # allow editing comment
-)
-# keep-empty is needed so that base commit gets integrated
-git rebase --keep-empty --strategy=recursive  origin/$BRANCH
+# Copyright (C) 2023 AlgoRND
+#
+# License: GPL
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+
+git-rebase-remote origin
+# git fetch origin
+# BRANCH=master
+# # do this as a single command so that if reset fails, there is no commit attempt.
+# git reset --soft $(git merge-base HEAD origin/$BRANCH) && (
+#     git commit -m "$(git log --format=%B --reverse HEAD..HEAD@{1})"
+#     git commit --amend # allow editing comment
+# )
+# # keep-empty is needed so that base commit gets integrated
+# git rebase --keep-empty --strategy=recursive  origin/$BRANCH

@@ -1,6 +1,9 @@
-// (C) AlgoEngineering LLC 2008-2012
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2012 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,14 +18,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
 // Source: cpp/amc/field.cpp
-//
-// Created By: alexei.lebedev
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev hayk.mkrtchyan
 //
 
 #include "include/amc.h"
@@ -134,35 +132,52 @@ void amc::tfunc_Field2_ReadStrptrMaybe() {
     ok = ok && (ValQ(field) || field.reftype == dmmeta_Reftype_reftype_Bitfld);
     ok = ok && !amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"ReadStrptrMaybe"));
     bool has_set = amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Set"));
-    bool has_ctyperead = !field.c_bitfld && !field.c_fbigend && HasReadQ(*field.p_arg) && !field.c_inlary;
-    if (HasReadQ(*field.p_ctype) && ok && (has_set || has_ctyperead)) {
-        amc::FFunc& doread = amc::CreateCurFunc();
-        doread.inl = true;
-        doread.priv = true;
-        Ins(&R, doread.ret    , "bool",false);
-        Ins(&R, doread.proto  , "$name_ReadStrptrMaybe($Partype &parent, algo::strptr in_str)",false);
-        Ins(&R, doread.body     , "bool retval = true;");
-        if (has_set) {// set function
+    bool has_ctyperead = HasReadQ(*field.p_arg) &&
+        !(field.c_bitfld || field.c_fbigend || field.c_inlary || field.c_falias);
+    vrfy(!(has_set && field.c_fflag && field.c_fflag->cumulative),
+         tempstr()<<"amc.fflag"
+         <<Keyval("fflag",field.field)
+         <<Keyval("comment", "fflag.cumulative can't be used on a field with Set function"));
+    if (HasReadQ(*field.p_ctype) && ok) {
+        if (has_ctyperead && !has_set && !ctype.c_pmaskfld && !field.c_fflag) {
+            field.ctype_read=true;// use ctype's function to read this field
+        } else {
+            amc::FFunc& doread = amc::CreateCurFunc();
+            doread.inl = true;
+            doread.priv = true;
             Set(R, "$Fldcpptype", field.cpp_type);
-            Ins(&R, doread.body , "$Fldcpptype $name_tmp;");
-            Ins(&R, doread.body , "retval = $Cpptype_ReadStrptrMaybe($name_tmp, in_str);");
-            Ins(&R, doread.body , "if (retval) {");
-            Ins(&R, doread.body , "    $name_Set(parent, $name_tmp);");
-            Ins(&R, doread.body , "}");
-            // don't set present flag, the _Set function already does it
-        } else if (has_ctyperead) {
-            Ins(&R, doread.body , "retval = $Cpptype_ReadStrptrMaybe(parent.$name, in_str);");
-            SetPresent(doread,"parent",field);
-            if (!ctype.c_pmaskfld) {
-                // implementation involves calling $Cpptype_ReadStrptr --
-                // as an optimization (that saves ~120K lines of generated code),
-                // leave it marked internal and set special flag.
-                // THIS IS IRREGULAR -- BUT I LIKE 120K LESS GARBAGE.
-                doread.ismacro=true;
-                field.ctype_read=true;
+            AddRetval(doread, "bool", "retval", "true");
+            Ins(&R, doread.proto  , "$name_ReadStrptrMaybe($Partype &parent, algo::strptr in_str)",false);
+            // remap empty value to something different
+            if (field.c_fflag && field.c_fflag->emptyval != "") {
+                Set(R,"$emptyval",field.c_fflag->emptyval);
+                Ins(&R, doread.body , "if (in_str == \"\") {");
+                Ins(&R, doread.body , "    in_str = $emptyval; // fflag:$field - empty input string");
+                Ins(&R, doread.body , "}");
+            }
+            if (has_set) {// set function
+                Ins(&R, doread.body , "$Fldcpptype $name_tmp;");
+                Ins(&R, doread.body , "retval = $Cpptype_ReadStrptrMaybe($name_tmp, in_str);");
+                Ins(&R, doread.body , "if (retval) {");
+                Ins(&R, doread.body , "    $name_Set(parent, $name_tmp);");
+                Ins(&R, doread.body , "}");
+                // don't set present flag, the _Set function already does it
+            } else if (field.c_fflag && field.c_fflag->cumulative) {
+                Ins(&R, doread.body , "$Fldcpptype $name_tmp;");
+                Ins(&R, doread.body , "retval = $Cpptype_ReadStrptrMaybe($name_tmp, in_str);");
+                Ins(&R, doread.body , "if (retval) {");
+                Ins(&R, doread.body , "    parent.$name += $name_tmp; // fflag:$field cumulative");
+                Ins(&R, doread.body , "}");
+                SetPresent(doread,"parent",field);
+            } else if (has_ctyperead) {
+                Ins(&R, doread.body , "retval = $Cpptype_ReadStrptrMaybe(parent.$name, in_str);");
+                SetPresent(doread,"parent",field);
+            } else {
+                MaybeUnused(doread, "parent");
+                MaybeUnused(doread, "in_str");
+                Ins(&R, doread.body , "// don't know how to read field $field");
             }
         }
-        Ins(&R, doread.body     , "return retval;");
     }
 }
 
@@ -192,4 +207,28 @@ void amc::tfunc_Field_Concat(){
         amc::c_substr_field_QuickSort();
         GenerateSetForCoveredTrees(*field, 0, -1);
     }
+}
+
+// -----------------------------------------------------------------------------
+
+// True if ReadFieldExpr for the field
+bool amc::HasReadExprQ(amc::FField &field) {
+    return field.ctype_read || amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"ReadStrptrMaybe"));
+}
+
+// -----------------------------------------------------------------------------
+
+// Return an expression, with type bool,
+// reading field FIELD in struct PARENT from value STRVAL
+// If impossible, return FALSE;
+tempstr amc::ReadFieldExpr(amc::FField &field, algo::strptr parent, algo::strptr strval) {
+    tempstr ret;
+    if (field.ctype_read) {
+        ret << field.cpp_type<<"_ReadStrptrMaybe("<<parent<<"."<<name_Get(field)<<", "<<strval<<")";
+    } else if (amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"ReadStrptrMaybe"))) {
+        ret << name_Get(field)<<"_ReadStrptrMaybe("<<parent<<", "<<strval<<")";
+    } else {
+        ret << "false";
+    }
+    return ret;
 }

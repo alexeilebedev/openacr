@@ -1,4 +1,4 @@
-# atf_comp -report:N -print sv2ssim.Convert2Tsv | sv2ssim test/csv/1.csv -ctype a.B -schema -data -outseparator:$'\t' -header:N | cat
+# atf_comp -report:N -printinput sv2ssim.Convert2Tsv | sv2ssim test/csv/1.csv -ctype a.B -schema -data -outseparator:$'\t' -header:N | cat
 John	Doe	120 jefferson st.	Riverside	NJ	08075
 Jack	McGinnis	220 hobo Av.	Phila	PA	09119
 John "Da Man"	Repici	120 Jefferson St.	Riverside	NJ	08075

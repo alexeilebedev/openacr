@@ -1,6 +1,9 @@
-// (C) AlgoEngineering LLC 2008-2013
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2013 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,14 +18,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
 // Source: cpp/amc/fconst.cpp -- Constants, string <-> int conversion
-//
-// Created By: alexei.lebedev hayk.mkrtchyan
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev hayk.mkrtchyan
 //
 
 #include "include/amc.h"

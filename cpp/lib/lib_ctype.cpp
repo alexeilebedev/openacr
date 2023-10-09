@@ -1,5 +1,8 @@
-// (C) 2016-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2016-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,13 +17,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: lib_ctype (lib) -- Helpful library for reading/writing ctypes as text tuples
 // Exceptions: yes
 // Source: cpp/lib/lib_ctype.cpp
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/algo.h"
@@ -375,4 +374,25 @@ tempstr lib_ctype::StabilizeSsimTuple(strptr str) {
         out = str;
     }
     return out;
+}
+
+// -----------------------------------------------------------------------------
+
+// Fill Replscope with attribute values, including substr
+void lib_ctype::FillReplscope(algo_lib::Replscope &R, strptr str) {
+    Tuple tuple;
+    if (Tuple_ReadStrptrMaybe(tuple,str)) {
+        lib_ctype::FCtype *ctype = lib_ctype::TagToCtype(tuple);
+        ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+            Set(R,tempstr()<<"$"<<attr.name,attr.value);
+            lib_ctype::FField *srcfield = ctype
+                ? ind_field_Find(dmmeta::Field_Concat_ctype_name(ctype->ctype,attr.name))
+                : NULL;
+            if (srcfield) {
+                ind_beg(field_c_substr_srcfield_curs,substr,*srcfield) {
+                    Set(R,tempstr()<<"$"<<name_Get(*substr.p_field),Pathcomp(attr.value,strptr(substr.expr.value)));
+                }ind_end;
+            }
+        }ind_end;
+    }
 }

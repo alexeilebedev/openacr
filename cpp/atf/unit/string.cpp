@@ -1,5 +1,8 @@
-// (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,13 +17,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: atf_unit (exe) -- Unit tests (see unittest table)
 // Exceptions: yes
 // Source: cpp/atf/unit/string.cpp
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/atf_unit.h"
@@ -258,4 +257,23 @@ void atf_unit::unittest_algo_lib_Tabulate() {
             "abcd        a        ee\n"
             "aa     bbbbbb   asdfasdfasdfa\n");
     prlog(result);
+}
+
+// --------------------------------------------------------------------------------
+
+static tempstr TestSepCurs(strptr line, char sep) {
+    tempstr ret;
+    ind_beg(algo::Sep_curs,token,line,sep) {
+        ret << Keyval(tempstr()<<ind_curs(token).index,token);
+    }ind_end;
+    return ret;
+}
+
+void atf_unit::unittest_algo_lib_StringSepCurs() {
+    vrfyeq_(TestSepCurs(""         ,'\0'),strptr("0:\"\""));
+    vrfyeq_(TestSepCurs("abc"      ,'\0'),strptr("0:abc"));
+    vrfyeq_(TestSepCurs("abc"      ,'|') ,strptr("0:abc"));
+    vrfyeq_(TestSepCurs("a|b|c"    ,'|') ,strptr("0:a  1:b  2:c"));
+    vrfyeq_(TestSepCurs("a||b||c|" ,'|') ,strptr("0:a  1:\"\"  2:b  3:\"\"  4:c  5:\"\""));
+    vrfyeq_(TestSepCurs("abc|bce,cde def\tefgh",'|'),strptr("0:abc  1:\"bce,cde def\\tefgh\""));
 }

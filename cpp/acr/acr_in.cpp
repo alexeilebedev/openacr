@@ -1,6 +1,9 @@
-// (C) AlgoEngineering LLC 2008-2013
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2013 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,14 +18,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: acr_in (exe) -- ACR Input - compute set of ssimfiles or tuples used by a specific target
 // Exceptions: yes
 // Source: cpp/acr/acr_in.cpp
-//
-// Created By: alexei.lebedev vladimir.parizhsky
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev vladimir.parizhsky
 //
 // Print ssim tuples desired by a specified process,
 // or print names of ssim files

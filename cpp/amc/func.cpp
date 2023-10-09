@@ -1,5 +1,8 @@
-// (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,13 +17,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
 // Source: cpp/amc/func.cpp -- C++ function output
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/amc.h"
@@ -121,6 +120,9 @@ void amc::GenRetvalInit(amc::FFunc &func, amc::Funcarg &funcarg, strptr initiali
 
 // -----------------------------------------------------------------------------
 
+// Declare return value for function FUNC.
+// The value has type TYPE, name NAME< and is initialized with INITALIZER.
+//
 amc::Funcarg* amc::AddRetval(amc::FFunc &func, strptr type, strptr name, strptr initializer) {
     amc::Funcarg &funcarg = funcarg_Alloc(func);
     funcarg.type = type;
@@ -146,6 +148,10 @@ amc::Funcarg* amc::AddTypearg(amc::FFunc &func, strptr type) {
 
 // -----------------------------------------------------------------------------
 
+// Finalize function. This is done just before printing the function out.
+// If the function has a return value, "return RETVAL" is added to the function body
+// "MaybeUnused" is issued for all arguments (this is just a heuristic but it doesn't hurt)
+// so that if any arguments were unused in the body, compiler error doesn't result
 static void FinalizeFunc(amc::FFunc &func) {
     ind_beg(amc::func_funcarg_curs,funcarg,func) {
         if (funcarg.name != "" && funcarg.type != "void" && !funcarg.typearg) {

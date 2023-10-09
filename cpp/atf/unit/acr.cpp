@@ -1,5 +1,7 @@
-// (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,13 +16,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: atf_unit (exe) -- Unit tests (see unittest table)
 // Exceptions: yes
 // Source: cpp/atf/unit/acr.cpp
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/atf_unit.h"
@@ -130,7 +128,7 @@ void atf_unit::unittest_acr_Write1() {
                "dmmeta.ctype ctype:a.B\n"
                , "%"
                , "-write -print:N; cat temp/x"
-               , "dmmeta.ns  ns:a  nstype:\"\"  comment:\"\"\n\n"
+               , "dmmeta.ns  ns:a  nstype:\"\"  license:\"\"  comment:\"\"\n\n"
                "dmmeta.ctype  ctype:a.B  comment:\"\"");
 }
 
@@ -142,7 +140,7 @@ void atf_unit::unittest_acr_Write2() {
                "dmmeta.ctype ctype:a.B\n"
                , "%"
                , "-write -tree -print:N; cat temp/x"
-               , "dmmeta.ns  ns:a  nstype:\"\"  comment:\"\"\n"
+               , "dmmeta.ns  ns:a  nstype:\"\"  license:\"\"  comment:\"\"\n"
                "  dmmeta.ctype  ctype:a.B  comment:\"\"");
 }
 
@@ -222,7 +220,7 @@ void atf_unit::unittest_acr_Xref1() {
                "dmmeta.ctype ctype:a.B\n"
                , "ctype:a.B"
                , "-nup:1"
-               , "dmmeta.ns  ns:a  nstype:\"\"  comment:\"\"\n\n"
+               , "dmmeta.ns  ns:a  nstype:\"\"  license:\"\"  comment:\"\"\n\n"
                "dmmeta.ctype  ctype:a.B  comment:\"\"");
 }
 
@@ -234,7 +232,7 @@ void atf_unit::unittest_acr_Xref2() {
                "dmmeta.ctype ctype:a.B\n"
                , "ns:a"
                , "-ndown:1"
-               , "dmmeta.ns  ns:a  nstype:\"\"  comment:\"\"\n\n"
+               , "dmmeta.ns  ns:a  nstype:\"\"  license:\"\"  comment:\"\"\n\n"
                "dmmeta.ctype  ctype:a.B  comment:\"\"");
 }
 

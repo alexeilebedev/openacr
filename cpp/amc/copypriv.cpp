@@ -1,5 +1,8 @@
-// (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,13 +17,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
 // Source: cpp/amc/copypriv.cpp
-//
-// Created By: alexei.lebedev hayk.mkrtchyan
-// Recent Changes: alexei.lebedev hayk.mkrtchyan
 //
 
 #include "include/amc.h"
@@ -45,20 +44,19 @@ bool amc::CopyPrivQ(amc::FCtype &ctype) {
             ind_beg(amc::ctype_c_field_curs, field, ctype) {
                 if (field.p_reftype->isval && CopyPrivQ(*field.p_arg)) {
                     SetCopyPriv(ctype, tempstr()<<"value field "<<field.field<<" is not copiable");
-                }
-                if (!field.p_reftype->cancopy && ctype_Get(field) != "algo.cstring") {
-                    SetCopyPriv(ctype, tempstr()<<"reftype of "<<field.field<<" prohibits copy");
-                }
-                if (field.c_xref != NULL) {
+                } else if (!field.p_reftype->cancopy && ctype_Get(field) != "algo.cstring") {
+                    SetCopyPriv(ctype, tempstr()<<"reftype "<<field.reftype<<" of "<<field.field<<" prohibits copy");
+                } else if (field.reftype == dmmeta_Reftype_reftype_Regx) {
+                    SetCopyPriv(ctype, tempstr()<<"reftype "<<field.reftype<<" of "<<field.field<<" prohibits copy");
+                } else if (field.reftype == dmmeta_Reftype_reftype_Tary) {
+                    SetCopyPriv(ctype, tempstr()<<"reftype "<<field.reftype<<" of "<<field.field<<" prohibits copy");
+                } else if (field.c_xref != NULL) {
                     SetCopyPriv(ctype, tempstr()<<"x-reference on "<<field.field<<" prevents copy");
-                }
-                if (field.c_cascdel != NULL) {
+                } else if (field.c_cascdel != NULL) {
                     SetCopyPriv(ctype, tempstr()<<"cascdel on "<<field.field<<" prevents copy");
-                }
-                if (field.c_fcleanup != NULL) {
+                } else if (field.c_fcleanup != NULL) {
                     SetCopyPriv(ctype, tempstr()<<"user-defined fcleanup on "<<field.field<<" prevents copy");
-                }
-                if (field.c_fuserinit != NULL) {
+                } else if (field.c_fuserinit != NULL) {
                     SetCopyPriv(ctype, tempstr()<<"user-defined fuserinit on "<<field.field<<" prevents copy");
                 }
             }ind_end;

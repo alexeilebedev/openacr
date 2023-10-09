@@ -1,0 +1,3 @@
+# atf_comp -report:N -printinput mdbg.OutOfOrderArgs | mdbg -args:x y | cat
+mdbg: error at -args:x: must be preceded by [-target]
+

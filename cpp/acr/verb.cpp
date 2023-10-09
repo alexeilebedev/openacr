@@ -1,6 +1,9 @@
-// (C) AlgoEngineering LLC 2008-2013
-// (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2013 AlgoEngineering LLC
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,13 +18,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: acr (exe) -- Algo Cross-Reference - ssimfile database & update tool
 // Exceptions: NO
 // Source: cpp/acr/verb.cpp -- Command-line verbs
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/acr.h"
@@ -67,18 +66,17 @@ void acr::Main_Cmd() {
 // Print fields in a column
 void acr::Main_Field() {
     ind_beg(acr::_db_zd_all_selrec_curs, rec,acr::_db) {
-        strptr echo=acr::_db.cmdline.field;
         tempstr out;
         algo::ListSep ls("\t");
-        while (elems_N(echo)>0) {
-            strptr tok=Pathcomp(echo,",LL");// list of fields
-            echo=Pathcomp(echo,",LR");
-            acr::FField *field=acr::ind_field_Find(tempstr()<<rec.p_ctype->ctype<<"."<<tok);
-            if (field) {
-                out<<ls;
-                out << EvalAttr(rec.tuple, *field);
-            }
-        }
+        ind_beg(command::acr_field_curs,field,_db.cmdline) {
+            ind_beg(algo::Sep_curs,tok,field,',') {
+                acr::FField *ffield=acr::ind_field_Find(tempstr()<<rec.p_ctype->ctype<<"."<<tok);
+                if (ffield) {
+                    out<<ls;
+                    out << EvalAttr(rec.tuple, *ffield);
+                }
+            }ind_end;
+        }ind_end;
         if (ch_N(out)) {
             prlog(out);
         }
@@ -120,7 +118,7 @@ void acr::Main_Mysql() {
          <<"acr.mydir"<<Keyval("comment","-in must be a directory"));
     acr_my.cmd.nsdb.expr = acr::_db.cmdline.query;
     acr_my.cmd.e = true;
-    acr_my.cmd.fldfunc = acr::_db.cmdline.fldfunc;
+    acr_my.cmd.fldfunc = true;
     acr_my.cmd.in = acr::_db.cmdline.in;
     int rc = acr_my_Exec(acr_my);
     if (rc!=0) {
@@ -132,55 +130,56 @@ void acr::Main_Mysql() {
 
 // -----------------------------------------------------------------------------
 
-void acr::Main_Browser() {
-    strptr browser = getenv("BROWSER");
-    if (!elems_N(browser)) {
-        prerr("WARNING: BROWSER environment variable not set");
-    }
-    if (elems_N(browser)) {
-        tempstr cmd;
-        cmd << browser;
-        cmd << " http://localhost:6769/?q=";
-        strptr_PrintUri(acr::_db.cmdline.query, cmd, true);
-        cmd << " & ";// background it
-        int rc = system(Zeroterm(cmd));
-        (void)rc;
+// Add ctype and its transitive closure to the list of selected records
+// This produces a new query but doesn't run it
+void acr::ScheduleSelectCtype(acr::FCtype &ctype_ctype, acr::FCtype &ctype) {
+    if (bool_Update(ctype.mark_sel,true)) {
+        acr::FRec *ctype_rec=ind_rec_Find(ctype_ctype,ctype.ctype);
+        if (ctype_rec && !zd_all_selrec_InLlistQ(*ctype_rec)) {
+            acr::FQuery& next  = acr::query_Alloc();
+            next.queryop = acr_Queryop_value_select;
+            algo_lib::Regx_ReadLiteral(next.ssimfile, "dmmeta.ctype");
+            Regx_ReadLiteral(next.query.value, ctype.ctype);
+            next.ndown = 100;
+            next.comment = "recursive ctype selection";
+            (void)acr::query_XrefMaybe(next);
+        }
     }
 }
 
 // -----------------------------------------------------------------------------
 
-static void SelectCtype(acr::FCtype &ctype_ctype, acr::FCtype &ctype) {
-    acr::FRec *ctype_rec=ind_rec_Find(ctype_ctype,ctype.ctype);
-    if (ctype_rec && !zd_all_selrec_InLlistQ(*ctype_rec)) {
-        acr::FQuery& next  = acr::query_Alloc();
-        next.queryop = acr_Queryop_value_select;
-        next.ctype = "dmmeta.Ctype";
-        next.pk    = true;
-        next.value = ctype.ctype;
-        next.ndown = 100;
-        (void)acr::query_XrefMaybe(next);
-        acr::RunAllQueries();
-    }
-}
-
 // Select ctypes of selected records, deselect records themselves
-void acr::Main_SelectMeta() {
+void acr::SelectMeta() {
     // Find data record of 'ctype'
     acr::FCtype *ctype_ctype = acr::ind_ctype_Find("dmmeta.Ctype");
     vrfy(ctype_ctype, "acr.broken_metadata");
     if (ctype_ctype->c_ssimfile && !ctype_ctype->c_ssimfile->c_file) {
         acr::LoadSsimfile(*ctype_ctype->c_ssimfile);
     }
+    // mark selected records for metaselection and deselect them
     ind_beg(acr::_db_zd_all_selrec_curs,rec,acr::_db) {
         rec.metasel=true;
     }ind_end;
     acr::Rec_DeselectAll();
+    // add ctypes of selected records to the selected list
     ind_beg(acr::_db_file_curs, file, acr::_db) {
         ind_beg(acr::file_zd_frec_curs,rec,file) {
             if (rec.metasel) {
-                SelectCtype(*ctype_ctype,*rec.p_ctype);
+                ScheduleSelectCtype(*ctype_ctype,*rec.p_ctype);
             }
+        }ind_end;
+    }ind_end;
+    // add ctypes of empty ssimfiles to the selected list
+    ind_beg(acr::_db_ssimfile_curs, ssimfile, acr::_db) {
+        if (ssimfile.c_file && zd_frec_EmptyQ(*ssimfile.c_file)) {
+            ScheduleSelectCtype(*ctype_ctype, *ssimfile.p_ctype);
+        }
+    }ind_end;
+    // clear metasel flag on all records
+    ind_beg(acr::_db_file_curs, file, acr::_db) {
+        ind_beg(acr::file_zd_frec_curs,rec,file) {
+            rec.metasel=false;
         }ind_end;
     }ind_end;
 }

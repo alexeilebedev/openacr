@@ -9,6 +9,8 @@ dmmeta.gconst  field:dev.Arch.arch  namefld:dev.Arch.arch  idfld:""  wantenum:N
 dmmeta.gconst  field:dev.Builddir.builddir  namefld:dev.Builddir.builddir  idfld:""  wantenum:N
 dmmeta.gconst  field:dev.Cfg.cfg  namefld:dev.Cfg.cfg  idfld:""  wantenum:N
 dmmeta.gconst  field:dev.Compiler.compiler  namefld:dev.Compiler.compiler  idfld:""  wantenum:N
+dmmeta.gconst  field:dev.License.license  namefld:dev.License.license  idfld:""  wantenum:N
+dmmeta.gconst  field:dev.Sandbox.sandbox  namefld:dev.Sandbox.sandbox  idfld:""  wantenum:N
 dmmeta.gconst  field:dev.Target.target  namefld:dev.Target.target  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Buftype.pnewtype  namefld:dmmeta.Buftype.pnewtype  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.BuftypeId.value  namefld:dmmeta.Buftype.pnewtype  idfld:""  wantenum:N
@@ -25,3 +27,15 @@ dmmeta.gconst  field:dmmeta.Ssimfile.ssimfile  namefld:dmmeta.Ssimfile.ssimfile 
 dmmeta.gconst  field:dmmeta.Steptype.steptype  namefld:dmmeta.Steptype.steptype  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Strfmt.strfmt  namefld:dmmeta.Strfmt.strfmt  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Strtype.strtype  namefld:dmmeta.Strtype.strtype  idfld:""  wantenum:N
+dmmeta.gconst  field:gclidb.Gact.gact  namefld:gclidb.Gact.gact  idfld:""  wantenum:N
+dmmeta.gconst  field:gclidb.Gclicmd.gclicmd  namefld:gclidb.Gclicmd.gclicmd  idfld:""  wantenum:N
+dmmeta.gconst  field:gclidb.Gclienv.gclienv  namefld:gclidb.Gclienv.gclienv  idfld:""  wantenum:N
+dmmeta.gconst  field:gclidb.Gclisub.gclisub  namefld:gclidb.Gclisub.gclisub  idfld:""  wantenum:N
+dmmeta.gconst  field:gclidb.Gfld.gfld  namefld:gclidb.Gfld.gfld  idfld:""  wantenum:N
+dmmeta.gconst  field:gclidb.Grepogitport.grepogitport  namefld:gclidb.Grepogitport.grepogitport  idfld:""  wantenum:N
+dmmeta.gconst  field:gclidb.Grepossh.grepossh  namefld:gclidb.Grepossh.grepossh  idfld:""  wantenum:N
+dmmeta.gconst  field:gclidb.Gstate.gstate  namefld:gclidb.Gstate.gstate  idfld:""  wantenum:N
+dmmeta.gconst  field:gclidb.Gtbl.gtbl  namefld:gclidb.Gtbl.gtbl  idfld:""  wantenum:N
+dmmeta.gconst  field:gclidb.Gtblact.gtblact  namefld:gclidb.Gtblact.gtblact  idfld:""  wantenum:N
+dmmeta.gconst  field:gclidb.Gtype.gtype  namefld:gclidb.Gtype.gtype  idfld:""  wantenum:N
+dmmeta.gconst  field:gclidb.Label.label  namefld:gclidb.Label.label  idfld:""  wantenum:N

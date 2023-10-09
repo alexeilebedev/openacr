@@ -1,5 +1,7 @@
-// (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,23 +16,25 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
 // Source: cpp/amc/tclass.cpp
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/amc.h"
 
 // -----------------------------------------------------------------------------
 
-// Call all tfunc generators for specified tclass.
-// Context is provided via _db.genfield: (which needs to be renamed)
-// - genfield.p_field   --- field pointer, possibly NULL
+// Call tclass, tfunc, and cursor generators for this template
+// Context is provided via _db.genfield:
+// - genfield.p_field   --- field pointer (NULL for tclass, cursor, and Ctype, set for individual fields)
 // - genfield.p_ctype   --- current ctype, never NULL
+// - genfield.p_tfunc   --- pointer to tfunc, never NULL
+// First, the tclass function is called
+// Then, for each tfunc, its function is called
+// The tfunc may be a cursor generator (as indicated by tcurs table)
+// If it's a cursor generator, then a forward-declaration for the cursor is created.
+// In this case, variables $fcurs (cursor key) and $curstype (cursor type) are set.
 void amc::GenTclass(amc::FTclass &tclass) {
     amc::FNs &ns = *amc::_db.genfield.p_ctype->p_ns;
     tclass.step();
@@ -61,6 +65,10 @@ void amc::GenTclass(amc::FTclass &tclass) {
 
 // -----------------------------------------------------------------------------
 
+// Get pointer to the field's memory pool
+// Any field can be assigned a custom memory pool with the basepool table.
+// Field doesn't have a custom pool, then the namespace custom pool (as specified in nsx table)
+// is used.
 amc::FField *amc::GetBasepool(amc::FField &field) {
     amc::FNs &ns = *field.p_ctype->p_ns;
     amc::FField *ret = field.c_basepool ? field.c_basepool->p_base : NULL;
@@ -142,7 +150,6 @@ static void GenTclass_Field(amc::FField &field) {
     if (field.c_fstep) {
         GenTclass(amc_tclass_Step);
     }
-
     GenTclass(amc_tclass_Field2);
 
     // ! destructive

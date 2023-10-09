@@ -1,6 +1,8 @@
-// (C) AlgoEngineering LLC 2008-2012
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2012 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,14 +17,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
 // Source: cpp/amc/pool.cpp
-//
-// Created By: alexei.lebedev alexey.polovinkin
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev hayk.mkrtchyan
 //
 // #AL# TODO: Pool.Delete: HANDLE NOREMOVE
 // Problem is with insertion code, which is forced to remove
@@ -283,8 +280,8 @@ static amc::FXref *FindChildXref(amc::FField &field) {// find xref in same names
 
 // -----------------------------------------------------------------------------
 
-bool amc::ChildFieldExistsQ(amc::FField &basefield, amc::FCtype &childtype) {
-    return amc::ind_field_Find(tempstr() << childtype.ctype << "." << name_Get(basefield)) != NULL;
+amc::FField *amc::FindFieldByName(amc::FCtype &ctype, algo::strptr name) {
+    return amc::ind_field_Find(dmmeta::Field_Concat_ctype_name(ctype.ctype,name));
 }
 
 // -----------------------------------------------------------------------------
@@ -308,17 +305,18 @@ void amc::tfunc_Pool_UpdateMaybe() {
             Ins(&R, update.body, "if (row) {");
             // loop over fields of base type
             amc::FCtype *base = GetBaseType(*field.p_arg,field.p_arg);
-            ind_beg(amc::ctype_c_field_curs,basefield,*base) if (NeedCopyQ(basefield)) {
+            ind_beg(amc::ctype_c_field_curs,basefield,*base) {
                 Set(R, "$cppname", name_Get(basefield));
-                if (basefield.c_xref) {
+                if (!amc::FindFieldByName(*field.p_arg, name_Get(basefield))) {// make sure it wasn't stripped
+                } else if (basefield.c_xref) {
                     Ins(&R, update.body, "    // $cppname: xref exists, not updating");
                 } else if (amc::FXref *xref = FindChildXref(basefield)) {
                     Set(R, "$childxref", xref->field);
                     Ins(&R, update.body, "    // $cppname: target of xreffld ($childxref), not updating");
-                } else {
-                    if (amc::ChildFieldExistsQ(basefield, *field.p_arg)) {// make sure it wasn't stripped
-                        Ins(&R, update.body, "    row->$cppname = value.$cppname;");
-                    }
+                } else if (FldfuncQ(field)) {// cppfunc, substr, alias
+                } else if (ComputedFieldQ(field)) {// lenfld, typefld
+                } else if (ValQ(field)) {
+                    Ins(&R, update.body, "    row->$cppname = value.$cppname;");
                 }
             }ind_end;
             Ins(&R, update.body, "} else {");

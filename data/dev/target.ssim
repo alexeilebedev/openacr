@@ -1,44 +1,48 @@
-dev.target  target:""  license:""  compat:%-%g%.%-%
-dev.target  target:abt  license:GPL  compat:%-%g%.%-%
-dev.target  target:acr  license:GPL  compat:%-%g%.%-%
-dev.target  target:acr_compl  license:GPL  compat:%-%g%.%-%
-dev.target  target:acr_ed  license:GPL  compat:%-%g%.%-%
-dev.target  target:acr_in  license:GPL  compat:%-%g%.%-%
-dev.target  target:acr_my  license:GPL  compat:%-%g%.%-%
-dev.target  target:algo_lib  license:GPL  compat:%-%g%.%-%
-dev.target  target:algo_pch  license:GPL  compat:%-%g%.%-%
-dev.target  target:amc  license:GPL  compat:%-%g%.%-%
-dev.target  target:amc_gc  license:GPL  compat:%-%g%.%-%
-dev.target  target:amc_vis  license:GPL  compat:%-%g%.%-%
-dev.target  target:ams_cat  license:""  compat:Linux-%.%-%
-dev.target  target:ams_sendtest  license:""  compat:"(Linux-%g%|CYGWIN_NT-cl).%-%"
-dev.target  target:atf_amc  license:GPL  compat:%-%g%.%-%
-dev.target  target:atf_ci  license:GPL  compat:%-%.%-%
-dev.target  target:atf_comp  license:""  compat:Linux-%.%-%
-dev.target  target:atf_cov  license:""  compat:Linux-%.%-%
-dev.target  target:atf_fuzz  license:""  compat:Linux-%.%-%
-dev.target  target:atf_nrun  license:""  compat:%-%.%-%
-dev.target  target:atf_unit  license:GPL  compat:%-%.%-%
-dev.target  target:bash2html  license:""  compat:%-%.%-%
-dev.target  target:gitlab  license:""  compat:Linux-%.%-%
-dev.target  target:lib_ams  license:""  compat:"(Linux-%g%|CYGWIN_NT-cl).%-%"
-dev.target  target:lib_ctype  license:GPL  compat:%-%.%-%
-dev.target  target:lib_exec  license:GPL  compat:%-%.%-%
-dev.target  target:lib_fm  license:""  compat:Linux-%.%-%
-dev.target  target:lib_git  license:GPL  compat:%-%.%-%
-dev.target  target:lib_iconv  license:GPL  compat:%-%g%.%-%
-dev.target  target:lib_json  license:GPL  compat:%-%.%-%
-dev.target  target:lib_mysql  license:GPL  compat:%-%g%.%-%
-dev.target  target:lib_prot  license:GPL  compat:%-%.%-%
-dev.target  target:lib_sql  license:GPL  compat:%-%g%.%-%
-dev.target  target:mdbg  license:GPL  compat:%-%g%.%-%
-dev.target  target:mysql2ssim  license:GPL  compat:%-%g%.%-%
-dev.target  target:ntup  license:GPL  compat:%-%g%.%-%
-dev.target  target:orgfile  license:GPL  compat:%-%g%.%-%
-dev.target  target:src_func  license:GPL  compat:%-%g%.%-%
-dev.target  target:src_hdr  license:GPL  compat:%-%g%.%-%
-dev.target  target:src_lim  license:GPL  compat:%-%g%.%-%
-dev.target  target:ssim2csv  license:GPL  compat:%-%g%.%-%
-dev.target  target:ssim2mysql  license:GPL  compat:%-%g%.%-%
-dev.target  target:strconv  license:GPL  compat:%-%g%.%-%
-dev.target  target:sv2ssim  license:""  compat:Linux-%.%-%
+dev.target  target:""  compat:%-%g%.%-%
+dev.target  target:abt  compat:%-%g%.%-%
+dev.target  target:abt_md  compat:Linux-%.%-%
+dev.target  target:acr  compat:%-%g%.%-%
+dev.target  target:acr_compl  compat:%-%g%.%-%
+dev.target  target:acr_ed  compat:%-%g%.%-%
+dev.target  target:acr_in  compat:%-%g%.%-%
+dev.target  target:acr_my  compat:%-%g%.%-%
+dev.target  target:algo_lib  compat:%-%g%.%-%
+dev.target  target:algo_pch  compat:%-%g%.%-%
+dev.target  target:amc  compat:%-%g%.%-%
+dev.target  target:amc_gc  compat:%-%g%.%-%
+dev.target  target:amc_vis  compat:%-%g%.%-%
+dev.target  target:ams_cat  compat:Linux-%.%-%
+dev.target  target:ams_sendtest  compat:"(Linux-%g%|CYGWIN_NT-cl).%-%"
+dev.target  target:atf_amc  compat:%-%g%.%-%
+dev.target  target:atf_ci  compat:%-%.%-%
+dev.target  target:atf_cmdline  compat:Linux-%.%-%
+dev.target  target:atf_comp  compat:Linux-%.%-%
+dev.target  target:atf_cov  compat:Linux-%.%-%
+dev.target  target:atf_fuzz  compat:Linux-%.%-%
+dev.target  target:atf_gcli  compat:Linux-%.%-%
+dev.target  target:atf_nrun  compat:%-%.%-%
+dev.target  target:atf_unit  compat:%-%.%-%
+dev.target  target:bash2html  compat:%-%.%-%
+dev.target  target:gcli  compat:Linux-%.%-%
+dev.target  target:lib_ams  compat:"(Linux-%g%|CYGWIN_NT-cl).%-%"
+dev.target  target:lib_ctype  compat:%-%.%-%
+dev.target  target:lib_exec  compat:%-%.%-%
+dev.target  target:lib_fm  compat:Linux-%.%-%
+dev.target  target:lib_git  compat:%-%.%-%
+dev.target  target:lib_iconv  compat:%-%g%.%-%
+dev.target  target:lib_json  compat:%-%.%-%
+dev.target  target:lib_mysql  compat:%-%g%.%-%
+dev.target  target:lib_prot  compat:%-%.%-%
+dev.target  target:lib_sql  compat:%-%g%.%-%
+dev.target  target:mdbg  compat:%-%g%.%-%
+dev.target  target:mysql2ssim  compat:%-%g%.%-%
+dev.target  target:orgfile  compat:%-%g%.%-%
+dev.target  target:sandbox  compat:Linux-%.%-%
+dev.target  target:src_func  compat:%-%g%.%-%
+dev.target  target:src_hdr  compat:%-%g%.%-%
+dev.target  target:src_lim  compat:%-%g%.%-%
+dev.target  target:ssim2csv  compat:%-%g%.%-%
+dev.target  target:ssim2mysql  compat:%-%g%.%-%
+dev.target  target:ssimfilt  compat:%-%g%.%-%
+dev.target  target:strconv  compat:%-%g%.%-%
+dev.target  target:sv2ssim  compat:Linux-%.%-%

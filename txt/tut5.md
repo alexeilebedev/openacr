@@ -22,17 +22,16 @@ dev.targsrc  targsrc:atf_nrun/include/gen/atf_nrun_gen.inl.h  comment:""
 
 ```
 inline-command: atf_nrun -h
-
-
-Usage: atf_nrun [options]
-    -in       string  Input directory or filename, - for stdin. default: "data"
-    -maxjobs  int     Number of simultaneous jobs. default: 2
-    [ncmd]    int     . default: 6
-    -verbose          Enable verbose mode
-    -debug            Enable debug mode
-    -version          Show version information
-    -sig              Print SHA1 signatures for dispatches
-    -help             Print this screen and exit
+Usage: atf_nrun [[-ncmd:]<int>] [options]
+    OPTION      TYPE    DFLT    COMMENT
+    -in         string  "data"  Input directory or filename, - for stdin
+    -maxjobs    int     2       Number of simultaneous jobs
+    [ncmd]      int     6
+    -verbose    int             Verbosity level (0..255); alias -v; cumulative
+    -debug      int             Debug level (0..255); alias -d; cumulative
+    -help                       Print help an exit; alias -h
+    -version                    Print version and exit
+    -signature                  Show signatures and exit; alias -sig
 
 ```
 
@@ -188,9 +187,10 @@ some less useful ones:
 
 ```
 inline-command: acr ns:atf_nrun -t -report:N | egrep -v '(dev.targsrc|dmmeta.ctypelen)'
+dev.license  license:GPL  comment:""
 dmmeta.nstype  nstype:exe  comment:Executable
-  dmmeta.ns  ns:atf_nrun  nstype:exe  comment:""
-    dev.target  target:atf_nrun  license:""  compat:%-%.%-%
+  dmmeta.ns  ns:atf_nrun  nstype:exe  license:GPL  comment:""
+    dev.target  target:atf_nrun  compat:%-%.%-%
       dev.targdep  targdep:atf_nrun.algo_lib  comment:""
       dev.targdep  targdep:atf_nrun.algo_pch  comment:""
       dev.tgtcov  target:atf_nrun  cov_min:0.00  maxerr:0.00  comment:""
@@ -198,7 +198,7 @@ dmmeta.nstype  nstype:exe  comment:Executable
     dmmeta.ctype  ctype:atf_nrun.FDb  comment:""
       dmmeta.field  field:atf_nrun.FDb._db      arg:atf_nrun.FDb      reftype:Global  dflt:""  comment:""
       dmmeta.field  field:atf_nrun.FDb.cmdline  arg:command.atf_nrun  reftype:Val     dflt:""  comment:""
-        dmmeta.fcmdline  field:atf_nrun.FDb.cmdline  read:Y  comment:""
+        dmmeta.fcmdline  field:atf_nrun.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
 
       dmmeta.field  field:atf_nrun.FDb.fentry       arg:atf_nrun.FEntry  reftype:Lary   dflt:""  comment:"List of jobs"
       dmmeta.field  field:atf_nrun.FDb.ind_running  arg:atf_nrun.FEntry  reftype:Thash  dflt:""  comment:"Running job"
@@ -218,5 +218,6 @@ dmmeta.nstype  nstype:exe  comment:Executable
       dmmeta.field  field:atf_nrun.FEntry.job      arg:command.bash  reftype:Exec  dflt:""  comment:Subprocess
 
     dmmeta.main  ns:atf_nrun  ismodule:N
+    dmmeta.nscpp  ns:atf_nrun  comment:""
     dmmeta.nsx  ns:atf_nrun  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  comment:""
 ```

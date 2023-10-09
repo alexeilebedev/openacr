@@ -4,21 +4,20 @@
 
 ```
 inline-command: orgfile -h
-
-
 orgfile: OpenACR File deduplicator tool
 Usage: orgfile [options]
-    -in       string  Input directory or filename, - for stdin. default: "data"
-    -move     string  Read stdin, rename files based on pattern
-    -dedup    string  Only allow deleting files that match this regx
-    -commit           Apply changes. default: false
-    -undo             Read previous orgfile output, undoing movement. default: false
-    -hash     string  Hash command to use for deduplication. default: "sha1"
-    -verbose          Enable verbose mode
-    -debug            Enable debug mode
-    -version          Show version information
-    -sig              Print SHA1 signatures for dispatches
-    -help             Print this screen and exit
+    OPTION      TYPE    DFLT    COMMENT
+    -in         string  "data"  Input directory or filename, - for stdin
+    -move       string  ""      Read stdin, rename files based on pattern
+    -dedup      regx    ""      Only allow deleting files that match this regx
+    -commit                     Apply changes
+    -undo                       Read previous orgfile output, undoing movement
+    -hash       string  "sha1"  Hash command to use for deduplication
+    -verbose    int             Verbosity level (0..255); alias -v; cumulative
+    -debug      int             Debug level (0..255); alias -d; cumulative
+    -help                       Print help an exit; alias -h
+    -version                    Print version and exit
+    -signature                  Show signatures and exit; alias -sig
 
 ```
 

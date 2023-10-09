@@ -1,4 +1,4 @@
-This file was created with 'atf_ci readme' from files in [txt/](txt/) -- *do not edit*
+This file was created with 'abt_md' from files in [txt/](txt/) -- *do not edit*
 
 ## Table Of Contents
    * [About](#about)
@@ -42,6 +42,8 @@ This file was created with 'atf_ci readme' from files in [txt/](txt/) -- *do not
    * [Troubleshooting build errors](#troubleshooting-build-errors)
    * [atf_fuzz: fuzz tester](#atf_fuzz-fuzz-tester)
    * [sv2ssim - Separated Value file processor](#sv2ssim---separated-value-file-processor)
+   * [Gcli - gitlab/github command-line client](#gcli---gitlab-github-command-line-client)
+   * [Sandbox - sandbox management tool](#sandbox---sandbox-management-tool)
 
 
 ## About
@@ -282,7 +284,7 @@ Readme files can be in-line or included via a link. This is configured by the `i
 
 ```
 inline-command: acr readme | head -1
-dev.readme  gitfile:txt/about.md                   inl:Y  comment:""
+dev.readme  gitfile:txt/about.md                   inl:Y  sandbox:N  filter:""               comment:""
 ```
 
 The top-level README.md file is created with `make readme` or, in reality, `atf_ci readme`.
@@ -388,3 +390,9 @@ is replaced with the output of specified command. An example of such a command c
 
 ## sv2ssim - Separated Value file processor
 [See txt/sv2ssim.md](txt/sv2ssim.md)
+
+## Gcli - gitlab/github command-line client
+[See txt/gcli.md](txt/gcli.md)
+
+## Sandbox - sandbox management tool
+[See txt/sandbox.md](txt/sandbox.md)

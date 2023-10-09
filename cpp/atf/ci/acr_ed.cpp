@@ -1,4 +1,7 @@
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -22,44 +25,38 @@
 
 // -----------------------------------------------------------------------------
 
+// Runs in sandbox
 void atf_ci::citest_acr_ed_ssimdb() {
-    // create a new ssimdb inside a sandbox
+    // create a new ssimdb
     command::acr_ed_proc acr_ed;
     acr_ed.cmd.create=true;
     acr_ed.cmd.target="ssimdb";
     acr_ed.cmd.nstype=dmmeta_Nstype_nstype_ssimdb;
-    acr_ed.cmd.sandbox=true;
-    acr_ed.cmd.showcpp=false;
     acr_ed.cmd.write=true;
     acr_ed_ExecX(acr_ed);
 
     // check that everything is ok
     command::acr_proc acr;
-    acr.cmd.in = "temp/acr_ed";
-    acr.cmd.schema = "temp/acr_ed";
     acr.cmd.query = "%";
     acr.cmd.check=true;
-    acr_ed_ExecX(acr_ed);
+    acr_ExecX(acr);
 }
 
 // -----------------------------------------------------------------------------
 
+// Runs in sandbox
 void atf_ci::citest_acr_ed_ssimfile() {
-    // create a new ssimdb inside a sandbox
+    // create a new ssimdb
     {
         command::acr_ed_proc acr_ed;
         acr_ed.cmd.create=true;
         acr_ed.cmd.target="ssimdb";
         acr_ed.cmd.nstype=dmmeta_Nstype_nstype_ssimdb;
-        acr_ed.cmd.sandbox=true;
-        acr_ed.cmd.showcpp=false;
         acr_ed.cmd.write=true;
         acr_ed_ExecX(acr_ed);
     }
 
-    // go inside sandbox
-    errno_vrfy(chdir("temp/acr_ed")==0, "chdir");
-
+    // create a new ssimfile
     {
         command::acr_ed_proc acr_ed;
         acr_ed.cmd.create=true;
@@ -69,27 +66,29 @@ void atf_ci::citest_acr_ed_ssimfile() {
     }
 
     // insert a tuple
-    SysCmd("echo dev.xyz xyz:blah | acr -insert -write");
+    vrfy_(SysCmd("echo dev.xyz xyz:blah | acr -insert -write")==0);
     // query it
-    SysCmd("acr xyz");
-    // build something
-    SysCmd("abt 'abt'");
+    vrfy_(SysCmd("acr xyz")==0);
 
     // check that everything is ok
     command::acr_proc acr;
     acr.cmd.query = "%";
     acr.cmd.check=true;
     acr_ExecX(acr);
-    errno_vrfy(chdir("../../")==0, "chdir");
+
+    // build everything
+    command::abt_proc abt;
+    abt.cmd.target.expr="abt";
+    abt_ExecX(abt);
 }
 
 // --------------------------------------------------------------------------------
 
+// Runs in sandbox
 void atf_ci::citest_acr_ed_target() {
     command::acr_ed_proc acr_ed;
     acr_ed.cmd.create=true;
     acr_ed.cmd.target="acr_test";
-    acr_ed.cmd.sandbox=true;
     acr_ed.cmd.write=true;
     acr_ed_ExecX(acr_ed);
 }

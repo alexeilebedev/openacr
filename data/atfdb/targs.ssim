@@ -2,8 +2,153 @@ atfdb.targs  comptest:acr.BadNs  args:"-insert -write -check"
 atfdb.targs  comptest:acr.BadPkey  args:"-insert -write -check"
 atfdb.targs  comptest:acr.BadReftype  args:"-insert -write -check"
 atfdb.targs  comptest:acr.BadReftype2  args:"-insert -write -check"
+atfdb.targs  comptest:acr.DelField  args:"field:dmmeta.Ns.license -del"
+atfdb.targs  comptest:acr.DelRecord  args:"-in:- target:samp -del"
+atfdb.targs  comptest:acr.Fields  args:"-in:- ns -field:nstype -field:comment"
+atfdb.targs  comptest:acr.FieldsComma  args:"-in:- ns -field:nstype,comment"
+atfdb.targs  comptest:acr.Meta1  args:"anonfld -meta"
+atfdb.targs  comptest:acr.Meta2  args:"ftuple -meta"
+atfdb.targs  comptest:acr.Meta3  args:"ftuple -meta -cmt"
+atfdb.targs  comptest:acr.QueryCtype  args:dmmeta.ctype:dmmeta.Ctype
+atfdb.targs  comptest:acr.RenameRecord  args:"-in:- target:samp -rename:xyz"
+atfdb.targs  comptest:acr.TooManyArgs  args:"x y"
+atfdb.targs  comptest:acr.Where  args:"-in:- ns -where:nstype:protocol"
+atfdb.targs  comptest:acr_compl.A01a  args:"-line:'atf_cmdline --'"
+atfdb.targs  comptest:acr_compl.A01b  args:"-line:'atf_cmdline -- '"
+atfdb.targs  comptest:acr_compl.A01c  args:"-line:'atf_cmdline -- ' -type:63"
+atfdb.targs  comptest:acr_compl.A02a  args:"-line:'atf_cmdline -- -STR'"
+atfdb.targs  comptest:acr_compl.A02b  args:"-line:'atf_cmdline -- -STR '"
+atfdb.targs  comptest:acr_compl.A02c  args:"-line:'atf_cmdline -- -STR ' -type:63"
+atfdb.targs  comptest:acr_compl.A03a  args:"-line:'atf_cmdline -- -STR -1'"
+atfdb.targs  comptest:acr_compl.A03b  args:"-line:'atf_cmdline -- -STR -1 '"
+atfdb.targs  comptest:acr_compl.A03c  args:"-line:'atf_cmdline -- -STR -1 ' -type:63"
+atfdb.targs  comptest:acr_compl.A04a  args:"-line:'atf_cmdline -- -STR -1 -0.0001'"
+atfdb.targs  comptest:acr_compl.A04b  args:"-line:'atf_cmdline -- -STR -1 -0.0001 '"
+atfdb.targs  comptest:acr_compl.A04c  args:"-line:'atf_cmdline -- -STR -1 -0.0001 ' -type:63"
+atfdb.targs  comptest:acr_compl.A05a  args:"-line:'atf_cmdline -- -STR -1 -0.0001 Y'"
+atfdb.targs  comptest:acr_compl.A05b  args:"-line:'atf_cmdline -- -STR -1 -0.0001 Y '"
+atfdb.targs  comptest:acr_compl.A05c  args:"-line:'atf_cmdline -- -STR -1 -0.0001 Y ' -type:63"
+atfdb.targs  comptest:acr_compl.A06a  args:"-line:'atf_cmdline -- -STR -1 -0.0001 Y -2'"
+atfdb.targs  comptest:acr_compl.A06b  args:"-line:'atf_cmdline -- -STR -1 -0.0001 Y -2 '"
+atfdb.targs  comptest:acr_compl.A06c  args:"-line:'atf_cmdline -- -STR -1 -0.0001 Y -2 ' -type:63"
+atfdb.targs  comptest:acr_compl.A07a  args:"-line:'atf_cmdline -- -STR -1 -0.0001 Y -2 -3'"
+atfdb.targs  comptest:acr_compl.A07b  args:"-line:'atf_cmdline -- -STR -1 -0.0001 Y -2 -3 '"
+atfdb.targs  comptest:acr_compl.A07c  args:"-line:'atf_cmdline -- -STR -1 -0.0001 Y -2 -3 ' -type:63"
+atfdb.targs  comptest:acr_compl.Acr01  args:'-line:"acr "'
+atfdb.targs  comptest:acr_compl.Acr02  args:'-line:"acr -query"'
+atfdb.targs  comptest:acr_compl.Acr03  args:'-line:"acr -query:"'
+atfdb.targs  comptest:acr_compl.Acr04  args:'-line:"acr -query "'
+atfdb.targs  comptest:acr_compl.Acr05  args:'-line:"acr dmmeta"'
+atfdb.targs  comptest:acr_compl.Acr06  args:'-line:"acr unittest"'
+atfdb.targs  comptest:acr_compl.Acr07  args:'-line:"acr nitte"'
+atfdb.targs  comptest:acr_compl.BadExe  args:"-line:'blah'"
+atfdb.targs  comptest:acr_compl.BadOpt  args:"-line:'atf_cmdline -blah'"
+atfdb.targs  comptest:acr_compl.BadOptColon  args:"-line:'atf_cmdline -blah:'"
+atfdb.targs  comptest:acr_compl.BadOptColonSpace  args:"-line:'atf_cmdline -blah: '"
+atfdb.targs  comptest:acr_compl.BadOptSpace  args:"-line:'atf_cmdline -blah '"
+atfdb.targs  comptest:acr_compl.Bare  args:""
+atfdb.targs  comptest:acr_compl.CustomData  args:'-data:- -line:"acr -query:gclidb.gclicmdt:"'
+atfdb.targs  comptest:acr_compl.DblColon  args:'-line:"atf_cmdline -dbl:"'
+atfdb.targs  comptest:acr_compl.DblColonList  args:'-line:"atf_cmdline -dbl:" -type:63'
+atfdb.targs  comptest:acr_compl.DblSpace  args:'-line:"atf_cmdline -dbl "'
+atfdb.targs  comptest:acr_compl.DblSpaceList  args:'-line:"atf_cmdline -dbl " -type:63'
+atfdb.targs  comptest:acr_compl.EnumCtypeColon  args:'-line:"atf_cmdline -cconst:"'
+atfdb.targs  comptest:acr_compl.EnumCtypeColonList  args:'-line:"atf_cmdline -cconst:" -type:63'
+atfdb.targs  comptest:acr_compl.EnumCtypeSpace  args:'-line:"atf_cmdline -cconst "'
+atfdb.targs  comptest:acr_compl.EnumCtypeSpaceList  args:'-line:"atf_cmdline -cconst " -type:63'
+atfdb.targs  comptest:acr_compl.EnumFieldColon  args:'-line:"atf_cmdline -fconst:"'
+atfdb.targs  comptest:acr_compl.EnumFieldColonList  args:'-line:"atf_cmdline -fconst:" -type:63'
+atfdb.targs  comptest:acr_compl.EnumFieldSpace  args:'-line:"atf_cmdline -fconst "'
+atfdb.targs  comptest:acr_compl.EnumFieldSpaceList  args:'-line:"atf_cmdline -fconst " -type:63'
+atfdb.targs  comptest:acr_compl.FlagColon  args:'-line:"atf_cmdline -flag:"'
+atfdb.targs  comptest:acr_compl.FlagColonList  args:'-line:"atf_cmdline -flag:" -type:63'
+atfdb.targs  comptest:acr_compl.FlagSpace  args:'-line:"atf_cmdline -flag "'
+atfdb.targs  comptest:acr_compl.FlagSpaceList  args:'-line:"atf_cmdline -flag " -type:63'
+atfdb.targs  comptest:acr_compl.Install  args:-install
+atfdb.targs  comptest:acr_compl.NumColon  args:'-line:"atf_cmdline -num:"'
+atfdb.targs  comptest:acr_compl.NumColonList  args:'-line:"atf_cmdline -num:" -type:63'
+atfdb.targs  comptest:acr_compl.NumSpace  args:'-line:"atf_cmdline -num "'
+atfdb.targs  comptest:acr_compl.NumSpaceList  args:'-line:"atf_cmdline -num " -type:63'
+atfdb.targs  comptest:acr_compl.OptCumul  args:"-line:'atf_cmdline -astr: -anum: -adbl: -str: -num: -dbl: -aflag -verbose -'"
+atfdb.targs  comptest:acr_compl.OptCumulAlias  args:"-line:'atf_cmdline -astr: -anum: -adbl: -str: -num: -dbl: -aflag -v -'"
+atfdb.targs  comptest:acr_compl.OptD  args:'-line:"atf_cmdline -d"'
+atfdb.targs  comptest:acr_compl.OptDList  args:'-line:"atf_cmdline -d" -type:63'
+atfdb.targs  comptest:acr_compl.OptH  args:'-line:"atf_cmdline -h"'
+atfdb.targs  comptest:acr_compl.OptHList  args:'-line:"atf_cmdline -h -type:63"'
+atfdb.targs  comptest:acr_compl.OptNonCumul  args:"-line:'atf_cmdline -astr: -anum: -adbl: -str: -num: -dbl: -aflag -help -'"
+atfdb.targs  comptest:acr_compl.OptNonCumulAlias  args:"-line:'atf_cmdline -astr: -anum: -adbl: -str: -num: -dbl: -aflag -h -'"
+atfdb.targs  comptest:acr_compl.OptPkeyColon  args:'-line:"atf_cmdline -dpkey:"'
+atfdb.targs  comptest:acr_compl.OptPkeyColonFull  args:'-line:"atf_cmdline -dpkey:atfdb.Unittest"'
+atfdb.targs  comptest:acr_compl.OptPkeyColonFullList  args:'-line:"atf_cmdline -dpkey:atfdb.Unittest" -type:63'
+atfdb.targs  comptest:acr_compl.OptPkeyColonList  args:'-line:"atf_cmdline -dpkey:" -type:63'
+atfdb.targs  comptest:acr_compl.OptPkeyColonPrefix  args:'-line:"atf_cmdline -dpkey:atfdb.Unit"'
+atfdb.targs  comptest:acr_compl.OptPkeyColonPrefixList  args:'-line:"atf_cmdline -dpkey:atfdb.Unit" -type:63'
+atfdb.targs  comptest:acr_compl.OptPkeyColonSubstr  args:'-line:"atf_cmdline -dpkey:nittes"'
+atfdb.targs  comptest:acr_compl.OptPkeyColonSubstrList  args:'-line:"atf_cmdline -dpkey:nittes" -type:63'
+atfdb.targs  comptest:acr_compl.OptPkeySpace  args:'-line:"atf_cmdline -dpkey "'
+atfdb.targs  comptest:acr_compl.OptPkeySpaceFull  args:'-line:"atf_cmdline -dpkey atfdb.Unittest"'
+atfdb.targs  comptest:acr_compl.OptPkeySpaceFullList  args:'-line:"atf_cmdline -dpkey atfdb.Unittest" -type:63'
+atfdb.targs  comptest:acr_compl.OptPkeySpaceList  args:'-line:"atf_cmdline -dpkey " -type:63'
+atfdb.targs  comptest:acr_compl.OptPkeySpacePrefix  args:'-line:"atf_cmdline -dpkey atfdb.Unit"'
+atfdb.targs  comptest:acr_compl.OptPkeySpacePrefixList  args:'-line:"atf_cmdline -dpkey atfdb.Unit" -type:63'
+atfdb.targs  comptest:acr_compl.OptPkeySpaceSubstr  args:'-line:"atf_cmdline -dpkey nittes"'
+atfdb.targs  comptest:acr_compl.OptPkeySpaceSubstrList  args:'-line:"atf_cmdline -dpkey nittes" -type:63'
+atfdb.targs  comptest:acr_compl.OptRegxColon  args:'-line:"atf_cmdline -dregx:"'
+atfdb.targs  comptest:acr_compl.OptRegxColonFull  args:'-line:"atf_cmdline -dregx:atfdb.Unittest"'
+atfdb.targs  comptest:acr_compl.OptRegxColonFullList  args:'-line:"atf_cmdline -dregx:atfdb.Unittest" -type:63'
+atfdb.targs  comptest:acr_compl.OptRegxColonList  args:'-line:"atf_cmdline -dregx:" -type:63'
+atfdb.targs  comptest:acr_compl.OptRegxColonPrefix  args:'-line:"atf_cmdline -dregx:atfdb.Unit"'
+atfdb.targs  comptest:acr_compl.OptRegxColonPrefixList  args:'-line:"atf_cmdline -dregx:atfdb.Unit" -type:63'
+atfdb.targs  comptest:acr_compl.OptRegxColonSubstr  args:'-line:"atf_cmdline -dregx:nittes"'
+atfdb.targs  comptest:acr_compl.OptRegxColonSubstrList  args:'-line:"atf_cmdline -dregx:nittes" -type:63'
+atfdb.targs  comptest:acr_compl.OptRegxSpace  args:'-line:"atf_cmdline -dregx "'
+atfdb.targs  comptest:acr_compl.OptRegxSpaceFull  args:'-line:"atf_cmdline -dregx atfdb.Unittest"'
+atfdb.targs  comptest:acr_compl.OptRegxSpaceFullList  args:'-line:"atf_cmdline -dregx atfdb.Unittest" -type:63'
+atfdb.targs  comptest:acr_compl.OptRegxSpaceList  args:'-line:"atf_cmdline -dregx " -type:63'
+atfdb.targs  comptest:acr_compl.OptRegxSpacePrefix  args:'-line:"atf_cmdline -dregx atfdb.Unit"'
+atfdb.targs  comptest:acr_compl.OptRegxSpacePrefixList  args:'-line:"atf_cmdline -dregx atfdb.Unit" -type:63'
+atfdb.targs  comptest:acr_compl.OptRegxSpaceSubstr  args:'-line:"atf_cmdline -dregx nittes"'
+atfdb.targs  comptest:acr_compl.OptRegxSpaceSubstrList  args:'-line:"atf_cmdline -dregx nittes" -type:63'
+atfdb.targs  comptest:acr_compl.OptSig  args:'-line:"atf_cmdline -sig"'
+atfdb.targs  comptest:acr_compl.OptSigList  args:'-line:"atf_cmdline -sig -type:63"'
+atfdb.targs  comptest:acr_compl.OptV  args:'-line:"atf_cmdline -v"'
+atfdb.targs  comptest:acr_compl.OptVList  args:'-line:"atf_cmdline -v" -type:63'
+atfdb.targs  comptest:acr_compl.StrColon  args:'-line:"atf_cmdline -str:"'
+atfdb.targs  comptest:acr_compl.StrColonList  args:'-line:"atf_cmdline -str:" -type:63'
+atfdb.targs  comptest:acr_compl.StrSpace  args:'-line:"atf_cmdline -str "'
+atfdb.targs  comptest:acr_compl.StrSpaceList  args:'-line:"atf_cmdline -str " -type:63'
+atfdb.targs  comptest:acr_compl.T01  args:'-line:"atf_cmdline "'
+atfdb.targs  comptest:acr_compl.T02  args:'-line:"atf_cmdline -astr: "'
+atfdb.targs  comptest:acr_compl.T03  args:'-line:"atf_cmdline -astr: -anum: "'
+atfdb.targs  comptest:acr_compl.T04  args:'-line:"atf_cmdline -astr: -anum: -adbl: "'
+atfdb.targs  comptest:acr_compl.T05  args:'-line:"atf_cmdline -astr: -anum: -adbl: -str: "'
+atfdb.targs  comptest:acr_compl.T06  args:'-line:"atf_cmdline -astr: -anum: -adbl: -str: -num: "'
+atfdb.targs  comptest:acr_compl.T07  args:'-line:"atf_cmdline -astr: -anum: -adbl: -str: -num: -dbl: "'
+atfdb.targs  comptest:acr_compl.T08  args:'-line:"atf_cmdline -astr: -anum: -adbl: -str: -num: -dbl: -aflag "'
+atfdb.targs  comptest:acr_compl.T09  args:'-line:"atf_cmdline -astr: -anum: -adbl: -str: -num: -dbl: -aflag -"'
+atfdb.targs  comptest:acr_compl.T10  args:'-line:"atf_cmdline -astr: -anum: -adbl: -str: -num: -dbl: -aflag -" -type:63'
 atfdb.targs  comptest:acr_ed.CreateCtype  args:"-create -ctype ams.ChildTypeMsg -subset ams.MsgHeader -msgtype:400 -reftype:Base"
 atfdb.targs  comptest:acr_ed.CreateSsimfileBadNs  args:"--create -ssimfile ams.test -subset algo.Smallstr10"
+atfdb.targs  comptest:atf_cmdline.Bare  args:""
+atfdb.targs  comptest:atf_cmdline.Debug  args:"-debug blah -str blah"
+atfdb.targs  comptest:atf_cmdline.Help  args:-help
+atfdb.targs  comptest:atf_cmdline.Minimal  args:"blah -str blah"
+atfdb.targs  comptest:atf_cmdline.MinimalExec  args:"-exec blah -str blah"
+atfdb.targs  comptest:atf_cmdline.Rich  args:"-str -STR -num 12 -dbl -0.0003 -flag -dstr -DSTR -dnum -45 -ddbl -0.123 -dflag:N -mstr -MSTR1 -mstr -MSTR2 -mstr -MSTR3 -mnum -1 -mnum -2 -mnum -3 -mdbl -1.1 -mdbl -2.2 -mdbl -3.2 -fconst medium -cconst May -- -ASTR -200 0.0002 Y -100 -200 -300"
+atfdb.targs  comptest:atf_cmdline.RichExec  args:"-exec -verbose -verbose -verbose -debug -str -STR -num 12 -dbl -0.0003 -flag -dstr -DSTR -dnum -45 -ddbl -0.123 -dflag:N -mstr -MSTR1 -mstr -MSTR2 -mstr -MSTR3 -mnum -1 -mnum -2 -mnum -3 -mdbl -1.1 -mdbl -2.2 -mdbl -3.2 -fconst medium -cconst:May -- -ASTR -200 0.0002 Y -100 -200 -300"
+atfdb.targs  comptest:atf_cmdline.Sig  args:-sig
+atfdb.targs  comptest:atf_cmdline.Verbose  args:"-verbose -verbose blah -str blah"
+atfdb.targs  comptest:atf_cmdline.Version  args:-version
+atfdb.targs  comptest:mdbg.OutOfOrderArgs  args:"-args:x y"
+atfdb.targs  comptest:mdbg.Smoke  args:"-dry_run mdbg mdbg"
+atfdb.targs  comptest:mdbg.SmokeBreak  args:"-dry_run -tui mdbg mdbg -b a,b,c,d,e"
+atfdb.targs  comptest:mdbg.SmokeBreak2  args:"-dry_run -tui mdbg mdbg -b a -b b -b c"
+atfdb.targs  comptest:ssimfilt.Csv  args:-format:csv
+atfdb.targs  comptest:ssimfilt.FirstTag  args:^
+atfdb.targs  comptest:ssimfilt.MatchField  args:"% ns:b%"
+atfdb.targs  comptest:ssimfilt.MatchTag  args:dmmeta.%
+atfdb.targs  comptest:ssimfilt.SelectField  args:"-field:nstype -format:field"
+atfdb.targs  comptest:ssimfilt.Table  args:-t
 atfdb.targs  comptest:sv2ssim.Convert1  args:"test/csv/2.csv -ctype a.B -schema -data"
 atfdb.targs  comptest:sv2ssim.Convert1Signed  args:"test/csv/2.csv -ctype a.B -schema -data -prefer_signed"
 atfdb.targs  comptest:sv2ssim.Convert2  args:"test/csv/1.csv -ctype a.B -schema -data -outseparator:, -header:N"

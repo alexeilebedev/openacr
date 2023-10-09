@@ -1,6 +1,9 @@
-// (C) AlgoEngineering LLC 2008-2012
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2012 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,14 +18,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
 // Source: cpp/amc/gen.cpp
-//
-// Created By: alexei.lebedev jeffrey.wang
-// Authors: alexei.lebedev hayk.mkrtchyan
-// Recent Changes: alexei.lebedev hayk.mkrtchyan
 //
 // All the functions starting with gen_
 
@@ -385,6 +383,29 @@ void amc::gen_lookuppkey() {
 
 // -----------------------------------------------------------------------------
 
+// Ensure fregx record exists for each field of type Regx or RegxSql
+// Rewrite RegxSql fields as Regx, regxtype Sql
+// (generalization of original RegxSql reftype)
+void amc::gen_rewrite_regx() {
+    ind_beg(amc::_db_field_curs, field,amc::_db) {
+        if (field.reftype == dmmeta_Reftype_reftype_RegxSql) {
+            field.reftype = dmmeta_Reftype_reftype_Regx;
+            field.p_reftype = ind_reftype_Find(field.reftype);
+        }
+        if (field.reftype == dmmeta_Reftype_reftype_Regx) {
+            if (!field.c_fregx) {
+                amc::FFregx &fregx = amc::fregx_Alloc();
+                fregx.field=field.field;
+                fregx.partial=false;
+                fregx.regxtype=amcdb_regxtype_Sql;
+                vrfy_(fregx_XrefMaybe(fregx) && field.c_fregx==&fregx);
+            }
+        }
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
 static void CheckReftype(amc::FField &field, strptr reftype, bool haschild, strptr ssimfile, cstring &err) {
     if (haschild     && !(field.reftype == reftype    )) {
         err << "Field reftype must be a " << reftype;
@@ -691,8 +712,9 @@ void amc::gen_select_ns() {
     algo_lib::Regx ns_regx;
     (void)Regx_ReadStrptrMaybe(ns_regx, amc::Query_GetNs());
     ind_beg(amc::_db_ns_curs, ns,amc::_db) {
-        ns.select = !amc::QueryModeQ()
-            || Regx_Match(ns_regx,ns.ns);
+        ns.select = ns.c_nscpp
+            && (!amc::QueryModeQ()
+                || Regx_Match(ns_regx,ns.ns));
     }ind_end;
 }
 
