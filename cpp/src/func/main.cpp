@@ -1,4 +1,6 @@
-// (C) 2016-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2016-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,9 +20,6 @@
 // Target: src_func (exe) -- Access / edit functions
 // Exceptions: yes
 // Source: cpp/src/func/main.cpp -- Main file
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/algo.h"

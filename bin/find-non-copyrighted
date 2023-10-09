@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+SCRIPT_FILES=`acr scriptfile -cmd 'grep -q Copyright $gitfile || [ $(wc -l < $gitfile) -lt 30 ] || echo $gitfile' | bash`
+CPP_FILES2=`acr dev.targsrc: -cmd '[[ $src =~ ^(extern|cpp/gen|include/gen) ]] || grep -q Copyright $src || echo $src' | bash`
+echo $SCRIPT_FILES$CPP_FILES2

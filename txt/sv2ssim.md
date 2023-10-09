@@ -2,29 +2,26 @@
 
 ```
 inline-command: sv2ssim -help
+Usage: sv2ssim [-fname:]<string> [options]
+    OPTION          TYPE    DFLT    COMMENT
+    -in             string  "data"  Input directory or filename, - for stdin
+    [fname]         string          Input file, use - for stdin
+    -separator      string  ','     Input field separator
+    -outseparator   string  ""      Output separator. Default: ssim
+    -header                 Y       File has header line
+    -ctype          string  ""      Type tag for output tuples
+    -ssimfile       string  ""      (with -schema) Create ssimfile definition
+    -schema                         (output)Generate schema from input file
+    -field          regx    "%"     (output) Print selected fields
+    -data                           (output) Convert input file to ssim tuples
+    -report                 Y       Print final report
+    -prefer_signed                  Prefer signed types when given a choice
+    -verbose        int             Verbosity level (0..255); alias -v; cumulative
+    -debug          int             Debug level (0..255); alias -d; cumulative
+    -help                           Print help an exit; alias -h
+    -version                        Print version and exit
+    -signature                      Show signatures and exit; alias -sig
 
-
-Usage: sv2ssim fname [options]
-    -in             string  Input directory or filename, - for stdin. default: "data"
-    [fname]         string  Input file, use - for stdin
-    -separator      string  Input field separator. default: ','
-    -outseparator   string  Output separator. Default: ssim
-    -header                 File has header line. default: true
-    -ctype          string  Type tag for output tuples
-    -ssimfile       string  (with -schema) Create ssimfile definition
-    -schema                 (output)Generate schema from input file. default: false
-    -field          string  (output) Print selected fields. default: "%"
-    -data                   (output) Convert input file to ssim tuples. default: false
-    -report                 Print final report. default: true
-    -prefer_signed          Prefer signed types when given a choice. default: false
-    -verbose                Enable verbose mode
-    -debug                  Enable debug mode
-    -version                Show version information
-    -sig                    Print SHA1 signatures for dispatches
-    -help                   Print this screen and exit
-
-
-string value required for string argument #0 ([fname])
 ```
 
 ### Description

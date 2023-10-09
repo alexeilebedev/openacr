@@ -1,4 +1,6 @@
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,10 +20,6 @@
 // Target: algo_lib (lib) -- Support library for all executables
 // Exceptions: NO
 // Source: cpp/lib/algo/txttbl.cpp -- Ascii table
-//
-// Created By: alexei.lebedev shreejith.lokegowda
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev shreejith.lokegowda hayk.mkrtchyan
 //
 
 #include "include/algo.h"

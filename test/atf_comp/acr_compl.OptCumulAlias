@@ -1,0 +1,25 @@
+# atf_comp -report:N -printinput acr_compl.OptCumulAlias | acr_compl -line:'atf_cmdline -astr: -anum: -adbl: -str: -num: -dbl: -aflag -v -' | cat
+-amnum 
+-cconst 
+-d 
+-ddbl 
+-debug 
+-dflag:N 
+-dnum 
+-dpkey 
+-dregx 
+-dstr 
+-exec 
+-fconst 
+-flag 
+-h 
+-help 
+-in 
+-mdbl 
+-mnum 
+-mstr 
+-sig 
+-signature 
+-v 
+-verbose 
+-version 

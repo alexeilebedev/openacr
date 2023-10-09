@@ -1,4 +1,6 @@
-// (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,9 +20,6 @@
 // Target: atf_amc (exe) -- Unit tests for amc (see amctest table)
 // Exceptions: NO
 // Source: cpp/atf/amc/fstep.cpp
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/atf_amc.h"

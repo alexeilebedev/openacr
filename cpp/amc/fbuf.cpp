@@ -1,4 +1,6 @@
-// (C) 2014-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2014-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,10 +20,6 @@
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
 // Source: cpp/amc/fbuf.cpp -- Byte buffer
-//
-// Created By: alexei.lebedev
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev shreejith.lokegowda hayk.mkrtchyan
 //
 
 #include "include/amc.h"

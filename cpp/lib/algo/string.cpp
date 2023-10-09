@@ -1,4 +1,6 @@
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,10 +20,6 @@
 // Target: algo_lib (lib) -- Support library for all executables
 // Exceptions: NO
 // Source: cpp/lib/algo/string.cpp -- cstring functions
-//
-// Created By: alexei.lebedev jeffrey.wang
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev hayk.mkrtchyan jeffrey.wang
 //
 
 #include "include/algo.h"
@@ -1562,4 +1560,38 @@ tempstr algo::ToWindowsPath(strptr path) {
 // compatibility
 void algo::reset(algo::cstring &lhs) {
     ch_RemoveAll(lhs);
+}
+
+// -----------------------------------------------------------------------------
+
+void algo::Sep_curs_Reset(algo::Sep_curs &curs, strptr line, char sep) {
+    curs.rest  = line;
+    curs.sep   = sep;
+    curs.state = Sep_curs::State::normal;
+    curs.index = -1;
+    Sep_curs_Next(curs);
+}
+
+void algo::Sep_curs_Next(algo::Sep_curs &curs) {
+    switch (curs.state) {
+    case Sep_curs::State::normal:
+        {
+            int pos = FindChar(curs.rest,curs.sep);
+            if (pos>=0) {
+                curs.token = ch_FirstN(curs.rest,pos);
+                curs.rest = RestFrom(curs.rest,pos+1);
+            } else {
+                curs.token = curs.rest;
+                curs.rest = strptr();
+                curs.state = Sep_curs::State::last;
+            }
+            ++curs.index;
+            break;
+        }
+    case Sep_curs::State::last:
+        curs.state = Sep_curs::State::invalid;
+        break;
+    default:
+        break;
+    }
 }

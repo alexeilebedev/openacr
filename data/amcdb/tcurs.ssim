@@ -1,6 +1,7 @@
 amcdb.tcurs  tfunc:Atree.curs  dflt:Y  comment:""
 amcdb.tcurs  tfunc:Bheap.curs  dflt:Y  comment:""
 amcdb.tcurs  tfunc:Bheap.unordcurs  dflt:N  comment:""
+amcdb.tcurs  tfunc:Bitset.bitcurs  dflt:Y  comment:""
 amcdb.tcurs  tfunc:Inlary.curs  dflt:Y  comment:""
 amcdb.tcurs  tfunc:Lary.curs  dflt:Y  comment:""
 amcdb.tcurs  tfunc:Llist.curs  dflt:Y  comment:""

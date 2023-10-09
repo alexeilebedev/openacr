@@ -1,0 +1,20 @@
+# atf_comp -report:N -printinput atf_cmdline.MinimalExec | atf_cmdline -exec blah -str blah | cat
+bin/atf_cmdline  blah 0 0 N -str:blah -cconst:None
+astr:blah
+anum:0
+adbl:0
+aflag:N
+str:blah
+num:0
+dbl:0
+flag:N
+dstr:blah
+dnum:-33
+ddbl:0.0001
+dflag:Y
+fconst:high
+cconst:None
+dregx.expr:%
+dpkey:
+verbose:0
+debug:0

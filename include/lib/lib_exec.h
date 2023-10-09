@@ -1,4 +1,5 @@
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,9 +19,6 @@
 // Target: lib_exec (lib) -- Build and run a dag of subprocesses with N parallel jobs
 // Exceptions: NO
 // Header: include/lib/lib_exec.h
-//
-// Created By: alexei.lebedev luke.huang
-// Recent Changes: alexei.lebedev luke.huang
 //
 
 #include "include/gen/lib_exec_gen.h"

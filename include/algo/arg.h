@@ -1,4 +1,5 @@
-// (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,9 +20,6 @@
 // Exceptions: NO
 // Header: include/algo/arg.h
 //
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
-//
 
 namespace algo { // update-hdr srcfile:%/algo/arg.%
     // Dear human:
@@ -34,17 +32,4 @@ namespace algo { // update-hdr srcfile:%/algo/arg.%
     // cpp/lib/algo/arg.cpp -- Parse command-line
     //
     strptr gitinfo_Get();
-
-    // Scan argc/argv array, validate provided options,
-    // and populate argtuple.attrs -- this is the Tuple that
-    // will be ultimately scanned by <somecommand>_ReadStrptrMaybe
-    // to read the command line
-    // both -a:b and -a b syntaxes are supported
-    // In the syntax string, [x]:y means x is anonymous
-    // if there is no value, and proto-arg has default value, it is taken
-    // for a flag, -a alone means value of 'true'.
-    // There is an ambiguity here,
-    // in that command line '-a true' will be interpreted as flag '-a' followed by
-    // positional arg with value 'true'.
-    void Argtuple_ReadArgv(algo::Argtuple &argtuple, int argc, char **argv, strptr syntax, strptr help_string);
 }

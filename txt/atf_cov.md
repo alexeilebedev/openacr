@@ -4,27 +4,26 @@
 
 ```
 inline-command: atf_cov -h
-
-
 Usage: atf_cov [options]
-    -in         string  Input directory or filename, - for stdin. default: "data"
-    -covdir     string  Output directory to save coverage data. default: "temp/covdata"
-    -logfile    string  Log file
-    -runcmd     string  command to run
-    -exclude    string  Exclude gitfiles (external, generated). default: "(extern|include/gen|cpp/gen)/%"
-    -mergepath  string  colon-separated dir list to load .cov.ssim files from
-    -gcov               run gcov. default: false
-    -ssim               write out ssim files. default: false
-    -report             write out all reports. default: false
-    -capture            Write coverage information into tgtcov table. default: false
-    -xmlpretty          Generate pretty-formatted XML. default: false
-    -summary            Show summary figures. default: true
-    -check              Check coverage information against tgtcov table. default: false
-    -verbose            Enable verbose mode
-    -debug              Enable debug mode
-    -version            Show version information
-    -sig                Print SHA1 signatures for dispatches
-    -help               Print this screen and exit
+    OPTION      TYPE    DFLT                              COMMENT
+    -in         string  "data"                            Input directory or filename, - for stdin
+    -covdir     string  "temp/covdata"                    Output directory to save coverage data
+    -logfile    string  ""                                Log file
+    -runcmd     string  ""                                command to run
+    -exclude    regx    "(extern|include/gen|cpp/gen)/%"  Exclude gitfiles (external, generated)
+    -mergepath  string  ""                                colon-separated dir list to load .cov.ssim files from
+    -gcov                                                 run gcov
+    -ssim                                                 write out ssim files
+    -report                                               write out all reports
+    -capture                                              Write coverage information into tgtcov table
+    -xmlpretty                                            Generate pretty-formatted XML
+    -summary            Y                                 Show summary figures
+    -check                                                Check coverage information against tgtcov table
+    -verbose    int                                       Verbosity level (0..255); alias -v; cumulative
+    -debug      int                                       Debug level (0..255); alias -d; cumulative
+    -help                                                 Print help an exit; alias -h
+    -version                                              Print version and exit
+    -signature                                            Show signatures and exit; alias -sig
 
 ```
 

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+MRJOB=$(gcli mr | grep "$BRANCH" | awk '{print $1}')
+gcli mrjob:"$MRJOB/%" -t

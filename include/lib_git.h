@@ -1,4 +1,5 @@
-// (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,9 +19,6 @@
 // Target: lib_git (lib) -- Helpful git wrappers
 // Exceptions: yes
 // Header: include/lib_git.h
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/gen/lib_git_gen.h"
@@ -66,4 +64,10 @@ namespace lib_git { // update-hdr
 
     // Return TRUE if BRANCH is a valid git branch
     bool GitBranchExistsQ(strptr branch);
+
+    // Get configured user: name <email>
+    tempstr GetUser();
+
+    // Get year of latest commit of given file
+    u32 GetLastCommitYear(strptr file);
 }

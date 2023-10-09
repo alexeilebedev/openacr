@@ -1,4 +1,6 @@
-// (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,9 +21,6 @@
 // Exceptions: yes
 // Source: cpp/atf/ci/ssim.cpp -- ssim database normalizations
 //
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
-//
 
 #include "include/atf_ci.h"
 
@@ -41,7 +40,7 @@ void atf_ci::citest_normalize_acr() {
 
 void atf_ci::citest_normalize_acr_my() {
 #if defined(__CYGWIN__)
-    prlog("cygwin doens't have a working mariadb install. skipping acr_my test");
+    prlog("cygwin doesn't have a working mariadb install. skipping acr_my test");
 #else
     command::acr_my_proc acr_my;
     acr_my.cmd.abort = true;

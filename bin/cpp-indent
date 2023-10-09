@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# (C) NYSE | Intercontinental Exchange 2013-2016
+# Copyright (C) 2013-2016 NYSE | Intercontinental Exchange
 #
 # Apply indentation policy to specified source files.
 # Usage:

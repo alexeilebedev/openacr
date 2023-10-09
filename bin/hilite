@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
-# (C) NYSE | Intercontinental Exchange 2013-2014
-# Author: Alexei Lebedev
+#
+# Copyright 2013-2014 (C) NYSE | Intercontinental Exchange
 #
 # filter to colorize output
 # Usage 1:

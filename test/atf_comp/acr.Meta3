@@ -1,0 +1,45 @@
+# atf_comp -report:N -printinput acr.Meta3 | acr ftuple -meta -cmt | cat
+# Ctype            Comment
+# dmmeta.Ctype     Conceptual type (or C type)
+# dmmeta.Ns        Namespace (for in-memory database, protocol, etc)
+# dmmeta.Cfmt      Specify options for printing/reading ctypes into multiple formats
+# bool             1-byte bool, c++ type.
+# dmmeta.Ctypelen  Size of Ctype
+# dmmeta.Field     Specify field of a struct
+# dmmeta.Ssimfile  Ssim tuple name for structure
+# dmmeta.Nsdb      Annotate ssimdb namespaces
+# dmmeta.Xref      Specify how to cross-reference (i.e. project, or group-by) one record with another
+
+# e.g. dmmeta.ctype  ctype:""  comment:""
+# e.g. dmmeta.cfmt  cfmt:""  printfmt:""  read:""  print:""  sep:""  genop:""  comment:""
+# e.g. dmmeta.ctypelen  ctype:""  len:""  alignment:""  padbytes:""
+# e.g. dmmeta.field  field:""  arg:""  reftype:""  dflt:""  comment:""
+# e.g. dmmeta.ssimfile  ssimfile:""  ctype:""
+# e.g. dmmeta.ssimsort  ssimfile:""  sortfld:""  comment:""
+# e.g. dmmeta.xref  field:""  inscond:""  via:""
+
+dmmeta.ctype  ctype:dmmeta.Ftuple  comment:""
+  dmmeta.field  field:dmmeta.Ftuple.field    arg:dmmeta.Field  reftype:Pkey  dflt:""  comment:""
+  dmmeta.field  field:dmmeta.Ftuple.comment  arg:algo.Comment  reftype:Val   dflt:""  comment:""
+  dmmeta.cfmt  cfmt:dmmeta.Ftuple.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+  dmmeta.ctypelen  ctype:dmmeta.Ftuple  len:254  alignment:1  padbytes:0
+
+dmmeta.field  field:lib_ctype.FFtuple.msghdr  arg:dmmeta.Ftuple  reftype:Base  dflt:""  comment:""
+dmmeta.ssimfile  ssimfile:dmmeta.ftuple  ctype:dmmeta.Ftuple
+  dmmeta.ssimsort  ssimfile:dmmeta.ftuple  sortfld:dmmeta.Ftuple.field  comment:""
+
+dmmeta.xref  field:lib_ctype.FField.c_ftuple  inscond:true  via:lib_ctype.FDb.ind_field/dmmeta.Ftuple.field
+
+# Field                  Arg              Reftype  Comment
+# dmmeta.Ctype.ctype     algo.Smallstr50  Val      Identifier. must be ns.typename
+# dmmeta.Ctype.ns        dmmeta.Ns        Pkey     translates to c++ namespace
+# dmmeta.Ctype.name      algo.Smallstr50  Val      Identifier. must be ns.typename
+# dmmeta.Ctypelen.ctype  dmmeta.Ctype     Pkey     Identifies the Ctype
+# dmmeta.Field.ctype     dmmeta.Ctype     Pkey     enclosing structure
+# dmmeta.Field.ns        dmmeta.Ns        Pkey     Namespace
+# dmmeta.Field.name      algo.Smallstr50  Val      name of field
+# dmmeta.Field.arg       dmmeta.Ctype     Pkey     type of field
+# dmmeta.Field.dflt      dmmeta.CppExpr   Val      default value (c++ expression)
+# dmmeta.Xref.inscond    dmmeta.CppExpr   Val      Insert condition
+# dmmeta.Xref.ns         dmmeta.Ns        Pkey     Ns with which this xref is a member
+report.acr  n_select:9  n_insert:0  n_delete:0  n_update:0  n_file_mod:0

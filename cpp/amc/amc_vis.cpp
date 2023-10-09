@@ -1,5 +1,7 @@
-// (C) AlgoEngineering LLC 2008-2012
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2012 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,10 +21,6 @@
 // Target: amc_vis (exe) -- amc: draw access path diagrams
 // Exceptions: yes
 // Source: cpp/amc/amc_vis.cpp
-//
-// Created By: alexei.lebedev
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 // Visualize ctype graph
 
@@ -137,6 +135,8 @@ static void ShowCircular(amc_vis::FNode *node, int level) {
 static bool DepRefQ(amc_vis::FField &field) {
     return field.p_arg != field.p_ctype
         && field.reftype != dmmeta_Reftype_reftype_Global
+        && field.reftype != dmmeta_Reftype_reftype_Regx
+        && field.reftype != dmmeta_Reftype_reftype_RegxSql
         && field.reftype != dmmeta_Reftype_reftype_Hook;
 }
 

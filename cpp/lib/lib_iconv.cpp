@@ -1,5 +1,6 @@
-// (C) AlgoEngineering LLC 2008-2013
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2013 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,9 +20,6 @@
 // Target: lib_iconv (lib) -- Iconv wrapper
 // Exceptions: NO
 // Source: cpp/lib/lib_iconv.cpp
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 // Odbc/Iconvlib wrappers
 // close conversion descriptor

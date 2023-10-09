@@ -1,0 +1,4 @@
+# atf_comp -report:N -printinput acr.FieldsComma | acr -in:- ns -field:nstype,comment | cat
+exe	comment 1
+ssimdb	comment 2
+protocol	comment 3

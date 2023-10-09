@@ -1,4 +1,6 @@
-// (C) 2016-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2016-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,8 +20,6 @@
 // Target: src_lim (exe) -- Enforce line length, function length, and indentation limits
 // Exceptions: yes
 // Source: cpp/src/lim.cpp
-//
-// Created By: alexei.lebedev
 //
 
 #include "include/algo.h"

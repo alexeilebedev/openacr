@@ -1,4 +1,6 @@
-// (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,9 +20,6 @@
 // Target: algo_lib (lib) -- Support library for all executables
 // Exceptions: NO
 // Header: include/algo/string.inl.h
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 // Append and end-of-line sequence to string S.
 
@@ -236,4 +235,15 @@ inline algo::Line_curs::Line_curs() : eof(true),i(-1){
 }
 
 inline algo::Word_curs::Word_curs() : index(0){
+}
+
+inline bool algo::Sep_curs_ValidQ(algo::Sep_curs &curs) {
+    return curs.state != Sep_curs::State::invalid;
+}
+
+inline strptr &algo::Sep_curs_Access(algo::Sep_curs &curs) {
+    return curs.token;
+}
+
+inline algo::Sep_curs::Sep_curs() : sep('\0'), index(-1), state(algo::Sep_curs::State::invalid){
 }

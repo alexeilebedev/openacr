@@ -1,0 +1,8 @@
+#!/usr/bin/env perl
+# this script is used to stabilize output of inline-command
+# blocks in *.md files
+while (<>) {
+    s/^(report.amc)  .*/$1  ***/;
+    s/ (time|cache):(.*?) / $1:*** /;
+    print;
+}

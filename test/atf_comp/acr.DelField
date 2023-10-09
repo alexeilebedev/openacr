@@ -1,0 +1,5 @@
+# atf_comp -report:N -printinput acr.DelField | acr field:dev.Target.license -del | cat
+acr.delete  dmmeta.field  field:dev.Target.license  arg:dev.License  reftype:Pkey  dflt:""  comment:""
+
+acr.delete  dmmeta.xref  field:src_hdr.FTarget.p_license  inscond:true  via:src_hdr.FDb.ind_license/dev.Target.license
+report.acr  n_select:2  n_insert:0  n_delete:2  n_update:0  n_file_mod:0

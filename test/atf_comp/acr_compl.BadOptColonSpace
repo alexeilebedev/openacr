@@ -1,0 +1,1 @@
+# atf_comp -report:N -printinput acr_compl.BadOptColonSpace | acr_compl -line:'atf_cmdline -blah: ' | cat

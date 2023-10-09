@@ -1,4 +1,6 @@
-// (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,9 +20,6 @@
 // Target: lib_sql (lib) -- SQL formatting functions
 // Exceptions: yes
 // Source: cpp/lib/lib_sql.cpp
-//
-// Created By: ara.aslyan alexei.lebedev
-// Recent Changes: ara.aslyan alexei.lebedev
 //
 
 #include "include/algo.h"

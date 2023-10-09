@@ -1,0 +1,1 @@
+# atf_comp -report:N -printinput acr_compl.BadExe | acr_compl -line:'blah' | cat

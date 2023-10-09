@@ -103,6 +103,7 @@ dmmeta.ccmp  ctype:algo.RspaceStr200  extrn:N  genop:Y  order:N  minmax:N  comme
 dmmeta.ccmp  ctype:algo.RspaceStr21  extrn:N  genop:Y  order:N  minmax:N  comment:""
 dmmeta.ccmp  ctype:algo.RspaceStr24  extrn:N  genop:N  order:Y  minmax:N  comment:""
 dmmeta.ccmp  ctype:algo.RspaceStr240  extrn:N  genop:Y  order:N  minmax:N  comment:""
+dmmeta.ccmp  ctype:algo.RspaceStr25  extrn:N  genop:N  order:Y  minmax:N  comment:""
 dmmeta.ccmp  ctype:algo.RspaceStr26  extrn:N  genop:Y  order:N  minmax:N  comment:""
 dmmeta.ccmp  ctype:algo.RspaceStr3  extrn:N  genop:Y  order:N  minmax:N  comment:""
 dmmeta.ccmp  ctype:algo.RspaceStr31  extrn:N  genop:Y  order:N  minmax:N  comment:""

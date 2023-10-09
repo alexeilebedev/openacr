@@ -1,4 +1,6 @@
-// (C) 2016-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2016-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023-2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,9 +20,6 @@
 // Target: src_hdr (exe) -- Update source file / copyright header
 // Exceptions: yes
 // Source: cpp/src/hdr.cpp
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/algo.h"
@@ -85,26 +84,6 @@ static void AddCopyright(src_hdr::FSrc &src, cstring &out) {
 
 // -----------------------------------------------------------------------------
 
-static void InsertCommentMaybe(strptr name, strptr value, cstring &out) {
-    if (ch_N(value)) {
-        InsertComment(tempstr()<<name<<": "<<value, out);
-    }
-}
-
-// -----------------------------------------------------------------------------
-
-static void Authors(src_hdr::FSrc &src, cstring &out) {
-    int n=ch_N(out);
-    InsertCommentMaybe("Created By", src.created_by, out);
-    InsertCommentMaybe("Authors", src.authors, out);
-    InsertCommentMaybe("Recent Changes", src.recent_changes, out);
-    if (ch_N(out)>n) {
-        InsertComment("\n",out);
-    }
-}
-
-// -----------------------------------------------------------------------------
-
 static void Save(src_hdr::FSrc &src) {
     cstring out;
     AddCopyright(src,out);
@@ -120,19 +99,11 @@ static void Save(src_hdr::FSrc &src) {
     src_hdr::FTargsrc &targsrc=*src.p_targsrc;
     // add namespace info
     DescribeTarget(*targsrc.p_target->p_ns,out,targsrc);
-    Authors(src,out);
     InsertComment(src.comment,out);
     out<<eol;
     out<<src.body;
 
     (void)SafeStringToFile(out,src_Get(*src.p_targsrc),algo::FileFlags());
-}
-
-// -----------------------------------------------------------------------------
-
-// a "tag" is a header line of the form "A: B"
-static tempstr GetTagValue(strptr line) {
-    return tempstr(Trimmed(Pathcomp(line,":LR")));
 }
 
 // -----------------------------------------------------------------------------
@@ -149,15 +120,11 @@ static void ReadTagLine(src_hdr::FSrc &src, strptr line) {
         // ignore, we re-generate this
     } else if (StartsWithQ(line,"Header:")) {
         // ignore, we re-generate this
-    } else if (StartsWithQ(line,"Created By:")) {
-        src.created_by = GetTagValue(line);
-    } else if (StartsWithQ(line,"Authors:")) {
-        src.authors = GetTagValue(line);
-    } else if (StartsWithQ(line,"Recent Changes:")) {
-        src.recent_changes = GetTagValue(line);
     } else if (StartsWithQ(line,"Exceptions:")) {
         // ignore, we re-generate this
     } else if (StartsWithQ(line,"(C)")) {
+        src.copyright<<line<<eol;
+    } else if (StartsWithQ(line,"Copyright")) {
         src.copyright<<line<<eol;
     } else if (ch_N(line)) {
         if (src.saw_target) {
@@ -172,12 +139,49 @@ static void ReadTagLine(src_hdr::FSrc &src, strptr line) {
 
 // -----------------------------------------------------------------------------
 
-static void UpdateAuthors(src_hdr::FSrc &src) {
-    tempstr cmd=tempstr()<<src_hdr::dev_scriptfile_bin_git_authors<<src_Get(*src.p_targsrc);
-    tempstr data=SysEval(cmd,FailokQ(true),1024*1024);
-    ind_beg(Line_curs,line,data) {
-        ReadTagLine(src,Trimmed(line));
+// put current year copyright of company specified as -update_copyright arg
+static void UpdateCopyright(src_hdr::FSrc &src) {
+    strptr our_company = src_hdr::_db.cmdline.update_copyright;
+    u32 year = GetLocalTimeStruct(algo::CurrUnTime()).tm_year + 1900;
+    bool ok(false);
+    tempstr new_copyright;
+    ind_beg(Line_curs,line,src.copyright) {
+        algo::StringIter it(line);
+        strptr copyright = GetWordCharf(it);
+        strptr parenc = GetWordCharf(it);
+        strptr years = GetWordCharf(it);
+        strptr company = Trimmed(it.Rest());
+        if (company == our_company) {
+            ok = true;
+            strptr prior_ranges = Pathcomp(years,",RL");
+            strptr last_range = Pathcomp(years,",RR");
+            strptr first_year = Pathcomp(last_range,"-RL");
+            u32    last_year = ParseU32(Pathcomp(last_range,"-RR"),0);
+            if (last_year < year) {
+                new_copyright << copyright << " " << parenc << " ";
+                if (ch_N(prior_ranges)) {
+                    new_copyright << prior_ranges << ",";
+                }
+                if (last_year+1 == year) {
+                    new_copyright << (ch_N(first_year)
+                                      ? first_year
+                                      : tempstr()<<last_year)
+                                  << "-" << year;
+                } else {
+                    new_copyright << last_range << "," << year;
+                }
+                new_copyright << " " << our_company << eol;
+            } else {
+                new_copyright << line << eol;
+            }
+        } else {
+            new_copyright << line << eol;
+        }
     }ind_end;
+    if (!ok) {
+        new_copyright << "Copyright (C) " << year << " " << our_company;
+    }
+    src.copyright = new_copyright;
 }
 
 // -----------------------------------------------------------------------------
@@ -193,8 +197,8 @@ static void RebuildHeader(src_hdr::FSrc &src) {
             src.body<<line<<eol;
         }
     }ind_end;
-    if (src_hdr::_db.cmdline.update_authors) {
-        UpdateAuthors(src);
+    if (ch_N(src_hdr::_db.cmdline.update_copyright)) {
+        UpdateCopyright(src);
     }
     if (src_hdr::_db.cmdline.indent) {
         tempstr out;
@@ -235,6 +239,9 @@ static void LoadLicense() {
     ind_beg(src_hdr::_db_license_curs,license,src_hdr::_db) {
         if (license.license != "") {
             license.text = FileToString(tempstr()<<"conf/"<<license.license<<".license.txt",algo::FileFlags());
+            if (ch_N(license.text)) {
+                license.text << eol;
+            }
         }
     }ind_end;
 }

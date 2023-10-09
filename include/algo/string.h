@@ -1,4 +1,6 @@
-// (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,9 +20,6 @@
 // Target: algo_lib (lib) -- Support library for all executables
 // Exceptions: NO
 // Header: include/algo/string.h -- String functions
-//
-// Created By: alexei.lebedev hayk.mkrtchyan
-// Recent Changes: alexei.lebedev hayk.mkrtchyan
 //
 
 #pragma once
@@ -104,6 +103,28 @@ namespace algo {
         strptr token;// current token
         int index;// current index (may be past token.end)
         inline Word_curs();
+    };
+
+    // Token cursor (works with ind_beg/ind_end)
+    // Tokens are separated by sep char.
+    // Usage:
+    // ind_beg(Sep_curs,token,line,sep) {
+    //     prlog("Token number "<<ind_curs(token).index<<" is "<<token);
+    // }ind_end;
+    // Consecutive separators are not collapsed i.e. empty token is issued between them.
+    // If no separator found, the token is entire string even it is an empty string.
+    struct Sep_curs {
+        typedef strptr ChildType;
+        strptr rest;
+        char   sep;
+        strptr token; // current token
+        int    index; // token index starts from 0, not needed for cursor, just for convenience
+        enum State {  // state machine:
+            normal,   // valid token before separator
+            last,     // valid token before eol
+            invalid   // invalid token
+        } state;
+        inline Sep_curs();
     };
 
     // -----------------------------------------------------------------------------
@@ -459,6 +480,8 @@ namespace algo { // update-hdr srcfile:'(%/algo/string.%|%/algo/line.%)'
 
     // compatibility
     void reset(algo::cstring &lhs);
+    void Sep_curs_Reset(algo::Sep_curs &curs, strptr line, char sep);
+    void Sep_curs_Next(algo::Sep_curs &curs);
 
     // -------------------------------------------------------------------
     // include/algo/string.inl.h
@@ -513,4 +536,6 @@ namespace algo { // update-hdr srcfile:'(%/algo/string.%|%/algo/line.%)'
     template<class T> inline void Getary_Set(StringDesc &desc, algo::aryptr<char>(*fcn)(T&));
     inline strptr &FileLine_curs_Access(algo::FileLine_curs &curs);
     inline bool FileLine_curs_ValidQ(algo::FileLine_curs &curs);
+    inline bool Sep_curs_ValidQ(algo::Sep_curs &curs);
+    inline strptr &Sep_curs_Access(algo::Sep_curs &curs);
 }

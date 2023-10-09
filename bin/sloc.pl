@@ -1,9 +1,7 @@
 #!/usr/bin/env perl
 #
-# AOS
-# (C) AlgoEngineering LLC 2008-2012
-# (C) NYSE | Intercontinental Exchange 2013-2014
-#
+# Copyright (C) 2008-2012 AlgoEngineering LLC
+# Copyright (C) 2013-2014 NYSE | Intercontinental Exchange
 #
 # usage: sloc.pl <list of files>
 # LOC = line of code; i.e. non-comment line

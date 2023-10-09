@@ -1,0 +1,2 @@
+# atf_comp -report:N -printinput acr_compl.OptRegxSpaceFullList | acr_compl -line:"atf_cmdline -dregx atfdb.Unittest" -type:63 | cat
+atfdb.Unittest

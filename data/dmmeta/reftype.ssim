@@ -1,3 +1,4 @@
+dmmeta.reftype  reftype:Alias  isval:Y  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
 dmmeta.reftype  reftype:Atree  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:Y  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
 dmmeta.reftype  reftype:Base  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N
 dmmeta.reftype  reftype:Bheap  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:Y  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
@@ -21,6 +22,7 @@ dmmeta.reftype  reftype:Pkey  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxr
 dmmeta.reftype  reftype:Protocol  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N
 dmmeta.reftype  reftype:Ptr  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
 dmmeta.reftype  reftype:Ptrary  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
+dmmeta.reftype  reftype:Regx  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N
 dmmeta.reftype  reftype:RegxSql  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N
 dmmeta.reftype  reftype:Sbrk  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N
 dmmeta.reftype  reftype:Smallstr  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N

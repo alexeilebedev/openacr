@@ -1,4 +1,5 @@
-// (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,9 +19,6 @@
 // Target: abt (exe) -- Algo Build Tool (build system)
 // Exceptions: NO
 // Source: cpp/abt/disas.cpp -- Disassemble
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/abt.h"

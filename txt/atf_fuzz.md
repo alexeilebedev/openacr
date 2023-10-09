@@ -4,22 +4,21 @@
 
 ```
 inline-command: atf_fuzz -h
-
-
-Usage: atf_fuzz [options]
-    -reprofile  string  File where repros are stored. default: "temp/atf_fuzz.repro"
-    [target]    string  Target to fuzz
-    [args]      string  Additional arguments to target
-    -inputfile  string  File with input tuples.
-    -fuzzstrat  string  Strategy to choose. default: "%"
-    -in         string  Input directory or filename, - for stdin. default: "data"
-    -seed       int     Random seed. default: 0
-    -testprob   double  Run each case with this probability. default: 1
-    -verbose            Enable verbose mode
-    -debug              Enable debug mode
-    -version            Show version information
-    -sig                Print SHA1 signatures for dispatches
-    -help               Print this screen and exit
+Usage: atf_fuzz [[-target:]<string>] [[-args:]<string>] [options]
+    OPTION      TYPE    DFLT                   COMMENT
+    -reprofile  string  "temp/atf_fuzz.repro"  File where repros are stored
+    [target]    string  ""                     Target to fuzz
+    [args]      string  ""                     Additional arguments to target
+    -inputfile  string  ""                     File with input tuples.
+    -fuzzstrat  regx    "%"                    Strategy to choose
+    -in         string  "data"                 Input directory or filename, - for stdin
+    -seed       int     0                      Random seed
+    -testprob   double  1                      Run each case with this probability
+    -verbose    int                            Verbosity level (0..255); alias -v; cumulative
+    -debug      int                            Debug level (0..255); alias -d; cumulative
+    -help                                      Print help an exit; alias -h
+    -version                                   Print version and exit
+    -signature                                 Show signatures and exit; alias -sig
 
 ```
 

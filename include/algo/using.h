@@ -1,4 +1,6 @@
-// (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,13 +21,7 @@
 // Exceptions: NO
 // Header: include/algo/using.h
 //
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
-//
 
-using algo::ArgProto;
-using algo::Argtuple;
-using algo::Argtuple_proto_curs;
 using algo::Attr;
 using algo::Bool;
 using algo::BumpToPow2;

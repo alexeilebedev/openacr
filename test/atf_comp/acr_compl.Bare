@@ -1,0 +1,4 @@
+# atf_comp -report:N -printinput acr_compl.Bare | acr_compl  | cat
+You seem to be calling acr_compl interactively.
+Normally, acr_compl is implicitly by bash, with COMP_LINE or COMP_POINT environment variables set.
+Suggestion: Use acr_compl -install to generate an installation script

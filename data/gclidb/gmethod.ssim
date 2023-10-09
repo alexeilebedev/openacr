@@ -1,0 +1,5 @@
+gclidb.gmethod  gmethod:DELETE  val:4  comment:""
+gclidb.gmethod  gmethod:GET  val:0  comment:""
+gclidb.gmethod  gmethod:PATCH  val:3  comment:""
+gclidb.gmethod  gmethod:POST  val:1  comment:""
+gclidb.gmethod  gmethod:PUT  val:2  comment:""

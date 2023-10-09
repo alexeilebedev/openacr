@@ -1,6 +1,5 @@
 #!/usr/bin/env perl
 $s="";
-open(my $log,">","log");
 $|++; # autoflush;
 my $x;
 while (read(STDIN, $x, 1)) {

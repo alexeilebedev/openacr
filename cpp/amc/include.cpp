@@ -1,4 +1,6 @@
-// (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,9 +20,6 @@
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
 // Source: cpp/amc/include.cpp
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/amc.h"
@@ -80,6 +79,9 @@ static void CollectParentns(amc::FNs &tgt, amc::FNs &parentns) {
 // Emit include scan guards for all headers
 void amc::GenInclude() {
     algo_lib::Replscope R;
+
+    // load copyright for all generated files
+    amc::_db.copyright = FileToString(dev_gitfile_conf_copyright_txt);
 
     // keep gen file names unique -- gdb requires unique names to set breakpoints
     ind_beg(amc::_db_ns_curs, ns,amc::_db) {
@@ -154,7 +156,7 @@ void amc::GenUsedNs() {
             if (ArgNeedsFwdDeclQ(field)) {
                 AddFwdDecl(ns,*field.p_arg);
             }
-            if (field.reftype == dmmeta_Reftype_reftype_RegxSql) {
+            if (field.reftype == dmmeta_Reftype_reftype_Regx) {
                 AddSourceDep(ns, *amc::ind_ns_Find("algo_lib"));
             }
             if (field.c_smallstr && field.c_smallstr->c_numstr) {

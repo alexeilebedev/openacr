@@ -1,4 +1,4 @@
-# atf_comp -report:N -print acr.BadReftype2 | acr -insert -write -check | cat
+# atf_comp -report:N -printinput acr.BadReftype2 | acr -insert -write -check | cat
 stdin-insert:1: acr.ssimreq  rec:dmmeta.Field:command.acr_ed.blah  value:reftype:Tary  comment:"This value requires a corresponding entry in dmmeta.tary"
 dmmeta.field  field:command.acr_ed.blah  arg:i32  reftype:Tary
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 #
-# (C) NYSE | Intercontinental Exchange 2013-2014
+# Copyright (C) 2013-2014 NYSE | Intercontinental Exchange
 #
 # script to update dev.gitfile table and acmdb.keyfile
 #

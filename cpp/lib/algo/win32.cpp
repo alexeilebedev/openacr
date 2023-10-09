@@ -1,3 +1,5 @@
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -31,7 +33,7 @@
 #include <winbase.h>
 #include <shlwapi.h>
 enum {
-      SIGNAL_EXIT_CODE_BASE=10000
+    SIGNAL_EXIT_CODE_BASE=10000
 };
 
 // WIN_CODE: windows API call exit function
@@ -316,7 +318,7 @@ int fnmatch(const char *pattern, const char *filename, int flags) {
     Regx_ReadShell(reg,pattern,true);
     bool ret = Regx_Match(reg,strptr(filename));
     enum {
-          FNM_NOMATCH=1
+        FNM_NOMATCH=1
     };
     return ret ? 0 : FNM_NOMATCH;
 }

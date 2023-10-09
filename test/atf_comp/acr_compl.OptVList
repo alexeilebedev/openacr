@@ -1,0 +1,4 @@
+# atf_comp -report:N -printinput acr_compl.OptVList | acr_compl -line:"atf_cmdline -v" -type:63 | cat
+-v
+-verbose
+-version

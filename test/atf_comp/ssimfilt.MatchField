@@ -1,0 +1,5 @@
+# atf_comp -report:N -printinput ssimfilt.MatchField | ssimfilt % ns:b% | cat
+dmmeta.ns  ns:blah
+dmmeta.ctype  ctype:blah.Y
+dev.target  target:ssimfilt
+

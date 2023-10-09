@@ -1,4 +1,6 @@
-// (C) 2014-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2014-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,10 +20,6 @@
 // Target: lib_json (lib) -- Full json support library
 // Exceptions: NO
 // Source: cpp/lib/lib_json.cpp
-//
-// Created By: alexei.lebedev alexey.polovinkin
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev alexey.polovinkin
 //
 
 #include "include/algo.h"

@@ -22,10 +22,11 @@ A stream ID is a 32-bit entity consisting of four 8-bit fields: process type, pr
 Process types are registered in table `amsdb.proctype`. The standard types are:
 
 ```
-inline-command: acr proctype
-amsdb.proctype  proctype:0        id:0  comment:"No process"
-amsdb.proctype  proctype:amstest  id:5  comment:"Ams testing"
-report.acr  n_select:2  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+inline-command: acr proctype | ssimfilt ^ -t
+PROCTYPE  ID  COMMENT
+0         0   No process
+amstest   5   Ams testing
+
 ```
 
 Stream types are registered in table `amsdb.streamtype`. The standard types are:

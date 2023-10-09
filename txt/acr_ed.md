@@ -4,60 +4,59 @@
 
 ```
 inline-command: acr_ed -h
-
-
 acr_ed: ACR Editor Set of useful recipes, uses acr, abt, git, and other tools
 Usage: acr_ed [options]
-    -in         string  Input directory or filename, - for stdin. default: "data"
-    -create             Create new entity (-finput, -target, -ctype, -field). default: false
-    -del                Delete mode. default: false
-    -rename     string  Rename to something else
-    -replace            Use acr -replace (default is -insert, fails on duplicate). default: false
-    -finput             Create in-memory table based on ssimfile. default: false
-    -foutput            Declare field as an output. default: false
-    -srcfile    string      Create source file
-    -gstatic            Like -finput, but data is loaded at compile time. default: false
-    -indexed            (with -finput) Add hash index. default: false
-    -target     string  Create new target
-    -nstype     string  (with -create -target): exe,lib,etc.. default: "exe"
-    -ctype      string  Create new ctype
-    -pooltype   string   Pool reftype (Lary,Lpool etc) for finput/ctype
-    -ssimfile   string    Ssimfile for new ctype
-    -subset     string    Primary key is a subset of this ctype
-    -subset2    string    Primary key is also a subset of this ctype
-    -separator  string      Key separator. default: "."
-    -field      string  Create field
-    -arg        string    Field type (e.g. u32, etc), (with -ctype) add the base field
-    -dflt       string    Field default value
-    -anon                 Anonymous field (use with command lines). default: false
-    -bigend               Big-endian field. default: false
-    -cascdel              Field is cascdel. default: false
-    -before     string    Place field before this one
-    -substr     string    New field is a substring
-    -srcfield   string    Source field for bitfld/substr
-    -fstep      string    Add fstep record
-    -inscond    string    Insert condition (for xref). default: "true"
-    -reftype    string    Reftype (e.g. Val, Thash, Llist, etc)
-    -hashfld    string      (-reftype:Thash) Hash field
-    -sortfld    string      (-reftype:Bheap) Sort field
-    -unittest   string  Create unit test, <ns>.<functionname>
-    -citest     string  Create CI test
-    -cppfunc    string  Field is a cppfunc, pass c++ expression as argument
-    -xref                   X-ref with field type. default: false
-    -via        string        X-ref argument (index, pointer, or index/key)
-    -write              Commit output to disk. default: false
-    -e                   (with -create -unittest) Edit new testcase. default: false
-    -comment    string  Comment for new entity
-    -sandbox            Make changes in sandbox. default: false
-    -test               Build resulting changes, run tests. default: false
-    -showcpp            (With -sandbox), show resulting diff. default: false
-    -msgtype    string  (with -ctype) use this msgtype as type
-    -anonfld            Create anonfld. default: false
-    -verbose            Enable verbose mode
-    -debug              Enable debug mode
-    -version            Show version information
-    -sig                Print SHA1 signatures for dispatches
-    -help               Print this screen and exit
+    OPTION      TYPE    DFLT    COMMENT
+    -in         string  "data"  Input directory or filename, - for stdin
+    -create                     Create new entity (-finput, -target, -ctype, -field)
+    -del                        Delete mode
+    -rename     string  ""      Rename to something else
+    -replace                    Use acr -replace (default is -insert, fails on duplicate)
+    -finput                     Create in-memory table based on ssimfile
+    -foutput                    Declare field as an output
+    -srcfile    string  ""          Create source file
+    -gstatic                    Like -finput, but data is loaded at compile time
+    -indexed                    (with -finput) Add hash index
+    -target     string  ""      Create new target
+    -nstype     string  "exe"   (with -create -target): exe,lib,etc.
+    -ctype      string  ""      Create new ctype
+    -pooltype   string  ""       Pool reftype (Lary,Lpool etc) for finput/ctype
+    -ssimfile   string  ""        Ssimfile for new ctype
+    -subset     string  ""        Primary key is a subset of this ctype
+    -subset2    string  ""        Primary key is also a subset of this ctype
+    -separator  string  "."         Key separator
+    -field      string  ""      Create field
+    -arg        string  ""        Field type (e.g. u32, etc), (with -ctype) add the base field
+    -dflt       string  ""        Field default value
+    -anon                         Anonymous field (use with command lines)
+    -bigend                       Big-endian field
+    -cascdel                      Field is cascdel
+    -before     string  ""        Place field before this one
+    -substr     string  ""        New field is a substring
+    -srcfield   string  ""        Source field for bitfld/substr
+    -fstep      string  ""        Add fstep record
+    -inscond    string  "true"    Insert condition (for xref)
+    -reftype    string  ""        Reftype (e.g. Val, Thash, Llist, etc)
+    -hashfld    string  ""          (-reftype:Thash) Hash field
+    -sortfld    string  ""          (-reftype:Bheap) Sort field
+    -unittest   string  ""      Create unit test, <ns>.<functionname>
+    -citest     string  ""      Create CI test
+    -cppfunc    string  ""      Field is a cppfunc, pass c++ expression as argument
+    -xref                           X-ref with field type
+    -via        string  ""            X-ref argument (index, pointer, or index/key)
+    -write                      Commit output to disk
+    -e                           (with -create -unittest) Edit new testcase
+    -comment    string  ""      Comment for new entity
+    -sandbox                    Make changes in sandbox
+    -test                       Build resulting changes, run tests
+    -showcpp                    (With -sandbox), show resulting diff
+    -msgtype    string  ""      (with -ctype) use this msgtype as type
+    -anonfld                    Create anonfld
+    -verbose    int             Verbosity level (0..255); alias -v; cumulative
+    -debug      int             Debug level (0..255); alias -d; cumulative
+    -help                       Print help an exit; alias -h
+    -version                    Print version and exit
+    -signature                  Show signatures and exit; alias -sig
 
 ```
 
@@ -339,16 +338,17 @@ with default tail and head insertion, with and without a count, and with or with
 
 The full list of linked list types can be gleaned from this table:
 ```
-inline-command: acr listtype
-dmmeta.listtype  listtype:cd   circular:Y  haveprev:Y  instail:Y  comment:"Circular doubly-linked queue"
-dmmeta.listtype  listtype:cdl  circular:Y  haveprev:Y  instail:N  comment:"Circular double-linked lifo (stack)"
-dmmeta.listtype  listtype:cs   circular:Y  haveprev:N  instail:Y  comment:"Circular singly-linked queue"
-dmmeta.listtype  listtype:csl  circular:Y  haveprev:N  instail:N  comment:"Circular singly-linked lifo (stack)"
-dmmeta.listtype  listtype:zd   circular:N  haveprev:Y  instail:Y  comment:"Zero-terminated doubly-linked queue"
-dmmeta.listtype  listtype:zdl  circular:N  haveprev:Y  instail:N  comment:"Zero-terminated doubly-linked lifo (stack)"
-dmmeta.listtype  listtype:zs   circular:N  haveprev:N  instail:Y  comment:"Zero-terminated singly-linked queue"
-dmmeta.listtype  listtype:zsl  circular:N  haveprev:N  instail:N  comment:"Zero-terminated singly-linked lifo (stack)"
-report.acr  n_select:8  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+inline-command: acr listtype | ssimfilt ^ -t
+LISTTYPE  CIRCULAR  HAVEPREV  INSTAIL  COMMENT
+cd        Y         Y         Y        Circular doubly-linked queue
+cdl       Y         Y         N        Circular double-linked lifo (stack)
+cs        Y         N         Y        Circular singly-linked queue
+csl       Y         N         N        Circular singly-linked lifo (stack)
+zd        N         Y         Y        Zero-terminated doubly-linked queue
+zdl       N         Y         N        Zero-terminated doubly-linked lifo (stack)
+zs        N         N         Y        Zero-terminated singly-linked queue
+zsl       N         N         N        Zero-terminated singly-linked lifo (stack)
+
 ```
 
 The arguments `havetail` and `havecount` are specified directly in the `llist` record which is required for a linked list.

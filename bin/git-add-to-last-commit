@@ -1,5 +1,5 @@
 #!/bin/sh
-if [ "`git ls-files -m -c -d`" != "" ]; then
-    git reset --soft HEAD^ && git commit --allow-empty -a -C HEAD@{1}
+if [ "`git $1 ls-files -m -c -d`" != "" ]; then
+    git $1 reset --soft HEAD^ && git $1 commit --allow-empty -a -C HEAD@{1}
 fi
 true

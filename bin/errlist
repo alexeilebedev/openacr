@@ -1,5 +1,5 @@
 #
-# (C) NYSE | Intercontinental Exchange 2013-2014
+# Copyright (C) 2013-2014 NYSE | Intercontinental Exchange
 #
 # Run specified command and open error list in editor
 # Works with emacs and vim

@@ -1,4 +1,6 @@
-// (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,9 +20,6 @@
 // Target: lib_ctype (lib) -- Helpful library for reading/writing ctypes as text tuples
 // Exceptions: yes
 // Header: include/lib/lib_ctype.h
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/gen/lib_ctype_gen.h"
@@ -93,4 +92,7 @@ namespace lib_ctype { // update-hdr
 
     // Remove unstable fields from a string that's supposed to correspond CTYPE
     tempstr StabilizeSsimTuple(strptr str);
+
+    // Fill Replscope with attribute values, including substr
+    void FillReplscope(algo_lib::Replscope &R, strptr str);
 }

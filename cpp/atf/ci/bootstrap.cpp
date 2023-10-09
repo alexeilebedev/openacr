@@ -1,3 +1,5 @@
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,6 +20,19 @@
 //
 
 #include "include/atf_ci.h"
+
+// -----------------------------------------------------------------------------
+
+static void InsertCopyright(cstring &out) {
+    cstring text = FileToString(atf_ci::dev_gitfile_conf_copyright_txt);
+    ind_beg(Line_curs,line,text) {
+        out<<"#";
+        if (ch_N(line)) {
+            out<<" "<<line;
+        }
+        out<<eol;
+    }ind_end;
+}
 
 // -----------------------------------------------------------------------------
 
@@ -50,6 +65,7 @@ void atf_ci::citest_bootstrap() {
             cstring text;
             algo_lib::Replscope R;
             Ins(&R, text, "#!/usr/bin/env bash");
+            InsertCopyright(text);
             Ins(&R, text, "echo '# this script has been created using atf_ci bootstrap'");
             Ins(&R, text, "echo '# now building an abt executable which will build the rest'");
             Ins(&R, text, "mkdir -p build");

@@ -1,0 +1,2 @@
+# atf_comp -report:N -printinput acr_compl.T07 | acr_compl -line:"atf_cmdline -astr: -anum: -adbl: -str: -num: -dbl: " | cat
+-aflag 

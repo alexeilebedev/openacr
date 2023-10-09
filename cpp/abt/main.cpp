@@ -1,5 +1,7 @@
-// (C) AlgoEngineering LLC 2008-2013
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2013 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,10 +21,6 @@
 // Target: abt (exe) -- Algo Build Tool (build system)
 // Exceptions: NO
 // Source: cpp/abt/main.cpp -- Algo Build Tool - Main file
-//
-// Created By: alexei.lebedev mark.page
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 // TODO Create entries for object files and add them as input dependencies to link step.
 // Currently, the out-of-date flag propagation is unconvincing
@@ -498,9 +496,6 @@ static void Main_ListIncl() {
 // -----------------------------------------------------------------------------
 
 static void Main_Helpscreen() {
-    algo_lib::FTxttbl tbl;
-    AddCol(tbl, "Target");
-    AddCol(tbl, "Comment");
     tempstr all_tgts;
     int len_before=0;
     algo::ListSep ls;

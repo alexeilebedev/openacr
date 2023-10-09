@@ -1,4 +1,6 @@
-// (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,12 +21,8 @@
 // Exceptions: NO
 // Source: cpp/amc/signature.cpp
 //
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
-//
 
 #include "include/amc.h"
-#include <openssl/sha.h>
 #include "include/sha.h"
 
 // Recursive function to compute all ctype dependencies

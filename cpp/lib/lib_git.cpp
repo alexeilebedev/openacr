@@ -1,4 +1,6 @@
-// (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,9 +20,6 @@
 // Target: lib_git (lib) -- Helpful git wrappers
 // Exceptions: yes
 // Source: cpp/lib/lib_git.cpp
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/algo.h"
@@ -114,4 +113,27 @@ bool lib_git::GitBranchExistsQ(strptr branch) {
         }
     }
     return found;
+}
+
+// -----------------------------------------------------------------------------
+
+// Get configured user: name <email>
+tempstr lib_git::GetUser() {
+    tempstr ret;
+    tempstr name(Trimmed(SysEval("git config user.name 2>/dev/null", FailokQ(true),1000)));
+    tempstr email(Trimmed(SysEval("git config user.email 2>/dev/null", FailokQ(true),1000)));
+    if (ch_N(name)) {
+        ret << name;
+        if (ch_N(email)) {
+            ret << " <" << email << ">";
+        }
+    }
+    return ret;
+}
+
+// Get year of latest commit of given file
+u32 lib_git::GetLastCommitYear(strptr file) {
+    cstring cmd = tempstr() << "git log -1 --pretty=format:%ci " << file;
+    tempstr date(Trimmed(SysEval(cmd, FailokQ(false),1000)));
+    return ParseU32(date,0);
 }

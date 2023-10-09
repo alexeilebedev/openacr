@@ -1,5 +1,7 @@
-// (C) AlgoEngineering LLC 2008-2012
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2012 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,9 +21,6 @@
 // Target: algo_lib (lib) -- Support library for all executables
 // Exceptions: NO
 // Header: include/sysincl.h -- System header includes
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #pragma once

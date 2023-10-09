@@ -1,0 +1,10 @@
+# atf_comp -report:N -printinput acr_compl.OptDList | acr_compl -line:"atf_cmdline -d" -type:63 | cat
+-d
+-dbl:<double>
+-ddbl:<double>
+-debug
+-dflag:N
+-dnum:<int>
+-dpkey:<pkey>
+-dregx:<regx>
+-dstr:<string>

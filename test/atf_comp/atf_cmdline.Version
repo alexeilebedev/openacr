@@ -1,0 +1,5 @@
+# atf_comp -report:N -printinput atf_cmdline.Version | atf_cmdline -version | cat
+dev.gitinfo  comment:unversioned
+atf_cmdline: Missing value for required argument -astr (see -help)
+atf_cmdline: Missing value for required argument -str (see -help)
+

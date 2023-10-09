@@ -1,9 +1,7 @@
 #!/usr/bin/env perl
 #
-# AOS
-# (C) AlgoEngineering LLC 2008-2012
-# (C) NYSE | Intercontinental Exchange 2013-2014
-#
+# Copyright (C) 2008-2012 AlgoEngineering LLC
+# Copyright (C) 2013-2014 NYSE | Intercontinental Exchange
 #
 # run this tool from root to get line count statistics
 #

@@ -1,4 +1,5 @@
-// (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,9 +19,6 @@
 // Target: algo_lib (lib) -- Support library for all executables
 // Exceptions: NO
 // Header: include/algo/tstamp.h
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 namespace algo { // update-hdr srcfile:%/algo/tstamp.%

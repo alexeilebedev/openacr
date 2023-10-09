@@ -5,9 +5,8 @@ dmmeta.cpptype  ctype:SQLLEN  ctor:N  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:ShStream  ctor:N  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:acr.FEvalattr  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:acr.Queryop  ctor:Y  dtor:Y  cheap_copy:N
-dmmeta.cpptype  ctype:acr_compl.Badness  ctor:Y  dtor:Y  cheap_copy:Y
+dmmeta.cpptype  ctype:acr_compl.Badness  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:acr_compl.Shellqtype  ctor:Y  dtor:Y  cheap_copy:Y
-dmmeta.cpptype  ctype:algo.ArgProto  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:algo.Attr  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:algo.Bool  ctor:Y  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.Comment  ctor:Y  dtor:Y  cheap_copy:N
@@ -120,6 +119,7 @@ dmmeta.cpptype  ctype:algo.RspaceStr18  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.RspaceStr2  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.RspaceStr20  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.RspaceStr24  ctor:N  dtor:N  cheap_copy:Y
+dmmeta.cpptype  ctype:algo.RspaceStr25  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.RspaceStr3  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.RspaceStr32  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.RspaceStr4  ctor:N  dtor:N  cheap_copy:Y
@@ -290,6 +290,7 @@ dmmeta.cpptype  ctype:dmmeta.Llist  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Main  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Msgtype  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Ns  ctor:Y  dtor:Y  cheap_copy:N
+dmmeta.cpptype  ctype:dmmeta.Nscpp  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Nsproto  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Nstype  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Nsx  ctor:Y  dtor:Y  cheap_copy:N

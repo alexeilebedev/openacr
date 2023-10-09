@@ -1,4 +1,6 @@
-// (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,9 +20,6 @@
 // Target: abt (exe) -- Algo Build Tool (build system)
 // Exceptions: NO
 // Source: cpp/abt/opt.cpp -- Calculate compiler options
-//
-// Created By: ara.aslyan alexei.lebedev
-// Recent Changes: ara.aslyan alexei.lebedev
 //
 
 #include "include/abt.h"
