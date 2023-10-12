@@ -1,4 +1,5 @@
 dmmeta.fcast  field:acr.Queryop.value  expr:""  comment:""
+dmmeta.fcast  field:acr.ReadMode.read_mode  expr:""  comment:""
 dmmeta.fcast  field:acr_compl.Badness.badness  expr:""  comment:""
 dmmeta.fcast  field:algo.Bool.value  expr:""  comment:""
 dmmeta.fcast  field:algo.Comment.value  expr:""  comment:""

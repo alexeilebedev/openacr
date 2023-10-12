@@ -3601,6 +3601,52 @@ inline acr::FieldId::operator acr_FieldIdEnum () const {
 inline void acr::FieldId_Init(acr::FieldId& parent) {
     parent.value = i32(-1);
 }
+inline acr::ReadMode::ReadMode(u8                             in_read_mode)
+    : read_mode(in_read_mode)
+{
+}
+inline acr::ReadMode::ReadMode(acr_ReadModeEnum arg) { this->read_mode = u8(arg); }
+inline acr::ReadMode::ReadMode() {
+    acr::ReadMode_Init(*this);
+}
+
+
+// --- acr.ReadMode.read_mode.GetEnum
+// Get value of field as enum type
+inline acr_ReadModeEnum acr::read_mode_GetEnum(const acr::ReadMode& parent) {
+    return acr_ReadModeEnum(parent.read_mode);
+}
+
+// --- acr.ReadMode.read_mode.SetEnum
+// Set value of field from enum type.
+inline void acr::read_mode_SetEnum(acr::ReadMode& parent, acr_ReadModeEnum rhs) {
+    parent.read_mode = u8(rhs);
+}
+
+// --- acr.ReadMode.read_mode.Cast
+inline acr::ReadMode::operator acr_ReadModeEnum () const {
+    return acr_ReadModeEnum((*this).read_mode);
+}
+
+// --- acr.ReadMode..Cmp
+inline i32 acr::ReadMode_Cmp(acr::ReadMode & lhs, acr::ReadMode & rhs) {
+    i32 retval = 0;
+    retval = u8_Cmp(lhs.read_mode, rhs.read_mode);
+    return retval;
+}
+
+// --- acr.ReadMode..Init
+// Set all fields to initial values.
+inline void acr::ReadMode_Init(acr::ReadMode& parent) {
+    parent.read_mode = u8(0);
+}
+
+// --- acr.ReadMode..Eq
+inline bool acr::ReadMode_Eq(const acr::ReadMode & lhs,const acr::ReadMode & rhs) {
+    bool retval = true;
+    retval = u8_Eq(lhs.read_mode, rhs.read_mode);
+    return retval;
+}
 inline acr::TableId::TableId(i32                            in_value)
     : value(in_value)
 {

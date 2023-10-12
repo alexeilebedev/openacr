@@ -146,7 +146,6 @@ will go back to the default:
 
 ```
 inline-command: echo 'dev.t t:ggg' | acr -replace -write
-acr.update  dev.t  t:ggg  val:0   comment:""
 report.acr  ***
 ```
 
@@ -167,7 +166,6 @@ report.amc  ***
 
 ```
 inline-command: echo 'dev.t t:ggg val:3' | acr -replace -write
-acr.update  dev.t  t:ggg  val:3  val2:0   comment:""
 report.acr  ***
 ```
 
@@ -175,7 +173,6 @@ So far so good. Now let's use -merge:
 
 ```
 inline-command: echo 'dev.t t:ggg val2:4' | acr -merge -write
-acr.update  dev.t  t:ggg  val:3  val2:4  comment:""
 report.acr  ***
 ```
 
@@ -246,7 +243,6 @@ Let's update a few values with `acr -merge`:
 
 ```
 inline-command: echo 'dev.a a:a1 b:55' | acr -merge -write
-acr.update  dev.a  a:a1  b:55  comment:""
 report.acr  ***
 ```
 
@@ -829,36 +825,6 @@ option:
 ```
 inline-command: mkdir x; acr dmmeta.% | acr -in:x -insert -write -print:N
 report.acr  ***
-inline-command: sandbox acr -- mkdir x
-Sandbox   Size  Clean  Path                   Comment
-abt_md    N/A   Y      temp/sandbox.abt_md
-acr_ed    N/A   Y      temp/sandbox.acr_ed    sandbox for testing acr_ed changes
-amc       N/A   Y      temp/sandbox.amc       sandbox for running amc commands
-amc_gc    N/A   Y      temp/sandbox.amc_gc    sandbox for garbage collection tool
-atf_ci    N/A   Y      temp/sandbox.atf_ci    sandbox for CI testing
-atf_fuzz  N/A   Y      temp/sandbox.atf_fuzz  sandbox for fuzzing
-
-```
-
-All records have now been copied from `data` to `in`.
-As long as we specify the `-in` option, acr will read and write from the specified directory.
-
-### Using A File As A Data Set
-
-We can do the same thing with a file
-
-```
-inline-command: rm -r x; touch x; acr dmmeta.% | acr -in:x -insert -write -print:N
-report.acr  ***
-inline-command: sandbox acr -- rm -r x
-Sandbox   Size  Clean  Path                   Comment
-abt_md    N/A   Y      temp/sandbox.abt_md
-acr_ed    N/A   Y      temp/sandbox.acr_ed    sandbox for testing acr_ed changes
-amc       N/A   Y      temp/sandbox.amc       sandbox for running amc commands
-amc_gc    N/A   Y      temp/sandbox.amc_gc    sandbox for garbage collection tool
-atf_ci    N/A   Y      temp/sandbox.atf_ci    sandbox for CI testing
-atf_fuzz  N/A   Y      temp/sandbox.atf_fuzz  sandbox for fuzzing
-
 ```
 
 File `x` now contains ssim tuples, one per line, and it can be queried or edited
@@ -926,7 +892,6 @@ fields. Let's add a comment to the dev.C.c field:
 
 ```
 inline-command: echo 'dmmeta.field field:dev.C.c comment:"Name of the color (primary key)"' | acr -merge -write
-acr.update  dmmeta.field  field:dev.C.c  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:"Name of the color (primary key)"
 report.acr  ***
 ```
 

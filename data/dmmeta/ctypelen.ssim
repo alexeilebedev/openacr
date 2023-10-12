@@ -26,7 +26,7 @@ dmmeta.ctypelen  ctype:acr.FCdflt  len:660  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:acr.FCheck  len:40  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:acr.FCppfunc  len:354  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:acr.FCtype  len:424  alignment:8  padbytes:33
-dmmeta.ctypelen  ctype:acr.FDb  len:4272  alignment:8  padbytes:64
+dmmeta.ctypelen  ctype:acr.FDb  len:4280  alignment:8  padbytes:64
 dmmeta.ctypelen  ctype:acr.FErr  len:72  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:acr.FEvalattr  len:48  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:acr.FField  len:680  alignment:8  padbytes:10
@@ -49,6 +49,7 @@ dmmeta.ctypelen  ctype:acr.FUniqueattr  len:32  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:acr.FWrite  len:16  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:acr.PlineKey  len:16  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:acr.Queryop  len:1  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:acr.ReadMode  len:1  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:acr.RecSortkey  len:32  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:acr_compl.Badness  len:24  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:acr_compl.Completion  len:24  alignment:8  padbytes:7
@@ -664,7 +665,7 @@ dmmeta.ctypelen  ctype:atfdb.Unittest  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:bash2html.FDb  len:32  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:command.abt  len:480  alignment:8  padbytes:12
 dmmeta.ctypelen  ctype:command.abt_md  len:104  alignment:8  padbytes:0
-dmmeta.ctypelen  ctype:command.acr  len:192  alignment:8  padbytes:26
+dmmeta.ctypelen  ctype:command.acr  len:200  alignment:8  padbytes:33
 dmmeta.ctypelen  ctype:command.acr_compl  len:104  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:command.acr_ed  len:1408  alignment:8  padbytes:51
 dmmeta.ctypelen  ctype:command.acr_in  len:240  alignment:8  padbytes:12

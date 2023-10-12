@@ -71,6 +71,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_del           : ret = "del";  break;
         case command_FieldId_insert        : ret = "insert";  break;
         case command_FieldId_replace       : ret = "replace";  break;
+        case command_FieldId_update        : ret = "update";  break;
         case command_FieldId_merge         : ret = "merge";  break;
         case command_FieldId_unused        : ret = "unused";  break;
         case command_FieldId_trunc         : ret = "trunc";  break;
@@ -240,7 +241,6 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_selector      : ret = "selector";  break;
         case command_FieldId_fields        : ret = "fields";  break;
         case command_FieldId_accept        : ret = "accept";  break;
-        case command_FieldId_update        : ret = "update";  break;
         case command_FieldId_approve       : ret = "approve";  break;
         case command_FieldId_needs_work    : ret = "needs_work";  break;
         case command_FieldId_authdir       : ret = "authdir";  break;
@@ -2510,6 +2510,7 @@ bool command::acr_ReadFieldMaybe(command::acr &parent, algo::strptr field, algo:
         case command_FieldId_del: retval = bool_ReadStrptrMaybe(parent.del, strval); break;
         case command_FieldId_insert: retval = bool_ReadStrptrMaybe(parent.insert, strval); break;
         case command_FieldId_replace: retval = bool_ReadStrptrMaybe(parent.replace, strval); break;
+        case command_FieldId_update: retval = bool_ReadStrptrMaybe(parent.update, strval); break;
         case command_FieldId_merge: retval = bool_ReadStrptrMaybe(parent.merge, strval); break;
         case command_FieldId_unused: retval = bool_ReadStrptrMaybe(parent.unused, strval); break;
         case command_FieldId_trunc: retval = bool_ReadStrptrMaybe(parent.trunc, strval); break;
@@ -2574,6 +2575,7 @@ void command::acr_Init(command::acr& parent) {
     parent.del = bool(false);
     parent.insert = bool(false);
     parent.replace = bool(false);
+    parent.update = bool(false);
     parent.merge = bool(false);
     parent.unused = bool(false);
     parent.trunc = bool(false);
@@ -2662,6 +2664,12 @@ void command::acr_PrintArgv(command::acr & row, algo::cstring &str) {
         ch_RemoveAll(temp);
         bool_Print(row.replace, temp);
         str << " -replace:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.update == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.update, temp);
+        str << " -update:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.merge == false)) {
@@ -2893,7 +2901,12 @@ i32 command::acr_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_merge: { // bool: no argument required but value may be specified as replace:Y
+        case command_FieldId_update: { // bool: no argument required but value may be specified as replace:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_merge: { // bool: no argument required but value may be specified as update:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -5377,6 +5390,12 @@ int command::acr_Execv(command::acr_proc& parent) {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-replace:";
         bool_Print(parent.cmd.replace, *arg);
+    }
+
+    if (parent.cmd.update != false) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-update:";
+        bool_Print(parent.cmd.update, *arg);
     }
 
     if (parent.cmd.merge != false) {

@@ -1,3 +1,4 @@
+dmmeta.anonfld  field:acr.ReadMode.read_mode  comment:""
 dmmeta.anonfld  field:acr_compl.Badness.badness  comment:""
 dmmeta.anonfld  field:acr_compl.Shellqtype.type  comment:""
 dmmeta.anonfld  field:algo.Bool.value  comment:""

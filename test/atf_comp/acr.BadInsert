@@ -1,0 +1,3 @@
+# atf_comp -report:N -printinput acr.BadInsert | acr insert ns:ns% | cat
+acr: too many arguments. error at ns:ns%
+

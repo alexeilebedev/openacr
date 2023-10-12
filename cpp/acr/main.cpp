@@ -119,9 +119,6 @@ static void Main_RewriteOpts() {
         acr::_db.cmdline.print = false;
         acr::_db.cmdline.report = false;
     }
-    if (acr::_db.cmdline.merge) {
-        acr::_db.cmdline.replace=true;// merge implies replace
-    }
     if (acr::_db.cmdline.t) {
         acr::_db.cmdline.loose  = true;
         acr::_db.cmdline.pretty = true;

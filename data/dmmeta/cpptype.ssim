@@ -5,6 +5,7 @@ dmmeta.cpptype  ctype:SQLLEN  ctor:N  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:ShStream  ctor:N  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:acr.FEvalattr  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:acr.Queryop  ctor:Y  dtor:Y  cheap_copy:N
+dmmeta.cpptype  ctype:acr.ReadMode  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:acr_compl.Badness  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:acr_compl.Shellqtype  ctor:Y  dtor:Y  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.Attr  ctor:Y  dtor:Y  cheap_copy:N
