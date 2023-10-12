@@ -1,6 +1,9 @@
-// (C) AlgoEngineering LLC 2008-2012
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2012 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,14 +18,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
 // Source: cpp/amc/tary.cpp
-//
-// Created By: alexei.lebedev jeffrey.wang
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev jeffrey.wang hayk.mkrtchyan
 //
 
 #include "include/amc.h"
@@ -620,4 +618,27 @@ void amc::tfunc_Tary_curs() {
     Ins(&R, curs_access.ret  , "$Cpptype&", false);
     Ins(&R, curs_access.proto, "$Parname_$name_curs_Access($Parname_$name_curs &curs)", false);
     Ins(&R, curs_access.body, "return curs.elems[curs.index];");
+}
+
+void amc::tfunc_Tary_ReadStrptrMaybe() {
+    algo_lib::Replscope &R = amc::_db.genfield.R;
+    amc::FField &field = *amc::_db.genfield.p_field;
+    if (HasArgvReadQ(*field.p_ctype)) {
+        amc::FFunc& rd = amc::CreateCurFunc();
+        Ins(&R, rd.comment, "Convert string to field. Return success value");
+        Ins(&R, rd.ret  , "bool", false);
+        Ins(&R, rd.proto, "$name_ReadStrptrMaybe($Parent, algo::strptr in_str)", false);
+        Ins(&R, rd.body, "bool retval = true;");
+        if (field.arg == "char") {
+            Ins(&R, rd.body , "$name_AddAry($parname,in_str);");
+        } else if (field.arg == "u8") {
+            Ins(&R, rd.body , "$name_AddAry($parname,strptr_ToMemptr(in_str));");
+        } else {
+            Ins(&R, rd.body , "retval = $Cpptype_ReadStrptrMaybe($name_Alloc($parname), in_str);");
+        }
+        SetPresent(rd,Subst(R,"$parname"),field);
+        MaybeUnused(rd,Subst(R,"$parname"));
+        MaybeUnused(rd,"in_str");
+        Ins(&R, rd.body, "return retval;");
+    }
 }

@@ -1,5 +1,8 @@
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +17,6 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: acr_ed (exe) -- ACR Editor Set of useful recipes, uses acr, abt, git, and other tools
 // Exceptions: yes
 // Source: cpp/acr/ed/main.cpp
@@ -302,6 +304,8 @@ void acr_ed::Main() {
     algo_lib::FLockfile lockfile;
     LockFileInit(lockfile, "lock/acr_ed");
 
+    acr_ed::_db.script << "set -e" << eol;
+
     if (acr_ed::_db.cmdline.create) {
         Create();
     }
@@ -320,10 +324,13 @@ void acr_ed::Main() {
         Main_Vis();
     }
 
-    // BEGIN SANDBOX (if showcpp specified)
-
+    // BEGIN SANDBOX (if requested)
     if (acr_ed::_db.cmdline.sandbox) {
-        BeginSandbox();
+        command::sandbox_proc sandbox;
+        sandbox.cmd.name.expr = dev_Sandbox_sandbox_acr_ed;
+        sandbox.cmd.reset = true;
+        sandbox_ExecX(sandbox);
+        algo_lib::SandboxEnter(dev_Sandbox_sandbox_acr_ed);
         acr_ed::_db.cmdline.write = true;// !!! enable write mode from now on
         NeedAmc();
     }
@@ -333,13 +340,13 @@ void acr_ed::Main() {
     if (acr_ed::_db.cmdline.test) {
         BuildTest();
     }
-    ExitSandbox();
-    // not in sandbox anymore...
 
-    if (acr_ed::_db.cmdline.showcpp) {
-        SysCmd("("
-               "diff -I signature -U 8 -r ./cpp/gen temp/acr_ed/cpp/gen; "
-               "diff -I signature -U 8 -r ./include/gen temp/acr_ed/include/gen"
-               ") | hilite -d | limit-output 10000", FailokQ(true));
+    // END SANDBOX (if requested)
+    if (acr_ed::_db.cmdline.sandbox) {
+        algo_lib::SandboxExit();
+        command::sandbox_proc sandbox;
+        sandbox.cmd.name.expr = dev_Sandbox_sandbox_acr_ed;
+        sandbox.cmd.diff = true;
+        sandbox_ExecX(sandbox);
     }
 }

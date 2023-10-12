@@ -1,6 +1,9 @@
-// (C) AlgoEngineering LLC 2008-2012
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2012 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,14 +18,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: atf_unit (exe) -- Unit tests (see unittest table)
 // Exceptions: yes
 // Header: include/atf_unit.h
-//
-// Created By: alexei.lebedev
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #pragma once
@@ -137,6 +135,7 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_lib_FmtBufDec();
     // void unittest_algo_lib_CaseConversion();
     // void unittest_algo_FileFlags();
+    // void unittest_algo_Base64();
 
     // -------------------------------------------------------------------
     // cpp/atf/unit/algo_lib.cpp
@@ -144,11 +143,6 @@ namespace atf_unit { // update-hdr
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_algo_lib_PopCnt1();
     // void unittest_algo_lib_PopCnt2();
-    // void unittest_algo_lib_TestBitSet();
-    // void unittest_algo_lib_TestFbitset();
-    // void unittest_algo_lib_TestFbitset2();
-    // void unittest_algo_lib_TestFbitset3();
-    // void unittest_algo_lib_TestFbitset4();
     // void unittest_algo_lib_DoTestRounding();
 
     // CPU should only use the lower 5 bits for shifting
@@ -433,6 +427,8 @@ namespace atf_unit { // update-hdr
     void PrintPerfSample(const strptr& action, u64 nloops, u64 clocks);
     void Testcmp(const char *file, int line, strptr value, strptr expect, bool eq);
     void Testcmp(const char *file, int line, const char *value, const char *expect, bool eq);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void unittest_atf_unit_Outfile();
     void Main();
 
     // -------------------------------------------------------------------
@@ -463,6 +459,7 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_lib_StringFind();
     // void unittest_algo_lib_StringCase();
     // void unittest_algo_lib_Tabulate();
+    // void unittest_algo_lib_StringSepCurs();
 
     // -------------------------------------------------------------------
     // cpp/atf/unit/time.cpp
@@ -480,9 +477,6 @@ namespace atf_unit { // update-hdr
     // cpp/atf/unit/tuple.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void unittest_algo_lib_Argtuple_ReadArgv();
-    // void unittest_algo_lib_Argtuple_ReadStrptr();
-    // void unittest_algo_lib_Argtuple2();
     // void unittest_algo_lib_Tuple1();
     // void unittest_algo_lib_Tuple2();
 

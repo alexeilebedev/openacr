@@ -1,5 +1,8 @@
-// (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,13 +17,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: acr_ed (exe) -- ACR Editor Set of useful recipes, uses acr, abt, git, and other tools
 // Exceptions: yes
 // Source: cpp/acr/ed/target.cpp -- Create, delete, rename target
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/acr_ed.h"
@@ -62,6 +61,7 @@ void acr_ed::Main_CreateTarget() {
     // namespace
     acr_ed::_db.out_ssim<< dmmeta::Ns(acr_ed::_db.cmdline.target
                                       , acr_ed::_db.cmdline.nstype
+                                      , dev_License_license_GPL
                                       , algo::Comment(acr_ed::_db.cmdline.comment)) << eol;
 
     if (is_protocol) {
@@ -81,10 +81,14 @@ void acr_ed::Main_CreateTarget() {
     if (is_exe) {
         acr_ed::_db.out_ssim<<dmmeta::Main(acr_ed::_db.cmdline.target, false/*ismodule*/)<<eol;
     }
+    // generate C++ code
+    acr_ed::_db.out_ssim<< dmmeta::Nscpp(acr_ed::_db.cmdline.target, algo::Comment()) << eol;
 
     // tuples for abt to build this executable
     if (is_exe || is_lib || is_protocol) {
-        Ins(&R, acr_ed::_db.out_ssim, "dev.target  target:$target");
+        dev::Target target;
+        target.target="$target";
+        Ins(&R, acr_ed::_db.out_ssim, tempstr()<<target);
     }
     if (is_exe || is_lib) {
         Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:$targdir/$target.cpp  comment:''");
@@ -117,15 +121,46 @@ void acr_ed::Main_CreateTarget() {
     }
 
     if (is_exe) {
-        Ins(&R, acr_ed::_db.out_ssim, "dmmeta.ctype  ctype:command.$target  comment:''");
-        Ins(&R, acr_ed::_db.out_ssim, "dmmeta.cfmt  cfmt:command.$target.Argv  printfmt:Tuple  print:Y  read:Y  sep:''  genop:N  comment:''");
-        Ins(&R, acr_ed::_db.out_ssim, "dmmeta.field  field:$target.FDb.cmdline  arg:command.$target  reftype:Val  dflt:''  comment:''  ");
-        Ins(&R, acr_ed::_db.out_ssim, "dmmeta.fcmdline  field:$target.FDb.cmdline  read:Y  comment:''");
-        Ins(&R, acr_ed::_db.out_ssim, "dmmeta.field  field:command.$target.in  arg:algo.cstring  reftype:Val  dflt:'\"data\"'  comment:'Input directory or filename, - for stdin'");
-        Ins(&R, acr_ed::_db.out_ssim, "dmmeta.floadtuples  field:command.$target.in  comment:''");
+        dmmeta::Ctype ctype;
+        ctype.ctype = "command.$target";
+        Ins(&R, acr_ed::_db.out_ssim, tempstr() << ctype);
+
+        dmmeta::Cfmt cfmt;
+        cfmt.cfmt = "command.$target.Argv";
+        cfmt.printfmt = "Tuple";
+        cfmt.print = true;
+        cfmt.read = true;
+        cfmt.genop = true;
+        Ins(&R, acr_ed::_db.out_ssim, tempstr() << cfmt);
+
+        dmmeta::Field field;
+        field.field = "$target.FDb.cmdline";
+        field.arg = ctype.ctype;
+        field.reftype = dmmeta_Reftype_reftype_Val;
+        Ins(&R, acr_ed::_db.out_ssim, tempstr() << field);
+
+        dmmeta::Fcmdline fcmdline;
+        fcmdline.field=field.field;
+        fcmdline.basecmdline="algo_lib.FDb.cmdline";
+        fcmdline.read=true;
+        Ins(&R, acr_ed::_db.out_ssim, tempstr() << fcmdline);
+
+        dmmeta::Field in;
+        in.field="command.$target.in";
+        in.arg="algo.cstring";
+        in.reftype=dmmeta_Reftype_reftype_Val;
+        in.dflt.value = "\"data\"";
+        in.comment.value = "Input directory or filename, - for stdin";
+        Ins(&R, acr_ed::_db.out_ssim, tempstr() << in);
+
+        dmmeta::Floadtuples floadtuples;
+        floadtuples.field=in.field;
+        Ins(&R, acr_ed::_db.out_ssim, tempstr() << floadtuples);
     }
     if (is_ssimdb) {
-        Ins(&R, acr_ed::_db.out_ssim, "dmmeta.nsdb  ns:$target  comment:''");
+        dmmeta::Nsdb nsdb;
+        nsdb.ns="$target";
+        Ins(&R, acr_ed::_db.out_ssim, tempstr()<<nsdb);
     }
     if (is_exe || is_lib) {
         // sample header
@@ -174,8 +209,8 @@ void acr_ed::Main_CreateTarget() {
     Ins(&R, acr_ed::_db.script,"bin/src_hdr -targsrc:$target/% -write");
     if (is_exe || is_lib) {
         Ins(&R, acr_ed::_db.script,"bin/update-hdr");
-        Ins(&R, acr_ed::_db.script,"bin/abt -install $target");
     }
+    Ins(&R, acr_ed::_db.script, "echo 'please execute $(acr_compl -install) to add completions support for new target'");
 }
 
 // -----------------------------------------------------------------------------
@@ -201,7 +236,6 @@ void acr_ed::Main_RenameTarget() {
 
     Ins(&R, acr_ed::_db.script, "bin/acr ctype:command.$oldtarg -rename command.$newtarg  -write -report:N");
     Ins(&R, acr_ed::_db.script, "bin/acr ctype:report.$oldtarg -rename report.$newtarg  -write -report:N");
-    Ins(&R, acr_ed::_db.script, "bin/acr target:$oldtarg -rename $newtarg -write -report:N");
     Ins(&R, acr_ed::_db.script, "bin/acr ns:$oldtarg -rename $newtarg -write -report:N");
 
     Ins(&R, acr_ed::_db.script, "# rename targsrc records");
@@ -214,6 +248,7 @@ void acr_ed::Main_RenameTarget() {
     Ins(&R, acr_ed::_db.script, "git mv -f include/gen/$oldtarg_gen.inl.h include/gen/$newtarg_gen.inl.h");
     Ins(&R, acr_ed::_db.script, "git mv -f cpp/gen/$oldtarg_gen.cpp cpp/gen/$newtarg_gen.cpp");
     Ins(&R, acr_ed::_db.script, "git mv -f $oldfname.cpp $newfname.cpp");
+    Ins(&R, acr_ed::_db.script, "git mv -f include/$oldfname.h include/$newfname.h");// rename header
 
     if (ns->nstype == dmmeta_Nstype_nstype_exe) {
         Ins(&R, acr_ed::_db.script, "# move soft link");
@@ -222,12 +257,14 @@ void acr_ed::Main_RenameTarget() {
     }
     Ins(&R, acr_ed::_db.script, "# update remaining gitfile records");
     Ins(&R, acr_ed::_db.script, "bin/update-gitfile");
+    Ins(&R, acr_ed::_db.script, "bin/update-hdr");// update header contents
     acr_ed::NeedAmc();
     Ins(&R, acr_ed::_db.script, "# renaming of $oldtarg -> $newtarg complete");
     Ins(&R, acr_ed::_db.script, "# please edit $newfname.cpp manually");
     Ins(&R, acr_ed::_db.script, "# If you are sure that no corruption will result, you can run");
     Ins(&R, acr_ed::_db.script, "# ");
     Ins(&R, acr_ed::_db.script, "#     sed -i s/$oldtarg::/$newtarg::/g $newfname.cpp");
+    Ins(&R, acr_ed::_db.script, "echo 'please execute $(acr_compl -install) to update completions support for renamed target'");
 }
 
 // -----------------------------------------------------------------------------
@@ -250,5 +287,6 @@ void acr_ed::Main_DeleteTarget() {
     Ins(&R, acr_ed::_db.script, "git rm -f bin/$target");
     Ins(&R, acr_ed::_db.script, "bin/update-gitfile");
     Ins(&R, acr_ed::_db.script, "bin/src_hdr -write");
+    Ins(&R, acr_ed::_db.script, "echo 'please execute $(acr_compl -install) to remove completions support for deleted target'");
     acr_ed::NeedAmc();
 }

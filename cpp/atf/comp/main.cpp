@@ -1,3 +1,19 @@
+// Copyright (C) 2023 Astra
+// Copyright (C) 2023 AlgoRND
+//
+// License: GPL
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Target: atf_comp (exe)
 // Exceptions: yes
@@ -155,7 +171,7 @@ void atf_comp::Comptest_Start(atf_comp::FComptest &comptest) {
     // compute command line
     SetupCmdline(comptest);
     tempstr out;
-    out << "# atf_comp -report:N -print "<<comptest.comptest
+    out << "# atf_comp -report:N -printinput "<<comptest.comptest
         << " | " <<target_Get(comptest);
     if (comptest.c_targs) {
         out <<" " <<comptest.c_targs->args;
@@ -352,16 +368,18 @@ void atf_comp::Main_SetupSigchild() {
 
 // Print selected comptests using a format compatible with Main_Read
 // to string OUT.
-void atf_comp::Main_Print(cstring &out, bool show_output) {
+void atf_comp::Main_Print(cstring &out, bool show_output, bool show_testcase) {
     ind_beg(_db_zd_sel_comptest_curs,comptest,_db) {
-        out << "comptest " << comptest.comptest;
-        if (comptest.c_targs) {
-            out <<" " <<comptest.c_targs->args;
+        if (show_testcase) {
+            out << "comptest " << comptest.comptest;
+            if (comptest.c_targs) {
+                out <<" " <<comptest.c_targs->args;
+            }
+            if (comptest.c_tfilt && ch_N(comptest.c_tfilt->filter)) {
+                out << " | " << comptest.c_tfilt->filter;
+            }
+            out << eol;
         }
-        if (comptest.c_tfilt && ch_N(comptest.c_tfilt->filter)) {
-            out << " | " << comptest.c_tfilt->filter;
-        }
-        out << eol;
         ind_beg(comptest_zd_tmsg_curs,tmsg,comptest) {
             if (dir_Get(tmsg) == atfdb_Msgdir_msgdir_in) {
                 out << tmsg.msg << eol;
@@ -485,10 +503,10 @@ void atf_comp::Main_Debug() {
         command::mdbg_proc mdbg;
         mdbg.cmd.target = target_Get(comptest);
         if (comptest.c_targs) {
-            mdbg.cmd.args <<" " <<comptest.c_targs->args;
+            args_Alloc(mdbg.cmd) <<" " <<comptest.c_targs->args;
         }
-        mdbg.cmd.args << " <"<<comptest.file_test_in;
-        mdbg.cmd.b = _db.cmdline.b;
+        args_Alloc(mdbg.cmd) << " <"<<comptest.file_test_in;
+        b_Alloc(mdbg.cmd) = _db.cmdline.b;
         int rc=mdbg_Exec(mdbg);
         algo_lib::_db.exit_code=rc;
         if (atf_comp::zd_sel_comptest_N()>1) {
@@ -524,7 +542,7 @@ void atf_comp::Main_RewriteCmdline() {
         _db.cmdline.build=true;
         _db.cmdline.cfg=dev_Cfg_cfg_coverage;
     }
-    if (_db.cmdline.normalize || _db.cmdline.print || _db.cmdline.mdbg) {
+    if (_db.cmdline.normalize || _db.cmdline.print || _db.cmdline.printinput|| _db.cmdline.mdbg) {
         _db.cmdline.e=false; // doesn't make sense
         _db.cmdline.run = false;
     }
@@ -572,9 +590,9 @@ void atf_comp::Main() {
     Main_Select();
     if (_db.cmdline.normalize) {
         Main_Normalize();
-    } else if (_db.cmdline.print) {
+    } else if (_db.cmdline.print || _db.cmdline.printinput) {
         cstring out;
-        Main_Print(out,algo_lib::_db.cmdline.verbose);
+        Main_Print(out,algo_lib::_db.cmdline.verbose && _db.cmdline.print,_db.cmdline.print);
         prlog(out);
     } else if (_db.cmdline.mdbg) {
         Main_Debug();

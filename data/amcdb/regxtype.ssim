@@ -1,0 +1,4 @@
+amcdb.regxtype  regxtype:""  comment:"The internal format"
+amcdb.regxtype  regxtype:Acr  comment:""
+amcdb.regxtype  regxtype:Shell  comment:""
+amcdb.regxtype  regxtype:Sql  comment:"SQL Regex"

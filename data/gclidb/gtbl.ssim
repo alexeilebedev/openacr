@@ -1,0 +1,11 @@
+gclidb.gtbl  gtbl:gitconfig  comment:"git remote configuration"
+gclidb.gtbl  gtbl:help  comment:"this help screen"
+gclidb.gtbl  gtbl:issue  comment:"issues in github/gitlab"
+gclidb.gtbl  gtbl:issuenote  comment:"issues notes/comments"
+gclidb.gtbl  gtbl:milestone  comment:"milestone in github/gitlab"
+gclidb.gtbl  gtbl:mr  comment:"merge requests/pulls in github/gitlab"
+gclidb.gtbl  gtbl:mrjob  comment:'lists CI jobs triggered by mr, shows jobs "trace"'
+gclidb.gtbl  gtbl:mrnote  comment:"mr notes/comments"
+gclidb.gtbl  gtbl:repo  comment:"repositories configured locally in github/gitlab"
+gclidb.gtbl  gtbl:reporemote  comment:"repositories in github/gitlab visible for access tokens"
+gclidb.gtbl  gtbl:user  comment:"users in github/gitlab"

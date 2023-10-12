@@ -1,0 +1,2 @@
+gclidb.gtype  gtype:ghp  default_url:https://api.github.com  comment:"github type token key"
+gclidb.gtype  gtype:glpat  default_url:""  comment:"gitlab type token key"

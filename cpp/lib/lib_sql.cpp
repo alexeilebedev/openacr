@@ -1,5 +1,8 @@
-// (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,13 +17,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: lib_sql (lib) -- SQL formatting functions
 // Exceptions: yes
 // Source: cpp/lib/lib_sql.cpp
-//
-// Created By: ara.aslyan alexei.lebedev
-// Recent Changes: ara.aslyan alexei.lebedev
 //
 
 #include "include/algo.h"

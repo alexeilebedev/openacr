@@ -1,6 +1,9 @@
-// (C) AlgoEngineering LLC 2008-2013
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2013 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,14 +18,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: acr (exe) -- Algo Cross-Reference - ssimfile database & update tool
 // Exceptions: NO
 // Header: include/acr.h
-//
-// Created By: alexei.lebedev
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 // ACR: Algo Cross-Reference
 // ACR Interface
@@ -53,9 +51,12 @@ namespace acr { // update-hdr
     //
     acr::FRec* ReadTuple(Tuple &tuple, acr::FFile &file, bool insert);
 
-    // TUPLE: input tuple
-    // CTYPE: associated type, as found via the type tag
-    // ATTR: pkey attr
+    // Create a new record from tuple TUPLE, having primary key PKEY_ATTR and type
+    // CTYPE (as found via the type tag).
+    // if INSERT is specified, the record inserted. Otherwise, it's deleted
+    // This function checks CMDLINE.REPLACE flag to see if the record is allowed
+    // to replace an existing record; if CMDLINE.MERGE is specified, attributes are merged
+    // into an existing record if one exists
     acr::FRec *CreateRec(acr::FFile &file, acr::FCtype *ctype, algo::Tuple &tuple, algo::Attr *pkey_attr, bool insert);
 
     // -------------------------------------------------------------------
@@ -142,13 +143,24 @@ namespace acr { // update-hdr
     // -------------------------------------------------------------------
     // cpp/acr/select.cpp -- Selection
     //
+
+    // Remove record from the per-ctype selected set
+    // Remove record from global selected set
+    // If the record was the last selected record for its ctype,
+    // remove its ctype from the selected list
     void Rec_Deselect(acr::FRec& rec);
 
     // De-select all records
+    // - zd_all_selrec list is cleared
+    // - zd_selrec list is cleared for each ctype
+    // - zd_sel_ctype list is cleared
     void Rec_DeselectAll();
 
     // Select all records from all files
     void Rec_SelectAll();
+
+    // Select all records that were modified
+    void Rec_SelectModified();
 
     // Conditionally insert record into selection set
     // - Record is added to zd_selrec list for is ctype
@@ -171,10 +183,13 @@ namespace acr { // update-hdr
     // Print fields in a column
     void Main_Regxof();
     void Main_Mysql();
-    void Main_Browser();
+
+    // Add ctype and its transitive closure to the list of selected records
+    // This produces a new query but doesn't run it
+    void ScheduleSelectCtype(acr::FCtype &ctype_ctype, acr::FCtype &ctype);
 
     // Select ctypes of selected records, deselect records themselves
-    void Main_SelectMeta();
+    void SelectMeta();
     void Main_AcrEdit();
 
     // -------------------------------------------------------------------

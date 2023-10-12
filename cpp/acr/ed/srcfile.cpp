@@ -1,5 +1,8 @@
-// (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,13 +17,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: acr_ed (exe) -- ACR Editor Set of useful recipes, uses acr, abt, git, and other tools
 // Exceptions: yes
 // Source: cpp/acr/ed/srcfile.cpp -- Create, delete, rename source file
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/acr_ed.h"
@@ -88,8 +87,11 @@ void acr_ed::Main_CreateSrcfile() {
         acr_ed::_db.out_ssim << dev::Targsrc(targsrc,algo::Comment(acr_ed::_db.cmdline.comment))<<eol;
     }
     if (readme) {
-        bool inl=false;
-        acr_ed::_db.out_ssim << dev::Readme(acr_ed::_db.cmdline.srcfile,inl,algo::Comment(acr_ed::_db.cmdline.comment))<<eol;
+        dev::Readme r;
+        r.inl=false;
+        r.gitfile = acr_ed::_db.cmdline.srcfile;
+        r.comment.value = acr_ed::_db.cmdline.comment;
+        acr_ed::_db.out_ssim << r << eol;
     }
 
     // create source file, insert some content

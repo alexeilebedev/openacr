@@ -7,7 +7,7 @@ Readme files can be in-line or included via a link. This is configured by the `i
 
 ```
 inline-command: acr readme | head -1
-dev.readme  gitfile:txt/about.md                   inl:Y  comment:""
+dev.readme  gitfile:txt/about.md                   inl:Y  sandbox:N  filter:""               comment:""
 ```
 
 The top-level README.md file is created with `make readme` or, in reality, `atf_ci readme`.

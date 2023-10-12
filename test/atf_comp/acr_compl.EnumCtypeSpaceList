@@ -1,0 +1,14 @@
+# atf_comp -report:N -printinput acr_compl.EnumCtypeSpaceList | acr_compl -line:"atf_cmdline -cconst " -type:63 | cat
+January
+February
+March
+May
+July
+November
+October
+June
+April
+None
+September
+August
+December

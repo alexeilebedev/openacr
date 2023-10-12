@@ -1,0 +1,3 @@
+# atf_comp -report:N -printinput acr_compl.Acr01 | acr_compl -line:"acr " | test/acr_compl_filt.bash
+-query:amcdb.bltin:
+-query:gclidb.label:

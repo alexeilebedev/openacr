@@ -1,6 +1,9 @@
-// (C) AlgoEngineering LLC 2008-2013
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2013 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,14 +18,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: acr (exe) -- Algo Cross-Reference - ssimfile database & update tool
 // Exceptions: NO
 // Source: cpp/acr/print.cpp
-//
-// Created By: alexei.lebedev
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 // Print records in normalized order.
 // Absent of any dependencies between record keys, print records
@@ -63,12 +61,24 @@ static void SetDepth(acr::PlineKey &key, int depth) {
 
 // Show comment for specified ctype (only one)
 static void PrintCtypeComments1(acr::FPrint &, algo_lib::FTxttbl &txttbl, acr::FCtype &ctype) {
-    if (!ctype.cmt_printed && ch_N(ctype.comment.value) > 0) {
-        ctype.cmt_printed = true;
+    if (bool_Update(ctype.cmt_printed,true) && ch_N(ctype.comment)) {
         AddRow(txttbl);
         AddCell(txttbl) << ctype.ctype;
         AddCell(txttbl) << ctype.comment;
     }
+}
+
+static void PrintSampleTuple(acr::FCtype &ctype, cstring &out) {
+    out << "# e.g. ";
+    if (ctype.c_ssimfile) {
+        out << ctype.c_ssimfile->ssimfile;
+    } else {
+        out << ctype.ctype;
+    }
+    ind_beg(acr::ctype_c_field_curs, field, ctype) if (!field.c_substr) {
+        out << Keyval(name_Get(field),"");
+    }ind_end;
+    out << eol;
 }
 
 // Show comments for all ctypes
@@ -78,27 +88,38 @@ static void PrintCtypeComments(acr::FPrint &print) {
     AddRow(txttbl);
     AddCol(txttbl, "Ctype");
     AddCol(txttbl, "Comment");
-    ind_beg(acr::_db_zd_all_selrec_curs, rec,acr::_db) {
-        rec.p_ctype->cmt_printed = false;
+    ind_beg(acr::_db_ctype_curs, ctype, acr::_db) {
+        ctype.cmt_printed=false;
     }ind_end;
-
-    ind_beg(acr::_db_zd_all_selrec_curs, rec,acr::_db) {
-        acr::FCtype &ctype = *rec.p_ctype;
-        if (!ctype.cmt_printed) {
-            PrintCtypeComments1(print,txttbl,ctype);
-            // recurse one level down -- print comments for fields' args.
-            ind_beg(acr::ctype_c_field_curs, field, ctype) {
-                PrintCtypeComments1(print, txttbl, *field.p_arg);
-            }ind_end;
+    ind_beg(acr::_db_zd_all_selrec_curs, rec, acr::_db) {
+        acr::FCtype &ctype=*rec.p_ctype;
+        PrintCtypeComments1(print,txttbl,ctype);
+        // recurse one level down -- print comments for fields' args.
+        ind_beg(acr::ctype_c_field_curs, field, ctype) {
+            PrintCtypeComments1(print, txttbl, *field.p_arg);
+        }ind_end;
+    }ind_end;
+    tempstr out;
+    FTxttbl_Print(txttbl,out);
+    int nline=0;
+    ind_beg(Line_curs,lineiter,out) {
+        print.out << "# "<<lineiter << eol;
+        nline++;
+    }ind_end;
+    if (nline) {
+        print.out<<eol;
+    }
+    int nsample=0;
+    // show sample tuples for any ctype for which it makes
+    // sense for the user to type in a tuple
+    ind_beg(acr::_db_zd_sel_ctype_curs, ctype, acr::_db) {
+        if (!zd_selrec_EmptyQ(ctype) || acr::zd_all_selrec_EmptyQ()) {
+            PrintSampleTuple(ctype,print.out);
+            nsample++;
         }
     }ind_end;
-    if (c_txtrow_N(txttbl) > 1) {
-        tempstr out;
-        FTxttbl_Print(txttbl,out);
-        ind_beg(Line_curs,lineiter,out) {
-            print.out << "# "<<lineiter << eol;
-        }ind_end;
-        print.out << eol; // skip a line
+    if (nsample) {
+        print.out << eol;
     }
 }
 
@@ -113,13 +134,12 @@ static void PrintFieldComments(acr::FPrint &print) {
     AddCol(txttbl, "Arg");
     AddCol(txttbl, "Reftype");
     AddCol(txttbl, "Comment");
-    ind_beg(acr::_db_zd_all_selrec_curs, rec,acr::_db) {
-        rec.p_ctype->cmt_printed = false;
+    ind_beg(acr::_db_ctype_curs, ctype, acr::_db) {
+        ctype.cmt_printed=false;
     }ind_end;
     ind_beg(acr::_db_zd_all_selrec_curs, rec,acr::_db) {
-        acr::FCtype &ctype = *rec.p_ctype;
-        if (!ctype.cmt_printed) {
-            ctype.cmt_printed = true;
+        acr::FCtype &ctype=*rec.p_ctype;
+        if (bool_Update(ctype.cmt_printed,true)) {
             ind_beg(acr::ctype_c_field_curs, field, ctype) if (ch_N(field.comment.value) > 0) {
                 AddRow(txttbl);
                 AddCell(txttbl) << field.field;

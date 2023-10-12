@@ -1,5 +1,8 @@
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,14 +17,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: algo_lib (lib) -- Support library for all executables
 // Exceptions: NO
 // Source: cpp/lib/algo/file.cpp -- File functions
-//
-// Created By: alexei.lebedev
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev luke.huang
 //
 // AL: used sendfile() here previously, but don't like the random
 // failures; using read/write instead.

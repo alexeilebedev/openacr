@@ -1,6 +1,9 @@
-// (C) AlgoEngineering LLC 2008-2013
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2013 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,14 +18,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
 // Source: cpp/amc/main.cpp -- Main driver
-//
-// Created By: alexei.lebedev alexey.polovinkin
-// Authors: alexei.lebedev alexey.polovinkin
-// Recent Changes: alexei.lebedev hayk.mkrtchyan
 //
 // Algo Model Compiler (AMC)
 // TODO: $ errlist 'cd ~/proj/.testgen && (cd ../ && abt amc && dflt.debug-x86_64/amc -out_dir .testgen) && abt -install %'
@@ -386,7 +384,7 @@ void amc::memptr_PrintOctetsHexArray(algo::memptr ary, cstring &out, bool caps) 
 }
 
 bool amc::FldfuncQ(amc::FField &field) {
-    return field.c_cppfunc || field.c_substr;
+    return field.c_cppfunc || field.c_substr || field.c_falias;
 }
 
 bool amc::CanCopyQ(amc::FCtype &ctype) {
@@ -574,30 +572,26 @@ bool amc::ValQ(amc::FField &field) {
 
 // -----------------------------------------------------------------------------
 
-bool amc::NeedCopyQ(amc::FField &field) {
-    bool retval = ValQ(field);
-    retval &= !field.c_substr;
-    retval &= !field.c_cppfunc;
-    retval &= !GetLenfld(field); // do not copy length
-    retval &= !field.c_typefld; // do not copy length
-    return retval;
+bool amc::ComputedFieldQ(amc::FField &field) {
+    return field.c_typefld || GetLenfld(field);
 }
 
 // -----------------------------------------------------------------------------
 
+// Evaluate value of SSIM attribute as described by field FIELD
+// given tuple TUPLE
 tempstr amc::EvalAttr(Tuple &tuple, amc::FField &field) {
     tempstr ret;
-    if (FldfuncQ(field)) {
-        amc::FSubstr *substr = field.c_substr;
-        if (substr) {
-            tempstr val(attr_GetString(tuple, StripNs("",substr->srcfield)));
-            ret = Pathcomp(val, substr->expr.value);// ((a=Pathcomp(a,expr) would be an error)
-        }
+    if (amc::FSubstr *substr = field.c_substr) {
+        tempstr val(attr_GetString(tuple, name_Get(*substr->p_srcfield)));
+        ret = Pathcomp(val, substr->expr.value);// ((a=Pathcomp(a,expr) would be an error)
     } else {
         ret = attr_GetString(tuple, name_Get(field));
     }
     return ret;
 }
+
+// -----------------------------------------------------------------------------
 
 i32 amc::WidthMin(amc::FField &field) {
     i32 ret;
@@ -764,8 +758,11 @@ tempstr amc::LengthExpr(amc::FCtype &ctype, strptr name) {
     return ret;
 }
 
+// -----------------------------------------------------------------------------
+
 // Return C++ expression string assigning value VALUE to field FIELD
 // given parent reference PARNAME.
+// If NEEDS_CAST is set, a cast is added to the target type
 tempstr amc::AssignExpr(amc::FField &field, strptr parname, strptr value, bool needs_cast) {
     tempstr ret;
     tempstr value_expr;
@@ -776,7 +773,8 @@ tempstr amc::AssignExpr(amc::FField &field, strptr parname, strptr value, bool n
     } else {
         value_expr << value;
     }
-    if (field.c_fbigend || FldfuncQ(field) || field.c_bitfld ) {
+    bool has_set = amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Set"));
+    if (has_set || field.c_fbigend || FldfuncQ(field) || field.c_bitfld ) {
         ret << name_Get(field)<<"_Set("<<parname<<", "<<value_expr<<")";
     } else {
         if (elems_N(parname)>0 && parname[0] == '*') {
@@ -853,6 +851,15 @@ bool amc::HasReadQ(amc::FCtype &ctype) {// check if ctype has a string read func
     return false;
 }
 
+bool amc::HasArgvReadQ(amc::FCtype &ctype) {// check if ctype has an argv read function
+    ind_beg(amc::ctype_zs_cfmt_curs, cfmt, ctype) {
+        if (cfmt.read && strfmt_Get(cfmt) == dmmeta_Strfmt_strfmt_Argv) {
+            return true;
+        }
+    }ind_end;
+    return false;
+}
+
 // Set IDENT to sanitized version of FROM
 // if FROM is a known c++ keyword, prepend '_' to it.
 // If FROM is an empty string, use "_default"
@@ -893,9 +900,13 @@ tempstr amc::NsTo_(strptr ident) {
     return ret;
 }
 
-//
-// return base class of ctype (type of first anonymous field, if any)
-//
+// Return TRUE if the type is relational (ctype is in a ssimdb namespace)
+bool amc::RelationalQ(amc::FCtype &ctype) {
+    return GetBaseType(ctype,&ctype)->p_ns->nstype == dmmeta_Nstype_nstype_ssimdb;
+}
+
+// Return base class of ctype, DFLT if it doesn't have a base
+// Base is found by locating a field of reftype Base.
 amc::FCtype *amc::GetBaseType(amc::FCtype &ctype, amc::FCtype *dflt) {
     amc::FCtype *retval = dflt;
     ind_beg(amc::ctype_c_field_curs,field,ctype) if (field.reftype == dmmeta_Reftype_reftype_Base) {

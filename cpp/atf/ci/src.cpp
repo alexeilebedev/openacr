@@ -1,5 +1,8 @@
-// (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,13 +17,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: atf_ci (exe) -- Normalization tests (see citest table)
 // Exceptions: yes
 // Source: cpp/atf/ci/src.cpp -- source file (cpp/, include/) normalizations including amc
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/atf_ci.h"
@@ -78,8 +77,8 @@ void atf_ci::citest_indent_script() {
 
 // -----------------------------------------------------------------------------
 
-// update copyright info in source files
-void atf_ci::citest_copyright() {
+// update file headers
+void atf_ci::citest_file_header() {
     command::src_hdr src_hdr;
     src_hdr.write=true;
     SysCmd(src_hdr_ToCmdline(src_hdr),FailokQ(false));
@@ -191,5 +190,16 @@ void atf_ci::citest_iffy_src() {
     if (output != "") {
         prlog(output);
         vrfy(0,"Please fix above instances of iffy code and retry");
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+void atf_ci::citest_non_copyrighted() {
+    cstring output(Trimmed(SysEval(dev_scriptfile_bin_find_non_copyrighted,FailokQ(false),1024*1024)));
+    if (output != "") {
+        prlog(output);
+        vrfy(0,"Each C++ file, and each non-trivial script file shall be copyrighted."
+             " Put copyright notice to above files.");
     }
 }

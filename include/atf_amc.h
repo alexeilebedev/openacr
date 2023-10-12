@@ -1,5 +1,8 @@
-// (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,13 +17,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: atf_amc (exe) -- Unit tests for amc (see amctest table)
 // Exceptions: NO
 // Header: include/atf_amc.h
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/algo.h"
@@ -83,6 +82,17 @@ namespace atf_amc { // update-hdr
     // void amctest_BitfldNet();
     // void amctest_BitfldTuple();
     // void amctest_BitfldBitset();
+
+    // -------------------------------------------------------------------
+    // cpp/atf/amc/bitset.cpp
+    //
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void amctest_BitsetTary64();
+    // void amctest_BitsetInlary16();
+    // void amctest_BitsetVal8();
+    // void amctest_BitsetVal64();
+    // void amctest_BitsetVal128();
+    // void amctest_BitsetBitcurs();
 
     // -------------------------------------------------------------------
     // cpp/atf/amc/cascdel.cpp
@@ -554,6 +564,20 @@ namespace atf_amc { // update-hdr
     // void amctest_TaryInit3();
     // void amctest_TaryInit4();
     // void amctest_TaryReserve();
+
+    // -------------------------------------------------------------------
+    // cpp/atf/amc/thash.cpp
+    //
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void amctest_ThashEmpty();
+    // void amctest_ThashInsertMaybe();
+    // void amctest_ThashRemove();
+    // void amctest_ThashFindRemove();
+    // void amctest_ThashGetOrCreate();
+    // void amctest_ThashXref();
+
+    // THASH DLL
+    // void amctest_PerfThashRemove();
 
     // -------------------------------------------------------------------
     // cpp/atf/amc/varlen.cpp

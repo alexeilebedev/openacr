@@ -1,6 +1,8 @@
-// (C) AlgoEngineering LLC 2008-2013
-// (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2013 AlgoEngineering LLC
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,13 +17,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: acr (exe) -- Algo Cross-Reference - ssimfile database & update tool
 // Exceptions: NO
 // Source: cpp/acr/createrec.cpp -- Create record
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/acr.h"
@@ -137,6 +135,8 @@ static void MergeTuple(algo::Tuple &tuple, acr::FRec &rec) {
 
 // -----------------------------------------------------------------------------
 
+// Calculate record's SORTKEY which is a combination
+// of the value of its SSIMSORT attribute and rowid.
 static void InitSortkey(acr::FRec &rec, float rowid) {
     // initialize string sort field
     rec.sortkey.num=0;
@@ -172,9 +172,12 @@ static acr::FFile *PickOutfile(acr::FFile &infile, acr::FCtype *ctype) {
 
 // -----------------------------------------------------------------------------
 
-// TUPLE: input tuple
-// CTYPE: associated type, as found via the type tag
-// ATTR: pkey attr
+// Create a new record from tuple TUPLE, having primary key PKEY_ATTR and type
+// CTYPE (as found via the type tag).
+// if INSERT is specified, the record inserted. Otherwise, it's deleted
+// This function checks CMDLINE.REPLACE flag to see if the record is allowed
+// to replace an existing record; if CMDLINE.MERGE is specified, attributes are merged
+// into an existing record if one exists
 acr::FRec *acr::CreateRec(acr::FFile &file, acr::FCtype *ctype, algo::Tuple &tuple, algo::Attr *pkey_attr, bool insert) {
     bool isnew = !file.autoloaded;
     strptr pkey     = pkey_attr->value;
@@ -185,7 +188,6 @@ acr::FRec *acr::CreateRec(acr::FFile &file, acr::FCtype *ctype, algo::Tuple &tup
     // if the cmdline.rowid option is enabled, and the input line contains the
     // attribute acr.rowid, then allow this attribute to set the line id,
     // and strip the attribute before saving record.
-    //
     // records are written to disk in rowid order.
     float rowid   = ret ? ret->sortkey.rowid : ctype->next_rowid;
     if (insert) {

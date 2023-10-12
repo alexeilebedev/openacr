@@ -1,5 +1,8 @@
-// (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,18 +17,11 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: algo_lib (lib) -- Support library for all executables
 // Exceptions: NO
 // Header: include/algo/using.h
 //
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
-//
 
-using algo::ArgProto;
-using algo::Argtuple;
-using algo::Argtuple_proto_curs;
 using algo::Attr;
 using algo::Bool;
 using algo::BumpToPow2;

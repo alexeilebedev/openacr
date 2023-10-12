@@ -1,5 +1,8 @@
-// (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +17,6 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
 // Source: cpp/amc/ctype/read.cpp -- Read ctype from string
@@ -102,19 +104,17 @@ static void Ctype_ReadStrptrMaybe_Sep(algo_lib::Replscope &R, amc::FCtype &ctype
     int counter = 0;
     amc::FField *lastfld = NULL;
     ind_beg(amc::ctype_c_field_curs, field,ctype) {
-        if (amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"ReadStrptrMaybe"))) {
+        if (HasReadExprQ(field)) {
             lastfld = &field;
         }
     }ind_end;
     ind_beg(amc::ctype_c_field_curs, field,ctype) {
-        amc::FFunc *func = amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"ReadStrptrMaybe"));
-        if (func && bh_bitfld_EmptyQ(field)) {
+        if (HasReadExprQ(field) && bh_bitfld_EmptyQ(field)) {
             char c = sep.elems[u32_Min(counter, elems_N(sep)-1)];
             counter++;
             tempstr cpp_char;
             char_PrintCppSingleQuote(c, cpp_char);
             Set(R, "$cppchar", cpp_char);
-            Set(R, "$Fldtype", field.cpp_type);
             Set(R, "$name", name_Get(field));
             Ins(&R, readstrptr.body, "");
             if (&field != lastfld) {
@@ -122,11 +122,8 @@ static void Ctype_ReadStrptrMaybe_Sep(algo_lib::Replscope &R, amc::FCtype &ctype
             } else {
                 Ins(&R, readstrptr.body, "value = in_str;");// no more -- scan the rest
             }
-            if (field.ctype_read) {
-                Ins(&R, readstrptr.body    , "retval = retval && $Fldtype_ReadStrptrMaybe(parent.$name, value);");
-            } else {
-                Ins(&R, readstrptr.body    , "retval = retval && $name_ReadStrptrMaybe(parent, value);");
-            }
+            Set(R, "$ReadExpr", ReadFieldExpr(field, "parent", "value"));
+            Ins(&R, readstrptr.body    , "retval = retval && $ReadExpr;");
         }
     }ind_end;
     if (counter-1 != elems_N(sep)) {
@@ -148,17 +145,14 @@ static void Ctype_ReadStrptrMaybe_Raw(algo_lib::Replscope &R, amc::FCtype &ctype
     int nprint = 0;
     ind_beg(amc::ctype_c_field_curs, field,ctype) {
         bool good = true;
-        good &= amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"ReadStrptrMaybe")) != NULL;
+        good &= HasReadExprQ(field);
         good &= !field.c_bitfld;
         if (good) {
             Set(R,"$name",name_Get(field));
             Set(R,"$fns",ns_Get(field));
             Set(R,"$Fldtype",field.cpp_type);
-            if (field.ctype_read) {
-                Ins(&R, readstrptr.body, "retval = retval && $Fldtype_ReadStrptrMaybe(parent.$name, in_str);");
-            } else {
-                Ins(&R, readstrptr.body , "retval = retval && $fns::$name_ReadStrptrMaybe(parent, in_str);");
-            }
+            Set(R, "$ReadExpr", ReadFieldExpr(field, "parent", "in_str"));
+            Ins(&R, readstrptr.body, "retval = retval && $ReadExpr;");
             nprint++;
         }
     }ind_end;
@@ -284,15 +278,9 @@ void amc::tfunc_Ctype_ReadFieldMaybe() {
         Ins(&R, fcn.body       , "bool retval = true; // default is no error");
         Ins(&R, fcn.body       , "switch(field_id) {");
         ind_beg(amc::ctype_c_field_curs, field,ctype) {
-            if (amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"ReadStrptrMaybe"))) {// this function must exist
-                Set(R, "$name", name_Get(field));
-                if (field.ctype_read) {
-                    Set(R, "$Fldtype", field.cpp_type);
-                    Ins(&R, fcn.body,"case $ns_FieldId_$name: retval = $Fldtype_ReadStrptrMaybe(parent.$name, strval); break;");
-                } else {
-                    Ins(&R, fcn.body,"case $ns_FieldId_$name: retval = $name_ReadStrptrMaybe(parent, strval); break;");
-                }
-            }
+            Set(R, "$name", name_Get(field));
+            Set(R, "$ReadExpr", ReadFieldExpr(field, "parent", "strval"));
+            Ins(&R, fcn.body,"case $ns_FieldId_$name: retval = $ReadExpr; break;");
         }ind_end;
         Ins(&R, fcn.body, "default: break;");
         Ins(&R, fcn.body, "}");

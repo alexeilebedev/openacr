@@ -1,5 +1,8 @@
-// (C) 2016-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2016-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023-2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,13 +17,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: src_hdr (exe) -- Update source file / copyright header
 // Exceptions: yes
 // Source: cpp/src/hdr.cpp
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/algo.h"
@@ -31,9 +30,9 @@
 
 // -----------------------------------------------------------------------------
 
-static void InsertComment(strptr text, cstring &out) {
+static void InsertComment(src_hdr::FSrc &src, strptr text, cstring &out) {
     ind_beg(Line_curs,line,text) {
-        out<<"//";
+        out<<src.cmtstring;
         if (ch_N(line)) {
             out<<" "<<line;
         }
@@ -59,87 +58,72 @@ static tempstr DemarcatedComment(strptr comment) {
 
 // -----------------------------------------------------------------------------
 
-static void DescribeTarget(src_hdr::FNs &ns, cstring &out, src_hdr::FTargsrc &targsrc) {
+static void DescribeTarget(src_hdr::FSrc &src, src_hdr::FNs &ns, cstring &out) {
     tempstr hdr = Tag("Target", tempstr()<<ns.ns<<" ("<<ns.nstype<<")");
     if (ch_N(ns.comment.value)) {
         hdr<<" -- "<<ns.comment;
     }
-    InsertComment(hdr,out);
+    InsertComment(src,hdr,out);
     if (ns.c_nsx) {
-        InsertComment(Tag("Exceptions", ns.c_nsx->genthrow?"yes":"NO"), out);
+        InsertComment(src,Tag("Exceptions", ns.c_nsx->genthrow?"yes":"NO"), out);
     }
-    bool header = ext_Get(targsrc)=="h";
-    strptr tagname = header ? "Header" : "Source";
-    InsertComment(Tag(tagname
-                      , tempstr()<<src_Get(targsrc)<<DemarcatedComment(targsrc.comment))
-                  ,out);
-    InsertComment("\n",out);
-}
-
-// -----------------------------------------------------------------------------
-
-static void AddCopyright(src_hdr::FSrc &src, cstring &out) {
-    InsertComment(src.copyright,out);
-    InsertComment("\n",out);
-}
-
-// -----------------------------------------------------------------------------
-
-static void InsertCommentMaybe(strptr name, strptr value, cstring &out) {
-    if (ch_N(value)) {
-        InsertComment(tempstr()<<name<<": "<<value, out);
+    if (src.p_targsrc) {
+        bool header = GetFileExt(src.src)==".h";
+        strptr tagname = header ? "Header" : "Source";
+        InsertComment(src,Tag(tagname
+                              , tempstr()<<src.src<<DemarcatedComment(src.p_targsrc->comment))
+                      ,out);
+        InsertComment(src,"\n",out);
     }
 }
 
 // -----------------------------------------------------------------------------
 
-static void Authors(src_hdr::FSrc &src, cstring &out) {
-    int n=ch_N(out);
-    InsertCommentMaybe("Created By", src.created_by, out);
-    InsertCommentMaybe("Authors", src.authors, out);
-    InsertCommentMaybe("Recent Changes", src.recent_changes, out);
-    if (ch_N(out)>n) {
-        InsertComment("\n",out);
-    }
-}
-
-// -----------------------------------------------------------------------------
-
+// Write file contents using the following layout:
+// <SHEBANG>
+// <COPYRIGHTS>
+// <LICENSE>
+// <TARGSRC DESCRIPTION>
 static void Save(src_hdr::FSrc &src) {
     cstring out;
-    AddCopyright(src,out);
+    ind_beg(algo::Line_curs,line,src.shebang) {
+        out << "#" << line << eol;
+    }ind_end;
+    InsertComment(src,src.copyright,out);
+    InsertComment(src,"\n",out);
 
-    strptr license = src.p_targsrc->p_target->p_license->text;
-    if (license != "") {
-        InsertComment(strptr(license),out);
+    if (src.p_license) {
+        strptr license = src.p_license->text;
+        if (license != "") {
+            InsertComment(src,Tag("License",src.p_license->license),out);
+            InsertComment(src,strptr(license),out);
+        }
     }
-    // if copyright came from ICE, add contact info
-    if (FindStr(src.copyright, "Intercontinental Exchange")!=-1) {
-        InsertComment("Contacting ICE: <https://www.theice.com/contact>\n\n",out);
+    if (src.contact_ice != "") {
+        InsertComment(src,Tag("Contacting ICE",src.contact_ice),out);
     }
-    src_hdr::FTargsrc &targsrc=*src.p_targsrc;
-    // add namespace info
-    DescribeTarget(*targsrc.p_target->p_ns,out,targsrc);
-    Authors(src,out);
-    InsertComment(src.comment,out);
+    if (src_hdr::FTargsrc *targsrc=src.p_targsrc) {
+        DescribeTarget(src,*targsrc->p_target->p_ns,out);
+    }
+    InsertComment(src,src.comment,out);
     out<<eol;
     out<<src.body;
 
-    (void)SafeStringToFile(out,src_Get(*src.p_targsrc),algo::FileFlags());
-}
-
-// -----------------------------------------------------------------------------
-
-// a "tag" is a header line of the form "A: B"
-static tempstr GetTagValue(strptr line) {
-    return tempstr(Trimmed(Pathcomp(line,":LR")));
+    verblog(out);
+    if (src_hdr::_db.cmdline.write) {
+        (void)SafeStringToFile(out,src.src,algo::FileFlags());
+    }
 }
 
 // -----------------------------------------------------------------------------
 
 static void ReadTagLine(src_hdr::FSrc &src, strptr line) {
-    if (StartsWithQ(line,"Target:")) {
-        src.saw_target = true;
+    if (StartsWithQ(line,"!")) {// shebang
+        src.shebang << line << eol;
+        // ignore, we re-generate this
+    } else if (StartsWithQ(line,"Target:")) {
+        // ignore, we re-generate this
+    } else if (StartsWithQ(line,"License:")) {
         // ignore, we re-generate this
     } else if (StartsWithQ(line,"Comment:")) {
         // ignore, we re-generate this
@@ -149,83 +133,92 @@ static void ReadTagLine(src_hdr::FSrc &src, strptr line) {
         // ignore, we re-generate this
     } else if (StartsWithQ(line,"Header:")) {
         // ignore, we re-generate this
-    } else if (StartsWithQ(line,"Created By:")) {
-        src.created_by = GetTagValue(line);
-    } else if (StartsWithQ(line,"Authors:")) {
-        src.authors = GetTagValue(line);
-    } else if (StartsWithQ(line,"Recent Changes:")) {
-        src.recent_changes = GetTagValue(line);
     } else if (StartsWithQ(line,"Exceptions:")) {
         // ignore, we re-generate this
+    } else if (StartsWithQ(line,"Contacting ICE:")) {
+        src.contact_ice=Trimmed(Pathcomp(line,":LR"));
     } else if (StartsWithQ(line,"(C)")) {
         src.copyright<<line<<eol;
-    } else if (ch_N(line)) {
-        if (src.saw_target) {
-            src.comment<<line<<eol;
-        } else {
-            // this line must be part of the license text that sits
-            // at the top of every source file.
-            // all unrecognized text prior to 'Target:' is discarded.
-        }
+    } else if (StartsWithQ(line,"Copyright")) {
+        src.copyright<<line<<eol;
+    } else if (src_hdr::ind_fcopyline_Find(Trimmed(line))) {// copyright line - ignore
+    } else {
+        src.comment<<line<<eol;
     }
 }
 
 // -----------------------------------------------------------------------------
 
-static void UpdateAuthors(src_hdr::FSrc &src) {
-    tempstr cmd=tempstr()<<src_hdr::dev_scriptfile_bin_git_authors<<src_Get(*src.p_targsrc);
-    tempstr data=SysEval(cmd,FailokQ(true),1024*1024);
-    ind_beg(Line_curs,line,data) {
-        ReadTagLine(src,Trimmed(line));
+// put current year copyright of company specified as -update_copyright arg
+static void UpdateCopyright(src_hdr::FSrc &src) {
+    strptr our_company = src_hdr::_db.cmdline.update_copyright;
+    u32 year = GetLocalTimeStruct(algo::CurrUnTime()).tm_year + 1900;
+    bool ok(false);
+    tempstr new_copyright;
+    ind_beg(Line_curs,line,src.copyright) {
+        algo::StringIter it(line);
+        strptr copyright = GetWordCharf(it);
+        strptr parenc = GetWordCharf(it);
+        strptr years = GetWordCharf(it);
+        strptr company = Trimmed(it.Rest());
+        if (company == our_company) {
+            ok = true;
+            strptr prior_ranges = Pathcomp(years,",RL");
+            strptr last_range = Pathcomp(years,",RR");
+            strptr first_year = Pathcomp(last_range,"-RL");
+            u32    last_year = ParseU32(Pathcomp(last_range,"-RR"),0);
+            if (last_year < year) {
+                new_copyright << copyright << " " << parenc << " ";
+                if (ch_N(prior_ranges)) {
+                    new_copyright << prior_ranges << ",";
+                }
+                if (last_year+1 == year) {
+                    new_copyright << (ch_N(first_year)
+                                      ? first_year
+                                      : tempstr()<<last_year)
+                                  << "-" << year;
+                } else {
+                    new_copyright << last_range << "," << year;
+                }
+                new_copyright << " " << our_company << eol;
+            } else {
+                new_copyright << line << eol;
+            }
+        } else {
+            new_copyright << line << eol;
+        }
     }ind_end;
+    if (!ok) {
+        new_copyright << "Copyright (C) " << year << " " << our_company;
+    }
+    src.copyright = new_copyright;
 }
 
 // -----------------------------------------------------------------------------
 
 static void RebuildHeader(src_hdr::FSrc &src) {
-    bool inhdr=true;
-    ind_beg(Line_curs,line,src.text) {
-        // empty lines following header are part of the header
-        inhdr = inhdr && (StartsWithQ(line,"//") || !ch_N(Trimmed(line)));
-        if (inhdr) {
-            ReadTagLine(src,Trimmed(RestFrom(line,2)));
-        } else {
-            src.body<<line<<eol;
-        }
-    }ind_end;
-    if (src_hdr::_db.cmdline.update_authors) {
-        UpdateAuthors(src);
-    }
-    if (src_hdr::_db.cmdline.indent) {
-        tempstr out;
-        algo::InsertIndent(out, src.body,0);
-        src.body=out;
-    }
-    // prlog("src_hdr.file"
-    //    <<Keyval("src",src_Get(*src.p_targsrc))
-    //    <<Keyval("comment",src.comment));
-    if (src_hdr::_db.cmdline.write) {
-        Save(src);
-    }
-}
-
-// -----------------------------------------------------------------------------
-
-static bool ScanTargsrcQ(src_hdr::FTargsrc &targsrc, algo_lib::Regx &exclude) {
-    bool match = Regx_Match(src_hdr::_db.cmdline.targsrc,targsrc.targsrc)
-        && !Regx_Match(exclude,src_Get(targsrc));
-    return match;
-}
-
-// -----------------------------------------------------------------------------
-
-static void ScanTargsrc(src_hdr::FTargsrc &targsrc) {
     algo_lib::MmapFile file;
-    if (MmapFile_Load(file,src_Get(targsrc))) {
-        src_hdr::FSrc src;
-        src.p_targsrc=&targsrc;
+    if (MmapFile_Load(file,src.src)) {
         src.text=file.text;
-        RebuildHeader(src);
+        bool inhdr=true;
+        ind_beg(Line_curs,line,src.text) {
+            // empty lines following header are part of the header
+            inhdr = inhdr && (StartsWithQ(line,src.cmtstring) || !ch_N(Trimmed(line)));
+            if (inhdr) {
+                ReadTagLine(src,Trimmed(RestFrom(line,ch_N(src.cmtstring))));
+            } else {
+                src.body<<line<<eol;
+            }
+        }ind_end;
+        if (ch_N(src_hdr::_db.cmdline.update_copyright)) {
+            UpdateCopyright(src);
+        }
+        if (src_hdr::_db.cmdline.indent) {
+            tempstr out;
+            algo::InsertIndent(out, src.body,0);
+            src.body=out;
+        }
+        Save(src);
     }
 }
 
@@ -235,6 +228,12 @@ static void LoadLicense() {
     ind_beg(src_hdr::_db_license_curs,license,src_hdr::_db) {
         if (license.license != "") {
             license.text = FileToString(tempstr()<<"conf/"<<license.license<<".license.txt",algo::FileFlags());
+            if (ch_N(license.text)) {
+                license.text << eol;
+            }
+            ind_beg(algo::Line_curs,line,license.text) {
+                src_hdr::ind_fcopyline_GetOrCreate(Trimmed(line));
+            }ind_end;
         }
     }ind_end;
 }
@@ -244,10 +243,25 @@ static void LoadLicense() {
 void src_hdr::Main() {
     algo_lib::Regx exclude;
     LoadLicense();
-    (void)Regx_ReadStrptrMaybe(exclude,"(include/gen/%|cpp/gen/%|extern/%)");
+    (void)Regx_ReadStrptrMaybe(exclude,"(include/gen/%|cpp/gen/%|extern/%|bin/bootstrap/%)");
     ind_beg(src_hdr::_db_targsrc_curs,targsrc,src_hdr::_db) {
-        if (ScanTargsrcQ(targsrc,exclude)) {
-            ScanTargsrc(targsrc);
+        if (Regx_Match(_db.cmdline.targsrc,targsrc.targsrc) && !Regx_Match(exclude,src_Get(targsrc))) {
+            src_hdr::FSrc src;
+            src.src=src_Get(targsrc);
+            src.p_targsrc=&targsrc;
+            src.p_license=targsrc.p_target->p_ns->p_license;
+            src.cmtstring="//";
+            RebuildHeader(src);
+        }
+    }ind_end;
+    ind_beg(src_hdr::_db_scriptfile_curs,scriptfile,src_hdr::_db) {
+        if (Regx_Match(_db.cmdline.scriptfile,scriptfile.gitfile) && !Regx_Match(exclude,scriptfile.gitfile)) {
+            src_hdr::FSrc src;
+            src.src=scriptfile.gitfile;
+            src.p_targsrc=NULL;
+            src.p_license=scriptfile.p_license;
+            src.cmtstring="#";
+            RebuildHeader(src);
         }
     }ind_end;
 

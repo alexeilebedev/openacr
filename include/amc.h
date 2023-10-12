@@ -1,6 +1,9 @@
-// (C) AlgoEngineering LLC 2008-2013
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2013 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,14 +18,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
 // Header: include/amc.h -- Main header
-//
-// Created By: alexei.lebedev alexey.polovinkin
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev hayk.mkrtchyan
 //
 
 #include "include/gen/amc_gen.h"
@@ -36,6 +34,15 @@ namespace amc { // update-hdr
     //     source files. Editing this text is futile.
     //     To refresh the contents of this section, run 'update-hdr'.
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+
+    // -------------------------------------------------------------------
+    // cpp/amc/alias.cpp
+    //
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void tclass_Alias();
+    // void tfunc_Alias_Get();
+    // void tfunc_Alias_Set();
+    // void tfunc_Alias_ReadStrptrMaybe();
 
     // -------------------------------------------------------------------
     // cpp/amc/avl.cpp
@@ -153,6 +160,8 @@ namespace amc { // update-hdr
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Base();
+
+    // Generate a function to copy fields from a ctype to its base type
     // void tfunc_Base_CopyOut();
     // void tfunc_Base_CopyIn();
     // void tfunc_Base_Castbase();
@@ -223,6 +232,7 @@ namespace amc { // update-hdr
     // void tfunc_Bitset_ExpandBits();
     // void tfunc_Bitset_AllocBit();
     // void tfunc_Bitset_Sup();
+    // void tfunc_Bitset_bitcurs();
 
     // -------------------------------------------------------------------
     // cpp/amc/blkpool.cpp
@@ -319,6 +329,9 @@ namespace amc { // update-hdr
     // void tfunc_Ctype_EqStrptr();
     // void tfunc_Ctype_PrintArgv();
     // void tfunc_Ctype_ToCmdline();
+
+    // Used with command lines
+    // void tfunc_Ctype_NArgs();
     // void tfunc_Ctype_Print();
     // void tfunc_Ctype_FmtJson();
     // void tfunc_Ctype_EqEnum();
@@ -546,6 +559,14 @@ namespace amc { // update-hdr
     // void tfunc_Field2_ReadStrptrMaybe();
     // void tfunc_Field_Concat();
 
+    // True if ReadFieldExpr for the field
+    bool HasReadExprQ(amc::FField &field);
+
+    // Return an expression, with type bool,
+    // reading field FIELD in struct PARENT from value STRVAL
+    // If impossible, return FALSE;
+    tempstr ReadFieldExpr(amc::FField &field, algo::strptr parent, algo::strptr strval);
+
     // -------------------------------------------------------------------
     // cpp/amc/func.cpp -- C++ function output
     //
@@ -571,6 +592,10 @@ namespace amc { // update-hdr
     // This allows initialization of references (i.e. X &retval = <expr>)
     // and also results in shorter code.
     void GenRetvalInit(amc::FFunc &func, amc::Funcarg &funcarg, strptr initializer);
+
+    // Declare return value for function FUNC.
+    // The value has type TYPE, name NAME< and is initialized with INITALIZER.
+    //
     amc::Funcarg* AddRetval(amc::FFunc &func, strptr type, strptr name, strptr initializer);
 
     // Add a type argument to function FUNC,
@@ -638,6 +663,11 @@ namespace amc { // update-hdr
 
     // Rewrite reftype:Pkey fields into reftype:Val
     // void gen_lookuppkey();
+
+    // Ensure fregx record exists for each field of type Regx or RegxSql
+    // Rewrite RegxSql fields as Regx, regxtype Sql
+    // (generalization of original RegxSql reftype)
+    // void gen_rewrite_regx();
     // void gen_check_reftype();
     // void gen_detectinst();
     // void gen_check_cpptype();
@@ -718,16 +748,35 @@ namespace amc { // update-hdr
     // void tfunc_Global_LoadSsimfileMaybe();
     // void tfunc_Global_main();
     // void tfunc_Global_WinMain();
-    // void tfunc_Global_MainArgs();
     // void tfunc_Global_MainLoop();
     // void tfunc_Global_Steps();
     // void tfunc_Global_Step();
     // void tfunc_Global_Main();
     // void tfunc_Global_StaticCheck();
 
-    //
-    // Command-line help string and syntax string for executable command
-    //
+    // Return TRUE if FIELD (in command line context) requires no argument
+    // This is true for bool fields or fields with "emptyval" provided
+    bool CmdArgValueRequiredQ(amc::FField &field);
+
+    // True if field is a required command-line argument
+    bool CmdArgRequiredQ(amc::FField &field);
+
+    // Pick a field to extract enums from.
+    // Handle the case of a single-field ctype with enums in it
+    amc::FField *GetEnumField(amc::FField &field);
+    tempstr GetUsageString(amc::FNs &ns, amc::FFcmdline &cmdline);
+
+    // Return expression
+    // $cpptype &NAME = $ns::$_db.$fieldname
+    // where
+    // $cpptype is the type of FIELD
+    // $ns is the namespace of FIELD
+    // $_db is the global instance in $ns
+    // $fieldname is the name of the field
+    tempstr VarRefToGlobal(amc::FField &field, strptr name);
+
+    // Namespace ReadArgv function to read command line
+    //     (user-implemented function, prototype is in amc-generated header)
     // void tfunc_Global_ReadArgv();
 
     // -------------------------------------------------------------------
@@ -992,7 +1041,10 @@ namespace amc { // update-hdr
 
     // Returns TRUE if the field is an inline value, except for Varlen and Opt
     bool ValQ(amc::FField &field);
-    bool NeedCopyQ(amc::FField &field);
+    bool ComputedFieldQ(amc::FField &field);
+
+    // Evaluate value of SSIM attribute as described by field FIELD
+    // given tuple TUPLE
     tempstr EvalAttr(Tuple &tuple, amc::FField &field);
     i32 WidthMin(amc::FField &field);
     i32 WidthMax(amc::FField &field);
@@ -1017,6 +1069,7 @@ namespace amc { // update-hdr
 
     // Return C++ expression string assigning value VALUE to field FIELD
     // given parent reference PARNAME.
+    // If NEEDS_CAST is set, a cast is added to the target type
     tempstr AssignExpr(amc::FField &field, strptr parname, strptr value, bool needs_cast);
 
     // Heuristically determine if the type is a string type.
@@ -1035,6 +1088,7 @@ namespace amc { // update-hdr
     // check if ctype has a string read function
     bool HasStringReadQ(amc::FCtype &ctype);
     bool HasReadQ(amc::FCtype &ctype);
+    bool HasArgvReadQ(amc::FCtype &ctype);
 
     // Set IDENT to sanitized version of FROM
     // if FROM is a known c++ keyword, prepend '_' to it.
@@ -1054,9 +1108,11 @@ namespace amc { // update-hdr
     tempstr NsToCpp(strptr ident);
     tempstr NsTo_(strptr ident);
 
-    //
-    // return base class of ctype (type of first anonymous field, if any)
-    //
+    // Return TRUE if the type is relational (ctype is in a ssimdb namespace)
+    bool RelationalQ(amc::FCtype &ctype);
+
+    // Return base class of ctype, DFLT if it doesn't have a base
+    // Base is found by locating a field of reftype Base.
     amc::FCtype *GetBaseType(amc::FCtype &ctype, amc::FCtype *dflt);
     amc::FCtype *UltimateBaseType(amc::FCtype *ctype, amc::FCtype *dflt);
     tempstr SsimFilename(strptr root, amc::FCtype& ctype, bool do_throw);
@@ -1185,7 +1241,7 @@ namespace amc { // update-hdr
     // Like VarlenMaybe, but die on out-of-memory
     // void tfunc_Pool_AllocVarlen();
     // void tfunc_Pool_InsertMaybe();
-    bool ChildFieldExistsQ(amc::FField &basefield, amc::FCtype &childtype);
+    amc::FField *FindFieldByName(amc::FCtype &ctype, algo::strptr name);
     //     (user-implemented function, prototype is in amc-generated header)
     // void tfunc_Pool_UpdateMaybe();
     // void tfunc_Pool_Delete();
@@ -1262,6 +1318,10 @@ namespace amc { // update-hdr
     // void tfunc_RegxSql_ReadStrptrMaybe();
     // void tfunc_RegxSql_Print();
     // void tfunc_RegxSql_Init();
+    // void tclass_Regx();
+    // void tfunc_Regx_ReadStrptrMaybe();
+    // void tfunc_Regx_Print();
+    // void tfunc_Regx_Init();
 
     // -------------------------------------------------------------------
     // cpp/amc/sbrk.cpp
@@ -1434,16 +1494,28 @@ namespace amc { // update-hdr
     // void tfunc_Tary_Eq();
     // void tfunc_Tary_Cmp();
     // void tfunc_Tary_curs();
+    // void tfunc_Tary_ReadStrptrMaybe();
 
     // -------------------------------------------------------------------
     // cpp/amc/tclass.cpp
     //
 
-    // Call all tfunc generators for specified tclass.
-    // Context is provided via _db.genfield: (which needs to be renamed)
-    // - genfield.p_field   --- field pointer, possibly NULL
+    // Call tclass, tfunc, and cursor generators for this template
+    // Context is provided via _db.genfield:
+    // - genfield.p_field   --- field pointer (NULL for tclass, cursor, and Ctype, set for individual fields)
     // - genfield.p_ctype   --- current ctype, never NULL
+    // - genfield.p_tfunc   --- pointer to tfunc, never NULL
+    // First, the tclass function is called
+    // Then, for each tfunc, its function is called
+    // The tfunc may be a cursor generator (as indicated by tcurs table)
+    // If it's a cursor generator, then a forward-declaration for the cursor is created.
+    // In this case, variables $fcurs (cursor key) and $curstype (cursor type) are set.
     void GenTclass(amc::FTclass &tclass);
+
+    // Get pointer to the field's memory pool
+    // Any field can be assigned a custom memory pool with the basepool table.
+    // Field doesn't have a custom pool, then the namespace custom pool (as specified in nsx table)
+    // is used.
     amc::FField *GetBasepool(amc::FField &field);
 
     // Call tfunc generators for every field in this ctype

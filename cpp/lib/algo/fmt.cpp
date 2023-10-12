@@ -1,5 +1,8 @@
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,14 +17,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: algo_lib (lib) -- Support library for all executables
 // Exceptions: NO
 // Source: cpp/lib/algo/fmt.cpp -- Print to string / Read from string
-//
-// Created By: alexei.lebedev vladimir.parizhsky
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev hayk.mkrtchyan edward.danileyko
 //
 
 #include "include/algo.h"
@@ -1748,6 +1746,15 @@ void algo::strptr_PrintBash(strptr str, algo::cstring &out) {
 tempstr algo::strptr_ToBash(strptr str) {
     tempstr out;
     strptr_PrintBash(str,out);
+    return out;
+}
+
+// -----------------------------------------------------------------------------
+
+// Escape S according to ssim rules and return result
+tempstr algo::strptr_ToSsim(strptr str) {
+    tempstr out;
+    strptr_PrintSsim(str,out);
     return out;
 }
 

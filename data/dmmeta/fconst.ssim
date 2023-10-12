@@ -78,6 +78,14 @@ dmmeta.fconst  fconst:atf_cov.Phase.value/runcmd  value:0  comment:"Run command"
 dmmeta.fconst  fconst:atf_cov.Phase.value/gcov  value:1  comment:"Prepare and run gcov"
 dmmeta.fconst  fconst:atf_cov.Phase.value/ssim  value:2  comment:"Generate ssim coverage files"
 dmmeta.fconst  fconst:atf_cov.Phase.value/report  value:3  comment:"Create all report"
+dmmeta.fconst  fconst:command.atf_cmdline.fconst/high  value:0  comment:Cool
+dmmeta.fconst  fconst:command.atf_cmdline.fconst/medium  value:1  comment:So-so
+dmmeta.fconst  fconst:command.atf_cmdline.fconst/low  value:2  comment:Bad
+dmmeta.fconst  fconst:command.ssimfilt.format/ssim  value:0  comment:"Print selected/filtered tuples"
+dmmeta.fconst  fconst:command.ssimfilt.format/csv  value:1  comment:"First tuple determines header. CSV quoting is used. Newlines are removed"
+dmmeta.fconst  fconst:command.ssimfilt.format/field  value:2  comment:"Print selected fields, one per line"
+dmmeta.fconst  fconst:command.ssimfilt.format/cmd  value:4  comment:"Emit command for each tuple (implied if -cmd is set)"
+dmmeta.fconst  fconst:command.ssimfilt.format/table  value:5  comment:"ASCII table for each group of tuples"
 dmmeta.fconst  fconst:dev.Covline.flag/N  value:"'N'"  comment:Non-executable
 dmmeta.fconst  fconst:dev.Covline.flag/E  value:"'E'"  comment:Executable
 dmmeta.fconst  fconst:dev.Covline.flag/P  value:"'P'"  comment:"Executable, partially executed"
@@ -86,9 +94,11 @@ dmmeta.fconst  fconst:fm.Flag.value/raised  value:"'R'"  comment:"Raised alarm"
 dmmeta.fconst  fconst:fm.Severity.value/critical  value:"'0'"  comment:"Service-affecting fault, immediate attention"
 dmmeta.fconst  fconst:fm.Severity.value/major  value:"'1'"  comment:"Service-affecting fault, urgent attention"
 dmmeta.fconst  fconst:fm.Severity.value/minor  value:"'2'"  comment:"Non-service affecting fault, need attention"
-dmmeta.fconst  fconst:gitlab.FHttp.request_method/GET  value:0  comment:GET
-dmmeta.fconst  fconst:gitlab.FHttp.request_method/POST  value:1  comment:POST
-dmmeta.fconst  fconst:gitlab.FHttp.request_method/PUT  value:2  comment:PUT
+dmmeta.fconst  fconst:gcli.FHttp.request_method/GET  value:0  comment:GET
+dmmeta.fconst  fconst:gcli.FHttp.request_method/POST  value:1  comment:POST
+dmmeta.fconst  fconst:gcli.FHttp.request_method/PUT  value:2  comment:PUT
+dmmeta.fconst  fconst:gcli.FHttp.request_method/PATCH  value:3  comment:PATCH
+dmmeta.fconst  fconst:gcli.FHttp.request_method/DELETE  value:4  comment:DELETE
 dmmeta.fconst  fconst:lib_json.FNode.type/null  value:0  comment:""
 dmmeta.fconst  fconst:lib_json.FNode.type/false  value:1  comment:""
 dmmeta.fconst  fconst:lib_json.FNode.type/true  value:2  comment:""

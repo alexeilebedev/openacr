@@ -1,6 +1,9 @@
-// (C) AlgoEngineering LLC 2008-2013
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2013 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,14 +18,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: algo_lib (lib) -- Support library for all executables
 // Exceptions: NO
 // Header: include/define.h -- Macros
-//
-// Created By: alexei.lebedev ara.aslyan
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev ara.aslyan
 //
 
 #pragma once
@@ -129,7 +127,7 @@
 
 // -----------------------------------------------------------------------------
 
-#define ind_beg(CURS,VAR,PARENT) { CURS VAR##i; CURS##_Reset(VAR##i,PARENT); for(; CURS##_ValidQ(VAR##i); CURS##_Next(VAR##i)) { \
+#define ind_beg(CURS,VAR,...) { CURS VAR##i; CURS##_Reset(VAR##i,__VA_ARGS__); for(; CURS##_ValidQ(VAR##i); CURS##_Next(VAR##i)) { \
     CURS::ChildType &VAR=CURS##_Access(VAR##i);
 
 #define ind_end }}

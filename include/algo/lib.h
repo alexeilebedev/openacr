@@ -1,5 +1,8 @@
-// (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,14 +17,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: algo_lib (lib) -- Support library for all executables
 // Exceptions: NO
 // Header: include/algo/lib.h
-//
-// Created By: alexei.lebedev shreejith.lokegowda
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev shreejith.lokegowda luke.huang
 //
 // This file has 3 sections:
 // - manual function declarations for namespace algo (not doable with amc or src_func)
@@ -510,6 +508,16 @@ namespace algo_lib { // update-hdr
     // Linux only.
     int KillRecurse(int pid, int sig, bool kill_topmost);
 
+    // Return computed name for sandbox SANDBOX
+    tempstr SandboxDir(algo::strptr sandbox);
+
+    // Enter sandbox and remember previous directory
+    void SandboxEnter(algo::strptr sandbox);
+
+    // Change to the directory that was current before sandbox mode
+    // Must be balanced with SandboxEnter
+    void SandboxExit();
+
     // -------------------------------------------------------------------
     // cpp/lib/algo/line.cpp -- Line processing
     //
@@ -575,6 +583,11 @@ namespace algo_lib { // update-hdr
     // -------------------------------------------------------------------
     // cpp/lib/algo/regx.cpp -- Sql Regx implementation
     //
+
+    // there is not enough information in a regx expression to fully specify it.
+    // sql vs shell vs classic regx, vs acr, partial vs full.
+    // we print back the original expression that was read in, but the information
+    // about what function read it is lost.
     void Regx_Print(algo_lib::Regx &regx, algo::cstring &lhs);
 
     // Check if REGX matches S, return result
@@ -594,15 +607,24 @@ namespace algo_lib { // update-hdr
     void Regx_ReadShell(algo_lib::Regx &regx, algo::strptr input, bool full);
 
     // Parse SQL-style regx:
-    // % -> .*
-    // _ -> .
-    // All other regx chars are escaped away
+    // % is rewritten as .*
+    // _ is rewritten as .
+    // (, ), [, ] are passed through
+    // ., *, ?, + are escaped
     // if FULL is set to false, input is treated as ".*input.*"
     void Regx_ReadSql(algo_lib::Regx &regx, algo::strptr input, bool full);
-    bool Regx_ReadStrptrMaybe(algo_lib::Regx &regx, algo::strptr input);
 
-    // Check if string contains a SQL regular expression
-    bool SqlRegxQ(algo::strptr s);
+    // Parse ACR-style regx:
+    // % is rewritten as .*
+    // (, ), [, ], _ are passed through
+    // ., *, ?, + are escaped
+    // if FULL is set to false, input is treated as ".*input.*"
+    // If the input expression can be matched as a string, set REGX.LITERAL to true
+    void Regx_ReadAcr(algo_lib::Regx &regx, algo::strptr input, bool full);
+
+    // Set REGX to match string INPUT literally
+    void Regx_ReadLiteral(algo_lib::Regx &regx, algo::strptr input);
+    bool Regx_ReadStrptrMaybe(algo_lib::Regx &regx, algo::strptr input);
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/string.cpp -- cstring functions

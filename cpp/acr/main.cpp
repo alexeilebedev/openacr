@@ -1,6 +1,9 @@
-// (C) AlgoEngineering LLC 2008-2013
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2013 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,14 +18,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: acr (exe) -- Algo Cross-Reference - ssimfile database & update tool
 // Exceptions: NO
 // Source: cpp/acr/main.cpp
-//
-// Created By: alexei.lebedev alexey.polovinkin
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev luke.huang
 //
 // ACR: Algo Cross-Reference
 // See txt/acr.md for more information
@@ -48,7 +46,11 @@ acr::FQuery& acr::ParseQuery(strptr expr) {
 
     // query: RELNAME:VAL or NS.RELNAME:VAL  NS.RELNAME.FIELD:VAL
     strptr key    = Pathcomp(expr, ":LL");
-    query.value   = Pathcomp(expr, ":LR");
+    strptr value  = Pathcomp(expr, ":LR");
+    if (value == "") {
+        value = "%";
+    }
+    Regx_ReadAcr(query.query.value, value, true);
     query.queryop = acr_Queryop_value_select;
 
     // query=RELNAME:VAL            s1:RELNAME   s2:""             s3:""         s4:""
@@ -70,16 +72,15 @@ acr::FQuery& acr::ParseQuery(strptr expr) {
         ns = "%";
     }
 
-    query.regx_ssimfile  << ns << "." << relname;
+    Regx_ReadAcr(query.ssimfile, tempstr() << ns << "." << relname, true);
+    Regx_ReadAcr(query.query.name, field, true);
+    ind_beg(command::acr_where_curs,where,_db.cmdline) {
+        acr::AttrRegx &attr=where_Alloc(query);
+        Regx_ReadAcr(attr.name,Pathcomp(where,":LL"),true);
+        Regx_ReadAcr(attr.value,Pathcomp(where,":LR"),true);
+    }ind_end;
 
-    // this line allows queries like 'acr Device'
-    // to behave the same as 'acr device'
-    query.ctype  << ns << "." << relname;
-
-    query.field     << field;
-
-    if (!ch_N(query.value)) query.value << "%";
-
+    query.comment = "main command-line query";
     (void)acr::query_XrefMaybe(query);
     return query;
 }
@@ -110,7 +111,7 @@ static void Main_RewriteOpts() {
     if (acr::_db.cmdline.meta) {
         acr::_db.cmdline.tree = true;
     }
-    if (ch_N(acr::_db.cmdline.field) > 0) {
+    if (field_N(acr::_db.cmdline) > 0) {
         acr::_db.cmdline.print = false;
         acr::_db.cmdline.report = false;
     }
@@ -184,10 +185,12 @@ static void Main_SelectRename() {
     fquery.ndown  = acr::_db.cmdline.ndown;
     fquery.unused = acr::_db.cmdline.unused;
     fquery.delrec = acr::_db.cmdline.del;
+    fquery.selmeta= acr::_db.cmdline.meta;
     if (ch_N(acr::_db.cmdline.rename)) {
         fquery.new_val = acr::_db.cmdline.rename;
         fquery.queryop = acr_Queryop_value_set_attr;
     }
+    fquery.comment = "command-line rename request";
     acr::RunAllQueries();    // QUERY EXECUTION HERE
 }
 
@@ -269,16 +272,8 @@ void acr::Main() {
         Main_SelectRename();
     }
 
-    if (acr::_db.cmdline.meta) {
-        Main_SelectMeta();
-    }
-
     if (acr::_db.cmdline.check) {    // validate data and print suggestions.
         acr::Main_Check();
-    }
-
-    if (acr::_db.cmdline.b) {
-        acr::Main_Browser();
     }
 
     if (acr::_db.cmdline.my) {
@@ -287,15 +282,19 @@ void acr::Main() {
 
     RunAllQueries();
 
+    // select renamed records
+    acr::Rec_SelectModified();
+
     // edit mode
     if (acr::_db.cmdline.e) {
         acr::Main_AcrEdit();
+        acr::_db.cmdline.cmt=false;
     }
     // print command to be executed for each matching tuple
     if (ch_N(acr::_db.cmdline.cmd)>0) {
         Main_Cmd();
     }
-    if (ch_N(acr::_db.cmdline.field)>0) {
+    if (field_N(acr::_db.cmdline)>0) {
         Main_Field();
     } else if (ch_N(acr::_db.cmdline.regxof)>0) {
         Main_Regxof();

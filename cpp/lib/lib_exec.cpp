@@ -1,5 +1,8 @@
-// (C) 2014-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2014-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,14 +17,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: lib_exec (lib) -- Build and run a dag of subprocesses with N parallel jobs
 // Exceptions: NO
 // Source: cpp/lib/lib_exec.cpp
-//
-// Created By: david.hawthorne alexei.lebedev
-// Authors: alexei.lebedev david.hawthorne
-// Recent Changes: alexei.lebedev jeremy.xue jeffrey.wang
 //
 
 #include "include/algo.h"
@@ -61,8 +59,9 @@ static void ShowOutput(lib_exec::FSyscmd &cmd) {
     print_cmd &= !cmd.fail_prereq;         // if the command is failing because some prior command failed, don't print
                                            // print command name and status
     if (print_cmd) {
+        tempstr pre(lib_exec::_db.cmdline.dry_run ? "dry_run: " : sep);
         tempstr outstr;
-        outstr << sep << cmd.command;
+        outstr << pre << cmd.command;
         if (cmd.status != 0) {
             outstr << ": status "<<cmd.status;
         }
@@ -136,6 +135,8 @@ void lib_exec::StartCmd(lib_exec::FSyscmd &cmd) {
     if (lib_exec::_db.cmdline.dry_run || !ch_N(cmd.command) || cmd.fail_prereq) {
         if (cmd.fail_prereq) {
             cmd.status = 1;
+        } else {
+            ShowOutput(cmd); // for dry_run
         }
     } else {
         if (cmd.redir_out) {

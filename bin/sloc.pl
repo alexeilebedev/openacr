@@ -1,31 +1,38 @@
 #!/usr/bin/env perl
+# Copyright (C) 2008-2012 AlgoEngineering LLC
+# Copyright (C) 2013-2014 NYSE | Intercontinental Exchange
+# Copyright (C) 2023 AlgoRND
 #
-# AOS
-# (C) AlgoEngineering LLC 2008-2012
-# (C) NYSE | Intercontinental Exchange 2013-2014
+# License: GPL
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# Contacting ICE: <https://www.theice.com/contact>
 # usage: sloc.pl <list of files>
 # LOC = line of code; i.e. non-comment line
-#
 # this program is just a variation on wc -l. the most important
 # number it produces if 'total non-comment lines'.
-#
 # if list of files is not specified, and ff is installed, it is used.
 # if no ff, sloc will consider all files under current directory,
 # filtering out non-text files with -T
-#
 # PER FILE metrics use total # of files, so they don't make sense
 # 'for files of type XX'.
-#
 # interestign links:
-#   http://vimeo.com/9270320
-#
+# http://vimeo.com/9270320
 # the curly braces count approximate number of basic blocks
 # total # of chars is the 'reading cost' of the code.
 # warnings about few unique lines of code indicate a copy-paste problem.
-#
-#
+
 @files = @ARGV;
 @files = split(/\n/, `ff -l 2>/dev/null`) if !@files;
 @files = split(/\n/, `find . -type f | grep -v '.svn'`) if !@files;

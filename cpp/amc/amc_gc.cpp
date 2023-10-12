@@ -1,5 +1,8 @@
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,18 +17,14 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: amc_gc (exe) -- Empirically eliminate unused records
 // Exceptions: NO
 // Source: cpp/amc/amc_gc.cpp
 //
-// Created By: alexei.lebedev
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev
-//
 
 #include "include/gen/amc_gc_gen.h"
 #include "include/gen/amc_gc_gen.inl.h"
+#include "include/gen/dev_gen.h"
 
 // -----------------------------------------------------------------------------
 
@@ -87,10 +86,10 @@ static int DeleteRec(strptr line, strptr pkey) {
     if (amc_gc::_db.cmdline.include) {
         // line has the form
         // e.g. cpp/abt/abt_noterel.cpp:9:#include "include/algo.h"
-        SysCmd(tempstr()
-               <<"sed -i "<<Pathcomp(line,":LR:LL")<<"d"// line number
-               <<" "<<Pathcomp(line,":LL")// filename
-               , FailokQ(true), DryrunQ(false));
+        rc=SysCmd(tempstr()
+                  <<"sed -i "<<Pathcomp(line,":LR:LL")<<"d"// line number
+                  <<" "<<Pathcomp(line,":LL")// filename
+                  , FailokQ(true), DryrunQ(false));
     } else {
         command::acr_proc acr;
         acr.cmd.del     = true;
@@ -107,15 +106,15 @@ static int DeleteRec(strptr line, strptr pkey) {
 // -----------------------------------------------------------------------------
 
 static int SandboxDeleteRec(strptr line, strptr pkey) {
-    errno_vrfy(chdir(".testgen")==0,"chdir");// CHANGING DIRECTORY HERE
+    algo_lib::SandboxEnter(dev_Sandbox_sandbox_amc_gc);
     command::amc_proc amc;
     command::abt_proc abt;
 
-    amc.fstdout     = tempstr() << ">>../" << amc_gc::_db.buildlog;
-    amc.fstderr     = tempstr() << ">>../" << amc_gc::_db.buildlog;
-
-    abt.fstdout     = tempstr() << ">>../" << amc_gc::_db.buildlog;
-    abt.fstderr     = tempstr() << ">>../" << amc_gc::_db.buildlog;
+    // redirect all to the build log
+    amc.fstdout     << ">>"<<DirFileJoin(algo_lib::_db.sandbox_orig_dir, amc_gc::_db.buildlog);
+    amc.fstderr     = amc.fstdout;
+    abt.fstdout     = amc.fstdout;
+    abt.fstderr     = amc.fstdout;
 
     int rc = DeleteRec(line, pkey);
     if (rc==0) {
@@ -128,7 +127,7 @@ static int SandboxDeleteRec(strptr line, strptr pkey) {
     if (rc == 0) {
         rc = abt_Exec(abt);
     }
-    errno_vrfy(chdir(Zeroterm(amc_gc::_db.basedir))==0,"chdir");// CHANGING DIRECTORY BACK
+    algo_lib::SandboxExit();
     return rc;
 }
 
@@ -150,14 +149,15 @@ static void Analyze(strptr line) {
     tempstr pkey=GetPkey(line);
     if (pkey != "") {
         bool eliminate=false;
-        tempstr what(amc_gc::_db.cmdline.include ? "cpp include" : "data");
-        SysCmd(tempstr()<<"rsync -ac "<<what<<" .testgen"
-               ,FailokQ(false),DryrunQ(false));// copy new data over
+        command::sandbox_proc sandbox;
+        sandbox.cmd.name.expr = dev_Sandbox_sandbox_amc_gc;
+        sandbox.cmd.clean = true;
+        sandbox_ExecX(sandbox);
         StringToFile("", amc_gc::_db.buildlog);
 
         int rc=SandboxDeleteRec(line,pkey);
         if (rc==0) {
-            (void)DeleteRec(line,pkey);
+            (void)DeleteRec(line,pkey);// delete in parent directory
             tempstr logcontents(FileToString(amc_gc::_db.buildlog,algo::FileFlags()));
             amc_gc::_db.n_newcppline = n_cppline_Get(logcontents,amc_gc::_db.n_newcppline);
             amc_gc::_db.n_del++;
@@ -194,12 +194,12 @@ static void Begin(strptr recs) {
 // -----------------------------------------------------------------------------
 
 void amc_gc::Main() {
-    amc_gc::_db.basedir = algo::GetCurDir();
     tempstr recs = QueryRecords();
     Begin(recs);
-    SysCmd("mkdir -p .testgen .testgen/temp"); // setup!
-    SysCmd("rsync --delete -ac bin cpp algo build include extern data .testgen"
-           ,FailokQ(false),DryrunQ(false));// copy everything over
+    command::sandbox_proc sandbox;
+    sandbox.cmd.name.expr = dev_Sandbox_sandbox_amc_gc;
+    sandbox.cmd.reset = true;
+    sandbox_ExecX(sandbox);
 
     ind_beg(Line_curs,line,recs) {
         Analyze(line);

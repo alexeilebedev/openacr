@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# Copyright (C) 2023 AlgoRND
+#
+# License: GPL
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# use git-rebase-remote <remote> [<default_branch>]
+
+ORIGIN=("${@:1}")
+BRANCH=master
+if (( $# >= 2 )); then
+    BRANCH=("${@:2}")
+fi
+# if no params are specified, get it from git
+if (( $# == 0 )); then
+    OB=$(git status -b --porcelain | head -1 | cut -d'.' -f5 | cut -d' ' -f1)
+    ORIGIN=$(echo $OB | cut -d'/' -f1)
+    BRANCH=$(echo $OB | cut -d'/' -f2)
+fi
+echo "rebasing to remote:"$ORIGIN "branch:"$BRANCH
+
+git fetch $ORIGIN
+# do this as a single command so that if reset fails, there is no commit attempt.
+git reset --soft $(git merge-base HEAD $ORIGIN/$BRANCH) && (
+    git commit -m "$(git log --format=%B --reverse HEAD..HEAD@{1})"
+    git commit --amend # allow editing comment
+)
+# keep-empty is needed so that base commit gets integrated
+git rebase --keep-empty --strategy=recursive  $ORIGIN/$BRANCH

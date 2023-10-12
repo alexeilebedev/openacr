@@ -1,6 +1,9 @@
-// (C) AlgoEngineering LLC 2008-2012
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2012 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,14 +18,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
 // Source: cpp/amc/bitset.cpp
-//
-// Created By: alexei.lebedev hayk.mkrtchyan
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev hayk.mkrtchyan jeffrey.wang
 //
 
 #include "include/amc.h"
@@ -354,5 +352,66 @@ void amc::tfunc_Bitset_Sup() {
         Ins(&R, sup.body, "    }");
         Ins(&R, sup.body, "}");
         Ins(&R, sup.body, "return ret;");
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+void amc::tfunc_Bitset_bitcurs() {
+    algo_lib::Replscope &R = amc::_db.genfield.R;
+    amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
+    amc::FCtype &elemtype = *amc::_db.genfield.p_field->p_arg;
+    u32 elem_bits = elemtype.c_csize ? elemtype.c_csize->size*8 :0;
+    if (elem_bits <= 64) {
+        amc::FFunc& curs_next = amc::ind_func_GetOrCreate(Subst(R,"$field_bitcurs.Next"));
+        Ins(&R, curs_next.comment, "proceed to next item");
+        Ins(&R, curs_next.ret  , "void", false);
+        Ins(&R, curs_next.proto, "$Parname_$name_bitcurs_Next($Parname_$name_bitcurs &curs)", false);
+        Ins(&R, curs_next.body, "++curs.bit;");
+        Ins(&R, curs_next.body, "int index = curs.bit / $elembits;");
+        Ins(&R, curs_next.body, "int offset = curs.bit % $elembits;");
+        Ins(&R, curs_next.body, "for (; index < curs.n_elems; ++index, offset = 0) {");
+        Ins(&R, curs_next.body, "    u64 rest = curs.elems[index] >> offset;");
+        Ins(&R, curs_next.body, "    if (rest) {");
+        Ins(&R, curs_next.body, "         offset += algo::u64_BitScanForward(rest);");
+        Ins(&R, curs_next.body, "         break;");
+        Ins(&R, curs_next.body, "    }");
+        Ins(&R, curs_next.body, "}");
+        Ins(&R, curs_next.body, "curs.bit = index * $elembits + offset;");
+        Ins(&R, ns.curstext, "");
+        Ins(&R, ns.curstext, "struct $Parname_$name_bitcurs {// cursor");
+        Ins(&R, ns.curstext, "    typedef int& ChildType;");
+        Ins(&R, ns.curstext, "    $Cpptype* elems;");
+        Ins(&R, ns.curstext, "    int n_elems;");
+        Ins(&R, ns.curstext, "    int bit;");
+        Ins(&R, ns.curstext, "    $Parname_$name_bitcurs() : elems(0), n_elems(0), bit(0) {}");
+        Ins(&R, ns.curstext, "};");
+        Ins(&R, ns.curstext, "");
+
+        {
+            amc::FFunc& curs_reset = amc::ind_func_GetOrCreate(Subst(R,"$field_bitcurs.Reset"));
+            Ins(&R, curs_reset.ret  , "void", false);
+            Ins(&R, curs_reset.proto, "$Parname_$name_bitcurs_Reset($Parname_$name_bitcurs &curs, $Partype &parent)", false);
+            Ins(&R, curs_reset.body, "curs.elems = &$name_qFind(parent,0);");
+            Ins(&R, curs_reset.body, "curs.n_elems = $name_N(parent);");
+            Ins(&R, curs_reset.body, "curs.bit = -1;");
+            Ins(&R, curs_reset.body, "$Parname_$name_bitcurs_Next(curs);");
+        }
+
+        {
+            amc::FFunc& curs_validq = amc::ind_func_GetOrCreate(Subst(R,"$field_bitcurs.ValidQ"));
+            curs_validq.inl = true;
+            Ins(&R, curs_validq.comment, "cursor points to valid item");
+            Ins(&R, curs_validq.ret  , "bool", false);
+            Ins(&R, curs_validq.proto, "$Parname_$name_bitcurs_ValidQ($Parname_$name_bitcurs &curs)", false);
+            Ins(&R, curs_validq.body, "return curs.bit < curs.n_elems*$elembits;");
+        }
+
+        amc::FFunc& curs_access = amc::ind_func_GetOrCreate(Subst(R,"$field_bitcurs.Access"));
+        curs_access.inl = true;
+        Ins(&R, curs_access.comment, "item access");
+        Ins(&R, curs_access.ret  , "int&", false);
+        Ins(&R, curs_access.proto, "$Parname_$name_bitcurs_Access($Parname_$name_bitcurs &curs)", false);
+        Ins(&R, curs_access.body, "return curs.bit;");
     }
 }

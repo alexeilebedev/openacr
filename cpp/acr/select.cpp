@@ -1,6 +1,8 @@
-// (C) AlgoEngineering LLC 2008-2013
-// (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2013 AlgoEngineering LLC
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,27 +17,33 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: acr (exe) -- Algo Cross-Reference - ssimfile database & update tool
 // Exceptions: NO
 // Source: cpp/acr/select.cpp -- Selection
-//
-// Created By: alexei.lebedev
-// Recent Changes: alexei.lebedev
 //
 
 #include "include/acr.h"
 
 // -----------------------------------------------------------------------------
 
+// Remove record from the per-ctype selected set
+// Remove record from global selected set
+// If the record was the last selected record for its ctype,
+// remove its ctype from the selected list
 void acr::Rec_Deselect(acr::FRec& rec) {
     acr::zd_selrec_Remove(*rec.p_ctype, rec);
     acr::zd_all_selrec_Remove(rec);
+    if (zd_selrec_EmptyQ(*rec.p_ctype)) {
+        acr::zd_sel_ctype_Remove(*rec.p_ctype);
+    }
 }
 
 // -----------------------------------------------------------------------------
 
 // De-select all records
+// - zd_all_selrec list is cleared
+// - zd_selrec list is cleared for each ctype
+// - zd_sel_ctype list is cleared
 void acr::Rec_DeselectAll() {
     acr::zd_all_selrec_RemoveAll();
     while(acr::FCtype *ctype=acr::zd_sel_ctype_First()) {
@@ -52,6 +60,19 @@ void acr::Rec_SelectAll() {
     ind_beg(acr::_db_file_curs, file, acr::_db) {
         ind_beg(acr::file_zd_frec_curs, rec, file) {
             Rec_Select(rec);
+        }ind_end;
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
+// Select all records that were modified
+void acr::Rec_SelectModified() {
+    ind_beg(acr::_db_file_curs, file, acr::_db) {
+        ind_beg(acr::file_zd_frec_curs, rec, file) {
+            if (rec.mod) {
+                Rec_Select(rec);
+            }
         }ind_end;
     }ind_end;
 }

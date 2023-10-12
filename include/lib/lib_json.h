@@ -1,5 +1,8 @@
-// (C) 2014-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2014-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,13 +17,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: lib_json (lib) -- Full json support library
 // Exceptions: NO
 // Header: include/lib/lib_json.h
-//
-// Created By: alexei.lebedev alexey.polovinkin
-// Recent Changes: alexei.lebedev alexey.polovinkin
 //
 // JSON library
 // predefined conversions from basic types to json nodes

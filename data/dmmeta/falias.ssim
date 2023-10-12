@@ -1,0 +1,4 @@
+dmmeta.falias  field:algo_lib.Cmdline.d  basefield:algo_lib.Cmdline.debug  comment:""
+dmmeta.falias  field:algo_lib.Cmdline.h  basefield:algo_lib.Cmdline.help  comment:""
+dmmeta.falias  field:algo_lib.Cmdline.sig  basefield:algo_lib.Cmdline.signature  comment:""
+dmmeta.falias  field:algo_lib.Cmdline.v  basefield:algo_lib.Cmdline.verbose  comment:""

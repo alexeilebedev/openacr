@@ -4,39 +4,39 @@
 
 ```
 inline-command: atf_comp -h
-
-
-Usage: atf_comp [options]
-    -in               string  Input directory or filename, - for stdin. default: "data"
-    [comptest]        string  Select comptest (SQL regex). default: "%"
-    -mdbg                     (action) Run component test under debugger. default: false
-    -run                      (action) Run selected component tests. default: true
-    -capture                  (action) Re-capture test results. default: false
-    -print                    (action) Print testcase. default: false
-    -e                        (action) Open selected testcases in an editor. default: false
-    -normalize                (action) Renumber and normalize tmsgs. default: false
-    -covcapture               (action) Capture new coverage percentages and save back. default: false
-    -covcheck                 (action) Check coverage percentages against tgtcov table. default: false
-    -compdir          string  Component image directory (exe)
-    -cfg              string  Set config. default: "release"
-    -check_untracked          Check for untracked file before allowing test to run. default: true
-    -maxerr           int     Exit after this many errors. default: 1
-    -build                    Build given cfg before test. default: false
-    -ood                      Check given cfg for ood before test. default: false
-    -memcheck                 Run under memory checker (valgrind). default: false
-    -force                    (With -memcheck) run suppressed memcheck. default: false
-    -callgrind                Run under callgrind profiler (valgrind). default: false
-    -maxjobs          int     Maximum number of tests run in parallel. default: 1
-    -stream                   prints component's output. default: false
-    -i                        Read and execute testcase from stdin. default: false
-    -write                    (implied with -e) Write any changes back to ssim tables. default: true
-    -report                   Print final report. default: false
-    -b                string  Breakpoint passed to mdbg as-is
-    -verbose                  Enable verbose mode
-    -debug                    Enable debug mode
-    -version                  Show version information
-    -sig                      Print SHA1 signatures for dispatches
-    -help                     Print this screen and exit
+Usage: atf_comp [[-comptest:]<regx>] [options]
+    OPTION            TYPE    DFLT       COMMENT
+    -in               string  "data"     Input directory or filename, - for stdin
+    [comptest]        regx    "%"        Select comptest (SQL regex)
+    -mdbg                                (action) Run component test under debugger
+    -run                      Y          (action) Run selected component tests
+    -capture                             (action) Re-capture test results
+    -print                               (action) Print testcase
+    -printinput                          (action) Print input of test case
+    -e                                   (action) Open selected testcases in an editor
+    -normalize                           (action) Renumber and normalize tmsgs
+    -covcapture                          (action) Capture new coverage percentages and save back
+    -covcheck                            (action) Check coverage percentages against tgtcov table
+    -compdir          string  ""         Component image directory (exe)
+    -cfg              string  "release"  Set config
+    -check_untracked          Y          Check for untracked file before allowing test to run
+    -maxerr           int     1          Exit after this many errors
+    -build                               Build given cfg before test
+    -ood                                 Check given cfg for ood before test
+    -memcheck                            Run under memory checker (valgrind)
+    -force                               (With -memcheck) run suppressed memcheck
+    -callgrind                           Run under callgrind profiler (valgrind)
+    -maxjobs          int     1          Maximum number of tests run in parallel
+    -stream                              prints component's output
+    -i                                   Read and execute testcase from stdin
+    -write                    Y          (implied with -e) Write any changes back to ssim tables
+    -report                              Print final report
+    -b                string  ""         Breakpoint passed to mdbg as-is
+    -verbose          int                Verbosity level (0..255); alias -v; cumulative
+    -debug            int                Debug level (0..255); alias -d; cumulative
+    -help                                Print help an exit; alias -h
+    -version                             Print version and exit
+    -signature                           Show signatures and exit; alias -sig
 
 ```
 
@@ -229,8 +229,9 @@ It is not possible to combine several tools in singe run, and thus not all files
 
 ### Printing testcase
 
-Use `-print` to print a testcase to stdout in a human-readable way (display format)
-This output can be fed directly to the target process using bash pipe.
+Use `-print` to print a testcase to stdout in a human-readable way (display format).
+Use `-printinput` to print testcase input,
+which can be fed directly to the target process using bash pipe.
 
 ### Editing testcase
 

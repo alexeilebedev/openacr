@@ -1,6 +1,9 @@
-// (C) AlgoEngineering LLC 2008-2012
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2012 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,14 +18,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
 // Source: cpp/amc/exec.cpp -- reftype Exec
-//
-// Created By: alexei.lebedev hayk.mkrtchyan
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev hayk.mkrtchyan
 //
 
 #include "include/amc.h"
@@ -231,74 +229,80 @@ void amc::tfunc_Exec_Execv() {
     amc::FField &execfield = *amc::_db.genfield.p_field;
     bool amc_command = ind_ns_Find(name_Get(*execfield.p_arg)) != NULL;
 
+    amc::FCtype &cmdtype=*amc::_db.genfield.p_field->p_arg;
     amc::FFunc& execv = CreateCurFunc();
-    Set(R, "$ndatafld", tempstr()<<amc::c_datafld_N(*amc::_db.genfield.p_field->p_arg) * 2);
+    Set(R,"$cmdtypens",ns_Get(cmdtype));
     Ins(&R, execv.ret    , "int",false);
     Ins(&R, execv.proto  , "$name_Execv($Parent)",false);
     Ins(&R, execv.comment, "Call execv with specified parameters -- cprint:$Ctype.Argv");
-    Ins(&R, execv.body, "char **argv = (char**)alloca(($ndatafld+2+algo_lib::_db.cmdline.verbose)*sizeof(char*));"
-        " // start of first arg (future pointer)");
-    Ins(&R, execv.body, "algo::tempstr temp;");
-    Ins(&R, execv.body, "int n_argv=0;");
-
-    Ins(&R, execv.body,"argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer");
-    Ins(&R, execv.body, "temp << $_path;");
-    Ins(&R, execv.body, "ch_Alloc(temp) = 0;// NUL term for pathname");
-
-    ind_beg(amc::ctype_c_field_curs, field, *amc::_db.genfield.p_field->p_arg) if (!FldfuncQ(field)) {
+    Ins(&R, execv.body, "algo_lib::exec_args_Alloc() << $_path;");
+    ind_beg(amc::ctype_c_field_curs, field, cmdtype) if (!FldfuncQ(field)) {
         Set(R, "$fldname", name_Get(field));
-        if (ch_N(field.dflt.value) > 0) {
-            Set(R, "$dflt", field.dflt.value);
-            if (field.reftype==dmmeta_Reftype_reftype_RegxSql) {
-                Set(R, "$chkdflt", "$_cmd.$fldname.expr != $dflt");
-            } else {
-                Set(R, "$chkdflt", "$_cmd.$fldname != $dflt");
-            }
-        } else {
-            Set(R, "$chkdflt", "true");
-        }
-        Ins(&R, execv.body, "");
-        Ins(&R, execv.body, "if ($chkdflt) {");
-        if (amc_command) {
-            // amc command -- single argument contains key & value
-            Ins(&R, execv.body,"    argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer");
-            Ins(&R, execv.body,"    temp << \"-$fldname:\";");
-        } else {
-            // non-amc command -- can't use key-value format. 2 arguments needed
-            Ins(&R, execv.body,"    argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer");
-            Ins(&R, execv.body,"    temp << \"-$fldname\";");
-            Ins(&R, execv.body,"    ch_Alloc(temp) = 0;");
-            Ins(&R, execv.body,"    argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer");
-        }
-        // #AL# this is a hack -- need a field print function here.
-        amc::FFunc* func = amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Print"));
-        bool has_field_print = func != NULL;
-        has_field_print |= field.reftype == dmmeta_Reftype_reftype_RegxSql;
-        if (has_field_print) {
-            Set(R, "$fns", ns_Get(*field.p_ctype));
-            Ins(&R, execv.body, "    $fns::$fldname_Print($_cmd, temp);");
-        } else {
+        if (field.reftype == dmmeta_Reftype_reftype_Tary) {
             Set(R, "$Ftype", name_Get(*field.p_arg));
-            Ins(&R, execv.body,"    $Ftype_Print($_cmd.$fldname, temp);");
+            Ins(&R, execv.body, "ind_beg($cmdtypens::$name_$fldname_curs,value,$_cmd) {");
+            if (amc_command) {
+                // amc command -- single argument contains key & value
+                Ins(&R, execv.body,"    cstring *arg = &algo_lib::exec_args_Alloc();");
+                Ins(&R, execv.body,"    *arg << \"-$fldname:\";");
+            } else {
+                // non-amc command -- can't use key-value format. 2 arguments needed
+                Ins(&R, execv.body,"    algo_lib::exec_args_Alloc() << \"-$fldname\";");
+                Ins(&R, execv.body,"    cstring *arg = &algo_lib::exec_args_Alloc();");
+            }
+            Set(R, "$Ftype", name_Get(*field.p_arg));
+            Ins(&R, execv.body,"    $Ftype_Print(value, *arg);");
+            Ins(&R, execv.body, "}ind_end;");
+        } else {
+            if (ch_N(field.dflt.value) > 0) {
+                Set(R, "$dflt", field.dflt.value);
+                if (field.reftype==dmmeta_Reftype_reftype_Regx) {
+                    Set(R, "$chkdflt", "$_cmd.$fldname.expr != $dflt");
+                } else {
+                    Set(R, "$chkdflt", "$_cmd.$fldname != $dflt");
+                }
+            } else {
+                Set(R, "$chkdflt", "true");
+            }
+            Ins(&R, execv.body, "");
+            Ins(&R, execv.body, "if ($chkdflt) {");
+            if (amc_command) {
+                // amc command -- single argument contains key & value
+                Ins(&R, execv.body,"    cstring *arg = &algo_lib::exec_args_Alloc();");
+                Ins(&R, execv.body,"    *arg << \"-$fldname:\";");
+            } else {
+                // non-amc command -- can't use key-value format. 2 arguments needed
+                Ins(&R, execv.body,"    algo_lib::exec_args_Alloc() << \"-$fldname\";");
+                Ins(&R, execv.body,"    cstring *arg = &algo_lib::exec_args_Alloc();");
+            }
+            // #AL# this is a hack -- need a field print function here.
+            amc::FFunc* func = amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Print"));
+            bool has_field_print = func != NULL;
+            has_field_print |= field.reftype == dmmeta_Reftype_reftype_Regx;
+            if (has_field_print) {
+                Set(R, "$fns", ns_Get(*field.p_ctype));
+                Ins(&R, execv.body, "    $fns::$fldname_Print($_cmd, *arg);");
+            } else {
+                Set(R, "$Ftype", name_Get(*field.p_arg));
+                Ins(&R, execv.body,"    $Ftype_Print($_cmd.$fldname, *arg);");
+            }
+            Ins(&R, execv.body,"}");
         }
-        Ins(&R, execv.body,"    ch_Alloc(temp) = 0;// NUL term for this arg");
-        Ins(&R, execv.body,"}");
     }ind_end;
 
     if (amc_command) {
         // add verbose flags -- one fewer than current process
-        Ins(&R, execv.body,"for (int i=0; i+1 < algo_lib::_db.cmdline.verbose; i++) {");
-        Ins(&R, execv.body,"    argv[n_argv++] = (char*)(int_ptr)ch_N(temp);// future pointer");
-        Ins(&R, execv.body,"    temp << \"-verbose\";");
-        Ins(&R, execv.body,"    ch_Alloc(temp) = 0;");
+        Ins(&R, execv.body,"for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {");
+        Ins(&R, execv.body,"    algo_lib::exec_args_Alloc() << \"-verbose\";");
         Ins(&R, execv.body,"}");
     }
 
-    // shift argv pointers
-    Ins(&R, execv.body,"argv[n_argv] = NULL; // last pointer");
-    Ins(&R, execv.body,"while (n_argv>0) { // shift pointers");
-    Ins(&R, execv.body,"    argv[--n_argv] += (u64)temp.ch_elems;");
-    Ins(&R, execv.body,"}");
+    // form args array
+    Ins(&R, execv.body,"char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));");
+    Ins(&R, execv.body,"ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {");
+    Ins(&R, execv.body,"    argv[ind_curs(arg).index] = Zeroterm(arg);");
+    Ins(&R, execv.body,"}ind_end;");
+    Ins(&R, execv.body,"argv[algo_lib::exec_args_N()] = NULL;");
 
     Ins(&R, execv.body,"// if $_path is relative, search for it in PATH");
     Ins(&R, execv.body,"algo_lib::ResolveExecFname($_path);");

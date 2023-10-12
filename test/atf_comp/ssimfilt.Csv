@@ -1,0 +1,10 @@
+# atf_comp -report:N -printinput ssimfilt.Csv | ssimfilt -format:csv | cat
+nstype,comment
+exe,Executable
+lib,Library
+none,"Skip building"
+objlist,"Object files are added to dependents' link line"
+pch,"Precompiled header"
+protocol,"Protocol (not a target)"
+ssimdb,"Ssim database (not a target)"
+

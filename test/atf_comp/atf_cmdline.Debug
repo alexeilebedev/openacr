@@ -1,0 +1,19 @@
+# atf_comp -report:N -printinput atf_cmdline.Debug | atf_cmdline -debug blah -str blah | cat
+astr:blah
+anum:0
+adbl:0
+aflag:N
+str:blah
+num:0
+dbl:0
+flag:N
+dstr:blah
+dnum:-33
+ddbl:0.0001
+dflag:Y
+fconst:high
+cconst:None
+dregx.expr:%
+dpkey:
+verbose:0
+debug:1

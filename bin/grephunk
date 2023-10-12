@@ -1,5 +1,25 @@
 #!/usr/bin/env perl
-use strict;
+# Copyright (C) 2008-2013 AlgoEngineering LLC
+# Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+# Copyright (C) 2023 AlgoRND
+#
+# License: GPL
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# Contacting ICE: <https://www.theice.com/contact>
+# first line of defense:
+# get rid of trivial conflicts and commit if no further changes...
 # scan hunks on stdin,
 # and filter them according them to specified pattern
 # any number of patterns must be specified
@@ -15,8 +35,7 @@ use strict;
 # filename pattern is specified with f:<regex>
 # example: grephunk amc f:!/gen/ x.diff h:'}\s+$'
 # hunk must contain word amc anywhere in it, filename should not have pattern /gen/
-#    and hunk ends in closing curly (plus some whitespace)
-
+# and hunk ends in closing curly (plus some whitespace)
 # Example of a patch file:
 # diff --git a/include/gen/atf_amc_gen.inl.h b/include/gen/atf_amc_gen.inl.h
 # index fbcd12a..5871940 100644
@@ -27,12 +46,12 @@ use strict;
 # @@ -426 +440 @@ inline atf_amc::DispFilter::DispFilter() {
 # -inline int atf_amc::pmask_Nbits(atf_amc::DispFilter &parent) {
 # +inline int atf_amc::pmask_Nbits(atf_amc::DispFilter& parent) {
-#
 # Here there are 2 hunks, one for each @@-line
 # Each hunk shares the filename
 # Each hunk has a header (everything from word 'diff ' to the first @@)
 # and several bodies; each part starts with @@
-#
+
+use strict;
 
 my @patterns;
 my $hunkheader="";# everything prior to @@

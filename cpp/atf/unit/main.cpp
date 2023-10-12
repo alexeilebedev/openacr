@@ -1,6 +1,9 @@
-// (C) AlgoEngineering LLC 2008-2013
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2013 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,14 +18,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: atf_unit (exe) -- Unit tests (see unittest table)
 // Exceptions: yes
 // Source: cpp/atf/unit/main.cpp
-//
-// Created By: alexei.lebedev alexey.polovinkin
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev jeffrey.wang
 //
 
 #include "include/atf_unit.h"
@@ -62,11 +60,14 @@ static void Main_Debug() {
     }ind_end;
     single_case_cpp << "atf_unit::unittest_" << Pathcomp(single_case,".LL") << "_" << Pathcomp(single_case,".LR");
 
-    command::mdbg mdbg;
-    mdbg.target = "atf_unit";
-    mdbg.args = tempstr() << " -nofork " << single_case;
-    mdbg.b = tempstr() << single_case_cpp<<",Testcmpfail";
-    SysCmd(mdbg_ToCmdline(mdbg), FailokQ(true), DryrunQ(false));
+    command::mdbg_proc mdbg;
+    mdbg.cmd.target = "atf_unit";
+    args_Alloc(mdbg.cmd) << "-nofork";
+    args_Alloc(mdbg.cmd) << single_case;
+    b_Alloc(mdbg.cmd) << single_case_cpp;
+    b_Alloc(mdbg.cmd) << "Testcmpfail";
+    int rc=mdbg_Exec(mdbg);
+    algo_lib::_db.exit_code=rc;
 }
 
 // -----------------------------------------------------------------------------
@@ -187,6 +188,17 @@ void atf_unit::Testcmp(const char *file, int line, const char *value, const char
 
 // -----------------------------------------------------------------------------
 
+void atf_unit::unittest_atf_unit_Outfile() {
+    ind_beg(algo::Dir_curs,entry,"test/atf_unit/*") {
+        if (!EndsWithQ(entry.filename,"~")) {
+            vrfy(atf_unit::ind_unittest_Find(entry.filename)
+                 ,tempstr()<<"foreign file "<<entry.pathname);
+        }
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
 void atf_unit::Main() {
 
     atf_unit::_db.perf_cycle_budget = algo::ToSchedTime(atf_unit::_db.cmdline.perf_secs);
@@ -207,7 +219,7 @@ void atf_unit::Main() {
     }
 
     // Drop into debugger
-    if (atf_unit::_db.cmdline.debug) {
+    if (atf_unit::_db.cmdline.mdbg) {
         Main_Debug();
         _exit(0);
     }

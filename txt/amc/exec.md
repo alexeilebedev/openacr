@@ -22,7 +22,8 @@ struct amc_proc { // command.amc_proc: Subprocess: Algo Model Compiler: generate
     amc_proc();
     ~amc_proc();
 private:
-    // reftype of command.amc_proc.amc prohibits copy
+    // reftype Exec of command.amc_proc.amc prohibits copy
+    // value field command.amc_proc.cmd is not copiable
     amc_proc(const amc_proc&){ /*disallow copy constructor */}
     void operator =(const amc_proc&){ /*disallow direct assignment */}
 };

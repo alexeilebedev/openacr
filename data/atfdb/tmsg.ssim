@@ -2,5 +2,57 @@ atfdb.tmsg  tmsg:acr.BadNs/100000.in  istuple:N  msg:"dmmeta.ctype ctype:x.Y"
 atfdb.tmsg  tmsg:acr.BadPkey/100000.in  istuple:N  msg:dmmeta.ctype
 atfdb.tmsg  tmsg:acr.BadReftype/100000.in  istuple:N  msg:"dmmeta.field field:command.acr_ed.blah arg:bool"
 atfdb.tmsg  tmsg:acr.BadReftype2/100000.in  istuple:N  msg:"dmmeta.field field:command.acr_ed.blah arg:i32 reftype:Tary"
+atfdb.tmsg  tmsg:acr.DelRecord/100000.in  istuple:N  msg:'dmmeta.ns  ns:samp  nstype:exe  license:GPL  comment:""'
+atfdb.tmsg  tmsg:acr.DelRecord/100010.in  istuple:N  msg:"dev.target  target:samp  license:GPL  compat:%-%g%.%-%"
+atfdb.tmsg  tmsg:acr.DelRecord/100020.in  istuple:N  msg:'dev.targdep  targdep:samp.algo_lib  comment:""'
+atfdb.tmsg  tmsg:acr.DelRecord/100030.in  istuple:N  msg:'dev.targsrc  targsrc:samp/cpp/samp/1.cpp          comment:""'
+atfdb.tmsg  tmsg:acr.DelRecord/100040.in  istuple:N  msg:'dev.targsrc  targsrc:samp/cpp/samp/2.cpp      comment:""'
+atfdb.tmsg  tmsg:acr.Fields/100000.in  istuple:N  msg:'dmmeta.ns  ns:ns1        nstype:exe       comment:"comment 1"'
+atfdb.tmsg  tmsg:acr.Fields/100010.in  istuple:N  msg:'dmmeta.ns  ns:ns2      nstype:ssimdb    comment:"comment 2"'
+atfdb.tmsg  tmsg:acr.Fields/100020.in  istuple:N  msg:'dmmeta.ns  ns:ns3         nstype:protocol  comment:"comment 3"'
+atfdb.tmsg  tmsg:acr.FieldsComma/100000.in  istuple:N  msg:'dmmeta.ns  ns:ns1        nstype:exe       comment:"comment 1"'
+atfdb.tmsg  tmsg:acr.FieldsComma/100010.in  istuple:N  msg:'dmmeta.ns  ns:ns2      nstype:ssimdb    comment:"comment 2"'
+atfdb.tmsg  tmsg:acr.FieldsComma/100020.in  istuple:N  msg:'dmmeta.ns  ns:ns3         nstype:protocol  comment:"comment 3"'
+atfdb.tmsg  tmsg:acr.RenameRecord/100000.in  istuple:N  msg:'dmmeta.ns  ns:samp  nstype:exe  license:GPL  comment:""'
+atfdb.tmsg  tmsg:acr.RenameRecord/100010.in  istuple:N  msg:"dev.target  target:samp  compat:%-%g%.%-%"
+atfdb.tmsg  tmsg:acr.RenameRecord/100020.in  istuple:N  msg:'dev.targdep  targdep:samp.algo_lib  comment:""'
+atfdb.tmsg  tmsg:acr.RenameRecord/100030.in  istuple:N  msg:'dev.targsrc  targsrc:samp/cpp/samp/1.cpp          comment:""'
+atfdb.tmsg  tmsg:acr.RenameRecord/100040.in  istuple:N  msg:'dev.targsrc  targsrc:samp/cpp/samp/2.cpp      comment:""'
+atfdb.tmsg  tmsg:acr.Where/100000.in  istuple:N  msg:'dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:""'
+atfdb.tmsg  tmsg:acr.Where/100010.in  istuple:N  msg:'dmmeta.ns  ns:ns2      nstype:ssimdb    license:GPL  comment:""'
+atfdb.tmsg  tmsg:acr.Where/100020.in  istuple:N  msg:'dmmeta.ns  ns:ns3         nstype:protocol    license:GPL   comment:""'
+atfdb.tmsg  tmsg:acr_compl.CustomData/100000.in  istuple:N  msg:"gclidb.gclicmdt  gclicmdt:mrreviewrm.ghp      gmethod:DELETE  uri:repos/$KEYID/pulls/$ISSUE/requested_reviewers     comment:github"
+atfdb.tmsg  tmsg:acr_compl.CustomData/100010.in  istuple:N  msg:'gclidb.gclicmdt  gclicmdt:mrsearch.ghp        gmethod:GET     uri:"search/issues?q=is:pr+repo:$KEYID$COND"          comment:github'
+atfdb.tmsg  tmsg:acr_compl.CustomData/100020.in  istuple:N  msg:'gclidb.gclicmdt  gclicmdt:mslist.ghp          gmethod:GET     uri:"repos/$KEYID/milestones?state=open"              comment:github'
+atfdb.tmsg  tmsg:acr_compl.CustomData/100030.in  istuple:N  msg:'gclidb.gclicmdt  gclicmdt:mslist.glpat        gmethod:GET     uri:"api/v4/projects/$KEYID/milestones?active=true"   comment:gitlab'
+atfdb.tmsg  tmsg:ssimfilt.Csv/100000.in  istuple:N  msg:"dmmeta.nstype  nstype:exe       comment:Executable"
+atfdb.tmsg  tmsg:ssimfilt.Csv/100010.in  istuple:N  msg:"dmmeta.nstype  nstype:lib       comment:Library"
+atfdb.tmsg  tmsg:ssimfilt.Csv/100020.in  istuple:N  msg:'dmmeta.nstype  nstype:none      comment:"Skip building"'
+atfdb.tmsg  tmsg:ssimfilt.Csv/100030.in  istuple:N  msg:'dmmeta.nstype  nstype:objlist   comment:"Object files are added to dependents\' link line"'
+atfdb.tmsg  tmsg:ssimfilt.Csv/100040.in  istuple:N  msg:'dmmeta.nstype  nstype:pch       comment:"Precompiled header"'
+atfdb.tmsg  tmsg:ssimfilt.Csv/100050.in  istuple:N  msg:'dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"'
+atfdb.tmsg  tmsg:ssimfilt.Csv/100060.in  istuple:N  msg:'dmmeta.nstype  nstype:ssimdb    comment:"Ssim database (not a target)"'
+atfdb.tmsg  tmsg:ssimfilt.FirstTag/100000.in  istuple:N  msg:"dmmeta.ns ns:blah"
+atfdb.tmsg  tmsg:ssimfilt.FirstTag/100010.in  istuple:N  msg:"dmmeta.ctype ctype:blah.Y"
+atfdb.tmsg  tmsg:ssimfilt.MatchField/100000.in  istuple:N  msg:"dmmeta.ns ns:blah"
+atfdb.tmsg  tmsg:ssimfilt.MatchField/100010.in  istuple:N  msg:"dmmeta.ctype ctype:blah.Y"
+atfdb.tmsg  tmsg:ssimfilt.MatchField/100020.in  istuple:N  msg:"dev.target target:ssimfilt"
+atfdb.tmsg  tmsg:ssimfilt.MatchTag/100000.in  istuple:N  msg:"dmmeta.ns ns:blah"
+atfdb.tmsg  tmsg:ssimfilt.MatchTag/100010.in  istuple:N  msg:"dmmeta.ctype ctype:blah.Y"
+atfdb.tmsg  tmsg:ssimfilt.MatchTag/100020.in  istuple:N  msg:"dev.target target:ssimfilt"
+atfdb.tmsg  tmsg:ssimfilt.SelectField/100000.in  istuple:N  msg:"dmmeta.nstype  nstype:exe       comment:Executable"
+atfdb.tmsg  tmsg:ssimfilt.SelectField/100010.in  istuple:N  msg:"dmmeta.nstype  nstype:lib       comment:Library"
+atfdb.tmsg  tmsg:ssimfilt.SelectField/100020.in  istuple:N  msg:'dmmeta.nstype  nstype:none      comment:"Skip building"'
+atfdb.tmsg  tmsg:ssimfilt.SelectField/100030.in  istuple:N  msg:'dmmeta.nstype  nstype:objlist   comment:"Object files are added to dependents\' link line"'
+atfdb.tmsg  tmsg:ssimfilt.SelectField/100040.in  istuple:N  msg:'dmmeta.nstype  nstype:pch       comment:"Precompiled header"'
+atfdb.tmsg  tmsg:ssimfilt.SelectField/100050.in  istuple:N  msg:'dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"'
+atfdb.tmsg  tmsg:ssimfilt.SelectField/100060.in  istuple:N  msg:'dmmeta.nstype  nstype:ssimdb    comment:"Ssim database (not a target)"'
+atfdb.tmsg  tmsg:ssimfilt.Table/100000.in  istuple:N  msg:"dmmeta.nstype  nstype:exe       comment:Executable"
+atfdb.tmsg  tmsg:ssimfilt.Table/100010.in  istuple:N  msg:"dmmeta.nstype  nstype:lib       comment:Library"
+atfdb.tmsg  tmsg:ssimfilt.Table/100020.in  istuple:N  msg:'dmmeta.nstype  nstype:none      comment:"Skip building"'
+atfdb.tmsg  tmsg:ssimfilt.Table/100030.in  istuple:N  msg:'dmmeta.nstype  nstype:objlist   comment:"Object files are added to dependents\' link line"'
+atfdb.tmsg  tmsg:ssimfilt.Table/100040.in  istuple:N  msg:'dmmeta.nstype  nstype:pch       comment:"Precompiled header"'
+atfdb.tmsg  tmsg:ssimfilt.Table/100050.in  istuple:N  msg:'dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"'
+atfdb.tmsg  tmsg:ssimfilt.Table/100060.in  istuple:N  msg:'dmmeta.nstype  nstype:ssimdb    comment:"Ssim database (not a target)"'
 atfdb.tmsg  tmsg:sv2ssim.UniqueFieldName/100000.in  istuple:N  msg:1,1,1,1,,
 atfdb.tmsg  tmsg:sv2ssim.UniqueFieldName/100010.in  istuple:N  msg:2,2,2,2,2

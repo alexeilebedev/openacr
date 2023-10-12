@@ -1,4 +1,4 @@
-dmmeta.argvtype  ctype:bool  argvtype:flag  comment:""
+dmmeta.argvtype  ctype:bool  argvtype:""  comment:"Flag type"
 dmmeta.argvtype  ctype:double  argvtype:double  comment:""
 dmmeta.argvtype  ctype:float  argvtype:double  comment:""
 dmmeta.argvtype  ctype:i16  argvtype:int  comment:""

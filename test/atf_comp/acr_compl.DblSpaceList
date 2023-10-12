@@ -1,0 +1,3 @@
+# atf_comp -report:N -printinput acr_compl.DblSpaceList | acr_compl -line:"atf_cmdline -dbl " -type:63 | cat
+<double>
+value type

@@ -1,6 +1,9 @@
-// (C) AlgoEngineering LLC 2008-2012
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2012 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,14 +18,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: algo_lib (lib) -- Support library for all executables
 // Exceptions: NO
 // Source: cpp/lib/algo/regx.cpp -- Sql Regx implementation
-//
-// Created By: alexei.lebedev hayk.mkrtchyan
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev hayk.mkrtchyan
 //
 // Regx parser / matcher.
 // Supports parentheses, char ranges, ?, *, + (full list of macros below)
@@ -417,9 +415,7 @@ static bool Backslash(algo_lib::RegxParse &regxparse, algo_lib::Regx &regx, int 
 
 // -----------------------------------------------------------------------------
 
-// parse regex string
-static void RunRegxParse(algo_lib::RegxParse &regxparse) {
-    algo_lib::Regx &regx = *regxparse.p_regx;
+static void RegxReset(algo_lib::Regx &regx) {
     // reset any previous regx state -- actually, leaving it here doesn't hurt
     // except for wasting memory.
     state_RemoveAll(regx);
@@ -427,6 +423,14 @@ static void RunRegxParse(algo_lib::RegxParse &regxparse) {
     ary_RemoveAll(regx.next_front);
     ary_RemoveAll(regx.start);
     regx.accept = 0;
+}
+
+// -----------------------------------------------------------------------------
+
+// parse regex string
+static void RunRegxParse(algo_lib::RegxParse &regxparse) {
+    algo_lib::Regx &regx = *regxparse.p_regx;
+    RegxReset(regx);
     for (int i=0; i<elems_N(regxparse.input); i++) {
         bool processed = false;
         char c = regxparse.input[i];
@@ -509,10 +513,13 @@ static void RunRegxParse(algo_lib::RegxParse &regxparse) {
 
 // -----------------------------------------------------------------------------
 
+// there is not enough information in a regx expression to fully specify it.
+// sql vs shell vs classic regx, vs acr, partial vs full.
+// we print back the original expression that was read in, but the information
+// about what function read it is lost.
 void algo_lib::Regx_Print(algo_lib::Regx &regx, algo::cstring &lhs) {
-    // there is not enough information in a regx expression to fully specify it.
-    // sql vs shell vs classic regx, partial vs full.
-    lhs << regx.expr;// copout -- printing regx as it was read
+    // copout -- printing regx as it was read
+    lhs << regx.expr;
 }
 
 // -----------------------------------------------------------------------------
@@ -553,12 +560,12 @@ bool algo_lib::Regx_Match(algo_lib::Regx &regx, algo::strptr text) {
     bool ret = false;
     if (regx.accepts_all) {
         ret = true;// matches all strings
+    } else if (regx.literal) {
+        ret = regx.expr == text;// matches literally
+    } else if (ary_N(regx.front) == 0) {
+        ret = text.n_elems == 0; // matches empty string only
     } else {
-        if (ary_N(regx.front) == 0) {
-            ret = text.n_elems == 0; // matches empty string only
-        } else {
-            ret = ScanString(regx,text);
-        }
+        ret = ScanString(regx,text);
     }
     //prerr(regx.expr<<" // "<< text << " // "<<ret);
     return ret;
@@ -587,13 +594,21 @@ void algo_lib::Regx_ReadDflt(algo_lib::Regx &regx, algo::strptr input) {
 // if FULL is set to false, input is treated as ".*input.*"
 void algo_lib::Regx_ReadShell(algo_lib::Regx &regx, algo::strptr input, bool full) {
     regx.expr = input;
+    regx.literal=true;
     tempstr regx_str;
-    if (!full) regx_str << ".*";
+    if (!full) {
+        regx.literal=false;
+        regx_str << ".*";
+    }
     frep_(i,elems_N(input)) {
         switch(input[i]) {
         case '*':
+            regx_str<<".*";
+            regx.literal=false;
+            break;
         case '?':
-            regx_str<<'.';
+            regx_str<<".?";
+            regx.literal=false;
             break;
         case '.':
         case '\\':
@@ -601,12 +616,16 @@ void algo_lib::Regx_ReadShell(algo_lib::Regx &regx, algo::strptr input, bool ful
         case ']':
         case '(':
         case ')':
-            regx_str<<'\\';
+            regx.literal=false;
+            regx_str<<'\\'<<input[i];
             break;
+        default:
+            regx_str<<input[i];
         }
-        regx_str<<input[i];
     }
-    if (!full) regx_str << ".*";
+    if (!full) {
+        regx_str << ".*";
+    }
     algo_lib::RegxParse regxparse;
     regxparse.input = regx_str;
     regxparse.p_regx = &regx;
@@ -616,14 +635,17 @@ void algo_lib::Regx_ReadShell(algo_lib::Regx &regx, algo::strptr input, bool ful
 // -----------------------------------------------------------------------------
 
 // Parse SQL-style regx:
-// % -> .*
-// _ -> .
-// All other regx chars are escaped away
+// % is rewritten as .*
+// _ is rewritten as .
+// (, ), [, ] are passed through
+// ., *, ?, + are escaped
 // if FULL is set to false, input is treated as ".*input.*"
 void algo_lib::Regx_ReadSql(algo_lib::Regx &regx, algo::strptr input, bool full) {
     regx.expr = input;
+    regx.literal=true;
     tempstr regx_str;
     if (!full) {
+        regx.literal=false;
         regx_str << ".*";
     }
     bool escape = false;
@@ -641,13 +663,18 @@ void algo_lib::Regx_ReadSql(algo_lib::Regx &regx, algo::strptr input, bool full)
             }
         } else {
             switch(input[i]) {
-            case '\\': escape = true           ; break;
-            case '%' : regx_str<<".*"          ; break; // % -> .*
-            case '_' : regx_str<<"."           ; break; // _ -> .
-            case '.' : regx_str<<'\\'<<input[i]; break; // . -> \.
-            case '*' : regx_str<<'\\'<<input[i]; break; // * -> \*
-            case '?' : regx_str<<'\\'<<input[i]; break; // ? -> \?
-            case '+' : regx_str<<'\\'<<input[i]; break; // + -> \+
+            case '\\': escape = true           ; regx.literal=false; break; //
+            case '%' : regx_str<<".*"          ; regx.literal=false; break; // % -> .*
+            case '_' : regx_str<<"."           ; regx.literal=false; break; // _ -> .
+            case '.' :
+            case '*' :
+            case '?' :
+            case '+' : regx_str<<'\\'<<input[i]; break; // + -> \+, etc.
+            case '|' :
+            case '(' :
+            case ')' :
+            case '[' :
+            case ']' : regx_str<<input[i]      ; regx.literal=false; break; // + -> \+
             default  : regx_str<<input[i]      ; break; // $X -> $X
             }
         }
@@ -663,22 +690,70 @@ void algo_lib::Regx_ReadSql(algo_lib::Regx &regx, algo::strptr input, bool full)
 
 // -----------------------------------------------------------------------------
 
-bool algo_lib::Regx_ReadStrptrMaybe(algo_lib::Regx &regx, algo::strptr input) {
-    Regx_ReadSql(regx,input,true);
-    return true;
+// Parse ACR-style regx:
+// % is rewritten as .*
+// (, ), [, ], _ are passed through
+// ., *, ?, + are escaped
+// if FULL is set to false, input is treated as ".*input.*"
+// If the input expression can be matched as a string, set REGX.LITERAL to true
+void algo_lib::Regx_ReadAcr(algo_lib::Regx &regx, algo::strptr input, bool full) {
+    regx.expr = input;
+    regx.literal=true;
+    tempstr regx_str;
+    if (!full) {
+        regx.literal=false;
+        regx_str << ".*";
+    }
+    bool escape = false;
+    frep_(i,elems_N(input)) {
+        if (escape) {
+            escape = false;
+            switch(input[i]) {
+            case '%' : regx_str<<"%"           ; break; // \% -> %
+            case '\\':
+            case '(' :
+            case ')' :
+            case '|' :
+            default  : regx_str<<'\\'<<input[i]; break; // \$X -> \$X
+            }
+        } else {
+            switch(input[i]) {
+            case '\\': escape = true           ; regx.literal=false; break; //
+            case '%' : regx_str<<".*"          ; regx.literal=false; break; // % -> .*
+            case '.' :
+            case '*' :
+            case '?' :
+            case '+' : regx_str<<'\\'<<input[i]; break; // + -> \+, etc.
+            case '|' :
+            case '(' :
+            case ')' :
+            case '[' :
+            case ']' : regx_str<<input[i]      ; regx.literal=false; break; // + -> \+
+            default  : regx_str<<input[i]      ; break; // $X -> $X
+            }
+        }
+    }
+    if (!full) {
+        regx_str << ".*";
+    }
+    algo_lib::RegxParse regxparse;
+    regxparse.input = regx_str;
+    regxparse.p_regx = &regx;
+    ::RunRegxParse(regxparse);
 }
 
 // -----------------------------------------------------------------------------
 
-// Check if string contains a SQL regular expression
-bool algo_lib::SqlRegxQ(algo::strptr s) {
-    bool ret = false;
-    frep_(i, elems_N(s)) {
-        char c = s[i];
-        if (c == '|' || c == '%' || c == '(' || c == ')') {
-            ret = true;
-            break;
-        }
-    }
-    return ret;
+// Set REGX to match string INPUT literally
+void algo_lib::Regx_ReadLiteral(algo_lib::Regx &regx, algo::strptr input) {
+    RegxReset(regx);
+    regx.expr = input;
+    regx.literal=true;
+}
+
+// -----------------------------------------------------------------------------
+
+bool algo_lib::Regx_ReadStrptrMaybe(algo_lib::Regx &regx, algo::strptr input) {
+    Regx_ReadSql(regx,input,true);
+    return true;
 }

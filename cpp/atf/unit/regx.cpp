@@ -1,4 +1,7 @@
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -35,6 +38,16 @@ static bool RegxMatchSql(strptr expr, strptr str) {
     algo_lib::Regx regx;
     Regx_ReadSql(regx,expr,true);
     return Regx_Match(regx,str);
+}
+static bool RegxAcrLiteralQ(strptr expr) {
+    algo_lib::Regx regx;
+    Regx_ReadAcr(regx,expr,true);
+    return regx.literal;
+}
+static bool RegxSqlLiteralQ(strptr expr) {
+    algo_lib::Regx regx;
+    Regx_ReadSql(regx,expr,true);
+    return regx.literal;
 }
 
 // --------------------------------------------------------------------------------
@@ -80,7 +93,6 @@ void atf_unit::unittest_algo_lib_Regx() {
 
     vrfyeq_(RegxMatchSql("", ""), true);// empty regx matches empty string
     vrfyeq_(RegxMatchSql("", "x"), false);// empty regx matches empty string only
-    vrfyeq_(RegxMatchSql("_", "a"), true);// any char
     vrfyeq_(RegxMatchSql("\\_", "a"), false);// escaped underscore -> real char
     vrfyeq_(RegxMatchSql("%", ""), true);
     vrfyeq_(RegxMatchSql("%", "a"), true);
@@ -94,6 +106,38 @@ void atf_unit::unittest_algo_lib_Regx() {
     vrfyeq_(RegxMatchSql("(a|b)(d|e)", "ae"), true);// should be ok
     vrfyeq_(RegxMatchSql("(a|b)(d|e)", "bd"), true);// should be ok
     vrfyeq_(RegxMatchSql("(a|b)(d|e)", "bd"), true);// should be ok
+
+    vrfy_(RegxSqlLiteralQ(""));
+    vrfy_(RegxSqlLiteralQ("2"));
+    vrfy_(RegxSqlLiteralQ("."));
+    vrfy_(RegxSqlLiteralQ("*"));
+    vrfy_(RegxSqlLiteralQ("+"));
+    vrfy_(RegxSqlLiteralQ("?"));
+    vrfy_(RegxSqlLiteralQ("$"));
+    vrfy_(RegxSqlLiteralQ("^"));
+    vrfy_(!RegxSqlLiteralQ("_"));
+    vrfy_(!RegxSqlLiteralQ("|"));
+    vrfy_(!RegxSqlLiteralQ("%"));
+    vrfy_(!RegxSqlLiteralQ("("));
+    vrfy_(!RegxSqlLiteralQ(")"));
+    vrfy_(!RegxSqlLiteralQ("["));
+    vrfy_(!RegxSqlLiteralQ("]"));
+
+    vrfy_(RegxAcrLiteralQ(""));
+    vrfy_(RegxAcrLiteralQ("2"));
+    vrfy_(RegxAcrLiteralQ("."));
+    vrfy_(RegxAcrLiteralQ("_"));
+    vrfy_(RegxAcrLiteralQ("*"));
+    vrfy_(RegxAcrLiteralQ("+"));
+    vrfy_(RegxAcrLiteralQ("?"));
+    vrfy_(RegxAcrLiteralQ("$"));
+    vrfy_(RegxAcrLiteralQ("^"));
+    vrfy_(!RegxAcrLiteralQ("|"));
+    vrfy_(!RegxAcrLiteralQ("%"));
+    vrfy_(!RegxAcrLiteralQ("("));
+    vrfy_(!RegxAcrLiteralQ(")"));
+    vrfy_(!RegxAcrLiteralQ("["));
+    vrfy_(!RegxAcrLiteralQ("]"));
 }
 
 // -----------------------------------------------------------------------------

@@ -1,11 +1,26 @@
 #!/usr/bin/env bash
-# todo: make this the default output of
+# Copyright (C) 2023 AlgoRND
 #
+# License: GPL
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# todo: make this the default output of
 # acr_ed -create -ctype <typename> -subset <underlyingtype> -anonfld
 # add handling of anonfld to acr_ed
 # - if underlying type has cfmt, add a cfmt
 # - if underlying has small size, emit cheap_copy:Y
-#
+
 T=$1
 ARG=$2
 DFLT=${3:-0}

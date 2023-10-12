@@ -1,6 +1,9 @@
-// (C) AlgoEngineering LLC 2008-2012
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2012 AlgoEngineering LLC
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2021 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -15,14 +18,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
 // Source: cpp/amc/ctype/main.cpp -- Ctype code generators
-//
-// Created By: alexei.lebedev jeffrey.wang
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev hayk.mkrtchyan ara.aslyan
 //
 
 #include "include/amc.h"
@@ -753,8 +751,9 @@ void amc::tfunc_Ctype_PrintArgv() {
     if (has_print) {
         ind_beg(amc::ctype_c_field_curs, field,ctype) {
             vrfy(field.reftype == dmmeta_Reftype_reftype_Val
-                 || field.reftype == dmmeta_Reftype_reftype_RegxSql
-                 ,Subst(R,"Only field reftype:Val,Pkey are supported for $Ctype.PrintArgv"));
+                 || field.reftype == dmmeta_Reftype_reftype_Regx
+                 || field.reftype == dmmeta_Reftype_reftype_Tary
+                 ,Subst(R,"Only field reftype:Val,Pkey,RegxSql,Tary are supported for $Ctype.PrintArgv"));
             vrfy(!field.c_fbigend,Subst(R,"Big-endian is not supported for $Ctype.PrintArgv"));
         }ind_end;
     }
@@ -782,24 +781,34 @@ void amc::tfunc_Ctype_PrintArgv() {
                 Set(R, "$Attr", tempstr()<<"-"<<name_Get(field)<<":");
             }
             Set(R, "$name", name_Get(field));
-            tempstr text;
-            Ins(&R, text,"ch_RemoveAll(temp);");
-            // TODO: this function must be shared with the Tuple version!
-            if (amc::FFunc* func = amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Print"))) {
-                if (func->ismacro) {// inline the function!
-                    Ins(&R, text, func->body, false);
-                } else {
-                    Set(R, "$fns", ns_Get(*field.p_ctype));
-                    Ins(&R, text, "$fns::$name_Print(const_cast<$Cpptype&>(row), temp);");
-                }
-            } else {
+            if (field.reftype == dmmeta_Reftype_reftype_Tary) {
                 Set(R, "$Ftype", name_Get(valtype));
-                Ins(&R, text,"$Ftype_Print(row.$name, temp);");
+                Ins(&R, prnargv.body, "ind_beg($Name_$name_curs,value,row) {");
+                Ins(&R, prnargv.body, "    ch_RemoveAll(temp);");
+                Ins(&R, prnargv.body, "    $Ftype_Print(value, temp);");
+                Ins(&R, prnargv.body, "    str << \" $Attr\";");
+                Ins(&R, prnargv.body, "    strptr_PrintBash(temp,str);");
+                Ins(&R, prnargv.body, "}ind_end;");
+            } else {
+                tempstr text;
+                Ins(&R, text,"ch_RemoveAll(temp);");
+                // TODO: this function must be shared with the Tuple version!
+                if (amc::FFunc* func = amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Print"))) {
+                    if (func->ismacro) {// inline the function!
+                        Ins(&R, text, func->body, false);
+                    } else {
+                        Set(R, "$fns", ns_Get(*field.p_ctype));
+                        Ins(&R, text, "$fns::$name_Print(const_cast<$Cpptype&>(row), temp);");
+                    }
+                } else {
+                    Set(R, "$Ftype", name_Get(valtype));
+                    Ins(&R, text,"$Ftype_Print(row.$name, temp);");
+                }
+                Ins(&R, text,"str << \" $Attr\";");
+                Ins(&R, text,"strptr_PrintBash(temp,str);");
+                bool canskip = !field.c_anonfld; // anonymous fields must be printed or meaning of command can change
+                prnargv.body << CheckDfltExpr(field,text,canskip);
             }
-            Ins(&R, text,"str << \" $Attr\";");
-            Ins(&R, text,"strptr_PrintBash(temp,str);");
-            bool canskip = !field.c_anonfld; // anonymous fields must be printed or meaning of command can change
-            prnargv.body << CheckDfltExpr(field,text,canskip);
         }ind_end;
     }
 }
@@ -835,6 +844,66 @@ void amc::tfunc_Ctype_ToCmdline() {
         Ins(&R, tocmdline.body   , "    ret << \" -debug\";");
         Ins(&R, tocmdline.body   , "}");
         Ins(&R, tocmdline.body   , "return ret;");
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Used with command lines
+void amc::tfunc_Ctype_NArgs() {
+    algo_lib::Replscope R;
+    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+
+    bool has_read = false;
+    ind_beg(amc::ctype_zs_cfmt_curs, cfmt, ctype) {
+        if (cfmt.read && strfmt_Get(cfmt) == dmmeta_Strfmt_strfmt_Argv) {
+            has_read=true;
+            break;
+        }
+    }ind_end;
+    if (has_read) {
+        Set(R, "$Name", name_Get(ctype));
+        Set(R, "$ns", ns_Get(ctype));
+
+        amc::FFunc& func = amc::CreateCurFunc();
+        Ins(&R, func.comment, "Return # of command-line arguments that must follow this argument");
+        Ins(&R, func.comment, "If FIELD is invalid, return -1");
+        Ins(&R, func.proto  , Subst(R,"$Name_NArgs()"),false);
+        AddRetval(func, "i32", "retval", "1");
+        AddProtoArg(func, Subst(R,"$ns::FieldId"), "field");
+        AddProtoArg(func, "algo::strptr&", "out_dflt");
+        AddProtoArg(func, "bool*", "out_anon");
+        Ins(&R, func.body   , "switch (field) {");
+        ind_beg(ctype_c_field_curs,field,ctype) {
+            int nargs=1;
+            amc::FField *actualfield = &field;
+            tempstr comment;
+            if (field.c_falias) {
+                actualfield=field.c_falias->p_basefield;
+            }
+            Set(R, "$name", name_Get(field));
+            Set(R, "$isanon", (field.c_anonfld ? "true" : "false"));
+            if (actualfield->arg=="bool") {
+                nargs=0;
+                Set(R,"$emptyval","\"Y\"");
+                comment<<"bool: no argument required but value may be specified as $name:Y";
+            } else if (actualfield->c_fflag && actualfield->c_fflag->emptyval != "\"\"") {
+                nargs=0;
+                Set(R, "$emptyval",actualfield->c_fflag->emptyval);
+                comment<<"dmmeta.fflag: emptyval specified; no argument required but value may be specified as $name:value";
+            }
+            Ins(&R, func.body, "case $ns_FieldId_$name: { // $comment");
+            Ins(&R, func.body, "    *out_anon = $isanon;");
+            if (nargs==0) {
+                Set(R,"$comment",comment);
+                Ins(&R, func.body, "    retval=0;");
+                Ins(&R, func.body, "    out_dflt=$emptyval;");
+            }
+            Ins(&R, func.body, "} break;");
+        }ind_end;
+        Ins(&R, func.body   , "default:");
+        Ins(&R, func.body   , "    retval=-1; // unrecognized");
+        Ins(&R, func.body   , "}");
     }
 }
 
@@ -913,13 +982,20 @@ void amc::tfunc_Ctype_GetAnon() {
         MaybeUnused(getanon, "parent");//must call before "return"
         Ins(&R, getanon.body   , "switch(idx) {");
         int idx=0;
+        Set(R,"$dfltanon","algo::strptr()");
         ind_beg(amc::ctype_c_field_curs, field,ctype) if (field.c_anonfld) {
             Set(R, "$fstr"   , strptr(tempstr() << "strptr(\"" << name_Get(field) << "\", "<<ch_N(name_Get(field))<<")"));
             Set(R, "$idx"   , tempstr()<<idx);
-            Ins(&R, getanon.body, "case($idx): return $fstr;");
+            // Tary must be last arg
+            if (field.reftype == dmmeta_Reftype_reftype_Tary) {
+                Set(R,"$dfltanon","$fstr");
+                break;
+            } else {
+                Ins(&R, getanon.body, "case($idx): return $fstr;");
+            }
             idx++;
         }ind_end;
-        Ins(&R, getanon.body    , "default: return algo::strptr();");
+        Ins(&R, getanon.body    , "default: return $dfltanon;");
         Ins(&R, getanon.body    , "}");
     }
 }

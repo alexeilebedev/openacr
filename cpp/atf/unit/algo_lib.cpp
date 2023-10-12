@@ -1,5 +1,8 @@
-// (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2023 AlgoRND
 //
+// License: GPL
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,14 +17,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-//
 // Target: atf_unit (exe) -- Unit tests (see unittest table)
 // Exceptions: yes
 // Source: cpp/atf/unit/algo_lib.cpp
-//
-// Created By: alexei.lebedev vladimir.parizhsky
-// Authors: alexei.lebedev
-// Recent Changes: alexei.lebedev hayk.mkrtchyan ezequiel.fernandes
 //
 
 #include "include/atf_unit.h"
@@ -47,127 +45,6 @@ void atf_unit::unittest_algo_lib_PopCnt2() {
         vrfy_(algo::u64_Count1s(~( u64(1) << i   )) ==     N-1);
         vrfy_(algo::u64_Count1s(  (u64(1) << i)-1 ) == u32(i  ));
         vrfy_(algo::u64_Count1s(~((u64(1) << i)-1)) ==     N-i);
-    }
-}
-
-void atf_unit::unittest_algo_lib_TestBitSet() {
-    algo_lib::Bitset B;
-    ary_ExpandBits(B, 100);
-    vrfy_(ary_N(B) == 2);
-    ary_qSetBit(B, 0);
-    ary_qSetBit(B, 4);
-    ary_qSetBit(B, 63);
-    vrfy_(ary_Sum1s(B) == 3);
-    vrfy_( ary_qGetBit(B, 0));
-    vrfy_( ary_qGetBit(B, 4));
-    vrfy_( ary_qGetBit(B, 63));
-    vrfy_(!ary_qGetBit(B, 64));
-    vrfy_(!ary_qGetBit(B, 1));
-
-    ary_qClearBit(B, 0);
-    vrfy_(ary_Sum1s(B) == 2);
-    vrfy_(!ary_qGetBit(B, 0));
-
-    ary_ClearBitsAll(B);
-    vrfy_(ary_Sum1s(B)==0);
-
-    ary_AllocBit(B, 1000);
-    ary_qSetBit(B, 1000);
-    vrfy_(ary_qGetBit(B, 1000));
-}
-
-void atf_unit::unittest_algo_lib_TestFbitset() {
-    atf_unit::Bitset frame;
-    vrfyeq_(atf_unit::fld1_Sum1s(frame), u64(0));
-    vrfyeq_(atf_unit::fld1_BitsEmptyQ(frame), true);
-    Fill(atf_unit::fld1_Getary(frame), (short unsigned int)-1);
-    vrfyeq_(atf_unit::fld1_Sum1s(frame), u64(64));
-    vrfyeq_(atf_unit::fld1_BitsEmptyQ(frame), false);
-
-    atf_unit::fld1_qClearBit(frame, 4);
-    vrfyeq_(atf_unit::fld1_qGetBit(frame, 4), false);
-    vrfyeq_(atf_unit::fld1_Sum1s(frame), u64(63));
-    vrfyeq_(atf_unit::fld1_BitsEmptyQ(frame), false);
-
-    atf_unit::fld1_ClearBit(frame, 64); // out of range
-    vrfyeq_(atf_unit::fld1_Sum1s(frame), u64(63));
-    vrfyeq_(atf_unit::fld1_BitsEmptyQ(frame), false);
-
-    atf_unit::fld1_ClearBit(frame, 63);
-    vrfyeq_(fld1_Sup(frame),63);
-
-    atf_unit::fld1_qClearBit(frame, 1);
-
-    vrfy_( atf_unit::fld1_qGetBit(frame, 0));
-    vrfy_(!atf_unit::fld1_qGetBit(frame, 1));
-    vrfy_( atf_unit::fld1_qGetBit(frame, 2));
-    vrfy_( atf_unit::fld1_qGetBit(frame, 3));
-    vrfy_(!atf_unit::fld1_qGetBit(frame, 4));
-    vrfy_(!atf_unit::fld1_qGetBit(frame, 63));
-    vrfyeq_(atf_unit::fld1_Sum1s(frame), u64(61));
-    vrfyeq_(atf_unit::fld1_BitsEmptyQ(frame), false);
-    atf_unit::fld1_ClearBitsAll(frame);
-    vrfyeq_(atf_unit::fld1_Sum1s(frame), u64(0));
-    vrfyeq_(atf_unit::fld1_BitsEmptyQ(frame), true);
-}
-
-void atf_unit::unittest_algo_lib_TestFbitset2() {
-    atf_unit::Bitset frame;
-    vrfyeq_(frame.fld8, u8(0));
-
-    // set all 8 bits one by one
-    for(int i=0; i<8; i++) {
-        atf_unit::fld8_qSetBit(frame, i);
-        vrfyeq_(frame.fld8, (i==7 ? u8(-1) : (u8(1)<<(i+1))-1));
-        vrfyeq_(fld8_Sum1s(frame), u8(i+1));
-        vrfyeq_(fld8_Sup(frame), i+1);
-    }
-    // clear all 8 bits one by one
-    for (int i=7; i>=0; i--) {
-        atf_unit::fld8_qClearBit(frame, i);
-        vrfyeq_(frame.fld8, (u8(1)<<i)-1);
-        vrfyeq_(fld8_Sum1s(frame), u8(i));
-        vrfyeq_(fld8_Sup(frame), i);
-    }
-}
-
-void atf_unit::unittest_algo_lib_TestFbitset3() {
-    atf_unit::Bitset frame;
-    vrfyeq_(frame.fld64, u64(0));
-
-    // set all 64 bits one by one
-    for(int i=0; i<64; i++) {
-        atf_unit::fld64_qSetBit(frame, i);
-        vrfyeq_(frame.fld64, (i==63 ? u64(-1) : (u64(1)<<(i+1))-1));
-        vrfyeq_(fld64_Sum1s(frame), u64(i+1));
-        vrfyeq_(fld64_Sup(frame), i+1);
-        vrfyeq_(fld64_BitsEmptyQ(frame), false);
-    }
-    // clear all 64 bits one by one
-    for (int i=63; i>=0; i--) {
-        atf_unit::fld64_qClearBit(frame, i);
-        vrfyeq_(frame.fld64, (u64(1)<<i)-1);
-        vrfyeq_(fld64_Sum1s(frame), u64(i));
-        vrfyeq_(fld64_Sup(frame), i);
-        vrfyeq_(fld64_BitsEmptyQ(frame), i==0);
-    }
-}
-
-void atf_unit::unittest_algo_lib_TestFbitset4() {
-    atf_unit::Bitset frame;
-    vrfyeq_(frame.fld128, u128(0));
-
-    // set all 128 bits one by one
-    for(int i=0; i<128; i++) {
-        atf_unit::fld128_qSetBit(frame, i);
-        vrfyeq_(frame.fld128, (u64(i)==127 ? u128(-1) : (u128(1)<<(i+1))-u128(1)));
-        vrfyeq_(fld128_Sum1s(frame), u128(i+1));
-    }
-    // clear all 128 bits one by one
-    for (int i=127; i>=0; i--) {
-        atf_unit::fld128_qClearBit(frame, i);
-        vrfyeq_(frame.fld128, (u128(1)<<i)-1);
-        vrfyeq_(fld128_Sum1s(frame), u128(i));
     }
 }
 
@@ -1040,10 +917,13 @@ void atf_unit::unittest_algo_lib_ParseOct3() {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Warray-bounds"
     res = 0;
-    vrfyeq_(1,algo::ParseOct3(*(const u32 *)("1\350"),4,res));
+    vrfyeq_(1,algo::ParseOct3(*(const u32 *)("1\35000"),4,res));
     vrfyeq_(1,res);
 
-    vrfyeq_(0,algo::ParseOct3(*(const u32 *)("\1350"),4,res));
+    vrfyeq_(0,algo::ParseOct3(*(const u32 *)("\135000"),4,res));
+#ifdef WIN32
+#pragma warning(pop)
+#endif
 #pragma GCC diagnostic pop
 
     // verify non-octal digit

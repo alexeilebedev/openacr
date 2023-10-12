@@ -1,7 +1,7 @@
 ;;
 ;; AOS
-;; (C) AlgoEngineering LLC 2008-2012
-;; (C) NYSE | Intercontinental Exchange 2013-2014
+;; Copyright (C) 2008-2012 AlgoEngineering LLC
+;; Copyright (C) 2013-2014 NYSE | Intercontinental Exchange
 ;;
 ;; This is a commonly used .emacs file. To install:
 ;;

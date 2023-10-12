@@ -1,0 +1,3 @@
+gclidb.gclienv  gclienv:all  addon:""  comment:""
+gclidb.gclienv  gclienv:ghub  addon:-authdir:$IN_AUTH  comment:""
+gclidb.gclienv  gclienv:glab  addon:-authdir:$IN_AUTH  comment:""
