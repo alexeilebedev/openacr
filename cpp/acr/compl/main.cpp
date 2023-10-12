@@ -172,13 +172,10 @@ bool acr_compl::UniqueCompletionQ() {
 
 // Read source data for completions from file FNAME into global table _db.complsource
 void acr_compl::LoadComplsource(strptr fname) {
-    algo_lib::InTextFile in;
-    if (fname == "-") {
-        in.file.fd=Fildes(dup(0));
-    } else {
-        in.file.fd = OpenRead(fname, algo::FileFlags());
-    }
-    ind_beg(algo::FileLine_curs,line,in.file.fd) {
+    // fd closed upon destruction
+    algo_lib::FFildes in;
+    in.fd= fname == "-" ? Fildes(dup(0)) : OpenRead(fname, algo::FileFlags());
+    ind_beg(algo::FileLine_curs,line,in.fd) {
         Tuple_ReadStrptr(complsource_Alloc().tuple, line, false);
     }ind_end;
 }

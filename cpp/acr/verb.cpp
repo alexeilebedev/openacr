@@ -247,9 +247,9 @@ void acr::Main_AcrEdit() {
     // appear to originate from the input file.
     acr::FFile &file = acr::ind_file_GetOrCreate(FileInputQ() ? strptr(acr::_db.cmdline.in) : strptr(fname));
     file.deselect=true;
-    algo_lib::InTextFile in;
-    in.file.fd =  OpenRead(fname);
-    ReadLines(file,in);
+    algo_lib::FFildes in;
+    in.fd =  OpenRead(fname);
+    ReadLines(file,in.fd);
     // give up the flock
     close(fd.value);
     // if no exception is thrown above, unlink file.

@@ -822,6 +822,7 @@ dev.gitfile  gitfile:run/.empty
 dev.gitfile  gitfile:run/.ffskip
 dev.gitfile  gitfile:temp/.empty
 dev.gitfile  gitfile:test/acr_compl_filt.bash
+dev.gitfile  gitfile:test/atf_comp/acr.BadInsert
 dev.gitfile  gitfile:test/atf_comp/acr.BadNs
 dev.gitfile  gitfile:test/atf_comp/acr.BadPkey
 dev.gitfile  gitfile:test/atf_comp/acr.BadReftype
@@ -830,12 +831,18 @@ dev.gitfile  gitfile:test/atf_comp/acr.DelField
 dev.gitfile  gitfile:test/atf_comp/acr.DelRecord
 dev.gitfile  gitfile:test/atf_comp/acr.Fields
 dev.gitfile  gitfile:test/atf_comp/acr.FieldsComma
+dev.gitfile  gitfile:test/atf_comp/acr.Insert
+dev.gitfile  gitfile:test/atf_comp/acr.Merge
 dev.gitfile  gitfile:test/atf_comp/acr.Meta1
 dev.gitfile  gitfile:test/atf_comp/acr.Meta2
 dev.gitfile  gitfile:test/atf_comp/acr.Meta3
 dev.gitfile  gitfile:test/atf_comp/acr.QueryCtype
 dev.gitfile  gitfile:test/atf_comp/acr.RenameRecord
+dev.gitfile  gitfile:test/atf_comp/acr.Replace
+dev.gitfile  gitfile:test/atf_comp/acr.Select
 dev.gitfile  gitfile:test/atf_comp/acr.TooManyArgs
+dev.gitfile  gitfile:test/atf_comp/acr.UpdateBad
+dev.gitfile  gitfile:test/atf_comp/acr.UpdateGood
 dev.gitfile  gitfile:test/atf_comp/acr.Where
 dev.gitfile  gitfile:test/atf_comp/acr_compl.A01a
 dev.gitfile  gitfile:test/atf_comp/acr_compl.A01b

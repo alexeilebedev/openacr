@@ -58,9 +58,10 @@ const char *acr_help =
 "    -where...   string          Additional key:value pairs to match\n"
 "    -select             Y       Select records matching query (default)\n"
 "    -del                        Delete found item\n"
-"    -insert                     Read input and insert tuples\n"
+"    -insert                     Read stdin and insert tuples\n"
 "    -replace                    Read stdin and replace tuples\n"
-"    -merge                      Like replace, but merge tuple attributes\n"
+"    -update                     Read stdin and update attributes of existing tuples\n"
+"    -merge                      Combination of -update and -insert\n"
 "    -unused                     Only select records which are not referenced.\n"
 "    -trunc                      (with insert or rename): truncate table on first write\n"
 "    -check                      Run cross-reference check on selection\n"
@@ -7312,6 +7313,81 @@ bool acr::FieldId_ReadStrptrMaybe(acr::FieldId &parent, algo::strptr in_str) {
 // print string representation of acr::FieldId to string LHS, no header -- cprint:acr.FieldId.String
 void acr::FieldId_Print(acr::FieldId & row, algo::cstring &str) {
     acr::value_Print(row, str);
+}
+
+// --- acr.ReadMode.read_mode.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* acr::read_mode_ToCstr(const acr::ReadMode& parent) {
+    const char *ret = NULL;
+    switch(read_mode_GetEnum(parent)) {
+        case acr_ReadMode_insert           : ret = "insert";  break;
+        case acr_ReadMode_replace          : ret = "replace";  break;
+        case acr_ReadMode_update           : ret = "update";  break;
+        case acr_ReadMode_merge            : ret = "merge";  break;
+        case acr_ReadMode_delete           : ret = "delete";  break;
+    }
+    return ret;
+}
+
+// --- acr.ReadMode.read_mode.Print
+// Convert read_mode to a string. First, attempt conversion to a known string.
+// If no string matches, print read_mode as a numeric value.
+void acr::read_mode_Print(const acr::ReadMode& parent, algo::cstring &lhs) {
+    const char *strval = read_mode_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.read_mode;
+    }
+}
+
+// --- acr.ReadMode.read_mode.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool acr::read_mode_SetStrptrMaybe(acr::ReadMode& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 5: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+                case LE_STR5('m','e','r','g','e'): {
+                    read_mode_SetEnum(parent,acr_ReadMode_merge); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 6: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
+                case LE_STR6('d','e','l','e','t','e'): {
+                    read_mode_SetEnum(parent,acr_ReadMode_delete); ret = true; break;
+                }
+                case LE_STR6('i','n','s','e','r','t'): {
+                    read_mode_SetEnum(parent,acr_ReadMode_insert); ret = true; break;
+                }
+                case LE_STR6('u','p','d','a','t','e'): {
+                    read_mode_SetEnum(parent,acr_ReadMode_update); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 7: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+                case LE_STR7('r','e','p','l','a','c','e'): {
+                    read_mode_SetEnum(parent,acr_ReadMode_replace); ret = true; break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- acr.ReadMode.read_mode.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void acr::read_mode_SetStrptr(acr::ReadMode& parent, algo::strptr rhs, acr_ReadModeEnum dflt) {
+    if (!read_mode_SetStrptrMaybe(parent,rhs)) read_mode_SetEnum(parent,dflt);
 }
 
 // --- acr.TableId.value.ToCstr
