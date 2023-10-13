@@ -54,6 +54,19 @@ enum acr_FieldIdEnum {        // acr.FieldId.value
 enum { acr_FieldIdEnum_N = 1 };
 
 
+// --- acr_ReadModeEnum
+
+enum acr_ReadModeEnum {           // acr.ReadMode.read_mode
+     acr_ReadMode_insert    = 0   // Insert new record only
+    ,acr_ReadMode_replace   = 1   // Replace record with input
+    ,acr_ReadMode_update    = 2   // Merge existing attributes only
+    ,acr_ReadMode_merge     = 3   // Create new record & merge attributes
+    ,acr_ReadMode_delete    = 4   // Delete record
+};
+
+enum { acr_ReadModeEnum_N = 5 };
+
+
 // --- acr_TableIdEnum
 
 enum acr_TableIdEnum {                    // acr.TableId.value
@@ -177,6 +190,7 @@ namespace acr { struct FTempkey; }
 namespace acr { struct FUniqueattr; }
 namespace acr { struct FWrite; }
 namespace acr { struct FieldId; }
+namespace acr { struct ReadMode; }
 namespace acr { struct TableId; }
 namespace acr { extern struct acr::FDb _db; }
 namespace acr { // gen:ns_print_struct
@@ -2907,6 +2921,38 @@ bool                 FieldId_ReadStrptrMaybe(acr::FieldId &parent, algo::strptr 
 void                 FieldId_Init(acr::FieldId& parent);
 // print string representation of acr::FieldId to string LHS, no header -- cprint:acr.FieldId.String
 void                 FieldId_Print(acr::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- acr.ReadMode
+struct ReadMode { // acr.ReadMode
+    u8   read_mode;   //   0
+    inline operator acr_ReadModeEnum() const;
+    explicit ReadMode(u8                             in_read_mode);
+    ReadMode(acr_ReadModeEnum arg);
+    ReadMode();
+};
+
+// Get value of field as enum type
+acr_ReadModeEnum     read_mode_GetEnum(const acr::ReadMode& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+void                 read_mode_SetEnum(acr::ReadMode& parent, acr_ReadModeEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char*          read_mode_ToCstr(const acr::ReadMode& parent) __attribute__((nothrow));
+// Convert read_mode to a string. First, attempt conversion to a known string.
+// If no string matches, print read_mode as a numeric value.
+void                 read_mode_Print(const acr::ReadMode& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool                 read_mode_SetStrptrMaybe(acr::ReadMode& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void                 read_mode_SetStrptr(acr::ReadMode& parent, algo::strptr rhs, acr_ReadModeEnum dflt) __attribute__((nothrow));
+
+i32                  ReadMode_Cmp(acr::ReadMode & lhs, acr::ReadMode & rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 ReadMode_Init(acr::ReadMode& parent);
+bool                 ReadMode_Eq(const acr::ReadMode & lhs,const acr::ReadMode & rhs) __attribute__((nothrow));
 
 // --- acr.TableId
 struct TableId { // acr.TableId: Index of table in this namespace

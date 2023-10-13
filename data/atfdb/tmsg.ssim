@@ -1,3 +1,5 @@
+atfdb.tmsg  tmsg:acr.BadInsert/100000.in  istuple:N  msg:'dmmeta.ns  ns:ns1        nstype:exe      license:xx   comment:"This record will be inserted"'
+atfdb.tmsg  tmsg:acr.BadInsert/100010.in  istuple:N  msg:'dmmeta.ns  ns:ns1        nstype:lib      license:yy   comment:"This record will not"'
 atfdb.tmsg  tmsg:acr.BadNs/100000.in  istuple:N  msg:"dmmeta.ctype ctype:x.Y"
 atfdb.tmsg  tmsg:acr.BadPkey/100000.in  istuple:N  msg:dmmeta.ctype
 atfdb.tmsg  tmsg:acr.BadReftype/100000.in  istuple:N  msg:"dmmeta.field field:command.acr_ed.blah arg:bool"
@@ -13,11 +15,22 @@ atfdb.tmsg  tmsg:acr.Fields/100020.in  istuple:N  msg:'dmmeta.ns  ns:ns3        
 atfdb.tmsg  tmsg:acr.FieldsComma/100000.in  istuple:N  msg:'dmmeta.ns  ns:ns1        nstype:exe       comment:"comment 1"'
 atfdb.tmsg  tmsg:acr.FieldsComma/100010.in  istuple:N  msg:'dmmeta.ns  ns:ns2      nstype:ssimdb    comment:"comment 2"'
 atfdb.tmsg  tmsg:acr.FieldsComma/100020.in  istuple:N  msg:'dmmeta.ns  ns:ns3         nstype:protocol  comment:"comment 3"'
+atfdb.tmsg  tmsg:acr.Insert/100000.in  istuple:N  msg:'dmmeta.ns  ns:ns1        nstype:exe      license:xx   comment:"This record will be inserted"'
+atfdb.tmsg  tmsg:acr.Insert/100010.in  istuple:N  msg:'dmmeta.ns  ns:ns1        nstype:lib      license:yy   comment:"This record will not"'
+atfdb.tmsg  tmsg:acr.Merge/100000.in  istuple:N  msg:'dmmeta.ns  ns:acr        nstype:lib         comment:"nstype attribute will be updated"'
 atfdb.tmsg  tmsg:acr.RenameRecord/100000.in  istuple:N  msg:'dmmeta.ns  ns:samp  nstype:exe  license:GPL  comment:""'
 atfdb.tmsg  tmsg:acr.RenameRecord/100010.in  istuple:N  msg:"dev.target  target:samp  compat:%-%g%.%-%"
 atfdb.tmsg  tmsg:acr.RenameRecord/100020.in  istuple:N  msg:'dev.targdep  targdep:samp.algo_lib  comment:""'
 atfdb.tmsg  tmsg:acr.RenameRecord/100030.in  istuple:N  msg:'dev.targsrc  targsrc:samp/cpp/samp/1.cpp          comment:""'
 atfdb.tmsg  tmsg:acr.RenameRecord/100040.in  istuple:N  msg:'dev.targsrc  targsrc:samp/cpp/samp/2.cpp      comment:""'
+atfdb.tmsg  tmsg:acr.Replace/100000.in  istuple:N  msg:'dmmeta.ns  ns:ns1        nstype:exe      license:xx   comment:"This record will be replaced"'
+atfdb.tmsg  tmsg:acr.Replace/100010.in  istuple:N  msg:'dmmeta.ns  ns:ns1        nstype:lib      license:yy   comment:"This record will remain"'
+atfdb.tmsg  tmsg:acr.Select/100000.in  istuple:N  msg:'dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:"This will be selected"'
+atfdb.tmsg  tmsg:acr.Select/100010.in  istuple:N  msg:'dmmeta.ns  ns:ns2      nstype:ssimdb    license:GPL  comment:"This will be selected"'
+atfdb.tmsg  tmsg:acr.Select/100020.in  istuple:N  msg:'dmmeta.ns  ns:ns3         nstype:protocol    license:GPL   comment:"This will be selected"'
+atfdb.tmsg  tmsg:acr.UpdateBad/100000.in  istuple:N  msg:'dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:"Namespace doesn\'t exist, but not a failure"'
+atfdb.tmsg  tmsg:acr.UpdateGood/100000.in  istuple:N  msg:'dmmeta.ns  ns:acr        nstype:lib      license:zzz   comment:"Namespace exists, attribute will be updated"'
+atfdb.tmsg  tmsg:acr.UpdateGood/100010.in  istuple:N  msg:'dmmeta.ns  ns:acr        nstype:ssimdb   comment:"Namespace exists, attribute will be updated"'
 atfdb.tmsg  tmsg:acr.Where/100000.in  istuple:N  msg:'dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:""'
 atfdb.tmsg  tmsg:acr.Where/100010.in  istuple:N  msg:'dmmeta.ns  ns:ns2      nstype:ssimdb    license:GPL  comment:""'
 atfdb.tmsg  tmsg:acr.Where/100020.in  istuple:N  msg:'dmmeta.ns  ns:ns3         nstype:protocol    license:GPL   comment:""'

@@ -1,0 +1,2 @@
+# atf_comp -report:N -printinput acr.UpdateBad | acr -update ns:ns% | cat
+report.acr  n_select:0  n_insert:0  n_delete:0  n_update:0  n_file_mod:0

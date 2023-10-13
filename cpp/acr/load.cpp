@@ -44,7 +44,7 @@ void acr::LoadSsimfile(acr::FSsimfile& ssimfile) {
                 Tuple tuple;
                 if (Tuple_ReadStrptrMaybe(tuple, line)) {
                     ssimfile.c_file->lineno = ind_curs(line).i+1;
-                    ReadTuple(tuple, *ssimfile.c_file, true);
+                    ReadTuple(tuple, *ssimfile.c_file, acr_ReadMode_insert);
                 }
             }ind_end;
         }
@@ -55,50 +55,56 @@ void acr::LoadSsimfile(acr::FSsimfile& ssimfile) {
 
 // Read lines from input text file IN
 // Associate loaded records with record FILE.
-void acr::ReadLines(acr::FFile &file, algo_lib::InTextFile &in) {
-    strptr line;
-    while (ReadLine(in,line)) {
-        Tuple tuple;
+void acr::ReadLines(acr::FFile &file, algo::Fildes in) {
+    Tuple tuple;
+    acr::ReadMode read_mode;
+    read_mode=acr_ReadMode_insert;// default
+    if (_db.cmdline.replace) {
+        read_mode=acr_ReadMode_replace;
+    } else if (_db.cmdline.merge) {
+        read_mode=acr_ReadMode_merge;
+    } else if (_db.cmdline.update) {
+        read_mode=acr_ReadMode_update;
+    }
+    // 'del' is an operation that applies to selected records,
+    // so it is not applicable here.
+    ind_beg(algo::FileLine_curs,line,in) {
         if (Tuple_ReadStrptrMaybe(tuple,line)) {
-            acr::FRec *rec = acr::ReadTuple(tuple, file, true);
-            // deselect record if nothing changed.
-            // desired effect:
-            // after editing session, only changes are printed.
-            if (file.deselect && rec && !rec->isnew && !rec->mod && !rec->del) {
-                acr::Rec_Deselect(*rec);
-            }
+            acr::FRec *rec = acr::ReadTuple(tuple, file, read_mode);
+            (void)rec;
         }
         file.lineno++;
-    }
+    }ind_end;
 }
 
 // -----------------------------------------------------------------------------
 
 void acr::Main_ReadIn() {
+    // load data from "-in:..."
     if (FileInputQ()) {
         acr::FFile &file = acr::ind_file_GetOrCreate(acr::_db.cmdline.in);
         file.sticky = true;
         file.autoloaded = true;// not new data
-        algo_lib::InTextFile in;
-        in.file.fd = OpenRead(acr::_db.cmdline.in, algo::FileFlags());
+        algo_lib::FFildes in;
+        in.fd = OpenRead(acr::_db.cmdline.in, algo::FileFlags());
         file.filename = acr::_db.cmdline.in;
-        file.modtime = FdModTime(in.file.fd);
-        ReadLines(file,in);
+        file.modtime = FdModTime(in.fd);
+        ReadLines(file,in.fd);
     } else if (acr::_db.cmdline.in == "-") {
         acr::FFile &file = acr::ind_file_GetOrCreate(acr::_db.cmdline.in);
         file.autoloaded = true;// not new data
-        algo_lib::InTextFile in;
-        in.file.fd = Fildes(dup(0));
-        ReadLines(file,in);
+        algo_lib::FFildes in;
+        in.fd = Fildes(dup(0));
+        ReadLines(file,in.fd);
     }
-    // Read data from stdin, insert or replace into in-memory store
+    // Read data from stdin, insert/replace/update/merge into in-memory store
     // If stdio mode is selected, the incoming records form a background
     // for the query(i.e. they are not considered "new")
-    if (acr::_db.cmdline.insert || acr::_db.cmdline.replace) {
-        algo_lib::InTextFile in;
-        in.file.fd = Fildes(dup(0));
+    if (acr::_db.cmdline.insert || acr::_db.cmdline.replace || acr::_db.cmdline.update || acr::_db.cmdline.merge) {
+        algo_lib::FFildes in;
+        in.fd = Fildes(dup(0));
         acr::FFile &file = acr::ind_file_GetOrCreate("stdin-insert");
-        ReadLines(file,in);
+        ReadLines(file,in.fd);
     }
 }
 

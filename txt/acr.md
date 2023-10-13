@@ -107,7 +107,7 @@ inline-command: acr a:a'(2|3|4)' -regxof:a
 
 #### The -replace option
 
-When `-replace` is specified, each new tuple completely overrides the previous tuple. 
+The `-replace` also reads stdin, and each new tuple completely overrides the previous tuple. 
 Any fields that aren't specified are assigned default values. Let's illustrate by first
 creating a temporary table:
 
@@ -146,13 +146,19 @@ will go back to the default:
 
 ```
 inline-command: echo 'dev.t t:ggg' | acr -replace -write
-acr.update  dev.t  t:ggg  val:0   comment:""
 report.acr  ***
 ```
 
+#### The -update option
+
+The option `-update` also reads stdin, but no new records will be created. Any attributes
+from input records will be used to update existing attributes in the data set.
+Attributes not specified on input will retain their original values in the data set.
+
 #### The -merge option
 
-The `-merge` option is like replace on a per-field basis. When a record being inserted
+The `-merge` option also reads stdin, but whole records aren't replaced.
+If a new record is found on input, it is inserted as with insert. When a record being inserted
 exists in the dataset, any attributes from the new record replace attributes in the original records.
 Let's illustrate using the same `t` table. We'll need another column, call it `val2`, and
 set `val` back to 3:
@@ -167,7 +173,6 @@ report.amc  ***
 
 ```
 inline-command: echo 'dev.t t:ggg val:3' | acr -replace -write
-acr.update  dev.t  t:ggg  val:3  val2:0   comment:""
 report.acr  ***
 ```
 
@@ -175,7 +180,6 @@ So far so good. Now let's use -merge:
 
 ```
 inline-command: echo 'dev.t t:ggg val2:4' | acr -merge -write
-acr.update  dev.t  t:ggg  val:3  val2:4  comment:""
 report.acr  ***
 ```
 
@@ -246,7 +250,6 @@ Let's update a few values with `acr -merge`:
 
 ```
 inline-command: echo 'dev.a a:a1 b:55' | acr -merge -write
-acr.update  dev.a  a:a1  b:55  comment:""
 report.acr  ***
 ```
 
@@ -829,36 +832,21 @@ option:
 ```
 inline-command: mkdir x; acr dmmeta.% | acr -in:x -insert -write -print:N
 report.acr  ***
-inline-command: sandbox acr -- mkdir x
-Sandbox   Size  Clean  Path                   Comment
-abt_md    N/A   Y      temp/sandbox.abt_md
-acr_ed    N/A   Y      temp/sandbox.acr_ed    sandbox for testing acr_ed changes
-amc       N/A   Y      temp/sandbox.amc       sandbox for running amc commands
-amc_gc    N/A   Y      temp/sandbox.amc_gc    sandbox for garbage collection tool
-atf_ci    N/A   Y      temp/sandbox.atf_ci    sandbox for CI testing
-atf_fuzz  N/A   Y      temp/sandbox.atf_fuzz  sandbox for fuzzing
-
 ```
 
 All records have now been copied from `data` to `in`.
-As long as we specify the `-in` option, acr will read and write from the specified directory.
+As long as we specify the `-in` option, acr will read and write data from the specified directory.
 
 ### Using A File As A Data Set
 
 We can do the same thing with a file
 
 ```
-inline-command: rm -r x; touch x; acr dmmeta.% | acr -in:x -insert -write -print:N
+inline-command: rm -r x; touch x; acr c -report:N | acr -in:x -insert -write 
+acr.insert  dev.c  c:blue   comment:""
+acr.insert  dev.c  c:green  comment:""
+acr.insert  dev.c  c:red    comment:""
 report.acr  ***
-inline-command: sandbox acr -- rm -r x
-Sandbox   Size  Clean  Path                   Comment
-abt_md    N/A   Y      temp/sandbox.abt_md
-acr_ed    N/A   Y      temp/sandbox.acr_ed    sandbox for testing acr_ed changes
-amc       N/A   Y      temp/sandbox.amc       sandbox for running amc commands
-amc_gc    N/A   Y      temp/sandbox.amc_gc    sandbox for garbage collection tool
-atf_ci    N/A   Y      temp/sandbox.atf_ci    sandbox for CI testing
-atf_fuzz  N/A   Y      temp/sandbox.atf_fuzz  sandbox for fuzzing
-
 ```
 
 File `x` now contains ssim tuples, one per line, and it can be queried or edited
@@ -926,7 +914,6 @@ fields. Let's add a comment to the dev.C.c field:
 
 ```
 inline-command: echo 'dmmeta.field field:dev.C.c comment:"Name of the color (primary key)"' | acr -merge -write
-acr.update  dmmeta.field  field:dev.C.c  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:"Name of the color (primary key)"
 report.acr  ***
 ```
 

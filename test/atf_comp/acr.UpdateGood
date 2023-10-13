@@ -1,0 +1,3 @@
+# atf_comp -report:N -printinput acr.UpdateGood | acr -update ns:acr | cat
+dmmeta.ns  ns:acr  nstype:ssimdb  license:zzz  comment:"Namespace exists, attribute will be updated"
+report.acr  n_select:1  n_insert:0  n_delete:0  n_update:0  n_file_mod:0

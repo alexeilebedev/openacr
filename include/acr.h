@@ -45,11 +45,11 @@ namespace acr { // update-hdr
     // cpp/acr/createrec.cpp -- Create record
     //
 
-    // insert tuple into database.
-    // if tuple cannot be inserted, return NULL.
-    // FILE    input file. if NULL, assign file of ssimfile!
-    //
-    acr::FRec* ReadTuple(Tuple &tuple, acr::FFile &file, bool insert);
+    // Insert record in ACR's database.
+    // Upon first access of ssimfile, load ssimfile from disk.
+    // If -trunc option is set, delete all records
+    // This is different from marking records for deletion.
+    acr::FRec* ReadTuple(Tuple &tuple, acr::FFile &file, acr::ReadMode read_mode);
 
     // Create a new record from tuple TUPLE, having primary key PKEY_ATTR and type
     // CTYPE (as found via the type tag).
@@ -57,7 +57,7 @@ namespace acr { // update-hdr
     // This function checks CMDLINE.REPLACE flag to see if the record is allowed
     // to replace an existing record; if CMDLINE.MERGE is specified, attributes are merged
     // into an existing record if one exists
-    acr::FRec *CreateRec(acr::FFile &file, acr::FCtype *ctype, algo::Tuple &tuple, algo::Attr *pkey_attr, bool insert);
+    acr::FRec *CreateRec(acr::FFile &file, acr::FCtype *ctype, algo::Tuple &tuple, algo::Attr *pkey_attr, acr::ReadMode read_mode);
 
     // -------------------------------------------------------------------
     // cpp/acr/err.cpp -- Show errors / suggestions
@@ -91,7 +91,7 @@ namespace acr { // update-hdr
 
     // Read lines from input text file IN
     // Associate loaded records with record FILE.
-    void ReadLines(acr::FFile &file, algo_lib::InTextFile &in);
+    void ReadLines(acr::FFile &file, algo::Fildes in);
     void Main_ReadIn();
     bool EphemeralQ(acr::FFile &file);
 
