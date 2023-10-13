@@ -97,8 +97,7 @@ void atf_ci::citest_bootstrap() {
             // when using printcmd, specify explicit out_dir
             // so that abt doesn't feel compelled to create a soft link to build/release.
             // instead the soft link will point to build/Linux-g++.release-x86_64
-            abt.cmd.out_dir     = tempstr() << "build/"<<abt.cmd.uname
-                                            <<"-"<<abt.cmd.compiler<<"."<<abt.cmd.cfg<<"-"<<abt.cmd.arch;
+            abt.cmd.out_dir     = tempstr() << "build/"<<abt.cmd.cfg;
             abt.cmd.install     = true;
             abt.cmd.target.expr = dmmeta_Ns_ns_abt;
             abt.cmd.printcmd    = true;

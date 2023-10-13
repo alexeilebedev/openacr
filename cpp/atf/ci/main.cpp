@@ -264,14 +264,6 @@ void atf_ci::citest_comptest() {
 
 // -----------------------------------------------------------------------------
 
-void atf_ci::citest_outfile () {
-    command::bash_proc bash;
-    bash.cmd.c << dev_scriptfile_bin_update_outfile;
-    bash_ExecX(bash);
-}
-
-// -----------------------------------------------------------------------------
-
 void atf_ci::citest_readme() {
     command::abt_md_proc abt_md;
     abt_md_ExecX(abt_md);

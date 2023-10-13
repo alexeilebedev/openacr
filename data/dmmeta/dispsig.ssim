@@ -12,7 +12,7 @@ dmmeta.dispsig  dispsig:atf_amc.Disp  signature:d11df8e45dfabb45e515398cd71d30a1
 dmmeta.dispsig  dispsig:atf_amc.Input  signature:3b9943558be9b03e79fade60297ec50f1d4702a3
 dmmeta.dispsig  dispsig:atf_amc.Msgs  signature:f80a13e46fff2c18de1f4dbbbb11703d07c170d2
 dmmeta.dispsig  dispsig:atf_amc.Ssimfiles  signature:9a25d87b6ed236e8b6794b21dc308f66286505af
-dmmeta.dispsig  dispsig:atf_ci.Input  signature:ae315f0e1f7eba1e4cfa8248baf0c99882074f08
+dmmeta.dispsig  dispsig:atf_ci.Input  signature:8d718e3f83a783296825e055a0cf7126fcd14a19
 dmmeta.dispsig  dispsig:atf_comp.Input  signature:992a7c431c3ffd5c6fb80d9918b452d5a2b4b9f8
 dmmeta.dispsig  dispsig:atf_cov.Input  signature:774b3462442086aab82bec334fc8af0881956e21
 dmmeta.dispsig  dispsig:atf_fuzz.Input  signature:247c584a89bfb9a3d8684c502b42e49ece421791

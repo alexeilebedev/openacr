@@ -37,15 +37,9 @@ dev.gitfile  gitfile:bin/ccache-clean
 dev.gitfile  gitfile:bin/ccache-use
 dev.gitfile  gitfile:bin/ci-show-log
 dev.gitfile  gitfile:bin/cpp-indent
-dev.gitfile  gitfile:bin/create-readme
-dev.gitfile  gitfile:bin/ctype-dedup
-dev.gitfile  gitfile:bin/define-new-type
 dev.gitfile  gitfile:bin/delete-duplicate-lines
 dev.gitfile  gitfile:bin/diff-to-errlist
-dev.gitfile  gitfile:bin/edit-cmdline
 dev.gitfile  gitfile:bin/edit-conflicts
-dev.gitfile  gitfile:bin/edit-ctype
-dev.gitfile  gitfile:bin/edit-func
 dev.gitfile  gitfile:bin/em
 dev.gitfile  gitfile:bin/errlist
 dev.gitfile  gitfile:bin/ff
@@ -115,7 +109,6 @@ dev.gitfile  gitfile:bin/todo
 dev.gitfile  gitfile:bin/update-gitfile
 dev.gitfile  gitfile:bin/update-hdr
 dev.gitfile  gitfile:bin/update-linelim
-dev.gitfile  gitfile:bin/update-outfile
 dev.gitfile  gitfile:bin/update-scriptfile
 dev.gitfile  gitfile:bin/zfs_snapshot.pl
 dev.gitfile  gitfile:conf/GPL.license.txt

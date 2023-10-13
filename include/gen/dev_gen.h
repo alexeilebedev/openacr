@@ -147,38 +147,40 @@ enum dev_FieldIdEnum {                    // dev.FieldId.value
     ,dev_FieldId_ssimfs            = 71
     ,dev_FieldId_ssimfile          = 72
     ,dev_FieldId_file              = 73
-    ,dev_FieldId_lscmd             = 74
-    ,dev_FieldId_excl              = 75
-    ,dev_FieldId_syscmd            = 76
-    ,dev_FieldId_execkey           = 77
-    ,dev_FieldId_command           = 78
-    ,dev_FieldId_pid               = 79
-    ,dev_FieldId_status            = 80
-    ,dev_FieldId_nprereq           = 81
-    ,dev_FieldId_fail_prereq       = 82
-    ,dev_FieldId_completed         = 83
-    ,dev_FieldId_maxtime           = 84
-    ,dev_FieldId_syscmddep         = 85
-    ,dev_FieldId_child             = 86
-    ,dev_FieldId_parent            = 87
-    ,dev_FieldId_syslib            = 88
-    ,dev_FieldId_targdep           = 89
-    ,dev_FieldId_target            = 90
-    ,dev_FieldId_compat            = 91
-    ,dev_FieldId_targsrc           = 92
-    ,dev_FieldId_targsyslib        = 93
-    ,dev_FieldId_cov_min           = 94
-    ,dev_FieldId_maxerr            = 95
-    ,dev_FieldId_timefmt           = 96
-    ,dev_FieldId_dirname           = 97
-    ,dev_FieldId_tool_opt          = 98
-    ,dev_FieldId_opt               = 99
-    ,dev_FieldId_sortfld           = 100
-    ,dev_FieldId_field             = 101
-    ,dev_FieldId_value             = 102
+    ,dev_FieldId_rmfile            = 74
+    ,dev_FieldId_needfile          = 75
+    ,dev_FieldId_lscmd             = 76
+    ,dev_FieldId_excl              = 77
+    ,dev_FieldId_syscmd            = 78
+    ,dev_FieldId_execkey           = 79
+    ,dev_FieldId_command           = 80
+    ,dev_FieldId_pid               = 81
+    ,dev_FieldId_status            = 82
+    ,dev_FieldId_nprereq           = 83
+    ,dev_FieldId_fail_prereq       = 84
+    ,dev_FieldId_completed         = 85
+    ,dev_FieldId_maxtime           = 86
+    ,dev_FieldId_syscmddep         = 87
+    ,dev_FieldId_child             = 88
+    ,dev_FieldId_parent            = 89
+    ,dev_FieldId_syslib            = 90
+    ,dev_FieldId_targdep           = 91
+    ,dev_FieldId_target            = 92
+    ,dev_FieldId_compat            = 93
+    ,dev_FieldId_targsrc           = 94
+    ,dev_FieldId_targsyslib        = 95
+    ,dev_FieldId_cov_min           = 96
+    ,dev_FieldId_maxerr            = 97
+    ,dev_FieldId_timefmt           = 98
+    ,dev_FieldId_dirname           = 99
+    ,dev_FieldId_tool_opt          = 100
+    ,dev_FieldId_opt               = 101
+    ,dev_FieldId_sortfld           = 102
+    ,dev_FieldId_field             = 103
+    ,dev_FieldId_value             = 104
 };
 
-enum { dev_FieldIdEnum_N = 103 };
+enum { dev_FieldIdEnum_N = 105 };
 
 extern const char *  dev_License_license_;      //        fconst:dev.License.license/
 extern const char *  dev_License_license_GPL;   // GPL    fconst:dev.License.license/GPL
@@ -870,10 +872,12 @@ void                 Srcfile_Print(dev::Srcfile & row, algo::cstring &str) __att
 
 // --- dev.Ssimfs
 struct Ssimfs { // dev.Ssimfs
-    algo::Smallstr200   ssimfs;    //
-    algo::cstring       lscmd;     // Command that produces keys that should be in the table
-    algo_lib::Regx      excl;      // Sql Regx
-    algo::Comment       comment;   //
+    algo::Smallstr200   ssimfs;     //
+    bool                rmfile;     //   false  Remove extra files from directory
+    bool                needfile;   //   false  File must exist
+    algo::cstring       lscmd;      // Command that produces keys that should be in the table
+    algo_lib::Regx      excl;       // Sql Regx
+    algo::Comment       comment;    //
     Ssimfs();
 private:
     // reftype Regx of dev.Ssimfs.excl prohibits copy
@@ -898,6 +902,8 @@ bool                 Ssimfs_ReadFieldMaybe(dev::Ssimfs &parent, algo::strptr fie
 // Read fields of dev::Ssimfs from an ascii string.
 // The format of the string is an ssim Tuple
 bool                 Ssimfs_ReadStrptrMaybe(dev::Ssimfs &parent, algo::strptr in_str);
+// Set all fields to initial values.
+void                 Ssimfs_Init(dev::Ssimfs& parent);
 // print string representation of dev::Ssimfs to string LHS, no header -- cprint:dev.Ssimfs.String
 void                 Ssimfs_Print(dev::Ssimfs & row, algo::cstring &str) __attribute__((nothrow));
 

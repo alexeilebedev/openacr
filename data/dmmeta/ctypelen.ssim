@@ -611,7 +611,7 @@ dmmeta.ctypelen  ctype:atf_ci.FNs  len:288  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:atf_ci.FReadme  len:458  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atf_ci.FScriptfile  len:416  alignment:8  padbytes:2
 dmmeta.ctypelen  ctype:atf_ci.FSsimfile  len:112  alignment:8  padbytes:0
-dmmeta.ctypelen  ctype:atf_ci.FSsimfs  len:464  alignment:8  padbytes:6
+dmmeta.ctypelen  ctype:atf_ci.FSsimfs  len:464  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:atf_ci.FTargsrc  len:254  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atf_ci.File  len:32  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:atf_cmdline.FDb  len:368  alignment:8  padbytes:7
@@ -729,7 +729,7 @@ dmmeta.ctypelen  ctype:dev.Sandbox  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Sbpath  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Scriptfile  len:406  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dev.Srcfile  len:202  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:dev.Ssimfs  len:464  alignment:8  padbytes:6
+dmmeta.ctypelen  ctype:dev.Ssimfs  len:464  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:dev.Syscmd  len:48  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:dev.Syscmddep  len:16  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:dev.Syslib  len:204  alignment:1  padbytes:0

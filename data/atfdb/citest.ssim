@@ -1,5 +1,4 @@
 atfdb.citest  citest:checkclean  cijob:normalize  sandbox:N  comment:"Check that no files are modified"
-atfdb.citest  citest:outfile  cijob:normalize  sandbox:N  comment:""
 atfdb.citest  citest:atf_amc  cijob:normalize  sandbox:N  comment:"Test amc (run atf_amc)"
 atfdb.citest  citest:gitfile  cijob:normalize  sandbox:N  comment:"Update gitfile tables by scanning filesystem"
 atfdb.citest  citest:normalize_acr  cijob:normalize  sandbox:N  comment:"Read ssim databases into memory and write back"

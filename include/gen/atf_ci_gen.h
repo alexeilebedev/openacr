@@ -135,7 +135,6 @@ namespace atf_ci { // gen:ns_gsymbol
     extern const char* dev_scriptfile_bin_fix_gen_conflicts; // "bin/fix-gen-conflicts"
     extern const char* dev_scriptfile_bin_update_gitfile; // "bin/update-gitfile"
     extern const char* dev_scriptfile_bin_update_hdr; // "bin/update-hdr"
-    extern const char* dev_scriptfile_bin_update_outfile; // "bin/update-outfile"
     extern const char* dev_scriptfile_bin_update_scriptfile; // "bin/update-scriptfile"
 } // gen:ns_gsymbol
 namespace atf_ci { // gen:ns_print_struct
@@ -1120,10 +1119,12 @@ void                 FSsimfile_Uninit(atf_ci::FSsimfile& ssimfile) __attribute__
 // --- atf_ci.FSsimfs
 // create: atf_ci.FDb.ssimfs (Lary)
 struct FSsimfs { // atf_ci.FSsimfs
-    algo::Smallstr200   ssimfs;    //
-    algo::cstring       lscmd;     // Command that produces keys that should be in the table
-    algo_lib::Regx      excl;      // Sql Regx
-    algo::Comment       comment;   //
+    algo::Smallstr200   ssimfs;     //
+    bool                rmfile;     //   false  Remove extra files from directory
+    bool                needfile;   //   false  File must exist
+    algo::cstring       lscmd;      // Command that produces keys that should be in the table
+    algo_lib::Regx      excl;       // Sql Regx
+    algo::Comment       comment;    //
 private:
     friend atf_ci::FSsimfs&     ssimfs_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_ci::FSsimfs*     ssimfs_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -1147,6 +1148,8 @@ algo::Smallstr150    file_Get(atf_ci::FSsimfs& ssimfs) __attribute__((__warn_unu
 // Print back to string
 void                 excl_Print(atf_ci::FSsimfs& ssimfs, algo::cstring &out) __attribute__((nothrow));
 
+// Set all fields to initial values.
+void                 FSsimfs_Init(atf_ci::FSsimfs& ssimfs);
 
 // --- atf_ci.FTargsrc
 // create: atf_ci.FDb.targsrc (Lary)
@@ -1386,8 +1389,6 @@ struct _db_file_curs {// cursor
 namespace atf_ci { // gen:ns_func
 // User-implemented function from gstatic:atf_ci.FDb.citest
 void                 citest_checkclean();
-// User-implemented function from gstatic:atf_ci.FDb.citest
-void                 citest_outfile();
 // User-implemented function from gstatic:atf_ci.FDb.citest
 void                 citest_atf_amc();
 // User-implemented function from gstatic:atf_ci.FDb.citest

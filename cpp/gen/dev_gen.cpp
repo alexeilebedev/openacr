@@ -803,6 +803,8 @@ const char* dev::value_ToCstr(const dev::FieldId& parent) {
         case dev_FieldId_ssimfs            : ret = "ssimfs";  break;
         case dev_FieldId_ssimfile          : ret = "ssimfile";  break;
         case dev_FieldId_file              : ret = "file";  break;
+        case dev_FieldId_rmfile            : ret = "rmfile";  break;
+        case dev_FieldId_needfile          : ret = "needfile";  break;
         case dev_FieldId_lscmd             : ret = "lscmd";  break;
         case dev_FieldId_excl              : ret = "excl";  break;
         case dev_FieldId_syscmd            : ret = "syscmd";  break;
@@ -1024,6 +1026,9 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('r','a','n','l','i','b'): {
                     value_SetEnum(parent,dev_FieldId_ranlib); ret = true; break;
                 }
+                case LE_STR6('r','m','f','i','l','e'): {
+                    value_SetEnum(parent,dev_FieldId_rmfile); ret = true; break;
+                }
                 case LE_STR6('s','b','p','a','t','h'): {
                     value_SetEnum(parent,dev_FieldId_sbpath); ret = true; break;
                 }
@@ -1141,6 +1146,9 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('f','i','l','e','n','a','m','e'): {
                     value_SetEnum(parent,dev_FieldId_filename); ret = true; break;
+                }
+                case LE_STR8('n','e','e','d','f','i','l','e'): {
+                    value_SetEnum(parent,dev_FieldId_needfile); ret = true; break;
                 }
                 case LE_STR8('o','p','t','_','t','y','p','e'): {
                     value_SetEnum(parent,dev_FieldId_opt_type); ret = true; break;
@@ -2250,6 +2258,8 @@ bool dev::Ssimfs_ReadFieldMaybe(dev::Ssimfs &parent, algo::strptr field, algo::s
         case dev_FieldId_ssimfs: retval = algo::Smallstr200_ReadStrptrMaybe(parent.ssimfs, strval); break;
         case dev_FieldId_ssimfile: retval = false; break;
         case dev_FieldId_file: retval = false; break;
+        case dev_FieldId_rmfile: retval = bool_ReadStrptrMaybe(parent.rmfile, strval); break;
+        case dev_FieldId_needfile: retval = bool_ReadStrptrMaybe(parent.needfile, strval); break;
         case dev_FieldId_lscmd: retval = algo::cstring_ReadStrptrMaybe(parent.lscmd, strval); break;
         case dev_FieldId_excl: retval = excl_ReadStrptrMaybe(parent, strval); break;
         case dev_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
@@ -2281,6 +2291,12 @@ void dev::Ssimfs_Print(dev::Ssimfs & row, algo::cstring &str) {
 
     algo::Smallstr200_Print(row.ssimfs, temp);
     PrintAttrSpaceReset(str,"ssimfs", temp);
+
+    bool_Print(row.rmfile, temp);
+    PrintAttrSpaceReset(str,"rmfile", temp);
+
+    bool_Print(row.needfile, temp);
+    PrintAttrSpaceReset(str,"needfile", temp);
 
     algo::cstring_Print(row.lscmd, temp);
     PrintAttrSpaceReset(str,"lscmd", temp);
