@@ -1181,8 +1181,16 @@ inline void atf_ci::FSsimfile_Init(atf_ci::FSsimfile& ssimfile) {
     ssimfile.ind_ssimfile_next = (atf_ci::FSsimfile*)-1; // (atf_ci.FDb.ind_ssimfile) not-in-hash
 }
 inline atf_ci::FSsimfs::FSsimfs() {
+    atf_ci::FSsimfs_Init(*this);
 }
 
+
+// --- atf_ci.FSsimfs..Init
+// Set all fields to initial values.
+inline void atf_ci::FSsimfs_Init(atf_ci::FSsimfs& ssimfs) {
+    ssimfs.rmfile = bool(false);
+    ssimfs.needfile = bool(false);
+}
 inline atf_ci::FTargsrc::FTargsrc() {
 }
 

@@ -292,8 +292,16 @@ inline dev::Srcfile::Srcfile() {
 }
 
 inline dev::Ssimfs::Ssimfs() {
+    dev::Ssimfs_Init(*this);
 }
 
+
+// --- dev.Ssimfs..Init
+// Set all fields to initial values.
+inline void dev::Ssimfs_Init(dev::Ssimfs& parent) {
+    parent.rmfile = bool(false);
+    parent.needfile = bool(false);
+}
 inline dev::Syscmd::Syscmd(i64                            in_syscmd
         ,const algo::strptr&            in_command
         ,i32                            in_pid

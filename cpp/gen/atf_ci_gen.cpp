@@ -87,7 +87,6 @@ namespace atf_ci { // gen:ns_gsymbol
     const char* dev_scriptfile_bin_fix_gen_conflicts("bin/fix-gen-conflicts");
     const char* dev_scriptfile_bin_update_gitfile("bin/update-gitfile");
     const char* dev_scriptfile_bin_update_hdr("bin/update-hdr");
-    const char* dev_scriptfile_bin_update_outfile("bin/update-outfile");
     const char* dev_scriptfile_bin_update_scriptfile("bin/update-scriptfile");
 } // gen:ns_gsymbol
 namespace atf_ci { // gen:ns_print_proto
@@ -385,7 +384,7 @@ static void atf_ci::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_ci.Input'  signature:'ae315f0e1f7eba1e4cfa8248baf0c99882074f08'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_ci.Input'  signature:'8d718e3f83a783296825e055a0cf7126fcd14a19'");
 }
 
 // --- atf_ci.FDb._db.StaticCheck
@@ -604,7 +603,6 @@ static void atf_ci::citest_LoadStatic() {
         void (*step)();
     } data[] = {
         { "atfdb.citest  citest:checkclean  cijob:normalize  sandbox:N  comment:\"Check that no files are modified\"", atf_ci::citest_checkclean }
-        ,{ "atfdb.citest  citest:outfile  cijob:normalize  sandbox:N  comment:\"\"", atf_ci::citest_outfile }
         ,{ "atfdb.citest  citest:atf_amc  cijob:normalize  sandbox:N  comment:\"Test amc (run atf_amc)\"", atf_ci::citest_atf_amc }
         ,{ "atfdb.citest  citest:gitfile  cijob:normalize  sandbox:N  comment:\"Update gitfile tables by scanning filesystem\"", atf_ci::citest_gitfile }
         ,{ "atfdb.citest  citest:normalize_acr  cijob:normalize  sandbox:N  comment:\"Read ssim databases into memory and write back\"", atf_ci::citest_normalize_acr }
@@ -3207,6 +3205,8 @@ void atf_ci::FSsimfile_Uninit(atf_ci::FSsimfile& ssimfile) {
 // Copy fields out of row
 void atf_ci::ssimfs_CopyOut(atf_ci::FSsimfs &row, dev::Ssimfs &out) {
     out.ssimfs = row.ssimfs;
+    out.rmfile = row.rmfile;
+    out.needfile = row.needfile;
     out.lscmd = row.lscmd;
     (void)Regx_ReadSql(out.excl, row.excl.expr, true);
     out.comment = row.comment;
@@ -3216,6 +3216,8 @@ void atf_ci::ssimfs_CopyOut(atf_ci::FSsimfs &row, dev::Ssimfs &out) {
 // Copy fields in to row
 void atf_ci::ssimfs_CopyIn(atf_ci::FSsimfs &row, dev::Ssimfs &in) {
     row.ssimfs = in.ssimfs;
+    row.rmfile = in.rmfile;
+    row.needfile = in.needfile;
     row.lscmd = in.lscmd;
     (void)Regx_ReadSql(row.excl, in.excl.expr, true);
     row.comment = in.comment;

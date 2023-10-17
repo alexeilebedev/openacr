@@ -54,15 +54,21 @@ void atf_ci::citest_ssimfs() {
         // delete extra files
         ind_beg(_db_file_curs,file,_db) {
             if (file.file_exists && !file.record_exists) {
+                if (ssimfs.rmfile) {
+                    SysCmd(tempstr()<<"git rm -f "<<file.file);
+                }
                 prlog("atf_ci.ssimfs_extra_file"
                       <<Keyval("file",file.file)
+                      <<Keyval("removed",ssimfs.rmfile)
                       <<Keyval("comment",tempstr()<<"not in "<<ssimfile_Get(ssimfs)));
                 ok=false;
             } else if (file.record_exists && !file.file_exists) {
-                prlog("atf_ci.ssimfs_missing_file"
-                      <<Keyval("file",file.file)
-                      <<Keyval("comment",tempstr()<<"required by "<<ssimfile_Get(ssimfs)));
-                ok=false;
+                if (ssimfs.needfile) {
+                    prlog("atf_ci.ssimfs_missing_file"
+                          <<Keyval("file",file.file)
+                          <<Keyval("comment",tempstr()<<"required by "<<ssimfile_Get(ssimfs)));
+                    ok=false;
+                }
             }
         }ind_end;
     }ind_end;
