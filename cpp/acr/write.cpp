@@ -109,7 +109,7 @@ void acr::WriteFiles() {
     } else {
         acr::FWrite write;
         ind_beg(acr::_db_file_curs, file, acr::_db) {
-            if (!EphemeralQ(file)) {
+            if (ch_N(file.filename) != 0) {
                 WriteFile(write,file);
             }
         }ind_end;

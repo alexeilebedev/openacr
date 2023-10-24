@@ -1,8 +1,7 @@
-# atf_comp -report:N -printinput acr.RenameRecord | acr -in:- target:samp -rename:xyz | cat
 acr.update  dev.target  target:xyz  compat:%-%g%.%-%
 
 acr.update  dev.targdep  targdep:xyz.algo_lib  comment:""
 
 acr.update  dev.targsrc  targsrc:xyz/cpp/samp/1.cpp  comment:""
 acr.update  dev.targsrc  targsrc:xyz/cpp/samp/2.cpp  comment:""
-report.acr  n_select:4  n_insert:0  n_delete:0  n_update:4  n_file_mod:0
+report.acr  n_select:4  n_insert:0  n_delete:0  n_ignore:0  n_update:4  n_file_mod:0

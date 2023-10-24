@@ -879,7 +879,7 @@ void amc::tfunc_Ctype_NArgs() {
             amc::FField *actualfield = &field;
             tempstr comment;
             if (field.c_falias) {
-                actualfield=field.c_falias->p_basefield;
+                actualfield=field.c_falias->p_srcfield;
             }
             Set(R, "$name", name_Get(field));
             Set(R, "$isanon", (field.c_anonfld ? "true" : "false"));

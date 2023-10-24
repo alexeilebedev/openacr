@@ -72,120 +72,114 @@ enum { dev_Covline_flag_Enum_N = 3 };
 
 // --- dev_FieldIdEnum
 
-enum dev_FieldIdEnum {                    // dev.FieldId.value
-     dev_FieldId_arch              = 0
-    ,dev_FieldId_comment           = 1
-    ,dev_FieldId_badline           = 2
-    ,dev_FieldId_expr              = 3
-    ,dev_FieldId_targsrc_regx      = 4
-    ,dev_FieldId_builddir          = 5
-    ,dev_FieldId_uname             = 6
-    ,dev_FieldId_compiler          = 7
-    ,dev_FieldId_cfg               = 8
-    ,dev_FieldId_suffix            = 9
-    ,dev_FieldId_ranlib            = 10
-    ,dev_FieldId_ar                = 11
-    ,dev_FieldId_link              = 12
-    ,dev_FieldId_libext            = 13
-    ,dev_FieldId_exeext            = 14
-    ,dev_FieldId_pchext            = 15
-    ,dev_FieldId_objext            = 16
-    ,dev_FieldId_rc                = 17
-    ,dev_FieldId_covfile           = 18
-    ,dev_FieldId_total             = 19
-    ,dev_FieldId_nonexe            = 20
-    ,dev_FieldId_exe               = 21
-    ,dev_FieldId_exer              = 22
-    ,dev_FieldId_hit               = 23
-    ,dev_FieldId_cov               = 24
-    ,dev_FieldId_covline           = 25
-    ,dev_FieldId_src               = 26
-    ,dev_FieldId_line              = 27
-    ,dev_FieldId_flag              = 28
-    ,dev_FieldId_text              = 29
-    ,dev_FieldId_covtarget         = 30
-    ,dev_FieldId_gitfile           = 31
-    ,dev_FieldId_ext               = 32
-    ,dev_FieldId_gitinfo           = 33
-    ,dev_FieldId_author            = 34
-    ,dev_FieldId_compver           = 35
-    ,dev_FieldId_package           = 36
-    ,dev_FieldId_hilite            = 37
-    ,dev_FieldId_color             = 38
-    ,dev_FieldId_htmlentity        = 39
-    ,dev_FieldId_code              = 40
-    ,dev_FieldId_include           = 41
-    ,dev_FieldId_srcfile           = 42
-    ,dev_FieldId_filename          = 43
-    ,dev_FieldId_sys               = 44
-    ,dev_FieldId_issue             = 45
-    ,dev_FieldId_project           = 46
-    ,dev_FieldId_assignee          = 47
-    ,dev_FieldId_labels            = 48
-    ,dev_FieldId_milestone         = 49
-    ,dev_FieldId_iid               = 50
-    ,dev_FieldId_title             = 51
-    ,dev_FieldId_license           = 52
-    ,dev_FieldId_nlongline         = 53
-    ,dev_FieldId_longestline       = 54
-    ,dev_FieldId_nbadws            = 55
-    ,dev_FieldId_maxws             = 56
-    ,dev_FieldId_nlongfunc         = 57
-    ,dev_FieldId_longestfunc       = 58
-    ,dev_FieldId_nmysteryfunc      = 59
-    ,dev_FieldId_badness           = 60
-    ,dev_FieldId_mdsection         = 61
-    ,dev_FieldId_match             = 62
-    ,dev_FieldId_perns             = 63
-    ,dev_FieldId_mr                = 64
-    ,dev_FieldId_source_branch     = 65
-    ,dev_FieldId_pipeline_status   = 66
-    ,dev_FieldId_strict            = 67
-    ,dev_FieldId_opt_type          = 68
-    ,dev_FieldId_sep               = 69
-    ,dev_FieldId_inl               = 70
-    ,dev_FieldId_sandbox           = 71
-    ,dev_FieldId_filter            = 72
-    ,dev_FieldId_readme            = 73
-    ,dev_FieldId_ns                = 74
-    ,dev_FieldId_sbpath            = 75
-    ,dev_FieldId_ssimfs            = 76
-    ,dev_FieldId_ssimfile          = 77
-    ,dev_FieldId_file              = 78
-    ,dev_FieldId_rmfile            = 79
-    ,dev_FieldId_needfile          = 80
-    ,dev_FieldId_lscmd             = 81
-    ,dev_FieldId_excl              = 82
-    ,dev_FieldId_syscmd            = 83
-    ,dev_FieldId_execkey           = 84
-    ,dev_FieldId_command           = 85
-    ,dev_FieldId_pid               = 86
-    ,dev_FieldId_status            = 87
-    ,dev_FieldId_nprereq           = 88
-    ,dev_FieldId_fail_prereq       = 89
-    ,dev_FieldId_completed         = 90
-    ,dev_FieldId_maxtime           = 91
-    ,dev_FieldId_syscmddep         = 92
-    ,dev_FieldId_child             = 93
-    ,dev_FieldId_parent            = 94
-    ,dev_FieldId_syslib            = 95
-    ,dev_FieldId_targdep           = 96
-    ,dev_FieldId_target            = 97
-    ,dev_FieldId_compat            = 98
-    ,dev_FieldId_targsrc           = 99
-    ,dev_FieldId_targsyslib        = 100
-    ,dev_FieldId_cov_min           = 101
-    ,dev_FieldId_maxerr            = 102
-    ,dev_FieldId_timefmt           = 103
-    ,dev_FieldId_dirname           = 104
-    ,dev_FieldId_tool_opt          = 105
-    ,dev_FieldId_opt               = 106
-    ,dev_FieldId_sortfld           = 107
-    ,dev_FieldId_field             = 108
-    ,dev_FieldId_value             = 109
+enum dev_FieldIdEnum {                 // dev.FieldId.value
+     dev_FieldId_arch           = 0
+    ,dev_FieldId_comment        = 1
+    ,dev_FieldId_badline        = 2
+    ,dev_FieldId_expr           = 3
+    ,dev_FieldId_targsrc_regx   = 4
+    ,dev_FieldId_builddir       = 5
+    ,dev_FieldId_uname          = 6
+    ,dev_FieldId_compiler       = 7
+    ,dev_FieldId_cfg            = 8
+    ,dev_FieldId_suffix         = 9
+    ,dev_FieldId_ranlib         = 10
+    ,dev_FieldId_ar             = 11
+    ,dev_FieldId_link           = 12
+    ,dev_FieldId_libext         = 13
+    ,dev_FieldId_exeext         = 14
+    ,dev_FieldId_pchext         = 15
+    ,dev_FieldId_objext         = 16
+    ,dev_FieldId_rc             = 17
+    ,dev_FieldId_covfile        = 18
+    ,dev_FieldId_total          = 19
+    ,dev_FieldId_nonexe         = 20
+    ,dev_FieldId_exe            = 21
+    ,dev_FieldId_exer           = 22
+    ,dev_FieldId_hit            = 23
+    ,dev_FieldId_cov            = 24
+    ,dev_FieldId_covline        = 25
+    ,dev_FieldId_src            = 26
+    ,dev_FieldId_line           = 27
+    ,dev_FieldId_flag           = 28
+    ,dev_FieldId_text           = 29
+    ,dev_FieldId_covtarget      = 30
+    ,dev_FieldId_edaction       = 31
+    ,dev_FieldId_edacttype      = 32
+    ,dev_FieldId_name           = 33
+    ,dev_FieldId_needamc        = 34
+    ,dev_FieldId_gitfile        = 35
+    ,dev_FieldId_ext            = 36
+    ,dev_FieldId_gitinfo        = 37
+    ,dev_FieldId_author         = 38
+    ,dev_FieldId_compver        = 39
+    ,dev_FieldId_package        = 40
+    ,dev_FieldId_hilite         = 41
+    ,dev_FieldId_color          = 42
+    ,dev_FieldId_htmlentity     = 43
+    ,dev_FieldId_code           = 44
+    ,dev_FieldId_include        = 45
+    ,dev_FieldId_srcfile        = 46
+    ,dev_FieldId_filename       = 47
+    ,dev_FieldId_sys            = 48
+    ,dev_FieldId_license        = 49
+    ,dev_FieldId_nlongline      = 50
+    ,dev_FieldId_longestline    = 51
+    ,dev_FieldId_nbadws         = 52
+    ,dev_FieldId_maxws          = 53
+    ,dev_FieldId_nlongfunc      = 54
+    ,dev_FieldId_longestfunc    = 55
+    ,dev_FieldId_nmysteryfunc   = 56
+    ,dev_FieldId_badness        = 57
+    ,dev_FieldId_mdsection      = 58
+    ,dev_FieldId_match          = 59
+    ,dev_FieldId_perns          = 60
+    ,dev_FieldId_strict         = 61
+    ,dev_FieldId_opt_type       = 62
+    ,dev_FieldId_sep            = 63
+    ,dev_FieldId_inl            = 64
+    ,dev_FieldId_sandbox        = 65
+    ,dev_FieldId_filter         = 66
+    ,dev_FieldId_readme         = 67
+    ,dev_FieldId_ns             = 68
+    ,dev_FieldId_sbpath         = 69
+    ,dev_FieldId_ssimfs         = 70
+    ,dev_FieldId_ssimfile       = 71
+    ,dev_FieldId_file           = 72
+    ,dev_FieldId_rmfile         = 73
+    ,dev_FieldId_needfile       = 74
+    ,dev_FieldId_lscmd          = 75
+    ,dev_FieldId_excl           = 76
+    ,dev_FieldId_syscmd         = 77
+    ,dev_FieldId_execkey        = 78
+    ,dev_FieldId_command        = 79
+    ,dev_FieldId_pid            = 80
+    ,dev_FieldId_status         = 81
+    ,dev_FieldId_nprereq        = 82
+    ,dev_FieldId_fail_prereq    = 83
+    ,dev_FieldId_completed      = 84
+    ,dev_FieldId_maxtime        = 85
+    ,dev_FieldId_syscmddep      = 86
+    ,dev_FieldId_child          = 87
+    ,dev_FieldId_parent         = 88
+    ,dev_FieldId_syslib         = 89
+    ,dev_FieldId_targdep        = 90
+    ,dev_FieldId_target         = 91
+    ,dev_FieldId_compat         = 92
+    ,dev_FieldId_targsrc        = 93
+    ,dev_FieldId_targsyslib     = 94
+    ,dev_FieldId_cov_min        = 95
+    ,dev_FieldId_maxerr         = 96
+    ,dev_FieldId_timefmt        = 97
+    ,dev_FieldId_dirname        = 98
+    ,dev_FieldId_tool_opt       = 99
+    ,dev_FieldId_opt            = 100
+    ,dev_FieldId_sortfld        = 101
+    ,dev_FieldId_field          = 102
+    ,dev_FieldId_value          = 103
 };
 
-enum { dev_FieldIdEnum_N = 110 };
+enum { dev_FieldIdEnum_N = 104 };
 
 extern const char *  dev_License_license_;      //        fconst:dev.License.license/
 extern const char *  dev_License_license_GPL;   // GPL    fconst:dev.License.license/GPL
@@ -221,7 +215,9 @@ extern const char *  dev_Target_target_atf_gcli;       // atf_gcli        fconst
 extern const char *  dev_Target_target_atf_nrun;       // atf_nrun        fconst:dev.Target.target/atf_nrun
 extern const char *  dev_Target_target_atf_unit;       // atf_unit        fconst:dev.Target.target/atf_unit
 extern const char *  dev_Target_target_bash2html;      // bash2html       fconst:dev.Target.target/bash2html
+extern const char *  dev_Target_target_gcache;         // gcache          fconst:dev.Target.target/gcache
 extern const char *  dev_Target_target_gcli;           // gcli            fconst:dev.Target.target/gcli
+extern const char *  dev_Target_target_lib_amcdb;      // lib_amcdb       fconst:dev.Target.target/lib_amcdb
 extern const char *  dev_Target_target_lib_ams;        // lib_ams         fconst:dev.Target.target/lib_ams
 extern const char *  dev_Target_target_lib_ctype;      // lib_ctype       fconst:dev.Target.target/lib_ctype
 extern const char *  dev_Target_target_lib_exec;       // lib_exec        fconst:dev.Target.target/lib_exec
@@ -235,6 +231,7 @@ extern const char *  dev_Target_target_lib_sql;        // lib_sql         fconst
 extern const char *  dev_Target_target_mdbg;           // mdbg            fconst:dev.Target.target/mdbg
 extern const char *  dev_Target_target_mysql2ssim;     // mysql2ssim      fconst:dev.Target.target/mysql2ssim
 extern const char *  dev_Target_target_orgfile;        // orgfile         fconst:dev.Target.target/orgfile
+extern const char *  dev_Target_target_samp_regx;      // samp_regx       fconst:dev.Target.target/samp_regx
 extern const char *  dev_Target_target_sandbox;        // sandbox         fconst:dev.Target.target/sandbox
 extern const char *  dev_Target_target_src_func;       // src_func        fconst:dev.Target.target/src_func
 extern const char *  dev_Target_target_src_hdr;        // src_hdr         fconst:dev.Target.target/src_hdr
@@ -251,17 +248,16 @@ namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 CfgPkey;
     typedef algo::Smallstr50 CompilerPkey;
     typedef algo::Smallstr200 CovlinePkey;
+    typedef algo::Smallstr50 EdactionPkey;
+    typedef algo::Smallstr50 EdacttypePkey;
     typedef algo::Smallstr200 GitfilePkey;
     typedef algo::Smallstr40 GitinfoPkey;
     typedef algo::Smallstr50 HilitePkey;
     typedef algo::Smallstr50 HtmlentityPkey;
     typedef algo::Smallstr200 IncludePkey;
-    typedef algo::Smallstr50 IssuePkey;
     typedef algo::Smallstr50 LicensePkey;
     typedef algo::Smallstr50 MdsectionPkey;
-    typedef algo::Smallstr50 MrPkey;
     typedef algo::Smallstr50 OptTypePkey;
-    typedef algo::Smallstr50 ProjectPkey;
     typedef algo::Smallstr200 ReadmePkey;
     typedef algo::Smallstr50 SandboxPkey;
     typedef algo::Smallstr50 SbpathPkey;
@@ -289,21 +285,20 @@ namespace dev { struct Compiler; }
 namespace dev { struct Covfile; }
 namespace dev { struct Covline; }
 namespace dev { struct Covtarget; }
+namespace dev { struct Edaction; }
+namespace dev { struct Edacttype; }
 namespace dev { struct FieldId; }
 namespace dev { struct Gitfile; }
 namespace dev { struct Gitinfo; }
 namespace dev { struct Hilite; }
 namespace dev { struct Htmlentity; }
 namespace dev { struct Include; }
-namespace dev { struct Issue; }
 namespace dev { struct License; }
 namespace dev { struct Linelim; }
 namespace dev { struct Mdsection; }
-namespace dev { struct Mr; }
 namespace dev { struct Msgfile; }
 namespace dev { struct Noindent; }
 namespace dev { struct OptType; }
-namespace dev { struct Project; }
 namespace dev { struct Readme; }
 namespace dev { struct Readmens; }
 namespace dev { struct Sandbox; }
@@ -521,6 +516,44 @@ void                 Covtarget_Init(dev::Covtarget& parent);
 // print string representation of dev::Covtarget to string LHS, no header -- cprint:dev.Covtarget.String
 void                 Covtarget_Print(dev::Covtarget & row, algo::cstring &str) __attribute__((nothrow));
 
+// --- dev.Edaction
+struct Edaction { // dev.Edaction: acr_ed editing action (only one can exist at a time)
+    algo::Smallstr50   edaction;   //
+    bool               needamc;    //   false
+    algo::Comment      comment;    //
+    Edaction();
+};
+
+algo::Smallstr50     edacttype_Get(dev::Edaction& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::Smallstr50     Edaction_edacttype_Get(algo::strptr arg) __attribute__((nothrow));
+
+algo::Smallstr50     name_Get(dev::Edaction& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::Smallstr50     Edaction_name_Get(algo::strptr arg) __attribute__((nothrow));
+
+tempstr              Edaction_Concat_edacttype_name( const algo::strptr& edacttype ,const algo::strptr& name );
+bool                 Edaction_ReadFieldMaybe(dev::Edaction &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Edaction from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 Edaction_ReadStrptrMaybe(dev::Edaction &parent, algo::strptr in_str);
+// Set all fields to initial values.
+void                 Edaction_Init(dev::Edaction& parent);
+// print string representation of dev::Edaction to string LHS, no header -- cprint:dev.Edaction.String
+void                 Edaction_Print(dev::Edaction & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- dev.Edacttype
+struct Edacttype { // dev.Edacttype: acr_ed editing action type
+    algo::Smallstr50   edacttype;   //
+    algo::Comment      comment;     //
+    Edacttype();
+};
+
+bool                 Edacttype_ReadFieldMaybe(dev::Edacttype &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Edacttype from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 Edacttype_ReadStrptrMaybe(dev::Edacttype &parent, algo::strptr in_str);
+// print string representation of dev::Edacttype to string LHS, no header -- cprint:dev.Edacttype.String
+void                 Edacttype_Print(dev::Edacttype & row, algo::cstring &str) __attribute__((nothrow));
+
 // --- dev.FieldId
 #pragma pack(push,1)
 struct FieldId { // dev.FieldId: Field read helper
@@ -657,30 +690,6 @@ void                 Include_Init(dev::Include& parent);
 // print string representation of dev::Include to string LHS, no header -- cprint:dev.Include.String
 void                 Include_Print(dev::Include & row, algo::cstring &str) __attribute__((nothrow));
 
-// --- dev.Issue
-struct Issue { // dev.Issue: Gitlab project issue
-    algo::Smallstr50   issue;       // Identifier. must be in form project.iid
-    algo::Smallstr50   assignee;    // User the issue is assigned to
-    algo::cstring      labels;      // Issue labels - comma-separated list
-    algo::cstring      milestone;   // Issue milestone, blank if none
-    algo::cstring      title;       // Issue title
-    Issue();
-};
-
-algo::Smallstr50     project_Get(dev::Issue& parent) __attribute__((__warn_unused_result__, nothrow));
-algo::Smallstr50     Issue_project_Get(algo::strptr arg) __attribute__((nothrow));
-
-u32                  iid_Get(dev::Issue& parent) __attribute__((__warn_unused_result__, nothrow));
-u32                  Issue_iid_Get(algo::strptr arg) __attribute__((nothrow));
-
-tempstr              Issue_Concat_project_iid( const algo::strptr& project ,u32 iid );
-bool                 Issue_ReadFieldMaybe(dev::Issue &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of dev::Issue from an ascii string.
-// The format of the string is an ssim Tuple
-bool                 Issue_ReadStrptrMaybe(dev::Issue &parent, algo::strptr in_str);
-// print string representation of dev::Issue to string LHS, no header -- cprint:dev.Issue.String
-void                 Issue_Print(dev::Issue & row, algo::cstring &str) __attribute__((nothrow));
-
 // --- dev.License
 struct License { // dev.License
     algo::Smallstr50   license;   //
@@ -736,29 +745,6 @@ void                 Mdsection_Init(dev::Mdsection& parent);
 // print string representation of dev::Mdsection to string LHS, no header -- cprint:dev.Mdsection.String
 void                 Mdsection_Print(dev::Mdsection & row, algo::cstring &str) __attribute__((nothrow));
 
-// --- dev.Mr
-struct Mr { // dev.Mr: Gitlab project mr
-    algo::Smallstr50   mr;                // Identifier. must be in form project.iid
-    algo::cstring      title;             // Mr title
-    algo::cstring      source_branch;     // Source branch
-    algo::Smallstr20   pipeline_status;   // Pipeline status
-    Mr();
-};
-
-algo::Smallstr50     project_Get(dev::Mr& parent) __attribute__((__warn_unused_result__, nothrow));
-algo::Smallstr50     Mr_project_Get(algo::strptr arg) __attribute__((nothrow));
-
-u32                  iid_Get(dev::Mr& parent) __attribute__((__warn_unused_result__, nothrow));
-u32                  Mr_iid_Get(algo::strptr arg) __attribute__((nothrow));
-
-tempstr              Mr_Concat_project_iid( const algo::strptr& project ,u32 iid );
-bool                 Mr_ReadFieldMaybe(dev::Mr &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of dev::Mr from an ascii string.
-// The format of the string is an ssim Tuple
-bool                 Mr_ReadStrptrMaybe(dev::Mr &parent, algo::strptr in_str);
-// print string representation of dev::Mr to string LHS, no header -- cprint:dev.Mr.String
-void                 Mr_Print(dev::Mr & row, algo::cstring &str) __attribute__((nothrow));
-
 // --- dev.Msgfile
 struct Msgfile { // dev.Msgfile
     algo::Smallstr200   gitfile;   // Name of file containing messages
@@ -807,13 +793,6 @@ bool                 OptType_ReadFieldMaybe(dev::OptType &parent, algo::strptr f
 bool                 OptType_ReadStrptrMaybe(dev::OptType &parent, algo::strptr in_str);
 // print string representation of dev::OptType to string LHS, no header -- cprint:dev.OptType.String
 void                 OptType_Print(dev::OptType & row, algo::cstring &str) __attribute__((nothrow));
-
-// --- dev.Project
-struct Project { // dev.Project: Gitlab project mr
-    algo::Smallstr50   project;   // Identifier
-    Project();
-};
-
 
 // --- dev.Readme
 struct Readme { // dev.Readme
@@ -1230,16 +1209,16 @@ inline algo::cstring &operator <<(algo::cstring &str, const dev::Badline &row);/
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Covfile &row);// cfmt:dev.Covfile.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Covline &row);// cfmt:dev.Covline.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Covtarget &row);// cfmt:dev.Covtarget.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Edaction &row);// cfmt:dev.Edaction.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Edacttype &row);// cfmt:dev.Edacttype.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::FieldId &row);// cfmt:dev.FieldId.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Gitfile &row);// cfmt:dev.Gitfile.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Hilite &row);// cfmt:dev.Hilite.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Htmlentity &row);// cfmt:dev.Htmlentity.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Include &row);// cfmt:dev.Include.String
-inline algo::cstring &operator <<(algo::cstring &str, const dev::Issue &row);// cfmt:dev.Issue.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::License &row);// cfmt:dev.License.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Linelim &row);// cfmt:dev.Linelim.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Mdsection &row);// cfmt:dev.Mdsection.String
-inline algo::cstring &operator <<(algo::cstring &str, const dev::Mr &row);// cfmt:dev.Mr.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Msgfile &row);// cfmt:dev.Msgfile.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Noindent &row);// cfmt:dev.Noindent.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Readme &row);// cfmt:dev.Readme.String

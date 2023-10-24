@@ -39,8 +39,8 @@
 #include "include/gen/report_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
+#include "include/gen/lib_amcdb_gen.h"
+#include "include/gen/lib_amcdb_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
@@ -65,6 +65,7 @@ const char *acr_help =
 "    -unused                     Only select records which are not referenced.\n"
 "    -trunc                      (with insert or rename): truncate table on first write\n"
 "    -check                      Run cross-reference check on selection\n"
+"    -selerr             Y       (with -check): Select error records\n"
 "    -maxshow    int     100     Limit number of errors per table\n"
 "    -write                      Write data back to disk.\n"
 "    -rename     string  \"\"      Change value of found item\n"
@@ -80,7 +81,7 @@ const char *acr_help =
 "    -schema     string  \"data\"  Directory for initializing acr meta-data\n"
 "    -e                          Open selection in editor, write back when done.\n"
 "    -t                          Short for -tree -xref -loose\n"
-"    -rowid                      Print/respect acr.rowid attribute\n"
+"    -rowid                      Always print acr.rowid attribute\n"
 "    -in         string  \"data\"  Input directory or filename, - for stdin\n"
 "    -cmt                        Print comments for all columns referenced in output\n"
 "    -report             Y       Show final report\n"
@@ -91,7 +92,7 @@ const char *acr_help =
 "    -meta                       Select meta-data for selected records\n"
 "    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      int             Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help an exit; alias -h\n"
+"    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
 ;
@@ -2513,7 +2514,7 @@ void acr::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(acr::LoadTuplesMaybe(cmd.schema)
+    vrfy(acr::LoadTuplesMaybe(cmd.schema,true)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
@@ -2550,7 +2551,7 @@ static void acr::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr.Input'  signature:'5b35bb60c26576ddf66e70c5fcefab0c79b6cbb9'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr.Input'  signature:'5f91ecbc205637e7a2d60a2d2840f289bd48bbd9'");
 }
 
 // --- acr.FDb._db.StaticCheck
@@ -2650,7 +2651,6 @@ bool acr::InsertStrptrMaybe(algo::strptr str) {
             break;
         }
         default:
-        retval = algo_lib::InsertStrptrMaybe(str);
         break;
     } //switch
     if (!retval) {
@@ -2661,24 +2661,70 @@ bool acr::InsertStrptrMaybe(algo::strptr str) {
 
 // --- acr.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool acr::LoadTuplesMaybe(algo::strptr root) {
+bool acr::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    static const char *ssimfiles[] = {
-        "dmmeta.anonfld", "dmmeta.ctype", "amcdb.bltin", "dmmeta.cdflt"
-        , "dmmeta.cppfunc", "dmmeta.field", "dmmeta.funique", "dmmeta.smallstr"
-        , "dmmeta.ssimfile", "dmmeta.ssimreq", "dmmeta.ssimsort", "dmmeta.substr"
+    if (FileQ(root)) {
+        retval = acr::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = acr::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && acr::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && acr::LoadTuplesFile(algo::SsimFname(root,"dmmeta.anonfld"),recursive);
+        retval = retval && acr::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
+        retval = retval && acr::LoadTuplesFile(algo::SsimFname(root,"amcdb.bltin"),recursive);
+        retval = retval && acr::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cdflt"),recursive);
+        retval = retval && acr::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cppfunc"),recursive);
+        retval = retval && acr::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
+        retval = retval && acr::LoadTuplesFile(algo::SsimFname(root,"dmmeta.funique"),recursive);
+        retval = retval && acr::LoadTuplesFile(algo::SsimFname(root,"dmmeta.smallstr"),recursive);
+        retval = retval && acr::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
+        retval = retval && acr::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimreq"),recursive);
+        retval = retval && acr::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimsort"),recursive);
+        retval = retval && acr::LoadTuplesFile(algo::SsimFname(root,"dmmeta.substr"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
 
-        , NULL};
-        retval = algo_lib::DoLoadTuples(root, acr::InsertStrptrMaybe, ssimfiles, true);
-        return retval;
+// --- acr.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool acr::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- acr.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool acr::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+        }
+        retval = retval && acr::InsertStrptrMaybe(line);
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
+    return retval;
 }
 
 // --- acr.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool acr::LoadSsimfileMaybe(algo::strptr fname) {
+bool acr::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, acr::InsertStrptrMaybe, true);
+        retval = acr::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }
@@ -6399,7 +6445,6 @@ void acr::FQuery_Init(acr::FQuery& query) {
     query.ndown = i32(0);
     query.unused = bool(false);
     query.selmeta = bool(false);
-    query.delrec = bool(false);
     query.comment = algo::strptr("");
     query.query_next = (acr::FQuery*)-1; // (acr.FDb.query) not-in-tpool's freelist
     query.zs_query_next = (acr::FQuery*)-1; // (acr.FDb.zs_query) not-in-list
@@ -6446,9 +6491,6 @@ void acr::FQuery_Print(acr::FQuery & row, algo::cstring &str) {
 
     bool_Print(row.selmeta, temp);
     PrintAttrSpaceReset(str,"selmeta", temp);
-
-    bool_Print(row.delrec, temp);
-    PrintAttrSpaceReset(str,"delrec", temp);
 
     algo::cstring_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
@@ -6513,6 +6555,43 @@ void acr::FRec_Uninit(acr::FRec& rec) {
     if (p_p_ctype)  {
         zd_trec_Remove(*p_p_ctype, row);// remove rec from index zd_trec
     }
+}
+
+// --- acr.FRec..Print
+// print string representation of acr::FRec to string LHS, no header -- cprint:acr.FRec.String
+void acr::FRec_Print(acr::FRec & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "acr.FRec";
+
+    algo::cstring_Print(row.pkey, temp);
+    PrintAttrSpaceReset(str,"pkey", temp);
+
+    algo::Tuple_Print(row.tuple, temp);
+    PrintAttrSpaceReset(str,"tuple", temp);
+
+    bool_Print(row.del, temp);
+    PrintAttrSpaceReset(str,"del", temp);
+
+    bool_Print(row.mod, temp);
+    PrintAttrSpaceReset(str,"mod", temp);
+
+    bool_Print(row.metasel, temp);
+    PrintAttrSpaceReset(str,"metasel", temp);
+
+    bool_Print(row.isnew, temp);
+    PrintAttrSpaceReset(str,"isnew", temp);
+
+    i32_Print(row.seldist, temp);
+    PrintAttrSpaceReset(str,"seldist", temp);
+
+    acr::RecSortkey_Print(row.sortkey, temp);
+    PrintAttrSpaceReset(str,"sortkey", temp);
+
+    u64_PrintHex(u64((const acr::FPline*)row.c_pline), temp, 8, true);
+    PrintAttrSpaceReset(str,"c_pline", temp);
+
+    i32_Print(row.lineno, temp);
+    PrintAttrSpaceReset(str,"lineno", temp);
 }
 
 // --- acr.FRun.c_ctype.Insert
@@ -7322,11 +7401,11 @@ void acr::FieldId_Print(acr::FieldId & row, algo::cstring &str) {
 const char* acr::read_mode_ToCstr(const acr::ReadMode& parent) {
     const char *ret = NULL;
     switch(read_mode_GetEnum(parent)) {
-        case acr_ReadMode_insert           : ret = "insert";  break;
-        case acr_ReadMode_replace          : ret = "replace";  break;
-        case acr_ReadMode_update           : ret = "update";  break;
-        case acr_ReadMode_merge            : ret = "merge";  break;
-        case acr_ReadMode_delete           : ret = "delete";  break;
+        case acr_ReadMode_acr_insert       : ret = "acr.insert";  break;
+        case acr_ReadMode_acr_replace      : ret = "acr.replace";  break;
+        case acr_ReadMode_acr_update       : ret = "acr.update";  break;
+        case acr_ReadMode_acr_merge        : ret = "acr.merge";  break;
+        case acr_ReadMode_acr_delete       : ret = "acr.delete";  break;
     }
     return ret;
 }
@@ -7350,32 +7429,37 @@ void acr::read_mode_Print(const acr::ReadMode& parent, algo::cstring &lhs) {
 bool acr::read_mode_SetStrptrMaybe(acr::ReadMode& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
-        case 5: {
-            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
-                case LE_STR5('m','e','r','g','e'): {
-                    read_mode_SetEnum(parent,acr_ReadMode_merge); ret = true; break;
+        case 9: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','c','r','.','m','e','r','g'): {
+                    if (memcmp(rhs.elems+8,"e",1)==0) { read_mode_SetEnum(parent,acr_ReadMode_acr_merge); ret = true; break; }
+                    break;
                 }
             }
             break;
         }
-        case 6: {
-            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
-                case LE_STR6('d','e','l','e','t','e'): {
-                    read_mode_SetEnum(parent,acr_ReadMode_delete); ret = true; break;
+        case 10: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','c','r','.','d','e','l','e'): {
+                    if (memcmp(rhs.elems+8,"te",2)==0) { read_mode_SetEnum(parent,acr_ReadMode_acr_delete); ret = true; break; }
+                    break;
                 }
-                case LE_STR6('i','n','s','e','r','t'): {
-                    read_mode_SetEnum(parent,acr_ReadMode_insert); ret = true; break;
+                case LE_STR8('a','c','r','.','i','n','s','e'): {
+                    if (memcmp(rhs.elems+8,"rt",2)==0) { read_mode_SetEnum(parent,acr_ReadMode_acr_insert); ret = true; break; }
+                    break;
                 }
-                case LE_STR6('u','p','d','a','t','e'): {
-                    read_mode_SetEnum(parent,acr_ReadMode_update); ret = true; break;
+                case LE_STR8('a','c','r','.','u','p','d','a'): {
+                    if (memcmp(rhs.elems+8,"te",2)==0) { read_mode_SetEnum(parent,acr_ReadMode_acr_update); ret = true; break; }
+                    break;
                 }
             }
             break;
         }
-        case 7: {
-            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
-                case LE_STR7('r','e','p','l','a','c','e'): {
-                    read_mode_SetEnum(parent,acr_ReadMode_replace); ret = true; break;
+        case 11: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','c','r','.','r','e','p','l'): {
+                    if (memcmp(rhs.elems+8,"ace",3)==0) { read_mode_SetEnum(parent,acr_ReadMode_acr_replace); ret = true; break; }
+                    break;
                 }
             }
             break;

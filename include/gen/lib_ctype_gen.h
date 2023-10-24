@@ -107,8 +107,8 @@ namespace lib_ctype { // gen:ns_print_struct
 // access: lib_ctype.FCtype.c_cdflt (Ptr)
 struct FCdflt { // lib_ctype.FCdflt
     algo::Smallstr50   ctype;      //
-    dmmeta::CppExpr    dflt;       //
-    dmmeta::CppExpr    cppdflt;    //
+    algo::CppExpr      dflt;       //
+    algo::CppExpr      cppdflt;    //
     algo::Smallstr50   ssimdflt;   //
     algo::Smallstr50   jsdflt;     //
     algo::Comment      comment;    //
@@ -173,7 +173,7 @@ void                 FCfmt_Print(lib_ctype::FCfmt & row, algo::cstring &str) __a
 // access: lib_ctype.FField.c_cppfunc (Ptr)
 struct FCppfunc { // lib_ctype.FCppfunc
     algo::Smallstr100   field;   //
-    dmmeta::CppExpr     expr;    //
+    algo::CppExpr       expr;    //
 private:
     friend lib_ctype::FCppfunc& cppfunc_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend lib_ctype::FCppfunc* cppfunc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -592,9 +592,13 @@ void                 StaticCheck();
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
-bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
+bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file.
+bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file descriptor.
+bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
-bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
@@ -819,7 +823,7 @@ struct FFconst { // lib_ctype.FFconst
     lib_ctype::FFconst*   ind_fconst_key_next;   // hash next
     lib_ctype::FFconst*   ind_fconst_next;       // hash next
     algo::Smallstr100     fconst;                //
-    dmmeta::CppExpr       value;                 //
+    algo::CppExpr         value;                 //
     algo::Comment         comment;               //
     algo::cstring         key;                   //
     lib_ctype::FFconst*   zd_fconst_next;        // zslist link; -1 means not-in-list
@@ -860,7 +864,7 @@ struct FField { // lib_ctype.FField
     algo::Smallstr100          field;                     //
     algo::Smallstr50           arg;                       // type of field
     algo::Smallstr50           reftype;                   //   "Val"
-    dmmeta::CppExpr            dflt;                      // default value (c++ expression)
+    algo::CppExpr              dflt;                      // default value (c++ expression)
     algo::Comment              comment;                   //
     bool                       istuple_computed;          //   false
     lib_ctype::FFtuple*        c_ftuple;                  // optional pointer
@@ -1048,7 +1052,7 @@ void                 FSsimfile_Uninit(lib_ctype::FSsimfile& ssimfile) __attribut
 // access: lib_ctype.FField.c_substr_srcfield (Ptrary)
 struct FSubstr { // lib_ctype.FSubstr
     algo::Smallstr100    field;                            //
-    dmmeta::CppExpr      expr;                             //
+    algo::CppExpr        expr;                             //
     algo::Smallstr100    srcfield;                         //
     lib_ctype::FField*   p_field;                          // reference to parent row
     bool                 field_c_substr_srcfield_in_ary;   //   false  membership flag

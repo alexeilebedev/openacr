@@ -37,10 +37,10 @@
 #include "include/gen/report_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/lib_ctype_gen.h"
 #include "include/gen/lib_ctype_gen.inl.h"
+#include "include/gen/lib_prot_gen.h"
+#include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
@@ -83,7 +83,7 @@ const char *atf_comp_help =
 "    -b                string  \"\"         Breakpoint passed to mdbg as-is\n"
 "    -verbose          int                Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug            int                Debug level (0..255); alias -d; cumulative\n"
-"    -help                                Print help an exit; alias -h\n"
+"    -help                                Print help and exit; alias -h\n"
 "    -version                             Print version and exit\n"
 "    -signature                           Show signatures and exit; alias -sig\n"
 ;
@@ -142,6 +142,28 @@ algo::Smallstr16 atf_comp::target_Get(atf_comp::FComptest& comptest) {
 algo::Smallstr50 atf_comp::testname_Get(atf_comp::FComptest& comptest) {
     algo::Smallstr50 ret(algo::Pathcomp(comptest.comptest, ".LR"));
     return ret;
+}
+
+// --- atf_comp.FComptest.c_targs.Cascdel
+// Delete referred-to items.
+// Deleted pointed-to item.
+void atf_comp::c_targs_Cascdel(atf_comp::FComptest& comptest) {
+    atf_comp::FTargs *ptr = comptest.c_targs;
+    if (ptr) {
+        targs_Delete(*ptr);
+        comptest.c_targs = NULL;
+    }
+}
+
+// --- atf_comp.FComptest.c_tfilt.Cascdel
+// Delete referred-to items.
+// Deleted pointed-to item.
+void atf_comp::c_tfilt_Cascdel(atf_comp::FComptest& comptest) {
+    atf_comp::FTfilt *ptr = comptest.c_tfilt;
+    if (ptr) {
+        tfilt_Delete(*ptr);
+        comptest.c_tfilt = NULL;
+    }
 }
 
 // --- atf_comp.FComptest.zd_tmsg.Cascdel
@@ -252,6 +274,8 @@ void atf_comp::FComptest_Init(atf_comp::FComptest& comptest) {
 void atf_comp::FComptest_Uninit(atf_comp::FComptest& comptest) {
     atf_comp::FComptest &row = comptest; (void)row;
     zd_tmsg_Cascdel(comptest); // dmmeta.cascdel:atf_comp.FComptest.zd_tmsg
+    c_tfilt_Cascdel(comptest); // dmmeta.cascdel:atf_comp.FComptest.c_tfilt
+    c_targs_Cascdel(comptest); // dmmeta.cascdel:atf_comp.FComptest.c_targs
     zd_run_comptest_Remove(row); // remove comptest from index zd_run_comptest
     ind_comptest_Remove(row); // remove comptest from index ind_comptest
     zd_sel_comptest_Remove(row); // remove comptest from index zd_sel_comptest
@@ -411,7 +435,7 @@ void atf_comp::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(atf_comp::LoadTuplesMaybe(cmd.in)
+    vrfy(atf_comp::LoadTuplesMaybe(cmd.in,true)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
@@ -491,7 +515,6 @@ bool atf_comp::InsertStrptrMaybe(algo::strptr str) {
             break;
         }
         default:
-        retval = algo_lib::InsertStrptrMaybe(str);
         break;
     } //switch
     if (!retval) {
@@ -502,14 +525,65 @@ bool atf_comp::InsertStrptrMaybe(algo::strptr str) {
 
 // --- atf_comp.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool atf_comp::LoadTuplesMaybe(algo::strptr root) {
+bool atf_comp::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    static const char *ssimfiles[] = {
-        "atfdb.comptest", "atfdb.targs", "atfdb.tfilt", "atfdb.tmsg"
+    if (FileQ(root)) {
+        retval = atf_comp::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = atf_comp::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cdflt"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfmt"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cppfunc"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fconst"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ftuple"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.substr"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dev.unstablefld"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.comptest"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.targs"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.tfilt"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.tmsg"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
 
-        , NULL};
-        retval = algo_lib::DoLoadTuples(root, atf_comp::InsertStrptrMaybe, ssimfiles, true);
-        return retval;
+// --- atf_comp.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool atf_comp::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- atf_comp.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool atf_comp::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+            retval = retval && lib_ctype::InsertStrptrMaybe(line);
+        }
+        retval = retval && atf_comp::InsertStrptrMaybe(line);
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
+    return retval;
 }
 
 // --- atf_comp.FDb._db.SaveTuples
@@ -527,10 +601,10 @@ u32 atf_comp::SaveTuples(algo::strptr root) {
 
 // --- atf_comp.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool atf_comp::LoadSsimfileMaybe(algo::strptr fname) {
+bool atf_comp::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, atf_comp::InsertStrptrMaybe, true);
+        retval = atf_comp::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }
@@ -917,57 +991,75 @@ atf_comp::FTargs* atf_comp::targs_InsertMaybe(const atfdb::Targs &value) {
     targs_CopyIn(*row,const_cast<atfdb::Targs&>(value));
     bool ok = targs_XrefMaybe(*row); // this may return false
     if (!ok) {
-        targs_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        targs_Delete(*row); // delete offending row, any existing xrefs are cleared
         row = NULL; // forget this ever happened
     }
     return row;
 }
 
+// --- atf_comp.FDb.targs.Delete
+// Remove row from all global and cross indices, then deallocate row
+void atf_comp::targs_Delete(atf_comp::FTargs &row) {
+    row.~FTargs();
+    targs_FreeMem(row);
+}
+
 // --- atf_comp.FDb.targs.AllocMem
-// Allocate space for one element. If no memory available, return NULL.
+// Allocate space for one element
+// If no memory available, return NULL.
 void* atf_comp::targs_AllocMem() {
-    u64 new_nelems     = _db.targs_n+1;
-    // compute level and index on level
-    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
-    u64 base  = u64(1)<<bsr;
-    u64 index = new_nelems-base;
-    void *ret = NULL;
-    // if level doesn't exist yet, create it
-    atf_comp::FTargs*  lev   = NULL;
-    if (bsr < 32) {
-        lev = _db.targs_lary[bsr];
-        if (!lev) {
-            lev=(atf_comp::FTargs*)algo_lib::malloc_AllocMem(sizeof(atf_comp::FTargs) * (u64(1)<<bsr));
-            _db.targs_lary[bsr] = lev;
-        }
+    atf_comp::FTargs *row = _db.targs_free;
+    if (UNLIKELY(!row)) {
+        targs_Reserve(1);
+        row = _db.targs_free;
     }
-    // allocate element from this level
-    if (lev) {
-        _db.targs_n = i32(new_nelems);
-        ret = lev + index;
+    if (row) {
+        _db.targs_free = row->targs_next;
+    }
+    return row;
+}
+
+// --- atf_comp.FDb.targs.FreeMem
+// Remove mem from all global and cross indices, then deallocate mem
+void atf_comp::targs_FreeMem(atf_comp::FTargs &row) {
+    if (UNLIKELY(row.targs_next != (atf_comp::FTargs*)-1)) {
+        FatalErrorExit("atf_comp.tpool_double_delete  pool:atf_comp.FDb.targs  comment:'double deletion caught'");
+    }
+    row.targs_next = _db.targs_free; // insert into free list
+    _db.targs_free  = &row;
+}
+
+// --- atf_comp.FDb.targs.Reserve
+// Preallocate memory for N more elements
+// Return number of elements actually reserved.
+u64 atf_comp::targs_Reserve(u64 n_elems) {
+    u64 ret = 0;
+    while (ret < n_elems) {
+        u64 size = _db.targs_blocksize; // underlying allocator is probably Lpool
+        u64 reserved = targs_ReserveMem(size);
+        ret += reserved;
+        if (reserved == 0) {
+            break;
+        }
     }
     return ret;
 }
 
-// --- atf_comp.FDb.targs.RemoveAll
-// Remove all elements from Lary
-void atf_comp::targs_RemoveAll() {
-    for (u64 n = _db.targs_n; n>0; ) {
-        n--;
-        targs_qFind(u64(n)).~FTargs(); // destroy last element
-        _db.targs_n = i32(n);
+// --- atf_comp.FDb.targs.ReserveMem
+// Allocate block of given size, break up into small elements and append to free list.
+// Return number of elements reserved.
+u64 atf_comp::targs_ReserveMem(u64 size) {
+    u64 ret = 0;
+    if (size >= sizeof(atf_comp::FTargs)) {
+        atf_comp::FTargs *mem = (atf_comp::FTargs*)algo_lib::malloc_AllocMem(size);
+        ret = mem ? size / sizeof(atf_comp::FTargs) : 0;
+        // add newly allocated elements to the free list;
+        for (u64 i=0; i < ret; i++) {
+            mem[i].targs_next = _db.targs_free;
+            _db.targs_free = mem+i;
+        }
     }
-}
-
-// --- atf_comp.FDb.targs.RemoveLast
-// Delete last element of array. Do nothing if array is empty.
-void atf_comp::targs_RemoveLast() {
-    u64 n = _db.targs_n;
-    if (n > 0) {
-        n -= 1;
-        targs_qFind(u64(n)).~FTargs();
-        _db.targs_n = i32(n);
-    }
+    return ret;
 }
 
 // --- atf_comp.FDb.targs.InputMaybe
@@ -1162,57 +1254,75 @@ atf_comp::FTfilt* atf_comp::tfilt_InsertMaybe(const atfdb::Tfilt &value) {
     tfilt_CopyIn(*row,const_cast<atfdb::Tfilt&>(value));
     bool ok = tfilt_XrefMaybe(*row); // this may return false
     if (!ok) {
-        tfilt_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        tfilt_Delete(*row); // delete offending row, any existing xrefs are cleared
         row = NULL; // forget this ever happened
     }
     return row;
 }
 
+// --- atf_comp.FDb.tfilt.Delete
+// Remove row from all global and cross indices, then deallocate row
+void atf_comp::tfilt_Delete(atf_comp::FTfilt &row) {
+    row.~FTfilt();
+    tfilt_FreeMem(row);
+}
+
 // --- atf_comp.FDb.tfilt.AllocMem
-// Allocate space for one element. If no memory available, return NULL.
+// Allocate space for one element
+// If no memory available, return NULL.
 void* atf_comp::tfilt_AllocMem() {
-    u64 new_nelems     = _db.tfilt_n+1;
-    // compute level and index on level
-    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
-    u64 base  = u64(1)<<bsr;
-    u64 index = new_nelems-base;
-    void *ret = NULL;
-    // if level doesn't exist yet, create it
-    atf_comp::FTfilt*  lev   = NULL;
-    if (bsr < 32) {
-        lev = _db.tfilt_lary[bsr];
-        if (!lev) {
-            lev=(atf_comp::FTfilt*)algo_lib::malloc_AllocMem(sizeof(atf_comp::FTfilt) * (u64(1)<<bsr));
-            _db.tfilt_lary[bsr] = lev;
-        }
+    atf_comp::FTfilt *row = _db.tfilt_free;
+    if (UNLIKELY(!row)) {
+        tfilt_Reserve(1);
+        row = _db.tfilt_free;
     }
-    // allocate element from this level
-    if (lev) {
-        _db.tfilt_n = i32(new_nelems);
-        ret = lev + index;
+    if (row) {
+        _db.tfilt_free = row->tfilt_next;
+    }
+    return row;
+}
+
+// --- atf_comp.FDb.tfilt.FreeMem
+// Remove mem from all global and cross indices, then deallocate mem
+void atf_comp::tfilt_FreeMem(atf_comp::FTfilt &row) {
+    if (UNLIKELY(row.tfilt_next != (atf_comp::FTfilt*)-1)) {
+        FatalErrorExit("atf_comp.tpool_double_delete  pool:atf_comp.FDb.tfilt  comment:'double deletion caught'");
+    }
+    row.tfilt_next = _db.tfilt_free; // insert into free list
+    _db.tfilt_free  = &row;
+}
+
+// --- atf_comp.FDb.tfilt.Reserve
+// Preallocate memory for N more elements
+// Return number of elements actually reserved.
+u64 atf_comp::tfilt_Reserve(u64 n_elems) {
+    u64 ret = 0;
+    while (ret < n_elems) {
+        u64 size = _db.tfilt_blocksize; // underlying allocator is probably Lpool
+        u64 reserved = tfilt_ReserveMem(size);
+        ret += reserved;
+        if (reserved == 0) {
+            break;
+        }
     }
     return ret;
 }
 
-// --- atf_comp.FDb.tfilt.RemoveAll
-// Remove all elements from Lary
-void atf_comp::tfilt_RemoveAll() {
-    for (u64 n = _db.tfilt_n; n>0; ) {
-        n--;
-        tfilt_qFind(u64(n)).~FTfilt(); // destroy last element
-        _db.tfilt_n = i32(n);
+// --- atf_comp.FDb.tfilt.ReserveMem
+// Allocate block of given size, break up into small elements and append to free list.
+// Return number of elements reserved.
+u64 atf_comp::tfilt_ReserveMem(u64 size) {
+    u64 ret = 0;
+    if (size >= sizeof(atf_comp::FTfilt)) {
+        atf_comp::FTfilt *mem = (atf_comp::FTfilt*)algo_lib::malloc_AllocMem(size);
+        ret = mem ? size / sizeof(atf_comp::FTfilt) : 0;
+        // add newly allocated elements to the free list;
+        for (u64 i=0; i < ret; i++) {
+            mem[i].tfilt_next = _db.tfilt_free;
+            _db.tfilt_free = mem+i;
+        }
     }
-}
-
-// --- atf_comp.FDb.tfilt.RemoveLast
-// Delete last element of array. Do nothing if array is empty.
-void atf_comp::tfilt_RemoveLast() {
-    u64 n = _db.tfilt_n;
-    if (n > 0) {
-        n -= 1;
-        tfilt_qFind(u64(n)).~FTfilt();
-        _db.tfilt_n = i32(n);
-    }
+    return ret;
 }
 
 // --- atf_comp.FDb.tfilt.InputMaybe
@@ -1756,31 +1866,15 @@ void atf_comp::FDb_Init() {
     _db.zd_sel_comptest_head = NULL; // (atf_comp.FDb.zd_sel_comptest)
     _db.zd_sel_comptest_n = 0; // (atf_comp.FDb.zd_sel_comptest)
     _db.zd_sel_comptest_tail = NULL; // (atf_comp.FDb.zd_sel_comptest)
-    // initialize LAry targs (atf_comp.FDb.targs)
-    _db.targs_n = 0;
-    memset(_db.targs_lary, 0, sizeof(_db.targs_lary)); // zero out all level pointers
-    atf_comp::FTargs* targs_first = (atf_comp::FTargs*)algo_lib::malloc_AllocMem(sizeof(atf_comp::FTargs) * (u64(1)<<4));
-    if (!targs_first) {
-        FatalErrorExit("out of memory");
-    }
-    for (int i = 0; i < 4; i++) {
-        _db.targs_lary[i]  = targs_first;
-        targs_first    += 1ULL<<i;
-    }
+    // targs: initialize Tpool
+    _db.targs_free      = NULL;
+    _db.targs_blocksize = algo::BumpToPow2(64 * sizeof(atf_comp::FTargs)); // allocate 64-127 elements at a time
     // tmsg: initialize Tpool
     _db.tmsg_free      = NULL;
     _db.tmsg_blocksize = algo::BumpToPow2(64 * sizeof(atf_comp::FTmsg)); // allocate 64-127 elements at a time
-    // initialize LAry tfilt (atf_comp.FDb.tfilt)
-    _db.tfilt_n = 0;
-    memset(_db.tfilt_lary, 0, sizeof(_db.tfilt_lary)); // zero out all level pointers
-    atf_comp::FTfilt* tfilt_first = (atf_comp::FTfilt*)algo_lib::malloc_AllocMem(sizeof(atf_comp::FTfilt) * (u64(1)<<4));
-    if (!tfilt_first) {
-        FatalErrorExit("out of memory");
-    }
-    for (int i = 0; i < 4; i++) {
-        _db.tfilt_lary[i]  = tfilt_first;
-        tfilt_first    += 1ULL<<i;
-    }
+    // tfilt: initialize Tpool
+    _db.tfilt_free      = NULL;
+    _db.tfilt_blocksize = algo::BumpToPow2(64 * sizeof(atf_comp::FTfilt)); // allocate 64-127 elements at a time
     _db.zd_run_comptest_head = NULL; // (atf_comp.FDb.zd_run_comptest)
     _db.zd_run_comptest_n = 0; // (atf_comp.FDb.zd_run_comptest)
     _db.zd_run_comptest_tail = NULL; // (atf_comp.FDb.zd_run_comptest)
@@ -1804,12 +1898,6 @@ void atf_comp::FDb_Init() {
 // --- atf_comp.FDb..Uninit
 void atf_comp::FDb_Uninit() {
     atf_comp::FDb &row = _db; (void)row;
-
-    // atf_comp.FDb.tfilt.Uninit (Lary)  //
-    // skip destruction in global scope
-
-    // atf_comp.FDb.targs.Uninit (Lary)  //
-    // skip destruction in global scope
 
     // atf_comp.FDb.ind_comptest.Uninit (Thash)  //
     // skip destruction of ind_comptest in global scope

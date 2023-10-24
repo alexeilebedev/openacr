@@ -1,4 +1,3 @@
-# atf_comp -report:N -printinput acr.Meta3 | acr ftuple -meta -cmt | cat
 # Ctype            Comment
 # dmmeta.Ctype     Conceptual type (or C type)
 # dmmeta.Ns        Namespace (for in-memory database, protocol, etc)
@@ -39,7 +38,7 @@ dmmeta.xref  field:lib_ctype.FField.c_ftuple  inscond:true  via:lib_ctype.FDb.in
 # dmmeta.Field.ns        dmmeta.Ns        Pkey     Namespace
 # dmmeta.Field.name      algo.Smallstr50  Val      name of field
 # dmmeta.Field.arg       dmmeta.Ctype     Pkey     type of field
-# dmmeta.Field.dflt      dmmeta.CppExpr   Val      default value (c++ expression)
-# dmmeta.Xref.inscond    dmmeta.CppExpr   Val      Insert condition
+# dmmeta.Field.dflt      algo.CppExpr     Val      default value (c++ expression)
+# dmmeta.Xref.inscond    algo.CppExpr     Val      Insert condition
 # dmmeta.Xref.ns         dmmeta.Ns        Pkey     Ns with which this xref is a member
-report.acr  n_select:9  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+report.acr  n_select:9  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0

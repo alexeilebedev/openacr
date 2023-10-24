@@ -69,7 +69,7 @@ const char *gcli_help =
 "    -show_gitlab_system_notes                     (misc) Show issue and mr notes created by gitlab\n"
 "    -verbose                   int                Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug                     int                Debug level (0..255); alias -d; cumulative\n"
-"    -help                                         Print help an exit; alias -h\n"
+"    -help                                         Print help and exit; alias -h\n"
 "    -version                                      Print version and exit\n"
 "    -signature                                    Show signatures and exit; alias -sig\n"
 ;
@@ -255,7 +255,7 @@ void gcli::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(gcli::LoadTuplesMaybe(cmd.in)
+    vrfy(gcli::LoadTuplesMaybe(cmd.in,true)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
@@ -292,7 +292,7 @@ static void gcli::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'gcli.Input'  signature:'e2b3722e93882be80e82c480e5b04dc976278b52'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'gcli.Input'  signature:'11a9aa9a5e538f546927ef1802bd464c4e5842b9'");
 }
 
 // --- gcli.FDb._db.StaticCheck
@@ -395,7 +395,6 @@ bool gcli::InsertStrptrMaybe(algo::strptr str) {
             break;
         }
         default:
-        retval = algo_lib::InsertStrptrMaybe(str);
         break;
     } //switch
     if (!retval) {
@@ -406,24 +405,72 @@ bool gcli::InsertStrptrMaybe(algo::strptr str) {
 
 // --- gcli.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool gcli::LoadTuplesMaybe(algo::strptr root) {
+bool gcli::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    static const char *ssimfiles[] = {
-        "gclidb.gact", "gclidb.gclicmdf2j", "gclidb.gtype", "gclidb.gclicmdt"
-        , "gclidb.gfld", "gclidb.gmethod", "gclidb.grepo", "gclidb.grepogitport"
-        , "gclidb.grepossh", "gclidb.gstatet", "gclidb.gtbl", "gclidb.gtblactfld"
-        , "gclidb.gtypeh", "gclidb.gtypeprefix"
-        , NULL};
-        retval = algo_lib::DoLoadTuples(root, gcli::InsertStrptrMaybe, ssimfiles, true);
-        return retval;
+    if (FileQ(root)) {
+        retval = gcli::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = gcli::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gact"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gclicmdf2j"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtype"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gclicmdt"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gfld"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gmethod"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.grepo"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.grepogitport"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.grepossh"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gstatet"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtbl"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtblactfld"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtypeh"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtypeprefix"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
+
+// --- gcli.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool gcli::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- gcli.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool gcli::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+        }
+        retval = retval && gcli::InsertStrptrMaybe(line);
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
+    return retval;
 }
 
 // --- gcli.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool gcli::LoadSsimfileMaybe(algo::strptr fname) {
+bool gcli::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, gcli::InsertStrptrMaybe, true);
+        retval = gcli::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }
@@ -8217,6 +8264,7 @@ void gcli::FGmethod_Uninit(gcli::FGmethod& gmethod) {
 // Copy fields out of row
 void gcli::grepo_CopyOut(gcli::FGrepo &row, gclidb::Grepo &out) {
     out.grepo = row.grepo;
+    out.name = row.name;
     out.token = row.token;
     out.default_branch = row.default_branch;
     out.keyid = row.keyid;
@@ -8231,6 +8279,7 @@ void gcli::grepo_CopyOut(gcli::FGrepo &row, gclidb::Grepo &out) {
 // Copy fields in to row
 void gcli::grepo_CopyIn(gcli::FGrepo &row, gclidb::Grepo &in) {
     row.grepo = in.grepo;
+    row.name = in.name;
     row.token = in.token;
     row.default_branch = in.default_branch;
     row.keyid = in.keyid;
@@ -8247,8 +8296,8 @@ algo::cstring gcli::host_Get(gcli::FGrepo& grepo) {
     return ret;
 }
 
-// --- gcli.FGrepo.name.Get
-algo::cstring gcli::name_Get(gcli::FGrepo& grepo) {
+// --- gcli.FGrepo.fname.Get
+algo::cstring gcli::fname_Get(gcli::FGrepo& grepo) {
     algo::cstring ret(algo::Pathcomp(grepo.grepo, "@LR"));
     return ret;
 }

@@ -220,6 +220,10 @@ int algo::FindFrom(strptr s, strptr t, int from, bool case_sensitive) {
     return -1;
 }
 
+int algo::FindFrom(strptr s, strptr t, int from) {
+    return algo::FindFrom(s,t,from,true);
+}
+
 int algo::FindFrom(strptr s, char c, int from) {
     for (int i=from; i < (int)s.n_elems; i++) if (s.elems[i]==c) return i;
     return -1;
@@ -236,6 +240,9 @@ int algo::FindStr(strptr lhs, strptr t, bool case_sensitive) {
     return FindFrom(lhs, t,    0, case_sensitive);
 }
 
+int algo::FindStr(strptr lhs, strptr t) {
+    return FindFrom(lhs, t, 0, true);
+}
 
 static inline int GetCharNum(strptr s, int &i) {
     int c = s[i];
@@ -274,7 +281,7 @@ bool algo::StrEqual(strptr a, strptr b, bool case_sens) {
     }
 }
 
-bool algo::StartsWithQ(strptr s, strptr sstr, bool case_sensitive) {
+bool algo::StartsWithQ(strptr s, strptr sstr, bool case_sensitive DFLTVAL(true)) {
     return StrEqual(FirstN(s,elems_N(sstr)), sstr, case_sensitive);
 }
 
@@ -408,7 +415,7 @@ int algo::UnescapeC(u32 str, int len, u8 &result) {
 
 // -----------------------------------------------------------------------------
 
-int algo::Replace(cstring &str, const strptr& from, const strptr& to, bool case_sensitive, bool preserve_case) {
+int algo::Replace(cstring &str, const strptr& from, const strptr& to, bool case_sensitive DFLTVAL(true), bool preserve_case DFLTVAL(true)) {
     if (!elems_N(from)) {
         return 0;
     }
@@ -474,7 +481,7 @@ static void SetVar(algo_lib::Replscope &scope, strptr from, strptr to) {
 // KEY        string to replace
 // VALUE      value to replace it with
 // SUBST      If set, $-expand the VALUE parameter
-void algo_lib::Set(algo_lib::Replscope &scope, strptr from, strptr to, bool subst) {
+void algo_lib::Set(algo_lib::Replscope &scope, strptr from, strptr to, bool subst DFLTVAL(true)) {
     if (subst) {
         tempstr temp;
         Ins(&scope, temp, to, false);
@@ -482,12 +489,6 @@ void algo_lib::Set(algo_lib::Replscope &scope, strptr from, strptr to, bool subs
     } else {
         SetVar(scope,from,to);
     }
-}
-
-// -----------------------------------------------------------------------------
-
-void algo_lib::Set(algo_lib::Replscope &scope, strptr from, strptr to) {
-    Set(scope,from,to,true);
 }
 
 // -----------------------------------------------------------------------------
@@ -552,7 +553,7 @@ static strptr ScanVar(algo_lib::Replscope &R, strptr text, int &i) {
 // EOL      append end-of-line (default)
 // SCOPE    if not NULL, replace any $-string in TEXT with corresponding value.
 //            it is an error if any $-string does not expand.
-void algo_lib::Ins(algo_lib::Replscope *scope, algo::cstring &out, strptr text, bool eol) {
+void algo_lib::Ins(algo_lib::Replscope *scope, algo::cstring &out, strptr text, bool eol DFLTVAL(true)) {
     int i=0;
     int lim = text.n_elems;
     int start=0;
@@ -573,10 +574,6 @@ void algo_lib::Ins(algo_lib::Replscope *scope, algo::cstring &out, strptr text, 
     if (eol) {
         out << '\n';
     }
-}
-
-void algo_lib::Ins(algo_lib::Replscope *scope, algo::cstring &out, strptr text) {
-    Ins(scope,out,text,true);
 }
 
 // -----------------------------------------------------------------------------
@@ -691,16 +688,8 @@ static inline algo::strptr _GetWordCharf(algo::StringIter &iter, bool (*sep)(u32
 // Skip leading characters matching SEP
 // Return run of characters up to next matching SEP, or EOF.
 // Do not skip trailing separators.
-strptr algo::GetWordCharf(algo::StringIter &iter, bool (*sep)(u32)) {
+strptr algo::GetWordCharf(algo::StringIter &iter, bool (*sep)(u32) DFLTVAL(algo_lib::WhiteCharQ)) {
     return _GetWordCharf(iter,sep);
-}
-
-// Skip leading whitespace characters
-// Return run of characters up to next whitespace, or EOF.
-// Do not skip trailing whitespace
-strptr algo::GetWordCharf(algo::StringIter &iter) {
-    // optimized using inline
-    return _GetWordCharf(iter,algo_lib::WhiteCharQ);
 }
 
 // Skip any leading whitespace in STR.

@@ -24,14 +24,14 @@ dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"
 
 dmmeta.field  field:amc.FDb.cmdline  arg:command.amc  reftype:Val  dflt:""  comment:""
   dmmeta.fcmdline  field:amc.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
-report.acr  n_select:16  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+report.acr  n_select:16  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
 ```
 
 The `fcmdline` record generates code to parse the command line from argc/argv,
 and generates the syntax string which can be seen below:
 
 ```
-inline-command: amc -h
+inline-command: amc -h; true
 amc: Algo Model Compiler: generate code under include/gen and cpp/gen
 Usage: amc [[-query:]<string>] [options]
     OPTION      TYPE    DFLT    COMMENT
@@ -44,7 +44,7 @@ Usage: amc [[-query:]<string>] [options]
     -trace      regx    ""      Regx of something to trace code generation
     -verbose    int             Verbosity level (0..255); alias -v; cumulative
     -debug      int             Debug level (0..255); alias -d; cumulative
-    -help                       Print help an exit; alias -h
+    -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
 

@@ -272,90 +272,6 @@ inline atf_comp::FComptest& atf_comp::zd_sel_comptest_qLast() {
     return *row;
 }
 
-// --- atf_comp.FDb.targs.EmptyQ
-// Return true if index is empty
-inline bool atf_comp::targs_EmptyQ() {
-    return _db.targs_n == 0;
-}
-
-// --- atf_comp.FDb.targs.Find
-// Look up row by row id. Return NULL if out of range
-inline atf_comp::FTargs* atf_comp::targs_Find(u64 t) {
-    atf_comp::FTargs *retval = NULL;
-    if (LIKELY(u64(t) < u64(_db.targs_n))) {
-        u64 x = t + 1;
-        u64 bsr   = algo::u64_BitScanReverse(x);
-        u64 base  = u64(1)<<bsr;
-        u64 index = x-base;
-        retval = &_db.targs_lary[bsr][index];
-    }
-    return retval;
-}
-
-// --- atf_comp.FDb.targs.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline atf_comp::FTargs* atf_comp::targs_Last() {
-    return targs_Find(u64(_db.targs_n-1));
-}
-
-// --- atf_comp.FDb.targs.N
-// Return number of items in the pool
-inline i32 atf_comp::targs_N() {
-    return _db.targs_n;
-}
-
-// --- atf_comp.FDb.targs.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline atf_comp::FTargs& atf_comp::targs_qFind(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
-    return _db.targs_lary[bsr][index];
-}
-
-// --- atf_comp.FDb.tfilt.EmptyQ
-// Return true if index is empty
-inline bool atf_comp::tfilt_EmptyQ() {
-    return _db.tfilt_n == 0;
-}
-
-// --- atf_comp.FDb.tfilt.Find
-// Look up row by row id. Return NULL if out of range
-inline atf_comp::FTfilt* atf_comp::tfilt_Find(u64 t) {
-    atf_comp::FTfilt *retval = NULL;
-    if (LIKELY(u64(t) < u64(_db.tfilt_n))) {
-        u64 x = t + 1;
-        u64 bsr   = algo::u64_BitScanReverse(x);
-        u64 base  = u64(1)<<bsr;
-        u64 index = x-base;
-        retval = &_db.tfilt_lary[bsr][index];
-    }
-    return retval;
-}
-
-// --- atf_comp.FDb.tfilt.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline atf_comp::FTfilt* atf_comp::tfilt_Last() {
-    return tfilt_Find(u64(_db.tfilt_n-1));
-}
-
-// --- atf_comp.FDb.tfilt.N
-// Return number of items in the pool
-inline i32 atf_comp::tfilt_N() {
-    return _db.tfilt_n;
-}
-
-// --- atf_comp.FDb.tfilt.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline atf_comp::FTfilt& atf_comp::tfilt_qFind(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
-    return _db.tfilt_lary[bsr][index];
-}
-
 // --- atf_comp.FDb.zd_run_comptest.EmptyQ
 // Return true if index is empty
 inline bool atf_comp::zd_run_comptest_EmptyQ() {
@@ -686,56 +602,6 @@ inline atf_comp::FComptest& atf_comp::_db_zd_sel_comptest_curs_Access(_db_zd_sel
     return *curs.row;
 }
 
-// --- atf_comp.FDb.targs_curs.Reset
-// cursor points to valid item
-inline void atf_comp::_db_targs_curs_Reset(_db_targs_curs &curs, atf_comp::FDb &parent) {
-    curs.parent = &parent;
-    curs.index = 0;
-}
-
-// --- atf_comp.FDb.targs_curs.ValidQ
-// cursor points to valid item
-inline bool atf_comp::_db_targs_curs_ValidQ(_db_targs_curs &curs) {
-    return curs.index < _db.targs_n;
-}
-
-// --- atf_comp.FDb.targs_curs.Next
-// proceed to next item
-inline void atf_comp::_db_targs_curs_Next(_db_targs_curs &curs) {
-    curs.index++;
-}
-
-// --- atf_comp.FDb.targs_curs.Access
-// item access
-inline atf_comp::FTargs& atf_comp::_db_targs_curs_Access(_db_targs_curs &curs) {
-    return targs_qFind(u64(curs.index));
-}
-
-// --- atf_comp.FDb.tfilt_curs.Reset
-// cursor points to valid item
-inline void atf_comp::_db_tfilt_curs_Reset(_db_tfilt_curs &curs, atf_comp::FDb &parent) {
-    curs.parent = &parent;
-    curs.index = 0;
-}
-
-// --- atf_comp.FDb.tfilt_curs.ValidQ
-// cursor points to valid item
-inline bool atf_comp::_db_tfilt_curs_ValidQ(_db_tfilt_curs &curs) {
-    return curs.index < _db.tfilt_n;
-}
-
-// --- atf_comp.FDb.tfilt_curs.Next
-// proceed to next item
-inline void atf_comp::_db_tfilt_curs_Next(_db_tfilt_curs &curs) {
-    curs.index++;
-}
-
-// --- atf_comp.FDb.tfilt_curs.Access
-// item access
-inline atf_comp::FTfilt& atf_comp::_db_tfilt_curs_Access(_db_tfilt_curs &curs) {
-    return tfilt_qFind(u64(curs.index));
-}
-
 // --- atf_comp.FDb.zd_run_comptest_curs.Reset
 // cursor points to valid item
 inline void atf_comp::_db_zd_run_comptest_curs_Reset(_db_zd_run_comptest_curs &curs, atf_comp::FDb &parent) {
@@ -872,6 +738,7 @@ inline atf_comp::FTargs::~FTargs() {
 // --- atf_comp.FTargs..Init
 // Set all fields to initial values.
 inline void atf_comp::FTargs_Init(atf_comp::FTargs& targs) {
+    targs.targs_next = (atf_comp::FTargs*)-1; // (atf_comp.FDb.targs) not-in-tpool's freelist
     targs.zd_out_targs_next = (atf_comp::FTargs*)-1; // (atf_comp.FDb.zd_out_targs) not-in-list
     targs.zd_out_targs_prev = NULL; // (atf_comp.FDb.zd_out_targs)
 }
@@ -887,6 +754,7 @@ inline atf_comp::FTfilt::~FTfilt() {
 // --- atf_comp.FTfilt..Init
 // Set all fields to initial values.
 inline void atf_comp::FTfilt_Init(atf_comp::FTfilt& tfilt) {
+    tfilt.tfilt_next = (atf_comp::FTfilt*)-1; // (atf_comp.FDb.tfilt) not-in-tpool's freelist
     tfilt.zd_out_tfilt_next = (atf_comp::FTfilt*)-1; // (atf_comp.FDb.zd_out_tfilt) not-in-list
     tfilt.zd_out_tfilt_prev = NULL; // (atf_comp.FDb.zd_out_tfilt)
 }

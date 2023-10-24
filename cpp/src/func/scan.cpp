@@ -144,7 +144,7 @@ static void ScanFile(src_func::FTargsrc &targsrc) {
             src_func::_db.report.n_line++;
             func->body << line << eol;
         }
-        if (ch_First(line)== '}') {
+        if (ch_First(line,0)== '}') {
             func=NULL;
             precomment="";
         }

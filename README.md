@@ -67,6 +67,8 @@ This file was created with 'abt_md' from files in [txt/](txt/) -- *do not edit*
    * [ssim2mysql: Ssim -> mysql](#ssim2mysql-ssim----mysql)
    * [ssimfilt: Tuple utility](#ssimfilt-tuple-utility)
    * [strconv: A simple string utility](#strconv-a-simple-string-utility)
+   * [gcache: Compiler cache](#gcache-compiler-cache)
+   * [samp_regx:](#samp_regx)
 
 
 ## About
@@ -488,3 +490,9 @@ is replaced with the output of specified command. An example of such a command c
 
 ## strconv: A simple string utility
 [See txt/strconv.md](txt/strconv.md)
+
+## gcache: Compiler cache
+[See txt/gcache.md](txt/gcache.md)
+
+## samp_regx:
+[See txt/samp_regx.md](txt/samp_regx.md)

@@ -23,7 +23,7 @@
 //
 
 #include "include/algo.h"
-#include "include/lib/lib_ctype.h"
+#include "include/lib_ctype.h"
 
 // -----------------------------------------------------------------------------
 
@@ -213,9 +213,8 @@ static void RewritePkey() {
 
 // -----------------------------------------------------------------------------
 
-// Load main schema from specified dataset
-void lib_ctype::Init(strptr root) {
-    vrfy(lib_ctype::LoadTuplesMaybe(root), algo_lib::_db.errtext);
+// Prepare main schema
+void lib_ctype::Init() {
     RewritePkey();
     PrepFconst();
     PrepPrintfmt();
@@ -312,7 +311,7 @@ static void Match_Attr_Printfmt(lib_ctype::Match &match, lib_ctype::FField *fiel
 // Check if EXPECT is a proper subset of RESULT
 // Search exits early if match.distance exceeds match.maxdist.
 static void Match_Tuple(lib_ctype::Match &match, Tuple &expect, Tuple &result, lib_ctype::FCtype &ctype) {
-    ind_beg(Tuple_attrs_curs, expected_attr, expect) {
+    ind_beg(algo::Tuple_attrs_curs, expected_attr, expect) {
         lib_ctype::FField *field = FindField(ctype, expected_attr.name);
         Attr *attr2 = attr_Find(result, expected_attr.name, 0);
         if (field) {

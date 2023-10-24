@@ -28,11 +28,11 @@ void amc::tfunc_Alias_Get() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
     amc::FFunc& func = amc::CreateCurFunc();
-    Set(R, "$basename", name_Get(*field.c_falias->p_basefield));
+    Set(R, "$basename", name_Get(*field.c_falias->p_srcfield));
     Ins(&R, func.comment, "Alias: value is retrieved from $basename");
     Ins(&R, func.ret  , "$Cpptype", false);
     Ins(&R, func.proto, "$name_Get($Cparent)", false);
-    Set(R, "$FieldExpr", FieldvalExpr(field.p_ctype,*field.c_falias->p_basefield,"parent"));
+    Set(R, "$FieldExpr", FieldvalExpr(field.p_ctype,*field.c_falias->p_srcfield,"parent"));
     func.inl = true;
     Ins(&R, func.body, "return $FieldExpr;");
 }
@@ -40,26 +40,26 @@ void amc::tfunc_Alias_Get() {
 void amc::tfunc_Alias_Set() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
-    amc::FField &basefield = *field.c_falias->p_basefield;
+    amc::FField &srcfield = *field.c_falias->p_srcfield;
     amc::FFunc& func = amc::CreateCurFunc();
 
     Set(R, "$Fldargtype", Argtype(field));
-    Set(R, "$basename", name_Get(basefield));
+    Set(R, "$basename", name_Get(srcfield));
     Ins(&R, func.comment, "Alias: value is assigned to $basename");
     AddRetval(func,"void","","");
     Ins(&R, func.proto, "$name_Set($Parent, $Fldargtype rhs)", false);
-    Ins(&R, func.body, tempstr()<<AssignExpr(basefield, Subst(R,"parent"), "rhs", false)<<";");
+    Ins(&R, func.body, tempstr()<<AssignExpr(srcfield, Subst(R,"parent"), "rhs", false)<<";");
 }
 
 void amc::tfunc_Alias_ReadStrptrMaybe() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
-    amc::FField &basefield = *field.c_falias->p_basefield;
+    amc::FField &srcfield = *field.c_falias->p_srcfield;
     amc::FFunc& func = amc::CreateCurFunc();
     Ins(&R, func.comment, "Alias: value is read into $basename");
     Ins(&R, func.proto  , "$name_ReadStrptrMaybe()",false);
     AddProtoArg(func, Subst(R,"$Partype&"), "parent", true);
     AddProtoArg(func, "algo::strptr", "in_str", true);
-    Set(R,"$ReadExpr",ReadFieldExpr(basefield,"$parname","in_str"));
+    Set(R,"$ReadExpr",ReadFieldExpr(srcfield,"$parname","in_str"));
     AddRetval(func,"bool","retval",Subst(R,"$ReadExpr"));
 }

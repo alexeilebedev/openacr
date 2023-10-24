@@ -37,8 +37,6 @@
 #include "include/gen/dev_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
@@ -53,14 +51,14 @@ const char *abt_md_help =
 "Usage: abt_md [[-readme:]<regx>] [[-section:]<regx>] [options]\n"
 "    OPTION      TYPE    DFLT    COMMENT\n"
 "    -in         string  \"data\"  Input directory or filename, - for stdin\n"
-"    [readme]    regx    \"\"      Regx of readme to process/show (empty=all)\n"
-"    -ns         regx    \"\"      Process readmes for this namespace\n"
+"    [readme]    regx    \"%\"     Regx of readme to process/show (empty=all)\n"
+"    -ns         regx    \"\"      (overrides -readme) Process readmes for this namespace\n"
 "    [section]   regx    \"%\"     Select specific section to process\n"
 "    -print                      Print output to screen\n"
 "    -dry_run                    Do not write changes to disk\n"
 "    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      int             Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help an exit; alias -h\n"
+"    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
 ;
@@ -377,7 +375,7 @@ void abt_md::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(abt_md::LoadTuplesMaybe(cmd.in)
+    vrfy(abt_md::LoadTuplesMaybe(cmd.in,true)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
@@ -462,7 +460,6 @@ bool abt_md::InsertStrptrMaybe(algo::strptr str) {
             break;
         }
         default:
-        retval = algo_lib::InsertStrptrMaybe(str);
         break;
     } //switch
     if (!retval) {
@@ -473,22 +470,63 @@ bool abt_md::InsertStrptrMaybe(algo::strptr str) {
 
 // --- abt_md.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool abt_md::LoadTuplesMaybe(algo::strptr root) {
+bool abt_md::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    static const char *ssimfiles[] = {
-        "dmmeta.ctype", "dmmeta.ns", "dev.readme", "dev.readmens"
-        , "dmmeta.ssimfile"
-        , NULL};
-        retval = algo_lib::DoLoadTuples(root, abt_md::InsertStrptrMaybe, ssimfiles, true);
-        return retval;
+    if (FileQ(root)) {
+        retval = abt_md::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = abt_md::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
+        retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ns"),recursive);
+        retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dev.readme"),recursive);
+        retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dev.readmens"),recursive);
+        retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
+
+// --- abt_md.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool abt_md::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- abt_md.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool abt_md::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+        }
+        retval = retval && abt_md::InsertStrptrMaybe(line);
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
+    return retval;
 }
 
 // --- abt_md.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool abt_md::LoadSsimfileMaybe(algo::strptr fname) {
+bool abt_md::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, abt_md::InsertStrptrMaybe, true);
+        retval = abt_md::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }

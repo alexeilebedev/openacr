@@ -538,6 +538,7 @@ namespace atf_amc { // update-hdr
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_ReadTuple1();
     // void amctest_ReadTuple2();
+    // void amctest_ReadTuple2a();
     // void amctest_ReadTuple3();
     // void amctest_ReadTuple4();
     // void amctest_ReadTuple5();

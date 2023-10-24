@@ -41,9 +41,6 @@ static acr::FCtype *FindCtype(Tuple &tuple) {
                 ssimfile = ctype->c_ssimfile;
             }
         }
-        if (ssimfile && !ssimfile->c_file) {// associate table file
-            LoadSsimfile(*ssimfile);
-        }
     }
     return ctype;
 }
@@ -52,20 +49,17 @@ static acr::FCtype *FindCtype(Tuple &tuple) {
 
 // Insert record in ACR's database.
 // Upon first access of ssimfile, load ssimfile from disk.
-//   If -trunc option is set, delete all records
-//      This is different from marking records for deletion.
+// If -trunc option is set, mark all records for deletion
 acr::FRec* acr::ReadTuple(Tuple &tuple, acr::FFile &file, acr::ReadMode read_mode) {
     acr::FCtype *ctype = FindCtype(tuple);
     acr::FRec *ret = NULL;
     if (ctype) {
+        LoadRecords(*ctype);
         // truncate table on first insertion
-        // there is an implicit commit happening here -- we can't
-        // subsequently insert new records as long as undeleted records stay
-        // in the index.
         if (!file.autoloaded && ctype->n_insert == 0 && acr::_db.cmdline.trunc) {
-            while (acr::FRec *rec = acr::zd_trec_First(*ctype)) {
-                acr::rec_Delete(*rec);
-            }
+            ind_beg(acr::ctype_zd_trec_curs,rec,*ctype) {
+                rec.del=true;
+            }ind_end;
         }
         algo::Smallstr50 attr_pkey;
         if (c_field_N(*ctype) > 0) {
@@ -80,32 +74,18 @@ acr::FRec* acr::ReadTuple(Tuple &tuple, acr::FFile &file, acr::ReadMode read_mod
         } else {
             ret = acr::CreateRec(file,ctype,tuple,attr,read_mode);
         }
-    } else if (tuple.head.value == "acr.delete" && attrs_N(tuple) > 0) {// override mode from input
-        tuple.head = attrs_qFind(tuple,0);
-        attrs_Remove(tuple,0);
-        ret = ReadTuple(tuple, file, acr_ReadMode_delete);
-    } else if (tuple.head.value == "acr.insert" && attrs_N(tuple) > 0) {// override mode from input
-        tuple.head = attrs_qFind(tuple,0);
-        attrs_Remove(tuple,0);
-        ret = ReadTuple(tuple, file, acr_ReadMode_insert);
-    } else if (tuple.head.value == "acr.update" && attrs_N(tuple) > 0) {// override mode from input
-        tuple.head = attrs_qFind(tuple,0);
-        attrs_Remove(tuple,0);
-        ret = ReadTuple(tuple, file, acr_ReadMode_update);
-    } else if (tuple.head.value == "acr.merge" && attrs_N(tuple) > 0) {// override mode from input
-        tuple.head = attrs_qFind(tuple,0);
-        attrs_Remove(tuple,0);
-        ret = ReadTuple(tuple, file, acr_ReadMode_merge);
-    } else if (tuple.head.value == "acr.replace" && attrs_N(tuple) > 0) {// override mode from input
-        tuple.head = attrs_qFind(tuple,0);
-        attrs_Remove(tuple,0);
-        ret = ReadTuple(tuple, file, acr_ReadMode_replace);
-    }
-    // deselect record if nothing changed.
-    // desired effect:
-    // after editing session, only changes are printed.
-    if (file.deselect && ret && !ret->isnew && !ret->mod && !ret->del) {
-        acr::Rec_Deselect(*ret);
+    } else if (read_mode_SetStrptrMaybe(read_mode, tuple.head.value)) {// override mode from input
+        // one of acr.insert, acr.replace, acr.delete, acr.merge, acr.update
+        if (attrs_N(tuple) > 0) {
+            tuple.head = attrs_qFind(tuple,0);
+            attrs_Remove(tuple,0);
+            ret = ReadTuple(tuple, file, read_mode);
+        }
+    } else {
+        // unknown ctype
+        if (tuple.head.value != "") {
+            _db.report.n_ignore++;
+        }
     }
     return ret;
 }
@@ -136,6 +116,8 @@ static void InitSortkey(acr::FRec &rec, float rowid) {
 // -----------------------------------------------------------------------------
 
 // Determine output file for ctype CTYPE loaded from input file INFILE.
+// If the file has flag "STICKY", then the record is associated back to that file
+// Otherwise, the records is assigned to the appropriate ssimfile (based on the type)
 static acr::FFile *PickOutfile(acr::FFile &infile, acr::FCtype *ctype) {
     acr::FFile *ret = &infile;
     if (!infile.sticky) {
@@ -156,7 +138,6 @@ static acr::FFile *PickOutfile(acr::FFile &infile, acr::FCtype *ctype) {
 // to replace an existing record; if CMDLINE.MERGE is specified, attributes are merged
 // into an existing record if one exists
 acr::FRec *acr::CreateRec(acr::FFile &file, acr::FCtype *ctype, algo::Tuple &tuple, algo::Attr *pkey_attr, acr::ReadMode read_mode) {
-    bool isnew = !file.autoloaded;
     strptr pkey     = pkey_attr->value;
     acr::FRec *ret  = acr::ind_rec_Find(*ctype, pkey);
     // determine line of record
@@ -167,30 +148,34 @@ acr::FRec *acr::CreateRec(acr::FFile &file, acr::FCtype *ctype, algo::Tuple &tup
     // and strip the attribute before saving record.
     // records are written to disk in rowid order.
     float rowid   = ret ? ret->sortkey.rowid : ctype->next_rowid;
-    if (read_mode == acr_ReadMode_delete) {
+    if (read_mode == acr_ReadMode_acr_delete) {
         if (ret) {
             ret->del = true;
-            Rec_Select(*ret);
+        } else {
+            _db.report.n_ignore++;
         }
     } else {
         ctype->next_rowid = float_Max(ctype->next_rowid, rowid + 1);
+        // detect acr.rowid attribute and update record rowid
+        // (which allows inserting records into the middle of an unsorted file)
         algo::Attr *rowid_attr = attr_Find(tuple, "acr.rowid");
         if (rowid_attr) {
             (void)float_ReadStrptrMaybe(rowid, rowid_attr->value);
             attrs_Remove(tuple, attrs_rowid_Get(tuple, *rowid_attr));
         }
-        // detect duplicate records...
-        if (read_mode == acr_ReadMode_insert) {
-            if (ret) {
-                prerr("acr.duplicate_key  key:"<<ctype->ctype<<":"<<pkey_attr->value);
-                algo_lib::_db.exit_code=1;
+        if (read_mode == acr_ReadMode_acr_insert) {// insert of existing record -> ignore
+            if (ret && !ret->del) {
+                _db.report.n_ignore++;
                 return NULL;
             }
-        } else if (read_mode == acr_ReadMode_update) {
-            // update of non-existing record - skip silently
-            if (!ret) {
+        } else if (read_mode == acr_ReadMode_acr_update) {// update of non-existent record -> ignore
+            if (!(ret && !ret->del)) {
+                _db.report.n_ignore++;
                 return NULL;
             }
+        }
+        if (!ret || ret->del) {
+            ctype->n_insert += !file.autoloaded;
         }
         if (!ret) {
             ret             = &acr::rec_Alloc();
@@ -199,40 +184,36 @@ acr::FRec *acr::CreateRec(acr::FFile &file, acr::FCtype *ctype, algo::Tuple &tup
             ret->p_infile   = &file;
             ret->p_outfile  = PickOutfile(file, ctype);
             ret->pkey       = pkey;
-            ret->isnew      = isnew;
-            acr::_db.report.n_insert += isnew;
+            ret->isnew      = !file.autoloaded;
             (void)acr::rec_XrefMaybe(*ret);
-            if (isnew) {
-                Rec_Select(*ret);
-            }
         }
+        // save old tuple
+        algo::Tuple prev;
+        prev.head=ret->tuple.head;
+        attrs_Addary(prev,attrs_Getary(ret->tuple));
         // if the record was scheduled for deletion, cancel that!
-        ret->del            = false;
-        // update attributes
-        ret->tuple.head.value    = tuple.head.value;
-        if (read_mode == acr_ReadMode_merge || read_mode == acr_ReadMode_update) {
-            // if this is not an initial insertion (isnew==false),
-            // see if this record is any different from the one before...
-            // if so, mark as modified.
-            // the retord is already marked as not-deleted
-            if (!isnew && !Tuple_EqualQ(ret->tuple, tuple)) {
-                ret->mod = true;
-                acr::_db.report.n_update++;
-            }
-            ind_beg(algo::Tuple_attrs_curs,attr,tuple) {// merge incoming tuple into existing tuple
-                algo::Attr *attr2=attr_Find(ret->tuple,attr.name);
-                if (attr2) {
-                    attr2->value = attr.value;
-                } else {
-                    attr_Add(ret->tuple,attr.name,attr.value);
-                }
-            }ind_end;
-        } else if (read_mode == acr_ReadMode_replace || read_mode == acr_ReadMode_insert) {
+        ret->del = false;
+        ret->tuple.head.value = tuple.head.value;
+        // reset existing tuple if replace or insert
+        if (read_mode == acr_ReadMode_acr_replace || read_mode == acr_ReadMode_acr_insert) {
             attrs_RemoveAll(ret->tuple);
-            attrs_Addary(ret->tuple, attrs_Getary(tuple));
+        }
+        // merge incoming tuple into existing tuple
+        // incoming tuple may have duplicate attributes (e.g. a:b a:c)
+        // so we can't just copy them over. must iterate and merge
+        ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+            algo::Attr *attr2=attr_Find(ret->tuple,attr.name);
+            if (attr2) {
+                attr2->value = attr.value;
+            } else {
+                attr_Add(ret->tuple,attr.name,attr.value);
+            }
+        }ind_end;
+        // mark record as modified if something changed
+        if (!file.autoloaded && !ret->isnew && !Tuple_EqualQ(prev,ret->tuple)) {
+            ret->mod = true;
         }
         InitSortkey(*ret,rowid);
-        ctype->n_insert += isnew;
     }
     return ret;
 }

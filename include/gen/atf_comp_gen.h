@@ -68,8 +68,6 @@ namespace atfdb { struct Tmsg; }
 namespace atf_comp { struct comptest_zd_tmsg_curs; }
 namespace atf_comp { struct _db_comptest_curs; }
 namespace atf_comp { struct _db_zd_sel_comptest_curs; }
-namespace atf_comp { struct _db_targs_curs; }
-namespace atf_comp { struct _db_tfilt_curs; }
 namespace atf_comp { struct _db_zd_run_comptest_curs; }
 namespace atf_comp { struct _db_zd_out_tmsg_curs; }
 namespace atf_comp { struct _db_zd_out_comptest_curs; }
@@ -145,11 +143,17 @@ algo::Smallstr16     target_Get(atf_comp::FComptest& comptest) __attribute__((__
 
 algo::Smallstr50     testname_Get(atf_comp::FComptest& comptest) __attribute__((__warn_unused_result__, nothrow));
 
+// Delete referred-to items.
+// Deleted pointed-to item.
+void                 c_targs_Cascdel(atf_comp::FComptest& comptest) __attribute__((nothrow));
 // Insert row into pointer index. Return final membership status.
 bool                 c_targs_InsertMaybe(atf_comp::FComptest& comptest, atf_comp::FTargs& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 void                 c_targs_Remove(atf_comp::FComptest& comptest, atf_comp::FTargs& row) __attribute__((nothrow));
 
+// Delete referred-to items.
+// Deleted pointed-to item.
+void                 c_tfilt_Cascdel(atf_comp::FComptest& comptest) __attribute__((nothrow));
 // Insert row into pointer index. Return final membership status.
 bool                 c_tfilt_InsertMaybe(atf_comp::FComptest& comptest, atf_comp::FTfilt& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
@@ -219,12 +223,12 @@ struct FDb { // atf_comp.FDb
     atf_comp::FComptest*    zd_sel_comptest_head;         // zero-terminated doubly linked list
     i32                     zd_sel_comptest_n;            // zero-terminated doubly linked list
     atf_comp::FComptest*    zd_sel_comptest_tail;         // pointer to last element
-    atf_comp::FTargs*       targs_lary[32];               // level array
-    i32                     targs_n;                      // number of elements in array
+    u64                     targs_blocksize;              // # bytes per block
+    atf_comp::FTargs*       targs_free;                   //
     u64                     tmsg_blocksize;               // # bytes per block
     atf_comp::FTmsg*        tmsg_free;                    //
-    atf_comp::FTfilt*       tfilt_lary[32];               // level array
-    i32                     tfilt_n;                      // number of elements in array
+    u64                     tfilt_blocksize;              // # bytes per block
+    atf_comp::FTfilt*       tfilt_free;                   //
     atf_comp::FComptest*    zd_run_comptest_head;         // zero-terminated doubly linked list
     i32                     zd_run_comptest_n;            // zero-terminated doubly linked list
     atf_comp::FComptest*    zd_run_comptest_tail;         // pointer to last element
@@ -262,11 +266,15 @@ void                 StaticCheck();
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
-bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
+bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file.
+bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file descriptor.
+bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Save ssim data to given directory.
 u32                  SaveTuples(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
-bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
@@ -353,22 +361,19 @@ atf_comp::FTargs*    targs_AllocMaybe() __attribute__((__warn_unused_result__, n
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
 atf_comp::FTargs*    targs_InsertMaybe(const atfdb::Targs &value) __attribute__((nothrow));
-// Allocate space for one element. If no memory available, return NULL.
+// Remove row from all global and cross indices, then deallocate row
+void                 targs_Delete(atf_comp::FTargs &row) __attribute__((nothrow));
+// Allocate space for one element
+// If no memory available, return NULL.
 void*                targs_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-bool                 targs_EmptyQ() __attribute__((nothrow, pure));
-// Look up row by row id. Return NULL if out of range
-atf_comp::FTargs*    targs_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to last element of array, or NULL if array is empty
-atf_comp::FTargs*    targs_Last() __attribute__((nothrow, pure));
-// Return number of items in the pool
-i32                  targs_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Remove all elements from Lary
-void                 targs_RemoveAll() __attribute__((nothrow));
-// Delete last element of array. Do nothing if array is empty.
-void                 targs_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-atf_comp::FTargs&    targs_qFind(u64 t) __attribute__((nothrow, pure));
+// Remove mem from all global and cross indices, then deallocate mem
+void                 targs_FreeMem(atf_comp::FTargs &row) __attribute__((nothrow));
+// Preallocate memory for N more elements
+// Return number of elements actually reserved.
+u64                  targs_Reserve(u64 n_elems) __attribute__((nothrow));
+// Allocate block of given size, break up into small elements and append to free list.
+// Return number of elements reserved.
+u64                  targs_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 targs_XrefMaybe(atf_comp::FTargs &row);
@@ -406,22 +411,19 @@ atf_comp::FTfilt*    tfilt_AllocMaybe() __attribute__((__warn_unused_result__, n
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
 atf_comp::FTfilt*    tfilt_InsertMaybe(const atfdb::Tfilt &value) __attribute__((nothrow));
-// Allocate space for one element. If no memory available, return NULL.
+// Remove row from all global and cross indices, then deallocate row
+void                 tfilt_Delete(atf_comp::FTfilt &row) __attribute__((nothrow));
+// Allocate space for one element
+// If no memory available, return NULL.
 void*                tfilt_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-bool                 tfilt_EmptyQ() __attribute__((nothrow, pure));
-// Look up row by row id. Return NULL if out of range
-atf_comp::FTfilt*    tfilt_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to last element of array, or NULL if array is empty
-atf_comp::FTfilt*    tfilt_Last() __attribute__((nothrow, pure));
-// Return number of items in the pool
-i32                  tfilt_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Remove all elements from Lary
-void                 tfilt_RemoveAll() __attribute__((nothrow));
-// Delete last element of array. Do nothing if array is empty.
-void                 tfilt_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-atf_comp::FTfilt&    tfilt_qFind(u64 t) __attribute__((nothrow, pure));
+// Remove mem from all global and cross indices, then deallocate mem
+void                 tfilt_FreeMem(atf_comp::FTfilt &row) __attribute__((nothrow));
+// Preallocate memory for N more elements
+// Return number of elements actually reserved.
+u64                  tfilt_Reserve(u64 n_elems) __attribute__((nothrow));
+// Allocate block of given size, break up into small elements and append to free list.
+// Return number of elements reserved.
+u64                  tfilt_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 tfilt_XrefMaybe(atf_comp::FTfilt &row);
@@ -583,22 +585,6 @@ void                 _db_zd_sel_comptest_curs_Next(_db_zd_sel_comptest_curs &cur
 // item access
 atf_comp::FComptest& _db_zd_sel_comptest_curs_Access(_db_zd_sel_comptest_curs &curs);
 // cursor points to valid item
-void                 _db_targs_curs_Reset(_db_targs_curs &curs, atf_comp::FDb &parent);
-// cursor points to valid item
-bool                 _db_targs_curs_ValidQ(_db_targs_curs &curs);
-// proceed to next item
-void                 _db_targs_curs_Next(_db_targs_curs &curs);
-// item access
-atf_comp::FTargs&    _db_targs_curs_Access(_db_targs_curs &curs);
-// cursor points to valid item
-void                 _db_tfilt_curs_Reset(_db_tfilt_curs &curs, atf_comp::FDb &parent);
-// cursor points to valid item
-bool                 _db_tfilt_curs_ValidQ(_db_tfilt_curs &curs);
-// proceed to next item
-void                 _db_tfilt_curs_Next(_db_tfilt_curs &curs);
-// item access
-atf_comp::FTfilt&    _db_tfilt_curs_Access(_db_tfilt_curs &curs);
-// cursor points to valid item
 void                 _db_zd_run_comptest_curs_Reset(_db_zd_run_comptest_curs &curs, atf_comp::FDb &parent);
 // cursor points to valid item
 bool                 _db_zd_run_comptest_curs_ValidQ(_db_zd_run_comptest_curs &curs);
@@ -643,10 +629,11 @@ void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- atf_comp.FTargs
-// create: atf_comp.FDb.targs (Lary)
+// create: atf_comp.FDb.targs (Tpool)
 // global access: zd_out_targs (Llist)
 // access: atf_comp.FComptest.c_targs (Ptr)
 struct FTargs { // atf_comp.FTargs
+    atf_comp::FTargs*   targs_next;          // Pointer to next free element int tpool
     atf_comp::FTargs*   zd_out_targs_next;   // zslist link; -1 means not-in-list
     atf_comp::FTargs*   zd_out_targs_prev;   // previous element
     algo::Smallstr50    comptest;            //
@@ -654,8 +641,7 @@ struct FTargs { // atf_comp.FTargs
 private:
     friend atf_comp::FTargs&    targs_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_comp::FTargs*    targs_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 targs_RemoveAll() __attribute__((nothrow));
-    friend void                 targs_RemoveLast() __attribute__((nothrow));
+    friend void                 targs_Delete(atf_comp::FTargs &row) __attribute__((nothrow));
     FTargs();
     ~FTargs();
     FTargs(const FTargs&){ /*disallow copy constructor */}
@@ -672,10 +658,11 @@ void                 FTargs_Init(atf_comp::FTargs& targs);
 void                 FTargs_Uninit(atf_comp::FTargs& targs) __attribute__((nothrow));
 
 // --- atf_comp.FTfilt
-// create: atf_comp.FDb.tfilt (Lary)
+// create: atf_comp.FDb.tfilt (Tpool)
 // global access: zd_out_tfilt (Llist)
 // access: atf_comp.FComptest.c_tfilt (Ptr)
 struct FTfilt { // atf_comp.FTfilt
+    atf_comp::FTfilt*   tfilt_next;          // Pointer to next free element int tpool
     atf_comp::FTfilt*   zd_out_tfilt_next;   // zslist link; -1 means not-in-list
     atf_comp::FTfilt*   zd_out_tfilt_prev;   // previous element
     algo::Smallstr50    comptest;            //
@@ -684,8 +671,7 @@ struct FTfilt { // atf_comp.FTfilt
 private:
     friend atf_comp::FTfilt&    tfilt_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_comp::FTfilt*    tfilt_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 tfilt_RemoveAll() __attribute__((nothrow));
-    friend void                 tfilt_RemoveLast() __attribute__((nothrow));
+    friend void                 tfilt_Delete(atf_comp::FTfilt &row) __attribute__((nothrow));
     FTfilt();
     ~FTfilt();
     FTfilt(const FTfilt&){ /*disallow copy constructor */}
@@ -840,22 +826,6 @@ struct _db_zd_sel_comptest_curs {// fcurs:atf_comp.FDb.zd_sel_comptest/curs
     _db_zd_sel_comptest_curs() {
         row = NULL;
     }
-};
-
-
-struct _db_targs_curs {// cursor
-    typedef atf_comp::FTargs ChildType;
-    atf_comp::FDb *parent;
-    i64 index;
-    _db_targs_curs(){ parent=NULL; index=0; }
-};
-
-
-struct _db_tfilt_curs {// cursor
-    typedef atf_comp::FTfilt ChildType;
-    atf_comp::FDb *parent;
-    i64 index;
-    _db_tfilt_curs(){ parent=NULL; index=0; }
 };
 
 

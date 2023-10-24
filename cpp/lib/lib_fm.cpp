@@ -23,11 +23,9 @@
 #include "include/lib_fm.h"
 
 // Initialize FM library
-// in - directory to load data
-// prefix - automatically add prefix to object instance ID, current service name
-void lib_fm::FmInit(algo::strptr in, algo::strptr object_prefix) {
+// prefix - automatically add prefix to object instance ID
+void lib_fm::FmInit(algo::strptr object_prefix) {
     _db.object_prefix = object_prefix;
-    lib_fm::LoadTuplesMaybe(in);
 }
 
 // Compose log file name from file_prefix and date:

@@ -1,8 +1,7 @@
-# atf_comp -report:N -printinput acr.DelRecord | acr -in:- target:samp -del | cat
 acr.delete  dev.target  target:samp  compat:%-%g%.%-%
 
 acr.delete  dev.targdep  targdep:samp.algo_lib  comment:""
 
 acr.delete  dev.targsrc  targsrc:samp/cpp/samp/1.cpp  comment:""
 acr.delete  dev.targsrc  targsrc:samp/cpp/samp/2.cpp  comment:""
-report.acr  n_select:4  n_insert:0  n_delete:4  n_update:0  n_file_mod:0
+report.acr  n_select:4  n_insert:0  n_delete:4  n_ignore:0  n_update:0  n_file_mod:0

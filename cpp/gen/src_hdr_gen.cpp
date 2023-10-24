@@ -35,8 +35,6 @@
 #include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_git_gen.h"
@@ -63,7 +61,7 @@ const char *src_hdr_help =
 "    -scriptfile        regx    \"\"      Regx of scripts to update header\n"
 "    -verbose           int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug             int             Debug level (0..255); alias -d; cumulative\n"
-"    -help                              Print help an exit; alias -h\n"
+"    -help                              Print help and exit; alias -h\n"
 "    -version                           Print version and exit\n"
 "    -signature                         Show signatures and exit; alias -sig\n"
 ;
@@ -228,7 +226,7 @@ void src_hdr::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(src_hdr::LoadTuplesMaybe(cmd.in)
+    vrfy(src_hdr::LoadTuplesMaybe(cmd.in,true)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
@@ -318,7 +316,6 @@ bool src_hdr::InsertStrptrMaybe(algo::strptr str) {
             break;
         }
         default:
-        retval = algo_lib::InsertStrptrMaybe(str);
         break;
     } //switch
     if (!retval) {
@@ -329,22 +326,64 @@ bool src_hdr::InsertStrptrMaybe(algo::strptr str) {
 
 // --- src_hdr.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool src_hdr::LoadTuplesMaybe(algo::strptr root) {
+bool src_hdr::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    static const char *ssimfiles[] = {
-        "dev.license", "dmmeta.ns", "dmmeta.nsx", "dev.scriptfile"
-        , "dev.target", "dev.targsrc"
-        , NULL};
-        retval = algo_lib::DoLoadTuples(root, src_hdr::InsertStrptrMaybe, ssimfiles, true);
-        return retval;
+    if (FileQ(root)) {
+        retval = src_hdr::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = src_hdr::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dev.license"),recursive);
+        retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ns"),recursive);
+        retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsx"),recursive);
+        retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dev.scriptfile"),recursive);
+        retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
+        retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
+
+// --- src_hdr.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool src_hdr::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- src_hdr.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool src_hdr::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+        }
+        retval = retval && src_hdr::InsertStrptrMaybe(line);
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
+    return retval;
 }
 
 // --- src_hdr.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool src_hdr::LoadSsimfileMaybe(algo::strptr fname) {
+bool src_hdr::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, src_hdr::InsertStrptrMaybe, true);
+        retval = src_hdr::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }

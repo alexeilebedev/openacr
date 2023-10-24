@@ -1,3 +1,2 @@
-# atf_comp -report:N -printinput ssimfilt.FirstTag | ssimfilt ^ | cat
 dmmeta.ns  ns:blah
 

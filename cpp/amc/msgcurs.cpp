@@ -72,22 +72,22 @@ static void GenMsgcurs(amc::FCtype &fctype, amc::FTypefld &typefld) {
     amc::InsField(dmmeta::Field(tempstr()<<fctype.ctype<<".msg"
                                 , typefld.p_ctype->ctype
                                 , dmmeta_Reftype_reftype_Ptr
-                                , dmmeta::CppExpr("")
+                                , algo::CppExpr("")
                                 , algo::Comment("Pointer to current message")));
     amc::InsField(dmmeta::Field(tempstr()<<fctype.ctype<<".bytes"
                                 , "u8"
                                 , dmmeta_Reftype_reftype_Ptr
-                                , dmmeta::CppExpr("")
+                                , algo::CppExpr("")
                                 , algo::Comment("Beginning of region")));
     amc::InsField(dmmeta::Field(tempstr()<<fctype.ctype<<".limit"
                                 , "i32"
                                 , dmmeta_Reftype_reftype_Val
-                                , dmmeta::CppExpr("")
+                                , algo::CppExpr("")
                                 , algo::Comment("# Of bytes in the region")));
     amc::InsField(dmmeta::Field(tempstr()<<fctype.ctype<<".msglen"
                                 , "i32"
                                 , dmmeta_Reftype_reftype_Val
-                                , dmmeta::CppExpr("")
+                                , algo::CppExpr("")
                                 , algo::Comment("Length of current message (if any)")));
     amc::pack_InsertMaybe(dmmeta::Pack(fctype.ctype, algo::Comment()));
     {

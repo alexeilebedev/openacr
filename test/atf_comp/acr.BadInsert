@@ -1,4 +1,2 @@
-# atf_comp -report:N -printinput acr.BadInsert | acr -insert ns:ns% | cat
-acr.duplicate_key  key:dmmeta.Ns:ns1
 acr.insert  dmmeta.ns  ns:ns1  nstype:exe  license:xx  comment:"This record will be inserted"
-report.acr  n_select:1  n_insert:1  n_delete:0  n_update:0  n_file_mod:0
+report.acr  n_select:1  n_insert:1  n_delete:0  n_ignore:1  n_update:0  n_file_mod:0

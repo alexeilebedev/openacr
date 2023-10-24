@@ -1,4 +1,3 @@
-# atf_comp -report:N -printinput acr.Meta1 | acr anonfld -meta | cat
 dmmeta.ctype  ctype:dmmeta.Anonfld  comment:"Omit field name where possible (command line, enums, constants)"
   dmmeta.cpptype  ctype:dmmeta.Anonfld  ctor:Y  dtor:Y  cheap_copy:N
   dmmeta.field  field:dmmeta.Anonfld.field    arg:dmmeta.Field  reftype:Pkey  dflt:""  comment:""
@@ -18,4 +17,4 @@ dmmeta.ssimfile  ssimfile:dmmeta.anonfld  ctype:dmmeta.Anonfld
 
 dmmeta.xref  field:acr_compl.FField.c_anonfld  inscond:true  via:acr_compl.FDb.ind_field/dmmeta.Anonfld.field
 dmmeta.xref  field:amc.FField.c_anonfld  inscond:true  via:amc.FDb.ind_field/dmmeta.Anonfld.field
-report.acr  n_select:15  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+report.acr  n_select:15  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0

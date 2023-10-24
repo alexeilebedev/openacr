@@ -26,7 +26,7 @@
 #include "include/gen/atf_ci_gen.h"
 #include "include/gen/atf_ci_gen.inl.h"
 
-#include "include/lib/lib_ctype.h"
+#include "include/lib_ctype.h"
 
 namespace atf_ci { // update-hdr
     // Dear human:

@@ -55,83 +55,84 @@ enum gclidb_FieldIdEnum {                   // gclidb.FieldId.value
     ,gclidb_FieldId_val               = 22
     ,gclidb_FieldId_grepo             = 23
     ,gclidb_FieldId_host              = 24
-    ,gclidb_FieldId_name              = 25
-    ,gclidb_FieldId_token             = 26
-    ,gclidb_FieldId_default_branch    = 27
-    ,gclidb_FieldId_keyid             = 28
-    ,gclidb_FieldId_ssh_repo          = 29
-    ,gclidb_FieldId_web_url           = 30
-    ,gclidb_FieldId_descr             = 31
-    ,gclidb_FieldId_active            = 32
-    ,gclidb_FieldId_priv              = 33
-    ,gclidb_FieldId_grepogitport      = 34
-    ,gclidb_FieldId_port              = 35
-    ,gclidb_FieldId_grepossh          = 36
-    ,gclidb_FieldId_sshid             = 37
-    ,gclidb_FieldId_gstate            = 38
-    ,gclidb_FieldId_st                = 39
-    ,gclidb_FieldId_state             = 40
-    ,gclidb_FieldId_gstatet           = 41
-    ,gclidb_FieldId_gtbl              = 42
-    ,gclidb_FieldId_gtblact           = 43
-    ,gclidb_FieldId_t                 = 44
-    ,gclidb_FieldId_e                 = 45
-    ,gclidb_FieldId_auth              = 46
-    ,gclidb_FieldId_gtblactfld        = 47
-    ,gclidb_FieldId_dflt              = 48
-    ,gclidb_FieldId_field_name_dflt   = 49
-    ,gclidb_FieldId_optional          = 50
-    ,gclidb_FieldId_regx              = 51
-    ,gclidb_FieldId_gtblacttst        = 52
-    ,gclidb_FieldId_working           = 53
-    ,gclidb_FieldId_cmd               = 54
-    ,gclidb_FieldId_gtblacttstout     = 55
-    ,gclidb_FieldId_out               = 56
-    ,gclidb_FieldId_text              = 57
-    ,gclidb_FieldId_default_url       = 58
-    ,gclidb_FieldId_gtypeh            = 59
-    ,gclidb_FieldId_header            = 60
-    ,gclidb_FieldId_gtypeprefix       = 61
-    ,gclidb_FieldId_prefix            = 62
-    ,gclidb_FieldId_issue             = 63
-    ,gclidb_FieldId_project           = 64
-    ,gclidb_FieldId_iid               = 65
-    ,gclidb_FieldId_assignee          = 66
-    ,gclidb_FieldId_labels            = 67
-    ,gclidb_FieldId_milestone_iid     = 68
-    ,gclidb_FieldId_milestone_num     = 69
-    ,gclidb_FieldId_milestone         = 70
-    ,gclidb_FieldId_title             = 71
-    ,gclidb_FieldId_author            = 72
-    ,gclidb_FieldId_mr                = 73
-    ,gclidb_FieldId_description       = 74
-    ,gclidb_FieldId_issuenote         = 75
-    ,gclidb_FieldId_nid               = 76
-    ,gclidb_FieldId_note              = 77
-    ,gclidb_FieldId_system            = 78
-    ,gclidb_FieldId_issuepipeline     = 79
-    ,gclidb_FieldId_id                = 80
-    ,gclidb_FieldId_id_in             = 81
-    ,gclidb_FieldId_status            = 82
-    ,gclidb_FieldId_label             = 83
-    ,gclidb_FieldId_proj              = 84
-    ,gclidb_FieldId_source_branch     = 85
-    ,gclidb_FieldId_source_repo       = 86
-    ,gclidb_FieldId_reviewer          = 87
-    ,gclidb_FieldId_pipeline_status   = 88
-    ,gclidb_FieldId_pipeline_id       = 89
-    ,gclidb_FieldId_draft             = 90
-    ,gclidb_FieldId_node_id           = 91
-    ,gclidb_FieldId_mrjob             = 92
-    ,gclidb_FieldId_job               = 93
-    ,gclidb_FieldId_ref               = 94
-    ,gclidb_FieldId_runner            = 95
-    ,gclidb_FieldId_mrnote            = 96
-    ,gclidb_FieldId_user              = 97
-    ,gclidb_FieldId_value             = 98
+    ,gclidb_FieldId_fname             = 25
+    ,gclidb_FieldId_name              = 26
+    ,gclidb_FieldId_token             = 27
+    ,gclidb_FieldId_default_branch    = 28
+    ,gclidb_FieldId_keyid             = 29
+    ,gclidb_FieldId_ssh_repo          = 30
+    ,gclidb_FieldId_web_url           = 31
+    ,gclidb_FieldId_descr             = 32
+    ,gclidb_FieldId_active            = 33
+    ,gclidb_FieldId_priv              = 34
+    ,gclidb_FieldId_grepogitport      = 35
+    ,gclidb_FieldId_port              = 36
+    ,gclidb_FieldId_grepossh          = 37
+    ,gclidb_FieldId_sshid             = 38
+    ,gclidb_FieldId_gstate            = 39
+    ,gclidb_FieldId_st                = 40
+    ,gclidb_FieldId_state             = 41
+    ,gclidb_FieldId_gstatet           = 42
+    ,gclidb_FieldId_gtbl              = 43
+    ,gclidb_FieldId_gtblact           = 44
+    ,gclidb_FieldId_t                 = 45
+    ,gclidb_FieldId_e                 = 46
+    ,gclidb_FieldId_auth              = 47
+    ,gclidb_FieldId_gtblactfld        = 48
+    ,gclidb_FieldId_dflt              = 49
+    ,gclidb_FieldId_field_name_dflt   = 50
+    ,gclidb_FieldId_optional          = 51
+    ,gclidb_FieldId_regx              = 52
+    ,gclidb_FieldId_gtblacttst        = 53
+    ,gclidb_FieldId_working           = 54
+    ,gclidb_FieldId_cmd               = 55
+    ,gclidb_FieldId_gtblacttstout     = 56
+    ,gclidb_FieldId_out               = 57
+    ,gclidb_FieldId_text              = 58
+    ,gclidb_FieldId_default_url       = 59
+    ,gclidb_FieldId_gtypeh            = 60
+    ,gclidb_FieldId_header            = 61
+    ,gclidb_FieldId_gtypeprefix       = 62
+    ,gclidb_FieldId_prefix            = 63
+    ,gclidb_FieldId_issue             = 64
+    ,gclidb_FieldId_project           = 65
+    ,gclidb_FieldId_iid               = 66
+    ,gclidb_FieldId_assignee          = 67
+    ,gclidb_FieldId_labels            = 68
+    ,gclidb_FieldId_milestone_iid     = 69
+    ,gclidb_FieldId_milestone_num     = 70
+    ,gclidb_FieldId_milestone         = 71
+    ,gclidb_FieldId_title             = 72
+    ,gclidb_FieldId_author            = 73
+    ,gclidb_FieldId_mr                = 74
+    ,gclidb_FieldId_description       = 75
+    ,gclidb_FieldId_issuenote         = 76
+    ,gclidb_FieldId_nid               = 77
+    ,gclidb_FieldId_note              = 78
+    ,gclidb_FieldId_system            = 79
+    ,gclidb_FieldId_issuepipeline     = 80
+    ,gclidb_FieldId_id                = 81
+    ,gclidb_FieldId_id_in             = 82
+    ,gclidb_FieldId_status            = 83
+    ,gclidb_FieldId_label             = 84
+    ,gclidb_FieldId_proj              = 85
+    ,gclidb_FieldId_source_branch     = 86
+    ,gclidb_FieldId_source_repo       = 87
+    ,gclidb_FieldId_reviewer          = 88
+    ,gclidb_FieldId_pipeline_status   = 89
+    ,gclidb_FieldId_pipeline_id       = 90
+    ,gclidb_FieldId_draft             = 91
+    ,gclidb_FieldId_node_id           = 92
+    ,gclidb_FieldId_mrjob             = 93
+    ,gclidb_FieldId_job               = 94
+    ,gclidb_FieldId_ref               = 95
+    ,gclidb_FieldId_runner            = 96
+    ,gclidb_FieldId_mrnote            = 97
+    ,gclidb_FieldId_user              = 98
+    ,gclidb_FieldId_value             = 99
 };
 
-enum { gclidb_FieldIdEnum_N = 99 };
+enum { gclidb_FieldIdEnum_N = 100 };
 
 extern const char *  gclidb_Gact_gact_accept;       // accept        fconst:gclidb.Gact.gact/accept
 extern const char *  gclidb_Gact_gact_approve;      // approve       fconst:gclidb.Gact.gact/approve
@@ -288,7 +289,7 @@ namespace gclidb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 GtblactPkey;
     typedef algo::Smallstr50 GtblactfldPkey;
     typedef algo::Smallstr250 GtblacttstPkey;
-    typedef algo::Smallstr50 GtblacttstoutPkey;
+    typedef algo::Smallstr250 GtblacttstoutPkey;
     typedef algo::Smallstr50 GtypePkey;
     typedef algo::Smallstr250 GtypehPkey;
     typedef algo::Smallstr50 GtypeprefixPkey;
@@ -300,6 +301,7 @@ namespace gclidb { // gen:ns_pkeytypedef
     typedef algo::Smallstr150 MrPkey;
     typedef algo::Smallstr250 MrjobPkey;
     typedef algo::cstring MrnotePkey;
+    typedef algo::Smallstr50 ProjectPkey;
     typedef algo::Smallstr50 UserPkey;
 } // gen:ns_pkeytypedef
 namespace gclidb { // gen:ns_field
@@ -338,6 +340,7 @@ namespace gclidb { struct Milestone; }
 namespace gclidb { struct Mr; }
 namespace gclidb { struct Mrjob; }
 namespace gclidb { struct Mrnote; }
+namespace gclidb { struct Project; }
 namespace gclidb { struct User; }
 namespace gclidb { // gen:ns_print_struct
 
@@ -582,7 +585,8 @@ void                 Gmethod_Print(gclidb::Gmethod & row, algo::cstring &str) __
 
 // --- gclidb.Grepo
 struct Grepo { // gclidb.Grepo: Repo table (acr grepo -in ~/.ssim)
-    algo::Smallstr250   grepo;            // gcli name/access token
+    algo::Smallstr250   grepo;            // gcli host/full name
+    algo::cstring       name;             // gcli full name
     algo::cstring       token;            // gitlab project or repo access token
     algo::cstring       default_branch;   //   "origin"  gcli remote used in the workflow
     algo::cstring       keyid;            // gcli project id or repo
@@ -597,10 +601,10 @@ struct Grepo { // gclidb.Grepo: Repo table (acr grepo -in ~/.ssim)
 algo::cstring        host_Get(gclidb::Grepo& parent) __attribute__((__warn_unused_result__, nothrow));
 algo::cstring        Grepo_host_Get(algo::strptr arg) __attribute__((nothrow));
 
-algo::cstring        name_Get(gclidb::Grepo& parent) __attribute__((__warn_unused_result__, nothrow));
-algo::cstring        Grepo_name_Get(algo::strptr arg) __attribute__((nothrow));
+algo::cstring        fname_Get(gclidb::Grepo& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::cstring        Grepo_fname_Get(algo::strptr arg) __attribute__((nothrow));
 
-tempstr              Grepo_Concat_host_name( const algo::strptr& host ,const algo::strptr& name );
+tempstr              Grepo_Concat_host_fname( const algo::strptr& host ,const algo::strptr& fname );
 bool                 Grepo_ReadFieldMaybe(gclidb::Grepo &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Grepo from an ascii string.
 // The format of the string is an ssim Tuple
@@ -780,8 +784,8 @@ void                 Gtblacttst_Print(gclidb::Gtblacttst & row, algo::cstring &s
 
 // --- gclidb.Gtblacttstout
 struct Gtblacttstout { // gclidb.Gtblacttstout
-    algo::Smallstr50   gtblacttstout;   //
-    algo::cstring      text;            //
+    algo::Smallstr250   gtblacttstout;   //
+    algo::cstring       text;            //
     Gtblacttstout();
 };
 
@@ -1046,6 +1050,13 @@ bool                 Mrnote_ReadFieldMaybe(gclidb::Mrnote &parent, algo::strptr 
 bool                 Mrnote_ReadStrptrMaybe(gclidb::Mrnote &parent, algo::strptr in_str);
 // print string representation of gclidb::Mrnote to string LHS, no header -- cprint:gclidb.Mrnote.String
 void                 Mrnote_Print(gclidb::Mrnote & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- gclidb.Project
+struct Project { // gclidb.Project: Gitlab project mr
+    algo::Smallstr50   project;   // Identifier
+    Project();
+};
+
 
 // --- gclidb.User
 struct User { // gclidb.User

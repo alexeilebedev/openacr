@@ -1,4 +1,3 @@
-# atf_comp -report:N -printinput acr_compl.T10 | acr_compl -line:"atf_cmdline -astr: -anum: -adbl: -str: -num: -dbl: -aflag -" -type:63 | cat
 -amnum:<int>
 -cconst:<enum>
 -d

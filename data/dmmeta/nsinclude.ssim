@@ -1,3 +1,3 @@
-dmmeta.nsinclude  nsinclude:atf_amc/include/lib/lib_json.h  sys:N  comment:""
+dmmeta.nsinclude  nsinclude:atf_amc/include/lib_json.h  sys:N  comment:""
 dmmeta.nsinclude  nsinclude:lib_iconv/iconv.h  sys:Y  comment:""
 dmmeta.nsinclude  nsinclude:lib_mysql/mariadb/mysql.h  sys:Y  comment:""

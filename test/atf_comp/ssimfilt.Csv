@@ -1,4 +1,3 @@
-# atf_comp -report:N -printinput ssimfilt.Csv | ssimfilt -format:csv | cat
 nstype,comment
 exe,Executable
 lib,Library

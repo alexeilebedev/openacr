@@ -36,7 +36,7 @@ static void AlarmHook(void *, lib_fm::FAlarm &alarm) {
 }
 
 void atf_unit::unittest_fm() {
-    lib_fm::FmInit("data","prefix");
+    lib_fm::FmInit("prefix");
     lib_fm::_db.h_alarm = AlarmHook;
     lib_fm::alarm_RemoveAll();
 

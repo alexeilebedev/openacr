@@ -21,7 +21,7 @@ dev.targsrc  targsrc:atf_nrun/include/gen/atf_nrun_gen.inl.h  comment:""
 ### Syntax
 
 ```
-inline-command: atf_nrun -h
+inline-command: atf_nrun -h; true
 atf_nrun: Run N subprocesses in parallel
 Usage: atf_nrun [[-ncmd:]<int>] [options]
     OPTION      TYPE    DFLT    COMMENT
@@ -30,7 +30,7 @@ Usage: atf_nrun [[-ncmd:]<int>] [options]
     [ncmd]      int     6
     -verbose    int             Verbosity level (0..255); alias -v; cumulative
     -debug      int             Debug level (0..255); alias -d; cumulative
-    -help                       Print help an exit; alias -h
+    -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
 
@@ -194,7 +194,7 @@ dmmeta.nstype  nstype:exe  comment:Executable
     dev.target  target:atf_nrun  compat:%-%.%-%
       dev.targdep  targdep:atf_nrun.algo_lib  comment:""
       dev.targdep  targdep:atf_nrun.algo_pch  comment:""
-      dev.tgtcov  target:atf_nrun  cov_min:0.00  maxerr:0.00  comment:""
+      dev.tgtcov  target:atf_nrun  cov_min:0.00  maxerr:1.00  comment:""
 
     dmmeta.ctype  ctype:atf_nrun.FDb  comment:""
       dmmeta.field  field:atf_nrun.FDb._db      arg:atf_nrun.FDb      reftype:Global  dflt:""  comment:""

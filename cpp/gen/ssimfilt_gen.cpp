@@ -33,8 +33,6 @@
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
@@ -62,7 +60,7 @@ const char *ssimfilt_help =
 "    -cmd        string  \"\"      Command to output\n"
 "    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      int             Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help an exit; alias -h\n"
+"    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
 ;
@@ -232,7 +230,7 @@ void ssimfilt::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(ssimfilt::LoadTuplesMaybe(cmd.in)
+    vrfy(ssimfilt::LoadTuplesMaybe(cmd.in,true)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
@@ -287,18 +285,57 @@ bool ssimfilt::InsertStrptrMaybe(algo::strptr str) {
 
 // --- ssimfilt.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool ssimfilt::LoadTuplesMaybe(algo::strptr root) {
+bool ssimfilt::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    (void)root;//only to avoid -Wunused-parameter
+    if (FileQ(root)) {
+        retval = ssimfilt::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = ssimfilt::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && ssimfilt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
+
+// --- ssimfilt.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool ssimfilt::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- ssimfilt.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool ssimfilt::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+        }
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
     return retval;
 }
 
 // --- ssimfilt.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool ssimfilt::LoadSsimfileMaybe(algo::strptr fname) {
+bool ssimfilt::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, ssimfilt::InsertStrptrMaybe, true);
+        retval = ssimfilt::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }

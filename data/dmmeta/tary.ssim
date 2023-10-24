@@ -35,6 +35,7 @@ dmmeta.tary  field:command.atf_cmdline.amnum  aliased:N  comment:"Anon number ar
 dmmeta.tary  field:command.atf_cmdline.mdbl  aliased:N  comment:"Double array"
 dmmeta.tary  field:command.atf_cmdline.mnum  aliased:N  comment:"Number array"
 dmmeta.tary  field:command.atf_cmdline.mstr  aliased:N  comment:"String array"
+dmmeta.tary  field:command.gcache.cmd  aliased:N  comment:"Command to execute"
 dmmeta.tary  field:command.gcli.fields  aliased:N  comment:"String array"
 dmmeta.tary  field:command.mdbg.args  aliased:N  comment:""
 dmmeta.tary  field:command.mdbg.b  aliased:N  comment:""

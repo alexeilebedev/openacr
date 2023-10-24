@@ -1,3 +1,2 @@
-# atf_comp -report:N -printinput acr_compl.StrColonList | acr_compl -line:"atf_cmdline -str:" -type:63 | cat
 <string>
 value type

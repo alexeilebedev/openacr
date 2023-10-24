@@ -30,7 +30,7 @@ namespace acr_compl { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/acr/compl/main.cpp
+    // cpp/acr_compl/main.cpp
     //
 
     // adapted from cpp/amc/global.cpp
@@ -79,7 +79,7 @@ namespace acr_compl { // update-hdr
     void Main();
 
     // -------------------------------------------------------------------
-    // cpp/acr/compl/shell.cpp
+    // cpp/acr_compl/shell.cpp
     //
     void Main_SplitLineToArgv();
 

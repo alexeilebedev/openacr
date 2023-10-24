@@ -78,37 +78,39 @@ static void SuggestAlternatives(acr::FCtype &ctype, acr::FField &field, acr::FCh
                 ,tempstr()<< "Invalid value "<<name_Get(field)
                 <<":"<<EvalAttr(rec.tuple, field));
     }ind_end;
-    tempstr help;
-    help << "Type               "<<field.arg << eol;
-    help << "Valid values       ";
-    algo::ListSep ls(", ");
-    int idx = 0;
-    ind_beg(acr::ctype_zd_trec_curs,  rec, *field.p_arg) {
-        if (idx++ > 100) {
-            help << ", ...";
-            break;
-        }
-        help << ls << rec.pkey;
-    }ind_end;
-    NoteErr(&ctype,NULL,NULL,help);
+    // show suggestions unless the bad records will be deleted
+    if (!acr::_db.cmdline.del) {
+        tempstr help;
+        help << "Type               "<<field.arg << eol;
+        help << "Valid values       ";
+        algo::ListSep ls(", ");
+        int idx = 0;
+        ind_beg(acr::ctype_zd_trec_curs,  rec, *field.p_arg) {
+            if (idx++ > 100) {
+                help << ", ...";
+                break;
+            }
+            help << ls << rec.pkey;
+        }ind_end;
+        NoteErr(&ctype,NULL,NULL,help);
+    }
 }
 
 // -----------------------------------------------------------------------------
 
 static void CheckXref_Field(acr::FCtype &ctype, acr::FField &field, acr::FCheck &check) {
-    if (RecordsLoadedQ(*field.p_arg)) {// don't check ssimfiles that are not loaded
-        acr::c_bad_rec_RemoveAll(check);
-        ind_beg(acr::ctype_zd_selrec_curs, rec, ctype) {// loop through all records for this ctype
-            tempstr attr(EvalAttr(rec.tuple, field));// find attribute value
-            if (!acr::ind_rec_Find(*field.p_arg,attr)) {// check index for pkey
-                c_bad_rec_Insert(check, rec);
-            }
-        }ind_end;
-        if (c_bad_rec_N(check)) {
-            check.n_err++;
-            if (check.n_err < acr::_db.cmdline.maxshow) {
-                SuggestAlternatives(ctype,field,check);
-            }
+    LoadRecords(*field.p_arg);
+    acr::c_bad_rec_RemoveAll(check);
+    ind_beg(acr::ctype_zd_selrec_curs, rec, ctype) {// loop through all records for this ctype
+        tempstr attr(EvalAttr(rec.tuple, field));// find attribute value
+        if (!acr::ind_rec_Find(*field.p_arg,attr)) {// check index for pkey
+            c_bad_rec_Insert(check, rec);
+        }
+    }ind_end;
+    if (c_bad_rec_N(check)) {
+        check.n_err++;
+        if (check.n_err < acr::_db.cmdline.maxshow) {
+            SuggestAlternatives(ctype,field,check);
         }
     }
 }
@@ -163,13 +165,11 @@ void acr::CheckSsimreq() {
 
         // load files that are needed to execute the check
         // (but only if the involved records are already loaded)
-        if (!acr::zd_selrec_EmptyQ(*sub) && super->c_ssimfile && !super->c_ssimfile->c_file) {
-            LoadSsimfile(*super->c_ssimfile);
+        if (!acr::zd_selrec_EmptyQ(*sub)) {
+            LoadRecords(*super);
         }
-        if (ssimreq.bidir) {
-            if (!acr::zd_selrec_EmptyQ(*super) && !sub->c_ssimfile->c_file) {
-                LoadSsimfile(*sub->c_ssimfile);
-            }
+        if (ssimreq.bidir && !acr::zd_selrec_EmptyQ(*super)) {
+            LoadRecords(*sub);
         }
 
         algo_lib::Regx regx;
@@ -258,14 +258,26 @@ void acr::Main_Check() {
     CheckSsimreq();
 
     // select only bad records
-    SelectErrRecs();
-    ShowErrRecs();
-
-    if (acr::_db.cmdline.report) {
-        prlog(report::acr_check(check.n_record, acr::zd_all_err_N()));
+    if (_db.cmdline.selerr) {
+        acr::Rec_DeselectAll();
+        ind_beg(acr::_db_zd_all_err_curs, err,acr::_db) {
+            if (err.rec) {
+                Rec_Select(*err.rec);
+                if (acr::_db.cmdline.del) {
+                    err.rec->del=true;
+                }
+            }
+        }ind_end;
     }
-    if (acr::zd_all_err_N()) {
-        acr::_db.check_failed = true;
-        algo_lib::_db.exit_code = 1;
+
+    if (!_db.cmdline.del) {
+        ShowErrRecs();
+        if (acr::_db.cmdline.report) {
+            prlog(report::acr_check(check.n_record, acr::zd_all_err_N()));
+        }
+        if (acr::zd_all_err_N()) {
+            acr::_db.check_failed = true;
+            algo_lib::_db.exit_code = 1;
+        }
     }
 }

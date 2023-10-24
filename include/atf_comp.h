@@ -127,9 +127,12 @@ namespace atf_comp { // update-hdr
     //
 
     // Read FD, create testcases based on the following mini-language
-    // comptest <name>
-    // expect <name>
-    // <msg> -- input message
+    // comptest <name> <args> -- component test name & command-line arguments
+    // comment <text>    -- comment
+    // exit_code <code>  -- exit code
+    // filter <code>     -- output filter
+    // expect <msg>      -- expected outputline
+    // <anything else>   -- input message
     // New testcases are added to zd_out_comptest, and will be subject
     // to selection in a subsequent step
     void Main_Read(algo::Fildes fd);

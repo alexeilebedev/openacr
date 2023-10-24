@@ -1308,6 +1308,124 @@ inline void command::bash_proc_Init(command::bash_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
+inline command::gcache::gcache() {
+    command::gcache_Init(*this);
+}
+
+inline command::gcache::~gcache() {
+    command::gcache_Uninit(*this);
+}
+
+
+// --- command.gcache.cmd.EmptyQ
+// Return true if index is empty
+inline bool command::cmd_EmptyQ(command::gcache& parent) {
+    return parent.cmd_n == 0;
+}
+
+// --- command.gcache.cmd.Find
+// Look up row by row id. Return NULL if out of range
+inline algo::cstring* command::cmd_Find(command::gcache& parent, u64 t) {
+    u64 idx = t;
+    u64 lim = parent.cmd_n;
+    if (idx >= lim) return NULL;
+    return parent.cmd_elems + idx;
+}
+
+// --- command.gcache.cmd.Getary
+// Return array pointer by value
+inline algo::aryptr<algo::cstring> command::cmd_Getary(command::gcache& parent) {
+    return algo::aryptr<algo::cstring>(parent.cmd_elems, parent.cmd_n);
+}
+
+// --- command.gcache.cmd.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline algo::cstring* command::cmd_Last(command::gcache& parent) {
+    return cmd_Find(parent, u64(parent.cmd_n-1));
+}
+
+// --- command.gcache.cmd.Max
+// Return max. number of items in the array
+inline i32 command::cmd_Max(command::gcache& parent) {
+    (void)parent;
+    return parent.cmd_max;
+}
+
+// --- command.gcache.cmd.N
+// Return number of items in the array
+inline i32 command::cmd_N(const command::gcache& parent) {
+    return parent.cmd_n;
+}
+
+// --- command.gcache.cmd.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void command::cmd_Reserve(command::gcache& parent, int n) {
+    u32 new_n = parent.cmd_n + n;
+    if (UNLIKELY(new_n > parent.cmd_max)) {
+        cmd_AbsReserve(parent, new_n);
+    }
+}
+
+// --- command.gcache.cmd.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline algo::cstring& command::cmd_qFind(command::gcache& parent, u64 t) {
+    return parent.cmd_elems[t];
+}
+
+// --- command.gcache.cmd.qLast
+// Return reference to last element of array. No bounds checking
+inline algo::cstring& command::cmd_qLast(command::gcache& parent) {
+    return cmd_qFind(parent, u64(parent.cmd_n-1));
+}
+
+// --- command.gcache.cmd.rowid_Get
+// Return row id of specified element
+inline u64 command::cmd_rowid_Get(command::gcache& parent, algo::cstring &elem) {
+    u64 id = &elem - parent.cmd_elems;
+    return u64(id);
+}
+
+// --- command.gcache.cmd_curs.Next
+// proceed to next item
+inline void command::gcache_cmd_curs_Next(gcache_cmd_curs &curs) {
+    curs.index++;
+}
+
+// --- command.gcache.cmd_curs.Reset
+inline void command::gcache_cmd_curs_Reset(gcache_cmd_curs &curs, command::gcache &parent) {
+    curs.elems = parent.cmd_elems;
+    curs.n_elems = parent.cmd_n;
+    curs.index = 0;
+}
+
+// --- command.gcache.cmd_curs.ValidQ
+// cursor points to valid item
+inline bool command::gcache_cmd_curs_ValidQ(gcache_cmd_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- command.gcache.cmd_curs.Access
+// item access
+inline algo::cstring& command::gcache_cmd_curs_Access(gcache_cmd_curs &curs) {
+    return curs.elems[curs.index];
+}
+inline command::gcache_proc::gcache_proc() {
+    command::gcache_proc_Init(*this);
+}
+
+inline command::gcache_proc::~gcache_proc() {
+    command::gcache_proc_Uninit(*this);
+}
+
+
+// --- command.gcache_proc..Init
+// Set all fields to initial values.
+inline void command::gcache_proc_Init(command::gcache_proc& parent) {
+    parent.path = algo::strptr("bin/gcache");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
 inline command::gcli::gcli() {
     command::gcli_Init(*this);
 }
@@ -1710,6 +1828,49 @@ inline command::orgfile_proc::~orgfile_proc() {
 // Set all fields to initial values.
 inline void command::orgfile_proc_Init(command::orgfile_proc& parent) {
     parent.path = algo::strptr("bin/orgfile");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
+inline command::samp_regx::samp_regx() {
+    command::samp_regx_Init(*this);
+}
+
+
+// --- command.samp_regx.style.GetEnum
+// Get value of field as enum type
+inline command_samp_regx_style_Enum command::style_GetEnum(const command::samp_regx& parent) {
+    return command_samp_regx_style_Enum(parent.style);
+}
+
+// --- command.samp_regx.style.SetEnum
+// Set value of field from enum type.
+inline void command::style_SetEnum(command::samp_regx& parent, command_samp_regx_style_Enum rhs) {
+    parent.style = u8(rhs);
+}
+
+// --- command.samp_regx..Init
+// Set all fields to initial values.
+inline void command::samp_regx_Init(command::samp_regx& parent) {
+    parent.in = algo::strptr("data");
+    parent.style = u8(0);
+    parent.match = bool(false);
+    parent.string = algo::strptr("");
+    parent.show = bool(false);
+}
+inline command::samp_regx_proc::samp_regx_proc() {
+    command::samp_regx_proc_Init(*this);
+}
+
+inline command::samp_regx_proc::~samp_regx_proc() {
+    command::samp_regx_proc_Uninit(*this);
+}
+
+
+// --- command.samp_regx_proc..Init
+// Set all fields to initial values.
+inline void command::samp_regx_proc_Init(command::samp_regx_proc& parent) {
+    parent.path = algo::strptr("bin/samp_regx");
     parent.pid = pid_t(0);
     parent.timeout = i32(0);
     parent.status = i32(0);
@@ -2319,5 +2480,10 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const command::Field
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const command::acr_compl &row) {// cfmt:command.acr_compl.String
     command::acr_compl_Print(const_cast<command::acr_compl&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const command::gcache &row) {// cfmt:command.gcache.String
+    command::gcache_Print(const_cast<command::gcache&>(row), str);
     return str;
 }

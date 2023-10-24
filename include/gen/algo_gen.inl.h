@@ -805,6 +805,137 @@ inline bool algo::Comment_Eq(const algo::Comment & lhs,const algo::Comment & rhs
     retval = algo::Smallstr150_Eq(lhs.value, rhs.value);
     return retval;
 }
+
+inline bool algo::Smallstr250::operator ==(const algo::Smallstr250 &rhs) const {
+    return algo::Smallstr250_Eq(const_cast<algo::Smallstr250&>(*this),const_cast<algo::Smallstr250&>(rhs));
+}
+
+inline bool algo::Smallstr250::operator !=(const algo::Smallstr250 &rhs) const {
+    return !algo::Smallstr250_Eq(const_cast<algo::Smallstr250&>(*this),const_cast<algo::Smallstr250&>(rhs));
+}
+
+inline bool algo::Smallstr250::operator ==(const algo::strptr &rhs) const {
+    return algo::Smallstr250_EqStrptr(const_cast<algo::Smallstr250&>(*this),rhs);
+}
+inline algo::Smallstr250::Smallstr250() {
+    algo::Smallstr250_Init(*this);
+}
+
+
+// --- algo.Smallstr250.ch.Add
+// Append character to string.
+// If there is no space for an extra character, do nothing.
+inline void algo::ch_Add(algo::Smallstr250& parent, char c) {
+    if (parent.n_ch < 250) {
+        parent.ch[parent.n_ch++] = c;
+    }
+}
+
+// --- algo.Smallstr250.ch.AddStrptr
+// Append string to this string.
+// If there is no space for an extra character, trim.
+// If there is no space left, dump core in debug mode.
+inline void algo::ch_AddStrptr(algo::Smallstr250& parent, algo::strptr str) {
+    int n_new = str.n_elems;
+    if (parent.n_ch + n_new > 250) {
+        n_new = 250 - parent.n_ch;
+    }
+    memcpy(parent.ch + parent.n_ch, str.elems, n_new);
+    parent.n_ch = u8(parent.n_ch + n_new);
+}
+
+// --- algo.Smallstr250.ch.Getary
+// Access string as array of chars
+inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr250& parent) {
+    int len = ch_N(parent);
+    algo::aryptr<char> ret((char*)parent.ch, len);
+    return ret;
+}
+
+// --- algo.Smallstr250.ch.HashStrptr
+inline u32 algo::Smallstr250_Hash(u32 prev, const algo::strptr &str) {
+    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
+}
+
+// --- algo.Smallstr250.ch.Init
+inline void algo::ch_Init(algo::Smallstr250 &parent) {
+    parent.n_ch = 0;
+}
+
+// --- algo.Smallstr250.ch.Max
+// always return constant 250
+inline int algo::ch_Max(algo::Smallstr250& parent) {
+    (void)parent;
+    return 250;
+}
+
+// --- algo.Smallstr250.ch.N
+inline int algo::ch_N(const algo::Smallstr250& parent) {
+    u64 ret;
+    ret = parent.n_ch;
+    return int(ret);
+}
+
+// --- algo.Smallstr250.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::Smallstr250::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.Smallstr250.ch.Set
+// Copy from same type
+// Copy value from RHS.
+inline void algo::Smallstr250::operator =(const algo::Smallstr250& parent) {
+    memcpy(ch, parent.ch, parent.n_ch);
+    n_ch = parent.n_ch;
+}
+
+// --- algo.Smallstr250.ch.Ctor
+inline  algo::Smallstr250::Smallstr250(const algo::Smallstr250 &rhs) {
+    operator =(rhs);
+}
+
+// --- algo.Smallstr250.ch.CtorStrptr
+inline  algo::Smallstr250::Smallstr250(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
+// --- algo.Smallstr250.ch.Cast
+inline algo::Smallstr250::operator algo::strptr () const {
+    return ch_Getary(*this);
+}
+
+// --- algo.Smallstr250..Cmp
+inline i32 algo::Smallstr250_Cmp(algo::Smallstr250 & lhs, algo::Smallstr250 & rhs) {
+    i32 retval = 0;
+    retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
+    return retval;
+}
+
+// --- algo.Smallstr250..Init
+// Set all fields to initial values.
+inline void algo::Smallstr250_Init(algo::Smallstr250& parent) {
+    parent.n_ch = 0;
+}
+
+// --- algo.Smallstr250..Eq
+inline bool algo::Smallstr250_Eq(const algo::Smallstr250 & lhs,const algo::Smallstr250 & rhs) {
+    bool retval = true;
+    retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
+    return retval;
+}
+
+// --- algo.Smallstr250..EqStrptr
+inline bool algo::Smallstr250_EqStrptr(algo::Smallstr250 & lhs, const algo::strptr &rhs) {
+    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+}
+inline algo::CppExpr::CppExpr(const algo::strptr&            in_value)
+    : value(in_value)
+{
+}
+inline algo::CppExpr::CppExpr() {
+}
+
 inline algo::UnTime::UnTime(i64                            in_value)
     : value(in_value)
 {
@@ -17256,130 +17387,6 @@ inline bool algo::Smallstr25_EqStrptr(algo::Smallstr25 & lhs, const algo::strptr
     return algo::strptr_Eq(ch_Getary(lhs), rhs);
 }
 
-inline bool algo::Smallstr250::operator ==(const algo::Smallstr250 &rhs) const {
-    return algo::Smallstr250_Eq(const_cast<algo::Smallstr250&>(*this),const_cast<algo::Smallstr250&>(rhs));
-}
-
-inline bool algo::Smallstr250::operator !=(const algo::Smallstr250 &rhs) const {
-    return !algo::Smallstr250_Eq(const_cast<algo::Smallstr250&>(*this),const_cast<algo::Smallstr250&>(rhs));
-}
-
-inline bool algo::Smallstr250::operator ==(const algo::strptr &rhs) const {
-    return algo::Smallstr250_EqStrptr(const_cast<algo::Smallstr250&>(*this),rhs);
-}
-inline algo::Smallstr250::Smallstr250() {
-    algo::Smallstr250_Init(*this);
-}
-
-
-// --- algo.Smallstr250.ch.Add
-// Append character to string.
-// If there is no space for an extra character, do nothing.
-inline void algo::ch_Add(algo::Smallstr250& parent, char c) {
-    if (parent.n_ch < 250) {
-        parent.ch[parent.n_ch++] = c;
-    }
-}
-
-// --- algo.Smallstr250.ch.AddStrptr
-// Append string to this string.
-// If there is no space for an extra character, trim.
-// If there is no space left, dump core in debug mode.
-inline void algo::ch_AddStrptr(algo::Smallstr250& parent, algo::strptr str) {
-    int n_new = str.n_elems;
-    if (parent.n_ch + n_new > 250) {
-        n_new = 250 - parent.n_ch;
-    }
-    memcpy(parent.ch + parent.n_ch, str.elems, n_new);
-    parent.n_ch = u8(parent.n_ch + n_new);
-}
-
-// --- algo.Smallstr250.ch.Getary
-// Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr250& parent) {
-    int len = ch_N(parent);
-    algo::aryptr<char> ret((char*)parent.ch, len);
-    return ret;
-}
-
-// --- algo.Smallstr250.ch.HashStrptr
-inline u32 algo::Smallstr250_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
-// --- algo.Smallstr250.ch.Init
-inline void algo::ch_Init(algo::Smallstr250 &parent) {
-    parent.n_ch = 0;
-}
-
-// --- algo.Smallstr250.ch.Max
-// always return constant 250
-inline int algo::ch_Max(algo::Smallstr250& parent) {
-    (void)parent;
-    return 250;
-}
-
-// --- algo.Smallstr250.ch.N
-inline int algo::ch_N(const algo::Smallstr250& parent) {
-    u64 ret;
-    ret = parent.n_ch;
-    return int(ret);
-}
-
-// --- algo.Smallstr250.ch.AssignStrptr
-// Copy from strptr (operator=)
-inline void algo::Smallstr250::operator =(const algo::strptr &str) {
-    ch_SetStrptr(*this, str);
-}
-
-// --- algo.Smallstr250.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::Smallstr250::operator =(const algo::Smallstr250& parent) {
-    memcpy(ch, parent.ch, parent.n_ch);
-    n_ch = parent.n_ch;
-}
-
-// --- algo.Smallstr250.ch.Ctor
-inline  algo::Smallstr250::Smallstr250(const algo::Smallstr250 &rhs) {
-    operator =(rhs);
-}
-
-// --- algo.Smallstr250.ch.CtorStrptr
-inline  algo::Smallstr250::Smallstr250(const algo::strptr &rhs) {
-    ch_SetStrptr(*this, rhs);
-}
-
-// --- algo.Smallstr250.ch.Cast
-inline algo::Smallstr250::operator algo::strptr () const {
-    return ch_Getary(*this);
-}
-
-// --- algo.Smallstr250..Cmp
-inline i32 algo::Smallstr250_Cmp(algo::Smallstr250 & lhs, algo::Smallstr250 & rhs) {
-    i32 retval = 0;
-    retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
-    return retval;
-}
-
-// --- algo.Smallstr250..Init
-// Set all fields to initial values.
-inline void algo::Smallstr250_Init(algo::Smallstr250& parent) {
-    parent.n_ch = 0;
-}
-
-// --- algo.Smallstr250..Eq
-inline bool algo::Smallstr250_Eq(const algo::Smallstr250 & lhs,const algo::Smallstr250 & rhs) {
-    bool retval = true;
-    retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
-    return retval;
-}
-
-// --- algo.Smallstr250..EqStrptr
-inline bool algo::Smallstr250_EqStrptr(algo::Smallstr250 & lhs, const algo::strptr &rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-
 inline bool algo::Smallstr3::operator ==(const algo::Smallstr3 &rhs) const {
     return algo::Smallstr3_Eq(const_cast<algo::Smallstr3&>(*this),const_cast<algo::Smallstr3&>(rhs));
 }
@@ -19918,6 +19925,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::Bool &ro
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::Comment &row) {// cfmt:algo.Comment.String
     algo::Comment_Print(const_cast<algo::Comment&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::CppExpr &row) {// cfmt:algo.CppExpr.String
+    algo::CppExpr_Print(const_cast<algo::CppExpr&>(row), str);
     return str;
 }
 

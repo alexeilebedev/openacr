@@ -1,6 +1,13 @@
 ## acr_dm: ACR Diff/Merge
 
 ACR Diff/Merge is a tool for merging ssim files.
+It is typically installed as a "merge driver" for git, and called upon by git
+to merge changes made in ssimfiles. The main insight is that since ssimfile are
+sets, they can be merged more efficiently than source files. Changes in nearby
+lines are not conflicts, and even changes to different attributes of a record
+having the same key are not conflicts either. Only change to the same attribute
+are considered a conflict. Thus, the tool can easily merge changes where one version
+adds a column, another removes a column.
 
 ### Syntax
 
@@ -14,7 +21,7 @@ Usage: acr_dm [[-arg:]<string>] [options]
     -msize       int     7       Conflict marker size
     -verbose     int             Verbosity level (0..255); alias -v; cumulative
     -debug       int             Debug level (0..255); alias -d; cumulative
-    -help                        Print help an exit; alias -h
+    -help                        Print help and exit; alias -h
     -version                     Print version and exit
     -signature                   Show signatures and exit; alias -sig
 
@@ -25,14 +32,10 @@ Usage: acr_dm [[-arg:]<string>] [options]
 At the moment the following limitations exist:
 
 - No diff function, merge only;
-- Order of merged tuples changes, i.e. new tuples does not keep their
-position, they are added to the bottom, that may cause unwanted effects
-where tuple order is sensitive.
 
 ### Operation
 
-The tool accepts a number of nameless arguments. These arguments are
-file names to merge.
+The tool accepts a list of files. These are the file names to merge.
 
 - The first argument is *older* (archived) version, from which all other
 versions are derived;
@@ -106,68 +109,88 @@ garden.flower  flower:lily  color:pink    leaf:bowl
 
 **file1** is the common ancestor.
 
-Let's merge **file2** with **file3**
+Let's merge **file2** with **file3**.
+Both file2 anad file3 remove the column `thorned`. File2 adds a new column `language`
+and file3 adds a new column 'leaf', and there are some changes to the color attribute,
+but they don't conflict. The resulting changes can be merged without conflict.
 
 ```
 inline-command: acr_dm test/acr_dm/file1.ssim test/acr_dm/file2.ssim test/acr_dm/file3.ssim
 garden.flower  flower:rose  color:yellow  language:romance  leaf:compound
 garden.flower  flower:tulip  color:red  language:friendship  leaf:strap
 garden.flower  flower:orchid  color:white  language:happiness  leaf:oblong
-garden.flower  flower:iris  color:blue  language:luck  leaf:sword
 garden.flower  flower:lily  color:white  language:sweet
+garden.flower  flower:iris  color:blue  language:luck  leaf:sword
 garden.flower  flower:daisy  color:orange  leaf:spatula
 ```
 
 Now let's merge **file2** with **file4**
 
 ```
-inline-command: acr_dm test/acr_dm/file1.ssim test/acr_dm/file2.ssim test/acr_dm/file4.ssim
+inline-command: acr_dm test/acr_dm/file1.ssim test/acr_dm/file2.ssim test/acr_dm/file4.ssim; true
 garden.flower  flower:rose  color:yellow  language:romance  leaf:compound
 garden.flower  flower:tulip  color:red  language:friendship  leaf:strap
 garden.flower  flower:orchid  color:white  language:happiness  leaf:oblong
-garden.flower  flower:iris  color:blue  language:luck  leaf:sword
 <<<<<<< test/acr_dm/file2.ssim
 garden.flower  flower:lily  color:white  language:sweet
 =======
 garden.flower  flower:lily  color:pink  leaf:bowl
 >>>>>>> test/acr_dm/file4.ssim
+garden.flower  flower:iris  color:blue  language:luck  leaf:sword
 garden.flower  flower:daisy  color:orange  leaf:spatula
 ```
 
 Merge results in conflict.
 
+### Algorithm
+
+As `acr_dm` reads files, it assigns each tuple a 2-component rowid.
+The rowids are assigned as follows:
+
+First, look up the key in the tuple table.
+- If the entry exists, update next rowid to the rowid of this entry
+- If the entry doesn't exist, and we're reading the first (base) file, assign the next number.
+- If the entry doesn't exist, and we're reading a subsequent file, then
+take the previous existing rowid and assign the next number to the 2nd position.
+
+The tuples are then written out in rowid order.
+This has the effect of placing all new tuples after the last known location.
+
 ### Git integration
 
-The tool integrates to local git repository with **.git/config** as
-custom merge driver. Since **.git/config** could not be versioned,
-the config if kept on versioned file **.gitconfig**.
-
-```
-inline-command: cat .gitconfig
-[merge "acr_dm"]
-    name = Resolve conflicts in ssim files
-    driver = acr_dm -write_ours -msize %L -- %O %A %B
-```
+The tool integrates with local git repository as custom merge driver.
 
 To install, run:
 ```
 gitconfig-setup
 ```
 
-This will copy **.gitconfig** to **.git/config**.
-
-To choose merge driver for ssim files, **.gitattributes** files is used:
+To choose merge driver for ssim files, **.gitattributes** file is used:
 
 ```
-inline-command: cat .gitattributes
-cat: .gitattributes: No such file or directory
+inline-command: grep acr_dm .gitattributes
+*.ssim merge=acr_dm
+```
+
+### Inputs
+
+`acr_dm` takes the following tables on input:
+```
+CTYPE                COMMENT
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
 ```
 
 ### Tests
 
-The following component tests are defined for `acr_dm`:
+The following component tests are defined for `acr_dm`.
+These can be executed with `atf_comp <comptest> -v`
 ```
-acr_dm.Conflict	
-acr_dm.Merge	
+COMPTEST            COMMENT
+acr_dm.Conflict
+acr_dm.Merge
+acr_dm.RenameTuple
+
+
+
 ```
 

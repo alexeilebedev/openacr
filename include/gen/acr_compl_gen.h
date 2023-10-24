@@ -130,6 +130,7 @@ namespace acr_compl { struct _db_argvtype_curs; }
 namespace acr_compl { struct _db_falias_curs; }
 namespace acr_compl { struct _db_complsource_curs; }
 namespace acr_compl { struct field_c_fconst_curs; }
+namespace acr_compl { struct field_c_falias_srcfield_curs; }
 namespace acr_compl { struct Badness; }
 namespace acr_compl { struct FAnonfld; }
 namespace acr_compl { struct FArgvtype; }
@@ -490,9 +491,13 @@ void                 StaticCheck();
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
-bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
+bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file.
+bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file descriptor.
+bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
-bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
@@ -1113,13 +1118,13 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // --- acr_compl.FFalias
 // create: acr_compl.FDb.falias (Lary)
 // access: acr_compl.FField.c_falias (Ptr)
-// access: acr_compl.FField.c_falias_base (Ptr)
+// access: acr_compl.FField.c_falias_srcfield (Ptrary)
 struct FFalias { // acr_compl.FFalias
-    algo::Smallstr100    field;         //
-    algo::Smallstr100    basefield;     //
-    algo::Comment        comment;       //
-    acr_compl::FField*   p_basefield;   // reference to parent row
-    acr_compl::FField*   p_field;       // reference to parent row
+    algo::Smallstr100    field;        //
+    algo::Smallstr100    srcfield;     //
+    algo::Comment        comment;      //
+    acr_compl::FField*   p_srcfield;   // reference to parent row
+    acr_compl::FField*   p_field;      // reference to parent row
 private:
     friend acr_compl::FFalias&  falias_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr_compl::FFalias*  falias_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -1177,7 +1182,7 @@ void                 FFcmdline_Uninit(acr_compl::FFcmdline& fcmdline) __attribut
 // access: acr_compl.FField.c_fconst (Ptrary)
 struct FFconst { // acr_compl.FFconst
     algo::Smallstr100   fconst;                  //
-    dmmeta::CppExpr     value;                   //
+    algo::CppExpr       value;                   //
     algo::Comment       comment;                 //
     bool                field_c_fconst_in_ary;   //   false  membership flag
 private:
@@ -1239,7 +1244,7 @@ void                 FFflag_Uninit(acr_compl::FFflag& fflag) __attribute__((noth
 // global access: ind_cmd_field_name (Thash)
 // access: acr_compl.FCompletion.field (Ptr)
 // access: acr_compl.FCtype.c_field (Ptrary)
-// access: acr_compl.FFalias.p_basefield (Upptr)
+// access: acr_compl.FFalias.p_srcfield (Upptr)
 // access: acr_compl.FFalias.p_field (Upptr)
 // access: acr_compl.FFcmdline.p_field (Upptr)
 // access: acr_compl.FFcmdline.p_basecmdline (Upptr)
@@ -1251,7 +1256,7 @@ struct FField { // acr_compl.FField
     algo::Smallstr100      field;                     //
     algo::Smallstr50       arg;                       // type of field
     algo::Smallstr50       reftype;                   //   "Val"
-    dmmeta::CppExpr        dflt;                      // default value (c++ expression)
+    algo::CppExpr          dflt;                      // default value (c++ expression)
     algo::Comment          comment;                   //
     acr_compl::FCtype*     p_arg;                     // reference to parent row
     acr_compl::FAnonfld*   c_anonfld;                 // optional pointer
@@ -1262,7 +1267,9 @@ struct FField { // acr_compl.FField
     acr_compl::FFflag*     c_fflag;                   // optional pointer
     acr_compl::FCtype*     p_ctype;                   // reference to parent row
     acr_compl::FFalias*    c_falias;                  // optional pointer
-    acr_compl::FFalias*    c_falias_base;             // optional pointer
+    acr_compl::FFalias**   c_falias_srcfield_elems;   // array of pointers
+    u32                    c_falias_srcfield_n;       // array of pointers
+    u32                    c_falias_srcfield_max;     // capacity of allocated array
     bool                   ctype_c_field_in_ary;      //   false  membership flag
 private:
     friend acr_compl::FField&   field_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -1322,10 +1329,28 @@ bool                 c_falias_InsertMaybe(acr_compl::FField& field, acr_compl::F
 // Remove element from index. If element is not in index, do nothing.
 void                 c_falias_Remove(acr_compl::FField& field, acr_compl::FFalias& row) __attribute__((nothrow));
 
-// Insert row into pointer index. Return final membership status.
-bool                 c_falias_base_InsertMaybe(acr_compl::FField& field, acr_compl::FFalias& row) __attribute__((nothrow));
-// Remove element from index. If element is not in index, do nothing.
-void                 c_falias_base_Remove(acr_compl::FField& field, acr_compl::FFalias& row) __attribute__((nothrow));
+// Return true if index is empty
+bool                 c_falias_srcfield_EmptyQ(acr_compl::FField& field) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+acr_compl::FFalias*  c_falias_srcfield_Find(acr_compl::FField& field, u32 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array of pointers
+algo::aryptr<acr_compl::FFalias*> c_falias_srcfield_Getary(acr_compl::FField& field) __attribute__((nothrow));
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+void                 c_falias_srcfield_Insert(acr_compl::FField& field, acr_compl::FFalias& row) __attribute__((nothrow));
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Linear search is used to locate the element.
+// Return value: whether element was inserted into array.
+bool                 c_falias_srcfield_ScanInsertMaybe(acr_compl::FField& field, acr_compl::FFalias& row) __attribute__((nothrow));
+// Return number of items in the pointer array
+i32                  c_falias_srcfield_N(const acr_compl::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void                 c_falias_srcfield_Remove(acr_compl::FField& field, acr_compl::FFalias& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+void                 c_falias_srcfield_RemoveAll(acr_compl::FField& field) __attribute__((nothrow));
+// Reserve space in index for N more elements;
+void                 c_falias_srcfield_Reserve(acr_compl::FField& field, u32 n) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FField_Init(acr_compl::FField& field);
@@ -1336,6 +1361,13 @@ bool                 field_c_fconst_curs_ValidQ(field_c_fconst_curs &curs);
 void                 field_c_fconst_curs_Next(field_c_fconst_curs &curs);
 // item access
 acr_compl::FFconst&  field_c_fconst_curs_Access(field_c_fconst_curs &curs);
+void                 field_c_falias_srcfield_curs_Reset(field_c_falias_srcfield_curs &curs, acr_compl::FField &parent);
+// cursor points to valid item
+bool                 field_c_falias_srcfield_curs_ValidQ(field_c_falias_srcfield_curs &curs);
+// proceed to next item
+void                 field_c_falias_srcfield_curs_Next(field_c_falias_srcfield_curs &curs);
+// item access
+acr_compl::FFalias&  field_c_falias_srcfield_curs_Access(field_c_falias_srcfield_curs &curs);
 void                 FField_Uninit(acr_compl::FField& field) __attribute__((nothrow));
 // print string representation of acr_compl::FField to string LHS, no header -- cprint:acr_compl.FField.String
 void                 FField_Print(acr_compl::FField & row, algo::cstring &str) __attribute__((nothrow));
@@ -1666,6 +1698,15 @@ struct field_c_fconst_curs {// fcurs:acr_compl.FField.c_fconst/curs
     u32 n_elems;
     u32 index;
     field_c_fconst_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
+struct field_c_falias_srcfield_curs {// fcurs:acr_compl.FField.c_falias_srcfield/curs
+    typedef acr_compl::FFalias ChildType;
+    acr_compl::FFalias** elems;
+    u32 n_elems;
+    u32 index;
+    field_c_falias_srcfield_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
 } // gen:ns_curstext

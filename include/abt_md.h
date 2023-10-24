@@ -30,7 +30,7 @@ namespace abt_md { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/abt/abt_md.cpp
+    // cpp/abt_md/abt_md.cpp
     //
 
     // Load specified readme into memory as FILE_SECTION records

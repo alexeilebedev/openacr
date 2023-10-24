@@ -889,6 +889,7 @@ inline void src_func::FTargsrc_Init(src_func::FTargsrc& targsrc) {
     targsrc.zd_func_n = 0; // (src_func.FTargsrc.zd_func)
     targsrc.zd_func_tail = NULL; // (src_func.FTargsrc.zd_func)
     targsrc.p_target = NULL;
+    targsrc.select = bool(false);
     targsrc.cd_targsrc_next = (src_func::FTargsrc*)-1; // (src_func.FTarget.cd_targsrc) not-in-list
     targsrc.cd_targsrc_prev = NULL; // (src_func.FTarget.cd_targsrc)
 }

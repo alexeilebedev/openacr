@@ -29,8 +29,6 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
@@ -73,7 +71,7 @@ const char *atf_cmdline_help =
 "    -dpkey      string  \"\"      Predefined pkey\n"
 "    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      int             Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help an exit; alias -h\n"
+"    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
 ;
@@ -255,7 +253,7 @@ void atf_cmdline::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(atf_cmdline::LoadTuplesMaybe(cmd.in)
+    vrfy(atf_cmdline::LoadTuplesMaybe(cmd.in,true)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
@@ -310,18 +308,57 @@ bool atf_cmdline::InsertStrptrMaybe(algo::strptr str) {
 
 // --- atf_cmdline.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool atf_cmdline::LoadTuplesMaybe(algo::strptr root) {
+bool atf_cmdline::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    (void)root;//only to avoid -Wunused-parameter
+    if (FileQ(root)) {
+        retval = atf_cmdline::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = atf_cmdline::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && atf_cmdline::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
+
+// --- atf_cmdline.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool atf_cmdline::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- atf_cmdline.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool atf_cmdline::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+        }
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
     return retval;
 }
 
 // --- atf_cmdline.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool atf_cmdline::LoadSsimfileMaybe(algo::strptr fname) {
+bool atf_cmdline::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, atf_cmdline::InsertStrptrMaybe, true);
+        retval = atf_cmdline::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }

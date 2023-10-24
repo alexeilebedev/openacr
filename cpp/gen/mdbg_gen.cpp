@@ -33,8 +33,6 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
@@ -67,7 +65,7 @@ const char *mdbg_help =
 "    -dry_run                        Print commands but don't execute\n"
 "    -verbose       int              Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug         int              Debug level (0..255); alias -d; cumulative\n"
-"    -help                           Print help an exit; alias -h\n"
+"    -help                           Print help and exit; alias -h\n"
 "    -version                        Print version and exit\n"
 "    -signature                      Show signatures and exit; alias -sig\n"
 ;
@@ -468,7 +466,7 @@ void mdbg::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(mdbg::LoadTuplesMaybe(cmd.in)
+    vrfy(mdbg::LoadTuplesMaybe(cmd.in,true)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
@@ -534,7 +532,6 @@ bool mdbg::InsertStrptrMaybe(algo::strptr str) {
             break;
         }
         default:
-        retval = algo_lib::InsertStrptrMaybe(str);
         break;
     } //switch
     if (!retval) {
@@ -545,21 +542,60 @@ bool mdbg::InsertStrptrMaybe(algo::strptr str) {
 
 // --- mdbg.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool mdbg::LoadTuplesMaybe(algo::strptr root) {
+bool mdbg::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    static const char *ssimfiles[] = {
-        "dev.cfg", "dev.builddir"
-        , NULL};
-        retval = algo_lib::DoLoadTuples(root, mdbg::InsertStrptrMaybe, ssimfiles, true);
-        return retval;
+    if (FileQ(root)) {
+        retval = mdbg::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = mdbg::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && mdbg::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && mdbg::LoadTuplesFile(algo::SsimFname(root,"dev.cfg"),recursive);
+        retval = retval && mdbg::LoadTuplesFile(algo::SsimFname(root,"dev.builddir"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
+
+// --- mdbg.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool mdbg::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- mdbg.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool mdbg::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+        }
+        retval = retval && mdbg::InsertStrptrMaybe(line);
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
+    return retval;
 }
 
 // --- mdbg.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool mdbg::LoadSsimfileMaybe(algo::strptr fname) {
+bool mdbg::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, mdbg::InsertStrptrMaybe, true);
+        retval = mdbg::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }

@@ -117,7 +117,7 @@ void amc::gen_prep_proto() {
                 amc::ctype_InsertMaybe(dmmeta::Ctype(db,algo::Comment("amc-generated struct for internal purposes")));
                 amc::pack_InsertMaybe(dmmeta::Pack(db,algo::Comment()));
                 amc::field_InsertMaybe(dmmeta::Field(tempstr()<<db<<".proto", db, dmmeta_Reftype_reftype_Protocol
-                                                     , dmmeta::CppExpr(), algo::Comment("")));
+                                                     , algo::CppExpr(), algo::Comment("")));
             }
         }
     }ind_end;

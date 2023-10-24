@@ -22,21 +22,34 @@ Usage: ssimfilt [[-typetag:]<regx>] [[-match:]<string>] [options]
     -cmd        string  ""      Command to output
     -verbose    int             Verbosity level (0..255); alias -v; cumulative
     -debug      int             Debug level (0..255); alias -d; cumulative
-    -help                       Print help an exit; alias -h
+    -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
 
 ```
 
+### Inputs
+
+`ssimfilt` takes the following tables on input:
+```
+CTYPE                COMMENT
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
+```
+
 ### Tests
 
-The following component tests are defined for `ssimfilt`:
+The following component tests are defined for `ssimfilt`.
+These can be executed with `atf_comp <comptest> -v`
 ```
-ssimfilt.Csv	
-ssimfilt.FirstTag	Lock typetag to first input tuple
-ssimfilt.MatchField	
-ssimfilt.MatchTag	
-ssimfilt.SelectField	
-ssimfilt.Table	
+COMPTEST              COMMENT
+ssimfilt.Csv
+ssimfilt.FirstTag     Lock typetag to first input tuple
+ssimfilt.MatchField
+ssimfilt.MatchTag
+ssimfilt.SelectField
+ssimfilt.Table
+
+
+
 ```
 

@@ -261,6 +261,36 @@ inline acr_dm::FValue& acr_dm::value_qFind(u64 t) {
     return _db.value_lary[bsr][index];
 }
 
+// --- acr_dm.FDb.bh_tuple.EmptyQ
+// Return true if index is empty
+inline bool acr_dm::bh_tuple_EmptyQ() {
+    return _db.bh_tuple_n == 0;
+}
+
+// --- acr_dm.FDb.bh_tuple.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline acr_dm::FTuple* acr_dm::bh_tuple_First() {
+    acr_dm::FTuple *row = NULL;
+    if (_db.bh_tuple_n > 0) {
+        row = _db.bh_tuple_elems[0];
+    }
+    return row;
+}
+
+// --- acr_dm.FDb.bh_tuple.InBheapQ
+// Return true if row is in index, false otherwise
+inline bool acr_dm::bh_tuple_InBheapQ(acr_dm::FTuple& row) {
+    bool result = false;
+    result = row.bh_tuple_idx != -1;
+    return result;
+}
+
+// --- acr_dm.FDb.bh_tuple.N
+// Return number of items in the heap
+inline i32 acr_dm::bh_tuple_N() {
+    return _db.bh_tuple_n;
+}
+
 // --- acr_dm.FDb.tuple_curs.Reset
 // cursor points to valid item
 inline void acr_dm::_db_tuple_curs_Reset(_db_tuple_curs &curs, acr_dm::FDb &parent) {
@@ -334,6 +364,96 @@ inline void acr_dm::_db_value_curs_Next(_db_value_curs &curs) {
 // item access
 inline acr_dm::FValue& acr_dm::_db_value_curs_Access(_db_value_curs &curs) {
     return value_qFind(u64(curs.index));
+}
+
+// --- acr_dm.FDb.bh_tuple_curs.Access
+// Access current element. If not more elements, return NULL
+inline acr_dm::FTuple& acr_dm::_db_bh_tuple_curs_Access(_db_bh_tuple_curs &curs) {
+    return *curs.temp_elems[0];
+}
+
+// --- acr_dm.FDb.bh_tuple_curs.ValidQ
+// Return true if Access() will return non-NULL.
+inline bool acr_dm::_db_bh_tuple_curs_ValidQ(_db_bh_tuple_curs &curs) {
+    return curs.temp_n > 0;
+}
+inline acr_dm::Rowid::Rowid(i32                            in_f1
+        ,i32                            in_f2)
+    : f1(in_f1)
+    , f2(in_f2)
+{
+}
+
+inline bool acr_dm::Rowid::operator ==(const acr_dm::Rowid &rhs) const {
+    return acr_dm::Rowid_Eq(const_cast<acr_dm::Rowid&>(*this),const_cast<acr_dm::Rowid&>(rhs));
+}
+
+inline bool acr_dm::Rowid::operator !=(const acr_dm::Rowid &rhs) const {
+    return !acr_dm::Rowid_Eq(const_cast<acr_dm::Rowid&>(*this),const_cast<acr_dm::Rowid&>(rhs));
+}
+
+inline bool acr_dm::Rowid::operator <(const acr_dm::Rowid &rhs) const {
+    return acr_dm::Rowid_Lt(const_cast<acr_dm::Rowid&>(*this),const_cast<acr_dm::Rowid&>(rhs));
+}
+
+inline bool acr_dm::Rowid::operator >(const acr_dm::Rowid &rhs) const {
+    return rhs < *this;
+}
+
+inline bool acr_dm::Rowid::operator <=(const acr_dm::Rowid &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool acr_dm::Rowid::operator >=(const acr_dm::Rowid &rhs) const {
+    return !(*this < rhs);
+}
+inline acr_dm::Rowid::Rowid() {
+    acr_dm::Rowid_Init(*this);
+}
+
+
+// --- acr_dm.Rowid..Lt
+inline bool acr_dm::Rowid_Lt(acr_dm::Rowid & lhs, acr_dm::Rowid & rhs) {
+    return Rowid_Cmp(lhs,rhs) < 0;
+}
+
+// --- acr_dm.Rowid..Cmp
+inline i32 acr_dm::Rowid_Cmp(acr_dm::Rowid & lhs, acr_dm::Rowid & rhs) {
+    i32 retval = 0;
+    retval = i32_Cmp(lhs.f1, rhs.f1);
+    if (retval != 0) {
+        return retval;
+    }
+    retval = i32_Cmp(lhs.f2, rhs.f2);
+    return retval;
+}
+
+// --- acr_dm.Rowid..Init
+// Set all fields to initial values.
+inline void acr_dm::Rowid_Init(acr_dm::Rowid& parent) {
+    parent.f1 = i32(0);
+    parent.f2 = i32(0);
+}
+
+// --- acr_dm.Rowid..Eq
+inline bool acr_dm::Rowid_Eq(const acr_dm::Rowid & lhs,const acr_dm::Rowid & rhs) {
+    bool retval = true;
+    retval = i32_Eq(lhs.f1, rhs.f1);
+    if (!retval) {
+        return false;
+    }
+    retval = i32_Eq(lhs.f2, rhs.f2);
+    return retval;
+}
+
+// --- acr_dm.Rowid..Update
+// Set value. Return true if new value is different from old value.
+inline bool acr_dm::Rowid_Update(acr_dm::Rowid &lhs, acr_dm::Rowid & rhs) {
+    bool ret = !Rowid_Eq(lhs, rhs); // compare values
+    if (ret) {
+        lhs = rhs; // update
+    }
+    return ret;
 }
 inline acr_dm::Source::Source() {
     acr_dm::Source_Init(*this);
@@ -538,6 +658,20 @@ inline acr_dm::FTuple::~FTuple() {
 }
 
 
+// --- acr_dm.FTuple.rowid.Lt
+// Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
+inline bool acr_dm::rowid_Lt(acr_dm::FTuple& tuple, acr_dm::FTuple &rhs) {
+    return acr_dm::Rowid_Lt(tuple.rowid,rhs.rowid);
+}
+
+// --- acr_dm.FTuple.rowid.Cmp
+// Compare two fields.
+inline i32 acr_dm::rowid_Cmp(acr_dm::FTuple& tuple, acr_dm::FTuple &rhs) {
+    i32 retval = 0;
+    retval = acr_dm::Rowid_Cmp(tuple.rowid, rhs.rowid);
+    return retval;
+}
+
 // --- acr_dm.FTuple.zs_attr.EmptyQ
 // Return true if index is empty
 inline bool acr_dm::zs_attr_EmptyQ(acr_dm::FTuple& tuple) {
@@ -595,6 +729,7 @@ inline void acr_dm::FTuple_Init(acr_dm::FTuple& tuple) {
     tuple.zs_attr_n = 0; // (acr_dm.FTuple.zs_attr)
     tuple.zs_attr_tail = NULL; // (acr_dm.FTuple.zs_attr)
     tuple.ind_tuple_next = (acr_dm::FTuple*)-1; // (acr_dm.FDb.ind_tuple) not-in-hash
+    tuple.bh_tuple_idx = -1; // (acr_dm.FDb.bh_tuple) not-in-heap
 }
 
 // --- acr_dm.FTuple.zs_attr_curs.Reset
@@ -671,6 +806,11 @@ inline void acr_dm::FieldId_Init(acr_dm::FieldId& parent) {
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_dm::trace &row) {// cfmt:acr_dm.trace.String
     acr_dm::trace_Print(const_cast<acr_dm::trace&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_dm::Rowid &row) {// cfmt:acr_dm.Rowid.String
+    acr_dm::Rowid_Print(const_cast<acr_dm::Rowid&>(row), str);
     return str;
 }
 

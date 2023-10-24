@@ -230,7 +230,7 @@ bool algo::TimeStruct_Read(TimeStruct &out, algo::StringIter &iter, const strptr
 
 static TimeStruct SecsToTs(i64 secs, i64 nsecs) {
     TimeStruct ret;
-    ret.tm_neg = secs < 0;
+    ret.tm_neg = secs < 0 || nsecs < 0;
     secs = algo::Abs(secs);
     ret.tm_nsec  = int(algo::Abs(nsecs));
     ret.tm_sec   = int(secs % 60);

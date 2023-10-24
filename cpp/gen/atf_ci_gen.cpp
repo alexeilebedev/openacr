@@ -39,12 +39,12 @@
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/lib_ctype_gen.h"
 #include "include/gen/lib_ctype_gen.inl.h"
 #include "include/gen/lib_git_gen.h"
 #include "include/gen/lib_git_gen.inl.h"
+#include "include/gen/lib_prot_gen.h"
+#include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
@@ -67,7 +67,7 @@ const char *atf_ci_help =
 "    -capture                    Capture the output of the test\n"
 "    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      int             Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help an exit; alias -h\n"
+"    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
 ;
@@ -348,7 +348,7 @@ void atf_ci::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(atf_ci::LoadTuplesMaybe(cmd.in)
+    vrfy(atf_ci::LoadTuplesMaybe(cmd.in,true)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
@@ -469,7 +469,6 @@ bool atf_ci::InsertStrptrMaybe(algo::strptr str) {
             break;
         }
         default:
-        retval = algo_lib::InsertStrptrMaybe(str);
         break;
     } //switch
     if (!retval) {
@@ -480,23 +479,79 @@ bool atf_ci::InsertStrptrMaybe(algo::strptr str) {
 
 // --- atf_ci.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool atf_ci::LoadTuplesMaybe(algo::strptr root) {
+bool atf_ci::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    static const char *ssimfiles[] = {
-        "dev.builddir", "dev.cfg", "dev.gitfile", "dev.msgfile"
-        , "dev.noindent", "dmmeta.ns", "dev.readme", "dev.scriptfile"
-        , "dmmeta.ssimfile", "dev.ssimfs", "dev.targsrc"
-        , NULL};
-        retval = algo_lib::DoLoadTuples(root, atf_ci::InsertStrptrMaybe, ssimfiles, true);
-        return retval;
+    if (FileQ(root)) {
+        retval = atf_ci::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = atf_ci::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cdflt"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfmt"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cppfunc"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fconst"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ftuple"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dmmeta.substr"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.unstablefld"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.builddir"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.cfg"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.gitfile"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.msgfile"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.noindent"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ns"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.readme"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.scriptfile"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.ssimfs"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
+
+// --- atf_ci.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool atf_ci::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- atf_ci.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool atf_ci::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+            retval = retval && lib_ctype::InsertStrptrMaybe(line);
+        }
+        retval = retval && atf_ci::InsertStrptrMaybe(line);
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
+    return retval;
 }
 
 // --- atf_ci.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool atf_ci::LoadSsimfileMaybe(algo::strptr fname) {
+bool atf_ci::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, atf_ci::InsertStrptrMaybe, true);
+        retval = atf_ci::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }

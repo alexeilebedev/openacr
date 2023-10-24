@@ -367,9 +367,13 @@ void                 StaticCheck();
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
-bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
+bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file.
+bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file descriptor.
+bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
-bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
@@ -1027,7 +1031,7 @@ struct FField { // acr_in.FField
     algo::Smallstr100   field;                  //
     algo::Smallstr50    arg;                    // type of field
     algo::Smallstr50    reftype;                //   "Val"
-    dmmeta::CppExpr     dflt;                   // default value (c++ expression)
+    algo::CppExpr       dflt;                   // default value (c++ expression)
     algo::Comment       comment;                //
     acr_in::FCtype*     p_arg;                  // reference to parent row
     acr_in::FCtype*     p_ctype;                // reference to parent row
@@ -1175,7 +1179,7 @@ void                 FSsimfile_Uninit(acr_in::FSsimfile& ssimfile) __attribute__
 // access: acr_in.FField.c_substr (Ptr)
 struct FSubstr { // acr_in.FSubstr
     algo::Smallstr100   field;      //
-    dmmeta::CppExpr     expr;       //
+    algo::CppExpr       expr;       //
     algo::Smallstr100   srcfield;   //
 private:
     friend acr_in::FSubstr&     substr_Alloc() __attribute__((__warn_unused_result__, nothrow));

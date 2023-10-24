@@ -44,7 +44,6 @@ If non-empty, can be
 - status: exit status of subprocess, if it has exited.
 
 The generated functions are:
-```
 * _Start(): If `pid` is zero, start the subprocess using specified command line, timeout, and redirects.
  After the process is started, it will run until
 -- it exits by itself

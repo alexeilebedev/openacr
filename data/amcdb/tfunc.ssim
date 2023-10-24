@@ -185,6 +185,8 @@ amcdb.tfunc  tfunc:Global.InitReflection  hasthrow:N  leaf:N  poolfunc:N  inl:N 
 amcdb.tfunc  tfunc:Global.StaticCheck  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:""
 amcdb.tfunc  tfunc:Global.InsertStrptrMaybe  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:""
 amcdb.tfunc  tfunc:Global.LoadTuplesMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:"Load all finputs from given directory."
+amcdb.tfunc  tfunc:Global.LoadTuplesFile  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:"Load all finputs from given file."
+amcdb.tfunc  tfunc:Global.LoadTuplesFd  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:"Load all finputs from given file descriptor."
 amcdb.tfunc  tfunc:Global.SaveTuples  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:"Save ssim data to given directory."
 amcdb.tfunc  tfunc:Global.Init  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:""
 amcdb.tfunc  tfunc:Global.LoadSsimfileMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:"Load specified ssimfile."

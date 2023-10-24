@@ -16,7 +16,7 @@ Usage: src_hdr [options]
     -scriptfile        regx    ""      Regx of scripts to update header
     -verbose           int             Verbosity level (0..255); alias -v; cumulative
     -debug             int             Debug level (0..255); alias -d; cumulative
-    -help                              Print help an exit; alias -h
+    -help                              Print help and exit; alias -h
     -version                           Print version and exit
     -signature                         Show signatures and exit; alias -sig
 
@@ -26,12 +26,13 @@ Usage: src_hdr [options]
 
 `src_hdr` takes the following tables on input:
 ```
-CTYPE           COMMENT
+CTYPE                COMMENT
 dev.License
-dmmeta.Ns       Namespace (for in-memory database, protocol, etc)
-dev.Target      Build target
-dev.Targsrc     List of sources for target
+dmmeta.Ns            Namespace (for in-memory database, protocol, etc)
+dev.Target           Build target
+dev.Targsrc          List of sources for target
 dev.Scriptfile
-dmmeta.Nsx      Control code-generation and exception handling options for process/library
+dmmeta.Nsx           Control code-generation and exception handling options for process/library
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
 ```
 

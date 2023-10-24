@@ -8,9 +8,11 @@ dmmeta.cpptype  ctype:acr.Queryop  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:acr.ReadMode  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:acr_compl.Badness  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:acr_compl.Shellqtype  ctor:Y  dtor:Y  cheap_copy:Y
+dmmeta.cpptype  ctype:acr_dm.Rowid  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:algo.Attr  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:algo.Bool  ctor:Y  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.Comment  ctor:Y  dtor:Y  cheap_copy:N
+dmmeta.cpptype  ctype:algo.CppExpr  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:algo.DateCache  ctor:N  dtor:N  cheap_copy:N
 dmmeta.cpptype  ctype:algo.Dbbox  ctor:Y  dtor:N  cheap_copy:N
 dmmeta.cpptype  ctype:algo.DryrunQ  ctor:Y  dtor:N  cheap_copy:Y
@@ -182,6 +184,7 @@ dmmeta.cpptype  ctype:algo_lib.MmapFile  ctor:N  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:algo_lib.RegxToken  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:amc.BltinId  ctor:Y  dtor:Y  cheap_copy:Y
 dmmeta.cpptype  ctype:amc.Enumstr  ctor:Y  dtor:Y  cheap_copy:N
+dmmeta.cpptype  ctype:amc.Pnewtype  ctor:Y  dtor:Y  cheap_copy:Y
 dmmeta.cpptype  ctype:amc_vis.FNodedep  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:amc_vis.Linkdep  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:amc_vis.Linkkey  ctor:Y  dtor:Y  cheap_copy:Y
@@ -220,6 +223,7 @@ dmmeta.cpptype  ctype:atf.Testrun  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:atf_amc.Cstr  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:atf_amc.Ctype1Attr  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:atf_amc.Ctype2Attr  ctor:Y  dtor:Y  cheap_copy:N
+dmmeta.cpptype  ctype:atf_amc.Ctype2AttrAnon  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:atf_amc.MsgHdrLT  ctor:Y  dtor:N  cheap_copy:N
 dmmeta.cpptype  ctype:atf_amc.MsgHeader  ctor:Y  dtor:N  cheap_copy:N
 dmmeta.cpptype  ctype:atf_amc.MsgLTA  ctor:Y  dtor:N  cheap_copy:N
@@ -260,13 +264,11 @@ dmmeta.cpptype  ctype:dmmeta.Anonfld  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Basepool  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Bitfld  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Buftype  ctor:Y  dtor:Y  cheap_copy:N
-dmmeta.cpptype  ctype:dmmeta.BuftypeId  ctor:Y  dtor:Y  cheap_copy:Y
 dmmeta.cpptype  ctype:dmmeta.Cascdel  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Ccmp  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Cextern  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Cfmt  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Chash  ctor:Y  dtor:Y  cheap_copy:N
-dmmeta.cpptype  ctype:dmmeta.CppExpr  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Cppkeyword  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Cpptype  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Csize  ctor:Y  dtor:Y  cheap_copy:N
@@ -300,7 +302,6 @@ dmmeta.cpptype  ctype:dmmeta.Pack  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Pmaskfld  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Pnew  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Ptrary  ctor:Y  dtor:Y  cheap_copy:N
-dmmeta.cpptype  ctype:dmmeta.ReftypeId  ctor:Y  dtor:Y  cheap_copy:Y
 dmmeta.cpptype  ctype:dmmeta.Sortfld  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Ssimfile  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Steptype  ctor:Y  dtor:Y  cheap_copy:N
@@ -323,6 +324,7 @@ dmmeta.cpptype  ctype:fm.Objtype  ctor:N  dtor:N  cheap_copy:N
 dmmeta.cpptype  ctype:fm.Severity  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:fm.Source  ctor:N  dtor:N  cheap_copy:N
 dmmeta.cpptype  ctype:fm.Summary  ctor:N  dtor:N  cheap_copy:N
+dmmeta.cpptype  ctype:gcache.cleanreport  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:i16  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:i32  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:i64  ctor:N  dtor:N  cheap_copy:Y
@@ -336,6 +338,7 @@ dmmeta.cpptype  ctype:pad_byte  ctor:Y  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:pid_t  ctor:N  dtor:Y  cheap_copy:Y
 dmmeta.cpptype  ctype:report.abt  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:report.acr_check  ctor:Y  dtor:Y  cheap_copy:N
+dmmeta.cpptype  ctype:report.gcache  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:u128  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:u16  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:u32  ctor:N  dtor:N  cheap_copy:Y

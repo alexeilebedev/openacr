@@ -37,6 +37,8 @@ static void PrintPrecomment(src_func::FFunc &func, cstring &out) {
 
 // -----------------------------------------------------------------------------
 
+// Return the first line of function definition, without namespace.
+// Convert DFLTARG(xxx) to =xxx
 static tempstr FirstLineWithoutNs(src_func::FFunc &func, strptr ns) {
     tempstr proto(GetProto(func)); // void ns::funcname(....)
     // strip namespace by looking for "ns::"

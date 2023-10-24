@@ -35,10 +35,10 @@
 #include "include/gen/dev_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/lib_prot_gen.h"
+#include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
@@ -56,7 +56,6 @@ const char *acr_ed_help =
 "    -create                     Create new entity (-finput, -target, -ctype, -field)\n"
 "    -del                        Delete mode\n"
 "    -rename     string  \"\"      Rename to something else\n"
-"    -replace                    Use acr -replace (default is -insert, fails on duplicate)\n"
 "    -finput                     Create in-memory table based on ssimfile\n"
 "    -foutput                    Declare field as an output\n"
 "    -srcfile    string  \"\"          Create source file\n"
@@ -78,6 +77,7 @@ const char *acr_ed_help =
 "    -cascdel                      Field is cascdel\n"
 "    -before     string  \"\"        Place field before this one\n"
 "    -substr     string  \"\"        New field is a substring\n"
+"    -alias                      Create alias field (requires -srcfield)\n"
 "    -srcfield   string  \"\"        Source field for bitfld/substr\n"
 "    -fstep      string  \"\"        Add fstep record\n"
 "    -inscond    string  \"true\"    Insert condition (for xref)\n"
@@ -99,7 +99,7 @@ const char *acr_ed_help =
 "    -anonfld                    Create anonfld\n"
 "    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      int             Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help an exit; alias -h\n"
+"    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
 ;
@@ -124,6 +124,7 @@ namespace acr_ed { // gen:ns_print_proto
     static bool          cpptype_InputMaybe(dmmeta::Cpptype &elem) __attribute__((nothrow));
     static bool          cfmt_InputMaybe(dmmeta::Cfmt &elem) __attribute__((nothrow));
     static bool          nsdb_InputMaybe(dmmeta::Nsdb &elem) __attribute__((nothrow));
+    static void          edaction_LoadStatic() __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
@@ -419,6 +420,40 @@ void acr_ed::FCtype_Uninit(acr_ed::FCtype& ctype) {
 
     // acr_ed.FCtype.c_field.Uninit (Ptrary)  //
     algo_lib::malloc_FreeMem(ctype.c_field_elems, sizeof(acr_ed::FField*)*ctype.c_field_max); // (acr_ed.FCtype.c_field)
+}
+
+// --- acr_ed.FEdaction.base.CopyOut
+// Copy fields out of row
+void acr_ed::edaction_CopyOut(acr_ed::FEdaction &row, dev::Edaction &out) {
+    out.edaction = row.edaction;
+    out.needamc = row.needamc;
+    out.comment = row.comment;
+}
+
+// --- acr_ed.FEdaction.base.CopyIn
+// Copy fields in to row
+void acr_ed::edaction_CopyIn(acr_ed::FEdaction &row, dev::Edaction &in) {
+    row.edaction = in.edaction;
+    row.needamc = in.needamc;
+    row.comment = in.comment;
+}
+
+// --- acr_ed.FEdaction.edacttype.Get
+algo::Smallstr50 acr_ed::edacttype_Get(acr_ed::FEdaction& edaction) {
+    algo::Smallstr50 ret(algo::Pathcomp(edaction.edaction, "_LL"));
+    return ret;
+}
+
+// --- acr_ed.FEdaction.name.Get
+algo::Smallstr50 acr_ed::name_Get(acr_ed::FEdaction& edaction) {
+    algo::Smallstr50 ret(algo::Pathcomp(edaction.edaction, "_LR"));
+    return ret;
+}
+
+// --- acr_ed.FEdaction..Uninit
+void acr_ed::FEdaction_Uninit(acr_ed::FEdaction& edaction) {
+    acr_ed::FEdaction &row = edaction; (void)row;
+    ind_edaction_Remove(row); // remove edaction from index ind_edaction
 }
 
 // --- acr_ed.trace..Print
@@ -776,7 +811,7 @@ void acr_ed::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(acr_ed::LoadTuplesMaybe(cmd.in)
+    vrfy(acr_ed::LoadTuplesMaybe(cmd.in,true)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
@@ -813,11 +848,12 @@ static void acr_ed::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_ed.Input'  signature:'639bf4accf4b0ae5a1edac114fd03a4c77be2e52'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_ed.Input'  signature:'9553e18360cb0dae4d67f43bb9a50f50a35a7459'");
 }
 
 // --- acr_ed.FDb._db.StaticCheck
 void acr_ed::StaticCheck() {
+    algo_assert(sizeof(acr_ed::edaction_step_hook) == 8); // csize:acr_ed.edaction_step_hook
     algo_assert(_offset_of(acr_ed::FieldId, value) + sizeof(((acr_ed::FieldId*)0)->value) == sizeof(acr_ed::FieldId));
 }
 
@@ -920,7 +956,6 @@ bool acr_ed::InsertStrptrMaybe(algo::strptr str) {
             break;
         }
         default:
-        retval = algo_lib::InsertStrptrMaybe(str);
         break;
     } //switch
     if (!retval) {
@@ -931,24 +966,73 @@ bool acr_ed::InsertStrptrMaybe(algo::strptr str) {
 
 // --- acr_ed.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool acr_ed::LoadTuplesMaybe(algo::strptr root) {
+bool acr_ed::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    static const char *ssimfiles[] = {
-        "dmmeta.ns", "dmmeta.ctype", "dmmeta.cfmt", "dmmeta.cpptype"
-        , "dmmeta.cstr", "dmmeta.field", "dmmeta.fprefix", "dmmeta.listtype"
-        , "dmmeta.nsdb", "dmmeta.pack", "dev.sbpath", "dmmeta.ssimfile"
-        , "dev.target", "dev.targsrc", "dmmeta.typefld"
-        , NULL};
-        retval = algo_lib::DoLoadTuples(root, acr_ed::InsertStrptrMaybe, ssimfiles, true);
-        return retval;
+    if (FileQ(root)) {
+        retval = acr_ed::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = acr_ed::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ns"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfmt"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cpptype"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cstr"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fprefix"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.listtype"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsdb"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.pack"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dev.sbpath"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.typefld"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
+
+// --- acr_ed.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool acr_ed::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- acr_ed.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool acr_ed::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+        }
+        retval = retval && acr_ed::InsertStrptrMaybe(line);
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
+    return retval;
 }
 
 // --- acr_ed.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool acr_ed::LoadSsimfileMaybe(algo::strptr fname) {
+bool acr_ed::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, acr_ed::InsertStrptrMaybe, true);
+        retval = acr_ed::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }
@@ -2362,6 +2446,15 @@ static bool acr_ed::target_InputMaybe(dev::Target &elem) {
 bool acr_ed::target_XrefMaybe(acr_ed::FTarget &row) {
     bool retval = true;
     (void)row;
+    acr_ed::FNs* p_target = acr_ed::ind_ns_Find(row.target);
+    if (UNLIKELY(!p_target)) {
+        algo_lib::ResetErrtext() << "acr_ed.bad_xref  index:acr_ed.FDb.ind_ns" << Keyval("key", row.target);
+        return false;
+    }
+    // target: save pointer to target
+    if (true) { // user-defined insert condition
+        row.p_ns = p_target;
+    }
     // insert target into index ind_target
     if (true) { // user-defined insert condition
         bool success = ind_target_InsertMaybe(row);
@@ -2394,23 +2487,6 @@ acr_ed::FTarget* acr_ed::ind_target_Find(const algo::strptr& key) {
 acr_ed::FTarget& acr_ed::ind_target_FindX(const algo::strptr& key) {
     acr_ed::FTarget* ret = ind_target_Find(key);
     vrfy(ret, tempstr() << "acr_ed.key_error  table:ind_target  key:'"<<key<<"'  comment:'key not found'");
-    return *ret;
-}
-
-// --- acr_ed.FDb.ind_target.GetOrCreate
-// Find row by key. If not found, create and x-reference a new row with with this key.
-acr_ed::FTarget& acr_ed::ind_target_GetOrCreate(const algo::strptr& key) {
-    acr_ed::FTarget* ret = ind_target_Find(key);
-    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
-        ret         = &target_Alloc();
-        (*ret).target = key;
-        bool good = target_XrefMaybe(*ret);
-        if (!good) {
-            target_RemoveLast(); // delete offending row, any existing xrefs are cleared
-            ret = NULL;
-        }
-    }
-    vrfy(ret, tempstr() << "acr_ed.create_error  table:ind_target  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -2599,6 +2675,10 @@ bool acr_ed::targsrc_XrefMaybe(acr_ed::FTargsrc &row) {
     // targsrc: save pointer to target
     if (true) { // user-defined insert condition
         row.p_target = p_target;
+    }
+    // insert targsrc into index zd_targsrc
+    if (true) { // user-defined insert condition
+        zd_targsrc_Insert(*p_target, row);
     }
     return retval;
 }
@@ -3649,6 +3729,240 @@ void acr_ed::ind_nsdb_Reserve(int n) {
     }
 }
 
+// --- acr_ed.FDb.edaction.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_ed::FEdaction& acr_ed::edaction_Alloc() {
+    acr_ed::FEdaction* row = edaction_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_ed.out_of_mem  field:acr_ed.FDb.edaction  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_ed.FDb.edaction.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_ed::FEdaction* acr_ed::edaction_AllocMaybe() {
+    acr_ed::FEdaction *row = (acr_ed::FEdaction*)edaction_AllocMem();
+    if (row) {
+        new (row) acr_ed::FEdaction; // call constructor
+    }
+    return row;
+}
+
+// --- acr_ed.FDb.edaction.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_ed::FEdaction* acr_ed::edaction_InsertMaybe(const dev::Edaction &value) {
+    acr_ed::FEdaction *row = &edaction_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    edaction_CopyIn(*row,const_cast<dev::Edaction&>(value));
+    bool ok = edaction_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        edaction_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_ed.FDb.edaction.RemoveAll
+// Destroy all elements of Inlary
+void acr_ed::edaction_RemoveAll() {
+    for (u64 n = _db.edaction_n; n>0; ) {
+        n--;
+        reinterpret_cast<acr_ed::FEdaction*>(_db.edaction_data)[n].~FEdaction(); // destroy last element
+        _db.edaction_n=n;
+    }
+}
+
+// --- acr_ed.FDb.edaction.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_ed::edaction_RemoveLast() {
+    u64 n = _db.edaction_n;
+    if (n > 0) {
+        n -= 1;
+        reinterpret_cast<acr_ed::FEdaction*>(_db.edaction_data)[n].~FEdaction();
+        _db.edaction_n = n;
+    }
+}
+
+// --- acr_ed.FDb.edaction.LoadStatic
+static void acr_ed::edaction_LoadStatic() {
+    static struct _t {
+        const char *s;
+        void (*step)();
+    } data[] = {
+        { "dev.edaction  edaction:Create_Citest  needamc:Y  comment:\"-create -citest <citest>\"", acr_ed::edaction_Create_Citest }
+        ,{ "dev.edaction  edaction:Create_Ctype  needamc:Y  comment:\"-create -ctype <ctype> [-subset <ctype> [-subset2 <ctype2> -separator <char>]] [-pooltype <pooltype>] [-indexed]\"", acr_ed::edaction_Create_Ctype }
+        ,{ "dev.edaction  edaction:Create_Field  needamc:Y  comment:\"-create -field <field> -arg <ctype> -reftype <reftype> [-xref [-via <via>]] [-anonfld] [-fbigend] ...\"", acr_ed::edaction_Create_Field }
+        ,{ "dev.edaction  edaction:Create_Finput  needamc:Y  comment:\"-create -finput -target <target> -ssimfile <ssimfile>\"", acr_ed::edaction_Create_Finput }
+        ,{ "dev.edaction  edaction:Create_Srcfile  needamc:N  comment:\"-create -srcfile <filename.(h|md|cpp)>\"", acr_ed::edaction_Create_Srcfile }
+        ,{ "dev.edaction  edaction:Create_Ssimfile  needamc:Y  comment:\"-create -ssimfile <ssimfile> [-subset <ctype> [-subset2 <ctype2> -separator <char>]]\"", acr_ed::edaction_Create_Ssimfile }
+        ,{ "dev.edaction  edaction:Create_Target  needamc:Y  comment:\"-create -target <target>\"", acr_ed::edaction_Create_Target }
+        ,{ "dev.edaction  edaction:Create_Unittest  needamc:Y  comment:\"-create -unittest <unittest>\"", acr_ed::edaction_Create_Unittest }
+        ,{ "dev.edaction  edaction:Delete_Ctype  needamc:Y  comment:\"-del -ctype <ctype>\"", acr_ed::edaction_Delete_Ctype }
+        ,{ "dev.edaction  edaction:Delete_Field  needamc:Y  comment:\"-del -field <field>\"", acr_ed::edaction_Delete_Field }
+        ,{ "dev.edaction  edaction:Delete_Srcfile  needamc:N  comment:\"-del -srcfile <srcfile>\"", acr_ed::edaction_Delete_Srcfile }
+        ,{ "dev.edaction  edaction:Delete_Ssimfile  needamc:Y  comment:\"-del -ssimfile <ssimfile\"", acr_ed::edaction_Delete_Ssimfile }
+        ,{ "dev.edaction  edaction:Delete_Target  needamc:Y  comment:\"-del -target <target>\"", acr_ed::edaction_Delete_Target }
+        ,{ "dev.edaction  edaction:Rename_Ctype  needamc:Y  comment:\"-ctype <ctype> -rename <newname>\"", acr_ed::edaction_Rename_Ctype }
+        ,{ "dev.edaction  edaction:Rename_Field  needamc:Y  comment:\"-field <field> -rename <newname>\"", acr_ed::edaction_Rename_Field }
+        ,{ "dev.edaction  edaction:Rename_Srcfile  needamc:N  comment:\"-srcfile <srcfile> -rename <newname>\"", acr_ed::edaction_Rename_Srcfile }
+        ,{ "dev.edaction  edaction:Rename_Ssimfile  needamc:Y  comment:\"-ssimfile <ssimfile> -rename <newname>\"", acr_ed::edaction_Rename_Ssimfile }
+        ,{ "dev.edaction  edaction:Rename_Target  needamc:Y  comment:\"-target <target> -rename <newtarget>\"", acr_ed::edaction_Rename_Target }
+        ,{NULL, NULL}
+    };
+    (void)data;
+    dev::Edaction edaction;
+    for (int i=0; data[i].s; i++) {
+        (void)dev::Edaction_ReadStrptrMaybe(edaction, algo::strptr(data[i].s));
+        acr_ed::FEdaction *elem = edaction_InsertMaybe(edaction);
+        vrfy(elem, tempstr("acr_ed.static_insert_fatal_error")
+        << Keyval("tuple",algo::strptr(data[i].s))
+        << Keyval("comment",algo_lib::DetachBadTags()));
+        elem->step = data[i].step;
+    }
+}
+
+// --- acr_ed.FDb.edaction.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_ed::edaction_XrefMaybe(acr_ed::FEdaction &row) {
+    bool retval = true;
+    (void)row;
+    // insert edaction into index ind_edaction
+    if (true) { // user-defined insert condition
+        bool success = ind_edaction_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_ed.duplicate_key  xref:acr_ed.FDb.ind_edaction"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- acr_ed.FDb.ind_edaction.Find
+// Find row by key. Return NULL if not found.
+acr_ed::FEdaction* acr_ed::ind_edaction_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_edaction_buckets_n - 1);
+    acr_ed::FEdaction* *e = &_db.ind_edaction_buckets_elems[index];
+    acr_ed::FEdaction* ret=NULL;
+    do {
+        ret       = *e;
+        bool done = !ret || (*ret).edaction == key;
+        if (done) break;
+        e         = &ret->ind_edaction_next;
+    } while (true);
+    return ret;
+}
+
+// --- acr_ed.FDb.ind_edaction.FindX
+// Look up row by key and return reference. Throw exception if not found
+acr_ed::FEdaction& acr_ed::ind_edaction_FindX(const algo::strptr& key) {
+    acr_ed::FEdaction* ret = ind_edaction_Find(key);
+    vrfy(ret, tempstr() << "acr_ed.key_error  table:ind_edaction  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- acr_ed.FDb.ind_edaction.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr_ed::FEdaction& acr_ed::ind_edaction_GetOrCreate(const algo::strptr& key) {
+    acr_ed::FEdaction* ret = ind_edaction_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &edaction_Alloc();
+        (*ret).edaction = key;
+        bool good = edaction_XrefMaybe(*ret);
+        if (!good) {
+            edaction_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "acr_ed.create_error  table:ind_edaction  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- acr_ed.FDb.ind_edaction.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool acr_ed::ind_edaction_InsertMaybe(acr_ed::FEdaction& row) {
+    ind_edaction_Reserve(1);
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_edaction_next == (acr_ed::FEdaction*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr50_Hash(0, row.edaction) & (_db.ind_edaction_buckets_n - 1);
+        acr_ed::FEdaction* *prev = &_db.ind_edaction_buckets_elems[index];
+        do {
+            acr_ed::FEdaction* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).edaction == row.edaction) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_edaction_next;
+        } while (true);
+        if (retval) {
+            row.ind_edaction_next = *prev;
+            _db.ind_edaction_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- acr_ed.FDb.ind_edaction.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void acr_ed::ind_edaction_Remove(acr_ed::FEdaction& row) {
+    if (LIKELY(row.ind_edaction_next != (acr_ed::FEdaction*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr50_Hash(0, row.edaction) & (_db.ind_edaction_buckets_n - 1);
+        acr_ed::FEdaction* *prev = &_db.ind_edaction_buckets_elems[index]; // addr of pointer to current element
+        while (acr_ed::FEdaction *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_edaction_next; // unlink (singly linked list)
+                _db.ind_edaction_n--;
+                row.ind_edaction_next = (acr_ed::FEdaction*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_edaction_next;
+        }
+    }
+}
+
+// --- acr_ed.FDb.ind_edaction.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void acr_ed::ind_edaction_Reserve(int n) {
+    u32 old_nbuckets = _db.ind_edaction_buckets_n;
+    u32 new_nelems   = _db.ind_edaction_n + n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(acr_ed::FEdaction*);
+        u32 new_size = new_nbuckets * sizeof(acr_ed::FEdaction*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        acr_ed::FEdaction* *new_buckets = (acr_ed::FEdaction**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("acr_ed.out_of_memory  field:acr_ed.FDb.ind_edaction");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_edaction_buckets_n; i++) {
+            acr_ed::FEdaction* elem = _db.ind_edaction_buckets_elems[i];
+            while (elem) {
+                acr_ed::FEdaction &row        = *elem;
+                acr_ed::FEdaction* next       = row.ind_edaction_next;
+                u32 index          = algo::Smallstr50_Hash(0, row.edaction) & (new_nbuckets-1);
+                row.ind_edaction_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_edaction_buckets_elems, old_size);
+        _db.ind_edaction_buckets_elems = new_buckets;
+        _db.ind_edaction_buckets_n = new_nbuckets;
+    }
+}
+
 // --- acr_ed.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr acr_ed::trace_RowidFind(int t) {
@@ -3902,13 +4216,29 @@ void acr_ed::FDb_Init() {
     }
     memset(_db.ind_nsdb_buckets_elems, 0, sizeof(acr_ed::FNsdb*)*_db.ind_nsdb_buckets_n); // (acr_ed.FDb.ind_nsdb)
     _db.could_be_ptr = bool(false);
+    _db.edaction_n = 0; // edaction: initialize count
+    // initialize hash table for acr_ed::FEdaction;
+    _db.ind_edaction_n             	= 0; // (acr_ed.FDb.ind_edaction)
+    _db.ind_edaction_buckets_n     	= 4; // (acr_ed.FDb.ind_edaction)
+    _db.ind_edaction_buckets_elems 	= (acr_ed::FEdaction**)algo_lib::malloc_AllocMem(sizeof(acr_ed::FEdaction*)*_db.ind_edaction_buckets_n); // initial buckets (acr_ed.FDb.ind_edaction)
+    if (!_db.ind_edaction_buckets_elems) {
+        FatalErrorExit("out of memory"); // (acr_ed.FDb.ind_edaction)
+    }
+    memset(_db.ind_edaction_buckets_elems, 0, sizeof(acr_ed::FEdaction*)*_db.ind_edaction_buckets_n); // (acr_ed.FDb.ind_edaction)
 
     acr_ed::InitReflection();
+    edaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_ed.FDb.edaction  load acr_ed.FEdaction records
 }
 
 // --- acr_ed.FDb..Uninit
 void acr_ed::FDb_Uninit() {
     acr_ed::FDb &row = _db; (void)row;
+
+    // acr_ed.FDb.ind_edaction.Uninit (Thash)  //
+    // skip destruction of ind_edaction in global scope
+
+    // acr_ed.FDb.edaction.Uninit (Inlary)  //
+    // skip destruction in global scope
 
     // acr_ed.FDb.ind_nsdb.Uninit (Thash)  //
     // skip destruction of ind_nsdb in global scope
@@ -4234,6 +4564,78 @@ void acr_ed::target_CopyIn(acr_ed::FTarget &row, dev::Target &in) {
     row.compat = in.compat;
 }
 
+// --- acr_ed.FTarget.zd_targsrc.Insert
+// Insert row into linked list. If row is already in linked list, do nothing.
+void acr_ed::zd_targsrc_Insert(acr_ed::FTarget& target, acr_ed::FTargsrc& row) {
+    if (!zd_targsrc_InLlistQ(row)) {
+        acr_ed::FTargsrc* old_tail = target.zd_targsrc_tail;
+        row.zd_targsrc_next = NULL;
+        row.zd_targsrc_prev = old_tail;
+        target.zd_targsrc_tail = &row;
+        acr_ed::FTargsrc **new_row_a = &old_tail->zd_targsrc_next;
+        acr_ed::FTargsrc **new_row_b = &target.zd_targsrc_head;
+        acr_ed::FTargsrc **new_row = old_tail ? new_row_a : new_row_b;
+        *new_row = &row;
+        target.zd_targsrc_n++;
+    }
+}
+
+// --- acr_ed.FTarget.zd_targsrc.Remove
+// Remove element from index. If element is not in index, do nothing.
+void acr_ed::zd_targsrc_Remove(acr_ed::FTarget& target, acr_ed::FTargsrc& row) {
+    if (zd_targsrc_InLlistQ(row)) {
+        acr_ed::FTargsrc* old_head       = target.zd_targsrc_head;
+        (void)old_head; // in case it's not used
+        acr_ed::FTargsrc* prev = row.zd_targsrc_prev;
+        acr_ed::FTargsrc* next = row.zd_targsrc_next;
+        // if element is first, adjust list head; otherwise, adjust previous element's next
+        acr_ed::FTargsrc **new_next_a = &prev->zd_targsrc_next;
+        acr_ed::FTargsrc **new_next_b = &target.zd_targsrc_head;
+        acr_ed::FTargsrc **new_next = prev ? new_next_a : new_next_b;
+        *new_next = next;
+        // if element is last, adjust list tail; otherwise, adjust next element's prev
+        acr_ed::FTargsrc **new_prev_a = &next->zd_targsrc_prev;
+        acr_ed::FTargsrc **new_prev_b = &target.zd_targsrc_tail;
+        acr_ed::FTargsrc **new_prev = next ? new_prev_a : new_prev_b;
+        *new_prev = prev;
+        target.zd_targsrc_n--;
+        row.zd_targsrc_next=(acr_ed::FTargsrc*)-1; // not-in-list
+    }
+}
+
+// --- acr_ed.FTarget.zd_targsrc.RemoveAll
+// Empty the index. (The rows are not deleted)
+void acr_ed::zd_targsrc_RemoveAll(acr_ed::FTarget& target) {
+    acr_ed::FTargsrc* row = target.zd_targsrc_head;
+    target.zd_targsrc_head = NULL;
+    target.zd_targsrc_tail = NULL;
+    target.zd_targsrc_n = 0;
+    while (row) {
+        acr_ed::FTargsrc* row_next = row->zd_targsrc_next;
+        row->zd_targsrc_next  = (acr_ed::FTargsrc*)-1;
+        row->zd_targsrc_prev  = NULL;
+        row = row_next;
+    }
+}
+
+// --- acr_ed.FTarget.zd_targsrc.RemoveFirst
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+acr_ed::FTargsrc* acr_ed::zd_targsrc_RemoveFirst(acr_ed::FTarget& target) {
+    acr_ed::FTargsrc *row = NULL;
+    row = target.zd_targsrc_head;
+    if (row) {
+        acr_ed::FTargsrc *next = row->zd_targsrc_next;
+        target.zd_targsrc_head = next;
+        acr_ed::FTargsrc **new_end_a = &next->zd_targsrc_prev;
+        acr_ed::FTargsrc **new_end_b = &target.zd_targsrc_tail;
+        acr_ed::FTargsrc **new_end = next ? new_end_a : new_end_b;
+        *new_end = NULL;
+        target.zd_targsrc_n--;
+        row->zd_targsrc_next = (acr_ed::FTargsrc*)-1; // mark as not-in-list
+    }
+    return row;
+}
+
 // --- acr_ed.FTarget..Uninit
 void acr_ed::FTarget_Uninit(acr_ed::FTarget& target) {
     acr_ed::FTarget &row = target; (void)row;
@@ -4270,6 +4672,15 @@ algo::Smallstr200 acr_ed::src_Get(acr_ed::FTargsrc& targsrc) {
 algo::Smallstr10 acr_ed::ext_Get(acr_ed::FTargsrc& targsrc) {
     algo::Smallstr10 ret(algo::Pathcomp(targsrc.targsrc, ".RR"));
     return ret;
+}
+
+// --- acr_ed.FTargsrc..Uninit
+void acr_ed::FTargsrc_Uninit(acr_ed::FTargsrc& targsrc) {
+    acr_ed::FTargsrc &row = targsrc; (void)row;
+    acr_ed::FTarget* p_target = acr_ed::ind_target_Find(target_Get(row));
+    if (p_target)  {
+        zd_targsrc_Remove(*p_target, row);// remove targsrc from index zd_targsrc
+    }
 }
 
 // --- acr_ed.FTypefld.base.CopyOut

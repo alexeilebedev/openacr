@@ -85,7 +85,10 @@ namespace src_func { // update-hdr
     // and return result
     strptr StripComment(strptr line);
 
-    // Remove open curly from function prototype line
+    // Get first line of function definition
+    // Remove open curly
+    // Replace DFLTVAL(x) with =x (for headers)
+    // Replace FUNCATTR(x) with x (for headers)
     tempstr GetProto(src_func::FFunc &func);
 
     // Check if line contains function start

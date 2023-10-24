@@ -63,6 +63,31 @@ void atf_amc::amctest_ReadTuple2() {
 
 // -----------------------------------------------------------------------------
 
+void atf_amc::amctest_ReadTuple2a() {
+    tempstr out;
+    atf_amc::Ctype2AttrAnon out_ctype;
+    out_ctype.attr1 = 55;
+    out_ctype.attr2 = 66;
+    Ctype2AttrAnon_Print(out_ctype, out);
+    vrfyeq_(out, "atf_amc.Ctype2AttrAnon  attr1:55  attr2:66");
+    // Check that ReadStrptr works with named attrs
+    {
+        atf_amc::Ctype2AttrAnon in_ctype;
+        Ctype2AttrAnon_ReadStrptrMaybe(in_ctype, out);
+        vrfyeq_(in_ctype.attr1,55);
+        vrfyeq_(in_ctype.attr2,66);
+    }
+    // Check that ReadStrptr works with anon attrs
+    {
+        atf_amc::Ctype2AttrAnon in_ctype;
+        Ctype2AttrAnon_ReadStrptrMaybe(in_ctype, "atf_amc.Ctype2AttrAnon 77 88");
+        vrfyeq_(in_ctype.attr1,77);
+        vrfyeq_(in_ctype.attr2,88);
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 void atf_amc::amctest_ReadTuple3() {
     int i=0;
     ind_beg(algo::Attr_curs,curs,"abcd e:f h:g #ddddd") {

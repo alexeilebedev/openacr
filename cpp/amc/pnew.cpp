@@ -147,12 +147,12 @@ static void HandleLen(amc::Genpnew &genpnew) {
 
 static void DispatchBuftype(amc::FPnew &pnew, amc::Genpnew &genpnew) {
     algo_lib::Replscope &R=genpnew.R;
-    dmmeta::BuftypeId buftype_id;
-    value_SetStrptr(buftype_id,buftype_Get(pnew),dmmeta_BuftypeId_Memptr);
-    switch(buftype_id) {
-    case dmmeta_BuftypeId_Memptr      : PnewMemptr(R, genpnew); break;
-    case dmmeta_BuftypeId_ByteAry     : PnewByteAry(R, genpnew); break;
-    case dmmeta_BuftypeId_AmsStream   : PnewAmsStream(R, genpnew); break;
+    amc::Pnewtype pnewtype;
+    value_SetStrptr(pnewtype,buftype_Get(pnew),amc_Pnewtype_Memptr);
+    switch(pnewtype) {
+    case amc_Pnewtype_Memptr      : PnewMemptr(R, genpnew); break;
+    case amc_Pnewtype_ByteAry     : PnewByteAry(R, genpnew); break;
+    case amc_Pnewtype_AmsStream   : PnewAmsStream(R, genpnew); break;
     default                           : vrfy(0, "unsupported buftype"); break;
     }
 }

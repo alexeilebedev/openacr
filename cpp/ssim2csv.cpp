@@ -67,7 +67,7 @@ static void HandleLine(strptr line, int lineno) {
         ssim2csv::FFlatten fl = ssim2csv::flatten_qLast();
         ssim2csv::flatten_RemoveLast();
         Tuple_ReadStrptr(temp,fl.in,true);
-        ind_beg(Tuple_attrs_curs, attr, temp) {
+        ind_beg(algo::Tuple_attrs_curs, attr, temp) {
             tempstr name(fl.prefix);
             if (ch_N(fl.prefix)) name << ".";
             name << attr.name;

@@ -38,7 +38,7 @@ amsdb.streamtype  streamtype:ctl    id:1  comment:"AMS control messages"
 amsdb.streamtype  streamtype:io     id:5  comment:"Messages intended for file output"
 amsdb.streamtype  streamtype:out    id:2  comment:"Log messages, alarms"
 amsdb.streamtype  streamtype:trace  id:6  comment:"Trace messages"
-report.acr  n_select:5  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+report.acr  n_select:5  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
 ```
 
 Together, stream id is formatted like this: `proctype-index.streamtype-index`.

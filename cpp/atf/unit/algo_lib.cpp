@@ -783,10 +783,10 @@ void atf_unit::unittest_algo_lib_test_strptr() {
     vrfy_(!StrEqual(strptr("abc"), "Abd" ,false));
     vrfy_(!StrEqual(strptr("abc"), "abCd",false));
 
-    vrfy_(CompareNoCase("a","b")<0);
-    vrfy_(CompareNoCase("a","A")==0);
-    vrfy_(CompareNoCase("a","aa")<0);
-    vrfy_(CompareNoCase("a","AA")<0);
+    vrfy_(algo::CompareNoCase("a","b")<0);
+    vrfy_(algo::CompareNoCase("a","A")==0);
+    vrfy_(algo::CompareNoCase("a","aa")<0);
+    vrfy_(algo::CompareNoCase("a","AA")<0);
 
     strptr s("abc");
     s = RestFrom(s, 1);
@@ -2098,6 +2098,7 @@ void atf_unit::unittest_algo_lib_SysEval() {
     CheckSysEval("printf %s blah","blah",10,true);
     CheckSysEval("printf %s longstring","",1,false);// will fail because of output limit
     CheckSysEval("cat /dev/zero","",100000,false);// will fail because of output limit
+    CheckSysEval("false","",100000,false);// will fail
     CheckSysEval("echo blah","blah\n",5,true);// check newline
 }
 

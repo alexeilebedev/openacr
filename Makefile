@@ -9,6 +9,3 @@ default:
 
 clean:
 	git clean -dfx build temp
-
-readme:
-	atf_ci %readme

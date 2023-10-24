@@ -130,7 +130,7 @@ Fault types are defined on the table:
 ```
 inline-command: acr fmdb.alm_code
 fmdb.alm_code  alm_code:TEST-EXER  severity:major  source:UnitTest  summary:"Test exercise"
-report.acr  n_select:1  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+report.acr  n_select:1  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
 ```
 
 This table plays the role of alarm inventory, and alarm severity assignment profile.
@@ -147,7 +147,7 @@ inline-command: acr dmmeta.fconst:fm.Severity.value/%
 dmmeta.fconst  fconst:fm.Severity.value/critical  value:"'0'"  comment:"Service-affecting fault, immediate attention"
 dmmeta.fconst  fconst:fm.Severity.value/major     value:"'1'"  comment:"Service-affecting fault, urgent attention"
 dmmeta.fconst  fconst:fm.Severity.value/minor     value:"'2'"  comment:"Non-service affecting fault, need attention"
-report.acr  n_select:3  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+report.acr  n_select:3  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
 ```
 
 Source identifies the fragment of source code where this alarm code is managed (raised,cleared).
@@ -158,7 +158,7 @@ Source is defined as follows:
 ```
 inline-command: acr fmdb.alm_source
 fmdb.alm_source  alm_source:UnitTest  comment:"Unit test"
-report.acr  n_select:1  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+report.acr  n_select:1  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
 ```
 
 #### Alarm Instance
@@ -184,7 +184,7 @@ dmmeta.field  field:fmdb.Alarm.objtype_summary  arg:fm.Summary        reftype:Va
 dmmeta.field  field:fmdb.Alarm.summary          arg:fm.Summary        reftype:Val  dflt:""  comment:"Alarm summary from inventory"
 dmmeta.field  field:fmdb.Alarm.description      arg:fm.Description    reftype:Val  dflt:""  comment:"Alarm message from object"
 dmmeta.field  field:fmdb.Alarm.source           arg:fm.Source         reftype:Val  dflt:""  comment:"Subsystem where alarm has been detected"
-report.acr  n_select:17  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+report.acr  n_select:17  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
 ```
 
 Primary key `alarm` has  the following format: `CODE@OBJECT`.
@@ -197,7 +197,7 @@ Various objects may have same addressing, thus object type qualifies instance, a
 ```
 inline-command: acr fmdb.alm_objtype
 fmdb.alm_objtype  alm_objtype:SYS  summary:System
-report.acr  n_select:1  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+report.acr  n_select:1  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
 ```
 
 Note that `code`, `object`, `objtype`, `objinst`, `objprefix` are substrings of `alarm` primary key.
@@ -210,7 +210,6 @@ Lib_fm library facilitates working with alarms.
 
 ```
     void FmInit(
-        algo::strptr in,            // ssim data directory
         algo::strptr object_prefix  // object prefix
     );
 ```

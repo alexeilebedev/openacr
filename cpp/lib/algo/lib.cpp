@@ -40,7 +40,7 @@
 // -----------------------------------------------------------------------------
 
 // Execute unix command and return output.
-tempstr algo::SysEval(strptr cmd, FailokQ fail_ok, int max_output, bool echo) {
+tempstr algo::SysEval(strptr cmd, FailokQ fail_ok, int max_output, bool echo DFLTVAL(false)) {
     tempstr result;
     bool ok = true;
     int start_code=0;
@@ -101,8 +101,11 @@ tempstr algo::SysEval(strptr cmd, FailokQ fail_ok, int max_output, bool echo) {
 // -----------------------------------------------------------------------------
 
 // Execute unix command and return status code.
-// Exception is thrown if FAIL_OK is false, and subprocess does not exit normally.
-int algo::SysCmd(strptr cmd, FailokQ fail_ok, DryrunQ dry_run, EchoQ echo) {
+// Execute command using system().
+// fail_ok: if true, command must succeed or throw exception
+// dry_run: if true, do not run command, just print
+// echo: print command. command alwyas echoed if verbose mode is on
+int algo::SysCmd(strptr cmd, FailokQ fail_ok DFLTVAL(FailokQ(true)), DryrunQ dry_run DFLTVAL(DryrunQ(false)), EchoQ echo DFLTVAL(EchoQ(false))) {
     int ret = 0;
     if (dry_run) {
         prlog("dry_run: "<<cmd);// make it clear that the command is not executing
@@ -176,7 +179,7 @@ void algo_lib::fd_Cleanup(algo_lib::FFildes &fildes) {
     }
 }
 
-bool algo::Tuple_EqualQ(Tuple &t1, Tuple &t2, bool ignore_comment) {
+bool algo::Tuple_EqualQ(Tuple &t1, Tuple &t2) {
     bool ret = true;
     if (!(t1.head == t2.head)) {
         ret = false;
@@ -184,9 +187,6 @@ bool algo::Tuple_EqualQ(Tuple &t1, Tuple &t2, bool ignore_comment) {
         ret = false;
     } else {
         ind_beg(Tuple_attrs_curs,attr1,t1) {
-            if (ignore_comment && attr1.name == "comment") {
-                continue;
-            }
             Attr &attr2 = attrs_qFind(t2, ind_curs(attr1).index);
             if (!(attr1 == attr2)) {
                 ret = false;
@@ -197,7 +197,7 @@ bool algo::Tuple_EqualQ(Tuple &t1, Tuple &t2, bool ignore_comment) {
     return ret;
 }
 
-Attr* algo::attr_Find(Tuple &tuple, strptr name, int occurence) {
+Attr* algo::attr_Find(Tuple &tuple, strptr name, int occurence DFLTVAL(0)) {
     Attr *ret = NULL;
     frep_(i,attrs_N(tuple)) {
         if (attrs_qFind(tuple,i).name == name) {
@@ -211,7 +211,7 @@ Attr* algo::attr_Find(Tuple &tuple, strptr name, int occurence) {
     return ret;
 }
 
-strptr algo::attr_GetString(Tuple &T, strptr name, strptr dflt) {
+strptr algo::attr_GetString(Tuple &T, strptr name, strptr dflt DFLTVAL(strptr())) {
     Attr *attr = attr_Find(T, name, 0);
     return attr ? strptr(attr->value) : dflt;
 }
@@ -375,7 +375,7 @@ static void SignalHandler(int sig) {
     algo_lib::_db.limit = algo_lib::_db.clock; // interrupt
 }
 
-void algo::SetupExitSignals(bool sigint) {
+void algo::SetupExitSignals(bool sigint DFLTVAL(true)) {
     struct sigaction sigact;
     sigact.sa_handler = SignalHandler;
     sigemptyset(&sigact.sa_mask);
@@ -590,73 +590,6 @@ bool algo_lib::IpmaskValidQ(const strptr ipmask) {
         valid  = valid && (mask_len == 32 || (ip.ipv4 << mask_len == 0));
     }
     return valid;
-}
-
-// -----------------------------------------------------------------------------
-
-// Read tuples from specified file descriptor.
-// FNAME is used to report errors
-// LoadFunc is called for each line.
-// if STRICT is specified, function exits on first error.
-// Return success status
-// This function is used by amc for process startup
-// If this function is passed a non-blocking file descriptor,
-// it is temporarily changed to a blocking one.
-bool algo_lib::LoadTuplesFd(algo::Fildes fd, strptr fname, bool (*LoadFunc)(strptr), bool strict) {
-    bool retval = true;
-    ind_beg(algo::FileLine_curs,line,fd) {
-        bool ok = LoadFunc(line);
-        if (!ok) {
-            algo_lib::_db.errtext << eol << fname << ":" << (ind_curs(line).i+1) << ": " << line << eol;
-            retval = false;
-            if (strict) {
-                break;
-            }
-        }
-    }ind_end;
-    return retval;
-}
-
-// -----------------------------------------------------------------------------
-
-// Like LoadTuplesFd but load from specified file
-bool algo_lib::LoadTuplesFile(strptr fname, bool (*LoadFunc)(strptr), bool strict) {
-    algo_lib::FFildes fildes;
-    fildes.fd = OpenRead(fname);
-    bool ret = LoadTuplesFd(fildes.fd, fname, LoadFunc, strict);
-    return ret;
-}
-
-// -----------------------------------------------------------------------------
-
-// root = "-" -- read tuples from stdin
-// root = filename -- read tuples from filename, return success code
-// root = directory -- load ssimfiles specified with SSIMFILES from dataset, return success code
-// all tuples are passed to LoadFunc.
-// if STRICT is specified, function exits on first error.
-// Otherwise, it runs until the end.
-// This function is used by amc for process startup
-bool algo_lib::DoLoadTuples(strptr root, bool (*LoadFunc)(strptr), const char **ssimfiles, bool strict) {
-    bool retval = true;
-    if (FileQ(root)) {
-        retval = algo_lib::LoadTuplesFile(root, LoadFunc, strict);
-    } else if (root == "-") {
-        retval = LoadTuplesFd(algo::Fildes(0), "-", LoadFunc, strict);
-    } else if (DirectoryQ(root)) {
-        for (int i=0; ssimfiles && ssimfiles[i]; i++) {
-            if (!algo_lib::LoadTuplesFile(SsimFname(root, ssimfiles[i]), LoadFunc, strict)) {
-                retval=false;
-                if (strict) {
-                    break;
-                }
-            }
-        }
-    } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
-        retval = false;
-    }
-    return retval;
 }
 
 // -----------------------------------------------------------------------------

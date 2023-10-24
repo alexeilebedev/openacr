@@ -23,7 +23,7 @@
 //
 
 #include "include/atf_unit.h"
-#include "include/lib/lib_json.h"
+#include "include/lib_json.h"
 
 // auxiliary function to invoke parser
 // one by one char or whole buffer

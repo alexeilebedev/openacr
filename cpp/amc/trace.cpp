@@ -53,7 +53,7 @@ void amc::gen_trace() {
                                            , true // genop
                                            , algo::Comment()));
         amc::pack_InsertMaybe(dmmeta::Pack(ctype_key, algo::Comment()));
-        amc::FField &field=*InsField(dmmeta::Field(field_key, ctype_key, dmmeta_Reftype_reftype_Val, dmmeta::CppExpr(), algo::Comment()));
+        amc::FField &field=*InsField(dmmeta::Field(field_key, ctype_key, dmmeta_Reftype_reftype_Val, algo::CppExpr(), algo::Comment()));
         field.reflect=true;// look it up
     }ind_end;
 

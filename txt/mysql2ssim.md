@@ -18,9 +18,17 @@ Usage: mysql2ssim [-url:]<string> [[-tables:]<string>] [options]
     -baddbok                        Don't claim if bad database
     -verbose        int             Verbosity level (0..255); alias -v; cumulative
     -debug          int             Debug level (0..255); alias -d; cumulative
-    -help                           Print help an exit; alias -h
+    -help                           Print help and exit; alias -h
     -version                        Print version and exit
     -signature                      Show signatures and exit; alias -sig
 
+```
+
+### Inputs
+
+`mysql2ssim` takes the following tables on input:
+```
+CTYPE                COMMENT
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
 ```
 

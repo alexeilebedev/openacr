@@ -42,7 +42,7 @@ static void MarkModified(acr::FRun &run, acr::FRec &rec) {
 //   1. Schedule rename of appropriate column in the affected ssimfile
 //   2. Rename acr's field record (update schema)
 static void ScheduleCascadeUpdate(acr::FRec& rec, strptr old_val, strptr new_val) {
-    ind_beg(acr::ctype_c_child_curs,  child, *rec.p_ctype) if (child.c_ssimfile && bool_Update(child.mark_cascupdate,true)) {
+    ind_beg(acr::ctype_c_child_curs, child, *rec.p_ctype) if (child.c_ssimfile) {
         ind_beg(acr::ctype_c_field_curs, childfld, child) {
             if (childfld.p_arg == rec.p_ctype) {
                 acr::FQuery& next  = acr::query_Alloc();
@@ -58,8 +58,10 @@ static void ScheduleCascadeUpdate(acr::FRec& rec, strptr old_val, strptr new_val
     }ind_end;
 
     if (rec.p_ctype->ctype == "dmmeta.Field") {
+        acr::FField *oldfield = acr::ind_field_Find(old_val);
         acr::FCtype *ctype = acr::ind_ctype_Find(StripExt(new_val));
-        if (ctype && ctype->c_ssimfile) {
+        // substr fields don't have any presence in ssimfiles so there is nothing to rename
+        if ((!oldfield || !oldfield->isfldfunc) && ctype && ctype->c_ssimfile) {
             acr::FQuery& next  = acr::query_Alloc();
             Regx_ReadLiteral(next.ssimfile, ctype->c_ssimfile->ssimfile);
             next.queryop      = acr_Queryop_value_rename_attr;
@@ -128,22 +130,21 @@ static bool VisitField(acr::FRun &run, acr::FQuery& query, acr::FRec& rec, acr::
         switch(value_GetEnum(query.queryop)) {
         case acr_Queryop_value_del_attr: {
             if (evalattr.attr) {
-                acr::_db.report.n_update++;
                 MarkModified(run,rec);
                 attrs_Remove(rec.tuple, attrs_rowid_Get(rec.tuple, *evalattr.attr));
             }
         } break;
 
         case acr_Queryop_value_rename_attr: {
-            if (evalattr.attr) {
-                acr::_db.report.n_update++;
+            // evalattr for a substr field will find the field that encloses the substring
+            // expression. when renaming the attribute, there is nothing to do
+            if (evalattr.attr && evalattr.attr->name == name_Get(field)) {
                 MarkModified(run,rec);
                 evalattr.attr->name = query.new_val;
             }
         } break;
 
         case acr_Queryop_value_set_attr: {
-            acr::_db.report.n_update++;
             if (evalattr.attr) {
                 MarkModified(run,rec);
                 tempstr newval;
@@ -172,11 +173,13 @@ static bool VisitField(acr::FRun &run, acr::FQuery& query, acr::FRec& rec, acr::
 
 // -----------------------------------------------------------------------------
 
-// extend front down
-// if the select record is a pkey, and it is being referenced by another pkey,
-// we can select the source record with a direct lookup.
-// if the reference is from a non-indexed column, we must scan the ssimfile.
-// we currently always scan the entrie ssimfile.
+// extend selected front down
+// the search starts with all selected records, where we clear the visit flag
+// we then create a list RUN.C_CHILD of all potential ctypes that might reference these selected records,
+// we then scan records for these ctypes, and add new records to the selected list
+// The function returns the number of records added.
+// The function performs one iteration of the downward transitive closure. Looping until
+// SelectDown returns 0 finds all downward references.
 static int SelectDown(acr::FRun &run, acr::FQuery &query) {
     int nmatch=0;
     // find the set of all ssimfiles which may reference records selected so far.
@@ -196,9 +199,7 @@ static int SelectDown(acr::FRun &run, acr::FQuery &query) {
     // walk all records of each ssimfile
     // add records which reference one of selected records
     ind_beg(acr::run_c_child_curs, child, run) {
-        if (child.c_ssimfile && !child.c_ssimfile->c_file) {
-            acr::LoadSsimfile(*child.c_ssimfile);
-        }
+        LoadRecords(child);
         ind_beg(acr::ctype_zd_trec_curs, rec, child) {
             ind_beg(acr::ctype_c_field_curs,  field, child) if (field.p_arg->c_ssimfile) {
                 tempstr val(EvalAttr(rec.tuple, field));
@@ -237,11 +238,7 @@ static void SelectUp(acr::FRun &, acr::FQuery &query) {
     ind_beg(acr::_db_zd_all_selrec_curs, rec,acr::_db) {
         if (rec.seldist >= 0 && rec.seldist < query.nup) {
             ind_beg(acr::ctype_c_field_curs,  field, *rec.p_ctype) if (field.p_arg->c_ssimfile) {
-                // read ssimfile if necessary
-                acr::FSsimfile *rel = field.p_arg->c_ssimfile;
-                if (!rel->c_file) {
-                    acr::LoadSsimfile(*rel);
-                }
+                LoadRecords(*field.p_arg);
                 // look up item in the parent record.
                 // if found -- add that record to the match set
                 tempstr val(EvalAttr(rec.tuple, field));
@@ -334,18 +331,6 @@ static void SelectCtypes(acr::FRun &run, acr::FQuery &query) {
 
 // -----------------------------------------------------------------------------
 
-static void LoadSsimfiles(acr::FRun &run) {
-    if (!acr::FileInputQ()) {
-        ind_beg(acr::run_c_ctype_curs, ctype, run) {
-            if (ctype.c_ssimfile && !ctype.c_ssimfile->c_file) {
-                acr::LoadSsimfile(*ctype.c_ssimfile);
-            }
-        }ind_end;
-    }
-}
-
-// -----------------------------------------------------------------------------
-
 static void SelectUpDown(acr::FRun &run, acr::FQuery &query) {
     if (query.nup > 0) {
         SelectUp(run,query);
@@ -357,17 +342,6 @@ static void SelectUpDown(acr::FRun &run, acr::FQuery &query) {
         if (nmatch==0) {
             break;
         }
-    }
-}
-
-// -----------------------------------------------------------------------------
-
-static void MarkDelete(acr::FQuery &query) {
-    if (query.delrec) {
-        ind_beg(acr::_db_zd_all_selrec_curs, rec,acr::_db) {
-            rec.del = true;
-            acr::_db.report.n_delete++;
-        }ind_end;
     }
 }
 
@@ -393,10 +367,11 @@ void acr::RunQuery(acr::FQuery &query) {
         // compute list of potential ssimfiles that contain matches
         SelectCtypes(run,query);
         // load ssimfiles (if necessary)
-        LoadSsimfiles(run);
+        ind_beg(acr::run_c_ctype_curs, ctype, run) {
+            LoadRecords(ctype);
+        }ind_end;
         VisitRecords(run,query);
         SelectUpDown(run,query);
-        MarkDelete(query);
         c_child_RemoveAll(run);
         if (query.selmeta) {
             SelectMeta();

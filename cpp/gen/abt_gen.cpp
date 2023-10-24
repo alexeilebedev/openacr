@@ -39,8 +39,6 @@
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
@@ -80,7 +78,7 @@ const char *abt_help =
 "    -jcdb       string  \"\"      Create JSON compilation database in specified file\n"
 "    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      int             Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help an exit; alias -h\n"
+"    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
 ;
@@ -1415,7 +1413,7 @@ void abt::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(abt::LoadTuplesMaybe(cmd.in)
+    vrfy(abt::LoadTuplesMaybe(cmd.in,true)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
@@ -1553,7 +1551,6 @@ bool abt::InsertStrptrMaybe(algo::strptr str) {
             break;
         }
         default:
-        retval = algo_lib::InsertStrptrMaybe(str);
         break;
     } //switch
     if (!retval) {
@@ -1564,23 +1561,72 @@ bool abt::InsertStrptrMaybe(algo::strptr str) {
 
 // --- abt.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool abt::LoadTuplesMaybe(algo::strptr root) {
+bool abt::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    static const char *ssimfiles[] = {
-        "dev.arch", "dev.cfg", "dev.compiler", "dmmeta.ns"
-        , "dev.syslib", "dev.target", "dev.targdep", "dev.targsrc"
-        , "dev.targsyslib", "dev.tool_opt", "dev.uname"
-        , NULL};
-        retval = algo_lib::DoLoadTuples(root, abt::InsertStrptrMaybe, ssimfiles, true);
-        return retval;
+    if (FileQ(root)) {
+        retval = abt::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = abt::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.arch"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.cfg"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.compiler"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.include"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ns"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.syscmd"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.syscmddep"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.syslib"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.targdep"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.targsyslib"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.tool_opt"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.uname"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
+
+// --- abt.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool abt::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- abt.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool abt::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+        }
+        retval = retval && abt::InsertStrptrMaybe(line);
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
+    return retval;
 }
 
 // --- abt.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool abt::LoadSsimfileMaybe(algo::strptr fname) {
+bool abt::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, abt::InsertStrptrMaybe, true);
+        retval = abt::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }
@@ -6137,6 +6183,10 @@ bool abt::value_SetStrptrMaybe(abt::TableId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"et",2)==0) { value_SetEnum(parent,abt_TableId_dev_Target); ret = true; break; }
                     break;
                 }
+                case LE_STR8('d','e','v','.','s','y','s','c'): {
+                    if (memcmp(rhs.elems+8,"md",2)==0) { value_SetEnum(parent,abt_TableId_dev_syscmd); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','e','v','.','s','y','s','l'): {
                     if (memcmp(rhs.elems+8,"ib",2)==0) { value_SetEnum(parent,abt_TableId_dev_syslib); ret = true; break; }
                     break;
@@ -6161,6 +6211,10 @@ bool abt::value_SetStrptrMaybe(abt::TableId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('d','e','v','.','T','o','o','l'): {
                     if (memcmp(rhs.elems+8,"Opt",3)==0) { value_SetEnum(parent,abt_TableId_dev_ToolOpt); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','i','n','c','l'): {
+                    if (memcmp(rhs.elems+8,"ude",3)==0) { value_SetEnum(parent,abt_TableId_dev_include); ret = true; break; }
                     break;
                 }
                 case LE_STR8('d','e','v','.','t','a','r','g'): {
@@ -6192,6 +6246,10 @@ bool abt::value_SetStrptrMaybe(abt::TableId& parent, algo::strptr rhs) {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','e','v','.','S','y','s','c'): {
                     if (memcmp(rhs.elems+8,"mddep",5)==0) { value_SetEnum(parent,abt_TableId_dev_Syscmddep); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','s','y','s','c'): {
+                    if (memcmp(rhs.elems+8,"mddep",5)==0) { value_SetEnum(parent,abt_TableId_dev_syscmddep); ret = true; break; }
                     break;
                 }
             }

@@ -34,9 +34,8 @@ namespace lib_fm { // update-hdr
     //
 
     // Initialize FM library
-    // in - directory to load data
-    // prefix - automatically add prefix to object instance ID, current service name
-    void FmInit(algo::strptr in, algo::strptr object_prefix);
+    // prefix - automatically add prefix to object instance ID
+    void FmInit(algo::strptr object_prefix);
 
     // Compose log file name from file_prefix and date:
     // file_prefix%Y-%b-%d.ssim

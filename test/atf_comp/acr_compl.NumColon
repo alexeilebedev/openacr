@@ -1,1 +1,0 @@
-# atf_comp -report:N -printinput acr_compl.NumColon | acr_compl -line:"atf_cmdline -num:" | cat

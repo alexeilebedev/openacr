@@ -190,13 +190,13 @@ void atf_amc::amctest_PerfThashRemove() {
         ind_thash_elem_GetOrCreate(i);
     }
     u64 seq(0);
-    u64 s_begin = get_cycles();
+    u64 s_begin = algo::get_cycles();
     frep_(i,N) {
         ind_thash_elem_Remove(thash_elem_qFind(seq));
         seq = (seq*Multiplier+1)%Modulo;
     }
     vrfyeq_(ind_thash_elem_N(),0);
-    u64 s_end = get_cycles();
+    u64 s_end = algo::get_cycles();
     double sllist_cycles_per_elem = double(s_end-s_begin)/N;
 
     prlog("atf_amc.PerfThashRemove"

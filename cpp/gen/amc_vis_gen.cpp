@@ -33,8 +33,6 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
@@ -60,7 +58,7 @@ const char *amc_vis_help =
 "    -render             Y       Produce an ascii drawing\n"
 "    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      int             Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help an exit; alias -h\n"
+"    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
 ;
@@ -672,7 +670,7 @@ void amc_vis::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(amc_vis::LoadTuplesMaybe(cmd.in)
+    vrfy(amc_vis::LoadTuplesMaybe(cmd.in,true)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
@@ -709,7 +707,7 @@ static void amc_vis::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc_vis.Input'  signature:'76002ceb41bd908a4029a5ae4341364b2386489a'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc_vis.Input'  signature:'7eab961558532767facad7b92ecfb38930c122a0'");
 }
 
 // --- amc_vis.FDb._db.StaticCheck
@@ -750,7 +748,6 @@ bool amc_vis::InsertStrptrMaybe(algo::strptr str) {
             break;
         }
         default:
-        retval = algo_lib::InsertStrptrMaybe(str);
         break;
     } //switch
     if (!retval) {
@@ -761,22 +758,62 @@ bool amc_vis::InsertStrptrMaybe(algo::strptr str) {
 
 // --- amc_vis.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool amc_vis::LoadTuplesMaybe(algo::strptr root) {
+bool amc_vis::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    static const char *ssimfiles[] = {
-        "dmmeta.ctype", "dmmeta.reftype", "dmmeta.field", "dmmeta.finput"
+    if (FileQ(root)) {
+        retval = amc_vis::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = amc_vis::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && amc_vis::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && amc_vis::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
+        retval = retval && amc_vis::LoadTuplesFile(algo::SsimFname(root,"dmmeta.reftype"),recursive);
+        retval = retval && amc_vis::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
+        retval = retval && amc_vis::LoadTuplesFile(algo::SsimFname(root,"dmmeta.finput"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
 
-        , NULL};
-        retval = algo_lib::DoLoadTuples(root, amc_vis::InsertStrptrMaybe, ssimfiles, true);
-        return retval;
+// --- amc_vis.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool amc_vis::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- amc_vis.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool amc_vis::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+        }
+        retval = retval && amc_vis::InsertStrptrMaybe(line);
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
+    return retval;
 }
 
 // --- amc_vis.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool amc_vis::LoadSsimfileMaybe(algo::strptr fname) {
+bool amc_vis::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, amc_vis::InsertStrptrMaybe, true);
+        retval = amc_vis::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }

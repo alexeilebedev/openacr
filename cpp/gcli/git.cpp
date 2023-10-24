@@ -72,13 +72,13 @@ void gcli::CheckGitBranchExists(strptr issue_key){
 }
 // -----------------------------------------------------------------------------
 void gcli::GitCheckoutBranch(strptr target_branch, strptr source_branch){
-    SysCmd(GitCmd(tempstr()<<"fetch "<<name_Get(gcli::_db.grepo_sel)<<" "<<source_branch)
+    SysCmd(GitCmd(tempstr()<<"fetch "<<gcli::_db.grepo_sel.name<<" "<<source_branch)
            , FailokQ(false), DryrunQ(gcli::_db.cmdline.dry_run), EchoQ(algo_lib::_db.cmdline.verbose));
     tempstr co_cmd;
     co_cmd << " checkout --track -b "
            << target_branch
            << " "
-           << name_Get(gcli::_db.grepo_sel)<<"/"<<source_branch;
+           << gcli::_db.grepo_sel.name<<"/"<<source_branch;
     SysCmd(GitCmd(co_cmd), FailokQ(false), DryrunQ(gcli::_db.cmdline.dry_run), EchoQ(algo_lib::_db.cmdline.verbose));
 }
 // -----------------------------------------------------------------------------
@@ -182,7 +182,7 @@ static void SetGitRemote(){
         Set(R,"$sshport",grepogitport.port);
 
         // Find a name like id_rsa
-        tempstr repo(name_Get(grepo));
+        tempstr repo(grepo.name);
         Set(R,"$repo",repo);
         Set(R,"$sshid","id_rsa");
         Set(R,"$sshfile","");
@@ -217,7 +217,7 @@ void gcli::gtblact_gitconfig_list(gcli::FGtblact&){
     algo::ListSep ls("|");
     algo_lib::Replscope R;
     ind_beg(gcli::_db_grepo_curs,grepo,gcli::_db){
-        tempstr repo(name_Get(grepo));
+        tempstr repo(grepo.name);
         Set(R,"$repo",repo);
         grep_cmd<<ls<<Subst(R,"^$repo\t");
     }ind_end;
@@ -231,8 +231,7 @@ void gcli::gtblact_gitconfig_list(gcli::FGtblact&){
     }ind_end;
 }
 // -----------------------------------------------------------------------------
-void gcli::gtblact_gitconfig_create(gcli::FGtblact& gtblact){
-    (void)gtblact;
+void gcli::gtblact_gitconfig_create(gcli::FGtblact &gtblact){
     SetGitRemote();
     // Execute git remote settings
     ind_beg(gcli::_db_grepo_curs,grepo,gcli::_db){

@@ -1,1 +1,0 @@
-# atf_comp -report:N -printinput acr_compl.A03b | acr_compl -line:'atf_cmdline -- -STR -1 ' | cat

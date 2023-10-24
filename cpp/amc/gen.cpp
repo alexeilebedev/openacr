@@ -761,7 +761,7 @@ void amc::gen_gconst() {
                 // will sanitize the name when creating a C++ identifier
                 if (attrs_N(tuple) > 0) {
                     fconst.fconst = tempstr() << gconst.field << "/" << name;// shouldn't this be VALUE instead???
-                    fconst.value = dmmeta::CppExpr(value);
+                    fconst.value = algo::CppExpr(value);
                     fconst.comment.value = attr_GetString(tuple, "comment");// import comment, if any
                     amc::fconst_InsertMaybe(fconst);
                     nrec++;
@@ -788,7 +788,7 @@ void amc::gen_bitfldenum() {
             fconst.fconst = tempstr() << srcfield.field << "/" << name_Get(*bitfld.p_field);
             fconst.comment = algo::Comment(bitfld.field);
             // cpp_type has not yet defined, assume cpp_type = ctype
-            fconst.value = dmmeta::CppExpr(tempstr() << "("<< srcfield.p_arg->ctype << "(1)<<" << bitfld.offset << ")");
+            fconst.value = algo::CppExpr(tempstr() << "("<< srcfield.p_arg->ctype << "(1)<<" << bitfld.offset << ")");
             amc::fconst_InsertMaybe(fconst);
         }ind_end;
     }ind_end;
@@ -912,11 +912,11 @@ void amc::gen_newfield_count() {
         if (field.reftype == dmmeta_Reftype_reftype_Count) {
             Field_AddChild(field, dmmeta::Field(tempstr() << field.field << "_n"
                                                 , "u32", dmmeta_Reftype_reftype_Val
-                                                , dmmeta::CppExpr()
+                                                , algo::CppExpr()
                                                 , algo::Comment("Number of elements in the set")));// parent: n
             Field_AddChild(field, dmmeta::Field(tempstr() << field.arg << "." << name_Get(field) << "_value"
                                                 , "bool", dmmeta_Reftype_reftype_Val
-                                                , dmmeta::CppExpr()
+                                                , algo::CppExpr()
                                                 , algo::Comment("Value contributed to the sum")));// child: value
         }
     }ind_end;

@@ -1,2 +1,1 @@
-# atf_comp -report:N -printinput acr_compl.FlagSpace | acr_compl -line:"atf_cmdline -flag " | cat
 -astr:

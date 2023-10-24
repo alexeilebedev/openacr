@@ -25,6 +25,20 @@
 
 #pragma once
 
+// Usage:
+// In C++ files (where default arguments are not allowed)
+//    void F(int blah DFLTVAL(0))
+// In headers, this is translated to
+//    void F(int blah = 0)
+#define DFLTVAL(X)
+
+// Usage:
+// In C++ files (where function attrs are not allowed):
+//    void F() FUNCATTR(__attribute__((nonnull)))
+// In headers:
+//    void F() __attribute__((nonnull))
+#define FUNCATTR(X)
+
 #define CACHE_LINE                  64
 
 #define SQL_QUOTE                    "\""
@@ -188,17 +202,6 @@
 #define verblog2(x)           { if(UNLIKELY(algo_lib::_db.cmdline.verbose>1)) { log_msg_(algo_lib_logcat_stderr,x,true); }}
 #define verblog3(x)           { if(UNLIKELY(algo_lib::_db.cmdline.verbose>2)) { log_msg_(algo_lib_logcat_stderr,x,true); }}
 #define dbglog(x)             { if(UNLIKELY(algo_lib::_db.cmdline.debug)) { log_msg_(algo_lib_logcat_stderr,x,true); }}
-
-#define bitset_beg(INDTYPE,IND,SET) {                                   \
-    algo::aryptr<u64> IND##_temp(ary_Getary(SET));                      \
-    for (i32 IND##_i##i=0; IND##_i##i < IND##_temp.n_elems; IND##_i##i++) { \
-    u64 IND##_i = IND##_temp.elems[IND##_i##i];                         \
-    while (IND##_i) {                                                   \
-    u64 IND##_j = algo::u64_BitScanForward(IND##_i);                    \
-    IND##_i &= ~(u64(1)<<IND##_j);                                      \
-    INDTYPE IND = INDTYPE(ind_curs(IND##_i) * 64 + IND##_j);
-
-#define bitset_end }}}
 
 #ifdef constant
 #undef constant

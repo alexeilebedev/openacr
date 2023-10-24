@@ -51,10 +51,13 @@ enum abt_TableIdEnum {                   // abt.TableId.value
     ,abt_TableId_dev_Compiler     = 2    // dev.Compiler -> abt.FCompiler
     ,abt_TableId_dev_compiler     = 2    // dev.compiler -> abt.FCompiler
     ,abt_TableId_dev_Include      = 3    // dev.Include -> abt.FInclude
+    ,abt_TableId_dev_include      = 3    // dev.include -> abt.FInclude
     ,abt_TableId_dmmeta_Ns        = 4    // dmmeta.Ns -> abt.FNs
     ,abt_TableId_dmmeta_ns        = 4    // dmmeta.ns -> abt.FNs
     ,abt_TableId_dev_Syscmd       = 5    // dev.Syscmd -> abt.FSyscmd
+    ,abt_TableId_dev_syscmd       = 5    // dev.syscmd -> abt.FSyscmd
     ,abt_TableId_dev_Syscmddep    = 6    // dev.Syscmddep -> abt.FSyscmddep
+    ,abt_TableId_dev_syscmddep    = 6    // dev.syscmddep -> abt.FSyscmddep
     ,abt_TableId_dev_Syslib       = 7    // dev.Syslib -> abt.FSyslib
     ,abt_TableId_dev_syslib       = 7    // dev.syslib -> abt.FSyslib
     ,abt_TableId_dev_Targdep      = 8    // dev.Targdep -> abt.FTargdep
@@ -71,7 +74,7 @@ enum abt_TableIdEnum {                   // abt.TableId.value
     ,abt_TableId_dev_uname        = 13   // dev.uname -> abt.FUname
 };
 
-enum { abt_TableIdEnum_N = 25 };
+enum { abt_TableIdEnum_N = 28 };
 
 namespace abt { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -603,9 +606,13 @@ void                 StaticCheck();
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
-bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
+bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file.
+bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file descriptor.
+bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
-bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error

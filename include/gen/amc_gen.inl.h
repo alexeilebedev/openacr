@@ -2937,7 +2937,7 @@ inline bool amc::reftype_EmptyQ() {
 
 // --- amc.FDb.reftype.Find
 // Look up row by row id. Return NULL if out of range
-inline amc::FReftype* amc::reftype_Find(dmmeta::ReftypeId t) {
+inline amc::FReftype* amc::reftype_Find(i32 t) {
     amc::FReftype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.reftype_n))) {
         u64 x = t + 1;
@@ -2952,7 +2952,7 @@ inline amc::FReftype* amc::reftype_Find(dmmeta::ReftypeId t) {
 // --- amc.FDb.reftype.Last
 // Return pointer to last element of array, or NULL if array is empty
 inline amc::FReftype* amc::reftype_Last() {
-    return reftype_Find(dmmeta::ReftypeId(_db.reftype_n-1));
+    return reftype_Find(i32(_db.reftype_n-1));
 }
 
 // --- amc.FDb.reftype.N
@@ -2963,7 +2963,7 @@ inline i32 amc::reftype_N() {
 
 // --- amc.FDb.reftype.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline amc::FReftype& amc::reftype_qFind(dmmeta::ReftypeId t) {
+inline amc::FReftype& amc::reftype_qFind(i32 t) {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -7941,7 +7941,7 @@ inline void amc::_db_reftype_curs_Next(_db_reftype_curs &curs) {
 // --- amc.FDb.reftype_curs.Access
 // item access
 inline amc::FReftype& amc::_db_reftype_curs_Access(_db_reftype_curs &curs) {
-    return reftype_qFind(dmmeta::ReftypeId(curs.index));
+    return reftype_qFind(i32(curs.index));
 }
 
 // --- amc.FDb.cpptype_curs.Reset
@@ -10568,7 +10568,7 @@ inline amc::FFalias::~FFalias() {
 // --- amc.FFalias..Init
 // Set all fields to initial values.
 inline void amc::FFalias_Init(amc::FFalias& falias) {
-    falias.p_basefield = NULL;
+    falias.p_srcfield = NULL;
 }
 inline amc::FFbase::FFbase() {
     amc::FFbase_Init(*this);
@@ -13487,6 +13487,42 @@ inline void amc::c_nscpp_Remove(amc::FNs& ns, amc::FNscpp& row) {
     }
 }
 
+// --- amc.FNs.c_ssimfile.EmptyQ
+// Return true if index is empty
+inline bool amc::c_ssimfile_EmptyQ(amc::FNs& ns) {
+    return ns.c_ssimfile_n == 0;
+}
+
+// --- amc.FNs.c_ssimfile.Find
+// Look up row by row id. Return NULL if out of range
+inline amc::FSsimfile* amc::c_ssimfile_Find(amc::FNs& ns, u32 t) {
+    amc::FSsimfile *retval = NULL;
+    u64 idx = t;
+    u64 lim = ns.c_ssimfile_n;
+    if (idx < lim) {
+        retval = ns.c_ssimfile_elems[idx];
+    }
+    return retval;
+}
+
+// --- amc.FNs.c_ssimfile.Getary
+// Return array of pointers
+inline algo::aryptr<amc::FSsimfile*> amc::c_ssimfile_Getary(amc::FNs& ns) {
+    return algo::aryptr<amc::FSsimfile*>(ns.c_ssimfile_elems, ns.c_ssimfile_n);
+}
+
+// --- amc.FNs.c_ssimfile.N
+// Return number of items in the pointer array
+inline i32 amc::c_ssimfile_N(const amc::FNs& ns) {
+    return ns.c_ssimfile_n;
+}
+
+// --- amc.FNs.c_ssimfile.RemoveAll
+// Empty the index. (The rows are not deleted)
+inline void amc::c_ssimfile_RemoveAll(amc::FNs& ns) {
+    ns.c_ssimfile_n = 0;
+}
+
 // --- amc.FNs.c_ctype_curs.Reset
 inline void amc::ns_c_ctype_curs_Reset(ns_c_ctype_curs &curs, amc::FNs &parent) {
     curs.elems = parent.c_ctype_elems;
@@ -13934,6 +13970,31 @@ inline void amc::ns_c_nsinclude_curs_Next(ns_c_nsinclude_curs &curs) {
 // --- amc.FNs.c_nsinclude_curs.Access
 // item access
 inline amc::FNsinclude& amc::ns_c_nsinclude_curs_Access(ns_c_nsinclude_curs &curs) {
+    return *curs.elems[curs.index];
+}
+
+// --- amc.FNs.c_ssimfile_curs.Reset
+inline void amc::ns_c_ssimfile_curs_Reset(ns_c_ssimfile_curs &curs, amc::FNs &parent) {
+    curs.elems = parent.c_ssimfile_elems;
+    curs.n_elems = parent.c_ssimfile_n;
+    curs.index = 0;
+}
+
+// --- amc.FNs.c_ssimfile_curs.ValidQ
+// cursor points to valid item
+inline bool amc::ns_c_ssimfile_curs_ValidQ(ns_c_ssimfile_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- amc.FNs.c_ssimfile_curs.Next
+// proceed to next item
+inline void amc::ns_c_ssimfile_curs_Next(ns_c_ssimfile_curs &curs) {
+    curs.index++;
+}
+
+// --- amc.FNs.c_ssimfile_curs.Access
+// item access
+inline amc::FSsimfile& amc::ns_c_ssimfile_curs_Access(ns_c_ssimfile_curs &curs) {
     return *curs.elems[curs.index];
 }
 inline amc::FNscpp::FNscpp() {
@@ -14589,6 +14650,38 @@ inline amc::Genpnew::Genpnew() {
     amc::Genpnew_Init(*this);
 }
 
+inline amc::Pnewtype::Pnewtype(u8                             in_value)
+    : value(in_value)
+{
+}
+inline amc::Pnewtype::Pnewtype(amc_PnewtypeEnum arg) { this->value = u8(arg); }
+inline amc::Pnewtype::Pnewtype() {
+    amc::Pnewtype_Init(*this);
+}
+
+
+// --- amc.Pnewtype.value.GetEnum
+// Get value of field as enum type
+inline amc_PnewtypeEnum amc::value_GetEnum(const amc::Pnewtype& parent) {
+    return amc_PnewtypeEnum(parent.value);
+}
+
+// --- amc.Pnewtype.value.SetEnum
+// Set value of field from enum type.
+inline void amc::value_SetEnum(amc::Pnewtype& parent, amc_PnewtypeEnum rhs) {
+    parent.value = u8(rhs);
+}
+
+// --- amc.Pnewtype.value.Cast
+inline amc::Pnewtype::operator amc_PnewtypeEnum () const {
+    return amc_PnewtypeEnum((*this).value);
+}
+
+// --- amc.Pnewtype..Init
+// Set all fields to initial values.
+inline void amc::Pnewtype_Init(amc::Pnewtype& parent) {
+    parent.value = u8(0);
+}
 inline amc::TableId::TableId(i32                            in_value)
     : value(in_value)
 {
@@ -14639,6 +14732,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const amc::trace &ro
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const amc::FieldId &row) {// cfmt:amc.FieldId.String
     amc::FieldId_Print(const_cast<amc::FieldId&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const amc::Pnewtype &row) {// cfmt:amc.Pnewtype.String
+    amc::Pnewtype_Print(const_cast<amc::Pnewtype&>(row), str);
     return str;
 }
 

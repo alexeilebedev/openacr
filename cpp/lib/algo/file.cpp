@@ -229,7 +229,7 @@ strptr algo::GetDirName(strptr a) NOTHROW {
 // if DO_THROW is specified, throw exceptions on failure.
 // If DO_THROW is false, return success value.
 // TODO: test on windows
-bool algo::CreateDirRecurse(strptr s, bool do_throw, u32 mode) {
+bool algo::CreateDirRecurse(strptr s, bool do_throw DFLTVAL(true), u32 mode DFLTVAL(0755)) {
     if (!elems_N(s))           return false;
     if (DirectoryQ(s)) return true;
     strptr base = StripDirComponent(s);
@@ -238,12 +238,6 @@ bool algo::CreateDirRecurse(strptr s, bool do_throw, u32 mode) {
     ok     |= errno == EEXIST;
     errno_vrfy(!do_throw || ok,tempstr()<< "create dir ["<<s<<"]");
     return ok;
-}
-
-// Short version of CreateDirRecurse -- throws exception on error,
-// new directory has mode 0755 if created
-bool algo::CreateDirRecurse(strptr f) {
-    return CreateDirRecurse(f, true, 0755);
 }
 
 // -----------------------------------------------------------------------------
@@ -659,7 +653,7 @@ bool algo::TruncateFile(Fildes fd, i64 size) {
 // File is read using a "safe" method of succesively calling read.
 // relying on reported file size or using mmap does not work in all cases
 // Todo: test on windows
-const tempstr algo::FileToString(const strptr& fname, algo::FileFlags flags) {
+const tempstr algo::FileToString(const strptr& fname, algo::FileFlags flags DFLTVAL(algo_FileFlags__throw)) {
     algo_lib::FFildes fd;
     tempstr ret;
     fd.fd = OpenRead(fname,flags);
@@ -687,13 +681,6 @@ const tempstr algo::FileToString(const strptr& fname, algo::FileFlags flags) {
         ret.ch_n = ch_FindFirst(ret,0).beg;
     }
     return ret;
-}
-
-// -----------------------------------------------------------------------------
-
-// Same Short version of FileToString, throw exception on error.
-const tempstr algo::FileToString(const strptr& fname) {
-    return FileToString(fname,algo_FileFlags__throw);
 }
 
 // -----------------------------------------------------------------------------
@@ -730,16 +717,16 @@ static i64 GetMode(char *fname, int dflt) {
 
 // -----------------------------------------------------------------------------
 
-static int CreateReplacementFile(cstring &oldfname, cstring &newfname, int dfltmode) {
+algo::Fildes algo::CreateReplacementFile(cstring &oldfname, cstring &newfname, int dfltmode) {
     ch_RemoveAll(newfname);
     newfname << oldfname << "-XXXXXX";
     mode_t old_mask = umask(033);
-    int fd=mkstemp((char*)Zeroterm(newfname));
+    algo::Fildes fd(mkstemp((char*)Zeroterm(newfname)));
     (void)umask(old_mask);
-    if (fd!=-1) {
+    if (ValidQ(fd)) {
         // mkstemp creates a file with mode 0600 --
         // preserve old file's mode or use 0644
-        (void)fchmod(fd,GetMode((char*)Zeroterm(oldfname),dfltmode));
+        (void)fchmod(fd.value,GetMode((char*)Zeroterm(oldfname),dfltmode));
     }
     return fd;
 }
@@ -768,12 +755,12 @@ bool algo::SafeStringToFile(const strptr& str, const strptr& filename, int dfltm
     if (attempt_write) {
         tempstr oldfile(filename);
         tempstr newfile;
-        int fd = CreateReplacementFile(oldfile,newfile,dfltmode);
-        if (fd==-1) {
+        algo::Fildes fd = CreateReplacementFile(oldfile,newfile,dfltmode);
+        if (!ValidQ(fd)) {
             ok=false;
         } else {
-            ok=WriteFile(algo::Fildes(fd), (u8*)str.elems, str.n_elems);// does not throw
-            (void)close(fd);
+            ok=WriteFile(fd, (u8*)str.elems, str.n_elems);// does not throw
+            (void)close(fd.value);
         }
         if (ok) {
 #ifdef WIN32
@@ -803,7 +790,7 @@ bool algo::SafeStringToFile(const strptr& str, const strptr& filename) {
 // If CHECK_SAME is specified, first compare contents and do not perform a write
 // if the contents are the same.
 // FLAGS may specify algo_FileFlags__throw, in which case an exception is thrown on error
-bool algo::StringToFile(const strptr& str, const strptr& filename, algo::FileFlags flags, bool check_same){
+bool algo::StringToFile(const strptr& str, const strptr& filename, algo::FileFlags flags DFLTVAL(algo_FileFlags__throw), bool check_same DFLTVAL(true)){
     bool dowrite = elems_N(filename)>0;
     if (dowrite && check_same) {
         algo_lib::MmapFile file;
@@ -819,37 +806,18 @@ bool algo::StringToFile(const strptr& str, const strptr& filename, algo::FileFla
     return dowrite;
 }
 
-// Short version of StringToFile: compares file contents before writing,
-// throws exception on error.
-bool algo::StringToFile(const strptr& str, const strptr& filename) {
-    return StringToFile(str,filename,algo_FileFlags__throw,true);
-}
-
-// Short version of StringToFile: compares file contents before writing.
-bool algo::StringToFile(const strptr& str, const strptr& filename, algo::FileFlags flags) {
-    return StringToFile(str,filename,flags,true);
-}
-
 // -----------------------------------------------------------------------------
 
-algo::Fildes algo::OpenWrite(const strptr& filename, algo::FileFlags flags) {
+algo::Fildes algo::OpenWrite(const strptr& filename, algo::FileFlags flags DFLTVAL(algo::FileFlags())) {
     write_Set(flags, true);
     return OpenFile(filename,flags);
 }
 
-algo::Fildes algo::OpenWrite(const strptr& filename) {
-    return OpenWrite(filename,algo::FileFlags());
-}
-
 // -----------------------------------------------------------------------------
 
-algo::Fildes algo::OpenRead(const strptr& filename, algo::FileFlags flags) {
+algo::Fildes algo::OpenRead(const strptr& filename, algo::FileFlags flags DFLTVAL(algo::FileFlags())) {
     read_Set(flags, true);
     return OpenFile(filename,flags);
-}
-
-algo::Fildes algo::OpenRead(const strptr& filename) {
-    return OpenRead(filename,algo::FileFlags());
 }
 
 // -----------------------------------------------------------------------------

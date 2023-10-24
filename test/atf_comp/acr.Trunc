@@ -1,0 +1,3 @@
+acr.delete  dev.timefmt  timefmt:PSX_%Y%m%d        dirname:N   comment:"photoshop express format"
+acr.delete  dev.timefmt  timefmt:signal-%Y-%m-%d-  dirname:N   comment:"signal app format"
+acr.insert  dev.timefmt  timefmt:xyz               dirname:N   comment:""

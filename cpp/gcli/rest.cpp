@@ -25,7 +25,7 @@
 
 // -----------------------------------------------------------------------------
 tempstr gcli::Urlencode(strptr str_in){
-    return tempstr()<<curl_easy_escape(NULL, str_in.elems, str_in.n_elems);
+    return str_in.n_elems == 0 ? tempstr() : tempstr()<<curl_easy_escape(NULL, str_in.elems, str_in.n_elems);
 }
 // -----------------------------------------------------------------------------
 static void FormTuple(gcli::FGclicmd &gclicmd){
@@ -332,7 +332,7 @@ static void SetGclicmd(gcli::FGclicmd &gclicmd){
         gmethod_key=gclicmdt->gmethod;
     }
     // Set name/proj
-    gclicmd.proj=name_Get(gcli::_db.grepo_sel);
+    gclicmd.proj=gcli::_db.grepo_sel.name;
     // Set separator
     gclicmd.sep="?";
     if (Replace(gclicmd.url,gclicmd.sep,gclicmd.sep)){

@@ -25,6 +25,104 @@
 
 #pragma once
 
+template<class T> inline tempstr &algo::operator <<(const tempstr &lhs, const T &rhs) {
+    (cstring&)lhs << rhs;
+    return (tempstr&)lhs;
+}
+
+// Refurbish: destroy and re-create object in place.
+// This function is exception-safe: if ~T throws an exception, T::T still gets
+// called.
+// Implementation note: explicit calls to destructor are checked for NULL pointer
+// by GCC, so the nonnull attribute is required.
+template<class T> inline void algo::Refurbish(T &t) FUNCATTR(F_NONNULL) {
+    algo::Renew<T> r(t);
+    t.~T();
+}
+
+
+template<class T> inline int algo::elems_N(const aryptr<T> &ary) {
+    return ary.n_elems;
+}
+
+template<class T> inline int algo::ch_N(const aryptr<T> &ary) {
+    return ary.n_elems;
+}
+
+template<class T> inline void algo::Fill(const aryptr<T> &lhs, const T &t) {
+    frep_(i,ch_N(lhs)) {
+        lhs[i]=t;
+    }
+}
+
+template<class T> inline algo::aryptr<T>::aryptr() {
+    elems = 0;
+    n_elems = 0;
+}
+
+template<class T> inline T &algo::aryptr<T>::operator [](u32 idx) const {
+    return elems[idx];
+}
+
+template<class T, class U> inline int algo::Find(const algo::aryptr<T> &lhs, const U&t) {
+    frep_ (i, lhs.n_elems) {
+        if (lhs.elems[i]==t) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+template<class T> inline algo::aryptr<T> algo::FirstN(const algo::aryptr<T> &lhs, u32 n) {
+    u32 lim = lhs.n_elems;
+    if (n > lim) {
+        n = lim;
+    }
+    return algo::aryptr<T>(lhs.elems, n);
+}
+
+template<class T> inline algo::aryptr<T> algo::LastN(const algo::aryptr<T> &lhs, u32 n) {
+    u32 lim = lhs.n_elems;
+    if (n > lim) {
+        n = lim;
+    }
+    return algo::aryptr<T>(lhs.elems + lim - n, n);
+}
+
+template<class T> inline algo::aryptr<T> algo::RestFrom(const algo::aryptr<T> &lhs, u32 n) {
+    u32 lim = lhs.n_elems;
+    if (n > lim) {
+        n = lim;
+    }
+    return algo::aryptr<T>(lhs.elems + n, lim - n);
+}
+
+template<class T> inline algo::aryptr<T> algo::qGetRegion(const algo::aryptr<T> &lhs, u32 lo, u32 n) {
+    return algo::aryptr<T>(lhs.elems + lo, n);
+}
+
+template<class T> inline algo::aryptr<T> algo::GetRegion(const algo::aryptr<T> &lhs, u32 lo, u32 n) {
+    u32 max = lhs.n_elems;
+    lo = u32_Min(lo, max);
+    n  = u32_Min(n,  max - lo);
+    return algo::aryptr<T>(lhs.elems + lo, n);
+}
+
+template<class T> inline algo::aryptr<u8> algo::BytesOf(const T &t) {
+    return algo::aryptr<u8>((u8*)&t,sizeof(t));
+}
+
+template<class T> inline algo::aryptr<T>::aryptr(const T *e, i32 in_n) : elems(const_cast<T*>(e)) , n_elems(in_n) {
+}
+
+template<class T> inline algo::aryptr<T>::aryptr(const char *e) : elems(const_cast<T*>(e)) , n_elems(algo::ImpliedLength((T*)NULL,e)) {
+}
+
+template<class T> inline T &algo::qLast(const algo::aryptr<T> &ary) {
+    return ary.elems[ary.n_elems-1];
+}
+
+
 #ifdef WIN32
 inline u16 htobe16(u16 val) { return _byteswap_ushort(val); }
 inline u32 htobe32(u32 val) { return _byteswap_ulong(val); }
@@ -767,4 +865,431 @@ inline bool     algo::u32_Pow2Q(u32 i) {
 
 inline algo::PageBuf::~PageBuf() {
     free(elems);// posix_memalign_free?
+}
+
+
+#pragma once
+
+// -----------------------------------------------------------------------------
+
+// get CPU HZ value as u64
+inline u64 algo::get_cpu_hz_int() {
+    return algo_lib::_db.cpu_hz;
+}
+
+// get CPU HZ value as double
+inline double algo::get_cpu_hz() {
+    return algo_lib::_db.hz;
+}
+
+// cpu_hz (untyped SchedTime)
+// use this for timestamps.
+// these calls may be pipelined and reordered, so measuring instruction
+// latency with these is not possible. for that, use rdtscp
+inline u64 algo::get_cycles() {
+#ifdef WIN32
+    return __rdtsc();
+#else
+    unsigned low, high;
+    asm volatile (
+                  "rdtsc"
+                  : "=a" (low), "=d" (high)
+                  :
+                  :
+                  );
+    return u64(high)<<32 | low;
+#endif
+}
+
+// Convert scheduler time units to seconds.
+inline double algo::ToSecs(SchedTime ticks) {
+    return ticks.value * (1.0/algo_lib::_db.hz);
+}
+
+inline algo::UnDiff algo::ToUnDiff(SchedTime ticks) {
+    return UnDiff(i64(ticks.value * (1e9/algo_lib::_db.hz)));
+}
+
+inline algo::SchedTime algo::ToSchedTime(double secs) {
+    return SchedTime(u64(secs * algo_lib::_db.hz));
+}
+
+inline algo::UnTime algo::ToUnTime(UnixTime t) {
+    return UnTime(t.value * UNTIME_PER_SEC);
+}
+
+inline algo::UnixTime algo::ToUnixTime(UnTime t) {
+    const i64 quotient = t.value/UNTIME_PER_SEC;
+    return UnixTime((t.value % UNTIME_PER_SEC < 0) ? quotient-1 : quotient);
+}
+
+inline double algo::ToSecs(UnDiff t) {
+    return t.value / double(UNTIME_PER_SEC);
+}
+
+inline double algo::ToSecs(UnTime t) {
+    return t.value / double(UNTIME_PER_SEC);
+}
+
+inline algo::UnixTime algo::CurrUnixTime(){
+    time_t secs;
+    time(&secs);
+    return UnixTime(secs);
+}
+
+// use this for performance measurements.
+// according to Intel software manual, lfence followed by rdtsc
+// is the beez knees.
+inline u64 algo::rdtscp() {
+#ifdef WIN32
+    _ReadBarrier();
+    return get_cycles();
+#else
+    unsigned low, high;
+    asm volatile (
+                  "lfence\n"
+                  "rdtsc"
+                  : "=a" (low), "=d" (high) // output
+                  :                         // input
+                  : "memory"                // clobbered
+                  );
+    return u64(high)<<32 | low;
+#endif
+}
+
+inline algo::UnixDiff algo::UnixDiffHMS(i64 h, int m, int s) {
+    return algo::UnixDiff(i64(h)*SECS_PER_HOUR + i64(m)*SECS_PER_MIN + s);
+}
+
+inline algo::UnDiff algo::UnDiffSecs(double d) {
+    return algo::UnDiff(i64(d  * UNTIME_PER_SEC));
+}
+
+inline algo::UnTime algo::UnTimeSecs(double d) {
+    return algo::UnTime(i64(d  * UNTIME_PER_SEC));
+}
+
+inline algo::UnDiff algo::UnDiffSecs(i64 i) {
+    return algo::UnDiff(    i  * UNTIME_PER_SEC);
+}
+
+inline algo::UnDiff algo::UnDiffSecs(i32 i) {
+    return algo::UnDiff(i64(i) * UNTIME_PER_SEC);
+}
+
+inline algo::UnDiff algo::UnDiffHMS(int h, int m, int s) {
+    return algo::UnDiffSecs(i64(h) * SECS_PER_HOUR + i64(m)*SECS_PER_MIN + s);
+}
+
+// Current value of get_cycles();
+inline algo::SchedTime algo::CurrSchedTime() {
+    return algo::SchedTime(get_cycles());
+}
+
+// Elapsed time in seconds between two SchedTimes.
+inline double algo::ElapsedSecs(algo::SchedTime start, algo::SchedTime end) {
+    return (end-start)/get_cpu_hz();
+}
+
+inline algo::TimeStruct::TimeStruct() {
+    ZeroBytes(static_cast<tm&>(*this));
+    tm_nsec = 0;
+    tm_neg = false;
+    tm_isdst = -1;
+}
+
+inline algo::TimeStruct::TimeStruct(const struct tm &t) : tm(t) {
+    tm_nsec = 0;
+    tm_neg = false;
+}
+
+inline algo::WDiff algo::ToWDiff(algo::UnixDiff d) {
+    return algo::WDiff(d.value * WTIME_PER_SEC);
+}
+
+inline algo::WDiff algo::ToWDiff(algo::UnDiff d) {
+    return algo::WDiff(d.value / 100);
+}
+
+inline algo::UnixDiff algo::ToUnixDiff(algo::WDiff d) {
+    return algo::UnixDiff(d.value / WTIME_PER_SEC);
+}
+
+inline algo::WTime algo::ToWTime(algo::UnTime s) {
+    return WTime(i64(s.value / (algo::UNTIME_PER_SEC / WTIME_PER_SEC) + WTIME_OFFSET));
+}
+
+inline algo::UnDiff algo::ToUnDiff(algo::WDiff d) {
+    return algo::UnDiff(d.value * 100);
+}
+
+inline algo::UnixTime algo::ToUnixTime(algo::WTime nt) {
+    i64 tmp(nt.value - WTIME_OFFSET);
+    // clip to the earliest possible UnixTime
+    return algo::UnixTime(tmp >= 0 ? int(u64(tmp) / WTIME_PER_SEC) : 0);
+}
+
+inline algo::WTime algo::ToWTime(algo::UnixTime t) {
+    return algo::WTime(i64(t.value) * WTIME_PER_SEC + WTIME_OFFSET);
+}
+
+inline double algo::ToSecs(algo::WDiff t) {
+    return t.value / double(algo::WTIME_PER_SEC);
+}
+
+// Append and end-of-line sequence to string S.
+
+inline void algo::eol(cstring &s) {
+    ch_Alloc(s) = '\n';
+}
+
+inline algo::strptr algo::ToStrPtr(memptr buf)  {
+    return strptr((char*)buf.elems,elems_N(buf));
+}
+
+// Note: cstring << algo::ToLower(int) will output an *integer*, not a character
+inline int algo::ToLower(int i)  {
+    return i>='A' && i<='Z' ? i-'A'+'a' : i;
+}
+
+// Note: cstring << algo::ToUpper(int) will output an *integer*, not a character
+inline int algo::ToUpper(int i)  {
+    return i>='a' && i<='z' ? i-'a'+'A' : i;
+}
+
+inline char algo::ToLower(char i)  {
+    return i>='A' && i<='Z' ? char(i-'A'+'a') : i;
+}
+
+inline char algo::ToUpper(char i)  {
+    return i>='a' && i<='z' ? char(i-'a'+'A') : i;
+}
+
+inline bool algo::StringIter::EofQ() const {
+    return index==elems_N(expr);
+}
+
+inline char algo::StringIter::Peek() {
+    if (index==elems_N(expr)) return 0;
+    return (unsigned char)expr[index];
+}
+
+inline char algo::StringIter::GetChar() {
+    if (index==elems_N(expr)) return 0;
+    return (unsigned char)expr[index++];
+}
+
+inline algo::StringIter &algo::StringIter::Ws() {
+    for (; index < elems_N(expr); index++) {
+        if (!algo_lib::WhiteCharQ(expr[index])) {
+            break;
+        }
+    }
+    return *this;
+}
+
+inline algo::i32_Range algo::TFind(const strptr &s, char match) {
+    return ch_FindFirst(s,match);
+}
+
+inline algo::i32_Range algo::TRevFind(const strptr &s, char match) {
+    return ch_FindLast(s,match);
+}
+
+inline algo::aryptr<char> algo::ch_FirstN(const strptr &lhs, u32 n) {
+    u32 lim = lhs.n_elems;
+    if (n > lim) {
+        n = lim;
+    }
+    return algo::aryptr<char>(lhs.elems, n);
+}
+
+inline algo::aryptr<char> algo::ch_LastN(const strptr &lhs, u32 n) {
+    u32 lim = lhs.n_elems;
+    if (n > lim) {
+        n = lim;
+    }
+    return algo::aryptr<char>(lhs.elems + lim - n, n);
+}
+
+inline algo::aryptr<char> algo::ch_RestFrom(const strptr &lhs, u32 n) {
+    u32 lim = lhs.n_elems;
+    if (n > lim) {
+        n = lim;
+    }
+    return algo::aryptr<char>(lhs.elems + n, lim - n);
+}
+
+inline algo::aryptr<char> algo::ch_GetRegion(const strptr &lhs, u32 lo, u32 n) {
+    u32 max = lhs.n_elems;
+    lo = u32_Min(lo, max);
+    n  = u32_Min(n,  max - lo);
+    return algo::aryptr<char>(lhs.elems + lo, n);
+}
+
+inline int algo::ImpliedLength(char *, const char *c) {
+    return int(c ? strlen(c) : 0);
+}
+
+inline int algo::ImpliedLength(const char *, const char *c) {
+    return int(c ? strlen(c) : 0);
+}
+
+inline int algo::ch_N(const strptr &s) {
+    return s.n_elems;
+}
+
+inline int algo::ch_First(const strptr &s, int dflt) {
+    return s.n_elems>0 ? s.elems[0] : dflt;
+}
+
+inline int algo::ch_Last(const strptr &s, int dflt) {
+    return s.n_elems>0 ? s.elems[s.n_elems-1] : dflt;
+}
+
+inline int algo::ch_N(const tempstr &str) {
+    return str.ch_n;
+}
+
+inline int algo::range_N(const i32_Range &rhs) {
+    return rhs.end - rhs.beg;
+}
+
+inline algo::aryptr<u8> algo::strptr_ToMemptr(algo::aryptr<char> rhs) {
+    return algo::aryptr<u8>((u8*)rhs.elems,rhs.n_elems);
+}
+
+inline algo::aryptr<char> algo::memptr_ToStrptr(algo::aryptr<u8> rhs) {
+    return algo::aryptr<char>((char*)rhs.elems,rhs.n_elems);
+}
+
+// if next character matches WHAT, skip and return true
+// otherwise return false
+inline bool algo::SkipChar(StringIter &iter, char what) {
+    char cur = iter.Peek();
+    bool ret = (cur==what);
+    iter.index += ret;
+    return ret;
+}
+
+// Convert string to numeric type.
+// If there is an error, or string is empty, return DFLT.
+// If there is junk at the end of the string, silently ignore it.
+// Use StringIter version to check for junk, or use -X version to throw exception.
+inline int algo::ParseI32(strptr str, int dflt) {
+    StringIter iter(str); return ParseI32(iter, dflt);
+}
+
+inline u32 algo::ParseU32(strptr str, u32 dflt) {
+    StringIter iter(str); return ParseU32(iter, dflt);
+}
+
+inline i64 algo::ParseI64(strptr str, i64 dflt) {
+    StringIter iter(str); return ParseI64(iter, dflt);
+}
+
+inline u64 algo::ParseU64(strptr str, u64 dflt) {
+    StringIter iter(str); return ParseU64(iter, dflt);
+}
+
+inline strptr algo::StringIter::Rest() {
+    return RestFrom(expr, index);
+}
+
+inline algo::Attr_curs &algo::Attr_curs_Access(Attr_curs &curs) {
+    return curs;
+}
+
+inline bool algo::Attr_curs_ValidQ(Attr_curs &curs) {
+    return curs.valid;
+}
+
+inline bool algo::Line_curs_ValidQ(Line_curs &curs) {
+    return !curs.eof;
+}
+
+inline strptr &algo::Line_curs_Access(Line_curs &curs) {
+    return curs.line;
+}
+
+inline bool algo::Word_curs_ValidQ(Word_curs &curs) {
+    return curs.token.elems < curs.text.elems + curs.text.n_elems;
+}
+
+inline strptr &algo::Word_curs_Access(Word_curs &curs) {
+    return curs.token;
+}
+
+template<class T> inline void algo::Init_Set(StringDesc &desc, void(*fcn)(T&)) {
+    desc.Init=InitFcn(fcn);
+}
+
+template<class T> inline void algo::SetnumMaybe_Set(StringDesc &desc, bool(*fcn)(T&, i64 num)) {
+    desc.SetnumMaybe=SetnumFcn(fcn);
+}
+
+template<class T> inline void algo::Geti64_Set(StringDesc &desc, i64(*fcn)(T&, bool &)) {
+    desc.Geti64=Geti64Fcn(fcn);
+}
+
+template<class T> inline void algo::Getary_Set(StringDesc &desc, algo::aryptr<char>(*fcn)(T&)) {
+    desc.Getary=GetaryFcn(fcn);
+}
+
+inline strptr &algo::FileLine_curs_Access(algo::FileLine_curs &curs) {
+    return curs.line;
+}
+
+inline bool algo::FileLine_curs_ValidQ(algo::FileLine_curs &curs) {
+    return !curs.eof;
+}
+
+inline algo::ListSep::ListSep(strptr sep_) : sep(sep_), iter(0) {
+}
+
+inline algo::Line_curs::Line_curs() : eof(true),i(-1){
+}
+
+inline algo::Word_curs::Word_curs() : index(0){
+}
+
+inline bool algo::Sep_curs_ValidQ(algo::Sep_curs &curs) {
+    return curs.state != Sep_curs::State::invalid;
+}
+
+inline strptr &algo::Sep_curs_Access(algo::Sep_curs &curs) {
+    return curs.token;
+}
+
+inline algo::Sep_curs::Sep_curs() : sep('\0'), index(-1), state(algo::Sep_curs::State::invalid){
+}
+
+
+inline u32 algo::u16_FmtBuf(u32 value, u8 *buf) {
+    return u32_FmtBufSmall(value,buf);
+}
+
+inline algo::cstring &algo::operator<<(algo::cstring &out, const char* t) {
+    strptr_Print (strptr(t),out);
+    return out;
+}
+
+inline algo::cstring &algo::operator<<(algo::cstring &out, const ListSep &t) {
+    ListSep_Print(t,out);
+    return out;
+}
+
+inline algo::cstring &algo::operator<<(algo::cstring &out, const memptr &t) {
+    memptr_Print (t,out);
+    return out;
+}
+
+inline algo::cstring &algo::operator<<(algo::cstring &out, const strptr &t) {
+    strptr_Print (t,out);
+    return out;
+}
+
+inline algo::cstring &algo::operator<<(algo::cstring &out, void (*t)(algo::cstring &)) {
+    t(out);
+    return out;
 }

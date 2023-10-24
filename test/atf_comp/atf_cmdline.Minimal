@@ -1,4 +1,3 @@
-# atf_comp -report:N -printinput atf_cmdline.Minimal | atf_cmdline blah -str blah | cat
 astr:blah
 anum:0
 adbl:0

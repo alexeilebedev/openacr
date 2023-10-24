@@ -1,4 +1,3 @@
-# atf_comp -report:N -printinput atf_cmdline.Verbose | atf_cmdline -verbose -verbose blah -str blah | cat
 astr:blah
 anum:0
 adbl:0

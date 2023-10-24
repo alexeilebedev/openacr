@@ -19,7 +19,7 @@ Usage: atf_gcli [options]
     -dry_run                        Print actions, do not perform
     -verbose        int             Verbosity level (0..255); alias -v; cumulative
     -debug          int             Debug level (0..255); alias -d; cumulative
-    -help                           Print help an exit; alias -h
+    -help                           Print help and exit; alias -h
     -version                        Print version and exit
     -signature                      Show signatures and exit; alias -sig
 
@@ -35,5 +35,6 @@ gclidb.Gtblact
 gclidb.Gtblacttst
 gclidb.Gtblacttstout
 gclidb.Gclienvsub
+dmmeta.Dispsigcheck   Check signature of input data against executable's version
 ```
 

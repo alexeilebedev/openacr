@@ -239,26 +239,26 @@ static void AddFilterField(amc::FCtype &ctype, amc::FField &field) {
         amc::InsField(dmmeta::Field(start_key
                                     , field.arg
                                     , field.reftype
-                                    , dmmeta::CppExpr()
+                                    , algo::CppExpr()
                                     , algo::Comment()));
         amc::InsField(dmmeta::Field(tempstr()<<ctype.ctype<<".end_"<<name_Get(field)
                                     , field.arg
                                     , field.reftype
-                                    , dmmeta::CppExpr()
+                                    , algo::CppExpr()
                                     , algo::Comment()));
     }
     if (!key_exists) {// always match verbatim field
         amc::InsField(dmmeta::Field(key
                                     , field.arg
                                     , field.reftype
-                                    , dmmeta::CppExpr()
+                                    , algo::CppExpr()
                                     , algo::Comment()));
     }
     if (!key_exists && string) {// regx
         amc::InsField(dmmeta::Field(tempstr()<<key<<"_regx"
                                     , "algo_lib.Regx"
                                     , "Val"
-                                    , dmmeta::CppExpr()
+                                    , algo::CppExpr()
                                     , algo::Comment()));
     }
 }
@@ -268,7 +268,7 @@ static void AddFilterField(amc::FCtype &ctype, amc::FField &field) {
 static void NewField_Filter(amc::FDispatch &dispatch) {
     amc::FCtype &ctype = amc::ind_ctype_GetOrCreate(tempstr() << dispatch.dispatch<<"Filter");
     dmmeta::FieldPkey pmaskname(tempstr()<<ctype.ctype<<".pmask");
-    amc::FField &pmask = *amc::InsField(dmmeta::Field(pmaskname, "u64", "Inlary", dmmeta::CppExpr(), algo::Comment()));
+    amc::FField &pmask = *amc::InsField(dmmeta::Field(pmaskname, "u64", "Inlary", algo::CppExpr(), algo::Comment()));
     amc::FInlary *inlary = amc::inlary_InsertMaybe(dmmeta::Inlary(pmaskname, 1,1, algo::Comment()));
     amc::pmaskfld_InsertMaybe(dmmeta::Pmaskfld(pmask.field, algo::Comment()));
     amc::cfmt_InsertMaybe(dmmeta::Cfmt(tempstr()<<ctype.ctype<<"."<<dmmeta_Strfmt_strfmt_Tuple

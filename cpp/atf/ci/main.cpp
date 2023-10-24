@@ -257,9 +257,29 @@ void atf_ci::citest_shebang() {
 // -----------------------------------------------------------------------------
 
 void atf_ci::citest_comptest() {
-    command::atf_comp_proc atf_comp;
-    atf_comp.cmd.normalize=true;
-    (void)atf_comp_Exec(atf_comp);
+    // rewrite messages in tests
+    {
+        command::atf_comp_proc atf_comp;
+        atf_comp.cmd.normalize=true;
+        atf_comp.cmd.write=true;
+        (void)atf_comp_Exec(atf_comp);
+    }
+    // write to file
+    {
+        command::atf_comp_proc atf_comp;
+        atf_comp.cmd.print = true;
+        atf_comp.fstdout = ">temp/atf_comp.txt";
+        atf_comp_ExecX(atf_comp);
+    }
+    // read from file
+    {
+        command::atf_comp_proc atf_comp;
+        atf_comp.cmd.i = true;
+        atf_comp.cmd.run = false;
+        atf_comp.cmd.write = true;
+        atf_comp.fstdin = "<temp/atf_comp.txt";
+        atf_comp_ExecX(atf_comp);
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -274,7 +294,7 @@ void atf_ci::citest_readme() {
 void atf_ci::Main() {
     algo_lib::DieWithParent();
 
-    lib_ctype::Init(_db.cmdline.in);
+    lib_ctype::Init();
 
     int n_run  = 0;
     int n_pass = 0;

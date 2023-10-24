@@ -48,7 +48,11 @@ static void InsTopoSortVisit(amc::FNs& ns, amc::FCtype& ctype) {
 void amc::tclass_Global() {
     amc::FField         &field = *amc::_db.genfield.p_field;
     amc::FNs            &ns    = *field.p_ctype->p_ns;
-
+    ind_beg(amc::ns_c_parentns_curs, parentns, ns) {
+        ind_beg(amc::ns_c_ctype_curs, ctype, parentns) {
+            InsTopoSortVisit(parentns, ctype);
+        }ind_end;
+    }ind_end;
     ind_beg(amc::ns_c_ctype_curs, ctype, ns) {
         InsTopoSortVisit(ns, ctype);
     }ind_end;
@@ -78,11 +82,9 @@ void amc::tfunc_Global_Init() {
 
 // -----------------------------------------------------------------------------
 
-static void GenLoadTuples(amc::FFunc &ldt, algo_lib::Replscope &R, amc::FField &field) {
-    Ins(&R, ldt.body, "static const char *ssimfiles[] = {");
-    algo::ListSep ls;
-    int nitem=0;
-    ind_beg(amc::ns_c_ctype_ins_curs, ctype, *field.p_ctype->p_ns) if (FirstInst(ctype)) {
+// collects all ssim files for target namespace from its dependency
+static void CollectSsimfiles(amc::FNs &tgt, amc::FNs &dep) {
+    ind_beg(amc::ns_c_ctype_ins_curs, ctype, dep) if (FirstInst(ctype)) {
         amc::FField &inst = *FirstInst(ctype);
         amc::FCtype *base = GetBaseType(ctype, &ctype);
         if (inst.c_finput && base->c_ssimfile) {
@@ -99,14 +101,9 @@ static void GenLoadTuples(amc::FFunc &ldt, algo_lib::Replscope &R, amc::FField &
                       <<Keyval("text","Finput does not work with reftype:Cppstack"));
                 algo_lib::_db.exit_code++;
             }
-            ldt.body << ls << "\"" << base->c_ssimfile->ssimfile << "\"";
-            if (++nitem % 4 == 0) {
-                ldt.body << "\n";
-            }
+            c_ssimfile_ScanInsertMaybe(tgt, *base->c_ssimfile);
         }
     }ind_end;
-    ldt.body << "\n" << ls << "NULL" << "};\n";
-    Ins(&R, ldt.body, "retval = algo_lib::DoLoadTuples(root, $ns::InsertStrptrMaybe, ssimfiles, true);");
 }
 
 // -----------------------------------------------------------------------------
@@ -114,13 +111,76 @@ static void GenLoadTuples(amc::FFunc &ldt, algo_lib::Replscope &R, amc::FField &
 void amc::tfunc_Global_LoadTuplesMaybe() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
+    amc::FNs &ns = *field.p_ctype->p_ns;
     amc::FFunc& ldt = amc::CreateCurFunc(true); {
         AddProtoArg(ldt, "algo::strptr", "root");
+        AddProtoArg(ldt, "bool", "recursive");
         AddRetval(ldt, "bool", "retval","true");
     }
-    if (amc::HasFinputsQ(*field.p_ctype->p_ns)) {
-        GenLoadTuples(ldt,R,field);
+    ind_beg(amc::ns_c_parentns_curs, parentns, ns) {
+        CollectSsimfiles(ns,parentns);
+    }ind_end;
+    CollectSsimfiles(ns,ns);
+    Ins(&R, ldt.body, "if (FileQ(root)) {");
+    Ins(&R, ldt.body, "    retval = $ns::LoadTuplesFile(root, recursive);");
+    Ins(&R, ldt.body, "} else if (root == \"-\") {");
+    Ins(&R, ldt.body, "    retval = $ns::LoadTuplesFd(algo::Fildes(0),\"(stdin)\",recursive);");
+    Ins(&R, ldt.body, "} else if (DirectoryQ(root)) {");
+    ind_beg(ns_c_ssimfile_curs,ssimfile,ns) {
+        Set(R,"$ssimfile",ssimfile.ssimfile);
+        Ins(&R, ldt.body, "    retval = retval && $ns::LoadTuplesFile(algo::SsimFname(root,\"$ssimfile\"),recursive);");
+    }ind_end;
+    Ins(&R, ldt.body, "} else {");
+    Ins(&R, ldt.body, "    algo_lib::SaveBadTag(\"path\", root);");
+    Ins(&R, ldt.body, "    algo_lib::SaveBadTag(\"comment\", \"Wrong working directory?\");");
+    Ins(&R, ldt.body, "    retval = false;");
+    Ins(&R, ldt.body, "}");
+}
+
+// -----------------------------------------------------------------------------
+
+void amc::tfunc_Global_LoadTuplesFile() {
+    algo_lib::Replscope &R = amc::_db.genfield.R;
+    amc::FFunc& ldt = amc::CreateCurFunc(true);
+    AddProtoArg(ldt, "algo::strptr", "fname");
+    AddProtoArg(ldt, "bool", "recursive");
+    AddRetval(ldt, "bool", "retval","true");
+    Ins(&R, ldt.body, "algo_lib::FFildes fildes;");
+    Ins(&R, ldt.body, "fildes.fd = OpenRead(fname,algo_FileFlags__throw);");
+    Ins(&R, ldt.body, "retval = LoadTuplesFd(fildes.fd, fname, recursive);");
+}
+
+// -----------------------------------------------------------------------------
+
+void amc::tfunc_Global_LoadTuplesFd() {
+    algo_lib::Replscope &R = amc::_db.genfield.R;
+    amc::FField &field = *amc::_db.genfield.p_field;
+    amc::FNs &ns = *field.p_ctype->p_ns;
+    amc::FFunc& ldt = amc::CreateCurFunc(true);
+    AddProtoArg(ldt, "algo::Fildes", "fd");
+    AddProtoArg(ldt, "algo::strptr", "fname");
+    AddProtoArg(ldt, "bool", "recursive");
+    AddRetval(ldt, "bool", "retval","true");
+    Ins(&R, ldt.body, "ind_beg(algo::FileLine_curs,line,fd) {");
+    Ins(&R, ldt.body, "    if (recursive) {");
+    ind_beg(amc::ns_c_parentns_curs, parentns, ns) {
+        if (&parentns != &ns && amc::HasFinputsQ(parentns)) {
+            Set(R,"$parentns", parentns.ns);
+            Ins(&R, ldt.body, "         retval = retval && $parentns::InsertStrptrMaybe(line);");
+        }
+    }ind_end;
+    Ins(&R, ldt.body, "    }");
+    if (amc::HasFinputsQ(ns)) {
+        Ins(&R, ldt.body, "    retval = retval && $ns::InsertStrptrMaybe(line);");
     }
+    Ins(&R, ldt.body, "    if (!retval) {");
+    Ins(&R, ldt.body, "        algo_lib::_db.errtext << eol");
+    Ins(&R, ldt.body, "            << fname << \":\"");
+    Ins(&R, ldt.body, "            << (ind_curs(line).i+1)");
+    Ins(&R, ldt.body, "            << \": \" << line << eol;");
+    Ins(&R, ldt.body, "        break;");
+    Ins(&R, ldt.body, "    }");
+    Ins(&R, ldt.body, "}ind_end;");
 }
 
 // -----------------------------------------------------------------------------
@@ -193,9 +253,9 @@ void amc::tfunc_Global_InsertStrptrMaybe() {
             Ins(&R, fcn.body    , "}");
         }ind_end;
         Ins(&R, fcn.body    , "default:");
-        if (ns_Get(*field.p_ctype) != "algo_lib") {
-            Ins(&R, fcn.body    , "    retval = algo_lib::InsertStrptrMaybe(str);");
-        }
+        //if (ns_Get(*field.p_ctype) != "algo_lib") {
+        //    Ins(&R, fcn.body    , "    retval = algo_lib::InsertStrptrMaybe(str);");
+        //}
         Ins(&R, fcn.body        , "    break;");
         Ins(&R, fcn.body        , "} //switch");
         Ins(&R, fcn.body    , "if (!retval) {");
@@ -275,11 +335,12 @@ void amc::tfunc_Global_LoadSsimfileMaybe() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FFunc& loadssimfile = amc::CreateCurFunc(true); {
         AddProtoArg(loadssimfile,"algo::strptr","fname");
+        AddProtoArg(loadssimfile,"bool","recursive");
         AddRetval(loadssimfile,"bool","retval","true");
     }
     // Loading non-existent files is considered a success
     Ins(&R, loadssimfile.body   , "if (FileQ(fname)) {");
-    Ins(&R, loadssimfile.body   , "    retval = algo_lib::LoadTuplesFile(fname, $ns::InsertStrptrMaybe, true);");
+    Ins(&R, loadssimfile.body   , "    retval = $ns::LoadTuplesFile(fname, recursive);");
     Ins(&R, loadssimfile.body   , "}");
 }
 
@@ -558,6 +619,7 @@ bool amc::CmdArgValueRequiredQ(amc::FField &field) {
 // True if field is a required command-line argument
 bool amc::CmdArgRequiredQ(amc::FField &field) {
     return field.dflt.value=="" // no default provided...
+        && !(field.arg == "algo.UnTime" || field.arg == "algo.UnDiff") // these can't be mandatory
         && !field.c_tary // not an array
         && !c_fconst_N(*amc::GetEnumField(field)) // not an enum (these are always initialized)
         && CmdArgValueRequiredQ(field); // does require an arg
@@ -681,7 +743,7 @@ static void GenHelpSyntax(amc::FNs &ns, amc::FFcmdline &cmdline) {
                 table << field.comment;
                 // list aliases
                 ind_beg(amc::ctype_c_field_curs, aliasfield, *thisctype) {
-                    if (aliasfield.c_falias && aliasfield.c_falias->p_basefield == &field) {
+                    if (aliasfield.c_falias && aliasfield.c_falias->p_srcfield == &field) {
                         table << "; alias -"<<name_Get(aliasfield);
                     }
                 }ind_end;
@@ -981,7 +1043,7 @@ void amc::tfunc_Global_ReadArgv() {
         amc::FFloadtuples *floadtuples = fcmdline->p_field->p_arg->c_floadtuples;
         if (floadtuples) {
             Set(R,"$loadtuplesname",name_Get(*floadtuples->p_field));
-            Ins(&R, func.body, "vrfy($ns::LoadTuplesMaybe(cmd.$loadtuplesname)");
+            Ins(&R, func.body, "vrfy($ns::LoadTuplesMaybe(cmd.$loadtuplesname,true)");
             Ins(&R, func.body, "    ,tempstr()<<\"where:load_input  \"<<algo_lib::DetachBadTags());");
         }
     }

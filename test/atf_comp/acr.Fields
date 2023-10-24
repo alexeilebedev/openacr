@@ -1,4 +1,3 @@
-# atf_comp -report:N -printinput acr.Fields | acr -in:- ns -field:nstype -field:comment | cat
 exe	comment 1
 ssimdb	comment 2
 protocol	comment 3

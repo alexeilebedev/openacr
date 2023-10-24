@@ -21,7 +21,7 @@ Usage: ssim2mysql [options]
     -fkey                       Enable foreign key constraints (uses InnoDB storage engine)
     -verbose    int             Verbosity level (0..255); alias -v; cumulative
     -debug      int             Debug level (0..255); alias -d; cumulative
-    -help                       Print help an exit; alias -h
+    -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
 
@@ -31,12 +31,13 @@ Usage: ssim2mysql [options]
 
 `ssim2mysql` takes the following tables on input:
 ```
-CTYPE            COMMENT
-dmmeta.Ns        Namespace (for in-memory database, protocol, etc)
-dmmeta.Ctype     Conceptual type (or C type)
-dmmeta.Field     Specify field of a struct
-dmmeta.Substr    Specify that the field value is computed from a substring of another field
-dmmeta.Ssimfile  Ssim tuple name for structure
+CTYPE                COMMENT
+dmmeta.Ns            Namespace (for in-memory database, protocol, etc)
+dmmeta.Ctype         Conceptual type (or C type)
+dmmeta.Field         Specify field of a struct
+dmmeta.Substr        Specify that the field value is computed from a substring of another field
+dmmeta.Ssimfile      Ssim tuple name for structure
 dmmeta.Sqltype
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
 ```
 

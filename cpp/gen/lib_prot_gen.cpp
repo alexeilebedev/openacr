@@ -25,8 +25,6 @@
 #include "include/algo.h"  // hard-coded include
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 namespace lib_prot { // gen:ns_print_proto
     static void          SizeCheck();

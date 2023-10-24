@@ -224,6 +224,8 @@ namespace algo { struct ByteAry; }
 namespace algo { struct Charset; }
 namespace algo { struct Smallstr150; }
 namespace algo { struct Comment; }
+namespace algo { struct Smallstr250; }
+namespace algo { struct CppExpr; }
 namespace algo { struct UnTime; }
 namespace algo { struct DateCache; }
 namespace algo { struct Dbbox; }
@@ -391,7 +393,6 @@ namespace algo { struct Smallstr16; }
 namespace algo { struct Smallstr2; }
 namespace algo { struct Smallstr20; }
 namespace algo { struct Smallstr25; }
-namespace algo { struct Smallstr250; }
 namespace algo { struct Smallstr3; }
 namespace algo { struct Smallstr30; }
 namespace algo { struct Smallstr32; }
@@ -793,6 +794,73 @@ i32                  Comment_Cmp(algo::Comment & lhs, algo::Comment & rhs) __att
 bool                 Comment_Eq(const algo::Comment & lhs,const algo::Comment & rhs) __attribute__((nothrow));
 // print string representation of algo::Comment to string LHS, no header -- cprint:algo.Comment.String
 void                 Comment_Print(algo::Comment & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- algo.Smallstr250
+struct Smallstr250 { // algo.Smallstr250
+    enum { ch_max = 250 };
+    u8 ch[250+1];
+    u8 n_ch;
+
+    inline operator algo::strptr() const;
+    bool operator ==(const algo::Smallstr250 &rhs) const;
+    bool operator !=(const algo::Smallstr250 &rhs) const;
+    bool operator ==(const algo::strptr &rhs) const;
+    // Copy from strptr (operator=)
+    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
+    // Copy from same type
+    // Copy value from RHS.
+    void                 operator =(const algo::Smallstr250& parent) __attribute__((nothrow));
+    Smallstr250(const algo::Smallstr250 &rhs) __attribute__((nothrow));
+    Smallstr250(const algo::strptr &rhs) __attribute__((nothrow));
+    Smallstr250();
+};
+
+// Append character to string.
+// If there is no space for an extra character, do nothing.
+void                 ch_Add(algo::Smallstr250& parent, char c) __attribute__((nothrow));
+// Append string to this string.
+// If there is no space for an extra character, trim.
+// If there is no space left, dump core in debug mode.
+void                 ch_AddStrptr(algo::Smallstr250& parent, algo::strptr str) __attribute__((nothrow));
+// Access string as array of chars
+algo::aryptr<char>   ch_Getary(const algo::Smallstr250& parent) __attribute__((nothrow));
+u32                  Smallstr250_Hash(u32 prev, const algo::strptr &str);
+void                 ch_Init(algo::Smallstr250 &parent) __attribute__((nothrow));
+// always return constant 250
+int                  ch_Max(algo::Smallstr250& parent) __attribute__((nothrow));
+int                  ch_N(const algo::Smallstr250& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+void                 ch_Print(algo::Smallstr250& parent, algo::cstring &out) __attribute__((nothrow));
+// Convert string to field. Return success value
+bool                 ch_ReadStrptrMaybe(algo::Smallstr250& parent, algo::strptr rhs) __attribute__((nothrow));
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void                 ch_SetStrptr(algo::Smallstr250& parent, const algo::strptr &rhs) __attribute__((nothrow));
+
+u32                  Smallstr250_Hash(u32 prev, const algo::Smallstr250 & rhs) __attribute__((nothrow));
+// Read fields of algo::Smallstr250 from an ascii string.
+// The format of the string is the format of the algo::Smallstr250's only field
+bool                 Smallstr250_ReadStrptrMaybe(algo::Smallstr250 &parent, algo::strptr in_str);
+i32                  Smallstr250_Cmp(algo::Smallstr250 & lhs, algo::Smallstr250 & rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 Smallstr250_Init(algo::Smallstr250& parent);
+bool                 Smallstr250_Eq(const algo::Smallstr250 & lhs,const algo::Smallstr250 & rhs) __attribute__((nothrow));
+bool                 Smallstr250_EqStrptr(algo::Smallstr250 & lhs, const algo::strptr &rhs) __attribute__((nothrow));
+// print string representation of algo::Smallstr250 to string LHS, no header -- cprint:algo.Smallstr250.String
+void                 Smallstr250_Print(algo::Smallstr250 & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- algo.CppExpr
+struct CppExpr { // algo.CppExpr
+    algo::Smallstr250   value;   // expression
+    explicit CppExpr(const algo::strptr&            in_value);
+    CppExpr();
+};
+
+// Read fields of algo::CppExpr from an ascii string.
+// The format of the string is the format of the algo::CppExpr's only field
+bool                 CppExpr_ReadStrptrMaybe(algo::CppExpr &parent, algo::strptr in_str);
+// print string representation of algo::CppExpr to string LHS, no header -- cprint:algo.CppExpr.String
+void                 CppExpr_Print(algo::CppExpr & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- algo.UnTime
 #pragma pack(push,1)
@@ -8591,60 +8659,6 @@ bool                 Smallstr25_EqStrptr(algo::Smallstr25 & lhs, const algo::str
 // print string representation of algo::Smallstr25 to string LHS, no header -- cprint:algo.Smallstr25.String
 void                 Smallstr25_Print(algo::Smallstr25 & row, algo::cstring &str) __attribute__((nothrow));
 
-// --- algo.Smallstr250
-struct Smallstr250 { // algo.Smallstr250
-    enum { ch_max = 250 };
-    u8 ch[250+1];
-    u8 n_ch;
-
-    inline operator algo::strptr() const;
-    bool operator ==(const algo::Smallstr250 &rhs) const;
-    bool operator !=(const algo::Smallstr250 &rhs) const;
-    bool operator ==(const algo::strptr &rhs) const;
-    // Copy from strptr (operator=)
-    void                 operator =(const algo::strptr &str) __attribute__((nothrow));
-    // Copy from same type
-    // Copy value from RHS.
-    void                 operator =(const algo::Smallstr250& parent) __attribute__((nothrow));
-    Smallstr250(const algo::Smallstr250 &rhs) __attribute__((nothrow));
-    Smallstr250(const algo::strptr &rhs) __attribute__((nothrow));
-    Smallstr250();
-};
-
-// Append character to string.
-// If there is no space for an extra character, do nothing.
-void                 ch_Add(algo::Smallstr250& parent, char c) __attribute__((nothrow));
-// Append string to this string.
-// If there is no space for an extra character, trim.
-// If there is no space left, dump core in debug mode.
-void                 ch_AddStrptr(algo::Smallstr250& parent, algo::strptr str) __attribute__((nothrow));
-// Access string as array of chars
-algo::aryptr<char>   ch_Getary(const algo::Smallstr250& parent) __attribute__((nothrow));
-u32                  Smallstr250_Hash(u32 prev, const algo::strptr &str);
-void                 ch_Init(algo::Smallstr250 &parent) __attribute__((nothrow));
-// always return constant 250
-int                  ch_Max(algo::Smallstr250& parent) __attribute__((nothrow));
-int                  ch_N(const algo::Smallstr250& parent) __attribute__((__warn_unused_result__, nothrow, pure));
-void                 ch_Print(algo::Smallstr250& parent, algo::cstring &out) __attribute__((nothrow));
-// Convert string to field. Return success value
-bool                 ch_ReadStrptrMaybe(algo::Smallstr250& parent, algo::strptr rhs) __attribute__((nothrow));
-// Copy from strptr, clipping length
-// Set string to the value provided by RHS.
-// If RHS is too large, it is silently clipped.
-void                 ch_SetStrptr(algo::Smallstr250& parent, const algo::strptr &rhs) __attribute__((nothrow));
-
-u32                  Smallstr250_Hash(u32 prev, const algo::Smallstr250 & rhs) __attribute__((nothrow));
-// Read fields of algo::Smallstr250 from an ascii string.
-// The format of the string is the format of the algo::Smallstr250's only field
-bool                 Smallstr250_ReadStrptrMaybe(algo::Smallstr250 &parent, algo::strptr in_str);
-i32                  Smallstr250_Cmp(algo::Smallstr250 & lhs, algo::Smallstr250 & rhs) __attribute__((nothrow));
-// Set all fields to initial values.
-void                 Smallstr250_Init(algo::Smallstr250& parent);
-bool                 Smallstr250_Eq(const algo::Smallstr250 & lhs,const algo::Smallstr250 & rhs) __attribute__((nothrow));
-bool                 Smallstr250_EqStrptr(algo::Smallstr250 & lhs, const algo::strptr &rhs) __attribute__((nothrow));
-// print string representation of algo::Smallstr250 to string LHS, no header -- cprint:algo.Smallstr250.String
-void                 Smallstr250_Print(algo::Smallstr250 & row, algo::cstring &str) __attribute__((nothrow));
-
 // --- algo.Smallstr3
 struct Smallstr3 { // algo.Smallstr3
     enum { ch_max = 3 };
@@ -10053,6 +10067,7 @@ namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const algo::Attr &row);// cfmt:algo.Attr.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::Bool &row);// cfmt:algo.Bool.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::Comment &row);// cfmt:algo.Comment.String
+inline algo::cstring &operator <<(algo::cstring &str, const algo::CppExpr &row);// cfmt:algo.CppExpr.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::UnTime &row);// cfmt:algo.UnTime.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::Dbbox &row);// cfmt:algo.Dbbox.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::DryrunQ &row);// cfmt:algo.DryrunQ.String

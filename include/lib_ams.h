@@ -31,7 +31,7 @@ namespace lib_ams { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/lib/ams/expect.cpp -- Expect implementation
+    // cpp/lib_ams/expect.cpp -- Expect implementation
     //
 
     // In-process `expect` implementation allows pausing reading of inputs until
@@ -75,7 +75,7 @@ namespace lib_ams { // update-hdr
     void ExpectCheck();
 
     // -------------------------------------------------------------------
-    // cpp/lib/ams/file.cpp
+    // cpp/lib_ams/file.cpp
     //
 
     // Whether write file is in good state - valid fd and no failure
@@ -165,7 +165,7 @@ namespace lib_ams { // update-hdr
     void fd_Cleanup(lib_ams::FReadfile& parent);
 
     // -------------------------------------------------------------------
-    // cpp/lib/ams/stream.cpp
+    // cpp/lib_ams/stream.cpp
     //
 
     // Scan /dev/shm for stale stream files and delete them

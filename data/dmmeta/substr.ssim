@@ -17,13 +17,11 @@ dmmeta.substr  field:dev.Builddir.compiler  expr:.LL-LR  srcfield:dev.Builddir.b
 dmmeta.substr  field:dev.Builddir.uname  expr:.LL-LL  srcfield:dev.Builddir.builddir
 dmmeta.substr  field:dev.Covline.line  expr::RR  srcfield:dev.Covline.covline
 dmmeta.substr  field:dev.Covline.src  expr::RL  srcfield:dev.Covline.covline
+dmmeta.substr  field:dev.Edaction.edacttype  expr:_LL  srcfield:dev.Edaction.edaction
+dmmeta.substr  field:dev.Edaction.name  expr:_LR  srcfield:dev.Edaction.edaction
 dmmeta.substr  field:dev.Gitfile.ext  expr:/RR.LR.RR  srcfield:dev.Gitfile.gitfile
 dmmeta.substr  field:dev.Include.filename  expr::LR  srcfield:dev.Include.include
 dmmeta.substr  field:dev.Include.srcfile  expr::LL  srcfield:dev.Include.include
-dmmeta.substr  field:dev.Issue.iid  expr:.RR  srcfield:dev.Issue.issue
-dmmeta.substr  field:dev.Issue.project  expr:.RL  srcfield:dev.Issue.issue
-dmmeta.substr  field:dev.Mr.iid  expr:.RR  srcfield:dev.Mr.mr
-dmmeta.substr  field:dev.Mr.project  expr:.RL  srcfield:dev.Mr.mr
 dmmeta.substr  field:dev.Srcfile.ext  expr:.RR  srcfield:dev.Srcfile.srcfile
 dmmeta.substr  field:dev.Ssimfs.file  expr::LR  srcfield:dev.Ssimfs.ssimfs
 dmmeta.substr  field:dev.Ssimfs.ssimfile  expr::LL  srcfield:dev.Ssimfs.ssimfs
@@ -131,8 +129,8 @@ dmmeta.substr  field:gclidb.Gclienvsub.sub  expr:.LR  srcfield:gclidb.Gclienvsub
 dmmeta.substr  field:gclidb.Githost.git  expr:@LL  srcfield:gclidb.Githost.githost
 dmmeta.substr  field:gclidb.Githost.gitrepo  expr:@LR:LR  srcfield:gclidb.Githost.githost
 dmmeta.substr  field:gclidb.Githost.host  expr:@LR:LL  srcfield:gclidb.Githost.githost
+dmmeta.substr  field:gclidb.Grepo.fname  expr:@LR  srcfield:gclidb.Grepo.grepo
 dmmeta.substr  field:gclidb.Grepo.host  expr:@LL  srcfield:gclidb.Grepo.grepo
-dmmeta.substr  field:gclidb.Grepo.name  expr:@LR  srcfield:gclidb.Grepo.grepo
 dmmeta.substr  field:gclidb.Grepossh.name  expr:/RR  srcfield:gclidb.Grepossh.sshid
 dmmeta.substr  field:gclidb.Gstate.st  expr:_LL  srcfield:gclidb.Gstate.gstate
 dmmeta.substr  field:gclidb.Gstate.state  expr:_LR  srcfield:gclidb.Gstate.gstate

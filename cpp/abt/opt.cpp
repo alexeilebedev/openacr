@@ -39,6 +39,10 @@ tempstr abt::EvalSrcfileCmdline(algo_lib::Replscope &R, abt::FTarget &target, ab
     } else {
         if (abt::_db.gcache) {
             out << "gcache ";
+            if (algo_lib::_db.cmdline.verbose>1) {
+                out << " -v:"<<int(algo_lib::_db.cmdline.verbose-1);
+            }
+            out << " -- ";
         } else if (abt::_db.ccache) {
             out << "ccache ";
         }

@@ -18,7 +18,7 @@ Usage: atf_fuzz [[-target:]<string>] [[-args:]<string>] [options]
     -testprob   double  1                      Run each case with this probability
     -verbose    int                            Verbosity level (0..255); alias -v; cumulative
     -debug      int                            Debug level (0..255); alias -d; cumulative
-    -help                                      Print help an exit; alias -h
+    -help                                      Print help and exit; alias -h
     -version                                   Print version and exit
     -signature                                 Show signatures and exit; alias -sig
 
@@ -36,7 +36,7 @@ The list of strategies supported by `atf_fuzz` is as follows:
 ```
 inline-command: acr fuzzstrat
 atfdb.fuzzstrat  fuzzstrat:skip_inputs  comment:"Run target in sandbox with various missing inputs"
-report.acr  n_select:1  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+report.acr  n_select:1  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
 ```
 
 ### Command-line flags
@@ -53,7 +53,8 @@ of inputs in case it is too big
 
 `atf_fuzz` takes the following tables on input:
 ```
-CTYPE       COMMENT
-dev.Target  Build target
+CTYPE                COMMENT
+dev.Target           Build target
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
 ```
 

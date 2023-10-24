@@ -105,7 +105,7 @@ void acr::LookupField(acr::FRec &rec, strptr fieldname, acr::FCtype *&prev_ctype
 // -----------------------------------------------------------------------------
 
 static void Main_RewriteOpts() {
-    if (acr::_db.cmdline.check || acr::_db.cmdline.my) {
+    if (acr::_db.cmdline.my) {
         acr::_db.cmdline.print = false;
     }
     if (acr::_db.cmdline.meta) {
@@ -127,25 +127,15 @@ static void Main_RewriteOpts() {
     }
     if (acr::_db.cmdline.e) {
         acr::_db.cmdline.cmt   = true;
-        // #AL# short mode is still buggy -- don't enable yet, unless asked explicitly
-        //acr::_db.cmdline.s     = true; //  short mode
         acr::_db.cmdline.rowid = true; // force rowid to avoid editing errors
     }
     if (acr::_db.cmdline.unused) {
         acr::_db.cmdline.nup = 0;
         acr::_db.cmdline.ndown = 1;
     }
-    // cascading delete
-    if (acr::_db.cmdline.del) {
-        acr::_db.cmdline.select   = true;
-        acr::_db.cmdline.nup      = 0;
-        acr::_db.cmdline.ndown    = INT_MAX;
-    }
     // check
     if (acr::_db.cmdline.check) {
         acr::_db.cmdline.select = true;
-        acr::_db.cmdline.nup = 1;
-        acr::_db.cmdline.ndown = 0;
     }
     if (acr::_db.cmdline.xref) {
         if (!acr::_db.cmdline.nup) acr::_db.cmdline.nup = 100; // set unless overridden
@@ -181,7 +171,6 @@ static void Main_SelectRename() {
     fquery.nup    = acr::_db.cmdline.nup;
     fquery.ndown  = acr::_db.cmdline.ndown;
     fquery.unused = acr::_db.cmdline.unused;
-    fquery.delrec = acr::_db.cmdline.del;
     fquery.selmeta= acr::_db.cmdline.meta;
     if (ch_N(acr::_db.cmdline.rename)) {
         fquery.new_val = acr::_db.cmdline.rename;
@@ -269,24 +258,51 @@ void acr::Main() {
         Main_SelectRename();
     }
 
-    if (acr::_db.cmdline.check) {    // validate data and print suggestions.
-        acr::Main_Check();
-    }
-
     if (acr::_db.cmdline.my) {
         acr::Main_Mysql();
     }
 
     RunAllQueries();
 
-    // select renamed records
-    acr::Rec_SelectModified();
+    // select modified records
+    acr::SelectModified();
+
+    // validate data and print suggestions.
+    if (acr::_db.cmdline.check) {
+        acr::Main_Check();
+    }
 
     // edit mode
     if (acr::_db.cmdline.e) {
         acr::Main_AcrEdit();
         acr::_db.cmdline.cmt=false;
     }
+
+    // delete selected records
+    if (acr::_db.cmdline.del) {
+        ind_beg(acr::_db_zd_all_selrec_curs,selrec,acr::_db) {
+            selrec.del=true;
+        }ind_end;
+    }
+
+    // propagate 'del' flag recursively down
+    acr::CascadeDelete();
+
+    // count changes
+    ind_beg(acr::_db_file_curs, file, acr::_db) {
+        ind_beg(acr::file_zd_frec_curs, rec, file) {
+            if (rec.del) {
+                acr::_db.report.n_delete++;
+            }
+            if (rec.mod) {
+                acr::_db.report.n_update++;
+            }
+            if (rec.isnew) {
+                acr::_db.report.n_insert++;
+            }
+        }ind_end;
+    }ind_end;
+
     // print command to be executed for each matching tuple
     if (ch_N(acr::_db.cmdline.cmd)>0) {
         Main_Cmd();

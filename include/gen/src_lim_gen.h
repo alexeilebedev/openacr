@@ -47,13 +47,14 @@ enum src_lim_TableIdEnum {               // src_lim.TableId.value
     ,src_lim_TableId_dev_Gitfile   = 1   // dev.Gitfile -> src_lim.FGitfile
     ,src_lim_TableId_dev_gitfile   = 1   // dev.gitfile -> src_lim.FGitfile
     ,src_lim_TableId_dev_Include   = 2   // dev.Include -> src_lim.FInclude
+    ,src_lim_TableId_dev_include   = 2   // dev.include -> src_lim.FInclude
     ,src_lim_TableId_dev_Linelim   = 3   // dev.Linelim -> src_lim.FLinelim
     ,src_lim_TableId_dev_linelim   = 3   // dev.linelim -> src_lim.FLinelim
     ,src_lim_TableId_dev_Targsrc   = 4   // dev.Targsrc -> src_lim.FTargsrc
     ,src_lim_TableId_dev_targsrc   = 4   // dev.targsrc -> src_lim.FTargsrc
 };
 
-enum { src_lim_TableIdEnum_N = 9 };
+enum { src_lim_TableIdEnum_N = 10 };
 
 namespace src_lim { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -208,9 +209,13 @@ void                 StaticCheck();
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
-bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
+bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file.
+bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file descriptor.
+bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
-bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error

@@ -861,6 +861,7 @@ inline void abt_md::FileSection_Init(abt_md::FileSection& file_section) {
     file_section.sortkey = i32(0);
     file_section.p_mdsection = NULL;
     file_section.select = bool(false);
+    file_section.firstline = i32(0);
     file_section.zd_file_section_next = (abt_md::FileSection*)-1; // (abt_md.FMdsection.zd_file_section) not-in-list
     file_section.zd_file_section_prev = NULL; // (abt_md.FMdsection.zd_file_section)
     file_section.bh_file_section_idx = -1; // (abt_md.FDb.bh_file_section) not-in-heap

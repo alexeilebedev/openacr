@@ -1,4 +1,3 @@
-# atf_comp -report:N -printinput sv2ssim.Convert1Signed | sv2ssim test/csv/2.csv -ctype a.B -schema -data -prefer_signed | cat
 a.B  Month:JAN  _1958:340  _1959:360  _1960:417
 a.B  Month:FEB  _1958:318  _1959:342  _1960:391
 a.B  Month:MAR  _1958:362  _1959:406  _1960:419

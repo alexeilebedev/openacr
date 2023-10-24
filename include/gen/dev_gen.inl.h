@@ -125,6 +125,19 @@ inline void dev::Covtarget_Init(dev::Covtarget& parent) {
     parent.exe = u32(0);
     parent.hit = u32(0);
 }
+inline dev::Edaction::Edaction() {
+    dev::Edaction_Init(*this);
+}
+
+
+// --- dev.Edaction..Init
+// Set all fields to initial values.
+inline void dev::Edaction_Init(dev::Edaction& parent) {
+    parent.needamc = bool(false);
+}
+inline dev::Edacttype::Edacttype() {
+}
+
 inline dev::FieldId::FieldId(i32                            in_value)
     : value(in_value)
 {
@@ -204,9 +217,6 @@ inline dev::Include::Include() {
 inline void dev::Include_Init(dev::Include& parent) {
     parent.sys = bool(false);
 }
-inline dev::Issue::Issue() {
-}
-
 inline dev::License::License() {
 }
 
@@ -236,9 +246,6 @@ inline dev::Mdsection::Mdsection() {
 inline void dev::Mdsection_Init(dev::Mdsection& parent) {
     parent.perns = bool(false);
 }
-inline dev::Mr::Mr() {
-}
-
 inline dev::Msgfile::Msgfile() {
     dev::Msgfile_Init(*this);
 }
@@ -261,9 +268,6 @@ inline dev::OptType::OptType(const algo::strptr&            in_opt_type
 {
 }
 inline dev::OptType::OptType() {
-}
-
-inline dev::Project::Project() {
 }
 
 inline dev::Readme::Readme(const algo::strptr&            in_gitfile
@@ -461,6 +465,16 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Covtarget
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Edaction &row) {// cfmt:dev.Edaction.String
+    dev::Edaction_Print(const_cast<dev::Edaction&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Edacttype &row) {// cfmt:dev.Edacttype.String
+    dev::Edacttype_Print(const_cast<dev::Edacttype&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::FieldId &row) {// cfmt:dev.FieldId.String
     dev::FieldId_Print(const_cast<dev::FieldId&>(row), str);
     return str;
@@ -486,11 +500,6 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Include &
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Issue &row) {// cfmt:dev.Issue.String
-    dev::Issue_Print(const_cast<dev::Issue&>(row), str);
-    return str;
-}
-
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::License &row) {// cfmt:dev.License.String
     dev::License_Print(const_cast<dev::License&>(row), str);
     return str;
@@ -503,11 +512,6 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Linelim &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Mdsection &row) {// cfmt:dev.Mdsection.String
     dev::Mdsection_Print(const_cast<dev::Mdsection&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Mr &row) {// cfmt:dev.Mr.String
-    dev::Mr_Print(const_cast<dev::Mr&>(row), str);
     return str;
 }
 

@@ -1,5 +1,6 @@
 dmmeta.gconst  field:amc.BltinId.value  namefld:amcdb.Bltin.ctype  idfld:""  wantenum:N
 dmmeta.gconst  field:amc.CppkeywordId.id  namefld:dmmeta.Cppkeyword.cppkeyword  idfld:""  wantenum:N
+dmmeta.gconst  field:amc.Pnewtype.value  namefld:dmmeta.Buftype.pnewtype  idfld:""  wantenum:N
 dmmeta.gconst  field:amcdb.Curstype.curstype  namefld:amcdb.Curstype.curstype  idfld:""  wantenum:N
 dmmeta.gconst  field:amcdb.Tclass.tclass  namefld:amcdb.Tclass.tclass  idfld:amcdb.Tclass.tclass  wantenum:N
 dmmeta.gconst  field:ams.ProcType.value  namefld:amsdb.ProcType.proctype  idfld:amsdb.ProcType.id  wantenum:Y
@@ -13,7 +14,6 @@ dmmeta.gconst  field:dev.License.license  namefld:dev.License.license  idfld:"" 
 dmmeta.gconst  field:dev.Sandbox.sandbox  namefld:dev.Sandbox.sandbox  idfld:""  wantenum:N
 dmmeta.gconst  field:dev.Target.target  namefld:dev.Target.target  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Buftype.pnewtype  namefld:dmmeta.Buftype.pnewtype  idfld:""  wantenum:N
-dmmeta.gconst  field:dmmeta.BuftypeId.value  namefld:dmmeta.Buftype.pnewtype  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Fbufdir.fbufdir  namefld:dmmeta.Fbufdir.fbufdir  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Fbuftype.fbuftype  namefld:dmmeta.Fbuftype.fbuftype  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Hashtype.hashtype  namefld:dmmeta.Hashtype.hashtype  idfld:""  wantenum:N
@@ -21,7 +21,6 @@ dmmeta.gconst  field:dmmeta.Ns.ns  namefld:dmmeta.Ns.ns  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Nstype.nstype  namefld:dmmeta.Nstype.nstype  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Printfmt.printfmt  namefld:dmmeta.Printfmt.printfmt  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Reftype.reftype  namefld:dmmeta.Reftype.reftype  idfld:dmmeta.Reftype.reftype  wantenum:Y
-dmmeta.gconst  field:dmmeta.ReftypeId.value  namefld:dmmeta.Reftype.reftype  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Sorttype.sorttype  namefld:dmmeta.Sorttype.sorttype  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Ssimfile.ssimfile  namefld:dmmeta.Ssimfile.ssimfile  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Steptype.steptype  namefld:dmmeta.Steptype.steptype  idfld:""  wantenum:N

@@ -1,1 +1,0 @@
-# atf_comp -report:N -printinput acr_compl.OptSigList | acr_compl -line:"atf_cmdline -sig -type:63" | cat

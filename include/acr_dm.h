@@ -30,7 +30,7 @@ namespace acr_dm { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/acr/acr_dm.cpp
+    // cpp/acr_dm/acr_dm.cpp
     //
 
     // Get or create tuple attribute

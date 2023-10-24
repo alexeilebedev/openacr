@@ -25,7 +25,7 @@ Usage: mdbg [-target:]<string> [[-args:]<string>] [options]
     -dry_run                        Print commands but don't execute
     -verbose       int              Verbosity level (0..255); alias -v; cumulative
     -debug         int              Debug level (0..255); alias -d; cumulative
-    -help                           Print help an exit; alias -h
+    -help                           Print help and exit; alias -h
     -version                        Print version and exit
     -signature                      Show signatures and exit; alias -sig
 
@@ -164,18 +164,24 @@ can be tried out and fixed.
 
 `mdbg` takes the following tables on input:
 ```
-CTYPE         COMMENT
+CTYPE                COMMENT
 dev.Cfg
-dev.Builddir  Directory where object files/executables go. Determines compile/link options
+dev.Builddir         Directory where object files/executables go. Determines compile/link options
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
 ```
 
 ### Tests
 
-The following component tests are defined for `mdbg`:
+The following component tests are defined for `mdbg`.
+These can be executed with `atf_comp <comptest> -v`
 ```
-mdbg.OutOfOrderArgs	
-mdbg.Smoke	
-mdbg.SmokeBreak	
-mdbg.SmokeBreak2	
+COMPTEST             COMMENT
+mdbg.OutOfOrderArgs
+mdbg.Smoke
+mdbg.SmokeBreak
+mdbg.SmokeBreak2
+
+
+
 ```
 

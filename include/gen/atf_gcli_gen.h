@@ -149,9 +149,13 @@ void                 StaticCheck();
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
-bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
+bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file.
+bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file descriptor.
+bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
-bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
@@ -663,7 +667,7 @@ void                 FGtblacttst_Uninit(atf_gcli::FGtblacttst& gtblacttst) __att
 // access: atf_gcli.FGtblacttst.c_gtblacttstout (Ptrary)
 struct FGtblacttstout { // atf_gcli.FGtblacttstout
     atf_gcli::FGtblacttstout*   ind_gtblacttstout_next;              // hash next
-    algo::Smallstr50            gtblacttstout;                       //
+    algo::Smallstr250           gtblacttstout;                       //
     algo::cstring               text;                                //
     algo::cstring               tout;                                //
     bool                        gtblacttst_c_gtblacttstout_in_ary;   //   false  membership flag

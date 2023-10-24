@@ -23,7 +23,7 @@ Usage: sandbox [-name:]<regx> [[-cmd:]<string>] [options]
     -files...   string          Shell regx to diff
     -verbose    int             Verbosity level (0..255); alias -v; cumulative
     -debug      int             Debug level (0..255); alias -d; cumulative
-    -help                       Print help an exit; alias -h
+    -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
 
@@ -51,14 +51,14 @@ includes
 The following functions in `algo_lib` help use sandboxing inside a process
 
 ```
-inline-command: src_func algo_lib %Sandbox% -proto
+inline-command: src_func algo_lib %Sandbox% -proto -showloc:N
 // Return computed name for sandbox SANDBOX
-cpp/lib/algo/lib.cpp:734: tempstr algo_lib::SandboxDir(algo::strptr sandbox) 
+tempstr algo_lib::SandboxDir(algo::strptr sandbox) 
 // Enter sandbox and remember previous directory
-cpp/lib/algo/lib.cpp:745: void algo_lib::SandboxEnter(algo::strptr sandbox) 
+void algo_lib::SandboxEnter(algo::strptr sandbox) 
 // Change to the directory that was current before sandbox mode
 // Must be balanced with SandboxEnter
-cpp/lib/algo/lib.cpp:756: void algo_lib::SandboxExit() 
+void algo_lib::SandboxExit() 
 ```
 
 ### Example: create a new sandbox
@@ -148,8 +148,9 @@ $ sandbox test -create "sandbox test2 -create 'command'" -del
 
 `sandbox` takes the following tables on input:
 ```
-CTYPE        COMMENT
+CTYPE                COMMENT
 dev.Sbpath
 dev.Sandbox
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
 ```
 

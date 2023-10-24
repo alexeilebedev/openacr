@@ -87,6 +87,7 @@ namespace dmmeta { struct Cpptype; }
 namespace dmmeta { struct Cstr; }
 namespace dmmeta { struct Ctype; }
 namespace acr_ed { struct FNs; }
+namespace dev { struct Edaction; }
 namespace dmmeta { struct Field; }
 namespace acr_ed { struct FCtype; }
 namespace dmmeta { struct Fprefix; }
@@ -118,9 +119,12 @@ namespace acr_ed { struct _db_typefld_curs; }
 namespace acr_ed { struct _db_cpptype_curs; }
 namespace acr_ed { struct _db_cfmt_curs; }
 namespace acr_ed { struct _db_nsdb_curs; }
+namespace acr_ed { struct _db_edaction_curs; }
+namespace acr_ed { struct target_zd_targsrc_curs; }
 namespace acr_ed { struct FCfmt; }
 namespace acr_ed { struct FCpptype; }
 namespace acr_ed { struct FCstr; }
+namespace acr_ed { struct FEdaction; }
 namespace acr_ed { struct trace; }
 namespace acr_ed { struct FDb; }
 namespace acr_ed { struct FField; }
@@ -135,6 +139,9 @@ namespace acr_ed { struct FTypefld; }
 namespace acr_ed { struct FieldId; }
 namespace acr_ed { struct TableId; }
 namespace acr_ed { extern struct acr_ed::FDb _db; }
+namespace acr_ed { // hook_fcn_typedef
+    typedef void (*edaction_step_hook)(); // hook:acr_ed.FEdaction.step
+} // hook_decl
 namespace acr_ed { // gen:ns_print_struct
 
 // --- acr_ed.FCfmt
@@ -355,6 +362,39 @@ acr_ed::FCfmt&       ctype_c_cfmt_curs_Access(ctype_c_cfmt_curs &curs);
 void                 FCtype_Init(acr_ed::FCtype& ctype);
 void                 FCtype_Uninit(acr_ed::FCtype& ctype) __attribute__((nothrow));
 
+// --- acr_ed.FEdaction
+// create: acr_ed.FDb.edaction (Inlary)
+// global access: ind_edaction (Thash)
+struct FEdaction { // acr_ed.FEdaction
+    algo::Smallstr50             edaction;            //
+    bool                         needamc;             //   false
+    algo::Comment                comment;             //
+    acr_ed::edaction_step_hook   step;                //   NULL  Pointer to a function
+    bool                         select;              //   false
+    acr_ed::FEdaction*           ind_edaction_next;   // hash next
+    FEdaction();
+    ~FEdaction();
+private:
+    FEdaction(const FEdaction&){ /*disallow copy constructor */}
+    void operator =(const FEdaction&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 edaction_CopyOut(acr_ed::FEdaction &row, dev::Edaction &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 edaction_CopyIn(acr_ed::FEdaction &row, dev::Edaction &in) __attribute__((nothrow));
+
+algo::Smallstr50     edacttype_Get(acr_ed::FEdaction& edaction) __attribute__((__warn_unused_result__, nothrow));
+
+algo::Smallstr50     name_Get(acr_ed::FEdaction& edaction) __attribute__((__warn_unused_result__, nothrow));
+
+// Invoke function by pointer
+void                 step_Call(acr_ed::FEdaction& edaction) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 FEdaction_Init(acr_ed::FEdaction& edaction);
+void                 FEdaction_Uninit(acr_ed::FEdaction& edaction) __attribute__((nothrow));
+
 // --- acr_ed.trace
 #pragma pack(push,1)
 struct trace { // acr_ed.trace
@@ -368,80 +408,86 @@ void                 trace_Print(acr_ed::trace & row, algo::cstring &str) __attr
 // --- acr_ed.FDb
 // create: acr_ed.FDb._db (Global)
 struct FDb { // acr_ed.FDb
-    acr_ed::FNs*          ns_lary[32];                  // level array
-    i32                   ns_n;                         // number of elements in array
-    acr_ed::FNs**         ind_ns_buckets_elems;         // pointer to bucket array
-    i32                   ind_ns_buckets_n;             // number of elements in bucket array
-    i32                   ind_ns_n;                     // number of elements in the hash table
-    command::acr_ed       cmdline;                      //
-    acr_ed::FField*       field_lary[32];               // level array
-    i32                   field_n;                      // number of elements in array
-    acr_ed::FField**      ind_field_buckets_elems;      // pointer to bucket array
-    i32                   ind_field_buckets_n;          // number of elements in bucket array
-    i32                   ind_field_n;                  // number of elements in the hash table
-    acr_ed::FCtype*       ctype_lary[32];               // level array
-    i32                   ctype_n;                      // number of elements in array
-    algo::cstring         fcontents;                    // Optional file contents
-    algo::cstring         script;                       // Script to execute
-    algo::cstring         out_ssim;                     // Input for acr command
-    acr_ed::FCtype**      ind_ctype_buckets_elems;      // pointer to bucket array
-    i32                   ind_ctype_buckets_n;          // number of elements in bucket array
-    i32                   ind_ctype_n;                  // number of elements in the hash table
-    acr_ed::FSsimfile*    ssimfile_lary[32];            // level array
-    i32                   ssimfile_n;                   // number of elements in array
-    acr_ed::FSsimfile**   ind_ssimfile_buckets_elems;   // pointer to bucket array
-    i32                   ind_ssimfile_buckets_n;       // number of elements in bucket array
-    i32                   ind_ssimfile_n;               // number of elements in the hash table
-    acr_ed::FCstr*        cstr_lary[32];                // level array
-    i32                   cstr_n;                       // number of elements in array
-    algo::cstring*        vis_elems;                    // pointer to elements
-    u32                   vis_n;                        // number of elements in array
-    u32                   vis_max;                      // max. capacity of array before realloc
-    acr_ed::FListtype*    listtype_lary[32];            // level array
-    i32                   listtype_n;                   // number of elements in array
-    acr_ed::FListtype**   ind_listtype_buckets_elems;   // pointer to bucket array
-    i32                   ind_listtype_buckets_n;       // number of elements in bucket array
-    i32                   ind_listtype_n;               // number of elements in the hash table
-    acr_ed::FFprefix*     fprefix_lary[32];             // level array
-    i32                   fprefix_n;                    // number of elements in array
-    acr_ed::FFprefix**    ind_fprefix_buckets_elems;    // pointer to bucket array
-    i32                   ind_fprefix_buckets_n;        // number of elements in bucket array
-    i32                   ind_fprefix_n;                // number of elements in the hash table
-    acr_ed::FTarget*      target_lary[32];              // level array
-    i32                   target_n;                     // number of elements in array
-    acr_ed::FTarget**     ind_target_buckets_elems;     // pointer to bucket array
-    i32                   ind_target_buckets_n;         // number of elements in bucket array
-    i32                   ind_target_n;                 // number of elements in the hash table
-    algo::Smallstr100     keyfld;                       //
-    algo::Smallstr100     viafld;                       //
-    bool                  need_amc;                     //   false
-    acr_ed::FTargsrc*     targsrc_lary[32];             // level array
-    i32                   targsrc_n;                    // number of elements in array
-    algo::cstring         abt_path;                     //   "bin/abt"  path for executable
-    command::abt          abt_cmd;                      // command line for child process
-    algo::cstring         abt_fstdin;                   // redirect for stdin
-    algo::cstring         abt_fstdout;                  // redirect for stdout
-    algo::cstring         abt_fstderr;                  // redirect for stderr
-    pid_t                 abt_pid;                      //   0  pid of running child process
-    i32                   abt_timeout;                  //   0  optional timeout for child process
-    i32                   abt_status;                   //   0  last exit status of child process
-    acr_ed::FSbpath*      sbpath_lary[32];              // level array
-    i32                   sbpath_n;                     // number of elements in array
-    acr_ed::FPack*        pack_lary[32];                // level array
-    i32                   pack_n;                       // number of elements in array
-    acr_ed::FTypefld*     typefld_lary[32];             // level array
-    i32                   typefld_n;                    // number of elements in array
-    acr_ed::FCpptype*     cpptype_lary[32];             // level array
-    i32                   cpptype_n;                    // number of elements in array
-    acr_ed::FCfmt*        cfmt_lary[32];                // level array
-    i32                   cfmt_n;                       // number of elements in array
-    acr_ed::FNsdb*        nsdb_lary[32];                // level array
-    i32                   nsdb_n;                       // number of elements in array
-    acr_ed::FNsdb**       ind_nsdb_buckets_elems;       // pointer to bucket array
-    i32                   ind_nsdb_buckets_n;           // number of elements in bucket array
-    i32                   ind_nsdb_n;                   // number of elements in the hash table
-    bool                  could_be_ptr;                 //   false  Used to automatically guess Ptr or Ptrary reftype on new fields
-    acr_ed::trace         trace;                        //
+    acr_ed::FNs*          ns_lary[32];                                     // level array
+    i32                   ns_n;                                            // number of elements in array
+    acr_ed::FNs**         ind_ns_buckets_elems;                            // pointer to bucket array
+    i32                   ind_ns_buckets_n;                                // number of elements in bucket array
+    i32                   ind_ns_n;                                        // number of elements in the hash table
+    command::acr_ed       cmdline;                                         //
+    acr_ed::FField*       field_lary[32];                                  // level array
+    i32                   field_n;                                         // number of elements in array
+    acr_ed::FField**      ind_field_buckets_elems;                         // pointer to bucket array
+    i32                   ind_field_buckets_n;                             // number of elements in bucket array
+    i32                   ind_field_n;                                     // number of elements in the hash table
+    acr_ed::FCtype*       ctype_lary[32];                                  // level array
+    i32                   ctype_n;                                         // number of elements in array
+    algo::cstring         fcontents;                                       // Optional file contents
+    algo::cstring         script;                                          // Script to execute
+    algo::cstring         out_ssim;                                        // Input for acr command
+    acr_ed::FCtype**      ind_ctype_buckets_elems;                         // pointer to bucket array
+    i32                   ind_ctype_buckets_n;                             // number of elements in bucket array
+    i32                   ind_ctype_n;                                     // number of elements in the hash table
+    acr_ed::FSsimfile*    ssimfile_lary[32];                               // level array
+    i32                   ssimfile_n;                                      // number of elements in array
+    acr_ed::FSsimfile**   ind_ssimfile_buckets_elems;                      // pointer to bucket array
+    i32                   ind_ssimfile_buckets_n;                          // number of elements in bucket array
+    i32                   ind_ssimfile_n;                                  // number of elements in the hash table
+    acr_ed::FCstr*        cstr_lary[32];                                   // level array
+    i32                   cstr_n;                                          // number of elements in array
+    algo::cstring*        vis_elems;                                       // pointer to elements
+    u32                   vis_n;                                           // number of elements in array
+    u32                   vis_max;                                         // max. capacity of array before realloc
+    acr_ed::FListtype*    listtype_lary[32];                               // level array
+    i32                   listtype_n;                                      // number of elements in array
+    acr_ed::FListtype**   ind_listtype_buckets_elems;                      // pointer to bucket array
+    i32                   ind_listtype_buckets_n;                          // number of elements in bucket array
+    i32                   ind_listtype_n;                                  // number of elements in the hash table
+    acr_ed::FFprefix*     fprefix_lary[32];                                // level array
+    i32                   fprefix_n;                                       // number of elements in array
+    acr_ed::FFprefix**    ind_fprefix_buckets_elems;                       // pointer to bucket array
+    i32                   ind_fprefix_buckets_n;                           // number of elements in bucket array
+    i32                   ind_fprefix_n;                                   // number of elements in the hash table
+    acr_ed::FTarget*      target_lary[32];                                 // level array
+    i32                   target_n;                                        // number of elements in array
+    acr_ed::FTarget**     ind_target_buckets_elems;                        // pointer to bucket array
+    i32                   ind_target_buckets_n;                            // number of elements in bucket array
+    i32                   ind_target_n;                                    // number of elements in the hash table
+    algo::Smallstr100     keyfld;                                          //
+    algo::Smallstr100     viafld;                                          //
+    bool                  need_amc;                                        //   false
+    acr_ed::FTargsrc*     targsrc_lary[32];                                // level array
+    i32                   targsrc_n;                                       // number of elements in array
+    algo::cstring         abt_path;                                        //   "bin/abt"  path for executable
+    command::abt          abt_cmd;                                         // command line for child process
+    algo::cstring         abt_fstdin;                                      // redirect for stdin
+    algo::cstring         abt_fstdout;                                     // redirect for stdout
+    algo::cstring         abt_fstderr;                                     // redirect for stderr
+    pid_t                 abt_pid;                                         //   0  pid of running child process
+    i32                   abt_timeout;                                     //   0  optional timeout for child process
+    i32                   abt_status;                                      //   0  last exit status of child process
+    acr_ed::FSbpath*      sbpath_lary[32];                                 // level array
+    i32                   sbpath_n;                                        // number of elements in array
+    acr_ed::FPack*        pack_lary[32];                                   // level array
+    i32                   pack_n;                                          // number of elements in array
+    acr_ed::FTypefld*     typefld_lary[32];                                // level array
+    i32                   typefld_n;                                       // number of elements in array
+    acr_ed::FCpptype*     cpptype_lary[32];                                // level array
+    i32                   cpptype_n;                                       // number of elements in array
+    acr_ed::FCfmt*        cfmt_lary[32];                                   // level array
+    i32                   cfmt_n;                                          // number of elements in array
+    acr_ed::FNsdb*        nsdb_lary[32];                                   // level array
+    i32                   nsdb_n;                                          // number of elements in array
+    acr_ed::FNsdb**       ind_nsdb_buckets_elems;                          // pointer to bucket array
+    i32                   ind_nsdb_buckets_n;                              // number of elements in bucket array
+    i32                   ind_nsdb_n;                                      // number of elements in the hash table
+    bool                  could_be_ptr;                                    //   false  Used to automatically guess Ptr or Ptrary reftype on new fields
+    u128                  edaction_data[sizeu128(acr_ed::FEdaction,18)];   // place for data
+    i32                   edaction_n;                                      // number of elems current in existence
+    enum { edaction_max = 18 };
+    acr_ed::FEdaction**   ind_edaction_buckets_elems;                      // pointer to bucket array
+    i32                   ind_edaction_buckets_n;                          // number of elements in bucket array
+    i32                   ind_edaction_n;                                  // number of elements in the hash table
+    acr_ed::trace         trace;                                           //
 };
 
 // Allocate memory for new default row.
@@ -503,9 +549,13 @@ void                 StaticCheck();
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
-bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
+bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file.
+bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file descriptor.
+bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
-bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
@@ -817,8 +867,6 @@ bool                 ind_target_EmptyQ() __attribute__((nothrow));
 acr_ed::FTarget*     ind_target_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Look up row by key and return reference. Throw exception if not found
 acr_ed::FTarget&     ind_target_FindX(const algo::strptr& key);
-// Find row by key. If not found, create and x-reference a new row with with this key.
-acr_ed::FTarget&     ind_target_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 i32                  ind_target_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
@@ -1061,6 +1109,55 @@ void                 ind_nsdb_Remove(acr_ed::FNsdb& row) __attribute__((nothrow)
 // Reserve enough room in the hash for N more elements. Return success code.
 void                 ind_nsdb_Reserve(int n) __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_ed::FEdaction&   edaction_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+acr_ed::FEdaction*   edaction_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_ed::FEdaction*   edaction_InsertMaybe(const dev::Edaction &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                edaction_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 edaction_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+acr_ed::FEdaction*   edaction_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array pointer by value
+algo::aryptr<acr_ed::FEdaction> edaction_Getary() __attribute__((nothrow));
+// Return constant 18 -- max. number of items in the pool
+i32                  edaction_Max() __attribute__((nothrow));
+// Return number of items in the array
+i32                  edaction_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Destroy all elements of Inlary
+void                 edaction_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 edaction_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking in release.
+acr_ed::FEdaction&   edaction_qFind(u64 t) __attribute__((nothrow));
+// Compute row id of element given element's address
+u64                  edaction_rowid_Get(acr_ed::FEdaction &row) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 edaction_XrefMaybe(acr_ed::FEdaction &row);
+
+// Return true if hash is empty
+bool                 ind_edaction_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+acr_ed::FEdaction*   ind_edaction_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+acr_ed::FEdaction&   ind_edaction_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr_ed::FEdaction&   ind_edaction_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+i32                  ind_edaction_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool                 ind_edaction_InsertMaybe(acr_ed::FEdaction& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void                 ind_edaction_Remove(acr_ed::FEdaction& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+void                 ind_edaction_Reserve(int n) __attribute__((nothrow));
+
 // cursor points to valid item
 void                 _db_ns_curs_Reset(_db_ns_curs &curs, acr_ed::FDb &parent);
 // cursor points to valid item
@@ -1188,6 +1285,14 @@ bool                 _db_nsdb_curs_ValidQ(_db_nsdb_curs &curs);
 void                 _db_nsdb_curs_Next(_db_nsdb_curs &curs);
 // item access
 acr_ed::FNsdb&       _db_nsdb_curs_Access(_db_nsdb_curs &curs);
+// cursor points to valid item
+void                 _db_edaction_curs_Reset(_db_edaction_curs &curs, acr_ed::FDb &parent);
+// cursor points to valid item
+bool                 _db_edaction_curs_ValidQ(_db_edaction_curs &curs);
+// proceed to next item
+void                 _db_edaction_curs_Next(_db_edaction_curs &curs);
+// item access
+acr_ed::FEdaction&   _db_edaction_curs_Access(_db_edaction_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
@@ -1201,7 +1306,7 @@ struct FField { // acr_ed.FField
     algo::Smallstr100   field;                  //
     algo::Smallstr50    arg;                    // type of field
     algo::Smallstr50    reftype;                //   "Val"
-    dmmeta::CppExpr     dflt;                   // default value (c++ expression)
+    algo::CppExpr       dflt;                   // default value (c++ expression)
     algo::Comment       comment;                //
     acr_ed::FCtype*     p_ctype;                // reference to parent row
     u32                 rowid;                  //   0
@@ -1294,6 +1399,7 @@ void                 FListtype_Uninit(acr_ed::FListtype& listtype) __attribute__
 // global access: ind_ns (Thash)
 // access: acr_ed.FCtype.p_ns (Upptr)
 // access: acr_ed.FField.p_ns (Upptr)
+// access: acr_ed.FTarget.p_ns (Upptr)
 struct FNs { // acr_ed.FNs
     acr_ed::FNs*       ind_ns_next;   // hash next
     algo::Smallstr16   ns;            // Namespace name (primary key)
@@ -1428,10 +1534,14 @@ void                 FSsimfile_Uninit(acr_ed::FSsimfile& ssimfile) __attribute__
 // global access: ind_target (Thash)
 // access: acr_ed.FTargsrc.p_target (Upptr)
 struct FTarget { // acr_ed.FTarget
-    acr_ed::FTarget*   ind_target_next;   // hash next
-    algo::Smallstr16   target;            //
-    algo::Smallstr50   compat;            //   "Linux-%.%-%"
-    u32                score;             //   0  For guessing target from source file
+    acr_ed::FTarget*    ind_target_next;   // hash next
+    algo::Smallstr16    target;            //
+    algo::Smallstr50    compat;            //   "Linux-%.%-%"
+    u32                 score;             //   0  For guessing target from source file
+    acr_ed::FTargsrc*   zd_targsrc_head;   // zero-terminated doubly linked list
+    i32                 zd_targsrc_n;      // zero-terminated doubly linked list
+    acr_ed::FTargsrc*   zd_targsrc_tail;   // pointer to last element
+    acr_ed::FNs*        p_ns;              // reference to parent row
 private:
     friend acr_ed::FTarget&     target_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr_ed::FTarget*     target_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -1447,23 +1557,59 @@ void                 target_CopyOut(acr_ed::FTarget &row, dev::Target &out) __at
 // Copy fields in to row
 void                 target_CopyIn(acr_ed::FTarget &row, dev::Target &in) __attribute__((nothrow));
 
+// Return true if index is empty
+bool                 zd_targsrc_EmptyQ(acr_ed::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+acr_ed::FTargsrc*    zd_targsrc_First(acr_ed::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+bool                 zd_targsrc_InLlistQ(acr_ed::FTargsrc& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+void                 zd_targsrc_Insert(acr_ed::FTarget& target, acr_ed::FTargsrc& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+acr_ed::FTargsrc*    zd_targsrc_Last(acr_ed::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return number of items in the linked list
+i32                  zd_targsrc_N(const acr_ed::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+acr_ed::FTargsrc*    zd_targsrc_Next(acr_ed::FTargsrc &row) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to previous element in the list
+acr_ed::FTargsrc*    zd_targsrc_Prev(acr_ed::FTargsrc &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+void                 zd_targsrc_Remove(acr_ed::FTarget& target, acr_ed::FTargsrc& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+void                 zd_targsrc_RemoveAll(acr_ed::FTarget& target) __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+acr_ed::FTargsrc*    zd_targsrc_RemoveFirst(acr_ed::FTarget& target) __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+acr_ed::FTargsrc&    zd_targsrc_qLast(acr_ed::FTarget& target) __attribute__((__warn_unused_result__, nothrow));
+
 // Set all fields to initial values.
 void                 FTarget_Init(acr_ed::FTarget& target);
+// cursor points to valid item
+void                 target_zd_targsrc_curs_Reset(target_zd_targsrc_curs &curs, acr_ed::FTarget &parent);
+// cursor points to valid item
+bool                 target_zd_targsrc_curs_ValidQ(target_zd_targsrc_curs &curs);
+// proceed to next item
+void                 target_zd_targsrc_curs_Next(target_zd_targsrc_curs &curs);
+// item access
+acr_ed::FTargsrc&    target_zd_targsrc_curs_Access(target_zd_targsrc_curs &curs);
 void                 FTarget_Uninit(acr_ed::FTarget& target) __attribute__((nothrow));
 
 // --- acr_ed.FTargsrc
 // create: acr_ed.FDb.targsrc (Lary)
+// access: acr_ed.FTarget.zd_targsrc (Llist)
 struct FTargsrc { // acr_ed.FTargsrc
-    algo::Smallstr100   targsrc;    //
-    algo::Comment       comment;    //
-    acr_ed::FTarget*    p_target;   // reference to parent row
+    acr_ed::FTargsrc*   zd_targsrc_next;   // zslist link; -1 means not-in-list
+    acr_ed::FTargsrc*   zd_targsrc_prev;   // previous element
+    algo::Smallstr100   targsrc;           //
+    algo::Comment       comment;           //
+    acr_ed::FTarget*    p_target;          // reference to parent row
 private:
     friend acr_ed::FTargsrc&    targsrc_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr_ed::FTargsrc*    targsrc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 targsrc_RemoveAll() __attribute__((nothrow));
     friend void                 targsrc_RemoveLast() __attribute__((nothrow));
     FTargsrc();
-    // x-reference on acr_ed.FTargsrc.p_target prevents copy
+    ~FTargsrc();
     FTargsrc(const FTargsrc&){ /*disallow copy constructor */}
     void operator =(const FTargsrc&){ /*disallow direct assignment */}
 };
@@ -1481,6 +1627,7 @@ algo::Smallstr10     ext_Get(acr_ed::FTargsrc& targsrc) __attribute__((__warn_un
 
 // Set all fields to initial values.
 void                 FTargsrc_Init(acr_ed::FTargsrc& targsrc);
+void                 FTargsrc_Uninit(acr_ed::FTargsrc& targsrc) __attribute__((nothrow));
 
 // --- acr_ed.FTypefld
 // create: acr_ed.FDb.typefld (Lary)
@@ -1732,8 +1879,61 @@ struct _db_nsdb_curs {// cursor
     _db_nsdb_curs(){ parent=NULL; index=0; }
 };
 
+
+struct _db_edaction_curs {// cursor
+    typedef acr_ed::FEdaction ChildType;
+    int index;
+    acr_ed::FDb *parent;
+    _db_edaction_curs() { parent=NULL; index=0; }
+};
+
+
+struct target_zd_targsrc_curs {// fcurs:acr_ed.FTarget.zd_targsrc/curs
+    typedef acr_ed::FTargsrc ChildType;
+    acr_ed::FTargsrc* row;
+    target_zd_targsrc_curs() {
+        row = NULL;
+    }
+};
+
 } // gen:ns_curstext
 namespace acr_ed { // gen:ns_func
+// User-implemented function from gstatic:acr_ed.FDb.edaction
+void                 edaction_Create_Citest();
+// User-implemented function from gstatic:acr_ed.FDb.edaction
+void                 edaction_Create_Ctype();
+// User-implemented function from gstatic:acr_ed.FDb.edaction
+void                 edaction_Create_Field();
+// User-implemented function from gstatic:acr_ed.FDb.edaction
+void                 edaction_Create_Finput();
+// User-implemented function from gstatic:acr_ed.FDb.edaction
+void                 edaction_Create_Srcfile();
+// User-implemented function from gstatic:acr_ed.FDb.edaction
+void                 edaction_Create_Ssimfile();
+// User-implemented function from gstatic:acr_ed.FDb.edaction
+void                 edaction_Create_Target();
+// User-implemented function from gstatic:acr_ed.FDb.edaction
+void                 edaction_Create_Unittest();
+// User-implemented function from gstatic:acr_ed.FDb.edaction
+void                 edaction_Delete_Ctype();
+// User-implemented function from gstatic:acr_ed.FDb.edaction
+void                 edaction_Delete_Field();
+// User-implemented function from gstatic:acr_ed.FDb.edaction
+void                 edaction_Delete_Srcfile();
+// User-implemented function from gstatic:acr_ed.FDb.edaction
+void                 edaction_Delete_Ssimfile();
+// User-implemented function from gstatic:acr_ed.FDb.edaction
+void                 edaction_Delete_Target();
+// User-implemented function from gstatic:acr_ed.FDb.edaction
+void                 edaction_Rename_Ctype();
+// User-implemented function from gstatic:acr_ed.FDb.edaction
+void                 edaction_Rename_Field();
+// User-implemented function from gstatic:acr_ed.FDb.edaction
+void                 edaction_Rename_Srcfile();
+// User-implemented function from gstatic:acr_ed.FDb.edaction
+void                 edaction_Rename_Ssimfile();
+// User-implemented function from gstatic:acr_ed.FDb.edaction
+void                 edaction_Rename_Target();
 } // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)
