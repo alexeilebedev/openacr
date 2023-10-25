@@ -50,14 +50,10 @@ static void Main_Start() {
     bool started=false;
     // check if dir exist, and initialize if not
     tempstr cmd;
+    CreateDirRecurse(acr_my::_db.data_logdir);
     if (!DirectoryQ(acr_my::_db.data_dir)){
         // create mysql directory
         CreateDirRecurse(acr_my::_db.data_dir);
-        // **VP** if logdir dir is the same as data_dir
-        // --initialize fails because it puts a record into data_dir
-        // and mysqld sees the dir as contaminated!
-        CreateDirRecurse(acr_my::_db.data_logdir);
-        // assume mysqld_safe is in the path
         cmd << MysqldSafeCmd()
             << " --initialize"
             << " 1>/dev/null";

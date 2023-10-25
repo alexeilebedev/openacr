@@ -521,6 +521,9 @@ and powerful development environment.
     'mdbg acr' debugs acr
     'mdbg "mdbg acr"' debugs the debugger debugging acr (in principle)
 
+    'abt_md -ns:acr' generates documentation for acr
+    'abt_md -ns:abt_md' generates documentation for abt_md
+
 And of course, even though this is fun, 
 the point of these tools is not to compile themselves: that economy is just a by-product of the naming conventions.
 The point is to allow the creation of new applications,

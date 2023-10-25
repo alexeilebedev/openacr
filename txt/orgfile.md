@@ -1,10 +1,11 @@
-## Orgfile: organize and deduplicate files by timestamp and by contents
+## orgfile: organize and deduplicate files by timestamp and by contents
+
+
 
 ### Syntax
 
 ```
-inline-command: orgfile -h
-orgfile: OpenACR File deduplicator tool
+orgfile: organize and deduplicate files by timestamp and by contents
 Usage: orgfile [options]
     OPTION      TYPE    DFLT    COMMENT
     -in         string  "data"  Input directory or filename, - for stdin
@@ -71,24 +72,35 @@ For orgfilededup, orgfile deletes the duplicate file. With `-undo -dedup`, orgfi
 since deletion cannot be undone.
 For some move operations, `-undo` will move files back to their original locations.
 
-## Examples
-
 ### Find files with identical contents (but don't do anything with them)
+
 ```
 find . | orgfile -dedup
 ```
 
 ### Same as above but with an additional filter
+
 ```
 find . | orgfile -dedup | grep <blah> | orgfile -commit
 ```
 
 ### Delete files in secondary backup that already exist in primary backup
+
 ```
 find backup backup2 -type f | orgfile -dedup:"backup2/%" -commit
 ```
 
 ### Organize images by year and day
+
 ```
 find . -name "*.jpg" | orgfile -move:image/%Y/%Y-%m-%d/ -commit
 ```
+
+### Inputs
+
+`orgfile` takes the following tables on input:
+```
+CTYPE        COMMENT
+dev.Timefmt  Time formats supported by orgfile
+```
+

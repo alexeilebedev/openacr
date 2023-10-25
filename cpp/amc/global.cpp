@@ -975,6 +975,7 @@ void amc::tfunc_Global_ReadArgv() {
         Ins(&R, func.body, "if (doexit) {");
         Ins(&R, func.body, "    _exit(algo_lib::_db.exit_code);");
         Ins(&R, func.body, "}");
+        Ins(&R, func.body, "algo_lib::ResetErrtext();");
 
         // post-processing steps:
         amc::FFloadtuples *floadtuples = fcmdline->p_field->p_arg->c_floadtuples;

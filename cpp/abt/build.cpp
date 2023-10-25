@@ -17,7 +17,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-// Target: abt (exe) -- Algo Build Tool (build system)
+// Target: abt (exe) -- Algo Build Tool - build & link C++ targets
 // Exceptions: NO
 // Source: cpp/abt/build.cpp -- Build dag execution
 //
@@ -151,17 +151,6 @@ static void Build_DumpOutput(abt::FSyscmd *compl_cmd) {
 
 // -----------------------------------------------------------------------------
 
-static void Build_CleanPartial(abt::FSyscmd *compl_cmd) {
-    if (!compl_cmd->fail_prereq && compl_cmd->status != 0 && ch_N(compl_cmd->outfile)) {
-        verblog("abt.cleanup"
-                <<Keyval("syscmd", compl_cmd->syscmd)
-                <<Keyval("outfile",compl_cmd->outfile));
-        abt::DeleteFileV(compl_cmd->outfile);
-    }
-}
-
-// -----------------------------------------------------------------------------
-
 static void Build_ShowCompl(abt::FSyscmd *compl_cmd) {
     bool print_cmd   = compl_cmd->status != 0 && !compl_cmd->fail_prereq;
     // #AL# NOTE: do not use Filestat here as it may be out of date
@@ -266,7 +255,6 @@ static void Build_RunDag() {
                 Build_Progress(line_n,built_n);
             }
             Build_AdvanceDependent(compl_cmd);
-            Build_CleanPartial(compl_cmd);
         }
     } while (keepgoing);
 

@@ -3,6 +3,7 @@ dmmeta.nsx  ns:abt  genthrow:N  correct_getorcreate:N  pool:abt.FDb.lpool  sortx
 dmmeta.nsx  ns:abt_md  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  comment:""
 dmmeta.nsx  ns:acr  genthrow:N  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  comment:""
 dmmeta.nsx  ns:acr_compl  genthrow:N  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  comment:""
+dmmeta.nsx  ns:acr_dm  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  comment:""
 dmmeta.nsx  ns:acr_ed  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  comment:""
 dmmeta.nsx  ns:acr_in  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  comment:""
 dmmeta.nsx  ns:acr_my  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  comment:""

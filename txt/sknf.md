@@ -204,7 +204,7 @@ an integer, a string, or a cross product of two other sets.
 
 Decomposing your domain into sets based on *cardinality alone* has the property of being
 replicable -- if two people go into separate rooms and each design a schema for the same domain,
-they will likely arrive at the same decomposition except perhaps for the spelling of names. 
+they will likely arrive at the same decomposition except perhaps for the spelling of names.
 
 ### Structured Keys Are Complex Domains
 
@@ -273,3 +273,4 @@ just a single composite value. It scales indefinitely, and every join takes just
 
 Perhaps in the clade of DBMS construction philosophies,
 the closest analog to SKNF would be DKNF (Domain Key Normal Form).
+

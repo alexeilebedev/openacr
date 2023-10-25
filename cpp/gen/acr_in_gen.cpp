@@ -653,6 +653,7 @@ void acr_in::ReadArgv() {
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
     }
+    algo_lib::ResetErrtext();
     vrfy(acr_in::LoadTuplesMaybe(cmd.schema)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }

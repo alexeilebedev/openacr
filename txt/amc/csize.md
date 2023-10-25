@@ -85,3 +85,4 @@ is to set the attribute `pack:Y` in the `nsx` (namespace extra) record:
 ```
 dmmeta.nsx  ns:algw1  genthrow:N  correct_getorcreate:Y  pool:algo_lib.FDb.lpool  sortxref:N  pack:Y  fldoffset_asserts:Y  comment:""
 ```
+

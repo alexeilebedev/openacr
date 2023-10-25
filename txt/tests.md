@@ -80,3 +80,4 @@ in a file that links with `atf_ci`.
 If a test fails, the easiest way to debug it is to re-run `atf_unit` with
 `-debug` flag. It will use `mdbg` and automatically set a breakpoint at the first
 line of the test in question.
+

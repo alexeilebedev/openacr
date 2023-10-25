@@ -1,9 +1,10 @@
-## acr_ed: Acr Editor
+## acr_ed: ACR Editor Set of useful recipes, uses acr, abt, git, and other tools
+
+
 
 ### Syntax
 
 ```
-inline-command: acr_ed -h
 acr_ed: ACR Editor Set of useful recipes, uses acr, abt, git, and other tools
 Usage: acr_ed [options]
     OPTION      TYPE    DFLT    COMMENT
@@ -86,8 +87,6 @@ between the current directory and the sandbox after executing the transaction in
 
 ~~~
 
-### Targets
-
 #### Create Target
 
     $ acr_ed -create -target:X
@@ -102,8 +101,6 @@ between the current directory and the sandbox after executing the transaction in
 
     $ acr_ed -del -target:X
     ...
-
-### Ssimfiles
 
 #### Create Ssimfile
 
@@ -132,8 +129,6 @@ Options `-subset`, `-subset2` take ctype names.
 
     $ acr_ed -del -ssimfile ns.x
     ...
-
-### Source Files
 
 #### Create Source File
 
@@ -164,8 +159,6 @@ With `-e` option, the resulting file is opened for editing.
     $ acr_ed -create -srcfile txt/abcd.md
     ...
 
-### Ctypes
-
 #### Create A Ctype
 
     $ acr_ed -create -ctype ns.Name
@@ -177,6 +170,7 @@ With `-e` option, the resulting file is opened for editing.
     ...
 
 #### Create a Ctype with a single field
+
 If `-reftype` is omitted, it will be guessed
 If the field refers to a relational table, `reftype:Pkey` is picked by default
 If the field looks like a value, `reftype:Val` is used;
@@ -185,6 +179,7 @@ If the field looks like a value, `reftype:Val` is used;
     ...
 
 #### Create a string field that's a cross-product of two other keys
+
 If field type is omitted, `algo.Smallstr50` is picked.
 This creates three fields: the requested one, and two substring fields that are extracted
 from the created field as `fldfunc`s (in C++, this is implemented with a `_Get` function).
@@ -197,16 +192,17 @@ but it will be parsed from the parent field on every access.
     ...
 
 #### Create a substring directly
+
 Create a field named `field` that is extracted as a substring from another source field.
 The `substr` specification is described in txt/acr.md (look for Pathcomp)
 
     $ acr_ed -create -field ns.Name.field -substr .LL -srcfield ns.Name.field2
-    
+
 #### Delete A Ctype
 
     $ acr_ed -del -ctype ns.Name
     ...
-    
+
 ### Add An Input To Program
 
     $ acr_ed -create -finput -target ns -ssimfile ns2.name
@@ -247,6 +243,7 @@ To throw in a hash index, specify `-indexed`
     EOF
 
 ### Create An Index
+
 `acr_ed` can create both global and partitioned indexes. The rule is as follows:
 You can create an index in table A of records of type B if there exists a function that can locate B given A.
 Since the global database (`FDb`) is always accessible, you can always create a global index.
@@ -257,6 +254,7 @@ You can specify the path from B to A using `-via` argument. `-via` can be a poin
 an expression in the form `hash_field/key`. Examples will show the difference
 
 #### Create an Upptr (reference)
+
 Let's start by creating a new executable with an in-memory database, called `samp_xref`. We'll
 input two tables, `ns` and `ctype`. These are related because `ctype` key contains a reference to `ns`.
 
@@ -329,6 +327,7 @@ Other index types are available.
     $ acr_ed -create -field sample.FDb.bh_table -sortfld <fieldname>
 
 #### Create a circular, doubly linked list
+
 The structure of the linked list is described by the field prefix.
 amc supports 32 types of linked lists: singly and doubly linked, circular or zero-terminated,
 with default tail and head insertion, with and without a count, and with or without a tail pointer.
@@ -364,6 +363,7 @@ The arguments `havetail` and `havecount` are specified directly in the `llist` r
     $ acr_ed -create -field sample.FDb.c_table
 
 #### Conditional X-Ref
+
 There are two phases to the creation of each record in the in-memory databases created by amc.
 One is to allocate the record and fill out its fields, and the other is to call `_XrefMaybe`.
 The x-reference step inserts the record into any indexes, as described in the schema. The code for x-referencing
@@ -372,3 +372,34 @@ a record into an index until later time (as determined by the programmer). In th
 which ends up in the `dmmeta.xref.inscond` field and becomes an if-statement to be tested before doing the xref.
 
     $ acr_ed -create -field sample.FDb.ind_table -inscond false
+
+### Inputs
+
+`acr_ed` takes the following tables on input:
+```
+CTYPE            COMMENT
+dmmeta.Ns        Namespace (for in-memory database, protocol, etc)
+dmmeta.Ctype     Conceptual type (or C type)
+dmmeta.Field     Specify field of a struct
+dmmeta.Typefld   Specifies which field of a message carries the type
+dev.Target       Build target
+dev.Targsrc      List of sources for target
+dmmeta.Nsdb      Annotate ssimdb namespaces
+dmmeta.Ssimfile  Ssim tuple name for structure
+dev.Sbpath
+dmmeta.Pack      Request byte-packing of structure fields
+dmmeta.Fprefix   Mapping between field prefix and Reftype
+dmmeta.Listtype  Specify structure of linked list based on field prefix
+dmmeta.Cstr      Specify that type behaves like a string
+dmmeta.Cpptype   Specify whether a ctype can be passed by value, and other c++ options
+dmmeta.Cfmt      Specify options for printing/reading ctypes into multiple formats
+```
+
+### Tests
+
+The following component tests are defined for `acr_ed`:
+```
+acr_ed.CreateCtype	
+acr_ed.CreateSsimfileBadNs	
+```
+

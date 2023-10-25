@@ -1,9 +1,11 @@
-## atf_fuzz: fuzz tester
+## atf_fuzz: Generator of bad inputs for targets
+
+
 
 ### Syntax
 
 ```
-inline-command: atf_fuzz -h
+atf_fuzz: Generator of bad inputs for targets
 Usage: atf_fuzz [[-target:]<string>] [[-args:]<string>] [options]
     OPTION      TYPE    DFLT                   COMMENT
     -reprofile  string  "temp/atf_fuzz.repro"  File where repros are stored
@@ -46,3 +48,12 @@ report.acr  n_select:1  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
 * -seed: Random seed (see -testprob)
 * -testprob: Each test is invoked with this probability. This can be adjusted to sparse out the space
 of inputs in case it is too big
+
+### Inputs
+
+`atf_fuzz` takes the following tables on input:
+```
+CTYPE       COMMENT
+dev.Target  Build target
+```
+

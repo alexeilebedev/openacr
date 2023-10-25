@@ -16,7 +16,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-// Target: abt (exe) -- Algo Build Tool (build system)
+// Target: abt (exe) -- Algo Build Tool - build & link C++ targets
 // Exceptions: NO
 // Source: cpp/abt/disas.cpp -- Disassemble
 //

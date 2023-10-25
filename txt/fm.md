@@ -1,5 +1,7 @@
 ## Fault Management
 
+
+
 ### Introduction
 
 Fault management is dynamyc fault management functionality aligned
@@ -120,8 +122,6 @@ cleared alarm preserves its severity.
 - Usable alarms always require attention. Every single occurrence of temporary failure
 does not need attention, but high rate of such failures for a period of time requires,
 and shall be considered as single occurrence.
-
-### Data Model
 
 #### Alarm Inventory, Alarm Severity Assignment Profile
 

@@ -1,14 +1,11 @@
-## Mdbg: Gdb front-end
+## mdbg: Gdb front-end
 
-### Disambiguation
 
-There exists a microsoft-provided tool named mdbg. Please make sure
-this tool is first in PATH in order to avoid confusion.
 
 ### Syntax
+
 ```
-inline-command: bin/mdbg -h
-mdbg: My debugger
+mdbg: Gdb front-end
 Usage: mdbg [-target:]<string> [[-args:]<string>] [options]
     OPTION         TYPE    DFLT     COMMENT
     [target]       string           Executable name
@@ -88,6 +85,11 @@ a debugger layout reminiscent of Visual Studio or Eclipse, with locals, breakpoi
 threads subwindows, etc.
 Additionally specifying the `-disas` option enables the disassembly window.
 
+### Disambiguation
+
+There exists a microsoft-provided tool named mdbg. Please make sure
+this tool is first in PATH in order to avoid confusion.
+
 ### Specifying arguments
 
 The first argument to mdbg is the debug target name. Mdbg must know it so it can build it.
@@ -150,11 +152,30 @@ By default, gdb is configured to catch exceptions. To ignore them instead, speci
 
 ### Gdb Python Interface
 
-To enable gdb python scriptability, specify `-py` option. 
+To enable gdb python scriptability, specify `-py` option.
 
 ### Bugs
 
 Because gdb and emacs don't form a standardized environment, it's possible that mdbg's integration
 is broken in some way. Please file an issue, describing your config, so that this combination
 can be tried out and fixed.
+
+### Inputs
+
+`mdbg` takes the following tables on input:
+```
+CTYPE         COMMENT
+dev.Cfg
+dev.Builddir  Directory where object files/executables go. Determines compile/link options
+```
+
+### Tests
+
+The following component tests are defined for `mdbg`:
+```
+mdbg.OutOfOrderArgs	
+mdbg.Smoke	
+mdbg.SmokeBreak	
+mdbg.SmokeBreak2	
+```
 

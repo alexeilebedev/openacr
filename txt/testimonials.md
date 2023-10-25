@@ -31,7 +31,7 @@ These are some of the good things people have said about acr/amc.
     single codebase
 
         Hayk Mkrtchyan
- 
+
 ### 4
 
     Alexei envisioned a new HPC programming paradigm, wrote a programming
@@ -43,3 +43,4 @@ These are some of the good things people have said about acr/amc.
     more on the way.
 
         Vladimir Parizhsky
+

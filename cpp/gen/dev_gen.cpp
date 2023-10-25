@@ -790,6 +790,9 @@ const char* dev::value_ToCstr(const dev::FieldId& parent) {
         case dev_FieldId_longestfunc       : ret = "longestfunc";  break;
         case dev_FieldId_nmysteryfunc      : ret = "nmysteryfunc";  break;
         case dev_FieldId_badness           : ret = "badness";  break;
+        case dev_FieldId_mdsection         : ret = "mdsection";  break;
+        case dev_FieldId_match             : ret = "match";  break;
+        case dev_FieldId_perns             : ret = "perns";  break;
         case dev_FieldId_mr                : ret = "mr";  break;
         case dev_FieldId_source_branch     : ret = "source_branch";  break;
         case dev_FieldId_pipeline_status   : ret = "pipeline_status";  break;
@@ -799,6 +802,8 @@ const char* dev::value_ToCstr(const dev::FieldId& parent) {
         case dev_FieldId_inl               : ret = "inl";  break;
         case dev_FieldId_sandbox           : ret = "sandbox";  break;
         case dev_FieldId_filter            : ret = "filter";  break;
+        case dev_FieldId_readme            : ret = "readme";  break;
+        case dev_FieldId_ns                : ret = "ns";  break;
         case dev_FieldId_sbpath            : ret = "sbpath";  break;
         case dev_FieldId_ssimfs            : ret = "ssimfs";  break;
         case dev_FieldId_ssimfile          : ret = "ssimfile";  break;
@@ -864,6 +869,9 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR2('m','r'): {
                     value_SetEnum(parent,dev_FieldId_mr); ret = true; break;
+                }
+                case LE_STR2('n','s'): {
+                    value_SetEnum(parent,dev_FieldId_ns); ret = true; break;
                 }
                 case LE_STR2('r','c'): {
                     value_SetEnum(parent,dev_FieldId_rc); ret = true; break;
@@ -964,8 +972,14 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 case LE_STR5('l','s','c','m','d'): {
                     value_SetEnum(parent,dev_FieldId_lscmd); ret = true; break;
                 }
+                case LE_STR5('m','a','t','c','h'): {
+                    value_SetEnum(parent,dev_FieldId_match); ret = true; break;
+                }
                 case LE_STR5('m','a','x','w','s'): {
                     value_SetEnum(parent,dev_FieldId_maxws); ret = true; break;
+                }
+                case LE_STR5('p','e','r','n','s'): {
+                    value_SetEnum(parent,dev_FieldId_perns); ret = true; break;
                 }
                 case LE_STR5('t','i','t','l','e'): {
                     value_SetEnum(parent,dev_FieldId_title); ret = true; break;
@@ -1025,6 +1039,9 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR6('r','a','n','l','i','b'): {
                     value_SetEnum(parent,dev_FieldId_ranlib); ret = true; break;
+                }
+                case LE_STR6('r','e','a','d','m','e'): {
+                    value_SetEnum(parent,dev_FieldId_readme); ret = true; break;
                 }
                 case LE_STR6('r','m','f','i','l','e'): {
                     value_SetEnum(parent,dev_FieldId_rmfile); ret = true; break;
@@ -1170,6 +1187,10 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('c','o','v','t','a','r','g','e'): {
                     if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,dev_FieldId_covtarget); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('m','d','s','e','c','t','i','o'): {
+                    if (memcmp(rhs.elems+8,"n",1)==0) { value_SetEnum(parent,dev_FieldId_mdsection); ret = true; break; }
                     break;
                 }
                 case LE_STR8('m','i','l','e','s','t','o','n'): {
@@ -1760,6 +1781,55 @@ void dev::Linelim_Print(dev::Linelim & row, algo::cstring &str) {
     PrintAttrSpaceReset(str,"badness", temp);
 }
 
+// --- dev.Mdsection..ReadFieldMaybe
+bool dev::Mdsection_ReadFieldMaybe(dev::Mdsection &parent, algo::strptr field, algo::strptr strval) {
+    dev::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case dev_FieldId_mdsection: retval = algo::Smallstr50_ReadStrptrMaybe(parent.mdsection, strval); break;
+        case dev_FieldId_match: retval = algo::Smallstr200_ReadStrptrMaybe(parent.match, strval); break;
+        case dev_FieldId_perns: retval = bool_ReadStrptrMaybe(parent.perns, strval); break;
+        case dev_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dev.Mdsection..ReadStrptrMaybe
+// Read fields of dev::Mdsection from an ascii string.
+// The format of the string is an ssim Tuple
+bool dev::Mdsection_ReadStrptrMaybe(dev::Mdsection &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dev.mdsection") || algo::StripTypeTag(in_str, "dev.Mdsection");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Mdsection_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dev.Mdsection..Print
+// print string representation of dev::Mdsection to string LHS, no header -- cprint:dev.Mdsection.String
+void dev::Mdsection_Print(dev::Mdsection & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "dev.mdsection";
+
+    algo::Smallstr50_Print(row.mdsection, temp);
+    PrintAttrSpaceReset(str,"mdsection", temp);
+
+    algo::Smallstr200_Print(row.match, temp);
+    PrintAttrSpaceReset(str,"match", temp);
+
+    bool_Print(row.perns, temp);
+    PrintAttrSpaceReset(str,"perns", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
 // --- dev.Mr.project.Get
 algo::Smallstr50 dev::project_Get(dev::Mr& parent) {
     algo::Smallstr50 ret(algo::Pathcomp(parent.mr, ".RL"));
@@ -2023,6 +2093,51 @@ void dev::Readme_Print(dev::Readme & row, algo::cstring &str) {
 
     algo::Smallstr100_Print(row.filter, temp);
     PrintAttrSpaceReset(str,"filter", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
+// --- dev.Readmens..ReadFieldMaybe
+bool dev::Readmens_ReadFieldMaybe(dev::Readmens &parent, algo::strptr field, algo::strptr strval) {
+    dev::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case dev_FieldId_readme: retval = algo::Smallstr200_ReadStrptrMaybe(parent.readme, strval); break;
+        case dev_FieldId_ns: retval = algo::Smallstr16_ReadStrptrMaybe(parent.ns, strval); break;
+        case dev_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dev.Readmens..ReadStrptrMaybe
+// Read fields of dev::Readmens from an ascii string.
+// The format of the string is an ssim Tuple
+bool dev::Readmens_ReadStrptrMaybe(dev::Readmens &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dev.readmens") || algo::StripTypeTag(in_str, "dev.Readmens");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Readmens_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dev.Readmens..Print
+// print string representation of dev::Readmens to string LHS, no header -- cprint:dev.Readmens.String
+void dev::Readmens_Print(dev::Readmens & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "dev.readmens";
+
+    algo::Smallstr200_Print(row.readme, temp);
+    PrintAttrSpaceReset(str,"readme", temp);
+
+    algo::Smallstr16_Print(row.ns, temp);
+    PrintAttrSpaceReset(str,"ns", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

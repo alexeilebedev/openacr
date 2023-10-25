@@ -204,6 +204,7 @@ void ssim2csv::ReadArgv() {
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
     }
+    algo_lib::ResetErrtext();
 }
 
 // --- ssim2csv.FDb._db.MainLoop

@@ -1,4 +1,5 @@
 dmmeta.sortfld  field:abt.FDb.bh_syscmd  sortfld:dev.Syscmd.execkey
+dmmeta.sortfld  field:abt_md.FDb.bh_file_section  sortfld:abt_md.FileSection.sortkey
 dmmeta.sortfld  field:acr.FDb.bh_ctype_topo  sortfld:acr.FCtype.topokey
 dmmeta.sortfld  field:acr.FDb.bh_pline  sortfld:acr.FPline.key
 dmmeta.sortfld  field:acr_compl.FDb.bh_completion  sortfld:acr_compl.FCompletion.badness

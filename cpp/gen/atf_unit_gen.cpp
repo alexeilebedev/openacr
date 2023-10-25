@@ -1042,6 +1042,7 @@ void atf_unit::ReadArgv() {
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
     }
+    algo_lib::ResetErrtext();
     vrfy(atf_unit::LoadTuplesMaybe(cmd.data_dir)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }

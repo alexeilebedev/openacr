@@ -329,6 +329,135 @@ inline void command::acr_compl_proc_Init(command::acr_compl_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
+inline command::acr_dm::acr_dm() {
+    command::acr_dm_Init(*this);
+}
+
+inline command::acr_dm::~acr_dm() {
+    command::acr_dm_Uninit(*this);
+}
+
+
+// --- command.acr_dm.arg.EmptyQ
+// Return true if index is empty
+inline bool command::arg_EmptyQ(command::acr_dm& parent) {
+    return parent.arg_n == 0;
+}
+
+// --- command.acr_dm.arg.Find
+// Look up row by row id. Return NULL if out of range
+inline algo::cstring* command::arg_Find(command::acr_dm& parent, u64 t) {
+    u64 idx = t;
+    u64 lim = parent.arg_n;
+    if (idx >= lim) return NULL;
+    return parent.arg_elems + idx;
+}
+
+// --- command.acr_dm.arg.Getary
+// Return array pointer by value
+inline algo::aryptr<algo::cstring> command::arg_Getary(command::acr_dm& parent) {
+    return algo::aryptr<algo::cstring>(parent.arg_elems, parent.arg_n);
+}
+
+// --- command.acr_dm.arg.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline algo::cstring* command::arg_Last(command::acr_dm& parent) {
+    return arg_Find(parent, u64(parent.arg_n-1));
+}
+
+// --- command.acr_dm.arg.Max
+// Return max. number of items in the array
+inline i32 command::arg_Max(command::acr_dm& parent) {
+    (void)parent;
+    return parent.arg_max;
+}
+
+// --- command.acr_dm.arg.N
+// Return number of items in the array
+inline i32 command::arg_N(const command::acr_dm& parent) {
+    return parent.arg_n;
+}
+
+// --- command.acr_dm.arg.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void command::arg_Reserve(command::acr_dm& parent, int n) {
+    u32 new_n = parent.arg_n + n;
+    if (UNLIKELY(new_n > parent.arg_max)) {
+        arg_AbsReserve(parent, new_n);
+    }
+}
+
+// --- command.acr_dm.arg.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline algo::cstring& command::arg_qFind(command::acr_dm& parent, u64 t) {
+    return parent.arg_elems[t];
+}
+
+// --- command.acr_dm.arg.qLast
+// Return reference to last element of array. No bounds checking
+inline algo::cstring& command::arg_qLast(command::acr_dm& parent) {
+    return arg_qFind(parent, u64(parent.arg_n-1));
+}
+
+// --- command.acr_dm.arg.rowid_Get
+// Return row id of specified element
+inline u64 command::arg_rowid_Get(command::acr_dm& parent, algo::cstring &elem) {
+    u64 id = &elem - parent.arg_elems;
+    return u64(id);
+}
+
+// --- command.acr_dm.arg_curs.Next
+// proceed to next item
+inline void command::acr_dm_arg_curs_Next(acr_dm_arg_curs &curs) {
+    curs.index++;
+}
+
+// --- command.acr_dm.arg_curs.Reset
+inline void command::acr_dm_arg_curs_Reset(acr_dm_arg_curs &curs, command::acr_dm &parent) {
+    curs.elems = parent.arg_elems;
+    curs.n_elems = parent.arg_n;
+    curs.index = 0;
+}
+
+// --- command.acr_dm.arg_curs.ValidQ
+// cursor points to valid item
+inline bool command::acr_dm_arg_curs_ValidQ(acr_dm_arg_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- command.acr_dm.arg_curs.Access
+// item access
+inline algo::cstring& command::acr_dm_arg_curs_Access(acr_dm_arg_curs &curs) {
+    return curs.elems[curs.index];
+}
+
+// --- command.acr_dm..Init
+// Set all fields to initial values.
+inline void command::acr_dm_Init(command::acr_dm& parent) {
+    parent.in = algo::strptr("data");
+    parent.arg_elems 	= 0; // (command.acr_dm.arg)
+    parent.arg_n     	= 0; // (command.acr_dm.arg)
+    parent.arg_max   	= 0; // (command.acr_dm.arg)
+    parent.write_ours = bool(false);
+    parent.msize = u8(7);
+}
+inline command::acr_dm_proc::acr_dm_proc() {
+    command::acr_dm_proc_Init(*this);
+}
+
+inline command::acr_dm_proc::~acr_dm_proc() {
+    command::acr_dm_proc_Uninit(*this);
+}
+
+
+// --- command.acr_dm_proc..Init
+// Set all fields to initial values.
+inline void command::acr_dm_proc_Init(command::acr_dm_proc& parent) {
+    parent.path = algo::strptr("bin/acr_dm");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
 inline command::acr_ed::acr_ed() {
     command::acr_ed_Init(*this);
 }

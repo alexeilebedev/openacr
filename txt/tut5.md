@@ -22,6 +22,7 @@ dev.targsrc  targsrc:atf_nrun/include/gen/atf_nrun_gen.inl.h  comment:""
 
 ```
 inline-command: atf_nrun -h
+atf_nrun: Run N subprocesses in parallel
 Usage: atf_nrun [[-ncmd:]<int>] [options]
     OPTION      TYPE    DFLT    COMMENT
     -in         string  "data"  Input directory or filename, - for stdin
@@ -189,7 +190,7 @@ some less useful ones:
 inline-command: acr ns:atf_nrun -t -report:N | egrep -v '(dev.targsrc|dmmeta.ctypelen)'
 dev.license  license:GPL  comment:""
 dmmeta.nstype  nstype:exe  comment:Executable
-  dmmeta.ns  ns:atf_nrun  nstype:exe  license:GPL  comment:""
+  dmmeta.ns  ns:atf_nrun  nstype:exe  license:GPL  comment:"Run N subprocesses in parallel"
     dev.target  target:atf_nrun  compat:%-%.%-%
       dev.targdep  targdep:atf_nrun.algo_lib  comment:""
       dev.targdep  targdep:atf_nrun.algo_pch  comment:""
@@ -220,4 +221,7 @@ dmmeta.nstype  nstype:exe  comment:Executable
     dmmeta.main  ns:atf_nrun  ismodule:N
     dmmeta.nscpp  ns:atf_nrun  comment:""
     dmmeta.nsx  ns:atf_nrun  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  comment:""
+
+dev.readmens  readme:txt/atf_nrun.md  ns:atf_nrun  comment:""
 ```
+

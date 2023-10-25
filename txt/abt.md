@@ -1,4 +1,4 @@
-## abt: A Build Tool
+## abt: Algo Build Tool - build & link C++ targets
 
 Abt is a build tool. The argument to abt is a target name regex.
 Here, target means 'build target'.
@@ -48,6 +48,44 @@ See the [Compiler Cache](#compiler-cache) section.
 
 The `outofdate` line shows what `abt` found to be out of date: 1 precompiled header,
 38 source files, 2 libraries and 1 executable.
+
+### Syntax
+
+```
+abt: Algo Build Tool - build & link C++ targets
+Usage: abt [[-target:]<regx>] [options]
+    OPTION      TYPE    DFLT    COMMENT
+    [target]    regx    ""      Regx of target name
+    -in         string  "data"  Root of input ssim dir
+    -out_dir    string  ""      Output directory
+    -cfg        string  ""      Set config
+    -compiler   string  ""      Set compiler.
+    -uname      string  ""      Set uname (default: guess)
+    -arch       string  ""      Set architecture (default: guess)
+    -ood                        List out-of-date source files
+    -list                       List target files
+    -listincl                   List includes
+    -build                      If set, build specified target (all necessary steps)
+    -preproc                    Preprocess file, produce .i file
+    -clean                      Delete all output files
+    -dry_run                    Print actions, do not perform
+    -maxjobs    int     0       Maximum number of child build processes. 0=pick good default
+    -printcmd                   Print commands. Do not execute
+    -force                      Assume all files are out-of-date
+    -install                    Update soft-link under bin/
+    -coverity                   Run abt in coverity mode
+    -package    string  ""      Package tag
+    -maxerr     int     100     Max failing commands before rest of pipeline is forced to fail
+    -disas      regx    ""      Regex of function to disassemble
+    -report             Y       Print final report
+    -jcdb       string  ""      Create JSON compilation database in specified file
+    -verbose    int             Verbosity level (0..255); alias -v; cumulative
+    -debug      int             Debug level (0..255); alias -d; cumulative
+    -help                       Print help an exit; alias -h
+    -version                    Print version and exit
+    -signature                  Show signatures and exit; alias -sig
+
+```
 
 ### Input Tables
 
@@ -163,7 +201,7 @@ on a per-target, per-uname, per-compiler, per-cfg and per-arch basis:
       dev.tool_opt  tool_opt:184  opt_type:LINK_OPTS  opt:--coverage         target:""  uname:""  compiler:g++  cfg:coverage  arch:""  comment:""
       dev.tool_opt  tool_opt:185  opt_type:CC_OPTS    opt:-D_COVERAGE        target:""  uname:""  compiler:g++  cfg:coverage  arch:""  comment:""
       report.acr  n_select:7  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
-  
+
 ### Disassembling
 
 Abt includes a convenient disassembly mode, which can be invoked with `-disas`.
@@ -231,8 +269,6 @@ clean.
 
 ~TBD~
 
-## Working with source files & targets
-
 ### Listing Files
 
 List all targets:
@@ -252,6 +288,7 @@ Re-build copyright blocks in files:
      src_hdr -write
 
 ### Creating Source Files
+
 It is perfectly possible to never use any of these commands, and just do everything by hand.
 But the muse of automation requires that working with source files should be automated.
 
@@ -326,4 +363,22 @@ Search function arguments (i.e. first line, including return type and arguments)
 Show target functions, sort by name:
 
      src_func amc -sortname
+
+### Inputs
+
+`abt` takes the following tables on input:
+```
+CTYPE           COMMENT
+dmmeta.Ns       Namespace (for in-memory database, protocol, etc)
+dev.Uname
+dev.ToolOpt
+dev.Syslib
+dev.Target      Build target
+dev.Targsyslib
+dev.Targsrc     List of sources for target
+dev.Targdep     Dependency between targets
+dev.Compiler
+dev.Cfg
+dev.Arch
+```
 

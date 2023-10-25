@@ -1,9 +1,11 @@
-## atf_cov: Code coverage measurement tool
+## atf_cov: Line coverage
+
+
 
 ### Syntax
 
 ```
-inline-command: atf_cov -h
+atf_cov: Line coverage
 Usage: atf_cov [options]
     OPTION      TYPE    DFLT                              COMMENT
     -in         string  "data"                            Input directory or filename, - for stdin
@@ -109,7 +111,6 @@ Partially executed lines are counted as executed.
 Lines within automatically generated files, system and third-party libraries,
 although may be hit or not are typically treated as infeasible, and thus discounted.
 
-
 ### One-liner
 
 One liner to perform whole processing at once:
@@ -130,7 +131,6 @@ second subcommand runs it and processes coverage results.
 
 `-report` asks to produce reports.
 
-
 ### Changing directory to store coverage data
 
 By default, all temporary and output files are stored on **temp/covdata** directory.
@@ -147,7 +147,6 @@ to use any non-empty directory such as project root, or home directory for that 
 Atf_cov may produce huge amount of files with extremely long names.
 It may not be so easy to clean up these files manually.
 Removing whole directory with all the files inside is much easier.
-
 
 ### Running instrumented executable
 
@@ -167,7 +166,6 @@ and searches coverage database files (.gcda) files there.
 
 The motivation of such solution is in avoiding of overwriting coverage database
 during parallel test run.
-
 
 ### Redirecting log to a file
 
@@ -209,7 +207,6 @@ Source files, those are not a part of any target (`dev.targsrc` table)
 are automatically treated as infeasible, this behavior can not be changed.
 
 For more info on GNU Gcov, refer to (https://gcc.gnu.org/onlinedocs/gcc/Gcov.html).
-
 
 ### Treating source files as infeasible
 
@@ -341,7 +338,6 @@ If measured coverage falls lower than saved one, error message is displayed, and
 Short summary is automatcally displayed on the tool output, to suppress it use `-summary:N`.
 This summary report is generated in file with `-report`.
 
-
 ### Output files
 
 Atf_cov generates output files on `-covdata` directory;
@@ -353,3 +349,18 @@ Atf_cov generates output files on `-covdata` directory;
 - report.txt - coverage report in txt format
 - summary.txt - summary figures in txt format
 - cobertura.xml - coverage report in cobertura xml format
+
+### Inputs
+
+`atf_cov` takes the following tables on input:
+```
+CTYPE          COMMENT
+dev.Target     Build target
+dev.Tgtcov
+dev.Gitfile
+dev.Targsrc    List of sources for target
+dev.Covtarget
+dev.Covline
+dev.Covfile
+```
+

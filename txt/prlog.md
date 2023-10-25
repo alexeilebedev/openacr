@@ -76,3 +76,4 @@ There is unfortunately no clear rule that says whether process output should go 
 stdout or stderr. 
 
 Log category names are a mess
+

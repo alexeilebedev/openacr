@@ -226,6 +226,16 @@ inline void dev::Linelim_Init(dev::Linelim& parent) {
     parent.longestfunc = u32(0);
     parent.nmysteryfunc = u32(0);
 }
+inline dev::Mdsection::Mdsection() {
+    dev::Mdsection_Init(*this);
+}
+
+
+// --- dev.Mdsection..Init
+// Set all fields to initial values.
+inline void dev::Mdsection_Init(dev::Mdsection& parent) {
+    parent.perns = bool(false);
+}
 inline dev::Mr::Mr() {
 }
 
@@ -279,6 +289,9 @@ inline void dev::Readme_Init(dev::Readme& parent) {
     parent.inl = bool(false);
     parent.sandbox = bool(false);
 }
+inline dev::Readmens::Readmens() {
+}
+
 inline dev::Sandbox::Sandbox() {
 }
 
@@ -488,6 +501,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Linelim &
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Mdsection &row) {// cfmt:dev.Mdsection.String
+    dev::Mdsection_Print(const_cast<dev::Mdsection&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Mr &row) {// cfmt:dev.Mr.String
     dev::Mr_Print(const_cast<dev::Mr&>(row), str);
     return str;
@@ -505,6 +523,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Noindent 
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Readme &row) {// cfmt:dev.Readme.String
     dev::Readme_Print(const_cast<dev::Readme&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Readmens &row) {// cfmt:dev.Readmens.String
+    dev::Readmens_Print(const_cast<dev::Readmens&>(row), str);
     return str;
 }
 

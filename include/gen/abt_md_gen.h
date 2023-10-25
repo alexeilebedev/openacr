@@ -23,9 +23,11 @@
 
 
 #pragma once
-#include "include/gen/command_gen.h"
-#include "include/gen/dev_gen.h"
+#include "include/gen/dmmeta_gen.h"
 #include "include/gen/algo_gen.h"
+#include "include/gen/command_gen.h"
+#include "include/gen/algo_lib_gen.h"
+#include "include/gen/dev_gen.h"
 //#pragma endinclude
 // gen:ns_enums
 
@@ -40,12 +42,20 @@ enum { abt_md_FieldIdEnum_N = 1 };
 
 // --- abt_md_TableIdEnum
 
-enum abt_md_TableIdEnum {              // abt_md.TableId.value
-     abt_md_TableId_dev_Readme   = 0   // dev.Readme -> abt_md.FReadme
-    ,abt_md_TableId_dev_readme   = 0   // dev.readme -> abt_md.FReadme
+enum abt_md_TableIdEnum {                   // abt_md.TableId.value
+     abt_md_TableId_dmmeta_Ctype      = 0   // dmmeta.Ctype -> abt_md.FCtype
+    ,abt_md_TableId_dmmeta_ctype      = 0   // dmmeta.ctype -> abt_md.FCtype
+    ,abt_md_TableId_dmmeta_Ns         = 1   // dmmeta.Ns -> abt_md.FNs
+    ,abt_md_TableId_dmmeta_ns         = 1   // dmmeta.ns -> abt_md.FNs
+    ,abt_md_TableId_dev_Readme        = 2   // dev.Readme -> abt_md.FReadme
+    ,abt_md_TableId_dev_readme        = 2   // dev.readme -> abt_md.FReadme
+    ,abt_md_TableId_dev_Readmens      = 3   // dev.Readmens -> abt_md.FReadmens
+    ,abt_md_TableId_dev_readmens      = 3   // dev.readmens -> abt_md.FReadmens
+    ,abt_md_TableId_dmmeta_Ssimfile   = 4   // dmmeta.Ssimfile -> abt_md.FSsimfile
+    ,abt_md_TableId_dmmeta_ssimfile   = 4   // dmmeta.ssimfile -> abt_md.FSsimfile
 };
 
-enum { abt_md_TableIdEnum_N = 2 };
+enum { abt_md_TableIdEnum_N = 10 };
 
 namespace abt_md { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -53,15 +63,140 @@ namespace abt_md { // gen:ns_field
 extern const char *abt_md_help;
 } // gen:ns_field
 // gen:ns_fwddecl2
+namespace dmmeta { struct Ctype; }
+namespace dev { struct Mdsection; }
+namespace dmmeta { struct Ns; }
 namespace dev { struct Readme; }
+namespace dev { struct Readmens; }
+namespace abt_md { struct FNs; }
+namespace abt_md { struct FReadme; }
+namespace dmmeta { struct Ssimfile; }
+namespace abt_md { struct FCtype; }
+namespace abt_md { struct FMdsection; }
+namespace abt_md { struct mdsection_zd_file_section_curs; }
 namespace abt_md { struct _db_readme_curs; }
+namespace abt_md { struct _db_mdsection_curs; }
+namespace abt_md { struct _db_file_section_curs; }
+namespace abt_md { struct _db_bh_file_section_curs; }
+namespace abt_md { struct _db_ns_curs; }
+namespace abt_md { struct _db_ssimfile_curs; }
+namespace abt_md { struct _db_ctype_curs; }
+namespace abt_md { struct _db_readmens_curs; }
 namespace abt_md { struct trace; }
 namespace abt_md { struct FDb; }
-namespace abt_md { struct FReadme; }
+namespace abt_md { struct FReadmens; }
+namespace abt_md { struct FSsimfile; }
 namespace abt_md { struct FieldId; }
+namespace abt_md { struct FileSection; }
 namespace abt_md { struct TableId; }
 namespace abt_md { extern struct abt_md::FDb _db; }
+namespace abt_md { // hook_fcn_typedef
+    typedef void (*mdsection_step_hook)(abt_md::FileSection& arg); // hook:abt_md.FMdsection.step
+} // hook_decl
 namespace abt_md { // gen:ns_print_struct
+
+// --- abt_md.FCtype
+// create: abt_md.FDb.ctype (Lary)
+// global access: ind_ctype (Thash)
+// access: abt_md.FSsimfile.p_ctype (Upptr)
+struct FCtype { // abt_md.FCtype
+    algo::Smallstr50   ctype;            // Identifier. must be ns.typename
+    algo::Comment      comment;          //
+    abt_md::FCtype*    ind_ctype_next;   // hash next
+private:
+    friend abt_md::FCtype&      ctype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend abt_md::FCtype*      ctype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 ctype_RemoveAll() __attribute__((nothrow));
+    friend void                 ctype_RemoveLast() __attribute__((nothrow));
+    FCtype();
+    ~FCtype();
+    FCtype(const FCtype&){ /*disallow copy constructor */}
+    void operator =(const FCtype&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 ctype_CopyOut(abt_md::FCtype &row, dmmeta::Ctype &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 ctype_CopyIn(abt_md::FCtype &row, dmmeta::Ctype &in) __attribute__((nothrow));
+
+algo::Smallstr16     ns_Get(abt_md::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+
+algo::Smallstr50     name_Get(abt_md::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+
+// Set all fields to initial values.
+void                 FCtype_Init(abt_md::FCtype& ctype);
+void                 FCtype_Uninit(abt_md::FCtype& ctype) __attribute__((nothrow));
+
+// --- abt_md.FMdsection
+// create: abt_md.FDb.mdsection (Inlary)
+// access: abt_md.FileSection.p_mdsection (Upptr)
+struct FMdsection { // abt_md.FMdsection
+    algo::Smallstr50              mdsection;              //
+    algo::Smallstr200             match;                  //
+    bool                          perns;                  //   false
+    algo::Comment                 comment;                //
+    abt_md::mdsection_step_hook   step;                   //   NULL  Pointer to a function
+    algo_lib::Regx                match_regx;             // Sql Regx
+    i32                           rowid;                  //   0
+    abt_md::FileSection*          zd_file_section_head;   // zero-terminated doubly linked list
+    i32                           zd_file_section_n;      // zero-terminated doubly linked list
+    abt_md::FileSection*          zd_file_section_tail;   // pointer to last element
+    FMdsection();
+private:
+    // reftype Hook of abt_md.FMdsection.step prohibits copy
+    // reftype Regx of abt_md.FMdsection.match_regx prohibits copy
+    // reftype Llist of abt_md.FMdsection.zd_file_section prohibits copy
+    // ... and several other reasons
+    FMdsection(const FMdsection&){ /*disallow copy constructor */}
+    void operator =(const FMdsection&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 mdsection_CopyOut(abt_md::FMdsection &row, dev::Mdsection &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 mdsection_CopyIn(abt_md::FMdsection &row, dev::Mdsection &in) __attribute__((nothrow));
+
+// Invoke function by pointer
+void                 step_Call(abt_md::FMdsection& mdsection, abt_md::FileSection& arg) __attribute__((nothrow));
+
+// Print back to string
+void                 match_regx_Print(abt_md::FMdsection& mdsection, algo::cstring &out) __attribute__((nothrow));
+
+// Return true if index is empty
+bool                 zd_file_section_EmptyQ(abt_md::FMdsection& mdsection) __attribute__((__warn_unused_result__, nothrow, pure));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+abt_md::FileSection* zd_file_section_First(abt_md::FMdsection& mdsection) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+bool                 zd_file_section_InLlistQ(abt_md::FileSection& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+void                 zd_file_section_Insert(abt_md::FMdsection& mdsection, abt_md::FileSection& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+abt_md::FileSection* zd_file_section_Last(abt_md::FMdsection& mdsection) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return number of items in the linked list
+i32                  zd_file_section_N(const abt_md::FMdsection& mdsection) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+abt_md::FileSection* zd_file_section_Next(abt_md::FileSection &row) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to previous element in the list
+abt_md::FileSection* zd_file_section_Prev(abt_md::FileSection &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+void                 zd_file_section_Remove(abt_md::FMdsection& mdsection, abt_md::FileSection& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+void                 zd_file_section_RemoveAll(abt_md::FMdsection& mdsection) __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+abt_md::FileSection* zd_file_section_RemoveFirst(abt_md::FMdsection& mdsection) __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+abt_md::FileSection& zd_file_section_qLast(abt_md::FMdsection& mdsection) __attribute__((__warn_unused_result__, nothrow));
+
+// Set all fields to initial values.
+void                 FMdsection_Init(abt_md::FMdsection& mdsection);
+// cursor points to valid item
+void                 mdsection_zd_file_section_curs_Reset(mdsection_zd_file_section_curs &curs, abt_md::FMdsection &parent);
+// cursor points to valid item
+bool                 mdsection_zd_file_section_curs_ValidQ(mdsection_zd_file_section_curs &curs);
+// proceed to next item
+void                 mdsection_zd_file_section_curs_Next(mdsection_zd_file_section_curs &curs);
+// item access
+abt_md::FileSection& mdsection_zd_file_section_curs_Access(mdsection_zd_file_section_curs &curs);
 
 // --- abt_md.trace
 #pragma pack(push,1)
@@ -76,13 +211,40 @@ void                 trace_Print(abt_md::trace & row, algo::cstring &str) __attr
 // --- abt_md.FDb
 // create: abt_md.FDb._db (Global)
 struct FDb { // abt_md.FDb
-    command::abt_md     cmdline;                    //
-    abt_md::FReadme*    readme_lary[32];            // level array
-    i32                 readme_n;                   // number of elements in array
-    abt_md::FReadme**   ind_readme_buckets_elems;   // pointer to bucket array
-    i32                 ind_readme_buckets_n;       // number of elements in bucket array
-    i32                 ind_readme_n;               // number of elements in the hash table
-    abt_md::trace       trace;                      //
+    command::abt_md         cmdline;                                          //
+    abt_md::FReadme*        readme_lary[32];                                  // level array
+    i32                     readme_n;                                         // number of elements in array
+    abt_md::FReadme**       ind_readme_buckets_elems;                         // pointer to bucket array
+    i32                     ind_readme_buckets_n;                             // number of elements in bucket array
+    i32                     ind_readme_n;                                     // number of elements in the hash table
+    u128                    mdsection_data[sizeu128(abt_md::FMdsection,9)];   // place for data
+    i32                     mdsection_n;                                      // number of elems current in existence
+    enum { mdsection_max = 9 };
+    abt_md::FileSection*    file_section_lary[32];                            // level array
+    i32                     file_section_n;                                   // number of elements in array
+    abt_md::FileSection**   bh_file_section_elems;                            // binary heap by sortkey
+    i32                     bh_file_section_n;                                // number of elements in the heap
+    i32                     bh_file_section_max;                              // max elements in bh_file_section_elems
+    abt_md::FReadme*        c_readme;                                         // optional pointer
+    abt_md::FNs*            ns_lary[32];                                      // level array
+    i32                     ns_n;                                             // number of elements in array
+    abt_md::FNs**           ind_ns_buckets_elems;                             // pointer to bucket array
+    i32                     ind_ns_buckets_n;                                 // number of elements in bucket array
+    i32                     ind_ns_n;                                         // number of elements in the hash table
+    algo_lib::Replscope     R;                                                //
+    abt_md::FSsimfile*      ssimfile_lary[32];                                // level array
+    i32                     ssimfile_n;                                       // number of elements in array
+    abt_md::FSsimfile**     ind_ssimfile_buckets_elems;                       // pointer to bucket array
+    i32                     ind_ssimfile_buckets_n;                           // number of elements in bucket array
+    i32                     ind_ssimfile_n;                                   // number of elements in the hash table
+    abt_md::FCtype*         ctype_lary[32];                                   // level array
+    i32                     ctype_n;                                          // number of elements in array
+    abt_md::FCtype**        ind_ctype_buckets_elems;                          // pointer to bucket array
+    i32                     ind_ctype_buckets_n;                              // number of elements in bucket array
+    i32                     ind_ctype_n;                                      // number of elements in the hash table
+    abt_md::FReadmens*      readmens_lary[32];                                // level array
+    i32                     readmens_n;                                       // number of elements in array
+    abt_md::trace           trace;                                            //
 };
 
 // Read argc,argv directly into the fields of the command line(s)
@@ -155,6 +317,254 @@ void                 ind_readme_Remove(abt_md::FReadme& row) __attribute__((noth
 // Reserve enough room in the hash for N more elements. Return success code.
 void                 ind_readme_Reserve(int n) __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+abt_md::FMdsection&  mdsection_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+abt_md::FMdsection*  mdsection_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+abt_md::FMdsection*  mdsection_InsertMaybe(const dev::Mdsection &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                mdsection_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 mdsection_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+abt_md::FMdsection*  mdsection_Find(i32 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array pointer by value
+algo::aryptr<abt_md::FMdsection> mdsection_Getary() __attribute__((nothrow));
+// Return constant 9 -- max. number of items in the pool
+i32                  mdsection_Max() __attribute__((nothrow));
+// Return number of items in the array
+i32                  mdsection_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Destroy all elements of Inlary
+void                 mdsection_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 mdsection_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking in release.
+abt_md::FMdsection&  mdsection_qFind(i32 t) __attribute__((nothrow));
+// Compute row id of element given element's address
+i32                  mdsection_rowid_Get(abt_md::FMdsection &row) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 mdsection_XrefMaybe(abt_md::FMdsection &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+abt_md::FileSection& file_section_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+abt_md::FileSection* file_section_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                file_section_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 file_section_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+abt_md::FileSection* file_section_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+abt_md::FileSection* file_section_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  file_section_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 file_section_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 file_section_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+abt_md::FileSection& file_section_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 file_section_XrefMaybe(abt_md::FileSection &row);
+
+// Remove all elements from heap and free memory used by the array.
+void                 bh_file_section_Dealloc() __attribute__((nothrow));
+// Return true if index is empty
+bool                 bh_file_section_EmptyQ() __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+abt_md::FileSection* bh_file_section_First() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in index, false otherwise
+bool                 bh_file_section_InBheapQ(abt_md::FileSection& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row. Row must not already be in index. If row is already in index, do nothing.
+void                 bh_file_section_Insert(abt_md::FileSection& row) __attribute__((nothrow));
+// Return number of items in the heap
+i32                  bh_file_section_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// If row is in heap, update its position. If row is not in heap, insert it.
+// Return new position of item in the heap (0=top)
+i32                  bh_file_section_Reheap(abt_md::FileSection& row) __attribute__((nothrow));
+// Key of first element in the heap changed. Move it.
+// This function does not check the insert condition.
+// Return new position of item in the heap (0=top).
+// Heap must be non-empty or behavior is undefined.
+i32                  bh_file_section_ReheapFirst() __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+void                 bh_file_section_Remove(abt_md::FileSection& row) __attribute__((nothrow));
+// Remove all elements from binary heap
+void                 bh_file_section_RemoveAll() __attribute__((nothrow));
+// If index is empty, return NULL. Otherwise remove and return first key in index.
+//  Call 'head changed' trigger.
+abt_md::FileSection* bh_file_section_RemoveFirst() __attribute__((nothrow));
+// Reserve space in index for N more elements
+void                 bh_file_section_Reserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+abt_md::FNs&         ns_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+abt_md::FNs*         ns_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+abt_md::FNs*         ns_InsertMaybe(const dmmeta::Ns &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                ns_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 ns_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+abt_md::FNs*         ns_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+abt_md::FNs*         ns_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 ns_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 ns_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+abt_md::FNs&         ns_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 ns_XrefMaybe(abt_md::FNs &row);
+
+// Return true if hash is empty
+bool                 ind_ns_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+abt_md::FNs*         ind_ns_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+abt_md::FNs&         ind_ns_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+abt_md::FNs&         ind_ns_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+i32                  ind_ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool                 ind_ns_InsertMaybe(abt_md::FNs& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void                 ind_ns_Remove(abt_md::FNs& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+void                 ind_ns_Reserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+abt_md::FSsimfile&   ssimfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+abt_md::FSsimfile*   ssimfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+abt_md::FSsimfile*   ssimfile_InsertMaybe(const dmmeta::Ssimfile &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                ssimfile_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 ssimfile_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+abt_md::FSsimfile*   ssimfile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+abt_md::FSsimfile*   ssimfile_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  ssimfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 ssimfile_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 ssimfile_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+abt_md::FSsimfile&   ssimfile_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 ssimfile_XrefMaybe(abt_md::FSsimfile &row);
+
+// Return true if hash is empty
+bool                 ind_ssimfile_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+abt_md::FSsimfile*   ind_ssimfile_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+abt_md::FSsimfile&   ind_ssimfile_FindX(const algo::strptr& key);
+// Return number of items in the hash
+i32                  ind_ssimfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool                 ind_ssimfile_InsertMaybe(abt_md::FSsimfile& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void                 ind_ssimfile_Remove(abt_md::FSsimfile& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+void                 ind_ssimfile_Reserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+abt_md::FCtype&      ctype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+abt_md::FCtype*      ctype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+abt_md::FCtype*      ctype_InsertMaybe(const dmmeta::Ctype &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                ctype_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 ctype_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+abt_md::FCtype*      ctype_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+abt_md::FCtype*      ctype_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  ctype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 ctype_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 ctype_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+abt_md::FCtype&      ctype_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 ctype_XrefMaybe(abt_md::FCtype &row);
+
+// Return true if hash is empty
+bool                 ind_ctype_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+abt_md::FCtype*      ind_ctype_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+abt_md::FCtype&      ind_ctype_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+abt_md::FCtype&      ind_ctype_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+i32                  ind_ctype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool                 ind_ctype_InsertMaybe(abt_md::FCtype& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void                 ind_ctype_Remove(abt_md::FCtype& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+void                 ind_ctype_Reserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+abt_md::FReadmens&   readmens_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+abt_md::FReadmens*   readmens_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+abt_md::FReadmens*   readmens_InsertMaybe(const dev::Readmens &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                readmens_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 readmens_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+abt_md::FReadmens*   readmens_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+abt_md::FReadmens*   readmens_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  readmens_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 readmens_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 readmens_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+abt_md::FReadmens&   readmens_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 readmens_XrefMaybe(abt_md::FReadmens &row);
+
 // cursor points to valid item
 void                 _db_readme_curs_Reset(_db_readme_curs &curs, abt_md::FDb &parent);
 // cursor points to valid item
@@ -163,20 +573,111 @@ bool                 _db_readme_curs_ValidQ(_db_readme_curs &curs);
 void                 _db_readme_curs_Next(_db_readme_curs &curs);
 // item access
 abt_md::FReadme&     _db_readme_curs_Access(_db_readme_curs &curs);
+// cursor points to valid item
+void                 _db_mdsection_curs_Reset(_db_mdsection_curs &curs, abt_md::FDb &parent);
+// cursor points to valid item
+bool                 _db_mdsection_curs_ValidQ(_db_mdsection_curs &curs);
+// proceed to next item
+void                 _db_mdsection_curs_Next(_db_mdsection_curs &curs);
+// item access
+abt_md::FMdsection&  _db_mdsection_curs_Access(_db_mdsection_curs &curs);
+// cursor points to valid item
+void                 _db_file_section_curs_Reset(_db_file_section_curs &curs, abt_md::FDb &parent);
+// cursor points to valid item
+bool                 _db_file_section_curs_ValidQ(_db_file_section_curs &curs);
+// proceed to next item
+void                 _db_file_section_curs_Next(_db_file_section_curs &curs);
+// item access
+abt_md::FileSection& _db_file_section_curs_Access(_db_file_section_curs &curs);
+void                 _db_bh_file_section_curs_Reserve(_db_bh_file_section_curs &curs, int n);
+// Reset cursor. If HEAP is non-empty, add its top element to CURS.
+void                 _db_bh_file_section_curs_Reset(_db_bh_file_section_curs &curs, abt_md::FDb &parent);
+// Advance cursor.
+void                 _db_bh_file_section_curs_Next(_db_bh_file_section_curs &curs);
+// Access current element. If not more elements, return NULL
+abt_md::FileSection& _db_bh_file_section_curs_Access(_db_bh_file_section_curs &curs);
+// Return true if Access() will return non-NULL.
+bool                 _db_bh_file_section_curs_ValidQ(_db_bh_file_section_curs &curs);
+// cursor points to valid item
+void                 _db_ns_curs_Reset(_db_ns_curs &curs, abt_md::FDb &parent);
+// cursor points to valid item
+bool                 _db_ns_curs_ValidQ(_db_ns_curs &curs);
+// proceed to next item
+void                 _db_ns_curs_Next(_db_ns_curs &curs);
+// item access
+abt_md::FNs&         _db_ns_curs_Access(_db_ns_curs &curs);
+// cursor points to valid item
+void                 _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, abt_md::FDb &parent);
+// cursor points to valid item
+bool                 _db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs);
+// proceed to next item
+void                 _db_ssimfile_curs_Next(_db_ssimfile_curs &curs);
+// item access
+abt_md::FSsimfile&   _db_ssimfile_curs_Access(_db_ssimfile_curs &curs);
+// cursor points to valid item
+void                 _db_ctype_curs_Reset(_db_ctype_curs &curs, abt_md::FDb &parent);
+// cursor points to valid item
+bool                 _db_ctype_curs_ValidQ(_db_ctype_curs &curs);
+// proceed to next item
+void                 _db_ctype_curs_Next(_db_ctype_curs &curs);
+// item access
+abt_md::FCtype&      _db_ctype_curs_Access(_db_ctype_curs &curs);
+// cursor points to valid item
+void                 _db_readmens_curs_Reset(_db_readmens_curs &curs, abt_md::FDb &parent);
+// cursor points to valid item
+bool                 _db_readmens_curs_ValidQ(_db_readmens_curs &curs);
+// proceed to next item
+void                 _db_readmens_curs_Next(_db_readmens_curs &curs);
+// item access
+abt_md::FReadmens&   _db_readmens_curs_Access(_db_readmens_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
 
+// --- abt_md.FNs
+// create: abt_md.FDb.ns (Lary)
+// global access: ind_ns (Thash)
+// access: abt_md.FReadmens.p_ns (Upptr)
+struct FNs { // abt_md.FNs
+    abt_md::FNs*       ind_ns_next;   // hash next
+    algo::Smallstr16   ns;            // Namespace name (primary key)
+    algo::Smallstr50   nstype;        //
+    algo::Smallstr50   license;       //
+    algo::Comment      comment;       //
+private:
+    friend abt_md::FNs&         ns_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend abt_md::FNs*         ns_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 ns_RemoveAll() __attribute__((nothrow));
+    friend void                 ns_RemoveLast() __attribute__((nothrow));
+    FNs();
+    ~FNs();
+    FNs(const FNs&){ /*disallow copy constructor */}
+    void operator =(const FNs&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 ns_CopyOut(abt_md::FNs &row, dmmeta::Ns &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 ns_CopyIn(abt_md::FNs &row, dmmeta::Ns &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 FNs_Init(abt_md::FNs& ns);
+void                 FNs_Uninit(abt_md::FNs& ns) __attribute__((nothrow));
+
 // --- abt_md.FReadme
 // create: abt_md.FDb.readme (Lary)
 // global access: ind_readme (Thash)
+// global access: c_readme (Ptr)
+// access: abt_md.FReadmens.p_readme (Upptr)
 struct FReadme { // abt_md.FReadme
-    abt_md::FReadme*    ind_readme_next;   // hash next
-    algo::Smallstr200   gitfile;           //
-    bool                inl;               //   false
-    bool                sandbox;           //   false
-    algo::Smallstr100   filter;            //
-    algo::Comment       comment;           //
+    abt_md::FReadme*     ind_readme_next;   // hash next
+    algo::Smallstr200    gitfile;           //
+    bool                 inl;               //   false
+    bool                 sandbox;           //   false
+    algo::Smallstr100    filter;            //
+    algo::Comment        comment;           //
+    abt_md::FReadmens*   c_readmens;        // optional pointer
+    bool                 select;            //   false
 private:
     friend abt_md::FReadme&     readme_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend abt_md::FReadme*     readme_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -193,9 +694,77 @@ void                 readme_CopyOut(abt_md::FReadme &row, dev::Readme &out) __at
 // Copy fields in to row
 void                 readme_CopyIn(abt_md::FReadme &row, dev::Readme &in) __attribute__((nothrow));
 
+// Insert row into pointer index. Return final membership status.
+bool                 c_readmens_InsertMaybe(abt_md::FReadme& readme, abt_md::FReadmens& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+void                 c_readmens_Remove(abt_md::FReadme& readme, abt_md::FReadmens& row) __attribute__((nothrow));
+
 // Set all fields to initial values.
 void                 FReadme_Init(abt_md::FReadme& readme);
 void                 FReadme_Uninit(abt_md::FReadme& readme) __attribute__((nothrow));
+
+// --- abt_md.FReadmens
+// create: abt_md.FDb.readmens (Lary)
+// access: abt_md.FReadme.c_readmens (Ptr)
+struct FReadmens { // abt_md.FReadmens
+    algo::Smallstr200   readme;     //
+    algo::Smallstr16    ns;         //
+    algo::Comment       comment;    //
+    abt_md::FNs*        p_ns;       // reference to parent row
+    abt_md::FReadme*    p_readme;   // reference to parent row
+private:
+    friend abt_md::FReadmens&   readmens_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend abt_md::FReadmens*   readmens_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 readmens_RemoveAll() __attribute__((nothrow));
+    friend void                 readmens_RemoveLast() __attribute__((nothrow));
+    FReadmens();
+    ~FReadmens();
+    FReadmens(const FReadmens&){ /*disallow copy constructor */}
+    void operator =(const FReadmens&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 readmens_CopyOut(abt_md::FReadmens &row, dev::Readmens &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 readmens_CopyIn(abt_md::FReadmens &row, dev::Readmens &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+void                 FReadmens_Init(abt_md::FReadmens& readmens);
+void                 FReadmens_Uninit(abt_md::FReadmens& readmens) __attribute__((nothrow));
+
+// --- abt_md.FSsimfile
+// create: abt_md.FDb.ssimfile (Lary)
+// global access: ind_ssimfile (Thash)
+struct FSsimfile { // abt_md.FSsimfile
+    abt_md::FSsimfile*   ind_ssimfile_next;   // hash next
+    algo::Smallstr50     ssimfile;            //
+    algo::Smallstr50     ctype;               //
+    abt_md::FCtype*      p_ctype;             // reference to parent row
+private:
+    friend abt_md::FSsimfile&   ssimfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend abt_md::FSsimfile*   ssimfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 ssimfile_RemoveAll() __attribute__((nothrow));
+    friend void                 ssimfile_RemoveLast() __attribute__((nothrow));
+    FSsimfile();
+    ~FSsimfile();
+    FSsimfile(const FSsimfile&){ /*disallow copy constructor */}
+    void operator =(const FSsimfile&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+void                 ssimfile_CopyOut(abt_md::FSsimfile &row, dmmeta::Ssimfile &out) __attribute__((nothrow));
+// Copy fields in to row
+void                 ssimfile_CopyIn(abt_md::FSsimfile &row, dmmeta::Ssimfile &in) __attribute__((nothrow));
+
+algo::Smallstr16     ssimns_Get(abt_md::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+
+algo::Smallstr16     ns_Get(abt_md::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+
+algo::Smallstr50     name_Get(abt_md::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+
+// Set all fields to initial values.
+void                 FSsimfile_Init(abt_md::FSsimfile& ssimfile);
+void                 FSsimfile_Uninit(abt_md::FSsimfile& ssimfile) __attribute__((nothrow));
 
 // --- abt_md.FieldId
 #pragma pack(push,1)
@@ -236,6 +805,35 @@ void                 FieldId_Init(abt_md::FieldId& parent);
 // print string representation of abt_md::FieldId to string LHS, no header -- cprint:abt_md.FieldId.String
 void                 FieldId_Print(abt_md::FieldId & row, algo::cstring &str) __attribute__((nothrow));
 
+// --- abt_md.FileSection
+// create: abt_md.FDb.file_section (Lary)
+// global access: bh_file_section (Bheap)
+// access: abt_md.FMdsection.step (Hook)
+// access: abt_md.FMdsection.zd_file_section (Llist)
+struct FileSection { // abt_md.FileSection
+    abt_md::FileSection*   zd_file_section_next;   // zslist link; -1 means not-in-list
+    abt_md::FileSection*   zd_file_section_prev;   // previous element
+    i32                    bh_file_section_idx;    // index in heap; -1 means not-in-heap
+    algo::cstring          title;                  // First line
+    algo::cstring          text;                   // Remaining lines
+    i32                    sortkey;                //   0  Sort key
+    abt_md::FMdsection*    p_mdsection;            // reference to parent row
+    bool                   select;                 //   false  Selected for processing
+private:
+    friend abt_md::FileSection& file_section_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend abt_md::FileSection* file_section_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 file_section_RemoveAll() __attribute__((nothrow));
+    friend void                 file_section_RemoveLast() __attribute__((nothrow));
+    FileSection();
+    ~FileSection();
+    FileSection(const FileSection&){ /*disallow copy constructor */}
+    void operator =(const FileSection&){ /*disallow direct assignment */}
+};
+
+// Set all fields to initial values.
+void                 FileSection_Init(abt_md::FileSection& file_section);
+void                 FileSection_Uninit(abt_md::FileSection& file_section) __attribute__((nothrow));
+
 // --- abt_md.TableId
 struct TableId { // abt_md.TableId: Index of table in this namespace
     i32   value;   //   -1  index of table
@@ -275,6 +873,15 @@ void                 TableId_Print(abt_md::TableId & row, algo::cstring &str) __
 } // gen:ns_print_struct
 namespace abt_md { // gen:ns_curstext
 
+struct mdsection_zd_file_section_curs {// fcurs:abt_md.FMdsection.zd_file_section/curs
+    typedef abt_md::FileSection ChildType;
+    abt_md::FileSection* row;
+    mdsection_zd_file_section_curs() {
+        row = NULL;
+    }
+};
+
+
 struct _db_readme_curs {// cursor
     typedef abt_md::FReadme ChildType;
     abt_md::FDb *parent;
@@ -282,8 +889,86 @@ struct _db_readme_curs {// cursor
     _db_readme_curs(){ parent=NULL; index=0; }
 };
 
+
+struct _db_mdsection_curs {// cursor
+    typedef abt_md::FMdsection ChildType;
+    int index;
+    abt_md::FDb *parent;
+    _db_mdsection_curs() { parent=NULL; index=0; }
+};
+
+
+struct _db_file_section_curs {// cursor
+    typedef abt_md::FileSection ChildType;
+    abt_md::FDb *parent;
+    i64 index;
+    _db_file_section_curs(){ parent=NULL; index=0; }
+};
+
+// Non-destructive heap cursor, returns heap elements in sorted order.
+// A running front of potential smallest entries is kept in the helper heap (curs.temp_%)
+struct _db_bh_file_section_curs {
+    typedef abt_md::FileSection ChildType;
+    abt_md::FDb      *parent;        // parent
+    abt_md::FileSection*     *temp_elems;    // helper heap
+    int            temp_n;        // number of elements heaped in the helper heap
+    int            temp_max;      // max number of elements possible in the helper heap
+    _db_bh_file_section_curs() : parent(NULL), temp_elems(NULL), temp_n(0), temp_max(0) {}
+    ~_db_bh_file_section_curs();
+};
+
+
+struct _db_ns_curs {// cursor
+    typedef abt_md::FNs ChildType;
+    abt_md::FDb *parent;
+    i64 index;
+    _db_ns_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_ssimfile_curs {// cursor
+    typedef abt_md::FSsimfile ChildType;
+    abt_md::FDb *parent;
+    i64 index;
+    _db_ssimfile_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_ctype_curs {// cursor
+    typedef abt_md::FCtype ChildType;
+    abt_md::FDb *parent;
+    i64 index;
+    _db_ctype_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_readmens_curs {// cursor
+    typedef abt_md::FReadmens ChildType;
+    abt_md::FDb *parent;
+    i64 index;
+    _db_readmens_curs(){ parent=NULL; index=0; }
+};
+
 } // gen:ns_curstext
 namespace abt_md { // gen:ns_func
+// User-implemented function from gstatic:abt_md.FDb.mdsection
+void                 mdsection_Title(abt_md::FileSection&);
+// User-implemented function from gstatic:abt_md.FDb.mdsection
+void                 mdsection_Syntax(abt_md::FileSection&);
+// User-implemented function from gstatic:abt_md.FDb.mdsection
+void                 mdsection_Limitations(abt_md::FileSection&);
+// User-implemented function from gstatic:abt_md.FDb.mdsection
+void                 mdsection_Description(abt_md::FileSection&);
+// User-implemented function from gstatic:abt_md.FDb.mdsection
+void                 mdsection_Content(abt_md::FileSection&);
+// User-implemented function from gstatic:abt_md.FDb.mdsection
+void                 mdsection_Example(abt_md::FileSection&);
+// User-implemented function from gstatic:abt_md.FDb.mdsection
+void                 mdsection_Inputs(abt_md::FileSection&);
+// User-implemented function from gstatic:abt_md.FDb.mdsection
+void                 mdsection_Tests(abt_md::FileSection&);
+// User-implemented function from gstatic:abt_md.FDb.mdsection
+void                 mdsection_Copyright(abt_md::FileSection&);
 } // gen:ns_func
 int                  main(int argc, char **argv);
 #if defined(WIN32)

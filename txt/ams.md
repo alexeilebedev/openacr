@@ -47,7 +47,7 @@ For instance, `proc1-0.md-0`.
 Proc types and stream types can be extended for the given system being implemented.
 For every stream that a process reads or writes, it publishes one `ams.StreamHb` message to its `ctl`
 output stream. The `ctl` output stream is different from standard output because it is non-deterministic
-(contains time-based messages such as heartbeats). 
+(contains time-based messages such as heartbeats).
 
 ## AMS Library
 
@@ -203,11 +203,6 @@ Control process kills child processes that do not send heartbeats (each process 
 setting, disk write process is given at least 60 seconds). After killing a child process, control
 process publishes an appropriate messages so that all writers can remove the dead reader from their table.
 
-### Tests
-
-- `atf_unit lib_ams.SendData`: This test uses `fork()` and sends 1 million messages through a small
-shared memory window, measuring receive latency
-
 ### Performance
 
 Use of single writer and multiple readers, with strict flow control,
@@ -241,4 +236,9 @@ amstest-0: atf_unit.AmsSendTest  n_msg_send:2000000  n_msg_recv:0  n_write_wait:
 atf_unit.unittest  unittest:lib_ams.SendData8  success:Y  comment:""
 report.atf_unit  n_test_total:526  success:Y  n_test_run:1  n_err:0
 ```
+
+### Tests
+
+- `atf_unit lib_ams.SendData`: This test uses `fork()` and sends 1 million messages through a small
+shared memory window, measuring receive latency
 
