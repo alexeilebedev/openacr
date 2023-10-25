@@ -1,4 +1,5 @@
 dev.gitfile  gitfile:.ffroot
+dev.gitfile  gitfile:.gitconfig
 dev.gitfile  gitfile:.github/workflows/main.yml
 dev.gitfile  gitfile:.gitignore
 dev.gitfile  gitfile:Makefile
@@ -122,6 +123,7 @@ dev.gitfile  gitfile:conf/elisp/markdown-mode.el
 dev.gitfile  gitfile:conf/emacs.el
 dev.gitfile  gitfile:conf/license.txt
 dev.gitfile  gitfile:conf/tut1.txt
+dev.gitfile  gitfile:conf/tut3.txt
 dev.gitfile  gitfile:conf/vim/ftdetect/ssim.vim
 dev.gitfile  gitfile:conf/vim/syntax/ssim.vim
 dev.gitfile  gitfile:conf/vimrc
@@ -637,6 +639,7 @@ dev.gitfile  gitfile:include/abt.h
 dev.gitfile  gitfile:include/abt_md.h
 dev.gitfile  gitfile:include/acr.h
 dev.gitfile  gitfile:include/acr_compl.h
+dev.gitfile  gitfile:include/acr_dm.h
 dev.gitfile  gitfile:include/acr_ed.h
 dev.gitfile  gitfile:include/algo.h
 dev.gitfile  gitfile:include/algo.inl.h
@@ -822,6 +825,10 @@ dev.gitfile  gitfile:run/.empty
 dev.gitfile  gitfile:run/.ffskip
 dev.gitfile  gitfile:temp/.empty
 dev.gitfile  gitfile:test/acr_compl_filt.bash
+dev.gitfile  gitfile:test/acr_dm/file1.ssim
+dev.gitfile  gitfile:test/acr_dm/file2.ssim
+dev.gitfile  gitfile:test/acr_dm/file3.ssim
+dev.gitfile  gitfile:test/acr_dm/file4.ssim
 dev.gitfile  gitfile:test/atf_comp/acr.BadInsert
 dev.gitfile  gitfile:test/atf_comp/acr.BadNs
 dev.gitfile  gitfile:test/atf_comp/acr.BadPkey
@@ -958,6 +965,8 @@ dev.gitfile  gitfile:test/atf_comp/acr_compl.T07
 dev.gitfile  gitfile:test/atf_comp/acr_compl.T08
 dev.gitfile  gitfile:test/atf_comp/acr_compl.T09
 dev.gitfile  gitfile:test/atf_comp/acr_compl.T10
+dev.gitfile  gitfile:test/atf_comp/acr_dm.Conflict
+dev.gitfile  gitfile:test/atf_comp/acr_dm.Merge
 dev.gitfile  gitfile:test/atf_comp/acr_ed.CreateCtype
 dev.gitfile  gitfile:test/atf_comp/acr_ed.CreateSsimfileBadNs
 dev.gitfile  gitfile:test/atf_comp/atf_cmdline.Bare

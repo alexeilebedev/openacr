@@ -47,6 +47,7 @@ atf_cov::FDb    atf_cov::_db;     // dependency found via dev.targdep
 
 namespace atf_cov {
 const char *atf_cov_help =
+"atf_cov: Line coverage\n"
 "Usage: atf_cov [options]\n"
 "    OPTION      TYPE    DFLT                              COMMENT\n"
 "    -in         string  \"data\"                            Input directory or filename, - for stdin\n"

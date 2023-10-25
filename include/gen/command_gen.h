@@ -1682,7 +1682,7 @@ tempstr              ams_cat_ToCmdline(command::ams_cat & row) __attribute__((no
 i32                  ams_cat_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.ams_cat_proc
-struct ams_cat_proc { // command.ams_cat_proc: Subprocess: 
+struct ams_cat_proc { // command.ams_cat_proc: Subprocess: Algo Messaging System sample tool
     algo::cstring      path;      //   "bin/ams_cat"  path for executable
     command::ams_cat   cmd;       // command line for child process
     algo::cstring      fstdin;    // redirect for stdin
@@ -1769,7 +1769,7 @@ tempstr              ams_sendtest_ToCmdline(command::ams_sendtest & row) __attri
 i32                  ams_sendtest_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.ams_sendtest_proc
-struct ams_sendtest_proc { // command.ams_sendtest_proc: Subprocess: 
+struct ams_sendtest_proc { // command.ams_sendtest_proc: Subprocess: Algo Messaging System test tool
     algo::cstring           path;      //   "bin/ams_sendtest"  path for executable
     command::ams_sendtest   cmd;       // command line for child process
     algo::cstring           fstdin;    // redirect for stdin
@@ -2362,7 +2362,7 @@ algo::strptr         atf_comp_GetAnon(command::atf_comp &parent, i32 idx) __attr
 i32                  atf_comp_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.atf_comp_proc
-struct atf_comp_proc { // command.atf_comp_proc: Subprocess: 
+struct atf_comp_proc { // command.atf_comp_proc: Subprocess: Algo Test Framework - Component test execution
     algo::cstring       path;      //   "bin/atf_comp"  path for executable
     command::atf_comp   cmd;       // command line for child process
     algo::cstring       fstdin;    // redirect for stdin
@@ -2449,7 +2449,7 @@ tempstr              atf_cov_ToCmdline(command::atf_cov & row) __attribute__((no
 i32                  atf_cov_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.atf_cov_proc
-struct atf_cov_proc { // command.atf_cov_proc: Subprocess: 
+struct atf_cov_proc { // command.atf_cov_proc: Subprocess: Line coverage
     algo::cstring      path;      //   "bin/atf_cov"  path for executable
     command::atf_cov   cmd;       // command line for child process
     algo::cstring      fstdin;    // redirect for stdin
@@ -2532,7 +2532,7 @@ algo::strptr         atf_fuzz_GetAnon(command::atf_fuzz &parent, i32 idx) __attr
 i32                  atf_fuzz_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.atf_fuzz_proc
-struct atf_fuzz_proc { // command.atf_fuzz_proc: Subprocess: 
+struct atf_fuzz_proc { // command.atf_fuzz_proc: Subprocess: Generator of bad inputs for targets
     algo::cstring       path;      //   "bin/atf_fuzz"  path for executable
     command::atf_fuzz   cmd;       // command line for child process
     algo::cstring       fstdin;    // redirect for stdin
@@ -2683,7 +2683,7 @@ algo::strptr         atf_nrun_GetAnon(command::atf_nrun &parent, i32 idx) __attr
 i32                  atf_nrun_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.atf_nrun_proc
-struct atf_nrun_proc { // command.atf_nrun_proc: Subprocess: 
+struct atf_nrun_proc { // command.atf_nrun_proc: Subprocess: Run N subprocesses in parallel
     algo::cstring       path;      //   "bin/atf_nrun"  path for executable
     command::atf_nrun   cmd;       // command line for child process
     algo::cstring       fstdin;    // redirect for stdin
@@ -3025,7 +3025,7 @@ algo::strptr         gcli_GetAnon(command::gcli &parent, i32 idx) __attribute__(
 i32                  gcli_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.gcli_proc
-struct gcli_proc { // command.gcli_proc: Subprocess: cli utility for gitlab and github
+struct gcli_proc { // command.gcli_proc: Subprocess: Gcli - gitlab/github command-line client
     algo::cstring   path;      //   "bin/gcli"  path for executable
     command::gcli   cmd;       // command line for child process
     algo::cstring   fstdin;    // redirect for stdin
@@ -3259,7 +3259,7 @@ algo::strptr         mdbg_GetAnon(command::mdbg &parent, i32 idx) __attribute__(
 i32                  mdbg_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.mdbg_proc
-struct mdbg_proc { // command.mdbg_proc: Subprocess: My debugger
+struct mdbg_proc { // command.mdbg_proc: Subprocess: Gdb front-end
     algo::cstring   path;      //   "bin/mdbg"  path for executable
     command::mdbg   cmd;       // command line for child process
     algo::cstring   fstdin;    // redirect for stdin
@@ -3411,7 +3411,7 @@ tempstr              orgfile_ToCmdline(command::orgfile & row) __attribute__((no
 i32                  orgfile_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.orgfile_proc
-struct orgfile_proc { // command.orgfile_proc: Subprocess: OpenACR File deduplicator tool
+struct orgfile_proc { // command.orgfile_proc: Subprocess: organize and deduplicate files by timestamp and by contents
     algo::cstring      path;      //   "bin/orgfile"  path for executable
     command::orgfile   cmd;       // command line for child process
     algo::cstring      fstdin;    // redirect for stdin
@@ -3604,7 +3604,7 @@ algo::strptr         sandbox_GetAnon(command::sandbox &parent, i32 idx) __attrib
 i32                  sandbox_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.sandbox_proc
-struct sandbox_proc { // command.sandbox_proc: Subprocess: 
+struct sandbox_proc { // command.sandbox_proc: Subprocess: Sandbox - sandbox management tool
     algo::cstring      path;      //   "bin/sandbox"  path for executable
     command::sandbox   cmd;       // command line for child process
     algo::cstring      fstdin;    // redirect for stdin
@@ -4406,7 +4406,7 @@ algo::strptr         sv2ssim_GetAnon(command::sv2ssim &parent, i32 idx) __attrib
 i32                  sv2ssim_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.sv2ssim_proc
-struct sv2ssim_proc { // command.sv2ssim_proc: Subprocess: 
+struct sv2ssim_proc { // command.sv2ssim_proc: Subprocess: sv2ssim - Separated Value file processor
     algo::cstring      path;      //   "bin/sv2ssim"  path for executable
     command::sv2ssim   cmd;       // command line for child process
     algo::cstring      fstdin;    // redirect for stdin

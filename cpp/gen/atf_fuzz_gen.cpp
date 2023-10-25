@@ -49,6 +49,7 @@ atf_fuzz::FDb   atf_fuzz::_db;    // dependency found via dev.targdep
 
 namespace atf_fuzz {
 const char *atf_fuzz_help =
+"atf_fuzz: Generator of bad inputs for targets\n"
 "Usage: atf_fuzz [[-target:]<string>] [[-args:]<string>] [options]\n"
 "    OPTION      TYPE    DFLT                   COMMENT\n"
 "    -reprofile  string  \"temp/atf_fuzz.repro\"  File where repros are stored\n"

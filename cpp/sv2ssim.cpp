@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Target: sv2ssim (exe)
+// Target: sv2ssim (exe) -- sv2ssim - Separated Value file processor
 // Exceptions: yes
 // Source: cpp/sv2ssim.cpp
 //

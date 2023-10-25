@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Target: atf_fuzz (exe)
+// Target: atf_fuzz (exe) -- Generator of bad inputs for targets
 // Exceptions: yes
 // Header: include/atf_fuzz.h
 //

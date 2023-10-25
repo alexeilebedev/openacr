@@ -52,6 +52,7 @@ atf_comp::FDb    atf_comp::_db;     // dependency found via dev.targdep
 
 namespace atf_comp {
 const char *atf_comp_help =
+"atf_comp: Algo Test Framework - Component test execution\n"
 "Usage: atf_comp [[-comptest:]<regx>] [options]\n"
 "    OPTION            TYPE    DFLT       COMMENT\n"
 "    -in               string  \"data\"     Input directory or filename, - for stdin\n"

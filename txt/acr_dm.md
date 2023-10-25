@@ -160,7 +160,7 @@ To choose merge driver for ssim files, **.gitattributes** files is used:
 
 ```
 inline-command: cat .gitattributes
-*.ssim merge=acr_dm
+cat: .gitattributes: No such file or directory
 ```
 
 ### Tests

@@ -3,6 +3,7 @@ dev.target  target:abt  compat:%-%g%.%-%
 dev.target  target:abt_md  compat:Linux-%.%-%
 dev.target  target:acr  compat:%-%g%.%-%
 dev.target  target:acr_compl  compat:%-%g%.%-%
+dev.target  target:acr_dm  compat:Linux-%.%-%
 dev.target  target:acr_ed  compat:%-%g%.%-%
 dev.target  target:acr_in  compat:%-%g%.%-%
 dev.target  target:acr_my  compat:%-%g%.%-%

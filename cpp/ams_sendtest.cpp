@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Target: ams_sendtest (exe)
+// Target: ams_sendtest (exe) -- Algo Messaging System test tool
 // Exceptions: yes
 // Source: cpp/ams_sendtest.cpp
 //

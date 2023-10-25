@@ -45,6 +45,7 @@ atf_nrun::FDb   atf_nrun::_db;    // dependency found via dev.targdep
 
 namespace atf_nrun {
 const char *atf_nrun_help =
+"atf_nrun: Run N subprocesses in parallel\n"
 "Usage: atf_nrun [[-ncmd:]<int>] [options]\n"
 "    OPTION      TYPE    DFLT    COMMENT\n"
 "    -in         string  \"data\"  Input directory or filename, - for stdin\n"

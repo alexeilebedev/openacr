@@ -91,6 +91,7 @@ const char *dev_Target_target_abt         = "abt";
 const char *dev_Target_target_abt_md      = "abt_md";
 const char *dev_Target_target_acr         = "acr";
 const char *dev_Target_target_acr_compl   = "acr_compl";
+const char *dev_Target_target_acr_dm      = "acr_dm";
 const char *dev_Target_target_acr_ed      = "acr_ed";
 const char *dev_Target_target_acr_in      = "acr_in";
 const char *dev_Target_target_acr_my      = "acr_my";

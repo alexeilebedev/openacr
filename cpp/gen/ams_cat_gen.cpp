@@ -46,6 +46,7 @@ ams_cat::FDb    ams_cat::_db;     // dependency found via dev.targdep
 
 namespace ams_cat {
 const char *ams_cat_help =
+"ams_cat: Algo Messaging System sample tool\n"
 "Usage: ams_cat [options]\n"
 "    OPTION      TYPE    DFLT    COMMENT\n"
 "    -in         string  \"data\"  Input directory or filename, - for stdin\n"

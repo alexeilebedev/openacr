@@ -50,6 +50,7 @@ ams_sendtest::FDb   ams_sendtest::_db;    // dependency found via dev.targdep
 
 namespace ams_sendtest {
 const char *ams_sendtest_help =
+"ams_sendtest: Algo Messaging System test tool\n"
 "Usage: ams_sendtest [options]\n"
 "    OPTION         TYPE    DFLT    COMMENT\n"
 "    -in            string  \"data\"  Input directory or filename, - for stdin\n"

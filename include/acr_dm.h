@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Target: ams_cat (exe) -- Algo Messaging System sample tool
+// Target: acr_dm (exe) -- ACR Diff/Merge
 // Exceptions: yes
-// Header: include/ams_cat.h
+// Header: include/acr_dm.h
 //
 
-#include "include/gen/ams_cat_gen.h"
-#include "include/gen/ams_cat_gen.inl.h"
+#include "include/gen/acr_dm_gen.h"
+#include "include/gen/acr_dm_gen.inl.h"
 
-namespace ams_cat { // update-hdr
+namespace acr_dm { // update-hdr
     // Dear human:
     //     Text from here to the closing curly brace was produced by scanning
     //     source files. Editing this text is futile.
@@ -30,7 +30,39 @@ namespace ams_cat { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/ams/ams_cat.cpp
+    // cpp/acr/acr_dm.cpp
     //
+
+    // Get or create tuple attribute
+    acr_dm::FAttr &zs_attr_GetOrCreate(FTuple &tuple, strptr name);
+
+    // Get or create attribute value
+    acr_dm::FValue &zs_value_GetOrCreate(FAttr &attr, strptr val);
+
+    // Load all files
+    void Main_LoadFiles();
+
+    // Print list of sources (for dump only)
+    void PrintSource(acr_dm::Source &source, cstring &out);
+
+    // Dump
+    void Main_Dump();
+
+    // whether an item has been removed in some source
+    inline bool RemovedQ(acr_dm::Source source);
+
+    // print conflict marker
+    void PrintConflictMarker(char mark, strptr source_name, cstring &out);
+
+    // Print tuple for given source
+    void PrintSourceTuple(FTuple &tuple, int source, cstring &out);
+
+    // Print merged tuple, return false in case of conflict
+    bool MergeTuple(FTuple &tuple, cstring &out);
+
+    // Merge
+    void Main_Merge();
+
+    // Main routine
     void Main();
 }

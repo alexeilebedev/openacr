@@ -44,7 +44,6 @@ dev.Scriptfile
 dev.Readme
 dev.Noindent
 dev.Msgfile
-dclidb.Dctr      Container
 dev.Cfg
 dev.Builddir     Directory where object files/executables go. Determines compile/link options
 ```

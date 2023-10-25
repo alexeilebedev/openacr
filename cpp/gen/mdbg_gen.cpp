@@ -47,7 +47,7 @@ mdbg::FDb       mdbg::_db;        // dependency found via dev.targdep
 
 namespace mdbg {
 const char *mdbg_help =
-"mdbg: My debugger\n"
+"mdbg: Gdb front-end\n"
 "Usage: mdbg [-target:]<string> [[-args:]<string>] [options]\n"
 "    OPTION         TYPE    DFLT     COMMENT\n"
 "    [target]       string           Executable name\n"

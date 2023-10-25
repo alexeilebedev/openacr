@@ -1,0 +1,7 @@
+garden.flower  flower:rose  color:red  thorned:Y
+garden.flower  flower:dahlia  color:pink  thorned:N
+garden.flower  flower:tulip  color:yellow  thorned:N
+garden.flower  flower:orchid  color:white  thorned:N
+garden.flower  flower:lotus  color:pink  thorned:N
+garden.flower  flower:carnation color:red  thorned:N
+garden.flower  flower:iris  color:yellow  thorned:N

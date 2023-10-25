@@ -49,6 +49,7 @@ sv2ssim::FDb    sv2ssim::_db;     // dependency found via dev.targdep
 
 namespace sv2ssim {
 const char *sv2ssim_help =
+"sv2ssim: sv2ssim - Separated Value file processor\n"
 "Usage: sv2ssim [-fname:]<string> [options]\n"
 "    OPTION          TYPE    DFLT    COMMENT\n"
 "    -in             string  \"data\"  Input directory or filename, - for stdin\n"

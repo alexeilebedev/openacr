@@ -200,6 +200,7 @@ extern const char *  dev_Target_target_abt;            // abt             fconst
 extern const char *  dev_Target_target_abt_md;         // abt_md          fconst:dev.Target.target/abt_md
 extern const char *  dev_Target_target_acr;            // acr             fconst:dev.Target.target/acr
 extern const char *  dev_Target_target_acr_compl;      // acr_compl       fconst:dev.Target.target/acr_compl
+extern const char *  dev_Target_target_acr_dm;         // acr_dm          fconst:dev.Target.target/acr_dm
 extern const char *  dev_Target_target_acr_ed;         // acr_ed          fconst:dev.Target.target/acr_ed
 extern const char *  dev_Target_target_acr_in;         // acr_in          fconst:dev.Target.target/acr_in
 extern const char *  dev_Target_target_acr_my;         // acr_my          fconst:dev.Target.target/acr_my

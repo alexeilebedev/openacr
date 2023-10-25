@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Target: atf_cov (exe)
+// Target: atf_cov (exe) -- Line coverage
 // Exceptions: yes
 // Header: include/atf_cov.h
 //

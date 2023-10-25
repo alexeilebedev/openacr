@@ -134,6 +134,8 @@ atfdb.comptest  comptest:acr_compl.T07  timeout:10  memcheck:Y  exit_code:0  com
 atfdb.comptest  comptest:acr_compl.T08  timeout:10  memcheck:Y  exit_code:0  comment:""
 atfdb.comptest  comptest:acr_compl.T09  timeout:10  memcheck:Y  exit_code:0  comment:""
 atfdb.comptest  comptest:acr_compl.T10  timeout:10  memcheck:Y  exit_code:0  comment:""
+atfdb.comptest  comptest:acr_dm.Conflict  timeout:10  memcheck:Y  exit_code:1  comment:""
+atfdb.comptest  comptest:acr_dm.Merge  timeout:10  memcheck:Y  exit_code:0  comment:""
 atfdb.comptest  comptest:acr_ed.CreateCtype  timeout:10  memcheck:Y  exit_code:0  comment:""
 atfdb.comptest  comptest:acr_ed.CreateSsimfileBadNs  timeout:10  memcheck:Y  exit_code:1  comment:""
 atfdb.comptest  comptest:atf_cmdline.Bare  timeout:10  memcheck:Y  exit_code:1  comment:""
