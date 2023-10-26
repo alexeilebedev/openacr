@@ -1,6 +1,7 @@
 dev.gitfile  gitfile:.ffroot
 dev.gitfile  gitfile:.github/workflows/main.yml
 dev.gitfile  gitfile:.gitignore
+dev.gitfile  gitfile:LICENSE
 dev.gitfile  gitfile:Makefile
 dev.gitfile  gitfile:README.md
 dev.gitfile  gitfile:bin/abt
