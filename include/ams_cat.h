@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Target: ams_cat (exe)
+// Target: ams_cat (exe) -- Algo Messaging System sample tool
 // Exceptions: yes
 // Header: include/ams_cat.h
 //

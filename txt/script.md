@@ -30,7 +30,7 @@ by walking upward from the current directory until encountering a directory with
 
 `ff` automatically skips directory `temp/`.
 The `-f` option can be used to select which files `ff` selects for searching.
-There can be multiple `-f` options. They act as "OR". 
+There can be multiple `-f` options. They act as "OR".
 
 #### Negative Patterns
 
@@ -67,6 +67,7 @@ By default, `ff` highlights output. But if `-notty` is specified, or the output
 is not a terminal, highlighting is skipped.
 
 `ff` is similar to `grep -RHn`, but more specialized.
+
 ### Grephunk: patch file filter
 
 Grephunk is a perl script that scan hunks on stdin
@@ -124,6 +125,7 @@ In the example below, hunk must contain the word amc anywhere in it,
 and filename should not have pattern /gen/
 
     grephunk amc f:!/gen/ h:'}\s+$'
+
 ### Hilite: inline highlighter
 
 The hilite tool is a perl script for highlighting strings in some output.

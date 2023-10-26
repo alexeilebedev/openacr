@@ -109,7 +109,6 @@ Here is an example of the default value, in this case `"data"`:
     $ acr field:command.%.in | head -1
     dmmeta.field  field:command.acr.in  arg:algo.cstring  reftype:Val  dflt:'"data"'  comment:"Input directory or filename, - for stdin"
 
-
 ### Integer Options
 
 Let's continue. It's time to add an integer-valued option:
@@ -158,7 +157,7 @@ a string is a valid type. For instance, to input an IPv4 address, use
 
 Reading ctypes from a string is controlled by the `dmmeta.cfmt` table, where a user-provided
 function may be specified with `extrn:Y`. This is described in depth in the chapter on string conversion.
-    
+
 ### Bash Command Completion
 
 OpenACR offers completion of command line parameters for any program in its domain.
@@ -409,3 +408,4 @@ it inherits a lower verbosity level than the parent. This allows tracing the pro
 by using an appropriate number of `-v`'s on the command line.
 
 Don't forget to `git reset --hard` to clean up any local changes.
+

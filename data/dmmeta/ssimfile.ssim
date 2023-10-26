@@ -34,10 +34,12 @@ dmmeta.ssimfile  ssimfile:dev.hilite  ctype:dev.Hilite
 dmmeta.ssimfile  ssimfile:dev.htmlentity  ctype:dev.Htmlentity
 dmmeta.ssimfile  ssimfile:dev.license  ctype:dev.License
 dmmeta.ssimfile  ssimfile:dev.linelim  ctype:dev.Linelim
+dmmeta.ssimfile  ssimfile:dev.mdsection  ctype:dev.Mdsection
 dmmeta.ssimfile  ssimfile:dev.msgfile  ctype:dev.Msgfile
 dmmeta.ssimfile  ssimfile:dev.noindent  ctype:dev.Noindent
 dmmeta.ssimfile  ssimfile:dev.opt_type  ctype:dev.OptType
 dmmeta.ssimfile  ssimfile:dev.readme  ctype:dev.Readme
+dmmeta.ssimfile  ssimfile:dev.readmens  ctype:dev.Readmens
 dmmeta.ssimfile  ssimfile:dev.sandbox  ctype:dev.Sandbox
 dmmeta.ssimfile  ssimfile:dev.sbpath  ctype:dev.Sbpath
 dmmeta.ssimfile  ssimfile:dev.scriptfile  ctype:dev.Scriptfile

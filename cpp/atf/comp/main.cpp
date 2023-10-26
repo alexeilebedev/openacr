@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Target: atf_comp (exe)
+// Target: atf_comp (exe) -- Algo Test Framework - Component test execution
 // Exceptions: yes
 // Source: cpp/atf/comp/main.cpp
 //

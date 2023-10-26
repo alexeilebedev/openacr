@@ -18,7 +18,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-// Target: abt (exe) -- Algo Build Tool (build system)
+// Target: abt (exe) -- Algo Build Tool - build & link C++ targets
 // Exceptions: NO
 // Source: cpp/abt/main.cpp -- Algo Build Tool - Main file
 //
@@ -583,15 +583,15 @@ static void Main_CreateCmds(algo_lib::Replscope &R, abt::FTarget &target, abt::F
     ind_beg(abt::target_c_srcfile_curs, srcfile,target) {
         // preprocess source file
         Set(R,"$srcfile",srcfile.srcfile);
-        Set(R,"$objpath",srcfile.objpath);
         if (abt::_db.cmdline.preproc) {
-            tempstr outfile(ReplaceExt(srcfile.objpath, ".i"));
+            Set(R,"$objpath",ReplaceExt(srcfile.objpath, ".i"));
             abt::FSyscmd& cmd_preproc = NewCmd(&targ_start, &targ_comptarg);
-            cmd_preproc.command << abt::EvalSrcfileCmdline(R,target,srcfile)
-                                << " -c "<< srcfile.srcfile << " -o "<<outfile<<" -E ";
+            prlog(abt::EvalSrcfileCmdline(R,target,srcfile));
+            cmd_preproc.command << abt::EvalSrcfileCmdline(R,target,srcfile) << " -E";
         }
         // compile source file or precompiled header
         if (abt::_db.cmdline.build && srcfile.ood) {
+            Set(R,"$objpath",srcfile.objpath);
             abt::FSyscmd& cmd_compile = NewCmd(&targ_start, &targ_comptarg);
             cmd_compile.outfile = srcfile.objpath;
             // for coverage config, remove .gcda files - when .o and .gcno gets recompiled,

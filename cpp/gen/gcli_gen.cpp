@@ -47,7 +47,7 @@ gcli::FDb       gcli::_db;        // dependency found via dev.targdep
 
 namespace gcli {
 const char *gcli_help =
-"gcli: cli utility for gitlab and github\n"
+"gcli: Gcli - gitlab/github command-line client\n"
 "Usage: gcli [[-selector:]<string>] [[-fields:]<string>] [options]\n"
 "    OPTION                     TYPE    DFLT       COMMENT\n"
 "    -in                        string  \"data\"     Input directory or filename, - for stdin\n"
@@ -254,6 +254,7 @@ void gcli::ReadArgv() {
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
     }
+    algo_lib::ResetErrtext();
     vrfy(gcli::LoadTuplesMaybe(cmd.in)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }

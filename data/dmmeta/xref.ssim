@@ -30,6 +30,15 @@ dmmeta.xref  field:abt.FTarget.p_ns  inscond:true  via:abt.FDb.ind_ns/dev.Target
 dmmeta.xref  field:abt.FDb.ind_filestat  inscond:true  via:""
 dmmeta.xref  field:abt.FDb.zd_inclstack  inscond:false  via:""
 dmmeta.xref  field:abt_md.FDb.ind_readme  inscond:true  via:""
+dmmeta.xref  field:abt_md.FDb.bh_file_section  inscond:true  via:""
+dmmeta.xref  field:abt_md.FDb.ind_ns  inscond:true  via:""
+dmmeta.xref  field:abt_md.FMdsection.zd_file_section  inscond:true  via:abt_md.FileSection.p_mdsection
+dmmeta.xref  field:abt_md.FDb.ind_ssimfile  inscond:true  via:""
+dmmeta.xref  field:abt_md.FDb.ind_ctype  inscond:true  via:""
+dmmeta.xref  field:abt_md.FSsimfile.p_ctype  inscond:true  via:abt_md.FDb.ind_ctype/dmmeta.Ssimfile.ctype
+dmmeta.xref  field:abt_md.FReadme.c_readmens  inscond:true  via:abt_md.FDb.ind_readme/dev.Readmens.readme
+dmmeta.xref  field:abt_md.FReadmens.p_ns  inscond:true  via:abt_md.FDb.ind_ns/dev.Readmens.ns
+dmmeta.xref  field:abt_md.FReadmens.p_readme  inscond:true  via:abt_md.FDb.ind_readme/dev.Readmens.readme
 dmmeta.xref  field:acr.FDb.zd_pline  inscond:true  via:""
 dmmeta.xref  field:acr.FDb.zd_pdep  inscond:true  via:""
 dmmeta.xref  field:acr.FPline.zd_child  inscond:true  via:acr.FPdep.p_parent
@@ -88,6 +97,9 @@ dmmeta.xref  field:acr_compl.FField.c_falias  inscond:true  via:acr_compl.FDb.in
 dmmeta.xref  field:acr_compl.FFalias.p_basefield  inscond:true  via:acr_compl.FDb.ind_field/dmmeta.Falias.basefield
 dmmeta.xref  field:acr_compl.FField.c_falias_base  inscond:true  via:acr_compl.FDb.ind_field/dmmeta.Falias.basefield
 dmmeta.xref  field:acr_compl.FFalias.p_field  inscond:true  via:acr_compl.FDb.ind_field/dmmeta.Falias.field
+dmmeta.xref  field:acr_dm.FDb.ind_tuple  inscond:true  via:""
+dmmeta.xref  field:acr_dm.FTuple.zs_attr  inscond:true  via:acr_dm.FAttr.p_tuple
+dmmeta.xref  field:acr_dm.FAttr.zs_value  inscond:true  via:acr_dm.FValue.p_attr
 dmmeta.xref  field:acr_ed.FDb.ind_ns  inscond:true  via:""
 dmmeta.xref  field:acr_ed.FDb.ind_field  inscond:true  via:""
 dmmeta.xref  field:acr_ed.FDb.ind_ctype  inscond:true  via:""

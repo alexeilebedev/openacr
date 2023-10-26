@@ -1,4 +1,4 @@
-## Sandbox - sandbox management tool
+## sandbox: Sandbox - sandbox management tool
 
 The sandbox tool can be used to create, delete and manage sandboxes, which are copies of
 the current directory that include any currently modified files.
@@ -7,7 +7,7 @@ The list of sandboxes is in `dev.sandbox`.
 ### Syntax
 
 ```
-inline-command: sandbox -h
+sandbox: Sandbox - sandbox management tool
 Usage: sandbox [-name:]<regx> [[-cmd:]<string>] [options]
     OPTION      TYPE    DFLT    COMMENT
     -in         string  "data"  Input directory or filename, - for stdin
@@ -37,6 +37,29 @@ With `-create`, a new entry is added to `dev.sandbox` table and this implies `-r
 Sandbox performs actions in the following order: `-create`, `-reset`, `-clean`,
 execute comand in sandbox, `-diff`, `-gc`, `-del`. This means you can create a sandbox, run a command
 inside it, show the difference, and delete the sandbox in one line.
+
+### Tools that use sandbox:
+
+* `amc_gc` uses sandbox to test changes to process in-memory database composition, and to clean up
+includes
+* `acr_ed` uses sandbox when invoked with `-sandbox` option
+* `atf_fuzz` uses sandbox
+* `atf_ci` uses sandbox to run tests marked `sandbox:Y
+
+### Library support
+
+The following functions in `algo_lib` help use sandboxing inside a process
+
+```
+inline-command: src_func algo_lib %Sandbox% -proto
+// Return computed name for sandbox SANDBOX
+cpp/lib/algo/lib.cpp:734: tempstr algo_lib::SandboxDir(algo::strptr sandbox) 
+// Enter sandbox and remember previous directory
+cpp/lib/algo/lib.cpp:745: void algo_lib::SandboxEnter(algo::strptr sandbox) 
+// Change to the directory that was current before sandbox mode
+// Must be balanced with SandboxEnter
+cpp/lib/algo/lib.cpp:756: void algo_lib::SandboxExit() 
+```
 
 ### Example: create a new sandbox
 
@@ -121,25 +144,12 @@ the mode) will corrupt the original git directory.
 $ sandbox test -create "sandbox test2 -create 'command'" -del
 ```
 
-### Tools that use sandbox:
+### Inputs
 
-* `amc_gc` uses sandbox to test changes to process in-memory database composition, and to clean up
-includes
-* `acr_ed` uses sandbox when invoked with `-sandbox` option
-* `atf_fuzz` uses sandbox
-* `atf_ci` uses sandbox to run tests marked `sandbox:Y
-
-### Library support
-
-The following functions in `algo_lib` help use sandboxing inside a process
-
+`sandbox` takes the following tables on input:
 ```
-inline-command: src_func algo_lib %Sandbox% -proto
-// Return computed name for sandbox SANDBOX
-cpp/lib/algo/lib.cpp:734: tempstr algo_lib::SandboxDir(algo::strptr sandbox) 
-// Enter sandbox and remember previous directory
-cpp/lib/algo/lib.cpp:745: void algo_lib::SandboxEnter(algo::strptr sandbox) 
-// Change to the directory that was current before sandbox mode
-// Must be balanced with SandboxEnter
-cpp/lib/algo/lib.cpp:756: void algo_lib::SandboxExit() 
+CTYPE        COMMENT
+dev.Sbpath
+dev.Sandbox
 ```
+

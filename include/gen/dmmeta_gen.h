@@ -227,6 +227,7 @@ extern const char *  dmmeta_Ns_ns_abt;            // abt             fconst:dmme
 extern const char *  dmmeta_Ns_ns_abt_md;         // abt_md          fconst:dmmeta.Ns.ns/abt_md
 extern const char *  dmmeta_Ns_ns_acr;            // acr             fconst:dmmeta.Ns.ns/acr
 extern const char *  dmmeta_Ns_ns_acr_compl;      // acr_compl       fconst:dmmeta.Ns.ns/acr_compl
+extern const char *  dmmeta_Ns_ns_acr_dm;         // acr_dm          fconst:dmmeta.Ns.ns/acr_dm
 extern const char *  dmmeta_Ns_ns_acr_ed;         // acr_ed          fconst:dmmeta.Ns.ns/acr_ed
 extern const char *  dmmeta_Ns_ns_acr_in;         // acr_in          fconst:dmmeta.Ns.ns/acr_in
 extern const char *  dmmeta_Ns_ns_acr_my;         // acr_my          fconst:dmmeta.Ns.ns/acr_my
@@ -458,10 +459,12 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dev_hilite;                  // de
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_htmlentity;              // dev.htmlentity               fconst:dmmeta.Ssimfile.ssimfile/dev.htmlentity
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_license;                 // dev.license                  fconst:dmmeta.Ssimfile.ssimfile/dev.license
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_linelim;                 // dev.linelim                  fconst:dmmeta.Ssimfile.ssimfile/dev.linelim
+extern const char *  dmmeta_Ssimfile_ssimfile_dev_mdsection;               // dev.mdsection                fconst:dmmeta.Ssimfile.ssimfile/dev.mdsection
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_msgfile;                 // dev.msgfile                  fconst:dmmeta.Ssimfile.ssimfile/dev.msgfile
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_noindent;                // dev.noindent                 fconst:dmmeta.Ssimfile.ssimfile/dev.noindent
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_opt_type;                // dev.opt_type                 fconst:dmmeta.Ssimfile.ssimfile/dev.opt_type
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_readme;                  // dev.readme                   fconst:dmmeta.Ssimfile.ssimfile/dev.readme
+extern const char *  dmmeta_Ssimfile_ssimfile_dev_readmens;                // dev.readmens                 fconst:dmmeta.Ssimfile.ssimfile/dev.readmens
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_sandbox;                 // dev.sandbox                  fconst:dmmeta.Ssimfile.ssimfile/dev.sandbox
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_sbpath;                  // dev.sbpath                   fconst:dmmeta.Ssimfile.ssimfile/dev.sbpath
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_scriptfile;              // dev.scriptfile               fconst:dmmeta.Ssimfile.ssimfile/dev.scriptfile

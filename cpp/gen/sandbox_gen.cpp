@@ -47,6 +47,7 @@ sandbox::FDb    sandbox::_db;     // dependency found via dev.targdep
 
 namespace sandbox {
 const char *sandbox_help =
+"sandbox: Sandbox - sandbox management tool\n"
 "Usage: sandbox [-name:]<regx> [[-cmd:]<string>] [options]\n"
 "    OPTION      TYPE    DFLT    COMMENT\n"
 "    -in         string  \"data\"  Input directory or filename, - for stdin\n"
@@ -239,6 +240,7 @@ void sandbox::ReadArgv() {
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
     }
+    algo_lib::ResetErrtext();
     vrfy(sandbox::LoadTuplesMaybe(cmd.in)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }

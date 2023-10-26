@@ -10,40 +10,63 @@ This file was created with 'abt_md' from files in [txt/](txt/) -- *do not edit*
       * [Binaries](#binaries)
 ; [Intermediate Files](#intermediate-files)
    * [Writing Readmes](#writing-readmes)
-   * [Orgfile: organize and deduplicate files by timestamp and by contents](#orgfile-organize-and-deduplicate-files-by-timestamp-and-by-contents)
+   * [orgfile: organize and deduplicate files by timestamp and by contents](#orgfile-organize-and-deduplicate-files-by-timestamp-and-by-contents)
    * [Tutorial 1: Parts And Projects Tutorial](#tutorial-1-parts-and-projects-tutorial)
    * [Tutorial 2: Parts And Projects in SQL](#tutorial-2-parts-and-projects-in-sql)
    * [Tutorial 3: Scheduling And Main Loop](#tutorial-3-scheduling-and-main-loop)
    * [Tutorial 4: Command Lines](#tutorial-4-command-lines)
    * [Tutorial 5: Running multiple subprocesses](#tutorial-5-running-multiple-subprocesses)
    * [Structured Keys](#structured-keys)
-   * [acr: Auto Cross Reference](#acr-auto-cross-reference)
-   * [acr_in: Show input tuples for target](#acr_in-show-input-tuples-for-target)
-   * [abt: A Build Tool](#abt-a-build-tool)
-   * [acr_ed: Acr Editor](#acr_ed-acr-editor)
-   * [amc: Algo Model Compiler](#amc-algo-model-compiler)
+   * [acr: Algo Cross-Reference - ssimfile database & update tool](#acr-algo-cross-reference---ssimfile-database---update-tool)
+   * [acr_in: ACR Input - compute set of ssimfiles or tuples used by a specific target](#acr_in-acr-input---compute-set-of-ssimfiles-or-tuples-used-by-a-specific-target)
+   * [abt: Algo Build Tool - build & link C++ targets](#abt-algo-build-tool---build---link-c---targets)
+   * [acr_ed: ACR Editor Set of useful recipes, uses acr, abt, git, and other tools](#acr_ed-acr-editor-set-of-useful-recipes--uses-acr--abt--git--and-other-tools)
+   * [amc: Algo Model Compiler: generate code under include/gen and cpp/gen](#amc-algo-model-compiler-generate-code-under-include-gen-and-cpp-gen)
    * [Describing Protocols in AMC](#describing-protocols-in-amc)
    * [Reading and Printing](#reading-and-printing)
    * [Fconst/Gconst: Enumerated Types](#fconst-gconst-enumerated-types)
    * [Amc: Size and field offset assertions](#amc-size-and-field-offset-assertions)
    * [Tests](#tests)
-   * [Mdbg: Gdb front-end](#mdbg-gdb-front-end)
+   * [mdbg: Gdb front-end](#mdbg-gdb-front-end)
    * [Scriptlets](#scriptlets)
    * [Coding Style](#coding-style)
    * [Testimonials](#testimonials)
    * [amc: Subprocess Invocation](#amc-subprocess-invocation)
    * [amc: Program Startup & Main](#amc-program-startup---main)
    * [AMS: Algo Mesaging System](#ams-algo-mesaging-system)
-   * [atf_comp: A component test framework](#atf_comp-a-component-test-framework)
-   * [atf_cov: Code coverage measurement tool](#atf_cov-code-coverage-measurement-tool)
+   * [atf_comp: Algo Test Framework - Component test execution](#atf_comp-algo-test-framework---component-test-execution)
+   * [atf_cov: Line coverage](#atf_cov-line-coverage)
    * [Tracing](#tracing)
    * [Printing / Process output](#printing---process-output)
    * [Fault Management](#fault-management)
    * [Troubleshooting build errors](#troubleshooting-build-errors)
-   * [atf_fuzz: fuzz tester](#atf_fuzz-fuzz-tester)
-   * [sv2ssim - Separated Value file processor](#sv2ssim---separated-value-file-processor)
-   * [Gcli - gitlab/github command-line client](#gcli---gitlab-github-command-line-client)
-   * [Sandbox - sandbox management tool](#sandbox---sandbox-management-tool)
+   * [atf_fuzz: Generator of bad inputs for targets](#atf_fuzz-generator-of-bad-inputs-for-targets)
+   * [sv2ssim: sv2ssim - Separated Value file processor](#sv2ssim-sv2ssim---separated-value-file-processor)
+   * [gcli: Gcli - gitlab/github command-line client](#gcli-gcli---gitlab-github-command-line-client)
+   * [sandbox: Sandbox - sandbox management tool](#sandbox-sandbox---sandbox-management-tool)
+   * [acr_dm: ACR Diff/Merge](#acr_dm-acr-diff-merge)
+   * [abt_md: Tool to generate markdown documentation](#abt_md-tool-to-generate-markdown-documentation)
+   * [acr_compl: ACR shell auto-complete for all targets](#acr_compl-acr-shell-auto-complete-for-all-targets)
+   * [acr_my: ACR <-> MariaDB adaptor](#acr_my-acr-----mariadb-adaptor)
+   * [amc_gc: Empirically eliminate unused records](#amc_gc-empirically-eliminate-unused-records)
+   * [amc_vis: amc: draw access path diagrams](#amc_vis-amc-draw-access-path-diagrams)
+   * [ams_cat: Algo Messaging System sample tool](#ams_cat-algo-messaging-system-sample-tool)
+   * [ams_sendtest: Algo Messaging System test tool](#ams_sendtest-algo-messaging-system-test-tool)
+   * [atf_amc: Unit tests for amc (see amctest table)](#atf_amc-unit-tests-for-amc--see-amctest-table-)
+   * [atf_ci: Normalization tests (see citest table)](#atf_ci-normalization-tests--see-citest-table-)
+   * [atf_cmdline: Test tool for command line parsing](#atf_cmdline-test-tool-for-command-line-parsing)
+   * [atf_nrun: Run N subprocesses in parallel](#atf_nrun-run-n-subprocesses-in-parallel)
+   * [atf_unit: Unit tests (see unittest table)](#atf_unit-unit-tests--see-unittest-table-)
+   * [bash2html: Convert bash output and colours to html](#bash2html-convert-bash-output-and-colours-to-html)
+   * [mysql2ssim: mysql -> ssim conversion tool](#mysql2ssim-mysql----ssim-conversion-tool)
+   * [atf_gcli: test harness for gcli](#atf_gcli-test-harness-for-gcli)
+   * [src_func: Access / edit functions](#src_func-access---edit-functions)
+   * [src_hdr: Update source file / copyright header](#src_hdr-update-source-file---copyright-header)
+   * [src_lim: Enforce line length, function length, and indentation limits](#src_lim-enforce-line-length--function-length--and-indentation-limits)
+   * [ssim2csv: Ssim -> csv conversion tool](#ssim2csv-ssim----csv-conversion-tool)
+   * [ssim2mysql: Ssim -> mysql](#ssim2mysql-ssim----mysql)
+   * [ssimfilt: Tuple utility](#ssimfilt-tuple-utility)
+   * [strconv: A simple string utility](#strconv-a-simple-string-utility)
 
 
 ## About
@@ -295,7 +318,7 @@ the inline-command directive. Everything after this directive and before the nex
 is replaced with the output of specified command. An example of such a command can be seen above
 
 
-## Orgfile: organize and deduplicate files by timestamp and by contents
+## orgfile: organize and deduplicate files by timestamp and by contents
 [See txt/orgfile.md](txt/orgfile.md)
 
 ## Tutorial 1: Parts And Projects Tutorial
@@ -316,19 +339,19 @@ is replaced with the output of specified command. An example of such a command c
 ## Structured Keys
 [See txt/sknf.md](txt/sknf.md)
 
-## acr: Auto Cross Reference
+## acr: Algo Cross-Reference - ssimfile database & update tool
 [See txt/acr.md](txt/acr.md)
 
-## acr_in: Show input tuples for target
+## acr_in: ACR Input - compute set of ssimfiles or tuples used by a specific target
 [See txt/acr_in.md](txt/acr_in.md)
 
-## abt: A Build Tool
+## abt: Algo Build Tool - build & link C++ targets
 [See txt/abt.md](txt/abt.md)
 
-## acr_ed: Acr Editor
+## acr_ed: ACR Editor Set of useful recipes, uses acr, abt, git, and other tools
 [See txt/acr_ed.md](txt/acr_ed.md)
 
-## amc: Algo Model Compiler
+## amc: Algo Model Compiler: generate code under include/gen and cpp/gen
 [See txt/amc.md](txt/amc.md)
 
 ## Describing Protocols in AMC
@@ -346,7 +369,7 @@ is replaced with the output of specified command. An example of such a command c
 ## Tests
 [See txt/tests.md](txt/tests.md)
 
-## Mdbg: Gdb front-end
+## mdbg: Gdb front-end
 [See txt/mdbg.md](txt/mdbg.md)
 
 ## Scriptlets
@@ -367,10 +390,10 @@ is replaced with the output of specified command. An example of such a command c
 ## AMS: Algo Mesaging System
 [See txt/ams.md](txt/ams.md)
 
-## atf_comp: A component test framework
+## atf_comp: Algo Test Framework - Component test execution
 [See txt/atf_comp.md](txt/atf_comp.md)
 
-## atf_cov: Code coverage measurement tool
+## atf_cov: Line coverage
 [See txt/atf_cov.md](txt/atf_cov.md)
 
 ## Tracing
@@ -385,14 +408,83 @@ is replaced with the output of specified command. An example of such a command c
 ## Troubleshooting build errors
 [See txt/abt-troubleshoot.md](txt/abt-troubleshoot.md)
 
-## atf_fuzz: fuzz tester
+## atf_fuzz: Generator of bad inputs for targets
 [See txt/atf_fuzz.md](txt/atf_fuzz.md)
 
-## sv2ssim - Separated Value file processor
+## sv2ssim: sv2ssim - Separated Value file processor
 [See txt/sv2ssim.md](txt/sv2ssim.md)
 
-## Gcli - gitlab/github command-line client
+## gcli: Gcli - gitlab/github command-line client
 [See txt/gcli.md](txt/gcli.md)
 
-## Sandbox - sandbox management tool
+## sandbox: Sandbox - sandbox management tool
 [See txt/sandbox.md](txt/sandbox.md)
+
+## acr_dm: ACR Diff/Merge
+[See txt/acr_dm.md](txt/acr_dm.md)
+
+## abt_md: Tool to generate markdown documentation
+[See txt/abt_md.md](txt/abt_md.md)
+
+## acr_compl: ACR shell auto-complete for all targets
+[See txt/acr_compl.md](txt/acr_compl.md)
+
+## acr_my: ACR <-> MariaDB adaptor
+[See txt/acr_my.md](txt/acr_my.md)
+
+## amc_gc: Empirically eliminate unused records
+[See txt/amc_gc.md](txt/amc_gc.md)
+
+## amc_vis: amc: draw access path diagrams
+[See txt/amc_vis.md](txt/amc_vis.md)
+
+## ams_cat: Algo Messaging System sample tool
+[See txt/ams_cat.md](txt/ams_cat.md)
+
+## ams_sendtest: Algo Messaging System test tool
+[See txt/ams_sendtest.md](txt/ams_sendtest.md)
+
+## atf_amc: Unit tests for amc (see amctest table)
+[See txt/atf_amc.md](txt/atf_amc.md)
+
+## atf_ci: Normalization tests (see citest table)
+[See txt/atf_ci.md](txt/atf_ci.md)
+
+## atf_cmdline: Test tool for command line parsing
+[See txt/atf_cmdline.md](txt/atf_cmdline.md)
+
+## atf_nrun: Run N subprocesses in parallel
+[See txt/atf_nrun.md](txt/atf_nrun.md)
+
+## atf_unit: Unit tests (see unittest table)
+[See txt/atf_unit.md](txt/atf_unit.md)
+
+## bash2html: Convert bash output and colours to html
+[See txt/bash2html.md](txt/bash2html.md)
+
+## mysql2ssim: mysql -> ssim conversion tool
+[See txt/mysql2ssim.md](txt/mysql2ssim.md)
+
+## atf_gcli: test harness for gcli
+[See txt/atf_gcli.md](txt/atf_gcli.md)
+
+## src_func: Access / edit functions
+[See txt/src_func.md](txt/src_func.md)
+
+## src_hdr: Update source file / copyright header
+[See txt/src_hdr.md](txt/src_hdr.md)
+
+## src_lim: Enforce line length, function length, and indentation limits
+[See txt/src_lim.md](txt/src_lim.md)
+
+## ssim2csv: Ssim -> csv conversion tool
+[See txt/ssim2csv.md](txt/ssim2csv.md)
+
+## ssim2mysql: Ssim -> mysql
+[See txt/ssim2mysql.md](txt/ssim2mysql.md)
+
+## ssimfilt: Tuple utility
+[See txt/ssimfilt.md](txt/ssimfilt.md)
+
+## strconv: A simple string utility
+[See txt/strconv.md](txt/strconv.md)

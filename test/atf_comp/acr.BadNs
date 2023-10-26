@@ -3,7 +3,7 @@ stdin-insert:1: Invalid value ns:x
 dmmeta.ctype  ctype:x.Y
 
 Type               dmmeta.Ns
-Valid values       , abt, abt_md, acr, acr_compl, acr_ed, acr_in, acr_my, algo, algo_lib, algo_pch, amc, amc_gc, amc_vis, amcdb, ams, ams_cat, ams_sendtest, amsdb, atf, atf_amc, atf_ci, atf_cmdline, atf_comp, atf_cov, atf_fuzz, atf_gcli, atf_nrun, atf_unit, atfdb, bash2html, command, dev, dmmeta, fm, fmdb, gcli, gclidb, ietf, lib_ams, lib_ctype, lib_exec, lib_fm, lib_git, lib_iconv, lib_json, lib_mysql, lib_prot, lib_sql, mdbg, mysql2ssim, orgfile, report, sandbox, src_func, src_hdr, src_lim, ssim2csv, ssim2mysql, ssimfilt, strconv, sv2ssim
+Valid values       , abt, abt_md, acr, acr_compl, acr_dm, acr_ed, acr_in, acr_my, algo, algo_lib, algo_pch, amc, amc_gc, amc_vis, amcdb, ams, ams_cat, ams_sendtest, amsdb, atf, atf_amc, atf_ci, atf_cmdline, atf_comp, atf_cov, atf_fuzz, atf_gcli, atf_nrun, atf_unit, atfdb, bash2html, command, dev, dmmeta, fm, fmdb, gcli, gclidb, ietf, lib_ams, lib_ctype, lib_exec, lib_fm, lib_git, lib_iconv, lib_json, lib_mysql, lib_prot, lib_sql, mdbg, mysql2ssim, orgfile, report, sandbox, src_func, src_hdr, src_lim, ssim2csv, ssim2mysql, ssimfilt, strconv, sv2ssim
 
 acr.badrefs  ctype:dmmeta.Ctype  nbad:1
 

@@ -24,33 +24,63 @@ have to worry about every conceivable interleaving of incoming events.
 
 Let's begin by creating a sample app and add a main loop to it.
 
-    $ acr_ed -create -target sample -write
-    ...
+```
+inline-command: acr_ed -create -target sample -write
+acr_ed.create_target  target:sample
+report.acr_check  records:38  errors:0
+report.acr  ***
+report.amc  ***
+report.acr  ***
+please execute $(acr_compl -install) to add completions support for new target
+report.amc  ***
+```
 
 Since `amc` always generates a main loop in case the program wants it, we don't need to
 do anything special except modify the `sample::Main` function:
 
-    void sample::Main() {
-        sample::MainLoop();
-    }
+```
+inline-command: sed -i 's/prlog.*/sample::MainLoop();/' cpp/sample.cpp
+```
 
-    $ ai sample && sample
-    ...
+```
+inline-command: sed '/{/,/}/p;d' cpp/sample.cpp
+void sample::Main() {
+    sample::MainLoop();
+}
+```
+
+Build:
+
+```
+inline-command: ai sample
+abt.config  config:Linux-g++.release-x86_64  cache:***  out_dir:build/release
+abt.outofdate  ***
+report.abt  n_target:5  time:***  n_warn:0  n_err:0  n_install:0
+```
+
+Run:
+
+```
+inline-command: sample
+```
 
 When you run the newly modified sample, you will notice that it exits right away. That's
 because `sample::MainLoop` has detected that no actions are possible,
 and has exited. Let's take a closer look at the generated `sample::MainLoop`:
 
-    // --- sample.FDb._db.MainLoop
-    // Main loop.
-    void sample::MainLoop() {
-        SchedTime time(get_cycles());
-        algo_lib::_db.clock          = time;
-        do {
-            algo_lib::_db.next_loop.value = algo_lib::_db.limit;
-            algo_lib::Step(); // dependent namespace specified via (dev.targdep)
-        } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
-    }
+```
+inline-command: sed '/--- sample.FDb._db.MainLoop/,/^}/p;d' cpp/gen/sample_gen.cpp
+// --- sample.FDb._db.MainLoop
+// Main loop.
+void sample::MainLoop() {
+    algo::SchedTime time(algo::get_cycles());
+    algo_lib::_db.clock          = time;
+    do {
+        algo_lib::_db.next_loop.value = algo_lib::_db.limit;
+        sample::Steps();
+    } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
+}
+```
 
 The main loop algorithm is controlled by the following three main variables:
 
@@ -78,26 +108,42 @@ namespaces that comprise the app, the main loop automatically begins to poll it 
 Now let's modify our app so that it prints numbers `0..10`, asynchronously, then exits.
 There are many ways to do it, so we'll start with the most general one: a table.
 
-    $ acr_ed -create -ctype sample.Value -subset i32 -pooltype Tpool -write
-    ...
-    $ acr_ed -create -field sample.FDb.zd_value -fstep Inline -write
-    ...
+```
+inline-command: acr_ed -create -ctype sample.Value -subset i32 -pooltype Tpool -write
+report.acr_check  records:8  errors:0
+report.acr  ***
+report.amc  ***
+```
+
+```
+inline-command: acr_ed -create -field sample.FDb.zd_value -fstep Inline -write
+acr_ed.create_field  field:sample.FDb.zd_value
+sample.FDb.zd_value
+sample.FDb.value
+acr_ed.guess_arg  arg:sample.Value
+report.acr_check  records:11  errors:0
+report.acr  ***
+report.amc  ***
+```
 
 The above commands, which are best practiced interactively, add the following records to our database:
 
-    $ acr ctype:sample.Value -t
-    dmmeta.nstype  nstype:exe
-      dmmeta.ns  ns:sample  nstype:exe  comment:""
-        dmmeta.ctype  ctype:sample.Value  comment:""
-          dmmeta.field  field:sample.Value.value  arg:i32  reftype:Val  dflt:""  comment:""
-          dmmeta.ctypelen  ctype:sample.Value  len:32  alignment:8  padbytes:4
+```
+inline-command: acr ctype:sample.Value -t
+dev.license  license:GPL  comment:""
+dmmeta.nstype  nstype:exe  comment:Executable
+  dmmeta.ns  ns:sample  nstype:exe  license:GPL  comment:""
+    dmmeta.ctype  ctype:sample.Value  comment:""
+      dmmeta.field  field:sample.Value.value  arg:i32  reftype:Val  dflt:""  comment:""
+      dmmeta.ctypelen  ctype:sample.Value  len:32  alignment:8  padbytes:4
 
-    dmmeta.field  field:sample.FDb.value     arg:sample.Value  reftype:Tpool  dflt:""  comment:""
-    dmmeta.field  field:sample.FDb.zd_value  arg:sample.Value  reftype:Llist  dflt:""  comment:""
-      dmmeta.llist  field:sample.FDb.zd_value  havetail:Y  havecount:Y  comment:""
-      dmmeta.fstep  fstep:sample.FDb.zd_value  steptype:Inline  comment:""
-      dmmeta.xref  field:sample.FDb.zd_value  inscond:true  via:""
-    report.acr  n_select:10  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+dmmeta.field  field:sample.FDb.value     arg:sample.Value  reftype:Tpool  dflt:""  comment:""
+dmmeta.field  field:sample.FDb.zd_value  arg:sample.Value  reftype:Llist  dflt:""  comment:""
+  dmmeta.llist  field:sample.FDb.zd_value  havetail:Y  havecount:Y  comment:""
+  dmmeta.fstep  fstep:sample.FDb.zd_value  steptype:Inline  comment:""
+  dmmeta.xref  field:sample.FDb.zd_value  inscond:true  via:""
+report.acr  ***
+```
 
 To summarize:
 * We have a new table of type `sample.Value` (`sample::Value` in C++), where new elements
@@ -108,36 +154,35 @@ called `zd_value`.
 
 Now let's modify the sample and run it:
 
-    void sample::zd_value_Step() {
-        Value &value = *zd_value_First();
-        prlog(value.value);
-        value_Delete(value);
-    }
+```
+inline-command: cp conf/tut3.txt cpp/sample.cpp
+```
 
-    void sample::Main() {
-        for (int i=0; i < 10; i++) {
-            Value &value=value_Alloc();
-            value.value=i;
-            value_XrefMaybe(value);
-        }
-        sample::MainLoop();
-    }
+```
+inline-command: sed '/zd_value_Step/,$p;d' cpp/tut3.cpp
+sed: can't read cpp/tut3.cpp: No such file or directory
+```
 
-    ...
-    $ ai sample
-    ...
-    $ sample
-    0
-    1
-    2
-    3
-    4
-    5
-    6
-    7
-    8
-    9
-    $ ...
+```
+inline-command: ai sample
+abt.config  config:Linux-g++.release-x86_64  cache:***  out_dir:build/release
+abt.outofdate  ***
+report.abt  n_target:5  time:***  n_warn:0  n_err:0  n_install:0
+```
+
+```
+inline-command: sample
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+```
 
 The program has printed 10 numbers and exited. We already know that a program exits
 when it can be proven that it has nothing remaining to do. We also have the beginnings
@@ -146,45 +191,54 @@ of an asynchronous program written in engine style.
 Let's proceed slowly and understand what code got generated, and what we can do with it.
 First, let's check the new `MainLoop`;
 
-    $ amc sample.%.MainLoop
+```
+inline-command: amc sample.%.MainLoop
 
-    // --- sample.FDb._db.MainLoop
-    // Main loop.
-    void sample::MainLoop() {
-        SchedTime time(get_cycles());
-        algo_lib::_db.clock          = time;
-        do {
-            algo_lib::_db.next_loop.value = algo_lib::_db.limit;
-            sample::Step(); // dependent namespace specified via (dev.targdep)
-            algo_lib::Step(); // dependent namespace specified via (dev.targdep)
-        } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
-    }
-    ...
+// --- sample.FDb._db.MainLoop
+// Main loop.
+void sample::MainLoop() {
+    algo::SchedTime time(algo::get_cycles());
+    algo_lib::_db.clock          = time;
+    do {
+        algo_lib::_db.next_loop.value = algo_lib::_db.limit;
+        sample::Steps();
+    } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
+}
+
+report.amc  ***
+```
 
 We see that `sample::Step` is now called. That's because we defined the `fstep` record on `zd_sample`.
 Let's drill down to `Step`:
 
-    $ amc sample.%.Step
+```
+inline-command: amc sample.%.Step
 
-    // --- sample.FDb._db.Step
-    // Main step
-    void sample::Step() {
-        zd_value_Call();
-    }
-    ...
+// --- sample.FDb._db.Step
+// Main step
+void sample::Step() {
+    zd_value_Call();
+}
+
+report.amc  ***
+```
 
 Almost nothing interesting here... Let's check `zd_value_Call`:
 
-    $ amc sample.%.zd_value.Call
+```
+inline-command: amc sample.%.zd_value.Call
 
-    // --- sample.FDb.zd_value.Call
-    inline static void sample::zd_value_Call() {
-        if (!sample::zd_value_EmptyQ()) { // fstep:sample.FDb.zd_value
-            sample::zd_value_Step(); // steptype:Inline: call function on every step
-            zd_value_UpdateCycles();
-            algo_lib::_db.next_loop = algo_lib::_db.clock;
-        }
+// --- sample.FDb.zd_value.Call
+inline static void sample::zd_value_Call() {
+    if (!sample::zd_value_EmptyQ()) { // fstep:sample.FDb.zd_value
+        sample::zd_value_Step(); // steptype:Inline: call function on every step
+        zd_value_UpdateCycles();
+        algo_lib::_db.next_loop = algo_lib::_db.clock;
     }
+}
+
+report.amc  ***
+```
 
 Finally, the interesting bit. We see that the main `Step` checks to see if `zd_value` is empty.
 If not, it calls `zd_value_Step`, which is a user-defined function. The function can rely
@@ -461,3 +515,4 @@ Let's run the program:
 Our primitive non-blocking program does what we intended.
 This code could be combined with other non-blocking code,
 and the behaviors the two will be combined.
+

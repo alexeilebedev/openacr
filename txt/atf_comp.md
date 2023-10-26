@@ -1,9 +1,11 @@
-## atf_comp: A component test framework
+## atf_comp: Algo Test Framework - Component test execution
+
+
 
 ### Syntax
 
 ```
-inline-command: atf_comp -h
+atf_comp: Algo Test Framework - Component test execution
 Usage: atf_comp [[-comptest:]<regx>] [options]
     OPTION            TYPE    DFLT       COMMENT
     -in               string  "data"     Input directory or filename, - for stdin
@@ -60,8 +62,6 @@ running tests in companion with other tools (NOT YET ALL IMPLEMENTED):
 - profiling;
 - coverage measurement;
 - automatic fuzzing.
-
-### Data model
 
 #### Testcase
 
@@ -170,7 +170,6 @@ Once memory errors have been detected, they are displayed, and test failed.
 To suppress memcheck for particular comptest, set `memcheck:N`.
 To run suppresed memcheck, use `-memcheck -force`.
 
-
 ### Run tests under profiler
 
 Atf_cov supports callgrind profiler, use `-callgrind`:
@@ -196,7 +195,6 @@ qcachegrind path_to/comptest.callgrind.out
 
 Replace *comptest* with comptest id.
 Replace *path_to* with the actual file location.
-
 
 ### Measuring test coverage
 
@@ -257,4 +255,25 @@ To do this, invoked `atf_comp` with `-mdbg` option.
 The command line produced by atf_comp can be used for stand-alone testing,
 omitting atf_comp altogether.
 Use `-v` to see the command line being generated.
+
+### Inputs
+
+`atf_comp` takes the following tables on input:
+```
+CTYPE            COMMENT
+dmmeta.Ctype     Conceptual type (or C type)
+dmmeta.Field     Specify field of a struct
+dev.Unstablefld
+dmmeta.Substr    Specify that the field value is computed from a substring of another field
+dmmeta.Ssimfile  Ssim tuple name for structure
+dmmeta.Ftuple
+dmmeta.Fconst    Specify enum value (integer + string constant) for a field
+dmmeta.Cppfunc   Value of field provided by this expression
+dmmeta.Cfmt      Specify options for printing/reading ctypes into multiple formats
+dmmeta.Cdflt     Specify default value for single-value types that lack fields
+atfdb.Comptest
+atfdb.Tmsg
+atfdb.Tfilt
+atfdb.Targs
+```
 

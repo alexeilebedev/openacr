@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Target: orgfile (exe) -- OpenACR File deduplicator tool
+// Target: orgfile (exe) -- organize and deduplicate files by timestamp and by contents
 // Exceptions: yes
 // Header: include/orgfile.h
 //

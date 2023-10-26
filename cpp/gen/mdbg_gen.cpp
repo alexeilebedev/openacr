@@ -47,7 +47,7 @@ mdbg::FDb       mdbg::_db;        // dependency found via dev.targdep
 
 namespace mdbg {
 const char *mdbg_help =
-"mdbg: My debugger\n"
+"mdbg: Gdb front-end\n"
 "Usage: mdbg [-target:]<string> [[-args:]<string>] [options]\n"
 "    OPTION         TYPE    DFLT     COMMENT\n"
 "    [target]       string           Executable name\n"
@@ -467,6 +467,7 @@ void mdbg::ReadArgv() {
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
     }
+    algo_lib::ResetErrtext();
     vrfy(mdbg::LoadTuplesMaybe(cmd.in)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }

@@ -67,8 +67,9 @@ struct Bool { // algo.Bool
     Bool();
 };
 ```
-    
+
 ### Fcast
+
     
 One thing that's useful is to be able to cast the wrapper struct to the enum type.
 This is done by adding an fcast record:
@@ -82,7 +83,7 @@ This adds the following function to the `algo::Bool` type:
 ```
     inline operator algo_BoolEnum() const;
 ```
-    
+
 ### Anonfld
 
 Another commonly used feature is the `anonfld` record.
@@ -96,6 +97,7 @@ the enum's symbols would be named `algo_Bool_value_true`, etc. With anonfld, it 
 etc.
 
 ### Gconst: Taking values from a table
+
     
 The related table is `gconst`, which allows specifying `fconsts` using two columns
 from an arbitrary ssimfile. It's programmer's choice whether to use `fconst` or `gconst`.

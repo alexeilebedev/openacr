@@ -1,10 +1,59 @@
-## acr: Auto Cross Reference
+## acr: Algo Cross-Reference - ssimfile database & update tool
 
 Acr is a query and editing tool for ssim (super-simple) databases.
 These databases can be proper directories, or files, or stdin.
 Acr is not concerned with big data; it's about small but highly cross-referenced data,
 essentially configurations and source code. A rule of thumb is that acr will
 process 1 million records/sec and the data sets must fit in memory.
+
+### Syntax
+
+```
+acr: Algo Cross-Reference - ssimfile database & update tool
+Usage: acr [[-query:]<string>] [options]
+    OPTION      TYPE    DFLT    COMMENT
+    [query]     string  ""      Regx to match record
+    -where...   string          Additional key:value pairs to match
+    -select             Y       Select records matching query (default)
+    -del                        Delete found item
+    -insert                     Read stdin and insert tuples
+    -replace                    Read stdin and replace tuples
+    -update                     Read stdin and update attributes of existing tuples
+    -merge                      Combination of -update and -insert
+    -unused                     Only select records which are not referenced.
+    -trunc                      (with insert or rename): truncate table on first write
+    -check                      Run cross-reference check on selection
+    -maxshow    int     100     Limit number of errors per table
+    -write                      Write data back to disk.
+    -rename     string  ""      Change value of found item
+    -nup        int     0       Number of levels to go up
+    -ndown      int     0       Number of levels to go down
+    -xref                       Short for -nup 100 -ndown 100
+    -fldfunc                    Evaluate fldfunc when printing tuple
+    -maxgroup   int     25      Max. items per group
+    -pretty             Y       Align output in blocks
+    -tree                       Print as tree
+    -loose                      Allow printing a record before its references (used with -e)
+    -my                         Invoke acr_my -e (using acr_my directly is faster)
+    -schema     string  "data"  Directory for initializing acr meta-data
+    -e                          Open selection in editor, write back when done.
+    -t                          Short for -tree -xref -loose
+    -rowid                      Print/respect acr.rowid attribute
+    -in         string  "data"  Input directory or filename, - for stdin
+    -cmt                        Print comments for all columns referenced in output
+    -report             Y       Show final report
+    -print              Y       Print selected records
+    -cmd        string  ""      Print script with command execution for each selected row
+    -field...   string          Fields to select
+    -regxof     string  ""      Single field: output regx of matching field values
+    -meta                       Select meta-data for selected records
+    -verbose    int             Verbosity level (0..255); alias -v; cumulative
+    -debug      int             Debug level (0..255); alias -d; cumulative
+    -help                       Print help an exit; alias -h
+    -version                    Print version and exit
+    -signature                  Show signatures and exit; alias -sig
+
+```
 
 ### Querying
 
@@ -830,7 +879,7 @@ To create a new directory-based data set, we just create an empty directory and 
 option:
 
 ```
-inline-command: mkdir x; acr dmmeta.% | acr -in:x -insert -write -print:N
+inline-command: mkdir x; acr % | acr -in:x -insert -write -print:N
 report.acr  ***
 ```
 
@@ -846,6 +895,13 @@ inline-command: rm -r x; touch x; acr c -report:N | acr -in:x -insert -write
 acr.insert  dev.c  c:blue   comment:""
 acr.insert  dev.c  c:green  comment:""
 acr.insert  dev.c  c:red    comment:""
+report.acr  ***
+```
+inline-command: touch x
+```
+
+```
+inline-command: acr dmmeta.% | acr -in:x -insert -write -print:N
 report.acr  ***
 ```
 
@@ -986,3 +1042,51 @@ Or stop the server, discarding changes:
 The table `dmmeta.sqltype` allows ssim2mysql to map ctypes to SQL types so that
 round tripping can occur without loss. We check in CI that all acr tables 
 can be round tripped through MariaDB with no change.
+
+### Inputs
+
+`acr` takes the following tables on input:
+```
+CTYPE            COMMENT
+dmmeta.Ctype     Conceptual type (or C type)
+dmmeta.Field     Specify field of a struct
+dmmeta.Substr    Specify that the field value is computed from a substring of another field
+dmmeta.Ssimfile  Ssim tuple name for structure
+dmmeta.Ssimsort
+dmmeta.Ssimreq   Presence of ssimfile requires that superset field has a certain value
+dmmeta.Smallstr  Generated fixed-length padded or length-delimited string field
+dmmeta.Funique   This field must be unique in the table. Not needed for primary key
+dmmeta.Cppfunc   Value of field provided by this expression
+dmmeta.Cdflt     Specify default value for single-value types that lack fields
+amcdb.Bltin      Specify properties of a C built-in type
+dmmeta.Anonfld   Omit field name where possible (command line, enums, constants)
+```
+
+### Tests
+
+The following component tests are defined for `acr`:
+```
+acr.BadInsert	
+acr.BadNs	
+acr.BadPkey	Warning about missing pkey - not error
+acr.BadReftype	
+acr.BadReftype2	
+acr.DelField	
+acr.DelRecord	
+acr.Fields	
+acr.FieldsComma	
+acr.Insert	
+acr.Merge	
+acr.Meta1	
+acr.Meta2	
+acr.Meta3	
+acr.QueryCtype	
+acr.RenameRecord	
+acr.Replace	
+acr.Select	
+acr.TooManyArgs	
+acr.UpdateBad	
+acr.UpdateGood	
+acr.Where	
+```
+

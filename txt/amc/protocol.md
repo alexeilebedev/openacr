@@ -238,7 +238,7 @@ void                 Omega_OrderAdd(prot1.Ctx &ctx, omega::OrderAdd &msg, u32 ms
 ```
 
 That this example notwithstanding, dispatches are never generated in the protocol's namespace,
-because they belong with the application, not the protocol. 
+because they belong with the application, not the protocol.
 
 ### Dispsig - Dispatch Signatures
 

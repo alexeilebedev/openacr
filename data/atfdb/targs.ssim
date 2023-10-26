@@ -134,6 +134,8 @@ atfdb.targs  comptest:acr_compl.T07  args:'-line:"atf_cmdline -astr: -anum: -adb
 atfdb.targs  comptest:acr_compl.T08  args:'-line:"atf_cmdline -astr: -anum: -adbl: -str: -num: -dbl: -aflag "'
 atfdb.targs  comptest:acr_compl.T09  args:'-line:"atf_cmdline -astr: -anum: -adbl: -str: -num: -dbl: -aflag -"'
 atfdb.targs  comptest:acr_compl.T10  args:'-line:"atf_cmdline -astr: -anum: -adbl: -str: -num: -dbl: -aflag -" -type:63'
+atfdb.targs  comptest:acr_dm.Conflict  args:"test/acr_dm/file1.ssim test/acr_dm/file2.ssim test/acr_dm/file4.ssim"
+atfdb.targs  comptest:acr_dm.Merge  args:"test/acr_dm/file1.ssim test/acr_dm/file2.ssim test/acr_dm/file3.ssim"
 atfdb.targs  comptest:acr_ed.CreateCtype  args:"-create -ctype ams.ChildTypeMsg -subset ams.MsgHeader -msgtype:400 -reftype:Base"
 atfdb.targs  comptest:acr_ed.CreateSsimfileBadNs  args:"--create -ssimfile ams.test -subset algo.Smallstr10"
 atfdb.targs  comptest:atf_cmdline.Bare  args:""

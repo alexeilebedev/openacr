@@ -1,14 +1,14 @@
-## Gcli - gitlab/github command-line client
+## gcli: Gcli - gitlab/github command-line client
 
 Gcli is a client for gitlab/github. It can list, create and update issues,
 merge requests (MRs), pull requests, list MR jobs, list users, list remote repos, update local
 git config to access those repos, create and update issue & MR notes, list milestones.
+Examples are provided below
 
 ### Syntax
 
 ```
-inline-command: gcli -h
-gcli: cli utility for gitlab and github
+gcli: Gcli - gitlab/github command-line client
 Usage: gcli [[-selector:]<string>] [[-fields:]<string>] [options]
     OPTION                     TYPE    DFLT       COMMENT
     -in                        string  "data"     Input directory or filename, - for stdin
@@ -43,9 +43,9 @@ pair `[table]:[key]` identifying the table on which to perform an action;
 `[fields] is an optional list of additional key-value pairs used when updating or filtering the table.
 
 Table is by default `issue`, but can be any table from the list provided by `gcli help`.
-Key is a regex. Actions can be `-create`, `-update`, `-start`, `-e`, etc. 
+Key is a regex. Actions can be `-create`, `-update`, `-start`, `-e`, etc.
 
-### Getting help (beyond command syntax)
+### Example: Get help (beyond command syntax)
 
 ```
 inline-command: gcli help
@@ -66,7 +66,7 @@ use help[:table] -t for more detailed help, ex "help:issue -t" or "help:help -t"
 shortcuts: "." selector represents current branch, ".." selector represents current branch with "." to use for notes
 ```
 
-### Getting detailed help
+### Example: Get detailed help
 
 One of the tables gcli supports is `help`. The value is table name:
 
@@ -103,7 +103,7 @@ mrnote                              mr notes/comments
 
 ```
 
-### Accessing repository
+### Example: create access to repository
 
 The list of repositories is stored in ~/.ssim/gclidb/grepo.ssim
 Access to a new host can be established by running
@@ -114,7 +114,7 @@ gcli repo -create token:<token> host:<host>
 
 This fetches a list of available repositories and adds them all to the list in `grepo.ssim`
 
-### Listing remote repositories
+### Example: list remote repositories
 
 This command uses a token to fetch a list of available repositories from remote service
 and display them. It doesn't access local state.
@@ -123,22 +123,22 @@ and display them. It doesn't access local state.
 gcli reporemote token:<token> [host:<host>]
 ```
 
-### Listing known repositories
+### Example: list known repositories
 
 The list of known repositories can be displayed with `gcli repo`
 and examined/edited with `acr -in ~/.ssim grepo`
 
-### Setting default remote repo
+### Example: set default remote repo
 
 Gcli addresses all requests to the default repo. The repo can be switched with
 
 ```
-gcli repo -update <repo>
+gcli repo -update arnd
 ```
 
 The output of the command lists all known repos, and shows which one is the default
 
-### Editing list of repos
+### Example: edit list of repos
 
 ```
 gcli repo -update
@@ -146,54 +146,52 @@ gcli repo -update
 
 TODO: this should be `gcli repo -e`, `-update` should do nothing
 
-### Listing issues
+### Example: list issues
 
 ```
 gcli
 ```
 
-### Listing a single issue with details (notes etc)
+### Example: list a single issue with details (notes etc)
 
 ```
 gcli <issuekey> -t
 ```
 
-where issuekey is in form of <repo>.<issue number> or just <issue number>.
-
-### Creating a new issue
+### Example: create a new issue
 
 ```
 gcli -create
 ```
 
-### Editing an existing issue
+### Example: edit an existing issue
 
 ```
-gcli <issuekey> -e
+gcli arnd.117 -e
 ```
 
-### Reopening an issue
+### Example: reopen an issue
 
 ```
-gcli <issuekey> -update status:opened
+gcli arnd.117 -update status:opened
 ```
 
-### Changing issue assignee
+### Example: change issue assignee
 
 Multiple fields can be updated with the same command.
 For safety, the `-update` command only works with a single issue.
 
 ```
-gcli <issuekey> -update assignee:<assignee>
+gcli arnd.117 -update assignee:alexei
 ```
 
-### Displaing issues with filtering
+### Example: display issues with filtering
 
 ```
-gcli <repo>.% author:<author>
+gcli arnd.% author:apolov
 ```
 
-### Starting working on an issue
+### Example: start working on an issue
 
 Gcli will ensure that the current directory is clean (no modifications),
 fetch remote repo, create a local branch with a name matching issue key,
@@ -202,63 +200,96 @@ set issue state to `in_progress`, and switch to the new branch.
 If the branch already exists, no local changes are performed
 
 ```
-gcli <issuekey> -start
+gcli 117 -start
 ```
 
-### Showing multiple issues with filtering
+### Example: show multiple issues with filtering
 
 ```
-gcli <repo>.% assignee:<aignee> state:opened
+gcli arnd.% assignee:alexei state:opened
 ```
 
-### Listing merge requests
+### Example: list merge requests
 
 ```
-gcli mr
+$ gcli mr
+MR          ISSUE     AUTHOR  REVIEWER  PIPELINE  STATE   TITLE
+mr:arnd.91  arnd.119  apolov            success   opened  Issue arnd#119
+mr:arnd.84  arnd.126  alexei            failed    opened  issue #126
+mr:arnd.77  arnd.121  alexei  vparizhs  success   opened  Issue #arnd.121
 ```
 
-### Showing status of CI pipelines for merge request
+### Example: show status of CI pipelines for merge request
 
 To show details of a merge request, including any of its running pipelines,
 use `-t`
 
 ```
-gcli mr:<mrkey> -t
+gcli mr:arnd.91 -t
+MR                    ISSUE     AUTHOR           REVIEWER  PIPELINE  STATE   TITLE
+mr:arnd.91            arnd.119  apolov                     success   opened  Issue arnd#119
+
+DESCRIPTION
+create patch/thash-dl.diff: makes collision list doubly linked
+performance doesn't justify inclusion
+add atf_amc tests for thash
+closes arnd#119
+
+MRNOTE                AUTHOR
+mr:arnd.91.3630       apolov
+![image](/uploads/c3fbc5adaf145ce178862d0033970d91/image.png)
+
+Performance of Thash Remove DLL is certainly worse than SLL.
+
+NOT RECOMMENDED TO BE MERGED:
+- no any benefit;
+- rewrites table thash, which makes impossible to merge/rebase normally.
+
+Only Thash SLL tests could be taken those were implemented in scope of this issue.
+
+
+MRJOB                 STATUS    RUNNER
+mr:arnd.91/memcheck   success   gitlab-runner-2
+mr:arnd.91/comp       success   gitlab-runner-4
+mr:arnd.91/normalize  success   gitlab-runner-2
+mr:arnd.91/build      success   gitlab-runner-4
 ```
 
-Where mrkey is in form <repo>.<MR nubmer>
+### Example: show output of a CI pipeline
 
-
-### Showing output of a CI pipeline
-
-To show the output of an mrjob, use 
+To show the output of an mrjob, use `gcli mrjob:...`
 
 ```
-gcli mrjob:mr:<mrkey>/<jobname>
+$ gcli mrjob:mr:arnd.91/memcheck | head
+Running with gitlab-runner 16.4.0 (4e724e03)
+  on gitlab-runner-2 TDXuZ4xYU, system ID: s_ca1266e3726f
+  Preparing the "shell" executor
+  Using Shell (bash) executor...
+  Preparing environment
+  Running on gitlab-runner-2.ctwsl1.vovaco.com...
+  Getting source from Git repository
+  Fetching changes with git depth set to 20...
+  Reinitialized existing Git repository in /home/gitlab-runner/builds/TDXuZ4xYU/0/algornd/arnd/.git/
+  Checking out a49a3f69 as detached HEAD (ref is arnd.119)...
 ```
 
-### Scanning all CI pipelines for errors
+### Example: scan all CI pipelines for errors
 
-You can use a regex with mrjob, e.g. 
-
-```
-mr:<mrkey>/%
-```
-
+You can use a regex with mrjob, e.g. `mr:arnd.91/%`
 This is useful when searching CI output for a particular error string
 
 ```
-$ gcli mrjob:mr:<mrkey>/% | grep success:N
+$ gcli mrjob:mr:arnd.91/% | grep success:N
 ```
 
-### Creating merge request
+### Example: create merge request
 
 Gcli will push current branch to the remote repo and create or update a merge request for it.
 The issue name is determined by looking at the current branch name.
 
 The comment for the most recent git commit must reference the issue and agree
-with current branch name. For instance, if you are on a branch `proj.117`, the comment
-for HEAD must contain the string `proj#117`. Use `git commit --amend` to edit the commit comment.
+with current branch name. For instance, if you are on a branch `arnd.117`, the comment
+for HEAD must contain the string `#arnd.117`. Use `git commit --amend` to edit the commit comment.
 
 If a merge request already exists, it is automatically refreshed.
 By default, merge requests are prefixed with `Draft: ` making them unmergeable.
@@ -269,49 +300,46 @@ interface) to continue.
 gcli mr -create
 ```
 
-### Reviewing merge request
+### Example: start reviewing merge request
 
 The verbs `-start`, `-approve`, `-needs_work` are used with the review workflow.
 To begin reviewing a merge request, use
 
 ```
-gcli mr:<mrkey> -start
+gcli mr:arnd.121 -start
 ```
 
-### Approving merge request
+### Example: approve merge request
 
 When you approve a merge request, the Draft prefix is lifted from the MR title
-
 ```
-gcli mr:<mrkey> -approve
+gcli mr:arnd.121 -approve
 ```
 
-### List remote users
+### Example: list remote users
 
 ```
 gcli user
 ```
 
-### Input tables
+### Inputs
 
-Gcli inputs the following tables
-
+`gcli` takes the following tables on input:
 ```
-inline-command: acr -report:N ctype:$(acr_in gcli | acr -in:- ssimfile -regxof ctype) | ssimfilt -t
 CTYPE                COMMENT
-gclidb.Gact          Action that may be performed on a table
-gclidb.Gclicmdf2j    Mapping of internal fields to JSON fields for gitlab/github
-gclidb.Gclicmdt      Internal test
+gclidb.Gtype         Platform type (ghp=github; glpat=gitlab)
+gclidb.Gtypeprefix   Token prefix mapping to platform
+gclidb.Gtypeh        HTTP heaaderes for user with platform
 gclidb.Gfld          Gitlab/github field name
-gclidb.Gmethod       HTTP method list
-gclidb.Grepo         Repo table (acr grepo -in ~/.ssim)
-gclidb.Grepogitport  Default ports for repositories
-gclidb.Grepossh      Ssh key table
-gclidb.Gstatet       Internal
+gclidb.Gact          Action that may be performed on a table
 gclidb.Gtbl          Supported gcli tables
 gclidb.Gtblactfld    List of available for each table & action combination
-gclidb.Gtype         Platform type (ghp=github; glpat=gitlab)
-gclidb.Gtypeh        HTTP heaaderes for user with platform
-gclidb.Gtypeprefix   Token prefix mapping to platform
-
+gclidb.Gstatet       Internal
+gclidb.Grepossh      Ssh key table
+gclidb.Grepogitport  Default ports for repositories
+gclidb.Grepo         Repo table (acr grepo -in ~/.ssim)
+gclidb.Gmethod       HTTP method list
+gclidb.Gclicmdt      Internal test
+gclidb.Gclicmdf2j    Mapping of internal fields to JSON fields for gitlab/github
 ```
+

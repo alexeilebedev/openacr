@@ -1,7 +1,11 @@
-## sv2ssim - Separated Value file processor
+## sv2ssim: sv2ssim - Separated Value file processor
+
+
+
+### Syntax
 
 ```
-inline-command: sv2ssim -help
+sv2ssim: sv2ssim - Separated Value file processor
 Usage: sv2ssim [-fname:]<string> [options]
     OPTION          TYPE    DFLT    COMMENT
     -in             string  "data"  Input directory or filename, - for stdin
@@ -69,7 +73,6 @@ atfdb.comptest  comptest:sv2ssim.UniqueFieldName  timeout:10  memcheck:Y  exit_c
 report.acr  n_select:5  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
 ```
 
-
 ### Examples
 
 ```
@@ -108,3 +111,24 @@ dmmeta.field  field:a.B._1958  arg:i32  reftype:Val  dflt:""  comment:""
 dmmeta.field  field:a.B._1959  arg:i32  reftype:Val  dflt:""  comment:""
 dmmeta.field  field:a.B._1960  arg:i32  reftype:Val  dflt:""  comment:""
 ```
+
+### Inputs
+
+`sv2ssim` takes the following tables on input:
+```
+CTYPE          COMMENT
+dmmeta.Svtype  Table for determining ctype from separated value file
+amcdb.Bltin    Specify properties of a C built-in type
+```
+
+### Tests
+
+The following component tests are defined for `sv2ssim`:
+```
+sv2ssim.Convert1	
+sv2ssim.Convert1Signed	
+sv2ssim.Convert2	
+sv2ssim.Convert2Tsv	
+sv2ssim.UniqueFieldName	
+```
+

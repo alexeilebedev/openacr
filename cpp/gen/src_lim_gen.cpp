@@ -425,6 +425,7 @@ void src_lim::ReadArgv() {
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
     }
+    algo_lib::ResetErrtext();
     vrfy(src_lim::LoadTuplesMaybe(cmd.in)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }

@@ -47,7 +47,7 @@ orgfile::FDb    orgfile::_db;     // dependency found via dev.targdep
 
 namespace orgfile {
 const char *orgfile_help =
-"orgfile: OpenACR File deduplicator tool\n"
+"orgfile: organize and deduplicate files by timestamp and by contents\n"
 "Usage: orgfile [options]\n"
 "    OPTION      TYPE    DFLT    COMMENT\n"
 "    -in         string  \"data\"  Input directory or filename, - for stdin\n"
@@ -211,6 +211,7 @@ void orgfile::ReadArgv() {
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
     }
+    algo_lib::ResetErrtext();
     vrfy(orgfile::LoadTuplesMaybe(cmd.in)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }

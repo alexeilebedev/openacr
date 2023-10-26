@@ -234,6 +234,7 @@ void mysql2ssim::ReadArgv() {
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
     }
+    algo_lib::ResetErrtext();
 }
 
 // --- mysql2ssim.FDb._db.MainLoop

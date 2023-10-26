@@ -162,8 +162,8 @@ void amc::gen_check_static() {
         // Ptrary can be both xref and non-xref -- for now assume it's xref
         ind_beg(amc::ctype_c_field_curs, field, *gstatic.p_field->p_arg) {
             bool isxref = field.p_reftype->isxref;
-            isxref |= (field.reftype == dmmeta_Reftype_reftype_Ptrary && field.c_xref);
-            isxref |= (field.reftype == dmmeta_Reftype_reftype_Ptr && field.c_xref);
+            isxref |= (field.reftype == dmmeta_Reftype_reftype_Ptrary);
+            isxref |= (field.reftype == dmmeta_Reftype_reftype_Ptr);
             isxref |= (field.reftype == dmmeta_Reftype_reftype_Hook);
             amc::FField *inst = amc::FirstInst(*field.p_arg);
             if (!isxref && inst && inst->c_finput) {
@@ -171,6 +171,7 @@ void amc::gen_check_static() {
                          <<Keyval("ctype",gstatic.p_field->arg)
                          <<Keyval("uses",field.arg)
                          <<Keyval("via",field.field)
+                         <<Keyval("reftype",field.reftype)
                          <<Keyval("comment","A statically loaded table cannot refer to a dynamically loaded one."));
             }
             if (!isxref && inst && inst->c_gstatic && gstatic.p_field->p_arg->topo_idx < inst->c_gstatic->p_field->p_arg->topo_idx) {
@@ -542,6 +543,7 @@ static bool NeedFirstchangedQ(amc::FField &field) {
     ret &= field.reftype != dmmeta_Reftype_reftype_Tary;
     ret &= field.reftype != dmmeta_Reftype_reftype_Lary;
     ret &= field.reftype != dmmeta_Reftype_reftype_Thash;
+    ret &= field.reftype != dmmeta_Reftype_reftype_Ptrary;
     ret &= !ValQ(field);
     return ret;
 }
@@ -1339,24 +1341,20 @@ void amc::gen_ns_gstatic() {
         algo_lib::Replscope R;
         Set(R, "$cur_gen", amc::_db.cur_gen);
         // insert initialization code
-        ind_beg(amc::ns_c_ctype_curs, ctype, ns) {
-            amc::FField *inst = FirstInst(ctype);
-            if (inst && inst->c_gstatic) {
-                amc::FGstatic &gstatic = *inst->c_gstatic;
-                if (!ns.c_globfld) {
-                    prerr("amc.null_gstatic"
-                          <<Keyval("gstatic",gstatic.field)
-                          <<Keyval("comment","no in-memory database -- cannot load static"));
-                    algo_lib::_db.exit_code=1;
-                    break;
-                }
-                amc::FFunc *init = amc::init_GetOrCreate(*ns.c_globfld->p_arg);
-                amc::FField& field = *gstatic.p_field;
-                Set(R, "$name", name_Get(field));
-                Set(R, "$gstatic", gstatic.field);
-                Set(R, "$Ctype", ctype.ctype);
-                Ins(&R, init->body, "$name_LoadStatic(); // gen:$cur_gen  gstatic:$gstatic  load $Ctype records");
+        ind_beg(amc::ns_c_gstatic_curs, gstatic, ns) {
+            if (!ns.c_globfld) {
+                prerr("amc.null_gstatic"
+                      <<Keyval("gstatic",gstatic.field)
+                      <<Keyval("comment","no in-memory database -- cannot load static"));
+                algo_lib::_db.exit_code=1;
+                break;
             }
+            amc::FFunc *init = amc::init_GetOrCreate(*ns.c_globfld->p_arg);
+            amc::FField& field = *gstatic.p_field;
+            Set(R, "$name", name_Get(field));
+            Set(R, "$gstatic", gstatic.field);
+            Set(R, "$Ctype", field.p_arg->ctype);
+            Ins(&R, init->body, "$name_LoadStatic(); // gen:$cur_gen  gstatic:$gstatic  load $Ctype records");
         }ind_end;
     }ind_end;
 }

@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Target: gcli (exe) -- cli utility for gitlab and github
+// Target: gcli (exe) -- Gcli - gitlab/github command-line client
 // Exceptions: yes
 // Source: cpp/gcli/gtblact.cpp
 //

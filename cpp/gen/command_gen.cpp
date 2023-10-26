@@ -65,6 +65,9 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_report        : ret = "report";  break;
         case command_FieldId_jcdb          : ret = "jcdb";  break;
         case command_FieldId_readme        : ret = "readme";  break;
+        case command_FieldId_ns            : ret = "ns";  break;
+        case command_FieldId_section       : ret = "section";  break;
+        case command_FieldId_print         : ret = "print";  break;
         case command_FieldId_query         : ret = "query";  break;
         case command_FieldId_where         : ret = "where";  break;
         case command_FieldId_select        : ret = "select";  break;
@@ -93,7 +96,6 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_t             : ret = "t";  break;
         case command_FieldId_rowid         : ret = "rowid";  break;
         case command_FieldId_cmt           : ret = "cmt";  break;
-        case command_FieldId_print         : ret = "print";  break;
         case command_FieldId_cmd           : ret = "cmd";  break;
         case command_FieldId_field         : ret = "field";  break;
         case command_FieldId_regxof        : ret = "regxof";  break;
@@ -103,6 +105,9 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_point         : ret = "point";  break;
         case command_FieldId_type          : ret = "type";  break;
         case command_FieldId_debug_log     : ret = "debug_log";  break;
+        case command_FieldId_arg           : ret = "arg";  break;
+        case command_FieldId_write_ours    : ret = "write_ours";  break;
+        case command_FieldId_msize         : ret = "msize";  break;
         case command_FieldId_create        : ret = "create";  break;
         case command_FieldId_finput        : ret = "finput";  break;
         case command_FieldId_foutput       : ret = "foutput";  break;
@@ -116,7 +121,6 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_subset        : ret = "subset";  break;
         case command_FieldId_subset2       : ret = "subset2";  break;
         case command_FieldId_separator     : ret = "separator";  break;
-        case command_FieldId_arg           : ret = "arg";  break;
         case command_FieldId_dflt          : ret = "dflt";  break;
         case command_FieldId_anon          : ret = "anon";  break;
         case command_FieldId_bigend        : ret = "bigend";  break;
@@ -139,7 +143,6 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_showcpp       : ret = "showcpp";  break;
         case command_FieldId_msgtype       : ret = "msgtype";  break;
         case command_FieldId_anonfld       : ret = "anonfld";  break;
-        case command_FieldId_ns            : ret = "ns";  break;
         case command_FieldId_sigcheck      : ret = "sigcheck";  break;
         case command_FieldId_data_dir      : ret = "data_dir";  break;
         case command_FieldId_related       : ret = "related";  break;
@@ -643,6 +646,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR5('m','e','r','g','e'): {
                     value_SetEnum(parent,command_FieldId_merge); ret = true; break;
                 }
+                case LE_STR5('m','s','i','z','e'): {
+                    value_SetEnum(parent,command_FieldId_msize); ret = true; break;
+                }
                 case LE_STR5('n','d','o','w','n'): {
                     value_SetEnum(parent,command_FieldId_ndown); ret = true; break;
                 }
@@ -941,6 +947,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('s','a','n','d','b','o','x'): {
                     value_SetEnum(parent,command_FieldId_sandbox); ret = true; break;
                 }
+                case LE_STR7('s','e','c','t','i','o','n'): {
+                    value_SetEnum(parent,command_FieldId_section); ret = true; break;
+                }
                 case LE_STR7('s','h','o','w','c','p','p'): {
                     value_SetEnum(parent,command_FieldId_showcpp); ret = true; break;
                 }
@@ -1138,6 +1147,10 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('s','h','o','w','s','t','a','t'): {
                     if (memcmp(rhs.elems+8,"ic",2)==0) { value_SetEnum(parent,command_FieldId_showstatic); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('w','r','i','t','e','_','o','u'): {
+                    if (memcmp(rhs.elems+8,"rs",2)==0) { value_SetEnum(parent,command_FieldId_write_ours); ret = true; break; }
                     break;
                 }
             }
@@ -1707,6 +1720,36 @@ bool command::readme_ReadStrptrMaybe(command::abt_md& parent, algo::strptr in) {
     return retval;
 }
 
+// --- command.abt_md.ns.Print
+// Print back to string
+void command::ns_Print(command::abt_md& parent, algo::cstring &out) {
+    Regx_Print(parent.ns, out);
+}
+
+// --- command.abt_md.ns.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::ns_ReadStrptrMaybe(command::abt_md& parent, algo::strptr in) {
+    Regx_ReadSql(parent.ns, in, true);
+    bool retval = true;// !parent.ns.parseerror; -- TODO: uncomment
+    return retval;
+}
+
+// --- command.abt_md.section.Print
+// Print back to string
+void command::section_Print(command::abt_md& parent, algo::cstring &out) {
+    Regx_Print(parent.section, out);
+}
+
+// --- command.abt_md.section.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::section_ReadStrptrMaybe(command::abt_md& parent, algo::strptr in) {
+    Regx_ReadSql(parent.section, in, true);
+    bool retval = true;// !parent.section.parseerror; -- TODO: uncomment
+    return retval;
+}
+
 // --- command.abt_md..ReadFieldMaybe
 bool command::abt_md_ReadFieldMaybe(command::abt_md &parent, algo::strptr field, algo::strptr strval) {
     command::FieldId field_id;
@@ -1715,6 +1758,10 @@ bool command::abt_md_ReadFieldMaybe(command::abt_md &parent, algo::strptr field,
     switch(field_id) {
         case command_FieldId_in: retval = algo::cstring_ReadStrptrMaybe(parent.in, strval); break;
         case command_FieldId_readme: retval = readme_ReadStrptrMaybe(parent, strval); break;
+        case command_FieldId_ns: retval = ns_ReadStrptrMaybe(parent, strval); break;
+        case command_FieldId_section: retval = section_ReadStrptrMaybe(parent, strval); break;
+        case command_FieldId_print: retval = bool_ReadStrptrMaybe(parent.print, strval); break;
+        case command_FieldId_dry_run: retval = bool_ReadStrptrMaybe(parent.dry_run, strval); break;
         default: break;
     }
     if (!retval) {
@@ -1744,7 +1791,11 @@ bool command::abt_md_ReadTupleMaybe(command::abt_md &parent, algo::Tuple &tuple)
 // Set all fields to initial values.
 void command::abt_md_Init(command::abt_md& parent) {
     parent.in = algo::strptr("data");
-    Regx_ReadSql(parent.readme, "%", true);
+    Regx_ReadSql(parent.readme, "", true);
+    Regx_ReadSql(parent.ns, "", true);
+    Regx_ReadSql(parent.section, "%", true);
+    parent.print = bool(false);
+    parent.dry_run = bool(false);
 }
 
 // --- command.abt_md..PrintArgv
@@ -1764,6 +1815,28 @@ void command::abt_md_PrintArgv(command::abt_md & row, algo::cstring &str) {
     command::readme_Print(const_cast<command::abt_md&>(row), temp);
     str << " ";
     strptr_PrintBash(temp,str);
+    if (!(row.ns.expr == "")) {
+        ch_RemoveAll(temp);
+        command::ns_Print(const_cast<command::abt_md&>(row), temp);
+        str << " -ns:";
+        strptr_PrintBash(temp,str);
+    }
+    ch_RemoveAll(temp);
+    command::section_Print(const_cast<command::abt_md&>(row), temp);
+    str << " ";
+    strptr_PrintBash(temp,str);
+    if (!(row.print == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.print, temp);
+        str << " -print:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.dry_run == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.dry_run, temp);
+        str << " -dry_run:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.abt_md..ToCmdline
@@ -1788,6 +1861,7 @@ algo::strptr command::abt_md_GetAnon(command::abt_md &parent, i32 idx) {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("readme", 6);
+        case(1): return strptr("section", 7);
         default: return algo::strptr();
     }
 }
@@ -1805,10 +1879,25 @@ i32 command::abt_md_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* 
         case command_FieldId_readme: { // $comment
             *out_anon = true;
         } break;
+        case command_FieldId_ns: { // $comment
+            *out_anon = false;
+        } break;
+        case command_FieldId_section: { // $comment
+            *out_anon = true;
+        } break;
+        case command_FieldId_print: { // $comment
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_dry_run: { // bool: no argument required but value may be specified as print:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
         default:
         retval=-1; // unrecognized
     }
-    (void)out_dflt;//only to avoid -Wunused-parameter
     return retval;
 }
 
@@ -1921,10 +2010,34 @@ int command::abt_md_Execv(command::abt_md_proc& parent) {
         cstring_Print(parent.cmd.in, *arg);
     }
 
-    if (parent.cmd.readme.expr != "%") {
+    if (parent.cmd.readme.expr != "") {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-readme:";
         command::readme_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.ns.expr != "") {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-ns:";
+        command::ns_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.section.expr != "%") {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-section:";
+        command::section_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.print != false) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-print:";
+        bool_Print(parent.cmd.print, *arg);
+    }
+
+    if (parent.cmd.dry_run != false) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-dry_run:";
+        bool_Print(parent.cmd.dry_run, *arg);
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         algo_lib::exec_args_Alloc() << "-verbose";
@@ -3390,6 +3503,425 @@ void command::acr_compl_proc_Uninit(command::acr_compl_proc& parent) {
 
     // command.acr_compl_proc.acr_compl.Uninit (Exec)  //
     acr_compl_Kill(parent); // kill child, ensure forward progress
+}
+
+// --- command.acr_dm.arg.Alloc
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+algo::cstring& command::arg_Alloc(command::acr_dm& parent) {
+    arg_Reserve(parent, 1);
+    int n  = parent.arg_n;
+    int at = n;
+    algo::cstring *elems = parent.arg_elems;
+    new (elems + at) algo::cstring(); // construct new element, default initializer
+    parent.arg_n = n+1;
+    return elems[at];
+}
+
+// --- command.acr_dm.arg.AllocAt
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::cstring& command::arg_AllocAt(command::acr_dm& parent, int at) {
+    arg_Reserve(parent, 1);
+    int n  = parent.arg_n;
+    if (UNLIKELY(u64(at) >= u64(n+1))) {
+        FatalErrorExit("command.bad_alloc_at  field:command.acr_dm.arg  comment:'index out of range'");
+    }
+    algo::cstring *elems = parent.arg_elems;
+    memmove(elems + at + 1, elems + at, (n - at) * sizeof(algo::cstring));
+    new (elems + at) algo::cstring(); // construct element, default initializer
+    parent.arg_n = n+1;
+    return elems[at];
+}
+
+// --- command.acr_dm.arg.AllocN
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> command::arg_AllocN(command::acr_dm& parent, int n_elems) {
+    arg_Reserve(parent, n_elems);
+    int old_n  = parent.arg_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = parent.arg_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(); // construct new element, default initialize
+    }
+    parent.arg_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- command.acr_dm.arg.Remove
+// Remove item by index. If index outside of range, do nothing.
+void command::arg_Remove(command::acr_dm& parent, u32 i) {
+    u32 lim = parent.arg_n;
+    algo::cstring *elems = parent.arg_elems;
+    if (i < lim) {
+        elems[i].~cstring(); // destroy element
+        memmove(elems + i, elems + (i + 1), sizeof(algo::cstring) * (lim - (i + 1)));
+        parent.arg_n = lim - 1;
+    }
+}
+
+// --- command.acr_dm.arg.RemoveAll
+void command::arg_RemoveAll(command::acr_dm& parent) {
+    u32 n = parent.arg_n;
+    while (n > 0) {
+        n -= 1;
+        parent.arg_elems[n].~cstring();
+        parent.arg_n = n;
+    }
+}
+
+// --- command.acr_dm.arg.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void command::arg_RemoveLast(command::acr_dm& parent) {
+    u64 n = parent.arg_n;
+    if (n > 0) {
+        n -= 1;
+        arg_qFind(parent, u64(n)).~cstring();
+        parent.arg_n = n;
+    }
+}
+
+// --- command.acr_dm.arg.AbsReserve
+// Make sure N elements fit in array. Process dies if out of memory
+void command::arg_AbsReserve(command::acr_dm& parent, int n) {
+    u32 old_max  = parent.arg_max;
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.arg_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("command.tary_nomem  field:command.acr_dm.arg  comment:'out of memory'");
+        }
+        parent.arg_elems = (algo::cstring*)new_mem;
+        parent.arg_max = new_max;
+    }
+}
+
+// --- command.acr_dm.arg.Setary
+// Copy contents of RHS to PARENT.
+void command::arg_Setary(command::acr_dm& parent, command::acr_dm &rhs) {
+    arg_RemoveAll(parent);
+    int nnew = rhs.arg_n;
+    arg_Reserve(parent, nnew); // reserve space
+    for (int i = 0; i < nnew; i++) { // copy elements over
+        new (parent.arg_elems + i) algo::cstring(arg_qFind(rhs, i));
+        parent.arg_n = i + 1;
+    }
+}
+
+// --- command.acr_dm.arg.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> command::arg_AllocNVal(command::acr_dm& parent, int n_elems, const algo::cstring& val) {
+    arg_Reserve(parent, n_elems);
+    int old_n  = parent.arg_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = parent.arg_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(val);
+    }
+    parent.arg_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- command.acr_dm.arg.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool command::arg_ReadStrptrMaybe(command::acr_dm& parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::cstring_ReadStrptrMaybe(arg_Alloc(parent), in_str);
+    return retval;
+}
+
+// --- command.acr_dm..ReadFieldMaybe
+bool command::acr_dm_ReadFieldMaybe(command::acr_dm &parent, algo::strptr field, algo::strptr strval) {
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case command_FieldId_in: retval = algo::cstring_ReadStrptrMaybe(parent.in, strval); break;
+        case command_FieldId_arg: retval = arg_ReadStrptrMaybe(parent, strval); break;
+        case command_FieldId_write_ours: retval = bool_ReadStrptrMaybe(parent.write_ours, strval); break;
+        case command_FieldId_msize: retval = u8_ReadStrptrMaybe(parent.msize, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.acr_dm..ReadTupleMaybe
+// Read fields of command::acr_dm from attributes of ascii tuple TUPLE
+bool command::acr_dm_ReadTupleMaybe(command::acr_dm &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    int anon_idx = 0;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        if (ch_N(attr.name) == 0) {
+            attr.name = acr_dm_GetAnon(parent, anon_idx++);
+        }
+        retval = acr_dm_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- command.acr_dm..Uninit
+void command::acr_dm_Uninit(command::acr_dm& parent) {
+    command::acr_dm &row = parent; (void)row;
+
+    // command.acr_dm.arg.Uninit (Tary)  //Files to merge: older ours theirs...
+    // remove all elements from command.acr_dm.arg
+    arg_RemoveAll(parent);
+    // free memory for Tary command.acr_dm.arg
+    algo_lib::malloc_FreeMem(parent.arg_elems, sizeof(algo::cstring)*parent.arg_max); // (command.acr_dm.arg)
+}
+
+// --- command.acr_dm..PrintArgv
+// print command-line args of command::acr_dm to string  -- cprint:command.acr_dm.Argv
+void command::acr_dm_PrintArgv(command::acr_dm & row, algo::cstring &str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)row;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+    ind_beg(acr_dm_arg_curs,value,row) {
+        ch_RemoveAll(temp);
+        cstring_Print(value, temp);
+        str << " ";
+        strptr_PrintBash(temp,str);
+    }ind_end;
+    if (!(row.write_ours == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.write_ours, temp);
+        str << " -write_ours:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.msize == 7)) {
+        ch_RemoveAll(temp);
+        u8_Print(row.msize, temp);
+        str << " -msize:";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- command.acr_dm..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::acr_dm_ToCmdline(command::acr_dm & row) {
+    tempstr ret;
+    ret << "bin/acr_dm ";
+    acr_dm_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.acr_dm..GetAnon
+algo::strptr command::acr_dm_GetAnon(command::acr_dm &parent, i32 idx) {
+    (void)parent;//only to avoid -Wunused-parameter
+    switch(idx) {
+        default: return strptr("arg", 3);
+    }
+}
+
+// --- command.acr_dm..NArgs
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+i32 command::acr_dm_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+    i32 retval = 1;
+    switch (field) {
+        case command_FieldId_in: { // $comment
+            *out_anon = false;
+        } break;
+        case command_FieldId_arg: { // $comment
+            *out_anon = true;
+        } break;
+        case command_FieldId_write_ours: { // $comment
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_msize: { // bool: no argument required but value may be specified as write_ours:Y
+            *out_anon = false;
+        } break;
+        default:
+        retval=-1; // unrecognized
+    }
+    return retval;
+}
+
+// --- command.acr_dm_proc.acr_dm.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::acr_dm_Start(command::acr_dm_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(acr_dm_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(acr_dm_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= acr_dm_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.acr_dm_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.acr_dm_proc.acr_dm.StartRead
+// Start subprocess & Read output
+algo::Fildes command::acr_dm_StartRead(command::acr_dm_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    acr_dm_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.acr_dm_proc.acr_dm.Kill
+// Kill subprocess and wait
+void command::acr_dm_Kill(command::acr_dm_proc& parent) {
+    if (parent.pid != 0) {
+        kill(parent.pid,9);
+        acr_dm_Wait(parent);
+    }
+}
+
+// --- command.acr_dm_proc.acr_dm.Wait
+// Wait for subprocess to return
+void command::acr_dm_Wait(command::acr_dm_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.acr_dm_proc.acr_dm.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::acr_dm_Exec(command::acr_dm_proc& parent) {
+    acr_dm_Start(parent);
+    acr_dm_Wait(parent);
+    return parent.status;
+}
+
+// --- command.acr_dm_proc.acr_dm.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::acr_dm_ExecX(command::acr_dm_proc& parent) {
+    int rc = acr_dm_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",acr_dm_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.acr_dm_proc.acr_dm.Execv
+// Call execv()
+// Call execv with specified parameters -- cprint:acr_dm.Argv
+int command::acr_dm_Execv(command::acr_dm_proc& parent) {
+    algo_lib::exec_args_Alloc() << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+    ind_beg(command::acr_dm_arg_curs,value,parent.cmd) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-arg:";
+        cstring_Print(value, *arg);
+    }ind_end;
+
+    if (parent.cmd.write_ours != false) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-write_ours:";
+        bool_Print(parent.cmd.write_ours, *arg);
+    }
+
+    if (parent.cmd.msize != 7) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-msize:";
+        u8_Print(parent.cmd.msize, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        algo_lib::exec_args_Alloc() << "-verbose";
+    }
+    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
+    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+        argv[ind_curs(arg).index] = Zeroterm(arg);
+    }ind_end;
+    argv[algo_lib::exec_args_N()] = NULL;
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    return execv(Zeroterm(parent.path),argv);
+}
+
+// --- command.acr_dm_proc.acr_dm.ToCmdline
+algo::tempstr command::acr_dm_ToCmdline(command::acr_dm_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::acr_dm_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.acr_dm_proc..Uninit
+void command::acr_dm_proc_Uninit(command::acr_dm_proc& parent) {
+    command::acr_dm_proc &row = parent; (void)row;
+
+    // command.acr_dm_proc.acr_dm.Uninit (Exec)  //
+    acr_dm_Kill(parent); // kill child, ensure forward progress
 }
 
 // --- command.acr_ed..ReadFieldMaybe

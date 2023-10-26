@@ -18,7 +18,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-// Target: mdbg (exe) -- My debugger
+// Target: mdbg (exe) -- Gdb front-end
 // Exceptions: NO
 // Source: cpp/mdbg.cpp
 //

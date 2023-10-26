@@ -6288,6 +6288,7 @@ void amc::ReadArgv() {
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
     }
+    algo_lib::ResetErrtext();
 }
 
 // --- amc.FDb._db.MainLoop
@@ -23567,9 +23568,9 @@ void amc::FDb_Init() {
 
     amc::InitReflection();
     tclass_LoadStatic(); // gen:ns_gstatic  gstatic:amc.FDb.tclass  load amc.FTclass records
+    tfunc_LoadStatic(); // gen:ns_gstatic  gstatic:amc.FDb.tfunc  load amc.FTfunc records
     gen_LoadStatic(); // gen:ns_gstatic  gstatic:amc.FDb.gen  load amc.FGen records
     reftype_LoadStatic(); // gen:ns_gstatic  gstatic:amc.FDb.reftype  load amc.FReftype records
-    tfunc_LoadStatic(); // gen:ns_gstatic  gstatic:amc.FDb.tfunc  load amc.FTfunc records
 }
 
 // --- amc.FDb..Uninit

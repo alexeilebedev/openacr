@@ -636,6 +636,7 @@ void acr_compl::ReadArgv() {
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
     }
+    algo_lib::ResetErrtext();
 }
 
 // --- acr_compl.FDb._db.MainLoop

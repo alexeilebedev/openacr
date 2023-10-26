@@ -46,6 +46,7 @@ ams_cat::FDb    ams_cat::_db;     // dependency found via dev.targdep
 
 namespace ams_cat {
 const char *ams_cat_help =
+"ams_cat: Algo Messaging System sample tool\n"
 "Usage: ams_cat [options]\n"
 "    OPTION      TYPE    DFLT    COMMENT\n"
 "    -in         string  \"data\"  Input directory or filename, - for stdin\n"
@@ -203,6 +204,7 @@ void ams_cat::ReadArgv() {
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
     }
+    algo_lib::ResetErrtext();
     vrfy(ams_cat::LoadTuplesMaybe(cmd.in)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }

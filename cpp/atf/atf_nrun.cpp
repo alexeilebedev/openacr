@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Target: atf_nrun (exe)
+// Target: atf_nrun (exe) -- Run N subprocesses in parallel
 // Exceptions: yes
 // Source: cpp/atf/atf_nrun.cpp
 //

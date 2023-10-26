@@ -51,7 +51,7 @@ abt::FDb        abt::_db;         // dependency found via dev.targdep
 
 namespace abt {
 const char *abt_help =
-"abt: Algo Build Tool (build system)\n"
+"abt: Algo Build Tool - build & link C++ targets\n"
 "Usage: abt [[-target:]<regx>] [options]\n"
 "    OPTION      TYPE    DFLT    COMMENT\n"
 "    [target]    regx    \"\"      Regx of target name\n"
@@ -1414,6 +1414,7 @@ void abt::ReadArgv() {
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
     }
+    algo_lib::ResetErrtext();
     vrfy(abt::LoadTuplesMaybe(cmd.in)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }

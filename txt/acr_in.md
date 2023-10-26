@@ -1,4 +1,4 @@
-## acr_in: Show input tuples for target
+## acr_in: ACR Input - compute set of ssimfiles or tuples used by a specific target
 
 acr_in computes the names and the order of ssimfiles
 which constitute target's declared input.
@@ -43,6 +43,29 @@ references, and is independent of the target itself. This means that
 resulting input can be fed into any one of the targets implied by the
 regex, without error.
 
+### Syntax
+
+```
+acr_in: ACR Input - compute set of ssimfiles or tuples used by a specific target
+Usage: acr_in [-ns:]<regx> [options]
+    OPTION        TYPE    DFLT    COMMENT
+    [ns]          regx            Regx of matching namespace
+    -data                         List ssimfile contents
+    -sigcheck             Y       Output sigcheck records for schema version mismatch detection
+    -list                         List ssimfile names
+    -data_dir     string  "data"  Directory with ssimfiles
+    -schema       string  "data"
+    -related      string  ""      Select only tuples related to specified acr key
+    -notssimfile  regx    ""      Exclude ssimfiles matching regx
+    -checkable                    Ensure output passes acr -check
+    -verbose      int             Verbosity level (0..255); alias -v; cumulative
+    -debug        int             Debug level (0..255); alias -d; cumulative
+    -help                         Print help an exit; alias -h
+    -version                      Print version and exit
+    -signature                    Show signatures and exit; alias -sig
+
+```
+
 ### The -data option
 
 With -data argument, acr_in also loads the specified ssimfiles in memory
@@ -86,3 +109,20 @@ In contrast, if we didn't specify `-related`, `-data` would fetch all records:
 
     $ acr_in sample -data | wc -l
     864
+
+### Inputs
+
+`acr_in` takes the following tables on input:
+```
+CTYPE            COMMENT
+dmmeta.Ns        Namespace (for in-memory database, protocol, etc)
+dmmeta.Dispsig
+dev.Target       Build target
+dev.Targdep      Dependency between targets
+dmmeta.Ctype     Conceptual type (or C type)
+dmmeta.Field     Specify field of a struct
+dmmeta.Substr    Specify that the field value is computed from a substring of another field
+dmmeta.Ssimfile  Ssim tuple name for structure
+dmmeta.Finput    Describe input table of a program
+```
+

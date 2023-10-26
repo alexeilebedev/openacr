@@ -2,6 +2,7 @@ dmmeta.main  ns:abt  ismodule:N
 dmmeta.main  ns:abt_md  ismodule:N
 dmmeta.main  ns:acr  ismodule:N
 dmmeta.main  ns:acr_compl  ismodule:N
+dmmeta.main  ns:acr_dm  ismodule:N
 dmmeta.main  ns:acr_ed  ismodule:N
 dmmeta.main  ns:acr_in  ismodule:N
 dmmeta.main  ns:acr_my  ismodule:N

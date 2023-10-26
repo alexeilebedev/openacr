@@ -25,18 +25,20 @@
 #include "include/algo.h"  // hard-coded include
 #include "include/gen/abt_md_gen.h"
 #include "include/gen/abt_md_gen.inl.h"
-#include "include/gen/command_gen.h"
-#include "include/gen/command_gen.inl.h"
-#include "include/gen/dev_gen.h"
-#include "include/gen/dev_gen.inl.h"
+#include "include/gen/dmmeta_gen.h"
+#include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/command_gen.h"
+#include "include/gen/command_gen.inl.h"
+#include "include/gen/algo_lib_gen.h"
+#include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/dev_gen.h"
+#include "include/gen/dev_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
-#include "include/gen/algo_lib_gen.h"
-#include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
@@ -47,10 +49,15 @@ abt_md::FDb     abt_md::_db;      // dependency found via dev.targdep
 
 namespace abt_md {
 const char *abt_md_help =
-"Usage: abt_md [[-readme:]<regx>] [options]\n"
+"abt_md: Tool to generate markdown documentation\n"
+"Usage: abt_md [[-readme:]<regx>] [[-section:]<regx>] [options]\n"
 "    OPTION      TYPE    DFLT    COMMENT\n"
 "    -in         string  \"data\"  Input directory or filename, - for stdin\n"
-"    [readme]    regx    \"%\"     Re-inline these readmes\n"
+"    [readme]    regx    \"\"      Regx of readme to process/show (empty=all)\n"
+"    -ns         regx    \"\"      Process readmes for this namespace\n"
+"    [section]   regx    \"%\"     Select specific section to process\n"
+"    -print                      Print output to screen\n"
+"    -dry_run                    Do not write changes to disk\n"
 "    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      int             Debug level (0..255); alias -d; cumulative\n"
 "    -help                       Print help an exit; alias -h\n"
@@ -60,16 +67,162 @@ const char *abt_md_help =
 
 
 } // namespace abt_md
+abt_md::_db_bh_file_section_curs::~_db_bh_file_section_curs() {
+    algo_lib::malloc_FreeMem(temp_elems, sizeof(void*) * temp_max);
+
+}
+
 namespace abt_md { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     static void          InitReflection();
     static bool          readme_InputMaybe(dev::Readme &elem) __attribute__((nothrow));
+    static void          mdsection_LoadStatic() __attribute__((nothrow));
+    // Find new location for ROW starting at IDX
+    // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    static int           bh_file_section_Downheap(abt_md::FileSection& row, int idx) __attribute__((nothrow));
+    // Find and return index of new location for element ROW in the heap, starting at index IDX.
+    // Move any elements along the way but do not modify ROW.
+    static int           bh_file_section_Upheap(abt_md::FileSection& row, int idx) __attribute__((nothrow));
+    static bool          bh_file_section_ElemLt(abt_md::FileSection &a, abt_md::FileSection &b) __attribute__((nothrow));
+    static void          _db_bh_file_section_curs_Add(_db_bh_file_section_curs &curs, abt_md::FileSection& row);
+    static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
+    static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
+    static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
+    static bool          readmens_InputMaybe(dev::Readmens &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     static void          SizeCheck();
 } // gen:ns_print_proto
+
+// --- abt_md.FCtype.base.CopyOut
+// Copy fields out of row
+void abt_md::ctype_CopyOut(abt_md::FCtype &row, dmmeta::Ctype &out) {
+    out.ctype = row.ctype;
+    out.comment = row.comment;
+}
+
+// --- abt_md.FCtype.base.CopyIn
+// Copy fields in to row
+void abt_md::ctype_CopyIn(abt_md::FCtype &row, dmmeta::Ctype &in) {
+    row.ctype = in.ctype;
+    row.comment = in.comment;
+}
+
+// --- abt_md.FCtype.ns.Get
+algo::Smallstr16 abt_md::ns_Get(abt_md::FCtype& ctype) {
+    algo::Smallstr16 ret(algo::Pathcomp(ctype.ctype, ".RL"));
+    return ret;
+}
+
+// --- abt_md.FCtype.name.Get
+algo::Smallstr50 abt_md::name_Get(abt_md::FCtype& ctype) {
+    algo::Smallstr50 ret(algo::Pathcomp(ctype.ctype, ".RR"));
+    return ret;
+}
+
+// --- abt_md.FCtype..Uninit
+void abt_md::FCtype_Uninit(abt_md::FCtype& ctype) {
+    abt_md::FCtype &row = ctype; (void)row;
+    ind_ctype_Remove(row); // remove ctype from index ind_ctype
+}
+
+// --- abt_md.FMdsection.base.CopyOut
+// Copy fields out of row
+void abt_md::mdsection_CopyOut(abt_md::FMdsection &row, dev::Mdsection &out) {
+    out.mdsection = row.mdsection;
+    out.match = row.match;
+    out.perns = row.perns;
+    out.comment = row.comment;
+}
+
+// --- abt_md.FMdsection.base.CopyIn
+// Copy fields in to row
+void abt_md::mdsection_CopyIn(abt_md::FMdsection &row, dev::Mdsection &in) {
+    row.mdsection = in.mdsection;
+    row.match = in.match;
+    row.perns = in.perns;
+    row.comment = in.comment;
+}
+
+// --- abt_md.FMdsection.match_regx.Print
+// Print back to string
+void abt_md::match_regx_Print(abt_md::FMdsection& mdsection, algo::cstring &out) {
+    Regx_Print(mdsection.match_regx, out);
+}
+
+// --- abt_md.FMdsection.zd_file_section.Insert
+// Insert row into linked list. If row is already in linked list, do nothing.
+void abt_md::zd_file_section_Insert(abt_md::FMdsection& mdsection, abt_md::FileSection& row) {
+    if (!zd_file_section_InLlistQ(row)) {
+        abt_md::FileSection* old_tail = mdsection.zd_file_section_tail;
+        row.zd_file_section_next = NULL;
+        row.zd_file_section_prev = old_tail;
+        mdsection.zd_file_section_tail = &row;
+        abt_md::FileSection **new_row_a = &old_tail->zd_file_section_next;
+        abt_md::FileSection **new_row_b = &mdsection.zd_file_section_head;
+        abt_md::FileSection **new_row = old_tail ? new_row_a : new_row_b;
+        *new_row = &row;
+        mdsection.zd_file_section_n++;
+    }
+}
+
+// --- abt_md.FMdsection.zd_file_section.Remove
+// Remove element from index. If element is not in index, do nothing.
+void abt_md::zd_file_section_Remove(abt_md::FMdsection& mdsection, abt_md::FileSection& row) {
+    if (zd_file_section_InLlistQ(row)) {
+        abt_md::FileSection* old_head       = mdsection.zd_file_section_head;
+        (void)old_head; // in case it's not used
+        abt_md::FileSection* prev = row.zd_file_section_prev;
+        abt_md::FileSection* next = row.zd_file_section_next;
+        // if element is first, adjust list head; otherwise, adjust previous element's next
+        abt_md::FileSection **new_next_a = &prev->zd_file_section_next;
+        abt_md::FileSection **new_next_b = &mdsection.zd_file_section_head;
+        abt_md::FileSection **new_next = prev ? new_next_a : new_next_b;
+        *new_next = next;
+        // if element is last, adjust list tail; otherwise, adjust next element's prev
+        abt_md::FileSection **new_prev_a = &next->zd_file_section_prev;
+        abt_md::FileSection **new_prev_b = &mdsection.zd_file_section_tail;
+        abt_md::FileSection **new_prev = next ? new_prev_a : new_prev_b;
+        *new_prev = prev;
+        mdsection.zd_file_section_n--;
+        row.zd_file_section_next=(abt_md::FileSection*)-1; // not-in-list
+    }
+}
+
+// --- abt_md.FMdsection.zd_file_section.RemoveAll
+// Empty the index. (The rows are not deleted)
+void abt_md::zd_file_section_RemoveAll(abt_md::FMdsection& mdsection) {
+    abt_md::FileSection* row = mdsection.zd_file_section_head;
+    mdsection.zd_file_section_head = NULL;
+    mdsection.zd_file_section_tail = NULL;
+    mdsection.zd_file_section_n = 0;
+    while (row) {
+        abt_md::FileSection* row_next = row->zd_file_section_next;
+        row->zd_file_section_next  = (abt_md::FileSection*)-1;
+        row->zd_file_section_prev  = NULL;
+        row = row_next;
+    }
+}
+
+// --- abt_md.FMdsection.zd_file_section.RemoveFirst
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+abt_md::FileSection* abt_md::zd_file_section_RemoveFirst(abt_md::FMdsection& mdsection) {
+    abt_md::FileSection *row = NULL;
+    row = mdsection.zd_file_section_head;
+    if (row) {
+        abt_md::FileSection *next = row->zd_file_section_next;
+        mdsection.zd_file_section_head = next;
+        abt_md::FileSection **new_end_a = &next->zd_file_section_prev;
+        abt_md::FileSection **new_end_b = &mdsection.zd_file_section_tail;
+        abt_md::FileSection **new_end = next ? new_end_a : new_end_b;
+        *new_end = NULL;
+        mdsection.zd_file_section_n--;
+        row->zd_file_section_next = (abt_md::FileSection*)-1; // mark as not-in-list
+    }
+    return row;
+}
 
 // --- abt_md.trace..Print
 // print string representation of abt_md::trace to string LHS, no header -- cprint:abt_md.trace.String
@@ -223,6 +376,7 @@ void abt_md::ReadArgv() {
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
     }
+    algo_lib::ResetErrtext();
     vrfy(abt_md::LoadTuplesMaybe(cmd.in)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
@@ -260,11 +414,12 @@ static void abt_md::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt_md.Input'  signature:'9ee307dd6f08e1caafb902967e323b41be77ef00'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt_md.Input'  signature:'60c87e8b6dbb79b3ccf5058819607d3b303724c6'");
 }
 
 // --- abt_md.FDb._db.StaticCheck
 void abt_md::StaticCheck() {
+    algo_assert(sizeof(abt_md::mdsection_step_hook) == 8); // csize:abt_md.mdsection_step_hook
     algo_assert(_offset_of(abt_md::FieldId, value) + sizeof(((abt_md::FieldId*)0)->value) == sizeof(abt_md::FieldId));
 }
 
@@ -282,6 +437,30 @@ bool abt_md::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && readme_InputMaybe(elem);
             break;
         }
+        case abt_md_TableId_dmmeta_Ns: { // finput:abt_md.FDb.ns
+            dmmeta::Ns elem;
+            retval = dmmeta::Ns_ReadStrptrMaybe(elem, str);
+            retval = retval && ns_InputMaybe(elem);
+            break;
+        }
+        case abt_md_TableId_dmmeta_Ssimfile: { // finput:abt_md.FDb.ssimfile
+            dmmeta::Ssimfile elem;
+            retval = dmmeta::Ssimfile_ReadStrptrMaybe(elem, str);
+            retval = retval && ssimfile_InputMaybe(elem);
+            break;
+        }
+        case abt_md_TableId_dmmeta_Ctype: { // finput:abt_md.FDb.ctype
+            dmmeta::Ctype elem;
+            retval = dmmeta::Ctype_ReadStrptrMaybe(elem, str);
+            retval = retval && ctype_InputMaybe(elem);
+            break;
+        }
+        case abt_md_TableId_dev_Readmens: { // finput:abt_md.FDb.readmens
+            dev::Readmens elem;
+            retval = dev::Readmens_ReadStrptrMaybe(elem, str);
+            retval = retval && readmens_InputMaybe(elem);
+            break;
+        }
         default:
         retval = algo_lib::InsertStrptrMaybe(str);
         break;
@@ -297,7 +476,8 @@ bool abt_md::InsertStrptrMaybe(algo::strptr str) {
 bool abt_md::LoadTuplesMaybe(algo::strptr root) {
     bool retval = true;
     static const char *ssimfiles[] = {
-        "dev.readme"
+        "dmmeta.ctype", "dmmeta.ns", "dev.readme", "dev.readmens"
+        , "dmmeta.ssimfile"
         , NULL};
         retval = algo_lib::DoLoadTuples(root, abt_md::InsertStrptrMaybe, ssimfiles, true);
         return retval;
@@ -556,6 +736,1170 @@ void abt_md::ind_readme_Reserve(int n) {
     }
 }
 
+// --- abt_md.FDb.mdsection.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+abt_md::FMdsection& abt_md::mdsection_Alloc() {
+    abt_md::FMdsection* row = mdsection_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.mdsection  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- abt_md.FDb.mdsection.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+abt_md::FMdsection* abt_md::mdsection_AllocMaybe() {
+    abt_md::FMdsection *row = (abt_md::FMdsection*)mdsection_AllocMem();
+    if (row) {
+        new (row) abt_md::FMdsection; // call constructor
+        row->rowid = i32(mdsection_N() - 1);
+    }
+    return row;
+}
+
+// --- abt_md.FDb.mdsection.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+abt_md::FMdsection* abt_md::mdsection_InsertMaybe(const dev::Mdsection &value) {
+    abt_md::FMdsection *row = &mdsection_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    mdsection_CopyIn(*row,const_cast<dev::Mdsection&>(value));
+    bool ok = mdsection_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        mdsection_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- abt_md.FDb.mdsection.RemoveAll
+// Destroy all elements of Inlary
+void abt_md::mdsection_RemoveAll() {
+    for (u64 n = _db.mdsection_n; n>0; ) {
+        n--;
+        reinterpret_cast<abt_md::FMdsection*>(_db.mdsection_data)[n].~FMdsection(); // destroy last element
+        _db.mdsection_n=n;
+    }
+}
+
+// --- abt_md.FDb.mdsection.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void abt_md::mdsection_RemoveLast() {
+    u64 n = _db.mdsection_n;
+    if (n > 0) {
+        n -= 1;
+        reinterpret_cast<abt_md::FMdsection*>(_db.mdsection_data)[n].~FMdsection();
+        _db.mdsection_n = n;
+    }
+}
+
+// --- abt_md.FDb.mdsection.LoadStatic
+static void abt_md::mdsection_LoadStatic() {
+    static struct _t {
+        const char *s;
+        void (*step)(abt_md::FileSection&);
+    } data[] = {
+        { "dev.mdsection  mdsection:Title  match:\"## %\"  perns:Y  comment:\"Title: replaced with namespace comment\"", abt_md::mdsection_Title }
+        ,{ "dev.mdsection  mdsection:Syntax  match:\"### Syntax\"  perns:Y  comment:\"Syntax: section replaced with command syntax\"", abt_md::mdsection_Syntax }
+        ,{ "dev.mdsection  mdsection:Limitations  match:\"### Limitations\"  perns:Y  comment:\"Tool limitations: fully user-generated\"", abt_md::mdsection_Limitations }
+        ,{ "dev.mdsection  mdsection:Description  match:\"### Description\"  perns:N  comment:\"Description: fully user-generated\"", abt_md::mdsection_Description }
+        ,{ "dev.mdsection  mdsection:Content  match:\"### ---\"  perns:N  comment:\"Any other content (hard-coded)\"", abt_md::mdsection_Content }
+        ,{ "dev.mdsection  mdsection:Example  match:\"### Example%\"  perns:N  comment:\"User-generated example\"", abt_md::mdsection_Example }
+        ,{ "dev.mdsection  mdsection:Inputs  match:\"### Inputs\"  perns:Y  comment:\"Inputs: section replaced with list of command inputs\"", abt_md::mdsection_Inputs }
+        ,{ "dev.mdsection  mdsection:Tests  match:\"### Tests\"  perns:Y  comment:\"Inputs: section replaced with test & coverage information\"", abt_md::mdsection_Tests }
+        ,{ "dev.mdsection  mdsection:Copyright  match:\"### Copyright\"  perns:Y  comment:\"Copyright information\"", abt_md::mdsection_Copyright }
+        ,{NULL, NULL}
+    };
+    (void)data;
+    dev::Mdsection mdsection;
+    for (int i=0; data[i].s; i++) {
+        (void)dev::Mdsection_ReadStrptrMaybe(mdsection, algo::strptr(data[i].s));
+        abt_md::FMdsection *elem = mdsection_InsertMaybe(mdsection);
+        vrfy(elem, tempstr("abt_md.static_insert_fatal_error")
+        << Keyval("tuple",algo::strptr(data[i].s))
+        << Keyval("comment",algo_lib::DetachBadTags()));
+        elem->step = data[i].step;
+    }
+}
+
+// --- abt_md.FDb.mdsection.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool abt_md::mdsection_XrefMaybe(abt_md::FMdsection &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
+// --- abt_md.FDb.file_section.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+abt_md::FileSection& abt_md::file_section_Alloc() {
+    abt_md::FileSection* row = file_section_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.file_section  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- abt_md.FDb.file_section.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+abt_md::FileSection* abt_md::file_section_AllocMaybe() {
+    abt_md::FileSection *row = (abt_md::FileSection*)file_section_AllocMem();
+    if (row) {
+        new (row) abt_md::FileSection; // call constructor
+    }
+    return row;
+}
+
+// --- abt_md.FDb.file_section.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* abt_md::file_section_AllocMem() {
+    u64 new_nelems     = _db.file_section_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    abt_md::FileSection*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.file_section_lary[bsr];
+        if (!lev) {
+            lev=(abt_md::FileSection*)algo_lib::malloc_AllocMem(sizeof(abt_md::FileSection) * (u64(1)<<bsr));
+            _db.file_section_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.file_section_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- abt_md.FDb.file_section.RemoveAll
+// Remove all elements from Lary
+void abt_md::file_section_RemoveAll() {
+    for (u64 n = _db.file_section_n; n>0; ) {
+        n--;
+        file_section_qFind(u64(n)).~FileSection(); // destroy last element
+        _db.file_section_n = i32(n);
+    }
+}
+
+// --- abt_md.FDb.file_section.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void abt_md::file_section_RemoveLast() {
+    u64 n = _db.file_section_n;
+    if (n > 0) {
+        n -= 1;
+        file_section_qFind(u64(n)).~FileSection();
+        _db.file_section_n = i32(n);
+    }
+}
+
+// --- abt_md.FDb.file_section.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool abt_md::file_section_XrefMaybe(abt_md::FileSection &row) {
+    bool retval = true;
+    (void)row;
+    // insert file_section into index bh_file_section
+    if (true) { // user-defined insert condition
+        bh_file_section_Insert(row);
+    }
+    abt_md::FMdsection* p_p_mdsection = row.p_mdsection;
+    if (UNLIKELY(!p_p_mdsection)) {
+        algo_lib::ResetErrtext() << "abt_md.null_ref  xref:abt_md.FMdsection.zd_file_section";
+        return false;
+    }
+    // insert file_section into index zd_file_section
+    if (true) { // user-defined insert condition
+        zd_file_section_Insert(*p_p_mdsection, row);
+    }
+    return retval;
+}
+
+// --- abt_md.FDb.bh_file_section.Dealloc
+// Remove all elements from heap and free memory used by the array.
+void abt_md::bh_file_section_Dealloc() {
+    bh_file_section_RemoveAll();
+    algo_lib::malloc_FreeMem(_db.bh_file_section_elems, sizeof(abt_md::FileSection*)*_db.bh_file_section_max);
+    _db.bh_file_section_max   = 0;
+    _db.bh_file_section_elems = NULL;
+}
+
+// --- abt_md.FDb.bh_file_section.Downheap
+// Find new location for ROW starting at IDX
+// NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+static int abt_md::bh_file_section_Downheap(abt_md::FileSection& row, int idx) {
+    abt_md::FileSection* *elems = _db.bh_file_section_elems;
+    int n = _db.bh_file_section_n;
+    int child = idx*2+1;
+    while (child < n) {
+        abt_md::FileSection* p = elems[child]; // left child
+        int rchild = child+1;
+        if (rchild < n) {
+            abt_md::FileSection* q = elems[rchild]; // right child
+            if (bh_file_section_ElemLt(*q,*p)) {
+                child = rchild;
+                p     = q;
+            }
+        }
+        if (!bh_file_section_ElemLt(*p,row)) {
+            break;
+        }
+        p->bh_file_section_idx   = idx;
+        elems[idx]     = p;
+        idx            = child;
+        child          = idx*2+1;
+    }
+    return idx;
+}
+
+// --- abt_md.FDb.bh_file_section.Insert
+// Insert row. Row must not already be in index. If row is already in index, do nothing.
+void abt_md::bh_file_section_Insert(abt_md::FileSection& row) {
+    if (LIKELY(row.bh_file_section_idx == -1)) {
+        bh_file_section_Reserve(1);
+        int n = _db.bh_file_section_n;
+        _db.bh_file_section_n = n + 1;
+        int new_idx = bh_file_section_Upheap(row, n);
+        row.bh_file_section_idx = new_idx;
+        _db.bh_file_section_elems[new_idx] = &row;
+    }
+}
+
+// --- abt_md.FDb.bh_file_section.Reheap
+// If row is in heap, update its position. If row is not in heap, insert it.
+// Return new position of item in the heap (0=top)
+i32 abt_md::bh_file_section_Reheap(abt_md::FileSection& row) {
+    int old_idx = row.bh_file_section_idx;
+    bool isnew = old_idx == -1;
+    if (isnew) {
+        bh_file_section_Reserve(1);
+        old_idx = _db.bh_file_section_n++;
+    }
+    int new_idx = bh_file_section_Upheap(row, old_idx);
+    if (!isnew && new_idx == old_idx) {
+        new_idx = bh_file_section_Downheap(row, old_idx);
+    }
+    row.bh_file_section_idx = new_idx;
+    _db.bh_file_section_elems[new_idx] = &row;
+    return new_idx;
+}
+
+// --- abt_md.FDb.bh_file_section.ReheapFirst
+// Key of first element in the heap changed. Move it.
+// This function does not check the insert condition.
+// Return new position of item in the heap (0=top).
+// Heap must be non-empty or behavior is undefined.
+i32 abt_md::bh_file_section_ReheapFirst() {
+    abt_md::FileSection &row = *_db.bh_file_section_elems[0];
+    i32 new_idx = bh_file_section_Downheap(row, 0);
+    row.bh_file_section_idx = new_idx;
+    _db.bh_file_section_elems[new_idx] = &row;
+    return new_idx;
+}
+
+// --- abt_md.FDb.bh_file_section.Remove
+// Remove element from index. If element is not in index, do nothing.
+void abt_md::bh_file_section_Remove(abt_md::FileSection& row) {
+    if (bh_file_section_InBheapQ(row)) {
+        int old_idx = row.bh_file_section_idx;
+        if (_db.bh_file_section_elems[old_idx] == &row) { // sanity check: heap points back to row
+            row.bh_file_section_idx = -1;           // mark not in heap
+            i32 n = _db.bh_file_section_n - 1; // index of last element in heap
+            _db.bh_file_section_n = n;         // decrease count
+            if (old_idx != n) {
+                abt_md::FileSection *elem = _db.bh_file_section_elems[n];
+                int new_idx = bh_file_section_Upheap(*elem, old_idx);
+                if (new_idx == old_idx) {
+                    new_idx = bh_file_section_Downheap(*elem, old_idx);
+                }
+                elem->bh_file_section_idx = new_idx;
+                _db.bh_file_section_elems[new_idx] = elem;
+            }
+        }
+    }
+}
+
+// --- abt_md.FDb.bh_file_section.RemoveAll
+// Remove all elements from binary heap
+void abt_md::bh_file_section_RemoveAll() {
+    int n = _db.bh_file_section_n;
+    for (int i = n - 1; i>=0; i--) {
+        _db.bh_file_section_elems[i]->bh_file_section_idx = -1; // mark not-in-heap
+    }
+    _db.bh_file_section_n = 0;
+}
+
+// --- abt_md.FDb.bh_file_section.RemoveFirst
+// If index is empty, return NULL. Otherwise remove and return first key in index.
+//  Call 'head changed' trigger.
+abt_md::FileSection* abt_md::bh_file_section_RemoveFirst() {
+    abt_md::FileSection *row = NULL;
+    if (_db.bh_file_section_n > 0) {
+        row = _db.bh_file_section_elems[0];
+        row->bh_file_section_idx = -1;           // mark not in heap
+        i32 n = _db.bh_file_section_n - 1; // index of last element in heap
+        _db.bh_file_section_n = n;         // decrease count
+        if (n) {
+            abt_md::FileSection &elem = *_db.bh_file_section_elems[n];
+            int new_idx = bh_file_section_Downheap(elem, 0);
+            elem.bh_file_section_idx = new_idx;
+            _db.bh_file_section_elems[new_idx] = &elem;
+        }
+    }
+    return row;
+}
+
+// --- abt_md.FDb.bh_file_section.Reserve
+// Reserve space in index for N more elements
+void abt_md::bh_file_section_Reserve(int n) {
+    i32 old_max = _db.bh_file_section_max;
+    if (UNLIKELY(_db.bh_file_section_n + n > old_max)) {
+        u32 new_max  = u32_Max(4, old_max * 2);
+        u32 old_size = old_max * sizeof(abt_md::FileSection*);
+        u32 new_size = new_max * sizeof(abt_md::FileSection*);
+        void *new_mem = algo_lib::malloc_ReallocMem(_db.bh_file_section_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("abt_md.out_of_memory  field:abt_md.FDb.bh_file_section");
+        }
+        _db.bh_file_section_elems = (abt_md::FileSection**)new_mem;
+        _db.bh_file_section_max = new_max;
+    }
+}
+
+// --- abt_md.FDb.bh_file_section.Upheap
+// Find and return index of new location for element ROW in the heap, starting at index IDX.
+// Move any elements along the way but do not modify ROW.
+static int abt_md::bh_file_section_Upheap(abt_md::FileSection& row, int idx) {
+    abt_md::FileSection* *elems = _db.bh_file_section_elems;
+    while (idx>0) {
+        int j = (idx-1)/2;
+        abt_md::FileSection* p = elems[j];
+        if (!bh_file_section_ElemLt(row, *p)) {
+            break;
+        }
+        p->bh_file_section_idx = idx;
+        elems[idx] = p;
+        idx = j;
+    }
+    return idx;
+}
+
+// --- abt_md.FDb.bh_file_section.ElemLt
+inline static bool abt_md::bh_file_section_ElemLt(abt_md::FileSection &a, abt_md::FileSection &b) {
+    (void)_db;
+    return a.sortkey < b.sortkey;
+}
+
+// --- abt_md.FDb.ns.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+abt_md::FNs& abt_md::ns_Alloc() {
+    abt_md::FNs* row = ns_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.ns  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- abt_md.FDb.ns.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+abt_md::FNs* abt_md::ns_AllocMaybe() {
+    abt_md::FNs *row = (abt_md::FNs*)ns_AllocMem();
+    if (row) {
+        new (row) abt_md::FNs; // call constructor
+    }
+    return row;
+}
+
+// --- abt_md.FDb.ns.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+abt_md::FNs* abt_md::ns_InsertMaybe(const dmmeta::Ns &value) {
+    abt_md::FNs *row = &ns_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    ns_CopyIn(*row,const_cast<dmmeta::Ns&>(value));
+    bool ok = ns_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        ns_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- abt_md.FDb.ns.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* abt_md::ns_AllocMem() {
+    u64 new_nelems     = _db.ns_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    abt_md::FNs*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.ns_lary[bsr];
+        if (!lev) {
+            lev=(abt_md::FNs*)algo_lib::malloc_AllocMem(sizeof(abt_md::FNs) * (u64(1)<<bsr));
+            _db.ns_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.ns_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- abt_md.FDb.ns.RemoveAll
+// Remove all elements from Lary
+void abt_md::ns_RemoveAll() {
+    for (u64 n = _db.ns_n; n>0; ) {
+        n--;
+        ns_qFind(u64(n)).~FNs(); // destroy last element
+        _db.ns_n = i32(n);
+    }
+}
+
+// --- abt_md.FDb.ns.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void abt_md::ns_RemoveLast() {
+    u64 n = _db.ns_n;
+    if (n > 0) {
+        n -= 1;
+        ns_qFind(u64(n)).~FNs();
+        _db.ns_n = i32(n);
+    }
+}
+
+// --- abt_md.FDb.ns.InputMaybe
+static bool abt_md::ns_InputMaybe(dmmeta::Ns &elem) {
+    bool retval = true;
+    retval = ns_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- abt_md.FDb.ns.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool abt_md::ns_XrefMaybe(abt_md::FNs &row) {
+    bool retval = true;
+    (void)row;
+    // insert ns into index ind_ns
+    if (true) { // user-defined insert condition
+        bool success = ind_ns_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "abt_md.duplicate_key  xref:abt_md.FDb.ind_ns"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- abt_md.FDb.ind_ns.Find
+// Find row by key. Return NULL if not found.
+abt_md::FNs* abt_md::ind_ns_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
+    abt_md::FNs* *e = &_db.ind_ns_buckets_elems[index];
+    abt_md::FNs* ret=NULL;
+    do {
+        ret       = *e;
+        bool done = !ret || (*ret).ns == key;
+        if (done) break;
+        e         = &ret->ind_ns_next;
+    } while (true);
+    return ret;
+}
+
+// --- abt_md.FDb.ind_ns.FindX
+// Look up row by key and return reference. Throw exception if not found
+abt_md::FNs& abt_md::ind_ns_FindX(const algo::strptr& key) {
+    abt_md::FNs* ret = ind_ns_Find(key);
+    vrfy(ret, tempstr() << "abt_md.key_error  table:ind_ns  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- abt_md.FDb.ind_ns.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+abt_md::FNs& abt_md::ind_ns_GetOrCreate(const algo::strptr& key) {
+    abt_md::FNs* ret = ind_ns_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &ns_Alloc();
+        (*ret).ns = key;
+        bool good = ns_XrefMaybe(*ret);
+        if (!good) {
+            ns_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "abt_md.create_error  table:ind_ns  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- abt_md.FDb.ind_ns.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool abt_md::ind_ns_InsertMaybe(abt_md::FNs& row) {
+    ind_ns_Reserve(1);
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_ns_next == (abt_md::FNs*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        abt_md::FNs* *prev = &_db.ind_ns_buckets_elems[index];
+        do {
+            abt_md::FNs* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).ns == row.ns) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_ns_next;
+        } while (true);
+        if (retval) {
+            row.ind_ns_next = *prev;
+            _db.ind_ns_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- abt_md.FDb.ind_ns.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void abt_md::ind_ns_Remove(abt_md::FNs& row) {
+    if (LIKELY(row.ind_ns_next != (abt_md::FNs*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        abt_md::FNs* *prev = &_db.ind_ns_buckets_elems[index]; // addr of pointer to current element
+        while (abt_md::FNs *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_ns_next; // unlink (singly linked list)
+                _db.ind_ns_n--;
+                row.ind_ns_next = (abt_md::FNs*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_ns_next;
+        }
+    }
+}
+
+// --- abt_md.FDb.ind_ns.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void abt_md::ind_ns_Reserve(int n) {
+    u32 old_nbuckets = _db.ind_ns_buckets_n;
+    u32 new_nelems   = _db.ind_ns_n + n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(abt_md::FNs*);
+        u32 new_size = new_nbuckets * sizeof(abt_md::FNs*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        abt_md::FNs* *new_buckets = (abt_md::FNs**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("abt_md.out_of_memory  field:abt_md.FDb.ind_ns");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_ns_buckets_n; i++) {
+            abt_md::FNs* elem = _db.ind_ns_buckets_elems[i];
+            while (elem) {
+                abt_md::FNs &row        = *elem;
+                abt_md::FNs* next       = row.ind_ns_next;
+                u32 index          = algo::Smallstr16_Hash(0, row.ns) & (new_nbuckets-1);
+                row.ind_ns_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_ns_buckets_elems, old_size);
+        _db.ind_ns_buckets_elems = new_buckets;
+        _db.ind_ns_buckets_n = new_nbuckets;
+    }
+}
+
+// --- abt_md.FDb.ssimfile.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+abt_md::FSsimfile& abt_md::ssimfile_Alloc() {
+    abt_md::FSsimfile* row = ssimfile_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.ssimfile  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- abt_md.FDb.ssimfile.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+abt_md::FSsimfile* abt_md::ssimfile_AllocMaybe() {
+    abt_md::FSsimfile *row = (abt_md::FSsimfile*)ssimfile_AllocMem();
+    if (row) {
+        new (row) abt_md::FSsimfile; // call constructor
+    }
+    return row;
+}
+
+// --- abt_md.FDb.ssimfile.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+abt_md::FSsimfile* abt_md::ssimfile_InsertMaybe(const dmmeta::Ssimfile &value) {
+    abt_md::FSsimfile *row = &ssimfile_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    ssimfile_CopyIn(*row,const_cast<dmmeta::Ssimfile&>(value));
+    bool ok = ssimfile_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        ssimfile_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- abt_md.FDb.ssimfile.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* abt_md::ssimfile_AllocMem() {
+    u64 new_nelems     = _db.ssimfile_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    abt_md::FSsimfile*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.ssimfile_lary[bsr];
+        if (!lev) {
+            lev=(abt_md::FSsimfile*)algo_lib::malloc_AllocMem(sizeof(abt_md::FSsimfile) * (u64(1)<<bsr));
+            _db.ssimfile_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.ssimfile_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- abt_md.FDb.ssimfile.RemoveAll
+// Remove all elements from Lary
+void abt_md::ssimfile_RemoveAll() {
+    for (u64 n = _db.ssimfile_n; n>0; ) {
+        n--;
+        ssimfile_qFind(u64(n)).~FSsimfile(); // destroy last element
+        _db.ssimfile_n = i32(n);
+    }
+}
+
+// --- abt_md.FDb.ssimfile.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void abt_md::ssimfile_RemoveLast() {
+    u64 n = _db.ssimfile_n;
+    if (n > 0) {
+        n -= 1;
+        ssimfile_qFind(u64(n)).~FSsimfile();
+        _db.ssimfile_n = i32(n);
+    }
+}
+
+// --- abt_md.FDb.ssimfile.InputMaybe
+static bool abt_md::ssimfile_InputMaybe(dmmeta::Ssimfile &elem) {
+    bool retval = true;
+    retval = ssimfile_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- abt_md.FDb.ssimfile.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool abt_md::ssimfile_XrefMaybe(abt_md::FSsimfile &row) {
+    bool retval = true;
+    (void)row;
+    abt_md::FCtype* p_ctype = abt_md::ind_ctype_Find(row.ctype);
+    if (UNLIKELY(!p_ctype)) {
+        algo_lib::ResetErrtext() << "abt_md.bad_xref  index:abt_md.FDb.ind_ctype" << Keyval("key", row.ctype);
+        return false;
+    }
+    // ssimfile: save pointer to ctype
+    if (true) { // user-defined insert condition
+        row.p_ctype = p_ctype;
+    }
+    // insert ssimfile into index ind_ssimfile
+    if (true) { // user-defined insert condition
+        bool success = ind_ssimfile_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "abt_md.duplicate_key  xref:abt_md.FDb.ind_ssimfile"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- abt_md.FDb.ind_ssimfile.Find
+// Find row by key. Return NULL if not found.
+abt_md::FSsimfile* abt_md::ind_ssimfile_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ssimfile_buckets_n - 1);
+    abt_md::FSsimfile* *e = &_db.ind_ssimfile_buckets_elems[index];
+    abt_md::FSsimfile* ret=NULL;
+    do {
+        ret       = *e;
+        bool done = !ret || (*ret).ssimfile == key;
+        if (done) break;
+        e         = &ret->ind_ssimfile_next;
+    } while (true);
+    return ret;
+}
+
+// --- abt_md.FDb.ind_ssimfile.FindX
+// Look up row by key and return reference. Throw exception if not found
+abt_md::FSsimfile& abt_md::ind_ssimfile_FindX(const algo::strptr& key) {
+    abt_md::FSsimfile* ret = ind_ssimfile_Find(key);
+    vrfy(ret, tempstr() << "abt_md.key_error  table:ind_ssimfile  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- abt_md.FDb.ind_ssimfile.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool abt_md::ind_ssimfile_InsertMaybe(abt_md::FSsimfile& row) {
+    ind_ssimfile_Reserve(1);
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_ssimfile_next == (abt_md::FSsimfile*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        abt_md::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index];
+        do {
+            abt_md::FSsimfile* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).ssimfile == row.ssimfile) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_ssimfile_next;
+        } while (true);
+        if (retval) {
+            row.ind_ssimfile_next = *prev;
+            _db.ind_ssimfile_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- abt_md.FDb.ind_ssimfile.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void abt_md::ind_ssimfile_Remove(abt_md::FSsimfile& row) {
+    if (LIKELY(row.ind_ssimfile_next != (abt_md::FSsimfile*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        abt_md::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index]; // addr of pointer to current element
+        while (abt_md::FSsimfile *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_ssimfile_next; // unlink (singly linked list)
+                _db.ind_ssimfile_n--;
+                row.ind_ssimfile_next = (abt_md::FSsimfile*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_ssimfile_next;
+        }
+    }
+}
+
+// --- abt_md.FDb.ind_ssimfile.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void abt_md::ind_ssimfile_Reserve(int n) {
+    u32 old_nbuckets = _db.ind_ssimfile_buckets_n;
+    u32 new_nelems   = _db.ind_ssimfile_n + n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(abt_md::FSsimfile*);
+        u32 new_size = new_nbuckets * sizeof(abt_md::FSsimfile*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        abt_md::FSsimfile* *new_buckets = (abt_md::FSsimfile**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("abt_md.out_of_memory  field:abt_md.FDb.ind_ssimfile");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_ssimfile_buckets_n; i++) {
+            abt_md::FSsimfile* elem = _db.ind_ssimfile_buckets_elems[i];
+            while (elem) {
+                abt_md::FSsimfile &row        = *elem;
+                abt_md::FSsimfile* next       = row.ind_ssimfile_next;
+                u32 index          = algo::Smallstr50_Hash(0, row.ssimfile) & (new_nbuckets-1);
+                row.ind_ssimfile_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_ssimfile_buckets_elems, old_size);
+        _db.ind_ssimfile_buckets_elems = new_buckets;
+        _db.ind_ssimfile_buckets_n = new_nbuckets;
+    }
+}
+
+// --- abt_md.FDb.ctype.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+abt_md::FCtype& abt_md::ctype_Alloc() {
+    abt_md::FCtype* row = ctype_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.ctype  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- abt_md.FDb.ctype.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+abt_md::FCtype* abt_md::ctype_AllocMaybe() {
+    abt_md::FCtype *row = (abt_md::FCtype*)ctype_AllocMem();
+    if (row) {
+        new (row) abt_md::FCtype; // call constructor
+    }
+    return row;
+}
+
+// --- abt_md.FDb.ctype.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+abt_md::FCtype* abt_md::ctype_InsertMaybe(const dmmeta::Ctype &value) {
+    abt_md::FCtype *row = &ctype_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    ctype_CopyIn(*row,const_cast<dmmeta::Ctype&>(value));
+    bool ok = ctype_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        ctype_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- abt_md.FDb.ctype.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* abt_md::ctype_AllocMem() {
+    u64 new_nelems     = _db.ctype_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    abt_md::FCtype*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.ctype_lary[bsr];
+        if (!lev) {
+            lev=(abt_md::FCtype*)algo_lib::malloc_AllocMem(sizeof(abt_md::FCtype) * (u64(1)<<bsr));
+            _db.ctype_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.ctype_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- abt_md.FDb.ctype.RemoveAll
+// Remove all elements from Lary
+void abt_md::ctype_RemoveAll() {
+    for (u64 n = _db.ctype_n; n>0; ) {
+        n--;
+        ctype_qFind(u64(n)).~FCtype(); // destroy last element
+        _db.ctype_n = i32(n);
+    }
+}
+
+// --- abt_md.FDb.ctype.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void abt_md::ctype_RemoveLast() {
+    u64 n = _db.ctype_n;
+    if (n > 0) {
+        n -= 1;
+        ctype_qFind(u64(n)).~FCtype();
+        _db.ctype_n = i32(n);
+    }
+}
+
+// --- abt_md.FDb.ctype.InputMaybe
+static bool abt_md::ctype_InputMaybe(dmmeta::Ctype &elem) {
+    bool retval = true;
+    retval = ctype_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- abt_md.FDb.ctype.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool abt_md::ctype_XrefMaybe(abt_md::FCtype &row) {
+    bool retval = true;
+    (void)row;
+    // insert ctype into index ind_ctype
+    if (true) { // user-defined insert condition
+        bool success = ind_ctype_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "abt_md.duplicate_key  xref:abt_md.FDb.ind_ctype"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- abt_md.FDb.ind_ctype.Find
+// Find row by key. Return NULL if not found.
+abt_md::FCtype* abt_md::ind_ctype_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
+    abt_md::FCtype* *e = &_db.ind_ctype_buckets_elems[index];
+    abt_md::FCtype* ret=NULL;
+    do {
+        ret       = *e;
+        bool done = !ret || (*ret).ctype == key;
+        if (done) break;
+        e         = &ret->ind_ctype_next;
+    } while (true);
+    return ret;
+}
+
+// --- abt_md.FDb.ind_ctype.FindX
+// Look up row by key and return reference. Throw exception if not found
+abt_md::FCtype& abt_md::ind_ctype_FindX(const algo::strptr& key) {
+    abt_md::FCtype* ret = ind_ctype_Find(key);
+    vrfy(ret, tempstr() << "abt_md.key_error  table:ind_ctype  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- abt_md.FDb.ind_ctype.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+abt_md::FCtype& abt_md::ind_ctype_GetOrCreate(const algo::strptr& key) {
+    abt_md::FCtype* ret = ind_ctype_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &ctype_Alloc();
+        (*ret).ctype = key;
+        bool good = ctype_XrefMaybe(*ret);
+        if (!good) {
+            ctype_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "abt_md.create_error  table:ind_ctype  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- abt_md.FDb.ind_ctype.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool abt_md::ind_ctype_InsertMaybe(abt_md::FCtype& row) {
+    ind_ctype_Reserve(1);
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_ctype_next == (abt_md::FCtype*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        abt_md::FCtype* *prev = &_db.ind_ctype_buckets_elems[index];
+        do {
+            abt_md::FCtype* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).ctype == row.ctype) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_ctype_next;
+        } while (true);
+        if (retval) {
+            row.ind_ctype_next = *prev;
+            _db.ind_ctype_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- abt_md.FDb.ind_ctype.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void abt_md::ind_ctype_Remove(abt_md::FCtype& row) {
+    if (LIKELY(row.ind_ctype_next != (abt_md::FCtype*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        abt_md::FCtype* *prev = &_db.ind_ctype_buckets_elems[index]; // addr of pointer to current element
+        while (abt_md::FCtype *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_ctype_next; // unlink (singly linked list)
+                _db.ind_ctype_n--;
+                row.ind_ctype_next = (abt_md::FCtype*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_ctype_next;
+        }
+    }
+}
+
+// --- abt_md.FDb.ind_ctype.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void abt_md::ind_ctype_Reserve(int n) {
+    u32 old_nbuckets = _db.ind_ctype_buckets_n;
+    u32 new_nelems   = _db.ind_ctype_n + n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(abt_md::FCtype*);
+        u32 new_size = new_nbuckets * sizeof(abt_md::FCtype*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        abt_md::FCtype* *new_buckets = (abt_md::FCtype**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("abt_md.out_of_memory  field:abt_md.FDb.ind_ctype");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_ctype_buckets_n; i++) {
+            abt_md::FCtype* elem = _db.ind_ctype_buckets_elems[i];
+            while (elem) {
+                abt_md::FCtype &row        = *elem;
+                abt_md::FCtype* next       = row.ind_ctype_next;
+                u32 index          = algo::Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
+                row.ind_ctype_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_ctype_buckets_elems, old_size);
+        _db.ind_ctype_buckets_elems = new_buckets;
+        _db.ind_ctype_buckets_n = new_nbuckets;
+    }
+}
+
+// --- abt_md.FDb.readmens.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+abt_md::FReadmens& abt_md::readmens_Alloc() {
+    abt_md::FReadmens* row = readmens_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.readmens  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- abt_md.FDb.readmens.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+abt_md::FReadmens* abt_md::readmens_AllocMaybe() {
+    abt_md::FReadmens *row = (abt_md::FReadmens*)readmens_AllocMem();
+    if (row) {
+        new (row) abt_md::FReadmens; // call constructor
+    }
+    return row;
+}
+
+// --- abt_md.FDb.readmens.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+abt_md::FReadmens* abt_md::readmens_InsertMaybe(const dev::Readmens &value) {
+    abt_md::FReadmens *row = &readmens_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    readmens_CopyIn(*row,const_cast<dev::Readmens&>(value));
+    bool ok = readmens_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        readmens_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- abt_md.FDb.readmens.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* abt_md::readmens_AllocMem() {
+    u64 new_nelems     = _db.readmens_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    abt_md::FReadmens*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.readmens_lary[bsr];
+        if (!lev) {
+            lev=(abt_md::FReadmens*)algo_lib::malloc_AllocMem(sizeof(abt_md::FReadmens) * (u64(1)<<bsr));
+            _db.readmens_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.readmens_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- abt_md.FDb.readmens.RemoveAll
+// Remove all elements from Lary
+void abt_md::readmens_RemoveAll() {
+    for (u64 n = _db.readmens_n; n>0; ) {
+        n--;
+        readmens_qFind(u64(n)).~FReadmens(); // destroy last element
+        _db.readmens_n = i32(n);
+    }
+}
+
+// --- abt_md.FDb.readmens.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void abt_md::readmens_RemoveLast() {
+    u64 n = _db.readmens_n;
+    if (n > 0) {
+        n -= 1;
+        readmens_qFind(u64(n)).~FReadmens();
+        _db.readmens_n = i32(n);
+    }
+}
+
+// --- abt_md.FDb.readmens.InputMaybe
+static bool abt_md::readmens_InputMaybe(dev::Readmens &elem) {
+    bool retval = true;
+    retval = readmens_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- abt_md.FDb.readmens.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool abt_md::readmens_XrefMaybe(abt_md::FReadmens &row) {
+    bool retval = true;
+    (void)row;
+    abt_md::FNs* p_ns = abt_md::ind_ns_Find(row.ns);
+    if (UNLIKELY(!p_ns)) {
+        algo_lib::ResetErrtext() << "abt_md.bad_xref  index:abt_md.FDb.ind_ns" << Keyval("key", row.ns);
+        return false;
+    }
+    // readmens: save pointer to ns
+    if (true) { // user-defined insert condition
+        row.p_ns = p_ns;
+    }
+    abt_md::FReadme* p_readme = abt_md::ind_readme_Find(row.readme);
+    if (UNLIKELY(!p_readme)) {
+        algo_lib::ResetErrtext() << "abt_md.bad_xref  index:abt_md.FDb.ind_readme" << Keyval("key", row.readme);
+        return false;
+    }
+    // readmens: save pointer to readme
+    if (true) { // user-defined insert condition
+        row.p_readme = p_readme;
+    }
+    // insert readmens into index c_readmens
+    if (true) { // user-defined insert condition
+        bool success = c_readmens_InsertMaybe(*p_readme, row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "abt_md.duplicate_key  xref:abt_md.FReadme.c_readmens"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
 // --- abt_md.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr abt_md::trace_RowidFind(int t) {
@@ -566,6 +1910,94 @@ static algo::ImrowPtr abt_md::trace_RowidFind(int t) {
 // Function return 1
 inline static i32 abt_md::trace_N() {
     return 1;
+}
+
+// --- abt_md.FDb.bh_file_section_curs.Add
+static void abt_md::_db_bh_file_section_curs_Add(_db_bh_file_section_curs &curs, abt_md::FileSection& row) {
+    u32 n = curs.temp_n;
+    int i = n;
+    curs.temp_n = n+1;
+    abt_md::FileSection* *elems = curs.temp_elems;
+    while (i>0) {
+        int j = (i-1)/2;
+        abt_md::FileSection* p = elems[j];
+        if (!bh_file_section_ElemLt(row,*p)) {
+            break;
+        }
+        elems[i]=p;
+        i=j;
+    }
+    elems[i]=&row;
+}
+
+// --- abt_md.FDb.bh_file_section_curs.Reserve
+void abt_md::_db_bh_file_section_curs_Reserve(_db_bh_file_section_curs &curs, int n) {
+    if (n > curs.temp_max) {
+        size_t old_size   = sizeof(void*) * curs.temp_max;
+        size_t new_size   = sizeof(void*) * bh_file_section_N();
+        curs.temp_elems   = (abt_md::FileSection**)algo_lib::malloc_ReallocMem(curs.temp_elems, old_size, new_size);
+        if (!curs.temp_elems) {
+            algo::FatalErrorExit("abt_md.cursor_out_of_memory  func:abt_md.FDb.bh_file_section_curs.Reserve");
+        }
+        curs.temp_max       = bh_file_section_N();
+    }
+}
+
+// --- abt_md.FDb.bh_file_section_curs.Reset
+// Reset cursor. If HEAP is non-empty, add its top element to CURS.
+void abt_md::_db_bh_file_section_curs_Reset(_db_bh_file_section_curs &curs, abt_md::FDb &parent) {
+    curs.parent       = &parent;
+    _db_bh_file_section_curs_Reserve(curs, bh_file_section_N());
+    curs.temp_n = 0;
+    if (parent.bh_file_section_n > 0) {
+        abt_md::FileSection &first = *parent.bh_file_section_elems[0];
+        curs.temp_elems[0] = &first; // insert first element in heap
+        curs.temp_n = 1;
+    }
+}
+
+// --- abt_md.FDb.bh_file_section_curs.Next
+// Advance cursor.
+void abt_md::_db_bh_file_section_curs_Next(_db_bh_file_section_curs &curs) {
+    abt_md::FileSection* *elems = curs.temp_elems;
+    int n = curs.temp_n;
+    if (n > 0) {
+        // remove top element from heap
+        abt_md::FileSection* dead = elems[0];
+        int i       = 0;
+        abt_md::FileSection* last = curs.temp_elems[n-1];
+        // downheap last elem
+        do {
+            abt_md::FileSection* choose = last;
+            int l         = i*2+1;
+            if (l<n) {
+                abt_md::FileSection* el = elems[l];
+                int r     = l+1;
+                r        -= r==n;
+                abt_md::FileSection* er = elems[r];
+                if (bh_file_section_ElemLt(*er,*el)) {
+                    el  = er;
+                    l   = r;
+                }
+                bool b = bh_file_section_ElemLt(*el,*last);
+                if (b) choose = el;
+                if (!b) l = n;
+            }
+            elems[i] = choose;
+            i = l;
+        } while (i < n);
+        curs.temp_n = n-1;
+        int index = dead->bh_file_section_idx;
+        i = (index*2+1);
+        if (i < bh_file_section_N()) {
+            abt_md::FileSection &elem = *curs.parent->bh_file_section_elems[i];
+            _db_bh_file_section_curs_Add(curs, elem);
+        }
+        if (i+1 < bh_file_section_N()) {
+            abt_md::FileSection &elem = *curs.parent->bh_file_section_elems[i + 1];
+            _db_bh_file_section_curs_Add(curs, elem);
+        }
+    }
 }
 
 // --- abt_md.FDb..Init
@@ -590,19 +2022,158 @@ void abt_md::FDb_Init() {
         FatalErrorExit("out of memory"); // (abt_md.FDb.ind_readme)
     }
     memset(_db.ind_readme_buckets_elems, 0, sizeof(abt_md::FReadme*)*_db.ind_readme_buckets_n); // (abt_md.FDb.ind_readme)
+    _db.mdsection_n = 0; // mdsection: initialize count
+    // initialize LAry file_section (abt_md.FDb.file_section)
+    _db.file_section_n = 0;
+    memset(_db.file_section_lary, 0, sizeof(_db.file_section_lary)); // zero out all level pointers
+    abt_md::FileSection* file_section_first = (abt_md::FileSection*)algo_lib::malloc_AllocMem(sizeof(abt_md::FileSection) * (u64(1)<<4));
+    if (!file_section_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.file_section_lary[i]  = file_section_first;
+        file_section_first    += 1ULL<<i;
+    }
+    _db.bh_file_section_max   	= 0; // (abt_md.FDb.bh_file_section)
+    _db.bh_file_section_n     	= 0; // (abt_md.FDb.bh_file_section)
+    _db.bh_file_section_elems 	= NULL; // (abt_md.FDb.bh_file_section)
+    _db.c_readme = NULL;
+    // initialize LAry ns (abt_md.FDb.ns)
+    _db.ns_n = 0;
+    memset(_db.ns_lary, 0, sizeof(_db.ns_lary)); // zero out all level pointers
+    abt_md::FNs* ns_first = (abt_md::FNs*)algo_lib::malloc_AllocMem(sizeof(abt_md::FNs) * (u64(1)<<4));
+    if (!ns_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.ns_lary[i]  = ns_first;
+        ns_first    += 1ULL<<i;
+    }
+    // initialize hash table for abt_md::FNs;
+    _db.ind_ns_n             	= 0; // (abt_md.FDb.ind_ns)
+    _db.ind_ns_buckets_n     	= 4; // (abt_md.FDb.ind_ns)
+    _db.ind_ns_buckets_elems 	= (abt_md::FNs**)algo_lib::malloc_AllocMem(sizeof(abt_md::FNs*)*_db.ind_ns_buckets_n); // initial buckets (abt_md.FDb.ind_ns)
+    if (!_db.ind_ns_buckets_elems) {
+        FatalErrorExit("out of memory"); // (abt_md.FDb.ind_ns)
+    }
+    memset(_db.ind_ns_buckets_elems, 0, sizeof(abt_md::FNs*)*_db.ind_ns_buckets_n); // (abt_md.FDb.ind_ns)
+    // initialize LAry ssimfile (abt_md.FDb.ssimfile)
+    _db.ssimfile_n = 0;
+    memset(_db.ssimfile_lary, 0, sizeof(_db.ssimfile_lary)); // zero out all level pointers
+    abt_md::FSsimfile* ssimfile_first = (abt_md::FSsimfile*)algo_lib::malloc_AllocMem(sizeof(abt_md::FSsimfile) * (u64(1)<<4));
+    if (!ssimfile_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.ssimfile_lary[i]  = ssimfile_first;
+        ssimfile_first    += 1ULL<<i;
+    }
+    // initialize hash table for abt_md::FSsimfile;
+    _db.ind_ssimfile_n             	= 0; // (abt_md.FDb.ind_ssimfile)
+    _db.ind_ssimfile_buckets_n     	= 4; // (abt_md.FDb.ind_ssimfile)
+    _db.ind_ssimfile_buckets_elems 	= (abt_md::FSsimfile**)algo_lib::malloc_AllocMem(sizeof(abt_md::FSsimfile*)*_db.ind_ssimfile_buckets_n); // initial buckets (abt_md.FDb.ind_ssimfile)
+    if (!_db.ind_ssimfile_buckets_elems) {
+        FatalErrorExit("out of memory"); // (abt_md.FDb.ind_ssimfile)
+    }
+    memset(_db.ind_ssimfile_buckets_elems, 0, sizeof(abt_md::FSsimfile*)*_db.ind_ssimfile_buckets_n); // (abt_md.FDb.ind_ssimfile)
+    // initialize LAry ctype (abt_md.FDb.ctype)
+    _db.ctype_n = 0;
+    memset(_db.ctype_lary, 0, sizeof(_db.ctype_lary)); // zero out all level pointers
+    abt_md::FCtype* ctype_first = (abt_md::FCtype*)algo_lib::malloc_AllocMem(sizeof(abt_md::FCtype) * (u64(1)<<4));
+    if (!ctype_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.ctype_lary[i]  = ctype_first;
+        ctype_first    += 1ULL<<i;
+    }
+    // initialize hash table for abt_md::FCtype;
+    _db.ind_ctype_n             	= 0; // (abt_md.FDb.ind_ctype)
+    _db.ind_ctype_buckets_n     	= 4; // (abt_md.FDb.ind_ctype)
+    _db.ind_ctype_buckets_elems 	= (abt_md::FCtype**)algo_lib::malloc_AllocMem(sizeof(abt_md::FCtype*)*_db.ind_ctype_buckets_n); // initial buckets (abt_md.FDb.ind_ctype)
+    if (!_db.ind_ctype_buckets_elems) {
+        FatalErrorExit("out of memory"); // (abt_md.FDb.ind_ctype)
+    }
+    memset(_db.ind_ctype_buckets_elems, 0, sizeof(abt_md::FCtype*)*_db.ind_ctype_buckets_n); // (abt_md.FDb.ind_ctype)
+    // initialize LAry readmens (abt_md.FDb.readmens)
+    _db.readmens_n = 0;
+    memset(_db.readmens_lary, 0, sizeof(_db.readmens_lary)); // zero out all level pointers
+    abt_md::FReadmens* readmens_first = (abt_md::FReadmens*)algo_lib::malloc_AllocMem(sizeof(abt_md::FReadmens) * (u64(1)<<4));
+    if (!readmens_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.readmens_lary[i]  = readmens_first;
+        readmens_first    += 1ULL<<i;
+    }
 
     abt_md::InitReflection();
+    mdsection_LoadStatic(); // gen:ns_gstatic  gstatic:abt_md.FDb.mdsection  load abt_md.FMdsection records
 }
 
 // --- abt_md.FDb..Uninit
 void abt_md::FDb_Uninit() {
     abt_md::FDb &row = _db; (void)row;
 
+    // abt_md.FDb.readmens.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // abt_md.FDb.ind_ctype.Uninit (Thash)  //
+    // skip destruction of ind_ctype in global scope
+
+    // abt_md.FDb.ctype.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // abt_md.FDb.ind_ssimfile.Uninit (Thash)  //
+    // skip destruction of ind_ssimfile in global scope
+
+    // abt_md.FDb.ssimfile.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // abt_md.FDb.ind_ns.Uninit (Thash)  //
+    // skip destruction of ind_ns in global scope
+
+    // abt_md.FDb.ns.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // abt_md.FDb.bh_file_section.Uninit (Bheap)  //
+    // skip destruction in global scope
+
+    // abt_md.FDb.file_section.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // abt_md.FDb.mdsection.Uninit (Inlary)  //
+    // skip destruction in global scope
+
     // abt_md.FDb.ind_readme.Uninit (Thash)  //
     // skip destruction of ind_readme in global scope
 
     // abt_md.FDb.readme.Uninit (Lary)  //
     // skip destruction in global scope
+}
+
+// --- abt_md.FNs.base.CopyOut
+// Copy fields out of row
+void abt_md::ns_CopyOut(abt_md::FNs &row, dmmeta::Ns &out) {
+    out.ns = row.ns;
+    out.nstype = row.nstype;
+    out.license = row.license;
+    out.comment = row.comment;
+}
+
+// --- abt_md.FNs.base.CopyIn
+// Copy fields in to row
+void abt_md::ns_CopyIn(abt_md::FNs &row, dmmeta::Ns &in) {
+    row.ns = in.ns;
+    row.nstype = in.nstype;
+    row.license = in.license;
+    row.comment = in.comment;
+}
+
+// --- abt_md.FNs..Uninit
+void abt_md::FNs_Uninit(abt_md::FNs& ns) {
+    abt_md::FNs &row = ns; (void)row;
+    ind_ns_Remove(row); // remove ns from index ind_ns
 }
 
 // --- abt_md.FReadme.base.CopyOut
@@ -629,6 +2200,69 @@ void abt_md::readme_CopyIn(abt_md::FReadme &row, dev::Readme &in) {
 void abt_md::FReadme_Uninit(abt_md::FReadme& readme) {
     abt_md::FReadme &row = readme; (void)row;
     ind_readme_Remove(row); // remove readme from index ind_readme
+}
+
+// --- abt_md.FReadmens.base.CopyOut
+// Copy fields out of row
+void abt_md::readmens_CopyOut(abt_md::FReadmens &row, dev::Readmens &out) {
+    out.readme = row.readme;
+    out.ns = row.ns;
+    out.comment = row.comment;
+}
+
+// --- abt_md.FReadmens.base.CopyIn
+// Copy fields in to row
+void abt_md::readmens_CopyIn(abt_md::FReadmens &row, dev::Readmens &in) {
+    row.readme = in.readme;
+    row.ns = in.ns;
+    row.comment = in.comment;
+}
+
+// --- abt_md.FReadmens..Uninit
+void abt_md::FReadmens_Uninit(abt_md::FReadmens& readmens) {
+    abt_md::FReadmens &row = readmens; (void)row;
+    abt_md::FReadme* p_readme = abt_md::ind_readme_Find(row.readme);
+    if (p_readme)  {
+        c_readmens_Remove(*p_readme, row);// remove readmens from index c_readmens
+    }
+}
+
+// --- abt_md.FSsimfile.base.CopyOut
+// Copy fields out of row
+void abt_md::ssimfile_CopyOut(abt_md::FSsimfile &row, dmmeta::Ssimfile &out) {
+    out.ssimfile = row.ssimfile;
+    out.ctype = row.ctype;
+}
+
+// --- abt_md.FSsimfile.base.CopyIn
+// Copy fields in to row
+void abt_md::ssimfile_CopyIn(abt_md::FSsimfile &row, dmmeta::Ssimfile &in) {
+    row.ssimfile = in.ssimfile;
+    row.ctype = in.ctype;
+}
+
+// --- abt_md.FSsimfile.ssimns.Get
+algo::Smallstr16 abt_md::ssimns_Get(abt_md::FSsimfile& ssimfile) {
+    algo::Smallstr16 ret(algo::Pathcomp(ssimfile.ssimfile, ".LL"));
+    return ret;
+}
+
+// --- abt_md.FSsimfile.ns.Get
+algo::Smallstr16 abt_md::ns_Get(abt_md::FSsimfile& ssimfile) {
+    algo::Smallstr16 ret(algo::Pathcomp(ssimfile.ssimfile, ".LL"));
+    return ret;
+}
+
+// --- abt_md.FSsimfile.name.Get
+algo::Smallstr50 abt_md::name_Get(abt_md::FSsimfile& ssimfile) {
+    algo::Smallstr50 ret(algo::Pathcomp(ssimfile.ssimfile, ".RR"));
+    return ret;
+}
+
+// --- abt_md.FSsimfile..Uninit
+void abt_md::FSsimfile_Uninit(abt_md::FSsimfile& ssimfile) {
+    abt_md::FSsimfile &row = ssimfile; (void)row;
+    ind_ssimfile_Remove(row); // remove ssimfile from index ind_ssimfile
 }
 
 // --- abt_md.FieldId.value.ToCstr
@@ -706,13 +2340,27 @@ void abt_md::FieldId_Print(abt_md::FieldId & row, algo::cstring &str) {
     abt_md::value_Print(row, str);
 }
 
+// --- abt_md.FileSection..Uninit
+void abt_md::FileSection_Uninit(abt_md::FileSection& file_section) {
+    abt_md::FileSection &row = file_section; (void)row;
+    bh_file_section_Remove(row); // remove file_section from index bh_file_section
+    abt_md::FMdsection* p_p_mdsection = row.p_mdsection;
+    if (p_p_mdsection)  {
+        zd_file_section_Remove(*p_p_mdsection, row);// remove file_section from index zd_file_section
+    }
+}
+
 // --- abt_md.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 const char* abt_md::value_ToCstr(const abt_md::TableId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
+        case abt_md_TableId_dmmeta_Ctype   : ret = "dmmeta.Ctype";  break;
+        case abt_md_TableId_dmmeta_Ns      : ret = "dmmeta.Ns";  break;
         case abt_md_TableId_dev_Readme     : ret = "dev.Readme";  break;
+        case abt_md_TableId_dev_Readmens   : ret = "dev.Readmens";  break;
+        case abt_md_TableId_dmmeta_Ssimfile: ret = "dmmeta.Ssimfile";  break;
     }
     return ret;
 }
@@ -736,6 +2384,19 @@ void abt_md::value_Print(const abt_md::TableId& parent, algo::cstring &lhs) {
 bool abt_md::value_SetStrptrMaybe(abt_md::TableId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
+        case 9: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','m','m','e','t','a','.','N'): {
+                    if (memcmp(rhs.elems+8,"s",1)==0) { value_SetEnum(parent,abt_md_TableId_dmmeta_Ns); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','m','m','e','t','a','.','n'): {
+                    if (memcmp(rhs.elems+8,"s",1)==0) { value_SetEnum(parent,abt_md_TableId_dmmeta_ns); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
         case 10: {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','e','v','.','R','e','a','d'): {
@@ -744,6 +2405,40 @@ bool abt_md::value_SetStrptrMaybe(abt_md::TableId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('d','e','v','.','r','e','a','d'): {
                     if (memcmp(rhs.elems+8,"me",2)==0) { value_SetEnum(parent,abt_md_TableId_dev_readme); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 12: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','e','v','.','R','e','a','d'): {
+                    if (memcmp(rhs.elems+8,"mens",4)==0) { value_SetEnum(parent,abt_md_TableId_dev_Readmens); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','r','e','a','d'): {
+                    if (memcmp(rhs.elems+8,"mens",4)==0) { value_SetEnum(parent,abt_md_TableId_dev_readmens); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','m','m','e','t','a','.','C'): {
+                    if (memcmp(rhs.elems+8,"type",4)==0) { value_SetEnum(parent,abt_md_TableId_dmmeta_Ctype); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','m','m','e','t','a','.','c'): {
+                    if (memcmp(rhs.elems+8,"type",4)==0) { value_SetEnum(parent,abt_md_TableId_dmmeta_ctype); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 15: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','m','m','e','t','a','.','S'): {
+                    if (memcmp(rhs.elems+8,"simfile",7)==0) { value_SetEnum(parent,abt_md_TableId_dmmeta_Ssimfile); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','m','m','e','t','a','.','s'): {
+                    if (memcmp(rhs.elems+8,"simfile",7)==0) { value_SetEnum(parent,abt_md_TableId_dmmeta_ssimfile); ret = true; break; }
                     break;
                 }
             }
