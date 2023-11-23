@@ -1,3 +1,2 @@
-# atf_comp -report:N -printinput acr.TooManyArgs | acr x y | cat
 acr: too many arguments. error at y
 

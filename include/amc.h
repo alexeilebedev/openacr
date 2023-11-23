@@ -742,6 +742,8 @@ namespace amc { // update-hdr
     // void tclass_Global();
     // void tfunc_Global_Init();
     // void tfunc_Global_LoadTuplesMaybe();
+    // void tfunc_Global_LoadTuplesFile();
+    // void tfunc_Global_LoadTuplesFd();
     // void tfunc_Global_SaveTuples();
     // void tfunc_Global_InsertStrptrMaybe();
     // void tfunc_Global_InitReflection();

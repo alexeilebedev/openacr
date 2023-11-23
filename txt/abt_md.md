@@ -9,14 +9,14 @@ abt_md: Tool to generate markdown documentation
 Usage: abt_md [[-readme:]<regx>] [[-section:]<regx>] [options]
     OPTION      TYPE    DFLT    COMMENT
     -in         string  "data"  Input directory or filename, - for stdin
-    [readme]    regx    ""      Regx of readme to process/show (empty=all)
-    -ns         regx    ""      Process readmes for this namespace
+    [readme]    regx    "%"     Regx of readme to process/show (empty=all)
+    -ns         regx    ""      (overrides -readme) Process readmes for this namespace
     [section]   regx    "%"     Select specific section to process
     -print                      Print output to screen
     -dry_run                    Do not write changes to disk
     -verbose    int             Verbosity level (0..255); alias -v; cumulative
     -debug      int             Debug level (0..255); alias -d; cumulative
-    -help                       Print help an exit; alias -h
+    -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
 
@@ -46,10 +46,11 @@ processing.
 
 `abt_md` takes the following tables on input:
 ```
-CTYPE            COMMENT
-dmmeta.Ns        Namespace (for in-memory database, protocol, etc)
-dmmeta.Ctype     Conceptual type (or C type)
-dmmeta.Ssimfile  Ssim tuple name for structure
+CTYPE                COMMENT
+dmmeta.Ns            Namespace (for in-memory database, protocol, etc)
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
+dmmeta.Ctype         Conceptual type (or C type)
+dmmeta.Ssimfile      Ssim tuple name for structure
 dev.Readme
 dev.Readmens
 ```

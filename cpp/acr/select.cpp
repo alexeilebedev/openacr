@@ -66,11 +66,12 @@ void acr::Rec_SelectAll() {
 
 // -----------------------------------------------------------------------------
 
-// Select all records that were modified
-void acr::Rec_SelectModified() {
+// Select all records that were modified or deleted
+// This includes records that were both inserted and deleted during this run
+void acr::SelectModified() {
     ind_beg(acr::_db_file_curs, file, acr::_db) {
         ind_beg(acr::file_zd_frec_curs, rec, file) {
-            if (rec.mod) {
+            if (rec.mod || rec.del || rec.isnew) {
                 Rec_Select(rec);
             }
         }ind_end;
@@ -92,17 +93,4 @@ bool acr::Rec_Select(acr::FRec& rec) {
         acr::zd_sel_ctype_Insert(*rec.p_ctype);
     }
     return add;
-}
-
-// -----------------------------------------------------------------------------
-
-// Deselect all records.
-// Select only records in the error set
-void acr::SelectErrRecs() {
-    acr::Rec_DeselectAll();
-    ind_beg(acr::_db_zd_all_err_curs, err,acr::_db) {
-        if (err.rec) {
-            Rec_Select(*err.rec);
-        }
-    }ind_end;
 }

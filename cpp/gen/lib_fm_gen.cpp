@@ -33,10 +33,10 @@
 #include "include/gen/fm_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/lib_prot_gen.h"
+#include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 namespace lib_fm { // gen:ns_gsymbol
     const char* fmdb_alm_code_TEST_EXER("TEST-EXER");
@@ -235,7 +235,6 @@ bool lib_fm::InsertStrptrMaybe(algo::strptr str) {
             break;
         }
         default:
-        retval = algo_lib::InsertStrptrMaybe(str);
         break;
     } //switch
     if (!retval) {
@@ -246,13 +245,52 @@ bool lib_fm::InsertStrptrMaybe(algo::strptr str) {
 
 // --- lib_fm.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool lib_fm::LoadTuplesMaybe(algo::strptr root) {
+bool lib_fm::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    static const char *ssimfiles[] = {
-        "fmdb.alm_code", "fmdb.alm_objtype"
-        , NULL};
-        retval = algo_lib::DoLoadTuples(root, lib_fm::InsertStrptrMaybe, ssimfiles, true);
-        return retval;
+    if (FileQ(root)) {
+        retval = lib_fm::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = lib_fm::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && lib_fm::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && lib_fm::LoadTuplesFile(algo::SsimFname(root,"fmdb.alm_code"),recursive);
+        retval = retval && lib_fm::LoadTuplesFile(algo::SsimFname(root,"fmdb.alm_objtype"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
+
+// --- lib_fm.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool lib_fm::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- lib_fm.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool lib_fm::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+        }
+        retval = retval && lib_fm::InsertStrptrMaybe(line);
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
+    return retval;
 }
 
 // --- lib_fm.FDb._db.SaveTuples
@@ -267,10 +305,10 @@ u32 lib_fm::SaveTuples(algo::strptr root) {
 
 // --- lib_fm.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool lib_fm::LoadSsimfileMaybe(algo::strptr fname) {
+bool lib_fm::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, lib_fm::InsertStrptrMaybe, true);
+        retval = lib_fm::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }

@@ -1,4 +1,3 @@
-# atf_comp -report:N -printinput ssimfilt.MatchTag | ssimfilt dmmeta.% | cat
 dmmeta.ns  ns:blah
 dmmeta.ctype  ctype:blah.Y
 

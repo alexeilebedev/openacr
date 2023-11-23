@@ -41,8 +41,8 @@
 #include "include/gen/dev_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
+#include "include/gen/lib_amcdb_gen.h"
+#include "include/gen/lib_amcdb_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
@@ -65,7 +65,7 @@ const char *amc_help =
 "    -trace      regx    \"\"      Regx of something to trace code generation\n"
 "    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      int             Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help an exit; alias -h\n"
+"    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
 ;
@@ -6000,7 +6000,7 @@ amc::FReftype* amc::reftype_AllocMaybe() {
     amc::FReftype *row = (amc::FReftype*)reftype_AllocMem();
     if (row) {
         new (row) amc::FReftype; // call constructor
-        row->rowid = dmmeta::ReftypeId(reftype_N() - 1);
+        row->rowid = i32(reftype_N() - 1);
     }
     return row;
 }
@@ -6050,7 +6050,7 @@ void* amc::reftype_AllocMem() {
 void amc::reftype_RemoveAll() {
     for (u64 n = _db.reftype_n; n>0; ) {
         n--;
-        reftype_qFind(dmmeta::ReftypeId(n)).~FReftype(); // destroy last element
+        reftype_qFind(i32(n)).~FReftype(); // destroy last element
         _db.reftype_n = i32(n);
     }
 }
@@ -6061,7 +6061,7 @@ void amc::reftype_RemoveLast() {
     u64 n = _db.reftype_n;
     if (n > 0) {
         n -= 1;
-        reftype_qFind(dmmeta::ReftypeId(n)).~FReftype();
+        reftype_qFind(i32(n)).~FReftype();
         _db.reftype_n = i32(n);
     }
 }
@@ -6324,7 +6324,7 @@ static void amc::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'61e0e856f7c4cd692968cd5c34a97282c54ca03f'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'7aecbe58b239a5ea9f2ce94e17b8aabb5183e9bc'");
 }
 
 // --- amc.FDb._db.StaticCheck
@@ -6914,7 +6914,6 @@ bool amc::InsertStrptrMaybe(algo::strptr str) {
             break;
         }
         default:
-        retval = algo_lib::InsertStrptrMaybe(str);
         break;
     } //switch
     if (!retval) {
@@ -6925,36 +6924,145 @@ bool amc::InsertStrptrMaybe(algo::strptr str) {
 
 // --- amc.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool amc::LoadTuplesMaybe(algo::strptr root) {
+bool amc::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    static const char *ssimfiles[] = {
-        "dev.license", "dmmeta.ns", "dmmeta.ctype", "dmmeta.field"
-        , "dmmeta.anonfld", "dmmeta.argvtype", "dmmeta.basepool", "dmmeta.bitfld"
-        , "amcdb.bltin", "dmmeta.cafter", "dmmeta.cascdel", "dmmeta.ccmp"
-        , "dmmeta.cdflt", "dmmeta.cextern", "dmmeta.cfmt", "dmmeta.cget"
-        , "dmmeta.charset", "dmmeta.chash", "dmmeta.cppfunc", "dmmeta.cpptype"
-        , "dmmeta.csize", "dmmeta.cstr", "dmmeta.dispatch", "dmmeta.dispatch_msg"
-        , "dmmeta.dispctx", "dmmeta.dispfilter", "dmmeta.disptrace", "dmmeta.falias"
-        , "dmmeta.fbase", "dmmeta.fbigend", "dmmeta.fbitset", "dmmeta.fbuf"
-        , "dmmeta.fcast", "dmmeta.fcleanup", "dmmeta.fcmap", "dmmeta.fcmdline"
-        , "dmmeta.fcmp", "dmmeta.fcompact", "dmmeta.fconst", "dmmeta.fcurs"
-        , "dmmeta.fdec", "dmmeta.fstep", "dmmeta.fdelay", "dmmeta.fflag"
-        , "dmmeta.findrem", "dmmeta.finput", "dmmeta.fldoffset", "dmmeta.floadtuples"
-        , "dmmeta.fnoremove", "dmmeta.foutput", "dmmeta.fprefix", "dmmeta.fregx"
-        , "dmmeta.fsort", "dmmeta.ftrace", "dmmeta.funique", "dmmeta.fuserinit"
-        , "dmmeta.fwddecl", "dmmeta.gconst", "dmmeta.gstatic", "dmmeta.ssimfile"
-        , "dmmeta.gsymbol", "dmmeta.hook", "dmmeta.inlary", "dmmeta.lenfld"
-        , "dmmeta.listtype", "dmmeta.llist", "dmmeta.main", "dmmeta.msgtype"
-        , "dmmeta.xref", "dmmeta.nocascdel", "dmmeta.nossimfile", "dmmeta.noxref"
-        , "dmmeta.nscpp", "dmmeta.nsdb", "dmmeta.nsinclude", "dmmeta.nsproto"
-        , "dmmeta.nsx", "dmmeta.smallstr", "dmmeta.numstr", "dmmeta.pack"
-        , "dmmeta.pmaskfld", "dmmeta.pnew", "dmmeta.ptrary", "dmmeta.rowid"
-        , "dmmeta.sortfld", "dmmeta.ssimvolatile", "dmmeta.substr", "dev.target"
-        , "dev.targdep", "dmmeta.tary", "amcdb.tcurs", "dmmeta.thash"
-        , "dmmeta.typefld", "dmmeta.usertracefld"
-        , NULL};
-        retval = algo_lib::DoLoadTuples(root, amc::InsertStrptrMaybe, ssimfiles, true);
-        return retval;
+    if (FileQ(root)) {
+        retval = amc::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = amc::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dev.license"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ns"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.anonfld"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.argvtype"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.basepool"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.bitfld"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"amcdb.bltin"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cafter"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cascdel"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ccmp"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cdflt"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cextern"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfmt"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cget"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.charset"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.chash"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cppfunc"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cpptype"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.csize"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cstr"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispatch"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispatch_msg"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispctx"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispfilter"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.disptrace"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.falias"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fbase"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fbigend"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fbitset"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fbuf"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcast"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcleanup"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcmap"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcmdline"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcmp"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcompact"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fconst"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcurs"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fdec"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fstep"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fdelay"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fflag"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.findrem"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.finput"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fldoffset"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.floadtuples"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fnoremove"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.foutput"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fprefix"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fregx"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fsort"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ftrace"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.func"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.funique"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fuserinit"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fwddecl"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.gconst"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.gstatic"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.gsymbol"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.hook"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.inlary"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.lenfld"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.listtype"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.llist"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.main"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.msgtype"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.xref"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nocascdel"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nossimfile"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.noxref"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nscpp"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsdb"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsinclude"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsproto"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsx"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.smallstr"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.numstr"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.pack"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.pmaskfld"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.pnew"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ptrary"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.rowid"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.sortfld"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimvolatile"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.substr"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dev.targdep"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.tary"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"amcdb.tcurs"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.thash"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.typefld"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.usertracefld"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
+
+// --- amc.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool amc::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- amc.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool amc::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+        }
+        retval = retval && amc::InsertStrptrMaybe(line);
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
+    return retval;
 }
 
 // --- amc.FDb._db.SaveTuples
@@ -6972,10 +7080,10 @@ u32 amc::SaveTuples(algo::strptr root) {
 
 // --- amc.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool amc::LoadSsimfileMaybe(algo::strptr fname) {
+bool amc::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, amc::InsertStrptrMaybe, true);
+        retval = amc::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }
@@ -15368,6 +15476,8 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Global.StaticCheck  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Global_StaticCheck }
         ,{ "amcdb.tfunc  tfunc:Global.InsertStrptrMaybe  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Global_InsertStrptrMaybe }
         ,{ "amcdb.tfunc  tfunc:Global.LoadTuplesMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Load all finputs from given directory.\"", amc::tfunc_Global_LoadTuplesMaybe }
+        ,{ "amcdb.tfunc  tfunc:Global.LoadTuplesFile  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Load all finputs from given file.\"", amc::tfunc_Global_LoadTuplesFile }
+        ,{ "amcdb.tfunc  tfunc:Global.LoadTuplesFd  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Load all finputs from given file descriptor.\"", amc::tfunc_Global_LoadTuplesFd }
         ,{ "amcdb.tfunc  tfunc:Global.SaveTuples  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Save ssim data to given directory.\"", amc::tfunc_Global_SaveTuples }
         ,{ "amcdb.tfunc  tfunc:Global.Init  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Global_Init }
         ,{ "amcdb.tfunc  tfunc:Global.LoadSsimfileMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Load specified ssimfile.\"", amc::tfunc_Global_LoadSsimfileMaybe }
@@ -21710,14 +21820,14 @@ static bool amc::falias_InputMaybe(dmmeta::Falias &elem) {
 bool amc::falias_XrefMaybe(amc::FFalias &row) {
     bool retval = true;
     (void)row;
-    amc::FField* p_basefield = amc::ind_field_Find(row.basefield);
-    if (UNLIKELY(!p_basefield)) {
-        algo_lib::ResetErrtext() << "amc.bad_xref  index:amc.FDb.ind_field" << Keyval("key", row.basefield);
+    amc::FField* p_srcfield = amc::ind_field_Find(row.srcfield);
+    if (UNLIKELY(!p_srcfield)) {
+        algo_lib::ResetErrtext() << "amc.bad_xref  index:amc.FDb.ind_field" << Keyval("key", row.srcfield);
         return false;
     }
-    // falias: save pointer to basefield
+    // falias: save pointer to srcfield
     if (true) { // user-defined insert condition
-        row.p_basefield = p_basefield;
+        row.p_srcfield = p_srcfield;
     }
     amc::FField* p_field = amc::ind_field_Find(row.field);
     if (UNLIKELY(!p_field)) {
@@ -24677,7 +24787,7 @@ void amc::FEnumstrLen_Uninit(amc::FEnumstrLen& enumstr_len) {
 // Copy fields out of row
 void amc::falias_CopyOut(amc::FFalias &row, dmmeta::Falias &out) {
     out.field = row.field;
-    out.basefield = row.basefield;
+    out.srcfield = row.srcfield;
     out.comment = row.comment;
 }
 
@@ -24685,7 +24795,7 @@ void amc::falias_CopyOut(amc::FFalias &row, dmmeta::Falias &out) {
 // Copy fields in to row
 void amc::falias_CopyIn(amc::FFalias &row, dmmeta::Falias &in) {
     row.field = in.field;
-    row.basefield = in.basefield;
+    row.srcfield = in.srcfield;
     row.comment = in.comment;
 }
 
@@ -28403,6 +28513,79 @@ void amc::c_nsinclude_Reserve(amc::FNs& ns, u32 n) {
     }
 }
 
+// --- amc.FNs.c_ssimfile.Insert
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+void amc::c_ssimfile_Insert(amc::FNs& ns, amc::FSsimfile& row) {
+    // reserve space
+    c_ssimfile_Reserve(ns, 1);
+    u32 n  = ns.c_ssimfile_n;
+    u32 at = n;
+    amc::FSsimfile* *elems = ns.c_ssimfile_elems;
+    elems[at] = &row;
+    ns.c_ssimfile_n = n+1;
+
+}
+
+// --- amc.FNs.c_ssimfile.ScanInsertMaybe
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Linear search is used to locate the element.
+// Return value: whether element was inserted into array.
+bool amc::c_ssimfile_ScanInsertMaybe(amc::FNs& ns, amc::FSsimfile& row) {
+    bool retval = true;
+    u32 n  = ns.c_ssimfile_n;
+    for (u32 i = 0; i < n; i++) {
+        if (ns.c_ssimfile_elems[i] == &row) {
+            retval = false;
+            break;
+        }
+    }
+    if (retval) {
+        // reserve space
+        c_ssimfile_Reserve(ns, 1);
+        ns.c_ssimfile_elems[n] = &row;
+        ns.c_ssimfile_n = n+1;
+    }
+    return retval;
+}
+
+// --- amc.FNs.c_ssimfile.Remove
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void amc::c_ssimfile_Remove(amc::FNs& ns, amc::FSsimfile& row) {
+    int lim = ns.c_ssimfile_n;
+    amc::FSsimfile* *elems = ns.c_ssimfile_elems;
+    // search backward, so that most recently added element is found first.
+    // if found, shift array.
+    for (int i = lim-1; i>=0; i--) {
+        amc::FSsimfile* elem = elems[i]; // fetch element
+        if (elem == &row) {
+            int j = i + 1;
+            size_t nbytes = sizeof(amc::FSsimfile*) * (lim - j);
+            memmove(elems + i, elems + j, nbytes);
+            ns.c_ssimfile_n = lim - 1;
+            break;
+        }
+    }
+}
+
+// --- amc.FNs.c_ssimfile.Reserve
+// Reserve space in index for N more elements;
+void amc::c_ssimfile_Reserve(amc::FNs& ns, u32 n) {
+    u32 old_max = ns.c_ssimfile_max;
+    if (UNLIKELY(ns.c_ssimfile_n + n > old_max)) {
+        u32 new_max  = u32_Max(4, old_max * 2);
+        u32 old_size = old_max * sizeof(amc::FSsimfile*);
+        u32 new_size = new_max * sizeof(amc::FSsimfile*);
+        void *new_mem = amc::lpool_ReallocMem(ns.c_ssimfile_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("amc.out_of_memory  field:amc.FNs.c_ssimfile");
+        }
+        ns.c_ssimfile_elems = (amc::FSsimfile**)new_mem;
+        ns.c_ssimfile_max = new_max;
+    }
+}
+
 // --- amc.FNs..Init
 // Set all fields to initial values.
 void amc::FNs_Init(amc::FNs& ns) {
@@ -28475,6 +28658,9 @@ void amc::FNs_Init(amc::FNs& ns) {
     ns.c_nsinclude_max = 0; // (amc.FNs.c_nsinclude)
     ns.c_nscpp = NULL;
     ns.p_license = NULL;
+    ns.c_ssimfile_elems = NULL; // (amc.FNs.c_ssimfile)
+    ns.c_ssimfile_n = 0; // (amc.FNs.c_ssimfile)
+    ns.c_ssimfile_max = 0; // (amc.FNs.c_ssimfile)
     ns.ind_ns_next = (amc::FNs*)-1; // (amc.FDb.ind_ns) not-in-hash
 }
 
@@ -28483,6 +28669,9 @@ void amc::FNs_Uninit(amc::FNs& ns) {
     amc::FNs &row = ns; (void)row;
     c_outfile_Cascdel(ns); // dmmeta.cascdel:amc.FNs.c_outfile
     ind_ns_Remove(row); // remove ns from index ind_ns
+
+    // amc.FNs.c_ssimfile.Uninit (Ptrary)  //
+    amc::lpool_FreeMem(ns.c_ssimfile_elems, sizeof(amc::FSsimfile*)*ns.c_ssimfile_max); // (amc.FNs.c_ssimfile)
 
     // amc.FNs.c_nsinclude.Uninit (Ptrary)  //
     amc::lpool_FreeMem(ns.c_nsinclude_elems, sizeof(amc::FNsinclude*)*ns.c_nsinclude_max); // (amc.FNs.c_nsinclude)
@@ -28969,6 +29158,7 @@ void amc::FReftype_Init(amc::FReftype& reftype) {
     reftype.hasalloc = bool(false);
     reftype.inst = bool(false);
     reftype.varlen = bool(false);
+    reftype.rowid = i32(0);
     reftype.p_tclass = NULL;
     reftype.zs_fprefix_head = NULL; // (amc.FReftype.zs_fprefix)
     reftype.zs_fprefix_tail = NULL; // (amc.FReftype.zs_fprefix)
@@ -29576,7 +29766,7 @@ algo::Smallstr100 amc::keyfld_Get(amc::FXref& xref) {
 // --- amc.FXref..Init
 // Set all fields to initial values.
 void amc::FXref_Init(amc::FXref& xref) {
-    xref.inscond = dmmeta::CppExpr("true");
+    xref.inscond = algo::CppExpr("true");
     xref.p_field = NULL;
     xref.p_ctype = NULL;
     xref.c_nocascdel = NULL;
@@ -29700,6 +29890,113 @@ void amc::Genpnew_Init(amc::Genpnew& parent) {
     parent.p_varlenfld = NULL;
     parent.optnolen = bool(false);
     parent.hasret = bool(true);
+}
+
+// --- amc.Pnewtype.value.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* amc::value_ToCstr(const amc::Pnewtype& parent) {
+    const char *ret = NULL;
+    switch(value_GetEnum(parent)) {
+        case amc_Pnewtype_Memptr           : ret = "Memptr";  break;
+        case amc_Pnewtype_AmsStream        : ret = "AmsStream";  break;
+        case amc_Pnewtype_Fixed            : ret = "Fixed";  break;
+        case amc_Pnewtype_Dynamic          : ret = "Dynamic";  break;
+        case amc_Pnewtype_ByteAry          : ret = "ByteAry";  break;
+    }
+    return ret;
+}
+
+// --- amc.Pnewtype.value.Print
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+void amc::value_Print(const amc::Pnewtype& parent, algo::cstring &lhs) {
+    const char *strval = value_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.value;
+    }
+}
+
+// --- amc.Pnewtype.value.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool amc::value_SetStrptrMaybe(amc::Pnewtype& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 5: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+                case LE_STR5('F','i','x','e','d'): {
+                    value_SetEnum(parent,amc_Pnewtype_Fixed); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 6: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
+                case LE_STR6('M','e','m','p','t','r'): {
+                    value_SetEnum(parent,amc_Pnewtype_Memptr); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 7: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+                case LE_STR7('B','y','t','e','A','r','y'): {
+                    value_SetEnum(parent,amc_Pnewtype_ByteAry); ret = true; break;
+                }
+                case LE_STR7('D','y','n','a','m','i','c'): {
+                    value_SetEnum(parent,amc_Pnewtype_Dynamic); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 9: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('A','m','s','S','t','r','e','a'): {
+                    if (memcmp(rhs.elems+8,"m",1)==0) { value_SetEnum(parent,amc_Pnewtype_AmsStream); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- amc.Pnewtype.value.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void amc::value_SetStrptr(amc::Pnewtype& parent, algo::strptr rhs, amc_PnewtypeEnum dflt) {
+    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
+}
+
+// --- amc.Pnewtype.value.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool amc::value_ReadStrptrMaybe(amc::Pnewtype& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = u8_ReadStrptrMaybe(parent.value,rhs);
+    }
+    return retval;
+}
+
+// --- amc.Pnewtype..ReadStrptrMaybe
+// Read fields of amc::Pnewtype from an ascii string.
+// The format of the string is the format of the amc::Pnewtype's only field
+bool amc::Pnewtype_ReadStrptrMaybe(amc::Pnewtype &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && value_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- amc.Pnewtype..Print
+// print string representation of amc::Pnewtype to string LHS, no header -- cprint:amc.Pnewtype.String
+void amc::Pnewtype_Print(amc::Pnewtype row, algo::cstring &str) {
+    amc::value_Print(row, str);
 }
 
 // --- amc.TableId.value.ToCstr
@@ -29944,6 +30241,7 @@ bool amc::value_SetStrptrMaybe(amc::TableId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"buf",3)==0) { value_SetEnum(parent,amc_TableId_dmmeta_fbuf); ret = true; break; }
                     if (memcmp(rhs.elems+8,"cmp",3)==0) { value_SetEnum(parent,amc_TableId_dmmeta_fcmp); ret = true; break; }
                     if (memcmp(rhs.elems+8,"dec",3)==0) { value_SetEnum(parent,amc_TableId_dmmeta_fdec); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"unc",3)==0) { value_SetEnum(parent,amc_TableId_dmmeta_func); ret = true; break; }
                     break;
                 }
                 case LE_STR8('d','m','m','e','t','a','.','h'): {

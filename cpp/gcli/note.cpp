@@ -50,7 +50,7 @@ void gcli::gtblact_issuenote_create(gcli::FGtblact &gtblact){
     }
 
     gcli::VerifyGtblactfldsUpdate(gtblact);
-    tempstr d(GtblactfiledsToJson(gtblact));
+    tempstr d(GtblactfieldsToJson(gtblact));
     if (d!=""){
         gcli::FGclicmd &gclicmd=AddGclicmd(gclidb_Gclicmd_gclicmd_noteadd,true,gcli::IssueArgNumber(iid_Get(issue),""));
         gclicmd.body=d;
@@ -109,7 +109,7 @@ void gcli::gtblact_issuenote_update(gcli::FGtblact &gtblact){
     }ind_end;
 
     // update marked fields
-    tempstr d(GtblactfiledsToJson(gtblact));
+    tempstr d(GtblactfieldsToJson(gtblact));
     if (d!=""){
         gcli::FGclicmd &gclicmd=AddGclicmd(gclidb_Gclicmd_gclicmd_notemod,true,gcli::IssueArgNumber(issue.issue,""));
         gclicmd.note_id=nid_Get(*issuenote);
@@ -166,7 +166,7 @@ void gcli::gtblact_mrnote_create(gcli::FGtblact &gtblact){
 
     gcli::VerifyGtblactfldsUpdate(gtblact);
 
-    tempstr d(GtblactfiledsToJson(gtblact));
+    tempstr d(GtblactfieldsToJson(gtblact));
     if (d!=""){
         gcli::FGclicmd &gclicmd=AddGclicmd(gclidb_Gclicmd_gclicmd_mrnoteadd,true,gcli::IssueArgNumber(iid_Get(mr),""));
         gclicmd.body=d;
@@ -222,7 +222,7 @@ void gcli::gtblact_mrnote_update(gcli::FGtblact &gtblact){
     }ind_end;
 
     // update marked fields
-    tempstr d(GtblactfiledsToJson(gtblact));
+    tempstr d(GtblactfieldsToJson(gtblact));
     if (d!=""){
         gcli::FGclicmd &gclicmd=AddGclicmd(gclidb_Gclicmd_gclicmd_mrnotemod,true,gcli::IssueArgNumber(mr.mr,""));
         gclicmd.note_id=nid_Get(*mrnote);

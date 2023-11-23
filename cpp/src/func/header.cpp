@@ -81,13 +81,9 @@ static bool UpdateFileQ(src_func::FTargsrc &targsrc) {
 // Go over all sources (includes & sources!)
 // Look for 'update-hdr' sections and insert function prototypes there.
 void src_func::Main_UpdateHeader() {
-    ind_beg(src_func::_db_target_curs,target,src_func::_db) {
-        if (target.select) {
-            ind_beg(src_func::target_cd_targsrc_curs,targsrc,target) {
-                if (UpdateFileQ(targsrc)) {
-                    UpdateHeader(target,src_Get(targsrc));
-                }
-            }ind_end;
+    ind_beg(src_func::_db_targsrc_curs,targsrc,_db) if (targsrc.select) {
+        if (UpdateFileQ(targsrc)) {
+            UpdateHeader(*targsrc.p_target,src_Get(targsrc));
         }
     }ind_end;
 }

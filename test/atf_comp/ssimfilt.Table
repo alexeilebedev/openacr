@@ -1,4 +1,3 @@
-# atf_comp -report:N -printinput ssimfilt.Table | ssimfilt -t | cat
 NSTYPE    COMMENT
 exe       Executable
 lib       Library

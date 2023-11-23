@@ -5,6 +5,7 @@ These databases can be proper directories, or files, or stdin.
 Acr is not concerned with big data; it's about small but highly cross-referenced data,
 essentially configurations and source code. A rule of thumb is that acr will
 process 1 million records/sec and the data sets must fit in memory.
+A large project might have 10,000 ctypes, 1,000 ssimfiles and 30,000 fields, and a few million records.
 
 ### Syntax
 
@@ -23,6 +24,7 @@ Usage: acr [[-query:]<string>] [options]
     -unused                     Only select records which are not referenced.
     -trunc                      (with insert or rename): truncate table on first write
     -check                      Run cross-reference check on selection
+    -selerr             Y       (with -check): Select error records
     -maxshow    int     100     Limit number of errors per table
     -write                      Write data back to disk.
     -rename     string  ""      Change value of found item
@@ -38,7 +40,7 @@ Usage: acr [[-query:]<string>] [options]
     -schema     string  "data"  Directory for initializing acr meta-data
     -e                          Open selection in editor, write back when done.
     -t                          Short for -tree -xref -loose
-    -rowid                      Print/respect acr.rowid attribute
+    -rowid                      Always print acr.rowid attribute
     -in         string  "data"  Input directory or filename, - for stdin
     -cmt                        Print comments for all columns referenced in output
     -report             Y       Show final report
@@ -49,7 +51,7 @@ Usage: acr [[-query:]<string>] [options]
     -meta                       Select meta-data for selected records
     -verbose    int             Verbosity level (0..255); alias -v; cumulative
     -debug      int             Debug level (0..255); alias -d; cumulative
-    -help                       Print help an exit; alias -h
+    -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
 
@@ -57,24 +59,29 @@ Usage: acr [[-query:]<string>] [options]
 
 ### Querying
 
-The default data directory "data", can be specified with -in option.
-Assuming you've successfully built acr, you can type
+The default data directory "data", can can be specified with -in option.
+Assuming you've successfully built acr, you can dump the entire database with:
 
-    $ acr %
-    amcdb.curs  curs:curs       comment:""
-    amcdb.curs  curs:unordcurs  comment:""
-    < about 10,000 more records are printed >
+```
+inline-command: acr % | head
+amcdb.curstype  curstype:bitcurs    comment:"Bit-scan forward cursor (yields bit numbers for 1's)"
+amcdb.curstype  curstype:curs       comment:"Regular forward cursor"
+amcdb.curstype  curstype:delcurs    comment:"Allow ind_del to delete current element during scanning"
+amcdb.curstype  curstype:oncecurs   comment:"Scan index once, removing elements after scanning"
+amcdb.curstype  curstype:unordcurs  comment:"Scan bheap in non-sorted order (faster)"
 
-This will dump all records in the data directory, about 10,000 of them.
-Of course, once you start growing a real project around this initial deposit,
-3,000 fields will seem like nothing.
-A large project may easily get 10,000 ctypes, 1,000 ssimfiles and 30,000 fields,
-and a few million records.
+amcdb.gen  gen:prep_signature     perns:N  comment:"Prepare signatures"
+amcdb.gen  gen:select_ns          perns:N  comment:"Select namespaces for processing"
+amcdb.gen  gen:dispenum           perns:N  comment:"generate enum for each dispatch (creates new ctypes)"
+amcdb.gen  gen:countxref          perns:N  comment:""
+```
 
-The query parameter for acr is a SQL regular expression.
-SQL regexes are very convenient to use on the command line;
-the whilecard character is `%` instead of `*`, and thus quoting is mostly unnecessary.
-ACR also supports characters '|', '(', ')' in regex, and that's it.
+This shows all records in the data directory.
+
+The query parameter for acr is a SQL-inspired regular expression.
+SQL regexes are convenient to use on the command line;
+the whildcard character is `%` instead of `*`, and thus quoting is mostly unnecessary.
+ACR also supports characters '|', '(', ')'.
 
 You could achieve a similar result to `acr %` by running
 
@@ -84,11 +91,18 @@ You could achieve a similar result to `acr %` by running
 ### Creating A New Table
 
 To show the rest of the commands, let's start with a couple of fresh tables
-and proceed interactively. We will choose the `dev` namespace; this choice is quite arbitrary.
+and proceed interactively. We will choose the `dev` namespace; this choice is arbitrary.
 
 ```
 inline-command: acr_ed -create -ssimfile dev.a -write
-report.acr_check  records:13  errors:0
+report.acr_check  records:***  errors:0
+acr.insert  dmmeta.ctype  ctype:dev.A  comment:""
+  acr.insert  dmmeta.field  field:dev.A.a        arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+  acr.insert  dmmeta.field  field:dev.A.comment  arg:algo.Comment     reftype:Val  dflt:""  comment:""
+  acr.insert  dmmeta.cfmt  cfmt:dev.A.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+
+acr.insert  dmmeta.ssimfile  ssimfile:dev.a  ctype:dev.A
+  acr.insert  dmmeta.ssimsort  ssimfile:dev.a  sortfld:dev.A.a  comment:""
 report.acr  ***
 report.acr  ***
 report.amc  ***
@@ -96,7 +110,7 @@ report.amc  ***
 
 This will create a new empty table data/dev/a.ssim. The ctype for `a` has a single string field
 named 'a'. The fact that this ssimfile was created was recorded in the dmmeta database.
-The dmmeta database is how acr knows anything.
+The dmmeta database holds acr's schema
 
 ```
 inline-command: acr ssimfile:dev.a
@@ -108,7 +122,7 @@ report.acr  ***
 
 We can now populate this table with some data. `acr -insert -write` reads values from standard
 input, inserts them into the database, and saves everything to disk when done. Duplicate keys
-will cause errors. If we need to ignore duplicates, we use `acr -replace -write`.
+will cause records to be ignored. If we need to ignore duplicates, we use `acr -replace -write`.
 
 ```
 inline-command: for X in {0..10}; do echo dev.a a:a$X; done | acr -insert -write
@@ -162,7 +176,14 @@ creating a temporary table:
 
 ```
 inline-command: acr_ed -create -ssimfile dev.t -write
-report.acr_check  records:13  errors:0
+report.acr_check  records:***  errors:0
+acr.insert  dmmeta.ctype  ctype:dev.T  comment:""
+  acr.insert  dmmeta.field  field:dev.T.t        arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+  acr.insert  dmmeta.field  field:dev.T.comment  arg:algo.Comment     reftype:Val  dflt:""  comment:""
+  acr.insert  dmmeta.cfmt  cfmt:dev.T.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+
+acr.insert  dmmeta.ssimfile  ssimfile:dev.t  ctype:dev.T
+  acr.insert  dmmeta.ssimsort  ssimfile:dev.t  sortfld:dev.T.t  comment:""
 report.acr  ***
 report.acr  ***
 report.amc  ***
@@ -171,7 +192,8 @@ report.amc  ***
 ```
 inline-command: acr_ed -create -field dev.T.val -arg u32 -write
 acr_ed.create_field  field:dev.T.val
-report.acr_check  records:5  errors:0
+report.acr_check  records:***  errors:0
+acr.insert  dmmeta.field  field:dev.T.val  arg:u32  reftype:Val  dflt:""  comment:""
 report.acr  ***
 report.amc  ***
 ```
@@ -186,7 +208,6 @@ Now let's try to insert another record with the value `ggg`:
 
 ```
 inline-command: echo 'dev.t t:ggg' | acr -insert -write
-acr.duplicate_key  key:dev.T:ggg
 report.acr  ***
 ```
 
@@ -195,6 +216,7 @@ will go back to the default:
 
 ```
 inline-command: echo 'dev.t t:ggg' | acr -replace -write
+acr.update  dev.t  t:ggg  val:0   comment:""
 report.acr  ***
 ```
 
@@ -207,7 +229,8 @@ Attributes not specified on input will retain their original values in the data 
 #### The -merge option
 
 The `-merge` option also reads stdin, but whole records aren't replaced.
-If a new record is found on input, it is inserted as with insert. When a record being inserted
+If a new record is found on input, it is inserted as with insert. This is sometimes called 'upsert'
+in other systems. When a record being inserted
 exists in the dataset, any attributes from the new record replace attributes in the original records.
 Let's illustrate using the same `t` table. We'll need another column, call it `val2`, and
 set `val` back to 3:
@@ -215,13 +238,15 @@ set `val` back to 3:
 ```
 inline-command: acr_ed -create -field dev.T.val2 -arg u32 -write
 acr_ed.create_field  field:dev.T.val2
-report.acr_check  records:5  errors:0
+report.acr_check  records:***  errors:0
+acr.insert  dmmeta.field  field:dev.T.val2  arg:u32  reftype:Val  dflt:""  comment:""
 report.acr  ***
 report.amc  ***
 ```
 
 ```
 inline-command: echo 'dev.t t:ggg val:3' | acr -replace -write
+acr.update  dev.t  t:ggg  val:3  val2:0   comment:""
 report.acr  ***
 ```
 
@@ -229,6 +254,7 @@ So far so good. Now let's use -merge:
 
 ```
 inline-command: echo 'dev.t t:ggg val2:4' | acr -merge -write
+acr.update  dev.t  t:ggg  val:3  val2:4  comment:""
 report.acr  ***
 ```
 
@@ -240,13 +266,14 @@ With this option, when the first change is made to the table, the table is first
 
 ```
 inline-command: echo 'dev.t t:hhh' | acr -insert -trunc -write
+acr.delete  dev.t  t:ggg  val:3   val2:4   comment:""
 acr.insert  dev.t  t:hhh  val:0   val2:0   comment:""
 report.acr  ***
 ```
 
 ### Generating Shell Scripts
 
-Finally, the `-cmd` option produces an executable shell script which can be piped to `sh`. 
+The `-cmd` option produces an executable shell script which can be piped to `bash`.
 For each record in the final selection, acr outputs variable assignment statements, giving the
 shell script access to the values of all field attributes, the fldfuncs, the tuple itsef (`acr_tuple`)
 the type tag (`acr_head`) and the rowid (`acr_rowid`). The script can then use whatever 
@@ -261,7 +288,7 @@ a=a1
 comment=''
 echo ==== $a ====
 
-# report.acr  n_select:1  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+# report.acr  n_select:1  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
 ```
 
 Piping through bash produces the desired result:
@@ -271,26 +298,36 @@ inline-command: acr a:a1 -cmd 'echo ==== $a ====' | bash
 ==== a1 ====
 ```
 
-The beauty of `-cmd` is that it just outputs a script, which can be consumed with a single process.
-one command per output row would have been a lot slower
+Since `-cmd` just outputs a script, the output can be consumed with a single process.
+One command per output row would have been much slower
 
-### Deleting Records From Stdin
+### Other operations from stdin
 
 The options `-insert`, `-replace`, `-merge` all enable reading of stdin
-for a list of tuples. This input stream can contain special lines.
+for a list of tuples. This lines in the input stream can override the setting on the command line.
+THe following table shows the possible prefixes:
 
-Whenever a line starts with `acr.delete`, the corresponding record is deleted.
+```
+inline-comment: acr fconst:acr.ReadMode.read_mode/% -field name,comment
+```
 
-Whenever a line starts with `acr.insert`, the corresponding record is inserted (subject to replace/merge semantics).
+To illustrate, invoking `acr -insert` and then providing the lines
+```
+acr.delete <tuple>
+acr.merge <tuple>
+```
+
+Performs the corresponding actions.
 
 ### Inserting a Column
 
-We now might want to add a column to the `a` table.
+Let's illustrate adding a column to the `a` table:
 
 ```
 inline-command: acr_ed -create -field dev.A.b -arg u32 -write
 acr_ed.create_field  field:dev.A.b
-report.acr_check  records:5  errors:0
+report.acr_check  records:***  errors:0
+acr.insert  dmmeta.field  field:dev.A.b  arg:u32  reftype:Val  dflt:""  comment:""
 report.acr  ***
 report.amc  ***
 ```
@@ -299,6 +336,7 @@ Let's update a few values with `acr -merge`:
 
 ```
 inline-command: echo 'dev.a a:a1 b:55' | acr -merge -write
+acr.update  dev.a  a:a1  b:55  comment:""
 report.acr  ***
 ```
 
@@ -346,7 +384,14 @@ When we specify the -subset parameter, we must include the ctype (not ssimfile).
 
 ```
 inline-command: acr_ed -create -ssimfile:dev.b -subset dev.A -write
-report.acr_check  records:14  errors:0
+report.acr_check  records:***  errors:0
+acr.insert  dmmeta.ctype  ctype:dev.B  comment:""
+  acr.insert  dmmeta.field  field:dev.B.a        arg:dev.A         reftype:Pkey  dflt:""  comment:""
+  acr.insert  dmmeta.field  field:dev.B.comment  arg:algo.Comment  reftype:Val   dflt:""  comment:""
+  acr.insert  dmmeta.cfmt  cfmt:dev.B.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+
+acr.insert  dmmeta.ssimfile  ssimfile:dev.b  ctype:dev.B
+  acr.insert  dmmeta.ssimsort  ssimfile:dev.b  sortfld:dev.B.a  comment:""
 report.acr  ***
 report.acr  ***
 report.amc  ***
@@ -470,6 +515,7 @@ matching `a` record.
 What if we wanted to see what `-del` does without modifying the database?
 We could omit the `-write` option. Notice that acr prints the records that *would*
 be deleted, but in the final report, `n_file_mod:0` so we know that nothing was written back.
+Without -write, acr outputs a script that can be fed into acr to perform the specified actions.
 
 ```
 inline-command: acr a:a5 -del
@@ -480,7 +526,7 @@ report.acr  ***
 ```
 
 `-del` works with any number of records. You could delete the entire database with
-`acr % -del -write`.
+`acr % -del -write`. When deleting a record, acr also deletes any dependent records.
 
 When deleting a field, acr automatically opens and rewrites the corresponding ssimfile
 so that the deleted column disappears.
@@ -512,7 +558,7 @@ you wouln't be able to even type up "hello world". Usually, it's applications th
 and cross-reference records are the ones that care about constraint violation.
 
 ```
-inline-command: acr -check b
+inline-command: acr -check b; true
 data/dev/b.ssim:5: Invalid value a:xyz
 dev.b  a:xyz  comment:""
 
@@ -521,7 +567,8 @@ Valid values       a0, a1, a10, a2, a3, a5, a6, a7, a8, a9
 
 acr.badrefs  ctype:dev.B  nbad:1
 
-report.acr_check  records:9  errors:3
+report.acr_check  records:***  errors:3
+dev.b  a:xyz  comment:""
 report.acr  ***
 ```
 
@@ -530,7 +577,7 @@ With `-check`, the final selection consists only of records with errors in them.
 we can run acr with `-check -e` to edit these records (and delete the record in question)
 But we could also delete the offending record, rename it, or insert a missing `a` record.
 
-Notice that `-check -del` doesn't work as you would expect (this might be fixed later).
+With `-check -del`, acr deletes any bad records (and any of their dependencies).
 
 ### Renaming
 
@@ -561,7 +608,14 @@ we'll let's create a table `d`, whose key is a cross product of `b` and `c`.
 
 ```
 inline-command: acr_ed -create -ssimfile:dev.c -write
-report.acr_check  records:13  errors:0
+report.acr_check  records:***  errors:0
+acr.insert  dmmeta.ctype  ctype:dev.C  comment:""
+  acr.insert  dmmeta.field  field:dev.C.c        arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+  acr.insert  dmmeta.field  field:dev.C.comment  arg:algo.Comment     reftype:Val  dflt:""  comment:""
+  acr.insert  dmmeta.cfmt  cfmt:dev.C.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+
+acr.insert  dmmeta.ssimfile  ssimfile:dev.c  ctype:dev.C
+  acr.insert  dmmeta.ssimsort  ssimfile:dev.c  sortfld:dev.C.c  comment:""
 report.acr  ***
 report.acr  ***
 report.amc  ***
@@ -575,10 +629,22 @@ acr.insert  dev.c  c:blue   comment:""
 report.acr  ***
 ```
 
-
 ```
 inline-command: acr_ed -create -ssimfile dev.d -subset dev.B -subset2 dev.C -separator . -write
-report.acr_check  records:20  errors:0
+report.acr_check  records:***  errors:0
+acr.insert  dmmeta.ctype  ctype:dev.D  comment:""
+  acr.insert  dmmeta.field  field:dev.D.d  arg:algo.Smallstr50  reftype:Val   dflt:""  comment:""
+  acr.insert  dmmeta.field  field:dev.D.b  arg:dev.B            reftype:Pkey  dflt:""  comment:""
+    acr.insert  dmmeta.substr  field:dev.D.b  expr:.RL  srcfield:dev.D.d
+
+  acr.insert  dmmeta.field  field:dev.D.c  arg:dev.C  reftype:Pkey  dflt:""  comment:""
+    acr.insert  dmmeta.substr  field:dev.D.c  expr:.RR  srcfield:dev.D.d
+
+  acr.insert  dmmeta.field  field:dev.D.comment  arg:algo.Comment  reftype:Val  dflt:""  comment:""
+  acr.insert  dmmeta.cfmt  cfmt:dev.D.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+
+acr.insert  dmmeta.ssimfile  ssimfile:dev.d  ctype:dev.D
+  acr.insert  dmmeta.ssimsort  ssimfile:dev.d  sortfld:dev.D.d  comment:""
 report.acr  ***
 report.acr  ***
 report.amc  ***
@@ -598,7 +664,7 @@ acr.insert  dev.d  d:a7.blue   comment:""
 report.acr  ***
 ```
 
-Now the most interesting part is, how does acr see the resulting structure?
+How does acr see the resulting structure?
 Below we see that acr has followed the schema and discovered all the necessary dependencies,
 grouping `d` under `b`, which groups under `a`. All the referenced colors from `c` were
 included in the output, but didn't become part of the tree, because only the leftmost
@@ -628,6 +694,9 @@ dev.a  a:a7  b:0  comment:""
     dev.d  d:a7.red    comment:""
 report.acr  ***
 ```
+
+Renaming will update structured keys. So if you renamed `a5` to something else, all of the
+records that reference it would be updated accordingly.
 
 Let's look at the definition of `dev.D` type. The reason I have been holding off
 on showing the definitions of the types `dev.A`, `dev.B`, and `dev.C` is that 
@@ -703,7 +772,7 @@ These triples can be repeated as many times as necessary to "bite off" pieces of
 .RL.RL removes the 2 trailing dots from a string. The corresponding C++ function that implements this
 search is called algo::Pathcomp.
 
-The funciton that parses these expressions is called Pathcomp, and we can view its source code:
+The function that parses these expressions is called Pathcomp, and we can view its source code:
 
 ```
 inline-command: src_func algo_lib Pathcomp
@@ -776,7 +845,7 @@ dev.d  d:a7.blue  comment:""
 report.acr  ***
 ```
 
-The query string you pass to acr is a regular expression that extends to the name of the ssimfile as well
+The query string you pass to acr is a regular expression that extends to the name of the ssimfile as well.
 So, if we wanted to search both `b` and `c` tables, we'd write:
 
 ```
@@ -897,13 +966,6 @@ acr.insert  dev.c  c:green  comment:""
 acr.insert  dev.c  c:red    comment:""
 report.acr  ***
 ```
-inline-command: touch x
-```
-
-```
-inline-command: acr dmmeta.% | acr -in:x -insert -write -print:N
-report.acr  ***
-```
 
 File `x` now contains ssim tuples, one per line, and it can be queried or edited
 just like any other data set. Just by dumping some tuples in a file, we get a data set.
@@ -970,6 +1032,7 @@ fields. Let's add a comment to the dev.C.c field:
 
 ```
 inline-command: echo 'dmmeta.field field:dev.C.c comment:"Name of the color (primary key)"' | acr -merge -write
+acr.update  dmmeta.field  field:dev.C.c  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:"Name of the color (primary key)"
 report.acr  ***
 ```
 
@@ -1047,46 +1110,57 @@ can be round tripped through MariaDB with no change.
 
 `acr` takes the following tables on input:
 ```
-CTYPE            COMMENT
-dmmeta.Ctype     Conceptual type (or C type)
-dmmeta.Field     Specify field of a struct
-dmmeta.Substr    Specify that the field value is computed from a substring of another field
-dmmeta.Ssimfile  Ssim tuple name for structure
+CTYPE                COMMENT
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
+dmmeta.Ctype         Conceptual type (or C type)
+dmmeta.Field         Specify field of a struct
+dmmeta.Substr        Specify that the field value is computed from a substring of another field
+dmmeta.Ssimfile      Ssim tuple name for structure
 dmmeta.Ssimsort
-dmmeta.Ssimreq   Presence of ssimfile requires that superset field has a certain value
-dmmeta.Smallstr  Generated fixed-length padded or length-delimited string field
-dmmeta.Funique   This field must be unique in the table. Not needed for primary key
-dmmeta.Cppfunc   Value of field provided by this expression
-dmmeta.Cdflt     Specify default value for single-value types that lack fields
-amcdb.Bltin      Specify properties of a C built-in type
-dmmeta.Anonfld   Omit field name where possible (command line, enums, constants)
+dmmeta.Ssimreq       Presence of ssimfile requires that superset field has a certain value
+dmmeta.Smallstr      Generated fixed-length padded or length-delimited string field
+dmmeta.Funique       This field must be unique in the table. Not needed for primary key
+dmmeta.Cppfunc       Value of field provided by this expression
+dmmeta.Cdflt         Specify default value for single-value types that lack fields
+amcdb.Bltin          Specify properties of a C built-in type
+dmmeta.Anonfld       Omit field name where possible (command line, enums, constants)
 ```
 
 ### Tests
 
-The following component tests are defined for `acr`:
+The following component tests are defined for `acr`.
+These can be executed with `atf_comp <comptest> -v`
 ```
-acr.BadInsert	
-acr.BadNs	
-acr.BadPkey	Warning about missing pkey - not error
-acr.BadReftype	
-acr.BadReftype2	
-acr.DelField	
-acr.DelRecord	
-acr.Fields	
-acr.FieldsComma	
-acr.Insert	
-acr.Merge	
-acr.Meta1	
-acr.Meta2	
-acr.Meta3	
-acr.QueryCtype	
-acr.RenameRecord	
-acr.Replace	
-acr.Select	
-acr.TooManyArgs	
-acr.UpdateBad	
-acr.UpdateGood	
-acr.Where	
+COMPTEST            COMMENT
+acr.BadInsert       Duplicate insert is ignored
+acr.BadNs           Insert a bad record and check that it's detected
+acr.BadPkey         Warning about missing pkey - not error
+acr.BadReftype      Invalid reftype detected
+acr.CascDel         -del recursively deletes dependent records
+acr.CascDel2        Insert records & cascade delete them -- no change
+acr.DelField        A field is deleted
+acr.DelRecord       A record is deleted
+acr.DeleteReinsert  A record is deleted and re-inserted
+acr.Fields          Select fields
+acr.FieldsComma     Select fields with comma separator
+acr.Insert          Insert a few records
+acr.InsertDelete    Insert & delete record, nothing happens
+acr.Merge           Merging
+acr.Meta1           Select meta-information
+acr.Meta2           Select meta-information
+acr.Meta3           Select meta-information
+acr.NullTrunc       Trunc with reinsertion has no effect
+acr.QueryCtype      Select one record
+acr.RenameRecord    Rename field and propagate recursively through structured keys
+acr.Replace         A record is replaced
+acr.Select          A record is selected
+acr.TooManyArgs     Acr command line input error
+acr.Trunc           Truncate table
+acr.UpdateBad       Update fails
+acr.UpdateGood      Update succeeds
+acr.Where           Test -where option
+
+
+
 ```
 

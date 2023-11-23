@@ -26,31 +26,22 @@ static void Main_ShowGrepolist(){
     cstring out;
     out << "REPO/REMOTE\tDFLT\tHOST\tPRIV\tTOKEN\n";
     tempstr dflt("dflt");
-    ind_beg(gcli::_db_grepo_curs, grepo, gcli::_db) if (grepo.select) {
-        out << name_Get(grepo)
-            << "\t" << dflt
-            << "\t" << host_Get(grepo)
-            << "\t" << grepo.priv
-            << "\t" << grepo.token
-            << eol;
+    ind_beg(gcli::_db_grepo_curs, grepo, gcli::_db) {
+        if (grepo.select) {
+            out << grepo.name
+                << "\t" << dflt
+                << "\t" << host_Get(grepo)
+                << "\t" << grepo.priv
+                << "\t" << grepo.token
+                << eol;
+        }
         dflt="";
     }ind_end;
     prlog(Tabulated(out,"\t"));
 }
 // -----------------------------------------------------------------------------
 static void Main_ShowGreporemotelist(){
-    cstring out;
-    out << "REPO/REMOTE\tHOST\tPRIV\tTOKEN\n";
-    tempstr dflt("dflt");
-    ind_beg(gcli::_db_grepo_curs, grepo, gcli::_db) if (grepo.select) {
-        out << name_Get(grepo)
-            << "\t" << host_Get(grepo)
-            << "\t" << grepo.priv
-            << "\t" << grepo.token
-            << eol;
-        dflt="";
-    }ind_end;
-    prlog(Tabulated(out,"\t"));
+    Main_ShowGrepolist();
 }
 // -----------------------------------------------------------------------------
 void gcli::gtblact_repo_list(gcli::FGtblact &gtblact){
@@ -62,7 +53,7 @@ void gcli::gtblact_repo_list(gcli::FGtblact &gtblact){
     algo_lib::Regx token_regx;
     Regx_ReadSql(token_regx,gcli::GetTblactfld(gtblact.gtblact,gclidb_Gfld_gfld_token), false);
     ind_beg(gcli::_db_grepo_curs,grepo,gcli::_db){
-        grepo.select=algo_lib::Regx_Match(repo_regx,name_Get(grepo));
+        grepo.select=algo_lib::Regx_Match(repo_regx,grepo.name);
         grepo.select&=algo_lib::Regx_Match(host_regx,host_Get(grepo));
         grepo.select&=algo_lib::Regx_Match(token_regx,grepo.token);
     }ind_end;
@@ -123,8 +114,10 @@ void gcli::gclicmd_token2repos(gcli::FGclicmd &gclicmd){
         gclidb::Grepo grepo_in;
         if (Grepo_ReadStrptrMaybe(grepo_in,tuple.tuples)){
             grepo_in.grepo=tempstr()
-                <<gclidb::Grepo_Concat_host_name(gclicmd.host,grepo_in.grepo);
+                <<gclidb::Grepo_Concat_host_fname(gclicmd.host,grepo_in.grepo);
             grepo_in.token=gclicmd.token;
+            // Set repo name
+            grepo_in.name=fname_Get(grepo_in);
             // Add/replace grepo record
             if (grepo_in.priv!="internal"
                 && Regx_Match(gcli::_db.regx_repo,grepo_in.grepo)
@@ -141,36 +134,13 @@ void gcli::gclicmd_token2repos(gcli::FGclicmd &gclicmd){
     }
 }
 // -----------------------------------------------------------------------------
-// TODO: remove me
-static void GauthToGrepoCompat(){
-    tempstr gauth_file;
-    gauth_file=SsimFname(DirFileJoin(gcli::_db.home,gcli::_db.cmdline.authdir),"gclidb.gauth");
-    tempstr grepo_file;
-    grepo_file=SsimFname(DirFileJoin(gcli::_db.home,gcli::_db.cmdline.authdir),dmmeta_Ssimfile_ssimfile_gclidb_grepo);
-    if (FileQ(gauth_file) && !FileQ(grepo_file)){
-        tempstr gauth_in(FileToString(gauth_file));
-        tempstr grepo_out;
-        ind_beg(Line_curs,line_in,gauth_in){
-            tempstr line(line_in);
-            Replace(line,"gclidb.gauth","gclidb.grepo");
-            Replace(line," gauth:"," grepo:");
-            grepo_out<<line<<eol;
-        }ind_end;
-        StringToFile(grepo_out,grepo_file);
-        unlink(Zeroterm(gauth_file));
-    }
-}
-// -----------------------------------------------------------------------------
 void gcli::LoadGrepo(){
     // Backward-Comparibility code
-    // TODO: Remove
-    GauthToGrepoCompat();
-
     // Load grepo file
     gcli::_db.auth_file=SsimFname(DirFileJoin(gcli::_db.home,gcli::_db.cmdline.authdir),dmmeta_Ssimfile_ssimfile_gclidb_grepo);
     // if file was not read, read it
     if (gcli::grepo_N()==0){
-        (void)gcli::LoadSsimfileMaybe(gcli::_db.auth_file);
+        (void)gcli::LoadSsimfileMaybe(gcli::_db.auth_file,false);
     }
 }
 // -----------------------------------------------------------------------------
@@ -191,7 +161,7 @@ static void GrepoSelect(){
     Regx_ReadSql(target_regx,target_no_dot, false);
 
     ind_beg(gcli::_db_grepo_curs,grepo,gcli::_db) if (grepo.active){
-        if (algo_lib::Regx_Match(target_regx,name_Get(grepo))){
+        if (algo_lib::Regx_Match(target_regx,grepo.name)){
             grepo_CopyOut(grepo,gcli::_db.grepo_sel);
             break;
         }
@@ -209,9 +179,9 @@ static void GrepoSelect(){
          <<eol
          <<Keyval("comment","no project matching auth_file records is selected by target")
          <<eol
-         <<Keyval("comment","to initialize auth_file record please supply personal access token via table:repo -create command")
+         <<Keyval("comment","to initialize auth_file record please supply personal access token via selector:repo -create command")
          <<eol
-         <<Keyval("comment","visit <https://docs.gcli.com/ee/user/profile/personal_access_tokens.html> for directions")
+         <<Keyval("comment","visit <https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html> for directions")
          );
     verblog("gcli.info"
             <<Keyval("guessed_proj",gcli::_db.grepo_sel.grepo)
@@ -225,10 +195,7 @@ static void SetGtype(strptr auth_token){
             gcli::_db.p_gtype=gtypeprefix.p_gtype;
         }
     }ind_end;
-    if (!gcli::_db.p_gtype){ //debug
-        // ind_beg(){
-        //     p
-        // }ind_end;
+    if (!gcli::_db.p_gtype){
         vrfy(gcli::_db.p_gtype, tempstr()
              <<Keyval("gtype",auth_token)
              <<Keyval("comment","unsupported gtype")
@@ -251,7 +218,7 @@ static void AuthInit(gcli::FGtblact &gtblact){
             <<Keyval("token",token)
             <<Keyval("host",host)
             );
-    gcli::_db.grepo_sel.grepo=gclidb::Grepo_Concat_host_name(host,"none");
+    gcli::_db.grepo_sel.grepo=gclidb::Grepo_Concat_host_fname(host,"none");
 }
 // -----------------------------------------------------------------------------
 void gcli::Main_ManageAuth(){
@@ -335,7 +302,7 @@ void gcli::gtblact_repo_update(gcli::FGtblact &gtblact){
     ind_beg(gcli::_db_grepo_curs,grepo,gcli::_db){
         gclidb::Grepo grepo_out;
         grepo_CopyOut(grepo,grepo_out);
-        if (name_Get(grepo)==repo){
+        if (grepo.name==repo){
             out_first<<grepo_out<<eol;
         } else {
             out_last<<grepo_out<<eol;

@@ -1,4 +1,3 @@
-# atf_comp -report:N -printinput acr_compl.OptNonCumulAlias | acr_compl -line:'atf_cmdline -astr: -anum: -adbl: -str: -num: -dbl: -aflag -h -' | cat
 -amnum 
 -cconst 
 -d 

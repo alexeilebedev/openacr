@@ -208,6 +208,9 @@ inline gclidb::Mrjob::Mrjob() {
 inline gclidb::Mrnote::Mrnote() {
 }
 
+inline gclidb::Project::Project() {
+}
+
 inline gclidb::User::User() {
     gclidb::User_Init(*this);
 }

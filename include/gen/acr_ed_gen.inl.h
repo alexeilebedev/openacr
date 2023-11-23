@@ -28,6 +28,24 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/dev_gen.inl.h"
 //#pragma endinclude
+static acr_ed::FEdaction &acr_ed_edaction_Create_Citest     = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[0];
+static acr_ed::FEdaction &acr_ed_edaction_Create_Ctype      = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[1];
+static acr_ed::FEdaction &acr_ed_edaction_Create_Field      = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[2];
+static acr_ed::FEdaction &acr_ed_edaction_Create_Finput     = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[3];
+static acr_ed::FEdaction &acr_ed_edaction_Create_Srcfile    = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[4];
+static acr_ed::FEdaction &acr_ed_edaction_Create_Ssimfile   = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[5];
+static acr_ed::FEdaction &acr_ed_edaction_Create_Target     = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[6];
+static acr_ed::FEdaction &acr_ed_edaction_Create_Unittest   = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[7];
+static acr_ed::FEdaction &acr_ed_edaction_Delete_Ctype      = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[8];
+static acr_ed::FEdaction &acr_ed_edaction_Delete_Field      = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[9];
+static acr_ed::FEdaction &acr_ed_edaction_Delete_Srcfile    = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[10];
+static acr_ed::FEdaction &acr_ed_edaction_Delete_Ssimfile   = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[11];
+static acr_ed::FEdaction &acr_ed_edaction_Delete_Target     = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[12];
+static acr_ed::FEdaction &acr_ed_edaction_Rename_Ctype      = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[13];
+static acr_ed::FEdaction &acr_ed_edaction_Rename_Field      = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[14];
+static acr_ed::FEdaction &acr_ed_edaction_Rename_Srcfile    = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[15];
+static acr_ed::FEdaction &acr_ed_edaction_Rename_Ssimfile   = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[16];
+static acr_ed::FEdaction &acr_ed_edaction_Rename_Target     = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[17];
 inline acr_ed::FCfmt::FCfmt() {
     acr_ed::FCfmt_Init(*this);
 }
@@ -307,6 +325,31 @@ inline void acr_ed::ctype_c_cfmt_curs_Next(ctype_c_cfmt_curs &curs) {
 // item access
 inline acr_ed::FCfmt& acr_ed::ctype_c_cfmt_curs_Access(ctype_c_cfmt_curs &curs) {
     return *curs.elems[curs.index];
+}
+inline acr_ed::FEdaction::FEdaction() {
+    acr_ed::FEdaction_Init(*this);
+}
+
+inline acr_ed::FEdaction::~FEdaction() {
+    acr_ed::FEdaction_Uninit(*this);
+}
+
+
+// --- acr_ed.FEdaction.step.Call
+// Invoke function by pointer
+inline void acr_ed::step_Call(acr_ed::FEdaction& edaction) {
+    if (edaction.step) {
+        edaction.step();
+    }
+}
+
+// --- acr_ed.FEdaction..Init
+// Set all fields to initial values.
+inline void acr_ed::FEdaction_Init(acr_ed::FEdaction& edaction) {
+    edaction.needamc = bool(false);
+    edaction.select = bool(false);
+    edaction.step = NULL;
+    edaction.ind_edaction_next = (acr_ed::FEdaction*)-1; // (acr_ed.FDb.ind_edaction) not-in-hash
 }
 inline acr_ed::trace::trace() {
 }
@@ -1105,6 +1148,74 @@ inline i32 acr_ed::ind_nsdb_N() {
     return _db.ind_nsdb_n;
 }
 
+// --- acr_ed.FDb.edaction.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+inline void* acr_ed::edaction_AllocMem() {
+    void *row = reinterpret_cast<acr_ed::FEdaction*>(_db.edaction_data) + _db.edaction_n;
+    if (_db.edaction_n == 18) row = NULL;
+    if (row) _db.edaction_n++;
+    return row;
+}
+
+// --- acr_ed.FDb.edaction.EmptyQ
+// Return true if index is empty
+inline bool acr_ed::edaction_EmptyQ() {
+    return _db.edaction_n == 0;
+}
+
+// --- acr_ed.FDb.edaction.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_ed::FEdaction* acr_ed::edaction_Find(u64 t) {
+    u64 idx = t;
+    u64 lim = _db.edaction_n;
+    return idx < lim ? reinterpret_cast<acr_ed::FEdaction*>(_db.edaction_data) + idx : NULL; // unsigned comparison with limit
+}
+
+// --- acr_ed.FDb.edaction.Getary
+// Return array pointer by value
+inline algo::aryptr<acr_ed::FEdaction> acr_ed::edaction_Getary() {
+    return algo::aryptr<acr_ed::FEdaction>(reinterpret_cast<acr_ed::FEdaction*>(_db.edaction_data), _db.edaction_n);
+}
+
+// --- acr_ed.FDb.edaction.Max
+// Return constant 18 -- max. number of items in the pool
+inline i32 acr_ed::edaction_Max() {
+    return 18;
+}
+
+// --- acr_ed.FDb.edaction.N
+// Return number of items in the array
+inline i32 acr_ed::edaction_N() {
+    (void)_db;//only to avoid -Wunused-parameter
+    return _db.edaction_n;
+}
+
+// --- acr_ed.FDb.edaction.qFind
+// 'quick' Access row by row id. No bounds checking in release.
+inline acr_ed::FEdaction& acr_ed::edaction_qFind(u64 t) {
+    u64 idx = t;
+    return reinterpret_cast<acr_ed::FEdaction*>(_db.edaction_data)[idx];
+}
+
+// --- acr_ed.FDb.edaction.rowid_Get
+// Compute row id of element given element's address
+inline u64 acr_ed::edaction_rowid_Get(acr_ed::FEdaction &row) {
+    u64 ret = u64(&row - reinterpret_cast<acr_ed::FEdaction*>(_db.edaction_data));
+    return u64(ret);
+}
+
+// --- acr_ed.FDb.ind_edaction.EmptyQ
+// Return true if hash is empty
+inline bool acr_ed::ind_edaction_EmptyQ() {
+    return _db.ind_edaction_n == 0;
+}
+
+// --- acr_ed.FDb.ind_edaction.N
+// Return number of items in the hash
+inline i32 acr_ed::ind_edaction_N() {
+    return _db.ind_edaction_n;
+}
+
 // --- acr_ed.FDb.ns_curs.Reset
 // cursor points to valid item
 inline void acr_ed::_db_ns_curs_Reset(_db_ns_curs &curs, acr_ed::FDb &parent) {
@@ -1504,6 +1615,31 @@ inline void acr_ed::_db_nsdb_curs_Next(_db_nsdb_curs &curs) {
 inline acr_ed::FNsdb& acr_ed::_db_nsdb_curs_Access(_db_nsdb_curs &curs) {
     return nsdb_qFind(u64(curs.index));
 }
+
+// --- acr_ed.FDb.edaction_curs.Reset
+// cursor points to valid item
+inline void acr_ed::_db_edaction_curs_Reset(_db_edaction_curs &curs, acr_ed::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_ed.FDb.edaction_curs.ValidQ
+// cursor points to valid item
+inline bool acr_ed::_db_edaction_curs_ValidQ(_db_edaction_curs &curs) {
+    return u64(curs.index) < u64(curs.parent->edaction_n);
+}
+
+// --- acr_ed.FDb.edaction_curs.Next
+// proceed to next item
+inline void acr_ed::_db_edaction_curs_Next(_db_edaction_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_ed.FDb.edaction_curs.Access
+// item access
+inline acr_ed::FEdaction& acr_ed::_db_edaction_curs_Access(_db_edaction_curs &curs) {
+    return edaction_qFind(u64(curs.index));
+}
 inline acr_ed::FField::FField() {
     acr_ed::FField_Init(*this);
 }
@@ -1605,15 +1741,104 @@ inline acr_ed::FTarget::~FTarget() {
 }
 
 
+// --- acr_ed.FTarget.zd_targsrc.EmptyQ
+// Return true if index is empty
+inline bool acr_ed::zd_targsrc_EmptyQ(acr_ed::FTarget& target) {
+    return target.zd_targsrc_head == NULL;
+}
+
+// --- acr_ed.FTarget.zd_targsrc.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline acr_ed::FTargsrc* acr_ed::zd_targsrc_First(acr_ed::FTarget& target) {
+    acr_ed::FTargsrc *row = NULL;
+    row = target.zd_targsrc_head;
+    return row;
+}
+
+// --- acr_ed.FTarget.zd_targsrc.InLlistQ
+// Return true if row is in the linked list, false otherwise
+inline bool acr_ed::zd_targsrc_InLlistQ(acr_ed::FTargsrc& row) {
+    bool result = false;
+    result = !(row.zd_targsrc_next == (acr_ed::FTargsrc*)-1);
+    return result;
+}
+
+// --- acr_ed.FTarget.zd_targsrc.Last
+// If index empty, return NULL. Otherwise return pointer to last element in index
+inline acr_ed::FTargsrc* acr_ed::zd_targsrc_Last(acr_ed::FTarget& target) {
+    acr_ed::FTargsrc *row = NULL;
+    row = target.zd_targsrc_tail;
+    return row;
+}
+
+// --- acr_ed.FTarget.zd_targsrc.N
+// Return number of items in the linked list
+inline i32 acr_ed::zd_targsrc_N(const acr_ed::FTarget& target) {
+    return target.zd_targsrc_n;
+}
+
+// --- acr_ed.FTarget.zd_targsrc.Next
+// Return pointer to next element in the list
+inline acr_ed::FTargsrc* acr_ed::zd_targsrc_Next(acr_ed::FTargsrc &row) {
+    return row.zd_targsrc_next;
+}
+
+// --- acr_ed.FTarget.zd_targsrc.Prev
+// Return pointer to previous element in the list
+inline acr_ed::FTargsrc* acr_ed::zd_targsrc_Prev(acr_ed::FTargsrc &row) {
+    return row.zd_targsrc_prev;
+}
+
+// --- acr_ed.FTarget.zd_targsrc.qLast
+// Return reference to last element in the index. No bounds checking.
+inline acr_ed::FTargsrc& acr_ed::zd_targsrc_qLast(acr_ed::FTarget& target) {
+    acr_ed::FTargsrc *row = NULL;
+    row = target.zd_targsrc_tail;
+    return *row;
+}
+
 // --- acr_ed.FTarget..Init
 // Set all fields to initial values.
 inline void acr_ed::FTarget_Init(acr_ed::FTarget& target) {
     target.compat = algo::strptr("Linux-%.%-%");
     target.score = u32(0);
+    target.zd_targsrc_head = NULL; // (acr_ed.FTarget.zd_targsrc)
+    target.zd_targsrc_n = 0; // (acr_ed.FTarget.zd_targsrc)
+    target.zd_targsrc_tail = NULL; // (acr_ed.FTarget.zd_targsrc)
+    target.p_ns = NULL;
     target.ind_target_next = (acr_ed::FTarget*)-1; // (acr_ed.FDb.ind_target) not-in-hash
+}
+
+// --- acr_ed.FTarget.zd_targsrc_curs.Reset
+// cursor points to valid item
+inline void acr_ed::target_zd_targsrc_curs_Reset(target_zd_targsrc_curs &curs, acr_ed::FTarget &parent) {
+    curs.row = parent.zd_targsrc_head;
+}
+
+// --- acr_ed.FTarget.zd_targsrc_curs.ValidQ
+// cursor points to valid item
+inline bool acr_ed::target_zd_targsrc_curs_ValidQ(target_zd_targsrc_curs &curs) {
+    return curs.row != NULL;
+}
+
+// --- acr_ed.FTarget.zd_targsrc_curs.Next
+// proceed to next item
+inline void acr_ed::target_zd_targsrc_curs_Next(target_zd_targsrc_curs &curs) {
+    acr_ed::FTargsrc *next = (*curs.row).zd_targsrc_next;
+    curs.row = next;
+}
+
+// --- acr_ed.FTarget.zd_targsrc_curs.Access
+// item access
+inline acr_ed::FTargsrc& acr_ed::target_zd_targsrc_curs_Access(target_zd_targsrc_curs &curs) {
+    return *curs.row;
 }
 inline acr_ed::FTargsrc::FTargsrc() {
     acr_ed::FTargsrc_Init(*this);
+}
+
+inline acr_ed::FTargsrc::~FTargsrc() {
+    acr_ed::FTargsrc_Uninit(*this);
 }
 
 
@@ -1621,6 +1846,8 @@ inline acr_ed::FTargsrc::FTargsrc() {
 // Set all fields to initial values.
 inline void acr_ed::FTargsrc_Init(acr_ed::FTargsrc& targsrc) {
     targsrc.p_target = NULL;
+    targsrc.zd_targsrc_next = (acr_ed::FTargsrc*)-1; // (acr_ed.FTarget.zd_targsrc) not-in-list
+    targsrc.zd_targsrc_prev = NULL; // (acr_ed.FTarget.zd_targsrc)
 }
 inline acr_ed::FTypefld::FTypefld() {
 }

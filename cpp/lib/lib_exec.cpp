@@ -23,7 +23,7 @@
 //
 
 #include "include/algo.h"
-#include "include/lib/lib_exec.h"
+#include "include/lib_exec.h"
 #ifndef WIN32
 #include <sys/wait.h>
 #include <sys/resource.h>   // setrlimit()

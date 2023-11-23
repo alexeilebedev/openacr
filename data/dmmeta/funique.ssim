@@ -1,4 +1,6 @@
 dmmeta.funique  field:amsdb.ProcType.id  comment:""
 dmmeta.funique  field:amsdb.StreamType.id  comment:""
 dmmeta.funique  field:dev.Htmlentity.code  comment:""
+dmmeta.funique  field:dev.Syscmd.pid  comment:""
 dmmeta.funique  field:dev.Targsrc.src  comment:""
+dmmeta.funique  field:gclidb.Mrnote.mrnote  comment:""

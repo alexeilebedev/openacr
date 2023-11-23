@@ -1,4 +1,3 @@
-# atf_comp -report:N -printinput mdbg.SmokeBreak2 | mdbg -dry_run -tui mdbg mdbg -b a -b b -b c | cat
 bin/abt  mdbg -cfg:debug
 #mdbg mdbg
 #Gdb script is shown below

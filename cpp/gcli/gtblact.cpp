@@ -397,7 +397,7 @@ void gcli::TupleToGtblactflds(gcli::FGtblact &gtblact,strptr str){
 }
 // -----------------------------------------------------------------------------
 // take text in "gtblact:value" format and populate gtblactfld uval2 with its values
-static void TextToGtblactfiels(gcli::FGtblact &gtblact,strptr file){
+static void TextToGtblactflds(gcli::FGtblact &gtblact,strptr file){
     // clear uval2
     ind_beg(gcli::gtblact_c_gtblactfld_curs,gtblactfld,gtblact) {
         gtblactfld.uval2="";
@@ -422,16 +422,17 @@ static void TextToGtblactfiels(gcli::FGtblact &gtblact,strptr file){
 bool gcli::EditGtblactfld(gcli::FGtblact &gtblact,strptr issue_key_in){
     tempstr issue_key(issue_key_in);
     if (issue_key==""){
-        issue_key=name_Get(gcli::_db.grepo_sel);
+        issue_key=gcli::_db.grepo_sel.name;
         issue_key<<".NEW_ISSUE";
     }
     Replace(issue_key,"/","_");
 
     vrfy_(gcli::_db.editor.ch_n);
-    gcli::_db.edit_file = DirFileJoin(gcli::_db.home,issue_key);
+    //    gcli::_db.edit_file = DirFileJoin(gcli::_db.home,issue_key);
+    gcli::_db.edit_file = DirFileJoin("temp",issue_key);
     if (FileQ(gcli::_db.edit_file)){
         // restore file to gtblactfiled uval2
-        TextToGtblactfiels(gtblact,gcli::_db.edit_file);
+        TextToGtblactflds(gtblact,gcli::_db.edit_file);
     };
     // preserve cmdline entry of gtblactflds;
     ind_beg(gcli::gtblact_c_gtblactfld_curs,gtblactfld,gtblact) {
@@ -461,7 +462,7 @@ bool gcli::EditGtblactfld(gcli::FGtblact &gtblact,strptr issue_key_in){
         return false;
     }
     // Parse edited result back into gtblactflds
-    TextToGtblactfiels(gtblact,gcli::_db.edit_file);
+    TextToGtblactflds(gtblact,gcli::_db.edit_file);
     // form new entry
     ind_beg(gcli::gtblact_c_gtblactfld_curs,gtblactfld,gtblact) {
         if (gtblactfld.uval2!=""){
@@ -485,7 +486,7 @@ void gcli::VerifyGtblactfldsUpdate(gcli::FGtblact &gtblact){
     }ind_end;
 }
 // -----------------------------------------------------------------------------
-tempstr gcli::GtblactfiledsToJson(gcli::FGtblact &gtblact){
+tempstr gcli::GtblactfieldsToJson(gcli::FGtblact &gtblact){
     tempstr out;
     lib_json::FNode *obj(NULL);
     ind_beg(gcli::gtblact_c_gtblactfld_curs,gtblactfld,gtblact) if (gtblactfld.update){

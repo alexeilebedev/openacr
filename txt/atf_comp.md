@@ -36,7 +36,7 @@ Usage: atf_comp [[-comptest:]<regx>] [options]
     -b                string  ""         Breakpoint passed to mdbg as-is
     -verbose          int                Verbosity level (0..255); alias -v; cumulative
     -debug            int                Debug level (0..255); alias -d; cumulative
-    -help                                Print help an exit; alias -h
+    -help                                Print help and exit; alias -h
     -version                             Print version and exit
     -signature                           Show signatures and exit; alias -sig
 
@@ -260,20 +260,21 @@ Use `-v` to see the command line being generated.
 
 `atf_comp` takes the following tables on input:
 ```
-CTYPE            COMMENT
-dmmeta.Ctype     Conceptual type (or C type)
-dmmeta.Field     Specify field of a struct
+CTYPE                COMMENT
+dmmeta.Ctype         Conceptual type (or C type)
+dmmeta.Field         Specify field of a struct
 dev.Unstablefld
-dmmeta.Substr    Specify that the field value is computed from a substring of another field
-dmmeta.Ssimfile  Ssim tuple name for structure
+dmmeta.Substr        Specify that the field value is computed from a substring of another field
+dmmeta.Ssimfile      Ssim tuple name for structure
 dmmeta.Ftuple
-dmmeta.Fconst    Specify enum value (integer + string constant) for a field
-dmmeta.Cppfunc   Value of field provided by this expression
-dmmeta.Cfmt      Specify options for printing/reading ctypes into multiple formats
-dmmeta.Cdflt     Specify default value for single-value types that lack fields
+dmmeta.Fconst        Specify enum value (integer + string constant) for a field
+dmmeta.Cppfunc       Value of field provided by this expression
+dmmeta.Cfmt          Specify options for printing/reading ctypes into multiple formats
+dmmeta.Cdflt         Specify default value for single-value types that lack fields
 atfdb.Comptest
 atfdb.Tmsg
 atfdb.Tfilt
 atfdb.Targs
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
 ```
 

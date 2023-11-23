@@ -79,6 +79,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_unused        : ret = "unused";  break;
         case command_FieldId_trunc         : ret = "trunc";  break;
         case command_FieldId_check         : ret = "check";  break;
+        case command_FieldId_selerr        : ret = "selerr";  break;
         case command_FieldId_maxshow       : ret = "maxshow";  break;
         case command_FieldId_write         : ret = "write";  break;
         case command_FieldId_rename        : ret = "rename";  break;
@@ -127,6 +128,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_cascdel       : ret = "cascdel";  break;
         case command_FieldId_before        : ret = "before";  break;
         case command_FieldId_substr        : ret = "substr";  break;
+        case command_FieldId_alias         : ret = "alias";  break;
         case command_FieldId_srcfield      : ret = "srcfield";  break;
         case command_FieldId_fstep         : ret = "fstep";  break;
         case command_FieldId_inscond       : ret = "inscond";  break;
@@ -241,6 +243,13 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_nofork        : ret = "nofork";  break;
         case command_FieldId_perf_secs     : ret = "perf_secs";  break;
         case command_FieldId_pertest_timeout: ret = "pertest_timeout";  break;
+        case command_FieldId_stats         : ret = "stats";  break;
+        case command_FieldId_enable        : ret = "enable";  break;
+        case command_FieldId_disable       : ret = "disable";  break;
+        case command_FieldId_gc            : ret = "gc";  break;
+        case command_FieldId_dir           : ret = "dir";  break;
+        case command_FieldId_hitrate       : ret = "hitrate";  break;
+        case command_FieldId_after         : ret = "after";  break;
         case command_FieldId_selector      : ret = "selector";  break;
         case command_FieldId_fields        : ret = "fields";  break;
         case command_FieldId_accept        : ret = "accept";  break;
@@ -268,13 +277,17 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_commit        : ret = "commit";  break;
         case command_FieldId_undo          : ret = "undo";  break;
         case command_FieldId_hash          : ret = "hash";  break;
+        case command_FieldId_expr          : ret = "expr";  break;
+        case command_FieldId_style         : ret = "style";  break;
+        case command_FieldId_match         : ret = "match";  break;
+        case command_FieldId_string        : ret = "string";  break;
+        case command_FieldId_show          : ret = "show";  break;
         case command_FieldId_name          : ret = "name";  break;
         case command_FieldId_reset         : ret = "reset";  break;
-        case command_FieldId_gc            : ret = "gc";  break;
         case command_FieldId_diff          : ret = "diff";  break;
         case command_FieldId_files         : ret = "files";  break;
-        case command_FieldId_targsrc       : ret = "targsrc";  break;
         case command_FieldId_body          : ret = "body";  break;
+        case command_FieldId_targsrc       : ret = "targsrc";  break;
         case command_FieldId_func          : ret = "func";  break;
         case command_FieldId_nextfile      : ret = "nextfile";  break;
         case command_FieldId_other         : ret = "other";  break;
@@ -300,7 +313,6 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_db            : ret = "db";  break;
         case command_FieldId_createdb      : ret = "createdb";  break;
         case command_FieldId_typetag       : ret = "typetag";  break;
-        case command_FieldId_match         : ret = "match";  break;
         case command_FieldId_format        : ret = "format";  break;
         case command_FieldId_tocamelcase   : ret = "tocamelcase";  break;
         case command_FieldId_tolowerunder  : ret = "tolowerunder";  break;
@@ -402,6 +414,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR3('d','e','l'): {
                     value_SetEnum(parent,command_FieldId_del); ret = true; break;
                 }
+                case LE_STR3('d','i','r'): {
+                    value_SetEnum(parent,command_FieldId_dir); ret = true; break;
+                }
                 case LE_STR3('d','o','t'): {
                     value_SetEnum(parent,command_FieldId_dot); ret = true; break;
                 }
@@ -488,6 +503,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('e','x','e','c'): {
                     value_SetEnum(parent,command_FieldId_exec); ret = true; break;
                 }
+                case LE_STR4('e','x','p','r'): {
+                    value_SetEnum(parent,command_FieldId_expr); ret = true; break;
+                }
                 case LE_STR4('f','k','e','y'): {
                     value_SetEnum(parent,command_FieldId_fkey); ret = true; break;
                 }
@@ -554,6 +572,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('s','e','r','v'): {
                     value_SetEnum(parent,command_FieldId_serv); ret = true; break;
                 }
+                case LE_STR4('s','h','o','w'): {
+                    value_SetEnum(parent,command_FieldId_show); ret = true; break;
+                }
                 case LE_STR4('s','s','i','m'): {
                     value_SetEnum(parent,command_FieldId_ssim); ret = true; break;
                 }
@@ -585,6 +606,12 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR5('a','f','l','a','g'): {
                     value_SetEnum(parent,command_FieldId_aflag); ret = true; break;
+                }
+                case LE_STR5('a','f','t','e','r'): {
+                    value_SetEnum(parent,command_FieldId_after); ret = true; break;
+                }
+                case LE_STR5('a','l','i','a','s'): {
+                    value_SetEnum(parent,command_FieldId_alias); ret = true; break;
                 }
                 case LE_STR5('a','m','n','u','m'): {
                     value_SetEnum(parent,command_FieldId_amnum); ret = true; break;
@@ -679,6 +706,12 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR5('s','t','a','r','t'): {
                     value_SetEnum(parent,command_FieldId_start); ret = true; break;
                 }
+                case LE_STR5('s','t','a','t','s'): {
+                    value_SetEnum(parent,command_FieldId_stats); ret = true; break;
+                }
+                case LE_STR5('s','t','y','l','e'): {
+                    value_SetEnum(parent,command_FieldId_style); ret = true; break;
+                }
                 case LE_STR5('t','r','a','c','e'): {
                     value_SetEnum(parent,command_FieldId_trace); ret = true; break;
                 }
@@ -731,6 +764,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR6('d','o','f','o','r','k'): {
                     value_SetEnum(parent,command_FieldId_dofork); ret = true; break;
+                }
+                case LE_STR6('e','n','a','b','l','e'): {
+                    value_SetEnum(parent,command_FieldId_enable); ret = true; break;
                 }
                 case LE_STR6('e','x','p','a','n','d'): {
                     value_SetEnum(parent,command_FieldId_expand); ret = true; break;
@@ -807,8 +843,14 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('s','e','l','e','c','t'): {
                     value_SetEnum(parent,command_FieldId_select); ret = true; break;
                 }
+                case LE_STR6('s','e','l','e','r','r'): {
+                    value_SetEnum(parent,command_FieldId_selerr); ret = true; break;
+                }
                 case LE_STR6('s','t','r','e','a','m'): {
                     value_SetEnum(parent,command_FieldId_stream); ret = true; break;
+                }
+                case LE_STR6('s','t','r','i','n','g'): {
+                    value_SetEnum(parent,command_FieldId_string); ret = true; break;
                 }
                 case LE_STR6('s','u','b','s','e','t'): {
                     value_SetEnum(parent,command_FieldId_subset); ret = true; break;
@@ -875,6 +917,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('c','p','p','f','u','n','c'): {
                     value_SetEnum(parent,command_FieldId_cppfunc); ret = true; break;
                 }
+                case LE_STR7('d','i','s','a','b','l','e'): {
+                    value_SetEnum(parent,command_FieldId_disable); ret = true; break;
+                }
                 case LE_STR7('d','r','y','_','r','u','n'): {
                     value_SetEnum(parent,command_FieldId_dry_run); ret = true; break;
                 }
@@ -892,6 +937,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('h','a','s','h','f','l','d'): {
                     value_SetEnum(parent,command_FieldId_hashfld); ret = true; break;
+                }
+                case LE_STR7('h','i','t','r','a','t','e'): {
+                    value_SetEnum(parent,command_FieldId_hitrate); ret = true; break;
                 }
                 case LE_STR7('i','n','c','l','u','d','e'): {
                     value_SetEnum(parent,command_FieldId_include); ret = true; break;
@@ -1791,7 +1839,7 @@ bool command::abt_md_ReadTupleMaybe(command::abt_md &parent, algo::Tuple &tuple)
 // Set all fields to initial values.
 void command::abt_md_Init(command::abt_md& parent) {
     parent.in = algo::strptr("data");
-    Regx_ReadSql(parent.readme, "", true);
+    Regx_ReadSql(parent.readme, "%", true);
     Regx_ReadSql(parent.ns, "", true);
     Regx_ReadSql(parent.section, "%", true);
     parent.print = bool(false);
@@ -2010,7 +2058,7 @@ int command::abt_md_Execv(command::abt_md_proc& parent) {
         cstring_Print(parent.cmd.in, *arg);
     }
 
-    if (parent.cmd.readme.expr != "") {
+    if (parent.cmd.readme.expr != "%") {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-readme:";
         command::readme_Print(parent.cmd, *arg);
@@ -2628,6 +2676,7 @@ bool command::acr_ReadFieldMaybe(command::acr &parent, algo::strptr field, algo:
         case command_FieldId_unused: retval = bool_ReadStrptrMaybe(parent.unused, strval); break;
         case command_FieldId_trunc: retval = bool_ReadStrptrMaybe(parent.trunc, strval); break;
         case command_FieldId_check: retval = bool_ReadStrptrMaybe(parent.check, strval); break;
+        case command_FieldId_selerr: retval = bool_ReadStrptrMaybe(parent.selerr, strval); break;
         case command_FieldId_maxshow: retval = i32_ReadStrptrMaybe(parent.maxshow, strval); break;
         case command_FieldId_write: retval = bool_ReadStrptrMaybe(parent.write, strval); break;
         case command_FieldId_rename: retval = algo::cstring_ReadStrptrMaybe(parent.rename, strval); break;
@@ -2693,6 +2742,7 @@ void command::acr_Init(command::acr& parent) {
     parent.unused = bool(false);
     parent.trunc = bool(false);
     parent.check = bool(false);
+    parent.selerr = bool(true);
     parent.maxshow = i32(100);
     parent.write = bool(false);
     parent.rename = algo::strptr("");
@@ -2807,6 +2857,12 @@ void command::acr_PrintArgv(command::acr & row, algo::cstring &str) {
         ch_RemoveAll(temp);
         bool_Print(row.check, temp);
         str << " -check:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.selerr == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.selerr, temp);
+        str << " -selerr:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.maxshow == 100)) {
@@ -3039,10 +3095,15 @@ i32 command::acr_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_maxshow: { // bool: no argument required but value may be specified as check:Y
+        case command_FieldId_selerr: { // bool: no argument required but value may be specified as check:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_maxshow: { // bool: no argument required but value may be specified as selerr:Y
             *out_anon = false;
         } break;
-        case command_FieldId_write: { // bool: no argument required but value may be specified as check:Y
+        case command_FieldId_write: { // bool: no argument required but value may be specified as selerr:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -3934,7 +3995,6 @@ bool command::acr_ed_ReadFieldMaybe(command::acr_ed &parent, algo::strptr field,
         case command_FieldId_create: retval = bool_ReadStrptrMaybe(parent.create, strval); break;
         case command_FieldId_del: retval = bool_ReadStrptrMaybe(parent.del, strval); break;
         case command_FieldId_rename: retval = algo::cstring_ReadStrptrMaybe(parent.rename, strval); break;
-        case command_FieldId_replace: retval = bool_ReadStrptrMaybe(parent.replace, strval); break;
         case command_FieldId_finput: retval = bool_ReadStrptrMaybe(parent.finput, strval); break;
         case command_FieldId_foutput: retval = bool_ReadStrptrMaybe(parent.foutput, strval); break;
         case command_FieldId_srcfile: retval = algo::cstring_ReadStrptrMaybe(parent.srcfile, strval); break;
@@ -3956,6 +4016,7 @@ bool command::acr_ed_ReadFieldMaybe(command::acr_ed &parent, algo::strptr field,
         case command_FieldId_cascdel: retval = bool_ReadStrptrMaybe(parent.cascdel, strval); break;
         case command_FieldId_before: retval = algo::Smallstr100_ReadStrptrMaybe(parent.before, strval); break;
         case command_FieldId_substr: retval = algo::Smallstr100_ReadStrptrMaybe(parent.substr, strval); break;
+        case command_FieldId_alias: retval = bool_ReadStrptrMaybe(parent.alias, strval); break;
         case command_FieldId_srcfield: retval = algo::Smallstr100_ReadStrptrMaybe(parent.srcfield, strval); break;
         case command_FieldId_fstep: retval = algo::Smallstr100_ReadStrptrMaybe(parent.fstep, strval); break;
         case command_FieldId_inscond: retval = algo::cstring_ReadStrptrMaybe(parent.inscond, strval); break;
@@ -4003,7 +4064,6 @@ void command::acr_ed_Init(command::acr_ed& parent) {
     parent.create = bool(false);
     parent.del = bool(false);
     parent.rename = algo::strptr("");
-    parent.replace = bool(false);
     parent.finput = bool(false);
     parent.foutput = bool(false);
     parent.srcfile = algo::strptr("");
@@ -4025,6 +4085,7 @@ void command::acr_ed_Init(command::acr_ed& parent) {
     parent.cascdel = bool(false);
     parent.before = algo::strptr("");
     parent.substr = algo::strptr("");
+    parent.alias = bool(false);
     parent.srcfield = algo::strptr("");
     parent.fstep = algo::strptr("");
     parent.inscond = algo::strptr("true");
@@ -4075,12 +4136,6 @@ void command::acr_ed_PrintArgv(command::acr_ed & row, algo::cstring &str) {
         ch_RemoveAll(temp);
         cstring_Print(row.rename, temp);
         str << " -rename:";
-        strptr_PrintBash(temp,str);
-    }
-    if (!(row.replace == false)) {
-        ch_RemoveAll(temp);
-        bool_Print(row.replace, temp);
-        str << " -replace:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.finput == false)) {
@@ -4207,6 +4262,12 @@ void command::acr_ed_PrintArgv(command::acr_ed & row, algo::cstring &str) {
         ch_RemoveAll(temp);
         Smallstr100_Print(row.substr, temp);
         str << " -substr:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.alias == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.alias, temp);
+        str << " -alias:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.srcfield == "")) {
@@ -4365,12 +4426,7 @@ i32 command::acr_ed_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* 
         case command_FieldId_rename: { // bool: no argument required but value may be specified as del:Y
             *out_anon = false;
         } break;
-        case command_FieldId_replace: { // bool: no argument required but value may be specified as del:Y
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_finput: { // bool: no argument required but value may be specified as replace:Y
+        case command_FieldId_finput: { // bool: no argument required but value may be specified as del:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -4447,34 +4503,39 @@ i32 command::acr_ed_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* 
         case command_FieldId_substr: { // bool: no argument required but value may be specified as cascdel:Y
             *out_anon = false;
         } break;
-        case command_FieldId_srcfield: { // bool: no argument required but value may be specified as cascdel:Y
+        case command_FieldId_alias: { // bool: no argument required but value may be specified as cascdel:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_srcfield: { // bool: no argument required but value may be specified as alias:Y
             *out_anon = false;
         } break;
-        case command_FieldId_fstep: { // bool: no argument required but value may be specified as cascdel:Y
+        case command_FieldId_fstep: { // bool: no argument required but value may be specified as alias:Y
             *out_anon = false;
         } break;
-        case command_FieldId_inscond: { // bool: no argument required but value may be specified as cascdel:Y
+        case command_FieldId_inscond: { // bool: no argument required but value may be specified as alias:Y
             *out_anon = false;
         } break;
-        case command_FieldId_reftype: { // bool: no argument required but value may be specified as cascdel:Y
+        case command_FieldId_reftype: { // bool: no argument required but value may be specified as alias:Y
             *out_anon = false;
         } break;
-        case command_FieldId_hashfld: { // bool: no argument required but value may be specified as cascdel:Y
+        case command_FieldId_hashfld: { // bool: no argument required but value may be specified as alias:Y
             *out_anon = false;
         } break;
-        case command_FieldId_sortfld: { // bool: no argument required but value may be specified as cascdel:Y
+        case command_FieldId_sortfld: { // bool: no argument required but value may be specified as alias:Y
             *out_anon = false;
         } break;
-        case command_FieldId_unittest: { // bool: no argument required but value may be specified as cascdel:Y
+        case command_FieldId_unittest: { // bool: no argument required but value may be specified as alias:Y
             *out_anon = false;
         } break;
-        case command_FieldId_citest: { // bool: no argument required but value may be specified as cascdel:Y
+        case command_FieldId_citest: { // bool: no argument required but value may be specified as alias:Y
             *out_anon = false;
         } break;
-        case command_FieldId_cppfunc: { // bool: no argument required but value may be specified as cascdel:Y
+        case command_FieldId_cppfunc: { // bool: no argument required but value may be specified as alias:Y
             *out_anon = false;
         } break;
-        case command_FieldId_xref: { // bool: no argument required but value may be specified as cascdel:Y
+        case command_FieldId_xref: { // bool: no argument required but value may be specified as alias:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -4651,12 +4712,6 @@ int command::acr_ed_Execv(command::acr_ed_proc& parent) {
         cstring_Print(parent.cmd.rename, *arg);
     }
 
-    if (parent.cmd.replace != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-replace:";
-        bool_Print(parent.cmd.replace, *arg);
-    }
-
     if (parent.cmd.finput != false) {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-finput:";
@@ -4781,6 +4836,12 @@ int command::acr_ed_Execv(command::acr_ed_proc& parent) {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-substr:";
         Smallstr100_Print(parent.cmd.substr, *arg);
+    }
+
+    if (parent.cmd.alias != false) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-alias:";
+        bool_Print(parent.cmd.alias, *arg);
     }
 
     if (parent.cmd.srcfield != "") {
@@ -5952,6 +6013,12 @@ int command::acr_Execv(command::acr_proc& parent) {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-check:";
         bool_Print(parent.cmd.check, *arg);
+    }
+
+    if (parent.cmd.selerr != true) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-selerr:";
+        bool_Print(parent.cmd.selerr, *arg);
     }
 
     if (parent.cmd.maxshow != 100) {
@@ -12864,6 +12931,625 @@ void command::bash_proc_Uninit(command::bash_proc& parent) {
     bash_Kill(parent); // kill child, ensure forward progress
 }
 
+// --- command.gcache.cmd.Alloc
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+algo::cstring& command::cmd_Alloc(command::gcache& parent) {
+    cmd_Reserve(parent, 1);
+    int n  = parent.cmd_n;
+    int at = n;
+    algo::cstring *elems = parent.cmd_elems;
+    new (elems + at) algo::cstring(); // construct new element, default initializer
+    parent.cmd_n = n+1;
+    return elems[at];
+}
+
+// --- command.gcache.cmd.AllocAt
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::cstring& command::cmd_AllocAt(command::gcache& parent, int at) {
+    cmd_Reserve(parent, 1);
+    int n  = parent.cmd_n;
+    if (UNLIKELY(u64(at) >= u64(n+1))) {
+        FatalErrorExit("command.bad_alloc_at  field:command.gcache.cmd  comment:'index out of range'");
+    }
+    algo::cstring *elems = parent.cmd_elems;
+    memmove(elems + at + 1, elems + at, (n - at) * sizeof(algo::cstring));
+    new (elems + at) algo::cstring(); // construct element, default initializer
+    parent.cmd_n = n+1;
+    return elems[at];
+}
+
+// --- command.gcache.cmd.AllocN
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> command::cmd_AllocN(command::gcache& parent, int n_elems) {
+    cmd_Reserve(parent, n_elems);
+    int old_n  = parent.cmd_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = parent.cmd_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(); // construct new element, default initialize
+    }
+    parent.cmd_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- command.gcache.cmd.Remove
+// Remove item by index. If index outside of range, do nothing.
+void command::cmd_Remove(command::gcache& parent, u32 i) {
+    u32 lim = parent.cmd_n;
+    algo::cstring *elems = parent.cmd_elems;
+    if (i < lim) {
+        elems[i].~cstring(); // destroy element
+        memmove(elems + i, elems + (i + 1), sizeof(algo::cstring) * (lim - (i + 1)));
+        parent.cmd_n = lim - 1;
+    }
+}
+
+// --- command.gcache.cmd.RemoveAll
+void command::cmd_RemoveAll(command::gcache& parent) {
+    u32 n = parent.cmd_n;
+    while (n > 0) {
+        n -= 1;
+        parent.cmd_elems[n].~cstring();
+        parent.cmd_n = n;
+    }
+}
+
+// --- command.gcache.cmd.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void command::cmd_RemoveLast(command::gcache& parent) {
+    u64 n = parent.cmd_n;
+    if (n > 0) {
+        n -= 1;
+        cmd_qFind(parent, u64(n)).~cstring();
+        parent.cmd_n = n;
+    }
+}
+
+// --- command.gcache.cmd.AbsReserve
+// Make sure N elements fit in array. Process dies if out of memory
+void command::cmd_AbsReserve(command::gcache& parent, int n) {
+    u32 old_max  = parent.cmd_max;
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.cmd_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("command.tary_nomem  field:command.gcache.cmd  comment:'out of memory'");
+        }
+        parent.cmd_elems = (algo::cstring*)new_mem;
+        parent.cmd_max = new_max;
+    }
+}
+
+// --- command.gcache.cmd.Setary
+// Copy contents of RHS to PARENT.
+void command::cmd_Setary(command::gcache& parent, command::gcache &rhs) {
+    cmd_RemoveAll(parent);
+    int nnew = rhs.cmd_n;
+    cmd_Reserve(parent, nnew); // reserve space
+    for (int i = 0; i < nnew; i++) { // copy elements over
+        new (parent.cmd_elems + i) algo::cstring(cmd_qFind(rhs, i));
+        parent.cmd_n = i + 1;
+    }
+}
+
+// --- command.gcache.cmd.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> command::cmd_AllocNVal(command::gcache& parent, int n_elems, const algo::cstring& val) {
+    cmd_Reserve(parent, n_elems);
+    int old_n  = parent.cmd_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = parent.cmd_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(val);
+    }
+    parent.cmd_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- command.gcache.cmd.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool command::cmd_ReadStrptrMaybe(command::gcache& parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::cstring_ReadStrptrMaybe(cmd_Alloc(parent), in_str);
+    return retval;
+}
+
+// --- command.gcache..ReadFieldMaybe
+bool command::gcache_ReadFieldMaybe(command::gcache &parent, algo::strptr field, algo::strptr strval) {
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case command_FieldId_in: retval = algo::cstring_ReadStrptrMaybe(parent.in, strval); break;
+        case command_FieldId_cmd: retval = cmd_ReadStrptrMaybe(parent, strval); break;
+        case command_FieldId_install: retval = bool_ReadStrptrMaybe(parent.install, strval); break;
+        case command_FieldId_stats: retval = bool_ReadStrptrMaybe(parent.stats, strval); break;
+        case command_FieldId_enable: retval = bool_ReadStrptrMaybe(parent.enable, strval); break;
+        case command_FieldId_disable: retval = bool_ReadStrptrMaybe(parent.disable, strval); break;
+        case command_FieldId_gc: retval = bool_ReadStrptrMaybe(parent.gc, strval); break;
+        case command_FieldId_clean: retval = bool_ReadStrptrMaybe(parent.clean, strval); break;
+        case command_FieldId_dir: retval = algo::cstring_ReadStrptrMaybe(parent.dir, strval); break;
+        case command_FieldId_hitrate: retval = bool_ReadStrptrMaybe(parent.hitrate, strval); break;
+        case command_FieldId_after: retval = algo::UnTime_ReadStrptrMaybe(parent.after, strval); break;
+        case command_FieldId_report: retval = bool_ReadStrptrMaybe(parent.report, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.gcache..ReadTupleMaybe
+// Read fields of command::gcache from attributes of ascii tuple TUPLE
+bool command::gcache_ReadTupleMaybe(command::gcache &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    int anon_idx = 0;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        if (ch_N(attr.name) == 0) {
+            attr.name = gcache_GetAnon(parent, anon_idx++);
+        }
+        retval = gcache_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- command.gcache..Init
+// Set all fields to initial values.
+void command::gcache_Init(command::gcache& parent) {
+    parent.in = algo::strptr("data");
+    parent.cmd_elems 	= 0; // (command.gcache.cmd)
+    parent.cmd_n     	= 0; // (command.gcache.cmd)
+    parent.cmd_max   	= 0; // (command.gcache.cmd)
+    parent.install = bool(false);
+    parent.stats = bool(false);
+    parent.enable = bool(false);
+    parent.disable = bool(false);
+    parent.gc = bool(false);
+    parent.clean = bool(false);
+    parent.dir = algo::strptr("/tmp/gcache");
+    parent.hitrate = bool(false);
+    parent.report = bool(false);
+}
+
+// --- command.gcache..Uninit
+void command::gcache_Uninit(command::gcache& parent) {
+    command::gcache &row = parent; (void)row;
+
+    // command.gcache.cmd.Uninit (Tary)  //Command to execute
+    // remove all elements from command.gcache.cmd
+    cmd_RemoveAll(parent);
+    // free memory for Tary command.gcache.cmd
+    algo_lib::malloc_FreeMem(parent.cmd_elems, sizeof(algo::cstring)*parent.cmd_max); // (command.gcache.cmd)
+}
+
+// --- command.gcache..PrintArgv
+// print command-line args of command::gcache to string  -- cprint:command.gcache.Argv
+void command::gcache_PrintArgv(command::gcache & row, algo::cstring &str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)row;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+    ind_beg(gcache_cmd_curs,value,row) {
+        ch_RemoveAll(temp);
+        cstring_Print(value, temp);
+        str << " ";
+        strptr_PrintBash(temp,str);
+    }ind_end;
+    if (!(row.install == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.install, temp);
+        str << " -install:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.stats == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.stats, temp);
+        str << " -stats:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.enable == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.enable, temp);
+        str << " -enable:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.disable == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.disable, temp);
+        str << " -disable:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.gc == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.gc, temp);
+        str << " -gc:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.clean == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.clean, temp);
+        str << " -clean:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.dir == "/tmp/gcache")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.dir, temp);
+        str << " -dir:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.hitrate == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.hitrate, temp);
+        str << " -hitrate:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(UnTime_Eq(row.after, algo::UnTime()))) {
+        ch_RemoveAll(temp);
+        UnTime_Print(row.after, temp);
+        str << " -after:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.report == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.report, temp);
+        str << " -report:";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- command.gcache..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::gcache_ToCmdline(command::gcache & row) {
+    tempstr ret;
+    ret << "bin/gcache ";
+    gcache_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.gcache..Print
+// print string representation of command::gcache to string LHS, no header -- cprint:command.gcache.String
+void command::gcache_Print(command::gcache & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "command.gcache";
+
+    algo::cstring_Print(row.in, temp);
+    PrintAttrSpaceReset(str,"in", temp);
+
+    bool_Print(row.install, temp);
+    PrintAttrSpaceReset(str,"install", temp);
+
+    bool_Print(row.stats, temp);
+    PrintAttrSpaceReset(str,"stats", temp);
+
+    bool_Print(row.enable, temp);
+    PrintAttrSpaceReset(str,"enable", temp);
+
+    bool_Print(row.disable, temp);
+    PrintAttrSpaceReset(str,"disable", temp);
+
+    bool_Print(row.gc, temp);
+    PrintAttrSpaceReset(str,"gc", temp);
+
+    bool_Print(row.clean, temp);
+    PrintAttrSpaceReset(str,"clean", temp);
+
+    algo::cstring_Print(row.dir, temp);
+    PrintAttrSpaceReset(str,"dir", temp);
+
+    bool_Print(row.hitrate, temp);
+    PrintAttrSpaceReset(str,"hitrate", temp);
+
+    algo::UnTime_Print(row.after, temp);
+    PrintAttrSpaceReset(str,"after", temp);
+
+    bool_Print(row.report, temp);
+    PrintAttrSpaceReset(str,"report", temp);
+}
+
+// --- command.gcache..GetAnon
+algo::strptr command::gcache_GetAnon(command::gcache &parent, i32 idx) {
+    (void)parent;//only to avoid -Wunused-parameter
+    switch(idx) {
+        default: return strptr("cmd", 3);
+    }
+}
+
+// --- command.gcache..NArgs
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+i32 command::gcache_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+    i32 retval = 1;
+    switch (field) {
+        case command_FieldId_in: { // $comment
+            *out_anon = false;
+        } break;
+        case command_FieldId_cmd: { // $comment
+            *out_anon = true;
+        } break;
+        case command_FieldId_install: { // $comment
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_stats: { // bool: no argument required but value may be specified as install:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_enable: { // bool: no argument required but value may be specified as stats:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_disable: { // bool: no argument required but value may be specified as enable:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_gc: { // bool: no argument required but value may be specified as disable:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_clean: { // bool: no argument required but value may be specified as gc:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_dir: { // bool: no argument required but value may be specified as clean:Y
+            *out_anon = false;
+        } break;
+        case command_FieldId_hitrate: { // bool: no argument required but value may be specified as clean:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_after: { // bool: no argument required but value may be specified as hitrate:Y
+            *out_anon = false;
+        } break;
+        case command_FieldId_report: { // bool: no argument required but value may be specified as hitrate:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        default:
+        retval=-1; // unrecognized
+    }
+    return retval;
+}
+
+// --- command.gcache_proc.gcache.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::gcache_Start(command::gcache_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(gcache_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(gcache_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= gcache_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.gcache_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.gcache_proc.gcache.StartRead
+// Start subprocess & Read output
+algo::Fildes command::gcache_StartRead(command::gcache_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    gcache_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.gcache_proc.gcache.Kill
+// Kill subprocess and wait
+void command::gcache_Kill(command::gcache_proc& parent) {
+    if (parent.pid != 0) {
+        kill(parent.pid,9);
+        gcache_Wait(parent);
+    }
+}
+
+// --- command.gcache_proc.gcache.Wait
+// Wait for subprocess to return
+void command::gcache_Wait(command::gcache_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.gcache_proc.gcache.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::gcache_Exec(command::gcache_proc& parent) {
+    gcache_Start(parent);
+    gcache_Wait(parent);
+    return parent.status;
+}
+
+// --- command.gcache_proc.gcache.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::gcache_ExecX(command::gcache_proc& parent) {
+    int rc = gcache_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",gcache_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.gcache_proc.gcache.Execv
+// Call execv()
+// Call execv with specified parameters -- cprint:gcache.Argv
+int command::gcache_Execv(command::gcache_proc& parent) {
+    algo_lib::exec_args_Alloc() << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+    ind_beg(command::gcache_cmd_curs,value,parent.cmd) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-cmd:";
+        cstring_Print(value, *arg);
+    }ind_end;
+
+    if (parent.cmd.install != false) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-install:";
+        bool_Print(parent.cmd.install, *arg);
+    }
+
+    if (parent.cmd.stats != false) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-stats:";
+        bool_Print(parent.cmd.stats, *arg);
+    }
+
+    if (parent.cmd.enable != false) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-enable:";
+        bool_Print(parent.cmd.enable, *arg);
+    }
+
+    if (parent.cmd.disable != false) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-disable:";
+        bool_Print(parent.cmd.disable, *arg);
+    }
+
+    if (parent.cmd.gc != false) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-gc:";
+        bool_Print(parent.cmd.gc, *arg);
+    }
+
+    if (parent.cmd.clean != false) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-clean:";
+        bool_Print(parent.cmd.clean, *arg);
+    }
+
+    if (parent.cmd.dir != "/tmp/gcache") {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-dir:";
+        cstring_Print(parent.cmd.dir, *arg);
+    }
+
+    if (parent.cmd.hitrate != false) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-hitrate:";
+        bool_Print(parent.cmd.hitrate, *arg);
+    }
+
+    if (true) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-after:";
+        UnTime_Print(parent.cmd.after, *arg);
+    }
+
+    if (parent.cmd.report != false) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-report:";
+        bool_Print(parent.cmd.report, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        algo_lib::exec_args_Alloc() << "-verbose";
+    }
+    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
+    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+        argv[ind_curs(arg).index] = Zeroterm(arg);
+    }ind_end;
+    argv[algo_lib::exec_args_N()] = NULL;
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    return execv(Zeroterm(parent.path),argv);
+}
+
+// --- command.gcache_proc.gcache.ToCmdline
+algo::tempstr command::gcache_ToCmdline(command::gcache_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::gcache_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.gcache_proc..Uninit
+void command::gcache_proc_Uninit(command::gcache_proc& parent) {
+    command::gcache_proc &row = parent; (void)row;
+
+    // command.gcache_proc.gcache.Uninit (Exec)  //
+    gcache_Kill(parent); // kill child, ensure forward progress
+}
+
 // --- command.gcli.fields.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -15174,6 +15860,404 @@ void command::orgfile_proc_Uninit(command::orgfile_proc& parent) {
     orgfile_Kill(parent); // kill child, ensure forward progress
 }
 
+// --- command.samp_regx.style.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* command::style_ToCstr(const command::samp_regx& parent) {
+    const char *ret = NULL;
+    switch(style_GetEnum(parent)) {
+        case command_samp_regx_style_acr   : ret = "acr";  break;
+        case command_samp_regx_style_shell : ret = "shell";  break;
+        case command_samp_regx_style_classic: ret = "classic";  break;
+        case command_samp_regx_style_literal: ret = "literal";  break;
+    }
+    return ret;
+}
+
+// --- command.samp_regx.style.Print
+// Convert style to a string. First, attempt conversion to a known string.
+// If no string matches, print style as a numeric value.
+void command::style_Print(const command::samp_regx& parent, algo::cstring &lhs) {
+    const char *strval = style_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.style;
+    }
+}
+
+// --- command.samp_regx.style.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool command::style_SetStrptrMaybe(command::samp_regx& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 3: {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+                case LE_STR3('a','c','r'): {
+                    style_SetEnum(parent,command_samp_regx_style_acr); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 5: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+                case LE_STR5('s','h','e','l','l'): {
+                    style_SetEnum(parent,command_samp_regx_style_shell); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 7: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+                case LE_STR7('c','l','a','s','s','i','c'): {
+                    style_SetEnum(parent,command_samp_regx_style_classic); ret = true; break;
+                }
+                case LE_STR7('l','i','t','e','r','a','l'): {
+                    style_SetEnum(parent,command_samp_regx_style_literal); ret = true; break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- command.samp_regx.style.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void command::style_SetStrptr(command::samp_regx& parent, algo::strptr rhs, command_samp_regx_style_Enum dflt) {
+    if (!style_SetStrptrMaybe(parent,rhs)) style_SetEnum(parent,dflt);
+}
+
+// --- command.samp_regx.style.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool command::style_ReadStrptrMaybe(command::samp_regx& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = style_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = u8_ReadStrptrMaybe(parent.style,rhs);
+    }
+    return retval;
+}
+
+// --- command.samp_regx..ReadFieldMaybe
+bool command::samp_regx_ReadFieldMaybe(command::samp_regx &parent, algo::strptr field, algo::strptr strval) {
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case command_FieldId_in: retval = algo::cstring_ReadStrptrMaybe(parent.in, strval); break;
+        case command_FieldId_expr: retval = algo::cstring_ReadStrptrMaybe(parent.expr, strval); break;
+        case command_FieldId_style: retval = style_ReadStrptrMaybe(parent, strval); break;
+        case command_FieldId_match: retval = bool_ReadStrptrMaybe(parent.match, strval); break;
+        case command_FieldId_string: retval = algo::cstring_ReadStrptrMaybe(parent.string, strval); break;
+        case command_FieldId_show: retval = bool_ReadStrptrMaybe(parent.show, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.samp_regx..ReadTupleMaybe
+// Read fields of command::samp_regx from attributes of ascii tuple TUPLE
+bool command::samp_regx_ReadTupleMaybe(command::samp_regx &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    int anon_idx = 0;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        if (ch_N(attr.name) == 0) {
+            attr.name = samp_regx_GetAnon(parent, anon_idx++);
+        }
+        retval = samp_regx_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- command.samp_regx..PrintArgv
+// print command-line args of command::samp_regx to string  -- cprint:command.samp_regx.Argv
+void command::samp_regx_PrintArgv(command::samp_regx & row, algo::cstring &str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)row;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+    ch_RemoveAll(temp);
+    cstring_Print(row.expr, temp);
+    str << " ";
+    strptr_PrintBash(temp,str);
+    if (!(row.style == 0)) {
+        ch_RemoveAll(temp);
+        command::style_Print(const_cast<command::samp_regx&>(row), temp);
+        str << " -style:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.match == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.match, temp);
+        str << " -match:";
+        strptr_PrintBash(temp,str);
+    }
+    ch_RemoveAll(temp);
+    cstring_Print(row.string, temp);
+    str << " ";
+    strptr_PrintBash(temp,str);
+    if (!(row.show == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.show, temp);
+        str << " -show:";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- command.samp_regx..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::samp_regx_ToCmdline(command::samp_regx & row) {
+    tempstr ret;
+    ret << "bin/samp_regx ";
+    samp_regx_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.samp_regx..GetAnon
+algo::strptr command::samp_regx_GetAnon(command::samp_regx &parent, i32 idx) {
+    (void)parent;//only to avoid -Wunused-parameter
+    switch(idx) {
+        case(0): return strptr("expr", 4);
+        case(1): return strptr("string", 6);
+        default: return algo::strptr();
+    }
+}
+
+// --- command.samp_regx..NArgs
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+i32 command::samp_regx_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+    i32 retval = 1;
+    switch (field) {
+        case command_FieldId_in: { // $comment
+            *out_anon = false;
+        } break;
+        case command_FieldId_expr: { // $comment
+            *out_anon = true;
+        } break;
+        case command_FieldId_style: { // $comment
+            *out_anon = false;
+        } break;
+        case command_FieldId_match: { // $comment
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_string: { // bool: no argument required but value may be specified as match:Y
+            *out_anon = true;
+        } break;
+        case command_FieldId_show: { // bool: no argument required but value may be specified as match:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        default:
+        retval=-1; // unrecognized
+    }
+    return retval;
+}
+
+// --- command.samp_regx_proc.samp_regx.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::samp_regx_Start(command::samp_regx_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(samp_regx_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(samp_regx_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= samp_regx_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.samp_regx_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.samp_regx_proc.samp_regx.StartRead
+// Start subprocess & Read output
+algo::Fildes command::samp_regx_StartRead(command::samp_regx_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    samp_regx_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.samp_regx_proc.samp_regx.Kill
+// Kill subprocess and wait
+void command::samp_regx_Kill(command::samp_regx_proc& parent) {
+    if (parent.pid != 0) {
+        kill(parent.pid,9);
+        samp_regx_Wait(parent);
+    }
+}
+
+// --- command.samp_regx_proc.samp_regx.Wait
+// Wait for subprocess to return
+void command::samp_regx_Wait(command::samp_regx_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.samp_regx_proc.samp_regx.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::samp_regx_Exec(command::samp_regx_proc& parent) {
+    samp_regx_Start(parent);
+    samp_regx_Wait(parent);
+    return parent.status;
+}
+
+// --- command.samp_regx_proc.samp_regx.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::samp_regx_ExecX(command::samp_regx_proc& parent) {
+    int rc = samp_regx_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",samp_regx_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.samp_regx_proc.samp_regx.Execv
+// Call execv()
+// Call execv with specified parameters -- cprint:samp_regx.Argv
+int command::samp_regx_Execv(command::samp_regx_proc& parent) {
+    algo_lib::exec_args_Alloc() << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (true) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-expr:";
+        cstring_Print(parent.cmd.expr, *arg);
+    }
+
+    if (parent.cmd.style != 0) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-style:";
+        command::style_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.match != false) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-match:";
+        bool_Print(parent.cmd.match, *arg);
+    }
+
+    if (parent.cmd.string != "") {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-string:";
+        cstring_Print(parent.cmd.string, *arg);
+    }
+
+    if (parent.cmd.show != false) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-show:";
+        bool_Print(parent.cmd.show, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        algo_lib::exec_args_Alloc() << "-verbose";
+    }
+    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
+    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+        argv[ind_curs(arg).index] = Zeroterm(arg);
+    }ind_end;
+    argv[algo_lib::exec_args_N()] = NULL;
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    return execv(Zeroterm(parent.path),argv);
+}
+
+// --- command.samp_regx_proc.samp_regx.ToCmdline
+algo::tempstr command::samp_regx_ToCmdline(command::samp_regx_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::samp_regx_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.samp_regx_proc..Uninit
+void command::samp_regx_proc_Uninit(command::samp_regx_proc& parent) {
+    command::samp_regx_proc &row = parent; (void)row;
+
+    // command.samp_regx_proc.samp_regx.Uninit (Exec)  //
+    samp_regx_Kill(parent); // kill child, ensure forward progress
+}
+
 // --- command.sandbox.name.Print
 // Print back to string
 void command::name_Print(command::sandbox& parent, algo::cstring &out) {
@@ -15880,18 +16964,18 @@ void command::sandbox_proc_Uninit(command::sandbox_proc& parent) {
     sandbox_Kill(parent); // kill child, ensure forward progress
 }
 
-// --- command.src_func.targsrc.Print
+// --- command.src_func.target.Print
 // Print back to string
-void command::targsrc_Print(command::src_func& parent, algo::cstring &out) {
-    Regx_Print(parent.targsrc, out);
+void command::target_Print(command::src_func& parent, algo::cstring &out) {
+    Regx_Print(parent.target, out);
 }
 
-// --- command.src_func.targsrc.ReadStrptrMaybe
+// --- command.src_func.target.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::targsrc_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
-    Regx_ReadSql(parent.targsrc, in, true);
-    bool retval = true;// !parent.targsrc.parseerror; -- TODO: uncomment
+bool command::target_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
+    Regx_ReadSql(parent.target, in, true);
+    bool retval = true;// !parent.target.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -15922,6 +17006,21 @@ void command::body_Print(command::src_func& parent, algo::cstring &out) {
 bool command::body_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
     Regx_ReadSql(parent.body, in, true);
     bool retval = true;// !parent.body.parseerror; -- TODO: uncomment
+    return retval;
+}
+
+// --- command.src_func.targsrc.Print
+// Print back to string
+void command::targsrc_Print(command::src_func& parent, algo::cstring &out) {
+    Regx_Print(parent.targsrc, out);
+}
+
+// --- command.src_func.targsrc.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::targsrc_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
+    Regx_ReadSql(parent.targsrc, in, true);
+    bool retval = true;// !parent.targsrc.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -15962,9 +17061,10 @@ bool command::src_func_ReadFieldMaybe(command::src_func &parent, algo::strptr fi
     bool retval = true; // default is no error
     switch(field_id) {
         case command_FieldId_in: retval = algo::cstring_ReadStrptrMaybe(parent.in, strval); break;
-        case command_FieldId_targsrc: retval = targsrc_ReadStrptrMaybe(parent, strval); break;
+        case command_FieldId_target: retval = target_ReadStrptrMaybe(parent, strval); break;
         case command_FieldId_name: retval = name_ReadStrptrMaybe(parent, strval); break;
         case command_FieldId_body: retval = body_ReadStrptrMaybe(parent, strval); break;
+        case command_FieldId_targsrc: retval = targsrc_ReadStrptrMaybe(parent, strval); break;
         case command_FieldId_func: retval = func_ReadStrptrMaybe(parent, strval); break;
         case command_FieldId_comment: retval = comment_ReadStrptrMaybe(parent, strval); break;
         case command_FieldId_nextfile: retval = algo::Smallstr200_ReadStrptrMaybe(parent.nextfile, strval); break;
@@ -16010,9 +17110,10 @@ bool command::src_func_ReadTupleMaybe(command::src_func &parent, algo::Tuple &tu
 // Set all fields to initial values.
 void command::src_func_Init(command::src_func& parent) {
     parent.in = algo::strptr("data");
-    Regx_ReadSql(parent.targsrc, "%", true);
+    Regx_ReadSql(parent.target, "%", true);
     Regx_ReadSql(parent.name, "%", true);
     Regx_ReadSql(parent.body, "%", true);
+    Regx_ReadSql(parent.targsrc, "", true);
     Regx_ReadSql(parent.func, "%", true);
     Regx_ReadSql(parent.comment, "%", true);
     parent.nextfile = algo::strptr("");
@@ -16045,7 +17146,7 @@ void command::src_func_PrintArgv(command::src_func & row, algo::cstring &str) {
         strptr_PrintBash(temp,str);
     }
     ch_RemoveAll(temp);
-    command::targsrc_Print(const_cast<command::src_func&>(row), temp);
+    command::target_Print(const_cast<command::src_func&>(row), temp);
     str << " ";
     strptr_PrintBash(temp,str);
     ch_RemoveAll(temp);
@@ -16056,6 +17157,12 @@ void command::src_func_PrintArgv(command::src_func & row, algo::cstring &str) {
     command::body_Print(const_cast<command::src_func&>(row), temp);
     str << " ";
     strptr_PrintBash(temp,str);
+    if (!(row.targsrc.expr == "")) {
+        ch_RemoveAll(temp);
+        command::targsrc_Print(const_cast<command::src_func&>(row), temp);
+        str << " -targsrc:";
+        strptr_PrintBash(temp,str);
+    }
     if (!(row.func.expr == "%")) {
         ch_RemoveAll(temp);
         command::func_Print(const_cast<command::src_func&>(row), temp);
@@ -16175,7 +17282,7 @@ tempstr command::src_func_ToCmdline(command::src_func & row) {
 algo::strptr command::src_func_GetAnon(command::src_func &parent, i32 idx) {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
-        case(0): return strptr("targsrc", 7);
+        case(0): return strptr("target", 6);
         case(1): return strptr("name", 4);
         case(2): return strptr("body", 4);
         default: return algo::strptr();
@@ -16192,7 +17299,7 @@ i32 command::src_func_NArgs(command::FieldId field, algo::strptr& out_dflt, bool
         case command_FieldId_in: { // $comment
             *out_anon = false;
         } break;
-        case command_FieldId_targsrc: { // $comment
+        case command_FieldId_target: { // $comment
             *out_anon = true;
         } break;
         case command_FieldId_name: { // $comment
@@ -16200,6 +17307,9 @@ i32 command::src_func_NArgs(command::FieldId field, algo::strptr& out_dflt, bool
         } break;
         case command_FieldId_body: { // $comment
             *out_anon = true;
+        } break;
+        case command_FieldId_targsrc: { // $comment
+            *out_anon = false;
         } break;
         case command_FieldId_func: { // $comment
             *out_anon = false;
@@ -16390,10 +17500,10 @@ int command::src_func_Execv(command::src_func_proc& parent) {
         cstring_Print(parent.cmd.in, *arg);
     }
 
-    if (parent.cmd.targsrc.expr != "%") {
+    if (parent.cmd.target.expr != "%") {
         cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-targsrc:";
-        command::targsrc_Print(parent.cmd, *arg);
+        *arg << "-target:";
+        command::target_Print(parent.cmd, *arg);
     }
 
     if (parent.cmd.name.expr != "%") {
@@ -16406,6 +17516,12 @@ int command::src_func_Execv(command::src_func_proc& parent) {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-body:";
         command::body_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.targsrc.expr != "") {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-targsrc:";
+        command::targsrc_Print(parent.cmd, *arg);
     }
 
     if (parent.cmd.func.expr != "%") {

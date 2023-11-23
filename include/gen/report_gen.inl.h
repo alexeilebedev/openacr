@@ -62,11 +62,13 @@ inline report::Protocol::Protocol() {
 
 inline report::abt::abt(u16                            in_n_target
         ,algo::UnDiff                   in_time
+        ,const algo::strptr&            in_hitrate
         ,u32                            in_n_warn
         ,u32                            in_n_err
         ,u16                            in_n_install)
     : n_target(in_n_target)
     , time(in_time)
+    , hitrate(in_hitrate)
     , n_warn(in_n_warn)
     , n_err(in_n_err)
     , n_install(in_n_install)
@@ -96,6 +98,7 @@ inline void report::acr_Init(report::acr& parent) {
     parent.n_select = u32(0);
     parent.n_insert = u32(0);
     parent.n_delete = u32(0);
+    parent.n_ignore = u32(0);
     parent.n_update = u32(0);
     parent.n_file_mod = u32(0);
 }
@@ -162,6 +165,33 @@ inline void report::atf_unit_Init(report::atf_unit& parent) {
     parent.n_test_run = u64(0);
     parent.n_err = u64(0);
 }
+inline report::gcache::gcache(algo::UnTime                   in_starttime
+        ,double                         in_elapsed_sec
+        ,i32                            in_preproc_size
+        ,bool                           in_hit
+        ,const algo::strptr&            in_cached_file
+        ,bool                           in_copy_file_range)
+    : starttime(in_starttime)
+    , elapsed_sec(in_elapsed_sec)
+    , preproc_size(in_preproc_size)
+    , hit(in_hit)
+    , cached_file(in_cached_file)
+    , copy_file_range(in_copy_file_range)
+{
+}
+inline report::gcache::gcache() {
+    report::gcache_Init(*this);
+}
+
+
+// --- report.gcache..Init
+// Set all fields to initial values.
+inline void report::gcache_Init(report::gcache& parent) {
+    parent.elapsed_sec = double(0.0);
+    parent.preproc_size = i32(0);
+    parent.hit = bool(false);
+    parent.copy_file_range = bool(false);
+}
 inline report::src_func::src_func() {
     report::src_func_Init(*this);
 }
@@ -211,6 +241,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const report::atf_co
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const report::atf_unit &row) {// cfmt:report.atf_unit.String
     report::atf_unit_Print(const_cast<report::atf_unit&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const report::gcache &row) {// cfmt:report.gcache.String
+    report::gcache_Print(const_cast<report::gcache&>(row), str);
     return str;
 }
 

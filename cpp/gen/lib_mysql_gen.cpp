@@ -88,18 +88,55 @@ bool lib_mysql::InsertStrptrMaybe(algo::strptr str) {
 
 // --- lib_mysql.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool lib_mysql::LoadTuplesMaybe(algo::strptr root) {
+bool lib_mysql::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    (void)root;//only to avoid -Wunused-parameter
+    if (FileQ(root)) {
+        retval = lib_mysql::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = lib_mysql::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
+
+// --- lib_mysql.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool lib_mysql::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- lib_mysql.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool lib_mysql::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+        }
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
     return retval;
 }
 
 // --- lib_mysql.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool lib_mysql::LoadSsimfileMaybe(algo::strptr fname) {
+bool lib_mysql::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, lib_mysql::InsertStrptrMaybe, true);
+        retval = lib_mysql::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }

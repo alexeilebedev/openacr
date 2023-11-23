@@ -86,9 +86,26 @@ void atf_ci::citest_acr_ed_ssimfile() {
 
 // Runs in sandbox
 void atf_ci::citest_acr_ed_target() {
-    command::acr_ed_proc acr_ed;
-    acr_ed.cmd.create=true;
-    acr_ed.cmd.target="acr_test";
-    acr_ed.cmd.write=true;
-    acr_ed_ExecX(acr_ed);
+    // create a new target
+    {
+        command::acr_ed_proc acr_ed;
+        acr_ed.cmd.create=true;
+        acr_ed.cmd.target="acr_test";
+        acr_ed.cmd.write=true;
+        acr_ed_ExecX(acr_ed);
+        command::abt_proc abt;
+        abt.cmd.target.expr = "acr_test";
+        abt_ExecX(abt);
+    }
+    // rename this target and check that everything compiles
+    {
+        command::acr_ed_proc acr_ed;
+        acr_ed.cmd.target="acr_test";
+        acr_ed.cmd.rename="samp_test";
+        acr_ed.cmd.write=true;
+        acr_ed_ExecX(acr_ed);
+        command::abt_proc abt;
+        abt.cmd.target.expr = "samp_test";
+        abt_ExecX(abt);
+    }
 }

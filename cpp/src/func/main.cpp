@@ -40,9 +40,40 @@ strptr src_func::StripComment(strptr line) {
 
 // -----------------------------------------------------------------------------
 
-// Remove open curly from function prototype line
+// S   : input string
+// CALL: string that looks like "XYZ("
+// Result: find all instances of "XYZ(...)", handling nested parentheses,
+//    in string and replace them with
+//    PREFIX ... (whatever was inside the parentheses)
+// This expands macros DFLTVAL and FUNCATTR in headers.
+static tempstr RemoveAnnotation(strptr s, strptr call, strptr prefix) {
+    tempstr ret(s);
+    int i=0;
+    while ((i=FindStr(ret,call))!=-1) {
+        int parens=1;
+        int start=i+call.n_elems, end;
+        for (end =i+call.n_elems; end <ch_N(ret) && parens>0; end++) {
+            if (ret.ch_elems[end]=='(') {
+                parens++;
+            } else if (ret.ch_elems[end]==')') {
+                parens--;
+            }
+        }
+        ret=tempstr()<<ch_FirstN(ret,i)<<prefix<<ch_GetRegion(ret,start,end-1-start)<<ch_RestFrom(ret,end);
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Get first line of function definition
+// Remove open curly
+// Replace DFLTVAL(x) with =x (for headers)
+// Replace FUNCATTR(x) with x (for headers)
 tempstr src_func::GetProto(src_func::FFunc &func) {
     tempstr ret(Pathcomp(func.body,"\nLL{LL"));
+    ret=RemoveAnnotation(ret,"DFLTVAL(","= ");
+    ret=RemoveAnnotation(ret,"FUNCATTR(","");
     return ret;
 }
 
@@ -153,8 +184,24 @@ strptr src_func::Nsline_GetNamespace(strptr str) {
 // -----------------------------------------------------------------------------
 
 static void SelectTarget() {
+    // select target, and any targsrc under it
     ind_beg(src_func::_db_target_curs,target,src_func::_db) {
-        target.select = Regx_Match(src_func::_db.cmdline.targsrc, target.target);
+        target.select = Regx_Match(src_func::_db.cmdline.target, target.target);
+        if (target.select) {
+            ind_beg(src_func::target_cd_targsrc_curs,targsrc,target) {
+                targsrc.select=true;
+            }ind_end;
+        }
+    }ind_end;
+    // select targsrc, and any target above it
+    ind_beg(src_func::_db_targsrc_curs,targsrc,src_func::_db) {
+        targsrc.select = targsrc.select || Regx_Match(src_func::_db.cmdline.targsrc, targsrc.targsrc);
+        if (targsrc.select) {
+            targsrc.p_target->select=true;
+        }
+    }ind_end;
+    ind_beg(src_func::_db_target_curs,target,src_func::_db) if (target.select) {
+        verblog("# select "<<target.target);
     }ind_end;
 }
 

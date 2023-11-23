@@ -1302,6 +1302,23 @@ inline bool atf_amc::Ctype2Attr_Update(atf_amc::Ctype2Attr &lhs, atf_amc::Ctype2
     }
     return ret;
 }
+inline atf_amc::Ctype2AttrAnon::Ctype2AttrAnon(u32                            in_attr1
+        ,u32                            in_attr2)
+    : attr1(in_attr1)
+    , attr2(in_attr2)
+{
+}
+inline atf_amc::Ctype2AttrAnon::Ctype2AttrAnon() {
+    atf_amc::Ctype2AttrAnon_Init(*this);
+}
+
+
+// --- atf_amc.Ctype2AttrAnon..Init
+// Set all fields to initial values.
+inline void atf_amc::Ctype2AttrAnon_Init(atf_amc::Ctype2AttrAnon& parent) {
+    parent.attr1 = u32(0);
+    parent.attr2 = u32(0);
+}
 inline atf_amc::DelType1::DelType1() {
     atf_amc::DelType1_Init(*this);
 }
@@ -10260,6 +10277,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::Ctype
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::Ctype2Attr &row) {// cfmt:atf_amc.Ctype2Attr.String
     atf_amc::Ctype2Attr_Print(const_cast<atf_amc::Ctype2Attr&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::Ctype2AttrAnon &row) {// cfmt:atf_amc.Ctype2AttrAnon.String
+    atf_amc::Ctype2AttrAnon_Print(const_cast<atf_amc::Ctype2AttrAnon&>(row), str);
     return str;
 }
 

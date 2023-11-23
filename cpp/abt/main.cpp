@@ -613,21 +613,25 @@ static void Main_CreateCmds(algo_lib::Replscope &R, abt::FTarget &target, abt::F
         Set(R,"$libs",libs);
         if (target.p_ns->nstype == dmmeta_Nstype_nstype_pch) {
             // do nothing -- the precompiled header has been created
-        } else if (target.p_ns->nstype == dmmeta_Nstype_nstype_lib) {
-            // recreate lib from scratch,
-            // otherwise old stale archive members don't get removed
-            abt::FSyscmd& cmd_ar = NewCmd(&targ_linktarg, &targ_end);
-            cmd_ar.outfile = target.outfile;// file to clean on failure
-            cmd_ar.command << "rm -f "<<target.outfile;
-            if (abt::_db.cmdline.compiler == dev_Compiler_compiler_cl) {
-                cmd_ar.command << Subst(R,"; $_ar /nologo $objs /out:$outfile");
+        } else if (target.p_ns->nstype == dmmeta_Nstype_nstype_lib || target.p_ns->nstype == dmmeta_Nstype_nstype_exe) {
+            tempstr tempfile = tempstr()<< target.outfile<<".tmp";
+            Set(R, "$origoutfile", "$outfile");
+            Set(R, "$outfile", tempfile);
+            abt::FSyscmd& cmd = NewCmd(&targ_linktarg, &targ_end);
+            cmd.outfile = tempfile;// file to clean on failure
+            cmd.command << Subst(R,"rm -f $outfile");
+            if (target.p_ns->nstype == dmmeta_Nstype_nstype_lib) {
+                // recreate lib from scratch,
+                // otherwise old stale archive members don't get removed
+                if (abt::_db.cmdline.compiler == dev_Compiler_compiler_cl) {
+                    cmd.command << "\n"<<Subst(R,"$_ar /nologo $objs /out:$outfile");
+                } else {
+                    cmd.command << "\n"<<Subst(R,"$_ar cr $outfile $objs && $ranlib $outfile");
+                }
             } else {
-                cmd_ar.command << Subst(R,"; $_ar cr $outfile $objs && $ranlib $outfile");
+                cmd.command << "\n"<<abt::EvalLinkCmdline(R,target);
             }
-        } else if (target.p_ns->nstype == dmmeta_Nstype_nstype_exe) {
-            abt::FSyscmd& cmd_link = NewCmd(&targ_linktarg, &targ_insttarg);
-            cmd_link.outfile = target.outfile;
-            cmd_link.command = abt::EvalLinkCmdline(R,target);
+            cmd.command << Subst(R,"\nmv -f $outfile $origoutfile");
         }
     }
 
@@ -773,7 +777,8 @@ static void DetectCcache() {
     // don't enable in coverity phase -- disables coverity
     // ignore in 'printcmd' (bootstrap) mode
     if (!abt::_db.cmdline.printcmd && abt::_db.cmdline.jcdb=="") {
-        if (algo::DirectoryQ(".gcache/")) {
+
+        if (algo::DirectoryQ(".gcache/") && algo::FileQ("bin/gcache")) {
             abt::_db.gcache=true;
         } else if (algo::DirectoryQ(".ccache/")) {
             abt::_db.ccache=true;
@@ -983,7 +988,7 @@ static void CreateDirRecurseV(strptr dir) {
 // -----------------------------------------------------------------------------
 
 void abt::Main() {
-    algo::SchedTime cycles = algo::CurrSchedTime();
+    algo::UnTime starttime = algo::CurrUnTime();
     algo::SetupExitSignals();
 
     RewriteOpts();
@@ -1075,7 +1080,15 @@ void abt::Main() {
     }
 
     // report abt warnings and errors, and execution time
-    abt::_db.report.time = algo::UnDiffSecs(algo::ElapsedSecs(cycles,algo::CurrSchedTime()));
+    abt::_db.report.time = algo::CurrUnTime()-starttime;
+    // compute hit rate from moment of invocation
+    if (_db.gcache) {
+        command::gcache gcache;
+        gcache.hitrate=true;
+        gcache.after=starttime;
+        abt::_db.report.hitrate=Trimmed(SysEval(command::gcache_ToCmdline(gcache)<<" 2>&1",FailokQ(true),1024));
+    }
+
     Main_ShowReport();
     verblog(abt::_db.trace);
 

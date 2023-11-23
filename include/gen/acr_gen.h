@@ -33,13 +33,13 @@
 
 // --- acr_Queryop_value_Enum
 
-enum acr_Queryop_value_Enum {                     // acr.Queryop.value
+enum acr_Queryop_value_Enum {                      // acr.Queryop.value
      acr_Queryop_value_none                  = 0
-    ,acr_Queryop_value_select                = 1
-    ,acr_Queryop_value_set_attr              = 2
-    ,acr_Queryop_value_rename_attr           = 3
-    ,acr_Queryop_value_del_attr              = 4
-    ,acr_Queryop_value_finish_rename_field   = 5
+    ,acr_Queryop_value_select                = 1   // Select record
+    ,acr_Queryop_value_set_attr              = 2   // Set attribute value
+    ,acr_Queryop_value_rename_attr           = 3   // Set attribute name
+    ,acr_Queryop_value_del_attr              = 4   // Delete attribute
+    ,acr_Queryop_value_finish_rename_field   = 5   // Some clean-up
 };
 
 enum { acr_Queryop_value_Enum_N = 6 };
@@ -56,12 +56,12 @@ enum { acr_FieldIdEnum_N = 1 };
 
 // --- acr_ReadModeEnum
 
-enum acr_ReadModeEnum {           // acr.ReadMode.read_mode
-     acr_ReadMode_insert    = 0   // Insert new record only
-    ,acr_ReadMode_replace   = 1   // Replace record with input
-    ,acr_ReadMode_update    = 2   // Merge existing attributes only
-    ,acr_ReadMode_merge     = 3   // Create new record & merge attributes
-    ,acr_ReadMode_delete    = 4   // Delete record
+enum acr_ReadModeEnum {               // acr.ReadMode.read_mode
+     acr_ReadMode_acr_insert    = 0   // Insert new record only
+    ,acr_ReadMode_acr_replace   = 1   // Replace record with input
+    ,acr_ReadMode_acr_update    = 2   // Merge existing attributes only
+    ,acr_ReadMode_acr_merge     = 3   // Create new record & merge attributes
+    ,acr_ReadMode_acr_delete    = 4   // Delete record
 };
 
 enum { acr_ReadModeEnum_N = 5 };
@@ -140,6 +140,7 @@ namespace acr { struct _db_cdflt_curs; }
 namespace acr { struct _db_field_curs; }
 namespace acr { struct _db_file_curs; }
 namespace acr { struct _db_zd_all_selrec_curs; }
+namespace acr { struct _db_zd_all_selrec_delcurs; }
 namespace acr { struct _db_zd_all_err_curs; }
 namespace acr { struct _db_zd_sel_ctype_curs; }
 namespace acr { struct _db_bh_pline_curs; }
@@ -306,8 +307,8 @@ void                 FBltin_Uninit(acr::FBltin& bltin) __attribute__((nothrow));
 // access: acr.FCtype.c_cdflt (Ptr)
 struct FCdflt { // acr.FCdflt
     algo::Smallstr50   ctype;      //
-    dmmeta::CppExpr    dflt;       //
-    dmmeta::CppExpr    cppdflt;    //
+    algo::CppExpr      dflt;       //
+    algo::CppExpr      cppdflt;    //
     algo::Smallstr50   ssimdflt;   //
     algo::Smallstr50   jsdflt;     //
 private:
@@ -432,7 +433,7 @@ void                 FCheck_Uninit(acr::FCheck& check) __attribute__((nothrow));
 // create: acr.FDb.cppfunc (Lary)
 struct FCppfunc { // acr.FCppfunc
     algo::Smallstr100   field;   //
-    dmmeta::CppExpr     expr;    //
+    algo::CppExpr       expr;    //
 private:
     friend acr::FCppfunc&       cppfunc_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FCppfunc*       cppfunc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -1150,9 +1151,13 @@ void                 StaticCheck();
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
-bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
+bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file.
+bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file descriptor.
+bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
-bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
@@ -1747,6 +1752,14 @@ void                 _db_zd_all_selrec_curs_Next(_db_zd_all_selrec_curs &curs);
 // item access
 acr::FRec&           _db_zd_all_selrec_curs_Access(_db_zd_all_selrec_curs &curs);
 // cursor points to valid item
+void                 _db_zd_all_selrec_delcurs_Reset(_db_zd_all_selrec_delcurs &curs, acr::FDb &parent);
+// cursor points to valid item
+bool                 _db_zd_all_selrec_delcurs_ValidQ(_db_zd_all_selrec_delcurs &curs);
+// proceed to next item
+void                 _db_zd_all_selrec_delcurs_Next(_db_zd_all_selrec_delcurs &curs);
+// item access
+acr::FRec&           _db_zd_all_selrec_delcurs_Access(_db_zd_all_selrec_delcurs &curs);
+// cursor points to valid item
 void                 _db_zd_all_err_curs_Reset(_db_zd_all_err_curs &curs, acr::FDb &parent);
 // cursor points to valid item
 bool                 _db_zd_all_err_curs_ValidQ(_db_zd_all_err_curs &curs);
@@ -1932,7 +1945,7 @@ struct FField { // acr.FField
     algo::Smallstr100   field;                  //
     algo::Smallstr50    arg;                    // type of field
     algo::Smallstr50    reftype;                //   "Val"
-    dmmeta::CppExpr     dflt;                   // default value (c++ expression)
+    algo::CppExpr       dflt;                   // default value (c++ expression)
     algo::Comment       comment;                //
     acr::FCtype*        p_ctype;                // reference to parent row
     acr::FCtype*        p_arg;                  // reference to parent row
@@ -1990,7 +2003,6 @@ struct FFile { // acr.FFile
     acr::FRec*      zd_frec_tail;    // pointer to last element
     algo::UnTime    modtime;         // File modification time at time of loading
     bool            autoloaded;      //   false  File was pulled in implicitly: loaded records are not 'inserted'
-    bool            deselect;        //   false  De-select input records
 private:
     friend acr::FFile&          file_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FFile*          file_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -2327,7 +2339,6 @@ struct FQuery { // acr.FQuery
     i32              ndown;           //   0  Number of levels to go down (transitive closure)
     bool             unused;          //   false  Only select records which are not referenced.
     bool             selmeta;         //   false  Only select meta records of matched records
-    bool             delrec;          //   false  Delete matching record
     algo::cstring    comment;         //   ""  Debug info
 private:
     friend acr::FQuery&         query_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -2474,6 +2485,8 @@ void                 c_pline_Remove(acr::FRec& rec, acr::FPline& row) __attribut
 // Set all fields to initial values.
 void                 FRec_Init(acr::FRec& rec);
 void                 FRec_Uninit(acr::FRec& rec) __attribute__((nothrow));
+// print string representation of acr::FRec to string LHS, no header -- cprint:acr.FRec.String
+void                 FRec_Print(acr::FRec & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- acr.FRun
 // create: acr.FDb.run (Cppstack)
@@ -2636,7 +2649,7 @@ struct FSmallstr { // acr.FSmallstr
     algo::Smallstr100   field;     //
     i32                 length;    //   0  Maximum characters in the string
     algo::Smallstr50    strtype;   // Data format for string
-    dmmeta::CppExpr     pad;       // Pad character (if applicable)
+    algo::CppExpr       pad;       // Pad character (if applicable)
     bool                strict;    //   false
 private:
     friend acr::FSmallstr&      smallstr_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -2766,7 +2779,7 @@ void                 FSsimsort_Uninit(acr::FSsimsort& ssimsort) __attribute__((n
 // access: acr.FField.c_substr (Ptr)
 struct FSubstr { // acr.FSubstr
     algo::Smallstr100   field;      //
-    dmmeta::CppExpr     expr;       //
+    algo::CppExpr       expr;       //
     algo::Smallstr100   srcfield;   //
 private:
     friend acr::FSubstr&        substr_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -3132,6 +3145,17 @@ struct _db_zd_all_selrec_curs {// fcurs:acr.FDb.zd_all_selrec/curs
 };
 
 
+struct _db_zd_all_selrec_delcurs {// fcurs:acr.FDb.zd_all_selrec/delcurs
+    typedef acr::FRec ChildType;
+    acr::FRec* row;
+    acr::FRec *next;
+    _db_zd_all_selrec_delcurs() {
+        row = NULL;
+        next = NULL;
+    }
+};
+
+
 struct _db_zd_all_err_curs {// fcurs:acr.FDb.zd_all_err/curs
     typedef acr::FErr ChildType;
     acr::FErr* row;
@@ -3349,6 +3373,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const acr::trace &row);// 
 inline algo::cstring &operator <<(algo::cstring &str, const acr::PlineKey &row);// cfmt:acr.PlineKey.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr::Queryop &row);// cfmt:acr.Queryop.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr::FQuery &row);// cfmt:acr.FQuery.String
+inline algo::cstring &operator <<(algo::cstring &str, const acr::FRec &row);// cfmt:acr.FRec.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr::FRun &row);// cfmt:acr.FRun.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr::FieldId &row);// cfmt:acr.FieldId.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr::TableId &row);// cfmt:acr.TableId.String

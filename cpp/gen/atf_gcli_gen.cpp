@@ -61,7 +61,7 @@ const char *atf_gcli_help =
 "    -dry_run                        Print actions, do not perform\n"
 "    -verbose        int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug          int             Debug level (0..255); alias -d; cumulative\n"
-"    -help                           Print help an exit; alias -h\n"
+"    -help                           Print help and exit; alias -h\n"
 "    -version                        Print version and exit\n"
 "    -signature                      Show signatures and exit; alias -sig\n"
 ;
@@ -219,7 +219,7 @@ void atf_gcli::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(atf_gcli::LoadTuplesMaybe(cmd.in)
+    vrfy(atf_gcli::LoadTuplesMaybe(cmd.in,true)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
@@ -256,7 +256,7 @@ static void atf_gcli::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_gcli.Input'  signature:'74c531ddb4a9d5e2538fda428996756795d56a09'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_gcli.Input'  signature:'4389b15ab01b092474cb6ac758fa336bd012f965'");
 }
 
 // --- atf_gcli.FDb._db.StaticCheck
@@ -303,7 +303,6 @@ bool atf_gcli::InsertStrptrMaybe(algo::strptr str) {
             break;
         }
         default:
-        retval = algo_lib::InsertStrptrMaybe(str);
         break;
     } //switch
     if (!retval) {
@@ -314,22 +313,63 @@ bool atf_gcli::InsertStrptrMaybe(algo::strptr str) {
 
 // --- atf_gcli.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool atf_gcli::LoadTuplesMaybe(algo::strptr root) {
+bool atf_gcli::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    static const char *ssimfiles[] = {
-        "gclidb.gclienv", "gclidb.gclienvsub", "gclidb.gtblact", "gclidb.gtblacttst"
-        , "gclidb.gtblacttstout"
-        , NULL};
-        retval = algo_lib::DoLoadTuples(root, atf_gcli::InsertStrptrMaybe, ssimfiles, true);
-        return retval;
+    if (FileQ(root)) {
+        retval = atf_gcli::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = atf_gcli::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && atf_gcli::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && atf_gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gclienv"),recursive);
+        retval = retval && atf_gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gclienvsub"),recursive);
+        retval = retval && atf_gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtblact"),recursive);
+        retval = retval && atf_gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtblacttst"),recursive);
+        retval = retval && atf_gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtblacttstout"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
+
+// --- atf_gcli.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool atf_gcli::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- atf_gcli.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool atf_gcli::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+        }
+        retval = retval && atf_gcli::InsertStrptrMaybe(line);
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
+    return retval;
 }
 
 // --- atf_gcli.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool atf_gcli::LoadSsimfileMaybe(algo::strptr fname) {
+bool atf_gcli::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, atf_gcli::InsertStrptrMaybe, true);
+        retval = atf_gcli::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }
@@ -697,7 +737,7 @@ void atf_gcli::ind_gtblacttst_Reserve(int n) {
 // --- atf_gcli.FDb.ind_gtblacttstout.Find
 // Find row by key. Return NULL if not found.
 atf_gcli::FGtblacttstout* atf_gcli::ind_gtblacttstout_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_gtblacttstout_buckets_n - 1);
+    u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_gtblacttstout_buckets_n - 1);
     atf_gcli::FGtblacttstout* *e = &_db.ind_gtblacttstout_buckets_elems[index];
     atf_gcli::FGtblacttstout* ret=NULL;
     do {
@@ -723,7 +763,7 @@ bool atf_gcli::ind_gtblacttstout_InsertMaybe(atf_gcli::FGtblacttstout& row) {
     ind_gtblacttstout_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gtblacttstout_next == (atf_gcli::FGtblacttstout*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.gtblacttstout) & (_db.ind_gtblacttstout_buckets_n - 1);
+        u32 index = algo::Smallstr250_Hash(0, row.gtblacttstout) & (_db.ind_gtblacttstout_buckets_n - 1);
         atf_gcli::FGtblacttstout* *prev = &_db.ind_gtblacttstout_buckets_elems[index];
         do {
             atf_gcli::FGtblacttstout* ret = *prev;
@@ -749,7 +789,7 @@ bool atf_gcli::ind_gtblacttstout_InsertMaybe(atf_gcli::FGtblacttstout& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_gcli::ind_gtblacttstout_Remove(atf_gcli::FGtblacttstout& row) {
     if (LIKELY(row.ind_gtblacttstout_next != (atf_gcli::FGtblacttstout*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.gtblacttstout) & (_db.ind_gtblacttstout_buckets_n - 1);
+        u32 index = algo::Smallstr250_Hash(0, row.gtblacttstout) & (_db.ind_gtblacttstout_buckets_n - 1);
         atf_gcli::FGtblacttstout* *prev = &_db.ind_gtblacttstout_buckets_elems[index]; // addr of pointer to current element
         while (atf_gcli::FGtblacttstout *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -786,7 +826,7 @@ void atf_gcli::ind_gtblacttstout_Reserve(int n) {
             while (elem) {
                 atf_gcli::FGtblacttstout &row        = *elem;
                 atf_gcli::FGtblacttstout* next       = row.ind_gtblacttstout_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.gtblacttstout) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr250_Hash(0, row.gtblacttstout) & (new_nbuckets-1);
                 row.ind_gtblacttstout_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;

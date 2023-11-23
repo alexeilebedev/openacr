@@ -68,7 +68,7 @@ const char *atf_amc_help =
 "    -q                          Quiet mode\n"
 "    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      int             Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help an exit; alias -h\n"
+"    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
 ;
@@ -886,6 +886,61 @@ void atf_amc::Ctype2Attr_Print(atf_amc::Ctype2Attr & row, algo::cstring &str) {
 
     u32_Print(row.attr2, temp);
     PrintAttrSpaceReset(str,"attr2", temp);
+}
+
+// --- atf_amc.Ctype2AttrAnon..ReadFieldMaybe
+bool atf_amc::Ctype2AttrAnon_ReadFieldMaybe(atf_amc::Ctype2AttrAnon &parent, algo::strptr field, algo::strptr strval) {
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case atf_amc_FieldId_attr1: retval = u32_ReadStrptrMaybe(parent.attr1, strval); break;
+        case atf_amc_FieldId_attr2: retval = u32_ReadStrptrMaybe(parent.attr2, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.Ctype2AttrAnon..ReadStrptrMaybe
+// Read fields of atf_amc::Ctype2AttrAnon from an ascii string.
+// The format of the string is an ssim Tuple
+bool atf_amc::Ctype2AttrAnon_ReadStrptrMaybe(atf_amc::Ctype2AttrAnon &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atf_amc.Ctype2AttrAnon");
+    int anon_idx = 0;
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        if (ch_N(attr.name) == 0) {
+            attr.name = Ctype2AttrAnon_GetAnon(parent, anon_idx++);
+        }
+        retval = retval && Ctype2AttrAnon_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.Ctype2AttrAnon..Print
+// print string representation of atf_amc::Ctype2AttrAnon to string LHS, no header -- cprint:atf_amc.Ctype2AttrAnon.String
+void atf_amc::Ctype2AttrAnon_Print(atf_amc::Ctype2AttrAnon & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "atf_amc.Ctype2AttrAnon";
+
+    u32_Print(row.attr1, temp);
+    PrintAttrSpaceReset(str,"attr1", temp);
+
+    u32_Print(row.attr2, temp);
+    PrintAttrSpaceReset(str,"attr2", temp);
+}
+
+// --- atf_amc.Ctype2AttrAnon..GetAnon
+algo::strptr atf_amc::Ctype2AttrAnon_GetAnon(atf_amc::Ctype2AttrAnon &parent, i32 idx) {
+    (void)parent;//only to avoid -Wunused-parameter
+    switch(idx) {
+        case(0): return strptr("attr1", 5);
+        case(1): return strptr("attr2", 5);
+        default: return algo::strptr();
+    }
 }
 
 // --- atf_amc.DelType1.u32val.Access
@@ -4423,7 +4478,7 @@ void atf_amc::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(atf_amc::LoadTuplesMaybe(cmd.in)
+    vrfy(atf_amc::LoadTuplesMaybe(cmd.in,true)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
@@ -4527,7 +4582,6 @@ bool atf_amc::InsertStrptrMaybe(algo::strptr str) {
             break;
         }
         default:
-        retval = algo_lib::InsertStrptrMaybe(str);
         break;
     } //switch
     if (!retval) {
@@ -4538,21 +4592,58 @@ bool atf_amc::InsertStrptrMaybe(algo::strptr str) {
 
 // --- atf_amc.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool atf_amc::LoadTuplesMaybe(algo::strptr root) {
+bool atf_amc::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    static const char *ssimfiles[] = {
+    if (FileQ(root)) {
+        retval = atf_amc::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = atf_amc::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && atf_amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
 
-        NULL};
-        retval = algo_lib::DoLoadTuples(root, atf_amc::InsertStrptrMaybe, ssimfiles, true);
-        return retval;
+// --- atf_amc.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool atf_amc::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- atf_amc.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool atf_amc::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+        }
+        retval = retval && atf_amc::InsertStrptrMaybe(line);
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
+    return retval;
 }
 
 // --- atf_amc.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool atf_amc::LoadSsimfileMaybe(algo::strptr fname) {
+bool atf_amc::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, atf_amc::InsertStrptrMaybe, true);
+        retval = atf_amc::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }
@@ -5587,6 +5678,7 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:ReadProc  comment:\"Read from subprocess\"", atf_amc::amctest_ReadProc }
         ,{ "atfdb.amctest  amctest:ReadTuple1  comment:\"A single field is printed without field name\"", atf_amc::amctest_ReadTuple1 }
         ,{ "atfdb.amctest  amctest:ReadTuple2  comment:\"Two fields are printed as name-value pairs.\"", atf_amc::amctest_ReadTuple2 }
+        ,{ "atfdb.amctest  amctest:ReadTuple2a  comment:\"Two anon fields are printed as name-value pairs.\"", atf_amc::amctest_ReadTuple2a }
         ,{ "atfdb.amctest  amctest:ReadTuple3  comment:Attr_curs", atf_amc::amctest_ReadTuple3 }
         ,{ "atfdb.amctest  amctest:ReadTuple4  comment:\"Attr_curs -- empty string\"", atf_amc::amctest_ReadTuple4 }
         ,{ "atfdb.amctest  amctest:ReadTuple5  comment:\"Attr_curs -- quoted strings\"", atf_amc::amctest_ReadTuple5 }

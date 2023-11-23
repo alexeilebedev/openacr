@@ -43,7 +43,7 @@ namespace gcli { // update-hdr
     void GitRemoveMrBranch(strptr mr_branch);
     //     (user-implemented function, prototype is in amc-generated header)
     // void gtblact_gitconfig_list(gcli::FGtblact&);
-    // void gtblact_gitconfig_create(gcli::FGtblact& gtblact);
+    // void gtblact_gitconfig_create(gcli::FGtblact &gtblact);
 
     // -------------------------------------------------------------------
     // cpp/gcli/gtblact.cpp
@@ -68,7 +68,7 @@ namespace gcli { // update-hdr
     void TupleToGtblactflds(gcli::FGtblact &gtblact,strptr str);
     bool EditGtblactfld(gcli::FGtblact &gtblact,strptr issue_key_in);
     void VerifyGtblactfldsUpdate(gcli::FGtblact &gtblact);
-    tempstr GtblactfiledsToJson(gcli::FGtblact &gtblact);
+    tempstr GtblactfieldsToJson(gcli::FGtblact &gtblact);
 
     // -------------------------------------------------------------------
     // cpp/gcli/help.cpp
@@ -146,6 +146,8 @@ namespace gcli { // update-hdr
     gcli::FMr & ReadSingleMr(gcli::FGtblact &gtblact);
     //     (user-implemented function, prototype is in amc-generated header)
     // void gtblact_mr_update(gcli::FGtblact &gtblact);
+    void Mr_SearchCond(gcli::FGtblact &gtblact);
+    //     (user-implemented function, prototype is in amc-generated header)
     // void gtblact_mr_list(gcli::FGtblact &gtblact);
     // void gtblact_mrjob_list(gcli::FGtblact &gtblact);
     // void gtblact_mr_accept(gcli::FGtblact &gtblact);

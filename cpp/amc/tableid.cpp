@@ -58,7 +58,7 @@ void amc::GenTableId(amc::FNs &ns) {
     int imrowidx = 0;
     ind_beg(amc::ns_c_ctype_curs, ctype,ns) if (HasFinputQ(ctype)) {
         dmmeta::Fconst fconst;
-        fconst.value         = dmmeta::CppExpr(tempstr() << imrowidx);
+        fconst.value         = algo::CppExpr(tempstr() << imrowidx);
 
         amc::FCtype *base = GetBaseType(ctype, &ctype); // recognize base, or type itself
         fconst.fconst = tempstr() << table_ctype.ctype << ".value/" << base->ctype;

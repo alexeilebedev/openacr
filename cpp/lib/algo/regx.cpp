@@ -56,7 +56,6 @@ static algo::RegxMacro _macro[]  = {
     ,{'s' ,"\n\r\t\v \f"}
     ,{'S' ,"^\n\r\t\v \f"}
 };
-static algo::aryptr<algo::RegxMacro> _g_macro(_macro,sizeof(_macro)/sizeof(_macro[0]));
 
 static int RegxState_ReadStrptrChClass(algo_lib::RegxState &state, strptr str);
 
@@ -82,14 +81,14 @@ static bool TotalQ(algo_lib::RegxState &state) {
 static void CalcAcceptsAllQ(algo_lib::Regx &regx) {
     bool ret=false;
     if (ary_GetBit(regx.start, regx.accept)) {
-        bitset_beg(int,start,regx.start) {
+        ind_beg(algo_lib::Bitset_ary_bitcurs,start,regx.start) {
             if (algo_lib::RegxState *state = state_Find(regx,start)) {
                 ret = ary_GetBit(state->out, regx.accept) && TotalQ(*state);
                 if (ret) {
                     break;
                 }
             }
-        }bitset_end;
+        }ind_end;
     }
     regx.accepts_all=ret;
 
@@ -110,6 +109,7 @@ static void CalcAcceptsAllQ(algo_lib::Regx &regx) {
 // Parses escaped chars such as d->digit, w->word, s->space, $->$
 static bool RegxState_ReadChar(algo_lib::RegxState &state, char c) {
     bool retval = false;
+    algo::aryptr<algo::RegxMacro> _g_macro(_macro,sizeof(_macro)/sizeof(_macro[0]));
     ind_beg_aryptr(algo::RegxMacro,macro,_g_macro) {
         if (c == macro.c) {
             RegxState_ReadStrptrChClass(state, macro.crange);
@@ -215,11 +215,11 @@ static algo_lib::RegxState& NewState(algo_lib::RegxParse &regxparse) {
 // -----------------------------------------------------------------------------
 
 static void AddOut(algo_lib::Regx &regx, algo_lib::RegxExpr &E, int out) {
-    bitset_beg(int,id,E.out) {
+    ind_beg(algo_lib::Bitset_ary_bitcurs,id,E.out) {
         algo_lib::RegxState &state = state_qFind(regx, id);
         ary_AllocBit(state.out, out);
         ary_qSetBit(state.out, out);
-    }bitset_end;
+    }ind_end;
 }
 
 // -----------------------------------------------------------------------------
@@ -298,14 +298,14 @@ static void ClearBubbles(algo_lib::Regx &regx) {
         ind_beg_aryptr(algo_lib::RegxState,S,state_Getary(regx)) {
             ary_ClearBitsAll(clear);
             ary_ClearBitsAll(set  );
-            bitset_beg(u32,out,S.out) {
+            ind_beg(algo_lib::Bitset_ary_bitcurs,out,S.out) {
                 algo_lib::RegxState &next = state_qFind(regx, out);
                 if (ary_qGetBit(S.out, out) && !ch_class_N(next)) {
                     ary_qSetBit (clear, out);
                     ary_OrBits(set  , next.out);
                     changed = true;
                 }
-            }bitset_end;
+            }ind_end;
             ary_OrBits  (S.out, set);
             ary_ClearBits(S.out, clear);
         }ind_end_aryptr;
@@ -529,7 +529,7 @@ static bool ScanString(algo_lib::Regx &regx, const algo::strptr &text) {
     ary_Setary(regx.front, regx.start);
     ind_beg_aryptr(char,c,text) {// scan the string
         u32 match = 0;
-        bitset_beg(u32,idx,regx.front) {
+        ind_beg(algo_lib::Bitset_ary_bitcurs,idx,regx.front) {
             algo_lib::RegxState &state  = state_qFind(regx, idx);
             if (state.accept_all) {// we win -- short circuit
                 return true;
@@ -542,7 +542,7 @@ static bool ScanString(algo_lib::Regx &regx, const algo::strptr &text) {
                     break;
                 }
             }ind_end_aryptr;
-        }bitset_end;
+        }ind_end;
         ary_ClearBitsAll(regx.front);
         // is swapping arrays like this legal?
         algo::TSwap(regx.front,regx.next_front);

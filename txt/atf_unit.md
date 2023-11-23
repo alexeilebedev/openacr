@@ -20,7 +20,7 @@ Usage: atf_unit [[-unittest:]<regx>] [options]
     -check_untracked          Y       Check for untracked file before allowing test to run
     -verbose          int             Verbosity level (0..255); alias -v; cumulative
     -debug            int             Debug level (0..255); alias -d; cumulative
-    -help                             Print help an exit; alias -h
+    -help                             Print help and exit; alias -h
     -version                          Print version and exit
     -signature                        Show signatures and exit; alias -sig
 
@@ -30,8 +30,9 @@ Usage: atf_unit [[-unittest:]<regx>] [options]
 
 `atf_unit` takes the following tables on input:
 ```
-CTYPE            COMMENT
-fmdb.AlmObjtype  Alarm resource type
+CTYPE                COMMENT
+fmdb.AlmObjtype      Alarm resource type
 fmdb.AlmCode
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
 ```
 

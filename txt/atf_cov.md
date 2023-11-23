@@ -23,7 +23,7 @@ Usage: atf_cov [options]
     -check                                                Check coverage information against tgtcov table
     -verbose    int                                       Verbosity level (0..255); alias -v; cumulative
     -debug      int                                       Debug level (0..255); alias -d; cumulative
-    -help                                                 Print help an exit; alias -h
+    -help                                                 Print help and exit; alias -h
     -version                                              Print version and exit
     -signature                                            Show signatures and exit; alias -sig
 
@@ -233,7 +233,7 @@ dmmeta.field  field:dev.Covtarget.exe        arg:u32           reftype:Val   dfl
 dmmeta.field  field:dev.Covtarget.exer       arg:algo.U32Dec2  reftype:Val   dflt:""  comment:"Percentage of executable lines"
 dmmeta.field  field:dev.Covtarget.hit        arg:u32           reftype:Val   dflt:""  comment:"Exercised lines"
 dmmeta.field  field:dev.Covtarget.cov        arg:algo.U32Dec2  reftype:Val   dflt:""  comment:"Line coverage"
-report.acr  n_select:7  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+report.acr  n_select:7  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
 ```
 For total figures hard-coded keyword 'TOTAL' is used as target name.
 
@@ -249,7 +249,7 @@ dmmeta.field  field:dev.Covfile.exe      arg:u32           reftype:Val   dflt:""
 dmmeta.field  field:dev.Covfile.exer     arg:algo.U32Dec2  reftype:Val   dflt:""  comment:"Percentage of executable lines"
 dmmeta.field  field:dev.Covfile.hit      arg:u32           reftype:Val   dflt:""  comment:"Exercised lines"
 dmmeta.field  field:dev.Covfile.cov      arg:algo.U32Dec2  reftype:Val   dflt:""  comment:"Line coverage"
-report.acr  n_select:7  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+report.acr  n_select:7  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
 ```
 
 Txt format is human-friendly tabulated version of ssim data.
@@ -276,7 +276,7 @@ dmmeta.field  field:dev.Covline.line     arg:u32               reftype:Val   dfl
 dmmeta.field  field:dev.Covline.flag     arg:char              reftype:Val   dflt:"'N'"  comment:Flag
 dmmeta.field  field:dev.Covline.hit      arg:u32               reftype:Val   dflt:""     comment:"Number of hits"
 dmmeta.field  field:dev.Covline.text     arg:algo.cstring      reftype:Val   dflt:""     comment:"Line text"
-report.acr  n_select:6  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+report.acr  n_select:6  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
 ```
 
 Key of this table is colon-separated pair (source file, source line).
@@ -287,7 +287,7 @@ inline-command: acr dmmeta.fconst:dev.Covline.%
 dmmeta.fconst  fconst:dev.Covline.flag/N  value:"'N'"  comment:Non-executable
 dmmeta.fconst  fconst:dev.Covline.flag/E  value:"'E'"  comment:Executable
 dmmeta.fconst  fconst:dev.Covline.flag/P  value:"'P'"  comment:"Executable, partially executed"
-report.acr  n_select:3  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+report.acr  n_select:3  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
 ```
 
 ### Merging data from multiple runs
@@ -354,13 +354,14 @@ Atf_cov generates output files on `-covdata` directory;
 
 `atf_cov` takes the following tables on input:
 ```
-CTYPE          COMMENT
-dev.Target     Build target
+CTYPE                COMMENT
+dev.Target           Build target
 dev.Tgtcov
 dev.Gitfile
-dev.Targsrc    List of sources for target
+dev.Targsrc          List of sources for target
 dev.Covtarget
 dev.Covline
 dev.Covfile
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
 ```
 

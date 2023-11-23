@@ -34,7 +34,7 @@ namespace acr_ed { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/acr/ed/ctype.cpp -- Create, delete, rename ctype
+    // cpp/acr_ed/ctype.cpp -- Create, delete, rename ctype
     //
 
     // Pick a default reftype when creating a subset
@@ -54,20 +54,22 @@ namespace acr_ed { // update-hdr
     // acr_ed -create -ctype acmdb.Devos -subset1 acmdb.Device -subset2 acmdb.Os -separator /
     // Example 2:
     // acr_ed -create -ctype atf_tmsg.FOrder -pooltype Tpool -indexed
-    void Main_CreateCtype();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void edaction_Create_Ctype();
 
     // acr_ed -ctype:X -del -write
-    void Main_DeleteCtype();
+    // void edaction_Delete_Ctype();
 
     // acr_ed -ctype:X -rename:Y -write
-    void Main_RenameCtype();
+    // void edaction_Rename_Ctype();
 
     // -------------------------------------------------------------------
-    // cpp/acr/ed/field.cpp -- Create, delete, rename field
+    // cpp/acr_ed/field.cpp -- Create, delete, rename field
     //
-    void Main_DeleteField();
-    void Main_RenameField();
-    void Main_CreateField();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void edaction_Delete_Field();
+    // void edaction_Rename_Field();
+    // void edaction_Create_Field();
 
     // Look at field FIELD, which is of reftype acr_ed::_db.cmdline.reftype.
     // Create any required record for it:
@@ -84,14 +86,15 @@ namespace acr_ed { // update-hdr
     void CreateHashIndex(dmmeta::Field &field);
 
     // -------------------------------------------------------------------
-    // cpp/acr/ed/finput.cpp
+    // cpp/acr_ed/finput.cpp
     //
 
     // #AL# todo: merge this with -create -ctype
-    void Main_CreateFinput();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void edaction_Create_Finput();
 
     // -------------------------------------------------------------------
-    // cpp/acr/ed/main.cpp
+    // cpp/acr_ed/main.cpp
     //
 
     // Request that amc runs after the current script
@@ -102,40 +105,45 @@ namespace acr_ed { // update-hdr
     void InsertSrcfileInclude(algo_lib::Replscope &R, bool mainheader);
     void BuildTest();
     void ScriptEditFile(algo_lib::Replscope &R, strptr fname);
+    void ProcessAction();
     void Main();
 
     // -------------------------------------------------------------------
-    // cpp/acr/ed/srcfile.cpp -- Create, delete, rename source file
+    // cpp/acr_ed/srcfile.cpp -- Create, delete, rename source file
     //
 
     // Create cpp, h or readme file
-    void Main_CreateSrcfile();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void edaction_Create_Srcfile();
 
     // Rename cpp, h, or readme file
-    void Main_RenameSrcfile();
+    // void edaction_Rename_Srcfile();
 
     // Delete cpp,h, or readme file
-    void Main_DeleteSrcfile();
+    // void edaction_Delete_Srcfile();
 
     // -------------------------------------------------------------------
-    // cpp/acr/ed/ssimfile.cpp -- Create, delete, rename ssim file
+    // cpp/acr_ed/ssimfile.cpp -- Create, delete, rename ssim file
     //
-    void Main_CreateSsimfile();
-    void Main_RenameSsimfile();
-    void Main_DeleteSsimfile();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void edaction_Create_Ssimfile();
+    // void edaction_Rename_Ssimfile();
+    // void edaction_Delete_Ssimfile();
 
     // -------------------------------------------------------------------
-    // cpp/acr/ed/target.cpp -- Create, delete, rename target
+    // cpp/acr_ed/target.cpp -- Create, delete, rename target
     //
-    void Main_CreateTarget();
-    void Main_RenameTarget();
-    void Main_DeleteTarget();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void edaction_Create_Target();
+    // void edaction_Rename_Target();
+    // void edaction_Delete_Target();
 
     // -------------------------------------------------------------------
-    // cpp/acr/ed/unittest.cpp -- Create, delete, rename unit test
+    // cpp/acr_ed/unittest.cpp -- Create, delete, rename unit test
     //
-    void Main_CreateUnittest();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void edaction_Create_Unittest();
 
     // Create a new normalization check
-    void Main_CreateCitest();
+    // void edaction_Create_Citest();
 }

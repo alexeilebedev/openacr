@@ -1,3 +1,2 @@
-# atf_comp -report:N -printinput acr_compl.A01c | acr_compl -line:'atf_cmdline -- ' -type:63 | cat
 <astr:string>
 value type

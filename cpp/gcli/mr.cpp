@@ -250,7 +250,7 @@ void gcli::gtblact_mr_create(gcli::FGtblact &gtblact){
     AssertGitWorkDirClean();
 
     // Do branch git push - issue exists and matches the branch
-    PushGitBranch(name_Get(gcli::_db.grepo_sel));
+    PushGitBranch(gcli::_db.grepo_sel.name);
 
     // Load git comments and parse them into title and description
     tempstr title;
@@ -353,7 +353,7 @@ void gcli::gtblact_mr_update(gcli::FGtblact &gtblact){
     }
 
     // update marked fields
-    tempstr d(GtblactfiledsToJson(gtblact));
+    tempstr d(GtblactfieldsToJson(gtblact));
     if (d!=""){
         gcli::FGclicmd &gclicmd=AddGclicmd(gclidb_Gclicmd_gclicmd_mrmod,true,gcli::IssueArgNumber(iid_Get(mr),""));
         gclicmd.body=d;
@@ -378,8 +378,18 @@ void gcli::gtblact_mr_update(gcli::FGtblact &gtblact){
     }
 }
 // -----------------------------------------------------------------------------
+void gcli::Mr_SearchCond(gcli::FGtblact &gtblact){
+    if (gcli::_db.p_gtype->gtype==gclidb_Gtype_gtype_ghp){
+        gcli::FGclicmd &gclicmd=AddGclicmd(gclidb_Gclicmd_gclicmd_mrsearch,true,"");
+        gclicmd.cond=SearchGithubSetCond(gtblact);
+    } else if (gcli::_db.p_gtype->gtype==gclidb_Gtype_gtype_glpat){
+        gcli::FGclicmd &gclicmd=AddGclicmd(gclidb_Gclicmd_gclicmd_mrlist,true,"");
+        gclicmd.cond=SearchGitlabSetCond(gtblact);
+    }
+}
+// -----------------------------------------------------------------------------
 void gcli::gtblact_mr_list(gcli::FGtblact &gtblact){
-    //https://api.github.com/search/issues?q=repo:myname/myrepo+state:open+is:issue+in:description+works
+    //https://api.github.com/search/issues?q=repo:vparizhs/arnd+state:open+is:issue+in:description+works
     // Conver fields to query cond(ition)
     // extract field
     tempstr mr(gtblact.id);
@@ -390,13 +400,7 @@ void gcli::gtblact_mr_list(gcli::FGtblact &gtblact){
         ReadSingleMr(gtblact);
         AddGclicmd(gclidb_Gclicmd_gclicmd_mrlist,true,gcli::IssueArgNumber(mr,"/"));
     } else {
-        if (gcli::_db.p_gtype->gtype==gclidb_Gtype_gtype_ghp){
-            gcli::FGclicmd &gclicmd=AddGclicmd(gclidb_Gclicmd_gclicmd_mrsearch,true,gcli::IssueArgNumber(mr,"/"));
-            gclicmd.cond=SearchGithubSetCond(gtblact);
-        } else if (gcli::_db.p_gtype->gtype==gclidb_Gtype_gtype_glpat){
-            gcli::FGclicmd &gclicmd=AddGclicmd(gclidb_Gclicmd_gclicmd_mrlist,true,"");
-            gclicmd.cond=SearchGitlabSetCond(gtblact);
-        }
+        gcli::Mr_SearchCond(gtblact);
         // Set command for rest
         AddGclicmd(gclidb_Gclicmd_gclicmd_mrlistdet,false,"");
         AddGclicmd(gclidb_Gclicmd_gclicmd_mrnote,false,"");

@@ -111,6 +111,7 @@ atfdb.amctest  amctest:PtraryInsert  comment:"Insert/Remove invariants for Ptrar
 atfdb.amctest  amctest:ReadProc  comment:"Read from subprocess"
 atfdb.amctest  amctest:ReadTuple1  comment:"A single field is printed without field name"
 atfdb.amctest  amctest:ReadTuple2  comment:"Two fields are printed as name-value pairs."
+atfdb.amctest  amctest:ReadTuple2a  comment:"Two anon fields are printed as name-value pairs."
 atfdb.amctest  amctest:ReadTuple3  comment:Attr_curs
 atfdb.amctest  amctest:ReadTuple4  comment:"Attr_curs -- empty string"
 atfdb.amctest  amctest:ReadTuple5  comment:"Attr_curs -- quoted strings"

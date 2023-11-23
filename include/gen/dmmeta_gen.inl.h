@@ -78,38 +78,6 @@ inline dmmeta::Buftype::Buftype(const algo::strptr&            in_pnewtype
 inline dmmeta::Buftype::Buftype() {
 }
 
-inline dmmeta::BuftypeId::BuftypeId(u8                             in_value)
-    : value(in_value)
-{
-}
-inline dmmeta::BuftypeId::BuftypeId(dmmeta_BuftypeIdEnum arg) { this->value = u8(arg); }
-inline dmmeta::BuftypeId::BuftypeId() {
-    dmmeta::BuftypeId_Init(*this);
-}
-
-
-// --- dmmeta.BuftypeId.value.GetEnum
-// Get value of field as enum type
-inline dmmeta_BuftypeIdEnum dmmeta::value_GetEnum(const dmmeta::BuftypeId& parent) {
-    return dmmeta_BuftypeIdEnum(parent.value);
-}
-
-// --- dmmeta.BuftypeId.value.SetEnum
-// Set value of field from enum type.
-inline void dmmeta::value_SetEnum(dmmeta::BuftypeId& parent, dmmeta_BuftypeIdEnum rhs) {
-    parent.value = u8(rhs);
-}
-
-// --- dmmeta.BuftypeId.value.Cast
-inline dmmeta::BuftypeId::operator dmmeta_BuftypeIdEnum () const {
-    return dmmeta_BuftypeIdEnum((*this).value);
-}
-
-// --- dmmeta.BuftypeId..Init
-// Set all fields to initial values.
-inline void dmmeta::BuftypeId_Init(dmmeta::BuftypeId& parent) {
-    parent.value = u8(0);
-}
 inline dmmeta::Cafter::Cafter() {
 }
 
@@ -149,13 +117,6 @@ inline void dmmeta::Ccmp_Init(dmmeta::Ccmp& parent) {
     parent.order = bool(false);
     parent.minmax = bool(false);
 }
-inline dmmeta::CppExpr::CppExpr(const algo::strptr&            in_value)
-    : value(in_value)
-{
-}
-inline dmmeta::CppExpr::CppExpr() {
-}
-
 inline dmmeta::Cdflt::Cdflt() {
 }
 
@@ -510,7 +471,7 @@ inline dmmeta::Fcompact::Fcompact() {
 }
 
 inline dmmeta::Fconst::Fconst(const algo::strptr&            in_fconst
-        ,const dmmeta::CppExpr&         in_value
+        ,const algo::CppExpr&           in_value
         ,const algo::Comment&           in_comment)
     : fconst(in_fconst)
     , value(in_value)
@@ -522,8 +483,8 @@ inline dmmeta::Fconst::Fconst() {
 
 
 // --- dmmeta.Fconst.value.Cast
-inline dmmeta::Fconst::operator dmmeta::CppExpr () const {
-    return dmmeta::CppExpr((*this).value);
+inline dmmeta::Fconst::operator algo::CppExpr () const {
+    return algo::CppExpr((*this).value);
 }
 inline dmmeta::Fcurs::Fcurs() {
 }
@@ -563,7 +524,7 @@ inline void dmmeta::Fflag_Init(dmmeta::Fflag& parent) {
 inline dmmeta::Field::Field(const algo::strptr&            in_field
         ,const algo::strptr&            in_arg
         ,const algo::strptr&            in_reftype
-        ,const dmmeta::CppExpr&         in_dflt
+        ,const algo::CppExpr&           in_dflt
         ,const algo::Comment&           in_comment)
     : field(in_field)
     , arg(in_arg)
@@ -846,7 +807,7 @@ inline void dmmeta::Main_Init(dmmeta::Main& parent) {
     parent.ismodule = bool(false);
 }
 inline dmmeta::Msgtype::Msgtype(const algo::strptr&            in_ctype
-        ,const dmmeta::CppExpr&         in_type)
+        ,const algo::CppExpr&           in_type)
     : ctype(in_ctype)
     , type(in_type)
 {
@@ -1051,44 +1012,6 @@ inline dmmeta::ReftypeCase::operator dmmeta_ReftypeCaseEnum () const {
 inline void dmmeta::ReftypeCase_Init(dmmeta::ReftypeCase& parent) {
     parent.reftype = u8(0);
 }
-inline dmmeta::ReftypeId::ReftypeId(u8                             in_value)
-    : value(in_value)
-{
-}
-inline dmmeta::ReftypeId::ReftypeId(dmmeta_ReftypeIdEnum arg) { this->value = u8(arg); }
-inline dmmeta::ReftypeId::ReftypeId() {
-    dmmeta::ReftypeId_Init(*this);
-}
-
-
-// --- dmmeta.ReftypeId.value.GetEnum
-// Get value of field as enum type
-inline dmmeta_ReftypeIdEnum dmmeta::value_GetEnum(const dmmeta::ReftypeId& parent) {
-    return dmmeta_ReftypeIdEnum(parent.value);
-}
-
-// --- dmmeta.ReftypeId.value.SetEnum
-// Set value of field from enum type.
-inline void dmmeta::value_SetEnum(dmmeta::ReftypeId& parent, dmmeta_ReftypeIdEnum rhs) {
-    parent.value = u8(rhs);
-}
-
-// --- dmmeta.ReftypeId.value.Cast
-inline dmmeta::ReftypeId::operator dmmeta_ReftypeIdEnum () const {
-    return dmmeta_ReftypeIdEnum((*this).value);
-}
-
-// --- dmmeta.ReftypeId..Hash
-inline u32 dmmeta::ReftypeId_Hash(u32 prev, dmmeta::ReftypeId rhs) {
-    prev = u8_Hash(prev, rhs.value);
-    return prev;
-}
-
-// --- dmmeta.ReftypeId..Init
-// Set all fields to initial values.
-inline void dmmeta::ReftypeId_Init(dmmeta::ReftypeId& parent) {
-    parent.value = u8(0);
-}
 inline dmmeta::Rowid::Rowid() {
 }
 
@@ -1171,7 +1094,7 @@ inline dmmeta::Strtype::Strtype() {
 }
 
 inline dmmeta::Substr::Substr(const algo::strptr&            in_field
-        ,const dmmeta::CppExpr&         in_expr
+        ,const algo::CppExpr&           in_expr
         ,const algo::strptr&            in_srcfield)
     : field(in_field)
     , expr(in_expr)
@@ -1254,7 +1177,7 @@ inline dmmeta::Usertracefld::Usertracefld() {
 }
 
 inline dmmeta::Xref::Xref(const algo::strptr&            in_field
-        ,const dmmeta::CppExpr&         in_inscond
+        ,const algo::CppExpr&           in_inscond
         ,const algo::strptr&            in_via)
     : field(in_field)
     , inscond(in_inscond)
@@ -1269,7 +1192,7 @@ inline dmmeta::Xref::Xref() {
 // --- dmmeta.Xref..Init
 // Set all fields to initial values.
 inline void dmmeta::Xref_Init(dmmeta::Xref& parent) {
-    parent.inscond = dmmeta::CppExpr("true");
+    parent.inscond = algo::CppExpr("true");
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Anonfld &row) {// cfmt:dmmeta.Anonfld.String
@@ -1297,11 +1220,6 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Buftyp
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::BuftypeId &row) {// cfmt:dmmeta.BuftypeId.String
-    dmmeta::BuftypeId_Print(const_cast<dmmeta::BuftypeId&>(row), str);
-    return str;
-}
-
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Cafter &row) {// cfmt:dmmeta.Cafter.String
     dmmeta::Cafter_Print(const_cast<dmmeta::Cafter&>(row), str);
     return str;
@@ -1314,11 +1232,6 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Cascde
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Ccmp &row) {// cfmt:dmmeta.Ccmp.String
     dmmeta::Ccmp_Print(const_cast<dmmeta::Ccmp&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::CppExpr &row) {// cfmt:dmmeta.CppExpr.String
-    dmmeta::CppExpr_Print(const_cast<dmmeta::CppExpr&>(row), str);
     return str;
 }
 
@@ -1749,11 +1662,6 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Ptrary
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Reftype &row) {// cfmt:dmmeta.Reftype.String
     dmmeta::Reftype_Print(const_cast<dmmeta::Reftype&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::ReftypeId &row) {// cfmt:dmmeta.ReftypeId.String
-    dmmeta::ReftypeId_Print(const_cast<dmmeta::ReftypeId&>(row), str);
     return str;
 }
 

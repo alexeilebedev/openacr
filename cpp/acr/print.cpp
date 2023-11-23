@@ -335,7 +335,6 @@ static void UpdateAttrWidth(acr::FPline &pline, acr::FPrint &print) {
 // Print all lines held in c_pline and prepare for new line group.
 static void EndGroup(acr::FPrint &print) {
     ind_beg(acr::print_c_pline_curs, pline, print) {
-        //prerr(pline.key<<" "<<pline.p_rec->tuple);
         u32 start = print.out.ch_n;
         acr::FRec& rec = *pline.p_rec;
         for(; print.skip_line>0; print.skip_line--) {

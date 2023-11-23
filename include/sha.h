@@ -38,7 +38,7 @@
 struct Sha1Ctx {
     EVP_MD_CTX* sha_context;
     u8          sha_digest[EVP_MAX_MD_SIZE];
-    Bool        final_flag;
+    algo::Bool        final_flag;
     Sha1Ctx();
     ~Sha1Ctx();
 };

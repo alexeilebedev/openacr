@@ -154,9 +154,7 @@ void acr::SelectMeta() {
     // Find data record of 'ctype'
     acr::FCtype *ctype_ctype = acr::ind_ctype_Find("dmmeta.Ctype");
     vrfy(ctype_ctype, "acr.broken_metadata");
-    if (ctype_ctype->c_ssimfile && !ctype_ctype->c_ssimfile->c_file) {
-        acr::LoadSsimfile(*ctype_ctype->c_ssimfile);
-    }
+    LoadRecords(*ctype_ctype);
     // mark selected records for metaselection and deselect them
     ind_beg(acr::_db_zd_all_selrec_curs,rec,acr::_db) {
         rec.metasel=true;
@@ -243,16 +241,64 @@ void acr::Main_AcrEdit() {
     ind_beg(acr::_db_zd_all_selrec_curs, rec,acr::_db) {
         rec.del = true;
     }ind_end;
+    // de-select all records
+    acr::Rec_DeselectAll();
     // with -in:<filename> -e, any newly inserted records
     // appear to originate from the input file.
     acr::FFile &file = acr::ind_file_GetOrCreate(FileInputQ() ? strptr(acr::_db.cmdline.in) : strptr(fname));
-    file.deselect=true;
     algo_lib::FFildes in;
     in.fd =  OpenRead(fname);
-    ReadLines(file,in.fd);
+    // insert records from file in replace mode
+    ReadLines(file,in.fd,acr_ReadMode_acr_replace);
     // give up the flock
     close(fd.value);
     // if no exception is thrown above, unlink file.
     // otherwise it stays around.
     unlink(Zeroterm(fname));
+}
+
+// -----------------------------------------------------------------------------
+
+// Start with selected records
+// Find all dependent records and delete them as well
+// In the end, de-select records that were both inserted and deleted
+void acr::CascadeDelete() {
+    int nmatch=0;
+    int totmatch=0;
+    acr::FRun run; // temp
+    do {
+        nmatch=0;
+        c_child_RemoveAll(run);
+        ind_beg(acr::_db_zd_all_selrec_curs, rec,acr::_db) {
+            if (rec.del) {
+                ind_beg(acr::ctype_c_field_curs,  field, *rec.p_ctype) {
+                    ind_beg(acr::ctype_c_child_curs, child, *field.p_ctype) {
+                        c_child_Insert(run, child);
+                    }ind_end;
+                }ind_end;
+            }
+        }ind_end;
+        ind_beg(acr::run_c_child_curs, child, run) {
+            LoadRecords(child);
+            ind_beg(acr::ctype_zd_trec_curs, rec, child) {
+                ind_beg(acr::ctype_c_field_curs,  field, child) if (field.p_arg->c_ssimfile) {
+                    tempstr val(EvalAttr(rec.tuple, field));
+                    acr::FRec *parrec = acr::ind_rec_Find(*field.p_arg, val);
+                    if (!rec.del && parrec && parrec->del) {
+                        rec.del=true;
+                        Rec_Select(rec);
+                        nmatch++;
+                    }
+                }ind_end;
+            }ind_end;
+        }ind_end;
+        totmatch += nmatch;
+    } while (nmatch);
+    // de-select records that were both inserted and deleted
+    // since there is no point in showing them
+    ind_beg(acr::_db_zd_all_selrec_delcurs, rec, acr::_db) {
+        if (rec.isnew && rec.del) {
+            acr::Rec_Deselect(rec);
+        }
+    }ind_end;
 }

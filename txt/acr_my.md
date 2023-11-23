@@ -21,7 +21,7 @@ Usage: acr_my [[-nsdb:]<regx>] [options]
     -serv                       Start mysql with TCP/IP service enabled
     -verbose    int             Verbosity level (0..255); alias -v; cumulative
     -debug      int             Debug level (0..255); alias -d; cumulative
-    -help                       Print help an exit; alias -h
+    -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
 
@@ -31,8 +31,9 @@ Usage: acr_my [[-nsdb:]<regx>] [options]
 
 `acr_my` takes the following tables on input:
 ```
-CTYPE            COMMENT
-dmmeta.Nsdb      Annotate ssimdb namespaces
-dmmeta.Ssimfile  Ssim tuple name for structure
+CTYPE                COMMENT
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
+dmmeta.Nsdb          Annotate ssimdb namespaces
+dmmeta.Ssimfile      Ssim tuple name for structure
 ```
 

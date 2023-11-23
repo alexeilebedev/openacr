@@ -32,10 +32,8 @@ if ($clean) {
 }
 my $F = shift @ARGV;
 $F = "%" if !$F;
-# build abt & src_hdr, which must be up-to-date in order
-# to execute the rest of the script
-system("bin/abt", "-install", "abt|src_hdr", "-report:N")==0 or Die("abt failed: $?");
-# calls src_func -updateproto
+
+# update copyright headers, call src_func to update prototypes in headers
 # allow this one to fail
 system("bin/src_hdr", "-write", "-targsrc:%");
 # main build step

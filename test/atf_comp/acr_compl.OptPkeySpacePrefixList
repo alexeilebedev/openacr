@@ -1,2 +1,1 @@
-# atf_comp -report:N -printinput acr_compl.OptPkeySpacePrefixList | acr_compl -line:"atf_cmdline -dpkey atfdb.Unit" -type:63 | cat
 atfdb.Unittest

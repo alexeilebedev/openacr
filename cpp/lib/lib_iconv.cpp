@@ -24,8 +24,8 @@
 // Odbc/Iconvlib wrappers
 // close conversion descriptor
 
-#include "include/lib/lib_mysql.h"
-#include "include/lib/lib_iconv.h"
+#include "include/lib_mysql.h"
+#include "include/lib_iconv.h"
 
 void lib_iconv::Close(lib_iconv::Icd &icd) {
     if (icd.icd != (iconv_t)-1) {

@@ -21,7 +21,7 @@
 //
 
 #include "include/atf_comp.h"
-#include "include/lib/lib_ctype.h"
+#include "include/lib_ctype.h"
 #include "include/gen/dev_gen.h"
 
 // -----------------------------------------------------------------------------
@@ -183,11 +183,11 @@ void atf_comp::Comptest_Start(atf_comp::FComptest &comptest) {
     out << eol;
     StringToFile(out, comptest.file_test_out);
     comptest.bash.timeout = GetTimeout(comptest);
-    comptest.bash.fstdin  = tempstr() << "<" << comptest.file_test_in;
+    comptest.bash.fstdin << "<" << comptest.file_test_in;
     if (_db.cmdline.stream) {
         comptest.bash.cmd.c << " |& tee -a " << comptest.file_test_out;
     } else {
-        comptest.bash.fstdout = tempstr() << ">>" << comptest.file_test_out;
+        comptest.bash.fstdout << ">" << comptest.file_test_out;
         comptest.bash.fstderr = ">&1";
     }
     int rc = bash_Start(comptest.bash);
@@ -232,6 +232,8 @@ bool atf_comp::CompareOutput(atf_comp::FComptest &comptest) {
     };
 
     cstring expect_fname = tempstr() << "test/atf_comp/" << comptest.comptest;
+    verblog("# ----- test output -----\n"<<FileToString(fname)<<"\n# ----- end test output -----");
+
     verblog("atf_comp.compare_file"
             <<Keyval("file1",fname)
             <<Keyval("file2",expect_fname));
@@ -375,10 +377,12 @@ void atf_comp::Main_Print(cstring &out, bool show_output, bool show_testcase) {
             if (comptest.c_targs) {
                 out <<" " <<comptest.c_targs->args;
             }
-            if (comptest.c_tfilt && ch_N(comptest.c_tfilt->filter)) {
-                out << " | " << comptest.c_tfilt->filter;
-            }
             out << eol;
+            out << "comment "<<comptest.comment<<eol;
+            out << "exit_code "<<comptest.exit_code<<eol;
+            if (comptest.c_tfilt && ch_N(comptest.c_tfilt->filter)) {
+                out << "filter "<<comptest.c_tfilt->filter<<eol;
+            }
         }
         ind_beg(comptest_zd_tmsg_curs,tmsg,comptest) {
             if (dir_Get(tmsg) == atfdb_Msgdir_msgdir_in) {
@@ -568,7 +572,7 @@ void atf_comp::Main_RewriteCmdline() {
 
 void atf_comp::Main() {
     algo::CreateDirRecurse(atf_comp::_db.tempdir);
-    lib_ctype::Init(_db.cmdline.in);
+    lib_ctype::Init();
     Main_RewriteCmdline();
     Main_GuessCompdir();
     Main_SetupSigchild();

@@ -69,7 +69,7 @@ const char *ams_sendtest_help =
 "    -recvdelay     int     0       Pause nanoseconds between messages\n"
 "    -verbose       int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug         int             Debug level (0..255); alias -d; cumulative\n"
-"    -help                          Print help an exit; alias -h\n"
+"    -help                          Print help and exit; alias -h\n"
 "    -version                       Print version and exit\n"
 "    -signature                     Show signatures and exit; alias -sig\n"
 ;
@@ -477,7 +477,7 @@ void ams_sendtest::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(ams_sendtest::LoadTuplesMaybe(cmd.in)
+    vrfy(ams_sendtest::LoadTuplesMaybe(cmd.in,true)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
@@ -532,18 +532,57 @@ bool ams_sendtest::InsertStrptrMaybe(algo::strptr str) {
 
 // --- ams_sendtest.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool ams_sendtest::LoadTuplesMaybe(algo::strptr root) {
+bool ams_sendtest::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    (void)root;//only to avoid -Wunused-parameter
+    if (FileQ(root)) {
+        retval = ams_sendtest::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = ams_sendtest::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && ams_sendtest::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
+
+// --- ams_sendtest.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool ams_sendtest::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- ams_sendtest.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool ams_sendtest::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+        }
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
     return retval;
 }
 
 // --- ams_sendtest.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool ams_sendtest::LoadSsimfileMaybe(algo::strptr fname) {
+bool ams_sendtest::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, ams_sendtest::InsertStrptrMaybe, true);
+        retval = ams_sendtest::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }

@@ -35,8 +35,6 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
@@ -60,7 +58,7 @@ const char *src_lim_help =
 "    -badline    regx    \"\"      Check badline (acr badline)\n"
 "    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      int             Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help an exit; alias -h\n"
+"    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
 ;
@@ -426,7 +424,7 @@ void src_lim::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(src_lim::LoadTuplesMaybe(cmd.in)
+    vrfy(src_lim::LoadTuplesMaybe(cmd.in,true)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
@@ -514,7 +512,6 @@ bool src_lim::InsertStrptrMaybe(algo::strptr str) {
             break;
         }
         default:
-        retval = algo_lib::InsertStrptrMaybe(str);
         break;
     } //switch
     if (!retval) {
@@ -525,22 +522,63 @@ bool src_lim::InsertStrptrMaybe(algo::strptr str) {
 
 // --- src_lim.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool src_lim::LoadTuplesMaybe(algo::strptr root) {
+bool src_lim::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    static const char *ssimfiles[] = {
-        "dev.badline", "dev.gitfile", "dev.linelim", "dev.targsrc"
+    if (FileQ(root)) {
+        retval = src_lim::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = src_lim::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && src_lim::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && src_lim::LoadTuplesFile(algo::SsimFname(root,"dev.badline"),recursive);
+        retval = retval && src_lim::LoadTuplesFile(algo::SsimFname(root,"dev.gitfile"),recursive);
+        retval = retval && src_lim::LoadTuplesFile(algo::SsimFname(root,"dev.include"),recursive);
+        retval = retval && src_lim::LoadTuplesFile(algo::SsimFname(root,"dev.linelim"),recursive);
+        retval = retval && src_lim::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
 
-        , NULL};
-        retval = algo_lib::DoLoadTuples(root, src_lim::InsertStrptrMaybe, ssimfiles, true);
-        return retval;
+// --- src_lim.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool src_lim::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- src_lim.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool src_lim::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+        }
+        retval = retval && src_lim::InsertStrptrMaybe(line);
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
+    return retval;
 }
 
 // --- src_lim.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool src_lim::LoadSsimfileMaybe(algo::strptr fname) {
+bool src_lim::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, src_lim::InsertStrptrMaybe, true);
+        retval = src_lim::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }
@@ -1435,6 +1473,10 @@ bool src_lim::value_SetStrptrMaybe(src_lim::TableId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('d','e','v','.','g','i','t','f'): {
                     if (memcmp(rhs.elems+8,"ile",3)==0) { value_SetEnum(parent,src_lim_TableId_dev_gitfile); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','i','n','c','l'): {
+                    if (memcmp(rhs.elems+8,"ude",3)==0) { value_SetEnum(parent,src_lim_TableId_dev_include); ret = true; break; }
                     break;
                 }
                 case LE_STR8('d','e','v','.','l','i','n','e'): {

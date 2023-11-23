@@ -35,10 +35,10 @@
 #include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/lib_amcdb_gen.h"
+#include "include/gen/lib_amcdb_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
@@ -66,7 +66,7 @@ const char *sv2ssim_help =
 "    -prefer_signed                  Prefer signed types when given a choice\n"
 "    -verbose        int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug          int             Debug level (0..255); alias -d; cumulative\n"
-"    -help                           Print help an exit; alias -h\n"
+"    -help                           Print help and exit; alias -h\n"
 "    -version                        Print version and exit\n"
 "    -signature                      Show signatures and exit; alias -sig\n"
 ;
@@ -270,7 +270,7 @@ void sv2ssim::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(sv2ssim::LoadTuplesMaybe(cmd.in)
+    vrfy(sv2ssim::LoadTuplesMaybe(cmd.in,true)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
@@ -336,7 +336,6 @@ bool sv2ssim::InsertStrptrMaybe(algo::strptr str) {
             break;
         }
         default:
-        retval = algo_lib::InsertStrptrMaybe(str);
         break;
     } //switch
     if (!retval) {
@@ -347,21 +346,60 @@ bool sv2ssim::InsertStrptrMaybe(algo::strptr str) {
 
 // --- sv2ssim.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool sv2ssim::LoadTuplesMaybe(algo::strptr root) {
+bool sv2ssim::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    static const char *ssimfiles[] = {
-        "amcdb.bltin", "dmmeta.svtype"
-        , NULL};
-        retval = algo_lib::DoLoadTuples(root, sv2ssim::InsertStrptrMaybe, ssimfiles, true);
-        return retval;
+    if (FileQ(root)) {
+        retval = sv2ssim::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = sv2ssim::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && sv2ssim::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && sv2ssim::LoadTuplesFile(algo::SsimFname(root,"amcdb.bltin"),recursive);
+        retval = retval && sv2ssim::LoadTuplesFile(algo::SsimFname(root,"dmmeta.svtype"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
+
+// --- sv2ssim.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool sv2ssim::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- sv2ssim.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool sv2ssim::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+        }
+        retval = retval && sv2ssim::InsertStrptrMaybe(line);
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
+    return retval;
 }
 
 // --- sv2ssim.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool sv2ssim::LoadSsimfileMaybe(algo::strptr fname) {
+bool sv2ssim::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, sv2ssim::InsertStrptrMaybe, true);
+        retval = sv2ssim::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }

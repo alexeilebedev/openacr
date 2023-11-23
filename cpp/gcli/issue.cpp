@@ -100,7 +100,7 @@ void gcli::VerifySingleIssue(strptr issue_key){
 tempstr gcli::GetTargetKey(strptr issue_key){
     VerifySingleIssue(issue_key);
     tempstr issue_num(gcli::IssueArgNumber(issue_key,""));
-    tempstr proj(name_Get(gcli::_db.grepo_sel));
+    tempstr proj(gcli::_db.grepo_sel.name);
 
     return IssueName(proj,issue_num);
 }
@@ -236,7 +236,7 @@ void gcli::gclicmd_issuemod(gcli::FGclicmd &gclicmd){
 }
 // -----------------------------------------------------------------------------
 void gcli::gtblact_issue_list(gcli::FGtblact &gtblact){
-    //https://api.github.com/search/issues?q=repo:myname/myrepo+state:open+is:issue+in:description+works
+    //https://api.github.com/search/issues?q=repo:vparizhs/arnd+state:open+is:issue+in:description+works
     // Conver fields to query cond(ition)
     // extract field
     tempstr id(gtblact.id);
@@ -244,7 +244,8 @@ void gcli::gtblact_issue_list(gcli::FGtblact &gtblact){
     // get milestone list for xref
     AddGclicmd(gclidb_Gclicmd_gclicmd_mslist,true,"");
     // get mrlist for xref
-    AddGclicmd(gclidb_Gclicmd_gclicmd_mrlist,true,"");
+    gcli::Mr_SearchCond(gcli::SetGtblactfld(gclidb_Gtblact_gtblact_mr_list, gclidb_Gfld_gfld_state,gcli::Gstate(gclidb_Gstate_gstate_state_opened)));
+    //    gcli::Mr_SearchCond(gcli::SetGtblactfld(gclidb_Gtblact_gtblact_mr_list, gclidb_Gfld_gfld_state,"all"));
 
     if (gcli::SingleIssueQ(id)){
         AddGclicmd(gclidb_Gclicmd_gclicmd_issuelist,true,gcli::IssueArgNumber(id,"/"));
@@ -274,6 +275,10 @@ void gcli::gtblact_issue_list(gcli::FGtblact &gtblact){
 void gcli::gtblact_issue_update(gcli::FGtblact &gtblact){
     gcli::_db.cmdline.t=gtblact.t;
     // read the issue we want to update
+    if (gtblact.id=="%"){
+        gtblact.id=gcli::GetCurrentGitBranch();
+    }
+    // read the issue we want to update
     gcli::FIssue &issue=ReadSingleIssue(gtblact);
     // populate gtblactfields with the issue
     gclidb::Issue issue_out;
@@ -297,7 +302,7 @@ void gcli::gtblact_issue_update(gcli::FGtblact &gtblact){
     }ind_end;
 
     // update marked fields
-    tempstr d(GtblactfiledsToJson(gtblact));
+    tempstr d(GtblactfieldsToJson(gtblact));
     if (d!=""){
         gcli::FGclicmd &gclicmd=AddGclicmd(gclidb_Gclicmd_gclicmd_issuemod,true,gcli::IssueArgNumber(iid_Get(issue),""));
         gclicmd.body=d;
@@ -331,7 +336,7 @@ void gcli::gtblact_issue_create(gcli::FGtblact &gtblact){
     }
 
     gcli::VerifyGtblactfldsUpdate(gtblact);
-    tempstr d(GtblactfiledsToJson(gtblact));
+    tempstr d(GtblactfieldsToJson(gtblact));
     if (d!=""){
         gcli::FGclicmd &gclicmd=AddGclicmd(gclidb_Gclicmd_gclicmd_issueadd,true,gcli::IssueArgNumber("",""));
         gclicmd.body=d;

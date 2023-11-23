@@ -25,7 +25,7 @@
 // Convert SSIM data to SQL.
 // Print SQL to the screen to submit to mysql
 
-#include "include/lib/lib_mysql.h"
+#include "include/lib_mysql.h"
 #include "include/gen/ssim2mysql_gen.h"
 #include "include/gen/ssim2mysql_gen.inl.h"
 
@@ -219,11 +219,11 @@ static tempstr Dflt(ssim2mysql::FField *root_fld) {
 
 // -----------------------------------------------------------------------------
 
-static bool GoodReftype(dmmeta::ReftypeId reftype) {
-    return reftype == dmmeta_ReftypeId_Pkey
-        || reftype == dmmeta_ReftypeId_Val
-        || reftype == dmmeta_ReftypeId_Regx
-        || reftype == dmmeta_ReftypeId_RegxSql;// also a string
+static bool GoodReftype(dmmeta::ReftypePkey reftype) {
+    return reftype == dmmeta_Reftype_reftype_Pkey
+        || reftype == dmmeta_Reftype_reftype_Val
+        || reftype == dmmeta_Reftype_reftype_Regx
+        || reftype == dmmeta_Reftype_reftype_RegxSql;// also a string
 }
 
 // -----------------------------------------------------------------------------
@@ -242,7 +242,7 @@ static void FixupFields(ssim2mysql::FCtype &ctype) {
         vrfy(ssim2mysql::field_InsertMaybe(dmmeta::Field(tempstr()<<ctype.ctype<<".extra_column_for_roundtrip"
                                                          ,"algo.Comment"
                                                          , "Val"
-                                                         ,dmmeta::CppExpr()
+                                                         ,algo::CppExpr()
                                                          , algo::Comment())), algo_lib::_db.errtext);
     }
 }
@@ -277,17 +277,12 @@ static void Main_GenSchema_Table(ssim2mysql::FSsimfile &ssimfile) {
         // do not make it back via mysql2ssim, but they simplify writing of joins)
         bool good = !fld.c_substr || ssim2mysql::_db.cmdline.fldfunc;
         fld.select = good;
-        //fld.is_pkeyref = fld.reftype == dmmeta_Reftype_reftype_Pkey;
-        dmmeta::ReftypeId reftype_id;
-        value_SetStrptr(reftype_id,fld.reftype,dmmeta_ReftypeId_Val);
-        dmmeta_ReftypeIdEnum reftype = value_GetEnum(reftype_id);
-        fld.is_pkeyref = reftype == dmmeta_ReftypeId_Pkey;
+        dmmeta::ReftypePkey reftype(dmmeta_Reftype_reftype_Val);
+        fld.is_pkeyref = reftype == dmmeta_Reftype_reftype_Pkey;
         if (good && GoodReftype(reftype)) {
             createcmd.cmd << ls;
             createcmd.cmd << "`" << name_Get(fld) << "` ";       // Column name
             ssim2mysql::FField *root_fld = RootField(&fld);// follow pkey chain to find out true type.
-            dmmeta::ReftypeId root_reftype_id;
-            value_SetStrptr(root_reftype_id,root_fld->reftype,dmmeta_ReftypeId_Val);
             ssim2mysql::FSqltype *sqltype = root_fld->p_arg->c_sqltype; // builtin?
             vrfy(sqltype, tempstr()<<"no sqltype defined for ctype "<<root_fld->arg);
             createcmd.cmd << sqltype->expr;

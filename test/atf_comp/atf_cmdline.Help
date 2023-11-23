@@ -1,4 +1,3 @@
-# atf_comp -report:N -printinput atf_cmdline.Help | atf_cmdline -help | cat
 atf_cmdline: Test tool for command line parsing
 Usage: atf_cmdline [-astr:]<string> [[-anum:]<int>] [[-adbl:]<double>] -str:<string> [[-amnum:]<int>] [options]
     OPTION      TYPE    DFLT    COMMENT
@@ -29,7 +28,7 @@ Usage: atf_cmdline [-astr:]<string> [[-anum:]<int>] [[-adbl:]<double>] -str:<str
     -dpkey      string  ""      Predefined pkey
     -verbose    int             Verbosity level (0..255); alias -v; cumulative
     -debug      int             Debug level (0..255); alias -d; cumulative
-    -help                       Print help an exit; alias -h
+    -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
 

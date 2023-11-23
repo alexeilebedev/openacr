@@ -1,5 +1,3 @@
-# atf_comp -report:N -printinput acr.Select | acr -insert ns:ns% | cat
-acr.insert  dmmeta.ns  ns:ns1  nstype:exe       license:GPL  comment:"This will be selected"
-acr.insert  dmmeta.ns  ns:ns2  nstype:ssimdb    license:GPL  comment:"This will be selected"
-acr.insert  dmmeta.ns  ns:ns3  nstype:protocol  license:GPL  comment:"This will be selected"
-report.acr  n_select:3  n_insert:3  n_delete:0  n_update:0  n_file_mod:0
+dmmeta.ns  ns:nsi1  nstype:exe     license:GPL  comment:"This will be selected"
+dmmeta.ns  ns:nsi2  nstype:ssimdb  license:GPL  comment:"This will be selected"
+report.acr  n_select:2  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0

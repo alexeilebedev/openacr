@@ -16,7 +16,7 @@ Usage: orgfile [options]
     -hash       string  "sha1"  Hash command to use for deduplication
     -verbose    int             Verbosity level (0..255); alias -v; cumulative
     -debug      int             Debug level (0..255); alias -d; cumulative
-    -help                       Print help an exit; alias -h
+    -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
 
@@ -100,7 +100,8 @@ find . -name "*.jpg" | orgfile -move:image/%Y/%Y-%m-%d/ -commit
 
 `orgfile` takes the following tables on input:
 ```
-CTYPE        COMMENT
-dev.Timefmt  Time formats supported by orgfile
+CTYPE                COMMENT
+dev.Timefmt          Time formats supported by orgfile
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
 ```
 

@@ -39,8 +39,6 @@
 #include "include/gen/dev_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
@@ -52,12 +50,13 @@ src_func::FDb   src_func::_db;    // dependency found via dev.targdep
 namespace src_func {
 const char *src_func_help =
 "src_func: Access / edit functions\n"
-"Usage: src_func [[-targsrc:]<regx>] [[-name:]<regx>] [[-body:]<regx>] [options]\n"
+"Usage: src_func [[-target:]<regx>] [[-name:]<regx>] [[-body:]<regx>] [options]\n"
 "    OPTION        TYPE    DFLT    COMMENT\n"
 "    -in           string  \"data\"  Input directory or filename, - for stdin\n"
-"    [targsrc]     regx    \"%\"     Visit these sources (accepts target name)\n"
-"    [name]        regx    \"%\"     (with -listfunc) Match function name\n"
-"    [body]        regx    \"%\"     (with -listfunc) Match function body\n"
+"    [target]      regx    \"%\"     Visit these targets\n"
+"    [name]        regx    \"%\"     Match function name\n"
+"    [body]        regx    \"%\"     Match function body\n"
+"    -targsrc      regx    \"\"      Visit these sources (optional)\n"
 "    -func         regx    \"%\"     (with -listfunc) Match function prototype\n"
 "    -comment      regx    \"%\"     (with -listfunc) Match function comment\n"
 "    -nextfile     string  \"\"      Print name of next srcfile in targsrc list\n"
@@ -76,7 +75,7 @@ const char *src_func_help =
 "    -report\n"
 "    -verbose      int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug        int             Debug level (0..255); alias -d; cumulative\n"
-"    -help                         Print help an exit; alias -h\n"
+"    -help                         Print help and exit; alias -h\n"
 "    -version                      Print version and exit\n"
 "    -signature                    Show signatures and exit; alias -sig\n"
 ;
@@ -377,7 +376,7 @@ void src_func::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(src_func::LoadTuplesMaybe(cmd.in)
+    vrfy(src_func::LoadTuplesMaybe(cmd.in,true)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
@@ -414,7 +413,7 @@ static void src_func::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_func.Input'  signature:'0cb31011ed739123fef11708b56ef33c782556e3'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_func.Input'  signature:'b9361395364d32d168c3ee379f9a1b152e31425e'");
 }
 
 // --- src_func.FDb._db.StaticCheck
@@ -467,7 +466,6 @@ bool src_func::InsertStrptrMaybe(algo::strptr str) {
             break;
         }
         default:
-        retval = algo_lib::InsertStrptrMaybe(str);
         break;
     } //switch
     if (!retval) {
@@ -478,22 +476,64 @@ bool src_func::InsertStrptrMaybe(algo::strptr str) {
 
 // --- src_func.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool src_func::LoadTuplesMaybe(algo::strptr root) {
+bool src_func::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    static const char *ssimfiles[] = {
-        "dmmeta.ctypelen", "dmmeta.dispatch", "dmmeta.fstep", "dev.target"
-        , "dev.targsrc", "dmmeta.gstatic"
-        , NULL};
-        retval = algo_lib::DoLoadTuples(root, src_func::InsertStrptrMaybe, ssimfiles, true);
-        return retval;
+    if (FileQ(root)) {
+        retval = src_func::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = src_func::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctypelen"),recursive);
+        retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispatch"),recursive);
+        retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fstep"),recursive);
+        retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
+        retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
+        retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dmmeta.gstatic"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
+
+// --- src_func.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool src_func::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- src_func.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool src_func::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+        }
+        retval = retval && src_func::InsertStrptrMaybe(line);
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
+    return retval;
 }
 
 // --- src_func.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool src_func::LoadSsimfileMaybe(algo::strptr fname) {
+bool src_func::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, src_func::InsertStrptrMaybe, true);
+        retval = src_func::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }

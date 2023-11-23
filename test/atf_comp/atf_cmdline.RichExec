@@ -1,4 +1,3 @@
-# atf_comp -report:N -printinput atf_cmdline.RichExec | atf_cmdline -exec -verbose -verbose -verbose -debug -str -STR -num 12 -dbl -0.0003 -flag -dstr -DSTR -dnum -45 -ddbl -0.123 -dflag:N -mstr -MSTR1 -mstr -MSTR2 -mstr -MSTR3 -mnum -1 -mnum -2 -mnum -3 -mdbl -1.1 -mdbl -2.2 -mdbl -3.2 -fconst medium -cconst:May -- -ASTR -200 0.0002 Y -100 -200 -300 | cat
 bin/atf_cmdline  -ASTR -200 0.0002 Y -str:-STR -num:12 -dbl:-0.0003 -flag:Y -dstr:-DSTR -dnum:-45 -ddbl:-0.123 -dflag:N -mstr:-MSTR1 -mstr:-MSTR2 -mstr:-MSTR3 -mnum:-1 -mnum:-2 -mnum:-3 -mdbl:-1.1 -mdbl:-2.2 -mdbl:-3.2 -100 -200 -300 -fconst:medium -cconst:May -verbose -verbose
 astr:-ASTR
 anum:-200

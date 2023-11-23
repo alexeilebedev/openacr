@@ -24,7 +24,9 @@ dev.target  target:atf_gcli  compat:Linux-%.%-%
 dev.target  target:atf_nrun  compat:%-%.%-%
 dev.target  target:atf_unit  compat:%-%.%-%
 dev.target  target:bash2html  compat:%-%.%-%
+dev.target  target:gcache  compat:Linux-%.%-%
 dev.target  target:gcli  compat:Linux-%.%-%
+dev.target  target:lib_amcdb  compat:Linux-%.%-%
 dev.target  target:lib_ams  compat:"(Linux-%g%|CYGWIN_NT-cl).%-%"
 dev.target  target:lib_ctype  compat:%-%.%-%
 dev.target  target:lib_exec  compat:%-%.%-%
@@ -38,6 +40,7 @@ dev.target  target:lib_sql  compat:%-%g%.%-%
 dev.target  target:mdbg  compat:%-%g%.%-%
 dev.target  target:mysql2ssim  compat:%-%g%.%-%
 dev.target  target:orgfile  compat:%-%g%.%-%
+dev.target  target:samp_regx  compat:Linux-%.%-%
 dev.target  target:sandbox  compat:Linux-%.%-%
 dev.target  target:src_func  compat:%-%g%.%-%
 dev.target  target:src_hdr  compat:%-%g%.%-%

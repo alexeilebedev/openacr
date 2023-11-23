@@ -69,22 +69,23 @@ static void DeleteFiles(strptr dir, strptr pattern) {
 }
 
 static void CleanupDirPhase(strptr covdir, atf_cov_Phase_value_Enum phase) {
-    switch (phase) {
-    case atf_cov_Phase_value_runcmd:
+    if (phase == atf_cov_Phase_value_runcmd) {
         DeleteFiles(covdir,"*.gcda");
-        // fall-through
-    case atf_cov_Phase_value_gcov:
+        phase = atf_cov_Phase_value_gcov;// grab the next phases too
+    }
+    if (phase == atf_cov_Phase_value_gcov) {
         DeleteFiles(covdir,"*.gcno");
         DeleteFiles(covdir,"*.gcov");
-        // fall-through
-    case atf_cov_Phase_value_ssim:
+        phase = atf_cov_Phase_value_ssim;// grab the next phases too
+    }
+    if (phase == atf_cov_Phase_value_ssim) {
         DeleteFiles(covdir,"*.cov.ssim");
-        // fall-through
-    case atf_cov_Phase_value_report:
+        phase = atf_cov_Phase_value_report;// grab the next phases too
+    }
+    if (phase == atf_cov_Phase_value_report) {
         DeleteFiles(covdir,"report.txt");
         DeleteFiles(covdir,"report.ssim");
         DeleteFiles(covdir,"cobertura.xml");
-        // fall-through
     }
 }
 

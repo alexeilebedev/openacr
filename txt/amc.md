@@ -17,111 +17,9 @@ Usage: amc [[-query:]<string>] [options]
     -trace      regx    ""      Regx of something to trace code generation
     -verbose    int             Verbosity level (0..255); alias -v; cumulative
     -debug      int             Debug level (0..255); alias -d; cumulative
-    -help                       Print help an exit; alias -h
+    -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
-
-```
-
-### Input tables
-
-```
-inline-command: acr ctype:$(acr_in amc | acr -in:- % -regxof:ctype) | ssimfilt ^ -t
-CTYPE                COMMENT
-amcdb.Bltin          Specify properties of a C built-in type
-amcdb.Tcurs          Cursor template
-dev.License
-dev.Targdep          Dependency between targets
-dev.Target           Build target
-dmmeta.Anonfld       Omit field name where possible (command line, enums, constants)
-dmmeta.Argvtype      Customize parsing of command lines (rarely used)
-dmmeta.Basepool      Specify pool to be used for allocating elements of a type
-dmmeta.Bitfld        Specify offset/width of a bitfield within another field
-dmmeta.Cafter        Control amc processing order for unrelated types (used in rare situations)
-dmmeta.Cascdel       Request cascading delete of referenced rows
-dmmeta.Ccmp          Generate hash function
-dmmeta.Cdflt         Specify default value for single-value types that lack fields
-dmmeta.Cextern       Externally defined ctype (a struct from system header, or from a c++ library)
-dmmeta.Cfmt          Specify options for printing/reading ctypes into multiple formats
-dmmeta.Cget          Generate state functions for these ctypes
-dmmeta.Charset       Generate functions to determine if a character is a member of a set
-dmmeta.Chash         Generate hash function
-dmmeta.Cppfunc       Value of field provided by this expression
-dmmeta.Cpptype       Specify whether a ctype can be passed by value, and other c++ options
-dmmeta.Csize         Specify size/alignment for built-in C++ types
-dmmeta.Cstr          Specify that type behaves like a string
-dmmeta.Ctype         Conceptual type (or C type)
-dmmeta.Dispatch      Generate code for a multi-way branch
-dmmeta.DispatchMsg   Add message to a dispatch
-dmmeta.Dispctx       Use context with dispatch
-dmmeta.Dispfilter    Generate filter function on dispatch
-dmmeta.Disptrace     Generate trace fields (cycles, counts) for all dispatch branches
-dmmeta.Falias
-dmmeta.Fbase         Customize imported Base fields
-dmmeta.Fbigend       Annotate field as having big-endian storage
-dmmeta.Fbitset       Generate bitset functions over integer field or array
-dmmeta.Fbuf          Buffer for reading/writing messages, works with Iohook
-dmmeta.Fcast         Generate implicit conversion from field to c++ expression
-dmmeta.Fcleanup      Request user-implemented function to be called at Uninit time for a field
-dmmeta.Fcmap         Bidirectional mapping between fconst values
-dmmeta.Fcmdline      Annotate field that holds process command line
-dmmeta.Fcmp          Request versionsort or case-insensitive sort for field
-dmmeta.Fcompact      Request compaction upon removal from index
-dmmeta.Fconst        Specify enum value (integer + string constant) for a field
-dmmeta.Fcurs         Request generation of custom cursor
-dmmeta.Fdec          Specify that field has an implied # of decimal places and specify formatting options
-dmmeta.Fdelay        Control elapsed time between execution of a step
-dmmeta.Fflag         Options for command-line flags
-dmmeta.Field         Specify field of a struct
-dmmeta.Findrem       Request generation of FindRemove function
-dmmeta.Finput        Describe input table of a program
-dmmeta.Fldoffset     Assert field offset - will result in compile-time error if violated
-dmmeta.Floadtuples   Request that process automatically load any input tables on startup
-dmmeta.Fnoremove     Omit any functions for removing elements from table; Table is append-only
-dmmeta.Foutput       Generate function to save index/table back to disk
-dmmeta.Fprefix       Mapping between field prefix and Reftype
-dmmeta.Fregx         Specify options for command-line regx field
-dmmeta.Fsort         Generate custom sort function for array field
-dmmeta.Fstep         Generate a main loop step to be executed whenever a field is non-empty
-dmmeta.Ftrace        Generate cycle/step counting fields for a step
-dmmeta.Funique       This field must be unique in the table. Not needed for primary key
-dmmeta.Fuserinit     Add user-defined initialization function for field (see fcleanup)
-dmmeta.Fwddecl       Request forward declaration of a field
-dmmeta.Gconst        Import ssim table columns as fconst for a field
-dmmeta.Gstatic       Load entries for this table at startup time
-dmmeta.Gsymbol       Create C++ symbols from entries in ssim table
-dmmeta.Hook          Required on Hook fields
-dmmeta.Inlary        Generate inline array of fixed or variable length (all entries fit within parent struct)
-dmmeta.Lenfld        Specify which gives length of varlen portion in bytes
-dmmeta.Listtype      Specify structure of linked list based on field prefix
-dmmeta.Llist         Options for Llist field
-dmmeta.Main          Generate Main function for namespace
-dmmeta.Msgtype       Specify message type for each eligible message, controls dispatch
-dmmeta.Nocascdel     Remove cascade delete for this index
-dmmeta.Nossimfile    Indicates that ssimfile does not exist for this ssimdb ctype
-dmmeta.Noxref        Explicitly specify that no x-ref exists between tables (don't use unless forced)
-dmmeta.Ns            Namespace (for in-memory database, protocol, etc)
-dmmeta.Nscpp         Generate C++ code for this namespace
-dmmeta.Nsdb          Annotate ssimdb namespaces
-dmmeta.Nsinclude     Explicitly specify a C++ include file for namespace
-dmmeta.Nsproto       Annotate protocol namespace (collection of types, no state)
-dmmeta.Nsx           Control code-generation and exception handling options for process/library
-dmmeta.Numstr        Add functions to read numbers out of a string field
-dmmeta.Pack          Request byte-packing of structure fields
-dmmeta.Pmaskfld      Specify which fields holds presence mask bits (one for each field in struct)
-dmmeta.Pnew          Generate custom constructor (placement new), for use with binary protocols
-dmmeta.Ptrary        Required for fields with reftype:Ptrary
-dmmeta.Rowid         Initialize field to row id of element
-dmmeta.Smallstr      Generated fixed-length padded or length-delimited string field
-dmmeta.Sortfld       Specify what field an index (Bheap,Atree) is sorted on
-dmmeta.Ssimfile      Ssim tuple name for structure
-dmmeta.Ssimvolatile  Types based on ssim files marked this way cannot be cross-referenced
-dmmeta.Substr        Specify that the field value is computed from a substring of another field
-dmmeta.Tary          Indirect linear dynamically alocated array (used for strings, arrays of data, etc)
-dmmeta.Thash         Hash index, required for fields with reftype Thash
-dmmeta.Typefld       Specifies which field of a message carries the type
-dmmeta.Usertracefld  Add custom user trace fields to process's trace struct
-dmmeta.Xref          Specify how to cross-reference (i.e. project, or group-by) one record with another
 
 ```
 
@@ -137,36 +35,82 @@ the location of the input dataset can be specified.
 With option `-out_dir`, the location of output directory can be specified. The default
 is `.`.
 
-Amc generates hash tables, arrays, linked lists, dequeues, binary heaps; trees;
-hierarchical, region-based memory allocators, including
-single and powers-of-two freelists, fifo, linear array (vector),
-indirect array (with permanent pointers); inline arrays and fixed-size arrays;
-Functions to convert any struct to/from a string or a bash command line; Enum support,
-both for integer and string values; presence masks; big-endian fields;
-sort functions on custom fields; incremental group-by indexes; tracking of pointers
-with automatic cascade delete; protection against linear scanning when deleting
-elements of singly linked lists; scheduling constructs (for real-time modules); cycle accounting ('traces').
-Generation of C++ symbols from ssimfile columns; Statically loaded tables; Subprocess invocation;
-Asynchronous I/O. Bitsets on top of any array type. Char sets;
-Fixed string types (Pascal strings, Left-padded strings, Right-padded
-strings, Fixed-length strings with numeric conversion); Scaled decimal types;
-Bidirectional mappings between enumerated types;
-Dispatches (any group of ctypes), whether sharing a common header with a type field, or not.
-Printing, reading, calling dispatches given both binary and text input.
-Uniform cursor (iterator) interfaces for bheap, hash, tree, array,
-lines, files in directory, messages in a memory region, and more.
+Amc generates
+* hash tables
+* arrays
+* linked lists
+* dequeues
+* binary heaps
+* trees
+* region-based memory allocators of several types: free list, powers-of-two freelist, fifo allocator, sbrk
+* attaching huge pages to any allocator
+* fifos
+* linear arrays (vectors)
+* indirect arrays (with permanent pointers)
+* inline arrays and fixed-size arrays
+* Functions to convert any struct to/from a string or a bash command line
+* Enums based on any column from a table, supporting both integer and string values
+* presence masks
+* big-endian fields
+* Scaled decimal types
+* enforced packing for protocol namespaces
+* calculation of cryptographic hashes of protocols, ensuring binary compatibility of messages sent over the wire
+* parsing of command lines with arbitrary user-defined types, supporting enums, arrays and optional fields
+* optimized 'placement new' functions for various memory buffers
+* buffers with or without asynchronous I/O, with automatic parsing of messages and edge-triggered epoll/kqueue
+* automatic incremental group-by indexes (inserting a record automatically updates global and partitioned indexes)
+* syntax help string for an executable
+* '#include' lines only for those files that are needed to compile a unit
+* forward declarations for any referenced types whose headers don't need to be included
+* controlled order of initialization (an unsolved issue in C++)
+* field-wise constructors for any record
+* copy protection for records which are cross-referenced and thus cannot be moved
+* functions to map strings to enums and enums to strings
+* allocating arbitrary fields as bitfields within other fields, with checks for overlapping
+* getters and setters for any field, if requested
+* functions to create a structured pkey out of its components (_Concat functions)
+* recursive checking that a packed type doesn't include an unpacked type by value; other consistency checks
+* conversion of any type to/from JSON object
+* full set of C++ comparison operators for any types
+* << and >> operators
+* tracking of pointers with automatic cascade delete
+* protection against linear scanning when deleting elements of singly linked lists
+* lexicographic sorting and comparison of structs with any number of fields, enabling structured keys and multi-dimensional priority queues.
+* sort functions on custom fields
+* scheduling constructs (steps) for real-time modules
+* cycle accounting ('traces') for steps, dispatches
+* records indexed with an arbitrary number of indexes (multiple priority queues, linked lists, etc.)
+* custom pool (allocator) for any type
+* custom pool for any pool, allowing use of completely separate memory for different types (this is used both for performance and security)
+* optional alloc/delete counters for any pool
+* C++ symbols from ssimfile columns
+* Statically loaded tables (that become part of the source code)
+* Synchronous and asynchronous subprocess invocation
+* Asynchronous I/O functions
+* Bitsets on top of any integer or array type
+* Char sets, both bitmap-based and computed
+* Fixed string types (Pascal strings, Left-padded strings, Right-padded strings, Fixed-length strings) with optional numeric conversion
+* Bidirectional mappings between enumerated types
+* Dispatches (any group of ctypes), whether sharing a common header with a type field, or not.
+* Printing, reading, calling dispatches given both binary and text input
+* Uniform cursors (iterators):
+** cursors for all indexes
+** destructive cursors
+** cursors that allow deletion of elements while scanning
+** cursors for any defined message types
+** cursors for lines in a file, or in a memory region
+** cursors for files in directory
+** cursors for messages in a memory region.
 
-For each program, these things are generated in-place and
-from scratch, and can be iteratively customized.
+For each program, all code is generated from scratch.
 The resulting code forms a *database of source code*,
 containing a superset of functions that will be used by the final
-application. The generated code is verbose, user-readable, properly commented,
+application. The generated code is verbose, user-readable, commented,
 is intended to be readable by a human, corresponds directly to the final assembly
-code, and intentionally uses only a small, conservative subset of C++. 
+code with no ambiguity, and intentionally uses only a small, conservative subset of C++. 
 `Amc` does not modify or reverse-engineer user code, so it's not a framework
-where you have to "plug in" anything. User always controls what functions will be called
-(dispatches and steps are an exception, but they are also explicitly controllable).
-`amc` is a tool for constructing robust software based on your specifications.
+where you have to "plug in" anything. User controls what functions will be called and when.
+Thus, `amc` is a tool for constructing robust software based on your specifications.
 
 The authors have spent many years using template-based libraries and
 class hierarchies, and found them to be unmaintainable in the long
@@ -180,7 +124,7 @@ fields at runtime, or delete certain functions, or create multiple
 symbols, and are hard to debug because they break the mapping between
 lines of code and assembly, which is required for debugging system
 code. Annotated, generated code overcomes this while eliminating an
-entire complex sublanguage.  Virtual functions, or function pointers,
+entire complex sublanguage. Virtual functions, or function pointers,
 can be useful and even unavoidable, (and are implemented in amc as
 Hooks), but they negatively affect process reliability. Dijkstra's
 predicate transformer, which is the only available theoretical tool
@@ -190,13 +134,14 @@ possibility open that the target function will do something that
 violates the post-condition, which makes the calling code statically
 unanalyzable. That's why our approach is to construct lists or
 priority queues of "todo" items in a process, and then process them
-with a well-defined loop or step.  This forces distinct cases to be
+with a well-defined loop or step. This forces distinct cases to be
 enumerated by some state field or an enum, and collects the code for
 processing the distinct cases into one place, making it possible to think
 about post-conditions again.
 
 `Amc` loads about 100 ssim tables. The full list can be obtained with
-`acr_in amc`. The exact actual `amc` input can be printed with `acr_in
+`acr_in amc` and appears at the end of this document.
+The exact actual `amc` input can be printed with `acr_in
 amc -data`.  About 20% of these tables are responsible for 80% of the
 generated code, the rest deal with finer details.
 
@@ -488,20 +433,20 @@ The defined prefixes are:
 ```
 inline-command: acr fprefix | ssimfilt ^ -t
 FPREFIX  REFTYPE  COMMENT
-bh       Bheap
-c        Ptrary
-cd       Llist
-cdl      Llist
-cnt      Count
-cs       Llist
-csl      Llist
-ind      Thash
-p        Upptr
-tr       Atree
-zd       Llist
-zdl      Llist
-zs       Llist
-zsl      Llist
+bh       Bheap    Binary heap
+c        Ptrary   Pointer array
+cd       Llist    Circular doubly linked list
+cdl      Llist    Circular doubly linked LIFO list
+cnt      Count    Count of items
+cs       Llist    Circular singly linked list
+csl      Llist    Circular singly linked LIFO list
+ind      Thash    Hash table (index)
+p        Upptr    Up-pointer: equivalent of Pkey reference for in-memory model
+tr       Atree    AVL tree
+zd       Llist    Zero-terminated doubly linked list
+zdl      Llist    Zero-terminated doubly linked LIFO list
+zs       Llist    Zero-terminated singly linked list
+zsl      Llist    Zero-terminated singly linked LIFO list
 
 ```
 
@@ -812,13 +757,52 @@ Amc can generate code to get / set bits in any field that is an integer (`u8`, `
 Here is an example:
 
 ```
-inline-command: acr -t field:atf_unit.Bitset.fld8 | egrep Bitset
+inline-command: acr -t field:atf_amc.Bitset.fld8 | egrep Bitset
+    dmmeta.ctype  ctype:atf_amc.Bitset  comment:"Test bitset"
+      dmmeta.field  field:atf_amc.Bitset.fld8  arg:u8  reftype:Val  dflt:""  comment:"Bitset field"
+        dmmeta.fbitset  field:atf_amc.Bitset.fld8  comment:""
 ```
 
 The generated functions are as follows:
 
 ```
-inline-command: amc -report:N -proto atf_unit.Bitset.fld8.%
+inline-command: amc -report:N -proto atf_amc.Bitset.fld8.%
+// Return constant 1
+int                  fld8_N(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Access value
+u8&                  fld8_qFind(atf_amc::Bitset& parent, int) __attribute__((__warn_unused_result__, nothrow));
+// Get max # of bits in the bitset
+// Return max. number of bits supported by array
+int                  fld8_Nbits(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
+// Retrieve value of bit #BIT_IDX in bit set. No bounds checking
+bool                 fld8_qGetBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
+// Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
+bool                 fld8_GetBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
+// Check if all the bits in the bitset are equal to zero
+bool                 fld8_BitsEmptyQ(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
+u64                  fld8_Sum1s(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
+// Clear bit # BIT_IDX in bit set. No bounds checking
+void                 fld8_qClearBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
+// Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
+void                 fld8_ClearBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
+// Set bit # BIT_IDX in bit set. No bounds checking
+void                 fld8_qSetBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
+// Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
+void                 fld8_SetBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
+// Set bit # BIT_IDX in bit set. No bounds checking
+void                 fld8_qSetBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) __attribute__((nothrow));
+// Or bit # BIT_IDX in bit set. No bounds checking
+void                 fld8_qOrBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) __attribute__((nothrow));
+// Set all bits of array to zero.
+// Note: this does not change what NBits will return.
+void                 fld8_ClearBitsAll(atf_amc::Bitset& parent) __attribute__((nothrow));
+// Zero in PARENT any bits that are set in RHS.
+void                 fld8_ClearBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) __attribute__((nothrow));
+// Set PARENT to union of two bitsets.
+// (This function is not named Set.. to avoid triple entendre).
+void                 fld8_OrBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) __attribute__((nothrow));
+// Return smallest number N such that indexes of all 1 bits are below N
+i32                  fld8_Sup(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
 
 ```
 
@@ -1750,6 +1734,7 @@ dmmeta.Gconst        Import ssim table columns as fconst for a field
 dmmeta.Fwddecl       Request forward declaration of a field
 dmmeta.Fuserinit     Add user-defined initialization function for field (see fcleanup)
 dmmeta.Funique       This field must be unique in the table. Not needed for primary key
+dmmeta.Func
 dmmeta.Ftrace        Generate cycle/step counting fields for a step
 dmmeta.Fstep         Generate a main loop step to be executed whenever a field is non-empty
 dmmeta.Fsort         Generate custom sort function for array field
@@ -1775,7 +1760,7 @@ dmmeta.Fbuf          Buffer for reading/writing messages, works with Iohook
 dmmeta.Fbitset       Generate bitset functions over integer field or array
 dmmeta.Fbigend       Annotate field as having big-endian storage
 dmmeta.Fbase         Customize imported Base fields
-dmmeta.Falias
+dmmeta.Falias        Alias field
 dmmeta.Dispatch      Generate code for a multi-way branch
 dmmeta.Disptrace     Generate trace fields (cycles, counts) for all dispatch branches
 dmmeta.Dispfilter    Generate filter function on dispatch
@@ -1799,5 +1784,6 @@ dmmeta.Bitfld        Specify offset/width of a bitfield within another field
 dmmeta.Basepool      Specify pool to be used for allocating elements of a type
 dmmeta.Argvtype      Customize parsing of command lines (rarely used)
 dmmeta.Anonfld       Omit field name where possible (command line, enums, constants)
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
 ```
 

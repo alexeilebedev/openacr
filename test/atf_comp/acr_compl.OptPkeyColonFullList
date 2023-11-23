@@ -1,2 +1,1 @@
-# atf_comp -report:N -printinput acr_compl.OptPkeyColonFullList | acr_compl -line:"atf_cmdline -dpkey:atfdb.Unittest" -type:63 | cat
 atfdb.Unittest

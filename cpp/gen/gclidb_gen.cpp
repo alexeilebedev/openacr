@@ -232,6 +232,7 @@ const char* gclidb::value_ToCstr(const gclidb::FieldId& parent) {
         case gclidb_FieldId_val            : ret = "val";  break;
         case gclidb_FieldId_grepo          : ret = "grepo";  break;
         case gclidb_FieldId_host           : ret = "host";  break;
+        case gclidb_FieldId_fname          : ret = "fname";  break;
         case gclidb_FieldId_name           : ret = "name";  break;
         case gclidb_FieldId_token          : ret = "token";  break;
         case gclidb_FieldId_default_branch : ret = "default_branch";  break;
@@ -464,6 +465,9 @@ bool gclidb::value_SetStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR5('f','i','e','l','d'): {
                     value_SetEnum(parent,gclidb_FieldId_field); ret = true; break;
+                }
+                case LE_STR5('f','n','a','m','e'): {
+                    value_SetEnum(parent,gclidb_FieldId_fname); ret = true; break;
                 }
                 case LE_STR5('g','r','e','p','o'): {
                     value_SetEnum(parent,gclidb_FieldId_grepo); ret = true; break;
@@ -1369,21 +1373,21 @@ algo::cstring gclidb::Grepo_host_Get(algo::strptr arg) {
     return ret;
 }
 
-// --- gclidb.Grepo.name.Get
-algo::cstring gclidb::name_Get(gclidb::Grepo& parent) {
+// --- gclidb.Grepo.fname.Get
+algo::cstring gclidb::fname_Get(gclidb::Grepo& parent) {
     algo::cstring ret(algo::Pathcomp(parent.grepo, "@LR"));
     return ret;
 }
 
-// --- gclidb.Grepo.name.Get2
-algo::cstring gclidb::Grepo_name_Get(algo::strptr arg) {
+// --- gclidb.Grepo.fname.Get2
+algo::cstring gclidb::Grepo_fname_Get(algo::strptr arg) {
     algo::cstring ret(algo::Pathcomp(arg, "@LR"));
     return ret;
 }
 
-// --- gclidb.Grepo..Concat_host_name
-tempstr gclidb::Grepo_Concat_host_name( const algo::strptr& host ,const algo::strptr& name ) {
-    return tempstr() << host <<'@'<< name ;
+// --- gclidb.Grepo..Concat_host_fname
+tempstr gclidb::Grepo_Concat_host_fname( const algo::strptr& host ,const algo::strptr& fname ) {
+    return tempstr() << host <<'@'<< fname ;
 }
 
 // --- gclidb.Grepo..ReadFieldMaybe
@@ -1394,7 +1398,8 @@ bool gclidb::Grepo_ReadFieldMaybe(gclidb::Grepo &parent, algo::strptr field, alg
     switch(field_id) {
         case gclidb_FieldId_grepo: retval = algo::Smallstr250_ReadStrptrMaybe(parent.grepo, strval); break;
         case gclidb_FieldId_host: retval = false; break;
-        case gclidb_FieldId_name: retval = false; break;
+        case gclidb_FieldId_fname: retval = false; break;
+        case gclidb_FieldId_name: retval = algo::cstring_ReadStrptrMaybe(parent.name, strval); break;
         case gclidb_FieldId_token: retval = algo::cstring_ReadStrptrMaybe(parent.token, strval); break;
         case gclidb_FieldId_default_branch: retval = algo::cstring_ReadStrptrMaybe(parent.default_branch, strval); break;
         case gclidb_FieldId_keyid: retval = algo::cstring_ReadStrptrMaybe(parent.keyid, strval); break;
@@ -1438,6 +1443,9 @@ void gclidb::Grepo_Print(gclidb::Grepo & row, algo::cstring &str) {
 
     algo::Smallstr250_Print(row.grepo, temp);
     PrintAttrSpaceReset(str,"grepo", temp);
+
+    algo::cstring_Print(row.name, temp);
+    PrintAttrSpaceReset(str,"name", temp);
 
     algo::cstring_Print(row.token, temp);
     PrintAttrSpaceReset(str,"token", temp);
@@ -2043,7 +2051,7 @@ bool gclidb::Gtblacttstout_ReadFieldMaybe(gclidb::Gtblacttstout &parent, algo::s
     (void)value_SetStrptrMaybe(field_id,field);
     bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_gtblacttstout: retval = algo::Smallstr50_ReadStrptrMaybe(parent.gtblacttstout, strval); break;
+        case gclidb_FieldId_gtblacttstout: retval = algo::Smallstr250_ReadStrptrMaybe(parent.gtblacttstout, strval); break;
         case gclidb_FieldId_gtblacttst: retval = false; break;
         case gclidb_FieldId_out: retval = false; break;
         case gclidb_FieldId_text: retval = algo::cstring_ReadStrptrMaybe(parent.text, strval); break;
@@ -2073,7 +2081,7 @@ void gclidb::Gtblacttstout_Print(gclidb::Gtblacttstout & row, algo::cstring &str
     algo::tempstr temp;
     str << "gclidb.gtblacttstout";
 
-    algo::Smallstr50_Print(row.gtblacttstout, temp);
+    algo::Smallstr250_Print(row.gtblacttstout, temp);
     PrintAttrSpaceReset(str,"gtblacttstout", temp);
 
     algo::cstring_Print(row.text, temp);
@@ -2330,7 +2338,7 @@ bool gclidb::Issue_ReadFieldMaybe(gclidb::Issue &parent, algo::strptr field, alg
 // The format of the string is an ssim Tuple
 bool gclidb::Issue_ReadStrptrMaybe(gclidb::Issue &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "gclidb.Issue");
+    retval = algo::StripTypeTag(in_str, "gclidb.issue") || algo::StripTypeTag(in_str, "gclidb.Issue");
     ind_beg(algo::Attr_curs, attr, in_str) {
         retval = retval && Issue_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
@@ -2341,7 +2349,7 @@ bool gclidb::Issue_ReadStrptrMaybe(gclidb::Issue &parent, algo::strptr in_str) {
 // print string representation of gclidb::Issue to string LHS, no header -- cprint:gclidb.Issue.String
 void gclidb::Issue_Print(gclidb::Issue & row, algo::cstring &str) {
     algo::tempstr temp;
-    str << "gclidb.Issue";
+    str << "gclidb.issue";
 
     algo::Smallstr50_Print(row.issue, temp);
     PrintAttrSpaceReset(str,"issue", temp);
@@ -2431,7 +2439,7 @@ bool gclidb::Issuenote_ReadFieldMaybe(gclidb::Issuenote &parent, algo::strptr fi
 // The format of the string is an ssim Tuple
 bool gclidb::Issuenote_ReadStrptrMaybe(gclidb::Issuenote &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "gclidb.Issuenote");
+    retval = algo::StripTypeTag(in_str, "gclidb.issuenote") || algo::StripTypeTag(in_str, "gclidb.Issuenote");
     ind_beg(algo::Attr_curs, attr, in_str) {
         retval = retval && Issuenote_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
@@ -2442,7 +2450,7 @@ bool gclidb::Issuenote_ReadStrptrMaybe(gclidb::Issuenote &parent, algo::strptr i
 // print string representation of gclidb::Issuenote to string LHS, no header -- cprint:gclidb.Issuenote.String
 void gclidb::Issuenote_Print(gclidb::Issuenote & row, algo::cstring &str) {
     algo::tempstr temp;
-    str << "gclidb.Issuenote";
+    str << "gclidb.issuenote";
 
     algo::Smallstr250_Print(row.issuenote, temp);
     PrintAttrSpaceReset(str,"issuenote", temp);
@@ -2510,7 +2518,7 @@ bool gclidb::Issuepipeline_ReadFieldMaybe(gclidb::Issuepipeline &parent, algo::s
 // The format of the string is an ssim Tuple
 bool gclidb::Issuepipeline_ReadStrptrMaybe(gclidb::Issuepipeline &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "gclidb.Issuepipeline");
+    retval = algo::StripTypeTag(in_str, "gclidb.issuepipeline") || algo::StripTypeTag(in_str, "gclidb.Issuepipeline");
     ind_beg(algo::Attr_curs, attr, in_str) {
         retval = retval && Issuepipeline_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
@@ -2521,7 +2529,7 @@ bool gclidb::Issuepipeline_ReadStrptrMaybe(gclidb::Issuepipeline &parent, algo::
 // print string representation of gclidb::Issuepipeline to string LHS, no header -- cprint:gclidb.Issuepipeline.String
 void gclidb::Issuepipeline_Print(gclidb::Issuepipeline & row, algo::cstring &str) {
     algo::tempstr temp;
-    str << "gclidb.Issuepipeline";
+    str << "gclidb.issuepipeline";
 
     algo::Smallstr250_Print(row.issuepipeline, temp);
     PrintAttrSpaceReset(str,"issuepipeline", temp);
@@ -2627,7 +2635,7 @@ bool gclidb::Milestone_ReadFieldMaybe(gclidb::Milestone &parent, algo::strptr fi
 // The format of the string is an ssim Tuple
 bool gclidb::Milestone_ReadStrptrMaybe(gclidb::Milestone &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "gclidb.Milestone");
+    retval = algo::StripTypeTag(in_str, "gclidb.milestone") || algo::StripTypeTag(in_str, "gclidb.Milestone");
     ind_beg(algo::Attr_curs, attr, in_str) {
         retval = retval && Milestone_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
@@ -2638,7 +2646,7 @@ bool gclidb::Milestone_ReadStrptrMaybe(gclidb::Milestone &parent, algo::strptr i
 // print string representation of gclidb::Milestone to string LHS, no header -- cprint:gclidb.Milestone.String
 void gclidb::Milestone_Print(gclidb::Milestone & row, algo::cstring &str) {
     algo::tempstr temp;
-    str << "gclidb.Milestone";
+    str << "gclidb.milestone";
 
     algo::Smallstr200_Print(row.milestone, temp);
     PrintAttrSpaceReset(str,"milestone", temp);
@@ -2712,7 +2720,7 @@ bool gclidb::Mr_ReadFieldMaybe(gclidb::Mr &parent, algo::strptr field, algo::str
 // The format of the string is an ssim Tuple
 bool gclidb::Mr_ReadStrptrMaybe(gclidb::Mr &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "gclidb.Mr");
+    retval = algo::StripTypeTag(in_str, "gclidb.mr") || algo::StripTypeTag(in_str, "gclidb.Mr");
     ind_beg(algo::Attr_curs, attr, in_str) {
         retval = retval && Mr_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
@@ -2723,7 +2731,7 @@ bool gclidb::Mr_ReadStrptrMaybe(gclidb::Mr &parent, algo::strptr in_str) {
 // print string representation of gclidb::Mr to string LHS, no header -- cprint:gclidb.Mr.String
 void gclidb::Mr_Print(gclidb::Mr & row, algo::cstring &str) {
     algo::tempstr temp;
-    str << "gclidb.Mr";
+    str << "gclidb.mr";
 
     algo::Smallstr150_Print(row.mr, temp);
     PrintAttrSpaceReset(str,"mr", temp);
@@ -2819,7 +2827,7 @@ bool gclidb::Mrjob_ReadFieldMaybe(gclidb::Mrjob &parent, algo::strptr field, alg
 // The format of the string is an ssim Tuple
 bool gclidb::Mrjob_ReadStrptrMaybe(gclidb::Mrjob &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "gclidb.Mrjob");
+    retval = algo::StripTypeTag(in_str, "gclidb.mrjob") || algo::StripTypeTag(in_str, "gclidb.Mrjob");
     ind_beg(algo::Attr_curs, attr, in_str) {
         retval = retval && Mrjob_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
@@ -2830,7 +2838,7 @@ bool gclidb::Mrjob_ReadStrptrMaybe(gclidb::Mrjob &parent, algo::strptr in_str) {
 // print string representation of gclidb::Mrjob to string LHS, no header -- cprint:gclidb.Mrjob.String
 void gclidb::Mrjob_Print(gclidb::Mrjob & row, algo::cstring &str) {
     algo::tempstr temp;
-    str << "gclidb.Mrjob";
+    str << "gclidb.mrjob";
 
     algo::Smallstr250_Print(row.mrjob, temp);
     PrintAttrSpaceReset(str,"mrjob", temp);
@@ -2908,7 +2916,7 @@ bool gclidb::Mrnote_ReadFieldMaybe(gclidb::Mrnote &parent, algo::strptr field, a
 // The format of the string is an ssim Tuple
 bool gclidb::Mrnote_ReadStrptrMaybe(gclidb::Mrnote &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "gclidb.Mrnote");
+    retval = algo::StripTypeTag(in_str, "gclidb.mrnote") || algo::StripTypeTag(in_str, "gclidb.Mrnote");
     ind_beg(algo::Attr_curs, attr, in_str) {
         retval = retval && Mrnote_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
@@ -2919,7 +2927,7 @@ bool gclidb::Mrnote_ReadStrptrMaybe(gclidb::Mrnote &parent, algo::strptr in_str)
 // print string representation of gclidb::Mrnote to string LHS, no header -- cprint:gclidb.Mrnote.String
 void gclidb::Mrnote_Print(gclidb::Mrnote & row, algo::cstring &str) {
     algo::tempstr temp;
-    str << "gclidb.Mrnote";
+    str << "gclidb.mrnote";
 
     algo::cstring_Print(row.system, temp);
     PrintAttrSpaceReset(str,"system", temp);
@@ -2956,7 +2964,7 @@ bool gclidb::User_ReadFieldMaybe(gclidb::User &parent, algo::strptr field, algo:
 // The format of the string is an ssim Tuple
 bool gclidb::User_ReadStrptrMaybe(gclidb::User &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "gclidb.User");
+    retval = algo::StripTypeTag(in_str, "gclidb.user") || algo::StripTypeTag(in_str, "gclidb.User");
     ind_beg(algo::Attr_curs, attr, in_str) {
         retval = retval && User_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
@@ -2967,7 +2975,7 @@ bool gclidb::User_ReadStrptrMaybe(gclidb::User &parent, algo::strptr in_str) {
 // print string representation of gclidb::User to string LHS, no header -- cprint:gclidb.User.String
 void gclidb::User_Print(gclidb::User & row, algo::cstring &str) {
     algo::tempstr temp;
-    str << "gclidb.User";
+    str << "gclidb.user";
 
     algo::Smallstr50_Print(row.user, temp);
     PrintAttrSpaceReset(str,"user", temp);

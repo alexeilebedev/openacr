@@ -316,49 +316,49 @@ void amc::NewFieldExec() {
         Field_AddChild(field, dmmeta::Field(SubfieldName(field, "path")
                                             , "algo.cstring"
                                             , dmmeta_Reftype_reftype_Val
-                                            , dmmeta::CppExpr(DefaultExecPath(field))
+                                            , algo::CppExpr(DefaultExecPath(field))
                                             , algo::Comment("path for executable")));
 
         Field_AddChild(field, dmmeta::Field(SubfieldName(field, "cmd")
                                             , field.arg
                                             , dmmeta_Reftype_reftype_Val
-                                            , dmmeta::CppExpr()
+                                            , algo::CppExpr()
                                             , algo::Comment("command line for child process")));
 
         Field_AddChild(field, dmmeta::Field(SubfieldName(field, "fstdin")
                                             , "algo.cstring"
                                             , dmmeta_Reftype_reftype_Val
-                                            , dmmeta::CppExpr()
+                                            , algo::CppExpr()
                                             , algo::Comment("redirect for stdin")));
 
         Field_AddChild(field, dmmeta::Field(SubfieldName(field, "fstdout")
                                             , "algo.cstring"
                                             , dmmeta_Reftype_reftype_Val
-                                            , dmmeta::CppExpr()
+                                            , algo::CppExpr()
                                             , algo::Comment("redirect for stdout")));
 
         Field_AddChild(field, dmmeta::Field(SubfieldName(field, "fstderr")
                                             , "algo.cstring"
                                             , dmmeta_Reftype_reftype_Val
-                                            , dmmeta::CppExpr()
+                                            , algo::CppExpr()
                                             , algo::Comment("redirect for stderr")));
 
         Field_AddChild(field, dmmeta::Field(SubfieldName(field, "pid")
                                             , "pid_t"
                                             , dmmeta_Reftype_reftype_Val
-                                            , dmmeta::CppExpr()
+                                            , algo::CppExpr()
                                             , algo::Comment("pid of running child process")));
 
         Field_AddChild(field, dmmeta::Field(SubfieldName(field, "timeout")
                                             , "i32"
                                             , dmmeta_Reftype_reftype_Val
-                                            , dmmeta::CppExpr("0")
+                                            , algo::CppExpr("0")
                                             , algo::Comment("optional timeout for child process")));
 
         Field_AddChild(field, dmmeta::Field(SubfieldName(field, "status")
                                             , "i32"
                                             , dmmeta_Reftype_reftype_Val
-                                            , dmmeta::CppExpr()
+                                            , algo::CppExpr()
                                             , algo::Comment("last exit status of child process")));
     }ind_end;
 }

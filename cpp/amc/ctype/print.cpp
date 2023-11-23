@@ -215,7 +215,8 @@ static void GenPrintTuple(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FCfmt
                     Ins(&R, print.body,"if ($name_Get($pararg) != NULL) {");
                 }
             }
-            Set(R, "$Attr", (field.c_anonfld ? strptr() : strptr(name_Get(field))));
+            // always print attr name, even for anonfld
+            Set(R, "$Attr", name_Get(field));
             tempstr expr;
             Ins(&R, expr, "PrintAttrSpaceReset(str,\"$Attr\", temp);");
             text << CheckDfltExpr(field,expr,false);

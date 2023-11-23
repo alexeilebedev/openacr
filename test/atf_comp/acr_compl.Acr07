@@ -1,2 +1,1 @@
-# atf_comp -report:N -printinput acr_compl.Acr07 | acr_compl -line:"acr nitte" | cat
 atfdb.unittest:

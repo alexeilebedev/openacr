@@ -23,7 +23,7 @@
 //
 
 #include "include/atf_unit.h"
-#include "include/lib/lib_exec.h"
+#include "include/lib_exec.h"
 #ifndef WIN32
 #include <sys/resource.h>
 #endif

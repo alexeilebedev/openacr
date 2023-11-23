@@ -18,7 +18,7 @@ Usage: amc_vis [[-ctype:]<regx>] [options]
     -render             Y       Produce an ascii drawing
     -verbose    int             Verbosity level (0..255); alias -v; cumulative
     -debug      int             Debug level (0..255); alias -d; cumulative
-    -help                       Print help an exit; alias -h
+    -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
 
@@ -28,10 +28,11 @@ Usage: amc_vis [[-ctype:]<regx>] [options]
 
 `amc_vis` takes the following tables on input:
 ```
-CTYPE           COMMENT
+CTYPE                COMMENT
 dmmeta.Reftype
-dmmeta.Ctype    Conceptual type (or C type)
-dmmeta.Field    Specify field of a struct
-dmmeta.Finput   Describe input table of a program
+dmmeta.Ctype         Conceptual type (or C type)
+dmmeta.Field         Specify field of a struct
+dmmeta.Finput        Describe input table of a program
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
 ```
 

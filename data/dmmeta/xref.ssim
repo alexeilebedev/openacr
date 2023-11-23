@@ -94,12 +94,13 @@ dmmeta.xref  field:acr_compl.FCtype.c_argvtype  inscond:true  via:acr_compl.FDb.
 dmmeta.xref  field:acr_compl.FField.c_fflag  inscond:true  via:acr_compl.FDb.ind_field/dmmeta.Fflag.field
 dmmeta.xref  field:acr_compl.FField.p_ctype  inscond:true  via:acr_compl.FDb.ind_ctype/dmmeta.Field.ctype
 dmmeta.xref  field:acr_compl.FField.c_falias  inscond:true  via:acr_compl.FDb.ind_field/dmmeta.Falias.field
-dmmeta.xref  field:acr_compl.FFalias.p_basefield  inscond:true  via:acr_compl.FDb.ind_field/dmmeta.Falias.basefield
-dmmeta.xref  field:acr_compl.FField.c_falias_base  inscond:true  via:acr_compl.FDb.ind_field/dmmeta.Falias.basefield
 dmmeta.xref  field:acr_compl.FFalias.p_field  inscond:true  via:acr_compl.FDb.ind_field/dmmeta.Falias.field
+dmmeta.xref  field:acr_compl.FFalias.p_srcfield  inscond:true  via:acr_compl.FDb.ind_field/dmmeta.Falias.srcfield
+dmmeta.xref  field:acr_compl.FField.c_falias_srcfield  inscond:true  via:acr_compl.FDb.ind_field/dmmeta.Falias.srcfield
 dmmeta.xref  field:acr_dm.FDb.ind_tuple  inscond:true  via:""
 dmmeta.xref  field:acr_dm.FTuple.zs_attr  inscond:true  via:acr_dm.FAttr.p_tuple
 dmmeta.xref  field:acr_dm.FAttr.zs_value  inscond:true  via:acr_dm.FValue.p_attr
+dmmeta.xref  field:acr_dm.FDb.bh_tuple  inscond:false  via:""
 dmmeta.xref  field:acr_ed.FDb.ind_ns  inscond:true  via:""
 dmmeta.xref  field:acr_ed.FDb.ind_field  inscond:true  via:""
 dmmeta.xref  field:acr_ed.FDb.ind_ctype  inscond:true  via:""
@@ -121,6 +122,9 @@ dmmeta.xref  field:acr_ed.FCtype.c_typefld  inscond:true  via:acr_ed.FDb.ind_cty
 dmmeta.xref  field:acr_ed.FCtype.c_cpptype  inscond:true  via:acr_ed.FDb.ind_ctype/dmmeta.Cpptype.ctype
 dmmeta.xref  field:acr_ed.FCtype.c_cfmt  inscond:true  via:acr_ed.FDb.ind_ctype/dmmeta.Cfmt.ctype
 dmmeta.xref  field:acr_ed.FDb.ind_nsdb  inscond:true  via:""
+dmmeta.xref  field:acr_ed.FTarget.zd_targsrc  inscond:true  via:acr_ed.FDb.ind_target/dev.Targsrc.target
+dmmeta.xref  field:acr_ed.FTarget.p_ns  inscond:true  via:acr_ed.FDb.ind_ns/dev.Target.target
+dmmeta.xref  field:acr_ed.FDb.ind_edaction  inscond:true  via:""
 dmmeta.xref  field:acr_in.FDb.ind_tuple  inscond:true  via:""
 dmmeta.xref  field:acr_in.FDb.ind_field  inscond:true  via:""
 dmmeta.xref  field:acr_in.FDb.ind_ctype  inscond:true  via:""
@@ -380,7 +384,7 @@ dmmeta.xref  field:amc.FGsymbol.p_symboltype  inscond:true  via:amc.FDb.ind_ctyp
 dmmeta.xref  field:amc.FNs.c_nscpp  inscond:true  via:amc.FDb.ind_ns/dmmeta.Nscpp.ns
 dmmeta.xref  field:amc.FDb.ind_fflag  inscond:true  via:""
 dmmeta.xref  field:amc.FField.c_fflag  inscond:true  via:amc.FDb.ind_field/dmmeta.Fflag.field
-dmmeta.xref  field:amc.FFalias.p_basefield  inscond:true  via:amc.FDb.ind_field/dmmeta.Falias.basefield
+dmmeta.xref  field:amc.FFalias.p_srcfield  inscond:true  via:amc.FDb.ind_field/dmmeta.Falias.srcfield
 dmmeta.xref  field:amc.FField.c_falias  inscond:true  via:amc.FDb.ind_field/dmmeta.Falias.field
 dmmeta.xref  field:amc.FFcmdline.p_basecmdline  inscond:true  via:amc.FDb.ind_field/dmmeta.Fcmdline.basecmdline
 dmmeta.xref  field:amc.FDb.ind_license  inscond:true  via:""

@@ -35,8 +35,6 @@
 #include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
@@ -63,7 +61,7 @@ const char *acr_my_help =
 "    -serv                       Start mysql with TCP/IP service enabled\n"
 "    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      int             Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help an exit; alias -h\n"
+"    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
 ;
@@ -340,7 +338,7 @@ void acr_my::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(acr_my::LoadTuplesMaybe(cmd.schema)
+    vrfy(acr_my::LoadTuplesMaybe(cmd.schema,true)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
@@ -406,7 +404,6 @@ bool acr_my::InsertStrptrMaybe(algo::strptr str) {
             break;
         }
         default:
-        retval = algo_lib::InsertStrptrMaybe(str);
         break;
     } //switch
     if (!retval) {
@@ -417,21 +414,60 @@ bool acr_my::InsertStrptrMaybe(algo::strptr str) {
 
 // --- acr_my.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool acr_my::LoadTuplesMaybe(algo::strptr root) {
+bool acr_my::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    static const char *ssimfiles[] = {
-        "dmmeta.nsdb", "dmmeta.ssimfile"
-        , NULL};
-        retval = algo_lib::DoLoadTuples(root, acr_my::InsertStrptrMaybe, ssimfiles, true);
-        return retval;
+    if (FileQ(root)) {
+        retval = acr_my::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = acr_my::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && acr_my::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && acr_my::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsdb"),recursive);
+        retval = retval && acr_my::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
+
+// --- acr_my.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool acr_my::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- acr_my.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool acr_my::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+        }
+        retval = retval && acr_my::InsertStrptrMaybe(line);
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
+    return retval;
 }
 
 // --- acr_my.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool acr_my::LoadSsimfileMaybe(algo::strptr fname) {
+bool acr_my::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, acr_my::InsertStrptrMaybe, true);
+        retval = acr_my::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }

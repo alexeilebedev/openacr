@@ -1,4 +1,3 @@
-# atf_comp -report:N -printinput acr_compl.CustomData | acr_compl -data:- -line:"acr -query:gclidb.gclicmdt:" | cat
 mrreviewrm.ghp 
 mrsearch.ghp 
 mslist.ghp 

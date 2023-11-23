@@ -2044,6 +2044,37 @@ inline acr::FRec& acr::_db_zd_all_selrec_curs_Access(_db_zd_all_selrec_curs &cur
     return *curs.row;
 }
 
+// --- acr.FDb.zd_all_selrec_delcurs.Reset
+// cursor points to valid item
+inline void acr::_db_zd_all_selrec_delcurs_Reset(_db_zd_all_selrec_delcurs &curs, acr::FDb &parent) {
+    curs.row = parent.zd_all_selrec_head;
+    if (curs.row) {
+        curs.next = (*curs.row).zd_all_selrec_next;
+    }
+}
+
+// --- acr.FDb.zd_all_selrec_delcurs.ValidQ
+// cursor points to valid item
+inline bool acr::_db_zd_all_selrec_delcurs_ValidQ(_db_zd_all_selrec_delcurs &curs) {
+    return curs.row != NULL;
+}
+
+// --- acr.FDb.zd_all_selrec_delcurs.Next
+// proceed to next item
+inline void acr::_db_zd_all_selrec_delcurs_Next(_db_zd_all_selrec_delcurs &curs) {
+    acr::FRec *next = curs.next;
+    curs.row = next;
+    if (curs.row) {
+        curs.next = (*curs.row).zd_all_selrec_next;
+    }
+}
+
+// --- acr.FDb.zd_all_selrec_delcurs.Access
+// item access
+inline acr::FRec& acr::_db_zd_all_selrec_delcurs_Access(_db_zd_all_selrec_delcurs &curs) {
+    return *curs.row;
+}
+
 // --- acr.FDb.zd_all_err_curs.Reset
 // cursor points to valid item
 inline void acr::_db_zd_all_err_curs_Reset(_db_zd_all_err_curs &curs, acr::FDb &parent) {
@@ -2510,7 +2541,6 @@ inline void acr::FFile_Init(acr::FFile& file) {
     file.zd_frec_head = NULL; // (acr.FFile.zd_frec)
     file.zd_frec_tail = NULL; // (acr.FFile.zd_frec)
     file.autoloaded = bool(false);
-    file.deselect = bool(false);
     file.ind_file_next = (acr::FFile*)-1; // (acr.FDb.ind_file) not-in-hash
 }
 
@@ -3702,6 +3732,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const acr::Queryop &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr::FQuery &row) {// cfmt:acr.FQuery.String
     acr::FQuery_Print(const_cast<acr::FQuery&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const acr::FRec &row) {// cfmt:acr.FRec.String
+    acr::FRec_Print(const_cast<acr::FRec&>(row), str);
     return str;
 }
 

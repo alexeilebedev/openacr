@@ -28,10 +28,13 @@ dmmeta.ssimfile  ssimfile:dev.compiler  ctype:dev.Compiler
 dmmeta.ssimfile  ssimfile:dev.covfile  ctype:dev.Covfile
 dmmeta.ssimfile  ssimfile:dev.covline  ctype:dev.Covline
 dmmeta.ssimfile  ssimfile:dev.covtarget  ctype:dev.Covtarget
+dmmeta.ssimfile  ssimfile:dev.edaction  ctype:dev.Edaction
+dmmeta.ssimfile  ssimfile:dev.edacttype  ctype:dev.Edacttype
 dmmeta.ssimfile  ssimfile:dev.gitfile  ctype:dev.Gitfile
 dmmeta.ssimfile  ssimfile:dev.gitinfo  ctype:dev.Gitinfo
 dmmeta.ssimfile  ssimfile:dev.hilite  ctype:dev.Hilite
 dmmeta.ssimfile  ssimfile:dev.htmlentity  ctype:dev.Htmlentity
+dmmeta.ssimfile  ssimfile:dev.include  ctype:dev.Include
 dmmeta.ssimfile  ssimfile:dev.license  ctype:dev.License
 dmmeta.ssimfile  ssimfile:dev.linelim  ctype:dev.Linelim
 dmmeta.ssimfile  ssimfile:dev.mdsection  ctype:dev.Mdsection
@@ -45,6 +48,8 @@ dmmeta.ssimfile  ssimfile:dev.sbpath  ctype:dev.Sbpath
 dmmeta.ssimfile  ssimfile:dev.scriptfile  ctype:dev.Scriptfile
 dmmeta.ssimfile  ssimfile:dev.srcfile  ctype:dev.Srcfile
 dmmeta.ssimfile  ssimfile:dev.ssimfs  ctype:dev.Ssimfs
+dmmeta.ssimfile  ssimfile:dev.syscmd  ctype:dev.Syscmd
+dmmeta.ssimfile  ssimfile:dev.syscmddep  ctype:dev.Syscmddep
 dmmeta.ssimfile  ssimfile:dev.syslib  ctype:dev.Syslib
 dmmeta.ssimfile  ssimfile:dev.targdep  ctype:dev.Targdep
 dmmeta.ssimfile  ssimfile:dev.target  ctype:dev.Target
@@ -80,6 +85,7 @@ dmmeta.ssimfile  ssimfile:dmmeta.dispatch_msg  ctype:dmmeta.DispatchMsg
 dmmeta.ssimfile  ssimfile:dmmeta.dispctx  ctype:dmmeta.Dispctx
 dmmeta.ssimfile  ssimfile:dmmeta.dispfilter  ctype:dmmeta.Dispfilter
 dmmeta.ssimfile  ssimfile:dmmeta.dispsig  ctype:dmmeta.Dispsig
+dmmeta.ssimfile  ssimfile:dmmeta.dispsigcheck  ctype:dmmeta.Dispsigcheck
 dmmeta.ssimfile  ssimfile:dmmeta.disptrace  ctype:dmmeta.Disptrace
 dmmeta.ssimfile  ssimfile:dmmeta.falias  ctype:dmmeta.Falias
 dmmeta.ssimfile  ssimfile:dmmeta.fbase  ctype:dmmeta.Fbase
@@ -112,6 +118,7 @@ dmmeta.ssimfile  ssimfile:dmmeta.fsort  ctype:dmmeta.Fsort
 dmmeta.ssimfile  ssimfile:dmmeta.fstep  ctype:dmmeta.Fstep
 dmmeta.ssimfile  ssimfile:dmmeta.ftrace  ctype:dmmeta.Ftrace
 dmmeta.ssimfile  ssimfile:dmmeta.ftuple  ctype:dmmeta.Ftuple
+dmmeta.ssimfile  ssimfile:dmmeta.func  ctype:dmmeta.Func
 dmmeta.ssimfile  ssimfile:dmmeta.funique  ctype:dmmeta.Funique
 dmmeta.ssimfile  ssimfile:dmmeta.fuserinit  ctype:dmmeta.Fuserinit
 dmmeta.ssimfile  ssimfile:dmmeta.fwddecl  ctype:dmmeta.Fwddecl
@@ -180,6 +187,7 @@ dmmeta.ssimfile  ssimfile:gclidb.gclienv  ctype:gclidb.Gclienv
 dmmeta.ssimfile  ssimfile:gclidb.gclienvsub  ctype:gclidb.Gclienvsub
 dmmeta.ssimfile  ssimfile:gclidb.gclisub  ctype:gclidb.Gclisub
 dmmeta.ssimfile  ssimfile:gclidb.gfld  ctype:gclidb.Gfld
+dmmeta.ssimfile  ssimfile:gclidb.githost  ctype:gclidb.Githost
 dmmeta.ssimfile  ssimfile:gclidb.gmethod  ctype:gclidb.Gmethod
 dmmeta.ssimfile  ssimfile:gclidb.grepo  ctype:gclidb.Grepo
 dmmeta.ssimfile  ssimfile:gclidb.grepogitport  ctype:gclidb.Grepogitport
@@ -194,4 +202,13 @@ dmmeta.ssimfile  ssimfile:gclidb.gtblacttstout  ctype:gclidb.Gtblacttstout
 dmmeta.ssimfile  ssimfile:gclidb.gtype  ctype:gclidb.Gtype
 dmmeta.ssimfile  ssimfile:gclidb.gtypeh  ctype:gclidb.Gtypeh
 dmmeta.ssimfile  ssimfile:gclidb.gtypeprefix  ctype:gclidb.Gtypeprefix
+dmmeta.ssimfile  ssimfile:gclidb.issue  ctype:gclidb.Issue
+dmmeta.ssimfile  ssimfile:gclidb.issuenote  ctype:gclidb.Issuenote
+dmmeta.ssimfile  ssimfile:gclidb.issuepipeline  ctype:gclidb.Issuepipeline
 dmmeta.ssimfile  ssimfile:gclidb.label  ctype:gclidb.Label
+dmmeta.ssimfile  ssimfile:gclidb.milestone  ctype:gclidb.Milestone
+dmmeta.ssimfile  ssimfile:gclidb.mr  ctype:gclidb.Mr
+dmmeta.ssimfile  ssimfile:gclidb.mrjob  ctype:gclidb.Mrjob
+dmmeta.ssimfile  ssimfile:gclidb.mrnote  ctype:gclidb.Mrnote
+dmmeta.ssimfile  ssimfile:gclidb.project  ctype:gclidb.Project
+dmmeta.ssimfile  ssimfile:gclidb.user  ctype:gclidb.User

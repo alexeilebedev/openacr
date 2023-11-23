@@ -254,7 +254,7 @@ void amc::CloneFields(amc::FCtype &from, amc::FCtype &to, double next_rowid, amc
             dmmeta::Falias newfalias;
             amc::falias_CopyOut(*field.c_falias, newfalias);
             newfalias.field = newfield.field;
-            newfalias.basefield = dmmeta::Field_Concat_ctype_name(ctype_Get(newfield),name_Get(*field.c_falias->p_basefield));
+            newfalias.srcfield = dmmeta::Field_Concat_ctype_name(ctype_Get(newfield),name_Get(*field.c_falias->p_srcfield));
             amc::falias_InsertMaybe(newfalias);
         }
         if (field.c_fbigend) {

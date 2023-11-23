@@ -685,6 +685,76 @@ void algo::Comment_Print(algo::Comment & row, algo::cstring &str) {
     algo::Smallstr150_Print(row.value, str);
 }
 
+// --- algo.Smallstr250.ch.Print
+void algo::ch_Print(algo::Smallstr250& parent, algo::cstring &out) {
+    ch_Addary(out, ch_Getary(parent));
+}
+
+// --- algo.Smallstr250.ch.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr250& parent, algo::strptr rhs) {
+    bool retval = false;
+    if (rhs.n_elems <= 250) {
+        ch_SetStrptr(parent, rhs);
+        retval = true;
+    } else {
+        algo_lib::SaveBadTag("comment","text too long, limit 250");
+    }
+    return retval;
+}
+
+// --- algo.Smallstr250.ch.SetStrptr
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void algo::ch_SetStrptr(algo::Smallstr250& parent, const algo::strptr &rhs) {
+    int len = i32_Min(rhs.n_elems, 250);
+    char *rhs_elems = rhs.elems;
+    int i = 0;
+    int j = 0;
+    for (; i < len; i++, j++) {
+        parent.ch[j] = rhs_elems[i];
+    }
+    parent.n_ch       = u8(len);
+}
+
+// --- algo.Smallstr250..Hash
+u32 algo::Smallstr250_Hash(u32 prev, const algo::Smallstr250 & rhs) {
+    algo::strptr ch_strptr = ch_Getary(rhs);
+    prev = ::strptr_Hash(prev, ch_strptr);
+    return prev;
+}
+
+// --- algo.Smallstr250..ReadStrptrMaybe
+// Read fields of algo::Smallstr250 from an ascii string.
+// The format of the string is the format of the algo::Smallstr250's only field
+bool algo::Smallstr250_ReadStrptrMaybe(algo::Smallstr250 &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && ch_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- algo.Smallstr250..Print
+// print string representation of algo::Smallstr250 to string LHS, no header -- cprint:algo.Smallstr250.String
+void algo::Smallstr250_Print(algo::Smallstr250 & row, algo::cstring &str) {
+    algo::ch_Print(row, str);
+}
+
+// --- algo.CppExpr..ReadStrptrMaybe
+// Read fields of algo::CppExpr from an ascii string.
+// The format of the string is the format of the algo::CppExpr's only field
+bool algo::CppExpr_ReadStrptrMaybe(algo::CppExpr &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && algo::Smallstr250_ReadStrptrMaybe(parent.value, in_str);
+    return retval;
+}
+
+// --- algo.CppExpr..Print
+// print string representation of algo::CppExpr to string LHS, no header -- cprint:algo.CppExpr.String
+void algo::CppExpr_Print(algo::CppExpr & row, algo::cstring &str) {
+    algo::Smallstr250_Print(row.value, str);
+}
+
 // --- algo.Dbbox..ReadFieldMaybe
 bool algo::Dbbox_ReadFieldMaybe(algo::Dbbox &parent, algo::strptr field, algo::strptr strval) {
     algo::FieldId field_id;
@@ -724,10 +794,10 @@ void algo::Dbbox_Print(algo::Dbbox & row, algo::cstring &str) {
     str << "algo.Dbbox";
 
     double_Print(row.min, temp);
-    PrintAttrSpaceReset(str,"", temp);
+    PrintAttrSpaceReset(str,"min", temp);
 
     double_Print(row.max, temp);
-    PrintAttrSpaceReset(str,"", temp);
+    PrintAttrSpaceReset(str,"max", temp);
 }
 
 // --- algo.Dbbox..GetAnon
@@ -12267,61 +12337,6 @@ bool algo::Smallstr25_ReadStrptrMaybe(algo::Smallstr25 &parent, algo::strptr in_
 // --- algo.Smallstr25..Print
 // print string representation of algo::Smallstr25 to string LHS, no header -- cprint:algo.Smallstr25.String
 void algo::Smallstr25_Print(algo::Smallstr25 & row, algo::cstring &str) {
-    algo::ch_Print(row, str);
-}
-
-// --- algo.Smallstr250.ch.Print
-void algo::ch_Print(algo::Smallstr250& parent, algo::cstring &out) {
-    ch_Addary(out, ch_Getary(parent));
-}
-
-// --- algo.Smallstr250.ch.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::Smallstr250& parent, algo::strptr rhs) {
-    bool retval = false;
-    if (rhs.n_elems <= 250) {
-        ch_SetStrptr(parent, rhs);
-        retval = true;
-    } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 250");
-    }
-    return retval;
-}
-
-// --- algo.Smallstr250.ch.SetStrptr
-// Copy from strptr, clipping length
-// Set string to the value provided by RHS.
-// If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr250& parent, const algo::strptr &rhs) {
-    int len = i32_Min(rhs.n_elems, 250);
-    char *rhs_elems = rhs.elems;
-    int i = 0;
-    int j = 0;
-    for (; i < len; i++, j++) {
-        parent.ch[j] = rhs_elems[i];
-    }
-    parent.n_ch       = u8(len);
-}
-
-// --- algo.Smallstr250..Hash
-u32 algo::Smallstr250_Hash(u32 prev, const algo::Smallstr250 & rhs) {
-    algo::strptr ch_strptr = ch_Getary(rhs);
-    prev = ::strptr_Hash(prev, ch_strptr);
-    return prev;
-}
-
-// --- algo.Smallstr250..ReadStrptrMaybe
-// Read fields of algo::Smallstr250 from an ascii string.
-// The format of the string is the format of the algo::Smallstr250's only field
-bool algo::Smallstr250_ReadStrptrMaybe(algo::Smallstr250 &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = retval && ch_ReadStrptrMaybe(parent, in_str);
-    return retval;
-}
-
-// --- algo.Smallstr250..Print
-// print string representation of algo::Smallstr250 to string LHS, no header -- cprint:algo.Smallstr250.String
-void algo::Smallstr250_Print(algo::Smallstr250 & row, algo::cstring &str) {
     algo::ch_Print(row, str);
 }
 

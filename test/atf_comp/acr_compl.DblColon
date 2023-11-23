@@ -1,1 +1,0 @@
-# atf_comp -report:N -printinput acr_compl.DblColon | acr_compl -line:"atf_cmdline -dbl:" | cat

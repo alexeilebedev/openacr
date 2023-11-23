@@ -1,4 +1,3 @@
-# atf_comp -report:N -printinput ssimfilt.SelectField | ssimfilt -field:nstype -format:field | cat
 exe
 lib
 none

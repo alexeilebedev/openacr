@@ -40,11 +40,11 @@
 static void ReadParentMsg(lib_ams::FStream &stream, ams::MsgHeader &) {
     ams_sendtest::AmsSendTest &frame = ams_sendtest::_db.ams_send_test;
     if (ams_sendtest::_db.cmdline.recvdelay_ns>0) {
-        u64 clock=get_cycles();
+        u64 clock=algo::get_cycles();
         u64 limit=clock + ams_sendtest::_db.cmdline.recvdelay_ns / algo_lib::_db.clocks_to_ns;
         while (clock < limit) {
             sfence();
-            clock=get_cycles();
+            clock=algo::get_cycles();
         }
     }
     frame.n_msg_recv++;

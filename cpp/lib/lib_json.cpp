@@ -66,6 +66,13 @@ lib_json::FNode &lib_json::NewNode(lib_json::FNode *parent, lib_json_FNode_type_
     return qNewNode(parent,type,field);
 }
 
+// PARENT    parent node or NULL
+// TYPE      node type
+// VALUE     node value where applicable (only for field, string, number)
+lib_json::FNode &lib_json::NewNode(lib_json::FNode *parent, lib_json_FNode_type_Enum type) {
+    return NewNode(parent,type,strptr());
+}
+
 static lib_json::FNode &NewNodeSmart(lib_json::FNode *parent, lib_json_FNode_type_Enum type, strptr field) {
     bool is_obj = parent && parent->type == lib_json_FNode_type_object;
     vrfy(is_obj == !!elems_N(field),"wrong use of field name");
@@ -80,21 +87,21 @@ lib_json::FNode &lib_json::NewFieldNode(lib_json::FNode *parent, strptr field) {
     return NewNode(parent,lib_json_FNode_type_field,field);
 }
 
-lib_json::FNode &lib_json::NewObjectNode(lib_json::FNode *parent, strptr field) {
+lib_json::FNode &lib_json::NewObjectNode(lib_json::FNode *parent, strptr field DFLTVAL(strptr())) {
     return NewNodeSmart(parent, lib_json_FNode_type_object, field);
 }
 
-lib_json::FNode &lib_json::NewArrayNode(lib_json::FNode *parent, strptr field) {
+lib_json::FNode &lib_json::NewArrayNode(lib_json::FNode *parent, strptr field DFLTVAL(strptr())) {
     return NewNodeSmart(parent, lib_json_FNode_type_array, field);
 }
 
-lib_json::FNode &lib_json::NewStringNode(lib_json::FNode *parent, strptr field, strptr value) {
+lib_json::FNode &lib_json::NewStringNode(lib_json::FNode *parent, strptr field DFLTVAL(strptr()), strptr value DFLTVAL(strptr())) {
     lib_json::FNode &node = NewNodeSmart(parent, lib_json_FNode_type_string, field);
     node.value = value;
     return node;
 }
 
-lib_json::FNode &lib_json::NewNumberNode(lib_json::FNode *parent, strptr field, strptr value) {
+lib_json::FNode &lib_json::NewNumberNode(lib_json::FNode *parent, strptr field DFLTVAL(strptr()), strptr value DFLTVAL(strptr("0"))) {
     lib_json::FNode &node = NewNodeSmart(parent, lib_json_FNode_type_number, field);
     node.value = value;
     return node;
@@ -499,7 +506,18 @@ inline bool ScalarNodeQ(lib_json::FNode &node) {
         && node.type != lib_json_FNode_type_object;
 }
 
-// Main parser routine - parse buffer
+// Parses JSON text into tree structure according to ECMA-404
+// can be invoked repeadetly with new data portions (can be used directly as read hook)
+//
+// PARSER    parser handle
+// BUF       input buffer to process
+//           non-zero-length - parse new data portion
+//           zero-length     - to finalize and check completeness
+// RETURN    true for OK, false for parse error
+//
+// after finalization, root node pointer is available at: parser.root_node
+// whole tree is automatically deleted upon parser destruction,
+// to detach tree from parser do parser.root_node=NULL
 bool lib_json::JsonParse(lib_json::FParser &parser, strptr buf) {
     parser.buf = buf;
     parser.ind = 0;
@@ -560,6 +578,11 @@ static void JsonSerializeString(strptr str, cstring &lhs) {
 }
 
 // Serialize to string
+// Serialize to JSON tree to text
+// NODE      root node to start from
+// LHS       target string
+// PRETTY    whether or not pretty-format
+// INDENT    level of indenting (for pretty-formatting)
 void lib_json::JsonSerialize(lib_json::FNode* node, cstring &lhs, bool pretty, u32 indent) {
     if (node) {
         switch (node->type) {
@@ -609,11 +632,19 @@ void lib_json::JsonSerialize(lib_json::FNode* node, cstring &lhs, bool pretty, u
     }
 }
 
+void lib_json::JsonSerialize(lib_json::FNode* node, cstring &lhs, bool pretty) {
+    lib_json::JsonSerialize(node,lhs,pretty,0);
+}
 
-// find node in object chain
-// path is dot-separated list of field keys
-// e.g. path abc.def.ghi and parent {"abc:{"def":{"ghi":value}}}
-// yields value node
+void lib_json::JsonSerialize(lib_json::FNode* node, cstring &lhs) {
+    lib_json::JsonSerialize(node,lhs,false,0);
+}
+
+// Find node in object chain
+// PARENT    node to start from
+// PATH      dot-separated list of field keys
+//           e.g. path abc.def.ghi and parent pointing to {"abc:{"def":{"ghi":value}}}
+//           yields value node
 lib_json::FNode* lib_json::node_Find(lib_json::FNode* parent, strptr path) {
     algo::StringIter it(path);
     while (!it.EofQ()) {
@@ -625,9 +656,12 @@ lib_json::FNode* lib_json::node_Find(lib_json::FNode* parent, strptr path) {
     return parent;
 }
 
-// get node value as string, empty in case if path is not found, or structural node
-// boolean is converted to 0/1 (to be shown as numeric)
-// null is empty string
+// Get node value as string
+// Empty string is returned in case of any error or null value
+// true/false is converted to 0/1
+//
+// PARENT    node to start from
+// PATH      dot-separated list of field keys
 strptr lib_json::strptr_Get(lib_json::FNode* parent, strptr path) {
     lib_json::FNode* node = lib_json::node_Find(parent,path);
     strptr ret;
@@ -643,16 +677,20 @@ strptr lib_json::strptr_Get(lib_json::FNode* parent, strptr path) {
     return ret;
 }
 
-// get array node, NULL in case of any error
-// NULL if not found or not an array
+// Get array node, NULL in case of any error
+//
+// PARENT    node to start from
+// PATH      dot-separated list of field keys
 lib_json::FNode* lib_json::node_GetArray(lib_json::FNode* parent, strptr path) {
     lib_json::FNode* node = node_Find(parent,path);
     return (!node || node->type != lib_json_FNode_type_array) ? NULL : node;
 }
 
-// get node value as u32
-// boolean is converted to 0/1 (to be shown as numeric)
-// exception on any error
+// Get node value as u32, EXCEPTION on any error
+// true/false is converted to 0/1
+//
+// PARENT    node to start from
+// PATH      dot-separated list of field keys
 u32 lib_json::u32_Get(lib_json::FNode* parent, strptr path) {
     lib_json::FNode* node = lib_json::node_Find(parent,path);
     vrfy(node,"u32_Get: path is not found");

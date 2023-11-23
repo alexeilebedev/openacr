@@ -1,0 +1,2 @@
+acr.update  dmmeta.ns  ns:amc  nstype:exe  license:GPL  comment:"Algo Cross-Reference - ssimfile database & update tool"
+report.acr  n_select:1  n_insert:0  n_delete:0  n_ignore:0  n_update:1  n_file_mod:0

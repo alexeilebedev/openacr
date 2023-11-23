@@ -31,10 +31,12 @@
 // --- acr_dm_FieldIdEnum
 
 enum acr_dm_FieldIdEnum {        // acr_dm.FieldId.value
-     acr_dm_FieldId_value   = 0
+     acr_dm_FieldId_f1      = 0
+    ,acr_dm_FieldId_f2      = 1
+    ,acr_dm_FieldId_value   = 2
 };
 
-enum { acr_dm_FieldIdEnum_N = 1 };
+enum { acr_dm_FieldIdEnum_N = 3 };
 
 namespace acr_dm { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -48,10 +50,12 @@ namespace acr_dm { struct attr_zs_value_curs; }
 namespace acr_dm { struct _db_tuple_curs; }
 namespace acr_dm { struct _db_attr_curs; }
 namespace acr_dm { struct _db_value_curs; }
+namespace acr_dm { struct _db_bh_tuple_curs; }
 namespace acr_dm { struct Source_source_bitcurs; }
 namespace acr_dm { struct tuple_zs_attr_curs; }
 namespace acr_dm { struct trace; }
 namespace acr_dm { struct FDb; }
+namespace acr_dm { struct Rowid; }
 namespace acr_dm { struct Source; }
 namespace acr_dm { struct FValue; }
 namespace acr_dm { struct FieldId; }
@@ -139,6 +143,9 @@ struct FDb { // acr_dm.FDb
     i32                attr_n;                    // number of elements in array
     acr_dm::FValue*    value_lary[32];            // level array
     i32                value_n;                   // number of elements in array
+    acr_dm::FTuple**   bh_tuple_elems;            // binary heap by rowid
+    i32                bh_tuple_n;                // number of elements in the heap
+    i32                bh_tuple_max;              // max elements in bh_tuple_elems
     acr_dm::trace      trace;                     //
 };
 
@@ -158,9 +165,13 @@ void                 StaticCheck();
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
-bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
+bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file.
+bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file descriptor.
+bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
-bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
@@ -259,6 +270,36 @@ acr_dm::FValue&      value_qFind(u64 t) __attribute__((nothrow, pure));
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 value_XrefMaybe(acr_dm::FValue &row);
 
+// Remove all elements from heap and free memory used by the array.
+void                 bh_tuple_Dealloc() __attribute__((nothrow));
+// Return true if index is empty
+bool                 bh_tuple_EmptyQ() __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+acr_dm::FTuple*      bh_tuple_First() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in index, false otherwise
+bool                 bh_tuple_InBheapQ(acr_dm::FTuple& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row. Row must not already be in index. If row is already in index, do nothing.
+void                 bh_tuple_Insert(acr_dm::FTuple& row) __attribute__((nothrow));
+// Return number of items in the heap
+i32                  bh_tuple_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// If row is in heap, update its position. If row is not in heap, insert it.
+// Return new position of item in the heap (0=top)
+i32                  bh_tuple_Reheap(acr_dm::FTuple& row) __attribute__((nothrow));
+// Key of first element in the heap changed. Move it.
+// This function does not check the insert condition.
+// Return new position of item in the heap (0=top).
+// Heap must be non-empty or behavior is undefined.
+i32                  bh_tuple_ReheapFirst() __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+void                 bh_tuple_Remove(acr_dm::FTuple& row) __attribute__((nothrow));
+// Remove all elements from binary heap
+void                 bh_tuple_RemoveAll() __attribute__((nothrow));
+// If index is empty, return NULL. Otherwise remove and return first key in index.
+//  Call 'head changed' trigger.
+acr_dm::FTuple*      bh_tuple_RemoveFirst() __attribute__((nothrow));
+// Reserve space in index for N more elements
+void                 bh_tuple_Reserve(int n) __attribute__((nothrow));
+
 // cursor points to valid item
 void                 _db_tuple_curs_Reset(_db_tuple_curs &curs, acr_dm::FDb &parent);
 // cursor points to valid item
@@ -283,9 +324,47 @@ bool                 _db_value_curs_ValidQ(_db_value_curs &curs);
 void                 _db_value_curs_Next(_db_value_curs &curs);
 // item access
 acr_dm::FValue&      _db_value_curs_Access(_db_value_curs &curs);
+void                 _db_bh_tuple_curs_Reserve(_db_bh_tuple_curs &curs, int n);
+// Reset cursor. If HEAP is non-empty, add its top element to CURS.
+void                 _db_bh_tuple_curs_Reset(_db_bh_tuple_curs &curs, acr_dm::FDb &parent);
+// Advance cursor.
+void                 _db_bh_tuple_curs_Next(_db_bh_tuple_curs &curs);
+// Access current element. If not more elements, return NULL
+acr_dm::FTuple&      _db_bh_tuple_curs_Access(_db_bh_tuple_curs &curs);
+// Return true if Access() will return non-NULL.
+bool                 _db_bh_tuple_curs_ValidQ(_db_bh_tuple_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
+
+// --- acr_dm.Rowid
+struct Rowid { // acr_dm.Rowid
+    i32   f1;   //   0
+    i32   f2;   //   0
+    explicit Rowid(i32                            in_f1
+        ,i32                            in_f2);
+    bool operator ==(const acr_dm::Rowid &rhs) const;
+    bool operator !=(const acr_dm::Rowid &rhs) const;
+    bool operator <(const acr_dm::Rowid &rhs) const;
+    bool operator >(const acr_dm::Rowid &rhs) const;
+    bool operator <=(const acr_dm::Rowid &rhs) const;
+    bool operator >=(const acr_dm::Rowid &rhs) const;
+    Rowid();
+};
+
+bool                 Rowid_ReadFieldMaybe(acr_dm::Rowid &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of acr_dm::Rowid from an ascii string.
+// The format of the string is a string with separated values
+bool                 Rowid_ReadStrptrMaybe(acr_dm::Rowid &parent, algo::strptr in_str);
+bool                 Rowid_Lt(acr_dm::Rowid & lhs, acr_dm::Rowid & rhs) __attribute__((nothrow));
+i32                  Rowid_Cmp(acr_dm::Rowid & lhs, acr_dm::Rowid & rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 Rowid_Init(acr_dm::Rowid& parent);
+bool                 Rowid_Eq(const acr_dm::Rowid & lhs,const acr_dm::Rowid & rhs) __attribute__((nothrow));
+// Set value. Return true if new value is different from old value.
+bool                 Rowid_Update(acr_dm::Rowid &lhs, acr_dm::Rowid & rhs) __attribute__((nothrow));
+// print string representation of acr_dm::Rowid to string LHS, no header -- cprint:acr_dm.Rowid.String
+void                 Rowid_Print(acr_dm::Rowid & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- acr_dm.Source
 struct Source { // acr_dm.Source
@@ -343,10 +422,13 @@ void                 Source_Init(acr_dm::Source& parent);
 // --- acr_dm.FTuple
 // create: acr_dm.FDb.tuple (Lary)
 // global access: ind_tuple (Thash)
+// global access: bh_tuple (Bheap)
 // access: acr_dm.FAttr.p_tuple (Upptr)
 struct FTuple { // acr_dm.FTuple
     acr_dm::FTuple*   ind_tuple_next;   // hash next
+    i32               bh_tuple_idx;     // index in heap; -1 means not-in-heap
     algo::cstring     key;              //
+    acr_dm::Rowid     rowid;            //
     acr_dm::FAttr*    zs_attr_head;     // zero-terminated singly linked list
     i32               zs_attr_n;        // zero-terminated singly linked list
     acr_dm::FAttr*    zs_attr_tail;     // pointer to last element
@@ -361,6 +443,11 @@ private:
     FTuple(const FTuple&){ /*disallow copy constructor */}
     void operator =(const FTuple&){ /*disallow direct assignment */}
 };
+
+// Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
+bool                 rowid_Lt(acr_dm::FTuple& tuple, acr_dm::FTuple &rhs) __attribute__((nothrow));
+// Compare two fields.
+i32                  rowid_Cmp(acr_dm::FTuple& tuple, acr_dm::FTuple &rhs) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 zs_attr_EmptyQ(acr_dm::FTuple& tuple) __attribute__((__warn_unused_result__, nothrow, pure));
@@ -494,6 +581,18 @@ struct _db_value_curs {// cursor
     _db_value_curs(){ parent=NULL; index=0; }
 };
 
+// Non-destructive heap cursor, returns heap elements in sorted order.
+// A running front of potential smallest entries is kept in the helper heap (curs.temp_%)
+struct _db_bh_tuple_curs {
+    typedef acr_dm::FTuple ChildType;
+    acr_dm::FDb      *parent;        // parent
+    acr_dm::FTuple*     *temp_elems;    // helper heap
+    int            temp_n;        // number of elements heaped in the helper heap
+    int            temp_max;      // max number of elements possible in the helper heap
+    _db_bh_tuple_curs() : parent(NULL), temp_elems(NULL), temp_n(0), temp_max(0) {}
+    ~_db_bh_tuple_curs();
+};
+
 
 struct Source_source_bitcurs {// cursor
     typedef int& ChildType;
@@ -522,5 +621,6 @@ int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 // gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const acr_dm::trace &row);// cfmt:acr_dm.trace.String
+inline algo::cstring &operator <<(algo::cstring &str, const acr_dm::Rowid &row);// cfmt:acr_dm.Rowid.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_dm::FieldId &row);// cfmt:acr_dm.FieldId.String
 }

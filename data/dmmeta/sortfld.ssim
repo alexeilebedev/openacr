@@ -3,6 +3,7 @@ dmmeta.sortfld  field:abt_md.FDb.bh_file_section  sortfld:abt_md.FileSection.sor
 dmmeta.sortfld  field:acr.FDb.bh_ctype_topo  sortfld:acr.FCtype.topokey
 dmmeta.sortfld  field:acr.FDb.bh_pline  sortfld:acr.FPline.key
 dmmeta.sortfld  field:acr_compl.FDb.bh_completion  sortfld:acr_compl.FCompletion.badness
+dmmeta.sortfld  field:acr_dm.FDb.bh_tuple  sortfld:acr_dm.FTuple.rowid
 dmmeta.sortfld  field:algo_lib.FDb.bh_timehook  sortfld:algo_lib.FTimehook.time
 dmmeta.sortfld  field:amc.FDb.bh_enumstr_len  sortfld:amc.FEnumstrLen.len
 dmmeta.sortfld  field:amc.FEnumstrLen.bh_enumstr  sortfld:amc.Enumstr.str

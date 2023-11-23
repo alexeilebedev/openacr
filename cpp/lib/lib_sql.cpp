@@ -68,7 +68,7 @@ const tempstr lib_sql::SqlQuotedValue(Tuple &tuple, Attr &attr) {
 const tempstr lib_sql::SqlNames(Tuple &tuple) {
     tempstr ret;
     algo::ListSep ls(",");
-    ind_beg(Tuple_attrs_curs,attr,tuple) {
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         ret << ls << attr.name;
     }ind_end;
     return ret;
@@ -80,7 +80,7 @@ const tempstr lib_sql::SqlNames(Tuple &tuple) {
 const tempstr lib_sql::SqlNameValues(Tuple &tuple) {
     tempstr ret;
     algo::ListSep ls(",");
-    ind_beg(Tuple_attrs_curs,attr,tuple) {
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         ret << ls << attr.name << "=" << SqlQuotedValue(tuple,attr);
     }ind_end;
     return ret;
@@ -92,7 +92,7 @@ const tempstr lib_sql::SqlNameValues(Tuple &tuple) {
 tempstr lib_sql::SqlValues(Tuple &tuple) {
     tempstr ret;
     algo::ListSep ls(",");
-    ind_beg(Tuple_attrs_curs,attr,tuple) {
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         ret << ls << SqlQuotedValue(tuple,attr);
     }ind_end;
     return ret;

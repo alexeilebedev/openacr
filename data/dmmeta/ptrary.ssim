@@ -16,6 +16,7 @@ dmmeta.ptrary  field:acr.FRun.c_field  unique:N
 dmmeta.ptrary  field:acr.FRun.c_rec  unique:N
 dmmeta.ptrary  field:acr.FWrite.c_cmtrec  unique:N
 dmmeta.ptrary  field:acr_compl.FCtype.c_field  unique:Y
+dmmeta.ptrary  field:acr_compl.FField.c_falias_srcfield  unique:N
 dmmeta.ptrary  field:acr_compl.FField.c_fconst  unique:Y
 dmmeta.ptrary  field:acr_ed.FCtype.c_cfmt  unique:N
 dmmeta.ptrary  field:acr_ed.FCtype.c_field  unique:Y
@@ -59,6 +60,7 @@ dmmeta.ptrary  field:amc.FNs.c_nsinclude  unique:Y
 dmmeta.ptrary  field:amc.FNs.c_outfile  unique:Y
 dmmeta.ptrary  field:amc.FNs.c_parentns  unique:N
 dmmeta.ptrary  field:amc.FNs.c_pnew  unique:Y
+dmmeta.ptrary  field:amc.FNs.c_ssimfile  unique:N
 dmmeta.ptrary  field:amc.FTarget.c_targdep  unique:Y
 dmmeta.ptrary  field:amc.FTclass.c_tfunc  unique:Y
 dmmeta.ptrary  field:amc_vis.FCtype.c_field  unique:Y

@@ -31,8 +31,6 @@
 #include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 algo_lib::_db_bh_timehook_curs::~_db_bh_timehook_curs() {
     algo_lib::lpool_FreeMem(temp_elems, sizeof(void*) * temp_max);
@@ -929,13 +927,49 @@ bool algo_lib::InsertStrptrMaybe(algo::strptr str) {
 
 // --- algo_lib.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool algo_lib::LoadTuplesMaybe(algo::strptr root) {
+bool algo_lib::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    static const char *ssimfiles[] = {
+    if (FileQ(root)) {
+        retval = algo_lib::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = algo_lib::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && algo_lib::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
 
-        NULL};
-        retval = algo_lib::DoLoadTuples(root, algo_lib::InsertStrptrMaybe, ssimfiles, true);
-        return retval;
+// --- algo_lib.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool algo_lib::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- algo_lib.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool algo_lib::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+        }
+        retval = retval && algo_lib::InsertStrptrMaybe(line);
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
+    return retval;
 }
 
 // --- algo_lib.FDb._db.Init
@@ -952,10 +986,10 @@ void algo_lib::Init() {
 
 // --- algo_lib.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool algo_lib::LoadSsimfileMaybe(algo::strptr fname) {
+bool algo_lib::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, algo_lib::InsertStrptrMaybe, true);
+        retval = algo_lib::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }
@@ -4386,6 +4420,10 @@ bool algo_lib::value_SetStrptrMaybe(algo_lib::TableId& parent, algo::strptr rhs)
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','D'): {
                     if (memcmp(rhs.elems+8,"ispsigcheck",11)==0) { value_SetEnum(parent,algo_lib_TableId_dmmeta_Dispsigcheck); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','m','m','e','t','a','.','d'): {
+                    if (memcmp(rhs.elems+8,"ispsigcheck",11)==0) { value_SetEnum(parent,algo_lib_TableId_dmmeta_dispsigcheck); ret = true; break; }
                     break;
                 }
             }

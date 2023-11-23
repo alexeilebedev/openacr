@@ -70,9 +70,10 @@ enum { algo_lib_RegxToken_type_Enum_N = 3 };
 
 enum algo_lib_TableIdEnum {                       // algo_lib.TableId.value
      algo_lib_TableId_dmmeta_Dispsigcheck   = 0   // dmmeta.Dispsigcheck -> algo_lib.FDispsigcheck
+    ,algo_lib_TableId_dmmeta_dispsigcheck   = 0   // dmmeta.dispsigcheck -> algo_lib.FDispsigcheck
 };
 
-enum { algo_lib_TableIdEnum_N = 1 };
+enum { algo_lib_TableIdEnum_N = 2 };
 
 namespace algo_lib { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -256,7 +257,7 @@ void                 Bitset_Uninit(algo_lib::Bitset& parent) __attribute__((noth
 struct Cmdline { // algo_lib.Cmdline: *can't move this to command namespace because of circular dependency*
     u8     verbose;     //   0  Verbosity level (0..255)
     u8     debug;       //   0  Debug level (0..255)
-    bool   help;        //   false  Print help an exit
+    bool   help;        //   false  Print help and exit
     bool   version;     //   false  Print version and exit
     bool   signature;   //   false  Show signatures and exit
     Cmdline();
@@ -703,10 +704,14 @@ void                 StaticCheck();
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
-bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
+bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file.
+bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file descriptor.
+bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 void                 Init() __attribute__((nothrow));
 // Load specified ssimfile.
-bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error

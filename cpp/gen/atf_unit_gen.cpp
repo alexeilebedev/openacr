@@ -35,10 +35,10 @@
 #include "include/gen/atfdb_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/lib_prot_gen.h"
+#include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/lib_ams_gen.h"
 #include "include/gen/lib_ams_gen.inl.h"
 #include "include/gen/lib_exec_gen.h"
@@ -76,7 +76,7 @@ const char *atf_unit_help =
 "    -check_untracked          Y       Check for untracked file before allowing test to run\n"
 "    -verbose          int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug            int             Debug level (0..255); alias -d; cumulative\n"
-"    -help                             Print help an exit; alias -h\n"
+"    -help                             Print help and exit; alias -h\n"
 "    -version                          Print version and exit\n"
 "    -signature                        Show signatures and exit; alias -sig\n"
 ;
@@ -1043,7 +1043,7 @@ void atf_unit::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(atf_unit::LoadTuplesMaybe(cmd.data_dir)
+    vrfy(atf_unit::LoadTuplesMaybe(cmd.data_dir,true)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
@@ -1099,18 +1099,60 @@ bool atf_unit::InsertStrptrMaybe(algo::strptr str) {
 
 // --- atf_unit.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool atf_unit::LoadTuplesMaybe(algo::strptr root) {
+bool atf_unit::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    (void)root;//only to avoid -Wunused-parameter
+    if (FileQ(root)) {
+        retval = atf_unit::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = atf_unit::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && atf_unit::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && atf_unit::LoadTuplesFile(algo::SsimFname(root,"fmdb.alm_code"),recursive);
+        retval = retval && atf_unit::LoadTuplesFile(algo::SsimFname(root,"fmdb.alm_objtype"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
+
+// --- atf_unit.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool atf_unit::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- atf_unit.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool atf_unit::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+            retval = retval && lib_fm::InsertStrptrMaybe(line);
+        }
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
     return retval;
 }
 
 // --- atf_unit.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool atf_unit::LoadSsimfileMaybe(algo::strptr fname) {
+bool atf_unit::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, atf_unit::InsertStrptrMaybe, true);
+        retval = atf_unit::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }
@@ -1379,12 +1421,6 @@ int atf_unit::acr_ed_Execv() {
         cstring_Print(_db.acr_ed_cmd.rename, *arg);
     }
 
-    if (_db.acr_ed_cmd.replace != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-replace:";
-        bool_Print(_db.acr_ed_cmd.replace, *arg);
-    }
-
     if (_db.acr_ed_cmd.finput != false) {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-finput:";
@@ -1509,6 +1545,12 @@ int atf_unit::acr_ed_Execv() {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-substr:";
         Smallstr100_Print(_db.acr_ed_cmd.substr, *arg);
+    }
+
+    if (_db.acr_ed_cmd.alias != false) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-alias:";
+        bool_Print(_db.acr_ed_cmd.alias, *arg);
     }
 
     if (_db.acr_ed_cmd.srcfield != "") {

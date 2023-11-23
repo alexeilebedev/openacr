@@ -60,7 +60,7 @@ Usage: acr_in [-ns:]<regx> [options]
     -checkable                    Ensure output passes acr -check
     -verbose      int             Verbosity level (0..255); alias -v; cumulative
     -debug        int             Debug level (0..255); alias -d; cumulative
-    -help                         Print help an exit; alias -h
+    -help                         Print help and exit; alias -h
     -version                      Print version and exit
     -signature                    Show signatures and exit; alias -sig
 
@@ -114,15 +114,16 @@ In contrast, if we didn't specify `-related`, `-data` would fetch all records:
 
 `acr_in` takes the following tables on input:
 ```
-CTYPE            COMMENT
-dmmeta.Ns        Namespace (for in-memory database, protocol, etc)
-dmmeta.Dispsig
-dev.Target       Build target
-dev.Targdep      Dependency between targets
-dmmeta.Ctype     Conceptual type (or C type)
-dmmeta.Field     Specify field of a struct
-dmmeta.Substr    Specify that the field value is computed from a substring of another field
-dmmeta.Ssimfile  Ssim tuple name for structure
-dmmeta.Finput    Describe input table of a program
+CTYPE                COMMENT
+dmmeta.Ns            Namespace (for in-memory database, protocol, etc)
+dmmeta.Dispsig       Cryptographic signature of all dispatches
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
+dev.Target           Build target
+dev.Targdep          Dependency between targets
+dmmeta.Ctype         Conceptual type (or C type)
+dmmeta.Field         Specify field of a struct
+dmmeta.Substr        Specify that the field value is computed from a substring of another field
+dmmeta.Ssimfile      Ssim tuple name for structure
+dmmeta.Finput        Describe input table of a program
 ```
 

@@ -47,8 +47,7 @@ namespace acr { // update-hdr
 
     // Insert record in ACR's database.
     // Upon first access of ssimfile, load ssimfile from disk.
-    // If -trunc option is set, delete all records
-    // This is different from marking records for deletion.
+    // If -trunc option is set, mark all records for deletion
     acr::FRec* ReadTuple(Tuple &tuple, acr::FFile &file, acr::ReadMode read_mode);
 
     // Create a new record from tuple TUPLE, having primary key PKEY_ATTR and type
@@ -85,21 +84,20 @@ namespace acr { // update-hdr
     // cpp/acr/load.cpp -- Load files
     //
 
-    // Load input records for ssimfile SSIMFILE
-    // and create an approprate FILE record.
-    void LoadSsimfile(acr::FSsimfile& ssimfile);
+    // Load records for this ctype from the appropriate ssimfile
+    // This does nothing if acr is operating in file mode, or if the ssimfile doesn't exist
+    void LoadRecords(acr::FCtype &ctype);
 
-    // Read lines from input text file IN
-    // Associate loaded records with record FILE.
-    void ReadLines(acr::FFile &file, algo::Fildes in);
+    // Return default read mode as specified on the command line
+    acr::ReadMode DefaultReadMode();
+
+    // Read lines from fd IN, associating them with file FILE
+    // The read mode is READ_MODE
+    void ReadLines(acr::FFile &file, algo::Fildes in, acr::ReadMode read_mode);
     void Main_ReadIn();
-    bool EphemeralQ(acr::FFile &file);
 
     // True if acr input comes from a named file
     bool FileInputQ();
-
-    // Return true if all records for specified ctype are available and in memory
-    bool RecordsLoadedQ(acr::FCtype &ctype);
 
     // -------------------------------------------------------------------
     // cpp/acr/main.cpp
@@ -159,18 +157,15 @@ namespace acr { // update-hdr
     // Select all records from all files
     void Rec_SelectAll();
 
-    // Select all records that were modified
-    void Rec_SelectModified();
+    // Select all records that were modified or deleted
+    // This includes records that were both inserted and deleted during this run
+    void SelectModified();
 
     // Conditionally insert record into selection set
     // - Record is added to zd_selrec list for is ctype
     // - Record is added to zd_all_selrec (global list)
     // - Selected ctype is added to zd_sel_ctype list
     bool Rec_Select(acr::FRec& rec);
-
-    // Deselect all records.
-    // Select only records in the error set
-    void SelectErrRecs();
 
     // -------------------------------------------------------------------
     // cpp/acr/verb.cpp -- Command-line verbs
@@ -191,6 +186,11 @@ namespace acr { // update-hdr
     // Select ctypes of selected records, deselect records themselves
     void SelectMeta();
     void Main_AcrEdit();
+
+    // Start with selected records
+    // Find all dependent records and delete them as well
+    // In the end, de-select records that were both inserted and deleted
+    void CascadeDelete();
 
     // -------------------------------------------------------------------
     // cpp/acr/write.cpp -- Write files

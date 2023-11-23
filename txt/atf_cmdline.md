@@ -35,25 +35,38 @@ Usage: atf_cmdline [-astr:]<string> [[-anum:]<int>] [[-adbl:]<double>] -str:<str
     -dpkey      string  ""      Predefined pkey
     -verbose    int             Verbosity level (0..255); alias -v; cumulative
     -debug      int             Debug level (0..255); alias -d; cumulative
-    -help                       Print help an exit; alias -h
+    -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
 
 ```
 
+### Inputs
+
+`atf_cmdline` takes the following tables on input:
+```
+CTYPE                COMMENT
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
+```
+
 ### Tests
 
-The following component tests are defined for `atf_cmdline`:
+The following component tests are defined for `atf_cmdline`.
+These can be executed with `atf_comp <comptest> -v`
 ```
-atf_cmdline.Bare	
-atf_cmdline.Debug	
-atf_cmdline.Help	
-atf_cmdline.Minimal	
-atf_cmdline.MinimalExec	
-atf_cmdline.Rich	
-atf_cmdline.RichExec	
-atf_cmdline.Sig	
-atf_cmdline.Verbose	
-atf_cmdline.Version	
+COMPTEST                 COMMENT
+atf_cmdline.Bare
+atf_cmdline.Debug
+atf_cmdline.Help
+atf_cmdline.Minimal
+atf_cmdline.MinimalExec
+atf_cmdline.Rich
+atf_cmdline.RichExec
+atf_cmdline.Sig
+atf_cmdline.Verbose
+atf_cmdline.Version
+
+
+
 ```
 

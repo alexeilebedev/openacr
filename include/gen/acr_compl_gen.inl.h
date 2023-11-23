@@ -1396,7 +1396,7 @@ inline acr_compl::FFalias::~FFalias() {
 // --- acr_compl.FFalias..Init
 // Set all fields to initial values.
 inline void acr_compl::FFalias_Init(acr_compl::FFalias& falias) {
-    falias.p_basefield = NULL;
+    falias.p_srcfield = NULL;
     falias.p_field = NULL;
 }
 inline acr_compl::FFcmdline::FFcmdline() {
@@ -1553,24 +1553,40 @@ inline void acr_compl::c_falias_Remove(acr_compl::FField& field, acr_compl::FFal
     }
 }
 
-// --- acr_compl.FField.c_falias_base.InsertMaybe
-// Insert row into pointer index. Return final membership status.
-inline bool acr_compl::c_falias_base_InsertMaybe(acr_compl::FField& field, acr_compl::FFalias& row) {
-    acr_compl::FFalias* ptr = field.c_falias_base;
-    bool retval = (ptr == NULL) | (ptr == &row);
-    if (retval) {
-        field.c_falias_base = &row;
+// --- acr_compl.FField.c_falias_srcfield.EmptyQ
+// Return true if index is empty
+inline bool acr_compl::c_falias_srcfield_EmptyQ(acr_compl::FField& field) {
+    return field.c_falias_srcfield_n == 0;
+}
+
+// --- acr_compl.FField.c_falias_srcfield.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_compl::FFalias* acr_compl::c_falias_srcfield_Find(acr_compl::FField& field, u32 t) {
+    acr_compl::FFalias *retval = NULL;
+    u64 idx = t;
+    u64 lim = field.c_falias_srcfield_n;
+    if (idx < lim) {
+        retval = field.c_falias_srcfield_elems[idx];
     }
     return retval;
 }
 
-// --- acr_compl.FField.c_falias_base.Remove
-// Remove element from index. If element is not in index, do nothing.
-inline void acr_compl::c_falias_base_Remove(acr_compl::FField& field, acr_compl::FFalias& row) {
-    acr_compl::FFalias *ptr = field.c_falias_base;
-    if (LIKELY(ptr == &row)) {
-        field.c_falias_base = NULL;
-    }
+// --- acr_compl.FField.c_falias_srcfield.Getary
+// Return array of pointers
+inline algo::aryptr<acr_compl::FFalias*> acr_compl::c_falias_srcfield_Getary(acr_compl::FField& field) {
+    return algo::aryptr<acr_compl::FFalias*>(field.c_falias_srcfield_elems, field.c_falias_srcfield_n);
+}
+
+// --- acr_compl.FField.c_falias_srcfield.N
+// Return number of items in the pointer array
+inline i32 acr_compl::c_falias_srcfield_N(const acr_compl::FField& field) {
+    return field.c_falias_srcfield_n;
+}
+
+// --- acr_compl.FField.c_falias_srcfield.RemoveAll
+// Empty the index. (The rows are not deleted)
+inline void acr_compl::c_falias_srcfield_RemoveAll(acr_compl::FField& field) {
+    field.c_falias_srcfield_n = 0;
 }
 
 // --- acr_compl.FField.c_fconst_curs.Reset
@@ -1595,6 +1611,31 @@ inline void acr_compl::field_c_fconst_curs_Next(field_c_fconst_curs &curs) {
 // --- acr_compl.FField.c_fconst_curs.Access
 // item access
 inline acr_compl::FFconst& acr_compl::field_c_fconst_curs_Access(field_c_fconst_curs &curs) {
+    return *curs.elems[curs.index];
+}
+
+// --- acr_compl.FField.c_falias_srcfield_curs.Reset
+inline void acr_compl::field_c_falias_srcfield_curs_Reset(field_c_falias_srcfield_curs &curs, acr_compl::FField &parent) {
+    curs.elems = parent.c_falias_srcfield_elems;
+    curs.n_elems = parent.c_falias_srcfield_n;
+    curs.index = 0;
+}
+
+// --- acr_compl.FField.c_falias_srcfield_curs.ValidQ
+// cursor points to valid item
+inline bool acr_compl::field_c_falias_srcfield_curs_ValidQ(field_c_falias_srcfield_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- acr_compl.FField.c_falias_srcfield_curs.Next
+// proceed to next item
+inline void acr_compl::field_c_falias_srcfield_curs_Next(field_c_falias_srcfield_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_compl.FField.c_falias_srcfield_curs.Access
+// item access
+inline acr_compl::FFalias& acr_compl::field_c_falias_srcfield_curs_Access(field_c_falias_srcfield_curs &curs) {
     return *curs.elems[curs.index];
 }
 inline acr_compl::FNs::FNs() {

@@ -49,15 +49,13 @@ static void Main_Setopts(){
     if (gcli::_db.cmdline.accept){
         gcli::_db.cmdline.approve=true;
     }
+    if (gcli::_db.cmdline.dry_run){
+        algo_lib::_db.cmdline.verbose=true;
+    }
     // Validate table name/params
     gcli::ValidateGtbl();
     // Map cmdline args to verbs
     gcli::ArgsToTuple();
-
-    // prepare support structure for gscope
-    if (gcli::_db.cmdline.dry_run){
-        algo_lib::_db.cmdline.verbose=true;
-    }
     // parse _db.tokenbuf into gtblact fields
     gcli::TokenbufToGtblactflds();
     gcli::VerifyGtblactflds();

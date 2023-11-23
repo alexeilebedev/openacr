@@ -33,8 +33,6 @@
 #include "include/gen/dev_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
@@ -1560,7 +1558,7 @@ static void lib_ctype::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ctype.Input'  signature:'2a47ece330ef76ad000ddf04b33a7e5a3ee2201b'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ctype.Input'  signature:'82201368d54da2ba1cbd348f2d2f1f3e9da957fe'");
 }
 
 // --- lib_ctype.FDb._db.StaticCheck
@@ -1637,7 +1635,6 @@ bool lib_ctype::InsertStrptrMaybe(algo::strptr str) {
             break;
         }
         default:
-        retval = algo_lib::InsertStrptrMaybe(str);
         break;
     } //switch
     if (!retval) {
@@ -1648,23 +1645,68 @@ bool lib_ctype::InsertStrptrMaybe(algo::strptr str) {
 
 // --- lib_ctype.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool lib_ctype::LoadTuplesMaybe(algo::strptr root) {
+bool lib_ctype::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    static const char *ssimfiles[] = {
-        "dmmeta.ctype", "dmmeta.cdflt", "dmmeta.cfmt", "dmmeta.field"
-        , "dmmeta.cppfunc", "dmmeta.fconst", "dmmeta.ftuple", "dmmeta.ssimfile"
-        , "dmmeta.substr", "dev.unstablefld"
-        , NULL};
-        retval = algo_lib::DoLoadTuples(root, lib_ctype::InsertStrptrMaybe, ssimfiles, true);
-        return retval;
+    if (FileQ(root)) {
+        retval = lib_ctype::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = lib_ctype::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
+        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cdflt"),recursive);
+        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfmt"),recursive);
+        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
+        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cppfunc"),recursive);
+        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fconst"),recursive);
+        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ftuple"),recursive);
+        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
+        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.substr"),recursive);
+        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dev.unstablefld"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
+
+// --- lib_ctype.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool lib_ctype::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- lib_ctype.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool lib_ctype::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+        }
+        retval = retval && lib_ctype::InsertStrptrMaybe(line);
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
+    return retval;
 }
 
 // --- lib_ctype.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool lib_ctype::LoadSsimfileMaybe(algo::strptr fname) {
+bool lib_ctype::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, lib_ctype::InsertStrptrMaybe, true);
+        retval = lib_ctype::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }
@@ -2524,7 +2566,7 @@ void lib_ctype::FFconst_Print(lib_ctype::FFconst & row, algo::cstring &str) {
     algo::Smallstr100_Print(row.fconst, temp);
     PrintAttrSpaceReset(str,"fconst", temp);
 
-    dmmeta::CppExpr_Print(row.value, temp);
+    algo::CppExpr_Print(row.value, temp);
     PrintAttrSpaceReset(str,"value", temp);
 
     algo::Comment_Print(row.comment, temp);
@@ -2758,7 +2800,7 @@ void lib_ctype::FField_Print(lib_ctype::FField & row, algo::cstring &str) {
     algo::Smallstr50_Print(row.reftype, temp);
     PrintAttrSpaceReset(str,"reftype", temp);
 
-    dmmeta::CppExpr_Print(row.dflt, temp);
+    algo::CppExpr_Print(row.dflt, temp);
     PrintAttrSpaceReset(str,"dflt", temp);
 
     algo::Comment_Print(row.comment, temp);

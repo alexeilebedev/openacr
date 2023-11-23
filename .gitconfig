@@ -1,3 +1,0 @@
-[merge "acr_dm"]
-    name = Resolve conflicts in ssim files
-    driver = acr_dm -write_ours -msize %L -- %O %A %B

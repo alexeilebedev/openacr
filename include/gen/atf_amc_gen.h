@@ -23,7 +23,7 @@
 
 
 #pragma once
-#include "include/lib/lib_json.h"
+#include "include/lib_json.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/atfdb_gen.h"
 #include "include/gen/command_gen.h"
@@ -410,6 +410,7 @@ namespace atf_amc { struct BytebufDyn; }
 namespace atf_amc { struct Cstr; }
 namespace atf_amc { struct Ctype1Attr; }
 namespace atf_amc { struct Ctype2Attr; }
+namespace atf_amc { struct Ctype2AttrAnon; }
 namespace atf_amc { struct DelType1; }
 namespace atf_amc { struct DispCase; }
 namespace atf_amc { struct DispFilter; }
@@ -1028,6 +1029,25 @@ bool                 Ctype2Attr_Eq(const atf_amc::Ctype2Attr & lhs,const atf_amc
 bool                 Ctype2Attr_Update(atf_amc::Ctype2Attr &lhs, atf_amc::Ctype2Attr & rhs) __attribute__((nothrow));
 // print string representation of atf_amc::Ctype2Attr to string LHS, no header -- cprint:atf_amc.Ctype2Attr.String
 void                 Ctype2Attr_Print(atf_amc::Ctype2Attr & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- atf_amc.Ctype2AttrAnon
+struct Ctype2AttrAnon { // atf_amc.Ctype2AttrAnon
+    u32   attr1;   //   0
+    u32   attr2;   //   0
+    explicit Ctype2AttrAnon(u32                            in_attr1
+        ,u32                            in_attr2);
+    Ctype2AttrAnon();
+};
+
+bool                 Ctype2AttrAnon_ReadFieldMaybe(atf_amc::Ctype2AttrAnon &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atf_amc::Ctype2AttrAnon from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 Ctype2AttrAnon_ReadStrptrMaybe(atf_amc::Ctype2AttrAnon &parent, algo::strptr in_str);
+// Set all fields to initial values.
+void                 Ctype2AttrAnon_Init(atf_amc::Ctype2AttrAnon& parent);
+// print string representation of atf_amc::Ctype2AttrAnon to string LHS, no header -- cprint:atf_amc.Ctype2AttrAnon.String
+void                 Ctype2AttrAnon_Print(atf_amc::Ctype2AttrAnon & row, algo::cstring &str) __attribute__((nothrow));
+algo::strptr         Ctype2AttrAnon_GetAnon(atf_amc::Ctype2AttrAnon &parent, i32 idx) __attribute__((nothrow));
 
 // --- atf_amc.DelType1
 struct DelType1 { // atf_amc.DelType1: Delptr test 1
@@ -2271,9 +2291,13 @@ void                 StaticCheck();
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
-bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
+bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file.
+bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file descriptor.
+bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
-bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
@@ -7373,6 +7397,8 @@ void                 amctest_ReadTuple1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_ReadTuple2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+void                 amctest_ReadTuple2a();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_ReadTuple3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 void                 amctest_ReadTuple4();
@@ -7669,6 +7695,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::BitfldType1
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::BitfldType2 &row);// cfmt:atf_amc.BitfldType2.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::Ctype1Attr &row);// cfmt:atf_amc.Ctype1Attr.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::Ctype2Attr &row);// cfmt:atf_amc.Ctype2Attr.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::Ctype2AttrAnon &row);// cfmt:atf_amc.Ctype2AttrAnon.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::trace &row);// cfmt:atf_amc.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::TypeG &row);// cfmt:atf_amc.TypeG.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::FieldId &row);// cfmt:atf_amc.FieldId.String

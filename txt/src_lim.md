@@ -18,7 +18,7 @@ Usage: src_lim [options]
     -badline    regx    ""      Check badline (acr badline)
     -verbose    int             Verbosity level (0..255); alias -v; cumulative
     -debug      int             Debug level (0..255); alias -d; cumulative
-    -help                       Print help an exit; alias -h
+    -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
 
@@ -28,10 +28,12 @@ Usage: src_lim [options]
 
 `src_lim` takes the following tables on input:
 ```
-CTYPE        COMMENT
+CTYPE                COMMENT
 dev.Gitfile
-dev.Targsrc  List of sources for target
+dev.Targsrc          List of sources for target
 dev.Linelim
+dev.Include          A site where one file includes another
 dev.Badline
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
 ```
 

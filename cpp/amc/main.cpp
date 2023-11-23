@@ -1012,7 +1012,7 @@ void amc::Main_CloneFconst_Field(amc::FField &field) {
     dmmeta::Ctype ctype_enum(tempstr() << ctype_Get(field) << "Case"
                              , algo::Comment(tempstr()<<"enum helper "<<field.p_ctype->comment));
     dmmeta::Field field_enum(tempstr() << ctype_enum.ctype << "." << name_Get(field)
-                             , "u8", dmmeta_Reftype_reftype_Val, dmmeta::CppExpr(), algo::Comment());
+                             , "u8", dmmeta_Reftype_reftype_Val, algo::CppExpr(), algo::Comment());
     dmmeta::Fcast fcast(field_enum.field, "", algo::Comment());
     dmmeta::Cpptype cpptype(ctype_enum.ctype, true/*ctor*/,true/*dtor*/, false/*cheap_copy*/);
     dmmeta::Pack pack(ctype_enum.ctype, algo::Comment());// insert pack
@@ -1035,7 +1035,7 @@ void amc::Main_CloneFconst_Field(amc::FField &field) {
             // map empty string to 0, everything to integers 1+
             tempstr val = tempstr() << (ch_N(fconst.value.value)>0 ? int(next_val++) : int(0));
             dmmeta::Fconst fconst_enum(tempstr() << field_enum.field << "/" << fconst.value
-                                       , dmmeta::CppExpr(val), fconst.comment);
+                                       , algo::CppExpr(val), fconst.comment);
             if (amc::ind_fconst_Find(fconst_enum.fconst)) {
                 verblog("amc.clone_fconst:'"<< fconst_enum.fconst<<"  comment:'Value skipped because it is a duplicate'");
             } else {
@@ -1170,15 +1170,11 @@ void amc::Main_Gen() {
 // OUTPUT        Generate files for the namespace(s)
 
 void amc::Main() {
-    ind_beg(amc::_db_ctype_curs,ctype,amc::_db) {
-        c_field_QuickSort(ctype);
-    }ind_end;
-
     // open in editor before loading data
     if (amc::_db.cmdline.e) {
         Main_Edit();
     }
-    vrfy(amc::LoadTuplesMaybe(amc::_db.cmdline.in_dir), algo_lib::_db.errtext);
+    vrfy(amc::LoadTuplesMaybe(amc::_db.cmdline.in_dir,true), algo_lib::_db.errtext);
     // Look up default allocator
     amc::_db.c_malloc = amc::ind_field_Find("algo_lib.FDb.malloc");
     vrfy(amc::_db.c_malloc, tempstr()<<"amc.fieldnotfound"

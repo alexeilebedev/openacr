@@ -29,46 +29,54 @@
 
 // --- report_FieldIdEnum
 
-enum report_FieldIdEnum {                 // report.FieldId.value
-     report_FieldId_n_target        = 0
-    ,report_FieldId_time            = 1
-    ,report_FieldId_n_warn          = 2
-    ,report_FieldId_n_err           = 3
-    ,report_FieldId_n_install       = 4
-    ,report_FieldId_n_select        = 5
-    ,report_FieldId_n_insert        = 6
-    ,report_FieldId_n_delete        = 7
-    ,report_FieldId_n_update        = 8
-    ,report_FieldId_n_file_mod      = 9
-    ,report_FieldId_records         = 10
-    ,report_FieldId_errors          = 11
-    ,report_FieldId_n_cppfile       = 12
-    ,report_FieldId_n_cppline       = 13
-    ,report_FieldId_n_ctype         = 14
-    ,report_FieldId_n_func          = 15
-    ,report_FieldId_n_xref          = 16
-    ,report_FieldId_n_filemod       = 17
-    ,report_FieldId_ntest           = 18
-    ,report_FieldId_nselect         = 19
-    ,report_FieldId_npass           = 20
-    ,report_FieldId_nskip           = 21
-    ,report_FieldId_nrun            = 22
-    ,report_FieldId_nwrite          = 23
-    ,report_FieldId_nerr            = 24
-    ,report_FieldId_ninsert         = 25
-    ,report_FieldId_success         = 26
-    ,report_FieldId_n_test_total    = 27
-    ,report_FieldId_n_test_run      = 28
-    ,report_FieldId_n_line          = 29
-    ,report_FieldId_n_static        = 30
-    ,report_FieldId_n_inline        = 31
-    ,report_FieldId_n_mysteryfunc   = 32
-    ,report_FieldId_n_baddecl       = 33
-    ,report_FieldId_comment         = 34
-    ,report_FieldId_value           = 35
+enum report_FieldIdEnum {                   // report.FieldId.value
+     report_FieldId_n_target          = 0
+    ,report_FieldId_time              = 1
+    ,report_FieldId_hitrate           = 2
+    ,report_FieldId_n_warn            = 3
+    ,report_FieldId_n_err             = 4
+    ,report_FieldId_n_install         = 5
+    ,report_FieldId_n_select          = 6
+    ,report_FieldId_n_insert          = 7
+    ,report_FieldId_n_delete          = 8
+    ,report_FieldId_n_ignore          = 9
+    ,report_FieldId_n_update          = 10
+    ,report_FieldId_n_file_mod        = 11
+    ,report_FieldId_records           = 12
+    ,report_FieldId_errors            = 13
+    ,report_FieldId_n_cppfile         = 14
+    ,report_FieldId_n_cppline         = 15
+    ,report_FieldId_n_ctype           = 16
+    ,report_FieldId_n_func            = 17
+    ,report_FieldId_n_xref            = 18
+    ,report_FieldId_n_filemod         = 19
+    ,report_FieldId_ntest             = 20
+    ,report_FieldId_nselect           = 21
+    ,report_FieldId_npass             = 22
+    ,report_FieldId_nskip             = 23
+    ,report_FieldId_nrun              = 24
+    ,report_FieldId_nwrite            = 25
+    ,report_FieldId_nerr              = 26
+    ,report_FieldId_ninsert           = 27
+    ,report_FieldId_success           = 28
+    ,report_FieldId_n_test_total      = 29
+    ,report_FieldId_n_test_run        = 30
+    ,report_FieldId_starttime         = 31
+    ,report_FieldId_elapsed_sec       = 32
+    ,report_FieldId_preproc_size      = 33
+    ,report_FieldId_hit               = 34
+    ,report_FieldId_cached_file       = 35
+    ,report_FieldId_copy_file_range   = 36
+    ,report_FieldId_n_line            = 37
+    ,report_FieldId_n_static          = 38
+    ,report_FieldId_n_inline          = 39
+    ,report_FieldId_n_mysteryfunc     = 40
+    ,report_FieldId_n_baddecl         = 41
+    ,report_FieldId_comment           = 42
+    ,report_FieldId_value             = 43
 };
 
-enum { report_FieldIdEnum_N = 36 };
+enum { report_FieldIdEnum_N = 44 };
 
 namespace report { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -83,6 +91,7 @@ namespace report { struct acr_check; }
 namespace report { struct amc; }
 namespace report { struct atf_comp; }
 namespace report { struct atf_unit; }
+namespace report { struct gcache; }
 namespace report { struct src_func; }
 namespace report { // gen:ns_print_struct
 
@@ -138,13 +147,15 @@ void                 StaticCheck();
 
 // --- report.abt
 struct abt { // report.abt
-    u16            n_target;    //   0
-    algo::UnDiff   time;        //
-    u32            n_warn;      //   0
-    u32            n_err;       //   0
-    u16            n_install;   //   0
+    u16                n_target;    //   0
+    algo::UnDiff       time;        //
+    algo::Smallstr20   hitrate;     //
+    u32                n_warn;      //   0
+    u32                n_err;       //   0
+    u16                n_install;   //   0
     explicit abt(u16                            in_n_target
         ,algo::UnDiff                   in_time
+        ,const algo::strptr&            in_hitrate
         ,u32                            in_n_warn
         ,u32                            in_n_err
         ,u16                            in_n_install);
@@ -162,11 +173,12 @@ void                 abt_Print(report::abt & row, algo::cstring &str) __attribut
 
 // --- report.acr
 struct acr { // report.acr
-    u32   n_select;     //   0
-    u32   n_insert;     //   0
-    u32   n_delete;     //   0
-    u32   n_update;     //   0
-    u32   n_file_mod;   //   0
+    u32   n_select;     //   0  Number of records selected
+    u32   n_insert;     //   0  Number of records inserted
+    u32   n_delete;     //   0  Number of records deleted
+    u32   n_ignore;     //   0  Number of input records ignored
+    u32   n_update;     //   0  Number of records updated
+    u32   n_file_mod;   //   0  Number of files modified
     acr();
 };
 
@@ -258,6 +270,32 @@ void                 atf_unit_Init(report::atf_unit& parent);
 // print string representation of report::atf_unit to string LHS, no header -- cprint:report.atf_unit.String
 void                 atf_unit_Print(report::atf_unit & row, algo::cstring &str) __attribute__((nothrow));
 
+// --- report.gcache
+struct gcache { // report.gcache
+    algo::UnTime    starttime;         // Beginning of run
+    double          elapsed_sec;       //   0.0  End of run
+    i32             preproc_size;      //   0  Size of preprocessed filed
+    bool            hit;               //   false  Cache hit - compilation avoided
+    algo::cstring   cached_file;       // location of cached file
+    bool            copy_file_range;   //   false  kernel-side copy succeeded
+    explicit gcache(algo::UnTime                   in_starttime
+        ,double                         in_elapsed_sec
+        ,i32                            in_preproc_size
+        ,bool                           in_hit
+        ,const algo::strptr&            in_cached_file
+        ,bool                           in_copy_file_range);
+    gcache();
+};
+
+bool                 gcache_ReadFieldMaybe(report::gcache &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of report::gcache from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 gcache_ReadStrptrMaybe(report::gcache &parent, algo::strptr in_str);
+// Set all fields to initial values.
+void                 gcache_Init(report::gcache& parent);
+// print string representation of report::gcache to string LHS, no header -- cprint:report.gcache.String
+void                 gcache_Print(report::gcache & row, algo::cstring &str) __attribute__((nothrow));
+
 // --- report.src_func
 struct src_func { // report.src_func
     u32             n_func;          //   0
@@ -291,5 +329,6 @@ inline algo::cstring &operator <<(algo::cstring &str, const report::acr_check &r
 inline algo::cstring &operator <<(algo::cstring &str, const report::amc &row);// cfmt:report.amc.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::atf_comp &row);// cfmt:report.atf_comp.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::atf_unit &row);// cfmt:report.atf_unit.String
+inline algo::cstring &operator <<(algo::cstring &str, const report::gcache &row);// cfmt:report.gcache.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::src_func &row);// cfmt:report.src_func.String
 }

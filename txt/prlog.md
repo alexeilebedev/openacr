@@ -44,7 +44,7 @@ inline-command: acr logcat
 dmmeta.logcat  logcat:expect  enabled:N  builtin:N  comment:"lib_ams expect implementation"
 dmmeta.logcat  logcat:stderr  enabled:Y  builtin:Y  comment:"Standard error (cannot be disabled)"
 dmmeta.logcat  logcat:stdout  enabled:Y  builtin:Y  comment:"Standard output (cannot be disabled)"
-report.acr  n_select:3  n_insert:0  n_delete:0  n_update:0  n_file_mod:0
+report.acr  n_select:3  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
 ```
 
 ### Verblog

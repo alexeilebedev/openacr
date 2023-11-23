@@ -43,7 +43,7 @@ static amc::FCtype *CreateCasetype(amc::FDispatch &dispatch) {
     dmmeta::Field field(tempstr() << ctype.ctype << ".value"
                         , "u32"
                         , dmmeta_Reftype_reftype_Val
-                        , dmmeta::CppExpr()
+                        , algo::CppExpr()
                         , algo::Comment());
     amc::FField &ffield = *amc::InsField(field);
     (void)ffield;

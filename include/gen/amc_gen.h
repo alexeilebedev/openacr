@@ -158,6 +158,19 @@ enum amc_FieldIdEnum {        // amc.FieldId.value
 enum { amc_FieldIdEnum_N = 3 };
 
 
+// --- amc_PnewtypeEnum
+
+enum amc_PnewtypeEnum {             // amc.Pnewtype.value
+     amc_Pnewtype_Memptr      = 0   // Some region in memory
+    ,amc_Pnewtype_AmsStream   = 1   // Ams stream
+    ,amc_Pnewtype_Fixed       = 2   // Fixed buffer
+    ,amc_Pnewtype_Dynamic     = 3   // Dynamic buffer
+    ,amc_Pnewtype_ByteAry     = 4   // ByteAry
+};
+
+enum { amc_PnewtypeEnum_N = 5 };
+
+
 // --- amc_TableIdEnum
 
 enum amc_TableIdEnum {                        // amc.TableId.value
@@ -266,6 +279,7 @@ enum amc_TableIdEnum {                        // amc.TableId.value
     ,amc_TableId_dmmeta_Ftrace         = 51   // dmmeta.Ftrace -> amc.FFtrace
     ,amc_TableId_dmmeta_ftrace         = 51   // dmmeta.ftrace -> amc.FFtrace
     ,amc_TableId_dmmeta_Func           = 52   // dmmeta.Func -> amc.FFunc
+    ,amc_TableId_dmmeta_func           = 52   // dmmeta.func -> amc.FFunc
     ,amc_TableId_dmmeta_Funique        = 53   // dmmeta.Funique -> amc.FFunique
     ,amc_TableId_dmmeta_funique        = 53   // dmmeta.funique -> amc.FFunique
     ,amc_TableId_dmmeta_Fuserinit      = 54   // dmmeta.Fuserinit -> amc.FFuserinit
@@ -352,7 +366,7 @@ enum amc_TableIdEnum {                        // amc.TableId.value
     ,amc_TableId_dmmeta_xref           = 94   // dmmeta.xref -> amc.FXref
 };
 
-enum { amc_TableIdEnum_N = 189 };
+enum { amc_TableIdEnum_N = 190 };
 
 namespace amc { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -637,6 +651,7 @@ namespace amc { struct ns_c_foutput_curs; }
 namespace amc { struct ns_c_fstep_curs; }
 namespace amc { struct ns_c_gsymbol_curs; }
 namespace amc { struct ns_c_nsinclude_curs; }
+namespace amc { struct ns_c_ssimfile_curs; }
 namespace amc { struct reftype_zs_fprefix_curs; }
 namespace amc { struct target_c_targdep_curs; }
 namespace amc { struct BltinId; }
@@ -745,6 +760,7 @@ namespace amc { struct FXref; }
 namespace amc { struct FieldId; }
 namespace amc { struct Funcarg; }
 namespace amc { struct Genpnew; }
+namespace amc { struct Pnewtype; }
 namespace amc { struct TableId; }
 namespace amc { extern struct amc::FDb _db; }
 namespace amc { // hook_fcn_typedef
@@ -1091,8 +1107,8 @@ void                 FCcmp_Uninit(amc::FCcmp& ccmp) __attribute__((nothrow));
 // access: amc.FCtype.c_cdflt (Ptr)
 struct FCdflt { // amc.FCdflt
     algo::Smallstr50   ctype;      //
-    dmmeta::CppExpr    dflt;       //
-    dmmeta::CppExpr    cppdflt;    //
+    algo::CppExpr      dflt;       //
+    algo::CppExpr      cppdflt;    //
     algo::Smallstr50   ssimdflt;   //
     algo::Smallstr50   jsdflt;     //
     algo::Comment      comment;    //
@@ -1261,7 +1277,7 @@ void                 FChash_Uninit(amc::FChash& chash) __attribute__((nothrow));
 // access: amc.FField.c_cppfunc (Ptr)
 struct FCppfunc { // amc.FCppfunc
     algo::Smallstr100   field;   //
-    dmmeta::CppExpr     expr;    //
+    algo::CppExpr       expr;    //
 private:
     friend amc::FCppfunc&       cppfunc_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend amc::FCppfunc*       cppfunc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -3204,7 +3220,7 @@ void*                reftype_AllocMem() __attribute__((__warn_unused_result__, n
 // Return true if index is empty
 bool                 reftype_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
-amc::FReftype*       reftype_Find(dmmeta::ReftypeId t) __attribute__((__warn_unused_result__, nothrow, pure));
+amc::FReftype*       reftype_Find(i32 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 amc::FReftype*       reftype_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
@@ -3214,7 +3230,7 @@ void                 reftype_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 void                 reftype_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
-amc::FReftype&       reftype_qFind(dmmeta::ReftypeId t) __attribute__((nothrow, pure));
+amc::FReftype&       reftype_qFind(i32 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 reftype_XrefMaybe(amc::FReftype &row);
@@ -3235,11 +3251,15 @@ void                 StaticCheck();
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
-bool                 LoadTuplesMaybe(algo::strptr root) __attribute__((nothrow));
+bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file.
+bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
+// Load all finputs from given file descriptor.
+bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Save ssim data to given directory.
 u32                  SaveTuples(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
-bool                 LoadSsimfileMaybe(algo::strptr fname) __attribute__((nothrow));
+bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
@@ -7524,10 +7544,10 @@ void                 FEnumstrLen_Uninit(amc::FEnumstrLen& enumstr_len) __attribu
 // create: amc.FDb.falias (Lary)
 // access: amc.FField.c_falias (Ptr)
 struct FFalias { // amc.FFalias
-    algo::Smallstr100   field;         //
-    algo::Smallstr100   basefield;     //
-    algo::Comment       comment;       //
-    amc::FField*        p_basefield;   // reference to parent row
+    algo::Smallstr100   field;        //
+    algo::Smallstr100   srcfield;     //
+    algo::Comment       comment;      //
+    amc::FField*        p_srcfield;   // reference to parent row
 private:
     friend amc::FFalias&        falias_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend amc::FFalias*        falias_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -7844,7 +7864,7 @@ struct FFconst { // amc.FFconst
     amc::FFconst*       ind_fconst_next;         // hash next
     amc::FFconst*       ind_fconst_int_next;     // hash next
     algo::Smallstr100   fconst;                  //
-    dmmeta::CppExpr     value;                   //
+    algo::CppExpr       value;                   //
     algo::Comment       comment;                 //
     amc::FField*        p_field;                 // reference to parent row
     algo::cstring       cpp_value;               //
@@ -8012,7 +8032,7 @@ void                 FFflag_Uninit(amc::FFflag& fflag) __attribute__((nothrow));
 // access: amc.FCtype.zd_inst (Llist)
 // access: amc.FCtype.zd_access (Llist)
 // access: amc.FCtype.c_pkeyfield (Ptr)
-// access: amc.FFalias.p_basefield (Upptr)
+// access: amc.FFalias.p_srcfield (Upptr)
 // access: amc.FFbigend.p_field (Upptr)
 // access: amc.FFbitset.p_field (Upptr)
 // access: amc.FFbuf.p_insready (Upptr)
@@ -8064,7 +8084,7 @@ struct FField { // amc.FField
     algo::Smallstr100   field;                    //
     algo::Smallstr50    arg;                      // type of field
     algo::Smallstr50    reftype;                  //   "Val"
-    dmmeta::CppExpr     dflt;                     // default value (c++ expression)
+    algo::CppExpr       dflt;                     // default value (c++ expression)
     algo::Comment       comment;                  //
     amc::FFsort*        c_fsort;                  // optional pointer
     amc::FFbitset*      c_fbitset;                // optional pointer
@@ -9477,7 +9497,7 @@ void                 FMain_Uninit(amc::FMain& main) __attribute__((nothrow));
 // access: amc.FCtype.c_msgtype (Ptr)
 struct FMsgtype { // amc.FMsgtype
     algo::Smallstr50   ctype;     //
-    dmmeta::CppExpr    type;      //
+    algo::CppExpr      type;      //
     amc::FCtype*       p_ctype;   // reference to parent row
 private:
     friend amc::FMsgtype&       msgtype_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -9660,6 +9680,9 @@ struct FNs { // amc.FNs
     u32                 c_nsinclude_max;     // capacity of allocated array
     amc::FNscpp*        c_nscpp;             // optional pointer
     amc::FLicense*      p_license;           // reference to parent row
+    amc::FSsimfile**    c_ssimfile_elems;    // array of pointers
+    u32                 c_ssimfile_n;        // array of pointers
+    u32                 c_ssimfile_max;      // capacity of allocated array
 private:
     friend amc::FNs&            ns_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend amc::FNs*            ns_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -10134,6 +10157,29 @@ bool                 c_nscpp_InsertMaybe(amc::FNs& ns, amc::FNscpp& row) __attri
 // Remove element from index. If element is not in index, do nothing.
 void                 c_nscpp_Remove(amc::FNs& ns, amc::FNscpp& row) __attribute__((nothrow));
 
+// Return true if index is empty
+bool                 c_ssimfile_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+amc::FSsimfile*      c_ssimfile_Find(amc::FNs& ns, u32 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array of pointers
+algo::aryptr<amc::FSsimfile*> c_ssimfile_Getary(amc::FNs& ns) __attribute__((nothrow));
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+void                 c_ssimfile_Insert(amc::FNs& ns, amc::FSsimfile& row) __attribute__((nothrow));
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Linear search is used to locate the element.
+// Return value: whether element was inserted into array.
+bool                 c_ssimfile_ScanInsertMaybe(amc::FNs& ns, amc::FSsimfile& row) __attribute__((nothrow));
+// Return number of items in the pointer array
+i32                  c_ssimfile_N(const amc::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void                 c_ssimfile_Remove(amc::FNs& ns, amc::FSsimfile& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+void                 c_ssimfile_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
+// Reserve space in index for N more elements;
+void                 c_ssimfile_Reserve(amc::FNs& ns, u32 n) __attribute__((nothrow));
+
 // Set all fields to initial values.
 void                 FNs_Init(amc::FNs& ns);
 void                 ns_c_ctype_curs_Reset(ns_c_ctype_curs &curs, amc::FNs &parent);
@@ -10262,6 +10308,13 @@ bool                 ns_c_nsinclude_curs_ValidQ(ns_c_nsinclude_curs &curs);
 void                 ns_c_nsinclude_curs_Next(ns_c_nsinclude_curs &curs);
 // item access
 amc::FNsinclude&     ns_c_nsinclude_curs_Access(ns_c_nsinclude_curs &curs);
+void                 ns_c_ssimfile_curs_Reset(ns_c_ssimfile_curs &curs, amc::FNs &parent);
+// cursor points to valid item
+bool                 ns_c_ssimfile_curs_ValidQ(ns_c_ssimfile_curs &curs);
+// proceed to next item
+void                 ns_c_ssimfile_curs_Next(ns_c_ssimfile_curs &curs);
+// item access
+amc::FSsimfile&      ns_c_ssimfile_curs_Access(ns_c_ssimfile_curs &curs);
 void                 FNs_Uninit(amc::FNs& ns) __attribute__((nothrow));
 
 // --- amc.FNscpp
@@ -10578,23 +10631,23 @@ void                 FPtrary_Uninit(amc::FPtrary& ptrary) __attribute__((nothrow
 // global access: ind_reftype (Thash)
 // access: amc.FField.p_reftype (Upptr)
 struct FReftype { // amc.FReftype
-    amc::FReftype*      ind_reftype_next;   // hash next
-    algo::Smallstr50    reftype;            //   "Val"
-    bool                isval;              //   false  True if field makes values of target type
-    bool                cascins;            //   false  Field is cascade-insert
-    bool                usebasepool;        //   false
-    bool                cancopy;            //   false
-    bool                isxref;             //   false
-    bool                del;                //   false  Supports random deletion?
-    bool                up;                 //   false
-    bool                isnew;              //   false
-    bool                hasalloc;           //   false
-    bool                inst;               //   false
-    bool                varlen;             //   false
-    dmmeta::ReftypeId   rowid;              //
-    amc::FTclass*       p_tclass;           // reference to parent row
-    amc::FFprefix*      zs_fprefix_head;    // zero-terminated singly linked list
-    amc::FFprefix*      zs_fprefix_tail;    // pointer to last element
+    amc::FReftype*     ind_reftype_next;   // hash next
+    algo::Smallstr50   reftype;            //   "Val"
+    bool               isval;              //   false  True if field makes values of target type
+    bool               cascins;            //   false  Field is cascade-insert
+    bool               usebasepool;        //   false
+    bool               cancopy;            //   false
+    bool               isxref;             //   false
+    bool               del;                //   false  Supports random deletion?
+    bool               up;                 //   false
+    bool               isnew;              //   false
+    bool               hasalloc;           //   false
+    bool               inst;               //   false
+    bool               varlen;             //   false
+    i32                rowid;              //   0
+    amc::FTclass*      p_tclass;           // reference to parent row
+    amc::FFprefix*     zs_fprefix_head;    // zero-terminated singly linked list
+    amc::FFprefix*     zs_fprefix_tail;    // pointer to last element
 private:
     friend amc::FReftype&       reftype_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend amc::FReftype*       reftype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -10681,7 +10734,7 @@ struct FSmallstr { // amc.FSmallstr
     algo::Smallstr100   field;               //
     i32                 length;              //   0  Maximum characters in the string
     algo::Smallstr50    strtype;             // Data format for string
-    dmmeta::CppExpr     pad;                 // Pad character (if applicable)
+    algo::CppExpr       pad;                 // Pad character (if applicable)
     bool                strict;              //   false
     amc::FField*        p_field;             // reference to parent row
     amc::FNumstr*       c_numstr;            // optional pointer
@@ -10742,6 +10795,7 @@ void                 FSortfld_Uninit(amc::FSortfld& sortfld) __attribute__((noth
 // global access: ind_ssimfile (Thash)
 // access: amc.FCtype.c_ssimfile (Ptr)
 // access: amc.FGsymbol.p_ssimfile (Upptr)
+// access: amc.FNs.c_ssimfile (Ptrary)
 struct FSsimfile { // amc.FSsimfile
     amc::FSsimfile*       ind_ssimfile_next;   // hash next
     algo::Smallstr50      ssimfile;            //
@@ -10835,7 +10889,7 @@ struct FSubstr { // amc.FSubstr
     amc::FSubstr*       zd_substr_params_next;       // zslist link; -1 means not-in-list
     amc::FSubstr*       zd_substr_params_prev;       // previous element
     algo::Smallstr100   field;                       //
-    dmmeta::CppExpr     expr;                        //
+    algo::CppExpr       expr;                        //
     algo::Smallstr100   srcfield;                    //
     amc::FField*        p_field;                     // reference to parent row
     amc::FField*        p_srcfield;                  // reference to parent row
@@ -11193,7 +11247,7 @@ struct FXref { // amc.FXref
     amc::FXref*         zd_xref_keyfld_next;   // zslist link; -1 means not-in-list
     amc::FXref*         zd_xref_keyfld_prev;   // previous element
     algo::Smallstr100   field;                 //
-    dmmeta::CppExpr     inscond;               //   "true"  Insert condition
+    algo::CppExpr       inscond;               //   "true"  Insert condition
     algo::Smallstr200   via;                   //
     amc::FField*        p_field;               // reference to parent row
     amc::FCtype*        p_ctype;               // reference to parent row
@@ -11308,6 +11362,43 @@ private:
 
 // Set all fields to initial values.
 void                 Genpnew_Init(amc::Genpnew& parent);
+
+// --- amc.Pnewtype
+struct Pnewtype { // amc.Pnewtype
+    u8   value;   //   0
+    inline operator amc_PnewtypeEnum() const;
+    explicit Pnewtype(u8                             in_value);
+    Pnewtype(amc_PnewtypeEnum arg);
+    Pnewtype();
+};
+
+// Get value of field as enum type
+amc_PnewtypeEnum     value_GetEnum(const amc::Pnewtype& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+void                 value_SetEnum(amc::Pnewtype& parent, amc_PnewtypeEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char*          value_ToCstr(const amc::Pnewtype& parent) __attribute__((nothrow));
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+void                 value_Print(const amc::Pnewtype& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool                 value_SetStrptrMaybe(amc::Pnewtype& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void                 value_SetStrptr(amc::Pnewtype& parent, algo::strptr rhs, amc_PnewtypeEnum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+bool                 value_ReadStrptrMaybe(amc::Pnewtype& parent, algo::strptr rhs) __attribute__((nothrow));
+
+// Read fields of amc::Pnewtype from an ascii string.
+// The format of the string is the format of the amc::Pnewtype's only field
+bool                 Pnewtype_ReadStrptrMaybe(amc::Pnewtype &parent, algo::strptr in_str);
+// Set all fields to initial values.
+void                 Pnewtype_Init(amc::Pnewtype& parent);
+// print string representation of amc::Pnewtype to string LHS, no header -- cprint:amc.Pnewtype.String
+void                 Pnewtype_Print(amc::Pnewtype row, algo::cstring &str) __attribute__((nothrow));
 
 // --- amc.TableId
 struct TableId { // amc.TableId: Index of table in this namespace
@@ -12683,6 +12774,15 @@ struct ns_c_nsinclude_curs {// fcurs:amc.FNs.c_nsinclude/curs
 };
 
 
+struct ns_c_ssimfile_curs {// fcurs:amc.FNs.c_ssimfile/curs
+    typedef amc::FSsimfile ChildType;
+    amc::FSsimfile** elems;
+    u32 n_elems;
+    u32 index;
+    ns_c_ssimfile_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
 struct reftype_zs_fprefix_curs {// fcurs:amc.FReftype.zs_fprefix/curs
     typedef amc::FFprefix ChildType;
     amc::FFprefix* row;
@@ -13178,6 +13278,10 @@ void                 tfunc_Global_StaticCheck();
 void                 tfunc_Global_InsertStrptrMaybe();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Global_LoadTuplesMaybe();
+// User-implemented function from gstatic:amc.FDb.tfunc
+void                 tfunc_Global_LoadTuplesFile();
+// User-implemented function from gstatic:amc.FDb.tfunc
+void                 tfunc_Global_LoadTuplesFd();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Global_SaveTuples();
 // User-implemented function from gstatic:amc.FDb.tfunc
@@ -13783,5 +13887,6 @@ inline algo::cstring &operator <<(algo::cstring &str, const amc::BltinId &row);/
 inline algo::cstring &operator <<(algo::cstring &str, const amc::Enumstr &row);// cfmt:amc.Enumstr.String
 inline algo::cstring &operator <<(algo::cstring &str, const amc::trace &row);// cfmt:amc.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const amc::FieldId &row);// cfmt:amc.FieldId.String
+inline algo::cstring &operator <<(algo::cstring &str, const amc::Pnewtype &row);// cfmt:amc.Pnewtype.String
 inline algo::cstring &operator <<(algo::cstring &str, const amc::TableId &row);// cfmt:amc.TableId.String
 }

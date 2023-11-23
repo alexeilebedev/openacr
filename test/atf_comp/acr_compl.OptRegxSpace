@@ -1,3 +1,3 @@
-# atf_comp -report:N -printinput acr_compl.OptRegxSpace | acr_compl -line:"atf_cmdline -dregx " | test/acr_compl_filt.bash
 
+DIR 
 u8 

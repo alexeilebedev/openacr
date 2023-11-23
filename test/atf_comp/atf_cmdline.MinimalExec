@@ -1,4 +1,3 @@
-# atf_comp -report:N -printinput atf_cmdline.MinimalExec | atf_cmdline -exec blah -str blah | cat
 bin/atf_cmdline  blah 0 0 N -str:blah -cconst:None
 astr:blah
 anum:0

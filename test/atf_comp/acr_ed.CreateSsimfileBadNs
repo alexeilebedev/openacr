@@ -1,7 +1,1 @@
-# atf_comp -report:N -printinput acr_ed.CreateSsimfileBadNs | acr_ed --create -ssimfile ams.test -subset algo.Smallstr10 | cat
-acr_ed.createssimfile_bad_ssimns  comment:"ssimns shall be on dmmeta.nsdb"
-bin/acr  '' -insert:Y -check:Y -write:Y -t:Y -rowid:Y << EOF
-EOF
-
-set -e
-bin/amc
+acr_ed.createssimfile_bad_ssimns  comment:"specified namespace is not registered in dmmeta.nsdb table"

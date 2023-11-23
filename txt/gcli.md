@@ -30,7 +30,7 @@ Usage: gcli [[-selector:]<string>] [[-fields:]<string>] [options]
     -show_gitlab_system_notes                     (misc) Show issue and mr notes created by gitlab
     -verbose                   int                Verbosity level (0..255); alias -v; cumulative
     -debug                     int                Debug level (0..255); alias -d; cumulative
-    -help                                         Print help an exit; alias -h
+    -help                                         Print help and exit; alias -h
     -version                                      Print version and exit
     -signature                                    Show signatures and exit; alias -sig
 
@@ -341,5 +341,6 @@ gclidb.Grepo         Repo table (acr grepo -in ~/.ssim)
 gclidb.Gmethod       HTTP method list
 gclidb.Gclicmdt      Internal test
 gclidb.Gclicmdf2j    Mapping of internal fields to JSON fields for gitlab/github
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
 ```
 

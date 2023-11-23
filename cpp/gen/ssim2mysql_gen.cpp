@@ -33,8 +33,6 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_mysql_gen.h"
@@ -66,7 +64,7 @@ const char *ssim2mysql_help =
 "    -fkey                       Enable foreign key constraints (uses InnoDB storage engine)\n"
 "    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      int             Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help an exit; alias -h\n"
+"    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
 ;
@@ -1171,7 +1169,7 @@ void ssim2mysql::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(ssim2mysql::LoadTuplesMaybe(cmd.data_dir)
+    vrfy(ssim2mysql::LoadTuplesMaybe(cmd.data_dir,true)
     ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
@@ -1210,7 +1208,7 @@ static void ssim2mysql::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'ssim2mysql.Input'  signature:'0e69864de5bd01f99c3d8aaa899c7f6cf96b3b4f'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'ssim2mysql.Input'  signature:'ff89fc6345e9c2cbce6bd0306e95536701f81ffe'");
 }
 
 // --- ssim2mysql.FDb._db.StaticCheck
@@ -1264,7 +1262,6 @@ bool ssim2mysql::InsertStrptrMaybe(algo::strptr str) {
             break;
         }
         default:
-        retval = algo_lib::InsertStrptrMaybe(str);
         break;
     } //switch
     if (!retval) {
@@ -1275,22 +1272,64 @@ bool ssim2mysql::InsertStrptrMaybe(algo::strptr str) {
 
 // --- ssim2mysql.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool ssim2mysql::LoadTuplesMaybe(algo::strptr root) {
+bool ssim2mysql::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    static const char *ssimfiles[] = {
-        "dmmeta.ns", "dmmeta.ctype", "dmmeta.ssimfile", "dmmeta.field"
-        , "dmmeta.sqltype", "dmmeta.substr"
-        , NULL};
-        retval = algo_lib::DoLoadTuples(root, ssim2mysql::InsertStrptrMaybe, ssimfiles, true);
-        return retval;
+    if (FileQ(root)) {
+        retval = ssim2mysql::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = ssim2mysql::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && ssim2mysql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && ssim2mysql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ns"),recursive);
+        retval = retval && ssim2mysql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
+        retval = retval && ssim2mysql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
+        retval = retval && ssim2mysql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
+        retval = retval && ssim2mysql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.sqltype"),recursive);
+        retval = retval && ssim2mysql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.substr"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
+
+// --- ssim2mysql.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool ssim2mysql::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- ssim2mysql.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool ssim2mysql::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+        }
+        retval = retval && ssim2mysql::InsertStrptrMaybe(line);
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
+    return retval;
 }
 
 // --- ssim2mysql.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool ssim2mysql::LoadSsimfileMaybe(algo::strptr fname) {
+bool ssim2mysql::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, ssim2mysql::InsertStrptrMaybe, true);
+        retval = ssim2mysql::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }
@@ -2682,7 +2721,7 @@ void ssim2mysql::FField_Print(ssim2mysql::FField & row, algo::cstring &str) {
     algo::Smallstr50_Print(row.reftype, temp);
     PrintAttrSpaceReset(str,"reftype", temp);
 
-    dmmeta::CppExpr_Print(row.dflt, temp);
+    algo::CppExpr_Print(row.dflt, temp);
     PrintAttrSpaceReset(str,"dflt", temp);
 
     algo::Comment_Print(row.comment, temp);
@@ -3254,7 +3293,7 @@ void ssim2mysql::FSubstr_Print(ssim2mysql::FSubstr & row, algo::cstring &str) {
     algo::Smallstr100_Print(row.field, temp);
     PrintAttrSpaceReset(str,"field", temp);
 
-    dmmeta::CppExpr_Print(row.expr, temp);
+    algo::CppExpr_Print(row.expr, temp);
     PrintAttrSpaceReset(str,"expr", temp);
 
     algo::Smallstr100_Print(row.srcfield, temp);

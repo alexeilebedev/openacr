@@ -14,9 +14,17 @@ Usage: amc_gc [options]
     -in         string  "data"  Input directory or filename, - for stdin
     -verbose    int             Verbosity level (0..255); alias -v; cumulative
     -debug      int             Debug level (0..255); alias -d; cumulative
-    -help                       Print help an exit; alias -h
+    -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
 
+```
+
+### Inputs
+
+`amc_gc` takes the following tables on input:
+```
+CTYPE                COMMENT
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
 ```
 

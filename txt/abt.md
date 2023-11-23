@@ -81,7 +81,7 @@ Usage: abt [[-target:]<regx>] [options]
     -jcdb       string  ""      Create JSON compilation database in specified file
     -verbose    int             Verbosity level (0..255); alias -v; cumulative
     -debug      int             Debug level (0..255); alias -d; cumulative
-    -help                       Print help an exit; alias -h
+    -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
 
@@ -368,15 +368,19 @@ Show target functions, sort by name:
 
 `abt` takes the following tables on input:
 ```
-CTYPE           COMMENT
-dmmeta.Ns       Namespace (for in-memory database, protocol, etc)
+CTYPE                COMMENT
+dmmeta.Ns            Namespace (for in-memory database, protocol, etc)
+dmmeta.Dispsigcheck  Check signature of input data against executable's version
 dev.Uname
 dev.ToolOpt
 dev.Syslib
-dev.Target      Build target
+dev.Target           Build target
 dev.Targsyslib
-dev.Targsrc     List of sources for target
-dev.Targdep     Dependency between targets
+dev.Targsrc          List of sources for target
+dev.Targdep          Dependency between targets
+dev.Syscmd           System command to execute
+dev.Syscmddep        Dependency between two commands
+dev.Include          A site where one file includes another
 dev.Compiler
 dev.Cfg
 dev.Arch

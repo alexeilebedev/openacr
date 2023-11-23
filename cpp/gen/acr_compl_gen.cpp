@@ -33,8 +33,6 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_prot_gen.h"
-#include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
@@ -59,7 +57,7 @@ const char *acr_compl_help =
 "    -debug_log  string  \"\"      Log file for debug information, overrides ACR_COMPL_DEBUG_LOG\n"
 "    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      int             Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help an exit; alias -h\n"
+"    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
 ;
@@ -672,7 +670,7 @@ static void acr_compl::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_compl.Input'  signature:'e3729b3bda1bac1b4fe002af8e06c21322a12ec3'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_compl.Input'  signature:'dab8aaf9cc440b037ce59d91ffe8aa39f4df4836'");
 }
 
 // --- acr_compl.FDb._db.StaticCheck
@@ -759,7 +757,6 @@ bool acr_compl::InsertStrptrMaybe(algo::strptr str) {
             break;
         }
         default:
-        retval = algo_lib::InsertStrptrMaybe(str);
         break;
     } //switch
     if (!retval) {
@@ -770,23 +767,68 @@ bool acr_compl::InsertStrptrMaybe(algo::strptr str) {
 
 // --- acr_compl.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool acr_compl::LoadTuplesMaybe(algo::strptr root) {
+bool acr_compl::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     bool retval = true;
-    static const char *ssimfiles[] = {
-        "dmmeta.ctype", "dmmeta.field", "dmmeta.anonfld", "dmmeta.argvtype"
-        , "dmmeta.falias", "dmmeta.ns", "dmmeta.fcmdline", "dmmeta.fconst"
-        , "dmmeta.fflag", "dmmeta.ssimfile"
-        , NULL};
-        retval = algo_lib::DoLoadTuples(root, acr_compl::InsertStrptrMaybe, ssimfiles, true);
-        return retval;
+    if (FileQ(root)) {
+        retval = acr_compl::LoadTuplesFile(root, recursive);
+    } else if (root == "-") {
+        retval = acr_compl::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
+    } else if (DirectoryQ(root)) {
+        retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
+        retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
+        retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.anonfld"),recursive);
+        retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.argvtype"),recursive);
+        retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.falias"),recursive);
+        retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ns"),recursive);
+        retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcmdline"),recursive);
+        retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fconst"),recursive);
+        retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fflag"),recursive);
+        retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
+    } else {
+        algo_lib::SaveBadTag("path", root);
+        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        retval = false;
+    }
+    return retval;
+}
+
+// --- acr_compl.FDb._db.LoadTuplesFile
+// Load all finputs from given file.
+bool acr_compl::LoadTuplesFile(algo::strptr fname, bool recursive) {
+    bool retval = true;
+    algo_lib::FFildes fildes;
+    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
+    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    return retval;
+}
+
+// --- acr_compl.FDb._db.LoadTuplesFd
+// Load all finputs from given file descriptor.
+bool acr_compl::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+    bool retval = true;
+    ind_beg(algo::FileLine_curs,line,fd) {
+        if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
+        }
+        retval = retval && acr_compl::InsertStrptrMaybe(line);
+        if (!retval) {
+            algo_lib::_db.errtext << eol
+            << fname << ":"
+            << (ind_curs(line).i+1)
+            << ": " << line << eol;
+            break;
+        }
+    }ind_end;
+    return retval;
 }
 
 // --- acr_compl.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool acr_compl::LoadSsimfileMaybe(algo::strptr fname) {
+bool acr_compl::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
     bool retval = true;
     if (FileQ(fname)) {
-        retval = algo_lib::LoadTuplesFile(fname, acr_compl::InsertStrptrMaybe, true);
+        retval = acr_compl::LoadTuplesFile(fname, recursive);
     }
     return retval;
 }
@@ -2856,15 +2898,6 @@ static bool acr_compl::falias_InputMaybe(dmmeta::Falias &elem) {
 bool acr_compl::falias_XrefMaybe(acr_compl::FFalias &row) {
     bool retval = true;
     (void)row;
-    acr_compl::FField* p_basefield = acr_compl::ind_field_Find(row.basefield);
-    if (UNLIKELY(!p_basefield)) {
-        algo_lib::ResetErrtext() << "acr_compl.bad_xref  index:acr_compl.FDb.ind_field" << Keyval("key", row.basefield);
-        return false;
-    }
-    // falias: save pointer to basefield
-    if (true) { // user-defined insert condition
-        row.p_basefield = p_basefield;
-    }
     acr_compl::FField* p_field = acr_compl::ind_field_Find(row.field);
     if (UNLIKELY(!p_field)) {
         algo_lib::ResetErrtext() << "acr_compl.bad_xref  index:acr_compl.FDb.ind_field" << Keyval("key", row.field);
@@ -2873,6 +2906,15 @@ bool acr_compl::falias_XrefMaybe(acr_compl::FFalias &row) {
     // falias: save pointer to field
     if (true) { // user-defined insert condition
         row.p_field = p_field;
+    }
+    acr_compl::FField* p_srcfield = acr_compl::ind_field_Find(row.srcfield);
+    if (UNLIKELY(!p_srcfield)) {
+        algo_lib::ResetErrtext() << "acr_compl.bad_xref  index:acr_compl.FDb.ind_field" << Keyval("key", row.srcfield);
+        return false;
+    }
+    // falias: save pointer to srcfield
+    if (true) { // user-defined insert condition
+        row.p_srcfield = p_srcfield;
     }
     // insert falias into index c_falias
     if (true) { // user-defined insert condition
@@ -2883,14 +2925,9 @@ bool acr_compl::falias_XrefMaybe(acr_compl::FFalias &row) {
             return false;
         }
     }
-    // insert falias into index c_falias_base
+    // insert falias into index c_falias_srcfield
     if (true) { // user-defined insert condition
-        bool success = c_falias_base_InsertMaybe(*p_basefield, row);
-        if (UNLIKELY(!success)) {
-            ch_RemoveAll(algo_lib::_db.errtext);
-            algo_lib::_db.errtext << "acr_compl.duplicate_key  xref:acr_compl.FField.c_falias_base"; // check for duplicate key
-            return false;
-        }
+        c_falias_srcfield_Insert(*p_srcfield, row);
     }
     return retval;
 }
@@ -3335,7 +3372,7 @@ void acr_compl::FDb_Uninit() {
 // Copy fields out of row
 void acr_compl::falias_CopyOut(acr_compl::FFalias &row, dmmeta::Falias &out) {
     out.field = row.field;
-    out.basefield = row.basefield;
+    out.srcfield = row.srcfield;
     out.comment = row.comment;
 }
 
@@ -3343,7 +3380,7 @@ void acr_compl::falias_CopyOut(acr_compl::FFalias &row, dmmeta::Falias &out) {
 // Copy fields in to row
 void acr_compl::falias_CopyIn(acr_compl::FFalias &row, dmmeta::Falias &in) {
     row.field = in.field;
-    row.basefield = in.basefield;
+    row.srcfield = in.srcfield;
     row.comment = in.comment;
 }
 
@@ -3354,9 +3391,9 @@ void acr_compl::FFalias_Uninit(acr_compl::FFalias& falias) {
     if (p_field)  {
         c_falias_Remove(*p_field, row);// remove falias from index c_falias
     }
-    acr_compl::FField* p_basefield = acr_compl::ind_field_Find(row.basefield);
-    if (p_basefield)  {
-        c_falias_base_Remove(*p_basefield, row);// remove falias from index c_falias_base
+    acr_compl::FField* p_srcfield = acr_compl::ind_field_Find(row.srcfield);
+    if (p_srcfield)  {
+        c_falias_srcfield_Remove(*p_srcfield, row);// remove falias from index c_falias_srcfield
     }
 }
 
@@ -3559,6 +3596,79 @@ void acr_compl::c_fconst_Reserve(acr_compl::FField& field, u32 n) {
     }
 }
 
+// --- acr_compl.FField.c_falias_srcfield.Insert
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+void acr_compl::c_falias_srcfield_Insert(acr_compl::FField& field, acr_compl::FFalias& row) {
+    // reserve space
+    c_falias_srcfield_Reserve(field, 1);
+    u32 n  = field.c_falias_srcfield_n;
+    u32 at = n;
+    acr_compl::FFalias* *elems = field.c_falias_srcfield_elems;
+    elems[at] = &row;
+    field.c_falias_srcfield_n = n+1;
+
+}
+
+// --- acr_compl.FField.c_falias_srcfield.ScanInsertMaybe
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Linear search is used to locate the element.
+// Return value: whether element was inserted into array.
+bool acr_compl::c_falias_srcfield_ScanInsertMaybe(acr_compl::FField& field, acr_compl::FFalias& row) {
+    bool retval = true;
+    u32 n  = field.c_falias_srcfield_n;
+    for (u32 i = 0; i < n; i++) {
+        if (field.c_falias_srcfield_elems[i] == &row) {
+            retval = false;
+            break;
+        }
+    }
+    if (retval) {
+        // reserve space
+        c_falias_srcfield_Reserve(field, 1);
+        field.c_falias_srcfield_elems[n] = &row;
+        field.c_falias_srcfield_n = n+1;
+    }
+    return retval;
+}
+
+// --- acr_compl.FField.c_falias_srcfield.Remove
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void acr_compl::c_falias_srcfield_Remove(acr_compl::FField& field, acr_compl::FFalias& row) {
+    int lim = field.c_falias_srcfield_n;
+    acr_compl::FFalias* *elems = field.c_falias_srcfield_elems;
+    // search backward, so that most recently added element is found first.
+    // if found, shift array.
+    for (int i = lim-1; i>=0; i--) {
+        acr_compl::FFalias* elem = elems[i]; // fetch element
+        if (elem == &row) {
+            int j = i + 1;
+            size_t nbytes = sizeof(acr_compl::FFalias*) * (lim - j);
+            memmove(elems + i, elems + j, nbytes);
+            field.c_falias_srcfield_n = lim - 1;
+            break;
+        }
+    }
+}
+
+// --- acr_compl.FField.c_falias_srcfield.Reserve
+// Reserve space in index for N more elements;
+void acr_compl::c_falias_srcfield_Reserve(acr_compl::FField& field, u32 n) {
+    u32 old_max = field.c_falias_srcfield_max;
+    if (UNLIKELY(field.c_falias_srcfield_n + n > old_max)) {
+        u32 new_max  = u32_Max(4, old_max * 2);
+        u32 old_size = old_max * sizeof(acr_compl::FFalias*);
+        u32 new_size = new_max * sizeof(acr_compl::FFalias*);
+        void *new_mem = algo_lib::malloc_ReallocMem(field.c_falias_srcfield_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("acr_compl.out_of_memory  field:acr_compl.FField.c_falias_srcfield");
+        }
+        field.c_falias_srcfield_elems = (acr_compl::FFalias**)new_mem;
+        field.c_falias_srcfield_max = new_max;
+    }
+}
+
 // --- acr_compl.FField..Init
 // Set all fields to initial values.
 void acr_compl::FField_Init(acr_compl::FField& field) {
@@ -3572,7 +3682,9 @@ void acr_compl::FField_Init(acr_compl::FField& field) {
     field.c_fflag = NULL;
     field.p_ctype = NULL;
     field.c_falias = NULL;
-    field.c_falias_base = NULL;
+    field.c_falias_srcfield_elems = NULL; // (acr_compl.FField.c_falias_srcfield)
+    field.c_falias_srcfield_n = 0; // (acr_compl.FField.c_falias_srcfield)
+    field.c_falias_srcfield_max = 0; // (acr_compl.FField.c_falias_srcfield)
     field.ctype_c_field_in_ary = bool(false);
     field.ind_field_next = (acr_compl::FField*)-1; // (acr_compl.FDb.ind_field) not-in-hash
     field.zd_cmd_field_next = (acr_compl::FField*)-1; // (acr_compl.FDb.zd_cmd_field) not-in-list
@@ -3590,6 +3702,9 @@ void acr_compl::FField_Uninit(acr_compl::FField& field) {
     }
     zd_cmd_field_Remove(row); // remove field from index zd_cmd_field
     ind_cmd_field_name_Remove(row); // remove field from index ind_cmd_field_name
+
+    // acr_compl.FField.c_falias_srcfield.Uninit (Ptrary)  //
+    algo_lib::malloc_FreeMem(field.c_falias_srcfield_elems, sizeof(acr_compl::FFalias*)*field.c_falias_srcfield_max); // (acr_compl.FField.c_falias_srcfield)
 
     // acr_compl.FField.c_fconst.Uninit (Ptrary)  //
     algo_lib::malloc_FreeMem(field.c_fconst_elems, sizeof(acr_compl::FFconst*)*field.c_fconst_max); // (acr_compl.FField.c_fconst)
@@ -3610,7 +3725,7 @@ void acr_compl::FField_Print(acr_compl::FField & row, algo::cstring &str) {
     algo::Smallstr50_Print(row.reftype, temp);
     PrintAttrSpaceReset(str,"reftype", temp);
 
-    dmmeta::CppExpr_Print(row.dflt, temp);
+    algo::CppExpr_Print(row.dflt, temp);
     PrintAttrSpaceReset(str,"dflt", temp);
 
     algo::Comment_Print(row.comment, temp);
@@ -3627,9 +3742,6 @@ void acr_compl::FField_Print(acr_compl::FField & row, algo::cstring &str) {
 
     u64_PrintHex(u64((const acr_compl::FFalias*)row.c_falias), temp, 8, true);
     PrintAttrSpaceReset(str,"c_falias", temp);
-
-    u64_PrintHex(u64((const acr_compl::FFalias*)row.c_falias_base), temp, 8, true);
-    PrintAttrSpaceReset(str,"c_falias_base", temp);
 
     bool_Print(row.ctype_c_field_in_ary, temp);
     PrintAttrSpaceReset(str,"ctype_c_field_in_ary", temp);

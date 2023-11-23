@@ -1,3 +1,2 @@
-# atf_comp -report:N -printinput acr_compl.NumSpaceList | acr_compl -line:"atf_cmdline -num " -type:63 | cat
 <int>
 value type
