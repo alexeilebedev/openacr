@@ -532,21 +532,21 @@ bool atf_comp::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = atf_comp::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
-        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cdflt"),recursive);
-        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfmt"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
-        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cppfunc"),recursive);
-        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fconst"),recursive);
-        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ftuple"),recursive);
-        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.substr"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ftuple"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fconst"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cppfunc"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfmt"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cdflt"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dev.unstablefld"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.comptest"),recursive);
-        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.targs"),recursive);
-        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.tfilt"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.tmsg"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.tfilt"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.targs"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");
@@ -557,11 +557,18 @@ bool atf_comp::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 
 // --- atf_comp.FDb._db.LoadTuplesFile
 // Load all finputs from given file.
+// Read tuples from file FNAME into this namespace's in-memory database.
+// If RECURSIVE is TRUE, then also load these tuples into any parent namespaces
+// It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
+// Function returns TRUE if all records were parsed and inserted without error.
+// If the function returns FALSE, use algo_lib::DetachBadTags() for error description
 bool atf_comp::LoadTuplesFile(algo::strptr fname, bool recursive) {
     bool retval = true;
     algo_lib::FFildes fildes;
-    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
-    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    fildes.fd = OpenRead(fname,algo::FileFlags());
+    if (ValidQ(fildes.fd)) {
+        retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    }
     return retval;
 }
 

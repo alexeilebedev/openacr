@@ -623,6 +623,8 @@ namespace amc { struct _db_nscpp_curs; }
 namespace amc { struct _db_fflag_curs; }
 namespace amc { struct _db_falias_curs; }
 namespace amc { struct _db_license_curs; }
+namespace amc { struct _db_c_ssimfile_sorted_curs; }
+namespace amc { struct _db_zd_ssimfile_todo_curs; }
 namespace amc { struct dispatch_c_dispatch_msg_curs; }
 namespace amc { struct enumstr_c_fconst_curs; }
 namespace amc { struct enumstr_len_bh_enumstr_curs; }
@@ -638,7 +640,6 @@ namespace amc { struct ns_c_func_curs; }
 namespace amc { struct ns_c_dispatch_curs; }
 namespace amc { struct ns_c_gstatic_curs; }
 namespace amc { struct ns_include_curs; }
-namespace amc { struct ns_c_ctype_ins_curs; }
 namespace amc { struct ns_c_dispsig_curs; }
 namespace amc { struct ns_c_parentns_curs; }
 namespace amc { struct ns_c_cppincl_curs; }
@@ -646,12 +647,10 @@ namespace amc { struct ns_c_hdrincl_curs; }
 namespace amc { struct ns_c_fwddecl_curs; }
 namespace amc { struct ns_c_pnew_curs; }
 namespace amc { struct ns_c_outfile_curs; }
-namespace amc { struct ns_c_finput_curs; }
 namespace amc { struct ns_c_foutput_curs; }
 namespace amc { struct ns_c_fstep_curs; }
 namespace amc { struct ns_c_gsymbol_curs; }
 namespace amc { struct ns_c_nsinclude_curs; }
-namespace amc { struct ns_c_ssimfile_curs; }
 namespace amc { struct reftype_zs_fprefix_curs; }
 namespace amc { struct target_c_targdep_curs; }
 namespace amc { struct BltinId; }
@@ -1397,7 +1396,6 @@ void                 FCstr_Uninit(amc::FCstr& cstr) __attribute__((nothrow));
 // access: amc.FHook.p_funcptr (Upptr)
 // access: amc.FMsgtype.p_ctype (Upptr)
 // access: amc.FNs.c_ctype (Ptrary)
-// access: amc.FNs.c_ctype_ins (Ptrary)
 // access: amc.FNumstr.p_numtype (Upptr)
 // access: amc.FPack.p_ctype (Upptr)
 // access: amc.FPnew.p_ctype (Upptr)
@@ -1430,7 +1428,7 @@ struct FCtype { // amc.FCtype
     amc::FCtype**         c_parent_elems;             // array of pointers
     u32                   c_parent_n;                 // array of pointers
     u32                   c_parent_max;               // capacity of allocated array
-    amc::FSsimfile*       c_ssimfile;                 // optional pointer
+    amc::FSsimfile*       c_ssimfile;                 // Ssimfile associated with this ctype. optional pointer
     amc::FPack*           c_pack;                     // optional pointer
     amc::FLenfld*         c_lenfld;                   // optional pointer
     amc::FPmaskfld*       c_pmaskfld;                 // optional pointer
@@ -1472,7 +1470,6 @@ struct FCtype { // amc.FCtype
     bool                  size_unknown;               //   false
     bool                  size_locked;                //   false
     bool                  topo_visited;               //   false  Temporary
-    bool                  ins_visited;                //   false  Temporary
     bool                  enum_visited;               //   false  Temporary
     bool                  copy_priv;                  //   false  disallow copy ctor / assign op
     bool                  fields_cloned;              //   false  True if fields from c_cbase have been cloned.
@@ -1485,7 +1482,6 @@ struct FCtype { // amc.FCtype
     amc::FNossimfile*     c_nossimfile;               // optional pointer
     i32                   topo_idx;                   //   0  Index of ctype in array c_ctype (after topological sort)
     bool                  ns_c_ctype_in_ary;          //   false  membership flag
-    bool                  ns_c_ctype_ins_in_ary;      //   false  membership flag
     amc::FCtype*          ind_ctype_next;             // hash next
     amc::FCtype*          zsl_ctype_pack_tran_next;   // zslist link; -1 means not-in-list
     amc::FCtype*          zs_sig_visit_next;          // zslist link; -1 means not-in-list
@@ -2453,6 +2449,12 @@ struct FDb { // amc.FDb
     amc::FLicense**       ind_license_buckets_elems;                // pointer to bucket array
     i32                   ind_license_buckets_n;                    // number of elements in bucket array
     i32                   ind_license_n;                            // number of elements in the hash table
+    amc::FSsimfile**      c_ssimfile_sorted_elems;                  // array of pointers
+    u32                   c_ssimfile_sorted_n;                      // array of pointers
+    u32                   c_ssimfile_sorted_max;                    // capacity of allocated array
+    amc::FSsimfile*       zd_ssimfile_todo_head;                    // zero-terminated doubly linked list
+    i32                   zd_ssimfile_todo_n;                       // zero-terminated doubly linked list
+    amc::FSsimfile*       zd_ssimfile_todo_tail;                    // pointer to last element
     amc::trace            trace;                                    //
 };
 
@@ -3253,6 +3255,11 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
 bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file.
+// Read tuples from file FNAME into this namespace's in-memory database.
+// If RECURSIVE is TRUE, then also load these tuples into any parent namespaces
+// It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
+// Function returns TRUE if all records were parsed and inserted without error.
+// If the function returns FALSE, use algo_lib::DetachBadTags() for error description
 bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file descriptor.
 bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
@@ -6232,6 +6239,53 @@ void                 ind_license_Remove(amc::FLicense& row) __attribute__((nothr
 // Reserve enough room in the hash for N more elements. Return success code.
 void                 ind_license_Reserve(int n) __attribute__((nothrow));
 
+// Return true if index is empty
+bool                 c_ssimfile_sorted_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+amc::FSsimfile*      c_ssimfile_sorted_Find(u32 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array of pointers
+algo::aryptr<amc::FSsimfile*> c_ssimfile_sorted_Getary() __attribute__((nothrow));
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+void                 c_ssimfile_sorted_Insert(amc::FSsimfile& row) __attribute__((nothrow));
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+bool                 c_ssimfile_sorted_InsertMaybe(amc::FSsimfile& row) __attribute__((nothrow));
+// Return number of items in the pointer array
+i32                  c_ssimfile_sorted_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void                 c_ssimfile_sorted_Remove(amc::FSsimfile& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+void                 c_ssimfile_sorted_RemoveAll() __attribute__((nothrow));
+// Reserve space in index for N more elements;
+void                 c_ssimfile_sorted_Reserve(u32 n) __attribute__((nothrow));
+
+// Return true if index is empty
+bool                 zd_ssimfile_todo_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+amc::FSsimfile*      zd_ssimfile_todo_First() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+bool                 zd_ssimfile_todo_InLlistQ(amc::FSsimfile& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+void                 zd_ssimfile_todo_Insert(amc::FSsimfile& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+amc::FSsimfile*      zd_ssimfile_todo_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return number of items in the linked list
+i32                  zd_ssimfile_todo_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+amc::FSsimfile*      zd_ssimfile_todo_Next(amc::FSsimfile &row) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to previous element in the list
+amc::FSsimfile*      zd_ssimfile_todo_Prev(amc::FSsimfile &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+void                 zd_ssimfile_todo_Remove(amc::FSsimfile& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+void                 zd_ssimfile_todo_RemoveAll() __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+amc::FSsimfile*      zd_ssimfile_todo_RemoveFirst() __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+amc::FSsimfile&      zd_ssimfile_todo_qLast() __attribute__((__warn_unused_result__, nothrow));
+
 // cursor points to valid item
 void                 _db_fsort_curs_Reset(_db_fsort_curs &curs, amc::FDb &parent);
 // cursor points to valid item
@@ -7179,6 +7233,21 @@ bool                 _db_license_curs_ValidQ(_db_license_curs &curs);
 void                 _db_license_curs_Next(_db_license_curs &curs);
 // item access
 amc::FLicense&       _db_license_curs_Access(_db_license_curs &curs);
+void                 _db_c_ssimfile_sorted_curs_Reset(_db_c_ssimfile_sorted_curs &curs, amc::FDb &parent);
+// cursor points to valid item
+bool                 _db_c_ssimfile_sorted_curs_ValidQ(_db_c_ssimfile_sorted_curs &curs);
+// proceed to next item
+void                 _db_c_ssimfile_sorted_curs_Next(_db_c_ssimfile_sorted_curs &curs);
+// item access
+amc::FSsimfile&      _db_c_ssimfile_sorted_curs_Access(_db_c_ssimfile_sorted_curs &curs);
+// cursor points to valid item
+void                 _db_zd_ssimfile_todo_curs_Reset(_db_zd_ssimfile_todo_curs &curs, amc::FDb &parent);
+// cursor points to valid item
+bool                 _db_zd_ssimfile_todo_curs_ValidQ(_db_zd_ssimfile_todo_curs &curs);
+// proceed to next item
+void                 _db_zd_ssimfile_todo_curs_Next(_db_zd_ssimfile_todo_curs &curs);
+// item access
+amc::FSsimfile&      _db_zd_ssimfile_todo_curs_Access(_db_zd_ssimfile_todo_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
@@ -8593,14 +8662,12 @@ void                 FFindrem_Uninit(amc::FFindrem& findrem) __attribute__((noth
 // --- amc.FFinput
 // create: amc.FDb.finput (Lary)
 // access: amc.FField.c_finput (Ptr)
-// access: amc.FNs.c_finput (Ptrary)
 struct FFinput { // amc.FFinput
-    algo::Smallstr100   field;                // Target field to read
-    bool                extrn;                //   false  Call user-provided function
-    bool                update;               //   false
-    bool                strict;               //   true  Exist process if record contains error
-    amc::FField*        p_field;              // reference to parent row
-    bool                ns_c_finput_in_ary;   //   false  membership flag
+    algo::Smallstr100   field;     // Target field to read
+    bool                extrn;     //   false  Call user-provided function
+    bool                update;    //   false
+    bool                strict;    //   true  Exist process if record contains error
+    amc::FField*        p_field;   // reference to parent row
 private:
     friend amc::FFinput&        finput_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend amc::FFinput*        finput_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -9630,9 +9697,6 @@ struct FNs { // amc.FNs
     algo::cstring*      include_elems;       // pointer to elements
     u32                 include_n;           // number of elements in array
     u32                 include_max;         // max. capacity of array before realloc
-    amc::FCtype**       c_ctype_ins_elems;   // array of pointers
-    u32                 c_ctype_ins_n;       // array of pointers
-    u32                 c_ctype_ins_max;     // capacity of allocated array
     bool                topo_visited;        //   false
     algo::Sha1sig       signature;           //
     algo::Sha1sig       signature_input;     //
@@ -9663,9 +9727,6 @@ struct FNs { // amc.FNs
     amc::FOutfile**     c_outfile_elems;     // array of pointers
     u32                 c_outfile_n;         // array of pointers
     u32                 c_outfile_max;       // capacity of allocated array
-    amc::FFinput**      c_finput_elems;      // array of pointers
-    u32                 c_finput_n;          // array of pointers
-    u32                 c_finput_max;        // capacity of allocated array
     amc::FFoutput**     c_foutput_elems;     // array of pointers
     u32                 c_foutput_n;         // array of pointers
     u32                 c_foutput_max;       // capacity of allocated array
@@ -9680,9 +9741,6 @@ struct FNs { // amc.FNs
     u32                 c_nsinclude_max;     // capacity of allocated array
     amc::FNscpp*        c_nscpp;             // optional pointer
     amc::FLicense*      p_license;           // reference to parent row
-    amc::FSsimfile**    c_ssimfile_elems;    // array of pointers
-    u32                 c_ssimfile_n;        // array of pointers
-    u32                 c_ssimfile_max;      // capacity of allocated array
 private:
     friend amc::FNs&            ns_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend amc::FNs*            ns_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -9835,28 +9893,6 @@ algo::cstring&       include_qLast(amc::FNs& ns) __attribute__((nothrow));
 u64                  include_rowid_Get(amc::FNs& ns, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<algo::cstring> include_AllocNVal(amc::FNs& ns, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
-
-// Return true if index is empty
-bool                 c_ctype_ins_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
-// Look up row by row id. Return NULL if out of range
-amc::FCtype*         c_ctype_ins_Find(amc::FNs& ns, u32 t) __attribute__((__warn_unused_result__, nothrow));
-// Return array of pointers
-algo::aryptr<amc::FCtype*> c_ctype_ins_Getary(amc::FNs& ns) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
-void                 c_ctype_ins_Insert(amc::FNs& ns, amc::FCtype& row) __attribute__((nothrow));
-// Insert pointer to row in array.
-// If row is already in the array, do nothing.
-// Return value: whether element was inserted into array.
-bool                 c_ctype_ins_InsertMaybe(amc::FNs& ns, amc::FCtype& row) __attribute__((nothrow));
-// Return number of items in the pointer array
-i32                  c_ctype_ins_N(const amc::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
-// Find element using linear scan. If element is in array, remove, otherwise do nothing
-void                 c_ctype_ins_Remove(amc::FNs& ns, amc::FCtype& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-void                 c_ctype_ins_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
-// Reserve space in index for N more elements;
-void                 c_ctype_ins_Reserve(amc::FNs& ns, u32 n) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_dispsig_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
@@ -10043,28 +10079,6 @@ void                 c_outfile_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
 void                 c_outfile_Reserve(amc::FNs& ns, u32 n) __attribute__((nothrow));
 
 // Return true if index is empty
-bool                 c_finput_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
-// Look up row by row id. Return NULL if out of range
-amc::FFinput*        c_finput_Find(amc::FNs& ns, u32 t) __attribute__((__warn_unused_result__, nothrow));
-// Return array of pointers
-algo::aryptr<amc::FFinput*> c_finput_Getary(amc::FNs& ns) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
-void                 c_finput_Insert(amc::FNs& ns, amc::FFinput& row) __attribute__((nothrow));
-// Insert pointer to row in array.
-// If row is already in the array, do nothing.
-// Return value: whether element was inserted into array.
-bool                 c_finput_InsertMaybe(amc::FNs& ns, amc::FFinput& row) __attribute__((nothrow));
-// Return number of items in the pointer array
-i32                  c_finput_N(const amc::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
-// Find element using linear scan. If element is in array, remove, otherwise do nothing
-void                 c_finput_Remove(amc::FNs& ns, amc::FFinput& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-void                 c_finput_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
-// Reserve space in index for N more elements;
-void                 c_finput_Reserve(amc::FNs& ns, u32 n) __attribute__((nothrow));
-
-// Return true if index is empty
 bool                 c_foutput_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 amc::FFoutput*       c_foutput_Find(amc::FNs& ns, u32 t) __attribute__((__warn_unused_result__, nothrow));
@@ -10157,29 +10171,6 @@ bool                 c_nscpp_InsertMaybe(amc::FNs& ns, amc::FNscpp& row) __attri
 // Remove element from index. If element is not in index, do nothing.
 void                 c_nscpp_Remove(amc::FNs& ns, amc::FNscpp& row) __attribute__((nothrow));
 
-// Return true if index is empty
-bool                 c_ssimfile_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
-// Look up row by row id. Return NULL if out of range
-amc::FSsimfile*      c_ssimfile_Find(amc::FNs& ns, u32 t) __attribute__((__warn_unused_result__, nothrow));
-// Return array of pointers
-algo::aryptr<amc::FSsimfile*> c_ssimfile_Getary(amc::FNs& ns) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
-void                 c_ssimfile_Insert(amc::FNs& ns, amc::FSsimfile& row) __attribute__((nothrow));
-// Insert pointer to row in array.
-// If row is already in the array, do nothing.
-// Linear search is used to locate the element.
-// Return value: whether element was inserted into array.
-bool                 c_ssimfile_ScanInsertMaybe(amc::FNs& ns, amc::FSsimfile& row) __attribute__((nothrow));
-// Return number of items in the pointer array
-i32                  c_ssimfile_N(const amc::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
-// Find element using linear scan. If element is in array, remove, otherwise do nothing
-void                 c_ssimfile_Remove(amc::FNs& ns, amc::FSsimfile& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-void                 c_ssimfile_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
-// Reserve space in index for N more elements;
-void                 c_ssimfile_Reserve(amc::FNs& ns, u32 n) __attribute__((nothrow));
-
 // Set all fields to initial values.
 void                 FNs_Init(amc::FNs& ns);
 void                 ns_c_ctype_curs_Reset(ns_c_ctype_curs &curs, amc::FNs &parent);
@@ -10217,13 +10208,6 @@ void                 ns_include_curs_Reset(ns_include_curs &curs, amc::FNs &pare
 bool                 ns_include_curs_ValidQ(ns_include_curs &curs);
 // item access
 algo::cstring&       ns_include_curs_Access(ns_include_curs &curs);
-void                 ns_c_ctype_ins_curs_Reset(ns_c_ctype_ins_curs &curs, amc::FNs &parent);
-// cursor points to valid item
-bool                 ns_c_ctype_ins_curs_ValidQ(ns_c_ctype_ins_curs &curs);
-// proceed to next item
-void                 ns_c_ctype_ins_curs_Next(ns_c_ctype_ins_curs &curs);
-// item access
-amc::FCtype&         ns_c_ctype_ins_curs_Access(ns_c_ctype_ins_curs &curs);
 void                 ns_c_dispsig_curs_Reset(ns_c_dispsig_curs &curs, amc::FNs &parent);
 // cursor points to valid item
 bool                 ns_c_dispsig_curs_ValidQ(ns_c_dispsig_curs &curs);
@@ -10273,13 +10257,6 @@ bool                 ns_c_outfile_curs_ValidQ(ns_c_outfile_curs &curs);
 void                 ns_c_outfile_curs_Next(ns_c_outfile_curs &curs);
 // item access
 amc::FOutfile&       ns_c_outfile_curs_Access(ns_c_outfile_curs &curs);
-void                 ns_c_finput_curs_Reset(ns_c_finput_curs &curs, amc::FNs &parent);
-// cursor points to valid item
-bool                 ns_c_finput_curs_ValidQ(ns_c_finput_curs &curs);
-// proceed to next item
-void                 ns_c_finput_curs_Next(ns_c_finput_curs &curs);
-// item access
-amc::FFinput&        ns_c_finput_curs_Access(ns_c_finput_curs &curs);
 void                 ns_c_foutput_curs_Reset(ns_c_foutput_curs &curs, amc::FNs &parent);
 // cursor points to valid item
 bool                 ns_c_foutput_curs_ValidQ(ns_c_foutput_curs &curs);
@@ -10308,13 +10285,6 @@ bool                 ns_c_nsinclude_curs_ValidQ(ns_c_nsinclude_curs &curs);
 void                 ns_c_nsinclude_curs_Next(ns_c_nsinclude_curs &curs);
 // item access
 amc::FNsinclude&     ns_c_nsinclude_curs_Access(ns_c_nsinclude_curs &curs);
-void                 ns_c_ssimfile_curs_Reset(ns_c_ssimfile_curs &curs, amc::FNs &parent);
-// cursor points to valid item
-bool                 ns_c_ssimfile_curs_ValidQ(ns_c_ssimfile_curs &curs);
-// proceed to next item
-void                 ns_c_ssimfile_curs_Next(ns_c_ssimfile_curs &curs);
-// item access
-amc::FSsimfile&      ns_c_ssimfile_curs_Access(ns_c_ssimfile_curs &curs);
 void                 FNs_Uninit(amc::FNs& ns) __attribute__((nothrow));
 
 // --- amc.FNscpp
@@ -10793,16 +10763,23 @@ void                 FSortfld_Uninit(amc::FSortfld& sortfld) __attribute__((noth
 // --- amc.FSsimfile
 // create: amc.FDb.ssimfile (Lary)
 // global access: ind_ssimfile (Thash)
+// global access: c_ssimfile_sorted (Ptrary)
+// global access: zd_ssimfile_todo (Llist)
 // access: amc.FCtype.c_ssimfile (Ptr)
 // access: amc.FGsymbol.p_ssimfile (Upptr)
-// access: amc.FNs.c_ssimfile (Ptrary)
 struct FSsimfile { // amc.FSsimfile
-    amc::FSsimfile*       ind_ssimfile_next;   // hash next
-    algo::Smallstr50      ssimfile;            //
-    algo::Smallstr50      ctype;               //
-    algo::cstring         ssim;                // Ssim content
-    amc::FCtype*          p_ctype;             // reference to parent row
-    amc::FSsimvolatile*   c_ssimvolatile;      // optional pointer
+    amc::FSsimfile*       ind_ssimfile_next;              // hash next
+    amc::FSsimfile*       zd_ssimfile_todo_next;          // zslist link; -1 means not-in-list
+    amc::FSsimfile*       zd_ssimfile_todo_prev;          // previous element
+    algo::Smallstr50      ssimfile;                       //
+    algo::Smallstr50      ctype;                          //
+    algo::cstring         ssim;                           // Ssim content
+    amc::FCtype*          p_ctype;                        // reference to parent row
+    amc::FSsimvolatile*   c_ssimvolatile;                 // optional pointer
+    bool                  topovisit;                      //   false
+    i32                   topoindex;                      //   0
+    bool                  input_select;                   //   false
+    bool                  _db_c_ssimfile_sorted_in_ary;   //   false  membership flag
 private:
     friend amc::FSsimfile&      ssimfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend amc::FSsimfile*      ssimfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -12517,6 +12494,24 @@ struct _db_license_curs {// cursor
 };
 
 
+struct _db_c_ssimfile_sorted_curs {// fcurs:amc.FDb.c_ssimfile_sorted/curs
+    typedef amc::FSsimfile ChildType;
+    amc::FSsimfile** elems;
+    u32 n_elems;
+    u32 index;
+    _db_c_ssimfile_sorted_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
+struct _db_zd_ssimfile_todo_curs {// fcurs:amc.FDb.zd_ssimfile_todo/curs
+    typedef amc::FSsimfile ChildType;
+    amc::FSsimfile* row;
+    _db_zd_ssimfile_todo_curs() {
+        row = NULL;
+    }
+};
+
+
 struct dispatch_c_dispatch_msg_curs {// fcurs:amc.FDispatch.c_dispatch_msg/curs
     typedef amc::FDispatchmsg ChildType;
     amc::FDispatchmsg** elems;
@@ -12657,15 +12652,6 @@ struct ns_include_curs {// cursor
 };
 
 
-struct ns_c_ctype_ins_curs {// fcurs:amc.FNs.c_ctype_ins/curs
-    typedef amc::FCtype ChildType;
-    amc::FCtype** elems;
-    u32 n_elems;
-    u32 index;
-    ns_c_ctype_ins_curs() { elems=NULL; n_elems=0; index=0; }
-};
-
-
 struct ns_c_dispsig_curs {// fcurs:amc.FNs.c_dispsig/curs
     typedef amc::FDispsig ChildType;
     amc::FDispsig** elems;
@@ -12729,15 +12715,6 @@ struct ns_c_outfile_curs {// fcurs:amc.FNs.c_outfile/curs
 };
 
 
-struct ns_c_finput_curs {// fcurs:amc.FNs.c_finput/curs
-    typedef amc::FFinput ChildType;
-    amc::FFinput** elems;
-    u32 n_elems;
-    u32 index;
-    ns_c_finput_curs() { elems=NULL; n_elems=0; index=0; }
-};
-
-
 struct ns_c_foutput_curs {// fcurs:amc.FNs.c_foutput/curs
     typedef amc::FFoutput ChildType;
     amc::FFoutput** elems;
@@ -12771,15 +12748,6 @@ struct ns_c_nsinclude_curs {// fcurs:amc.FNs.c_nsinclude/curs
     u32 n_elems;
     u32 index;
     ns_c_nsinclude_curs() { elems=NULL; n_elems=0; index=0; }
-};
-
-
-struct ns_c_ssimfile_curs {// fcurs:amc.FNs.c_ssimfile/curs
-    typedef amc::FSsimfile ChildType;
-    amc::FSsimfile** elems;
-    u32 n_elems;
-    u32 index;
-    ns_c_ssimfile_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
 
@@ -13728,6 +13696,8 @@ void                 gen_countxref();
 void                 gen_detectinst();
 // User-implemented function from gstatic:amc.FDb.gen
 void                 gen_trace();
+// User-implemented function from gstatic:amc.FDb.gen
+void                 gen_sortssimfile();
 // User-implemented function from gstatic:amc.FDb.gen
 void                 gen_lookuppkey();
 // User-implemented function from gstatic:amc.FDb.gen

@@ -25,11 +25,35 @@
 // Print ssim tuples desired by a specified process,
 // or print names of ssim files
 
-#include "include/algo.h"
-#include "include/gen/acr_in_gen.h"
-#include "include/gen/acr_in_gen.inl.h"
+#include "include/acr_in.h"
 
-// Select namespaces
+// -----------------------------------------------------------------------------
+
+// Find or create an nsssimfile entry
+// Nsssimfile = ns/ssimfile, representing a finput relation between ns and ssimfile
+acr_in::FNsssimfile &acr_in::ind_nsssimfile_GetOrCreate(algo::strptr ns, algo::strptr ssimfile) {
+    tempstr key = tempstr() << ns << "/" << ssimfile;
+    acr_in::FNsssimfile *ret = acr_in::ind_nsssimfile_Find(key);
+    // create nssimfile entry
+    if (!ret) {
+        ret = &acr_in::nsssimfile_Alloc();
+        ret->nsssimfile = key;
+        vrfy_(nsssimfile_XrefMaybe(*ret));
+    }
+    return *ret;
+}
+
+// True if we are doing a reverse lookup of namespaces by ssimfile,
+// as opposed to a forward lookup of ssimfiles by namespace
+bool acr_in::ReverseLookupQ() {
+    return acr_in::_db.cmdline.r.expr != "";
+}
+
+// -----------------------------------------------------------------------------
+
+// Populate ns.select field
+// Start by selecting any namespace that matches command line "-ns" argument
+// Then extend namespace selection to include all dependent namespaces via targdep
 static void Main_Ns() {
     // Select initial set of namespaces
     ind_beg(acr_in::_db_ns_curs, ns, acr_in::_db) {
@@ -51,17 +75,18 @@ static void Main_Ns() {
 
     // Select namespaces matching selected targets
     ind_beg(acr_in::_db_target_curs, target, acr_in::_db) if (zd_targ_visit_InLlistQ(target)) {
-        acr_in::FNs *ns = acr_in::ind_ns_Find(target.target);
-        if (ns && !ns->select) {
-            verblog("acr_in.ns  select:"<<ns->ns);
-            ns->select = true;
+        if (!target.p_ns->select) {
+            verblog("acr_in.ns  select:"<<target.target);
+            target.p_ns->select = true;
         }
     }ind_end;
 }
 
 // -----------------------------------------------------------------------------
-// Compute ctypes which are finputs
 
+// Find base type (the one associated with ssimfile) for this ctype
+// by looking for a base field
+// If none found, return ctype itself
 static acr_in::FCtype *Basetype(acr_in::FCtype &ctype) {
     acr_in::FCtype *retval = &ctype;
     ind_beg(acr_in::ctype_c_field_curs,field,ctype) if (field.reftype == dmmeta_Reftype_reftype_Base) {
@@ -84,19 +109,35 @@ static bool SelectCtypeQ(acr_in::FCtype *ctype) {
 
 // -----------------------------------------------------------------------------
 
+// Select ssimfiles loaded by selected namespaces
+// There are two way a ssimfile gets selected:
+// - it is a finput to a selected namespace
+// - it matches command line "-r" argument
+// If a ssimfile is selected, it is marked as "is_finput" and its ctype is is added
+// to the temporary "zd_todo" list.
+// The "zd_todo" is used to topologically order all selected ssimfiles in order
+// of their dependence.
+// In the end, global "zd_ssimfile" list is populated in the order in which
+// the ssimfiles should be printed.
 static void Main_SelectSsimfile() {
-    ind_beg(acr_in::_db_finput_curs, finput, acr_in::_db) if (finput.p_ns->select) {
+    // select ssimfiles for lookup
+    // select ssimfiles by namespace, or directly via -r option
+    ind_beg(acr_in::_db_finput_curs, finput, acr_in::_db) {
         acr_in::FCtype *ctype = Basetype(*finput.p_field->p_arg);// prefer base
-        if (ctype->c_ssimfile) {
-            ctype->c_ssimfile->is_finput = true;
+        bool add = finput.p_ns->select || (ctype->c_ssimfile && Regx_Match(acr_in::_db.cmdline.r,ctype->c_ssimfile->ssimfile));
+        if (add) {
+            if (ctype->c_ssimfile) {
+                ctype->c_ssimfile->is_finput = true;
+            }
+            zd_todo_Insert(*ctype);
+            acr_in::ind_nsssimfile_GetOrCreate(finput.p_ns->ns,ctype->c_ssimfile->ssimfile);
         }
-        zd_todo_Insert(*ctype);
     }ind_end;
     // topologically sort ctypes that have ssimfiles
     // zd_todo is a stack.
+    // this produces global list zd_ssimfile which correctly orders ssimfiles by dependency between each other
     while (acr_in::FCtype *ctype = acr_in::zd_todo_Last()) {
-        if (!ctype->visit) {
-            ctype->visit = true;
+        if (bool_Update(ctype->visit,true)) {
             ind_beg(acr_in::ctype_c_field_curs, field, *ctype) if (field.reftype == dmmeta_Reftype_reftype_Pkey) {
                 acr_in::zd_todo_Remove(*field.p_arg);
                 acr_in::zd_todo_Insert(*field.p_arg);
@@ -113,162 +154,6 @@ static void Main_SelectSsimfile() {
 
 // -----------------------------------------------------------------------------
 
-static tempstr EvalAttr(Tuple &tuple, acr_in::FField &field) {
-    tempstr ret;
-    acr_in::FSubstr *substr = field.c_substr;
-    if (substr) {
-        tempstr val(attr_GetString(tuple, StripNs("",substr->srcfield)));
-        ret = Pathcomp(val, substr->expr.value);// ((a=Pathcomp(a,expr) would be an error)
-    } else {
-        ret = attr_GetString(tuple, name_Get(field));
-    }
-    return ret;
-}
-
-// -----------------------------------------------------------------------------
-//
-// Transitive closure filter
-//   - Select all records matching $related regex. Call their ctypes related.
-//   - Also mark as related any tables theoretically reachable from related ctypes
-//   - Select all records belonging to related ctypes
-//   - Select non-related tables in entirety
-//
-static void Main_Related() {
-    // select all related records
-    algo_lib::Regx regx_related;
-    Regx_ReadSql(regx_related, acr_in::_db.cmdline.related, true);
-    ind_beg(acr_in::_db_tuple_curs, tuple, acr_in::_db) {
-        if (algo_lib::Regx_Match(regx_related, tuple.key)) {
-            tuple.p_ctype->related = true;
-            tuple.p_ctype->select = true;
-            acr_in::zd_related_Insert(*tuple.p_ctype);
-            acr_in::zd_select_Insert(tuple);
-        }
-    }ind_end;
-
-    // Build list of related ctypes (all ctypes derived from initial selection)
-    for (acr_in::FCtype *ctype = acr_in::zd_related_First(); ctype; ctype = ctype->zd_related_next) {
-        ind_beg(acr_in::ctype_c_ctype_curs, child, *ctype) {
-            acr_in::zd_related_Insert(child);
-            child.select = true;
-            child.related = true;
-        }ind_end;
-    }
-
-    // select any children of related records
-    for (acr_in::FTuple *tuple = acr_in::zd_select_First(); tuple; tuple = tuple->zd_select_next) {
-        ind_beg(acr_in::tuple_c_child_curs, child, *tuple) {
-            child.p_ctype->select = true;
-            acr_in::zd_select_Insert(child);
-        }ind_end;
-    }
-
-    // select all records from tables which weren't marked in this
-    // algorithm
-    ind_beg(acr_in::_db_tuple_curs, tuple, acr_in::_db) if (tuple.p_ctype->parent_of_finput && !tuple.p_ctype->related) {
-        acr_in::zd_select_Insert(tuple);
-    }ind_end;
-}
-
-// -----------------------------------------------------------------------------
-
-static bool SsimfilePkeyQ(acr_in::FField &field) {
-    return field.reftype == dmmeta_Reftype_reftype_Pkey && field.p_arg->c_ssimfile;
-}
-
-// -----------------------------------------------------------------------------
-
-static void VisitParents(acr_in::FTuple &tuple, Tuple &in_tuple, acr_in::FSsimfile &ssimfile) {
-    ind_beg(acr_in::ctype_c_field_curs, field, *ssimfile.p_ctype) if (SsimfilePkeyQ(field)) {
-        tempstr key;
-        key << field.p_arg->c_ssimfile->ssimfile<<":"<<EvalAttr(in_tuple,field);
-        // if parent record is missing, must not fail.
-        if (acr_in::FTuple *parent_tuple = acr_in::ind_tuple_Find(key)) {
-            acr_in::c_parent_Insert(tuple,*parent_tuple); // Parents
-            acr_in::c_child_Insert(*parent_tuple,tuple); // Children
-        } else {
-            prerr("acr_in.reference_error"
-                  <<Keyval("child_key",tuple.key)
-                  <<Keyval("field",field.field)
-                  <<Keyval("parent_key",key)
-                  <<Keyval("comment","Referential integrity check failed"));
-        }
-    }ind_end;
-}
-
-static void LoadTuple(acr_in::FSsimfile &ssimfile, strptr line, bool dag) {
-    Tuple in_tuple;
-    vrfy(Tuple_ReadStrptrMaybe(in_tuple, line), algo_lib::_db.errtext);
-    if (attrs_N(in_tuple)){
-        acr_in::FTuple &tuple = acr_in::tuple_Alloc();
-        tuple.key           = tempstr()<<in_tuple.head.value<<":"<<attrs_qFind(in_tuple,0).value;
-        tuple.str              = line;
-        tuple.p_ctype = ssimfile.p_ctype;
-        vrfy(tuple_XrefMaybe(tuple), algo_lib::_db.errtext);
-        if (dag) {
-            VisitParents(tuple,in_tuple,ssimfile);
-        }
-    }
-}
-
-// -----------------------------------------------------------------------------
-
-static void MaybeDeselectChildren(acr_in::FTuple &parent) {
-    if (!zd_select_InLlistQ(parent)) {
-        ind_beg(acr_in::tuple_c_child_curs, child, parent) if (zd_select_InLlistQ(child)) {
-            zd_select_Remove(child);
-            MaybeDeselectChildren(child);
-        }ind_end;
-    }
-}
-
-// -----------------------------------------------------------------------------
-
-static void Main_Data() {
-    bool dag = ch_N(acr_in::_db.cmdline.related) > 0;
-
-    if (dag) {
-        ind_beg(acr_in::_db_zd_ssimfile_curs, ssimfile, acr_in::_db) {
-            acr_in::FCtype &ctype = *ssimfile.p_ctype;
-            ind_beg(acr_in::ctype_c_field_curs, field, ctype) if (SsimfilePkeyQ(field)) {
-                acr_in::c_ctype_Insert(*field.p_arg, ctype); // Children
-            }ind_end;
-        }ind_end;
-    }
-
-    // load all ssimfiles and build database of tuples
-    // Build parent/child relationships between data
-    ind_beg(acr_in::_db_zd_ssimfile_curs, ssimfile, acr_in::_db) {
-        tempstr fname;
-        fname << SsimFname(acr_in::_db.cmdline.data_dir, ssimfile.ssimfile);
-        algo_lib::MmapFile fmap;
-        algo_lib::MmapFile_Load(fmap, fname);
-        ind_beg(algo::Line_curs, line, fmap.text) {        // Insert tuples
-            LoadTuple(ssimfile,line,dag);
-        }ind_end;
-    }ind_end;
-
-    // Perform transitive closure on data using selected algorithm
-    if (ch_N(acr_in::_db.cmdline.related) > 0) {
-        Main_Related();
-    } else {
-        // just select all records
-        ind_beg(acr_in::_db_tuple_curs, tuple, acr_in::_db) {
-            zd_select_Insert(tuple);
-        }ind_end;
-    }
-
-    // deselect children of deselected parents
-    // this must be done iteratively
-    if (dag) {
-        ind_beg(acr_in::_db_tuple_curs, tuple, acr_in::_db) {
-            MaybeDeselectChildren(tuple);
-        }ind_end;
-    }
-}
-
-// -----------------------------------------------------------------------------
-
 static bool PrintTupleQ(acr_in::FTuple &tuple) {
     bool ret=zd_select_InLlistQ(tuple);
     bool print_all = acr_in::_db.cmdline.checkable;
@@ -280,15 +165,97 @@ static bool PrintTupleQ(acr_in::FTuple &tuple) {
 
 // -----------------------------------------------------------------------------
 
+// Propagate nsssimfile entries to all dependents
+static void Main_PropagateNsSsimfile() {
+    int nold=0;
+    do {
+        nold=acr_in::nsssimfile_N();
+        ind_beg(acr_in::_db_nsssimfile_curs,nsssimfile,acr_in::_db) {
+            acr_in::FNs *ns=nsssimfile.p_ns;
+            if (ns->c_target) {
+                ind_beg(acr_in::target_c_targdep_child_curs,child,*ns->c_target) {
+                    acr_in::ind_nsssimfile_GetOrCreate(target_Get(child),ssimfile_Get(nsssimfile));
+                }ind_end;
+            }
+        }ind_end;
+    } while (acr_in::nsssimfile_N()>nold);
+    // select additional namespaces only in -r (reverse lookup mode)
+    // otherwise, show only those namespaces which were selected
+    if (acr_in::ReverseLookupQ()) {
+        ind_beg(acr_in::_db_nsssimfile_curs,nsssimfile,acr_in::_db) {
+            nsssimfile.p_ns->select=true;
+        }ind_end;
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Main output function
+// There are 3 modes:
+//   - tree mode (works both with both kinds of lookups)
+//   - ssimfile lookup mode (-r)
+//   - ns lookup mode (-ns)
+static void Main_List() {
+    ind_beg(acr_in::_db_zd_ssimfile_curs, ssimfile, acr_in::_db) {
+        ind_beg(acr_in::ssimfile_zd_nsssimfile_ssimfile_curs,nsssimfile,ssimfile) {
+            nsssimfile.show=true;
+        }ind_end;
+    }ind_end;
+    if (acr_in::_db.cmdline.t) {
+        // show tree
+        ind_beg(acr_in::_db_ns_curs, ns, acr_in::_db) if (ns.select) {
+            int nshow=0;
+            ind_beg(acr_in::ns_zd_nsssimfile_ns_curs, nsssimfile, ns) if (nsssimfile.show) {
+                nshow++;
+            }ind_end;
+            if (nshow) {
+                prlog(ns.ns<<":");
+                ind_beg(acr_in::ns_zd_nsssimfile_ns_curs, nsssimfile, ns) if (nsssimfile.show) {
+                    prlog("    dmmeta.ssimfile"
+                          <<Keyval("ssimfile",ssimfile_Get(nsssimfile))
+                          <<Keyval("ctype",nsssimfile.p_ssimfile->ctype));
+                }ind_end;
+            }
+        }ind_end;
+    } else if (acr_in::ReverseLookupQ()) {
+        // show list of ns <-> ssimfile pairs
+        ind_beg(acr_in::_db_nsssimfile_curs, nsssimfile, acr_in::_db) if (nsssimfile.show) {
+            prlog("acr_in.nsssimfile"
+                  //<<Keyval("nsssimfile",nsssimfile.nsssimfile)
+                  <<Keyval("ns",ns_Get(nsssimfile))
+                  <<Keyval("ssimfile",ssimfile_Get(nsssimfile)));
+        }ind_end;
+    } else {
+        // show ssimfiles
+        ind_beg(acr_in::_db_zd_ssimfile_curs, ssimfile, acr_in::_db) {
+            dmmeta::Ssimfile out;
+            ssimfile_CopyOut(ssimfile, out);
+            prlog(out);
+        }ind_end;
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 void acr_in::Main() {
     // pick reasonable default
     if (!acr_in::_db.cmdline.data && !acr_in::_db.cmdline.list) {
         acr_in::_db.cmdline.list = true;
     }
+    if (ReverseLookupQ()) {
+        acr_in::_db.cmdline.sigcheck=false;
+    }
+    if (acr_in::_db.cmdline.ns.expr != "" && acr_in::_db.cmdline.r.expr != "") {
+        vrfy(0,"acr_in: please choose either [-ns] or -r options, but not both");
+    }
 
     Main_Ns();
 
     Main_SelectSsimfile();
+
+    if (ReverseLookupQ()) {
+        Main_PropagateNsSsimfile();
+    }
 
     // output dispsigcheck records for all selected namespaces
     if (acr_in::_db.cmdline.sigcheck) {
@@ -299,11 +266,7 @@ void acr_in::Main() {
 
     // list ssimfiles
     if (acr_in::_db.cmdline.list) {
-        ind_beg(acr_in::_db_zd_ssimfile_curs, ssimfile, acr_in::_db) {
-            dmmeta::Ssimfile out;
-            ssimfile_CopyOut(ssimfile, out);
-            prlog(out);
-        }ind_end;
+        Main_List();
     }
 
     // Build parent/child relationships between ctypes

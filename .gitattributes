@@ -1,0 +1,4 @@
+[core]
+*.h text eol=lf
+*.cpp text eol=lf
+*.ssim merge=acr_dm

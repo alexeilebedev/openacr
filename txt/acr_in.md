@@ -1,5 +1,34 @@
 ## acr_in: ACR Input - compute set of ssimfiles or tuples used by a specific target
 
+
+
+### Syntax
+
+```
+acr_in: ACR Input - compute set of ssimfiles or tuples used by a specific target
+Usage: acr_in [[-ns:]<regx>] [options]
+    OPTION        TYPE    DFLT    COMMENT
+    [ns]          regx    ""      Regx of matching namespace
+    -data                         List ssimfile contents
+    -sigcheck             Y       Output sigcheck records for schema version mismatch detection
+    -list                         List ssimfile names
+    -t                            (with -list) Tree mode
+    -data_dir     string  "data"  Directory with ssimfiles
+    -schema       string  "data"
+    -related      string  ""      Select only tuples related to specified acr key
+    -notssimfile  regx    ""      Exclude ssimfiles matching regx
+    -checkable                    Ensure output passes acr -check
+    -r            regx    ""      Reverse lookup of target by ssimfile
+    -verbose      int             Verbosity level (0..255); alias -v; cumulative
+    -debug        int             Debug level (0..255); alias -d; cumulative
+    -help                         Print help and exit; alias -h
+    -version                      Print version and exit
+    -signature                    Show signatures and exit; alias -sig
+
+```
+
+### Description
+
 acr_in computes the names and the order of ssimfiles
 which constitute target's declared input.
 
@@ -43,29 +72,6 @@ references, and is independent of the target itself. This means that
 resulting input can be fed into any one of the targets implied by the
 regex, without error.
 
-### Syntax
-
-```
-acr_in: ACR Input - compute set of ssimfiles or tuples used by a specific target
-Usage: acr_in [-ns:]<regx> [options]
-    OPTION        TYPE    DFLT    COMMENT
-    [ns]          regx            Regx of matching namespace
-    -data                         List ssimfile contents
-    -sigcheck             Y       Output sigcheck records for schema version mismatch detection
-    -list                         List ssimfile names
-    -data_dir     string  "data"  Directory with ssimfiles
-    -schema       string  "data"
-    -related      string  ""      Select only tuples related to specified acr key
-    -notssimfile  regx    ""      Exclude ssimfiles matching regx
-    -checkable                    Ensure output passes acr -check
-    -verbose      int             Verbosity level (0..255); alias -v; cumulative
-    -debug        int             Debug level (0..255); alias -d; cumulative
-    -help                         Print help and exit; alias -h
-    -version                      Print version and exit
-    -signature                    Show signatures and exit; alias -sig
-
-```
-
 ### The -data option
 
 With -data argument, acr_in also loads the specified ssimfiles in memory
@@ -76,6 +82,18 @@ This can be used to create canned input files:
     acr_in sample -data > tempfile
     sample -in:tempfile
     # this is exactly the same as running sample -in:data
+
+### The -r option
+
+With the `-r` option, one can supply a regex of a ssimfile and get a list
+of all namespaces that require the ssimfile. This includes any dependent namespaces
+via the targdep table.
+
+### The -t option
+
+This option outputs a tree, grouped by namespace first.
+A ssimfile can appear in the output multiple times, once for each
+namespace that requires it
 
 ### The -checkable option
 
@@ -125,5 +143,19 @@ dmmeta.Field         Specify field of a struct
 dmmeta.Substr        Specify that the field value is computed from a substring of another field
 dmmeta.Ssimfile      Ssim tuple name for structure
 dmmeta.Finput        Describe input table of a program
+```
+
+### Tests
+
+The following component tests are defined for `acr_in`.
+These can be executed with `atf_comp <comptest> -v`
+```
+COMPTEST        COMMENT
+acr_in.Reverse
+acr_in.Simple
+acr_in.Tree
+
+
+
 ```
 

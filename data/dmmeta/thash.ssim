@@ -44,6 +44,8 @@ dmmeta.thash  field:acr_in.FDb.ind_dispsig  hashfld:dmmeta.Dispsig.dispsig  uniq
 dmmeta.thash  field:acr_in.FDb.ind_field  hashfld:dmmeta.Field.field  unique:Y  comment:""
 dmmeta.thash  field:acr_in.FDb.ind_finput  hashfld:dmmeta.Finput.field  unique:Y  comment:""
 dmmeta.thash  field:acr_in.FDb.ind_ns  hashfld:dmmeta.Ns.ns  unique:Y  comment:""
+dmmeta.thash  field:acr_in.FDb.ind_nsssimfile  hashfld:acr_in.FNsssimfile.nsssimfile  unique:Y  comment:""
+dmmeta.thash  field:acr_in.FDb.ind_ssimfile  hashfld:dmmeta.Ssimfile.ssimfile  unique:Y  comment:""
 dmmeta.thash  field:acr_in.FDb.ind_target  hashfld:dev.Target.target  unique:Y  comment:""
 dmmeta.thash  field:acr_in.FDb.ind_tuple  hashfld:acr_in.FTuple.key  unique:Y  comment:""
 dmmeta.thash  field:algo_lib.FDb.ind_dispsigcheck  hashfld:dmmeta.Dispsigcheck.dispsig  unique:Y  comment:""

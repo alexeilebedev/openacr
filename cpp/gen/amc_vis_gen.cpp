@@ -765,11 +765,11 @@ bool amc_vis::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = amc_vis::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && amc_vis::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
-        retval = retval && amc_vis::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
         retval = retval && amc_vis::LoadTuplesFile(algo::SsimFname(root,"dmmeta.reftype"),recursive);
+        retval = retval && amc_vis::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
         retval = retval && amc_vis::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
         retval = retval && amc_vis::LoadTuplesFile(algo::SsimFname(root,"dmmeta.finput"),recursive);
+        retval = retval && amc_vis::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");
@@ -780,11 +780,18 @@ bool amc_vis::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 
 // --- amc_vis.FDb._db.LoadTuplesFile
 // Load all finputs from given file.
+// Read tuples from file FNAME into this namespace's in-memory database.
+// If RECURSIVE is TRUE, then also load these tuples into any parent namespaces
+// It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
+// Function returns TRUE if all records were parsed and inserted without error.
+// If the function returns FALSE, use algo_lib::DetachBadTags() for error description
 bool amc_vis::LoadTuplesFile(algo::strptr fname, bool recursive) {
     bool retval = true;
     algo_lib::FFildes fildes;
-    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
-    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    fildes.fd = OpenRead(fname,algo::FileFlags());
+    if (ValidQ(fildes.fd)) {
+        retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    }
     return retval;
 }
 

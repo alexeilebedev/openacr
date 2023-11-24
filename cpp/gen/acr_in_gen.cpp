@@ -48,17 +48,19 @@ acr_in::FDb     acr_in::_db;      // dependency found via dev.targdep
 namespace acr_in {
 const char *acr_in_help =
 "acr_in: ACR Input - compute set of ssimfiles or tuples used by a specific target\n"
-"Usage: acr_in [-ns:]<regx> [options]\n"
+"Usage: acr_in [[-ns:]<regx>] [options]\n"
 "    OPTION        TYPE    DFLT    COMMENT\n"
-"    [ns]          regx            Regx of matching namespace\n"
+"    [ns]          regx    \"\"      Regx of matching namespace\n"
 "    -data                         List ssimfile contents\n"
 "    -sigcheck             Y       Output sigcheck records for schema version mismatch detection\n"
 "    -list                         List ssimfile names\n"
+"    -t                            (with -list) Tree mode\n"
 "    -data_dir     string  \"data\"  Directory with ssimfiles\n"
 "    -schema       string  \"data\"\n"
 "    -related      string  \"\"      Select only tuples related to specified acr key\n"
 "    -notssimfile  regx    \"\"      Exclude ssimfiles matching regx\n"
 "    -checkable                    Ensure output passes acr -check\n"
+"    -r            regx    \"\"      Reverse lookup of target by ssimfile\n"
 "    -verbose      int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug        int             Debug level (0..255); alias -d; cumulative\n"
 "    -help                         Print help and exit; alias -h\n"
@@ -264,6 +266,7 @@ void acr_in::FCtype_Init(acr_in::FCtype& ctype) {
     ctype.c_ctype_n = 0; // (acr_in.FCtype.c_ctype)
     ctype.c_ctype_max = 0; // (acr_in.FCtype.c_ctype)
     ctype.parent_of_finput = bool(false);
+    ctype.p_ns = NULL;
     ctype.ind_ctype_next = (acr_in::FCtype*)-1; // (acr_in.FDb.ind_ctype) not-in-hash
     ctype.zd_todo_next = (acr_in::FCtype*)-1; // (acr_in.FDb.zd_todo) not-in-list
     ctype.zd_todo_prev = NULL; // (acr_in.FDb.zd_todo)
@@ -520,7 +523,6 @@ void acr_in::ReadArgv() {
     command::FieldId attrid;
     bool endopt=false;
     int whichns=0;// which namespace does the current attribute belong to
-    bool ns_present = false;
     for (; argidx < algo_lib::_db.argc; argidx++) {
         algo::strptr arg = algo_lib::_db.argv[argidx];
         algo::strptr attrval;
@@ -600,7 +602,6 @@ void acr_in::ReadArgv() {
             if (whichns==1) {
                 ret=command::acr_in_ReadFieldMaybe(cmd, attrname, attrval);
                 switch(attrid.value) {
-                    case command_FieldId_ns: ns_present=true; break;
                     default:break;
                 }
             }
@@ -635,10 +636,6 @@ void acr_in::ReadArgv() {
         doexit = true;
     }
     if (!dohelp) {
-        if (!ns_present) {
-            err << "acr_in: Missing value for required argument -ns (see -help)" << eol;
-            doexit = true;
-        }
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
@@ -689,7 +686,7 @@ static void acr_in::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_in.Input'  signature:'174bbc074ebf9646c566c0f8996112785f27f3c9'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_in.Input'  signature:'bc6164542bba76ea61fabd74b05f469ac7b8303b'");
 }
 
 // --- acr_in.FDb._db.StaticCheck
@@ -777,14 +774,14 @@ bool acr_in::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = acr_in::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && acr_in::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
-        retval = retval && acr_in::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
         retval = retval && acr_in::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ns"),recursive);
-        retval = retval && acr_in::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsig"),recursive);
+        retval = retval && acr_in::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
         retval = retval && acr_in::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
-        retval = retval && acr_in::LoadTuplesFile(algo::SsimFname(root,"dmmeta.finput"),recursive);
-        retval = retval && acr_in::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
         retval = retval && acr_in::LoadTuplesFile(algo::SsimFname(root,"dmmeta.substr"),recursive);
+        retval = retval && acr_in::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
+        retval = retval && acr_in::LoadTuplesFile(algo::SsimFname(root,"dmmeta.finput"),recursive);
+        retval = retval && acr_in::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsig"),recursive);
+        retval = retval && acr_in::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && acr_in::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
         retval = retval && acr_in::LoadTuplesFile(algo::SsimFname(root,"dev.targdep"),recursive);
     } else {
@@ -797,11 +794,18 @@ bool acr_in::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 
 // --- acr_in.FDb._db.LoadTuplesFile
 // Load all finputs from given file.
+// Read tuples from file FNAME into this namespace's in-memory database.
+// If RECURSIVE is TRUE, then also load these tuples into any parent namespaces
+// It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
+// Function returns TRUE if all records were parsed and inserted without error.
+// If the function returns FALSE, use algo_lib::DetachBadTags() for error description
 bool acr_in::LoadTuplesFile(algo::strptr fname, bool recursive) {
     bool retval = true;
     algo_lib::FFildes fildes;
-    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
-    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    fildes.fd = OpenRead(fname,algo::FileFlags());
+    if (ValidQ(fildes.fd)) {
+        retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    }
     return retval;
 }
 
@@ -1273,6 +1277,15 @@ static bool acr_in::ctype_InputMaybe(dmmeta::Ctype &elem) {
 bool acr_in::ctype_XrefMaybe(acr_in::FCtype &row) {
     bool retval = true;
     (void)row;
+    acr_in::FNs* p_ns = acr_in::ind_ns_Find(ns_Get(row));
+    if (UNLIKELY(!p_ns)) {
+        algo_lib::ResetErrtext() << "acr_in.bad_xref  index:acr_in.FDb.ind_ns" << Keyval("key", ns_Get(row));
+        return false;
+    }
+    // ctype: save pointer to ns
+    if (true) { // user-defined insert condition
+        row.p_ns = p_ns;
+    }
     // insert ctype into index ind_ctype
     if (true) { // user-defined insert condition
         bool success = ind_ctype_InsertMaybe(row);
@@ -1305,23 +1318,6 @@ acr_in::FCtype* acr_in::ind_ctype_Find(const algo::strptr& key) {
 acr_in::FCtype& acr_in::ind_ctype_FindX(const algo::strptr& key) {
     acr_in::FCtype* ret = ind_ctype_Find(key);
     vrfy(ret, tempstr() << "acr_in.key_error  table:ind_ctype  key:'"<<key<<"'  comment:'key not found'");
-    return *ret;
-}
-
-// --- acr_in.FDb.ind_ctype.GetOrCreate
-// Find row by key. If not found, create and x-reference a new row with with this key.
-acr_in::FCtype& acr_in::ind_ctype_GetOrCreate(const algo::strptr& key) {
-    acr_in::FCtype* ret = ind_ctype_Find(key);
-    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
-        ret         = &ctype_Alloc();
-        (*ret).ctype = key;
-        bool good = ctype_XrefMaybe(*ret);
-        if (!good) {
-            ctype_RemoveLast(); // delete offending row, any existing xrefs are cleared
-            ret = NULL;
-        }
-    }
-    vrfy(ret, tempstr() << "acr_in.create_error  table:ind_ctype  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
@@ -1507,6 +1503,15 @@ bool acr_in::ssimfile_XrefMaybe(acr_in::FSsimfile &row) {
         if (UNLIKELY(!success)) {
             ch_RemoveAll(algo_lib::_db.errtext);
             algo_lib::_db.errtext << "acr_in.duplicate_key  xref:acr_in.FCtype.c_ssimfile"; // check for duplicate key
+            return false;
+        }
+    }
+    // insert ssimfile into index ind_ssimfile
+    if (true) { // user-defined insert condition
+        bool success = ind_ssimfile_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_in.duplicate_key  xref:acr_in.FDb.ind_ssimfile"; // check for duplicate key
             return false;
         }
     }
@@ -2833,6 +2838,10 @@ bool acr_in::targdep_XrefMaybe(acr_in::FTargdep &row) {
     if (true) { // user-defined insert condition
         c_targdep_Insert(*p_target, row);
     }
+    // insert targdep into index c_targdep_child
+    if (true) { // user-defined insert condition
+        c_targdep_child_Insert(*p_parent, row);
+    }
     return retval;
 }
 
@@ -2906,6 +2915,328 @@ acr_in::FTarget* acr_in::zd_targ_visit_RemoveFirst() {
         row->zd_targ_visit_next = (acr_in::FTarget*)-1; // mark as not-in-list
     }
     return row;
+}
+
+// --- acr_in.FDb.nsssimfile.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_in::FNsssimfile& acr_in::nsssimfile_Alloc() {
+    acr_in::FNsssimfile* row = nsssimfile_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_in.out_of_mem  field:acr_in.FDb.nsssimfile  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_in.FDb.nsssimfile.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_in::FNsssimfile* acr_in::nsssimfile_AllocMaybe() {
+    acr_in::FNsssimfile *row = (acr_in::FNsssimfile*)nsssimfile_AllocMem();
+    if (row) {
+        new (row) acr_in::FNsssimfile; // call constructor
+    }
+    return row;
+}
+
+// --- acr_in.FDb.nsssimfile.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_in::nsssimfile_AllocMem() {
+    u64 new_nelems     = _db.nsssimfile_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_in::FNsssimfile*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.nsssimfile_lary[bsr];
+        if (!lev) {
+            lev=(acr_in::FNsssimfile*)algo_lib::malloc_AllocMem(sizeof(acr_in::FNsssimfile) * (u64(1)<<bsr));
+            _db.nsssimfile_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.nsssimfile_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_in.FDb.nsssimfile.RemoveAll
+// Remove all elements from Lary
+void acr_in::nsssimfile_RemoveAll() {
+    for (u64 n = _db.nsssimfile_n; n>0; ) {
+        n--;
+        nsssimfile_qFind(u64(n)).~FNsssimfile(); // destroy last element
+        _db.nsssimfile_n = i32(n);
+    }
+}
+
+// --- acr_in.FDb.nsssimfile.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_in::nsssimfile_RemoveLast() {
+    u64 n = _db.nsssimfile_n;
+    if (n > 0) {
+        n -= 1;
+        nsssimfile_qFind(u64(n)).~FNsssimfile();
+        _db.nsssimfile_n = i32(n);
+    }
+}
+
+// --- acr_in.FDb.nsssimfile.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_in::nsssimfile_XrefMaybe(acr_in::FNsssimfile &row) {
+    bool retval = true;
+    (void)row;
+    acr_in::FNs* p_ns = acr_in::ind_ns_Find(ns_Get(row));
+    if (UNLIKELY(!p_ns)) {
+        algo_lib::ResetErrtext() << "acr_in.bad_xref  index:acr_in.FDb.ind_ns" << Keyval("key", ns_Get(row));
+        return false;
+    }
+    // nsssimfile: save pointer to ns
+    if (true) { // user-defined insert condition
+        row.p_ns = p_ns;
+    }
+    acr_in::FSsimfile* p_ssimfile = acr_in::ind_ssimfile_Find(ssimfile_Get(row));
+    if (UNLIKELY(!p_ssimfile)) {
+        algo_lib::ResetErrtext() << "acr_in.bad_xref  index:acr_in.FDb.ind_ssimfile" << Keyval("key", ssimfile_Get(row));
+        return false;
+    }
+    // nsssimfile: save pointer to ssimfile
+    if (true) { // user-defined insert condition
+        row.p_ssimfile = p_ssimfile;
+    }
+    // insert nsssimfile into index ind_nsssimfile
+    if (true) { // user-defined insert condition
+        bool success = ind_nsssimfile_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_in.duplicate_key  xref:acr_in.FDb.ind_nsssimfile"; // check for duplicate key
+            return false;
+        }
+    }
+    // insert nsssimfile into index zd_nsssimfile_ns
+    if (true) { // user-defined insert condition
+        zd_nsssimfile_ns_Insert(*p_ns, row);
+    }
+    // insert nsssimfile into index zd_nsssimfile_ssimfile
+    if (true) { // user-defined insert condition
+        zd_nsssimfile_ssimfile_Insert(*p_ssimfile, row);
+    }
+    return retval;
+}
+
+// --- acr_in.FDb.ind_nsssimfile.Find
+// Find row by key. Return NULL if not found.
+acr_in::FNsssimfile* acr_in::ind_nsssimfile_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_nsssimfile_buckets_n - 1);
+    acr_in::FNsssimfile* *e = &_db.ind_nsssimfile_buckets_elems[index];
+    acr_in::FNsssimfile* ret=NULL;
+    do {
+        ret       = *e;
+        bool done = !ret || (*ret).nsssimfile == key;
+        if (done) break;
+        e         = &ret->ind_nsssimfile_next;
+    } while (true);
+    return ret;
+}
+
+// --- acr_in.FDb.ind_nsssimfile.FindX
+// Look up row by key and return reference. Throw exception if not found
+acr_in::FNsssimfile& acr_in::ind_nsssimfile_FindX(const algo::strptr& key) {
+    acr_in::FNsssimfile* ret = ind_nsssimfile_Find(key);
+    vrfy(ret, tempstr() << "acr_in.key_error  table:ind_nsssimfile  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- acr_in.FDb.ind_nsssimfile.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool acr_in::ind_nsssimfile_InsertMaybe(acr_in::FNsssimfile& row) {
+    ind_nsssimfile_Reserve(1);
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_nsssimfile_next == (acr_in::FNsssimfile*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr200_Hash(0, row.nsssimfile) & (_db.ind_nsssimfile_buckets_n - 1);
+        acr_in::FNsssimfile* *prev = &_db.ind_nsssimfile_buckets_elems[index];
+        do {
+            acr_in::FNsssimfile* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).nsssimfile == row.nsssimfile) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_nsssimfile_next;
+        } while (true);
+        if (retval) {
+            row.ind_nsssimfile_next = *prev;
+            _db.ind_nsssimfile_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- acr_in.FDb.ind_nsssimfile.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void acr_in::ind_nsssimfile_Remove(acr_in::FNsssimfile& row) {
+    if (LIKELY(row.ind_nsssimfile_next != (acr_in::FNsssimfile*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr200_Hash(0, row.nsssimfile) & (_db.ind_nsssimfile_buckets_n - 1);
+        acr_in::FNsssimfile* *prev = &_db.ind_nsssimfile_buckets_elems[index]; // addr of pointer to current element
+        while (acr_in::FNsssimfile *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_nsssimfile_next; // unlink (singly linked list)
+                _db.ind_nsssimfile_n--;
+                row.ind_nsssimfile_next = (acr_in::FNsssimfile*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_nsssimfile_next;
+        }
+    }
+}
+
+// --- acr_in.FDb.ind_nsssimfile.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void acr_in::ind_nsssimfile_Reserve(int n) {
+    u32 old_nbuckets = _db.ind_nsssimfile_buckets_n;
+    u32 new_nelems   = _db.ind_nsssimfile_n + n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(acr_in::FNsssimfile*);
+        u32 new_size = new_nbuckets * sizeof(acr_in::FNsssimfile*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        acr_in::FNsssimfile* *new_buckets = (acr_in::FNsssimfile**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("acr_in.out_of_memory  field:acr_in.FDb.ind_nsssimfile");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_nsssimfile_buckets_n; i++) {
+            acr_in::FNsssimfile* elem = _db.ind_nsssimfile_buckets_elems[i];
+            while (elem) {
+                acr_in::FNsssimfile &row        = *elem;
+                acr_in::FNsssimfile* next       = row.ind_nsssimfile_next;
+                u32 index          = algo::Smallstr200_Hash(0, row.nsssimfile) & (new_nbuckets-1);
+                row.ind_nsssimfile_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_nsssimfile_buckets_elems, old_size);
+        _db.ind_nsssimfile_buckets_elems = new_buckets;
+        _db.ind_nsssimfile_buckets_n = new_nbuckets;
+    }
+}
+
+// --- acr_in.FDb.ind_ssimfile.Find
+// Find row by key. Return NULL if not found.
+acr_in::FSsimfile* acr_in::ind_ssimfile_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ssimfile_buckets_n - 1);
+    acr_in::FSsimfile* *e = &_db.ind_ssimfile_buckets_elems[index];
+    acr_in::FSsimfile* ret=NULL;
+    do {
+        ret       = *e;
+        bool done = !ret || (*ret).ssimfile == key;
+        if (done) break;
+        e         = &ret->ind_ssimfile_next;
+    } while (true);
+    return ret;
+}
+
+// --- acr_in.FDb.ind_ssimfile.FindX
+// Look up row by key and return reference. Throw exception if not found
+acr_in::FSsimfile& acr_in::ind_ssimfile_FindX(const algo::strptr& key) {
+    acr_in::FSsimfile* ret = ind_ssimfile_Find(key);
+    vrfy(ret, tempstr() << "acr_in.key_error  table:ind_ssimfile  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- acr_in.FDb.ind_ssimfile.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool acr_in::ind_ssimfile_InsertMaybe(acr_in::FSsimfile& row) {
+    ind_ssimfile_Reserve(1);
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_ssimfile_next == (acr_in::FSsimfile*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        acr_in::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index];
+        do {
+            acr_in::FSsimfile* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).ssimfile == row.ssimfile) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_ssimfile_next;
+        } while (true);
+        if (retval) {
+            row.ind_ssimfile_next = *prev;
+            _db.ind_ssimfile_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- acr_in.FDb.ind_ssimfile.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void acr_in::ind_ssimfile_Remove(acr_in::FSsimfile& row) {
+    if (LIKELY(row.ind_ssimfile_next != (acr_in::FSsimfile*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        acr_in::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index]; // addr of pointer to current element
+        while (acr_in::FSsimfile *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_ssimfile_next; // unlink (singly linked list)
+                _db.ind_ssimfile_n--;
+                row.ind_ssimfile_next = (acr_in::FSsimfile*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_ssimfile_next;
+        }
+    }
+}
+
+// --- acr_in.FDb.ind_ssimfile.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void acr_in::ind_ssimfile_Reserve(int n) {
+    u32 old_nbuckets = _db.ind_ssimfile_buckets_n;
+    u32 new_nelems   = _db.ind_ssimfile_n + n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(acr_in::FSsimfile*);
+        u32 new_size = new_nbuckets * sizeof(acr_in::FSsimfile*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        acr_in::FSsimfile* *new_buckets = (acr_in::FSsimfile**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("acr_in.out_of_memory  field:acr_in.FDb.ind_ssimfile");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_ssimfile_buckets_n; i++) {
+            acr_in::FSsimfile* elem = _db.ind_ssimfile_buckets_elems[i];
+            while (elem) {
+                acr_in::FSsimfile &row        = *elem;
+                acr_in::FSsimfile* next       = row.ind_ssimfile_next;
+                u32 index          = algo::Smallstr50_Hash(0, row.ssimfile) & (new_nbuckets-1);
+                row.ind_ssimfile_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_ssimfile_buckets_elems, old_size);
+        _db.ind_ssimfile_buckets_elems = new_buckets;
+        _db.ind_ssimfile_buckets_n = new_nbuckets;
+    }
 }
 
 // --- acr_in.FDb.trace.RowidFind
@@ -3107,6 +3438,33 @@ void acr_in::FDb_Init() {
     _db.zd_targ_visit_head = NULL; // (acr_in.FDb.zd_targ_visit)
     _db.zd_targ_visit_n = 0; // (acr_in.FDb.zd_targ_visit)
     _db.zd_targ_visit_tail = NULL; // (acr_in.FDb.zd_targ_visit)
+    // initialize LAry nsssimfile (acr_in.FDb.nsssimfile)
+    _db.nsssimfile_n = 0;
+    memset(_db.nsssimfile_lary, 0, sizeof(_db.nsssimfile_lary)); // zero out all level pointers
+    acr_in::FNsssimfile* nsssimfile_first = (acr_in::FNsssimfile*)algo_lib::malloc_AllocMem(sizeof(acr_in::FNsssimfile) * (u64(1)<<4));
+    if (!nsssimfile_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.nsssimfile_lary[i]  = nsssimfile_first;
+        nsssimfile_first    += 1ULL<<i;
+    }
+    // initialize hash table for acr_in::FNsssimfile;
+    _db.ind_nsssimfile_n             	= 0; // (acr_in.FDb.ind_nsssimfile)
+    _db.ind_nsssimfile_buckets_n     	= 4; // (acr_in.FDb.ind_nsssimfile)
+    _db.ind_nsssimfile_buckets_elems 	= (acr_in::FNsssimfile**)algo_lib::malloc_AllocMem(sizeof(acr_in::FNsssimfile*)*_db.ind_nsssimfile_buckets_n); // initial buckets (acr_in.FDb.ind_nsssimfile)
+    if (!_db.ind_nsssimfile_buckets_elems) {
+        FatalErrorExit("out of memory"); // (acr_in.FDb.ind_nsssimfile)
+    }
+    memset(_db.ind_nsssimfile_buckets_elems, 0, sizeof(acr_in::FNsssimfile*)*_db.ind_nsssimfile_buckets_n); // (acr_in.FDb.ind_nsssimfile)
+    // initialize hash table for acr_in::FSsimfile;
+    _db.ind_ssimfile_n             	= 0; // (acr_in.FDb.ind_ssimfile)
+    _db.ind_ssimfile_buckets_n     	= 4; // (acr_in.FDb.ind_ssimfile)
+    _db.ind_ssimfile_buckets_elems 	= (acr_in::FSsimfile**)algo_lib::malloc_AllocMem(sizeof(acr_in::FSsimfile*)*_db.ind_ssimfile_buckets_n); // initial buckets (acr_in.FDb.ind_ssimfile)
+    if (!_db.ind_ssimfile_buckets_elems) {
+        FatalErrorExit("out of memory"); // (acr_in.FDb.ind_ssimfile)
+    }
+    memset(_db.ind_ssimfile_buckets_elems, 0, sizeof(acr_in::FSsimfile*)*_db.ind_ssimfile_buckets_n); // (acr_in.FDb.ind_ssimfile)
 
     acr_in::InitReflection();
 }
@@ -3114,6 +3472,15 @@ void acr_in::FDb_Init() {
 // --- acr_in.FDb..Uninit
 void acr_in::FDb_Uninit() {
     acr_in::FDb &row = _db; (void)row;
+
+    // acr_in.FDb.ind_ssimfile.Uninit (Thash)  //
+    // skip destruction of ind_ssimfile in global scope
+
+    // acr_in.FDb.ind_nsssimfile.Uninit (Thash)  //
+    // skip destruction of ind_nsssimfile in global scope
+
+    // acr_in.FDb.nsssimfile.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // acr_in.FDb.targdep.Uninit (Lary)  //
     // skip destruction in global scope
@@ -3308,10 +3675,113 @@ void acr_in::ns_CopyIn(acr_in::FNs &row, dmmeta::Ns &in) {
     row.comment = in.comment;
 }
 
+// --- acr_in.FNs.zd_nsssimfile_ns.Insert
+// Insert row into linked list. If row is already in linked list, do nothing.
+void acr_in::zd_nsssimfile_ns_Insert(acr_in::FNs& ns, acr_in::FNsssimfile& row) {
+    if (!zd_nsssimfile_ns_InLlistQ(row)) {
+        acr_in::FNsssimfile* old_tail = ns.zd_nsssimfile_ns_tail;
+        row.zd_nsssimfile_ns_next = NULL;
+        row.zd_nsssimfile_ns_prev = old_tail;
+        ns.zd_nsssimfile_ns_tail = &row;
+        acr_in::FNsssimfile **new_row_a = &old_tail->zd_nsssimfile_ns_next;
+        acr_in::FNsssimfile **new_row_b = &ns.zd_nsssimfile_ns_head;
+        acr_in::FNsssimfile **new_row = old_tail ? new_row_a : new_row_b;
+        *new_row = &row;
+        ns.zd_nsssimfile_ns_n++;
+    }
+}
+
+// --- acr_in.FNs.zd_nsssimfile_ns.Remove
+// Remove element from index. If element is not in index, do nothing.
+void acr_in::zd_nsssimfile_ns_Remove(acr_in::FNs& ns, acr_in::FNsssimfile& row) {
+    if (zd_nsssimfile_ns_InLlistQ(row)) {
+        acr_in::FNsssimfile* old_head       = ns.zd_nsssimfile_ns_head;
+        (void)old_head; // in case it's not used
+        acr_in::FNsssimfile* prev = row.zd_nsssimfile_ns_prev;
+        acr_in::FNsssimfile* next = row.zd_nsssimfile_ns_next;
+        // if element is first, adjust list head; otherwise, adjust previous element's next
+        acr_in::FNsssimfile **new_next_a = &prev->zd_nsssimfile_ns_next;
+        acr_in::FNsssimfile **new_next_b = &ns.zd_nsssimfile_ns_head;
+        acr_in::FNsssimfile **new_next = prev ? new_next_a : new_next_b;
+        *new_next = next;
+        // if element is last, adjust list tail; otherwise, adjust next element's prev
+        acr_in::FNsssimfile **new_prev_a = &next->zd_nsssimfile_ns_prev;
+        acr_in::FNsssimfile **new_prev_b = &ns.zd_nsssimfile_ns_tail;
+        acr_in::FNsssimfile **new_prev = next ? new_prev_a : new_prev_b;
+        *new_prev = prev;
+        ns.zd_nsssimfile_ns_n--;
+        row.zd_nsssimfile_ns_next=(acr_in::FNsssimfile*)-1; // not-in-list
+    }
+}
+
+// --- acr_in.FNs.zd_nsssimfile_ns.RemoveAll
+// Empty the index. (The rows are not deleted)
+void acr_in::zd_nsssimfile_ns_RemoveAll(acr_in::FNs& ns) {
+    acr_in::FNsssimfile* row = ns.zd_nsssimfile_ns_head;
+    ns.zd_nsssimfile_ns_head = NULL;
+    ns.zd_nsssimfile_ns_tail = NULL;
+    ns.zd_nsssimfile_ns_n = 0;
+    while (row) {
+        acr_in::FNsssimfile* row_next = row->zd_nsssimfile_ns_next;
+        row->zd_nsssimfile_ns_next  = (acr_in::FNsssimfile*)-1;
+        row->zd_nsssimfile_ns_prev  = NULL;
+        row = row_next;
+    }
+}
+
+// --- acr_in.FNs.zd_nsssimfile_ns.RemoveFirst
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+acr_in::FNsssimfile* acr_in::zd_nsssimfile_ns_RemoveFirst(acr_in::FNs& ns) {
+    acr_in::FNsssimfile *row = NULL;
+    row = ns.zd_nsssimfile_ns_head;
+    if (row) {
+        acr_in::FNsssimfile *next = row->zd_nsssimfile_ns_next;
+        ns.zd_nsssimfile_ns_head = next;
+        acr_in::FNsssimfile **new_end_a = &next->zd_nsssimfile_ns_prev;
+        acr_in::FNsssimfile **new_end_b = &ns.zd_nsssimfile_ns_tail;
+        acr_in::FNsssimfile **new_end = next ? new_end_a : new_end_b;
+        *new_end = NULL;
+        ns.zd_nsssimfile_ns_n--;
+        row->zd_nsssimfile_ns_next = (acr_in::FNsssimfile*)-1; // mark as not-in-list
+    }
+    return row;
+}
+
 // --- acr_in.FNs..Uninit
 void acr_in::FNs_Uninit(acr_in::FNs& ns) {
     acr_in::FNs &row = ns; (void)row;
     ind_ns_Remove(row); // remove ns from index ind_ns
+}
+
+// --- acr_in.FNsssimfile.ns.Get
+algo::Smallstr16 acr_in::ns_Get(acr_in::FNsssimfile& nsssimfile) {
+    algo::Smallstr16 ret(algo::Pathcomp(nsssimfile.nsssimfile, "/RL"));
+    return ret;
+}
+
+// --- acr_in.FNsssimfile.ssimfile.Get
+algo::Smallstr50 acr_in::ssimfile_Get(acr_in::FNsssimfile& nsssimfile) {
+    algo::Smallstr50 ret(algo::Pathcomp(nsssimfile.nsssimfile, "/RR"));
+    return ret;
+}
+
+// --- acr_in.FNsssimfile..Concat_ns_ssimfile
+tempstr acr_in::FNsssimfile_Concat_ns_ssimfile( const algo::strptr& ns ,const algo::strptr& ssimfile ) {
+    return tempstr() << ns <<'/'<< ssimfile ;
+}
+
+// --- acr_in.FNsssimfile..Uninit
+void acr_in::FNsssimfile_Uninit(acr_in::FNsssimfile& nsssimfile) {
+    acr_in::FNsssimfile &row = nsssimfile; (void)row;
+    ind_nsssimfile_Remove(row); // remove nsssimfile from index ind_nsssimfile
+    acr_in::FNs* p_ns = acr_in::ind_ns_Find(ns_Get(row));
+    if (p_ns)  {
+        zd_nsssimfile_ns_Remove(*p_ns, row);// remove nsssimfile from index zd_nsssimfile_ns
+    }
+    acr_in::FSsimfile* p_ssimfile = acr_in::ind_ssimfile_Find(ssimfile_Get(row));
+    if (p_ssimfile)  {
+        zd_nsssimfile_ssimfile_Remove(*p_ssimfile, row);// remove nsssimfile from index zd_nsssimfile_ssimfile
+    }
 }
 
 // --- acr_in.FSsimfile.msghdr.CopyOut
@@ -3346,6 +3816,78 @@ algo::Smallstr50 acr_in::name_Get(acr_in::FSsimfile& ssimfile) {
     return ret;
 }
 
+// --- acr_in.FSsimfile.zd_nsssimfile_ssimfile.Insert
+// Insert row into linked list. If row is already in linked list, do nothing.
+void acr_in::zd_nsssimfile_ssimfile_Insert(acr_in::FSsimfile& ssimfile, acr_in::FNsssimfile& row) {
+    if (!zd_nsssimfile_ssimfile_InLlistQ(row)) {
+        acr_in::FNsssimfile* old_tail = ssimfile.zd_nsssimfile_ssimfile_tail;
+        row.zd_nsssimfile_ssimfile_next = NULL;
+        row.zd_nsssimfile_ssimfile_prev = old_tail;
+        ssimfile.zd_nsssimfile_ssimfile_tail = &row;
+        acr_in::FNsssimfile **new_row_a = &old_tail->zd_nsssimfile_ssimfile_next;
+        acr_in::FNsssimfile **new_row_b = &ssimfile.zd_nsssimfile_ssimfile_head;
+        acr_in::FNsssimfile **new_row = old_tail ? new_row_a : new_row_b;
+        *new_row = &row;
+        ssimfile.zd_nsssimfile_ssimfile_n++;
+    }
+}
+
+// --- acr_in.FSsimfile.zd_nsssimfile_ssimfile.Remove
+// Remove element from index. If element is not in index, do nothing.
+void acr_in::zd_nsssimfile_ssimfile_Remove(acr_in::FSsimfile& ssimfile, acr_in::FNsssimfile& row) {
+    if (zd_nsssimfile_ssimfile_InLlistQ(row)) {
+        acr_in::FNsssimfile* old_head       = ssimfile.zd_nsssimfile_ssimfile_head;
+        (void)old_head; // in case it's not used
+        acr_in::FNsssimfile* prev = row.zd_nsssimfile_ssimfile_prev;
+        acr_in::FNsssimfile* next = row.zd_nsssimfile_ssimfile_next;
+        // if element is first, adjust list head; otherwise, adjust previous element's next
+        acr_in::FNsssimfile **new_next_a = &prev->zd_nsssimfile_ssimfile_next;
+        acr_in::FNsssimfile **new_next_b = &ssimfile.zd_nsssimfile_ssimfile_head;
+        acr_in::FNsssimfile **new_next = prev ? new_next_a : new_next_b;
+        *new_next = next;
+        // if element is last, adjust list tail; otherwise, adjust next element's prev
+        acr_in::FNsssimfile **new_prev_a = &next->zd_nsssimfile_ssimfile_prev;
+        acr_in::FNsssimfile **new_prev_b = &ssimfile.zd_nsssimfile_ssimfile_tail;
+        acr_in::FNsssimfile **new_prev = next ? new_prev_a : new_prev_b;
+        *new_prev = prev;
+        ssimfile.zd_nsssimfile_ssimfile_n--;
+        row.zd_nsssimfile_ssimfile_next=(acr_in::FNsssimfile*)-1; // not-in-list
+    }
+}
+
+// --- acr_in.FSsimfile.zd_nsssimfile_ssimfile.RemoveAll
+// Empty the index. (The rows are not deleted)
+void acr_in::zd_nsssimfile_ssimfile_RemoveAll(acr_in::FSsimfile& ssimfile) {
+    acr_in::FNsssimfile* row = ssimfile.zd_nsssimfile_ssimfile_head;
+    ssimfile.zd_nsssimfile_ssimfile_head = NULL;
+    ssimfile.zd_nsssimfile_ssimfile_tail = NULL;
+    ssimfile.zd_nsssimfile_ssimfile_n = 0;
+    while (row) {
+        acr_in::FNsssimfile* row_next = row->zd_nsssimfile_ssimfile_next;
+        row->zd_nsssimfile_ssimfile_next  = (acr_in::FNsssimfile*)-1;
+        row->zd_nsssimfile_ssimfile_prev  = NULL;
+        row = row_next;
+    }
+}
+
+// --- acr_in.FSsimfile.zd_nsssimfile_ssimfile.RemoveFirst
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+acr_in::FNsssimfile* acr_in::zd_nsssimfile_ssimfile_RemoveFirst(acr_in::FSsimfile& ssimfile) {
+    acr_in::FNsssimfile *row = NULL;
+    row = ssimfile.zd_nsssimfile_ssimfile_head;
+    if (row) {
+        acr_in::FNsssimfile *next = row->zd_nsssimfile_ssimfile_next;
+        ssimfile.zd_nsssimfile_ssimfile_head = next;
+        acr_in::FNsssimfile **new_end_a = &next->zd_nsssimfile_ssimfile_prev;
+        acr_in::FNsssimfile **new_end_b = &ssimfile.zd_nsssimfile_ssimfile_tail;
+        acr_in::FNsssimfile **new_end = next ? new_end_a : new_end_b;
+        *new_end = NULL;
+        ssimfile.zd_nsssimfile_ssimfile_n--;
+        row->zd_nsssimfile_ssimfile_next = (acr_in::FNsssimfile*)-1; // mark as not-in-list
+    }
+    return row;
+}
+
 // --- acr_in.FSsimfile..Uninit
 void acr_in::FSsimfile_Uninit(acr_in::FSsimfile& ssimfile) {
     acr_in::FSsimfile &row = ssimfile; (void)row;
@@ -3354,6 +3896,7 @@ void acr_in::FSsimfile_Uninit(acr_in::FSsimfile& ssimfile) {
         c_ssimfile_Remove(*p_ctype, row);// remove ssimfile from index c_ssimfile
     }
     zd_ssimfile_Remove(row); // remove ssimfile from index zd_ssimfile
+    ind_ssimfile_Remove(row); // remove ssimfile from index ind_ssimfile
 }
 
 // --- acr_in.FSubstr.msghdr.CopyOut
@@ -3413,6 +3956,10 @@ void acr_in::FTargdep_Uninit(acr_in::FTargdep& targdep) {
     acr_in::FTarget* p_target = acr_in::ind_target_Find(target_Get(row));
     if (p_target)  {
         c_targdep_Remove(*p_target, row);// remove targdep from index c_targdep
+    }
+    acr_in::FTarget* p_parent = acr_in::ind_target_Find(parent_Get(row));
+    if (p_parent)  {
+        c_targdep_child_Remove(*p_parent, row);// remove targdep from index c_targdep_child
     }
 }
 
@@ -3494,6 +4041,70 @@ void acr_in::c_targdep_Reserve(acr_in::FTarget& target, u32 n) {
     }
 }
 
+// --- acr_in.FTarget.c_targdep_child.Insert
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+void acr_in::c_targdep_child_Insert(acr_in::FTarget& target, acr_in::FTargdep& row) {
+    if (bool_Update(row.target_c_targdep_child_in_ary,true)) {
+        // reserve space
+        c_targdep_child_Reserve(target, 1);
+        u32 n  = target.c_targdep_child_n;
+        u32 at = n;
+        acr_in::FTargdep* *elems = target.c_targdep_child_elems;
+        elems[at] = &row;
+        target.c_targdep_child_n = n+1;
+
+    }
+}
+
+// --- acr_in.FTarget.c_targdep_child.InsertMaybe
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+bool acr_in::c_targdep_child_InsertMaybe(acr_in::FTarget& target, acr_in::FTargdep& row) {
+    bool retval = !row.target_c_targdep_child_in_ary;
+    c_targdep_child_Insert(target,row); // check is performed in _Insert again
+    return retval;
+}
+
+// --- acr_in.FTarget.c_targdep_child.Remove
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void acr_in::c_targdep_child_Remove(acr_in::FTarget& target, acr_in::FTargdep& row) {
+    if (bool_Update(row.target_c_targdep_child_in_ary,false)) {
+        int lim = target.c_targdep_child_n;
+        acr_in::FTargdep* *elems = target.c_targdep_child_elems;
+        // search backward, so that most recently added element is found first.
+        // if found, shift array.
+        for (int i = lim-1; i>=0; i--) {
+            acr_in::FTargdep* elem = elems[i]; // fetch element
+            if (elem == &row) {
+                int j = i + 1;
+                size_t nbytes = sizeof(acr_in::FTargdep*) * (lim - j);
+                memmove(elems + i, elems + j, nbytes);
+                target.c_targdep_child_n = lim - 1;
+                break;
+            }
+        }
+    }
+}
+
+// --- acr_in.FTarget.c_targdep_child.Reserve
+// Reserve space in index for N more elements;
+void acr_in::c_targdep_child_Reserve(acr_in::FTarget& target, u32 n) {
+    u32 old_max = target.c_targdep_child_max;
+    if (UNLIKELY(target.c_targdep_child_n + n > old_max)) {
+        u32 new_max  = u32_Max(4, old_max * 2);
+        u32 old_size = old_max * sizeof(acr_in::FTargdep*);
+        u32 new_size = new_max * sizeof(acr_in::FTargdep*);
+        void *new_mem = algo_lib::malloc_ReallocMem(target.c_targdep_child_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("acr_in.out_of_memory  field:acr_in.FTarget.c_targdep_child");
+        }
+        target.c_targdep_child_elems = (acr_in::FTargdep**)new_mem;
+        target.c_targdep_child_max = new_max;
+    }
+}
+
 // --- acr_in.FTarget..Uninit
 void acr_in::FTarget_Uninit(acr_in::FTarget& target) {
     acr_in::FTarget &row = target; (void)row;
@@ -3504,7 +4115,10 @@ void acr_in::FTarget_Uninit(acr_in::FTarget& target) {
         c_target_Remove(*p_target, row);// remove target from index c_target
     }
 
-    // acr_in.FTarget.c_targdep.Uninit (Ptrary)  //
+    // acr_in.FTarget.c_targdep_child.Uninit (Ptrary)  //List of targdeps where we are the parent
+    algo_lib::malloc_FreeMem(target.c_targdep_child_elems, sizeof(acr_in::FTargdep*)*target.c_targdep_child_max); // (acr_in.FTarget.c_targdep_child)
+
+    // acr_in.FTarget.c_targdep.Uninit (Ptrary)  //List of targdeps where we are the child
     algo_lib::malloc_FreeMem(target.c_targdep_elems, sizeof(acr_in::FTargdep*)*target.c_targdep_max); // (acr_in.FTarget.c_targdep)
 }
 

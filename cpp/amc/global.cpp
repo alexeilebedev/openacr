@@ -25,37 +25,9 @@
 
 #include "include/amc.h"
 
-//
-// Re-order ctypes for reading.
-// Include only ctypes which have instances in this namespace.
-// Is anything else required?
-//
-static void InsTopoSortVisit(amc::FNs& ns, amc::FCtype& ctype) {
-    if (!ctype.ins_visited) {
-        ctype.ins_visited = true;
-        if (ctype.p_ns == &ns && FirstInst(ctype)) {
-            ind_beg(amc::ctype_c_parent_curs, parent, ctype) {
-                InsTopoSortVisit(ns, parent);
-            }ind_end;
-            amc::c_ctype_ins_Insert(ns, ctype);
-        }
-    }
-}
-
-
 // -----------------------------------------------------------------------------
 
 void amc::tclass_Global() {
-    amc::FField         &field = *amc::_db.genfield.p_field;
-    amc::FNs            &ns    = *field.p_ctype->p_ns;
-    ind_beg(amc::ns_c_parentns_curs, parentns, ns) {
-        ind_beg(amc::ns_c_ctype_curs, ctype, parentns) {
-            InsTopoSortVisit(parentns, ctype);
-        }ind_end;
-    }ind_end;
-    ind_beg(amc::ns_c_ctype_curs, ctype, ns) {
-        InsTopoSortVisit(ns, ctype);
-    }ind_end;
 }
 
 // -----------------------------------------------------------------------------
@@ -80,30 +52,15 @@ void amc::tfunc_Global_Init() {
     }
 }
 
-// -----------------------------------------------------------------------------
-
-// collects all ssim files for target namespace from its dependency
-static void CollectSsimfiles(amc::FNs &tgt, amc::FNs &dep) {
-    ind_beg(amc::ns_c_ctype_ins_curs, ctype, dep) if (FirstInst(ctype)) {
-        amc::FField &inst = *FirstInst(ctype);
-        amc::FCtype *base = GetBaseType(ctype, &ctype);
-        if (inst.c_finput && base->c_ssimfile) {
-            if (!HasReadQ(*base)) {
-                prerr("amc.gen_finput"
-                      <<Keyval("field",inst.field)
-                      <<Keyval("base",base->ctype)
-                      <<Keyval("text","Missing cfmt read:Y for base"));
-                algo_lib::_db.exit_code++;
-            }
-            if (inst.reftype == "Cppstack") {
-                prerr("amc.gen_finput_cppstack"
-                      <<Keyval("field",inst.field)
-                      <<Keyval("text","Finput does not work with reftype:Cppstack"));
-                algo_lib::_db.exit_code++;
-            }
-            c_ssimfile_ScanInsertMaybe(tgt, *base->c_ssimfile);
+int amc::c_parentns_FindIndex(amc::FNs& ns, amc::FNs *val) {
+    int index=-1;
+    ind_beg(ns_c_parentns_curs,parentns,ns) {
+        if (&parentns == val) {
+            index=ind_curs(parentns).index;
+            break;
         }
     }ind_end;
+    return index;
 }
 
 // -----------------------------------------------------------------------------
@@ -117,18 +74,24 @@ void amc::tfunc_Global_LoadTuplesMaybe() {
         AddProtoArg(ldt, "bool", "recursive");
         AddRetval(ldt, "bool", "retval","true");
     }
-    ind_beg(amc::ns_c_parentns_curs, parentns, ns) {
-        CollectSsimfiles(ns,parentns);
+    ind_beg(amc::_db_finput_curs, finput, amc::_db) {
+        amc::FCtype *arg = finput.p_field->p_arg;
+        amc::FNs *finput_ns = finput.p_field->p_ctype->p_ns;
+        amc::FCtype *ctype = amc::GetBaseType(*arg,arg);// prefer base
+        if (ctype->c_ssimfile && (finput_ns == &ns || c_parentns_FindIndex(ns,finput_ns)!=-1)) {
+            ctype->c_ssimfile->input_select=true;
+        }
     }ind_end;
-    CollectSsimfiles(ns,ns);
     Ins(&R, ldt.body, "if (FileQ(root)) {");
     Ins(&R, ldt.body, "    retval = $ns::LoadTuplesFile(root, recursive);");
     Ins(&R, ldt.body, "} else if (root == \"-\") {");
     Ins(&R, ldt.body, "    retval = $ns::LoadTuplesFd(algo::Fildes(0),\"(stdin)\",recursive);");
     Ins(&R, ldt.body, "} else if (DirectoryQ(root)) {");
-    ind_beg(ns_c_ssimfile_curs,ssimfile,ns) {
-        Set(R,"$ssimfile",ssimfile.ssimfile);
-        Ins(&R, ldt.body, "    retval = retval && $ns::LoadTuplesFile(algo::SsimFname(root,\"$ssimfile\"),recursive);");
+    ind_beg(_db_c_ssimfile_sorted_curs,ssimfile,_db) {
+        if (bool_Update(ssimfile.input_select,false)) {
+            Set(R,"$ssimfile",ssimfile.ssimfile);
+            Ins(&R, ldt.body, "    retval = retval && $ns::LoadTuplesFile(algo::SsimFname(root,\"$ssimfile\"),recursive);");
+        }
     }ind_end;
     Ins(&R, ldt.body, "} else {");
     Ins(&R, ldt.body, "    algo_lib::SaveBadTag(\"path\", root);");
@@ -142,12 +105,19 @@ void amc::tfunc_Global_LoadTuplesMaybe() {
 void amc::tfunc_Global_LoadTuplesFile() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FFunc& ldt = amc::CreateCurFunc(true);
+    Ins(&R, ldt.comment, "Read tuples from file FNAME into this namespace's in-memory database.");
+    Ins(&R, ldt.comment, "If RECURSIVE is TRUE, then also load these tuples into any parent namespaces");
+    Ins(&R, ldt.comment, "It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).");
+    Ins(&R, ldt.comment, "Function returns TRUE if all records were parsed and inserted without error.");
+    Ins(&R, ldt.comment, "If the function returns FALSE, use algo_lib::DetachBadTags() for error description");
     AddProtoArg(ldt, "algo::strptr", "fname");
     AddProtoArg(ldt, "bool", "recursive");
     AddRetval(ldt, "bool", "retval","true");
     Ins(&R, ldt.body, "algo_lib::FFildes fildes;");
-    Ins(&R, ldt.body, "fildes.fd = OpenRead(fname,algo_FileFlags__throw);");
-    Ins(&R, ldt.body, "retval = LoadTuplesFd(fildes.fd, fname, recursive);");
+    Ins(&R, ldt.body, "fildes.fd = OpenRead(fname,algo::FileFlags());");
+    Ins(&R, ldt.body, "if (ValidQ(fildes.fd)) {");
+    Ins(&R, ldt.body, "    retval = LoadTuplesFd(fildes.fd, fname, recursive);");
+    Ins(&R, ldt.body, "}");
 }
 
 // -----------------------------------------------------------------------------
@@ -276,9 +246,9 @@ void amc::tfunc_Global_InitReflection() {
     }
     initrefl.priv = true;
     initrefl.inl = false;
-    int n_finput = c_finput_N(ns);// count inputs/outputs in this ns
+    bool has_inputs = amc::HasFinputsQ(*field.p_ctype->p_ns);
     tempstr text;// register own database
-    Set(R, "$InsertStrptrMaybe", n_finput > 0 ? "$ns::InsertStrptrMaybe" : "NULL");
+    Set(R, "$InsertStrptrMaybe", has_inputs ? "$ns::InsertStrptrMaybe" : "NULL");
     Set(R, "$Step", c_fstep_N(ns) ? "$ns::Step" : "NULL");
     Set(R, "$MainLoop", ns.c_main ? "$ns::MainLoop" : "NULL");
     Ins(&R, initrefl.body,"algo_lib::imdb_InsertMaybe(algo::Imdb(\"$ns\", $InsertStrptrMaybe, $Step, $MainLoop, NULL, algo::Comment()));");

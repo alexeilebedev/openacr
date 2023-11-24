@@ -1,3 +1,5 @@
+dmmeta.substr  field:acr_in.FNsssimfile.ns  expr:/RL  srcfield:acr_in.FNsssimfile.nsssimfile
+dmmeta.substr  field:acr_in.FNsssimfile.ssimfile  expr:/RR  srcfield:acr_in.FNsssimfile.nsssimfile
 dmmeta.substr  field:amc.FOutfile.ns  expr:/RR_RL  srcfield:amc.FOutfile.outfile
 dmmeta.substr  field:amcdb.Tcurs.curstype  expr:.RR  srcfield:amcdb.Tcurs.tfunc
 dmmeta.substr  field:amcdb.Tfunc.name  expr:.RR  srcfield:amcdb.Tfunc.tfunc

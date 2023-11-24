@@ -1,4 +1,5 @@
 dev.gitfile  gitfile:.ffroot
+dev.gitfile  gitfile:.gitattributes
 dev.gitfile  gitfile:.github/workflows/main.yml
 dev.gitfile  gitfile:.gitignore
 dev.gitfile  gitfile:LICENSE
@@ -153,6 +154,7 @@ dev.gitfile  gitfile:cpp/acr_ed/ssimfile.cpp
 dev.gitfile  gitfile:cpp/acr_ed/target.cpp
 dev.gitfile  gitfile:cpp/acr_ed/unittest.cpp
 dev.gitfile  gitfile:cpp/acr_in/acr_in.cpp
+dev.gitfile  gitfile:cpp/acr_in/data.cpp
 dev.gitfile  gitfile:cpp/acr_my/acr_my.cpp
 dev.gitfile  gitfile:cpp/amc/alias.cpp
 dev.gitfile  gitfile:cpp/amc/amc_gc.cpp
@@ -662,6 +664,7 @@ dev.gitfile  gitfile:include/acr.h
 dev.gitfile  gitfile:include/acr_compl.h
 dev.gitfile  gitfile:include/acr_dm.h
 dev.gitfile  gitfile:include/acr_ed.h
+dev.gitfile  gitfile:include/acr_in.h
 dev.gitfile  gitfile:include/algo.h
 dev.gitfile  gitfile:include/algo.inl.h
 dev.gitfile  gitfile:include/algo_pch.hpp
@@ -994,6 +997,9 @@ dev.gitfile  gitfile:test/atf_comp/acr_dm.Merge
 dev.gitfile  gitfile:test/atf_comp/acr_dm.RenameTuple
 dev.gitfile  gitfile:test/atf_comp/acr_ed.CreateCtype
 dev.gitfile  gitfile:test/atf_comp/acr_ed.CreateSsimfileBadNs
+dev.gitfile  gitfile:test/atf_comp/acr_in.Reverse
+dev.gitfile  gitfile:test/atf_comp/acr_in.Simple
+dev.gitfile  gitfile:test/atf_comp/acr_in.Tree
 dev.gitfile  gitfile:test/atf_comp/atf_cmdline.Bare
 dev.gitfile  gitfile:test/atf_comp/atf_cmdline.Debug
 dev.gitfile  gitfile:test/atf_comp/atf_cmdline.Help
