@@ -7244,6 +7244,102 @@ inline i32 amc::ind_license_N() {
     return _db.ind_license_n;
 }
 
+// --- amc.FDb.c_ssimfile_sorted.EmptyQ
+// Return true if index is empty
+inline bool amc::c_ssimfile_sorted_EmptyQ() {
+    return _db.c_ssimfile_sorted_n == 0;
+}
+
+// --- amc.FDb.c_ssimfile_sorted.Find
+// Look up row by row id. Return NULL if out of range
+inline amc::FSsimfile* amc::c_ssimfile_sorted_Find(u32 t) {
+    amc::FSsimfile *retval = NULL;
+    u64 idx = t;
+    u64 lim = _db.c_ssimfile_sorted_n;
+    if (idx < lim) {
+        retval = _db.c_ssimfile_sorted_elems[idx];
+    }
+    return retval;
+}
+
+// --- amc.FDb.c_ssimfile_sorted.Getary
+// Return array of pointers
+inline algo::aryptr<amc::FSsimfile*> amc::c_ssimfile_sorted_Getary() {
+    return algo::aryptr<amc::FSsimfile*>(_db.c_ssimfile_sorted_elems, _db.c_ssimfile_sorted_n);
+}
+
+// --- amc.FDb.c_ssimfile_sorted.N
+// Return number of items in the pointer array
+inline i32 amc::c_ssimfile_sorted_N() {
+    return _db.c_ssimfile_sorted_n;
+}
+
+// --- amc.FDb.c_ssimfile_sorted.RemoveAll
+// Empty the index. (The rows are not deleted)
+inline void amc::c_ssimfile_sorted_RemoveAll() {
+    for (u32 i = 0; i < _db.c_ssimfile_sorted_n; i++) {
+        // mark all elements as not-in-array
+        _db.c_ssimfile_sorted_elems[i]->_db_c_ssimfile_sorted_in_ary = false;
+    }
+    _db.c_ssimfile_sorted_n = 0;
+}
+
+// --- amc.FDb.zd_ssimfile_todo.EmptyQ
+// Return true if index is empty
+inline bool amc::zd_ssimfile_todo_EmptyQ() {
+    return _db.zd_ssimfile_todo_head == NULL;
+}
+
+// --- amc.FDb.zd_ssimfile_todo.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline amc::FSsimfile* amc::zd_ssimfile_todo_First() {
+    amc::FSsimfile *row = NULL;
+    row = _db.zd_ssimfile_todo_head;
+    return row;
+}
+
+// --- amc.FDb.zd_ssimfile_todo.InLlistQ
+// Return true if row is in the linked list, false otherwise
+inline bool amc::zd_ssimfile_todo_InLlistQ(amc::FSsimfile& row) {
+    bool result = false;
+    result = !(row.zd_ssimfile_todo_next == (amc::FSsimfile*)-1);
+    return result;
+}
+
+// --- amc.FDb.zd_ssimfile_todo.Last
+// If index empty, return NULL. Otherwise return pointer to last element in index
+inline amc::FSsimfile* amc::zd_ssimfile_todo_Last() {
+    amc::FSsimfile *row = NULL;
+    row = _db.zd_ssimfile_todo_tail;
+    return row;
+}
+
+// --- amc.FDb.zd_ssimfile_todo.N
+// Return number of items in the linked list
+inline i32 amc::zd_ssimfile_todo_N() {
+    return _db.zd_ssimfile_todo_n;
+}
+
+// --- amc.FDb.zd_ssimfile_todo.Next
+// Return pointer to next element in the list
+inline amc::FSsimfile* amc::zd_ssimfile_todo_Next(amc::FSsimfile &row) {
+    return row.zd_ssimfile_todo_next;
+}
+
+// --- amc.FDb.zd_ssimfile_todo.Prev
+// Return pointer to previous element in the list
+inline amc::FSsimfile* amc::zd_ssimfile_todo_Prev(amc::FSsimfile &row) {
+    return row.zd_ssimfile_todo_prev;
+}
+
+// --- amc.FDb.zd_ssimfile_todo.qLast
+// Return reference to last element in the index. No bounds checking.
+inline amc::FSsimfile& amc::zd_ssimfile_todo_qLast() {
+    amc::FSsimfile *row = NULL;
+    row = _db.zd_ssimfile_todo_tail;
+    return *row;
+}
+
 // --- amc.FDb.fsort_curs.Reset
 // cursor points to valid item
 inline void amc::_db_fsort_curs_Reset(_db_fsort_curs &curs, amc::FDb &parent) {
@@ -10209,6 +10305,56 @@ inline void amc::_db_license_curs_Next(_db_license_curs &curs) {
 inline amc::FLicense& amc::_db_license_curs_Access(_db_license_curs &curs) {
     return license_qFind(u64(curs.index));
 }
+
+// --- amc.FDb.c_ssimfile_sorted_curs.Reset
+inline void amc::_db_c_ssimfile_sorted_curs_Reset(_db_c_ssimfile_sorted_curs &curs, amc::FDb &parent) {
+    curs.elems = parent.c_ssimfile_sorted_elems;
+    curs.n_elems = parent.c_ssimfile_sorted_n;
+    curs.index = 0;
+}
+
+// --- amc.FDb.c_ssimfile_sorted_curs.ValidQ
+// cursor points to valid item
+inline bool amc::_db_c_ssimfile_sorted_curs_ValidQ(_db_c_ssimfile_sorted_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- amc.FDb.c_ssimfile_sorted_curs.Next
+// proceed to next item
+inline void amc::_db_c_ssimfile_sorted_curs_Next(_db_c_ssimfile_sorted_curs &curs) {
+    curs.index++;
+}
+
+// --- amc.FDb.c_ssimfile_sorted_curs.Access
+// item access
+inline amc::FSsimfile& amc::_db_c_ssimfile_sorted_curs_Access(_db_c_ssimfile_sorted_curs &curs) {
+    return *curs.elems[curs.index];
+}
+
+// --- amc.FDb.zd_ssimfile_todo_curs.Reset
+// cursor points to valid item
+inline void amc::_db_zd_ssimfile_todo_curs_Reset(_db_zd_ssimfile_todo_curs &curs, amc::FDb &parent) {
+    curs.row = parent.zd_ssimfile_todo_head;
+}
+
+// --- amc.FDb.zd_ssimfile_todo_curs.ValidQ
+// cursor points to valid item
+inline bool amc::_db_zd_ssimfile_todo_curs_ValidQ(_db_zd_ssimfile_todo_curs &curs) {
+    return curs.row != NULL;
+}
+
+// --- amc.FDb.zd_ssimfile_todo_curs.Next
+// proceed to next item
+inline void amc::_db_zd_ssimfile_todo_curs_Next(_db_zd_ssimfile_todo_curs &curs) {
+    amc::FSsimfile *next = (*curs.row).zd_ssimfile_todo_next;
+    curs.row = next;
+}
+
+// --- amc.FDb.zd_ssimfile_todo_curs.Access
+// item access
+inline amc::FSsimfile& amc::_db_zd_ssimfile_todo_curs_Access(_db_zd_ssimfile_todo_curs &curs) {
+    return *curs.row;
+}
 inline amc::FDispatch::FDispatch() {
     amc::FDispatch_Init(*this);
 }
@@ -11999,7 +12145,6 @@ inline void amc::FFinput_Init(amc::FFinput& finput) {
     finput.update = bool(false);
     finput.strict = bool(true);
     finput.p_field = NULL;
-    finput.ns_c_finput_in_ary = bool(false);
 }
 inline amc::FFldoffset::FFldoffset() {
     amc::FFldoffset_Init(*this);
@@ -12859,46 +13004,6 @@ inline u64 amc::include_rowid_Get(amc::FNs& ns, algo::cstring &elem) {
     return u64(id);
 }
 
-// --- amc.FNs.c_ctype_ins.EmptyQ
-// Return true if index is empty
-inline bool amc::c_ctype_ins_EmptyQ(amc::FNs& ns) {
-    return ns.c_ctype_ins_n == 0;
-}
-
-// --- amc.FNs.c_ctype_ins.Find
-// Look up row by row id. Return NULL if out of range
-inline amc::FCtype* amc::c_ctype_ins_Find(amc::FNs& ns, u32 t) {
-    amc::FCtype *retval = NULL;
-    u64 idx = t;
-    u64 lim = ns.c_ctype_ins_n;
-    if (idx < lim) {
-        retval = ns.c_ctype_ins_elems[idx];
-    }
-    return retval;
-}
-
-// --- amc.FNs.c_ctype_ins.Getary
-// Return array of pointers
-inline algo::aryptr<amc::FCtype*> amc::c_ctype_ins_Getary(amc::FNs& ns) {
-    return algo::aryptr<amc::FCtype*>(ns.c_ctype_ins_elems, ns.c_ctype_ins_n);
-}
-
-// --- amc.FNs.c_ctype_ins.N
-// Return number of items in the pointer array
-inline i32 amc::c_ctype_ins_N(const amc::FNs& ns) {
-    return ns.c_ctype_ins_n;
-}
-
-// --- amc.FNs.c_ctype_ins.RemoveAll
-// Empty the index. (The rows are not deleted)
-inline void amc::c_ctype_ins_RemoveAll(amc::FNs& ns) {
-    for (u32 i = 0; i < ns.c_ctype_ins_n; i++) {
-        // mark all elements as not-in-array
-        ns.c_ctype_ins_elems[i]->ns_c_ctype_ins_in_ary = false;
-    }
-    ns.c_ctype_ins_n = 0;
-}
-
 // --- amc.FNs.c_dispsig.EmptyQ
 // Return true if index is empty
 inline bool amc::c_dispsig_EmptyQ(amc::FNs& ns) {
@@ -13267,46 +13372,6 @@ inline void amc::c_outfile_RemoveAll(amc::FNs& ns) {
     ns.c_outfile_n = 0;
 }
 
-// --- amc.FNs.c_finput.EmptyQ
-// Return true if index is empty
-inline bool amc::c_finput_EmptyQ(amc::FNs& ns) {
-    return ns.c_finput_n == 0;
-}
-
-// --- amc.FNs.c_finput.Find
-// Look up row by row id. Return NULL if out of range
-inline amc::FFinput* amc::c_finput_Find(amc::FNs& ns, u32 t) {
-    amc::FFinput *retval = NULL;
-    u64 idx = t;
-    u64 lim = ns.c_finput_n;
-    if (idx < lim) {
-        retval = ns.c_finput_elems[idx];
-    }
-    return retval;
-}
-
-// --- amc.FNs.c_finput.Getary
-// Return array of pointers
-inline algo::aryptr<amc::FFinput*> amc::c_finput_Getary(amc::FNs& ns) {
-    return algo::aryptr<amc::FFinput*>(ns.c_finput_elems, ns.c_finput_n);
-}
-
-// --- amc.FNs.c_finput.N
-// Return number of items in the pointer array
-inline i32 amc::c_finput_N(const amc::FNs& ns) {
-    return ns.c_finput_n;
-}
-
-// --- amc.FNs.c_finput.RemoveAll
-// Empty the index. (The rows are not deleted)
-inline void amc::c_finput_RemoveAll(amc::FNs& ns) {
-    for (u32 i = 0; i < ns.c_finput_n; i++) {
-        // mark all elements as not-in-array
-        ns.c_finput_elems[i]->ns_c_finput_in_ary = false;
-    }
-    ns.c_finput_n = 0;
-}
-
 // --- amc.FNs.c_foutput.EmptyQ
 // Return true if index is empty
 inline bool amc::c_foutput_EmptyQ(amc::FNs& ns) {
@@ -13487,42 +13552,6 @@ inline void amc::c_nscpp_Remove(amc::FNs& ns, amc::FNscpp& row) {
     }
 }
 
-// --- amc.FNs.c_ssimfile.EmptyQ
-// Return true if index is empty
-inline bool amc::c_ssimfile_EmptyQ(amc::FNs& ns) {
-    return ns.c_ssimfile_n == 0;
-}
-
-// --- amc.FNs.c_ssimfile.Find
-// Look up row by row id. Return NULL if out of range
-inline amc::FSsimfile* amc::c_ssimfile_Find(amc::FNs& ns, u32 t) {
-    amc::FSsimfile *retval = NULL;
-    u64 idx = t;
-    u64 lim = ns.c_ssimfile_n;
-    if (idx < lim) {
-        retval = ns.c_ssimfile_elems[idx];
-    }
-    return retval;
-}
-
-// --- amc.FNs.c_ssimfile.Getary
-// Return array of pointers
-inline algo::aryptr<amc::FSsimfile*> amc::c_ssimfile_Getary(amc::FNs& ns) {
-    return algo::aryptr<amc::FSsimfile*>(ns.c_ssimfile_elems, ns.c_ssimfile_n);
-}
-
-// --- amc.FNs.c_ssimfile.N
-// Return number of items in the pointer array
-inline i32 amc::c_ssimfile_N(const amc::FNs& ns) {
-    return ns.c_ssimfile_n;
-}
-
-// --- amc.FNs.c_ssimfile.RemoveAll
-// Empty the index. (The rows are not deleted)
-inline void amc::c_ssimfile_RemoveAll(amc::FNs& ns) {
-    ns.c_ssimfile_n = 0;
-}
-
 // --- amc.FNs.c_ctype_curs.Reset
 inline void amc::ns_c_ctype_curs_Reset(ns_c_ctype_curs &curs, amc::FNs &parent) {
     curs.elems = parent.c_ctype_elems;
@@ -13646,31 +13675,6 @@ inline bool amc::ns_include_curs_ValidQ(ns_include_curs &curs) {
 // item access
 inline algo::cstring& amc::ns_include_curs_Access(ns_include_curs &curs) {
     return curs.elems[curs.index];
-}
-
-// --- amc.FNs.c_ctype_ins_curs.Reset
-inline void amc::ns_c_ctype_ins_curs_Reset(ns_c_ctype_ins_curs &curs, amc::FNs &parent) {
-    curs.elems = parent.c_ctype_ins_elems;
-    curs.n_elems = parent.c_ctype_ins_n;
-    curs.index = 0;
-}
-
-// --- amc.FNs.c_ctype_ins_curs.ValidQ
-// cursor points to valid item
-inline bool amc::ns_c_ctype_ins_curs_ValidQ(ns_c_ctype_ins_curs &curs) {
-    return curs.index < curs.n_elems;
-}
-
-// --- amc.FNs.c_ctype_ins_curs.Next
-// proceed to next item
-inline void amc::ns_c_ctype_ins_curs_Next(ns_c_ctype_ins_curs &curs) {
-    curs.index++;
-}
-
-// --- amc.FNs.c_ctype_ins_curs.Access
-// item access
-inline amc::FCtype& amc::ns_c_ctype_ins_curs_Access(ns_c_ctype_ins_curs &curs) {
-    return *curs.elems[curs.index];
 }
 
 // --- amc.FNs.c_dispsig_curs.Reset
@@ -13848,31 +13852,6 @@ inline amc::FOutfile& amc::ns_c_outfile_curs_Access(ns_c_outfile_curs &curs) {
     return *curs.elems[curs.index];
 }
 
-// --- amc.FNs.c_finput_curs.Reset
-inline void amc::ns_c_finput_curs_Reset(ns_c_finput_curs &curs, amc::FNs &parent) {
-    curs.elems = parent.c_finput_elems;
-    curs.n_elems = parent.c_finput_n;
-    curs.index = 0;
-}
-
-// --- amc.FNs.c_finput_curs.ValidQ
-// cursor points to valid item
-inline bool amc::ns_c_finput_curs_ValidQ(ns_c_finput_curs &curs) {
-    return curs.index < curs.n_elems;
-}
-
-// --- amc.FNs.c_finput_curs.Next
-// proceed to next item
-inline void amc::ns_c_finput_curs_Next(ns_c_finput_curs &curs) {
-    curs.index++;
-}
-
-// --- amc.FNs.c_finput_curs.Access
-// item access
-inline amc::FFinput& amc::ns_c_finput_curs_Access(ns_c_finput_curs &curs) {
-    return *curs.elems[curs.index];
-}
-
 // --- amc.FNs.c_foutput_curs.Reset
 inline void amc::ns_c_foutput_curs_Reset(ns_c_foutput_curs &curs, amc::FNs &parent) {
     curs.elems = parent.c_foutput_elems;
@@ -13970,31 +13949,6 @@ inline void amc::ns_c_nsinclude_curs_Next(ns_c_nsinclude_curs &curs) {
 // --- amc.FNs.c_nsinclude_curs.Access
 // item access
 inline amc::FNsinclude& amc::ns_c_nsinclude_curs_Access(ns_c_nsinclude_curs &curs) {
-    return *curs.elems[curs.index];
-}
-
-// --- amc.FNs.c_ssimfile_curs.Reset
-inline void amc::ns_c_ssimfile_curs_Reset(ns_c_ssimfile_curs &curs, amc::FNs &parent) {
-    curs.elems = parent.c_ssimfile_elems;
-    curs.n_elems = parent.c_ssimfile_n;
-    curs.index = 0;
-}
-
-// --- amc.FNs.c_ssimfile_curs.ValidQ
-// cursor points to valid item
-inline bool amc::ns_c_ssimfile_curs_ValidQ(ns_c_ssimfile_curs &curs) {
-    return curs.index < curs.n_elems;
-}
-
-// --- amc.FNs.c_ssimfile_curs.Next
-// proceed to next item
-inline void amc::ns_c_ssimfile_curs_Next(ns_c_ssimfile_curs &curs) {
-    curs.index++;
-}
-
-// --- amc.FNs.c_ssimfile_curs.Access
-// item access
-inline amc::FSsimfile& amc::ns_c_ssimfile_curs_Access(ns_c_ssimfile_curs &curs) {
     return *curs.elems[curs.index];
 }
 inline amc::FNscpp::FNscpp() {
@@ -14318,14 +14272,6 @@ inline void amc::c_ssimvolatile_Remove(amc::FSsimfile& ssimfile, amc::FSsimvolat
     if (LIKELY(ptr == &row)) {
         ssimfile.c_ssimvolatile = NULL;
     }
-}
-
-// --- amc.FSsimfile..Init
-// Set all fields to initial values.
-inline void amc::FSsimfile_Init(amc::FSsimfile& ssimfile) {
-    ssimfile.p_ctype = NULL;
-    ssimfile.c_ssimvolatile = NULL;
-    ssimfile.ind_ssimfile_next = (amc::FSsimfile*)-1; // (amc.FDb.ind_ssimfile) not-in-hash
 }
 inline amc::FSsimvolatile::FSsimvolatile() {
 }

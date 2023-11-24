@@ -973,22 +973,22 @@ bool acr_ed::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = acr_ed::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ns"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
-        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfmt"),recursive);
-        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cpptype"),recursive);
-        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cstr"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsdb"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fprefix"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.listtype"),recursive);
-        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsdb"),recursive);
-        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.pack"),recursive);
-        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dev.sbpath"),recursive);
-        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
-        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
-        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.typefld"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dev.sbpath"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.pack"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cstr"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cpptype"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfmt"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");

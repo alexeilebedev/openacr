@@ -677,6 +677,10 @@ namespace amc { // update-hdr
     //     (user-implemented function, prototype is in amc-generated header)
     // void gen_prep_field();
     // void gen_check_bigend();
+
+    // walk over all xrefs and populate ctype.c_parent array,
+    // which lists all the "parent" ctypes (ones used by this ctype)
+    // check
     // void gen_xref_parent();
     // void gen_datafld();
     // void gen_ctype_toposort();
@@ -735,12 +739,18 @@ namespace amc { // update-hdr
     // void gen_check_fcurs();
     // void gen_check_varlen();
 
+    // Generate a global list c_ssimfile_sorted
+    // which indexes ssimfiles in topological order
+    // void gen_sortssimfile();
+
     // -------------------------------------------------------------------
     // cpp/amc/global.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Global();
     // void tfunc_Global_Init();
+    int c_parentns_FindIndex(amc::FNs& ns, amc::FNs *val);
+    //     (user-implemented function, prototype is in amc-generated header)
     // void tfunc_Global_LoadTuplesMaybe();
     // void tfunc_Global_LoadTuplesFile();
     // void tfunc_Global_LoadTuplesFd();

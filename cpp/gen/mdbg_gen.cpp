@@ -549,9 +549,9 @@ bool mdbg::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = mdbg::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && mdbg::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && mdbg::LoadTuplesFile(algo::SsimFname(root,"dev.cfg"),recursive);
         retval = retval && mdbg::LoadTuplesFile(algo::SsimFname(root,"dev.builddir"),recursive);
+        retval = retval && mdbg::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");

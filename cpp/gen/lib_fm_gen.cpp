@@ -252,9 +252,9 @@ bool lib_fm::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = lib_fm::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && lib_fm::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
-        retval = retval && lib_fm::LoadTuplesFile(algo::SsimFname(root,"fmdb.alm_code"),recursive);
         retval = retval && lib_fm::LoadTuplesFile(algo::SsimFname(root,"fmdb.alm_objtype"),recursive);
+        retval = retval && lib_fm::LoadTuplesFile(algo::SsimFname(root,"fmdb.alm_code"),recursive);
+        retval = retval && lib_fm::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");

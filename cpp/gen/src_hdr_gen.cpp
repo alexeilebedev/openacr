@@ -333,12 +333,12 @@ bool src_hdr::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = src_hdr::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dev.license"),recursive);
         retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ns"),recursive);
-        retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsx"),recursive);
-        retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dev.scriptfile"),recursive);
         retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
+        retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dev.scriptfile"),recursive);
+        retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsx"),recursive);
+        retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);

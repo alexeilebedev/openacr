@@ -466,14 +466,14 @@ bool atf_cov::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = atf_cov::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.gitfile"),recursive);
-        retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.covfile"),recursive);
-        retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.covline"),recursive);
         retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
-        retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.covtarget"),recursive);
-        retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
         retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.tgtcov"),recursive);
+        retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.covtarget"),recursive);
+        retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.covline"),recursive);
+        retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.covfile"),recursive);
+        retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");

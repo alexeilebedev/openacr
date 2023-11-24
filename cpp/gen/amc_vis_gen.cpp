@@ -765,10 +765,10 @@ bool amc_vis::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = amc_vis::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && amc_vis::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && amc_vis::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
         retval = retval && amc_vis::LoadTuplesFile(algo::SsimFname(root,"dmmeta.reftype"),recursive);
         retval = retval && amc_vis::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
+        retval = retval && amc_vis::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && amc_vis::LoadTuplesFile(algo::SsimFname(root,"dmmeta.finput"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);

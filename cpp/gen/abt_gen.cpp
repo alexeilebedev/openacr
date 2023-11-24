@@ -1568,21 +1568,21 @@ bool abt::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = abt::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ns"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
         retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.arch"),recursive);
         retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.cfg"),recursive);
         retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.compiler"),recursive);
-        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.include"),recursive);
-        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ns"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.uname"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.tool_opt"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.syslib"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.targsyslib"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.targdep"),recursive);
         retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.syscmd"),recursive);
         retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.syscmddep"),recursive);
-        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.syslib"),recursive);
-        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
-        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.targdep"),recursive);
-        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
-        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.targsyslib"),recursive);
-        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.tool_opt"),recursive);
-        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.uname"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.include"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");

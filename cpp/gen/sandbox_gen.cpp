@@ -322,8 +322,8 @@ bool sandbox::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = sandbox::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && sandbox::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && sandbox::LoadTuplesFile(algo::SsimFname(root,"dev.sandbox"),recursive);
+        retval = retval && sandbox::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && sandbox::LoadTuplesFile(algo::SsimFname(root,"dev.sbpath"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);

@@ -353,9 +353,9 @@ bool sv2ssim::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = sv2ssim::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
+        retval = retval && sv2ssim::LoadTuplesFile(algo::SsimFname(root,"dmmeta.svtype"),recursive);
         retval = retval && sv2ssim::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && sv2ssim::LoadTuplesFile(algo::SsimFname(root,"amcdb.bltin"),recursive);
-        retval = retval && sv2ssim::LoadTuplesFile(algo::SsimFname(root,"dmmeta.svtype"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");

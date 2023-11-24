@@ -483,13 +483,13 @@ bool src_func::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = src_func::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctypelen"),recursive);
-        retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispatch"),recursive);
-        retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fstep"),recursive);
         retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
-        retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
         retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dmmeta.gstatic"),recursive);
+        retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fstep"),recursive);
+        retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispatch"),recursive);
+        retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");

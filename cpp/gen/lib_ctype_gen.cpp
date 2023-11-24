@@ -1652,17 +1652,17 @@ bool lib_ctype::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = lib_ctype::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
-        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cdflt"),recursive);
-        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfmt"),recursive);
         retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
-        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cppfunc"),recursive);
-        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fconst"),recursive);
+        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dev.unstablefld"),recursive);
         retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ftuple"),recursive);
         retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
+        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfmt"),recursive);
+        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fconst"),recursive);
         retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.substr"),recursive);
-        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dev.unstablefld"),recursive);
+        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cppfunc"),recursive);
+        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cdflt"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");

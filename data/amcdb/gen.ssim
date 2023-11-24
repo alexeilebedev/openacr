@@ -4,6 +4,7 @@ amcdb.gen  gen:dispenum  perns:N  comment:"generate enum for each dispatch (crea
 amcdb.gen  gen:countxref  perns:N  comment:""
 amcdb.gen  gen:detectinst  perns:N  comment:"Detect creation access paths"
 amcdb.gen  gen:trace  perns:N  comment:"Generate trace counters (creates new ctypes)"
+amcdb.gen  gen:sortssimfile  perns:N  comment:"Topologically sort ssimfiles by pkey references"
 amcdb.gen  gen:lookuppkey  perns:N  comment:"Rewrite Pkey->Val"
 amcdb.gen  gen:rewrite_regx  perns:N  comment:"Rewrite RegxSql as Regx, regxtype Sql"
 amcdb.gen  gen:tableenum  perns:N  comment:"Create enum for tables"

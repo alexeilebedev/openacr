@@ -1279,12 +1279,12 @@ bool ssim2mysql::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = ssim2mysql::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && ssim2mysql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && ssim2mysql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ns"),recursive);
         retval = retval && ssim2mysql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
-        retval = retval && ssim2mysql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
-        retval = retval && ssim2mysql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
         retval = retval && ssim2mysql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.sqltype"),recursive);
+        retval = retval && ssim2mysql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
+        retval = retval && ssim2mysql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
+        retval = retval && ssim2mysql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && ssim2mysql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.substr"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);

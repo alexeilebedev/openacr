@@ -412,21 +412,21 @@ bool gcli::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = gcli::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gact"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gclicmdf2j"),recursive);
         retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtype"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gclicmdt"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtypeprefix"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtypeh"),recursive);
         retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gfld"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gmethod"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.grepo"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.grepogitport"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.grepossh"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gstatet"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gact"),recursive);
         retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtbl"),recursive);
         retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtblactfld"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtypeh"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtypeprefix"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gstatet"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.grepossh"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.grepogitport"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.grepo"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gmethod"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gclicmdt"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gclicmdf2j"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");

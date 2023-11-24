@@ -477,12 +477,12 @@ bool abt_md::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = abt_md::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
-        retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
         retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ns"),recursive);
+        retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
+        retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
+        retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dev.readme"),recursive);
         retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dev.readmens"),recursive);
-        retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");

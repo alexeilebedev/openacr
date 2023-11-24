@@ -532,21 +532,21 @@ bool atf_comp::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = atf_comp::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
-        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cdflt"),recursive);
-        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfmt"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
-        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cppfunc"),recursive);
-        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fconst"),recursive);
-        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ftuple"),recursive);
-        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
-        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.substr"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dev.unstablefld"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ftuple"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.comptest"),recursive);
-        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.targs"),recursive);
-        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.tfilt"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.tmsg"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.tfilt"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.targs"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfmt"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fconst"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.substr"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cppfunc"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cdflt"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");

@@ -529,12 +529,12 @@ bool src_lim::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = src_lim::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && src_lim::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
-        retval = retval && src_lim::LoadTuplesFile(algo::SsimFname(root,"dev.badline"),recursive);
         retval = retval && src_lim::LoadTuplesFile(algo::SsimFname(root,"dev.gitfile"),recursive);
-        retval = retval && src_lim::LoadTuplesFile(algo::SsimFname(root,"dev.include"),recursive);
         retval = retval && src_lim::LoadTuplesFile(algo::SsimFname(root,"dev.linelim"),recursive);
+        retval = retval && src_lim::LoadTuplesFile(algo::SsimFname(root,"dev.badline"),recursive);
+        retval = retval && src_lim::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && src_lim::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
+        retval = retval && src_lim::LoadTuplesFile(algo::SsimFname(root,"dev.include"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");
