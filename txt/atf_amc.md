@@ -20,11 +20,3 @@ Usage: atf_amc [[-amctest:]<regx>] [options]
 
 ```
 
-### Inputs
-
-`atf_amc` takes the following tables on input:
-```
-CTYPE                COMMENT
-dmmeta.Dispsigcheck  Check signature of input data against executable's version
-```
-

@@ -617,13 +617,30 @@ void amc::gen_check_bigend() {
 
 // -----------------------------------------------------------------------------
 
+
+// walk over all xrefs and populate ctype.c_parent array,
+// which lists all the "parent" ctypes (ones used by this ctype)
+// check
 void amc::gen_xref_parent() {
-    // walk over all xrefs and create p_parent links
     ind_beg(amc::_db_xref_curs, xref, amc::_db) {
-        if (xref.p_field->reftype == dmmeta_Reftype_reftype_Upptr) {
-            c_parent_Insert(*xref.p_field->p_ctype, *xref.p_field->p_arg);
-        } else {
-            c_parent_Insert(*xref.p_field->p_arg, *xref.p_field->p_ctype);
+        amc::FCtype *child = xref.p_field->p_ctype;
+        amc::FCtype *parent = xref.p_field->p_arg;
+        if (xref.p_field->reftype != dmmeta_Reftype_reftype_Upptr) {
+            algo::TSwap(child,parent);
+        }
+        c_parent_Insert(*child,*parent);
+        amc::FCtype *base1=amc::GetBaseType(*child,child);
+        amc::FCtype *base2=amc::GetBaseType(*parent,parent);
+        if (base1->c_ssimfile && base2->c_ssimfile && base1->c_ssimfile->topoindex < base2->c_ssimfile->topoindex) {
+            prerr("amc.bad_xref"
+                  <<Keyval("field",xref.field)
+                  <<Keyval("child_type",child->ctype)
+                  <<Keyval("parent_type",parent->ctype)
+                  <<Keyval("child_ssimfile",base1->c_ssimfile->ssimfile)
+                  <<Keyval("parent_ssimfile",base2->c_ssimfile->ssimfile)
+                  <<Keyval("comment","The x-ref relationship between child_type and parent_type implies a different ordering"
+                           "than the Pkey relationship between child_ssimfile and parent_ssimfile"));
+            algo_lib::_db.exit_code=1;
         }
     }ind_end;
 }
@@ -1422,5 +1439,30 @@ void amc::gen_check_varlen() {
                   <<Keyval("cheap_copy","N"));
             algo_lib::_db.exit_code=1;
         }
+    }ind_end;
+}
+
+// Generate a global list c_ssimfile_sorted
+// which indexes ssimfiles in topological order
+void amc::gen_sortssimfile() {
+    ind_beg(amc::_db_ssimfile_curs, ssimfile, amc::_db) {
+        zd_ssimfile_todo_Insert(ssimfile);
+    }ind_end;
+    while (amc::FSsimfile *S = amc::zd_ssimfile_todo_Last()) {
+        if (bool_Update(S->topovisit,true)) {
+            ind_beg(amc::ctype_c_field_curs, field, *S->p_ctype) {
+                amc::FSsimfile *parent=field.p_arg->c_ssimfile;
+                if (parent && field.reftype == dmmeta_Reftype_reftype_Pkey) {
+                    amc::zd_ssimfile_todo_Remove(*parent);
+                    amc::zd_ssimfile_todo_Insert(*parent);
+                }
+            }ind_end;
+        } else {
+            zd_ssimfile_todo_Remove(*S);
+            c_ssimfile_sorted_Insert(*S);
+        }
+    }
+    ind_beg(amc::_db_c_ssimfile_sorted_curs,ssimfile,_db) {
+        ssimfile.topoindex=ind_curs(ssimfile).index;
     }ind_end;
 }

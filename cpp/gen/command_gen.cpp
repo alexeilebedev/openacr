@@ -150,6 +150,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_related       : ret = "related";  break;
         case command_FieldId_notssimfile   : ret = "notssimfile";  break;
         case command_FieldId_checkable     : ret = "checkable";  break;
+        case command_FieldId_r             : ret = "r";  break;
         case command_FieldId_nsdb          : ret = "nsdb";  break;
         case command_FieldId_fkey          : ret = "fkey";  break;
         case command_FieldId_start         : ret = "start";  break;
@@ -358,6 +359,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case 'q': {
                     value_SetEnum(parent,command_FieldId_q); ret = true; break;
+                }
+                case 'r': {
+                    value_SetEnum(parent,command_FieldId_r); ret = true; break;
                 }
                 case 't': {
                     value_SetEnum(parent,command_FieldId_t); ret = true; break;
@@ -5025,6 +5029,21 @@ bool command::notssimfile_ReadStrptrMaybe(command::acr_in& parent, algo::strptr 
     return retval;
 }
 
+// --- command.acr_in.r.Print
+// Print back to string
+void command::r_Print(command::acr_in& parent, algo::cstring &out) {
+    Regx_Print(parent.r, out);
+}
+
+// --- command.acr_in.r.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::r_ReadStrptrMaybe(command::acr_in& parent, algo::strptr in) {
+    Regx_ReadSql(parent.r, in, true);
+    bool retval = true;// !parent.r.parseerror; -- TODO: uncomment
+    return retval;
+}
+
 // --- command.acr_in..ReadFieldMaybe
 bool command::acr_in_ReadFieldMaybe(command::acr_in &parent, algo::strptr field, algo::strptr strval) {
     command::FieldId field_id;
@@ -5035,11 +5054,13 @@ bool command::acr_in_ReadFieldMaybe(command::acr_in &parent, algo::strptr field,
         case command_FieldId_data: retval = bool_ReadStrptrMaybe(parent.data, strval); break;
         case command_FieldId_sigcheck: retval = bool_ReadStrptrMaybe(parent.sigcheck, strval); break;
         case command_FieldId_list: retval = bool_ReadStrptrMaybe(parent.list, strval); break;
+        case command_FieldId_t: retval = bool_ReadStrptrMaybe(parent.t, strval); break;
         case command_FieldId_data_dir: retval = algo::cstring_ReadStrptrMaybe(parent.data_dir, strval); break;
         case command_FieldId_schema: retval = algo::cstring_ReadStrptrMaybe(parent.schema, strval); break;
         case command_FieldId_related: retval = algo::cstring_ReadStrptrMaybe(parent.related, strval); break;
         case command_FieldId_notssimfile: retval = notssimfile_ReadStrptrMaybe(parent, strval); break;
         case command_FieldId_checkable: retval = bool_ReadStrptrMaybe(parent.checkable, strval); break;
+        case command_FieldId_r: retval = r_ReadStrptrMaybe(parent, strval); break;
         default: break;
     }
     if (!retval) {
@@ -5068,14 +5089,17 @@ bool command::acr_in_ReadTupleMaybe(command::acr_in &parent, algo::Tuple &tuple)
 // --- command.acr_in..Init
 // Set all fields to initial values.
 void command::acr_in_Init(command::acr_in& parent) {
+    Regx_ReadSql(parent.ns, "", true);
     parent.data = bool(false);
     parent.sigcheck = bool(true);
     parent.list = bool(false);
+    parent.t = bool(false);
     parent.data_dir = algo::strptr("data");
     parent.schema = algo::strptr("data");
     parent.related = algo::strptr("");
     Regx_ReadSql(parent.notssimfile, "", true);
     parent.checkable = bool(false);
+    Regx_ReadSql(parent.r, "", true);
 }
 
 // --- command.acr_in..PrintArgv
@@ -5107,6 +5131,12 @@ void command::acr_in_PrintArgv(command::acr_in & row, algo::cstring &str) {
         str << " -list:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.t == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.t, temp);
+        str << " -t:";
+        strptr_PrintBash(temp,str);
+    }
     if (!(row.data_dir == "data")) {
         ch_RemoveAll(temp);
         cstring_Print(row.data_dir, temp);
@@ -5135,6 +5165,12 @@ void command::acr_in_PrintArgv(command::acr_in & row, algo::cstring &str) {
         ch_RemoveAll(temp);
         bool_Print(row.checkable, temp);
         str << " -checkable:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.r.expr == "")) {
+        ch_RemoveAll(temp);
+        command::r_Print(const_cast<command::acr_in&>(row), temp);
+        str << " -r:";
         strptr_PrintBash(temp,str);
     }
 }
@@ -5190,22 +5226,30 @@ i32 command::acr_in_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* 
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_data_dir: { // bool: no argument required but value may be specified as list:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_schema: { // bool: no argument required but value may be specified as list:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_related: { // bool: no argument required but value may be specified as list:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_notssimfile: { // bool: no argument required but value may be specified as list:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_checkable: { // bool: no argument required but value may be specified as list:Y
+        case command_FieldId_t: { // bool: no argument required but value may be specified as list:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
+        } break;
+        case command_FieldId_data_dir: { // bool: no argument required but value may be specified as t:Y
+            *out_anon = false;
+        } break;
+        case command_FieldId_schema: { // bool: no argument required but value may be specified as t:Y
+            *out_anon = false;
+        } break;
+        case command_FieldId_related: { // bool: no argument required but value may be specified as t:Y
+            *out_anon = false;
+        } break;
+        case command_FieldId_notssimfile: { // bool: no argument required but value may be specified as t:Y
+            *out_anon = false;
+        } break;
+        case command_FieldId_checkable: { // bool: no argument required but value may be specified as t:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_r: { // bool: no argument required but value may be specified as checkable:Y
+            *out_anon = false;
         } break;
         default:
         retval=-1; // unrecognized
@@ -5316,7 +5360,7 @@ void command::acr_in_ExecX(command::acr_in_proc& parent) {
 int command::acr_in_Execv(command::acr_in_proc& parent) {
     algo_lib::exec_args_Alloc() << parent.path;
 
-    if (true) {
+    if (parent.cmd.ns.expr != "") {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-ns:";
         command::ns_Print(parent.cmd, *arg);
@@ -5338,6 +5382,12 @@ int command::acr_in_Execv(command::acr_in_proc& parent) {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-list:";
         bool_Print(parent.cmd.list, *arg);
+    }
+
+    if (parent.cmd.t != false) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-t:";
+        bool_Print(parent.cmd.t, *arg);
     }
 
     if (parent.cmd.data_dir != "data") {
@@ -5368,6 +5418,12 @@ int command::acr_in_Execv(command::acr_in_proc& parent) {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-checkable:";
         bool_Print(parent.cmd.checkable, *arg);
+    }
+
+    if (parent.cmd.r.expr != "") {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-r:";
+        command::r_Print(parent.cmd, *arg);
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         algo_lib::exec_args_Alloc() << "-verbose";

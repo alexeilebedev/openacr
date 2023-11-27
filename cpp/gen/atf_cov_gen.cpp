@@ -466,14 +466,14 @@ bool atf_cov::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = atf_cov::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.gitfile"),recursive);
-        retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.covfile"),recursive);
-        retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.covline"),recursive);
+        retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
-        retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.covtarget"),recursive);
-        retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
         retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.tgtcov"),recursive);
+        retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
+        retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.covtarget"),recursive);
+        retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.covline"),recursive);
+        retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.covfile"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");
@@ -484,11 +484,18 @@ bool atf_cov::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 
 // --- atf_cov.FDb._db.LoadTuplesFile
 // Load all finputs from given file.
+// Read tuples from file FNAME into this namespace's in-memory database.
+// If RECURSIVE is TRUE, then also load these tuples into any parent namespaces
+// It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
+// Function returns TRUE if all records were parsed and inserted without error.
+// If the function returns FALSE, use algo_lib::DetachBadTags() for error description
 bool atf_cov::LoadTuplesFile(algo::strptr fname, bool recursive) {
     bool retval = true;
     algo_lib::FFildes fildes;
-    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
-    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    fildes.fd = OpenRead(fname,algo::FileFlags());
+    if (ValidQ(fildes.fd)) {
+        retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    }
     return retval;
 }
 

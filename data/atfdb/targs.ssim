@@ -144,6 +144,9 @@ atfdb.targs  comptest:acr_dm.Merge  args:"test/acr_dm/file1.ssim test/acr_dm/fil
 atfdb.targs  comptest:acr_dm.RenameTuple  args:"test/acr_dm/renametuple1.ssim test/acr_dm/renametuple2.ssim test/acr_dm/renametuple3.ssim"
 atfdb.targs  comptest:acr_ed.CreateCtype  args:"-create -ctype ams.ChildTypeMsg -subset ams.MsgHeader -msgtype:400 -reftype:Base"
 atfdb.targs  comptest:acr_ed.CreateSsimfileBadNs  args:"--create -ssimfile ams.test -subset algo.Smallstr10"
+atfdb.targs  comptest:acr_in.Reverse  args:"-r dev.targdep"
+atfdb.targs  comptest:acr_in.Simple  args:acr_in
+atfdb.targs  comptest:acr_in.Tree  args:"acr_in -t"
 atfdb.targs  comptest:atf_cmdline.Bare  args:""
 atfdb.targs  comptest:atf_cmdline.Debug  args:"-debug blah -str blah"
 atfdb.targs  comptest:atf_cmdline.Help  args:-help

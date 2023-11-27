@@ -343,6 +343,7 @@ void abt_md::mdsection_Inputs(abt_md::FileSection &section) {
     algo_lib::FFildes read;
     command::acr_in_proc acr_in;
     acr_in.cmd.ns.expr=_db.c_readme->c_readmens->ns;
+    acr_in.cmd.sigcheck=false;
     cstring text;
     Ins(&_db.R,text, "`$ns` takes the following tables on input:");
     Ins(&_db.R,text, "```");

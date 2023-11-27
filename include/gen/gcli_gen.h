@@ -392,6 +392,11 @@ bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
 bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file.
+// Read tuples from file FNAME into this namespace's in-memory database.
+// If RECURSIVE is TRUE, then also load these tuples into any parent namespaces
+// It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
+// Function returns TRUE if all records were parsed and inserted without error.
+// If the function returns FALSE, use algo_lib::DetachBadTags() for error description
 bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file descriptor.
 bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));

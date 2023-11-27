@@ -2493,7 +2493,6 @@ void amc::FCtype_Init(amc::FCtype& ctype) {
     ctype.size_unknown = bool(false);
     ctype.size_locked = bool(false);
     ctype.topo_visited = bool(false);
-    ctype.ins_visited = bool(false);
     ctype.enum_visited = bool(false);
     ctype.copy_priv = bool(false);
     ctype.fields_cloned = bool(false);
@@ -2506,7 +2505,6 @@ void amc::FCtype_Init(amc::FCtype& ctype) {
     ctype.c_nossimfile = NULL;
     ctype.topo_idx = i32(0);
     ctype.ns_c_ctype_in_ary = bool(false);
-    ctype.ns_c_ctype_ins_in_ary = bool(false);
     ctype.ind_ctype_next = (amc::FCtype*)-1; // (amc.FDb.ind_ctype) not-in-hash
     ctype.zsl_ctype_pack_tran_next = (amc::FCtype*)-1; // (amc.FDb.zsl_ctype_pack_tran) not-in-list
     ctype.zs_sig_visit_next = (amc::FCtype*)-1; // (amc.FDb.zs_sig_visit) not-in-list
@@ -2519,9 +2517,6 @@ void amc::FCtype_Uninit(amc::FCtype& ctype) {
     amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(row));
     if (p_ns)  {
         c_ctype_Remove(*p_ns, row);// remove ctype from index c_ctype
-    }
-    if (p_ns)  {
-        c_ctype_ins_Remove(*p_ns, row);// remove ctype from index c_ctype_ins
     }
     zsl_ctype_pack_tran_Remove(row); // remove ctype from index zsl_ctype_pack_tran
     zs_sig_visit_Remove(row); // remove ctype from index zs_sig_visit
@@ -6324,7 +6319,7 @@ static void amc::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'7aecbe58b239a5ea9f2ce94e17b8aabb5183e9bc'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'defa565d2cb1fa6ff1382714cec24e761f0a354d'");
 }
 
 // --- amc.FDb._db.StaticCheck
@@ -6931,102 +6926,102 @@ bool amc::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = amc::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dev.license"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ns"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.anonfld"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.argvtype"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.basepool"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.bitfld"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"amcdb.bltin"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cafter"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cascdel"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ccmp"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cdflt"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cextern"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfmt"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cget"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.charset"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.chash"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cppfunc"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cpptype"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.csize"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cstr"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispatch"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispatch_msg"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispctx"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispfilter"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.disptrace"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.falias"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fbase"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fbigend"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fbitset"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fbuf"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcast"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcleanup"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcmap"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcmdline"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcmp"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcompact"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fconst"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcurs"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fdec"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fstep"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fdelay"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fflag"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.findrem"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.finput"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fldoffset"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.floadtuples"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fnoremove"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.foutput"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fprefix"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fregx"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fsort"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ftrace"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.func"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.funique"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fuserinit"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fwddecl"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.gconst"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.gstatic"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.xref"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.usertracefld"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.typefld"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.thash"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.tary"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.substr"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsdb"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.gsymbol"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.hook"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.inlary"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.lenfld"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimvolatile"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.sortfld"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.smallstr"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.rowid"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ptrary"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.pnew"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.pmaskfld"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.pack"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.numstr"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsx"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsproto"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsinclude"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nscpp"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.noxref"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nossimfile"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nocascdel"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.msgtype"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.main"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fprefix"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.listtype"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.llist"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.main"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.msgtype"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.xref"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nocascdel"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nossimfile"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.noxref"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nscpp"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsdb"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsinclude"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsproto"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsx"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.smallstr"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.numstr"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.pack"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.pmaskfld"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.pnew"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ptrary"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.rowid"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.sortfld"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimvolatile"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.substr"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.lenfld"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.inlary"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.hook"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.gsymbol"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.gstatic"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.gconst"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fwddecl"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fuserinit"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.funique"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.func"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ftrace"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fstep"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fsort"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fregx"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.foutput"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fnoremove"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.floadtuples"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fldoffset"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.finput"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.findrem"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fflag"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fdelay"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fdec"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcurs"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fconst"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcompact"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcmp"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcmdline"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcmap"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcleanup"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcast"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fbuf"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fbitset"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fbigend"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fbase"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.falias"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispatch"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.disptrace"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispfilter"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispctx"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispatch_msg"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cstr"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.csize"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cpptype"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cppfunc"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.chash"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.charset"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cget"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfmt"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cextern"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cdflt"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ccmp"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cascdel"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cafter"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.bitfld"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.basepool"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.argvtype"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.anonfld"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dev.targdep"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.tary"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"amcdb.tcurs"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.thash"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.typefld"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.usertracefld"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"amcdb.bltin"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");
@@ -7037,11 +7032,18 @@ bool amc::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 
 // --- amc.FDb._db.LoadTuplesFile
 // Load all finputs from given file.
+// Read tuples from file FNAME into this namespace's in-memory database.
+// If RECURSIVE is TRUE, then also load these tuples into any parent namespaces
+// It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
+// Function returns TRUE if all records were parsed and inserted without error.
+// If the function returns FALSE, use algo_lib::DetachBadTags() for error description
 bool amc::LoadTuplesFile(algo::strptr fname, bool recursive) {
     bool retval = true;
     algo_lib::FFildes fildes;
-    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
-    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    fildes.fd = OpenRead(fname,algo::FileFlags());
+    if (ValidQ(fildes.fd)) {
+        retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    }
     return retval;
 }
 
@@ -11930,15 +11932,6 @@ bool amc::finput_XrefMaybe(amc::FFinput &row) {
             return false;
         }
     }
-    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(row));
-    if (UNLIKELY(!p_ns)) {
-        algo_lib::ResetErrtext() << "amc.bad_xref  index:amc.FDb.ind_ns" << Keyval("key", ns_Get(row));
-        return false;
-    }
-    // insert finput into index c_finput
-    if (true) { // user-defined insert condition
-        c_finput_Insert(*p_ns, row);
-    }
     return retval;
 }
 
@@ -15944,6 +15937,7 @@ static void amc::gen_LoadStatic() {
         ,{ "amcdb.gen  gen:countxref  perns:N  comment:\"\"", amc::gen_countxref }
         ,{ "amcdb.gen  gen:detectinst  perns:N  comment:\"Detect creation access paths\"", amc::gen_detectinst }
         ,{ "amcdb.gen  gen:trace  perns:N  comment:\"Generate trace counters (creates new ctypes)\"", amc::gen_trace }
+        ,{ "amcdb.gen  gen:sortssimfile  perns:N  comment:\"Topologically sort ssimfiles by pkey references\"", amc::gen_sortssimfile }
         ,{ "amcdb.gen  gen:lookuppkey  perns:N  comment:\"Rewrite Pkey->Val\"", amc::gen_lookuppkey }
         ,{ "amcdb.gen  gen:rewrite_regx  perns:N  comment:\"Rewrite RegxSql as Regx, regxtype Sql\"", amc::gen_rewrite_regx }
         ,{ "amcdb.gen  gen:tableenum  perns:N  comment:\"Create enum for tables\"", amc::gen_tableenum }
@@ -22067,6 +22061,142 @@ void amc::ind_license_Reserve(int n) {
     }
 }
 
+// --- amc.FDb.c_ssimfile_sorted.Insert
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+void amc::c_ssimfile_sorted_Insert(amc::FSsimfile& row) {
+    if (bool_Update(row._db_c_ssimfile_sorted_in_ary,true)) {
+        // reserve space
+        c_ssimfile_sorted_Reserve(1);
+        u32 n  = _db.c_ssimfile_sorted_n;
+        u32 at = n;
+        amc::FSsimfile* *elems = _db.c_ssimfile_sorted_elems;
+        elems[at] = &row;
+        _db.c_ssimfile_sorted_n = n+1;
+
+    }
+}
+
+// --- amc.FDb.c_ssimfile_sorted.InsertMaybe
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+bool amc::c_ssimfile_sorted_InsertMaybe(amc::FSsimfile& row) {
+    bool retval = !row._db_c_ssimfile_sorted_in_ary;
+    c_ssimfile_sorted_Insert(row); // check is performed in _Insert again
+    return retval;
+}
+
+// --- amc.FDb.c_ssimfile_sorted.Remove
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void amc::c_ssimfile_sorted_Remove(amc::FSsimfile& row) {
+    if (bool_Update(row._db_c_ssimfile_sorted_in_ary,false)) {
+        int lim = _db.c_ssimfile_sorted_n;
+        amc::FSsimfile* *elems = _db.c_ssimfile_sorted_elems;
+        // search backward, so that most recently added element is found first.
+        // if found, shift array.
+        for (int i = lim-1; i>=0; i--) {
+            amc::FSsimfile* elem = elems[i]; // fetch element
+            if (elem == &row) {
+                int j = i + 1;
+                size_t nbytes = sizeof(amc::FSsimfile*) * (lim - j);
+                memmove(elems + i, elems + j, nbytes);
+                _db.c_ssimfile_sorted_n = lim - 1;
+                break;
+            }
+        }
+    }
+}
+
+// --- amc.FDb.c_ssimfile_sorted.Reserve
+// Reserve space in index for N more elements;
+void amc::c_ssimfile_sorted_Reserve(u32 n) {
+    u32 old_max = _db.c_ssimfile_sorted_max;
+    if (UNLIKELY(_db.c_ssimfile_sorted_n + n > old_max)) {
+        u32 new_max  = u32_Max(4, old_max * 2);
+        u32 old_size = old_max * sizeof(amc::FSsimfile*);
+        u32 new_size = new_max * sizeof(amc::FSsimfile*);
+        void *new_mem = amc::lpool_ReallocMem(_db.c_ssimfile_sorted_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("amc.out_of_memory  field:amc.FDb.c_ssimfile_sorted");
+        }
+        _db.c_ssimfile_sorted_elems = (amc::FSsimfile**)new_mem;
+        _db.c_ssimfile_sorted_max = new_max;
+    }
+}
+
+// --- amc.FDb.zd_ssimfile_todo.Insert
+// Insert row into linked list. If row is already in linked list, do nothing.
+void amc::zd_ssimfile_todo_Insert(amc::FSsimfile& row) {
+    if (!zd_ssimfile_todo_InLlistQ(row)) {
+        amc::FSsimfile* old_tail = _db.zd_ssimfile_todo_tail;
+        row.zd_ssimfile_todo_next = NULL;
+        row.zd_ssimfile_todo_prev = old_tail;
+        _db.zd_ssimfile_todo_tail = &row;
+        amc::FSsimfile **new_row_a = &old_tail->zd_ssimfile_todo_next;
+        amc::FSsimfile **new_row_b = &_db.zd_ssimfile_todo_head;
+        amc::FSsimfile **new_row = old_tail ? new_row_a : new_row_b;
+        *new_row = &row;
+        _db.zd_ssimfile_todo_n++;
+    }
+}
+
+// --- amc.FDb.zd_ssimfile_todo.Remove
+// Remove element from index. If element is not in index, do nothing.
+void amc::zd_ssimfile_todo_Remove(amc::FSsimfile& row) {
+    if (zd_ssimfile_todo_InLlistQ(row)) {
+        amc::FSsimfile* old_head       = _db.zd_ssimfile_todo_head;
+        (void)old_head; // in case it's not used
+        amc::FSsimfile* prev = row.zd_ssimfile_todo_prev;
+        amc::FSsimfile* next = row.zd_ssimfile_todo_next;
+        // if element is first, adjust list head; otherwise, adjust previous element's next
+        amc::FSsimfile **new_next_a = &prev->zd_ssimfile_todo_next;
+        amc::FSsimfile **new_next_b = &_db.zd_ssimfile_todo_head;
+        amc::FSsimfile **new_next = prev ? new_next_a : new_next_b;
+        *new_next = next;
+        // if element is last, adjust list tail; otherwise, adjust next element's prev
+        amc::FSsimfile **new_prev_a = &next->zd_ssimfile_todo_prev;
+        amc::FSsimfile **new_prev_b = &_db.zd_ssimfile_todo_tail;
+        amc::FSsimfile **new_prev = next ? new_prev_a : new_prev_b;
+        *new_prev = prev;
+        _db.zd_ssimfile_todo_n--;
+        row.zd_ssimfile_todo_next=(amc::FSsimfile*)-1; // not-in-list
+    }
+}
+
+// --- amc.FDb.zd_ssimfile_todo.RemoveAll
+// Empty the index. (The rows are not deleted)
+void amc::zd_ssimfile_todo_RemoveAll() {
+    amc::FSsimfile* row = _db.zd_ssimfile_todo_head;
+    _db.zd_ssimfile_todo_head = NULL;
+    _db.zd_ssimfile_todo_tail = NULL;
+    _db.zd_ssimfile_todo_n = 0;
+    while (row) {
+        amc::FSsimfile* row_next = row->zd_ssimfile_todo_next;
+        row->zd_ssimfile_todo_next  = (amc::FSsimfile*)-1;
+        row->zd_ssimfile_todo_prev  = NULL;
+        row = row_next;
+    }
+}
+
+// --- amc.FDb.zd_ssimfile_todo.RemoveFirst
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+amc::FSsimfile* amc::zd_ssimfile_todo_RemoveFirst() {
+    amc::FSsimfile *row = NULL;
+    row = _db.zd_ssimfile_todo_head;
+    if (row) {
+        amc::FSsimfile *next = row->zd_ssimfile_todo_next;
+        _db.zd_ssimfile_todo_head = next;
+        amc::FSsimfile **new_end_a = &next->zd_ssimfile_todo_prev;
+        amc::FSsimfile **new_end_b = &_db.zd_ssimfile_todo_tail;
+        amc::FSsimfile **new_end = next ? new_end_a : new_end_b;
+        *new_end = NULL;
+        _db.zd_ssimfile_todo_n--;
+        row->zd_ssimfile_todo_next = (amc::FSsimfile*)-1; // mark as not-in-list
+    }
+    return row;
+}
+
 // --- amc.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr amc::trace_RowidFind(int t) {
@@ -23675,6 +23805,12 @@ void amc::FDb_Init() {
         FatalErrorExit("out of memory"); // (amc.FDb.ind_license)
     }
     memset(_db.ind_license_buckets_elems, 0, sizeof(amc::FLicense*)*_db.ind_license_buckets_n); // (amc.FDb.ind_license)
+    _db.c_ssimfile_sorted_elems = NULL; // (amc.FDb.c_ssimfile_sorted)
+    _db.c_ssimfile_sorted_n = 0; // (amc.FDb.c_ssimfile_sorted)
+    _db.c_ssimfile_sorted_max = 0; // (amc.FDb.c_ssimfile_sorted)
+    _db.zd_ssimfile_todo_head = NULL; // (amc.FDb.zd_ssimfile_todo)
+    _db.zd_ssimfile_todo_n = 0; // (amc.FDb.zd_ssimfile_todo)
+    _db.zd_ssimfile_todo_tail = NULL; // (amc.FDb.zd_ssimfile_todo)
 
     amc::InitReflection();
     tclass_LoadStatic(); // gen:ns_gstatic  gstatic:amc.FDb.tclass  load amc.FTclass records
@@ -23686,6 +23822,9 @@ void amc::FDb_Init() {
 // --- amc.FDb..Uninit
 void amc::FDb_Uninit() {
     amc::FDb &row = _db; (void)row;
+
+    // amc.FDb.c_ssimfile_sorted.Uninit (Ptrary)  //Global list of ssimfiles topologically sorted by pkey
+    amc::lpool_FreeMem(_db.c_ssimfile_sorted_elems, sizeof(amc::FSsimfile*)*_db.c_ssimfile_sorted_max); // (amc.FDb.c_ssimfile_sorted)
 
     // amc.FDb.ind_license.Uninit (Thash)  //
     // skip destruction of ind_license in global scope
@@ -26052,10 +26191,6 @@ void amc::FFinput_Uninit(amc::FFinput& finput) {
     if (p_field)  {
         c_finput_Remove(*p_field, row);// remove finput from index c_finput
     }
-    amc::FNs* p_ns = amc::ind_ns_Find(ns_Get(row));
-    if (p_ns)  {
-        c_finput_Remove(*p_ns, row);// remove finput from index c_finput
-    }
 }
 
 // --- amc.FFldoffset.msghdr.CopyOut
@@ -27639,70 +27774,6 @@ algo::aryptr<algo::cstring> amc::include_AllocNVal(amc::FNs& ns, int n_elems, co
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
-// --- amc.FNs.c_ctype_ins.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
-void amc::c_ctype_ins_Insert(amc::FNs& ns, amc::FCtype& row) {
-    if (bool_Update(row.ns_c_ctype_ins_in_ary,true)) {
-        // reserve space
-        c_ctype_ins_Reserve(ns, 1);
-        u32 n  = ns.c_ctype_ins_n;
-        u32 at = n;
-        amc::FCtype* *elems = ns.c_ctype_ins_elems;
-        elems[at] = &row;
-        ns.c_ctype_ins_n = n+1;
-
-    }
-}
-
-// --- amc.FNs.c_ctype_ins.InsertMaybe
-// Insert pointer to row in array.
-// If row is already in the array, do nothing.
-// Return value: whether element was inserted into array.
-bool amc::c_ctype_ins_InsertMaybe(amc::FNs& ns, amc::FCtype& row) {
-    bool retval = !row.ns_c_ctype_ins_in_ary;
-    c_ctype_ins_Insert(ns,row); // check is performed in _Insert again
-    return retval;
-}
-
-// --- amc.FNs.c_ctype_ins.Remove
-// Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_ctype_ins_Remove(amc::FNs& ns, amc::FCtype& row) {
-    if (bool_Update(row.ns_c_ctype_ins_in_ary,false)) {
-        int lim = ns.c_ctype_ins_n;
-        amc::FCtype* *elems = ns.c_ctype_ins_elems;
-        // search backward, so that most recently added element is found first.
-        // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
-            amc::FCtype* elem = elems[i]; // fetch element
-            if (elem == &row) {
-                int j = i + 1;
-                size_t nbytes = sizeof(amc::FCtype*) * (lim - j);
-                memmove(elems + i, elems + j, nbytes);
-                ns.c_ctype_ins_n = lim - 1;
-                break;
-            }
-        }
-    }
-}
-
-// --- amc.FNs.c_ctype_ins.Reserve
-// Reserve space in index for N more elements;
-void amc::c_ctype_ins_Reserve(amc::FNs& ns, u32 n) {
-    u32 old_max = ns.c_ctype_ins_max;
-    if (UNLIKELY(ns.c_ctype_ins_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(amc::FCtype*);
-        u32 new_size = new_max * sizeof(amc::FCtype*);
-        void *new_mem = amc::lpool_ReallocMem(ns.c_ctype_ins_elems, old_size, new_size);
-        if (UNLIKELY(!new_mem)) {
-            FatalErrorExit("amc.out_of_memory  field:amc.FNs.c_ctype_ins");
-        }
-        ns.c_ctype_ins_elems = (amc::FCtype**)new_mem;
-        ns.c_ctype_ins_max = new_max;
-    }
-}
-
 // --- amc.FNs.c_dispsig.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
@@ -28193,70 +28264,6 @@ void amc::c_outfile_Reserve(amc::FNs& ns, u32 n) {
     }
 }
 
-// --- amc.FNs.c_finput.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
-void amc::c_finput_Insert(amc::FNs& ns, amc::FFinput& row) {
-    if (bool_Update(row.ns_c_finput_in_ary,true)) {
-        // reserve space
-        c_finput_Reserve(ns, 1);
-        u32 n  = ns.c_finput_n;
-        u32 at = n;
-        amc::FFinput* *elems = ns.c_finput_elems;
-        elems[at] = &row;
-        ns.c_finput_n = n+1;
-
-    }
-}
-
-// --- amc.FNs.c_finput.InsertMaybe
-// Insert pointer to row in array.
-// If row is already in the array, do nothing.
-// Return value: whether element was inserted into array.
-bool amc::c_finput_InsertMaybe(amc::FNs& ns, amc::FFinput& row) {
-    bool retval = !row.ns_c_finput_in_ary;
-    c_finput_Insert(ns,row); // check is performed in _Insert again
-    return retval;
-}
-
-// --- amc.FNs.c_finput.Remove
-// Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_finput_Remove(amc::FNs& ns, amc::FFinput& row) {
-    if (bool_Update(row.ns_c_finput_in_ary,false)) {
-        int lim = ns.c_finput_n;
-        amc::FFinput* *elems = ns.c_finput_elems;
-        // search backward, so that most recently added element is found first.
-        // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
-            amc::FFinput* elem = elems[i]; // fetch element
-            if (elem == &row) {
-                int j = i + 1;
-                size_t nbytes = sizeof(amc::FFinput*) * (lim - j);
-                memmove(elems + i, elems + j, nbytes);
-                ns.c_finput_n = lim - 1;
-                break;
-            }
-        }
-    }
-}
-
-// --- amc.FNs.c_finput.Reserve
-// Reserve space in index for N more elements;
-void amc::c_finput_Reserve(amc::FNs& ns, u32 n) {
-    u32 old_max = ns.c_finput_max;
-    if (UNLIKELY(ns.c_finput_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(amc::FFinput*);
-        u32 new_size = new_max * sizeof(amc::FFinput*);
-        void *new_mem = amc::lpool_ReallocMem(ns.c_finput_elems, old_size, new_size);
-        if (UNLIKELY(!new_mem)) {
-            FatalErrorExit("amc.out_of_memory  field:amc.FNs.c_finput");
-        }
-        ns.c_finput_elems = (amc::FFinput**)new_mem;
-        ns.c_finput_max = new_max;
-    }
-}
-
 // --- amc.FNs.c_foutput.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
@@ -28513,79 +28520,6 @@ void amc::c_nsinclude_Reserve(amc::FNs& ns, u32 n) {
     }
 }
 
-// --- amc.FNs.c_ssimfile.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
-void amc::c_ssimfile_Insert(amc::FNs& ns, amc::FSsimfile& row) {
-    // reserve space
-    c_ssimfile_Reserve(ns, 1);
-    u32 n  = ns.c_ssimfile_n;
-    u32 at = n;
-    amc::FSsimfile* *elems = ns.c_ssimfile_elems;
-    elems[at] = &row;
-    ns.c_ssimfile_n = n+1;
-
-}
-
-// --- amc.FNs.c_ssimfile.ScanInsertMaybe
-// Insert pointer to row in array.
-// If row is already in the array, do nothing.
-// Linear search is used to locate the element.
-// Return value: whether element was inserted into array.
-bool amc::c_ssimfile_ScanInsertMaybe(amc::FNs& ns, amc::FSsimfile& row) {
-    bool retval = true;
-    u32 n  = ns.c_ssimfile_n;
-    for (u32 i = 0; i < n; i++) {
-        if (ns.c_ssimfile_elems[i] == &row) {
-            retval = false;
-            break;
-        }
-    }
-    if (retval) {
-        // reserve space
-        c_ssimfile_Reserve(ns, 1);
-        ns.c_ssimfile_elems[n] = &row;
-        ns.c_ssimfile_n = n+1;
-    }
-    return retval;
-}
-
-// --- amc.FNs.c_ssimfile.Remove
-// Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc::c_ssimfile_Remove(amc::FNs& ns, amc::FSsimfile& row) {
-    int lim = ns.c_ssimfile_n;
-    amc::FSsimfile* *elems = ns.c_ssimfile_elems;
-    // search backward, so that most recently added element is found first.
-    // if found, shift array.
-    for (int i = lim-1; i>=0; i--) {
-        amc::FSsimfile* elem = elems[i]; // fetch element
-        if (elem == &row) {
-            int j = i + 1;
-            size_t nbytes = sizeof(amc::FSsimfile*) * (lim - j);
-            memmove(elems + i, elems + j, nbytes);
-            ns.c_ssimfile_n = lim - 1;
-            break;
-        }
-    }
-}
-
-// --- amc.FNs.c_ssimfile.Reserve
-// Reserve space in index for N more elements;
-void amc::c_ssimfile_Reserve(amc::FNs& ns, u32 n) {
-    u32 old_max = ns.c_ssimfile_max;
-    if (UNLIKELY(ns.c_ssimfile_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(amc::FSsimfile*);
-        u32 new_size = new_max * sizeof(amc::FSsimfile*);
-        void *new_mem = amc::lpool_ReallocMem(ns.c_ssimfile_elems, old_size, new_size);
-        if (UNLIKELY(!new_mem)) {
-            FatalErrorExit("amc.out_of_memory  field:amc.FNs.c_ssimfile");
-        }
-        ns.c_ssimfile_elems = (amc::FSsimfile**)new_mem;
-        ns.c_ssimfile_max = new_max;
-    }
-}
-
 // --- amc.FNs..Init
 // Set all fields to initial values.
 void amc::FNs_Init(amc::FNs& ns) {
@@ -28610,9 +28544,6 @@ void amc::FNs_Init(amc::FNs& ns) {
     ns.include_elems 	= 0; // (amc.FNs.include)
     ns.include_n     	= 0; // (amc.FNs.include)
     ns.include_max   	= 0; // (amc.FNs.include)
-    ns.c_ctype_ins_elems = NULL; // (amc.FNs.c_ctype_ins)
-    ns.c_ctype_ins_n = 0; // (amc.FNs.c_ctype_ins)
-    ns.c_ctype_ins_max = 0; // (amc.FNs.c_ctype_ins)
     ns.topo_visited = bool(false);
     ns.c_dispsig_elems = NULL; // (amc.FNs.c_dispsig)
     ns.c_dispsig_n = 0; // (amc.FNs.c_dispsig)
@@ -28641,9 +28572,6 @@ void amc::FNs_Init(amc::FNs& ns) {
     ns.c_outfile_elems = NULL; // (amc.FNs.c_outfile)
     ns.c_outfile_n = 0; // (amc.FNs.c_outfile)
     ns.c_outfile_max = 0; // (amc.FNs.c_outfile)
-    ns.c_finput_elems = NULL; // (amc.FNs.c_finput)
-    ns.c_finput_n = 0; // (amc.FNs.c_finput)
-    ns.c_finput_max = 0; // (amc.FNs.c_finput)
     ns.c_foutput_elems = NULL; // (amc.FNs.c_foutput)
     ns.c_foutput_n = 0; // (amc.FNs.c_foutput)
     ns.c_foutput_max = 0; // (amc.FNs.c_foutput)
@@ -28658,9 +28586,6 @@ void amc::FNs_Init(amc::FNs& ns) {
     ns.c_nsinclude_max = 0; // (amc.FNs.c_nsinclude)
     ns.c_nscpp = NULL;
     ns.p_license = NULL;
-    ns.c_ssimfile_elems = NULL; // (amc.FNs.c_ssimfile)
-    ns.c_ssimfile_n = 0; // (amc.FNs.c_ssimfile)
-    ns.c_ssimfile_max = 0; // (amc.FNs.c_ssimfile)
     ns.ind_ns_next = (amc::FNs*)-1; // (amc.FDb.ind_ns) not-in-hash
 }
 
@@ -28669,9 +28594,6 @@ void amc::FNs_Uninit(amc::FNs& ns) {
     amc::FNs &row = ns; (void)row;
     c_outfile_Cascdel(ns); // dmmeta.cascdel:amc.FNs.c_outfile
     ind_ns_Remove(row); // remove ns from index ind_ns
-
-    // amc.FNs.c_ssimfile.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ns.c_ssimfile_elems, sizeof(amc::FSsimfile*)*ns.c_ssimfile_max); // (amc.FNs.c_ssimfile)
 
     // amc.FNs.c_nsinclude.Uninit (Ptrary)  //
     amc::lpool_FreeMem(ns.c_nsinclude_elems, sizeof(amc::FNsinclude*)*ns.c_nsinclude_max); // (amc.FNs.c_nsinclude)
@@ -28684,9 +28606,6 @@ void amc::FNs_Uninit(amc::FNs& ns) {
 
     // amc.FNs.c_foutput.Uninit (Ptrary)  //
     amc::lpool_FreeMem(ns.c_foutput_elems, sizeof(amc::FFoutput*)*ns.c_foutput_max); // (amc.FNs.c_foutput)
-
-    // amc.FNs.c_finput.Uninit (Ptrary)  //
-    amc::lpool_FreeMem(ns.c_finput_elems, sizeof(amc::FFinput*)*ns.c_finput_max); // (amc.FNs.c_finput)
 
     // amc.FNs.c_outfile.Uninit (Ptrary)  //
     amc::lpool_FreeMem(ns.c_outfile_elems, sizeof(amc::FOutfile*)*ns.c_outfile_max); // (amc.FNs.c_outfile)
@@ -28708,9 +28627,6 @@ void amc::FNs_Uninit(amc::FNs& ns) {
 
     // amc.FNs.c_dispsig.Uninit (Ptrary)  //
     amc::lpool_FreeMem(ns.c_dispsig_elems, sizeof(amc::FDispsig*)*ns.c_dispsig_max); // (amc.FNs.c_dispsig)
-
-    // amc.FNs.c_ctype_ins.Uninit (Ptrary)  //Ctypes that can be inserted with LoadTuples, in right order
-    amc::lpool_FreeMem(ns.c_ctype_ins_elems, sizeof(amc::FCtype*)*ns.c_ctype_ins_max); // (amc.FNs.c_ctype_ins)
 
     // amc.FNs.include.Uninit (Tary)  //
     // remove all elements from amc.FNs.include
@@ -29286,6 +29202,20 @@ algo::Smallstr50 amc::name_Get(amc::FSsimfile& ssimfile) {
     return ret;
 }
 
+// --- amc.FSsimfile..Init
+// Set all fields to initial values.
+void amc::FSsimfile_Init(amc::FSsimfile& ssimfile) {
+    ssimfile.p_ctype = NULL;
+    ssimfile.c_ssimvolatile = NULL;
+    ssimfile.topovisit = bool(false);
+    ssimfile.topoindex = i32(0);
+    ssimfile.input_select = bool(false);
+    ssimfile._db_c_ssimfile_sorted_in_ary = bool(false);
+    ssimfile.ind_ssimfile_next = (amc::FSsimfile*)-1; // (amc.FDb.ind_ssimfile) not-in-hash
+    ssimfile.zd_ssimfile_todo_next = (amc::FSsimfile*)-1; // (amc.FDb.zd_ssimfile_todo) not-in-list
+    ssimfile.zd_ssimfile_todo_prev = NULL; // (amc.FDb.zd_ssimfile_todo)
+}
+
 // --- amc.FSsimfile..Uninit
 void amc::FSsimfile_Uninit(amc::FSsimfile& ssimfile) {
     amc::FSsimfile &row = ssimfile; (void)row;
@@ -29294,6 +29224,8 @@ void amc::FSsimfile_Uninit(amc::FSsimfile& ssimfile) {
     if (p_ctype)  {
         c_ssimfile_Remove(*p_ctype, row);// remove ssimfile from index c_ssimfile
     }
+    c_ssimfile_sorted_Remove(row); // remove ssimfile from index c_ssimfile_sorted
+    zd_ssimfile_todo_Remove(row); // remove ssimfile from index zd_ssimfile_todo
 }
 
 // --- amc.FSsimvolatile.base.CopyOut

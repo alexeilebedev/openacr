@@ -412,21 +412,21 @@ bool gcli::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = gcli::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gact"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gclicmdf2j"),recursive);
         retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtype"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gclicmdt"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gfld"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gmethod"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.grepo"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.grepogitport"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.grepossh"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gstatet"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtbl"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtblactfld"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtypeh"),recursive);
         retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtypeprefix"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtypeh"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gact"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtbl"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gfld"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtblactfld"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gstatet"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.grepossh"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.grepogitport"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.grepo"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gmethod"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gclicmdt"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gclicmdf2j"),recursive);
+        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");
@@ -437,11 +437,18 @@ bool gcli::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 
 // --- gcli.FDb._db.LoadTuplesFile
 // Load all finputs from given file.
+// Read tuples from file FNAME into this namespace's in-memory database.
+// If RECURSIVE is TRUE, then also load these tuples into any parent namespaces
+// It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
+// Function returns TRUE if all records were parsed and inserted without error.
+// If the function returns FALSE, use algo_lib::DetachBadTags() for error description
 bool gcli::LoadTuplesFile(algo::strptr fname, bool recursive) {
     bool retval = true;
     algo_lib::FFildes fildes;
-    fildes.fd = OpenRead(fname,algo_FileFlags__throw);
-    retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    fildes.fd = OpenRead(fname,algo::FileFlags());
+    if (ValidQ(fildes.fd)) {
+        retval = LoadTuplesFd(fildes.fd, fname, recursive);
+    }
     return retval;
 }
 

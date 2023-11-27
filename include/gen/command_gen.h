@@ -140,181 +140,182 @@ enum command_FieldIdEnum {                             // command.FieldId.value
     ,command_FieldId_related                    = 107
     ,command_FieldId_notssimfile                = 108
     ,command_FieldId_checkable                  = 109
-    ,command_FieldId_nsdb                       = 110
-    ,command_FieldId_fkey                       = 111
-    ,command_FieldId_start                      = 112
-    ,command_FieldId_stop                       = 113
-    ,command_FieldId_abort                      = 114
-    ,command_FieldId_shell                      = 115
-    ,command_FieldId_serv                       = 116
-    ,command_FieldId_in_dir                     = 117
-    ,command_FieldId_proto                      = 118
-    ,command_FieldId_trace                      = 119
-    ,command_FieldId_fconst                     = 120
-    ,command_FieldId_gconst                     = 121
-    ,command_FieldId_key                        = 122
-    ,command_FieldId_include                    = 123
-    ,command_FieldId_dot                        = 124
-    ,command_FieldId_xns                        = 125
-    ,command_FieldId_noinput                    = 126
-    ,command_FieldId_render                     = 127
-    ,command_FieldId_id                         = 128
-    ,command_FieldId_file_prefix                = 129
-    ,command_FieldId_nchild                     = 130
-    ,command_FieldId_blocking                   = 131
-    ,command_FieldId_nmsg                       = 132
-    ,command_FieldId_timeout                    = 133
-    ,command_FieldId_recvdelay_ns               = 134
-    ,command_FieldId_senddelay_ns               = 135
-    ,command_FieldId_msgsize_min                = 136
-    ,command_FieldId_msgsize_max                = 137
-    ,command_FieldId_bufsize                    = 138
-    ,command_FieldId_recvdelay                  = 139
-    ,command_FieldId_amctest                    = 140
-    ,command_FieldId_dofork                     = 141
-    ,command_FieldId_q                          = 142
-    ,command_FieldId_cijob                      = 143
-    ,command_FieldId_capture                    = 144
-    ,command_FieldId_exec                       = 145
-    ,command_FieldId_astr                       = 146
-    ,command_FieldId_anum                       = 147
-    ,command_FieldId_adbl                       = 148
-    ,command_FieldId_aflag                      = 149
-    ,command_FieldId_str                        = 150
-    ,command_FieldId_num                        = 151
-    ,command_FieldId_dbl                        = 152
-    ,command_FieldId_flag                       = 153
-    ,command_FieldId_dstr                       = 154
-    ,command_FieldId_dnum                       = 155
-    ,command_FieldId_ddbl                       = 156
-    ,command_FieldId_dflag                      = 157
-    ,command_FieldId_mstr                       = 158
-    ,command_FieldId_mnum                       = 159
-    ,command_FieldId_mdbl                       = 160
-    ,command_FieldId_amnum                      = 161
-    ,command_FieldId_cconst                     = 162
-    ,command_FieldId_dregx                      = 163
-    ,command_FieldId_dpkey                      = 164
-    ,command_FieldId_comptest                   = 165
-    ,command_FieldId_mdbg                       = 166
-    ,command_FieldId_run                        = 167
-    ,command_FieldId_printinput                 = 168
-    ,command_FieldId_normalize                  = 169
-    ,command_FieldId_covcapture                 = 170
-    ,command_FieldId_covcheck                   = 171
-    ,command_FieldId_compdir                    = 172
-    ,command_FieldId_check_untracked            = 173
-    ,command_FieldId_memcheck                   = 174
-    ,command_FieldId_callgrind                  = 175
-    ,command_FieldId_stream                     = 176
-    ,command_FieldId_i                          = 177
-    ,command_FieldId_b                          = 178
-    ,command_FieldId_covdir                     = 179
-    ,command_FieldId_logfile                    = 180
-    ,command_FieldId_runcmd                     = 181
-    ,command_FieldId_exclude                    = 182
-    ,command_FieldId_mergepath                  = 183
-    ,command_FieldId_gcov                       = 184
-    ,command_FieldId_ssim                       = 185
-    ,command_FieldId_xmlpretty                  = 186
-    ,command_FieldId_summary                    = 187
-    ,command_FieldId_reprofile                  = 188
-    ,command_FieldId_args                       = 189
-    ,command_FieldId_inputfile                  = 190
-    ,command_FieldId_fuzzstrat                  = 191
-    ,command_FieldId_seed                       = 192
-    ,command_FieldId_testprob                   = 193
-    ,command_FieldId_gtblacttst                 = 194
-    ,command_FieldId_mr                         = 195
-    ,command_FieldId_note                       = 196
-    ,command_FieldId_skip_init                  = 197
-    ,command_FieldId_skip_git_init              = 198
-    ,command_FieldId_ncmd                       = 199
-    ,command_FieldId_nofork                     = 200
-    ,command_FieldId_perf_secs                  = 201
-    ,command_FieldId_pertest_timeout            = 202
-    ,command_FieldId_stats                      = 203
-    ,command_FieldId_enable                     = 204
-    ,command_FieldId_disable                    = 205
-    ,command_FieldId_gc                         = 206
-    ,command_FieldId_dir                        = 207
-    ,command_FieldId_hitrate                    = 208
-    ,command_FieldId_after                      = 209
-    ,command_FieldId_selector                   = 210
-    ,command_FieldId_fields                     = 211
-    ,command_FieldId_accept                     = 212
-    ,command_FieldId_approve                    = 213
-    ,command_FieldId_needs_work                 = 214
-    ,command_FieldId_authdir                    = 215
-    ,command_FieldId_gitdir                     = 216
-    ,command_FieldId_show_gitlab_system_notes   = 217
-    ,command_FieldId_complooo                   = 218
-    ,command_FieldId_attach                     = 219
-    ,command_FieldId_catchthrow                 = 220
-    ,command_FieldId_tui                        = 221
-    ,command_FieldId_bcmd                       = 222
-    ,command_FieldId_emacs                      = 223
-    ,command_FieldId_manywin                    = 224
-    ,command_FieldId_follow_child               = 225
-    ,command_FieldId_py                         = 226
-    ,command_FieldId_writessimfile              = 227
-    ,command_FieldId_url                        = 228
-    ,command_FieldId_tables                     = 229
-    ,command_FieldId_nologo                     = 230
-    ,command_FieldId_baddbok                    = 231
-    ,command_FieldId_move                       = 232
-    ,command_FieldId_dedup                      = 233
-    ,command_FieldId_commit                     = 234
-    ,command_FieldId_undo                       = 235
-    ,command_FieldId_hash                       = 236
-    ,command_FieldId_expr                       = 237
-    ,command_FieldId_style                      = 238
-    ,command_FieldId_match                      = 239
-    ,command_FieldId_string                     = 240
-    ,command_FieldId_show                       = 241
-    ,command_FieldId_name                       = 242
-    ,command_FieldId_reset                      = 243
-    ,command_FieldId_diff                       = 244
-    ,command_FieldId_files                      = 245
-    ,command_FieldId_body                       = 246
-    ,command_FieldId_targsrc                    = 247
-    ,command_FieldId_func                       = 248
-    ,command_FieldId_nextfile                   = 249
-    ,command_FieldId_other                      = 250
-    ,command_FieldId_updateproto                = 251
-    ,command_FieldId_listfunc                   = 252
-    ,command_FieldId_iffy                       = 253
-    ,command_FieldId_gen                        = 254
-    ,command_FieldId_showloc                    = 255
-    ,command_FieldId_showstatic                 = 256
-    ,command_FieldId_showsortkey                = 257
-    ,command_FieldId_sortname                   = 258
-    ,command_FieldId_baddecl                    = 259
-    ,command_FieldId_indent                     = 260
-    ,command_FieldId_update_copyright           = 261
-    ,command_FieldId_scriptfile                 = 262
-    ,command_FieldId_linelim                    = 263
-    ,command_FieldId_strayfile                  = 264
-    ,command_FieldId_badchar                    = 265
-    ,command_FieldId_badline                    = 266
-    ,command_FieldId_expand                     = 267
-    ,command_FieldId_ignoreQuote                = 268
-    ,command_FieldId_maxpacket                  = 269
-    ,command_FieldId_db                         = 270
-    ,command_FieldId_createdb                   = 271
-    ,command_FieldId_typetag                    = 272
-    ,command_FieldId_format                     = 273
-    ,command_FieldId_tocamelcase                = 274
-    ,command_FieldId_tolowerunder               = 275
-    ,command_FieldId_pathcomp                   = 276
-    ,command_FieldId_fname                      = 277
-    ,command_FieldId_outseparator               = 278
-    ,command_FieldId_header                     = 279
-    ,command_FieldId_prefer_signed              = 280
-    ,command_FieldId_value                      = 281
+    ,command_FieldId_r                          = 110
+    ,command_FieldId_nsdb                       = 111
+    ,command_FieldId_fkey                       = 112
+    ,command_FieldId_start                      = 113
+    ,command_FieldId_stop                       = 114
+    ,command_FieldId_abort                      = 115
+    ,command_FieldId_shell                      = 116
+    ,command_FieldId_serv                       = 117
+    ,command_FieldId_in_dir                     = 118
+    ,command_FieldId_proto                      = 119
+    ,command_FieldId_trace                      = 120
+    ,command_FieldId_fconst                     = 121
+    ,command_FieldId_gconst                     = 122
+    ,command_FieldId_key                        = 123
+    ,command_FieldId_include                    = 124
+    ,command_FieldId_dot                        = 125
+    ,command_FieldId_xns                        = 126
+    ,command_FieldId_noinput                    = 127
+    ,command_FieldId_render                     = 128
+    ,command_FieldId_id                         = 129
+    ,command_FieldId_file_prefix                = 130
+    ,command_FieldId_nchild                     = 131
+    ,command_FieldId_blocking                   = 132
+    ,command_FieldId_nmsg                       = 133
+    ,command_FieldId_timeout                    = 134
+    ,command_FieldId_recvdelay_ns               = 135
+    ,command_FieldId_senddelay_ns               = 136
+    ,command_FieldId_msgsize_min                = 137
+    ,command_FieldId_msgsize_max                = 138
+    ,command_FieldId_bufsize                    = 139
+    ,command_FieldId_recvdelay                  = 140
+    ,command_FieldId_amctest                    = 141
+    ,command_FieldId_dofork                     = 142
+    ,command_FieldId_q                          = 143
+    ,command_FieldId_cijob                      = 144
+    ,command_FieldId_capture                    = 145
+    ,command_FieldId_exec                       = 146
+    ,command_FieldId_astr                       = 147
+    ,command_FieldId_anum                       = 148
+    ,command_FieldId_adbl                       = 149
+    ,command_FieldId_aflag                      = 150
+    ,command_FieldId_str                        = 151
+    ,command_FieldId_num                        = 152
+    ,command_FieldId_dbl                        = 153
+    ,command_FieldId_flag                       = 154
+    ,command_FieldId_dstr                       = 155
+    ,command_FieldId_dnum                       = 156
+    ,command_FieldId_ddbl                       = 157
+    ,command_FieldId_dflag                      = 158
+    ,command_FieldId_mstr                       = 159
+    ,command_FieldId_mnum                       = 160
+    ,command_FieldId_mdbl                       = 161
+    ,command_FieldId_amnum                      = 162
+    ,command_FieldId_cconst                     = 163
+    ,command_FieldId_dregx                      = 164
+    ,command_FieldId_dpkey                      = 165
+    ,command_FieldId_comptest                   = 166
+    ,command_FieldId_mdbg                       = 167
+    ,command_FieldId_run                        = 168
+    ,command_FieldId_printinput                 = 169
+    ,command_FieldId_normalize                  = 170
+    ,command_FieldId_covcapture                 = 171
+    ,command_FieldId_covcheck                   = 172
+    ,command_FieldId_compdir                    = 173
+    ,command_FieldId_check_untracked            = 174
+    ,command_FieldId_memcheck                   = 175
+    ,command_FieldId_callgrind                  = 176
+    ,command_FieldId_stream                     = 177
+    ,command_FieldId_i                          = 178
+    ,command_FieldId_b                          = 179
+    ,command_FieldId_covdir                     = 180
+    ,command_FieldId_logfile                    = 181
+    ,command_FieldId_runcmd                     = 182
+    ,command_FieldId_exclude                    = 183
+    ,command_FieldId_mergepath                  = 184
+    ,command_FieldId_gcov                       = 185
+    ,command_FieldId_ssim                       = 186
+    ,command_FieldId_xmlpretty                  = 187
+    ,command_FieldId_summary                    = 188
+    ,command_FieldId_reprofile                  = 189
+    ,command_FieldId_args                       = 190
+    ,command_FieldId_inputfile                  = 191
+    ,command_FieldId_fuzzstrat                  = 192
+    ,command_FieldId_seed                       = 193
+    ,command_FieldId_testprob                   = 194
+    ,command_FieldId_gtblacttst                 = 195
+    ,command_FieldId_mr                         = 196
+    ,command_FieldId_note                       = 197
+    ,command_FieldId_skip_init                  = 198
+    ,command_FieldId_skip_git_init              = 199
+    ,command_FieldId_ncmd                       = 200
+    ,command_FieldId_nofork                     = 201
+    ,command_FieldId_perf_secs                  = 202
+    ,command_FieldId_pertest_timeout            = 203
+    ,command_FieldId_stats                      = 204
+    ,command_FieldId_enable                     = 205
+    ,command_FieldId_disable                    = 206
+    ,command_FieldId_gc                         = 207
+    ,command_FieldId_dir                        = 208
+    ,command_FieldId_hitrate                    = 209
+    ,command_FieldId_after                      = 210
+    ,command_FieldId_selector                   = 211
+    ,command_FieldId_fields                     = 212
+    ,command_FieldId_accept                     = 213
+    ,command_FieldId_approve                    = 214
+    ,command_FieldId_needs_work                 = 215
+    ,command_FieldId_authdir                    = 216
+    ,command_FieldId_gitdir                     = 217
+    ,command_FieldId_show_gitlab_system_notes   = 218
+    ,command_FieldId_complooo                   = 219
+    ,command_FieldId_attach                     = 220
+    ,command_FieldId_catchthrow                 = 221
+    ,command_FieldId_tui                        = 222
+    ,command_FieldId_bcmd                       = 223
+    ,command_FieldId_emacs                      = 224
+    ,command_FieldId_manywin                    = 225
+    ,command_FieldId_follow_child               = 226
+    ,command_FieldId_py                         = 227
+    ,command_FieldId_writessimfile              = 228
+    ,command_FieldId_url                        = 229
+    ,command_FieldId_tables                     = 230
+    ,command_FieldId_nologo                     = 231
+    ,command_FieldId_baddbok                    = 232
+    ,command_FieldId_move                       = 233
+    ,command_FieldId_dedup                      = 234
+    ,command_FieldId_commit                     = 235
+    ,command_FieldId_undo                       = 236
+    ,command_FieldId_hash                       = 237
+    ,command_FieldId_expr                       = 238
+    ,command_FieldId_style                      = 239
+    ,command_FieldId_match                      = 240
+    ,command_FieldId_string                     = 241
+    ,command_FieldId_show                       = 242
+    ,command_FieldId_name                       = 243
+    ,command_FieldId_reset                      = 244
+    ,command_FieldId_diff                       = 245
+    ,command_FieldId_files                      = 246
+    ,command_FieldId_body                       = 247
+    ,command_FieldId_targsrc                    = 248
+    ,command_FieldId_func                       = 249
+    ,command_FieldId_nextfile                   = 250
+    ,command_FieldId_other                      = 251
+    ,command_FieldId_updateproto                = 252
+    ,command_FieldId_listfunc                   = 253
+    ,command_FieldId_iffy                       = 254
+    ,command_FieldId_gen                        = 255
+    ,command_FieldId_showloc                    = 256
+    ,command_FieldId_showstatic                 = 257
+    ,command_FieldId_showsortkey                = 258
+    ,command_FieldId_sortname                   = 259
+    ,command_FieldId_baddecl                    = 260
+    ,command_FieldId_indent                     = 261
+    ,command_FieldId_update_copyright           = 262
+    ,command_FieldId_scriptfile                 = 263
+    ,command_FieldId_linelim                    = 264
+    ,command_FieldId_strayfile                  = 265
+    ,command_FieldId_badchar                    = 266
+    ,command_FieldId_badline                    = 267
+    ,command_FieldId_expand                     = 268
+    ,command_FieldId_ignoreQuote                = 269
+    ,command_FieldId_maxpacket                  = 270
+    ,command_FieldId_db                         = 271
+    ,command_FieldId_createdb                   = 272
+    ,command_FieldId_typetag                    = 273
+    ,command_FieldId_format                     = 274
+    ,command_FieldId_tocamelcase                = 275
+    ,command_FieldId_tolowerunder               = 276
+    ,command_FieldId_pathcomp                   = 277
+    ,command_FieldId_fname                      = 278
+    ,command_FieldId_outseparator               = 279
+    ,command_FieldId_header                     = 280
+    ,command_FieldId_prefer_signed              = 281
+    ,command_FieldId_value                      = 282
 };
 
-enum { command_FieldIdEnum_N = 282 };
+enum { command_FieldIdEnum_N = 283 };
 
 
 // --- command_atf_cmdline_fconst_Enum
@@ -1188,19 +1189,23 @@ void                 acr_ed_proc_Uninit(command::acr_ed_proc& parent) __attribut
 // --- command.acr_in
 // access: command.acr_in_proc.acr_in (Exec)
 struct acr_in { // command.acr_in
-    algo_lib::Regx   ns;            // Sql Regx of dmmeta::Ns
+    algo_lib::Regx   ns;            //   ""  Sql Regx of dmmeta::Ns
     bool             data;          //   false  List ssimfile contents
     bool             sigcheck;      //   true  Output sigcheck records for schema version mismatch detection
     bool             list;          //   false  List ssimfile names
+    bool             t;             //   false  (with -list) Tree mode
     algo::cstring    data_dir;      //   "data"  Directory with ssimfiles
     algo::cstring    schema;        //   "data"
     algo::cstring    related;       //   ""  Select only tuples related to specified acr key
     algo_lib::Regx   notssimfile;   //   ""  Sql Regx of dmmeta::Ssimfile
     bool             checkable;     //   false  Ensure output passes acr -check
+    algo_lib::Regx   r;             //   ""  Sql Regx of dmmeta::Ssimfile
     acr_in();
 private:
     // reftype Regx of command.acr_in.ns prohibits copy
     // reftype Regx of command.acr_in.notssimfile prohibits copy
+    // reftype Regx of command.acr_in.r prohibits copy
+    // ... and several other reasons
     acr_in(const acr_in&){ /*disallow copy constructor */}
     void operator =(const acr_in&){ /*disallow direct assignment */}
 };
@@ -1216,6 +1221,12 @@ void                 notssimfile_Print(command::acr_in& parent, algo::cstring &o
 // Read Regx from string
 // Convert string to field. Return success value
 bool                 notssimfile_ReadStrptrMaybe(command::acr_in& parent, algo::strptr in) __attribute__((nothrow));
+
+// Print back to string
+void                 r_Print(command::acr_in& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+bool                 r_ReadStrptrMaybe(command::acr_in& parent, algo::strptr in) __attribute__((nothrow));
 
 bool                 acr_in_ReadFieldMaybe(command::acr_in &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::acr_in from attributes of ascii tuple TUPLE
