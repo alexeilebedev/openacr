@@ -919,6 +919,12 @@ void                 c_gclicmd_Remove(gcli::FGclicmd& row) __attribute__((nothro
 void                 c_gclicmd_RemoveAll() __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_gclicmd_Reserve(u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+gcli::FGclicmd&      c_gclicmd_qFind(u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 c_gclicmd_InAryQ(gcli::FGclicmd& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+gcli::FGclicmd&      c_gclicmd_qLast() __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1598,6 +1604,12 @@ void                 c_gfld_Remove(gcli::FGfld& row) __attribute__((nothrow));
 void                 c_gfld_RemoveAll() __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_gfld_Reserve(u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+gcli::FGfld&         c_gfld_qFind(u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 c_gfld_InAryQ(gcli::FGfld& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+gcli::FGfld&         c_gfld_qLast() __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -2056,6 +2068,10 @@ void                 c_tuples_Remove(gcli::FGclicmd& gclicmd, gcli::FTuples& row
 void                 c_tuples_RemoveAll(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_tuples_Reserve(gcli::FGclicmd& gclicmd, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+gcli::FTuples&       c_tuples_qFind(gcli::FGclicmd& gclicmd, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+gcli::FTuples&       c_tuples_qLast(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 
 // Invoke function by pointer
 void                 step_Call(gcli::FGclicmd& gclicmd, gcli::FGclicmd& arg) __attribute__((nothrow));
@@ -2081,6 +2097,12 @@ void                 c_gclicmdarg_Remove(gcli::FGclicmd& gclicmd, gcli::FGclicmd
 void                 c_gclicmdarg_RemoveAll(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_gclicmdarg_Reserve(gcli::FGclicmd& gclicmd, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+gcli::FGclicmdarg&   c_gclicmdarg_qFind(gcli::FGclicmd& gclicmd, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 gclicmd_c_gclicmdarg_InAryQ(gcli::FGclicmdarg& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+gcli::FGclicmdarg&   c_gclicmdarg_qLast(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_gclicmdc_EmptyQ(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
@@ -2103,6 +2125,12 @@ void                 c_gclicmdc_Remove(gcli::FGclicmd& gclicmd, gcli::FGclicmdc&
 void                 c_gclicmdc_RemoveAll(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_gclicmdc_Reserve(gcli::FGclicmd& gclicmd, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+gcli::FGclicmdc&     c_gclicmdc_qFind(gcli::FGclicmd& gclicmd, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 gclicmd_c_gclicmdc_InAryQ(gcli::FGclicmdc& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+gcli::FGclicmdc&     c_gclicmdc_qLast(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_gclicmdf2j_EmptyQ(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
@@ -2125,6 +2153,12 @@ void                 c_gclicmdf2j_Remove(gcli::FGclicmd& gclicmd, gcli::FGclicmd
 void                 c_gclicmdf2j_RemoveAll(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_gclicmdf2j_Reserve(gcli::FGclicmd& gclicmd, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+gcli::FGclicmdf2j&   c_gclicmdf2j_qFind(gcli::FGclicmd& gclicmd, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 gclicmd_c_gclicmdf2j_InAryQ(gcli::FGclicmdf2j& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+gcli::FGclicmdf2j&   c_gclicmdf2j_qLast(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FGclicmd_Init(gcli::FGclicmd& gclicmd);
@@ -2233,6 +2267,12 @@ void                 c_gclicmdf_Remove(gcli::FGclicmdc& gclicmdc, gcli::FGclicmd
 void                 c_gclicmdf_RemoveAll(gcli::FGclicmdc& gclicmdc) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_gclicmdf_Reserve(gcli::FGclicmdc& gclicmdc, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+gcli::FGclicmdf&     c_gclicmdf_qFind(gcli::FGclicmdc& gclicmdc, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 gclicmdc_c_gclicmdf_InAryQ(gcli::FGclicmdf& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+gcli::FGclicmdf&     c_gclicmdf_qLast(gcli::FGclicmdc& gclicmdc) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FGclicmdc_Init(gcli::FGclicmdc& gclicmdc);
@@ -2366,6 +2406,10 @@ void                 c_gclicmdf_Remove(gcli::FGclicmdj2f& gclicmdj2f, gcli::FGcl
 void                 c_gclicmdf_RemoveAll(gcli::FGclicmdj2f& gclicmdj2f) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_gclicmdf_Reserve(gcli::FGclicmdj2f& gclicmdj2f, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+gcli::FGclicmdf&     c_gclicmdf_qFind(gcli::FGclicmdj2f& gclicmdj2f, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+gcli::FGclicmdf&     c_gclicmdf_qLast(gcli::FGclicmdj2f& gclicmdj2f) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FGclicmdj2f_Init(gcli::FGclicmdj2f& gclicmdj2f);
@@ -2464,6 +2508,12 @@ void                 c_gtblactfld_Remove(gcli::FGfld& gfld, gcli::FGtblactfld& r
 void                 c_gtblactfld_RemoveAll(gcli::FGfld& gfld) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_gtblactfld_Reserve(gcli::FGfld& gfld, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+gcli::FGtblactfld&   c_gtblactfld_qFind(gcli::FGfld& gfld, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 gfld_c_gtblactfld_InAryQ(gcli::FGtblactfld& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+gcli::FGtblactfld&   c_gtblactfld_qLast(gcli::FGfld& gfld) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FGfld_Init(gcli::FGfld& gfld);
@@ -2712,6 +2762,12 @@ void                 c_gtblact_Remove(gcli::FGtbl& gtbl, gcli::FGtblact& row) __
 void                 c_gtblact_RemoveAll(gcli::FGtbl& gtbl) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_gtblact_Reserve(gcli::FGtbl& gtbl, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+gcli::FGtblact&      c_gtblact_qFind(gcli::FGtbl& gtbl, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 gtbl_c_gtblact_InAryQ(gcli::FGtblact& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+gcli::FGtblact&      c_gtblact_qLast(gcli::FGtbl& gtbl) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FGtbl_Init(gcli::FGtbl& gtbl);
@@ -2790,6 +2846,12 @@ void                 c_gtblactfld_Remove(gcli::FGtblact& gtblact, gcli::FGtblact
 void                 c_gtblactfld_RemoveAll(gcli::FGtblact& gtblact) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_gtblactfld_Reserve(gcli::FGtblact& gtblact, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+gcli::FGtblactfld&   c_gtblactfld_qFind(gcli::FGtblact& gtblact, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 gtblact_c_gtblactfld_InAryQ(gcli::FGtblactfld& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+gcli::FGtblactfld&   c_gtblactfld_qLast(gcli::FGtblact& gtblact) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FGtblact_Init(gcli::FGtblact& gtblact);
@@ -2901,6 +2963,12 @@ void                 c_gtypeh_Remove(gcli::FGtype& gtype, gcli::FGtypeh& row) __
 void                 c_gtypeh_RemoveAll(gcli::FGtype& gtype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_gtypeh_Reserve(gcli::FGtype& gtype, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+gcli::FGtypeh&       c_gtypeh_qFind(gcli::FGtype& gtype, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 gtype_c_gtypeh_InAryQ(gcli::FGtypeh& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+gcli::FGtypeh&       c_gtypeh_qLast(gcli::FGtype& gtype) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_gtypeprefix_EmptyQ(gcli::FGtype& gtype) __attribute__((nothrow));
@@ -2923,6 +2991,12 @@ void                 c_gtypeprefix_Remove(gcli::FGtype& gtype, gcli::FGtypeprefi
 void                 c_gtypeprefix_RemoveAll(gcli::FGtype& gtype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_gtypeprefix_Reserve(gcli::FGtype& gtype, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+gcli::FGtypeprefix&  c_gtypeprefix_qFind(gcli::FGtype& gtype, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 gtype_c_gtypeprefix_InAryQ(gcli::FGtypeprefix& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+gcli::FGtypeprefix&  c_gtypeprefix_qLast(gcli::FGtype& gtype) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FGtype_Init(gcli::FGtype& gtype);
@@ -3087,7 +3161,7 @@ algo::cstring&       response_header_qLast(gcli::FHttp& parent) __attribute__((n
 // Return row id of specified element
 u64                  response_header_rowid_Get(gcli::FHttp& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> response_header_AllocNVal(gcli::FHttp& parent, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> response_header_AllocNVal(gcli::FHttp& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 
 // proceed to next item
 void                 FHttp_response_header_curs_Next(FHttp_response_header_curs &curs);
@@ -3168,6 +3242,12 @@ void                 c_mrjob_Remove(gcli::FIssue& issue, gcli::FMrjob& row) __at
 void                 c_mrjob_RemoveAll(gcli::FIssue& issue) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_mrjob_Reserve(gcli::FIssue& issue, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+gcli::FMrjob&        c_mrjob_qFind(gcli::FIssue& issue, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 issue_c_mrjob_InAryQ(gcli::FMrjob& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+gcli::FMrjob&        c_mrjob_qLast(gcli::FIssue& issue) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_issuenote_EmptyQ(gcli::FIssue& issue) __attribute__((nothrow));
@@ -3190,6 +3270,12 @@ void                 c_issuenote_Remove(gcli::FIssue& issue, gcli::FIssuenote& r
 void                 c_issuenote_RemoveAll(gcli::FIssue& issue) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_issuenote_Reserve(gcli::FIssue& issue, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+gcli::FIssuenote&    c_issuenote_qFind(gcli::FIssue& issue, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 issue_c_issuenote_InAryQ(gcli::FIssuenote& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+gcli::FIssuenote&    c_issuenote_qLast(gcli::FIssue& issue) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FIssue_Init(gcli::FIssue& issue);
@@ -3347,6 +3433,12 @@ void                 c_mrnote_Remove(gcli::FMr& mr, gcli::FMrnote& row) __attrib
 void                 c_mrnote_RemoveAll(gcli::FMr& mr) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_mrnote_Reserve(gcli::FMr& mr, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+gcli::FMrnote&       c_mrnote_qFind(gcli::FMr& mr, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 mr_c_mrnote_InAryQ(gcli::FMrnote& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+gcli::FMrnote&       c_mrnote_qLast(gcli::FMr& mr) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_mrjob_EmptyQ(gcli::FMr& mr) __attribute__((nothrow));
@@ -3369,6 +3461,12 @@ void                 c_mrjob_Remove(gcli::FMr& mr, gcli::FMrjob& row) __attribut
 void                 c_mrjob_RemoveAll(gcli::FMr& mr) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_mrjob_Reserve(gcli::FMr& mr, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+gcli::FMrjob&        c_mrjob_qFind(gcli::FMr& mr, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 mr_c_mrjob_InAryQ(gcli::FMrjob& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+gcli::FMrjob&        c_mrjob_qLast(gcli::FMr& mr) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FMr_Init(gcli::FMr& mr);

@@ -158,20 +158,28 @@ void amc::tfunc_Hook_Call() {
     amc::FField &field = *amc::_db.genfield.p_field;
     amc::FHook &hook = *field.c_hook;
 
-    amc::FFunc& func = amc::CreateCurFunc(true); {
-        func.inl = true;
-        if (field.arg != "") {
-            AddProtoArg(func, amc::Refto(field.p_arg->cpp_type), "arg");
-        }
-        AddRetval(func, "void", "", "");
+    amc::FFunc& func = amc::CreateCurFunc(true);
+    func.inl = true;
+    if (field.arg != "") {
+        AddProtoArg(func, amc::Refto(field.p_arg->cpp_type), "arg");
+    }
+    AddRetval(func, "void", "", "");
+    const bool static_inlary = amc::StaticQ(hook) && amc::InlaryQ(hook);
+    if (!static_inlary) {
         Ins(&R, func.body    , "if ($parname.$name) {");
-        Ins(&R, func.body    , "    $parname.$name();");
-        if (!StaticQ(hook)) {// user-defined context
-            amc::AddArg(func.body, Subst(R,"(void*)$parname.$name_ctx"));
-        }
-        if (field.arg != "") {// additional argument
-            amc::AddArg(func.body, "arg");
-        }
+    }
+    Ins(&R, func.body    , "    $parname.$name();");
+    if (!StaticQ(hook)) {// user-defined context
+        amc::AddArg(func.body, Subst(R,"(void*)$parname.$name_ctx"));
+    }
+    if (field.arg != "") {// additional argument
+        amc::AddArg(func.body, "arg");
+    }
+    if (!static_inlary) {
         Ins(&R, func.body    , "}");
     }
+}
+bool amc::InlaryQ(amc::FHook& hook) {
+    amc::FField *inst = amc::FirstInst(*hook.p_field->p_ctype);
+    return inst && inst->reftype == dmmeta_Reftype_reftype_Inlary;
 }

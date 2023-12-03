@@ -60,9 +60,7 @@ inline abt_md::FMdsection::FMdsection() {
 // --- abt_md.FMdsection.step.Call
 // Invoke function by pointer
 inline void abt_md::step_Call(abt_md::FMdsection& mdsection, abt_md::FileSection& arg) {
-    if (mdsection.step) {
-        mdsection.step(arg);
-    }
+    mdsection.step(arg);
 }
 
 // --- abt_md.FMdsection.zd_file_section.EmptyQ

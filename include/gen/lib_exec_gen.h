@@ -347,6 +347,12 @@ void                 c_prior_Remove(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmd
 void                 c_prior_RemoveAll(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_prior_Reserve(lib_exec::FSyscmd& syscmd, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+lib_exec::FSyscmddep& c_prior_qFind(lib_exec::FSyscmd& syscmd, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 syscmd_c_prior_InAryQ(lib_exec::FSyscmddep& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+lib_exec::FSyscmddep& c_prior_qLast(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_next_EmptyQ(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
@@ -369,6 +375,12 @@ void                 c_next_Remove(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmdd
 void                 c_next_RemoveAll(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_next_Reserve(lib_exec::FSyscmd& syscmd, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+lib_exec::FSyscmddep& c_next_qFind(lib_exec::FSyscmd& syscmd, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 syscmd_c_next_InAryQ(lib_exec::FSyscmddep& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+lib_exec::FSyscmddep& c_next_qLast(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FSyscmd_Init(lib_exec::FSyscmd& syscmd);

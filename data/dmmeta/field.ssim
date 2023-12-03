@@ -45,6 +45,7 @@ dmmeta.field  field:abt.FDb.filestat  arg:abt.FFilestat  reftype:Lary  dflt:""  
 dmmeta.field  field:abt.FDb.ind_filestat  arg:abt.FFilestat  reftype:Thash  dflt:""  comment:""
 dmmeta.field  field:abt.FDb.builddir  arg:dev.Builddir  reftype:Pkey  dflt:""  comment:uname-compiler.cfg-arch
 dmmeta.field  field:abt.FDb.zd_inclstack  arg:abt.FSrcfile  reftype:Llist  dflt:""  comment:""
+dmmeta.field  field:abt.FDb.tty  arg:bool  reftype:Val  dflt:""  comment:Output
 dmmeta.field  field:abt.FFilestat.filename  arg:algo.cstring  reftype:Val  dflt:""  comment:""
 dmmeta.field  field:abt.FFilestat.modtime  arg:algo.UnTime  reftype:Val  dflt:""  comment:""
 dmmeta.field  field:abt.FFilestat.size  arg:u64  reftype:Val  dflt:""  comment:""

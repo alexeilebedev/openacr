@@ -212,7 +212,7 @@ static void Build_RunDag() {
     u32 line_n = u32_Max(1,LineN());
     u32 last_progress=0;
     u32 built_n = 0;
-    bool show_progress = isatty(1) && line_n > 10000;
+    bool show_progress = abt::_db.tty && line_n > 10000;
     bool keepgoing = false;
     do {
         abt::FSyscmd *compl_cmd = NULL;

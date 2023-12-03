@@ -15543,7 +15543,7 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Malloc.AllocMem  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:Y  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Malloc_AllocMem }
         ,{ "amcdb.tfunc  tfunc:Malloc.FreeMem  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Malloc_FreeMem }
         ,{ "amcdb.tfunc  tfunc:Malloc.ReallocMem  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Malloc_ReallocMem }
-        ,{ "amcdb.tfunc  tfunc:Numstr.qGetnum  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Numstr_qGetnum }
+        ,{ "amcdb.tfunc  tfunc:Numstr.Getnum  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Numstr_Getnum }
         ,{ "amcdb.tfunc  tfunc:Numstr.GetnumDflt  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Numstr_GetnumDflt }
         ,{ "amcdb.tfunc  tfunc:Numstr.Geti64  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Numstr_Geti64 }
         ,{ "amcdb.tfunc  tfunc:Numstr.SetnumMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Numstr_SetnumMaybe }
@@ -15584,6 +15584,9 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Ptrary.Uninit  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:\"\"", amc::tfunc_Ptrary_Uninit }
         ,{ "amcdb.tfunc  tfunc:Ptrary.curs  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ptrary_curs }
         ,{ "amcdb.tfunc  tfunc:Ptrary.oncecurs  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ptrary_oncecurs }
+        ,{ "amcdb.tfunc  tfunc:Ptrary.qFind  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Return reference without bounds checking\"", amc::tfunc_Ptrary_qFind }
+        ,{ "amcdb.tfunc  tfunc:Ptrary.InAryQ  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"True if row is in any ptrary instance\"", amc::tfunc_Ptrary_InAryQ }
+        ,{ "amcdb.tfunc  tfunc:Ptrary.qLast  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Reference to last element without bounds checking\"", amc::tfunc_Ptrary_qLast }
         ,{ "amcdb.tfunc  tfunc:Regx.Init  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:\"\"", amc::tfunc_Regx_Init }
         ,{ "amcdb.tfunc  tfunc:Regx.Print  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Print back to string\"", amc::tfunc_Regx_Print }
         ,{ "amcdb.tfunc  tfunc:Regx.ReadStrptrMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Read Regx from string\"", amc::tfunc_Regx_ReadStrptrMaybe }
@@ -15651,7 +15654,7 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Tary.qLast  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Return reference to last element of array. No bounds checking\"", amc::tfunc_Tary_qLast }
         ,{ "amcdb.tfunc  tfunc:Tary.rowid_Get  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Return row id of specified element\"", amc::tfunc_Tary_rowid_Get }
         ,{ "amcdb.tfunc  tfunc:Tary.curs  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Tary_curs }
-        ,{ "amcdb.tfunc  tfunc:Tary.AllocNVal  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:Y  pure:N  ismacro:N  comment:\"Reserve space. Insert N elements at the end of the array, return pointer to array\"", amc::tfunc_Tary_AllocNVal }
+        ,{ "amcdb.tfunc  tfunc:Tary.AllocNVal  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Reserve space. Insert N elements at the end of the array, return pointer to array\"", amc::tfunc_Tary_AllocNVal }
         ,{ "amcdb.tfunc  tfunc:Tary.ReadStrptrMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Tary_ReadStrptrMaybe }
         ,{ "amcdb.tfunc  tfunc:Thash.Cascdel  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Delete all rows reachable through the hash index\"", amc::tfunc_Thash_Cascdel }
         ,{ "amcdb.tfunc  tfunc:Thash.EmptyQ  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Return true if hash is empty\"", amc::tfunc_Thash_EmptyQ }
@@ -29835,6 +29838,7 @@ const char* amc::value_ToCstr(const amc::Pnewtype& parent) {
         case amc_Pnewtype_Fixed            : ret = "Fixed";  break;
         case amc_Pnewtype_Dynamic          : ret = "Dynamic";  break;
         case amc_Pnewtype_ByteAry          : ret = "ByteAry";  break;
+        case amc_Pnewtype_Append           : ret = "Append";  break;
     }
     return ret;
 }
@@ -29868,6 +29872,9 @@ bool amc::value_SetStrptrMaybe(amc::Pnewtype& parent, algo::strptr rhs) {
         }
         case 6: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
+                case LE_STR6('A','p','p','e','n','d'): {
+                    value_SetEnum(parent,amc_Pnewtype_Append); ret = true; break;
+                }
                 case LE_STR6('M','e','m','p','t','r'): {
                     value_SetEnum(parent,amc_Pnewtype_Memptr); ret = true; break;
                 }

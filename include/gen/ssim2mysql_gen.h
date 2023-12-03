@@ -211,6 +211,12 @@ void                 c_field_Remove(ssim2mysql::FCtype& ctype, ssim2mysql::FFiel
 void                 c_field_RemoveAll(ssim2mysql::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_field_Reserve(ssim2mysql::FCtype& ctype, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+ssim2mysql::FField&  c_field_qFind(ssim2mysql::FCtype& ctype, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ctype_c_field_InAryQ(ssim2mysql::FField& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+ssim2mysql::FField&  c_field_qLast(ssim2mysql::FCtype& ctype) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 bool                 c_ssimfile_InsertMaybe(ssim2mysql::FCtype& ctype, ssim2mysql::FSsimfile& row) __attribute__((nothrow));
@@ -974,6 +980,12 @@ void                 c_ssimfile_Remove(ssim2mysql::FNs& ns, ssim2mysql::FSsimfil
 void                 c_ssimfile_RemoveAll(ssim2mysql::FNs& ns) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_ssimfile_Reserve(ssim2mysql::FNs& ns, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+ssim2mysql::FSsimfile& c_ssimfile_qFind(ssim2mysql::FNs& ns, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ns_c_ssimfile_InAryQ(ssim2mysql::FSsimfile& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+ssim2mysql::FSsimfile& c_ssimfile_qLast(ssim2mysql::FNs& ns) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FNs_Init(ssim2mysql::FNs& ns);
@@ -1076,6 +1088,12 @@ void                 c_column_Remove(ssim2mysql::FSsimfile& ssimfile, ssim2mysql
 void                 c_column_RemoveAll(ssim2mysql::FSsimfile& ssimfile) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_column_Reserve(ssim2mysql::FSsimfile& ssimfile, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+ssim2mysql::FColumn& c_column_qFind(ssim2mysql::FSsimfile& ssimfile, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ssimfile_c_column_InAryQ(ssim2mysql::FColumn& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+ssim2mysql::FColumn& c_column_qLast(ssim2mysql::FSsimfile& ssimfile) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FSsimfile_Init(ssim2mysql::FSsimfile& ssimfile);

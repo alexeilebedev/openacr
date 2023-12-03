@@ -111,11 +111,11 @@ namespace lib_ams { // gen:ns_gsymbol
     extern const char* amsdb_streamtype_out; // "out"
     extern const char* amsdb_streamtype_trace; // "trace"
 } // gen:ns_gsymbol
-namespace lib_ams {
+namespace lib_ams { // gen:ns_pnew
 struct FStream;
 void *BeginWrite(lib_ams::FStream &stream, int len);
 void EndWrite(lib_ams::FStream &stream, void *msg, int len);
-} // namespace lib_ams
+} // gen:ns_pnew
 namespace lib_ams { // gen:ns_print_struct
 
 // --- lib_ams.CtlConnCase
@@ -1030,7 +1030,7 @@ u8&                  buf_qLast(lib_ams::FReadfile& parent) __attribute__((nothro
 // Return row id of specified element
 u64                  buf_rowid_Get(lib_ams::FReadfile& parent, u8 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u8>     buf_AllocNVal(lib_ams::FReadfile& parent, int n_elems, const u8& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<u8>     buf_AllocNVal(lib_ams::FReadfile& parent, int n_elems, const u8& val) __attribute__((nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -1070,7 +1070,7 @@ u8&                  cbuf_qLast(lib_ams::FReadfile& parent) __attribute__((nothr
 // Return row id of specified element
 u64                  cbuf_rowid_Get(lib_ams::FReadfile& parent, u8 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u8>     cbuf_AllocNVal(lib_ams::FReadfile& parent, int n_elems, const u8& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<u8>     cbuf_AllocNVal(lib_ams::FReadfile& parent, int n_elems, const u8& val) __attribute__((nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -1110,7 +1110,7 @@ u32&                 offset_qLast(lib_ams::FReadfile& parent) __attribute__((not
 // Return row id of specified element
 u64                  offset_rowid_Get(lib_ams::FReadfile& parent, u32 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u32>    offset_AllocNVal(lib_ams::FReadfile& parent, int n_elems, const u32& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<u32>    offset_AllocNVal(lib_ams::FReadfile& parent, int n_elems, const u32& val) __attribute__((nothrow));
 
 // proceed to next item
 void                 FReadfile_buf_curs_Next(FReadfile_buf_curs &curs);
@@ -1349,7 +1349,7 @@ u8&                  buf_qLast(lib_ams::FWritefile& writefile) __attribute__((no
 // Return row id of specified element
 u64                  buf_rowid_Get(lib_ams::FWritefile& writefile, u8 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u8>     buf_AllocNVal(lib_ams::FWritefile& writefile, int n_elems, const u8& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<u8>     buf_AllocNVal(lib_ams::FWritefile& writefile, int n_elems, const u8& val) __attribute__((nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -1389,7 +1389,7 @@ u8&                  cbuf_qLast(lib_ams::FWritefile& writefile) __attribute__((n
 // Return row id of specified element
 u64                  cbuf_rowid_Get(lib_ams::FWritefile& writefile, u8 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u8>     cbuf_AllocNVal(lib_ams::FWritefile& writefile, int n_elems, const u8& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<u8>     cbuf_AllocNVal(lib_ams::FWritefile& writefile, int n_elems, const u8& val) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FWritefile_Init(lib_ams::FWritefile& writefile);

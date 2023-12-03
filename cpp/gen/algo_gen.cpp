@@ -39,123 +39,11 @@ namespace algo { // gen:ns_print_proto
     static bool          write_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          eof_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          err_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u64           ch_qGetnum(algo::LnumStr10_U64& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u64           ch_qGetnum(algo::LnumStr11_U64& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u64           ch_qGetnum(algo::LnumStr12_U64& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u64           ch_qGetnum(algo::LnumStr13_U64_Base36& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u64           ch_qGetnum(algo::LnumStr16_U64_Base16& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u32           ch_qGetnum(algo::LnumStr1_U32& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u64           ch_qGetnum(algo::LnumStr20_U64& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u64           ch_qGetnum(algo::LnumStr22_U64& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u32           ch_qGetnum(algo::LnumStr2_U32& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u32           ch_qGetnum(algo::LnumStr3_U32& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u32           ch_qGetnum(algo::LnumStr4_U32& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u32           ch_qGetnum(algo::LnumStr5_U32& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u32           ch_qGetnum(algo::LnumStr5_U32_Base36& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u32           ch_qGetnum(algo::LnumStr6_U32& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u32           ch_qGetnum(algo::LnumStr7_U32& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u32           ch_qGetnum(algo::LnumStr7_U32_Base36& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u32           ch_qGetnum(algo::LnumStr8_U32& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u32           ch_qGetnum(algo::LnumStr8_U32_Base16& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u64           ch_qGetnum(algo::LnumStr8_U64& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u32           ch_qGetnum(algo::LnumStr9_U32& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u64           ch_qGetnum(algo::LnumStr9_U64& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static i64           ch_qGetnum(algo::LspaceStr20_I64& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u64           ch_qGetnum(algo::LspaceStr20_U64& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static i16           ch_qGetnum(algo::LspaceStr3_I16& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u16           ch_qGetnum(algo::LspaceStr5_I16& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u32           ch_qGetnum(algo::LspaceStr6_U32& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static i32           ch_qGetnum(algo::LspaceStr7_I32_Base36& parent, u32 &ok) __attribute__((nothrow));
     static bool          err_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          ok_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          neg_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          overflow_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          hex_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u32           ch_qGetnum(algo::RnullStr6_U32& parent, u32 &ok) __attribute__((nothrow));
     static void          SizeCheck();
 } // gen:ns_print_proto
 algo::cstring& algo::cstring::operator =(const algo::strptr &rhs) {
@@ -3239,16 +3127,18 @@ void algo::ch_SetStrptr(algo::LnumStr10_U64& parent, const algo::strptr &rhs) {
     }
 }
 
-// --- algo.LnumStr10_U64.ch.qGetnum
+// --- algo.LnumStr10_U64.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u64 algo::ch_qGetnum(algo::LnumStr10_U64& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u64 algo::ch_Getnum(algo::LnumStr10_U64& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
+        u32 ok = 1;
         val = aParseNum16(str, ok);
+        and_ok &= (ok != 0);
     }
     return u64(val);
 }
@@ -3258,8 +3148,8 @@ static u64 algo::ch_qGetnum(algo::LnumStr10_U64& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u64 algo::ch_GetnumDflt(algo::LnumStr10_U64& parent, u64 dflt) {
-    u32 ok = 1;
-    u64 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u64 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -3268,9 +3158,8 @@ u64 algo::ch_GetnumDflt(algo::LnumStr10_U64& parent, u64 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LnumStr10_U64& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -3347,16 +3236,18 @@ void algo::ch_SetStrptr(algo::LnumStr11_U64& parent, const algo::strptr &rhs) {
     }
 }
 
-// --- algo.LnumStr11_U64.ch.qGetnum
+// --- algo.LnumStr11_U64.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u64 algo::ch_qGetnum(algo::LnumStr11_U64& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u64 algo::ch_Getnum(algo::LnumStr11_U64& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
+        u32 ok = 1;
         val = aParseNum16(str, ok);
+        and_ok &= (ok != 0);
     }
     return u64(val);
 }
@@ -3366,8 +3257,8 @@ static u64 algo::ch_qGetnum(algo::LnumStr11_U64& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u64 algo::ch_GetnumDflt(algo::LnumStr11_U64& parent, u64 dflt) {
-    u32 ok = 1;
-    u64 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u64 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -3376,9 +3267,8 @@ u64 algo::ch_GetnumDflt(algo::LnumStr11_U64& parent, u64 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LnumStr11_U64& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -3455,16 +3345,18 @@ void algo::ch_SetStrptr(algo::LnumStr12_U64& parent, const algo::strptr &rhs) {
     }
 }
 
-// --- algo.LnumStr12_U64.ch.qGetnum
+// --- algo.LnumStr12_U64.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u64 algo::ch_qGetnum(algo::LnumStr12_U64& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u64 algo::ch_Getnum(algo::LnumStr12_U64& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
+        u32 ok = 1;
         val = aParseNum16(str, ok);
+        and_ok &= (ok != 0);
     }
     return u64(val);
 }
@@ -3474,8 +3366,8 @@ static u64 algo::ch_qGetnum(algo::LnumStr12_U64& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u64 algo::ch_GetnumDflt(algo::LnumStr12_U64& parent, u64 dflt) {
-    u32 ok = 1;
-    u64 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u64 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -3484,9 +3376,8 @@ u64 algo::ch_GetnumDflt(algo::LnumStr12_U64& parent, u64 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LnumStr12_U64& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -3563,12 +3454,12 @@ void algo::ch_SetStrptr(algo::LnumStr13_U64_Base36& parent, const algo::strptr &
     }
 }
 
-// --- algo.LnumStr13_U64_Base36.ch.qGetnum
+// --- algo.LnumStr13_U64_Base36.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u64 algo::ch_qGetnum(algo::LnumStr13_U64_Base36& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u64 algo::ch_Getnum(algo::LnumStr13_U64_Base36& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
@@ -3581,11 +3472,11 @@ static u64 algo::ch_qGetnum(algo::LnumStr13_U64_Base36& parent, u32 &ok) {
         } else if (ch >= 'A' && ch <= 'A' + 36-10) {
             digit = digit - 'A' + 10;
         } else {
-            ok = 0;
+            and_ok = false;
         }
         // Check for 64-bit overflow inside the loop
         u64 r1 = val*36 + digit;
-        ok &= (val <= r1);
+        and_ok &= (val <= r1);
         val = r1;
     }
     return u64(val);
@@ -3596,8 +3487,8 @@ static u64 algo::ch_qGetnum(algo::LnumStr13_U64_Base36& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u64 algo::ch_GetnumDflt(algo::LnumStr13_U64_Base36& parent, u64 dflt) {
-    u32 ok = 1;
-    u64 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u64 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -3606,9 +3497,8 @@ u64 algo::ch_GetnumDflt(algo::LnumStr13_U64_Base36& parent, u64 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LnumStr13_U64_Base36& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -3693,12 +3583,12 @@ void algo::ch_SetStrptr(algo::LnumStr16_U64_Base16& parent, const algo::strptr &
     }
 }
 
-// --- algo.LnumStr16_U64_Base16.ch.qGetnum
+// --- algo.LnumStr16_U64_Base16.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u64 algo::ch_qGetnum(algo::LnumStr16_U64_Base16& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u64 algo::ch_Getnum(algo::LnumStr16_U64_Base16& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
@@ -3711,11 +3601,11 @@ static u64 algo::ch_qGetnum(algo::LnumStr16_U64_Base16& parent, u32 &ok) {
         } else if (ch >= 'A' && ch <= 'A' + 16-10) {
             digit = digit - 'A' + 10;
         } else {
-            ok = 0;
+            and_ok = false;
         }
         val = val*16 + digit;
     }
-    ok &= val <= 0XFFFFFFFFFFFFFFFF;
+    and_ok &= val <= 0XFFFFFFFFFFFFFFFF;
     return u64(val);
 }
 
@@ -3724,8 +3614,8 @@ static u64 algo::ch_qGetnum(algo::LnumStr16_U64_Base16& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u64 algo::ch_GetnumDflt(algo::LnumStr16_U64_Base16& parent, u64 dflt) {
-    u32 ok = 1;
-    u64 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u64 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -3734,9 +3624,8 @@ u64 algo::ch_GetnumDflt(algo::LnumStr16_U64_Base16& parent, u64 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LnumStr16_U64_Base16& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -3821,16 +3710,18 @@ void algo::ch_SetStrptr(algo::LnumStr1_U32& parent, const algo::strptr &rhs) {
     }
 }
 
-// --- algo.LnumStr1_U32.ch.qGetnum
+// --- algo.LnumStr1_U32.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32 algo::ch_qGetnum(algo::LnumStr1_U32& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32 algo::ch_Getnum(algo::LnumStr1_U32& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
+        u32 ok = 1;
         val = aParseNum4(str, ok);
+        and_ok &= (ok != 0);
     }
     return u32(val);
 }
@@ -3840,8 +3731,8 @@ static u32 algo::ch_qGetnum(algo::LnumStr1_U32& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32 algo::ch_GetnumDflt(algo::LnumStr1_U32& parent, u32 dflt) {
-    u32 ok = 1;
-    u32 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -3850,9 +3741,8 @@ u32 algo::ch_GetnumDflt(algo::LnumStr1_U32& parent, u32 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LnumStr1_U32& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -3929,12 +3819,12 @@ void algo::ch_SetStrptr(algo::LnumStr20_U64& parent, const algo::strptr &rhs) {
     }
 }
 
-// --- algo.LnumStr20_U64.ch.qGetnum
+// --- algo.LnumStr20_U64.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u64 algo::ch_qGetnum(algo::LnumStr20_U64& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u64 algo::ch_Getnum(algo::LnumStr20_U64& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
@@ -3943,11 +3833,11 @@ static u64 algo::ch_qGetnum(algo::LnumStr20_U64& parent, u32 &ok) {
         if (ch >= '0' && ch < '0' + 10) {
             digit -= '0';
         } else {
-            ok = 0;
+            and_ok = false;
         }
         // Check for 64-bit overflow inside the loop
         u64 r1 = val*10 + digit;
-        ok &= (val <= r1);
+        and_ok &= (val <= r1);
         val = r1;
     }
     return u64(val);
@@ -3958,8 +3848,8 @@ static u64 algo::ch_qGetnum(algo::LnumStr20_U64& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u64 algo::ch_GetnumDflt(algo::LnumStr20_U64& parent, u64 dflt) {
-    u32 ok = 1;
-    u64 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u64 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -3968,9 +3858,8 @@ u64 algo::ch_GetnumDflt(algo::LnumStr20_U64& parent, u64 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LnumStr20_U64& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -4047,12 +3936,12 @@ void algo::ch_SetStrptr(algo::LnumStr22_U64& parent, const algo::strptr &rhs) {
     }
 }
 
-// --- algo.LnumStr22_U64.ch.qGetnum
+// --- algo.LnumStr22_U64.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u64 algo::ch_qGetnum(algo::LnumStr22_U64& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u64 algo::ch_Getnum(algo::LnumStr22_U64& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
@@ -4061,11 +3950,11 @@ static u64 algo::ch_qGetnum(algo::LnumStr22_U64& parent, u32 &ok) {
         if (ch >= '0' && ch < '0' + 10) {
             digit -= '0';
         } else {
-            ok = 0;
+            and_ok = false;
         }
         // Check for 64-bit overflow inside the loop
         u64 r1 = val*10 + digit;
-        ok &= (val <= r1);
+        and_ok &= (val <= r1);
         val = r1;
     }
     return u64(val);
@@ -4076,8 +3965,8 @@ static u64 algo::ch_qGetnum(algo::LnumStr22_U64& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u64 algo::ch_GetnumDflt(algo::LnumStr22_U64& parent, u64 dflt) {
-    u32 ok = 1;
-    u64 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u64 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -4086,9 +3975,8 @@ u64 algo::ch_GetnumDflt(algo::LnumStr22_U64& parent, u64 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LnumStr22_U64& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -4165,16 +4053,18 @@ void algo::ch_SetStrptr(algo::LnumStr2_U32& parent, const algo::strptr &rhs) {
     }
 }
 
-// --- algo.LnumStr2_U32.ch.qGetnum
+// --- algo.LnumStr2_U32.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32 algo::ch_qGetnum(algo::LnumStr2_U32& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32 algo::ch_Getnum(algo::LnumStr2_U32& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
+        u32 ok = 1;
         val = aParseNum4(str, ok);
+        and_ok &= (ok != 0);
     }
     return u32(val);
 }
@@ -4184,8 +4074,8 @@ static u32 algo::ch_qGetnum(algo::LnumStr2_U32& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32 algo::ch_GetnumDflt(algo::LnumStr2_U32& parent, u32 dflt) {
-    u32 ok = 1;
-    u32 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -4194,9 +4084,8 @@ u32 algo::ch_GetnumDflt(algo::LnumStr2_U32& parent, u32 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LnumStr2_U32& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -4273,16 +4162,18 @@ void algo::ch_SetStrptr(algo::LnumStr3_U32& parent, const algo::strptr &rhs) {
     }
 }
 
-// --- algo.LnumStr3_U32.ch.qGetnum
+// --- algo.LnumStr3_U32.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32 algo::ch_qGetnum(algo::LnumStr3_U32& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32 algo::ch_Getnum(algo::LnumStr3_U32& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
+        u32 ok = 1;
         val = aParseNum4(str, ok);
+        and_ok &= (ok != 0);
     }
     return u32(val);
 }
@@ -4292,8 +4183,8 @@ static u32 algo::ch_qGetnum(algo::LnumStr3_U32& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32 algo::ch_GetnumDflt(algo::LnumStr3_U32& parent, u32 dflt) {
-    u32 ok = 1;
-    u32 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -4302,9 +4193,8 @@ u32 algo::ch_GetnumDflt(algo::LnumStr3_U32& parent, u32 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LnumStr3_U32& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -4381,16 +4271,18 @@ void algo::ch_SetStrptr(algo::LnumStr4_U32& parent, const algo::strptr &rhs) {
     }
 }
 
-// --- algo.LnumStr4_U32.ch.qGetnum
+// --- algo.LnumStr4_U32.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32 algo::ch_qGetnum(algo::LnumStr4_U32& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32 algo::ch_Getnum(algo::LnumStr4_U32& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
+        u32 ok = 1;
         val = aParseNum4(str, ok);
+        and_ok &= (ok != 0);
     }
     return u32(val);
 }
@@ -4400,8 +4292,8 @@ static u32 algo::ch_qGetnum(algo::LnumStr4_U32& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32 algo::ch_GetnumDflt(algo::LnumStr4_U32& parent, u32 dflt) {
-    u32 ok = 1;
-    u32 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -4410,9 +4302,8 @@ u32 algo::ch_GetnumDflt(algo::LnumStr4_U32& parent, u32 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LnumStr4_U32& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -4489,16 +4380,18 @@ void algo::ch_SetStrptr(algo::LnumStr5_U32& parent, const algo::strptr &rhs) {
     }
 }
 
-// --- algo.LnumStr5_U32.ch.qGetnum
+// --- algo.LnumStr5_U32.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32 algo::ch_qGetnum(algo::LnumStr5_U32& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32 algo::ch_Getnum(algo::LnumStr5_U32& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
+        u32 ok = 1;
         val = aParseNum8(str, ok);
+        and_ok &= (ok != 0);
     }
     return u32(val);
 }
@@ -4508,8 +4401,8 @@ static u32 algo::ch_qGetnum(algo::LnumStr5_U32& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32 algo::ch_GetnumDflt(algo::LnumStr5_U32& parent, u32 dflt) {
-    u32 ok = 1;
-    u32 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -4518,9 +4411,8 @@ u32 algo::ch_GetnumDflt(algo::LnumStr5_U32& parent, u32 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LnumStr5_U32& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -4597,12 +4489,12 @@ void algo::ch_SetStrptr(algo::LnumStr5_U32_Base36& parent, const algo::strptr &r
     }
 }
 
-// --- algo.LnumStr5_U32_Base36.ch.qGetnum
+// --- algo.LnumStr5_U32_Base36.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32 algo::ch_qGetnum(algo::LnumStr5_U32_Base36& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32 algo::ch_Getnum(algo::LnumStr5_U32_Base36& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
@@ -4615,7 +4507,7 @@ static u32 algo::ch_qGetnum(algo::LnumStr5_U32_Base36& parent, u32 &ok) {
         } else if (ch >= 'A' && ch <= 'A' + 36-10) {
             digit = digit - 'A' + 10;
         } else {
-            ok = 0;
+            and_ok = false;
         }
         val = val*36 + digit;
     }
@@ -4627,8 +4519,8 @@ static u32 algo::ch_qGetnum(algo::LnumStr5_U32_Base36& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32 algo::ch_GetnumDflt(algo::LnumStr5_U32_Base36& parent, u32 dflt) {
-    u32 ok = 1;
-    u32 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -4637,9 +4529,8 @@ u32 algo::ch_GetnumDflt(algo::LnumStr5_U32_Base36& parent, u32 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LnumStr5_U32_Base36& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -4724,16 +4615,18 @@ void algo::ch_SetStrptr(algo::LnumStr6_U32& parent, const algo::strptr &rhs) {
     }
 }
 
-// --- algo.LnumStr6_U32.ch.qGetnum
+// --- algo.LnumStr6_U32.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32 algo::ch_qGetnum(algo::LnumStr6_U32& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32 algo::ch_Getnum(algo::LnumStr6_U32& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
+        u32 ok = 1;
         val = aParseNum8(str, ok);
+        and_ok &= (ok != 0);
     }
     return u32(val);
 }
@@ -4743,8 +4636,8 @@ static u32 algo::ch_qGetnum(algo::LnumStr6_U32& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32 algo::ch_GetnumDflt(algo::LnumStr6_U32& parent, u32 dflt) {
-    u32 ok = 1;
-    u32 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -4753,9 +4646,8 @@ u32 algo::ch_GetnumDflt(algo::LnumStr6_U32& parent, u32 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LnumStr6_U32& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -4832,16 +4724,18 @@ void algo::ch_SetStrptr(algo::LnumStr7_U32& parent, const algo::strptr &rhs) {
     }
 }
 
-// --- algo.LnumStr7_U32.ch.qGetnum
+// --- algo.LnumStr7_U32.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32 algo::ch_qGetnum(algo::LnumStr7_U32& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32 algo::ch_Getnum(algo::LnumStr7_U32& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
+        u32 ok = 1;
         val = aParseNum8(str, ok);
+        and_ok &= (ok != 0);
     }
     return u32(val);
 }
@@ -4851,8 +4745,8 @@ static u32 algo::ch_qGetnum(algo::LnumStr7_U32& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32 algo::ch_GetnumDflt(algo::LnumStr7_U32& parent, u32 dflt) {
-    u32 ok = 1;
-    u32 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -4861,9 +4755,8 @@ u32 algo::ch_GetnumDflt(algo::LnumStr7_U32& parent, u32 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LnumStr7_U32& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -4940,12 +4833,12 @@ void algo::ch_SetStrptr(algo::LnumStr7_U32_Base36& parent, const algo::strptr &r
     }
 }
 
-// --- algo.LnumStr7_U32_Base36.ch.qGetnum
+// --- algo.LnumStr7_U32_Base36.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32 algo::ch_qGetnum(algo::LnumStr7_U32_Base36& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32 algo::ch_Getnum(algo::LnumStr7_U32_Base36& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
@@ -4958,11 +4851,11 @@ static u32 algo::ch_qGetnum(algo::LnumStr7_U32_Base36& parent, u32 &ok) {
         } else if (ch >= 'A' && ch <= 'A' + 36-10) {
             digit = digit - 'A' + 10;
         } else {
-            ok = 0;
+            and_ok = false;
         }
         val = val*36 + digit;
     }
-    ok &= val <= 0XFFFFFFFF;
+    and_ok &= val <= 0XFFFFFFFF;
     return u32(val);
 }
 
@@ -4971,8 +4864,8 @@ static u32 algo::ch_qGetnum(algo::LnumStr7_U32_Base36& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32 algo::ch_GetnumDflt(algo::LnumStr7_U32_Base36& parent, u32 dflt) {
-    u32 ok = 1;
-    u32 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -4981,9 +4874,8 @@ u32 algo::ch_GetnumDflt(algo::LnumStr7_U32_Base36& parent, u32 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LnumStr7_U32_Base36& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -5068,16 +4960,18 @@ void algo::ch_SetStrptr(algo::LnumStr8_U32& parent, const algo::strptr &rhs) {
     }
 }
 
-// --- algo.LnumStr8_U32.ch.qGetnum
+// --- algo.LnumStr8_U32.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32 algo::ch_qGetnum(algo::LnumStr8_U32& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32 algo::ch_Getnum(algo::LnumStr8_U32& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
+        u32 ok = 1;
         val = aParseNum8(str, ok);
+        and_ok &= (ok != 0);
     }
     return u32(val);
 }
@@ -5087,8 +4981,8 @@ static u32 algo::ch_qGetnum(algo::LnumStr8_U32& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32 algo::ch_GetnumDflt(algo::LnumStr8_U32& parent, u32 dflt) {
-    u32 ok = 1;
-    u32 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -5097,9 +4991,8 @@ u32 algo::ch_GetnumDflt(algo::LnumStr8_U32& parent, u32 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LnumStr8_U32& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -5176,12 +5069,12 @@ void algo::ch_SetStrptr(algo::LnumStr8_U32_Base16& parent, const algo::strptr &r
     }
 }
 
-// --- algo.LnumStr8_U32_Base16.ch.qGetnum
+// --- algo.LnumStr8_U32_Base16.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32 algo::ch_qGetnum(algo::LnumStr8_U32_Base16& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32 algo::ch_Getnum(algo::LnumStr8_U32_Base16& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
@@ -5194,11 +5087,11 @@ static u32 algo::ch_qGetnum(algo::LnumStr8_U32_Base16& parent, u32 &ok) {
         } else if (ch >= 'A' && ch <= 'A' + 16-10) {
             digit = digit - 'A' + 10;
         } else {
-            ok = 0;
+            and_ok = false;
         }
         val = val*16 + digit;
     }
-    ok &= val <= 0XFFFFFFFF;
+    and_ok &= val <= 0XFFFFFFFF;
     return u32(val);
 }
 
@@ -5207,8 +5100,8 @@ static u32 algo::ch_qGetnum(algo::LnumStr8_U32_Base16& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32 algo::ch_GetnumDflt(algo::LnumStr8_U32_Base16& parent, u32 dflt) {
-    u32 ok = 1;
-    u32 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -5217,9 +5110,8 @@ u32 algo::ch_GetnumDflt(algo::LnumStr8_U32_Base16& parent, u32 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LnumStr8_U32_Base16& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -5304,16 +5196,18 @@ void algo::ch_SetStrptr(algo::LnumStr8_U64& parent, const algo::strptr &rhs) {
     }
 }
 
-// --- algo.LnumStr8_U64.ch.qGetnum
+// --- algo.LnumStr8_U64.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u64 algo::ch_qGetnum(algo::LnumStr8_U64& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u64 algo::ch_Getnum(algo::LnumStr8_U64& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
+        u32 ok = 1;
         val = aParseNum8(str, ok);
+        and_ok &= (ok != 0);
     }
     return u64(val);
 }
@@ -5323,8 +5217,8 @@ static u64 algo::ch_qGetnum(algo::LnumStr8_U64& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u64 algo::ch_GetnumDflt(algo::LnumStr8_U64& parent, u64 dflt) {
-    u32 ok = 1;
-    u64 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u64 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -5333,9 +5227,8 @@ u64 algo::ch_GetnumDflt(algo::LnumStr8_U64& parent, u64 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LnumStr8_U64& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -5412,16 +5305,18 @@ void algo::ch_SetStrptr(algo::LnumStr9_U32& parent, const algo::strptr &rhs) {
     }
 }
 
-// --- algo.LnumStr9_U32.ch.qGetnum
+// --- algo.LnumStr9_U32.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32 algo::ch_qGetnum(algo::LnumStr9_U32& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32 algo::ch_Getnum(algo::LnumStr9_U32& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
+        u32 ok = 1;
         val = aParseNum16(str, ok);
+        and_ok &= (ok != 0);
     }
     return u32(val);
 }
@@ -5431,8 +5326,8 @@ static u32 algo::ch_qGetnum(algo::LnumStr9_U32& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32 algo::ch_GetnumDflt(algo::LnumStr9_U32& parent, u32 dflt) {
-    u32 ok = 1;
-    u32 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -5441,9 +5336,8 @@ u32 algo::ch_GetnumDflt(algo::LnumStr9_U32& parent, u32 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LnumStr9_U32& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -5520,16 +5414,18 @@ void algo::ch_SetStrptr(algo::LnumStr9_U64& parent, const algo::strptr &rhs) {
     }
 }
 
-// --- algo.LnumStr9_U64.ch.qGetnum
+// --- algo.LnumStr9_U64.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u64 algo::ch_qGetnum(algo::LnumStr9_U64& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u64 algo::ch_Getnum(algo::LnumStr9_U64& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
+        u32 ok = 1;
         val = aParseNum16(str, ok);
+        and_ok &= (ok != 0);
     }
     return u64(val);
 }
@@ -5539,8 +5435,8 @@ static u64 algo::ch_qGetnum(algo::LnumStr9_U64& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u64 algo::ch_GetnumDflt(algo::LnumStr9_U64& parent, u64 dflt) {
-    u32 ok = 1;
-    u64 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u64 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -5549,9 +5445,8 @@ u64 algo::ch_GetnumDflt(algo::LnumStr9_U64& parent, u64 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LnumStr9_U64& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -5978,12 +5873,12 @@ void algo::ch_SetStrptr(algo::LspaceStr20_I64& parent, const algo::strptr &rhs) 
     }
 }
 
-// --- algo.LspaceStr20_I64.ch.qGetnum
+// --- algo.LspaceStr20_I64.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static i64 algo::ch_qGetnum(algo::LspaceStr20_I64& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+i64 algo::ch_Getnum(algo::LspaceStr20_I64& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     bool is_neg = (str.n_elems > 0) && (str.elems[0] == '-');
@@ -5997,11 +5892,11 @@ static i64 algo::ch_qGetnum(algo::LspaceStr20_I64& parent, u32 &ok) {
         if (ch >= '0' && ch < '0' + 10) {
             digit -= '0';
         } else {
-            ok = 0;
+            and_ok = false;
         }
         // Check for 64-bit overflow inside the loop
         u64 r1 = val*10 + digit;
-        ok &= (val <= r1);
+        and_ok &= (val <= r1);
         val = r1;
     }
     i64 ret = is_neg ? -val : val;
@@ -6013,8 +5908,8 @@ static i64 algo::ch_qGetnum(algo::LspaceStr20_I64& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 i64 algo::ch_GetnumDflt(algo::LspaceStr20_I64& parent, i64 dflt) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    i64 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -6023,9 +5918,8 @@ i64 algo::ch_GetnumDflt(algo::LspaceStr20_I64& parent, i64 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LspaceStr20_I64& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -6109,12 +6003,12 @@ void algo::ch_SetStrptr(algo::LspaceStr20_U64& parent, const algo::strptr &rhs) 
     }
 }
 
-// --- algo.LspaceStr20_U64.ch.qGetnum
+// --- algo.LspaceStr20_U64.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u64 algo::ch_qGetnum(algo::LspaceStr20_U64& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u64 algo::ch_Getnum(algo::LspaceStr20_U64& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
@@ -6123,11 +6017,11 @@ static u64 algo::ch_qGetnum(algo::LspaceStr20_U64& parent, u32 &ok) {
         if (ch >= '0' && ch < '0' + 10) {
             digit -= '0';
         } else {
-            ok = 0;
+            and_ok = false;
         }
         // Check for 64-bit overflow inside the loop
         u64 r1 = val*10 + digit;
-        ok &= (val <= r1);
+        and_ok &= (val <= r1);
         val = r1;
     }
     return u64(val);
@@ -6138,8 +6032,8 @@ static u64 algo::ch_qGetnum(algo::LspaceStr20_U64& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u64 algo::ch_GetnumDflt(algo::LspaceStr20_U64& parent, u64 dflt) {
-    u32 ok = 1;
-    u64 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u64 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -6148,9 +6042,8 @@ u64 algo::ch_GetnumDflt(algo::LspaceStr20_U64& parent, u64 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LspaceStr20_U64& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -6284,12 +6177,12 @@ void algo::ch_SetStrptr(algo::LspaceStr3_I16& parent, const algo::strptr &rhs) {
     }
 }
 
-// --- algo.LspaceStr3_I16.ch.qGetnum
+// --- algo.LspaceStr3_I16.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static i16 algo::ch_qGetnum(algo::LspaceStr3_I16& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+i16 algo::ch_Getnum(algo::LspaceStr3_I16& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     bool is_neg = (str.n_elems > 0) && (str.elems[0] == '-');
@@ -6298,7 +6191,9 @@ static i16 algo::ch_qGetnum(algo::LspaceStr3_I16& parent, u32 &ok) {
         str.n_elems--;
     }
     if (elems_N(str)>0) { // empty string maps to zero
+        u32 ok = 1;
         val = aParseNum4(str, ok);
+        and_ok &= (ok != 0);
     }
     i64 ret = is_neg ? -val : val;
     return i16(ret);
@@ -6309,8 +6204,8 @@ static i16 algo::ch_qGetnum(algo::LspaceStr3_I16& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 i16 algo::ch_GetnumDflt(algo::LspaceStr3_I16& parent, i16 dflt) {
-    u32 ok = 1;
-    i16 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    i16 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -6319,9 +6214,8 @@ i16 algo::ch_GetnumDflt(algo::LspaceStr3_I16& parent, i16 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LspaceStr3_I16& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -6519,18 +6413,20 @@ void algo::ch_SetStrptr(algo::LspaceStr5_I16& parent, const algo::strptr &rhs) {
     }
 }
 
-// --- algo.LspaceStr5_I16.ch.qGetnum
+// --- algo.LspaceStr5_I16.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u16 algo::ch_qGetnum(algo::LspaceStr5_I16& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u16 algo::ch_Getnum(algo::LspaceStr5_I16& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
+        u32 ok = 1;
         val = aParseNum8(str, ok);
+        and_ok &= (ok != 0);
     }
-    ok &= val <= 0XFFFF;
+    and_ok &= val <= 0XFFFF;
     return u16(val);
 }
 
@@ -6539,8 +6435,8 @@ static u16 algo::ch_qGetnum(algo::LspaceStr5_I16& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u16 algo::ch_GetnumDflt(algo::LspaceStr5_I16& parent, u16 dflt) {
-    u32 ok = 1;
-    u16 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u16 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -6549,9 +6445,8 @@ u16 algo::ch_GetnumDflt(algo::LspaceStr5_I16& parent, u16 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LspaceStr5_I16& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -6690,16 +6585,18 @@ void algo::ch_SetStrptr(algo::LspaceStr6_U32& parent, const algo::strptr &rhs) {
     }
 }
 
-// --- algo.LspaceStr6_U32.ch.qGetnum
+// --- algo.LspaceStr6_U32.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32 algo::ch_qGetnum(algo::LspaceStr6_U32& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32 algo::ch_Getnum(algo::LspaceStr6_U32& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
+        u32 ok = 1;
         val = aParseNum8(str, ok);
+        and_ok &= (ok != 0);
     }
     return u32(val);
 }
@@ -6709,8 +6606,8 @@ static u32 algo::ch_qGetnum(algo::LspaceStr6_U32& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32 algo::ch_GetnumDflt(algo::LspaceStr6_U32& parent, u32 dflt) {
-    u32 ok = 1;
-    u32 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -6719,9 +6616,8 @@ u32 algo::ch_GetnumDflt(algo::LspaceStr6_U32& parent, u32 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LspaceStr6_U32& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -6798,12 +6694,12 @@ void algo::ch_SetStrptr(algo::LspaceStr7_I32_Base36& parent, const algo::strptr 
     }
 }
 
-// --- algo.LspaceStr7_I32_Base36.ch.qGetnum
+// --- algo.LspaceStr7_I32_Base36.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static i32 algo::ch_qGetnum(algo::LspaceStr7_I32_Base36& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+i32 algo::ch_Getnum(algo::LspaceStr7_I32_Base36& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     bool is_neg = (str.n_elems > 0) && (str.elems[0] == '-');
@@ -6821,12 +6717,12 @@ static i32 algo::ch_qGetnum(algo::LspaceStr7_I32_Base36& parent, u32 &ok) {
         } else if (ch >= 'A' && ch <= 'A' + 36-10) {
             digit = digit - 'A' + 10;
         } else {
-            ok = 0;
+            and_ok = false;
         }
         val = val*36 + digit;
     }
     i64 ret = is_neg ? -val : val;
-    ok &= ret >= i64(0XFFFFFFFF80000000) && ret <= i64(0X7FFFFFFF);
+    and_ok &= ret >= i64(0XFFFFFFFF80000000) && ret <= i64(0X7FFFFFFF);
     return i32(ret);
 }
 
@@ -6835,8 +6731,8 @@ static i32 algo::ch_qGetnum(algo::LspaceStr7_I32_Base36& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 i32 algo::ch_GetnumDflt(algo::LspaceStr7_I32_Base36& parent, i32 dflt) {
-    u32 ok = 1;
-    i32 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    i32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -6845,9 +6741,8 @@ i32 algo::ch_GetnumDflt(algo::LspaceStr7_I32_Base36& parent, i32 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::LspaceStr7_I32_Base36& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -9877,16 +9772,18 @@ void algo::ch_SetStrptr(algo::RnullStr6_U32& parent, const algo::strptr &rhs) {
     }
 }
 
-// --- algo.RnullStr6_U32.ch.qGetnum
+// --- algo.RnullStr6_U32.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32 algo::ch_qGetnum(algo::RnullStr6_U32& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32 algo::ch_Getnum(algo::RnullStr6_U32& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
+        u32 ok = 1;
         val = aParseNum8(str, ok);
+        and_ok &= (ok != 0);
     }
     return u32(val);
 }
@@ -9896,8 +9793,8 @@ static u32 algo::ch_qGetnum(algo::RnullStr6_U32& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32 algo::ch_GetnumDflt(algo::RnullStr6_U32& parent, u32 dflt) {
-    u32 ok = 1;
-    u32 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -9906,9 +9803,8 @@ u32 algo::ch_GetnumDflt(algo::RnullStr6_U32& parent, u32 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 algo::ch_Geti64(algo::RnullStr6_U32& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 

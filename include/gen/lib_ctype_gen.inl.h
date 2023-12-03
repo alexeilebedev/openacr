@@ -98,6 +98,24 @@ inline void lib_ctype::c_field_RemoveAll(lib_ctype::FCtype& ctype) {
     ctype.c_field_n = 0;
 }
 
+// --- lib_ctype.FCtype.c_field.qFind
+// Return reference without bounds checking
+inline lib_ctype::FField& lib_ctype::c_field_qFind(lib_ctype::FCtype& ctype, u32 idx) {
+    return *ctype.c_field_elems[idx];
+}
+
+// --- lib_ctype.FCtype.c_field.InAryQ
+// True if row is in any ptrary instance
+inline bool lib_ctype::ctype_c_field_InAryQ(lib_ctype::FField& row) {
+    return row.ctype_c_field_in_ary;
+}
+
+// --- lib_ctype.FCtype.c_field.qLast
+// Reference to last element without bounds checking
+inline lib_ctype::FField& lib_ctype::c_field_qLast(lib_ctype::FCtype& ctype) {
+    return *ctype.c_field_elems[ctype.c_field_n-1];
+}
+
 // --- lib_ctype.FCtype.c_cdflt.InsertMaybe
 // Insert row into pointer index. Return final membership status.
 inline bool lib_ctype::c_cdflt_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FCdflt& row) {
@@ -156,6 +174,24 @@ inline void lib_ctype::c_cfmt_RemoveAll(lib_ctype::FCtype& ctype) {
         ctype.c_cfmt_elems[i]->ctype_c_cfmt_in_ary = false;
     }
     ctype.c_cfmt_n = 0;
+}
+
+// --- lib_ctype.FCtype.c_cfmt.qFind
+// Return reference without bounds checking
+inline lib_ctype::FCfmt& lib_ctype::c_cfmt_qFind(lib_ctype::FCtype& ctype, u32 idx) {
+    return *ctype.c_cfmt_elems[idx];
+}
+
+// --- lib_ctype.FCtype.c_cfmt.InAryQ
+// True if row is in any ptrary instance
+inline bool lib_ctype::ctype_c_cfmt_InAryQ(lib_ctype::FCfmt& row) {
+    return row.ctype_c_cfmt_in_ary;
+}
+
+// --- lib_ctype.FCtype.c_cfmt.qLast
+// Reference to last element without bounds checking
+inline lib_ctype::FCfmt& lib_ctype::c_cfmt_qLast(lib_ctype::FCtype& ctype) {
+    return *ctype.c_cfmt_elems[ctype.c_cfmt_n-1];
 }
 
 // --- lib_ctype.FCtype.c_field_curs.Reset
@@ -1165,6 +1201,24 @@ inline void lib_ctype::c_substr_srcfield_RemoveAll(lib_ctype::FField& field) {
         field.c_substr_srcfield_elems[i]->field_c_substr_srcfield_in_ary = false;
     }
     field.c_substr_srcfield_n = 0;
+}
+
+// --- lib_ctype.FField.c_substr_srcfield.qFind
+// Return reference without bounds checking
+inline lib_ctype::FSubstr& lib_ctype::c_substr_srcfield_qFind(lib_ctype::FField& field, u32 idx) {
+    return *field.c_substr_srcfield_elems[idx];
+}
+
+// --- lib_ctype.FField.c_substr_srcfield.InAryQ
+// True if row is in any ptrary instance
+inline bool lib_ctype::field_c_substr_srcfield_InAryQ(lib_ctype::FSubstr& row) {
+    return row.field_c_substr_srcfield_in_ary;
+}
+
+// --- lib_ctype.FField.c_substr_srcfield.qLast
+// Reference to last element without bounds checking
+inline lib_ctype::FSubstr& lib_ctype::c_substr_srcfield_qLast(lib_ctype::FField& field) {
+    return *field.c_substr_srcfield_elems[field.c_substr_srcfield_n-1];
 }
 
 // --- lib_ctype.FField.zd_fconst_curs.Reset

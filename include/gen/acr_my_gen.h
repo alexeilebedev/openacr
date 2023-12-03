@@ -134,7 +134,7 @@ algo::cstring&       ary_ns_qLast() __attribute__((nothrow));
 // Return row id of specified element
 u64                  ary_ns_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> ary_ns_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> ary_ns_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
 
 // Read argc,argv directly into the fields of the command line(s)
 // The following fields are updated:

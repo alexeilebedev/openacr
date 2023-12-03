@@ -681,6 +681,24 @@ inline void atf_cov::c_covline_RemoveAll(atf_cov::FGitfile& gitfile) {
     gitfile.c_covline_n = 0;
 }
 
+// --- atf_cov.FGitfile.c_covline.qFind
+// Return reference without bounds checking
+inline atf_cov::FCovline& atf_cov::c_covline_qFind(atf_cov::FGitfile& gitfile, u32 idx) {
+    return *gitfile.c_covline_elems[idx];
+}
+
+// --- atf_cov.FGitfile.c_covline.InAryQ
+// True if row is in any ptrary instance
+inline bool atf_cov::gitfile_c_covline_InAryQ(atf_cov::FCovline& row) {
+    return row.gitfile_c_covline_in_ary;
+}
+
+// --- atf_cov.FGitfile.c_covline.qLast
+// Reference to last element without bounds checking
+inline atf_cov::FCovline& atf_cov::c_covline_qLast(atf_cov::FGitfile& gitfile) {
+    return *gitfile.c_covline_elems[gitfile.c_covline_n-1];
+}
+
 // --- atf_cov.FGitfile.c_covfile.InsertMaybe
 // Insert row into pointer index. Return final membership status.
 inline bool atf_cov::c_covfile_InsertMaybe(atf_cov::FGitfile& gitfile, atf_cov::FCovfile& row) {
@@ -783,6 +801,24 @@ inline void atf_cov::c_targsrc_RemoveAll(atf_cov::FTarget& target) {
         target.c_targsrc_elems[i]->target_c_targsrc_in_ary = false;
     }
     target.c_targsrc_n = 0;
+}
+
+// --- atf_cov.FTarget.c_targsrc.qFind
+// Return reference without bounds checking
+inline atf_cov::FTargsrc& atf_cov::c_targsrc_qFind(atf_cov::FTarget& target, u32 idx) {
+    return *target.c_targsrc_elems[idx];
+}
+
+// --- atf_cov.FTarget.c_targsrc.InAryQ
+// True if row is in any ptrary instance
+inline bool atf_cov::target_c_targsrc_InAryQ(atf_cov::FTargsrc& row) {
+    return row.target_c_targsrc_in_ary;
+}
+
+// --- atf_cov.FTarget.c_targsrc.qLast
+// Reference to last element without bounds checking
+inline atf_cov::FTargsrc& atf_cov::c_targsrc_qLast(atf_cov::FTarget& target) {
+    return *target.c_targsrc_elems[target.c_targsrc_n-1];
 }
 
 // --- atf_cov.FTarget.c_covtarget.InsertMaybe

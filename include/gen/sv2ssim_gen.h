@@ -246,7 +246,7 @@ algo::cstring&       linetok_qLast() __attribute__((nothrow));
 // Return row id of specified element
 u64                  linetok_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> linetok_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> linetok_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.

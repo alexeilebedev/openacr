@@ -821,6 +821,7 @@ namespace amc { // update-hdr
 
     // Implement _Call function for the hook
     // void tfunc_Hook_Call();
+    bool InlaryQ(amc::FHook& hook);
 
     // -------------------------------------------------------------------
     // cpp/amc/include.cpp
@@ -1186,7 +1187,7 @@ namespace amc { // update-hdr
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Numstr();
-    // void tfunc_Numstr_qGetnum();
+    // void tfunc_Numstr_Getnum();
     // void tfunc_Numstr_GetnumDflt();
     // void tfunc_Numstr_Geti64();
     // void tfunc_Numstr_SetnumMaybe();
@@ -1294,6 +1295,9 @@ namespace amc { // update-hdr
     // void tfunc_Ptrary_Cascdel();
     // void tfunc_Ptrary_EmptyQ();
     // void tfunc_Ptrary_Find();
+    // void tfunc_Ptrary_InAryQ();
+    // void tfunc_Ptrary_qFind();
+    // void tfunc_Ptrary_qLast();
     // void tfunc_Ptrary_Getary();
     // void tfunc_Ptrary_Init();
     // void tfunc_Ptrary_Insert();

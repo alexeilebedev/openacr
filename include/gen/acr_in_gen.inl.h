@@ -97,6 +97,24 @@ inline void acr_in::c_field_RemoveAll(acr_in::FCtype& ctype) {
     ctype.c_field_n = 0;
 }
 
+// --- acr_in.FCtype.c_field.qFind
+// Return reference without bounds checking
+inline acr_in::FField& acr_in::c_field_qFind(acr_in::FCtype& ctype, u32 idx) {
+    return *ctype.c_field_elems[idx];
+}
+
+// --- acr_in.FCtype.c_field.InAryQ
+// True if row is in any ptrary instance
+inline bool acr_in::ctype_c_field_InAryQ(acr_in::FField& row) {
+    return row.ctype_c_field_in_ary;
+}
+
+// --- acr_in.FCtype.c_field.qLast
+// Reference to last element without bounds checking
+inline acr_in::FField& acr_in::c_field_qLast(acr_in::FCtype& ctype) {
+    return *ctype.c_field_elems[ctype.c_field_n-1];
+}
+
 // --- acr_in.FCtype.c_ctype.EmptyQ
 // Return true if index is empty
 inline bool acr_in::c_ctype_EmptyQ(acr_in::FCtype& ctype) {
@@ -131,6 +149,18 @@ inline i32 acr_in::c_ctype_N(const acr_in::FCtype& ctype) {
 // Empty the index. (The rows are not deleted)
 inline void acr_in::c_ctype_RemoveAll(acr_in::FCtype& ctype) {
     ctype.c_ctype_n = 0;
+}
+
+// --- acr_in.FCtype.c_ctype.qFind
+// Return reference without bounds checking
+inline acr_in::FCtype& acr_in::c_ctype_qFind(acr_in::FCtype& ctype, u32 idx) {
+    return *ctype.c_ctype_elems[idx];
+}
+
+// --- acr_in.FCtype.c_ctype.qLast
+// Reference to last element without bounds checking
+inline acr_in::FCtype& acr_in::c_ctype_qLast(acr_in::FCtype& ctype) {
+    return *ctype.c_ctype_elems[ctype.c_ctype_n-1];
 }
 
 // --- acr_in.FCtype.c_field_curs.Reset
@@ -1893,6 +1923,24 @@ inline void acr_in::c_targdep_RemoveAll(acr_in::FTarget& target) {
     target.c_targdep_n = 0;
 }
 
+// --- acr_in.FTarget.c_targdep.qFind
+// Return reference without bounds checking
+inline acr_in::FTargdep& acr_in::c_targdep_qFind(acr_in::FTarget& target, u32 idx) {
+    return *target.c_targdep_elems[idx];
+}
+
+// --- acr_in.FTarget.c_targdep.InAryQ
+// True if row is in any ptrary instance
+inline bool acr_in::target_c_targdep_InAryQ(acr_in::FTargdep& row) {
+    return row.target_c_targdep_in_ary;
+}
+
+// --- acr_in.FTarget.c_targdep.qLast
+// Reference to last element without bounds checking
+inline acr_in::FTargdep& acr_in::c_targdep_qLast(acr_in::FTarget& target) {
+    return *target.c_targdep_elems[target.c_targdep_n-1];
+}
+
 // --- acr_in.FTarget.c_targdep_child.EmptyQ
 // Return true if index is empty
 inline bool acr_in::c_targdep_child_EmptyQ(acr_in::FTarget& target) {
@@ -1931,6 +1979,24 @@ inline void acr_in::c_targdep_child_RemoveAll(acr_in::FTarget& target) {
         target.c_targdep_child_elems[i]->target_c_targdep_child_in_ary = false;
     }
     target.c_targdep_child_n = 0;
+}
+
+// --- acr_in.FTarget.c_targdep_child.qFind
+// Return reference without bounds checking
+inline acr_in::FTargdep& acr_in::c_targdep_child_qFind(acr_in::FTarget& target, u32 idx) {
+    return *target.c_targdep_child_elems[idx];
+}
+
+// --- acr_in.FTarget.c_targdep_child.InAryQ
+// True if row is in any ptrary instance
+inline bool acr_in::target_c_targdep_child_InAryQ(acr_in::FTargdep& row) {
+    return row.target_c_targdep_child_in_ary;
+}
+
+// --- acr_in.FTarget.c_targdep_child.qLast
+// Reference to last element without bounds checking
+inline acr_in::FTargdep& acr_in::c_targdep_child_qLast(acr_in::FTarget& target) {
+    return *target.c_targdep_child_elems[target.c_targdep_child_n-1];
 }
 
 // --- acr_in.FTarget..Init
@@ -2043,6 +2109,18 @@ inline void acr_in::c_child_RemoveAll(acr_in::FTuple& tuple) {
     tuple.c_child_n = 0;
 }
 
+// --- acr_in.FTuple.c_child.qFind
+// Return reference without bounds checking
+inline acr_in::FTuple& acr_in::c_child_qFind(acr_in::FTuple& tuple, u32 idx) {
+    return *tuple.c_child_elems[idx];
+}
+
+// --- acr_in.FTuple.c_child.qLast
+// Reference to last element without bounds checking
+inline acr_in::FTuple& acr_in::c_child_qLast(acr_in::FTuple& tuple) {
+    return *tuple.c_child_elems[tuple.c_child_n-1];
+}
+
 // --- acr_in.FTuple.c_parent.EmptyQ
 // Return true if index is empty
 inline bool acr_in::c_parent_EmptyQ(acr_in::FTuple& tuple) {
@@ -2077,6 +2155,18 @@ inline i32 acr_in::c_parent_N(const acr_in::FTuple& tuple) {
 // Empty the index. (The rows are not deleted)
 inline void acr_in::c_parent_RemoveAll(acr_in::FTuple& tuple) {
     tuple.c_parent_n = 0;
+}
+
+// --- acr_in.FTuple.c_parent.qFind
+// Return reference without bounds checking
+inline acr_in::FTuple& acr_in::c_parent_qFind(acr_in::FTuple& tuple, u32 idx) {
+    return *tuple.c_parent_elems[idx];
+}
+
+// --- acr_in.FTuple.c_parent.qLast
+// Reference to last element without bounds checking
+inline acr_in::FTuple& acr_in::c_parent_qLast(acr_in::FTuple& tuple) {
+    return *tuple.c_parent_elems[tuple.c_parent_n-1];
 }
 
 // --- acr_in.FTuple..Init

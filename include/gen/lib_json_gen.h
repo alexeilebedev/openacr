@@ -270,6 +270,12 @@ void                 c_child_Remove(lib_json::FNode& node, lib_json::FNode& row)
 void                 c_child_RemoveAll(lib_json::FNode& node) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_child_Reserve(lib_json::FNode& node, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+lib_json::FNode&     c_child_qFind(lib_json::FNode& node, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 node_c_child_InAryQ(lib_json::FNode& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+lib_json::FNode&     c_child_qLast(lib_json::FNode& node) __attribute__((nothrow));
 
 // Get value of field as enum type
 lib_json_FNode_type_Enum type_GetEnum(const lib_json::FNode& node) __attribute__((nothrow));

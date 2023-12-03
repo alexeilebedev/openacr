@@ -108,7 +108,7 @@ void acr_ed::edaction_Create_Srcfile() {
     // updateh file copyright headers
     Ins(&R, acr_ed::_db.script, "git add $srcfile");
     if (cpp_or_h) {
-        Ins(&R, acr_ed::_db.script, "bin/src_hdr -tarsrc:$target/% -write");
+        Ins(&R, acr_ed::_db.script, "bin/src_hdr -targsrc:$target/% -write");
     }
     ScriptEditFile(R,acr_ed::_db.cmdline.srcfile);
 }

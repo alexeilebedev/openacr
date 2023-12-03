@@ -425,7 +425,7 @@ atf_unit::Dbl&       orig_qLast(atf_unit::FPerfSort& parent) __attribute__((noth
 // Return row id of specified element
 u64                  orig_rowid_Get(atf_unit::FPerfSort& parent, atf_unit::Dbl &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_unit::Dbl> orig_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const atf_unit::Dbl& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<atf_unit::Dbl> orig_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const atf_unit::Dbl& val) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 orig_XrefMaybe(atf_unit::Dbl &row);
@@ -475,7 +475,7 @@ atf_unit::Dbl&       sorted_qLast(atf_unit::FPerfSort& parent) __attribute__((no
 // Return row id of specified element
 u64                  sorted_rowid_Get(atf_unit::FPerfSort& parent, atf_unit::Dbl &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_unit::Dbl> sorted_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const atf_unit::Dbl& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<atf_unit::Dbl> sorted_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const atf_unit::Dbl& val) __attribute__((nothrow));
 // Verify whether array is sorted
 bool                 sorted_SortedQ(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Insertion sort
@@ -523,7 +523,7 @@ i32&                 index_qLast(atf_unit::FPerfSort& parent) __attribute__((not
 // Return row id of specified element
 u64                  index_rowid_Get(atf_unit::FPerfSort& parent, i32 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<i32>    index_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const i32& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<i32>    index_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const i32& val) __attribute__((nothrow));
 
 // proceed to next item
 void                 FPerfSort_orig_curs_Next(FPerfSort_orig_curs &curs);

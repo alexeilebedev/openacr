@@ -360,6 +360,7 @@ struct FDb { // abt.FDb
     abt::FSrcfile*      zd_inclstack_head;            // zero-terminated doubly linked list
     i32                 zd_inclstack_n;               // zero-terminated doubly linked list
     abt::FSrcfile*      zd_inclstack_tail;            // pointer to last element
+    bool                tty;                          //   false  Output
     abt::trace          trace;                        //
 };
 
@@ -1053,7 +1054,7 @@ algo::cstring&       sysincl_qLast() __attribute__((nothrow));
 // Return row id of specified element
 u64                  sysincl_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> sysincl_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> sysincl_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 zs_origsel_target_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -1611,6 +1612,12 @@ void                 c_prior_Remove(abt::FSyscmd& syscmd, abt::FSyscmddep& row) 
 void                 c_prior_RemoveAll(abt::FSyscmd& syscmd) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_prior_Reserve(abt::FSyscmd& syscmd, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+abt::FSyscmddep&     c_prior_qFind(abt::FSyscmd& syscmd, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 syscmd_c_prior_InAryQ(abt::FSyscmddep& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+abt::FSyscmddep&     c_prior_qLast(abt::FSyscmd& syscmd) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_next_EmptyQ(abt::FSyscmd& syscmd) __attribute__((nothrow));
@@ -1633,6 +1640,12 @@ void                 c_next_Remove(abt::FSyscmd& syscmd, abt::FSyscmddep& row) _
 void                 c_next_RemoveAll(abt::FSyscmd& syscmd) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_next_Reserve(abt::FSyscmd& syscmd, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+abt::FSyscmddep&     c_next_qFind(abt::FSyscmd& syscmd, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 syscmd_c_next_InAryQ(abt::FSyscmddep& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+abt::FSyscmddep&     c_next_qLast(abt::FSyscmd& syscmd) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FSyscmd_Init(abt::FSyscmd& syscmd);
@@ -1825,6 +1838,12 @@ void                 c_targsrc_Remove(abt::FTarget& target, abt::FTargsrc& row) 
 void                 c_targsrc_RemoveAll(abt::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_targsrc_Reserve(abt::FTarget& target, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+abt::FTargsrc&       c_targsrc_qFind(abt::FTarget& target, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 target_c_targsrc_InAryQ(abt::FTargsrc& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+abt::FTargsrc&       c_targsrc_qLast(abt::FTarget& target) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_srcfile_EmptyQ(abt::FTarget& target) __attribute__((nothrow));
@@ -1848,6 +1867,10 @@ void                 c_srcfile_Remove(abt::FTarget& target, abt::FSrcfile& row) 
 void                 c_srcfile_RemoveAll(abt::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_srcfile_Reserve(abt::FTarget& target, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+abt::FSrcfile&       c_srcfile_qFind(abt::FTarget& target, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+abt::FSrcfile&       c_srcfile_qLast(abt::FTarget& target) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_targdep_EmptyQ(abt::FTarget& target) __attribute__((nothrow));
@@ -1870,6 +1893,12 @@ void                 c_targdep_Remove(abt::FTarget& target, abt::FTargdep& row) 
 void                 c_targdep_RemoveAll(abt::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_targdep_Reserve(abt::FTarget& target, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+abt::FTargdep&       c_targdep_qFind(abt::FTarget& target, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 target_c_targdep_InAryQ(abt::FTargdep& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+abt::FTargdep&       c_targdep_qLast(abt::FTarget& target) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_targsyslib_EmptyQ(abt::FTarget& target) __attribute__((nothrow));
@@ -1892,6 +1921,12 @@ void                 c_targsyslib_Remove(abt::FTarget& target, abt::FTargsyslib&
 void                 c_targsyslib_RemoveAll(abt::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_targsyslib_Reserve(abt::FTarget& target, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+abt::FTargsyslib&    c_targsyslib_qFind(abt::FTarget& target, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 target_c_targsyslib_InAryQ(abt::FTargsyslib& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+abt::FTargsyslib&    c_targsyslib_qLast(abt::FTarget& target) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_alldep_EmptyQ(abt::FTarget& target) __attribute__((nothrow));
@@ -1915,6 +1950,10 @@ void                 c_alldep_Remove(abt::FTarget& target, abt::FTarget& row) __
 void                 c_alldep_RemoveAll(abt::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_alldep_Reserve(abt::FTarget& target, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+abt::FTarget&        c_alldep_qFind(abt::FTarget& target, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+abt::FTarget&        c_alldep_qLast(abt::FTarget& target) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_alllib_EmptyQ(abt::FTarget& target) __attribute__((nothrow));
@@ -1938,6 +1977,10 @@ void                 c_alllib_Remove(abt::FTarget& target, abt::FSyslib& row) __
 void                 c_alllib_RemoveAll(abt::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_alllib_Reserve(abt::FTarget& target, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+abt::FSyslib&        c_alllib_qFind(abt::FTarget& target, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+abt::FSyslib&        c_alllib_qLast(abt::FTarget& target) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FTarget_Init(abt::FTarget& target);

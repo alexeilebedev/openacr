@@ -101,6 +101,9 @@ static i32 ComputeXpos(amc_vis::FNode *node) {
             ind_beg(amc_vis::node_zd_link_out_curs, link, prior) {
                 if (link.outrow >= node->c_top->outrow && link.outrow <= node->c_bottom->outrow) {
                     xpos = i32_Max(xpos, prior.xpos + ch_N(link.label1));
+                    xpos = i32_Max(xpos, prior.xpos + ch_N(link.label2));
+                } else if (link.p_node1->c_top->outrow <= node->c_top->outrow && link.p_node2->c_bottom->outrow >= node->c_bottom->outrow) {
+                    xpos = i32_Max(xpos, prior.xpos + 2);
                 }
             }ind_end;
         }ind_end;
@@ -365,7 +368,7 @@ static void Main_GenerateDot() {
         out << eol;
     }ind_end;
 
-    out << "};\n";
+    out << "}\n";
     verblog(out);
     StringToFile(out, amc_vis::_db.cmdline.dot, algo_FileFlags__throw);
     tempstr svg;
@@ -386,14 +389,14 @@ void amc_vis::Main() {
 
     // select all reachable ctypes
     if (amc_vis::_db.cmdline.xref) {
-        if (amc_vis::FCtype *ctype = amc_vis::zd_select_First()) {
-            ind_beg(amc_vis::ctype_c_field_curs, field, *ctype) {
-                bool select  = amc_vis::_db.cmdline.xns || ns_Get(*field.p_arg) == ns_Get(*ctype);
+        ind_beg(amc_vis::_db_ctype_curs, ctype, amc_vis::_db) if (Regx_Match(amc_vis::_db.cmdline.ctype, strptr(ctype.ctype))) {
+            ind_beg(amc_vis::ctype_c_field_curs, field, ctype) {
+                bool select  = amc_vis::_db.cmdline.xns || ns_Get(*field.p_arg) == ns_Get(ctype);
                 if (select) {
                     zd_select_Insert(*field.p_arg);
                 }
             }ind_end;
-        }
+        }ind_end;
     }
 
     // determine which ctypes are inputs

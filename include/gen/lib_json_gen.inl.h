@@ -200,6 +200,24 @@ inline void lib_json::c_child_RemoveAll(lib_json::FNode& node) {
     node.c_child_n = 0;
 }
 
+// --- lib_json.FNode.c_child.qFind
+// Return reference without bounds checking
+inline lib_json::FNode& lib_json::c_child_qFind(lib_json::FNode& node, u32 idx) {
+    return *node.c_child_elems[idx];
+}
+
+// --- lib_json.FNode.c_child.InAryQ
+// True if row is in any ptrary instance
+inline bool lib_json::node_c_child_InAryQ(lib_json::FNode& row) {
+    return row.node_c_child_in_ary;
+}
+
+// --- lib_json.FNode.c_child.qLast
+// Reference to last element without bounds checking
+inline lib_json::FNode& lib_json::c_child_qLast(lib_json::FNode& node) {
+    return *node.c_child_elems[node.c_child_n-1];
+}
+
 // --- lib_json.FNode.type.GetEnum
 // Get value of field as enum type
 inline lib_json_FNode_type_Enum lib_json::type_GetEnum(const lib_json::FNode& node) {

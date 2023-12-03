@@ -800,7 +800,7 @@ algo::cstring&       where_qLast(command::acr& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  where_rowid_Get(command::acr& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> where_AllocNVal(command::acr& parent, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> where_AllocNVal(command::acr& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 where_ReadStrptrMaybe(command::acr& parent, algo::strptr in_str) __attribute__((nothrow));
 
@@ -842,7 +842,7 @@ algo::cstring&       field_qLast(command::acr& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  field_rowid_Get(command::acr& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> field_AllocNVal(command::acr& parent, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> field_AllocNVal(command::acr& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 field_ReadStrptrMaybe(command::acr& parent, algo::strptr in_str) __attribute__((nothrow));
 
@@ -1007,7 +1007,7 @@ algo::cstring&       arg_qLast(command::acr_dm& parent) __attribute__((nothrow))
 // Return row id of specified element
 u64                  arg_rowid_Get(command::acr_dm& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> arg_AllocNVal(command::acr_dm& parent, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> arg_AllocNVal(command::acr_dm& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 arg_ReadStrptrMaybe(command::acr_dm& parent, algo::strptr in_str) __attribute__((nothrow));
 
@@ -2100,7 +2100,7 @@ algo::cstring&       mstr_qLast(command::atf_cmdline& parent) __attribute__((not
 // Return row id of specified element
 u64                  mstr_rowid_Get(command::atf_cmdline& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> mstr_AllocNVal(command::atf_cmdline& parent, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> mstr_AllocNVal(command::atf_cmdline& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 mstr_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) __attribute__((nothrow));
 
@@ -2142,7 +2142,7 @@ i32&                 mnum_qLast(command::atf_cmdline& parent) __attribute__((not
 // Return row id of specified element
 u64                  mnum_rowid_Get(command::atf_cmdline& parent, i32 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<i32>    mnum_AllocNVal(command::atf_cmdline& parent, int n_elems, const i32& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<i32>    mnum_AllocNVal(command::atf_cmdline& parent, int n_elems, const i32& val) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 mnum_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) __attribute__((nothrow));
 
@@ -2184,7 +2184,7 @@ double&              mdbl_qLast(command::atf_cmdline& parent) __attribute__((not
 // Return row id of specified element
 u64                  mdbl_rowid_Get(command::atf_cmdline& parent, double &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<double> mdbl_AllocNVal(command::atf_cmdline& parent, int n_elems, const double& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<double> mdbl_AllocNVal(command::atf_cmdline& parent, int n_elems, const double& val) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 mdbl_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) __attribute__((nothrow));
 
@@ -2226,7 +2226,7 @@ i32&                 amnum_qLast(command::atf_cmdline& parent) __attribute__((no
 // Return row id of specified element
 u64                  amnum_rowid_Get(command::atf_cmdline& parent, i32 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<i32>    amnum_AllocNVal(command::atf_cmdline& parent, int n_elems, const i32& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<i32>    amnum_AllocNVal(command::atf_cmdline& parent, int n_elems, const i32& val) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 amnum_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) __attribute__((nothrow));
 
@@ -3032,7 +3032,7 @@ algo::cstring&       cmd_qLast(command::gcache& parent) __attribute__((nothrow))
 // Return row id of specified element
 u64                  cmd_rowid_Get(command::gcache& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> cmd_AllocNVal(command::gcache& parent, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> cmd_AllocNVal(command::gcache& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 cmd_ReadStrptrMaybe(command::gcache& parent, algo::strptr in_str) __attribute__((nothrow));
 
@@ -3173,7 +3173,7 @@ algo::cstring&       fields_qLast(command::gcli& parent) __attribute__((nothrow)
 // Return row id of specified element
 u64                  fields_rowid_Get(command::gcli& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> fields_AllocNVal(command::gcli& parent, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> fields_AllocNVal(command::gcli& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 fields_ReadStrptrMaybe(command::gcli& parent, algo::strptr in_str) __attribute__((nothrow));
 
@@ -3358,7 +3358,7 @@ algo::cstring&       args_qLast(command::mdbg& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  args_rowid_Get(command::mdbg& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> args_AllocNVal(command::mdbg& parent, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> args_AllocNVal(command::mdbg& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 args_ReadStrptrMaybe(command::mdbg& parent, algo::strptr in_str) __attribute__((nothrow));
 
@@ -3400,7 +3400,7 @@ algo::cstring&       b_qLast(command::mdbg& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  b_rowid_Get(command::mdbg& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> b_AllocNVal(command::mdbg& parent, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> b_AllocNVal(command::mdbg& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 b_ReadStrptrMaybe(command::mdbg& parent, algo::strptr in_str) __attribute__((nothrow));
 
@@ -3793,7 +3793,7 @@ algo::cstring&       cmd_qLast(command::sandbox& parent) __attribute__((nothrow)
 // Return row id of specified element
 u64                  cmd_rowid_Get(command::sandbox& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> cmd_AllocNVal(command::sandbox& parent, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> cmd_AllocNVal(command::sandbox& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 cmd_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in_str) __attribute__((nothrow));
 
@@ -3835,7 +3835,7 @@ algo::cstring&       files_qLast(command::sandbox& parent) __attribute__((nothro
 // Return row id of specified element
 u64                  files_rowid_Get(command::sandbox& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> files_AllocNVal(command::sandbox& parent, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> files_AllocNVal(command::sandbox& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 files_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in_str) __attribute__((nothrow));
 
@@ -4426,7 +4426,7 @@ algo::cstring&       match_qLast(command::ssimfilt& parent) __attribute__((nothr
 // Return row id of specified element
 u64                  match_rowid_Get(command::ssimfilt& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> match_AllocNVal(command::ssimfilt& parent, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> match_AllocNVal(command::ssimfilt& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 match_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in_str) __attribute__((nothrow));
 
@@ -4468,7 +4468,7 @@ algo::cstring&       field_qLast(command::ssimfilt& parent) __attribute__((nothr
 // Return row id of specified element
 u64                  field_rowid_Get(command::ssimfilt& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> field_AllocNVal(command::ssimfilt& parent, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> field_AllocNVal(command::ssimfilt& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
 bool                 field_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in_str) __attribute__((nothrow));
 

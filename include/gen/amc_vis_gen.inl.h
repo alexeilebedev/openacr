@@ -76,6 +76,24 @@ inline void amc_vis::c_field_RemoveAll(amc_vis::FCtype& ctype) {
     ctype.c_field_n = 0;
 }
 
+// --- amc_vis.FCtype.c_field.qFind
+// Return reference without bounds checking
+inline amc_vis::FField& amc_vis::c_field_qFind(amc_vis::FCtype& ctype, u32 idx) {
+    return *ctype.c_field_elems[idx];
+}
+
+// --- amc_vis.FCtype.c_field.InAryQ
+// True if row is in any ptrary instance
+inline bool amc_vis::ctype_c_field_InAryQ(amc_vis::FField& row) {
+    return row.ctype_c_field_in_ary;
+}
+
+// --- amc_vis.FCtype.c_field.qLast
+// Reference to last element without bounds checking
+inline amc_vis::FField& amc_vis::c_field_qLast(amc_vis::FCtype& ctype) {
+    return *ctype.c_field_elems[ctype.c_field_n-1];
+}
+
 // --- amc_vis.FCtype.c_field_curs.Reset
 inline void amc_vis::ctype_c_field_curs_Reset(ctype_c_field_curs &curs, amc_vis::FCtype &parent) {
     curs.elems = parent.c_field_elems;
@@ -414,6 +432,24 @@ inline void amc_vis::c_linklist_RemoveAll() {
         _db.c_linklist_elems[i]->_db_c_linklist_in_ary = false;
     }
     _db.c_linklist_n = 0;
+}
+
+// --- amc_vis.FDb.c_linklist.qFind
+// Return reference without bounds checking
+inline amc_vis::Link& amc_vis::c_linklist_qFind(u32 idx) {
+    return *_db.c_linklist_elems[idx];
+}
+
+// --- amc_vis.FDb.c_linklist.InAryQ
+// True if row is in any ptrary instance
+inline bool amc_vis::c_linklist_InAryQ(amc_vis::Link& row) {
+    return row._db_c_linklist_in_ary;
+}
+
+// --- amc_vis.FDb.c_linklist.qLast
+// Reference to last element without bounds checking
+inline amc_vis::Link& amc_vis::c_linklist_qLast() {
+    return *_db.c_linklist_elems[_db.c_linklist_n-1];
 }
 
 // --- amc_vis.FDb.bh_node.EmptyQ

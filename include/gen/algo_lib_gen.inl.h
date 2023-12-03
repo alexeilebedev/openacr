@@ -1547,6 +1547,24 @@ inline void algo_lib::c_txtcell_RemoveAll(algo_lib::FTxtrow& txtrow) {
     txtrow.c_txtcell_n = 0;
 }
 
+// --- algo_lib.FTxtrow.c_txtcell.qFind
+// Return reference without bounds checking
+inline algo_lib::FTxtcell& algo_lib::c_txtcell_qFind(algo_lib::FTxtrow& txtrow, u32 idx) {
+    return *txtrow.c_txtcell_elems[idx];
+}
+
+// --- algo_lib.FTxtrow.c_txtcell.InAryQ
+// True if row is in any ptrary instance
+inline bool algo_lib::txtrow_c_txtcell_InAryQ(algo_lib::FTxtcell& row) {
+    return row.txtrow_c_txtcell_in_ary;
+}
+
+// --- algo_lib.FTxtrow.c_txtcell.qLast
+// Reference to last element without bounds checking
+inline algo_lib::FTxtcell& algo_lib::c_txtcell_qLast(algo_lib::FTxtrow& txtrow) {
+    return *txtrow.c_txtcell_elems[txtrow.c_txtcell_n-1];
+}
+
 // --- algo_lib.FTxtrow..Init
 // Set all fields to initial values.
 inline void algo_lib::FTxtrow_Init(algo_lib::FTxtrow& txtrow) {
@@ -1631,6 +1649,24 @@ inline void algo_lib::c_txtrow_RemoveAll(algo_lib::FTxttbl& txttbl) {
         txttbl.c_txtrow_elems[i]->txttbl_c_txtrow_in_ary = false;
     }
     txttbl.c_txtrow_n = 0;
+}
+
+// --- algo_lib.FTxttbl.c_txtrow.qFind
+// Return reference without bounds checking
+inline algo_lib::FTxtrow& algo_lib::c_txtrow_qFind(algo_lib::FTxttbl& txttbl, u32 idx) {
+    return *txttbl.c_txtrow_elems[idx];
+}
+
+// --- algo_lib.FTxttbl.c_txtrow.InAryQ
+// True if row is in any ptrary instance
+inline bool algo_lib::txttbl_c_txtrow_InAryQ(algo_lib::FTxtrow& row) {
+    return row.txttbl_c_txtrow_in_ary;
+}
+
+// --- algo_lib.FTxttbl.c_txtrow.qLast
+// Reference to last element without bounds checking
+inline algo_lib::FTxtrow& algo_lib::c_txtrow_qLast(algo_lib::FTxttbl& txttbl) {
+    return *txttbl.c_txtrow_elems[txttbl.c_txtrow_n-1];
 }
 
 // --- algo_lib.FTxttbl.c_txtrow_curs.Reset

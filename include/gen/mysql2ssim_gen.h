@@ -146,7 +146,7 @@ algo::cstring&       table_names_qLast() __attribute__((nothrow));
 // Return row id of specified element
 u64                  table_names_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> table_names_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> table_names_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -184,7 +184,7 @@ algo::cstring&       in_tables_qLast() __attribute__((nothrow));
 // Return row id of specified element
 u64                  in_tables_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> in_tables_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> in_tables_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
 
 // proceed to next item
 void                 _db_table_names_curs_Next(_db_table_names_curs &curs);
@@ -257,7 +257,7 @@ algo::cstring&       vals_qLast(mysql2ssim::FTobltin& parent) __attribute__((not
 // Return row id of specified element
 u64                  vals_rowid_Get(mysql2ssim::FTobltin& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> vals_AllocNVal(mysql2ssim::FTobltin& parent, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> vals_AllocNVal(mysql2ssim::FTobltin& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 
 // proceed to next item
 void                 FTobltin_vals_curs_Next(FTobltin_vals_curs &curs);

@@ -595,6 +595,18 @@ inline void amc::c_field_RemoveAll(amc::FCtype& ctype) {
     ctype.c_field_n = 0;
 }
 
+// --- amc.FCtype.c_field.qFind
+// Return reference without bounds checking
+inline amc::FField& amc::c_field_qFind(amc::FCtype& ctype, u32 idx) {
+    return *ctype.c_field_elems[idx];
+}
+
+// --- amc.FCtype.c_field.qLast
+// Reference to last element without bounds checking
+inline amc::FField& amc::c_field_qLast(amc::FCtype& ctype) {
+    return *ctype.c_field_elems[ctype.c_field_n-1];
+}
+
 // --- amc.FCtype.c_msgtype.InsertMaybe
 // Insert row into pointer index. Return final membership status.
 inline bool amc::c_msgtype_InsertMaybe(amc::FCtype& ctype, amc::FMsgtype& row) {
@@ -695,6 +707,24 @@ inline void amc::c_static_RemoveAll(amc::FCtype& ctype) {
     ctype.c_static_n = 0;
 }
 
+// --- amc.FCtype.c_static.qFind
+// Return reference without bounds checking
+inline amc::FStatictuple& amc::c_static_qFind(amc::FCtype& ctype, u32 idx) {
+    return *ctype.c_static_elems[idx];
+}
+
+// --- amc.FCtype.c_static.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::ctype_c_static_InAryQ(amc::FStatictuple& row) {
+    return row.ctype_c_static_in_ary;
+}
+
+// --- amc.FCtype.c_static.qLast
+// Reference to last element without bounds checking
+inline amc::FStatictuple& amc::c_static_qLast(amc::FCtype& ctype) {
+    return *ctype.c_static_elems[ctype.c_static_n-1];
+}
+
 // --- amc.FCtype.c_cpptype.InsertMaybe
 // Insert row into pointer index. Return final membership status.
 inline bool amc::c_cpptype_InsertMaybe(amc::FCtype& ctype, amc::FCpptype& row) {
@@ -749,6 +779,18 @@ inline i32 amc::c_parent_N(const amc::FCtype& ctype) {
 // Empty the index. (The rows are not deleted)
 inline void amc::c_parent_RemoveAll(amc::FCtype& ctype) {
     ctype.c_parent_n = 0;
+}
+
+// --- amc.FCtype.c_parent.qFind
+// Return reference without bounds checking
+inline amc::FCtype& amc::c_parent_qFind(amc::FCtype& ctype, u32 idx) {
+    return *ctype.c_parent_elems[idx];
+}
+
+// --- amc.FCtype.c_parent.qLast
+// Reference to last element without bounds checking
+inline amc::FCtype& amc::c_parent_qLast(amc::FCtype& ctype) {
+    return *ctype.c_parent_elems[ctype.c_parent_n-1];
 }
 
 // --- amc.FCtype.c_ssimfile.InsertMaybe
@@ -889,6 +931,24 @@ inline void amc::c_datafld_RemoveAll(amc::FCtype& ctype) {
         ctype.c_datafld_elems[i]->ctype_c_datafld_in_ary = false;
     }
     ctype.c_datafld_n = 0;
+}
+
+// --- amc.FCtype.c_datafld.qFind
+// Return reference without bounds checking
+inline amc::FField& amc::c_datafld_qFind(amc::FCtype& ctype, u32 idx) {
+    return *ctype.c_datafld_elems[idx];
+}
+
+// --- amc.FCtype.c_datafld.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::ctype_c_datafld_InAryQ(amc::FField& row) {
+    return row.ctype_c_datafld_in_ary;
+}
+
+// --- amc.FCtype.c_datafld.qLast
+// Reference to last element without bounds checking
+inline amc::FField& amc::c_datafld_qLast(amc::FCtype& ctype) {
+    return *ctype.c_datafld_elems[ctype.c_datafld_n-1];
 }
 
 // --- amc.FCtype.zd_inst.EmptyQ
@@ -1111,6 +1171,18 @@ inline i32 amc::c_ffunc_N(const amc::FCtype& ctype) {
 // Empty the index. (The rows are not deleted)
 inline void amc::c_ffunc_RemoveAll(amc::FCtype& ctype) {
     ctype.c_ffunc_n = 0;
+}
+
+// --- amc.FCtype.c_ffunc.qFind
+// Return reference without bounds checking
+inline amc::FFunc& amc::c_ffunc_qFind(amc::FCtype& ctype, u32 idx) {
+    return *ctype.c_ffunc_elems[idx];
+}
+
+// --- amc.FCtype.c_ffunc.qLast
+// Reference to last element without bounds checking
+inline amc::FFunc& amc::c_ffunc_qLast(amc::FCtype& ctype) {
+    return *ctype.c_ffunc_elems[ctype.c_ffunc_n-1];
 }
 
 // --- amc.FCtype.zd_cafter.EmptyQ
@@ -1343,6 +1415,24 @@ inline void amc::c_fcurs_RemoveAll(amc::FCtype& ctype) {
         ctype.c_fcurs_elems[i]->ctype_c_fcurs_in_ary = false;
     }
     ctype.c_fcurs_n = 0;
+}
+
+// --- amc.FCtype.c_fcurs.qFind
+// Return reference without bounds checking
+inline amc::FFcurs& amc::c_fcurs_qFind(amc::FCtype& ctype, u32 idx) {
+    return *ctype.c_fcurs_elems[idx];
+}
+
+// --- amc.FCtype.c_fcurs.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::ctype_c_fcurs_InAryQ(amc::FFcurs& row) {
+    return row.ctype_c_fcurs_in_ary;
+}
+
+// --- amc.FCtype.c_fcurs.qLast
+// Reference to last element without bounds checking
+inline amc::FFcurs& amc::c_fcurs_qLast(amc::FCtype& ctype) {
+    return *ctype.c_fcurs_elems[ctype.c_fcurs_n-1];
 }
 
 // --- amc.FCtype.c_ctypelen.InsertMaybe
@@ -1737,12 +1827,28 @@ inline void amc::c_tfunc_RemoveAll(amc::FTclass& tclass) {
     tclass.c_tfunc_n = 0;
 }
 
+// --- amc.FTclass.c_tfunc.qFind
+// Return reference without bounds checking
+inline amc::FTfunc& amc::c_tfunc_qFind(amc::FTclass& tclass, u32 idx) {
+    return *tclass.c_tfunc_elems[idx];
+}
+
+// --- amc.FTclass.c_tfunc.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::tclass_c_tfunc_InAryQ(amc::FTfunc& row) {
+    return row.tclass_c_tfunc_in_ary;
+}
+
+// --- amc.FTclass.c_tfunc.qLast
+// Reference to last element without bounds checking
+inline amc::FTfunc& amc::c_tfunc_qLast(amc::FTclass& tclass) {
+    return *tclass.c_tfunc_elems[tclass.c_tfunc_n-1];
+}
+
 // --- amc.FTclass.step.Call
 // Invoke function by pointer
 inline void amc::step_Call(amc::FTclass& tclass) {
-    if (tclass.step) {
-        tclass.step();
-    }
+    tclass.step();
 }
 
 // --- amc.FTclass.c_tfunc_curs.Reset
@@ -3649,6 +3755,18 @@ inline void amc::c_ctype_sorted_RemoveAll() {
     _db.c_ctype_sorted_n = 0;
 }
 
+// --- amc.FDb.c_ctype_sorted.qFind
+// Return reference without bounds checking
+inline amc::FCtype& amc::c_ctype_sorted_qFind(u32 idx) {
+    return *_db.c_ctype_sorted_elems[idx];
+}
+
+// --- amc.FDb.c_ctype_sorted.qLast
+// Reference to last element without bounds checking
+inline amc::FCtype& amc::c_ctype_sorted_qLast() {
+    return *_db.c_ctype_sorted_elems[_db.c_ctype_sorted_n-1];
+}
+
 // --- amc.FDb.enumstr.EmptyQ
 // Return true if index is empty
 inline bool amc::enumstr_EmptyQ() {
@@ -4037,6 +4155,18 @@ inline i32 amc::c_ns_sorted_N() {
 // Empty the index. (The rows are not deleted)
 inline void amc::c_ns_sorted_RemoveAll() {
     _db.c_ns_sorted_n = 0;
+}
+
+// --- amc.FDb.c_ns_sorted.qFind
+// Return reference without bounds checking
+inline amc::FNs& amc::c_ns_sorted_qFind(u32 idx) {
+    return *_db.c_ns_sorted_elems[idx];
+}
+
+// --- amc.FDb.c_ns_sorted.qLast
+// Reference to last element without bounds checking
+inline amc::FNs& amc::c_ns_sorted_qLast() {
+    return *_db.c_ns_sorted_elems[_db.c_ns_sorted_n-1];
 }
 
 // --- amc.FDb.finput.EmptyQ
@@ -4795,6 +4925,24 @@ inline void amc::c_dispsig_sorted_RemoveAll() {
         _db.c_dispsig_sorted_elems[i]->_db_c_dispsig_sorted_in_ary = false;
     }
     _db.c_dispsig_sorted_n = 0;
+}
+
+// --- amc.FDb.c_dispsig_sorted.qFind
+// Return reference without bounds checking
+inline amc::FDispsig& amc::c_dispsig_sorted_qFind(u32 idx) {
+    return *_db.c_dispsig_sorted_elems[idx];
+}
+
+// --- amc.FDb.c_dispsig_sorted.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::c_dispsig_sorted_InAryQ(amc::FDispsig& row) {
+    return row._db_c_dispsig_sorted_in_ary;
+}
+
+// --- amc.FDb.c_dispsig_sorted.qLast
+// Reference to last element without bounds checking
+inline amc::FDispsig& amc::c_dispsig_sorted_qLast() {
+    return *_db.c_dispsig_sorted_elems[_db.c_dispsig_sorted_n-1];
 }
 
 // --- amc.FDb.zs_sig_visit.EmptyQ
@@ -6297,6 +6445,24 @@ inline void amc::c_substr_field_RemoveAll() {
     _db.c_substr_field_n = 0;
 }
 
+// --- amc.FDb.c_substr_field.qFind
+// Return reference without bounds checking
+inline amc::FSubstr& amc::c_substr_field_qFind(u32 idx) {
+    return *_db.c_substr_field_elems[idx];
+}
+
+// --- amc.FDb.c_substr_field.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::c_substr_field_InAryQ(amc::FSubstr& row) {
+    return row._db_c_substr_field_in_ary;
+}
+
+// --- amc.FDb.c_substr_field.qLast
+// Reference to last element without bounds checking
+inline amc::FSubstr& amc::c_substr_field_qLast() {
+    return *_db.c_substr_field_elems[_db.c_substr_field_n-1];
+}
+
 // --- amc.FDb.ctypelen.EmptyQ
 // Return true if index is empty
 inline bool amc::ctypelen_EmptyQ() {
@@ -6379,6 +6545,24 @@ inline void amc::c_ctypelen_RemoveAll() {
     _db.c_ctypelen_n = 0;
 }
 
+// --- amc.FDb.c_ctypelen.qFind
+// Return reference without bounds checking
+inline amc::FCtypelen& amc::c_ctypelen_qFind(u32 idx) {
+    return *_db.c_ctypelen_elems[idx];
+}
+
+// --- amc.FDb.c_ctypelen.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::c_ctypelen_InAryQ(amc::FCtypelen& row) {
+    return row._db_c_ctypelen_in_ary;
+}
+
+// --- amc.FDb.c_ctypelen.qLast
+// Reference to last element without bounds checking
+inline amc::FCtypelen& amc::c_ctypelen_qLast() {
+    return *_db.c_ctypelen_elems[_db.c_ctypelen_n-1];
+}
+
 // --- amc.FDb.c_tempfield.EmptyQ
 // Return true if index is empty
 inline bool amc::c_tempfield_EmptyQ() {
@@ -6417,6 +6601,24 @@ inline void amc::c_tempfield_RemoveAll() {
         _db.c_tempfield_elems[i]->_db_c_tempfield_in_ary = false;
     }
     _db.c_tempfield_n = 0;
+}
+
+// --- amc.FDb.c_tempfield.qFind
+// Return reference without bounds checking
+inline amc::FField& amc::c_tempfield_qFind(u32 idx) {
+    return *_db.c_tempfield_elems[idx];
+}
+
+// --- amc.FDb.c_tempfield.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::c_tempfield_InAryQ(amc::FField& row) {
+    return row._db_c_tempfield_in_ary;
+}
+
+// --- amc.FDb.c_tempfield.qLast
+// Reference to last element without bounds checking
+inline amc::FField& amc::c_tempfield_qLast() {
+    return *_db.c_tempfield_elems[_db.c_tempfield_n-1];
 }
 
 // --- amc.FDb.fbase.EmptyQ
@@ -7282,6 +7484,24 @@ inline void amc::c_ssimfile_sorted_RemoveAll() {
         _db.c_ssimfile_sorted_elems[i]->_db_c_ssimfile_sorted_in_ary = false;
     }
     _db.c_ssimfile_sorted_n = 0;
+}
+
+// --- amc.FDb.c_ssimfile_sorted.qFind
+// Return reference without bounds checking
+inline amc::FSsimfile& amc::c_ssimfile_sorted_qFind(u32 idx) {
+    return *_db.c_ssimfile_sorted_elems[idx];
+}
+
+// --- amc.FDb.c_ssimfile_sorted.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::c_ssimfile_sorted_InAryQ(amc::FSsimfile& row) {
+    return row._db_c_ssimfile_sorted_in_ary;
+}
+
+// --- amc.FDb.c_ssimfile_sorted.qLast
+// Reference to last element without bounds checking
+inline amc::FSsimfile& amc::c_ssimfile_sorted_qLast() {
+    return *_db.c_ssimfile_sorted_elems[_db.c_ssimfile_sorted_n-1];
 }
 
 // --- amc.FDb.zd_ssimfile_todo.EmptyQ
@@ -10424,6 +10644,24 @@ inline void amc::c_dispatch_msg_RemoveAll(amc::FDispatch& dispatch) {
     dispatch.c_dispatch_msg_n = 0;
 }
 
+// --- amc.FDispatch.c_dispatch_msg.qFind
+// Return reference without bounds checking
+inline amc::FDispatchmsg& amc::c_dispatch_msg_qFind(amc::FDispatch& dispatch, u32 idx) {
+    return *dispatch.c_dispatch_msg_elems[idx];
+}
+
+// --- amc.FDispatch.c_dispatch_msg.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::dispatch_c_dispatch_msg_InAryQ(amc::FDispatchmsg& row) {
+    return row.dispatch_c_dispatch_msg_in_ary;
+}
+
+// --- amc.FDispatch.c_dispatch_msg.qLast
+// Reference to last element without bounds checking
+inline amc::FDispatchmsg& amc::c_dispatch_msg_qLast(amc::FDispatch& dispatch) {
+    return *dispatch.c_dispatch_msg_elems[dispatch.c_dispatch_msg_n-1];
+}
+
 // --- amc.FDispatch.c_disptrace.InsertMaybe
 // Insert row into pointer index. Return final membership status.
 inline bool amc::c_disptrace_InsertMaybe(amc::FDispatch& dispatch, amc::FDisptrace& row) {
@@ -10605,6 +10843,18 @@ inline i32 amc::c_fconst_N(const amc::FEnumstr& enumstr) {
 // Empty the index. (The rows are not deleted)
 inline void amc::c_fconst_RemoveAll(amc::FEnumstr& enumstr) {
     enumstr.c_fconst_n = 0;
+}
+
+// --- amc.FEnumstr.c_fconst.qFind
+// Return reference without bounds checking
+inline amc::FFconst& amc::c_fconst_qFind(amc::FEnumstr& enumstr, u32 idx) {
+    return *enumstr.c_fconst_elems[idx];
+}
+
+// --- amc.FEnumstr.c_fconst.qLast
+// Reference to last element without bounds checking
+inline amc::FFconst& amc::c_fconst_qLast(amc::FEnumstr& enumstr) {
+    return *enumstr.c_fconst_elems[enumstr.c_fconst_n-1];
 }
 
 // --- amc.FEnumstr..Init
@@ -11021,6 +11271,18 @@ inline void amc::c_ffunc_RemoveAll(amc::FField& field) {
     field.c_ffunc_n = 0;
 }
 
+// --- amc.FField.c_ffunc.qFind
+// Return reference without bounds checking
+inline amc::FFunc& amc::c_ffunc_qFind(amc::FField& field, u32 idx) {
+    return *field.c_ffunc_elems[idx];
+}
+
+// --- amc.FField.c_ffunc.qLast
+// Reference to last element without bounds checking
+inline amc::FFunc& amc::c_ffunc_qLast(amc::FField& field) {
+    return *field.c_ffunc_elems[field.c_ffunc_n-1];
+}
+
 // --- amc.FField.c_xref.InsertMaybe
 // Insert row into pointer index. Return final membership status.
 inline bool amc::c_xref_InsertMaybe(amc::FField& field, amc::FXref& row) {
@@ -11379,6 +11641,24 @@ inline void amc::c_fconst_RemoveAll(amc::FField& field) {
         field.c_fconst_elems[i]->field_c_fconst_in_ary = false;
     }
     field.c_fconst_n = 0;
+}
+
+// --- amc.FField.c_fconst.qFind
+// Return reference without bounds checking
+inline amc::FFconst& amc::c_fconst_qFind(amc::FField& field, u32 idx) {
+    return *field.c_fconst_elems[idx];
+}
+
+// --- amc.FField.c_fconst.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::field_c_fconst_InAryQ(amc::FFconst& row) {
+    return row.field_c_fconst_in_ary;
+}
+
+// --- amc.FField.c_fconst.qLast
+// Reference to last element without bounds checking
+inline amc::FFconst& amc::c_fconst_qLast(amc::FField& field) {
+    return *field.c_fconst_elems[field.c_fconst_n-1];
 }
 
 // --- amc.FField.c_finput.InsertMaybe
@@ -12776,6 +13056,24 @@ inline void amc::c_ctype_RemoveAll(amc::FNs& ns) {
     ns.c_ctype_n = 0;
 }
 
+// --- amc.FNs.c_ctype.qFind
+// Return reference without bounds checking
+inline amc::FCtype& amc::c_ctype_qFind(amc::FNs& ns, u32 idx) {
+    return *ns.c_ctype_elems[idx];
+}
+
+// --- amc.FNs.c_ctype.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::ns_c_ctype_InAryQ(amc::FCtype& row) {
+    return row.ns_c_ctype_in_ary;
+}
+
+// --- amc.FNs.c_ctype.qLast
+// Reference to last element without bounds checking
+inline amc::FCtype& amc::c_ctype_qLast(amc::FNs& ns) {
+    return *ns.c_ctype_elems[ns.c_ctype_n-1];
+}
+
 // --- amc.FNs.c_func.EmptyQ
 // Return true if index is empty
 inline bool amc::c_func_EmptyQ(amc::FNs& ns) {
@@ -12816,6 +13114,24 @@ inline void amc::c_func_RemoveAll(amc::FNs& ns) {
     ns.c_func_n = 0;
 }
 
+// --- amc.FNs.c_func.qFind
+// Return reference without bounds checking
+inline amc::FFunc& amc::c_func_qFind(amc::FNs& ns, u32 idx) {
+    return *ns.c_func_elems[idx];
+}
+
+// --- amc.FNs.c_func.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::ns_c_func_InAryQ(amc::FFunc& row) {
+    return row.ns_c_func_in_ary;
+}
+
+// --- amc.FNs.c_func.qLast
+// Reference to last element without bounds checking
+inline amc::FFunc& amc::c_func_qLast(amc::FNs& ns) {
+    return *ns.c_func_elems[ns.c_func_n-1];
+}
+
 // --- amc.FNs.c_dispatch.EmptyQ
 // Return true if index is empty
 inline bool amc::c_dispatch_EmptyQ(amc::FNs& ns) {
@@ -12854,6 +13170,24 @@ inline void amc::c_dispatch_RemoveAll(amc::FNs& ns) {
         ns.c_dispatch_elems[i]->ns_c_dispatch_in_ary = false;
     }
     ns.c_dispatch_n = 0;
+}
+
+// --- amc.FNs.c_dispatch.qFind
+// Return reference without bounds checking
+inline amc::FDispatch& amc::c_dispatch_qFind(amc::FNs& ns, u32 idx) {
+    return *ns.c_dispatch_elems[idx];
+}
+
+// --- amc.FNs.c_dispatch.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::ns_c_dispatch_InAryQ(amc::FDispatch& row) {
+    return row.ns_c_dispatch_in_ary;
+}
+
+// --- amc.FNs.c_dispatch.qLast
+// Reference to last element without bounds checking
+inline amc::FDispatch& amc::c_dispatch_qLast(amc::FNs& ns) {
+    return *ns.c_dispatch_elems[ns.c_dispatch_n-1];
 }
 
 // --- amc.FNs.c_globfld.InsertMaybe
@@ -12914,6 +13248,24 @@ inline void amc::c_gstatic_RemoveAll(amc::FNs& ns) {
         ns.c_gstatic_elems[i]->ns_c_gstatic_in_ary = false;
     }
     ns.c_gstatic_n = 0;
+}
+
+// --- amc.FNs.c_gstatic.qFind
+// Return reference without bounds checking
+inline amc::FGstatic& amc::c_gstatic_qFind(amc::FNs& ns, u32 idx) {
+    return *ns.c_gstatic_elems[idx];
+}
+
+// --- amc.FNs.c_gstatic.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::ns_c_gstatic_InAryQ(amc::FGstatic& row) {
+    return row.ns_c_gstatic_in_ary;
+}
+
+// --- amc.FNs.c_gstatic.qLast
+// Reference to last element without bounds checking
+inline amc::FGstatic& amc::c_gstatic_qLast(amc::FNs& ns) {
+    return *ns.c_gstatic_elems[ns.c_gstatic_n-1];
 }
 
 // --- amc.FNs.c_main.InsertMaybe
@@ -13044,6 +13396,24 @@ inline void amc::c_dispsig_RemoveAll(amc::FNs& ns) {
     ns.c_dispsig_n = 0;
 }
 
+// --- amc.FNs.c_dispsig.qFind
+// Return reference without bounds checking
+inline amc::FDispsig& amc::c_dispsig_qFind(amc::FNs& ns, u32 idx) {
+    return *ns.c_dispsig_elems[idx];
+}
+
+// --- amc.FNs.c_dispsig.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::ns_c_dispsig_InAryQ(amc::FDispsig& row) {
+    return row.ns_c_dispsig_in_ary;
+}
+
+// --- amc.FNs.c_dispsig.qLast
+// Reference to last element without bounds checking
+inline amc::FDispsig& amc::c_dispsig_qLast(amc::FNs& ns) {
+    return *ns.c_dispsig_elems[ns.c_dispsig_n-1];
+}
+
 // --- amc.FNs.c_parentns.EmptyQ
 // Return true if index is empty
 inline bool amc::c_parentns_EmptyQ(amc::FNs& ns) {
@@ -13078,6 +13448,18 @@ inline i32 amc::c_parentns_N(const amc::FNs& ns) {
 // Empty the index. (The rows are not deleted)
 inline void amc::c_parentns_RemoveAll(amc::FNs& ns) {
     ns.c_parentns_n = 0;
+}
+
+// --- amc.FNs.c_parentns.qFind
+// Return reference without bounds checking
+inline amc::FNs& amc::c_parentns_qFind(amc::FNs& ns, u32 idx) {
+    return *ns.c_parentns_elems[idx];
+}
+
+// --- amc.FNs.c_parentns.qLast
+// Reference to last element without bounds checking
+inline amc::FNs& amc::c_parentns_qLast(amc::FNs& ns) {
+    return *ns.c_parentns_elems[ns.c_parentns_n-1];
 }
 
 // --- amc.FNs.c_cppincl.EmptyQ
@@ -13116,6 +13498,18 @@ inline void amc::c_cppincl_RemoveAll(amc::FNs& ns) {
     ns.c_cppincl_n = 0;
 }
 
+// --- amc.FNs.c_cppincl.qFind
+// Return reference without bounds checking
+inline amc::FNs& amc::c_cppincl_qFind(amc::FNs& ns, u32 idx) {
+    return *ns.c_cppincl_elems[idx];
+}
+
+// --- amc.FNs.c_cppincl.qLast
+// Reference to last element without bounds checking
+inline amc::FNs& amc::c_cppincl_qLast(amc::FNs& ns) {
+    return *ns.c_cppincl_elems[ns.c_cppincl_n-1];
+}
+
 // --- amc.FNs.c_hdrincl.EmptyQ
 // Return true if index is empty
 inline bool amc::c_hdrincl_EmptyQ(amc::FNs& ns) {
@@ -13150,6 +13544,18 @@ inline i32 amc::c_hdrincl_N(const amc::FNs& ns) {
 // Empty the index. (The rows are not deleted)
 inline void amc::c_hdrincl_RemoveAll(amc::FNs& ns) {
     ns.c_hdrincl_n = 0;
+}
+
+// --- amc.FNs.c_hdrincl.qFind
+// Return reference without bounds checking
+inline amc::FNs& amc::c_hdrincl_qFind(amc::FNs& ns, u32 idx) {
+    return *ns.c_hdrincl_elems[idx];
+}
+
+// --- amc.FNs.c_hdrincl.qLast
+// Reference to last element without bounds checking
+inline amc::FNs& amc::c_hdrincl_qLast(amc::FNs& ns) {
+    return *ns.c_hdrincl_elems[ns.c_hdrincl_n-1];
 }
 
 // --- amc.FNs.c_fwddecl.EmptyQ
@@ -13190,6 +13596,24 @@ inline void amc::c_fwddecl_RemoveAll(amc::FNs& ns) {
         ns.c_fwddecl_elems[i]->ns_c_fwddecl_in_ary = false;
     }
     ns.c_fwddecl_n = 0;
+}
+
+// --- amc.FNs.c_fwddecl.qFind
+// Return reference without bounds checking
+inline amc::FFwddecl& amc::c_fwddecl_qFind(amc::FNs& ns, u32 idx) {
+    return *ns.c_fwddecl_elems[idx];
+}
+
+// --- amc.FNs.c_fwddecl.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::ns_c_fwddecl_InAryQ(amc::FFwddecl& row) {
+    return row.ns_c_fwddecl_in_ary;
+}
+
+// --- amc.FNs.c_fwddecl.qLast
+// Reference to last element without bounds checking
+inline amc::FFwddecl& amc::c_fwddecl_qLast(amc::FNs& ns) {
+    return *ns.c_fwddecl_elems[ns.c_fwddecl_n-1];
 }
 
 // --- amc.FNs.c_nsx.InsertMaybe
@@ -13270,6 +13694,24 @@ inline void amc::c_pnew_RemoveAll(amc::FNs& ns) {
         ns.c_pnew_elems[i]->ns_c_pnew_in_ary = false;
     }
     ns.c_pnew_n = 0;
+}
+
+// --- amc.FNs.c_pnew.qFind
+// Return reference without bounds checking
+inline amc::FPnew& amc::c_pnew_qFind(amc::FNs& ns, u32 idx) {
+    return *ns.c_pnew_elems[idx];
+}
+
+// --- amc.FNs.c_pnew.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::ns_c_pnew_InAryQ(amc::FPnew& row) {
+    return row.ns_c_pnew_in_ary;
+}
+
+// --- amc.FNs.c_pnew.qLast
+// Reference to last element without bounds checking
+inline amc::FPnew& amc::c_pnew_qLast(amc::FNs& ns) {
+    return *ns.c_pnew_elems[ns.c_pnew_n-1];
 }
 
 // --- amc.FNs.c_fcmdline.InsertMaybe
@@ -13372,6 +13814,24 @@ inline void amc::c_outfile_RemoveAll(amc::FNs& ns) {
     ns.c_outfile_n = 0;
 }
 
+// --- amc.FNs.c_outfile.qFind
+// Return reference without bounds checking
+inline amc::FOutfile& amc::c_outfile_qFind(amc::FNs& ns, u32 idx) {
+    return *ns.c_outfile_elems[idx];
+}
+
+// --- amc.FNs.c_outfile.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::ns_c_outfile_InAryQ(amc::FOutfile& row) {
+    return row.ns_c_outfile_in_ary;
+}
+
+// --- amc.FNs.c_outfile.qLast
+// Reference to last element without bounds checking
+inline amc::FOutfile& amc::c_outfile_qLast(amc::FNs& ns) {
+    return *ns.c_outfile_elems[ns.c_outfile_n-1];
+}
+
 // --- amc.FNs.c_foutput.EmptyQ
 // Return true if index is empty
 inline bool amc::c_foutput_EmptyQ(amc::FNs& ns) {
@@ -13410,6 +13870,24 @@ inline void amc::c_foutput_RemoveAll(amc::FNs& ns) {
         ns.c_foutput_elems[i]->ns_c_foutput_in_ary = false;
     }
     ns.c_foutput_n = 0;
+}
+
+// --- amc.FNs.c_foutput.qFind
+// Return reference without bounds checking
+inline amc::FFoutput& amc::c_foutput_qFind(amc::FNs& ns, u32 idx) {
+    return *ns.c_foutput_elems[idx];
+}
+
+// --- amc.FNs.c_foutput.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::ns_c_foutput_InAryQ(amc::FFoutput& row) {
+    return row.ns_c_foutput_in_ary;
+}
+
+// --- amc.FNs.c_foutput.qLast
+// Reference to last element without bounds checking
+inline amc::FFoutput& amc::c_foutput_qLast(amc::FNs& ns) {
+    return *ns.c_foutput_elems[ns.c_foutput_n-1];
 }
 
 // --- amc.FNs.c_fstep.EmptyQ
@@ -13452,6 +13930,24 @@ inline void amc::c_fstep_RemoveAll(amc::FNs& ns) {
     ns.c_fstep_n = 0;
 }
 
+// --- amc.FNs.c_fstep.qFind
+// Return reference without bounds checking
+inline amc::FFstep& amc::c_fstep_qFind(amc::FNs& ns, u32 idx) {
+    return *ns.c_fstep_elems[idx];
+}
+
+// --- amc.FNs.c_fstep.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::ns_c_fstep_InAryQ(amc::FFstep& row) {
+    return row.ns_c_fstep_in_ary;
+}
+
+// --- amc.FNs.c_fstep.qLast
+// Reference to last element without bounds checking
+inline amc::FFstep& amc::c_fstep_qLast(amc::FNs& ns) {
+    return *ns.c_fstep_elems[ns.c_fstep_n-1];
+}
+
 // --- amc.FNs.c_gsymbol.EmptyQ
 // Return true if index is empty
 inline bool amc::c_gsymbol_EmptyQ(amc::FNs& ns) {
@@ -13492,6 +13988,24 @@ inline void amc::c_gsymbol_RemoveAll(amc::FNs& ns) {
     ns.c_gsymbol_n = 0;
 }
 
+// --- amc.FNs.c_gsymbol.qFind
+// Return reference without bounds checking
+inline amc::FGsymbol& amc::c_gsymbol_qFind(amc::FNs& ns, u32 idx) {
+    return *ns.c_gsymbol_elems[idx];
+}
+
+// --- amc.FNs.c_gsymbol.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::ns_c_gsymbol_InAryQ(amc::FGsymbol& row) {
+    return row.ns_c_gsymbol_in_ary;
+}
+
+// --- amc.FNs.c_gsymbol.qLast
+// Reference to last element without bounds checking
+inline amc::FGsymbol& amc::c_gsymbol_qLast(amc::FNs& ns) {
+    return *ns.c_gsymbol_elems[ns.c_gsymbol_n-1];
+}
+
 // --- amc.FNs.c_nsinclude.EmptyQ
 // Return true if index is empty
 inline bool amc::c_nsinclude_EmptyQ(amc::FNs& ns) {
@@ -13530,6 +14044,24 @@ inline void amc::c_nsinclude_RemoveAll(amc::FNs& ns) {
         ns.c_nsinclude_elems[i]->ns_c_nsinclude_in_ary = false;
     }
     ns.c_nsinclude_n = 0;
+}
+
+// --- amc.FNs.c_nsinclude.qFind
+// Return reference without bounds checking
+inline amc::FNsinclude& amc::c_nsinclude_qFind(amc::FNs& ns, u32 idx) {
+    return *ns.c_nsinclude_elems[idx];
+}
+
+// --- amc.FNs.c_nsinclude.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::ns_c_nsinclude_InAryQ(amc::FNsinclude& row) {
+    return row.ns_c_nsinclude_in_ary;
+}
+
+// --- amc.FNs.c_nsinclude.qLast
+// Reference to last element without bounds checking
+inline amc::FNsinclude& amc::c_nsinclude_qLast(amc::FNs& ns) {
+    return *ns.c_nsinclude_elems[ns.c_nsinclude_n-1];
 }
 
 // --- amc.FNs.c_nscpp.InsertMaybe
@@ -14376,6 +14908,24 @@ inline void amc::c_targdep_RemoveAll(amc::FTarget& target) {
         target.c_targdep_elems[i]->target_c_targdep_in_ary = false;
     }
     target.c_targdep_n = 0;
+}
+
+// --- amc.FTarget.c_targdep.qFind
+// Return reference without bounds checking
+inline amc::FTargdep& amc::c_targdep_qFind(amc::FTarget& target, u32 idx) {
+    return *target.c_targdep_elems[idx];
+}
+
+// --- amc.FTarget.c_targdep.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::target_c_targdep_InAryQ(amc::FTargdep& row) {
+    return row.target_c_targdep_in_ary;
+}
+
+// --- amc.FTarget.c_targdep.qLast
+// Reference to last element without bounds checking
+inline amc::FTargdep& amc::c_targdep_qLast(amc::FTarget& target) {
+    return *target.c_targdep_elems[target.c_targdep_n-1];
 }
 
 // --- amc.FTarget..Init

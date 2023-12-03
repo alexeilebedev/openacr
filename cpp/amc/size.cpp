@@ -296,6 +296,7 @@ void amc::gen_ns_size_enums() {
         }ind_end;
     }ind_end;
     if (ch_N(str)) {
+        BeginNsBlock(*ns.hdr, ns, "");
         *ns.hdr << ""<<eol;
         *ns.hdr << "// sizes types appearing as Opt or Varlen; these need to be here"<<eol;
         *ns.hdr << "// to allow inline implementations of _Get functions and avoid"<<eol;
@@ -303,5 +304,6 @@ void amc::gen_ns_size_enums() {
         *ns.hdr << "enum {" << eol;
         *ns.hdr << str;
         *ns.hdr << "};" << eol;
+        EndNsBlock(*ns.hdr, ns, "");
     }
 }

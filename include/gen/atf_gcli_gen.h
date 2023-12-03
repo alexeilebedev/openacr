@@ -274,6 +274,12 @@ void                 c_gtblacttst_Remove(atf_gcli::FGtblacttst& row) __attribute
 void                 c_gtblacttst_RemoveAll() __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_gtblacttst_Reserve(u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+atf_gcli::FGtblacttst& c_gtblacttst_qFind(u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 c_gtblacttst_InAryQ(atf_gcli::FGtblacttst& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+atf_gcli::FGtblacttst& c_gtblacttst_qLast() __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -508,6 +514,12 @@ void                 c_gclienvsub_Remove(atf_gcli::FGclienv& gclienv, atf_gcli::
 void                 c_gclienvsub_RemoveAll(atf_gcli::FGclienv& gclienv) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_gclienvsub_Reserve(atf_gcli::FGclienv& gclienv, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+atf_gcli::FGclienvsub& c_gclienvsub_qFind(atf_gcli::FGclienv& gclienv, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 gclienv_c_gclienvsub_InAryQ(atf_gcli::FGclienvsub& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+atf_gcli::FGclienvsub& c_gclienvsub_qLast(atf_gcli::FGclienv& gclienv) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FGclienv_Init(atf_gcli::FGclienv& gclienv);
@@ -654,6 +666,12 @@ void                 c_gtblacttstout_Remove(atf_gcli::FGtblacttst& gtblacttst, a
 void                 c_gtblacttstout_RemoveAll(atf_gcli::FGtblacttst& gtblacttst) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_gtblacttstout_Reserve(atf_gcli::FGtblacttst& gtblacttst, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+atf_gcli::FGtblacttstout& c_gtblacttstout_qFind(atf_gcli::FGtblacttst& gtblacttst, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 gtblacttst_c_gtblacttstout_InAryQ(atf_gcli::FGtblacttstout& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+atf_gcli::FGtblacttstout& c_gtblacttstout_qLast(atf_gcli::FGtblacttst& gtblacttst) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FGtblacttst_Init(atf_gcli::FGtblacttst& gtblacttst);

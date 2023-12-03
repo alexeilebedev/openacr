@@ -90,6 +90,24 @@ inline void mdbg::c_builddir_RemoveAll(mdbg::FCfg& cfg) {
     cfg.c_builddir_n = 0;
 }
 
+// --- mdbg.FCfg.c_builddir.qFind
+// Return reference without bounds checking
+inline mdbg::FBuilddir& mdbg::c_builddir_qFind(mdbg::FCfg& cfg, u32 idx) {
+    return *cfg.c_builddir_elems[idx];
+}
+
+// --- mdbg.FCfg.c_builddir.InAryQ
+// True if row is in any ptrary instance
+inline bool mdbg::cfg_c_builddir_InAryQ(mdbg::FBuilddir& row) {
+    return row.cfg_c_builddir_in_ary;
+}
+
+// --- mdbg.FCfg.c_builddir.qLast
+// Reference to last element without bounds checking
+inline mdbg::FBuilddir& mdbg::c_builddir_qLast(mdbg::FCfg& cfg) {
+    return *cfg.c_builddir_elems[cfg.c_builddir_n-1];
+}
+
 // --- mdbg.FCfg.c_builddir_curs.Reset
 inline void mdbg::cfg_c_builddir_curs_Reset(cfg_c_builddir_curs &curs, mdbg::FCfg &parent) {
     curs.elems = parent.c_builddir_elems;

@@ -1919,6 +1919,24 @@ inline void abt::c_prior_RemoveAll(abt::FSyscmd& syscmd) {
     syscmd.c_prior_n = 0;
 }
 
+// --- abt.FSyscmd.c_prior.qFind
+// Return reference without bounds checking
+inline abt::FSyscmddep& abt::c_prior_qFind(abt::FSyscmd& syscmd, u32 idx) {
+    return *syscmd.c_prior_elems[idx];
+}
+
+// --- abt.FSyscmd.c_prior.InAryQ
+// True if row is in any ptrary instance
+inline bool abt::syscmd_c_prior_InAryQ(abt::FSyscmddep& row) {
+    return row.syscmd_c_prior_in_ary;
+}
+
+// --- abt.FSyscmd.c_prior.qLast
+// Reference to last element without bounds checking
+inline abt::FSyscmddep& abt::c_prior_qLast(abt::FSyscmd& syscmd) {
+    return *syscmd.c_prior_elems[syscmd.c_prior_n-1];
+}
+
 // --- abt.FSyscmd.c_next.EmptyQ
 // Return true if index is empty
 inline bool abt::c_next_EmptyQ(abt::FSyscmd& syscmd) {
@@ -1957,6 +1975,24 @@ inline void abt::c_next_RemoveAll(abt::FSyscmd& syscmd) {
         syscmd.c_next_elems[i]->syscmd_c_next_in_ary = false;
     }
     syscmd.c_next_n = 0;
+}
+
+// --- abt.FSyscmd.c_next.qFind
+// Return reference without bounds checking
+inline abt::FSyscmddep& abt::c_next_qFind(abt::FSyscmd& syscmd, u32 idx) {
+    return *syscmd.c_next_elems[idx];
+}
+
+// --- abt.FSyscmd.c_next.InAryQ
+// True if row is in any ptrary instance
+inline bool abt::syscmd_c_next_InAryQ(abt::FSyscmddep& row) {
+    return row.syscmd_c_next_in_ary;
+}
+
+// --- abt.FSyscmd.c_next.qLast
+// Reference to last element without bounds checking
+inline abt::FSyscmddep& abt::c_next_qLast(abt::FSyscmd& syscmd) {
+    return *syscmd.c_next_elems[syscmd.c_next_n-1];
 }
 
 // --- abt.FSyscmd.c_prior_curs.Reset
@@ -2105,6 +2141,24 @@ inline void abt::c_targsrc_RemoveAll(abt::FTarget& target) {
     target.c_targsrc_n = 0;
 }
 
+// --- abt.FTarget.c_targsrc.qFind
+// Return reference without bounds checking
+inline abt::FTargsrc& abt::c_targsrc_qFind(abt::FTarget& target, u32 idx) {
+    return *target.c_targsrc_elems[idx];
+}
+
+// --- abt.FTarget.c_targsrc.InAryQ
+// True if row is in any ptrary instance
+inline bool abt::target_c_targsrc_InAryQ(abt::FTargsrc& row) {
+    return row.target_c_targsrc_in_ary;
+}
+
+// --- abt.FTarget.c_targsrc.qLast
+// Reference to last element without bounds checking
+inline abt::FTargsrc& abt::c_targsrc_qLast(abt::FTarget& target) {
+    return *target.c_targsrc_elems[target.c_targsrc_n-1];
+}
+
 // --- abt.FTarget.c_srcfile.EmptyQ
 // Return true if index is empty
 inline bool abt::c_srcfile_EmptyQ(abt::FTarget& target) {
@@ -2139,6 +2193,18 @@ inline i32 abt::c_srcfile_N(const abt::FTarget& target) {
 // Empty the index. (The rows are not deleted)
 inline void abt::c_srcfile_RemoveAll(abt::FTarget& target) {
     target.c_srcfile_n = 0;
+}
+
+// --- abt.FTarget.c_srcfile.qFind
+// Return reference without bounds checking
+inline abt::FSrcfile& abt::c_srcfile_qFind(abt::FTarget& target, u32 idx) {
+    return *target.c_srcfile_elems[idx];
+}
+
+// --- abt.FTarget.c_srcfile.qLast
+// Reference to last element without bounds checking
+inline abt::FSrcfile& abt::c_srcfile_qLast(abt::FTarget& target) {
+    return *target.c_srcfile_elems[target.c_srcfile_n-1];
 }
 
 // --- abt.FTarget.c_targdep.EmptyQ
@@ -2181,6 +2247,24 @@ inline void abt::c_targdep_RemoveAll(abt::FTarget& target) {
     target.c_targdep_n = 0;
 }
 
+// --- abt.FTarget.c_targdep.qFind
+// Return reference without bounds checking
+inline abt::FTargdep& abt::c_targdep_qFind(abt::FTarget& target, u32 idx) {
+    return *target.c_targdep_elems[idx];
+}
+
+// --- abt.FTarget.c_targdep.InAryQ
+// True if row is in any ptrary instance
+inline bool abt::target_c_targdep_InAryQ(abt::FTargdep& row) {
+    return row.target_c_targdep_in_ary;
+}
+
+// --- abt.FTarget.c_targdep.qLast
+// Reference to last element without bounds checking
+inline abt::FTargdep& abt::c_targdep_qLast(abt::FTarget& target) {
+    return *target.c_targdep_elems[target.c_targdep_n-1];
+}
+
 // --- abt.FTarget.c_targsyslib.EmptyQ
 // Return true if index is empty
 inline bool abt::c_targsyslib_EmptyQ(abt::FTarget& target) {
@@ -2221,6 +2305,24 @@ inline void abt::c_targsyslib_RemoveAll(abt::FTarget& target) {
     target.c_targsyslib_n = 0;
 }
 
+// --- abt.FTarget.c_targsyslib.qFind
+// Return reference without bounds checking
+inline abt::FTargsyslib& abt::c_targsyslib_qFind(abt::FTarget& target, u32 idx) {
+    return *target.c_targsyslib_elems[idx];
+}
+
+// --- abt.FTarget.c_targsyslib.InAryQ
+// True if row is in any ptrary instance
+inline bool abt::target_c_targsyslib_InAryQ(abt::FTargsyslib& row) {
+    return row.target_c_targsyslib_in_ary;
+}
+
+// --- abt.FTarget.c_targsyslib.qLast
+// Reference to last element without bounds checking
+inline abt::FTargsyslib& abt::c_targsyslib_qLast(abt::FTarget& target) {
+    return *target.c_targsyslib_elems[target.c_targsyslib_n-1];
+}
+
 // --- abt.FTarget.c_alldep.EmptyQ
 // Return true if index is empty
 inline bool abt::c_alldep_EmptyQ(abt::FTarget& target) {
@@ -2257,6 +2359,18 @@ inline void abt::c_alldep_RemoveAll(abt::FTarget& target) {
     target.c_alldep_n = 0;
 }
 
+// --- abt.FTarget.c_alldep.qFind
+// Return reference without bounds checking
+inline abt::FTarget& abt::c_alldep_qFind(abt::FTarget& target, u32 idx) {
+    return *target.c_alldep_elems[idx];
+}
+
+// --- abt.FTarget.c_alldep.qLast
+// Reference to last element without bounds checking
+inline abt::FTarget& abt::c_alldep_qLast(abt::FTarget& target) {
+    return *target.c_alldep_elems[target.c_alldep_n-1];
+}
+
 // --- abt.FTarget.c_alllib.EmptyQ
 // Return true if index is empty
 inline bool abt::c_alllib_EmptyQ(abt::FTarget& target) {
@@ -2291,6 +2405,18 @@ inline i32 abt::c_alllib_N(const abt::FTarget& target) {
 // Empty the index. (The rows are not deleted)
 inline void abt::c_alllib_RemoveAll(abt::FTarget& target) {
     target.c_alllib_n = 0;
+}
+
+// --- abt.FTarget.c_alllib.qFind
+// Return reference without bounds checking
+inline abt::FSyslib& abt::c_alllib_qFind(abt::FTarget& target, u32 idx) {
+    return *target.c_alllib_elems[idx];
+}
+
+// --- abt.FTarget.c_alllib.qLast
+// Reference to last element without bounds checking
+inline abt::FSyslib& abt::c_alllib_qLast(abt::FTarget& target) {
+    return *target.c_alllib_elems[target.c_alllib_n-1];
 }
 
 // --- abt.FTarget.c_targsrc_curs.Reset

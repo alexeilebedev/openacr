@@ -3,3 +3,4 @@ dmmeta.pnewtype  pnewtype:AmsStream  comment:"Ams stream"
 dmmeta.pnewtype  pnewtype:Fixed  comment:"Fixed buffer"
 dmmeta.pnewtype  pnewtype:Dynamic  comment:"Dynamic buffer"
 dmmeta.pnewtype  pnewtype:ByteAry  comment:ByteAry
+dmmeta.pnewtype  pnewtype:Append  comment:Append

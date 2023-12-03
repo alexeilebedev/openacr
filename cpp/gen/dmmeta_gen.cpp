@@ -34,6 +34,7 @@ const char *dmmeta_Buftype_pnewtype_AmsStream   = "AmsStream";
 const char *dmmeta_Buftype_pnewtype_Fixed       = "Fixed";
 const char *dmmeta_Buftype_pnewtype_Dynamic     = "Dynamic";
 const char *dmmeta_Buftype_pnewtype_ByteAry     = "ByteAry";
+const char *dmmeta_Buftype_pnewtype_Append      = "Append";
 
 // compile-time string constants for dmmeta.Fbufdir.fbufdir
 const char *dmmeta_Fbufdir_fbufdir_in    = "in";

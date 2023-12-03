@@ -1,7 +1,7 @@
 dmmeta.ctypelen  ctype:abt.FArch  len:216  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:abt.FCfg  len:224  alignment:8  padbytes:5
 dmmeta.ctypelen  ctype:abt.FCompiler  len:544  alignment:8  padbytes:6
-dmmeta.ctypelen  ctype:abt.FDb  len:5408  alignment:8  padbytes:97
+dmmeta.ctypelen  ctype:abt.FDb  len:5408  alignment:8  padbytes:96
 dmmeta.ctypelen  ctype:abt.FFilestat  len:48  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:abt.FInclude  len:400  alignment:8  padbytes:12
 dmmeta.ctypelen  ctype:abt.FNs  len:288  alignment:8  padbytes:6

@@ -323,14 +323,6 @@ namespace atf_amc { // gen:ns_print_proto
     static bool          value3_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          value4_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
     static bool          value5_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u32           ch_qGetnum(atf_amc::RnullStr6_U32& parent, u32 &ok) __attribute__((nothrow));
-    // Convert field to numeric value. If the value is too large
-    // for the target type, the result is undefined.
-    // The special case of an empty string is evaluated to zero.
-    static u32           ch_qGetnum(atf_amc::RpasU32Str6& parent, u32 &ok) __attribute__((nothrow));
     // Extract next character from STR and advance IDX
     static int           novs_Nextchar(const atf_amc::SortedStr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
     // Extract next character from STR and advance IDX
@@ -4554,11 +4546,18 @@ void atf_amc::StaticCheck() {
     algo_assert(_offset_of(atf_amc::MsgsCase, value) + sizeof(((atf_amc::MsgsCase*)0)->value) == sizeof(atf_amc::MsgsCase));
     // check that bitfield fits width
     algo_assert(sizeof(((atf_amc::NetBitfld1*)0)->value_be)*8 >= 12);
+    algo_assert(_offset_of(atf_amc::OptAlloc_curs, msglen) + sizeof(((atf_amc::OptAlloc_curs*)0)->msglen) == sizeof(atf_amc::OptAlloc_curs));
+    algo_assert(_offset_of(atf_amc::OptG_curs, msglen) + sizeof(((atf_amc::OptG_curs*)0)->msglen) == sizeof(atf_amc::OptG_curs));
+    algo_assert(_offset_of(atf_amc::OptOptG_curs, msglen) + sizeof(((atf_amc::OptOptG_curs*)0)->msglen) == sizeof(atf_amc::OptOptG_curs));
     algo_assert(_offset_of(atf_amc::PmaskU128, value71) + sizeof(((atf_amc::PmaskU128*)0)->value71) == sizeof(atf_amc::PmaskU128));
     algo_assert(_offset_of(atf_amc::PmaskU32, value5) + sizeof(((atf_amc::PmaskU32*)0)->value5) == sizeof(atf_amc::PmaskU32));
     algo_assert(_offset_of(atf_amc::SsimfilesCase, value) + sizeof(((atf_amc::SsimfilesCase*)0)->value) == sizeof(atf_amc::SsimfilesCase));
     // check that bitfield fits width
     algo_assert(sizeof(((atf_amc::TypeBE64sf*)0)->value_be)*8 >= 64);
+    algo_assert(_offset_of(atf_amc::VarlenAlloc_curs, msglen) + sizeof(((atf_amc::VarlenAlloc_curs*)0)->msglen) == sizeof(atf_amc::VarlenAlloc_curs));
+    algo_assert(_offset_of(atf_amc::VarlenExtern_curs, msglen) + sizeof(((atf_amc::VarlenExtern_curs*)0)->msglen) == sizeof(atf_amc::VarlenExtern_curs));
+    algo_assert(_offset_of(atf_amc::VarlenH_curs, msglen) + sizeof(((atf_amc::VarlenH_curs*)0)->msglen) == sizeof(atf_amc::VarlenH_curs));
+    algo_assert(_offset_of(atf_amc::VarlenK_curs, msglen) + sizeof(((atf_amc::VarlenK_curs*)0)->msglen) == sizeof(atf_amc::VarlenK_curs));
 }
 
 // --- atf_amc.FDb._db.InsertStrptrMaybe
@@ -13378,16 +13377,18 @@ void atf_amc::ch_SetStrptr(atf_amc::RnullStr6_U32& parent, const algo::strptr &r
     }
 }
 
-// --- atf_amc.RnullStr6_U32.ch.qGetnum
+// --- atf_amc.RnullStr6_U32.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32 atf_amc::ch_qGetnum(atf_amc::RnullStr6_U32& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32 atf_amc::ch_Getnum(atf_amc::RnullStr6_U32& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
+        u32 ok = 1;
         val = aParseNum8(str, ok);
+        and_ok &= (ok != 0);
     }
     return u32(val);
 }
@@ -13397,8 +13398,8 @@ static u32 atf_amc::ch_qGetnum(atf_amc::RnullStr6_U32& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32 atf_amc::ch_GetnumDflt(atf_amc::RnullStr6_U32& parent, u32 dflt) {
-    u32 ok = 1;
-    u32 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -13407,9 +13408,8 @@ u32 atf_amc::ch_GetnumDflt(atf_amc::RnullStr6_U32& parent, u32 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 atf_amc::ch_Geti64(atf_amc::RnullStr6_U32& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 
@@ -13484,16 +13484,18 @@ void atf_amc::ch_SetStrptr(atf_amc::RpasU32Str6& parent, const algo::strptr &rhs
     parent.n_ch       = u8(len);
 }
 
-// --- atf_amc.RpasU32Str6.ch.qGetnum
+// --- atf_amc.RpasU32Str6.ch.Getnum
 // Convert field to numeric value. If the value is too large
-// for the target type, the result is undefined.
-// The special case of an empty string is evaluated to zero.
-static u32 atf_amc::ch_qGetnum(atf_amc::RpasU32Str6& parent, u32 &ok) {
-    (void)ok;
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32 atf_amc::ch_Getnum(atf_amc::RpasU32Str6& parent, bool &and_ok) {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
+        u32 ok = 1;
         val = aParseNum8(str, ok);
+        and_ok &= (ok != 0);
     }
     return u32(val);
 }
@@ -13503,8 +13505,8 @@ static u32 atf_amc::ch_qGetnum(atf_amc::RpasU32Str6& parent, u32 &ok) {
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32 atf_amc::ch_GetnumDflt(atf_amc::RpasU32Str6& parent, u32 dflt) {
-    u32 ok = 1;
-    u32 result = ch_qGetnum(parent, ok);
+    bool ok = true;
+    u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
 }
 
@@ -13513,9 +13515,8 @@ u32 atf_amc::ch_GetnumDflt(atf_amc::RpasU32Str6& parent, u32 dflt) {
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
 i64 atf_amc::ch_Geti64(atf_amc::RpasU32Str6& parent, bool &out_ok) {
-    u32 ok = 1;
-    i64 result = ch_qGetnum(parent, ok);
-    out_ok = ok != 0;
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
     return result;
 }
 

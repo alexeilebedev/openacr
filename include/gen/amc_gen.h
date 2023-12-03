@@ -166,9 +166,10 @@ enum amc_PnewtypeEnum {             // amc.Pnewtype.value
     ,amc_Pnewtype_Fixed       = 2   // Fixed buffer
     ,amc_Pnewtype_Dynamic     = 3   // Dynamic buffer
     ,amc_Pnewtype_ByteAry     = 4   // ByteAry
+    ,amc_Pnewtype_Append      = 5   // Append
 };
 
-enum { amc_PnewtypeEnum_N = 5 };
+enum { amc_PnewtypeEnum_N = 6 };
 
 
 // --- amc_TableIdEnum
@@ -1553,6 +1554,10 @@ void                 c_field_Remove(amc::FCtype& ctype, amc::FField& row) __attr
 void                 c_field_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_field_Reserve(amc::FCtype& ctype, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FField&         c_field_qFind(amc::FCtype& ctype, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FField&         c_field_qLast(amc::FCtype& ctype) __attribute__((nothrow));
 // Verify whether array is sorted
 bool                 c_field_SortedQ(amc::FCtype& ctype) __attribute__((nothrow));
 // Insertion sort
@@ -1598,6 +1603,12 @@ void                 c_static_Remove(amc::FCtype& ctype, amc::FStatictuple& row)
 void                 c_static_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_static_Reserve(amc::FCtype& ctype, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FStatictuple&   c_static_qFind(amc::FCtype& ctype, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ctype_c_static_InAryQ(amc::FStatictuple& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FStatictuple&   c_static_qLast(amc::FCtype& ctype) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 bool                 c_cpptype_InsertMaybe(amc::FCtype& ctype, amc::FCpptype& row) __attribute__((nothrow));
@@ -1626,6 +1637,10 @@ void                 c_parent_Remove(amc::FCtype& ctype, amc::FCtype& row) __att
 void                 c_parent_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_parent_Reserve(amc::FCtype& ctype, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FCtype&         c_parent_qFind(amc::FCtype& ctype, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FCtype&         c_parent_qLast(amc::FCtype& ctype) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 bool                 c_ssimfile_InsertMaybe(amc::FCtype& ctype, amc::FSsimfile& row) __attribute__((nothrow));
@@ -1673,6 +1688,12 @@ void                 c_datafld_Remove(amc::FCtype& ctype, amc::FField& row) __at
 void                 c_datafld_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_datafld_Reserve(amc::FCtype& ctype, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FField&         c_datafld_qFind(amc::FCtype& ctype, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ctype_c_datafld_InAryQ(amc::FField& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FField&         c_datafld_qLast(amc::FCtype& ctype) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 zd_inst_EmptyQ(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
@@ -1765,6 +1786,10 @@ void                 c_ffunc_Remove(amc::FCtype& ctype, amc::FFunc& row) __attri
 void                 c_ffunc_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_ffunc_Reserve(amc::FCtype& ctype, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FFunc&          c_ffunc_qFind(amc::FCtype& ctype, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FFunc&          c_ffunc_qLast(amc::FCtype& ctype) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 zd_cafter_EmptyQ(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
@@ -1857,6 +1882,12 @@ void                 c_fcurs_Remove(amc::FCtype& ctype, amc::FFcurs& row) __attr
 void                 c_fcurs_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_fcurs_Reserve(amc::FCtype& ctype, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FFcurs&         c_fcurs_qFind(amc::FCtype& ctype, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ctype_c_fcurs_InAryQ(amc::FFcurs& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FFcurs&         c_fcurs_qLast(amc::FCtype& ctype) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 bool                 c_ctypelen_InsertMaybe(amc::FCtype& ctype, amc::FCtypelen& row) __attribute__((nothrow));
@@ -2044,6 +2075,12 @@ void                 c_tfunc_Remove(amc::FTclass& tclass, amc::FTfunc& row) __at
 void                 c_tfunc_RemoveAll(amc::FTclass& tclass) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_tfunc_Reserve(amc::FTclass& tclass, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FTfunc&         c_tfunc_qFind(amc::FTclass& tclass, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 tclass_c_tfunc_InAryQ(amc::FTfunc& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FTfunc&         c_tfunc_qLast(amc::FTclass& tclass) __attribute__((nothrow));
 
 // Invoke function by pointer
 void                 step_Call(amc::FTclass& tclass) __attribute__((nothrow));
@@ -3804,6 +3841,10 @@ void                 c_ctype_sorted_Remove(amc::FCtype& row) __attribute__((noth
 void                 c_ctype_sorted_RemoveAll() __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_ctype_sorted_Reserve(u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FCtype&         c_ctype_sorted_qFind(u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FCtype&         c_ctype_sorted_qLast() __attribute__((nothrow));
 // Verify whether array is sorted
 bool                 c_ctype_sorted_SortedQ() __attribute__((nothrow));
 // Insertion sort
@@ -4109,6 +4150,10 @@ void                 c_ns_sorted_Remove(amc::FNs& row) __attribute__((nothrow));
 void                 c_ns_sorted_RemoveAll() __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_ns_sorted_Reserve(u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FNs&            c_ns_sorted_qFind(u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FNs&            c_ns_sorted_qLast() __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -4624,6 +4669,12 @@ void                 c_dispsig_sorted_Remove(amc::FDispsig& row) __attribute__((
 void                 c_dispsig_sorted_RemoveAll() __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_dispsig_sorted_Reserve(u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FDispsig&       c_dispsig_sorted_qFind(u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 c_dispsig_sorted_InAryQ(amc::FDispsig& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FDispsig&       c_dispsig_sorted_qLast() __attribute__((nothrow));
 // Verify whether array is sorted
 bool                 c_dispsig_sorted_SortedQ() __attribute__((nothrow));
 // Insertion sort
@@ -5592,6 +5643,12 @@ void                 c_substr_field_Remove(amc::FSubstr& row) __attribute__((not
 void                 c_substr_field_RemoveAll() __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_substr_field_Reserve(u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FSubstr&        c_substr_field_qFind(u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 c_substr_field_InAryQ(amc::FSubstr& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FSubstr&        c_substr_field_qLast() __attribute__((nothrow));
 // Verify whether array is sorted
 bool                 c_substr_field_SortedQ() __attribute__((nothrow));
 // Insertion sort
@@ -5650,6 +5707,12 @@ void                 c_ctypelen_Remove(amc::FCtypelen& row) __attribute__((nothr
 void                 c_ctypelen_RemoveAll() __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_ctypelen_Reserve(u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FCtypelen&      c_ctypelen_qFind(u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 c_ctypelen_InAryQ(amc::FCtypelen& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FCtypelen&      c_ctypelen_qLast() __attribute__((nothrow));
 // Verify whether array is sorted
 bool                 c_ctypelen_SortedQ() __attribute__((nothrow));
 // Insertion sort
@@ -5682,6 +5745,12 @@ void                 c_tempfield_Remove(amc::FField& row) __attribute__((nothrow
 void                 c_tempfield_RemoveAll() __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_tempfield_Reserve(u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FField&         c_tempfield_qFind(u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 c_tempfield_InAryQ(amc::FField& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FField&         c_tempfield_qLast() __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -6260,6 +6329,12 @@ void                 c_ssimfile_sorted_Remove(amc::FSsimfile& row) __attribute__
 void                 c_ssimfile_sorted_RemoveAll() __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_ssimfile_sorted_Reserve(u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FSsimfile&      c_ssimfile_sorted_qFind(u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 c_ssimfile_sorted_InAryQ(amc::FSsimfile& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FSsimfile&      c_ssimfile_sorted_qLast() __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 zd_ssimfile_todo_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -7323,6 +7398,12 @@ void                 c_dispatch_msg_Remove(amc::FDispatch& dispatch, amc::FDispa
 void                 c_dispatch_msg_RemoveAll(amc::FDispatch& dispatch) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_dispatch_msg_Reserve(amc::FDispatch& dispatch, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FDispatchmsg&   c_dispatch_msg_qFind(amc::FDispatch& dispatch, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 dispatch_c_dispatch_msg_InAryQ(amc::FDispatchmsg& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FDispatchmsg&   c_dispatch_msg_qLast(amc::FDispatch& dispatch) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 bool                 c_disptrace_InsertMaybe(amc::FDispatch& dispatch, amc::FDisptrace& row) __attribute__((nothrow));
@@ -7532,6 +7613,10 @@ void                 c_fconst_Remove(amc::FEnumstr& enumstr, amc::FFconst& row) 
 void                 c_fconst_RemoveAll(amc::FEnumstr& enumstr) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_fconst_Reserve(amc::FEnumstr& enumstr, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FFconst&        c_fconst_qFind(amc::FEnumstr& enumstr, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FFconst&        c_fconst_qLast(amc::FEnumstr& enumstr) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FEnumstr_Init(amc::FEnumstr& enumstr);
@@ -8288,6 +8373,10 @@ void                 c_ffunc_Remove(amc::FField& field, amc::FFunc& row) __attri
 void                 c_ffunc_RemoveAll(amc::FField& field) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_ffunc_Reserve(amc::FField& field, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FFunc&          c_ffunc_qFind(amc::FField& field, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FFunc&          c_ffunc_qLast(amc::FField& field) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 bool                 c_xref_InsertMaybe(amc::FField& field, amc::FXref& row) __attribute__((nothrow));
@@ -8390,6 +8479,12 @@ void                 c_fconst_Remove(amc::FField& field, amc::FFconst& row) __at
 void                 c_fconst_RemoveAll(amc::FField& field) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_fconst_Reserve(amc::FField& field, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FFconst&        c_fconst_qFind(amc::FField& field, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 field_c_fconst_InAryQ(amc::FFconst& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FFconst&        c_fconst_qLast(amc::FField& field) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 bool                 c_finput_InsertMaybe(amc::FField& field, amc::FFinput& row) __attribute__((nothrow));
@@ -9051,7 +9146,7 @@ amc::Funcarg&        funcarg_qLast(amc::FFunc& func) __attribute__((nothrow));
 // Return row id of specified element
 u64                  funcarg_rowid_Get(amc::FFunc& func, amc::Funcarg &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<amc::Funcarg> funcarg_AllocNVal(amc::FFunc& func, int n_elems, const amc::Funcarg& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<amc::Funcarg> funcarg_AllocNVal(amc::FFunc& func, int n_elems, const amc::Funcarg& val) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 funcarg_XrefMaybe(amc::Funcarg &row);
@@ -9777,6 +9872,12 @@ void                 c_ctype_Remove(amc::FNs& ns, amc::FCtype& row) __attribute_
 void                 c_ctype_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_ctype_Reserve(amc::FNs& ns, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FCtype&         c_ctype_qFind(amc::FNs& ns, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ns_c_ctype_InAryQ(amc::FCtype& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FCtype&         c_ctype_qLast(amc::FNs& ns) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_func_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
@@ -9799,6 +9900,12 @@ void                 c_func_Remove(amc::FNs& ns, amc::FFunc& row) __attribute__(
 void                 c_func_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_func_Reserve(amc::FNs& ns, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FFunc&          c_func_qFind(amc::FNs& ns, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ns_c_func_InAryQ(amc::FFunc& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FFunc&          c_func_qLast(amc::FNs& ns) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_dispatch_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
@@ -9821,6 +9928,12 @@ void                 c_dispatch_Remove(amc::FNs& ns, amc::FDispatch& row) __attr
 void                 c_dispatch_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_dispatch_Reserve(amc::FNs& ns, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FDispatch&      c_dispatch_qFind(amc::FNs& ns, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ns_c_dispatch_InAryQ(amc::FDispatch& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FDispatch&      c_dispatch_qLast(amc::FNs& ns) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 bool                 c_globfld_InsertMaybe(amc::FNs& ns, amc::FField& row) __attribute__((nothrow));
@@ -9848,6 +9961,12 @@ void                 c_gstatic_Remove(amc::FNs& ns, amc::FGstatic& row) __attrib
 void                 c_gstatic_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_gstatic_Reserve(amc::FNs& ns, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FGstatic&       c_gstatic_qFind(amc::FNs& ns, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ns_c_gstatic_InAryQ(amc::FGstatic& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FGstatic&       c_gstatic_qLast(amc::FNs& ns) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 bool                 c_main_InsertMaybe(amc::FNs& ns, amc::FMain& row) __attribute__((nothrow));
@@ -9892,7 +10011,7 @@ algo::cstring&       include_qLast(amc::FNs& ns) __attribute__((nothrow));
 // Return row id of specified element
 u64                  include_rowid_Get(amc::FNs& ns, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> include_AllocNVal(amc::FNs& ns, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> include_AllocNVal(amc::FNs& ns, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_dispsig_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
@@ -9915,6 +10034,12 @@ void                 c_dispsig_Remove(amc::FNs& ns, amc::FDispsig& row) __attrib
 void                 c_dispsig_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_dispsig_Reserve(amc::FNs& ns, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FDispsig&       c_dispsig_qFind(amc::FNs& ns, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ns_c_dispsig_InAryQ(amc::FDispsig& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FDispsig&       c_dispsig_qLast(amc::FNs& ns) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_parentns_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
@@ -9938,6 +10063,10 @@ void                 c_parentns_Remove(amc::FNs& ns, amc::FNs& row) __attribute_
 void                 c_parentns_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_parentns_Reserve(amc::FNs& ns, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FNs&            c_parentns_qFind(amc::FNs& ns, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FNs&            c_parentns_qLast(amc::FNs& ns) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_cppincl_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
@@ -9961,6 +10090,10 @@ void                 c_cppincl_Remove(amc::FNs& ns, amc::FNs& row) __attribute__
 void                 c_cppincl_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_cppincl_Reserve(amc::FNs& ns, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FNs&            c_cppincl_qFind(amc::FNs& ns, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FNs&            c_cppincl_qLast(amc::FNs& ns) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_hdrincl_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
@@ -9984,6 +10117,10 @@ void                 c_hdrincl_Remove(amc::FNs& ns, amc::FNs& row) __attribute__
 void                 c_hdrincl_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_hdrincl_Reserve(amc::FNs& ns, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FNs&            c_hdrincl_qFind(amc::FNs& ns, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FNs&            c_hdrincl_qLast(amc::FNs& ns) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_fwddecl_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
@@ -10006,6 +10143,12 @@ void                 c_fwddecl_Remove(amc::FNs& ns, amc::FFwddecl& row) __attrib
 void                 c_fwddecl_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_fwddecl_Reserve(amc::FNs& ns, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FFwddecl&       c_fwddecl_qFind(amc::FNs& ns, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ns_c_fwddecl_InAryQ(amc::FFwddecl& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FFwddecl&       c_fwddecl_qLast(amc::FNs& ns) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 bool                 c_nsx_InsertMaybe(amc::FNs& ns, amc::FNsx& row) __attribute__((nothrow));
@@ -10038,6 +10181,12 @@ void                 c_pnew_Remove(amc::FNs& ns, amc::FPnew& row) __attribute__(
 void                 c_pnew_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_pnew_Reserve(amc::FNs& ns, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FPnew&          c_pnew_qFind(amc::FNs& ns, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ns_c_pnew_InAryQ(amc::FPnew& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FPnew&          c_pnew_qLast(amc::FNs& ns) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 bool                 c_fcmdline_InsertMaybe(amc::FNs& ns, amc::FFcmdline& row) __attribute__((nothrow));
@@ -10077,6 +10226,12 @@ void                 c_outfile_Remove(amc::FNs& ns, amc::FOutfile& row) __attrib
 void                 c_outfile_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_outfile_Reserve(amc::FNs& ns, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FOutfile&       c_outfile_qFind(amc::FNs& ns, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ns_c_outfile_InAryQ(amc::FOutfile& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FOutfile&       c_outfile_qLast(amc::FNs& ns) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_foutput_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
@@ -10099,6 +10254,12 @@ void                 c_foutput_Remove(amc::FNs& ns, amc::FFoutput& row) __attrib
 void                 c_foutput_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_foutput_Reserve(amc::FNs& ns, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FFoutput&       c_foutput_qFind(amc::FNs& ns, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ns_c_foutput_InAryQ(amc::FFoutput& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FFoutput&       c_foutput_qLast(amc::FNs& ns) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_fstep_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
@@ -10121,6 +10282,12 @@ void                 c_fstep_Remove(amc::FNs& ns, amc::FFstep& row) __attribute_
 void                 c_fstep_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_fstep_Reserve(amc::FNs& ns, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FFstep&         c_fstep_qFind(amc::FNs& ns, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ns_c_fstep_InAryQ(amc::FFstep& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FFstep&         c_fstep_qLast(amc::FNs& ns) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_gsymbol_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
@@ -10143,6 +10310,12 @@ void                 c_gsymbol_Remove(amc::FNs& ns, amc::FGsymbol& row) __attrib
 void                 c_gsymbol_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_gsymbol_Reserve(amc::FNs& ns, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FGsymbol&       c_gsymbol_qFind(amc::FNs& ns, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ns_c_gsymbol_InAryQ(amc::FGsymbol& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FGsymbol&       c_gsymbol_qLast(amc::FNs& ns) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_nsinclude_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
@@ -10165,6 +10338,12 @@ void                 c_nsinclude_Remove(amc::FNs& ns, amc::FNsinclude& row) __at
 void                 c_nsinclude_RemoveAll(amc::FNs& ns) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_nsinclude_Reserve(amc::FNs& ns, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FNsinclude&     c_nsinclude_qFind(amc::FNs& ns, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ns_c_nsinclude_InAryQ(amc::FNsinclude& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FNsinclude&     c_nsinclude_qLast(amc::FNs& ns) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 bool                 c_nscpp_InsertMaybe(amc::FNs& ns, amc::FNscpp& row) __attribute__((nothrow));
@@ -10972,6 +11151,12 @@ void                 c_targdep_Remove(amc::FTarget& target, amc::FTargdep& row) 
 void                 c_targdep_RemoveAll(amc::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_targdep_Reserve(amc::FTarget& target, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc::FTargdep&       c_targdep_qFind(amc::FTarget& target, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 target_c_targdep_InAryQ(amc::FTargdep& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc::FTargdep&       c_targdep_qLast(amc::FTarget& target) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FTarget_Init(amc::FTarget& target);
@@ -13395,7 +13580,7 @@ void                 tfunc_Malloc_FreeMem();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Malloc_ReallocMem();
 // User-implemented function from gstatic:amc.FDb.tfunc
-void                 tfunc_Numstr_qGetnum();
+void                 tfunc_Numstr_Getnum();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Numstr_GetnumDflt();
 // User-implemented function from gstatic:amc.FDb.tfunc
@@ -13476,6 +13661,12 @@ void                 tfunc_Ptrary_Uninit();
 void                 tfunc_Ptrary_curs();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Ptrary_oncecurs();
+// User-implemented function from gstatic:amc.FDb.tfunc
+void                 tfunc_Ptrary_qFind();
+// User-implemented function from gstatic:amc.FDb.tfunc
+void                 tfunc_Ptrary_InAryQ();
+// User-implemented function from gstatic:amc.FDb.tfunc
+void                 tfunc_Ptrary_qLast();
 // User-implemented function from gstatic:amc.FDb.tfunc
 void                 tfunc_Regx_Init();
 // User-implemented function from gstatic:amc.FDb.tfunc

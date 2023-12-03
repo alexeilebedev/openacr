@@ -153,6 +153,12 @@ void                 c_builddir_Remove(mdbg::FCfg& cfg, mdbg::FBuilddir& row) __
 void                 c_builddir_RemoveAll(mdbg::FCfg& cfg) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_builddir_Reserve(mdbg::FCfg& cfg, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+mdbg::FBuilddir&     c_builddir_qFind(mdbg::FCfg& cfg, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 cfg_c_builddir_InAryQ(mdbg::FBuilddir& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+mdbg::FBuilddir&     c_builddir_qLast(mdbg::FCfg& cfg) __attribute__((nothrow));
 
 void                 cfg_c_builddir_curs_Reset(cfg_c_builddir_curs &curs, mdbg::FCfg &parent);
 // cursor points to valid item

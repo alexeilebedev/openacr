@@ -251,6 +251,12 @@ void                 c_field_Remove(lib_ctype::FCtype& ctype, lib_ctype::FField&
 void                 c_field_RemoveAll(lib_ctype::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_field_Reserve(lib_ctype::FCtype& ctype, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+lib_ctype::FField&   c_field_qFind(lib_ctype::FCtype& ctype, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ctype_c_field_InAryQ(lib_ctype::FField& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+lib_ctype::FField&   c_field_qLast(lib_ctype::FCtype& ctype) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 bool                 c_cdflt_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FCdflt& row) __attribute__((nothrow));
@@ -278,6 +284,12 @@ void                 c_cfmt_Remove(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& r
 void                 c_cfmt_RemoveAll(lib_ctype::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_cfmt_Reserve(lib_ctype::FCtype& ctype, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+lib_ctype::FCfmt&    c_cfmt_qFind(lib_ctype::FCtype& ctype, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ctype_c_cfmt_InAryQ(lib_ctype::FCfmt& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+lib_ctype::FCfmt&    c_cfmt_qLast(lib_ctype::FCtype& ctype) __attribute__((nothrow));
 
 void                 ctype_c_field_curs_Reset(ctype_c_field_curs &curs, lib_ctype::FCtype &parent);
 // cursor points to valid item
@@ -973,6 +985,12 @@ void                 c_substr_srcfield_Remove(lib_ctype::FField& field, lib_ctyp
 void                 c_substr_srcfield_RemoveAll(lib_ctype::FField& field) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_substr_srcfield_Reserve(lib_ctype::FField& field, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+lib_ctype::FSubstr&  c_substr_srcfield_qFind(lib_ctype::FField& field, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 field_c_substr_srcfield_InAryQ(lib_ctype::FSubstr& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+lib_ctype::FSubstr&  c_substr_srcfield_qLast(lib_ctype::FField& field) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FField_Init(lib_ctype::FField& field);

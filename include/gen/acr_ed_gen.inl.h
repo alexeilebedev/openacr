@@ -141,6 +141,24 @@ inline void acr_ed::c_field_RemoveAll(acr_ed::FCtype& ctype) {
     ctype.c_field_n = 0;
 }
 
+// --- acr_ed.FCtype.c_field.qFind
+// Return reference without bounds checking
+inline acr_ed::FField& acr_ed::c_field_qFind(acr_ed::FCtype& ctype, u32 idx) {
+    return *ctype.c_field_elems[idx];
+}
+
+// --- acr_ed.FCtype.c_field.InAryQ
+// True if row is in any ptrary instance
+inline bool acr_ed::ctype_c_field_InAryQ(acr_ed::FField& row) {
+    return row.ctype_c_field_in_ary;
+}
+
+// --- acr_ed.FCtype.c_field.qLast
+// Reference to last element without bounds checking
+inline acr_ed::FField& acr_ed::c_field_qLast(acr_ed::FCtype& ctype) {
+    return *ctype.c_field_elems[ctype.c_field_n-1];
+}
+
 // --- acr_ed.FCtype.c_cstr.InsertMaybe
 // Insert row into pointer index. Return final membership status.
 inline bool acr_ed::c_cstr_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FCstr& row) {
@@ -277,6 +295,18 @@ inline void acr_ed::c_cfmt_RemoveAll(acr_ed::FCtype& ctype) {
     ctype.c_cfmt_n = 0;
 }
 
+// --- acr_ed.FCtype.c_cfmt.qFind
+// Return reference without bounds checking
+inline acr_ed::FCfmt& acr_ed::c_cfmt_qFind(acr_ed::FCtype& ctype, u32 idx) {
+    return *ctype.c_cfmt_elems[idx];
+}
+
+// --- acr_ed.FCtype.c_cfmt.qLast
+// Reference to last element without bounds checking
+inline acr_ed::FCfmt& acr_ed::c_cfmt_qLast(acr_ed::FCtype& ctype) {
+    return *ctype.c_cfmt_elems[ctype.c_cfmt_n-1];
+}
+
 // --- acr_ed.FCtype.c_field_curs.Reset
 inline void acr_ed::ctype_c_field_curs_Reset(ctype_c_field_curs &curs, acr_ed::FCtype &parent) {
     curs.elems = parent.c_field_elems;
@@ -338,9 +368,7 @@ inline acr_ed::FEdaction::~FEdaction() {
 // --- acr_ed.FEdaction.step.Call
 // Invoke function by pointer
 inline void acr_ed::step_Call(acr_ed::FEdaction& edaction) {
-    if (edaction.step) {
-        edaction.step();
-    }
+    edaction.step();
 }
 
 // --- acr_ed.FEdaction..Init

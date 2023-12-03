@@ -88,6 +88,40 @@ void amc::tfunc_Ptrary_Find() {
     Ins(&R, find.body, "return retval;");
 }
 
+void amc::tfunc_Ptrary_InAryQ() {
+    algo_lib::Replscope &R = amc::_db.genfield.R;
+    amc::FField& field = *amc::_db.genfield.p_field;
+    amc::FPtrary& ptrary = *field.c_ptrary;
+    if (ptrary.unique) {
+        amc::FFunc& inary = amc::CreateCurFunc();
+        Ins(&R, inary.ret  , "bool", false);
+        if (amc::GlobalQ(*field.p_ctype)) {
+            Ins(&R, inary.proto, "$name_InAryQ($Cpptype& row)", false);
+        } else {
+            Ins(&R, inary.proto, "$parname_$name_InAryQ($Cpptype& row)", false);
+        }
+        Ins(&R, inary.body, "return row.$parname_$name_in_ary;");
+    }
+}
+
+void amc::tfunc_Ptrary_qFind() {
+    algo_lib::Replscope &R = amc::_db.genfield.R;
+    amc::FFunc& find = amc::CreateCurFunc();
+    find.inl = true;
+    Ins(&R, find.ret  , "$Cpptype&", false);
+    Ins(&R, find.proto, "$name_qFind($Parent, $Rowid idx)", false);
+    Ins(&R, find.body, "return *$parname.$name_elems[idx];");
+}
+
+void amc::tfunc_Ptrary_qLast() {
+    algo_lib::Replscope &R = amc::_db.genfield.R;
+    amc::FFunc& find = amc::CreateCurFunc();
+    find.inl = true;
+    Ins(&R, find.ret  , "$Cpptype&", false);
+    Ins(&R, find.proto, "$name_qLast($Parent)", false);
+    Ins(&R, find.body, "return *$parname.$name_elems[$parname.$name_n-1];");
+}
+
 void amc::tfunc_Ptrary_Getary() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
 

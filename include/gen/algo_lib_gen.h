@@ -233,7 +233,7 @@ u64&                 ary_qLast(algo_lib::Bitset& parent) __attribute__((nothrow)
 // Return row id of specified element
 u64                  ary_rowid_Get(algo_lib::Bitset& parent, u64 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u64>    ary_AllocNVal(algo_lib::Bitset& parent, int n_elems, const u64& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<u64>    ary_AllocNVal(algo_lib::Bitset& parent, int n_elems, const u64& val) __attribute__((nothrow));
 
 // proceed to next item
 void                 Bitset_ary_bitcurs_Next(Bitset_ary_bitcurs &curs);
@@ -370,7 +370,7 @@ algo::cstring&       ary_tok_qLast(algo_lib::CsvParse& csvparse) __attribute__((
 // Return row id of specified element
 u64                  ary_tok_rowid_Get(algo_lib::CsvParse& csvparse, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> ary_tok_AllocNVal(algo_lib::CsvParse& csvparse, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> ary_tok_AllocNVal(algo_lib::CsvParse& csvparse, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 
 // proceed to next item
 void                 csvparse_ary_tok_curs_Next(csvparse_ary_tok_curs &curs);
@@ -1142,7 +1142,7 @@ algo::cstring&       exec_args_qLast() __attribute__((nothrow));
 // Return row id of specified element
 u64                  exec_args_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> exec_args_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> exec_args_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
 
 // cursor points to valid item
 void                 _db_temp_strings_curs_Reset(_db_temp_strings_curs &curs, algo_lib::FDb &parent);
@@ -1434,6 +1434,12 @@ void                 c_txtcell_Remove(algo_lib::FTxtrow& txtrow, algo_lib::FTxtc
 void                 c_txtcell_RemoveAll(algo_lib::FTxtrow& txtrow) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_txtcell_Reserve(algo_lib::FTxtrow& txtrow, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+algo_lib::FTxtcell&  c_txtcell_qFind(algo_lib::FTxtrow& txtrow, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 txtrow_c_txtcell_InAryQ(algo_lib::FTxtcell& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+algo_lib::FTxtcell&  c_txtcell_qLast(algo_lib::FTxtrow& txtrow) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FTxtrow_Init(algo_lib::FTxtrow& txtrow);
@@ -1487,6 +1493,12 @@ void                 c_txtrow_Remove(algo_lib::FTxttbl& txttbl, algo_lib::FTxtro
 void                 c_txtrow_RemoveAll(algo_lib::FTxttbl& txttbl) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_txtrow_Reserve(algo_lib::FTxttbl& txttbl, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+algo_lib::FTxtrow&   c_txtrow_qFind(algo_lib::FTxttbl& txttbl, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 txttbl_c_txtrow_InAryQ(algo_lib::FTxtrow& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+algo_lib::FTxtrow&   c_txtrow_qLast(algo_lib::FTxttbl& txttbl) __attribute__((nothrow));
 // Verify whether array is sorted
 bool                 c_txtrow_SortedQ(algo_lib::FTxttbl& txttbl) __attribute__((nothrow));
 // Insertion sort
@@ -1883,7 +1895,7 @@ algo::i32_Range&     ch_class_qLast(algo_lib::RegxState& state) __attribute__((n
 // Return row id of specified element
 u64                  ch_class_rowid_Get(algo_lib::RegxState& state, algo::i32_Range &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::i32_Range> ch_class_AllocNVal(algo_lib::RegxState& state, int n_elems, const algo::i32_Range& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::i32_Range> ch_class_AllocNVal(algo_lib::RegxState& state, int n_elems, const algo::i32_Range& val) __attribute__((nothrow));
 // Verify whether array is sorted
 bool                 ch_class_SortedQ(algo_lib::RegxState& state) __attribute__((nothrow));
 // Insertion sort
@@ -2069,7 +2081,7 @@ i32&                 width_qLast(algo_lib::Tabulate& tabulate) __attribute__((no
 // Return row id of specified element
 u64                  width_rowid_Get(algo_lib::Tabulate& tabulate, i32 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<i32>    width_AllocNVal(algo_lib::Tabulate& tabulate, int n_elems, const i32& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<i32>    width_AllocNVal(algo_lib::Tabulate& tabulate, int n_elems, const i32& val) __attribute__((nothrow));
 
 // proceed to next item
 void                 tabulate_width_curs_Next(tabulate_width_curs &curs);
