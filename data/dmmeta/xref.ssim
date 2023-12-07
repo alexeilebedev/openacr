@@ -366,7 +366,6 @@ dmmeta.xref  field:amc.FCtype.c_ctypelen  inscond:true  via:amc.FDb.ind_ctype/dm
 dmmeta.xref  field:amc.FDb.c_ctypelen  inscond:true  via:""
 dmmeta.xref  field:amc.FField.c_fbase  inscond:true  via:amc.FDb.ind_field/dmmeta.Fbase.field
 dmmeta.xref  field:amc.FDb.ind_fcmap  inscond:true  via:""
-dmmeta.xref  field:amc.FCtype.c_nossimfile  inscond:true  via:amc.FDb.ind_ctype/dmmeta.Nossimfile.ctype
 dmmeta.xref  field:amc.FNs.c_gsymbol  inscond:true  via:amc.FDb.ind_ns/dmmeta.Gsymbol.ns
 dmmeta.xref  field:amc.FSortfld.p_sortfld  inscond:true  via:amc.FDb.ind_field/dmmeta.Sortfld.sortfld
 dmmeta.xref  field:amc.FField.c_sortfld  inscond:true  via:amc.FDb.ind_field/dmmeta.Sortfld.field

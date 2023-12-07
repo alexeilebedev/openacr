@@ -263,7 +263,6 @@ namespace amc { // gen:ns_print_proto
     // Quick sort engine
     static void          c_ctypelen_IntQuickSort(amc::FCtypelen* *elems, int n, int depth) __attribute__((nothrow));
     static bool          fbase_InputMaybe(dmmeta::Fbase &elem) __attribute__((nothrow));
-    static bool          nossimfile_InputMaybe(dmmeta::Nossimfile &elem) __attribute__((nothrow));
     static bool          gsymbol_InputMaybe(dmmeta::Gsymbol &elem) __attribute__((nothrow));
     static bool          sortfld_InputMaybe(dmmeta::Sortfld &elem) __attribute__((nothrow));
     static bool          cget_InputMaybe(dmmeta::Cget &elem) __attribute__((nothrow));
@@ -2502,7 +2501,6 @@ void amc::FCtype_Init(amc::FCtype& ctype) {
     ctype.totsize_byte = u32(0);
     ctype.n_xref = i32(0);
     ctype.next_anon_idx = i32(0);
-    ctype.c_nossimfile = NULL;
     ctype.topo_idx = i32(0);
     ctype.ns_c_ctype_in_ary = bool(false);
     ctype.ind_ctype_next = (amc::FCtype*)-1; // (amc.FDb.ind_ctype) not-in-hash
@@ -6319,7 +6317,7 @@ static void amc::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'defa565d2cb1fa6ff1382714cec24e761f0a354d'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'032c515eef72ef1e14ba458bc1ebfa0ea38daa26'");
 }
 
 // --- amc.FDb._db.StaticCheck
@@ -6818,12 +6816,6 @@ bool amc::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && fbase_InputMaybe(elem);
             break;
         }
-        case amc_TableId_dmmeta_Nossimfile: { // finput:amc.FDb.nossimfile
-            dmmeta::Nossimfile elem;
-            retval = dmmeta::Nossimfile_ReadStrptrMaybe(elem, str);
-            retval = retval && nossimfile_InputMaybe(elem);
-            break;
-        }
         case amc_TableId_dmmeta_Gsymbol: { // finput:amc.FDb.gsymbol
             dmmeta::Gsymbol elem;
             retval = dmmeta::Gsymbol_ReadStrptrMaybe(elem, str);
@@ -6952,7 +6944,6 @@ bool amc::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsinclude"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nscpp"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.noxref"),recursive);
-        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nossimfile"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nocascdel"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.msgtype"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.main"),recursive);
@@ -19874,118 +19865,6 @@ void amc::ind_fcmap_Reserve(int n) {
     }
 }
 
-// --- amc.FDb.nossimfile.Alloc
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-amc::FNossimfile& amc::nossimfile_Alloc() {
-    amc::FNossimfile* row = nossimfile_AllocMaybe();
-    if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("amc.out_of_mem  field:amc.FDb.nossimfile  comment:'Alloc failed'");
-    }
-    return *row;
-}
-
-// --- amc.FDb.nossimfile.AllocMaybe
-// Allocate memory for new element. If out of memory, return NULL.
-amc::FNossimfile* amc::nossimfile_AllocMaybe() {
-    amc::FNossimfile *row = (amc::FNossimfile*)nossimfile_AllocMem();
-    if (row) {
-        new (row) amc::FNossimfile; // call constructor
-    }
-    return row;
-}
-
-// --- amc.FDb.nossimfile.InsertMaybe
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-amc::FNossimfile* amc::nossimfile_InsertMaybe(const dmmeta::Nossimfile &value) {
-    amc::FNossimfile *row = &nossimfile_Alloc(); // if out of memory, process dies. if input error, return NULL.
-    nossimfile_CopyIn(*row,const_cast<dmmeta::Nossimfile&>(value));
-    bool ok = nossimfile_XrefMaybe(*row); // this may return false
-    if (!ok) {
-        nossimfile_RemoveLast(); // delete offending row, any existing xrefs are cleared
-        row = NULL; // forget this ever happened
-    }
-    return row;
-}
-
-// --- amc.FDb.nossimfile.AllocMem
-// Allocate space for one element. If no memory available, return NULL.
-void* amc::nossimfile_AllocMem() {
-    u64 new_nelems     = _db.nossimfile_n+1;
-    // compute level and index on level
-    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
-    u64 base  = u64(1)<<bsr;
-    u64 index = new_nelems-base;
-    void *ret = NULL;
-    // if level doesn't exist yet, create it
-    amc::FNossimfile*  lev   = NULL;
-    if (bsr < 32) {
-        lev = _db.nossimfile_lary[bsr];
-        if (!lev) {
-            lev=(amc::FNossimfile*)amc::lpool_AllocMem(sizeof(amc::FNossimfile) * (u64(1)<<bsr));
-            _db.nossimfile_lary[bsr] = lev;
-        }
-    }
-    // allocate element from this level
-    if (lev) {
-        _db.nossimfile_n = i32(new_nelems);
-        ret = lev + index;
-    }
-    return ret;
-}
-
-// --- amc.FDb.nossimfile.RemoveAll
-// Remove all elements from Lary
-void amc::nossimfile_RemoveAll() {
-    for (u64 n = _db.nossimfile_n; n>0; ) {
-        n--;
-        nossimfile_qFind(u64(n)).~FNossimfile(); // destroy last element
-        _db.nossimfile_n = i32(n);
-    }
-}
-
-// --- amc.FDb.nossimfile.RemoveLast
-// Delete last element of array. Do nothing if array is empty.
-void amc::nossimfile_RemoveLast() {
-    u64 n = _db.nossimfile_n;
-    if (n > 0) {
-        n -= 1;
-        nossimfile_qFind(u64(n)).~FNossimfile();
-        _db.nossimfile_n = i32(n);
-    }
-}
-
-// --- amc.FDb.nossimfile.InputMaybe
-static bool amc::nossimfile_InputMaybe(dmmeta::Nossimfile &elem) {
-    bool retval = true;
-    retval = nossimfile_InsertMaybe(elem) != nullptr;
-    return retval;
-}
-
-// --- amc.FDb.nossimfile.XrefMaybe
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool amc::nossimfile_XrefMaybe(amc::FNossimfile &row) {
-    bool retval = true;
-    (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
-    if (UNLIKELY(!p_ctype)) {
-        algo_lib::ResetErrtext() << "amc.bad_xref  index:amc.FDb.ind_ctype" << Keyval("key", row.ctype);
-        return false;
-    }
-    // insert nossimfile into index c_nossimfile
-    if (true) { // user-defined insert condition
-        bool success = c_nossimfile_InsertMaybe(*p_ctype, row);
-        if (UNLIKELY(!success)) {
-            ch_RemoveAll(algo_lib::_db.errtext);
-            algo_lib::_db.errtext << "amc.duplicate_key  xref:amc.FCtype.c_nossimfile"; // check for duplicate key
-            return false;
-        }
-    }
-    return retval;
-}
-
 // --- amc.FDb.gsymbol.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -23610,17 +23489,6 @@ void amc::FDb_Init() {
         FatalErrorExit("out of memory"); // (amc.FDb.ind_fcmap)
     }
     memset(_db.ind_fcmap_buckets_elems, 0, sizeof(amc::FFcmap*)*_db.ind_fcmap_buckets_n); // (amc.FDb.ind_fcmap)
-    // initialize LAry nossimfile (amc.FDb.nossimfile)
-    _db.nossimfile_n = 0;
-    memset(_db.nossimfile_lary, 0, sizeof(_db.nossimfile_lary)); // zero out all level pointers
-    amc::FNossimfile* nossimfile_first = (amc::FNossimfile*)amc::lpool_AllocMem(sizeof(amc::FNossimfile) * (u64(1)<<4));
-    if (!nossimfile_first) {
-        FatalErrorExit("out of memory");
-    }
-    for (int i = 0; i < 4; i++) {
-        _db.nossimfile_lary[i]  = nossimfile_first;
-        nossimfile_first    += 1ULL<<i;
-    }
     // initialize LAry gsymbol (amc.FDb.gsymbol)
     _db.gsymbol_n = 0;
     memset(_db.gsymbol_lary, 0, sizeof(_db.gsymbol_lary)); // zero out all level pointers
@@ -23875,9 +23743,6 @@ void amc::FDb_Uninit() {
     // skip destruction in global scope
 
     // amc.FDb.gsymbol.Uninit (Lary)  //
-    // skip destruction in global scope
-
-    // amc.FDb.nossimfile.Uninit (Lary)  //
     // skip destruction in global scope
 
     // amc.FDb.ind_fcmap.Uninit (Thash)  //
@@ -27337,29 +27202,6 @@ void amc::FNocascdel_Uninit(amc::FNocascdel& nocascdel) {
     }
 }
 
-// --- amc.FNossimfile.base.CopyOut
-// Copy fields out of row
-void amc::nossimfile_CopyOut(amc::FNossimfile &row, dmmeta::Nossimfile &out) {
-    out.ctype = row.ctype;
-    out.comment = row.comment;
-}
-
-// --- amc.FNossimfile.base.CopyIn
-// Copy fields in to row
-void amc::nossimfile_CopyIn(amc::FNossimfile &row, dmmeta::Nossimfile &in) {
-    row.ctype = in.ctype;
-    row.comment = in.comment;
-}
-
-// --- amc.FNossimfile..Uninit
-void amc::FNossimfile_Uninit(amc::FNossimfile& nossimfile) {
-    amc::FNossimfile &row = nossimfile; (void)row;
-    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
-    if (p_ctype)  {
-        c_nossimfile_Remove(*p_ctype, row);// remove nossimfile from index c_nossimfile
-    }
-}
-
 // --- amc.FNoxref.msghdr.CopyOut
 // Copy fields out of row
 void amc::noxref_CopyOut(amc::FNoxref &row, dmmeta::Noxref &out) {
@@ -30005,7 +29847,6 @@ const char* amc::value_ToCstr(const amc::TableId& parent) {
         case amc_TableId_dmmeta_Main       : ret = "dmmeta.Main";  break;
         case amc_TableId_dmmeta_Msgtype    : ret = "dmmeta.Msgtype";  break;
         case amc_TableId_dmmeta_Nocascdel  : ret = "dmmeta.Nocascdel";  break;
-        case amc_TableId_dmmeta_Nossimfile : ret = "dmmeta.Nossimfile";  break;
         case amc_TableId_dmmeta_Noxref     : ret = "dmmeta.Noxref";  break;
         case amc_TableId_dmmeta_Ns         : ret = "dmmeta.Ns";  break;
         case amc_TableId_dmmeta_Nscpp      : ret = "dmmeta.Nscpp";  break;
@@ -30573,16 +30414,8 @@ bool amc::value_SetStrptrMaybe(amc::TableId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"ispfilter",9)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Dispfilter); ret = true; break; }
                     break;
                 }
-                case LE_STR8('d','m','m','e','t','a','.','N'): {
-                    if (memcmp(rhs.elems+8,"ossimfile",9)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Nossimfile); ret = true; break; }
-                    break;
-                }
                 case LE_STR8('d','m','m','e','t','a','.','d'): {
                     if (memcmp(rhs.elems+8,"ispfilter",9)==0) { value_SetEnum(parent,amc_TableId_dmmeta_dispfilter); ret = true; break; }
-                    break;
-                }
-                case LE_STR8('d','m','m','e','t','a','.','n'): {
-                    if (memcmp(rhs.elems+8,"ossimfile",9)==0) { value_SetEnum(parent,amc_TableId_dmmeta_nossimfile); ret = true; break; }
                     break;
                 }
             }

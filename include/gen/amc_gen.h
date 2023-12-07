@@ -310,63 +310,61 @@ enum amc_TableIdEnum {                        // amc.TableId.value
     ,amc_TableId_dmmeta_msgtype        = 66   // dmmeta.msgtype -> amc.FMsgtype
     ,amc_TableId_dmmeta_Nocascdel      = 67   // dmmeta.Nocascdel -> amc.FNocascdel
     ,amc_TableId_dmmeta_nocascdel      = 67   // dmmeta.nocascdel -> amc.FNocascdel
-    ,amc_TableId_dmmeta_Nossimfile     = 68   // dmmeta.Nossimfile -> amc.FNossimfile
-    ,amc_TableId_dmmeta_nossimfile     = 68   // dmmeta.nossimfile -> amc.FNossimfile
-    ,amc_TableId_dmmeta_Noxref         = 69   // dmmeta.Noxref -> amc.FNoxref
-    ,amc_TableId_dmmeta_noxref         = 69   // dmmeta.noxref -> amc.FNoxref
-    ,amc_TableId_dmmeta_Ns             = 70   // dmmeta.Ns -> amc.FNs
-    ,amc_TableId_dmmeta_ns             = 70   // dmmeta.ns -> amc.FNs
-    ,amc_TableId_dmmeta_Nscpp          = 71   // dmmeta.Nscpp -> amc.FNscpp
-    ,amc_TableId_dmmeta_nscpp          = 71   // dmmeta.nscpp -> amc.FNscpp
-    ,amc_TableId_dmmeta_Nsdb           = 72   // dmmeta.Nsdb -> amc.FNsdb
-    ,amc_TableId_dmmeta_nsdb           = 72   // dmmeta.nsdb -> amc.FNsdb
-    ,amc_TableId_dmmeta_Nsinclude      = 73   // dmmeta.Nsinclude -> amc.FNsinclude
-    ,amc_TableId_dmmeta_nsinclude      = 73   // dmmeta.nsinclude -> amc.FNsinclude
-    ,amc_TableId_dmmeta_Nsproto        = 74   // dmmeta.Nsproto -> amc.FNsproto
-    ,amc_TableId_dmmeta_nsproto        = 74   // dmmeta.nsproto -> amc.FNsproto
-    ,amc_TableId_dmmeta_Nsx            = 75   // dmmeta.Nsx -> amc.FNsx
-    ,amc_TableId_dmmeta_nsx            = 75   // dmmeta.nsx -> amc.FNsx
-    ,amc_TableId_dmmeta_Numstr         = 76   // dmmeta.Numstr -> amc.FNumstr
-    ,amc_TableId_dmmeta_numstr         = 76   // dmmeta.numstr -> amc.FNumstr
-    ,amc_TableId_dmmeta_Pack           = 77   // dmmeta.Pack -> amc.FPack
-    ,amc_TableId_dmmeta_pack           = 77   // dmmeta.pack -> amc.FPack
-    ,amc_TableId_dmmeta_Pmaskfld       = 78   // dmmeta.Pmaskfld -> amc.FPmaskfld
-    ,amc_TableId_dmmeta_pmaskfld       = 78   // dmmeta.pmaskfld -> amc.FPmaskfld
-    ,amc_TableId_dmmeta_Pnew           = 79   // dmmeta.Pnew -> amc.FPnew
-    ,amc_TableId_dmmeta_pnew           = 79   // dmmeta.pnew -> amc.FPnew
-    ,amc_TableId_dmmeta_Ptrary         = 80   // dmmeta.Ptrary -> amc.FPtrary
-    ,amc_TableId_dmmeta_ptrary         = 80   // dmmeta.ptrary -> amc.FPtrary
-    ,amc_TableId_dmmeta_Rowid          = 81   // dmmeta.Rowid -> amc.FRowid
-    ,amc_TableId_dmmeta_rowid          = 81   // dmmeta.rowid -> amc.FRowid
-    ,amc_TableId_dmmeta_Smallstr       = 82   // dmmeta.Smallstr -> amc.FSmallstr
-    ,amc_TableId_dmmeta_smallstr       = 82   // dmmeta.smallstr -> amc.FSmallstr
-    ,amc_TableId_dmmeta_Sortfld        = 83   // dmmeta.Sortfld -> amc.FSortfld
-    ,amc_TableId_dmmeta_sortfld        = 83   // dmmeta.sortfld -> amc.FSortfld
-    ,amc_TableId_dmmeta_Ssimfile       = 84   // dmmeta.Ssimfile -> amc.FSsimfile
-    ,amc_TableId_dmmeta_ssimfile       = 84   // dmmeta.ssimfile -> amc.FSsimfile
-    ,amc_TableId_dmmeta_Ssimvolatile   = 85   // dmmeta.Ssimvolatile -> amc.FSsimvolatile
-    ,amc_TableId_dmmeta_ssimvolatile   = 85   // dmmeta.ssimvolatile -> amc.FSsimvolatile
-    ,amc_TableId_dmmeta_Substr         = 86   // dmmeta.Substr -> amc.FSubstr
-    ,amc_TableId_dmmeta_substr         = 86   // dmmeta.substr -> amc.FSubstr
-    ,amc_TableId_dev_Targdep           = 87   // dev.Targdep -> amc.FTargdep
-    ,amc_TableId_dev_targdep           = 87   // dev.targdep -> amc.FTargdep
-    ,amc_TableId_dev_Target            = 88   // dev.Target -> amc.FTarget
-    ,amc_TableId_dev_target            = 88   // dev.target -> amc.FTarget
-    ,amc_TableId_dmmeta_Tary           = 89   // dmmeta.Tary -> amc.FTary
-    ,amc_TableId_dmmeta_tary           = 89   // dmmeta.tary -> amc.FTary
-    ,amc_TableId_amcdb_Tcurs           = 90   // amcdb.Tcurs -> amc.FTcurs
-    ,amc_TableId_amcdb_tcurs           = 90   // amcdb.tcurs -> amc.FTcurs
-    ,amc_TableId_dmmeta_Thash          = 91   // dmmeta.Thash -> amc.FThash
-    ,amc_TableId_dmmeta_thash          = 91   // dmmeta.thash -> amc.FThash
-    ,amc_TableId_dmmeta_Typefld        = 92   // dmmeta.Typefld -> amc.FTypefld
-    ,amc_TableId_dmmeta_typefld        = 92   // dmmeta.typefld -> amc.FTypefld
-    ,amc_TableId_dmmeta_Usertracefld   = 93   // dmmeta.Usertracefld -> amc.FUsertracefld
-    ,amc_TableId_dmmeta_usertracefld   = 93   // dmmeta.usertracefld -> amc.FUsertracefld
-    ,amc_TableId_dmmeta_Xref           = 94   // dmmeta.Xref -> amc.FXref
-    ,amc_TableId_dmmeta_xref           = 94   // dmmeta.xref -> amc.FXref
+    ,amc_TableId_dmmeta_Noxref         = 68   // dmmeta.Noxref -> amc.FNoxref
+    ,amc_TableId_dmmeta_noxref         = 68   // dmmeta.noxref -> amc.FNoxref
+    ,amc_TableId_dmmeta_Ns             = 69   // dmmeta.Ns -> amc.FNs
+    ,amc_TableId_dmmeta_ns             = 69   // dmmeta.ns -> amc.FNs
+    ,amc_TableId_dmmeta_Nscpp          = 70   // dmmeta.Nscpp -> amc.FNscpp
+    ,amc_TableId_dmmeta_nscpp          = 70   // dmmeta.nscpp -> amc.FNscpp
+    ,amc_TableId_dmmeta_Nsdb           = 71   // dmmeta.Nsdb -> amc.FNsdb
+    ,amc_TableId_dmmeta_nsdb           = 71   // dmmeta.nsdb -> amc.FNsdb
+    ,amc_TableId_dmmeta_Nsinclude      = 72   // dmmeta.Nsinclude -> amc.FNsinclude
+    ,amc_TableId_dmmeta_nsinclude      = 72   // dmmeta.nsinclude -> amc.FNsinclude
+    ,amc_TableId_dmmeta_Nsproto        = 73   // dmmeta.Nsproto -> amc.FNsproto
+    ,amc_TableId_dmmeta_nsproto        = 73   // dmmeta.nsproto -> amc.FNsproto
+    ,amc_TableId_dmmeta_Nsx            = 74   // dmmeta.Nsx -> amc.FNsx
+    ,amc_TableId_dmmeta_nsx            = 74   // dmmeta.nsx -> amc.FNsx
+    ,amc_TableId_dmmeta_Numstr         = 75   // dmmeta.Numstr -> amc.FNumstr
+    ,amc_TableId_dmmeta_numstr         = 75   // dmmeta.numstr -> amc.FNumstr
+    ,amc_TableId_dmmeta_Pack           = 76   // dmmeta.Pack -> amc.FPack
+    ,amc_TableId_dmmeta_pack           = 76   // dmmeta.pack -> amc.FPack
+    ,amc_TableId_dmmeta_Pmaskfld       = 77   // dmmeta.Pmaskfld -> amc.FPmaskfld
+    ,amc_TableId_dmmeta_pmaskfld       = 77   // dmmeta.pmaskfld -> amc.FPmaskfld
+    ,amc_TableId_dmmeta_Pnew           = 78   // dmmeta.Pnew -> amc.FPnew
+    ,amc_TableId_dmmeta_pnew           = 78   // dmmeta.pnew -> amc.FPnew
+    ,amc_TableId_dmmeta_Ptrary         = 79   // dmmeta.Ptrary -> amc.FPtrary
+    ,amc_TableId_dmmeta_ptrary         = 79   // dmmeta.ptrary -> amc.FPtrary
+    ,amc_TableId_dmmeta_Rowid          = 80   // dmmeta.Rowid -> amc.FRowid
+    ,amc_TableId_dmmeta_rowid          = 80   // dmmeta.rowid -> amc.FRowid
+    ,amc_TableId_dmmeta_Smallstr       = 81   // dmmeta.Smallstr -> amc.FSmallstr
+    ,amc_TableId_dmmeta_smallstr       = 81   // dmmeta.smallstr -> amc.FSmallstr
+    ,amc_TableId_dmmeta_Sortfld        = 82   // dmmeta.Sortfld -> amc.FSortfld
+    ,amc_TableId_dmmeta_sortfld        = 82   // dmmeta.sortfld -> amc.FSortfld
+    ,amc_TableId_dmmeta_Ssimfile       = 83   // dmmeta.Ssimfile -> amc.FSsimfile
+    ,amc_TableId_dmmeta_ssimfile       = 83   // dmmeta.ssimfile -> amc.FSsimfile
+    ,amc_TableId_dmmeta_Ssimvolatile   = 84   // dmmeta.Ssimvolatile -> amc.FSsimvolatile
+    ,amc_TableId_dmmeta_ssimvolatile   = 84   // dmmeta.ssimvolatile -> amc.FSsimvolatile
+    ,amc_TableId_dmmeta_Substr         = 85   // dmmeta.Substr -> amc.FSubstr
+    ,amc_TableId_dmmeta_substr         = 85   // dmmeta.substr -> amc.FSubstr
+    ,amc_TableId_dev_Targdep           = 86   // dev.Targdep -> amc.FTargdep
+    ,amc_TableId_dev_targdep           = 86   // dev.targdep -> amc.FTargdep
+    ,amc_TableId_dev_Target            = 87   // dev.Target -> amc.FTarget
+    ,amc_TableId_dev_target            = 87   // dev.target -> amc.FTarget
+    ,amc_TableId_dmmeta_Tary           = 88   // dmmeta.Tary -> amc.FTary
+    ,amc_TableId_dmmeta_tary           = 88   // dmmeta.tary -> amc.FTary
+    ,amc_TableId_amcdb_Tcurs           = 89   // amcdb.Tcurs -> amc.FTcurs
+    ,amc_TableId_amcdb_tcurs           = 89   // amcdb.tcurs -> amc.FTcurs
+    ,amc_TableId_dmmeta_Thash          = 90   // dmmeta.Thash -> amc.FThash
+    ,amc_TableId_dmmeta_thash          = 90   // dmmeta.thash -> amc.FThash
+    ,amc_TableId_dmmeta_Typefld        = 91   // dmmeta.Typefld -> amc.FTypefld
+    ,amc_TableId_dmmeta_typefld        = 91   // dmmeta.typefld -> amc.FTypefld
+    ,amc_TableId_dmmeta_Usertracefld   = 92   // dmmeta.Usertracefld -> amc.FUsertracefld
+    ,amc_TableId_dmmeta_usertracefld   = 92   // dmmeta.usertracefld -> amc.FUsertracefld
+    ,amc_TableId_dmmeta_Xref           = 93   // dmmeta.Xref -> amc.FXref
+    ,amc_TableId_dmmeta_xref           = 93   // dmmeta.xref -> amc.FXref
 };
 
-enum { amc_TableIdEnum_N = 190 };
+enum { amc_TableIdEnum_N = 188 };
 
 namespace amc { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -455,7 +453,6 @@ namespace amc { struct FListtype; }
 namespace dmmeta { struct Main; }
 namespace dmmeta { struct Msgtype; }
 namespace dmmeta { struct Nocascdel; }
-namespace dmmeta { struct Nossimfile; }
 namespace dmmeta { struct Noxref; }
 namespace dmmeta { struct Ns; }
 namespace amc { struct FLicense; }
@@ -606,7 +603,6 @@ namespace amc { struct _db_ctypelen_curs; }
 namespace amc { struct _db_c_ctypelen_curs; }
 namespace amc { struct _db_c_tempfield_curs; }
 namespace amc { struct _db_fbase_curs; }
-namespace amc { struct _db_nossimfile_curs; }
 namespace amc { struct _db_gsymbol_curs; }
 namespace amc { struct _db_sortfld_curs; }
 namespace amc { struct _db_cget_curs; }
@@ -728,7 +724,6 @@ namespace amc { struct FLlist; }
 namespace amc { struct FMain; }
 namespace amc { struct FMsgtype; }
 namespace amc { struct FNocascdel; }
-namespace amc { struct FNossimfile; }
 namespace amc { struct FNoxref; }
 namespace amc { struct FNscpp; }
 namespace amc { struct FNsdb; }
@@ -1479,7 +1474,6 @@ struct FCtype { // amc.FCtype
     u32                   totsize_byte;               //   0  Total size in bytes of all fields
     i32                   n_xref;                     //   0
     i32                   next_anon_idx;              //   0  sequence to enumerate positional fields
-    amc::FNossimfile*     c_nossimfile;               // optional pointer
     i32                   topo_idx;                   //   0  Index of ctype in array c_ctype (after topological sort)
     bool                  ns_c_ctype_in_ary;          //   false  membership flag
     amc::FCtype*          ind_ctype_next;             // hash next
@@ -1862,11 +1856,6 @@ void                 c_fcurs_Reserve(amc::FCtype& ctype, u32 n) __attribute__((n
 bool                 c_ctypelen_InsertMaybe(amc::FCtype& ctype, amc::FCtypelen& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 void                 c_ctypelen_Remove(amc::FCtype& ctype, amc::FCtypelen& row) __attribute__((nothrow));
-
-// Insert row into pointer index. Return final membership status.
-bool                 c_nossimfile_InsertMaybe(amc::FCtype& ctype, amc::FNossimfile& row) __attribute__((nothrow));
-// Remove element from index. If element is not in index, do nothing.
-void                 c_nossimfile_Remove(amc::FCtype& ctype, amc::FNossimfile& row) __attribute__((nothrow));
 
 // cursor points to valid item
 void                 ctype_zs_cfmt_curs_Reset(ctype_zs_cfmt_curs &curs, amc::FCtype &parent);
@@ -2402,8 +2391,6 @@ struct FDb { // amc.FDb
     amc::FFcmap**         ind_fcmap_buckets_elems;                  // pointer to bucket array
     i32                   ind_fcmap_buckets_n;                      // number of elements in bucket array
     i32                   ind_fcmap_n;                              // number of elements in the hash table
-    amc::FNossimfile*     nossimfile_lary[32];                      // level array
-    i32                   nossimfile_n;                             // number of elements in array
     amc::FGsymbol*        gsymbol_lary[32];                         // level array
     i32                   gsymbol_n;                                // number of elements in array
     amc::FSortfld*        sortfld_lary[32];                         // level array
@@ -5728,34 +5715,6 @@ void                 ind_fcmap_Reserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-amc::FNossimfile&    nossimfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
-// Allocate memory for new element. If out of memory, return NULL.
-amc::FNossimfile*    nossimfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-amc::FNossimfile*    nossimfile_InsertMaybe(const dmmeta::Nossimfile &value) __attribute__((nothrow));
-// Allocate space for one element. If no memory available, return NULL.
-void*                nossimfile_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-bool                 nossimfile_EmptyQ() __attribute__((nothrow, pure));
-// Look up row by row id. Return NULL if out of range
-amc::FNossimfile*    nossimfile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to last element of array, or NULL if array is empty
-amc::FNossimfile*    nossimfile_Last() __attribute__((nothrow, pure));
-// Return number of items in the pool
-i32                  nossimfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Remove all elements from Lary
-void                 nossimfile_RemoveAll() __attribute__((nothrow));
-// Delete last element of array. Do nothing if array is empty.
-void                 nossimfile_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-amc::FNossimfile&    nossimfile_qFind(u64 t) __attribute__((nothrow, pure));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool                 nossimfile_XrefMaybe(amc::FNossimfile &row);
-
-// Allocate memory for new default row.
-// If out of memory, process is killed.
 amc::FGsymbol&       gsymbol_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
 amc::FGsymbol*       gsymbol_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -7097,14 +7056,6 @@ bool                 _db_fbase_curs_ValidQ(_db_fbase_curs &curs);
 void                 _db_fbase_curs_Next(_db_fbase_curs &curs);
 // item access
 amc::FFbase&         _db_fbase_curs_Access(_db_fbase_curs &curs);
-// cursor points to valid item
-void                 _db_nossimfile_curs_Reset(_db_nossimfile_curs &curs, amc::FDb &parent);
-// cursor points to valid item
-bool                 _db_nossimfile_curs_ValidQ(_db_nossimfile_curs &curs);
-// proceed to next item
-void                 _db_nossimfile_curs_Next(_db_nossimfile_curs &curs);
-// item access
-amc::FNossimfile&    _db_nossimfile_curs_Access(_db_nossimfile_curs &curs);
 // cursor points to valid item
 void                 _db_gsymbol_curs_Reset(_db_gsymbol_curs &curs, amc::FDb &parent);
 // cursor points to valid item
@@ -9606,30 +9557,6 @@ void                 nocascdel_CopyOut(amc::FNocascdel &row, dmmeta::Nocascdel &
 void                 nocascdel_CopyIn(amc::FNocascdel &row, dmmeta::Nocascdel &in) __attribute__((nothrow));
 
 void                 FNocascdel_Uninit(amc::FNocascdel& nocascdel) __attribute__((nothrow));
-
-// --- amc.FNossimfile
-// create: amc.FDb.nossimfile (Lary)
-// access: amc.FCtype.c_nossimfile (Ptr)
-struct FNossimfile { // amc.FNossimfile
-    algo::Smallstr50   ctype;     //
-    algo::Comment      comment;   //
-private:
-    friend amc::FNossimfile&    nossimfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
-    friend amc::FNossimfile*    nossimfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 nossimfile_RemoveAll() __attribute__((nothrow));
-    friend void                 nossimfile_RemoveLast() __attribute__((nothrow));
-    FNossimfile();
-    ~FNossimfile();
-    FNossimfile(const FNossimfile&){ /*disallow copy constructor */}
-    void operator =(const FNossimfile&){ /*disallow direct assignment */}
-};
-
-// Copy fields out of row
-void                 nossimfile_CopyOut(amc::FNossimfile &row, dmmeta::Nossimfile &out) __attribute__((nothrow));
-// Copy fields in to row
-void                 nossimfile_CopyIn(amc::FNossimfile &row, dmmeta::Nossimfile &in) __attribute__((nothrow));
-
-void                 FNossimfile_Uninit(amc::FNossimfile& nossimfile) __attribute__((nothrow));
 
 // --- amc.FNoxref
 // create: amc.FDb.noxref (Lary)
@@ -12351,14 +12278,6 @@ struct _db_fbase_curs {// cursor
     amc::FDb *parent;
     i64 index;
     _db_fbase_curs(){ parent=NULL; index=0; }
-};
-
-
-struct _db_nossimfile_curs {// cursor
-    typedef amc::FNossimfile ChildType;
-    amc::FDb *parent;
-    i64 index;
-    _db_nossimfile_curs(){ parent=NULL; index=0; }
 };
 
 

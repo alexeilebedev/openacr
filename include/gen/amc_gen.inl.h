@@ -1365,26 +1365,6 @@ inline void amc::c_ctypelen_Remove(amc::FCtype& ctype, amc::FCtypelen& row) {
     }
 }
 
-// --- amc.FCtype.c_nossimfile.InsertMaybe
-// Insert row into pointer index. Return final membership status.
-inline bool amc::c_nossimfile_InsertMaybe(amc::FCtype& ctype, amc::FNossimfile& row) {
-    amc::FNossimfile* ptr = ctype.c_nossimfile;
-    bool retval = (ptr == NULL) | (ptr == &row);
-    if (retval) {
-        ctype.c_nossimfile = &row;
-    }
-    return retval;
-}
-
-// --- amc.FCtype.c_nossimfile.Remove
-// Remove element from index. If element is not in index, do nothing.
-inline void amc::c_nossimfile_Remove(amc::FCtype& ctype, amc::FNossimfile& row) {
-    amc::FNossimfile *ptr = ctype.c_nossimfile;
-    if (LIKELY(ptr == &row)) {
-        ctype.c_nossimfile = NULL;
-    }
-}
-
 // --- amc.FCtype.zs_cfmt_curs.Reset
 // cursor points to valid item
 inline void amc::ctype_zs_cfmt_curs_Reset(ctype_zs_cfmt_curs &curs, amc::FCtype &parent) {
@@ -6473,48 +6453,6 @@ inline i32 amc::ind_fcmap_N() {
     return _db.ind_fcmap_n;
 }
 
-// --- amc.FDb.nossimfile.EmptyQ
-// Return true if index is empty
-inline bool amc::nossimfile_EmptyQ() {
-    return _db.nossimfile_n == 0;
-}
-
-// --- amc.FDb.nossimfile.Find
-// Look up row by row id. Return NULL if out of range
-inline amc::FNossimfile* amc::nossimfile_Find(u64 t) {
-    amc::FNossimfile *retval = NULL;
-    if (LIKELY(u64(t) < u64(_db.nossimfile_n))) {
-        u64 x = t + 1;
-        u64 bsr   = algo::u64_BitScanReverse(x);
-        u64 base  = u64(1)<<bsr;
-        u64 index = x-base;
-        retval = &_db.nossimfile_lary[bsr][index];
-    }
-    return retval;
-}
-
-// --- amc.FDb.nossimfile.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline amc::FNossimfile* amc::nossimfile_Last() {
-    return nossimfile_Find(u64(_db.nossimfile_n-1));
-}
-
-// --- amc.FDb.nossimfile.N
-// Return number of items in the pool
-inline i32 amc::nossimfile_N() {
-    return _db.nossimfile_n;
-}
-
-// --- amc.FDb.nossimfile.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline amc::FNossimfile& amc::nossimfile_qFind(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
-    return _db.nossimfile_lary[bsr][index];
-}
-
 // --- amc.FDb.gsymbol.EmptyQ
 // Return true if index is empty
 inline bool amc::gsymbol_EmptyQ() {
@@ -9877,31 +9815,6 @@ inline amc::FFbase& amc::_db_fbase_curs_Access(_db_fbase_curs &curs) {
     return fbase_qFind(u64(curs.index));
 }
 
-// --- amc.FDb.nossimfile_curs.Reset
-// cursor points to valid item
-inline void amc::_db_nossimfile_curs_Reset(_db_nossimfile_curs &curs, amc::FDb &parent) {
-    curs.parent = &parent;
-    curs.index = 0;
-}
-
-// --- amc.FDb.nossimfile_curs.ValidQ
-// cursor points to valid item
-inline bool amc::_db_nossimfile_curs_ValidQ(_db_nossimfile_curs &curs) {
-    return curs.index < _db.nossimfile_n;
-}
-
-// --- amc.FDb.nossimfile_curs.Next
-// proceed to next item
-inline void amc::_db_nossimfile_curs_Next(_db_nossimfile_curs &curs) {
-    curs.index++;
-}
-
-// --- amc.FDb.nossimfile_curs.Access
-// item access
-inline amc::FNossimfile& amc::_db_nossimfile_curs_Access(_db_nossimfile_curs &curs) {
-    return nossimfile_qFind(u64(curs.index));
-}
-
 // --- amc.FDb.gsymbol_curs.Reset
 // cursor points to valid item
 inline void amc::_db_gsymbol_curs_Reset(_db_gsymbol_curs &curs, amc::FDb &parent) {
@@ -12711,13 +12624,6 @@ inline amc::FNocascdel::FNocascdel() {
 
 inline amc::FNocascdel::~FNocascdel() {
     amc::FNocascdel_Uninit(*this);
-}
-
-inline amc::FNossimfile::FNossimfile() {
-}
-
-inline amc::FNossimfile::~FNossimfile() {
-    amc::FNossimfile_Uninit(*this);
 }
 
 inline amc::FNoxref::FNoxref() {

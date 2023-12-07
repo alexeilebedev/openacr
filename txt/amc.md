@@ -1718,7 +1718,6 @@ dmmeta.Nsproto       Annotate protocol namespace (collection of types, no state)
 dmmeta.Nsinclude     Explicitly specify a C++ include file for namespace
 dmmeta.Nscpp         Generate C++ code for this namespace
 dmmeta.Noxref        Explicitly specify that no x-ref exists between tables (don't use unless forced)
-dmmeta.Nossimfile    Indicates that ssimfile does not exist for this ssimdb ctype
 dmmeta.Nocascdel     Remove cascade delete for this index
 dmmeta.Msgtype       Specify message type for each eligible message, controls dispatch
 dmmeta.Main          Generate Main function for namespace

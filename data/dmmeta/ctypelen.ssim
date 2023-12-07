@@ -379,9 +379,9 @@ dmmeta.ctypelen  ctype:amc.FCppfunc  len:354  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amc.FCpptype  len:72  alignment:8  padbytes:1
 dmmeta.ctypelen  ctype:amc.FCsize  len:60  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:amc.FCstr  len:53  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:amc.FCtype  len:752  alignment:8  padbytes:31
+dmmeta.ctypelen  ctype:amc.FCtype  len:744  alignment:8  padbytes:31
 dmmeta.ctypelen  ctype:amc.FCtypelen  len:68  alignment:4  padbytes:3
-dmmeta.ctypelen  ctype:amc.FDb  len:33744  alignment:16  padbytes:458
+dmmeta.ctypelen  ctype:amc.FDb  len:33488  alignment:16  padbytes:462
 dmmeta.ctypelen  ctype:amc.FDispatch  len:168  alignment:8  padbytes:17
 dmmeta.ctypelen  ctype:amc.FDispatchmsg  len:144  alignment:8  padbytes:9
 dmmeta.ctypelen  ctype:amc.FDispctx  len:112  alignment:8  padbytes:0
@@ -437,7 +437,6 @@ dmmeta.ctypelen  ctype:amc.FLlist  len:112  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:amc.FMain  len:32  alignment:8  padbytes:5
 dmmeta.ctypelen  ctype:amc.FMsgtype  len:312  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:amc.FNocascdel  len:102  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:amc.FNossimfile  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amc.FNoxref  len:102  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amc.FNs  len:712  alignment:8  padbytes:16
 dmmeta.ctypelen  ctype:amc.FNscpp  len:170  alignment:1  padbytes:0
@@ -839,7 +838,6 @@ dmmeta.ctypelen  ctype:dmmeta.Logcat  len:206  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Main  len:19  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Msgtype  len:304  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Nocascdel  len:254  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:dmmeta.Nossimfile  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Noxref  len:254  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Ns  len:274  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:dmmeta.Nscpp  len:170  alignment:1  padbytes:0

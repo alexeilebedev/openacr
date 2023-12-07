@@ -30,7 +30,7 @@
 void amc::gen_ssimdb() {
     ind_beg(amc::_db_ctype_curs,ctype,amc::_db) {
         if (ctype.p_ns->nstype == dmmeta_Nstype_nstype_ssimdb && ctype.original) {
-            if (!ctype.c_ssimfile && !ctype.c_nossimfile) {
+            if (!ctype.c_ssimfile) {
                 prlog("amc.need_ssimfile"
                       <<Keyval("ctype",ctype.ctype)
                       <<Keyval("comment","ctype belonging to a 'nsdb' namespace must have a corresponding ssimfile"));

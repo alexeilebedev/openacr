@@ -329,7 +329,6 @@ const char *dmmeta_Ssimfile_ssimfile_dmmeta_logcat        = "dmmeta.logcat";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_main          = "dmmeta.main";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_msgtype       = "dmmeta.msgtype";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_nocascdel     = "dmmeta.nocascdel";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_nossimfile    = "dmmeta.nossimfile";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_noxref        = "dmmeta.noxref";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_ns            = "dmmeta.ns";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_nscpp         = "dmmeta.nscpp";
@@ -5401,47 +5400,6 @@ void dmmeta::Nocascdel_Print(dmmeta::Nocascdel & row, algo::cstring &str) {
 
     algo::Smallstr100_Print(row.xref, temp);
     PrintAttrSpaceReset(str,"xref", temp);
-
-    algo::Comment_Print(row.comment, temp);
-    PrintAttrSpaceReset(str,"comment", temp);
-}
-
-// --- dmmeta.Nossimfile..ReadFieldMaybe
-bool dmmeta::Nossimfile_ReadFieldMaybe(dmmeta::Nossimfile &parent, algo::strptr field, algo::strptr strval) {
-    dmmeta::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
-    switch(field_id) {
-        case dmmeta_FieldId_ctype: retval = algo::Smallstr50_ReadStrptrMaybe(parent.ctype, strval); break;
-        case dmmeta_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
-        default: break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- dmmeta.Nossimfile..ReadStrptrMaybe
-// Read fields of dmmeta::Nossimfile from an ascii string.
-// The format of the string is an ssim Tuple
-bool dmmeta::Nossimfile_ReadStrptrMaybe(dmmeta::Nossimfile &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "dmmeta.nossimfile") || algo::StripTypeTag(in_str, "dmmeta.Nossimfile");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && Nossimfile_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- dmmeta.Nossimfile..Print
-// print string representation of dmmeta::Nossimfile to string LHS, no header -- cprint:dmmeta.Nossimfile.String
-void dmmeta::Nossimfile_Print(dmmeta::Nossimfile & row, algo::cstring &str) {
-    algo::tempstr temp;
-    str << "dmmeta.nossimfile";
-
-    algo::Smallstr50_Print(row.ctype, temp);
-    PrintAttrSpaceReset(str,"ctype", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

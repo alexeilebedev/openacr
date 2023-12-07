@@ -581,7 +581,6 @@ dev.gitfile  gitfile:data/dmmeta/logcat.ssim
 dev.gitfile  gitfile:data/dmmeta/main.ssim
 dev.gitfile  gitfile:data/dmmeta/msgtype.ssim
 dev.gitfile  gitfile:data/dmmeta/nocascdel.ssim
-dev.gitfile  gitfile:data/dmmeta/nossimfile.ssim
 dev.gitfile  gitfile:data/dmmeta/noxref.ssim
 dev.gitfile  gitfile:data/dmmeta/ns.ssim
 dev.gitfile  gitfile:data/dmmeta/nscpp.ssim

@@ -818,9 +818,6 @@ inline dmmeta::Msgtype::Msgtype() {
 inline dmmeta::Nocascdel::Nocascdel() {
 }
 
-inline dmmeta::Nossimfile::Nossimfile() {
-}
-
 inline dmmeta::Noxref::Noxref() {
 }
 
@@ -1577,11 +1574,6 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Msgtyp
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Nocascdel &row) {// cfmt:dmmeta.Nocascdel.String
     dmmeta::Nocascdel_Print(const_cast<dmmeta::Nocascdel&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Nossimfile &row) {// cfmt:dmmeta.Nossimfile.String
-    dmmeta::Nossimfile_Print(const_cast<dmmeta::Nossimfile&>(row), str);
     return str;
 }
 

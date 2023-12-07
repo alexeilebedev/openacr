@@ -135,7 +135,6 @@ dmmeta.ssimfile  ssimfile:dmmeta.logcat  ctype:dmmeta.Logcat
 dmmeta.ssimfile  ssimfile:dmmeta.main  ctype:dmmeta.Main
 dmmeta.ssimfile  ssimfile:dmmeta.msgtype  ctype:dmmeta.Msgtype
 dmmeta.ssimfile  ssimfile:dmmeta.nocascdel  ctype:dmmeta.Nocascdel
-dmmeta.ssimfile  ssimfile:dmmeta.nossimfile  ctype:dmmeta.Nossimfile
 dmmeta.ssimfile  ssimfile:dmmeta.noxref  ctype:dmmeta.Noxref
 dmmeta.ssimfile  ssimfile:dmmeta.ns  ctype:dmmeta.Ns
 dmmeta.ssimfile  ssimfile:dmmeta.nscpp  ctype:dmmeta.Nscpp

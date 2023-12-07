@@ -506,7 +506,6 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_logcat;               // dm
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_main;                 // dmmeta.main                  fconst:dmmeta.Ssimfile.ssimfile/dmmeta.main
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_msgtype;              // dmmeta.msgtype               fconst:dmmeta.Ssimfile.ssimfile/dmmeta.msgtype
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_nocascdel;            // dmmeta.nocascdel             fconst:dmmeta.Ssimfile.ssimfile/dmmeta.nocascdel
-extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_nossimfile;           // dmmeta.nossimfile            fconst:dmmeta.Ssimfile.ssimfile/dmmeta.nossimfile
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_noxref;               // dmmeta.noxref                fconst:dmmeta.Ssimfile.ssimfile/dmmeta.noxref
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_ns;                   // dmmeta.ns                    fconst:dmmeta.Ssimfile.ssimfile/dmmeta.ns
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_nscpp;                // dmmeta.nscpp                 fconst:dmmeta.Ssimfile.ssimfile/dmmeta.nscpp
@@ -718,7 +717,6 @@ namespace dmmeta { struct Logcat; }
 namespace dmmeta { struct Main; }
 namespace dmmeta { struct Msgtype; }
 namespace dmmeta { struct Nocascdel; }
-namespace dmmeta { struct Nossimfile; }
 namespace dmmeta { struct Noxref; }
 namespace dmmeta { struct Ns; }
 namespace dmmeta { struct Nscpp; }
@@ -2281,20 +2279,6 @@ bool                 Nocascdel_ReadStrptrMaybe(dmmeta::Nocascdel &parent, algo::
 // print string representation of dmmeta::Nocascdel to string LHS, no header -- cprint:dmmeta.Nocascdel.String
 void                 Nocascdel_Print(dmmeta::Nocascdel & row, algo::cstring &str) __attribute__((nothrow));
 
-// --- dmmeta.Nossimfile
-struct Nossimfile { // dmmeta.Nossimfile: Indicates that ssimfile does not exist for this ssimdb ctype
-    algo::Smallstr50   ctype;     //
-    algo::Comment      comment;   //
-    Nossimfile();
-};
-
-bool                 Nossimfile_ReadFieldMaybe(dmmeta::Nossimfile &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of dmmeta::Nossimfile from an ascii string.
-// The format of the string is an ssim Tuple
-bool                 Nossimfile_ReadStrptrMaybe(dmmeta::Nossimfile &parent, algo::strptr in_str);
-// print string representation of dmmeta::Nossimfile to string LHS, no header -- cprint:dmmeta.Nossimfile.String
-void                 Nossimfile_Print(dmmeta::Nossimfile & row, algo::cstring &str) __attribute__((nothrow));
-
 // --- dmmeta.Noxref
 struct Noxref { // dmmeta.Noxref: Explicitly specify that no x-ref exists between tables (don't use unless forced)
     algo::Smallstr100   field;     //
@@ -3091,7 +3075,6 @@ inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Logcat &row)
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Main &row);// cfmt:dmmeta.Main.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Msgtype &row);// cfmt:dmmeta.Msgtype.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Nocascdel &row);// cfmt:dmmeta.Nocascdel.String
-inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Nossimfile &row);// cfmt:dmmeta.Nossimfile.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Noxref &row);// cfmt:dmmeta.Noxref.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Ns &row);// cfmt:dmmeta.Ns.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Nscpp &row);// cfmt:dmmeta.Nscpp.String
