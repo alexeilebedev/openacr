@@ -684,6 +684,12 @@ void                 c_covline_Remove(atf_cov::FGitfile& gitfile, atf_cov::FCovl
 void                 c_covline_RemoveAll(atf_cov::FGitfile& gitfile) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_covline_Reserve(atf_cov::FGitfile& gitfile, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+atf_cov::FCovline&   c_covline_qFind(atf_cov::FGitfile& gitfile, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 gitfile_c_covline_InAryQ(atf_cov::FCovline& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+atf_cov::FCovline&   c_covline_qLast(atf_cov::FGitfile& gitfile) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 bool                 c_covfile_InsertMaybe(atf_cov::FGitfile& gitfile, atf_cov::FCovfile& row) __attribute__((nothrow));
@@ -751,6 +757,12 @@ void                 c_targsrc_Remove(atf_cov::FTarget& target, atf_cov::FTargsr
 void                 c_targsrc_RemoveAll(atf_cov::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_targsrc_Reserve(atf_cov::FTarget& target, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+atf_cov::FTargsrc&   c_targsrc_qFind(atf_cov::FTarget& target, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 target_c_targsrc_InAryQ(atf_cov::FTargsrc& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+atf_cov::FTargsrc&   c_targsrc_qLast(atf_cov::FTarget& target) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 bool                 c_covtarget_InsertMaybe(atf_cov::FTarget& target, atf_cov::FCovtarget& row) __attribute__((nothrow));

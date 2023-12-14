@@ -64,13 +64,13 @@ static amc::FFunc &CreateCursFunc(amc::FCtype &ctype, strptr name) {
 //     int limit;
 //     int msglen;
 // };
-static void GenMsgcurs(amc::FCtype &fctype, amc::FTypefld &typefld) {
-    amc::FField &lenfld = *typefld.p_ctype->c_lenfld->p_field;
+static void GenMsgcurs(amc::FCtype &fctype, amc::FCtype &parent) {
+    amc::FField &lenfld = *parent.c_lenfld->p_field;
     algo_lib::Replscope R;
-    Set(R,"$Cpptype",amc::NsToCpp(typefld.p_ctype->ctype));
+    Set(R,"$Cpptype",amc::NsToCpp(parent.ctype));
     Ins(&R, fctype.body, "typedef $Cpptype *ChildType;");// add a typedef
     amc::InsField(dmmeta::Field(tempstr()<<fctype.ctype<<".msg"
-                                , typefld.p_ctype->ctype
+                                , parent.ctype
                                 , dmmeta_Reftype_reftype_Ptr
                                 , algo::CppExpr("")
                                 , algo::Comment("Pointer to current message")));
@@ -125,12 +125,12 @@ static void GenMsgcurs(amc::FCtype &fctype, amc::FTypefld &typefld) {
 
 // Generate a message-scanning cursor for each message header with length
 void amc::gen_msgcurs() {
-    ind_beg(amc::_db_typefld_curs,typefld,amc::_db) if (typefld.p_ctype->c_lenfld) {
+    ind_beg(amc::_db_ctype_curs,ctype,amc::_db) if (ctype.c_lenfld) {
         amc::FCtype *fctype
-            = ctype_InsertMaybe(dmmeta::Ctype(tempstr() << typefld.p_ctype->ctype << "_curs"
+            = ctype_InsertMaybe(dmmeta::Ctype(tempstr() << ctype.ctype << "_curs"
                                               , algo::Comment("Cursor for scanning messages in a memptr")));
         if (fctype) {
-            GenMsgcurs(*fctype, typefld);
+            GenMsgcurs(*fctype, ctype);
         }
     }ind_end;
 }

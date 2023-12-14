@@ -73,7 +73,7 @@ static void _GenFmtJson(amc::FCtype &ctype, amc::FCfmt *fcfmt) {
                 } else {
                     Set(R,"$return_json_node", "$Ftype_FmtJson($fldref,parent);");
                 }
-            } else if (field.reftype == dmmeta_Reftype_reftype_Tary) {
+            } else if (field.reftype == dmmeta_Reftype_reftype_Tary || field.reftype == dmmeta_Reftype_reftype_Inlary) {
                 amc::FCtype& valtype = *(field).p_arg;
                 Set(R, "$Ftype", valtype.cpp_type);
                 Set(R, "$fldref", FieldvalExpr(&ctype, field, "const_cast<$Cpptype&>(row)"));

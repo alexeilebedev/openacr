@@ -295,6 +295,12 @@ void                 c_field_Remove(acr_ed::FCtype& ctype, acr_ed::FField& row) 
 void                 c_field_RemoveAll(acr_ed::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_field_Reserve(acr_ed::FCtype& ctype, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+acr_ed::FField&      c_field_qFind(acr_ed::FCtype& ctype, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ctype_c_field_InAryQ(acr_ed::FField& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+acr_ed::FField&      c_field_qLast(acr_ed::FCtype& ctype) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 bool                 c_cstr_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FCstr& row) __attribute__((nothrow));
@@ -343,6 +349,10 @@ void                 c_cfmt_Remove(acr_ed::FCtype& ctype, acr_ed::FCfmt& row) __
 void                 c_cfmt_RemoveAll(acr_ed::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_cfmt_Reserve(acr_ed::FCtype& ctype, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+acr_ed::FCfmt&       c_cfmt_qFind(acr_ed::FCtype& ctype, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+acr_ed::FCfmt&       c_cfmt_qLast(acr_ed::FCtype& ctype) __attribute__((nothrow));
 
 void                 ctype_c_field_curs_Reset(ctype_c_field_curs &curs, acr_ed::FCtype &parent);
 // cursor points to valid item
@@ -752,7 +762,7 @@ algo::cstring&       vis_qLast() __attribute__((nothrow));
 // Return row id of specified element
 u64                  vis_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> vis_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> vis_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.

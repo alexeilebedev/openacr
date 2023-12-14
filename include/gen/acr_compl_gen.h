@@ -377,6 +377,12 @@ void                 c_field_Remove(acr_compl::FCtype& ctype, acr_compl::FField&
 void                 c_field_RemoveAll(acr_compl::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_field_Reserve(acr_compl::FCtype& ctype, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+acr_compl::FField&   c_field_qFind(acr_compl::FCtype& ctype, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ctype_c_field_InAryQ(acr_compl::FField& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+acr_compl::FField&   c_field_qLast(acr_compl::FCtype& ctype) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 bool                 c_ssimfile_InsertMaybe(acr_compl::FCtype& ctype, acr_compl::FSsimfile& row) __attribute__((nothrow));
@@ -545,7 +551,7 @@ algo::cstring&       word_qLast() __attribute__((nothrow));
 // Return row id of specified element
 u64                  word_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> word_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> word_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1323,6 +1329,12 @@ void                 c_fconst_Remove(acr_compl::FField& field, acr_compl::FFcons
 void                 c_fconst_RemoveAll(acr_compl::FField& field) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_fconst_Reserve(acr_compl::FField& field, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+acr_compl::FFconst&  c_fconst_qFind(acr_compl::FField& field, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 field_c_fconst_InAryQ(acr_compl::FFconst& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+acr_compl::FFconst&  c_fconst_qLast(acr_compl::FField& field) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 bool                 c_fflag_InsertMaybe(acr_compl::FField& field, acr_compl::FFflag& row) __attribute__((nothrow));
@@ -1356,6 +1368,10 @@ void                 c_falias_srcfield_Remove(acr_compl::FField& field, acr_comp
 void                 c_falias_srcfield_RemoveAll(acr_compl::FField& field) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_falias_srcfield_Reserve(acr_compl::FField& field, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+acr_compl::FFalias&  c_falias_srcfield_qFind(acr_compl::FField& field, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+acr_compl::FFalias&  c_falias_srcfield_qLast(acr_compl::FField& field) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FField_Init(acr_compl::FField& field);

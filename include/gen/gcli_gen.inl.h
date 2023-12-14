@@ -666,6 +666,24 @@ inline void gcli::c_gclicmd_RemoveAll() {
     _db.c_gclicmd_n = 0;
 }
 
+// --- gcli.FDb.c_gclicmd.qFind
+// Return reference without bounds checking
+inline gcli::FGclicmd& gcli::c_gclicmd_qFind(u32 idx) {
+    return *_db.c_gclicmd_elems[idx];
+}
+
+// --- gcli.FDb.c_gclicmd.InAryQ
+// True if row is in any ptrary instance
+inline bool gcli::c_gclicmd_InAryQ(gcli::FGclicmd& row) {
+    return row._db_c_gclicmd_in_ary;
+}
+
+// --- gcli.FDb.c_gclicmd.qLast
+// Reference to last element without bounds checking
+inline gcli::FGclicmd& gcli::c_gclicmd_qLast() {
+    return *_db.c_gclicmd_elems[_db.c_gclicmd_n-1];
+}
+
 // --- gcli.FDb.gclicmdj2f.EmptyQ
 // Return true if index is empty
 inline bool gcli::gclicmdj2f_EmptyQ() {
@@ -1576,6 +1594,24 @@ inline void gcli::c_gfld_RemoveAll() {
         _db.c_gfld_elems[i]->_db_c_gfld_in_ary = false;
     }
     _db.c_gfld_n = 0;
+}
+
+// --- gcli.FDb.c_gfld.qFind
+// Return reference without bounds checking
+inline gcli::FGfld& gcli::c_gfld_qFind(u32 idx) {
+    return *_db.c_gfld_elems[idx];
+}
+
+// --- gcli.FDb.c_gfld.InAryQ
+// True if row is in any ptrary instance
+inline bool gcli::c_gfld_InAryQ(gcli::FGfld& row) {
+    return row._db_c_gfld_in_ary;
+}
+
+// --- gcli.FDb.c_gfld.qLast
+// Reference to last element without bounds checking
+inline gcli::FGfld& gcli::c_gfld_qLast() {
+    return *_db.c_gfld_elems[_db.c_gfld_n-1];
 }
 
 // --- gcli.FDb.gtbl.EmptyQ
@@ -2544,6 +2580,18 @@ inline void gcli::c_tuples_RemoveAll(gcli::FGclicmd& gclicmd) {
     gclicmd.c_tuples_n = 0;
 }
 
+// --- gcli.FGclicmd.c_tuples.qFind
+// Return reference without bounds checking
+inline gcli::FTuples& gcli::c_tuples_qFind(gcli::FGclicmd& gclicmd, u32 idx) {
+    return *gclicmd.c_tuples_elems[idx];
+}
+
+// --- gcli.FGclicmd.c_tuples.qLast
+// Reference to last element without bounds checking
+inline gcli::FTuples& gcli::c_tuples_qLast(gcli::FGclicmd& gclicmd) {
+    return *gclicmd.c_tuples_elems[gclicmd.c_tuples_n-1];
+}
+
 // --- gcli.FGclicmd.step.Call
 // Invoke function by pointer
 inline void gcli::step_Call(gcli::FGclicmd& gclicmd, gcli::FGclicmd& arg) {
@@ -2592,6 +2640,24 @@ inline void gcli::c_gclicmdarg_RemoveAll(gcli::FGclicmd& gclicmd) {
     gclicmd.c_gclicmdarg_n = 0;
 }
 
+// --- gcli.FGclicmd.c_gclicmdarg.qFind
+// Return reference without bounds checking
+inline gcli::FGclicmdarg& gcli::c_gclicmdarg_qFind(gcli::FGclicmd& gclicmd, u32 idx) {
+    return *gclicmd.c_gclicmdarg_elems[idx];
+}
+
+// --- gcli.FGclicmd.c_gclicmdarg.InAryQ
+// True if row is in any ptrary instance
+inline bool gcli::gclicmd_c_gclicmdarg_InAryQ(gcli::FGclicmdarg& row) {
+    return row.gclicmd_c_gclicmdarg_in_ary;
+}
+
+// --- gcli.FGclicmd.c_gclicmdarg.qLast
+// Reference to last element without bounds checking
+inline gcli::FGclicmdarg& gcli::c_gclicmdarg_qLast(gcli::FGclicmd& gclicmd) {
+    return *gclicmd.c_gclicmdarg_elems[gclicmd.c_gclicmdarg_n-1];
+}
+
 // --- gcli.FGclicmd.c_gclicmdc.EmptyQ
 // Return true if index is empty
 inline bool gcli::c_gclicmdc_EmptyQ(gcli::FGclicmd& gclicmd) {
@@ -2632,6 +2698,24 @@ inline void gcli::c_gclicmdc_RemoveAll(gcli::FGclicmd& gclicmd) {
     gclicmd.c_gclicmdc_n = 0;
 }
 
+// --- gcli.FGclicmd.c_gclicmdc.qFind
+// Return reference without bounds checking
+inline gcli::FGclicmdc& gcli::c_gclicmdc_qFind(gcli::FGclicmd& gclicmd, u32 idx) {
+    return *gclicmd.c_gclicmdc_elems[idx];
+}
+
+// --- gcli.FGclicmd.c_gclicmdc.InAryQ
+// True if row is in any ptrary instance
+inline bool gcli::gclicmd_c_gclicmdc_InAryQ(gcli::FGclicmdc& row) {
+    return row.gclicmd_c_gclicmdc_in_ary;
+}
+
+// --- gcli.FGclicmd.c_gclicmdc.qLast
+// Reference to last element without bounds checking
+inline gcli::FGclicmdc& gcli::c_gclicmdc_qLast(gcli::FGclicmd& gclicmd) {
+    return *gclicmd.c_gclicmdc_elems[gclicmd.c_gclicmdc_n-1];
+}
+
 // --- gcli.FGclicmd.c_gclicmdf2j.EmptyQ
 // Return true if index is empty
 inline bool gcli::c_gclicmdf2j_EmptyQ(gcli::FGclicmd& gclicmd) {
@@ -2670,6 +2754,24 @@ inline void gcli::c_gclicmdf2j_RemoveAll(gcli::FGclicmd& gclicmd) {
         gclicmd.c_gclicmdf2j_elems[i]->gclicmd_c_gclicmdf2j_in_ary = false;
     }
     gclicmd.c_gclicmdf2j_n = 0;
+}
+
+// --- gcli.FGclicmd.c_gclicmdf2j.qFind
+// Return reference without bounds checking
+inline gcli::FGclicmdf2j& gcli::c_gclicmdf2j_qFind(gcli::FGclicmd& gclicmd, u32 idx) {
+    return *gclicmd.c_gclicmdf2j_elems[idx];
+}
+
+// --- gcli.FGclicmd.c_gclicmdf2j.InAryQ
+// True if row is in any ptrary instance
+inline bool gcli::gclicmd_c_gclicmdf2j_InAryQ(gcli::FGclicmdf2j& row) {
+    return row.gclicmd_c_gclicmdf2j_in_ary;
+}
+
+// --- gcli.FGclicmd.c_gclicmdf2j.qLast
+// Reference to last element without bounds checking
+inline gcli::FGclicmdf2j& gcli::c_gclicmdf2j_qLast(gcli::FGclicmd& gclicmd) {
+    return *gclicmd.c_gclicmdf2j_elems[gclicmd.c_gclicmdf2j_n-1];
 }
 
 // --- gcli.FGclicmd.c_tuples_curs.Reset
@@ -2835,6 +2937,24 @@ inline void gcli::c_gclicmdf_RemoveAll(gcli::FGclicmdc& gclicmdc) {
     gclicmdc.c_gclicmdf_n = 0;
 }
 
+// --- gcli.FGclicmdc.c_gclicmdf.qFind
+// Return reference without bounds checking
+inline gcli::FGclicmdf& gcli::c_gclicmdf_qFind(gcli::FGclicmdc& gclicmdc, u32 idx) {
+    return *gclicmdc.c_gclicmdf_elems[idx];
+}
+
+// --- gcli.FGclicmdc.c_gclicmdf.InAryQ
+// True if row is in any ptrary instance
+inline bool gcli::gclicmdc_c_gclicmdf_InAryQ(gcli::FGclicmdf& row) {
+    return row.gclicmdc_c_gclicmdf_in_ary;
+}
+
+// --- gcli.FGclicmdc.c_gclicmdf.qLast
+// Reference to last element without bounds checking
+inline gcli::FGclicmdf& gcli::c_gclicmdf_qLast(gcli::FGclicmdc& gclicmdc) {
+    return *gclicmdc.c_gclicmdf_elems[gclicmdc.c_gclicmdf_n-1];
+}
+
 // --- gcli.FGclicmdc..Init
 // Set all fields to initial values.
 inline void gcli::FGclicmdc_Init(gcli::FGclicmdc& gclicmdc) {
@@ -2945,6 +3065,18 @@ inline void gcli::c_gclicmdf_RemoveAll(gcli::FGclicmdj2f& gclicmdj2f) {
     gclicmdj2f.c_gclicmdf_n = 0;
 }
 
+// --- gcli.FGclicmdj2f.c_gclicmdf.qFind
+// Return reference without bounds checking
+inline gcli::FGclicmdf& gcli::c_gclicmdf_qFind(gcli::FGclicmdj2f& gclicmdj2f, u32 idx) {
+    return *gclicmdj2f.c_gclicmdf_elems[idx];
+}
+
+// --- gcli.FGclicmdj2f.c_gclicmdf.qLast
+// Reference to last element without bounds checking
+inline gcli::FGclicmdf& gcli::c_gclicmdf_qLast(gcli::FGclicmdj2f& gclicmdj2f) {
+    return *gclicmdj2f.c_gclicmdf_elems[gclicmdj2f.c_gclicmdf_n-1];
+}
+
 // --- gcli.FGclicmdj2f..Init
 // Set all fields to initial values.
 inline void gcli::FGclicmdj2f_Init(gcli::FGclicmdj2f& gclicmdj2f) {
@@ -3044,6 +3176,24 @@ inline void gcli::c_gtblactfld_RemoveAll(gcli::FGfld& gfld) {
         gfld.c_gtblactfld_elems[i]->gfld_c_gtblactfld_in_ary = false;
     }
     gfld.c_gtblactfld_n = 0;
+}
+
+// --- gcli.FGfld.c_gtblactfld.qFind
+// Return reference without bounds checking
+inline gcli::FGtblactfld& gcli::c_gtblactfld_qFind(gcli::FGfld& gfld, u32 idx) {
+    return *gfld.c_gtblactfld_elems[idx];
+}
+
+// --- gcli.FGfld.c_gtblactfld.InAryQ
+// True if row is in any ptrary instance
+inline bool gcli::gfld_c_gtblactfld_InAryQ(gcli::FGtblactfld& row) {
+    return row.gfld_c_gtblactfld_in_ary;
+}
+
+// --- gcli.FGfld.c_gtblactfld.qLast
+// Reference to last element without bounds checking
+inline gcli::FGtblactfld& gcli::c_gtblactfld_qLast(gcli::FGfld& gfld) {
+    return *gfld.c_gtblactfld_elems[gfld.c_gtblactfld_n-1];
 }
 
 // --- gcli.FGfld..Init
@@ -3208,6 +3358,24 @@ inline void gcli::c_gtblact_RemoveAll(gcli::FGtbl& gtbl) {
     gtbl.c_gtblact_n = 0;
 }
 
+// --- gcli.FGtbl.c_gtblact.qFind
+// Return reference without bounds checking
+inline gcli::FGtblact& gcli::c_gtblact_qFind(gcli::FGtbl& gtbl, u32 idx) {
+    return *gtbl.c_gtblact_elems[idx];
+}
+
+// --- gcli.FGtbl.c_gtblact.InAryQ
+// True if row is in any ptrary instance
+inline bool gcli::gtbl_c_gtblact_InAryQ(gcli::FGtblact& row) {
+    return row.gtbl_c_gtblact_in_ary;
+}
+
+// --- gcli.FGtbl.c_gtblact.qLast
+// Reference to last element without bounds checking
+inline gcli::FGtblact& gcli::c_gtblact_qLast(gcli::FGtbl& gtbl) {
+    return *gtbl.c_gtblact_elems[gtbl.c_gtblact_n-1];
+}
+
 // --- gcli.FGtbl..Init
 // Set all fields to initial values.
 inline void gcli::FGtbl_Init(gcli::FGtbl& gtbl) {
@@ -3300,6 +3468,24 @@ inline void gcli::c_gtblactfld_RemoveAll(gcli::FGtblact& gtblact) {
     gtblact.c_gtblactfld_n = 0;
 }
 
+// --- gcli.FGtblact.c_gtblactfld.qFind
+// Return reference without bounds checking
+inline gcli::FGtblactfld& gcli::c_gtblactfld_qFind(gcli::FGtblact& gtblact, u32 idx) {
+    return *gtblact.c_gtblactfld_elems[idx];
+}
+
+// --- gcli.FGtblact.c_gtblactfld.InAryQ
+// True if row is in any ptrary instance
+inline bool gcli::gtblact_c_gtblactfld_InAryQ(gcli::FGtblactfld& row) {
+    return row.gtblact_c_gtblactfld_in_ary;
+}
+
+// --- gcli.FGtblact.c_gtblactfld.qLast
+// Reference to last element without bounds checking
+inline gcli::FGtblactfld& gcli::c_gtblactfld_qLast(gcli::FGtblact& gtblact) {
+    return *gtblact.c_gtblactfld_elems[gtblact.c_gtblactfld_n-1];
+}
+
 // --- gcli.FGtblact.c_gtblactfld_curs.Reset
 inline void gcli::gtblact_c_gtblactfld_curs_Reset(gtblact_c_gtblactfld_curs &curs, gcli::FGtblact &parent) {
     curs.elems = parent.c_gtblactfld_elems;
@@ -3381,6 +3567,24 @@ inline void gcli::c_gtypeh_RemoveAll(gcli::FGtype& gtype) {
     gtype.c_gtypeh_n = 0;
 }
 
+// --- gcli.FGtype.c_gtypeh.qFind
+// Return reference without bounds checking
+inline gcli::FGtypeh& gcli::c_gtypeh_qFind(gcli::FGtype& gtype, u32 idx) {
+    return *gtype.c_gtypeh_elems[idx];
+}
+
+// --- gcli.FGtype.c_gtypeh.InAryQ
+// True if row is in any ptrary instance
+inline bool gcli::gtype_c_gtypeh_InAryQ(gcli::FGtypeh& row) {
+    return row.gtype_c_gtypeh_in_ary;
+}
+
+// --- gcli.FGtype.c_gtypeh.qLast
+// Reference to last element without bounds checking
+inline gcli::FGtypeh& gcli::c_gtypeh_qLast(gcli::FGtype& gtype) {
+    return *gtype.c_gtypeh_elems[gtype.c_gtypeh_n-1];
+}
+
 // --- gcli.FGtype.c_gtypeprefix.EmptyQ
 // Return true if index is empty
 inline bool gcli::c_gtypeprefix_EmptyQ(gcli::FGtype& gtype) {
@@ -3419,6 +3623,24 @@ inline void gcli::c_gtypeprefix_RemoveAll(gcli::FGtype& gtype) {
         gtype.c_gtypeprefix_elems[i]->gtype_c_gtypeprefix_in_ary = false;
     }
     gtype.c_gtypeprefix_n = 0;
+}
+
+// --- gcli.FGtype.c_gtypeprefix.qFind
+// Return reference without bounds checking
+inline gcli::FGtypeprefix& gcli::c_gtypeprefix_qFind(gcli::FGtype& gtype, u32 idx) {
+    return *gtype.c_gtypeprefix_elems[idx];
+}
+
+// --- gcli.FGtype.c_gtypeprefix.InAryQ
+// True if row is in any ptrary instance
+inline bool gcli::gtype_c_gtypeprefix_InAryQ(gcli::FGtypeprefix& row) {
+    return row.gtype_c_gtypeprefix_in_ary;
+}
+
+// --- gcli.FGtype.c_gtypeprefix.qLast
+// Reference to last element without bounds checking
+inline gcli::FGtypeprefix& gcli::c_gtypeprefix_qLast(gcli::FGtype& gtype) {
+    return *gtype.c_gtypeprefix_elems[gtype.c_gtypeprefix_n-1];
 }
 
 // --- gcli.FGtype..Init
@@ -3673,6 +3895,24 @@ inline void gcli::c_mrjob_RemoveAll(gcli::FIssue& issue) {
     issue.c_mrjob_n = 0;
 }
 
+// --- gcli.FIssue.c_mrjob.qFind
+// Return reference without bounds checking
+inline gcli::FMrjob& gcli::c_mrjob_qFind(gcli::FIssue& issue, u32 idx) {
+    return *issue.c_mrjob_elems[idx];
+}
+
+// --- gcli.FIssue.c_mrjob.InAryQ
+// True if row is in any ptrary instance
+inline bool gcli::issue_c_mrjob_InAryQ(gcli::FMrjob& row) {
+    return row.issue_c_mrjob_in_ary;
+}
+
+// --- gcli.FIssue.c_mrjob.qLast
+// Reference to last element without bounds checking
+inline gcli::FMrjob& gcli::c_mrjob_qLast(gcli::FIssue& issue) {
+    return *issue.c_mrjob_elems[issue.c_mrjob_n-1];
+}
+
 // --- gcli.FIssue.c_issuenote.EmptyQ
 // Return true if index is empty
 inline bool gcli::c_issuenote_EmptyQ(gcli::FIssue& issue) {
@@ -3711,6 +3951,24 @@ inline void gcli::c_issuenote_RemoveAll(gcli::FIssue& issue) {
         issue.c_issuenote_elems[i]->issue_c_issuenote_in_ary = false;
     }
     issue.c_issuenote_n = 0;
+}
+
+// --- gcli.FIssue.c_issuenote.qFind
+// Return reference without bounds checking
+inline gcli::FIssuenote& gcli::c_issuenote_qFind(gcli::FIssue& issue, u32 idx) {
+    return *issue.c_issuenote_elems[idx];
+}
+
+// --- gcli.FIssue.c_issuenote.InAryQ
+// True if row is in any ptrary instance
+inline bool gcli::issue_c_issuenote_InAryQ(gcli::FIssuenote& row) {
+    return row.issue_c_issuenote_in_ary;
+}
+
+// --- gcli.FIssue.c_issuenote.qLast
+// Reference to last element without bounds checking
+inline gcli::FIssuenote& gcli::c_issuenote_qLast(gcli::FIssue& issue) {
+    return *issue.c_issuenote_elems[issue.c_issuenote_n-1];
 }
 
 // --- gcli.FIssue.c_mrjob_curs.Reset
@@ -3842,6 +4100,24 @@ inline void gcli::c_mrnote_RemoveAll(gcli::FMr& mr) {
     mr.c_mrnote_n = 0;
 }
 
+// --- gcli.FMr.c_mrnote.qFind
+// Return reference without bounds checking
+inline gcli::FMrnote& gcli::c_mrnote_qFind(gcli::FMr& mr, u32 idx) {
+    return *mr.c_mrnote_elems[idx];
+}
+
+// --- gcli.FMr.c_mrnote.InAryQ
+// True if row is in any ptrary instance
+inline bool gcli::mr_c_mrnote_InAryQ(gcli::FMrnote& row) {
+    return row.mr_c_mrnote_in_ary;
+}
+
+// --- gcli.FMr.c_mrnote.qLast
+// Reference to last element without bounds checking
+inline gcli::FMrnote& gcli::c_mrnote_qLast(gcli::FMr& mr) {
+    return *mr.c_mrnote_elems[mr.c_mrnote_n-1];
+}
+
 // --- gcli.FMr.c_mrjob.EmptyQ
 // Return true if index is empty
 inline bool gcli::c_mrjob_EmptyQ(gcli::FMr& mr) {
@@ -3880,6 +4156,24 @@ inline void gcli::c_mrjob_RemoveAll(gcli::FMr& mr) {
         mr.c_mrjob_elems[i]->mr_c_mrjob_in_ary = false;
     }
     mr.c_mrjob_n = 0;
+}
+
+// --- gcli.FMr.c_mrjob.qFind
+// Return reference without bounds checking
+inline gcli::FMrjob& gcli::c_mrjob_qFind(gcli::FMr& mr, u32 idx) {
+    return *mr.c_mrjob_elems[idx];
+}
+
+// --- gcli.FMr.c_mrjob.InAryQ
+// True if row is in any ptrary instance
+inline bool gcli::mr_c_mrjob_InAryQ(gcli::FMrjob& row) {
+    return row.mr_c_mrjob_in_ary;
+}
+
+// --- gcli.FMr.c_mrjob.qLast
+// Reference to last element without bounds checking
+inline gcli::FMrjob& gcli::c_mrjob_qLast(gcli::FMr& mr) {
+    return *mr.c_mrjob_elems[mr.c_mrjob_n-1];
 }
 
 // --- gcli.FMr.c_mrnote_curs.Reset

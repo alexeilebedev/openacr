@@ -197,6 +197,12 @@ void                 c_field_Remove(acr_in::FCtype& ctype, acr_in::FField& row) 
 void                 c_field_RemoveAll(acr_in::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_field_Reserve(acr_in::FCtype& ctype, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+acr_in::FField&      c_field_qFind(acr_in::FCtype& ctype, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ctype_c_field_InAryQ(acr_in::FField& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+acr_in::FField&      c_field_qLast(acr_in::FCtype& ctype) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_ctype_EmptyQ(acr_in::FCtype& ctype) __attribute__((nothrow));
@@ -220,6 +226,10 @@ void                 c_ctype_Remove(acr_in::FCtype& ctype, acr_in::FCtype& row) 
 void                 c_ctype_RemoveAll(acr_in::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_ctype_Reserve(acr_in::FCtype& ctype, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+acr_in::FCtype&      c_ctype_qFind(acr_in::FCtype& ctype, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+acr_in::FCtype&      c_ctype_qLast(acr_in::FCtype& ctype) __attribute__((nothrow));
 
 void                 ctype_c_field_curs_Reset(ctype_c_field_curs &curs, acr_in::FCtype &parent);
 // cursor points to valid item
@@ -1478,6 +1488,12 @@ void                 c_targdep_Remove(acr_in::FTarget& target, acr_in::FTargdep&
 void                 c_targdep_RemoveAll(acr_in::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_targdep_Reserve(acr_in::FTarget& target, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+acr_in::FTargdep&    c_targdep_qFind(acr_in::FTarget& target, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 target_c_targdep_InAryQ(acr_in::FTargdep& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+acr_in::FTargdep&    c_targdep_qLast(acr_in::FTarget& target) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_targdep_child_EmptyQ(acr_in::FTarget& target) __attribute__((nothrow));
@@ -1500,6 +1516,12 @@ void                 c_targdep_child_Remove(acr_in::FTarget& target, acr_in::FTa
 void                 c_targdep_child_RemoveAll(acr_in::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_targdep_child_Reserve(acr_in::FTarget& target, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+acr_in::FTargdep&    c_targdep_child_qFind(acr_in::FTarget& target, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 target_c_targdep_child_InAryQ(acr_in::FTargdep& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+acr_in::FTargdep&    c_targdep_child_qLast(acr_in::FTarget& target) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FTarget_Init(acr_in::FTarget& target);
@@ -1575,6 +1597,10 @@ void                 c_child_Remove(acr_in::FTuple& tuple, acr_in::FTuple& row) 
 void                 c_child_RemoveAll(acr_in::FTuple& tuple) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_child_Reserve(acr_in::FTuple& tuple, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+acr_in::FTuple&      c_child_qFind(acr_in::FTuple& tuple, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+acr_in::FTuple&      c_child_qLast(acr_in::FTuple& tuple) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_parent_EmptyQ(acr_in::FTuple& tuple) __attribute__((nothrow));
@@ -1598,6 +1624,10 @@ void                 c_parent_Remove(acr_in::FTuple& tuple, acr_in::FTuple& row)
 void                 c_parent_RemoveAll(acr_in::FTuple& tuple) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_parent_Reserve(acr_in::FTuple& tuple, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+acr_in::FTuple&      c_parent_qFind(acr_in::FTuple& tuple, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+acr_in::FTuple&      c_parent_qLast(acr_in::FTuple& tuple) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FTuple_Init(acr_in::FTuple& tuple);

@@ -4780,6 +4780,7 @@ void abt::FDb_Init() {
     _db.zd_inclstack_head = NULL; // (abt.FDb.zd_inclstack)
     _db.zd_inclstack_n = 0; // (abt.FDb.zd_inclstack)
     _db.zd_inclstack_tail = NULL; // (abt.FDb.zd_inclstack)
+    _db.tty = bool(false);
 
     abt::InitReflection();
 }

@@ -238,6 +238,7 @@ namespace ams { struct MsgHeader_curs; }
 namespace ams { struct StreamPos; }
 namespace ams { struct Protocol; }
 namespace ams { struct StreamFlags; }
+namespace ams { // gen:ns_size_enums
 
 // sizes types appearing as Opt or Varlen; these need to be here
 // to allow inline implementations of _Get functions and avoid
@@ -245,6 +246,7 @@ namespace ams { struct StreamFlags; }
 enum {
     sizeof_ams_MsgHeader = 8
 };
+} // gen:ns_size_enums
 namespace ams { // gen:ns_print_struct
 
 // --- ams.AlarmSyncMsg

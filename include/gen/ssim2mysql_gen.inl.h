@@ -129,6 +129,24 @@ inline void ssim2mysql::c_field_RemoveAll(ssim2mysql::FCtype& ctype) {
     ctype.c_field_n = 0;
 }
 
+// --- ssim2mysql.FCtype.c_field.qFind
+// Return reference without bounds checking
+inline ssim2mysql::FField& ssim2mysql::c_field_qFind(ssim2mysql::FCtype& ctype, u32 idx) {
+    return *ctype.c_field_elems[idx];
+}
+
+// --- ssim2mysql.FCtype.c_field.InAryQ
+// True if row is in any ptrary instance
+inline bool ssim2mysql::ctype_c_field_InAryQ(ssim2mysql::FField& row) {
+    return row.ctype_c_field_in_ary;
+}
+
+// --- ssim2mysql.FCtype.c_field.qLast
+// Reference to last element without bounds checking
+inline ssim2mysql::FField& ssim2mysql::c_field_qLast(ssim2mysql::FCtype& ctype) {
+    return *ctype.c_field_elems[ctype.c_field_n-1];
+}
+
 // --- ssim2mysql.FCtype.c_ssimfile.InsertMaybe
 // Insert row into pointer index. Return final membership status.
 inline bool ssim2mysql::c_ssimfile_InsertMaybe(ssim2mysql::FCtype& ctype, ssim2mysql::FSsimfile& row) {
@@ -1050,6 +1068,24 @@ inline void ssim2mysql::c_ssimfile_RemoveAll(ssim2mysql::FNs& ns) {
     ns.c_ssimfile_n = 0;
 }
 
+// --- ssim2mysql.FNs.c_ssimfile.qFind
+// Return reference without bounds checking
+inline ssim2mysql::FSsimfile& ssim2mysql::c_ssimfile_qFind(ssim2mysql::FNs& ns, u32 idx) {
+    return *ns.c_ssimfile_elems[idx];
+}
+
+// --- ssim2mysql.FNs.c_ssimfile.InAryQ
+// True if row is in any ptrary instance
+inline bool ssim2mysql::ns_c_ssimfile_InAryQ(ssim2mysql::FSsimfile& row) {
+    return row.ns_c_ssimfile_in_ary;
+}
+
+// --- ssim2mysql.FNs.c_ssimfile.qLast
+// Reference to last element without bounds checking
+inline ssim2mysql::FSsimfile& ssim2mysql::c_ssimfile_qLast(ssim2mysql::FNs& ns) {
+    return *ns.c_ssimfile_elems[ns.c_ssimfile_n-1];
+}
+
 // --- ssim2mysql.FNs..Init
 // Set all fields to initial values.
 inline void ssim2mysql::FNs_Init(ssim2mysql::FNs& ns) {
@@ -1137,6 +1173,24 @@ inline void ssim2mysql::c_column_RemoveAll(ssim2mysql::FSsimfile& ssimfile) {
         ssimfile.c_column_elems[i]->ssimfile_c_column_in_ary = false;
     }
     ssimfile.c_column_n = 0;
+}
+
+// --- ssim2mysql.FSsimfile.c_column.qFind
+// Return reference without bounds checking
+inline ssim2mysql::FColumn& ssim2mysql::c_column_qFind(ssim2mysql::FSsimfile& ssimfile, u32 idx) {
+    return *ssimfile.c_column_elems[idx];
+}
+
+// --- ssim2mysql.FSsimfile.c_column.InAryQ
+// True if row is in any ptrary instance
+inline bool ssim2mysql::ssimfile_c_column_InAryQ(ssim2mysql::FColumn& row) {
+    return row.ssimfile_c_column_in_ary;
+}
+
+// --- ssim2mysql.FSsimfile.c_column.qLast
+// Reference to last element without bounds checking
+inline ssim2mysql::FColumn& ssim2mysql::c_column_qLast(ssim2mysql::FSsimfile& ssimfile) {
+    return *ssimfile.c_column_elems[ssimfile.c_column_n-1];
 }
 
 // --- ssim2mysql.FSsimfile.c_column_curs.Reset

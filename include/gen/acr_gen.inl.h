@@ -195,6 +195,18 @@ inline void acr::c_bad_rec_RemoveAll(acr::FCheck& check) {
     check.c_bad_rec_n = 0;
 }
 
+// --- acr.FCheck.c_bad_rec.qFind
+// Return reference without bounds checking
+inline acr::FRec& acr::c_bad_rec_qFind(acr::FCheck& check, u32 idx) {
+    return *check.c_bad_rec_elems[idx];
+}
+
+// --- acr.FCheck.c_bad_rec.qLast
+// Reference to last element without bounds checking
+inline acr::FRec& acr::c_bad_rec_qLast(acr::FCheck& check) {
+    return *check.c_bad_rec_elems[check.c_bad_rec_n-1];
+}
+
 // --- acr.FCheck.ary_name.EmptyQ
 // Return true if index is empty
 inline bool acr::ary_name_EmptyQ(acr::FCheck& check) {
@@ -375,6 +387,24 @@ inline void acr::c_field_RemoveAll(acr::FCtype& ctype) {
         ctype.c_field_elems[i]->ctype_c_field_in_ary = false;
     }
     ctype.c_field_n = 0;
+}
+
+// --- acr.FCtype.c_field.qFind
+// Return reference without bounds checking
+inline acr::FField& acr::c_field_qFind(acr::FCtype& ctype, u32 idx) {
+    return *ctype.c_field_elems[idx];
+}
+
+// --- acr.FCtype.c_field.InAryQ
+// True if row is in any ptrary instance
+inline bool acr::ctype_c_field_InAryQ(acr::FField& row) {
+    return row.ctype_c_field_in_ary;
+}
+
+// --- acr.FCtype.c_field.qLast
+// Reference to last element without bounds checking
+inline acr::FField& acr::c_field_qLast(acr::FCtype& ctype) {
+    return *ctype.c_field_elems[ctype.c_field_n-1];
 }
 
 // --- acr.FCtype.c_cdflt.InsertMaybe
@@ -563,6 +593,18 @@ inline i32 acr::c_child_N(const acr::FCtype& ctype) {
 // Empty the index. (The rows are not deleted)
 inline void acr::c_child_RemoveAll(acr::FCtype& ctype) {
     ctype.c_child_n = 0;
+}
+
+// --- acr.FCtype.c_child.qFind
+// Return reference without bounds checking
+inline acr::FCtype& acr::c_child_qFind(acr::FCtype& ctype, u32 idx) {
+    return *ctype.c_child_elems[idx];
+}
+
+// --- acr.FCtype.c_child.qLast
+// Reference to last element without bounds checking
+inline acr::FCtype& acr::c_child_qLast(acr::FCtype& ctype) {
+    return *ctype.c_child_elems[ctype.c_child_n-1];
 }
 
 // --- acr.FCtype.c_bltin.InsertMaybe
@@ -2820,6 +2862,18 @@ inline void acr::c_pline_RemoveAll(acr::FPrint& print) {
     print.c_pline_n = 0;
 }
 
+// --- acr.FPrint.c_pline.qFind
+// Return reference without bounds checking
+inline acr::FPline& acr::c_pline_qFind(acr::FPrint& print, u32 idx) {
+    return *print.c_pline_elems[idx];
+}
+
+// --- acr.FPrint.c_pline.qLast
+// Reference to last element without bounds checking
+inline acr::FPline& acr::c_pline_qLast(acr::FPrint& print) {
+    return *print.c_pline_elems[print.c_pline_n-1];
+}
+
 // --- acr.FPrint.c_pline_curs.Reset
 inline void acr::print_c_pline_curs_Reset(print_c_pline_curs &curs, acr::FPrint &parent) {
     curs.elems = parent.c_pline_elems;
@@ -3155,6 +3209,18 @@ inline void acr::c_ctype_RemoveAll(acr::FRun& run) {
     run.c_ctype_n = 0;
 }
 
+// --- acr.FRun.c_ctype.qFind
+// Return reference without bounds checking
+inline acr::FCtype& acr::c_ctype_qFind(acr::FRun& run, u32 idx) {
+    return *run.c_ctype_elems[idx];
+}
+
+// --- acr.FRun.c_ctype.qLast
+// Reference to last element without bounds checking
+inline acr::FCtype& acr::c_ctype_qLast(acr::FRun& run) {
+    return *run.c_ctype_elems[run.c_ctype_n-1];
+}
+
 // --- acr.FRun.c_field.EmptyQ
 // Return true if index is empty
 inline bool acr::c_field_EmptyQ(acr::FRun& run) {
@@ -3191,6 +3257,18 @@ inline void acr::c_field_RemoveAll(acr::FRun& run) {
     run.c_field_n = 0;
 }
 
+// --- acr.FRun.c_field.qFind
+// Return reference without bounds checking
+inline acr::FField& acr::c_field_qFind(acr::FRun& run, u32 idx) {
+    return *run.c_field_elems[idx];
+}
+
+// --- acr.FRun.c_field.qLast
+// Reference to last element without bounds checking
+inline acr::FField& acr::c_field_qLast(acr::FRun& run) {
+    return *run.c_field_elems[run.c_field_n-1];
+}
+
 // --- acr.FRun.c_rec.EmptyQ
 // Return true if index is empty
 inline bool acr::c_rec_EmptyQ(acr::FRun& run) {
@@ -3225,6 +3303,18 @@ inline i32 acr::c_rec_N(const acr::FRun& run) {
 // Empty the index. (The rows are not deleted)
 inline void acr::c_rec_RemoveAll(acr::FRun& run) {
     run.c_rec_n = 0;
+}
+
+// --- acr.FRun.c_rec.qFind
+// Return reference without bounds checking
+inline acr::FRec& acr::c_rec_qFind(acr::FRun& run, u32 idx) {
+    return *run.c_rec_elems[idx];
+}
+
+// --- acr.FRun.c_rec.qLast
+// Reference to last element without bounds checking
+inline acr::FRec& acr::c_rec_qLast(acr::FRun& run) {
+    return *run.c_rec_elems[run.c_rec_n-1];
 }
 
 // --- acr.FRun.c_child.EmptyQ
@@ -3265,6 +3355,24 @@ inline void acr::c_child_RemoveAll(acr::FRun& run) {
         run.c_child_elems[i]->run_c_child_in_ary = false;
     }
     run.c_child_n = 0;
+}
+
+// --- acr.FRun.c_child.qFind
+// Return reference without bounds checking
+inline acr::FCtype& acr::c_child_qFind(acr::FRun& run, u32 idx) {
+    return *run.c_child_elems[idx];
+}
+
+// --- acr.FRun.c_child.InAryQ
+// True if row is in any ptrary instance
+inline bool acr::run_c_child_InAryQ(acr::FCtype& row) {
+    return row.run_c_child_in_ary;
+}
+
+// --- acr.FRun.c_child.qLast
+// Reference to last element without bounds checking
+inline acr::FCtype& acr::c_child_qLast(acr::FRun& run) {
+    return *run.c_child_elems[run.c_child_n-1];
 }
 
 // --- acr.FRun.c_ctype_curs.Reset
@@ -3565,6 +3673,18 @@ inline i32 acr::c_cmtrec_N(const acr::FWrite& write) {
 // Empty the index. (The rows are not deleted)
 inline void acr::c_cmtrec_RemoveAll(acr::FWrite& write) {
     write.c_cmtrec_n = 0;
+}
+
+// --- acr.FWrite.c_cmtrec.qFind
+// Return reference without bounds checking
+inline acr::FRec& acr::c_cmtrec_qFind(acr::FWrite& write, u32 idx) {
+    return *write.c_cmtrec_elems[idx];
+}
+
+// --- acr.FWrite.c_cmtrec.qLast
+// Reference to last element without bounds checking
+inline acr::FRec& acr::c_cmtrec_qLast(acr::FWrite& write) {
+    return *write.c_cmtrec_elems[write.c_cmtrec_n-1];
 }
 
 // --- acr.FWrite.c_cmtrec_curs.Reset

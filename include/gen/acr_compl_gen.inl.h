@@ -227,6 +227,24 @@ inline void acr_compl::c_field_RemoveAll(acr_compl::FCtype& ctype) {
     ctype.c_field_n = 0;
 }
 
+// --- acr_compl.FCtype.c_field.qFind
+// Return reference without bounds checking
+inline acr_compl::FField& acr_compl::c_field_qFind(acr_compl::FCtype& ctype, u32 idx) {
+    return *ctype.c_field_elems[idx];
+}
+
+// --- acr_compl.FCtype.c_field.InAryQ
+// True if row is in any ptrary instance
+inline bool acr_compl::ctype_c_field_InAryQ(acr_compl::FField& row) {
+    return row.ctype_c_field_in_ary;
+}
+
+// --- acr_compl.FCtype.c_field.qLast
+// Reference to last element without bounds checking
+inline acr_compl::FField& acr_compl::c_field_qLast(acr_compl::FCtype& ctype) {
+    return *ctype.c_field_elems[ctype.c_field_n-1];
+}
+
 // --- acr_compl.FCtype.c_ssimfile.InsertMaybe
 // Insert row into pointer index. Return final membership status.
 inline bool acr_compl::c_ssimfile_InsertMaybe(acr_compl::FCtype& ctype, acr_compl::FSsimfile& row) {
@@ -1513,6 +1531,24 @@ inline void acr_compl::c_fconst_RemoveAll(acr_compl::FField& field) {
     field.c_fconst_n = 0;
 }
 
+// --- acr_compl.FField.c_fconst.qFind
+// Return reference without bounds checking
+inline acr_compl::FFconst& acr_compl::c_fconst_qFind(acr_compl::FField& field, u32 idx) {
+    return *field.c_fconst_elems[idx];
+}
+
+// --- acr_compl.FField.c_fconst.InAryQ
+// True if row is in any ptrary instance
+inline bool acr_compl::field_c_fconst_InAryQ(acr_compl::FFconst& row) {
+    return row.field_c_fconst_in_ary;
+}
+
+// --- acr_compl.FField.c_fconst.qLast
+// Reference to last element without bounds checking
+inline acr_compl::FFconst& acr_compl::c_fconst_qLast(acr_compl::FField& field) {
+    return *field.c_fconst_elems[field.c_fconst_n-1];
+}
+
 // --- acr_compl.FField.c_fflag.InsertMaybe
 // Insert row into pointer index. Return final membership status.
 inline bool acr_compl::c_fflag_InsertMaybe(acr_compl::FField& field, acr_compl::FFflag& row) {
@@ -1587,6 +1623,18 @@ inline i32 acr_compl::c_falias_srcfield_N(const acr_compl::FField& field) {
 // Empty the index. (The rows are not deleted)
 inline void acr_compl::c_falias_srcfield_RemoveAll(acr_compl::FField& field) {
     field.c_falias_srcfield_n = 0;
+}
+
+// --- acr_compl.FField.c_falias_srcfield.qFind
+// Return reference without bounds checking
+inline acr_compl::FFalias& acr_compl::c_falias_srcfield_qFind(acr_compl::FField& field, u32 idx) {
+    return *field.c_falias_srcfield_elems[idx];
+}
+
+// --- acr_compl.FField.c_falias_srcfield.qLast
+// Reference to last element without bounds checking
+inline acr_compl::FFalias& acr_compl::c_falias_srcfield_qLast(acr_compl::FField& field) {
+    return *field.c_falias_srcfield_elems[field.c_falias_srcfield_n-1];
 }
 
 // --- acr_compl.FField.c_fconst_curs.Reset

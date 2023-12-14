@@ -1916,6 +1916,24 @@ inline void atf_amc::c_child_ptrary_RemoveAll(atf_amc::FCascdel& cascdel) {
     cascdel.c_child_ptrary_n = 0;
 }
 
+// --- atf_amc.FCascdel.c_child_ptrary.qFind
+// Return reference without bounds checking
+inline atf_amc::FCascdel& atf_amc::c_child_ptrary_qFind(atf_amc::FCascdel& cascdel, u32 idx) {
+    return *cascdel.c_child_ptrary_elems[idx];
+}
+
+// --- atf_amc.FCascdel.c_child_ptrary.InAryQ
+// True if row is in any ptrary instance
+inline bool atf_amc::cascdel_c_child_ptrary_InAryQ(atf_amc::FCascdel& row) {
+    return row.cascdel_c_child_ptrary_in_ary;
+}
+
+// --- atf_amc.FCascdel.c_child_ptrary.qLast
+// Reference to last element without bounds checking
+inline atf_amc::FCascdel& atf_amc::c_child_ptrary_qLast(atf_amc::FCascdel& cascdel) {
+    return *cascdel.c_child_ptrary_elems[cascdel.c_child_ptrary_n-1];
+}
+
 // --- atf_amc.FCascdel.ind_child_thash.EmptyQ
 // Return true if hash is empty
 inline bool atf_amc::ind_child_thash_EmptyQ(atf_amc::FCascdel& cascdel) {
@@ -2141,9 +2159,7 @@ inline atf_amc::FListtype::FListtype() {
 // --- atf_amc.FListtype.step.Call
 // Invoke function by pointer
 inline void atf_amc::step_Call(atf_amc::FListtype& listtype, atf_amc::FListtype& arg) {
-    if (listtype.step) {
-        listtype.step(arg);
-    }
+    listtype.step(arg);
 }
 
 // --- atf_amc.FListtype..Init
@@ -3249,6 +3265,24 @@ inline void atf_amc::c_typek_RemoveAll() {
         _db.c_typek_elems[i]->_db_c_typek_in_ary = false;
     }
     _db.c_typek_n = 0;
+}
+
+// --- atf_amc.FDb.c_typek.qFind
+// Return reference without bounds checking
+inline atf_amc::FTypeK& atf_amc::c_typek_qFind(u32 idx) {
+    return *_db.c_typek_elems[idx];
+}
+
+// --- atf_amc.FDb.c_typek.InAryQ
+// True if row is in any ptrary instance
+inline bool atf_amc::c_typek_InAryQ(atf_amc::FTypeK& row) {
+    return row._db_c_typek_in_ary;
+}
+
+// --- atf_amc.FDb.c_typek.qLast
+// Reference to last element without bounds checking
+inline atf_amc::FTypeK& atf_amc::c_typek_qLast() {
+    return *_db.c_typek_elems[_db.c_typek_n-1];
 }
 
 // --- atf_amc.FDb.avl.EmptyQ
@@ -5077,6 +5111,18 @@ inline void atf_amc::c_ptrary_RemoveAll(atf_amc::FUnitSort& parent) {
     parent.c_ptrary_n = 0;
 }
 
+// --- atf_amc.FUnitSort.c_ptrary.qFind
+// Return reference without bounds checking
+inline atf_amc::TypeA& atf_amc::c_ptrary_qFind(atf_amc::FUnitSort& parent, u32 idx) {
+    return *parent.c_ptrary_elems[idx];
+}
+
+// --- atf_amc.FUnitSort.c_ptrary.qLast
+// Reference to last element without bounds checking
+inline atf_amc::TypeA& atf_amc::c_ptrary_qLast(atf_amc::FUnitSort& parent) {
+    return *parent.c_ptrary_elems[parent.c_ptrary_n-1];
+}
+
 // --- atf_amc.FUnitSort.fixary.Fill
 // Set all elements of fixed array to value RHS
 inline void atf_amc::fixary_Fill(atf_amc::FUnitSort& parent, const atf_amc::TypeA &rhs) {
@@ -6347,6 +6393,63 @@ inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::OptAlloc& row) {
 inline void atf_amc::OptAlloc_Init(atf_amc::OptAlloc& optalloc) {
     optalloc.length = u32(0);
 }
+inline atf_amc::OptAlloc_curs::OptAlloc_curs() {
+    atf_amc::OptAlloc_curs_Init(*this);
+}
+
+
+// --- atf_amc.OptAlloc_curs..ValidQ
+inline bool atf_amc::OptAlloc_curs_ValidQ(atf_amc::OptAlloc_curs& curs) {
+    return curs.msg != NULL;
+}
+
+// --- atf_amc.OptAlloc_curs..Reset
+inline void atf_amc::OptAlloc_curs_Reset(atf_amc::OptAlloc_curs& curs, algo::memptr buf) {
+    curs.bytes = buf.elems;
+    curs.limit = buf.n_elems;
+    atf_amc::OptAlloc *msg = NULL;
+    int msglen = 0;
+    if (curs.limit >= ssizeof(atf_amc::OptAlloc)) {
+        atf_amc::OptAlloc *ptr = (atf_amc::OptAlloc*)curs.bytes;
+        msglen = i32((*ptr).length);
+        if (msglen >= ssizeof(atf_amc::OptAlloc) && curs.limit >= msglen) {
+            msg = ptr;
+        }
+    }
+    curs.msg = msg;
+    curs.msglen = msglen;
+}
+
+// --- atf_amc.OptAlloc_curs..Access
+inline atf_amc::OptAlloc*& atf_amc::OptAlloc_curs_Access(atf_amc::OptAlloc_curs& curs) {
+    return curs.msg;
+}
+
+// --- atf_amc.OptAlloc_curs..Next
+inline void atf_amc::OptAlloc_curs_Next(atf_amc::OptAlloc_curs& curs) {
+    curs.bytes += curs.msglen;
+    curs.limit -= curs.msglen;
+    atf_amc::OptAlloc *msg = NULL;
+    int msglen = 0;
+    if (curs.limit >= ssizeof(atf_amc::OptAlloc)) {
+        atf_amc::OptAlloc *ptr = (atf_amc::OptAlloc*)curs.bytes;
+        msglen = i32((*ptr).length);
+        if (msglen >= ssizeof(atf_amc::OptAlloc) && curs.limit >= msglen) {
+            msg = ptr;
+        }
+    }
+    curs.msg = msg;
+    curs.msglen = msglen;
+}
+
+// --- atf_amc.OptAlloc_curs..Init
+// Set all fields to initial values.
+inline void atf_amc::OptAlloc_curs_Init(atf_amc::OptAlloc_curs& parent) {
+    parent.msg = NULL;
+    parent.bytes = NULL;
+    parent.limit = i32(0);
+    parent.msglen = i32(0);
+}
 inline atf_amc::OptG::OptG() {
     atf_amc::OptG_Init(*this);
 }
@@ -6380,6 +6483,63 @@ inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::OptG& row) {
 // Set all fields to initial values.
 inline void atf_amc::OptG_Init(atf_amc::OptG& optg) {
     optg.length = u32(0);
+}
+inline atf_amc::OptG_curs::OptG_curs() {
+    atf_amc::OptG_curs_Init(*this);
+}
+
+
+// --- atf_amc.OptG_curs..ValidQ
+inline bool atf_amc::OptG_curs_ValidQ(atf_amc::OptG_curs& curs) {
+    return curs.msg != NULL;
+}
+
+// --- atf_amc.OptG_curs..Reset
+inline void atf_amc::OptG_curs_Reset(atf_amc::OptG_curs& curs, algo::memptr buf) {
+    curs.bytes = buf.elems;
+    curs.limit = buf.n_elems;
+    atf_amc::OptG *msg = NULL;
+    int msglen = 0;
+    if (curs.limit >= ssizeof(atf_amc::OptG)) {
+        atf_amc::OptG *ptr = (atf_amc::OptG*)curs.bytes;
+        msglen = i32((*ptr).length);
+        if (msglen >= ssizeof(atf_amc::OptG) && curs.limit >= msglen) {
+            msg = ptr;
+        }
+    }
+    curs.msg = msg;
+    curs.msglen = msglen;
+}
+
+// --- atf_amc.OptG_curs..Access
+inline atf_amc::OptG*& atf_amc::OptG_curs_Access(atf_amc::OptG_curs& curs) {
+    return curs.msg;
+}
+
+// --- atf_amc.OptG_curs..Next
+inline void atf_amc::OptG_curs_Next(atf_amc::OptG_curs& curs) {
+    curs.bytes += curs.msglen;
+    curs.limit -= curs.msglen;
+    atf_amc::OptG *msg = NULL;
+    int msglen = 0;
+    if (curs.limit >= ssizeof(atf_amc::OptG)) {
+        atf_amc::OptG *ptr = (atf_amc::OptG*)curs.bytes;
+        msglen = i32((*ptr).length);
+        if (msglen >= ssizeof(atf_amc::OptG) && curs.limit >= msglen) {
+            msg = ptr;
+        }
+    }
+    curs.msg = msg;
+    curs.msglen = msglen;
+}
+
+// --- atf_amc.OptG_curs..Init
+// Set all fields to initial values.
+inline void atf_amc::OptG_curs_Init(atf_amc::OptG_curs& parent) {
+    parent.msg = NULL;
+    parent.bytes = NULL;
+    parent.limit = i32(0);
+    parent.msglen = i32(0);
 }
 inline atf_amc::OptOptG::OptOptG() {
     atf_amc::OptOptG_Init(*this);
@@ -6418,6 +6578,63 @@ inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::OptOptG& row) {
 // Set all fields to initial values.
 inline void atf_amc::OptOptG_Init(atf_amc::OptOptG& parent) {
     parent.length = u32(0);
+}
+inline atf_amc::OptOptG_curs::OptOptG_curs() {
+    atf_amc::OptOptG_curs_Init(*this);
+}
+
+
+// --- atf_amc.OptOptG_curs..ValidQ
+inline bool atf_amc::OptOptG_curs_ValidQ(atf_amc::OptOptG_curs& curs) {
+    return curs.msg != NULL;
+}
+
+// --- atf_amc.OptOptG_curs..Reset
+inline void atf_amc::OptOptG_curs_Reset(atf_amc::OptOptG_curs& curs, algo::memptr buf) {
+    curs.bytes = buf.elems;
+    curs.limit = buf.n_elems;
+    atf_amc::OptOptG *msg = NULL;
+    int msglen = 0;
+    if (curs.limit >= ssizeof(atf_amc::OptOptG)) {
+        atf_amc::OptOptG *ptr = (atf_amc::OptOptG*)curs.bytes;
+        msglen = i32((*ptr).length);
+        if (msglen >= ssizeof(atf_amc::OptOptG) && curs.limit >= msglen) {
+            msg = ptr;
+        }
+    }
+    curs.msg = msg;
+    curs.msglen = msglen;
+}
+
+// --- atf_amc.OptOptG_curs..Access
+inline atf_amc::OptOptG*& atf_amc::OptOptG_curs_Access(atf_amc::OptOptG_curs& curs) {
+    return curs.msg;
+}
+
+// --- atf_amc.OptOptG_curs..Next
+inline void atf_amc::OptOptG_curs_Next(atf_amc::OptOptG_curs& curs) {
+    curs.bytes += curs.msglen;
+    curs.limit -= curs.msglen;
+    atf_amc::OptOptG *msg = NULL;
+    int msglen = 0;
+    if (curs.limit >= ssizeof(atf_amc::OptOptG)) {
+        atf_amc::OptOptG *ptr = (atf_amc::OptOptG*)curs.bytes;
+        msglen = i32((*ptr).length);
+        if (msglen >= ssizeof(atf_amc::OptOptG) && curs.limit >= msglen) {
+            msg = ptr;
+        }
+    }
+    curs.msg = msg;
+    curs.msglen = msglen;
+}
+
+// --- atf_amc.OptOptG_curs..Init
+// Set all fields to initial values.
+inline void atf_amc::OptOptG_curs_Init(atf_amc::OptOptG_curs& parent) {
+    parent.msg = NULL;
+    parent.bytes = NULL;
+    parent.limit = i32(0);
+    parent.msglen = i32(0);
 }
 inline atf_amc::PmaskU128::PmaskU128() {
     atf_amc::PmaskU128_Init(*this);
@@ -10005,6 +10222,63 @@ inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenAlloc& row) {
 inline void atf_amc::VarlenAlloc_Init(atf_amc::VarlenAlloc& varlenalloc) {
     varlenalloc.length = u32(0);
 }
+inline atf_amc::VarlenAlloc_curs::VarlenAlloc_curs() {
+    atf_amc::VarlenAlloc_curs_Init(*this);
+}
+
+
+// --- atf_amc.VarlenAlloc_curs..ValidQ
+inline bool atf_amc::VarlenAlloc_curs_ValidQ(atf_amc::VarlenAlloc_curs& curs) {
+    return curs.msg != NULL;
+}
+
+// --- atf_amc.VarlenAlloc_curs..Reset
+inline void atf_amc::VarlenAlloc_curs_Reset(atf_amc::VarlenAlloc_curs& curs, algo::memptr buf) {
+    curs.bytes = buf.elems;
+    curs.limit = buf.n_elems;
+    atf_amc::VarlenAlloc *msg = NULL;
+    int msglen = 0;
+    if (curs.limit >= ssizeof(atf_amc::VarlenAlloc)) {
+        atf_amc::VarlenAlloc *ptr = (atf_amc::VarlenAlloc*)curs.bytes;
+        msglen = i32((*ptr).length);
+        if (msglen >= ssizeof(atf_amc::VarlenAlloc) && curs.limit >= msglen) {
+            msg = ptr;
+        }
+    }
+    curs.msg = msg;
+    curs.msglen = msglen;
+}
+
+// --- atf_amc.VarlenAlloc_curs..Access
+inline atf_amc::VarlenAlloc*& atf_amc::VarlenAlloc_curs_Access(atf_amc::VarlenAlloc_curs& curs) {
+    return curs.msg;
+}
+
+// --- atf_amc.VarlenAlloc_curs..Next
+inline void atf_amc::VarlenAlloc_curs_Next(atf_amc::VarlenAlloc_curs& curs) {
+    curs.bytes += curs.msglen;
+    curs.limit -= curs.msglen;
+    atf_amc::VarlenAlloc *msg = NULL;
+    int msglen = 0;
+    if (curs.limit >= ssizeof(atf_amc::VarlenAlloc)) {
+        atf_amc::VarlenAlloc *ptr = (atf_amc::VarlenAlloc*)curs.bytes;
+        msglen = i32((*ptr).length);
+        if (msglen >= ssizeof(atf_amc::VarlenAlloc) && curs.limit >= msglen) {
+            msg = ptr;
+        }
+    }
+    curs.msg = msg;
+    curs.msglen = msglen;
+}
+
+// --- atf_amc.VarlenAlloc_curs..Init
+// Set all fields to initial values.
+inline void atf_amc::VarlenAlloc_curs_Init(atf_amc::VarlenAlloc_curs& parent) {
+    parent.msg = NULL;
+    parent.bytes = NULL;
+    parent.limit = i32(0);
+    parent.msglen = i32(0);
+}
 inline atf_amc::VarlenExtern::VarlenExtern() {
     atf_amc::VarlenExtern_Init(*this);
 }
@@ -10063,6 +10337,63 @@ inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenExtern& row) {
 // Set all fields to initial values.
 inline void atf_amc::VarlenExtern_Init(atf_amc::VarlenExtern& varlen_extern) {
     varlen_extern.n_elems = u32(0);
+}
+inline atf_amc::VarlenExtern_curs::VarlenExtern_curs() {
+    atf_amc::VarlenExtern_curs_Init(*this);
+}
+
+
+// --- atf_amc.VarlenExtern_curs..ValidQ
+inline bool atf_amc::VarlenExtern_curs_ValidQ(atf_amc::VarlenExtern_curs& curs) {
+    return curs.msg != NULL;
+}
+
+// --- atf_amc.VarlenExtern_curs..Reset
+inline void atf_amc::VarlenExtern_curs_Reset(atf_amc::VarlenExtern_curs& curs, algo::memptr buf) {
+    curs.bytes = buf.elems;
+    curs.limit = buf.n_elems;
+    atf_amc::VarlenExtern *msg = NULL;
+    int msglen = 0;
+    if (curs.limit >= ssizeof(atf_amc::VarlenExtern)) {
+        atf_amc::VarlenExtern *ptr = (atf_amc::VarlenExtern*)curs.bytes;
+        msglen = i32(length_Get((*ptr)));
+        if (msglen >= ssizeof(atf_amc::VarlenExtern) && curs.limit >= msglen) {
+            msg = ptr;
+        }
+    }
+    curs.msg = msg;
+    curs.msglen = msglen;
+}
+
+// --- atf_amc.VarlenExtern_curs..Access
+inline atf_amc::VarlenExtern*& atf_amc::VarlenExtern_curs_Access(atf_amc::VarlenExtern_curs& curs) {
+    return curs.msg;
+}
+
+// --- atf_amc.VarlenExtern_curs..Next
+inline void atf_amc::VarlenExtern_curs_Next(atf_amc::VarlenExtern_curs& curs) {
+    curs.bytes += curs.msglen;
+    curs.limit -= curs.msglen;
+    atf_amc::VarlenExtern *msg = NULL;
+    int msglen = 0;
+    if (curs.limit >= ssizeof(atf_amc::VarlenExtern)) {
+        atf_amc::VarlenExtern *ptr = (atf_amc::VarlenExtern*)curs.bytes;
+        msglen = i32(length_Get((*ptr)));
+        if (msglen >= ssizeof(atf_amc::VarlenExtern) && curs.limit >= msglen) {
+            msg = ptr;
+        }
+    }
+    curs.msg = msg;
+    curs.msglen = msglen;
+}
+
+// --- atf_amc.VarlenExtern_curs..Init
+// Set all fields to initial values.
+inline void atf_amc::VarlenExtern_curs_Init(atf_amc::VarlenExtern_curs& parent) {
+    parent.msg = NULL;
+    parent.bytes = NULL;
+    parent.limit = i32(0);
+    parent.msglen = i32(0);
 }
 inline atf_amc::VarlenH::VarlenH() {
     atf_amc::VarlenH_Init(*this);
@@ -10123,6 +10454,63 @@ inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenH& row) {
 inline void atf_amc::VarlenH_Init(atf_amc::VarlenH& parent) {
     parent.length = u32(0);
 }
+inline atf_amc::VarlenH_curs::VarlenH_curs() {
+    atf_amc::VarlenH_curs_Init(*this);
+}
+
+
+// --- atf_amc.VarlenH_curs..ValidQ
+inline bool atf_amc::VarlenH_curs_ValidQ(atf_amc::VarlenH_curs& curs) {
+    return curs.msg != NULL;
+}
+
+// --- atf_amc.VarlenH_curs..Reset
+inline void atf_amc::VarlenH_curs_Reset(atf_amc::VarlenH_curs& curs, algo::memptr buf) {
+    curs.bytes = buf.elems;
+    curs.limit = buf.n_elems;
+    atf_amc::VarlenH *msg = NULL;
+    int msglen = 0;
+    if (curs.limit >= ssizeof(atf_amc::VarlenH)) {
+        atf_amc::VarlenH *ptr = (atf_amc::VarlenH*)curs.bytes;
+        msglen = i32((*ptr).length);
+        if (msglen >= ssizeof(atf_amc::VarlenH) && curs.limit >= msglen) {
+            msg = ptr;
+        }
+    }
+    curs.msg = msg;
+    curs.msglen = msglen;
+}
+
+// --- atf_amc.VarlenH_curs..Access
+inline atf_amc::VarlenH*& atf_amc::VarlenH_curs_Access(atf_amc::VarlenH_curs& curs) {
+    return curs.msg;
+}
+
+// --- atf_amc.VarlenH_curs..Next
+inline void atf_amc::VarlenH_curs_Next(atf_amc::VarlenH_curs& curs) {
+    curs.bytes += curs.msglen;
+    curs.limit -= curs.msglen;
+    atf_amc::VarlenH *msg = NULL;
+    int msglen = 0;
+    if (curs.limit >= ssizeof(atf_amc::VarlenH)) {
+        atf_amc::VarlenH *ptr = (atf_amc::VarlenH*)curs.bytes;
+        msglen = i32((*ptr).length);
+        if (msglen >= ssizeof(atf_amc::VarlenH) && curs.limit >= msglen) {
+            msg = ptr;
+        }
+    }
+    curs.msg = msg;
+    curs.msglen = msglen;
+}
+
+// --- atf_amc.VarlenH_curs..Init
+// Set all fields to initial values.
+inline void atf_amc::VarlenH_curs_Init(atf_amc::VarlenH_curs& parent) {
+    parent.msg = NULL;
+    parent.bytes = NULL;
+    parent.limit = i32(0);
+    parent.msglen = i32(0);
+}
 inline atf_amc::VarlenK::VarlenK() {
     atf_amc::VarlenK_Init(*this);
 }
@@ -10181,6 +10569,63 @@ inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenK& row) {
 // Set all fields to initial values.
 inline void atf_amc::VarlenK_Init(atf_amc::VarlenK& k) {
     k.length = u32(0);
+}
+inline atf_amc::VarlenK_curs::VarlenK_curs() {
+    atf_amc::VarlenK_curs_Init(*this);
+}
+
+
+// --- atf_amc.VarlenK_curs..ValidQ
+inline bool atf_amc::VarlenK_curs_ValidQ(atf_amc::VarlenK_curs& curs) {
+    return curs.msg != NULL;
+}
+
+// --- atf_amc.VarlenK_curs..Reset
+inline void atf_amc::VarlenK_curs_Reset(atf_amc::VarlenK_curs& curs, algo::memptr buf) {
+    curs.bytes = buf.elems;
+    curs.limit = buf.n_elems;
+    atf_amc::VarlenK *msg = NULL;
+    int msglen = 0;
+    if (curs.limit >= ssizeof(atf_amc::VarlenK)) {
+        atf_amc::VarlenK *ptr = (atf_amc::VarlenK*)curs.bytes;
+        msglen = i32((*ptr).length);
+        if (msglen >= ssizeof(atf_amc::VarlenK) && curs.limit >= msglen) {
+            msg = ptr;
+        }
+    }
+    curs.msg = msg;
+    curs.msglen = msglen;
+}
+
+// --- atf_amc.VarlenK_curs..Access
+inline atf_amc::VarlenK*& atf_amc::VarlenK_curs_Access(atf_amc::VarlenK_curs& curs) {
+    return curs.msg;
+}
+
+// --- atf_amc.VarlenK_curs..Next
+inline void atf_amc::VarlenK_curs_Next(atf_amc::VarlenK_curs& curs) {
+    curs.bytes += curs.msglen;
+    curs.limit -= curs.msglen;
+    atf_amc::VarlenK *msg = NULL;
+    int msglen = 0;
+    if (curs.limit >= ssizeof(atf_amc::VarlenK)) {
+        atf_amc::VarlenK *ptr = (atf_amc::VarlenK*)curs.bytes;
+        msglen = i32((*ptr).length);
+        if (msglen >= ssizeof(atf_amc::VarlenK) && curs.limit >= msglen) {
+            msg = ptr;
+        }
+    }
+    curs.msg = msg;
+    curs.msglen = msglen;
+}
+
+// --- atf_amc.VarlenK_curs..Init
+// Set all fields to initial values.
+inline void atf_amc::VarlenK_curs_Init(atf_amc::VarlenK_curs& parent) {
+    parent.msg = NULL;
+    parent.bytes = NULL;
+    parent.limit = i32(0);
+    parent.msglen = i32(0);
 }
 inline atf_amc::VarlenMsg::VarlenMsg() {
     atf_amc::VarlenMsg_Init(*this);

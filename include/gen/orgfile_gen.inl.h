@@ -237,6 +237,24 @@ inline void orgfile::c_filename_RemoveAll(orgfile::FFilehash& filehash) {
     filehash.c_filename_n = 0;
 }
 
+// --- orgfile.FFilehash.c_filename.qFind
+// Return reference without bounds checking
+inline orgfile::FFilename& orgfile::c_filename_qFind(orgfile::FFilehash& filehash, u32 idx) {
+    return *filehash.c_filename_elems[idx];
+}
+
+// --- orgfile.FFilehash.c_filename.InAryQ
+// True if row is in any ptrary instance
+inline bool orgfile::filehash_c_filename_InAryQ(orgfile::FFilename& row) {
+    return row.filehash_c_filename_in_ary;
+}
+
+// --- orgfile.FFilehash.c_filename.qLast
+// Reference to last element without bounds checking
+inline orgfile::FFilename& orgfile::c_filename_qLast(orgfile::FFilehash& filehash) {
+    return *filehash.c_filename_elems[filehash.c_filename_n-1];
+}
+
 // --- orgfile.FFilehash..Init
 // Set all fields to initial values.
 inline void orgfile::FFilehash_Init(orgfile::FFilehash& filehash) {

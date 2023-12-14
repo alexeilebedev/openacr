@@ -59,6 +59,12 @@ static void PnewByteAry(algo_lib::Replscope &R, amc::Genpnew &pnew) {
     Ins(&R, pnew.preamble, "msg = ($Cpptype*)ary_AllocN(buf,len).elems;");
 }
 
+static void PnewAppend(algo_lib::Replscope &R, amc::Genpnew &pnew) {
+    AddProtoArg(*pnew.p_func, "algo::ByteAry &", "buf");
+
+    Ins(&R, pnew.preamble, "msg = ($Cpptype*)ary_AllocN(buf,len).elems;");
+}
+
 // -----------------------------------------------------------------------------
 
 static void PnewAmsStream(algo_lib::Replscope &R, amc::Genpnew &pnew) {
@@ -68,11 +74,11 @@ static void PnewAmsStream(algo_lib::Replscope &R, amc::Genpnew &pnew) {
     if (bool_Update(amc::_db.has_ams_fwd_declare,true)) {
         if (amc::FNs *ns = amc::ind_ns_Find("lib_ams")) {
             // forward-declare
-            Ins(&R, *ns->hdr, "namespace lib_ams {");
+            BeginNsBlock(*ns->hdr, *ns, "");
             Ins(&R, *ns->hdr, "struct FStream;");
             Ins(&R, *ns->hdr, "void *BeginWrite(lib_ams::FStream &stream, int len);");
             Ins(&R, *ns->hdr, "void EndWrite(lib_ams::FStream &stream, void *msg, int len);");
-            Ins(&R, *ns->hdr, "} // namespace lib_ams");
+            EndNsBlock(*ns->hdr, *ns, "");
         }
     }
 
@@ -153,6 +159,7 @@ static void DispatchBuftype(amc::FPnew &pnew, amc::Genpnew &genpnew) {
     case amc_Pnewtype_Memptr      : PnewMemptr(R, genpnew); break;
     case amc_Pnewtype_ByteAry     : PnewByteAry(R, genpnew); break;
     case amc_Pnewtype_AmsStream   : PnewAmsStream(R, genpnew); break;
+    case amc_Pnewtype_Append      : PnewAppend(R, genpnew); break;
     default                           : vrfy(0, "unsupported buftype"); break;
     }
 }

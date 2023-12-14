@@ -72,6 +72,12 @@ tempstr abt::EvalSrcfileCmdline(algo_lib::Replscope &R, abt::FTarget &target, ab
     }ind_end;
 
     if (c_file || cpp_file || hpp_file) {
+        // not doable via tool_opt
+        // re-enable color output which gets squashed because output during parallel build
+        // goes to a temp file.
+        if (abt::_db.cmdline.compiler == dev_Compiler_compiler_gPP && _db.tty) {
+            out << " -fdiagnostics-color=always";
+        }
         // target is a precompiled header
         if (srcfile.p_target->p_ns->nstype == dmmeta_Nstype_nstype_pch) {
             if (abt::_db.cmdline.compiler == dev_Compiler_compiler_cl) {

@@ -31,6 +31,7 @@ extern const char *  dmmeta_Buftype_pnewtype_AmsStream;   // AmsStream    fconst
 extern const char *  dmmeta_Buftype_pnewtype_Fixed;       // Fixed        fconst:dmmeta.Buftype.pnewtype/Fixed
 extern const char *  dmmeta_Buftype_pnewtype_Dynamic;     // Dynamic      fconst:dmmeta.Buftype.pnewtype/Dynamic
 extern const char *  dmmeta_Buftype_pnewtype_ByteAry;     // ByteAry      fconst:dmmeta.Buftype.pnewtype/ByteAry
+extern const char *  dmmeta_Buftype_pnewtype_Append;      // Append       fconst:dmmeta.Buftype.pnewtype/Append
 extern const char *  dmmeta_Fbufdir_fbufdir_in;    // in     fconst:dmmeta.Fbufdir.fbufdir/in
 extern const char *  dmmeta_Fbufdir_fbufdir_out;   // out    fconst:dmmeta.Fbufdir.fbufdir/out
 extern const char *  dmmeta_Fbuftype_fbuftype_Bytebuf;   // Bytebuf    fconst:dmmeta.Fbuftype.fbuftype/Bytebuf

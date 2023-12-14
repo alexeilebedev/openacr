@@ -991,6 +991,7 @@ void abt::Main() {
     algo::UnTime starttime = algo::CurrUnTime();
     algo::SetupExitSignals();
 
+    _db.tty=isatty(1);
     RewriteOpts();
     algo_lib::Replscope R;
     Main_GuessParams(R);

@@ -60,9 +60,7 @@ void amc::tclass_Numstr() {
          || (numstr.base >= 2 && numstr.base <= 36), "unsupported base (must be 2..36 or 256)");
 }
 
-// -----------------------------------------------------------------------------
-
-void amc::tfunc_Numstr_qGetnum() {
+void amc::tfunc_Numstr_Getnum() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
     amc::FSmallstr &smallstr = *field.c_smallstr;
@@ -71,15 +69,14 @@ void amc::tfunc_Numstr_qGetnum() {
     bool str_max_may_not_fit_in_u64 = ((smallstr.length * log2(numstr.base)) > 8*sizeof(u64));
 
     amc::FFunc& qgetnum = amc::CreateCurFunc();
-    qgetnum.priv = true;
     Set(R, "$base", tempstr() << numstr.base);
     Set(R, "$bthresh", tempstr() << u32_Min(10,numstr.base));
     Ins(&R, qgetnum.comment, "Convert field to numeric value. If the value is too large");
-    Ins(&R, qgetnum.comment, "for the target type, the result is undefined.");
-    Ins(&R, qgetnum.comment, "The special case of an empty string is evaluated to zero.");
+    Ins(&R, qgetnum.comment, "for the target type, or the string is invalid, the result");
+    Ins(&R, qgetnum.comment, "is undefined, and and_ok is set to false.");
+    Ins(&R, qgetnum.comment, "Empty string is evaluated to zero.");
     Ins(&R, qgetnum.ret  , "$Rtype", false);
-    Ins(&R, qgetnum.proto, "$name_qGetnum($Parent, u32 &ok)", false);
-    Ins(&R, qgetnum.body        , "(void)ok;");
+    Ins(&R, qgetnum.proto, "$name_Getnum($Parent, bool &and_ok)", false);
     Ins(&R, qgetnum.body        , "u64 val = 0;");
     Ins(&R, qgetnum.body        , "algo::strptr str = $name_Getary($pararg);");
     bool fast_path = (numstr.base == 10 && smallstr.length <= 16); // fast path for base-10 conversion
@@ -96,7 +93,9 @@ void amc::tfunc_Numstr_qGetnum() {
             : smallstr.length <= 8 ? "aParseNum8"
             : "aParseNum16");
         Ins(&R, qgetnum.body    , "if (elems_N(str)>0) { // empty string maps to zero");
+        Ins(&R, qgetnum.body    , "    u32 ok = 1;");
         Ins(&R, qgetnum.body    , "    val = $Fcn(str, ok);");
+        Ins(&R, qgetnum.body    , "    and_ok &= (ok != 0);");
         Ins(&R, qgetnum.body    , "}");
     } else {
         Ins(&R, qgetnum.body    , "for (int i = 0; i < str.n_elems; i++) {");
@@ -114,7 +113,7 @@ void amc::tfunc_Numstr_qGetnum() {
         }
         if (numstr.base >= 2 && numstr.base <= 36) {
             Ins(&R, qgetnum.body, "    } else {");
-            Ins(&R, qgetnum.body, "        ok = 0;");
+            Ins(&R, qgetnum.body, "        and_ok = false;");
             Ins(&R, qgetnum.body, "    }");
         }
         if (numstr.base == 95) {
@@ -123,7 +122,7 @@ void amc::tfunc_Numstr_qGetnum() {
         if (str_max_may_not_fit_in_u64) {
             Ins(&R, qgetnum.body, "    // Check for 64-bit overflow inside the loop");
             Ins(&R, qgetnum.body, "    u64 r1 = val*$base + digit;");
-            Ins(&R, qgetnum.body, "    ok &= (val <= r1);");
+            Ins(&R, qgetnum.body, "    and_ok &= (val <= r1);");
             Ins(&R, qgetnum.body, "    val = r1;");
         } else {
             Ins(&R, qgetnum.body, "    val = val*$base + digit;");
@@ -134,18 +133,17 @@ void amc::tfunc_Numstr_qGetnum() {
     if (numstr.issigned) {
         Ins(&R, qgetnum.body    , "i64 ret = is_neg ? -val : val;");
         if ((str_max >= numstr.nummax) && !str_max_may_not_fit_in_u64) { // 64-bit overflow is already checked
-            Ins(&R, qgetnum.body    , "ok &= ret >= $nummin && ret <= $nummax;");// check for overflow
+            Ins(&R, qgetnum.body    , "and_ok &= ret >= $nummin && ret <= $nummax;");// check for overflow
         }
         Ins(&R, qgetnum.body    , "return $Rtype(ret);");
     } else {
         if ((str_max >= numstr.nummax) && !str_max_may_not_fit_in_u64) { // 64-bit overflow is already checked
-            Ins(&R, qgetnum.body    , "ok &= val <= $nummax;");// check for overflow
+            Ins(&R, qgetnum.body    , "and_ok &= val <= $nummax;");// check for overflow
         }
         Ins(&R, qgetnum.body    , "return $Rtype(val);");
     }
 }
 
-// -----------------------------------------------------------------------------
 
 void amc::tfunc_Numstr_GetnumDflt() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
@@ -161,8 +159,8 @@ void amc::tfunc_Numstr_GetnumDflt() {
     Ins(&R, getnumdflt.comment, "Empty string is evaluated to zero.");
     Ins(&R, getnumdflt.ret  , "$Rtype", false);
     Ins(&R, getnumdflt.proto, "$name_GetnumDflt($Parent, $Rtype dflt)", false);
-    Ins(&R, getnumdflt.body , "u32 ok = 1;");
-    Ins(&R, getnumdflt.body , "$Rtype result = $name_qGetnum($parname, ok);");
+    Ins(&R, getnumdflt.body , "bool ok = true;");
+    Ins(&R, getnumdflt.body , "$Rtype result = $name_Getnum($parname, ok);");
     Ins(&R, getnumdflt.body , "return ok ? result : dflt;");
 }
 
@@ -180,9 +178,8 @@ void amc::tfunc_Numstr_Geti64() {
     Ins(&R, geti64.comment, "Empty string is evaluated to zero.");
     Ins(&R, geti64.ret  , "i64", false);
     Ins(&R, geti64.proto, "$name_Geti64($Parent, bool &out_ok)", false);
-    Ins(&R, geti64.body , "u32 ok = 1;");
-    Ins(&R, geti64.body , "i64 result = $name_qGetnum($parname, ok);");
-    Ins(&R, geti64.body , "out_ok = ok != 0;");
+    Ins(&R, geti64.body , "out_ok = true;");
+    Ins(&R, geti64.body , "i64 result = $name_Getnum($parname, out_ok);");
     Ins(&R, geti64.body , "return result;");
 }
 

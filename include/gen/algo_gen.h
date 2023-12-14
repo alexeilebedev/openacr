@@ -497,7 +497,7 @@ char&                ch_qLast(algo::cstring& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  ch_rowid_Get(algo::cstring& parent, char &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<char>   ch_AllocNVal(algo::cstring& parent, int n_elems, const char& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<char>   ch_AllocNVal(algo::cstring& parent, int n_elems, const char& val) __attribute__((nothrow));
 
 // proceed to next item
 void                 cstring_ch_curs_Next(cstring_ch_curs &curs);
@@ -633,7 +633,7 @@ u8&                  ary_qLast(algo::ByteAry& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  ary_rowid_Get(algo::ByteAry& parent, u8 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u8>     ary_AllocNVal(algo::ByteAry& parent, int n_elems, const u8& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<u8>     ary_AllocNVal(algo::ByteAry& parent, int n_elems, const u8& val) __attribute__((nothrow));
 
 // proceed to next item
 void                 ByteAry_ary_curs_Next(ByteAry_ary_curs &curs);
@@ -2027,7 +2027,7 @@ char&                buf_qLast(algo::LineBuf& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  buf_rowid_Get(algo::LineBuf& parent, char &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<char>   buf_AllocNVal(algo::LineBuf& parent, int n_elems, const char& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<char>   buf_AllocNVal(algo::LineBuf& parent, int n_elems, const char& val) __attribute__((nothrow));
 
 // proceed to next item
 void                 LineBuf_buf_curs_Next(LineBuf_buf_curs &curs);
@@ -2074,6 +2074,11 @@ bool                 ch_ReadStrptrMaybe(algo::LnumStr10_U64& parent, algo::strpt
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LnumStr10_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u64                  ch_Getnum(algo::LnumStr10_U64& parent, bool &and_ok) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -2133,6 +2138,11 @@ bool                 ch_ReadStrptrMaybe(algo::LnumStr11_U64& parent, algo::strpt
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LnumStr11_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u64                  ch_Getnum(algo::LnumStr11_U64& parent, bool &and_ok) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u64                  ch_GetnumDflt(algo::LnumStr11_U64& parent, u64 dflt) __attribute__((nothrow));
@@ -2190,6 +2200,11 @@ bool                 ch_ReadStrptrMaybe(algo::LnumStr12_U64& parent, algo::strpt
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LnumStr12_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u64                  ch_Getnum(algo::LnumStr12_U64& parent, bool &and_ok) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -2249,6 +2264,11 @@ bool                 ch_ReadStrptrMaybe(algo::LnumStr13_U64_Base36& parent, algo
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LnumStr13_U64_Base36& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u64                  ch_Getnum(algo::LnumStr13_U64_Base36& parent, bool &and_ok) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u64                  ch_GetnumDflt(algo::LnumStr13_U64_Base36& parent, u64 dflt) __attribute__((nothrow));
@@ -2306,6 +2326,11 @@ bool                 ch_ReadStrptrMaybe(algo::LnumStr16_U64_Base16& parent, algo
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LnumStr16_U64_Base16& parent, const algo::strptr &rhs) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u64                  ch_Getnum(algo::LnumStr16_U64_Base16& parent, bool &and_ok) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -2365,6 +2390,11 @@ bool                 ch_ReadStrptrMaybe(algo::LnumStr1_U32& parent, algo::strptr
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LnumStr1_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32                  ch_Getnum(algo::LnumStr1_U32& parent, bool &and_ok) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32                  ch_GetnumDflt(algo::LnumStr1_U32& parent, u32 dflt) __attribute__((nothrow));
@@ -2422,6 +2452,11 @@ bool                 ch_ReadStrptrMaybe(algo::LnumStr20_U64& parent, algo::strpt
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LnumStr20_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u64                  ch_Getnum(algo::LnumStr20_U64& parent, bool &and_ok) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -2481,6 +2516,11 @@ bool                 ch_ReadStrptrMaybe(algo::LnumStr22_U64& parent, algo::strpt
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LnumStr22_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u64                  ch_Getnum(algo::LnumStr22_U64& parent, bool &and_ok) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u64                  ch_GetnumDflt(algo::LnumStr22_U64& parent, u64 dflt) __attribute__((nothrow));
@@ -2538,6 +2578,11 @@ bool                 ch_ReadStrptrMaybe(algo::LnumStr2_U32& parent, algo::strptr
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LnumStr2_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32                  ch_Getnum(algo::LnumStr2_U32& parent, bool &and_ok) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -2597,6 +2642,11 @@ bool                 ch_ReadStrptrMaybe(algo::LnumStr3_U32& parent, algo::strptr
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LnumStr3_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32                  ch_Getnum(algo::LnumStr3_U32& parent, bool &and_ok) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32                  ch_GetnumDflt(algo::LnumStr3_U32& parent, u32 dflt) __attribute__((nothrow));
@@ -2654,6 +2704,11 @@ bool                 ch_ReadStrptrMaybe(algo::LnumStr4_U32& parent, algo::strptr
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LnumStr4_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32                  ch_Getnum(algo::LnumStr4_U32& parent, bool &and_ok) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -2713,6 +2768,11 @@ bool                 ch_ReadStrptrMaybe(algo::LnumStr5_U32& parent, algo::strptr
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LnumStr5_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32                  ch_Getnum(algo::LnumStr5_U32& parent, bool &and_ok) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32                  ch_GetnumDflt(algo::LnumStr5_U32& parent, u32 dflt) __attribute__((nothrow));
@@ -2770,6 +2830,11 @@ bool                 ch_ReadStrptrMaybe(algo::LnumStr5_U32_Base36& parent, algo:
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LnumStr5_U32_Base36& parent, const algo::strptr &rhs) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32                  ch_Getnum(algo::LnumStr5_U32_Base36& parent, bool &and_ok) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -2829,6 +2894,11 @@ bool                 ch_ReadStrptrMaybe(algo::LnumStr6_U32& parent, algo::strptr
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LnumStr6_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32                  ch_Getnum(algo::LnumStr6_U32& parent, bool &and_ok) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32                  ch_GetnumDflt(algo::LnumStr6_U32& parent, u32 dflt) __attribute__((nothrow));
@@ -2886,6 +2956,11 @@ bool                 ch_ReadStrptrMaybe(algo::LnumStr7_U32& parent, algo::strptr
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LnumStr7_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32                  ch_Getnum(algo::LnumStr7_U32& parent, bool &and_ok) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -2945,6 +3020,11 @@ bool                 ch_ReadStrptrMaybe(algo::LnumStr7_U32_Base36& parent, algo:
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LnumStr7_U32_Base36& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32                  ch_Getnum(algo::LnumStr7_U32_Base36& parent, bool &and_ok) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32                  ch_GetnumDflt(algo::LnumStr7_U32_Base36& parent, u32 dflt) __attribute__((nothrow));
@@ -3002,6 +3082,11 @@ bool                 ch_ReadStrptrMaybe(algo::LnumStr8_U32& parent, algo::strptr
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LnumStr8_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32                  ch_Getnum(algo::LnumStr8_U32& parent, bool &and_ok) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -3061,6 +3146,11 @@ bool                 ch_ReadStrptrMaybe(algo::LnumStr8_U32_Base16& parent, algo:
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LnumStr8_U32_Base16& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32                  ch_Getnum(algo::LnumStr8_U32_Base16& parent, bool &and_ok) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32                  ch_GetnumDflt(algo::LnumStr8_U32_Base16& parent, u32 dflt) __attribute__((nothrow));
@@ -3118,6 +3208,11 @@ bool                 ch_ReadStrptrMaybe(algo::LnumStr8_U64& parent, algo::strptr
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LnumStr8_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u64                  ch_Getnum(algo::LnumStr8_U64& parent, bool &and_ok) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -3177,6 +3272,11 @@ bool                 ch_ReadStrptrMaybe(algo::LnumStr9_U32& parent, algo::strptr
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LnumStr9_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32                  ch_Getnum(algo::LnumStr9_U32& parent, bool &and_ok) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32                  ch_GetnumDflt(algo::LnumStr9_U32& parent, u32 dflt) __attribute__((nothrow));
@@ -3232,6 +3332,11 @@ bool                 ch_ReadStrptrMaybe(algo::LnumStr9_U64& parent, algo::strptr
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LnumStr9_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u64                  ch_Getnum(algo::LnumStr9_U64& parent, bool &and_ok) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -3599,6 +3704,11 @@ bool                 ch_ReadStrptrMaybe(algo::LspaceStr20_I64& parent, algo::str
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LspaceStr20_I64& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+i64                  ch_Getnum(algo::LspaceStr20_I64& parent, bool &and_ok) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 i64                  ch_GetnumDflt(algo::LspaceStr20_I64& parent, i64 dflt) __attribute__((nothrow));
@@ -3656,6 +3766,11 @@ bool                 ch_ReadStrptrMaybe(algo::LspaceStr20_U64& parent, algo::str
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LspaceStr20_U64& parent, const algo::strptr &rhs) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u64                  ch_Getnum(algo::LspaceStr20_U64& parent, bool &and_ok) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -3761,6 +3876,11 @@ bool                 ch_ReadStrptrMaybe(algo::LspaceStr3_I16& parent, algo::strp
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LspaceStr3_I16& parent, const algo::strptr &rhs) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+i16                  ch_Getnum(algo::LspaceStr3_I16& parent, bool &and_ok) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -3914,6 +4034,11 @@ bool                 ch_ReadStrptrMaybe(algo::LspaceStr5_I16& parent, algo::strp
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LspaceStr5_I16& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u16                  ch_Getnum(algo::LspaceStr5_I16& parent, bool &and_ok) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u16                  ch_GetnumDflt(algo::LspaceStr5_I16& parent, u16 dflt) __attribute__((nothrow));
@@ -4017,6 +4142,11 @@ bool                 ch_ReadStrptrMaybe(algo::LspaceStr6_U32& parent, algo::strp
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LspaceStr6_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32                  ch_Getnum(algo::LspaceStr6_U32& parent, bool &and_ok) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32                  ch_GetnumDflt(algo::LspaceStr6_U32& parent, u32 dflt) __attribute__((nothrow));
@@ -4072,6 +4202,11 @@ bool                 ch_ReadStrptrMaybe(algo::LspaceStr7_I32_Base36& parent, alg
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::LspaceStr7_I32_Base36& parent, const algo::strptr &rhs) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+i32                  ch_Getnum(algo::LspaceStr7_I32_Base36& parent, bool &and_ok) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -4322,7 +4457,7 @@ i32&                 start_qLast(algo::NormTxttbl& parent) __attribute__((nothro
 // Return row id of specified element
 u64                  start_rowid_Get(algo::NormTxttbl& parent, i32 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<i32>    start_AllocNVal(algo::NormTxttbl& parent, int n_elems, const i32& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<i32>    start_AllocNVal(algo::NormTxttbl& parent, int n_elems, const i32& val) __attribute__((nothrow));
 
 // proceed to next item
 void                 NormTxttbl_start_curs_Next(NormTxttbl_start_curs &curs);
@@ -6554,6 +6689,11 @@ bool                 ch_ReadStrptrMaybe(algo::RnullStr6_U32& parent, algo::strpt
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(algo::RnullStr6_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32                  ch_Getnum(algo::RnullStr6_U32& parent, bool &and_ok) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -9143,7 +9283,7 @@ algo::Attr&          attrs_qLast(algo::Tuple& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  attrs_rowid_Get(algo::Tuple& parent, algo::Attr &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::Attr> attrs_AllocNVal(algo::Tuple& parent, int n_elems, const algo::Attr& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::Attr> attrs_AllocNVal(algo::Tuple& parent, int n_elems, const algo::Attr& val) __attribute__((nothrow));
 
 // proceed to next item
 void                 Tuple_attrs_curs_Next(Tuple_attrs_curs &curs);
@@ -9433,7 +9573,7 @@ u64&                 ary_qLast(algo::U64Ary& parent) __attribute__((nothrow));
 // Return row id of specified element
 u64                  ary_rowid_Get(algo::U64Ary& parent, u64 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u64>    ary_AllocNVal(algo::U64Ary& parent, int n_elems, const u64& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<u64>    ary_AllocNVal(algo::U64Ary& parent, int n_elems, const u64& val) __attribute__((nothrow));
 
 // proceed to next item
 void                 U64Ary_ary_curs_Next(U64Ary_ary_curs &curs);

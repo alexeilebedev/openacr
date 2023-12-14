@@ -443,6 +443,9 @@ namespace atf_amc { struct Msgbuf; }
 namespace atf_amc { struct MsgsCase; }
 namespace atf_amc { struct NetBitfld1; }
 namespace atf_amc { struct OptAlloc; }
+namespace atf_amc { struct OptAlloc_curs; }
+namespace atf_amc { struct OptG_curs; }
+namespace atf_amc { struct OptOptG_curs; }
 namespace atf_amc { struct PmaskU128; }
 namespace atf_amc { struct PmaskU32; }
 namespace atf_amc { struct PmaskU555; }
@@ -465,8 +468,12 @@ namespace atf_amc { struct TypeBE64dflt; }
 namespace atf_amc { struct TypeBE64sf; }
 namespace atf_amc { struct Typefconst; }
 namespace atf_amc { struct VarlenAlloc; }
+namespace atf_amc { struct VarlenAlloc_curs; }
 namespace atf_amc { struct VarlenExtern; }
+namespace atf_amc { struct VarlenExtern_curs; }
 namespace atf_amc { struct VarlenH; }
+namespace atf_amc { struct VarlenH_curs; }
+namespace atf_amc { struct VarlenK_curs; }
 namespace atf_amc { extern struct atf_amc::FDb _db; }
 namespace atf_amc { // hook_fcn_typedef
     typedef void (*amctest_step_hook)(); // hook:atf_amc.FAmctest.step
@@ -482,6 +489,7 @@ namespace atf_amc { // gen:ns_gsymbol
 namespace atf_amc { // gen:ns_gsymbol
     extern const algo::strptr atfdb_test_gsymbol_strptr_TestStrptr; // "TestStrptr"
 } // gen:ns_gsymbol
+namespace atf_amc { // gen:ns_size_enums
 
 // sizes types appearing as Opt or Varlen; these need to be here
 // to allow inline implementations of _Get functions and avoid
@@ -492,6 +500,7 @@ enum {
     , sizeof_atf_amc_OptG = 4
     , sizeof_atf_amc_MsgHeader = 4
 };
+} // gen:ns_size_enums
 namespace atf_amc { // gen:ns_print_struct
 
 // --- atf_amc.AmcCleanup2
@@ -1449,6 +1458,12 @@ void                 c_child_ptrary_Remove(atf_amc::FCascdel& cascdel, atf_amc::
 void                 c_child_ptrary_RemoveAll(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_child_ptrary_Reserve(atf_amc::FCascdel& cascdel, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+atf_amc::FCascdel&   c_child_ptrary_qFind(atf_amc::FCascdel& cascdel, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 cascdel_c_child_ptrary_InAryQ(atf_amc::FCascdel& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+atf_amc::FCascdel&   c_child_ptrary_qLast(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 
 // Delete all rows reachable through the hash index
 void                 ind_child_thash_Cascdel(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
@@ -2655,6 +2670,12 @@ void                 c_typek_Remove(atf_amc::FTypeK& row) __attribute__((nothrow
 void                 c_typek_RemoveAll() __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_typek_Reserve(u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+atf_amc::FTypeK&     c_typek_qFind(u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 c_typek_InAryQ(atf_amc::FTypeK& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+atf_amc::FTypeK&     c_typek_qLast() __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -3163,7 +3184,7 @@ atf_amc::Cstr&       orig_qLast(atf_amc::FPerfSortString& parent) __attribute__(
 // Return row id of specified element
 u64                  orig_rowid_Get(atf_amc::FPerfSortString& parent, atf_amc::Cstr &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_amc::Cstr> orig_AllocNVal(atf_amc::FPerfSortString& parent, int n_elems, const atf_amc::Cstr& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<atf_amc::Cstr> orig_AllocNVal(atf_amc::FPerfSortString& parent, int n_elems, const atf_amc::Cstr& val) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 orig_XrefMaybe(atf_amc::Cstr &row);
@@ -3213,7 +3234,7 @@ atf_amc::Cstr&       sorted1_qLast(atf_amc::FPerfSortString& parent) __attribute
 // Return row id of specified element
 u64                  sorted1_rowid_Get(atf_amc::FPerfSortString& parent, atf_amc::Cstr &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_amc::Cstr> sorted1_AllocNVal(atf_amc::FPerfSortString& parent, int n_elems, const atf_amc::Cstr& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<atf_amc::Cstr> sorted1_AllocNVal(atf_amc::FPerfSortString& parent, int n_elems, const atf_amc::Cstr& val) __attribute__((nothrow));
 // Verify whether array is sorted
 bool                 sorted1_SortedQ(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Insertion sort
@@ -3726,7 +3747,7 @@ atf_amc::TypeA&      tary_qLast(atf_amc::FUnitSort& parent) __attribute__((nothr
 // Return row id of specified element
 u64                  tary_rowid_Get(atf_amc::FUnitSort& parent, atf_amc::TypeA &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_amc::TypeA> tary_AllocNVal(atf_amc::FUnitSort& parent, int n_elems, const atf_amc::TypeA& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<atf_amc::TypeA> tary_AllocNVal(atf_amc::FUnitSort& parent, int n_elems, const atf_amc::TypeA& val) __attribute__((nothrow));
 // Verify whether array is sorted
 bool                 tary_SortedQ(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Insertion sort
@@ -3761,6 +3782,10 @@ void                 c_ptrary_Remove(atf_amc::FUnitSort& parent, atf_amc::TypeA&
 void                 c_ptrary_RemoveAll(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_ptrary_Reserve(atf_amc::FUnitSort& parent, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+atf_amc::TypeA&      c_ptrary_qFind(atf_amc::FUnitSort& parent, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+atf_amc::TypeA&      c_ptrary_qLast(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Verify whether array is sorted
 bool                 c_ptrary_SortedQ(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Insertion sort
@@ -4677,6 +4702,7 @@ void                 NetBitfld1_Print(atf_amc::NetBitfld1 & row, algo::cstring &
 
 // --- atf_amc.OptAlloc
 // create: atf_amc.FDb.optalloc (Lpool)
+// access: atf_amc.OptAlloc_curs.msg (Ptr)
 #pragma pack(push,1)
 struct OptAlloc { // atf_amc.OptAlloc: An optional instance of atf_unit.A
     u32                    length;    //   0
@@ -4716,9 +4742,29 @@ void                 OptAlloc_Init(atf_amc::OptAlloc& optalloc);
 // print string representation of atf_amc::OptAlloc to string LHS, no header -- cprint:atf_amc.OptAlloc.String
 void                 OptAlloc_Print(atf_amc::OptAlloc & row, algo::cstring &str) __attribute__((nothrow));
 
+// --- atf_amc.OptAlloc_curs
+#pragma pack(push,1)
+struct OptAlloc_curs { // atf_amc.OptAlloc_curs: Cursor for scanning messages in a memptr
+    typedef atf_amc::OptAlloc *ChildType;
+    atf_amc::OptAlloc*   msg;      // Pointer to current message. optional pointer
+    u8*                  bytes;    // Beginning of region. optional pointer
+    i32                  limit;    //   0  # Of bytes in the region
+    i32                  msglen;   //   0  Length of current message (if any)
+    OptAlloc_curs();
+};
+#pragma pack(pop)
+
+bool                 OptAlloc_curs_ValidQ(atf_amc::OptAlloc_curs& curs) __attribute__((nothrow));
+void                 OptAlloc_curs_Reset(atf_amc::OptAlloc_curs& curs, algo::memptr buf) __attribute__((nothrow));
+atf_amc::OptAlloc*&  OptAlloc_curs_Access(atf_amc::OptAlloc_curs& curs) __attribute__((nothrow));
+void                 OptAlloc_curs_Next(atf_amc::OptAlloc_curs& curs) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 OptAlloc_curs_Init(atf_amc::OptAlloc_curs& parent);
+
 // --- atf_amc.OptG
 // create: atf_amc.OptOptG.optg (Opt)
 // access: atf_amc.FOptG.optg (Base)
+// access: atf_amc.OptG_curs.msg (Ptr)
 #pragma pack(push,1)
 struct OptG { // atf_amc.OptG: An optional instance of atf_unit.A
     u32                    length;    //   0
@@ -4751,7 +4797,27 @@ void                 OptG_Init(atf_amc::OptG& optg);
 // print string representation of atf_amc::OptG to string LHS, no header -- cprint:atf_amc.OptG.String
 void                 OptG_Print(atf_amc::OptG & row, algo::cstring &str) __attribute__((nothrow));
 
+// --- atf_amc.OptG_curs
+#pragma pack(push,1)
+struct OptG_curs { // atf_amc.OptG_curs: Cursor for scanning messages in a memptr
+    typedef atf_amc::OptG *ChildType;
+    atf_amc::OptG*   msg;      // Pointer to current message. optional pointer
+    u8*              bytes;    // Beginning of region. optional pointer
+    i32              limit;    //   0  # Of bytes in the region
+    i32              msglen;   //   0  Length of current message (if any)
+    OptG_curs();
+};
+#pragma pack(pop)
+
+bool                 OptG_curs_ValidQ(atf_amc::OptG_curs& curs) __attribute__((nothrow));
+void                 OptG_curs_Reset(atf_amc::OptG_curs& curs, algo::memptr buf) __attribute__((nothrow));
+atf_amc::OptG*&      OptG_curs_Access(atf_amc::OptG_curs& curs) __attribute__((nothrow));
+void                 OptG_curs_Next(atf_amc::OptG_curs& curs) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 OptG_curs_Init(atf_amc::OptG_curs& parent);
+
 // --- atf_amc.OptOptG
+// access: atf_amc.OptOptG_curs.msg (Ptr)
 #pragma pack(push,1)
 struct OptOptG { // atf_amc.OptOptG: An optional instance of atf_unit.Optg (recursive)
     u32                   length;   //   0
@@ -4789,6 +4855,25 @@ algo::memptr         GetMsgMemptr(const atf_amc::OptOptG& row) __attribute__((no
 void                 OptOptG_Init(atf_amc::OptOptG& parent);
 // print string representation of atf_amc::OptOptG to string LHS, no header -- cprint:atf_amc.OptOptG.String
 void                 OptOptG_Print(atf_amc::OptOptG & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- atf_amc.OptOptG_curs
+#pragma pack(push,1)
+struct OptOptG_curs { // atf_amc.OptOptG_curs: Cursor for scanning messages in a memptr
+    typedef atf_amc::OptOptG *ChildType;
+    atf_amc::OptOptG*   msg;      // Pointer to current message. optional pointer
+    u8*                 bytes;    // Beginning of region. optional pointer
+    i32                 limit;    //   0  # Of bytes in the region
+    i32                 msglen;   //   0  Length of current message (if any)
+    OptOptG_curs();
+};
+#pragma pack(pop)
+
+bool                 OptOptG_curs_ValidQ(atf_amc::OptOptG_curs& curs) __attribute__((nothrow));
+void                 OptOptG_curs_Reset(atf_amc::OptOptG_curs& curs, algo::memptr buf) __attribute__((nothrow));
+atf_amc::OptOptG*&   OptOptG_curs_Access(atf_amc::OptOptG_curs& curs) __attribute__((nothrow));
+void                 OptOptG_curs_Next(atf_amc::OptOptG_curs& curs) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 OptOptG_curs_Init(atf_amc::OptOptG_curs& parent);
 
 // --- atf_amc.PmaskU128
 #pragma pack(push,1)
@@ -5517,6 +5602,11 @@ bool                 ch_ReadStrptrMaybe(atf_amc::RnullStr6_U32& parent, algo::st
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(atf_amc::RnullStr6_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32                  ch_Getnum(atf_amc::RnullStr6_U32& parent, bool &and_ok) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
 u32                  ch_GetnumDflt(atf_amc::RnullStr6_U32& parent, u32 dflt) __attribute__((nothrow));
@@ -5587,6 +5677,11 @@ bool                 ch_ReadStrptrMaybe(atf_amc::RpasU32Str6& parent, algo::strp
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
 void                 ch_SetStrptr(atf_amc::RpasU32Str6& parent, const algo::strptr &rhs) __attribute__((nothrow));
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32                  ch_Getnum(atf_amc::RpasU32Str6& parent, bool &and_ok) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
@@ -5850,7 +5945,7 @@ u32&                 tary_u32_qLast(atf_amc::TaryU32& parent) __attribute__((not
 // Return row id of specified element
 u64                  tary_u32_rowid_Get(atf_amc::TaryU32& parent, u32 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u32>    tary_u32_AllocNVal(atf_amc::TaryU32& parent, int n_elems, const u32& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<u32>    tary_u32_AllocNVal(atf_amc::TaryU32& parent, int n_elems, const u32& val) __attribute__((nothrow));
 
 // proceed to next item
 void                 TaryU32_tary_u32_curs_Next(TaryU32_tary_u32_curs &curs);
@@ -5914,7 +6009,7 @@ u8&                  ary_qLast(atf_amc::TaryU8& parent) __attribute__((nothrow))
 // Return row id of specified element
 u64                  ary_rowid_Get(atf_amc::TaryU8& parent, u8 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u8>     ary_AllocNVal(atf_amc::TaryU8& parent, int n_elems, const u8& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<u8>     ary_AllocNVal(atf_amc::TaryU8& parent, int n_elems, const u8& val) __attribute__((nothrow));
 
 // proceed to next item
 void                 TaryU8_ary_curs_Next(TaryU8_ary_curs &curs);
@@ -6394,6 +6489,7 @@ void                 Typefconst_Print(atf_amc::Typefconst & row, algo::cstring &
 
 // --- atf_amc.VarlenAlloc
 // create: atf_amc.FDb.varlenalloc (Lpool)
+// access: atf_amc.VarlenAlloc_curs.msg (Ptr)
 #pragma pack(push,1)
 struct VarlenAlloc { // atf_amc.VarlenAlloc: An optional instance of atf_unit.A
     u32   length;   //   0
@@ -6430,8 +6526,28 @@ algo::memptr         GetMsgMemptr(const atf_amc::VarlenAlloc& row) __attribute__
 // Set all fields to initial values.
 void                 VarlenAlloc_Init(atf_amc::VarlenAlloc& varlenalloc);
 
+// --- atf_amc.VarlenAlloc_curs
+#pragma pack(push,1)
+struct VarlenAlloc_curs { // atf_amc.VarlenAlloc_curs: Cursor for scanning messages in a memptr
+    typedef atf_amc::VarlenAlloc *ChildType;
+    atf_amc::VarlenAlloc*   msg;      // Pointer to current message. optional pointer
+    u8*                     bytes;    // Beginning of region. optional pointer
+    i32                     limit;    //   0  # Of bytes in the region
+    i32                     msglen;   //   0  Length of current message (if any)
+    VarlenAlloc_curs();
+};
+#pragma pack(pop)
+
+bool                 VarlenAlloc_curs_ValidQ(atf_amc::VarlenAlloc_curs& curs) __attribute__((nothrow));
+void                 VarlenAlloc_curs_Reset(atf_amc::VarlenAlloc_curs& curs, algo::memptr buf) __attribute__((nothrow));
+atf_amc::VarlenAlloc*& VarlenAlloc_curs_Access(atf_amc::VarlenAlloc_curs& curs) __attribute__((nothrow));
+void                 VarlenAlloc_curs_Next(atf_amc::VarlenAlloc_curs& curs) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 VarlenAlloc_curs_Init(atf_amc::VarlenAlloc_curs& parent);
+
 // --- atf_amc.VarlenExtern
 // create: atf_amc.FDb.varlen_extern (Lpool)
+// access: atf_amc.VarlenExtern_curs.msg (Ptr)
 #pragma pack(push,1)
 struct VarlenExtern { // atf_amc.VarlenExtern: A varlen array at the end of a struct, but lenfld is external
     u32   n_elems;   //   0
@@ -6471,7 +6587,27 @@ algo::memptr         GetMsgMemptr(const atf_amc::VarlenExtern& row) __attribute_
 // Set all fields to initial values.
 void                 VarlenExtern_Init(atf_amc::VarlenExtern& varlen_extern);
 
+// --- atf_amc.VarlenExtern_curs
+#pragma pack(push,1)
+struct VarlenExtern_curs { // atf_amc.VarlenExtern_curs: Cursor for scanning messages in a memptr
+    typedef atf_amc::VarlenExtern *ChildType;
+    atf_amc::VarlenExtern*   msg;      // Pointer to current message. optional pointer
+    u8*                      bytes;    // Beginning of region. optional pointer
+    i32                      limit;    //   0  # Of bytes in the region
+    i32                      msglen;   //   0  Length of current message (if any)
+    VarlenExtern_curs();
+};
+#pragma pack(pop)
+
+bool                 VarlenExtern_curs_ValidQ(atf_amc::VarlenExtern_curs& curs) __attribute__((nothrow));
+void                 VarlenExtern_curs_Reset(atf_amc::VarlenExtern_curs& curs, algo::memptr buf) __attribute__((nothrow));
+atf_amc::VarlenExtern*& VarlenExtern_curs_Access(atf_amc::VarlenExtern_curs& curs) __attribute__((nothrow));
+void                 VarlenExtern_curs_Next(atf_amc::VarlenExtern_curs& curs) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 VarlenExtern_curs_Init(atf_amc::VarlenExtern_curs& parent);
+
 // --- atf_amc.VarlenH
+// access: atf_amc.VarlenH_curs.msg (Ptr)
 struct VarlenH { // atf_amc.VarlenH
     u32   length;   //   0
     // var-length field atf_amc.VarlenH.typeh starts here. access it with typeh_Addr
@@ -6509,8 +6645,28 @@ algo::memptr         GetMsgMemptr(const atf_amc::VarlenH& row) __attribute__((no
 // Set all fields to initial values.
 void                 VarlenH_Init(atf_amc::VarlenH& parent);
 
+// --- atf_amc.VarlenH_curs
+#pragma pack(push,1)
+struct VarlenH_curs { // atf_amc.VarlenH_curs: Cursor for scanning messages in a memptr
+    typedef atf_amc::VarlenH *ChildType;
+    atf_amc::VarlenH*   msg;      // Pointer to current message. optional pointer
+    u8*                 bytes;    // Beginning of region. optional pointer
+    i32                 limit;    //   0  # Of bytes in the region
+    i32                 msglen;   //   0  Length of current message (if any)
+    VarlenH_curs();
+};
+#pragma pack(pop)
+
+bool                 VarlenH_curs_ValidQ(atf_amc::VarlenH_curs& curs) __attribute__((nothrow));
+void                 VarlenH_curs_Reset(atf_amc::VarlenH_curs& curs, algo::memptr buf) __attribute__((nothrow));
+atf_amc::VarlenH*&   VarlenH_curs_Access(atf_amc::VarlenH_curs& curs) __attribute__((nothrow));
+void                 VarlenH_curs_Next(atf_amc::VarlenH_curs& curs) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 VarlenH_curs_Init(atf_amc::VarlenH_curs& parent);
+
 // --- atf_amc.VarlenK
 // create: atf_amc.VarlenMsg.k (Varlen)
+// access: atf_amc.VarlenK_curs.msg (Ptr)
 #pragma pack(push,1)
 struct VarlenK { // atf_amc.VarlenK: An optional instance of atf_unit.A
     u32   length;   //   0
@@ -6547,6 +6703,25 @@ algo::memptr         GetMsgMemptr(const atf_amc::VarlenK& row) __attribute__((no
 void                 VarlenK_Init(atf_amc::VarlenK& k);
 // print string representation of atf_amc::VarlenK to string LHS, no header -- cprint:atf_amc.VarlenK.String
 void                 VarlenK_Print(atf_amc::VarlenK & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- atf_amc.VarlenK_curs
+#pragma pack(push,1)
+struct VarlenK_curs { // atf_amc.VarlenK_curs: Cursor for scanning messages in a memptr
+    typedef atf_amc::VarlenK *ChildType;
+    atf_amc::VarlenK*   msg;      // Pointer to current message. optional pointer
+    u8*                 bytes;    // Beginning of region. optional pointer
+    i32                 limit;    //   0  # Of bytes in the region
+    i32                 msglen;   //   0  Length of current message (if any)
+    VarlenK_curs();
+};
+#pragma pack(pop)
+
+bool                 VarlenK_curs_ValidQ(atf_amc::VarlenK_curs& curs) __attribute__((nothrow));
+void                 VarlenK_curs_Reset(atf_amc::VarlenK_curs& curs, algo::memptr buf) __attribute__((nothrow));
+atf_amc::VarlenK*&   VarlenK_curs_Access(atf_amc::VarlenK_curs& curs) __attribute__((nothrow));
+void                 VarlenK_curs_Next(atf_amc::VarlenK_curs& curs) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 VarlenK_curs_Init(atf_amc::VarlenK_curs& parent);
 
 // --- atf_amc.VarlenMsg
 #pragma pack(push,1)

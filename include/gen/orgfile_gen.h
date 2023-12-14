@@ -306,6 +306,12 @@ void                 c_filename_Remove(orgfile::FFilehash& filehash, orgfile::FF
 void                 c_filename_RemoveAll(orgfile::FFilehash& filehash) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_filename_Reserve(orgfile::FFilehash& filehash, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+orgfile::FFilename&  c_filename_qFind(orgfile::FFilehash& filehash, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 filehash_c_filename_InAryQ(orgfile::FFilename& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+orgfile::FFilename&  c_filename_qLast(orgfile::FFilehash& filehash) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FFilehash_Init(orgfile::FFilehash& filehash);

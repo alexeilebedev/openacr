@@ -626,6 +626,24 @@ inline void src_hdr::c_targsrc_RemoveAll(src_hdr::FTarget& target) {
     target.c_targsrc_n = 0;
 }
 
+// --- src_hdr.FTarget.c_targsrc.qFind
+// Return reference without bounds checking
+inline src_hdr::FTargsrc& src_hdr::c_targsrc_qFind(src_hdr::FTarget& target, u32 idx) {
+    return *target.c_targsrc_elems[idx];
+}
+
+// --- src_hdr.FTarget.c_targsrc.InAryQ
+// True if row is in any ptrary instance
+inline bool src_hdr::target_c_targsrc_InAryQ(src_hdr::FTargsrc& row) {
+    return row.target_c_targsrc_in_ary;
+}
+
+// --- src_hdr.FTarget.c_targsrc.qLast
+// Reference to last element without bounds checking
+inline src_hdr::FTargsrc& src_hdr::c_targsrc_qLast(src_hdr::FTarget& target) {
+    return *target.c_targsrc_elems[target.c_targsrc_n-1];
+}
+
 // --- src_hdr.FTarget..Init
 // Set all fields to initial values.
 inline void src_hdr::FTarget_Init(src_hdr::FTarget& target) {

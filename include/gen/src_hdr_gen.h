@@ -675,6 +675,12 @@ void                 c_targsrc_Remove(src_hdr::FTarget& target, src_hdr::FTargsr
 void                 c_targsrc_RemoveAll(src_hdr::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_targsrc_Reserve(src_hdr::FTarget& target, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+src_hdr::FTargsrc&   c_targsrc_qFind(src_hdr::FTarget& target, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 target_c_targsrc_InAryQ(src_hdr::FTargsrc& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+src_hdr::FTargsrc&   c_targsrc_qLast(src_hdr::FTarget& target) __attribute__((nothrow));
 
 // Set all fields to initial values.
 void                 FTarget_Init(src_hdr::FTarget& target);

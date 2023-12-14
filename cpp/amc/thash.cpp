@@ -422,7 +422,6 @@ void amc::tfunc_Thash_Uninit() {
 void amc::tfunc_Thash_curs() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
-    //amc::FField &field = *amc::_db.genfield.p_field;
     Set(R, "$curspararg", ch_N(Subst(R,"$pararg")) ? "*curs.$parname" : "");
 
     Ins(&R, ns.curstext    , "");

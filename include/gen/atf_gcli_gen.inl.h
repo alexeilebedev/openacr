@@ -180,6 +180,24 @@ inline void atf_gcli::c_gtblacttst_RemoveAll() {
     _db.c_gtblacttst_n = 0;
 }
 
+// --- atf_gcli.FDb.c_gtblacttst.qFind
+// Return reference without bounds checking
+inline atf_gcli::FGtblacttst& atf_gcli::c_gtblacttst_qFind(u32 idx) {
+    return *_db.c_gtblacttst_elems[idx];
+}
+
+// --- atf_gcli.FDb.c_gtblacttst.InAryQ
+// True if row is in any ptrary instance
+inline bool atf_gcli::c_gtblacttst_InAryQ(atf_gcli::FGtblacttst& row) {
+    return row._db_c_gtblacttst_in_ary;
+}
+
+// --- atf_gcli.FDb.c_gtblacttst.qLast
+// Reference to last element without bounds checking
+inline atf_gcli::FGtblacttst& atf_gcli::c_gtblacttst_qLast() {
+    return *_db.c_gtblacttst_elems[_db.c_gtblacttst_n-1];
+}
+
 // --- atf_gcli.FDb.gclienvsub.EmptyQ
 // Return true if index is empty
 inline bool atf_gcli::gclienvsub_EmptyQ() {
@@ -540,6 +558,24 @@ inline void atf_gcli::c_gclienvsub_RemoveAll(atf_gcli::FGclienv& gclienv) {
     gclienv.c_gclienvsub_n = 0;
 }
 
+// --- atf_gcli.FGclienv.c_gclienvsub.qFind
+// Return reference without bounds checking
+inline atf_gcli::FGclienvsub& atf_gcli::c_gclienvsub_qFind(atf_gcli::FGclienv& gclienv, u32 idx) {
+    return *gclienv.c_gclienvsub_elems[idx];
+}
+
+// --- atf_gcli.FGclienv.c_gclienvsub.InAryQ
+// True if row is in any ptrary instance
+inline bool atf_gcli::gclienv_c_gclienvsub_InAryQ(atf_gcli::FGclienvsub& row) {
+    return row.gclienv_c_gclienvsub_in_ary;
+}
+
+// --- atf_gcli.FGclienv.c_gclienvsub.qLast
+// Reference to last element without bounds checking
+inline atf_gcli::FGclienvsub& atf_gcli::c_gclienvsub_qLast(atf_gcli::FGclienv& gclienv) {
+    return *gclienv.c_gclienvsub_elems[gclienv.c_gclienvsub_n-1];
+}
+
 // --- atf_gcli.FGclienv..Init
 // Set all fields to initial values.
 inline void atf_gcli::FGclienv_Init(atf_gcli::FGclienv& gclienv) {
@@ -645,6 +681,24 @@ inline void atf_gcli::c_gtblacttstout_RemoveAll(atf_gcli::FGtblacttst& gtblactts
         gtblacttst.c_gtblacttstout_elems[i]->gtblacttst_c_gtblacttstout_in_ary = false;
     }
     gtblacttst.c_gtblacttstout_n = 0;
+}
+
+// --- atf_gcli.FGtblacttst.c_gtblacttstout.qFind
+// Return reference without bounds checking
+inline atf_gcli::FGtblacttstout& atf_gcli::c_gtblacttstout_qFind(atf_gcli::FGtblacttst& gtblacttst, u32 idx) {
+    return *gtblacttst.c_gtblacttstout_elems[idx];
+}
+
+// --- atf_gcli.FGtblacttst.c_gtblacttstout.InAryQ
+// True if row is in any ptrary instance
+inline bool atf_gcli::gtblacttst_c_gtblacttstout_InAryQ(atf_gcli::FGtblacttstout& row) {
+    return row.gtblacttst_c_gtblacttstout_in_ary;
+}
+
+// --- atf_gcli.FGtblacttst.c_gtblacttstout.qLast
+// Reference to last element without bounds checking
+inline atf_gcli::FGtblacttstout& atf_gcli::c_gtblacttstout_qLast(atf_gcli::FGtblacttst& gtblacttst) {
+    return *gtblacttst.c_gtblacttstout_elems[gtblacttst.c_gtblacttstout_n-1];
 }
 
 // --- atf_gcli.FGtblacttst.c_gtblacttstout_curs.Reset

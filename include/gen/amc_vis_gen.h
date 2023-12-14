@@ -167,6 +167,12 @@ void                 c_field_Remove(amc_vis::FCtype& ctype, amc_vis::FField& row
 void                 c_field_RemoveAll(amc_vis::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_field_Reserve(amc_vis::FCtype& ctype, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc_vis::FField&     c_field_qFind(amc_vis::FCtype& ctype, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ctype_c_field_InAryQ(amc_vis::FField& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc_vis::FField&     c_field_qLast(amc_vis::FCtype& ctype) __attribute__((nothrow));
 
 void                 ctype_c_field_curs_Reset(ctype_c_field_curs &curs, amc_vis::FCtype &parent);
 // cursor points to valid item
@@ -502,6 +508,12 @@ void                 c_linklist_Remove(amc_vis::Link& row) __attribute__((nothro
 void                 c_linklist_RemoveAll() __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_linklist_Reserve(u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+amc_vis::Link&       c_linklist_qFind(u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 c_linklist_InAryQ(amc_vis::Link& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+amc_vis::Link&       c_linklist_qLast() __attribute__((nothrow));
 
 // Remove all elements from heap and free memory used by the array.
 void                 bh_node_Dealloc() __attribute__((nothrow));
@@ -1457,7 +1469,7 @@ u8&                  text_qLast(amc_vis::Outrow& outrow) __attribute__((nothrow)
 // Return row id of specified element
 u64                  text_rowid_Get(amc_vis::Outrow& outrow, u8 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u8>     text_AllocNVal(amc_vis::Outrow& outrow, int n_elems, const u8& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<u8>     text_AllocNVal(amc_vis::Outrow& outrow, int n_elems, const u8& val) __attribute__((nothrow));
 
 // proceed to next item
 void                 outrow_text_curs_Next(outrow_text_curs &curs);

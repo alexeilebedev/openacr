@@ -370,6 +370,10 @@ void                 c_bad_rec_Remove(acr::FCheck& check, acr::FRec& row) __attr
 void                 c_bad_rec_RemoveAll(acr::FCheck& check) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_bad_rec_Reserve(acr::FCheck& check, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+acr::FRec&           c_bad_rec_qFind(acr::FCheck& check, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+acr::FRec&           c_bad_rec_qLast(acr::FCheck& check) __attribute__((nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -409,7 +413,7 @@ algo::cstring&       ary_name_qLast(acr::FCheck& check) __attribute__((nothrow))
 // Return row id of specified element
 u64                  ary_name_rowid_Get(acr::FCheck& check, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> ary_name_AllocNVal(acr::FCheck& check, int n_elems, const algo::cstring& val) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::cstring> ary_name_AllocNVal(acr::FCheck& check, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 
 void                 check_c_bad_rec_curs_Reset(check_c_bad_rec_curs &curs, acr::FCheck &parent);
 // cursor points to valid item
@@ -540,6 +544,12 @@ void                 c_field_Remove(acr::FCtype& ctype, acr::FField& row) __attr
 void                 c_field_RemoveAll(acr::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_field_Reserve(acr::FCtype& ctype, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+acr::FField&         c_field_qFind(acr::FCtype& ctype, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 ctype_c_field_InAryQ(acr::FField& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+acr::FField&         c_field_qLast(acr::FCtype& ctype) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 bool                 c_cdflt_InsertMaybe(acr::FCtype& ctype, acr::FCdflt& row) __attribute__((nothrow));
@@ -632,6 +642,10 @@ void                 c_child_Remove(acr::FCtype& ctype, acr::FCtype& row) __attr
 void                 c_child_RemoveAll(acr::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_child_Reserve(acr::FCtype& ctype, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+acr::FCtype&         c_child_qFind(acr::FCtype& ctype, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+acr::FCtype&         c_child_qLast(acr::FCtype& ctype) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 bool                 c_bltin_InsertMaybe(acr::FCtype& ctype, acr::FBltin& row) __attribute__((nothrow));
@@ -2261,6 +2275,10 @@ void                 c_pline_Remove(acr::FPrint& print, acr::FPline& row) __attr
 void                 c_pline_RemoveAll(acr::FPrint& print) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_pline_Reserve(acr::FPrint& print, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+acr::FPline&         c_pline_qFind(acr::FPrint& print, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+acr::FPline&         c_pline_qLast(acr::FPrint& print) __attribute__((nothrow));
 
 void                 print_c_pline_curs_Reset(print_c_pline_curs &curs, acr::FPrint &parent);
 // cursor points to valid item
@@ -2545,6 +2563,10 @@ void                 c_ctype_Remove(acr::FRun& run, acr::FCtype& row) __attribut
 void                 c_ctype_RemoveAll(acr::FRun& run) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_ctype_Reserve(acr::FRun& run, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+acr::FCtype&         c_ctype_qFind(acr::FRun& run, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+acr::FCtype&         c_ctype_qLast(acr::FRun& run) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_field_EmptyQ(acr::FRun& run) __attribute__((nothrow));
@@ -2568,6 +2590,10 @@ void                 c_field_Remove(acr::FRun& run, acr::FField& row) __attribut
 void                 c_field_RemoveAll(acr::FRun& run) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_field_Reserve(acr::FRun& run, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+acr::FField&         c_field_qFind(acr::FRun& run, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+acr::FField&         c_field_qLast(acr::FRun& run) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_rec_EmptyQ(acr::FRun& run) __attribute__((nothrow));
@@ -2591,6 +2617,10 @@ void                 c_rec_Remove(acr::FRun& run, acr::FRec& row) __attribute__(
 void                 c_rec_RemoveAll(acr::FRun& run) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_rec_Reserve(acr::FRun& run, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+acr::FRec&           c_rec_qFind(acr::FRun& run, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+acr::FRec&           c_rec_qLast(acr::FRun& run) __attribute__((nothrow));
 
 // Return true if index is empty
 bool                 c_child_EmptyQ(acr::FRun& run) __attribute__((nothrow));
@@ -2613,6 +2643,12 @@ void                 c_child_Remove(acr::FRun& run, acr::FCtype& row) __attribut
 void                 c_child_RemoveAll(acr::FRun& run) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_child_Reserve(acr::FRun& run, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+acr::FCtype&         c_child_qFind(acr::FRun& run, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+bool                 run_c_child_InAryQ(acr::FCtype& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+acr::FCtype&         c_child_qLast(acr::FRun& run) __attribute__((nothrow));
 
 void                 run_c_ctype_curs_Reset(run_c_ctype_curs &curs, acr::FRun &parent);
 // cursor points to valid item
@@ -2881,6 +2917,10 @@ void                 c_cmtrec_Remove(acr::FWrite& write, acr::FRec& row) __attri
 void                 c_cmtrec_RemoveAll(acr::FWrite& write) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 void                 c_cmtrec_Reserve(acr::FWrite& write, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+acr::FRec&           c_cmtrec_qFind(acr::FWrite& write, u32 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+acr::FRec&           c_cmtrec_qLast(acr::FWrite& write) __attribute__((nothrow));
 // Verify whether array is sorted
 bool                 c_cmtrec_SortedQ(acr::FWrite& write) __attribute__((nothrow));
 // Insertion sort
