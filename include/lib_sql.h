@@ -21,6 +21,7 @@
 // Header: include/lib_sql.h
 //
 
+#include "include/algo.h"
 #include "include/gen/lib_sql_gen.h"
 #include "include/gen/lib_sql_gen.inl.h"
 

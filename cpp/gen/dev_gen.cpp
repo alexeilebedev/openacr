@@ -96,7 +96,6 @@ const char *dev_Target_target_acr_ed      = "acr_ed";
 const char *dev_Target_target_acr_in      = "acr_in";
 const char *dev_Target_target_acr_my      = "acr_my";
 const char *dev_Target_target_algo_lib    = "algo_lib";
-const char *dev_Target_target_algo_pch    = "algo_pch";
 const char *dev_Target_target_amc         = "amc";
 
 const char *dev_Target_target_amc_gc    = "amc_gc";

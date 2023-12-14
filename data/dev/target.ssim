@@ -8,7 +8,6 @@ dev.target  target:acr_ed  compat:%-%g%.%-%
 dev.target  target:acr_in  compat:%-%g%.%-%
 dev.target  target:acr_my  compat:%-%g%.%-%
 dev.target  target:algo_lib  compat:%-%g%.%-%
-dev.target  target:algo_pch  compat:%-%g%.%-%
 dev.target  target:amc  compat:%-%g%.%-%
 dev.target  target:amc_gc  compat:%-%g%.%-%
 dev.target  target:amc_vis  compat:%-%g%.%-%

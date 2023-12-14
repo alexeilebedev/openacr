@@ -21,6 +21,7 @@ Usage: gcache [[-cmd:]<string>] [options]
     -hitrate                           Report hit rate (specify start time with -after)
     -after      string                 Start time for reporting
     -report                            Show end-of-run report
+    -force                             Force recompile and update cache
     -verbose    int                    Verbosity level (0..255); alias -v; cumulative
     -debug      int                    Debug level (0..255); alias -d; cumulative
     -help                              Print help and exit; alias -h
@@ -69,6 +70,40 @@ First run invokes the compiler, and stores resulting object file under
 hash in the cache directory.
 
 On subsequent runs, the same command will copy saved object file to target location.
+
+### Precompiled header support
+
+The tool may precompile and use precompiled headers.
+The following line is used to mark the header as eligible to be precompiled.
+
+```
+void __gcache_pragma_pch_preprocess();
+```
+
+This line is in form of function prototype, although there is no such real function.
+
+The reasons are as follows:
+
+- gcache analyzes already preprocessed source;
+- function prototype may be repeated without any harm;
+
+The marker may be put in any place of header file.
+Marked header may be included to compilation unit directly
+or indirectly via one or mode parent header files.
+Main rule is: no any token shall be placed before this header at
+toplevel file and any of parent includes.
+Preprocessor directives and commants are OK.
+Best practice - include this header first.
+
+Note that only one header may be preprocessed per translation unit.
+If tool meets the marker more than once, the latest occurrence is taken,
+but only if there is no any token before the header.
+
+Gcache extracts header text from preprocessed source, precompiles it,
+and put result to cache, to be reused by other translation units.
+To use precompiled header, gcache edits preprocessed source replacing
+header text by `#pragma GCC pch_preprocess "cached_pch_file.gch"`,
+putting it at first position, above all other headers.
 
 ### Hash algorithm
 

@@ -563,7 +563,7 @@ void amc::gen_prep_field() {
         }
 
         tempstr temp;
-        amc::strptr_PrintCppIdent(ident, temp);
+        amc::strptr_PrintCppIdent(ident, temp, true);
         amccheck(ch_N(ident)==0 || temp == ident, "amc.prep_field"
                  <<Keyval("field",field.field)
                  <<Keyval("ident",ident)
@@ -825,7 +825,7 @@ void amc::gen_prep_fconst() {
         } else {
             temp << fconst.fconst;
         }
-        amc::strptr_PrintCppIdent(temp, fconst.cpp_name);
+        amc::strptr_PrintCppIdent(temp, fconst.cpp_name, true);
 
         algo::StringIter s(fconst.value.value);
         // try to parse LE_STRd("c..")

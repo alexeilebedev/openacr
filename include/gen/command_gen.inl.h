@@ -64,6 +64,18 @@ inline command::abt::abt() {
     command::abt_Init(*this);
 }
 
+
+// --- command.abt.cache.GetEnum
+// Get value of field as enum type
+inline command_abt_cache_Enum command::cache_GetEnum(const command::abt& parent) {
+    return command_abt_cache_Enum(parent.cache);
+}
+
+// --- command.abt.cache.SetEnum
+// Set value of field from enum type.
+inline void command::cache_SetEnum(command::abt& parent, command_abt_cache_Enum rhs) {
+    parent.cache = u8(rhs);
+}
 inline command::abt_md::abt_md() {
     command::abt_md_Init(*this);
 }

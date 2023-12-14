@@ -19,6 +19,7 @@
 // Header: include/atf_cmdline.h
 //
 
+#include "include/algo.h"
 #include "include/gen/atf_cmdline_gen.h"
 #include "include/gen/atf_cmdline_gen.inl.h"
 

@@ -114,6 +114,7 @@ void amc::tfunc_Global_LoadTuplesFile() {
     AddProtoArg(ldt, "bool", "recursive");
     AddRetval(ldt, "bool", "retval","true");
     Ins(&R, ldt.body, "algo_lib::FFildes fildes;");
+    Ins(&R, ldt.body, "// missing files are not an error");
     Ins(&R, ldt.body, "fildes.fd = OpenRead(fname,algo::FileFlags());");
     Ins(&R, ldt.body, "if (ValidQ(fildes.fd)) {");
     Ins(&R, ldt.body, "    retval = LoadTuplesFd(fildes.fd, fname, recursive);");

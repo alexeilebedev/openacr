@@ -23,7 +23,6 @@
 // Source: cpp/amc/substr.cpp
 //
 
-#include "include/gen/amc_gen.h"
 #include "include/amc.h"
 
 void amc::tclass_Substr() {

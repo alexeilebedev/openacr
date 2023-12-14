@@ -20,6 +20,7 @@
 // Header: include/atf_cov.h
 //
 
+#include "include/algo.h"
 #include "include/gen/atf_cov_gen.h"
 #include "include/gen/atf_cov_gen.inl.h"
 

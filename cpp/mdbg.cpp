@@ -23,6 +23,7 @@
 // Source: cpp/mdbg.cpp
 //
 
+#include "include/algo.h"
 #include "include/gen/mdbg_gen.h"
 #include "include/gen/mdbg_gen.inl.h"
 #include "include/gen/command_gen.h"

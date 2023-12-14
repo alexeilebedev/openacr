@@ -25,6 +25,7 @@
 // Dump contents of a mysql database, or some set of tables as an ssim file.
 // Optionally dump just the database schema.
 
+#include "include/algo.h"
 #include "include/gen/mysql2ssim_gen.h"
 #include "include/gen/mysql2ssim_gen.inl.h"
 #include "include/lib_mysql.h"

@@ -22,6 +22,7 @@
 // Header: include/lib_ctype.h
 //
 
+#include "include/algo.h"
 #include "include/gen/lib_ctype_gen.h"
 #include "include/gen/lib_ctype_gen.inl.h"
 

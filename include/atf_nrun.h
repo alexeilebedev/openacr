@@ -20,6 +20,7 @@
 // Header: include/atf_nrun.h
 //
 
+#include "include/algo.h"
 #include "include/gen/atf_nrun_gen.h"
 #include "include/gen/atf_nrun_gen.inl.h"
 

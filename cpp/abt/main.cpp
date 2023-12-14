@@ -68,7 +68,7 @@ i64 abt::execkey_Get(abt::FSyscmd &cmd) {
 // -----------------------------------------------------------------------------
 
 static bool SourceQ(abt::FTargsrc &targsrc) {
-    return targsrc.p_target->p_ns->nstype == dmmeta_Nstype_nstype_pch ? true : ext_Get(targsrc)!="h";
+    return ext_Get(targsrc)!="h";
 }
 
 // -----------------------------------------------------------------------------
@@ -350,14 +350,6 @@ tempstr abt::GetObjkey(strptr source) {
 
 // -----------------------------------------------------------------------------
 
-// Return true if this file is a precompiled header file
-bool abt::PchQ(abt::FSrcfile &srcfile) {
-    return srcfile.p_target
-        && srcfile.p_target->p_ns->nstype == dmmeta_Nstype_nstype_pch;
-}
-
-// -----------------------------------------------------------------------------
-
 static void ReadSrcfile_ComputeObjpath(abt::FSrcfile &srcfile) {
     srcfile.objkey = abt::GetObjkey(srcfile.srcfile);
     // Replace extension
@@ -367,10 +359,6 @@ static void ReadSrcfile_ComputeObjpath(abt::FSrcfile &srcfile) {
         tgt_ext = abt::_db.c_compiler->objext;
     } else if (ext == ".rc" && abt::_db.c_compiler->rc != "") {
         tgt_ext = ".res";
-    } else if (abt::PchQ(srcfile)) {
-        // normally we don't compile headers; but
-        // we do compile pch headers
-        tgt_ext = abt::_db.c_compiler->pchext;
     }
     if (ch_N(tgt_ext)) {
         srcfile.objpath << abt::_db.cmdline.out_dir << algo::MaybeDirSep;
@@ -509,25 +497,6 @@ static void Main_Helpscreen() {
 
 // -----------------------------------------------------------------------------
 
-static void Main_CalcPrecomp() {
-    ind_beg(abt::_db_target_curs, target,abt::_db) {
-        ind_beg(abt::target_c_targdep_curs, dep,target) {
-            if (dep.p_parent->p_ns->nstype == dmmeta_Nstype_nstype_pch) {
-                vrfy(target.p_ns->nstype != dmmeta_Nstype_nstype_pch, "can't use precompiled header here");
-                abt::FSrcfile& precomp_src = *c_srcfile_Find(*dep.p_parent, 0);
-                vrfy(!target.c_precomp, "target cannot have more than one precompiled header");
-                target.c_precomp = &precomp_src;
-                // make each source file of this target dependent on the precompiled header.
-                ind_beg(abt::target_c_srcfile_curs, srcfile, target) {
-                    abt::ind_include_GetOrCreate(tempstr()<<srcfile.srcfile<<":"<<precomp_src.srcfile);
-                }ind_end;
-            }
-        }ind_end;
-    }ind_end;
-}
-
-// -----------------------------------------------------------------------------
-
 static void Main_CreateJcdb(algo_lib::Replscope &R) {
     tempstr jcdb;
     jcdb << "[";
@@ -611,9 +580,7 @@ static void Main_CreateCmds(algo_lib::Replscope &R, abt::FTarget &target, abt::F
         DepsObjList(target,objs,libs);
         Set(R,"$objs",objs);
         Set(R,"$libs",libs);
-        if (target.p_ns->nstype == dmmeta_Nstype_nstype_pch) {
-            // do nothing -- the precompiled header has been created
-        } else if (target.p_ns->nstype == dmmeta_Nstype_nstype_lib || target.p_ns->nstype == dmmeta_Nstype_nstype_exe) {
+        if (target.p_ns->nstype == dmmeta_Nstype_nstype_lib || target.p_ns->nstype == dmmeta_Nstype_nstype_exe) {
             tempstr tempfile = tempstr()<< target.outfile<<".tmp";
             Set(R, "$origoutfile", "$outfile");
             Set(R, "$outfile", tempfile);
@@ -773,15 +740,31 @@ static void CreateTmpdir() {
 
 // -----------------------------------------------------------------------------
 
-static void DetectCcache() {
-    // don't enable in coverity phase -- disables coverity
+static void DetectCache() {
     // ignore in 'printcmd' (bootstrap) mode
     if (!abt::_db.cmdline.printcmd && abt::_db.cmdline.jcdb=="") {
-
-        if (algo::DirectoryQ(".gcache/") && algo::FileQ("bin/gcache")) {
-            abt::_db.gcache=true;
-        } else if (algo::DirectoryQ(".ccache/")) {
-            abt::_db.ccache=true;
+        bool gcache_enabled = algo::DirectoryQ(".gcache/") && algo::FileQ("bin/gcache");
+        bool ccache_enabled = algo::DirectoryQ(".ccache/");
+        // use switch without default to ensure that all options are processed
+        switch (cache_GetEnum(abt::_db.cmdline)) {
+        case command_abt_cache_auto:
+            abt::_db.gcache=gcache_enabled;
+            abt::_db.ccache=ccache_enabled && !abt::_db.gcache;
+            break;
+        case command_abt_cache_none:
+            break;
+        case command_abt_cache_gcache:
+        case command_abt_cache_gcache_force:
+            abt::_db.gcache=gcache_enabled;
+            if (!abt::_db.gcache) {
+                prerr("abt.notice"<<Keyval("message","gcache disabled, first run gcache -install -enable"));
+            }
+            break;
+        case command_abt_cache_ccache:
+            abt::_db.ccache=ccache_enabled;
+            if (!abt::_db.ccache) {
+                prerr("abt.notice"<<Keyval("message","ccache disabled, first run ccashe-use"));
+            }
         }
     }
 }
@@ -847,14 +830,13 @@ static void RewriteOpts() {
 
 static void Main_ShowOod() {
     bool realexec = !abt::_db.cmdline.dry_run && !abt::_db.cmdline.printcmd;
-    int ood_pch=0, ood_src=0, ood_lib=0, ood_exe=0, ood_objlist=0;
+    int ood_src=0, ood_lib=0, ood_exe=0, ood_objlist=0;
     ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) {
         ood_objlist += target.p_ns->nstype == dmmeta_Nstype_nstype_objlist && target.ood;
         ood_lib     += target.p_ns->nstype == dmmeta_Nstype_nstype_lib && target.ood;
         ood_exe     += target.p_ns->nstype == dmmeta_Nstype_nstype_exe && target.ood;
         ind_beg(abt::target_c_srcfile_curs, srcfile, target) {
             ood_src += srcfile.ood;
-            ood_pch += srcfile.ood && srcfile.p_target && srcfile.p_target->p_ns->nstype == dmmeta_Nstype_nstype_pch;
         }ind_end;
     }ind_end;
     if (realexec && abt::zs_sel_target_N() > 0 && abt::_db.cmdline.report) {
@@ -864,7 +846,6 @@ static void Main_ShowOod() {
               <<Keyval("out_dir",abt::_db.cmdline.out_dir)
               );
         prlog("abt.outofdate"
-              <<Keyval("pch", ood_pch)
               <<Keyval("src", ood_src)
               <<Keyval("lib", ood_lib)
               <<Keyval("exe", ood_exe)
@@ -896,32 +877,12 @@ static void Main_Cmddep() {
     ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) {
         if (target.p_ns->nstype != dmmeta_Nstype_nstype_none) {
             ind_beg(abt::target_c_targdep_curs, dep,target) {
-                // precompiled header -- must wait for it to finish linking
-                if (dep.p_parent->p_ns->nstype == dmmeta_Nstype_nstype_pch) {
-                    abt::syscmddep_InsertMaybe(dev::Syscmddep(target.targ_start->rowid, dep.p_parent->targ_end->rowid));
-                }
                 // library or list of objects -- can compile in parallel with it, must wait for link step
                 if (dep.p_parent->p_ns->nstype == dmmeta_Nstype_nstype_lib
                     || dep.p_parent->p_ns->nstype == dmmeta_Nstype_nstype_objlist) {
                     abt::syscmddep_InsertMaybe(dev::Syscmddep(target.targ_link->rowid, dep.p_parent->targ_end->rowid));
                 }
             }ind_end;
-        }
-    }ind_end;
-}
-
-// -----------------------------------------------------------------------------
-
-static void Main_ValidatePch() {
-    // validate pch targets
-    ind_beg(abt::_db_target_curs, target,abt::_db) {
-        if (target.p_ns->nstype == dmmeta_Nstype_nstype_pch) {
-            if (c_targsrc_N(target) != 1) {
-                prerr("abt.pch_source"
-                      <<Keyval("target",target.target)
-                      <<Keyval("comment","precompiled header target must have 1 source"));
-                algo_lib::_db.exit_code=1;
-            }
         }
     }ind_end;
 }
@@ -939,15 +900,6 @@ static void Main_ComputeOutfile() {
             tgt.outfile << abt::_db.cmdline.out_dir
                         << algo::MaybeDirSep << tgt.target
                         << abt::_db.c_compiler->exeext;
-        } else if (tgt.p_ns->nstype == dmmeta_Nstype_nstype_pch) {
-            tempstr objkey;
-            if(c_srcfile_N(tgt) > 0) {
-                objkey=c_srcfile_Find(tgt,0)->objkey;
-            }
-            tgt.outfile << abt::_db.cmdline.out_dir
-                        << algo::MaybeDirSep
-                        << objkey
-                        << abt::_db.c_compiler->pchext;
         }
     }ind_end;
 }
@@ -995,14 +947,11 @@ void abt::Main() {
     RewriteOpts();
     algo_lib::Replscope R;
     Main_GuessParams(R);
-    // cache use depends on value of -cfg
-    // so must call GuessParams before DetectCcache
-    DetectCcache();
+    DetectCache();
     if (abt::_db.cmdline.build) {
         CreateTmpdir();
     }
 
-    Main_ValidatePch();
     Main_ComputeSysincl();
 
     Main_PrepOpts();
@@ -1029,11 +978,6 @@ void abt::Main() {
         // create lock file
         LockFileInit(lockfile, DirFileJoin(abt::_db.cmdline.out_dir, "abt.lock"));
     }
-
-    // calculate c_precomp for each target.
-    // (optional precompiled header)
-    // (unfortunately, precompiled headers are modeled as targets)
-    Main_CalcPrecomp();
 
     // clean -- note, all cleaning has to be done before all compiling
     // or out-of-date determination
@@ -1087,7 +1031,15 @@ void abt::Main() {
         command::gcache gcache;
         gcache.hitrate=true;
         gcache.after=starttime;
-        abt::_db.report.hitrate=Trimmed(SysEval(command::gcache_ToCmdline(gcache)<<" 2>&1",FailokQ(true),1024));
+        cstring out = SysEval(command::gcache_ToCmdline(gcache)<<" 2>&1",FailokQ(true),1024);
+        ind_beg(Line_curs,line,out) {
+            report::gcache_hitrate hr;
+            if (gcache_hitrate_ReadStrptrMaybe(hr,line)) {
+                abt::_db.report.hitrate=hr.hitrate;
+                abt::_db.report.pch_hitrate=hr.pch_hitrate;
+                break;
+            }
+        }ind_end;
     }
 
     Main_ShowReport();

@@ -335,7 +335,6 @@ dev.gitfile  gitfile:cpp/gen/acr_in_gen.cpp
 dev.gitfile  gitfile:cpp/gen/acr_my_gen.cpp
 dev.gitfile  gitfile:cpp/gen/algo_gen.cpp
 dev.gitfile  gitfile:cpp/gen/algo_lib_gen.cpp
-dev.gitfile  gitfile:cpp/gen/algo_pch_gen.cpp
 dev.gitfile  gitfile:cpp/gen/amc_gc_gen.cpp
 dev.gitfile  gitfile:cpp/gen/amc_gen.cpp
 dev.gitfile  gitfile:cpp/gen/amc_vis_gen.cpp
@@ -667,7 +666,6 @@ dev.gitfile  gitfile:include/acr_ed.h
 dev.gitfile  gitfile:include/acr_in.h
 dev.gitfile  gitfile:include/algo.h
 dev.gitfile  gitfile:include/algo.inl.h
-dev.gitfile  gitfile:include/algo_pch.hpp
 dev.gitfile  gitfile:include/amc.h
 dev.gitfile  gitfile:include/ams_cat.h
 dev.gitfile  gitfile:include/ams_sendtest.h
@@ -706,8 +704,6 @@ dev.gitfile  gitfile:include/gen/algo_gen.h
 dev.gitfile  gitfile:include/gen/algo_gen.inl.h
 dev.gitfile  gitfile:include/gen/algo_lib_gen.h
 dev.gitfile  gitfile:include/gen/algo_lib_gen.inl.h
-dev.gitfile  gitfile:include/gen/algo_pch_gen.h
-dev.gitfile  gitfile:include/gen/algo_pch_gen.inl.h
 dev.gitfile  gitfile:include/gen/amc_gc_gen.h
 dev.gitfile  gitfile:include/gen/amc_gc_gen.inl.h
 dev.gitfile  gitfile:include/gen/amc_gen.h

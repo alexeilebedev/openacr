@@ -199,7 +199,6 @@ extern const char *  dev_Target_target_acr_ed;         // acr_ed          fconst
 extern const char *  dev_Target_target_acr_in;         // acr_in          fconst:dev.Target.target/acr_in
 extern const char *  dev_Target_target_acr_my;         // acr_my          fconst:dev.Target.target/acr_my
 extern const char *  dev_Target_target_algo_lib;       // algo_lib        fconst:dev.Target.target/algo_lib
-extern const char *  dev_Target_target_algo_pch;       // algo_pch        fconst:dev.Target.target/algo_pch
 extern const char *  dev_Target_target_amc;            // amc             fconst:dev.Target.target/amc
 extern const char *  dev_Target_target_amc_gc;         // amc_gc          fconst:dev.Target.target/amc_gc
 extern const char *  dev_Target_target_amc_vis;        // amc_vis         fconst:dev.Target.target/amc_vis

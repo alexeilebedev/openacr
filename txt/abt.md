@@ -79,6 +79,12 @@ Usage: abt [[-target:]<regx>] [options]
     -disas      regx    ""      Regex of function to disassemble
     -report             Y       Print final report
     -jcdb       string  ""      Create JSON compilation database in specified file
+    -cache      int     auto    Cache mode (auto|none|gcache|gcache-force|ccache)
+                                    auto  Select cache automatically among enabled
+                                    none  No cache
+                                    gcache  Select gcache if enabled (no cache if disabled)
+                                    gcache-force  Pass --force to gcache (no cache if disabled)
+                                    ccache  Select ccache if enabled (no cache if disabled)
     -verbose    int             Verbosity level (0..255); alias -v; cumulative
     -debug      int             Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h

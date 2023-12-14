@@ -88,7 +88,7 @@ amc::field_bh_bitfld_curs::~field_bh_bitfld_curs() {
 }
 
 namespace amc { // gen:ns_gsymbol
-    const algo::strptr amcdb_regxtype__("");
+    const algo::strptr amcdb_regxtype_("");
     const algo::strptr amcdb_regxtype_Acr("Acr");
     const algo::strptr amcdb_regxtype_Shell("Shell");
     const algo::strptr amcdb_regxtype_Sql("Sql");
@@ -7040,6 +7040,7 @@ bool amc::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 bool amc::LoadTuplesFile(algo::strptr fname, bool recursive) {
     bool retval = true;
     algo_lib::FFildes fildes;
+    // missing files are not an error
     fildes.fd = OpenRead(fname,algo::FileFlags());
     if (ValidQ(fildes.fd)) {
         retval = LoadTuplesFd(fildes.fd, fname, recursive);

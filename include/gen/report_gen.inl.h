@@ -63,12 +63,14 @@ inline report::Protocol::Protocol() {
 inline report::abt::abt(u16                            in_n_target
         ,algo::UnDiff                   in_time
         ,const algo::strptr&            in_hitrate
+        ,const algo::strptr&            in_pch_hitrate
         ,u32                            in_n_warn
         ,u32                            in_n_err
         ,u16                            in_n_install)
     : n_target(in_n_target)
     , time(in_time)
     , hitrate(in_hitrate)
+    , pch_hitrate(in_pch_hitrate)
     , n_warn(in_n_warn)
     , n_err(in_n_err)
     , n_install(in_n_install)
@@ -170,28 +172,36 @@ inline report::gcache::gcache(algo::UnTime                   in_starttime
         ,i32                            in_preproc_size
         ,bool                           in_hit
         ,const algo::strptr&            in_cached_file
-        ,bool                           in_copy_file_range)
+        ,bool                           in_copy_file_range
+        ,bool                           in_pch_hit
+        ,const algo::strptr&            in_pch_file
+        ,const algo::strptr&            in_source
+        ,const algo::strptr&            in_pch_source)
     : starttime(in_starttime)
     , elapsed_sec(in_elapsed_sec)
     , preproc_size(in_preproc_size)
     , hit(in_hit)
     , cached_file(in_cached_file)
     , copy_file_range(in_copy_file_range)
+    , pch_hit(in_pch_hit)
+    , pch_file(in_pch_file)
+    , source(in_source)
+    , pch_source(in_pch_source)
 {
 }
 inline report::gcache::gcache() {
     report::gcache_Init(*this);
 }
 
-
-// --- report.gcache..Init
-// Set all fields to initial values.
-inline void report::gcache_Init(report::gcache& parent) {
-    parent.elapsed_sec = double(0.0);
-    parent.preproc_size = i32(0);
-    parent.hit = bool(false);
-    parent.copy_file_range = bool(false);
+inline report::gcache_hitrate::gcache_hitrate(const algo::strptr&            in_hitrate
+        ,const algo::strptr&            in_pch_hitrate)
+    : hitrate(in_hitrate)
+    , pch_hitrate(in_pch_hitrate)
+{
 }
+inline report::gcache_hitrate::gcache_hitrate() {
+}
+
 inline report::src_func::src_func() {
     report::src_func_Init(*this);
 }
@@ -246,6 +256,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const report::atf_un
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const report::gcache &row) {// cfmt:report.gcache.String
     report::gcache_Print(const_cast<report::gcache&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const report::gcache_hitrate &row) {// cfmt:report.gcache_hitrate.String
+    report::gcache_hitrate_Print(const_cast<report::gcache_hitrate&>(row), str);
     return str;
 }
 

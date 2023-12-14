@@ -19,6 +19,7 @@
 // Header: include/sv2ssim.h
 //
 
+#include "include/algo.h"
 #include "include/gen/sv2ssim_gen.h"
 #include "include/gen/sv2ssim_gen.inl.h"
 

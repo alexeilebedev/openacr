@@ -24,6 +24,7 @@
 //
 // Visualize ctype graph
 
+#include "include/algo.h"
 #include "include/gen/amc_vis_gen.h"
 #include "include/gen/amc_vis_gen.inl.h"
 

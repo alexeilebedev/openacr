@@ -22,6 +22,7 @@
 // Source: cpp/amc/amc_gc.cpp
 //
 
+#include "include/algo.h"
 #include "include/gen/amc_gc_gen.h"
 #include "include/gen/amc_gc_gen.inl.h"
 #include "include/gen/dev_gen.h"

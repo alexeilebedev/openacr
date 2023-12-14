@@ -33,50 +33,55 @@ enum report_FieldIdEnum {                   // report.FieldId.value
      report_FieldId_n_target          = 0
     ,report_FieldId_time              = 1
     ,report_FieldId_hitrate           = 2
-    ,report_FieldId_n_warn            = 3
-    ,report_FieldId_n_err             = 4
-    ,report_FieldId_n_install         = 5
-    ,report_FieldId_n_select          = 6
-    ,report_FieldId_n_insert          = 7
-    ,report_FieldId_n_delete          = 8
-    ,report_FieldId_n_ignore          = 9
-    ,report_FieldId_n_update          = 10
-    ,report_FieldId_n_file_mod        = 11
-    ,report_FieldId_records           = 12
-    ,report_FieldId_errors            = 13
-    ,report_FieldId_n_cppfile         = 14
-    ,report_FieldId_n_cppline         = 15
-    ,report_FieldId_n_ctype           = 16
-    ,report_FieldId_n_func            = 17
-    ,report_FieldId_n_xref            = 18
-    ,report_FieldId_n_filemod         = 19
-    ,report_FieldId_ntest             = 20
-    ,report_FieldId_nselect           = 21
-    ,report_FieldId_npass             = 22
-    ,report_FieldId_nskip             = 23
-    ,report_FieldId_nrun              = 24
-    ,report_FieldId_nwrite            = 25
-    ,report_FieldId_nerr              = 26
-    ,report_FieldId_ninsert           = 27
-    ,report_FieldId_success           = 28
-    ,report_FieldId_n_test_total      = 29
-    ,report_FieldId_n_test_run        = 30
-    ,report_FieldId_starttime         = 31
-    ,report_FieldId_elapsed_sec       = 32
-    ,report_FieldId_preproc_size      = 33
-    ,report_FieldId_hit               = 34
-    ,report_FieldId_cached_file       = 35
-    ,report_FieldId_copy_file_range   = 36
-    ,report_FieldId_n_line            = 37
-    ,report_FieldId_n_static          = 38
-    ,report_FieldId_n_inline          = 39
-    ,report_FieldId_n_mysteryfunc     = 40
-    ,report_FieldId_n_baddecl         = 41
-    ,report_FieldId_comment           = 42
-    ,report_FieldId_value             = 43
+    ,report_FieldId_pch_hitrate       = 3
+    ,report_FieldId_n_warn            = 4
+    ,report_FieldId_n_err             = 5
+    ,report_FieldId_n_install         = 6
+    ,report_FieldId_n_select          = 7
+    ,report_FieldId_n_insert          = 8
+    ,report_FieldId_n_delete          = 9
+    ,report_FieldId_n_ignore          = 10
+    ,report_FieldId_n_update          = 11
+    ,report_FieldId_n_file_mod        = 12
+    ,report_FieldId_records           = 13
+    ,report_FieldId_errors            = 14
+    ,report_FieldId_n_cppfile         = 15
+    ,report_FieldId_n_cppline         = 16
+    ,report_FieldId_n_ctype           = 17
+    ,report_FieldId_n_func            = 18
+    ,report_FieldId_n_xref            = 19
+    ,report_FieldId_n_filemod         = 20
+    ,report_FieldId_ntest             = 21
+    ,report_FieldId_nselect           = 22
+    ,report_FieldId_npass             = 23
+    ,report_FieldId_nskip             = 24
+    ,report_FieldId_nrun              = 25
+    ,report_FieldId_nwrite            = 26
+    ,report_FieldId_nerr              = 27
+    ,report_FieldId_ninsert           = 28
+    ,report_FieldId_success           = 29
+    ,report_FieldId_n_test_total      = 30
+    ,report_FieldId_n_test_run        = 31
+    ,report_FieldId_starttime         = 32
+    ,report_FieldId_elapsed_sec       = 33
+    ,report_FieldId_preproc_size      = 34
+    ,report_FieldId_hit               = 35
+    ,report_FieldId_cached_file       = 36
+    ,report_FieldId_copy_file_range   = 37
+    ,report_FieldId_pch_hit           = 38
+    ,report_FieldId_pch_file          = 39
+    ,report_FieldId_source            = 40
+    ,report_FieldId_pch_source        = 41
+    ,report_FieldId_n_line            = 42
+    ,report_FieldId_n_static          = 43
+    ,report_FieldId_n_inline          = 44
+    ,report_FieldId_n_mysteryfunc     = 45
+    ,report_FieldId_n_baddecl         = 46
+    ,report_FieldId_comment           = 47
+    ,report_FieldId_value             = 48
 };
 
-enum { report_FieldIdEnum_N = 44 };
+enum { report_FieldIdEnum_N = 49 };
 
 namespace report { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -92,6 +97,7 @@ namespace report { struct amc; }
 namespace report { struct atf_comp; }
 namespace report { struct atf_unit; }
 namespace report { struct gcache; }
+namespace report { struct gcache_hitrate; }
 namespace report { struct src_func; }
 namespace report { // gen:ns_print_struct
 
@@ -147,15 +153,17 @@ void                 StaticCheck();
 
 // --- report.abt
 struct abt { // report.abt
-    u16                n_target;    //   0
-    algo::UnDiff       time;        //
-    algo::Smallstr20   hitrate;     //
-    u32                n_warn;      //   0
-    u32                n_err;       //   0
-    u16                n_install;   //   0
+    u16                n_target;      //   0
+    algo::UnDiff       time;          //
+    algo::Smallstr20   hitrate;       //
+    algo::Smallstr20   pch_hitrate;   //
+    u32                n_warn;        //   0
+    u32                n_err;         //   0
+    u16                n_install;     //   0
     explicit abt(u16                            in_n_target
         ,algo::UnDiff                   in_time
         ,const algo::strptr&            in_hitrate
+        ,const algo::strptr&            in_pch_hitrate
         ,u32                            in_n_warn
         ,u32                            in_n_err
         ,u16                            in_n_install);
@@ -278,12 +286,20 @@ struct gcache { // report.gcache
     bool            hit;               //   false  Cache hit - compilation avoided
     algo::cstring   cached_file;       // location of cached file
     bool            copy_file_range;   //   false  kernel-side copy succeeded
+    bool            pch_hit;           //   false  PCH hit - precompiled header reused
+    algo::cstring   pch_file;          // location of PCH file
+    algo::cstring   source;            // Source file
+    algo::cstring   pch_source;        // PCH source file
     explicit gcache(algo::UnTime                   in_starttime
         ,double                         in_elapsed_sec
         ,i32                            in_preproc_size
         ,bool                           in_hit
         ,const algo::strptr&            in_cached_file
-        ,bool                           in_copy_file_range);
+        ,bool                           in_copy_file_range
+        ,bool                           in_pch_hit
+        ,const algo::strptr&            in_pch_file
+        ,const algo::strptr&            in_source
+        ,const algo::strptr&            in_pch_source);
     gcache();
 };
 
@@ -295,6 +311,22 @@ bool                 gcache_ReadStrptrMaybe(report::gcache &parent, algo::strptr
 void                 gcache_Init(report::gcache& parent);
 // print string representation of report::gcache to string LHS, no header -- cprint:report.gcache.String
 void                 gcache_Print(report::gcache & row, algo::cstring &str) __attribute__((nothrow));
+
+// --- report.gcache_hitrate
+struct gcache_hitrate { // report.gcache_hitrate
+    algo::Smallstr20   hitrate;       // Hitrate
+    algo::Smallstr20   pch_hitrate;   // PCH hitrate
+    explicit gcache_hitrate(const algo::strptr&            in_hitrate
+        ,const algo::strptr&            in_pch_hitrate);
+    gcache_hitrate();
+};
+
+bool                 gcache_hitrate_ReadFieldMaybe(report::gcache_hitrate &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of report::gcache_hitrate from an ascii string.
+// The format of the string is an ssim Tuple
+bool                 gcache_hitrate_ReadStrptrMaybe(report::gcache_hitrate &parent, algo::strptr in_str);
+// print string representation of report::gcache_hitrate to string LHS, no header -- cprint:report.gcache_hitrate.String
+void                 gcache_hitrate_Print(report::gcache_hitrate & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- report.src_func
 struct src_func { // report.src_func
@@ -330,5 +362,6 @@ inline algo::cstring &operator <<(algo::cstring &str, const report::amc &row);//
 inline algo::cstring &operator <<(algo::cstring &str, const report::atf_comp &row);// cfmt:report.atf_comp.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::atf_unit &row);// cfmt:report.atf_unit.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::gcache &row);// cfmt:report.gcache.String
+inline algo::cstring &operator <<(algo::cstring &str, const report::gcache_hitrate &row);// cfmt:report.gcache_hitrate.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::src_func &row);// cfmt:report.src_func.String
 }

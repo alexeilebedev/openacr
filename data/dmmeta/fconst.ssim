@@ -83,6 +83,11 @@ dmmeta.fconst  fconst:atf_cov.Phase.value/runcmd  value:0  comment:"Run command"
 dmmeta.fconst  fconst:atf_cov.Phase.value/gcov  value:1  comment:"Prepare and run gcov"
 dmmeta.fconst  fconst:atf_cov.Phase.value/ssim  value:2  comment:"Generate ssim coverage files"
 dmmeta.fconst  fconst:atf_cov.Phase.value/report  value:3  comment:"Create all report"
+dmmeta.fconst  fconst:command.abt.cache/auto  value:0  comment:"Select cache automatically among enabled"
+dmmeta.fconst  fconst:command.abt.cache/none  value:1  comment:"No cache"
+dmmeta.fconst  fconst:command.abt.cache/gcache  value:2  comment:"Select gcache if enabled (no cache if disabled)"
+dmmeta.fconst  fconst:command.abt.cache/gcache-force  value:3  comment:"Pass --force to gcache (no cache if disabled)"
+dmmeta.fconst  fconst:command.abt.cache/ccache  value:4  comment:"Select ccache if enabled (no cache if disabled)"
 dmmeta.fconst  fconst:command.atf_cmdline.fconst/high  value:0  comment:Cool
 dmmeta.fconst  fconst:command.atf_cmdline.fconst/medium  value:1  comment:So-so
 dmmeta.fconst  fconst:command.atf_cmdline.fconst/low  value:2  comment:Bad

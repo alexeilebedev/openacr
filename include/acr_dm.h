@@ -19,6 +19,7 @@
 // Header: include/acr_dm.h
 //
 
+#include "include/algo.h"
 #include "include/gen/acr_dm_gen.h"
 #include "include/gen/acr_dm_gen.inl.h"
 

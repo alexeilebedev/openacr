@@ -61,7 +61,6 @@ const char *dmmeta_Ns_ns_acr_in      = "acr_in";
 const char *dmmeta_Ns_ns_acr_my      = "acr_my";
 const char *dmmeta_Ns_ns_algo        = "algo";
 const char *dmmeta_Ns_ns_algo_lib    = "algo_lib";
-const char *dmmeta_Ns_ns_algo_pch    = "algo_pch";
 const char *dmmeta_Ns_ns_amc         = "amc";
 const char *dmmeta_Ns_ns_amc_gc      = "amc_gc";
 const char *dmmeta_Ns_ns_amc_vis     = "amc_vis";
@@ -128,7 +127,6 @@ const char *dmmeta_Nstype_nstype_lib   = "lib";
 const char *dmmeta_Nstype_nstype_none      = "none";
 const char *dmmeta_Nstype_nstype_objlist   = "objlist";
 
-const char *dmmeta_Nstype_nstype_pch        = "pch";
 const char *dmmeta_Nstype_nstype_protocol   = "protocol";
 const char *dmmeta_Nstype_nstype_ssimdb     = "ssimdb";
 

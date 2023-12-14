@@ -19,6 +19,7 @@
 // Header: include/ssimfilt.h
 //
 
+#include "include/algo.h"
 #include "include/gen/ssimfilt_gen.h"
 #include "include/gen/ssimfilt_gen.inl.h"
 

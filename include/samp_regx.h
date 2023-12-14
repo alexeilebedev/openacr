@@ -19,6 +19,7 @@
 // Header: include/samp_regx.h
 //
 
+#include "include/algo.h"
 #include "include/gen/samp_regx_gen.h"
 #include "include/gen/samp_regx_gen.inl.h"
 

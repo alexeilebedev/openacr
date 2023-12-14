@@ -250,7 +250,7 @@ bool amc::HasFinputsQ(amc::FNs &ns) {
 tempstr amc::PkeyCppident(algo::Tuple &tuple) {
     tempstr ret;
     algo::Attr *attr = &attrs_qFind(tuple,0);
-    amc::strptr_PrintCppIdent(attr->value,ret);
+    amc::strptr_PrintCppIdent(attr->value,ret,true);
     return ret;
 }
 
@@ -860,30 +860,45 @@ bool amc::HasArgvReadQ(amc::FCtype &ctype) {// check if ctype has an argv read f
     return false;
 }
 
+// -----------------------------------------------------------------------------
+
 // Set IDENT to sanitized version of FROM
-// if FROM is a known c++ keyword, prepend '_' to it.
-// If FROM is an empty string, use "_default"
+// if MASK_KEYWORD is set, and FROM is a known c++ keyword, prepend '_' to it.
+// If FROM is an empty string, use "_"
 // Replace /, -, ., etc. with underscores.
+// Replace + with P, ' with A, " with Q (rationale?)
 // Example:
 // strptr_PrintCppIdent("abcd")   -> abcd
 // strptr_PrintCppIdent("ab.cd")  -> ab_cd
+// strptr_PrintCppIdent("+-$")    -> P__
 // strptr_PrintCppIdent("int")    -> _int
-// strptr_PrintCppIdent("")       -> _default
-void amc::strptr_PrintCppIdent(strptr from, cstring &out) {
+// strptr_PrintCppIdent("")       -> _
+void amc::strptr_PrintCppIdent(strptr from, cstring &out, bool mask_keyword) {
     amc::CppkeywordId kw_id;
     if (!elems_N(from) || algo_lib::DigitCharQ(from[0])) {
         out << "_";
     }
     out << from;
-    bool collision = id_SetStrptrMaybe(kw_id,out);
-    if (collision) {
-        out << "_";
+    if (mask_keyword) {
+        bool collision = id_SetStrptrMaybe(kw_id,out);
+        if (collision) {
+            out << "_";
+        }
     }
     Translate(out
-              , "+/.-<>!@#$%^&*():; '\""
-              , "P__________________AQ");
+              , "+/.-<>!@#$%^&*():; '\"|[]{}"
+              , "P__________________AQ_____");
 }
 
+// -----------------------------------------------------------------------------
+
+tempstr amc::strptr_ToCppIdent(strptr s, bool mask_keyword) {
+    tempstr ret;
+    amc::strptr_PrintCppIdent(s,ret,mask_keyword);
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
 //
 // IDENT        identifier in question
 // RETURN       identifier with . replaced with ::

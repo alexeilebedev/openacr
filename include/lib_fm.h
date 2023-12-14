@@ -19,6 +19,7 @@
 // Header: include/lib_fm.h
 //
 
+#include "include/algo.h"
 #include "include/gen/lib_fm_gen.h"
 #include "include/gen/lib_fm_gen.inl.h"
 

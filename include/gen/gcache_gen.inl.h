@@ -26,6 +26,7 @@
 #include "include/gen/report_gen.inl.h"
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 inline gcache::cleanreport::cleanreport(i32                            in_n_cachefile
         ,i32                            in_n_cachefile_del
@@ -59,6 +60,87 @@ inline void gcache::cleanreport_Init(gcache::cleanreport& parent) {
 inline gcache::trace::trace() {
 }
 
+
+// --- gcache.FDb.header.EmptyQ
+// Return true if index is empty
+inline bool gcache::header_EmptyQ() {
+    return _db.header_n == 0;
+}
+
+// --- gcache.FDb.header.Find
+// Look up row by row id. Return NULL if out of range
+inline gcache::FHeader* gcache::header_Find(u64 t) {
+    gcache::FHeader *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.header_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.header_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- gcache.FDb.header.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline gcache::FHeader* gcache::header_Last() {
+    return header_Find(u64(_db.header_n-1));
+}
+
+// --- gcache.FDb.header.N
+// Return number of items in the pool
+inline i32 gcache::header_N() {
+    return _db.header_n;
+}
+
+// --- gcache.FDb.header.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline gcache::FHeader& gcache::header_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.header_lary[bsr][index];
+}
+
+// --- gcache.FDb.header_curs.Reset
+// cursor points to valid item
+inline void gcache::_db_header_curs_Reset(_db_header_curs &curs, gcache::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- gcache.FDb.header_curs.ValidQ
+// cursor points to valid item
+inline bool gcache::_db_header_curs_ValidQ(_db_header_curs &curs) {
+    return curs.index < _db.header_n;
+}
+
+// --- gcache.FDb.header_curs.Next
+// proceed to next item
+inline void gcache::_db_header_curs_Next(_db_header_curs &curs) {
+    curs.index++;
+}
+
+// --- gcache.FDb.header_curs.Access
+// item access
+inline gcache::FHeader& gcache::_db_header_curs_Access(_db_header_curs &curs) {
+    return header_qFind(u64(curs.index));
+}
+inline gcache::FHeader::FHeader() {
+    gcache::FHeader_Init(*this);
+}
+
+
+// --- gcache.FHeader..Init
+// Set all fields to initial values.
+inline void gcache::FHeader_Init(gcache::FHeader& header) {
+    header.parent = NULL;
+    header.begin = i32(0);
+    header.inner_end = i32(0);
+    header.outer_end = i32(0);
+    header.mlines_before = bool(false);
+}
 inline gcache::FieldId::FieldId(i32                            in_value)
     : value(in_value)
 {
@@ -99,6 +181,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const gcache::cleanr
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const gcache::trace &row) {// cfmt:gcache.trace.String
     gcache::trace_Print(const_cast<gcache::trace&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const gcache::FHeader &row) {// cfmt:gcache.FHeader.String
+    gcache::FHeader_Print(const_cast<gcache::FHeader&>(row), str);
     return str;
 }
 

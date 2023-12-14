@@ -41,6 +41,7 @@ const char* report::value_ToCstr(const report::FieldId& parent) {
         case report_FieldId_n_target       : ret = "n_target";  break;
         case report_FieldId_time           : ret = "time";  break;
         case report_FieldId_hitrate        : ret = "hitrate";  break;
+        case report_FieldId_pch_hitrate    : ret = "pch_hitrate";  break;
         case report_FieldId_n_warn         : ret = "n_warn";  break;
         case report_FieldId_n_err          : ret = "n_err";  break;
         case report_FieldId_n_install      : ret = "n_install";  break;
@@ -75,6 +76,10 @@ const char* report::value_ToCstr(const report::FieldId& parent) {
         case report_FieldId_hit            : ret = "hit";  break;
         case report_FieldId_cached_file    : ret = "cached_file";  break;
         case report_FieldId_copy_file_range: ret = "copy_file_range";  break;
+        case report_FieldId_pch_hit        : ret = "pch_hit";  break;
+        case report_FieldId_pch_file       : ret = "pch_file";  break;
+        case report_FieldId_source         : ret = "source";  break;
+        case report_FieldId_pch_source     : ret = "pch_source";  break;
         case report_FieldId_n_line         : ret = "n_line";  break;
         case report_FieldId_n_static       : ret = "n_static";  break;
         case report_FieldId_n_inline       : ret = "n_inline";  break;
@@ -167,6 +172,9 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('n','w','r','i','t','e'): {
                     value_SetEnum(parent,report_FieldId_nwrite); ret = true; break;
                 }
+                case LE_STR6('s','o','u','r','c','e'): {
+                    value_SetEnum(parent,report_FieldId_source); ret = true; break;
+                }
             }
             break;
         }
@@ -186,6 +194,9 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('n','s','e','l','e','c','t'): {
                     value_SetEnum(parent,report_FieldId_nselect); ret = true; break;
+                }
+                case LE_STR7('p','c','h','_','h','i','t'): {
+                    value_SetEnum(parent,report_FieldId_pch_hit); ret = true; break;
                 }
                 case LE_STR7('r','e','c','o','r','d','s'): {
                     value_SetEnum(parent,report_FieldId_records); ret = true; break;
@@ -221,6 +232,9 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('n','_','u','p','d','a','t','e'): {
                     value_SetEnum(parent,report_FieldId_n_update); ret = true; break;
+                }
+                case LE_STR8('p','c','h','_','f','i','l','e'): {
+                    value_SetEnum(parent,report_FieldId_pch_file); ret = true; break;
                 }
             }
             break;
@@ -264,6 +278,10 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"un",2)==0) { value_SetEnum(parent,report_FieldId_n_test_run); ret = true; break; }
                     break;
                 }
+                case LE_STR8('p','c','h','_','s','o','u','r'): {
+                    if (memcmp(rhs.elems+8,"ce",2)==0) { value_SetEnum(parent,report_FieldId_pch_source); ret = true; break; }
+                    break;
+                }
             }
             break;
         }
@@ -275,6 +293,10 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('e','l','a','p','s','e','d','_'): {
                     if (memcmp(rhs.elems+8,"sec",3)==0) { value_SetEnum(parent,report_FieldId_elapsed_sec); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('p','c','h','_','h','i','t','r'): {
+                    if (memcmp(rhs.elems+8,"ate",3)==0) { value_SetEnum(parent,report_FieldId_pch_hitrate); ret = true; break; }
                     break;
                 }
             }
@@ -362,6 +384,7 @@ bool report::abt_ReadFieldMaybe(report::abt &parent, algo::strptr field, algo::s
         case report_FieldId_n_target: retval = u16_ReadStrptrMaybe(parent.n_target, strval); break;
         case report_FieldId_time: retval = algo::UnDiff_ReadStrptrMaybe(parent.time, strval); break;
         case report_FieldId_hitrate: retval = algo::Smallstr20_ReadStrptrMaybe(parent.hitrate, strval); break;
+        case report_FieldId_pch_hitrate: retval = algo::Smallstr20_ReadStrptrMaybe(parent.pch_hitrate, strval); break;
         case report_FieldId_n_warn: retval = u32_ReadStrptrMaybe(parent.n_warn, strval); break;
         case report_FieldId_n_err: retval = u32_ReadStrptrMaybe(parent.n_err, strval); break;
         case report_FieldId_n_install: retval = u16_ReadStrptrMaybe(parent.n_install, strval); break;
@@ -399,6 +422,9 @@ void report::abt_Print(report::abt & row, algo::cstring &str) {
 
     algo::Smallstr20_Print(row.hitrate, temp);
     PrintAttrSpaceReset(str,"hitrate", temp);
+
+    algo::Smallstr20_Print(row.pch_hitrate, temp);
+    PrintAttrSpaceReset(str,"pch_hitrate", temp);
 
     u32_Print(row.n_warn, temp);
     PrintAttrSpaceReset(str,"n_warn", temp);
@@ -695,6 +721,10 @@ bool report::gcache_ReadFieldMaybe(report::gcache &parent, algo::strptr field, a
         case report_FieldId_hit: retval = bool_ReadStrptrMaybe(parent.hit, strval); break;
         case report_FieldId_cached_file: retval = algo::cstring_ReadStrptrMaybe(parent.cached_file, strval); break;
         case report_FieldId_copy_file_range: retval = bool_ReadStrptrMaybe(parent.copy_file_range, strval); break;
+        case report_FieldId_pch_hit: retval = bool_ReadStrptrMaybe(parent.pch_hit, strval); break;
+        case report_FieldId_pch_file: retval = algo::cstring_ReadStrptrMaybe(parent.pch_file, strval); break;
+        case report_FieldId_source: retval = algo::cstring_ReadStrptrMaybe(parent.source, strval); break;
+        case report_FieldId_pch_source: retval = algo::cstring_ReadStrptrMaybe(parent.pch_source, strval); break;
         default: break;
     }
     if (!retval) {
@@ -713,6 +743,16 @@ bool report::gcache_ReadStrptrMaybe(report::gcache &parent, algo::strptr in_str)
         retval = retval && gcache_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
     return retval;
+}
+
+// --- report.gcache..Init
+// Set all fields to initial values.
+void report::gcache_Init(report::gcache& parent) {
+    parent.elapsed_sec = double(0.0);
+    parent.preproc_size = i32(0);
+    parent.hit = bool(false);
+    parent.copy_file_range = bool(false);
+    parent.pch_hit = bool(false);
 }
 
 // --- report.gcache..Print
@@ -738,6 +778,59 @@ void report::gcache_Print(report::gcache & row, algo::cstring &str) {
 
     bool_Print(row.copy_file_range, temp);
     PrintAttrSpaceReset(str,"copy_file_range", temp);
+
+    bool_Print(row.pch_hit, temp);
+    PrintAttrSpaceReset(str,"pch_hit", temp);
+
+    algo::cstring_Print(row.pch_file, temp);
+    PrintAttrSpaceReset(str,"pch_file", temp);
+
+    algo::cstring_Print(row.source, temp);
+    PrintAttrSpaceReset(str,"source", temp);
+
+    algo::cstring_Print(row.pch_source, temp);
+    PrintAttrSpaceReset(str,"pch_source", temp);
+}
+
+// --- report.gcache_hitrate..ReadFieldMaybe
+bool report::gcache_hitrate_ReadFieldMaybe(report::gcache_hitrate &parent, algo::strptr field, algo::strptr strval) {
+    report::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    bool retval = true; // default is no error
+    switch(field_id) {
+        case report_FieldId_hitrate: retval = algo::Smallstr20_ReadStrptrMaybe(parent.hitrate, strval); break;
+        case report_FieldId_pch_hitrate: retval = algo::Smallstr20_ReadStrptrMaybe(parent.pch_hitrate, strval); break;
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- report.gcache_hitrate..ReadStrptrMaybe
+// Read fields of report::gcache_hitrate from an ascii string.
+// The format of the string is an ssim Tuple
+bool report::gcache_hitrate_ReadStrptrMaybe(report::gcache_hitrate &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "report.gcache_hitrate");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && gcache_hitrate_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- report.gcache_hitrate..Print
+// print string representation of report::gcache_hitrate to string LHS, no header -- cprint:report.gcache_hitrate.String
+void report::gcache_hitrate_Print(report::gcache_hitrate & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "report.gcache_hitrate";
+
+    algo::Smallstr20_Print(row.hitrate, temp);
+    PrintAttrSpaceReset(str,"hitrate", temp);
+
+    algo::Smallstr20_Print(row.pch_hitrate, temp);
+    PrintAttrSpaceReset(str,"pch_hitrate", temp);
 }
 
 // --- report.src_func..ReadFieldMaybe
