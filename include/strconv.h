@@ -21,6 +21,7 @@
 // Header: include/strconv.h
 //
 
+#include "include/algo.h"
 #include "include/gen/strconv_gen.h"
 #include "include/gen/strconv_gen.inl.h"
 

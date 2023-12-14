@@ -102,7 +102,6 @@ void acr_ed::edaction_Create_Target() {
     if (is_exe || is_lib) {
         Ins(&R, acr_ed::_db.out_ssim, "dev.targdep  targdep:$target.algo_lib  comment:''");
         Ins(&R, acr_ed::_db.out_ssim, "dev.targdep  targdep:$target.lib_prot  comment:''");
-        Ins(&R, acr_ed::_db.out_ssim, "dev.targdep  targdep:$target.algo_pch  comment:''");
         // add FDb and a command line
         Ins(&R, acr_ed::_db.out_ssim, "dmmeta.ctype  ctype:$target.FDb  comment:''");
         Ins(&R, acr_ed::_db.out_ssim, "dmmeta.field  field:$target.FDb._db  arg:$target.FDb  reftype:Global  dflt:''  comment:''  ");

@@ -20,6 +20,7 @@
 // Header: include/bash2html.h
 //
 
+#include "include/algo.h"
 #include "include/gen/bash2html_gen.h"
 #include "include/gen/bash2html_gen.inl.h"
 

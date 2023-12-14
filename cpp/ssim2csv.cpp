@@ -23,9 +23,9 @@
 // Source: cpp/ssim2csv.cpp
 //
 
+#include "include/algo.h"
 #include "include/gen/ssim2csv_gen.h"
 #include "include/gen/ssim2csv_gen.inl.h"
-
 
 //
 // print array of strings as CSV tokens

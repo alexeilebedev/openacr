@@ -23,6 +23,7 @@
 // Header: include/acr_ed.h
 //
 
+#include "include/algo.h"
 #include "include/gen/acr_ed_gen.h"
 #include "include/gen/acr_ed_gen.inl.h"
 

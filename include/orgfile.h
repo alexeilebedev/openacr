@@ -20,6 +20,7 @@
 // Header: include/orgfile.h
 //
 
+#include "include/algo.h"
 #include "include/gen/orgfile_gen.h"
 #include "include/gen/orgfile_gen.inl.h"
 

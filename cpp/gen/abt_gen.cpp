@@ -76,6 +76,12 @@ const char *abt_help =
 "    -disas      regx    \"\"      Regex of function to disassemble\n"
 "    -report             Y       Print final report\n"
 "    -jcdb       string  \"\"      Create JSON compilation database in specified file\n"
+"    -cache      int     auto    Cache mode (auto|none|gcache|gcache-force|ccache)\n"
+"                                    auto  Select cache automatically among enabled\n"
+"                                    none  No cache\n"
+"                                    gcache  Select gcache if enabled (no cache if disabled)\n"
+"                                    gcache-force  Pass --force to gcache (no cache if disabled)\n"
+"                                    ccache  Select ccache if enabled (no cache if disabled)\n"
 "    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      int             Debug level (0..255); alias -d; cumulative\n"
 "    -help                       Print help and exit; alias -h\n"
@@ -1450,7 +1456,7 @@ static void abt::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt.Input'  signature:'44b5066b94da6ada576e02fc994284a9d3df4e29'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt.Input'  signature:'c4875676c218a86ad11f65d6ef52afbee531a3c5'");
 }
 
 // --- abt.FDb._db.StaticCheck
@@ -1601,6 +1607,7 @@ bool abt::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 bool abt::LoadTuplesFile(algo::strptr fname, bool recursive) {
     bool retval = true;
     algo_lib::FFildes fildes;
+    // missing files are not an error
     fildes.fd = OpenRead(fname,algo::FileFlags());
     if (ValidQ(fildes.fd)) {
         retval = LoadTuplesFd(fildes.fd, fname, recursive);
@@ -5778,7 +5785,6 @@ void abt::FTarget_Init(abt::FTarget& target) {
     target.targ_compile = NULL;
     target.targ_link = NULL;
     target.targ_end = NULL;
-    target.c_precomp = NULL;
     target.c_targsrc_elems = NULL; // (abt.FTarget.c_targsrc)
     target.c_targsrc_n = 0; // (abt.FTarget.c_targsrc)
     target.c_targsrc_max = 0; // (abt.FTarget.c_targsrc)

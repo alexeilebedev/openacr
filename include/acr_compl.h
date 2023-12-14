@@ -19,6 +19,7 @@
 // Header: include/acr_compl.h
 //
 
+#include "include/algo.h"
 #include "include/gen/acr_compl_gen.h"
 #include "include/gen/acr_compl_gen.inl.h"
 

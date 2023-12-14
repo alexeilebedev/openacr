@@ -769,7 +769,7 @@ namespace amc { // hook_fcn_typedef
     typedef void (*tfunc_step_hook)(); // hook:amc.FTfunc.step
 } // hook_decl
 namespace amc { // gen:ns_gsymbol
-    extern const algo::strptr amcdb_regxtype__; // ""
+    extern const algo::strptr amcdb_regxtype_; // ""
     extern const algo::strptr amcdb_regxtype_Acr; // "Acr"
     extern const algo::strptr amcdb_regxtype_Shell; // "Shell"
     extern const algo::strptr amcdb_regxtype_Sql; // "Sql"

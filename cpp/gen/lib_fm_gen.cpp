@@ -273,6 +273,7 @@ bool lib_fm::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 bool lib_fm::LoadTuplesFile(algo::strptr fname, bool recursive) {
     bool retval = true;
     algo_lib::FFildes fildes;
+    // missing files are not an error
     fildes.fd = OpenRead(fname,algo::FileFlags());
     if (ValidQ(fildes.fd)) {
         retval = LoadTuplesFd(fildes.fd, fname, recursive);

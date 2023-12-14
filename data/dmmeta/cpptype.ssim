@@ -339,6 +339,7 @@ dmmeta.cpptype  ctype:pid_t  ctor:N  dtor:Y  cheap_copy:Y
 dmmeta.cpptype  ctype:report.abt  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:report.acr_check  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:report.gcache  ctor:Y  dtor:Y  cheap_copy:N
+dmmeta.cpptype  ctype:report.gcache_hitrate  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:u128  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:u16  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:u32  ctor:N  dtor:N  cheap_copy:Y

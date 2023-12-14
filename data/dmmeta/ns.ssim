@@ -9,7 +9,6 @@ dmmeta.ns  ns:acr_in  nstype:exe  license:GPL  comment:"ACR Input - compute set 
 dmmeta.ns  ns:acr_my  nstype:exe  license:GPL  comment:"ACR <-> MariaDB adaptor"
 dmmeta.ns  ns:algo  nstype:protocol  license:GPL  comment:"Base library"
 dmmeta.ns  ns:algo_lib  nstype:lib  license:GPL  comment:"Support library for all executables"
-dmmeta.ns  ns:algo_pch  nstype:pch  license:GPL  comment:"precompiled header for pretty much everything"
 dmmeta.ns  ns:amc  nstype:exe  license:GPL  comment:"Algo Model Compiler: generate code under include/gen and cpp/gen"
 dmmeta.ns  ns:amc_gc  nstype:exe  license:GPL  comment:"Empirically eliminate unused records"
 dmmeta.ns  ns:amc_vis  nstype:exe  license:GPL  comment:"amc: draw access path diagrams"

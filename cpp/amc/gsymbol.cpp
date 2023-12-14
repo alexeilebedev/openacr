@@ -26,14 +26,6 @@
 
 // -----------------------------------------------------------------------------
 
-static tempstr ToIdent(strptr s) {
-    tempstr ret;
-    amc::strptr_PrintCppIdent(s,ret);
-    return ret;
-}
-
-// -----------------------------------------------------------------------------
-
 static tempstr ResolveGsymboltype(amc::FGsymbol &gsymbol) {
     tempstr ret;
     if (ch_N(gsymbol.symboltype)) {
@@ -66,15 +58,13 @@ void amc::gen_ns_gsymbol() {
                 Tuple_ReadStrptr(tuple, line, false);
                 if (attrs_N(tuple) > 0) {
                     tempstr value(attrs_qFind(tuple,0).value);
-                    tempstr name = tempstr() << ToIdent(ssimfile_Get(gsymbol))
-                                             << "_"
-                                             << ToIdent(value);
-                    *ns.hdr << "    extern const "<< symboltype << " " << ToIdent(name);
+                    tempstr name = strptr_ToCppIdent(tempstr()<<ssimfile_Get(gsymbol)<<"_"<<value,true);
+                    *ns.hdr << "    extern const "<< symboltype << " " << name;
                     *ns.hdr << "; // ";
                     strptr_PrintCppQuoted(value, *ns.hdr, '"');
                     *ns.hdr << eol;
 
-                    *ns.cpp << "    const " << symboltype << " " << ToIdent(name) << "(";
+                    *ns.cpp << "    const " << symboltype << " " << name << "(";
                     strptr_PrintCppQuoted(value, *ns.cpp, '"');
                     *ns.cpp << ");" << eol;
                 }

@@ -43,11 +43,11 @@
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 namespace lib_ams { // gen:ns_gsymbol
-    const char* amsdb_proctype__0("0");
+    const char* amsdb_proctype_0("0");
     const char* amsdb_proctype_amstest("amstest");
 } // gen:ns_gsymbol
 namespace lib_ams { // gen:ns_gsymbol
-    const char* amsdb_streamtype__0("0");
+    const char* amsdb_streamtype_0("0");
     const char* amsdb_streamtype_ctl("ctl");
     const char* amsdb_streamtype_io("io");
     const char* amsdb_streamtype_out("out");
@@ -678,6 +678,7 @@ bool lib_ams::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 bool lib_ams::LoadTuplesFile(algo::strptr fname, bool recursive) {
     bool retval = true;
     algo_lib::FFildes fildes;
+    // missing files are not an error
     fildes.fd = OpenRead(fname,algo::FileFlags());
     if (ValidQ(fildes.fd)) {
         retval = LoadTuplesFd(fildes.fd, fname, recursive);

@@ -42,6 +42,9 @@ tempstr abt::EvalSrcfileCmdline(algo_lib::Replscope &R, abt::FTarget &target, ab
             if (algo_lib::_db.cmdline.verbose>1) {
                 out << " -v:"<<int(algo_lib::_db.cmdline.verbose-1);
             }
+            if (cache_GetEnum(_db.cmdline) == command_abt_cache_gcache_force) {
+                out << " -force";
+            }
             out << " -- ";
         } else if (abt::_db.ccache) {
             out << "ccache ";
@@ -78,35 +81,6 @@ tempstr abt::EvalSrcfileCmdline(algo_lib::Replscope &R, abt::FTarget &target, ab
         if (abt::_db.cmdline.compiler == dev_Compiler_compiler_gPP && _db.tty) {
             out << " -fdiagnostics-color=always";
         }
-        // target is a precompiled header
-        if (srcfile.p_target->p_ns->nstype == dmmeta_Nstype_nstype_pch) {
-            if (abt::_db.cmdline.compiler == dev_Compiler_compiler_cl) {
-                out << " /Fp"<<srcfile.p_target->outfile;
-                out << " /Yccommon.h";
-            }
-        }
-        // target uses precompiled header
-        ind_beg(abt::target_c_targdep_curs, dep,target) {
-            if (dep.p_parent->p_ns->nstype == dmmeta_Nstype_nstype_pch) {
-                abt::FSrcfile& src = *c_srcfile_Find(*dep.p_parent, 0);
-                if (abt::_db.cmdline.compiler == dev_Compiler_compiler_clangPP) {
-                    // e.g.
-                    // src.srcfile == include/algo_pch.hpp
-                    // src.objkey == build/Linux-g++.release-x86_64/include.algo_pch.hpp.gch
-                    out << " -include-pch "<<src.objpath;
-                } else if (abt::_db.cmdline.compiler == dev_Compiler_compiler_cl) {
-                    out << " /Fp"<<dep.p_parent->outfile;
-                    out << " /Yucommon.h";
-                } else {
-                    out << " -iquote "<<GetDirName(src.objpath);
-                    out << " -include "<<src.srcfile;
-                }
-                // This is a hack to make coverity happy, because coverity doesn't recognize gcc pch.
-                if (abt::_db.cmdline.coverity && PchQ(src)) {
-                    out << " -include "<<src.srcfile;
-                }
-            }
-        }ind_end;
     }
     return out;
 }

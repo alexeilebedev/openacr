@@ -23,6 +23,7 @@
 // Header: include/amc.h -- Main header
 //
 
+#include "include/algo.h"
 #include "include/gen/amc_gen.h"
 #include "include/gen/amc_gen.inl.h"
 
@@ -1104,15 +1105,18 @@ namespace amc { // update-hdr
     bool HasArgvReadQ(amc::FCtype &ctype);
 
     // Set IDENT to sanitized version of FROM
-    // if FROM is a known c++ keyword, prepend '_' to it.
-    // If FROM is an empty string, use "_default"
+    // if MASK_KEYWORD is set, and FROM is a known c++ keyword, prepend '_' to it.
+    // If FROM is an empty string, use "_"
     // Replace /, -, ., etc. with underscores.
+    // Replace + with P, ' with A, " with Q (rationale?)
     // Example:
     // strptr_PrintCppIdent("abcd")   -> abcd
     // strptr_PrintCppIdent("ab.cd")  -> ab_cd
+    // strptr_PrintCppIdent("+-$")    -> P__
     // strptr_PrintCppIdent("int")    -> _int
-    // strptr_PrintCppIdent("")       -> _default
-    void strptr_PrintCppIdent(strptr from, cstring &out);
+    // strptr_PrintCppIdent("")       -> _
+    void strptr_PrintCppIdent(strptr from, cstring &out, bool mask_keyword);
+    tempstr strptr_ToCppIdent(strptr s, bool mask_keyword);
 
     //
     // IDENT        identifier in question

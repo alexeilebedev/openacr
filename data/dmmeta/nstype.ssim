@@ -2,6 +2,5 @@ dmmeta.nstype  nstype:exe  comment:Executable
 dmmeta.nstype  nstype:lib  comment:Library
 dmmeta.nstype  nstype:none  comment:"Skip building"
 dmmeta.nstype  nstype:objlist  comment:"Object files are added to dependents' link line"
-dmmeta.nstype  nstype:pch  comment:"Precompiled header"
 dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"
 dmmeta.nstype  nstype:ssimdb  comment:"Ssim database (not a target)"

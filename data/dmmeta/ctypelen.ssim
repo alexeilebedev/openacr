@@ -1,7 +1,7 @@
 dmmeta.ctypelen  ctype:abt.FArch  len:216  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:abt.FCfg  len:224  alignment:8  padbytes:5
 dmmeta.ctypelen  ctype:abt.FCompiler  len:544  alignment:8  padbytes:6
-dmmeta.ctypelen  ctype:abt.FDb  len:5408  alignment:8  padbytes:96
+dmmeta.ctypelen  ctype:abt.FDb  len:5440  alignment:8  padbytes:96
 dmmeta.ctypelen  ctype:abt.FFilestat  len:48  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:abt.FInclude  len:400  alignment:8  padbytes:12
 dmmeta.ctypelen  ctype:abt.FNs  len:288  alignment:8  padbytes:6
@@ -10,7 +10,7 @@ dmmeta.ctypelen  ctype:abt.FSyscmd  len:184  alignment:8  padbytes:21
 dmmeta.ctypelen  ctype:abt.FSyscmddep  len:40  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:abt.FSyslib  len:216  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:abt.FTargdep  len:224  alignment:8  padbytes:11
-dmmeta.ctypelen  ctype:abt.FTarget  len:296  alignment:8  padbytes:23
+dmmeta.ctypelen  ctype:abt.FTarget  len:288  alignment:8  padbytes:23
 dmmeta.ctypelen  ctype:abt.FTargsrc  len:280  alignment:8  padbytes:9
 dmmeta.ctypelen  ctype:abt.FTargsyslib  len:312  alignment:8  padbytes:11
 dmmeta.ctypelen  ctype:abt.FToolOpt  len:440  alignment:8  padbytes:9
@@ -83,7 +83,7 @@ dmmeta.ctypelen  ctype:acr_ed.FCfmt  len:331  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:acr_ed.FCpptype  len:55  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:acr_ed.FCstr  len:205  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:acr_ed.FCtype  len:296  alignment:8  padbytes:4
-dmmeta.ctypelen  ctype:acr_ed.FDb  len:10544  alignment:16  padbytes:85
+dmmeta.ctypelen  ctype:acr_ed.FDb  len:10560  alignment:16  padbytes:93
 dmmeta.ctypelen  ctype:acr_ed.FEdaction  len:232  alignment:8  padbytes:10
 dmmeta.ctypelen  ctype:acr_ed.FField  len:664  alignment:8  padbytes:17
 dmmeta.ctypelen  ctype:acr_ed.FFprefix  len:224  alignment:8  padbytes:5
@@ -680,7 +680,7 @@ dmmeta.ctypelen  ctype:atfdb.Tfilt  len:224  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:atfdb.Tmsg  len:72  alignment:8  padbytes:3
 dmmeta.ctypelen  ctype:atfdb.Unittest  len:204  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:bash2html.FDb  len:32  alignment:8  padbytes:7
-dmmeta.ctypelen  ctype:command.abt  len:480  alignment:8  padbytes:12
+dmmeta.ctypelen  ctype:command.abt  len:488  alignment:8  padbytes:19
 dmmeta.ctypelen  ctype:command.abt_md  len:288  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:command.acr  len:200  alignment:8  padbytes:32
 dmmeta.ctypelen  ctype:command.acr_compl  len:104  alignment:8  padbytes:7
@@ -706,7 +706,7 @@ dmmeta.ctypelen  ctype:command.atf_unit  len:152  alignment:8  padbytes:15
 dmmeta.ctypelen  ctype:command.bash  len:16  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:command.bash2html  len:24  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:command.bash_proc  len:96  alignment:8  padbytes:4
-dmmeta.ctypelen  ctype:command.gcache  len:72  alignment:8  padbytes:8
+dmmeta.ctypelen  ctype:command.gcache  len:72  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:command.gcli  len:352  alignment:8  padbytes:24
 dmmeta.ctypelen  ctype:command.lib_ctype  len:16  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:command.lib_exec  len:12  alignment:4  padbytes:5
@@ -890,7 +890,8 @@ dmmeta.ctypelen  ctype:fmdb.Alarm  len:528  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:fmdb.AlmCode  len:129  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:fmdb.AlmObjtype  len:79  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:fmdb.AlmSource  len:184  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:gcache.FDb  len:248  alignment:8  padbytes:12
+dmmeta.ctypelen  ctype:gcache.FDb  len:576  alignment:8  padbytes:12
+dmmeta.ctypelen  ctype:gcache.FHeader  len:40  alignment:8  padbytes:3
 dmmeta.ctypelen  ctype:gcache.cleanreport  len:32  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:gcli.FDb  len:9048  alignment:8  padbytes:126
 dmmeta.ctypelen  ctype:gcli.FGact  len:216  alignment:8  padbytes:4
@@ -1009,13 +1010,14 @@ dmmeta.ctypelen  ctype:orgfile.FFilename  len:96  alignment:8  padbytes:13
 dmmeta.ctypelen  ctype:orgfile.FTimefmt  len:255  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:orgfile.dedup  len:48  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:orgfile.move  len:48  alignment:8  padbytes:0
-dmmeta.ctypelen  ctype:report.abt  len:44  alignment:4  padbytes:2
+dmmeta.ctypelen  ctype:report.abt  len:68  alignment:4  padbytes:4
 dmmeta.ctypelen  ctype:report.acr  len:24  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:report.acr_check  len:8  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:report.amc  len:24  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:report.atf_comp  len:36  alignment:4  padbytes:3
 dmmeta.ctypelen  ctype:report.atf_unit  len:24  alignment:8  padbytes:3
-dmmeta.ctypelen  ctype:report.gcache  len:48  alignment:8  padbytes:10
+dmmeta.ctypelen  ctype:report.gcache  len:96  alignment:8  padbytes:9
+dmmeta.ctypelen  ctype:report.gcache_hitrate  len:44  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:report.src_func  len:180  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:samp_regx.FDb  len:72  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:sandbox.FDb  len:696  alignment:8  padbytes:7

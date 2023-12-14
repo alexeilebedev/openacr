@@ -101,11 +101,11 @@ namespace lib_ams { // hook_fcn_typedef
     typedef void (*stream_h_msg_orig_hook)(void* userctx, ams::MsgHeader& arg); // hook:lib_ams.FStream.h_msg_orig
 } // hook_decl
 namespace lib_ams { // gen:ns_gsymbol
-    extern const char* amsdb_proctype__0; // "0"
+    extern const char* amsdb_proctype_0; // "0"
     extern const char* amsdb_proctype_amstest; // "amstest"
 } // gen:ns_gsymbol
 namespace lib_ams { // gen:ns_gsymbol
-    extern const char* amsdb_streamtype__0; // "0"
+    extern const char* amsdb_streamtype_0; // "0"
     extern const char* amsdb_streamtype_ctl; // "ctl"
     extern const char* amsdb_streamtype_io; // "io"
     extern const char* amsdb_streamtype_out; // "out"

@@ -19,6 +19,7 @@
 // Header: include/ams_cat.h
 //
 
+#include "include/algo.h"
 #include "include/gen/ams_cat_gen.h"
 #include "include/gen/ams_cat_gen.inl.h"
 

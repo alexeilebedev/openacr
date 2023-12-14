@@ -21,6 +21,7 @@
 // Header: include/lib_git.h
 //
 
+#include "include/algo.h"
 #include "include/gen/lib_git_gen.h"
 #include "include/gen/lib_git_gen.inl.h"
 

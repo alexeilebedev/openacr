@@ -19,6 +19,7 @@
 // Header: include/atf_fuzz.h
 //
 
+#include "include/algo.h"
 #include "include/gen/atf_fuzz_gen.h"
 #include "include/gen/atf_fuzz_gen.inl.h"
 

@@ -220,7 +220,6 @@ extern const char *  dmmeta_Ns_ns_acr_in;         // acr_in          fconst:dmme
 extern const char *  dmmeta_Ns_ns_acr_my;         // acr_my          fconst:dmmeta.Ns.ns/acr_my
 extern const char *  dmmeta_Ns_ns_algo;           // algo            fconst:dmmeta.Ns.ns/algo
 extern const char *  dmmeta_Ns_ns_algo_lib;       // algo_lib        fconst:dmmeta.Ns.ns/algo_lib
-extern const char *  dmmeta_Ns_ns_algo_pch;       // algo_pch        fconst:dmmeta.Ns.ns/algo_pch
 extern const char *  dmmeta_Ns_ns_amc;            // amc             fconst:dmmeta.Ns.ns/amc
 extern const char *  dmmeta_Ns_ns_amc_gc;         // amc_gc          fconst:dmmeta.Ns.ns/amc_gc
 extern const char *  dmmeta_Ns_ns_amc_vis;        // amc_vis         fconst:dmmeta.Ns.ns/amc_vis
@@ -279,7 +278,6 @@ extern const char *  dmmeta_Nstype_nstype_exe;        // exe         fconst:dmme
 extern const char *  dmmeta_Nstype_nstype_lib;        // lib         fconst:dmmeta.Nstype.nstype/lib
 extern const char *  dmmeta_Nstype_nstype_none;       // none        fconst:dmmeta.Nstype.nstype/none
 extern const char *  dmmeta_Nstype_nstype_objlist;    // objlist     fconst:dmmeta.Nstype.nstype/objlist
-extern const char *  dmmeta_Nstype_nstype_pch;        // pch         fconst:dmmeta.Nstype.nstype/pch
 extern const char *  dmmeta_Nstype_nstype_protocol;   // protocol    fconst:dmmeta.Nstype.nstype/protocol
 extern const char *  dmmeta_Nstype_nstype_ssimdb;     // ssimdb      fconst:dmmeta.Nstype.nstype/ssimdb
 extern const char *  dmmeta_Printfmt_printfmt_Auto;         // Auto          fconst:dmmeta.Printfmt.printfmt/Auto

@@ -1978,3 +1978,6 @@ using algo::tempstr;
 
 // presently cannot be avoided
 #include "include/lib_json.h"
+
+// Gcache pragma to precompile this header
+void __gcache_pragma_pch_preprocess();

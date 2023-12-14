@@ -26,6 +26,7 @@
 #include "include/gen/report_gen.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/algo_gen.h"
+#include "include/gen/algo_lib_gen.h"
 //#pragma endinclude
 // gen:ns_enums
 
@@ -49,9 +50,11 @@ namespace gcache { // gen:ns_field
 extern const char *gcache_help;
 } // gen:ns_field
 // gen:ns_fwddecl2
+namespace gcache { struct _db_header_curs; }
 namespace gcache { struct cleanreport; }
 namespace gcache { struct trace; }
 namespace gcache { struct FDb; }
+namespace gcache { struct FHeader; }
 namespace gcache { struct FieldId; }
 namespace gcache { extern struct gcache::FDb _db; }
 namespace gcache { // gen:ns_print_struct
@@ -106,6 +109,10 @@ struct FDb { // gcache.FDb
     algo::cstring         cached;            //
     algo::cstring         logfname;          //
     algo::cstring         preproc_file;      //
+    gcache::FHeader*      header_lary[32];   // level array
+    i32                   header_n;          // number of elements in array
+    algo::cstring         preproc_text;      //
+    algo_lib::FFildes     lockfd;            //
     gcache::trace         trace;             //
 };
 
@@ -143,9 +150,65 @@ void                 Steps();
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool                 _db_XrefMaybe();
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+gcache::FHeader&     header_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+gcache::FHeader*     header_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+void*                header_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+bool                 header_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+gcache::FHeader*     header_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+gcache::FHeader*     header_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+i32                  header_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+void                 header_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+void                 header_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+gcache::FHeader&     header_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool                 header_XrefMaybe(gcache::FHeader &row);
+
+// cursor points to valid item
+void                 _db_header_curs_Reset(_db_header_curs &curs, gcache::FDb &parent);
+// cursor points to valid item
+bool                 _db_header_curs_ValidQ(_db_header_curs &curs);
+// proceed to next item
+void                 _db_header_curs_Next(_db_header_curs &curs);
+// item access
+gcache::FHeader&     _db_header_curs_Access(_db_header_curs &curs);
 // Set all fields to initial values.
 void                 FDb_Init();
 void                 FDb_Uninit() __attribute__((nothrow));
+
+// --- gcache.FHeader
+// create: gcache.FDb.header (Lary)
+// access: gcache.FHeader.parent (Ptr)
+struct FHeader { // gcache.FHeader
+    gcache::FHeader*   parent;          // optional pointer
+    algo::cstring      name;            //
+    i32                begin;           //   0
+    i32                inner_end;       //   0
+    i32                outer_end;       //   0
+    bool               mlines_before;   //   false
+private:
+    friend gcache::FHeader&     header_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend gcache::FHeader*     header_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 header_RemoveAll() __attribute__((nothrow));
+    friend void                 header_RemoveLast() __attribute__((nothrow));
+    FHeader();
+};
+
+// Set all fields to initial values.
+void                 FHeader_Init(gcache::FHeader& header);
+// print string representation of gcache::FHeader to string LHS, no header -- cprint:gcache.FHeader.String
+void                 FHeader_Print(gcache::FHeader & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- gcache.FieldId
 #pragma pack(push,1)
@@ -186,6 +249,16 @@ void                 FieldId_Init(gcache::FieldId& parent);
 // print string representation of gcache::FieldId to string LHS, no header -- cprint:gcache.FieldId.String
 void                 FieldId_Print(gcache::FieldId & row, algo::cstring &str) __attribute__((nothrow));
 } // gen:ns_print_struct
+namespace gcache { // gen:ns_curstext
+
+struct _db_header_curs {// cursor
+    typedef gcache::FHeader ChildType;
+    gcache::FDb *parent;
+    i64 index;
+    _db_header_curs(){ parent=NULL; index=0; }
+};
+
+} // gen:ns_curstext
 namespace gcache { // gen:ns_func
 } // gen:ns_func
 int                  main(int argc, char **argv);
@@ -196,5 +269,6 @@ int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const gcache::cleanreport &row);// cfmt:gcache.cleanreport.String
 inline algo::cstring &operator <<(algo::cstring &str, const gcache::trace &row);// cfmt:gcache.trace.String
+inline algo::cstring &operator <<(algo::cstring &str, const gcache::FHeader &row);// cfmt:gcache.FHeader.String
 inline algo::cstring &operator <<(algo::cstring &str, const gcache::FieldId &row);// cfmt:gcache.FieldId.String
 }

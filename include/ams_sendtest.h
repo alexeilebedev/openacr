@@ -19,6 +19,7 @@
 // Header: include/ams_sendtest.h
 //
 
+#include "include/algo.h"
 #include "include/gen/ams_sendtest_gen.h"
 #include "include/gen/ams_sendtest_gen.inl.h"
 

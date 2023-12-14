@@ -1460,7 +1460,6 @@ void                 FNs_Uninit(abt::FNs& ns) __attribute__((nothrow));
 // global access: zs_srcfile_read (Llist)
 // global access: zd_inclstack (Llist)
 // access: abt.FInclude.p_header (Upptr)
-// access: abt.FTarget.c_precomp (Ptr)
 // access: abt.FTarget.c_srcfile (Ptrary)
 struct FSrcfile { // abt.FSrcfile: Source file or header (key is pathname)
     abt::FSrcfile*      ind_srcfile_next;       // hash next
@@ -1779,7 +1778,6 @@ struct FTarget { // abt.FTarget
     abt::FSyscmd*        targ_compile;             // optional pointer
     abt::FSyscmd*        targ_link;                // optional pointer
     abt::FSyscmd*        targ_end;                 // optional pointer
-    abt::FSrcfile*       c_precomp;                // Precompled header for this target. optional pointer
     abt::FTargsrc**      c_targsrc_elems;          // array of pointers
     u32                  c_targsrc_n;              // array of pointers
     u32                  c_targsrc_max;            // capacity of allocated array

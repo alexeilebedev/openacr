@@ -19,6 +19,7 @@
 // Header: include/sandbox.h
 //
 
+#include "include/algo.h"
 #include "include/gen/sandbox_gen.h"
 #include "include/gen/sandbox_gen.inl.h"
 

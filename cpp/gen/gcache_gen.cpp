@@ -31,10 +31,10 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
@@ -60,6 +60,7 @@ const char *gcache_help =
 "    -hitrate                           Report hit rate (specify start time with -after)\n"
 "    -after      string                 Start time for reporting\n"
 "    -report                            Show end-of-run report\n"
+"    -force                             Force recompile and update cache\n"
 "    -verbose    int                    Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      int                    Debug level (0..255); alias -d; cumulative\n"
 "    -help                              Print help and exit; alias -h\n"
@@ -370,6 +371,7 @@ bool gcache::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 bool gcache::LoadTuplesFile(algo::strptr fname, bool recursive) {
     bool retval = true;
     algo_lib::FFildes fildes;
+    // missing files are not an error
     fildes.fd = OpenRead(fname,algo::FileFlags());
     if (ValidQ(fildes.fd)) {
         retval = LoadTuplesFd(fildes.fd, fname, recursive);
@@ -420,6 +422,83 @@ bool gcache::_db_XrefMaybe() {
     return retval;
 }
 
+// --- gcache.FDb.header.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+gcache::FHeader& gcache::header_Alloc() {
+    gcache::FHeader* row = header_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("gcache.out_of_mem  field:gcache.FDb.header  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- gcache.FDb.header.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+gcache::FHeader* gcache::header_AllocMaybe() {
+    gcache::FHeader *row = (gcache::FHeader*)header_AllocMem();
+    if (row) {
+        new (row) gcache::FHeader; // call constructor
+    }
+    return row;
+}
+
+// --- gcache.FDb.header.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* gcache::header_AllocMem() {
+    u64 new_nelems     = _db.header_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    gcache::FHeader*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.header_lary[bsr];
+        if (!lev) {
+            lev=(gcache::FHeader*)algo_lib::malloc_AllocMem(sizeof(gcache::FHeader) * (u64(1)<<bsr));
+            _db.header_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.header_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- gcache.FDb.header.RemoveAll
+// Remove all elements from Lary
+void gcache::header_RemoveAll() {
+    for (u64 n = _db.header_n; n>0; ) {
+        n--;
+        header_qFind(u64(n)).~FHeader(); // destroy last element
+        _db.header_n = i32(n);
+    }
+}
+
+// --- gcache.FDb.header.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void gcache::header_RemoveLast() {
+    u64 n = _db.header_n;
+    if (n > 0) {
+        n -= 1;
+        header_qFind(u64(n)).~FHeader();
+        _db.header_n = i32(n);
+    }
+}
+
+// --- gcache.FDb.header.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool gcache::header_XrefMaybe(gcache::FHeader &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
 // --- gcache.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr gcache::trace_RowidFind(int t) {
@@ -438,6 +517,17 @@ void gcache::FDb_Init() {
     _db.do_not_compile = bool(false);
     _db.do_not_link = bool(false);
     _db.do_not_assemble = bool(false);
+    // initialize LAry header (gcache.FDb.header)
+    _db.header_n = 0;
+    memset(_db.header_lary, 0, sizeof(_db.header_lary)); // zero out all level pointers
+    gcache::FHeader* header_first = (gcache::FHeader*)algo_lib::malloc_AllocMem(sizeof(gcache::FHeader) * (u64(1)<<4));
+    if (!header_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.header_lary[i]  = header_first;
+        header_first    += 1ULL<<i;
+    }
 
     gcache::InitReflection();
 }
@@ -445,6 +535,34 @@ void gcache::FDb_Init() {
 // --- gcache.FDb..Uninit
 void gcache::FDb_Uninit() {
     gcache::FDb &row = _db; (void)row;
+
+    // gcache.FDb.header.Uninit (Lary)  //
+    // skip destruction in global scope
+}
+
+// --- gcache.FHeader..Print
+// print string representation of gcache::FHeader to string LHS, no header -- cprint:gcache.FHeader.String
+void gcache::FHeader_Print(gcache::FHeader & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "gcache.FHeader";
+
+    u64_PrintHex(u64((const gcache::FHeader*)row.parent), temp, 8, true);
+    PrintAttrSpaceReset(str,"parent", temp);
+
+    algo::cstring_Print(row.name, temp);
+    PrintAttrSpaceReset(str,"name", temp);
+
+    i32_Print(row.begin, temp);
+    PrintAttrSpaceReset(str,"begin", temp);
+
+    i32_Print(row.inner_end, temp);
+    PrintAttrSpaceReset(str,"inner_end", temp);
+
+    i32_Print(row.outer_end, temp);
+    PrintAttrSpaceReset(str,"outer_end", temp);
+
+    bool_Print(row.mlines_before, temp);
+    PrintAttrSpaceReset(str,"mlines_before", temp);
 }
 
 // --- gcache.FieldId.value.ToCstr

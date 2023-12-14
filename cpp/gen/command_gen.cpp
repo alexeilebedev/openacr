@@ -64,6 +64,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_disas         : ret = "disas";  break;
         case command_FieldId_report        : ret = "report";  break;
         case command_FieldId_jcdb          : ret = "jcdb";  break;
+        case command_FieldId_cache         : ret = "cache";  break;
         case command_FieldId_readme        : ret = "readme";  break;
         case command_FieldId_ns            : ret = "ns";  break;
         case command_FieldId_section       : ret = "section";  break;
@@ -622,6 +623,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR5('b','u','i','l','d'): {
                     value_SetEnum(parent,command_FieldId_build); ret = true; break;
+                }
+                case LE_STR5('c','a','c','h','e'): {
+                    value_SetEnum(parent,command_FieldId_cache); ret = true; break;
                 }
                 case LE_STR5('c','h','e','c','k'): {
                     value_SetEnum(parent,command_FieldId_check); ret = true; break;
@@ -1387,6 +1391,93 @@ bool command::disas_ReadStrptrMaybe(command::abt& parent, algo::strptr in) {
     return retval;
 }
 
+// --- command.abt.cache.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* command::cache_ToCstr(const command::abt& parent) {
+    const char *ret = NULL;
+    switch(cache_GetEnum(parent)) {
+        case command_abt_cache_auto        : ret = "auto";  break;
+        case command_abt_cache_none        : ret = "none";  break;
+        case command_abt_cache_gcache      : ret = "gcache";  break;
+        case command_abt_cache_gcache_force: ret = "gcache-force";  break;
+        case command_abt_cache_ccache      : ret = "ccache";  break;
+    }
+    return ret;
+}
+
+// --- command.abt.cache.Print
+// Convert cache to a string. First, attempt conversion to a known string.
+// If no string matches, print cache as a numeric value.
+void command::cache_Print(const command::abt& parent, algo::cstring &lhs) {
+    const char *strval = cache_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.cache;
+    }
+}
+
+// --- command.abt.cache.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool command::cache_SetStrptrMaybe(command::abt& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('a','u','t','o'): {
+                    cache_SetEnum(parent,command_abt_cache_auto); ret = true; break;
+                }
+                case LE_STR4('n','o','n','e'): {
+                    cache_SetEnum(parent,command_abt_cache_none); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 6: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
+                case LE_STR6('c','c','a','c','h','e'): {
+                    cache_SetEnum(parent,command_abt_cache_ccache); ret = true; break;
+                }
+                case LE_STR6('g','c','a','c','h','e'): {
+                    cache_SetEnum(parent,command_abt_cache_gcache); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 12: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('g','c','a','c','h','e','-','f'): {
+                    if (memcmp(rhs.elems+8,"orce",4)==0) { cache_SetEnum(parent,command_abt_cache_gcache_force); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- command.abt.cache.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void command::cache_SetStrptr(command::abt& parent, algo::strptr rhs, command_abt_cache_Enum dflt) {
+    if (!cache_SetStrptrMaybe(parent,rhs)) cache_SetEnum(parent,dflt);
+}
+
+// --- command.abt.cache.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool command::cache_ReadStrptrMaybe(command::abt& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = cache_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = u8_ReadStrptrMaybe(parent.cache,rhs);
+    }
+    return retval;
+}
+
 // --- command.abt..ReadFieldMaybe
 bool command::abt_ReadFieldMaybe(command::abt &parent, algo::strptr field, algo::strptr strval) {
     command::FieldId field_id;
@@ -1417,6 +1508,7 @@ bool command::abt_ReadFieldMaybe(command::abt &parent, algo::strptr field, algo:
         case command_FieldId_disas: retval = disas_ReadStrptrMaybe(parent, strval); break;
         case command_FieldId_report: retval = bool_ReadStrptrMaybe(parent.report, strval); break;
         case command_FieldId_jcdb: retval = algo::cstring_ReadStrptrMaybe(parent.jcdb, strval); break;
+        case command_FieldId_cache: retval = cache_ReadStrptrMaybe(parent, strval); break;
         default: break;
     }
     if (!retval) {
@@ -1469,6 +1561,7 @@ void command::abt_Init(command::abt& parent) {
     Regx_ReadSql(parent.disas, "", true);
     parent.report = bool(true);
     parent.jcdb = algo::strptr("");
+    parent.cache = u8(0);
 }
 
 // --- command.abt..PrintArgv
@@ -1620,6 +1713,12 @@ void command::abt_PrintArgv(command::abt & row, algo::cstring &str) {
         str << " -jcdb:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.cache == 0)) {
+        ch_RemoveAll(temp);
+        command::cache_Print(const_cast<command::abt&>(row), temp);
+        str << " -cache:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.abt..ToCmdline
@@ -1749,6 +1848,9 @@ i32 command::abt_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out
             out_dflt="Y";
         } break;
         case command_FieldId_jcdb: { // bool: no argument required but value may be specified as report:Y
+            *out_anon = false;
+        } break;
+        case command_FieldId_cache: { // bool: no argument required but value may be specified as report:Y
             *out_anon = false;
         } break;
         default:
@@ -2374,6 +2476,12 @@ int command::abt_Execv(command::abt_proc& parent) {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-jcdb:";
         cstring_Print(parent.cmd.jcdb, *arg);
+    }
+
+    if (parent.cmd.cache != 0) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-cache:";
+        command::cache_Print(parent.cmd, *arg);
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         algo_lib::exec_args_Alloc() << "-verbose";
@@ -13130,6 +13238,7 @@ bool command::gcache_ReadFieldMaybe(command::gcache &parent, algo::strptr field,
         case command_FieldId_hitrate: retval = bool_ReadStrptrMaybe(parent.hitrate, strval); break;
         case command_FieldId_after: retval = algo::UnTime_ReadStrptrMaybe(parent.after, strval); break;
         case command_FieldId_report: retval = bool_ReadStrptrMaybe(parent.report, strval); break;
+        case command_FieldId_force: retval = bool_ReadStrptrMaybe(parent.force, strval); break;
         default: break;
     }
     if (!retval) {
@@ -13171,6 +13280,7 @@ void command::gcache_Init(command::gcache& parent) {
     parent.dir = algo::strptr("/tmp/gcache");
     parent.hitrate = bool(false);
     parent.report = bool(false);
+    parent.force = bool(false);
 }
 
 // --- command.gcache..Uninit
@@ -13263,6 +13373,12 @@ void command::gcache_PrintArgv(command::gcache & row, algo::cstring &str) {
         str << " -report:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.force == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.force, temp);
+        str << " -force:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.gcache..ToCmdline
@@ -13320,6 +13436,9 @@ void command::gcache_Print(command::gcache & row, algo::cstring &str) {
 
     bool_Print(row.report, temp);
     PrintAttrSpaceReset(str,"report", temp);
+
+    bool_Print(row.force, temp);
+    PrintAttrSpaceReset(str,"force", temp);
 }
 
 // --- command.gcache..GetAnon
@@ -13385,6 +13504,11 @@ i32 command::gcache_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* 
             *out_anon = false;
         } break;
         case command_FieldId_report: { // bool: no argument required but value may be specified as hitrate:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_force: { // bool: no argument required but value may be specified as report:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -13567,6 +13691,12 @@ int command::gcache_Execv(command::gcache_proc& parent) {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-report:";
         bool_Print(parent.cmd.report, *arg);
+    }
+
+    if (parent.cmd.force != false) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-force:";
+        bool_Print(parent.cmd.force, *arg);
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         algo_lib::exec_args_Alloc() << "-verbose";

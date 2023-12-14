@@ -19,6 +19,7 @@
 // Header: include/gcli.h
 //
 
+#include "include/algo.h"
 #include "include/gen/gcli_gen.h"
 #include "include/gen/gcli_gen.inl.h"
 #define old_intf false

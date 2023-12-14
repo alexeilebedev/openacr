@@ -57,9 +57,6 @@ namespace abt { // update-hdr
     // So, cpp/abt/main.cpp becomes cpp.abt.main.cpp
     // Next step will be to replace the extension
     tempstr GetObjkey(strptr source);
-
-    // Return true if this file is a precompiled header file
-    bool PchQ(abt::FSrcfile &srcfile);
     void DeleteFileV(strptr path);
     void Main_PrepOpts();
     void Main();

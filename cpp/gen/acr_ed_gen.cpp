@@ -1007,6 +1007,7 @@ bool acr_ed::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 bool acr_ed::LoadTuplesFile(algo::strptr fname, bool recursive) {
     bool retval = true;
     algo_lib::FFildes fildes;
+    // missing files are not an error
     fildes.fd = OpenRead(fname,algo::FileFlags());
     if (ValidQ(fildes.fd)) {
         retval = LoadTuplesFd(fildes.fd, fname, recursive);
@@ -2935,6 +2936,12 @@ int acr_ed::abt_Execv() {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-jcdb:";
         cstring_Print(_db.abt_cmd.jcdb, *arg);
+    }
+
+    if (_db.abt_cmd.cache != 0) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-cache:";
+        u8_Print(_db.abt_cmd.cache, *arg);
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         algo_lib::exec_args_Alloc() << "-verbose";

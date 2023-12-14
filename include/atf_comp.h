@@ -20,6 +20,7 @@
 // Header: include/atf_comp.h
 //
 
+#include "include/algo.h"
 #include "include/gen/atf_comp_gen.h"
 #include "include/gen/atf_comp_gen.inl.h"
 

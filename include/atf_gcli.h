@@ -19,6 +19,7 @@
 // Header: include/atf_gcli.h
 //
 
+#include "include/algo.h"
 #include "include/gen/atf_gcli_gen.h"
 #include "include/gen/atf_gcli_gen.inl.h"
 

@@ -25,6 +25,7 @@
 // ACR: Algo Cross-Reference
 // ACR Interface
 
+#include "include/algo.h"
 #include "include/gen/acr_gen.h"
 #include "include/gen/acr_gen.inl.h"
 
