@@ -94,7 +94,7 @@ acr::FRec* acr::ReadTuple(Tuple &tuple, acr::FFile &file, acr::ReadMode read_mod
 
 // Calculate record's SORTKEY which is a combination
 // of the value of its SSIMSORT attribute and rowid.
-static void InitSortkey(acr::FRec &rec, float rowid) {
+void acr::UpdateSortkey(acr::FRec &rec, float rowid) {
     // initialize string sort field
     rec.sortkey.num=0;
     ch_RemoveAll(rec.sortkey.str);
@@ -213,7 +213,7 @@ acr::FRec *acr::CreateRec(acr::FFile &file, acr::FCtype *ctype, algo::Tuple &tup
         if (!file.autoloaded && !ret->isnew && !Tuple_EqualQ(prev,ret->tuple)) {
             ret->mod = true;
         }
-        InitSortkey(*ret,rowid);
+        UpdateSortkey(*ret,rowid);
     }
     return ret;
 }

@@ -2636,6 +2636,94 @@ inline void acr::FPdep_Init(acr::FPdep& pdep) {
     pdep.zd_child_prev = NULL; // (acr.FPline.zd_child)
 }
 
+inline bool acr::RecSortkey::operator ==(const acr::RecSortkey &rhs) const {
+    return acr::RecSortkey_Eq(const_cast<acr::RecSortkey&>(*this),const_cast<acr::RecSortkey&>(rhs));
+}
+
+inline bool acr::RecSortkey::operator !=(const acr::RecSortkey &rhs) const {
+    return !acr::RecSortkey_Eq(const_cast<acr::RecSortkey&>(*this),const_cast<acr::RecSortkey&>(rhs));
+}
+
+inline bool acr::RecSortkey::operator <(const acr::RecSortkey &rhs) const {
+    return acr::RecSortkey_Lt(const_cast<acr::RecSortkey&>(*this),const_cast<acr::RecSortkey&>(rhs));
+}
+
+inline bool acr::RecSortkey::operator >(const acr::RecSortkey &rhs) const {
+    return rhs < *this;
+}
+
+inline bool acr::RecSortkey::operator <=(const acr::RecSortkey &rhs) const {
+    return !(rhs < *this);
+}
+
+inline bool acr::RecSortkey::operator >=(const acr::RecSortkey &rhs) const {
+    return !(*this < rhs);
+}
+inline acr::RecSortkey::RecSortkey() {
+    acr::RecSortkey_Init(*this);
+}
+
+
+// --- acr.RecSortkey..Hash
+inline u32 acr::RecSortkey_Hash(u32 prev, const acr::RecSortkey & rhs) {
+    prev = double_Hash(prev, rhs.num);
+    prev = cstring_Hash(prev, rhs.str);
+    prev = float_Hash(prev, rhs.rowid);
+    return prev;
+}
+
+// --- acr.RecSortkey..Lt
+inline bool acr::RecSortkey_Lt(acr::RecSortkey & lhs, acr::RecSortkey & rhs) {
+    return RecSortkey_Cmp(lhs,rhs) < 0;
+}
+
+// --- acr.RecSortkey..Cmp
+inline i32 acr::RecSortkey_Cmp(acr::RecSortkey & lhs, acr::RecSortkey & rhs) {
+    i32 retval = 0;
+    retval = double_Cmp(lhs.num, rhs.num);
+    if (retval != 0) {
+        return retval;
+    }
+    retval = algo::cstring_Cmp(lhs.str, rhs.str);
+    if (retval != 0) {
+        return retval;
+    }
+    retval = float_Cmp(lhs.rowid, rhs.rowid);
+    return retval;
+}
+
+// --- acr.RecSortkey..Init
+// Set all fields to initial values.
+inline void acr::RecSortkey_Init(acr::RecSortkey& parent) {
+    parent.num = double(0.0);
+    parent.rowid = float(0.f);
+}
+
+// --- acr.RecSortkey..Eq
+inline bool acr::RecSortkey_Eq(const acr::RecSortkey & lhs,const acr::RecSortkey & rhs) {
+    bool retval = true;
+    retval = double_Eq(lhs.num, rhs.num);
+    if (!retval) {
+        return false;
+    }
+    retval = algo::cstring_Eq(lhs.str, rhs.str);
+    if (!retval) {
+        return false;
+    }
+    retval = float_Eq(lhs.rowid, rhs.rowid);
+    return retval;
+}
+
+// --- acr.RecSortkey..Update
+// Set value. Return true if new value is different from old value.
+inline bool acr::RecSortkey_Update(acr::RecSortkey &lhs, acr::RecSortkey & rhs) {
+    bool ret = !RecSortkey_Eq(lhs, rhs); // compare values
+    if (ret) {
+        lhs = rhs; // update
+    }
+    return ret;
+}
+
 inline bool acr::PlineKey::operator ==(const acr::PlineKey &rhs) const {
     return acr::PlineKey_Eq(const_cast<acr::PlineKey&>(*this),const_cast<acr::PlineKey&>(rhs));
 }
@@ -2669,7 +2757,7 @@ inline u32 acr::PlineKey_Hash(u32 prev, const acr::PlineKey & rhs) {
     prev = i32_Hash(prev, rhs.alldep);
     prev = i32_Hash(prev, rhs.negdepth);
     prev = i32_Hash(prev, rhs.ctype_rank);
-    prev = i32_Hash(prev, rhs.rowid);
+    prev = RecSortkey_Hash(prev, rhs.sortkey);
     return prev;
 }
 
@@ -2684,7 +2772,6 @@ inline void acr::PlineKey_Init(acr::PlineKey& parent) {
     parent.alldep = i32(0);
     parent.negdepth = i32(0);
     parent.ctype_rank = i32(0);
-    parent.rowid = i32(0);
 }
 
 // --- acr.PlineKey..Update
@@ -3047,94 +3134,6 @@ inline bool acr::query_where_curs_ValidQ(query_where_curs &curs) {
 // item access
 inline acr::AttrRegx& acr::query_where_curs_Access(query_where_curs &curs) {
     return curs.elems[curs.index];
-}
-
-inline bool acr::RecSortkey::operator ==(const acr::RecSortkey &rhs) const {
-    return acr::RecSortkey_Eq(const_cast<acr::RecSortkey&>(*this),const_cast<acr::RecSortkey&>(rhs));
-}
-
-inline bool acr::RecSortkey::operator !=(const acr::RecSortkey &rhs) const {
-    return !acr::RecSortkey_Eq(const_cast<acr::RecSortkey&>(*this),const_cast<acr::RecSortkey&>(rhs));
-}
-
-inline bool acr::RecSortkey::operator <(const acr::RecSortkey &rhs) const {
-    return acr::RecSortkey_Lt(const_cast<acr::RecSortkey&>(*this),const_cast<acr::RecSortkey&>(rhs));
-}
-
-inline bool acr::RecSortkey::operator >(const acr::RecSortkey &rhs) const {
-    return rhs < *this;
-}
-
-inline bool acr::RecSortkey::operator <=(const acr::RecSortkey &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool acr::RecSortkey::operator >=(const acr::RecSortkey &rhs) const {
-    return !(*this < rhs);
-}
-inline acr::RecSortkey::RecSortkey() {
-    acr::RecSortkey_Init(*this);
-}
-
-
-// --- acr.RecSortkey..Hash
-inline u32 acr::RecSortkey_Hash(u32 prev, const acr::RecSortkey & rhs) {
-    prev = double_Hash(prev, rhs.num);
-    prev = cstring_Hash(prev, rhs.str);
-    prev = float_Hash(prev, rhs.rowid);
-    return prev;
-}
-
-// --- acr.RecSortkey..Lt
-inline bool acr::RecSortkey_Lt(acr::RecSortkey & lhs, acr::RecSortkey & rhs) {
-    return RecSortkey_Cmp(lhs,rhs) < 0;
-}
-
-// --- acr.RecSortkey..Cmp
-inline i32 acr::RecSortkey_Cmp(acr::RecSortkey & lhs, acr::RecSortkey & rhs) {
-    i32 retval = 0;
-    retval = double_Cmp(lhs.num, rhs.num);
-    if (retval != 0) {
-        return retval;
-    }
-    retval = algo::cstring_Cmp(lhs.str, rhs.str);
-    if (retval != 0) {
-        return retval;
-    }
-    retval = float_Cmp(lhs.rowid, rhs.rowid);
-    return retval;
-}
-
-// --- acr.RecSortkey..Init
-// Set all fields to initial values.
-inline void acr::RecSortkey_Init(acr::RecSortkey& parent) {
-    parent.num = double(0.0);
-    parent.rowid = float(0.f);
-}
-
-// --- acr.RecSortkey..Eq
-inline bool acr::RecSortkey_Eq(const acr::RecSortkey & lhs,const acr::RecSortkey & rhs) {
-    bool retval = true;
-    retval = double_Eq(lhs.num, rhs.num);
-    if (!retval) {
-        return false;
-    }
-    retval = algo::cstring_Eq(lhs.str, rhs.str);
-    if (!retval) {
-        return false;
-    }
-    retval = float_Eq(lhs.rowid, rhs.rowid);
-    return retval;
-}
-
-// --- acr.RecSortkey..Update
-// Set value. Return true if new value is different from old value.
-inline bool acr::RecSortkey_Update(acr::RecSortkey &lhs, acr::RecSortkey & rhs) {
-    bool ret = !RecSortkey_Eq(lhs, rhs); // compare values
-    if (ret) {
-        lhs = rhs; // update
-    }
-    return ret;
 }
 inline acr::FRec::FRec() {
     acr::FRec_Init(*this);

@@ -177,11 +177,11 @@ namespace acr { struct FErr; }
 namespace acr { struct FEvalattr; }
 namespace acr { struct FFunique; }
 namespace acr { struct FPdep; }
+namespace acr { struct RecSortkey; }
 namespace acr { struct PlineKey; }
 namespace acr { struct FPrintAttr; }
 namespace acr { struct Queryop; }
 namespace acr { struct FQuery; }
-namespace acr { struct RecSortkey; }
 namespace acr { struct FRun; }
 namespace acr { struct FSmallstr; }
 namespace acr { struct FSsimreq; }
@@ -2113,12 +2113,37 @@ private:
 void                 FPdep_Init(acr::FPdep& pdep);
 void                 FPdep_Uninit(acr::FPdep& pdep) __attribute__((nothrow));
 
+// --- acr.RecSortkey
+struct RecSortkey { // acr.RecSortkey: One record
+    double          num;     //   0.0  Numeric key (if present)
+    algo::cstring   str;     // String key (sort key)
+    float           rowid;   //   0.f  row id
+    bool operator ==(const acr::RecSortkey &rhs) const;
+    bool operator !=(const acr::RecSortkey &rhs) const;
+    bool operator <(const acr::RecSortkey &rhs) const;
+    bool operator >(const acr::RecSortkey &rhs) const;
+    bool operator <=(const acr::RecSortkey &rhs) const;
+    bool operator >=(const acr::RecSortkey &rhs) const;
+    RecSortkey();
+};
+
+u32                  RecSortkey_Hash(u32 prev, const acr::RecSortkey & rhs) __attribute__((nothrow));
+bool                 RecSortkey_Lt(acr::RecSortkey & lhs, acr::RecSortkey & rhs) __attribute__((nothrow));
+i32                  RecSortkey_Cmp(acr::RecSortkey & lhs, acr::RecSortkey & rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+void                 RecSortkey_Init(acr::RecSortkey& parent);
+bool                 RecSortkey_Eq(const acr::RecSortkey & lhs,const acr::RecSortkey & rhs) __attribute__((nothrow));
+// Set value. Return true if new value is different from old value.
+bool                 RecSortkey_Update(acr::RecSortkey &lhs, acr::RecSortkey & rhs) __attribute__((nothrow));
+// print string representation of acr::RecSortkey to string LHS, no header -- cprint:acr.RecSortkey.String
+void                 RecSortkey_Print(acr::RecSortkey & row, algo::cstring &str) __attribute__((nothrow));
+
 // --- acr.PlineKey
 struct PlineKey { // acr.PlineKey: Key for sorting print-line records
-    i32   alldep;       //   0  # Unresolved references
-    i32   negdepth;     //   0  Minus tree depth for depth-first print
-    i32   ctype_rank;   //   0  Topological key for ctype
-    i32   rowid;        //   0  Rowid of original record
+    i32               alldep;       //   0  # Unresolved references
+    i32               negdepth;     //   0  Minus tree depth for depth-first print
+    i32               ctype_rank;   //   0  Topological key for ctype
+    acr::RecSortkey   sortkey;      // Sort key of original record
     bool operator ==(const acr::PlineKey &rhs) const;
     bool operator !=(const acr::PlineKey &rhs) const;
     bool operator <(const acr::PlineKey &rhs) const;
@@ -2427,31 +2452,6 @@ acr::AttrRegx&       query_where_curs_Access(query_where_curs &curs);
 void                 FQuery_Uninit(acr::FQuery& query) __attribute__((nothrow));
 // print string representation of acr::FQuery to string LHS, no header -- cprint:acr.FQuery.String
 void                 FQuery_Print(acr::FQuery & row, algo::cstring &str) __attribute__((nothrow));
-
-// --- acr.RecSortkey
-struct RecSortkey { // acr.RecSortkey: One record
-    double          num;     //   0.0  Numeric key (if present)
-    algo::cstring   str;     // String key (sort key)
-    float           rowid;   //   0.f  row id
-    bool operator ==(const acr::RecSortkey &rhs) const;
-    bool operator !=(const acr::RecSortkey &rhs) const;
-    bool operator <(const acr::RecSortkey &rhs) const;
-    bool operator >(const acr::RecSortkey &rhs) const;
-    bool operator <=(const acr::RecSortkey &rhs) const;
-    bool operator >=(const acr::RecSortkey &rhs) const;
-    RecSortkey();
-};
-
-u32                  RecSortkey_Hash(u32 prev, const acr::RecSortkey & rhs) __attribute__((nothrow));
-bool                 RecSortkey_Lt(acr::RecSortkey & lhs, acr::RecSortkey & rhs) __attribute__((nothrow));
-i32                  RecSortkey_Cmp(acr::RecSortkey & lhs, acr::RecSortkey & rhs) __attribute__((nothrow));
-// Set all fields to initial values.
-void                 RecSortkey_Init(acr::RecSortkey& parent);
-bool                 RecSortkey_Eq(const acr::RecSortkey & lhs,const acr::RecSortkey & rhs) __attribute__((nothrow));
-// Set value. Return true if new value is different from old value.
-bool                 RecSortkey_Update(acr::RecSortkey &lhs, acr::RecSortkey & rhs) __attribute__((nothrow));
-// print string representation of acr::RecSortkey to string LHS, no header -- cprint:acr.RecSortkey.String
-void                 RecSortkey_Print(acr::RecSortkey & row, algo::cstring &str) __attribute__((nothrow));
 
 // --- acr.FRec
 // create: acr.FDb.rec (Tpool)
