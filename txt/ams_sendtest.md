@@ -30,6 +30,49 @@ Usage: ams_sendtest [options]
 
 ```
 
+### Options
+
+#### -in -- Input directory or filename, - for stdin
+
+
+#### -id -- Process index (0=parent)
+
+
+#### -file_prefix -- Use file_prefix
+
+
+#### -nchild -- Number of stream readers
+
+
+#### -blocking -- Use blocking send mode
+
+
+#### -nmsg -- Number of messages to send/receive
+
+
+#### -trace -- Regx expression specifying what to trace
+
+
+#### -timeout -- Time limit for the send
+
+
+#### -recvdelay_ns -- Pause nanoseconds between messages
+
+
+#### -senddelay_ns -- Pause nanoseconds between messages
+
+
+#### -msgsize_min -- Minimum message length
+
+
+#### -msgsize_max -- Maximum message length
+
+
+#### -bufsize -- Shared memory buffer size
+
+
+#### -recvdelay -- Pause nanoseconds between messages
+
 ### Inputs
 
 `ams_sendtest` takes the following tables on input:

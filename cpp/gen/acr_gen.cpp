@@ -5868,6 +5868,22 @@ void acr::FPdep_Uninit(acr::FPdep& pdep) {
     }
 }
 
+// --- acr.RecSortkey..Print
+// print string representation of acr::RecSortkey to string LHS, no header -- cprint:acr.RecSortkey.String
+void acr::RecSortkey_Print(acr::RecSortkey & row, algo::cstring &str) {
+    algo::tempstr temp;
+    str << "acr.RecSortkey";
+
+    double_Print(row.num, temp);
+    PrintAttrSpaceReset(str,"num", temp);
+
+    algo::cstring_Print(row.str, temp);
+    PrintAttrSpaceReset(str,"str", temp);
+
+    float_Print(row.rowid, temp);
+    PrintAttrSpaceReset(str,"rowid", temp);
+}
+
 // --- acr.PlineKey..Cmp
 i32 acr::PlineKey_Cmp(acr::PlineKey & lhs, acr::PlineKey & rhs) {
     i32 retval = 0;
@@ -5883,7 +5899,7 @@ i32 acr::PlineKey_Cmp(acr::PlineKey & lhs, acr::PlineKey & rhs) {
     if (retval != 0) {
         return retval;
     }
-    retval = i32_Cmp(lhs.rowid, rhs.rowid);
+    retval = acr::RecSortkey_Cmp(lhs.sortkey, rhs.sortkey);
     return retval;
 }
 
@@ -5902,7 +5918,7 @@ bool acr::PlineKey_Eq(const acr::PlineKey & lhs,const acr::PlineKey & rhs) {
     if (!retval) {
         return false;
     }
-    retval = i32_Eq(lhs.rowid, rhs.rowid);
+    retval = acr::RecSortkey_Eq(lhs.sortkey, rhs.sortkey);
     return retval;
 }
 
@@ -5921,8 +5937,8 @@ void acr::PlineKey_Print(acr::PlineKey & row, algo::cstring &str) {
     i32_Print(row.ctype_rank, temp);
     PrintAttrSpaceReset(str,"ctype_rank", temp);
 
-    i32_Print(row.rowid, temp);
-    PrintAttrSpaceReset(str,"rowid", temp);
+    acr::RecSortkey_Print(row.sortkey, temp);
+    PrintAttrSpaceReset(str,"sortkey", temp);
 }
 
 // --- acr.FPline.zd_child.Insert
@@ -6502,22 +6518,6 @@ void acr::FQuery_Print(acr::FQuery & row, algo::cstring &str) {
 
     algo::cstring_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
-}
-
-// --- acr.RecSortkey..Print
-// print string representation of acr::RecSortkey to string LHS, no header -- cprint:acr.RecSortkey.String
-void acr::RecSortkey_Print(acr::RecSortkey & row, algo::cstring &str) {
-    algo::tempstr temp;
-    str << "acr.RecSortkey";
-
-    double_Print(row.num, temp);
-    PrintAttrSpaceReset(str,"num", temp);
-
-    algo::cstring_Print(row.str, temp);
-    PrintAttrSpaceReset(str,"str", temp);
-
-    float_Print(row.rowid, temp);
-    PrintAttrSpaceReset(str,"rowid", temp);
 }
 
 // --- acr.FRec..Init

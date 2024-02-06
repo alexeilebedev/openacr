@@ -51,6 +51,10 @@ namespace acr { // update-hdr
     // If -trunc option is set, mark all records for deletion
     acr::FRec* ReadTuple(Tuple &tuple, acr::FFile &file, acr::ReadMode read_mode);
 
+    // Calculate record's SORTKEY which is a combination
+    // of the value of its SSIMSORT attribute and rowid.
+    void UpdateSortkey(acr::FRec &rec, float rowid);
+
     // Create a new record from tuple TUPLE, having primary key PKEY_ATTR and type
     // CTYPE (as found via the type tag).
     // if INSERT is specified, the record inserted. Otherwise, it's deleted

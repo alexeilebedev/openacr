@@ -275,7 +275,7 @@ static void CreateRecPline(acr::FPrint &print) {
             // global rank
             pline.key.ctype_rank = rec.p_ctype->rank;
             // sort by line id
-            pline.key.rowid      = rec.sortkey.rowid;
+            pline.key.sortkey    = rec.sortkey;
             pline.p_rec          = &rec;
             (void)acr::pline_XrefMaybe(pline);
         }

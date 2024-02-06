@@ -141,6 +141,7 @@ static bool VisitField(acr::FRun &run, acr::FQuery& query, acr::FRec& rec, acr::
             if (evalattr.attr && evalattr.attr->name == name_Get(field)) {
                 MarkModified(run,rec);
                 evalattr.attr->name = query.new_val;
+                acr::UpdateSortkey(rec,rec.sortkey.rowid);
             }
         } break;
 
@@ -155,6 +156,7 @@ static bool VisitField(acr::FRun &run, acr::FQuery& query, acr::FRec& rec, acr::
                     ScheduleCascadeUpdate(rec, evalattr.attr->value, newval);
                 }
                 evalattr.attr->value = newval;
+                acr::UpdateSortkey(rec,rec.sortkey.rowid);//update sort key
             }
         } break;
 
